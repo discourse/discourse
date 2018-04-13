@@ -234,8 +234,6 @@ pl_PL:
     delete_reason: "Skasowany z poziomu kolejki moderacji."
     not_found: "Post nie został znaleziony lub jest już zaktualizowany."
   groups:
-    success:
-      bulk_add: "%{users_added} użytkowników zostało dodanych do grupy"
     errors:
       can_not_modify_automatic: "Nie można modyfikować automatyczną grupę"
       invalid_domain: "'%{domain}' nie jest poprawną domeną."

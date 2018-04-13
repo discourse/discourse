@@ -357,17 +357,6 @@ sk:
         make_user_group_owner: "Nastaviť ako vlastníka"
         remove_user_as_group_owner: "Odobrať vlastníka"
     groups:
-      new:
-        title: "Nová skupina"
-        description: "Vytvoriť novú skupinu"
-        create: "Vytvoriť"
-        name:
-          too_short: "Názov skupiny je príliš krátky"
-          too_long: "Názov skupiny je príliš dlhý"
-          checking: "Kontrolujeme dostupnosť názvu skupiny"
-          available: "Názov skupiny je k dispozícii"
-          not_available: "Názov skupiny nie je k dispozícii"
-          blank: "Názov skupiny nesmie byť prázdny"
       manage:
         title: 'Spravovať'
         name: 'Názov'
@@ -376,11 +365,6 @@ sk:
         delete_member_confirm: "Odstrániť '%{username}' zo skupiny '%{group}'?"
         profile:
           title: Profil
-        members:
-          title: "Členovia"
-          description: "Spravovať členstvo v tejto skupine"
-          usernames: "Používateľské mená"
-          as_owner: "Nastaviť používateľa/ov ako vlastníka/ov skupiny"
         logs:
           title: "Záznamy"
           when: "Kedy"
@@ -390,7 +374,6 @@ sk:
           details: "Detaily"
           from: "Od"
           to: "Komu"
-      name_placeholder: "Meno skupiny, bez medzier, také isté pravidlá ako pre používateľské meno"
       public_admission: "Povoliť používateľom slobodne sa stať člen skupiny (kupina musí byť verejne viditeľná)"
       public_exit: "Povoliť používateľom slobodne opustiť skupinu."
       empty:
@@ -456,11 +439,6 @@ sk:
       posts: "Príspevky"
       mentions: "Zmienky"
       messages: "Správy"
-      visibility_levels:
-        title: "Kto môže vidieť túto skupinu?"
-        public: "Každý"
-        members: "Vlastníci skupiny, členovia a jej administrátori"
-        owners: "Vlastníci skupiny a jej administrátori"
       alias_levels:
         messageable: "Kto môže poslať správu tejto skupine?"
         nobody: "Nikto"
@@ -468,9 +446,6 @@ sk:
         mods_and_admins: "Iba moderátori a administrátori"
         members_mods_and_admins: "Iba členovia skupiny, moderátori a administrátori"
         everyone: "Každý"
-      trust_levels:
-        title: "Stupeň dôvery automaticky udelený členom po ich pridaní:"
-        none: "Žiadny"
       notifications:
         watching:
           title: "Sledovať"
@@ -2254,7 +2229,6 @@ sk:
         title: "Skupiny"
         edit: "Upraviť skupiny"
         refresh: "Obnoviť"
-        new: "Nový"
         about: "Tu upravíte Vaše členstvo v skupinách a mená"
         group_members: "Členovia skupiny"
         delete: "Odstrániť"
@@ -2262,21 +2236,11 @@ sk:
         delete_failed: "Nepodarilo sa zmazať skupinu. Pokiaľ je skupina automatická, nemôže byť zrušená."
         delete_owner_confirm: "Odobrať vlastnícke práva %{username}'?"
         add: "Pridať"
-        add_members: "Pridať členov"
         custom: "Vlastné"
-        bulk_complete: "Užívatelia boli pridaní do skupiny."
-        bulk: "Hromadné pridanie do skupiny"
-        bulk_paste: "Vlož zoznam používateľov alebo emailov, jeden na riadok:"
-        bulk_select: "(vyberte skupinu)"
         automatic: "Automaticky"
-        automatic_membership_email_domains: "Užívatelia, ktorí sa zaregistrovali s emailovou doménou uvedenou v zozname budú automaticky pridaní do tejto skupiny. "
-        automatic_membership_retroactive: "Použi pravidlo rovnakej emailovej domény pre pridanie registrovaných používateľov"
         default_title: "Štandardné označenie pre všetkých používateľov v tejto skupine"
-        primary_group: "Automaticky nastav ako hlavnú skupinu"
         group_owners: Vlastníci
         add_owners: Pridať vlastníkov
-        incoming_email: "Vlastná e-mailová adresa pre príchodziu poštu"
-        incoming_email_placeholder: "zadajte emailovú adresu"
       api:
         generate_master: "Vygenerovať Master API kľúč"
         none: "V súčasnosti neexistujú žiadne aktívne API kľúče."

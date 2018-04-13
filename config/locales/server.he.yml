@@ -214,8 +214,6 @@ he:
   queue:
     delete_reason: "נמחק באמצעות בקרה על תור הפוסטים"
   groups:
-    success:
-      bulk_add: "%{users_added} משתמשים נוספו לקבוצה."
     errors:
       can_not_modify_automatic: "אינכם יכולים לערוך קבוצה אוטומטית"
       invalid_domain: "'%{domain}' אינו שם מתחם תקף."

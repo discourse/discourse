@@ -85,8 +85,6 @@ sr:
   revert_version_same: "Trenutna verzija je ista onoj na koju pokušavate da se vratite."
   excerpt_image: "slika"
   groups:
-    success:
-      bulk_add: "%{users_added} korisnika je dodato grupi."
     default_names:
       everyone: "svi"
       admins: "admini"

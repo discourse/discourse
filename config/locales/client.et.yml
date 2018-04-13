@@ -328,7 +328,6 @@ et:
         make_user_group_owner: "Määra omanikuks"
         remove_user_as_group_owner: "Eemalda omanik"
     groups:
-      name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
       public_exit: "Luba kasutajatel vabalt grupist lahkuda"
       empty:
         posts: "Selle grupi liikmetelt ei ole postitusi."
@@ -357,12 +356,6 @@ et:
       posts: "Postitused"
       mentions: "Mainimisi"
       messages: "Sõnumid"
-      visibility_levels:
-        title: "Kes näevad seda gruppi?"
-        public: "Kõik"
-        members: "Grupi omanikud, liikmed ja adminid"
-        staff: "Grupi omanikud ja töötajad"
-        owners: "Grupi omanikud ja adminid"
       alias_levels:
         messageable: "Kes saab sellele grupile sõnumeid saata?"
         nobody: "Mitte keegi"
@@ -370,9 +363,6 @@ et:
         mods_and_admins: "Vaid moderaatorid ja adminnid"
         members_mods_and_admins: "Vaid grupi liikmed, moderaatorid ja adminnid"
         everyone: "Igaüks"
-      trust_levels:
-        title: "Liikmetele peale lisamist automaatselt omistatud usaldustase:"
-        none: "Puudub"
       notifications:
         watching:
           title: "Vaatlen"
@@ -397,7 +387,6 @@ et:
       flair_color_placeholder: "(Valikuline) Värvi väärtus heksakoodis"
       flair_preview_icon: "Ikooni eelvaatlus"
       flair_preview_image: "Pildi eelvaatlus"
-      flair_note: "Märkus: Andekus kuvatakse vaid kasutaja põhigrupi jaoks."
     user_action_groups:
       '1': "Meeldimisi antud"
       '2': "Meeldimisi saadud"
@@ -2281,7 +2270,6 @@ et:
         title: "Grupid"
         edit: "Muuda gruppe"
         refresh: "Värskenda"
-        new: "Uus"
         about: "Siin saad muuta oma grupi liikmelisust ja nimesid"
         group_members: "Grupi liikmed"
         delete: "Kustuta"
@@ -2289,21 +2277,11 @@ et:
         delete_failed: "Ei suuda kustutada seda gruppi. Kui see on automaatne grupp, ei saa seda hävitada."
         delete_owner_confirm: "Eemaldan kasutajalt '%{username}' omaniku õigused?"
         add: "Lisa"
-        add_members: "Lisa liikmeid"
         custom: "Individuaalne"
-        bulk_complete: "Kasutajad lisati gruppi."
-        bulk: "Lisa massina gruppi"
-        bulk_paste: "Kleebi kas"
-        bulk_select: "(vali grupp)"
         automatic: "Automaatne"
-        automatic_membership_email_domains: "Kasutajad, kes registreeruvad meiliaadressiga, mille domeen ühtib täpselt mõnega sellest loetelust, lisatakse siia gruppi automaatselt:"
-        automatic_membership_retroactive: "Olemasolevate registreeritud kasutajate lisamiseks rakenda sama meiliaadressi domeeni reeglit"
         default_title: "Vaikimisi tiitel kõigile kasutajatele siin grupis"
-        primary_group: "Muuda automaatselt peamiseks grupiks"
         group_owners: Omanikud
         add_owners: Lisa omanikke
-        incoming_email: "Individuaalne sissetuleva meili aadress"
-        incoming_email_placeholder: "sisesta meiliaadress"
         none_selected: "Vali alustamiseks grupp"
         no_custom_groups: "Loo uus kohandatud grupp"
       api:

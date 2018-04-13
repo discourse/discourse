@@ -212,8 +212,6 @@ da:
   queue:
     delete_reason: "Slettet via køen til moderation af indlæg."
   groups:
-    success:
-      bulk_add: "%{users_added} brugere er blevet tilføjet til gruppen."
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
       invalid_domain: "'%{domain}' er ikke et gyldigt domæne."

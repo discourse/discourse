@@ -320,7 +320,6 @@ sq:
         make_user_group_owner: "Bëje autor"
         remove_user_as_group_owner: "Hiq autorin"
     groups:
-      name_placeholder: "Emri i grupit, pa hapësira, si username-t"
       public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
       public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
       empty:
@@ -343,9 +342,6 @@ sq:
         mods_and_admins: "Vetëm moderatorët dhe adminët"
         members_mods_and_admins: "Vetëm anëtarët e grupit, moderatorët dhe adminët"
         everyone: "Të gjithë"
-      trust_levels:
-        title: "Niveli i besimit që ju akordohet automatikisht anëtarëve të grupit:"
-        none: "Asnjë"
       notifications:
         watching:
           title: "Në vëzhgim"
@@ -2009,7 +2005,6 @@ sq:
         title: "Grupet"
         edit: "Redakto Grup"
         refresh: "Rifresko"
-        new: "I Ri"
         about: "Modifiko anëtarët e grupit dhe emrin këtu"
         group_members: "Përdorues grupi"
         delete: "Fshij"
@@ -2017,12 +2012,7 @@ sq:
         delete_failed: "Nuk e fshimë dot grupin. Nëse ky është një grup automatik, nuk fshihet dot. "
         delete_owner_confirm: "Hiqe privilegjin e pronarit për '%{username}'?"
         add: "Shto"
-        add_members: "Shto Anëtar"
         custom: "Grupet e krijuara"
-        bulk_complete: "Përdoruesit iu shtuan grupit."
-        bulk: "Shto në masë tek grupi"
-        bulk_paste: "Ngjit një listë përdoruesisht ose adresash email, 1 për çdo rresht:"
-        bulk_select: "(zgjidhni një grup)"
         automatic: "Automatik"
         group_owners: Pronarët
         add_owners: Shto pronarë

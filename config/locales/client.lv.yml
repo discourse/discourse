@@ -348,7 +348,6 @@ lv:
         make_user_group_owner: "Padarīt par īpašnieku"
         remove_user_as_group_owner: "Noņemt īpašnieka tiesības"
     groups:
-      name_placeholder: "Grupas nosaukums, bez atstarpēm, tādi paši noteikumi kā lietotāja vārdam"
       public_admission: "Atļaut lietotājiem brīvi pievienoties grupai (šai grupai jābūt publiski redzamai)"
       public_exit: "Ļaut lietotājiem brīvi pamest grupu"
       empty:
@@ -374,21 +373,12 @@ lv:
       mentions: "Pieminēšanas"
       messages: "Ziņas"
       notification_level: "Noklusējuma līmenis paziņojumiem par jaunām grupas ziņām"
-      visibility_levels:
-        title: "Kas var redzēt grupu?"
-        public: "Ikviens"
-        members: "Grupu īpašnieki, biedri un administratori"
-        staff: "Grupu īpašnieki un personāls"
-        owners: "Grupu īpašnieki un administratori"
       alias_levels:
         nobody: "Neviens"
         only_admins: "Tikai administratori"
         mods_and_admins: "Tikai moderatori un administratori"
         members_mods_and_admins: "Tikai grupu biedri, moderatori un administratori"
         everyone: "Ikviens"
-      trust_levels:
-        title: "Uzticamības līmenis, ko automātiski piešķir visiem dalībniekiem pievienošanas brīdī:"
-        none: "Nav"
       notifications:
         watching:
           title: "Skatās"
@@ -413,7 +403,6 @@ lv:
       flair_color_placeholder: "(Neobligāti) Heksadecimālā krāsas vērtība"
       flair_preview_icon: "Priekšskatījuma ikona"
       flair_preview_image: "Priekšskatījuma attēls"
-      flair_note: "Piezīme: attēls parādīsies tikai lietotāja primārai grupai."
     user_action_groups:
       '1': "Veiktās atzinības"
       '2': "Saņemtās atzinības"
@@ -2322,7 +2311,6 @@ lv:
         title: "Grupas"
         edit: "Labot grupas"
         refresh: "Pārlādēt"
-        new: "Jauns"
         about: "Labot jūsu piederīgu grupām un to nosaukumus"
         group_members: "Grupas biedri"
         delete: "Dzēst"
@@ -2330,21 +2318,10 @@ lv:
         delete_failed: "Neizdevās izdzēst grupu. Ja šī ir automātiski izveidota grupa, to nav iespējams iznīcināt."
         delete_owner_confirm: "Noņemt lietotāja privilēģijas '%{username}'?"
         add: "Pievienot"
-        add_members: "Pievienot biedrus"
-        bulk_complete: "Šie lietotāji ir pievienoti grupai."
-        bulk_complete_users_not_added: "Šie lietotāji nav pievienoti (pārliecinieties, ka viņiem ir profili):"
-        bulk: "Pievienot grupai vairākus"
-        bulk_paste: "Kopēt lietotājvārdu vai e-pastu sarakstu, vienu katrā rindiņā:"
-        bulk_select: "(izvēlēties grupu)"
         automatic: "Automātiski"
-        automatic_membership_email_domains: "Lietotāji, kas reģistrējas ar e-pasta domēnu, kas precīzi sakrīt ar kādu no šī saraksta, tiks automātiski pievienoti šai grupai:"
-        automatic_membership_retroactive: "Izmantot viena e-pasta domēna noteikumu, lai pievienotu esošus lietotājus"
         default_title: "Noklusējuma apzīmējums visiem lietotājiem šajā grupā"
-        primary_group: "Automātiski padarīt par galveno grupu"
         group_owners: Īpašnieki
         add_owners: Pievienot īpašniekus
-        incoming_email: "Īpašas ienākošā e-pasta adreses"
-        incoming_email_placeholder: "ievadi e-pasta adresi"
         none_selected: "Izvēlēties grupu, lai uzsāktu"
         no_custom_groups: "Izveidot jaunu specifisku grupu"
       api:

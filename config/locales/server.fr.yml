@@ -250,8 +250,9 @@ fr:
     not_found: "Message non trouvé ou déjà mis à jour."
   groups:
     success:
-      bulk_add: "%{users_added} utilisateurs ont bien été ajoutés au groupe."
+      bulk_add: "%{count}utilisateur(s) a/ont été ajouté(s) au groupe."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' n'est pas un niveau de confiance valide."
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
       member_already_exist: "'%{username}' est déjà membre de ce groupe."
       invalid_domain: "'%{domain}' n'est pas un domaine valide."
@@ -1028,8 +1029,8 @@ fr:
     whitelist_internal_hosts: "Une liste de domaines internes que Discourse peut crawler en sécurité pour les Onebox et autres"
     allowed_iframes: "Une liste des préfixes du domaine src iframe que Discourse peut autoriser en toute sécurité dans les messages"
     whitelisted_crawler_user_agents: 'Les agents utilisateurs des robots d''exploration du Web qui devraient être autorisés à accéder au site.'
-    blacklisted_crawler_user_agents: 'Les agents utilisateurs des robots d''exploration du Web qui ne devraient pas être autorisés à accéder au site. Ne s''applique pas si une whitelist est définie.'
-    slow_down_crawler_user_agents: 'Agents de crawlers web qui devrait être limité dans robots.txt avec la commande crawl-delay, qui est respecté par yandax, bing et yahoo'
+    blacklisted_crawler_user_agents: 'Mot unique insensible à la casse dans la chaîne de caractères de l''agent utilisateur identifiant les robots d''exploration Web qui ne devraient pas être autorisés à accéder au site. Ne s''applique pas si une whitelist est définie.'
+    slow_down_crawler_user_agents: 'Agents de crawlers web qui devrait être limité dans robots.txt avec la commande Crawl-delay.'
     slow_down_crawler_rate: 'Si slow_down_crawler_user_agents est spécifié ce taux s''appliquera aux crawlers web (secondes d''attente entre requêtes)'
     top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
@@ -1076,6 +1077,7 @@ fr:
     sso_url: "URL de l'authentification unique SSO (doit inclure http:// ou http://)"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
     sso_overrides_bio: "Écrase la biographie du profil utilisateur et empêche l'utilisateur de le modifier"
+    sso_overrides_groups: "Synchroniser l'ensemble de adhésions de groupe manuelles avec les groupes spécifiés dans l'attibut sso (ATTENTION : si vous ne spécifiez pas de groupe toutes les adhésions de groupe manuelles seront résiliées pour l'utilisateur)"
     sso_overrides_email: "Surcharger les emails locaux avec les emails externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : Des écarts peuvent se produire dus aux règles locales sur les emails)"
     sso_overrides_username: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : des écarts peuvent se produire dûes aux différences de longueur et d'exigences sur les pseudos)"
     sso_overrides_name: "Surcharger les noms complets locaux avec les noms complets externes d'un SSO à chaque connexion, et prévenir les modifications locales."
@@ -1860,20 +1862,6 @@ fr:
 
     post_hidden_again:
       title: "Message caché à nouveau"
-      subject_template: "Message caché suite à des signalements de la communauté"
-      text_body_template: |+
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que votre message a été caché.
-
-        <%{base_url}%{url} >
-
-        %{flag_reason}
-
-        Plusieurs membres de la communauté ont signalé ce message avant qu'il ne soit masqué donc nous vous invitons à le revoir en fonction de ces retours. **Vous pouvez modifier votre message après %{edit_delay} minutes, mais il restera masqué jusqu'à ce qu'un responsable s'en occupe.**
-
-        Pour plus d'informations, merci de vous référer à notre [charte communautaire](%{base_url}/guidelines).
-
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces pour vous aider à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
@@ -3108,6 +3096,7 @@ fr:
     title: "Tags"
     staff_tag_disallowed: "Le tag \"%{tag}\" ne peut être mis que par un responsable."
     staff_tag_remove_disallowed: "Le tag \"%{tag}\" ne peut être retiré que par un responsable."
+    minimum_required_tags: "Vous devez choisir au moins %{count} tags."
   rss_by_tag: "Sujets avec le tag %{tag}"
   finish_installation:
     congratulations: "Félicitations, vous avez installé Discourse !"

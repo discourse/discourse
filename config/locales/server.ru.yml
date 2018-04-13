@@ -233,8 +233,6 @@ ru:
     delete_reason: "Удалено по запросу модератора."
     not_found: "Сообщение не найдено или уже обновлено."
   groups:
-    success:
-      bulk_add: "%{users_added}пользователей было добавлено в группу."
     errors:
       can_not_modify_automatic: "Вы не можете изменить автоматическую группу."
       invalid_domain: "'%{domain}' является некорректным доменом."

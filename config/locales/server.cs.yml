@@ -29,6 +29,7 @@ cs:
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
+  submit: "Odeslat"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
@@ -221,8 +222,6 @@ cs:
     delete_reason: "Smazáno moderátorem"
     not_found: "Příspěvek nebyl nalezen nebo již byl aktualizován."
   groups:
-    success:
-      bulk_add: "Uživatelé %{users_added} byli přidáni do skupiny."
     errors:
       can_not_modify_automatic: "Nelze měnit automatické skupiny"
       invalid_domain: "'%{domain}' není platná doména."

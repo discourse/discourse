@@ -307,7 +307,6 @@ zh_CN:
         make_user_group_owner: "设为所有者"
         remove_user_as_group_owner: "撤销所有者"
     groups:
-      name_placeholder: "群组名，没有空格，和用户名一样的规则"
       public_admission: "允许用户自由加入小组（需要小组公开可见）"
       public_exit: "允许用户自由离开小组"
       empty:
@@ -340,12 +339,6 @@ zh_CN:
       mentions: "提及"
       messages: "私信"
       notification_level: "小组私信的默认通知等级"
-      visibility_levels:
-        title: "谁能看到这个小组？"
-        public: "所有人"
-        members: "小组创建人，成员和管理员"
-        staff: "小组创建者及工作人员"
-        owners: "小组创建者及管理员"
       alias_levels:
         mentionable: "谁能@该小组"
         messageable: "谁能私信此小组"
@@ -354,9 +347,6 @@ zh_CN:
         mods_and_admins: "版主与管理员"
         members_mods_and_admins: "组员、版主与管理员"
         everyone: "任何人"
-      trust_levels:
-        title: "这些用户加入时，将自动赋予信任等级："
-        none: "无"
       notifications:
         watching:
           title: "跟踪"
@@ -381,7 +371,6 @@ zh_CN:
       flair_color_placeholder: "（可选）十六进制色彩值"
       flair_preview_icon: "预览图标"
       flair_preview_image: "预览图片"
-      flair_note: "注意：标示将只在用户的主要群组显示"
     user_action_groups:
       '1': "送出赞"
       '2': "获得赞"
@@ -2307,7 +2296,6 @@ zh_CN:
         title: "群组"
         edit: "编辑群组"
         refresh: "刷新"
-        new: "新群组"
         about: "在这里编辑群组的名字和成员"
         group_members: "群组成员"
         delete: "删除"
@@ -2315,22 +2303,11 @@ zh_CN:
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
         delete_owner_confirm: "移除“%{username}”的权限？"
         add: "添加"
-        add_members: "添加成员"
         custom: "定制"
-        bulk_complete: "用户已被添加到群组。"
-        bulk_complete_users_not_added: "这些用户还没有被添加（请确保他们已经有账户了）："
-        bulk: "批量添加到群组"
-        bulk_paste: "粘贴用户名邮件列表，一行一个："
-        bulk_select: "( 选择一个群组 )"
         automatic: "自动"
-        automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
-        automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
         default_title: "群组内所有用户的默认头衔"
-        primary_group: "自动设置为主要群组"
         group_owners: 所有者
         add_owners: 添加所有者
-        incoming_email: "自定义进站电子邮件地址"
-        incoming_email_placeholder: "输入邮箱地址"
         none_selected: "选择一个小组以开始"
         no_custom_groups: "创建一个自定义小组"
       api:

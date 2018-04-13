@@ -237,6 +237,9 @@ sv:
       last_read: "detta är det senaste inlägg som du läst, klicka för att bokmärka"
       remove: "Ta bort bokmärke"
       confirm_clear: "Är du säker på att du vill radera alla bokmärken från ämnet?"
+    topic_count_latest:
+      one: "Visa {{count}} nytt eller uppdaterat ämne"
+      other: "Visa {{count}} nya eller uppdaterade ämnen"
     preview: "förhandsgranska"
     cancel: "avbryt"
     save: "Spara ändringar"
@@ -326,7 +329,6 @@ sv:
         make_user_group_owner: "Gör till ägare"
         remove_user_as_group_owner: "Återkalla ägare"
     groups:
-      name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
       empty:
         posts: "Det är inga kommentarer från medlemmar i denna grupp"
         members: "Det finns inga medlemmar i denna grupp"
@@ -354,9 +356,6 @@ sv:
         mods_and_admins: "Bara moderatorer och administratörer"
         members_mods_and_admins: "Bara gruppmedlemmar, moderatorer och administratörer"
         everyone: "Alla"
-      trust_levels:
-        title: "Förtroendenivå som automatiskt beviljas användare när de läggs till:"
-        none: "Inga"
       notifications:
         watching:
           title: "Bevakar"
@@ -1024,6 +1023,7 @@ sv:
       empty: "Inga notifieringar hittades."
       more: "visa äldre notifikationer"
       total_flagged: "totalt antal flaggade inlägg"
+      granted_badge: "Förtjänade '{{description}}'"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
@@ -1316,7 +1316,7 @@ sv:
         make_banner: "Gör ämne till banderoll"
         remove_banner: "Ta bort banderollämne"
       reply:
-        title: 'svara'
+        title: 'Svara'
         help: 'Börja komponera ett svar på detta ämne'
       clear_pin:
         title: "Ta bort nål"
@@ -2147,7 +2147,6 @@ sv:
         title: "Grupper"
         edit: "Redigera Grupper"
         refresh: "Uppdatera"
-        new: "Ny"
         about: "Redigera dina gruppmedlemskap och -namn här."
         group_members: "Gruppmedlemmar"
         delete: "Radera"
@@ -2155,21 +2154,11 @@ sv:
         delete_failed: "Oförmögen att ta bort grupp. Om det här är en automatisk grupp så kan den inte raderas."
         delete_owner_confirm: "Ta bort användarprivilegier för '\"{username}'?"
         add: "Lägg till"
-        add_members: "Lägg till medlemmar"
         custom: "Anpassad"
-        bulk_complete: "Användarna har lagts till i gruppen."
-        bulk: "Masstilläggning till grupp"
-        bulk_paste: "Klistra in en lista av användarnamn eller e-postadresser, en per rad:"
-        bulk_select: "(välj en grupp)"
         automatic: "Automatisk"
-        automatic_membership_email_domains: "Användare som registrerar sig med en e-post vars domän exakt matchar en domän i den här listan kommer automatiskt att bli tillagd i den här gruppen:"
-        automatic_membership_retroactive: "Använd samma regel för e-postdomän för att lägga till nya användare"
         default_title: "Standardtitel för alla användare i denna grupp"
-        primary_group: "Automatiskt inställd som primär grupp"
         group_owners: Ägare
         add_owners: Lägg till ägare
-        incoming_email: "Egenvald inkommande e-postadress"
-        incoming_email_placeholder: "Ange e-postadress"
         none_selected: "Välj en grupp för att komma igång"
         no_custom_groups: "Skapa en egen grupp"
       api:

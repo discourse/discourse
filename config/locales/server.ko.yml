@@ -201,8 +201,6 @@ ko:
   queue:
     delete_reason: "운영팀이 글을 지웠습니다."
   groups:
-    success:
-      bulk_add: "%{users_added}명의 사용자가 그룹에 추가되었습니다."
     errors:
       can_not_modify_automatic: "자동 설정 그룹은 수정할 수 없습니다."
       invalid_domain: "'%{domain}'은 유효한 도메인이 아닙니다."

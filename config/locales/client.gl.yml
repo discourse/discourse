@@ -323,9 +323,6 @@ gl:
         mods_and_admins: "Só moderadores e administradores"
         members_mods_and_admins: "Só membros do grupo, moderadores e administradores"
         everyone: "Todos"
-      trust_levels:
-        title: "Nivel de confianza automático concedido aos membros cando son engadidos:"
-        none: "Ningún"
       notifications:
         watching:
           title: "Ver"
@@ -1637,7 +1634,6 @@ gl:
         title: "Grupos"
         edit: "Editar grupos"
         refresh: "Actualizar"
-        new: "Novo"
         about: "Edita aquí a túa pertenza a un grupo e nomes"
         group_members: "Membros do grupo"
         delete: "Eliminar"
@@ -1645,21 +1641,11 @@ gl:
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
         add: "Engadir"
-        add_members: "Engadir membros"
         custom: "Personalizar"
-        bulk_complete: "Engadíronse os usuarios ao grupo."
-        bulk: "Engadir ao grupo en bloque"
-        bulk_paste: "Pegar unha lista de nomes de usuario ou correos-e, un por liña:"
-        bulk_select: "(seleccionar un grupo)"
         automatic: "Automático"
-        automatic_membership_email_domains: "Os usuarios que se rexistraron cun dominio de correo electrónico que coincida exactamente con algún da lista engadiranse automaticamente a este grupo:"
-        automatic_membership_retroactive: "Aplicar a regra do mesmo dominio de correo electrónico para engadir os usuarios rexistrados."
         default_title: "Título predeterminado para os usuarios deste grupo"
-        primary_group: "Estabelecer automaticamente como grupo primario"
         group_owners: Propietarios
         add_owners: Engadir propietarios
-        incoming_email: "Personalizar enderezos de correo-e entrantes"
-        incoming_email_placeholder: "introducir enderezos de correo-e"
       api:
         generate_master: "Xerar unha chave maestra da API"
         none: "Non hai chaves activas da API agora mesmo."

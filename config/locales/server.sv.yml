@@ -460,12 +460,14 @@ sv:
       long_form: 'flagga detta som orelevant'
     spam:
       title: 'Spam'
+      description: 'Det här inlägget är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på det aktuella ämnet.'
+      short_description: 'Detta är reklam eller vandalism'
       long_form: 'flagga detta som spam'
       email_title: '"%{title}" flaggades som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Olämpligt'
-      description: 'Detta inläggs innehåll inkluderar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="/guidelines">våra riktlinjer</a>r.'
+      description: 'Detta inläggs innehåll inkluderar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="/guidelines">våra riktlinjer</a>.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
       title: 'Skicka ett meddelande till @{{username}} '

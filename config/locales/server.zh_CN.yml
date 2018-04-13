@@ -208,8 +208,6 @@ zh_CN:
     delete_reason: "通过帖子审核队列删除"
     not_found: "未找到帖子或已经更新。"
   groups:
-    success:
-      bulk_add: "%{users_added}用户已经被添加至小组。"
     errors:
       can_not_modify_automatic: "你不能修改自动组"
       invalid_domain: "“%{domain}”不是有效域名。"

@@ -346,17 +346,10 @@ fi:
         make_user_group_owner: "Myönnä isännyys"
         remove_user_as_group_owner: "Peru isännyys"
     groups:
-      new:
-        title: "Uusi ryhmä"
-        description: "Luo uusi ryhmä"
-        create: "Luo"
-        name:
-          too_short: "Ryhmän nimi on liian lyhyt"
-          too_long: "Ryhmän nimi on liian pitkä"
-          checking: "Tarkistetaan onko ryhmän nimi vapaana..."
-          available: "Ryhmän nimi on vapaana"
-          not_available: "Ryhmän nimi on käytössä"
-          blank: "Ryhmän nimi ei voi olla tyhjä"
+      add_members:
+        title: "Lisää jäseniä"
+        description: "Hallinnoi ryhmän jäsenyyksiä"
+        usernames: "Käyttäjänimet"
       manage:
         title: 'Hallinnoi'
         name: 'Nimi'
@@ -365,11 +358,8 @@ fi:
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
         profile:
           title: Profiili
-        members:
-          title: "Jäsenet"
-          description: "Hallinnoi ryhmän jäsenyyksiä"
-          usernames: "Käyttäjänimet"
-          as_owner: "Tee ryhmän jäsenestä tai jäsenistä ryhmän isäntiä"
+        interaction:
+          title: Vuorovaikutus
         logs:
           title: "Lokit"
           when: "Milloin"
@@ -380,7 +370,6 @@ fi:
           details: "Yksityiskohdat"
           from: "Mistä"
           to: "Minne"
-      name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
       public_admission: "Salli käyttäjien liittyä ryhmään vapaasti (Ryhmän täytyy olla julkinen)"
       public_exit: "Salli käyttäjien poistua ryhmästä vapaasti"
       empty:
@@ -437,17 +426,17 @@ fi:
         filter_placeholder_admin: "käyttäjänimi tai sähköposti"
         filter_placeholder: "käyttäjänimi"
         remove_member: "Poista jäsen"
+        remove_member_description: "Poista <b>%{username}</b> ryhmästä"
+        make_owner: "Myönnä isännyys"
+        make_owner_description: "Tee käyttäjästä <b>%{username}</b> ryhmän isäntä"
+        remove_owner: "Peru isännyys"
+        remove_owner_description: "Peru käyttäjältä <b>%{username}</b> ryhmän isännyys"
+        owner: "Isäntä"
       topics: "Ketjut"
       posts: "Viestit"
       mentions: "Maininnat"
       messages: "Viestit"
       notification_level: "Ryhmäviestien oletusilmoitusasetus"
-      visibility_levels:
-        title: "Ketkä näkevät tämän ryhmän?"
-        public: "Kaikk"
-        members: "Ryhmän isännät, jäsenet ja ylläpitäjät"
-        staff: "Ryhmän isännät ja henkilökunta"
-        owners: "Ryhmän isännät ja ylläpitäjät"
       alias_levels:
         mentionable: "Ketkä voivat @mainita ryhmän?"
         messageable: "Ketkä voivat lähettää ryhmälle viestin?"
@@ -456,9 +445,6 @@ fi:
         mods_and_admins: "Vain ylläpitäjät ja valvojat"
         members_mods_and_admins: "Vain ryhmän jäsenet, valvojat ja ylläpitäjät"
         everyone: "Kaikki"
-      trust_levels:
-        title: "Luottamustaso, joka annetaan automaattisesti lisättäessä tähän ryhmään:"
-        none: "Ei mitään"
       notifications:
         watching:
           title: "Tarkkailussa"
@@ -483,7 +469,6 @@ fi:
       flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
       flair_preview_icon: "Ikonin esikatselu"
       flair_preview_image: "Kuvan esikatselu"
-      flair_note: "Huom. Käyttäjän ensisijainen ryhmä määrää pinssin."
     user_action_groups:
       '1': "Annetut tykkäykset"
       '2': "Saadut tykkäykset"
@@ -679,6 +664,17 @@ fi:
         choose: "Valitse salasana"
       second_factor:
         title: "Kaksivaiheinen tunnistautuminen"
+        disable: "Poista kaksivaiheinen tunnistautuminen käytöstä"
+        enable: "tilin tietoturvan parantamiseksi"
+        confirm_password_description: "Jatka vahvistamalla salasanasi"
+        label: "Koodi"
+        enable_description: |
+          Skannaa QR-koodi laitteellesi sopivalla sovelluksella (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) ja syötä tunnistautumiskoodi.
+        disable_description: "Syötä sovelluksen tarjoama tunnistautumiskoodi"
+        show_key_description: "Syötä manuaalisesti"
+        extended_description: |
+          Kaksivaiheinen tunnistautuminen lisää tilisi tietoturvaa vaatimalla kertakäyttöisen koodin salasanan lisäksi. Koodeja voi luoda <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> ja <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> -laitteilla.
+        oauth_enabled_warning: "Huomioi, ettet voi kirjautua some-tilien avulla, jos kaksivaiheinen tunnistautuminen on käytössä."
       change_about:
         title: "Muokkaa kuvaustasi"
         error: "Arvon muuttamisessa tapahtui virhe."
@@ -1021,13 +1017,20 @@ fi:
       button_ok: "OK"
       button_help: "Apua"
     email_login:
+      link_label: "Lähetä minulle kirjautumislinkki"
       button_label: "sähköpostitse"
+      complete_username: "Jos on olemassa käyttäjätili käyttäjänimellä <b>%{username}</b>, kirjautumislinkin sisältävän sähköpostiviestin pitäisi saapua sinulle tuota pikaa."
+      complete_email: "Jos on olemassa käyttäjätili sähköpostiosoitteella <b>%{email}</b>, kirjautumislinkin sisältävän sähköpostiviestin pitäisi saapua sinulle tuota pikaa."
+      complete_username_found: "Käyttäjätili käyttäjänimellä <b>%{username}</b> löytyi. Kirjautumislinkin sisältävän sähköpostiviestin pitäisi saapua sinulle tuota pikaa."
+      complete_email_found: "Käyttäjätili sähköpostiosoitteella <b>%{email}</b> löytyi. Kirjautumislinkin sisältävän sähköpostiviestin pitäisi saapua sinulle tuota pikaa."
       complete_username_not_found: "Ei löytynyt käyttäjänimeä <b>%{username}</b>"
       complete_email_not_found: "Ei löytynyt sähköpostiosoitetta <b>%{email}</b>"
     login:
       title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
+      second_factor_title: "Kaksivaiheinen tunnistautuminen"
+      second_factor_description: "Syötä sovelluksen antama todennuskoodi:"
       email_placeholder: "sähköposti tai käyttäjätunnus"
       caps_lock_warning: "Caps Lock on päällä"
       error: "Tuntematon virhe"
@@ -1045,6 +1048,7 @@ fi:
       not_allowed_from_ip_address: "Kirjautuminen estetty tästä IP-osoitteesta."
       admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
       resend_activation_email: "Klikkaa tästä lähettääksesi vahvistusviestin uudelleen."
+      omniauth_disallow_totp: "Käyttäjätilisi käyttää kaksivaiheista tunnistautumista. Kirjaudu salasanasi avulla."
       resend_title: "Lähetä aktivointisähköposti uudelleen"
       change_email: "Vaihda sähköpostiosoitetta"
       provide_new_email: "Anna uusi osoite niin lähetämme sinulle vahvistamissähköpostin."
@@ -1127,6 +1131,13 @@ fi:
       medium_tone: Ruskea ihonväri
       medium_dark_tone: Tummanruskea ihonväri
       dark_tone: Tumma ihonväri
+    shared_drafts:
+      title: "Jaetut luonnokset"
+      notice: "Tämä ketju näkyy vain niille, jotka näkevät <b>{{category}}</b> -alueen."
+      destination_category: "Kohdealue"
+      publish: "Julkaise jaettu luonnos"
+      confirm_publish: "Haluatko varmasti julkaista luonnoksen?"
+      publishing: "Julkaistaan ketjua..."
     composer:
       emoji: "Emoji :)"
       more_emoji: "lisää..."
@@ -1167,6 +1178,8 @@ fi:
       create_topic: "Aloita ketju"
       create_pm: "Viesti"
       create_whisper: "Kuiskaa"
+      create_shared_draft: "Luo jaettu luonnos"
+      edit_shared_draft: "Muokkaa jaettua luonnosta"
       title: "Tai paina Ctrl+Enter"
       users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
@@ -1223,6 +1236,21 @@ fi:
           desc: Vastaa tiettyyn viestiin
         reply_as_new_topic:
           label: Vastaa sivuavassa ketjussa
+          desc: Aloita uusi, tähän ketjuun linkittyvä ketju
+        reply_as_private_message:
+          label: Uusi viesti
+          desc: Aloita uusi yksityiskeskustelu
+        reply_to_topic:
+          label: Vastaa ketjuun
+          desc: Vastaa ketjuun muttei mihinkään tiettyyn viestiin
+        toggle_whisper:
+          label: Kuiskaus päälle/pois
+          desc: Kuiskaukset näkyvät vain henkilökuntalaisille
+        create_topic:
+          label: "Uusi ketju"
+        shared_draft:
+          label: "Jaettu luonnos"
+          desc: "Luonnostele ketju, joka näkyy vain henkilökunnalle"
     notifications:
       tooltip:
         regular:
@@ -1265,6 +1293,7 @@ fi:
         quoted: '{{username}} lainasi sinua ketjussa "{{topic}}" - {{site_title}}'
         replied: '{{username}} vastasi sinulle ketjussa "{{topic}}" - {{site_title}}'
         posted: '{{username}} vastasi ketjuun "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} lähetti sinulle yksityisviestin keskustelussa "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkitti viestiisi ketjusta "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Lisää kuva"
@@ -1291,9 +1320,6 @@ fi:
       select_all: "Valitse kaikki"
       clear_all: "Tyhjennä kaikki"
       too_short: "Hakusana on liian lyhyt."
-      result_count:
-        one: "<span>Yksi tulos haulle</span><span class='term'>{{term}}</span>"
-        other: "<span>{{count}}{{plus}} tulosta haulle</span><span class='term'>{{term}}</span>"
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
@@ -1430,6 +1456,9 @@ fi:
       move_to_inbox:
         title: 'Siirrä saapuneisiin'
         help: 'Siirrä takaisin saapuneisiin.'
+      edit_message:
+        help: 'Muokkaa keskustelun ensimmäistä viestiä'
+        title: 'Muokkaa viestiä'
       list: 'Ketjut'
       new: 'uusi ketju'
       unread: 'lukematta'
@@ -1759,6 +1788,7 @@ fi:
         other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
       collapse: "kutista"
       expand_collapse: "laajenna/pienennä"
+      locked: "henkilökunnan jäsen on estänyt tämän viestin muokkaamisen"
       gap:
         one: "näytä 1 piilotettu vastaus"
         other: "näytä {{count}} piilotettua vastausta"
@@ -1830,6 +1860,10 @@ fi:
         unhide: "Poista piilotus"
         change_owner: "Vaihda omistajuutta"
         grant_badge: "Myönnä ansiomerkki"
+        lock_post: "Lukitse viesti"
+        lock_post_description: "estä kirjoittajaa muokkaamasta tätä viestiä"
+        unlock_post: "Vapauta viesti"
+        unlock_post_description: "salli kirjoittajan muokata viestiä"
       actions:
         flag: 'Liputa'
         defer_flags:
@@ -2003,6 +2037,7 @@ fi:
       email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
+      suppress_from_latest: "Vaimenna alue Tuoreimmat-näkymästä"
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
       num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
       subcategory_num_featured_topics: "Kuinka monta ketjua näytetään emoalueen sivulla:"
@@ -2313,6 +2348,7 @@ fi:
         one: "1 myönnetty"
         other: "%{count} myönnettyä"
       select_badge_for_title: Valitse tittelisi ansiomerkeistä
+      none: "(ei mitään)"
       successfully_granted: "Ansiomerkin %{badge} myöntäminen käyttäjälle %{username} onnistui"
       badge_grouping:
         getting_started:
@@ -2535,7 +2571,6 @@ fi:
         title: "Ryhmät"
         edit: "Muokkaa ryhmiä"
         refresh: "Lataa uudelleen"
-        new: "Uusi"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
         delete: "Poista"
@@ -2543,22 +2578,11 @@ fi:
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
         delete_owner_confirm: "Poista omistajan etuudet käyttäjältä '%{username}'?"
         add: "Lisää"
-        add_members: "Lisää jäseniä"
         custom: "Mukautetut"
-        bulk_complete: "Käyttäjät on lisätty ryhmään."
-        bulk_complete_users_not_added: "Näitä käyttäjiä ei lisätty (varmista, että tilit ovat olemassa):"
-        bulk: "Lisää ryhmään useita"
-        bulk_paste: "Liitä lista käyttäjänimistä tai sähköpostiosoitteista, yksi per rivi:"
-        bulk_select: "(valitse ryhmä)"
         automatic: "Automaattiset"
-        automatic_membership_email_domains: "Käyttäjät, jotka luovat tunnuksen sähköpostiosoitteella, jonka verkkotunnus on tällä listalla, lisätään tähän ryhmään:"
-        automatic_membership_retroactive: "Lisää jo olemassa olevat käyttäjät käyttäen samaa sääntöä verkkotunnuksista"
         default_title: "Tämä ryhmän jäsenten oletustitteli"
-        primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
         group_owners: Omistajat
         add_owners: Lisää omistajia
-        incoming_email: "Saapuvan sähköpostin osoite"
-        incoming_email_placeholder: "aseta sähköpostiosoite"
         none_selected: "Aloita valitsemalla ryhmä"
         no_custom_groups: "Luo uusi mukautettu ryhmä"
       api:

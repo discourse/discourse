@@ -214,8 +214,6 @@ pt:
   queue:
     delete_reason: "Eliminado através da fila de moderação de mensagens"
   groups:
-    success:
-      bulk_add: "Foram adicionados %{users_added} utilizadores ao grupo."
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
       invalid_domain: "'%{domain}' não é um domínio válido."

@@ -292,7 +292,6 @@ zh_TW:
         make_user_group_owner: "設為所有者"
         remove_user_as_group_owner: "撤銷管理員"
     groups:
-      name_placeholder: "群組名，沒有空格，和用戶名一樣的規則"
       empty:
         posts: "群組成員沒有發佈帖子。"
         members: "這個團隊裡面沒有成員"
@@ -320,9 +319,6 @@ zh_TW:
         mods_and_admins: "只有板主以及管理員"
         members_mods_and_admins: "只有群組成員、板主以及管理員"
         everyone: "所有人"
-      trust_levels:
-        title: "當這些成員加入時自動提升信任等級:"
-        none: "無"
       notifications:
         watching:
           title: "關注"
@@ -347,7 +343,6 @@ zh_TW:
       flair_color_placeholder: "（可選）十六進制色彩值"
       flair_preview_icon: "預覽圖示"
       flair_preview_image: "預覽圖片"
-      flair_note: "注意：標示將只在用戶的主要群組顯示"
     user_action_groups:
       '1': "已按讚"
       '2': "已收到的讚"
@@ -2012,7 +2007,6 @@ zh_TW:
         title: "群組"
         edit: "編輯群組"
         refresh: "重新整理"
-        new: "建立"
         about: "請在此編輯你的群組成員與名稱"
         group_members: "群組成員"
         delete: "刪除"
@@ -2020,21 +2014,11 @@ zh_TW:
         delete_failed: "無法刪除群組，自動建立的群組無法刪除。"
         delete_owner_confirm: "移除“%{username}”的權限？"
         add: "加入"
-        add_members: "新增成員"
         custom: "客製"
-        bulk_complete: "用戶已被添加到群組。"
-        bulk: "批量添加到群組"
-        bulk_paste: "粘貼用戶名郵件列表，一行一個："
-        bulk_select: "( 選擇一個群組 )"
         automatic: "自動建立"
-        automatic_membership_email_domains: "註冊的用戶的電子郵件地址網域，完全符合列表裡某項時，會自動加進這個群組裡："
-        automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的用戶上："
         default_title: "群組內所有成員的預設頭銜"
-        primary_group: "自動設定為主要群組"
         group_owners: 所有者
         add_owners: 添加所有者
-        incoming_email: "自定義進站電子郵件地址"
-        incoming_email_placeholder: "輸入郵箱地址"
       api:
         generate_master: "產生主 API 金鑰"
         none: "目前沒有啟用中的 API 金鑰。"

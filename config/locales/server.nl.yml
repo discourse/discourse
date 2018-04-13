@@ -212,8 +212,6 @@ nl:
   queue:
     delete_reason: "Verwijderd via wachtrij voor berichtmoderatie"
   groups:
-    success:
-      bulk_add: "Er zijn %{users_added} gebruikers aan de groep toegevoegd."
     errors:
       can_not_modify_automatic: "U kunt een automatische groep niet wijzigen"
       invalid_domain: "%{domain}' is geen geldig domein."
@@ -1413,6 +1411,8 @@ nl:
     unsubscribe:
       title: "Uitschrijven"
       description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
+    reply_by_email: "[Bezoek topic (het)](%{base_url}%{url}) of beantwoord deze e-mail om te reageren."
+    visit_link_to_respond: "[Bezoek topic (het)](%{base_url}%{url}) om te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."

@@ -393,26 +393,21 @@ ru:
         make_user_group_owner: "Сделать владельцем"
         remove_user_as_group_owner: "Лишить прав владельца"
     groups:
-      new:
-        title: "Новая группа"
-        description: "Создать новую группу"
-        create: "Создать"
-        name:
-          too_short: "Имя группы слишком короткое"
-          too_long: "Название группы слишком длинное"
+      add_members:
+        usernames: "Псевдоним"
       manage:
+        name: 'Имя'
+        full_name: 'Полное имя'
         add_members: "Добавить участника"
         delete_member_confirm: "Удалить '%{username}' из '%{group}' группы?"
         profile:
           title: Профиль
-        members:
-          title: "Участники"
-          description: "Управление членством в этой группе"
+        interaction:
+          notification: Уведомление
         logs:
           title: "Логи"
           when: "Когда"
           details: "Подробности"
-      name_placeholder: "Название группы, без пробелов, по тем же правилам, что и для псевдонимов."
       public_admission: "Разрешить пользователям свободно присоединяться к группе (требуется общедоступная группа)"
       public_exit: "Разрешить пользователям свободно покидать группу"
       empty:
@@ -443,7 +438,10 @@ ru:
         all_groups: "Все Группы"
         close_groups: "Закрытая группа"
         automatic_groups: "Автоматические Группы"
+        automatic: "Автоматическая"
         closed: "Закрыто"
+        public: "Публичный"
+        private: "Закрытый"
         public_groups: "Публичные Группы"
         automatic_group: Автоматическая группа
         close_group: Закрытая группа
@@ -470,12 +468,6 @@ ru:
       mentions: "Упоминания"
       messages: "Сообщения"
       notification_level: "Уровень уведомлений по умолчанию для сообщений группы"
-      visibility_levels:
-        title: "Кто может видеть эту группу?"
-        public: "Все"
-        members: "Владельцы группы, участники и администраторы"
-        staff: "Владельцы группы и персонал"
-        owners: "Владельцы группы и администраторы"
       alias_levels:
         messageable: "Кто может писать сообщить в эту группу?"
         nobody: "Никто"
@@ -483,9 +475,6 @@ ru:
         mods_and_admins: "Только модераторы и администраторы"
         members_mods_and_admins: "Только члены группы, модераторы и администраторы"
         everyone: "Все"
-      trust_levels:
-        title: "Уровень доверия участника при создании:"
-        none: "(Нет)"
       notifications:
         watching:
           title: "Наблюдать"
@@ -510,7 +499,6 @@ ru:
       flair_color_placeholder: "(Необязательно) Hex-код цвета"
       flair_preview_icon: "Иконка Предпросмотра"
       flair_preview_image: "Изображение Предпросмотра"
-      flair_note: "Внимание: Флаер будет показываться только основной группе пользователей."
     user_action_groups:
       '1': "Выразил симпатий"
       '2': "Получил симпатий"
@@ -1191,6 +1179,7 @@ ru:
         post_length: "Сообщение должно быть не короче {{min}} символов"
         try_like: 'Пробовали ли вы выразить симпатию с помощью кнопки <i class="fa fa-heart"></i> ?'
         category_missing: "Нужно выбрать раздел"
+        tags_missing: "Необходимо выбрать по крайней мере {{count}} тег"
       save_edit: "Сохранить"
       reply_original: "Ответ в первоначальной теме"
       reply_here: "Ответить в текущей теме"
@@ -1314,11 +1303,6 @@ ru:
       select_all: "Выбрать все"
       clear_all: "Сбросить все"
       too_short: "Слишком короткое слово для поиска."
-      result_count:
-        one: "1 результат для <span class='term'>{{term}}</span>"
-        few: "{{count}}{{plus}} результатов для <span class='term'>{{term}}</span>"
-        many: "{{count}}{{plus}} результатов для <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} результатов для <span class='term'>{{term}}</span>"
       title: "Поиск по темам, сообщениям, псевдонимам и разделам"
       no_results: "Ничего не найдено."
       no_more_results: "Больше ничего не найдено."
@@ -1356,6 +1340,7 @@ ru:
           unpinned: Не закреплены
           unseen: Отметить непрочитанным
           wiki: Являются вики
+          all_tags: Все вышеуказанные теги
         statuses:
           label: Характеристика темы
           open: Открыта
@@ -2013,7 +1998,7 @@ ru:
       topic_template: "Шаблон темы"
       tags: "Тэги"
       tags_allowed_tags: "Разрешить использовать в этом разделе только следующие метки:"
-      tags_allowed_tag_groups: "Разрешить использовать в этом разделе только метки из этих групп:"
+      tags_allowed_tag_groups: "Разрешить использовать в этом разделе только теги из этих групп:"
       tags_placeholder: "(Необязательно) список доступных тегов"
       tag_groups_placeholder: "(Необязательно) список доступных групп тегов"
       topic_featured_link_allowed: "Разрешить популярные ссылки в этой категории"
@@ -2062,6 +2047,7 @@ ru:
       default_position: "Позиция по умолчанию"
       position_disabled: "Разделы будут показаны в порядке активности. Чтобы настроить порядок разделов,"
       position_disabled_click: 'включите настройку "fixed category positions".'
+      minimum_required_tags: 'Минимальное количество тегов, требуемых в теме:'
       parent: "Родительский раздел"
       notifications:
         watching:
@@ -2415,7 +2401,7 @@ ru:
       </p>
     tagging:
       all_tags: "Все теги"
-      other_tags: "Изменить тэги"
+      other_tags: "Изменить теги"
       selector_all_tags: "Все теги"
       selector_no_tags: "Нет тегов"
       changed: "Теги изменены:"
@@ -2465,6 +2451,7 @@ ru:
         save: "Сохранить"
         delete: "Удалить"
         confirm_delete: "Вы уверены, что хотите удалить эту группу тегов?"
+        visible_only_to_staff: "Теги видны только персоналу"
       topics:
         none:
           unread: "Нет непрочитанных тем."
@@ -2622,7 +2609,6 @@ ru:
         title: "Группы"
         edit: "Управление группами"
         refresh: "Обновить"
-        new: "Добавить новую"
         about: "Здесь можно редактировать группы и имена групп"
         group_members: "Участники группы"
         delete: "Удалить"
@@ -2630,22 +2616,11 @@ ru:
         delete_failed: "Невозможно удалить группу. Если группа была создана автоматически, то она не может быть удалена."
         delete_owner_confirm: "Отозвать права владельца у пользователя '%{username}'?"
         add: "Добавить"
-        add_members: "Добавить участников"
         custom: "Настраиваемые"
-        bulk_complete: "Пользователи успешно добавлены в группу."
-        bulk_complete_users_not_added: "Эти пользователи не были добавлены (убедитесь, что у них есть учётная запись):"
-        bulk: "Массовое добавление в группу"
-        bulk_paste: "Впишите список пользователей или адресов e-mail, по одному на строчку:"
-        bulk_select: "(выберите группу)"
         automatic: "Автоматические"
-        automatic_membership_email_domains: "Пользователи, которые регистрируются с доменом электронной почты из этого списка, будут автоматически добавлены в группу:"
-        automatic_membership_retroactive: "Добавить в группу уже сущетсвующих зарегестрированных пользователей по этому правилу домена электронной почты"
         default_title: "Заголовок по умолчанию для всех пользователей в группе"
-        primary_group: "Автоматически использовать в качестве основной группы"
         group_owners: Владельцы
         add_owners: Добавить владельцев
-        incoming_email: "Специальный входящий адрес e-mail"
-        incoming_email_placeholder: "введите e-mail"
         none_selected: "Чтобы начать, выберите группу!"
         no_custom_groups: "Создать новую кастомную группу"
       api:

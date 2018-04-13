@@ -359,8 +359,6 @@ sr:
         mods_and_admins: "Samo moderatori i Administratori"
         members_mods_and_admins: "Samo članovi grupe, moderatori i administratori"
         everyone: "Svi"
-      trust_levels:
-        none: "Ništa"
       flair_bg_color_placeholder: "(Opciono) Hex vrednost boje"
     user_action_groups:
       '1': "Data sviđanja"
@@ -1510,16 +1508,12 @@ sr:
         title: "Grupe"
         edit: "Izmeni Grupe"
         refresh: "Osveži"
-        new: "Novo"
         about: "Ovde izmenite svoje članstvo u grupama i imenima grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
         delete_confirm: "Obriši ovu grupu?"
         delete_failed: "Nemoguće obrisati grupu. Ako je ovo automatska grupa, ne možete je obrisati."
         add: "Dodaj"
-        add_members: "Dodaj članove"
-        automatic_membership_email_domains: "Korisnici koji se registruju sa email domenom koja tačno odgovora jednoj na ovoj listi biće automatski dodani u ovu grupu:"
-        automatic_membership_retroactive: "Primeni isto pravilo o email domeni za dodavanje postojećih registrovanih korisnika"
       api:
         generate_master: "Generiši glavni API ključ"
         none: "Nema aktivnih API ključeva"

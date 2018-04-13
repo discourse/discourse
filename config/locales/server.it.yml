@@ -219,8 +219,6 @@ it:
   queue:
     delete_reason: "Cancellato attraverso la coda di moderazione"
   groups:
-    success:
-      bulk_add: "%{users_added}utentu sono stati aggiunti al gruppo. "
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       invalid_domain: "'%{domain}' non è un dominio valido."

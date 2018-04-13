@@ -346,7 +346,24 @@ de:
         make_user_group_owner: "Zum Eigentümer machen"
         remove_user_as_group_owner: "Eigentümerrechte entziehen"
     groups:
-      name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
+      manage:
+        title: 'Verwalten'
+        name: 'Name'
+        full_name: 'Vollständiger Name'
+        add_members: "Mitglieder hinzufügen"
+        delete_member_confirm: "Entferne „%{username}“ aus der Gruppe „%{group}“?"
+        profile:
+          title: Profi
+        logs:
+          title: "Protokoll"
+          when: "Wann"
+          action: "Aktion"
+          acting_user: "Ausführender Benutzer"
+          target_user: "Betroffener Benutzer"
+          subject: "Betreff"
+          details: "Details"
+          from: "Von"
+          to: "An"
       public_admission: "Erlaube Benutzern, die Gruppe eigenständig zu betreten (Erfordert, dass die Gruppe öffentlich sichtbar ist)"
       public_exit: "Erlaube Benutzern, die Gruppe eigenständig zu verlassen"
       empty:
@@ -357,6 +374,9 @@ de:
         topics: "Es gibt keine Themen von Mitgliedern dieser Gruppe."
         logs: "Es gibt keine Protokolleinträge für diese Gruppe."
       add: "Hinzufügen"
+      join: "Beitreten"
+      leave: "Verlassen"
+      request: "Anfrage"
       message: "Nachricht"
       allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppen-Eigentümer zu senden."
       membership_request_template: "Benutzerdefinierte Vorlage, das Benutzern angezeigt wird, die eine Mitgliedschaftsanfrage senden"
@@ -366,17 +386,31 @@ de:
         reason: "Lass’ die Gruppenbesitzer wissen, warum du in diese Gruppe gehörst"
       membership: "Mitgliedschaft"
       name: "Name"
+      group_name: "Gruppenname"
+      user_count: "Benutzer"
       bio: "Über die Gruppe"
       selector_placeholder: "Benutzernamen eingeben"
       owner: "Eigentümer"
       index:
         title: "Gruppen"
+        all: "Alle Gruppen"
         empty: "Es gibt keine sichtbaren Gruppen."
+        filter: "Filtern nach Art der Gruppe"
         all_groups: "Alle Gruppen"
         owner_groups: "Gruppen, deren Eigentümer ich bin"
+        close_groups: "Geschlossene Gruppe"
         automatic_groups: "Automatische Gruppen"
+        automatic: "Automatisch"
+        closed: "Geschlossen"
+        public: "Öffentlich"
+        private: "Geheim"
         public_groups: "Öffentliche Gruppen"
+        automatic_group: Automatische Gruppe
+        close_group: Gruppe schließen
         my_groups: "Meine Gruppen"
+        group_type: "Art der Gruppe"
+        is_group_user: "Mitglied"
+        is_group_owner: "Eigentümer"
       title:
         one: "Gruppe"
         other: "Gruppen"
@@ -391,17 +425,12 @@ de:
         make_owner_description: "Füge <b>%{username}</b> als Eigentümer dieser Gruppe hinzu"
         remove_owner: "Als Eigentümer entfernen"
         remove_owner_description: "Entferne <b>%{username}</b> als Eigentümer dieser Gruppe"
+        owner: "Eigentümer"
       topics: "Themen"
       posts: "Beiträge"
       mentions: "Erwähnungen"
       messages: "Nachrichten"
       notification_level: "Standard-Benachrichtigungsstufe für Gruppen-Nachrichten"
-      visibility_levels:
-        title: "Wer kann diese Gruppe sehen?"
-        public: "Alle"
-        members: "Gruppenbesitzer, Mitglieder und Admins"
-        staff: "Gruppenbesitzer und Team"
-        owners: "Gruppenbesitzer und Admins"
       alias_levels:
         mentionable: "Wer kann diese Gruppe @erwähnen?"
         messageable: "Wer kann dieser Gruppe eine Nachricht schicken?"
@@ -410,9 +439,6 @@ de:
         mods_and_admins: "Nur Moderatoren und Administratoren"
         members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
         everyone: "Jeder"
-      trust_levels:
-        title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
-        none: "keine"
       notifications:
         watching:
           title: "Beobachten"
@@ -437,7 +463,6 @@ de:
       flair_color_placeholder: "(Optoinal) Hex-Farbwert"
       flair_preview_icon: "Vorschau-Icon"
       flair_preview_image: "Vorschaubild"
-      flair_note: "Hinweise: Ein Avatar-Hintergrund wird nur für die Hauptgruppe eines Benutzers angezeigt."
     user_action_groups:
       '1': "Abgegebene Likes"
       '2': "Erhaltene Likes"
@@ -511,6 +536,7 @@ de:
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
       expand_profile: "Erweitern"
+      collapse_profile: "Zuklappen"
       bookmarks: "Lesezeichen"
       bio: "Über mich"
       invited_by: "Eingeladen von"
@@ -869,6 +895,7 @@ de:
         header_title: "Profil. Nachrichten, Lesezeichen und Einstellungen"
       title:
         title: "Titel"
+        none: "(keiner)"
       filters:
         all: "Alle"
       stream:
@@ -1147,6 +1174,7 @@ de:
       create_pm: "Nachricht"
       create_whisper: "Flüstern"
       create_shared_draft: "Erstelle gemeinsame Vorlage"
+      edit_shared_draft: "Gemeinsame Vorlage bearbeiten"
       title: "Oder drücke Strg+Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
@@ -1288,8 +1316,8 @@ de:
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
       result_count:
-        one: "<span>1 Ergebnis für</span><span class='term'>{{term}}</span>"
-        other: "<span>{{count}}{{plus}} Ergebnisse für</span><span class='term'>{{term}}</span>"
+        one: "<span>1 Ergebnis für </span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} Ergebnisse für </span><span class='term'>{{term}}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
@@ -2390,6 +2418,7 @@ de:
         save: "Speichern"
         delete: "Löschen"
         confirm_delete: "Möchtest du wirklich diese Schlagwort-Gruppe löschen?"
+        visible_only_to_staff: "Schlagwörter sind nur für das Team sichtbar"
       topics:
         none:
           unread: "Du hast keine ungelesenen Themen."
@@ -2512,6 +2541,9 @@ de:
         more: "(weitere Antworten…)"
         suspend_user: "Benutzer sperren"
         suspend_user_title: "Benutzer für diesen Beitrag sperren"
+        replies:
+          one: "[1 Antwort]"
+          other: "[%{count} Antworten]"
         dispositions:
           agreed: "zugestimmt"
           disagreed: "abgelehnt"
@@ -2547,7 +2579,6 @@ de:
         title: "Gruppen"
         edit: "Gruppen bearbeiten"
         refresh: "Aktualisieren"
-        new: "Neu"
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
@@ -2555,22 +2586,11 @@ de:
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_owner_confirm: "Eigentümerrechte für '%{username}' entfernen?"
         add: "Hinzufügen"
-        add_members: "Mitglieder hinzufügen"
         custom: "Benutzerdefiniert"
-        bulk_complete: "Die Benutzer wurden der Gruppe hinzugefügt."
-        bulk_complete_users_not_added: "Diese Benutzer wurden nicht hinzugefügt (stelle sicher, dass sie ein Konto haben):"
-        bulk: "Mehrere der Gruppe hinzufügen"
-        bulk_paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein (ein Eintrag je Zeile):"
-        bulk_select: "(wähle eine Gruppe aus)"
         automatic: "Automatisch"
-        automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
-        automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
         default_title: "Standardtitel für alle Benutzer in dieser Gruppe"
-        primary_group: "Automatisch als primäre Gruppe festlegen"
         group_owners: Eigentümer
         add_owners: Eigentümer hinzufügen
-        incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
-        incoming_email_placeholder: "E-Mail-Adresse eingeben"
         none_selected: "Wähle eine Gruppe, um loszulegen"
         no_custom_groups: "Erstelle eine neue benutzerdefinierte Gruppe"
       api:
@@ -2628,6 +2648,15 @@ de:
         user_event:
           name: "Benutzer Ereignis"
           details: "Wenn sich ein Benutzer anmeldet, abmeldet, erstellt, genehmigt oder aktualisiert wird."
+        group_event:
+          name: "Gruppen-Ereignis"
+          details: "Wenn eine Gruppe erstellt, aktualisiert oder gelöscht wird."
+        category_event:
+          name: "Kategorie-Ereignis"
+          details: "Wenn eine Kategorie erstellt, aktualisiert oder gelöscht wird."
+        tag_event:
+          name: "Schlagwort-Ereignis"
+          details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -2787,6 +2816,7 @@ de:
           add_upload: "Upload hinzufügen"
           upload_file_tip: "Wähle einen hochzuladenen Medieninhalt aus (png, woff2, usw.)"
           variable_name: "SCSS Variablen-Name:"
+          variable_name_invalid: "Ungültiger Variablenname. Nur alphanumerische Zeichen sind erlaubt. Muss mit einem Buchstaben beginnen. Muss eindeutig sein."
           upload: "Hochladen"
           child_themes_check: "Theme beinhaltet andere Kinder-Themes"
           css_html: "Benutzerdefiniertes CSS/HTML"
@@ -3031,6 +3061,7 @@ de:
             post_unlocked: "Beitrag entsperrt"
             check_personal_message: "Nachrichten geprüft"
             disabled_second_factor: "Zwei-Faktor-Authentifizierung deaktiviert"
+            topic_published: "Thema veröffentlicht"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
