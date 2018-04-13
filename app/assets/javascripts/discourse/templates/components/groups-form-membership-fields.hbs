@@ -6,7 +6,9 @@
       {{i18n 'admin.groups.manage.membership.automatic_membership_email_domains'}}
     </label>
 
-    {{list-setting name="automatic_membership" settingValue=model.emailDomains}}
+    {{list-setting name="automatic_membership"
+        settingValue=model.emailDomains
+        class="group-form-automatic-membership-automatic"}}
 
     <label>
       {{input type="checkbox"
