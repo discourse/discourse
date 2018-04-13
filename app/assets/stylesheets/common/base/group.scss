@@ -9,10 +9,19 @@
   position: relative;
 }
 
-.group-username-filter {
+.group-members-actions {
   position: absolute;
-  right: 0;
   top: -49px;
+  right: 0px;
+
+  .group-username-filter {
+    margin: 0px;
+    vertical-align: middle;
+  }
+
+  .group-members-dropdown, .group-members-add {
+    vertical-align: middle;
+  }
 }
 
 .group-post {
