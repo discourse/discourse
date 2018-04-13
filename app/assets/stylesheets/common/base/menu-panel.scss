@@ -59,8 +59,9 @@
     a {
       padding: 0.25em 0.5em;
       display: block;
-      &:hover {
+      &:hover, &:focus {
         background-color: $highlight-medium;
+        outline: none;
       }
     }
 
@@ -243,9 +244,19 @@
         display: none;
       }
 
-      span { color: $primary; }
-      &:hover { background-color: $highlight-medium; }
-      a { padding: 0; }
+      span { 
+        color: $primary; 
+      }
+
+      &:hover, &:focus { 
+        background-color: $highlight-medium; 
+        outline: none; 
+      }
+
+      a { 
+        padding: 0; 
+      }
+
       p {
         margin: 0;
         overflow: hidden;
@@ -318,9 +329,18 @@ div.menu-links-header {
   border-spacing: 0 0.5em;
   .menu-links-row {
     display: table-row;
+    li.glyphs {
+      text-align: right;
+      a {
+        display: inline-flex;
+        min-width: 15px;
+        justify-content: center;
+      } 
+    }
   }
-  a:hover {
+  a:hover, a:focus {
     background-color: $highlight-medium;
+    outline: none;
   }
   a {
     padding: 0.5em;
