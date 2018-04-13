@@ -1,6 +1,6 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import KeyValueStore from 'discourse/lib/key-value-store';
-import { context } from 'discourse/lib/desktop-notifications';
+import { context, isHidden } from 'discourse/lib/desktop-notifications';
 
 const keyValueStore = new KeyValueStore(context);
 
@@ -21,6 +21,11 @@ export default Ember.Component.extend({
     get() {
       return keyValueStore.getItem('notifications-disabled');
     }
+  },
+
+  @computed
+  hideDesktopNotifications() {
+    return isHidden();
   },
 
   @computed
