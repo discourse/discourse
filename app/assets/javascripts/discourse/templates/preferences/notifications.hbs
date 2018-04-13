@@ -20,11 +20,7 @@
   </div>
 </div>
 
-<div class="control-group desktop-notifications">
-  <label class="control-label">{{i18n 'user.desktop_notifications.label'}}</label>
-  {{desktop-notification-config}}
-  <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
-</div>
+{{desktop-notification-config}}
 
 {{#if siteSettings.enable_personal_messages}}
   <div class="control-group private-messages">

@@ -7,6 +7,7 @@ let liveEnabled = false;
 let havePermission = null;
 let mbClientId = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 let lastAction = -1;
+let hideDesktopNotifications = false;
 
 const focusTrackerKey = "focus-tracker";
 const idleThresholdTime = 1000 * 10; // 10 seconds
@@ -167,4 +168,12 @@ function unsubscribe(bus, user) {
   bus.unsubscribe(alertChannel(user));
 }
 
-export { context, init, onNotification, unsubscribe, alertChannel };
+function hide() {
+  hideDesktopNotifications = true;
+}
+
+function isHidden() {
+  return hideDesktopNotifications;
+}
+
+export { context, init, onNotification, unsubscribe, alertChannel, hide, isHidden };
