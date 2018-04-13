@@ -2886,7 +2886,8 @@ en:
         add: "Add"
         custom: "Custom"
         automatic: "Automatic"
-        default_title: "Default title for all users in this group"
+        default_title: "Default title"
+        default_title_description: "will be applied to all users in the group"
         group_owners: Owners
         add_owners: Add owners
         none_selected: "Select a group to get started"
