@@ -117,6 +117,14 @@ class TopicsController < ApplicationController
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
 
+    # provide hint to crawlers only for now
+    # we would like to give them a bit more signal about age of data
+    if use_crawler_layout?
+      if last_modified = @topic_view.posts&.map { |p| p.updated_at }&.max&.httpdate
+        response.headers['Last-Modified'] = last_modified
+      end
+    end
+
     perform_show_response
 
   rescue Discourse::InvalidAccess => ex

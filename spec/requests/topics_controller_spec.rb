@@ -554,11 +554,21 @@ RSpec.describe TopicsController do
     context "when a crawler" do
       it "renders with the crawler layout, and handles proper pagination" do
 
+        page1_time = 3.months.ago
+        page2_time = 2.months.ago
+        page3_time = 1.month.ago
+
+        freeze_time page1_time
+
         topic = Fabricate(:topic)
         Fabricate(:post, topic_id: topic.id)
         Fabricate(:post, topic_id: topic.id)
+
+        freeze_time page2_time
         Fabricate(:post, topic_id: topic.id)
         Fabricate(:post, topic_id: topic.id)
+
+        freeze_time page3_time
         Fabricate(:post, topic_id: topic.id)
 
         # ugly, but no inteface to set this and we don't want to create
@@ -575,8 +585,12 @@ RSpec.describe TopicsController do
         expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=2")
 
+        expect(response.headers['Last-Modified']).to eq(page1_time.httpdate)
+
         get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
+
+        expect(response.headers['Last-Modified']).to eq(page2_time.httpdate)
 
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
@@ -584,6 +598,7 @@ RSpec.describe TopicsController do
         get topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
+        expect(response.headers['Last-Modified']).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
       end
     end
