@@ -332,22 +332,6 @@ ca:
         make_user_group_owner: "Crea persona propietària"
         remove_user_as_group_owner: "Elimina persona propietària"
     groups:
-      logs:
-        title: "Registres"
-        when: "Quan"
-        action: "Acció"
-        acting_user: "Persona usuària activa"
-        target_user: "Persona usuària destinatària"
-        subject: "Tema"
-        details: "Detalls"
-        from: "De"
-        to: "A"
-      edit:
-        title: 'Edita grup'
-        full_name: 'Nom complet'
-        add_members: "Afegeix membres"
-        delete_member_confirm: "Elimina '%{username}' del '%{group}' grup?"
-      name_placeholder: "Nom del grup, sense espais, igual que la regla del nom de la identitat"
       empty:
         posts: "No hi ha publicacions de membres d'aquest grup."
         members: "No hi ha membres a aquest grup."
@@ -356,12 +340,7 @@ ca:
         topics: "No hi ha temes de membres d'aquest grup."
         logs: "No hi ha registres per a aquest grup."
       add: "Afegegix"
-      join: "Uneix-te al grup"
-      leave: "Abandona el grup"
-      request: "Demana afegir-te al grup"
       message: "Missatge"
-      automatic_group: Grup Automàtic
-      is_group_user: "Ets membre d'aquest grup"
       membership: "Afiliació"
       name: "Nom"
       bio: "Sobre el Grup"
@@ -377,18 +356,12 @@ ca:
       posts: "Publicacions"
       mentions: "Mencions"
       messages: "Missatges"
-      visibility_levels:
-        title: "Qui pot veure aquest grup?"
-        public: "Tothom"
       alias_levels:
         nobody: "Ningú"
         only_admins: "Només persones administradores"
         mods_and_admins: "Només persones moderadores o administradores"
         members_mods_and_admins: "Només mebres de grups, persones moderadores i administradores"
         everyone: "Tothom"
-      trust_levels:
-        title: "El nivell de confiança atorgat automàticament a membres quan s'afegeixen:"
-        none: "Cap"
       notifications:
         watching:
           title: "Mirant"
@@ -413,7 +386,6 @@ ca:
       flair_color_placeholder: "(Opcional) Valor de color Hex"
       flair_preview_icon: "Vista prèvia d'icona"
       flair_preview_image: "Vista prèvia d'imatge"
-      flair_note: "Nota: l'adornament només es mostrarà per a un grup primari de persones usuàries."
     user_action_groups:
       '1': "Donats"
       '2': "Rebuts"
@@ -1088,19 +1060,6 @@ ca:
       total_flagged: "total publicacions amb bandera"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
-      alt:
-        mentioned: "Mencionat per"
-        quoted: "Citat per"
-        replied: "Respost"
-        posted: "Publicat per"
-        edited: "Edita la teva publicació per"
-        liked: "Els ha agradat la teva entrada"
-        invited_to_topic: "Ha convidat a un tema de"
-        invitee_accepted: "Invitació acceptada per"
-        moved_post: "La teva publicació ha estat moguda per"
-        linked: "Enllaç a la teva publicació"
-        granted_badge: "Distintiu atorgat"
-        group_message_summary: "Missatges a la bústia d'entrada del grup"
       popup:
         mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'
@@ -2205,7 +2164,6 @@ ca:
         title: "Grups"
         edit: "Edita grups"
         refresh: "Actualitza"
-        new: "Nou"
         about: "Edita aquí la teva pertinença de grup i noms"
         group_members: "Membres de grup"
         delete: "Esborra"
@@ -2213,21 +2171,11 @@ ca:
         delete_failed: "Impossible esborrar aquest grup. Si és un grup automàtic, no pot ser destruït."
         delete_owner_confirm: "Esborra privilegis propietaris per a '%{username}'?"
         add: "Afegegix"
-        add_members: "Afegeix membres"
         custom: "Personalitza"
-        bulk_complete: "Les persones usuàries s'han afegit al grup."
-        bulk: "Afegeix a grup massivament"
-        bulk_paste: "Enganxa una llista de persones o correus, un per línia:"
-        bulk_select: "(tria un grup)"
         automatic: "Automàtic"
-        automatic_membership_email_domains: "Les persones registrades amb un domini de correu que coincideix amb un de la llista s'afegiran automàticament a aquest grup:"
-        automatic_membership_retroactive: "Aplica la mateixa regla de domini de correu per afegir persones registrades existents"
         default_title: "Títol per defecte per a totes les persones a aquest grup"
-        primary_group: "Estableix automàticament com a grup primari"
         group_owners: Persones propietàries
         add_owners: Afegeix persones propietàries
-        incoming_email: "Personalitza l'adreça de correu electrònic entrant:"
-        incoming_email_placeholder: "introdueix una adreça de correu electrònic"
       api:
         generate_master: "Genera una clau mestra API"
         none: "No hi ha claus API actives ara mateix"

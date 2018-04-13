@@ -111,9 +111,9 @@ class PostAnalyzer
     return @raw_links if @raw_links.present?
 
     @raw_links = []
-    cooked_stripped.css("a[href]").each do |l|
+    cooked_stripped.css("a").each do |l|
       # Don't include @mentions in the link count
-      next if l['href'].blank? || link_is_a_mention?(l)
+      next if link_is_a_mention?(l)
       @raw_links << l['href'].to_s
     end
 

@@ -64,6 +64,7 @@ module BackupRestore
         wait_for_sidekiq
 
         BackupRestore.move_tables_between_schemas("public", "backup")
+        @db_was_changed = true
         restore_dump
         migrate_database
         reconnect_database
@@ -500,8 +501,8 @@ module BackupRestore
 
     def log(message)
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-      puts(message) rescue nil
-      publish_log(message, timestamp) rescue nil
+      puts(message)
+      publish_log(message, timestamp)
       save_log(message, timestamp)
     end
 

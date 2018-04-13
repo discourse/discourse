@@ -152,9 +152,11 @@ ru:
       email: 'Поделиться ссылкой по электронной почте'
     action_codes:
       public_topic: "Сделал эту тему публичной %{when}"
+      private_topic: "сделал эту тему персональным сообщением %{when}"
       split_topic: "Разделил эту тему %{when}"
       invited_user: "Пригласил %{who} %{when}"
       invited_group: "Пригласил %{who} %{when}"
+      user_left: "%{who} удалить себя из этого сообщения %{when}"
       removed_user: "Исключил %{who} %{when}"
       removed_group: "Исключил %{who} %{when}"
       autoclosed:
@@ -177,6 +179,7 @@ ru:
         disabled: 'Исключил из списков %{when}'
       banner:
         enabled: 'создал(а) из этого баннер %{when}. Он будет виден вверху каждой страницы пока пользователь не закроет его.'
+        disabled: 'удалил это объявление %{when}. Он больше не будет отображаться в верхней части каждой страницы.'
     topic_admin_menu: "действия администратора над темой"
     wizard_required: "Добро пожаловать в ваш новый Discourse! Начните с <a href='%{url}' data-auto-route='true'>мастера настройки</a> ✨"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Уведомления любого вида не будут отправляться на почту."
@@ -203,6 +206,7 @@ ru:
     not_implemented: "Извините, эта функция еще не реализована!"
     no_value: "Нет"
     yes_value: "Да"
+    submit: "Представлять"
     generic_error: "Извините, произошла ошибка."
     generic_error_with_reason: "Произошла ошибка: %{error}"
     sign_up: "Зарегистрироваться"
@@ -278,6 +282,21 @@ ru:
       last_read: "это последнее прочитанное вами сообщение; нажмите, чтобы добавить его в закладки"
       remove: "Удалить закладку"
       confirm_clear: "Вы уверены, что хотите удалить все эти темы из Избранного?"
+    topic_count_latest:
+      one: "Есть {{count}} новая или обновленная тема"
+      few: "Есть {{count}} новых или обновленных тем"
+      many: "Есть {{count}} новых или обновленных тем"
+      other: "Есть {{count}} новых или обновленных тем"
+    topic_count_unread:
+      one: "Посмотреть {{count}} непрочитанную тему"
+      few: "Посмотреть {{count}} непрочитанных тем"
+      many: "Посмотреть {{count}} непрочитанных тем"
+      other: "Посмотреть {{count}} непрочитанных тем"
+    topic_count_new:
+      one: "Посмотреть {{count}} новую тему"
+      few: "Посмотреть {{count}} новые темы"
+      many: "Посмотреть {{count}} новые темы"
+      other: "Посмотреть {{count}} новые темы"
     preview: "предпросмотр"
     cancel: "отмена"
     save: "Сохранить"
@@ -290,6 +309,7 @@ ru:
     pasting: "Вставка..."
     enable: "Включить"
     disable: "Отключить"
+    continue: "Продолжать"
     undo: "Отменить"
     revert: "Вернуть"
     failed: "Проблема"
@@ -373,22 +393,21 @@ ru:
         make_user_group_owner: "Сделать владельцем"
         remove_user_as_group_owner: "Лишить прав владельца"
     groups:
-      logs:
-        title: "Логи"
-        when: "Когда"
-        action: "Действие"
-        acting_user: "Действующий пользователь"
-        target_user: "Целевой пользователь"
-        subject: "Тема"
-        details: "Подробности"
-        from: "От"
-        to: "Кому"
-      edit:
-        title: 'Редактировать Группу'
-        full_name: 'Полное Имя'
-        add_members: "Добавить Участников"
-        delete_member_confirm: "Удалить '%{username}' из группы '%{group}'?"
-      name_placeholder: "Название группы, без пробелов, по тем же правилам, что и для псевдонимов."
+      add_members:
+        usernames: "Псевдоним"
+      manage:
+        name: 'Имя'
+        full_name: 'Полное имя'
+        add_members: "Добавить участника"
+        delete_member_confirm: "Удалить '%{username}' из '%{group}' группы?"
+        profile:
+          title: Профиль
+        interaction:
+          notification: Уведомление
+        logs:
+          title: "Логи"
+          when: "Когда"
+          details: "Подробности"
       public_admission: "Разрешить пользователям свободно присоединяться к группе (требуется общедоступная группа)"
       public_exit: "Разрешить пользователям свободно покидать группу"
       empty:
@@ -399,47 +418,63 @@ ru:
         topics: "Нет тем от участников этой группы."
         logs: "Нет логов для этой группы."
       add: "Добавить"
-      join: "Вступить в Группу"
-      leave: "Покинуть Группу"
-      request: "Попроситься в Группу"
       message: "Сообщение"
-      automatic_group: Автоматическая Группа
-      is_group_user: "Вы участник этой группы"
       allow_membership_requests: "Разрешить пользователям отправлять запросы на вступление в группу владельцев"
       membership_request:
         submit: "Подтвердить запрос"
         title: "Запрос на вступление в группу %{group_name}"
       membership: "Участие"
       name: "Название"
+      group_name: "Название группы"
+      user_count: "Пользователи"
       bio: "О Группе"
+      selector_placeholder: "введите псевдоним"
       owner: "владелец"
       index:
         title: "Группы"
+        all: "Все Группы"
         empty: "Нет видимых групп."
+        filter: "Фильтр по типу группы"
+        all_groups: "Все Группы"
+        close_groups: "Закрытая группа"
+        automatic_groups: "Автоматические Группы"
+        automatic: "Автоматическая"
+        closed: "Закрыто"
+        public: "Публичный"
+        private: "Закрытый"
+        public_groups: "Публичные Группы"
+        automatic_group: Автоматическая группа
+        close_group: Закрытая группа
+        my_groups: "Мои Группы"
+        group_type: "Тип группы"
+        is_group_user: "Участник"
+        is_group_owner: "Владелец"
       title:
         one: "Группа"
         few: "Группы"
         many: "Группы"
         other: "Группы"
       activity: "Деятельность"
+      members:
+        title: "Участники"
+        filter_placeholder_admin: "псевдоним или e-mail"
+        filter_placeholder: "псевдоним"
+        remove_member: "Удалить Пользователя"
+        remove_member_description: "Удалить <b>%{username}</b> из группы"
+        make_owner: "Сделать Владельцем"
+        remove_owner: "Удалить Владельца"
       topics: "Темы"
       posts: "Сообщения"
       mentions: "Упоминания"
       messages: "Сообщения"
-      visibility_levels:
-        title: "Кто может видеть эту группу?"
-        public: "Все"
-        members: "Владельцы группы, участники и администраторы"
-        owners: "Владельцы группы и администраторы"
+      notification_level: "Уровень уведомлений по умолчанию для сообщений группы"
       alias_levels:
+        messageable: "Кто может писать сообщить в эту группу?"
         nobody: "Никто"
         only_admins: "Только администраторы"
         mods_and_admins: "Только модераторы и администраторы"
         members_mods_and_admins: "Только члены группы, модераторы и администраторы"
         everyone: "Все"
-      trust_levels:
-        title: "Уровень доверия участника при создании:"
-        none: "(Нет)"
       notifications:
         watching:
           title: "Наблюдать"
@@ -464,7 +499,6 @@ ru:
       flair_color_placeholder: "(Необязательно) Hex-код цвета"
       flair_preview_icon: "Иконка Предпросмотра"
       flair_preview_image: "Изображение Предпросмотра"
-      flair_note: "Внимание: Флаер будет показываться только основной группе пользователей."
     user_action_groups:
       '1': "Выразил симпатий"
       '2': "Получил симпатий"
@@ -555,6 +589,7 @@ ru:
         disable: "Отключить оповещения"
         enable: "Включить оповещения"
         each_browser_note: "Примечание: эта настройка устанавливается в каждом браузере индивидуально."
+      dismiss: 'Отложить'
       dismiss_notifications: "Отложить все"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
       first_notification: "Ваше первое уведомление! Выберите его, чтобы начать."
@@ -637,6 +672,7 @@ ru:
         move_to_archive: "Архив"
         failed_to_move: "Невозможно переместить выделенные сообщения (возможно, у вас проблемы с Интернетом)"
         select_all: "Выбрать все"
+        tags: "Тэги"
       preferences_nav:
         account: "Учётная запись"
         profile: "Профиль"
@@ -654,6 +690,9 @@ ru:
         set_password: "Установить пароль"
         choose_new: "Выберите новый пароль"
         choose: "Выберите пароль"
+      second_factor:
+        title: "Двухфакторная аутентификация"
+        disable: "Отключить двухфакторную аутентификацию"
       change_about:
         title: "Изменить информацию обо мне"
         error: "При изменении значения произошла ошибка."
@@ -951,6 +990,8 @@ ru:
     first_post: Первое сообщение
     mute: Отключить
     unmute: Включить
+    last_post: Дата
+    time_read: Прочитанные
     last_reply_lowercase: последний ответ
     replies_lowercase:
       one: ответ
@@ -1009,10 +1050,13 @@ ru:
       title: "Войти"
       username: "Пользователь"
       password: "Пароль"
+      second_factor_title: "Двухфакторная аутентификация"
+      second_factor_description: "Пожалуйста, введите код аутентификации из вашего приложения:"
       email_placeholder: "E-mail или псевдоним"
       caps_lock_warning: "Caps Lock включен"
       error: "Неизвестная ошибка"
       rate_limit: "Сделайте перерыв перед очередной попыткой войти."
+      blank_username: "Введите ваш e-mail  или псевдоним."
       blank_username_or_password: "Введите ваш e-mail (или псевдоним) и пароль."
       reset_password: 'Сброс пароля'
       logging_in: "Проверка..."
@@ -1099,6 +1143,8 @@ ru:
       objects: Objects
       celebration: Celebration
       recent: Недавно использованные
+    shared_drafts:
+      title: "Общие Черновики"
     composer:
       emoji: "Смайлики :)"
       more_emoji: "еще..."
@@ -1133,6 +1179,7 @@ ru:
         post_length: "Сообщение должно быть не короче {{min}} символов"
         try_like: 'Пробовали ли вы выразить симпатию с помощью кнопки <i class="fa fa-heart"></i> ?'
         category_missing: "Нужно выбрать раздел"
+        tags_missing: "Необходимо выбрать по крайней мере {{count}} тег"
       save_edit: "Сохранить"
       reply_original: "Ответ в первоначальной теме"
       reply_here: "Ответить в текущей теме"
@@ -1141,6 +1188,7 @@ ru:
       create_topic: "Создать тему"
       create_pm: "Отправить личное сообщение"
       create_whisper: "Внутреннее сообщение"
+      create_shared_draft: "Создать Общий Проект"
       title: "Или нажмите Ctrl+Enter"
       users_placeholder: "Добавить пользователя"
       title_placeholder: "Название: суть темы коротким предложением"
@@ -1197,6 +1245,8 @@ ru:
           label: Ответить на тему
         create_topic:
           label: "Новая тема"
+        shared_draft:
+          label: "Общий Проект"
     notifications:
       tooltip:
         regular:
@@ -1221,26 +1271,13 @@ ru:
         few: "{{count}} сообщений в вашей группе: {{group_name}} "
         many: "{{count}} сообщений в вашей группе: {{group_name}} "
         other: "{{count}} сообщений в вашей группе: {{group_name}} "
-      alt:
-        mentioned: "Упомянуто"
-        quoted: "Процитировано пользователем"
-        replied: "Ответил"
-        posted: "Опубликовано"
-        edited: "Изменил ваше сообщение"
-        liked: "Понравилось ваше сообщение"
-        private_message: "Личное сообщение от"
-        invited_to_topic: "Приглашение в тему от"
-        invitee_accepted: "Приглашение принято"
-        moved_post: "Ваша тема перенесена участником "
-        linked: "Ссылка на ваше сообщение"
-        granted_badge: "Награда получена от"
-        group_message_summary: "Входящие сообщения группы"
       popup:
         mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
         quoted: '{{username}} процитировал Вас в "{{topic}}" - {{site_title}}'
         replied: '{{username}} ответил вам в "{{topic}}" - {{site_title}}'
         posted: '{{username}} написал в "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} отправил вам личное сообщение в "{{topic}}" - {{site_title}}'
         linked: '{{username}} ссылается на ваш пост в теме: "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Add an image"
@@ -1303,6 +1340,7 @@ ru:
           unpinned: Не закреплены
           unseen: Отметить непрочитанным
           wiki: Являются вики
+          all_tags: Все вышеуказанные теги
         statuses:
           label: Характеристика темы
           open: Открыта
@@ -1396,6 +1434,8 @@ ru:
       move_to_inbox:
         title: 'Переместить во входящие'
         help: 'Переместить сообщение во входящие'
+      edit_message:
+        title: 'Редактировать сообщение'
       list: 'Темы'
       new: 'новая тема'
       unread: 'непрочитанно'
@@ -1454,10 +1494,15 @@ ru:
       jump_reply_down: перейти к более поздним ответам
       deleted: "Тема удалена"
       auto_update_input:
+        tomorrow: "Завтра"
         later_this_week: "Позже на этой неделе"
         this_weekend: "В эти выходные"
         next_week: "На следующей неделе"
+        two_weeks: "Две недели"
         next_month: "В следующем месяце"
+        three_months: "Три месяца"
+        six_months: "Шесть месяцев"
+        one_year: "Один год"
         forever: "Навсегда"
         pick_date_and_time: "Выбрать дату и время"
       temp_open:
@@ -1953,7 +1998,7 @@ ru:
       topic_template: "Шаблон темы"
       tags: "Тэги"
       tags_allowed_tags: "Разрешить использовать в этом разделе только следующие метки:"
-      tags_allowed_tag_groups: "Разрешить использовать в этом разделе только метки из этих групп:"
+      tags_allowed_tag_groups: "Разрешить использовать в этом разделе только теги из этих групп:"
       tags_placeholder: "(Необязательно) список доступных тегов"
       tag_groups_placeholder: "(Необязательно) список доступных групп тегов"
       topic_featured_link_allowed: "Разрешить популярные ссылки в этой категории"
@@ -2002,6 +2047,7 @@ ru:
       default_position: "Позиция по умолчанию"
       position_disabled: "Разделы будут показаны в порядке активности. Чтобы настроить порядок разделов,"
       position_disabled_click: 'включите настройку "fixed category positions".'
+      minimum_required_tags: 'Минимальное количество тегов, требуемых в теме:'
       parent: "Родительский раздел"
       notifications:
         watching:
@@ -2355,7 +2401,7 @@ ru:
       </p>
     tagging:
       all_tags: "Все теги"
-      other_tags: "Изменить тэги"
+      other_tags: "Изменить теги"
       selector_all_tags: "Все теги"
       selector_no_tags: "Нет тегов"
       changed: "Теги изменены:"
@@ -2405,6 +2451,7 @@ ru:
         save: "Сохранить"
         delete: "Удалить"
         confirm_delete: "Вы уверены, что хотите удалить эту группу тегов?"
+        visible_only_to_staff: "Теги видны только персоналу"
       topics:
         none:
           unread: "Нет непрочитанных тем."
@@ -2562,7 +2609,6 @@ ru:
         title: "Группы"
         edit: "Управление группами"
         refresh: "Обновить"
-        new: "Добавить новую"
         about: "Здесь можно редактировать группы и имена групп"
         group_members: "Участники группы"
         delete: "Удалить"
@@ -2570,22 +2616,11 @@ ru:
         delete_failed: "Невозможно удалить группу. Если группа была создана автоматически, то она не может быть удалена."
         delete_owner_confirm: "Отозвать права владельца у пользователя '%{username}'?"
         add: "Добавить"
-        add_members: "Добавить участников"
         custom: "Настраиваемые"
-        bulk_complete: "Пользователи успешно добавлены в группу."
-        bulk_complete_users_not_added: "Эти пользователи не были добавлены (убедитесь, что у них есть учётная запись):"
-        bulk: "Массовое добавление в группу"
-        bulk_paste: "Впишите список пользователей или адресов e-mail, по одному на строчку:"
-        bulk_select: "(выберите группу)"
         automatic: "Автоматические"
-        automatic_membership_email_domains: "Пользователи, которые регистрируются с доменом электронной почты из этого списка, будут автоматически добавлены в группу:"
-        automatic_membership_retroactive: "Добавить в группу уже сущетсвующих зарегестрированных пользователей по этому правилу домена электронной почты"
         default_title: "Заголовок по умолчанию для всех пользователей в группе"
-        primary_group: "Автоматически использовать в качестве основной группы"
         group_owners: Владельцы
         add_owners: Добавить владельцев
-        incoming_email: "Специальный входящий адрес e-mail"
-        incoming_email_placeholder: "введите e-mail"
         none_selected: "Чтобы начать, выберите группу!"
         no_custom_groups: "Создать новую кастомную группу"
       api:
@@ -2793,6 +2828,7 @@ ru:
           common: "Общее"
           desktop: "Настольный"
           mobile: "Мобильный"
+          settings: "Настройки"
           preview: "Предпросмотр"
           is_default: "Активировать по умолчанию"
           user_selectable: "Пользователи могут выбирать стиль"
@@ -2821,6 +2857,7 @@ ru:
           updating: "Обновляю..."
           up_to_date: "Стиль текущей версии, последняя проверка:"
           add: "Добавить"
+          theme_settings: "Настройки темы"
           commits_behind:
             one: "Тема находится на 1 коммит сзади!"
             few: "Тема находится на {{count}} коммитов сзади!"
@@ -3236,6 +3273,7 @@ ru:
         private_topics_count: Частные темы
         posts_read_count: Прочитано сообщений
         post_count: Создано сообщений
+        second_factor_enabled: Двухфакторная аутентификация включена
         topics_entered: Просмотрено тем
         flags_given_count: Отправлено жалоб
         flags_received_count: Получено жалоб

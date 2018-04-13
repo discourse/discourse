@@ -20,6 +20,12 @@ export default SelectKitRowComponent.extend({
     return displayCategoryDescription;
   },
 
+  @computed("description", "category.name")
+  title(categoryDescription, categoryName) {
+    if (categoryDescription) return categoryDescription;
+    return categoryName;
+  },
+
   @computed("computedContent.value", "computedContent.name")
   category(value, name) {
     if (Ember.isEmpty(value)) {
@@ -76,6 +82,8 @@ export default SelectKitRowComponent.extend({
 
   @computed("category.description")
   description(description) {
-    return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    if (description) {
+      return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    }
   }
 });

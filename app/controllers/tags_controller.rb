@@ -44,7 +44,10 @@ class TagsController < ::ApplicationController
             extras: { tag_groups: grouped_tag_counts }
           }
         else
-          unrestricted_tags = Tag.where("tags.id NOT IN (select tag_id from category_tags) AND tags.topic_count > 0")
+          unrestricted_tags = DiscourseTagging.filter_visible(
+            Tag.where("tags.id NOT IN (select tag_id from category_tags) AND tags.topic_count > 0"),
+            guardian
+          )
 
           categories = Category.where("id in (select category_id from category_tags)")
             .where("id in (?)", guardian.allowed_category_ids)
@@ -107,6 +110,7 @@ class TagsController < ::ApplicationController
     tag.name = new_tag_name
     if tag.save
       StaffActionLogger.new(current_user).log_custom('renamed_tag', previous_value: params[:tag_id], new_value: new_tag_name)
+      DiscourseEvent.trigger(:tag_updated, tag)
       render json: { tag: { id: new_tag_name } }
     else
       render_json_error tag.errors.full_messages

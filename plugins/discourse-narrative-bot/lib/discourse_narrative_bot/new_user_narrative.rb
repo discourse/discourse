@@ -182,8 +182,13 @@ module DiscourseNarrativeBot
       #{instance_eval(&@next_instructions)}
       RAW
 
+      title = I18n.t("#{I18N_KEY}.hello.title", title: SiteSetting.title)
+      if SiteSetting.max_emojis_in_title == 0
+        title = title.gsub(/:([\w\-+]+(?::t\d)?):/, '').strip
+      end
+
       opts = {
-        title: I18n.t("#{I18N_KEY}.hello.title", title: SiteSetting.title),
+        title: title,
         target_usernames: @user.username,
         archetype: Archetype.private_message,
         subtype: TopicSubtype.system_message,

@@ -5,10 +5,36 @@ describe User do
   let(:user) { Fabricate(:user) }
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :username }
-    it { is_expected.to validate_presence_of :primary_email }
+    describe '#username' do
+      it { is_expected.to validate_presence_of :username }
+
+      describe 'when username already exists' do
+        it 'should not be valid' do
+          new_user = Fabricate.build(:user, username: user.username.upcase)
+
+          expect(new_user).to_not be_valid
+
+          expect(new_user.errors.full_messages.first)
+            .to include(I18n.t(:'user.username.unique'))
+        end
+      end
+
+      describe 'when group with a same name already exists' do
+        it 'should not be valid' do
+          group = Fabricate(:group)
+          new_user = Fabricate.build(:user, username: group.name.upcase)
+
+          expect(new_user).to_not be_valid
+
+          expect(new_user.errors.full_messages.first)
+            .to include(I18n.t(:'user.username.unique'))
+        end
+      end
+    end
 
     describe 'emails' do
+      it { is_expected.to validate_presence_of :primary_email }
+
       let(:user) { Fabricate.build(:user) }
 
       describe 'when record has a valid email' do

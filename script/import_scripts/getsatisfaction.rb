@@ -15,6 +15,10 @@
 #
 # You need to call fix_quotes_in_csv() for CSV files that use \" to escape quotes within quoted fields.
 # The import script expects quotes to be escaped with "".
+#
+# It's likely that some posts in replies.csv aren't in the correct order. Currently the import script doesn't handle
+# that correctly and will import the replies in the wrong order.
+# You should run `rake posts:reorder_posts` after the import.
 
 require 'csv'
 require 'set'

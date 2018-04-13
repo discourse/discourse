@@ -34,6 +34,24 @@ describe Migration::SafeMigrate do
 
     expect(output).to include("TableDropper")
 
+    expect { User.first }.not_to raise_error
+    expect(User.first).not_to eq(nil)
+  end
+
+  it "bans all table renames" do
+    Migration::SafeMigrate.enable!
+
+    path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/rename_table"
+
+    output = capture_stdout do
+      expect(lambda do
+        ActiveRecord::Migrator.up([path])
+      end).to raise_error(StandardError)
+    end
+
+    expect(output).to include("TableDropper")
+
+    expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
   end
 
@@ -51,6 +69,7 @@ describe Migration::SafeMigrate do
     expect(output).to include("ColumnDropper")
 
     expect(User.first).not_to eq(nil)
+    expect { User.first.username }.not_to raise_error
   end
 
   it "bans all column renames" do
@@ -67,6 +86,7 @@ describe Migration::SafeMigrate do
     expect(output).to include("ColumnDropper")
 
     expect(User.first).not_to eq(nil)
+    expect { User.first.username }.not_to raise_error
   end
 
   it "supports being disabled" do

@@ -13,9 +13,10 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
   counts: null,
   showing: 'members',
+  destroying: null,
 
-  @computed('showMessages', 'model.user_count')
-  tabs(showMessages, userCount) {
+  @computed('showMessages', 'model.user_count', 'canManageGroup')
+  tabs(showMessages, userCount, canManageGroup) {
     const membersTab = Tab.create({
       name: 'members',
       route: 'group.index',
@@ -36,15 +37,12 @@ export default Ember.Controller.extend({
       }));
     }
 
-    if (this.currentUser && this.currentUser.canManageGroup(this.model)) {
-      defaultTabs.push(...[
+    if (canManageGroup) {
+      defaultTabs.push(
         Tab.create({
-          name: 'edit', i18nKey: 'edit.title', icon: 'pencil'
-        }),
-        Tab.create({
-          name: 'logs', i18nKey: 'logs.title', icon: 'list-alt'
+          name: 'manage', i18nKey: 'manage.title', icon: 'wrench'
         })
-      ]);
+      );
     }
 
     return defaultTabs;
@@ -84,14 +82,40 @@ export default Ember.Controller.extend({
     return this.currentUser && messageable;
   },
 
-  @computed('model')
-  canManageGroup(model) {
-    return this.currentUser && this.currentUser.canManageGroup(model);
+  @computed('model', 'model.automatic')
+  canManageGroup(model, automatic) {
+    return this.currentUser && (
+      this.currentUser.canManageGroup(model) ||
+      (this.currentUser.admin && automatic)
+    );
   },
 
   actions: {
     messageGroup() {
       this.send('createNewMessageViaParams', this.get('model.name'));
-    }
+    },
+
+    destroy() {
+      const group = this.get('model');
+      this.set('destroying', true);
+
+      bootbox.confirm(
+        I18n.t("admin.groups.delete_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        confirmed => {
+          if (confirmed) {
+            group.destroy().then(() => {
+              this.transitionToRoute('groups.index');
+            }).catch(error => {
+              Ember.Logger.error(error);
+              bootbox.alert(I18n.t("admin.groups.delete_failed"));
+            }).finally(() => this.set('destroying', false));
+          } else {
+            this.set('destroying', false);
+          }
+        }
+      );
+    },
   }
 });

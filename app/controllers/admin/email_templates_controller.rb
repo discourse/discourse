@@ -17,6 +17,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
                      "system_messages.email_reject_screened_email",
                      "system_messages.email_reject_unrecognized_error",
                      "system_messages.pending_users_reminder", "system_messages.post_hidden",
+                     "system_messages.post_hidden_again",
                      "system_messages.restore_failed", "system_messages.restore_succeeded",
                      "system_messages.spam_post_blocked", "system_messages.too_many_spam_flags",
                      "system_messages.unsilenced", "system_messages.user_automatically_silenced",

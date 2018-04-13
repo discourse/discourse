@@ -35,6 +35,7 @@ module FlagQuery
              p.user_id,
              p.topic_id,
              p.post_number,
+             p.reply_count,
              p.hidden,
              p.deleted_at,
              p.user_deleted,

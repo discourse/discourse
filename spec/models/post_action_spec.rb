@@ -418,11 +418,16 @@ describe PostAction do
       post = create_post
       walterwhite = Fabricate(:walter_white)
 
+      SiteSetting.queue_jobs = true
       SiteSetting.flags_required_to_hide_post = 2
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:spam])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden")
 
       post.reload
 
@@ -442,6 +447,10 @@ describe PostAction do
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden_again")
 
       post.reload
 
@@ -701,4 +710,36 @@ describe PostAction do
     end
   end
 
+  describe "triggers webhook events" do
+    let(:post) { Fabricate(:post) }
+
+    it 'flag created' do
+      event = DiscourseEvent.track_events { PostAction.act(eviltrout, post, PostActionType.types[:spam]) }.last
+      expect(event[:event_name]).to eq(:flag_created)
+    end
+
+    context "resolving flags" do
+      before do
+        @flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      end
+
+      it 'flag agreed' do
+        event = DiscourseEvent.track_events { PostAction.agree_flags!(post, moderator) }.last
+        expect(event[:event_name]).to eq(:flag_agreed)
+        expect(event[:params].first).to eq(@flag)
+      end
+
+      it 'flag disagreed' do
+        event = DiscourseEvent.track_events { PostAction.clear_flags!(post, moderator) }.last
+        expect(event[:event_name]).to eq(:flag_disagreed)
+        expect(event[:params].first).to eq(@flag)
+      end
+
+      it 'flag deferred' do
+        event = DiscourseEvent.track_events { PostAction.defer_flags!(post, moderator) }.last
+        expect(event[:event_name]).to eq(:flag_deferred)
+        expect(event[:params].first).to eq(@flag)
+      end
+    end
+  end
 end

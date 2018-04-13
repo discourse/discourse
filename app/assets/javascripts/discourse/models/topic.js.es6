@@ -488,6 +488,14 @@ const Topic = RestModel.extend({
     }).catch(popupAjaxError);
   },
 
+  updateDestinationCategory(categoryId) {
+    this.set('destination_category_id', categoryId);
+    return ajax(`/t/${this.get('id')}/shared-draft`, {
+      method: 'PUT',
+      data: { category_id: categoryId }
+    });
+  },
+
   convertTopic(type) {
     return ajax(`/t/${this.get('id')}/convert-topic/${type}`, {type: 'PUT'}).then(() => {
       window.location.reload();

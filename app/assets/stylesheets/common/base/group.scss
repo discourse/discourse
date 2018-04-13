@@ -2,6 +2,26 @@
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
   margin-bottom: 15px;
+  position: relative;
+}
+
+.group-outlet {
+  position: relative;
+}
+
+.group-members-actions {
+  position: absolute;
+  top: -49px;
+  right: 0px;
+
+  .group-username-filter {
+    margin: 0px;
+    vertical-align: middle;
+  }
+
+  .group-members-dropdown, .group-members-add {
+    vertical-align: middle;
+  }
 }
 
 .group-post {
@@ -78,7 +98,7 @@
   }
 }
 
-.group-logs-filter {
+.group-manage-logs-filter {
   margin-right: 10px;
 
   &:hover {
@@ -86,7 +106,7 @@
   }
 }
 
-table.group-logs {
+table.group-manage-logs {
   width: 100%;
 
   th, tr {
@@ -102,7 +122,7 @@ table.group-logs {
     padding: 10px 0;
   }
 
-  .group-logs-expand-details {
+  .group-manage-logs-expand-details {
     cursor: pointer;
 
     i {
@@ -120,7 +140,7 @@ table.group-members {
   }
 
   th:first-child {
-    width: 60%;
+    width: 30%;
     text-align: left;
   }
 
@@ -172,23 +192,9 @@ table.group-members {
   color: $primary;
 }
 
-.form-horizontal {
+.form-vertical {
   .group-flair-inputs {
     display: inline-block;
-
-    input[type="text"] {
-      width: 80% !important;
-      margin-bottom: 10px;
-    }
-
-    .group-flair-left {
-      float: left;
-    }
-
-    .group-flair-right {
-      float: left;
-      margin-left: 30px;
-    }
   }
 
   .avatar-flair-preview {
@@ -201,24 +207,12 @@ table.group-members {
   }
 }
 
-.group-edit {
-  .form-horizontal {
-    label {
-      font-weight: bold;
-    }
-  }
+.group-form-save {
+  margin-right: 20px;
 }
 
-.group-membership {
-  .ac-wrap {
-    width: 100% !important;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  .group-membership-make-owner {
+.group-add-members {
+  .group-add-members-make-owner {
     label {
       display: inline;
       vertical-align: middle;

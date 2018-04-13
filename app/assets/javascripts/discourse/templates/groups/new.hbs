@@ -1,0 +1,41 @@
+{{#d-section pageClass="groups-new"}}
+  <h1>{{i18n "admin.groups.new.title"}}</h1>
+
+  <hr/>
+
+  <form class="groups-form form-vertical">
+    {{#groups-form-profile-fields model=model disableSave=saving}}
+      <div class="control-group">
+        <label class="control-label" for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
+
+        {{user-selector usernames=model.ownerUsernames
+            class="input-xxlarge"
+            placeholderKey="groups.selector_placeholder"
+            id="owner-selector"}}
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="member-selector">{{i18n 'groups.members.title'}}</label>
+
+        {{user-selector usernames=model.usernames
+            class="input-xxlarge"
+            placeholderKey="groups.selector_placeholder"
+            id="member-selector"}}
+      </div>
+    {{/groups-form-profile-fields}}
+
+    {{groups-form-membership-fields model=model}}
+    {{groups-form-interaction-fields model=model}}
+
+    <div class='control-group buttons'>
+      {{d-button action="save"
+          disabled=saving
+          class='btn btn-primary group-form-save'
+          label="admin.groups.new.create"}}
+
+      {{#link-to "groups"}}
+        {{i18n 'cancel'}}
+      {{/link-to}}
+    </div>
+  </form>
+{{/d-section}}

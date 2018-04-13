@@ -117,6 +117,14 @@ class TopicsController < ApplicationController
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
 
+    # provide hint to crawlers only for now
+    # we would like to give them a bit more signal about age of data
+    if use_crawler_layout?
+      if last_modified = @topic_view.posts&.map { |p| p.updated_at }&.max&.httpdate
+        response.headers['Last-Modified'] = last_modified
+      end
+    end
+
     perform_show_response
 
   rescue Discourse::InvalidAccess => ex
@@ -668,9 +676,10 @@ class TopicsController < ApplicationController
       raise ActionController::ParameterMissing.new(:topic_ids)
     end
 
-    operation = params.require(:operation)
-    operation.permit!
-    operation = operation.to_h.symbolize_keys
+    operation = params
+      .require(:operation)
+      .permit(:type, :group, :category_id, :notification_level_id, tags: [])
+      .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])

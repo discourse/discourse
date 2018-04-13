@@ -15,7 +15,7 @@
     {{tag-chooser
       tags=model.parent_tag_name
       everyTag=true
-      limit=1
+      maximum=1
       allowCreate=true
       filterPlaceholder="tagging.groups.parent_tag_placeholder"}}
     <span class="description">{{i18n 'tagging.groups.parent_tag_description'}}</span>
@@ -25,6 +25,13 @@
     <label>
       {{input type="checkbox" checked=model.one_per_topic name="onepertopic"}}
       {{i18n 'tagging.groups.one_per_topic_label'}}
+    </label>
+  </section>
+
+  <section class="group-visibility">
+    <label>
+      {{input type="checkbox" checked=model.visible_only_to_staff name="visible_only_to_staff"}}
+      {{i18n 'tagging.groups.visible_only_to_staff'}}
     </label>
   </section>
 

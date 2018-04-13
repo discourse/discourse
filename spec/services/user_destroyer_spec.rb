@@ -125,17 +125,10 @@ describe UserDestroyer do
           @user.stubs(:first_post_created_at).returns(Time.zone.now)
         end
 
-        it 'should not delete the user' do
-          expect { destroy rescue nil }.to_not change { User.count }
-        end
-
-        it 'should raise an error' do
-          expect { destroy }.to raise_error(UserDestroyer::PostsExistError)
-        end
-
-        it 'should not log the action' do
+        it 'should raise the right error' do
           StaffActionLogger.any_instance.expects(:log_user_deletion).never
-          destroy rescue nil
+          expect { destroy }.to raise_error(UserDestroyer::PostsExistError)
+          expect(user.reload.id).to be_present
         end
       end
 

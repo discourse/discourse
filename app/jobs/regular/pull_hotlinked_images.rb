@@ -24,7 +24,7 @@ module Jobs
           follow_redirect: true
         )
       rescue
-        if (retries -= 1) > 0
+        if (retries -= 1) > 0 && !Rails.env.test?
           sleep 1
           retry
         end
@@ -47,9 +47,9 @@ module Jobs
 
       downloaded_urls = {}
 
-      large_images = JSON.parse(post.custom_fields[Post::LARGE_IMAGES].presence || "[]") rescue []
-      broken_images = JSON.parse(post.custom_fields[Post::BROKEN_IMAGES].presence || "[]") rescue []
-      downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}") rescue {}
+      large_images = JSON.parse(post.custom_fields[Post::LARGE_IMAGES].presence || "[]")
+      broken_images = JSON.parse(post.custom_fields[Post::BROKEN_IMAGES].presence || "[]")
+      downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
 
       has_new_large_image  = false
       has_new_broken_image = false
@@ -62,7 +62,9 @@ module Jobs
         if is_valid_image_url(src)
           begin
             # have we already downloaded that file?
-            unless downloaded_images.include?(src) || large_images.include?(src) || broken_images.include?(src)
+            schemeless_src = remove_scheme(original_src)
+
+            unless downloaded_images.include?(schemeless_src) || large_images.include?(schemeless_src) || broken_images.include?(schemeless_src)
               if hotlinked = download(src)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
@@ -70,17 +72,17 @@ module Jobs
                   upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
-                    downloaded_images[src.sub(/^https?:/i, "")] = upload.id
+                    downloaded_images[remove_scheme(src)] = upload.id
                     has_downloaded_image = true
                   else
                     log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
                   end
                 else
-                  large_images << original_src.sub(/^https?:/i, "")
+                  large_images << remove_scheme(original_src)
                   has_new_large_image = true
                 end
               else
-                broken_images << original_src.sub(/^https?:/i, "")
+                broken_images << remove_scheme(original_src)
                 has_new_broken_image = true
               end
             end
@@ -170,6 +172,11 @@ module Jobs
       )
     end
 
+    private
+
+      def remove_scheme(src)
+        src.sub(/^https?:/i, "")
+      end
   end
 
 end

@@ -197,11 +197,7 @@ module ImportScripts::Mbox
     end
 
     def extract_reply_message_ids(mail)
-      message_ids = [mail.in_reply_to, Email::Receiver.extract_references(mail.references)]
-      message_ids.flatten!
-      message_ids.select!(&:present?)
-      message_ids.uniq!
-      message_ids.first(20)
+      Email::Receiver.extract_reply_message_ids(mail, max_message_id_count: 20)
     end
 
     def extract_subject(receiver, list_name)

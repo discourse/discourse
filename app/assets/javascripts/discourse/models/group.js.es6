@@ -124,16 +124,21 @@ const Group = RestModel.extend({
     return mentionableLevel === '99';
   },
 
+  @computed("visibility_level")
+  isPrivate(visibilityLevel) {
+    return visibilityLevel !== 0;
+  },
+
   @observes("visibility_level", "canEveryoneMention")
   _updateAllowMembershipRequests() {
-    if (this.get('visibility_level') !== 0 || !this.get('canEveryoneMention')) {
+    if (this.get('isPrivate') || !this.get('canEveryoneMention')) {
       this.set ('allow_membership_requests', false);
     }
   },
 
   @observes("visibility_level")
   _updatePublic() {
-    if (this.get('visibility_level') !== 0) {
+    if (this.get('isPrivate')) {
       this.set('public', false);
       this.set('allow_membership_requests', false);
     }
@@ -185,10 +190,7 @@ const Group = RestModel.extend({
   },
 
   save() {
-    const id = this.get('id');
-    const url = this.get('is_group_owner') ? `/groups/${id}` : `/admin/groups/${id}`;
-
-    return ajax(url, {
+    return ajax(`/groups/${this.get('id')}`, {
       type: "PUT",
       data: { group: this.asJSON() }
     });
@@ -248,10 +250,6 @@ Group.reopenClass({
     return ajax("/groups/search.json", { data: opts }).then(groups => {
       return groups.map(g => Group.create(g));
     });
-  },
-
-  find(name) {
-    return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
   },
 
   loadMembers(name, offset, limit, params) {

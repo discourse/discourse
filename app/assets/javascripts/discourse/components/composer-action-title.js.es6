@@ -1,11 +1,19 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
-import { PRIVATE_MESSAGE, CREATE_TOPIC, CREATE_SHARED_DRAFT, REPLY, EDIT } from "discourse/models/composer";
+import {
+  PRIVATE_MESSAGE,
+  CREATE_TOPIC,
+  CREATE_SHARED_DRAFT,
+  REPLY,
+  EDIT,
+  EDIT_SHARED_DRAFT
+} from "discourse/models/composer";
 import { iconHTML } from 'discourse-common/lib/icon-library';
 
 const TITLES = {
   [PRIVATE_MESSAGE]: 'topic.private_message',
   [CREATE_TOPIC]: 'topic.create_long',
-  [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft'
+  [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft',
+  [EDIT_SHARED_DRAFT]: 'composer.edit_shared_draft'
 };
 
 export default Ember.Component.extend({

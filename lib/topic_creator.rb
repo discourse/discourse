@@ -24,11 +24,6 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
-    # not sure where this should go
-    if !@guardian.is_staff? && staff_only = DiscourseTagging.staff_only_tags(@opts[:tags])
-      topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_only.join(" "))
-    end
-
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
 
@@ -159,7 +154,19 @@ class TopicCreator
   end
 
   def setup_tags(topic)
-    DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+    if @opts[:tags].blank?
+      unless @guardian.is_staff? || !guardian.can_tag?(topic)
+        # Validate minimum required tags for a category
+        category = find_category
+        if category.present? && category.minimum_required_tags > 0
+          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          rollback_from_errors!(topic)
+        end
+      end
+    else
+      valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+      rollback_from_errors!(topic) unless valid_tags
+    end
   end
 
   def setup_auto_close_time(topic)

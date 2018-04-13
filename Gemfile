@@ -24,8 +24,7 @@ else
   gem 'seed-fu'
 end
 
-gem 'mail'
-gem 'mime-types', require: 'mime/types/columnar'
+gem 'mail', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
@@ -59,7 +58,7 @@ gem 'aws-sdk-s3', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.10'
+gem 'email_reply_trimmer', '0.1.11'
 
 # Forked until https://github.com/toy/image_optim/pull/149 is merged
 gem 'discourse_image_optim', require: 'image_optim'

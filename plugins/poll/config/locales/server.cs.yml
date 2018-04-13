@@ -37,6 +37,7 @@ cs:
     no_polls_associated_with_this_post: "Tento příspěvek nemá žádné hlasování. "
     no_poll_with_this_name: "Tento příspěvek nemá žádné hlasování se jménem <strong>%{name}</strong>. "
     post_is_deleted: "Operaci na smazaném příspěvku nelze provést."
+    user_cant_post_in_topic: "Nemůžete hlasovat, protože v tomto tématu nemůžete odesílat příspěvky."
     topic_must_be_open_to_vote: "Téma musí být otevřené, aby bylo možné hlasovat."
     poll_must_be_open_to_vote: "Hlasování musí být otevřené, aby bylo možné hlasovat."
     topic_must_be_open_to_toggle_status: "Téma musí být otevřené, aby bylo možné změnit status."

@@ -11,6 +11,10 @@
         font-size: $font-0;
         transition: none;
 
+        &.is-none .selected-name {
+          color: inherit;
+        }
+
         .d-icon {
           opacity: 1;
           font-size: $font-0;

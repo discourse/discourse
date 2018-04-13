@@ -110,7 +110,11 @@ class Stylesheet::Manager
       if File.exists?(stylesheet_fullpath)
         unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
           begin
-            source_map = File.read(source_map_fullpath) rescue nil
+            source_map = begin
+              File.read(source_map_fullpath)
+            rescue Errno::ENOENT
+            end
+
             StylesheetCache.add(qualified_target, digest, File.read(stylesheet_fullpath), source_map)
           rescue => e
             Rails.logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"

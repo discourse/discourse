@@ -519,7 +519,7 @@ export default Ember.Controller.extend({
       if (result.responseJson.action === "create_post" || this.get('replyAsNewTopicDraft') || this.get('replyAsNewPrivateMessageDraft')) {
         this.destroyDraft();
       }
-      if (this.get('model.action') === 'edit') {
+      if (this.get('model.editingPost')) {
         this.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
         if (result.responseJson.post.post_number === 1) {
           this.appEvents.trigger('header:update-topic', composer.get('topic'));
@@ -779,8 +779,16 @@ export default Ember.Controller.extend({
 
   @computed('model.categoryId', 'lastValidatedAt')
   categoryValidation(categoryId, lastValidatedAt) {
-    if( !this.siteSettings.allow_uncategorized_topics && !categoryId) {
+    if(!this.siteSettings.allow_uncategorized_topics && !categoryId) {
       return InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
+    }
+  },
+
+  @computed('model.category', 'model.tags', 'lastValidatedAt')
+  tagValidation(category, tags, lastValidatedAt) {
+    const tagsArray = tags || [];
+    if (this.site.get('can_tag_topics') && category && category.get('minimum_required_tags') > tagsArray.length) {
+      return InputValidation.create({ failed: true, reason: I18n.t('composer.error.tags_missing', {count: category.get('minimum_required_tags')}), lastShownAt: lastValidatedAt });
     }
   },
 

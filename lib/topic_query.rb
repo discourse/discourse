@@ -482,17 +482,19 @@ class TopicQuery
     end
 
     def apply_shared_drafts(result, category_id, options)
-      viewing_shared = category_id && category_id == SiteSetting.shared_drafts_category.to_i
+      drafts_category_id = SiteSetting.shared_drafts_category.to_i
+      viewing_shared = category_id && category_id == drafts_category_id
 
       if guardian.can_create_shared_draft?
-        result = result.includes(:shared_draft).references(:shared_draft)
-
         if options[:destination_category_id]
           destination_category_id = get_category_id(options[:destination_category_id])
-          return result.where("shared_drafts.category_id" => destination_category_id)
+          topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
+          return result.where(id: topic_ids)
+        elsif viewing_shared
+          result = result.includes(:shared_draft).references(:shared_draft)
+        else
+          return result.where('topics.category_id != ?', drafts_category_id)
         end
-
-        return result.where("shared_drafts.id IS NULL") unless viewing_shared
       end
 
       result

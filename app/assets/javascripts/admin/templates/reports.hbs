@@ -31,20 +31,10 @@
   {{#if viewingGraph}}
     {{admin-graph model=model}}
   {{else}}
-  <table class='table report'>
-    <tr>
-      <th>{{model.xaxis}}</th>
-      <th>{{model.yaxis}}</th>
-    </tr>
+    {{admin-table-report model=model}}
+  {{/if}}
 
-    {{#each model.dataReversed as |row|}}
-      <tr>
-        <td>{{row.x}}</td>
-        <td>
-          {{row.y}}
-        </td>
-      </tr>
-    {{/each}}
-  </table>
+  {{#if model.relatedReport}}
+    {{admin-table-report model=model.relatedReport}}
   {{/if}}
 {{/conditional-loading-spinner}}

@@ -27,17 +27,33 @@
     width: 100%;
 
     .secondary {
+      background: $secondary;
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
 
       .btn {
-        padding: 3px 12px;
+        padding: 4px 12px;
       }
 
       dl {
         margin: 0;
+        padding: 5px 10px;
+        div {
+          display: inline-flex;
+          align-items: baseline;
+          margin-right: 15px;
+          margin: 4px 0;          
+        }
+      }
+
+      dt, dd {
+        display: inline-flex;
+        align-items: center;
       }
 
       dd {
         padding: 0;
+        margin: 0 15px 0 0;
         overflow: hidden;
         text-overflow: ellipsis;
         color: $primary;
@@ -54,7 +70,7 @@
 
       dt {
         color: $secondary-medium;
-        margin: 0;
+        margin-right: 5px;        
         display: inline-block;
       }
     }

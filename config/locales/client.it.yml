@@ -330,22 +330,6 @@ it:
         make_user_group_owner: "Assegna proprietà"
         remove_user_as_group_owner: "Revoca proprietà"
     groups:
-      logs:
-        title: "Log"
-        when: "Quando"
-        action: "Azione"
-        acting_user: "Utente attore"
-        target_user: "Utente destinatario"
-        subject: "Oggetto"
-        details: "Dettagli"
-        from: "Da"
-        to: "A"
-      edit:
-        title: 'Modifica Gruppo'
-        full_name: 'Nome Completo'
-        add_members: "Aggiungi Membri"
-        delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
-      name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
       public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (Richiede che il gruppo sia visibile a tutti)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
@@ -356,12 +340,7 @@ it:
         topics: "Non ci sono argomenti da membri di questo gruppo."
         logs: "Non ci sono log per questo gruppo."
       add: "Aggiungi"
-      join: "Partecipa al Gruppo"
-      leave: "Abbandona il Gruppo"
-      request: "Richiedi di partecipare al gruppo"
       message: "Messaggio"
-      automatic_group: Gruppo Automatico
-      is_group_user: "Sei un membro di questo gruppo"
       allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
       membership_request_template: "Template personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
       membership_request:
@@ -384,12 +363,6 @@ it:
       mentions: "Menzioni"
       messages: "Messaggi"
       notification_level: "Livello di notifica predefinito per i messaggi di gruppo"
-      visibility_levels:
-        title: "Chi può vedere questo gruppo?"
-        public: "Chiunque"
-        members: "Proprietari del gruppo, membri e amministratori"
-        staff: "Proprietari del gruppo e staff"
-        owners: "Proprietari del gruppo e amministratori"
       alias_levels:
         mentionable: "Chi può @menzionare questo gruppo?"
         messageable: "Chi può inviare messaggi a questo gruppo?"
@@ -398,9 +371,6 @@ it:
         mods_and_admins: "Solo i moderatori e gli amministratori"
         members_mods_and_admins: "Solo i membri del gruppo, i moderatori e gli amministratori"
         everyone: "Tutti"
-      trust_levels:
-        title: "Livello di esperienza automaticamente assegnato ai membri quando vengono aggiunti:"
-        none: "Nessuno"
       notifications:
         watching:
           title: "In osservazione"
@@ -425,7 +395,6 @@ it:
       flair_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_preview_icon: "Anteprima Icona"
       flair_preview_image: "Anteprima Immagine"
-      flair_note: "Nota: Flair sarà mostrato solo per i gruppi primari dell'utente."
     user_action_groups:
       '1': "Mi piace - Assegnati"
       '2': "Mi piace - Ricevuti"
@@ -1179,20 +1148,6 @@ it:
       group_message_summary:
         one: "{{count}} messaggi in arrivo nella casella {{group_name}}"
         other: "{{count}} messaggi in arrivo nella casella {{group_name}}"
-      alt:
-        mentioned: "Menzionato da"
-        quoted: "Citato da"
-        replied: "Risposto"
-        posted: "Messaggio da"
-        edited: "Modifica il tuo messaggio da"
-        liked: "Ha assegnato un \"Mi piace\" al tuo messaggio"
-        invited_to_topic: "Invitato a un argomento da"
-        invitee_accepted: "Invito accettato da"
-        moved_post: "Il tuo messaggio è stato spostato da"
-        linked: "Collegamento al tuo messaggio"
-        granted_badge: "Distintivo assegnato"
-        group_message_summary: "Messaggi nel gruppo in arrivo"
-        topic_reminder: "Un promemoria"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
@@ -1225,9 +1180,6 @@ it:
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
-      result_count:
-        one: "1 risultato per <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} risultati per <span class='term'>{{term}}</span>"
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
@@ -2436,7 +2388,6 @@ it:
         title: "Gruppi"
         edit: "Modifica Gruppi"
         refresh: "Aggiorna"
-        new: "Nuovo"
         about: "Modifica qui la tua appartenenza ai gruppi e i loro nomi"
         group_members: "Membri del gruppo"
         delete: "Cancella"
@@ -2444,22 +2395,11 @@ it:
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
         add: "Aggiungi"
-        add_members: "Aggiungi membri"
         custom: "Personalizzato"
-        bulk_complete: "Gli utenti sono stati aggiunti al gruppo."
-        bulk_complete_users_not_added: "Questi utenti non sono stati aggiunti (assicurati che abbiano un account):"
-        bulk: "Aggiunta Massiva al Gruppo"
-        bulk_paste: "Incolla una lista di nomi utente o di email, uno per riga:"
-        bulk_select: "(seleziona un gruppo)"
         automatic: "Automatico"
-        automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
-        automatic_membership_retroactive: "Applica la stessa regola sul dominio email per aggiungere utenti registrati esistenti"
         default_title: "Titolo predefinito per tutti gli utenti di questo gruppo"
-        primary_group: "Imposta automaticamente come gruppo principale"
         group_owners: Proprietari
         add_owners: Aggiungi proprietari
-        incoming_email: "Indirizzo email personalizzato"
-        incoming_email_placeholder: "inserisci l'indirizzo e-mail"
         none_selected: "Seleziona un gruppo per iniziare"
         no_custom_groups: "Crea un nuovo gruppo personalizzato"
       api:

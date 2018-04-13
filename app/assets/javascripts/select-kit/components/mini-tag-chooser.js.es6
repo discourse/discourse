@@ -34,17 +34,17 @@ export default ComboBox.extend(Tags, {
       });
     });
 
-    this.set("limit", parseInt(this.get("limit") || this.get("siteSettings.max_tags_per_topic")));
+    this.set("maximum", parseInt(this.get("limit") || this.get("maximum") || this.get("siteSettings.max_tags_per_topic")));
   },
 
-  @computed("hasReachedLimit")
-  caretIcon(hasReachedLimit) {
-    return hasReachedLimit ? null : "plus fa-fw";
+  @computed("hasReachedMaximum")
+  caretIcon(hasReachedMaximum) {
+    return hasReachedMaximum ? null : "plus fa-fw";
   },
 
   @computed("tags")
   selection(tags) {
-    return makeArray(tags);
+    return makeArray(tags).map(c => this.computeContentItem(c));
   },
 
   filterComputedContent(computedContent) {
@@ -56,7 +56,7 @@ export default ComboBox.extend(Tags, {
 
     this.$(".select-kit-body").on("click.mini-tag-chooser", ".selected-tag", (event) => {
       event.stopImmediatePropagation();
-      this.destroyTags($(event.target).attr("data-value"));
+      this.destroyTags(this.computeContentItem($(event.target).attr("data-value")));
     });
 
     this.$(".select-kit-header").on("focus.mini-tag-chooser", ".selected-name", (event) => {
@@ -110,7 +110,7 @@ export default ComboBox.extend(Tags, {
       }
 
       tags.map((tag) => {
-        const isHighlighted = highlightedSelection.includes(tag);
+        const isHighlighted = highlightedSelection.map(s => get(s, "value")).includes(tag);
         output += `
           <button aria-label="${tag}" title="${tag}" class="selected-tag ${isHighlighted ? 'is-highlighted' : ''}" data-value="${tag}">
             ${tag}
@@ -125,12 +125,20 @@ export default ComboBox.extend(Tags, {
   computeHeaderContent() {
     let content = this._super();
 
-    const joinedTags = this.get("selection").join(", ");
+    const joinedTags = this.get("selection")
+                           .map(s => Ember.get(s, "value"))
+                           .join(", ");
 
     if (isEmpty(this.get("selection"))) {
       content.label = I18n.t("tagging.choose_for_topic");
     } else {
       content.label = joinedTags;
+    }
+
+    if (!this.get("hasReachedMinimum") && isEmpty(this.get("selection"))) {
+      const key = this.get("minimumLabel") || "select_kit.min_content_not_reached";
+      const label = I18n.t(key, { count: this.get("minimum") });
+      content.title = content.name = content.label = label;
     }
 
     content.title = content.name = content.value = joinedTags;
@@ -144,7 +152,13 @@ export default ComboBox.extend(Tags, {
       limit: this.get("siteSettings.max_tag_search_results"),
       categoryId: this.get("categoryId")
     };
-    if (this.get("selection")) data.selected_tags = this.get("selection").slice(0, 100);
+
+    if (this.get("selection")) {
+      data.selected_tags = this.get("selection")
+                               .map(s => Ember.get(s, "value"))
+                               .slice(0, 100);
+    }
+
     if (!this.get("everyTag")) data.filterForInput = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
@@ -161,13 +175,22 @@ export default ComboBox.extend(Tags, {
 
     results = results.filter(r => !context.get("selection").includes(r.id));
 
-    return results.map(result => {
+    results = results.map(result => {
       return { id: result.text, name: result.text, count: result.count };
     });
+
+    // if forbidden we probably have an existing tag which is not in the list of
+    // returned tags, so we manually add it at the top
+    if (json.forbidden) {
+      results.unshift({ id: json.forbidden, name: json.forbidden, count: 0 });
+    }
+
+    return results;
   },
 
   destroyTags(tags) {
-    tags = Ember.makeArray(tags);
+    tags = Ember.makeArray(tags).map(c => get(c, "value"));
+
     // work around usage with buffered proxy
     // it does not listen on array changes, similar hack already on select
     // TODO: FIX buffered-proxy.js to support arrays

@@ -320,33 +320,12 @@ sq:
         make_user_group_owner: "Bëje autor"
         remove_user_as_group_owner: "Hiq autorin"
     groups:
-      logs:
-        title: "Ditari"
-        when: "Kur"
-        action: "Veprimi"
-        acting_user: "Anëtari veprues"
-        target_user: "Anëtari i prekur"
-        subject: "Subjekti"
-        details: "Detaje"
-        from: "Nga"
-        to: "Për"
-      edit:
-        title: 'Redakto Grupin'
-        full_name: 'Emri i plotë'
-        add_members: "Shto anëtarë"
-        delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
-      name_placeholder: "Emri i grupit, pa hapësira, si username-t"
       public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
       public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
       empty:
         posts: "Nuk ka postime nga anëtarët e këtij grupi."
         members: "Nuk ka anëtarë në këtë grup."
       add: "Shto"
-      join: "Bashkoju grupit"
-      leave: "Ik nga grupi"
-      request: "Kërko t'i bashkohesh grupit"
-      automatic_group: Grup automatik
-      is_group_user: "Jeni anëtar i këtij grupi"
       name: "Emri"
       bio: "Mbi grupin"
       owner: "autori"
@@ -363,9 +342,6 @@ sq:
         mods_and_admins: "Vetëm moderatorët dhe adminët"
         members_mods_and_admins: "Vetëm anëtarët e grupit, moderatorët dhe adminët"
         everyone: "Të gjithë"
-      trust_levels:
-        title: "Niveli i besimit që ju akordohet automatikisht anëtarëve të grupit:"
-        none: "Asnjë"
       notifications:
         watching:
           title: "Në vëzhgim"
@@ -1024,19 +1000,6 @@ sq:
       empty: "Nuk u gjet asnjë njoftim. "
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali i postimeve të sinjalizuar"
-      alt:
-        mentioned: "Përmendur nga"
-        quoted: "Cituar nga"
-        replied: "Përgjigjur"
-        posted: "Postim nga"
-        edited: "Redakto postimin tuaj"
-        liked: "Pëlqeu postimin tuaj"
-        invited_to_topic: "I/e ftuar në temë nga"
-        invitee_accepted: "Ftesa u pranua nga"
-        moved_post: "Postimi juaj u transferua nga"
-        linked: "Lidhja drejt postimit tuaj"
-        granted_badge: "Stema u atribua"
-        group_message_summary: "Mesazhet në inboxin e grupit"
       popup:
         mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
@@ -2042,7 +2005,6 @@ sq:
         title: "Grupet"
         edit: "Redakto Grup"
         refresh: "Rifresko"
-        new: "I Ri"
         about: "Modifiko anëtarët e grupit dhe emrin këtu"
         group_members: "Përdorues grupi"
         delete: "Fshij"
@@ -2050,12 +2012,7 @@ sq:
         delete_failed: "Nuk e fshimë dot grupin. Nëse ky është një grup automatik, nuk fshihet dot. "
         delete_owner_confirm: "Hiqe privilegjin e pronarit për '%{username}'?"
         add: "Shto"
-        add_members: "Shto Anëtar"
         custom: "Grupet e krijuara"
-        bulk_complete: "Përdoruesit iu shtuan grupit."
-        bulk: "Shto në masë tek grupi"
-        bulk_paste: "Ngjit një listë përdoruesisht ose adresash email, 1 për çdo rresht:"
-        bulk_select: "(zgjidhni një grup)"
         automatic: "Automatik"
         group_owners: Pronarët
         add_owners: Shto pronarë

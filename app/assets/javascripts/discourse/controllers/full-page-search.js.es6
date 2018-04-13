@@ -174,7 +174,7 @@ export default Ember.Controller.extend({
 
   @computed('expanded')
   searchAdvancedIcon(expanded) {
-    return iconHTML(expanded ? "caret-down" : "caret-right");
+    return iconHTML(expanded ? "caret-down fa-fw" : "caret-right fa-fw");
   },
 
   @computed('page')

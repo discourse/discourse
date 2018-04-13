@@ -40,45 +40,34 @@ acceptance("Search - Full Page", {
   }
 });
 
+
 QUnit.test("perform various searches", assert => {
   visit("/search");
 
   andThen(() => {
     assert.ok($('body.search-page').length, "has body class");
     assert.ok(exists('.search-container'), "has container class");
-    assert.ok(find('input.search').length > 0);
+    assert.ok(find('.search-query').length > 0);
     assert.ok(find('.fps-topic').length === 0);
   });
 
-  fillIn('.search input.full-page-search', 'none');
-  click('.search .btn-primary');
+  fillIn('.search-query', 'none');
+  click('.search-cta');
 
   andThen(() => {
     assert.ok(find('.fps-topic').length === 0, 'has no results');
     assert.ok(find('.no-results-suggestion .google-search-form'));
   });
 
-  fillIn('.search input.full-page-search', 'posts');
-  click('.search .btn-primary');
+  fillIn('.search-query', 'posts');
+  click('.search-cta');
 
   andThen(() => assert.ok(find('.fps-topic').length === 1, 'has one post'));
 });
 
-QUnit.test("open advanced search", assert => {
-  visit("/search");
-
-  andThen(() => assert.ok(exists('.search .search-advanced'), 'shows advanced search panel'));
-
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
-
-  andThen(() => assert.ok(visible('.search-advanced .search-advanced-options'), '"search-advanced-options" is visible'));
-});
-
 QUnit.test("escape search term", (assert) => {
   visit("/search");
-  fillIn('.search input.full-page-search', '@<script>prompt(1337)</script>gmail.com');
-  click('.search-advanced-btn');
+  fillIn('.search-query', '@<script>prompt(1337)</script>gmail.com');
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options span:contains("<script>prompt(1337)</script>gmail.com")'), 'it escapes search term');
@@ -87,8 +76,7 @@ QUnit.test("escape search term", (assert) => {
 
 QUnit.test("update username through advanced search ui", assert => {
   visit("/search");
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   fillIn('.search-advanced-options .user-selector', 'admin');
   click('.search-advanced-options .user-selector');
   keyEvent('.search-advanced-options .user-selector', 'keydown', 8);
@@ -102,7 +90,7 @@ QUnit.test("update username through advanced search ui", assert => {
 
       andThen(() => {
         assert.ok(exists('.search-advanced-options span:contains("admin")'), 'has "admin" pre-populated');
-        assert.equal(find('.search input.full-page-search').val(), "none @admin", 'has updated search term to "none user:admin"');
+        assert.equal(find('.search-query').val(), "none @admin", 'has updated search term to "none user:admin"');
       });
     });
   });
@@ -113,20 +101,19 @@ QUnit.test("update category through advanced search ui", assert => {
 
   visit("/search");
 
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   categoryChooser.expand().fillInFilter('faq').selectRowByValue(4);
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .badge-category:contains("faq")'), 'has "faq" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none #faq", 'has updated search term to "none #faq"');
+    assert.equal(find('.search-query').val(), "none #faq", 'has updated search term to "none #faq"');
   });
 });
 
 // test("update group through advanced search ui", assert => {
 //   visit("/search");
-//   fillIn('.search input.full-page-search', 'none');
-//   click('.search-advanced-btn');
+//   fillIn('.search-query', 'none');
+//
 //   fillIn('.search-advanced-options .group-selector', 'moderators');
 //   click('.search-advanced-options .group-selector');
 //   keyEvent('.search-advanced-options .group-selector', 'keydown', 8);
@@ -140,7 +127,7 @@ QUnit.test("update category through advanced search ui", assert => {
 //
 //       andThen(() => {
 //         assert.ok(exists('.search-advanced-options span:contains("moderators")'), 'has "moderators" pre-populated');
-//         assert.equal(find('.search input.full-page-search').val(), "none group:moderators", 'has updated search term to "none group:moderators"');
+//         assert.equal(find('.search-query').val(), "none group:moderators", 'has updated search term to "none group:moderators"');
 //       });
 //     });
 //   });
@@ -148,8 +135,8 @@ QUnit.test("update category through advanced search ui", assert => {
 
 // test("update badges through advanced search ui", assert => {
 //   visit("/search");
-//   fillIn('.search input.full-page-search', 'none');
-//   click('.search-advanced-btn');
+//   fillIn('.search-query', 'none');
+//
 //   fillIn('.search-advanced-options .badge-names', 'Reader');
 //   click('.search-advanced-options .badge-names');
 //   keyEvent('.search-advanced-options .badge-names', 'keydown', 8);
@@ -163,7 +150,7 @@ QUnit.test("update category through advanced search ui", assert => {
 //
 //       andThen(() => {
 //         assert.ok(exists('.search-advanced-options span:contains("Reader")'), 'has "Reader" pre-populated');
-//         assert.equal(find('.search input.full-page-search').val(), "none badge:Reader", 'has updated search term to "none badge:Reader"');
+//         assert.equal(find('.search-query').val(), "none badge:Reader", 'has updated search term to "none badge:Reader"');
 //       });
 //     });
 //   });
@@ -171,8 +158,8 @@ QUnit.test("update category through advanced search ui", assert => {
 
 // test("update tags through advanced search ui", assert => {
 //   visit("/search");
-//   fillIn('.search input.full-page-search', 'none');
-//   click('.search-advanced-btn');
+//   fillIn('.search-query', 'none');
+//
 //
 //   keyEvent('.search-advanced-options .tag-chooser input.select2-input', 'keydown', 110);
 //   fillIn('.search-advanced-options .tag-chooser input.select2-input', 'monkey');
@@ -183,7 +170,7 @@ QUnit.test("update category through advanced search ui", assert => {
 //       click('li.select2-result-selectable:first');
 //       andThen(() => {
 //         assert.ok(exists('.search-advanced-options .tag-chooser .tag-monkey'), 'has "monkey" pre-populated');
-//         assert.equal(find('.search input.full-page-search').val(), "none tags:monkey", 'has updated search term to "none tags:monkey"');
+//         assert.equal(find('.search-query').val(), "none tags:monkey", 'has updated search term to "none tags:monkey"');
 //       });
 //     });
 //   });
@@ -191,38 +178,35 @@ QUnit.test("update category through advanced search ui", assert => {
 
 QUnit.test("update in:likes filter through advanced search ui", assert => {
   visit("/search");
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   click('.search-advanced-options .in-likes');
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .in-likes:checked'), 'has "I liked" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none in:likes", 'has updated search term to "none in:likes"');
+    assert.equal(find('.search-query').val(), "none in:likes", 'has updated search term to "none in:likes"');
   });
 });
 
 QUnit.test("update in:private filter through advanced search ui", assert => {
   visit("/search");
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   click('.search-advanced-options .in-private');
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .in-private:checked'), 'has "are in my messages" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none in:private", 'has updated search term to "none in:private"');
+    assert.equal(find('.search-query').val(), "none in:private", 'has updated search term to "none in:private"');
   });
 });
 
 QUnit.test("update in:seen filter through advanced search ui", assert => {
   visit("/search");
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   click('.search-advanced-options .in-seen');
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .in-seen:checked'), 'it should check the right checkbox');
 
-    assert.equal(find('.search input.full-page-search').val(), "none in:seen",
+    assert.equal(find('.search-query').val(), "none in:seen",
       'it should update the search term'
     );
   });
@@ -233,13 +217,12 @@ QUnit.test("update in filter through advanced search ui", assert => {
 
   visit("/search");
 
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   inSelector.expand().selectRowByValue('bookmarks');
 
   andThen(() => {
     assert.ok(inSelector.rowByName("I bookmarked").exists(), 'has "I bookmarked" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none in:bookmarks", 'has updated search term to "none in:bookmarks"');
+    assert.equal(find('.search-query').val(), "none in:bookmarks", 'has updated search term to "none in:bookmarks"');
   });
 });
 
@@ -248,13 +231,12 @@ QUnit.test("update status through advanced search ui", assert => {
 
   visit("/search");
 
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   statusSelector.expand().selectRowByValue('closed');
 
   andThen(() => {
     assert.ok(statusSelector.rowByName("are closed").exists(), 'has "are closed" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none status:closed", 'has updated search term to "none status:closed"');
+    assert.equal(find('.search-query').val(), "none status:closed", 'has updated search term to "none status:closed"');
   });
 });
 
@@ -263,26 +245,24 @@ QUnit.test("update post time through advanced search ui", assert => {
 
   visit("/search");
 
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   fillIn('#search-post-date .date-picker', '2016-10-05');
   postTimeSelector.expand().selectRowByValue('after');
 
   andThen(() => {
     assert.ok(postTimeSelector.rowByName("after").exists(), 'has "after" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none after:2016-10-05", 'has updated search term to "none after:2016-10-05"');
+    assert.equal(find('.search-query').val(), "none after:2016-10-05", 'has updated search term to "none after:2016-10-05"');
   });
 });
 
 QUnit.test("update min post count through advanced search ui", assert => {
   visit("/search");
-  fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced-btn');
+  fillIn('.search-query', 'none');
   fillIn('#search-min-post-count', '5');
 
   andThen(() => {
     assert.equal(find('.search-advanced-options #search-min-post-count').val(), "5", 'has "5" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none min_post_count:5", 'has updated search term to "none min_post_count:5"');
+    assert.equal(find('.search-query').val(), "none min_post_count:5", 'has updated search term to "none min_post_count:5"');
   });
 });
 
@@ -292,6 +272,6 @@ QUnit.test("validate advanced search when initially empty", assert => {
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .in-likes:checked'), 'has "I liked" populated');
-    assert.equal(find('.search input.full-page-search').val(), "in:likes", 'has updated search term to "in:likes"');
+    assert.equal(find('.search-query').val(), "in:likes", 'has updated search term to "in:likes"');
   });
 });

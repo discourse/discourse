@@ -29,7 +29,7 @@ span.badge-posts {
 .topic-post {
   nav.post-controls {
     clear: both;
-    color: dark-light-choose($primary-low-mid, $secondary-high);        
+    color: dark-light-choose($primary-low-mid, $secondary-high);
     .d-icon {
       opacity: 1.0;
     }
@@ -51,7 +51,7 @@ span.badge-posts {
       }
       &.reply {
         float: right;
-        color: $primary-high;        
+        color: $primary-high;
       }
       &.has-like {
         color: $love;
@@ -62,8 +62,18 @@ span.badge-posts {
     }
 
     button.like-count {
-      font-size: $font-0;
+      font-size: $font-up-1;
       padding: 8px 4px;
+      i.fa-heart {
+        padding-left: 8px;
+        color: dark-light-choose($primary-low-mid, $secondary-high);
+      }
+      &.my-likes {
+        margin-right: 5px;
+      }
+      &.regular-likes {
+        margin-right: -5px;
+      }
     }
   }
 }
@@ -404,7 +414,7 @@ blockquote {
 }
 
 .gap {
-  padding: 0.25em 0;  
+  padding: 0.25em 0;
 }
 
 .gutter { display: none; }

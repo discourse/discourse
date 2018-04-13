@@ -2,6 +2,20 @@
     placeholderKey=filterPlaceholder
     class="group-username-filter no-blur"}}
 
+<div class="group-members-manage">
+  {{#if canManageGroup}}
+    {{#if currentUser.admin}}
+      {{group-members-dropdown
+          showAddMembersModal="showAddMembersModal"
+          showBulkAddModal="showBulkAddModal"}}
+    {{else}}
+      {{d-button icon="plus"
+          label="groups.add_members.title"
+          class="group-members-add"}}
+    {{/if}}
+  {{/if}}
+</div>
+
 {{#if hasMembers}}
   {{#load-more selector=".group-members .user-info" action="loadMore"}}
     <div class="group-members">

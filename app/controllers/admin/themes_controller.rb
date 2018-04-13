@@ -78,7 +78,8 @@ class Admin::ThemesController < Admin::AdminController
       begin
         @theme = RemoteTheme.import_theme(params[:remote], current_user, private_key: params[:private_key])
         render json: @theme, status: :created
-      rescue RuntimeError
+      rescue RuntimeError => e
+        Discourse.warn_exception(e, message: "Error importing theme")
         render_json_error I18n.t('themes.error_importing')
       end
     elsif params[:bundle]

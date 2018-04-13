@@ -1,12 +1,27 @@
-{{text-field value=filterInput
-    placeholderKey=filterPlaceholder
-    class="group-username-filter no-blur"}}
+<div class="group-members-actions">
+  {{text-field value=filterInput
+      placeholderKey=filterPlaceholder
+      class="group-username-filter no-blur"}}
+
+  {{#if canManageGroup}}
+    {{#if currentUser.admin}}
+      {{group-members-dropdown
+          showAddMembersModal="showAddMembersModal"
+          showBulkAddModal="showBulkAddModal"}}
+    {{else}}
+      {{d-button icon="plus"
+          label="groups.add_members.title"
+          class="group-members-add"}}
+    {{/if}}
+  {{/if}}
+</div>
 
 {{#if hasMembers}}
   {{#load-more selector=".group-members tr" action="loadMore"}}
     <table class='group-members'>
       <thead>
         {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
+        <th class='group-owner'>{{i18n "groups.members.owner"}}</th>
         {{group-index-toggle order=order desc=desc field='last_posted_at' i18nKey='last_post'}}
         {{group-index-toggle order=order desc=desc field='last_seen_at'  i18nKey='last_seen'}}
         <th></th>
@@ -16,10 +31,17 @@
         {{#each model.members as |m|}}
           <tr>
             <td class='avatar'>
-              {{#user-info user=m skipName=skipName}}
-                {{#if m.owner}}<strong class="group-owner-label">{{i18n "groups.owner"}}</strong>{{/if}}
-              {{/user-info}}
+              {{user-info user=m skipName=skipName}}
             </td>
+
+            <td class='group-owner'>
+              {{#if m.owner}}
+                <strong class="group-owner-label">
+                  {{d-icon "shield"}}
+                </strong>
+              {{/if}}
+            </td>
+
             <td>
               <span class="text">{{bound-date m.last_posted_at}}</span>
             </td>

@@ -1,32 +1,26 @@
-# See http://www.robotstxt.org/wc/norobots.html for documentation on how to use the robots.txt file
+# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+<% if Discourse.base_uri.present? %>
+# This robots.txt file is not used. Please append the content below in the robots.txt file located at the root
+<% end %>
 #
-User-agent: *
-Disallow: /auth/cas
-Disallow: /auth/facebook/callback
-Disallow: /auth/twitter/callback
-Disallow: /auth/google/callback
-Disallow: /auth/yahoo/callback
-Disallow: /auth/github/callback
-Disallow: /auth/cas/callback
-Disallow: /assets/browser-update*.js
-Disallow: /users/
-Disallow: /u/
-Disallow: /badges/
-Disallow: /search
-Disallow: /search/
-Disallow: /tags
-Disallow: /tags/
-Disallow: /email/
-Disallow: /session
-Disallow: /session/
-Disallow: /admin
-Disallow: /admin/
-Disallow: /user-api-key
-Disallow: /user-api-key/
-Disallow: /*?api_key*
-Disallow: /*?*api_key*
-Disallow: /groups
-Disallow: /groups/
-Disallow: /uploads/
+<% @allowed_user_agents.each do |user_agent| %>
+User-agent: <%= user_agent %>
+<% end %>
+<% RobotsTxtController::DISALLOWED_PATHS.each do |path| %>
+Disallow: <%= Discourse.base_uri + path %>
+<% end %>
+
+<% if @disallowed_user_agents %>
+  <% @disallowed_user_agents.each do |user_agent| %>
+User-agent: <%= user_agent %>
+Disallow: <%= Discourse.base_uri + "/" %>
+
+  <% end %>
+<% end %>
 
 <%= server_plugin_outlet "robots_txt_index" %>
+
+<% @crawler_delayed_agents.each do |agent, delay| %>
+User-agent: <%= agent %>
+Crawl-delay: <%= delay %>
+<% end %>

@@ -28,6 +28,7 @@ et:
   posts: "postitused"
   loading: "Laetakse"
   log_in: "Logi sisse"
+  submit: "Saada"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
@@ -355,21 +356,6 @@ et:
       title: "juht"
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
-    slow_down: "Oled antud seda toimingut liiga palju proovinud. Proovi hiljem uuesti."
-    by_type:
-      first_day_replies_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud vastuste limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      first_day_topics_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_topic: "Lisad teemasid liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      create_post: "Vastad liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      delete_post: "Kustutad postitusi liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      public_group_membership: "Liitud gruppidega/lahkud neist liiga sageli. Palun oota %{time_left} enne kui uuesti proovid."
-      topics_per_day: "Oled ületanud tänaseks lubatud uute teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      pms_per_day: "Oled ületanud tänaseks lubatud sõnumite limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_like: "Oled ületanud tänaseks lubatud meeldimiste lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_bookmark: "Oled ületanud tänaseks lubatud järjehoidjate lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      live_post_counts: "Küsid postituste reaalajas loendit liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      unsubscribe_via_email: "Oled ületanud tänaseks lubatud meilitsi tellimuste tühistamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      topic_invitations_per_day: "Oled ületanud tänaseks lubatud teemadesse kutsumise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
     hours:
       one: "1 tund"
       other: "%{count} tundi"
@@ -731,6 +717,24 @@ et:
       text_body_template: |2
 
           %{message}
+    digest:
+      new_topics: "Uued teemad"
+      unread_messages: "Lugemata sõnumid"
+      unread_notifications: "Lugemata teavitused"
+      new_posts: "Uued postitused"
+      new_users: "Uued kasutajad"
+      popular_topics: "Populaarsed teemad"
+      follow_topic: "Jälgi seda teemat"
+      join_the_discussion: "Loe lisa"
+      popular_posts: "Populaarsed postitused"
+      more_new: "Uus sinu jaoks"
+      subject_template: "[%{email_prefix}] Kokkuvõte"
+      your_email_settings: "sinu e-posti seaded"
+      click_here: "kliki siia"
+      from: "%{site_name} kokkuvõte"
+    forgot_password:
+      title: "Unustasin parooli"
+      subject_template: "[%{email_prefix}] Parooli taastamine"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:
@@ -743,6 +747,9 @@ et:
   terms_of_service:
     title: "Teenuse tingimused"
   deleted: 'kustutatud'
+  image: "pilt"
+  upload:
+    pasted_image_filename: "Asetatud pilt"
   email_log:
     anonymous_user: "Kasutaja on anonüümne"
     seen_recently: "Kasutajat nähti hiljuti"
@@ -751,6 +758,12 @@ et:
     message_to_blank: "message.to on tühi"
     text_part_body_blank: "text_part.body on tühi"
     body_blank: "sisu on tühi"
+  color_schemes:
+    default: "Hele skeem"
+    dark: "Tume skeem"
+    default_theme_name: "Vaikimisi"
+    dark_theme_name: "Tume"
+    light_theme_name: "Hele"
   about: "Teave"
   guidelines: "Juhendid"
   privacy: "Privaatsus"

@@ -17,7 +17,7 @@ const DiscourseRoute = Ember.Route.extend({
   refresh() {
     if (!this.refreshQueryWithoutTransition) { return this._super(); }
 
-    if (!this.router.router.activeTransition) {
+    if (!this.router._routerMicrolib.activeTransition) {
       const controller = this.controller,
             model = controller.get('model'),
             params = this.controller.getProperties(Object.keys(this.queryParams));

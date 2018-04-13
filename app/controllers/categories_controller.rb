@@ -149,6 +149,7 @@ class CategoriesController < ApplicationController
       old_permissions = cat.permissions_params
 
       if result = cat.update(category_params)
+        DiscourseEvent.trigger(:category_updated, cat)
         Scheduler::Defer.later "Log staff action change category settings" do
           @staff_action_logger.log_category_settings_change(@category, category_params, old_permissions)
         end
@@ -165,6 +166,7 @@ class CategoriesController < ApplicationController
     custom_slug = params[:slug].to_s
 
     if custom_slug.present? && @category.update_attributes(slug: custom_slug)
+      DiscourseEvent.trigger(:category_updated, @category)
       render json: success_json
     else
       render_json_error(@category)
@@ -281,6 +283,7 @@ class CategoriesController < ApplicationController
                         :default_view,
                         :subcategory_list_style,
                         :default_top_period,
+                        :minimum_required_tags,
                         custom_fields: [params[:custom_fields].try(:keys)],
                         permissions: [*p.try(:keys)],
                         allowed_tags: [],

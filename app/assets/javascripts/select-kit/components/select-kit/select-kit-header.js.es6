@@ -4,7 +4,7 @@ const { isEmpty, makeArray } = Ember;
 export default Ember.Component.extend({
   layoutName: "select-kit/templates/components/select-kit/select-kit-header",
   classNames: ["select-kit-header"],
-  classNameBindings: ["isFocused"],
+  classNameBindings: ["isFocused", "isNone"],
   attributeBindings: [
     "tabindex",
     "ariaLabel:aria-label",
@@ -13,6 +13,8 @@ export default Ember.Component.extend({
     "value:data-value",
     "name:data-name",
   ],
+
+  isNone: Ember.computed.none("computedContent.value"),
 
   ariaHasPopup: true,
 

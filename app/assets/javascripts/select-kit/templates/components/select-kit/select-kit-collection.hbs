@@ -30,26 +30,25 @@
   }}
 {{/if}}
 
-{{#if maxContentRow}}
-  <li class="select-kit-row max-content">
-    {{maxContentRow}}
+{{#if noContentRow}}
+  <li class="select-kit-row no-content">
+    {{noContentRow}}
   </li>
 {{else}}
-  {{#if noContentRow}}
-    <li class="select-kit-row no-content">
-      {{noContentRow}}
-    </li>
-  {{else}}
-    {{#each collectionComputedContent as |computedContent|}}
-      {{component rowComponent
-        computedContent=computedContent
-        highlighted=highlighted
-        computedValue=computedValue
-        templateForRow=templateForRow
-        onClickRow=onClickRow
-        onMouseoverRow=onMouseoverRow
-        options=rowComponentOptions
-      }}
-    {{/each}}
+  {{#if validationMessage}}
+    <div class="validation-message">
+      {{validationMessage}}
+    </div>
   {{/if}}
+  {{#each collectionComputedContent as |computedContent|}}
+    {{component rowComponent
+      computedContent=computedContent
+      highlighted=highlighted
+      computedValue=computedValue
+      templateForRow=templateForRow
+      onClickRow=onClickRow
+      onMouseoverRow=onMouseoverRow
+      options=rowComponentOptions
+    }}
+  {{/each}}
 {{/if}}

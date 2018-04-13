@@ -16,7 +16,6 @@ class Validators::PostValidator < ActiveModel::Validator
     max_images_validator(record)
     max_attachments_validator(record)
     can_post_links_validator(record)
-    newuser_links_validator(record)
     unique_post_validator(record)
   end
 
@@ -82,7 +81,7 @@ class Validators::PostValidator < ActiveModel::Validator
 
   # Ensure new users can not put too many images in a post
   def max_images_validator(post)
-    return if post.acting_user.blank?
+    return if post.acting_user.blank? || post.acting_user&.staff?
 
     if post.acting_user.trust_level < TrustLevel[SiteSetting.min_trust_to_post_images]
       add_error_if_count_exceeded(
@@ -110,9 +109,12 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def can_post_links_validator(post)
-    return if (post.link_count == 0 && !post.has_oneboxes?) ||
+    if (post.link_count == 0 && !post.has_oneboxes?) ||
       Guardian.new(post.acting_user).can_post_link? ||
       private_message?(post)
+
+      return newuser_links_validator(post)
+    end
 
     post.errors.add(:base, I18n.t(:links_require_trust))
   end

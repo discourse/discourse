@@ -84,12 +84,18 @@ export default SelectKitComponent.extend({
   },
 
   computeHeaderContent() {
-    return {
+    let content = {
       title: this.get("title"),
       icons: makeArray(this.getWithDefault("headerIcon", [])),
       value: this.get("selection.value"),
       name: this.get("selection.name") || this.get("noneRowComputedContent.name")
     };
+
+    if (this.get("noneLabel") && !this.get("hasSelection")) {
+      content.title = content.name = I18n.t(this.get("noneLabel"));
+    }
+
+    return content;
   },
 
   @computed("computedAsyncContent.[]", "computedValue")
@@ -128,7 +134,7 @@ export default SelectKitComponent.extend({
     return selection !== this.get("noneRowComputedContent") && !isNone(selection);
   },
 
-  @computed("computedValue", "filter", "collectionComputedContent.[]", "hasReachedLimit")
+  @computed("computedValue", "filter", "collectionComputedContent.[]", "hasReachedMaximum", "hasReachedMinimum")
   shouldDisplayCreateRow(computedValue, filter) {
     return this._super() && computedValue !== filter;
   },

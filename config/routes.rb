@@ -10,6 +10,7 @@ USERNAME_ROUTE_FORMAT = /[\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
+  relative_url_root = (defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root) ? Rails.configuration.relative_url_root + '/' : '/'
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
@@ -77,7 +78,6 @@ Discourse::Application.routes.draw do
 
     resources :groups, constraints: AdminConstraint.new do
       collection do
-        post "refresh_automatic_groups" => "groups#refresh_automatic_groups"
         get 'bulk'
         get 'bulk-complete' => 'groups#bulk'
         put 'bulk' => 'groups#bulk_perform'
@@ -292,7 +292,10 @@ Discourse::Application.routes.draw do
   get "extra-locales/:bundle" => "extra_locales#show"
 
   resources :session, id: RouteFormat.username, only: [:create, :destroy, :become] do
-    get 'become'
+    if !Rails.env.production?
+      get 'become'
+    end
+
     collection do
       post "forgot_password"
     end
@@ -462,6 +465,7 @@ Discourse::Application.routes.draw do
     get 'logs' => 'groups#histories'
 
     collection do
+      get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
       get "search" => "groups#search"
     end
 
@@ -472,6 +476,12 @@ Discourse::Application.routes.draw do
         messages
         messages/inbox
         messages/archive
+        manage
+        manage/profile
+        manage/members
+        manage/membership
+        manage/interaction
+        manage/logs
       }.each do |path|
         get path => 'groups#show'
       end
@@ -540,7 +550,7 @@ Discourse::Application.routes.draw do
   get "/badges/:id(/:slug)" => "badges#show"
   resources :user_badges, only: [:index, :create, :destroy]
 
-  get '/c', to: redirect('/categories')
+  get '/c', to: redirect(relative_url_root + 'categories')
 
   resources :categories, except: :show
   post "category/:category_id/move" => "categories#move"
@@ -616,7 +626,7 @@ Discourse::Application.routes.draw do
     get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive"
     get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread"
     get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
-    get "groups/:group_name.json" => "list#group_topics", as: "group_topics"
+    get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username
 
     scope "/private-messages-group/:username", group_name: RouteFormat.username do
       get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"
@@ -722,8 +732,10 @@ Discourse::Application.routes.draw do
     # current site before updating to a new Service Worker.
     # Support the old Service Worker path to avoid routing error filling up the
     # logs.
-    get "/service-worker.js" => redirect(service_worker_asset), format: :js
+    get "/service-worker.js" => redirect(relative_url_root + service_worker_asset), format: :js
     get service_worker_asset => "static#service_worker_asset", format: :js
+  elsif Rails.env.development?
+    get "/service-worker.js" => "static#service_worker_asset", format: :js
   end
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false

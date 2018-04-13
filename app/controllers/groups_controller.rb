@@ -1,5 +1,4 @@
 class GroupsController < ApplicationController
-
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -7,7 +6,8 @@ class GroupsController < ApplicationController
     :update,
     :histories,
     :request_membership,
-    :search
+    :search,
+    :new
   ]
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -37,7 +37,7 @@ class GroupsController < ApplicationController
   }
 
   def index
-    unless SiteSetting.enable_group_directory?
+    unless SiteSetting.enable_group_directory? || current_user&.staff?
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
@@ -108,9 +108,23 @@ class GroupsController < ApplicationController
       end
 
       format.json do
-        render_serialized(group, GroupShowSerializer, root: 'basic_group')
+        groups = Group.visible_groups(current_user)
+
+        if !guardian.is_staff?
+          groups = groups.where(automatic: false)
+        end
+
+        render_json_dump(
+          group: serialize_data(group, GroupShowSerializer, root: nil),
+          extras: {
+            visible_group_names: groups.pluck(:name)
+          }
+        )
       end
     end
+  end
+
+  def new
   end
 
   def edit
@@ -118,10 +132,11 @@ class GroupsController < ApplicationController
 
   def update
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group) unless current_user.admin
 
-    if group.update_attributes(group_params)
+    if group.update(group_params(automatic: group.automatic))
       GroupActionLogger.new(current_user, group).log_change_group_settings
+      DiscourseEvent.trigger(:group_updated, group)
 
       render json: success_json
     else
@@ -253,7 +268,7 @@ class GroupsController < ApplicationController
     if (usernames = group.users.where(id: users.pluck(:id)).pluck(:username)).present?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
-        username: usernames.join(", "),
+        username: usernames.sort.join(", "),
         count: usernames.size
       ))
     else
@@ -289,7 +304,8 @@ class GroupsController < ApplicationController
   end
 
   def remove_member
-    group = Group.find(params[:id])
+    group = Group.find_by(id: params[:id])
+    raise Discourse::NotFound unless group
     group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
     user =
@@ -373,7 +389,7 @@ class GroupsController < ApplicationController
 
   def histories
     group = find_group(:group_id)
-    guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group) unless current_user.admin
 
     page_size = 25
     offset = (params[:offset] && params[:offset].to_i) || 0
@@ -410,23 +426,54 @@ class GroupsController < ApplicationController
 
   private
 
-  def group_params
-    params.require(:group).permit(
-      :flair_url,
-      :flair_bg_color,
-      :flair_color,
-      :bio_raw,
-      :full_name,
-      :public_admission,
-      :public_exit,
-      :allow_membership_requests,
-      :membership_request_template,
-    )
+  def group_params(automatic: false)
+    permitted_params =
+      if automatic
+        %i{
+          visibility_level
+          mentionable_level
+          messageable_level
+          default_notification_level
+        }
+      else
+        default_params = %i{
+          mentionable_level
+          messageable_level
+          title
+          flair_url
+          flair_bg_color
+          flair_color
+          bio_raw
+          public_admission
+          public_exit
+          allow_membership_requests
+          full_name
+          default_notification_level
+          membership_request_template
+        }
+
+        if current_user.admin
+          default_params.push(*[
+            :incoming_email,
+            :primary_group,
+            :visibility_level,
+            :name,
+            :grant_trust_level,
+            :automatic_membership_email_domains,
+            :automatic_membership_retroactive
+          ])
+        end
+
+        default_params
+      end
+
+    params.require(:group).permit(*permitted_params)
   end
 
   def find_group(param_name)
     name = params.require(param_name)
-    group = Group.find_by("lower(name) = ?", name.downcase)
+    group = Group
+    group = group.find_by("lower(name) = ?", name.downcase)
     guardian.ensure_can_see!(group)
     group
   end

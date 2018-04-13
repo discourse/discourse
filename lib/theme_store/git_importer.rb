@@ -78,7 +78,7 @@ class ThemeStore::GitImporter
     end
 
     Discourse::Utils.execute_command({
-      'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa"
+      'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no"
     }, "git", "clone", @url, @temp_folder)
   ensure
     FileUtils.rm_rf ssh_folder

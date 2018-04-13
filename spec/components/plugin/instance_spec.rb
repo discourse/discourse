@@ -93,6 +93,15 @@ describe Plugin::Instance do
       expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(0)
       expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
     end
+
+    it "remaps vendored_core_pretty_text asset" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_asset("moment.js", :vendored_core_pretty_text)
+
+      plugin.send :register_assets!
+
+      expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq("lib/javascripts/moment.js")
+    end
   end
 
   context "register service worker" do

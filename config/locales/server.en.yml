@@ -293,8 +293,11 @@ en:
 
   groups:
     success:
-      bulk_add: "%{users_added} users have been added to the group."
+      bulk_add:
+        one: "%{count} user have been added to the group."
+        other: "%{count} users have been added to the group."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."
@@ -560,23 +563,23 @@ en:
       broken: "This image is broken"
 
   rate_limiter:
-    slow_down: "You have performed this action too many times, try again later."
-    too_many_requests: "You have performed this action too many times. Please wait %{time_left} before trying again."
+    slow_down: "You’ve performed this action too many times, please try again later."
+    too_many_requests: "You’ve performed this action too many times. Please wait %{time_left} before trying again."
     by_type:
-      first_day_replies_per_day: "You've reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} before trying again."
-      first_day_topics_per_day: "You've reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
-      create_topic: "You're creating topics too quickly. Please wait %{time_left} before trying again."
-      create_post: "You're replying too quickly. Please wait %{time_left} before trying again."
-      delete_post: "You're deleting posts too quickly. Please wait %{time_left} before trying again."
-      public_group_membership: "You're joining/leaving groups too frequently. Please wait %{time_left} before trying again."
-      topics_per_day: "You've reached the maximum number of new topics today. Please wait %{time_left} before trying again."
-      pms_per_day: "You've reached the maximum number of messages today. Please wait %{time_left} before trying again."
-      create_like: "You've reached the maximum number of likes today. Please wait %{time_left} before trying again."
-      create_bookmark: "You've reached the maximum number of bookmarks today. Please wait %{time_left} before trying again."
-      edit_post: "You've reached the maximum number of edits today. Please wait %{time_left} before trying again."
-      live_post_counts: "You're asking for live post counts too quickly. Please wait %{time_left} before trying again."
-      unsubscribe_via_email: "You've reached the maximum number of unsubscribe via email today. Please wait %{time_left} before trying again."
-      topic_invitations_per_day: "You've reached the maximum number of topic invitations today. Please wait %{time_left} before trying again."
+      first_day_replies_per_day: "You’ve reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} before trying again."
+      first_day_topics_per_day: "You’ve reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
+      create_topic: "You’re creating topics too quickly. Please wait %{time_left} before trying again."
+      create_post: "You’re replying too quickly. Please wait %{time_left} before trying again."
+      delete_post: "You’re deleting posts too quickly. Please wait %{time_left} before trying again."
+      public_group_membership: "You’re joining/leaving groups too frequently. Please wait %{time_left} before trying again."
+      topics_per_day: "You’ve reached the maximum number of new topics. Please wait %{time_left} before trying again."
+      pms_per_day: "You’ve reached the maximum number of messages. Please wait %{time_left} before trying again."
+      create_like: "You’ve reached the maximum number of likes. Please wait %{time_left} before trying again."
+      create_bookmark: "You’ve reached the maximum number of bookmarks. Please wait %{time_left} before trying again."
+      edit_post: "You’ve reached the maximum number of edits. Please wait %{time_left} before trying again."
+      live_post_counts: "You’re asking for live post counts too quickly. Please wait %{time_left} before trying again."
+      unsubscribe_via_email: "You’ve reached the maximum number of unsubscribes via email. Please wait %{time_left} before trying again."
+      topic_invitations_per_day: "You’ve reached the maximum number of topic invitations. Please wait %{time_left} before trying again."
 
     hours:
       one: "1 hour"
@@ -873,6 +876,10 @@ en:
       title: "User-to-User"
       xaxis: "Day"
       yaxis: "Number of messages"
+    user_to_user_private_messages_with_replies:
+      title: "User-to-User (with replies)"
+      xaxis: "Day"
+      yaxis: "Number of messages"
     system_private_messages:
       title: "System"
       xaxis: "Day"
@@ -964,6 +971,10 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
+    web_crawlers:
+      title: "Web Crawler Requests"
+      xaxis: "User Agent"
+      yaxis: "Pageviews"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1115,6 +1126,10 @@ en:
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     whitelist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
+    whitelisted_crawler_user_agents: 'User agents of web crawlers that should be allowed to access the site.'
+    blacklisted_crawler_user_agents: 'Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined.'
+    slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive'
+    slow_down_crawler_rate: 'If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)'
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1170,6 +1185,7 @@ en:
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
+    sso_overrides_groups: "Synchronize all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
@@ -1584,6 +1600,7 @@ en:
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
+    approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
@@ -2088,6 +2105,22 @@ en:
         Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
 
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+
+    post_hidden_again:
+      title: "Post Hidden again"
+      subject_template: "Post hidden by community flags, staff notified"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden again.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Multiple community members flagged this post before it was hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -3599,6 +3632,7 @@ en:
     title: "Tags"
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
+    minimum_required_tags: "You must select at least %{count} tags."
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:

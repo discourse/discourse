@@ -35,6 +35,7 @@ ur:
     no_polls_associated_with_this_post: "کوئی پول اس پوسٹ کے ساتھ منسلک نہیں ہیں۔"
     no_poll_with_this_name: "کوئی پول جس کا نام <strong>%{نام}</strong> ہو، اس پوسٹ کے ساتھ منسلک نہیں ہے۔"
     post_is_deleted: "حذف کر دی گی پوست پر کام نہیں کیا جا سکتا۔"
+    user_cant_post_in_topic: "آپ ووٹ نہیں کر سکتے کیونکہ آپ اِس ٹاپک میں پوسٹ نہیں کر سکتے ہیں۔"
     topic_must_be_open_to_vote: "ووٹ کرنے کیلیے ٹاپک کا کھلا ہونا ضروری ہے۔"
     poll_must_be_open_to_vote: "ووٹ کرنے کیلیے پول کا کھلا ہونا ضروری ہے۔"
     topic_must_be_open_to_toggle_status: "سٹیٹس بدلنے کیلیے ٹاپک کا کھلا ہونا ضروری ہے۔"

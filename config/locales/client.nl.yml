@@ -164,6 +164,7 @@ nl:
     not_implemented: "Deze functie is helaas nog niet beschikbaar, sorry!"
     no_value: "Nee"
     yes_value: "Ja"
+    submit: "Verstuur"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
     sign_up: "Registreren"
@@ -247,6 +248,7 @@ nl:
     uploaded: "Geupload!"
     enable: "Inschakelen"
     disable: "Uitschakelen"
+    continue: "Doorgaan"
     undo: "Ongedaan maken"
     revert: "Terugzetten"
     failed: "Mislukt"
@@ -324,22 +326,15 @@ nl:
         make_user_group_owner: "Eigenaar maken"
         remove_user_as_group_owner: "Eigenaar intrekken"
     groups:
-      logs:
-        title: "Logboeken"
-        when: "Wanneer"
-        action: "Actie"
-        acting_user: "Uitvoerende gebruiker"
-        target_user: "Doelgebruiker"
-        subject: "Onderwerp"
-        details: "Details"
-        from: "Van"
-        to: "Tot"
-      edit:
-        title: 'Groep bewerken'
+      manage:
+        name: 'Naam'
         full_name: 'Volledige naam'
         add_members: "Leden toevoegen"
-        delete_member_confirm: "'%{username}' uit de groep '%{group}' verwijderen?"
-      name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
+        profile:
+          title: Profiel
+        logs:
+          from: "Van"
+          to: "Naar"
       public_admission: "Gebruikers toestaan om vrij aan de groep deel te nemen (Groep moet hiervoor zichtbaar zijn)"
       public_exit: "Gebruikers toestaan om vrij de groep te verlaten"
       empty:
@@ -350,12 +345,8 @@ nl:
         topics: "Er zijn geen topics van leden van deze groep."
         logs: "Er zijn geen logs voor deze groep."
       add: "Toevoegen"
-      join: "Deelnemen aan groep"
-      leave: "Groep verlaten"
-      request: "Verzoek voor deelname aan groep"
+      leave: "Verlaat"
       message: "Bericht"
-      automatic_group: Automatische groep
-      is_group_user: "U bent een lid van deze groep"
       allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
       membership_request_template: "Aangepaste template om aan gebruikers te laten zien bij het sturen van een lidmaatschap verzoek"
       membership_request:
@@ -364,26 +355,32 @@ nl:
         reason: "Laat de groepbeheerders weten waarom je in deze groep hoort"
       membership: "Lidmaatschap"
       name: "Naam"
+      user_count: "Gebruikers"
       bio: "Over groep"
       owner: "eigenaar"
       index:
         title: "Groepen"
         empty: "Er zijn geen zichtbare groepen."
+        automatic: "Automatisch"
+        closed: "Gesloten"
+        public: "Openbaar"
+        private: "Privaat"
+        public_groups: "Publieke groepen"
+        my_groups: "Mijn groepen"
+        is_group_user: "Lid"
+        is_group_owner: "Eigenaar"
       title:
         one: "Groep"
         other: "Groepen"
       activity: "Activiteit"
+      members:
+        filter_placeholder_admin: "gebruikersnaam of e-mail, e-mailadres"
+        filter_placeholder: "gebruikersnaam"
       topics: "Topics"
       posts: "Berichten"
       mentions: "Vermeldingen"
       messages: "Berichten"
       notification_level: "Standaard meldingsniveau voor groepsberichten"
-      visibility_levels:
-        title: "Voor wie is deze groep zichtbaar?"
-        public: "Iedereen"
-        members: "Groepseigenaars, -beheerders en -leden"
-        staff: "Groepseigenaars en -personeel"
-        owners: "Groepeigenaars en -beheerders"
       alias_levels:
         mentionable: "Wie kan deze groep taggen?"
         messageable: "Wie kan deze groep een bericht sturen?"
@@ -392,9 +389,6 @@ nl:
         mods_and_admins: "Alleen moderators en beheerders"
         members_mods_and_admins: "Alleen groepsleden, moderators en beheerders"
         everyone: "Iedereen"
-      trust_levels:
-        title: "Vertrouwensniveau dat automatisch aan nieuwe gebruikers wordt toegekend:"
-        none: "Geen"
       notifications:
         watching:
           title: "In de gaten houden"
@@ -419,7 +413,6 @@ nl:
       flair_color_placeholder: "(Optioneel) Hex-kleurwaarde"
       flair_preview_icon: "Pictogramvoorbeeld"
       flair_preview_image: "Afbeeldingsvoorbeeld"
-      flair_note: "Opmerking: flair is alleen zichtbaar voor de primaire groep van een gebruiker."
     user_action_groups:
       '1': "Gegeven likes"
       '2': "Ontvangen likes"
@@ -492,6 +485,7 @@ nl:
       activity_stream: "Activiteit"
       preferences: "Voorkeuren"
       expand_profile: "Uitvouwen"
+      collapse_profile: "Samenvouwen"
       bookmarks: "Favorieten"
       bio: "Over mij"
       invited_by: "Uitgenodigd door"
@@ -507,6 +501,7 @@ nl:
         disable: "Meldingen uitschakelen"
         enable: "Meldingen inschakelen"
         each_browser_note: "Opmerking: u moet deze instelling in elke browser die u gebruikt wijzigen."
+      dismiss: 'Negeren'
       dismiss_notifications: "Alle verwijderen"
       dismiss_notifications_tooltip: "Alle ongelezen meldingen markeren als gelezen"
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
@@ -605,6 +600,8 @@ nl:
         set_password: "Wachtwoord instellen"
         choose_new: "Kies een nieuw wachtwoord"
         choose: "Kies een wachtwoord"
+      second_factor:
+        label: "Code"
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -882,6 +879,7 @@ nl:
     first_post: Eerste bericht
     mute: Negeren
     unmute: Tonen
+    time_read: Gelezen
     last_reply_lowercase: laatste antwoord
     replies_lowercase:
       one: antwoord
@@ -1142,19 +1140,6 @@ nl:
       group_message_summary:
         one: "{{count}} bericht in je Postvak IN voor {{group_name}}"
         other: "{{count}} berichten in je Postvak IN voor {{group_name}}"
-      alt:
-        mentioned: "Genoemd door"
-        quoted: "Geciteerd door"
-        replied: "Beantwoord"
-        posted: "Geplaatst door"
-        edited: "Uw bericht bewerkt door"
-        liked: "Heeft uw bericht geliket"
-        invited_to_topic: "Uitgenodigd voor een topic door"
-        invitee_accepted: "Uitnodiging geaccepteerd door"
-        moved_post: "Uw bericht is verplaatst door"
-        linked: "Koppeling naar uw bericht"
-        granted_badge: "Badge toegekend"
-        group_message_summary: "Berichten in groepspostvak"
       popup:
         mentioned: '{{username}} heeft u genoemd in ''{{topic}}'' - {{site_title}}'
         group_mentioned: '{{username}} heeft u genoemd in ''{{topic}}'' - {{site_title}}'
@@ -1620,6 +1605,7 @@ nl:
       deleted_by_author:
         one: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
         other: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
+      collapse: "samenvouwen"
       expand_collapse: "uitvouwen/samenvouwen"
       gap:
         one: "1 verborgen antwoord weergeven"
@@ -2351,7 +2337,6 @@ nl:
         title: "Groepen"
         edit: "Groepen bewerken"
         refresh: "Vernieuwen"
-        new: "Nieuw"
         about: "Bewerk hier uw groepslidmaatschap en namen"
         group_members: "Groepsleden"
         delete: "Verwijderen"
@@ -2359,22 +2344,11 @@ nl:
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet worden verwijderd."
         delete_owner_confirm: "Eigenaarsprivileges van '% {username}' verwijderen?"
         add: "Toevoegen"
-        add_members: "Leden toevoegen"
         custom: "Aangepast"
-        bulk_complete: "De gebruikers zijn aan de groep toegevoegd."
-        bulk_complete_users_not_added: "Deze gebruikers zijn niet toegevoegd (controleer of ze een account hebben):"
-        bulk: "Bulk toevoegen aan groep"
-        bulk_paste: "Plak een lijst van gebruikersnamen of e-mailadressen, één per regel:"
-        bulk_select: "(selecteer een groep)"
         automatic: "Automatisch"
-        automatic_membership_email_domains: "Gebruikers die zich met een e-maildomein registeren dat precies overeenkomt met een domein in deze lijst worden automatisch aan deze groep toegevoegd:"
-        automatic_membership_retroactive: "Dezelfde e-maildomeinregel toepassen voor het toevoegen van bestaande geregistreerde gebruikers"
         default_title: "Standaardtitel voor alle gebruikers in deze groep"
-        primary_group: "Automatisch instellen als primaire groep"
         group_owners: Eigenaren
         add_owners: Eigenaren toevoegen
-        incoming_email: "Aangepast adres voor inkomende e-mail"
-        incoming_email_placeholder: "voer e-mailadres in"
         none_selected: "Selecteer een groep om te beginnen"
         no_custom_groups: "Een nieuwe aangepaste groep maken"
       api:

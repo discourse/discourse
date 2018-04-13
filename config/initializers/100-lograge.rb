@@ -34,6 +34,8 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         {
           ip: ip,
           username: username,
+          hostname: `hostname`,
+          pid: Process.pid
         }
       rescue => e
         Rails.logger.warn("Failed to append custom payload: #{e.message}\n#{e.backtrace.join("\n")}")
@@ -94,6 +96,11 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
       config.lograge.logger = DiscourseLogstashLogger.logger(
         uri: ENV['LOGSTASH_URI'], type: :rails
       )
+
+      # Remove ActiveSupport::Logger from the chain and replace with Lograge's
+      # logger
+      Rails.logger.instance_variable_get(:@chained).pop
+      Rails.logger.chain(config.lograge.logger)
     end
   end
 end

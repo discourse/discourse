@@ -49,7 +49,9 @@ export default function() {
     this.route('categoryWithID', { path: '/c/:parentSlug/:slug/:id' });
   });
 
-  this.route('groups', { resetNamespace: true });
+  this.route('groups', { resetNamespace: true }, function() {
+    this.route("new", { path: "custom/new" });
+  });
 
   this.route('group', { path: '/groups/:name', resetNamespace: true }, function() {
     this.route('members');
@@ -60,8 +62,13 @@ export default function() {
       this.route('mentions');
     });
 
-    this.route('logs');
-    this.route('edit');
+    this.route('manage', function() {
+      this.route('profile');
+      this.route('membership');
+      this.route('interaction');
+      this.route('members');
+      this.route('logs');
+    });
 
     this.route('messages', function() {
       this.route('inbox');

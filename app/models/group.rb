@@ -35,16 +35,20 @@ class Group < ActiveRecord::Base
   after_save :expire_cache
   after_destroy :expire_cache
 
+  after_commit :trigger_group_created_event, on: :create
+  after_commit :trigger_group_destroyed_event, on: :destroy
+
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
   end
 
   validate :name_format_validator
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
   validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0, 3] != 'fa-' }
+  validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
     everyone: 0,
@@ -434,6 +438,15 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # given something that might be a group name, id, or record, return the group id
+  def self.group_id_from_param(group_param)
+    return group_param.id if group_param.is_a?(Group)
+    return group_param if group_param.is_a?(Integer)
+
+    # subtle, using Group[] ensures the group exists in the DB
+    Group[group_param.to_sym].id
+  end
+
   def self.builtin
     Enum.new(:moderators, :admins, :trust_level_1, :trust_level_2)
   end
@@ -571,11 +584,33 @@ class Group < ActiveRecord::Base
     self.member_of(groups, user).where("gu.owner")
   end
 
+  def trigger_group_created_event
+    DiscourseEvent.trigger(:group_created, self)
+    true
+  end
+
+  def trigger_group_destroyed_event
+    DiscourseEvent.trigger(:group_destroyed, self)
+    true
+  end
+
   protected
 
     def name_format_validator
       self.name.strip!
-      UsernameValidator.perform_validation(self, 'name')
+      self.name.downcase!
+
+      UsernameValidator.perform_validation(self, 'name') || begin
+        if will_save_change_to_name? && name_was&.downcase != self.name
+          existing = Group.exec_sql(
+            User::USERNAME_EXISTS_SQL, username: self.name
+          ).values.present?
+
+          if existing
+            errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
+          end
+        end
+      end
     end
 
     def automatic_membership_email_domains_format_validator
@@ -653,6 +688,15 @@ class Group < ActiveRecord::Base
     end
 
   private
+
+    def validate_grant_trust_level
+      unless TrustLevel.valid?(self.grant_trust_level)
+        self.errors.add(:base, I18n.t(
+          'groups.errors.grant_trust_level_not_valid',
+          trust_level: self.grant_trust_level
+        ))
+      end
+    end
 
     def can_allow_membership_requests
       valid = true

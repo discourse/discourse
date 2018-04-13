@@ -320,6 +320,7 @@ login:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
+  sso_overrides_groups: false
   sso_overrides_bio: false
   sso_overrides_email:
     default: false
@@ -358,7 +359,7 @@ users:
     max: 60
   reserved_usernames:
     type: list
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|account-created"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|hp|account-created|password-reset|admin-login|confirm-admin|account-created|activate-account|confirm-email-token|authorize-email"
   min_password_length:
     client: true
     default: 10
@@ -646,6 +647,8 @@ posting:
   approve_new_topics_unless_trust_level:
     default: 0
     enum: 'TrustLevelSetting'
+  approve_unless_staged:
+    default: false
   notify_about_queued_posts_after:
     default: 24
   auto_close_messages_post_count: 500
@@ -1018,6 +1021,16 @@ security:
     default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?'
     type: list
     client: true
+  whitelisted_crawler_user_agents:
+    type: list
+    default: ''
+  blacklisted_crawler_user_agents:
+    type: list
+    default: ''
+  slow_down_crawler_user_agents:
+    type: list
+    default: 'bingbot'
+  slow_down_crawler_rate: 60
 
 onebox:
   enable_flash_video_onebox: false

@@ -73,7 +73,9 @@ class UserUpdater
     end
 
     TAG_NAMES.each do |attribute, level|
-      TagUser.batch_set(user, level, attributes[attribute])
+      if attributes.has_key?(attribute)
+        TagUser.batch_set(user, level, attributes[attribute]&.split(',') || [])
+      end
     end
 
     save_options = false

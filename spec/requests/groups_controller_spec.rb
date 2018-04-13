@@ -4,6 +4,8 @@ describe GroupsController do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
+  let(:admin) { Fabricate(:admin) }
+  let(:moderator) { Fabricate(:moderator) }
 
   describe '#index' do
     let(:staff_group) do
@@ -11,11 +13,32 @@ describe GroupsController do
     end
 
     context 'when group directory is disabled' do
-      it 'should deny access' do
+      before do
         SiteSetting.enable_group_directory = false
+      end
 
+      it 'should deny access for an anon user' do
         get "/groups.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(403)
+      end
+
+      it 'should deny access for a normal user' do
+        get "/groups.json"
+        expect(response.status).to eq(403)
+      end
+
+      it 'should not deny access for an admin' do
+        sign_in(admin)
+        get "/groups.json"
+
+        expect(response.status).to eq(200)
+      end
+
+      it 'should not deny access for a moderator' do
+        sign_in(moderator)
+        get "/groups.json"
+
+        expect(response.status).to eq(200)
       end
     end
 
@@ -206,6 +229,47 @@ describe GroupsController do
   end
 
   describe '#show' do
+    it "ensures the group can be seen" do
+      sign_in(Fabricate(:user))
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns the right response" do
+      sign_in(user)
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(200)
+
+      response_body = JSON.parse(response.body)
+
+      expect(response_body['group']['id']).to eq(group.id)
+      expect(response_body['extras']["visible_group_names"]).to eq([group.name])
+    end
+
+    context 'as an admin' do
+      it "returns the right response" do
+        sign_in(Fabricate(:admin))
+        get "/groups/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+
+        response_body = JSON.parse(response.body)
+
+        expect(response_body['group']['id']).to eq(group.id)
+
+        groups = Group::AUTO_GROUPS.keys
+        groups.delete(:everyone)
+        groups.push(group.name)
+
+        expect(response_body['extras']["visible_group_names"])
+          .to contain_exactly(*groups.map(&:to_s))
+      end
+    end
+
     it 'should respond to HTML' do
       group.update_attribute(:bio_cooked, 'testing group bio')
 
@@ -228,10 +292,88 @@ describe GroupsController do
 
         expect(response.status).to eq(200)
 
-        response_body = JSON.parse(response.body)['basic_group']
+        response_body = JSON.parse(response.body)['group']
 
         expect(response_body["id"]).to eq(group.id)
       end
+    end
+  end
+
+  describe "#posts" do
+    it "ensures the group can be seen" do
+      sign_in(Fabricate(:user))
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "calls `posts_for` and responds with JSON" do
+      sign_in(user)
+      post = Fabricate(:post, user: user)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body).first["id"]).to eq(post.id)
+    end
+  end
+
+  describe "#members" do
+    it "ensures the group can be seen" do
+      sign_in(Fabricate(:user))
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "ensures that membership can be paginated" do
+      5.times { group.add(Fabricate(:user)) }
+      usernames = group.users.map { |m| m.username }.sort
+
+      get "/groups/#{group.name}/members.json", params: { limit: 3 }
+
+      expect(response.status).to eq(200)
+
+      members = JSON.parse(response.body)["members"]
+
+      expect(members.map { |m| m['username'] }).to eq(usernames[0..2])
+
+      get "/groups/#{group.name}/members.json", params: { limit: 3, offset: 3 }
+
+      expect(response.status).to eq(200)
+
+      members = JSON.parse(response.body)["members"]
+
+      expect(members.map { |m| m['username'] }).to eq(usernames[3..5])
+    end
+  end
+
+  describe '#posts_feed' do
+    it 'renders RSS' do
+      get "/groups/#{group.name}/posts.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+  end
+
+  describe '#mentions_feed' do
+    it 'renders RSS' do
+      get "/groups/#{group.name}/mentions.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'fails when disabled' do
+      SiteSetting.enable_mentions = false
+
+      get "/groups/#{group.name}/mentions.rss"
+
+      expect(response.status).to eq(404)
     end
   end
 
@@ -274,11 +416,28 @@ describe GroupsController do
       end
 
       it "should be able update the group" do
-        group.update!(allow_membership_requests: false)
+        group.update!(
+          allow_membership_requests: false,
+          visibility_level: 2,
+          mentionable_level: 2,
+          messageable_level: 2,
+          default_notification_level: 0,
+          grant_trust_level: 0,
+          automatic_membership_retroactive: false
+        )
 
         expect do
           put "/groups/#{group.id}.json", params: {
             group: {
+              mentionable_level: 1,
+              messageable_level: 1,
+              visibility_level: 1,
+              automatic_membership_email_domains: 'test.org',
+              automatic_membership_retroactive: true,
+              title: 'haha',
+              primary_group: true,
+              grant_trust_level: 1,
+              incoming_email: 'test@mail.org',
               flair_bg_color: 'FFF',
               flair_color: 'BBB',
               flair_url: 'fa-adjust',
@@ -288,11 +447,13 @@ describe GroupsController do
               public_exit: true,
               allow_membership_requests: true,
               membership_request_template: 'testing',
+              default_notification_level: 1,
+              name: 'testing'
             }
           }
-        end.to change { GroupHistory.count }.by(9)
+        end.to change { GroupHistory.count }.by(13)
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         group.reload
 
@@ -305,7 +466,29 @@ describe GroupsController do
         expect(group.public_exit).to eq(true)
         expect(group.allow_membership_requests).to eq(true)
         expect(group.membership_request_template).to eq('testing')
-        expect(GroupHistory.last.subject).to eq('membership_request_template')
+        expect(group.name).to eq('test')
+        expect(group.visibility_level).to eq(2)
+        expect(group.mentionable_level).to eq(1)
+        expect(group.messageable_level).to eq(1)
+        expect(group.default_notification_level).to eq(1)
+        expect(group.automatic_membership_email_domains).to eq(nil)
+        expect(group.automatic_membership_retroactive).to eq(false)
+        expect(group.title).to eq('haha')
+        expect(group.primary_group).to eq(false)
+        expect(group.incoming_email).to eq(nil)
+        expect(group.grant_trust_level).to eq(0)
+      end
+
+      it 'should not be allowed to update automatic groups' do
+        group = Group.find(Group::AUTO_GROUPS[:admins])
+
+        put "/groups/#{group.id}.json", params: {
+          group: {
+            messageable_level: 1
+          }
+        }
+
+        expect(response.status).to eq(403)
       end
     end
 
@@ -313,13 +496,84 @@ describe GroupsController do
       before do
         user.update_attributes!(admin: true)
         sign_in(user)
+        SiteSetting.queue_jobs = true
       end
 
       it 'should be able to update the group' do
-        put "/groups/#{group.id}.json", params: { group: { flair_color: 'BBB' } }
+        group.update!(
+          visibility_level: 2,
+          automatic_membership_retroactive: false,
+          grant_trust_level: 0
+        )
 
-        expect(response).to be_success
-        expect(group.reload.flair_color).to eq('BBB')
+        put "/groups/#{group.id}.json", params: {
+          group: {
+            flair_color: 'BBB',
+            name: 'testing',
+            incoming_email: 'test@mail.org',
+            primary_group: true,
+            automatic_membership_email_domains: 'test.org',
+            automatic_membership_retroactive: true,
+            grant_trust_level: 2,
+            visibility_level: 1
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.flair_color).to eq('BBB')
+        expect(group.name).to eq('testing')
+        expect(group.incoming_email).to eq("test@mail.org")
+        expect(group.primary_group).to eq(true)
+        expect(group.visibility_level).to eq(1)
+        expect(group.automatic_membership_email_domains).to eq('test.org')
+        expect(group.automatic_membership_retroactive).to eq(true)
+        expect(group.grant_trust_level).to eq(2)
+
+        expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"])
+          .to eq(group.id)
+      end
+
+      it "should be able to update an automatic group" do
+        group = Group.find(Group::AUTO_GROUPS[:admins])
+
+        group.update!(
+          visibility_level: 2,
+          mentionable_level: 2,
+          messageable_level: 2,
+          default_notification_level: 2
+        )
+
+        put "/groups/#{group.id}.json", params: {
+          group: {
+            flair_color: 'BBB',
+            name: 'testing',
+            visibility_level: 1,
+            mentionable_level: 1,
+            messageable_level: 1,
+            default_notification_level: 1
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.flair_color).to eq(nil)
+        expect(group.name).to eq('admins')
+        expect(group.visibility_level).to eq(1)
+        expect(group.mentionable_level).to eq(1)
+        expect(group.messageable_level).to eq(1)
+        expect(group.default_notification_level).to eq(1)
+      end
+
+      it 'triggers a extensibility event' do
+        event = DiscourseEvent.track_events {
+          put "/groups/#{group.id}.json", params: { group: { flair_color: 'BBB' } }
+        }.last
+
+        expect(event[:event_name]).to eq(:group_updated)
+        expect(event[:params].first).to eq(group)
       end
     end
 
@@ -579,7 +833,8 @@ describe GroupsController do
         end
 
         it 'fails when multiple member already exists' do
-          user3 = Fabricate(:user)
+          user2.update!(username: 'alice')
+          user3 = Fabricate(:user, username: 'bob')
           [user2, user3].each { |user| group.add(user) }
 
           expect do
@@ -591,7 +846,7 @@ describe GroupsController do
 
           expect(JSON.parse(response.body)["errors"]).to include(I18n.t(
             "groups.errors.member_already_exist",
-            username: "#{user2.username}, #{user3.username}",
+            username: "alice, bob",
             count: 2
           ))
         end
@@ -750,7 +1005,7 @@ describe GroupsController do
     end
   end
 
-  describe "group histories" do
+  describe "#histories" do
     context 'when user is not signed in' do
       it 'should raise the right error' do
         get "/groups/#{group.name}/logs.json"
@@ -770,18 +1025,20 @@ describe GroupsController do
       end
     end
 
-    describe 'viewing history' do
-      context 'public group' do
-        before do
-          group.add_owner(user)
+    describe 'when user is a group owner' do
+      before do
+        group.add_owner(user)
+        sign_in(user)
+      end
 
+      describe 'when viewing a public group' do
+        before do
           group.update_attributes!(
             public_admission: true,
             public_exit: true
           )
 
           GroupActionLogger.new(user, group).log_change_group_settings
-          sign_in(user)
         end
 
         it 'should allow group owner to view history' do
@@ -798,40 +1055,56 @@ describe GroupsController do
         end
       end
 
-      context 'admin' do
-        let(:admin) { Fabricate(:admin) }
+      it 'should not be allowed to view history of an automatic group' do
+        group = Group.find_by(id: Group::AUTO_GROUPS[:admins])
 
-        before do
-          sign_in(admin)
-        end
+        get "/groups/#{group.name}/logs.json"
 
-        it 'should be able to view history' do
-          GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+        expect(response.status).to eq(403)
+      end
+    end
 
-          get "/groups/#{group.name}/logs.json"
+    context 'when user is an admin' do
+      let(:admin) { Fabricate(:admin) }
 
-          expect(response).to be_success
+      before do
+        sign_in(admin)
+      end
 
-          result = JSON.parse(response.body)["logs"].first
+      it 'should be able to view history' do
+        GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
 
-          expect(result["action"]).to eq(GroupHistory.actions[3].to_s)
-        end
+        get "/groups/#{group.name}/logs.json"
 
-        it 'should be able to filter through the history' do
-          GroupActionLogger.new(admin, group).log_add_user_to_group(user)
-          GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+        expect(response).to be_success
 
-          get "/groups/#{group.name}/logs.json", params: {
-            filters: { "action" => "add_user_to_group" }
-          }
+        result = JSON.parse(response.body)["logs"].first
 
-          expect(response).to be_success
+        expect(result["action"]).to eq(GroupHistory.actions[3].to_s)
+      end
 
-          logs = JSON.parse(response.body)["logs"]
+      it 'should be able to view history of automatic groups' do
+        group = Group.find_by(id: Group::AUTO_GROUPS[:admins])
 
-          expect(logs.count).to eq(1)
-          expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
-        end
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+      end
+
+      it 'should be able to filter through the history' do
+        GroupActionLogger.new(admin, group).log_add_user_to_group(user)
+        GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+
+        get "/groups/#{group.name}/logs.json", params: {
+          filters: { "action" => "add_user_to_group" }
+        }
+
+        expect(response).to be_success
+
+        logs = JSON.parse(response.body)["logs"]
+
+        expect(logs.count).to eq(1)
+        expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
       end
     end
   end
@@ -970,6 +1243,36 @@ describe GroupsController do
 
         expect(groups.map { |group| group['id'] })
           .to contain_exactly(group.id, hidden_group.id)
+      end
+    end
+  end
+
+  describe '#new' do
+    describe 'for an anon user' do
+      it 'should return 404' do
+        get '/groups/custom/new'
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe 'for a normal user' do
+      before { sign_in(user) }
+
+      it 'should return 404' do
+        get '/groups/custom/new'
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe 'for an admin user' do
+      before { sign_in(Fabricate(:admin)) }
+
+      it 'should return 404' do
+        get '/groups/custom/new'
+
+        expect(response.status).to eq(200)
       end
     end
   end

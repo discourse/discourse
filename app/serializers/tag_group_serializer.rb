@@ -1,5 +1,5 @@
 class TagGroupSerializer < ApplicationSerializer
-  attributes :id, :name, :tag_names, :parent_tag_name, :one_per_topic
+  attributes :id, :name, :tag_names, :parent_tag_name, :one_per_topic, :visible_only_to_staff
 
   def tag_names
     object.tags.map(&:name).sort

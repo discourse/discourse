@@ -19,8 +19,8 @@ export default ComboBoxComponent.extend({
   categoryStyle: Ember.computed.alias("siteSettings.category_style"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
-  caretDownIcon: "caret-right fa-fw",
-  caretUpIcon: "caret-down fa-fw",
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
 
   @computed("tagId")
   noTagsSelected() {

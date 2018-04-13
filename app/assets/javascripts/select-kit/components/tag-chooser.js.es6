@@ -37,7 +37,7 @@ export default MultiSelectComponent.extend(Tags, {
     });
 
     if (!this.get("unlimitedTagCount")) {
-      this.set("limit", parseInt(this.get("limit") || this.get("siteSettings.max_tags_per_topic")));
+      this.set("maximum", parseInt(this.get("limit") || this.get("maximum") || this.get("siteSettings.max_tags_per_topic")));
     }
   },
 
@@ -62,7 +62,7 @@ export default MultiSelectComponent.extend(Tags, {
     },
 
     onExpand() {
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
     },
 
     onDeselect() {
@@ -108,8 +108,16 @@ export default MultiSelectComponent.extend(Tags, {
       results = results.sort((a, b) => a.id > b.id);
     }
 
-    return results.map(result => {
+    results = results.map(result => {
       return { id: result.text, name: result.text, count: result.count };
     });
+
+    // if forbidden we probably have an existing tag which is not in the list of
+    // returned tags, so we manually add it at the top
+    if (json.forbidden) {
+      results.unshift({ id: json.forbidden, name: json.forbidden, count: 0 });
+    }
+
+    return results;
   }
 });

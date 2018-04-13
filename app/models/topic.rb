@@ -31,7 +31,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids, :tags_changed
+  attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     if site_setting.name.to_s == "slug_generation_method" && site_setting.saved_change_to_value?
@@ -190,6 +190,8 @@ class Topic < ActiveRecord::Base
 
     where("topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})", condition[1])
   }
+
+  scope :with_subtype, ->(subtype) { where('topics.subtype = ?', subtype) }
 
   attr_accessor :ignore_category_auto_close
   attr_accessor :skip_callbacks
@@ -1019,11 +1021,16 @@ SQL
     TopicUser.change(user.id, id, cleared_pinned_at: nil)
   end
 
-  def update_pinned(status, global = false, pinned_until = nil)
-    pinned_until = Time.parse(pinned_until) rescue nil
+  def update_pinned(status, global = false, pinned_until = "")
+    pinned_until ||= ''
+
+    pinned_until = begin
+      Time.parse(pinned_until)
+    rescue ArgumentError
+    end
 
     update_columns(
-      pinned_at: status ? Time.now : nil,
+      pinned_at: status ? Time.zone.now : nil,
       pinned_globally: global,
       pinned_until: pinned_until
     )
@@ -1161,19 +1168,31 @@ SQL
   def message_archived?(user)
     return false unless user && user.id
 
-    sql = <<SQL
-SELECT 1 FROM topic_allowed_groups tg
-JOIN group_archived_messages gm
-      ON gm.topic_id = tg.topic_id AND
-         gm.group_id = tg.group_id
-  WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
-    AND tg.topic_id = :topic_id
+    # tricky query but this checks to see if message is archived for ALL groups you belong to
+    # OR if you have it archived as a user explicitly
 
-UNION ALL
+    sql = <<~SQL
+    SELECT 1
+    WHERE
+      (
+      SELECT count(*) FROM topic_allowed_groups tg
+      JOIN group_archived_messages gm
+            ON gm.topic_id = tg.topic_id AND
+               gm.group_id = tg.group_id
+        WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
+          AND tg.topic_id = :topic_id
+      ) =
+      (
+        SELECT case when count(*) = 0 then -1 else count(*) end FROM topic_allowed_groups tg
+        WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
+          AND tg.topic_id = :topic_id
+      )
 
-SELECT 1 FROM topic_allowed_users tu
-JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
-WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
+      UNION ALL
+
+      SELECT 1 FROM topic_allowed_users tu
+      JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
+      WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
 SQL
 
     User.exec_sql(sql, user_id: user.id, topic_id: id).to_a.length > 0
@@ -1305,6 +1324,10 @@ SQL
 
   def featured_link_root_domain
     MiniSuffix.domain(URI.parse(URI.encode(self.featured_link)).hostname)
+  end
+
+  def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
+    private_messages.with_subtype(topic_subtype).where('topics.created_at >= ? AND topics.created_at <= ?', start_date, end_date).group('date(topics.created_at)').order('date(topics.created_at)').count
   end
 
   private

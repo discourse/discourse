@@ -44,6 +44,7 @@
       <%= raw theme_lookup("head_tag") %>
     <%- end %>
 
+    <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
     <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.json">
 
@@ -60,8 +61,7 @@
   </head>
 
   <body class="<%= body_classes %>">
-    <%= render_google_tag_manager_code %>
-
+    <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
       <div id="main-outlet" class="wrap">

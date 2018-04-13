@@ -3,3 +3,6 @@
 {{/if}}
 {{topic-status topic=flaggedPost.topic}}
 <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
+{{#if flaggedPost.reply_count}}
+  <span class="flagged-post-reply-count">{{i18n 'admin.flags.replies' count=flaggedPost.reply_count}}</span>
+{{/if}}

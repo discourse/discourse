@@ -24,6 +24,7 @@ class TopicConverter
       @topic.archetype = Archetype.default
       @topic.save
       update_user_stats
+      update_category_topic_count_by(1)
 
       # TODO: Every post in a PRIVATE MESSAGE looks the same: each is a UserAction::NEW_PRIVATE_MESSAGE.
       #       So we need to remove all those user actions and re-log all the posts.
@@ -46,6 +47,7 @@ class TopicConverter
 
   def convert_to_private_message
     Topic.transaction do
+      update_category_topic_count_by(-1)
       @topic.category_id = nil
       @topic.archetype = Archetype.private_message
       add_allowed_users
@@ -89,6 +91,12 @@ class TopicConverter
     @topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id < 0 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)
+    end
+  end
+
+  def update_category_topic_count_by(num)
+    if @topic.category_id.present?
+      Category.where(['id = ?', @topic.category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
   end
 
