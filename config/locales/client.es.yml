@@ -346,17 +346,10 @@ es:
         make_user_group_owner: "Convertir en dueño"
         remove_user_as_group_owner: "Quitar de dueño"
     groups:
-      new:
-        title: "Nuevo grupo"
-        description: "Crear un nuevo grupo"
-        create: "Crear"
-        name:
-          too_short: "El nombre del grupo es muy corto"
-          too_long: "El nombre del grupo es demasiado largo"
-          checking: "Comprobando disponibilidad del nombre del grupo..."
-          available: "El nombre del grupo está disponible"
-          not_available: "El nombre del grupo no está disponible"
-          blank: "El nombre del grupo no puede estar vacío"
+      add_members:
+        title: "Añadir miembros"
+        description: "Gestionar los miembros de este grupo"
+        usernames: "Nombres de usuari"
       manage:
         title: 'Gestionar'
         name: 'Nombre'
@@ -365,11 +358,13 @@ es:
         delete_member_confirm: "¿Quitar a '%{username}' del grupo '%{group}'?"
         profile:
           title: Perfil
-        members:
-          title: "Miembros"
-          description: "Gestionar los miembros de este grup"
-          usernames: "Nombres de usuario"
-          as_owner: "Establecer usuario(s) como dueño(s) de este grupo"
+        interaction:
+          title: Interacción
+          posting: Publicaciones
+          notification: Notificación
+        membership:
+          title: Membresía
+          access: Acceso
         logs:
           title: "Registros"
           when: "Cuándo"
@@ -380,7 +375,6 @@ es:
           details: "Detalles"
           from: "De"
           to: "A"
-      name_placeholder: "Nombre del grupo, sin espacios, igual que los nombres de usuarios"
       public_admission: "Permitir a los usuarios unirse al grupo cuando quieran (Requiere que el grupo sea visible)"
       public_exit: "Permitir a los usuarios dejar el grupo libremente"
       empty:
@@ -448,12 +442,6 @@ es:
       mentions: "Menciones"
       messages: "Mensajes"
       notification_level: "Nivel de notificación por defecto para mensajes en grupo"
-      visibility_levels:
-        title: "¿Quién puede ver este grupo?"
-        public: "Todos"
-        members: "Propietarios del grupo, miembros y administradores"
-        staff: "Propietarios del grupo, y staff"
-        owners: "Propietarios del grupo y administradores"
       alias_levels:
         mentionable: "¿Quién puede @mencionar este grupo?"
         messageable: "¿Quién puede mensajear este grupo?"
@@ -462,9 +450,6 @@ es:
         mods_and_admins: "Solo moderadores y administradores"
         members_mods_and_admins: "Solo miembros del grupo, moderadores y administradores"
         everyone: "Todos"
-      trust_levels:
-        title: "Nivel de confianza entregado automáticamente a miembros cuando son añadidos:"
-        none: "Ninguno"
       notifications:
         watching:
           title: "Vigilando"
@@ -489,7 +474,6 @@ es:
       flair_color_placeholder: "(Opcional) Valor del color en hexadecimal"
       flair_preview_icon: "Previsualización del icono"
       flair_preview_image: "Previsualización de la imagen"
-      flair_note: "Nota: el sub-avatar solo se mostrará para el grupo primario del usuario."
     user_action_groups:
       '1': "'Me gusta' Dados"
       '2': "'Me gusta' Recibidos"
@@ -922,6 +906,7 @@ es:
         header_title: "perfil, mensajes, marcadores y preferencias"
       title:
         title: "Título"
+        none: "(ninguno)"
       filters:
         all: "Todos"
       stream:
@@ -1341,9 +1326,6 @@ es:
       select_all: "Seleccionar todo"
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
-      result_count:
-        one: "<span>1 resultado para</span><span class='term'>{{term}}</span>"
-        other: "<span>{{count}}{{plus}} resultados para</span><span class='term'>{{term}}</span>"
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
       no_more_results: "No se encontraron más resultados."
@@ -2604,12 +2586,48 @@ es:
           notify_user: "personalizado"
           notify_moderators: "personalizado"
       groups:
+        new:
+          title: "Nuevo grupo"
+          create: "Crear"
+          name:
+            too_short: "El nombre del grupo es muy corto"
+            too_long: "El nombre del grupo es muy largo"
+            checking: "Comprobando disponibilidad del nombre del grupo..."
+            available: "El nombre del grupo está disponible"
+            not_available: "El nombre del grupo no está disponible"
+            blank: "El nombre del grupo no puede estar vacío"
+        bulk_add:
+          title: "Añadir en masa al grupo"
+          complete_users_not_added: "Los siguientes usuarios no han sido añadidos (asegúrate de que tengan cuenta):"
+          paste: "Pega una lista de nombres de usuario o emails, uno por línea:"
+        add_members:
+          as_owner: "Establecer usuario(s) como dueño(s) de este grupo"
+        manage:
+          interaction:
+            email: Email
+            incoming_email: "Dirección de email entrante personalizada"
+            incoming_email_placeholder: "introduce un email"
+            visibility: Visibilidad
+            visibility_levels:
+              title: "¿Quién puede ver este grupo?"
+              public: "Todo el mundo"
+              members: "Dueños del grupo, miembros y administradores"
+              staff: "Dueños del grupo y staff"
+              owners: "Dueños del grupo y administradores"
+          membership:
+            automatic: Automático
+            trust_level: Nivel de confianza
+            trust_levels_title: "Nivel de confianza asignado automáticamente a los miembros cuando son añadidos:"
+            trust_levels_none: "Ninguno"
+            automatic_membership_email_domains: "Los usuarios que se registren con un email cuyo dominio coincida exactamente con uno en esta lista serán añadidos automáticamente a este grupo:"
+            automatic_membership_retroactive: "Aplicar la misma regla de dominios de email para añadir usuarios ya registrados"
+            primary_group: "Establecer como grupo primario automáticamente"
+        name_placeholder: "Nombre del grupo, sin espacios, mismos requisitos que los nombres de usuario"
         primary: "Grupo principal"
         no_primary: "(ningún grupo principal)"
         title: "Grupos"
         edit: "Editar grupos"
         refresh: "Actualizar"
-        new: "Nuevo"
         about: "Edita los aquí los nombres de los grupos y sus miembros"
         group_members: "Miembros del grupo"
         delete: "Borrar"
@@ -2617,22 +2635,11 @@ es:
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_owner_confirm: "¿Quitar privilegios de propietario para '%{username}'?"
         add: "Añadir"
-        add_members: "Añadir miembros"
         custom: "Personalizado"
-        bulk_complete: "Los usuarios han sido añadidos al grupo."
-        bulk_complete_users_not_added: "Estos usuarios no fueron agregados (asegurar que ellos tengan una cuenta):"
-        bulk: "Añadir al grupo en masa"
-        bulk_paste: "Pega una lista de nombres de usuario o emails, uno por línea:"
-        bulk_select: "(selecciona un grupo)"
         automatic: "Automático"
-        automatic_membership_email_domains: "Los usuarios que se registren con un dominio de e-mail que esté en esta lista serán automáticamente añadidos a este grupo:"
-        automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
         default_title: "Título por defecto para todos los miembros en este grupo"
-        primary_group: "Establecer automáticamente como grupo principal"
         group_owners: Propietarios
         add_owners: Añadir propietarios
-        incoming_email: "Correos electrónicos entrantes personalizados"
-        incoming_email_placeholder: "introducir dirección de email"
         none_selected: "Selecciona un grupo para empezar"
         no_custom_groups: "Crear un nuevo grupo personalizado"
       api:
@@ -2740,6 +2747,7 @@ es:
         change_settings: "Cambiar preferencias"
         change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"
+        official: "Plugin oficial"
       backups:
         title: "Copia de seguridad"
         menu:

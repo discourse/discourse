@@ -127,6 +127,7 @@ ja:
     topic_admin_menu: "トピックの管理"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
+    bootstrap_mode_disabled: "ブートストラップモードは24時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
     s3:
@@ -220,6 +221,12 @@ ja:
       last_read: "この投稿をブックマークする"
       remove: "ブックマークを削除"
       confirm_clear: "このトピックの全てのブックマークを削除してもよいですか？"
+    topic_count_latest:
+      other: "{{count}}件の新規/更新トピックがあります。"
+    topic_count_unread:
+      other: "{{count}} 件の未読トピックがあります。"
+    topic_count_new:
+      other: "{{count}} 件の新規トピックがあります。"
     preview: "プレビュー"
     cancel: "キャンセル"
     save: "変更を保存"
@@ -306,7 +313,10 @@ ja:
         make_user_group_owner: "オーナーにする"
         remove_user_as_group_owner: "オーナーから削除する"
     groups:
-      name_placeholder: "グループネームはユーザー名と同様にスペース無し"
+      add_members:
+        title: "メンバーを追加する"
+        description: "このグループのメンバーシップを管理する"
+        usernames: "ユーザーネーム"
       public_admission: "ユーザーがグループへ自由に参加できるようにする (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に離脱できるようにする"
       empty:
@@ -339,12 +349,6 @@ ja:
       mentions: "メンション"
       messages: "メッセージ"
       notification_level: "グループメッセージのデフォルト通知レベル"
-      visibility_levels:
-        title: "誰がこのグループを見ることができますか?"
-        public: "誰でも"
-        members: "グループのオーナー、メンバーおよび管理者"
-        staff: "グループオーナーとスタッフのみ"
-        owners: "グループオーナーと管理者のみ"
       alias_levels:
         mentionable: "誰がこのグループに@メンションを送れますか?"
         messageable: "誰がこのグループにメッセージを送れますか?"
@@ -353,9 +357,6 @@ ja:
         mods_and_admins: "管理者とモデレータのみ"
         members_mods_and_admins: "管理者、モデレータ、グループメンバーのみ"
         everyone: "だれでも"
-      trust_levels:
-        title: "以下を追加した時に自動でトラストレベルを付与する:"
-        none: "なし"
       notifications:
         watching:
           title: "ウォッチ中"
@@ -380,7 +381,6 @@ ja:
       flair_color_placeholder: "(オプション) HEXカラー値"
       flair_preview_icon: "アイコンプレビュー"
       flair_preview_image: "画像プレビュー"
-      flair_note: "アバターはユーザーのプライマリーグループにだけ表示されます。"
     user_action_groups:
       '1': "「いいね！」 "
       '2': "「いいね！」 された"
@@ -888,10 +888,12 @@ ja:
       title: "ログイン"
       username: "ユーザ名"
       password: "パスワード"
+      second_factor_title: "２段階認証"
       email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
       error: "不明なエラー"
       rate_limit: "しばらく待ってから再度ログインをお試しください。"
+      blank_username: "あなたのメールアドレスかユーザー名を入力してください。"
       blank_username_or_password: "あなたのメールアドレスかユーザ名、そしてパスワードを入力して下さい。"
       reset_password: 'パスワードをリセット'
       logging_in: "ログイン中..."
@@ -904,6 +906,7 @@ ja:
       not_allowed_from_ip_address: "このIPアドレスでログインできません"
       admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
       resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックしてください。"
+      omniauth_disallow_totp: "あなたのアカウントは２段階認証が有効になっています。ログインにはパスワードが必要です。"
       resend_title: "アクティベーションメールの再送"
       change_email: "メールアドレスの変更"
       provide_new_email: "新しいメールアドレスを設定します。このあと、確認のメールを送信します。"
@@ -2124,26 +2127,17 @@ ja:
         title: "グループ"
         edit: "グループの編集"
         refresh: "更新"
-        new: "新規"
         about: "グループメンバーとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
         delete_confirm: "このグループを削除しますか?"
         delete_failed: "グループの削除に失敗しました。自動作成グループを削除することはできません。"
         add: "追加"
-        add_members: "メンバーを追加"
         custom: "カスタム"
-        bulk: "グループに一括追加"
-        bulk_paste: "1行ごとにユーザ名またはメールアドレスを貼り付けてください:"
-        bulk_select: "(グループを選択)"
         automatic: "自動で作成されたグループ"
-        automatic_membership_email_domains: "リスト内のメールアドレスのドメインに正確に一致したユーザは自動的にグループに追加される"
-        automatic_membership_retroactive: "同じメールアドレスドメインのルールを既に登録済みのユーザにも適用"
         default_title: "このグループのすべてのユーザーのデフォルトタイトル"
-        primary_group: "自動的にプライマリグループとして設定"
         group_owners: オーナー
         add_owners: オーナーを追加
-        incoming_email_placeholder: "メールアドレスを入力"
       api:
         generate_master: "マスターAPIキーを生成"
         none: "現在アクティブなAPIキーが存在しません。"

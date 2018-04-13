@@ -331,7 +331,6 @@ tr_TR:
         make_user_group_owner: "Sahip yap"
         remove_user_as_group_owner: "Sahipliğini İptal Et"
     groups:
-      name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
       public_admission: "Kullanıcıların gruba özgürce katılmalarına izin ver (grubun Herkese açık olması gerekir)"
       public_exit: "Kullanıcıların grubu özgürce terk etmesine izin ver"
       empty:
@@ -364,12 +363,6 @@ tr_TR:
       mentions: "Bahsetmeler"
       messages: "İletiler"
       notification_level: "Grup mesajları için varsayılan bildirim düzeyi"
-      visibility_levels:
-        title: "Bu grubu kim görebilir?"
-        public: "Herkes"
-        members: "Grup sahipleri, üyeler ve yöneticiler"
-        staff: "Grup sahipleri ve yetkili"
-        owners: "Grup sahipleri ve yöneticileri"
       alias_levels:
         mentionable: "Bu gruptan kimler @bahsedebilir?"
         messageable: "Bu gruba kimler ileti gönderebilir?"
@@ -378,9 +371,6 @@ tr_TR:
         mods_and_admins: "Sadece Moderatörler ve Yöneticiler"
         members_mods_and_admins: "Sadece Grup Üyeleri, Moderatörler ve Yöneticiler"
         everyone: "Herkes"
-      trust_levels:
-        title: "Eklendiklerinde üyelere otomatik olarak güven seviyesi verilir:"
-        none: "Hiç"
       notifications:
         watching:
           title: "Gözleniyor"
@@ -405,7 +395,6 @@ tr_TR:
       flair_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
       flair_preview_icon: "İkonu önizle"
       flair_preview_image: "Resimi önizle"
-      flair_note: "Not: Kabiliyet sadece bir kullanıcının birincil grubu için gösterecek."
     user_action_groups:
       '1': "Verilen Beğeniler"
       '2': "Alınan Beğeniler"
@@ -1188,9 +1177,6 @@ tr_TR:
       select_all: "Tümünü Seç"
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
-      result_count:
-        one: "<span class='term'>{{term}}</span><span>için {{count}}{{plus}} sonuç</span>"
-        other: "<span class='term'>{{term}}</span><span>için {{count}}{{plus}} sonuç</span>"
       title: "konu, gönderi, kullanıcı veya kategori ara"
       no_results: "Hiç bir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
@@ -1363,7 +1349,7 @@ tr_TR:
       toggle_information: "konu ayrıntılarını aç/kapa"
       read_more_in_category: "Daha fazlası için {{catLink}} kategorisine göz atabilir ya da  {{latestLink}}yebilirsiniz."
       read_more: "Daha fazla okumak mı istiyorsunuz? {{catLink}} ya da {{latestLink}}."
-      read_more_MF: "Kalan { UNREAD, plural, =0 {} one { <a href='/unread'>1 okunmamış</a> } other { <a href='/unread'># okunmamış</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='/new'>1 yeni</a> konu} other { {BOTH, select, true{and } false {} other{}} <a href='/new'># yeni</a> konu} } var, veya {CATEGORY, select, true { {catLink}} false {{latestLink}} kategorilerindeki diğer {} konulara göz atabilirsiniz }"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>1 okunmamış mesaj</a> } other { <a href='/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsiniz."
       browse_all_categories: Bütün kategorilere göz at
       view_latest_topics: en son konuları görüntüle
       suggest_create_topic: Konu oluşturmaya ne dersiniz?
@@ -2329,7 +2315,6 @@ tr_TR:
         title: "Grup"
         edit: "Grupları Düzenle"
         refresh: "Yenile"
-        new: "Yeni"
         about: "Grup üyeliğinizi ve isimleri burada düzenleyin"
         group_members: "Grup üyeleri"
         delete: "Sil"
@@ -2337,21 +2322,11 @@ tr_TR:
         delete_failed: "Grup silinemedi. Bu otomatik oluşturulmuş bir grup ise, yok edilemez."
         delete_owner_confirm: "'%{username}' için sahiplik izni kaldırılsın mı?"
         add: "Ekle"
-        add_members: "Üye ekle"
         custom: "Özel"
-        bulk_complete: "Kullanıcılar gruba eklendi."
-        bulk: "Topluca Gruba Ekle"
-        bulk_paste: "Kullanıcı adı ya da e-posta listesini yapıştırın, her satıra bir tane gelecek şekilde:"
-        bulk_select: "(bir grup seçin)"
         automatic: "Otomatik"
-        automatic_membership_email_domains: "Bu listedeki bir e-posta alan adıyla kaydolan kullanıcılar otomatik olarak bu gruba eklenecekler:"
-        automatic_membership_retroactive: "Varolan kayıtlı kullanıcıları eklemek için aynı e-posta alan adı kuralını uygula"
         default_title: "Bu gruptaki tüm kullanıcılar için öntanımlı başlık"
-        primary_group: "Otomatik olarak ana grup yap"
         group_owners: Sahipler
         add_owners: Sahiplik ekle
-        incoming_email: "Özel gelen e-posta adresi"
-        incoming_email_placeholder: "e-posta adresi girin"
       api:
         generate_master: "Ana API Anahtarı Üret"
         none: "Şu an etkin API anahtarı bulunmuyor."

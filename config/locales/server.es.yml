@@ -250,8 +250,9 @@ es:
     not_found: "Post no encontrado o ya actualizado."
   groups:
     success:
-      bulk_add: "%{users_added} usuarios han sido agregados al grupo."
+      bulk_add: "Se han añadido %{count} usuarios al grupo"
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' no es un nivel de confianza válido"
       can_not_modify_automatic: "No se puede modificar un grupo automático"
       member_already_exist: "Los siguientes usuarios ya son miembros de este grupo: %{username}"
       invalid_domain: "'%{domain}' no es un dominio válido."
@@ -1795,19 +1796,6 @@ es:
         Para obtener más información sobre el comportamiento esperado, revisa por favor las [directrices de la comunidad](%{base_url}/guidelines).
     post_hidden_again:
       title: "Mensaje ocultado de nuevo"
-      subject_template: "Mensaje ocultado por reportes de la comunidad"
-      text_body_template: |
-        Hola,
-
-        Este es un mensaje automático de %{site_name} para hacerte saber que uno de tus mensajes ha sido ocultado de nuevo.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Varios miembros de la comunidad han reportado el mensaje antes de que fuera ocultado, por lo que te pedimos por favor que consideres cómo podrías cambiarlo para reflejar sus observaciones. **Podrás editar tu mensaje en %{edit_delay} minutos, pero permanecerá oculto hasta que sea revisado por el staff.**
-
-        Para más información sobre el comportamiento esperado, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2548,8 +2536,8 @@ es:
     search_title: "Busca en este sitio"
     search_google: "Google"
   offline:
-    title: "No carga app"
-    offline_page_message: "¡Parece que estás offline! Por favor revisa tu conexión a internet e intenta de nuevo."
+    title: "No se ha podido cargar"
+    offline_page_message: "¡Parece que no tienes conexión! Por favor, revisa tu conexión a internet e inténtalo de nuevo."
   login_required:
     welcome_message: |
       ## [Bienvenido a %{title}](#welcome)

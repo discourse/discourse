@@ -324,7 +324,6 @@ pt_BR:
         make_user_group_owner: "Tornar proprietário"
         remove_user_as_group_owner: "Revogar proprietário"
     groups:
-      name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
       public_admission: "Permitir que os usuários se juntem ao grupo livremente (Requer grupo visível ao público)"
       public_exit: "Permitir que os usuários deixem o grupo livremente"
       empty:
@@ -353,9 +352,6 @@ pt_BR:
       mentions: "Menções"
       messages: "Mensagens"
       notification_level: "Nível de notificação padrão para mensagens de grupo"
-      visibility_levels:
-        title: "Quem pode ver este grupo?"
-        public: "Todo mundo"
       alias_levels:
         mentionable: "Quem pode @mencionar este grupo?"
         messageable: "Quem pode enviar mensagens a este grupo?"
@@ -364,9 +360,6 @@ pt_BR:
         mods_and_admins: "Somente moderadores e Administradores"
         members_mods_and_admins: "Somente membros do grupo, moderadores e administradores"
         everyone: "Todos"
-      trust_levels:
-        title: "Nível de Confiança automaticamente concedido aos membros quando eles são incluídos"
-        none: "Nenhum"
       notifications:
         watching:
           title: "Observando"
@@ -391,7 +384,6 @@ pt_BR:
       flair_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
       flair_preview_icon: "Pré-visualizar Ícone"
       flair_preview_image: "Pré-visualizar Imagem"
-      flair_note: "Nota: o Flair somente será exibido para o grupo primário do usuário."
     user_action_groups:
       '1': "Curtidas dadas"
       '2': "Curtidas recebidas"
@@ -2259,7 +2251,6 @@ pt_BR:
         title: "Grupos"
         edit: "Editar Grupos"
         refresh: "Atualizar"
-        new: "Novo"
         about: "Editar participação no grupo e nomes aqui"
         group_members: "Membros do grupo"
         delete: "Apagar"
@@ -2267,21 +2258,11 @@ pt_BR:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Remover privilégio de proprietário de '%{username}'?"
         add: "Adicionar"
-        add_members: "Adicionar membros"
         custom: "Definidos"
-        bulk_complete: "Os usuários foram adicionados ao grupo."
-        bulk: "Adição em Massa ao Grupo"
-        bulk_paste: "Cole uma lista de usernames ou emails, um por linha:"
-        bulk_select: "(selecione um grupo)"
         automatic: "Automático"
-        automatic_membership_email_domains: "Usuários que se registram com um domínio de email que confere precisamente com algum desta lista serão automaticamente adicionados a este grupo:"
-        automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar usuários registrados"
         default_title: "Título padrão para todos usuários nesse grupo"
-        primary_group: "Configurar automaticamente como grupo primário"
         group_owners: Prorietários
         add_owners: Adicionar proprietários
-        incoming_email: "Endereço de email de entrada personalizado"
-        incoming_email_placeholder: "Insira um endereço de email"
         none_selected: "Selecione um grupo para começar"
         no_custom_groups: "Crie um novo grupo"
       api:

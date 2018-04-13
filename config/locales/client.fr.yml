@@ -346,17 +346,10 @@ fr:
         make_user_group_owner: "Rendre propriétaire"
         remove_user_as_group_owner: "Retirer le propriétaire"
     groups:
-      new:
-        title: "Nouveau groupe"
-        description: "Créer un nouveau groupe"
-        create: "Créer"
-        name:
-          too_short: "Nom de groupe trop court"
-          too_long: "Nom de groupe trop long"
-          checking: "Vérification de la disponibilité du nom de groupe…"
-          available: "Nom de groupe disponible"
-          not_available: "Nom de groupe indisponible"
-          blank: "Nom de groupe ne peut être vide"
+      add_members:
+        title: "Ajouter membres"
+        description: "Gérer les membres de ce groupe"
+        usernames: "Pseudos"
       manage:
         title: 'Gérer'
         name: 'Nom'
@@ -365,11 +358,13 @@ fr:
         delete_member_confirm: "Supprimer %{username} du groupe « %{group} » ?"
         profile:
           title: Profil
-        members:
-          title: "Membres"
-          description: "Gérer les membres de ce groupe"
-          usernames: "Pseudos"
-          as_owner: "Rendre utilisateur(s) propriétaire(s) de ce groupe"
+        interaction:
+          title: Intéraction
+          posting: Contribution
+          notification: Notification
+        membership:
+          title: Adhésion
+          access: Accès
         logs:
           title: "Journaux"
           when: "Quand"
@@ -380,7 +375,6 @@ fr:
           details: "Détails"
           from: "From"
           to: "À"
-      name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
       public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
@@ -448,12 +442,6 @@ fr:
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Niveau de notification par défaut pour les messages de groupe"
-      visibility_levels:
-        title: "Qui peut voir ce groupe ?"
-        public: "Tout le monde"
-        members: "Propriétaires du groupe, membres et administrateurs"
-        staff: "Propriétaires du groupe et responsables"
-        owners: "Propriétaires du groupe et administrateurs"
       alias_levels:
         mentionable: "Qui peut @mentionner ce groupe ?"
         messageable: "Qui peut envoyer un message à ce groupe ?"
@@ -462,9 +450,6 @@ fr:
         mods_and_admins: "Seulement les modérateurs et les administrateurs "
         members_mods_and_admins: "Seulement les membres du groupe, les modérateurs et les administrateurs "
         everyone: "Tout le monde"
-      trust_levels:
-        title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés :"
-        none: "Aucun"
       notifications:
         watching:
           title: "Surveiller"
@@ -489,7 +474,6 @@ fr:
       flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
       flair_preview_icon: "Prévisualiser l'icône"
       flair_preview_image: "Prévisualiser l'image"
-      flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
     user_action_groups:
       '1': "J'aime donnés"
       '2': "J'aime reçus"
@@ -923,6 +907,7 @@ fr:
         header_title: "profil, messages, signets et préférences"
       title:
         title: "Titre"
+        none: "(aucun)"
       filters:
         all: "Tous"
       stream:
@@ -1136,8 +1121,6 @@ fr:
       no_content: Aucune correspondance trouvée
       filter_placeholder: Rechercher...
       create: "Créer : '{{content}}'"
-      max_content_reached: "Vous ne pouvez séléctionner que {{count}} élément(s)."
-      min_content_not_reached: "Séléctionner au moins {{count}} élément(s)."
     emoji_picker:
       filter_placeholder: Chercher un emoji
       people: Personnes
@@ -1194,6 +1177,7 @@ fr:
         post_length: "Le message doit avoir au moins {{min}} caractères"
         try_like: 'Avez-vous essayé le bouton <i class="fa fa-heart"></i> ?'
         category_missing: "Vous devez choisir une catégorie"
+        tags_missing: "Vous devez choisir au moins {{count}} tags"
       save_edit: "Sauvegarder"
       reply_original: "Répondre sur le sujet d'origine"
       reply_here: "Répondre ici"
@@ -2081,6 +2065,7 @@ fr:
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste,"
       position_disabled_click: 'activer le paramètre "fixed category positions"'
+      minimum_required_tags: 'Nombre minimum de tags requis dans un sujet :'
       parent: "Catégorie parente"
       notifications:
         watching:
@@ -2607,12 +2592,48 @@ fr:
           notify_user: "personnalisé"
           notify_moderators: "personnalisé"
       groups:
+        new:
+          title: "Nouveau groupe"
+          create: "Créer"
+          name:
+            too_short: "Nom de groupe trop court"
+            too_long: "Nom de groupe trop long"
+            checking: "Vérification de la disponibilité du nom de groupe…"
+            available: "Nom de groupe disponible"
+            not_available: "Nom de groupe indisponible"
+            blank: "Nom de groupe ne peut être vide"
+        bulk_add:
+          title: "Ajouter au groupe en masse"
+          complete_users_not_added: "Ces utilisateurs n'ont pas été ajoutés (vérifiez qu'ils ont un compte) :"
+          paste: "Coller une liste de pseudo ou courriel, un par ligne :"
+        add_members:
+          as_owner: "Rendre utilisateur(s) propriétaire(s) de ce groupe"
+        manage:
+          interaction:
+            email: Courriel
+            incoming_email: "Adresse de courriel entrant personnalisée"
+            incoming_email_placeholder: "Entrer une adresse de courriel"
+            visibility: Visibilité
+            visibility_levels:
+              title: "Qui peut voir ce groupe ?"
+              public: "Tout le monde"
+              members: "Propriétaires du groupe, membres et administrateurs"
+              staff: "Propriétaires du groupe et responsables"
+              owners: "Propriétaires du groupe et administrateurs"
+          membership:
+            automatic: Automatique
+            trust_level: Niveau de confiance
+            trust_levels_title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés :"
+            trust_levels_none: "Aucun"
+            automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
+            automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
+            primary_group: "Définir comme groupe principal automatiquement"
+        name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les pseudos"
         primary: "Groupe principal"
         no_primary: "(pas de groupe principal)"
         title: "Groupes"
         edit: "Modifier les groupes"
         refresh: "Actualiser"
-        new: "Nouveau"
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
@@ -2620,22 +2641,11 @@ fr:
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
         add: "Ajouter"
-        add_members: "Ajouter des membres"
         custom: "Personnalisé"
-        bulk_complete: "Les utilisateurs ont été ajoutés au groupe"
-        bulk_complete_users_not_added: "Ces utilisateurs n'ont pas été ajoutés (vérifiez qu'ils ont un compte) :"
-        bulk: "Ajouter au groupe en masse"
-        bulk_paste: "Coller une liste de pseudo ou courriel, un par ligne :"
-        bulk_select: "(sélectionner un groupe)"
         automatic: "Automatique"
-        automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
-        automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
         default_title: "Titre par défaut pour tous les utilisateurs de ce groupe"
-        primary_group: "Définir comme groupe principal automatiquement"
         group_owners: Propriétaires
         add_owners: Ajouter des propriétaires
-        incoming_email: "Adresse de courriel entrant personnalisée"
-        incoming_email_placeholder: "Entrer une adresse de courriel"
         none_selected: "Sélectionnez un groupe pour commencer"
         no_custom_groups: "Créer un nouveau groupe personnalisé"
       api:
@@ -2743,6 +2753,7 @@ fr:
         change_settings: "Changer les paramètres"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
+        official: "Plugin officiel"
       backups:
         title: "Sauvegardes"
         menu:

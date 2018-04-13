@@ -184,7 +184,7 @@ ar:
       email: 'شارك هذا الرابط علي بريد إلكتروني'
     action_codes:
       public_topic: "أجعل هذا الموضوع عامًّا %{when}"
-      private_topic: "تحويل هذا الموضوعة إلى رسالة شخصية %{when}"
+      private_topic: "تحويل هذا الموضوع إلى رسالة شخصية %{when}"
       split_topic: "قسَم هذا الموضوع %{when}"
       invited_user: "دُعي %{who} %{when}"
       invited_group: "دُعي %{who} %{when}"
@@ -420,7 +420,6 @@ ar:
         make_user_group_owner: "تعيين كمالك"
         remove_user_as_group_owner: "سحب صلاحية المالك"
     groups:
-      name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
       public_admission: "السماح للاعضاء بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
       public_exit: "السماح للأعضاء بمغادرة المجموعة بحرية"
       empty:
@@ -459,12 +458,6 @@ ar:
       mentions: "الإشارات"
       messages: "الرسائل"
       notification_level: "المستوى الأفتراضي لإشعارات رسائل المجموعة"
-      visibility_levels:
-        title: "من يستطيع رؤية هذه المجموعة؟"
-        public: "الكل"
-        members: "مالكي المجموعة و الأعضاء و المديرين"
-        staff: "مالكي المجموعة و طاقم العمل"
-        owners: "مالكي المجموعة و المديرين"
       alias_levels:
         mentionable: "من يستطيع @الاشارة الى هذه المجموعة؟"
         messageable: "من يستطيع ارسال رسالة الى هذه المجموعة؟"
@@ -473,9 +466,6 @@ ar:
         mods_and_admins: "المدراء والمشرفون فقط"
         members_mods_and_admins: "أعضاء المجموعة والمدراء والمشرفون فقط"
         everyone: "الكل"
-      trust_levels:
-        title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"
-        none: "لا شيء"
       notifications:
         watching:
           title: "مُراقب"
@@ -500,7 +490,6 @@ ar:
       flair_color_placeholder: "(إختياري) اللون بترميز Hexadecimal"
       flair_preview_icon: "معاينة الأيقونة"
       flair_preview_image: "معاينة الصورة"
-      flair_note: "ملحوظة: الصورة المميزة سوف تظهر فقط لمجموعة العضو الرئيسية."
     user_action_groups:
       '1': "الإعجابات المعطاة"
       '2': "الإعجابات المتلقاة"
@@ -1535,6 +1524,7 @@ ar:
         next_week: "الاسبوع القادم"
         next_month: "الشهر القادم"
         one_year: "سنة واحدة"
+        forever: "للأبد"
         pick_date_and_time: "اختر التاريخ والوقت"
         set_based_on_last_post: "اغلقة بناء علي اخر منشور"
       publish_to_category:
@@ -2718,12 +2708,20 @@ ar:
           notify_user: "مخصص"
           notify_moderators: "مخصص"
       groups:
+        new:
+          name:
+            available: "اسم المجموعة متاح"
+            not_available: "اسم المجموعة غير متاح"
+            blank: "يجب تحديد اسم للمجموعة"
+        bulk_add:
+          title: "أضافة متعددة للمجموعة"
+          complete_users_not_added: "هؤلاء الأعضاء لن يتم اضافتهم (تأكد من أن لديهم حسابات)"
+        name_placeholder: "اسم المجموعة، بدون مسافات، كما هو الحال مع أسماء المستخدمين"
         primary: "المجموعة الأساسية"
         no_primary: "(لا يوجد مجموعة أساسية)"
         title: "مجموعات"
         edit: "تعديل المجموعة"
         refresh: "تحديث"
-        new: "جديد"
         about: "عدل عضوية المجموعة وأسماءها هنا"
         group_members: "أعضاء المجموعة"
         delete: "احذف"
@@ -2731,22 +2729,11 @@ ar:
         delete_failed: "تعذّر حذف المجموعة. إن كانت مجموعة آليّة، فلا يمكن تدميرها."
         delete_owner_confirm: "هل تريد إزالة صلاحيات الإدارة من '%{username} ؟"
         add: "اضافة"
-        add_members: "اضافة اعضاء"
         custom: "مخصص"
-        bulk_complete: "تمت إضافة الاعضاء إلى المجموعة."
-        bulk_complete_users_not_added: "هؤلاء الاعضاء لم يتم اضافتهم (تأكد انهم يملكون حساب)"
-        bulk: "إضافة متعددة إلى المجموعة"
-        bulk_paste: "الصق قائمة بأسماء الاعضاء أو عناوين البريد الإلكتروني، واحد لكل سطر:"
-        bulk_select: "(اختر مجموعة)"
         automatic: "تلقائي"
-        automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
-        automatic_membership_retroactive: "تطبيق نفس قاعدة عنوان البريد الإلكتروني لإضافة الاعضاء المسجلين الحاليين"
         default_title: "العنوان الافتراضي لكل أعضاء هذه المجموعة"
-        primary_group: "تعيين تلقائيا كمجموعة أساسية"
         group_owners: الملّاك
         add_owners: اضف ملّاكً
-        incoming_email: "تعيين بريد إلكتروني خاص:"
-        incoming_email_placeholder: "يرجى إدخال بريد الكتروني فعّال."
         none_selected: "اختر مجموعة للبدء"
         no_custom_groups: "انشئ مجموعة جديدة مخصصة"
       api:

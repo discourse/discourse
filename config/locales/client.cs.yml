@@ -158,7 +158,7 @@ cs:
         enabled: 'připnuto %{when}'
         disabled: 'odepnuto %{when}'
       pinned_globally:
-        enabled: 'globálně přinuto %{when}'
+        enabled: 'globálně připnuto %{when}'
         disabled: 'odepnuto %{when}'
       visible:
         enabled: 'uvedeno %{when}'
@@ -360,17 +360,6 @@ cs:
         make_user_group_owner: "Udělej vlastníkem"
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
-      new:
-        title: "Nová skupina"
-        description: "Vytvořit novou skupinu"
-        create: "Vytvořit"
-        name:
-          too_short: "Název skupiny je moc krátký"
-          too_long: "Název skupiny je moc dlouhý"
-          checking: "Zjišťuji, zda je jméno skupiny volné..."
-          available: "Název skupiny je k dispozici"
-          not_available: "Název skupiny není k dispozici"
-          blank: "Název skupiny nemůže být prázdný"
       manage:
         title: 'Spravovat'
         name: 'Název'
@@ -379,13 +368,10 @@ cs:
         delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
         profile:
           title: Profil
-        members:
-          title: "Členové"
         logs:
           action: "Akce"
           subject: "Předmět"
           from: "Od"
-      name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
       public_admission: "Povolit uživatelům volný přístup do skupiny (skupina musí být veřejně viditelná)"
       public_exit: "Povolit uživatelům volně opustit skupinu"
       empty:
@@ -431,12 +417,6 @@ cs:
       mentions: "Zmínění"
       messages: "Zprávy"
       notification_level: "Výchozí úroveň upozornění pro zprávy ze skupiny"
-      visibility_levels:
-        title: "Kdo vidí tuto skupinu?"
-        public: "Všichni"
-        members: "Vlastníci skupiny, členové a správci"
-        staff: "Vlastníci a redaktoři skupiny"
-        owners: "Vlastníci a správci skupiny"
       alias_levels:
         mentionable: "Kdo může @zmiňovat tuto skupinu?"
         messageable: "Kdo může psát zprávy do této skupinu?"
@@ -445,9 +425,6 @@ cs:
         mods_and_admins: "Pouze moderátoři a správci"
         members_mods_and_admins: "Pouze členové skupiny, moderátoři a správci"
         everyone: "Kdokoliv"
-      trust_levels:
-        title: "Automaticky přidělená úroveň důvěryhodnosti členům když jsou přidáni: "
-        none: "Žádná"
       notifications:
         watching:
           title: "Hlídané"
@@ -472,7 +449,6 @@ cs:
       flair_color_placeholder: "(Volitelné) Hex kód barvy"
       flair_preview_icon: "Náhled ikony"
       flair_preview_image: "Náhled obrázku"
-      flair_note: "Poznámka: Avatar se zobrazí pouze pro primární skupinu uživatele."
     user_action_groups:
       '1': "Rozdaných 'líbí se'"
       '2': "Obdržených 'líbí se'"
@@ -1116,7 +1092,6 @@ cs:
       no_content: Nebyly nalezeny žádné výsledky
       filter_placeholder: Hledat...
       create: "Vytvořit: '{{content}}'"
-      max_content_reached: "Můžete vybrat pouze {{count}} položek."
     emoji_picker:
       filter_placeholder: Hledat emoji
       people: Lidé
@@ -1327,10 +1302,6 @@ cs:
       select_all: "Vybrat vše"
       clear_all: "Vymazat vše"
       too_short: "Hledaný výraz je příliš krátký."
-      result_count:
-        one: "<span>1 výsledek pro</span><span class='term'>\"{{term}}\"</span>"
-        few: "<span>{{count}}{{plus}} výsledky pro</span><span class='term'>\"{{term}}\"</span>"
-        other: "<span>{{count}}{{plus}} výsledků pro</span><span class='term'>\"{{term}}\"</span>"
       title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
@@ -2652,7 +2623,6 @@ cs:
         title: "Skupiny"
         edit: "Upravit skupiny"
         refresh: "Obnovit"
-        new: "Nová"
         about: "Zde můžete upravit názvy skupin a členství"
         group_members: "Členové skupiny"
         delete: "Smazat"
@@ -2660,22 +2630,11 @@ cs:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Odstranit vlastnickou výsadu od '%{username}'?"
         add: "Přidat"
-        add_members: "Přidat členy"
         custom: "Přizpůsobené"
-        bulk_complete: "Uživatelé byli přidáni do skupiny."
-        bulk_complete_users_not_added: "Tito uživatelé nebyli přidáni (ujisti se, že mají účet):"
-        bulk: "Hromadné přidání do skupiny"
-        bulk_paste: "Vlož seznam uživatelských jmen a e-mailů, jeden záznam na řádek"
-        bulk_select: "(vyber skupinu)"
         automatic: "Automatické"
-        automatic_membership_email_domains: "Uživatelé zaregistrovaní s emailem jehož doména se přesně shoduje s jednou z tohoto seznamu budou automaticky přidáni to této skupiny:"
-        automatic_membership_retroactive: "Aplikovat stejné doménové pravidlo na už existující uživatele"
         default_title: "Výchozí popis pro všechny uživatele této skupiny"
-        primary_group: "Automaticky nastavit jako hlavní skupinu"
         group_owners: Vlastníci
         add_owners: Přidat vlastníky
-        incoming_email: "Vlastní příchozí emailová adresa"
-        incoming_email_placeholder: "zadej emailovou adresu"
         none_selected: "Vyber si skupinu, abys mohl začít"
         no_custom_groups: "Vytvořit novou vlastní skupinu"
       api:

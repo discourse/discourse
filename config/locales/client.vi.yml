@@ -307,7 +307,6 @@ vi:
         make_user_group_owner: "Đặt làm người sở hữu"
         remove_user_as_group_owner: "Huỷ quyền sở hữu"
     groups:
-      name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
       public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:
@@ -339,18 +338,12 @@ vi:
       posts: "Các bài viết"
       mentions: "Được nhắc đến"
       messages: "Tin nhắn"
-      visibility_levels:
-        title: "Ai có thể xem nhóm"
-        public: "Mọi người"
       alias_levels:
         nobody: "Không ai cả"
         only_admins: "Chỉ các quản trị viên"
         mods_and_admins: "Chỉ có người điều hành và ban quản trị"
         members_mods_and_admins: "Chỉ có thành viên trong nhóm, ban điều hành, và ban quản trị"
         everyone: "Mọi người"
-      trust_levels:
-        title: "Cấp độ tin tưởng tự động tăng cho thành viên khi họ thêm:"
-        none: "Không có gì"
       notifications:
         watching:
           title: "Đang theo dõi"
@@ -375,7 +368,6 @@ vi:
       flair_color_placeholder: "(Tuỳ chọn) Giá trị mã màu Hexa"
       flair_preview_icon: "Biểu tượng xem trước"
       flair_preview_image: "Ảnh xem trước"
-      flair_note: "Ghi chú: Ảnh đại diện chỉ hiển thị cho nhóm chính của người dùng"
     user_action_groups:
       '1': "Lượt thích"
       '2': "Lần được thích"
@@ -1932,7 +1924,6 @@ vi:
         title: "Nhóm"
         edit: "Sửa nhóm"
         refresh: "Làm mới"
-        new: "Mới"
         about: "Chỉnh sửa nhóm thành viên và tên của bạn ở đây"
         group_members: "Nhóm thành viên"
         delete: "Xóa"
@@ -1940,21 +1931,11 @@ vi:
         delete_failed: "Không thể xóa nhóm. Nếu đây là một nhóm tự động, nó không thể hủy bỏ."
         delete_owner_confirm: "Loại bỏ quyền sở hữu của '%{username}'?"
         add: "Thêm"
-        add_members: "Thêm thành viên"
         custom: "Tùy biến"
-        bulk_complete: "Các thành viên đã được thêm vào nhóm."
-        bulk: "Thêm vào nhóm theo lô"
-        bulk_paste: "Dán danh sách username hoặc email, mỗi mục một dòng:"
-        bulk_select: "(chọn nhóm)"
         automatic: "Tự động"
-        automatic_membership_email_domains: "Các thành viên đã đăng ký với đuôi email khớp với một trong danh sách này sẽ được tự động thêm vào nhóm:"
-        automatic_membership_retroactive: "Áp dụng quy tắc đuôi email tương tự để thêm thành viên đăng ký hiện tại"
         default_title: "Tên mặc định cho tất cả các thành viên trong nhóm này"
-        primary_group: "Tự động cài là nhóm chính"
         group_owners: Chủ sở hữu
         add_owners: Thêm chủ sở hữu
-        incoming_email: "Tùy chỉnh địa chỉ email đến"
-        incoming_email_placeholder: "điền địa chỉ email"
       api:
         generate_master: "Tạo Master API Key"
         none: "Không có API keys nào kích hoạt lúc này."

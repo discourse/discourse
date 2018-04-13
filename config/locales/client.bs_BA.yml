@@ -318,7 +318,6 @@ bs_BA:
         make_user_group_owner: "Napravi vlasnika"
         remove_user_as_group_owner: "Ukloni vlasnika"
     groups:
-      name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
       empty:
         posts: "Ne postoje postovi člana ove grupe."
         members: "Nema članova u grupi."
@@ -345,9 +344,6 @@ bs_BA:
         mods_and_admins: "Samo moderatori i Admini"
         members_mods_and_admins: "Samo članovi grupe, moderatori i admini"
         everyone: "Svatko"
-      trust_levels:
-        title: "Razina povjerenja je automatski dodijeljena članovima kada su postavljeni: "
-        none: "Ništa"
       notifications:
         watching:
           title: "Posmatram"
@@ -372,7 +368,6 @@ bs_BA:
       flair_color_placeholder: "(Opciono) Hex broj boje"
       flair_preview_icon: "Preview ikona"
       flair_preview_image: "Preview slika"
-      flair_note: "Obavještenje: Sposobnosti će biti prikazane samo za korisnike primarne grupe."
     user_action_groups:
       '1': "Dati Lajkovi"
       '2': "Dobijeni Lajkovi"
@@ -815,7 +810,7 @@ bs_BA:
     create_account:
       disclaimer: "Registracijom, vi se slažete sa <a href='{{privacy_link}}'>policom o privatnosti</a> i <a href='{{tos_link}}'>uslovima korištenja servisa</a>."
       title: "Kreiraj Nalog"
-      failed: "Something went wrong. Perhaps this email is already registered? Try the forgot password link."
+      failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
     forgot_password:
       title: "Zaboravili ste Šifru"
       action: "Zaboravio šifru"
@@ -1651,7 +1646,6 @@ bs_BA:
         title: "Groups"
         edit: "Edit Groups"
         refresh: "Refresh"
-        new: "New"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"

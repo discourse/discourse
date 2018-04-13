@@ -219,8 +219,6 @@ el:
   queue:
     delete_reason: "Διαγράφτηκαν μέσω της ουράς επανελέγχου "
   groups:
-    success:
-      bulk_add: "%{users_added} χρήστες προστέθηκαν στην ομάδα."
     errors:
       can_not_modify_automatic: "Δεν μπορείς να τροποποιήσεις μια αυτόματη ομάδα"
       invalid_domain: "'%{domain}' δεν είναι έγκυρο domain."

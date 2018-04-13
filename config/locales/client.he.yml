@@ -323,7 +323,6 @@ he:
         make_user_group_owner: "הפיכה לבעלים"
         remove_user_as_group_owner: "שלילת בעלות"
     groups:
-      name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
       public_admission: "אפשרו למשתמשים להצטרף לקבוצה בחופשיות (דורש קבוצה פומבית)"
       public_exit: "אפשרו למשתמשים לעזוב את הקבוצה בחופשיות"
       empty:
@@ -349,21 +348,12 @@ he:
       mentions: "אזכורים"
       messages: "הודעות"
       notification_level: "ברירת מחדל של רמת התראות להודעות קבוצה"
-      visibility_levels:
-        title: "מי יכול לראות קבוצה זו?"
-        public: "כולם"
-        members: "בעלי קבוצה, חברים ואדמיניסטרטורים"
-        staff: "בעלי קבוצה וצוות"
-        owners: "בעלי קבוצה ואדמיניסטרטורים"
       alias_levels:
         nobody: "אף אחד"
         only_admins: "רק מנהלים"
         mods_and_admins: "רק מנחים ומנהלים"
         members_mods_and_admins: "רק חברי הקבוצה, מנחים ומנהלים"
         everyone: "כולם"
-      trust_levels:
-        title: "רמת אמון הניתנת אוטומטית למשתמשים כשהם נוספים:"
-        none: "ללא"
       notifications:
         watching:
           title: "במעקב"
@@ -388,7 +378,6 @@ he:
       flair_color_placeholder: "(אופציונלי) ערך הקסדצימלי של הצבע"
       flair_preview_icon: "תצוגה מקדימה של אייקון"
       flair_preview_image: "תצוגה מקדימה של תמונה"
-      flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
     user_action_groups:
       '1': "לייקים שניתנו"
       '2': "לייקים שהתקבלו"
@@ -2238,7 +2227,6 @@ he:
         title: "קבוצות"
         edit: "ערוך קבוצות"
         refresh: "רענן"
-        new: "חדש"
         about: "ערוך את חברות הקבוצה שלך והשמות כאן"
         group_members: "חברי הקבוצה"
         delete: "מחק"
@@ -2246,22 +2234,11 @@ he:
         delete_failed: "לא ניתן למחוק קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
         delete_owner_confirm: "הסרת הרשאות מנהל עבור '%{username}'?"
         add: "הוספה"
-        add_members: "הוספת חברים וחברות"
         custom: "מותאם"
-        bulk_complete: "המשתמשים התווספו לקבוצה."
-        bulk_complete_users_not_added: "משתמשים אלו לא נוספו (וודאו שיש להם חשבון):"
-        bulk: "הוספה מרוכזת לקבוצה"
-        bulk_paste: "הדביקו רשימה של שמות משתמשים או כתובות אימייל, אחת בכל שורה:"
-        bulk_select: "(בחר קבוצה)"
         automatic: "אוטומטי"
-        automatic_membership_email_domains: "משתמשים אשר נרשמים עם מארח דוא\"ל שתואם בדיוק לאחד מהרשימה, יוספו באופן אוטומטי לקבוצה זו:"
-        automatic_membership_retroactive: "החלת כלל מארח דוא\"ל זהה כדי להוסיף משתמשים רשומים"
         default_title: "ברירת המחדל לכל המשתמשים בקבוצה זו"
-        primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
         group_owners: מנהלים
         add_owners: הוספת בעלים
-        incoming_email: "התאימו אישית כתובת מייל נכנס"
-        incoming_email_placeholder: "הכניסו כתובת מייל"
         none_selected: "בחירת קבוצה כדי להתחיל"
         no_custom_groups: "יצירת קבוצה מותאמת אישית"
       api:

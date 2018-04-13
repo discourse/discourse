@@ -309,7 +309,6 @@ fa_IR:
         make_user_group_owner: "مدیر کردن"
         remove_user_as_group_owner: "لغو مالکیت"
     groups:
-      name_placeholder: "در نام گروه نمی توان از فاصله استفاده کرد، مانند قوانین نامگذاری نام کاربری"
       empty:
         posts: "در این گروه هیچ نوشته ای توسط کاربران ارسال نشده."
         members: "این گروه هیچ عضوی ندارد"
@@ -338,21 +337,12 @@ fa_IR:
       mentions: "اشاره‌ها"
       messages: "پیام‌ها"
       notification_level: "سطح آگاه‌سازی پیش‌فرض برای پیام‌های گروهی"
-      visibility_levels:
-        title: "چه کسی می‌تواند این گروه را ببیند؟"
-        public: "همه"
-        members: "صاحبان گروه، اعضا، و مدیران"
-        staff: "صاحبان گروه و کارکنان"
-        owners: "صاحبان گروه و مدیران"
       alias_levels:
         nobody: "هیچ‌کس"
         only_admins: "فقط مدیران ارشد"
         mods_and_admins: "فقط مدیران و مدیران ارشد"
         members_mods_and_admins: "تنها اعضای گروه، مدیران ومدیران ارشد"
         everyone: "همه"
-      trust_levels:
-        title: "سطح اعتماد به صورت خودکار به اعضایی که اضافه می‌شوند داده می‌شود:"
-        none: "هیچ کدام"
       notifications:
         watching:
           title: "در حال مشاهده"
@@ -377,7 +367,6 @@ fa_IR:
       flair_color_placeholder: "(اختیاری) کد HEX رنگ"
       flair_preview_icon: "پیش‌نمایش آیکن"
       flair_preview_image: "پیش‌نمایش تصویر"
-      flair_note: "نکته:‌ خصیصه فقط برای گروه اصلی کاربر نمایش داده می‌شود."
     user_action_groups:
       '1': "پسندهای داده شده"
       '2': "پسندهای دریافت شده"
@@ -2154,7 +2143,6 @@ fa_IR:
         title: "گروه‌ها"
         edit: "ویرایش گروه‌ها"
         refresh: "تازه کردن"
-        new: "جدید"
         about: "عضویت و نام‌های گروه را در اینجا ویرایش کنید"
         group_members: "اعضای گروه"
         delete: "حذف"
@@ -2162,22 +2150,11 @@ fa_IR:
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
         add: "اضافه کردن"
-        add_members: "اضافه کردن عضو"
         custom: "سفارشی"
-        bulk_complete: "کاربران به گروه اضافه شدند."
-        bulk_complete_users_not_added: "این کاربران اضافه نشدند (مطمئن شوید که حساب عضو هستند)"
-        bulk: "اضافه کردن تعداد زیادی به گروه"
-        bulk_paste: "یک لیست از نام های کاربری و یا ایمیل ها وارد کنید, در هر خط فقط یکی:"
-        bulk_select: "(یک گروه انتخاب کنید)"
         automatic: "خودکار"
-        automatic_membership_email_domains: " کاربرانی که با ایمیل  دامنه ثبت نام کرده اند،دقیقا شبیه دامنه های لیست، بصورت خودکار به این گروه اضافه می شوند :"
-        automatic_membership_retroactive: "درخواست همان قاعده دامنه ایمیل برای اضافه کردن برای کاربران ثبت نام کرده"
         default_title: "عنوان را پیش فرض کن برای تمام اعضا در این گروه"
-        primary_group: "بطور خودکار به گروه اصلی تبدیل شد"
         group_owners: مالکین
         add_owners: افزودن مالک
-        incoming_email: "آدرس ایمیل های دریافتی سفارشی"
-        incoming_email_placeholder: "آدرس ایمیل را وارد کنید"
         none_selected: "برای شروع یک گروه انتخاب کنید"
         no_custom_groups: "ایجاد گروه سفارشی"
       api:

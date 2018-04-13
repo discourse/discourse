@@ -367,7 +367,6 @@ sl:
         make_user_group_owner: "Spremeni v lastnika"
         remove_user_as_group_owner: "Odstrani lastništvo"
     groups:
-      name_placeholder: "Ime skupine, brez presledkov, enako kot pravilo pri uporabniškem imenu"
       public_admission: "Dovoli uporabnikom, da se sami pridružijo skupini (skupina mora biti javna)"
       public_exit: "Dovoli uporabnikom da sami zapustijo skupino"
       empty:
@@ -404,12 +403,6 @@ sl:
       mentions: "Omembe"
       messages: "Sporočila"
       notification_level: "Privzeti nivo obvestil za sporočila skupini"
-      visibility_levels:
-        title: "Kdo lahko vidi skupino?"
-        public: "Vsi"
-        members: "Lastniki skupne, člani in admini"
-        staff: "Lastniki skupine in skrbniki"
-        owners: "Lastniki skupine in admini"
       alias_levels:
         mentionable: "Kdo lahko @omeni skupino?"
         messageable: "Kdo lahko pošlje sporočilo skupini?"
@@ -418,9 +411,6 @@ sl:
         mods_and_admins: "Le moderatorji in administratorji"
         members_mods_and_admins: "Le člani skupine, moderatorji in admnistratorji"
         everyone: "Vsi"
-      trust_levels:
-        title: "Nivo zaupanja samodejno podeljeno članom ko so dodani:"
-        none: "Brez"
       notifications:
         watching:
           title: "Spremlja"
@@ -888,11 +878,6 @@ sl:
       select_all: "Izberi vse"
       clear_all: "Počisti vse"
       too_short: "Niz za iskanje je prekratek"
-      result_count:
-        one: "<span>1 zadetek za</span><span class='term'>{{term}}</span>"
-        two: "<span>{{count}}{{plus}} zadetka za</span><span class='term'>{{term}}</span>"
-        few: "<span>{{count}}{{plus}} zadetkov za</span><span class='term'>{{term}}</span>"
-        other: "<span>{{count}}{{plus}} zadetkov za</span><span class='term'>{{term}}</span>"
       title: "išči po temah, objavah, uporabnikih ali kategorijah"
       no_results: "Iskanje nima zadetkov."
       no_more_results: "Ni več zadetkov iskanja."
@@ -1438,16 +1423,11 @@ sl:
         delete: "Izbriši"
         delete_confirm: "Izbriši skupino?"
         add: "Dodaj"
-        add_members: "Dodaj člane"
         custom: "Po meri"
-        bulk_complete: "Uporabnice/ki, ki so bili dodani v skupino"
-        bulk_select: "(izberi skupino)"
         automatic: "Avtomatsko"
         default_title: "Privzet naziv za vse uporabnice/ke v tej skupini"
-        primary_group: "Avtomatsko nastavi kot primarno skupino"
         group_owners: Lastniki
         add_owners: Dodaj lastnike
-        incoming_email_placeholder: "vnesite email naslov"
       api:
         user: "Uporabnik"
         title: "API"

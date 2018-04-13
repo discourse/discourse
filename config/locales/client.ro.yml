@@ -361,7 +361,6 @@ ro:
         make_user_group_owner: "Fă proprietar"
         remove_user_as_group_owner: "Revocă proprietar"
     groups:
-      name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
       public_admission: "Permite utilizatorilor să adere la grup fără restricții (Presupune ca grupul să fie vizibil)"
       public_exit: "Permite utilizatorilor să părăsească grupul în mod liber."
       empty:
@@ -396,12 +395,6 @@ ro:
       mentions: "Mențiuni"
       messages: "Mesaje"
       notification_level: "Nivelul de notificare prestabilit pentru mesajele de grup"
-      visibility_levels:
-        title: "Cine poate vedea acest grup?"
-        public: "Toată lumea"
-        members: "Proprietarii grupului, membrii și adminii"
-        staff: "Proprietarii grupului și echipa"
-        owners: "Proprietarii și adminii din grup"
       alias_levels:
         mentionable: "Cine poate @menționa acest grup?"
         messageable: "Cine poate trimite mesaje acestui grup?"
@@ -410,9 +403,6 @@ ro:
         mods_and_admins: "Doar moderatorii și adminii"
         members_mods_and_admins: "Membrii grupului, moderatorii și adminii"
         everyone: "Toată lumea"
-      trust_levels:
-        title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"
-        none: "Nimeni"
       notifications:
         watching:
           title: "Urmărind activ"
@@ -437,7 +427,6 @@ ro:
       flair_color_placeholder: "(Opțional) Valoarea Hex a culorii"
       flair_preview_icon: "Previzualizează iconiță"
       flair_preview_image: "Previzualizează imagine"
-      flair_note: "Observație: Elementul distinct va fi afișat doar pentru grupul principal al utilizatorului."
     user_action_groups:
       '1': "Aprecieri date"
       '2': "Aprecieri primite"
@@ -2483,7 +2472,6 @@ ro:
         title: "Grupuri"
         edit: "Editează grupuri"
         refresh: "Reîmprospătează"
-        new: "Noi"
         about: "Editează aici numele și apartenența la grupuri"
         group_members: "Membrii grupului"
         delete: "Șterge"
@@ -2491,22 +2479,11 @@ ro:
         delete_failed: "Imposibil de șters grupul. Dacă este unul automat, nu se poate șterge."
         delete_owner_confirm: "Revocă dreptul de proprietar pentru '%{username}'?"
         add: "Adaugă"
-        add_members: "Adaugă membri"
         custom: "Personalizat"
-        bulk_complete: "Utilizatorii au fost adăugați în grup."
-        bulk_complete_users_not_added: "Acești utilizatori nu au fost adăugați (asigură-te că au cont):"
-        bulk: "Adaugă în grup mai mulți utilizatori odată"
-        bulk_paste: "Lipește o listă de utilizatori sau email-uri, câte unul pe linie:"
-        bulk_select: "(selectează un grup)"
         automatic: "Automat"
-        automatic_membership_email_domains: "Utilizatorii care se înregistrează cu un domeniu de email identic cu unul din lista asta vor fi adăugați automat în acest grup:"
-        automatic_membership_retroactive: "Aplică aceeaşi regulă pentru domeniul de email pentru a adauga utilizatorii existenţi"
         default_title: "Titlu implicit pentru toți utilizatorii din acest grup"
-        primary_group: "Setează automat ca grup principal"
         group_owners: Proprietari
         add_owners: Adaugă proprietari
-        incoming_email: "Adresă de primire emailuri personalizată"
-        incoming_email_placeholder: "introducere adresă de email"
         none_selected: "Alege un grup pentru a începe"
         no_custom_groups: "Creează un nou grup personalizat"
       api:

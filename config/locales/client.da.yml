@@ -323,7 +323,6 @@ da:
         make_user_group_owner: "Gør til ejer"
         remove_user_as_group_owner: "Fjern ejer"
     groups:
-      name_placeholder: "Gruppenavn uden mellemrum, samme som reglen for brugernavn"
       public_admission: "Tillad brugere frit at tilmelde sig gruppen (Kræver at det er en offentlig synlig gruppe)"
       public_exit: "Tillad brugere frit at forlade gruppen"
       empty:
@@ -354,12 +353,6 @@ da:
       mentions: "Omtaler"
       messages: "Beskeder"
       notification_level: "Standard notifikationsniveau for gruppebeskeder"
-      visibility_levels:
-        title: "Hvem kan se denne gruppe?"
-        public: "Alle"
-        members: "Gruppeejer, medlemmer og admins"
-        staff: "Gruppeejer og hjælpeteam"
-        owners: "Gruppeejer og admins"
       alias_levels:
         mentionable: "Hvem kan @gruppenavn denne gruppe?"
         messageable: "Hvem kan sende en besked til denne gruppe?"
@@ -368,9 +361,6 @@ da:
         mods_and_admins: "Kun moderatore og administratore"
         members_mods_and_admins: "Kun gruppe medlemmer, moderatore og administratore"
         everyone: "Alle"
-      trust_levels:
-        title: "Tillidsniveau der automatisk tildeles medlemmer når de oprettes:"
-        none: "Ingen"
       notifications:
         watching:
           title: "Kigger"
@@ -395,7 +385,6 @@ da:
       flair_color_placeholder: "(Valgfrit) Hex farveværdi"
       flair_preview_icon: "Forhåndsvisning af ikonet"
       flair_preview_image: "Forhåndsvisning af billede"
-      flair_note: "Bemærk: Flair vil kun blive vist for en brugers primære gruppe."
     user_action_groups:
       '1': "Likes givet"
       '2': "Likes modtaget"
@@ -2209,7 +2198,6 @@ da:
         title: "Grupper"
         edit: "Redigér grupper"
         refresh: "Genindlæs"
-        new: "Nye"
         about: "Redigér gruppemedlemsskaber og gruppenavne her"
         group_members: "Gruppe medlemmer"
         delete: "Slet"
@@ -2217,22 +2205,11 @@ da:
         delete_failed: "Kan ikke slette gruppen. Hvis dette er en automatisk gruppe, kan den ikke ødelægges."
         delete_owner_confirm: "Fjern ejer-privilegier for '%{username}'?"
         add: "Tilføj"
-        add_members: "Tilføj medlemmer"
         custom: "Brugerdefineret"
-        bulk_complete: "Brugerne er tilføjet gruppen."
-        bulk_complete_users_not_added: "Disse brugere blev ikke tilføjet (sørg for at sikre, at de har en konto):"
-        bulk: "Tilføj mange brugere til gruppe"
-        bulk_paste: "Indsæt en liste brugerne eller emails, én per linje:"
-        bulk_select: "(vælg en gruppe)"
         automatic: "Automatisk"
-        automatic_membership_email_domains: "Brugere der registrerer med et email domæne der præcist matcher et på denne liste, vil automatisk blive tilføjet til denne gruppe:"
-        automatic_membership_retroactive: "Brug denne email domæne regel til at tilføje brugere der allerede er registrerede brugere"
         default_title: "Standard titel for alle brugere i denne gruppe"
-        primary_group: "Sæt automatisk som primær gruppe"
         group_owners: Ejere
         add_owners: Tilføj ejere
-        incoming_email: "Brugerdefineret indkommende email"
-        incoming_email_placeholder: "indtast email"
         none_selected: "Vælg en gruppe for at komme i gang"
         no_custom_groups: "Opret en ny brugerdefineret gruppe"
       api:

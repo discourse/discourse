@@ -346,17 +346,6 @@ ur:
         make_user_group_owner: "مالک بنائیں"
         remove_user_as_group_owner: "مالک منسوخ کریں"
     groups:
-      new:
-        title: "نیا گروپ"
-        description: "ایک نیا گروپ بنائیں"
-        create: "بنائیں"
-        name:
-          too_short: "گروپ کا نام بہت چھوٹا ہے"
-          too_long: "گروپ کا نام بہت طویل ہے"
-          checking: "گروپ کے نام کی دستیابی کی جانچ ہو رہی..."
-          available: "گروپ کا نام دستیاب ہے"
-          not_available: "گروپ کا نام دستیاب نہیں ہے"
-          blank: "گروپ کا نام خالی نہیں ہو سکتا"
       manage:
         title: 'مَینَیج'
         name: 'نام'
@@ -365,11 +354,6 @@ ur:
         delete_member_confirm: "'%{username}' کو '%{group}' گروپ سے ہٹائیں؟"
         profile:
           title: پروفائل
-        members:
-          title: "ممبران"
-          description: "اِس گروپ کی رکنیت کو مَینَیج کریں"
-          usernames: "صارف نام"
-          as_owner: "صارف(ین) کو اِس گروپ کے مالک(ین) کے طور پر مقرر کریں"
         logs:
           title: "لاگز"
           when: "کب"
@@ -380,7 +364,6 @@ ur:
           details: "تفصیلات"
           from: "سے"
           to: "کیلئے"
-      name_placeholder: "گروپ کا نام، کوئی خالی جگہ نہیں، نامِ صارفین کے اصولوں کے مطابق"
       public_admission: "صارفین کو آزادی سے گروپ میں شمولیت اختیار کرنے کی اجازت دیں (گروپ کا عوامی طور پر ظاہر ہونا لاذمی ہو)"
       public_exit: "صارفین کو آزادانہ طور پر گروپ چھوڑنے کی اجازت دیں"
       empty:
@@ -448,12 +431,6 @@ ur:
       mentions: "ذکر"
       messages: "پیغامات"
       notification_level: "گروپ پیغامات کیلئے اطلاعات کا پہلے سے طے شدہ لَیوَل"
-      visibility_levels:
-        title: "کون اِس گروپ کو دیکھ سکتا ہے؟"
-        public: "ہر کوئی"
-        members: "گروپ کے مالکان، اراکین اور منتظمین"
-        staff: "گروپ کے مالکان اور اسٹاف"
-        owners: "گروپ کے مالکان اور منتظمین"
       alias_levels:
         mentionable: "کون اِس گروپ کو @زکر کرسکتا ہے؟"
         messageable: "کون اِس گروپ کو پیغام بھیج سکتا ہے؟"
@@ -462,9 +439,6 @@ ur:
         mods_and_admins: "صرف ثالث اور منتظمین"
         members_mods_and_admins: "صرف گروپ کے اراکین، ثالث اور منتظمین"
         everyone: "ہر کوئی"
-      trust_levels:
-        title: "ممبران کو شامل کرتے وقت خود کار طریقے سے دیا جانے والا ٹرسٹ لَیول:"
-        none: "کوئی نہیں"
       notifications:
         watching:
           title: "نظر رکھی ہوئی ہے"
@@ -489,7 +463,6 @@ ur:
       flair_color_placeholder: "(اختیاری) ہیکس رنگ نمبر"
       flair_preview_icon: "آئکن کا مشاہدہ کریں"
       flair_preview_image: "تصویر کا مشاہدہ کریں"
-      flair_note: "نوٹ: فلیر صرف ایک صارف کے بنیادی گروپ کے لئے دکھایا جائے گا۔"
     user_action_groups:
       '1': "لائیکس دیے گئے"
       '2': "لائیکس موصول ہوے"
@@ -922,6 +895,7 @@ ur:
         header_title: "پروفائل، پیغامات، بک مارکس اور ترجیحات"
       title:
         title: "عنوان"
+        none: "(کوئی نہیں)"
       filters:
         all: "تمام"
       stream:
@@ -1135,8 +1109,6 @@ ur:
       no_content: کوئی میل نہیں ملے
       filter_placeholder: تلاش کریں...
       create: "'{{content}}' بنائیں"
-      max_content_reached: "آپ صرف {{count}} چیز(یں) منتخب کرسکتے ہیں."
-      min_content_not_reached: "کم از کم {{count}} چیز(یں) منتخب کریں"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
       people: لوگ
@@ -1343,9 +1315,6 @@ ur:
       select_all: "تمام منتخب کریں"
       clear_all: "تمام کو صاف کریں"
       too_short: "آپ کا سَرچ ٹَرم بہت مختصر ہے۔"
-      result_count:
-        one: "<span class='term'>{{term}}</span> کیلئیے 1 نتیجہ"
-        other: "<span class='term'>{{term}}</span> کیلئیے {{count}}{{plus}} نتائج"
       title: "ٹاپک، پوسٹس، صارفین، یا زمرہ جات کو سَرچ کریں"
       no_results: "کوئی نتائج نہیں پائے گئے۔"
       no_more_results: "کوئی اور نتائج نہیں پائے گئے۔"
@@ -2611,7 +2580,6 @@ ur:
         title: "گروپس"
         edit: "گروپس میں ترمیم کریں"
         refresh: "رِیفریش"
-        new: "نیا"
         about: "یہاں اپنے گروپ کی رکنیت کو اور ناموں میں ترمیم کریں"
         group_members: "گروپ کے اراکین"
         delete: "حذف کریں"
@@ -2619,22 +2587,11 @@ ur:
         delete_failed: "گروپ کو حذف کرنے میں ناکام۔ اگر یہ ایک خودکار گروپ ہے تو اسے ختم نہیں کیا جا سکتا۔"
         delete_owner_confirm: "'%{username}' کے لیے مالک کے استحقاق کو ہٹائیں؟"
         add: "شامل کریں"
-        add_members: "اراکین شامل کریں"
         custom: "اپنی مرضی کا"
-        bulk_complete: "صارفین کو گروپ میں شامل کر لیا گیا ہے۔"
-        bulk_complete_users_not_added: "یہ صارفین شامل نہیں ہو سکے (اس بات کو یقینی بنائیں کہ ان کا اکاؤنٹ موجود ہے):"
-        bulk: "گروپ میں کئی شامل کریں"
-        bulk_paste: "صارف ناموں اور یا اِیمیلز کی فہرست پَیسٹ کریں،  فی سطر ایک:"
-        bulk_select: "(ایک گروپ منتخب کریں)"
         automatic: "خود کار طریقے سے"
-        automatic_membership_email_domains: "جو صارفین ایک ایسے اِیمیل ڈومین کے ساتھ رجسٹر کرتے ہیں جو اِس فہرست میں سے کسی ایک سے پورا ملتا ہے، تو اُن کو خود کار طریقے سے اِس گروپ میں شامل کر دیا جائے گا:"
-        automatic_membership_retroactive: "موجودہ رجسٹرڈ صارفین کو شامل کرنے کے لئے وہی اِیمیل ڈومین اصول لاگو کریں"
         default_title: "اِس گروپ میں تمام صارفین کے لئے پہلے سے طے شدہ عنوان"
-        primary_group: "خود کار طریقے سے پرائمری گروپ کے طور پر مقرر کریں"
         group_owners: مالکان
         add_owners: مالکان شامل کریں
-        incoming_email: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس"
-        incoming_email_placeholder: "اِیمیل ایڈریس درج کریں"
         none_selected: "شروع کرنے کے لئے ایک گروپ منتخب کریں"
         no_custom_groups: "ایک نیا \"اپنی مرضی کا\" گروپ بنائیں"
       api:

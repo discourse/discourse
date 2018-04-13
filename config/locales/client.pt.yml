@@ -325,7 +325,6 @@ pt:
         make_user_group_owner: "Tornar dono"
         remove_user_as_group_owner: "Remover dono"
     groups:
-      name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
         posts: "Não existem publicações por membros deste grupo."
@@ -354,21 +353,12 @@ pt:
       mentions: "Menções"
       messages: "Mensagens"
       notification_level: "Nível de notificação predefinido para mensagens de grupo"
-      visibility_levels:
-        title: "Quem pode ver este grupo?"
-        public: "Toda a gente"
-        members: "Donos do grupo, membros e administradores"
-        staff: "Donos do grupo e equipa"
-        owners: "Donos do grupo e administradores"
       alias_levels:
         nobody: "Ninguém"
         only_admins: "Apenas administradores"
         mods_and_admins: "Apenas moderadores e Administradores"
         members_mods_and_admins: "Apenas membros do grupo, moderadores e administradores"
         everyone: "Todos"
-      trust_levels:
-        title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"
-        none: "Nenhum"
       notifications:
         watching:
           title: "A vigiar"
@@ -1187,9 +1177,6 @@ pt:
       select_all: "Selecionar Tudo"
       clear_all: "Limpar Tudo"
       too_short: "O seu termo de pesquisa é muito curto."
-      result_count:
-        one: "1 resultado para <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} resultados para <span class='term'>{{term}}</span>"
       title: "pesquisar por tópicos, publicações, utilizadores, ou categorias"
       no_results: "Não foram encontrados resultados."
       no_more_results: "Não foram encontrados mais resultados."
@@ -2245,7 +2232,6 @@ pt:
         title: "Grupos"
         edit: "Editar Grupos"
         refresh: "Atualizar"
-        new: "Novo"
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
@@ -2253,21 +2239,11 @@ pt:
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
         add: "Adicionar"
-        add_members: "Adicionar membros"
         custom: "Personalizar"
-        bulk_complete: "Os utilizadores foram adicionados ao grupo."
-        bulk: "Adicionar ao Grupo em Massa"
-        bulk_paste: "Colar uma lista de nomes de utilizador ou emails, um por linha:"
-        bulk_select: "(selecionar um grupo)"
         automatic: "Automático"
-        automatic_membership_email_domains: "Utilizadores que registem um domínio de email que corresponde exactamente a algum desta lista irão ser automaticamente adicionados a este grupo:"
-        automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar utilizadores registados existentes"
         default_title: "Título padrão para todos os utilizadores neste grupo"
-        primary_group: "Definir automaticamente como grupo primário"
         group_owners: Proprietários
         add_owners: Adicionar proprietários
-        incoming_email: "Endereço de email de entrada personalizado"
-        incoming_email_placeholder: "introduza o endereço de email"
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."

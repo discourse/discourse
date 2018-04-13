@@ -201,8 +201,6 @@ fa_IR:
   queue:
     delete_reason: "پاک شد از مدیر زمانبندی نوشته"
   groups:
-    success:
-      bulk_add: "%{users_added} کاربر به گروه اضافه شدند."
     errors:
       can_not_modify_automatic: "نمی‌توانید گروه‌های خودکار را تغییر دهید."
       invalid_domain: "'%{domain}' دامنه معتبری نیست."

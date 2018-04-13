@@ -317,12 +317,6 @@ th:
       posts: "โพสต์"
       mentions: "พูดถึง"
       messages: "ข้อความ"
-      visibility_levels:
-        title: "ใครสามารถเห็นกลุ่มนี้?"
-        public: "ทุกคน"
-        members: "เจ้าของกลุ่ม, สมาชิก และ ผู้ดูแลระบบ"
-        staff: "เจ้าของกลุ่ม และผู้ดูแล"
-        owners: "เจ้าของกลุ่ม และผู้ดูแลระบบ"
       alias_levels:
         mentionable: "ใครสามารถ @กล่าวถึง กลุ่มนี้"
         messageable: "ใครสามารถส่งข้อความในกลุ่มนี้?"
@@ -331,9 +325,6 @@ th:
         mods_and_admins: "ผู้ดูแลระบบและผู้ตรวจสอบ"
         members_mods_and_admins: "สมาชิกกลุ่ม ผู้ดูแลกระทู้ และผู้ดูแลเว็บ"
         everyone: "ทุกคน"
-      trust_levels:
-        title: "ระดับความไว้ใจจะถูกให้ไปยังผู้ใช้โดยอัตโนมัติเมื่อพวกเขาเพิ่ม:"
-        none: "ไม่มี"
       notifications:
         watching:
           title: "กำลังดู"
@@ -1373,7 +1364,6 @@ th:
         title: "กลุ่ม"
         edit: "แก้กลุ่ม"
         refresh: "รีโหลด"
-        new: "ใหม่"
         about: "แก้ไขสมาชิกและชื่อกลุ่มของคุณได้ที่นี่"
         group_members: "ชื่อสมาชิก"
         delete: "ลบ"
@@ -1381,11 +1371,8 @@ th:
         delete_failed: "ไม่สามารถลงกลุ่มได้ ถ้ากลุ่มนี้เป็นกลุ่มอัตโนมัติมันจะไม่สามารถถูกทำลายได้"
         delete_owner_confirm: "ลบสิทธิ์การเป็นเจ้าของ ของ '%{username}'?"
         add: "เพิ่ม"
-        add_members: "เพิ่มสมาชิก"
         group_owners: เจ้าของ
         add_owners: เพิ่มเจ้าของ
-        incoming_email: "ตั้งที่อยู่สำหรับอีเมลขาเข้า"
-        incoming_email_placeholder: "ใส่อีเมล"
       api:
         user: "ผู้ใช้"
         title: "API"

@@ -220,8 +220,6 @@ fi:
     delete_reason: "Poistettu moderointijonon kautta"
     not_found: "Viestiä ei löytynyt tai se päivittyi jo."
   groups:
-    success:
-      bulk_add: "%{users_added} käyttäjää lisättiin ryhmään."
     errors:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
       invalid_domain: "'%{domain}' ei ole käypä verkkotunnus."

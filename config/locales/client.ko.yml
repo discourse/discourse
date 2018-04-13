@@ -304,7 +304,6 @@ ko:
         make_user_group_owner: "소유자로 지정하기"
         remove_user_as_group_owner: "소유자 지정 취소하기"
     groups:
-      name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
       public_admission: "사용자가 그룹에 자유롭게 가입할 수 있도록 허용합니다. (그룹이 공개되어야 함)"
       public_exit: "사용자가 그룹을 자유롭게 탈퇴할 수 있도록 허용합니다."
       empty:
@@ -337,12 +336,6 @@ ko:
       mentions: "멘션"
       messages: "메시지"
       notification_level: "그룹 메시지의 기본 알림 레벨"
-      visibility_levels:
-        title: "누가 이 그룹을 볼 수 있나요?"
-        public: "모두"
-        members: "그룹 소유자, 멤버, 관리자"
-        staff: "그룹 소유자와 운영진"
-        owners: "그룹 소유자와 관리자"
       alias_levels:
         mentionable: "누가 이 그룹에 @멘션을 할 수 있나요?"
         messageable: "누가 이 그룹에 메시지를 보낼 수 있나요?"
@@ -351,9 +344,6 @@ ko:
         mods_and_admins: "운영자 및 관리자만"
         members_mods_and_admins: "그룹 멤버, 운영자, 관리자만"
         everyone: "모두"
-      trust_levels:
-        title: "멤버들이 추가되면 회원등급이 자동으로 부여됩니다:"
-        none: "없음"
       notifications:
         watching:
           title: "알림 : 주시 중"
@@ -378,7 +368,6 @@ ko:
       flair_color_placeholder: "(선택사항) 16진수 컬러 값"
       flair_preview_icon: "미리보기 아이콘"
       flair_preview_image: "미리보기 이미지"
-      flair_note: "주의사항: 플레어는 사용자의 주요 그룹에만 표시됩니다."
     user_action_groups:
       '1': "선사한 '좋아요'"
       '2': "받은 '좋아요'"
@@ -2240,7 +2229,6 @@ ko:
         title: "그룹"
         edit: "그룹 수정"
         refresh: "새로고침"
-        new: "새로운"
         about: "회원과 이름을 변경"
         group_members: "그룹 멤버"
         delete: "삭제"
@@ -2248,22 +2236,11 @@ ko:
         delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
         delete_owner_confirm: "'%{username}' 님에게서 소유자권한을 제거할까요?"
         add: "추가"
-        add_members: "사용자 추가하기"
         custom: "Custom"
-        bulk_complete: "회원들이 그룹에 추가되었습니다."
-        bulk_complete_users_not_added: "이 사용자는 추가되지 않았습니다(계정이 있는지 확인해보세요):"
-        bulk: "그룹에 한꺼번에 추가하기"
-        bulk_paste: "한 줄당 하나씩 아이디 또는 이메일 리스트를 붙여넣기 하세요."
-        bulk_select: "(그룹을 선택하세요)"
         automatic: "자동화"
-        automatic_membership_email_domains: "이 목록의 있는 항목과 사용자들이  등록한 이메일 도메인이 일치할때 이 그룹에 포함"
-        automatic_membership_retroactive: "이미 등록된 사용자에게 같은 이메일 도메인 규칙 적용하기"
         default_title: "이 그룹의 모든 사용자를 위한 기본 제목"
-        primary_group: "기본 그룹으로 자동적으로 설정"
         group_owners: 소유자
         add_owners: 소유자 추가하기
-        incoming_email: "사용자 설정 수신 이메일 주소"
-        incoming_email_placeholder: "이메일 주소를 입력하세요"
         none_selected: "시작할 그룹을 선택하세요"
         no_custom_groups: "사용자 설정 그룹 만들기"
       api:
