@@ -27,3 +27,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::TAG
   b.name = "tag"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::FLAG
+  b.name = "flag"
+end
