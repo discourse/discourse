@@ -86,11 +86,12 @@
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     transition: all linear .15s;
+    outline: none;
     img.avatar {
       width: 2.2857em;
       height: 2.2857em;
     }
-    &:hover {
+    &:hover, &:focus { 
       color: $primary;
       background-color: $primary-low;
       border-top: 1px solid transparent;
