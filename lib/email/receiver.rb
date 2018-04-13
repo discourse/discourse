@@ -274,7 +274,8 @@ module Email
       markdown, elided_markdown = if html.present?
         # use the first html extracter that matches
         if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
-          self.send(:"extract_from_#{html_extracter[0]}", html)
+          doc = Nokogiri::HTML.fragment(html)
+          self.send(:"extract_from_#{html_extracter[0]}", doc)
         else
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
           markdown = trim_discourse_markers(markdown)
@@ -295,67 +296,67 @@ module Email
     end
 
     HTML_EXTRACTERS ||= [
-      [:gmail, /class="gmail_/],
-      [:outlook, /id="(divRplyFwdMsg|Signature)"/],
-      [:word, /class="WordSection1"/],
-      [:exchange, /name="message(Body|Reply)Section"/],
-      [:apple_mail, /id="AppleMailSignature"/],
-      [:mozilla, /class="moz-/],
-      [:protonmail, /class="protonmail_/],
+      [:gmail, / class="gmail_/],
+      [:outlook, / id="(divRplyFwdMsg|Signature)"/],
+      [:word, / class="WordSection1"/],
+      [:exchange, / name="message(Body|Reply)Section"/],
+      [:apple_mail, / id="AppleMailSignature"/],
+      [:mozilla, / class="moz-/],
+      [:protonmail, / class="protonmail_/],
+      [:zimbra, / data-marker="__/],
     ]
 
-    def extract_from_gmail(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_gmail(doc)
       # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote
       # Just elide them all
       elided = doc.css("*[class^='gmail_']").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
-    def extract_from_outlook(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_outlook(doc)
       # Outlook properly identifies the signature and any replied/forwarded email
       # Use their id to remove them and anything that comes after
       elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
-    def extract_from_word(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
       elided = doc.css(".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *").remove
       to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
     end
 
-    def extract_from_exchange(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_exchange(doc)
       # Exchange is using the 'messageReplySection' class for forwarded emails
       # And 'messageBodySection' for the actual email
       elided = doc.css("div[name='messageReplySection']").remove
       to_markdown(doc.css("div[name='messageReplySection']").to_html, elided.to_html)
     end
 
-    def extract_from_apple_mail(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_apple_mail(doc)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
       elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
-    def extract_from_mozilla(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_mozilla(doc)
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided = doc.css("*[class^='moz-'], *[class^='moz-'] ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
-    def extract_from_protonmail(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_protonmail(doc)
       # Removes anything that has a class starting with "protonmail_" and everything after that
       elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_zimbra(doc)
+      # Removes anything that has a 'data-marker' attribute
+      elided = doc.css("*[data-marker]").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
