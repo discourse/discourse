@@ -198,6 +198,34 @@ $user_card_background: $secondary;
     margin-top: -53px;
   }
 
+  .group-card-avatar {
+    float: left;
+    margin-right: 10px;
+    margin-top: 0px;
+    .avatar-flair {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      background-repeat: no-repeat;
+      background-position: center;
+      color: $primary;
+      i {
+        margin: auto;
+        font-size: $font-up-4;
+      }
+    }
+  }
+  .members {
+    a {
+      color: lighten($primary, 40%);
+      &:hover {
+        color: $primary;
+      }
+    }
+  }
+
   p {
     margin: 0 0 5px 0;
   }
