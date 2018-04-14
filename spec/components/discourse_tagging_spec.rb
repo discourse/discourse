@@ -101,6 +101,12 @@ describe DiscourseTagging do
       let(:category) { Fabricate(:category, minimum_required_tags: 2) }
       let(:topic) { Fabricate(:topic, category: category) }
 
+      it 'when tags are not present' do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+      end
+
       it 'when tags are less than minimum_required_tags' do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
         expect(valid).to eq(false)
