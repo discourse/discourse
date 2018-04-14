@@ -22,9 +22,9 @@ function inject(context, key, value) {
 
 function injectPlainObject(context, key, value) {
   if (!context.themeSettings) {
-    Object.assign(context, { themeSettings: {} });
+    _.assign(context, { themeSettings: {} });
   }
-  Object.assign(context.themeSettings, { [key]: value });
+  _.assign(context.themeSettings, { [key]: value });
 }
 
 registerHelper('theme-setting-injector', function(arr, hash) {
