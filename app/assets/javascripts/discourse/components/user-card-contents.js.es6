@@ -1,115 +1,76 @@
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
-import { propertyNotEqual, setting } from 'discourse/lib/computed';
 import CleansUp from 'discourse/mixins/cleans-up';
 import afterTransition from 'discourse/lib/after-transition';
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
+import Group from 'discourse/models/group';
 import { userPath } from 'discourse/lib/url';
-import { durationTiny } from 'discourse/lib/formatter';
-import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
 const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
 const clickMention = "click.discourse-user-mention";
+const groupClickMention = "click.discourse-group-mention";
 
-export default Ember.Component.extend(CleansUp, CanCheckEmails, {
+const maxMembersToDisplay = 10;
+
+export default Ember.Component.extend(CleansUp, {
   elementId: 'user-card',
   classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'user.card_background::no-bg'],
-  allowBackgrounds: setting('allow_profile_backgrounds'),
 
   postStream: Ember.computed.alias('topic.postStream'),
-  enoughPostsForFiltering: Ember.computed.gte('topicPostCount', 2),
   viewingTopic: Ember.computed.match('currentPath', /^topic\./),
-  viewingAdmin: Ember.computed.match('currentPath', /^admin\./),
-  showFilter: Ember.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
-  showName: propertyNotEqual('user.name', 'user.username'),
-  hasUserFilters: Ember.computed.gt('postStream.userFilters.length', 0),
-  isSuspended: Ember.computed.notEmpty('user.suspend_reason'),
-  showBadges: setting('enable_badges'),
-  showMoreBadges: Ember.computed.gt('moreBadgesCount', 0),
-  showDelete: Ember.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
-  linkWebsite: Ember.computed.not('user.isBasic'),
-  hasLocationOrWebsite: Ember.computed.or('user.location', 'user.website_name'),
-  showCheckEmail: Ember.computed.and('user.staged', 'canCheckEmails'),
 
   visible: false,
   user: null,
+  group: null,
   username: null,
   avatar: null,
   userLoading: null,
   cardTarget: null,
   post: null,
+  cardType: null,
 
   // If inside a topic
   topicPostCount: null,
 
-  @computed('user.name')
-  nameFirst(name) {
-    return !this.siteSettings.prioritize_username_in_ux && name && name.trim().length > 0;
+  @computed('cardType')
+  isUserShown(cardType) {
+    return cardType == 'user';
   },
 
-  @computed('username', 'topicPostCount')
-  togglePostsLabel(username, count) {
-    return I18n.t("topic.filter_to", { username, count });
+  @computed('cardType')
+  isGroupShown(cardType) {
+    return cardType == 'group';
   },
 
-  @computed('user.user_fields.@each.value')
-  publicUserFields() {
-    const siteUserFields = this.site.get('user_fields');
-    if (!Ember.isEmpty(siteUserFields)) {
-      const userFields = this.get('user.user_fields');
-      return siteUserFields.filterBy('show_on_user_card', true).sortBy('position').map(field => {
-        Ember.set(field, 'dasherized_name', field.get('name').dasherize());
-        const value = userFields ? userFields[field.get('id')] : null;
-        return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });
-      }).compact();
-    }
+  _showUser(username, $target) {
+    const args = { stats: false };
+    args.include_post_count_for = this.get('topic.id');
+
+    User.findByUsername(username, args).then(user => {
+      if (user.topic_post_count) {
+        this.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
+      }
+      this.setProperties({ user, avatar: user, visible: true, cardType: 'user' });
+
+      this._positionCard($target);
+    }).catch(() => this._close()).finally(() => this.set('userLoading', null));
   },
 
-  @computed("user.trust_level")
-  removeNoFollow(trustLevel) {
-    return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
+  _showGroup(groupname, $target) {
+    this.store.find("group", groupname).then(group => {
+      this.setProperties({ group, avatar: group, visible: true, cardType: 'group' });
+      this._positionCard($target);
+      if(!group.flair_url && !group.flair_bg_color) {
+        group.set('flair_url', 'fa-users');
+      }
+      group.set('limit', maxMembersToDisplay);
+      return group.findMembers();
+    }).catch(() => this._close()).finally(() => this.set('userLoading', null));
   },
 
-  @computed('user.badge_count', 'user.featured_user_badges.length')
-  moreBadgesCount: (badgeCount, badgeLength) => badgeCount - badgeLength,
-
-  @computed('user.card_badge.image')
-  hasCardBadgeImage: image => image && image.indexOf('fa-') !== 0,
-
-  @observes('user.card_background')
-  addBackground() {
-    if (!this.get('allowBackgrounds')) { return; }
-
-    const $this = this.$();
-    if (!$this) { return; }
-
-    const url = this.get('user.card_background');
-    const bg = Ember.isEmpty(url) ? '' : `url(${Discourse.getURLWithCDN(url)})`;
-    $this.css('background-image', bg);
-  },
-
-  @computed('user.time_read', 'user.recent_time_read')
-  showRecentTimeRead(timeRead, recentTimeRead) {
-    return timeRead !== recentTimeRead && recentTimeRead !== 0;
-  },
-
-  @computed('user.recent_time_read')
-  recentTimeRead(recentTimeReadSeconds) {
-    return durationTiny(recentTimeReadSeconds);
-  },
-
-  @computed('showRecentTimeRead', 'user.time_read', 'recentTimeRead')
-  timeReadTooltip(showRecent, timeRead, recentTimeRead) {
-    if (showRecent) {
-      return I18n.t('time_read_recently_tooltip', {time_read: durationTiny(timeRead), recent_time_read: recentTimeRead});
-    } else {
-      return I18n.t('time_read_tooltip', {time_read: durationTiny(timeRead)});
-    }
-  },
-
-  _show(username, $target) {
+  _show(username, $target, userCardType) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       return false;
@@ -141,17 +102,13 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
     const post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
     this.setProperties({ username, userLoading: username, cardTarget: target, post });
 
-    const args = { stats: false };
-    args.include_post_count_for = this.get('topic.id');
+    if(userCardType == 'group') {
+      this._showGroup(username, $target);
+    }
+    else if(userCardType == 'user') {
+      this._showUser(username, $target);
+    }
 
-    User.findByUsername(username, args).then(user => {
-      if (user.topic_post_count) {
-        this.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
-      }
-      this.setProperties({ user, avatar: user, visible: true });
-
-      this._positionCard($target);
-    }).catch(() => this._close()).finally(() => this.set('userLoading', null));
 
     return false;
   },
@@ -179,14 +136,20 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
     $('#main-outlet').on(clickDataExpand, '[data-user-card]', (e) => {
       if (wantsNewWindow(e)) { return; }
       const $target = $(e.currentTarget);
-      return this._show($target.data('user-card'), $target);
+      return this._show($target.data('user-card'), $target, 'user');
     });
 
     $('#main-outlet').on(clickMention, 'a.mention', (e) => {
       if (wantsNewWindow(e)) { return; }
       const $target = $(e.target);
-      return this._show($target.text().replace(/^@/, ''), $target);
+      return this._show($target.text().replace(/^@/, ''), $target, 'user');
     });
+
+    $('#main-outlet').on(groupClickMention, 'a.mention-group', (e) => {
+      if (wantsNewWindow(e)) { return; }
+      const $target = $(e.target);
+      return this._show($target.text().replace(/^@/, ''), $target, 'group');
+    })
   },
 
   _positionCard(target) {
@@ -241,12 +204,14 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
     this.setProperties({
       visible: false,
       user: null,
+      group: null,
       username: null,
       avatar: null,
       userLoading: null,
       cardTarget: null,
       post: null,
-      topicPostCount: null
+      topicPostCount: null,
+      cardType: null
     });
   },
 
@@ -265,7 +230,7 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
   willDestroyElement() {
     this._super();
     $('html').off(clickOutsideEventName);
-    $('#main').off(clickDataExpand).off(clickMention);
+    $('#main').off(clickDataExpand).off(clickMention).off(groupClickMention);
   },
 
   actions: {
@@ -284,6 +249,10 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
       this.sendAction('composePrivateMessage', ...args);
     },
 
+    messageGroup() {
+      this.sendAction('createNewMessageViaParams', this.get('group.name'));
+    },
+
     togglePosts() {
       this.sendAction('togglePosts', this.get('user'));
       this._close();
@@ -295,6 +264,11 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
 
     showUser() {
       this.sendAction('showUser', this.get('user'));
+      this._close();
+    },
+
+    showGroup() {
+      this.sendAction('showGroup', this.get('group'));
       this._close();
     },
 
