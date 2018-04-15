@@ -14,7 +14,6 @@ class PostOwnerChanger
     @post_ids.each do |post_id|
       post = Post.with_deleted.where(id: post_id, topic_id: @topic.id).first
       next if post.blank?
-      old_owner = post.user
       @topic.user = @new_owner if post.is_first_post?
 
       if post.user == nil
@@ -25,10 +24,9 @@ class PostOwnerChanger
       PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
 
       if post.post_number == 1
-        TopicUser.change(old_owner.id, @topic.id, notification_level: 2) if old_owner
-        TopicUser.change(@new_owner.id, @topic.id, notification_level: 3)
+        TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[:watching])
       else
-        TopicUser.change(@new_owner.id, @topic.id, notification_level: 2)
+        TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[:tracking])
       end
 
       @topic.update_statistics

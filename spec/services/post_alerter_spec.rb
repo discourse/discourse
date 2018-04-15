@@ -337,15 +337,22 @@ describe PostAlerter do
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], mention_post])
     end
 
-  it "notification comes from editor is mention is added later" do
-    admin = Fabricate(:admin)
+    it "notification comes from editor if mention is added later" do
+      admin = Fabricate(:admin)
       post = create_post_with_alerts(user: user, raw: 'No mention here.')
       expect {
         post.revise(admin, raw: "Mention @eviltrout in this edit.")
       }.to change(evil_trout.notifications, :count)
       n = evil_trout.notifications.last
       expect(n.data_hash["original_username"]).to eq(admin.username)
-  end
+    end
+
+    it "doesn't notify the last post editor if they mention themself" do
+      post = create_post_with_alerts(user: user, raw: 'Post without a mention.')
+      expect {
+        post.revise(evil_trout, raw: "O hai, @eviltrout!")
+      }.not_to change(evil_trout.notifications, :count)
+    end
   end
 
   describe ".create_notification" do
