@@ -31,6 +31,13 @@ describe ScreenedIpAddress do
         described_class.new(valid_params.merge(action_name: nil))
       }.to raise_error(ArgumentError)
     end
+
+    it 'returns a useful error if ip address matches an existing record' do
+      ScreenedIpAddress.create(ip_address: '2600:387:b:f::7a/128', action_name: :block)
+      r = ScreenedIpAddress.new(ip_address: '2600:387:b:f::7a', action_name: :block)
+      expect(r.save).to eq(false)
+      expect(r.errors[:ip_address]).to be_present
+    end
   end
 
   describe "ip_address_with_mask" do

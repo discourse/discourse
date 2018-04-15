@@ -28,7 +28,6 @@ sv:
     default_cannot_be_made_public: "Omröstning med röster kan inte offentliggöras."
     named_cannot_be_made_public: "Omröstning med namnet <strong>%{name}</strong> har röster och kan inte offentliggöras."
     edit_window_expired:
-      cannot_change_polls: "Du kan inte lägga till, ta bort eller ändra namn på omröstningar efter de första  %{minutes} minutrarna."
       op_cannot_edit_options: "Du kan inte lägga till eller ta bort svarsalternativ efter de första %{minutes} minutrarna. Kontakta en moderator om du vill redigera ett svarsalternativ i en omröstning."
       staff_cannot_add_or_remove_options: "Du kan inte lägga till eller ta bort svarsalternativ efter de första %{minutes} minutrarna. Stäng denna diskussion och skapa en ny istället."
     no_polls_associated_with_this_post: "Inga omröstningar är knutet till detta inlägg."

@@ -225,6 +225,11 @@ input {
   margin-bottom: 10px;
 }
 
+.control-instructions {
+  color: dark-light-choose($primary-medium, $secondary-medium);
+  font-size: 0.875rem;
+}
+
 .control-group {
   margin-bottom: 9px;
 
@@ -327,6 +332,7 @@ input {
   }
 
   .control-label {
+    margin: 6.5px;
     float: left;
     width: 140px;
     text-align: right;

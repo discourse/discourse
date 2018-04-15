@@ -26,17 +26,21 @@ module DiscourseTagging
         end
       end
 
-      if tag_names.present?
-        category = topic.category
-        tag_names = tag_names + old_tag_names if append
+      category = topic.category
+      tag_names = tag_names + old_tag_names if append
 
+      if tag_names.present?
         # guardian is explicitly nil cause we don't want to strip all
         # staff tags that already passed validation
-        tags = filter_allowed_tags(Tag.where(name: tag_names), nil,           for_input: true,
-                                                                              category: category,
-                                                                              selected_tags: tag_names).to_a
+        tags = filter_allowed_tags(
+          Tag.where(name: tag_names),
+          nil, # guardian
+          for_topic: true,
+          category: category,
+          selected_tags: tag_names
+        ).to_a
 
-        if tags.size < tag_names.size && (category.nil? || category.tags.count == 0)
+        if tags.size < tag_names.size && (category.nil? || (category.tags.count == 0 && category.tag_groups.count == 0))
           tag_names.each do |name|
             unless Tag.where(name: name).exists?
               tags << Tag.create(name: name)
@@ -44,8 +48,20 @@ module DiscourseTagging
           end
         end
 
+        # validate minimum required tags for a category
+        if !guardian.is_staff? && category && category.minimum_required_tags > 0 && tags.length < category.minimum_required_tags
+          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          return false
+        end
+
         topic.tags = tags
       else
+        # validate minimum required tags for a category
+        if !guardian.is_staff? && category && category.minimum_required_tags > 0
+          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          return false
+        end
+
         topic.tags = []
       end
       topic.tags_changed = true
@@ -57,8 +73,16 @@ module DiscourseTagging
   #   term: a search term to filter tags by name
   #   category: a Category to which the object being tagged belongs
   #   for_input: result is for an input field, so only show permitted tags
+  #   for_topic: results are for tagging a topic
   #   selected_tags: an array of tag names that are in the current selection
   def self.filter_allowed_tags(query, guardian, opts = {})
+
+    selected_tag_ids = opts[:selected_tags] ? Tag.where(name: opts[:selected_tags]).pluck(:id) : []
+
+    if !opts[:for_topic] && !selected_tag_ids.empty?
+      query = query.where('tags.id NOT IN (?)', selected_tag_ids)
+    end
+
     term = opts[:term]
     if term.present?
       term.gsub!("_", "\\_")
@@ -86,7 +110,7 @@ module DiscourseTagging
 
         query = query.where("tags.id IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))", tag_group_ids)
       end
-    elsif opts[:for_input] || category
+    elsif opts[:for_input] || opts[:for_topic] || category
       # exclude tags that are restricted to other categories
       if CategoryTag.exists?
         query = query.where("tags.id NOT IN (SELECT tag_id FROM category_tags)")
@@ -98,9 +122,7 @@ module DiscourseTagging
       end
     end
 
-    if opts[:for_input]
-      selected_tag_ids = opts[:selected_tags] ? Tag.where(name: opts[:selected_tags]).pluck(:id) : []
-
+    if opts[:for_input] || opts[:for_topic]
       unless guardian.nil? || guardian.is_staff?
         staff_tag_names = SiteSetting.staff_tags.split("|")
         query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
@@ -141,7 +163,36 @@ module DiscourseTagging
       end
     end
 
-    query
+    if guardian.nil? || guardian.is_staff?
+      query
+    else
+      filter_visible(query, guardian)
+    end
+  end
+
+  def self.filter_visible(query, guardian = nil)
+    if !guardian&.is_staff? && TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).exists?
+      query.where(filter_visible_sql)
+    else
+      query
+    end
+  end
+
+  def self.filter_visible_sql
+    @filter_visible_sql ||= <<~SQL
+      tags.id NOT IN (
+        SELECT tgm.tag_id
+          FROM tag_group_memberships tgm
+    INNER JOIN tag_group_permissions tgp
+            ON tgp.tag_group_id = tgm.tag_group_id
+           AND tgp.group_id = #{Group::AUTO_GROUPS[:staff]})
+    SQL
+  end
+
+  def self.hidden_tag_names(guardian = nil)
+    return [] if guardian&.is_staff? || !TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).exists?
+    tag_group_ids = TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).pluck(:tag_group_id)
+    Tag.includes(:tag_groups).where('tag_group_id in (?)', tag_group_ids).pluck(:name)
   end
 
   def self.clean_tag(tag)

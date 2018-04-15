@@ -1,6 +1,7 @@
 export default Ember.Component.extend({
   classNameBindings: [':tag-list', 'categoryClass'],
 
+  isPrivateMessage: false,
   sortedTags: Ember.computed.sort('tags', 'sortProperties'),
 
   title: function() {

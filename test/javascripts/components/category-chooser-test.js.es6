@@ -35,9 +35,9 @@ componentTest('with scopedCategoryId', {
     this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(this.get('subject').rowByIndex(0).title(), 'feature');
+      assert.equal(this.get('subject').rowByIndex(0).title(), 'Discussion about features or potential features of Discourse: how they work, why they work, etc.');
       assert.equal(this.get('subject').rowByIndex(0).value(), 2);
-      assert.equal(this.get('subject').rowByIndex(1).title(), 'spec');
+      assert.equal(this.get('subject').rowByIndex(1).title(), 'My idea here is to have mini specs for features we would like built but have no bandwidth to build');
       assert.equal(this.get('subject').rowByIndex(1).value(), 26);
       assert.equal(this.get('subject').rows().length, 2);
     });

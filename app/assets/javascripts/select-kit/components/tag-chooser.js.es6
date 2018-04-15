@@ -2,7 +2,7 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import Tags from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
 import computed from "ember-addons/ember-computed-decorators";
-const { get, isEmpty, run, makeArray } = Ember;
+const { get, run, makeArray } = Ember;
 
 export default MultiSelectComponent.extend(Tags, {
   pluginApiIdentifiers: ["tag-chooser"],
@@ -11,6 +11,7 @@ export default MultiSelectComponent.extend(Tags, {
   filterable: true,
   filterPlaceholder: "tagging.choose_for_topic",
   limit: null,
+  blacklist: null,
   attributeBindings: ["categoryId"],
   allowAny: Ember.computed.alias("allowCreate"),
 
@@ -18,7 +19,11 @@ export default MultiSelectComponent.extend(Tags, {
     this._super();
 
     if (this.get("allowCreate") !== false) {
-      this.set("allowCreate", this.get("siteSettings.can_create_tag"));
+      this.set("allowCreate", this.site.get("can_create_tag"));
+    }
+
+    if (!this.get("blacklist")) {
+      this.set("blacklist", []);
     }
 
     this.set("termMatchesForbidden", false);
@@ -32,7 +37,7 @@ export default MultiSelectComponent.extend(Tags, {
     });
 
     if (!this.get("unlimitedTagCount")) {
-      this.set("limit", parseInt(this.get("limit") || this.get("siteSettings.max_tags_per_topic")));
+      this.set("maximum", parseInt(this.get("limit") || this.get("maximum") || this.get("siteSettings.max_tags_per_topic")));
     }
   },
 
@@ -53,25 +58,23 @@ export default MultiSelectComponent.extend(Tags, {
   actions: {
     onFilter(filter) {
       this.expand();
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, filter, 200));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, filter, 200));
     },
 
     onExpand() {
-      if (isEmpty(this.get("collectionComputedContent"))) {
-        this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
-      }
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
     },
 
     onDeselect() {
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
     },
 
     onSelect() {
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 50));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 50));
     }
   },
 
-  prepareSearch(query) {
+  _prepareSearch(query) {
     const selectedTags = makeArray(this.get("values")).filter(t => t);
 
     const data = {
@@ -79,7 +82,12 @@ export default MultiSelectComponent.extend(Tags, {
       limit: this.get("siteSettings.max_tag_search_results"),
       categoryId: this.get("categoryId")
     };
-    if (selectedTags) data.selected_tags = selectedTags.slice(0, 100);
+
+    if (selectedTags.length || this.get("blacklist").length) {
+      data.selected_tags = _.uniq(selectedTags.concat(this.get("blacklist")))
+                            .slice(0, 100);
+    }
+
     if (!this.get("everyTag")) data.filterForInput = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
@@ -100,8 +108,16 @@ export default MultiSelectComponent.extend(Tags, {
       results = results.sort((a, b) => a.id > b.id);
     }
 
-    return results.map(result => {
+    results = results.map(result => {
       return { id: result.text, name: result.text, count: result.count };
     });
+
+    // if forbidden we probably have an existing tag which is not in the list of
+    // returned tags, so we manually add it at the top
+    if (json.forbidden) {
+      results.unshift({ id: json.forbidden, name: json.forbidden, count: 0 });
+    }
+
+    return results;
   }
 });

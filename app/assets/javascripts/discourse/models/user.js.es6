@@ -23,12 +23,14 @@ const User = RestModel.extend({
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
   hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
   hasUnreadPMs: Em.computed.gt("private_messages_stats.unread", 0),
-  hasPosted: Em.computed.gt("post_count", 0),
-  hasNotPosted: Em.computed.not("hasPosted"),
-  canBeDeleted: Em.computed.and("can_be_deleted", "hasNotPosted"),
 
   redirected_to_top: {
     reason: null,
+  },
+
+  @computed("can_be_deleted", "post_count")
+  canBeDeleted(canBeDeleted, postCount) {
+    return canBeDeleted && postCount <= 5;
   },
 
   @computed()
@@ -216,6 +218,7 @@ const User = RestModel.extend({
       'website',
       'location',
       'name',
+      'title',
       'locale',
       'custom_fields',
       'user_fields',
@@ -281,6 +284,12 @@ const User = RestModel.extend({
       }
     });
 
+    ['muted_tags', 'tracked_tags', 'watched_tags', 'watching_first_post_tags'].forEach(prop => {
+      if (fields === undefined || fields.includes(prop)) {
+        data[prop] = this.get(prop) ? this.get(prop).join(',') : '';
+      }
+    });
+
     // TODO: We can remove this when migrated fully to rest model.
     this.set('isSaving', true);
     return ajax(userPath(`${this.get('username_lower')}.json`), {
@@ -340,13 +349,26 @@ const User = RestModel.extend({
            ua.action_type === UserAction.TYPES.topics;
   },
 
+  numGroupsToDisplay: 2,
+
   @computed("groups.[]")
-  displayGroups() {
+  filteredGroups() {
     const groups = this.get('groups') || [];
-    const filtered = groups.filter(group => {
+
+    return groups.filter(group => {
       return !group.automatic || group.name === "moderators";
     });
-    return filtered.length === 0 ? null : filtered;
+  },
+
+  @computed("filteredGroups", "numGroupsToDisplay")
+  displayGroups(filteredGroups, numGroupsToDisplay) {
+    const groups = filteredGroups.slice(0, numGroupsToDisplay);
+    return groups.length === 0 ? null : groups;
+  },
+
+  @computed("filteredGroups", "numGroupsToDisplay")
+  showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
+    return filteredGroups.length > numGroupsToDisplay;
   },
 
   // The user's stat count, excluding PMs.
@@ -548,6 +570,25 @@ const User = RestModel.extend({
 
   canManageGroup(group) {
     return group.get('automatic') ? false : (this.get('admin') || group.get('is_group_owner'));
+  },
+
+  @computed('groups.@each.title', 'badges.@each')
+  availableTitles() {
+    let titles = [];
+
+    _.each(this.get('groups'), group => {
+      if (group.get('title')) {
+        titles.push(group.get('title'));
+      }
+    });
+
+    _.each(this.get('badges'), badge => {
+      if (badge.get('allow_title')) {
+        titles.push(badge.get('name'));
+      }
+    });
+
+    return _.uniq(titles).sort();
   }
 });
 

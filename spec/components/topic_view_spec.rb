@@ -143,6 +143,16 @@ describe TopicView do
         expect { TopicView.new(private_message.id, Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
         expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
       end
+
+      it "does not log personal message view if there exists a similar log in previous hour" do
+        2.times { TopicView.new(private_message.id, evil_trout) }
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(1)
+
+        freeze_time (2.hours.from_now)
+
+        TopicView.new(private_message.id, evil_trout)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(2)
+      end
     end
 
     it "provides an absolute url" do

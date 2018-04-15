@@ -357,7 +357,11 @@ export default Ember.Component.extend({
       },
 
       onKeyUp(text, cp) {
-        return text.substring(0, cp).match(/(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/g);
+        const matches = /(?:^|[^a-z])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(text.substring(0, cp));
+
+        if (matches && matches[1]) {
+          return [ matches[1] ];
+        }
       },
 
       transformComplete(v) {
@@ -746,6 +750,8 @@ export default Ember.Component.extend({
     },
 
     toolbarButton(button) {
+      if (this.get('disabled')) { return; }
+
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
@@ -766,6 +772,8 @@ export default Ember.Component.extend({
     },
 
     showLinkModal() {
+      if (this.get('disabled')) { return; }
+
       this._lastSel = this._getSelected();
 
       if (this._lastSel) {
@@ -776,6 +784,8 @@ export default Ember.Component.extend({
     },
 
     formatCode() {
+      if (this.get('disabled')) { return; }
+
       const sel = this._getSelected('', { lineVal: true });
       const selValue = sel.value;
       const hasNewLine = selValue.indexOf("\n") !== -1;
@@ -829,6 +839,7 @@ export default Ember.Component.extend({
     },
 
     emoji() {
+      if (this.get('disabled')) { return; }
       this.set('emojiPickerIsActive', !this.get('emojiPickerIsActive'));
     }
   }

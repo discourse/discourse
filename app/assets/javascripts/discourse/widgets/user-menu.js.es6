@@ -99,6 +99,7 @@ createWidget('user-menu-dismiss-link', {
           attrs=(hash
             action="dismissNotifications"
             className="dismiss"
+            tabindex="0"
             icon="check"
             label="user.dismiss"
             title="user.dismiss_notifications_tooltip")}}
@@ -144,6 +145,7 @@ export default createWidget('user-menu', {
                 action: 'logout',
                 className: 'logout',
                 icon: 'sign-out',
+                href: '',
                 label: 'user.log_out'
               })
             )

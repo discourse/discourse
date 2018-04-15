@@ -1,0 +1,19 @@
+.groups-page {
+  .list-controls {
+    float: right;
+  }
+}
+
+$filter-line-height: 1.5;
+
+.groups-header-filters {
+  .groups-header-filters-type {
+    .select-kit-header {
+      line-height: $filter-line-height;
+    }
+  }
+
+  input {
+    line-height: $filter-line-height;
+  }
+}

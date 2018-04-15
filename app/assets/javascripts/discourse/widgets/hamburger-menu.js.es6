@@ -116,7 +116,7 @@ export default createWidget('hamburger-menu', {
       links.push({ route: 'users', className: 'user-directory-link', label: 'directory.title' });
     }
 
-    if (this.siteSettings.enable_group_directory) {
+    if (this.siteSettings.enable_group_directory || (this.currentUser && this.currentUser.staff)) {
       links.push({ route: 'groups', className: 'groups-link', label: 'groups.index.title' });
     }
 
@@ -153,7 +153,7 @@ export default createWidget('hamburger-menu', {
 
     const { site } = this;
     if (!site.mobileView && !this.capabilities.touch) {
-      links.push({ action: 'showKeyboard', className: 'keyboard-shortcuts-link', label: 'keyboard_shortcuts_help.title' });
+      links.push({ href: '', action: 'showKeyboard', className: 'keyboard-shortcuts-link', label: 'keyboard_shortcuts_help.title' });
     }
 
     if (this.site.mobileView || (this.siteSettings.enable_mobile_theme && this.capabilities.touch)) {

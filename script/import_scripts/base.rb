@@ -48,6 +48,7 @@ class ImportScripts::Base
     puts ""
 
     unless @skip_updates
+      update_topic_status
       update_bumped_at
       update_last_posted_at
       update_last_seen_at
@@ -88,6 +89,10 @@ class ImportScripts::Base
       @old_site_settings[key] = SiteSetting.send(key)
       SiteSetting.set(key, value)
     end
+
+    # Some changes that should not be rolled back after the script is done
+    SiteSetting.purge_unactivated_users_grace_period_days = 60
+    SiteSetting.purge_deleted_uploads_grace_period_days = 90
 
     RateLimiter.disable
   end
@@ -436,7 +441,6 @@ class ImportScripts::Base
       name: opts[:name],
       user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
-      description: opts[:description],
       parent_category_id: opts[:parent_category_id],
       color: opts[:color] || "AB9364",
       text_color: opts[:text_color] || "FFF",
@@ -445,6 +449,12 @@ class ImportScripts::Base
 
     new_category.custom_fields["import_id"] = import_id if import_id
     new_category.save!
+
+    if opts[:description].present?
+      changes = { raw: opts[:description] }
+      opts = { skip_revision: true, skip_validations: true, bypass_bump: true }
+      new_category.topic.first_post.revise(Discourse.system_user, changes, opts)
+    end
 
     add_category(import_id, new_category)
 
@@ -522,6 +532,13 @@ class ImportScripts::Base
     opts[:custom_fields] ||= {}
     opts[:custom_fields]['import_id'] = import_id
 
+    unless opts[:topic_id]
+      opts[:meta_data] = meta_data = {}
+      meta_data["import_closed"] = true if opts[:closed]
+      meta_data["import_archived"] = true if opts[:archived]
+      meta_data["import_topic_id"] = opts[:import_topic_id] if opts[:import_topic_id]
+    end
+
     opts[:guardian] = STAFF_GUARDIAN
     if @bbcode_to_md
       opts[:raw] = opts[:raw].bbcode_to_md(false) rescue opts[:raw]
@@ -592,6 +609,35 @@ class ImportScripts::Base
       closed_count += 1
       print_status(closed_count, total_count)
     end
+  end
+
+  def update_topic_status
+    puts "", "updating topic status"
+
+    Topic.exec_sql(<<~SQL)
+      UPDATE topics AS t
+      SET closed = TRUE
+      WHERE EXISTS(
+          SELECT 1
+          FROM topic_custom_fields AS f
+          WHERE f.topic_id = t.id AND f.name = 'import_closed' AND f.value = 't'
+      )
+    SQL
+
+    Topic.exec_sql(<<~SQL)
+      UPDATE topics AS t
+      SET archived = TRUE
+      WHERE EXISTS(
+          SELECT 1
+          FROM topic_custom_fields AS f
+          WHERE f.topic_id = t.id AND f.name = 'import_archived' AND f.value = 't'
+      )
+    SQL
+
+    TopicCustomField.exec_sql(<<~SQL)
+      DELETE FROM topic_custom_fields
+      WHERE name IN ('import_closed', 'import_archived')
+    SQL
   end
 
   def update_bumped_at

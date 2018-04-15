@@ -160,7 +160,11 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def tags_changes
-    { previous: previous["tags"], current: current["tags"] }
+    changes = {
+      previous: filter_visible_tags(previous["tags"]),
+      current: filter_visible_tags(current["tags"])
+    }
+    changes[:previous] == changes[:current] ? nil : changes
   end
 
   def include_tags_changes?
@@ -248,6 +252,11 @@ class PostRevisionSerializer < ApplicationSerializer
     def user
       # if stuff goes pear shape attribute to system
       object.user || Discourse.system_user
+    end
+
+    def filter_visible_tags(tags)
+      @hidden_tag_names ||= DiscourseTagging.hidden_tag_names(scope)
+      tags.is_a?(Array) ? (tags - @hidden_tag_names) : tags
     end
 
 end

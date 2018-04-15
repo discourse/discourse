@@ -117,7 +117,6 @@ it:
       email: 'invia questo collegamento via email'
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
-      private_topic: "ha reso questo argomento privato %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       invited_group: "invitato %{who} %{when}"
@@ -148,8 +147,6 @@ it:
     topic_admin_menu: "azioni amministrative sull'argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
-    bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
-    bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     themes:
       default_description: "Default"
     s3:
@@ -245,16 +242,6 @@ it:
       last_read: "questo è l'ultimo messaggio che hai letto; clicca per inserirlo nei segnalibri"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei sicuro di voler cancellare tutti segnalibri da questo argomento?"
-    topic_count_latest:
-      one: "{{count}} discussione nuova o aggiornata"
-      other: "{{count}} argomenti nuovi o aggiornati."
-    topic_count_unread:
-      one: "{{count}} discussione non letta."
-      other: "{{count}} argomenti non letti."
-    topic_count_new:
-      one: "{{count}} nuovo argomento."
-      other: "{{count}} nuovi argomenti."
-    click_to_show: "Clicca per visualizzare."
     preview: "Anteprima"
     cancel: "annulla"
     save: "Salva modifiche"
@@ -343,22 +330,6 @@ it:
         make_user_group_owner: "Assegna proprietà"
         remove_user_as_group_owner: "Revoca proprietà"
     groups:
-      logs:
-        title: "Log"
-        when: "Quando"
-        action: "Azione"
-        acting_user: "Utente attore"
-        target_user: "Utente destinatario"
-        subject: "Oggetto"
-        details: "Dettagli"
-        from: "Da"
-        to: "A"
-      edit:
-        title: 'Modifica Gruppo'
-        full_name: 'Nome Completo'
-        add_members: "Aggiungi Membri"
-        delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
-      name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
       public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (Richiede che il gruppo sia visibile a tutti)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
@@ -369,13 +340,7 @@ it:
         topics: "Non ci sono argomenti da membri di questo gruppo."
         logs: "Non ci sono log per questo gruppo."
       add: "Aggiungi"
-      join: "Partecipa al Gruppo"
-      leave: "Abbandona il Gruppo"
-      request: "Richiedi di partecipare al gruppo"
       message: "Messaggio"
-      automatic_group: Gruppo Automatico
-      closed_group: Gruppo Chiuso
-      is_group_user: "Sei un membro di questo gruppo"
       allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
       membership_request_template: "Template personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
       membership_request:
@@ -384,9 +349,7 @@ it:
         reason: "Spiega ai proprietari del gruppo perché vuoi entrare a far parte di questo gruppo"
       membership: "Iscrizione"
       name: "Nome"
-      user_count: "Numero di Membri"
       bio: "Informazioni sul Gruppo"
-      selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
       index:
         title: "Gruppi"
@@ -395,18 +358,11 @@ it:
         one: "Group"
         other: "Gruppi"
       activity: "Attività"
-      members: "Membri"
       topics: "Argomenti"
       posts: "Messaggi"
       mentions: "Menzioni"
       messages: "Messaggi"
       notification_level: "Livello di notifica predefinito per i messaggi di gruppo"
-      visibility_levels:
-        title: "Chi può vedere questo gruppo?"
-        public: "Chiunque"
-        members: "Proprietari del gruppo, membri e amministratori"
-        staff: "Proprietari del gruppo e staff"
-        owners: "Proprietari del gruppo e amministratori"
       alias_levels:
         mentionable: "Chi può @menzionare questo gruppo?"
         messageable: "Chi può inviare messaggi a questo gruppo?"
@@ -415,9 +371,6 @@ it:
         mods_and_admins: "Solo i moderatori e gli amministratori"
         members_mods_and_admins: "Solo i membri del gruppo, i moderatori e gli amministratori"
         everyone: "Tutti"
-      trust_levels:
-        title: "Livello di esperienza automaticamente assegnato ai membri quando vengono aggiunti:"
-        none: "Nessuno"
       notifications:
         watching:
           title: "In osservazione"
@@ -442,7 +395,6 @@ it:
       flair_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_preview_icon: "Anteprima Icona"
       flair_preview_image: "Anteprima Immagine"
-      flair_note: "Nota: Flair sarà mostrato solo per i gruppi primari dell'utente."
     user_action_groups:
       '1': "Mi piace - Assegnati"
       '2': "Mi piace - Ricevuti"
@@ -1196,20 +1148,6 @@ it:
       group_message_summary:
         one: "{{count}} messaggi in arrivo nella casella {{group_name}}"
         other: "{{count}} messaggi in arrivo nella casella {{group_name}}"
-      alt:
-        mentioned: "Menzionato da"
-        quoted: "Citato da"
-        replied: "Risposto"
-        posted: "Messaggio da"
-        edited: "Modifica il tuo messaggio da"
-        liked: "Ha assegnato un \"Mi piace\" al tuo messaggio"
-        invited_to_topic: "Invitato a un argomento da"
-        invitee_accepted: "Invito accettato da"
-        moved_post: "Il tuo messaggio è stato spostato da"
-        linked: "Collegamento al tuo messaggio"
-        granted_badge: "Distintivo assegnato"
-        group_message_summary: "Messaggi nel gruppo in arrivo"
-        topic_reminder: "Un promemoria"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
@@ -1242,9 +1180,6 @@ it:
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
-      result_count:
-        one: "1 risultato per <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} risultati per <span class='term'>{{term}}</span>"
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
@@ -1687,8 +1622,8 @@ it:
         select_all: seleziona tutto
         deselect_all: deseleziona tutto
         description:
-          one: Hai selezionato <b>1</b> messaggio.
-          other: Hai selezionato <b>{{count}}</b> messaggi.
+          one: "Hai selezionato <b>1</b> messaggio."
+          other: "Hai selezionato <b>{{count}}</b> messaggi."
     post:
       quote_reply: "Cita"
       edit_reason: "Motivo:"
@@ -1934,7 +1869,6 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
-      suppress_from_homepage: "Elimina questa categoria dalla homepage."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
@@ -2284,19 +2218,15 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Visualizzerai automaticamente tutti gli argomenti con questa etichetta. Riceverai una notifica per tutti i nuovi messaggi e argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         watching_first_post:
           title: "Osservando Primo Messaggio"
-          description: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomenti con questa etichetta."
         tracking:
           title: "Seguiti"
-          description: "Seguirai automaticamente tutti gli argomenti con questa etichetta. Accanto all'argomento apparirà un conteggio dei messaggi non letti e di quelli nuovi."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non riceverai alcuna notifica per nuovi argomenti con questa etichetta, e non compariranno nella tab dei messaggi non letti."
       groups:
         title: "Gruppi Etichette"
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
@@ -2458,8 +2388,6 @@ it:
         title: "Gruppi"
         edit: "Modifica Gruppi"
         refresh: "Aggiorna"
-        new: "Nuovo"
-        selector_placeholder: "inserisci nome utente"
         about: "Modifica qui la tua appartenenza ai gruppi e i loro nomi"
         group_members: "Membri del gruppo"
         delete: "Cancella"
@@ -2467,22 +2395,11 @@ it:
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
         add: "Aggiungi"
-        add_members: "Aggiungi membri"
         custom: "Personalizzato"
-        bulk_complete: "Gli utenti sono stati aggiunti al gruppo."
-        bulk_complete_users_not_added: "Questi utenti non sono stati aggiunti (assicurati che abbiano un account):"
-        bulk: "Aggiunta Massiva al Gruppo"
-        bulk_paste: "Incolla una lista di nomi utente o di email, uno per riga:"
-        bulk_select: "(seleziona un gruppo)"
         automatic: "Automatico"
-        automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
-        automatic_membership_retroactive: "Applica la stessa regola sul dominio email per aggiungere utenti registrati esistenti"
         default_title: "Titolo predefinito per tutti gli utenti di questo gruppo"
-        primary_group: "Imposta automaticamente come gruppo principale"
         group_owners: Proprietari
         add_owners: Aggiungi proprietari
-        incoming_email: "Indirizzo email personalizzato"
-        incoming_email_placeholder: "inserisci l'indirizzo e-mail"
         none_selected: "Seleziona un gruppo per iniziare"
         no_custom_groups: "Crea un nuovo gruppo personalizzato"
       api:
@@ -3231,10 +3148,7 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: 'Mostra solo le opzioni sovrascritte'
       site_settings:
-        show_overriden: 'Mostra solo le opzioni sovrascritte'
         title: 'Impostazioni'
-        reset: 'reimposta'
-        none: 'nessuno'
         no_results: "Nessun risultato trovato."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"

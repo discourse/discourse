@@ -27,7 +27,11 @@ class Report
      category_id: category_id,
      group_id: group_id,
      prev30Days: self.prev30Days
-    }
+    }.tap do |json|
+      if type == 'page_view_crawler_reqs'
+        json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
+      end
+    end
   end
 
   def Report.add_report(name, &block)
@@ -202,12 +206,18 @@ class Report
   # Private messages counts:
 
   def self.private_messages_report(report, topic_subtype)
-    basic_report_about report, Post, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
-    add_counts report, Post.private_posts.with_topic_subtype(topic_subtype), 'posts.created_at'
+    basic_report_about report, Topic, :private_message_topics_count_per_day, report.start_date, report.end_date, topic_subtype
+    add_counts report, Topic.private_messages.with_subtype(topic_subtype), 'topics.created_at'
   end
 
   def self.report_user_to_user_private_messages(report)
     private_messages_report report, TopicSubtype.user_to_user
+  end
+
+  def self.report_user_to_user_private_messages_with_replies(report)
+    topic_subtype = TopicSubtype.user_to_user
+    basic_report_about report, Post, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
+    add_counts report, Post.private_posts.with_topic_subtype(topic_subtype), 'posts.created_at'
   end
 
   def self.report_system_private_messages(report)
@@ -224,5 +234,13 @@ class Report
 
   def self.report_notify_user_private_messages(report)
     private_messages_report report, TopicSubtype.notify_user
+  end
+
+  def self.report_web_crawlers(report)
+    report.data = WebCrawlerRequest.where('date >= ? and date <= ?', report.start_date, report.end_date)
+      .limit(200)
+      .order('sum_count DESC')
+      .group(:user_agent).sum(:count)
+      .map { |ua, count| { x: ua, y: count } }
   end
 end

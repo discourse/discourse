@@ -1,0 +1,24 @@
+<div class='shared-draft-controls'>
+  {{#if publishing}}
+    {{i18n "shared_drafts.publishing"}}
+  {{else}}
+    {{{i18n "shared_drafts.notice" category=topic.category.name}}}
+
+    <div class='publish-field'>
+      <label>{{i18n "shared_drafts.destination_category"}}</label>
+      {{category-chooser
+        value=topic.destination_category_id
+        onChooseCategory=(action "updateDestinationCategory")}}
+    </div>
+
+    <div class='publish-field'>
+      {{#if validCategory}}
+        {{d-button
+          action=(action "publish")
+          label="shared_drafts.publish"
+          class="btn-primary publish-shared-draft"
+          icon="clipboard"}}
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

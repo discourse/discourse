@@ -2,10 +2,13 @@ import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { url } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import showModal from 'discourse/lib/show-modal';
+import ThemeSettings from 'admin/models/theme-settings';
 
 const THEME_UPLOAD_VAR = 2;
 
 export default Ember.Controller.extend({
+
+  editRouteName: 'adminCustomizeThemes.edit',
 
   @computed("model", "allThemes")
   parentThemes(model, allThemes) {
@@ -30,7 +33,7 @@ export default Ember.Controller.extend({
         return text + ": " + localized.join(" , ");
       }
     };
-    ['common','desktop','mobile'].forEach(target=> {
+    ['common', 'desktop', 'mobile'].forEach(target => {
       descriptions.push(description(target));
     });
     return descriptions.reject(d=>Em.isBlank(d));
@@ -75,6 +78,16 @@ export default Ember.Controller.extend({
     });
 
     return themes;
+  },
+
+  @computed("model.settings")
+  settings(settings) {
+    return settings.map(setting => ThemeSettings.create(setting));
+  },
+
+  @computed("settings")
+  hasSettings(settings) {
+    return settings.length > 0;
   },
 
   downloadUrl: url('model.id', '/admin/themes/%@'),
@@ -131,7 +144,7 @@ export default Ember.Controller.extend({
     },
 
     editTheme() {
-      let edit = ()=>this.transitionToRoute('adminCustomizeThemes.edit', this.get('model.id'), 'common', 'scss');
+      let edit = ()=>this.transitionToRoute(this.get('editRouteName'), this.get('model.id'), 'common', 'scss');
 
       if (this.get("model.remote_theme")) {
       bootbox.confirm(I18n.t("admin.customize.theme.edit_confirm"), result => {

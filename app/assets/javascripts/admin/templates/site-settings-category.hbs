@@ -1,7 +1,7 @@
 {{#if filteredContent}}
   {{#d-section class="form-horizontal settings"}}
     {{#each filteredContent as |setting|}}
-      {{site-setting setting=setting saveAction="saveSetting"}}
+      {{site-setting setting=setting}}
     {{/each}}
   {{/d-section}}
 {{else}}

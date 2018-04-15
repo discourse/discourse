@@ -159,7 +159,9 @@ aside.quote {
 }
 
 .post-hidden {
-  opacity: 0.5;
+  opacity: 0.5;       // opacity sets a new z-index context,
+  position: relative; // so the positioning is required,
+  z-index: z("base"); // otherwise post controls are stacked too low
 }
 
 .topic-post.staged {

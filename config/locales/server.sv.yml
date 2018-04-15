@@ -70,7 +70,7 @@ sv:
       has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
-      is_invalid: "Verkar oklart, det ären komplett mening"
+      is_invalid: "Verkar oklart, är det en komplett mening?"
       contains_censored_words: "innehåller följande censurerade ord:%(censurerade_ord)"
       less_than: måste vara mindre än %{count}
       less_than_or_equal_to: måste vara mindre eller lika med %{count}
@@ -94,7 +94,7 @@ sv:
     template:
       body: 'Det uppstod problem med följande fält:'
       header:
-        one: Ett fel förhindrade %{model} från att sparas
+        one: 'Ett fel förhindrade %{model} från att sparas'
         other: '%{count} fel förhindrade %{model} från att sparas'
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
@@ -113,7 +113,7 @@ sv:
   topic_invite:
     user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
   backup:
-    operation_already_running: "En operation är redan igång. Kan inte starta ett nytt jobb just nu."
+    operation_already_running: "En operation är redan igång och därför kan inte ett nytt jobb snartas just nu."
     backup_file_should_be_tar_gz: "Backup-filen ska vara ett .tar.gz arkiv."
     not_enough_space_on_disk: "Det finns inte tillräckligt mycket utrymme på disken för att ladda upp denna backup."
     invalid_filename: "Backupfilnamnet innehåller ogiltiga tecken. Giltiga tecken är a-z 0-9 . - _."
@@ -201,7 +201,6 @@ sv:
   groups:
     errors:
       can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
-      member_already_exist: "'%{username}' är redan medlem i denna grupp."
       invalid_domain: "'%{domain}' är inte ett giltigt domän."
       invalid_incoming_email: "'%{email}' är inte en giltig e-postadress."
       email_already_used_in_group: "'%{email}' är redan använd av gruppen '%{group_name}'."
@@ -297,25 +296,25 @@ sv:
     title: "Välkommen till loungen"
     body: |2
 
-      Grattis! :confetti_ball:
+        Grattis! :confetti_ball:
 
-      Om du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3).
+        Om du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3).
 
-      Du kan nu &hellip;
+        Du kan nu &hellip;
 
-      * Redigera rubriken för alla ämnen
-      * Ändra kategorin för alla ämnen
-      * Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)
-      * Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre
-      * Gömma spam med en enda flagga
+        * Redigera rubriken för alla ämnen
+        * Ändra kategorin för alla ämnen
+        * Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)
+        * Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre
+        * Gömma spam med en enda flagga
 
-      Här är den [aktuella listan över regelbundna användare](/badges/3/regular). Glöm inte att hälsa.
+        Här är den [aktuella listan över regelbundna användare](/badges/3/regular). Glöm inte att hälsa.
 
-      Tack för att du är en viktig del av det här forumet!
+        Tack för att du är en viktig del av det här forumet!
 
-      (För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att tillfredställa kraven över tid kommer att fortsätta vara regelbundna medlemmar.)
+        (För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att tillfredställa kraven över tid kommer att fortsätta vara regelbundna medlemmar.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorin %{category}"
     replace_paragraph: "(Byt ut den här första paragrafen med en sammanfattad beskrivning av din nya kategori. Den här vägledningen kommer att dyka upp i kategorins urvalsområde, så försök att hålla det kortare än 200 tecken. **Tills du har redigerat den här beskrivningen eller skapat nya ämnen så kommer den här kategorin inte att synas på kategorisidan.**)"
@@ -348,21 +347,6 @@ sv:
       title: "ledare"
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
-    slow_down: "Du har utfört den här handlingen för många gånger, försök igen senare."
-    by_type:
-      first_day_replies_per_day: "Du har uppnått maximalt antal inlägg en ny användare kan göra under första dagen. Var god vänta %{time_left} innan du försöker igen."
-      first_day_topics_per_day: "Du har uppnått maximalt antal nya ämnen som nya användare kan skapa under första dagen. Var god vänta %{time_left} innan du försöker igen."
-      create_topic: "Du skapar nya ämnen för snabbt. Var god vänta %{time_left} innan du försöker igen."
-      create_post: "Du svarar för snabbt. Var god vänta %{time_left} innan du försöker igen."
-      delete_post: "Du raderar inlägg för snabbt. Var god vänta %{time_left} innan du försöker igen."
-      public_group_membership: "Du deltar/lämnar grupper för frekvent. Vad god och vänta %[tid_kvar] innan du försöker igen."
-      topics_per_day: "Du har uppnått maximalt antal nya ämnen idag. Var god vänta %{time_left} innan du försöker igen."
-      pms_per_day: "Du har uppnått maximalt antal inlägg idag. Var god vänta %{time_left} innan du försöker igen."
-      create_like: "Du har uppnått maximalt antal gillningar idag. Var god vänta %{time_left} innan du försöker igen."
-      create_bookmark: "Du har uppnått maximalt antal bokmärken idag. Var god vänta %{time_left} innan du försöker igen."
-      live_post_counts: "Du ber om uppdateringar för ofta. Var god vänta %{time_left} innan du försöker igen."
-      unsubscribe_via_email: "Du har uppnått maximalt antal avregistreringar via e-post idag. Var god vänta %{time_left} innan du försöker igen."
-      topic_invitations_per_day: "Du har uppnått maximalt antal inbjudningar till ämnen idag. Var god vänta %{time_left} innan du försöker igen."
     hours:
       one: "1 timme"
       other: "%{count} timmar"
@@ -476,16 +460,17 @@ sv:
       long_form: 'flagga detta som orelevant'
     spam:
       title: 'Spam'
+      description: 'Det här inlägget är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på det aktuella ämnet.'
+      short_description: 'Detta är reklam eller vandalism'
       long_form: 'flagga detta som spam'
       email_title: '"%{title}" flaggades som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Olämpligt'
-      description: 'Detta inläggs innehåll inkluderar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="/guidelines">våra riktlinjer</a>r.'
+      description: 'Detta inläggs innehåll inkluderar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="/guidelines">våra riktlinjer</a>.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
       title: 'Skicka ett meddelande till @{{username}} '
-      description: 'Jag vill prata med den här personen direkt och privat om inlägget. '
       long_form: 'notifierad användare'
       email_title: 'Du skrev i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -862,8 +847,6 @@ sv:
     google_oauth2_client_id: "Klient-ID för din Google-applikation."
     google_oauth2_client_secret: "Klienthemlighet för din Google-applikation."
     enable_twitter_logins: "Aktivera Twitter autentisering, kräver twitter_consumer_key och twitter_consumer_secret"
-    twitter_consumer_key: "Konsumentnyckel för Twitter autentisering, registrerad på http://dev.twitter.com"
-    twitter_consumer_secret: "Konsumenthemlighet för Twitter autentisering, registrerad på http://dev.twitter.com"
     enable_instagram_logins: "Tillåt Instagramautentisering, kräver instagram_consumer_key och instagram_consumer_secret"
     instagram_consumer_key: "Konsumentnyckel för Instagram-autentisering"
     instagram_consumer_secret: "Konsumenthemlighet för Instagram-autentisering"
@@ -877,7 +860,6 @@ sv:
     allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
     automatic_backups_enabled: "Kör automatiska säkerhetskopior som definierats i säkerhetskopieringsfrekvens"
-    backup_frequency: "Hur frekvent vi skapar en säkerhetskopia, i dagar."
     enable_s3_backups: "Ladda upp säkerhetskopior till S3 vid färdigställning. VIKTIGT: kräver giltiga S3-kreditiv inlagda i Webbplatsinställningar > Filer."
     s3_backup_bucket: "Den externa behållaren för säkerhetskopieringar. VARNING: Se till att det här en privat behållare."
     s3_disable_cleanup: "Inaktivera borttagande av säkerhetskopior från S3 när de tagits bort lokalt."
@@ -1582,7 +1564,7 @@ sv:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       since_last_visit: "Sedan ditt senaste besök"
@@ -1783,8 +1765,6 @@ sv:
     promoter:
       name: Främjare
       description: Bjöd in en användare
-      long_description: |
-        Den här utmärkelsen beviljas när du bjuder in någon att delta i forumet med hjälp av inbjudningsknappen på användarsidan eller i slutet av ett ämne. Att bjuda in vänner som kan vara intresserade av specifika diskussioner är ett bra sätt att introducera nya personer till vårt forum, tack!
     campaigner:
       name: Förespråkare
       description: Bjöd in 3 grundläggande användare
@@ -1880,8 +1860,6 @@ sv:
     first_emoji:
       name: Första emoji
       description: Använde en emoji i ett inlägg
-      long_description: |
-        Den här utmärkelsen beviljas när du för första gången använder en emoji i ditt inlägg :thumbsup:. Emojis låter dig förmedla dina känslor i dina inlägg, från glädje :smiley: till sorgsenhet :anguished: till ilska :angry: och allt däremellan :sunglasses:. Skriv bara ett : (kolon) eller klicka på emoji-knappen i redigeraren för att välja mellan hundratals emojis :ok_hand:
     first_mention:
       name: Första omnämningen
       long_description: 'Den här utmärkelsen beviljas när du nämner någons @användarnamn i ett inlägg. Varje omnämnande genererar en notifiering till den personen, så att det känner till ditt inlägg. Börja skriva @ (snabel-a) för att nämna en användare, eller, om det tillåts, en grupp - det är ett bekvämt sätt att uppmärksamma dem på något. '

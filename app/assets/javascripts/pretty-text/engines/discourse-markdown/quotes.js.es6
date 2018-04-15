@@ -62,7 +62,7 @@ const rule = {
     if (primaryGroupName && primaryGroupName.length !== 0) {
       token.attrs.push(['class', `quote group-${primaryGroupName}`]);
     } else {
-      token.attrs.push(['class', 'quote']);
+      token.attrs.push(['class', 'quote no-group']);
     }
 
     if (postNumber) {
@@ -129,7 +129,7 @@ const rule = {
       token = state.push('quote_header_close', 'div', -1);
     }
 
-    token        = state.push('bbcode_open', 'blockquote', 1);
+    token = state.push('bbcode_open', 'blockquote', 1);
   },
 
   after: function(state) {
@@ -145,15 +145,16 @@ export function setup(helper) {
     opts.emojiSet = siteSettings.emoji_set;
   });
 
-  helper.registerPlugin(md=>{
-     md.block.bbcode.ruler.push('quotes', rule);
+  helper.registerPlugin(md => {
+    md.block.bbcode.ruler.push('quotes', rule);
   });
 
   helper.whiteList(['img[class=avatar]']);
   helper.whiteList({
     custom(tag, name, value) {
       if (tag === 'aside' && name === 'class') {
-        return !!/^quote group\-(.+)$/.exec(value);
+        return value === "quote no-group" ||
+          !!/^quote group\-(.+)$/.exec(value);
       }
     }
   });

@@ -98,7 +98,6 @@ fa_IR:
       email: 'این پیوند را با ایمیل بفرستید'
     action_codes:
       public_topic: "این موضوع در %{when}  عمومی شده"
-      private_topic: "این موضوع در %{when}  خصوصی شده"
       split_topic: "این موضوع  %{when} جدا شد "
       invited_user: "%{who} در %{when} دعوت شده"
       invited_group: "%{who} در %{when} دعوت شده"
@@ -129,8 +128,6 @@ fa_IR:
     topic_admin_menu: "اقدامات مدیریت موضوع"
     wizard_required: "به دیسکورس خوش آمدید! برای شروع نصب <a href='%{url}' data-auto-route='true'>کلیک کنید</a> ✨"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
-    bootstrap_mode_enabled: "برای راه‌اندازی راحت‌تر، حالت خود‌راه‌انداز فعال شده. به تمام کاربران سطح اعتماد 1 اعطا می‌شود و ایمیل خلاصه روزانه به صورت پیشفرض فعال می‌شود. این امکان وقتی تعداد کاربران  از %{min_users}  بیشتر شود، غیر فعال خواهد شد."
-    bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
     themes:
       default_description: "پیش‌فرض"
     s3:
@@ -226,11 +223,6 @@ fa_IR:
       confirm_clear: "آیا مطمئنید که می‌خواهید همه نشانک ها را از این موضوع پاک کنید؟"
     topic_count_latest:
       other: "{{count}} موضوع تازه یا به‌ روز شده."
-    topic_count_unread:
-      other: "{{count}} موضوع خوانده نشده."
-    topic_count_new:
-      other: "{{count}} موضوع جدید."
-    click_to_show: "برای نمایش کلیک کنید."
     preview: "پیش‌نمایش"
     cancel: "لغو"
     save: "ذخیره سازی تغییرات"
@@ -317,22 +309,6 @@ fa_IR:
         make_user_group_owner: "مدیر کردن"
         remove_user_as_group_owner: "لغو مالکیت"
     groups:
-      logs:
-        title: "گزارش‌ها"
-        when: "چه زمانی"
-        action: "عمل"
-        acting_user: "کاربر اجرایی"
-        target_user: "کاربر مقصد"
-        subject: "موضوع"
-        details: "جزئیات"
-        from: "از"
-        to: "به"
-      edit:
-        title: 'ویرایش گروه'
-        full_name: 'نام و نام خانوادگی'
-        add_members: "افزودن اعضا"
-        delete_member_confirm: "کاربر '%{username}' از گروه '%{group}' حذف شود؟"
-      name_placeholder: "در نام گروه نمی توان از فاصله استفاده کرد، مانند قوانین نامگذاری نام کاربری"
       empty:
         posts: "در این گروه هیچ نوشته ای توسط کاربران ارسال نشده."
         members: "این گروه هیچ عضوی ندارد"
@@ -341,22 +317,14 @@ fa_IR:
         topics: "در این گروه هیچ موضوعی توسط اعضای آن ایجاد نشده."
         logs: "هیچ گزارشی برای این گروه موجود نیست."
       add: "افزودن"
-      join: "پیوستن به گروه"
-      leave: "ترک گروه"
-      request: "درخواست پیوستن به گروه"
       message: "پیام"
-      automatic_group: گروه خودکار
-      closed_group: گروه بسته شده
-      is_group_user: "شما عضو این گروه هستید"
       allow_membership_requests: "اجازه ارسال درخواست عضویت در گروه به کاربران"
       membership_request:
         submit: "ارسال درخواست"
         title: "درخواست پیوستن به @%{group_name}"
       membership: "عضویت"
       name: "نام"
-      user_count: "تعداد اعضا"
       bio: "درباره گروه"
-      selector_placeholder: "افزودن عضو"
       owner: "مالک"
       index:
         title: "گروه‌ها"
@@ -364,27 +332,17 @@ fa_IR:
       title:
         other: "گروه ها"
       activity: "فعالیت"
-      members: "اعضا"
       topics: "موضوعات"
       posts: "نوشته‌ها"
       mentions: "اشاره‌ها"
       messages: "پیام‌ها"
       notification_level: "سطح آگاه‌سازی پیش‌فرض برای پیام‌های گروهی"
-      visibility_levels:
-        title: "چه کسی می‌تواند این گروه را ببیند؟"
-        public: "همه"
-        members: "صاحبان گروه، اعضا، و مدیران"
-        staff: "صاحبان گروه و کارکنان"
-        owners: "صاحبان گروه و مدیران"
       alias_levels:
         nobody: "هیچ‌کس"
         only_admins: "فقط مدیران ارشد"
         mods_and_admins: "فقط مدیران و مدیران ارشد"
         members_mods_and_admins: "تنها اعضای گروه، مدیران ومدیران ارشد"
         everyone: "همه"
-      trust_levels:
-        title: "سطح اعتماد به صورت خودکار به اعضایی که اضافه می‌شوند داده می‌شود:"
-        none: "هیچ کدام"
       notifications:
         watching:
           title: "در حال مشاهده"
@@ -409,7 +367,6 @@ fa_IR:
       flair_color_placeholder: "(اختیاری) کد HEX رنگ"
       flair_preview_icon: "پیش‌نمایش آیکن"
       flair_preview_image: "پیش‌نمایش تصویر"
-      flair_note: "نکته:‌ خصیصه فقط برای گروه اصلی کاربر نمایش داده می‌شود."
     user_action_groups:
       '1': "پسندهای داده شده"
       '2': "پسندهای دریافت شده"
@@ -1084,19 +1041,6 @@ fa_IR:
       empty: "اعلانی پیدا نشد."
       more: "نمایش اعلان‌های قدیمی‌تر"
       total_flagged: "همه‌ی نوشته‌های پرچم خورده"
-      alt:
-        mentioned: "اشاره شده توسط"
-        quoted: "نقل‌قول شده توسط"
-        replied: "پاسخ داده شد"
-        posted: "نوشته شده توسط"
-        edited: "نوشته‌تان را ویرایش کنید توسط"
-        liked: "ارسال شما را پسندید"
-        invited_to_topic: "دعوت شده به یک موضوع توسط"
-        invitee_accepted: "دعوت قبول شد توسط"
-        moved_post: "نوشته‌ی شما منتقل شد توسط"
-        linked: "پیوند به ارسال شما"
-        granted_badge: "نشان اعطا شد"
-        group_message_summary: "پیام‌های صندوق ورودی گروه"
       popup:
         mentioned: '{{username}} در "{{topic}}" - {{site_title}} به شما اشاره کرد'
         group_mentioned: '{{username}} به شما در "{{topic}}" - {{site_title}} اشاره نمود'
@@ -1517,7 +1461,7 @@ fa_IR:
         select_all: انتخاب همه
         deselect_all: عدم انتخاب همه
         description:
-          other: شما <b>{{count}}</b> نوشته انتخاب کرده اید
+          other: "شما <b>{{count}}</b> نوشته انتخاب کرده اید"
     post:
       quote_reply: "نقل‌قول"
       edit_reason: "دلیل:"
@@ -1728,7 +1672,6 @@ fa_IR:
       email_in_allow_strangers: "تایید ایمیل ها از کاربران ناشناس  بدون حساب کاربری"
       email_in_disabled: "ارسال موضوعات جدید با ایمیل در تنظیمات سایت غیر فعال است. برای فعال سازی  موضوعات جدید را با ایمیل ارسال کنید،"
       email_in_disabled_click: 'فعال کردن تنظیمات "email in".'
-      suppress_from_homepage: "برداشتن این دسته‌بندی از صفحه اصلی."
       show_subcategory_list: "تعداد دسته‌بندی‌های فرزند که بالای موضوعات این دسته‌بندی نمایش داده می‌شوند."
       num_featured_topics: "تعداد موضوعاتی که در صفحه دسته‌بندی نمایش داده می‌شوند:"
       subcategory_num_featured_topics: "تعداد موضوعات برجسته که در دسته‌بندی مادر نمایش داده می‌شوند:"
@@ -2058,19 +2001,15 @@ fa_IR:
       notifications:
         watching:
           title: "در حال مشاهده"
-          description: "شما به صورت خودکار تمام موضوعات این برچسب را مشاهده خواهید کرد. درباره‌ی نوشته‌ها و موضوعات جدید آگاه خواهید شد، به علاوه تعداد نوشته‌های خوانده نشده کنار موضوع نمایش داده خواهد شد."
         watching_first_post:
           title: "در حال مشاهده اولین نوشته"
-          description: "شما فقط برای اولین نوشته‌ی هر موضوع جدید در این برچسب مطلع خواهید شد."
         tracking:
           title: "پیگیری"
-          description: "به صورت خودکار در تمامی موضوعات این برچسب را پیگیری می‌کنید. تعداد نوشته‌های خوانده نشده کنار موضوع نمایش داده می‌شود."
         regular:
           title: "عادی"
           description: "اگر کسی به صورت @نام به شما اشاره کند، به شما اطلاع داده خواهد شد."
         muted:
           title: "بی‌صدا شد"
-          description: "از موضوعات جدید در این برچسب مطلع نخواهید شد و در تب مطالب خوانده نشده‌ها نیز نمایش داده نمی‌شوند."
       groups:
         title: "برچسب گروه‌ها"
         about: "برای مدیریت راحت‌تر گروه‌ها به آن‌ها برچسب اضافه کنید."
@@ -2204,8 +2143,6 @@ fa_IR:
         title: "گروه‌ها"
         edit: "ویرایش گروه‌ها"
         refresh: "تازه کردن"
-        new: "جدید"
-        selector_placeholder: "نام کاربری را وارد نمایید ."
         about: "عضویت و نام‌های گروه را در اینجا ویرایش کنید"
         group_members: "اعضای گروه"
         delete: "حذف"
@@ -2213,22 +2150,11 @@ fa_IR:
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
         add: "اضافه کردن"
-        add_members: "اضافه کردن عضو"
         custom: "سفارشی"
-        bulk_complete: "کاربران به گروه اضافه شدند."
-        bulk_complete_users_not_added: "این کاربران اضافه نشدند (مطمئن شوید که حساب عضو هستند)"
-        bulk: "اضافه کردن تعداد زیادی به گروه"
-        bulk_paste: "یک لیست از نام های کاربری و یا ایمیل ها وارد کنید, در هر خط فقط یکی:"
-        bulk_select: "(یک گروه انتخاب کنید)"
         automatic: "خودکار"
-        automatic_membership_email_domains: " کاربرانی که با ایمیل  دامنه ثبت نام کرده اند،دقیقا شبیه دامنه های لیست، بصورت خودکار به این گروه اضافه می شوند :"
-        automatic_membership_retroactive: "درخواست همان قاعده دامنه ایمیل برای اضافه کردن برای کاربران ثبت نام کرده"
         default_title: "عنوان را پیش فرض کن برای تمام اعضا در این گروه"
-        primary_group: "بطور خودکار به گروه اصلی تبدیل شد"
         group_owners: مالکین
         add_owners: افزودن مالک
-        incoming_email: "آدرس ایمیل های دریافتی سفارشی"
-        incoming_email_placeholder: "آدرس ایمیل را وارد کنید"
         none_selected: "برای شروع یک گروه انتخاب کنید"
         no_custom_groups: "ایجاد گروه سفارشی"
       api:
@@ -2901,11 +2827,10 @@ fa_IR:
         go_back: "بازگشت به جستجو"
         recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: 'تنها بازنویسی‌شده‌ها را نمایش بده'
-      site_settings:
-        show_overriden: 'تنها بازنویسی‌شده‌ها را نمایش بده'
-        title: 'تنظیمات'
+      settings:
         reset: 'بازنشانی'
-        none: 'هیچ کدام'
+      site_settings:
+        title: 'تنظیمات'
         no_results: "چیزی یافت نشد."
         clear_filter: "واضح"
         add_url: "اضافه کردن URL"

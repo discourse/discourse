@@ -42,7 +42,7 @@ const controllerOpts = {
       const tracker = this.topicTrackingState;
 
       // Move inserted into topics
-      this.get('content').loadBefore(tracker.get('newIncoming'));
+      this.get('content').loadBefore(tracker.get('newIncoming'), true);
       tracker.resetTracking();
       return false;
     },
@@ -137,11 +137,12 @@ const controllerOpts = {
   footerEducation: function() {
     if (!this.get('allLoaded') || this.get('model.topics.length') > 0 || !this.currentUser) { return; }
 
-    const split = (this.get('model.filter') || '').split('/');
+    const segments = (this.get('model.filter') || '').split('/');
 
-    if (split[0] !== 'new' && split[0] !== 'unread') { return; }
+    const tab = segments[segments.length - 1];
+    if (tab !== 'new' && tab !== 'unread') { return; }
 
-    return I18n.t("topics.none.educate." + split[0], {
+    return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(`${this.currentUser.get('username_lower')}/preferences`)
     });
   }.property('allLoaded', 'model.topics.length')

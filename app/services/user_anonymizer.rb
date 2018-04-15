@@ -1,7 +1,11 @@
 class UserAnonymizer
+
+  attr_reader :user_history
+
   def initialize(user, actor = nil)
     @user = user
     @actor = actor
+    @user_history = nil
   end
 
   def self.make_anonymous(user, actor = nil)
@@ -49,11 +53,18 @@ class UserAnonymizer
       @user.user_open_ids.find_each { |x| x.destroy }
       @user.api_key.try(:destroy)
 
-      UserHistory.create(action: UserHistory.actions[:anonymize_user],
-                         target_user_id: @user.id,
-                         acting_user_id: @actor ? @actor.id : @user.id,
-                         email: prev_email,
-                         details: "username: #{prev_username}")
+      history_details = {
+        action: UserHistory.actions[:anonymize_user],
+        target_user_id: @user.id,
+        acting_user_id: @actor ? @actor.id : @user.id,
+      }
+
+      if SiteSetting.log_anonymizer_details?
+        history_details[:email] = prev_email
+        history_details[:details] = "username: #{prev_username}"
+      end
+
+      @user_history = UserHistory.create(history_details)
     end
     @user
   end

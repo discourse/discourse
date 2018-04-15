@@ -184,10 +184,11 @@ ar:
       email: 'شارك هذا الرابط علي بريد إلكتروني'
     action_codes:
       public_topic: "أجعل هذا الموضوع عامًّا %{when}"
-      private_topic: "جعل هذا الموضوع خاصًّا %{when}"
+      private_topic: "تحويل هذا الموضوع إلى رسالة شخصية %{when}"
       split_topic: "قسَم هذا الموضوع %{when}"
       invited_user: "دُعي %{who} %{when}"
       invited_group: "دُعي %{who} %{when}"
+      user_left: "%{who}أزال نفسه من هذه الرسالة %{when}"
       removed_user: "اُقصي %{who} %{when}"
       removed_group: "اُقصي %{who} %{when}"
       autoclosed:
@@ -214,8 +215,6 @@ ar:
     topic_admin_menu: "صلاحيات المدير علي الموضوعات"
     wizard_required: "مرحبًا في نسختك الجديدة من دسكورس! فلنبدأ مع <a href='%{url}' data-auto-route='true'>مُرشد الإعدادات</a> ✨"
     emails_are_disabled: "لقد عطّل أحد المدراء الرّسائل الصادرة للجميع. لن تُرسل إشعارات عبر البريد الإلكتروني أيا كان نوعها."
-    bootstrap_mode_enabled: "لكى تتمكن من اطلاق موقعك الجديد بسهولة, الموقع اﻷن علي الوضع التمهيدي. كل المستخدمين الجدد سيحصلون علي مستوي الثقة 1 وسيكون خيار ارسال الملخص اليومى عن طريق البريد الالكترونى مفعل. سيتم الغاء الوضع التمهيدي تلقائيا عندما يتخطى عدد اﻷعضاء %{min_users} عضو."
-    bootstrap_mode_disabled: "سيتم الغاء الوضع التمهيدي خلال ال 24 ساعة القادمة."
     themes:
       default_description: "افتراضى"
     s3:
@@ -239,6 +238,7 @@ ar:
     not_implemented: "لم تُنجز هذه الخاصية بعد، عذرا."
     no_value: "لا"
     yes_value: "نعم"
+    submit: "أرسل"
     generic_error: "نأسف، حدث عطل ما."
     generic_error_with_reason: "حدث عطل ما: %{error}"
     sign_up: "أنشأ حسابا"
@@ -319,28 +319,6 @@ ar:
       last_read: "هذا آخر منشور قرأته، انقر لوضع علامة مرجعية علية"
       remove: "أزل العلامة المرجعية"
       confirm_clear: "أمتأكد من إزالة كل العلامات لمرجعية من هذا الموضوع؟"
-    topic_count_latest:
-      zero: "لا مواضيع جديدة أو محدّثة."
-      one: "موضوع واحد جديد أو محدّث."
-      two: "موضوعان جديدان أو محدّثان."
-      few: "{{count}} مواضيع جديدة أو محدّثة."
-      many: "{{count}} موضوعا جديدا أو محدّثا."
-      other: "{{count}} موضوع جديد أو محدث."
-    topic_count_unread:
-      zero: "لا مواضيع غير مقروءة"
-      one: "موضوع واحد غير مقروء."
-      two: "موضوعان غير مقروءان."
-      few: "{{count}} مواضيع غير مقروءة."
-      many: "{{count}} موضوعا غير مقروء."
-      other: "{{count}} موضوع غير مقروء."
-    topic_count_new:
-      zero: "لا مواضيع جديدة."
-      one: "موضوع واحد جديد."
-      two: "موضوعان جديدان."
-      few: "{{count}} مواضيع جديدة."
-      many: "{{count}} موضوعا جديدا."
-      other: "{{count}} موضوع جديد."
-    click_to_show: "انقر للعرض."
     preview: "معاينة"
     cancel: "ألغِ"
     save: "احفظ التعديلات"
@@ -350,6 +328,7 @@ ar:
     uploading: "يرفع..."
     uploading_filename: "يرفع {{filename}}..."
     uploaded: "رُفع!"
+    pasting: "جاري النسخ"
     enable: "فعّل"
     disable: "عطّل"
     undo: "تراجع"
@@ -441,22 +420,6 @@ ar:
         make_user_group_owner: "تعيين كمالك"
         remove_user_as_group_owner: "سحب صلاحية المالك"
     groups:
-      logs:
-        title: "السجلات"
-        when: "حين"
-        action: "إجراء"
-        acting_user: "العضو المسؤول"
-        target_user: "العضو المستهدف"
-        subject: "الموضوع"
-        details: "التفاصيل"
-        from: "من"
-        to: "إلى"
-      edit:
-        title: 'تعديل المجموعة'
-        full_name: 'الإسم الكامل'
-        add_members: "إضافة أعضاء"
-        delete_member_confirm: "إزالة '%{username}' من المجموعة '%{group}'؟"
-      name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
       public_admission: "السماح للاعضاء بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
       public_exit: "السماح للأعضاء بمغادرة المجموعة بحرية"
       empty:
@@ -467,13 +430,7 @@ ar:
         topics: "لا موضوعات من أعضاء هذه المجموعة."
         logs: "لا سجلّات لهذه المجموعة."
       add: "أضف"
-      join: "انضم للمجموعة"
-      leave: "غادر المجموعة"
-      request: "اطلب الانضمام للمجموعة"
       message: "رسالة"
-      automatic_group: مجموعة تلقائية
-      closed_group: مجموعة مغلقة
-      is_group_user: "أنت عضو في هذه المجموعة"
       allow_membership_requests: "السماح للأعضاء بأرسال طلب انضمام لمدراء المجموعة"
       membership_request_template: "لوحة مخصص تظهر للأعضاء عندما يرسلون طلب عضوية"
       membership_request:
@@ -482,9 +439,8 @@ ar:
         reason: "دع مدراء المجموعة يعرفون لماذا انت تنتمي لهذه المجموعة"
       membership: "العضوية"
       name: "الاسم"
-      user_count: "عدد اﻷعضاء"
       bio: "عن المجموعة"
-      selector_placeholder: "أضف أعضاء"
+      selector_placeholder: "أدخل اسم المستخدم"
       owner: "المالك"
       index:
         title: "المجموعات"
@@ -497,18 +453,11 @@ ar:
         many: "المجموعات"
         other: "المجموعات"
       activity: "النشاط"
-      members: "الأعضاء"
       topics: "الموضوعات"
       posts: "المنشورات"
       mentions: "الإشارات"
       messages: "الرسائل"
       notification_level: "المستوى الأفتراضي لإشعارات رسائل المجموعة"
-      visibility_levels:
-        title: "من يستطيع رؤية هذه المجموعة؟"
-        public: "الكل"
-        members: "مالكي المجموعة و الأعضاء و المديرين"
-        staff: "مالكي المجموعة و طاقم العمل"
-        owners: "مالكي المجموعة و المديرين"
       alias_levels:
         mentionable: "من يستطيع @الاشارة الى هذه المجموعة؟"
         messageable: "من يستطيع ارسال رسالة الى هذه المجموعة؟"
@@ -517,9 +466,6 @@ ar:
         mods_and_admins: "المدراء والمشرفون فقط"
         members_mods_and_admins: "أعضاء المجموعة والمدراء والمشرفون فقط"
         everyone: "الكل"
-      trust_levels:
-        title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"
-        none: "لا شيء"
       notifications:
         watching:
           title: "مُراقب"
@@ -544,7 +490,6 @@ ar:
       flair_color_placeholder: "(إختياري) اللون بترميز Hexadecimal"
       flair_preview_icon: "معاينة الأيقونة"
       flair_preview_image: "معاينة الصورة"
-      flair_note: "ملحوظة: الصورة المميزة سوف تظهر فقط لمجموعة العضو الرئيسية."
     user_action_groups:
       '1': "الإعجابات المعطاة"
       '2': "الإعجابات المتلقاة"
@@ -1325,20 +1270,6 @@ ar:
         few: "{{count}} رسالة في صندوق رسائل {{group_name}} "
         many: "{{count}} رسالة في صندوق رسائل {{group_name}} "
         other: "{{count}} رسالة في صندوق رسائل {{group_name}} "
-      alt:
-        mentioned: "أُشير إليك من"
-        quoted: "أُقتبس كلامك من"
-        replied: "مجاب"
-        posted: "منشور من"
-        edited: "تم تعديل منشورك من"
-        liked: "أُعجب بمنشورك"
-        invited_to_topic: "تمت دعوتك لموضوع من "
-        invitee_accepted: "قبلت دعوتك من"
-        moved_post: "منشورك نقل بواسطة"
-        linked: "وضع رابطا لمنشورك"
-        granted_badge: "تم منح الوسام"
-        group_message_summary: "رسائل صندوق المجموعة"
-        topic_reminder: "تذكير"
       popup:
         mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'
         group_mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'
@@ -1508,6 +1439,8 @@ ar:
       move_to_inbox:
         title: 'انقل إلى البريد الوارد'
         help: 'انقل الرسالة للبريد الوارد'
+      edit_message:
+        title: 'تحرير رسالة'
       list: 'الموضوعات'
       new: 'موضوع جديد'
       unread: 'غير مقروء'
@@ -1591,6 +1524,7 @@ ar:
         next_week: "الاسبوع القادم"
         next_month: "الشهر القادم"
         one_year: "سنة واحدة"
+        forever: "للأبد"
         pick_date_and_time: "اختر التاريخ والوقت"
         set_based_on_last_post: "اغلقة بناء علي اخر منشور"
       publish_to_category:
@@ -1848,12 +1782,12 @@ ar:
         select_all: حدد الكل
         deselect_all: أزل تحديد الكل
         description:
-          zero: لم تحدّد أي منشورات.
-          one: لقد حدّدت منشور<b>واحد</b>.
-          two: لقد حدّدت <b>منشورين</b>.
-          few: لقد حدّدت <b>{{count}}</b> منشور.
-          many: لقد حدّدت <b>{{count}}</b> منشور.
-          other: لقد حدّدت <b>{{count}}</b> منشور.
+          zero: "لم تحدّد أي منشورات."
+          one: "لقد حدّدت منشور<b>واحد</b>."
+          two: "لقد حدّدت <b>منشورين</b>."
+          few: "لقد حدّدت <b>{{count}}</b> منشور."
+          many: "لقد حدّدت <b>{{count}}</b> منشور."
+          other: "لقد حدّدت <b>{{count}}</b> منشور."
     post:
       quote_reply: "اقتبس"
       edit_reason: "السبب:"
@@ -2185,7 +2119,6 @@ ar:
       email_in_allow_strangers: "قبول بريد إلكتروني من زوار لا يملكون حسابات"
       email_in_disabled: "عُطّل إرسال المشاركات عبر البريد الإلكترونيّ من إعدادات الموقع. لتفعيل نشر المشاركات الجديدة عبر البريد،"
       email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
-      suppress_from_homepage: "امنع هذا القسم من الظهور في الصفحة الرئيسية."
       show_subcategory_list: "أظهر الأقسام الفرعية فوق الموضوعات من هذا القسم."
       num_featured_topics: "عدد الموضوعات المعروضة في صفحة الأقسام:"
       subcategory_num_featured_topics: "عدد الموضوعات المُميزة في صفحة القسم الرئيسي."
@@ -2618,19 +2551,15 @@ ar:
       notifications:
         watching:
           title: "مُراقب"
-          description: "ستتابع بشكل تلقائي جديد هذه الأقسام. سيتم إشعارك بكل منشور او موضوع، بالإضافة لذلك سيتم عرض عدد  المنشورات الغير مقروءة و الجديدة بجانب الموضوع."
         watching_first_post:
           title: "يُراقب فيه أول مشاركة"
-          description: "ستستقبل إشعارًا لأوّل مشاركة في كلّ موضوع في هذا الوسم."
         tracking:
           title: "مُتابع"
-          description: "ستتابع آليا كل مواضيع هذا الوسم. سيظهر عدّاد للمشاركات غير المقروءة والجديدة بجانب الموضوع."
         regular:
           title: "موضوع عادي"
           description: "ستستقبل إشعارًا إن أشار أحد إلى @اسمك أو ردّ على مشاركتك."
         muted:
           title: "مكتوم"
-          description: "لن تستقبل أيّ إشعار لأيّ موضوع جديد في هذا الوسم، ولن تظهر هذه المواضيع في لسان المواضيع غير المقروءة."
       groups:
         title: "مجموعات الأوسمة"
         about: "ضع الأوسمة في مجموعات ليسهل عليك إدارتها."
@@ -2779,13 +2708,20 @@ ar:
           notify_user: "مخصص"
           notify_moderators: "مخصص"
       groups:
+        new:
+          name:
+            available: "اسم المجموعة متاح"
+            not_available: "اسم المجموعة غير متاح"
+            blank: "يجب تحديد اسم للمجموعة"
+        bulk_add:
+          title: "أضافة متعددة للمجموعة"
+          complete_users_not_added: "هؤلاء الأعضاء لن يتم اضافتهم (تأكد من أن لديهم حسابات)"
+        name_placeholder: "اسم المجموعة، بدون مسافات، كما هو الحال مع أسماء المستخدمين"
         primary: "المجموعة الأساسية"
         no_primary: "(لا يوجد مجموعة أساسية)"
         title: "مجموعات"
         edit: "تعديل المجموعة"
         refresh: "تحديث"
-        new: "جديد"
-        selector_placeholder: "أدخل اسم المستخدم"
         about: "عدل عضوية المجموعة وأسماءها هنا"
         group_members: "أعضاء المجموعة"
         delete: "احذف"
@@ -2793,22 +2729,11 @@ ar:
         delete_failed: "تعذّر حذف المجموعة. إن كانت مجموعة آليّة، فلا يمكن تدميرها."
         delete_owner_confirm: "هل تريد إزالة صلاحيات الإدارة من '%{username} ؟"
         add: "اضافة"
-        add_members: "اضافة اعضاء"
         custom: "مخصص"
-        bulk_complete: "تمت إضافة الاعضاء إلى المجموعة."
-        bulk_complete_users_not_added: "هؤلاء الاعضاء لم يتم اضافتهم (تأكد انهم يملكون حساب)"
-        bulk: "إضافة متعددة إلى المجموعة"
-        bulk_paste: "الصق قائمة بأسماء الاعضاء أو عناوين البريد الإلكتروني، واحد لكل سطر:"
-        bulk_select: "(اختر مجموعة)"
         automatic: "تلقائي"
-        automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
-        automatic_membership_retroactive: "تطبيق نفس قاعدة عنوان البريد الإلكتروني لإضافة الاعضاء المسجلين الحاليين"
         default_title: "العنوان الافتراضي لكل أعضاء هذه المجموعة"
-        primary_group: "تعيين تلقائيا كمجموعة أساسية"
         group_owners: الملّاك
         add_owners: اضف ملّاكً
-        incoming_email: "تعيين بريد إلكتروني خاص:"
-        incoming_email_placeholder: "يرجى إدخال بريد الكتروني فعّال."
         none_selected: "اختر مجموعة للبدء"
         no_custom_groups: "انشئ مجموعة جديدة مخصصة"
       api:
@@ -3531,10 +3456,7 @@ ar:
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: 'اظهر التجاوزات فقط'
       site_settings:
-        show_overriden: 'اظهر فقط الاعدادات المعدلة'
         title: 'الإعدادات'
-        reset: 'إعادة تعيين'
-        none: 'لا شيء'
         no_results: "لا نتائج."
         clear_filter: "مسح"
         add_url: "اضافة رابط"
@@ -3556,6 +3478,7 @@ ar:
           developer: 'المطورون'
           embedding: "تضمين"
           legal: "الأمور القانونية"
+          api: 'API'
           user_api: 'API المستخدمين'
           uncategorized: 'أخرى'
           backups: "النُسخ الإحتياطية"

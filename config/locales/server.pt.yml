@@ -29,6 +29,7 @@ pt:
   loading: "A carregar"
   powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, e melhor visualização com o JavaScript ativado'
   log_in: "Iniciar Sessão"
+  submit: "Submeter"
   purge_reason: "Eliminada automaticamente como abandonada, conta desativada"
   disable_remote_images_download_reason: "A transferência remota de imagens foi desativada porque não existe espaço disponível no disco."
   anonymous: "Anónimo"
@@ -36,6 +37,11 @@ pt:
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, esquema de cor inválido"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
+    error_importing: "Erro ao clonar o repositório de GIT, acesso foi negado ou o repositório não foi encontrado"
+    settings_errors:
+      invalid_yaml: "O YAML fornecido é inválido"
+      data_type_not_a_number: "Tipo de configuração `%{name}` não é suportado. Tipos suportados são `integer`, `bool`, `lista` e `enum`."
+      name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
   emails:
     incoming:
       default_subject: "Este tópico precisa de um título"
@@ -98,7 +104,7 @@ pt:
     template:
       body: 'Ocorreram problemas com os seguintes campos:'
       header:
-        one: 1 erro impediu este %{model} de ser gravado
+        one: '1 erro impediu este %{model} de ser gravado'
         other: '%{count} erros impediram este %{model} de ser gravado'
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
@@ -166,7 +172,6 @@ pt:
   too_many_links:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 hiperligação numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
-  contains_blocked_words: "A sua publicação contém palavras que não são permitidas."
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
@@ -209,11 +214,8 @@ pt:
   queue:
     delete_reason: "Eliminado através da fila de moderação de mensagens"
   groups:
-    success:
-      bulk_add: "Foram adicionados %{users_added} utilizadores ao grupo."
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
-      member_already_exist: "'%{username}' já é membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
       invalid_incoming_email: "'%{email}' não é um endereço de email válido."
       email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
@@ -325,25 +327,25 @@ pt:
     title: "Bem-vindo ao Salão"
     body: |2+
 
-      Parabéns! :confetti_ball:
+        Parabéns! :confetti_ball:
 
-      Se consegue ver este tópico, então é porque foi recentemente promovido a **habitual** (Nível de Confiança 3).
+        Se consegue ver este tópico, então é porque foi recentemente promovido a **habitual** (Nível de Confiança 3).
 
-      Pode agora &hellip;
+        Pode agora &hellip;
 
-      * Editar o título de qualquer tópico
-      * Modificar a categoria de qualquer tópico
-      * Ter todas as suas hiperligações a serem seguidas ([nãoseguimento automático](http://en.wikipedia.org/wiki/Nofollow) é removido)
-      * Aceder a um salão privado de categorias, apenas visível a utilizadores com Nível de Confiança 3 ou superior
-      * Esconder spam com uma única sinalização
+        * Editar o título de qualquer tópico
+        * Modificar a categoria de qualquer tópico
+        * Ter todas as suas hiperligações a serem seguidas ([nãoseguimento automático](http://en.wikipedia.org/wiki/Nofollow) é removido)
+        * Aceder a um salão privado de categorias, apenas visível a utilizadores com Nível de Confiança 3 ou superior
+        * Esconder spam com uma única sinalização
 
-      Aqui está a [lista actual de membros habituais](/badges/3/regular). Certifique-se que diz olá.
+        Aqui está a [lista actual de membros habituais](/badges/3/regular). Certifique-se que diz olá.
 
-      Obrigado por ser uma parte importante na nossa comunidade!
+        Obrigado por ser uma parte importante na nossa comunidade!
 
-      (Para mais informação acerca dos Níveis de Confiança, [veja este tópico][confiança]. Por favor tenha conhecimento que apenas membros que continuam a corresponder aos requisitos ao longo do tempo, irão manter-se habituais.)
+        (Para mais informação acerca dos Níveis de Confiança, [veja este tópico][confiança]. Por favor tenha conhecimento que apenas membros que continuam a corresponder aos requisitos ao longo do tempo, irão manter-se habituais.)
 
-      [confiança]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [confiança]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
 
   category:
     topic_prefix: "Acerca da categoria %{category}"
@@ -377,20 +379,6 @@ pt:
       title: "líder"
     change_failed_explanation: "Tentou despromover %{user_name} para '%{new_trust_level}'. Contudo o Nível de Confiança é atualmente '%{current_trust_level}'. %{user_name} irá permanecer em '%{current_trust_level}' - se deseja despromover o utilizador, bloqueie o Nível de Confiança primeiro"
   rate_limiter:
-    slow_down: "Realizou esta ação demasiadas vezes, tente novamente mais tarde."
-    by_type:
-      first_day_replies_per_day: "Atingiu o número máximo de respostas que um novo utilizador pode criar no seu primeiro dia. Por favor espere %{time_left} antes de tentar novamente."
-      first_day_topics_per_day: "Atingiu o número máximo de tópicos que um novo utilizador pode criar no seu primeiro dia. Por favor espere %{time_left} antes de tentar novamente."
-      create_topic: "Está a criar tópicos demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
-      create_post: "Está a responder demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
-      delete_post: "Está a apagar publicações a um ritmo demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
-      topics_per_day: "Atingiu o número máximo de novos tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      pms_per_day: "Atingiu o número máximo de mensagens de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      create_like: "Atingiu o número máximo de gostos de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      create_bookmark: "Atingiu o número máximo de marcações de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      live_post_counts: "Está a pedir por contagens de publicações em tempo real a um ritmo demasiado rápido. Por favor espere %{time_left} antes de tentar outra vez."
-      unsubscribe_via_email: "Atingiu o número máximo de cancelamentos de subscrições por email de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      topic_invitations_per_day: "Atingiu o número máximo de convites para tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -523,8 +511,6 @@ pt:
       long_form: 'sinalizou isto como inapropriado'
     notify_user:
       title: 'Enviar uma mensagem a @{{username}}'
-      description: 'Quero falar com esta pessoa diretamente e em privado acerca da sua mensagem.'
-      short_description: 'Eu quero falar com esta pessoa diretamente e em privado sobre a sua publicação.'
       long_form: 'utilizador com mensagens'
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -905,8 +891,6 @@ pt:
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
-    twitter_consumer_key: "Chave de consumidor para autenticação pelo Twitter, registada em http://dev.twitter.com"
-    twitter_consumer_secret: "Chave do Consumidor para a autenticação pelo Twitter, registada em http://dev.twitter.com"
     enable_instagram_logins: "Activar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
     instagram_consumer_key: "Chave de consumidor para a autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para a autenticação via Instagram"
@@ -921,7 +905,6 @@ pt:
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
-    backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     s3_disable_cleanup: "Desactive a remoção das cópias de segurança do S3 quando removidas localmente."
@@ -1067,7 +1050,7 @@ pt:
     enable_staged_users: "Automaticamente criar utilizadores temporários ao processar emails recebidos."
     maximum_staged_users_per_email: "Número máximo de utilizadores temporários criados ao processar um email recebido."
     auto_generated_whitelist: "Lista de endereços de email que não serão verificados para conteúdo gerado automaticamente. Exemplo: foo@bar.com|discourse@bar.com"
-    block_auto_generated_emails: "Bloquear emails recebidos que sejam identificados como tendo sido gerados automaticamente."
+    block_auto_generated_emails: "Bloquear as mensagens a receber que sejam identificadas como tendo sido geradas automaticamente."
     ignore_by_title: "Ignorar emails recebidos com base no seu título."
     mailgun_api_key: "Chave de API secreta de Mailgun usada para verificar mensagens."
     soft_bounce_score: "Pontuação de redirecionamento adicionada ao utilizador quando um redirecionamento temporário acontece."
@@ -1138,9 +1121,9 @@ pt:
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
-    default_code_lang: "Linguagem de programação por defeito a aplicar no destaque da sintaxe em blocos de código GitHub (lang-auto, ruby, python, etc.)"
+    default_code_lang: "O destaque de sintaxe da linguagem de programação predefinida aplicada aos blocos de código do GitHub (lang-auto, ruby, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
-    autohighlight_all_code: "Forçar o destaque do código a todos os blocos de código pré-formatados mesmo quando não se especifica a linguagem."
+    autohighlight_all_code: "Forçar a aplicação do destaque de código para todos os blocos de código pré-formatados mesmo quando estes não especificam explicitamente a linguagem."
     highlighted_languages: "Incluídas regras de destaque da sintaxe (Aviso: incluir demasiadas linguagens pode impactar o desempenho) ver: https://highlightjs.org/static/demo/ para uma demonstração"
     embed_truncate: "Truncar mensagens incorporadas."
     allowed_href_schemes: "Esquemas permitidos nos links além de http e https."
@@ -1355,48 +1338,6 @@ pt:
       Desculpe, esta hiperligação de transferência da cópia de segurança já foi utilizada ou expirou.
   admin_confirmation_mailer:
     subject_template: "[%{email_prefix}] Confirmar nova Conta de Administrador"
-  test_mailer:
-    text_body_template: |
-      Este é um email de teste de
-
-      [**%{base_url}**][0]
-
-      A entregabilidade de email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:
-
-      - *Certifique-se* que configurou o endereço de: do `email de notificação` corretamente nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**.
-
-      - Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu pendente no canto superior direito de cada email.
-
-      - **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o registo de DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.
-
-      - Estará o [registo SPF][8] do seu domínio correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo correcto de registo oficial para SPF.
-
-      - Estará o [registo DKIM][3] do seu domínio correto? Isto irá melhorar significativamente a entregabilidade de emails. [Teste o seu registo DKIM][7] aqui.
-
-      - Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.
-
-      - Recomendamos vivamente que **envie um email de teste para [mail-tester.com][mt]** para verificar que tudo mencionado em cima está a funcionar correctamente.
-
-      (A maneira *fácil* é criar uma conta grátis em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que têm pacotes grátis generosos de envio de emails e serão suficientes para pequenas comunidades. Mesmo assim irá precisar de configurar os registos SPF e DKIM no seu DNS!)
-
-      Esperamos que tenha recebido este teste de entregabilidade de email sem problemas!
-
-      Boa sorte,
-
-      Dos seus amigos em [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{email_prefix}] Nova versão do Discourse, disponível atualização"
   new_version_mailer_with_notes:
@@ -1689,7 +1630,7 @@ pt:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       since_last_visit: "Desde a sua última visita"
@@ -1958,8 +1899,6 @@ pt:
     promoter:
       name: Promotor
       description: Convidou um utilizador
-      long_description: |
-        Este distintivo é concedido quando convida alguém para se juntar à comunidade através do botão de convidar na sua página de utilizador, ou no fim de um tópico. Convidar amigos que possam estar interessados em discussões específicas é uma boa maneira de apresentar a comunidade a novas pessoas, por isso, obrigado!
     campaigner:
       name: Ativista
       description: Convidou 3 utilizadores básicos
@@ -2055,8 +1994,6 @@ pt:
     first_emoji:
       name: Primeiro Emoji
       description: Usou um Emoji numa Publicação
-      long_description: |
-        Este distintivo é concedido quando pela primeira vez adiciona um Emoji à sua publicação :thumbsup:. Emoji deixam-no exprimir emoção  nas suas publicações, de felicidade :smiley: a tristeza :anguished: a raiva :angry: e tudo entre estes :sunglasses: . Escreva simplesmente : (dois pontos) ou prima o botão de Emoji na barra de ferramentas no editor para escolher um de entre centenas de escolhas :ok_hand:
     first_mention:
       name: Primeira Menção
       long_description: Este distintivo é concedido pela primeira vez que menciona o @nome-de-utilizador de alguém numa publicação sua. Cada menção gera uma notificação para o mencionado, de maneira a que saibam da sua publicação. Simplesmente comece por escrever @ (símbolo arroba) para mencionar qualquer utilizador, ou, se permitido, um grupo – é uma maneira conveniente de chamar a atenção de alguém.

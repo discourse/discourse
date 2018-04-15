@@ -52,6 +52,7 @@ class PostCreator
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
+  #     shared_draft          - Is the topic meant to be a shared draft
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
@@ -365,29 +366,15 @@ class PostCreator
     return unless @topic.private_message? && @topic.id
 
     UserArchivedMessage.where(topic_id: @topic.id).pluck(:user_id).each do |user_id|
-      UserArchivedMessage.move_to_inbox!(user_id, @topic.id)
+      UserArchivedMessage.move_to_inbox!(user_id, @topic)
     end
 
     GroupArchivedMessage.where(topic_id: @topic.id).pluck(:group_id).each do |group_id|
-      GroupArchivedMessage.move_to_inbox!(group_id, @topic.id)
+      GroupArchivedMessage.move_to_inbox!(group_id, @topic)
     end
   end
 
   private
-
-  # TODO: merge the similar function in TopicCreator and fix parameter naming for `category`
-  def find_category_id
-    @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
-
-    category =
-      if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-        Category.find_by(id: @opts[:category])
-      else
-        Category.find_by(name_lower: @opts[:category].try(:downcase))
-      end
-
-    category&.id
-  end
 
   def create_topic
     return if @topic

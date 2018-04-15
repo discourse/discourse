@@ -11,9 +11,10 @@ class Auth::DefaultCurrentUserProvider
   USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV ||= "_DISCOURSE_API"
   USER_API_KEY_ENV ||= "_DISCOURSE_USER_API"
-  TOKEN_COOKIE ||= "_t"
+  TOKEN_COOKIE ||= ENV['DISCOURSE_TOKEN_COOKIE'] || "_t"
   PATH_INFO ||= "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN ||= 10
+  BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
 
   # do all current user initialization here
   def initialize(env)
@@ -58,7 +59,8 @@ class Auth::DefaultCurrentUserProvider
         current_user = @user_token.try(:user)
       end
 
-      unless current_user
+      if !current_user
+        @env[BAD_TOKEN] = true
         begin
           limiter.performed!
         rescue RateLimiter::LimitExceeded
@@ -69,6 +71,8 @@ class Auth::DefaultCurrentUserProvider
           )
         end
       end
+    elsif @env['HTTP_DISCOURSE_LOGGED_IN']
+      @env[BAD_TOKEN] = true
     end
 
     if current_user && should_update_last_seen?

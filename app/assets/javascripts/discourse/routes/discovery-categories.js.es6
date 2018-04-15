@@ -12,20 +12,24 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     this.render("discovery/categories", { outlet: "list-container" });
   },
 
-  model() {
-    const style = !this.site.mobileView && this.siteSettings.desktop_category_page_style;
-    const parentCategory = this.get("model.parentCategory");
+  findCategories() {
+    let style = !this.site.mobileView &&
+      this.siteSettings.desktop_category_page_style;
 
-    let promise;
+    let parentCategory = this.get("model.parentCategory");
     if (parentCategory) {
-      promise = CategoryList.listForParent(this.store, parentCategory);
+      return CategoryList.listForParent(this.store, parentCategory);
     } else if (style === "categories_and_latest_topics") {
-      promise = this._loadCategoriesAndLatestTopics();
-    } else {
-      promise = CategoryList.list(this.store);
+      return this._findCategoriesAndTopics('latest');
+    } else if (style === "categories_and_top_topics") {
+      return this._findCategoriesAndTopics('top');
     }
 
-    return promise.then(model => {
+    return CategoryList.list(this.store);
+  },
+
+  model() {
+    return this.findCategories().then(model => {
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(model, "categories");
@@ -35,26 +39,31 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     });
   },
 
-  _loadCategoriesAndLatestTopics() {
-    const wrappedCategoriesList = PreloadStore.getAndRemove("categories_list");
-    const topicListLatest = PreloadStore.getAndRemove("topic_list_latest");
-    const categoriesList = wrappedCategoriesList && wrappedCategoriesList.category_list;
-    if (categoriesList && topicListLatest) {
-      return new Ember.RSVP.Promise(resolve => {
-        const result = Ember.Object.create({
-          categories: CategoryList.categoriesFrom(this.store, wrappedCategoriesList),
-          topics: TopicList.topicsFrom(this.store, topicListLatest),
+  _findCategoriesAndTopics(filter) {
+    return Ember.RSVP.hash({
+      wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
+      topicsList: PreloadStore.getAndRemove(`topic_list_${filter}`)
+    }).then(hash => {
+      let { wrappedCategoriesList, topicsList } = hash;
+      let categoriesList = wrappedCategoriesList &&
+        wrappedCategoriesList.category_list;
+
+      if (categoriesList && topicsList) {
+        return Ember.Object.create({
+          categories: CategoryList.categoriesFrom(
+            this.store,
+            wrappedCategoriesList
+          ),
+          topics: TopicList.topicsFrom(this.store, topicsList),
           can_create_category: categoriesList.can_create_category,
           can_create_topic: categoriesList.can_create_topic,
           draft_key: categoriesList.draft_key,
           draft: categoriesList.draft,
           draft_sequence: categoriesList.draft_sequence
         });
-
-        resolve(result);
-      });
-    } else {
-      return ajax("/categories_and_latest").then(result => {
+      }
+      // Otherwise, return the ajax result
+      return ajax(`/categories_and_${filter}`).then(result => {
         return Ember.Object.create({
           categories: CategoryList.categoriesFrom(this.store, result),
           topics: TopicList.topicsFrom(this.store, result),
@@ -65,7 +74,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
           draft_sequence: result.category_list.draft_sequence
         });
       });
-    }
+    });
   },
 
   titleToken() {

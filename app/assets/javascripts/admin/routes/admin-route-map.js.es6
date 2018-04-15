@@ -76,14 +76,6 @@ export default function() {
       });
     });
 
-    this.route('adminGroups', { path: '/groups', resetNamespace: true }, function() {
-      this.route('bulk');
-      this.route('bulkComplete', { path: 'bulk-complete' });
-      this.route('adminGroupsType', { path: '/:type', resetNamespace: true }, function() {
-        this.route('adminGroup', { path: '/:name', resetNamespace: true });
-      });
-    });
-
     this.route('adminUsers', { path: '/users', resetNamespace: true }, function() {
       this.route('adminUser', { path: '/:user_id/:username', resetNamespace: true }, function() {
         this.route('badges');

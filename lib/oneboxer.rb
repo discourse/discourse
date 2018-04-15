@@ -1,3 +1,4 @@
+require 'uri'
 require_dependency "onebox/discourse_onebox_sanitize_config"
 require_dependency 'final_destination'
 
@@ -76,6 +77,8 @@ module Oneboxer
     doc
   end
 
+  HTML5_BLOCK_ELEMENTS ||= %w{address article aside blockquote canvas center dd div dl dt fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 header hgroup hr li main nav noscript ol output p pre section table tfoot ul video}
+
   def self.apply(string_or_doc, args = nil)
     doc = string_or_doc
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
@@ -87,8 +90,9 @@ module Oneboxer
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
         next unless parsed_onebox.children.count > 0
 
-        # special logic to strip empty p elements
-        if element&.parent&.node_name&.downcase == "p" && element&.parent&.children&.count == 1
+        if element&.parent&.node_name&.downcase == "p" &&
+           element.parent.children.count == 1 &&
+           HTML5_BLOCK_ELEMENTS.include?(parsed_onebox.children[0].node_name.downcase)
           element = element.parent
         end
 
@@ -96,6 +100,9 @@ module Oneboxer
         element.swap parsed_onebox.to_html
       end
     end
+
+    # strip empty <p> elements
+    doc.css("p").each { |p| p.remove if p.children.empty? }
 
     Result.new(doc, changed)
   end
@@ -131,6 +138,7 @@ module Oneboxer
     end
 
     def self.onebox_raw(url, opts = {})
+      url = URI(url).to_s
       local_onebox(url, opts) || external_onebox(url)
     rescue => e
       # no point warning here, just cause we have an issue oneboxing a url

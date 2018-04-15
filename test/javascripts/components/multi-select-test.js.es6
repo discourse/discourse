@@ -66,6 +66,7 @@ componentTest('interactions', {
     });
 
     this.get('subject').selectRowByValue(3);
+    this.get('subject').expand();
 
     andThen(() => {
       assert.equal(
@@ -157,5 +158,46 @@ componentTest('with limitMatches', {
     this.get('subject').expand();
 
     andThen(() => assert.equal(this.get('subject').el().find(".select-kit-row").length, 2));
+  }
+});
+
+componentTest('with minimum', {
+  template: '{{multi-select content=content minimum=1}}',
+
+  beforeEach() {
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').validationMessage(), 'Select at least 1 item.'));
+
+    this.get('subject').selectRowByValue('sam');
+
+    andThen(() => {
+      assert.equal(this.get('subject').header().label(), 'sam');
+    });
+  }
+});
+
+componentTest('with minimumLabel', {
+  template: '{{multi-select content=content minimum=1 minimumLabel="test.minimum"}}',
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = { minimum: 'min %{count}' };
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').validationMessage(), 'min 1'));
+
+    this.get('subject').selectRowByValue('jeff');
+
+    andThen(() => {
+      assert.equal(this.get('subject').header().label(), 'jeff');
+    });
   }
 });

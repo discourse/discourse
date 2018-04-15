@@ -490,6 +490,24 @@ describe CookedPostProcessor do
     end
   end
 
+  context ".post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    before do
+      SiteSetting.add_rel_nofollow_to_user_content = false
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+      cpp.post_process_oneboxes
+    end
+
+    it "removes nofollow noopener from links" do
+      expect(cpp).to be_dirty
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+    end
+  end
+
   context ".post_process_oneboxes with square image" do
 
     it "generates a onebox-avatar class" do
@@ -773,6 +791,40 @@ describe CookedPostProcessor do
       it "awards a badge for replying via email" do
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstReplyByEmail).exists?).to eq(true)
+      end
+    end
+
+  end
+
+  context "quote processing" do
+    let(:cpp) { CookedPostProcessor.new(cp) }
+    let(:pp) { Fabricate(:post, raw: "This post is ripe for quoting!") }
+
+    context "with an unmodified quote" do
+      let(:cp) do
+        Fabricate(
+          :post,
+          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nripe for quoting\n[/quote]\ntest"
+        )
+      end
+
+      it "should not be marked as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-modified')).to be_blank
+      end
+    end
+
+    context "with a modified quote" do
+      let(:cp) do
+        Fabricate(
+          :post,
+          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nmodified\n[/quote]\ntest"
+        )
+      end
+
+      it "should be marked as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-modified')).to be_present
       end
     end
 

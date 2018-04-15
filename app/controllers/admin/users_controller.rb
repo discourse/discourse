@@ -308,7 +308,8 @@ class Admin::UsersController < Admin::AdminController
         silenced: true,
         silence_reason: silencer.user_history.try(:details),
         silenced_till: @user.silenced_till,
-        suspended_at: @user.silenced_at
+        suspended_at: @user.silenced_at,
+        silenced_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
   end
@@ -389,7 +390,13 @@ class Admin::UsersController < Admin::AdminController
     ip = params[:ip]
 
     # should we cache results in redis?
-    location = Excon.get("https://ipinfo.io/#{ip}/json", read_timeout: 10, connect_timeout: 10).body rescue nil
+    begin
+      location = Excon.get(
+        "https://ipinfo.io/#{ip}/json",
+        read_timeout: 10, connect_timeout: 10
+      )&.body
+    rescue Excon::Error
+    end
 
     render json: location
   end
@@ -423,7 +430,7 @@ class Admin::UsersController < Admin::AdminController
     }
 
     AdminUserIndexQuery.new(params).find_users(50).each do |user|
-      user_destroyer.destroy(user, options) rescue nil
+      user_destroyer.destroy(user, options)
     end
 
     render json: success_json
@@ -504,7 +511,8 @@ class Admin::UsersController < Admin::AdminController
           revisor.revise!(
             current_user,
             { raw:  params[:post_edit] },
-            skip_validations: true, skip_revision: true
+            skip_validations: true,
+            skip_revision: true
           )
         end
       end

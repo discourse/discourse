@@ -16,6 +16,9 @@ class Tag < ActiveRecord::Base
 
   after_save :index_search
 
+  after_commit :trigger_tag_created_event, on: :create
+  after_commit :trigger_tag_destroyed_event, on: :destroy
+
   def self.ensure_consistency!
     update_topic_counts # topic_count counter cache can miscount
   end
@@ -46,17 +49,48 @@ class Tag < ActiveRecord::Base
 
     return [] if scope_category_ids.empty?
 
+    filter_sql = guardian&.is_staff? ? '' : (' AND ' + DiscourseTagging.filter_visible_sql)
+
     tag_names_with_counts = Tag.exec_sql <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
   INNER JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
        WHERE stats.category_id in (#{scope_category_ids.join(',')})
+       #{filter_sql}
     GROUP BY tags.name
     ORDER BY sum_topic_count DESC, tag_name ASC
        LIMIT #{limit}
     SQL
 
     tag_names_with_counts.map { |row| row['tag_name'] }
+  end
+
+  def self.pm_tags(limit_arg: nil, guardian: nil, allowed_user: nil)
+    return [] if allowed_user.blank? || !(guardian || Guardian.new).can_tag_pms?
+    limit = limit_arg || SiteSetting.max_tags_in_filter_list
+    user_id = allowed_user.id
+
+    tag_names_with_counts = Tag.exec_sql <<~SQL
+      SELECT tags.name,
+          COUNT(topics.id) AS topic_count
+      FROM tags
+      INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
+      INNER JOIN topics ON topics.id = topic_tags.topic_id
+      AND topics.deleted_at IS NULL
+      AND topics.archetype = 'private_message'
+      WHERE topic_tags.topic_id IN
+      (SELECT topic_id
+        FROM topic_allowed_users
+        WHERE user_id = #{user_id}
+        UNION ALL SELECT tg.topic_id
+        FROM topic_allowed_groups tg
+        JOIN group_users gu ON gu.user_id = #{user_id}
+        AND gu.group_id = tg.group_id)
+      GROUP BY tags.name
+      LIMIT #{limit}
+    SQL
+
+    tag_names_with_counts.map { |t| { id: t['name'], text: t['name'], count: t['topic_count'] } }
   end
 
   def self.include_tags?
@@ -69,6 +103,16 @@ class Tag < ActiveRecord::Base
 
   def index_search
     SearchIndexer.index(self)
+  end
+
+  def trigger_tag_created_event
+    DiscourseEvent.trigger(:tag_created, self)
+    true
+  end
+
+  def trigger_tag_destroyed_event
+    DiscourseEvent.trigger(:tag_destroyed, self)
+    true
   end
 end
 

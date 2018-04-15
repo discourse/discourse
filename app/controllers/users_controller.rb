@@ -592,7 +592,7 @@ class UsersController < ApplicationController
         end
 
         email_token_user = EmailToken.confirmable(token)&.user
-        totp_enabled = email_token_user.totp_enabled?
+        totp_enabled = email_token_user&.totp_enabled?
         second_factor_token = params[:second_factor_token]
         confirm_email = false
 
@@ -970,7 +970,7 @@ class UsersController < ApplicationController
     )
 
     render json: success_json.merge(
-      key: current_user.user_second_factor.data,
+      key: current_user.user_second_factor.data.scan(/.{4}/).join(" "),
       qr: qrcode_svg
     )
   end
@@ -1064,7 +1064,7 @@ class UsersController < ApplicationController
 
       permitted.concat UserUpdater::OPTION_ATTR
       permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
-      permitted.concat UserUpdater::TAG_NAMES.keys.map { |k| { k => [] } }
+      permitted.concat UserUpdater::TAG_NAMES.keys
 
       result = params
         .permit(permitted)

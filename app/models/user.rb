@@ -50,6 +50,11 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+
+  has_many :group_users, dependent: :destroy
+  has_many :groups, through: :group_users
+  has_many :secure_categories, through: :groups, source: :categories
+
   has_many :user_emails, dependent: :destroy
 
   has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
@@ -68,10 +73,6 @@ class User < ActiveRecord::Base
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
-
-  has_many :group_users, dependent: :destroy
-  has_many :groups, through: :group_users
-  has_many :secure_categories, through: :groups, source: :categories
 
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
@@ -133,7 +134,9 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  scope :with_email, ->(email) { joins(:user_emails).where(user_emails: { email: email }) }
+  scope :with_email, ->(email) do
+    joins(:user_emails).where("lower(user_emails.email) IN (?)", email)
+  end
 
   scope :human_users, -> { where('users.id > 0') }
 
@@ -155,6 +158,37 @@ class User < ActiveRecord::Base
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
+
+  scope :filter_by_username, ->(filter) do
+    if filter.is_a?(Array)
+      where('username_lower ~* ?', "(#{filter.join('|')})")
+    else
+      where('username_lower ILIKE ?', "%#{filter}%")
+    end
+  end
+
+  scope :filter_by_username_or_email, ->(filter) do
+    if filter =~ /.+@.+/
+      # probably an email so try the bypass
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+        return where('users.id = ?', user_id)
+      end
+    end
+
+    users = joins(:primary_email)
+
+    if filter.is_a?(Array)
+      users.where(
+        'username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter',
+        filter: "(#{filter.join('|')})"
+      )
+    else
+      users.where(
+        'username_lower ILIKE :filter OR lower(user_emails.email) ILIKE :filter',
+        filter: "%#{filter}%"
+      )
+    end
+  end
 
   module NewTopicDuration
     ALWAYS = -1
@@ -996,7 +1030,7 @@ class User < ActiveRecord::Base
     if primary_email
       new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      build_primary_email(email: new_email)
+      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true)
     end
   end
 
@@ -1087,11 +1121,25 @@ class User < ActiveRecord::Base
     self.username_lower = username.downcase
   end
 
+  USERNAME_EXISTS_SQL = <<~SQL
+  (SELECT users.id AS user_id FROM users
+  WHERE users.username_lower = :username)
+
+  UNION ALL
+
+  (SELECT groups.id AS group_id FROM groups
+  WHERE lower(groups.name) = :username)
+  SQL
+
   def username_validator
     username_format_validator || begin
       lower = username.downcase
-      existing = User.find_by(username_lower: lower)
-      if will_save_change_to_username? && existing && existing.id != self.id
+
+      existing = User.exec_sql(
+        USERNAME_EXISTS_SQL, username: lower
+      ).to_a.first
+
+      if will_save_change_to_username? && existing.present? && existing["user_id"] != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end

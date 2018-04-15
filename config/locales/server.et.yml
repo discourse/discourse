@@ -28,6 +28,7 @@ et:
   posts: "postitused"
   loading: "Laetakse"
   log_in: "Logi sisse"
+  submit: "Saada"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
@@ -94,7 +95,7 @@ et:
     template:
       body: 'Järgmiste väljadega oli probleeme:'
       header:
-        one: 1 viga takistas mudeli %{model} salvestamist
+        one: '1 viga takistas mudeli %{model} salvestamist'
         other: '%{count} viga takistasid mudeli %{model} salvestamist'
     embed:
       load_from_remote: "Selle postituse laadimisel ilmnes üks viga"
@@ -197,7 +198,6 @@ et:
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"
-      member_already_exist: "'%{username}' on juba selle grupi liige."
       invalid_domain: "'%{domain}' ei ole nõuetele vastav domeen."
       invalid_incoming_email: "'%{email}' ei ole korrektne meiliaadress."
       email_already_used_in_group: "Grupp '%{group_name}' juba kasutab meiliaadressi '%{email}'."
@@ -289,41 +289,41 @@ et:
     title: "Teretulemast Discourse'i"
     body: |2
 
-      Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
+        Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
 
-      **Muuda see** enda kommuuni lühitutvustuseks:
+        **Muuda see** enda kommuuni lühitutvustuseks:
 
-      - Kellele see on?
-      - Mida siit leiab?
-      - Miks peaks keegi siia tulema?
-      - Kust saab rohkem infot (lingid, ressursid jne)?
+        - Kellele see on?
+        - Mida siit leiab?
+        - Miks peaks keegi siia tulema?
+        - Kust saab rohkem infot (lingid, ressursid jne)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
+        Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:
     title: "Teretulemast Lounge'i"
     body: |2
 
-      Õnnitlused! :confetti_ball:
+        Õnnitlused! :confetti_ball:
 
-      Kui Sa seda teemat näed, oled hiljuti edutatud **püsiliikmeks** (usaldustase 3).
+        Kui Sa seda teemat näed, oled hiljuti edutatud **püsiliikmeks** (usaldustase 3).
 
-      Nüüd võid &hellip;
+        Nüüd võid &hellip;
 
-      * Muuta suvalise teema pealkirja
-      * Muuta suvalise teema foorumit
-      * Lasta kõiki oma viiteid järgida ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) on eemaldatud)
-      * Siseneda vaid usaldustasemel 3 ja kõrgemal olevatele kasutajatele mõeldud privaatse Salongi foorumisse
-      * Peita spämmi vaid ühe tähisega
+        * Muuta suvalise teema pealkirja
+        * Muuta suvalise teema foorumit
+        * Lasta kõiki oma viiteid järgida ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) on eemaldatud)
+        * Siseneda vaid usaldustasemel 3 ja kõrgemal olevatele kasutajatele mõeldud privaatse Salongi foorumisse
+        * Peita spämmi vaid ühe tähisega
 
-      Siin on [hetke püsiliikmete nimekiri](/badges/3/regular). Tervita neid kindlasti.
+        Siin on [hetke püsiliikmete nimekiri](/badges/3/regular). Tervita neid kindlasti.
 
-      Täname, et oled meie kogukonna tähtis liige!
+        Täname, et oled meie kogukonna tähtis liige!
 
-      (Täiendava info saamiseks usaldustasemete kohta [vaata teemat][trust]. Pea meeles, et vaid need liikmed kes jätkuvalt seatud nõudmisi täidavad püsivad püsiliikmetena.)
+        (Täiendava info saamiseks usaldustasemete kohta [vaata teemat][trust]. Pea meeles, et vaid need liikmed kes jätkuvalt seatud nõudmisi täidavad püsivad püsiliikmetena.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Liigist %{category}"
     replace_paragraph: "(Asenda see paragrahv oma uues kategoorias kategooria lühitutvustusega. See juhis ilmub siis kategooriate vaates. Seega, katsu hoida kirjeldus alla 200 tähemärgi. **Kuniks sa pole muutnud seda kirjeldust või kuni sa pole loonud teemasid, ei ole seda kategooriat kategooriate lehel näha.**)"
@@ -356,21 +356,6 @@ et:
       title: "juht"
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
-    slow_down: "Oled antud seda toimingut liiga palju proovinud. Proovi hiljem uuesti."
-    by_type:
-      first_day_replies_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud vastuste limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      first_day_topics_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_topic: "Lisad teemasid liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      create_post: "Vastad liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      delete_post: "Kustutad postitusi liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      public_group_membership: "Liitud gruppidega/lahkud neist liiga sageli. Palun oota %{time_left} enne kui uuesti proovid."
-      topics_per_day: "Oled ületanud tänaseks lubatud uute teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      pms_per_day: "Oled ületanud tänaseks lubatud sõnumite limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_like: "Oled ületanud tänaseks lubatud meeldimiste lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_bookmark: "Oled ületanud tänaseks lubatud järjehoidjate lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      live_post_counts: "Küsid postituste reaalajas loendit liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      unsubscribe_via_email: "Oled ületanud tänaseks lubatud meilitsi tellimuste tühistamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      topic_invitations_per_day: "Oled ületanud tänaseks lubatud teemadesse kutsumise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
     hours:
       one: "1 tund"
       other: "%{count} tundi"
@@ -493,7 +478,6 @@ et:
       long_form: 'tähistasin selle kui sobimatu'
     notify_user:
       title: 'Saada kasutajale @{{username}} sõnum'
-      description: 'Soovin selle isikuga tema postituse osas otse ja privaatselt suhelda.'
       long_form: 'saatsin kasutajale sõnumi'
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -732,7 +716,25 @@ et:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
+    digest:
+      new_topics: "Uued teemad"
+      unread_messages: "Lugemata sõnumid"
+      unread_notifications: "Lugemata teavitused"
+      new_posts: "Uued postitused"
+      new_users: "Uued kasutajad"
+      popular_topics: "Populaarsed teemad"
+      follow_topic: "Jälgi seda teemat"
+      join_the_discussion: "Loe lisa"
+      popular_posts: "Populaarsed postitused"
+      more_new: "Uus sinu jaoks"
+      subject_template: "[%{email_prefix}] Kokkuvõte"
+      your_email_settings: "sinu e-posti seaded"
+      click_here: "kliki siia"
+      from: "%{site_name} kokkuvõte"
+    forgot_password:
+      title: "Unustasin parooli"
+      subject_template: "[%{email_prefix}] Parooli taastamine"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:
@@ -745,6 +747,9 @@ et:
   terms_of_service:
     title: "Teenuse tingimused"
   deleted: 'kustutatud'
+  image: "pilt"
+  upload:
+    pasted_image_filename: "Asetatud pilt"
   email_log:
     anonymous_user: "Kasutaja on anonüümne"
     seen_recently: "Kasutajat nähti hiljuti"
@@ -753,6 +758,12 @@ et:
     message_to_blank: "message.to on tühi"
     text_part_body_blank: "text_part.body on tühi"
     body_blank: "sisu on tühi"
+  color_schemes:
+    default: "Hele skeem"
+    dark: "Tume skeem"
+    default_theme_name: "Vaikimisi"
+    dark_theme_name: "Tume"
+    light_theme_name: "Hele"
   about: "Teave"
   guidelines: "Juhendid"
   privacy: "Privaatsus"

@@ -11,10 +11,12 @@ describe SessionController do
   describe '#become' do
     let!(:user) { Fabricate(:user) }
 
-    it "does not work when not in development mode" do
-      Rails.env.stubs(:development?).returns(false)
+    it "does not work when in production mode" do
+      Rails.env.stubs(:production?).returns(true)
       get :become, params: { session_id: user.username }, format: :json
-      expect(response).not_to be_redirect
+
+      expect(response.status).to eq(403)
+      expect(JSON.parse(response.body)["error_type"]).to eq("invalid_access")
       expect(session[:current_user_id]).to be_blank
     end
 
@@ -331,7 +333,7 @@ describe SessionController do
         expect(sso2.external_id).to eq(@user.id.to_s)
         expect(sso2.admin).to eq(true)
         expect(sso2.moderator).to eq(false)
-        expect(sso2.groups).to eq(@user.groups.pluck(:name))
+        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
       end
 
       it "successfully redirects user to return_sso_url when the user is logged in" do

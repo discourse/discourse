@@ -58,6 +58,19 @@ describe TopicEmbed do
       end
     end
 
+    context "post creation supports markdown rendering" do
+      before do
+        SiteSetting.embed_support_markdown = true
+      end
+
+      it "works as expected" do
+        post = TopicEmbed.import(user, url, title, "some random content")
+        expect(post).to be_present
+
+        # It uses regular rendering
+        expect(post.cook_method).to eq(Post.cook_methods[:regular])
+      end
+    end
   end
 
   context '.topic_id_for_embed' do

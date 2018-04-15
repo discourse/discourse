@@ -72,21 +72,39 @@ describe StaffActionLogger do
     end
   end
 
-  describe 'log_topic_deletion' do
-    let(:deleted_topic) { Fabricate(:topic) }
+  describe 'log_topic_delete_recover' do
+    let(:topic) { Fabricate(:topic) }
 
-    subject(:log_topic_deletion) { described_class.new(admin).log_topic_deletion(deleted_topic) }
+    context "when deleting topic" do
+      subject(:log_topic_delete_recover) { described_class.new(admin).log_topic_delete_recover(topic) }
 
-    it 'raises an error when topic is nil' do
-      expect { logger.log_topic_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+      it 'raises an error when topic is nil' do
+        expect { logger.log_topic_delete_recover(nil) }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'raises an error when topic is not a Topic' do
+        expect { logger.log_topic_delete_recover(1) }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'creates a new UserHistory record' do
+        expect { log_topic_delete_recover }.to change { UserHistory.count }.by(1)
+      end
     end
 
-    it 'raises an error when topic is not a Topic' do
-      expect { logger.log_topic_deletion(1) }.to raise_error(Discourse::InvalidParameters)
-    end
+    context "when recovering topic" do
+      subject(:log_topic_delete_recover) { described_class.new(admin).log_topic_delete_recover(topic, "recover_topic") }
 
-    it 'creates a new UserHistory record' do
-      expect { log_topic_deletion }.to change { UserHistory.count }.by(1)
+      it 'raises an error when topic is nil' do
+        expect { logger.log_topic_delete_recover(nil, "recover_topic") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'raises an error when topic is not a Topic' do
+        expect { logger.log_topic_delete_recover(1, "recover_topic") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'creates a new UserHistory record' do
+        expect { log_topic_delete_recover }.to change { UserHistory.count }.by(1)
+      end
     end
   end
 

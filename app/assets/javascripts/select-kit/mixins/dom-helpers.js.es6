@@ -6,6 +6,7 @@ export default Ember.Mixin.create({
 
     this._previousScrollParentOverflow = null;
     this._previousCSSContext = null;
+    this.selectionSelector = ".choice";
     this.filterInputSelector = ".filter-input";
     this.rowSelector = ".select-kit-row";
     this.collectionSelector = ".select-kit-collection";
@@ -58,41 +59,45 @@ export default Ember.Mixin.create({
     this.setProperties({ isFocused: false });
   },
 
-  // force the component in a known default state
   focus() {
-    Ember.run.schedule("afterRender", () => this.$header().focus());
+    Ember.run.schedule("afterRender", () => {
+      this.$header().focus();
+    });
   },
 
   // try to focus filter and fallback to header if not present
   focusFilterOrHeader() {
-    Ember.run.schedule("afterRender", () => {
-      if ((this.site && this.site.isMobileDevice) || !this.$filterInput().is(":visible")) {
-        this.$header().focus();
-      } else {
-        this.$filterInput().focus();
-      }
+    const context = this;
+    // next so we are sure it finised expand/collapse
+    Ember.run.next(() => {
+      Ember.run.schedule("afterRender", () => {
+        if ((this.site && this.site.isMobileDevice) || !context.$filterInput() || !context.$filterInput().is(":visible")) {
+          context.$header().focus();
+        } else {
+          context.$filterInput().focus();
+        }
+      });
     });
   },
 
   expand() {
-    if (this.get("isExpanded") === true) return;
+    if (this.get("isExpanded")) return;
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
     this.focusFilterOrHeader();
     this.autoHighlight();
-    this._setCollectionHeaderComputedContent();
-    this._setHeaderComputedContent();
+    this._boundaryActionHandler("onExpand", this);
   },
 
   collapse() {
     this.set("isExpanded", false);
     Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
-    this._setHeaderComputedContent();
+    this._boundaryActionHandler("onCollapse", this);
   },
 
   // lose focus of the component in two steps
   // first collapse and keep focus and then remove focus
   unfocus(event) {
-    if (this.get("isExpanded") === true) {
+    if (this.get("isExpanded")) {
       this.collapse(event);
       this.focus(event);
     } else {

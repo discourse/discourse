@@ -98,7 +98,6 @@ zh_CN:
       email: '在电子邮件里发送该链接'
     action_codes:
       public_topic: "于%{when}设置为公共主题"
-      private_topic: "于%{when}设置为私密主题"
       split_topic: "于%{when}分割了该主题"
       invited_user: "于%{when}邀请了%{who}"
       invited_group: "于%{when}邀请了%{who}"
@@ -129,8 +128,6 @@ zh_CN:
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你新安装的 Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
-    bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过 %{min_users} 个时关闭。"
-    bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
     themes:
       default_description: "默认"
     s3:
@@ -224,13 +221,6 @@ zh_CN:
       last_read: "这是你阅读过的最后一帖；点击收藏"
       remove: "取消收藏"
       confirm_clear: "你确定要清除该主题的所有收藏吗？"
-    topic_count_latest:
-      other: "{{count}} 新主题或更新的主题。"
-    topic_count_unread:
-      other: "{{count}} 未读主题。"
-    topic_count_new:
-      other: " {{count}} 个近期主题。"
-    click_to_show: "点击加载"
     preview: "预览"
     cancel: "取消"
     save: "保存更改"
@@ -317,22 +307,6 @@ zh_CN:
         make_user_group_owner: "设为所有者"
         remove_user_as_group_owner: "撤销所有者"
     groups:
-      logs:
-        title: "日志"
-        when: "时间"
-        action: "操作"
-        acting_user: "操作用户"
-        target_user: "目标用户"
-        subject: "主题"
-        details: "详情"
-        from: "来自"
-        to: "发至"
-      edit:
-        title: '编辑群组'
-        full_name: '群组名'
-        add_members: "增加组员"
-        delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
-      name_placeholder: "群组名，没有空格，和用户名一样的规则"
       public_admission: "允许用户自由加入小组（需要小组公开可见）"
       public_exit: "允许用户自由离开小组"
       empty:
@@ -343,13 +317,7 @@ zh_CN:
         topics: "群组的成员从未发表主题。"
         logs: "没有关于群组的日志。"
       add: "添加"
-      join: "加入群组"
-      leave: "离开群组"
-      request: "请求加入群组"
       message: "私信"
-      automatic_group: 自动群组
-      closed_group: 封闭群组
-      is_group_user: "你是该群组的一个成员"
       allow_membership_requests: "允许用户向小组拥有者发送成员请求"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
       membership_request:
@@ -358,9 +326,7 @@ zh_CN:
         reason: "向小组拥有者说明你为何属于这个小组"
       membership: "成员资格"
       name: "群组ID"
-      user_count: "成员数目"
       bio: "关于群组"
-      selector_placeholder: "添加成员"
       owner: "所有者"
       index:
         title: "群组"
@@ -368,18 +334,11 @@ zh_CN:
       title:
         other: "小组"
       activity: "活动"
-      members: "成员"
       topics: "主题"
       posts: "帖子"
       mentions: "提及"
       messages: "私信"
       notification_level: "小组私信的默认通知等级"
-      visibility_levels:
-        title: "谁能看到这个小组？"
-        public: "所有人"
-        members: "小组创建人，成员和管理员"
-        staff: "小组创建者及工作人员"
-        owners: "小组创建者及管理员"
       alias_levels:
         mentionable: "谁能@该小组"
         messageable: "谁能私信此小组"
@@ -388,9 +347,6 @@ zh_CN:
         mods_and_admins: "版主与管理员"
         members_mods_and_admins: "组员、版主与管理员"
         everyone: "任何人"
-      trust_levels:
-        title: "这些用户加入时，将自动赋予信任等级："
-        none: "无"
       notifications:
         watching:
           title: "跟踪"
@@ -415,7 +371,6 @@ zh_CN:
       flair_color_placeholder: "（可选）十六进制色彩值"
       flair_preview_icon: "预览图标"
       flair_preview_image: "预览图片"
-      flair_note: "注意：标示将只在用户的主要群组显示"
     user_action_groups:
       '1': "送出赞"
       '2': "获得赞"
@@ -508,6 +463,7 @@ zh_CN:
       disable_jump_reply: "回复后不跳转至新帖子"
       dynamic_favicon: "在浏览器图标中显示主题更新数量"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
+      allow_private_messages: "允许其他用户发送私信给我"
       external_links_in_new_tab: "在新标签页打开外部链接"
       enable_quoting: "在选择文字时显示引用回复按钮"
       change: "修改"
@@ -603,6 +559,8 @@ zh_CN:
         set_password: "设置密码"
         choose_new: "输入新密码"
         choose: "输入密码"
+      second_factor:
+        title: "双重验证"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -1149,20 +1107,6 @@ zh_CN:
       watching_first_post: "<span>新主题</span> {{description}}"
       group_message_summary:
         other: "{{count}} 条私信在{{group_name}}组的收件箱中"
-      alt:
-        mentioned: "被提及"
-        quoted: "被引用"
-        replied: "回复"
-        posted: "发自"
-        edited: "编辑你的帖子"
-        liked: "赞了你的帖子"
-        invited_to_topic: "主题邀请自"
-        invitee_accepted: "介绍邀请自"
-        moved_post: "你的帖子被移动自"
-        linked: "链接至你的帖子"
-        granted_badge: "勋章授予"
-        group_message_summary: "在群组收件箱中的私信"
-        topic_reminder: "一个提醒"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
@@ -1620,7 +1564,7 @@ zh_CN:
         select_all: 全选
         deselect_all: 全不选
         description:
-          other: 已选择 <b>{{count}}</b> 个帖子。
+          other: "已选择 <b>{{count}}</b> 个帖子。"
     post:
       quote_reply: "引用"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
@@ -1843,7 +1787,6 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       mailinglist_mirror: "分类镜像了一个邮件列表"
-      suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："
       subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
@@ -2178,19 +2121,15 @@ zh_CN:
       notifications:
         watching:
           title: "监看"
-          description: "你将自动监看该标签中的所有主题。新帖子和新主题会通知你，再者未读和新帖的数量也将显示在主题旁边。"
         watching_first_post:
           title: "监看头一帖"
-          description: "在这个标签中，只是每一个新主题的第一帖，才会通知你。"
         tracking:
           title: "跟踪"
-          description: "你将自动跟踪这个标签里的所有主题。未读和新帖的数量将显示在主题旁边。"
         regular:
           title: "普通"
           description: "如果有人@你或回复你的帖子，将通知你。"
         muted:
           title: "静音"
-          description: "在这个标签中，你将不会收到新主题任何通知，它们也不会出现在你的未读列表上面。"
       groups:
         title: "标签组"
         about: "将标签分组以便管理。"
@@ -2357,8 +2296,6 @@ zh_CN:
         title: "群组"
         edit: "编辑群组"
         refresh: "刷新"
-        new: "新群组"
-        selector_placeholder: "输入用户名"
         about: "在这里编辑群组的名字和成员"
         group_members: "群组成员"
         delete: "删除"
@@ -2366,22 +2303,11 @@ zh_CN:
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
         delete_owner_confirm: "移除“%{username}”的权限？"
         add: "添加"
-        add_members: "添加成员"
         custom: "定制"
-        bulk_complete: "用户已被添加到群组。"
-        bulk_complete_users_not_added: "这些用户还没有被添加（请确保他们已经有账户了）："
-        bulk: "批量添加到群组"
-        bulk_paste: "粘贴用户名邮件列表，一行一个："
-        bulk_select: "( 选择一个群组 )"
         automatic: "自动"
-        automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
-        automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
         default_title: "群组内所有用户的默认头衔"
-        primary_group: "自动设置为主要群组"
         group_owners: 所有者
         add_owners: 添加所有者
-        incoming_email: "自定义进站电子邮件地址"
-        incoming_email_placeholder: "输入邮箱地址"
         none_selected: "选择一个小组以开始"
         no_custom_groups: "创建一个自定义小组"
       api:
@@ -2994,6 +2920,7 @@ zh_CN:
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
         post_count: 发表的帖子数量
+        second_factor_enabled: 双重验证已启用
         topics_entered: 已查看的主题数量
         flags_given_count: 提交标记数量
         flags_received_count: 被他人标记数量
@@ -3132,10 +3059,7 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: '只显示修改过的'
       site_settings:
-        show_overriden: '只显示修改过的'
         title: '设置'
-        reset: '重置为默认'
-        none: '无'
         no_results: "找不到结果。"
         clear_filter: "清除"
         add_url: "增加链接"

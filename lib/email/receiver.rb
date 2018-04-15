@@ -64,6 +64,7 @@ module Email
       DistributedMutex.synchronize(@message_id) do
         begin
           return if IncomingEmail.exists?(message_id: @message_id)
+          ensure_valid_address_lists
           @from_email, @from_display_name = parse_from_field(@mail)
           @incoming_email = create_incoming_email
           process_internal
@@ -73,6 +74,16 @@ module Email
           @incoming_email.update_columns(error: error) if @incoming_email
           delete_staged_users
           raise
+        end
+      end
+    end
+
+    def ensure_valid_address_lists
+      [:to, :cc, :bcc].each do |field|
+        addresses = @mail[field]
+
+        if addresses&.errors.present?
+          @mail[field] = addresses.to_s.scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)
         end
       end
     end
@@ -198,11 +209,11 @@ module Email
         if user = User.find_by_email(email)
           user.user_stat.bounce_score += score
           user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
-          user.user_stat.save
+          user.user_stat.save!
 
           bounce_score = user.user_stat.bounce_score
           if user.active && bounce_score >= SiteSetting.bounce_score_threshold_deactivate
-            user.update_columns(active: false)
+            user.update!(active: false)
             reason = I18n.t("user.deactivated", email: user.email)
             StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
           elsif bounce_score >= SiteSetting.bounce_score_threshold
@@ -263,7 +274,8 @@ module Email
       markdown, elided_markdown = if html.present?
         # use the first html extracter that matches
         if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
-          self.send(:"extract_from_#{html_extracter[0]}", html)
+          doc = Nokogiri::HTML.fragment(html)
+          self.send(:"extract_from_#{html_extracter[0]}", doc)
         else
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
           markdown = trim_discourse_markers(markdown)
@@ -284,59 +296,67 @@ module Email
     end
 
     HTML_EXTRACTERS ||= [
-      [:gmail, /class="gmail_/],
-      [:outlook, /id="(divRplyFwdMsg|Signature)"/],
-      [:word, /class="WordSection1"/],
-      [:exchange, /name="message(Body|Reply)Section"/],
-      [:apple_mail, /id="AppleMailSignature"/],
-      [:mozilla, /class="moz-/],
+      [:gmail, / class="gmail_/],
+      [:outlook, / id="(divRplyFwdMsg|Signature)"/],
+      [:word, / class="WordSection1"/],
+      [:exchange, / name="message(Body|Reply)Section"/],
+      [:apple_mail, / id="AppleMailSignature"/],
+      [:mozilla, / class="moz-/],
+      [:protonmail, / class="protonmail_/],
+      [:zimbra, / data-marker="__/],
     ]
 
-    def extract_from_gmail(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_gmail(doc)
       # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote
       # Just elide them all
       elided = doc.css("*[class^='gmail_']").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
-    def extract_from_outlook(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_outlook(doc)
       # Outlook properly identifies the signature and any replied/forwarded email
       # Use their id to remove them and anything that comes after
       elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
-    def extract_from_word(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
       elided = doc.css(".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *").remove
       to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
     end
 
-    def extract_from_exchange(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_exchange(doc)
       # Exchange is using the 'messageReplySection' class for forwarded emails
       # And 'messageBodySection' for the actual email
       elided = doc.css("div[name='messageReplySection']").remove
-      to_markdown(doc.css("div[name='messageBodySection'").to_html, elided.to_html)
+      to_markdown(doc.css("div[name='messageReplySection']").to_html, elided.to_html)
     end
 
-    def extract_from_apple_mail(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_apple_mail(doc)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
-      elided = doc.css("#AppleMailSignature:last-of_type ~ *").remove
+      elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
-    def extract_from_mozilla(html)
-      doc = Nokogiri::HTML.fragment(html)
+    def extract_from_mozilla(doc)
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided = doc.css("*[class^='moz-'], *[class^='moz-'] ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_protonmail(doc)
+      # Removes anything that has a class starting with "protonmail_" and everything after that
+      elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_zimbra(doc)
+      # Removes anything that has a 'data-marker' attribute
+      elided = doc.css("*[data-marker]").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -518,14 +538,7 @@ module Email
       case destination[:type]
       when :group
         group = destination[:obj]
-        create_topic(user: user,
-                     raw: body,
-                     elided: elided,
-                     title: subject,
-                     archetype: Archetype.private_message,
-                     target_group_names: [group.name],
-                     is_group_message: true,
-                     skip_validations: true)
+        create_group_post(group, user, body, elided)
 
       when :category
         category = destination[:obj]
@@ -543,7 +556,7 @@ module Email
       when :reply
         email_log = destination[:obj]
 
-        if email_log.user_id != user.id && !forwareded_reply_key?(email_log, user)
+        if email_log.user_id != user.id && !forwarded_reply_key?(email_log, user)
           raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
@@ -556,27 +569,63 @@ module Email
       end
     end
 
-    def forwareded_reply_key?(email_log, user)
+    def create_group_post(group, user, body, elided)
+      message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
+      post_ids = []
+
+      incoming_emails = IncomingEmail
+        .where(message_id: message_ids)
+        .addressed_to_user(user)
+        .pluck(:post_id, :to_addresses, :cc_addresses)
+
+      incoming_emails.each do |post_id, to_addresses, cc_addresses|
+        post_ids << post_id if contains_email_address_of_user?(to_addresses, user) ||
+          contains_email_address_of_user?(cc_addresses, user)
+      end
+
+      if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+        create_reply(user: user,
+                     raw: body,
+                     elided: elided,
+                     post: post,
+                     topic: post.topic,
+                     skip_validations: true)
+      else
+        create_topic(user: user,
+                     raw: body,
+                     elided: elided,
+                     title: subject,
+                     archetype: Archetype.private_message,
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true)
+      end
+    end
+
+    def forwarded_reply_key?(email_log, user)
       incoming_emails = IncomingEmail
         .joins(:post)
         .where('posts.topic_id = ?', email_log.topic_id)
         .addressed_to(email_log.reply_key)
-        .addressed_to(user.email)
+        .addressed_to_user(user)
+        .pluck(:to_addresses, :cc_addresses)
 
-      incoming_emails.each do |email|
-        next unless contains_email_address?(email.to_addresses, user.email) ||
-          contains_email_address?(email.cc_addresses, user.email)
+      incoming_emails.each do |to_addresses, cc_addresses|
+        next unless contains_email_address_of_user?(to_addresses, user) ||
+          contains_email_address_of_user?(cc_addresses, user)
 
-        return true if contains_reply_by_email_address(email.to_addresses, email_log.reply_key) ||
-          contains_reply_by_email_address(email.cc_addresses, email_log.reply_key)
+        return true if contains_reply_by_email_address(to_addresses, email_log.reply_key) ||
+          contains_reply_by_email_address(cc_addresses, email_log.reply_key)
       end
 
       false
     end
 
-    def contains_email_address?(addresses, email)
+    def contains_email_address_of_user?(addresses, user)
       return false if addresses.blank?
-      addresses.split(";").include?(email)
+
+      addresses = addresses.split(";")
+      user.user_emails.any? { |user_email| addresses.include?(user_email.email) }
     end
 
     def contains_reply_by_email_address(addresses, reply_key)
@@ -684,13 +733,8 @@ module Email
     def find_related_post
       return if SiteSetting.find_related_post_with_key && !sent_to_mailinglist_mirror?
 
-      message_ids = [@mail.in_reply_to, Email::Receiver.extract_references(@mail.references)]
-      message_ids.flatten!
-      message_ids.select!(&:present?)
-      message_ids.uniq!
+      message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
-
-      message_ids = message_ids.first(5)
 
       host = Email::Sender.host_for(Discourse.base_url)
       post_id_regexp  = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
@@ -708,6 +752,14 @@ module Email
       return if post_ids.empty?
 
       Post.where(id: post_ids).order(:created_at).last
+    end
+
+    def self.extract_reply_message_ids(mail, max_message_id_count:)
+      message_ids = [mail.in_reply_to, Email::Receiver.extract_references(mail.references)]
+      message_ids.flatten!
+      message_ids.select!(&:present?)
+      message_ids.uniq!
+      message_ids.first(max_message_id_count)
     end
 
     def self.extract_references(references)
@@ -804,7 +856,7 @@ module Email
             end
           end
         ensure
-          tmp.try(:close!) rescue nil
+          tmp&.close!
         end
       end
 

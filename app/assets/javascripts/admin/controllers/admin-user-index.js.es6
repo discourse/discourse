@@ -24,9 +24,13 @@ export default Ember.Controller.extend(CanCheckEmails, {
     'model.can_disable_second_factor'
   ),
 
-  automaticGroups: function() {
-    return this.get("model.automaticGroups").map((g) => g.name).join(", ");
-  }.property("model.automaticGroups"),
+  @computed("model.automaticGroups")
+  automaticGroups(automaticGroups) {
+    return automaticGroups.map(group => {
+      const name = Ember.String.htmlSafe(group.name);
+      return `<a href="/groups/${name}">${name}</a>`;
+    }).join(", ");
+  },
 
   userFields: function() {
     const siteUserFields = this.site.get('user_fields'),
@@ -67,8 +71,16 @@ export default Ember.Controller.extend(CanCheckEmails, {
     silence() { return this.get("model").silence(); },
     deleteAllPosts() { return this.get("model").deleteAllPosts(); },
     anonymize() { return this.get('model').anonymize(); },
-    destroy() { return this.get('model').destroy(); },
     disableSecondFactor() { return this.get('model').disableSecondFactor(); },
+
+    destroy() {
+      const postCount = this.get('model.post_count');
+      if (postCount <= 5) {
+        return this.get('model').destroy({ deletePosts: true });
+      } else {
+        return this.get('model').destroy();
+      }
+    },
 
     viewActionLogs() {
       this.get('adminTools').showActionLogs(this, {

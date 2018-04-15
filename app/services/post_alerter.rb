@@ -38,6 +38,10 @@ class PostAlerter
     allowed_group_users(post)
   end
 
+  def only_allowed_users(users, post)
+    users.select { |u| allowed_users(post).include?(u) || allowed_group_users(post).include?(u) }
+  end
+
   def notify_about_reply?(post)
     post.post_type == Post.types[:regular] || post.post_type == Post.types[:whisper]
   end
@@ -50,20 +54,21 @@ class PostAlerter
 
     if mentioned_groups || mentioned_users
       mentioned_opts = {}
+      editor = post.last_editor
+
       if post.last_editor_id != post.user_id
         # Mention comes from an edit by someone else, so notification should say who added the mention.
-        editor = post.last_editor
         mentioned_opts = { user_id: editor.id, original_username: editor.username, display_username: editor.username }
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
-        notify_non_pm_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
-        notified += users
+        users = only_allowed_users(users, post) if editor.id < 0
+        notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
       if mentioned_users
-        notify_non_pm_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
-        notified += mentioned_users
+        mentioned_users = only_allowed_users(mentioned_users, post) if editor.id < 0
+        notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
     end
 
@@ -71,34 +76,31 @@ class PostAlerter
     reply_to_user = post.reply_notification_target
 
     if new_record && reply_to_user && !notified.include?(reply_to_user) && notify_about_reply?(post)
-      notify_non_pm_users(reply_to_user, :replied, post)
-      notified += [reply_to_user]
+      notified += notify_non_pm_users(reply_to_user, :replied, post)
     end
 
     # quotes
     quoted_users = extract_quoted_users(post)
-    notify_non_pm_users(quoted_users - notified, :quoted, post)
-    notified += quoted_users
+    notified += notify_non_pm_users(quoted_users - notified, :quoted, post)
 
     # linked
     linked_users = extract_linked_users(post)
-    notify_non_pm_users(linked_users - notified, :linked, post)
-    notified += linked_users
+    notified += notify_non_pm_users(linked_users - notified, :linked, post)
 
     # private messages
     if new_record
       if post.topic.private_message?
         # users that aren't part of any mentioned groups
-        users = directly_targeted_users(post)
+        users = directly_targeted_users(post).reject { |u| notified.include?(u) }
         DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
         users.each do |user|
           notification_level = TopicUser.get(post.topic, user).try(:notification_level)
-          if notified.include?(user) || notification_level == TopicUser.notification_levels[:watching] || user.staged?
+          if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
             create_notification(user, Notification.types[:private_message], post)
           end
         end
         # users that are part of all mentionned groups
-        users = indirectly_targeted_users(post)
+        users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
         DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
         users.each do |user|
           # only create a notification when watching the group
@@ -107,11 +109,7 @@ class PostAlerter
           if notification_level == TopicUser.notification_levels[:watching]
             create_notification(user, Notification.types[:private_message], post)
           elsif notification_level == TopicUser.notification_levels[:tracking]
-            if notified.include?(user)
-              create_notification(user, Notification.types[:private_message], post)
-            else
-              notify_group_summary(user, post)
-            end
+            notify_group_summary(user, post)
           end
         end
       elsif post.post_type == Post.types[:regular]
@@ -414,8 +412,7 @@ class PostAlerter
     )
 
     if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
-      # we may have an invalid post somehow, dont blow up
-      post_url = original_post.url rescue nil
+      post_url = original_post.url
       if post_url
         payload = {
          notification_type: type,
@@ -499,15 +496,21 @@ class PostAlerter
 
   # Notify a bunch of users
   def notify_non_pm_users(users, type, post, opts = {})
+    return [] if post.topic&.private_message?
 
-    return if post.topic.try(:private_message?)
+    notify_users(users, type, post, opts)
+  end
 
+  def notify_users(users, type, post, opts = {})
     users = [users] unless users.is_a?(Array)
+    users = users.reject { |u| u.staged? } if post.topic&.private_message?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |u|
       create_notification(u, Notification.types[type], post, opts)
     end
+
+    users
   end
 
   def notify_post_users(post, notified)

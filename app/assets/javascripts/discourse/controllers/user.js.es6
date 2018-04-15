@@ -10,9 +10,15 @@ export default Ember.Controller.extend(CanCheckEmails, {
   currentPath: Ember.computed.alias('application.currentPath'),
   adminTools: optionalService(),
 
-  @computed("content.username")
+  @computed('model.username')
   viewingSelf(username) {
-    return username === User.currentProp('username');
+    let currentUser = this.currentUser;
+    return currentUser && username === currentUser.get('username');
+  },
+
+  @computed('viewingSelf')
+  canExpandProfile(viewingSelf) {
+    return viewingSelf;
   },
 
   @computed('model.profileBackground')
@@ -91,6 +97,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   actions: {
+    collapseProfile() {
+      this.set('forceExpand', false);
+    },
+
     expandProfile() {
       this.set('forceExpand', true);
     },

@@ -19,6 +19,8 @@ export default ComboBoxComponent.extend({
   categoryStyle: Ember.computed.alias("siteSettings.category_style"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
 
   @computed("tagId")
   noTagsSelected() {
@@ -37,7 +39,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     if (!content.value) {
       if (this.get("noTagsSelected")) {

@@ -11,6 +11,7 @@
 // Stuff we need to load first
 //= require ./discourse/lib/utilities
 //= require ./discourse/lib/page-visible
+//= require ./discourse/lib/logout
 //= require ./discourse/lib/ajax
 //= require ./discourse/lib/text
 //= require ./discourse/lib/hash
@@ -35,6 +36,8 @@
 //= require ./discourse/models/result-set
 //= require ./discourse/models/store
 //= require ./discourse/models/action-summary
+//= require ./discourse/models/permission-type
+//= require ./discourse/models/category
 //= require ./discourse/models/topic
 //= require ./discourse/models/draft
 //= require ./discourse/models/composer
@@ -42,7 +45,6 @@
 //= require ./discourse/models/badge
 //= require ./discourse/models/permission-type
 //= require ./discourse/models/user-action-group
-//= require ./discourse/models/category
 //= require ./discourse/models/input-validation
 //= require ./discourse/lib/search
 //= require ./discourse/lib/user-search

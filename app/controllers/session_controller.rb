@@ -10,7 +10,7 @@ class SessionController < ApplicationController
   before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
   before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login become sso_provider destroy email_login)
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -52,7 +52,7 @@ class SessionController < ApplicationController
         sso.external_id = current_user.id.to_s
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
-        sso.groups = current_user.groups.pluck(:name)
+        sso.groups = current_user.groups.pluck(:name).join(",")
 
         if sso.return_sso_url.blank?
           render plain: "return_sso_url is blank, it must be provided", status: 400
@@ -75,13 +75,17 @@ class SessionController < ApplicationController
 
   # For use in development mode only when login options could be limited or disabled.
   # NEVER allow this to work in production.
-  def become
-    raise Discourse::InvalidAccess.new unless Rails.env.development?
-    user = User.find_by_username(params[:session_id])
-    raise "User #{params[:session_id]} not found" if user.blank?
+  if !Rails.env.production?
+    skip_before_action :check_xhr, only: [:become]
 
-    log_on_user(user)
-    redirect_to path("/")
+    def become
+      raise Discourse::InvalidAccess if Rails.env.production?
+      user = User.find_by_username(params[:session_id])
+      raise "User #{params[:session_id]} not found" if user.blank?
+
+      log_on_user(user)
+      redirect_to path("/")
+    end
   end
 
   def sso_login

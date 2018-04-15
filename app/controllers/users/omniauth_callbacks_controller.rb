@@ -48,7 +48,11 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     if origin.present?
-      parsed = URI.parse(origin) rescue nil
+      parsed = begin
+        URI.parse(origin)
+      rescue URI::InvalidURIError
+      end
+
       if parsed
         @origin = "#{parsed.path}?#{parsed.query}"
       end

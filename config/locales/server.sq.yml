@@ -168,25 +168,25 @@ sq:
     title: "Mirë se vini në Lounge"
     body: |2
 
-      Congratulations! :confetti_ball:
+        Congratulations! :confetti_ball:
 
-      If you can see this topic, you were recently promoted to **regular** (trust level 3).
+        If you can see this topic, you were recently promoted to **regular** (trust level 3).
 
-      You can now &hellip;
+        You can now &hellip;
 
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-      * Hide spam with a single flag
+        * Edit the title of any topic
+        * Change the category of any topic
+        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+        * Access a private Lounge category only visible to users at trust level 3 and higher
+        * Hide spam with a single flag
 
-      Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+        Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
 
-      Thanks for being an important part of this community!
+        Thanks for being an important part of this community!
 
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+        (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Rreth kategorisë %{category}"
     errors:
@@ -213,14 +213,6 @@ sq:
     leader:
       title: "udhëheqës"
   rate_limiter:
-    slow_down: "E keni bërë këtë veprim shumë shpesh, prisni pak e provoni më vonë. "
-    by_type:
-      first_day_replies_per_day: "Keni arritur maksimumin e përgjigjeve që një përdorues i ri mund të postojë në ditën e parë. Prisni %{time_left} dhe provoni përsëri."
-      first_day_topics_per_day: "Keni postuar maksimumin e temave që një anëtar i ri mund të krijojë në ditën e parë. Prisni %{time_left} para se të provoni përsëri. "
-      create_topic: "Po nxitoheni shumë për të krijuar tema të reja. Prisni %{time_left} dhe provoni përsëri."
-      create_post: "Po përgjigjeni shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      delete_post: "Po fshini postimet shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      topics_per_day: "Keni arritur maksimumin e temave të reja për sot. Prisni %{time_left} dhe provoni përsëri."
     hours:
       one: "1 orë"
       other: "%{count} orë"
@@ -338,7 +330,6 @@ sq:
       long_form: 'sinjalizoi këtë postim si të papërshtatshëm'
     notify_user:
       title: 'Dërgoji @{{username}} një mesazh'
-      description: 'Dëshiroj të flas me këtë person drejtpërdrejt dhe privatish rreth këtij postimi.'
       long_form: 'messaged user'
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -643,8 +634,6 @@ sq:
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
@@ -653,7 +642,6 @@ sq:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
-    backup_frequency: "How frequently we create a site backup, in days."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -1105,7 +1093,7 @@ sq:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       subject_template: "[%{email_prefix}] Përmbledhja"
@@ -1288,8 +1276,6 @@ sq:
     promoter:
       name: Promotor
       description: Ftoi një anëtar të ri në faqe
-      long_description: |
-        Kjo stemë jepet kur ftoni dikë për t'u bërë pjesë e komunitetit nëpërmjet butonit të ftesave në faqen e përdoruesit, ose në fund të faqes. Duke ftuar miq që mund të jenë të interesuar në biseda të veçanta është një mënyrë shumë e mirë të paraqesësh njerëz të rinj në komunitet, kështu që faleminderit!
     campaigner:
       name: Ambasador
       description: Ftoi 3 anëtarë të thjeshtë
@@ -1386,8 +1372,6 @@ sq:
     first_emoji:
       name: Emoji i parë
       description: Përdori Emoji në një postim
-      long_description: |
-        Kjo stemë jepet kur ju shtoni një Emoji në postimin tuaj për herë të parë :thumbsup:. Emoji ju lejon të përçoni emocionet në postimet tuaja, prej kënaqësisë :smiley: tek mërzitja :anguished: e deri tek inati :angry: dhe çdo gjë midis :sunglasses:. Thjesht filloni të shkruani : (dy pika) ose shtypni butonin Emoji në shiritin e veglave të fushës së shkrimit për të zgjedhur mes qindra llojesh :ok_hand:
     first_mention:
       name: Përmendja e parë
       long_description: Kjo stemë jepet herën e parë kur ju përmendni @username e dikujt në një postim. Secila përmendje krijon një njoftim për atë person, që të vihen në dijeni për postimin tuaj. Thjesht filloni të shtypni @ (simbolin te) për të përmendur çdo përdorues ose, nëse e mundur, çdo grup - është një mënyrë e volitshme për të patur vëmendjen e dikujt.

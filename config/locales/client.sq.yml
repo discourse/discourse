@@ -111,10 +111,10 @@ sq:
       email: 'dërgoje këtë lidhje me email'
     action_codes:
       public_topic: "e bëri këtë temë publike %{when}"
-      private_topic: "e bëri këtë temë private %{when}"
       split_topic: "ndaje këtë teme %{when}"
       invited_user: "ka ftuar %{who} %{when}"
       invited_group: "ka ftuar %{who} %{when}"
+      user_left: "u larguan nga ky mesazh"
       removed_user: "hequr %{who} %{when}"
       removed_group: "hequr %{who} %{when}"
       autoclosed:
@@ -138,7 +138,6 @@ sq:
     topic_admin_menu: "veprimet administrative mbi temën"
     wizard_required: "Mirseerdhët tek faqja juaj e re Discourse! Le t'ia nisim me <a href='%{url}' data-auto-route='true'>\"setup wizard\"</a> ✨"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
-    bootstrap_mode_enabled: "Për të thjeshtuar nisjen e komunitetit, jeni në formatin \"bootstrap\". Të gjithë anëtarët e rinj do të kenë nivelin e besimit 1 dhe emailat e përditshëm të aktivizuar. Këto opsione do të çaktivizohen automatikisht kur numri total i anëtarëve të kalojë numrin %{min_users}."
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -233,16 +232,6 @@ sq:
       last_read: "ky është postimi i fundit që keni lexuar; klikoni për t'a shtuar tek të preferuarat"
       remove: "Hiqeni nga të prefereruarat"
       confirm_clear: "Jeni të sigurtë se doni të fshini të gjitha të preferuarat nga kjo temë?"
-    topic_count_latest:
-      one: "{{count}} temë e re ose e përditësuar."
-      other: "{{count}} tema të reja ose të përditësuara."
-    topic_count_unread:
-      one: "{{count}} temë e palexuar."
-      other: "{{count}} tema të palexuara."
-    topic_count_new:
-      one: "{{count}} temë e re."
-      other: "{{count}} tema të reja."
-    click_to_show: "Kliko për ti shfaqur."
     preview: "shiko"
     cancel: "anulo"
     save: "Ruaj ndryshimet"
@@ -331,38 +320,18 @@ sq:
         make_user_group_owner: "Bëje autor"
         remove_user_as_group_owner: "Hiq autorin"
     groups:
-      logs:
-        title: "Ditari"
-        when: "Kur"
-        action: "Veprimi"
-        acting_user: "Anëtari veprues"
-        target_user: "Anëtari i prekur"
-        subject: "Subjekti"
-        details: "Detaje"
-        from: "Nga"
-        to: "Për"
-      edit:
-        title: 'Redakto Grupin'
-        full_name: 'Emri i plotë'
-        add_members: "Shto anëtarë"
-        delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
-      name_placeholder: "Emri i grupit, pa hapësira, si username-t"
+      public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
+      public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
+      empty:
+        posts: "Nuk ka postime nga anëtarët e këtij grupi."
+        members: "Nuk ka anëtarë në këtë grup."
       add: "Shto"
-      join: "Bashkoju grupit"
-      leave: "Ik nga grupi"
-      request: "Kërko t'i bashkohesh grupit"
-      automatic_group: Grup automatik
-      closed_group: Grup i mbyllur
-      is_group_user: "Jeni anëtar i këtij grupi"
       name: "Emri"
-      user_count: "Numri i anëtarëve"
       bio: "Mbi grupin"
-      selector_placeholder: "Shto anëtarë"
       owner: "autori"
       index:
         title: "Grupet"
       activity: "Aktiviteti"
-      members: "Anëtarë"
       topics: "Tema"
       posts: "Postime"
       mentions: "Përmendje"
@@ -373,9 +342,6 @@ sq:
         mods_and_admins: "Vetëm moderatorët dhe adminët"
         members_mods_and_admins: "Vetëm anëtarët e grupit, moderatorët dhe adminët"
         everyone: "Të gjithë"
-      trust_levels:
-        title: "Niveli i besimit që ju akordohet automatikisht anëtarëve të grupit:"
-        none: "Asnjë"
       notifications:
         watching:
           title: "Në vëzhgim"
@@ -629,6 +595,7 @@ sq:
         title: "Gjuha e faqes"
         instructions: "Gjuha e faqes për përdoruesin. Do të ndryshojë pasi të rifreskoni faqen. "
         default: "(paracaktuar)"
+        any: "ndonjë"
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       last_posted: "Postimi i fundit"
@@ -1033,19 +1000,6 @@ sq:
       empty: "Nuk u gjet asnjë njoftim. "
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali i postimeve të sinjalizuar"
-      alt:
-        mentioned: "Përmendur nga"
-        quoted: "Cituar nga"
-        replied: "Përgjigjur"
-        posted: "Postim nga"
-        edited: "Redakto postimin tuaj"
-        liked: "Pëlqeu postimin tuaj"
-        invited_to_topic: "I/e ftuar në temë nga"
-        invitee_accepted: "Ftesa u pranua nga"
-        moved_post: "Postimi juaj u transferua nga"
-        linked: "Lidhja drejt postimit tuaj"
-        granted_badge: "Stema u atribua"
-        group_message_summary: "Mesazhet në inboxin e grupit"
       popup:
         mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
@@ -1388,8 +1342,8 @@ sq:
         select_all: përzgjidhi të gjitha
         deselect_all: pastro zgjedhjen
         description:
-          one: Keni përzgjedhur <b>1</b> postim.
-          other: Keni përzgjedhur <b>{{count}}</b> postime.
+          one: "Keni përzgjedhur <b>1</b> postim."
+          other: "Keni përzgjedhur <b>{{count}}</b> postime."
     post:
       edit_reason: "Arsyeja:"
       post_number: "postimi {{number}}"
@@ -1609,7 +1563,6 @@ sq:
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       email_in_disabled: "Postimi i temave të reja me email është çaktivizuar në Rregullimet e faqes. Për të aktivizuar postimet e temave të reja me email,"
       email_in_disabled_click: 'aktivizo rregullimin "email in".'
-      suppress_from_homepage: "Hiqe këtë kategori nga faqja e parë."
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       edit_permissions: "Ndryshoni autorizimet"
       add_permission: "Shtoni autorizim"
@@ -1915,13 +1868,10 @@ sq:
       notifications:
         watching:
           title: "Në vëzhgim"
-          description: "Ju do të vëzhgoni automatikisht të gjitha temat nën këtë etiketë. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
         watching_first_post:
           title: "Postimi i parë nën vëzhgim"
-          description: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këtë etiketë."
         tracking:
           title: "Në gjurmim"
-          description: "Ju do të gjurmoni automatikisht të gjitha temat nën këtë etiketë. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
         regular:
           title: "Normal"
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose i përgjigjet postimeve tuaja. "
@@ -2055,8 +2005,6 @@ sq:
         title: "Grupet"
         edit: "Redakto Grup"
         refresh: "Rifresko"
-        new: "I Ri"
-        selector_placeholder: "vendos emrin e përdoruesit"
         about: "Modifiko anëtarët e grupit dhe emrin këtu"
         group_members: "Përdorues grupi"
         delete: "Fshij"
@@ -2064,12 +2012,7 @@ sq:
         delete_failed: "Nuk e fshimë dot grupin. Nëse ky është një grup automatik, nuk fshihet dot. "
         delete_owner_confirm: "Hiqe privilegjin e pronarit për '%{username}'?"
         add: "Shto"
-        add_members: "Shto Anëtar"
         custom: "Grupet e krijuara"
-        bulk_complete: "Përdoruesit iu shtuan grupit."
-        bulk: "Shto në masë tek grupi"
-        bulk_paste: "Ngjit një listë përdoruesisht ose adresash email, 1 për çdo rresht:"
-        bulk_select: "(zgjidhni një grup)"
         automatic: "Automatik"
         group_owners: Pronarët
         add_owners: Shto pronarë
@@ -2523,10 +2466,7 @@ sq:
         recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
         show_overriden: 'Shfaq vetëm të ndryshuarat'
       site_settings:
-        show_overriden: 'Shfaq vetëm të ndryshuarat'
         title: 'Rregullimet'
-        reset: 'rivendos'
-        none: 'asnjë'
         no_results: "Nuk u gjet asnjë rezultat."
         clear_filter: "Pastro"
         add_url: "shto URL"

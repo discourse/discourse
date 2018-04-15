@@ -27,6 +27,10 @@ describe UserUpdater do
   end
 
   describe '#update' do
+    let(:category) { Fabricate(:category) }
+    let(:tag) { Fabricate(:tag) }
+    let(:tag2) { Fabricate(:tag) }
+
     it 'saves user' do
       user = Fabricate(:user, name: 'Billy Bob')
       updater = UserUpdater.new(acting_user, user)
@@ -37,18 +41,21 @@ describe UserUpdater do
     end
 
     it 'can update categories and tags' do
-      category = Fabricate(:category)
-      tag = Fabricate(:tag)
-
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
-      updater.update(watched_tags: [tag.name], muted_category_ids: [category.id])
+      updater.update(watched_tags: "#{tag.name},#{tag2.name}", muted_category_ids: [category.id])
 
       expect(TagUser.where(
         user_id: user.id,
         tag_id: tag.id,
         notification_level: TagUser.notification_levels[:watching]
-      ).count).to eq(1)
+      ).exists?).to eq(true)
+
+      expect(TagUser.where(
+        user_id: user.id,
+        tag_id: tag2.id,
+        notification_level: TagUser.notification_levels[:watching]
+      ).exists?).to eq(true)
 
       expect(CategoryUser.where(
         user_id: user.id,
@@ -56,6 +63,18 @@ describe UserUpdater do
         notification_level: CategoryUser.notification_levels[:muted]
       ).count).to eq(1)
 
+    end
+
+    it "doesn't remove notification prefs when updating something else" do
+      user = Fabricate(:user)
+      TagUser.create!(user: user, tag: tag, notification_level: TagUser.notification_levels[:watching])
+      CategoryUser.create!(user: user, category: category, notification_level: CategoryUser.notification_levels[:muted])
+
+      updater = UserUpdater.new(acting_user, user)
+      updater.update(name: "Steve Dave")
+
+      expect(TagUser.where(user: user).count).to eq(1)
+      expect(CategoryUser.where(user: user).count).to eq(1)
     end
 
     it 'updates various fields' do

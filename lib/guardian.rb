@@ -215,8 +215,11 @@ class Guardian
     can_administer?(user) && !user.moderator?
   end
 
-  def can_grant_title?(user)
-    user && is_staff?
+  def can_grant_title?(user, title = nil)
+    return true if user && is_staff?
+    return false if user != @user
+    return true if user.badges.where(name: title, allow_title: true).exists?
+    user.groups.where(title: title).exists?
   end
 
   def can_change_primary_group?(user)
@@ -257,10 +260,13 @@ class Guardian
   def can_invite_to?(object, groups = nil)
     return false unless authenticated?
     return true if is_admin?
-    return false unless SiteSetting.enable_personal_messages?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false unless can_see?(object)
     return false if groups.present?
+
+    if object.is_a?(Topic) && object.private_message?
+      return false unless SiteSetting.enable_personal_messages?
+    end
 
     if object.is_a?(Topic) && object.category
       if object.category.groups.any?
