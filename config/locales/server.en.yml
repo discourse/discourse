@@ -293,8 +293,11 @@ en:
 
   groups:
     success:
-      bulk_add: "%{users_added} users have been added to the group."
+      bulk_add:
+        one: "%{count} user have been added to the group."
+        other: "%{count} users have been added to the group."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."
@@ -795,6 +798,7 @@ en:
     title: "Unsubscribed!"
     description: "<b>%{email}</b> has been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
+    private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
   unsubscribe:
     title: "Unsubscribe"
@@ -865,6 +869,15 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+    users_by_types:
+      title: "Users per types"
+      xaxis: "Type"
+      yaxis: "Number of Users"
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Suspended
+        silenced: Silenced
     emails:
       title: "Emails Sent"
       xaxis: "Day"
@@ -1124,7 +1137,7 @@ en:
     whitelist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
     whitelisted_crawler_user_agents: 'User agents of web crawlers that should be allowed to access the site.'
-    blacklisted_crawler_user_agents: 'User agents of web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined.'
+    blacklisted_crawler_user_agents: 'Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined.'
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive'
     slow_down_crawler_rate: 'If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)'
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1182,6 +1195,7 @@ en:
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
+    sso_overrides_groups: "Synchronize all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
@@ -2106,7 +2120,7 @@ en:
 
     post_hidden_again:
       title: "Post Hidden again"
-      subject_template: "Post hidden by community flags"
+      subject_template: "Post hidden by community flags, staff notified"
       text_body_template: |
         Hello,
 
@@ -2116,7 +2130,7 @@ en:
 
         %{flag_reason}
 
-        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, but it will remain hidden until handled by staff.**
+        Multiple community members flagged this post before it was hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -3628,6 +3642,7 @@ en:
     title: "Tags"
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
+    minimum_required_tags: "You must select at least %{count} tags."
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:
