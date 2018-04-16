@@ -230,6 +230,8 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
+    resources :dashboard_next, only: [:index]
+
     resources :dashboard, only: [:index] do
       collection do
         get "problems"

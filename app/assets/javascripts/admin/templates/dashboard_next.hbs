@@ -1,0 +1,28 @@
+{{plugin-outlet name="admin-dashboard-top"}}
+
+{{#conditional-loading-spinner condition=loading}}
+  <div class="community-health section">
+    <div class="section-title">
+      <h2>Community health</h2>
+      {{period-chooser period=period action="changePeriod"}}
+    </div>
+
+    <div class="section-body">
+      <div class="charts">
+        {{mini-chart dataSourceName="signups" startDate=startDate endDate=endDate}}
+        {{mini-chart dataSourceName="topics" startDate=startDate endDate=endDate}}
+      </div>
+    </div>
+  </div>
+
+  <div class="section-columns">
+    <div class="section-column">
+      {{mini-table dataSourceName="users_by_trust_level"}}
+    </div>
+
+    <div class="section-column">
+    </div>
+  </div>
+
+
+{{/conditional-loading-spinner}}
