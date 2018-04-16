@@ -63,3 +63,11 @@ Fabricator(:tag_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:tag_hook]]
   end
 end
+
+Fabricator(:flag_web_hook, from: :web_hook) do
+  transient flag_hook: WebHookEventType.find_by(name: 'flag')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:flag_hook]]
+  end
+end

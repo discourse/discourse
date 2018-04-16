@@ -75,6 +75,22 @@ describe PostOwnerChanger do
       expect(p1.reload.user).to eq(user_a)
     end
 
+    context "sets topic notification level for the new owner" do
+      let(:p4) { Fabricate(:post, post_number: 2, topic_id: topic.id) }
+
+      it "'watching' if the first post gets a new owner" do
+        described_class.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
+        expect(tu.notification_level).to eq(3)
+      end
+
+      it "'tracking' if other than the first post gets a new owner" do
+        described_class.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
+        expect(tu.notification_level).to eq(2)
+      end
+    end
+
     context "integration tests" do
       let(:p1user) { p1.user }
       let(:p2user) { p2.user }

@@ -40,7 +40,7 @@ export default Ember.Object.extend({
     return "/";
   },
 
-  appendQueryParams(path, findArgs) {
+  appendQueryParams(path, findArgs, extension) {
     if (findArgs) {
       if (typeof findArgs === "object") {
         const queryString = Object.keys(findArgs)
@@ -48,11 +48,11 @@ export default Ember.Object.extend({
                                   .map(k => k + "=" + encodeURIComponent(findArgs[k]));
 
         if (queryString.length) {
-          return path + "?" + queryString.join('&');
+          return `${path}${extension ? extension : ''}?${queryString.join('&')}`;
         }
       } else {
         // It's serializable as a string if not an object
-        return path + "/" + findArgs;
+        return `${path}/${findArgs}${extension ? extension : ''}`;
       }
     }
     return path;

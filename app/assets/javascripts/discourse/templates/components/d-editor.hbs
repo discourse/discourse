@@ -9,7 +9,7 @@
 </div>
 
 <div class='d-editor-container'>
-  <div class="d-editor-textarea-wrapper">
+  <div class="d-editor-textarea-wrapper {{if disabled "disabled"}}">
     <div class='d-editor-button-bar'>
       {{#each toolbar.groups as |group|}}
         {{#each group.buttons as |b|}}
@@ -39,7 +39,7 @@
     </div>
 
     {{conditional-loading-spinner condition=loading}}
-    {{textarea tabindex=tabindex value=value class="d-editor-input" placeholder=placeholderTranslated}}
+    {{textarea tabindex=tabindex value=value class="d-editor-input" placeholder=placeholderTranslated disabled=disabled}}
     {{popup-input-tip validation=validation}}
     {{plugin-outlet name="after-d-editor" tagName="" args=outletArgs}}
   </div>

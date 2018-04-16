@@ -90,6 +90,10 @@ class ImportScripts::Base
       SiteSetting.set(key, value)
     end
 
+    # Some changes that should not be rolled back after the script is done
+    SiteSetting.purge_unactivated_users_grace_period_days = 60
+    SiteSetting.purge_deleted_uploads_grace_period_days = 90
+
     RateLimiter.disable
   end
 

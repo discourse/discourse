@@ -53,7 +53,7 @@ $iframe-ratio:                    9/16 !default;
 
 // Image-type options
 $include-image-type:              true !default;
-$image-background:                #444 !default;
+$image-background:                linear-gradient(45deg, #111 0%,#333 100%) !default;
 $image-padding-top:               40px !default;
 $image-padding-bottom:            40px !default;
 $include-mobile-layout-for-image: true !default; // Removes paddings from top and bottom

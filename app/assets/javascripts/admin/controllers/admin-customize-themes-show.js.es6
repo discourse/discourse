@@ -8,6 +8,8 @@ const THEME_UPLOAD_VAR = 2;
 
 export default Ember.Controller.extend({
 
+  editRouteName: 'adminCustomizeThemes.edit',
+
   @computed("model", "allThemes")
   parentThemes(model, allThemes) {
     let parents = allThemes.filter(theme =>
@@ -142,7 +144,7 @@ export default Ember.Controller.extend({
     },
 
     editTheme() {
-      let edit = ()=>this.transitionToRoute('adminCustomizeThemes.edit', this.get('model.id'), 'common', 'scss');
+      let edit = ()=>this.transitionToRoute(this.get('editRouteName'), this.get('model.id'), 'common', 'scss');
 
       if (this.get("model.remote_theme")) {
       bootbox.confirm(I18n.t("admin.customize.theme.edit_confirm"), result => {

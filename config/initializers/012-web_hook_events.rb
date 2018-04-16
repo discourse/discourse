@@ -72,3 +72,14 @@ end
     WebHook.enqueue_hooks(:tag, tag_id: tag.id, event_name: event.to_s)
   end
 end
+
+%i(
+  flag_created
+  flag_agreed
+  flag_disagreed
+  flag_deferred
+).each do |event|
+  DiscourseEvent.on(event) do |flag|
+    WebHook.enqueue_hooks(:flag, flag_id: flag.id, event_name: event.to_s)
+  end
+end

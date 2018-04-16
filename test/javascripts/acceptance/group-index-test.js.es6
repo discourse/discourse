@@ -1,4 +1,4 @@
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import { acceptance, logIn, replaceCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Group Members");
 
@@ -18,6 +18,22 @@ QUnit.test("Viewing Members as anon user", assert => {
       find('.group-username-filter').attr('placeholder'),
       I18n.t('groups.members.filter_placeholder'),
       'it should display the right filter placehodler'
+    );
+  });
+});
+
+QUnit.test("Viewing Members as a group owner", assert => {
+  logIn();
+  Discourse.reset();
+  replaceCurrentUser({ admin: false, staff: false });
+
+  visit("/groups/discourse");
+  click('.group-members-add');
+
+  andThen(() => {
+    assert.equal(
+      find('#group-add-members-user-selector').length, 1,
+      'it should display the add members modal'
     );
   });
 });

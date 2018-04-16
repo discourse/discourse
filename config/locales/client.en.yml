@@ -403,17 +403,10 @@ en:
         remove_user_as_group_owner: "Revoke owner"
 
     groups:
-      new:
-        title: "New Group"
-        description: "Create a new group"
-        create: "Create"
-        name:
-          too_short: "Group name is too short"
-          too_long: "Group name is too long"
-          checking: "Checking group name availability..."
-          available: "Group name is available"
-          not_available: "Group name is not available"
-          blank: "Group name cannot be blank"
+      add_members:
+        title: "Add Members"
+        description: "Manage the membership of this group"
+        usernames: "Usernames"
       manage:
         title: 'Manage'
         name: 'Name'
@@ -422,11 +415,13 @@ en:
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         profile:
           title: Profile
-        members:
-          title: "Members"
-          description: "Manage the membership of this group"
-          usernames: "Usernames"
-          as_owner: "Set user(s) as owner(s) of this group"
+        interaction:
+          title: Interaction
+          posting: Posting
+          notification: Notification
+        membership:
+          title: Membership
+          access: Access
         logs:
           title: "Logs"
           when: "When"
@@ -437,7 +432,6 @@ en:
           details: "Details"
           from: "From"
           to: "To"
-      name_placeholder: "Group name, no spaces, same as username rule"
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
@@ -505,12 +499,6 @@ en:
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
-      visibility_levels:
-        title: "Who can see this group?"
-        public: "Everyone"
-        members: "Group owners, members and admins"
-        staff: "Group owners and staff"
-        owners: "Group owners and admins"
       alias_levels:
         mentionable: "Who can @mention this group?"
         messageable: "Who can message this group?"
@@ -519,9 +507,6 @@ en:
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
         everyone: "Everyone"
-      trust_levels:
-        title: "Trust level automatically granted to members when they're added:"
-        none: "None"
       notifications:
         watching:
           title: "Watching"
@@ -546,7 +531,6 @@ en:
       flair_color_placeholder: "(Optional) Hex color value"
       flair_preview_icon: "Preview Icon"
       flair_preview_image: "Preview Image"
-      flair_note: "Note: Flair will only show for a user's primary group."
 
     user_action_groups:
       "1": "Likes Given"
@@ -696,7 +680,7 @@ en:
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
-      delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
+      delete_yourself_not_allowed: "Please contact a staff member if you wish your account to be deleted."
       unread_message_count: "Messages"
       admin_delete: "Delete"
       users: "Users"
@@ -1014,6 +998,7 @@ en:
         header_title: "profile, messages, bookmarks and preferences"
       title:
         title: "Title"
+        none: "(none)"
 
       filters:
         all: "All"
@@ -1250,8 +1235,12 @@ en:
       no_content: No matches found
       filter_placeholder: Search...
       create: "Create: '{{content}}'"
-      max_content_reached: "You can only select {{count}} item(s)."
-      min_content_not_reached: "Select at least {{count}} item(s)."
+      max_content_reached:
+        one: "You can only select {{count}} item."
+        other: "You can only select {{count}} items."
+      min_content_not_reached:
+        one: "Select at least {{count}} item."
+        other: "Select at least {{count}} items."
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -1314,6 +1303,7 @@ en:
         post_length: "Post must be at least {{min}} characters"
         try_like: 'Have you tried the <i class="fa fa-heart"></i> button?'
         category_missing: "You must choose a category"
+        tags_missing: "You must choose at least {{count}} tags"
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
@@ -1336,6 +1326,7 @@ en:
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
+      reply_placeholder_choose_category: "You must select a category before typing here."
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
@@ -1475,8 +1466,8 @@ en:
       clear_all: "Clear All"
       too_short: "Your search term is too short."
       result_count:
-        one: "1 result for <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} results for <span class='term'>{{term}}</span>"
+        one: "<span>1 result for</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} results for</span><span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -1604,9 +1595,6 @@ en:
         search: "There are no more search results."
 
     topic:
-      unsubscribe:
-        stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
-        change_notification_state: "Your current notification state is "
       filter_to:
         one: "1 post in topic"
         other: "{{count}} posts in topic"
@@ -2277,6 +2265,7 @@ en:
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
+      minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
       notifications:
         watching:
@@ -2745,6 +2734,12 @@ en:
         page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
 
+        charts:
+          signups:
+            help: Users created for this period
+          topics:
+            help: Topics created for this period
+
         reports:
           today: "Today"
           yesterday: "Yesterday"
@@ -2843,12 +2838,48 @@ en:
           notify_moderators: "custom"
 
       groups:
+        new:
+          title: "New Group"
+          create: "Create"
+          name:
+            too_short: "Group name is too short"
+            too_long: "Group name is too long"
+            checking: "Checking group name availability..."
+            available: "Group name is available"
+            not_available: "Group name is not available"
+            blank: "Group name cannot be blank"
+        bulk_add:
+          title: "Bulk Add to Group"
+          complete_users_not_added: "These users were not added (make sure they have an account):"
+          paste: "Paste a list of usernames or emails, one per line:"
+        add_members:
+          as_owner: "Set user(s) as owner(s) of this group"
+        manage:
+          interaction:
+            email: Email
+            incoming_email: "Custom incoming email address"
+            incoming_email_placeholder: "enter email address"
+            visibility: Visibility
+            visibility_levels:
+              title: "Who can see this group?"
+              public: "Everyone"
+              members: "Group owners, members and admins"
+              staff: "Group owners and staff"
+              owners: "Group owners and admins"
+          membership:
+            automatic: Automatic
+            trust_level: Trust Level
+            trust_levels_title: "Trust level automatically granted to members when they're added:"
+            trust_levels_none: "None"
+            automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
+            automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+            primary_group: "Automatically set as primary group"
+        name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
         no_primary: "(no primary group)"
         title: "Groups"
         edit: "Edit Groups"
         refresh: "Refresh"
-        new: "New"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
@@ -2856,22 +2887,12 @@ en:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
-        add_members: "Add members"
         custom: "Custom"
-        bulk_complete: "The users have been added to the group."
-        bulk_complete_users_not_added: "These users were not added (make sure they have an account):"
-        bulk: "Bulk Add to Group"
-        bulk_paste: "Paste a list of usernames or emails, one per line:"
-        bulk_select: "(select a group)"
         automatic: "Automatic"
-        automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-        automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
-        default_title: "Default title for all users in this group"
-        primary_group: "Automatically set as primary group"
+        default_title: "Default title"
+        default_title_description: "will be applied to all users in the group"
         group_owners: Owners
         add_owners: Add owners
-        incoming_email: "Custom incoming email address"
-        incoming_email_placeholder: "enter email address"
         none_selected: "Select a group to get started"
         no_custom_groups: "Create a new custom group"
 
@@ -2940,6 +2961,9 @@ en:
         tag_event:
           name: "Tag Event"
           details: "When a tag is created, updated or destroyed."
+        flag_event:
+          name: "Flag Event"
+          details: "When a flag is created, agreed, disagreed or deferred."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -2981,7 +3005,7 @@ en:
         change_settings: "Change Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
-        official: "Offical Plugin"
+        official: "Official Plugin"
 
       backups:
         title: "Backups"

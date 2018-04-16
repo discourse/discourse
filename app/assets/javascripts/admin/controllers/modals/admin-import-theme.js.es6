@@ -9,6 +9,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
   selection: 'local',
   adminCustomizeThemes: Ember.inject.controller(),
   loading: false,
+  keyGenUrl: '/admin/themes/generate_key_pair',
+  importUrl: '/admin/themes/import',
 
   checkPrivate: Ember.computed.match('uploadUrl', /^git/),
 
@@ -17,7 +19,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     const checked = this.get('privateChecked');
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
-      ajax('/admin/themes/generate_key_pair', {method: 'POST'})
+      ajax(this.get('keyGenUrl'), {method: 'POST'})
         .then(pair => {
           this.set('privateKey', pair.private_key);
           this.set('publicKey', pair.public_key);
@@ -52,7 +54,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
 
       this.set('loading', true);
-      ajax('/admin/themes/import', options).then(result=>{
+      ajax(this.get('importUrl'), options).then(result=>{
         const theme = this.store.createRecord('theme',result.theme);
         this.get('adminCustomizeThemes').send('addTheme', theme);
         this.send('closeModal');

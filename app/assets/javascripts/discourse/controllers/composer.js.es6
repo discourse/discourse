@@ -682,7 +682,7 @@ export default Ember.Controller.extend({
     }
 
     if (opts.topicTitle && opts.topicTitle.length <= this.siteSettings.max_topic_title_length) {
-      this.set('model.title', opts.topicTitle);
+      this.set('model.title', escapeExpression(opts.topicTitle));
     }
 
     if (opts.topicCategoryId) {
@@ -707,7 +707,12 @@ export default Ember.Controller.extend({
     }
 
     if (opts.topicTags && !this.site.mobileView && this.site.get('can_tag_topics')) {
-      this.set('model.tags', opts.topicTags.split(","));
+      const self = this;
+      let tags = escapeExpression(opts.topicTags).split(",").slice(0, self.siteSettings.max_tags_per_topic);
+      tags.forEach(function(tag, index, array) {
+        array[index] = tag.substring(0, self.siteSettings.max_tag_length);
+      });
+      self.set('model.tags', tags);
     }
 
     if (opts.topicBody) {
@@ -779,8 +784,16 @@ export default Ember.Controller.extend({
 
   @computed('model.categoryId', 'lastValidatedAt')
   categoryValidation(categoryId, lastValidatedAt) {
-    if( !this.siteSettings.allow_uncategorized_topics && !categoryId) {
+    if(!this.siteSettings.allow_uncategorized_topics && !categoryId) {
       return InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
+    }
+  },
+
+  @computed('model.category', 'model.tags', 'lastValidatedAt')
+  tagValidation(category, tags, lastValidatedAt) {
+    const tagsArray = tags || [];
+    if (this.site.get('can_tag_topics') && category && category.get('minimum_required_tags') > tagsArray.length) {
+      return InputValidation.create({ failed: true, reason: I18n.t('composer.error.tags_missing', {count: category.get('minimum_required_tags')}), lastShownAt: lastValidatedAt });
     }
   },
 

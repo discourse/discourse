@@ -213,14 +213,6 @@ sq:
     leader:
       title: "udhëheqës"
   rate_limiter:
-    slow_down: "E keni bërë këtë veprim shumë shpesh, prisni pak e provoni më vonë. "
-    by_type:
-      first_day_replies_per_day: "Keni arritur maksimumin e përgjigjeve që një përdorues i ri mund të postojë në ditën e parë. Prisni %{time_left} dhe provoni përsëri."
-      first_day_topics_per_day: "Keni postuar maksimumin e temave që një anëtar i ri mund të krijojë në ditën e parë. Prisni %{time_left} para se të provoni përsëri. "
-      create_topic: "Po nxitoheni shumë për të krijuar tema të reja. Prisni %{time_left} dhe provoni përsëri."
-      create_post: "Po përgjigjeni shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      delete_post: "Po fshini postimet shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      topics_per_day: "Keni arritur maksimumin e temave të reja për sot. Prisni %{time_left} dhe provoni përsëri."
     hours:
       one: "1 orë"
       other: "%{count} orë"

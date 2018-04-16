@@ -38,7 +38,7 @@ class TopicsController < ApplicationController
 
   before_action :consider_user_for_promotion, only: :show
 
-  skip_before_action :check_xhr, only: [:show, :unsubscribe, :feed]
+  skip_before_action :check_xhr, only: [:show, :feed]
 
   def id_for_slug
     topic = Topic.find_by(slug: params[:slug].downcase)
@@ -117,6 +117,14 @@ class TopicsController < ApplicationController
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
 
+    # provide hint to crawlers only for now
+    # we would like to give them a bit more signal about age of data
+    if use_crawler_layout?
+      if last_modified = @topic_view.posts&.map { |p| p.updated_at }&.max&.httpdate
+        response.headers['Last-Modified'] = last_modified
+      end
+    end
+
     perform_show_response
 
   rescue Discourse::InvalidAccess => ex
@@ -144,30 +152,6 @@ class TopicsController < ApplicationController
     topic = TopicPublisher.new(topic, current_user, category.id).publish!
 
     render_serialized(topic.reload, BasicTopicSerializer)
-  end
-
-  def unsubscribe
-    if current_user.blank?
-      cookies[:destination_url] = request.fullpath
-      return redirect_to "/login-preferences"
-    end
-
-    @topic_view = TopicView.new(params[:topic_id], current_user)
-
-    if slugs_do_not_match || (!request.format.json? && params[:slug].blank?)
-      return redirect_to @topic_view.topic.unsubscribe_url, status: 301
-    end
-
-    tu = TopicUser.find_by(user_id: current_user.id, topic_id: params[:topic_id])
-
-    if tu && tu.notification_level > TopicUser.notification_levels[:regular]
-      tu.notification_level = TopicUser.notification_levels[:regular]
-      tu.save!
-    else
-      TopicUser.change(current_user.id, params[:topic_id].to_i, notification_level: TopicUser.notification_levels[:muted])
-    end
-
-    perform_show_response
   end
 
   def wordpress
@@ -670,7 +654,7 @@ class TopicsController < ApplicationController
 
     operation = params
       .require(:operation)
-      .permit(:type, :group, :category_id, :notification_level_id, :tags)
+      .permit(:type, :group, :category_id, :notification_level_id, tags: [])
       .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?

@@ -283,6 +283,7 @@ class CategoriesController < ApplicationController
                         :default_view,
                         :subcategory_list_style,
                         :default_top_period,
+                        :minimum_required_tags,
                         custom_fields: [params[:custom_fields].try(:keys)],
                         permissions: [*p.try(:keys)],
                         allowed_tags: [],

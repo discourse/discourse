@@ -37,7 +37,7 @@ class GroupsController < ApplicationController
   }
 
   def index
-    unless SiteSetting.enable_group_directory?
+    unless SiteSetting.enable_group_directory? || current_user&.staff?
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
@@ -304,7 +304,8 @@ class GroupsController < ApplicationController
   end
 
   def remove_member
-    group = Group.find(params[:id])
+    group = Group.find_by(id: params[:id])
+    raise Discourse::NotFound unless group
     group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
     user =

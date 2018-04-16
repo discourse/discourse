@@ -118,7 +118,8 @@ describe UserProfile do
     end
 
     it 'supports emoji images' do
-      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"/uploads/default/original/1X/f588830852fc8091a094cf0be0be0e6559dc8304.png?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=5\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\"> <img src=\"/images/emoji/twitter/thinking.png?v=5\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\">")
+
+      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"/uploads/default/original/1X/#{Upload.find(1).sha1}.png?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=5\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\"> <img src=\"/images/emoji/twitter/thinking.png?v=5\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\">")
     end
   end
 

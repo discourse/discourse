@@ -225,16 +225,6 @@ uk:
         add_user_to_group: "Добавити користувача"
         remove_user_from_group: "Видалити користувача"
     groups:
-      logs:
-        subject: "Тема"
-        details: "Деталі"
-        from: "Від"
-        to: "До"
-      edit:
-        title: 'Редагувати Групу'
-        full_name: 'Повне Ім''я'
-        add_members: "Добавити учасників"
-        delete_member_confirm: "Видалити '%{username}' з групи '%{group}'?"
       add: "Додати"
       topics: "Теми"
       posts: "Дописи"
@@ -1147,15 +1137,12 @@ uk:
         title: "Групи"
         edit: "Редагувати групи"
         refresh: "Оновити"
-        new: "Новий"
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
         delete: "Видалити"
         delete_confirm: "Видалити цю групу?"
         delete_failed: "Не вдалося видалити групу. Якщо це - автоматична група, її неможливо знищити."
         add: "Додати"
-        add_members: "Додати учасників"
-        bulk_select: "(обрати групу)"
       api:
         generate_master: "Згенерувати Головний ключ API"
         none: "Наразі немає жодного активного ключа API."

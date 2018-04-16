@@ -161,8 +161,8 @@ Report.reopenClass({
     }).then(json => {
       // Add zero values for missing dates
       if (json.report.data.length > 0) {
-        const startDateFormatted = moment(json.report.start_date).format('YYYY-MM-DD');
-        const endDateFormatted = moment(json.report.end_date).format('YYYY-MM-DD');
+        const startDateFormatted = moment(json.report.start_date).utc().format('YYYY-MM-DD');
+        const endDateFormatted = moment(json.report.end_date).utc().format('YYYY-MM-DD');
         json.report.data = fillMissingDates(json.report.data, startDateFormatted, endDateFormatted);
       }
 

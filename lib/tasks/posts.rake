@@ -87,9 +87,12 @@ def rebake_posts(opts = {})
   total = Post.count
   rebaked = 0
 
-  Post.find_each do |post|
-    rebake_post(post, opts)
-    print_status(rebaked += 1, total)
+  # TODO: make this resumable because carrying around 20 million ids in memory is not a great idea long term
+  Post.order(id: :desc).pluck(:id).in_groups_of(1000, false).each do |batched_post_ids|
+    Post.order(created_at: :desc).where(id: batched_post_ids).each do |post|
+      rebake_post(post, opts)
+      print_status(rebaked += 1, total)
+    end
   end
 
   SiteSetting.disable_edit_notifications = disable_edit_notifications
@@ -276,11 +279,11 @@ task 'posts:refresh_emails', [:topic_id] => [:environment] do |_, args|
 end
 
 desc 'Reorders all posts based on their creation_date'
-task 'posts:reorder_posts' => :environment do
+task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   Post.transaction do
     # update sort_order and flip post_number to prevent
     # unique constraint violations when updating post_number
-    Post.exec_sql(<<~SQL)
+    builder = SqlBuilder.new(<<~SQL)
       WITH ordered_posts AS (
           SELECT
             id,
@@ -289,6 +292,7 @@ task 'posts:reorder_posts' => :environment do
               PARTITION BY topic_id
               ORDER BY created_at, post_number ) AS new_post_number
           FROM posts
+          /*where*/
       )
       UPDATE posts AS p
       SET sort_order = o.new_post_number,
@@ -297,6 +301,8 @@ task 'posts:reorder_posts' => :environment do
       WHERE p.id = o.id AND
             p.post_number <> o.new_post_number
     SQL
+    builder.where("topic_id = :topic_id") if args[:topic_id]
+    builder.exec(topic_id: args[:topic_id])
 
     Notification.exec_sql(<<~SQL)
       UPDATE notifications AS x

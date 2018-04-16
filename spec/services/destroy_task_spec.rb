@@ -42,7 +42,6 @@ describe DestroyTask do
     let!(:g2) { Fabricate(:group) }
 
     it 'destroys all groups' do
-      before_count = Group.count
       DestroyTask.destroy_groups
       expect(Group.where(automatic: false).count).to eq 0
     end
@@ -55,14 +54,17 @@ describe DestroyTask do
   end
 
   describe 'users' do
-    let!(:u) { Fabricate(:user) }
-    let!(:u2) { Fabricate(:user) }
-    let!(:a) { Fabricate(:admin) }
-
     it 'destroys all non-admin users' do
+      before_count = User.count
+
+      Fabricate(:user)
+      Fabricate(:user)
+      Fabricate(:admin)
+
       DestroyTask.destroy_users
       expect(User.where(admin: false).count).to eq 0
-      expect(User.count).to eq 2 #system + 1 other admin
+      # admin does not get detroyed
+      expect(User.count).to eq before_count + 1
     end
   end
 

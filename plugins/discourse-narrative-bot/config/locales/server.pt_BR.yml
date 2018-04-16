@@ -53,6 +53,7 @@ pt_BR:
         quote: "No meio de toda dificuldade reside a oportunidade"
         author: "Albert Einstein"
       '2':
+        quote: "A liberdade não vale a pena se não conota liberdade para errar."
         author: "Mahatma Gandhi"
       '3':
         quote: "Não chore por que acabou, sorria por que aconteceu."
@@ -90,12 +91,16 @@ pt_BR:
         '5': "Você pode contar com ele"
         '6': "Como eu vejo, sim"
         '7': "Provavelmente"
+        '8': "Boa perspectiva"
         '9': "Sim"
+        '10': "Sinais apontam que sim"
         '12': "Pergunte novamente depois"
         '13': "Melhor não falar pra você agora"
+        '15': "Concentre-se e pergunte novamente"
         '16': "Não conte com isso"
         '17': "Minha resposta é não"
         '18': "Minhas fontes dizem que não"
+        '19': "Perspectiva não tão boa"
         '20': "Muito duvidoso"
       result: |-
         > :crystal_ball: %{result}
@@ -136,6 +141,12 @@ pt_BR:
           - Por motivos de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você vai ganhar novas habilidades (e [emblemas](/badges) ao passo que nós conhecermos melhor você.
 
           - Nós acreditamos em um {comunidade com comportamento civilizado](/guidelines) em todos os momentos.
+      onebox:
+        reply: |-
+          Legal! isto vai funcionar para a maioria dos links. Lembre-se, deve estar na linha _all by itself_, com nada na frente ou atrás.
       images:
         like_not_found: |-
           Você esqueceu de curtir :heart: meu [post?](%{url})
+      formatting:
+        reply: |-
+          Ótimo! HTML e BBCode também servem para formatação - para saber mais, [veja este tutorial](http://commonmark.org/help) :nerd:

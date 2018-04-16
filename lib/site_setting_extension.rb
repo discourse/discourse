@@ -252,13 +252,17 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
+  HOSTNAME_SETTINGS ||= %w{
+    disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains
+    email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains
+  }
+
   def filter_value(name, value)
-    if %w[disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
-      domain_array = []
-      value.split('|').each { |url| domain_array << get_hostname(url) }
-      value = domain_array.join("|")
+    if HOSTNAME_SETTINGS.include?(name)
+      value.split("|").map { |url| get_hostname(url) }.compact.uniq.join("|")
+    else
+      value
     end
-    value
   end
 
   def set(name, value)
@@ -339,16 +343,21 @@ module SiteSettingExtension
   end
 
   def get_hostname(url)
-    uri = begin
-      URI.parse(url)
+    url.strip!
+
+    host = begin
+      URI.parse(url)&.host
     rescue URI::InvalidURIError
+      nil
     end
 
-    unless uri.scheme.nil?
-      url = uri.host
+    host ||= begin
+      URI.parse("http://#{url}")&.host
+    rescue URI::InvalidURIError
+      nil
     end
 
-    url
+    host.presence || url
   end
 
   private

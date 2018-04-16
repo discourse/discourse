@@ -2,6 +2,7 @@ import ComboBox from "select-kit/components/combo-box";
 import Tags from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
+import { escapeExpression } from 'discourse/lib/utilities';
 const { get, isEmpty, run, makeArray } = Ember;
 
 export default ComboBox.extend(Tags, {
@@ -110,6 +111,7 @@ export default ComboBox.extend(Tags, {
       }
 
       tags.map((tag) => {
+        tag = escapeExpression(tag);
         const isHighlighted = highlightedSelection.map(s => get(s, "value")).includes(tag);
         output += `
           <button aria-label="${tag}" title="${tag}" class="selected-tag ${isHighlighted ? 'is-highlighted' : ''}" data-value="${tag}">

@@ -295,20 +295,6 @@ vi:
       title: "người khởi xướng"
     change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name}  xuống '%{new_trust_level}'. Tuy nhiên cấp độ  tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
   rate_limiter:
-    slow_down: "Hành động này đã được thực hiện quá nhiều lần. Bạn vui lòng thử lại sau."
-    by_type:
-      first_day_replies_per_day: "Bạn vừa vượt quá số lần trả lời tối đa trong ngày đầu của thành viên mới. Xin hãy chờ %{time_left} và thử lại sau."
-      first_day_topics_per_day: "Bạn vừa đạt tới số lần mở topic tối đa cho thành viên mới. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      create_topic: "Bạn đang tạo topic quá nhanh. Vui lòng chờ %{time_left} trước khi thử lại."
-      create_post: "Bạn đang trả lời quá nhanh. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      delete_post: "Bạn đang xóa bài viết quá nhanh, hãy đợi %{time_left} trước khi thử lại."
-      topics_per_day: "Bạn vừa đạt tới số lần mở topic mới tối đa trong ngày hôm nay. Vui lòng chờ %{time_left} trước khi thử lại."
-      pms_per_day: "Bạn vừa đạt tới số lần gửi tin nhắn tối đa trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      create_like: "Bạn vừa đạt tới số lần tối đa được Like trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      create_bookmark: "Bạn vừa đạt tới số lần đánh dấu tối đa trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      live_post_counts: "Bạn đang yêu cầu bộ đếm bài viết quá nhanh, hãy đợi %{time_left} trước khi thử lại."
-      unsubscribe_via_email: "Bạn đã vượt quá số lần hủy nhận tin qua email của ngày hôm nay, hãy đợi %{time_left} trước khi thử lại."
-      topic_invitations_per_day: "Bạn đã vượt quá số lần mời chủ đề của ngày hôm nay, hãy đợi %{time_left} trước khi thử lại."
     hours:
       other: "%{count} giờ"
     minutes:

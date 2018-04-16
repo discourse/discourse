@@ -192,20 +192,6 @@ a.badge-category {
   align-items: center;
 }
 
-.topic-unsubscribe {
-  .notifications-button {
-    display: inline-block;
-    float: none;
-    line-height: $line-height-large;
-    .dropdown-toggle {
-      float: none;
-    }
-    .dropdown-menu {
-      bottom: initial;
-    }
-  }
-}
-
 .post-links-container {
   @include unselectable;
   clear: both;

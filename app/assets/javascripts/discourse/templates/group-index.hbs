@@ -1,13 +1,21 @@
-{{text-field value=filterInput
-    placeholderKey=filterPlaceholder
-    class="group-username-filter no-blur"}}
+<div class="group-members-actions">
+  {{text-field value=filterInput
+      placeholderKey=filterPlaceholder
+      class="group-username-filter no-blur"}}
 
-{{#if canManageGroup}}
-  {{#link-to "group.manage.members" model.name class="btn btn-primary pull-right"}}
-    {{d-icon "plus"}}
-    {{i18n "groups.manage.add_members"}}
-  {{/link-to}}
-{{/if}}
+  {{#if canManageGroup}}
+    {{#if currentUser.admin}}
+      {{group-members-dropdown
+          showAddMembersModal="showAddMembersModal"
+          showBulkAddModal="showBulkAddModal"}}
+    {{else}}
+      {{d-button icon="plus"
+          action="showAddMembersModal"
+          label="groups.add_members.title"
+          class="group-members-add"}}
+    {{/if}}
+  {{/if}}
+</div>
 
 {{#if hasMembers}}
   {{#load-more selector=".group-members tr" action="loadMore"}}

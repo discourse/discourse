@@ -14,7 +14,6 @@ export default function() {
   });
 
   this.route('topicBySlugOrId', { path: '/t/:slugOrId', resetNamespace: true });
-  this.route('topicUnsubscribe', { path: '/t/:slug/:id/unsubscribe' });
 
   this.route('discovery', { path: '/', resetNamespace: true }, function() {
     // top
@@ -64,6 +63,8 @@ export default function() {
 
     this.route('manage', function() {
       this.route('profile');
+      this.route('membership');
+      this.route('interaction');
       this.route('members');
       this.route('logs');
     });

@@ -5,7 +5,7 @@ import computed from "ember-addons/ember-computed-decorators";
 export default DropdownButton.extend({
   buttonExtraClasses: 'no-text',
   title: '',
-  text: iconHTML('ellipsis-h'),
+  text: iconHTML('wrench'),
   classNames: ['group-member-dropdown'],
 
   @computed("member.owner")

@@ -391,22 +391,6 @@ zh_TW:
       title: "資深"
     change_failed_explanation: "你嘗試將%{user_name}降至%{new_trust_level}。然而他們的信任等級已經是%{current_trust_level}。%{user_name}將仍處于%{current_trust_level}——如果你想要降級用戶，先鎖定信任等級。"
   rate_limiter:
-    slow_down: "您這個動作重複太多次，請稍後再試。"
-    by_type:
-      first_day_replies_per_day: "你回帖的數量已經超出身為新用戶當天允許的上限，請等待%{time_left}之後再試。"
-      first_day_topics_per_day: "你創建新主題的數量已經超出身為新用戶當天允許的上限，請等待%{time_left}之後再試。"
-      create_topic: "您創建討論話題過於倉猝。請稍等 %{time_left} 再試一次。"
-      create_post: "你的回覆過快。請等待%{time_left}再重試。"
-      delete_post: "您刪除討論話題過於倉猝。請稍待 %{time_left} 後再試一次。"
-      public_group_membership: "您加入/離開群組過於頻繁。請稍等 %{time_left} 後再試一次。"
-      topics_per_day: "您今天新發佈的討論話題已經達到上限。請稍待 %{time_left} 後再試一次。"
-      pms_per_day: "您今天發表的訊息數已經達到上限。請等待 %{time_left} 後再行嘗試。"
-      create_like: "您今天給予讚的次數已經達到上限。請等待 %{time_left} 再行嘗試。"
-      create_bookmark: "您今天加入書籤的數目已經達到上限。請等待 %{time_left} 再行嘗試。"
-      edit_post: "您已達到單日編輯次數上限。請等待 %{time_left} 後再行嘗試。"
-      live_post_counts: "您要求的即時文章計數過於快速。請等待 %{time_left} 再行嘗試。"
-      unsubscribe_via_email: "你已經達到了今日用郵件解除訂閲的最大數量限制。請等待%{time_left}之後再試。"
-      topic_invitations_per_day: "你已經達到了今日主題邀請的最大數量限制。請等待%{time_left}之後再試。"
     hours:
       other: "%{count} 小時"
     minutes:

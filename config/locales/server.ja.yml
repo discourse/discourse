@@ -249,8 +249,6 @@ ja:
       title: "ベーシックユーザー"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
-    by_type:
-      public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
       other: "%{count} 時間"
     minutes:

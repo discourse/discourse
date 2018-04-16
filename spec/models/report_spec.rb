@@ -250,6 +250,33 @@ describe Report do
     end
   end
 
+  describe 'users by types level report' do
+    let(:report) { Report.find('users_by_types') }
+
+    context "no users" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with users at different trust levels" do
+      before do
+        3.times { Fabricate(:user, admin: true) }
+        2.times { Fabricate(:user, moderator: true) }
+        UserSilencer.silence(Fabricate(:user), Fabricate.build(:admin))
+        Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+        expect(report.data.find { |d| d[:x] == "admin" }[:y]).to eq 3
+        expect(report.data.find { |d| d[:x] == "moderator" }[:y]).to eq 2
+        expect(report.data.find { |d| d[:x] == "silenced" }[:y]).to eq 1
+        expect(report.data.find { |d| d[:x] == "suspended" }[:y]).to eq 1
+      end
+    end
+  end
+
   describe 'posts counts' do
     it "only counts regular posts" do
       post = Fabricate(:post)
