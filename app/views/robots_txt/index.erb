@@ -23,4 +23,8 @@ Disallow: <%= Discourse.base_uri + "/" %>
 <% @crawler_delayed_agents.each do |agent, delay| %>
 User-agent: <%= agent %>
 Crawl-delay: <%= delay %>
+<% RobotsTxtController::DISALLOWED_PATHS.each do |path| %>
+Disallow: <%= Discourse.base_uri + path %>
+<% end %>
+
 <% end %>
