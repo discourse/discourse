@@ -38,6 +38,6 @@ export default Ember.Component.extend({
       });
     }).finally(() => {
       this.set("isLoading", false);
-    })
+    });
   }
 });
