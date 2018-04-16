@@ -4,7 +4,6 @@ import afterTransition from 'discourse/lib/after-transition';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
-import Group from 'discourse/models/group';
 import { userPath } from 'discourse/lib/url';
 
 const clickOutsideEventName = "mousedown.outside-user-card";
@@ -36,12 +35,12 @@ export default Ember.Component.extend(CleansUp, {
 
   @computed('cardType')
   isUserShown(cardType) {
-    return cardType == 'user';
+    return cardType === 'user';
   },
 
   @computed('cardType')
   isGroupShown(cardType) {
-    return cardType == 'group';
+    return cardType === 'group';
   },
 
   _showUser(username, $target) {
@@ -102,10 +101,10 @@ export default Ember.Component.extend(CleansUp, {
     const post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
     this.setProperties({ username, userLoading: username, cardTarget: target, post });
 
-    if(userCardType == 'group') {
+    if(userCardType === 'group') {
       this._showGroup(username, $target);
     }
-    else if(userCardType == 'user') {
+    else if(userCardType === 'user') {
       this._showUser(username, $target);
     }
 
@@ -149,7 +148,7 @@ export default Ember.Component.extend(CleansUp, {
       if (wantsNewWindow(e)) { return; }
       const $target = $(e.target);
       return this._show($target.text().replace(/^@/, ''), $target, 'group');
-    })
+    });
   },
 
   _positionCard(target) {
