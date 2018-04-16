@@ -2,18 +2,19 @@
   <div class="chart-title">
     <h3>{{title}}</h3>
 
-    {{d-icon "question-circle"}}
+    {{#if help}}
+      {{d-icon "question-circle" title=help}}
+    {{/if}}
   </div>
 
   <div class="chart-container">
-
     {{#if oneDataPoint}}
       <span class="data-point">
         {{chartData.lastObject.y}}
       </span>
     {{else}}
       <div class="chart-trend {{trend}}">
-        <span>{{total}}</span>
+        <span>{{number total}}</span>
 
         {{#if trendIcon}}
           {{d-icon trendIcon}}

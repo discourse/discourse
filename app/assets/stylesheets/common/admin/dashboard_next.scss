@@ -33,7 +33,7 @@
     }
   }
 
-  .mini-table {
+  .dashboard-mini-table {
     .table-title {
       align-items: center;
       display: flex;
@@ -75,10 +75,14 @@
     justify-content: space-between;
     flex-wrap: wrap;
 
-    .mini-chart {
+    .dashboard-mini-chart {
       flex-grow: 1;
       width: calc(100% * (1/3) - 1px);
       margin-bottom: 1em;
+
+      .d-icon-question-circle {
+        cursor: pointer;
+      }
 
       .chart-title {
         align-items: center;
@@ -127,7 +131,7 @@
     .chart-trend {
       font-size: $font-up-5;
       position: absolute;
-      left: 1.5em;
+      left: 2em;
       top: .5em;
       display: flex;
       justify-content: space-between;

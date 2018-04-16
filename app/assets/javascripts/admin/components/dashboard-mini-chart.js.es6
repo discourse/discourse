@@ -3,7 +3,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 import loadScript from 'discourse/lib/load-script';
 
 export default Ember.Component.extend({
-  classNames: ["mini-chart"],
+  classNames: ["dashboard-mini-chart"],
 
   classNameBindings: ["trend", "oneDataPoint"],
 

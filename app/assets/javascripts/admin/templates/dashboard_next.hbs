@@ -9,15 +9,24 @@
 
     <div class="section-body">
       <div class="charts">
-        {{mini-chart dataSourceName="signups" startDate=startDate endDate=endDate}}
-        {{mini-chart dataSourceName="topics" startDate=startDate endDate=endDate}}
+        {{dashboard-mini-chart
+          dataSourceName="signups"
+          startDate=startDate
+          endDate=endDate
+          help="admin.dashboard.charts.signups.help"}}
+
+        {{dashboard-mini-chart
+          dataSourceName="topics"
+          startDate=startDate
+          endDate=endDate
+          help="admin.dashboard.charts.topics.help"}}
       </div>
     </div>
   </div>
 
   <div class="section-columns">
     <div class="section-column">
-      {{mini-table dataSourceName="users_by_trust_level"}}
+      {{dashboard-mini-table dataSourceName="users_by_trust_level"}}
     </div>
 
     <div class="section-column">
