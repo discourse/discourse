@@ -2737,6 +2737,12 @@ en:
         page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
 
+        charts:
+          signups:
+            help: Users created for this period
+          topics:
+            help: Topics created for this period
+
         reports:
           today: "Today"
           yesterday: "Yesterday"

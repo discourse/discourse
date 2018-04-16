@@ -2,7 +2,7 @@ import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
-  classNames: ["mini-table"],
+  classNames: ["dashboard-mini-table"],
 
   total: null,
   labels: null,
