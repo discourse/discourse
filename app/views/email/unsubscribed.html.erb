@@ -7,8 +7,8 @@
   </p>
 
   <% if @topic %>
-  <p>
-    <%=t("unsubscribed.topic_description", link: render_topic_title(@topic)).html_safe%>
-  </p>
+    <p><%=t("unsubscribed.topic_description", link: render_topic_title(@topic)).html_safe%></p>
+  <% elsif @topic_id %>
+    <p><%=t("unsubscribed.private_topic_description")%></p>
   <% end %>
 </div>

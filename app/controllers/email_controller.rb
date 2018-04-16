@@ -110,10 +110,11 @@ class EmailController < ApplicationController
 
   def unsubscribed
     @email = params[:email]
+    @topic_id = params[:topic_id]
     user = User.find_by_email(params[:email])
     raise Discourse::NotFound unless user
-    @topic = Topic.find_by(id: params[:topic_id].to_i) if params[:topic_id]
-    raise Discourse::NotFound unless Guardian.new(user).can_see?(@topic)
+    topic = Topic.find_by(id: params[:topic_id].to_i) if @topic_id
+    @topic = topic if topic && Guardian.new(nil).can_see?(topic)
   end
 
 end
