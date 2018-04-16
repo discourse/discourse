@@ -243,4 +243,22 @@ class Report
       .group(:user_agent).sum(:count)
       .map { |ua, count| { x: ua, y: count } }
   end
+
+  def self.report_users_by_types(report)
+    report.data = []
+
+    label = Proc.new { |key| I18n.t("reports.users_by_types.xaxis_labels.#{key}") }
+
+    admins = User.real.where(admin: true).count
+    report.data << { x: label.call("admin"), y: admins } if admins > 0
+
+    moderators = User.real.where(moderator: true).count
+    report.data << { x: label.call("moderator"), y: moderators } if moderators > 0
+
+    suspended = User.suspended.count
+    report.data << { x: label.call("suspended"), y: suspended } if suspended > 0
+
+    silenced = User.silenced.count
+    report.data << { x: label.call("silenced"), y: silenced } if silenced > 0
+  end
 end
