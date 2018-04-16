@@ -458,18 +458,16 @@ class Search
     end
   end
 
-  advanced_filter(/^tags?:(.*)/) do |posts, match|
-    search_tags(posts, match)
+  advanced_filter(/^tags?:([a-zA-Z0-9,\-_+]+)/) do |posts, match|
+    search_tags(posts, match, true)
   end
 
-  advanced_filter(/\-tags?:(.*)/) do |posts, match|
-    negative_tags = search_tags(posts, match)
-    posts.where(["posts.id NOT IN (?)", negative_tags.pluck("id")]).order("id")
+  advanced_filter(/\-tags?:([a-zA-Z0-9,\-_+]+)/) do |posts, match|
+    search_tags(posts, match, false)
   end
 
   advanced_filter(/filetypes?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
     file_extensions = match.split(",").map(&:downcase)
-
     posts.where("posts.id IN (
       SELECT post_id FROM topic_links
       WHERE extension IN (:file_extensions)
@@ -482,27 +480,28 @@ class Search
 
   private
 
-    def search_tags(posts, match)
+    def search_tags(posts, match, is_positive)
       return if match.nil?
+
+      modifier = is_positive ? "" : "NOT"
 
       if match.include?('+')
         tags = match.split('+')
-        posts.where("topics.id IN (
-              SELECT tt.topic_id
-              FROM topic_tags tt, tags
-              WHERE tt.tag_id = tags.id
-              GROUP BY tt.topic_id
-              HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
-              )", tags.join('&'))
+        posts.where("topics.id #{modifier} IN (
+          SELECT tt.topic_id
+          FROM topic_tags tt, tags
+          WHERE tt.tag_id = tags.id
+          GROUP BY tt.topic_id
+          HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
+        )", tags.join('&')).order("id")
       else
         tags = match.split(",")
 
-        posts.where("topics.id IN (
-              SELECT DISTINCT(tt.topic_id)
-              FROM topic_tags tt, tags
-              WHERE tt.tag_id = tags.id
-              AND tags.name in (?)
-              )", tags)
+        posts.where("topics.id #{modifier} IN (
+          SELECT DISTINCT(tt.topic_id)
+          FROM topic_tags tt, tags
+          WHERE tt.tag_id = tags.id AND tags.name IN (?)
+        )", tags).order("id")
       end
     end
 
