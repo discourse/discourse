@@ -47,7 +47,7 @@ class PostAlerter
   end
 
   def after_save_post(post, new_record = false)
-    notified = [post.user]
+    notified = [post.user, post.last_editor].uniq
 
     # mentions (users/groups)
     mentioned_groups, mentioned_users = extract_mentions(post)

@@ -23,6 +23,12 @@ class PostOwnerChanger
       post.set_owner(@new_owner, @acting_user, @skip_revision)
       PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
 
+      if post.post_number == 1
+        TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[:watching])
+      else
+        TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[:tracking])
+      end
+
       @topic.update_statistics
 
       @new_owner.user_stat.update(

@@ -410,6 +410,13 @@ describe PostAlerter do
         expect(n.data_hash["original_username"]).to eq(admin.username)
     end
 
+    it "doesn't notify the last post editor if they mention themself" do
+      post = create_post_with_alerts(user: user, raw: 'Post without a mention.')
+      expect {
+        post.revise(evil_trout, raw: "O hai, @eviltrout!")
+      }.not_to change(evil_trout.notifications, :count)
+    end
+
     let(:alice) { Fabricate(:user, username: 'alice') }
     let(:bob) { Fabricate(:user, username: 'bob') }
     let(:carol) { Fabricate(:admin, username: 'carol') }
