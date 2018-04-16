@@ -1007,10 +1007,6 @@ SQL
     Topic.relative_url(id, slug, post_number)
   end
 
-  def unsubscribe_url
-    "#{url}/unsubscribe"
-  end
-
   def clear_pin_for(user)
     return unless user.present?
     TopicUser.change(user.id, id, cleared_pinned_at: Time.now)

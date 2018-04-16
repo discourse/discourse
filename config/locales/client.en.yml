@@ -1595,9 +1595,6 @@ en:
         search: "There are no more search results."
 
     topic:
-      unsubscribe:
-        stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
-        change_notification_state: "Your current notification state is "
       filter_to:
         one: "1 post in topic"
         other: "{{count}} posts in topic"
