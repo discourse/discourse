@@ -36,14 +36,17 @@
   .dashboard-mini-table {
     margin-bottom: 1em;
 
+    &.is-loading {
+      height: 150px;
+    }
+
     .table-title {
       align-items: center;
       display: flex;
-      margin: .5em;
       justify-content: space-between;
 
       h3 {
-        margin: 0 .5em 0 0;
+        margin: .5em 0;
       }
     }
 
@@ -82,6 +85,10 @@
       width: calc(100% * (1/3) - 1px);
       margin-bottom: 1em;
 
+      &.is-loading {
+        height: 150px;
+      }
+
       .d-icon-question-circle {
         cursor: pointer;
       }
@@ -89,10 +96,9 @@
       .chart-title {
         align-items: center;
         display: flex;
-        margin: .5em;
 
         h3 {
-          margin: 0 .5em 0 0;
+          margin: .5em 0;
         }
       }
 

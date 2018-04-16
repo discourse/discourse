@@ -8,8 +8,6 @@ export default Ember.Controller.extend({
 
   @computed("period")
   startDate(period) {
-    if (period === "all") return null;
-
     switch (period) {
       case "yearly":
         return moment().subtract(1, "year").startOf("day");
@@ -26,14 +24,14 @@ export default Ember.Controller.extend({
       case "daily":
         return moment().startOf("day");
         break;
+      default:
+        return null;
     }
   },
 
   @computed("period")
   endDate(period) {
-    if (period === "all") return null;
-
-    return moment().endOf("day");
+    return period === "all" ? null : moment().endOf("day");
   },
 
   actions: {

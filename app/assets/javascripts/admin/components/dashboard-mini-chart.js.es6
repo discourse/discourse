@@ -5,7 +5,7 @@ import loadScript from 'discourse/lib/load-script';
 export default Ember.Component.extend({
   classNames: ["dashboard-mini-chart"],
 
-  classNameBindings: ["trend", "oneDataPoint"],
+  classNameBindings: ["trend", "oneDataPoint", "isLoading"],
 
   isLoading: false,
   total: null,
@@ -13,10 +13,8 @@ export default Ember.Component.extend({
   title: null,
   chartData: null,
   oneDataPoint: false,
-
   backgroundColor: "rgba(200,220,240,0.3)",
   borderColor: "#08C",
-
 
   didInsertElement() {
     this._super();
@@ -46,17 +44,9 @@ export default Ember.Component.extend({
     }
   },
 
-  _computeTrend(total, prevTotal) {
-    const percentChange = ((total - prevTotal) / prevTotal) * 100;
-
-    if (percentChange > 50) return "double-up";
-    if (percentChange > 0) return "up";
-    if (percentChange === 0) return "stable";
-    if (percentChange < 50) return "double-down";
-    if (percentChange < 0) return "down";
-  },
-
   fetchReport() {
+    this.set("isLoading", true);
+
     let payload = {data: {}};
 
     if (this.get("startDate")) {
@@ -66,8 +56,6 @@ export default Ember.Component.extend({
     if (this.get("endDate")) {
       payload.data.end_date = this.get("endDate").toISOString();
     }
-
-    this.set("isLoading", true);
 
     ajax(this.get("dataSource"), payload)
       .then((response) => {
@@ -94,9 +82,9 @@ export default Ember.Component.extend({
   },
 
   drawChart() {
-    const ctx = this.$(".chart-canvas")[0].getContext("2d");
+    const context = this.$(".chart-canvas")[0].getContext("2d");
 
-    let data = {
+    const data = {
       labels: this.get("chartData").map(r => r.x),
       datasets: [{
         data: this.get("chartData").map(r => r.y),
@@ -105,25 +93,32 @@ export default Ember.Component.extend({
       }]
     };
 
-    const config = {
+    this._chart = new window.Chart(context, this._buildChartConfig(data));
+  },
+
+  _buildChartConfig(data) {
+    return {
       type: "line",
-      data: data,
+      data,
       options: {
         legend: { display: false },
         responsive: true,
-        layout: {
-          padding: { left: 0, top: 0, right: 0, bottom: 0 }
-        },
+        layout: { padding: { left: 0, top: 0, right: 0, bottom: 0 } },
         scales: {
-          yAxes: [{
-            display: true,
-            ticks: { suggestedMin: 0 }
-          }],
+          yAxes: [{ display: true, ticks: { suggestedMin: 0 } }],
           xAxes: [{ display: true }],
         }
       },
     };
+  },
 
-    this._chart = new window.Chart(ctx, config);
-  }
+  _computeTrend(total, prevTotal) {
+    const percentChange = ((total - prevTotal) / prevTotal) * 100;
+
+    if (percentChange > 50) return "double-up";
+    if (percentChange > 0) return "up";
+    if (percentChange === 0) return "stable";
+    if (percentChange < 50) return "double-down";
+    if (percentChange < 0) return "down";
+  },
 });
