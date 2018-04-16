@@ -1,0 +1,25 @@
+{{#conditional-loading-spinner condition=isLoading}}
+  <div class="chart-title">
+    <h3>{{title}}</h3>
+
+    {{d-icon "question-circle"}}
+  </div>
+
+  <div class="chart-container">
+
+    {{#if oneDataPoint}}
+      <span class="data-point">
+        {{chartData.lastObject.y}}
+      </span>
+    {{else}}
+      <div class="chart-trend {{trend}}">
+        <span>{{total}}</span>
+
+        {{#if trendIcon}}
+          {{d-icon trendIcon}}
+        {{/if}}
+      </div>
+      <canvas class="chart-canvas"></canvas>
+    {{/if}}
+  </div>
+{{/conditional-loading-spinner}}

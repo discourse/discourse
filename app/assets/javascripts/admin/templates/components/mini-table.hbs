@@ -1,0 +1,28 @@
+{{#conditional-loading-spinner condition=isLoading}}
+  <div class="table-title">
+    <h3>{{title}}</h3>
+
+    {{#if help}}
+      <a href="{{helpPage}}">{{i18n help}}</a>
+    {{/if}}
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          {{#each labels as |label|}}
+            <th>{{label}}</th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {{#each dataset as |data|}}
+            <td>{{data}}</td>
+          {{/each}}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{{/conditional-loading-spinner}}
