@@ -1,6 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe RobotsTxtController do
+  describe '#builder' do
+    it "returns json information for building a robots.txt" do
+      get "/robots-builder.json"
+      json = ::JSON.parse(response.body)
+      expect(json).to be_present
+      expect(json['header']).to be_present
+      expect(json['agents']).to be_present
+    end
+  end
+
   describe '#index' do
 
     context 'subfolder' do
