@@ -2733,6 +2733,7 @@ en:
         page_views: "Pageviews"
         page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
+        community_health: Community health
 
         charts:
           signups:
