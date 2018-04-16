@@ -3,7 +3,7 @@
 {{#conditional-loading-spinner condition=loading}}
   <div class="community-health section">
     <div class="section-title">
-      <h2>Community health</h2>
+      <h2>{{i18n "admin.dashboard.community_health"}}</h2>
       {{period-chooser period=period action="changePeriod"}}
     </div>
 
@@ -33,6 +33,4 @@
     <div class="section-column">
     </div>
   </div>
-
-
 {{/conditional-loading-spinner}}
