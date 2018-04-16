@@ -650,8 +650,6 @@ Discourse::Application.routes.draw do
   get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
   get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: { topic_id: /\d+/ }
   get "t/:slug/:topic_id/summary" => "topics#show", defaults: { summary: true }, constraints: { topic_id: /\d+/ }
-  get "t/:slug/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: { topic_id: /\d+/ }
-  get "t/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: { topic_id: /\d+/ }
   get "t/:topic_id/summary" => "topics#show", constraints: { topic_id: /\d+/ }
   put "t/:slug/:topic_id" => "topics#update", constraints: { topic_id: /\d+/ }
   put "t/:slug/:topic_id/star" => "topics#star", constraints: { topic_id: /\d+/ }
