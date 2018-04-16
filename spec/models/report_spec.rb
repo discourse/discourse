@@ -269,10 +269,12 @@ describe Report do
 
       it "returns a report with data" do
         expect(report.data).to be_present
-        expect(report.data.find { |d| d[:x] == "admin" }[:y]).to eq 3
-        expect(report.data.find { |d| d[:x] == "moderator" }[:y]).to eq 2
-        expect(report.data.find { |d| d[:x] == "silenced" }[:y]).to eq 1
-        expect(report.data.find { |d| d[:x] == "suspended" }[:y]).to eq 1
+
+        label = Proc.new { |key| I18n.t("reports.users_by_types.xaxis_labels.#{key}") }
+        expect(report.data.find { |d| d[:x] == label.call("admin") }[:y]).to eq 3
+        expect(report.data.find { |d| d[:x] == label.call("moderator") }[:y]).to eq 2
+        expect(report.data.find { |d| d[:x] == label.call("silenced") }[:y]).to eq 1
+        expect(report.data.find { |d| d[:x] == label.call("suspended") }[:y]).to eq 1
       end
     end
   end
