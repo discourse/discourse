@@ -201,22 +201,24 @@ $user_card_background: $secondary;
   .group-card-avatar {
     float: left;
     margin-right: 10px;
-    margin-top: 0px;
+    margin-top: -5px;
+    $size: 50px;
     .avatar-flair {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: $size;
+      height: $size;
       display: flex;
       align-items: center;
       background-repeat: no-repeat;
       background-position: center;
+      background-size: $size;
       color: $primary;
       i {
         margin: auto;
-        font-size: $font-up-4;
+        font-size: $size !important;
       }
     }
   }
+
   .members {
     a {
       color: lighten($primary, 40%);
