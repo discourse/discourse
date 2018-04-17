@@ -518,7 +518,8 @@ const Composer = RestModel.extend({
       targetUsernames: opts.usernames,
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
-      whisper: opts.whisper
+      whisper: opts.whisper,
+      tags: opts.tags
     });
 
     if (opts.post) {
@@ -836,7 +837,8 @@ const Composer = RestModel.extend({
       metaData: this.get('metaData'),
       usernames: this.get('targetUsernames'),
       composerTime: this.get('composerTime'),
-      typingTime: this.get('typingTime')
+      typingTime: this.get('typingTime'),
+      tags: this.get('tags')
     };
 
     this.set('draftStatus', I18n.t('composer.saving_draft_tip'));

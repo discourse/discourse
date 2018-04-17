@@ -1600,6 +1600,7 @@ en:
         other: "{{count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
+      open_draft: "Open Draft"
       private_message: 'Start a message'
       archive_message:
         help: 'Move message to your archive'
