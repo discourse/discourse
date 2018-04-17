@@ -1,7 +1,7 @@
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import CleansUp from 'discourse/mixins/cleans-up';
 import afterTransition from 'discourse/lib/after-transition';
-import { propertyNotEqual, setting } from 'discourse/lib/computed';
+import { setting } from 'discourse/lib/computed';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
