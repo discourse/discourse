@@ -10,7 +10,7 @@
   <div class="chart-container">
     {{#if oneDataPoint}}
       <span class="data-point">
-        {{chartData.lastObject.y}}
+        {{number chartData.lastObject.y}}
       </span>
     {{else}}
       <div class="chart-trend {{trend}}">

@@ -91,6 +91,7 @@
 
       .d-icon-question-circle {
         cursor: pointer;
+        margin-left: .25em;
       }
 
       .chart-title {
@@ -139,7 +140,7 @@
     .chart-trend {
       font-size: $font-up-5;
       position: absolute;
-      left: 2em;
+      right: 1.5em;
       top: .5em;
       display: flex;
       justify-content: space-between;

@@ -41,6 +41,6 @@ export default Ember.Controller.extend({
   },
 
   _reportsForPeriodURL(period) {
-    return `/admin/dashboard_next?period=${period}`;
+    return `/admin/dashboard-next?period=${period}`;
   }
 });
