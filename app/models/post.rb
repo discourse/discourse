@@ -406,6 +406,10 @@ class Post < ActiveRecord::Base
     Post.excerpt(cooked, maxlength, options)
   end
 
+  def excerpt_for_topic
+    Post.excerpt(cooked, 220, strip_links: true)
+  end
+
   def is_first_post?
     post_number.blank? ?
       topic.try(:highest_post_number) == 0 :
