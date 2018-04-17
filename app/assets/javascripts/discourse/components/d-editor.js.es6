@@ -12,6 +12,7 @@ import { siteDir } from 'discourse/lib/text-direction';
 import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
 import toMarkdown from 'discourse/lib/to-markdown';
 import deprecated from 'discourse-common/lib/deprecated';
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -258,6 +259,7 @@ export default Ember.Component.extend({
 
     // disable clicking on links in the preview
     this.$('.d-editor-preview').on('click.preview', e => {
+      if (wantsNewWindow(e)) { return; }
       if ($(e.target).is("a")) {
         e.preventDefault();
         return false;
