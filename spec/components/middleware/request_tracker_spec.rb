@@ -330,9 +330,9 @@ describe Middleware::RequestTracker do
       }.to_not change { ApplicationRequest.count }
     end
 
-    it "allows json requests" do
+    it "blocks json requests" do
       SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
-      expect_success_response(*middleware.call(env(
+      expect_blocked_response(*middleware.call(env(
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)',
         'HTTP_ACCEPT' => 'application/json'
       )))
