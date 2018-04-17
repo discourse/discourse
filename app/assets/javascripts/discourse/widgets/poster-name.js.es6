@@ -14,7 +14,7 @@ createWidget('poster-name-title', {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName) {
       const href = Discourse.getURL(`/groups/${attrs.primaryGroupName}`);
-      titleContents = h('a.user-group', { className: attrs.extraClasses, attributes: { href } }, attrs.title);
+      titleContents = h('a.user-group', { className: attrs.extraClasses, attributes: { href, 'data-group-card': attrs.primaryGroupName } }, attrs.title);
     }
     return titleContents;
   }

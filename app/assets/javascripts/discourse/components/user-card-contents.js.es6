@@ -11,6 +11,7 @@ const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
 const clickMention = "click.discourse-user-mention";
 const groupClickMention = "click.discourse-group-mention";
+const groupClickDataExpand = "click.discourse-group-card"
 
 const maxMembersToDisplay = 10;
 
@@ -162,6 +163,12 @@ export default Ember.Component.extend(CleansUp, {
       return this._show($target.text().replace(/^@/, ''), $target, 'user');
     });
 
+    $('#main-outlet').on(groupClickDataExpand, '[data-group-card]', (e) => {
+      if (wantsNewWindow(e)) { return; }
+      const $target = $(e.currentTarget);
+      return this._show($target.data('group-card'), $target, 'group');
+    });
+
     $('#main-outlet').on(groupClickMention, 'a.mention-group', (e) => {
       if (wantsNewWindow(e)) { return; }
       const $target = $(e.target);
@@ -247,7 +254,7 @@ export default Ember.Component.extend(CleansUp, {
   willDestroyElement() {
     this._super();
     $('html').off(clickOutsideEventName);
-    $('#main').off(clickDataExpand).off(clickMention).off(groupClickMention);
+    $('#main').off(clickDataExpand).off(clickMention).off(groupClickMention).off(groupClickDataExpand);
   },
 
   actions: {
