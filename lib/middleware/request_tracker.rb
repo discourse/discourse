@@ -129,7 +129,8 @@ class Middleware::RequestTracker
       is_background: !!(request.path =~ /^\/message-bus\// || request.path =~ /\/topics\/timings/),
       is_mobile: helper.is_mobile?,
       track_view: track_view,
-      timing: timing
+      timing: timing,
+      queue_seconds: env['REQUEST_QUEUE_SECONDS']
     }.tap do |h|
       h[:user_agent] = env['HTTP_USER_AGENT'] if h[:is_crawler]
     end
@@ -158,6 +159,15 @@ class Middleware::RequestTracker
   def call(env)
     result = nil
     log_request = true
+
+    # doing this as early as possible so we have an
+    # accurate counter
+    if queue_start = env['HTTP_X_REQUEST_START']
+      queue_start = queue_start.split("t=")[1].to_f
+      queue_time = (Time.now.to_f - queue_start)
+      env['REQUEST_QUEUE_SECONDS'] = queue_time
+    end
+
     request = Rack::Request.new(env)
 
     if rate_limit(request)
