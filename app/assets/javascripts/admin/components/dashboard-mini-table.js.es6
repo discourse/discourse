@@ -17,7 +17,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super();
 
-    this.fetchReport.apply(this);
+    this.fetchReport();
   },
 
   @computed("dataSourceName")
@@ -26,6 +26,8 @@ export default Ember.Component.extend({
   },
 
   fetchReport() {
+    if (this.get("isLoading")) return;
+
     this.set("isLoading", true);
 
     ajax(this.get("dataSource"))
