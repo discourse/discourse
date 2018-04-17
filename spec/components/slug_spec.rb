@@ -24,6 +24,10 @@ describe Slug do
       expect(Slug.for("o_o_o")).to eq("o-o-o")
     end
 
+    it 'strips emoji string' do
+      expect(Slug.for(":smile: To Infinity and beyond! 🚀 :woman:t5:")).to eq("to-infinity-and-beyond")
+    end
+
     context 'ascii generator' do
       before { SiteSetting.slug_generation_method = 'ascii' }
 
