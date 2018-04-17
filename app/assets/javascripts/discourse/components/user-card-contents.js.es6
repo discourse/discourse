@@ -1,7 +1,8 @@
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import CleansUp from 'discourse/mixins/cleans-up';
 import afterTransition from 'discourse/lib/after-transition';
-import { default as computed } from 'ember-addons/ember-computed-decorators';
+import { propertyNotEqual, setting } from 'discourse/lib/computed';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
 import { userPath } from 'discourse/lib/url';
@@ -16,6 +17,8 @@ const maxMembersToDisplay = 10;
 export default Ember.Component.extend(CleansUp, {
   elementId: 'user-card',
   classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'user.card_background::no-bg'],
+  allowBackgrounds: setting('allow_profile_backgrounds'),
+  showBadges: setting('enable_badges'),
 
   postStream: Ember.computed.alias('topic.postStream'),
   viewingTopic: Ember.computed.match('currentPath', /^topic\./),
@@ -42,6 +45,21 @@ export default Ember.Component.extend(CleansUp, {
   isGroupShown(cardType) {
     return cardType === 'group';
   },
+
+  @observes('user.card_background')
+  addBackground() {
+    if (!this.get('allowBackgrounds')) { return; }
+
+    const $this = this.$();
+    if (!$this) { return; }
+
+    const url = this.get('user.card_background');
+    const bg = Ember.isEmpty(url) ? '' : `url(${Discourse.getURLWithCDN(url)})`;
+    $this.css('background-image', bg);
+  },
+
+  @computed('user.card_badge.image')
+  hasCardBadgeImage: image => image && image.indexOf('fa-') !== 0,
 
   _showUser(username, $target) {
     const args = { stats: false };

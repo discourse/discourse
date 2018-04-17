@@ -1,4 +1,4 @@
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
 import { durationTiny } from 'discourse/lib/formatter';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
@@ -6,13 +6,13 @@ import CanCheckEmails from 'discourse/mixins/can-check-emails';
 export default Ember.Component.extend(CanCheckEmails, {
 
   allowBackgrounds: setting('allow_profile_backgrounds'),
+  showBadges: setting('enable_badges'),
 
   enoughPostsForFiltering: Ember.computed.gte('topicPostCount', 2),
   showFilter: Ember.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
   showName: propertyNotEqual('user.name', 'user.username'),
   hasUserFilters: Ember.computed.gt('postStream.userFilters.length', 0),
   isSuspended: Ember.computed.notEmpty('user.suspend_reason'),
-  showBadges: setting('enable_badges'),
   showMoreBadges: Ember.computed.gt('moreBadgesCount', 0),
   showDelete: Ember.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: Ember.computed.not('user.isBasic'),
@@ -49,21 +49,6 @@ export default Ember.Component.extend(CanCheckEmails, {
 
   @computed('user.badge_count', 'user.featured_user_badges.length')
   moreBadgesCount: (badgeCount, badgeLength) => badgeCount - badgeLength,
-
-  @computed('user.card_badge.image')
-  hasCardBadgeImage: image => image && image.indexOf('fa-') !== 0,
-
-  @observes('user.card_background')
-  addBackground() {
-    if (!this.get('allowBackgrounds')) { return; }
-
-    const $this = this.$();
-    if (!$this) { return; }
-
-    const url = this.get('user.card_background');
-    const bg = Ember.isEmpty(url) ? '' : `url(${Discourse.getURLWithCDN(url)})`;
-    $this.css('background-image', bg);
-  },
 
   @computed('user.time_read', 'user.recent_time_read')
   showRecentTimeRead(timeRead, recentTimeRead) {
