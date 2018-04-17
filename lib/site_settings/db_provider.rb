@@ -37,7 +37,7 @@ class SiteSettings::DbProvider
     model.data_type = data_type
 
     # save! used to ensure after_commit is called
-    model.save!
+    model.save! if model.changed?
 
     true
   end
