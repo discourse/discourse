@@ -47,7 +47,7 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def include_bio_raw?
-    staff?
+    staff? || is_group_owner
   end
 
   def include_is_group_user?
