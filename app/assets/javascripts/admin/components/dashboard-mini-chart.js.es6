@@ -20,14 +20,14 @@ export default Ember.Component.extend({
     this._super();
 
     loadScript("/javascripts/Chart.min.js").then(() => {
-      this.fetchReport.apply(this);
+      this.fetchReport();
     });
   },
 
   didUpdateAttrs() {
     this._super();
 
-    this.fetchReport.apply(this);
+    this.fetchReport();
   },
 
   @computed("dataSourceName")
@@ -45,6 +45,8 @@ export default Ember.Component.extend({
   },
 
   fetchReport() {
+    if (this.get("isLoading")) return;
+
     this.set("isLoading", true);
 
     let payload = {data: {}};
@@ -97,6 +99,23 @@ export default Ember.Component.extend({
   },
 
   _buildChartConfig(data) {
+    const values = this.get("chartData").map(d => d.y);
+    const max = Math.max(...values);
+    const min = Math.min(...values);
+    const stepSize = Math.max(...[Math.ceil((max - min)/5), 20]);
+
+    const startDate = this.get("startDate") || moment();
+    const endDate = this.get("endDate") || moment();
+    const datesDifference = startDate.diff(endDate, "days");
+    let unit = "day";
+    if (datesDifference >= 366) {
+      unit = "quarter";
+    } else if (datesDifference >= 61) {
+      unit = "month";
+    } else if (datesDifference >= 14) {
+      unit = "week";
+    }
+
     return {
       type: "line",
       data,
@@ -105,8 +124,22 @@ export default Ember.Component.extend({
         responsive: true,
         layout: { padding: { left: 0, top: 0, right: 0, bottom: 0 } },
         scales: {
-          yAxes: [{ display: true, ticks: { suggestedMin: 0 } }],
-          xAxes: [{ display: true }],
+          yAxes: [
+            {
+              display: true,
+              ticks: { suggestedMin: 0, stepSize, suggestedMax: max + stepSize }
+            }
+          ],
+          xAxes: [
+            {
+              display: true,
+              type: "time",
+              time: {
+                parser: "YYYY-MM-DD",
+                unit
+              }
+            }
+          ],
         }
       },
     };

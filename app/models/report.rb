@@ -255,10 +255,10 @@ class Report
     moderators = User.real.where(moderator: true).count
     report.data << { x: label.call("moderator"), y: moderators } if moderators > 0
 
-    suspended = User.suspended.count
+    suspended = User.real.suspended.count
     report.data << { x: label.call("suspended"), y: suspended } if suspended > 0
 
-    silenced = User.silenced.count
+    silenced = User.real.silenced.count
     report.data << { x: label.call("silenced"), y: silenced } if silenced > 0
   end
 end
