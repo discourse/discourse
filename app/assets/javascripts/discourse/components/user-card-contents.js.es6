@@ -11,7 +11,7 @@ const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
 const clickMention = "click.discourse-user-mention";
 const groupClickMention = "click.discourse-group-mention";
-const groupClickDataExpand = "click.discourse-group-card"
+const groupClickDataExpand = "click.discourse-group-card";
 
 const maxMembersToDisplay = 10;
 
