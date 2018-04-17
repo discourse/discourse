@@ -651,8 +651,12 @@ posting:
     default: false
   notify_about_queued_posts_after:
     default: 24
-  auto_close_messages_post_count: 500
-  auto_close_topics_post_count: 10000
+  auto_close_messages_post_count:
+    default: 500
+    shadowed_by_global: true
+  auto_close_topics_post_count:
+    default: 10000
+    shadowed_by_global: true
   code_formatting_style:
     client: true
     type: enum
