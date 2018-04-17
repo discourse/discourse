@@ -260,7 +260,14 @@ export default Ember.Component.extend({
     // disable clicking on links in the preview
     this.$('.d-editor-preview').on('click.preview', e => {
       if (wantsNewWindow(e)) { return; }
-      if ($(e.target).is("a")) {
+      const $target = $(e.target);
+      if ($target.is("a.mention")) {
+        this.appEvents.trigger('click.discourse-preview-user-card-mention', $target);
+      }
+      if ($target.is("a.mention-group")) {
+        this.appEvents.trigger('click.discourse-preview-group-card-mention-group', $target);
+      }
+      if ($target.is("a")) {
         e.preventDefault();
         return false;
       }
