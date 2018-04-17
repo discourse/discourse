@@ -289,7 +289,6 @@ class Middleware::RequestTracker
   def block_crawler(request)
     request.get? &&
       !request.xhr? &&
-      request.env['HTTP_ACCEPT'] =~ /text\/html/ &&
       !request.path.ends_with?('robots.txt') &&
       CrawlerDetection.is_blocked_crawler?(request.env['HTTP_USER_AGENT'])
   end
