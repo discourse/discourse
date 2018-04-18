@@ -1469,6 +1469,7 @@ en:
         one: "<span>1 result for</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} results for</span><span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
+      full_page_title: "search topics or posts"
       no_results: "No results found."
       no_more_results: "No more results found."
       searching: "Searching ..."
