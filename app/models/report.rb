@@ -244,15 +244,15 @@ class Report
       .map { |ua, count| { x: ua, y: count } }
   end
 
-  def self.report_users_by_types(report)
+  def self.report_users_by_type(report)
     report.data = []
 
-    label = Proc.new { |key| I18n.t("reports.users_by_types.xaxis_labels.#{key}") }
+    label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
 
-    admins = User.real.where(admin: true).count
+    admins = User.real.admins.count
     report.data << { x: label.call("admin"), y: admins } if admins > 0
 
-    moderators = User.real.where(moderator: true).count
+    moderators = User.real.moderators.count
     report.data << { x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
