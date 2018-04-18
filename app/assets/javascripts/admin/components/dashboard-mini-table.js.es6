@@ -13,11 +13,24 @@ export default Ember.Component.extend({
   isLoading: false,
   help: null,
   helpPage: null,
+  model: null,
 
   didInsertElement() {
     this._super();
 
-    this.fetchReport();
+    if (this.get("dataSourceName")){
+      this._fetchReport();
+    } else if (this.get("model")) {
+      this._setPropertiesFromModel(this.get("model"));
+    }
+  },
+
+  didUpdateAttrs() {
+    this._super();
+
+    if (this.get("model")) {
+      this._setPropertiesFromModel(this.get("model"));
+    }
   },
 
   @computed("dataSourceName")
@@ -25,25 +38,28 @@ export default Ember.Component.extend({
     return `/admin/reports/${dataSourceName}`;
   },
 
-  fetchReport() {
+  _fetchReport() {
     if (this.get("isLoading")) return;
 
     this.set("isLoading", true);
 
     ajax(this.get("dataSource"))
       .then((response) => {
-        const report = response.report;
-        const data = report.data.sort((a, b) => a.x >= b.x);
-
-        this.setProperties({
-          labels: data.map(r => r.x),
-          dataset: data.map(r => r.y),
-          total: report.total,
-          title: report.title,
-          chartData: data
-        });
+        this._setPropertiesFromModel(response.report);
       }).finally(() => {
         this.set("isLoading", false);
       });
+  },
+
+  _setPropertiesFromModel(model) {
+    const data = model.data.sort((a, b) => a.x >= b.x);
+
+    this.setProperties({
+      labels: data.map(r => r.x),
+      dataset: data.map(r => r.y),
+      total: model.total,
+      title: model.title,
+      chartData: data
+    });
   }
 });
