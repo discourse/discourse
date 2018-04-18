@@ -16,23 +16,24 @@ export default Ember.Component.extend({
   backgroundColor: "rgba(200,220,240,0.3)",
   borderColor: "#08C",
 
-  didInsertElement() {
-    this._super();
-
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      this.fetchReport();
-    });
-  },
-
   didUpdateAttrs() {
     this._super();
 
-    this.fetchReport();
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      if (this.get("model") && !this.get("chartData")) {
+        this._setPropertiesFromModel(this.get("model"));
+        this._drawChart();
+      } else if (this.get("dataSource")) {
+        this._fetchReport();
+      }
+    });
   },
 
   @computed("dataSourceName")
   dataSource(dataSourceName) {
-    return `/admin/reports/${dataSourceName}`;
+    if (dataSourceName) {
+      return `/admin/reports/${dataSourceName}`;
+    }
   },
 
   @computed("trend")
@@ -44,7 +45,7 @@ export default Ember.Component.extend({
     }
   },
 
-  fetchReport() {
+  _fetchReport() {
     if (this.get("isLoading")) return;
 
     this.set("isLoading", true);
@@ -61,29 +62,20 @@ export default Ember.Component.extend({
 
     ajax(this.get("dataSource"), payload)
       .then((response) => {
-        const report = response.report;
-
-        this.setProperties({
-          oneDataPoint: (this.get("startDate") && this.get("endDate")) &&
-                        this.get("startDate").isSame(this.get("endDate"), 'day'),
-          total: report.total,
-          title: report.title,
-          trend: this._computeTrend(report.total, report.prev30Days),
-          chartData: report.data
-        });
+        this._setPropertiesFromModel(response.report);
       })
       .finally(() => {
         this.set("isLoading", false);
 
         Ember.run.schedule("afterRender", () => {
           if (!this.get("oneDataPoint")) {
-            this.drawChart();
+            this._drawChart();
           }
         });
       });
   },
 
-  drawChart() {
+  _drawChart() {
     const context = this.$(".chart-canvas")[0].getContext("2d");
 
     const data = {
@@ -96,6 +88,17 @@ export default Ember.Component.extend({
     };
 
     this._chart = new window.Chart(context, this._buildChartConfig(data));
+  },
+
+  _setPropertiesFromModel(model) {
+    this.setProperties({
+      oneDataPoint: (this.get("startDate") && this.get("endDate")) &&
+                    this.get("startDate").isSame(this.get("endDate"), 'day'),
+      total: model.total,
+      title: model.title,
+      trend: this._computeTrend(model.total, model.prev30Days),
+      chartData: model.data
+    });
   },
 
   _buildChartConfig(data) {

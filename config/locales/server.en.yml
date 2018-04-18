@@ -869,8 +869,8 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
-    users_by_types:
-      title: "Users per types"
+    users_by_type:
+      title: "Users per Type"
       xaxis: "Type"
       yaxis: "Number of Users"
       xaxis_labels:

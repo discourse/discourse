@@ -251,7 +251,7 @@ describe Report do
   end
 
   describe 'users by types level report' do
-    let(:report) { Report.find('users_by_types') }
+    let(:report) { Report.find('users_by_type') }
 
     context "no users" do
       it "returns an empty report" do
@@ -270,7 +270,7 @@ describe Report do
       it "returns a report with data" do
         expect(report.data).to be_present
 
-        label = Proc.new { |key| I18n.t("reports.users_by_types.xaxis_labels.#{key}") }
+        label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
         expect(report.data.find { |d| d[:x] == label.call("admin") }[:y]).to eq 3
         expect(report.data.find { |d| d[:x] == label.call("moderator") }[:y]).to eq 2
         expect(report.data.find { |d| d[:x] == label.call("silenced") }[:y]).to eq 1
