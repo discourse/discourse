@@ -275,6 +275,7 @@ class Middleware::RequestTracker
         limiter10.performed!
         type = 60
         limiter60.performed!
+        false
       rescue RateLimiter::LimitExceeded
         if warn
           Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{request.env["REQUEST_URI"]}")
