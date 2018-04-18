@@ -11,9 +11,12 @@ module DiscourseTagging
       new_tag_names = tag_names - old_tag_names
       removed_tag_names = old_tag_names - tag_names
 
+      hidden_tags = DiscourseTagging.hidden_tag_names
+
       # Protect staff-only tags
       unless guardian.is_staff?
-        staff_tags = DiscourseTagging.staff_only_tags(new_tag_names)
+        staff_tags = DiscourseTagging.staff_only_tags(new_tag_names) || []
+        staff_tags += hidden_tags & new_tag_names
         if staff_tags.present?
           topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" "))
           return false
@@ -24,6 +27,8 @@ module DiscourseTagging
           topic.errors[:base] << I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" "))
           return false
         end
+
+        tag_names += removed_tag_names & hidden_tags
       end
 
       category = topic.category

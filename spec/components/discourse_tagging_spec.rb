@@ -125,5 +125,28 @@ describe DiscourseTagging do
         expect(topic.errors[:base]).to be_empty
       end
     end
+
+    context 'hidden tags' do
+      let(:hidden_tag) { Fabricate(:tag) }
+      let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
+
+      it 'user cannot add hidden tag by knowing its name' do
+        expect(PostRevisor.new(post).revise!(topic.user, raw: post.raw + " edit", tags: [hidden_tag.name])).to be_falsey
+        expect(topic.reload.tags).to be_empty
+      end
+
+      it 'admin can add hidden tag' do
+        expect(PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name])).to be_truthy
+        expect(topic.reload.tags).to eq([hidden_tag])
+      end
+
+      it 'user does not get an error when editing their topic with a hidden tag' do
+        PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name])
+        expect(PostRevisor.new(post).revise!(topic.user, raw: post.raw + " edit", tags: [])).to be_truthy
+        expect(topic.reload.tags).to eq([hidden_tag])
+      end
+    end
   end
 end
