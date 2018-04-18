@@ -2690,7 +2690,7 @@ en:
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
-    forced_anonymous: "Site is under heavy load, we are temporarily presenting you with a cached anonymous view"
+    forced_anonymous: "Due to extreme load, this topic is temporarily being shown to everyone as a logged out user would see it."
 
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
