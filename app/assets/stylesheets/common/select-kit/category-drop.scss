@@ -70,6 +70,7 @@
         min-width: 100px;
         max-height: 300px;
         max-width: 30em;
+        padding: 4px 0;
 
         .collection-header {
           .category-filter {
@@ -79,7 +80,7 @@
             line-height: $line-height-medium;
             font-weight: bold;
             display: block;
-            padding: 10px 5px;
+            padding: 6px 10px;
 
             &:hover {
               text-decoration: underline;
@@ -101,7 +102,7 @@
         font-weight: bold;
         flex-direction: column;
         align-items: flex-start;
-        padding: 5px;
+        padding: 5px 10px;
 
         .category-desc {
           font-weight: normal;
@@ -117,7 +118,7 @@
         }
 
         &:not(.no-content) {
-          padding: 5px;
+          padding: 6px 10px;
         }
 
         .topic-count {

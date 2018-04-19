@@ -186,7 +186,7 @@ input {
   &[type="color"] {
     @include appearance-none;
     display: inline-block;
-    padding: 4px 10px;
+    padding: $input-padding;
     margin-bottom: 9px;
     font-size:  $font-0;
     line-height: $line-height-large;
