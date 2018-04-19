@@ -68,7 +68,7 @@ module Jobs
 
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
-            download_link = "#{Discourse.base_uri}/#{upload.url}"
+            download_link = upload.url
           else
             Rails.logger.warn("Failed to upload the file #{Discourse.base_uri}/export_csv/#{file_name}.gz")
           end
