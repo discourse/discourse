@@ -13,8 +13,7 @@ describe Validators::UploadValidator do
       created_upload = UploadCreator.new(csv_file, nil).create_for(user.id)
       validator.validate(created_upload)
       expect(created_upload).to_not be_valid
-      expect(created_upload.errors.full_messages.first)
-            .to include(I18n.t("activerecord.errors.messages.blank"))
+      expect(created_upload.errors.full_messages.first).to include(I18n.t("activerecord.errors.messages.blank"))
     end
 
     it "allows 'gz' as extension when uploading export file" do
