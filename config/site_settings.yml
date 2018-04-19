@@ -822,6 +822,10 @@ files:
     default: ''
     refresh: true
     type: list
+  export_authorized_extensions:
+    hidden: true
+    default: 'gz'
+    type: list
   crawl_images:
     default: true
   max_image_width:

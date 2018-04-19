@@ -710,9 +710,6 @@ Discourse::Application.routes.draw do
     collection do
       post "export_entity" => "export_csv#export_entity"
     end
-    member do
-      get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
-    end
   end
 
   get "onebox" => "onebox#show"

@@ -17,6 +17,7 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_group_message
   attr_accessor :for_theme
   attr_accessor :for_private_message
+  attr_accessor :for_export
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
