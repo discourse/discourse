@@ -20,6 +20,7 @@ class UploadCreator
   #  - for_theme (boolean)
   #  - for_private_message (boolean)
   #  - pasted (boolean)
+  #  - for_export (boolean)
   def initialize(file, filename, opts = {})
     @file = file
     @filename = filename || ''
@@ -84,6 +85,7 @@ class UploadCreator
       @upload.for_private_message = true if @opts[:for_private_message]
       @upload.for_group_message   = true if @opts[:for_group_message]
       @upload.for_theme           = true if @opts[:for_theme]
+      @upload.for_export          = true if @opts[:for_export]
 
       return @upload unless @upload.save
 
