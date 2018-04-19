@@ -118,7 +118,7 @@ SQL
         .map do |u|
           uri = begin
             URI.parse(u.url)
-          rescue URI::InvalidURIError
+          rescue URI::Error
           end
 
           [u, uri]
