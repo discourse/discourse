@@ -304,6 +304,7 @@ module Email
       [:mozilla, / class="moz-/],
       [:protonmail, / class="protonmail_/],
       [:zimbra, / data-marker="__/],
+      [:newton, /(id|class)="cm_/],
     ]
 
     def extract_from_gmail(doc)
@@ -357,6 +358,12 @@ module Email
     def extract_from_zimbra(doc)
       # Removes anything that has a 'data-marker' attribute
       elided = doc.css("*[data-marker]").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_newton(doc)
+      # Removes anything that has an id or a class starting with 'cm_'
+      elided = doc.css("*[id^='cm_'], *[class^='cm_']").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
