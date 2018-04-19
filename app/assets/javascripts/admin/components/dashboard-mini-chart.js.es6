@@ -11,22 +11,18 @@ export default Ember.Component.extend({
   total: null,
   trend: null,
   title: null,
-  chartData: null,
   oneDataPoint: false,
   backgroundColor: "rgba(200,220,240,0.3)",
   borderColor: "#08C",
 
+  didInsertElement() {
+    this._super();
+    this._initializeChart();
+  },
+
   didUpdateAttrs() {
     this._super();
-
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      if (this.get("model") && !this.get("chartData")) {
-        this._setPropertiesFromModel(this.get("model"));
-        this._drawChart();
-      } else if (this.get("dataSource")) {
-        this._fetchReport();
-      }
-    });
+    this._initializeChart();
   },
 
   @computed("dataSourceName")
@@ -75,13 +71,27 @@ export default Ember.Component.extend({
       });
   },
 
+  _initializeChart() {
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      if (this.get("model") && !this.get("values")) {
+        this._setPropertiesFromModel(this.get("model"));
+        this._drawChart();
+      } else if (this.get("dataSource")) {
+        this._fetchReport();
+      }
+    });
+  },
+
   _drawChart() {
-    const context = this.$(".chart-canvas")[0].getContext("2d");
+    const $chartCanvas = this.$(".chart-canvas");
+    if (!$chartCanvas.length) return;
+
+    const context = $chartCanvas[0].getContext("2d");
 
     const data = {
-      labels: this.get("chartData").map(r => r.x),
+      labels: this.get("labels"),
       datasets: [{
-        data: this.get("chartData").map(r => r.y),
+        data: this.get("values"),
         backgroundColor: this.get("backgroundColor"),
         borderColor: this.get("borderColor")
       }]
@@ -92,17 +102,18 @@ export default Ember.Component.extend({
 
   _setPropertiesFromModel(model) {
     this.setProperties({
+      labels: model.data.map(r => r.x),
+      values: model.data.map(r => r.y),
       oneDataPoint: (this.get("startDate") && this.get("endDate")) &&
                     this.get("startDate").isSame(this.get("endDate"), 'day'),
       total: model.total,
       title: model.title,
-      trend: this._computeTrend(model.total, model.prev30Days),
-      chartData: model.data
+      trend: this._computeTrend(model.total, model.prev30Days)
     });
   },
 
   _buildChartConfig(data) {
-    const values = this.get("chartData").map(d => d.y);
+    const values = this.get("values");
     const max = Math.max(...values);
     const min = Math.min(...values);
     const stepSize = Math.max(...[Math.ceil((max - min)/5), 20]);
