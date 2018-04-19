@@ -2,7 +2,7 @@ require_dependency 'topic_subtype'
 
 class Report
 
-  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id, :group_id
+  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id, :group_id, :labels
 
   def self.default_days
     30
@@ -26,7 +26,8 @@ class Report
      end_date: end_date,
      category_id: category_id,
      group_id: group_id,
-     prev30Days: self.prev30Days
+     prev30Days: self.prev30Days,
+     labels: labels
     }.tap do |json|
       if type == 'page_view_crawler_reqs'
         json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
@@ -260,5 +261,28 @@ class Report
 
     silenced = User.real.silenced.count
     report.data << { x: label.call("silenced"), y: silenced } if silenced > 0
+  end
+
+  def self.report_trending_search(report)
+    report.data = []
+
+    trends = SearchLog.select("term,
+       COUNT(*) AS searches,
+       SUM(CASE
+               WHEN search_result_id IS NOT NULL THEN 1
+               ELSE 0
+           END) AS click_through,
+       COUNT(DISTINCT ip_address) AS unique")
+      .where('created_at > ?  AND created_at <= ?', report.start_date, report.end_date)
+      .group(:term)
+      .order('COUNT(DISTINCT ip_address) DESC, COUNT(*) DESC')
+      .limit(20).to_a
+
+    label = Proc.new { |key| I18n.t("reports.trending_search.labels.#{key}") }
+    report.labels = [:term, :searches, :unique].map {|key| label.call(key) }
+
+    trends.each do |trend|
+      report.data << [trend.term, trend.searches, trend.unique]
+    end
   end
 end

@@ -1,72 +1,82 @@
 {{plugin-outlet name="admin-dashboard-top"}}
-
-
-  <div class="community-health section">
-    <div class="section-title">
-      <h2>{{i18n "admin.dashboard.community_health"}}</h2>
-      {{period-chooser period=period action="changePeriod"}}
-    </div>
-
-    <div class="section-body">
-      <div class="charts">
-        {{dashboard-mini-chart
-          model=global_reports_signups
-          dataSourceName="signups"
-          startDate=startDate
-          endDate=endDate
-          help="admin.dashboard.charts.signups.help"}}
-
-        {{dashboard-mini-chart
-          model=global_reports_topics
-          dataSourceName="topics"
-          startDate=startDate
-          endDate=endDate
-          help="admin.dashboard.charts.topics.help"}}
-      </div>
-    </div>
+{{lastRefreshedAt}}
+<div class="community-health section">
+  <div class="section-title">
+    <h2>{{i18n "admin.dashboard.community_health"}}</h2>
+    {{period-chooser period=period action="changePeriod"}}
   </div>
 
-  <div class="section-columns">
-    <div class="section-column">
-      {{dashboard-mini-table model=user_reports_users_by_type isLoading=isLoading}}
-      {{dashboard-mini-table model=user_reports_users_by_trust_level isLoading=isLoading}}
+  <div class="section-body">
+    <div class="charts">
+      {{dashboard-mini-chart
+        model=global_reports_signups
+        dataSourceName="signups"
+        startDate=startDate
+        endDate=endDate
+        help="admin.dashboard.charts.signups.help"}}
 
-      {{#conditional-loading-spinner isLoading=isLoading}}
-        <div class="misc">
-          <div class="durability">
-            {{#if currentUser.admin}}
-              <div class="backups">
-                <h3 class="durability-title"><a href="/admin/backups">{{i18n "admin.dashboard.backups"}}</a></h3>
-                <p>
-                  {{disk_space.backups_used}} ({{i18n "admin.dashboard.space_free" size=disk_space.backups_free}})
-                  <br />
-                  {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
-                </p>
-              </div>
-            {{/if}}
+      {{dashboard-mini-chart
+        model=global_reports_topics
+        dataSourceName="topics"
+        startDate=startDate
+        endDate=endDate
+        help="admin.dashboard.charts.topics.help"}}
+    </div>
+  </div>
+</div>
 
-            <div class="uploads">
-              <h3 class="durability-title">{{i18n "admin.dashboard.uploads"}}</h3>
+<div class="section-columns">
+  <div class="section-column">
+    {{dashboard-inline-table
+      model=user_reports_users_by_type
+      lastRefreshedAt=lastRefreshedAt
+      isLoading=isLoading}}
+
+    {{dashboard-inline-table
+      model=user_reports_users_by_trust_level
+      lastRefreshedAt=lastRefreshedAt
+      isLoading=isLoading}}
+
+    {{#conditional-loading-spinner isLoading=isLoading}}
+      <div class="misc">
+        <div class="durability">
+          {{#if currentUser.admin}}
+            <div class="backups">
+              <h3 class="durability-title"><a href="/admin/backups">{{i18n "admin.dashboard.backups"}}</a></h3>
               <p>
-                {{disk_space.uploads_used}} ({{i18n "admin.dashboard.space_free" size=disk_space.uploads_free}})
+                {{disk_space.backups_used}} ({{i18n "admin.dashboard.space_free" size=disk_space.backups_free}})
+                <br />
+                {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
               </p>
             </div>
+          {{/if}}
+
+          <div class="uploads">
+            <h3 class="durability-title">{{i18n "admin.dashboard.uploads"}}</h3>
+            <p>
+              {{disk_space.uploads_used}} ({{i18n "admin.dashboard.space_free" size=disk_space.uploads_free}})
+            </p>
           </div>
-
-          <hr />
-
-          <p class="last-dashboard-update">
-            {{i18n "admin.dashboard.last_updated"}} {{updatedTimestamp}}
-          </p>
-
-          <a rel="noopener" target="_blank" href="https://meta.discourse.org/t/discourse-2-0-0-beta6-release-notes/85241" class="btn">
-            {{i18n "admin.dashboard.whats_new_in_discourse"}}
-          </a>
         </div>
-      {{/conditional-loading-spinner}}
 
-    </div>
+        <hr />
 
-    <div class="section-column">
-    </div>
+        <p class="last-dashboard-update">
+          {{i18n "admin.dashboard.last_updated"}} {{updatedTimestamp}}
+        </p>
+
+        <a rel="noopener" target="_blank" href="https://meta.discourse.org/t/discourse-2-0-0-beta6-release-notes/85241" class="btn">
+          {{i18n "admin.dashboard.whats_new_in_discourse"}}
+        </a>
+      </div>
+    {{/conditional-loading-spinner}}
   </div>
+
+  <div class="section-column">
+    {{dashboard-table-trending-search
+      model=global_reports_trending_search
+      dataSourceName="trending_search"
+      startDate=startDate
+      endDate=endDate}}
+  </div>
+</div>

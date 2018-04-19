@@ -34,7 +34,7 @@ export default Ember.Controller.extend({
       }).finally(() => {
         this.set("isLoading", false);
       });
-    };
+    }
   },
 
   @computed("period")

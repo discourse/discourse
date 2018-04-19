@@ -9,8 +9,15 @@
     justify-content: space-between;
 
     .section-column {
-      flex: 1;
-      flex-grow: 1;
+      min-width: calc(50% - .5em);
+    }
+
+    .section-column:last-child {
+      margin-left: .5em;
+    }
+
+    .section-column:first-child {
+      margin-right: .5em;
     }
   }
 
@@ -33,7 +40,7 @@
     }
   }
 
-  .dashboard-mini-table {
+  .dashboard-table {
     margin-bottom: 1em;
 
     &.is-loading {
@@ -81,14 +88,9 @@
     flex-wrap: wrap;
 
     .dashboard-mini-chart {
-      flex-grow: 1;
       width: calc(100% * (1/3));
       margin-bottom: 1em;
-      margin-right: 1em;
-
-      &:last-child {
-        margin-right: 0;
-      }
+      flex-grow: 1;
 
       &.is-loading {
         height: 150px;
@@ -104,7 +106,7 @@
         display: flex;
 
         h3 {
-          margin: .5em 0;
+          margin: 1em 0;
         }
       }
 
@@ -142,6 +144,7 @@
 
     .chart-container {
       position: relative;
+      padding: 0 1em;
     }
 
     .chart-trend {
