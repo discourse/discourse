@@ -6,6 +6,7 @@ class AboutController < ApplicationController
 
   skip_before_action :check_xhr, only: [:index]
 
+  # 关于页面
   def index
     return redirect_to path('/login') if SiteSetting.login_required? && current_user.nil?
 

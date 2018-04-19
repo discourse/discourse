@@ -62,6 +62,7 @@ class ApplicationController < ActionController::Base
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
 
+  # 判断是不是爬虫
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
