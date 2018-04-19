@@ -278,8 +278,9 @@ class Report
       .order('COUNT(DISTINCT ip_address) DESC, COUNT(*) DESC')
       .limit(20).to_a
 
-    label = Proc.new { |key| I18n.t("reports.trending_search.labels.#{key}") }
-    report.labels = [:term, :searches, :unique].map {|key| label.call(key) }
+    report.labels = [:term, :searches, :unique].map { |key|
+      I18n.t("reports.trending_search.labels.#{key}")
+    }
 
     trends.each do |trend|
       report.data << [trend.term, trend.searches, trend.unique]
