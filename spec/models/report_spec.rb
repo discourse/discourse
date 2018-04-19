@@ -279,6 +279,37 @@ describe Report do
     end
   end
 
+  describe 'trending search report' do
+    let(:report) { Report.find('trending_search') }
+
+    context "no searches" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with different searches" do
+      before do
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
+        SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+
+        expect(report.data[0][0]).to eq "ruby"
+        expect(report.data[0][1]).to eq 3
+        expect(report.data[0][2]).to eq 2
+
+        expect(report.data[1][0]).to eq "php"
+        expect(report.data[1][1]).to eq 1
+        expect(report.data[1][2]).to eq 1
+      end
+    end
+  end
+
   describe 'posts counts' do
     it "only counts regular posts" do
       post = Fabricate(:post)

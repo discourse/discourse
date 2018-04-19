@@ -878,6 +878,12 @@ en:
         moderator: Moderator
         suspended: Suspended
         silenced: Silenced
+    trending_search:
+      title: Trending search
+      labels:
+        term: Term
+        searches: Searches
+        unique: Unique
     emails:
       title: "Emails Sent"
       xaxis: "Day"

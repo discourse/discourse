@@ -1,5 +1,5 @@
 export default Discourse.Route.extend({
-  setupController(controller) {
-    controller.fetchDashboard();
+  activate() {
+    this.controllerFor('admin-dashboard-next').fetchDashboard();
   }
 });
