@@ -141,7 +141,6 @@ export default Ember.Mixin.create({
             position.top -= $('html').scrollTop();
             //if content is fixed and will be cut off on the bottom, display it above...
             if(position.top + height + verticalAdjustments > $(window).height() - 50) {
-              console.log("adjusting... by " + (height + verticalAdjustments + 48));
               position.bottom = $(window).height() - (target.offset().top - $('html').scrollTop());
               if(verticalAdjustments > 0) {
                 position.bottom += 48;
