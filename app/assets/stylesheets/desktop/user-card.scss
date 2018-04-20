@@ -29,7 +29,7 @@ $user_card_background: $secondary;
 
   &.fixed {
     position: fixed;
-    z-index: 1000;
+    z-index: z("composer","content") + 1;
   }
 
   .card-content {
