@@ -86,6 +86,9 @@
           <div class="primary-textual">
             <h1 class="{{if nameFirst "full-name" "username"}}">{{if nameFirst model.name (format-username model.username)}} {{user-status model currentUser=currentUser}}</h1>
             <h2 class="{{if nameFirst "username" "full-name"}}">{{#if nameFirst}}{{model.username}}{{else}}{{model.name}}{{/if}}</h2>
+            {{#if model.staged}}
+              <h2 class="staged">{{i18n 'user.staged'}}</h2>
+            {{/if}}
             {{#if model.title}}
               <h3>{{model.title}}</h3>
             {{/if}}
@@ -191,7 +194,7 @@
             </dd>
             </div>
           {{/if}}
-          
+
           {{#if canDeleteUser}}
             <div>{{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
           {{/if}}

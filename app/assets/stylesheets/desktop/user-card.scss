@@ -41,9 +41,6 @@ $user_card_background: $secondary;
     a.card-huge-avatar {
       outline: none;
     }
-    .staged {
-      font-style: italic;
-    }
   }
 
   &.no-bg {
@@ -182,7 +179,7 @@ $user_card_background: $secondary;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: $user_card_primary;        
+        color: $user_card_primary;
     }
     .location {
       margin-right: .5em;
