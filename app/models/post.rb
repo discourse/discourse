@@ -682,26 +682,39 @@ class Post < ActiveRecord::Base
 
   MAX_REPLY_LEVEL ||= 1000
 
-  def reply_ids(guardian = nil)
-    replies = Post.exec_sql("
+  def reply_ids(guardian = nil, only_replies_to_single_post: true)
+    builder = SqlBuilder.new(<<~SQL, Post)
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
         SELECT reply_id, level + 1
-          FROM post_replies, breadcrumb
-         WHERE post_id = id
-           AND post_id <> reply_id
-           AND level < #{MAX_REPLY_LEVEL}
+        FROM post_replies AS r
+          JOIN breadcrumb AS b ON (r.post_id = b.id)
+        WHERE r.post_id <> r.reply_id
+              AND b.level < :max_reply_level
       ), breadcrumb_with_count AS (
-        SELECT id, level, COUNT(*)
-          FROM post_replies, breadcrumb
-         WHERE reply_id = id
-           AND reply_id <> post_id
-         GROUP BY id, level
+          SELECT
+            id,
+            level,
+            COUNT(*) AS count
+          FROM post_replies AS r
+            JOIN breadcrumb AS b ON (r.reply_id = b.id)
+          WHERE r.reply_id <> r.post_id
+          GROUP BY id, level
       )
-      SELECT id, level FROM breadcrumb_with_count WHERE level > 0 AND count = 1 ORDER BY id
-    ", post_id: id).to_a
+      SELECT id, level
+      FROM breadcrumb_with_count
+      /*where*/
+      ORDER BY id
+    SQL
 
+    builder.where("level > 0")
+
+    # ignore posts that aren't replies to exactly one post
+    # for example it skips a post when it contains 2 quotes (which are replies) from different posts
+    builder.where("count = 1") if only_replies_to_single_post
+
+    replies = builder.exec(post_id: id, max_reply_level: MAX_REPLY_LEVEL).to_a
     replies.map! { |r| { id: r["id"].to_i, level: r["level"].to_i } }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
