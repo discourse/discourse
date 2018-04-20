@@ -2812,6 +2812,9 @@ en:
         replies:
           one: "[1 reply]"
           other: "[%{count} replies]"
+        delete_replies:
+          one: "Also delete the %{count} reply to this post?"
+          other: "Also delete the %{count} replies to this post?"
 
         dispositions:
           agreed: "agreed"
