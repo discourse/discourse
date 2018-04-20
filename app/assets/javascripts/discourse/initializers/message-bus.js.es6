@@ -1,5 +1,20 @@
 // Initialize the message bus to receive messages.
 import pageVisible from 'discourse/lib/page-visible';
+import { handleLogoff } from 'discourse/lib/ajax';
+
+function ajax(opts) {
+  if (opts.complete) {
+    let oldComplete = opts.complete;
+    opts.complete = function(xhr, stat) {
+      handleLogoff(xhr);
+      oldComplete(xhr, stat);
+    };
+  } else {
+    opts.complete = handleLogoff;
+  }
+
+  return $.ajax(opts);
+}
 
 export default {
   name: "message-bus",
@@ -41,7 +56,7 @@ export default {
         if (pageVisible()) {
           opts.headers['Discourse-Visible'] = "true";
         }
-        return $.ajax(opts);
+        return ajax(opts);
       };
     } else {
 
@@ -50,7 +65,7 @@ export default {
         if (pageVisible()) {
           opts.headers['Discourse-Visible'] = "true";
         }
-        return $.ajax(opts);
+        return ajax(opts);
       };
 
       messageBus.baseUrl = Discourse.getURL('/');

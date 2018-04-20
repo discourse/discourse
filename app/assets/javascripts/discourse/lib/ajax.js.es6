@@ -13,6 +13,22 @@ export function viewTrackingRequired() {
   _trackView = true;
 }
 
+export function handleLogoff(xhr) {
+  if (xhr.getResponseHeader('Discourse-Logged-Out') && !_showingLogout) {
+    _showingLogout = true;
+    const messageBus = Discourse.__container__.lookup('message-bus:main');
+    messageBus.stop();
+    bootbox.dialog(
+      I18n.t("logout"), {label: I18n.t("refresh"), callback: logout},
+      {
+        onEscape: () => logout(),
+        backdrop: 'static'
+      }
+    );
+  }
+};
+
+
 /**
   Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
   for performance reasons. Also automatically adjusts the URL to support installs
@@ -59,19 +75,6 @@ export function ajax() {
     if (pageVisible()) {
       args.headers['Discourse-Visible'] = "true";
     }
-
-    let handleLogoff = function(xhr) {
-      if (xhr.getResponseHeader('Discourse-Logged-Out') && !_showingLogout) {
-        _showingLogout = true;
-        bootbox.dialog(
-          I18n.t("logout"), {label: I18n.t("refresh"), callback: logout},
-          {
-            onEscape: () => logout(),
-            backdrop: 'static'
-          }
-        );
-      }
-    };
 
     args.success = (data, textStatus, xhr) => {
       handleLogoff(xhr);
