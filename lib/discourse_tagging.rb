@@ -11,18 +11,19 @@ module DiscourseTagging
       new_tag_names = tag_names - old_tag_names
       removed_tag_names = old_tag_names - tag_names
 
-      hidden_tags = DiscourseTagging.hidden_tag_names
-
       # Protect staff-only tags
       unless guardian.is_staff?
-        staff_tags = DiscourseTagging.staff_only_tags(new_tag_names) || []
-        staff_tags += hidden_tags & new_tag_names
+        all_staff_tags = DiscourseTagging.staff_tag_names
+        hidden_tags = DiscourseTagging.hidden_tag_names
+
+        staff_tags = new_tag_names & all_staff_tags
+        staff_tags += new_tag_names & hidden_tags
         if staff_tags.present?
           topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" "))
           return false
         end
 
-        staff_tags = DiscourseTagging.staff_only_tags(removed_tag_names)
+        staff_tags = removed_tag_names & all_staff_tags
         if staff_tags.present?
           topic.errors[:base] << I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" "))
           return false
@@ -129,8 +130,8 @@ module DiscourseTagging
 
     if opts[:for_input] || opts[:for_topic]
       unless guardian.nil? || guardian.is_staff?
-        staff_tag_names = SiteSetting.staff_tags.split("|")
-        query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
+        all_staff_tags = DiscourseTagging.staff_tag_names
+        query = query.where('tags.name NOT IN (?)', all_staff_tags) if all_staff_tags.present?
       end
 
       # exclude tag groups that have a parent tag which is missing from selected_tags
@@ -176,45 +177,37 @@ module DiscourseTagging
   end
 
   def self.filter_visible(query, guardian = nil)
-    if !guardian&.is_staff? && TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).exists?
-      query.where(filter_visible_sql)
-    else
-      query
-    end
-  end
-
-  def self.filter_visible_sql
-    @filter_visible_sql ||= <<~SQL
-      tags.id NOT IN (
-        SELECT tgm.tag_id
-          FROM tag_group_memberships tgm
-    INNER JOIN tag_group_permissions tgp
-            ON tgp.tag_group_id = tgm.tag_group_id
-           AND tgp.group_id = #{Group::AUTO_GROUPS[:staff]})
-    SQL
+    guardian&.is_staff? ? query : query.where("tags.id NOT IN (#{hidden_tags_query.select(:id).to_sql})")
   end
 
   def self.hidden_tag_names(guardian = nil)
-    return [] if guardian&.is_staff? || !TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).exists?
-    tag_group_ids = TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).pluck(:tag_group_id)
-    Tag.includes(:tag_groups).where('tag_group_id in (?)', tag_group_ids).pluck(:name)
+    return [] if guardian&.is_staff?
+
+    hidden_tags_query.pluck(:name)
+  end
+
+  def self.hidden_tags_query
+    Tag.joins(:tag_groups)
+      .where('tag_groups.id NOT IN (
+        SELECT tag_group_id
+        FROM tag_group_permissions
+        WHERE group_id = ?)',
+        Group::AUTO_GROUPS[:everyone]
+      )
+  end
+
+  def self.staff_tag_names
+    Tag.joins(tag_groups: :tag_group_permissions)
+      .where('tag_group_permissions.group_id = ? AND tag_group_permissions.permission_type = ?',
+        Group::AUTO_GROUPS[:everyone],
+        TagGroupPermission.permission_types[:readonly]
+      ).pluck(:name)
   end
 
   def self.clean_tag(tag)
     tag.downcase.strip
       .gsub(/\s+/, '-').squeeze('-')
       .gsub(TAGS_FILTER_REGEXP, '')[0...SiteSetting.max_tag_length]
-  end
-
-  def self.staff_only_tags(tags)
-    return nil if tags.nil?
-
-    staff_tags = SiteSetting.staff_tags.split("|")
-
-    tag_diff = tags - staff_tags
-    tag_diff = tags - tag_diff
-
-    tag_diff.present? ? tag_diff : nil
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})

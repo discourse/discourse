@@ -4,7 +4,7 @@ class TagGroupPermission < ActiveRecord::Base
   belongs_to :group
 
   def self.permission_types
-    @permission_types ||= Enum.new(full: 1) #, see: 2
+    @permission_types ||= Enum.new(full: 1, readonly: 3)
   end
 end
 

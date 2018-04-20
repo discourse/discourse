@@ -74,6 +74,15 @@ describe DiscourseTagging do
       expect(tags.size).to eq(3)
       expect(tags).to contain_exactly(tag1, tag2, tag3)
     end
+
+    it 'returns staff only tags to everyone' do
+      create_staff_tags(['important'])
+      staff_tag = Tag.where(name: 'important').first
+      topic.tags << staff_tag
+      tags = DiscourseTagging.filter_visible(topic.tags, Guardian.new(user))
+      expect(tags.size).to eq(4)
+      expect(tags).to contain_exactly(tag1, tag2, tag3, staff_tag)
+    end
   end
 
   describe 'tag_topic_by_names' do
@@ -81,7 +90,7 @@ describe DiscourseTagging do
       let(:topic) { Fabricate(:topic) }
 
       before do
-        SiteSetting.staff_tags = "alpha"
+        create_staff_tags(['alpha'])
       end
 
       it "regular users can't add staff-only tags" do
