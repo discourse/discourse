@@ -1674,7 +1674,6 @@ en:
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the Tags page (/tags)."
     tag_style: "Visual style for tag badges."
-    staff_tags: "A list of tags that can only be applied by staff members"
     allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"

@@ -1605,10 +1605,6 @@ tags:
   tags_listed_by_group:
     client: true
     default: false
-  staff_tags:
-    type: list
-    client: true
-    default: ''
   allow_staff_to_tag_pms:
     default: false
   suppress_overlapping_tags_in_list:
