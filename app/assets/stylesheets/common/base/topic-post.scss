@@ -83,7 +83,7 @@
   big { font-size: 2rem; }
   small { font-size: 0.75rem; }
   small small { font-size: .75em; }
-  big big { font-size: 1em; } 
+  big big { font-size: 1em; }
   sub sub sub {bottom: 0;}
   sup sup sup {top: 0;}
 }
@@ -110,7 +110,7 @@
   .clearfix > .topic-meta-data > .names {
     span.user-title {
       background-color: dark-light-choose($highlight-low, $highlight-medium);
-      color: dark-light-choose($primary-high, $secondary-low);      
+      color: dark-light-choose($primary-high, $secondary-low);
       padding-left: 4px;
       padding-right: 4px;
     }
@@ -168,7 +168,6 @@ aside.quote {
   opacity: 0.4;
 }
 
-
 .quote-controls {
   float: right;
   display: flex;
@@ -204,7 +203,7 @@ aside.quote {
   background: blend-primary-secondary(5%);
   border: 1px solid $primary-low;
   border-top: none; // would cause double top border
-  
+
   .avatars {
     > div {
       float: left;
@@ -404,7 +403,7 @@ kbd
   background: dark-light-choose(#fafafa, #333);
   border: 1px solid dark-light-choose(#ccc, #555);
   border-bottom: medium none dark-light-choose(#fff, #000);
-  
+
   color: $primary;
   display: inline-block;
   font-size: $font-down-1;
@@ -469,7 +468,7 @@ blockquote > *:last-child {
   max-width: 755px;
   border-top: 1px solid $primary-low;
   .topic-avatar {
-    align-self: flex-start;    
+    align-self: flex-start;
     padding: .7em 0;
     border-top: none;
     margin-right: 11px;
@@ -490,7 +489,7 @@ blockquote > *:last-child {
   }
 
   .small-action-desc {
-    display: flex; 
+    display: flex;
     flex-wrap: wrap;
     flex: 1 1 100%;
     align-items: center;
@@ -501,7 +500,7 @@ blockquote > *:last-child {
     color: $primary-medium;
 
     .custom-message {
-      flex: 1 1 100%;      
+      flex: 1 1 100%;
       text-transform: none;
       font-weight: normal;
       font-size: $font-up-1;
