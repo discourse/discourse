@@ -864,10 +864,20 @@ describe GroupsController do
         ))
       end
 
-      it "returns 404 if member is not found" do
-        put "/groups/#{group.id}/members.json", params: { usernames: 'some donkey' }
+      it "returns 400 if member is not found" do
+        [
+          { usernames: "some thing" },
+          { user_ids: "-5,-6" },
+          { user_emails: "some@test.org" }
+        ].each do |params|
+          put "/groups/#{group.id}/members.json", params: params
 
-        expect(response.status).to eq(404)
+          expect(response.status).to eq(400)
+
+          body = JSON.parse(response.body)
+
+          expect(body["error_type"]).to eq("invalid_parameters")
+        end
       end
 
       context 'public group' do
