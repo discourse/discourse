@@ -10,9 +10,25 @@ end
 def setup_message_bus_env(env)
   return if env["__mb"]
 
+  extra_headers = {
+    "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
+    "Access-Control-Allow-Methods" => "GET, POST",
+    "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
+  }
+
   host = RailsMultisite::ConnectionManagement.host(env)
   RailsMultisite::ConnectionManagement.with_hostname(host) do
-    user = CurrentUser.lookup_from_env(env)
+    user = nil
+    begin
+      user = CurrentUser.lookup_from_env(env)
+    rescue Discourse::InvalidAccess => e
+      # this is bad we need to remove the cookie
+      if e.opts[:delete_cookie].present?
+        extra_headers['Set-Cookie'] = '_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      end
+    rescue => e
+      Discourse.warn_exception(e, message: "Unexpected error in Message Bus")
+    end
     user_id = user && user.id
     is_admin = !!(user && user.admin?)
     group_ids = if is_admin
@@ -21,12 +37,6 @@ def setup_message_bus_env(env)
     elsif user
       user.groups.pluck('groups.id')
     end
-
-    extra_headers = {
-      "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
-      "Access-Control-Allow-Methods" => "GET, POST",
-      "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
-    }
 
     if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
       extra_headers['Discourse-Logged-Out'] = '1'
