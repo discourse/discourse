@@ -76,7 +76,7 @@
 
   th,
   td {
-    padding: 7px 0;
+    padding: 10px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     max-width: 300px;
   }
@@ -175,8 +175,7 @@
 }
 
 tr.category-topic-link {
-  border-top: darken($secondary, 3%) 1px solid;
-  border-bottom: darken($secondary, 3%) 1px solid;
+  border-bottom: 1px solid $primary-low;
 }
 
 .topic-list.categories {
@@ -217,8 +216,9 @@ tr.category-topic-link {
 }
 
 .category-list-item {
-
+  padding: 5px 0 2px;
   border-left: 6px solid;
+  border-top: 1px solid;
 
   h3 {
     display: inline-block;
