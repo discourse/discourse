@@ -281,4 +281,40 @@ describe NewPostManager do
     end
   end
 
+  context 'when posting in the category requires approval' do
+    let(:user) { Fabricate(:user) }
+    let(:category) { Fabricate(:category) }
+
+    context 'when new topics require approval' do
+      before do
+        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+        category.save
+      end
+
+      it 'enqueues new topics' do
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new topic',
+          title: "Let's start a new topic!",
+          category: category.id
+        )
+
+        expect(manager.perform.action).to eq(:enqueued)
+      end
+    end
+
+    context 'when new posts require approval' do
+      let(:topic) { Fabricate(:topic, category: category) }
+
+      before do
+        category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
+        category.save
+      end
+
+      it 'enqueues new posts' do
+        manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
+        expect(manager.perform.action).to eq(:enqueued)
+      end
+    end
+  end
 end
