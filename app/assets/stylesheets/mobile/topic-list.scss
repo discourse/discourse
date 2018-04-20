@@ -176,6 +176,9 @@
 
 tr.category-topic-link {
   border-bottom: 1px solid $primary-low;
+  &:last-of-type {
+    border-bottom: none;
+  }
 }
 
 .topic-list.categories {
@@ -280,7 +283,7 @@ tr.category-topic-link {
     float: left;
   }
   > footer {
-    border-top: 0;
+    border-top: 1px solid $primary-low;
     padding: 7px 10px;
     figure {
       float: left;
