@@ -76,7 +76,7 @@
 
   th,
   td {
-    padding: 10px 0 0;
+    padding: 7px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     max-width: 300px;
   }
@@ -138,6 +138,10 @@
     padding: 12px 5px;
     color: dark-light-choose($primary-medium, $secondary-high);
     vertical-align: top;
+  }
+
+  th {
+    padding: 10px 0 0;
   }
 
   td:first-of-type {
