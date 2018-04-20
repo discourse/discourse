@@ -297,3 +297,16 @@ div.education {
   @extend .list-cell;
   border-bottom: 2px solid $primary-low;
 }
+
+// This is not what we want:
+//
+//     This is an overly-long topic title that would break just right
+//     *
+//
+// Instead, we want the line to break like this:
+//
+//     This is an overly-long topic title that would break just
+//     right *
+.topic-post-badges {
+  white-space: nowrap;
+}
