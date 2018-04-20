@@ -61,7 +61,7 @@ function organizeResults(r, options) {
     });
   }
 
-  if (options.term.match(/@/)) {
+  if (!options.disallowEmails && options.term.match(/@/)) {
     let e = { username: options.term };
     emails = [ e ];
     results.push(e);
