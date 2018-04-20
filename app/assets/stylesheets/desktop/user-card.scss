@@ -4,7 +4,7 @@
 $user_card_primary: $primary;
 $user_card_background: $secondary;
 
-#user-card {
+#user-card, #group-card {
   position: absolute;
   width: 500px;
   left: -9999px;
@@ -25,6 +25,11 @@ $user_card_background: $secondary;
   &.show {
     opacity: 1;
     @include transform(scale(1));
+  }
+
+  &.fixed {
+    position: fixed;
+    z-index: 1000;
   }
 
   .card-content {
