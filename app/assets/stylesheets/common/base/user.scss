@@ -42,7 +42,7 @@
           display: inline-flex;
           align-items: baseline;
           margin-right: 15px;
-          margin: 4px 0;          
+          margin: 4px 0;
         }
       }
 
@@ -70,7 +70,7 @@
 
       dt {
         color: $secondary-medium;
-        margin-right: 5px;        
+        margin-right: 5px;
         display: inline-block;
       }
     }
@@ -591,4 +591,9 @@
         padding: 5px 5px 0 5px;
         background-color: white;
     }
+}
+
+.primary-textual .staged,
+#user-card .staged {
+  font-style: italic;
 }
