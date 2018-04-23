@@ -470,4 +470,22 @@ describe StaffActionLogger do
       expect { log_check_personal_message }.to change { UserHistory.count }.by(1)
     end
   end
+
+  describe 'log_post_approved' do
+    let(:approved_post) { Fabricate(:post) }
+
+    subject(:log_post_approved) { described_class.new(admin).log_post_approved(approved_post) }
+
+    it 'raises an error when post is nil' do
+      expect { logger.log_post_approved(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when post is not a Post' do
+      expect { logger.log_post_approved(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_post_approved }.to change { UserHistory.count }.by(1)
+    end
+  end
 end
