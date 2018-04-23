@@ -156,7 +156,6 @@ a.reply-to-tab {
   margin: 10px 0;
 
   h4 {
-    margin: 0 0 3px 0;
     line-height: $line-height-medium;
   }
 
@@ -179,7 +178,7 @@ a.reply-to-tab {
         border-right: 0;
       }
     }
-    a, .number {
+    .number {
       line-height: $line-height-medium;
     }
     .number, i {
