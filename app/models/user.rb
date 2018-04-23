@@ -80,6 +80,8 @@ class User < ActiveRecord::Base
 
   has_one :api_key, dependent: :destroy
 
+  has_many :push_subscriptions, dependent: :destroy
+
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
   has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: 'GroupHistory'

@@ -55,6 +55,24 @@ function init(messageBus, appEvents) {
   }
 }
 
+function confirmNotification() {
+  const notification = new Notification(I18n.t("notifications.popup.confirm_title", {site_title: Discourse.SiteSettings.title}), {
+    body: I18n.t("notifications.popup.confirm_body"),
+    icon: Discourse.SiteSettings.logo_small_url || Discourse.SiteSettings.logo_url,
+    tag: "confirm-subscription"
+  });
+
+  function clickEventHandler() {
+    notification.close();
+  }
+
+  notification.addEventListener('click', clickEventHandler);
+  setTimeout(function() {
+    notification.close();
+    notification.removeEventListener('click', clickEventHandler);
+  }, 10 * 1000);
+}
+
 // This function is only called if permission was granted
 function setupNotifications(appEvents) {
 
@@ -167,4 +185,8 @@ function unsubscribe(bus, user) {
   bus.unsubscribe(alertChannel(user));
 }
 
-export { context, init, onNotification, unsubscribe, alertChannel };
+function disable() {
+  keyValueStore.setItem('notifications-disabled', 'disabled');
+}
+
+export { context, init, onNotification, unsubscribe, alertChannel, confirmNotification, disable };
