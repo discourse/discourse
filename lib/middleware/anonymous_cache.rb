@@ -104,20 +104,29 @@ module Middleware
         request.delete_param('api_key')
       end
 
-      def check_logged_in_rate_limit!
-        limiter = RateLimiter.new(
+      def logged_in_anon_limiter
+        @logged_in_anon_limiter ||= RateLimiter.new(
           nil,
           "logged_in_anon_cache_#{@env["HOST"]}/#{@env["REQUEST_URI"]}",
           GlobalSetting.force_anonymous_min_per_10_seconds,
           10
         )
-        !limiter.performed!(raise_error: false)
       end
 
+      def check_logged_in_rate_limit!
+        !logged_in_anon_limiter.performed!(raise_error: false)
+      end
+
+      MIN_TIME_TO_CHECK = 0.05
+
       def should_force_anonymous?
-        if queue_time = @env['REQUEST_QUEUE_SECONDS']
-          if queue_time > GlobalSetting.force_anonymous_min_queue_seconds && get?
+        if (queue_time = @env['REQUEST_QUEUE_SECONDS']) && get?
+          if queue_time > GlobalSetting.force_anonymous_min_queue_seconds
             return check_logged_in_rate_limit!
+          elsif queue_time >= MIN_TIME_TO_CHECK
+            if !logged_in_anon_limiter.can_perform?
+              return check_logged_in_rate_limit!
+            end
           end
         end
 
