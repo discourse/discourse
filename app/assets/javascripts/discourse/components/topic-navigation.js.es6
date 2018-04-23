@@ -1,5 +1,6 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 import showModal from 'discourse/lib/show-modal';
+import changesDOM from "discourse-common/lib/changes-dom";
 
 export default Ember.Component.extend({
   composerOpen: null,
@@ -10,9 +11,8 @@ export default Ember.Component.extend({
     this.set('info', Ember.Object.create());
   },
 
+  @changesDOM
   _performCheckSize() {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-
     let info = this.get('info');
 
     if (info.get('topicProgressExpanded')) {

@@ -3,6 +3,7 @@ import InputValidation from 'discourse/models/input-validation';
 import { load, lookupCache } from 'pretty-text/oneboxer';
 import { ajax } from 'discourse/lib/ajax';
 import afterTransition from 'discourse/lib/after-transition';
+import changesDOM from "discourse-common/lib/changes-dom";
 
 export default Ember.Component.extend({
   classNames: ['title-input'],
@@ -70,9 +71,8 @@ export default Ember.Component.extend({
     }
   },
 
+  @changesDOM
   _checkForUrl() {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-
     if (this.get('isAbsoluteUrl') && this.bodyIsDefault()) {
 
       // only feature links to external sites

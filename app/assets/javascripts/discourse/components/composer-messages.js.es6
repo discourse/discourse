@@ -1,4 +1,5 @@
 import LinkLookup from 'discourse/lib/link-lookup';
+import changesDOM from "discourse-common/lib/changes-dom";
 
 let _messagesCache = {};
 
@@ -71,8 +72,8 @@ export default Ember.Component.extend({
 
   // Resets all active messages.
   // For example if composing a new post.
+  @changesDOM
   reset() {
-    if (this.isDestroying || this.isDestroyed) { return; }
     this.setProperties({
       messages: [],
       messagesByTemplate: {},
@@ -84,9 +85,8 @@ export default Ember.Component.extend({
 
   // Called after the user has typed a reply.
   // Some messages only get shown after being typed.
+  @changesDOM
   _typedReply() {
-    if (this.isDestroying || this.isDestroyed) { return; }
-
     const composer = this.get('composer');
     if (composer.get('privateMessage')) {
       let usernames = composer.get('targetUsernames');

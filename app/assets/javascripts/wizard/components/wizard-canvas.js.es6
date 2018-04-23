@@ -1,3 +1,5 @@
+import changesDOM from "discourse-common/lib/changes-dom";
+
 const MAX_PARTICLES = 150;
 
 const SIZE = 144;
@@ -79,8 +81,9 @@ export default Ember.Component.extend({
     canvas.height = height;
   },
 
+  @changesDOM
   paint() {
-    if (this.isDestroying || this.isDestroyed || !this.ready) { return; }
+    if (!this.ready) { return; }
 
     const { ctx } = this;
     ctx.clearRect(0, 0, width, height);

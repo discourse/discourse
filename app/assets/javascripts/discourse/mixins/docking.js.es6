@@ -1,3 +1,5 @@
+import changesDOM from "discourse-common/lib/changes-dom";
+
 const helper = {
   offset() {
     const mainOffset = $('#main').offset();
@@ -16,8 +18,8 @@ export default Ember.Mixin.create({
     };
   },
 
+  @changesDOM
   safeDockCheck() {
-    if (this.isDestroyed || this.isDestroying) { return; }
     this.dockCheck(helper);
   },
 
