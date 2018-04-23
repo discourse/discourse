@@ -1201,6 +1201,9 @@ developer:
   bootstrap_error_pages:
     hidden: true
     default: false
+  enable_safe_mode:
+    default: true
+    client: true
 
 embedding:
   feed_polling_enabled:
