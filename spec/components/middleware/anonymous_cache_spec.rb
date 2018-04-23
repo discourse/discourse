@@ -79,18 +79,37 @@ describe Middleware::AnonymousCache::Helper do
         "rack.input" => StringIO.new
       }
 
-      app.call(env)
+      is_anon = false
+      app.call(env.dup)
       expect(is_anon).to eq(false)
 
-      app.call(env)
+      is_anon = false
+      app.call(env.dup)
       expect(is_anon).to eq(false)
 
-      app.call(env)
+      is_anon = false
+      app.call(env.dup)
       expect(is_anon).to eq(true)
 
-      _status, headers, _body = app.call(env)
+      is_anon = false
+      _status, headers, _body = app.call(env.dup)
       expect(is_anon).to eq(true)
       expect(headers['Set-Cookie']).to eq('dosp=1')
+
+      # tricky change, a 50ms delay still will trigger protection
+      # once it is tripped
+
+      env["REQUEST_QUEUE_SECONDS"] = 0.05
+      is_anon = false
+
+      app.call(env.dup)
+      expect(is_anon).to eq(true)
+
+      is_anon = false
+      env["REQUEST_QUEUE_SECONDS"] = 0.01
+
+      app.call(env.dup)
+      expect(is_anon).to eq(false)
     end
   end
 
