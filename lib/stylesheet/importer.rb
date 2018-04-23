@@ -64,7 +64,7 @@ module Stylesheet
         contents << category_css(c) if c.uploaded_background&.url.present?
       end
 
-      Import.new("categoy_background.scss", source: contents)
+      Import.new("category_background.scss", source: contents)
     end
 
     register_import "embedded_theme" do
