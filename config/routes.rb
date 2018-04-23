@@ -797,6 +797,10 @@ Discourse::Application.routes.draw do
 
   get "/themes/assets/:key" => "themes#assets"
 
+  if Rails.env == "test" || Rails.env == "development"
+    get "/qunit" => "qunit#index"
+  end
+
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 
 end
