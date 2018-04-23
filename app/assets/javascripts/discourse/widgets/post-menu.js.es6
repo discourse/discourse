@@ -12,7 +12,7 @@ function animateHeart($elem, start, end, complete) {
        .animate({ textIndent: end }, {
           complete,
           step(now) {
-            $(this).css('transform','scale('+now+')');
+            $(this).css('transform','scale('+now+')').addClass("fa-heart").removeClass("fa-heart-o");
           },
           duration: 150
         }, 'linear');
@@ -69,7 +69,7 @@ registerButton('like-count', attrs => {
     const title = attrs.liked
       ? count === 1 ? 'post.has_likes_title_only_you' : 'post.has_likes_title_you'
       : 'post.has_likes_title';
-      const icon = attrs.yours ? 'heart' : '';
+      const icon = attrs.yours ? 'heart-o' : '';
       const additionalClass = attrs.yours ? 'my-likes' : 'regular-likes';
 
     return { action: 'toggleWhoLiked',
