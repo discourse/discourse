@@ -296,16 +296,18 @@ describe Report do
         SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
       end
 
+      after do
+        SearchLog.clear_debounce_cache!
+      end
+
       it "returns a report with data" do
-        expect(report.data).to be_present
+        expect(report.data[0][0]).to eq("ruby")
+        expect(report.data[0][1]).to eq(3)
+        expect(report.data[0][2]).to eq(2)
 
-        expect(report.data[0][0]).to eq "ruby"
-        expect(report.data[0][1]).to eq 3
-        expect(report.data[0][2]).to eq 2
-
-        expect(report.data[1][0]).to eq "php"
-        expect(report.data[1][1]).to eq 1
-        expect(report.data[1][2]).to eq 1
+        expect(report.data[1][0]).to eq("php")
+        expect(report.data[1][1]).to eq(1)
+        expect(report.data[1][2]).to eq(1)
       end
     end
   end
