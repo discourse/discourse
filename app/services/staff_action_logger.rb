@@ -410,6 +410,14 @@ class StaffActionLogger
                                           context: topic.relative_url))
   end
 
+  def log_post_approved(post, opts = {})
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:post_approved],
+      post_id: post.id)
+    )
+  end
+
   private
 
     def params(opts = nil)

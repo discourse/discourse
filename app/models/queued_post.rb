@@ -77,6 +77,9 @@ class QueuedPost < ActiveRecord::Base
 
       unless created_post && creator.errors.blank?
         raise StandardError.new(creator.errors.full_messages.join(" "))
+      else
+        # Log post approval
+        StaffActionLogger.new(approved_by).log_post_approved(created_post)
       end
     end
 
