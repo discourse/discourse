@@ -7,15 +7,26 @@
 
 var args = process.argv.slice(2);
 
-if (args.length < 1 || args.length > 2) {
-  console.log("Usage: node run-qunit.js <URL> <timeout>");
+if (args.length < 1 || args.length > 3) {
+  console.log("Usage: node run-qunit.js <URL> <timeout> <result_file>");
   process.exit(1);
 }
 
 const chromeLauncher = require('chrome-launcher');
 const CDP = require('chrome-remote-interface');
 
-(function() {
+const QUNIT_RESULT = args[2];
+const fs = require('fs');
+
+if (QUNIT_RESULT) {
+  (async () => {
+    await fs.stat(QUNIT_RESULT, (err, stats) => {
+      if (stats && stats.isFile()) fs.unlink(QUNIT_RESULT);
+    });
+  })();
+}
+
+async function runAllTests() {
 
   function launchChrome() {
     const options = {
@@ -24,7 +35,7 @@ const CDP = require('chrome-remote-interface');
        '--headless',
        '--no-sandbox'
       ]
-    }
+    };
 
     if (process.env.REMOTE_DEBUG) {
       options.port = 9222;
@@ -33,74 +44,71 @@ const CDP = require('chrome-remote-interface');
     return chromeLauncher.launch(options);
   }
 
-  launchChrome().then(chrome => {
-    CDP({
-      port: chrome.port
-    }).then(protocol => {
-      const {Page, Runtime} = protocol;
-      Promise.all([Page.enable(), Runtime.enable()]).then(()=>{
+  let chrome = await launchChrome();
+  let protocol = await CDP({ port: chrome.port});
 
-        Runtime.consoleAPICalled((response) => {
-          const message = response['args'][0].value;
+  const {Page, Runtime} = protocol;
 
-          // If it's a simple test result, write without newline
-          if(message === "." || message === "F"){
-            process.stdout.write(message);
-          }else{
-            console.log(message);
-          }
-        });
+  await Promise.all([Page.enable(), Runtime.enable()]);
 
-        Page.navigate({
-          url: args[0]
-        });
+  Runtime.consoleAPICalled((response) => {
+    const message = response['args'][0].value;
 
-        Page.loadEventFired(() => {
+    // If it's a simple test result, write without newline
+    if(message === "." || message === "F"){
+      process.stdout.write(message);
+    } else if (message.startsWith("AUTOSPEC:")) {
+      fs.appendFileSync(QUNIT_RESULT, `${message.slice(10)}\n`);
+    } else {
+      console.log(message);
+    }
+  });
 
-          Runtime.evaluate({
-            expression: `(${qunit_script})()`
-          }).then(() => {
-            const timeout = parseInt(args[1] || 300000, 10);
-            var start = Date.now();
+  console.log("navigate to " + args[0]);
+  Page.navigate({url: args[0]});
 
-            var interval = setInterval(() => {
-              if (Date.now() > start + timeout) {
-                console.error("Tests timed out");
+  Page.loadEventFired(async () => {
 
-                protocol.close();
-                chrome.kill();
-                process.exit(124);
-              } else {
+    await Runtime.evaluate({ expression: `(${qunit_script})()`});
 
-                Runtime.evaluate({
-                  expression: `(${check_script})()`
-                }).then(numFails => {
-                  if (numFails.result.type !== 'undefined') {
-                    clearInterval(interval);
-                    protocol.close();
-                    chrome.kill();
+    const timeout = parseInt(args[1] || 300000, 10);
+    var start = Date.now();
 
-                    if (numFails.result.value > 0) {
-                      process.exit(1);
-                    } else {
-                      process.exit();
-                    }
-                  }
-                }).catch(error);
-              }
-            }, 250);
-          }).catch(error(1));
-        });
-      }).catch(error(3));
-    }).catch(error(4));
-  }).catch(error(5));
-})();
+    var interval;
 
-function error(code){
-  return function(){
-    console.log("A promise failed to resolve code:"+code);
-    process.exit(1);
-  };
+    let runTests = async function() {
+      if (Date.now() > start + timeout) {
+        console.error("Tests timed out");
+        protocol.close();
+        chrome.kill();
+        process.exit(124);
+      }
+
+      let numFails = await Runtime.evaluate({expression: `(${check_script})()`});
+
+      if (numFails && numFails.result && numFails.result.type !== 'undefined') {
+        clearInterval(interval);
+        protocol.close();
+        chrome.kill();
+
+        if (numFails.result.value > 0) {
+          process.exit(1);
+        } else {
+          process.exit();
+        }
+      }
+    };
+
+    interval = setInterval(runTests, 250);
+  });
+
+}
+
+try {
+  runAllTests();
+} catch(e) {
+  console.log("Failed to run tests: " + e);
+  process.exit(1);
 }
 
 // The following functions are converted to strings
@@ -122,9 +130,17 @@ function logQUnit() {
     }
   });
 
+  let durations = {};
+
   QUnit.testDone(function(context) {
+
+    durations[context.module + "::" + context.name] = context.runtime;
+
     if (context.failed) {
       var msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
+
+      /* QUNIT_RESULT */
+
       testErrors.push(msg);
       assertionErrors = [];
       console.log("F");
@@ -157,6 +173,14 @@ function logQUnit() {
       }
     }
 
+    console.log("Slowest tests");
+    console.log("----------------------------------------------");
+    let ary = Object.keys(durations).map((key) => ({ 'key': key, 'value': durations[key] }))
+    ary.sort((p1, p2) => (p2.value - p1.value));
+    ary.slice(0, 30).forEach(pair => {
+      console.log(pair.key + ": " + pair.value + "ms");
+    });
+
     var stats = [
       "Time: " + context.runtime + "ms",
       "Total: " + context.total,
@@ -164,14 +188,22 @@ function logQUnit() {
       "Failed: " + context.failed
     ];
     console.log(stats.join(", "));
+
+
     window.qunitDone = context;
   });
 }
-const qunit_script = logQUnit.toString();
+let qunit_script = logQUnit.toString();
+
+if (QUNIT_RESULT) {
+  qunit_script = qunit_script.replace("/* QUNIT_RESULT */", "console.log(`AUTOSPEC: ${context.module}:::${context.testId}:::${context.name}`);");
+
+}
 
 function check() {
   if(window.qunitDone){
     return window.qunitDone.failed;
   }
 }
+
 const check_script = check.toString();
