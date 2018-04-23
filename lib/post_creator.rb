@@ -291,22 +291,34 @@ class PostCreator
   end
 
   def auto_close
-    if @post.topic.private_message? &&
-        !@post.topic.closed &&
+    topic = @post.topic
+    is_private_message = topic.private_message?
+    topic_posts_count = @post.topic.posts_count
+
+    if is_private_message &&
+        !topic.closed &&
         SiteSetting.auto_close_messages_post_count > 0 &&
-        SiteSetting.auto_close_messages_post_count <= @post.topic.posts_count
+        SiteSetting.auto_close_messages_post_count <= topic_posts_count
 
-      @post.topic.update_status(:closed, true, Discourse.system_user,
-          message: I18n.t('topic_statuses.autoclosed_message_max_posts', count: SiteSetting.auto_close_messages_post_count))
-
-    elsif !@post.topic.private_message? &&
-        !@post.topic.closed &&
+      @post.topic.update_status(
+        :closed, true, Discourse.system_user,
+        message: I18n.t(
+          'topic_statuses.autoclosed_message_max_posts',
+          count: SiteSetting.auto_close_messages_post_count
+        )
+      )
+    elsif !is_private_message &&
+        !topic.closed &&
         SiteSetting.auto_close_topics_post_count > 0 &&
-        SiteSetting.auto_close_topics_post_count <= @post.topic.posts_count
+        SiteSetting.auto_close_topics_post_count <= topic_posts_count
 
-      @post.topic.update_status(:closed, true, Discourse.system_user,
-          message: I18n.t('topic_statuses.autoclosed_topic_max_posts', count: SiteSetting.auto_close_topics_post_count))
-
+      topic.update_status(
+        :closed, true, Discourse.system_user,
+        message: I18n.t(
+          'topic_statuses.autoclosed_topic_max_posts',
+          count: SiteSetting.auto_close_topics_post_count
+        )
+      )
     end
   end
 
@@ -405,16 +417,20 @@ class PostCreator
   end
 
   def update_topic_auto_close
-    topic_timer = @topic.public_topic_timer
+    if @topic.closed?
+      @topic.delete_topic_timer(TopicTimer.types[:close])
+    else
+      topic_timer = @topic.public_topic_timer
 
-    if topic_timer &&
-       topic_timer.based_on_last_post &&
-       topic_timer.duration > 0
+      if topic_timer &&
+         topic_timer.based_on_last_post &&
+         topic_timer.duration > 0
 
-      @topic.set_or_create_timer(TopicTimer.types[:close],
-        topic_timer.duration,
-        based_on_last_post: topic_timer.based_on_last_post
-      )
+        @topic.set_or_create_timer(TopicTimer.types[:close],
+          topic_timer.duration,
+          based_on_last_post: topic_timer.based_on_last_post
+        )
+      end
     end
   end
 
