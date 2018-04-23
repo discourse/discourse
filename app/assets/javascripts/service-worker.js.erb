@@ -80,7 +80,11 @@ self.addEventListener('fetch', function(event) {
         // If fetch() returns a valid HTTP response with an response code in the 4xx or 5xx
         // range, the catch() will NOT be called. If you need custom handling for 4xx or 5xx
         // errors, see https://github.com/GoogleChrome/samples/tree/gh-pages/service-worker/fallback-response
-        return caches.match(OFFLINE_URL);
+        if (!navigator.onLine) {
+          return caches.match(OFFLINE_URL);
+        } else {
+          throw error;
+        }
       })
     );
   }
