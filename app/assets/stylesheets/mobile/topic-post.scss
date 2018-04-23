@@ -64,7 +64,7 @@ span.badge-posts {
     button.like-count {
       font-size: $font-up-1;
       padding: 8px 4px;
-      i.fa-heart {
+      i.fa-heart, i.fa-heart-o {
         padding-left: 8px;
         color: dark-light-choose($primary-low-mid, $secondary-high);
       }
