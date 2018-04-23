@@ -101,7 +101,7 @@ const Topic = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function(tag){
-      if (title.toLowerCase().indexOf(tag) === -1 || Discourse.SiteSettings.staff_tags.indexOf(tag) !== -1) {
+      if (title.toLowerCase().indexOf(tag) === -1) {
         newTags.push(tag);
       }
     });
