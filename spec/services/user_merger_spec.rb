@@ -503,17 +503,23 @@ describe UserMerger do
     expect(post3.reload.rejected_by).to eq(target_user)
   end
 
-  it "updates search log entries" do
-    SearchLog.log(term: 'hello', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-    SearchLog.log(term: 'world', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-    SearchLog.log(term: 'star trek', search_type: :full_page, ip_address: '192.168.0.2', user_id: target_user.id)
-    SearchLog.log(term: 'bad', search_type: :full_page, ip_address: '192.168.0.3', user_id: walter.id)
+  describe 'search logs' do
+    after do
+      SearchLog.clear_debounce_cache!
+    end
 
-    merge_users!
+    it "updates search log entries" do
+      SearchLog.log(term: 'hello', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
+      SearchLog.log(term: 'world', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
+      SearchLog.log(term: 'star trek', search_type: :full_page, ip_address: '192.168.0.2', user_id: target_user.id)
+      SearchLog.log(term: 'bad', search_type: :full_page, ip_address: '192.168.0.3', user_id: walter.id)
 
-    expect(SearchLog.where(user_id: target_user.id).count).to eq(3)
-    expect(SearchLog.where(user_id: source_user.id).count).to eq(0)
-    expect(SearchLog.where(user_id: walter.id).count).to eq(1)
+      merge_users!
+
+      expect(SearchLog.where(user_id: target_user.id).count).to eq(3)
+      expect(SearchLog.where(user_id: source_user.id).count).to eq(0)
+      expect(SearchLog.where(user_id: walter.id).count).to eq(1)
+    end
   end
 
   it "merges tag notification settings" do
