@@ -201,7 +201,7 @@ module Middleware
         end
 
       if force_anon
-        result[1]["Set-Cookie"] = "dosp=1"
+        result[1]["Set-Cookie"] = "dosp=1; Path=/"
       end
 
       result
