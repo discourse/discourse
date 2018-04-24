@@ -434,7 +434,6 @@ gl:
       delete_account: "Eliminar a miña conta"
       delete_account_confirm: "Confirmas que queres eliminar definitivamente a túa conta? Esta acción non se pode desfacer!"
       deleted_yourself: "A túa conta acaba de ser eliminada completamente."
-      delete_yourself_not_allowed: "Non podes eliminar a túa conta neste intre. Contacta cun administrador para que este a elimine por ti. "
       unread_message_count: "Mensaxes"
       admin_delete: "Eliminar"
       users: "Usuarios"
@@ -933,9 +932,6 @@ gl:
         bookmarks: "Non hai máis temas marcados."
         search: "Non hai máis resultados da busca."
     topic:
-      unsubscribe:
-        stop_notifications: "Agora recibirás menos notificacións sobre <strong>{{title}}</strong>"
-        change_notification_state: "O estado actual das túas notificacións é"
       create: 'Novo tema'
       create_long: 'Crear un novo tema'
       private_message: 'Iniciar unha mensaxe'
@@ -1643,7 +1639,6 @@ gl:
         add: "Engadir"
         custom: "Personalizar"
         automatic: "Automático"
-        default_title: "Título predeterminado para os usuarios deste grupo"
         group_owners: Propietarios
         add_owners: Engadir propietarios
       api:

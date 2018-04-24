@@ -10,6 +10,3 @@ ur:
     presence:
       replying: "جواب دے رہے ہیں"
       editing: "ترمیم کر رہے ہیں"
-      replying_to_topic:
-        one: "جواب دے رہا ہے"
-        other: "جواب دے رہے ہیں"

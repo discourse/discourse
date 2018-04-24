@@ -1185,7 +1185,6 @@ ro:
     max_tags_in_filter_list: "Numărul maxim de etichete care să se afișeze într-un drop-down filtru. Vor fi afișate etichetele cele mai folosite."
     tags_sort_alphabetically: "Afișează etichetele în ordine alfabetică. Implicit, etichetele sunt afișate în ordinea popularității."
     tag_style: "Stil vizual pentru ecusoanele etichetă."
-    staff_tags: "O listă de etichete care nu poate fi aplicată decât de către membrii echipei."
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     remove_muted_tags_from_latest: "Nu afișa în lista subiectelor recente, subiectele ce au fost etichetate cu etichete setate pe silențios"

@@ -512,7 +512,6 @@ he:
       delete_account: "מחק את החשבון שלי"
       delete_account_confirm: "אתם בטוחים שברצונכם למחוק את החשבון? לא ניתן לבטל פעולה זו!"
       deleted_yourself: "חשבונך נמחק בהצלחה."
-      delete_yourself_not_allowed: "אתם לא יכולים למחוק את חשבונכם כרגע. צרו קשר עם מנהל כדי שימחק אותו בשבילכם."
       unread_message_count: "הודעות"
       admin_delete: "מחק"
       users: "משתמשים"
@@ -1196,9 +1195,6 @@ he:
         bookmarks: "אין עוד סימניות לנושאים."
         search: "אין עוד תוצאות חיפוש"
     topic:
-      unsubscribe:
-        stop_notifications: "תקבלו פחות התראות עבור <strong>{{title}}</strong>"
-        change_notification_state: "מצב ההתראות הנוכחי שלכם הוא"
       filter_to:
         one: "פוסט אחד בנושא"
         other: "{{count}} פוסטים בנושא"
@@ -2236,7 +2232,6 @@ he:
         add: "הוספה"
         custom: "מותאם"
         automatic: "אוטומטי"
-        default_title: "ברירת המחדל לכל המשתמשים בקבוצה זו"
         group_owners: מנהלים
         add_owners: הוספת בעלים
         none_selected: "בחירת קבוצה כדי להתחיל"

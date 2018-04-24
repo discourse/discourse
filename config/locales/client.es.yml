@@ -615,7 +615,7 @@ es:
       delete_account: "Borrar Mi Cuenta"
       delete_account_confirm: "¿Estás seguro que quieres borrar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
       deleted_yourself: "Tu cuenta ha sido borrada exitosamente."
-      delete_yourself_not_allowed: "No puedes borrar tu cuenta en este momento. Contacta a un administrador para borrar tu cuenta en tu nombre."
+      delete_yourself_not_allowed: "Por favor, contacta a un miembro del staff si quieres que se elimine tu cuenta."
       unread_message_count: "Mensajes"
       admin_delete: "Eliminar"
       users: "Usuarios"
@@ -924,15 +924,15 @@ es:
         unknown: "Error"
         not_found: "Página no encontrada"
       desc:
-        network: "Por favor revisa tu conexión."
+        network: "Por favor, revisa tu conexión."
         network_fixed: "Parece que ha vuelto."
         server: "Código de error: {{status}}"
         forbidden: "No estás permitido para ver eso."
         not_found: "¡Ups! la aplicación intentó cargar una URL inexistente."
         unknown: "Algo salió mal."
       buttons:
-        back: "Volver Atrás"
-        again: "Intentar de Nuevo"
+        back: "Volver atrás"
+        again: "Intentar de nuevo"
         fixed: "Cargar Página"
     close: "Cerrar"
     assets_changed_confirm: "Este sitio acaba de ser actualizado justo ahora. ¿Quieres recargar la página para ver la última versión?"
@@ -1042,7 +1042,7 @@ es:
       error: "Error desconocido"
       rate_limit: "Por favor, espera un poco antes de volver a intentar iniciar sesión."
       blank_username: "Por favor, introduce tu email o nombre de usuario."
-      blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
+      blank_username_or_password: "Por favor, introduce tu email o usuario, y tu contraseña."
       reset_password: 'Restablecer Contraseña'
       logging_in: "Iniciando Sesión..."
       or: "O"
@@ -1120,6 +1120,8 @@ es:
       no_content: Ninguna coincidencia encontrada
       filter_placeholder: Buscar...
       create: "Crear: `{{content}}'"
+      max_content_reached: "Solo puedes seleccionar {{count}}."
+      min_content_not_reached: "Selecciona al menos {{count}}."
     emoji_picker:
       filter_placeholder: Buscar emoji
       people: Personas
@@ -1176,6 +1178,7 @@ es:
         post_length: "El post debe tener por lo menos {{min}} caracteres."
         try_like: '¿Has probado el botón de <i class="fa fa-heart"></i>?'
         category_missing: "Debes escoger una categoría."
+        tags_missing: "Debes seleccionar al menos {{count}} etiquetas"
       save_edit: "Guardar edición"
       reply_original: "Responder en el Tema Original"
       reply_here: "Responder Aquí"
@@ -1196,6 +1199,7 @@ es:
       remove_featured_link: "Eliminar enlace del tema."
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
       reply_placeholder_no_images: "Escribe aquí. Usa Markdown, BBCode o HTML para dar formato."
+      reply_placeholder_choose_category: "Debes seleccionar una categoría antes de empezar a escribir aquí."
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando"
       saved: "¡Guardado!"
@@ -1326,7 +1330,11 @@ es:
       select_all: "Seleccionar todo"
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
+      result_count:
+        one: "<span>1 resultado para</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} resultados para</span><span class='term'>{{term}}</span>"
       title: "buscar temas, posts, usuarios o categorías"
+      full_page_title: "busca temas o mensajes"
       no_results: "No se ha encontrado ningún resultado."
       no_more_results: "No se encontraron más resultados."
       searching: "Buscando ..."
@@ -1433,7 +1441,7 @@ es:
         top: "No hay temas en el top más vistos."
         search: "No hay resultados de búsqueda."
         educate:
-          new: '<p>Tus temas nuevos aparecen aquí.</p><p>Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuevo</span> si fueron creados en los últimos 2 días.</p><p>Dirígite a <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
+          new: '<p>Tus temas nuevos aparecen aquí.</p><p>Por defecto, los temas se considerarán nuevos y mostrarán un indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuevo</span> si fueron creados en los últimos 2 días.</p><p>Dirígite a tus <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
           unread: '<p>Tus temas sin leer aparecen aquí.</p><p>Por defecto, los temas son considerados sin leer y mostrarán contadores de posts sin leer <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema por más de 4 minutos</li></ul><p>O si has establecido específicamente el tema como Siguiendo o Vigilando a través del control de notificaciones al pie de cada tema.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
       bottom:
         latest: "No hay más temas recientes para leer."
@@ -1447,14 +1455,12 @@ es:
         bookmarks: "No hay más temas guardados en marcadores."
         search: "No hay más resultados de búsqueda."
     topic:
-      unsubscribe:
-        stop_notifications: "Ahora recibirás menos notificaciones desde <strong>{{title}}</strong>"
-        change_notification_state: "El estado actual de notificación para ti es"
       filter_to:
         one: "1 post en el tema"
         other: "{{count}} posts en el tema"
       create: 'Crear tema'
       create_long: 'Crear un nuevo tema'
+      open_draft: "Abrir borrador"
       private_message: 'Empezar un mensaje'
       archive_message:
         help: 'Archivar mensaje'
@@ -2060,6 +2066,7 @@ es:
       default_position: "Posición predeterminada"
       position_disabled: "Las Categorías se mostrarán por orden de actividad. Para controlar el orden en que aparecen en las listas,"
       position_disabled_click: 'activa la opción "fixed category positions".'
+      minimum_required_tags: 'Número mínimo de etiquetas requeridas en un tema:'
       parent: "Categoría primaria"
       notifications:
         watching:
@@ -2430,6 +2437,8 @@ es:
         save: "Guardar"
         delete: "Eliminar"
         confirm_delete: "¿Seguro que quieres eliminar este grupo de etiquetas?"
+        everyone_can_use: "Las etiquetas pueden ser usadas por cualquiera"
+        usable_only_by_staff: "Las etiquetas son visibles para todo el mundo, pero solo el staff las puede utilizar"
         visible_only_to_staff: "Etiquetas solo visibles para staff"
       topics:
         none:
@@ -2458,6 +2467,7 @@ es:
       custom_message_placeholder: "Introducir un mensaje personalizado"
       custom_message_template_forum: "Hey, ¡quizá deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, he pensado que este tema te va a encantar!"
+    forced_anonymous: "Debido a una carga extrema en el servidor, esto se está mostrando temporalmente a todo el mundo como una persona sin iniciar sesión lo vería."
     safe_mode:
       enabled: "El modo seguro está activado, para salir del modo seguro cierra esta ventana del navegador"
   admin_js:
@@ -2492,11 +2502,19 @@ es:
         space_free: "{{size}} libre"
         uploads: "subidas"
         backups: "backups"
+        lastest_backup: "Última: %{date}"
         traffic_short: "Tráfico"
         traffic: "Peticiones web de la app"
         page_views: "Páginas vistas"
         page_views_short: "Páginas vistas"
         show_traffic_report: "Mostrar informe detallado del tráfico"
+        community_health: Salud de la comunidad
+        whats_new_in_discourse: ¿Qué hay nuevo en Discourse?
+        charts:
+          signups:
+            help: Usuarios creados en este periodo
+          topics:
+            help: Temas creados en este periodo
         reports:
           today: "Hoy"
           yesterday: "Ayer"
@@ -2637,7 +2655,8 @@ es:
         add: "Añadir"
         custom: "Personalizado"
         automatic: "Automático"
-        default_title: "Título por defecto para todos los miembros en este grupo"
+        default_title: "Título por defecto"
+        default_title_description: "se aplicará a todos los usuarios en el grupo"
         group_owners: Propietarios
         add_owners: Añadir propietarios
         none_selected: "Selecciona un grupo para empezar"
@@ -3112,6 +3131,7 @@ es:
             check_personal_message: "comprobar mensaje personal"
             disabled_second_factor: "desactivación de Verificación en dos pasos"
             topic_published: "tema despublicado"
+            post_approved: "post aprobado"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."

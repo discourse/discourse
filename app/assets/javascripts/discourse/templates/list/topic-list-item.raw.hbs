@@ -4,18 +4,25 @@
   </td>
 {{/if}}
 
+{{!--
+  The `~` syntax strip spaces between the elements, making it produce
+  `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,
+  with no space between them.
+  This causes the topic-post-badge to be considered the same word as "text"
+  at the end of the link, preventing it from line wrapping onto its own line.
+--}}
 <td class='main-link clearfix' colspan="{{titleColSpan}}">
   <span class='link-top-line'>
-    {{raw-plugin-outlet name="topic-list-before-status"}}
-    {{raw "topic-status" topic=topic}}
-    {{topic-link topic class="raw-link raw-topic-link"}}
-    {{#if topic.featured_link}}
-      {{topic-featured-link topic}}
-    {{/if}}
-    {{raw-plugin-outlet name="topic-list-after-title"}}
-    {{#if showTopicPostBadges}}
-      {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
-    {{/if}}
+    {{~raw-plugin-outlet name="topic-list-before-status"}}
+    {{~raw "topic-status" topic=topic}}
+    {{~topic-link topic class="raw-link raw-topic-link"}}
+    {{~#if topic.featured_link}}
+      {{~topic-featured-link topic}}
+    {{~/if}}
+    {{~raw-plugin-outlet name="topic-list-after-title"}}
+    {{~#if showTopicPostBadges}}
+      {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+    {{~/if}}
   </span>
 
   {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}

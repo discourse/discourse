@@ -52,7 +52,25 @@ const DiscourseRoute = Ember.Route.extend({
 
     refreshTitle() {
       Ember.run.once(this, this._refreshTitleOnce);
+    },
+
+    clearTopicDraft() {
+      // perhaps re-delegate this to root controller in all cases?
+      // TODO also poison the store so it does not come back from the
+      // dead
+      if (this.get('controller.list.draft')) {
+        this.set('controller.list.draft', null);
+      }
+
+      if (this.controllerFor("discovery/categories").get('model.draft')) {
+         this.controllerFor("discovery/categories").set('model.draft', null);
+      }
+
+      if (this.controllerFor("discovery/topics").get('model.draft')) {
+         this.controllerFor("discovery/topics").set('model.draft', null);
+      }
     }
+
   },
 
   redirectIfLoginRequired() {
@@ -63,17 +81,18 @@ const DiscourseRoute = Ember.Route.extend({
   },
 
   openTopicDraft(model){
-    // If there's a draft, open the create topic composer
-    if (model.draft) {
-      const composer = this.controllerFor('composer');
-      if (!composer.get('model.viewOpen')) {
-        composer.open({
-          action: Composer.CREATE_TOPIC,
-          draft: model.draft,
-          draftKey: model.draft_key,
-          draftSequence: model.draft_sequence
-        });
-      }
+    const composer = this.controllerFor('composer');
+
+    if (composer.get('model.action') === Composer.CREATE_TOPIC &&
+      composer.get('model.draftKey') === model.draft_key) {
+      composer.set('model.composeState', Composer.OPEN);
+    } else {
+      composer.open({
+        action: Composer.CREATE_TOPIC,
+        draft: model.draft,
+        draftKey: model.draft_key,
+        draftSequence: model.draft_sequence
+      });
     }
   },
 

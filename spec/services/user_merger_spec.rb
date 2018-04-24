@@ -503,17 +503,23 @@ describe UserMerger do
     expect(post3.reload.rejected_by).to eq(target_user)
   end
 
-  it "updates search log entries" do
-    SearchLog.log(term: 'hello', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-    SearchLog.log(term: 'world', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-    SearchLog.log(term: 'star trek', search_type: :full_page, ip_address: '192.168.0.2', user_id: target_user.id)
-    SearchLog.log(term: 'bad', search_type: :full_page, ip_address: '192.168.0.3', user_id: walter.id)
+  describe 'search logs' do
+    after do
+      SearchLog.clear_debounce_cache!
+    end
 
-    merge_users!
+    it "updates search log entries" do
+      SearchLog.log(term: 'hello', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
+      SearchLog.log(term: 'world', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
+      SearchLog.log(term: 'star trek', search_type: :full_page, ip_address: '192.168.0.2', user_id: target_user.id)
+      SearchLog.log(term: 'bad', search_type: :full_page, ip_address: '192.168.0.3', user_id: walter.id)
 
-    expect(SearchLog.where(user_id: target_user.id).count).to eq(3)
-    expect(SearchLog.where(user_id: source_user.id).count).to eq(0)
-    expect(SearchLog.where(user_id: walter.id).count).to eq(1)
+      merge_users!
+
+      expect(SearchLog.where(user_id: target_user.id).count).to eq(3)
+      expect(SearchLog.where(user_id: source_user.id).count).to eq(0)
+      expect(SearchLog.where(user_id: walter.id).count).to eq(1)
+    end
   end
 
   it "merges tag notification settings" do
@@ -696,7 +702,7 @@ describe UserMerger do
 
   context "user actions" do
     # action_type and user_id are not nullable
-    # target_topic_id and acting_user_id are nullable, but always a value
+    # target_topic_id and acting_user_id are nullable, but always have a value
 
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }
@@ -716,6 +722,14 @@ describe UserMerger do
                              acting_user_id: acting_user.id,
                              target_topic_id: post.topic_id,
                              target_post_id: post.id)
+    end
+
+    def log_got_private_message(acting_user, user, topic)
+      UserAction.log_action!(action_type: UserAction::GOT_PRIVATE_MESSAGE,
+                             user_id: user.id,
+                             acting_user_id: acting_user.id,
+                             target_topic_id: topic.id,
+                             target_post_id: -1)
     end
 
     it "merges when target_post_id is not set" do
@@ -747,6 +761,42 @@ describe UserMerger do
                                     user_id: walter.id,
                                     acting_user_id: target_user.id).pluck(:id)
       expect(action_ids).to contain_exactly(a2.id, a3.id)
+    end
+
+    it "merges when acting_user is neither source_user nor target_user" do
+      coding_horror = Fabricate(:coding_horror)
+
+      pm_topic1 = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: walter),
+        Fabricate.build(:topic_allowed_user, user: source_user),
+        Fabricate.build(:topic_allowed_user, user: target_user),
+        Fabricate.build(:topic_allowed_user, user: coding_horror),
+      ])
+
+      pm_topic2 = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: walter),
+        Fabricate.build(:topic_allowed_user, user: source_user)
+      ])
+
+      pm_topic3 = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: walter),
+        Fabricate.build(:topic_allowed_user, user: target_user)
+      ])
+
+      a1 = log_got_private_message(walter, source_user, pm_topic1)
+      a2 = log_got_private_message(walter, target_user, pm_topic1)
+      a3 = log_got_private_message(walter, coding_horror, pm_topic1)
+      a4 = log_got_private_message(walter, source_user, pm_topic2)
+      a5 = log_got_private_message(walter, target_user, pm_topic3)
+
+      merge_users!
+
+      expect(UserAction.count).to eq(4)
+
+      action_ids = UserAction.where(action_type: UserAction::GOT_PRIVATE_MESSAGE,
+                                    user_id: target_user.id,
+                                    acting_user_id: walter.id).pluck(:id)
+      expect(action_ids).to contain_exactly(a2.id, a4.id, a5.id)
     end
   end
 

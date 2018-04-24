@@ -1010,7 +1010,6 @@ tr_TR:
     max_tag_search_results: "Etiketler için arama yapılırken gösterilecek en fazla sonuç."
     tags_sort_alphabetically: "Etiketleri harf sırasına göre sırala. Öntanımlı olarak gözdelik seviyesine göre gösterilir."
     tag_style: "Etiket rozetleri için görsel biçim."
-    staff_tags: "Yalnızca görevli kişiler tarafından kullanılabilecek etiket listesi"
     min_trust_level_to_tag_topics: "Konulara etiket eklemek için gereken en az güven seviyesi."
     suppress_overlapping_tags_in_list: "Eğer etiketler konu ismi içerisinde tam kelime olarak bulunuyorsa, etiketi gösterme"
     company_short_name: "Firma İsmi (kısa)"

@@ -604,7 +604,6 @@ ur:
       delete_account: "میرا اکاؤنٹ حذف کریں"
       delete_account_confirm: "کیا آپ واقعی مستقل طور پر اپنا اکاؤنٹ حذف کرنا چاہتے ہیں؟ اس عمل کو کالعدم نہیں کیا جا سکتا!"
       deleted_yourself: "آپ کے اکاؤنٹ کو کامیابی سے حزف کر دیا گیا ہے۔"
-      delete_yourself_not_allowed: "آپ ابھی اپنے اکاؤنٹ کو حذف نہیں کرسکتے۔ آپ کے لئے اکاؤنٹ حزف کرنے کے لئے ایک ایڈمن سے رابطہ کریں۔"
       unread_message_count: "پیغامات"
       admin_delete: "حذف کریں"
       users: "صارفین"
@@ -1436,9 +1435,6 @@ ur:
         bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
         search: "سرچ کے مزید کوئی نتائج نہیں۔"
     topic:
-      unsubscribe:
-        stop_notifications: "اب آپ کو <strong>{{title}}</strong> کیلئے کم اطلاعات موصول ہوں گی"
-        change_notification_state: "آپ کا موجودہ نوٹیفکیشن حالت ہے"
       filter_to:
         one: "ٹاپک میں 1 پوسٹ"
         other: "ٹاپک میں {{count}} پوسٹس"
@@ -2589,7 +2585,6 @@ ur:
         add: "شامل کریں"
         custom: "اپنی مرضی کا"
         automatic: "خود کار طریقے سے"
-        default_title: "اِس گروپ میں تمام صارفین کے لئے پہلے سے طے شدہ عنوان"
         group_owners: مالکان
         add_owners: مالکان شامل کریں
         none_selected: "شروع کرنے کے لئے ایک گروپ منتخب کریں"

@@ -610,7 +610,6 @@ fi:
       delete_account: "Poista tilini"
       delete_account_confirm: "Oletko varma, että haluat lopullisesti poistaa käyttäjätilisi? Tätä toimintoa ei voi perua!"
       deleted_yourself: "Käyttäjätilisi on poistettu."
-      delete_yourself_not_allowed: "Et voi poistaa käyttäjätiliäsi juuti nyt. Sinun tulee pyytää ylläpitäjää poistamaan tilisi."
       unread_message_count: "Viestit"
       admin_delete: "Poista"
       users: "Käyttäjät"
@@ -1441,9 +1440,6 @@ fi:
         bookmarks: "Merkattuja ketjuja ei ole enempää."
         search: "Hakutuloksia ei ole enempää."
     topic:
-      unsubscribe:
-        stop_notifications: "Saat tästä lähtien vähemmän ilmoituksia aiheesta <strong>{{title}}</strong>"
-        change_notification_state: "Nykyinen ilmoitusasetuksesti on"
       filter_to:
         one: "1 viesti ketjussa"
         other: "{{count}} viestiä ketjussa"
@@ -2580,7 +2576,6 @@ fi:
         add: "Lisää"
         custom: "Mukautetut"
         automatic: "Automaattiset"
-        default_title: "Tämä ryhmän jäsenten oletustitteli"
         group_owners: Omistajat
         add_owners: Lisää omistajia
         none_selected: "Aloita valitsemalla ryhmä"

@@ -167,4 +167,13 @@ describe Jobs::CleanUpUploads do
     expect(Upload.find_by(id: upload.id)).to eq(upload)
   end
 
+  it "does not delete user exported csv uploads" do
+    csv_file = fabricate_upload
+    UserExport.create(file_name: "export.csv", user_id: Fabricate(:user).id, upload_id: csv_file.id)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.find_by(id: @upload.id)).to eq(nil)
+    expect(Upload.find_by(id: csv_file.id)).to eq(csv_file)
+  end
 end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe SearchLog, type: :model do
 
-  before do
+  after do
     SearchLog.clear_debounce_cache!
   end
 

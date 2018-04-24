@@ -715,6 +715,7 @@ fr:
     title: "Désabonné !"
     description: "<b>%{email}</b> a été désabonné. Pour modifier vos paramètres de courriel, <a href='%{url}'>visitez vos préférences utilisateurs</a>."
     topic_description: "Pour vous ré-abonner à %{link}, utilisez le contrôle des notifications en bas ou à droite du sujet."
+    private_topic_description: "Pour vous ré-abonner, utilisez le contrôle des notifications en bas ou à droite du sujet."
   unsubscribe:
     title: "Se désabonner"
     stop_watching_topic: "Arrêter de surveiller ce sujet, %{link}"
@@ -782,6 +783,21 @@ fr:
       title: "Utilisateurs par niveau de confiance"
       xaxis: "Niveau de confiance"
       yaxis: "Nombre d'utilisateurs"
+    users_by_type:
+      title: "Utilisateurs par type"
+      xaxis: "Type"
+      yaxis: "Nombre d'utilisateurs"
+      xaxis_labels:
+        admin: Administrateur
+        moderator: Modérateur
+        suspended: Suspendu
+        silenced: Sous silence
+    trending_search:
+      title: Recherche tendance
+      labels:
+        term: Terme
+        searches: Recherches
+        unique: Unique
     emails:
       title: "Courriels envoyés"
       xaxis: "Jour"
@@ -1440,7 +1456,6 @@ fr:
     tags_sort_alphabetically: "Afficher les tags par ordre alphabétique. Par défaut, ils sont affichés par ordre de popularité."
     tags_listed_by_group: "Lister les tags par groupe de tag sur la page Tags (/tags)."
     tag_style: "Style visuel pour tag badges."
-    staff_tags: "Une liste de tags qui ne peuvent être appliqués que par des responsables."
     allow_staff_to_tag_pms: "Autoriser les responsables à signaler n'importe quel message direct"
     min_trust_level_to_tag_topics: "Niveau de confiance minimum requis pour taguer des sujets"
     suppress_overlapping_tags_in_list: "Si des tags correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces tags"
@@ -1862,6 +1877,20 @@ fr:
 
     post_hidden_again:
       title: "Message caché à nouveau"
+      subject_template: "Message caché suite à des signalements de la communauté, responsables avertis"
+      text_body_template: |+
+        Bonjour,
+
+        Ceci est un message automatique de %{site_name} pour vous informer que votre message a été caché.
+
+        <%{base_url}%{url} >
+
+        %{flag_reason}
+
+        Plusieurs membres de la communauté ont signalé ce message avant qu'il ne soit masqué. **Puisque ce message a été caché plusieurs fois, il restera caché jusqu'à ce qu'un responsable puisse s'en occuper.**
+
+        Pour plus d'informations, merci de vous référer à notre [charte communautaire](%{base_url}/guidelines).
+
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces pour vous aider à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).

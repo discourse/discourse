@@ -13,6 +13,12 @@ export default Ember.Component.extend({
     return this.site.get('categoriesList');
   },
 
+  @computed('hasDraft')
+  createTopicLabel(hasDraft)
+  {
+    return hasDraft ? 'topic.open_draft': 'topic.create';
+  },
+
   @computed('category.can_edit')
   showCategoryEdit: canEdit => canEdit,
 

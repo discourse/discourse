@@ -324,7 +324,6 @@ uk:
       delete_account: "Видалити обліковий запис"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
-      delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
       unread_message_count: "Повідомлення"
       admin_delete: "Видалити"
       users: "Користувачі"

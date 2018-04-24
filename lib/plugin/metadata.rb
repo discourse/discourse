@@ -19,7 +19,6 @@ class Plugin::Metadata
     "Spoiler Alert!",
     "staff-notes",
     "GitHub badges",
-    "hosted-site",
     "lazyYT",
     "logster-rate-limit-checker",
     "poll",
@@ -35,7 +34,9 @@ class Plugin::Metadata
     "discourse-prometheus",
     "discourse-assign",
     "discourse-narrative-bot",
-    "discourse-presence"
+    "discourse-presence",
+    "discourse-staff-notes",
+    "discourse-voting"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]

@@ -651,8 +651,12 @@ posting:
     default: false
   notify_about_queued_posts_after:
     default: 24
-  auto_close_messages_post_count: 500
-  auto_close_topics_post_count: 10000
+  auto_close_messages_post_count:
+    default: 500
+    shadowed_by_global: true
+  auto_close_topics_post_count:
+    default: 10000
+    shadowed_by_global: true
   code_formatting_style:
     client: true
     type: enum
@@ -817,6 +821,10 @@ files:
     client: true
     default: ''
     refresh: true
+    type: list
+  export_authorized_extensions:
+    hidden: true
+    default: 'gz'
     type: list
   crawl_images:
     default: true
@@ -1193,6 +1201,9 @@ developer:
   bootstrap_error_pages:
     hidden: true
     default: false
+  enable_safe_mode:
+    default: true
+    client: true
 
 embedding:
   feed_polling_enabled:
@@ -1597,10 +1608,6 @@ tags:
   tags_listed_by_group:
     client: true
     default: false
-  staff_tags:
-    type: list
-    client: true
-    default: ''
   allow_staff_to_tag_pms:
     default: false
   suppress_overlapping_tags_in_list:

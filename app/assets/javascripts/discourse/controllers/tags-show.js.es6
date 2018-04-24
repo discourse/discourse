@@ -61,6 +61,10 @@ export default Ember.Controller.extend(BulkTopicSelection, {
 
   categories: Ember.computed.alias('site.categoriesList'),
 
+  createTopicLabel: function() {
+    return this.get('list.draft') ? 'topic.open_draft' : 'topic.create';
+  }.property('list', 'list.draft'),
+
   @computed('canCreateTopic', 'category', 'canCreateTopicOnCategory')
   createTopicDisabled(canCreateTopic, category, canCreateTopicOnCategory) {
     return !canCreateTopic || (category && !canCreateTopicOnCategory);

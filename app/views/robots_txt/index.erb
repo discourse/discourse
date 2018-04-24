@@ -1,26 +1,18 @@
-# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+<%= @robots_info[:header] %>
 <% if Discourse.base_uri.present? %>
 # This robots.txt file is not used. Please append the content below in the robots.txt file located at the root
 <% end %>
 #
-<% @allowed_user_agents.each do |user_agent| %>
-User-agent: <%= user_agent %>
-<% end %>
-<% RobotsTxtController::DISALLOWED_PATHS.each do |path| %>
-Disallow: <%= Discourse.base_uri + path %>
+<% @robots_info[:agents].each do |agent| %>
+User-agent: <%= agent[:name] %>
+<%- if agent[:delay] -%>
+Crawl-delay: <%= agent[:delay] %>
+<%- end -%>
+<% agent[:disallow].each do |path| %>
+Disallow: <%= path %>
 <% end %>
 
-<% if @disallowed_user_agents %>
-  <% @disallowed_user_agents.each do |user_agent| %>
-User-agent: <%= user_agent %>
-Disallow: <%= Discourse.base_uri + "/" %>
 
-  <% end %>
 <% end %>
 
 <%= server_plugin_outlet "robots_txt_index" %>
-
-<% @crawler_delayed_agents.each do |agent, delay| %>
-User-agent: <%= agent %>
-Crawl-delay: <%= delay %>
-<% end %>

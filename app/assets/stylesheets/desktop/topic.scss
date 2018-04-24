@@ -168,6 +168,7 @@
     top: 0;
     bottom: 0;
     width: 0;
+    max-width: 145px;
     border-right: 1px solid  $tertiary-low;
     background-color:  $tertiary-low;
     transition: width .75s;

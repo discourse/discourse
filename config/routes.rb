@@ -230,6 +230,8 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
+    get "dashboard-next" => "dashboard_next#index"
+
     resources :dashboard, only: [:index] do
       collection do
         get "problems"
@@ -449,6 +451,7 @@ Discourse::Application.routes.draw do
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
   get "posts/:id/reply-history" => "posts#reply_history"
   get "posts/:id/reply-ids"     => "posts#reply_ids"
+  get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: { username: RouteFormat.username }
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: { username: RouteFormat.username }
 
@@ -648,8 +651,6 @@ Discourse::Application.routes.draw do
   get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
   get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: { topic_id: /\d+/ }
   get "t/:slug/:topic_id/summary" => "topics#show", defaults: { summary: true }, constraints: { topic_id: /\d+/ }
-  get "t/:slug/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: { topic_id: /\d+/ }
-  get "t/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: { topic_id: /\d+/ }
   get "t/:topic_id/summary" => "topics#show", constraints: { topic_id: /\d+/ }
   put "t/:slug/:topic_id" => "topics#update", constraints: { topic_id: /\d+/ }
   put "t/:slug/:topic_id/star" => "topics#star", constraints: { topic_id: /\d+/ }
@@ -710,9 +711,6 @@ Discourse::Application.routes.draw do
     collection do
       post "export_entity" => "export_csv#export_entity"
     end
-    member do
-      get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
-    end
   end
 
   get "onebox" => "onebox#show"
@@ -744,6 +742,7 @@ Discourse::Application.routes.draw do
   get "favicon/proxied" => "static#favicon", format: false
 
   get "robots.txt" => "robots_txt#index"
+  get "robots-builder.json" => "robots_txt#builder"
   get "offline.html" => "offline#index"
   get "manifest.json" => "metadata#manifest", as: :manifest
   get "opensearch" => "metadata#opensearch", format: :xml
@@ -798,6 +797,10 @@ Discourse::Application.routes.draw do
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
   get "/themes/assets/:key" => "themes#assets"
+
+  if Rails.env == "test" || Rails.env == "development"
+    get "/qunit" => "qunit#index"
+  end
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 

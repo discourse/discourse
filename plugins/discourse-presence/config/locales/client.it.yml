@@ -10,6 +10,3 @@ it:
     presence:
       replying: "sta rispondendo"
       editing: "modificando"
-      replying_to_topic:
-        one: "sta rispondendo"
-        other: "stanno rispondendo"

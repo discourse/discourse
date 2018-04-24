@@ -161,7 +161,7 @@ describe SearchController do
   end
 
   context "#click" do
-    before do
+    after do
       SearchLog.clear_debounce_cache!
     end
 

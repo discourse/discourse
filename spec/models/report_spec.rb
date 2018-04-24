@@ -250,6 +250,68 @@ describe Report do
     end
   end
 
+  describe 'users by types level report' do
+    let(:report) { Report.find('users_by_type') }
+
+    context "no users" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with users at different trust levels" do
+      before do
+        3.times { Fabricate(:user, admin: true) }
+        2.times { Fabricate(:user, moderator: true) }
+        UserSilencer.silence(Fabricate(:user), Fabricate.build(:admin))
+        Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+
+        label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
+        expect(report.data.find { |d| d[:x] == label.call("admin") }[:y]).to eq 3
+        expect(report.data.find { |d| d[:x] == label.call("moderator") }[:y]).to eq 2
+        expect(report.data.find { |d| d[:x] == label.call("silenced") }[:y]).to eq 1
+        expect(report.data.find { |d| d[:x] == label.call("suspended") }[:y]).to eq 1
+      end
+    end
+  end
+
+  describe 'trending search report' do
+    let(:report) { Report.find('trending_search') }
+
+    context "no searches" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with different searches" do
+      before do
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
+        SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
+      end
+
+      after do
+        SearchLog.clear_debounce_cache!
+      end
+
+      it "returns a report with data" do
+        expect(report.data[0][0]).to eq("ruby")
+        expect(report.data[0][1]).to eq(3)
+        expect(report.data[0][2]).to eq(2)
+
+        expect(report.data[1][0]).to eq("php")
+        expect(report.data[1][1]).to eq(1)
+        expect(report.data[1][2]).to eq(1)
+      end
+    end
+  end
+
   describe 'posts counts' do
     it "only counts regular posts" do
       post = Fabricate(:post)

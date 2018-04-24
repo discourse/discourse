@@ -798,6 +798,7 @@ en:
     title: "Unsubscribed!"
     description: "<b>%{email}</b> has been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
+    private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
   unsubscribe:
     title: "Unsubscribe"
@@ -868,6 +869,21 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+    users_by_type:
+      title: "Users per Type"
+      xaxis: "Type"
+      yaxis: "Number of Users"
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Suspended
+        silenced: Silenced
+    trending_search:
+      title: Trending search
+      labels:
+        term: Term
+        searches: Searches
+        unique: Unique
     emails:
       title: "Emails Sent"
       xaxis: "Day"
@@ -1243,6 +1259,7 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     rebake_old_posts_count: "Number of old posts to be rebaked every 15 minutes."
+    enable_safe_mode: "Allow users to enter safe mode to debug plugins."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -1658,7 +1675,6 @@ en:
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the Tags page (/tags)."
     tag_style: "Visual style for tag badges."
-    staff_tags: "A list of tags that can only be applied by staff members"
     allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"

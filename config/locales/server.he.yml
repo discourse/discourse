@@ -29,6 +29,7 @@ he:
   loading: "טוען"
   powered_by_html: 'מופעל על ידי <a href="https://www.discourse.org">דיסקורס</a>, לצפיה מיטבית יש להפעיל JavaScript'
   log_in: "כניסה"
+  submit: "הגשה"
   purge_reason: "נמחק אוטומטית כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אחסון פנוי."
   anonymous: "אלמוני"
@@ -36,6 +37,8 @@ he:
   themes:
     bad_color_scheme: "לא ניתן לעדכן את התמה, סכמת צבעים שגויה"
     other_error: "ארעה שגיאה בזמן עדכון התמה"
+    settings_errors:
+      invalid_yaml: "ה־YAML שסופק שגוי."
   emails:
     incoming:
       default_subject: "נושא זה צריך כותרת"
@@ -1264,7 +1267,6 @@ he:
     max_tags_in_filter_list: "מספר מירבי של תגיות להצגה בתפריט הסינון הנפתח. יוצגו התגים שבשימוש הרב ביותר."
     tags_sort_alphabetically: "הצגת תגים בסדר אלפביתי. ברירת המחדל היא להציג אותם על פי פופולאריות."
     tag_style: "סגנון ויזואלי לתג עיטורים."
-    staff_tags: "רשימת תגים שניתנים להחלה רק על ידי אנשי צוות"
     min_trust_level_to_tag_topics: "רמת אמון מינימלית שדרושה כדי לתייג נושאים"
     suppress_overlapping_tags_in_list: "אם תגים תואמים בדיוק מילים בכותרות נושאים, אל תציגו את התגים"
     remove_muted_tags_from_latest: "אל תציגו נושאים מתוייגים עם תגים מושתקים ברשימת הנושאים האחרונים."

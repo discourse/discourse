@@ -454,7 +454,6 @@ th:
       delete_account: "ลบบัญชีของคุณ"
       delete_account_confirm: "คุณแน่ใจใหม่ที่จะลบบัญชีอย่างถาวร? การกระทำนี้ไม่สามารถยกเลิกได้"
       deleted_yourself: "คุณลบบัญชีเสร็จเเรียบร้อยแล้ว"
-      delete_yourself_not_allowed: "คุณไม่สามารถลบบัญชีได้ในขณะนี้ กรุณาติดต่อผู้ดูแลระบบเพื่อลบบัญชีของคุณ"
       unread_message_count: "ข้อความ"
       admin_delete: "ลบ"
       users: "ผู้ใช้"

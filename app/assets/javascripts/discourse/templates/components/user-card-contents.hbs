@@ -1,8 +1,7 @@
 {{#if visible}}
   <div class="card-content">
-
     <div class="user-card-avatar">
-      <a href={{user.path}} {{action "showUser"}} class="card-huge-avatar">{{bound-avatar avatar "huge"}}</a>
+      <a href={{user.path}} {{action "showUser"}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
       {{#if user.primary_group_name}}
         {{avatar-flair
           flairURL=user.primary_group_flair_url
@@ -24,7 +23,7 @@
           {{#if user.name}}
             <h2 class='full-name'>{{user.name}}</h2>
           {{/if}}
-        {{else}}
+{{else}}
           <h2 class='username'>{{username}}</h2>
         {{/unless}}
 

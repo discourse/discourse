@@ -432,11 +432,10 @@ describe Search do
       end
 
       it 'shows staff tags' do
-        staff_tag = Fabricate(:tag, name: "#{tag.name}9")
-        SiteSetting.staff_tags = "#{staff_tag.name}"
+        create_staff_tags(["#{tag.name}9"])
 
-        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags).to contain_exactly(tag, staff_tag)
-        expect(search.tags).to contain_exactly(tag, staff_tag)
+        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
+        expect(search.tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
       end
 
       it 'includes category-restricted tags' do

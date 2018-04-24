@@ -635,7 +635,6 @@ ar:
       delete_account: "أحذف الحسابي"
       delete_account_confirm: "أمتأكّد من حذف حسابك للأبد؟ هذا إجراء لا عودة فيه!"
       deleted_yourself: "حُذف حسابك بنجاح."
-      delete_yourself_not_allowed: "لا يمكنك حذف حسابك الآن. راسل أحد المدراء لحذف حسابك."
       unread_message_count: "الرسائل"
       admin_delete: "أحذف"
       users: "الأعضاء"
@@ -1420,9 +1419,6 @@ ar:
         bookmarks: "لا يوجد موضوعات عليها علامة مرجعية اخري."
         search: "لا يوجد نتائج بحث أخرى."
     topic:
-      unsubscribe:
-        stop_notifications: "انت الأن تستقبل اشعارات اقل عن<strong>{{title}}</strong>"
-        change_notification_state: "حالة اشعاراتك الحالية هي "
       filter_to:
         zero: "لا يوجد منشورات في الموضوع"
         one: "منشور واحد في الموضوع"
@@ -2731,7 +2727,6 @@ ar:
         add: "اضافة"
         custom: "مخصص"
         automatic: "تلقائي"
-        default_title: "العنوان الافتراضي لكل أعضاء هذه المجموعة"
         group_owners: الملّاك
         add_owners: اضف ملّاكً
         none_selected: "اختر مجموعة للبدء"

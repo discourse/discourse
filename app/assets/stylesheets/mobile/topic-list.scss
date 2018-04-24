@@ -85,6 +85,7 @@
 
   .badge-notification, .category-topic-link td.num .badge-notification {
     position: relative;
+    display: inline;
     top: -1px;
     font-size: $font-down-1;
     padding: 4px 6px 3px 6px;
@@ -140,6 +141,10 @@
     vertical-align: top;
   }
 
+  th {
+    padding: 10px 0 0;
+  }
+
   td:first-of-type {
     padding-left: 10px;
   }
@@ -175,8 +180,10 @@
 }
 
 tr.category-topic-link {
-  border-top: darken($secondary, 3%) 1px solid;
-  border-bottom: darken($secondary, 3%) 1px solid;
+  border-bottom: 1px solid $primary-low;
+  &:last-of-type {
+    border-bottom: none;
+  }
 }
 
 .topic-list.categories {
@@ -217,8 +224,9 @@ tr.category-topic-link {
 }
 
 .category-list-item {
-
+  padding: 5px 0 2px;
   border-left: 6px solid;
+  border-top: 1px solid;
 
   h3 {
     display: inline-block;
@@ -280,7 +288,7 @@ tr.category-topic-link {
     float: left;
   }
   > footer {
-    border-top: 0;
+    border-top: 1px solid $primary-low;
     padding: 7px 10px;
     figure {
       float: left;

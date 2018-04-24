@@ -30,8 +30,9 @@
       .select-kit-collection {
         display: flex;
         flex-direction: column;
-        padding: 0;
         max-height: 300px;
+        padding: 4px 0;
+        
 
         .collection-header {
           .tag-filter {
@@ -41,7 +42,7 @@
             line-height: $line-height-medium;
             font-weight: bold;
             display: block;
-            padding: 5px;
+            padding: 6px 10px;
 
             &:hover {
               text-decoration: underline;

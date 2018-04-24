@@ -355,7 +355,7 @@ class UserMerger
                    conditions: ["x.action_type = y.action_type",
                                 "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
                                 "x.target_post_id IS NOT DISTINCT FROM y.target_post_id",
-                                "x.acting_user_id IN (:source_user_id, :target_user_id)"])
+                                "(x.acting_user_id IN (:source_user_id, :target_user_id) OR x.acting_user_id IS NOT DISTINCT FROM y.acting_user_id)"])
     update_user_id(:user_actions,
                    user_id_column_name: "acting_user_id",
                    conditions: ["x.action_type = y.action_type",
