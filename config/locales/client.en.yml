@@ -3667,6 +3667,8 @@ en:
           likes_received: "Likes Received"
           likes_received_days: "Likes Received: unique days"
           likes_received_users: "Likes Received: unique users"
+          suspended: "Suspended (all time)"
+          silenced: "Silenced (all time)"
           qualifies: "Qualifies for trust level 3."
           does_not_qualify: "Doesn't qualify for trust level 3."
           will_be_promoted: "Will be promoted soon."
