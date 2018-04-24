@@ -1168,7 +1168,6 @@ zh_TW:
     max_tags_in_filter_list: "過濾下拉選單中顯示的標籤數上限。優先顯示最常用的標籤。"
     tags_sort_alphabetically: "按照字母順序顯示標籤。預設按流行度顯示。"
     tag_style: "標籤的視覺樣式。"
-    staff_tags: "只可由管理人員使用的標籤列表"
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     remove_muted_tags_from_latest: "在最新主題列表中，不顯示有靜音標籤的主題。"

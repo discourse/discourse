@@ -524,7 +524,6 @@ et:
       delete_account: "Kustuta minu konto"
       delete_account_confirm: "Kas oled kindel, et soovid oma konto jäädavalt kustutada? Seda toimingut ei ole võimalik tagasi võtta!"
       deleted_yourself: "Konto on edukalt kustutatud."
-      delete_yourself_not_allowed: "Sa ei saa hetkel oma kontot kustutada. Võta ühendust administraatoriga et ta teeks seda sinu eest."
       unread_message_count: "Sõnumid"
       admin_delete: "Kustuta"
       users: "Kasutajad"
@@ -1258,9 +1257,6 @@ et:
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
         search: "Rohkem otsingutulemusi pole."
     topic:
-      unsubscribe:
-        stop_notifications: "Sulle saabub nüüd <strong>{{title}}</strong> kohta vähem teavitusi"
-        change_notification_state: "Sinu teavituste olek on"
       filter_to:
         one: "1 postitus teemas"
         other: "{{count}} postitust teemas"
@@ -2279,7 +2275,6 @@ et:
         add: "Lisa"
         custom: "Individuaalne"
         automatic: "Automaatne"
-        default_title: "Vaikimisi tiitel kõigile kasutajatele siin grupis"
         group_owners: Omanikud
         add_owners: Lisa omanikke
         none_selected: "Vali alustamiseks grupp"

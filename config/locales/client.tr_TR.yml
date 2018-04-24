@@ -533,7 +533,6 @@ tr_TR:
       delete_account: "Hesabımı Sil"
       delete_account_confirm: "Hesabınızı kalıcı olarak silmek istediğinize emin misiniz? Bu eylemi geri alamazsınız!"
       deleted_yourself: "Hesabınız başarıyla silindi."
-      delete_yourself_not_allowed: "Hesabınızı şu an silemezsiniz. Hesabınızı silmesi için bir yönetici ile iletişime geçin."
       unread_message_count: "İletiler"
       admin_delete: "Sil"
       users: "Kullanıcılar"
@@ -1296,9 +1295,6 @@ tr_TR:
         bookmarks: "Daha fazla imlenmiş konu yok."
         search: "Daha fazla arama sonucu yok."
     topic:
-      unsubscribe:
-        stop_notifications: "Artık <strong>{{title}}</strong> için daha az bildirim alacaksınız."
-        change_notification_state: "Geçerli bildirim durumunuz"
       filter_to:
         one: "konuda {{count}} tane gönderi var"
         other: "konuda {{count}} tane gönderi var"
@@ -2324,7 +2320,6 @@ tr_TR:
         add: "Ekle"
         custom: "Özel"
         automatic: "Otomatik"
-        default_title: "Bu gruptaki tüm kullanıcılar için öntanımlı başlık"
         group_owners: Sahipler
         add_owners: Sahiplik ekle
       api:

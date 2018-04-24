@@ -27,11 +27,20 @@ ca:
   topics: "Temes"
   posts: "escrits"
   loading: "Carregant"
+  powered_by_html: 'Funciona amb <a href="https://www.discourse.org">Discourse</a>, per una millor experiència visita''ns amb JavaScript activat'
   log_in: "Entrar"
+  submit: "Envia"
   purge_reason: "Compte desactivat, esborrat automàticament per abandó."
   disable_remote_images_download_reason: "La descàrrega d'imatges ha estat desactivada perquè no hi havia prou espai d'emmatzematge al disc."
   anonymous: "Anònim"
   remove_posts_deleted_by_author: "Esborrat per la persona autora"
+  redirect_warning: "No hem pogut comprovar que l'enllaç que has seleccionat s'hagi enviat al fòrum. Si tot i així vols continuar, clica l'enllaç de sota."
+  themes:
+    bad_color_scheme: "No es pot actualitzar el tema, esquema de color invàlid"
+    other_error: "S'ha produït un error mentre s'actualitzava el tema"
+    error_importing: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit"
+    settings_errors:
+      invalid_yaml: "El YAML proveït és invàlid"
   emails:
     incoming:
       default_subject: "Aquest tema necessita un títol"
@@ -1187,7 +1196,6 @@ ca:
     max_tags_in_filter_list: "Quantitat màxima d'etiquetes per mostrar al filtre desplegable. S'hi veuran les etiquetes més emprades."
     tags_sort_alphabetically: "Mostra etiquetes per ordre alfabètic. Per defecte, es mostren ordenades per popularitat."
     tag_style: "Estil visual per a principals distincions."
-    staff_tags: "Un llistat d'etiquetes que només l'equip pot aplicar"
     min_trust_level_to_tag_topics: "Nivell de confiança mínim necessari per etiquetar temes"
     suppress_overlapping_tags_in_list: "Si les etiquetes coincideixen exactament amb paraules als títols dels temes, no mostris l'etiqueta"
     remove_muted_tags_from_latest: "No mostris temes etiquetats amb etiquetes silenciades al darrer llistat de temes."

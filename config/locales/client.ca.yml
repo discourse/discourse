@@ -521,7 +521,6 @@ ca:
       delete_account: "Esborra el meu compte"
       delete_account_confirm: "Segur que vols esborrar el teu compte permanentment? Aquesta acció no es pot desfer!"
       deleted_yourself: "El teu compte ha estat esborrat amb èxit."
-      delete_yourself_not_allowed: "No pots esborrar el teu compte ara mateix. Posa't en contacte amb la persona administradora per fer-ho."
       unread_message_count: "Missatges"
       admin_delete: "Esborra"
       users: "Persones usuàries"
@@ -1193,9 +1192,6 @@ ca:
         bookmarks: "No hi ha més temes marcats com a preferits."
         search: "No hi ha més resultats de la cerca."
     topic:
-      unsubscribe:
-        stop_notifications: "Ara rebràs menys alertes per a <strong>{{title}}</strong>"
-        change_notification_state: "L'estat actual d'alerta és"
       filter_to:
         one: "1 publicació al tema"
         other: "{{count}} publicacions al tema"
@@ -2173,7 +2169,6 @@ ca:
         add: "Afegegix"
         custom: "Personalitza"
         automatic: "Automàtic"
-        default_title: "Títol per defecte per a totes les persones a aquest grup"
         group_owners: Persones propietàries
         add_owners: Afegeix persones propietàries
       api:

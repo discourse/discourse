@@ -584,7 +584,6 @@ pl_PL:
       delete_account: "Usuń moje konto"
       delete_account_confirm: "Czy na pewno chcesz usunąć swoje konto? To nieodwracalne!"
       deleted_yourself: "Twoje konto zostało usunięte."
-      delete_yourself_not_allowed: "Nie możesz usunąć swojego konta w tej chwili. Skontaktuj się z administratorem, by usunął Twoje konto za Ciebie."
       unread_message_count: "Wiadomości"
       admin_delete: "Usuń"
       users: "Użytkownicy"
@@ -1371,9 +1370,6 @@ pl_PL:
         bookmarks: "Nie ma więcej zakładek."
         search: "Nie znaleziono więcej wyników."
     topic:
-      unsubscribe:
-        stop_notifications: "Będziesz otrzymywać mniej powiadomień o <strong>{{title}}</strong>"
-        change_notification_state: "Twój aktualny stan powiadomień to"
       filter_to:
         one: "1 post w temacie"
         few: "{{count}} posty w temacie"
@@ -2571,7 +2567,6 @@ pl_PL:
         add: "Dodaj"
         custom: "Niestandardowe"
         automatic: "Automatyczne"
-        default_title: "Domyślny tytuł użytkowników należących do tej grupy"
         group_owners: Właściciele
         add_owners: Dodaj właścicieli
         none_selected: "Wybierz grupę, aby rozpocząć"

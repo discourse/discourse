@@ -533,7 +533,6 @@ it:
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
       deleted_yourself: "Il tuo account è stato eliminato con successo."
-      delete_yourself_not_allowed: "Non puoi eliminare il tuo account in questo momento. Contatta un amministratore e chiedigli di cancellarlo per te."
       unread_message_count: "Messaggi"
       admin_delete: "Cancella"
       users: "Utenti"
@@ -1299,9 +1298,6 @@ it:
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
         search: "Non ci sono altri risultati di ricerca."
     topic:
-      unsubscribe:
-        stop_notifications: "Da ora riceverai meno notifiche per <strong>{{title}}</strong>"
-        change_notification_state: "Lo stato delle tue notifiche è"
       filter_to:
         one: "1 messaggio in questo argomento"
         other: "{{count}} messaggi in questo argomento"
@@ -2397,7 +2393,6 @@ it:
         add: "Aggiungi"
         custom: "Personalizzato"
         automatic: "Automatico"
-        default_title: "Titolo predefinito per tutti gli utenti di questo gruppo"
         group_owners: Proprietari
         add_owners: Aggiungi proprietari
         none_selected: "Seleziona un gruppo per iniziare"

@@ -551,7 +551,6 @@ nl:
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"
       deleted_yourself: "Uw account is met succes verwijderd."
-      delete_yourself_not_allowed: "U kunt uw account nu niet verwijderen. Neem contact op met een beheerder om uw account te laten verwijderen."
       unread_message_count: "Berichten"
       admin_delete: "Verwijderen"
       users: "Gebruikers"
@@ -1281,9 +1280,6 @@ nl:
         bookmarks: "Er zijn geen topics met bladwijzers meer."
         search: "Er zijn geen zoekresultaten meer."
     topic:
-      unsubscribe:
-        stop_notifications: "U ontvangt nu minder meldingen voor <strong>{{title}}</strong>"
-        change_notification_state: "Uw huidige meldingsstatus is"
       filter_to:
         one: "1 bericht in topic"
         other: "{{count}} berichten in topic"
@@ -2346,7 +2342,6 @@ nl:
         add: "Toevoegen"
         custom: "Aangepast"
         automatic: "Automatisch"
-        default_title: "Standaardtitel voor alle gebruikers in deze groep"
         group_owners: Eigenaren
         add_owners: Eigenaren toevoegen
         none_selected: "Selecteer een groep om te beginnen"

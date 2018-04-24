@@ -539,7 +539,6 @@ lv:
       delete_account: "Izdzēst manu profilu"
       delete_account_confirm: "Vai esat drošs, ka vēlaties neatgriezeniski dzēst savu profilu? Šo darbību nevar atcelt!"
       deleted_yourself: "Jūsu profils ir veiksmīgi izdzēsts."
-      delete_yourself_not_allowed: "Pašlaik jūs nevarat izdzēst savu profilu. Lūdzu sazinieties ar administratoru, lai izdzēstu jūsu profilu."
       unread_message_count: "Ziņas"
       admin_delete: "Dzēst"
       users: "Lietotāji"
@@ -1241,9 +1240,6 @@ lv:
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
         search: "Nekas netika atrasts."
     topic:
-      unsubscribe:
-        stop_notifications: "Tagad saņemsi mazāk paziņojumus no <strong>{{title}}</strong>"
-        change_notification_state: "Tavs šī brīža paziņojumu statuss ir"
       filter_to:
         zero: "tēmā ziņu nav"
         one: "1 ziņa tēmā"
@@ -2319,7 +2315,6 @@ lv:
         delete_owner_confirm: "Noņemt lietotāja privilēģijas '%{username}'?"
         add: "Pievienot"
         automatic: "Automātiski"
-        default_title: "Noklusējuma apzīmējums visiem lietotājiem šajā grupā"
         group_owners: Īpašnieki
         add_owners: Pievienot īpašniekus
         none_selected: "Izvēlēties grupu, lai uzsāktu"

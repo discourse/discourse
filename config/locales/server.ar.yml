@@ -1540,7 +1540,7 @@ ar:
       text_body_template: |
         أكد عنوان بريدك الإلكتروني لـ %{site_name} بالضغط على الرابط التالي :
 
-        %{email_token}/u/ وثق البريد الإلكتروني  /u/%{base_url}
+        %{email_token}/u/authorize-email/%{base_url}
     confirm_old_email:
       subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
       text_body_template: |
@@ -1550,7 +1550,7 @@ ar:
 
         أكّد عنوان بريدك الإلكتروني الحالي لـ %{site_name} بالضغط على الرابط التالي :
 
-        /u/أكّد بريدك الإلكتروني/%{email_token}%{base_url}
+        %{email_token}/u/authorize-email/%{base_url}
     notify_old_email:
       subject_template: "عنوان بريد الإلكتروني تم تغييرة %{email_prefix}"
     signup_after_approval:

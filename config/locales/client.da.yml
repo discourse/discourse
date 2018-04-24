@@ -522,7 +522,6 @@ da:
       delete_account: "Slet min konto"
       delete_account_confirm: "Er du sikker på du vil slette din konto permanent? Dette kan ikke fortrydes!"
       deleted_yourself: "Din konto er nu slettet."
-      delete_yourself_not_allowed: "Du kan ikke slette din konto lige nu. Kontakt en administrator for at få din konto slettet."
       unread_message_count: "Beskeder"
       admin_delete: "Slet"
       users: "Brugere"
@@ -1182,9 +1181,6 @@ da:
         bookmarks: "Der er ikke flere bogmærkede emner."
         search: "Der er ikke flere søgeresultater."
     topic:
-      unsubscribe:
-        stop_notifications: "Du vil nu modtage færre notifikationer for <strong>{{title}}</strong>"
-        change_notification_state: "Din nuværende notifikationstilstand er"
       filter_to:
         one: "1 indlæg i emnet"
         other: "{{count}} indlæg i emnet"
@@ -2207,7 +2203,6 @@ da:
         add: "Tilføj"
         custom: "Brugerdefineret"
         automatic: "Automatisk"
-        default_title: "Standard titel for alle brugere i denne gruppe"
         group_owners: Ejere
         add_owners: Tilføj ejere
         none_selected: "Vælg en gruppe for at komme i gang"

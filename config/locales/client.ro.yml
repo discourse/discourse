@@ -569,7 +569,6 @@ ro:
       delete_account: "Șterge-mi contul"
       delete_account_confirm: "Ești sigur că vrei să ștergi contul? Această acțiune este ireversibilă!"
       deleted_yourself: "Contul tău a fost șters cu succes."
-      delete_yourself_not_allowed: "Momentan nu îți poți șterge contul. Contactează un admin pentru a o face."
       unread_message_count: "Mesaje"
       admin_delete: "Șterge"
       users: "Utilizatori"
@@ -1338,9 +1337,6 @@ ro:
         bookmarks: "Nu mai sunt semne de carte."
         search: "Nu mai sunt rezultate."
     topic:
-      unsubscribe:
-        stop_notifications: "Vei primi mai puține notificări pentru <strong>{{title}}</strong>"
-        change_notification_state: "Starea actuală a notificărilor tale este"
       filter_to:
         one: "O postare în subiect"
         few: "{{count}} postări în subiect"
@@ -2067,7 +2063,7 @@ ro:
     posts_likes_MF: |
       Acest subiect are {count, plural, one {1 răspuns} other {# răspunsuri}} {ratio, select,
       jos {cu o rată înaltă de aprecieri pe postare}
-      med {cu o foarte înaltă rată de aprecieri pe postare}
+      med {cu o foarte înaltă de aprecieri pe postare}
       înalt {cu o rată extrem de înaltă de aprecieri pe postare}
       other {}}
     original_post: "Postare inițială"
@@ -2428,6 +2424,7 @@ ro:
         delete_title: "Șterge postarea la care se referă marcajul de avertizare."
         delete_post_defer_flag: "Șterge postarea și ignoră marcarea"
         delete_post_defer_flag_title: "Șterge postarea; dacă este prima, șterge subiectul"
+        delete_post_agree_flag: "Șterge postarea și aprobă marcajul de avertizare"
         delete_post_agree_flag_title: "Șterge postarea; dacă este prima, șterge subiectul"
         delete_flag_modal_title: "Șterge și..."
         delete_spammer: "Șterge spammer"
@@ -2481,7 +2478,6 @@ ro:
         add: "Adaugă"
         custom: "Personalizat"
         automatic: "Automat"
-        default_title: "Titlu implicit pentru toți utilizatorii din acest grup"
         group_owners: Proprietari
         add_owners: Adaugă proprietari
         none_selected: "Alege un grup pentru a începe"

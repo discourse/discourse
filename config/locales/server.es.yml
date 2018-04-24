@@ -715,6 +715,7 @@ es:
     title: "¡Suscripción cancelada!"
     description: "<b>%{email}</b> se ha desuscrito. Para cambiar la configuración del email, <a href='%{url}'>visita las preferencias del usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, utiliza el desplegable de notificación al pie o en la parte derecha del tema."
+    private_topic_description: "Para volver a suscribirte, usa el control de notificaciones en la parte de abajo a la derecha del tema."
   unsubscribe:
     title: "Cancelar suscripción"
     stop_watching_topic: "Dejar de vigilar este tema, %{link}"
@@ -782,6 +783,21 @@ es:
       title: "Usuarios por nivel de confianza"
       xaxis: "Día"
       yaxis: "Número de usuarios"
+    users_by_type:
+      title: "Usuarios por tipo"
+      xaxis: "Tip"
+      yaxis: "Número de usuarios"
+      xaxis_labels:
+        admin: Administrador
+        moderator: Moderador
+        suspended: Suspendido
+        silenced: Silenciado
+    trending_search:
+      title: Tendencias de búsqueda
+      labels:
+        term: Término
+        searches: Búsquedas
+        unique: Único
     emails:
       title: "Correos enviados"
       xaxis: "Día"
@@ -1420,7 +1436,6 @@ es:
     max_tags_in_filter_list: "Máximo número de etiquetas en el desplegable. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
     tag_style: "Estilo visual de las etiquetas."
-    staff_tags: "Una lista de etiquetas que sólo pueden ser aplicadas por administradores o moderadores"
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coinciden con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No mostrar temas con etiquetas silenciadas en la lista de temas recientes."
@@ -1796,6 +1811,19 @@ es:
         Para obtener más información sobre el comportamiento esperado, revisa por favor las [directrices de la comunidad](%{base_url}/guidelines).
     post_hidden_again:
       title: "Mensaje ocultado de nuevo"
+      subject_template: "Mensaje ocultado por reportes de la comunidad, se ha notificado al staff"
+      text_body_template: |
+        Hola,
+
+        Esto es un mensaje automático de %{site_name} para hacerte saber que tu mensaje ha vuelto a ser ocultado de nuevo.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Varios miembros de la comunidad han reportado este mensaje antes de que se ocultara. **Debido a que este mensaje ha sido ocultado anteriormente, se mantendrá oculto hasta que sea revisado por un miembro del staff.**
+
+        Para más información, lee las [directrices de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -3039,6 +3067,7 @@ es:
     title: "Etiquetas"
     staff_tag_disallowed: "La etiqueta \"%{tag}\" solo puede ser insertada por moderadores."
     staff_tag_remove_disallowed: "La etiqueta \"%{tag}\" solo puede ser eliminada por moderadores."
+    minimum_required_tags: "Debes seleccionar al menos %{count} etiquetas."
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "Enhorabuena, ¡has instalado Discourse!"

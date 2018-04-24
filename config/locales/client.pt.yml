@@ -515,7 +515,6 @@ pt:
       delete_account: "Eliminar A Minha Conta"
       delete_account_confirm: "Tem a certeza que pretende eliminar a sua conta de forma permanente? Esta ação não pode ser desfeita!"
       deleted_yourself: "A sua conta foi eliminada com sucesso."
-      delete_yourself_not_allowed: "Neste momento não pode eliminar a sua conta. Contacte um administrador para que este elimine a sua conta por si."
       unread_message_count: "Mensagens"
       admin_delete: "Apagar"
       users: "Utilizadores"
@@ -1279,9 +1278,6 @@ pt:
         bookmarks: "Não há mais tópicos marcados."
         search: "Não há mais resultados na pesquisa."
     topic:
-      unsubscribe:
-        stop_notifications: "Irá passar a receber menos notificações para <strong>{{title}}</strong>"
-        change_notification_state: "O seu estado de notificação atual é"
       filter_to:
         one: "1 publicação no tópico"
         other: "{{count}} publicações no tópico"
@@ -2241,7 +2237,6 @@ pt:
         add: "Adicionar"
         custom: "Personalizar"
         automatic: "Automático"
-        default_title: "Título padrão para todos os utilizadores neste grupo"
         group_owners: Proprietários
         add_owners: Adicionar proprietários
       api:

@@ -602,7 +602,6 @@ sk:
       delete_account: "Vymazať môj účet"
       delete_account_confirm: "Ste si istý, že chcete permanentne vymazať váš účet? Táto akcia je nenávratná."
       deleted_yourself: "Váš účet bol úspešne vymazaný."
-      delete_yourself_not_allowed: "Momentálne nie je možné vymazať váš učet. Kontaktujte administrátora a ten vám ho vymaže."
       unread_message_count: "Správy"
       admin_delete: "Vymazať"
       users: "Používatelia"
@@ -1263,9 +1262,6 @@ sk:
         bookmarks: "Žiadne ďalšie témy v záložkách."
         search: "Nenašlo sa viac výsledkov."
     topic:
-      unsubscribe:
-        stop_notifications: "Teraz budete dostávať menej upozornení na <strong>{{title}}</strong>"
-        change_notification_state: "Váš súčasný stav upozornení je"
       filter_to:
         one: "1 príspevok k téme"
         few: "{{count}} príspevky k téme"
@@ -2238,7 +2234,6 @@ sk:
         add: "Pridať"
         custom: "Vlastné"
         automatic: "Automaticky"
-        default_title: "Štandardné označenie pre všetkých používateľov v tejto skupine"
         group_owners: Vlastníci
         add_owners: Pridať vlastníkov
       api:

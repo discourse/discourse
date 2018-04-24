@@ -493,7 +493,6 @@ bs_BA:
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
-      delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
       unread_message_count: "Poruke"
       admin_delete: "Izbriši"
       users: "Korisnici"
@@ -1094,9 +1093,6 @@ bs_BA:
         bookmarks: "Nema više bookmark-ovanih tema."
         search: "Nema više rezultata pretrage."
     topic:
-      unsubscribe:
-        stop_notifications: "Sad će te dobijati manje obavještenja za <strong>{{title}}</strong>"
-        change_notification_state: "Vaše trenutno stanje obavještenja je"
       create: 'Započni Temu'
       create_long: 'Započni novu Temu'
       private_message: 'Započni privatnu konverzaciju'

@@ -33,6 +33,7 @@ zh_CN:
     no_polls_associated_with_this_post: "这个帖子中没有投票。"
     no_poll_with_this_name: "投票“<strong>%{name}</strong>”没有被关联到帖子。"
     post_is_deleted: "帖子已经删除，无法操作。"
+    user_cant_post_in_topic: "你无法投票，因为你无法在这个主题里发帖"
     topic_must_be_open_to_vote: "主题必须未被锁定才能投票。"
     poll_must_be_open_to_vote: "投票必须开启。"
     topic_must_be_open_to_toggle_status: "主题必须未被锁定才能改变状态。"

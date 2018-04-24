@@ -504,7 +504,6 @@ ko:
       delete_account: "내 계정 삭제"
       delete_account_confirm: "정말로 계정을 삭제할까요? 이 작업은 되돌릴 수 없습니다."
       deleted_yourself: "계정이 삭제 되었습니다."
-      delete_yourself_not_allowed: "지금은 계정을 삭제할 수 없습니다. 관리자에게 연락해 주세요."
       unread_message_count: "메시지"
       admin_delete: "삭제"
       users: "회원"
@@ -1224,9 +1223,6 @@ ko:
         bookmarks: "더이상 북마크한 주제가 없습니다."
         search: "더이상 검색 결과가 없습니다."
     topic:
-      unsubscribe:
-        stop_notifications: "<strong>{{title}}</strong>에 대한 알림은 이제 덜 받게 됩니다."
-        change_notification_state: "현재 당신의 알림 설정 : "
       filter_to:
         other: "이 토픽에 {{count}}개 게시글"
       create: '새 주제 만들기'
@@ -2238,7 +2234,6 @@ ko:
         add: "추가"
         custom: "Custom"
         automatic: "자동화"
-        default_title: "이 그룹의 모든 사용자를 위한 기본 제목"
         group_owners: 소유자
         add_owners: 소유자 추가하기
         none_selected: "시작할 그룹을 선택하세요"

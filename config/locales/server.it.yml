@@ -1307,7 +1307,6 @@ it:
     max_tags_in_filter_list: "Numero massimo di etichette da mostrare nell'elenco a discesa del filtro. Saranno mostrate le etichette più usate."
     tags_sort_alphabetically: "Mostra le etichette in ordine alfabetico. Per default vengono mostrate in ordine di popolarità."
     tag_style: "Stile grafico dei distintivi relativi alle etichette."
-    staff_tags: "Un elenco di etichette che possono essere usate soltanto dai membri dello staff"
     min_trust_level_to_tag_topics: "Livello di esperienza minimo richiesto per etichettare argomenti"
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
     remove_muted_tags_from_latest: "Non mostrare argomenti contrassegnati con etichette silenziate nella lista degli argomenti recenti."

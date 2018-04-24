@@ -169,6 +169,7 @@ cs:
     topic_admin_menu: "akce administrátora tématu"
     wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
+    bootstrap_mode_enabled: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{min_users} uživatelů."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     themes:
       default_description: "Výchozí"
@@ -268,6 +269,18 @@ cs:
       last_read: "Toto je váš poslední přečtený příspěvek. Klikněte pro přidání záložky."
       remove: "Odstranit záložku"
       confirm_clear: "Opravdu chcete odstranit všechny záložky z tohoto tématu?"
+    topic_count_latest:
+      one: "Zobrazit {{count}} nové nebo upravené téma"
+      few: "Zobrazit {{count}} nová nebo upravená témata"
+      other: "Zobrazit {{count}} nových nebo upravených témat"
+    topic_count_unread:
+      one: "Zobrazit {{count}} nepřečtené téma"
+      few: "Zobrazit {{count}} nepřečtená témata"
+      other: "Zobrazit {{count}} nepřečtených témat"
+    topic_count_new:
+      one: "Zobrazit {{count}} nové téma"
+      few: "Zobrazit {{count}} nová témata"
+      other: "Zobrazit {{count}} nových témat"
     preview: "ukázka"
     cancel: "zrušit"
     save: "Uložit změny"
@@ -280,6 +293,7 @@ cs:
     pasting: "Vkládám..."
     enable: "Zapnout"
     disable: "Vypnout"
+    continue: "Pokračovat"
     undo: "Zpět"
     revert: "Vrátit"
     failed: "Selhání"
@@ -297,7 +311,7 @@ cs:
       topic: "Téma:"
       approve: 'Schválit'
       reject: 'Odmítnout'
-      delete_user: 'Smažat uživatele'
+      delete_user: 'Smazat uživatele'
       title: "Potřebuje schválení"
       none: "Žádné příspěvky ke kontrole."
       edit: "Upravit"
@@ -360,6 +374,10 @@ cs:
         make_user_group_owner: "Udělej vlastníkem"
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
+      add_members:
+        title: "Přidat členy"
+        description: "Spravovat členství v této skupině"
+        usernames: "Uživatelská jména"
       manage:
         title: 'Spravovat'
         name: 'Název'
@@ -368,8 +386,14 @@ cs:
         delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
         profile:
           title: Profil
+        membership:
+          title: Členství
+          access: Přístup
         logs:
+          title: "Logy"
+          when: "Když"
           action: "Akce"
+          target_user: "Cílový uživatel"
           subject: "Předmět"
           from: "Od"
       public_admission: "Povolit uživatelům volný přístup do skupiny (skupina musí být veřejně viditelná)"
@@ -382,6 +406,9 @@ cs:
         topics: "V této skupině není od žádného člena ani jedno téma."
         logs: "Pro tuto skupinu neexistují žádné logy."
       add: "Přidat"
+      join: "Přidat se ke skupině"
+      leave: "Opustit skupinu"
+      request: "Požádat o členství ve skupině"
       message: "Zpráva"
       allow_membership_requests: "Povolit uživatelům odeslat žádost o členství vlastníkům skupin"
       membership_request_template: "Šablona, která se uživatelům zobrazí při odesílání žádosti o členství"
@@ -391,6 +418,7 @@ cs:
         reason: "Informovat vlastníky skupiny proč patříte do této skupiny"
       membership: "Členství"
       name: "Název"
+      group_name: "Název skupiny"
       user_count: "Uživatelé"
       bio: "O skupině"
       selector_placeholder: "zadejte uživatelské jméno"
@@ -399,11 +427,22 @@ cs:
         title: "Skupiny"
         all: "Všechny skupiny"
         empty: "Žádné viditelné skupiny."
+        filter: "Filtrovat podle typu skupiny"
         all_groups: "Všechny skupiny"
         owner_groups: "Skupiny, jejichž jsem majitelem"
+        close_groups: "Uzavřené skupiny"
         automatic_groups: "Automatické skupiny"
+        automatic: "Automatické"
+        closed: "Uzavřeno"
+        public: "Veřejné"
+        private: "Soukromé"
         public_groups: "Veřejné skupiny"
+        automatic_group: Automatická skupina
+        close_group: Zavřít skupinu
         my_groups: "Moje skupiny"
+        group_type: "Typ skupiny"
+        is_group_user: "Člen"
+        is_group_owner: "Vlastník"
       title:
         one: "Skupina"
         few: "Skupiny"
@@ -411,7 +450,12 @@ cs:
       activity: "Aktivita"
       members:
         title: "Členové"
+        filter_placeholder_admin: "uživatelské jméno nebo email"
+        filter_placeholder: "uživatelské jméno"
+        remove_member: "Odstranit člena"
         remove_member_description: "Odstranit <b>%{username}</b> z této skupiny"
+        make_owner: "Udělej vlastníkem"
+        owner: "Vlastník"
       topics: "Témata"
       posts: "Odpovědi"
       mentions: "Zmínění"
@@ -524,6 +568,7 @@ cs:
       activity_stream: "Aktivita"
       preferences: "Nastavení"
       expand_profile: "Rozšířit"
+      collapse_profile: "Sbalit"
       bookmarks: "Záložky"
       bio: "O mně"
       invited_by: "Pozvánka od"
@@ -591,7 +636,6 @@ cs:
       delete_account: "Smazat můj účet"
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
       deleted_yourself: "Váš účet byl úspěšně odstraněn."
-      delete_yourself_not_allowed: "Váš účet teď nejde odstranit. Obraťte se na správce aby váš účet smazal za vás."
       unread_message_count: "Zprávy"
       admin_delete: "Smazat"
       users: "Uživatelé"
@@ -884,6 +928,7 @@ cs:
         header_title: "profil, zprávy, záložky a nastavení"
       title:
         title: "Titul"
+        none: "(žádný)"
       filters:
         all: "Všechno"
       stream:
@@ -1424,9 +1469,6 @@ cs:
         bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
         search: "There are no more search results."
     topic:
-      unsubscribe:
-        stop_notifications: "Budete dostávat méně upozornění pro <strong>{{title}}</strong>"
-        change_notification_state: "Váš momentální stav oznámení je"
       filter_to:
         one: "1 příspěvek v tématu"
         few: "{{count}} příspěvky v tématu"
@@ -2466,6 +2508,7 @@ cs:
         save: "Uložit"
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
+        visible_only_to_staff: "Štítky vidí pouze redaktoři"
       topics:
         none:
           unread: "Nemáte žádná nepřečtená témata."
@@ -2588,6 +2631,10 @@ cs:
         more: "(více odpovědí...)"
         suspend_user: "Zakázat uživatele"
         suspend_user_title: "Pozastavit uživatele za tento příspěvek"
+        replies:
+          one: "[1 odpověď]"
+          few: "[%{count} odpovědi]"
+          other: "[%{count} odpovědí]"
         dispositions:
           agreed: "schváleno"
           disagreed: "neschváleno"
@@ -2618,6 +2665,40 @@ cs:
           notify_user: "Přizpůsobené"
           notify_moderators: "přizpůsobené"
       groups:
+        new:
+          title: "Nová skupina"
+          create: "Vytvořit"
+          name:
+            too_short: "Název skupiny je moc krátký"
+            too_long: "Název skupiny je moc dlouhý"
+            checking: "Zjišťuji, zda je jméno skupiny volné..."
+            available: "Název skupiny je k dispozici"
+            not_available: "Název skupiny není k dispozici"
+            blank: "Název skupiny nemůže být prázdný"
+        bulk_add:
+          title: "Hromadné přidání do skupiny"
+          complete_users_not_added: "Tito uživatelé nebyli přidáni (ujistěte se, že mají účet):"
+          paste: "Vložte seznam uživatelských jmen a e-mailů, jeden záznam na řádek:"
+        manage:
+          interaction:
+            email: Email
+            incoming_email: "Vlastní příchozí emailová adresa"
+            incoming_email_placeholder: "zadejte emailovou adresu"
+            visibility: Viditelnost
+            visibility_levels:
+              title: "Kdo vidí tuto skupinu?"
+              public: "Všichni"
+              members: "Vlastníci skupiny, členové a správci"
+              staff: "Vlastníci a redaktoři skupiny"
+              owners: "Vlastníci a správci skupiny"
+          membership:
+            automatic: Automatické
+            trust_level: Věrohodnost
+            trust_levels_title: "Automaticky přidělená věrohodnost členům když jsou přidáni: "
+            automatic_membership_email_domains: "Uživatelé zaregistrovaní s emailem jehož doména se přesně shoduje s jednou z tohoto seznamu budou automaticky přidáni to této skupiny:"
+            automatic_membership_retroactive: "Aplikovat stejné doménové pravidlo na už existující uživatele"
+            primary_group: "Automaticky nastavit jako hlavní skupinu"
+        name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
         primary: "Hlavní skupina"
         no_primary: "(žádná hlavní skupina)"
         title: "Skupiny"
@@ -2626,13 +2707,14 @@ cs:
         about: "Zde můžete upravit názvy skupin a členství"
         group_members: "Členové skupiny"
         delete: "Smazat"
-        delete_confirm: "Smazat toto skupiny?"
+        delete_confirm: "Smazat tuto skupinu?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Odstranit vlastnickou výsadu od '%{username}'?"
         add: "Přidat"
         custom: "Přizpůsobené"
         automatic: "Automatické"
-        default_title: "Výchozí popis pro všechny uživatele této skupiny"
+        default_title: "Výchozí popis"
+        default_title_description: "bude aplikováno na všechny uživatele ve skupině"
         group_owners: Vlastníci
         add_owners: Přidat vlastníky
         none_selected: "Vyber si skupinu, abys mohl začít"

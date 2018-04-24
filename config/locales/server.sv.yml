@@ -1126,7 +1126,6 @@ sv:
     max_tags_in_filter_list: "Högsta antal taggar att visa i filtreringsrullgardinen. De taggar som är mest använda kommer att visas."
     tags_sort_alphabetically: "Visa taggar i alfabetisk ordning. Standard är att visa i popularitetsordning."
     tag_style: "Visuell stil för tagg-utmärkelser."
-    staff_tags: "En lista av taggar som endast kan användas av personalen"
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen exakt matchar orden i ämnets titel, visa inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."

@@ -508,7 +508,6 @@ sv:
       delete_account: "Radera mitt konto"
       delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har tagits bort."
-      delete_yourself_not_allowed: "Du kan inte ta bort ditt konto just nu. Kontakta en admin och be om att få ditt konto borttaget."
       unread_message_count: "Meddelanden"
       admin_delete: "Radera"
       users: "Användare"
@@ -1155,9 +1154,6 @@ sv:
         bookmarks: "Inga fler bokmärkta ämnen hittades."
         search: "Inga fler sökresultat hittades."
     topic:
-      unsubscribe:
-        stop_notifications: "Du kommer du att motta färre notifieringar från <strong>{{title}}</strong>"
-        change_notification_state: "Ditt aktuella notifieringstillstånd är "
       filter_to:
         one: "1 inlägg i ämnet"
         other: "{{count}} inlägg i ämnet"
@@ -2156,7 +2152,6 @@ sv:
         add: "Lägg till"
         custom: "Anpassad"
         automatic: "Automatisk"
-        default_title: "Standardtitel för alla användare i denna grupp"
         group_owners: Ägare
         add_owners: Lägg till ägare
         none_selected: "Välj en grupp för att komma igång"

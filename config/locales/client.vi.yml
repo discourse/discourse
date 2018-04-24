@@ -500,7 +500,6 @@ vi:
       delete_account: "Xoá Tài khoản của tôi"
       delete_account_confirm: "Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản của bạn? Hành động này không thể được hoàn tác!"
       deleted_yourself: "Tài khoản của bạn đã được xóa thành công."
-      delete_yourself_not_allowed: "Bạn không thể xóa tài khoản của bạn ngay bây giờ. Liên lạc với admin để làm xóa tài khoản  cho bạn."
       unread_message_count: "Tin nhắn"
       admin_delete: "Xoá"
       users: "Thành viên"
@@ -1135,9 +1134,6 @@ vi:
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
         search: "Không có thêm kết quả tìm kiếm nào nữa."
     topic:
-      unsubscribe:
-        stop_notifications: "Từ bây giờ bạn sẽ không nhận thông báo từ <strong>{{title}}</strong>"
-        change_notification_state: "Tình trạn thông báo của bạn là"
       create: 'Chủ đề Mới'
       create_long: 'Tạo một Chủ đề mới'
       private_message: 'Bắt đầu một thông điệp'
@@ -1933,7 +1929,6 @@ vi:
         add: "Thêm"
         custom: "Tùy biến"
         automatic: "Tự động"
-        default_title: "Tên mặc định cho tất cả các thành viên trong nhóm này"
         group_owners: Chủ sở hữu
         add_owners: Thêm chủ sở hữu
       api:

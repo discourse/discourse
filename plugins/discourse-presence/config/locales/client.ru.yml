@@ -10,8 +10,3 @@ ru:
     presence:
       replying: "ответ"
       editing: "редактирование"
-      replying_to_topic:
-        one: "отвечает"
-        few: "отвечают"
-        many: "отвечают"
-        other: "отвечают"
