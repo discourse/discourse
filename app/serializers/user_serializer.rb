@@ -79,7 +79,6 @@ class UserSerializer < BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
   has_many :group_users, embed: :object, serializer: BasicGroupUserSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
-  has_one  :card_badge, embed: :object, serializer: BadgeSerializer
   has_one :user_option, embed: :object, serializer: UserOptionSerializer
 
   def include_user_option?
@@ -107,8 +106,6 @@ class UserSerializer < BasicUserSerializer
                      :custom_avatar_upload_id,
                      :custom_avatar_template,
                      :has_title_badges,
-                     :card_image_badge,
-                     :card_image_badge_id,
                      :muted_usernames,
                      :mailing_list_posts_per_day,
                      :can_change_bio,
@@ -171,10 +168,6 @@ class UserSerializer < BasicUserSerializer
     keys.length > 0 ? keys : nil
   end
 
-  def card_badge
-    object.user_profile.card_image_badge
-  end
-
   def bio_raw
     object.user_profile.bio_raw
   end
@@ -199,22 +192,6 @@ class UserSerializer < BasicUserSerializer
 
   def include_website_name
     website.present?
-  end
-
-  def card_image_badge_id
-    object.user_profile.card_image_badge.try(:id)
-  end
-
-  def include_card_image_badge_id?
-    card_image_badge_id.present?
-  end
-
-  def card_image_badge
-    object.user_profile.card_image_badge.try(:image)
-  end
-
-  def include_card_image_badge?
-    card_image_badge.present?
   end
 
   def profile_background
