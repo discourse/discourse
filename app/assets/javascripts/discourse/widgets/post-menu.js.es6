@@ -12,7 +12,7 @@ function animateHeart($elem, start, end, complete) {
        .animate({ textIndent: end }, {
           complete,
           step(now) {
-            $(this).css('transform','scale('+now+')').addClass("fa-heart").removeClass("fa-heart-o");
+            $(this).css('transform','scale('+now+')').addClass("d-liked").removeClass("d-unliked");
           },
           duration: 150
         }, 'linear');
