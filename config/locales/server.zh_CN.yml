@@ -29,6 +29,7 @@ zh_CN:
   loading: "载入中"
   powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳体验'
   log_in: "登录"
+  submit: "提交"
   purge_reason: "自动删除废弃，停用账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被停用。"
   anonymous: "匿名"
@@ -36,6 +37,8 @@ zh_CN:
   themes:
     bad_color_scheme: "色彩空间无效，无法更新主题"
     other_error: "更新主题时出错"
+    settings_errors:
+      invalid_yaml: "填写的 YAML 无效"
   emails:
     incoming:
       default_subject: "这个主题需要个标题"
@@ -155,6 +158,7 @@ zh_CN:
   no_mentions_allowed_newuser: "抱歉，访客无法@用户。"
   too_many_mentions_newuser:
     other: "抱歉，访客一次仅能@ %{count} 个用户。"
+  no_images_allowed_trust: "抱歉，你无法在这个帖子里贴图"
   no_images_allowed: "抱歉，访客无法贴图。"
   too_many_images:
     other: "抱歉，访客一次仅能贴 %{count} 张图。"
@@ -674,6 +678,13 @@ zh_CN:
       title: "各信任等级的用户数"
       xaxis: "用户等级"
       yaxis: "用户数"
+    users_by_type:
+      xaxis: "类型"
+      xaxis_labels:
+        admin: 管理员
+        moderator: 版主
+        suspended: 禁止
+        silenced: 禁言
     emails:
       title: "已发送邮件"
       xaxis: "天"
@@ -682,6 +693,9 @@ zh_CN:
       title: "用户至用户"
       xaxis: "天"
       yaxis: "私信数"
+    user_to_user_private_messages_with_replies:
+      xaxis: "天"
+      yaxis: "消息数量"
     system_private_messages:
       title: "系统"
       xaxis: "天"
@@ -773,6 +787,8 @@ zh_CN:
       title: "用户访问"
       xaxis: "天"
       yaxis: "访问次数"
+    web_crawlers:
+      title: "Web 爬虫请求"
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
     host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主机名。请更改成你的站点主机名。"
@@ -1272,7 +1288,6 @@ zh_CN:
     max_tags_in_filter_list: "过滤菜单中显示的标签数上限。优先显示最常用的标签。"
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tag_style: "标签的视觉样式。"
-    staff_tags: "只可由管理人员使用的标签列表"
     min_trust_level_to_tag_topics: "给主题加标签的最小信任等级"
     suppress_overlapping_tags_in_list: "如果标签匹配了主题标题中的词，不显示该标签"
     remove_muted_tags_from_latest: "在最新主题列表中，不显示有静音标签的主题。"
@@ -2205,6 +2220,8 @@ zh_CN:
         如果你没有试着用%{email}创建账户或者更改邮件，不要担心——你可以安全地忽略这封邮件。
 
         如果你有任何问题，[联系我们友善的工作人员](%{base_url}/about)。
+    account_second_factor_disabled:
+      title: "双重验证已停用"
     digest:
       why: "在你上次于%{last_seen_at}访问后，%{site_link}的新内容摘要。"
       since_last_visit: "自从你上次访问"
@@ -2235,6 +2252,8 @@ zh_CN:
 
         点击以下链接设置新密码：
         %{base_url}/u/password-reset/%{email_token}
+    email_login:
+      title: "用链接登录"
     set_password:
       title: "设置密码"
       subject_template: "[%{email_prefix}] 设置密码"

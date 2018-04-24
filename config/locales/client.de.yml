@@ -346,6 +346,10 @@ de:
         make_user_group_owner: "Zum Eigentümer machen"
         remove_user_as_group_owner: "Eigentümerrechte entziehen"
     groups:
+      add_members:
+        title: "Mitglieder hinzufügen"
+        description: "Verwalte die Mitgliedschaft in dieser Gruppe"
+        usernames: "Benutzernamen"
       manage:
         title: 'Verwalten'
         name: 'Name'
@@ -354,6 +358,13 @@ de:
         delete_member_confirm: "Entferne „%{username}“ aus der Gruppe „%{group}“?"
         profile:
           title: Profi
+        interaction:
+          title: Interaktion
+          posting: Beiträge
+          notification: Benachrichtigung
+        membership:
+          title: Mitgliedschaft
+          access: Zugriff
         logs:
           title: "Protokoll"
           when: "Wann"
@@ -604,7 +615,7 @@ de:
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
-      delete_yourself_not_allowed: "Du kannst im Moment dein Benutzerkonto nicht löschen. Kontaktiere einen Administrator, um dein Benutzerkonto löschen zu lassen."
+      delete_yourself_not_allowed: "Bitte kontaktiere das Team, wenn du möchtest, dass dein Konto gelöscht wird."
       unread_message_count: "Nachrichten"
       admin_delete: "Löschen"
       users: "Benutzer"
@@ -1109,6 +1120,8 @@ de:
       no_content: Keine Treffer gefunden
       filter_placeholder: Suchen…
       create: "Erstelle: '{{content}}'"
+      max_content_reached: "Du kannst nur {{count}} Elemente auswählen."
+      min_content_not_reached: "Wähle mindestens {{count}} Einträge aus."
     emoji_picker:
       filter_placeholder: Emoji suchen
       people: Personen
@@ -1165,6 +1178,7 @@ de:
         post_length: "Beitrag muss mindestens {{min}} Zeichen lang sein"
         try_like: 'Hast du schon die <i class="fa fa-heart"></i> Schaltfläche ausprobiert?'
         category_missing: "Du musst eine Kategorie auswählen"
+        tags_missing: "Du musst mindestens %{count} Schlagwörter wählen."
       save_edit: "Speichern"
       reply_original: "Auf das ursprünglichen Thema antworten"
       reply_here: "Hier antworten"
@@ -1185,6 +1199,7 @@ de:
       remove_featured_link: "Link aus Thema entfernen."
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       reply_placeholder_no_images: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung."
+      reply_placeholder_choose_category: "Du musst eine Kategorie auswählen, bevor du hier schreiben kannst."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Wird gespeichert"
       saved: "Gespeichert!"
@@ -1319,6 +1334,7 @@ de:
         one: "<span>1 Ergebnis für </span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} Ergebnisse für </span><span class='term'>{{term}}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
+      full_page_title: "suche nach Themen oder Beiträgen"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
       searching: "Suche …"
@@ -1439,14 +1455,12 @@ de:
         bookmarks: "Das waren alle Themen mit Lesezeichen."
         search: "Es gibt keine weiteren Suchergebnisse."
     topic:
-      unsubscribe:
-        stop_notifications: "Du wirst in Zukunft weniger Benachrichtigungen für <strong>{{title}}</strong> erhalten"
-        change_notification_state: "Dein aktueller Benachrichtigungsstatus ist"
       filter_to:
         one: "1 Beitrag im Thema"
         other: "{{count}} Beiträge im Thema"
       create: 'Neues Thema'
       create_long: 'Ein neues Thema erstellen'
+      open_draft: "Entwurf öffnen"
       private_message: 'Eine Unterhaltung beginnen'
       archive_message:
         help: 'Nachricht ins Archiv verschieben'
@@ -2052,6 +2066,7 @@ de:
       default_position: "Standardposition"
       position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern,"
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
+      minimum_required_tags: 'Minimal Anzahl an Schlagwörtern, die ein Thema erfordert'
       parent: "Übergeordnete Kategorie"
       notifications:
         watching:
@@ -2446,6 +2461,7 @@ de:
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
+    forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
     safe_mode:
       enabled: "Der geschützte Modus ist aktiviert. Schliesse das Browserfenster um ihn zu verlassen."
   admin_js:
@@ -2480,11 +2496,19 @@ de:
         space_free: "{{size}} frei"
         uploads: "Uploads"
         backups: "Backups"
+        lastest_backup: "Letztes: %{date}"
         traffic_short: "Traffic"
         traffic: "Web Requests der Applikation"
         page_views: "Seitenaufrufe"
         page_views_short: "Seitenaufrufe"
         show_traffic_report: "Zeige detaillierten Traffic-Bericht"
+        community_health: Community-Gesundheit
+        whats_new_in_discourse: Was ist neu in Discourse?
+        charts:
+          signups:
+            help: Erstellte Benutzer in dieser Zeit
+          topics:
+            help: Erstellte Themen in dieser Zeit
         reports:
           today: "Heute"
           yesterday: "Gestern"
@@ -2574,6 +2598,43 @@ de:
           notify_user: "benutzerdefiniert"
           notify_moderators: "benutzerdefiniert"
       groups:
+        new:
+          title: "Neue Gruppe"
+          create: "Erstellen"
+          name:
+            too_short: "Gruppenname ist zu kurz"
+            too_long: "Gruppenname ist zu lang"
+            checking: "Verfügbarkeit des Gruppennamens wird geprüft..."
+            available: "Gruppenname ist verfügbar"
+            not_available: "Gruppenname ist nicht verfügbar"
+            blank: "Gruppenname darf nicht leer sein"
+        bulk_add:
+          title: "Mehrere der Gruppe hinzufügen"
+          complete_users_not_added: "Diese Benutzer wurden nicht hinzugefügt (stelle sicher, dass sie ein Konto haben):"
+          paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein (ein Eintrag je Zeile):"
+        add_members:
+          as_owner: "Mache Benutzer zu Eigentümern dieser Gruppe"
+        manage:
+          interaction:
+            email: E-Mail
+            incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
+            incoming_email_placeholder: "E-Mail-Adresse eingeben"
+            visibility: Sichtbarkeit
+            visibility_levels:
+              title: "Wer kann diese Gruppe sehen?"
+              public: "Jeder"
+              members: "Gruppenbesitzer, Mitglieder und Admins"
+              staff: "Gruppenbesitzer und Team"
+              owners: "Gruppenbesitzer und Admins"
+          membership:
+            automatic: Automatisch
+            trust_level: Vertrauensstufe
+            trust_levels_title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
+            trust_levels_none: "Keine"
+            automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
+            automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
+            primary_group: "Automatisch als Hauptgruppe festlegen"
+        name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Hauptgruppe"
         no_primary: "(keine Hauptgruppe)"
         title: "Gruppen"
@@ -2588,7 +2649,8 @@ de:
         add: "Hinzufügen"
         custom: "Benutzerdefiniert"
         automatic: "Automatisch"
-        default_title: "Standardtitel für alle Benutzer in dieser Gruppe"
+        default_title: "Standard-Titel"
+        default_title_description: "wird auf alle Benutzer in der Gruppe angewendet"
         group_owners: Eigentümer
         add_owners: Eigentümer hinzufügen
         none_selected: "Wähle eine Gruppe, um loszulegen"
@@ -2657,6 +2719,9 @@ de:
         tag_event:
           name: "Schlagwort-Ereignis"
           details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
+        flag_event:
+          name: "Meldung-Ereignis"
+          details: "Wenn eine Meldung erstellt, akzeptiert, abgelehnt oder verschoben wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -2698,6 +2763,7 @@ de:
         change_settings: "Einstellungen ändern"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
+        official: "Offizielles Plugin"
       backups:
         title: "Backups"
         menu:

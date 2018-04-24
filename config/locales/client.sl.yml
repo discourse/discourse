@@ -554,7 +554,6 @@ sl:
       delete_account: "Izbriši Moj Račun"
       delete_account_confirm: "Si prepričan, da želiš trajno izbrisati svoj račun? Tega postopka ni mogoče razveljaviti!"
       deleted_yourself: "Vaš račun je bil uspešno izbrisan."
-      delete_yourself_not_allowed: "Trenutno ne morete izbrisati vašega računa. Kontaktiratje administratorja, da izbriše vaš račun."
       unread_message_count: "Sporočila"
       admin_delete: "Izbriši"
       users: "Uporabniki"
@@ -1425,7 +1424,6 @@ sl:
         add: "Dodaj"
         custom: "Po meri"
         automatic: "Avtomatsko"
-        default_title: "Privzet naziv za vse uporabnice/ke v tej skupini"
         group_owners: Lastniki
         add_owners: Dodaj lastnike
       api:

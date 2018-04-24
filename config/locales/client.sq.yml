@@ -484,7 +484,6 @@ sq:
       delete_account: "Fshi llogarinë time"
       delete_account_confirm: "Jeni i sigurtë që dëshironi ta mbyllni përgjithmonë llogarinë tuaj? Ky veprim nuk mund të zhbëhet!"
       deleted_yourself: "Llogaria juaj u fshi me sukses."
-      delete_yourself_not_allowed: "Nuk mund t'a fshini llogarinë tuaj tani. Kontaktoni një admin për të fshirë llogarinë. "
       unread_message_count: "Mesazhet"
       admin_delete: "Fshi"
       users: "Anëtarët"
@@ -1102,9 +1101,6 @@ sq:
         bookmarks: "Nuk ka më tema të preferuara."
         search: "Nuk ka më rezultate nga kërkimi. "
     topic:
-      unsubscribe:
-        stop_notifications: "Tani ju do të merrni më pak njoftime për <strong>{{title}}</strong>"
-        change_notification_state: "Statusi juaj i njoftimeve tani është"
       filter_to:
         one: "1 postim në temë"
         other: "{{count}} postime në temë"

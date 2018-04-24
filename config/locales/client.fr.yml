@@ -615,7 +615,7 @@ fr:
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action ne peut pas être annulée !"
       deleted_yourself: "Votre compte a été supprimé avec succès."
-      delete_yourself_not_allowed: "Vous ne pouvez pas supprimer votre compte maintenant. Contactez un administrateur pour faire supprimer votre compte pour vous."
+      delete_yourself_not_allowed: "Veuiller contacter un responsable si vous souhaiter faire supprimer votre compte."
       unread_message_count: "Messages"
       admin_delete: "Supprimer"
       users: "Utilisateurs"
@@ -1121,6 +1121,8 @@ fr:
       no_content: Aucune correspondance trouvée
       filter_placeholder: Rechercher...
       create: "Créer : '{{content}}'"
+      max_content_reached: "Vous ne pouvez séléctionner que {{count}} élément(s)."
+      min_content_not_reached: "Séléctionner au moins {{count}} élément(s)."
     emoji_picker:
       filter_placeholder: Chercher un emoji
       people: Personnes
@@ -1198,6 +1200,7 @@ fr:
       remove_featured_link: "Retirer le lien du sujet"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
       reply_placeholder_no_images: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme."
+      reply_placeholder_choose_category: "Vous devez sélectionner une catégorie avant de rédiger ici."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
       saved: "Sauvegardé !"
@@ -1332,6 +1335,7 @@ fr:
         one: "<span>1 résultat pour</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} résultats pour</span><span class='term'>{{term}}</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
+      full_page_title: "rechercher des sujets ou messages"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
       searching: "Recherche en cours…"
@@ -1452,14 +1456,12 @@ fr:
         bookmarks: "Il n'y a plus de sujets avec des signets."
         search: "Il n'y a plus de résultats à votre recherche."
     topic:
-      unsubscribe:
-        stop_notifications: "Vous recevrez moins de notifications pour <strong>{{title}}</strong>"
-        change_notification_state: "Votre statut de notification est"
       filter_to:
         one: "1 message dans le sujet"
         other: "{{count}} messages dans le sujet"
       create: 'Créer un sujet'
       create_long: 'Créer un nouveau sujet'
+      open_draft: "Ouvrir ébauche"
       private_message: 'Écrire un message'
       archive_message:
         help: 'Déplacer le message dans votre archive'
@@ -2464,6 +2466,7 @@ fr:
       custom_message_placeholder: "Entrez votre message personnalisé"
       custom_message_template_forum: "Hey, tu devrais rejoindre ce forum !"
       custom_message_template_topic: "Hey, je pensais que tu pourrais aimer ce sujet !"
+    forced_anonymous: "En raison de la charge extrême, ceci est temporairement montré à tout le monde comme un utilisateur déconnecté le verrait."
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
   admin_js:
@@ -2498,11 +2501,19 @@ fr:
         space_free: "{{size}} libre"
         uploads: "fichiers envoyés"
         backups: "sauvegardes"
+        lastest_backup: "Plus récent: %{date}"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
         page_views: "Pages vues"
         page_views_short: "Pages vues"
         show_traffic_report: "Afficher le rapport de trafic détaillé"
+        community_health: Santé communautaire
+        whats_new_in_discourse: Quoi de neuf dans Discourse ?
+        charts:
+          signups:
+            help: Utilisateurs crées dans cette période
+          topics:
+            help: Sujets crées pour cette période
         reports:
           today: "Aujourd'hui"
           yesterday: "Hier"
@@ -2643,7 +2654,8 @@ fr:
         add: "Ajouter"
         custom: "Personnalisé"
         automatic: "Automatique"
-        default_title: "Titre par défaut pour tous les utilisateurs de ce groupe"
+        default_title: "Titre par défaut"
+        default_title_description: "sera appliqué à tous les utilisateurs du groupe"
         group_owners: Propriétaires
         add_owners: Ajouter des propriétaires
         none_selected: "Sélectionnez un groupe pour commencer"
@@ -2712,6 +2724,9 @@ fr:
         tag_event:
           name: "Événement de tag"
           details: "Quand un tag est créé, mis à jour ou supprimé."
+        flag_event:
+          name: "Evènement de signalement"
+          details: "Quand un signalement est crée, approuvé, désapprouvé ou reporté."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"

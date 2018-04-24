@@ -55,6 +55,7 @@ ca:
         help:
           options_count: Introdueix almenys 2 opcions
           invalid_values: El valor mínim ha de ser menor que el valor màxim.
+          min_step_value: L'increment mínim és 1
         poll_type:
           label: Tipus
           regular: Elecció simple

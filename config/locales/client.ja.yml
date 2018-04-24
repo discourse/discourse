@@ -517,7 +517,6 @@ ja:
       delete_account: "アカウントを削除する"
       delete_account_confirm: "アカウントを削除してもよろしいですか？削除されたアカウントは復元できません。"
       deleted_yourself: "あなたのアカウントは削除されました。"
-      delete_yourself_not_allowed: "アカウントを削除できませんでした。サイトの管理者へ連絡してください。"
       unread_message_count: "メッセージ"
       admin_delete: "削除"
       users: "ユーザー"
@@ -1235,9 +1234,6 @@ ja:
         bookmarks: "ブックマーク済みのトピックはこれ以上ありません。"
         search: "検索結果は以上です。"
     topic:
-      unsubscribe:
-        stop_notifications: " <strong>{{title}}</strong>の通知を受け取らなくなります"
-        change_notification_state: "あなたへの通知状況は"
       filter_to:
         other: "トピック内の {{count}} 件を表示"
       create: '新規トピック'
@@ -2135,7 +2131,6 @@ ja:
         add: "追加"
         custom: "カスタム"
         automatic: "自動で作成されたグループ"
-        default_title: "このグループのすべてのユーザーのデフォルトタイトル"
         group_owners: オーナー
         add_owners: オーナーを追加
       api:

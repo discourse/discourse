@@ -249,7 +249,10 @@ de:
     delete_reason: "Aus der Moderations-Warteschlange für Beiträge gelöscht"
     not_found: "Seite nicht gefunden oder bereits aktualisiert."
   groups:
+    success:
+      bulk_add: "%{count} Benutzer wurden der Gruppe hinzugefügt."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' ist keine gültige Vertrauensstufe"
       can_not_modify_automatic: "Du kannst eine automatische Gruppe nicht bearbeiten"
       member_already_exist: "Die folgenden Benutzer sind bereits Mitglied dieser Gruppe: %{username}"
       invalid_domain: "'%{domain}' ist keine gültige Domain."
@@ -712,6 +715,7 @@ de:
     title: "Abbestellt!"
     description: "<b>%{email}</b> wurde abbestellt. Um deine E-Mail-Einstellungen zu ändern, <a href='%{url}'>besuche deine Benutzer-Einstellungen</a>."
     topic_description: "Um %{link} wieder zu abonnieren, verwende die Benachrichtigungseinstellungen, die du am Ende und rechts von jedem Thema findest."
+    private_topic_description: "Um das Thema wieder zu abonnieren, verwende die Benachrichtigungseinstellungen unten oder rechts vom Thema."
   unsubscribe:
     title: "Abbestellen"
     stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
@@ -779,6 +783,15 @@ de:
       title: "Benutzer nach Stufe"
       xaxis: "Stufe"
       yaxis: "Anzahl der Benutzer"
+    users_by_type:
+      title: "Benutzer nach Art"
+      xaxis: "Art"
+      yaxis: "Anzahl der Benutzer"
+      xaxis_labels:
+        admin: Administrator
+        moderator: Moderator
+        suspended: Gesperrt
+        silenced: Stummgeschaltet
     emails:
       title: "Gesendete E-Mails"
       xaxis: "Tag"
@@ -1026,6 +1039,8 @@ de:
     whitelist_internal_hosts: "Eine Liste interner Hostnamen, die Discourse sicher abrufen kann für Oneboxing und andere Zwecke"
     allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
     whitelisted_crawler_user_agents: 'Positivliste mit Browserkennungen von Suchmaschinen, die Zugriff auf die Seite haben sollen.'
+    blacklisted_crawler_user_agents: 'Eindeutiges Wort in der Browserkennung (Groß-/Kleinschreibung wird ignoriert)zur Identifizierung von Suchmaschinen, die keinen Zugriff auf die Seite haben sollen. Wird ignoriert, wenn eine Positivliste definiert wird.'
+    slow_down_crawler_user_agents: 'Browserkennungen von Suchmaschinen, deren Anfragezahl begrenzt werden soll über die Direktive crawl-delay in derDatei „robots.txt“.'
     slow_down_crawler_rate: 'Wenn slow_down_crawler_user_agents ausgewählt ist, wird diese Anfragenbegrenzung auf alle Suchmaschinen angewendet (Anzahl der Sekunden zwischen zwei Anfragen)'
     top_menu: "Legt fest, welche Elemente in der Navigationsleiste der Startseite auftauchen sollen, und in welcher Reihenfolge. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
@@ -1072,6 +1087,7 @@ de:
     sso_url: "URL des Single Sign-On-Endpunkts (muss http:// oder https:// enthalten)"
     sso_secret: "Geheimer Schlüssel für die Authentifizierung von SSO-Informationen. Sollte unbedingt 10 Zeichen oder länger sein."
     sso_overrides_bio: "Überschreibt \"Über mich\" im Benutzerprofil und verhindert Änderungen durch den Benutzer"
+    sso_overrides_groups: "Synchronisiert alle manuellen Gruppenmitgliedschaften mit den Gruppen, die im SSO-Attribut „groups“ angegeben ist (WARNUNG: wenn du keine Gruppen angibst, werden alle Gruppenmitgliedschaften des Benutzers aufgehoben)"
     sso_overrides_email: "Überschreibt lokale E-Mail mit E-Mail der externen Site aus dem SSO-Payload (WARNUNG: Diskrepanzen können aufgrund der Normalisierung lokaler E-Mail-Adressen auftreten.)"
     sso_overrides_username: "Überschreibt lokalen Benutzernamen mit dem Benutzernamen der externen Site aus dem SSO-Payload (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Benutzernamen auftreten)"
     sso_overrides_name: "Überschreibt den vollen Namen des Benutzers mit den Daten von der externen Site aus dem SSO-Payload bei jedem Login. Außerdem werden lokale Änderungen verhindert."
@@ -1434,7 +1450,6 @@ de:
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tags_listed_by_group: "Führe Schlagwörter auf der Schlagwort-Seite (/tags) geordnet nach Schlagwort-Gruppe auf."
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
-    staff_tags: "Eine Liste von Schlagwörtern, die nur von Team-Mitgliedern angewendet werden können."
     allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu markieren."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
@@ -1853,6 +1868,19 @@ de:
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     post_hidden_again:
       title: "Beitrag wieder ausgeblendet"
+      subject_template: "Beitrag ausgeblendet wegen Community-Meldungen, Team wurde informiert"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag erneut ausgeblendet wurde.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Mehrere Community-Mitglieder haben diesen Beitrag gemeldet, bevor er ausgeblendet wurde. **Weil der Beitrag mehr als einmal ausgeblendet wurde, wird er nun ausgeblendet bleiben, bis er vom Team behandelt wurde.**
+
+        Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -3233,6 +3261,7 @@ de:
     title: "Schlagwörter"
     staff_tag_disallowed: "Das Schlagwort \"%{tag}\" darf nur vom Team verwendet werden."
     staff_tag_remove_disallowed: "Das Schlagwort \"%{tag}\" darf nur vom Team entfernt werden."
+    minimum_required_tags: "Du musst mindestens %{count} Schlagwörter auswählen."
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
   finish_installation:
     congratulations: "Glückwunsch, du hast Discourse installiert!"

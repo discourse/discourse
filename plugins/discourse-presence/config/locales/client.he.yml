@@ -10,6 +10,3 @@ he:
     presence:
       replying: "תגובה"
       editing: "עריכה"
-      replying_to_topic:
-        one: "מגיב/ה"
-        other: "מגיבים"

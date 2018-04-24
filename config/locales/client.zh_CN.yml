@@ -151,6 +151,7 @@ zh_CN:
     not_implemented: "非常抱歉，这个功能仍在开发中！"
     no_value: "否"
     yes_value: "是"
+    submit: "提交"
     generic_error: "抱歉，出了点小问题。"
     generic_error_with_reason: "出错了：%{error}"
     sign_up: "注册"
@@ -307,6 +308,22 @@ zh_CN:
         make_user_group_owner: "设为所有者"
         remove_user_as_group_owner: "撤销所有者"
     groups:
+      manage:
+        profile:
+          title: 个人信息
+        interaction:
+          notification: 通知
+        membership:
+          title: 成员资格
+          access: 访问
+        logs:
+          title: "日志"
+          when: "时间"
+          action: "操作"
+          subject: "主题"
+          details: "详情"
+          from: "从"
+          to: "到"
       public_admission: "允许用户自由加入小组（需要小组公开可见）"
       public_exit: "允许用户自由离开小组"
       empty:
@@ -317,6 +334,9 @@ zh_CN:
         topics: "群组的成员从未发表主题。"
         logs: "没有关于群组的日志。"
       add: "添加"
+      join: "加入"
+      leave: "离开"
+      request: "请求"
       message: "私信"
       allow_membership_requests: "允许用户向小组拥有者发送成员请求"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
@@ -326,14 +346,27 @@ zh_CN:
         reason: "向小组拥有者说明你为何属于这个小组"
       membership: "成员资格"
       name: "群组ID"
+      user_count: "用户"
       bio: "关于群组"
+      selector_placeholder: "输入用户名"
       owner: "所有者"
       index:
         title: "群组"
         empty: "没有可见的群组。"
+        public: "公开"
+        private: "私密"
+        my_groups: "我的群组"
+        is_group_owner: "所有者"
       title:
         other: "小组"
       activity: "活动"
+      members:
+        title: "成员"
+        filter_placeholder: "用户名"
+        remove_member: "移除成员"
+        make_owner: "设为所有者"
+        remove_owner: "撤销所有者"
+        owner: "所有者"
       topics: "主题"
       posts: "帖子"
       mentions: "提及"
@@ -508,7 +541,6 @@ zh_CN:
       delete_account: "删除我的帐号"
       delete_account_confirm: "你真的要永久删除自己的帐号吗？删除之后无法恢复！"
       deleted_yourself: "你的帐号已被删除。"
-      delete_yourself_not_allowed: "你目前不能删除自己的帐号。联系管理员帮助你删除帐号。"
       unread_message_count: "私信"
       admin_delete: "删除"
       users: "用户"
@@ -542,6 +574,7 @@ zh_CN:
         move_to_archive: "存档"
         failed_to_move: "移动选中私信失败（可能你的网络出问题了）"
         select_all: "全选"
+        tags: "标签"
       preferences_nav:
         account: "帐号"
         profile: "个人信息"
@@ -561,6 +594,12 @@ zh_CN:
         choose: "输入密码"
       second_factor:
         title: "双重验证"
+        disable: "停用双重验证"
+        enable: "为了加强账户安全"
+        confirm_password_description: "确认密码以继续"
+        label: "编码"
+        disable_description: "请输入来自  app  的验证码"
+        show_key_description: "手动输入"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -1065,6 +1104,7 @@ zh_CN:
       olist_title: "数字列表"
       ulist_title: "符号列表"
       list_item: "列表条目"
+      toggle_direction: "切换方向"
       help: "Markdown 编辑帮助"
       collapse: "最小号编辑面板"
       abandon: "关闭编辑面板并放弃草稿"
@@ -1259,9 +1299,6 @@ zh_CN:
         bookmarks: "没有更多收藏的主题了。"
         search: "没有更多搜索结果了。"
     topic:
-      unsubscribe:
-        stop_notifications: "你将收到更少的关于<strong>{{title}}</strong>的通知"
-        change_notification_state: "你现在的通知状态是"
       filter_to:
         other: "本主题中的 {{count}} 帖"
       create: '发新主题'
@@ -1580,6 +1617,7 @@ zh_CN:
       show_hidden: '查看隐藏内容'
       deleted_by_author:
         other: "（帖子被作者删除，如无标记将在 %{count} 小时后自动删除）"
+      collapse: "折叠"
       expand_collapse: "展开/折叠"
       gap:
         other: "查看 {{count}} 个隐藏回复"
@@ -1629,6 +1667,8 @@ zh_CN:
         undelete: "恢复本帖"
         share: "分享指向这个帖子的链接"
         more: "更多"
+        delete_replies:
+          just_the_post: "不，只是这篇帖子"
         admin: "帖子管理"
         wiki: "公共编辑"
         unwiki: "限制公共编辑"
@@ -1637,6 +1677,10 @@ zh_CN:
         rebake: "重建 HTML"
         unhide: "显示"
         change_owner: "更改作者"
+        grant_badge: "授予徽章"
+        lock_post: "锁定帖子"
+        lock_post_description: "禁止发帖者编辑这篇帖子"
+        unlock_post: "解锁帖子"
       actions:
         flag: '标记'
         defer_flags:
@@ -2305,7 +2349,6 @@ zh_CN:
         add: "添加"
         custom: "定制"
         automatic: "自动"
-        default_title: "群组内所有用户的默认头衔"
         group_owners: 所有者
         add_owners: 添加所有者
         none_selected: "选择一个小组以开始"
@@ -2364,6 +2407,8 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
+        flag_event:
+          name: "标记事件"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"
@@ -2507,6 +2552,7 @@ zh_CN:
           common: "通用"
           desktop: "桌面"
           mobile: "移动"
+          settings: "设置"
           preview: "预览"
           is_default: "主题默认启用"
           user_selectable: "用户可选择主题"
@@ -2535,6 +2581,8 @@ zh_CN:
           updating: "更新..."
           up_to_date: "主题已经是最新版本，上次检查："
           add: "添加"
+          theme_settings: "主题设置"
+          no_settings: "这个主题内没有设置"
           commits_behind:
             other: "主题落后了 {{count}} 个变更！"
           scss:
@@ -2558,6 +2606,9 @@ zh_CN:
           body_tag:
             text: "</body>"
             title: "将在 </body> 标签前插入的 HTML"
+          yaml:
+            text: "YAML"
+            title: "用 YAML 格式定义主题设置"
         colors:
           select_base:
             title: "选择基础颜色方案"
@@ -2723,6 +2774,7 @@ zh_CN:
             revoke_badge: "撤销徽章"
             check_email: "检查电子邮件"
             delete_topic: "删除主题"
+            recover_topic: "撤销删除帖子"
             delete_post: "删除帖子"
             impersonate: "检视"
             anonymize_user: "匿名用户"
@@ -2749,6 +2801,12 @@ zh_CN:
             backup_destroy: "删除备份"
             reviewed_post: "已审核的帖子"
             custom_staff: "插件自定义操作"
+            post_locked: "帖子锁定"
+            post_edit: "帖子编辑"
+            post_unlocked: "帖子解锁"
+            check_personal_message: "检查个人信息"
+            disabled_second_factor: "停用双重验证"
+            topic_published: "帖子已发布"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2888,6 +2946,9 @@ zh_CN:
         suspended_until: "（直到%{until}）"
         cant_suspend: "该用户不能被封禁。"
         delete_all_posts: "删除所有帖子"
+        penalty_post_delete: "删除帖子"
+        penalty_post_edit: "编辑帖子"
+        penalty_post_none: "什么都不做"
         delete_all_posts_confirm_MF: "你将要删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个主题} other {# 个主题}}。确定吗？"
         silence: "禁言"
         unsilence: "解除禁言"
@@ -3058,6 +3119,9 @@ zh_CN:
         go_back: "返回搜索"
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: '只显示修改过的'
+      settings:
+        reset: '重置'
+        none: '无'
       site_settings:
         title: '设置'
         no_results: "找不到结果。"

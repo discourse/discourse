@@ -472,7 +472,6 @@ zh_TW:
       delete_account: "刪除我的帳號"
       delete_account_confirm: "你真的要刪除帳號嗎?此動作不能被還原!"
       deleted_yourself: "你的帳號已成功刪除"
-      delete_yourself_not_allowed: "帳號不能刪除。請聯絡管理人。"
       unread_message_count: "訊息"
       admin_delete: "刪除"
       users: "用戶"
@@ -1108,9 +1107,6 @@ zh_TW:
         bookmarks: "書籤裡沒有更多的討論話題了。"
         search: "沒有更多搜索結果了。"
     topic:
-      unsubscribe:
-        stop_notifications: "你將收到更少的關於<strong>{{title}}</strong>的通知"
-        change_notification_state: "你現在的通知狀態是"
       filter_to:
         other: "本主題中的 {{count}} 帖"
       create: '新討論話題'
@@ -2016,7 +2012,6 @@ zh_TW:
         add: "加入"
         custom: "客製"
         automatic: "自動建立"
-        default_title: "群組內所有成員的預設頭銜"
         group_owners: 所有者
         add_owners: 添加所有者
       api:

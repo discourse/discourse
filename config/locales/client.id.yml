@@ -425,7 +425,6 @@ id:
       delete_account: "Hapus Akun Saya"
       delete_account_confirm: "Apakah Anda yakin untuk menghapus akun ini secara permanen? Perintah ini tidak dapat dibatalkan!"
       deleted_yourself: "Akun Anda telah sukses dihapus."
-      delete_yourself_not_allowed: "Anda tidak dapat menghapus akun. Hubungi admin untuk menghapus akun Anda."
       unread_message_count: "Pesan"
       admin_delete: "Hapus"
       users: "Pengguna"

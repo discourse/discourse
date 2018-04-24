@@ -499,7 +499,6 @@ fa_IR:
       delete_account: "حساب‌کاربری من را پاک کن"
       delete_account_confirm: "آیا مطمئنید که می‌خواهید شناسه‌تان را برای همیشه پاک کنید؟ برگشتی در کار نیست!"
       deleted_yourself: "حساب‌ کاربری شما با موفقیت حذف شد."
-      delete_yourself_not_allowed: "در حال حاضر شما نمی‌توانید حساب کاربری خود را حذف کنید. به این منظور  با یکی از مدیران برای پاک کردن حسابتان تماس بگیرید."
       unread_message_count: "پیام‌ها"
       admin_delete: "پاک کردن"
       users: "کاربران"
@@ -1174,9 +1173,6 @@ fa_IR:
         bookmarks: "موضوع نشانک‌گذاری شده‌ی دیگری وجود ندارد."
         search: "نتیجه‌ی جستجوی دیگری وجود ندارد"
     topic:
-      unsubscribe:
-        stop_notifications: "حالا شما اعلانات کمتری برای <strong>{{title}}</strong> دریافت می‌کنید"
-        change_notification_state: "وضعیت فعلی اعلانات شما این هست"
       filter_to:
         other: "{{count}} نوشته در این موضوع وجود دارد"
       create: 'موضوع جدید'
@@ -2152,7 +2148,6 @@ fa_IR:
         add: "اضافه کردن"
         custom: "سفارشی"
         automatic: "خودکار"
-        default_title: "عنوان را پیش فرض کن برای تمام اعضا در این گروه"
         group_owners: مالکین
         add_owners: افزودن مالک
         none_selected: "برای شروع یک گروه انتخاب کنید"

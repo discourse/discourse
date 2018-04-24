@@ -446,7 +446,6 @@ sr:
       delete_account: "Obriši moj Nalog"
       delete_account_confirm: "Jeste li sigurni da želite trajno obrisati svoj nalog? Ova se akcija ne može poništiti!"
       deleted_yourself: "Vaš nalog je uspešno obrisan."
-      delete_yourself_not_allowed: "Trenutno ne možete obrisati svoj nalog. Kontaktirajte administratora da ga obriše umesto vas."
       unread_message_count: "Poruke"
       admin_delete: "Obriši"
       staff_counters:
