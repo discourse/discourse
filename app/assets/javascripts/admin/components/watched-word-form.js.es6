@@ -33,9 +33,9 @@ export default Ember.Component.extend({
           Ember.run.schedule('afterRender', () => this.$('.watched-word-input').focus());
         }).catch(e => {
           this.set('formSubmitted', false);
-          const msg = (e.responseJSON && e.responseJSON.errors) ?
-                      I18n.t("generic_error_with_reason", {error: e.responseJSON.errors.join('. ')}) :
-                      I18n.t("generic_error");
+          const msg = (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) ?
+            I18n.t("generic_error_with_reason", {error: e.jqXHR.responseJSON.errors.join('. ')}) :
+            I18n.t("generic_error");
           bootbox.alert(msg, () => this.$('.watched-word-input').focus());
         });
       }
