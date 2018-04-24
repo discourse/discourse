@@ -81,7 +81,7 @@ class RateLimiter
   end
 
   def performed!(raise_error: true)
-    return if rate_unlimited?
+    return true if rate_unlimited?
     now = Time.now.to_i
 
     if ((max || 0) <= 0) ||
