@@ -19,7 +19,6 @@ class Plugin::Metadata
     "Spoiler Alert!",
     "staff-notes",
     "GitHub badges",
-    "hosted-site",
     "lazyYT",
     "logster-rate-limit-checker",
     "poll",
