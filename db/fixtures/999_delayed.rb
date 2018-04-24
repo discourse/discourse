@@ -26,3 +26,13 @@ Migration::TableDropper.delayed_drop(
     STDERR.puts "Dropping versions. It isn't used anymore."
   }
 )
+
+Migration::ColumnDropper.drop(
+  table: 'user_profiles',
+  after_migration: 'DropUserCardBadgeColumns',
+  columns: ['card_image_badge_id'],
+  on_drop: ->() {
+    STDERR.puts "Removing user_profiles column card_image_badge_id"
+  },
+  delay: 3600
+)

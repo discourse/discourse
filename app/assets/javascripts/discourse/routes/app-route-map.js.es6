@@ -127,7 +127,6 @@ export default function() {
       this.route('second-factor');
       this.route('about', { path: '/about-me' });
       this.route('badgeTitle', { path: '/badge_title' });
-      this.route('card-badge', { path: '/card-badge' });
     });
 
     this.route('userInvited', { path: '/invited', resetNamespace: true }, function() {
