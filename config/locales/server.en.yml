@@ -2245,7 +2245,7 @@ en:
 
     csv_export_succeeded:
       title: "CSV Export Succeeded"
-      subject_template: "Data export complete"
+      subject_template: "[%{export_title}] Data export complete"
       text_body_template: |
         Your data export was successful! :dvd:
 

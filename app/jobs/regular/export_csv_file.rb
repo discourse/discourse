@@ -32,8 +32,16 @@ module Jobs
 
       file_name_prefix = if @entity == "user_archive"
         "#{@entity.split('_').join('-')}-#{@current_user.username}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+      elsif @entity == "report" && @extra[:name].present?
+        "#{@extra[:name].split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
       else
         "#{@entity.split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+      end
+
+      export_title = if @entity == "report" && @extra[:name].present?
+        I18n.t("reports.#{@extra[:name]}.title")
+      else
+        @entity.split('_').join(' ').titleize
       end
 
       user_export = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
@@ -77,7 +85,7 @@ module Jobs
       end
 
     ensure
-      notify_user(download_link, file_name, file_size)
+      notify_user(download_link, file_name, file_size, export_title)
     end
 
     def user_archive_export
@@ -351,7 +359,7 @@ module Jobs
         screened_url_array
       end
 
-      def notify_user(download_link, file_name, file_size)
+      def notify_user(download_link, file_name, file_size, export_title)
         if @current_user
           if download_link.present?
             SystemMessage.create_from_system_user(
@@ -359,7 +367,8 @@ module Jobs
               :csv_export_succeeded,
               download_link: download_link,
               file_name: "#{file_name}.gz",
-              file_size: file_size
+              file_size: file_size,
+              export_title: export_title
             )
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
