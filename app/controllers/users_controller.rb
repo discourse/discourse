@@ -48,8 +48,7 @@ class UsersController < ApplicationController
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
-      { include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) },
-      [{ user_profile: :card_image_badge }]
+      include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts)
     )
 
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
@@ -88,23 +87,6 @@ class UsersController < ApplicationController
   def badges
     raise Discourse::NotFound unless SiteSetting.enable_badges?
     show
-  end
-
-  def card_badge
-  end
-
-  def update_card_badge
-    user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
-
-    user_badge = UserBadge.find_by(id: params[:user_badge_id].to_i)
-    if user_badge && user_badge.user == user && user_badge.badge.image.present?
-      user.user_profile.update_column(:card_image_badge_id, user_badge.badge.id)
-    else
-      user.user_profile.update_column(:card_image_badge_id, nil)
-    end
-
-    render body: nil
   end
 
   def user_preferences_redirect

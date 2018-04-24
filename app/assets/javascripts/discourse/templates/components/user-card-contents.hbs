@@ -23,7 +23,7 @@
           {{#if user.name}}
             <h2 class='full-name'>{{user.name}}</h2>
           {{/if}}
-{{else}}
+        {{else}}
           <h2 class='username'>{{username}}</h2>
         {{/unless}}
 
@@ -78,6 +78,7 @@
         </li>
       {{/if}}
     </ul>
+
     {{plugin-outlet
       name="user-card-additional-controls"
       args=(hash user=user close=(action "close"))
@@ -91,12 +92,6 @@
       </div>
     {{else}}
       {{#if user.bio_cooked}}<div class='bio'>{{text-overflow class="overflow" text=user.bio_excerpt}}</div>{{/if}}
-    {{/if}}
-
-    {{#if user.card_badge}}
-      {{#link-to 'badges.show' user.card_badge class="card-badge" title=user.card_badge.name}}
-        {{icon-or-image user.card_badge.image title=user.card_badge.name}}
-      {{/link-to}}
     {{/if}}
 
     {{#if hasLocationOrWebsite}}

@@ -9,7 +9,7 @@ import CleansUp from 'discourse/mixins/cleans-up';
 export default Ember.Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: 'user-card',
   triggeringLinkClass: 'mention',
-  classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'user.card_background::no-bg', 'isFixed:fixed'],
+  classNameBindings: ['visible:show', 'showBadges', 'user.card_background::no-bg', 'isFixed:fixed'],
   allowBackgrounds: setting('allow_profile_backgrounds'),
   showBadges: setting('enable_badges'),
 
@@ -91,9 +91,6 @@ export default Ember.Component.extend(CardContentsBase, CanCheckEmails, CleansUp
     const bg = Ember.isEmpty(url) ? '' : `url(${Discourse.getURLWithCDN(url)})`;
     $this.css('background-image', bg);
   },
-
-  @computed('user.card_badge.image')
-  hasCardBadgeImage: image => image && image.indexOf('fa-') !== 0,
 
   _showCallback(username, $target) {
     const args = { stats: false };

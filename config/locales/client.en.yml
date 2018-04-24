@@ -834,8 +834,6 @@ en:
       created: "Joined"
       log_out: "Log Out"
       location: "Location"
-      card_badge:
-        title: "User Card Badge"
 
       website: "Web Site"
       email_settings: "Email"
