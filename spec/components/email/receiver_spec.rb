@@ -183,7 +183,7 @@ describe Email::Receiver do
 
     it "works" do
       expect { process(:text_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a text reply :)")
+      expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
       expect(topic.posts.last.via_email).to eq(true)
       expect(topic.posts.last.cooked).not_to match(/<br/)
 
@@ -233,7 +233,7 @@ describe Email::Receiver do
     it "uses text when prefer_html site setting is enabled but no html is available" do
       SiteSetting.incoming_email_prefer_html = true
       expect { process(:text_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a text reply :)")
+      expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
     end
 
     it "removes the 'on <date>, <contact> wrote' quoting line" do
