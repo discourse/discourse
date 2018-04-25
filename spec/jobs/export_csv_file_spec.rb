@@ -3,8 +3,20 @@ require 'rails_helper'
 describe Jobs::ExportCsvFile do
 
   context '.execute' do
+    let(:user) { Fabricate(:user, username: "john_doe") }
+
     it 'raises an error when the entity is missing' do
-      expect { Jobs::ExportCsvFile.new.execute(user_id: "1") }.to raise_error(Discourse::InvalidParameters)
+      expect { Jobs::ExportCsvFile.new.execute(user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'works' do
+      begin
+        expect { Jobs::ExportCsvFile.new.execute(user_id: user.id, entity: "user_archive") }.to_not raise_error
+        expect(user.topics_allowed.last.title).to eq("[User Archive] Data export complete")
+        expect(user.topics_allowed.last.first_post.raw).to include("user-archive-john_doe-")
+      ensure
+        user.uploads.find_each { |upload| upload.destroy }
+      end
     end
   end
 
