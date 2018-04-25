@@ -30,17 +30,23 @@ describe TrustLevel3Requirements do
       end
 
       it "returns if the user has ever been suspended" do
-        user.save
+        user.save!
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(0)
         expect(tl3_requirements.penalty_counts.total).to eq(0)
 
-        UserHistory.create(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
+        UserHistory.create!(
+          target_user_id: user.id,
+          action: UserHistory.actions[:suspend_user]
+        )
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(1)
         expect(tl3_requirements.penalty_counts.total).to eq(1)
 
-        UserHistory.create(target_user_id: user.id, action: UserHistory.actions[:unsuspend_user])
+        UserHistory.create!(
+          target_user_id: user.id,
+          action: UserHistory.actions[:unsuspend_user]
+        )
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(0)
         expect(tl3_requirements.penalty_counts.total).to eq(0)
