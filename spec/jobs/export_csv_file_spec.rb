@@ -18,7 +18,7 @@ describe Jobs::ExportCsvFile do
         ))
         expect(user.topics_allowed.last.first_post.raw).to include("user-archive-john_doe-")
       ensure
-        user.uploads.find_each { |upload| upload.destroy }
+        user.uploads.find_each { |upload| upload.destroy! }
       end
     end
   end
