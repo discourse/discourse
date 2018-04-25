@@ -12,7 +12,6 @@ class UserProfile < ActiveRecord::Base
 
   validate :website_domain_validator, if: Proc.new { |c| c.new_record? || c.website_changed? }
 
-  belongs_to :card_image_badge, class_name: 'Badge'
   has_many :user_profile_views, dependent: :destroy
 
   BAKED_VERSION = 1
@@ -126,7 +125,6 @@ end
 #  bio_cooked_version   :integer
 #  badge_granted_title  :boolean          default(FALSE)
 #  card_background      :string(255)
-#  card_image_badge_id  :integer
 #  views                :integer          default(0), not null
 #
 # Indexes
