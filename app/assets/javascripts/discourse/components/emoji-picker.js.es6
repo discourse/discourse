@@ -178,13 +178,17 @@ export default Ember.Component.extend({
   _bindModalClick() {
     this.$modal.on("click", () => this.set("active", false));
 
-    this.$(document).on("click.emoji-picker", (event) => {
-      const onPicker = $(event.target).parents(".emoji-picker").length === 1;
-      const onGrippie = event.target.className.indexOf("grippie") > -1;
-      if(!onPicker && !onGrippie) {
-        this.set("active", false);
-        return false;
+    $('html').on("mouseup.emoji-picker", event => {
+      let $target = $(event.target);
+      if ($target.closest(".emoji-picker").length ||
+          $target.closest('.emoji.btn').length ||
+          $target.hasClass('grippie')) {
+        return;
       }
+
+      // Close the popup if clicked outside
+      this.set("active", false);
+      return false;
     });
   },
 
@@ -194,7 +198,7 @@ export default Ember.Component.extend({
     this.$(window).off("resize");
     this.$modal.off("click");
     $("#reply-control").off("div-resizing");
-    this.$(document).off("click.emoji-picker");
+    $('html').off("mouseup.emoji-picker");
   },
 
   _filterEmojisList() {
