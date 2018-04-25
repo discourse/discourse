@@ -37,7 +37,8 @@ class Plugin::Metadata
     "discourse-presence",
     "discourse-staff-notes",
     "discourse-voting",
-    "docker_manager"
+    "docker_manager",
+    "discourse-signatures"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
