@@ -299,7 +299,7 @@ class ApplicationController < ActionController::Base
   SAFE_MODE = "safe_mode"
 
   def resolve_safe_mode
-    return unless SiteSetting.enable_safe_mode?
+    return unless guardian.can_enable_safe_mode?
 
     safe_mode = params[SAFE_MODE]
     if safe_mode
