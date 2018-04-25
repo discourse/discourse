@@ -12,7 +12,10 @@ describe Jobs::ExportCsvFile do
     it 'works' do
       begin
         expect { Jobs::ExportCsvFile.new.execute(user_id: user.id, entity: "user_archive") }.to_not raise_error
-        expect(user.topics_allowed.last.title).to eq("[User Archive] Data export complete")
+        expect(user.topics_allowed.last.title).to eq(I18n.t(
+          "system_messages.csv_export_succeeded.subject_template",
+          export_title: "User Archive"
+        ))
         expect(user.topics_allowed.last.first_post.raw).to include("user-archive-john_doe-")
       ensure
         user.uploads.find_each { |upload| upload.destroy }
