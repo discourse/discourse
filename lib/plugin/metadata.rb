@@ -36,7 +36,8 @@ class Plugin::Metadata
     "discourse-narrative-bot",
     "discourse-presence",
     "discourse-staff-notes",
-    "discourse-voting"
+    "discourse-voting",
+    "docker_manager"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
