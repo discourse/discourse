@@ -24,7 +24,7 @@ class SafeModeController < ApplicationController
   protected
 
   def ensure_safe_mode_enabled
-    raise Discourse::NotFound unless SiteSetting.enable_safe_mode?
+    raise Discourse::NotFound unless guardian.can_enable_safe_mode?
   end
 
 end
