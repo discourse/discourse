@@ -50,19 +50,7 @@
                         </span>
                       {{/if}}
 
-                      <span>
-                        <span class='groups-info-name'>{{group.displayName}}</span>
-
-                        {{#if group.full_name}}
-                          <span class='groups-info-full-name'>{{group.full_name}}</span>
-                        {{/if}}
-
-                        {{#if group.title}}
-                          <div>
-                            <span class='groups-info-title'>{{group.title}}</span>
-                          </div>
-                        {{/if}}
-                      </span>
+                      {{groups-info group=group}}
                     {{/link-to}}
                   </td>
 
