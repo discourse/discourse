@@ -842,8 +842,8 @@ class User < ActiveRecord::Base
 
   def self.count_by_first_post(start_date, end_date)
     joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
-    .smart_group_by_date("us.first_post_created_at", start_date, end_date)
-    .count
+      .smart_group_by_date("us.first_post_created_at", start_date, end_date)
+      .count
   end
 
   def secure_category_ids
