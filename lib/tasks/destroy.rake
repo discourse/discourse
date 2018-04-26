@@ -1,6 +1,6 @@
 ## These tasks are destructive and are for clearing out all the
 #   content and users from your site, but keeping your site settings,
-#   theme, and category structrue.
+#   theme, and category structure.
 desc "Remove all topics in a category"
 task "destroy:topics", [:category] => :environment do |t, args|
   category = args[:category]
@@ -32,7 +32,7 @@ task "destroy:users" => :environment do
   puts log = DestroyTask.destroy_users
 end
 
-desc "Destory site stats"
+desc "Destroy site stats"
 task "destroy:stats" => :environment do
   puts "Going to delete all site stats..."
   DestroyTask.destroy_stats
