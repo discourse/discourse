@@ -27,10 +27,12 @@
         <div class='container'>
           <table class="groups-table">
             <thead>
-              {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
-              {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
-              <th>{{i18n "groups.index.group_type"}}</th>
-              <th>{{i18n "groups.membership"}}</th>
+              <tr>
+                {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
+                {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
+                <th>{{i18n "groups.index.group_type"}}</th>
+                <th>{{i18n "groups.membership"}}</th>
+              </tr>
             </thead>
 
             <tbody>
