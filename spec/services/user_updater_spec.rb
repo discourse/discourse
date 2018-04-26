@@ -159,7 +159,7 @@ describe UserUpdater do
       it 'allows user to change title' do
         user = Fabricate(:user, title: 'Emperor')
         guardian = stub
-        guardian.stubs(:can_grant_title?).with(user).returns(true)
+        guardian.stubs(:can_grant_title?).with(user, 'Minion').returns(true)
         Guardian.stubs(:new).with(acting_user).returns(guardian)
         updater = UserUpdater.new(acting_user, user)
 
@@ -169,11 +169,63 @@ describe UserUpdater do
       end
     end
 
+    context 'title is from a badge' do
+      let(:user) { Fabricate(:user, title: 'Emperor') }
+      let(:badge) { Fabricate(:badge, name: 'Minion') }
+
+      context 'badge can be used as a title' do
+        before do
+          badge.update_attributes(allow_title: true)
+        end
+
+        it 'can use as title, sets badge_granted_title' do
+          BadgeGranter.grant(badge, user)
+          updater = UserUpdater.new(user, user)
+          updater.update(title: badge.name)
+          user.reload
+          expect(user.user_profile.badge_granted_title).to eq(true)
+        end
+
+        it 'badge has not been granted, does not change title' do
+          badge.update_attributes(allow_title: true)
+          updater = UserUpdater.new(user, user)
+          updater.update(title: badge.name)
+          user.reload
+          expect(user.title).not_to eq(badge.name)
+          expect(user.user_profile.badge_granted_title).to eq(false)
+        end
+
+        it 'changing to a title that is not from a badge, unsets badge_granted_title' do
+          user.update_attributes(title: badge.name)
+          user.user_profile.update_attributes(badge_granted_title: true)
+
+          guardian = stub
+          guardian.stubs(:can_grant_title?).with(user, 'Dancer').returns(true)
+          Guardian.stubs(:new).with(user).returns(guardian)
+
+          updater = UserUpdater.new(user, user)
+          updater.update(title: 'Dancer')
+          user.reload
+          expect(user.title).to eq('Dancer')
+          expect(user.user_profile.badge_granted_title).to eq(false)
+        end
+      end
+
+      it 'cannot use as title, does not change title' do
+        BadgeGranter.grant(badge, user)
+        updater = UserUpdater.new(user, user)
+        updater.update(title: badge.name)
+        user.reload
+        expect(user.title).not_to eq(badge.name)
+        expect(user.user_profile.badge_granted_title).to eq(false)
+      end
+    end
+
     context 'without permission to update title' do
       it 'does not allow user to change title' do
         user = Fabricate(:user, title: 'Emperor')
         guardian = stub
-        guardian.stubs(:can_grant_title?).with(user).returns(false)
+        guardian.stubs(:can_grant_title?).with(user, 'Minion').returns(false)
         Guardian.stubs(:new).with(acting_user).returns(guardian)
         updater = UserUpdater.new(acting_user, user)
 
