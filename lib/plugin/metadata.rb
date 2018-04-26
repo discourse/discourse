@@ -38,7 +38,19 @@ class Plugin::Metadata
     "discourse-staff-notes",
     "discourse-voting",
     "docker_manager",
-    "discourse-signatures"
+    "discourse-signatures",
+    "discourse-azure-ad",
+    "discourse-chronos",
+    "discourse-crowd",
+    "discourse-footnote",
+    "discourse-dwolla",
+    "discourse-gradle-issue",
+    "discourse-no-bump",
+    "discourse-moderator-attention",
+    "discourse-sitemap",
+    "discourse-tooltips",
+    "discourse-styleguide",
+    "discourse-saved-searches",
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
