@@ -85,6 +85,10 @@
   padding: 10px 10px 35px 10px;
   box-shadow: shadow("card");
   background: $highlight-medium;
+  .hide-preview & {
+    z-index: z("composer","dropdown") + 1;    
+  }
+  
 
   &.urgent {
     background: $danger-low;
