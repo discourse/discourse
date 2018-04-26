@@ -345,6 +345,9 @@ export default Ember.Component.extend({
         return obj.text;
       },
       dataSource(term) {
+        if (term.match(/\s/)) {
+          return null;
+        }
         return searchCategoryTag(term, siteSettings);
       },
       triggerRule(textarea, opts) {
