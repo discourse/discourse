@@ -21,8 +21,8 @@ module DateGroupable extend ActiveSupport::Concern
     end
 
     def group_by_unit(aggregation_unit, column)
-      group("date_trunc('#{aggregation_unit}', #{column})")
-        .order("date_trunc('#{aggregation_unit}', #{column})")
+      group("date_trunc('#{aggregation_unit}', #{column})::DATE")
+        .order("date_trunc('#{aggregation_unit}', #{column})::DATE")
     end
 
     def smart_group_by_date(column, start_date, end_date)
