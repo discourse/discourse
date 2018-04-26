@@ -42,7 +42,6 @@ class Plugin::Metadata
     "discourse-chronos",
     "discourse-crowd",
     "discourse-footnote",
-    "discourse-dwolla",
     "discourse-gradle-issue",
     "discourse-no-bump",
     "discourse-moderator-attention",
