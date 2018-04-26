@@ -43,6 +43,10 @@
   .dashboard-table {
     margin-bottom: 1em;
 
+    &.fixed table {
+      table-layout: fixed;
+    }
+
     &.is-loading {
       height: 150px;
     }
@@ -59,7 +63,6 @@
 
     table {
       border: 1px solid $primary-low-mid;
-      table-layout: fixed;
 
       thead {
         tr {
@@ -67,6 +70,10 @@
           th {
             border: 1px solid $primary-low-mid;
             text-align: center;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
           }
         }
       }
@@ -76,6 +83,31 @@
           td {
             border: 1px solid $primary-low-mid;
             text-align: center;
+          }
+
+          td.value {
+            i {
+              display: none;
+            }
+
+            &.high-trending-up, &.trending-up {
+              i.up {
+                color: $success;
+                display: inline;
+              }
+            }
+            &.high-trending-down, &.trending-down {
+              i.down {
+                color: $danger;
+                display: inline;
+              }
+            }
+            &.no-change {
+              i.down {
+                display: inline;
+                visibility: hidden;
+              }
+            }
           }
         }
       }
@@ -110,13 +142,13 @@
         }
       }
 
-      &.double-up, &.up {
+      &.high-trending-up, &.trending-up {
         .chart-trend, .data-point {
           color: rgb(17, 141, 0);
         }
       }
 
-      &.double-down, &.down {
+      &.high-trending-down, &.trending-down {
         .chart-trend, .data-point {
           color: $danger;
         }
@@ -145,13 +177,14 @@
     .chart-container {
       position: relative;
       padding: 0 1em;
+      min-height: 200px;
     }
 
     .chart-trend {
       font-size: $font-up-5;
       position: absolute;
-      right: 1.5em;
-      top: .5em;
+      right: 40px;
+      top: 5px;
       display: flex;
       justify-content: space-between;
       align-items: center;

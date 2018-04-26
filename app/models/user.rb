@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   include Roleable
   include HasCustomFields
   include SecondFactorManager
+  include DateGroupable
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -829,13 +830,20 @@ class User < ActiveRecord::Base
   end
 
   def self.count_by_signup_date(start_date, end_date, group_id = nil)
-    result = where('users.created_at >= ? AND users.created_at <= ?', start_date, end_date)
+    result = smart_group_by_date("users.created_at", start_date, end_date)
 
     if group_id
       result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
       result = result.where("group_users.group_id = ?", group_id)
     end
-    result.group('date(users.created_at)').order('date(users.created_at)').count
+
+    result.count
+  end
+
+  def self.count_by_first_post(start_date, end_date)
+    joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
+    .smart_group_by_date("us.first_post_created_at", start_date, end_date)
+    .count
   end
 
   def secure_category_ids

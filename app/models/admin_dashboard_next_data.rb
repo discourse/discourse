@@ -4,7 +4,8 @@ class AdminDashboardNextData
   GLOBAL_REPORTS ||= [
     'signups',
     'topics',
-    'trending_search'
+    'trending_search',
+    'new_contributors'
   ]
 
   USER_REPORTS ||= [
