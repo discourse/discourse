@@ -126,7 +126,6 @@ export default function() {
       this.route('email');
       this.route('second-factor');
       this.route('about', { path: '/about-me' });
-      this.route('badgeTitle', { path: '/badge_title' });
     });
 
     this.route('userInvited', { path: '/invited', resetNamespace: true }, function() {
