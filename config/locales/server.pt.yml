@@ -897,7 +897,6 @@ pt:
     enable_facebook_logins: "Ativar autenticação pelo Facebook, requer facebook_app_id e facebook_app_secret"
     facebook_app_id: "Id App usado para autenticação pelo Facebook, registado em https://developers.facebook.com/apps"
     facebook_app_secret: "Chave da App para autenticação com o Facebook, registado em https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "Requerer informação sobre mim, localização e website do facebook. (requer que sua aplicação de autenticação esteja autorizada pelo facebook)"
     enable_github_logins: "Ativar autenticação via Github, requer github_client_id e github_client_secret"
     github_client_id: "Id do cliente para autenticação pelo Github, registado em https://github.com/settings/applications"
     github_client_secret: "Chave do Cliente para autenticação pelo Github, registado em https://github.com/settings/applications"

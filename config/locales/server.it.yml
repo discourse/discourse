@@ -997,7 +997,6 @@ it:
     enable_facebook_logins: "Abilita l'autenticazione via Facebook, richiede facebook_app_id e facebook_app_secret"
     facebook_app_id: "App id per autenticazione Facebook, come registrata su  https://developers.facebook.com/apps"
     facebook_app_secret: "App secret per autenticazione Facebook, come registrata su https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "Richiedi i miei dati, posizione e sito web da facebook (richiede che la tua applicazione auth sia approvata da facebook)."
     enable_github_logins: "Abilita l'autenticazione via Github, richiede github_client_id e github_client_secret"
     github_client_id: "Client id per autenticazione Github, come registrata su https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, come registrata su  https://github.com/settings/applications"

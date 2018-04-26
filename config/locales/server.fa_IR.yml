@@ -925,7 +925,6 @@ fa_IR:
     enable_facebook_logins: "فعال کردن احراز هویت فیس‌بوک به facebook_app_id و facebook_app_secret  نیار دارد"
     facebook_app_id: "App ID برای احراز هویت فیس بوک٬ که در  https://developers.facebook.com/apps ایجاد شده"
     facebook_app_secret: "App secret برای احراز هویت فیس بوک، که در https://developers.facebook.com/apps ثبت شده"
-    facebook_request_extra_profile_details: "درخواست دربارهمن، موقعیت من و سایت من از فیسبوک‌ (نیازمند تایید برنامه شما توسط فیسبوک است)"
     enable_github_logins: "احراز هویت در Github را فعال کن، نیاز به github_client_id  و github_client_secret"
     github_client_id: "Client ID برای احراز هویت در Github ٬ که در https://github.com/settings/applications ایجاد شده"
     github_client_secret: "Client secret را برای احراز هویت Github@که در https://github.com/settings/applications ایجاد شده"

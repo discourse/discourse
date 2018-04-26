@@ -903,7 +903,6 @@ ro:
     enable_facebook_logins: "Activează autentificarea cu Facebook, necesită facebook_app_id și facebook_app_secret"
     facebook_app_id: "ID-ul aplicației pentru autentificarea cu Facebook, înregistrată la https://developers.facebook.com/apps"
     facebook_app_secret: "App secret pentru autentificarea cu Facebook, înregistrat la https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "Solicită informațiile despre mine, locație și website de la Facebook. (necesită ca aplicația ta de autentificare să fie aprobată de Facebook)"
     enable_github_logins: "Activează autentificarea cu Github, requires github_client_id and github_client_secret"
     github_client_id: "ID client pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
     github_client_secret: "Secretul clientului pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"

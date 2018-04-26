@@ -976,7 +976,6 @@ zh_CN:
     enable_facebook_logins: "启用 Facebook 帐号验证登录，需要 facebook_app_id 和 facebook_app_secret"
     facebook_app_id: "Facebook 帐号验证的应用帐号（App id），到 https://developers.facebook.com/apps 来注册获取"
     facebook_app_secret: "Facebook 帐号验证的应用密码（App secret），到 https://developers.facebook.com/apps 来注册获取"
-    facebook_request_extra_profile_details: "从 Facebook 中请求关于我、地点和网站。（需要 Facebook 许可你的登录应用）"
     enable_github_logins: "启用 Github 帐号验证登录，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帐号验证的客户端帐号（Client id），到 https://github.com/settings/applications 来注册获取"
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"

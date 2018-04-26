@@ -912,7 +912,6 @@ ko:
     enable_facebook_logins: "Facebook 인증을 활성화합니다. facebook_app_id와 facebook_app_secret 필요."
     facebook_app_id: "https://developers.facebook.com/apps에 등록된 Facebook 인증을 위한 App id"
     facebook_app_secret: "https://developers.facebook.com/apps에 등록된 Facebook 인증을 위한 App secret"
-    facebook_request_extra_profile_details: "Facebook에서 자기소개, 위치, 웹사이트를 요청(인증 어플리케이션이 Facebook으로부터 허가 받아야 함)"
     enable_github_logins: "Github 인증을 활성화한다. github_client_id와 github_client_secret 필요."
     github_client_id: "https://github.com/settings/applications에 등록된 Github 인증을 위한 Client id"
     github_client_secret: "https://github.com/settings/applications에 등록된 Github 인증을 위한 Client secret"

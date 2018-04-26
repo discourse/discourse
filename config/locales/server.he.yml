@@ -969,7 +969,6 @@ he:
     enable_facebook_logins: "איפשור אימות פייסבוק, מצריך facebook_app_id ו facebook_app_secret"
     facebook_app_id: "מזהה אפליקציה לאימות פייסבוק, רשום ב https://developers.facebook.com/apps"
     facebook_app_secret: "סוד אפליקציה לאימות פייסבוק, רשום ב https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "בקשת מידע לגבי \"אודות\", מיקום, ואתר אינטרנט מפייסבוק. (מצריך שאפליקציית האימות שלכם תאושר על ידי פייסבוק)"
     enable_github_logins: "אפשור אימות Github, מצריך github_client_id ו github_client_secret"
     github_client_id: "מזהה לקוח לאימות Github, רשום ב https://github.com/settings/applications"
     github_client_secret: "סוד לקוח לאימות Github, רשום ב https://github.com/settings/applications"

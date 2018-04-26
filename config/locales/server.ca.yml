@@ -908,7 +908,6 @@ ca:
     enable_facebook_logins: "Activa l'autenticació amb Facebook, necessita facebook_app_id i facebook_app_secret"
     facebook_app_id: "Id d'app per a l'autenticació amb Facebook, registrada a https://developers.facebook.com/apps"
     facebook_app_secret: "Secret d'app per a l'autenticació amb Facebook, registrat a https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "Demana sobre mi, ubicació i lloc web de Facebook. (necessita que la teva aplicació sigui aprovada per Facebook)"
     enable_github_logins: "Activar l'autenticació de GitHub, necessita  github_client_id i github_client_secret"
     github_client_id: "Id client per a l'autenticació amb Github, registrada a https://github.com/settings/applications"
     github_client_secret: "Secret de client per a l'autenticació amb GitHub, registrat a https://github.com/settings/applications"
