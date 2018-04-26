@@ -39,7 +39,6 @@ class Plugin::Metadata
     "discourse-voting",
     "docker_manager",
     "discourse-signatures",
-    "discourse-azure-ad",
     "discourse-chronos",
     "discourse-crowd",
     "discourse-footnote",
