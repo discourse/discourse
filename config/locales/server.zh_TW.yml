@@ -881,7 +881,6 @@ zh_TW:
     enable_facebook_logins: "啟用臉書（Facebook）帳號驗證登入，需要 facebook_app_id 和 facebook_app_secret"
     facebook_app_id: "臉書帳號驗證的應用帳號（App id），到 https://developers.facebook.com/apps 來註冊獲取"
     facebook_app_secret: "臉書帳號驗證的應用密碼（App secret），到 https://developers.facebook.com/apps 來註冊獲取"
-    facebook_request_extra_profile_details: "從 Facebook 中請求關於我、地點和網站。（需要 Facebook 許可你的登錄應用）"
     enable_github_logins: "啟用 Github 帳號驗證登入，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帳號驗證的用戶端帳號（Client id），到 https://github.com/settings/applications 來註冊獲取"
     github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"

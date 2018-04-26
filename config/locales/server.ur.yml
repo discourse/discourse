@@ -1092,7 +1092,6 @@ ur:
     enable_facebook_logins: "فَیس بُک توثیق کو فعال کریں، facebook_app_id اور facebook_app_secret کی ضرورت ہے"
     facebook_app_id: "فَیس بُک توثیق کیلئے اَیپ آئی ڈی، https://developers.facebook.com/apps پر رجسٹر کردہ"
     facebook_app_secret: "فَیس بُک توثیق کیلئے اَیپ سیکرٹ، https://developers.facebook.com/apps پر رجسٹر کردہ"
-    facebook_request_extra_profile_details: "فَیس بُک سے میرے بارے میں، میرا محل وقوع اور میری ویب سائٹ کی درخواست کریں۔ (آپ کی توثیق اَیپلیکیشن، فَیس بُک سے منظور شدہ ہونے کی ضرورت ہوتی ہے)"
     enable_github_logins: "گِٹ ہَب توثیق کو فعال کریں، github_client_id اور github_client_secret کی ضرورت ہے"
     github_client_id: "گِٹ ہَب توثیق کیلئے کلائنٹ آئی ڈی، https://github.com/settings/applications پر رجسٹر کردہ"
     github_client_secret: "گِٹ ہَب توثیق کیلئے کلائنٹ سیکرٹ، https://github.com/settings/applications پر رجسٹر کردہ"

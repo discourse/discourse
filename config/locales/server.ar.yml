@@ -1039,7 +1039,6 @@ ar:
     enable_facebook_logins: "تفعيل تسجيل الدخول عن طريق حساب الفيسبوك."
     facebook_app_id: "رقم تعريف تطبيق الفيسبوك المستخدم لنظام تسجيل الدخول، يمكنك الحصور علية من هنا https://developers.facebook.com/apps"
     facebook_app_secret: "الرقم السري لتطبيق الفيسبوك المستخدم لنظام تسجيل الدخول، يمكنك الحصور علية من هنا https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "اطلب من الفيسبوك البيانات \"عني و الموقع الجغرافي و الموقع الالكتروني\". ( يتطلب ان يكون التطبيق المستخدم موافق عليه من قبل الفيسبوك )"
     enable_github_logins: "فعّل استيثاق غِت‌هَب، يتطلّب github_client_id وgithub_client_secret"
     github_client_id: "هوية العميل للمصادقة جيثب، مسجلة في https://github.com/settings/applications"
     github_client_secret: "هوية العميل للمصادقة جيثب، مسجلة في https://github.com/settings/applications"
