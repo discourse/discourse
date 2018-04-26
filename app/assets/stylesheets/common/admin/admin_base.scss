@@ -965,13 +965,13 @@ table.api-keys {
         display: none;
       }
 
-      &.trending-up {
+      &.high-trending-up, &.trending-up {
         i.up {
           color: $success;
           display: inline;
         }
       }
-      &.trending-down {
+      &.high-trending-down, &.trending-down {
         i.down {
           color: $danger;
           display: inline;
@@ -986,10 +986,10 @@ table.api-keys {
     }
 
     tr.reverse-colors {
-      td.value.trending-down i.down {
+      td.value.high-trending-down i.down, td.value.trending-down i.down {
         color: $success;
       }
-      td.value.trending-up i.up {
+      td.value.high-trending-up i.up, td.value.trending-up i.up {
         color: $danger;
       }
     }

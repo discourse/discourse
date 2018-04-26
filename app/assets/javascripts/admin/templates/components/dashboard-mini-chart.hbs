@@ -2,8 +2,10 @@
   <div class="chart-title">
     <h3>{{title}}</h3>
 
-    {{#if help}}
-      {{d-icon "question-circle" title=help}}
+    {{#if description}}
+      <span title={{description}}>
+        {{d-icon "question-circle"}}
+      </span>
     {{/if}}
   </div>
 
@@ -14,7 +16,7 @@
       </span>
     {{else}}
       <div class="chart-trend {{trend}}">
-        <span>{{number total}}</span>
+        <span>{{number prev30Days}}</span>
 
         {{#if trendIcon}}
           {{d-icon trendIcon}}
