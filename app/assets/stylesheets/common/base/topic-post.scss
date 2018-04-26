@@ -630,3 +630,13 @@ and (max-width : 767px) {
     clear: left;
   }
 }
+
+.signup-cta {
+  a {
+    float: right;
+    text-decoration: underline;
+  }
+  .buttons {
+    margin-bottom: 1em;
+  }
+}
