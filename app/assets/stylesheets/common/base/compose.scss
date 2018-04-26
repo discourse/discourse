@@ -237,6 +237,10 @@
     }
   }
 
+  .popup-tip {
+    z-index: z("composer","dropdown");
+  }
+    
   .wmd-controls {
     position: relative;
     display: flex;
