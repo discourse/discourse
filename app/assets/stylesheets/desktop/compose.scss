@@ -14,6 +14,10 @@
   #private-message-users {
     width: 404px;
   }
+
+  .select-kit.is-expanded {
+    z-index: z("composer","dropdown");    
+  }
 }
 
 .category-input {
