@@ -7,6 +7,7 @@
 # max                - For a string setting, the maximum length. For an integer setting, the maximum value.
 # regex              - A regex that the value must match.
 # validator          - The name of the class that will be use to validate the value of the setting.
+# allow_any          - For choice settings allow items not specified in the choice list (default true)
 # enum               - The setting has a fixed set of allowed values, and only one can be chosen.
 #                      Set to the class name that defines the set.
 # shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
@@ -121,6 +122,7 @@ basic:
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
     validator: RegexPresenceValidator
+    allow_any: false
     choices:
      - latest
      - new
@@ -134,6 +136,7 @@ basic:
     client: true
     type: list
     default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
+    allow_any: false
     choices:
      - like-count
      - like
@@ -148,6 +151,7 @@ basic:
     client: true
     type: list
     default: 'flag|bookmark|edit|delete|admin'
+    allow_any: false
     choices:
      - like
      - edit
@@ -161,6 +165,7 @@ basic:
     client: true
     type: list
     default: 'twitter|facebook|email'
+    allow_any: false
     choices:
      - twitter
      - facebook

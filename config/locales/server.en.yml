@@ -154,6 +154,9 @@ en:
     embed:
       load_from_remote: "There was an error loading that post."
     site_settings:
+      invalid_choice:
+        one: 'You specified the invalid choice %{name}'
+        other: 'You specified the invalid choices %{name}'
       min_username_length_exists: "You cannot set the minimum username length above the shortest username."
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username."
