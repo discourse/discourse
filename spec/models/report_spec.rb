@@ -250,6 +250,36 @@ describe Report do
     end
   end
 
+  describe 'new contributors report' do
+    let(:report) { Report.find('new_contributors') }
+
+    context "no contributors" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with contributors" do
+      before do
+        jeff = Fabricate(:user)
+        jeff.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 1.day.ago)
+
+        regis = Fabricate(:user)
+        regis.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
+
+        hawk = Fabricate(:user)
+        hawk.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+
+        expect(report.data[0][:y]).to eq 2
+        expect(report.data[1][:y]).to eq 1
+      end
+    end
+  end
+
   describe 'users by types level report' do
     let(:report) { Report.find('users_by_type') }
 

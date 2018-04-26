@@ -60,12 +60,18 @@ const Report = Discourse.Model.extend({
   sevenDayTrend() {
     const currentPeriod = this.valueFor(1, 7);
     const prevPeriod = this.valueFor(8, 14);
-    if (currentPeriod > prevPeriod) {
+    const change = ((currentPeriod - prevPeriod) / prevPeriod) * 100;
+
+    if (change > 50) {
+      return "high-trending-up";
+    } else if (change > 0) {
       return "trending-up";
-    } else if (currentPeriod < prevPeriod) {
-      return "trending-down";
-    } else {
+    } else if (change === 0) {
       return "no-change";
+    } else if (change < -50) {
+      return "high-trending-down";
+    } else if (change < 0) {
+      return "trending-down";
     }
   },
 

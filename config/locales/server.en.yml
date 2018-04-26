@@ -840,6 +840,12 @@ en:
       title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
+      description: "Users created for this period"
+    new_contributors:
+      title: "New Contributors"
+      xaxis: "Day"
+      yaxis: "Number of new contributors"
+      description: "Number of users who made their first contribution"
     profile_views:
       title: "User Profile Views"
       xaxis: "Day"
@@ -848,6 +854,7 @@ en:
       title: "Topics"
       xaxis: "Day"
       yaxis: "Number of new topics"
+      description: "Topics created for this period"
     posts:
       title: "Posts"
       xaxis: "Day"

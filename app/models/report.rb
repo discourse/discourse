@@ -20,6 +20,7 @@ class Report
      title: I18n.t("reports.#{type}.title"),
      xaxis: I18n.t("reports.#{type}.xaxis"),
      yaxis: I18n.t("reports.#{type}.yaxis"),
+     description: I18n.t("reports.#{type}.description"),
      data: data,
      total: total,
      start_date: start_date,
@@ -107,6 +108,10 @@ class Report
     else
       report_about report, User.real, :count_by_signup_date
     end
+  end
+
+  def self.report_new_contributors(report)
+    report_about report, User.real, :count_by_first_post
   end
 
   def self.report_profile_views(report)

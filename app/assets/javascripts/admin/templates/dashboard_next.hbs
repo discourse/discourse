@@ -1,5 +1,5 @@
 {{plugin-outlet name="admin-dashboard-top"}}
-{{lastRefreshedAt}}
+
 <div class="community-health section">
   <div class="section-title">
     <h2>{{i18n "admin.dashboard.community_health"}}</h2>
@@ -9,31 +9,61 @@
   <div class="section-body">
     <div class="charts">
       {{dashboard-mini-chart
-        model=global_reports_signups
+        model=model.reports.global_reports.signups
         dataSourceName="signups"
         startDate=startDate
-        endDate=endDate
-        help="admin.dashboard.charts.signups.help"}}
+        endDate=endDate}}
 
       {{dashboard-mini-chart
-        model=global_reports_topics
+        model=model.reports.global_reports.topics
         dataSourceName="topics"
         startDate=startDate
-        endDate=endDate
-        help="admin.dashboard.charts.topics.help"}}
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        model=model.reports.global_reports.new_contributors
+        dataSourceName="new_contributors"
+        startDate=startDate
+        endDate=endDate}}
     </div>
   </div>
 </div>
 
 <div class="section-columns">
   <div class="section-column">
+    <div class="dashboard-table">
+      <div class="table-title">
+        <h3>{{i18n "admin.dashboard.activity_metrics"}}</h3>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>{{i18n 'admin.dashboard.reports.today'}}</th>
+              <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
+              <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
+              <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
+              <th>{{i18n 'admin.dashboard.reports.all'}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{admin-report-counts report=model.reports.global_reports.topics}}
+            {{admin-report-counts report=model.reports.global_reports.signups}}
+            {{admin-report-counts report=model.reports.global_reports.new_contributors}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     {{dashboard-inline-table
-      model=user_reports_users_by_type
+      model=model.reports.user_reports.users_by_type
       lastRefreshedAt=lastRefreshedAt
       isLoading=isLoading}}
 
     {{dashboard-inline-table
-      model=user_reports_users_by_trust_level
+      model=model.reports.user_reports.users_by_trust_level
       lastRefreshedAt=lastRefreshedAt
       isLoading=isLoading}}
 
@@ -44,7 +74,7 @@
             <div class="backups">
               <h3 class="durability-title"><a href="/admin/backups">{{i18n "admin.dashboard.backups"}}</a></h3>
               <p>
-                {{disk_space.backups_used}} ({{i18n "admin.dashboard.space_free" size=disk_space.backups_free}})
+                {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
                 <br />
                 {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
               </p>
@@ -54,7 +84,7 @@
           <div class="uploads">
             <h3 class="durability-title">{{i18n "admin.dashboard.uploads"}}</h3>
             <p>
-              {{disk_space.uploads_used}} ({{i18n "admin.dashboard.space_free" size=disk_space.uploads_free}})
+              {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
             </p>
           </div>
         </div>
