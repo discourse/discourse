@@ -16,7 +16,9 @@ sr:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
   date:
-    month_names: [null, januar, februar, mart, april, maj, jun, jul, avgust, septembar, oktobar, novembar, decembar]
+    month_names: [~, januar, februar, mart, april, maj, jun, jul, avgust, septembar, oktobar, novembar, decembar]
+    <<: *datetime_formats
+  time:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
@@ -35,9 +37,9 @@ sr:
       invalid_boolean: "Nepravilan boolean."
       even: mora biti parno
       exclusion: je rezervisano
-      greater_than: mora biti veće od %{count}
+      greater_than: "mora biti veće od %{count}"
       contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
-      less_than: mora biti manje od 1%{count}
+      less_than: "mora biti manje od 1%{count}"
       not_a_number: nije broj
       not_an_integer: mora biti ceo broj
       record_invalid: 'Verifikacija neuspešna: 1%{errors}'
@@ -45,6 +47,9 @@ sr:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -99,13 +104,13 @@ sr:
       user_profile:
         bio_raw: "O meni"
     errors:
+      <<: *errors
       models:
         user:
           attributes:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
-      <<: *errors
   change_email:
     authorizing_old:
       title: "Hvala što ste potvrdili svoju važeću email adresu"
@@ -193,8 +198,3 @@ sr:
             one_paragraph: "Molimo da vaša poruka dobrodošlice ne bude duža od jednog paragrafa."
       finished:
         title: "Vaš Discource je spreman!"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

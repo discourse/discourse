@@ -17,12 +17,12 @@ bs_BA:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
+    month_names: [~, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Topics"
   posts: "posts"
@@ -41,6 +41,9 @@ bs_BA:
       taken: "has already been taken"
     embed:
       load_from_remote: "There was an error loading that post."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -85,7 +88,7 @@ bs_BA:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
   education:
-    new-topic: |
+    'new-topic': |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
       - Does the title accurately describe your topic? Does it sound interesting?
@@ -95,7 +98,7 @@ bs_BA:
       - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
       - Does your reply improve the conversation in some way?
@@ -112,6 +115,7 @@ bs_BA:
       user_profile:
         bio_raw: "O Meni"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -127,7 +131,6 @@ bs_BA:
           attributes:
             hex:
               invalid: "is not a valid color"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_name: "Lounge"
@@ -176,18 +179,18 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      one: "1 sat"
-      few: "Par sati"
-      other: "%{count} sati"
+      few: Par sati
+      one: 1 sat
+      other: '%{count} sati'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
       about_x_hours:
-        one: "Pred 1 sat"
-        few: "Pred par sati"
-        other: "Pred %{count} sata"
+        few: Pred par sati
+        one: Pred 1 sat
+        other: Pred %{count} sata
   password_reset:
     update: 'Obnovi Šifru'
     save: 'Namjesti Šifru'
@@ -657,8 +660,6 @@ bs_BA:
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
     bulk_invite_failed:
       subject_template: "Bulk user invite processed with errors"
-    csv_export_succeeded:
-      subject_template: "Data Export completed successfully"
     csv_export_failed:
       subject_template: "Export failed"
     pending_users_reminder:
@@ -729,6 +730,3 @@ bs_BA:
     title: "Terms of Service"
   privacy_topic:
     title: "Privacy Policy"
-  activemodel:
-    errors:
-      <<: *errors

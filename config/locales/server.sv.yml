@@ -17,12 +17,12 @@ sv:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januari, Februari, Mars, April, Maj, Juni, Juli, Augusti, September, Oktober, November, December]
+    month_names: [~, Januari, Februari, Mars, April, Maj, Juni, Juli, Augusti, September, Oktober, November, December]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Ämnen"
   posts: "inlägg"
@@ -62,18 +62,18 @@ sv:
       present: måste vara tomt
       confirmation: "matchar inte %{attribute}"
       empty: kan inte vara tomt
-      equal_to: måste vara lika med %{count}
+      equal_to: "måste vara lika med %{count}"
       even: måste vara jämnt
       exclusion: är reserverad
-      greater_than: måste vara större än %{count}
-      greater_than_or_equal_to: måste vara större eller lika med %{count}
+      greater_than: "måste vara större än %{count}"
+      greater_than_or_equal_to: "måste vara större eller lika med %{count}"
       has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
       is_invalid: "Verkar oklart, är det en komplett mening?"
       contains_censored_words: "innehåller följande censurerade ord:%(censurerade_ord)"
-      less_than: måste vara mindre än %{count}
-      less_than_or_equal_to: måste vara mindre eller lika med %{count}
+      less_than: "måste vara mindre än %{count}"
+      less_than_or_equal_to: "måste vara mindre eller lika med %{count}"
       not_a_number: är inte ett nummer
       not_an_integer: måste vara ett tal
       odd: måste vara udda
@@ -94,7 +94,7 @@ sv:
     template:
       body: 'Det uppstod problem med följande fält:'
       header:
-        one: 'Ett fel förhindrade %{model} från att sparas'
+        one: Ett fel förhindrade %{model} från att sparas
         other: '%{count} fel förhindrade %{model} från att sparas'
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
@@ -105,6 +105,9 @@ sv:
       max_username_length_range: "Du kan inte sätta maximum högre än minimum."
       default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista. "
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "Ert invitations lösenord är ogiltigt. Vänlig kontakta webbplatsens administratör."
   bulk_invite:
@@ -124,8 +127,8 @@ sv:
   reading_time: "Lästid"
   likes: "Gillningar"
   too_many_replies:
-    one: "Vi är ledsna men nya användare är tillfälligt begränsade till 1 svar i samma ämne."
-    other: "Vi är ledsna men nya användare är tillfälligt begränsade till &{count} svar i samma ämne."
+    one: Vi är ledsna men nya användare är tillfälligt begränsade till 1 svar i samma ämne.
+    other: Vi är ledsna men nya användare är tillfälligt begränsade till &{count} svar i samma ämne.
   embed:
     start_discussion: "Starta diskussion"
     continue: "Fortsätt diskussion"
@@ -135,35 +138,35 @@ sv:
     no_hosts: "Inga värdar var uppsatta för textinbäddningen"
     configure: "konfigurera inbäddningen"
     more_replies:
-      one: "1 till svar"
-      other: "%{count} till svar"
+      one: 1 till svar
+      other: '%{count} till svar'
     loading: "Laddar diskussion..."
     permalink: "Permalänk"
     imported_from: "Detta är ett kopplat diskussionsämne till det ursprungliga inlägget på %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 svar"
-      other: "%{count} svar"
+      one: 1 svar
+      other: '%{count} svar'
   no_mentions_allowed: "Tyvärr, du kan inte omnämna andra användare."
   too_many_mentions:
-    one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
-    other: "Tyvärr, du kan bara omnämna %{count} användare i ett inlägg."
+    one: Tyvärr, du kan bara omnämna en annan användare i ett inlägg.
+    other: Tyvärr, du kan bara omnämna %{count} användare i ett inlägg.
   no_mentions_allowed_newuser: "Tyvärr, nya användare kan inte omnämna andra användare."
   too_many_mentions_newuser:
-    one: "Tyvärr, besökare kan bara omnämna en annan användare i ett inlägg."
-    other: "Tyvärr, besökare kan bara omnämna %{count} användare i ett inlägg."
+    one: Tyvärr, besökare kan bara omnämna en annan användare i ett inlägg.
+    other: Tyvärr, besökare kan bara omnämna %{count} användare i ett inlägg.
   no_images_allowed: "Tyvärr, nya användare kan inte infoga bilder i inlägg."
   too_many_images:
-    one: "Tyvärr, nya användare kan bara infoga en bild i ett inlägg."
-    other: "Tyvärr, nya användare kan bara infoga %{count} bilder i ett inlägg."
+    one: Tyvärr, nya användare kan bara infoga en bild i ett inlägg.
+    other: Tyvärr, nya användare kan bara infoga %{count} bilder i ett inlägg.
   no_attachments_allowed: "Tyvärr, nya användare kan inte bifoga filer i inlägg."
   too_many_attachments:
-    one: "Tyvärr, nya användare kan bara bifoga en filer i ett inlägg."
-    other: "Tyvärr, nya användare kan bara bifoga %{count} filer i ett inlägg."
+    one: Tyvärr, nya användare kan bara bifoga en filer i ett inlägg.
+    other: Tyvärr, nya användare kan bara bifoga %{count} filer i ett inlägg.
   no_links_allowed: "Tyvärr, nya användare kan inte ha länkar i inlägg."
   too_many_links:
-    one: "Tyvärr, besökare kan bara ha en länk i ett inlägg."
-    other: "Tyvärr, nya användare kan bara ha %{count} länkar i ett inlägg."
+    one: Tyvärr, besökare kan bara ha en länk i ett inlägg.
+    other: Tyvärr, nya användare kan bara ha %{count} länkar i ett inlägg.
   spamming_host: "Tyvärr, du kan inte posta en länk till det värdnamnet."
   user_is_suspended: "Avstängda användare är inte tillåtna att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
@@ -217,9 +220,9 @@ sv:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      one: "1 inlägg"
-      other: "%{count} inlägg"
-    new-topic: |
+      one: 1 inlägg
+      other: '%{count} inlägg'
+    'new-topic': |
       Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation!**
 
       - Låter rubriken intressant om du läser det högt? Är det en bra sammanfattning?
@@ -229,7 +232,7 @@ sv:
       - Inkludera vanligt förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori.
 
       För mer information kan du läsa [riktlinjerna](/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Välkommen till %{site_name} &mdash; **tack för att du bidrar!**
 
       - Bidrar ditt svar något till konversationen på något sätt?
@@ -251,6 +254,7 @@ sv:
       user_profile:
         bio_raw: "Om mig"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -280,7 +284,6 @@ sv:
           attributes:
             payload_url:
               invalid: "Webbadressen är ogiltig. Webbadressen skall inkludera :// eller https://. Inga blanktecken är tillåtna"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
   vip_category_name: "Lounge"
@@ -330,8 +333,8 @@ sv:
       uncategorized: "Du kan inte ta bort kategorin \"Okategoriserat\""
       has_subcategories: "Du kan inte ta bort den här kategorin för att den har underkategorier."
       topic_exists:
-        one: "Kan inte ta bort den här kategorien eftersom den innehåller ett ämne. Ämnet är %{topic_link}."
-        other: "Kan inte ta bort den här kategorien eftersom den innehåller %{count} ämnen. Äldsta ämnet är %{topic_link}."
+        one: Kan inte ta bort den här kategorien eftersom den innehåller ett ämne. Ämnet är %{topic_link}.
+        other: Kan inte ta bort den här kategorien eftersom den innehåller %{count} ämnen. Äldsta ämnet är %{topic_link}.
       topic_exists_no_oldest: "Kan inte ta bort den här kategorin eftersom antalet ämnen är %{count}."
     uncategorized_description: "Ämnen som inte behöver en kategori, eller som inte passar in i någon annan befintlig kategori."
   trust_levels:
@@ -348,85 +351,85 @@ sv:
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
     hours:
-      one: "1 timme"
-      other: "%{count} timmar"
+      one: 1 timme
+      other: '%{count} timmar'
     minutes:
-      one: "1 minut"
-      other: "%{count} minuter"
+      one: 1 minut
+      other: '%{count} minuter'
     seconds:
-      one: "1 sekund"
-      other: "%{count} sekunder"
+      one: 1 sekund
+      other: '%{count} sekunder'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        other: "%{count}s"
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        other: "%{count}m"
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1h"
-        other: "%{count}h"
+        one: 1h
+        other: '%{count}h'
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1mån"
-        other: "%{count}mån"
+        one: 1mån
+        other: '%{count}mån'
       x_months:
-        one: "1mån"
-        other: "%{count}mån"
+        one: 1mån
+        other: '%{count}mån'
       about_x_years:
-        one: "1år"
-        other: "%{count}år"
+        one: 1år
+        other: '%{count}år'
       over_x_years:
-        one: "> 1år"
-        other: "> %{count}år"
+        one: '> 1år'
+        other: '> %{count}år'
       almost_x_years:
-        one: "1år"
-        other: "%{count}år"
+        one: 1år
+        other: '%{count}år'
     distance_in_words_verbose:
       half_a_minute: "nyss"
       less_than_x_seconds:
-        one: "nyss"
-        other: "nyss"
+        one: nyss
+        other: nyss
       x_seconds:
-        one: "1 sekund sedan"
-        other: "%{count} sekunder sedan"
+        one: 1 sekund sedan
+        other: '%{count} sekunder sedan'
       less_than_x_minutes:
-        one: "mindre än 1 minut sedan"
-        other: "mindre än %{count} minuter sedan"
+        one: mindre än 1 minut sedan
+        other: mindre än %{count} minuter sedan
       x_minutes:
-        one: "1 minut sedan"
-        other: "%{count} minuter sedan"
+        one: 1 minut sedan
+        other: '%{count} minuter sedan'
       about_x_hours:
-        one: "1 timme sedan"
-        other: "%{count} timmar sedan"
+        one: 1 timme sedan
+        other: '%{count} timmar sedan'
       x_days:
-        one: "1 dag sedan"
-        other: "%{count} dagar sedan"
+        one: 1 dag sedan
+        other: '%{count} dagar sedan'
       about_x_months:
-        one: "ungefär 1 månad sedan"
-        other: "ungefär %{count} månader sedan"
+        one: ungefär 1 månad sedan
+        other: ungefär %{count} månader sedan
       x_months:
-        one: "1 månad sedan"
-        other: "%{count} månader sedan"
+        one: 1 månad sedan
+        other: '%{count} månader sedan'
       about_x_years:
-        one: "ungefär 1 år sedan"
-        other: "ungefär %{count} år sedan"
+        one: ungefär 1 år sedan
+        other: ungefär %{count} år sedan
       over_x_years:
-        one: "över 1 år sedan"
-        other: "över %{count} år sedan"
+        one: över 1 år sedan
+        other: över %{count} år sedan
       almost_x_years:
-        one: "nästan 1 år sedan"
-        other: "nästan %{count} år sedan"
+        one: nästan 1 år sedan
+        other: nästan %{count} år sedan
   password_reset:
     no_token: "Tyvärr, din lösenordslänk har löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
     choose_new: "Välj ett nytt lösenord"
@@ -707,8 +710,8 @@ sv:
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml-fil för att säkerställa att serverinställningarna för e-post är korrekta. <a href="/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
     email_polling_errored_recently:
-      one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer."
-      other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer."
+      one: E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer.
+      other: E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer.
     bad_favicon_url: "Uppladdningen av favoritikonen misslyckas. Kontrollera inställningen favicon_url i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
     poll_pop3_timeout: "Anslutningen till POP3-servern har nått tidsgränsen. Inkommande e-postmeddelanden kunde inte mottas. Var vänlig kontrollera dina <a href='/admin/site_settings/category/email'>POP3-inställningar</a> och tjänsteleverantör."
     poll_pop3_auth_error: "Anslutning till POP3-servern misslyckas med ett autentiseringsfel. Var vänlig kontrollera dina <a href='/admin/site_settings/category/email'>POP3-inställningar</a>."
@@ -1178,11 +1181,11 @@ sv:
       different_users: "Inlägg som hör till olika användare kan inte lägga ihop."
   move_posts:
     new_topic_moderator_post:
-      one: "Ett inlägg har delats in i ett nytt ämne: %{topic_link}"
-      other: "%{count} inlägg delades in i ett nytt ämne: %{topic_link}"
+      one: 'Ett inlägg har delats in i ett nytt ämne: %{topic_link}'
+      other: '%{count} inlägg delades in i ett nytt ämne: %{topic_link}'
     existing_topic_moderator_post:
-      one: "Ett inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
-      other: "%{count} inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
+      one: 'Ett inlägg har sammanfogats med ett existerande ämne: %{topic_link}'
+      other: '%{count} inlägg har sammanfogats med ett existerande ämne: %{topic_link}'
   change_owner:
     post_revision_text: "Ägarbyte från %{old_user} till %{new_user}"
     deleted_user: "en raderad användare"
@@ -1192,29 +1195,29 @@ sv:
     closed_enabled: "Detta ämne är nu stängt. Nya svar tillåts inte längre."
     closed_disabled: "Detta ämne är nu öppnat. Nya svar är tillåtna."
     autoclosed_message_max_posts:
-      one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av 1 inlägg."
-      other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
+      one: Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av 1 inlägg.
+      other: 'Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. '
     autoclosed_topic_max_posts:
-      one: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av 1 inlägg."
-      other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
+      one: Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av 1 inlägg.
+      other: 'Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. '
     autoclosed_enabled_days:
-      one: "Detta ämne stängdes automatiskt efter 1 dag. Nya svar är ej längre tillåtet."
-      other: "Detta ämne stängdes automatiskt efter %{count} dagar. Nya svar är ej längre tillåtna."
+      one: Detta ämne stängdes automatiskt efter 1 dag. Nya svar är ej längre tillåtet.
+      other: Detta ämne stängdes automatiskt efter %{count} dagar. Nya svar är ej längre tillåtna.
     autoclosed_enabled_hours:
-      one: "Detta ämne stängdes automatiskt efter 1 timme. Nya svar är ej längre tillåtna."
-      other: "Detta ämne stängdes automatiskt efter %{count} timmar. Nya svar är ej längre tillåtna."
+      one: Detta ämne stängdes automatiskt efter 1 timme. Nya svar är ej längre tillåtna.
+      other: Detta ämne stängdes automatiskt efter %{count} timmar. Nya svar är ej längre tillåtna.
     autoclosed_enabled_minutes:
-      one: "Detta ämne stängdes automatiskt efter 1 minut. Nya svar är ej längre tillåtna."
-      other: "Detta ämne stängdes automatiskt efter %{count} minuter. Nya svar är ej längre tillåtna."
+      one: Detta ämne stängdes automatiskt efter 1 minut. Nya svar är ej längre tillåtna.
+      other: Detta ämne stängdes automatiskt efter %{count} minuter. Nya svar är ej längre tillåtna.
     autoclosed_enabled_lastpost_days:
-      one: "Detta ämne stängdes automatiskt 1 dag efter det senaste svaret. Nya svar är ej längre tillåtna."
-      other: "Detta ämne stängdes automatiskt %{count} dagar efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: Detta ämne stängdes automatiskt 1 dag efter det senaste svaret. Nya svar är ej längre tillåtna.
+      other: Detta ämne stängdes automatiskt %{count} dagar efter det senaste svaret. Nya svar är ej längre tillåtna.
     autoclosed_enabled_lastpost_hours:
-      one: "Detta ämne stängdes automatiskt 1 timme efter det senaste svaret. Nya svar är ej längre tillåtna."
-      other: "Detta ämne stängdes automatiskt %{count} timmar efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: Detta ämne stängdes automatiskt 1 timme efter det senaste svaret. Nya svar är ej längre tillåtna.
+      other: Detta ämne stängdes automatiskt %{count} timmar efter det senaste svaret. Nya svar är ej längre tillåtna.
     autoclosed_enabled_lastpost_minutes:
-      one: "Detta ämne stängdes automatiskt 1 minut efter det senaste svaret. Nya svar är ej längre tillåtna."
-      other: "Detta ämne stängdes automatiskt %{count} minuter efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: Detta ämne stängdes automatiskt 1 minut efter det senaste svaret. Nya svar är ej längre tillåtna.
+      other: Detta ämne stängdes automatiskt %{count} minuter efter det senaste svaret. Nya svar är ej längre tillåtna.
     autoclosed_disabled: "Detta ämne är nu öppet. Nya svar är tillåtna."
     autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar är tillåtna."
     pinned_enabled: "Detta ämne är nu klistrat. Det dyker upp i toppen av dess kategori tills den blir avklistrad av personal för alla, eller av enskilda användare för de själva."
@@ -1265,8 +1268,8 @@ sv:
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
   flags_reminder:
     subject_template:
-      one: "1 flagga väntar på att bli hanterad"
-      other: "%{count} flaggor väntar på att bli hanterade"
+      one: 1 flagga väntar på att bli hanterad
+      other: '%{count} flaggor väntar på att bli hanterade'
   unsubscribe_mailer:
     title: "stäng av mail skrivaren"
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
@@ -1327,7 +1330,6 @@ sv:
       subject_template: "Massrekrytering av användare genererade fel"
     csv_export_succeeded:
       title: "CSV exporten lyckades"
-      subject_template: "Dataexport lyckades"
     csv_export_failed:
       title: "CSV exporten misslyckades"
       subject_template: "Dataexport misslyckades"
@@ -1412,8 +1414,8 @@ sv:
     pending_users_reminder:
       title: "Påminnelse om väntande användare"
       subject_template:
-        one: "1 användare väntar på godkännande"
-        other: "%{count} användare väntar på godkännande"
+        one: 1 användare väntar på godkännande
+        other: '%{count} användare väntar på godkännande'
       text_body_template: |
         Det finns nya användarregistreringar att godkänna (eller avvisa) innan de kan få tillträde till forumet.
 
@@ -1676,22 +1678,22 @@ sv:
         Den här utmärkelsen beviljas första gången som du redigerar något av dina inlägg. Även om du inte kan redigera dina inlägg förevigt så är redigering alltid en god idé — du kan förbättra dina inlägg, fixa små misstag eller lägga till något som du missade när du först skrev inlägget. Redigera dina inlägg för att göra dem ännu bättre!
     basic_user:
       name: Grundläggande
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Beviljad</a> alla väsentliga forumfunktioner
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Beviljad</a> alla väsentliga forumfunktioner"
       long_description: |
         Den här utmärkelsen beviljas när du uppnår förtroendenivå 1. Tack för att du har följt med en stund och läst några ämnen för att lära dig vad vårt forum handlar om. Dina användarrestriktioner som ny användare har lyfts och du har nu tillgång till alla väsentliga forumfunktioner, bland annat personliga meddelanden, flaggningar, redigering av wikin och möjligheten att posta flertalet bilder och länkar
     member:
       name: Medlem
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Beviljad</a> inbjudningar, gruppmeddelanden, fler gillningar
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Beviljad</a> inbjudningar, gruppmeddelanden, fler gillningar"
       long_description: |
         Den här utmärkelsen beviljas när du når förtroendenivå 2. Tack för att har varit en del av forumet de senaste veckorna. Du kan nu skicka inbjudningar från din användarsida eller från individuella ämnen, skicka gruppmeddelanden och ha några fler gillningar varje dag.
     regular:
       name: Regelbunden
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Beviljad</a> omkategorisera, döpa om, följa länkar, wiki, fler gillningar
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Beviljad</a> omkategorisera, döpa om, följa länkar, wiki, fler gillningar"
       long_description: |
         Den här utmärkelsen beviljas när du når förtroendenivå 3. Tack för att du regelbundet har varit en del av forumet de senaste månaderna. Du är nu en av våra mest aktiva läsare och en tillförlitlig bidragsgivare som gör forumet fantastiskt. Du kan nu omkategorisera och döpa om ämnen, använda mer kraftfulla verktyg som skräppost-flaggor, få tillgång till ett privat delforum och du får också massor av fler gillningar varje dag.
     leader:
       name: Ledare
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Beviljad</a> globala redigeringar, klistra, stänga, arkivera, splitta och sammanfoga, fler gillningar
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Beviljad</a> globala redigeringar, klistra, stänga, arkivera, splitta och sammanfoga, fler gillningar"
       long_description: |
         Den här utmärkelsen beviljas när du når förtroendenivå 4. Du är en ledare för det här forumet speciellt utvald av personalen och du är en fin förebild genom dina handlingar och ord här. Du har möjlighet att ändra alla inlägg, använda vanliga moderingsverktyg för ämnen såsom att klistra, stänga, olista, arkivera, splitta och sammanfoga, och du har massor av fler gillningar varje dag.
     welcome:
@@ -1703,7 +1705,7 @@ sv:
       name: Självbiograf
     anniversary:
       name: Årsdag
-      description: Aktiv medlem ett år, har skrivit minst en gång
+      description: "Aktiv medlem ett år, har skrivit minst en gång"
       long_description: |
         Den här utmärkelsen beviljas när du har varit en medlem i ett år med minst ett inlägg under det året. Tack för att du har varit en del av och bidragit till forumet. Vi kunde inte ha gjort det utan dig.
     nice_post:
@@ -1861,11 +1863,11 @@ sv:
       description: Använde en emoji i ett inlägg
     first_mention:
       name: Första omnämningen
-      long_description: 'Den här utmärkelsen beviljas när du nämner någons @användarnamn i ett inlägg. Varje omnämnande genererar en notifiering till den personen, så att det känner till ditt inlägg. Börja skriva @ (snabel-a) för att nämna en användare, eller, om det tillåts, en grupp - det är ett bekvämt sätt att uppmärksamma dem på något. '
+      long_description: "Den här utmärkelsen beviljas när du nämner någons @användarnamn i ett inlägg. Varje omnämnande genererar en notifiering till den personen, så att det känner till ditt inlägg. Börja skriva @ (snabel-a) för att nämna en användare, eller, om det tillåts, en grupp - det är ett bekvämt sätt att uppmärksamma dem på något. "
     first_onebox:
-      name: Första onebox:en
-      description: Lade upp en länk som var onebox:ad
-      long_description: 'Den här utmärkelsen beviljas när du för första gången lägger upp en länk på en rad för sig själv, vilken sedan automatiskt utvidgas och blir en onebox med en kort sammanfattning av länken, en rubrik och (när det finns tillgängligt) även en bild. '
+      name: "Första onebox:en"
+      description: "Lade upp en länk som var onebox:ad"
+      long_description: "Den här utmärkelsen beviljas när du för första gången lägger upp en länk på en rad för sig själv, vilken sedan automatiskt utvidgas och blir en onebox med en kort sammanfattning av länken, en rubrik och (när det finns tillgängligt) även en bild. "
     first_reply_by_email:
       name: Första svaret via e-post
       long_description: |
@@ -1992,6 +1994,3 @@ sv:
         title: "Invitera personal"
       finished:
         title: "Er diskussionsgrupp är klar!"
-  activemodel:
-    errors:
-      <<: *errors

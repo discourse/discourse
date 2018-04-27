@@ -10,6 +10,8 @@ uk:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  date:
+    month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
   title: "Discourse"
   topics: "Теми"
   posts: "дописи"
@@ -27,14 +29,17 @@ uk:
       not_a_number: це не цифра
       not_an_integer: має бути цілим числом
       too_long:
-        one: надто довге (максимум 1 символ)
         few: надто довге (максимум %{count} символів)
+        one: надто довге (максимум 1 символ)
         other: надто довге (максимум %{count} символів)
       other_than: "має бути іншим ніж %{count}"
     template:
       body: 'Проблеми на цих полях:'
     embed:
       load_from_remote: "Під час завантаження допису виникла проблема."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -47,31 +52,31 @@ uk:
     start_discussion: "Розпочати Дискусію"
     continue: "Продовжити Дискусію"
     more_replies:
-      one: "1 більше відповідей"
-      few: "%{count} більше відповідей"
-      other: "%{count} більше відповідей"
+      few: '%{count} більше відповідей'
+      one: 1 більше відповідей
+      other: '%{count} більше відповідей'
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
     replies:
-      one: "1 відповідь"
-      few: "%{count} відповідей"
-      other: "%{count} відповідей"
+      few: '%{count} відповідей'
+      one: 1 відповідь
+      other: '%{count} відповідей'
   no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
   too_many_images:
-    one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."
-    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
+    few: Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис.
+    one: Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис.
+    other: Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис.
   no_attachments_allowed: "Даруйте, нові користувачі не можуть вставляти прикріплення в дописи."
   too_many_attachments:
-    one: "Даруйте, нові користувачі можуть вставляти тільки одне прикріплення в допис."
-    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
+    few: Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис.
+    one: Даруйте, нові користувачі можуть вставляти тільки одне прикріплення в допис.
+    other: Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис.
   no_links_allowed: "Даруйте, нові користувачі не можуть вставляти посилання в дописи."
   too_many_links:
-    one: "Даруйте, нові користувачі можуть вставляти тільки одне посилання в допис."
-    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
+    few: Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис.
+    one: Даруйте, нові користувачі можуть вставляти тільки одне посилання в допис.
+    other: Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис.
   spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
   topic_not_found: "Щось пішло не так. Можливо цей допис було закрито або видалено, під час того як ви його переглядали?"
   just_posted_that: "це дуже схоже на те, що ви нещодавно дописували"
@@ -116,6 +121,7 @@ uk:
       user_profile:
         bio_raw: "Про мене"
     errors:
+      <<: *errors
       models:
         user:
           attributes:
@@ -125,7 +131,6 @@ uk:
           attributes:
             payload_url:
               invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
@@ -144,26 +149,26 @@ uk:
       title: "учасник"
   rate_limiter:
     hours:
-      one: "1 година"
-      few: "%{count} години"
-      other: "%{count} годин"
+      few: '%{count} години'
+      one: 1 година
+      other: '%{count} годин'
     minutes:
-      one: "1 хвилина"
-      few: "%{count} хвилини"
-      other: "%{count} хвилин"
+      few: '%{count} хвилини'
+      one: 1 хвилина
+      other: '%{count} хвилин'
     seconds:
-      one: "1 секунда"
-      few: "%{count} секунди"
-      other: "%{count} секунд"
+      few: '%{count} секунди'
+      one: 1 секунда
+      other: '%{count} секунд'
   datetime:
     distance_in_words:
       half_a_minute: "< 1 хв"
     distance_in_words_verbose:
       half_a_minute: "щойно"
       x_seconds:
-        one: "1 секунда тому"
-        few: "%{count} секунд тому"
-        other: "%{count} секунд тому"
+        few: '%{count} секунд тому'
+        one: 1 секунда тому
+        other: '%{count} секунд тому'
   password_reset:
     update: 'Оновити пароль'
     save: 'Встановити пароль'
@@ -449,6 +454,3 @@ uk:
   edit_this_page: "Редагувати цю сторінку"
   guidelines_topic:
     title: "ЧаПи/Інструкції"
-  activemodel:
-    errors:
-      <<: *errors

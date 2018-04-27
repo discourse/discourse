@@ -17,12 +17,12 @@ th:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, มกราคม, กุมภาพันธ์, มีนาคม, เมษายน, พฤษภาคม, มิถุนายน, กรกฎาคม, สิงหาคม, กันยายน, ตุลาคม, พฤศจิกายน, ธันวาคม]
+    month_names: [~, มกราคม, กุมภาพันธ์, มีนาคม, เมษายน, พฤษภาคม, มิถุนายน, กรกฎาคม, สิงหาคม, กันยายน, ตุลาคม, พฤศจิกายน, ธันวาคม]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "ดิสคอส"
   topics: "หัวข้อ"
   posts: "โพสต์"
@@ -39,6 +39,9 @@ th:
   errors: &errors
     messages:
       invalid: ไม่ถูกต้อง
+  activemodel:
+    errors:
+      <<: *errors
   embed:
     start_discussion: "เริ่มการสนทนา"
     continue: "ดำเนินการสนทนาต่อ"
@@ -58,7 +61,10 @@ th:
       staff: "ทีมงาน"
   education:
     until_posts:
-      other: "%{count} โพส"
+      other: '%{count} โพส'
+  activerecord:
+    errors:
+      <<: *errors
   category:
     topic_prefix: "เกี่ยวกับหมวด %{category}"
   archetypes:
@@ -102,9 +108,3 @@ th:
   page_not_found:
     see_more: "อื่น"
     search_google: "กูเกิ้ล"
-  activemodel:
-    errors:
-      <<: *errors
-  activerecord:
-    errors:
-      <<: *errors

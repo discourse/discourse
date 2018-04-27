@@ -17,12 +17,12 @@ nb_NO:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, januar, februar, mars, april, mai, juni, juli, august, september, oktober, november, desember]
+    month_names: [~, januar, februar, mars, april, mai, juni, juli, august, september, oktober, november, desember]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Tråder"
   posts: "innlegg"
@@ -64,18 +64,18 @@ nb_NO:
       present: må være tom
       confirmation: "er ikke like %{attribute}"
       empty: kan ikke være tom
-      equal_to: må være lik %{count}
+      equal_to: "må være lik %{count}"
       even: må være jevnt antall
       exclusion: er reservert
-      greater_than: må være større enn %{count}
-      greater_than_or_equal_to: må være lik eller større enn %{count}
+      greater_than: "må være større enn %{count}"
+      greater_than_or_equal_to: "må være lik eller større enn %{count}"
       has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
       is_invalid: "virker uklart, er det en komplett setning?"
       contains_censored_words: "inneholder følgende sensurerte ord: %{censored_words}"
-      less_than: må være mindre enn %{count}
-      less_than_or_equal_to: må være lik eller mindre enn %{count}
+      less_than: "må være mindre enn %{count}"
+      less_than_or_equal_to: "må være lik eller mindre enn %{count}"
       not_a_number: er ikke et nummer
       not_an_integer: må være ett heltall
       odd: må være oddetall
@@ -96,7 +96,7 @@ nb_NO:
     template:
       body: 'Dette er problemene med de følgene feltene:'
       header:
-        one: '1 feil forhindret lagring av %{model}'
+        one: 1 feil forhindret lagring av %{model}
         other: '%{count} feil forhindret lagring av %{model}'
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
@@ -106,6 +106,9 @@ nb_NO:
       max_username_length_exists: "Du kan ikke sette maksimallengden for brukernavn under det lengste brukernavnet."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "Ditt invitasjonssymbol er ugyldig. Kontakt sidens administrator."
   bulk_invite:
@@ -124,8 +127,8 @@ nb_NO:
   reading_time: "Lesetid"
   likes: "Likes"
   too_many_replies:
-    one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme tråden."
-    other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i samme tråd."
+    one: Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme tråden.
+    other: Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i samme tråd.
   embed:
     start_discussion: "Start diskusjon"
     continue: "Fortsett diskusjon"
@@ -135,28 +138,28 @@ nb_NO:
     no_hosts: "Vertsnavn for innbygging."
     configure: "Sett opp innbygging"
     more_replies:
-      one: "1 svar til"
-      other: "%{count} svar til"
+      one: 1 svar til
+      other: '%{count} svar til'
     loading: "Laster inn diskusjon…"
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 svar"
-      other: "%{count} svar"
+      one: 1 svar
+      other: '%{count} svar'
   no_mentions_allowed: "Beklager, du kan ikke nevne andre brukere."
   too_many_mentions:
-    one: "Beklager, du kan bare nevne en bruker i et innlegg. "
-    other: "Beklager, du kan bare nevne %{count} brukere i et innlegg. "
+    one: 'Beklager, du kan bare nevne en bruker i et innlegg. '
+    other: 'Beklager, du kan bare nevne %{count} brukere i et innlegg. '
   no_mentions_allowed_newuser: "Beklager, nye brukere kan ikke nevne andre brukere."
   no_images_allowed: "Beklager, nye brukere kan ikke legge til bilder i et innlegg."
   too_many_images:
-    one: "Beklager, nye brukere kan bare legge til ett bilde i et innlegg."
-    other: "Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg."
+    one: Beklager, nye brukere kan bare legge til ett bilde i et innlegg.
+    other: Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg.
   no_attachments_allowed: "Beklager, nye brukere kan ikke laste opp vedlegg til et innlegg."
   too_many_attachments:
-    one: "Beklager, nye brukere kan bare laste opp ett vedlegg til et innlegg."
-    other: "Beklager, nye brukere kan bare laste opp %{count} vedlegg til et innlegg."
+    one: Beklager, nye brukere kan bare laste opp ett vedlegg til et innlegg.
+    other: Beklager, nye brukere kan bare laste opp %{count} vedlegg til et innlegg.
   no_links_allowed: "Beklager, nye brukere kan ikke publisere innlegg med lenker."
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utestengte brukere kan ikke skrive innlegg."
@@ -215,9 +218,9 @@ nb_NO:
       trust_level_4: "tillitsnivå_4"
   education:
     until_posts:
-      one: "1 innlegg"
-      other: "%{count} innlegg"
-    new-topic: |
+      one: 1 innlegg
+      other: '%{count} innlegg'
+    'new-topic': |
       Velkommen til %{site_name}. **Takk for at du starter en ny samtale!**
 
       - Høres tittelen interessant ut hvis du leser den høyt? Er den en god oppsummering?
@@ -227,7 +230,7 @@ nb_NO:
       - Bruk relevante begrep i tråden slik at andre kan *finne* det. Velg en kategori for å gruppere tråden ditt med andre lignende tråder.
 
       [Se retningslinjene for dette nettstedet](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
 
       - Forbedrer innlegget ditt samtalen på noen måte?
@@ -249,6 +252,7 @@ nb_NO:
       user_profile:
         bio_raw: "Om meg"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -287,7 +291,6 @@ nb_NO:
           attributes:
             execute_at:
               in_the_past: "må være i fremtiden."
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet i profilen sin ennå</div>"
   vip_category_name: "Salong"
@@ -333,8 +336,8 @@ nb_NO:
       uncategorized: "Kan ikke slette Ukategorisert"
       has_subcategories: "Kan ikke slette denne kategorien fordi den har underkategorier."
       topic_exists:
-        one: "Kan ikke slette denne kategorien fordi den har 1 tråd. Eldste tråd er %{topic_link}."
-        other: "Kan ikke slette denne kategorien fordi den har %{count} tråder. Eldste tråd er %{topic_link}."
+        one: Kan ikke slette denne kategorien fordi den har 1 tråd. Eldste tråd er %{topic_link}.
+        other: Kan ikke slette denne kategorien fordi den har %{count} tråder. Eldste tråd er %{topic_link}.
       topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall tråder er %{count}."
     uncategorized_description: "Tråder som ikke trenger en kategori eller som ikke passer i noen av de eksisterende kategoriene."
   trust_levels:
@@ -350,85 +353,85 @@ nb_NO:
       title: "leder"
   rate_limiter:
     hours:
-      one: "1 time"
-      other: "%{count} timer"
+      one: 1 time
+      other: '%{count} timer'
     minutes:
-      one: "1 minutt"
-      other: "%{count} minutter"
+      one: 1 minutt
+      other: '%{count} minutter'
     seconds:
-      one: "1 sekund"
-      other: "%{count} sekunder"
+      one: 1 sekund
+      other: '%{count} sekunder'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        other: "%{count}s"
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        other: "%{count}m"
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1h"
-        other: "%{count}h"
+        one: 1h
+        other: '%{count}h'
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1mnd"
-        other: "%{count}mnd"
+        one: 1mnd
+        other: '%{count}mnd'
       x_months:
-        one: "1mnd"
-        other: "%{count}mnd"
+        one: 1mnd
+        other: '%{count}mnd'
       about_x_years:
-        one: "1å"
-        other: "%{count}å"
+        one: 1å
+        other: '%{count}å'
       over_x_years:
-        one: "> 1år"
-        other: "> %{count}y"
+        one: '> 1år'
+        other: '> %{count}y'
       almost_x_years:
-        one: "1år"
-        other: "%{count}år"
+        one: 1år
+        other: '%{count}år'
     distance_in_words_verbose:
       half_a_minute: "Nå nettopp"
       less_than_x_seconds:
-        one: "nå nettopp"
-        other: "nå nettopp"
+        one: nå nettopp
+        other: nå nettopp
       x_seconds:
-        one: "1 sekund siden"
-        other: "%{count} sekunder siden"
+        one: 1 sekund siden
+        other: '%{count} sekunder siden'
       less_than_x_minutes:
-        one: "mindre enn 1 minutt siden"
-        other: "mindre enn %{count} minutter siden"
+        one: mindre enn 1 minutt siden
+        other: mindre enn %{count} minutter siden
       x_minutes:
-        one: "1 minutt siden"
-        other: "%{count} minutter siden"
+        one: 1 minutt siden
+        other: '%{count} minutter siden'
       about_x_hours:
-        one: "1 time siden"
-        other: "%{count} timer siden"
+        one: 1 time siden
+        other: '%{count} timer siden'
       x_days:
-        one: "1 dag siden"
-        other: "%{count} dager siden"
+        one: 1 dag siden
+        other: '%{count} dager siden'
       about_x_months:
-        one: "ca 1 måned siden"
-        other: "ca %{count} måneder siden"
+        one: ca 1 måned siden
+        other: ca %{count} måneder siden
       x_months:
-        one: "1 måned siden"
-        other: "%{count} måneder siden"
+        one: 1 måned siden
+        other: '%{count} måneder siden'
       about_x_years:
-        one: "omtrent 1 år siden"
-        other: "omtrent %{count} år siden"
+        one: omtrent 1 år siden
+        other: omtrent %{count} år siden
       over_x_years:
-        one: "over et år siden"
-        other: "over  %{count} år siden"
+        one: over et år siden
+        other: over  %{count} år siden
       almost_x_years:
-        one: "nesten 1 år siden"
-        other: "nesten %{count} år siden"
+        one: nesten 1 år siden
+        other: nesten %{count} år siden
   password_reset:
     no_token: "Beklager, den lenken for å endre passord er for gammel. Velg logg inn-knappen bruk 'Jeg glemte passordet mitt' for å motta en ny lenke."
     choose_new: "Velg et nytt passord"
@@ -785,23 +788,23 @@ nb_NO:
     closed_enabled: "Denne tråden er nå lukket. Nye svar er ikke lenger tillatt."
     closed_disabled: "Denne tråden er nå åpen. Nye svar er tillatt."
     autoclosed_enabled_days:
-      one: "Denne tråden ble automatisk lukket etter 1 dag. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket etter %{count} dager. Nye svar er ikke lenger tillatt. "
+      one: 'Denne tråden ble automatisk lukket etter 1 dag. Nye svar er ikke lenger tillatt. '
+      other: 'Denne tråden ble automatisk lukket etter %{count} dager. Nye svar er ikke lenger tillatt. '
     autoclosed_enabled_hours:
-      one: "Denne tråden ble automatisk lukket etter 1 time. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket etter %{count} timer. Nye svar er ikke lenger tillatt. "
+      one: 'Denne tråden ble automatisk lukket etter 1 time. Nye svar er ikke lenger tillatt. '
+      other: 'Denne tråden ble automatisk lukket etter %{count} timer. Nye svar er ikke lenger tillatt. '
     autoclosed_enabled_minutes:
-      one: "Denne tråden ble automatisk lukket etter 1 minutt. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket etter %{count} minutter. Nye svar er ikke lenger tillatt. "
+      one: 'Denne tråden ble automatisk lukket etter 1 minutt. Nye svar er ikke lenger tillatt. '
+      other: 'Denne tråden ble automatisk lukket etter %{count} minutter. Nye svar er ikke lenger tillatt. '
     autoclosed_enabled_lastpost_days:
-      one: "Denne tråden ble automatisk lukket 1 dag etter siste innlegg. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket %{count} dager etter siste svar. Nye svar er ikke lenger tillatt. "
+      one: 'Denne tråden ble automatisk lukket 1 dag etter siste innlegg. Nye svar er ikke lenger tillatt. '
+      other: 'Denne tråden ble automatisk lukket %{count} dager etter siste svar. Nye svar er ikke lenger tillatt. '
     autoclosed_enabled_lastpost_hours:
-      one: "Denne tråden ble automatisk lukket 1 time etter siste innlegg. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket %{count} timer etter siste svar. Nye svar er ikke lenger tillatt. "
+      one: 'Denne tråden ble automatisk lukket 1 time etter siste innlegg. Nye svar er ikke lenger tillatt. '
+      other: 'Denne tråden ble automatisk lukket %{count} timer etter siste svar. Nye svar er ikke lenger tillatt. '
     autoclosed_enabled_lastpost_minutes:
-      one: "Denne tråden ble automatisk lukket 1 minutt etter siste innlegg. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket %{count} minutter etter siste svar. Nye svar er ikke lenger tillatt. "
+      one: 'Denne tråden ble automatisk lukket 1 minutt etter siste innlegg. Nye svar er ikke lenger tillatt. '
+      other: 'Denne tråden ble automatisk lukket %{count} minutter etter siste svar. Nye svar er ikke lenger tillatt. '
     autoclosed_disabled: "Denne tråden er nå åpen. Tråden kan svares på. "
     autoclosed_disabled_lastpost: "Denne tråden er åpne. Nye svar er tillatt."
     pinned_enabled: "Denne tråden er nå festet. Den vil vises øverst i kategorien sin inntil festet fjernes for alle av en administrator eller for individuelle brukere av dem selv."
@@ -1062,7 +1065,7 @@ nb_NO:
     gives_back:
       name: Gir tilbake
     first_onebox:
-      long_description: Dette merket tildeles den første gangen du publiserer et innlegg med en lenke på en egen linje, som deretter automatisk blir utvidet til en miniboks med en kort oppsummering av lenken, en tittel og (dersom tilgjengelig) et bilde.
+      long_description: "Dette merket tildeles den første gangen du publiserer et innlegg med en lenke på en egen linje, som deretter automatisk blir utvidet til en miniboks med en kort oppsummering av lenken, en tittel og (dersom tilgjengelig) et bilde."
   admin_login:
     success: "E-post sendt"
     submit_button: "Send e-post"
@@ -1148,6 +1151,3 @@ nb_NO:
                 label: "Kategorier"
       emoji:
         title: "Emoji"
-  activemodel:
-    errors:
-      <<: *errors

@@ -17,12 +17,12 @@ da:
       date_only: "%-d. %B, %Y"
       long: "%-d. %B %Y, %H:%M"
   date:
-    month_names: [null, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
+    month_names: [~, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
@@ -66,18 +66,18 @@ da:
       present: skal være tomt
       confirmation: "matcher ikke %{attribute}"
       empty: kan ikke være tom
-      equal_to: skal være %{count}
+      equal_to: "skal være %{count}"
       even: skal være et lige tal
       exclusion: er reserveret
-      greater_than: skal være større end %{count}
-      greater_than_or_equal_to: skal være større eller lig med %{count}
+      greater_than: "skal være større end %{count}"
+      greater_than_or_equal_to: "skal være større eller lig med %{count}"
       has_already_been_used: "er allerede blevet brugt"
       inclusion: er ikke inkluderet i listen
       invalid: er ikke gyldig
       is_invalid: "virker upræcis, er det en hel sætning?"
       contains_censored_words: "indeholder følgende censurerede ord: %{censurerede ord}"
-      less_than: skal være mindre end %{count}
-      less_than_or_equal_to: skal være mindre end eller lig med %{count}
+      less_than: "skal være mindre end %{count}"
+      less_than_or_equal_to: "skal være mindre end eller lig med %{count}"
       not_a_number: er ikke et nummer
       not_an_integer: skal være et heltal
       odd: skal være et ulige tal
@@ -98,7 +98,7 @@ da:
     template:
       body: 'Der var problemer med følgende felter:'
       header:
-        one: 'Een fejl forhindrede denne %{model} for at gemme.'
+        one: Een fejl forhindrede denne %{model} for at gemme.
         other: '%{count} fejl forhindrede denne %{model} i at gemme.'
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
@@ -109,6 +109,9 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "Dit invitation-token er ugyldigt. Kontakt veligst sitets administrator."
     user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='/u/%{username}/summary'>har allerede en profil!</a>"
@@ -129,8 +132,8 @@ da:
   reading_time: "Læsetid"
   likes: "Synes godt om"
   too_many_replies:
-    one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."
-    other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
+    one: Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med.
+    other: Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med.
   embed:
     start_discussion: "Start diskussion"
     continue: "Fortsæt diskussion"
@@ -140,35 +143,35 @@ da:
     no_hosts: "Ingen værter var konfigureret til indlejring."
     configure: "Konfigurér indlejring"
     more_replies:
-      one: "1 svar til"
-      other: "%{count} svar til"
+      one: 1 svar til
+      other: '%{count} svar til'
     loading: "Indlæser diskussion…"
     permalink: "Permalink"
     imported_from: "Importeret fra: %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 svar"
-      other: "%{count} svar"
+      one: 1 svar
+      other: '%{count} svar'
   no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
   too_many_mentions:
-    one: "Beklager, men du kan kun nævne %{count} brugere i et indlæg."
-    other: "Beklager, men du kan kun nævne %{count} brugere i et indlæg."
+    one: Beklager, men du kan kun nævne %{count} brugere i et indlæg.
+    other: Beklager, men du kan kun nævne %{count} brugere i et indlæg.
   no_mentions_allowed_newuser: "Beklager, nye brugere kan ikke nævne andre brugere."
   too_many_mentions_newuser:
-    one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
-    other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
+    one: Beklager, nye brugere kan kun nævne en bruger i et indlæg.
+    other: Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg.
   no_images_allowed: "Beklager, nye brugere kan ikke postere billeder i indlæg."
   too_many_images:
-    one: "Beklager, nye brugere kan kun anvende et billede i et indlæg."
-    other: "Beklager, nye brugere kan kun anvende %{count} billeder i et indlæg."
+    one: Beklager, nye brugere kan kun anvende et billede i et indlæg.
+    other: Beklager, nye brugere kan kun anvende %{count} billeder i et indlæg.
   no_attachments_allowed: "Beklager, nye brugere kan ikke vedhæfte filer i et indlæg."
   too_many_attachments:
-    one: "Beklager, nye brugere kan kun vedhæfte en fil i et indlæg."
-    other: "Beklager, nye brugere kan kun vedhæfte %{count} filer i et indlæg."
+    one: Beklager, nye brugere kan kun vedhæfte en fil i et indlæg.
+    other: Beklager, nye brugere kan kun vedhæfte %{count} filer i et indlæg.
   no_links_allowed: "Beklager, nye brugere kan ikke bruge links i indlæg."
   too_many_links:
-    one: "Beklager, nye brugere kan kun indsætte et link i et indlæg."
-    other: "Beklager, nye brugere kan kun indsætte %{count} links i et indlæg."
+    one: Beklager, nye brugere kan kun indsætte et link i et indlæg.
+    other: Beklager, nye brugere kan kun indsætte %{count} links i et indlæg.
   spamming_host: "Beklager, du kan ikke indsætte et link til det pågældende domæne."
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
@@ -230,9 +233,9 @@ da:
       trust_level_4: "tillidsniveau_4"
   education:
     until_posts:
-      one: "indlæg"
-      other: "%{count} indlæg"
-    new-topic: |
+      one: indlæg
+      other: '%{count} indlæg'
+    'new-topic': |
       Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
 
       -  Lyder title interessant hvis du læser den højt? Er det et godt resumé?
@@ -240,7 +243,7 @@ da:
       -  Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
 
       For mere info, [se vores retningslinjer](/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
 
       Husk venligst mens du skriver dit svar:
@@ -301,6 +304,7 @@ da:
       user_profile:
         bio_raw: "Om mig"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -336,7 +340,6 @@ da:
           attributes:
             name:
               taken: er allerede i brug af en anden emoji
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig”-feltet på din profil er pt. tomt, <a href='/u/%{username_lower}/preferences/about-me'>ønsker du at udfylde det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
@@ -399,8 +402,8 @@ da:
       uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
       topic_exists:
-        one: "Kan ikke slette denne kategori, da den indeholder et emne. Ældste emne er %{topic_link}"
-        other: "Kan ikke slette denne kategori, da den indeholder %{count} emner. Ældste emne er %{topic_link}"
+        one: Kan ikke slette denne kategori, da den indeholder et emne. Ældste emne er %{topic_link}
+        other: Kan ikke slette denne kategori, da den indeholder %{count} emner. Ældste emne er %{topic_link}
       topic_exists_no_oldest: "Kan ikke slette denne kategori fordi antallet af emner er %{count}"
     uncategorized_description: "Emner der ikke behøver kategori, eller ikke passer i eksisterende kategori."
   trust_levels:
@@ -417,85 +420,85 @@ da:
     change_failed_explanation: "Du har forsøgt at degradere %{user_name} til '%{new_trust_level}'. Imidlertid er deres niveau af tillid allerede '%{current_trust_level}'. %{user_name} vil forblive'%{current_trust_level}' - hvis du ønsker at degradere brugeren, skal du først låse brugerens tillids niveau / Trust Level"
   rate_limiter:
     hours:
-      one: "1 time"
-      other: "%{count} timer"
+      one: 1 time
+      other: '%{count} timer'
     minutes:
-      one: "1 minut"
-      other: "%{count} minutter"
+      one: 1 minut
+      other: '%{count} minutter'
     seconds:
-      one: "1 sekund"
-      other: "%{count} sekunder"
+      one: 1 sekund
+      other: '%{count} sekunder'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        other: "%{count}s"
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        other: "%{count}m"
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1h"
-        other: "%{count}t"
+        one: 1h
+        other: '%{count}t'
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1md"
-        other: "%{count}mdr"
+        one: 1md
+        other: '%{count}mdr'
       x_months:
-        one: "1md"
-        other: "%{count}mdr"
+        one: 1md
+        other: '%{count}mdr'
       about_x_years:
-        one: "1 år"
-        other: "%{count} år"
+        one: 1 år
+        other: '%{count} år'
       over_x_years:
-        one: "> 1 år"
-        other: "> %{count} år"
+        one: '> 1 år'
+        other: '> %{count} år'
       almost_x_years:
-        one: "1 år"
-        other: "%{count} år"
+        one: 1 år
+        other: '%{count} år'
     distance_in_words_verbose:
       half_a_minute: "lige nu"
       less_than_x_seconds:
-        one: "lige nu"
-        other: "lige nu"
+        one: lige nu
+        other: lige nu
       x_seconds:
-        one: "1 sekund siden"
-        other: "%{count} sekunder siden"
+        one: 1 sekund siden
+        other: '%{count} sekunder siden'
       less_than_x_minutes:
-        one: "mindre end 1 minut siden"
-        other: "mindre end %{count} minutter siden"
+        one: mindre end 1 minut siden
+        other: mindre end %{count} minutter siden
       x_minutes:
-        one: "1 minut siden"
-        other: "%{count} minutter siden"
+        one: 1 minut siden
+        other: '%{count} minutter siden'
       about_x_hours:
-        one: "1 time siden"
-        other: "%{count} timer siden"
+        one: 1 time siden
+        other: '%{count} timer siden'
       x_days:
-        one: "1 dag siden"
-        other: "%{count} dage siden"
+        one: 1 dag siden
+        other: '%{count} dage siden'
       about_x_months:
-        one: "ca. 1 måned siden"
-        other: "ca. %{count} måneder siden"
+        one: ca. 1 måned siden
+        other: ca. %{count} måneder siden
       x_months:
-        one: "1 måned siden"
-        other: "%{count} måneder siden"
+        one: 1 måned siden
+        other: '%{count} måneder siden'
       about_x_years:
-        one: "ca. 1 år siden"
-        other: "ca. %{count} år siden"
+        one: ca. 1 år siden
+        other: ca. %{count} år siden
       over_x_years:
-        one: "over 1 år siden"
-        other: "over %{count} år siden"
+        one: over 1 år siden
+        other: over %{count} år siden
       almost_x_years:
-        one: "næsten 1 år siden"
-        other: "næsten %{count} år siden"
+        one: næsten 1 år siden
+        other: næsten %{count} år siden
   password_reset:
     no_token: "Beklager, dit kodeords-reset link er udløbet. Vælg 'Log ind' knappen og brug 'Jeg har glemt mit kodeord' for at få et nyt link."
     choose_new: "Vælg en ny adgangskode"
@@ -783,8 +786,8 @@ da:
     failing_emails_warning: 'Der er %{num_failed_jobs} email operationer der mislykkede. Tjek din app.yml for at sikre at din mail server indstillinger er korrekte. <a href="/sidekiq/retries" target="_blank">Se mislykkede operationer i Sidekiq</a>.'
     subfolder_ends_in_slash: "Din undermappe er ikke opsat korrekt; DISCOURSE_RELATIVE_URL_ROOT ender med en slash."
     email_polling_errored_recently:
-      one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer."
-      other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='/logs' target='_blank'>the logs</a> for detaljer."
+      one: Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer.
+      other: Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='/logs' target='_blank'>the logs</a> for detaljer.
     bad_favicon_url: "Favicon kan ikke loades. Tjek dine favicon_url indstilling i  <a href='/admin/site_settings'>Site Settings</a>"
     poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
     poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='/admin/site_settings/category/email'>POP3 settings</a>."
@@ -1007,23 +1010,23 @@ da:
     closed_enabled: "Dette emne er nu lukket. Nye indlæg tillades ikke."
     closed_disabled: "Dette emne er nu åbent. Nye indlæg tillades."
     autoclosed_enabled_days:
-      one: "Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} dage. Nye svar er ikke længere tilladt."
+      one: Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt.
+      other: Dette emne blev automatisk lukket efter %{count} dage. Nye svar er ikke længere tilladt.
     autoclosed_enabled_hours:
-      one: "Dette emne blev automatisk lukket efter 1 time. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} timer. Nye svar er ikke længere tilladt."
+      one: Dette emne blev automatisk lukket efter 1 time. Nye svar er ikke længere tilladt.
+      other: Dette emne blev automatisk lukket efter %{count} timer. Nye svar er ikke længere tilladt.
     autoclosed_enabled_minutes:
-      one: "Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} minutter. Nye svar er ikke længere tilladt."
+      one: Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt.
+      other: Dette emne blev automatisk lukket efter %{count} minutter. Nye svar er ikke længere tilladt.
     autoclosed_enabled_lastpost_days:
-      one: "Dette emne blev automatisk lukket 1 dag efter det seneste svar. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket %{count} dage efter det seneste svar. Nye svar er ikke længere tilladt."
+      one: Dette emne blev automatisk lukket 1 dag efter det seneste svar. Nye svar er ikke længere tilladt.
+      other: Dette emne blev automatisk lukket %{count} dage efter det seneste svar. Nye svar er ikke længere tilladt.
     autoclosed_enabled_lastpost_hours:
-      one: "Dette emne blev automatisk lukket 1 time efter det seneste svar. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket %{count} timer efter det seneste svar. Nye svar er ikke længere tilladt."
+      one: Dette emne blev automatisk lukket 1 time efter det seneste svar. Nye svar er ikke længere tilladt.
+      other: Dette emne blev automatisk lukket %{count} timer efter det seneste svar. Nye svar er ikke længere tilladt.
     autoclosed_enabled_lastpost_minutes:
-      one: "Dette emne blev automatisk lukket 1 minut efter det seneste svar. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket %{count} minutter efter det seneste svar. Nye svar er ikke længere tilladt."
+      one: Dette emne blev automatisk lukket 1 minut efter det seneste svar. Nye svar er ikke længere tilladt.
+      other: Dette emne blev automatisk lukket %{count} minutter efter det seneste svar. Nye svar er ikke længere tilladt.
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
     autoclosed_disabled_lastpost: "Dette emne er nu åbent. Nye svar er tilladt."
     pinned_enabled: "Dette emne er nu fastgjort. Det vil stå i toppen af dets kategori indtil det bliver frigjort af \"staff\" for alle eller af hver bruger individuelt for dem selv."
@@ -1077,8 +1080,8 @@ da:
       max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
   flags_reminder:
     subject_template:
-      one: "1 flag venter på at blive håndteret"
-      other: "%{count} flag venter på at blive håndteret"
+      one: 1 flag venter på at blive håndteret
+      other: '%{count} flag venter på at blive håndteret'
   unsubscribe_mailer:
     subject_template: "Bekræft at du ikke længere ønsker at modtage email opdateringer fra %{site_title}"
     text_body_template: |+
@@ -1132,8 +1135,8 @@ da:
     deferred: "Tak for din henvendelse. Vi kigger på det."
     deferred_and_deleted: "Tak for din henvendelse. Vi har fjernet indlægget."
   temporarily_closed_due_to_flags:
-    one: "Emnet er lukket i 1 time pga. et stort antal flagmarkeringer."
-    other: "Emnet er lukket i %{count} timer pga. et stort antal flagmarkeringer."
+    one: Emnet er lukket i 1 time pga. et stort antal flagmarkeringer.
+    other: Emnet er lukket i %{count} timer pga. et stort antal flagmarkeringer.
   system_messages:
     private_topic_title: "Emne #%{id}"
     contents_hidden: "Gå venligst til indlægget for at se indholdet."
@@ -1198,8 +1201,8 @@ da:
     pending_users_reminder:
       title: "Påmindelse om afventende brugere"
       subject_template:
-        one: "1 bruger afventer godkendelse"
-        other: "%{count} brugere afventer godkendelse"
+        one: 1 bruger afventer godkendelse
+        other: '%{count} brugere afventer godkendelse'
       text_body_template: |
         Der er nye brugere, som afventer godkendelse (eller afvisning) før de kan tilgå dette forum.
 
@@ -1479,7 +1482,7 @@ da:
       name: Selvbiograf
     anniversary:
       name: Jubilæum
-      description: Aktivt medlem i et år, som har skrevet mindst et indlæg
+      description: "Aktivt medlem i et år, som har skrevet mindst et indlæg"
     nice_post:
       name: Fint svar
       description: Modtog 10 likes på et svar
@@ -1565,7 +1568,7 @@ da:
       name: Empatisk
       description: Har 500 likede indlæg og givet 1000 likes
     first_onebox:
-      long_description: Dette badge bliver tildelt første gang du poster et link i en linie for sig selv. Det vil automatisk ekspandere til en boks med et kort sammendrag af siden, en titel og (når muligt) et billede.
+      long_description: "Dette badge bliver tildelt første gang du poster et link i en linie for sig selv. Det vil automatisk ekspandere til en boks med et kort sammendrag af siden, en titel og (når muligt) et billede."
     first_reply_by_email:
       name: Første svar via email
       long_description: |
@@ -1676,6 +1679,3 @@ da:
         title: "Inviter hjælpere"
       finished:
         title: "Discourse er gjort klar til dig!"
-  activemodel:
-    errors:
-      <<: *errors

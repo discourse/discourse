@@ -43,62 +43,62 @@ gl:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
-          other: "< %{count}s"
+          one: < 1s
+          other: < %{count}s
         x_seconds:
-          one: "1s"
-          other: "%{count}s"
+          one: 1s
+          other: '%{count}s'
         x_minutes:
-          one: "1m"
-          other: "%{count}m"
+          one: 1m
+          other: '%{count}m'
         about_x_hours:
-          one: "1h"
-          other: "%{count}h"
+          one: 1h
+          other: '%{count}h'
         x_days:
-          one: "1d"
-          other: "%{count}d"
+          one: 1d
+          other: '%{count}d'
         about_x_years:
-          one: "1ano"
-          other: "%{count}anos"
+          one: 1ano
+          other: '%{count}anos'
         over_x_years:
-          one: "> 1ano"
-          other: "> %{count}anos"
+          one: '> 1ano'
+          other: '> %{count}anos'
         almost_x_years:
-          one: "1ano"
-          other: "%{count}anos"
+          one: 1ano
+          other: '%{count}anos'
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
-          other: "%{count} mins"
+          one: 1 min
+          other: '%{count} mins'
         x_hours:
-          one: "1 hora"
-          other: "%{count} horas"
+          one: 1 hora
+          other: '%{count} horas'
         x_days:
-          one: "1 día"
-          other: "%{count} días"
+          one: 1 día
+          other: '%{count} días'
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "Hai 1 min."
-          other: "Hai %{count} min."
+          one: Hai 1 min.
+          other: Hai %{count} min.
         x_hours:
-          one: "Hai 1 hora"
-          other: "Hai %{count} horas"
+          one: Hai 1 hora
+          other: Hai %{count} horas
         x_days:
-          one: "Hai 1 día"
-          other: "Hai %{count} días"
+          one: Hai 1 día
+          other: Hai %{count} días
       later:
         x_days:
-          one: "1 día despois"
-          other: "%{count} días despois"
+          one: 1 día despois
+          other: '%{count} días despois'
         x_months:
-          one: "1 mes despois"
-          other: "%{count} meses despois"
+          one: 1 mes despois
+          other: '%{count} meses despois'
         x_years:
-          one: "1 anos despois"
-          other: "%{count} anos despois"
+          one: 1 anos despois
+          other: '%{count} anos despois'
       previous_month: 'Mes anterior'
       next_month: 'Mes seguinte'
       placeholder: data
@@ -172,8 +172,8 @@ gl:
     show_help: "opcións"
     links: "Ligazóns"
     links_lowercase:
-      one: "ligazón"
-      other: "ligazóns"
+      one: ligazón
+      other: ligazóns
     faq: "FAQ"
     guidelines: "Directrices"
     privacy_policy: "Normas de confidencialidade"
@@ -197,8 +197,8 @@ gl:
     max_of_count: "máx. de {{count}}"
     alternation: "ou"
     character_count:
-      one: "{{count}} carácter"
-      other: "{{count}} caracteres"
+      one: '{{count}} carácter'
+      other: '{{count}} caracteres'
     suggested_topics:
       title: "Temas suxeridos"
       pm_title: "Mensaxes suxeridas"
@@ -266,16 +266,16 @@ gl:
       cancel: "Cancelar"
       view_pending: "ver as publicacións pendentes"
       has_pending_posts:
-        one: "Este tema ten <b>{{count}}</b> publicación agardando aprobación"
-        other: "Este tema ten <b>{{count}}</b> publicacións agardando aprobación."
+        one: Este tema ten <b>{{count}}</b> publicación agardando aprobación
+        other: Este tema ten <b>{{count}}</b> publicacións agardando aprobación.
       confirm: "Gardar os cambios"
       delete_prompt: "Confirmas a eliminación de <b>%{username}</b>? Eliminaranse todas as súas publicacións e bloquearase o seu correo electrónico e enderezo IP."
       approval:
         title: "A publicación necesita aprobación"
         description: "Recibimos a túa nova publicación pero cómpre que sexa aprobada por un moderador antes de aparecer. Ten paciencia."
         pending_posts:
-          one: "Tes <strong>{{count}}</strong> publicación pendente."
-          other: "Tes <strong>{{count}}</strong> publicacións pendentes."
+          one: Tes <strong>{{count}}</strong> publicación pendente.
+          other: Tes <strong>{{count}}</strong> publicacións pendentes.
         ok: "De acordo"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> publicou <a href='{{topicUrl}}'>o tema</a>"
@@ -307,8 +307,8 @@ gl:
       posts_read: "Lidas"
       posts_read_long: "Publicacións lidas"
       total_rows:
-        one: "Un usuario"
-        other: "%{count} usuarios"
+        one: Un usuario
+        other: '%{count} usuarios'
     groups:
       add: "Engadir"
       owner: "propietario"
@@ -337,18 +337,18 @@ gl:
           title: "Silenciado"
           description: "Non recibirás notificacións de nada relacionado con novos temas neste grupo."
     user_action_groups:
-      '1': "Gústames dados"
-      '2': "Gústames recibidos"
-      '3': "Marcadores"
-      '4': "Temas"
-      '5': "Respostas"
-      '6': "Respostas"
-      '7': "Mencións"
-      '9': "CItas"
-      '11': "Edicións"
-      '12': "Enviar elementos"
-      '13': "Caixa de entrada"
-      '14': "Pendente"
+      "1": "Gústames dados"
+      "2": "Gústames recibidos"
+      "3": "Marcadores"
+      "4": "Temas"
+      "5": "Respostas"
+      "6": "Respostas"
+      "7": "Mencións"
+      "9": "CItas"
+      "11": "Edicións"
+      "12": "Enviar elementos"
+      "13": "Caixa de entrada"
+      "14": "Pendente"
     categories:
       all: "todas as categorías"
       no_subcategory: "ningunha"
@@ -369,8 +369,8 @@ gl:
       toggle_ordering: "trocar o control de ordenación"
       subcategories: "Subcategorías"
       topic_stat_sentence:
-        one: "%{count} tema novo no último %{unit}."
-        other: "%{count} temas novos no último %{unit}."
+        one: '%{count} tema novo no último %{unit}.'
+        other: '%{count} temas novos no último %{unit}.'
     ip_lookup:
       title: Busca do enderezo IP
       hostname: Nome do servidor
@@ -500,8 +500,8 @@ gl:
         authenticated: "O teu enderezo de correo electrónico foi autenticado por {{provider}}"
         frequency_immediately: "Enviarémosche un correo-e axiña se non liches sobre o que che estamos a enviar."
         frequency:
-          one: "Só che eviaremos un correo-e se non te vimos no último minuto."
-          other: "Só che eviaremos un correo-e se non te vimos nos últimos {{count}} minutos."
+          one: Só che eviaremos un correo-e se non te vimos no último minuto.
+          other: Só che eviaremos un correo-e se non te vimos nos últimos {{count}} minutos.
       name:
         title: "Nome"
         instructions_required: "Nome completo"
@@ -528,8 +528,6 @@ gl:
       created: "Inscrito"
       log_out: "Saír da sesión"
       location: "Localización"
-      card_badge:
-        title: "Insignia na ficha do usuario"
       website: "Sitio web"
       email_settings: "Correo electrónico"
       like_notification_frequency:
@@ -581,8 +579,8 @@ gl:
         user: "Usuario convidado"
         sent: "Enviado"
         truncated:
-          one: "Amosando o primeiro convite."
-          other: "Amosando os primeiros {{count}} convites."
+          one: Amosando o primeiro convite.
+          other: Amosando os primeiros {{count}} convites.
         redeemed: "Convites utilizados"
         redeemed_tab: "Utilizados"
         redeemed_tab_with_count: "Utilizados ({{count}})"
@@ -904,8 +902,8 @@ gl:
         archive_topics: "Arquivar temas"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
-          one: "Seleccionaches <b>un</b> tema."
-          other: "Seleccionaches <b>{{count}}</b> temas."
+          one: Seleccionaches <b>un</b> tema.
+          other: Seleccionaches <b>{{count}}</b> temas.
       none:
         unread: "Non tes temas sen ler."
         new: "Non tes novos temas."
@@ -945,10 +943,10 @@ gl:
       new: 'novo tema'
       unread: 'sen ler'
       new_topics:
-        one: 'Un tema novo'
+        one: Un tema novo
         other: '{{count}} temas novos'
       unread_topics:
-        one: 'Un tema sen ler'
+        one: Un tema sen ler
         other: '{{count}} temas sen ler'
       title: 'Tema'
       invalid_access:
@@ -962,17 +960,17 @@ gl:
         title: "Non foi posíbel atopar o tema"
         description: "Sentímolo pero non foi posíbel atopar este tema. Quizais foi eliminado por un moderador."
       total_unread_posts:
-        one: "Tes unha publicación sen ler neste tema"
-        other: "Tes {{count}} publicacións sen ler neste tema"
+        one: Tes unha publicación sen ler neste tema
+        other: Tes {{count}} publicacións sen ler neste tema
       unread_posts:
-        one: "Tes unha publicación antiga sen ler neste tema"
-        other: "Tes {{count}} publicacións antigas sen ler neste tema"
+        one: Tes unha publicación antiga sen ler neste tema
+        other: Tes {{count}} publicacións antigas sen ler neste tema
       new_posts:
-        one: "hai unha nova publicación neste tema desde a túa última lectura"
-        other: "hai {{count}} novas publicacións neste tema desde a túa última lectura"
+        one: hai unha nova publicación neste tema desde a túa última lectura
+        other: hai {{count}} novas publicacións neste tema desde a túa última lectura
       likes:
-        one: "hai un gústame neste tema"
-        other: "hai {{count}} gústames neste tema"
+        one: hai un gústame neste tema
+        other: hai {{count}} gústames neste tema
       back_to_list: "Volver á lista de temas"
       options: "Opcións de temas"
       show_links: "amosar as ligazóns cara este tema"
@@ -982,7 +980,7 @@ gl:
       read_more_MF: "Hai { UNREAD, plural, =0 {} one { <a href='/unread'>1 sen ler</a> } other { <a href='/unread'># sen ler</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e} false { } other{}} <a href='/new'>1 novo</a> topic} other { {BOTH, select, true{e} false { } other{}} <a href='/new'># novos</a> topics} } restantes, ou {CATEGORY, select, true {explora outros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Explorar todas as categorías
       view_latest_topics: ver últimos temas
-      suggest_create_topic: Porque non crear un tema?
+      suggest_create_topic: "Porque non crear un tema?"
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
@@ -998,16 +996,16 @@ gl:
         current: publicación actual
       notifications:
         reasons:
-          '3_6': 'Recibirás notificacións porque estás vendo esta categoría.'
-          '3_5': 'Recibirás notificacións porque comezaches a ver este tema automaticamente.'
-          '3_2': 'Recibirás notificacións porque estás vendo este tema.'
-          '3_1': 'Recibirás notificacións por ser o creador deste tema.'
-          '3': 'Recibirás notificacións porque estás vendo este tema.'
-          '1_2': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
-          '1': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
-          '0_7': 'Estás ignorando todas as notificacións desta categoría.'
-          '0_2': 'Estás ignorando todas as notificacións deste tema.'
-          '0': 'Estás ignorando todas as notificacións deste tema.'
+          "3_6": 'Recibirás notificacións porque estás vendo esta categoría.'
+          "3_5": 'Recibirás notificacións porque comezaches a ver este tema automaticamente.'
+          "3_2": 'Recibirás notificacións porque estás vendo este tema.'
+          "3_1": 'Recibirás notificacións por ser o creador deste tema.'
+          "3": 'Recibirás notificacións porque estás vendo este tema.'
+          "1_2": 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
+          "1": 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
+          "0_7": 'Estás ignorando todas as notificacións desta categoría.'
+          "0_2": 'Estás ignorando todas as notificacións deste tema.'
+          "0": 'Estás ignorando todas as notificacións deste tema.'
         watching_pm:
           title: "Ver"
           description: "Recibirás notificacións de cada resposta a esta mensaxe e aparecerá o número de novas respostas."
@@ -1071,8 +1069,8 @@ gl:
         pin_validation: "Requírese unha data para pegar este tema."
         not_pinned: "Non hai temas pegados en {{categoryLink}}."
         already_pinned:
-          one: "Temas pegados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Temas pegados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Temas pegados actualmente en {{categoryLink}}: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Temas pegados actualmente en {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         pin_globally: "Facer que este tema apareza no alto de todas as listas de temas até"
         confirm_pin_globally: "Xa tes {{count}} temas pegados globalmente. Demasiados temas pegados pode resultar pesado para usuarios novos e anónimos. Confirmas que queres pegar outro tema globalmente?"
         unpin_globally: "Eliminar este tema da banda superior de todas as listas de temas."
@@ -1080,8 +1078,8 @@ gl:
         global_pin_note: "Os usuarios poden despegar o tema por si mesmos."
         not_pinned_globally: "Non hai temas pegados globalmente."
         already_pinned_globally:
-          one: "Temas pegados globalmente neste intre: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Temas pegados globalmente neste intre: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Temas pegados globalmente neste intre: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Temas pegados globalmente neste intre: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         make_banner: "Facer deste tema un báner que apareza na banda superior de todas as páxinas."
         remove_banner: "Eliminar o báner que aparece na banda superior de todas as páxinas."
         banner_note: "Os usuarios poden desbotar un báner se o pechan. Unicamente pode haber un tema que sexa un báner ao mesmo tempo."
@@ -1115,8 +1113,8 @@ gl:
       login_reply: 'Inicia sesión para responder'
       filters:
         n_posts:
-          one: "Unha publicación"
-          other: "{{count}} publicacións"
+          one: Unha publicación
+          other: '{{count}} publicacións'
         cancel: "Eliminar filtro"
       split_topic:
         title: "Mover ao tema novo"
@@ -1124,15 +1122,15 @@ gl:
         topic_name: "Nome do tema novo"
         error: "Produciuse un erro movendo as publicacións ao novo tema."
         instructions:
-          one: "Vas crear un novo tema e enchelo coa publicación que seleccionaches."
-          other: "Vas crear un novo tema e enchelo coas <b>{{count}}</b> publicacións que seleccionaches."
+          one: Vas crear un novo tema e enchelo coa publicación que seleccionaches.
+          other: Vas crear un novo tema e enchelo coas <b>{{count}}</b> publicacións que seleccionaches.
       merge_topic:
         title: "Mover a un tema existente"
         action: "mover a un tema existente"
         error: "Produciuse un erro movendo publicacións nese tema."
         instructions:
-          one: "Selecciona o tema ao que queres mover esta publicación."
-          other: "Selecciona o tema ao que queres mover estas <b>{{count}}</b> publicacións."
+          one: Selecciona o tema ao que queres mover esta publicación.
+          other: Selecciona o tema ao que queres mover estas <b>{{count}}</b> publicacións.
       change_owner:
         title: "Cambiar propietario das publicacións"
         action: "cambiar propiedade"
@@ -1140,8 +1138,8 @@ gl:
         label: "Novo propietario das publicacións"
         placeholder: "nome do usuario do novo propietario"
         instructions:
-          one: "Selecciona o novo propietario da publicación de <b>{{old_user}}</b>."
-          other: "Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>."
+          one: Selecciona o novo propietario da publicación de <b>{{old_user}}</b>.
+          other: Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>.
         instructions_warn: "Decátate que ningunha notificación sobre esta publicación se transferirá retroactivamente ao novo usuario.<br>Aviso: actualmente, non se transfire ao novo usuario ningún dato relacionado cunha publicación. Usa isto con tino."
       change_timestamp:
         action: "cambiar a marca data/hora"
@@ -1152,12 +1150,12 @@ gl:
         select: 'seleccionar'
         selected: 'seleccionados ({{count}})'
         delete: eliminar seleccionados
-        cancel: 'cancelar selección '
+        cancel: "cancelar selección "
         select_all: seleccionar todo
         deselect_all: deseleccionar todo
         description:
-          one: "Seleccionaches <b>unha</b> publicación."
-          other: "Seleccionaches <b>{{count}}</b> publicacións."
+          one: Seleccionaches <b>unha</b> publicación.
+          other: Seleccionaches <b>{{count}}</b> publicacións.
     post:
       edit_reason: "Razón:"
       post_number: "publicación {{number}}"
@@ -1168,26 +1166,26 @@ gl:
       show_full: "Amosar a publicación completa"
       show_hidden: 'Ver o contido oculto.'
       deleted_by_author:
-        one: "(as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} hora, excepto que fosen denunciadas)"
-        other: "(as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} horas, excepto que fosen denunciadas)"
+        one: (as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} hora, excepto que fosen denunciadas)
+        other: (as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} horas, excepto que fosen denunciadas)
       expand_collapse: "ampliar/reducir"
       gap:
-        one: "ver unha resposta oculta"
-        other: "ver {{count}} respostas ocultas"
+        one: ver unha resposta oculta
+        other: ver {{count}} respostas ocultas
       unread: "Publicación sen ler"
       has_replies:
-        one: "{{count}} resposta"
-        other: "{{count}} respostas"
+        one: '{{count}} resposta'
+        other: '{{count}} respostas'
       has_likes:
-        one: "{{count}} gústame"
-        other: "{{count}} gústames"
+        one: '{{count}} gústame'
+        other: '{{count}} gústames'
       has_likes_title:
-        one: "A unha persoa gustoulle esta publicación"
-        other: "A {{count}} persoas gustoulles esta publicación"
+        one: A unha persoa gustoulle esta publicación
+        other: A {{count}} persoas gustoulles esta publicación
       has_likes_title_only_you: "gustouche esta publicación"
       has_likes_title_you:
-        one: "A ti e a outro máis gustouvos esta publicación"
-        other: "A ti e a {{count}} persoas máis gustouvos esta publicación"
+        one: A ti e a outro máis gustouvos esta publicación
+        other: A ti e a {{count}} persoas máis gustouvos esta publicación
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Téntao de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Téntao de novo."
@@ -1253,54 +1251,54 @@ gl:
           vote: "Votaches esta publicación"
         by_you_and_others:
           off_topic:
-            one: "Ti e outro máis informastes disto como non relacionado"
-            other: "Ti e {{count}} máis informastes disto como non relacionado"
+            one: Ti e outro máis informastes disto como non relacionado
+            other: Ti e {{count}} máis informastes disto como non relacionado
           spam:
-            one: "Ti e outro máis denunciastes isto como spam"
-            other: "Ti e {{count}} máis denunciastes isto com spam"
+            one: Ti e outro máis denunciastes isto como spam
+            other: Ti e {{count}} máis denunciastes isto com spam
           inappropriate:
-            one: "Ti e outro máis denunciastes isto como inapropiado"
-            other: "Ti e {{count}} máis denunciastes isto como inapropiado"
+            one: Ti e outro máis denunciastes isto como inapropiado
+            other: Ti e {{count}} máis denunciastes isto como inapropiado
           notify_moderators:
-            one: "Ti e outro máis denunciastes isto para moderación"
-            other: "Ti e {{count}} máis denunciastes isto para moderación"
+            one: Ti e outro máis denunciastes isto para moderación
+            other: Ti e {{count}} máis denunciastes isto para moderación
           notify_user:
-            one: "Ti e unha persoa máis enviastes unha mensaxe a este usuario"
-            other: "Ti e {{count}} persoas máis enviastes unha mensaxe a este usuario"
+            one: Ti e unha persoa máis enviastes unha mensaxe a este usuario
+            other: Ti e {{count}} persoas máis enviastes unha mensaxe a este usuario
           bookmark:
-            one: "Ti e outra persoa marcastes esta publicación"
-            other: "Ti e {{count}} persoas máis marcastes esta publicación"
+            one: Ti e outra persoa marcastes esta publicación
+            other: Ti e {{count}} persoas máis marcastes esta publicación
           like:
-            one: "A ti e a un máis gustouvos isto"
-            other: "A ti e a {{count}} máis gustouvos isto"
+            one: A ti e a un máis gustouvos isto
+            other: A ti e a {{count}} máis gustouvos isto
           vote:
-            one: "Ti e outra persoa votastes esta publicación"
-            other: "Ti e {{count}} persoas máis votastes esta publicación"
+            one: Ti e outra persoa votastes esta publicación
+            other: Ti e {{count}} persoas máis votastes esta publicación
         by_others:
           off_topic:
-            one: "Unha persoa marcou isto como non relacionado"
-            other: "{{count}} persoas informaron disto como non relacionado"
+            one: Unha persoa marcou isto como non relacionado
+            other: '{{count}} persoas informaron disto como non relacionado'
           spam:
-            one: "Unha persoa marcou isto como spam"
-            other: "{{count}} persoas denunciaron isto como spam"
+            one: Unha persoa marcou isto como spam
+            other: '{{count}} persoas denunciaron isto como spam'
           inappropriate:
-            one: "Unha persoa denunciou isto como inapropiado"
-            other: "{{count}} persoas denunciaron isto como inapropiado"
+            one: Unha persoa denunciou isto como inapropiado
+            other: '{{count}} persoas denunciaron isto como inapropiado'
           notify_moderators:
-            one: "Unha persoa denunciou isto para moderación"
-            other: "{{count}} persoas denunciaron isto para moderación"
+            one: Unha persoa denunciou isto para moderación
+            other: '{{count}} persoas denunciaron isto para moderación'
           notify_user:
-            one: "Unha persoa enviou unha mensaxe a este usuario"
-            other: "{{count}} persoas enviaron unha mensaxe a este usuario"
+            one: Unha persoa enviou unha mensaxe a este usuario
+            other: '{{count}} persoas enviaron unha mensaxe a este usuario'
           bookmark:
-            one: "Unha persoa marcou esta publicación"
-            other: "{{count}} persoas marcaron esta publicación"
+            one: Unha persoa marcou esta publicación
+            other: '{{count}} persoas marcaron esta publicación'
           like:
-            one: "A unha persoa gustoulle isto"
-            other: "A {{count}} persoas gustoulles isto"
+            one: A unha persoa gustoulle isto
+            other: A {{count}} persoas gustoulles isto
           vote:
-            one: "Unha persoa votou por esta publicación"
-            other: "{{count}} persoas votaron por esta publicación"
+            one: Unha persoa votou por esta publicación
+            other: '{{count}} persoas votaron por esta publicación'
       revisions:
         controls:
           first: "Primeira revisión"
@@ -1408,8 +1406,8 @@ gl:
       participants_title: "Publicadores frecuentes"
       links_title: "Ligazóns populares"
       clicks:
-        one: "Un clic"
-        other: "%{count} clics"
+        one: Un clic
+        other: '%{count} clics'
     topic_statuses:
       warning:
         help: "Este é un aviso oficial."
@@ -1443,19 +1441,19 @@ gl:
     original_post: "Publicación orixinal"
     views: "Vistas"
     views_lowercase:
-      one: "vista"
-      other: "vistas"
+      one: vista
+      other: vistas
     replies: "Respostas"
     activity: "Actividade"
     likes: "Gústames"
     likes_lowercase:
-      one: "gústame"
-      other: "gústames"
+      one: gústame
+      other: gústames
     likes_long: "hai {{number}} gústames neste tema"
     users: "Usuarios"
     users_lowercase:
-      one: "usuario"
-      other: "usuarios"
+      one: usuario
+      other: usuarios
     category_title: "Categoría"
     history: "Historial"
     changed_by: "por {{author}}"
@@ -1468,8 +1466,8 @@ gl:
       latest:
         title: "Últimos"
         title_with_count:
-          one: "Último (1)"
-          other: "({{count}}) últimos"
+          one: Último (1)
+          other: ({{count}}) últimos
         help: "temas con publicacións recentes"
       hot:
         title: "Quentes"
@@ -1487,21 +1485,21 @@ gl:
       unread:
         title: "Sen ler"
         title_with_count:
-          one: "Un sen ler"
-          other: "({{count}}) sen ler"
+          one: Un sen ler
+          other: ({{count}}) sen ler
         help: "temas con publicacións sen ler que estás vendo ou seguindo"
         lower_title_with_count:
-          one: "Unha sen ler"
-          other: "{{count}} sen ler"
+          one: Unha sen ler
+          other: '{{count}} sen ler'
       new:
         lower_title_with_count:
-          one: "Un novo"
-          other: "{{count}} novos"
+          one: Un novo
+          other: '{{count}} novos'
         lower_title: "novo"
         title: "Novo"
         title_with_count:
-          one: "Un novo"
-          other: "({{count}}) novos"
+          one: Un novo
+          other: ({{count}}) novos
         help: "temas creados nos últimos días"
       posted:
         title: "As miñas publicacións"
@@ -1512,8 +1510,8 @@ gl:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
+          one: '{{categoryName}} (1)'
+          other: '{{categoryName}} ({{count}})'
         help: "últimos temas na categoría {{categoryName}}"
       top:
         title: "Destacados"
@@ -1951,11 +1949,11 @@ gl:
           suspect: 'Sospeitoso'
         approved: "Aprobado?"
         approved_selected:
-          one: "aprobar usuario"
-          other: "aprobar os ({{count}}) usuarios"
+          one: aprobar usuario
+          other: aprobar os ({{count}}) usuarios
         reject_selected:
-          one: "rexeitar usuario"
-          other: "rexeitar os ({{count}}) usuarios"
+          one: rexeitar usuario
+          other: rexeitar os ({{count}}) usuarios
         titles:
           active: 'Usuarios activos'
           new: 'Novos usuarios'
@@ -1971,11 +1969,11 @@ gl:
           suspended: 'Usuarios suspendidos'
           suspect: 'Usuarios sospeitosos'
         reject_successful:
-          one: "Rexeitouse un usuario correctamente."
-          other: "Rexeitáronse %{count} usuarios correctamente."
+          one: Rexeitouse un usuario correctamente.
+          other: Rexeitáronse %{count} usuarios correctamente.
         reject_failures:
-          one: "Produciuse un fallo rexeitando o usuario."
-          other: "Produciuse un fallo rexeitando os %{count} usuarios."
+          one: Produciuse un fallo rexeitando o usuario.
+          other: Produciuse un fallo rexeitando os %{count} usuarios.
         not_verified: "Sen verificar"
         check_email:
           title: "Amosar o enderezo de correo-e deste usuario"
@@ -2032,14 +2030,14 @@ gl:
         delete_forbidden_because_staff: "Non é posíbel eliminiar os administradores e moderadores."
         delete_posts_forbidden_because_staff: "Non é posíbel eliminar todas as publicacións dos administradores ou moderadores."
         delete_forbidden:
-          one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} día)"
-          other: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} días)"
+          one: Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} día)
+          other: Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} días)
         cant_delete_all_posts:
-          one: "Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} día. (o axuste delete_user_max_post_age.)"
-          other: "Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} días. (o axuste delete_user_max_post_age.)"
+          one: Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} día. (o axuste delete_user_max_post_age.)
+          other: Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} días. (o axuste delete_user_max_post_age.)
         cant_delete_all_too_many_posts:
-          one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación.  (delete_all_posts_max)"
-          other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións.  (delete_all_posts_max)"
+          one: Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación.  (delete_all_posts_max)
+          other: Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións.  (delete_all_posts_max)
         delete_confirm: "CONFIRMAS a eliminación deste usuario? Non se poderá desfacer!"
         delete_and_block: "Eliminar e <b>bloquear</b> este correo-e e enderezo IP"
         delete_dont_block: "Só eliminar"
@@ -2178,11 +2176,11 @@ gl:
         reason_help: (Ligazón a unha publicación ou tema)
         save: Gardar
         delete: Eliminar
-        delete_confirm: Confirmas a eliminación desta insignia?
+        delete_confirm: "Confirmas a eliminación desta insignia?"
         revoke: Revogar
         reason: Razón
         expand: Expandir &hellip;
-        revoke_confirm: Confirmas a revogación desta insignia?
+        revoke_confirm: "Confirmas a revogación desta insignia?"
         edit_badges: Editar insignias
         grant_badge: Conceder insignia
         granted_badges: Insignias concedidas
@@ -2219,14 +2217,14 @@ gl:
             text: "Faltan algunhas mostras para a concesión da insignia. Isto acontece cando a consulta sobre insignias devolve unha ID do usuario, ou de publicacións que non existen. Pode causar resultados inesperados posteriormente. Revisa outra vez a solicitude."
           no_grant_count: "Non hai insignias para asignar."
           grant_count:
-            one: "<b>1</b> insignia para asignar."
-            other: "<b>%{count}</b> insignias para asignar."
+            one: <b>1</b> insignia para asignar.
+            other: <b>%{count}</b> insignias para asignar.
           sample: "Mostra:"
           grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> para publicación en %{link}
-            with_post_time: <span class="username">%{username}</span> para publicación en %{link} o <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
+            with: "<span class=\"username\">%{username}</span>"
+            with_post: "<span class=\"username\">%{username}</span> para publicación en %{link}"
+            with_post_time: "<span class=\"username\">%{username}</span> para publicación en %{link} o <span class=\"time\">%{time}</span>"
+            with_time: "<span class=\"username\">%{username}</span> o <span class=\"time\">%{time}</span>"
       emoji:
         title: "Emoji"
         help: "Engade novo emoji que estará dispoñíbel para todos. (Suxestión: arrastra e solta múltiples ficheiros dunha vez)"
@@ -2267,7 +2265,7 @@ gl:
         category_id: "ID da categoría"
         category_title: "Categoría"
         external_url: "URL externa"
-        delete_confirm: Confirmas a eliminación desta ligazón permanente?
+        delete_confirm: "Confirmas a eliminación desta ligazón permanente?"
         form:
           label: "Novo:"
           add: "Engadir"

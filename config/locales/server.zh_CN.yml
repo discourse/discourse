@@ -17,12 +17,12 @@ zh_CN:
       date_only: "%Y年%m月%d日"
       long: "%Y年%m月%d日%H:%M"
   date:
-    month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
+    month_names: [~, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "上午"
     pm: "下午"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "主题列表"
   posts: "帖子"
@@ -75,18 +75,18 @@ zh_CN:
       present: 必须为空
       confirmation: "不匹配%{attribute}"
       empty: 不能为空
-      equal_to: 必须等于 %{count}
+      equal_to: "必须等于 %{count}"
       even: 必须为奇数
       exclusion: 被保留
-      greater_than: 必须大于 %{count}
-      greater_than_or_equal_to: 必须大于或等于 %{count}
+      greater_than: "必须大于 %{count}"
+      greater_than_or_equal_to: "必须大于或等于 %{count}"
       has_already_been_used: "不能和其他%{attribute}重复"
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
       contains_censored_words: "包含了以下敏感词:%{censored_words}"
-      less_than: 必须小于 %{count}
-      less_than_or_equal_to: 必须小于等于 %{count}
+      less_than: "必须小于 %{count}"
+      less_than_or_equal_to: "必须小于等于 %{count}"
       not_a_number: 不是数字
       not_an_integer: 必须是数字
       odd: 必须是偶数
@@ -104,7 +104,7 @@ zh_CN:
     template:
       body: '有下列问题：'
       header:
-        other: '有 %{count} 个错误使得%{model}无法被保存'
+        other: 有 %{count} 个错误使得%{model}无法被保存
     embed:
       load_from_remote: "载入帖子时出错了。"
     site_settings:
@@ -114,6 +114,9 @@ zh_CN:
       max_username_length_range: "不能将最大值设置为一个小于最小值的值。"
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "你的邀请码不正确。请联系网站管理员。"
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='/u/%{username}/summary'>已经有帐号了！</a>"
@@ -135,7 +138,7 @@ zh_CN:
   reading_time: "阅读时间"
   likes: "赞"
   too_many_replies:
-    other: "我们非常抱歉，但是新用户有发帖限制。在同一主题只能回复 %{count} 次。"
+    other: 我们非常抱歉，但是新用户有发帖限制。在同一主题只能回复 %{count} 次。
   embed:
     start_discussion: "开始讨论"
     continue: "继续讨论"
@@ -145,29 +148,29 @@ zh_CN:
     no_hosts: "嵌入没有设置任何主机地址。"
     configure: "配置嵌入"
     more_replies:
-      other: "%{count} 个更多回复"
+      other: '%{count} 个更多回复'
     loading: "正在载入讨论中..."
     permalink: "永久链接"
     imported_from: "这是一个已从原 %{link} 中分离的主题"
     in_reply_to: "▶ %{username}"
     replies:
-      other: "%{count} 个回复"
+      other: '%{count} 个回复'
   no_mentions_allowed: "抱歉，你无法提到其他用户。"
   too_many_mentions:
-    other: "抱歉，你一次仅能提到 %{count} 个用户。"
+    other: 抱歉，你一次仅能提到 %{count} 个用户。
   no_mentions_allowed_newuser: "抱歉，访客无法@用户。"
   too_many_mentions_newuser:
-    other: "抱歉，访客一次仅能@ %{count} 个用户。"
+    other: 抱歉，访客一次仅能@ %{count} 个用户。
   no_images_allowed_trust: "抱歉，你无法在这个帖子里贴图"
   no_images_allowed: "抱歉，访客无法贴图。"
   too_many_images:
-    other: "抱歉，访客一次仅能贴 %{count} 张图。"
+    other: 抱歉，访客一次仅能贴 %{count} 张图。
   no_attachments_allowed: "抱歉，新用户无法上传附件。"
   too_many_attachments:
-    other: "抱歉，新用户一次仅能上传 %{count} 个附件。"
+    other: 抱歉，新用户一次仅能上传 %{count} 个附件。
   no_links_allowed: "抱歉，访客无法贴链接。"
   too_many_links:
-    other: "抱歉，访客一次仅能贴 %{count} 条链接。"
+    other: 抱歉，访客一次仅能贴 %{count} 条链接。
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。或许这个主题在你看的时候已经被关闭或删除了。"
@@ -233,8 +236,8 @@ zh_CN:
       title: "%{group_name}的成员请求"
   education:
     until_posts:
-      other: "%{count} 个帖子"
-    new-topic: |
+      other: '%{count} 个帖子'
+    'new-topic': |
       欢迎来到%{site_name} &mdash; **衷心感谢你参与讨论！**
 
       - 标题念出来后听着有趣么？是否清晰明了？
@@ -244,7 +247,7 @@ zh_CN:
       - 选择常用的词句以便别人能找到你的主题。如果想要把主题和类似主题放在一起，选择一个分类。
 
       更多的帮助信息，[请查看我们的社区准则](/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
-    new-reply: |
+    'new-reply': |
       欢迎来到%{site_name} &mdash; **感谢你的贡献！**
 
       - 你的回复是否以某种方式改善了讨论？
@@ -302,6 +305,7 @@ zh_CN:
       user_profile:
         bio_raw: "关于我"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -349,7 +353,6 @@ zh_CN:
           attributes:
             word:
               too_many: "对该操作敏感词过多"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>你的个人主页中的关于我部分目前还是空白，<a href='/u/%{username_lower}/preferences/about-me'>你想要补些什么吗？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
@@ -416,7 +419,7 @@ zh_CN:
       uncategorized: "不能删除未分类。"
       has_subcategories: "不能删除该分类，因为它有子分类"
       topic_exists:
-        other: "不能删除该分类，因为它有 %{count} 个主题。最老的主题是 %{topic_link}。"
+        other: 不能删除该分类，因为它有 %{count} 个主题。最老的主题是 %{topic_link}。
       topic_exists_no_oldest: "不能删除该分类，因为主题数量为 %{count}。"
     uncategorized_description: "不需要分类或者不适合放在现在的任何分类中的主题。"
   trust_levels:
@@ -436,60 +439,60 @@ zh_CN:
       broken: "此图片已损坏"
   rate_limiter:
     hours:
-      other: "%{count}小时"
+      other: '%{count}小时'
     minutes:
-      other: "%{count}分"
+      other: '%{count}分'
     seconds:
-      other: "%{count}秒"
+      other: '%{count}秒'
   datetime:
     distance_in_words:
       half_a_minute: "< 1分"
       less_than_x_seconds:
-        other: "< %{count}秒"
+        other: < %{count}秒
       x_seconds:
-        other: "%{count}秒"
+        other: '%{count}秒'
       less_than_x_minutes:
-        other: "< %{count}分"
+        other: < %{count}分
       x_minutes:
-        other: "%{count}分"
+        other: '%{count}分'
       about_x_hours:
-        other: "%{count}小时"
+        other: '%{count}小时'
       x_days:
-        other: "%{count}天"
+        other: '%{count}天'
       about_x_months:
-        other: "%{count}分钟"
+        other: '%{count}分钟'
       x_months:
-        other: "%{count}分钟"
+        other: '%{count}分钟'
       about_x_years:
-        other: "%{count}年"
+        other: '%{count}年'
       over_x_years:
-        other: "> %{count}年"
+        other: '> %{count}年'
       almost_x_years:
-        other: "%{count}年"
+        other: '%{count}年'
     distance_in_words_verbose:
       half_a_minute: "刚刚"
       less_than_x_seconds:
-        other: "刚刚"
+        other: 刚刚
       x_seconds:
-        other: "%{count}秒之前"
+        other: '%{count}秒之前'
       less_than_x_minutes:
-        other: "少于%{count}分钟前"
+        other: 少于%{count}分钟前
       x_minutes:
-        other: "%{count}分钟前"
+        other: '%{count}分钟前'
       about_x_hours:
-        other: "%{count}小时前"
+        other: '%{count}小时前'
       x_days:
-        other: "%{count}天前"
+        other: '%{count}天前'
       about_x_months:
-        other: "大约%{count}分钟前"
+        other: 大约%{count}分钟前
       x_months:
-        other: "%{count}分钟前"
+        other: '%{count}分钟前'
       about_x_years:
-        other: "大约%{count}年前"
+        other: 大约%{count}年前
       over_x_years:
-        other: "超过%{count}年前"
+        other: 超过%{count}年前
       almost_x_years:
-        other: "将近%{count}年前"
+        other: 将近%{count}年前
   password_reset:
     no_token: "抱歉，密码修改链接已过期。选择登录按钮再使用“我忘记了密码”获得一个新链接。"
     choose_new: "选择一个新密码"
@@ -806,7 +809,7 @@ zh_CN:
     failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
-      other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
+      other: 邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。
     bad_favicon_url: "网站图标无法载入。检查<a href='/admin/site_settings'>站点设置</a>中的 favicon_url。"
     poll_pop3_timeout: "至 POP3 服务器的连接超时。无法获取进站邮件。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
     poll_pop3_auth_error: "至 POP3 服务器的连接验证失败。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>。"
@@ -896,7 +899,6 @@ zh_CN:
     notify_mods_when_user_silenced: "如果用户被自动禁言了，发私信给所有版主。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
-    enable_markdown_typographer: "使用基本的排版规则来提高文本段落的可读性，用符号替换 (c) (tm) 等，减少问号等等"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由管理人员批准。警告：在运行的站点中启用将解除所有非管理人员用户的访问权限！"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
@@ -1344,15 +1346,15 @@ zh_CN:
     not_seen_in_a_month: "欢迎回来！我们已经好久没见到你了。这些是你不在时的最热门主题。"
   merge_posts:
     edit_reason:
-      other: "%{username}合并了 %{count} 个帖子"
+      other: '%{username}合并了 %{count} 个帖子'
     errors:
       different_topics: "无法合并不同主题的帖子。"
       different_users: "无法合并不同用户的帖子。"
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} 个帖子被分离到了新主题：%{topic_link}"
+      other: '%{count} 个帖子被分离到了新主题：%{topic_link}'
     existing_topic_moderator_post:
-      other: "%{count} 个帖子被合并到现存主题：%{topic_link}"
+      other: '%{count} 个帖子被合并到现存主题：%{topic_link}'
   change_owner:
     post_revision_text: "所有权从 %{old_user} 转移至 %{new_user}"
     deleted_user: "已经删除的用户"
@@ -1362,33 +1364,33 @@ zh_CN:
     closed_enabled: "该主题现已关闭，不再允许新的回复。"
     closed_disabled: "本主题已开放，可以发表新的回复。"
     autoclosed_message_max_posts:
-      other: "私信中回复已经达到上限 %{count}，自动锁定。"
+      other: 私信中回复已经达到上限 %{count}，自动锁定。
     autoclosed_topic_max_posts:
-      other: "主题中回复已经达到上限 %{count}，自动关闭。"
+      other: 主题中回复已经达到上限 %{count}，自动关闭。
     autoclosed_enabled_days:
-      other: "该主题在创建%{count}天后自动关闭。不再允许添加新回复。"
+      other: 该主题在创建%{count}天后自动关闭。不再允许添加新回复。
     autoclosed_enabled_hours:
-      other: "该主题在创建%{count}小时后自动关闭。不再允许新的回复。"
+      other: 该主题在创建%{count}小时后自动关闭。不再允许新的回复。
     autoclosed_enabled_minutes:
-      other: "该主题在创建%{count}分钟后自动关闭。不再允许新的回复。"
+      other: 该主题在创建%{count}分钟后自动关闭。不再允许新的回复。
     autoclosed_enabled_lastpost_days:
-      other: "该主题在最后一个回复创建后%{count}天后自动关闭。不再允许新的回复。"
+      other: 该主题在最后一个回复创建后%{count}天后自动关闭。不再允许新的回复。
     autoclosed_enabled_lastpost_hours:
-      other: "该主题在最后一个回复创建后%{count}小时后自动关闭。不再允许添加新回复。"
+      other: 该主题在最后一个回复创建后%{count}小时后自动关闭。不再允许添加新回复。
     autoclosed_enabled_lastpost_minutes:
-      other: "本主题在最后一个回复创建后%{count}分钟后自动锁定。不再允许添加新回复。"
+      other: 本主题在最后一个回复创建后%{count}分钟后自动锁定。不再允许添加新回复。
     autoclosed_disabled_days:
-      other: "该主题开启 %{count} 天后将自动关闭。"
+      other: 该主题开启 %{count} 天后将自动关闭。
     autoclosed_disabled_hours:
-      other: "该主题开启 %{count} 小时后将自动关闭。"
+      other: 该主题开启 %{count} 小时后将自动关闭。
     autoclosed_disabled_minutes:
-      other: "该主题开启 %{count} 分钟后将自动关闭。"
+      other: 该主题开启 %{count} 分钟后将自动关闭。
     autoclosed_disabled_lastpost_days:
-      other: "该主题将在最后一个回复 %{count} 天后自动关闭。"
+      other: 该主题将在最后一个回复 %{count} 天后自动关闭。
     autoclosed_disabled_lastpost_hours:
-      other: "该主题将在最后一个回复 %{count} 小时后自动关闭。"
+      other: 该主题将在最后一个回复 %{count} 小时后自动关闭。
     autoclosed_disabled_lastpost_minutes:
-      other: "该主题将在最后一个回复 %{count} 分钟后自动关闭。"
+      other: 该主题将在最后一个回复 %{count} 分钟后自动关闭。
     autoclosed_disabled: "本主题是开放的，可以添加新的回复。"
     autoclosed_disabled_lastpost: "本主题现在开放了。可以添加新的回复。"
     pinned_enabled: "本主题已置顶，它将始终显示在它所属分类的顶部。可由管理人员对所有人解除置顶，或者由用户自己取消置顶。"
@@ -1456,9 +1458,9 @@ zh_CN:
       same_ip_address: "同一IP地址(%{ip_address})如其他用户"
   flags_reminder:
     flags_were_submitted:
-      other: "标志已经提交%{count}小时前。[请审核他们](/admin/flags)。"
+      other: 标志已经提交%{count}小时前。[请审核他们](/admin/flags)。
     subject_template:
-      other: "%{count} 个标记需要被处理"
+      other: '%{count} 个标记需要被处理'
   unsubscribe_mailer:
     title: "取消订阅发件人"
     subject_template: "确认你不想要收到%{site_title}的电子邮件更新"
@@ -1614,7 +1616,7 @@ zh_CN:
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   temporarily_closed_due_to_flags:
-    other: "因为大量社区成员的标记，这个主题被临时关闭 %{count} 小时。"
+    other: 因为大量社区成员的标记，这个主题被临时关闭 %{count} 小时。
   system_messages:
     private_topic_title: "主题 #%{id}"
     contents_hidden: "请访问帖子以查看内容。"
@@ -1717,7 +1719,6 @@ zh_CN:
         ```
     csv_export_succeeded:
       title: "成功导致CSV格式"
-      subject_template: "数据导出完成"
       text_body_template: |
         数据成功出成功！:dvd:
 
@@ -1962,7 +1963,7 @@ zh_CN:
     pending_users_reminder:
       title: "待审核用户提醒"
       subject_template:
-        other: "%{count} 个用户等待批准"
+        other: '%{count} 个用户等待批准'
       text_body_template: |
         有新注册的用户在访问论坛前需要被确认（或者拒绝）。
 
@@ -1990,7 +1991,7 @@ zh_CN:
     queued_posts_reminder:
       title: "待处理帖子提醒"
       subject_template:
-        other: "%{count} 个帖子等待审核"
+        other: '%{count} 个帖子等待审核'
       text_body_template: |
         你好，
 
@@ -2008,7 +2009,7 @@ zh_CN:
   user_notifications:
     previous_discussion: "之前的回复"
     reached_limit:
-      other: "注意：我们每天最多发送 %{count} 邮件。访问站点看看没被发送的消息。还有你很火！"
+      other: 注意：我们每天最多发送 %{count} 邮件。访问站点看看没被发送的消息。还有你很火！
     in_reply_to: "回复给"
     unsubscribe:
       title: "取消订阅"
@@ -2586,22 +2587,22 @@ zh_CN:
         该徽章授予给第一次编辑自己帖子的你。虽然你不能永远在编辑自己的帖子，但是编辑他们总是一个好办法——你可以改进你的帖子、修正小错误，或者是增补你原来没有写的内容。编辑能让你的帖子质量变得更好！
     basic_user:
       name: 初级用户
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社区功能
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">授予</a>所有常用社区功能"
       long_description: |
         该徽章授予给用户等级达到 1 的成员。感谢你在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。你的新用户限制已经被取消；并且你已经被授予了所有基本的社区权限，必须个人私信、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
       name: 成员
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀请、群组私信和更多的赞
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">授予</a>邀请、群组私信和更多的赞"
       long_description: |
         该徽章授予给达到用户等级 2 的你。感谢你在社区待了几周，真正融入到了社区中。你现在可以在你的用户页或者主题中邀请他人或者创建群组私信了。每天你也可以点更多次赞了。
     regular:
       name: 活跃用户
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a>重分类、重命名、跟踪链接、维基功能和更多的赞
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">授予</a>重分类、重命名、跟踪链接、维基功能和更多的赞"
       long_description: |
         该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社区。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社区。你现在可以社区待了几周，真正融入到了社区中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
     leader:
       name: 资深
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a>全局编辑、固定、锁定、存档、分割、合并和更多的赞
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">授予</a>全局编辑、固定、锁定、存档、分割、合并和更多的赞"
       long_description: |
         该徽章授予给达到用户等级 4 的你。你被管理人员选作了社区的领导力量，你用你的行动和言辞为社区树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、锁定、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
     welcome:
@@ -2611,7 +2612,7 @@ zh_CN:
         该徽章授予给帖子收到了第一个赞的成员。恭喜，有社区成员发现你发表的内容有意思、酷炫或者有用！
     autobiographer:
       name: 自传作者
-      description: 填写<a href="%{base_uri}/my/preferences/profile">用户资料</a>信息
+      description: "填写<a href=\"%{base_uri}/my/preferences/profile\">用户资料</a>信息"
       long_description: |
         该徽章授予给填写了<a href="%{base_uri}/my/preferences/profile">用户资料页</a>并设置了用户头像的你。让社群成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社群。让我们一起努力！
     anniversary:
@@ -2706,7 +2707,7 @@ zh_CN:
         该徽章授予给第一次在回复中引用帖子的你。在你的回复中引用之前帖子中的相关的段落将把主题关联在一起并切题。只要选中别的帖子中的任何文字，然后点击回复按钮将可以引用啦。多引用一些吧！
     read_guidelines:
       name: 阅读指引
-      description: 阅读<a href="%{base_uri}/guidelines">社群指引</a>
+      description: "阅读<a href=\"%{base_uri}/guidelines\">社群指引</a>"
       long_description: |
         该徽章授予给<a href="%{base_uri}/guidelines">阅读了社群指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社群。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
     reader:
@@ -2954,6 +2955,3 @@ zh_CN:
         description: |
           <p>如果你觉得需要修改这些设置，访问<a href='/admin' target='_blank'>管理员分块</a>；你可以在站点菜单找到扳手图标旁找到。</p>
           <p>祝你玩得开心，还有祝你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建设新社区好运！</a></p>
-  activemodel:
-    errors:
-      <<: *errors
