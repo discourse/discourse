@@ -128,5 +128,18 @@ describe InviteRedeemer do
       expect(user.group_users.count).to eq(4)
       expect(user.trust_level).to eq(2)
     end
+
+    it "only allows one user to be created per invite" do
+      SiteSetting.invite_passthrough_hours = 4800
+      user = invite_redeemer.redeem
+      invite.reload
+
+      user.email = "john@example.com"
+      user.save!
+
+      another_invite_redeemer = InviteRedeemer.new(invite, username, name)
+      another_user = another_invite_redeemer.redeem
+      expect(another_user).to eq(nil)
+    end
   end
 end
