@@ -318,7 +318,7 @@ describe Invite do
 
             it 'will not redeem twice' do
               expect(invite.redeem).to be_present
-              expect(invite.redeem.send_welcome_message).to eq(false)
+              expect(invite.redeem.email).to eq(user.email)
             end
           end
         end
