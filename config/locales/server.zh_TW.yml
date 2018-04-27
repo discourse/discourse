@@ -17,12 +17,12 @@ zh_TW:
       date_only: "%Y年%m月%d日"
       long: "%Y年%m月%d日%H:%M"
   date:
-    month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
+    month_names: [~, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "上午"
     pm: "下午"
-    <<: *datetime_formats
   title: "論壇"
   topics: "討論話題"
   posts: "文章"
@@ -63,18 +63,18 @@ zh_TW:
       present: 必須空白
       confirmation: "不匹配 %{attribute}"
       empty: 不能空白
-      equal_to: 必須等於 %{count}
+      equal_to: "必須等於 %{count}"
       even: 必須是雙數
       exclusion: 被保留
-      greater_than: 必須大於 %{count}
-      greater_than_or_equal_to: 必須大於或等於 %{count}
+      greater_than: "必須大於 %{count}"
+      greater_than_or_equal_to: "必須大於或等於 %{count}"
       has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
       contains_censored_words: "包含下列過濾詞彙: %{censored_words}"
-      less_than: 必須少於 %{count}
-      less_than_or_equal_to: 必須少於或等於 %{count}
+      less_than: "必須少於 %{count}"
+      less_than_or_equal_to: "必須少於或等於 %{count}"
       not_a_number: 不是數字
       not_an_integer: 必須是整數
       odd: 必須是單數
@@ -102,6 +102,9 @@ zh_TW:
       max_username_length_range: "你不能設定「最大」小於「最小」。"
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "您的邀請碼無效。請聯絡管理人員。"
     user_exists: "無需邀請 <b>%{email}</b>，他 <a href='/u/%{username}/summary'>已經有帳號了</a>！"
@@ -122,7 +125,7 @@ zh_TW:
   reading_time: "閱讀時間"
   likes: "個讚"
   too_many_replies:
-    other: "我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次"
+    other: 我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次
   embed:
     start_discussion: "開始討論"
     continue: "繼續討論"
@@ -132,28 +135,28 @@ zh_TW:
     no_hosts: "未設置內嵌用的主機。"
     configure: "配置嵌入"
     more_replies:
-      other: "%{count} 個更多回覆"
+      other: '%{count} 個更多回覆'
     loading: "討論串載入中⋯"
     permalink: "永久連結"
     imported_from: "這是一個已從原 %{link} 中分離的主題"
     in_reply_to: "▶ %{username}"
     replies:
-      other: "%{count} 個回覆"
+      other: '%{count} 個回覆'
   no_mentions_allowed: "抱歉，您無法提及其他用戶。"
   too_many_mentions:
-    other: "抱歉，您的文章中只能提及 %{count} 位用戶。"
+    other: 抱歉，您的文章中只能提及 %{count} 位用戶。
   no_mentions_allowed_newuser: "抱歉，新用戶不能提及其他用戶。"
   too_many_mentions_newuser:
-    other: "抱歉，新使用者在文章中只能提及 %{count} 位用戶。"
+    other: 抱歉，新使用者在文章中只能提及 %{count} 位用戶。
   no_images_allowed: "抱歉，新用戶不能在貼文中放置圖片。"
   too_many_images:
-    other: "抱歉，新使用者只能在文章中放置 %{count} 張圖片。"
+    other: 抱歉，新使用者只能在文章中放置 %{count} 張圖片。
   no_attachments_allowed: "抱歉，新用戶不能在貼文中放置附件。"
   too_many_attachments:
-    other: "抱歉，新使用者只能在文章中放置 %{count} 個附件。"
+    other: 抱歉，新使用者只能在文章中放置 %{count} 個附件。
   no_links_allowed: "抱歉，新用戶不能在貼文中放置連結。"
   too_many_links:
-    other: "抱歉，新使用者只能在文章中放置 %{count} 個連結。"
+    other: 抱歉，新使用者只能在文章中放置 %{count} 個連結。
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
@@ -208,8 +211,8 @@ zh_TW:
       trust_level_4: "信任等級 4"
   education:
     until_posts:
-      other: "%{count} 篇文章"
-    new-topic: |
+      other: '%{count} 篇文章'
+    'new-topic': |
       歡迎來到%{site_name} &mdash; **衷心感謝你參與討論！**
 
       - 標題是否清晰明了地描述了主題？看起來有意思麼？
@@ -219,7 +222,7 @@ zh_TW:
       - 選擇恰當的詞句以便別人能找到你的主題。若想要給主題分組，選擇一個分類。
 
       更多的幫助信息，[請查看我們的社群準則](/guidelines)。此信息面板只在你發佈前 %{education_posts_text}時顯示。
-    new-reply: |
+    'new-reply': |
       歡迎來到 %{site_name} — **感謝你的參與！**
 
       - 你的回應是否以某些方式改善了討論？
@@ -278,6 +281,7 @@ zh_TW:
       user_profile:
         bio_raw: "關於我"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -309,7 +313,6 @@ zh_TW:
           attributes:
             name:
               taken: 已被其他表情符號使用
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>你的個人檔案中，「關於我」的部分目前還沒有內容，<a href='/u/%{username_lower}/preferences/about-me'>不如來自我介紹一下吧？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
@@ -375,7 +378,7 @@ zh_TW:
       uncategorized: "不能刪除該分類"
       has_subcategories: "不能刪除該分類，因為它有子分類"
       topic_exists:
-        other: "不能刪除該分類，因為它有 %{count} 個話題，最老的話題是 %{topic_link}"
+        other: 不能刪除該分類，因為它有 %{count} 個話題，最老的話題是 %{topic_link}
       topic_exists_no_oldest: "不能刪除該分類，因為有 %{count} 個話題"
     uncategorized_description: "不需要分類或者不適合放在現在的任何分類中的主題。"
   trust_levels:
@@ -392,60 +395,60 @@ zh_TW:
     change_failed_explanation: "你嘗試將%{user_name}降至%{new_trust_level}。然而他們的信任等級已經是%{current_trust_level}。%{user_name}將仍處于%{current_trust_level}——如果你想要降級用戶，先鎖定信任等級。"
   rate_limiter:
     hours:
-      other: "%{count} 小時"
+      other: '%{count} 小時'
     minutes:
-      other: "%{count} 分"
+      other: '%{count} 分'
     seconds:
-      other: "%{count} 秒"
+      other: '%{count} 秒'
   datetime:
     distance_in_words:
       half_a_minute: "< 1分"
       less_than_x_seconds:
-        other: "< %{count} 秒鐘"
+        other: < %{count} 秒鐘
       x_seconds:
-        other: "%{count} 秒"
+        other: '%{count} 秒'
       less_than_x_minutes:
-        other: "< %{count} 分鐘"
+        other: < %{count} 分鐘
       x_minutes:
-        other: "%{count} 分鐘"
+        other: '%{count} 分鐘'
       about_x_hours:
-        other: "%{count} 小時"
+        other: '%{count} 小時'
       x_days:
-        other: "%{count} 天"
+        other: '%{count} 天'
       about_x_months:
-        other: "%{count} 月"
+        other: '%{count} 月'
       x_months:
-        other: "%{count} 月"
+        other: '%{count} 月'
       about_x_years:
-        other: "%{count} 年"
+        other: '%{count} 年'
       over_x_years:
-        other: "> %{count} 年"
+        other: '> %{count} 年'
       almost_x_years:
-        other: "%{count} 年"
+        other: '%{count} 年'
     distance_in_words_verbose:
       half_a_minute: "剛剛"
       less_than_x_seconds:
-        other: "剛才"
+        other: 剛才
       x_seconds:
-        other: "%{count} 秒前"
+        other: '%{count} 秒前'
       less_than_x_minutes:
-        other: "不到 %{count} 分鐘前"
+        other: 不到 %{count} 分鐘前
       x_minutes:
-        other: "%{count} 分鐘前"
+        other: '%{count} 分鐘前'
       about_x_hours:
-        other: "%{count} 小時前"
+        other: '%{count} 小時前'
       x_days:
-        other: "%{count} 天前"
+        other: '%{count} 天前'
       about_x_months:
-        other: "約 %{count} 個月前"
+        other: 約 %{count} 個月前
       x_months:
-        other: "%{count} 個月前"
+        other: '%{count} 個月前'
       about_x_years:
-        other: "約 %{count} 年前"
+        other: 約 %{count} 年前
       over_x_years:
-        other: "超過 %{count} 年前"
+        other: 超過 %{count} 年前
       almost_x_years:
-        other: "約 %{count} 年前"
+        other: 約 %{count} 年前
   password_reset:
     no_token: "抱歉，密碼修改連結已過期。選擇登錄按鈕再使用“我忘記了密碼”獲得一個新連結。"
     choose_new: "選擇一個新密碼"
@@ -732,7 +735,7 @@ zh_TW:
     failing_emails_warning: '有 %{num_failed_jobs} 個郵件任務失敗。請檢查 app.yml 檔案是否正確配置了郵件伺服器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失敗的任務</a>。'
     subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
     email_polling_errored_recently:
-      other: "郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='/logs' target='_blank'>日誌</a>尋找詳情。"
+      other: 郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='/logs' target='_blank'>日誌</a>尋找詳情。
     bad_favicon_url: "網站表徵圖無法載入。檢查<a href='/admin/site_settings'>站點設置</a>中的 favicon_url。"
     poll_pop3_timeout: "至 POP3 伺服器的連接超時。無法獲取進站郵件。請檢查<a href='/admin/site_settings/category/email'>POP3 設置</a>和服務商。"
     poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='/admin/site_settings/category/email'>POP3 設置</a>。"
@@ -1216,15 +1219,15 @@ zh_TW:
     not_seen_in_a_month: "歡迎回來！我們已經好久沒見到你了。這些是你不在時的最熱門主題。"
   merge_posts:
     edit_reason:
-      other: "%{username}合併了 %{count} 個帖子"
+      other: '%{username}合併了 %{count} 個帖子'
     errors:
       different_topics: "無法合並不同主題的帖子。"
       different_users: "無法合並不同用戶的帖子。"
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} 個帖子被分離到了新主題：%{topic_link}"
+      other: '%{count} 個帖子被分離到了新主題：%{topic_link}'
     existing_topic_moderator_post:
-      other: "%{count} 個帖子被合併到現存主題：%{topic_link}"
+      other: '%{count} 個帖子被合併到現存主題：%{topic_link}'
   change_owner:
     post_revision_text: "所有權從 %{old_user} 轉移至 %{new_user}"
     deleted_user: "已經刪除的用戶"
@@ -1234,21 +1237,21 @@ zh_TW:
     closed_enabled: "此討論話題已關閉，不再接受新的回覆。"
     closed_disabled: "此討論話題已開放，可以發表新的回覆。"
     autoclosed_message_max_posts:
-      other: "消息中回覆已經達到上限 %{count}，自動鎖定。"
+      other: 消息中回覆已經達到上限 %{count}，自動鎖定。
     autoclosed_topic_max_posts:
-      other: "主題中回覆已經達到上限 %{count}，自動關閉。"
+      other: 主題中回覆已經達到上限 %{count}，自動關閉。
     autoclosed_enabled_days:
-      other: "該主題在創建%{count}天后自動關閉。不再允許添加新回覆。"
+      other: 該主題在創建%{count}天后自動關閉。不再允許添加新回覆。
     autoclosed_enabled_hours:
-      other: "該主題在創建%{count}小時後自動關閉。不再允許新的回覆。"
+      other: 該主題在創建%{count}小時後自動關閉。不再允許新的回覆。
     autoclosed_enabled_minutes:
-      other: "該主題在創建%{count}分鐘後自動關閉。不再允許新的回覆。"
+      other: 該主題在創建%{count}分鐘後自動關閉。不再允許新的回覆。
     autoclosed_enabled_lastpost_days:
-      other: "該主題在最後一個回覆創建後%{count}天后自動關閉。不再允許新的回覆。"
+      other: 該主題在最後一個回覆創建後%{count}天后自動關閉。不再允許新的回覆。
     autoclosed_enabled_lastpost_hours:
-      other: "該主題在最後一個回覆創建後%{count}小時後自動關閉。不再允許添加新回覆。"
+      other: 該主題在最後一個回覆創建後%{count}小時後自動關閉。不再允許添加新回覆。
     autoclosed_enabled_lastpost_minutes:
-      other: "本主題在最後一個回覆創建後%{count}分鐘後自動鎖定。不再允許添加新回覆。"
+      other: 本主題在最後一個回覆創建後%{count}分鐘後自動鎖定。不再允許添加新回覆。
     autoclosed_disabled: "此討論話題已開放，可以發表新的回覆。"
     autoclosed_disabled_lastpost: "本主題現在開放了。可以添加新的回覆。"
     pinned_enabled: "本主題已置頂，它將始終顯示在它所屬分類的頂部。可由管理人員對所有人解除置頂，或者由用戶自己取消置頂。"
@@ -1305,7 +1308,7 @@ zh_TW:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
   flags_reminder:
     subject_template:
-      other: "%{count} 個標記需要被處理"
+      other: '%{count} 個標記需要被處理'
   unsubscribe_mailer:
     title: "取消訂閱 Mailer"
     subject_template: "確認你不想要收到%{site_title}的電子郵件更新"
@@ -1359,7 +1362,7 @@ zh_TW:
     deferred: "感謝你讓我們知道。我們正在調查。"
     deferred_and_deleted: "感謝通知我們。我們已經刪除了帖子。"
   temporarily_closed_due_to_flags:
-    other: "這個話題因為大量的社群投訴暫時關閉 %{count} 小時。"
+    other: 這個話題因為大量的社群投訴暫時關閉 %{count} 小時。
   system_messages:
     post_hidden:
       title: "文章已隱藏"
@@ -1453,7 +1456,6 @@ zh_TW:
         ```
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
-      subject_template: "資料匯出完成"
       text_body_template: |
         資料成功匯出了！:dvd:
 
@@ -1550,7 +1552,7 @@ zh_TW:
     pending_users_reminder:
       title: "待審用戶提醒"
       subject_template:
-        other: "%{count} 個用戶等待審核"
+        other: '%{count} 個用戶等待審核'
       text_body_template: |
         有新註冊的用戶在訪問論壇前需要被確認（或者拒絶）。
 
@@ -1582,7 +1584,7 @@ zh_TW:
   user_notifications:
     previous_discussion: "之前的回覆"
     reached_limit:
-      other: "注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！"
+      other: 注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！
     in_reply_to: "回覆給"
     unsubscribe:
       title: "取消訂閱"
@@ -2090,22 +2092,22 @@ zh_TW:
         該徽章授予給第一次編輯自己帖子的你。雖然你不能永遠在編輯自己的帖子，但是編輯他們總是一個好辦法——你可以改進你的帖子、修正小錯誤，或者是增補你原來沒有寫的內容。編輯能讓你的帖子質量變得更好！
     basic_user:
       name: 初級用戶
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">授予</a>所有常用社群功能"
       long_description: |
         該徽章授予給用戶等級達到 1 的成員。感謝你在社群裡花了一些時間並且閲讀了一些帖子，瞭解了我們的社群。你的新用戶限制已經被取消；並且你已經被授予了所有基本的社群權限，必須個人消息、標記、維基編輯和發佈多張圖片和多個連結的能力。
     member:
       name: 成員
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀請、群組消息和更多的贊
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">授予</a>邀請、群組消息和更多的贊"
       long_description: |
         該徽章授予給達到用戶等級 2 的你。感謝你在社群待了幾周，真正融入到了社群中。你現在可以在你的用戶頁或者主題中邀請他人或者創建群組消息了。每天你也可以點更多次讚了。
     regular:
       name: 活躍用戶
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a>重分類、重命名、跟蹤連結、維基功能和更多的贊
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">授予</a>重分類、重命名、跟蹤連結、維基功能和更多的贊"
       long_description: |
         該徽章授予給達到用戶等級 3 的你。感謝你在這幾個月持續地參與社群。你現在是我們之中最活躍的讀者之一了，你持續的貢獻極大地幫助了我們的社群。你現在可以社群待了幾周，真正融入到了社群中。你現在可以重新分類或者重命名主題、使用能力強大的垃圾標記功能以及訪問隱藏的貴賓分類了。而且每天你可以點更多次讚了。
     leader:
       name: 資深
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a>全局編輯、固定、鎖定、存檔、分割、合併和更多的贊
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">授予</a>全局編輯、固定、鎖定、存檔、分割、合併和更多的贊"
       long_description: |
         該徽章授予給達到用戶等級 4 的你。你被管理人員選作了社群的領導力量，你用你的行動和言辭為社群樹立了正面的形象。你現在可以修改所有帖子，使用常見的版主的主題管理功能，比如置頂、鎖定、隱藏、存檔、分割和合併功能。你每天可以點更多的讚了。
     welcome:
@@ -2433,6 +2435,3 @@ zh_TW:
         description: |
           <p>如果你覺得需要修改這些設置，訪問<a href='/admin' target='_blank'>管理員分塊</a>；你可以在站點菜單找到扳手表徵圖旁找到。</p>
           <p>祝你玩得開心，還有祝你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建設新社區好運！</a></p>
-  activemodel:
-    errors:
-      <<: *errors

@@ -17,12 +17,12 @@ pt:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
+    month_names: [~, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
   posts: "mensagens"
@@ -73,17 +73,17 @@ pt:
       present: tem que estar em branco
       confirmation: "não corresponde %{attribute}"
       empty: não pode estar vazio
-      equal_to: tem que ser igual a %{count}
+      equal_to: "tem que ser igual a %{count}"
       even: tem que ser par
       exclusion: está reservado
-      greater_than: tem que ser maior que %{count}
-      greater_than_or_equal_to: tem que ser maior ou igual a %{count}
+      greater_than: "tem que ser maior que %{count}"
+      greater_than_or_equal_to: "tem que ser maior ou igual a %{count}"
       has_already_been_used: "já foi usado"
       inclusion: não está incluído na lista
       invalid: é inválido
       is_invalid: "parece pouco claro, é uma frase completa?"
-      less_than: tem que ser menos que %{count}
-      less_than_or_equal_to: tem que ser menos ou igual a %{count}
+      less_than: "tem que ser menos que %{count}"
+      less_than_or_equal_to: "tem que ser menos ou igual a %{count}"
       not_a_number: não é um número
       not_an_integer: tem que ser um inteiro
       odd: tem que ser ímpar
@@ -104,7 +104,7 @@ pt:
     template:
       body: 'Ocorreram problemas com os seguintes campos:'
       header:
-        one: '1 erro impediu este %{model} de ser gravado'
+        one: 1 erro impediu este %{model} de ser gravado
         other: '%{count} erros impediram este %{model} de ser gravado'
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
@@ -115,6 +115,9 @@ pt:
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "O seu código de convite é inválido. Por favor, contacte o administrador do site."
   bulk_invite:
@@ -134,8 +137,8 @@ pt:
   reading_time: "Tempo de leitura"
   likes: "Gostos"
   too_many_replies:
-    one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a 1 resposta no mesmo tópico."
-    other: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico."
+    one: Pedimos desculpa mas novos utilizadores estão temporariamente limitados a 1 resposta no mesmo tópico.
+    other: Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico.
   embed:
     start_discussion: "Iniciar Discussão"
     continue: "Continuar Discussão"
@@ -143,35 +146,35 @@ pt:
     no_hosts: "Não foram configurados anfitriões para incorporar."
     configure: "Configurar Integração"
     more_replies:
-      one: "mais 1 resposta"
-      other: "mais %{count} respostas"
+      one: mais 1 resposta
+      other: mais %{count} respostas
     loading: "A carregar Discussão..."
     permalink: "Hiperligação Permanente"
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 resposta"
-      other: "%{count} respostas"
+      one: 1 resposta
+      other: '%{count} respostas'
   no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
   too_many_mentions:
-    one: "Pedimos desculpa, pode mencionar apenas 1 outro utilizador numa mensagem."
-    other: "Pedimos desculpa, pode mencionar apenas %{count} outros utilizadores numa mensagem."
+    one: Pedimos desculpa, pode mencionar apenas 1 outro utilizador numa mensagem.
+    other: Pedimos desculpa, pode mencionar apenas %{count} outros utilizadores numa mensagem.
   no_mentions_allowed_newuser: "Pedimos desculpa, novos utilizadores não podem mencionar outros utilizadores."
   too_many_mentions_newuser:
-    one: "Pedimos desculpa, novos utilizadores podem mencionar apenas 1 outro utilizador numa mensagem."
-    other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
+    one: Pedimos desculpa, novos utilizadores podem mencionar apenas 1 outro utilizador numa mensagem.
+    other: Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem.
   no_images_allowed: "Pedimos desculpa, novos utilizadores não podem colocar imagens nas mensagens."
   too_many_images:
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 imagem numa mensagem."
-    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagens numa mensagem."
+    one: Pedimos desculpa, novos utilizadores podem colocar apenas 1 imagem numa mensagem.
+    other: Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagens numa mensagem.
   no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 anexo numa mensagem."
-    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexos numa mensagem."
+    one: Pedimos desculpa, novos utilizadores podem colocar apenas 1 anexo numa mensagem.
+    other: Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexos numa mensagem.
   no_links_allowed: "Pedimos desculpa, novos utilizadores não podem colocar hiperligações nas mensagens."
   too_many_links:
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 hiperligação numa mensagem."
-    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
+    one: Pedimos desculpa, novos utilizadores podem colocar apenas 1 hiperligação numa mensagem.
+    other: Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem.
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
@@ -235,9 +238,9 @@ pt:
       title: "Pedido de Adesão para @%{group_name}"
   education:
     until_posts:
-      one: "1 mensagem"
-      other: "%{count} mensagens"
-    new-topic: |
+      one: 1 mensagem
+      other: '%{count} mensagens'
+    'new-topic': |
       Bem-vindo a %{site_name} &mdash; **obrigado por começar uma nova conversação!**
 
       - O título parece-lhe interessante se o ler em voz alto? É um bom resumo?
@@ -247,7 +250,7 @@ pt:
       - Inclua palavras usadas com frequência no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, selecione a categoria.
 
       Para mais, [verifique as orientações da comunidade](/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Bem-vindo a %{site_name} &mdash; **obrigado por contribuir!**
 
       - A sua resposta melhora de alguma maneira esta conversação?
@@ -269,6 +272,7 @@ pt:
       user_profile:
         bio_raw: "Sobre Mim"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -311,7 +315,6 @@ pt:
           attributes:
             word:
               too_many: "Demasiadas palavras para essa ação"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   vip_category_name: "Salão"
@@ -362,8 +365,8 @@ pt:
       uncategorized: "Não é possível eliminar Sem Categoria"
       has_subcategories: "Não é possível eliminar esta categoria porque contém sub-categorias."
       topic_exists:
-        one: "Não é possível eliminar esta categoria porque contém 1 tópico. O tópico mais antigo é  %{topic_link}."
-        other: "Não é possível eliminar esta categoria porque contém %{count} tópicos. O tópico mais antigo é  %{topic_link}."
+        one: Não é possível eliminar esta categoria porque contém 1 tópico. O tópico mais antigo é  %{topic_link}.
+        other: Não é possível eliminar esta categoria porque contém %{count} tópicos. O tópico mais antigo é  %{topic_link}.
       topic_exists_no_oldest: "Não é possível eliminar esta categoria porque a contagem de tópicos é de %{count}."
     uncategorized_description: "Tópicos que não precisam de uma categoria ou que não se encaixam em nenhuma outra categoria existente."
   trust_levels:
@@ -380,85 +383,85 @@ pt:
     change_failed_explanation: "Tentou despromover %{user_name} para '%{new_trust_level}'. Contudo o Nível de Confiança é atualmente '%{current_trust_level}'. %{user_name} irá permanecer em '%{current_trust_level}' - se deseja despromover o utilizador, bloqueie o Nível de Confiança primeiro"
   rate_limiter:
     hours:
-      one: "1 hora"
-      other: "%{count} horas"
+      one: 1 hora
+      other: '%{count} horas'
     minutes:
-      one: "1 minuto"
-      other: "%{count} minutos"
+      one: 1 minuto
+      other: '%{count} minutos'
     seconds:
-      one: "1 segundo"
-      other: "%{count} segundos"
+      one: 1 segundo
+      other: '%{count} segundos'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        other: "%{count}s"
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        other: "%{count}m"
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1h"
-        other: "%{count}h"
+        one: 1h
+        other: '%{count}h'
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1mês"
-        other: "%{count}mês"
+        one: 1mês
+        other: '%{count}mês'
       x_months:
-        one: "1mês"
-        other: "%{count}mês"
+        one: 1mês
+        other: '%{count}mês'
       about_x_years:
-        one: "1ano"
-        other: "%{count}anos"
+        one: 1ano
+        other: '%{count}anos'
       over_x_years:
-        one: "> 1ano"
-        other: "> %{count}anos"
+        one: '> 1ano'
+        other: '> %{count}anos'
       almost_x_years:
-        one: "1ano"
-        other: "%{count}anos"
+        one: 1ano
+        other: '%{count}anos'
     distance_in_words_verbose:
       half_a_minute: "mesmo agora"
       less_than_x_seconds:
-        one: "mesmo agora"
-        other: "mesmo agora"
+        one: mesmo agora
+        other: mesmo agora
       x_seconds:
-        one: "1 segundo atrás"
-        other: "%{count} segundos atrás"
+        one: 1 segundo atrás
+        other: '%{count} segundos atrás'
       less_than_x_minutes:
-        one: "menos de 1 minuto atrás"
-        other: "menos de %{count} minutos atrás"
+        one: menos de 1 minuto atrás
+        other: menos de %{count} minutos atrás
       x_minutes:
-        one: "1 minuto atrás"
-        other: "%{count} minutos atrás"
+        one: 1 minuto atrás
+        other: '%{count} minutos atrás'
       about_x_hours:
-        one: "1 hora atrás"
-        other: "%{count} horas atrás"
+        one: 1 hora atrás
+        other: '%{count} horas atrás'
       x_days:
-        one: "1 dia atrás"
-        other: "%{count} dias atrás"
+        one: 1 dia atrás
+        other: '%{count} dias atrás'
       about_x_months:
-        one: "há cerca de 1 mês atrás"
-        other: "há cerca de %{count} meses atrás"
+        one: há cerca de 1 mês atrás
+        other: há cerca de %{count} meses atrás
       x_months:
-        one: "1 mês atrás"
-        other: "%{count} meses atrás"
+        one: 1 mês atrás
+        other: '%{count} meses atrás'
       about_x_years:
-        one: "há cerca de 1 ano atrás"
-        other: "há cerca %{count} anos atrás"
+        one: há cerca de 1 ano atrás
+        other: há cerca %{count} anos atrás
       over_x_years:
-        one: "há mais de 1 ano atrás"
-        other: "há mais de %{count} anos atrás"
+        one: há mais de 1 ano atrás
+        other: há mais de %{count} anos atrás
       almost_x_years:
-        one: "há quase 1 ano atrás"
-        other: "há quase %{count} anos atrás"
+        one: há quase 1 ano atrás
+        other: há quase %{count} anos atrás
   password_reset:
     no_token: "Desculpe, essa hiperligação para alterar a palavra-passe é muito antiga. Selecione o botão Iniciar Sessão e utilize 'Esqueci a minha palavra-passe' para obter uma nova hiperligação."
     choose_new: "Escolha uma nova palavra-passe"
@@ -752,8 +755,8 @@ pt:
     failing_emails_warning: 'Há %{num_failed_jobs} tarefas de email que falharam. Verifique o seu app.yml e assegure-se que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank"> Veja as tarefas que falharam no Sidekiq</a>.'
     subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
     email_polling_errored_recently:
-      one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
-      other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
+      one: A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes.
+      other: A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes.
     bad_favicon_url: "Não estamos a conseguir carregar o favicon. Por favor, confirme a sua configuração favicon_url nas  <a href='/admin/site_settings'>Configurações do sítio</a>."
     poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
     poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='/admin/site_settings/category/email'>configuração de POP3</a>."
@@ -1229,18 +1232,18 @@ pt:
     not_seen_in_a_month: "Bem-vindo novamente! Não o vemos há algum tempo. Estes são os tópicos mais populares desde que esteve ausente."
   merge_posts:
     edit_reason:
-      one: "Uma publicação foi unida por  %{username}"
-      other: "%{count} publicações foram unidas por  %{username}"
+      one: Uma publicação foi unida por  %{username}
+      other: '%{count} publicações foram unidas por  %{username}'
     errors:
       different_topics: "Publicações pertencentes a tópicos diferentes não podem ser unidas."
       different_users: "Publicações pertencentes a utilizadores diferentes não podem ser unidas."
   move_posts:
     new_topic_moderator_post:
-      one: "Uma mensagem foi dividida em um novo tópico: %{topic_link}"
-      other: "%{count} mensagens foram divididas em um novo tópico: %{topic_link}"
+      one: 'Uma mensagem foi dividida em um novo tópico: %{topic_link}'
+      other: '%{count} mensagens foram divididas em um novo tópico: %{topic_link}'
     existing_topic_moderator_post:
-      one: "Uma mensagem foi unida em um tópico existente: %{topic_link}"
-      other: "%{count} mensagens foram unidas em um tópico existente: %{topic_link}"
+      one: 'Uma mensagem foi unida em um tópico existente: %{topic_link}'
+      other: '%{count} mensagens foram unidas em um tópico existente: %{topic_link}'
   change_owner:
     post_revision_text: "Direito de posse transferido de %{old_user} para %{new_user}"
     deleted_user: "um utilizador eliminado"
@@ -1250,29 +1253,29 @@ pt:
     closed_enabled: "Este tópico está agora fechado. Novas respostas não são aceites."
     closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceites."
     autoclosed_message_max_posts:
-      one: "Esta mensagem foi automaticamente fechada após atingir o limite máximo de 1 resposta."
-      other: "Esta mensagem foi automaticamente fechada após atingir o limite máximo de %{count} respostas."
+      one: Esta mensagem foi automaticamente fechada após atingir o limite máximo de 1 resposta.
+      other: Esta mensagem foi automaticamente fechada após atingir o limite máximo de %{count} respostas.
     autoclosed_topic_max_posts:
-      one: "Este tópico foi automaticamente fechado após atingir o limite máximo de 1 resposta."
-      other: "Este tópico foi automaticamente fechado após atingir o limite máximo de %{count} respostas."
+      one: Este tópico foi automaticamente fechado após atingir o limite máximo de 1 resposta.
+      other: Este tópico foi automaticamente fechado após atingir o limite máximo de %{count} respostas.
     autoclosed_enabled_days:
-      one: "Este tópico foi automaticamente encerrado após 1 dia. Novas respostas não são permitidas."
-      other: "Este tópico foi automaticamente encerrado após %{count} dias. Novas respostas não são permitidas."
+      one: Este tópico foi automaticamente encerrado após 1 dia. Novas respostas não são permitidas.
+      other: Este tópico foi automaticamente encerrado após %{count} dias. Novas respostas não são permitidas.
     autoclosed_enabled_hours:
-      one: "Este tópico foi automaticamente encerrado após 1 hora. Novas respostas não são permitidas."
-      other: "Este tópico foi automaticamente encerrado após %{count} horas. Novas respostas não são permitidas."
+      one: Este tópico foi automaticamente encerrado após 1 hora. Novas respostas não são permitidas.
+      other: Este tópico foi automaticamente encerrado após %{count} horas. Novas respostas não são permitidas.
     autoclosed_enabled_minutes:
-      one: "Este tópico foi automaticamente fechado após 1 minuto. Novas respostas não são permitidas."
-      other: "Este tópico foi automaticamente fechado após %{count} minutos. Novas respostas não são permitidas."
+      one: Este tópico foi automaticamente fechado após 1 minuto. Novas respostas não são permitidas.
+      other: Este tópico foi automaticamente fechado após %{count} minutos. Novas respostas não são permitidas.
     autoclosed_enabled_lastpost_days:
-      one: "Este tópico foi automaticamente fechado 1 dia após a última resposta. Novas respostas não são permitidas."
-      other: "Este tópico foi automaticamente fechado %{count} dias após a última resposta. Novas respostas não são permitidas."
+      one: Este tópico foi automaticamente fechado 1 dia após a última resposta. Novas respostas não são permitidas.
+      other: Este tópico foi automaticamente fechado %{count} dias após a última resposta. Novas respostas não são permitidas.
     autoclosed_enabled_lastpost_hours:
-      one: "Este tópico foi automaticamente fechado 1 hora após a última resposta. Novas respostas não são permitidas."
-      other: "Este tópico foi automaticamente fechado %{count} horas após a última resposta. Novas respostas não são permitidas."
+      one: Este tópico foi automaticamente fechado 1 hora após a última resposta. Novas respostas não são permitidas.
+      other: Este tópico foi automaticamente fechado %{count} horas após a última resposta. Novas respostas não são permitidas.
     autoclosed_enabled_lastpost_minutes:
-      one: "Este tópico foi automaticamente fechado 1 minuto após a última resposta. Novas respostas não são permitidas."
-      other: "Este tópico foi automaticamente fechado %{count} minutos após a última resposta. Novas respostas não são permitidas."
+      one: Este tópico foi automaticamente fechado 1 minuto após a última resposta. Novas respostas não são permitidas.
+      other: Este tópico foi automaticamente fechado %{count} minutos após a última resposta. Novas respostas não são permitidas.
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas são permitidas."
     autoclosed_disabled_lastpost: "Este tópico está agora aberto. Novas respostas são permitidas."
     pinned_enabled: "Este tópico está agora fixado. Irá aparecer no topo da sua categoria até ser desafixado pelo pessoal para todas as pessoas, ou por utilizadores individuais para si próprios."
@@ -1324,8 +1327,8 @@ pt:
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
   flags_reminder:
     subject_template:
-      one: "1 sinalização à espera de ser tratada"
-      other: "%{count} sinalizações à espera de serem tratadas"
+      one: 1 sinalização à espera de ser tratada
+      other: '%{count} sinalizações à espera de serem tratadas'
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
   invite_password_instructions:
@@ -1430,7 +1433,6 @@ pt:
       subject_template: "Convite de utilizadores em massa processado com erros"
     csv_export_succeeded:
       title: "Exportação de CSV bem-sucedida"
-      subject_template: "Exportação de dados completa"
     csv_export_failed:
       title: "Exportação de CSV falhou"
       subject_template: "A exportação dos dados falhou"
@@ -1484,8 +1486,8 @@ pt:
       subject_template: "Nova conta suspensa"
     pending_users_reminder:
       subject_template:
-        one: "1 utilizador espera a aprovação"
-        other: "%{count} utilizadores esperam a aprovação"
+        one: 1 utilizador espera a aprovação
+        other: '%{count} utilizadores esperam a aprovação'
       text_body_template: |
         Há registos de novos utilizadores à espera de serem aprovados (ou rejeitados) antes de poderem aceder a este fórum.
 
@@ -1808,22 +1810,22 @@ pt:
         Este distintivo é concedido pela primeira vez que edita uma das suas publicações. Apesar de não ser possível editar as suas publicações após um tempo limite, editar é sempre uma boa ideia - pode melhorar as suas publicações, corrigir pequenos erros, ou acrescentar algo que tenha esquecido quando criou a sua publicação. Edite para tornar as suas publicações ainda melhores!
     basic_user:
       name: Básico
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Atribuídas</a> todas as funções comunitárias essenciais
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Atribuídas</a> todas as funções comunitárias essenciais"
       long_description: |
         Este distintivo é concedido quando atinge o nível de confiança 1. Obrigado por ficar por cá durante algum tempo e por ler alguns tópicos para aprender do que trata a nossa comunidade. As suas restrições de novo utilizador foram removidas, e foram-lhe atribuídas habilidades essenciais da comunidade, tais como mensagens pessoais, denúncias, edição de wikis, e a habilidade de publicar múltiplas imagens e ligações.
     member:
       name: Membro
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Concedido</a> convites, mensagens de grupo, mais gostos
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Concedido</a> convites, mensagens de grupo, mais gostos"
       long_description: |
         Este distintivo é concedido quando atinge o nível de confiança 2. Obrigado por participar durante um período de semanas para se juntar à nossa comunidade. Agora pode enviar convites pessoais da sua página de utilizador ou tópicos individuais, criar mensagens de grupo, e mais alguns gostos por dia!
     regular:
       name: Regular
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concedido</a> re-categorização, renomeação, wiki, ligações seguidas, mais gostos
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Concedido</a> re-categorização, renomeação, wiki, ligações seguidas, mais gostos"
       long_description: |
         Este distintivo é concedido quando atingir o nível de confiança 3. Obrigado por ser uma parte regular da nossa comunidade por um período de meses. É de momento um dos leitores mais activos, que contribui regularmente para tornar esta comunidade excelente. Agora pode re-categorizar e renomear tópicos, aceder à área privada do salão, tomar partido de denúncias de spam mais poderosas, e muitos mais gostos por dia.
     leader:
       name: Líder
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concedido</a> edição global, afixar, fechar, arquivar, separar e unir, mais gostos
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Concedido</a> edição global, afixar, fechar, arquivar, separar e unir, mais gostos"
       long_description: |
         Este distintivo é concedido quando atinge o nível de confiança 4. É um líder nesta comunidade, como tal seleccionado pela equipa de apoio, e define um exemplo positivo para a comunidade nos seus actos e palavras. Tem a habilidade de editar todas as publicações, realizar acções de moderador de tópicos comuns tais como afixar, fechar, arquivar, separar e unir, e toneladas de gostos por dia.
     welcome:
@@ -1835,7 +1837,7 @@ pt:
       name: Autobiógrafo
     anniversary:
       name: Aniversário
-      description: Membro ativo há um ano, publicou pelo menos uma vez
+      description: "Membro ativo há um ano, publicou pelo menos uma vez"
       long_description: |
         Este distintivo é concedido quando tiver sido membro por um ano com pelo menos uma mensagem nesse ano. Obrigado por ficar por cá e por contribuir para a nossa comunidade. Não o podíamos fazer sem você.
     nice_post:
@@ -1994,11 +1996,11 @@ pt:
       description: Usou um Emoji numa Publicação
     first_mention:
       name: Primeira Menção
-      long_description: Este distintivo é concedido pela primeira vez que menciona o @nome-de-utilizador de alguém numa publicação sua. Cada menção gera uma notificação para o mencionado, de maneira a que saibam da sua publicação. Simplesmente comece por escrever @ (símbolo arroba) para mencionar qualquer utilizador, ou, se permitido, um grupo – é uma maneira conveniente de chamar a atenção de alguém.
+      long_description: "Este distintivo é concedido pela primeira vez que menciona o @nome-de-utilizador de alguém numa publicação sua. Cada menção gera uma notificação para o mencionado, de maneira a que saibam da sua publicação. Simplesmente comece por escrever @ (símbolo arroba) para mencionar qualquer utilizador, ou, se permitido, um grupo – é uma maneira conveniente de chamar a atenção de alguém."
     first_onebox:
       name: Primeira Pré-visualização
       description: Publicou uma ligação que foi pré-visualizada
-      long_description: Este distintivo é concedido pela primeira vez que publica uma ligação numa linha por si próprio, que foi então automaticamente expandido numa pré-visualização com um breve sumário da ligação, um titulo, e (quando disponível) uma imagem.
+      long_description: "Este distintivo é concedido pela primeira vez que publica uma ligação numa linha por si próprio, que foi então automaticamente expandido numa pré-visualização com um breve sumário da ligação, um titulo, e (quando disponível) uma imagem."
     first_reply_by_email:
       name: Primeira Resposta por Email
       long_description: |
@@ -2139,6 +2141,3 @@ pt:
         description: |
           <p>Se alguma vez quiser mudar estas configurações, visite <a href='/admin' target='_blank'>a sua secção de administração</a>; encontre-a junto ao ícone de chave inglesa no menu do sítio.</p>
           <p>Divirta-se, e boa sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>para a construção da sua comunidade!</a></p>
-  activemodel:
-    errors:
-      <<: *errors

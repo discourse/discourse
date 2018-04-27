@@ -43,68 +43,68 @@ nb_NO:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
-          other: "< %{count}s"
+          one: < 1s
+          other: < %{count}s
         x_seconds:
-          one: "1s"
-          other: "%{count}s"
+          one: 1s
+          other: '%{count}s'
         less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
+          one: < 1m
+          other: < %{count}m
         x_minutes:
-          one: "1m"
-          other: "%{count}m"
+          one: 1m
+          other: '%{count}m'
         about_x_hours:
-          one: "1t"
-          other: "%{count}t"
+          one: 1t
+          other: '%{count}t'
         x_days:
-          one: "1d"
-          other: "%{count}d"
+          one: 1d
+          other: '%{count}d'
         x_months:
-          one: "1mnd"
-          other: "%{count}mnd"
+          one: 1mnd
+          other: '%{count}mnd'
         about_x_years:
-          one: "1år"
-          other: "%{count}år"
+          one: 1år
+          other: '%{count}år'
         over_x_years:
-          one: "> 1år"
-          other: "> %{count}år"
+          one: '> 1år'
+          other: '> %{count}år'
         almost_x_years:
-          one: "1år"
-          other: "%{count}år"
+          one: 1år
+          other: '%{count}år'
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 minutt"
-          other: "%{count} minutter"
+          one: 1 minutt
+          other: '%{count} minutter'
         x_hours:
-          one: "1 time"
-          other: "%{count} timer"
+          one: 1 time
+          other: '%{count} timer'
         x_days:
-          one: "1 dag"
-          other: "%{count} dager"
+          one: 1 dag
+          other: '%{count} dager'
         date_year: "D. MMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 minutt siden"
-          other: "%{count} minutter siden"
+          one: 1 minutt siden
+          other: '%{count} minutter siden'
         x_hours:
-          one: "1 time siden"
-          other: "%{count} timer siden"
+          one: 1 time siden
+          other: '%{count} timer siden'
         x_days:
-          one: "1 dag siden"
-          other: "%{count} dager siden"
+          one: 1 dag siden
+          other: '%{count} dager siden'
       later:
         x_days:
-          one: "1 dag senere"
-          other: "%{count} dager senere"
+          one: 1 dag senere
+          other: '%{count} dager senere'
         x_months:
-          one: "1 måned senere"
-          other: "%{count} måneder senere"
+          one: 1 måned senere
+          other: '%{count} måneder senere'
         x_years:
-          one: "1 år senere"
-          other: "%{count} år senere"
+          one: 1 år senere
+          other: '%{count} år senere'
       previous_month: 'Forrige måned'
       next_month: 'Neste måned'
       placeholder: dato
@@ -185,8 +185,8 @@ nb_NO:
     show_help: "alternativer"
     links: "Lenker"
     links_lowercase:
-      one: "link"
-      other: "lenker"
+      one: link
+      other: lenker
     faq: "O-S-S"
     guidelines: "Retningslinjer"
     privacy_policy: "Personvernerklæring"
@@ -210,8 +210,8 @@ nb_NO:
     max_of_count: "maksimum av {{count}}"
     alternation: "eller"
     character_count:
-      one: "{{count}} tegn"
-      other: "{{count}} tegn"
+      one: '{{count}} tegn'
+      other: '{{count}} tegn'
     suggested_topics:
       title: "Anbefalte tråder"
       pm_title: "Anbefalte meldinger"
@@ -246,14 +246,14 @@ nb_NO:
       remove: "Fjern bokmerke"
       confirm_clear: "Er du sikker på at du vil fjerne alle bokmerkene fra denne tråden?"
     topic_count_latest:
-      one: "Se {{count}} nye eller oppdatert tråd"
-      other: "Se {{count}} nye eller oppdaterte tråder"
+      one: Se {{count}} nye eller oppdatert tråd
+      other: Se {{count}} nye eller oppdaterte tråder
     topic_count_unread:
-      one: "Se {{count}} ulest tråd"
-      other: "Se {{count}} uleste tråder"
+      one: Se {{count}} ulest tråd
+      other: Se {{count}} uleste tråder
     topic_count_new:
-      one: "Se {{count}} ny tråd"
-      other: "Se {{count}} nye tråder"
+      one: Se {{count}} ny tråd
+      other: Se {{count}} nye tråder
     preview: "forhåndsvisning"
     cancel: "avbryt"
     save: "Lagre endringer"
@@ -291,16 +291,16 @@ nb_NO:
       cancel: "Avbryt"
       view_pending: "vis ventende innlegg"
       has_pending_posts:
-        one: "Dette emnet har <b>1</b> innlegg som venter på godkjenning"
-        other: "Denne tråden har <b>{{count}}</b> innlegg som venter på godkjenning"
+        one: Dette emnet har <b>1</b> innlegg som venter på godkjenning
+        other: Denne tråden har <b>{{count}}</b> innlegg som venter på godkjenning
       confirm: "Lagre endringer"
       delete_prompt: "Er du sikker på at du ønsker å slette <b>%{username}</b>? Dette vil fjerne alle innlegg og blokkere e-post- og IP-addressen til vedkommende."
       approval:
         title: "Innlegg trenger godkjenning"
         description: "Vi har mottatt ditt nye innlegg men det krever godkjenning av en moderator før det vises. Ha tålmod."
         pending_posts:
-          one: "Du har <strong>1</strong> innlegg som venter på godkjenning."
-          other: "Du har <strong>{{count}}</strong> innlegg som venter på godkjenning."
+          one: Du har <strong>1</strong> innlegg som venter på godkjenning.
+          other: Du har <strong>{{count}}</strong> innlegg som venter på godkjenning.
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> opprettet <a href='{{topicUrl}}'>tråden</a>"
@@ -334,8 +334,8 @@ nb_NO:
       posts_read: "Lest"
       posts_read_long: "Innlegg lest"
       total_rows:
-        one: "1 bruker"
-        other: "%{count} brukere"
+        one: 1 bruker
+        other: '%{count} brukere'
     group_histories:
       actions:
         change_group_setting: "Endre gruppeinnstillinger"
@@ -403,8 +403,8 @@ nb_NO:
         is_group_user: "Medlem"
         is_group_owner: "Eier"
       title:
-        one: "Gruppe"
-        other: "Grupper"
+        one: Gruppe
+        other: Grupper
       activity: "Aktivitet"
       members:
         title: "Medlemmer"
@@ -455,18 +455,18 @@ nb_NO:
       flair_preview_icon: "Forhåndsvis ikon"
       flair_preview_image: "Forhåndsvis bilde"
     user_action_groups:
-      '1': "Likes tildelt"
-      '2': "Likes mottatt"
-      '3': "Bokmerker"
-      '4': "Tråder"
-      '5': "Svar"
-      '6': "Svar"
-      '7': "Omtalelser"
-      '9': "Sitater"
-      '11': "Redigeringer"
-      '12': "Sendte elementer"
-      '13': "Innboks"
-      '14': "Venter"
+      "1": "Likes tildelt"
+      "2": "Likes mottatt"
+      "3": "Bokmerker"
+      "4": "Tråder"
+      "5": "Svar"
+      "6": "Svar"
+      "7": "Omtalelser"
+      "9": "Sitater"
+      "11": "Redigeringer"
+      "12": "Sendte elementer"
+      "13": "Innboks"
+      "14": "Venter"
     categories:
       all: "Alle"
       all_subcategories: "alle i %{categoryName}"
@@ -488,11 +488,11 @@ nb_NO:
       toggle_ordering: "Slå på/av styring av sortering"
       subcategories: "Underkategorier"
       topic_sentence:
-        one: "1 tråd"
-        other: "%{count} tråder"
+        one: 1 tråd
+        other: '%{count} tråder'
       topic_stat_sentence:
-        one: "%{count} nytt tråder de siste %{unit}."
-        other: "%{count} nye tråder de siste %{unit}."
+        one: '%{count} nytt tråder de siste %{unit}.'
+        other: '%{count} nye tråder de siste %{unit}.'
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -694,8 +694,8 @@ nb_NO:
         authenticated: "Din e-post har blitt autentisert av {{provider}}"
         frequency_immediately: "Vi sender deg umiddelbart en e-post hvis du ikke har lest det vi sender e-post om."
         frequency:
-          one: "Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet."
-          other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}}  minuttene."
+          one: Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet.
+          other: Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}}  minuttene.
       name:
         title: "Navn"
         instructions: "ditt fulle navn (valgfritt)"
@@ -726,8 +726,6 @@ nb_NO:
       created: "Medlem fra"
       log_out: "Logg ut"
       location: "Sted"
-      card_badge:
-        title: "Brukerkort-merke"
       website: "Nettsted"
       email_settings: "E-post"
       like_notification_frequency:
@@ -783,8 +781,8 @@ nb_NO:
         sent: "Sendt"
         none: "Ingen invitasjoner å vise."
         truncated:
-          one: "Viser den første invitasjonen."
-          other: "Viser de {{count}} første invitisajonene."
+          one: Viser den første invitasjonen.
+          other: Viser de {{count}} første invitisajonene.
         redeemed: "Løs inn invitasjoner"
         redeemed_tab: "Brukt"
         redeemed_tab_with_count: "Innløste ({{count}})"
@@ -831,29 +829,29 @@ nb_NO:
         time_read: "lesetid"
         recent_time_read: "nylig lesetid"
         topic_count:
-          one: "tråd opprettet"
-          other: "tråder opprettet"
+          one: tråd opprettet
+          other: tråder opprettet
         post_count:
-          one: "innlegg skrevet"
-          other: "innlegg skrevet"
+          one: innlegg skrevet
+          other: innlegg skrevet
         likes_given:
-          one: "gitt"
-          other: "gitt"
+          one: gitt
+          other: gitt
         likes_received:
-          one: "mottatt"
-          other: "mottatt"
+          one: mottatt
+          other: mottatt
         days_visited:
-          one: "dag besøkt"
-          other: "dager besøkt"
+          one: dag besøkt
+          other: dager besøkt
         topics_entered:
-          one: "tråd vist"
-          other: "tråder vist"
+          one: tråd vist
+          other: tråder vist
         posts_read:
-          one: "innlegg lest"
-          other: "innlegg lest"
+          one: innlegg lest
+          other: innlegg lest
         bookmark_count:
-          one: "bokmerke"
-          other: "bokmerker"
+          one: bokmerke
+          other: bokmerker
         top_replies: "Mest Populære Svar"
         no_replies: "Ingen svar ennå."
         more_replies: "Flere svar"
@@ -921,8 +919,8 @@ nb_NO:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nådde innstillingsgrensen satt i %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overstiger innstillingsgrensen satt i %{siteSettingRate}."
       rate:
-        one: "1 feil/%{duration}"
-        other: "%{count} feil/%{duration}"
+        one: 1 feil/%{duration}
+        other: '%{count} feil/%{duration}'
     learn_more: "lær mer…"
     all_time: 'totalt'
     all_time_desc: 'totalt antall tråder opprettet'
@@ -1126,8 +1124,8 @@ nb_NO:
       drafts_offline: "utkast offline"
       group_mentioned_limit: "<b>Warning!</b> Du varslet <a href='{{group_link}}'>{{group}}</a>, dog har denne gruppen flere medlemmer en administratoren har satt opp som grense for varseling, {{max}} brukere. Ingen vil bli varslet."
       group_mentioned:
-        one: "Ved å nevne {{group}}, er du i ferd med å henvende deg til <a href='{{group_link}}'>{{count}} én person</a> – er du sikker?"
-        other: "Ved å nevne {{group}}, er du i ferd med å henvende deg til <a href='{{group_link}}'>{{count}} folk</a> – er du sikker?"
+        one: Ved å nevne {{group}}, er du i ferd med å henvende deg til <a href='{{group_link}}'>{{count}} én person</a> – er du sikker?
+        other: Ved å nevne {{group}}, er du i ferd med å henvende deg til <a href='{{group_link}}'>{{count}} folk</a> – er du sikker?
       cannot_see_mention:
         category: "Du nevnte {{username}}, men de vil ikke ikke bli varslet fordi de ikke har tilgang til denne kategorien. Du må legge dem til en gruppe som har tilgang til denne kategorien."
         private: "Du nevnte {{username}}, men de vil ikke bli varslet fordi de ikke kan se denne samtalen. Du må invitere dem til denne private samtalen."
@@ -1201,7 +1199,7 @@ nb_NO:
       admin_options_title: "Valgfrie tråd-instillinger for stab"
       composer_actions:
         reply_to_post:
-          label: Svar på innlegg %{postNumber} av %{postUsername}
+          label: "Svar på innlegg %{postNumber} av %{postUsername}"
           desc: Svar på et spesifikt innlegg
         reply_as_new_topic:
           label: Svar med lenket tråd
@@ -1211,7 +1209,7 @@ nb_NO:
           desc: Opprett en ny personlig melding
         reply_to_topic:
           label: Svar på tråd
-          desc: 'Svar på tråd, ikke et spesifikt innlegg '
+          desc: "Svar på tråd, ikke et spesifikt innlegg "
         toggle_whisper:
           label: Veksle visking
           desc: Hvisking er kun synlig for stab
@@ -1223,11 +1221,11 @@ nb_NO:
     notifications:
       tooltip:
         regular:
-          one: "Én usett merknad"
-          other: "{{count}} usette merknader"
+          one: Én usett merknad
+          other: '{{count}} usette merknader'
         message:
-          one: "Én ulest melding"
-          other: "{{count}} uleste meldinger"
+          one: Én ulest melding
+          other: '{{count}} uleste meldinger'
       title: "varsler om at @navnet ditt blir nevnt, svar på dine innlegg og tråder, meldinger, osv"
       none: "Notifikasjoner er ikke tilgjengelig for øyeblikket."
       empty: "Ingen varsler funnet."
@@ -1242,8 +1240,8 @@ nb_NO:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} og én annen</span> {{description}}"
-        other: "<span>{{username}}, {{username2}} og {{count}} andre</span> {{description}}"
+        one: <span>{{username}}, {{username2}} og én annen</span> {{description}}
+        other: <span>{{username}}, {{username2}} og {{count}} andre</span> {{description}}
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
@@ -1254,8 +1252,8 @@ nb_NO:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Ny tråd</span> {{description}}"
       group_message_summary:
-        one: "{{count}} melding i din {{group_name}} innboks"
-        other: "{{count}} meldinger i din innboks for {{group_name}}"
+        one: '{{count}} melding i din {{group_name}} innboks'
+        other: '{{count}} meldinger i din innboks for {{group_name}}'
       popup:
         mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
@@ -1377,8 +1375,8 @@ nb_NO:
         notification_level: "Varsler"
         choose_new_category: "Velg den nye kategorien for trådene:"
         selected:
-          one: "Du har valgt <b>1</b> tråd."
-          other: "Du har valgt <b>{{count}}</b> tråder."
+          one: Du har valgt <b>1</b> tråd.
+          other: Du har valgt <b>{{count}}</b> tråder.
         change_tags: "Erstatt stikkord"
         append_tags: "Legg til stikkord"
         choose_new_tags: "Velg nye stikkord for disse trådene:"
@@ -1411,8 +1409,8 @@ nb_NO:
         search: "Det finnes ingen flere søkeresultater"
     topic:
       filter_to:
-        one: "1 innlegg i tråd"
-        other: "{{count}} innlegg i tråd"
+        one: 1 innlegg i tråd
+        other: '{{count}} innlegg i tråd'
       create: 'Ny tråd'
       create_long: 'Opprett et ny tråd'
       private_message: 'Begynn en melding'
@@ -1428,10 +1426,10 @@ nb_NO:
       new: 'ny tråd'
       unread: 'ulest'
       new_topics:
-        one: 'Ett ny tråd'
+        one: Ett ny tråd
         other: '{{count}} nye tråder'
       unread_topics:
-        one: 'Ett ulest tråd'
+        one: Ett ulest tråd
         other: '{{count}} uleste tråder'
       title: 'Tråd'
       invalid_access:
@@ -1445,17 +1443,17 @@ nb_NO:
         title: "Tråd ikke funnet"
         description: "Beklager, vi kunne ikke finne den tråden. Kanskjer den ble fjernet av en moderator?"
       total_unread_posts:
-        one: "du har 1 ulest innlegg i dette emnet"
-        other: "du har {{count}} uleste innlegg i denne tråden"
+        one: du har 1 ulest innlegg i dette emnet
+        other: du har {{count}} uleste innlegg i denne tråden
       unread_posts:
-        one: "du har 1 ulest gammelt innlegg i denne tråden"
-        other: "du har {{count}} uleste gamle innlegg i denne tråden"
+        one: du har 1 ulest gammelt innlegg i denne tråden
+        other: du har {{count}} uleste gamle innlegg i denne tråden
       new_posts:
-        one: "Det finnes 1 nytt innlegg i denne tråden siden sist du leste det"
-        other: "Det finnes {{count}} nye innlegg i denne tråden siden sist du leste det"
+        one: Det finnes 1 nytt innlegg i denne tråden siden sist du leste det
+        other: Det finnes {{count}} nye innlegg i denne tråden siden sist du leste det
       likes:
-        one: "det er én like i denne tråden"
-        other: "det er {{number}} likes i denne tråden"
+        one: det er én like i denne tråden
+        other: det er {{number}} likes i denne tråden
       back_to_list: "Tilbake til listen over tråder"
       options: "Valg for tråder"
       show_links: "vis lenker i denne tråden"
@@ -1465,7 +1463,7 @@ nb_NO:
       read_more_MF: "Det { UNREAD, plural, =0 {} one { finnes <a href='/unread'>1 unread</a> } other { finnes <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {finnes } other{}} <a href='/new'>1 new</a> tråd} other { {BOTH, select, true{og } false {er } other{}} <a href='/new'># new</a> tråder} } igjen, or {CATEGORY, select, true {se andre tråder i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste tråder
-      suggest_create_topic: Hvorfor ikke opprette en tråd?
+      suggest_create_topic: "Hvorfor ikke opprette en tråd?"
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til senere svar
       deleted: "Tråden er blitt slettet"
@@ -1519,8 +1517,8 @@ nb_NO:
         auto_reminder: "Du vil bli påminnet om denne tråden %{timeLeft}."
       auto_close_title: 'Auto-lukk innstillinger'
       auto_close_immediate:
-        one: "Det siste innlegget i tråden er allerede en time gammelt, så tråden vil stenges umiddelbart."
-        other: "Det siste innlegget i tråden er allerede %{count} timer gammelt, så tråden vil stenges umiddelbart."
+        one: Det siste innlegget i tråden er allerede en time gammelt, så tråden vil stenges umiddelbart.
+        other: Det siste innlegget i tråden er allerede %{count} timer gammelt, så tråden vil stenges umiddelbart.
       timeline:
         back: "Tilbake"
         back_description: "Gå tilbake til forrige uleste innlegg"
@@ -1541,21 +1539,21 @@ nb_NO:
         title: endre hvor ofte du blir varslet om denne tråden
         reasons:
           mailing_list_mode: "Du har e-postlistemodus påslått, så du vil bli varslet på e-post om svar på denne tråden."
-          '3_10': 'Du vil motta varsler fordi du følger et stikkord for denne tråden'
-          '3_6': 'Du vil motta varsler fordi du følger denne kategorien'
-          '3_5': 'Du vil motta varsler fordi du startet å følge denne tråden automatisk.'
-          '3_2': 'Du vil motta varsler fordi du følger denne tråden'
-          '3_1': 'Du vil motta varsler fordi du opprettet denne tråden.'
-          '3': 'Du vil motta varsler fordi du følger denne tråden.'
-          '2_8': 'Du vil se antall nye svar fordi du følger denne kategorien.'
-          '2_4': 'Du vil se antall nye svar fordi du skrev et svar til denne tråden.'
-          '2_2': 'Du vil se antall nye svar fordi du overvåker denne tråden.'
-          '2': 'Du vil se antall nye svar fordi du <a href="/u/{{username}}/preferences">leste denne tråden</a>.'
-          '1_2': 'Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt.'
-          '1': 'Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt.'
-          '0_7': 'Du ignorerer alle varsler i denne kategorien.'
-          '0_2': 'Du ignorerer alle varsler om denne tråden.'
-          '0': 'Du ignorerer alle varsler om denne tråden.'
+          "3_10": 'Du vil motta varsler fordi du følger et stikkord for denne tråden'
+          "3_6": 'Du vil motta varsler fordi du følger denne kategorien'
+          "3_5": 'Du vil motta varsler fordi du startet å følge denne tråden automatisk.'
+          "3_2": 'Du vil motta varsler fordi du følger denne tråden'
+          "3_1": 'Du vil motta varsler fordi du opprettet denne tråden.'
+          "3": 'Du vil motta varsler fordi du følger denne tråden.'
+          "2_8": 'Du vil se antall nye svar fordi du følger denne kategorien.'
+          "2_4": 'Du vil se antall nye svar fordi du skrev et svar til denne tråden.'
+          "2_2": 'Du vil se antall nye svar fordi du overvåker denne tråden.'
+          "2": 'Du vil se antall nye svar fordi du <a href="/u/{{username}}/preferences">leste denne tråden</a>.'
+          "1_2": 'Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt.'
+          "1": 'Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt.'
+          "0_7": 'Du ignorerer alle varsler i denne kategorien.'
+          "0_2": 'Du ignorerer alle varsler om denne tråden.'
+          "0": 'Du ignorerer alle varsler om denne tråden.'
         watching_pm:
           title: "Følger"
           description: "Du vil bli varslet om hvert nye innlegg i denne meldingen. Antall nye tilbakemeldinger vil også bli vist. "
@@ -1628,8 +1626,8 @@ nb_NO:
         pin_validation: "En dato kreves for å feste denne tråden."
         not_pinned: "Det finnes ingen festede tråder i {{categoryLink}}."
         already_pinned:
-          one: "Tråder for øyeblikket låst i {{categoryLink}}: <strong class='badge badge-notification unread'>Ett</strong>"
-          other: "Tråder som er festet i {{categoryLink}} for øyeblikket: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Tråder for øyeblikket låst i {{categoryLink}}: <strong class=''badge badge-notification unread''>Ett</strong>'
+          other: 'Tråder som er festet i {{categoryLink}} for øyeblikket: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         pin_globally: "La denne tråden vises øverst i alle listene over tråder inntil"
         confirm_pin_globally: "Du har allerede {{count}} globalt festede tråder. For mange festede tråder kan være et problem for nye og anonyme brukere. Er du sikker på at du vil feste enda en tråd globalt? "
         unpin_globally: "Fjern denne tråden fra toppen av alle lister over tråder. "
@@ -1637,8 +1635,8 @@ nb_NO:
         global_pin_note: "Brukere kan fjerne festet for tråden for seg selv"
         not_pinned_globally: "Det finnes ingen globalt festede tråder."
         already_pinned_globally:
-          one: "Tråder for øyeblikket festet globalt: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Tråder som er festet globalt for øyeblikket: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Tråder for øyeblikket festet globalt: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Tråder som er festet globalt for øyeblikket: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         make_banner: "Gjør denne tråden til et banner som vises øverst på alle sider."
         remove_banner: "Fjern banneret som vises øverst alle sider. "
         banner_note: "Brukere kan fjerne banneret ved å lukke det. Kun én tråd kan være banner på et gitt tidspunkt. "
@@ -1675,8 +1673,8 @@ nb_NO:
       login_reply: 'Logg Inn for å svare'
       filters:
         n_posts:
-          one: "1 innlegg"
-          other: "{{count}} innlegg"
+          one: 1 innlegg
+          other: '{{count}} innlegg'
         cancel: "Fjern filter"
       split_topic:
         title: "Flytt til ny tråd"
@@ -1684,15 +1682,15 @@ nb_NO:
         topic_name: "Nytt navn på tråden"
         error: "Det oppstod en feil ved flytting av innlegg til den nye tråden."
         instructions:
-          one: "Du er i ferd med å lage et ny tråd basert på innlegget du har valgt.."
-          other: "Du er i ferd med å opprette et ny tråd og fylle den med de <b>{{count}}</b> innleggne du har valgt."
+          one: Du er i ferd med å lage et ny tråd basert på innlegget du har valgt..
+          other: Du er i ferd med å opprette et ny tråd og fylle den med de <b>{{count}}</b> innleggne du har valgt.
       merge_topic:
         title: "Flytt til eksisterende tråd"
         action: "flytt til eksisterende tråd"
         error: "Det oppstod en feil ved flytting av innlegg til den tråden"
         instructions:
-          one: "Velg den tråden du vil flytte det innlegget til."
-          other: "Velg tråden du vil flytte de <b>{{count}}</b> innleggene til."
+          one: Velg den tråden du vil flytte det innlegget til.
+          other: Velg tråden du vil flytte de <b>{{count}}</b> innleggene til.
       merge_posts:
         title: "Slå sammen valgte innlegg"
         action: "slå sammen valgte innlegg"
@@ -1704,8 +1702,8 @@ nb_NO:
         label: "Innleggenes nye eier"
         placeholder: "den nye eierens brukernavn"
         instructions:
-          one: "Velg den nye eieren til innlegget av <b>{{old_user}}</b>."
-          other: "Velg den nye eieren til {{count}} innlegg av  <b>{{old_user}}</b>."
+          one: Velg den nye eieren til innlegget av <b>{{old_user}}</b>.
+          other: Velg den nye eieren til {{count}} innlegg av  <b>{{old_user}}</b>.
         instructions_warn: "Merk at ingen varsler om dette innlegget vil overføres til den nye eieren i etterkant.<br>Advarsel: For øyeblikket blir ingen innleggsavhengige data overført til den nye brukeren. Bruk med omhu."
       change_timestamp:
         title: "Endre tidsstempel…"
@@ -1733,8 +1731,8 @@ nb_NO:
         select_all: velg alle
         deselect_all: fjern alle
         description:
-          one: "Du har valgt <b>1</b> innlegg."
-          other: "Du har valgt <b>{{count}}</b> innlegg."
+          one: Du har valgt <b>1</b> innlegg.
+          other: Du har valgt <b>{{count}}</b> innlegg.
     post:
       quote_reply: "Sitat"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
@@ -1749,28 +1747,28 @@ nb_NO:
       show_full: "Vis hele innlegget"
       show_hidden: 'Se skjult innhold'
       deleted_by_author:
-        one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
-        other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter %{count} timer, med mindre det blir rapportert)"
+        one: (innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)
+        other: (innlegg trukket tilbake av forfatter, blir automatisk slettet etter %{count} timer, med mindre det blir rapportert)
       collapse: "fold sammen"
       expand_collapse: "utvid/vis"
       locked: "et stabsmedlem har låst dette innlegget fra å bli endret"
       gap:
-        one: "vis 1 skjult svar"
-        other: "vis {{count}} skjulte svar"
+        one: vis 1 skjult svar
+        other: vis {{count}} skjulte svar
       unread: "Innlegget er ulest"
       has_replies:
-        one: "{{count}} svar"
-        other: "{{count}} svar"
+        one: '{{count}} svar'
+        other: '{{count}} svar'
       has_likes:
-        one: "{{count}} like"
-        other: "{{count}} likes"
+        one: '{{count}} like'
+        other: '{{count}} likes'
       has_likes_title:
-        one: "{{count}} bruker likte dette innlegget"
-        other: "{{count}} brukere likte dette innlegget"
+        one: '{{count}} bruker likte dette innlegget'
+        other: '{{count}} brukere likte dette innlegget'
       has_likes_title_only_you: "du likte dette innlegget"
       has_likes_title_you:
-        one: "du og 1 annen bruker likte dette innlegget"
-        other: "du og {{count}} andre likte dette innlegget"
+        one: du og 1 annen bruker likte dette innlegget
+        other: du og {{count}} andre likte dette innlegget
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
@@ -1810,11 +1808,11 @@ nb_NO:
         delete_replies:
           confirm: "Ønsker du å slette svarene på dette innlegget?"
           direct_replies:
-            one: "Ja, og ett direkte svar"
-            other: "Ja, og {{count}} direkte svar"
+            one: Ja, og ett direkte svar
+            other: Ja, og {{count}} direkte svar
           all_replies:
-            one: "Ja, og ett svar"
-            other: "Ja, og alle {{count}} svar"
+            one: Ja, og ett svar
+            other: Ja, og alle {{count}} svar
           just_the_post: "Nei, kun dette innlegget"
         admin: "Innleggsadministrasjon"
         wiki: "Opprett wiki"
@@ -1832,8 +1830,8 @@ nb_NO:
       actions:
         flag: 'Rapportering'
         defer_flags:
-          one: "Ignorer flagg"
-          other: "Ignorer flagg"
+          one: Ignorer flagg
+          other: Ignorer flagg
         undo:
           off_topic: "Angre rapportering"
           spam: "Angre rapportering"
@@ -1850,8 +1848,8 @@ nb_NO:
           bookmark: "bokmerket dette"
           like: "likte dette"
           like_capped:
-            one: "og {{count}} annen likte dette"
-            other: "og {{count}} andre likte dette"
+            one: og {{count}} annen likte dette
+            other: og {{count}} andre likte dette
           vote: "stemte for dette"
         by_you:
           off_topic: "Du rapporterte dette som utenfor temaet"
@@ -1864,62 +1862,62 @@ nb_NO:
           vote: "Du stemte for dette innlegget"
         by_you_and_others:
           off_topic:
-            one: "Du og 1 annen markerte dette som irrelevant"
-            other: "Du og {{count}} andre rapporterte dette som utenfor temaet"
+            one: Du og 1 annen markerte dette som irrelevant
+            other: Du og {{count}} andre rapporterte dette som utenfor temaet
           spam:
-            one: "Du og 1 annen markerte dette som spam"
-            other: "Du og {{count}} andre rapporterte dette som spam"
+            one: Du og 1 annen markerte dette som spam
+            other: Du og {{count}} andre rapporterte dette som spam
           inappropriate:
-            one: "Du og 1 annen markerte dette som upassende"
-            other: "Du og {{count}} andre rapporterte dette som upassende"
+            one: Du og 1 annen markerte dette som upassende
+            other: Du og {{count}} andre rapporterte dette som upassende
           notify_moderators:
-            one: "Du og 1 annen markerte dette for moderering"
-            other: "Du og {{count}} andre rapporterte dette for moderering"
+            one: Du og 1 annen markerte dette for moderering
+            other: Du og {{count}} andre rapporterte dette for moderering
           notify_user:
-            one: "Du og 1 annen bruker sendte en melding til denne brukeren"
-            other: "Du og {{count}} andre brukere har sendt en melding til denne brukeren"
+            one: Du og 1 annen bruker sendte en melding til denne brukeren
+            other: Du og {{count}} andre brukere har sendt en melding til denne brukeren
           bookmark:
-            one: "Du og 1 annen bokmerket dette innlegget"
-            other: "Du og {{count}} andre bokmerket dette innlegget"
+            one: Du og 1 annen bokmerket dette innlegget
+            other: Du og {{count}} andre bokmerket dette innlegget
           like:
-            one: "Du og 1 annen likte dette"
-            other: "Du og {{count}} andre likte dette"
+            one: Du og 1 annen likte dette
+            other: Du og {{count}} andre likte dette
           vote:
-            one: "Du og 1 annen stemte på dette innlegget"
-            other: "Du og {{count}} andre stemte på dette innlegget"
+            one: Du og 1 annen stemte på dette innlegget
+            other: Du og {{count}} andre stemte på dette innlegget
         by_others:
           off_topic:
-            one: "1 bruker markerte dette som irrelevant"
-            other: "{{count}} brukere rapporterte dette som irrelevant"
+            one: 1 bruker markerte dette som irrelevant
+            other: '{{count}} brukere rapporterte dette som irrelevant'
           spam:
-            one: "1 bruker markerte dette som spam"
-            other: "{{count}} brukere rapporterte dette som spam"
+            one: 1 bruker markerte dette som spam
+            other: '{{count}} brukere rapporterte dette som spam'
           inappropriate:
-            one: "1 bruker markerte dette som upassende"
-            other: "{{count}} brukere rapporterte dette som upassende"
+            one: 1 bruker markerte dette som upassende
+            other: '{{count}} brukere rapporterte dette som upassende'
           notify_moderators:
-            one: "1 bruker markerte dette for moderering"
-            other: "{{count}} brukere rapporterte dette for moderering"
+            one: 1 bruker markerte dette for moderering
+            other: '{{count}} brukere rapporterte dette for moderering'
           notify_user:
-            one: "1 person har sendt en melding til denne brukeren"
-            other: "{{count}} har sendt en melding til denne brukeren"
+            one: 1 person har sendt en melding til denne brukeren
+            other: '{{count}} har sendt en melding til denne brukeren'
           bookmark:
-            one: "1 bruker bokmerket dette innlegget"
-            other: "{{count}} brukere bokmerket dette innlegget"
+            one: 1 bruker bokmerket dette innlegget
+            other: '{{count}} brukere bokmerket dette innlegget'
           like:
-            one: "1 bruker likte dette"
-            other: "{{count}} brukere likte dette"
+            one: 1 bruker likte dette
+            other: '{{count}} brukere likte dette'
           vote:
-            one: "1 bruker stemte på dette innlegget"
-            other: "{{count}} brukere stemte på dette innlegget"
+            one: 1 bruker stemte på dette innlegget
+            other: '{{count}} brukere stemte på dette innlegget'
       delete:
         confirm:
-          one: "Er du sikker på at du ønsker å slette dette innlegget?"
-          other: "Er du sikker på at du ønsker å slette de {{count}} innleggene?"
+          one: Er du sikker på at du ønsker å slette dette innlegget?
+          other: Er du sikker på at du ønsker å slette de {{count}} innleggene?
       merge:
         confirm:
-          one: "Er du sikker på at du vil flette disse postene?"
-          other: "Er du sikker på at du vil flette de {{count}} innleggene?"
+          one: Er du sikker på at du vil flette disse postene?
+          other: Er du sikker på at du vil flette de {{count}} innleggene?
       revisions:
         controls:
           first: "Første versjon"
@@ -2076,14 +2074,14 @@ nb_NO:
       custom_placeholder_notify_moderators: "La oss vite nøyaktig hva problemet er, og del relevante lenker og eksempler hvorvidt det er mulig."
       custom_message:
         at_least:
-          one: "skriv inn minst ett tegn"
-          other: "skriv inn minst {{count}} tegn"
+          one: skriv inn minst ett tegn
+          other: skriv inn minst {{count}} tegn
         more:
-          one: "Én igjen…"
-          other: "{{count}} igjen…"
+          one: Én igjen…
+          other: '{{count}} igjen…'
         left:
-          one: "ett gjenstående"
-          other: "{{count}} gjenstående"
+          one: ett gjenstående
+          other: '{{count}} gjenstående'
     flagging_topic:
       title: "Takk for at du hjelper med å vedlikeholde god skikk i samfundet vårt!"
       action: "Rapporter tråd"
@@ -2094,13 +2092,13 @@ nb_NO:
       links_title: "Populære Lenker"
       links_shown: "vis flere lenker…"
       clicks:
-        one: "1 klikk"
-        other: "%{count} klikk"
+        one: 1 klikk
+        other: '%{count} klikk'
     post_links:
       about: "utvid flere lenker for dette innlegget"
       title:
-        one: "Én til"
-        other: "%{count} flere"
+        one: Én til
+        other: '%{count} flere'
     topic_statuses:
       warning:
         help: "Dette er en offisiell advarsel."
@@ -2134,22 +2132,22 @@ nb_NO:
     original_post: "Originalt innlegg"
     views: "Visninger"
     views_lowercase:
-      one: "visninger"
-      other: "visninger"
+      one: visninger
+      other: visninger
     replies: "Svar"
     views_long:
-      one: "denne tråden er vist 1 gang"
-      other: "denne tråden er blitt vist {{number}} ganger"
+      one: denne tråden er vist 1 gang
+      other: denne tråden er blitt vist {{number}} ganger
     activity: "Aktivitet"
     likes: "Likes"
     likes_lowercase:
-      one: "like"
-      other: "likes"
+      one: like
+      other: likes
     likes_long: "det finnes {{number}} likes i denne tråden"
     users: "Deltakere"
     users_lowercase:
-      one: "bruker"
-      other: "brukere"
+      one: bruker
+      other: brukere
     category_title: "Kategori"
     history: "Historie"
     changed_by: "av {{author}}"
@@ -2163,8 +2161,8 @@ nb_NO:
       latest:
         title: "Siste"
         title_with_count:
-          one: "Siste (1)"
-          other: "Siste ({{count}})"
+          one: Siste (1)
+          other: Siste ({{count}})
         help: "tråder med nylige innlegg"
       hot:
         title: "Populær"
@@ -2182,21 +2180,21 @@ nb_NO:
       unread:
         title: "Uleste"
         title_with_count:
-          one: "Ulest (1)"
-          other: "Ulest ({{count}})"
+          one: Ulest (1)
+          other: Ulest ({{count}})
         help: "tråder du følger eller overvåker for øyeblikket, med uleste innlegg"
         lower_title_with_count:
-          one: "1 ulest"
-          other: "{{count}} uleste"
+          one: 1 ulest
+          other: '{{count}} uleste'
       new:
         lower_title_with_count:
-          one: "1 ny"
-          other: "{{count}} nye"
+          one: 1 ny
+          other: '{{count}} nye'
         lower_title: "ny"
         title: "Nye"
         title_with_count:
-          one: "Nye (1)"
-          other: "Nye ({{count}})"
+          one: Nye (1)
+          other: Nye ({{count}})
         help: "tråder opprettet de siste dagene"
       posted:
         title: "Mine innlegg"
@@ -2207,8 +2205,8 @@ nb_NO:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
+          one: '{{categoryName}} (1)'
+          other: '{{categoryName}} ({{count}})'
         help: "siste tråder i {{categoryName}}-kategorien"
       top:
         title: "Aktive"
@@ -2296,22 +2294,22 @@ nb_NO:
         print: '<b>ctrl</b>+<b>p</b> Skriv ut tråd'
     badges:
       earned_n_times:
-        one: "Har gjort seg fortjent til dette merket"
-        other: "Har gjort seg fortjent til dette merket %{count} ganger"
+        one: Har gjort seg fortjent til dette merket
+        other: Har gjort seg fortjent til dette merket %{count} ganger
       granted_on: "Tildelt %{date}"
       others_count: "(%{count}) andre har dette merket"
       title: Merker
       allow_title: "Du kan bruke dette merket som tittel"
       multiple_grant: "Du kan oppnå dette flere ganger"
       badge_count:
-        one: "1 merke"
-        other: "%{count} merker"
+        one: 1 merke
+        other: '%{count} merker'
       more_badges:
-        one: "+1 mer"
-        other: "+%{count} Flere"
+        one: +1 mer
+        other: +%{count} Flere
       granted:
-        one: "ett tildelt"
-        other: "%{count} tildelt"
+        one: ett tildelt
+        other: '%{count} tildelt'
       select_badge_for_title: Velg et merke å bruke som din tittel
       none: "(intet)"
       successfully_granted: "Tildelte %{badge} til %{username}"
@@ -2345,8 +2343,8 @@ nb_NO:
       choose_for_topic: "valgfrie stikkord"
       delete_tag: "Slett stikkord"
       delete_confirm:
-        one: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra tråden det er tilknyttet?"
-        other: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra {{count}} tråder som har det?"
+        one: Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra tråden det er tilknyttet?
+        other: Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra {{count}} tråder som har det?
       delete_confirm_no_topics: "Er du sikker på at du ønsker å slette dette stikkordet?"
       rename_tag: "Gi stikkord nytt navn"
       rename_instructions: "Velg et nytt navn for dette stikkordet:"
@@ -2623,11 +2621,11 @@ nb_NO:
           none: "Det finnes ingen relaterte hendelser."
           redeliver: "Send på nytt"
           incoming:
-            one: "Det finnes en ny hendelse."
-            other: "Det finnes {{count}} nye hendelser."
+            one: Det finnes en ny hendelse.
+            other: Det finnes {{count}} nye hendelser.
           completed_in:
-            one: "Ferdig på 1 sekund."
-            other: "Ferdig på {{count}} sekunder."
+            one: Ferdig på 1 sekund.
+            other: Ferdig på {{count}} sekunder.
           request: "Forespørsel"
           response: "Svar"
           redeliver_confirm: "Er du sikker på at du vil sende samme payload på nytt?"
@@ -2792,8 +2790,8 @@ nb_NO:
           theme_settings: "Draktinnstillinger"
           no_settings: "Denne drakten har ingen innstillinger."
           commits_behind:
-            one: "Drakten er én utgave foreldet!"
-            other: "Drakten er {{count}} utgaver foreldet!"
+            one: Drakten er én utgave foreldet!
+            other: Drakten er {{count}} utgaver foreldet!
           scss:
             text: "CSS"
             title: "Skriv inn egendefinert CSS, alle gyldige CSS- og SCSS-stiler godtas"
@@ -3065,8 +3063,8 @@ nb_NO:
         clear_filter: "Tøm"
         show_words: "vis ord"
         word_count:
-          one: "ett ord"
-          other: "%{count} ord"
+          one: ett ord
+          other: '%{count} ord'
         actions:
           block: 'Blokker'
           censor: 'Sensurer'
@@ -3108,11 +3106,11 @@ nb_NO:
           suspect: 'Mistenkt'
         approved: "Godkjent?"
         approved_selected:
-          one: "godkjenn bruker"
-          other: "godkjenn brukere ({{count}})"
+          one: godkjenn bruker
+          other: godkjenn brukere ({{count}})
         reject_selected:
-          one: "avvis bruker"
-          other: "avvis brukere ({{count}})"
+          one: avvis bruker
+          other: avvis brukere ({{count}})
         titles:
           active: 'Aktive brukere'
           new: 'Nye brukere'
@@ -3129,11 +3127,11 @@ nb_NO:
           suspended: 'Utestengte brukere'
           suspect: 'Mistenkte brukere'
         reject_successful:
-          one: "Avvist 1 bruker."
-          other: "Avviste %{count} brukere."
+          one: Avvist 1 bruker.
+          other: Avviste %{count} brukere.
         reject_failures:
-          one: "Kunne ikke avvise 1 bruker."
-          other: "Kunne ikke avvise %{count} brukere."
+          one: Kunne ikke avvise 1 bruker.
+          other: Kunne ikke avvise %{count} brukere.
         not_verified: "Uverifisert"
         check_email:
           title: "Vis denne brukerens e-postadresse"
@@ -3218,14 +3216,14 @@ nb_NO:
         delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
-          one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"
-          other: "Brukere kan ikke slettes om de har innlegg. Slett alle innlegg før du forsøker å slette en bruker. (Innlegg eldre enn %{count} dager kan ikke slettes.)"
+          one: Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)
+          other: Brukere kan ikke slettes om de har innlegg. Slett alle innlegg før du forsøker å slette en bruker. (Innlegg eldre enn %{count} dager kan ikke slettes.)
         cant_delete_all_posts:
-          one: "Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dag gammel. (Innstillingen delete_user_max_post_age.)"
-          other: "Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dager gamle. (Innstillingen delete_user_max_post_age.)"
+          one: Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dag gammel. (Innstillingen delete_user_max_post_age.)
+          other: Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dager gamle. (Innstillingen delete_user_max_post_age.)
         cant_delete_all_too_many_posts:
-          one: "Kan ikke slette alle innlegg fordi brukeren har mer enn 1 innlegg. (delete_all_posts_max)"
-          other: "Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)"
+          one: Kan ikke slette alle innlegg fordi brukeren har mer enn 1 innlegg. (delete_all_posts_max)
+          other: Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)
         delete_confirm: "Er du HELT SIKKER på at du vil slette denne brukeren? Denne handlingen er permanent!"
         delete_and_block: "Slett og <b>blokker</b> denne e-post- og IP-adressen"
         delete_dont_block: "Bare slett"
@@ -3266,8 +3264,8 @@ nb_NO:
         tl3_requirements:
           title: "Krav til tillitsnivå 3"
           table_title:
-            one: "Den siste dagen:"
-            other: "De siste %{count} dagene:"
+            one: 'Den siste dagen:'
+            other: 'De siste %{count} dagene:'
           value_heading: "Verdi"
           requirement_heading: "Krav"
           visits: "Besøk"
@@ -3394,11 +3392,11 @@ nb_NO:
         reason_help: (En lenke til et innlegg eller tråd)
         save: Lagre
         delete: Slett
-        delete_confirm: Er du sikker på at du vil slette dette merket?
+        delete_confirm: "Er du sikker på at du vil slette dette merket?"
         revoke: Trekk tilbake
         reason: Grunn
         expand: Ekspander
-        revoke_confirm: Er du sikker på at du vil trekke tilbake dette merket?
+        revoke_confirm: "Er du sikker på at du vil trekke tilbake dette merket?"
         edit_badges: Rediger merker
         grant_badge: Tildel merke
         granted_badges: Tildelte merker
@@ -3436,14 +3434,14 @@ nb_NO:
             text: "Det finnes manglende grant samples. Dette skjer når merke-søket returnerer bruker-IDer eller innleggs-ID-er som ikke eksisterer. Dette kan føre til uventede resultater senere - dobbeltsjekk søket ditt."
           no_grant_count: "Ingen merker å tildele."
           grant_count:
-            one: "<b>Ett</b> merke å tildele."
-            other: "<b>%{count}</b> merker å tildele."
+            one: <b>Ett</b> merke å tildele.
+            other: <b>%{count}</b> merker å tildele.
           sample: "Eksempel:"
           grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> for innlegg i %{link}
-            with_post_time: <span class="username">%{username}</span> for innlegg i %{link} - <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
+            with: "<span class=\"username\">%{username}</span>"
+            with_post: "<span class=\"username\">%{username}</span> for innlegg i %{link}"
+            with_post_time: "<span class=\"username\">%{username}</span> for innlegg i %{link} - <span class=\"time\">%{time}</span>"
+            with_time: "<span class=\"username\">%{username}</span> - <span class=\"time\">%{time}</span>"
       emoji:
         title: "Emoji"
         help: "Legg til en ny emoji som vil være tilgjengelig for alle. (PROFFTIPS: Dra og slipp flere filer samtidig)"
@@ -3489,7 +3487,7 @@ nb_NO:
         category_id: "Kategori-ID"
         category_title: "Kategori"
         external_url: "Ekstern URL"
-        delete_confirm: Er du sikker på at du vil slette denne permalenken?
+        delete_confirm: "Er du sikker på at du vil slette denne permalenken?"
         form:
           label: "Ny:"
           add: "Legg til"
@@ -3504,8 +3502,8 @@ nb_NO:
       uploading: "Laster opp…"
       quit: "Kanskje senere"
       staff_count:
-        one: "Din gemenskap har ett stabsmedlem (deg)."
-        other: " Ditt fellesskap har %{count} stab, inkludert deg selv."
+        one: Din gemenskap har ett stabsmedlem (deg).
+        other: ' Ditt fellesskap har %{count} stab, inkludert deg selv.'
       invites:
         add_user: "legg til"
         none_added: "Du har ikke invitert noen til staben. Er du sikker på at du vil fortsette?"

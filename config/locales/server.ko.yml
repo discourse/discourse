@@ -17,12 +17,12 @@ ko:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, 1월, 2월, 3월, 4월, 5월, 6월, 7월, 8월, 9월, 10월, 11월, 12월]
+    month_names: [~, 1월, 2월, 3월, 4월, 5월, 6월, 7월, 8월, 9월, 10월, 11월, 12월]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "오전"
     pm: "오후"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "토픽"
   posts: "포스트"
@@ -67,18 +67,18 @@ ko:
       present: 공백이어야 합니다.
       confirmation: " %{attribute} 속성과 맞지 않음"
       empty: 필수 작성
-      equal_to: '다음 숫자와 같아야 함: %{count}'
+      equal_to: "다음 숫자와 같아야 함: %{count}"
       even: 짝수여야 함
       exclusion: 예약됨
-      greater_than: '%{count}보다 커야 함'
-      greater_than_or_equal_to: '%{count}보다 크거나 같아야 함'
+      greater_than: "%{count}보다 커야 함"
+      greater_than_or_equal_to: "%{count}보다 크거나 같아야 함"
       has_already_been_used: "이미 사용되었음"
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
       is_invalid: "문장이 불분명합니다."
       contains_censored_words: "검열된 단어가 있습니다: %{censored_words}"
-      less_than: '%{count}보다 작아야 함'
-      less_than_or_equal_to: '%{count}보다 작거나 같아야 함'
+      less_than: "%{count}보다 작아야 함"
+      less_than_or_equal_to: "%{count}보다 작거나 같아야 함"
       not_a_number: 숫자가 아님
       not_an_integer: 정수여야 함
       odd: 홀수여야 함
@@ -106,6 +106,9 @@ ko:
       max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
       default_categories_already_selected: "다른 목록에서 사용중인 카테고리는 선택할 수 없습니다."
       s3_upload_bucket_is_required: "'s3_upload_bucket'이 설정되지 않으면 S3로 업로드하기를 활성화할 수 없습니다."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "초대 토큰이 유효하지 않습니다. 사이트 관리자에게 문의하세요."
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='/u/%{username}/summary'>이미 회원이거든요!</a>"
@@ -126,7 +129,7 @@ ko:
   reading_time: "읽은 시간"
   likes: "좋아요"
   too_many_replies:
-    other: "죄송합니다. 신규 가입자는 글 하나에 %{count}개까지만 댓글을 달 수 있습니다."
+    other: 죄송합니다. 신규 가입자는 글 하나에 %{count}개까지만 댓글을 달 수 있습니다.
   embed:
     start_discussion: "토론 시작"
     continue: "토론 계속하기"
@@ -136,28 +139,28 @@ ko:
     no_hosts: "임베딩을 위한 호스트가 설정되지 않았습니다."
     configure: "삽입 설정"
     more_replies:
-      other: "추가 %{count} 개 댓글"
+      other: 추가 %{count} 개 댓글
     loading: "토론 불러오는 중..."
     permalink: "Permalink"
     imported_from: "%{link}에 있는 원글과 유사한 토론 글입니다."
     in_reply_to: "▶ %{username}"
     replies:
-      other: "답글 %{count}개"
+      other: 답글 %{count}개
   no_mentions_allowed: "죄송합니다, 다른 사용자를 언급할 수 없습니다."
   too_many_mentions:
-    other: "죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다."
+    other: 죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다.
   no_mentions_allowed_newuser: "죄송합니다. 새로운 사용자는 다른 사용자를 언급할 수 없습니다."
   too_many_mentions_newuser:
-    other: "죄송합니다. 신규 회원은 %{count}명의 사용자만 언급할 수 있습니다."
+    other: 죄송합니다. 신규 회원은 %{count}명의 사용자만 언급할 수 있습니다.
   no_images_allowed: "죄송합니다. 신규 회원은 글에 이미지를 넣을 수 없습니다."
   too_many_images:
-    other: "죄송합니다. 신규회원은 글 하나에 %{count}개의 이미지만 넣을 수 있습니다."
+    other: 죄송합니다. 신규회원은 글 하나에 %{count}개의 이미지만 넣을 수 있습니다.
   no_attachments_allowed: "죄송합니다. 신규회원은 글에 파일을 첨부할 수 없습니다."
   too_many_attachments:
-    other: "죄송합니다. 신규회원은 글 하나에 %{count}개의 파일만 첨부할 수 있습니다."
+    other: 죄송합니다. 신규회원은 글 하나에 %{count}개의 파일만 첨부할 수 있습니다.
   no_links_allowed: "죄송합니다. 신규회원은 글에 링크를 넣을 수 없습니다."
   too_many_links:
-    other: "죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다."
+    other: 죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다.
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에  토픽이 닫혔거나 지워진 건 아닐까요?"
@@ -222,8 +225,8 @@ ko:
       title: "@%{group_name}그룹에 가입 신청"
   education:
     until_posts:
-      other: "글 %{count}개"
-    new-topic: |
+      other: 글 %{count}개
+    'new-topic': |
       %{site_name}에 오신 것을 환영합니다 &mdash; **새로운 대화를 시작해서 감사합니다.**
 
       - 제목을 큰소리로 읽어봤을 때 흥미롭게 들리던가요? 좋은 요약문인가요?
@@ -233,7 +236,7 @@ ko:
       - 사람들이 *검색*할 수 있도록 토픽에 흔히 사용하는 단어를 집어넣으세요. 관련 토픽과 같이 엮으려면 해당 카테고리를 선택하시고요.
 
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)을 참조하세요.
-    new-reply: |
+    'new-reply': |
       %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
 
       - 당신의 댓글이 어떤 식으로든 토론을 발전시키나요?
@@ -291,6 +294,7 @@ ko:
       user_profile:
         bio_raw: "내 소개"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -334,7 +338,6 @@ ko:
           attributes:
             word:
               too_many: "해당 행동을 위한 단어가 너무 많습니다."
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>프로필의 자기소개란이 비어있습니다. <a href='/u/%{username_lower}/preferences/about-me'>뭔가 써보지 않으실래요?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name}님께서는 아직 프로필을 작성하지 않으셨습니다</div>"
@@ -383,7 +386,7 @@ ko:
       uncategorized: "Uncategorized는 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
       topic_exists:
-        other: "%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다. 가장 오래된 글타래는 %{topic_link}입니다."
+        other: '%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다. 가장 오래된 글타래는 %{topic_link}입니다.'
       topic_exists_no_oldest: "%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다."
     uncategorized_description: "카테고리가 필요없는 토픽이거나, 토픽에 부합하는 카테고리가 없습니다."
   trust_levels:
@@ -400,60 +403,60 @@ ko:
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      other: "%{count}시간"
+      other: '%{count}시간'
     minutes:
-      other: "%{count}분"
+      other: '%{count}분'
     seconds:
-      other: "%{count}초"
+      other: '%{count}초'
   datetime:
     distance_in_words:
       half_a_minute: "<1분"
       less_than_x_seconds:
-        other: "< %{count}초"
+        other: < %{count}초
       x_seconds:
-        other: "%{count}초"
+        other: '%{count}초'
       less_than_x_minutes:
-        other: "< %{count}분"
+        other: < %{count}분
       x_minutes:
-        other: "%{count}분"
+        other: '%{count}분'
       about_x_hours:
-        other: "%{count}시간"
+        other: '%{count}시간'
       x_days:
-        other: "%{count}일"
+        other: '%{count}일'
       about_x_months:
-        other: "%{count}달"
+        other: '%{count}달'
       x_months:
-        other: "%{count}달"
+        other: '%{count}달'
       about_x_years:
-        other: "%{count}년"
+        other: '%{count}년'
       over_x_years:
-        other: "%{count}년 보다 전"
+        other: '%{count}년 보다 전'
       almost_x_years:
-        other: "약 %{count}년"
+        other: 약 %{count}년
     distance_in_words_verbose:
       half_a_minute: "방금 전"
       less_than_x_seconds:
-        other: "방금 전"
+        other: 방금 전
       x_seconds:
-        other: "%{count}초 전"
+        other: '%{count}초 전'
       less_than_x_minutes:
-        other: "%{count}분 보다 이전"
+        other: '%{count}분 보다 이전'
       x_minutes:
-        other: "%{count}분 전"
+        other: '%{count}분 전'
       about_x_hours:
-        other: "%{count}시간 전"
+        other: '%{count}시간 전'
       x_days:
-        other: "%{count}일 전"
+        other: '%{count}일 전'
       about_x_months:
-        other: "약 %{count}달 전"
+        other: 약 %{count}달 전
       x_months:
-        other: "${count}달 전"
+        other: ${count}달 전
       about_x_years:
-        other: "약 %{count}년 전"
+        other: 약 %{count}년 전
       over_x_years:
-        other: "%{count}년 보다 이전"
+        other: '%{count}년 보다 이전'
       almost_x_years:
-        other: "약 %{count}년 전"
+        other: 약 %{count}년 전
   password_reset:
     no_token: "죄송하지만, 해당 비밀번호 변경 링크는 너무 오래됐습니다. 로그인 버튼을 눌러서 '비밀번호를 잊어버렸어요'를 사용하여 새로운 링크를 받으세요."
     choose_new: "새로운 비밀번호를 입력하세요"
@@ -756,7 +759,7 @@ ko:
     failing_emails_warning: '실패한 이메일 작업이 %{num_failed_jobs} 개 있습니다. app.yml 을 열어서 메일 서버 설정이 정확한지 확인해보세요. <a href="/sidekiq/retries" target="_blank">Sidekiq에서 실패한 작업 보기</a>.'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
     email_polling_errored_recently:
-      other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='/logs' target='_blank'>로그</a>에서 확인하세요."
+      other: 이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='/logs' target='_blank'>로그</a>에서 확인하세요.
     bad_favicon_url: "파비콘 불러오기가 실패했습니다. <a href='/admin/site_settings'>사이트 설정</a>에서 favicon_url 설정을 확인해보세요."
     poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
     poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
@@ -835,7 +838,6 @@ ko:
     tl4_additional_likes_per_day_multiplier: "tl4 (리더)의 일별 좋아요 제한을 올릴 배수"
     flag_sockpuppets: "어떤 신규 사용자(예:24이내 가입자)가 글타래를 생성하고 같은 IP주소의 또 다른 신규 사용자가 댓글을 쓰면 자동 스팸 신고"
     traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
-    enable_markdown_typographer: "문단의 가독성을 높이기 위해서 기본 타이포그라피 룰을 사용합니다. (c) (tm), 기타 기호를 교체하고 연달아 나오는 물음표의 갯수를 줄입니다."
     post_undo_action_window_mins: "사용자가 어떤 글에 대해서 수행한 작업(신고 등)을 취소하는 것이 허용되는 시간(초)"
     must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
@@ -1207,17 +1209,17 @@ ko:
     closed_enabled: "이 글타래는 이제 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     closed_disabled: "이 글타래는 이제 열렸습니다. 새로운 답글을 다실 수 있습니다."
     autoclosed_enabled_days:
-      other: "이 글타래는 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: 이 글타래는 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
     autoclosed_enabled_hours:
-      other: "이 글타래는 %{count}시간 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: 이 글타래는 %{count}시간 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
     autoclosed_enabled_minutes:
-      other: "이 글타래는 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: 이 글타래는 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
     autoclosed_enabled_lastpost_days:
-      other: "이 글타래는 마지막 답글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: 이 글타래는 마지막 답글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
     autoclosed_enabled_lastpost_hours:
-      other: "마지막 댓글로부터 %{count} 시간이 지나 글타래가 자동으로 닫혔습니다. 새로운 댓글을 다실 수 없습니다."
+      other: 마지막 댓글로부터 %{count} 시간이 지나 글타래가 자동으로 닫혔습니다. 새로운 댓글을 다실 수 없습니다.
     autoclosed_enabled_lastpost_minutes:
-      other: "이 글타래는 마지막 답글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: 이 글타래는 마지막 답글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
     autoclosed_disabled: "이 글타래는 이제 열렸습니다. 새로운 답글을 허용합니다."
     autoclosed_disabled_lastpost: "이 글타래는 이제 열렸습니다. 새로운 답글을 허용합니다."
     pinned_enabled: "이 글타래는 고정되었습니다. 고정이 해제되기 전까지 카테고리의 상단에 나타납니다."
@@ -1271,7 +1273,7 @@ ko:
       domain_not_allowed: "유효하지 않은 웹사이트입니다. 허용되는 도메인 목록: %{domains}"
   flags_reminder:
     subject_template:
-      other: "%{count}개의 신고가 접수 대기 중"
+      other: '%{count}개의 신고가 접수 대기 중'
   unsubscribe_mailer:
     title: "메일링 구독해지"
   invite_password_instructions:
@@ -1305,8 +1307,6 @@ ko:
       text_body_template: "대량 사용자 초대가 진행되어 %{sent}개의 초대장을 보냈습니다."
     bulk_invite_failed:
       subject_template: "대량 사용자 초대 중 오류가 났습니다."
-    csv_export_succeeded:
-      subject_template: "데이터 추출이 완료되었습니다."
     csv_export_failed:
       subject_template: "데이터 추출 실패"
     email_reject_parsing:
@@ -1321,7 +1321,7 @@ ko:
       subject_template: "대기중인 신규 계정"
     pending_users_reminder:
       subject_template:
-        other: "%{count}명의 새로운 사용자가 가입 승인 대기중 입니다."
+        other: '%{count}명의 새로운 사용자가 가입 승인 대기중 입니다.'
       text_body_template: |
         가입 승인 대기중(또는 거절된)인 새로운 사용자가 있습니다.
 
@@ -1472,22 +1472,22 @@ ko:
         이 배지는 처음으로 포스트를 편집했을 때 수여됩니다. 글을 고치는 것은 언제나 좋은 일이죠. 포스트를 더 낫게 만들 수도 있고, 작은 실수를 고칠 수도 있고, 처음 포스트를 올렸을 때 깜빡하고 못올렸던 걸 추가할 수도 있으니까요. 편집으로 당신의 포스트를 더 좋게 만들어보세요!
     basic_user:
       name: 초보회원
-      description: 모든 기본적인 커뮤니티 기능이 <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">수여되었습니다</a>
+      description: "모든 기본적인 커뮤니티 기능이 <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">수여되었습니다</a>"
       long_description: |
         이 배지는 신뢰도 1에 도달했을 때 수여됩니다. 잠시 동안 머물러서 몇 가지 토픽을 읽고 이 커뮤니티가 어떤 곳인지 탐구해주셔서 감사합니다. 당신의 신규 사용자 제한은 사라졌습니다. 이제 개인 메시지 보내기, 신고하기, 위키 편집하기, 이미지나 링크를 여러 개 올리기와 같은 기본적인 커뮤니티 기능을 사용하실 수 있습니다.
     member:
       name: 준회원
-      description: 초대장 보내기, 그룹 메시징, 더 많은 좋아요 보내기가<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">가능합니다</a>
+      description: "초대장 보내기, 그룹 메시징, 더 많은 좋아요 보내기가<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">가능합니다</a>"
       long_description: |
         이 배지는 신뢰도 2에 도달했을 때 수여됩니다. 몇 주가 넘도록 참여하시면서 우리 커뮤니티와 함께해주셔서 감사합니다. 이제 개인 토픽이나 사용자 페이지에서 초대장을 보낼 수 있고, 그룹 개인 메시지를 보내고 하루에 더 많은 좋아요를 보낼 수 있습니다.
     regular:
       name: 정회원
-      description: 카테고리 재조정, 이름바꾸기, 링크 팔로우, 위키, 더 많은 좋아요<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">가 가능합니다.</a>
+      description: "카테고리 재조정, 이름바꾸기, 링크 팔로우, 위키, 더 많은 좋아요<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">가 가능합니다.</a>"
       long_description: |
         이 배지는 신뢰도 4에 도달했을 때 수여됩니다. 여러 달이 넘도록 우리 커뮤니티의 중요멤버가 되어주셔서 감사합니다. 당신은 가장 활동적인 구독자이고 우리 커뮤니티를 훌륭하게 만드는 믿을만한 기여자이기도 합니다. 이제 당신은 토픽의 이름을 바꾸거나 카테고리 재조정을 할 수 있고, 더 강력한 신고 기능과 개인 라운지의 사용이 가능합니다. 그리고 하루에 더 많은 좋아요를 보낼 수 있습니다.
     leader:
       name: 지도자
-      description: 전역 편집, 핀 고정, 닫기, 아카이브, 자르고 붙이기, 더 많은 좋아요가<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">가능합니다</a>
+      description: "전역 편집, 핀 고정, 닫기, 아카이브, 자르고 붙이기, 더 많은 좋아요가<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">가능합니다</a>"
       long_description: |
         이 배지는 신뢰도 4에 도달했을 때 수여됩니다. 당신은 운영진에게 선택받은 이 커뮤니티의 리더입니다. 당신의 말과 행동은 이 커뮤니티의 다른 사용자에게 좋은 모범이 되고 있습니다. 이제 당신은 모든 포스트를 편집할 수 있는 권한과 핀 고정, 닫기, 목록해제, 아카이브, 자르기, 붙이기 같은 공통 토픽 운영권한을 가지게 됩니다. 그리고 하루에 엄청나게 많은 좋아요를 보낼 수 있습니다.
     welcome:
@@ -1658,11 +1658,11 @@ ko:
     first_mention:
       name: 첫 멘션
       description: 처음으로 포스트에서 다른 사용자를 멘션했습니다
-      long_description: 이 배지는 포스트에서 다른 사람의 @아이디 를 처음으로 멘션했을 때 수여됩니다. 각각의 멘션들은 해당 사용자에게 알림을 생성해서 당신이 쓴 포스트에 대해 알게 해줍니다. 그냥 @ 를 친 후 사용자 아이디를 입력하거나, 허용이 되어있다면 그룹을 입력할 수 있습니다. 관심을 끌 수 있는 아주 간편한 방법이죠.
+      long_description: "이 배지는 포스트에서 다른 사람의 @아이디 를 처음으로 멘션했을 때 수여됩니다. 각각의 멘션들은 해당 사용자에게 알림을 생성해서 당신이 쓴 포스트에 대해 알게 해줍니다. 그냥 @ 를 친 후 사용자 아이디를 입력하거나, 허용이 되어있다면 그룹을 입력할 수 있습니다. 관심을 끌 수 있는 아주 간편한 방법이죠."
     first_onebox:
       name: 첫 박스 링크
       description: 박스 링크를 처음으로 포스팅했습니다
-      long_description: 이 배지는 포스트의 링크만으로 이루어진 글 한줄을 남겨서 박스링크를 만들 때 수여됩니다.  박스링크에는 링크의 간략한 요약과 타이틀, (만약에 있다면) 그림이 실리게 됩니다.
+      long_description: "이 배지는 포스트의 링크만으로 이루어진 글 한줄을 남겨서 박스링크를 만들 때 수여됩니다.  박스링크에는 링크의 간략한 요약과 타이틀, (만약에 있다면) 그림이 실리게 됩니다."
     first_reply_by_email:
       name: 첫 이메일 답글
       description: 포스트에 이메일로 답글을 달았습니다
@@ -1817,6 +1817,3 @@ ko:
         description: |
           <p>이 설정을 바꾸고 싶어지면, <a href='/admin' target='_blank'>관리자 섹션</a>으로 들어가세요. 사이트 메뉴에 공구처럼 생긴 아이콘을 누르면 됩니다.</p>
           <p>당신의 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 만들기</a>를 응원합니다!</p>
-  activemodel:
-    errors:
-      <<: *errors

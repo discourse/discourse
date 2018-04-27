@@ -16,12 +16,12 @@ sk:
       short_no_year: "%B %-d"
       date_only: "%Y,  %B %-d"
   date:
-    month_names: [null, Január, Február, Marec, Apríl, Máj, Jún, Júl, August, September, Október, November, December]
+    month_names: [~, Január, Február, Marec, Apríl, Máj, Jún, Júl, August, September, Október, November, December]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "DIscourse"
   topics: "Témy"
   posts: "príspevky"
@@ -62,18 +62,18 @@ sk:
       present: musí byť prázdne
       confirmation: "sa nerovná %{attribute}"
       empty: nesmie byť prázdne
-      equal_to: sa musí rovnať %{count}
+      equal_to: "sa musí rovnať %{count}"
       even: musí byť párne
       exclusion: je rezervované
-      greater_than: musí byť viac ako %{count}
-      greater_than_or_equal_to: musí byť väčšie alebo rovné %{count}
+      greater_than: "musí byť viac ako %{count}"
+      greater_than_or_equal_to: "musí byť väčšie alebo rovné %{count}"
       has_already_been_used: "je už použité"
       inclusion: nie je v zozname
       invalid: je nesprávne
       is_invalid: "je to nejasné, je to kompletná veta?"
       contains_censored_words: "obsahuje nasledujúce cenzúrované slová %{censored_words}"
-      less_than: musí byť menej ako %{count}
-      less_than_or_equal_to: musí byť menej alebo rovné %{count}
+      less_than: "musí byť menej ako %{count}"
+      less_than_or_equal_to: "musí byť menej alebo rovné %{count}"
       not_a_number: nie je číslo
       not_an_integer: musí byť číslo
       odd: musí byť nepárne
@@ -82,23 +82,23 @@ sk:
         one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
         many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
       too_long:
-        one: príliš dlhé (maximálne 1 znak)
         few: príliiš dlhé (maximum je %{count} znaky)
+        one: príliš dlhé (maximálne 1 znak)
         other: príliiš dlhé (maximum je %{count} znakov)
       too_short:
-        one: príliiš krátke (minimum je 1 znak)
         few: príliiš krátke (minimum je %{count} znaky)
+        one: príliiš krátke (minimum je 1 znak)
         other: príliiš krátke (minimum je %{count} znakov)
       wrong_length:
-        one: nesprávna dĺžka (musí byť 1 znak)
         few: nesprávna dĺžka (musí byť %{count} znaky)
+        one: nesprávna dĺžka (musí byť 1 znak)
         other: nesprávna dĺžka (musí byť %{count} znakov)
       other_than: "musí byť iný než %{count}"
     template:
       body: 'Nastal problém s nasledujúcimi položkami:'
       header:
-        one: 'Uloženie  %{model} zlyhalo kôli chybe'
-        few: 'Uloženie  %{model} zlyhalo kôli %{count} chybám'
+        few: Uloženie  %{model} zlyhalo kôli %{count} chybám
+        one: Uloženie  %{model} zlyhalo kôli chybe
         other: 'Uloženie  %{model} zlyhalo kôli %{count} chybám '
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
@@ -109,6 +109,9 @@ sk:
       max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "Tvoj pozívací token je nesprávny. Prosím, kontaktujte administrátora stránky."
   bulk_invite:
@@ -125,50 +128,50 @@ sk:
   reading_time: "Doba čítania"
   likes: "Páči sa mi"
   too_many_replies:
-    one: "Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na jeden v rámci jednej témy."
-    few: "Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na %{count} v rámci jednej témy."
-    other: "Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na %{count} v rámci jednej témy."
+    few: Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na %{count} v rámci jednej témy.
+    one: Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na jeden v rámci jednej témy.
+    other: Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na %{count} v rámci jednej témy.
   embed:
     start_discussion: "Začať diskusiu"
     continue: "Pokračovať v diskusii"
     more_replies:
-      one: "1 ďalšia odpoveď"
-      few: "%{count} ďalšie odpovede"
-      other: "%{count} ďalších odpovedí"
+      few: '%{count} ďalšie odpovede'
+      one: 1 ďalšia odpoveď
+      other: '%{count} ďalších odpovedí'
     loading: "Nahrávanie Diskusie ..."
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 odpoveď"
-      few: "%{count} odpovede"
-      other: "%{count} odpovedí"
+      few: '%{count} odpovede'
+      one: 1 odpoveď
+      other: '%{count} odpovedí'
   no_mentions_allowed: "Ľutujeme, nesmiete zmieňovať iných používateľov"
   too_many_mentions:
-    one: "Ľutujeme, v príspevku môžete zmieniť maximálne jedného používateľa."
-    few: "Ľutujeme, v príspevku môžete zmieniť maximálne %{count} používatelov."
-    other: "Ľutujeme, v príspevku môžete zmieniť maximálne %{count} používatelov."
+    few: Ľutujeme, v príspevku môžete zmieniť maximálne %{count} používatelov.
+    one: Ľutujeme, v príspevku môžete zmieniť maximálne jedného používateľa.
+    other: Ľutujeme, v príspevku môžete zmieniť maximálne %{count} používatelov.
   no_mentions_allowed_newuser: "Ľutujeme, noví používatelia nesmú zmieňovať iných použivateľov"
   too_many_mentions_newuser:
-    one: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne jedného používateľa."
-    few: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
-    other: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
+    few: Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov.
+    one: Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne jedného používateľa.
+    other: Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov.
   no_images_allowed_trust: "Ľutujeme, do príspevku nemôžete vložiť obrázok"
   no_images_allowed: "Ľutujeme, noví používatelia nemôžu vkladať obrázky do príspevkov."
   too_many_images:
-    one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden obrázok do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázky do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázkov do príspevku."
+    few: Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázky do príspevku.
+    one: Ľutujeme, noví používatelia môžu vložiť maximálne jeden obrázok do príspevku.
+    other: Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázkov do príspevku.
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
-    one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  prílohy do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  príloh do príspevku."
+    few: Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  prílohy do príspevku.
+    one: Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku.
+    other: Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  príloh do príspevku.
   no_links_allowed: "Ľutujeme, noví používatelia nemôžu vkladať odkazy do príspevkov."
   too_many_links:
-    one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden odkaz do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} odkazy do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} odkazov do príspevku."
+    few: Ľutujeme, noví používatelia môžu vložiť maximálne %{count} odkazy do príspevku.
+    one: Ľutujeme, noví používatelia môžu vložiť maximálne jeden odkaz do príspevku.
+    other: Ľutujeme, noví používatelia môžu vložiť maximálne %{count} odkazov do príspevku.
   spamming_host: "Ľutujeme, nemôžete publikovať odkaz na tento zdroj"
   user_is_suspended: "Suspendovaní používatelia nemôžu vkladať príspevky"
   topic_not_found: "Niečo sa pokazilo. Téma mohla byť napríklad uzavretá, alebo zmazaná kým ste ju prezerali."
@@ -222,10 +225,10 @@ sk:
       trust_level_4: "stupen_dovery_4"
   education:
     until_posts:
-      one: "jeden príspevok"
-      few: "%{count} príspevky"
-      other: "%{count} príspevkov"
-    new-topic: |
+      few: '%{count} príspevky'
+      one: jeden príspevok
+      other: '%{count} príspevkov'
+    'new-topic': |
       Víitajte na %{site_name} &mdash; **Ďakujeme za založenie novej konverzácie!**
 
       - Znie titulok zaujímavo ak ho čítate nahlas ? Zodpovedá obsahu ?
@@ -235,7 +238,7 @@ sk:
       - Vložte často používane slová vo vašej téme aby ju ostatní vedeli "nájsť". Pre zlúčenie vašej témy so súvisiacimi témami vyberte kategóriu .
 
       Pre viac informácií, [pozri návody](/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Vitajte na %{site_name} &mdash; **Ďakujeme za príspevok!**
 
       - Vylepší vaša odpoveď nejakým spôsobom diskusiu ?
@@ -264,6 +267,7 @@ sk:
       user_profile:
         bio_raw: "O mne"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -287,7 +291,6 @@ sk:
           attributes:
             word:
               too_many: "Príliš veľa slov k tej akcii"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} nevložil zatiaľ nič do profilu \"O mne\"</div>"
   vip_category_name: "Salón"
@@ -336,9 +339,9 @@ sk:
       uncategorized: "Nemôžete vymazať kategóriu nezaradených"
       has_subcategories: "Nemôžete vymazať kategóriu pretože obsahuje podkategórie."
       topic_exists:
-        one: "Nemôžete vymazať kategóriu pretože obsahuje tému %{topic_link}."
-        few: "Nemôžete vymazať kategóriu pretože obsahuje %{count} témy. Najstaršia téma je %{topic_link}."
-        other: "Nemôžete vymazať kategóriu pretože obsahuje %{count} tém. Najstaršia téma je %{topic_link}."
+        few: Nemôžete vymazať kategóriu pretože obsahuje %{count} témy. Najstaršia téma je %{topic_link}.
+        one: Nemôžete vymazať kategóriu pretože obsahuje tému %{topic_link}.
+        other: Nemôžete vymazať kategóriu pretože obsahuje %{count} tém. Najstaršia téma je %{topic_link}.
       topic_exists_no_oldest: "Nemôžete vymazať túto kategóriu pretože obsahuje %{count} tém."
     uncategorized_description: "Témy, ktoré nepotrebujú kategóriu, alebo sa do žiadnej existujúcej nehodia."
   trust_levels:
@@ -358,110 +361,110 @@ sk:
       broken: "Tento obrázok je poškodený"
   rate_limiter:
     hours:
-      one: "1 hodina"
-      few: "%{count} hodiny"
-      other: "%{count} hodín"
+      few: '%{count} hodiny'
+      one: 1 hodina
+      other: '%{count} hodín'
     minutes:
-      one: "1 minútu"
-      few: "%{count} minúty"
-      other: "%{count} minút"
+      few: '%{count} minúty'
+      one: 1 minútu
+      other: '%{count} minút'
     seconds:
-      one: " 1 sekundu"
-      few: "%{count} sekundy"
-      other: "%{count} sekúnd"
+      few: '%{count} sekundy'
+      one: ' 1 sekundu'
+      other: '%{count} sekúnd'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        few: "< %{count}s"
-        other: "< %{count}s"
+        few: < %{count}s
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        few: "%{count}s"
-        other: "%{count}s"
+        few: '%{count}s'
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        few: "< %{count}m"
-        other: "< %{count}m"
+        few: < %{count}m
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        few: "%{count}m"
-        other: "%{count}m"
+        few: '%{count}m'
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1h"
-        few: "%{count}h"
-        other: "%{count}h"
+        few: '%{count}h'
+        one: 1h
+        other: '%{count}h'
       x_days:
-        one: "1d"
-        few: "%{count}d"
-        other: "%{count}d"
+        few: '%{count}d'
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: " 1mes"
-        few: "%{count}mes"
-        other: "%{count}mes"
+        few: '%{count}mes'
+        one: ' 1mes'
+        other: '%{count}mes'
       x_months:
-        one: "1mes"
-        few: "%{count}mes"
-        other: "%{count}mes"
+        few: '%{count}mes'
+        one: 1mes
+        other: '%{count}mes'
       about_x_years:
-        one: "1r"
-        few: "%{count}r"
-        other: "%{count}r"
+        few: '%{count}r'
+        one: 1r
+        other: '%{count}r'
       over_x_years:
-        one: "> 1r"
-        few: "> %{count}r"
-        other: "> %{count}r"
+        few: '> %{count}r'
+        one: '> 1r'
+        other: '> %{count}r'
       almost_x_years:
-        one: "1r"
-        few: "%{count}r"
-        other: "%{count}r"
+        few: '%{count}r'
+        one: 1r
+        other: '%{count}r'
     distance_in_words_verbose:
       half_a_minute: "práve teraz"
       less_than_x_seconds:
-        one: "práve teraz"
-        few: "práve teraz"
-        other: "práve teraz"
+        few: práve teraz
+        one: práve teraz
+        other: práve teraz
       x_seconds:
-        one: "pred sekundou"
-        few: "pred %{count} sekundami"
-        other: "pred %{count} sekundami"
+        few: pred %{count} sekundami
+        one: pred sekundou
+        other: pred %{count} sekundami
       less_than_x_minutes:
-        one: "menej ako pred minútou"
-        few: "menej ako pred %{count} minútami"
-        other: "menej ako pred %{count} minútami"
+        few: menej ako pred %{count} minútami
+        one: menej ako pred minútou
+        other: menej ako pred %{count} minútami
       x_minutes:
-        one: "pred minútou"
-        few: "pred %{count} minútami"
-        other: "pred %{count} minútami"
+        few: pred %{count} minútami
+        one: pred minútou
+        other: pred %{count} minútami
       about_x_hours:
-        one: "pred hodinou"
-        few: "pred %{count} hodinami"
-        other: "pred %{count} hodinami"
+        few: pred %{count} hodinami
+        one: pred hodinou
+        other: pred %{count} hodinami
       x_days:
-        one: "včera"
-        few: "pred %{count} dňami"
-        other: "pred %{count} dňami"
+        few: pred %{count} dňami
+        one: včera
+        other: pred %{count} dňami
       about_x_months:
-        one: "približne pred mesiacom"
-        few: "približne pred %{count} mesiacmi"
-        other: "približne pred %{count} mesiacmi"
+        few: približne pred %{count} mesiacmi
+        one: približne pred mesiacom
+        other: približne pred %{count} mesiacmi
       x_months:
-        one: "pred mesiacom"
-        few: "pred %{count} mesiacmi"
-        other: "pred %{count} mesiacmi"
+        few: pred %{count} mesiacmi
+        one: pred mesiacom
+        other: pred %{count} mesiacmi
       about_x_years:
-        one: "približne pred rokom"
-        few: "približne pred %{count} rokmi"
-        other: "približne pred %{count} rokmi"
+        few: približne pred %{count} rokmi
+        one: približne pred rokom
+        other: približne pred %{count} rokmi
       over_x_years:
-        one: "pred vyše rokom"
-        few: "pred vyše %{count} rokmi"
-        other: "pred vyše %{count} rokmi"
+        few: pred vyše %{count} rokmi
+        one: pred vyše rokom
+        other: pred vyše %{count} rokmi
       almost_x_years:
-        one: "pred takmer rokom"
-        few: "pred takmer %{count} rokmi"
-        other: "pred takmer %{count} rokmi"
+        few: pred takmer %{count} rokmi
+        one: pred takmer rokom
+        other: pred takmer %{count} rokmi
   password_reset:
     no_token: "Ľutujeme, tento odkaz na zmenu hesla je už príliš starý. Stlačte tlačidlo Prihlásiť a použite \"Zabudol som heslo\" pre vytvorenie nového odkazu."
     choose_new: "Napíš nové heslo"
@@ -1063,13 +1066,13 @@ sk:
     not_seen_in_a_month: "Vitajte späť! Nevideli sme Vás už nejaký čas. Toto sú najpopulárnejšie témy odkedy ste boli preč."
   move_posts:
     new_topic_moderator_post:
-      one: "Príspevok bol oddelený do novej témy: %{topic_link}"
-      few: "%{count} príspevky boli oddelené do novej témy: %{topic_link}"
-      other: "%{count} príspevkov bolo oddelených do novej témy: %{topic_link}"
+      few: '%{count} príspevky boli oddelené do novej témy: %{topic_link}'
+      one: 'Príspevok bol oddelený do novej témy: %{topic_link}'
+      other: '%{count} príspevkov bolo oddelených do novej témy: %{topic_link}'
     existing_topic_moderator_post:
-      one: "Príspevok bol pripojený k existujúcej téme: %{topic_link}"
-      few: "%{count} príspevky boli pripojené k existujúcej téme: %{topic_link}"
-      other: "%{count} príspevkov bolo pripojených k existujúcej téme: %{topic_link}"
+      few: '%{count} príspevky boli pripojené k existujúcej téme: %{topic_link}'
+      one: 'Príspevok bol pripojený k existujúcej téme: %{topic_link}'
+      other: '%{count} príspevkov bolo pripojených k existujúcej téme: %{topic_link}'
   change_owner:
     post_revision_text: "Vlástníctvo bolo prenesené z  %{old_user} na %{new_user}"
     deleted_user: "vymazaný užívateľ"
@@ -1079,37 +1082,37 @@ sk:
     closed_enabled: "Táto téma je už uzavretá. Nové odpovede už nie sú povolené."
     closed_disabled: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
     autoclosed_message_max_posts:
-      one: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu 1 odpovede."
-      few: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
-      other: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
+      few: Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí.
+      one: Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu 1 odpovede.
+      other: Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí.
     autoclosed_topic_max_posts:
-      one: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu 1 odpovede."
-      few: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
-      other: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
+      few: Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí.
+      one: Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu 1 odpovede.
+      other: Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí.
     autoclosed_enabled_days:
-      one: "Táto téma bola automaticky uzavretá po 1 dni . Nové odpovede už nie sú povolené."
-      few: "Táto téma bola automaticky uzavretá po %{count} dňoch . Nové odpovede už nie sú povolené."
-      other: "Táto téma bola automaticky uzavretá po %{count} dňoch . Nové odpovede už nie sú povolené."
+      few: Táto téma bola automaticky uzavretá po %{count} dňoch . Nové odpovede už nie sú povolené.
+      one: Táto téma bola automaticky uzavretá po 1 dni . Nové odpovede už nie sú povolené.
+      other: Táto téma bola automaticky uzavretá po %{count} dňoch . Nové odpovede už nie sú povolené.
     autoclosed_enabled_hours:
-      one: "Táto téma bola automaticky uzavretá po hodine. Nové odpovede už nie sú povolené."
-      few: "Táto téma bola automaticky uzavretá po %{count} hodinách. Nové odpovede už nie sú povolené."
-      other: "Táto téma bola automaticky uzavretá po %{count} hodinách. Nové odpovede už nie sú povolené."
+      few: Táto téma bola automaticky uzavretá po %{count} hodinách. Nové odpovede už nie sú povolené.
+      one: Táto téma bola automaticky uzavretá po hodine. Nové odpovede už nie sú povolené.
+      other: Táto téma bola automaticky uzavretá po %{count} hodinách. Nové odpovede už nie sú povolené.
     autoclosed_enabled_minutes:
-      one: "Táto téma bola automaticky uzavretá po minúte. Nové odpovede už nie sú povolené."
-      few: "Táto téma bola automaticky uzavretá po %{count} minútach. Nové odpovede už nie sú povolené."
-      other: "Táto téma bola automaticky uzavretá po %{count} minútach. Nové odpovede už nie sú povolené."
+      few: Táto téma bola automaticky uzavretá po %{count} minútach. Nové odpovede už nie sú povolené.
+      one: Táto téma bola automaticky uzavretá po minúte. Nové odpovede už nie sú povolené.
+      other: Táto téma bola automaticky uzavretá po %{count} minútach. Nové odpovede už nie sú povolené.
     autoclosed_enabled_lastpost_days:
-      one: "Táto téma bola automaticky uzavretá po 1 dni od poslednej odpovede. Nové odpovede už nie sú povolené."
-      few: "Táto téma bola automaticky uzavretá po %{count} dňoch od poslednej odpovede. Nové odpovede už nie sú povolené."
-      other: "Táto téma bola automaticky uzavretá po %{count} dňoch od poslednej odpovede. Nové odpovede už nie sú povolené."
+      few: Táto téma bola automaticky uzavretá po %{count} dňoch od poslednej odpovede. Nové odpovede už nie sú povolené.
+      one: Táto téma bola automaticky uzavretá po 1 dni od poslednej odpovede. Nové odpovede už nie sú povolené.
+      other: Táto téma bola automaticky uzavretá po %{count} dňoch od poslednej odpovede. Nové odpovede už nie sú povolené.
     autoclosed_enabled_lastpost_hours:
-      one: "Táto téma bola automaticky uzavretá po1 hodine od poslednej odpovede. Nové odpovede už nie sú povolené."
-      few: "Táto téma bola automaticky uzavretá po %{count} hodinách od poslednej odpovede. Nové odpovede už nie sú povolené."
-      other: "Táto téma bola automaticky uzavretá po %{count} hodinách od poslednej odpovede. Nové odpovede už nie sú povolené."
+      few: Táto téma bola automaticky uzavretá po %{count} hodinách od poslednej odpovede. Nové odpovede už nie sú povolené.
+      one: Táto téma bola automaticky uzavretá po1 hodine od poslednej odpovede. Nové odpovede už nie sú povolené.
+      other: Táto téma bola automaticky uzavretá po %{count} hodinách od poslednej odpovede. Nové odpovede už nie sú povolené.
     autoclosed_enabled_lastpost_minutes:
-      one: "Táto téma bola automaticky uzavretá po 1 minúte od poslednej odpovede. Nové odpovede už nie sú povolené."
-      few: "Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené."
-      other: "Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené."
+      few: Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené.
+      one: Táto téma bola automaticky uzavretá po 1 minúte od poslednej odpovede. Nové odpovede už nie sú povolené.
+      other: Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené.
     autoclosed_disabled: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
     autoclosed_disabled_lastpost: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
     pinned_enabled: "Táto téma je teraz pripnutá. Bude zobrazená na vrchu danej kategórie pokiaľ ju neodopnú zamestnanci pre všetkých alebo samostatne každý používateľ."
@@ -1155,9 +1158,9 @@ sk:
       max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
   flags_reminder:
     subject_template:
-      one: "1 značká čaká na zpracovanie"
-      few: "%{count} značky čakajú na zpracovanie"
-      other: "%{count} značiek čaká na zpracovanie"
+      few: '%{count} značky čakajú na zpracovanie'
+      one: 1 značká čaká na zpracovanie
+      other: '%{count} značiek čaká na zpracovanie'
   unsubscribe_mailer:
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
   invite_password_instructions:
@@ -1191,8 +1194,6 @@ sk:
       text_body_template: "Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok."
     bulk_invite_failed:
       subject_template: "Zpracovanie pozvania viacerých používateľov dopadlo s chybami"
-    csv_export_succeeded:
-      subject_template: "Export dát kompletný"
     csv_export_failed:
       subject_template: "Export dát zlyhal"
     email_reject_inactive_user:
@@ -1233,9 +1234,9 @@ sk:
         Akcia uverejnenia nebola rozpoznaná. Prosíme skúste znovu alebo, ak sa chovanie opakuje, uverejnite pomocou webstránky.
     pending_users_reminder:
       subject_template:
-        one: "1 užívateľ čaká na schválenie"
-        few: "%{count} užívateľia čakajú na schválenie"
-        other: "%{count} užívateľov čaká na schválenie"
+        few: '%{count} užívateľia čakajú na schválenie'
+        one: 1 užívateľ čaká na schválenie
+        other: '%{count} užívateľov čaká na schválenie'
     download_remote_images_disabled:
       subject_template: "Sťahovanie vzdialených obrázkov je zablokované."
   subject_re: "Re:"
@@ -1314,7 +1315,7 @@ sk:
   badges:
     first_mention:
       name: Prvá zmienka
-      long_description: Tento odznak je udelený, keď prvýkrát zmienite niekoho @meno vo Vašom príspevku. Každá zmienka generuje upozornenie danej osobe, takže bude vedieť o Vašom príspevku. Jednoducho začnite písať @ (zavináč) aby ste zmienili používateľa alebo, ak je to povolené, skupinu - Je to pohodlný spôsob ako upútať ich pozornosť.
+      long_description: "Tento odznak je udelený, keď prvýkrát zmienite niekoho @meno vo Vašom príspevku. Každá zmienka generuje upozornenie danej osobe, takže bude vedieť o Vašom príspevku. Jednoducho začnite písať @ (zavináč) aby ste zmienili používateľa alebo, ak je to povolené, skupinu - Je to pohodlný spôsob ako upútať ich pozornosť."
   admin_login:
     success: "Email odoslaný"
     email_input: "Email administrátora"
@@ -1326,6 +1327,3 @@ sk:
     step:
       invites:
         title: "Pozvite členov"
-  activemodel:
-    errors:
-      <<: *errors
