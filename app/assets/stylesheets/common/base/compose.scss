@@ -314,7 +314,7 @@
 }
 
 .autocomplete {
-  z-index: z("dropdown");
+  z-index: z("composer","dropdown") + 1;
   position: absolute;
   width: 240px;
   background-color: $secondary;
