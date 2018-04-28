@@ -17,6 +17,7 @@ export function viewTrackingRequired() {
   Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
   for performance reasons. Also automatically adjusts the URL to support installs
   in subfolders.
+  他们自己写了个 ajax 方法
 **/
 
 export function ajax() {
