@@ -62,6 +62,23 @@ describe PostRevisor do
       expect(post.topic.category_id).to eq(category.id)
     end
 
+    it 'does not revise category when the destination category requires topic approval' do
+      new_category = Fabricate(:category)
+      new_category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      new_category.save!
+
+      post = create_post
+      old_category_id = post.topic.category_id
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(old_category_id)
+
+      new_category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+      new_category.save!
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+    end
   end
 
   context 'revise wiki' do

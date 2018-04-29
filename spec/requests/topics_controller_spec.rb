@@ -644,8 +644,19 @@ RSpec.describe TopicsController do
 
         put "/t/#{topic.id}.json", params: { category_id: category.id }
 
-        expect(response.status).not_to eq(200)
-        expect(topic.category_id).not_to eq(category.id)
+        expect(response.status).to eq(403)
+        expect(topic.reload.category_id).not_to eq(category.id)
+      end
+
+      it 'can not move to a category that requires topic approval' do
+        category = Fabricate(:category)
+        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+        category.save!
+
+        put "/t/#{topic.id}.json", params: { category_id: category.id }
+
+        expect(response.status).to eq(403)
+        expect(topic.reload.category_id).not_to eq(category.id)
       end
 
       describe 'without permission' do
