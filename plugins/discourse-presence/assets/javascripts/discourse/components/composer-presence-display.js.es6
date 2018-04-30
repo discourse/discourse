@@ -80,6 +80,9 @@ export default Ember.Component.extend({
       if (this.get('isDestroyed')) { return; }
       this.set('presenceUsers', r.users);
       this.set('channel', r.messagebus_channel);
+
+      if (!r.messagebus_channel) { return; }
+
       this.messageBus.subscribe(r.messagebus_channel, message => {
         if (!this.get('isDestroyed')) this.set('presenceUsers', message.users);
         this._clearTimer = Ember.run.debounce(this, 'clear', keepAliveDuration + bufferTime);
