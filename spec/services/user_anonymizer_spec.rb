@@ -222,8 +222,6 @@ describe UserAnonymizer do
       expect(delete_history.reload.ip_address).to eq(anon_ip)
       expect(user_history.reload.ip_address).to eq(anon_ip)
       expect(user_profile_view.reload.ip_address).to eq(anon_ip)
-
-      expect("failed").to eq("success")
     end
 
   end
