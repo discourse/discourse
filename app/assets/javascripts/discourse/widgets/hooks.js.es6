@@ -55,9 +55,11 @@ let _dragging;
 
 const DRAG_NAME       = "mousemove.discourse-widget-drag";
 
-function cancelDrag(e, onDrag) {
+function cancelDrag(e) {
   $('body').removeClass('widget-dragging');
-  document.removeEventListener('touchmove', onDrag);
+  $(document).off(DRAG_NAME);
+
+  // We leave the drag event cause touch needs it always bound on iOS
 
   if (_dragging) {
     if (_dragging.dragEnd) { _dragging.dragEnd(e); }
@@ -78,9 +80,10 @@ WidgetClickHook.setupDocumentCallback = function() {
     }
   };
 
+  document.addEventListener('touchmove', onDrag, { passive: false, capture: true });
 
   $(document).on('mousedown.discource-widget-drag, touchstart.discourse-widget-drag', e => {
-    cancelDrag(e, onDrag);
+    cancelDrag(e);
     widget = findWidget(e.target, DRAG_ATTRIBUTE_NAME);
     if (widget) {
       e.preventDefault();
@@ -92,11 +95,13 @@ WidgetClickHook.setupDocumentCallback = function() {
           widget.drag(dragE);
         }
       });
-      document.addEventListener('touchmove', onDrag, { passive: false, capture: true });
     }
   });
 
-  $(document).on('mouseup.discourse-widget-drag, touchend.discourse-widget-drag', e => cancelDrag(e, onDrag));
+  $(document).on('mouseup.discourse-widget-drag, touchend.discourse-widget-drag', e => {
+    widget = null;
+    cancelDrag(e);
+  });
 
   $(document).on('click.discourse-widget', e => {
     nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, w => w.click(e));
