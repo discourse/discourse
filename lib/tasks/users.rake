@@ -48,6 +48,20 @@ task "users:merge", [:source_username, :target_username] => [:environment] do |_
   puts "", "Users merged!", ""
 end
 
+task "users:rename", [:old_username, :new_username] => [:environment] do |_, args|
+  old_username = args[:old_username]
+  new_username = args[:new_username]
+
+  if !old_username || !new_username
+    puts "ERROR: Expecting rake posts:rename[old_username,new_username]"
+    exit 1
+  end
+
+  changer = UsernameChanger.new(find_user(old_username), new_username)
+  changer.change(asynchronous: false)
+  puts "", "User renamed!", ""
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 
