@@ -68,16 +68,10 @@ function cancelDrag(e, onDrag) {
 WidgetClickHook.setupDocumentCallback = function() {
   if (_watchingDocument) { return; }
 
-
-  document.addEventListener('touchmove', e => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, { passive: false, capture: true });
-
   let widget;
   let onDrag = dragE => {
     const tt = dragE.targetTouches[0];
-    if (tt) {
+    if (tt && widget) {
       dragE.preventDefault();
       dragE.stopPropagation();
       widget.drag(tt);
