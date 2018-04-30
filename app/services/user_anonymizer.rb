@@ -20,9 +20,7 @@ class UserAnonymizer
       @prev_email = @user.email
       @prev_username = @user.username
 
-      if !UsernameChanger.change(@user, make_anon_username)
-        raise "Failed to change username"
-      end
+      raise "Failed to change username" unless UsernameChanger.change(@user, make_anon_username)
 
       @user.reload
       @user.password = SecureRandom.hex
@@ -32,9 +30,7 @@ class UserAnonymizer
       @user.title = nil
       @user.uploaded_avatar_id = nil
 
-      if @opts.has_key?(:anonymize_ip)
-        anonymize_ips(@opts[:anonymize_ip])
-      end
+      anonymize_ips(@opts[:anonymize_ip]) if @opts.has_key?(:anonymize_ip)
 
       @user.save
 
