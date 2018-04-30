@@ -59,7 +59,7 @@ function cancelDrag(e) {
   $('body').removeClass('widget-dragging');
   $(document).off(DRAG_NAME);
 
-  // We leave the drag event cause touch needs it always bound on iOS
+  // We leave the touchmove event cause touch needs it always bound on iOS
 
   if (_dragging) {
     if (_dragging.dragEnd) { _dragging.dragEnd(e); }
