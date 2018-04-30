@@ -46,11 +46,11 @@ export default Ember.Component.extend({
 
     run.scheduleOnce("afterRender", this, function() {
       this._bindEvents();
-      this._sectionLoadingCheck();
       this._loadCategoriesEmojis();
       this._positionPicker();
       this._scrollTo();
       this._updateSelectedDiversity();
+      this._checkVisibleSection();
     });
   },
 
@@ -145,11 +145,6 @@ export default Ember.Component.extend({
     $diversityPicker
       .find(`.diversity-scale[data-level="${this.get("selectedDiversity")}"]`)
       .addClass("selected");
-  },
-
-  _sectionLoadingCheck() {
-    this._checkTimeout = setTimeout(() => { this._sectionLoadingCheck(); }, 500);
-    run.throttle(this, this._checkVisibleSection, 100);
   },
 
   _loadCategoriesEmojis() {
@@ -322,7 +317,7 @@ export default Ember.Component.extend({
   _bindSectionsScroll() {
     this.$list.on("scroll", () => {
       this.scrollPosition = this.$list.scrollTop();
-      run.throttle(this, this._checkVisibleSection, 150);
+      run.debounce(this, this._checkVisibleSection, 50);
     });
   },
 
@@ -364,15 +359,19 @@ export default Ember.Component.extend({
     }
 
     const listHeight = this.$list.innerHeight();
+
+
     this.$visibleSections.forEach(visibleSection => {
       const $unloadedEmojis = $(visibleSection).find("button.emoji[data-loaded!='1']");
       $.each($unloadedEmojis, (_, button) => {
-        const $button = $(button);
-        const buttonTop = $button.position().top;
-        const buttonHeight = $button.height();
 
-        if(buttonTop + buttonHeight > 0 && buttonTop - buttonHeight < listHeight) {
-          this._setButtonBackground($button);
+        let offsetTop = button.offsetTop;
+
+        if (offsetTop < this.scrollPosition + listHeight + 200) {
+          if (offsetTop + 200 > this.scrollPosition) {
+            const $button = $(button);
+            this._setButtonBackground($button);
+          }
         }
       });
     });
