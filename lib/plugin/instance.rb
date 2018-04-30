@@ -571,7 +571,7 @@ JS
         DiscoursePluginRegistry.register_locale(locale, opts)
         Rails.configuration.assets.precompile << "locales/#{locale}.js"
       else
-        puts "Invalid locale! #{opts.inspect}"
+        Rails.logger.error "Invalid locale! #{opts.inspect}"
       end
     end
   end
