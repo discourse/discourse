@@ -106,6 +106,7 @@ export default Ember.Component.extend({
     }
 
     this._updateSelectedDiversity();
+    this._checkVisibleSection();
   },
 
   @observes("recentEmojis")
