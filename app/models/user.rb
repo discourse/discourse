@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   include Searchable
   include Roleable
   include HasCustomFields
+  include SecondFactorManager
+  include DateGroupable
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -49,6 +51,11 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+
+  has_many :group_users, dependent: :destroy
+  has_many :groups, through: :group_users
+  has_many :secure_categories, through: :groups, source: :categories
+
   has_many :user_emails, dependent: :destroy
 
   has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
@@ -60,15 +67,13 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :instagram_user_info, dependent: :destroy
+  has_one :user_second_factor, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
-
-  has_many :group_users, dependent: :destroy
-  has_many :groups, through: :group_users
-  has_many :secure_categories, through: :groups, source: :categories
 
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
@@ -130,7 +135,9 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  scope :with_email, ->(email) { joins(:user_emails).where(user_emails: { email: email }) }
+  scope :with_email, ->(email) do
+    joins(:user_emails).where("lower(user_emails.email) IN (?)", email)
+  end
 
   scope :human_users, -> { where('users.id > 0') }
 
@@ -152,6 +159,37 @@ class User < ActiveRecord::Base
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
+
+  scope :filter_by_username, ->(filter) do
+    if filter.is_a?(Array)
+      where('username_lower ~* ?', "(#{filter.join('|')})")
+    else
+      where('username_lower ILIKE ?', "%#{filter}%")
+    end
+  end
+
+  scope :filter_by_username_or_email, ->(filter) do
+    if filter =~ /.+@.+/
+      # probably an email so try the bypass
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+        return where('users.id = ?', user_id)
+      end
+    end
+
+    users = joins(:primary_email)
+
+    if filter.is_a?(Array)
+      users.where(
+        'username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter',
+        filter: "(#{filter.join('|')})"
+      )
+    else
+      users.where(
+        'username_lower ILIKE :filter OR lower(user_emails.email) ILIKE :filter',
+        filter: "%#{filter}%"
+      )
+    end
+  end
 
   module NewTopicDuration
     ALWAYS = -1
@@ -743,7 +781,8 @@ class User < ActiveRecord::Base
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
-      EmailToken.confirm(email_token.token)
+      user = EmailToken.confirm(email_token.token)
+      self.update!(active: true) if user.nil?
     else
       self.update!(active: true)
     end
@@ -791,13 +830,20 @@ class User < ActiveRecord::Base
   end
 
   def self.count_by_signup_date(start_date, end_date, group_id = nil)
-    result = where('users.created_at >= ? AND users.created_at <= ?', start_date, end_date)
+    result = smart_group_by_date("users.created_at", start_date, end_date)
 
     if group_id
       result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
       result = result.where("group_users.group_id = ?", group_id)
     end
-    result.group('date(users.created_at)').order('date(users.created_at)').count
+
+    result.count
+  end
+
+  def self.count_by_first_post(start_date, end_date)
+    joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
+      .smart_group_by_date("us.first_post_created_at", start_date, end_date)
+      .count
   end
 
   def secure_category_ids
@@ -884,7 +930,8 @@ class User < ActiveRecord::Base
     result << "Twitter(#{twitter_user_info.screen_name})"               if twitter_user_info
     result << "Facebook(#{facebook_user_info.username})"                if facebook_user_info
     result << "Google(#{google_user_info.email})"                       if google_user_info
-    result << "Github(#{github_user_info.screen_name})"                 if github_user_info
+    result << "GitHub(#{github_user_info.screen_name})"                 if github_user_info
+    result << "Instagram(#{instagram_user_info.screen_name})"           if instagram_user_info
     result << "#{oauth2_user_info.provider}(#{oauth2_user_info.email})" if oauth2_user_info
 
     user_open_ids.each do |oid|
@@ -987,11 +1034,11 @@ class User < ActiveRecord::Base
     primary_email.email
   end
 
-  def email=(email)
+  def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = email : primary_email.update(email: email)
+      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      build_primary_email(email: email)
+      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true)
     end
   end
 
@@ -1082,11 +1129,25 @@ class User < ActiveRecord::Base
     self.username_lower = username.downcase
   end
 
+  USERNAME_EXISTS_SQL = <<~SQL
+  (SELECT users.id AS user_id FROM users
+  WHERE users.username_lower = :username)
+
+  UNION ALL
+
+  (SELECT groups.id AS group_id FROM groups
+  WHERE lower(groups.name) = :username)
+  SQL
+
   def username_validator
     username_format_validator || begin
       lower = username.downcase
-      existing = User.find_by(username_lower: lower)
-      if will_save_change_to_username? && existing && existing.id != self.id
+
+      existing = User.exec_sql(
+        USERNAME_EXISTS_SQL, username: lower
+      ).to_a.first
+
+      if will_save_change_to_username? && existing.present? && existing["user_id"] != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end
@@ -1096,8 +1157,7 @@ class User < ActiveRecord::Base
     if SiteSetting.must_approve_users
       Jobs.enqueue(:critical_user_email,
         type: :signup_after_approval,
-        user_id: id,
-        email_token: email_tokens.first.token
+        user_id: id
       )
     end
   end
@@ -1175,7 +1235,7 @@ end
 #  username                  :string(60)       not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  name                      :string(255)
+#  name                      :string
 #  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
@@ -1197,10 +1257,10 @@ end
 #  flag_level                :integer          default(0), not null
 #  ip_address                :inet
 #  moderator                 :boolean          default(FALSE)
-#  title                     :string(255)
+#  title                     :string
 #  uploaded_avatar_id        :integer
-#  primary_group_id          :integer
 #  locale                    :string(10)
+#  primary_group_id          :integer
 #  registration_ip_address   :inet
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime

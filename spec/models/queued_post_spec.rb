@@ -69,6 +69,11 @@ describe QueuedPost do
       expect(post).to be_present
     end
 
+    it "logs post approvals" do
+      qp.approve!(admin)
+      expect(UserHistory.where(action: UserHistory.actions[:post_approved]).count).to eq(1)
+    end
+
     it "follows the correct workflow for rejection" do
       qp.create_pending_action
       qp.reject!(admin)
@@ -124,6 +129,8 @@ describe QueuedPost do
         topic = post.topic
         expect(topic).to be_present
         expect(topic.category).to eq(category)
+
+        expect(UserHistory.where(action: UserHistory.actions[:post_approved]).count).to eq(1)
       end
 
       it "rejecting doesn't create the post and topic" do

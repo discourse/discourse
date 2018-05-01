@@ -16,7 +16,9 @@ sr:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
   date:
-    month_names: [null, januar, februar, mart, april, maj, jun, jul, avgust, septembar, oktobar, novembar, decembar]
+    month_names: [~, januar, februar, mart, april, maj, jun, jul, avgust, septembar, oktobar, novembar, decembar]
+    <<: *datetime_formats
+  time:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
@@ -35,10 +37,9 @@ sr:
       invalid_boolean: "Nepravilan boolean."
       even: mora biti parno
       exclusion: je rezervisano
-      greater_than: mora biti veće od %{count}
+      greater_than: "mora biti veće od %{count}"
       contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
-      matches_censored_pattern: "sadrži sledeće reči koje se poklapaju sa registrom cenzurisanih reči: 1%{censored_wrods}"
-      less_than: mora biti manje od 1%{count}
+      less_than: "mora biti manje od 1%{count}"
       not_a_number: nije broj
       not_an_integer: mora biti ceo broj
       record_invalid: 'Verifikacija neuspešna: 1%{errors}'
@@ -46,6 +47,9 @@ sr:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -63,7 +67,6 @@ sr:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
   no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
-  contains_blocked_words: "Vaš post, sadrži reči koje nisu dozvoljene."
   user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
   topic_not_found: "Nešto se dogodilo. Možda je tema zatvorena ili izbrisana dok ste je gledali?"
   not_accepting_pms: "Žao nam je, %{username} trenutno ne prihvata privatne poruke."
@@ -87,10 +90,6 @@ sr:
   revert_version_same: "Trenutna verzija je ista onoj na koju pokušavate da se vratite."
   excerpt_image: "slika"
   groups:
-    success:
-      bulk_add: "%{users_added} korisnika je dodato grupi."
-    errors:
-      member_already_exist: "'%{username}' je postojeći član grupe."
     default_names:
       everyone: "svi"
       admins: "admini"
@@ -105,24 +104,19 @@ sr:
       user_profile:
         bio_raw: "O meni"
     errors:
+      <<: *errors
       models:
-        topic:
-          attributes:
-            base:
-              cant_send_pm: "Žao nam je, ne možete slati privatne poruke tom korisniku."
         user:
           attributes:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
-      <<: *errors
   change_email:
     authorizing_old:
       title: "Hvala što ste potvrdili svoju važeću email adresu"
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
-    min_private_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     apple_touch_icon_url: "Ikonica koja se koristi za Apple touch uređaje. Preporučena veličina 144px sa 144px."
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
@@ -135,7 +129,6 @@ sr:
     topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
     num_hours_to_close_topic: "Broj sati za pauziranje teme radi intervencije."
     reply_by_email_enabled: "Omogući odgovore na teme putem email poruka."
-    incoming_email_prefer_html: "Koristi HTML umesto tekstualnog formata za dolazne email poruke."
     disable_emails: "Spreči Discourse da šalje bilo kakve email poruke"
     delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
@@ -205,8 +198,3 @@ sr:
             one_paragraph: "Molimo da vaša poruka dobrodošlice ne bude duža od jednog paragrafa."
       finished:
         title: "Vaš Discource je spreman!"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

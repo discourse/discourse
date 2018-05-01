@@ -58,6 +58,19 @@ describe TopicEmbed do
       end
     end
 
+    context "post creation supports markdown rendering" do
+      before do
+        SiteSetting.embed_support_markdown = true
+      end
+
+      it "works as expected" do
+        post = TopicEmbed.import(user, url, title, "some random content")
+        expect(post).to be_present
+
+        # It uses regular rendering
+        expect(post.cook_method).to eq(Post.cook_methods[:regular])
+      end
+    end
   end
 
   context '.topic_id_for_embed' do
@@ -71,6 +84,11 @@ describe TopicEmbed do
       expect(TopicEmbed.topic_id_for_embed('http://examples.com/post/248')).to eq(nil)
       expect(TopicEmbed.topic_id_for_embed('http://example.com/post/24')).to eq(nil)
       expect(TopicEmbed.topic_id_for_embed('http://example.com/post')).to eq(nil)
+    end
+
+    it "finds the topic id when the embed_url contains a query string" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248?key=foo")
+      expect(TopicEmbed.topic_id_for_embed('http://example.com/post/248?key=foo')).to eq(topic_embed.topic_id)
     end
   end
 

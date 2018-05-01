@@ -160,11 +160,15 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def tags_changes
-    { previous: previous["tags"], current: current["tags"] }
+    changes = {
+      previous: filter_visible_tags(previous["tags"]),
+      current: filter_visible_tags(current["tags"])
+    }
+    changes[:previous] == changes[:current] ? nil : changes
   end
 
   def include_tags_changes?
-    SiteSetting.tagging_enabled && previous["tags"] != current["tags"]
+    scope.can_see_tags?(topic) && previous["tags"] != current["tags"]
   end
 
   protected
@@ -197,18 +201,11 @@ class PostRevisionSerializer < ApplicationSerializer
 
       # Retrieve any `tracked_topic_fields`
       PostRevisor.tracked_topic_fields.each_key do |field|
-        if topic.respond_to?(field)
-          latest_modifications[field.to_s] = [topic.send(field)]
-        end
+        latest_modifications[field.to_s] = [topic.send(field)] if topic.respond_to?(field)
       end
 
-      if SiteSetting.topic_featured_link_enabled
-        latest_modifications["featured_link"] = [post.topic.featured_link]
-      end
-
-      if SiteSetting.tagging_enabled
-        latest_modifications["tags"] = [post.topic.tags.map(&:name)]
-      end
+      latest_modifications["featured_link"] = [post.topic.featured_link] if SiteSetting.topic_featured_link_enabled
+      latest_modifications["tags"] = [topic.tags.pluck(:name)] if scope.can_see_tags?(topic)
 
       post_revisions << PostRevision.new(
         number: post_revisions.last.number + 1,
@@ -255,6 +252,15 @@ class PostRevisionSerializer < ApplicationSerializer
     def user
       # if stuff goes pear shape attribute to system
       object.user || Discourse.system_user
+    end
+
+    def filter_visible_tags(tags)
+      if tags.is_a?(Array) && tags.size > 0
+        @hidden_tag_names ||= DiscourseTagging.hidden_tag_names(scope)
+        tags - @hidden_tag_names
+      else
+        tags
+      end
     end
 
 end

@@ -8,7 +8,6 @@ export default ComboBoxComponent.extend({
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: "tag-drop",
   verticalOffset: 3,
-  collectionHeight: "200",
   value: Ember.computed.alias("tagId"),
   headerComponent: "tag-drop/tag-drop-header",
   rowComponent: "tag-drop/tag-drop-row",
@@ -20,6 +19,8 @@ export default ComboBoxComponent.extend({
   categoryStyle: Ember.computed.alias("siteSettings.category_style"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
 
   @computed("tagId")
   noTagsSelected() {
@@ -32,8 +33,13 @@ export default ComboBoxComponent.extend({
     return true;
   },
 
+  @computed("content")
+  filterable(content) {
+    return content && content.length >= 15;
+  },
+
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     if (!content.value) {
       if (this.get("noTagsSelected")) {

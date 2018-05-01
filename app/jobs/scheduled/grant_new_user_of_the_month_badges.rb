@@ -64,12 +64,16 @@ module Jobs
         LEFT OUTER JOIN topics       AS t        ON t.id = p.topic_id
         WHERE u.active
           AND u.id > 0
+          AND u.id NOT IN (#{current_owners.join(',')})
           AND NOT u.staged
           AND NOT u.admin
           AND NOT u.moderator
-          AND t.archetype <> '#{Archetype.private_message}'
+          AND u.suspended_at IS NULL
+          AND u.suspended_till IS NULL
           AND u.created_at >= CURRENT_TIMESTAMP - '1 month'::INTERVAL
-          AND u.id NOT IN (#{current_owners.join(',')})
+          AND t.archetype <> '#{Archetype.private_message}'
+          AND t.deleted_at IS NULL
+          AND p.deleted_at IS NULL
         GROUP BY u.id
         HAVING COUNT(DISTINCT p.id) > 1
            AND COUNT(DISTINCT p.topic_id) > 1

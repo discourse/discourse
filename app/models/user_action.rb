@@ -1,4 +1,6 @@
 class UserAction < ActiveRecord::Base
+  include DateGroupable
+
   belongs_to :user
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
@@ -117,6 +119,13 @@ SQL
 
     result
 
+  end
+
+  def self.count_daily_engaged_users(start_date, end_date)
+    select(:user_id).distinct
+      .where(action_type: [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE])
+      .smart_group_by_date(:created_at, start_date, end_date)
+      .count
   end
 
   def self.stream_item(action_id, guardian)
@@ -428,9 +437,9 @@ end
 #
 # Indexes
 #
-#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
-#  idx_user_actions_speed_up_user_all        (user_id,created_at,action_type)
-#  index_actions_on_acting_user_id           (acting_user_id)
-#  index_actions_on_user_id_and_action_type  (user_id,action_type)
-#  index_user_actions_on_target_post_id      (target_post_id)
+#  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  idx_user_actions_speed_up_user_all             (user_id,created_at,action_type)
+#  index_user_actions_on_acting_user_id           (acting_user_id)
+#  index_user_actions_on_target_post_id           (target_post_id)
+#  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
 #

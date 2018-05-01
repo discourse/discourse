@@ -1,16 +1,22 @@
 import { iconHTML } from 'discourse-common/lib/icon-library';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend(bufferedRender({
   tagName: 'th',
   classNames: ['sortable'],
   attributeBindings: ['title'],
   rerenderTriggers: ['order', 'asc'],
+  labelKey: null,
 
-  title: function() {
-    const labelKey = 'directory.' + this.get('field');
+  @computed("field", "labelKey")
+  title(field, labelKey) {
+    if (!labelKey) {
+      labelKey = `directory.${this.get('field')}`;
+    }
+
     return I18n.t(labelKey + '_long', { defaultValue: I18n.t(labelKey) });
-  }.property('field'),
+  },
 
   buildBuffer(buffer) {
     const icon = this.get('icon');
@@ -19,7 +25,7 @@ export default Ember.Component.extend(bufferedRender({
     }
 
     const field = this.get('field');
-    buffer.push(I18n.t('directory.' + field));
+    buffer.push(I18n.t(this.get('labelKey') || `directory.${field}`));
 
     if (field === this.get('order')) {
       buffer.push(iconHTML(this.get('asc') ? 'chevron-up' : 'chevron-down'));

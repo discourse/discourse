@@ -3,6 +3,7 @@ import showModal from 'discourse/lib/show-modal';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default RestrictedUserRoute.extend({
+
   model() {
     return this.modelFor('user');
   },
@@ -14,6 +15,10 @@ export default RestrictedUserRoute.extend({
   },
 
   actions: {
+    showTwoFactorModal() {
+      showModal('second-factor-intro');
+    },
+
     showAvatarSelector() {
       showModal('avatar-selector');
 

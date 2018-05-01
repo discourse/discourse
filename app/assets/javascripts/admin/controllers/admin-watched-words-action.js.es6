@@ -10,17 +10,23 @@ export default Ember.Controller.extend({
     return (this.get('adminWatchedWords.model') || []).findBy('nameKey', actionName);
   },
 
-  @computed('adminWatchedWords.model', 'actionNameKey')
-  filteredContent() {
-    if (!this.get('actionNameKey')) { return []; }
+  @computed('actionNameKey', 'adminWatchedWords.model')
+  filteredContent(actionNameKey) {
+    if (!actionNameKey) { return []; }
 
-    const a = this.findAction(this.get('actionNameKey'));
+    const a = this.findAction(actionNameKey);
     return a ? a.words : [];
   },
 
   @computed('actionNameKey')
   actionDescription(actionNameKey) {
     return I18n.t('admin.watched_words.action_descriptions.' + actionNameKey);
+  },
+
+  @computed('actionNameKey', 'adminWatchedWords.model')
+  wordCount(actionNameKey) {
+    const a = this.findAction(actionNameKey);
+    return a ? a.words.length : 0;
   },
 
   actions: {

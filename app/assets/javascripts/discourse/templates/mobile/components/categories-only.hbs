@@ -1,7 +1,7 @@
 {{#if categories}}
   <div class="category-list {{if showTopics 'with-topics'}}">
     {{#each categories as |c|}}
-      <div class='category-list-item category' style={{border-color c.color}}>
+      <div data-category-id={{c.id}} class='category-list-item category' style={{border-color c.color}}>
         <table class='topic-list'>
           <tr>
             <th class="main-link">

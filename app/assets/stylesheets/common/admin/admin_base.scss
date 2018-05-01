@@ -5,6 +5,7 @@
 
 @import "common/admin/customize";
 @import "common/admin/flagging";
+@import "common/admin/dashboard_next";
 @import "common/admin/moderation_history";
 @import "common/admin/suspend";
 
@@ -38,10 +39,7 @@ $mobile-breakpoint: 700px;
 
   tr {text-align: left;}
   td, th {padding: 8px;}
-  td {
-    border-bottom: 1px solid $primary-low;
-    border-top: 1px solid $primary-low;
-  }
+
   th {
     text-align: left;
 
@@ -130,14 +128,23 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.content-list li a span.count {
-  font-size: $font-down-1;
-  float: right;
-  margin-right: 10px;
-  background-color: $primary-low;
-  padding: 2px 5px;
-  border-radius: 5px;
-  color: $primary;
+.content-list {
+  width: 27%;
+  float: left;
+  li a span.count {
+    font-size: $font-down-1;
+    float: right;
+    margin-right: 10px;
+    background-color: $primary-low;
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: $primary;
+  }
+}
+
+.content-body {
+  float: left;
+  width: 60%;
 }
 
 .admin-content {
@@ -155,6 +162,20 @@ $mobile-breakpoint: 700px;
     tr {
       th:nth-of-type(1) {
         width: 20%;
+      }
+    }
+
+    &.web_crawlers {
+      tr {
+        th:nth-of-type(1) {
+          width: 60%;
+        }
+      }
+      td.x-value {
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
 
@@ -196,7 +217,7 @@ $mobile-breakpoint: 700px;
     width: 460px;
     right: 0;
     z-index: z("dropdown");
-    box-shadow: 0 2px 6px rgba(0,0,0, .8);
+    box-shadow: shadow("card");
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
@@ -229,7 +250,7 @@ $mobile-breakpoint: 700px;
   .select-kit.multi-select {
     width: 500px;
   }
-  .select-box-kit.dropdown-select-box {
+  .select-kit.dropdown-select-box {
     width: auto;
   }
 
@@ -259,6 +280,10 @@ $mobile-breakpoint: 700px;
   background-color: $primary-low;
   padding: 10px 10px 3px 0;
   @include clearfix;
+  nav {
+    float: left;
+    margin-left: 12px;
+  }
   .nav.nav-pills {
     li.active {
       a {
@@ -480,9 +505,6 @@ $mobile-breakpoint: 700px;
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
-      .select2-container-multi .select2-choices {
-        border: none;
-      }
     }
     .setting-controls {
       float: left;
@@ -506,15 +528,7 @@ $mobile-breakpoint: 700px;
       background-color: $secondary;
       border: 1px solid $primary-low;
       border-radius: 3px;
-      box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
-
-      li.select2-search-choice {
-        cursor: pointer;
-        .select2-search-choice-close {
-          content: "x"
-        }
-      }
 
       li.sortable-placeholder {
         padding: 3px 5px 3px 18px;
@@ -819,14 +833,6 @@ section.details {
   .controls {
     margin-top: 10px;
   }
-  .select2-container {
-    width: 100%;
-  }
-  .select2-choices {
-    width: 100%;
-    border-color: dark-light-choose($primary-low-mid, $secondary-high);
-  }
-
   .content-list {
     margin-right: 20px;
   }
@@ -956,13 +962,13 @@ table.api-keys {
         display: none;
       }
 
-      &.trending-up {
+      &.high-trending-up, &.trending-up {
         i.up {
           color: $success;
           display: inline;
         }
       }
-      &.trending-down {
+      &.high-trending-down, &.trending-down {
         i.down {
           color: $danger;
           display: inline;
@@ -977,10 +983,10 @@ table.api-keys {
     }
 
     tr.reverse-colors {
-      td.value.trending-down i.down {
+      td.value.high-trending-down i.down, td.value.trending-down i.down {
         color: $success;
       }
-      td.value.trending-up i.up {
+      td.value.high-trending-up i.up, td.value.trending-up i.up {
         color: $danger;
       }
     }
@@ -1317,6 +1323,10 @@ table.api-keys {
 
 .admin-plugins .col-enabled {
   width: 20px;
+}
+
+.admin-plugins-official-badge {
+  color: $success;
 }
 
 // Backups
@@ -1752,6 +1762,10 @@ table#user-badges {
   label {
     font-size: $font-0;
   }
+
+  &.content-list {
+    width: 100%;
+  }
 }
 
 .web-hook-events-listing {
@@ -1784,7 +1798,7 @@ table#user-badges {
 }
 
 .watched-words-list {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .watched-word {
   display: inline-block;

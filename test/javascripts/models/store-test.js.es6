@@ -49,14 +49,17 @@ QUnit.test('createRecord with a record as attributes returns that record from th
 
 QUnit.test('find', assert => {
   const store = createStore();
+
   return store.find('widget', 123).then(function(w) {
     assert.equal(w.get('name'), 'Trout Lure');
     assert.equal(w.get('id'), 123);
     assert.ok(!w.get('isNew'), 'found records are not new');
+    assert.equal(w.get('extras.hello'), 'world', "extra attributes are set");
 
     // A second find by id returns the same object
     store.find('widget', 123).then(function(w2) {
       assert.equal(w, w2);
+      assert.equal(w.get('extras.hello'), 'world', "extra attributes are set");
     });
   });
 });

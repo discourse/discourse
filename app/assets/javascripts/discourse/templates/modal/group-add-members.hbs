@@ -1,0 +1,36 @@
+{{#d-modal-body title="groups.add_members.title"}}
+  <form class="form-vertical group-add-members">
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "groups.add_members.usernames"}}
+      </label>
+
+      {{user-selector
+          class="input-xxlarge"
+          usernames=model.usernames
+          placeholderKey="groups.selector_placeholder"
+          id="group-add-members-user-selector"
+          disallowEmails=true}}
+    </div>
+
+    {{#if currentUser.admin}}
+      <div class="control-group group-add-members-make-owner">
+        <label>
+          {{input type="checkbox"
+              class="inline"
+              checked=setAsOwner
+              disabled=bulkAdd}}
+          {{i18n "admin.groups.add_members.as_owner"}}
+        </label>
+      </div>
+    {{/if}}
+  </form>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="addMembers"
+      class="add btn-primary"
+      icon="plus"
+      disabled=disableAddButton
+      label="groups.add"}}
+</div>

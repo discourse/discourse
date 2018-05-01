@@ -158,23 +158,6 @@ componentTest('doesn’t render collection content before first expand', {
   }
 });
 
-componentTest('supports options to limit size', {
-  template: '{{single-select collectionHeight=20 content=content}}',
-
-  beforeEach() {
-    this.set("content", ["robin", "régis"]);
-  },
-
-  test(assert) {
-    this.get('subject').expand();
-
-    andThen(() => {
-      const height = find(".select-kit-collection").height();
-      assert.equal(parseInt(height, 10), 20, "it limits the height");
-    });
-  }
-});
-
 componentTest('dynamic headerText', {
   template: '{{single-select value=1 content=content}}',
 
@@ -516,5 +499,46 @@ componentTest('with limitMatches', {
     this.get('subject').expand();
 
     andThen(() => assert.equal(this.get('subject').el().find(".select-kit-row").length, 2));
+  }
+});
+
+componentTest('with minimum', {
+  template: '{{single-select content=content minimum=1 allowAutoSelectFirst=false}}',
+
+  beforeEach() {
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').validationMessage(), 'Select at least 1 item.'));
+
+    this.get('subject').selectRowByValue('sam');
+
+    andThen(() => {
+      assert.equal(this.get('subject').header().label(), 'sam');
+    });
+  }
+});
+
+componentTest('with minimumLabel', {
+  template: '{{single-select content=content minimum=1 minimumLabel="test.minimum" allowAutoSelectFirst=false}}',
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = { minimum: 'min %{count}' };
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').validationMessage(), 'min 1'));
+
+    this.get('subject').selectRowByValue('jeff');
+
+    andThen(() => {
+      assert.equal(this.get('subject').header().label(), 'jeff');
+    });
   }
 });

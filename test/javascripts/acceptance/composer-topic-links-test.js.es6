@@ -1,10 +1,11 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Composer topic featured links", {
   loggedIn: true,
   settings: {
     topic_featured_link_enabled: true,
-    max_topic_title_length: 80
+    max_topic_title_length: 80,
+    enable_markdown_linkify: true,
   }
 });
 
@@ -73,5 +74,32 @@ QUnit.test("onebox with title but extra words in title field", assert => {
     assert.equal(find('.d-editor-preview').html().trim().indexOf('onebox'), -1, "onebox preview doesn't show");
     assert.equal(find('.d-editor-input').val().length, 0, "link isn't put into the post");
     assert.equal(find('.title-input input').val(), "http://www.example.com/has-title.html test", "title is unchanged");
+  });
+});
+
+acceptance("Composer topic featured links when uncategorized is not allowed", {
+  loggedIn: true,
+  settings: {
+    topic_featured_link_enabled: true,
+    max_topic_title_length: 80,
+    enable_markdown_linkify: true,
+    allow_uncategorized_topics: false
+  }
+});
+
+QUnit.test("Pasting a link enables the text input area", assert => {
+  replaceCurrentUser({ admin: false, staff: false, trust_level: 1 });
+
+  visit("/");
+  click('#create-topic');
+  andThen(() => {
+    assert.ok(find('.d-editor-textarea-wrapper.disabled').length, 'textarea is disabled');
+  });
+  fillIn('#reply-title', "http://www.example.com/has-title.html");
+  andThen(() => {
+    assert.ok(find('.d-editor-preview').html().trim().indexOf('onebox') > 0, "it pastes the link into the body and previews it");
+    assert.ok(exists('.d-editor-textarea-wrapper .popup-tip.good'), 'the body is now good');
+    assert.equal(find('.title-input input').val(), "An interesting article", "title is from the oneboxed article");
+    assert.ok(find('.d-editor-textarea-wrapper.disabled').length === 0, 'textarea is enabled');
   });
 });

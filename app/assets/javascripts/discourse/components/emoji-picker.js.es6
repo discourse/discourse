@@ -2,8 +2,7 @@ import { on, observes } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { emojis } from "pretty-text/emoji/data";
-import { extendedEmojiList, isSkinTonableEmoji } from "pretty-text/emoji";
+import { extendedEmojiList, isSkinTonableEmoji, emojiSearch } from "pretty-text/emoji";
 const { run } = Ember;
 
 const keyValueStore = new KeyValueStore("discourse_emojis_");
@@ -47,11 +46,11 @@ export default Ember.Component.extend({
 
     run.scheduleOnce("afterRender", this, function() {
       this._bindEvents();
-      this._sectionLoadingCheck();
       this._loadCategoriesEmojis();
       this._positionPicker();
       this._scrollTo();
       this._updateSelectedDiversity();
+      this._checkVisibleSection();
     });
   },
 
@@ -107,6 +106,7 @@ export default Ember.Component.extend({
     }
 
     this._updateSelectedDiversity();
+    this._checkVisibleSection();
   },
 
   @observes("recentEmojis")
@@ -148,11 +148,6 @@ export default Ember.Component.extend({
       .addClass("selected");
   },
 
-  _sectionLoadingCheck() {
-    this._checkTimeout = setTimeout(() => { this._sectionLoadingCheck(); }, 500);
-    run.throttle(this, this._checkVisibleSection, 100);
-  },
-
   _loadCategoriesEmojis() {
     $.each(this.$picker.find(".categories-column button.emoji"), (_, button) => {
       const $button = $(button);
@@ -179,13 +174,17 @@ export default Ember.Component.extend({
   _bindModalClick() {
     this.$modal.on("click", () => this.set("active", false));
 
-    this.$(document).on("click.emoji-picker", (event) => {
-      const onPicker = $(event.target).parents(".emoji-picker").length === 1;
-      const onGrippie = event.target.className.indexOf("grippie") > -1;
-      if(!onPicker && !onGrippie) {
-        this.set("active", false);
-        return false;
+    $('html').on("mouseup.emoji-picker", event => {
+      let $target = $(event.target);
+      if ($target.closest(".emoji-picker").length ||
+          $target.closest('.emoji.btn').length ||
+          $target.hasClass('grippie')) {
+        return;
       }
+
+      // Close the popup if clicked outside
+      this.set("active", false);
+      return false;
     });
   },
 
@@ -195,7 +194,7 @@ export default Ember.Component.extend({
     this.$(window).off("resize");
     this.$modal.off("click");
     $("#reply-control").off("div-resizing");
-    this.$(document).off("click.emoji-picker");
+    $('html').off("mouseup.emoji-picker");
   },
 
   _filterEmojisList() {
@@ -205,10 +204,7 @@ export default Ember.Component.extend({
       this.$list.css("visibility", "visible");
     } else {
       const lowerCaseFilter = this.get("filter").toLowerCase();
-      const filterableEmojis = emojis.concat(_.keys(extendedEmojiList()));
-      const filteredCodes = _.filter(filterableEmojis, code => {
-        return code.indexOf(lowerCaseFilter) > -1;
-      }).slice(0, 30);
+      const filteredCodes = emojiSearch(lowerCaseFilter, { maxResults: 30});
       this.$results.empty().html(
         _.map(filteredCodes, (code) => {
           const hasDiversity = isSkinTonableEmoji(code);
@@ -322,7 +318,7 @@ export default Ember.Component.extend({
   _bindSectionsScroll() {
     this.$list.on("scroll", () => {
       this.scrollPosition = this.$list.scrollTop();
-      run.throttle(this, this._checkVisibleSection, 150);
+      run.debounce(this, this._checkVisibleSection, 50);
     });
   },
 
@@ -364,15 +360,19 @@ export default Ember.Component.extend({
     }
 
     const listHeight = this.$list.innerHeight();
+
+
     this.$visibleSections.forEach(visibleSection => {
       const $unloadedEmojis = $(visibleSection).find("button.emoji[data-loaded!='1']");
       $.each($unloadedEmojis, (_, button) => {
-        const $button = $(button);
-        const buttonTop = $button.position().top;
-        const buttonHeight = $button.height();
 
-        if(buttonTop + buttonHeight > 0 && buttonTop - buttonHeight < listHeight) {
-          this._setButtonBackground($button);
+        let offsetTop = button.offsetTop;
+
+        if (offsetTop < this.scrollPosition + listHeight + 200) {
+          if (offsetTop + 200 > this.scrollPosition) {
+            const $button = $(button);
+            this._setButtonBackground($button);
+          }
         }
       });
     });

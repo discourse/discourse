@@ -28,7 +28,6 @@ he:
     default_cannot_be_made_public: "לא ניתן להפוך סקרים עם הצבעות קיימות לפומביים."
     named_cannot_be_made_public: "הסקר <strong>%{name}</strong> מכיל הצבעות ולא יכול להפוך לפומבי."
     edit_window_expired:
-      cannot_change_polls: "אינכם יכולים להוסיף, להסיר, או לשנות שם לסקרים לאחר %{minutes} הדקות הראשונות."
       op_cannot_edit_options: "אינכם יכולים להוסיף או להסיר אופציות סקרים אחרי %{minutes} הדקות הראשונות. אנא פנו למנחה אם אתם צריכים לערוך אופציית סקר."
       staff_cannot_add_or_remove_options: "אינכם יכולים להוסיף או להסיר אופציית סקר לאחר %{minutes} הדקות הראשונות. עליכם לסגור את הנושא וליצור אחד חדש במקום."
     no_polls_associated_with_this_post: "אין סקרים שמקושרים לפוסט הזה."

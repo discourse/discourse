@@ -56,15 +56,30 @@ describe Jobs::EmitWebHookEvent do
       stub_request(:post, "https://meta.discourse.org/webhook_listener")
         .to_return(body: 'OK', status: 200)
 
-      expect do
-        subject.execute(web_hook_id: post_hook.id, event_type: 'post', post_id: post.id)
-      end.to change(WebHookEvent, :count).by(1)
+      WebHookEventType.all.pluck(:name).each do |name|
+        web_hook_id = Fabricate("#{name}_web_hook").id
+        object_id = Fabricate(name).id
+
+        expect do
+          subject.execute(web_hook_id: web_hook_id, event_type: name, "#{name}_id": object_id)
+        end.to change(WebHookEvent, :count).by(1)
+      end
     end
 
     it 'skips silently on missing post' do
       expect do
         subject.execute(web_hook_id: post_hook.id, event_type: 'post', post_id: (Post.maximum(:id).to_i + 1))
       end.not_to raise_error
+    end
+
+    it 'should not skip trashed post' do
+      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+        .to_return(body: 'OK', status: 200)
+
+      expect do
+        post.trash!
+        subject.execute(web_hook_id: post_hook.id, event_type: 'post', post_id: post.id)
+      end.to change(WebHookEvent, :count).by(1)
     end
 
     it 'sets up proper request headers' do

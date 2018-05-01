@@ -343,7 +343,7 @@ describe UsersController do
         )
 
         expect(response).to be_success
-        expect(response.body).to include('{"is_developer":false,"admin":false}')
+        expect(response.body).to include('{"is_developer":false,"admin":false,"second_factor_required":false}')
 
         user.reload
 
@@ -405,6 +405,43 @@ describe UsersController do
 
         expect(email_token.confirmed).to eq(false)
         expect(UserAuthToken.where(id: user_token.id).count).to eq(1)
+      end
+
+      context '2 factor authentication required' do
+        let!(:second_factor) { Fabricate(:user_second_factor, user: user) }
+
+        it 'does not change with an invalid token' do
+          token = user.email_tokens.create!(email: user.email).token
+
+          get :password_reset, params: { token: token }
+
+          expect(response.body).to include('{"is_developer":false,"admin":false,"second_factor_required":true}')
+
+          put :password_reset,
+              params: { token: token, password: 'hg9ow8yHG32O', second_factor_token: '000000' }
+
+          expect(response.body).to include(I18n.t("login.invalid_second_factor_code"))
+
+          user.reload
+          expect(user.confirm_password?('hg9ow8yHG32O')).not_to eq(true)
+          expect(user.user_auth_tokens.count).not_to eq(1)
+        end
+
+        it 'changes password with valid 2-factor tokens' do
+          token = user.email_tokens.create(email: user.email).token
+
+          get :password_reset, params: { token: token }
+
+          put :password_reset, params: {
+            token: token,
+            password: 'hg9ow8yHG32O',
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now
+          }
+
+          user.reload
+          expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
+          expect(user.user_auth_tokens.count).to eq(1)
+        end
       end
     end
 
@@ -475,7 +512,7 @@ describe UsersController do
     end
   end
 
-  describe '.admin_login' do
+  describe '#admin_login' do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
 
@@ -483,6 +520,21 @@ describe UsersController do
       it 'enqueues mail with admin email and sso enabled' do
         Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :admin_login, user_id: admin.id))
         put :admin_login, params: { email: admin.email }
+      end
+    end
+
+    context 'when email is incorrect' do
+      render_views
+
+      it 'should return the right response' do
+        put :admin_login, params: { email: 'random' }
+
+        expect(response.status).to eq(200)
+
+        response_body = response.body
+
+        expect(response_body).to match(I18n.t("admin_login.errors.unknown_email_address"))
+        expect(response_body).to_not match(I18n.t("login.second_factor_description"))
       end
     end
 
@@ -510,6 +562,45 @@ describe UsersController do
           token = admin.email_tokens.create(email: admin.email).token
 
           get :admin_login, params: { token: token }
+          expect(response).to redirect_to('/')
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
+      end
+
+      describe 'when 2 factor authentication is enabled' do
+        let(:second_factor) { Fabricate(:user_second_factor, user: admin) }
+        let(:email_token) { Fabricate(:email_token, user: admin) }
+        render_views
+
+        it 'does not log in when token required' do
+          second_factor
+          get :admin_login, params: { token: email_token.token }
+          expect(response).not_to redirect_to('/')
+          expect(session[:current_user_id]).not_to eq(admin.id)
+          expect(response.body).to include(I18n.t('login.second_factor_description'));
+        end
+
+        describe 'invalid 2 factor token' do
+          it 'should display the right error' do
+            second_factor
+
+            put :admin_login, params: {
+              token: email_token.token,
+              second_factor_token: '13213'
+            }
+
+            expect(response.status).to eq(200)
+            expect(response.body).to include(I18n.t('login.second_factor_description'));
+            expect(response.body).to include(I18n.t('login.invalid_second_factor_code'));
+          end
+        end
+
+        it 'logs in when a valid 2-factor token is given' do
+          put :admin_login, params: {
+            token: email_token.token,
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now
+          }
+
           expect(response).to redirect_to('/')
           expect(session[:current_user_id]).to eq(admin.id)
         end
@@ -1450,12 +1541,14 @@ describe UsersController do
         it 'allows the update' do
           user2 = Fabricate(:user)
           user3 = Fabricate(:user)
+          tags = [Fabricate(:tag), Fabricate(:tag)]
 
           put :update, params: {
             username: user.username,
             name: 'Jim Tom',
             custom_fields: { test: :it },
-            muted_usernames: "#{user2.username},#{user3.username}"
+            muted_usernames: "#{user2.username},#{user3.username}",
+            watched_tags: "#{tags[0].name},#{tags[1].name}"
           }, format: :json
 
           expect(response).to be_success
@@ -1465,6 +1558,10 @@ describe UsersController do
           expect(user.name).to eq 'Jim Tom'
           expect(user.custom_fields['test']).to eq 'it'
           expect(user.muted_users.pluck(:username).sort).to eq [user2.username, user3.username].sort
+          expect(TagUser.where(
+            user: user,
+            notification_level: TagUser.notification_levels[:watching]
+          ).pluck(:tag_id)).to contain_exactly(tags[0].id, tags[1].id)
 
           theme = Theme.create(name: "test", user_selectable: true, user_id: -1)
 
@@ -1587,35 +1684,6 @@ describe UsersController do
           expect(user.reload.name).not_to eq 'Jim Tom'
         end
       end
-    end
-  end
-
-  describe "badge_card" do
-    let(:user) { Fabricate(:user) }
-    let(:badge) { Fabricate(:badge) }
-    let(:user_badge) { BadgeGranter.grant(badge, user) }
-
-    it "sets the user's card image to the badge" do
-      log_in_user user
-      put :update_card_badge, params: {
-        user_badge_id: user_badge.id, username: user.username
-      }, format: :json
-
-      expect(user.user_profile.reload.card_image_badge_id).to be_blank
-      badge.update_attributes image: "wat.com/wat.jpg"
-
-      put :update_card_badge, params: {
-        user_badge_id: user_badge.id, username: user.username
-      }, format: :json
-
-      expect(user.user_profile.reload.card_image_badge_id).to eq(badge.id)
-
-      # Can set to nothing
-      put :update_card_badge, params: {
-        username: user.username
-      }, format: :json
-
-      expect(user.user_profile.reload.card_image_badge_id).to be_blank
     end
   end
 

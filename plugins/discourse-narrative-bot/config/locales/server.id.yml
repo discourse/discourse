@@ -286,10 +286,6 @@ id:
         reply: |-
           Hebat! Cara ini bisa digunakan pada categories _and_ tags, jika pelabelan diaktifkan.
       change_topic_notification_level:
-        instructions: |-
-          Setiap topik memiliki tingkat pemberitahuan. Pengaturan awalnya adalah tingkat tertinggi, yakni 'watching', artinya surel pemberitahuan langsung dikirim setiap ada balasan baru. Tapi Anda bisa mengatur tingkat pemberitahuan untuk _topik_ apa_saja untuk 'watch', 'tracking' atau 'muted'.
-
-          Mari coba ubah tingkat pemberitahuan untuk topik ini. Di topik paling bawah, Anda akan menemukan sebuah tombol yang menyatakan kalau anda **menyimak** atau watching topik ini. Bisakah anda mengubahnya menjadi **tracking** atau mengikuti?
         not_found: |-
           Sepertinya Anda masih menyimak :eyes: topik ini! Jika kesulitan mencari tombolnya, tombol tingkat pengaturan ada di bawah topik.
         reply: |-

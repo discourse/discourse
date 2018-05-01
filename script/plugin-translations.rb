@@ -19,11 +19,12 @@ class PluginTxUpdater
     'discourse-canned-replies',
     'discourse-characters-required',
     'discourse-chat-integration',
+    'discourse-chronos',
     'discourse-data-explorer',
     'discourse-math',
     'discourse-oauth2-basic',
     'discourse-patreon',
-    # 'discourse-saved-searches', # TODO
+    'discourse-saved-searches',
     'discourse-solved',
     'discourse-staff-notes',
     'discourse-voting'

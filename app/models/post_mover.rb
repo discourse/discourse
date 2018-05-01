@@ -47,7 +47,7 @@ class PostMover
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
-    set_last_post_user_id(destination_topic)
+    update_last_post_stats
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -96,6 +96,7 @@ class PostMover
       via_email: post.via_email,
       raw_email: post.raw_email,
       skip_validations: true,
+      created_at: post.created_at,
       guardian: Guardian.new(user)
     )
 
@@ -127,7 +128,8 @@ class PostMover
       update[:reply_to_user_id] = nil
     end
 
-    post.update(update)
+    post.attributes = update
+    post.save(validate: false)
 
     move_incoming_emails(post, post)
     move_email_logs(post, post)
@@ -180,9 +182,13 @@ class PostMover
     move_type_str = PostMover.move_types[@move_type].to_s
 
     message = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t("move_posts.#{move_type_str}_moderator_post",
-             count: posts.length,
-             topic_link: "[#{destination_topic.title}](#{destination_topic.relative_url})")
+      I18n.t(
+        "move_posts.#{move_type_str}_moderator_post",
+        count: posts.length,
+        topic_link: posts.first.is_first_post? ?
+          "[#{destination_topic.title}](#{destination_topic.relative_url})" :
+          "[#{destination_topic.title}](#{posts.first.url})"
+      )
     end
 
     original_topic.add_moderator_post(
@@ -204,9 +210,15 @@ class PostMover
     end
   end
 
-  def set_last_post_user_id(topic)
-    user_id = topic.posts.last.user_id rescue nil
-    return if user_id.nil?
-    topic.update_attribute :last_post_user_id, user_id
+  def update_last_post_stats
+    post = destination_topic.posts.where.not(post_type: Post.types[:whisper]).last
+    if post && post_ids.include?(post.id)
+      attrs = {}
+      attrs[:last_posted_at] = post.created_at
+      attrs[:last_post_user_id] = post.user_id
+      attrs[:bumped_at] = post.created_at unless post.no_bump
+      attrs[:updated_at] = 'now()'
+      destination_topic.update_columns(attrs)
+    end
   end
 end

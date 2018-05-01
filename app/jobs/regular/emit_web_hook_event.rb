@@ -33,13 +33,13 @@ module Jobs
     end
 
     def setup_post(args)
-      post = Post.find_by(id: args[:post_id])
+      post = Post.with_deleted.find_by(id: args[:post_id])
       return if post.blank?
       args[:payload] = WebHookPostSerializer.new(post, scope: guardian, root: false).as_json
     end
 
     def setup_topic(args)
-      topic_view = (TopicView.new(args[:topic_id], Discourse.system_user) rescue nil)
+      topic_view = TopicView.new(args[:topic_id], Discourse.system_user)
       return if topic_view.blank?
       args[:payload] = WebHookTopicViewSerializer.new(topic_view, scope: guardian, root: false).as_json
     end
@@ -48,6 +48,30 @@ module Jobs
       user = User.find_by(id: args[:user_id])
       return if user.blank?
       args[:payload] = WebHookUserSerializer.new(user, scope: guardian, root: false).as_json
+    end
+
+    def setup_group(args)
+      group = Group.find(args[:group_id])
+      return if group.blank?
+      args[:payload] = WebHookGroupSerializer.new(group, scope: guardian, root: false).as_json
+    end
+
+    def setup_category(args)
+      category = Category.find(args[:category_id])
+      return if category.blank?
+      args[:payload] = WebHookCategorySerializer.new(category, scope: guardian, root: false).as_json
+    end
+
+    def setup_tag(args)
+      tag = Tag.find(args[:tag_id])
+      return if tag.blank?
+      args[:payload] = TagSerializer.new(tag, scope: guardian, root: false).as_json
+    end
+
+    def setup_flag(args)
+      flag = PostAction.find(args[:flag_id])
+      return if flag.blank?
+      args[:payload] = WebHookFlagSerializer.new(flag, scope: guardian, root: false).as_json
     end
 
     def ping_event?(event_type)

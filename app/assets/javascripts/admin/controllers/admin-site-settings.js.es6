@@ -31,7 +31,7 @@ export default Ember.Controller.extend({
           if (item.get('setting').toLowerCase().indexOf(filter) > -1) return true;
           if (item.get('setting').toLowerCase().replace(/_/g, ' ').indexOf(filter) > -1) return true;
           if (item.get('description').toLowerCase().indexOf(filter) > -1) return true;
-          if (item.get('value').toLowerCase().indexOf(filter) > -1) return true;
+          if ((item.get('value') || '').toLowerCase().indexOf(filter) > -1) return true;
           return false;
         } else {
           return true;

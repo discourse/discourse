@@ -48,7 +48,11 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     if origin.present?
-      parsed = URI.parse(origin) rescue nil
+      parsed = begin
+        URI.parse(origin)
+      rescue URI::InvalidURIError
+      end
+
       if parsed
         @origin = "#{parsed.path}?#{parsed.query}"
       end
@@ -114,11 +118,22 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
+    if user.totp_enabled?
+      @auth_result.omniauth_disallow_totp = true
+      return
+    end
+
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
       user.update!(staged: false)
+
       # ensure there is an active email token
-      user.email_tokens.create(email: user.email) unless EmailToken.where(email: user.email, confirmed: true).present? || user.email_tokens.active.where(email: user.email).exists?
+      unless EmailToken.where(email: user.email, confirmed: true).exists? ||
+        user.email_tokens.active.where(email: user.email).exists?
+
+        user.email_tokens.create!(email: user.email)
+      end
+
       user.activate
       user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end

@@ -34,7 +34,7 @@
     width: 150px;
     top: 100%;
     margin: 0;
-    li {
+    li {  
       list-style-type: none;
       margin-left: 0;
       margin-top: 5px;
@@ -68,12 +68,6 @@
     margin-left: 55px;
   }
 
-  > tbody > tr {
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-    }
-  }
-
   th,
   td {
     padding: 7px 0;
@@ -85,6 +79,7 @@
 
   .badge-notification, .category-topic-link td.num .badge-notification {
     position: relative;
+    display: inline;
     top: -1px;
     font-size: $font-down-1;
     padding: 4px 6px 3px 6px;
@@ -140,17 +135,16 @@
     vertical-align: top;
   }
 
+  th {
+    padding: 10px 0 0;
+  }
+
   td:first-of-type {
     padding-left: 10px;
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid $primary-low;
-      &:first-of-type {
-        border-top: 3px solid $primary-low;
-      }
-    }
+
     .category {
       border-left: 6px solid;
     }
@@ -175,8 +169,10 @@
 }
 
 tr.category-topic-link {
-  border-top: darken($secondary, 3%) 1px solid;
-  border-bottom: darken($secondary, 3%) 1px solid;
+  border-bottom: 1px solid $primary-low;
+  &:last-of-type {
+    border-bottom: none;
+  }
 }
 
 .topic-list.categories {
@@ -217,8 +213,9 @@ tr.category-topic-link {
 }
 
 .category-list-item {
-
+  padding: 5px 0 2px;
   border-left: 6px solid;
+  border-top: 1px solid;
 
   h3 {
     display: inline-block;
@@ -230,6 +227,10 @@ tr.category-topic-link {
     a[href] {
       color: $primary;
     }
+  }
+
+  .category-name {
+    max-width: 80vw;
   }
 
   .category-topic-link .main-link, .subcategories-list td, .category-description td {
@@ -276,7 +277,7 @@ tr.category-topic-link {
     float: left;
   }
   > footer {
-    border-top: 0;
+    border-top: 1px solid $primary-low;
     padding: 7px 10px;
     figure {
       float: left;
@@ -345,7 +346,7 @@ tr.category-topic-link {
   background-color: $secondary;
   border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: shadow("dropdown");
   background-clip: padding-box;
   margin: 1px 0 20px;
   .title {font-weight: bold; display: block;}
@@ -389,6 +390,10 @@ ol.category-breadcrumb {
 
 .tags-admin-menu {
   display: none;
+}
+
+.staff.tags-page #create-topic {
+  clear: right;
 }
 
 .topic-list-bottom h3 {

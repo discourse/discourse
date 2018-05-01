@@ -1,6 +1,39 @@
 export default {
+  "/groups/moderators.json":{
+    "group": {
+      "id": 50,
+      "automatic": true,
+      "name": "moderators",
+      "display_name": "moderators",
+      "mentionable_level": 0,
+      "messageable_level": 99,
+      "visibility_level": 0,
+      "automatic_membership_email_domains": null,
+      "automatic_membership_retroactive": false,
+      "primary_group": false,
+      "title": null,
+      "grant_trust_level": null,
+      "incoming_email": null,
+      "has_messages": true,
+      "flair_url": null,
+      "flair_bg_color": null,
+      "flair_color": null,
+      "bio_raw": null,
+      "bio_cooked": null,
+      "public_admission": false,
+      "public_exit": false,
+      "allow_membership_requests": false,
+      "full_name": null,
+      "default_notification_level": 2,
+      "membership_request_template": null,
+      "is_group_user": true,
+      "is_group_owner": true,
+      "mentionable": false,
+      "messageable": true
+    },
+  },
   "/groups/discourse.json":{
-    "basic_group":{
+    "group":{
       "id":47,
       "automatic":false,
       "name":"discourse",
@@ -14,6 +47,109 @@ export default {
       "is_group_owner":true,
       "mentionable":true,
       "messageable":true
+    },
+    "extras": {
+      "visible_group_names": ["discourse"]
+    }
+  },
+  "/topics/groups/discourse.json":{
+    "users":[
+      {
+        "id":2,
+        "username":"bruce1",
+        "avatar_template":"/user_avatar/meta.discourse.org/bruce1/{size}/5245.png"
+      },
+      {
+        "id":1,
+        "username":"bruce0",
+        "avatar_template":"/user_avatar/meta.discourse.org/bruce0/{size}/5245.png"
+      }
+    ],
+    "primary_groups":[],
+    "topic_list":{
+      "can_create_topic":true,
+      "draft":null,
+      "draft_key":"new_topic",
+      "draft_sequence":1,
+      "per_page":30,
+      "topics":[
+        {
+          "id":12074,
+          "title":"This is a test topic 1",
+          "fancy_title":"This is a test topic 1",
+          "slug":"this-is-a-test-topic-1",
+          "posts_count":0,
+          "reply_count":0,
+          "highest_post_number":0,
+          "image_url":null,
+          "created_at":"2018-03-15T03:12:48.955Z",
+          "last_posted_at":null,
+          "bumped":true,
+          "bumped_at":"2018-03-15T03:12:48.955Z",
+          "unseen":true,
+          "pinned":false,
+          "unpinned":null,
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":0,
+          "like_count":0,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"bruce1",
+          "category_id":1,
+          "pinned_globally":false,
+          "featured_link":null,
+          "posters":[
+            {
+              "extras":"latest single",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":2,
+              "primary_group_id":null
+            }
+          ]
+        },
+        {
+          "id":12073,
+          "title":"This is a test topic 0",
+          "fancy_title":"This is a test topic 0",
+          "slug":"this-is-a-test-topic-0",
+          "posts_count":0,
+          "reply_count":0,
+          "highest_post_number":0,
+          "image_url":null,
+          "created_at":"2018-03-15T03:12:48.899Z",
+          "last_posted_at":null,
+          "bumped":true,
+          "bumped_at":"2018-03-15T03:12:48.900Z",
+          "unseen":true,
+          "pinned":false,
+          "unpinned":null,
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":0,
+          "like_count":0,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"bruce0",
+          "category_id":1,
+          "pinned_globally":false,
+          "featured_link":null,
+          "posters":[
+            {
+              "extras":"latest single",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":1,
+              "primary_group_id":null
+            }
+          ]
+        }
+      ]
     }
   },
   "/groups/discourse/counts.json":{

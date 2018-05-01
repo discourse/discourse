@@ -91,7 +91,7 @@ export default function(filter, extras) {
       const topicOpts = {
         model,
         category: null,
-        period: model.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
+        period: model.get('for_period') || (filter.indexOf('top/') >= 0 ? filter.split('/')[1] : ''),
         selected: [],
         expandGloballyPinned: true
       };
@@ -106,8 +106,6 @@ export default function(filter, extras) {
         }
       }
       this.controllerFor('discovery/topics').setProperties(topicOpts);
-
-      this.openTopicDraft(model);
       this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
     },
 

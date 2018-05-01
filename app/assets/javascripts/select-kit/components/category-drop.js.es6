@@ -9,7 +9,6 @@ export default ComboBoxComponent.extend({
   classNameBindings: ["categoryStyle"],
   classNames: "category-drop",
   verticalOffset: 3,
-  collectionHeight: "200",
   content: Ember.computed.alias("categories"),
   rowComponent: "category-row",
   headerComponent: "category-drop/category-drop-header",
@@ -19,6 +18,8 @@ export default ComboBoxComponent.extend({
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
 
   init() {
     this._super();
@@ -33,8 +34,16 @@ export default ComboBoxComponent.extend({
     this.get("rowComponentOptions").setProperties({
       hideParentCategory: this.get("subCategory"),
       allowUncategorized: true,
-      displayCategoryDescription: true
+      displayCategoryDescription: !(
+        this.currentUser &&
+        (this.currentUser.get("staff") || this.currentUser.trust_level > 0)
+      )
     });
+  },
+
+  @computed("content")
+  filterable(content) {
+    return content && content.length >= 15;
   },
 
   @computed("allCategoriesUrl", "allCategoriesLabel", "noCategoriesUrl", "noCategoriesLabel")
@@ -59,7 +68,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);
@@ -70,9 +79,9 @@ export default ComboBoxComponent.extend({
       }).htmlSafe();
     } else {
       if (this.get("noSubcategories")) {
-        content.label = this.get("noCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("noCategoriesLabel")}</span>`;
       } else {
-        content.label = this.get("allCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("allCategoriesLabel")}</span>`;
       }
     }
 

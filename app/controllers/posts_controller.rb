@@ -8,7 +8,7 @@ require_dependency 'post_locker'
 
 class PostsController < ApplicationController
 
-  before_action :ensure_logged_in, except: [
+  requires_login except: [
     :show,
     :replies,
     :by_number,
@@ -200,6 +200,15 @@ class PostsController < ApplicationController
     if post.is_first_post?
       changes[:title] = params[:title] if params[:title]
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
+
+      if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
+        category = Category.find_by(id: changes[:category_id])
+        if category || (changes[:category_id].to_i == 0)
+          guardian.ensure_can_create_topic_on_category!(category)
+        else
+          return render_json_error(I18n.t('category.errors.not_found'))
+        end
+      end
     end
 
     # We don't need to validate edits to small action posts by staff
@@ -248,6 +257,11 @@ class PostsController < ApplicationController
   def reply_ids
     post = find_post_from_params
     render json: post.reply_ids(guardian).to_json
+  end
+
+  def all_reply_ids
+    post = find_post_from_params
+    render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
   end
 
   def destroy
@@ -630,6 +644,12 @@ class PostsController < ApplicationController
       result[:is_warning] = (params[:is_warning] == "true")
     else
       result[:is_warning] = false
+    end
+
+    if params[:shared_draft] == 'true'
+      raise Discourse::InvalidParameters.new(:shared_draft) unless guardian.can_create_shared_draft?
+
+      result[:shared_draft] = true
     end
 
     if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"

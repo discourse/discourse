@@ -276,6 +276,26 @@ describe PostAction do
       expect(post.like_count).to eq(0)
       expect(post.like_score).to eq(0)
     end
+
+    it "shouldn't change given_likes unless likes are given or removed" do
+      freeze_time(Time.zone.now)
+
+      PostAction.act(codinghorror, Fabricate(:post), PostActionType.types[:like])
+      expect(value_for(codinghorror.id, Date.today)).to eq(1)
+
+      PostActionType.types.each do |type_name, type_id|
+        post = Fabricate(:post)
+
+        PostAction.act(codinghorror, post, type_id)
+        actual_count = value_for(codinghorror.id, Date.today)
+        expected_count = type_name == :like ? 2 : 1
+        expect(actual_count).to eq(expected_count), "Expected likes_given to be #{expected_count} when adding '#{type_name}', but got #{actual_count}"
+
+        PostAction.remove_act(codinghorror, post, type_id)
+        actual_count = value_for(codinghorror.id, Date.today)
+        expect(actual_count).to eq(1), "Expected likes_given to be 1 when removing '#{type_name}', but got #{actual_count}"
+      end
+    end
   end
 
   describe "undo/redo repeatedly" do
@@ -362,15 +382,52 @@ describe PostAction do
       expect(post.spam_count).to eq(0)
     end
 
-    it 'should follow the rules for automatic hiding workflow' do
-      post = create_post
-      walterwhite = Fabricate(:walter_white)
+    it "will not allow regular users to auto hide staff posts" do
+      mod = Fabricate(:moderator)
+      post = Fabricate(:post, user: mod)
 
       SiteSetting.flags_required_to_hide_post = 2
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      PostAction.act(Fabricate(:walter_white), post, PostActionType.types[:spam])
+
+      post.reload
+
+      expect(post.hidden).to eq(false)
+      expect(post.hidden_at).to be_blank
+    end
+
+    it "allows staff users to auto hide staff posts" do
+      mod = Fabricate(:moderator)
+      post = Fabricate(:post, user: mod)
+
+      SiteSetting.flags_required_to_hide_post = 2
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      PostAction.act(Fabricate(:admin), post, PostActionType.types[:spam])
+
+      post.reload
+
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).to be_present
+    end
+
+    it 'should follow the rules for automatic hiding workflow' do
+      post = create_post
+      walterwhite = Fabricate(:walter_white)
+
+      SiteSetting.queue_jobs = true
+      SiteSetting.flags_required_to_hide_post = 2
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:spam])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden")
 
       post.reload
 
@@ -390,6 +447,10 @@ describe PostAction do
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden_again")
 
       post.reload
 
@@ -623,4 +684,62 @@ describe PostAction do
 
   end
 
+  describe '#is_flag?' do
+    describe 'when post action is a flag' do
+      it 'should return true' do
+        PostActionType.notify_flag_types.each do |_type, id|
+          post_action = PostAction.new(
+            user: codinghorror,
+            post_action_type_id: id
+          )
+
+          expect(post_action.is_flag?).to eq(true)
+        end
+      end
+    end
+
+    describe 'when post action is not a flag' do
+      it 'should return false' do
+        post_action = PostAction.new(
+          user: codinghorror,
+          post_action_type_id: 99
+        )
+
+        expect(post_action.is_flag?).to eq(false)
+      end
+    end
+  end
+
+  describe "triggers webhook events" do
+    let(:post) { Fabricate(:post) }
+
+    it 'flag created' do
+      event = DiscourseEvent.track_events { PostAction.act(eviltrout, post, PostActionType.types[:spam]) }.last
+      expect(event[:event_name]).to eq(:flag_created)
+    end
+
+    context "resolving flags" do
+      before do
+        @flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      end
+
+      it 'flag agreed' do
+        event = DiscourseEvent.track_events { PostAction.agree_flags!(post, moderator) }.last
+        expect(event[:event_name]).to eq(:flag_agreed)
+        expect(event[:params].first).to eq(@flag)
+      end
+
+      it 'flag disagreed' do
+        event = DiscourseEvent.track_events { PostAction.clear_flags!(post, moderator) }.last
+        expect(event[:event_name]).to eq(:flag_disagreed)
+        expect(event[:params].first).to eq(@flag)
+      end
+
+      it 'flag deferred' do
+        event = DiscourseEvent.track_events { PostAction.defer_flags!(post, moderator) }.last
+        expect(event[:event_name]).to eq(:flag_deferred)
+        expect(event[:params].first).to eq(@flag)
+      end
+    end
+  end
 end

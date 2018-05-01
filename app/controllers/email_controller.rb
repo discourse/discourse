@@ -1,7 +1,7 @@
 class EmailController < ApplicationController
-  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
   layout 'no_ember'
 
+  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
   before_action :ensure_logged_in, only: :preferences_redirect
 
   def preferences_redirect
@@ -110,8 +110,11 @@ class EmailController < ApplicationController
 
   def unsubscribed
     @email = params[:email]
-    raise Discourse::NotFound if !User.find_by_email(params[:email])
-    @topic = Topic.find_by(id: params[:topic_id].to_i) if params[:topic_id]
+    @topic_id = params[:topic_id]
+    user = User.find_by_email(params[:email])
+    raise Discourse::NotFound unless user
+    topic = Topic.find_by(id: params[:topic_id].to_i) if @topic_id
+    @topic = topic if topic && Guardian.new(nil).can_see?(topic)
   end
 
 end

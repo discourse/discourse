@@ -4,29 +4,33 @@ require_dependency 'wizard/builder'
 
 class SiteSerializer < ApplicationSerializer
 
-  attributes :default_archetype,
-             :notification_types,
-             :post_types,
-             :groups,
-             :filters,
-             :periods,
-             :top_menu_items,
-             :anonymous_top_menu_items,
-             :uncategorized_category_id, # this is hidden so putting it here
-             :is_readonly,
-             :disabled_plugins,
-             :user_field_max_length,
-             :suppressed_from_homepage_category_ids,
-             :post_action_types,
-             :topic_flag_types,
-             :can_create_tag,
-             :can_tag_topics,
-             :tags_filter_regexp,
-             :top_tags,
-             :wizard_required,
-             :topic_featured_link_allowed_category_ids,
-             :user_themes,
-             :censored_words
+  attributes(
+    :default_archetype,
+    :notification_types,
+    :post_types,
+    :groups,
+    :filters,
+    :periods,
+    :top_menu_items,
+    :anonymous_top_menu_items,
+    :uncategorized_category_id, # this is hidden so putting it here
+    :is_readonly,
+    :disabled_plugins,
+    :user_field_max_length,
+    :suppressed_from_latest_category_ids,
+    :post_action_types,
+    :topic_flag_types,
+    :can_create_tag,
+    :can_tag_topics,
+    :can_tag_pms,
+    :tags_filter_regexp,
+    :top_tags,
+    :wizard_required,
+    :topic_featured_link_allowed_category_ids,
+    :user_themes,
+    :censored_words,
+    :shared_drafts_category_id
+  )
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
@@ -106,11 +110,15 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def can_create_tag
-    SiteSetting.tagging_enabled && scope.can_create_tag?
+    scope.can_create_tag?
   end
 
   def can_tag_topics
-    SiteSetting.tagging_enabled && scope.can_tag_topics?
+    scope.can_tag_topics?
+  end
+
+  def can_tag_pms
+    scope.can_tag_pms?
   end
 
   def include_tags_filter_regexp?
@@ -148,4 +156,13 @@ class SiteSerializer < ApplicationSerializer
   def censored_words
     WordWatcher.words_for_action(:censor).join('|')
   end
+
+  def shared_drafts_category_id
+    SiteSetting.shared_drafts_category.to_i
+  end
+
+  def include_shared_drafts_category_id?
+    scope.can_create_shared_draft?
+  end
+
 end

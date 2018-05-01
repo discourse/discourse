@@ -33,7 +33,7 @@ describe TopicsController do
       get :show, params: { id: 666 }
       expect(controller.theme_key).to eq(theme.key)
 
-      theme.update_columns(user_selectable: false)
+      theme.update_attribute(:user_selectable, false)
 
       get :show, params: { id: 666 }
       expect(controller.theme_key).not_to eq(theme.key)
@@ -123,34 +123,6 @@ describe TopicsController do
         expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
       end
     end
-  end
-
-  describe "crawler" do
-    render_views
-
-    context "when not a crawler" do
-      it "renders with the application layout" do
-        get :show, params: { topic_id: topic.id, slug: topic.slug }
-
-        body = response.body
-
-        expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
-        expect(body).to have_tag(:meta, with: { name: 'fragment' })
-      end
-    end
-
-    context "when a crawler" do
-      it "renders with the crawler layout" do
-        request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-        get :show, params: { topic_id: topic.id, slug: topic.slug }
-
-        body = response.body
-
-        expect(body).to have_tag(:body, with: { class: 'crawler' })
-        expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
-      end
-    end
-
   end
 
   describe "print" do

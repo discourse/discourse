@@ -38,7 +38,7 @@ QUnit.test('missingReplyCharacters', assert => {
 
   missingReplyCharacters('hi', false, false, Discourse.SiteSettings.min_post_length - 2, 'too short public post');
   missingReplyCharacters('hi', false, true,  Discourse.SiteSettings.min_first_post_length - 2, 'too short first post');
-  missingReplyCharacters('hi', true, false,  Discourse.SiteSettings.min_private_message_post_length - 2, 'too short private message');
+  missingReplyCharacters('hi', true, false,  Discourse.SiteSettings.min_personal_message_post_length - 2, 'too short private message');
 
   const link = "http://imgur.com/gallery/grxX8";
   const composer = createComposer({ canEditTopicFeaturedLink: true, title: link, featuredLink: link, reply: link });
@@ -53,7 +53,7 @@ QUnit.test('missingTitleCharacters', assert => {
   };
 
   missingTitleCharacters('hi', false, Discourse.SiteSettings.min_topic_title_length - 2, 'too short post title');
-  missingTitleCharacters('z', true,  Discourse.SiteSettings.min_private_message_title_length - 1, 'too short pm title');
+  missingTitleCharacters('z', true,  Discourse.SiteSettings.min_personal_message_title_length - 1, 'too short pm title');
 });
 
 QUnit.test('replyDirty', assert => {
@@ -130,7 +130,7 @@ QUnit.test("Title length for regular topics", assert => {
 });
 
 QUnit.test("Title length for private messages", assert => {
-  Discourse.SiteSettings.min_private_message_title_length = 5;
+  Discourse.SiteSettings.min_personal_message_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
   const composer = createComposer({action: Composer.PRIVATE_MESSAGE});
 
@@ -145,7 +145,7 @@ QUnit.test("Title length for private messages", assert => {
 });
 
 QUnit.test("Title length for private messages", assert => {
-  Discourse.SiteSettings.min_private_message_title_length = 5;
+  Discourse.SiteSettings.min_personal_message_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
   const composer = createComposer({action: Composer.PRIVATE_MESSAGE});
 

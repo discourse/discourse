@@ -73,7 +73,7 @@ class Admin::FlagsController < Admin::AdminController
 
     post_action_type = PostAction.post_action_type_for_post(post.id)
 
-    keep_post = params[:action_on_post] == "keep"
+    keep_post = ['silenced', 'suspended', 'keep'].include?(params[:action_on_post])
     delete_post = params[:action_on_post] == "delete"
     restore_post = params[:action_on_post] == "restore"
 

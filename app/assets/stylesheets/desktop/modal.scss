@@ -22,8 +22,6 @@
 }
 
 .modal-body {
-  overflow-y: auto;
-  max-height: 400px;
   padding: 15px;
 }
 
@@ -35,19 +33,12 @@
   margin-left: -1px;
 }
 
-.modal-close {
-  display: inline-block;
-  float: right;
-  margin: 7px;
-}
-
 .modal-header {
   h3 {
-    display: inline-block;;
     font-size: $font-up-3;
-    padding: 10px 15px 7px;
   }
 }
+
 .close {
   font-size: $font-up-3;
   text-decoration: none;
@@ -65,32 +56,7 @@
 
   .category-combobox {
     width: 430px;
-
-    .select2-drop {
-      left: -9000px;
-      width: 428px;
-    }
-    .select2-search input {
-      width: 378px;
-    }
   }
-}
-
-.flag-modal {
-  max-height: 450px;
-  .flag-action-type-details {
-    line-height: $line-height-large;
-  }
-}
-
-.custom-message-length {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
-  font-size: $font-down-1;
-}
-
-.flag-message {
-  width: 95%;
-  margin: 0;
 }
 
 .edit-category-modal {
@@ -99,22 +65,6 @@
     height: 420px;
     max-height: 420px;
     padding-bottom: 0;
-  }
-  .secure-category-options {
-    margin: 10px 0 0 16px;
-    .badge-list {
-      margin: 10px 0;
-      li {
-        margin: 0 4px 8px 0;
-        a {
-          color: dark-light-choose($primary-medium, $secondary-medium);
-          cursor: pointer;
-        }
-        a:hover {
-          color: dark-light-choose($primary-medium, $secondary-medium);
-        }
-      }
-    }
   }
 
   .disable_info_wrap {
@@ -154,18 +104,6 @@
       max-width: 23%;
     }
   }
-
-}
-.tabbed-modal {
-  .modal-body {
-    position: relative;
-    height: 350px;
-  }
-}
-
-.modal-tab {
-  position: absolute;
-  width: 95%;
 }
 
 .split-modal {
@@ -210,20 +148,4 @@
   width: 400px;
   max-height: 150px;
   margin-bottom: 10px;
-}
-
-.change-timestamp {
-  min-height: 300px;
-
-  .date-picker {
-    width: 10em;
-  }
-
-  input[type=time] {
-    width: 6em;
-  }
-
-  form {
-    margin: 0;
-  }
 }

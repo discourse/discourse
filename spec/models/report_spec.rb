@@ -2,6 +2,50 @@ require 'rails_helper'
 
 describe Report do
 
+  describe "counting" do
+    describe "requests" do
+      before do
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        # today, an incomplete day:
+        ApplicationRequest.create(date: 0.days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 1)
+
+        # 60 complete days:
+        30.times do |i|
+          ApplicationRequest.create(date: (i + 1).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 10)
+        end
+        30.times do |i|
+          ApplicationRequest.create(date: (31 + i).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 100)
+        end
+      end
+
+      subject(:json) { Report.find("http_total_reqs").as_json }
+
+      it "counts the correct records" do
+        expect(json[:data].size).to eq(31) # today and 30 full days
+        expect(json[:data][0..-2].sum { |d| d[:y] }).to eq(300)
+        expect(json[:prev30Days]).to eq(3000)
+      end
+    end
+
+    describe "topics" do
+      before do
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        ((0..32).to_a + [60, 61, 62, 63]).each do |i|
+          Fabricate(:topic, created_at: i.days.ago)
+        end
+      end
+
+      subject(:json) { Report.find("topics").as_json }
+
+      it "counts the correct records" do
+        expect(json[:data].size).to eq(31)
+        expect(json[:prev30Days]).to eq(3)
+      end
+    end
+  end
+
   describe 'visits report' do
     let(:report) { Report.find('visits') }
 
@@ -58,18 +102,17 @@ describe Report do
           Fabricate(fabricator, created_at: 35.days.ago)
         end
 
-        context 'returns a report with data'
-          it "returns today's data" do
-            expect(report.data.select { |v| v[:x].today? }).to be_present
-          end
+        it "returns today's data" do
+          expect(report.data.select { |v| v[:x].today? }).to be_present
+        end
 
-          it 'returns total data' do
-            expect(report.total).to eq 7
-          end
+        it 'returns total data' do
+          expect(report.total).to eq 7
+        end
 
-          it "returns previous 30 day's data" do
-            expect(report.prev30Days).to be_present
-          end
+        it "returns previous 30 day's data" do
+          expect(report.prev30Days).to be_present
+        end
       end
     end
   end
@@ -123,7 +166,7 @@ describe Report do
   end
 
   describe 'private messages' do
-    let(:report) { Report.find('user_to_user_private_messages') }
+    let(:report) { Report.find('user_to_user_private_messages_with_replies') }
 
     it 'topic report).to not include private messages' do
       Fabricate(:private_message_topic, created_at: 1.hour.ago)
@@ -203,6 +246,98 @@ describe Report do
         expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:y]).to eq 3
         expect(report.data.find { |d| d[:x] == TrustLevel[2] }[:y]).to eq 2
         expect(report.data.find { |d| d[:x] == TrustLevel[4] }[:y]).to eq 1
+      end
+    end
+  end
+
+  describe 'new contributors report' do
+    let(:report) { Report.find('new_contributors') }
+
+    context "no contributors" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with contributors" do
+      before do
+        jeff = Fabricate(:user)
+        jeff.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 1.day.ago)
+
+        regis = Fabricate(:user)
+        regis.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
+
+        hawk = Fabricate(:user)
+        hawk.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+
+        expect(report.data[0][:y]).to eq 2
+        expect(report.data[1][:y]).to eq 1
+      end
+    end
+  end
+
+  describe 'users by types level report' do
+    let(:report) { Report.find('users_by_type') }
+
+    context "no users" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with users at different trust levels" do
+      before do
+        3.times { Fabricate(:user, admin: true) }
+        2.times { Fabricate(:user, moderator: true) }
+        UserSilencer.silence(Fabricate(:user), Fabricate.build(:admin))
+        Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+
+        label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
+        expect(report.data.find { |d| d[:x] == label.call("admin") }[:y]).to eq 3
+        expect(report.data.find { |d| d[:x] == label.call("moderator") }[:y]).to eq 2
+        expect(report.data.find { |d| d[:x] == label.call("silenced") }[:y]).to eq 1
+        expect(report.data.find { |d| d[:x] == label.call("suspended") }[:y]).to eq 1
+      end
+    end
+  end
+
+  describe 'trending search report' do
+    let(:report) { Report.find('trending_search') }
+
+    context "no searches" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with different searches" do
+      before do
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
+        SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
+      end
+
+      after do
+        SearchLog.clear_debounce_cache!
+      end
+
+      it "returns a report with data" do
+        expect(report.data[0][0]).to eq("ruby")
+        expect(report.data[0][1]).to eq(3)
+        expect(report.data[0][2]).to eq(2)
+
+        expect(report.data[1][0]).to eq("php")
+        expect(report.data[1][1]).to eq(1)
+        expect(report.data[1][2]).to eq(1)
       end
     end
   end

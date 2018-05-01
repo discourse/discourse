@@ -16,7 +16,7 @@
             <div>
               {{category-title-link category=c}}
               <div class="category-description">
-                {{{c.description_excerpt}}}
+                {{{dir-span c.description_excerpt}}}
               </div>
               <div class="clearfix"></div>
             </div>
@@ -24,6 +24,7 @@
               <div class='subcategories'>
                 {{#each c.subcategories as |s|}}
                   <span class='subcategory'>
+                    {{category-title-before category=s}}
                     {{category-link s hideParent="true"}}
                     {{category-unread category=s}}
                   </span>

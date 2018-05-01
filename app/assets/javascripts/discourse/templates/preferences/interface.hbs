@@ -43,7 +43,7 @@
   {{/if}}
 </div>
 
-{{plugin-outlet name="user-preferences-interface"}}
+{{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}
 
 <br/>
 

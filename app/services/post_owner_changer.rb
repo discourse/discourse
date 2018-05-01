@@ -11,18 +11,22 @@ class PostOwnerChanger
   end
 
   def change_owner!
-    ActiveRecord::Base.transaction do
-      @post_ids.each do |post_id|
-        post = Post.with_deleted.where(id: post_id, topic_id: @topic.id).first
-        next if post.blank?
-        @topic.user = @new_owner if post.is_first_post?
+    @post_ids.each do |post_id|
+      post = Post.with_deleted.where(id: post_id, topic_id: @topic.id).first
+      next if post.blank?
+      @topic.user = @new_owner if post.is_first_post?
 
-        if post.user == nil
-          @topic.recover! if post.is_first_post?
-        end
-        post.topic = @topic
-        post.set_owner(@new_owner, @acting_user, @skip_revision)
-        PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
+      if post.user == nil
+        @topic.recover! if post.is_first_post?
+      end
+      post.topic = @topic
+      post.set_owner(@new_owner, @acting_user, @skip_revision)
+      PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
+
+      if post.post_number == 1
+        TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[:watching])
+      else
+        TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[:tracking])
       end
 
       @topic.update_statistics
@@ -31,7 +35,7 @@ class PostOwnerChanger
         first_post_created_at: @new_owner.reload.posts.order('created_at ASC').first&.created_at
       )
 
-      @topic.save!
+      @topic.save!(validate: false)
     end
   end
 end

@@ -51,7 +51,7 @@
   .subcategories {
     .badge-notification.new-posts {
       padding: 0;
-      margin: 0 5px 0 0;
+      margin: 0 10px 0 0;
     }
   }
 
@@ -83,12 +83,6 @@
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid $primary-low;
-      &:first-of-type {
-        border-top: 3px solid $primary-low;
-      }
-    }
 
     .category {
       border-left: 6px solid;
@@ -110,7 +104,7 @@
   }
 }
 
-.categories-and-latest {
+.categories-and-latest, .categories-and-top {
   display: flex;
   flex-flow: row wrap;
 

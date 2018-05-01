@@ -23,9 +23,11 @@ import { addNavItem } from 'discourse/models/nav-item';
 import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
+import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
+import { disableNameSuppression } from 'discourse/widgets/poster-name';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.17';
+const PLUGIN_API_VERSION = '0.8.20';
 
 class PluginApi {
   constructor(version, container) {
@@ -368,6 +370,33 @@ class PluginApi {
     appEvents.on(name, fn);
   }
 
+  /**
+    Registers a function to generate custom avatar CSS classes
+    for a particular user.
+
+    Takes a function that will accept a user as a parameter
+    and return an array of CSS classes to apply.
+
+    ```javascript
+    api.customUserAvatarClasses(user => {
+      if (Ember.get(user, 'primary_group_name') === 'managers') {
+        return ['managers'];
+      }
+    });
+   **/
+  customUserAvatarClasses(fn) {
+    registerCustomAvatarHelper(fn);
+  }
+
+  /**
+   * Allows you to disable suppression of similar username / names on posts
+   * If a user has the username bob.bob and the name Bob Bob, one of the two
+   * will be suppressed depending on prioritize_username_in_ux.
+   * This allows you to override core behavior
+   **/
+  disableNameSuppressionOnPosts() {
+    disableNameSuppression();
+  }
 
   /**
    * Changes a setting associated with a widget. For example, if

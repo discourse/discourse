@@ -60,6 +60,72 @@ describe TopicCreator do
       end
     end
 
+    context 'tags' do
+      let!(:tag1) { Fabricate(:tag, name: "fun") }
+      let!(:tag2) { Fabricate(:tag, name: "fun2") }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.min_trust_to_create_tag = 0
+        SiteSetting.min_trust_level_to_tag_topics = 0
+      end
+
+      context 'regular tags' do
+        it "user can add tags to topic" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: [tag1.name]))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(1)
+        end
+      end
+
+      context 'staff-only tags' do
+        before do
+          create_staff_tags(['alpha'])
+        end
+
+        it "regular users can't add staff-only tags" do
+          expect do
+            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: ['alpha']))
+          end.to raise_error(ActiveRecord::Rollback)
+        end
+
+        it 'staff can add staff-only tags' do
+          topic = TopicCreator.create(admin, Guardian.new(admin), valid_attrs.merge(tags: ['alpha']))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(1)
+        end
+      end
+
+      context 'minimum_required_tags is present' do
+        let!(:category) { Fabricate(:category, name: "beta", minimum_required_tags: 2) }
+
+        it "fails for regular user if minimum_required_tags is not satisfied" do
+          expect do
+            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: "beta"))
+          end.to raise_error(ActiveRecord::Rollback)
+        end
+
+        it "lets admin create a topic regardless of minimum_required_tags" do
+          topic = TopicCreator.create(admin, Guardian.new(admin), valid_attrs.merge(tags: [tag1.name], category: "beta"))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(1)
+        end
+
+        it "works for regular user if minimum_required_tags is satisfied" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: [tag1.name, tag2.name], category: "beta"))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(2)
+        end
+
+        it "lets new user create a topic if they don't have sufficient trust level to tag topics" do
+          SiteSetting.min_trust_level_to_tag_topics = 1
+          new_user = Fabricate(:newuser)
+          topic = TopicCreator.create(new_user, Guardian.new(new_user), valid_attrs.merge(category: "beta"))
+          expect(topic).to be_valid
+        end
+      end
+    end
+
     context 'private message' do
 
       context 'success cases' do
@@ -80,7 +146,7 @@ describe TopicCreator do
         end
 
         it "should be possible for a trusted user to send private messages via email" do
-          SiteSetting.expects(:enable_private_email_messages).returns(true)
+          SiteSetting.expects(:enable_personal_email_messages).returns(true)
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
 
           expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
@@ -89,7 +155,7 @@ describe TopicCreator do
 
       context 'failure cases' do
         it "should be rollback the changes when email is invalid" do
-          SiteSetting.expects(:enable_private_email_messages).returns(true)
+          SiteSetting.expects(:enable_personal_email_messages).returns(true)
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
           attrs = pm_to_email_valid_attrs.dup
           attrs[:target_emails] = "t" * 256

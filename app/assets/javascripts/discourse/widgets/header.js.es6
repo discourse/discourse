@@ -5,6 +5,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import { applySearchAutocomplete } from "discourse/lib/search";
 import { ajax } from 'discourse/lib/ajax';
+import { addExtraUserClasses } from 'discourse/helpers/user-avatar';
 
 import { h } from 'virtual-dom';
 
@@ -30,10 +31,18 @@ createWidget('header-notifications', {
   html(attrs) {
     const { user } = attrs;
 
-    const contents = [ avatarImg(this.settings.avatarSize, {
+    let avatarAttrs = {
       template: user.get('avatar_template'),
       username: user.get('username')
-    }) ];
+    };
+
+    if (this.siteSettings.enable_names) {
+      avatarAttrs.name = user.get('name');
+    }
+
+    const contents = [
+      avatarImg(this.settings.avatarSize, addExtraUserClasses(user, avatarAttrs))
+    ];
 
     const unreadNotifications = user.get('unread_notifications');
     if (!!unreadNotifications) {
@@ -129,6 +138,7 @@ createWidget('header-icons', {
                         iconId: 'toggle-hamburger-menu',
                         active: attrs.hamburgerVisible,
                         action: 'toggleHamburger',
+                        href: '',
                         contents() {
                           if (!attrs.flagCount) { return; }
                           return h('div.badge-notification.flagged-posts', { attributes: {
@@ -400,6 +410,10 @@ export default createWidget('header', {
         this.toggleHamburger();
         break;
       case 'page-search':
+        let contextType = this.searchContextType();
+        if (contextType === 'topic') {
+          this.state.searchContextType = contextType;
+        }
         if (!this.togglePageSearch()) {
           msg.event.preventDefault();
           msg.event.stopPropagation();

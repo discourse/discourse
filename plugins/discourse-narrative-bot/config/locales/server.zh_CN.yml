@@ -221,8 +221,6 @@ zh_CN:
 
           选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后选中文字的同时按下**回复**按钮也可以！你可以再试一次吗？
       bookmark:
-        instructions: |-
-          如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做，你一会可能收到份 :gift: ！
         reply: |-
           太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像  &#8599;
         not_found: |-
@@ -357,12 +355,6 @@ zh_CN:
         reply: |-
           漂亮！记住这对分类和标签（如果站点启用了它的话）都有用。
       change_topic_notification_level:
-        instructions: |-
-          每个主题都有通知等级。默认为“普通”，只有别人直接回复你的时候才会提醒你。
-
-          默认情况下，私信中的通知等级被设为最高级“监看”，即你将收到每个新回复的提醒。但是你可以覆盖任意一个主题的通知等级至“监看”、“追踪”或“静音”。
-
-          让我们试试改变这个主题的通知等级。在主题最下方，你可以看到一个**监看**的按钮。你可以把通知等级改到**追踪**吗？
         not_found: |-
           看起来你仍在监看 :eyes: 这个主题！没找到按钮？通知等级就在主题页面的最下方。
         reply: |-
@@ -391,20 +383,6 @@ zh_CN:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          有时你可能想在回复中**隐藏详情**：
-
-          - 当你讨论电影或者电视节目中可能剧透的情节时。
-
-          - 当你帖子中有大量一次性读完可能太困难的可选细节时。
-
-          [details=点这里看它如何工作！]
-          1. 点击编辑器中的<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">齿轮图标。
-          2. 选择“隐藏详情”。
-          3. 编辑详情概要并添加内容。
-          [/details]
-
-          你可以用编辑器中的<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">齿轮图标在下次回复中添加一节详情吗？
         not_found: |-
           添加详情控件时碰到麻烦了？试试在下个回复中包含下列文字：
 

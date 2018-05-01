@@ -183,12 +183,18 @@ describe Email::Receiver do
 
     it "works" do
       expect { process(:text_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a text reply :)")
+      expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
       expect(topic.posts.last.via_email).to eq(true)
       expect(topic.posts.last.cooked).not_to match(/<br/)
 
       expect { process(:html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
+    end
+
+    it "automatically elides gmail quotes" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:gmail_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a **GMAIL** reply ;)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\nThis is the *elided* part!\n\n</details>")
     end
 
     it "doesn't process email with same message-id more than once" do
@@ -210,10 +216,10 @@ describe Email::Receiver do
 
       expect { process(:reply_with_8bit_encoding) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("hab vergessen kritische zeichen einzufügen:\näöüÄÖÜß")
-
     end
 
-    it "prefers text over html" do
+    it "prefers text over html when site setting is disabled" do
+      SiteSetting.incoming_email_prefer_html = false
       expect { process(:text_and_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is the *text* part.")
     end
@@ -227,7 +233,7 @@ describe Email::Receiver do
     it "uses text when prefer_html site setting is enabled but no html is available" do
       SiteSetting.incoming_email_prefer_html = true
       expect { process(:text_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a text reply :)")
+      expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
     end
 
     it "removes the 'on <date>, <contact> wrote' quoting line" do
@@ -363,6 +369,7 @@ describe Email::Receiver do
     end
 
     it "supports attached images in TEXT part" do
+      SiteSetting.incoming_email_prefer_html = false
       SiteSetting.queue_jobs = true
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
@@ -390,6 +397,12 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to_not match(/text\.txt/)
     end
 
+    it "supports emails with just an attachment" do
+      SiteSetting.authorized_extensions = "pdf"
+      expect { process(:attached_pdf_file) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to match(/discourse\.pdf/)
+    end
+
     it "supports liking via email" do
       expect { process(:like) }.to change(PostAction, :count)
     end
@@ -399,7 +412,7 @@ describe Email::Receiver do
       expect(topic.posts.last.created_at).to be_within(1.minute).of(DateTime.now)
     end
 
-    it "accepts emails with wrong reply key if the system knows about the forwareded email" do
+    it "accepts emails with wrong reply key if the system knows about the forwarded email" do
       Fabricate(:incoming_email,
                 raw: <<~RAW,
                   Return-Path: <discourse@bar.com>
@@ -536,6 +549,27 @@ describe Email::Receiver do
 
     end
 
+    context "when message sent to a group has no key and find_related_post_with_key is enabled" do
+      let!(:topic) do
+        SiteSetting.find_related_post_with_key = true
+        process(:email_reply_1)
+        Topic.last
+      end
+
+      it "creates a reply when the sender and referenced message id are known" do
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+      end
+
+      it "creates a new topic when the sender is not known" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+
+      it "creates a new topic when the referenced message id is not known" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(message_id: '99@foo.bar.mail')
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+    end
   end
 
   context "new topic in a category" do
@@ -872,5 +906,13 @@ describe Email::Receiver do
         expect { process(:mailinglist_reply) }.to change { topic.posts.count }
       end
     end
+  end
+
+  it "tries to fix unparsable email addresses in To and CC headers" do
+    expect { process(:unparsable_email_addresses) }.to raise_error(Email::Receiver::BadDestinationAddress)
+
+    email = IncomingEmail.last
+    expect(email.to_addresses).to eq("foo@bar.com")
+    expect(email.cc_addresses).to eq("bob@example.com;carol@example.com")
   end
 end

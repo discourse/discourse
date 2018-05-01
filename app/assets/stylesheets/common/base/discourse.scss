@@ -165,7 +165,7 @@ textarea {
 
   &:focus:required:invalid:focus {
     border-color: $danger;
-    box-shadow: 0 0 6px $danger;
+    box-shadow: shadow("focus-danger");
   }
 }
 
@@ -186,18 +186,17 @@ input {
   &[type="color"] {
     @include appearance-none;
     display: inline-block;
-    height: 18px;
-    padding: 4px 10px;
+    padding: $input-padding;
     margin-bottom: 9px;
     font-size:  $font-0;
-    line-height: $line-height-medium;
+    line-height: $line-height-large;
     color: $primary;
     background-color: $secondary;
     border: 1px solid $primary-medium;
     border-radius: 0;
     &:focus {
       border-color: $tertiary;
-      box-shadow: $tertiary 0 0 6px 0px;
+      box-shadow: shadow("focus");
       outline: 0;
     }
   }
@@ -209,7 +208,7 @@ textarea {
   border: 1px solid $primary-medium;
   &:focus {
     border-color: $tertiary;
-    box-shadow: $tertiary 0 0 6px 0px;
+    box-shadow: shadow("focus");
     outline: 0;
   }
 }
@@ -533,4 +532,8 @@ select {
       }
     }
   }
+}
+
+.inline {
+  display: inline;
 }

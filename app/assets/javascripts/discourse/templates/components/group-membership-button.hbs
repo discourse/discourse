@@ -11,21 +11,9 @@
       label="groups.leave"
       disabled=updatingMembership}}
 {{else if model.allow_membership_requests}}
-  {{#if userIsGroupUser}}
-    {{#if showMembershipStatus}}
-      {{d-button
-          class="btn-primary"
-          icon="user"
-          label="groups.is_group_user"
-          disabled=true}}
-    {{/if}}
-  {{else}}
-    {{d-button action="showRequestMembershipForm"
-        class="group-index-request"
-        disabled=loading
-        icon="user-plus"
-        label="groups.request"}}
-  {{/if}}
-{{else}}
-  {{yield}}
+  {{d-button action="showRequestMembershipForm"
+      class="group-index-request"
+      disabled=loading
+      icon="user-plus"
+      label="groups.request"}}
 {{/if}}

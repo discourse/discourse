@@ -154,6 +154,8 @@ SQL
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
+    DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_agreed, actions.first) if actions.first.present?
 
     update_flagged_posts_count
   end
@@ -186,6 +188,8 @@ SQL
     end
 
     Post.with_deleted.where(id: post.id).update_all(cached)
+    DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_disagreed, actions.first) if actions.first.present?
 
     update_flagged_posts_count
   end
@@ -203,6 +207,8 @@ SQL
       action.add_moderator_post_if_needed(moderator, :deferred, delete_post)
     end
 
+    DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_deferred, actions.first) if actions.first.present?
     update_flagged_posts_count
   end
 
@@ -302,7 +308,12 @@ SQL
         BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: post_action)
       end
     end
-    GivenDailyLike.increment_for(user.id)
+
+    if post_action && PostActionType.notify_flag_type_ids.include?(post_action_type_id)
+      DiscourseEvent.trigger(:flag_created, post_action)
+    end
+
+    GivenDailyLike.increment_for(user.id) if post_action_type_id == PostActionType.types[:like]
 
     # agree with other flags
     if staff_took_action
@@ -339,7 +350,7 @@ SQL
     if action = finder.first
       action.remove_act!(user)
       action.post.unhide! if action.staff_took_action
-      GivenDailyLike.decrement_for(user.id)
+      GivenDailyLike.decrement_for(user.id) if post_action_type_id == PostActionType.types[:like]
     end
   end
 
@@ -360,7 +371,7 @@ SQL
   end
 
   def is_flag?
-    !!PostActionType.flag_types[post_action_type_id]
+    !!PostActionType.notify_flag_types[post_action_type_id]
   end
 
   def is_private_message?
@@ -392,7 +403,7 @@ SQL
   end
 
   before_create do
-    post_action_type_ids = is_flag? ? PostActionType.flag_types_without_custom.values : post_action_type_id
+    post_action_type_ids = is_flag? ? PostActionType.notify_flag_types.values : post_action_type_id
     raise AlreadyActed if PostAction.where(user_id: user_id)
         .where(post_id: post_id)
         .where(post_action_type_id: post_action_type_ids)
@@ -538,7 +549,8 @@ SQL
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
-    return if post.hidden
+    return if post.hidden?
+    return if (!acting_user.staff?) && post.user.staff?
 
     if post_action_type == :spam &&
        acting_user.has_trust_level?(TrustLevel[3]) &&
@@ -564,6 +576,8 @@ SQL
       reason = guess_hide_reason(post)
     end
 
+    hiding_again = post.hidden_at.present?
+
     post.hidden = true
     post.hidden_at = Time.zone.now
     post.hidden_reason_id = reason
@@ -579,7 +593,10 @@ SQL
         flag_reason: I18n.t("flag_reasons.#{post_action_type}"),
       }
 
-      Jobs.enqueue_in(5.seconds, :send_system_message, user_id: post.user.id, message_type: :post_hidden, message_options: options)
+      Jobs.enqueue_in(5.seconds, :send_system_message,
+                      user_id: post.user.id,
+                      message_type: hiding_again ? :post_hidden_again : :post_hidden,
+                      message_options: options)
     end
   end
 

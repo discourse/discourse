@@ -23,29 +23,46 @@
     </li>
     {{plugin-outlet name="user-messages-nav" connectorTagName='li' args=(hash model=model)}}
     {{#each model.groups as |group|}}
-    {{#if group.has_messages}}
-    <li>
-      {{#link-to 'userPrivateMessages.group' group.name}}
-        {{d-icon "group" class="glyph"}}
-        {{capitalize-string group.name}}
-      {{/link-to}}
-    </li>
-    <li class='archive'>
-      {{#link-to 'userPrivateMessages.groupArchive' group.name}}
-        {{i18n 'user.messages.archive'}}
-      {{/link-to}}
-    </li>
-    {{/if}}
+      {{#if group.has_messages}}
+        <li>
+          {{#link-to 'userPrivateMessages.group' group.name}}
+            {{d-icon "group" class="glyph"}}
+            {{capitalize-string group.name}}
+          {{/link-to}}
+        </li>
+        <li class='archive'>
+          {{#link-to 'userPrivateMessages.groupArchive' group.name}}
+            {{i18n 'user.messages.archive'}}
+          {{/link-to}}
+        </li>
+      {{/if}}
     {{/each}}
+
+    {{#if pmTaggingEnabled}}
+      <li class="noGlyph">
+        {{#link-to 'userPrivateMessages.tags' model}}
+          {{i18n 'user.messages.tags'}}
+        {{/link-to}}
+      </li>
+      {{#if tagId}}
+        <li class="archive">
+          {{#link-to 'userPrivateMessages.tagsShow' tagId}}
+            {{tagId}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+    {{/if}}
   {{/mobile-nav}}
 {{/d-section}}
 
 <section class='user-right messages'>
 
 <div class="clearfix list-actions">
-    <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
-      {{d-icon "list"}}
-    </button>
+    {{#if showToggleBulkSelect}}
+      <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
+        {{d-icon "list"}}
+      </button>
+    {{/if}}
 
     {{#if site.mobileView}}
       {{#if showNewPM}}
@@ -64,7 +81,6 @@
       {{i18n "user.messages.move_to_inbox"}}
     </button>
     {{/if}}
-
 
     {{#if bulkSelectEnabled}}
     <button {{action "selectAll"}} class="btn btn-select-all">

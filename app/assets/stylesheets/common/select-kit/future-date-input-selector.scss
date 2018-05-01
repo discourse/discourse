@@ -1,7 +1,13 @@
-.select-box-kit, .select-kit {
+.select-kit {
   &.combobox {
     &.future-date-input-selector {
       min-width: 50%;
+
+      .future-date-input-selector-header {
+        .btn-clear {
+          line-height: $line-height-large;
+        }
+      }
 
       .future-date-input-selector-datetime {
         color: lighten($primary, 40%);

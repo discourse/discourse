@@ -318,7 +318,7 @@ describe Invite do
 
             it 'will not redeem twice' do
               expect(invite.redeem).to be_present
-              expect(invite.redeem.send_welcome_message).to eq(false)
+              expect(invite.redeem.email).to eq(user.email)
             end
           end
         end
@@ -329,9 +329,11 @@ describe Invite do
     context 'invited to topics' do
       let(:tl2_user) { Fabricate(:user, trust_level: 2) }
       let!(:topic) { Fabricate(:private_message_topic, user: tl2_user) }
-      let!(:invite) {
+
+      let!(:invite) do
         topic.invite(topic.user, 'jake@adventuretime.ooo')
-      }
+        Invite.find_by(invited_by_id: topic.user)
+      end
 
       context 'redeem topic invite' do
         it 'adds the user to the topic_users' do

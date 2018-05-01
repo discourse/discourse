@@ -2,8 +2,7 @@ source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
 
-# does not install in linux ATM, so hack this for now
-gem 'bootsnap', require: false
+gem 'bootsnap', require: false, platform: :mri
 
 def rails_master?
   ENV["RAILS_MASTER"] == '1'
@@ -25,8 +24,7 @@ else
   gem 'seed-fu'
 end
 
-gem 'mail'
-gem 'mime-types', require: 'mime/types/columnar'
+gem 'mail', '2.7.1.rc1', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
@@ -36,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.36'
+gem 'onebox', '1.8.46'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -49,9 +47,10 @@ gem 'message_bus'
 
 gem 'rails_multisite'
 
-gem 'fast_xs'
+gem 'fast_xs', platform: :mri
 
-gem 'fast_xor'
+# may move to xorcist post: https://github.com/fny/xorcist/issues/4
+gem 'fast_xor', platform: :mri
 
 gem 'fastimage'
 
@@ -59,16 +58,13 @@ gem 'aws-sdk-s3', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.9'
+gem 'email_reply_trimmer', '0.1.11'
 
 # Forked until https://github.com/toy/image_optim/pull/149 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-
-# this may end up deprecating nokogiri
-gem 'oga', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'
@@ -120,7 +116,6 @@ group :test, :development do
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', '2.9.8', require: false
-  gem 'discourse-qunit-rails', require: 'qunit-rails'
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
@@ -144,7 +139,7 @@ end
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank'
+gem 'fast_blank', platform: :mri
 
 # this provides a very efficient lru cache
 gem 'lru_redux'
@@ -158,7 +153,7 @@ gem 'htmlentities', require: false
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
-gem 'unicorn', require: false
+gem 'unicorn', require: false, platform: :mri
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
@@ -178,9 +173,15 @@ gem 'logster'
 
 gem 'sassc', require: false
 
+gem 'rotp'
+gem 'rqrcode'
+
+gem 'sshkey', require: false
+
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
   gem 'sqlite3', '~> 1.3.13'
   gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
+  gem 'reverse_markdown'
 end

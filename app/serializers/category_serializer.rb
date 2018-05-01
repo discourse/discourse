@@ -9,7 +9,7 @@ class CategorySerializer < BasicCategorySerializer
              :email_in,
              :email_in_allow_strangers,
              :mailinglist_mirror,
-             :suppress_from_homepage,
+             :suppress_from_latest,
              :all_topics_wiki,
              :can_delete,
              :cannot_delete_reason,
@@ -29,7 +29,7 @@ class CategorySerializer < BasicCategorySerializer
         }
       end
       if perms.length == 0 && !object.read_restricted
-        perms << { permission_type: CategoryGroup.permission_types[:full], group_name: :everyone }
+        perms << { permission_type: CategoryGroup.permission_types[:full], group_name: Group[:everyone]&.name.presence || :everyone }
       end
       perms
     end
@@ -72,7 +72,7 @@ class CategorySerializer < BasicCategorySerializer
     scope && scope.can_edit?(object)
   end
 
-  def include_suppress_from_homepage?
+  def include_suppress_from_latest?
     scope && scope.can_edit?(object)
   end
 

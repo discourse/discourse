@@ -110,8 +110,8 @@ module BackupRestore
     config = config.with_indifferent_access
 
     DatabaseConfiguration.new(
-      config["host"],
-      config["port"],
+      config["backup_host"] || config["host"],
+      config["backup_port"] || config["port"],
       config["username"] || ENV["USER"] || "postgres",
       config["password"],
       config["database"]

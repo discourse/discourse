@@ -1,3 +1,7 @@
+.topic-list.shared-drafts {
+  margin-bottom: 1.5em;
+}
+
 .show-more {
   width: 100%;
   z-index: z("base");
@@ -16,6 +20,8 @@
     }
   }
 }
+
+
 
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
@@ -51,7 +57,6 @@
       vertical-align: top;
       margin-top: 2px;
     }
-    border-bottom: 1px solid $primary-low;
 
     &.last-visit {
       border-bottom: none;
@@ -80,10 +85,6 @@
     }
   }
 
-  > tbody > tr:first-of-type {
-    border-top: 3px solid $primary-low;
-  }
-
   th,
   td {
     line-height: $line-height-large;
@@ -109,6 +110,12 @@
 
   .topic-featured-link {
     padding-left: 5px;
+  }
+
+  span.badge-category {
+    .category-name {
+      max-width: 150px;
+    }
   }
 
   .topic-excerpt {
@@ -154,6 +161,10 @@
   }
 
 }
+
+.heatmap-high, .heatmap-high a {color: #fe7a15 !important;}
+.heatmap-med, .heatmap-med a {color: #cf7721 !important;}
+.heatmap-low, .heatmap-low a {color: #9b764f !important;}
 
 .topic-list.categories {
 
@@ -235,7 +246,7 @@ ol.category-breadcrumb {
   display: block;
   float: left;
   list-style: none;
-  margin: 0 10px 0 0;
+  margin: 0 10px 10px 0;
   padding: 0;
 
   li {
@@ -279,5 +290,18 @@ div.education {
 
 .table-heading {
   @extend .list-cell;
-  border-bottom: 2px solid $primary-low;
+  border-bottom: 3px solid $primary-low;
+}
+
+// This is not what we want:
+//
+//     This is an overly-long topic title that would break just right
+//     *
+//
+// Instead, we want the line to break like this:
+//
+//     This is an overly-long topic title that would break just
+//     right *
+.topic-post-badges {
+  white-space: nowrap;
 }

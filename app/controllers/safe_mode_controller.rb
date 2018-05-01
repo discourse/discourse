@@ -1,5 +1,7 @@
 class SafeModeController < ApplicationController
   layout 'no_ember'
+  before_action :ensure_safe_mode_enabled
+
   skip_before_action :preload_json, :check_xhr
 
   def index
@@ -18,4 +20,11 @@ class SafeModeController < ApplicationController
       redirect_to safe_mode_path
     end
   end
+
+  protected
+
+  def ensure_safe_mode_enabled
+    raise Discourse::NotFound unless guardian.can_enable_safe_mode?
+  end
+
 end

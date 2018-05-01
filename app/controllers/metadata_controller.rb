@@ -21,6 +21,9 @@ class MetadataController < ApplicationController
       display: 'standalone',
       orientation: 'natural',
       start_url: "#{Discourse.base_uri}/",
+      share_target: {
+        url_template: 'new-topic?title={title}&body={text}%0A%0A{url}'
+      },
       background_color: "##{ColorScheme.hex_for_name('secondary')}",
       theme_color: "##{ColorScheme.hex_for_name('header_background')}",
       icons: [

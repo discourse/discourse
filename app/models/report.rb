@@ -2,7 +2,7 @@ require_dependency 'topic_subtype'
 
 class Report
 
-  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id, :group_id
+  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id, :group_id, :labels
 
   def self.default_days
     30
@@ -10,7 +10,7 @@ class Report
 
   def initialize(type)
     @type = type
-    @start_date ||= 1.month.ago.beginning_of_day
+    @start_date ||= Report.default_days.days.ago.beginning_of_day
     @end_date ||= Time.zone.now.end_of_day
   end
 
@@ -20,14 +20,20 @@ class Report
      title: I18n.t("reports.#{type}.title"),
      xaxis: I18n.t("reports.#{type}.xaxis"),
      yaxis: I18n.t("reports.#{type}.yaxis"),
+     description: I18n.t("reports.#{type}.description"),
      data: data,
      total: total,
      start_date: start_date,
      end_date: end_date,
      category_id: category_id,
      group_id: group_id,
-     prev30Days: self.prev30Days
-    }
+     prev30Days: self.prev30Days,
+     labels: labels
+    }.tap do |json|
+      if type == 'page_view_crawler_reqs'
+        json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
+      end
+    end
   end
 
   def Report.add_report(name, &block)
@@ -75,11 +81,12 @@ class Report
       report.data << { x: date, y: count }
     end
 
-    report.total      = data.sum(:count)
-    report.prev30Days = data.where('date >= ? AND date <= ?',
-                                               (report.start_date - 31.days).to_date,
-                                               (report.end_date - 31.days).to_date)
-      .sum(:count)
+    report.total = data.sum(:count)
+
+    report.prev30Days = data.where(
+        'date >= ? AND date < ?',
+        (report.start_date - 31.days).to_date, report.start_date.to_date
+      ).sum(:count)
   end
 
   def self.report_visits(report)
@@ -101,6 +108,10 @@ class Report
     else
       report_about report, User.real, :count_by_signup_date
     end
+  end
+
+  def self.report_new_contributors(report)
+    report_about report, User.real, :count_by_first_post
   end
 
   def self.report_profile_views(report)
@@ -201,12 +212,18 @@ class Report
   # Private messages counts:
 
   def self.private_messages_report(report, topic_subtype)
-    basic_report_about report, Post, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
-    add_counts report, Post.private_posts.with_topic_subtype(topic_subtype), 'posts.created_at'
+    basic_report_about report, Topic, :private_message_topics_count_per_day, report.start_date, report.end_date, topic_subtype
+    add_counts report, Topic.private_messages.with_subtype(topic_subtype), 'topics.created_at'
   end
 
   def self.report_user_to_user_private_messages(report)
     private_messages_report report, TopicSubtype.user_to_user
+  end
+
+  def self.report_user_to_user_private_messages_with_replies(report)
+    topic_subtype = TopicSubtype.user_to_user
+    basic_report_about report, Post, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
+    add_counts report, Post.private_posts.with_topic_subtype(topic_subtype), 'posts.created_at'
   end
 
   def self.report_system_private_messages(report)
@@ -223,5 +240,55 @@ class Report
 
   def self.report_notify_user_private_messages(report)
     private_messages_report report, TopicSubtype.notify_user
+  end
+
+  def self.report_web_crawlers(report)
+    report.data = WebCrawlerRequest.where('date >= ? and date <= ?', report.start_date, report.end_date)
+      .limit(200)
+      .order('sum_count DESC')
+      .group(:user_agent).sum(:count)
+      .map { |ua, count| { x: ua, y: count } }
+  end
+
+  def self.report_users_by_type(report)
+    report.data = []
+
+    label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
+
+    admins = User.real.admins.count
+    report.data << { x: label.call("admin"), y: admins } if admins > 0
+
+    moderators = User.real.moderators.count
+    report.data << { x: label.call("moderator"), y: moderators } if moderators > 0
+
+    suspended = User.real.suspended.count
+    report.data << { x: label.call("suspended"), y: suspended } if suspended > 0
+
+    silenced = User.real.silenced.count
+    report.data << { x: label.call("silenced"), y: silenced } if silenced > 0
+  end
+
+  def self.report_trending_search(report)
+    report.data = []
+
+    trends = SearchLog.select("term,
+       COUNT(*) AS searches,
+       SUM(CASE
+               WHEN search_result_id IS NOT NULL THEN 1
+               ELSE 0
+           END) AS click_through,
+       COUNT(DISTINCT ip_address) AS unique")
+      .where('created_at > ?  AND created_at <= ?', report.start_date, report.end_date)
+      .group(:term)
+      .order('COUNT(DISTINCT ip_address) DESC, COUNT(*) DESC')
+      .limit(20).to_a
+
+    report.labels = [:term, :searches, :unique].map { |key|
+      I18n.t("reports.trending_search.labels.#{key}")
+    }
+
+    trends.each do |trend|
+      report.data << [trend.term, trend.searches, trend.unique]
+    end
   end
 end

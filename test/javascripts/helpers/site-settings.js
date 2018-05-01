@@ -39,11 +39,11 @@ Discourse.SiteSettingsOriginal = {
   "delete_user_max_post_age":60,
   "delete_all_posts_max":15,
   "min_post_length":20,
-  "min_private_message_post_length":10,
+  "min_personal_message_post_length":10,
   "max_post_length":32000,
   "min_topic_title_length":15,
   "max_topic_title_length":255,
-  "min_private_message_title_length":2,
+  "min_personal_message_title_length":2,
   "allow_uncategorized_topics":true,
   "min_title_similar_length":10,
   "edit_history_visible_to_public":true,
@@ -59,6 +59,7 @@ Discourse.SiteSettingsOriginal = {
   "autohighlight_all_code":false,
   "email_in":false,
   "authorized_extensions":".jpg|.jpeg|.png|.gif|.svg|.txt|.ico|.yml",
+  "authorized_extensions_for_staff": "",
   "max_image_width":690,
   "max_image_height":500,
   "allow_profile_backgrounds":true,
@@ -89,6 +90,7 @@ Discourse.SiteSettingsOriginal = {
   "enable_emoji":true,
   "emoji_set":"emoji_one",
   "desktop_category_page_style":"categories_and_latest_topics",
-  "enable_mentions":true
+  "enable_mentions":true,
+  "enable_personal_messages": true
 };
 Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);

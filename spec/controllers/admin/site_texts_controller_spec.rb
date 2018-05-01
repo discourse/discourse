@@ -125,6 +125,34 @@ describe Admin::SiteTextsController do
         expect(log.new_value).to eq(original_title)
         expect(log.action).to eq(UserHistory.actions[:change_site_text])
       end
+
+      it 'returns site texts for the correct locale' do
+        SiteSetting.default_locale = :ru
+
+        ru_title = 'title ru'
+        ru_mf_text = 'ru {NUM_RESULTS, plural, one {1 result} other {many} }'
+
+        put :update, params: { id: 'title', site_text: { value: ru_title } }, format: :json
+        put :update, params: { id: 'js.topic.read_more_MF', site_text: { value: ru_mf_text } }, format: :json
+
+        get :show, params: { id: 'title' }, format: :json
+        json = ::JSON.parse(response.body)
+        expect(json['site_text']['value']).to eq(ru_title)
+
+        get :show, params: { id: 'js.topic.read_more_MF' }, format: :json
+        json = ::JSON.parse(response.body)
+        expect(json['site_text']['value']).to eq(ru_mf_text)
+
+        SiteSetting.default_locale = :en
+
+        get :show, params: { id: 'title' }, format: :json
+        json = ::JSON.parse(response.body)
+        expect(json['site_text']['value']).to_not eq(ru_title)
+
+        get :show, params: { id: 'js.topic.read_more_MF' }, format: :json
+        json = ::JSON.parse(response.body)
+        expect(json['site_text']['value']).to_not eq(ru_mf_text)
+      end
     end
   end
 

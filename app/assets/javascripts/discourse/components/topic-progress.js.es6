@@ -111,47 +111,36 @@ export default Ember.Component.extend({
       const style = `border-right-width: ${borderSize}; width: ${progressWidth}px`;
       $topicProgress.append(`<div class='bg' style="${style}">&nbsp;</div>`);
     } else {
-      $bg.css("border-right-width", borderSize).width(progressWidth);
+      $bg.css("border-right-width", borderSize).width(progressWidth - 2);
     }
   },
 
   _dock() {
-    const maximumOffset = $('#topic-bottom').offset(),
-          composerHeight = $('#reply-control').height() || 0,
-          $topicProgressWrapper = this.$(),
-          offset = window.pageYOffset || $('html').scrollTop();
+    const $wrapper = this.$();
+    if (!$wrapper || $wrapper.length === 0) return;
 
-    if (!$topicProgressWrapper || $topicProgressWrapper.length === 0) {
-      return;
-    }
+    const offset         = window.pageYOffset || $("html").scrollTop();
+    const progressHeight = this.site.mobileView ? 0 : $("#topic-progress").height();
+    const maximumOffset  = $("#topic-bottom").offset().top + progressHeight;
+    const windowHeight   = $(window).height();
+    const composerHeight = $("#reply-control").height() || 0;
+    const isDocked       = offset >= maximumOffset - windowHeight + composerHeight;
+    const bottom         = $("#main").height() - maximumOffset;
 
-    let isDocked = false;
-    if (maximumOffset) {
-      const threshold = maximumOffset.top;
-      const windowHeight = $(window).height();
-      const headerHeight = $('header').outerHeight(true);
-
-      if (this.capabilities.isIOS) {
-        isDocked = offset >= (threshold - windowHeight - headerHeight + composerHeight);
-      } else {
-        isDocked = offset >= (threshold - windowHeight + composerHeight);
-      }
-    }
-
-    const dockPos = $(document).height() - $('#topic-bottom').offset().top;
     if (composerHeight > 0) {
-      if (isDocked) {
-        $topicProgressWrapper.css('bottom', dockPos);
-      } else {
-        const height = composerHeight + "px";
-        if ($topicProgressWrapper.css('bottom') !== height) {
-          $topicProgressWrapper.css('bottom', height);
-        }
-      }
+      $wrapper.css("bottom", isDocked ? bottom : composerHeight);
     } else {
-      $topicProgressWrapper.css('bottom', isDocked ? dockPos : '');
+      $wrapper.css("bottom", isDocked ? bottom : "");
     }
-    this.set('docked', isDocked);
+
+    this.set("docked", isDocked);
+
+    const $replyArea = $("#reply-control .reply-area");
+    if ($replyArea && $replyArea.length > 0) {
+      $wrapper.css("right", `${$replyArea.offset().left}px`);
+    } else {
+      $wrapper.css("right", "1em");
+    }
   },
 
   click(e) {
@@ -159,7 +148,6 @@ export default Ember.Component.extend({
       this.send('toggleExpansion');
     }
   },
-
 
   actions: {
     toggleExpansion() {

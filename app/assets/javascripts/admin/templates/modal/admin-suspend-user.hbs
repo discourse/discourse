@@ -13,6 +13,13 @@
       </div>
       {{suspension-details reason=reason message=message}}
 
+      {{#if post}}
+        {{penalty-post-action
+          post=post
+          postAction=postAction
+          postEdit=postEdit}}
+      {{/if}}
+
     {{else}}
       <div class='cant-suspend'>
         {{i18n "admin.user.cant_suspend"}}

@@ -2,6 +2,10 @@ class WebHookEventType < ActiveRecord::Base
   TOPIC = 1
   POST = 2
   USER = 3
+  GROUP = 4
+  CATEGORY = 5
+  TAG = 6
+  FLAG = 7
 
   has_and_belongs_to_many :web_hooks
 

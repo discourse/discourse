@@ -45,3 +45,28 @@ QUnit.test("allowUncategorized", assert => {
   assert.blank(categoryBadgeHTML(uncategorized), "it doesn't return HTML for uncategorized by default");
   assert.present(categoryBadgeHTML(uncategorized, {allowUncategorized: true}), "it returns HTML");
 });
+
+QUnit.test("category names are wrapped in dir-spans", assert => {
+  Discourse.SiteSettings.support_mixed_text_direction = true;
+  const store = createStore();
+  const rtlCategory = store.createRecord('category', {
+    name: 'תכנות עם Ruby',
+    id: 123,
+    description_text: 'cool description',
+    color: 'ff0',
+    text_color: 'f00'
+  });
+
+  const ltrCategory = store.createRecord('category', {
+    name: 'Programming in Ruby',
+    id: 234
+  });
+
+  let tag = parseHTML(categoryBadgeHTML(rtlCategory))[0];
+  let dirSpan = tag.children[1].children[0];
+  assert.equal(dirSpan.attributes.dir, 'rtl');
+
+  tag = parseHTML(categoryBadgeHTML(ltrCategory))[0];
+  dirSpan = tag.children[1].children[0];
+  assert.equal(dirSpan.attributes.dir, 'ltr');
+});

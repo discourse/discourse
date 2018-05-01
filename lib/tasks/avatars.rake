@@ -25,7 +25,11 @@ task "avatars:clean" => :environment do
                         upload_id IN (SELECT gravatar_upload_id FROM user_avatars) OR
                         upload_id IN (SELECT uploaded_avatar_id FROM users)")
     .find_each do |optimized_image|
-    optimized_image.destroy!
+    begin
+      optimized_image.destroy!
+    rescue
+      # skip
+    end
     putc "." if (i += 1) % 10 == 0
   end
 

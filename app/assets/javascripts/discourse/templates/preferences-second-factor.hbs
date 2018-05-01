@@ -1,0 +1,126 @@
+<section class='user-content user-preferences'>
+  <form class="form-horizontal">
+    <div class="control-group">
+      <div class="controls">
+        <h3>{{i18n 'user.second_factor.title'}}</h3>
+      </div>
+    </div>
+
+    {{#if errorMessage}}
+      <div class="control-group">
+        <div class="instructions">
+          <div class='alert alert-error'>{{errorMessage}}</div>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if model.second_factor_enabled}}
+      <label class='control-label'>{{i18n 'user.second_factor.label'}}</label>
+
+      <div class="control-group">
+        <div class="controls">
+          {{second-factor-input value=secondFactorToken inputId='second-factor-token'}}
+        </div>
+
+        <div class='instructions'>
+          {{i18n 'user.second_factor.disable_description'}}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          {{d-button action="disableSecondFactor"
+              class="btn btn-primary"
+              disabled=loading
+              label=disableButtonText}}
+
+          {{cancel-link route="preferences.account" args= model.username}}
+        </div>
+      </div>
+    {{else}}
+      {{#if loaded}}
+        <div class="control-group">
+          <div class="controls">
+            {{{i18n 'user.second_factor.enable_description'}}}
+
+            {{#if displayOAuthWarning}}
+              {{i18n 'user.second_factor.oauth_enabled_warning'}}
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            <div class="qr-code-container">
+              <div class="qr-code">
+                {{{secondFactorImage}}}
+              </div>
+            </div>
+
+            <p>
+            {{#if showSecondFactorKey}}
+              {{secondFactorKey}}
+            {{else}}
+              <a {{action "showSecondFactorKey"}}>{{i18n 'user.second_factor.show_key_description'}}</a>
+            {{/if}}
+            </p>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label input-prepend">{{i18n 'user.second_factor.label'}}</label>
+
+          <div class="controls">
+            {{second-factor-input value=secondFactorToken inputId='second-factor-token'}}
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            {{d-button action="enableSecondFactor"
+                class="btn btn-primary"
+                disabled=loading
+                label=enableButtonText}}
+
+            {{cancel-link route="preferences.account" args= model.username}}
+          </div>
+        </div>
+      {{else}}
+        <div class="control-group">
+          <label class='control-label'>{{i18n 'user.password.title'}}</label>
+
+          <div class="controls">
+            {{text-field value=password
+                id="password"
+                type="password"
+                classNames="input-xxlarge"
+                autofocus="autofocus"}}
+          </div>
+
+          <div class='instructions'>
+            {{i18n 'user.second_factor.confirm_password_description'}}
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            {{d-button action="confirmPassword"
+                class="btn btn-primary"
+                disabled=loading
+                label=submitButtonText}}
+
+            {{d-button action="resetPassword"
+                class="btn"
+                disabled=resetPasswordLoading
+                icon="envelope"
+                label='user.change_password.action'}}
+
+            {{resetPasswordProgress}}
+
+            {{cancel-link route="preferences.account" args= model.username}}
+          </div>
+        </div>
+      {{/if}}
+    {{/if}}
+  </form>
+</section>

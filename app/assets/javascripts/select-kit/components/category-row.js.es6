@@ -20,6 +20,12 @@ export default SelectKitRowComponent.extend({
     return displayCategoryDescription;
   },
 
+  @computed("description", "category.name")
+  title(categoryDescription, categoryName) {
+    if (categoryDescription) return categoryDescription;
+    return categoryName;
+  },
+
   @computed("computedContent.value", "computedContent.name")
   category(value, name) {
     if (Ember.isEmpty(value)) {
@@ -32,18 +38,21 @@ export default SelectKitRowComponent.extend({
     }
   },
 
-  @computed("category")
-  badgeForCategory(category) {
+  @computed("category", "parentCategory")
+  badgeForCategory(category, parentCategory) {
     return categoryBadgeHTML(category, {
       link: this.get("categoryLink"),
       allowUncategorized: this.get("allowUncategorized"),
-      hideParent: this.get("hideParentCategory")
+      hideParent: parentCategory ? true : false
     }).htmlSafe();
   },
 
   @computed("parentCategory")
   badgeForParentCategory(parentCategory) {
-    return categoryBadgeHTML(parentCategory, {link: false}).htmlSafe();
+    return categoryBadgeHTML(parentCategory, {
+      link: this.get("categoryLink"),
+      allowUncategorized: this.get("allowUncategorized")
+    }).htmlSafe();
   },
 
   @computed("parentCategoryid")
@@ -73,6 +82,8 @@ export default SelectKitRowComponent.extend({
 
   @computed("category.description")
   description(description) {
-    return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    if (description) {
+      return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    }
   }
 });

@@ -40,7 +40,7 @@ createWidget('user-menu-links', {
                       icon: 'bookmark',
                       href: `${path}/activity/bookmarks` });
 
-    if (siteSettings.enable_private_messages) {
+    if (siteSettings.enable_personal_messages) {
       glyphs.push({ label: 'user.private_messages',
                     className: 'user-pms-link',
                     icon: 'envelope',
@@ -99,6 +99,7 @@ createWidget('user-menu-dismiss-link', {
           attrs=(hash
             action="dismissNotifications"
             className="dismiss"
+            tabindex="0"
             icon="check"
             label="user.dismiss"
             title="user.dismiss_notifications_tooltip")}}
@@ -144,6 +145,7 @@ export default createWidget('user-menu', {
                 action: 'logout',
                 className: 'logout',
                 icon: 'sign-out',
+                href: '',
                 label: 'user.log_out'
               })
             )

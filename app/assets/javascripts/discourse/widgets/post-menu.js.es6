@@ -12,7 +12,7 @@ function animateHeart($elem, start, end, complete) {
        .animate({ textIndent: end }, {
           complete,
           step(now) {
-            $(this).css('transform','scale('+now+')');
+            $(this).css('transform','scale('+now+')').addClass("d-liked").removeClass("d-unliked");
           },
           duration: 150
         }, 'linear');
@@ -69,11 +69,15 @@ registerButton('like-count', attrs => {
     const title = attrs.liked
       ? count === 1 ? 'post.has_likes_title_only_you' : 'post.has_likes_title_you'
       : 'post.has_likes_title';
+      const icon = attrs.yours ? 'heart' : '';
+      const additionalClass = attrs.yours ? 'my-likes' : 'regular-likes';
 
     return { action: 'toggleWhoLiked',
       title,
-      className: 'like-count highlight-action',
-      contents: I18n.t("post.has_likes", { count }),
+      className: `like-count highlight-action ${additionalClass}`,
+      contents: count,
+      icon,
+      iconRight: true,
       titleOptions: {count: attrs.liked ? (count-1) : count }
     };
   }
@@ -281,15 +285,18 @@ export default createWidget('post-menu', {
       replaceButton(orderedButtons, 'reply', 'wiki-edit');
     }
 
-    orderedButtons.forEach(i => {
-      const button = this.attachButton(i, attrs);
-      if (button) {
-        allButtons.push(button);
+    orderedButtons
+      .filter(x => x !== "like-count" && x !== "like")
+      .forEach(i => {
+        const button = this.attachButton(i, attrs);
 
-        if ((attrs.yours && button.attrs.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
-          visibleButtons.push(button);
+        if (button) {
+          allButtons.push(button);
+
+          if ((attrs.yours && button.attrs.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
+            visibleButtons.push(button);
+          }
         }
-      }
     });
 
     if (!this.settings.collapseButtons) {
@@ -309,6 +316,11 @@ export default createWidget('post-menu', {
         icon: 'ellipsis-h' });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
     }
+
+    visibleButtons.unshift(h('div.like-button', [
+      this.attachButton("like-count", attrs),
+      this.attachButton("like", attrs)
+    ]));
 
     Object.keys(_extraButtons).forEach(k => {
       const builder = _extraButtons[k];
@@ -384,6 +396,9 @@ export default createWidget('post-menu', {
 
   showMoreActions() {
     this.state.collapsed = false;
+    if (!this.state.likedUsers.length) {
+      return this.getWhoLiked();
+    }
   },
 
   like() {
@@ -401,18 +416,14 @@ export default createWidget('post-menu', {
     const $heart = $(`[data-post-id=${attrs.id}] .toggle-like .d-icon`);
     $heart.closest('button').addClass('has-like');
 
-    if (!Ember.testing) {
-      const scale = [1.0, 1.5];
-      return new Ember.RSVP.Promise(resolve => {
-        animateHeart($heart, scale[0], scale[1], () => {
-          animateHeart($heart, scale[1], scale[0], () => {
-            this.sendWidgetAction('toggleLike').then(() => resolve());
-          });
+    const scale = [1.0, 1.5];
+    return new Ember.RSVP.Promise(resolve => {
+      animateHeart($heart, scale[0], scale[1], () => {
+        animateHeart($heart, scale[1], scale[0], () => {
+          this.sendWidgetAction('toggleLike').then(() => resolve());
         });
       });
-    } else {
-      this.sendWidgetAction('toggleLike');
-    }
+    });
   },
 
   refreshLikes() {

@@ -1,7 +1,7 @@
 require_dependency 'oneboxer'
 
 class OneboxController < ApplicationController
-  before_action :ensure_logged_in
+  requires_login
 
   def show
     unless params[:refresh] == 'true'
@@ -14,13 +14,21 @@ class OneboxController < ApplicationController
     return render(body: nil, status: 429) if Oneboxer.is_previewing?(current_user.id)
 
     user_id = current_user.id
+    category_id = params[:category_id].to_i
+    topic_id = params[:topic_id].to_i
     invalidate = params[:refresh] == 'true'
     url = params[:url]
 
     hijack do
       Oneboxer.preview_onebox!(user_id)
 
-      preview = Oneboxer.preview(url, invalidate_oneboxes: invalidate)
+      preview = Oneboxer.preview(url,
+        invalidate_oneboxes: invalidate,
+        user_id: user_id,
+        category_id: category_id,
+        topic_id: topic_id
+      )
+
       preview.strip! if preview.present?
 
       Oneboxer.onebox_previewed!(user_id)

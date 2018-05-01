@@ -2,6 +2,26 @@
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
   margin-bottom: 15px;
+  position: relative;
+}
+
+.group-outlet {
+  position: relative;
+}
+
+.group-members-actions {
+  position: absolute;
+  top: -49px;
+  right: 0px;
+
+  .group-username-filter {
+    margin: 0px;
+    vertical-align: middle;
+  }
+
+  .group-members-dropdown, .group-members-add {
+    vertical-align: middle;
+  }
 }
 
 .group-post {
@@ -78,7 +98,7 @@
   }
 }
 
-.group-logs-filter {
+.group-manage-logs-filter {
   margin-right: 10px;
 
   &:hover {
@@ -86,12 +106,8 @@
   }
 }
 
-table.group-logs {
+table.group-manage-logs {
   width: 100%;
-
-  th, tr {
-    border-bottom: 1px solid $primary-low;
-  }
 
   th {
     text-align: left;
@@ -102,7 +118,7 @@ table.group-logs {
     padding: 10px 0;
   }
 
-  .group-logs-expand-details {
+  .group-manage-logs-expand-details {
     cursor: pointer;
 
     i {
@@ -115,13 +131,13 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  tr {
-    border-bottom: 1px solid $primary-low;
+  th:first-child {
+    width: 30%;
+    text-align: left;
   }
 
-  th:first-child {
-    width: 60%;
-    text-align: left;
+  th:last-child {
+    width: 5%;
   }
 
   th.group-members-actions {
@@ -129,7 +145,6 @@ table.group-members {
   }
 
   th {
-    border-bottom: 3px solid $primary-low;
     text-align: center;
     padding: 5px 0 5px 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -168,23 +183,9 @@ table.group-members {
   color: $primary;
 }
 
-.form-horizontal {
+.form-vertical {
   .group-flair-inputs {
     display: inline-block;
-
-    input[type="text"] {
-      width: 80% !important;
-      margin-bottom: 10px;
-    }
-
-    .group-flair-left {
-      float: left;
-    }
-
-    .group-flair-right {
-      float: left;
-      margin-left: 30px;
-    }
   }
 
   .avatar-flair-preview {
@@ -197,10 +198,19 @@ table.group-members {
   }
 }
 
-.group-edit {
-  .form-horizontal {
+.group-form-save {
+  margin-right: 20px;
+}
+
+.group-add-members {
+  .group-add-members-make-owner {
     label {
-      font-weight: bold;
+      display: inline;
+      vertical-align: middle;
+    }
+
+    input[type='checkbox'] {
+      vertical-align: middle;
     }
   }
 }
