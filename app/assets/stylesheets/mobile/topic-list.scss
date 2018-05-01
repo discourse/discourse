@@ -34,7 +34,7 @@
     width: 150px;
     top: 100%;
     margin: 0;
-    li {
+    li {  
       list-style-type: none;
       margin-left: 0;
       margin-top: 5px;
@@ -66,12 +66,6 @@
 
   .right {
     margin-left: 55px;
-  }
-
-  > tbody > tr {
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-    }
   }
 
   th,
@@ -150,12 +144,7 @@
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid $primary-low;
-      &:first-of-type {
-        border-top: 3px solid $primary-low;
-      }
-    }
+
     .category {
       border-left: 6px solid;
     }

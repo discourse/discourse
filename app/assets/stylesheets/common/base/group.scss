@@ -109,10 +109,6 @@
 table.group-manage-logs {
   width: 100%;
 
-  th, tr {
-    border-bottom: 1px solid $primary-low;
-  }
-
   th {
     text-align: left;
     padding: 5px 0;
@@ -135,10 +131,6 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  tr {
-    border-bottom: 1px solid $primary-low;
-  }
-
   th:first-child {
     width: 30%;
     text-align: left;
@@ -153,7 +145,6 @@ table.group-members {
   }
 
   th {
-    border-bottom: 3px solid $primary-low;
     text-align: center;
     padding: 5px 0 5px 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
