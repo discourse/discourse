@@ -36,6 +36,7 @@
             </div>
             <div class='clearfix'></div>
             <div class="topic-item-stats clearfix">
+              {{discourse-tags t mode="list" tagsForUser=tagsForUser}}
               <div class="pull-right">
                 {{raw "list/activity-column" topic=t tagName="div" class="num activity last"}}
                 <a href="{{t.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date t.bumped_at}}}'>{{t.last_poster_username}}</a>
