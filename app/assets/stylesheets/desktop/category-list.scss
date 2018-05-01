@@ -83,12 +83,6 @@
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid $primary-low;
-      &:first-of-type {
-        border-top: 3px solid $primary-low;
-      }
-    }
 
     .category {
       border-left: 6px solid;

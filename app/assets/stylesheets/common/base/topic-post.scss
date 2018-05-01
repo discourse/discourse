@@ -457,9 +457,6 @@ blockquote > *:last-child {
   td,th {
     padding: 3px 3px 3px 10px;
   }
-  tr {
-    border-bottom: 1px solid lighten($primary, 80%);
-  }
 }
 
 .small-action {

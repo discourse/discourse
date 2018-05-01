@@ -57,7 +57,6 @@
       vertical-align: top;
       margin-top: 2px;
     }
-    border-bottom: 1px solid $primary-low;
 
     &.last-visit {
       border-bottom: none;
@@ -84,10 +83,6 @@
       padding: 0 8px;
       font-size: $font-down-1;
     }
-  }
-
-  > tbody  {
-    border-top: 3px solid $primary-low;
   }
 
   th,
@@ -295,7 +290,7 @@ div.education {
 
 .table-heading {
   @extend .list-cell;
-  border-bottom: 2px solid $primary-low;
+  border-bottom: 3px solid $primary-low;
 }
 
 // This is not what we want:
