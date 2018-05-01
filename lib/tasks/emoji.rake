@@ -110,8 +110,8 @@ EMOJI_ALIASES ||= {
   "nerd_face" => [ "nerd" ],
   "hugs" => [ "hugging", "hugging_face" ],
   "roll_eyes" => [ "rolling_eyes", "face_with_rolling_eyes" ],
-  "slightly_frowning_face" => [ "slight_frown" ],
-  "frowning_face" => [ "frowning2", "white_frowning_face" ],
+  "slightly_frowning_face" => [ "slight_frown", "sad1" ],
+  "frowning_face" => [ "frowning2", "white_frowning_face", "sad2" ],
   "zipper_mouth_face" => [ "zipper_mouth" ],
   "face_with_head_bandage" => [ "head_bandage" ],
   "raised_hand_with_fingers_splayed" => [ "hand_splayed" ],
@@ -199,7 +199,9 @@ EMOJI_ALIASES ||= {
   "new_moon" => [ "moon" ],
   "oncoming_automobile" => [ "car", "automobile" ],
   "fleur_de_lis" => [ "fleur-de-lis" ],
-  "face_vomiting" => [ "puke" ]
+  "face_vomiting" => [ "puke" ],
+  "sob" => ["loudly_crying_face", "sad_crying_face"],
+
 }
 
 EMOJI_GROUPS ||= [
