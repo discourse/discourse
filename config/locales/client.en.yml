@@ -2968,7 +2968,7 @@ en:
           details: "When a tag is created, updated or destroyed."
         flag_event:
           name: "Flag Event"
-          details: "When a flag is created, agreed, disagreed or deferred."
+          details: "When a flag is created, agreed, disagreed or ignored."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
