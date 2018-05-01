@@ -423,6 +423,22 @@ describe UserNotifications do
       expect(mail.subject).to include("[PM] ")
     end
 
+    it "includes a list of participants" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      user1.username = "one"
+      user2.username = "two"
+      topic.allowed_users = [ user1, user2 ]
+      mail = UserNotifications.user_private_message(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.body).to include("#{I18n.t("user_notifications.pm_participants")} one, two")
+    end
+
     context "when SiteSetting.group_name_in_subject is true" do
       before do
         SiteSetting.group_in_subject = true
