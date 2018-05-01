@@ -163,7 +163,7 @@ img.emoji {
 .emoji-picker .section-group button.emoji:hover, .emoji-picker .results button.emoji:hover {
   display: inline-block;
   vertical-align: top;
-  border-radius: 50%;
+  border-radius: 2px;
   background-color: lighten($tertiary, 40%);
 }
 
