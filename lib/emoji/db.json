@@ -6795,5 +6795,17 @@
     "face_vomiting": [
       "puke"
     ]
+  },
+  "searchAliases": {
+    "sad": [
+      "frowning_face",
+      "slightly_frowning_face",
+      "sob",
+      "crying_cat_face",
+      "cry"
+    ],
+    "cry": [
+      "sob"
+    ]
   }
 }
