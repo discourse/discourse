@@ -6518,11 +6518,13 @@
       "face_with_rolling_eyes"
     ],
     "slightly_frowning_face": [
-      "slight_frown"
+      "slight_frown",
+      "sad1"
     ],
     "frowning_face": [
       "frowning2",
-      "white_frowning_face"
+      "white_frowning_face",
+      "sad2"
     ],
     "zipper_mouth_face": [
       "zipper_mouth"
@@ -6794,6 +6796,10 @@
     ],
     "face_vomiting": [
       "puke"
+    ],
+    "sob": [
+      "loudly_crying_face",
+      "sad_crying_face"
     ]
   }
 }
