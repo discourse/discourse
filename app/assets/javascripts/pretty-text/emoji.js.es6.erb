@@ -1,4 +1,4 @@
-import { emojis, aliases, translations, tonableEmojis } from 'pretty-text/emoji/data';
+import { emojis, aliases, searchAliases, translations, tonableEmojis } from 'pretty-text/emoji/data';
 
 // bump up this number to expire all emojis
 export const IMAGE_VERSION = "<%= Emoji::EMOJI_VERSION %>";
@@ -94,24 +94,28 @@ export function emojiSearch(term, options) {
     if (results.indexOf(val) === -1) {
       results.push(val);
     }
-    return maxResults > 0 && results.length >= maxResults;
+  }
+
+  // if term matches from beginning
+  for (let i=0; i<toSearch.length; i++) {
+    const item = toSearch[i];
+    if (item.indexOf(term) === 0) addResult(item);
+  }
+
+  if (searchAliases[term]) {
+    results.push.apply(results, searchAliases[term]);
   }
 
   for (let i=0; i<toSearch.length; i++) {
     const item = toSearch[i];
-    if (item.indexOf(term) === 0 && addResult(item)) {
-      return results;
-    }
+    if (item.indexOf(term) > 0) addResult(item);
   }
 
-  for (let i=0; i<toSearch.length; i++) {
-    const item = toSearch[i];
-    if (item.indexOf(term) > 0 && addResult(item)) {
-      return results;
-    }
+  if (maxResults === -1) {
+    return results;
+  } else {
+    return results.slice(0, maxResults);
   }
-
-  return results;
 };
 
 export function isSkinTonableEmoji(term) {
