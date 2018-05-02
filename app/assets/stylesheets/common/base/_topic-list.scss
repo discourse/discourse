@@ -12,17 +12,29 @@
 }
 
 .list-controls {
+  clear: both;
+  .combo-box .combo-box-header {
+    background: $primary-low;
+    color: $primary;
+    border: 1px solid transparent;
+    padding: 5px 6px 5px 10px;
+    font-size: $font-0;
+    transition: none;
+  }
   .select-kit {
     align-self: center;
-
+    .select-kit-collection {
+      font-size: $font-down-1;
+      .texts, .icons {
+        font-size: $font-up-1;
+      }
+    }
     &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
       float: right;
     }
   }
 }
-
-
-
+  
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
@@ -207,10 +219,6 @@
   tr {
     background-color: transparent;
   }
-}
-
-.list-controls {
-  clear: both;
 }
 
 #list-area {

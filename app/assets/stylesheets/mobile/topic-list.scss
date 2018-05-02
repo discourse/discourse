@@ -152,6 +152,9 @@
 }
 
 .category-list-item.category {
+  tr:first-of-type {
+    border: none;
+  }
   // Allow percentage widths on table cells to include their padding
   box-sizing: border-box;
   *, *:before, *:after {
