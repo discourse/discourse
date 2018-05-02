@@ -62,12 +62,10 @@ function confirmNotification() {
     tag: "confirm-subscription"
   });
 
-  function clickEventHandler() {
-    notification.close();
-  }
+  const clickEventHandler = () => notification.close();
 
   notification.addEventListener('click', clickEventHandler);
-  setTimeout(function() {
+  setTimeout(() => {
     notification.close();
     notification.removeEventListener('click', clickEventHandler);
   }, 10 * 1000);

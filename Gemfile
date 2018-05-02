@@ -186,5 +186,5 @@ if ENV["IMPORT"] == "1"
   gem 'reverse_markdown'
 end
 
-gem 'hkdf', '0.3.0'
-gem 'webpush', '0.3.2'
+gem 'hkdf', '0.3.0', require: false
+gem 'webpush', '0.3.2', require: false

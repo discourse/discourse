@@ -49,7 +49,7 @@ class PushNotificationPusher
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.find_by(user: user, data: subscription.to_json).destroy
+    PushSubscription.find_by(user: user, data: subscription.to_json)&.destroy
   end
 
   protected

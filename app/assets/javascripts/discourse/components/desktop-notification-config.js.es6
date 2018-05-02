@@ -66,10 +66,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("isEnabledDesktop", "isEnabledPush")
-  isEnabled(isEnabledDesktop, isEnabledPush) {
-    return isEnabledDesktop || isEnabledPush;
-  },
+  isEnabled: Ember.computed.or("isEnabledDesktop", "isEnabledPush"),
 
   isPushNotificationsPreferred() {
     if(!this.site.mobileView) {
