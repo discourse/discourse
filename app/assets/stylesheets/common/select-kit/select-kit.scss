@@ -5,21 +5,12 @@
 .select-kit {
   border: none;
   min-width: 220px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   display: inline-block;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   position: relative;
   vertical-align: middle;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
 
   &.is-hidden {
     display: none;
@@ -33,13 +24,8 @@
     z-index: z("dropdown");
 
     .select-kit-body {
-      display: -webkit-box;
-      display: -ms-flexbox;
       display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: column;
-              flex-direction: column;
+      flex-direction: column;
       left: 0;
       position: absolute;
       top: 0;
@@ -73,41 +59,21 @@
   .select-kit-header {
     box-sizing: border-box;
     overflow: hidden;
-    -webkit-transition: all .25s;
-    -o-transition: all .25s;
     transition: all .25s;
     cursor: pointer;
     outline: none;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    align-items: center;
     justify-content: space-between;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-
+    flex-direction: row;
+  
     .selected-name {
       text-align: left;
-      -webkit-box-flex: 1 1 auto;
-              -ms-flex: 1 1 auto;
-                  flex: 1 1 auto;
-      -o-text-overflow: ellipsis;
-         text-overflow: ellipsis;
+      flex: 1 1 auto;
+      text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
       color: inherit;
-    }
-
-    &.is-none {
-      .selected-name {
-        color: dark-light-choose($primary-high, $secondary-low);
-      }
     }
 
     .btn-clear {
@@ -126,12 +92,8 @@
     }
 
     .d-button-label {
-      display: -webkit-box;
-      display: -ms-flexbox;
       display: flex;
-      -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center;
+      align-items: center;
       white-space: nowrap;
       overflow: hidden;
       line-height: $line-height-medium;
@@ -146,26 +108,18 @@
   .select-kit-body {
     display: none;
     background: $secondary;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
   }
 
   .select-kit-row {
     cursor: pointer;
     line-height: $line-height-medium;
     outline: none;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     flex: 1 0 auto;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: start;
-        -ms-flex-pack: start;
-            justify-content: flex-start;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
 
     &.no-content {
       white-space: nowrap;
@@ -174,8 +128,7 @@
     .name {
       margin: 0;
       overflow: hidden;
-      -o-text-overflow: ellipsis;
-         text-overflow: ellipsis;
+      text-overflow: ellipsis;
       flex: 10;
     }
 
@@ -245,29 +198,20 @@
   }
 
   .select-kit-filter {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     box-sizing: border-box;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    align-items: center;
+    justify-content: space-between;
 
     .filter-input, .filter-input:focus, .filter-input:active {
       background: none;
       margin: 0;
       padding: 0;
-      -webkit-box-flex: 1;
-          -ms-flex: 1;
-              flex: 1;
+      flex: 1;
       outline: none;
       border: 0;
       border-radius: 0;
-      -webkit-box-shadow: none;
-              box-shadow: none;
+      box-shadow: none;
       width: 100%;
     }
 
@@ -291,8 +235,7 @@
     left: 0;
     background: none;
     display: none;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
     pointer-events: none;
   }
 }

@@ -1,29 +1,8 @@
 .group-nav {
   .group-dropdown {
     margin-right: 10px;
-
-    i {
-      color: $primary;
-    }
   }
-
-  li {
-    float: left;
-
-    a, i {
-      color: dark-light-choose($primary-medium, $secondary-high);
-    }
-
-    .active {
-      a, i {
-        color: $secondary;
-      }
-    }
-  }
-
-  margin-bottom: 30px;
 }
-
 .group-info {
   margin-bottom: 20px;
 }
