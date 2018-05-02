@@ -70,6 +70,8 @@ class UserAnonymizer
 
       @user_history = UserHistory.create(history_details)
     end
+
+    DiscourseEvent.trigger(:user_anonymized, user: @user, opts: @opts)
     @user
   end
 

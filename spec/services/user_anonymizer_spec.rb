@@ -4,6 +4,24 @@ describe UserAnonymizer do
 
   let(:admin) { Fabricate(:admin) }
 
+  describe "event" do
+    let(:user) { Fabricate(:user, username: "edward") }
+    subject(:make_anonymous) { described_class.make_anonymous(user, admin, anonymize_ip: '2.2.2.2') }
+
+    it "triggers the event" do
+      events = DiscourseEvent.track_events do
+        make_anonymous
+      end
+
+      anon_event = events.detect { |e| e[:event_name] == :user_anonymized }
+      expect(anon_event).to be_present
+      params_hash = anon_event[:params][0]
+
+      expect(params_hash[:user]).to eq(user)
+      expect(params_hash[:opts][:anonymize_ip]).to eq('2.2.2.2')
+    end
+  end
+
   describe "make_anonymous" do
     let(:user) { Fabricate(:user, username: "edward") }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
