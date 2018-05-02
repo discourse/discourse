@@ -25,6 +25,7 @@
     align-self: center;
     .select-kit-collection {
       font-size: $font-down-1;
+      max-height: 40vh;
       .texts, .icons {
         font-size: $font-up-1;
       }
