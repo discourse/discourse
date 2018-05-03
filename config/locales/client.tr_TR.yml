@@ -331,6 +331,9 @@ tr_TR:
         make_user_group_owner: "Sahip yap"
         remove_user_as_group_owner: "Sahipliğini İptal Et"
     groups:
+      manage:
+        logs:
+          from: "Kimden"
       public_admission: "Kullanıcıların gruba özgürce katılmalarına izin ver (grubun Herkese açık olması gerekir)"
       public_exit: "Kullanıcıların grubu özgürce terk etmesine izin ver"
       empty:
@@ -341,6 +344,8 @@ tr_TR:
         topics: "Bu grubun üyeleri tarafından oluşturulmuştur başlık yoktur."
         logs: "Bu grup için log kaydı bulunmamaktadır."
       add: "Ekle"
+      join: "Katıl"
+      leave: "Ayrıl"
       message: "ileti"
       allow_membership_requests: "Kullanıcılar'ın grup sahiplerine üyelik talepleri göndermesine izin ver"
       membership_request:
@@ -349,11 +354,16 @@ tr_TR:
         reason: "Grup sahiplerine bu gruba neden üye olduğunuzu bildirin"
       membership: "Üyelik"
       name: "İsim"
+      group_name: "Grup adı"
+      user_count: "Kullanıcılar"
       bio: "Grup Hakkında"
+      selector_placeholder: "kullanıcı adı girin"
       owner: "sahip"
       index:
         title: "Gruplar"
+        all: "Tüm Gruplar"
         empty: "Görünen hiç bir grup bulunmamaktadır."
+        automatic: "Otomatik"
       title:
         one: Gruplar
         other: Gruplar
@@ -565,6 +575,7 @@ tr_TR:
         move_to_archive: " Arşiv"
         failed_to_move: "Seçilen iletileri taşımak başarısız oldu (muhtemelen ağınız çöktü)"
         select_all: "Tümünü seç"
+        tags: "Etiketler"
       preferences_nav:
         account: "Hesap"
         profile: "Profil"
@@ -916,6 +927,7 @@ tr_TR:
       button_ok: "Tamam"
       button_help: "Yardım"
     email_login:
+      button_label: "e-posta ile"
       complete_email_not_found: "%{email}Hiç bir hesap bulunamadı"
     login:
       title: "Giriş Yap"
@@ -1298,6 +1310,7 @@ tr_TR:
         other: konuda {{count}} tane gönderi var
       create: 'Yeni Konu'
       create_long: 'Yeni bir konu oluştur'
+      open_draft: "Taslağı Aç"
       private_message: 'İleti başlat'
       archive_message:
         help: 'İletiyi arşivine taşı'
@@ -2135,11 +2148,13 @@ tr_TR:
       </p>
     tagging:
       all_tags: "Tüm Etiketler"
+      other_tags: "Diğer Etiketler"
       selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
       changed: "değişen etiketler:"
       tags: "Etiketler"
       delete_tag: "Etiketi Sil"
+      delete_confirm_no_topics: "Bu etiketi silmek istediğinize emin misiniz?"
       rename_tag: "Etiketi Yeniden Adlandır"
       rename_instructions: "Bu etiket için yeni bir ad seçin:"
       sort_by: "Sırala:"
@@ -2799,6 +2814,7 @@ tr_TR:
         suspend_reason_placeholder: "Askıya alma sebebi"
         suspend_message: "E Posta Mesajı"
         suspended_by: "Uzaklaştıran"
+        silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
         delete_all_posts: "Tüm gönderileri sil"
         delete_all_posts_confirm_MF: "{POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Emin misiniz?"

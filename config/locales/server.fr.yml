@@ -820,11 +820,11 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de courriels"
     user_to_user_private_messages:
-      title: "Utilisateur à utilisateur"
+      title: "Utilisateur à utilisateur (sans réponses)"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     user_to_user_private_messages_with_replies:
-      title: "Utilisateur à utilisateur (avec réponses)"
+      title: "Utilisateur à utilisateur (y compris réponses)"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     system_private_messages:
@@ -1117,7 +1117,7 @@ fr:
     sso_overrides_avatar: "Surcharge les avatars des utilisateurs avec les avatars d'un SSO. Si activé, il est fortement recommandé de désactiver allow_uploaded_avatars."
     sso_not_approved_url: "Rediriger les comptes SSO non validés vers cette URL"
     sso_allows_all_return_paths: "Ne pas restreindre le domaine pour les return_paths fournis par le SSO (par défaut, le chemin de retour doit être sur le site actuel)"
-    enable_local_logins: "Activer les comptes locaux avec pseudo et mot de passe. (Note : ceci doit être activé pour que les invitations fonctionnent)"
+    enable_local_logins: "Activer les comptes locaux avec pseudo et mot de passe. Ceci doit être activé pour que les invitations fonctionnent. ATTENTION : si désactivé, vous ne pourrez peut-être plus vous connecter si vous n'avez pas configuré au préalable au moins une autre méthode de connection."
     enable_local_logins_via_email: "Permettre aux utilisateurs de demander qu'un lien de connexion en un clic leur soit envoyé par courriel."
     allow_new_registrations: "Autorise l'inscription des nouveaux utilisateurs. Décocher pour prévenir la création de nouveau compte."
     enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."

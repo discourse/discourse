@@ -309,7 +309,6 @@ gl:
       xaxis: "Día"
       yaxis: "Número de correos-e enviados"
     user_to_user_private_messages:
-      title: "Entre usuarios"
       xaxis: "Día"
       yaxis: "Número de mensaxes"
     system_private_messages:

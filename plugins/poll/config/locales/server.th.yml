@@ -23,7 +23,6 @@ th:
     named_poll_with_multiple_choices_has_invalid_parameters: "แบบสำรวจพร้อมหลายตัวเลือกชื่อ <strong>%{name}</strong> มีการตั้งค่าผิด"
     requires_at_least_1_valid_option: "คุณจำเป็นต้องเลือกอย่างน้อย 1 ตัวเลือก"
     default_cannot_be_made_public: "โพลด้วยคะแนนเสียงนี้ไม่สามารถทำให้เป็นสาธารณะได้."
-    named_cannot_be_made_public: "โพลชื่อ <strong>%{name}</strong> ด้วยคะแนนเสียงนี้ไม่สามารถทำให้เป็นสาธารณะได้."
     no_polls_associated_with_this_post: "ไม่มีการสำรวจใดมีความเกี่ยวข้องกับโพสนี้"
     no_poll_with_this_name: "ไม่มีการสำรวจที่ชื่อ <strong>%{name}</strong> เกี่ยวข้องกับโพสนี้"
     post_is_deleted: "ไม่สามารถลบโพสได้"

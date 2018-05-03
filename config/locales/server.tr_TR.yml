@@ -552,7 +552,6 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "E-posta Sayısı"
     user_to_user_private_messages:
-      title: "Kullanıcıdan kullanıcıya"
       xaxis: "Gün"
       yaxis: "İleti sayısı"
     system_private_messages:
@@ -777,7 +776,6 @@ tr_TR:
     sso_overrides_name: "SSO yararlı yükündeki dış sitedeki tam adı, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel tam adın üzerine yazar."
     sso_overrides_avatar: "SSO yararlı yükündeki dış site avatarını kullanıcı avatarının üzerine yazar Eğer etkinleştirildiyse, allow_uploaded_avatars ayarının devre dışı bırakılması şiddetle önerilir"
     sso_not_approved_url: "Bu bağlantıya onaylanmamış SSO hesaplarını yönlendir."
-    enable_local_logins: "Yerel kullanıcı adı ve parola bazlı hesap girişlerini etkinleştir. (Not: davetiyelerin çalışabilmesi için bu ayarın etkinleştirilmesi gerekli)"
     allow_new_registrations: "Yeni kayıtlara izin ver. Yeni hesap oluşturulmasını engellemek için burayı işaretlemeyin."
     enable_signup_cta: "Geri dönen anonim kullanıcılara hesap oluşturmaları için bir uyarı göster."
     enable_yahoo_logins: "Yahoo doğrulamasını etkinleştir"

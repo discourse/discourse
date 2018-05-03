@@ -655,7 +655,6 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Número de Emails"
     user_to_user_private_messages:
-      title: "Usuário-a-Usuário"
       xaxis: "Dia"
       yaxis: "Número de mensagens particulares"
     system_private_messages:
@@ -891,7 +890,6 @@ pt_BR:
     sso_overrides_name: "Substitui nome completo local com nome completo do site externo através da informação de login, e previne mudanças locais."
     sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo de SSO. Se habilitado, desabilitar allow_uploaded_avatars é altamente recomendado"
     sso_not_approved_url: "Redireciona contas não aprovadas no login externo para este endereço"
-    enable_local_logins: "Habilitar nome de usuário e senha local para autenticação nas contas. (Observação: deve ser habilitado para funcionamento dos convites)"
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_signup_cta: "Mostra um aviso aos usuários anônimos que retornem, solicitando que criem uma conta."
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"

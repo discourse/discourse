@@ -676,7 +676,6 @@ da:
       xaxis: "Dag"
       yaxis: "Antal e-mails"
     user_to_user_private_messages:
-      title: "Bruger-til-bruger"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
     system_private_messages:

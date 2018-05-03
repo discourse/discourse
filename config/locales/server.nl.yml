@@ -700,7 +700,6 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal e-mails"
     user_to_user_private_messages:
-      title: "Gebruiker-naar-gebruiker"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
     system_private_messages:
@@ -935,7 +934,6 @@ nl:
     sso_overrides_name: "Overschrijft bij elke aanmelding lokaal opgegeven volledige naam door volledige naam uit SSO payload van externe site, en voorkomt lokaal wijzigen"
     sso_overrides_avatar: "Overschrijft gebruikers avatar door avatar uit SSO payload van externe site, uitschakelen van allow_uploaded_avatars is sterk aanbevolen."
     sso_not_approved_url: "Stuur niet geaccepteerde SSO accounts door naar deze URL"
-    enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. (Let op: dit moet aan staan voor toegang op basis van een uitnodiging.)"
     allow_new_registrations: "Nieuwe gebruikers registreren toestaan. Uitschakelen om te voorkomen dat iedereen een nieuw account kan maken."
     enable_signup_cta: "Een melding tonen voor terugkerende anonieme gebruikers waarin wordt gevraagd zich voor een account te registreren"
     enable_yahoo_logins: "Yahoo-authenticatie inschakelen"

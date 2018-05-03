@@ -2724,7 +2724,6 @@ de:
           details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
         flag_event:
           name: "Meldung-Ereignis"
-          details: "Wenn eine Meldung erstellt, akzeptiert, abgelehnt oder verschoben wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"

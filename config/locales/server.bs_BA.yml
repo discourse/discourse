@@ -305,7 +305,6 @@ bs_BA:
       xaxis: "Day"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
-      title: "User-to-User"
       xaxis: "Day"
       yaxis: "Number of private messages"
     system_private_messages:
@@ -430,7 +429,6 @@ bs_BA:
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
-    enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."

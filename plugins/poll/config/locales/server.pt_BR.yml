@@ -26,7 +26,6 @@ pt_BR:
     named_poll_with_multiple_choices_has_invalid_parameters: "Enquete chamada <strong>%{name}</strong> com múltiplas escolhas tem parâmetros inválidos."
     requires_at_least_1_valid_option: "Você deve selecionar pelo menos 1 opção válida."
     default_cannot_be_made_public: "Enquetes com votos não podem ser tornadas públicas."
-    named_cannot_be_made_public: "A enquete de nome <strong>%{name}</strong> tem votos e não pode se tornar pública."
     edit_window_expired:
       op_cannot_edit_options: "Você não pode adicionar ou remover opções das enquetes depois dos primeiros %{minutes} minutos. Por favor contate um moderador se você precisar editar uma opção da enquete."
       staff_cannot_add_or_remove_options: "Você não pode adicionar ou remover opções das enquetes depois dos primeiros %{minutes} minutos. Você deve fechar este tópico e criar um novo."

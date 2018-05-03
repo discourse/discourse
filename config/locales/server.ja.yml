@@ -441,7 +441,6 @@ ja:
       xaxis: "日"
       yaxis: "メールの数"
     user_to_user_private_messages:
-      title: "ユーザーからユーザーへ"
       xaxis: "日"
       yaxis: "メッセージ数"
     system_private_messages:
@@ -643,7 +642,6 @@ ja:
     sso_overrides_name: "ログインする度に、SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きし、ローカルでの変更を防ぐ"
     sso_overrides_avatar: "SSOペイロードから取得した外部サイトのプロフィール画像でローカルのプロフィール画像を上書きする。有効にする場合、プロフィール画像のアップデートを無効にする事を強く薦めます"
     sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
-    enable_local_logins: "ローカルのユーザ名、パスワードでのログインを有効にする (注意: 招待を使用するには有効にする必要があります)"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
     enable_google_oauth2_logins: "グーグル Oauth2 認証を有効にします。これはグーグルが現在サポートしている認証方式です。key と secret が必要です。"

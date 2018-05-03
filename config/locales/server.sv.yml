@@ -601,7 +601,6 @@ sv:
       xaxis: "Dag"
       yaxis: "Antal e-post"
     user_to_user_private_messages:
-      title: "Användare-till-användare"
       xaxis: "Dag"
       yaxis: "Antal meddelanden"
     system_private_messages:
@@ -842,7 +841,6 @@ sv:
     sso_overrides_name: "Åsidosätter lokala fullständiga namn med externa webbplatsers fullständiga namn från SSO-nyttolast vid varje inloggning, och förhindrar lokala ändringar."
     sso_overrides_avatar: "Åsidosätter användares avatarer med externa webbplatsers avatarer från SSO-nyttolast. Om aktiverad är inaktivering av allow_uploaded_avatars högt rekommenderat"
     sso_not_approved_url: "Omdirigera icke godkända SSO-konton till den här URL:en"
-    enable_local_logins: "Aktivera traditionell autentisering med lokala användarnamn och lösenord. (Obs: det här måste vara aktiverat för att inbjudningar ska fungera)"
     allow_new_registrations: "Tillåt nya användarregistreringar. Avbocka det här för att förhindra vem som helst från att skapa ett nytt konto."
     enable_signup_cta: "Visa en notis för återvändande anonyma användare för att förmå dem att registrera ett nytt konto."
     enable_yahoo_logins: "Aktivera Yahoo autentisering"
