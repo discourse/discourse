@@ -21,8 +21,12 @@ class Cache < ActiveSupport::Cache::Store
     redis.reconnect
   end
 
+  def keys(pattern = "*")
+    redis.keys("#{@namespace}:#{pattern}")
+  end
+
   def clear
-    redis.keys("#{@namespace}:*").each do |k|
+    keys.each do |k|
       redis.del(k)
     end
   end

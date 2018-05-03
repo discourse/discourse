@@ -1,0 +1,6 @@
+{{#if isLoading}}
+  <span class="title">{{computedTitle}}</span>
+  <div class="spinner {{size}}"></div>
+{{else}}
+  {{yield}}
+{{/if}}

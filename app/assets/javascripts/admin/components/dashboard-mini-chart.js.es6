@@ -1,43 +1,23 @@
 import { ajax } from "discourse/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
-import loadScript from "discourse/lib/load-script";
+import AsyncReport from "admin/mixins/async-report";
 import Report from "admin/models/report";
+import { number } from 'discourse/lib/formatter';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-mini-chart"],
-
-  classNameBindings: ["trend", "oneDataPoint", "isLoading"],
-
-  isLoading: false,
-  total: null,
-  trend: null,
-  title: null,
+  classNameBindings: ["thirtyDayTrend", "oneDataPoint"],
+  isLoading: true,
+  thirtyDayTrend: Ember.computed.alias("report.thirtyDayTrend"),
   oneDataPoint: false,
   backgroundColor: "rgba(200,220,240,0.3)",
   borderColor: "#08C",
+  average: false,
 
-  didInsertElement() {
+  willDestroyEelement() {
     this._super();
 
-    if (this.get("model")) {
-      loadScript("/javascripts/Chart.min.js").then(() => {
-        this._setPropertiesFromModel(this.get("model"));
-        this._drawChart();
-      });
-    }
-  },
-
-  didUpdateAttrs() {
-    this._super();
-
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      if (this.get("model") && !this.get("values")) {
-        this._setPropertiesFromModel(this.get("model"));
-        this._drawChart();
-      } else if (this.get("dataSource")) {
-        this._fetchReport();
-      }
-    });
+    this.messageBus.unsubscribe(this.get("dataSource"));
   },
 
   @computed("dataSourceName")
@@ -47,9 +27,9 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("trend")
-  trendIcon(trend) {
-    switch (trend) {
+  @computed("thirtyDayTrend")
+  trendIcon(thirtyDayTrend) {
+    switch (thirtyDayTrend) {
       case "trending-up":
         return "angle-up";
       case "trending-down":
@@ -63,79 +43,73 @@ export default Ember.Component.extend({
     }
   },
 
-  _fetchReport() {
-    if (this.get("isLoading")) return;
-
+  fetchReport() {
     this.set("isLoading", true);
 
     let payload = {
-      data: {}
+      data: { async: true }
     };
 
     if (this.get("startDate")) {
-      payload.data.start_date = this.get("startDate").toISOString();
+      payload.data.start_date = this.get("startDate").format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
     }
 
     if (this.get("endDate")) {
-      payload.data.end_date = this.get("endDate").toISOString();
+      payload.data.end_date = this.get("endDate").format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
     }
 
     ajax(this.get("dataSource"), payload)
       .then((response) => {
-        this._setPropertiesFromModel(Report.create(response.report));
+        // if (!Ember.isEmpty(response.report.data)) {
+          this._setPropertiesFromReport(Report.create(response.report));
+        // }
       })
       .finally(() => {
-        this.set("isLoading", false);
+        if (this.get("oneDataPoint")) {
+          this.set("isLoading", false);
+          return;
+        }
 
-        Ember.run.schedule("afterRender", () => {
-          if (!this.get("oneDataPoint")) {
-            this._drawChart();
-          }
-        });
+        if (!Ember.isEmpty(this.get("report.data"))) {
+          this.set("isLoading", false);
+          this.renderReport();
+        }
       });
   },
 
-  _drawChart() {
-    const $chartCanvas = this.$(".chart-canvas");
-    if (!$chartCanvas.length) return;
+  renderReport() {
+    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+    if (this.get("oneDataPoint")) return;
 
-    const context = $chartCanvas[0].getContext("2d");
+    Ember.run.schedule("afterRender", () => {
+      const $chartCanvas = this.$(".chart-canvas");
 
-    const data = {
-      labels: this.get("labels"),
-      datasets: [{
-        data: Ember.makeArray(this.get("values")),
-        backgroundColor: this.get("backgroundColor"),
-        borderColor: this.get("borderColor")
-      }]
-    };
+      if (!$chartCanvas.length) return;
+      const context = $chartCanvas[0].getContext("2d");
 
-    this._chart = new window.Chart(context, this._buildChartConfig(data));
-  },
+      const data = {
+        labels: this.get("labels"),
+        datasets: [{
+          data: Ember.makeArray(this.get("values")),
+          backgroundColor: this.get("backgroundColor"),
+          borderColor: this.get("borderColor")
+        }]
+      };
 
-  _setPropertiesFromModel(report) {
-    const oneDataPoint = (this.get("startDate") && this.get("endDate")) &&
-      this.get("startDate").isSame(this.get("endDate"), "day");
-
-    this.setProperties({
-      oneDataPoint,
-      labels: report.get("data").map(r => r.x),
-      values: report.get("data").map(r => r.y),
-      total: report.get("total"),
-      description: report.get("description"),
-      title: report.get("title"),
-      trend: report.get("sevenDayTrend"),
-      prev30Days: report.get("prev30Days"),
+      this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },
 
+  _setPropertiesFromReport(report) {
+    const oneDataPoint = (this.get("startDate") && this.get("endDate")) &&
+      this.get("startDate").isSame(this.get("endDate"), "day");
+
+    report.set("average", this.get("average"));
+
+    this.setProperties({ oneDataPoint, report });
+  },
+
   _buildChartConfig(data) {
-    const values = data.datasets[0].data;
-    const max = Math.max(...values);
-    const min = Math.min(...values);
-
-    const stepSize = Math.max(...[Math.ceil((max - min) / 5) * 5, 20]);
-
     return {
       type: "line",
       data,
@@ -144,7 +118,6 @@ export default Ember.Component.extend({
           display: false
         },
         responsive: true,
-        maintainAspectRatio: false,
         layout: {
           padding: {
             left: 0,
@@ -156,11 +129,7 @@ export default Ember.Component.extend({
         scales: {
           yAxes: [{
             display: true,
-            ticks: {
-              suggestedMin: 0,
-              stepSize,
-              suggestedMax: max + stepSize
-            }
+            ticks: { callback: (label) => number(label) }
           }],
           xAxes: [{
             display: true,

@@ -1228,6 +1228,9 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
+    conditional_loading_section:
+      loading: Loading...
+
     select_kit:
       default_header_text: Select...
       no_content: No matches found

@@ -342,6 +342,76 @@ describe Report do
     end
   end
 
+  describe 'DAU/MAU report' do
+    let(:report) { Report.find('dau_by_mau') }
+
+    context "no activity" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with different users/visits" do
+      before do
+        freeze_time
+
+        arpit = Fabricate(:user)
+        arpit.user_visits.create(visited_at:  1.day.ago)
+
+        sam = Fabricate(:user)
+        sam.user_visits.create(visited_at: 2.days.ago)
+
+        robin = Fabricate(:user)
+        robin.user_visits.create(visited_at: 2.days.ago)
+
+        michael = Fabricate(:user)
+        michael.user_visits.create(visited_at: 35.days.ago)
+
+        gerhard = Fabricate(:user)
+        gerhard.user_visits.create(visited_at: 45.days.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data.first[:y]).to eq(100)
+        expect(report.data.last[:y]).to eq(34)
+        expect(report.prev30Days).to eq(75)
+      end
+    end
+  end
+
+  describe 'Daily engaged users' do
+    let(:report) { Report.find('daily_engaged_users') }
+
+    context "no activity" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with different activities" do
+      before do
+        freeze_time
+
+        UserActionCreator.enable
+
+        arpit = Fabricate(:user)
+        sam = Fabricate(:user)
+
+        jeff = Fabricate(:user, created_at: 1.day.ago)
+        topic = Fabricate(:topic, user: jeff, created_at: 1.day.ago)
+        post = Fabricate(:post, topic: topic, user: jeff, created_at: 1.day.ago)
+
+        PostAction.act(arpit, post, PostActionType.types[:like])
+        PostAction.act(sam, post, PostActionType.types[:like])
+      end
+
+      it "returns a report with data" do
+        expect(report.data.first[:y]).to eq(1)
+        expect(report.data.last[:y]).to eq(2)
+      end
+    end
+  end
+
   describe 'posts counts' do
     it "only counts regular posts" do
       post = Fabricate(:post)
