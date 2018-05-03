@@ -39,7 +39,7 @@ class Plugin::Metadata
     "discourse-voting",
     "docker_manager",
     "discourse-signatures",
-    "discourse-chronos",
+    "discourse-cronos",
     "discourse-crowd",
     "discourse-footnote",
     "discourse-gradle-issue",
