@@ -1,5 +1,9 @@
+// We should try to reuse the user page HTML for groups when possible
+// To style group content differently, use the existing classes with a .group parent class.
+// For example: .group .user-navigation 
+
 .group-details-container {
-  background: rgba(230, 230, 230, 0.3);
+  background: $primary-very-low;
   padding: 20px;
   margin-bottom: 15px;
   position: relative;
@@ -22,45 +26,6 @@
   .group-members-dropdown, .group-members-add {
     vertical-align: middle;
   }
-}
-
-.group-post {
-  .group-post-header {
-    display: flex;
-
-    .group-post-avatar {
-      margin-right: 0.5em;
-    }
-
-    .time,
-    .delete-info {
-      color: lighten($primary, 40%);
-      font-size: $font-down-1;
-    }
-
-    .group-member-info {
-      display: flex;
-      color: lighten($primary, 40%);
-    }
-  }
-
-  .group-post-info {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    .group-post-title {
-      font-size: $font-up-1;
-    }
-  }
-
-  .group-post-excerpt {
-    margin: 1em 0;
-    word-wrap: break-word;
-    color: $primary;
-  }
-
-  padding: 1em 0;
-  border-bottom: 1px solid $primary-low;
 }
 
 .group-info {
@@ -173,7 +138,7 @@ table.group-members {
 
     td {
       text-align: center;
-      color: blend-primary-secondary(50%);
+      color: $primary-medium;
       padding: 0.8em 0;
     }
   }
