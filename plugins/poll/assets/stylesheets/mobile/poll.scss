@@ -8,6 +8,8 @@ div.poll {
   }
 
   .poll-info {
-    .info-text:before {content:"\00a0";} // nbsp
+    .info-label:before {
+      content:"\00a0"; //nbsp
+    }
   }
 }
