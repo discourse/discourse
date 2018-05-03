@@ -237,8 +237,6 @@ describe UsernameChanger do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
 
         it 'replaces the username in quote tags' do
-          avatar_url = user.avatar_template_url.gsub("{size}", "40")
-
           post = create_post_and_change_username(raw: <<~RAW)
             Lorem ipsum
 
@@ -275,12 +273,14 @@ describe UsernameChanger do
             dolor sit amet
           RAW
 
+          avatar_url = user.avatar_template.gsub("{size}", "40")
+
           expect(post.cooked).to match_html(<<~HTML)
             <p>Lorem ipsum</p>
             <aside class="quote no-group" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -288,7 +288,7 @@ describe UsernameChanger do
             <aside class="quote no-group">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -296,7 +296,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>

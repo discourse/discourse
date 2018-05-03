@@ -82,13 +82,17 @@ module Jobs
       end
 
       doc.css("aside.quote > div.title").each do |div|
-        # TODO Update avatar URL
         div.children.each do |child|
           child.content = child.content.gsub(@cooked_quote_username_regex, @new_username) if child.text?
         end
+        div.at_css("img.avatar")&.replace(avatar_img)
       end
 
       doc.to_html
+    end
+
+    def avatar_img
+      @avatar_img ||= PrettyText.avatar_img(User.find_by_id(@user_id).avatar_template, "tiny")
     end
   end
 end
