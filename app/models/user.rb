@@ -857,7 +857,7 @@ class User < ActiveRecord::Base
                 FROM incoming_emails e
                 WHERE e.user_id = u.id AND
                       e.post_id IS NOT NULL AND
-                      e.created_at BETWEEN (d.generated_date - INTERVAL '89 days') :: DATE AND d.generated_date
+                      e.created_at :: DATE BETWEEN (d.generated_date - INTERVAL '89 days') :: DATE AND d.generated_date
             )
       GROUP BY date_trunc('day', d.generated_date) :: DATE
       ORDER BY date_trunc('day', d.generated_date) :: DATE
