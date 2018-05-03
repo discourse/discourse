@@ -52,8 +52,13 @@ div.poll {
       font-size: 3.5em;
     }
 
-    .info-text {
+    .info-label {
       font-size: 1.7em;
+    }
+
+    .info-text {
+      margin: 5px 0;
+      display: block;
     }
   }
 
