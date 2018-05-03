@@ -53,6 +53,7 @@ bootsnap-compile-cache/
 !/plugins/discourse-nginx-performance-report
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
+!/plugins/discourse-cronos
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
