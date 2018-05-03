@@ -30,7 +30,6 @@ sk:
     named_poll_with_multiple_choices_has_invalid_parameters: "Hlasovanie s názvom <strong>%{name}</strong> s viac možnosťami má nesprávne parametre."
     requires_at_least_1_valid_option: "Musite vybrať aspoň 1 platnú možnosť."
     default_cannot_be_made_public: "Hlasovanie s hlasmi nemôže byť zverejnené."
-    named_cannot_be_made_public: "Hlasovanie s názvom <strong>%{name}</strong> má hlasy, preto nemôže byť zverejnené."
     edit_window_expired:
       op_cannot_edit_options: "Po prvých %{minutes}  minútach už nemôžete pridať alebo odstrániť možnosti hlasovania. Ak potrebujete upraviť možnosti hlasovania prosím kontaktujte moderátora."
       staff_cannot_add_or_remove_options: "Po prvých %{minutes}  minútach už nemôžete pridať alebo odstrániť možnosti hlasovania. Miesto toho by ste mali uzavrieť túto tému a miesto nej vytvoriť inú."

@@ -651,7 +651,6 @@ ca:
       xaxis: "Dia"
       yaxis: "Quantitat de correus"
     user_to_user_private_messages:
-      title: "Persona a persona"
       xaxis: "Dia"
       yaxis: "Quantitat de missatges"
     system_private_messages:
@@ -897,7 +896,6 @@ ca:
     sso_overrides_avatar: "Anul·la l'avatar de la persona amb avatar de lloc extern de la càrrega útil d'autenticació única, es recomana molt la inhabilitació de allow_uploaded_avatars"
     sso_not_approved_url: "Redirecciona els comptes d'autenticació única a aquesta adreça URL"
     sso_allows_all_return_paths: "No restringeixis el domini per a return_paths facilitat per l'autenticació única (per defecte el camí de retorn ha de ser el lloc actual)"
-    enable_local_logins: "Activa la connexió dels comptes basats en noms i contrasenyes locals. (Nota: això ha d'estar activat perquè les invitacions funcionin)"
     allow_new_registrations: "Permet registres de noves persones. Inhabilita-ho per tal d'evitar que qualsevol pugui crear un nou compte."
     enable_signup_cta: "Mostra un avís a les persones anònimes que tornin, convidant-les a registrar-s'hi amb un compte."
     enable_yahoo_logins: "Activa l'autenticació amb Yahoo"

@@ -650,7 +650,6 @@ ro:
       xaxis: "Zi"
       yaxis: "Numărul de emailuri"
     user_to_user_private_messages:
-      title: "De la utilizator la utilizator"
       xaxis: "Zi"
       yaxis: "Număr de mesaje"
     system_private_messages:
@@ -892,7 +891,6 @@ ro:
     sso_overrides_avatar: "Suprascrie avatarul utilizatorului cu avatarul din datele SSO. Dacă este activat, se recomandă călduros dezactivarea allow_uploaded_avatars"
     sso_not_approved_url: "Redirecționează conturile neaprobate SSO către acest URL"
     sso_allows_all_return_paths: "Nu restricționa domeniul pentru return_paths furnizate de SSO (implicit, calea de întoarcere trebuie să fie pe site-ul curent)"
-    enable_local_logins: "Activează numele de utilizator local și conturile bazate pe autentificare cu parolă. (Notă: Pentru ca invitațiile să funcționeze, această opțiune trebuie să fie activată)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     enable_yahoo_logins: "Activează autentificarea cu Yahoo"

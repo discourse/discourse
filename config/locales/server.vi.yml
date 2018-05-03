@@ -489,7 +489,6 @@ vi:
       xaxis: "Ngày"
       yaxis: "Số lượng emails"
     user_to_user_private_messages:
-      title: "Người dùng tới người dùng"
       xaxis: "Ngày"
       yaxis: "Số lượng tin nhắn"
     system_private_messages:
@@ -702,7 +701,6 @@ vi:
     sso_overrides_name: "Ghi đè tên thành viên cục bộ với tên thành viên trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ."
     sso_overrides_avatar: "Ghi đè avatar thành viên cục bộ với avatar thành viên trang ngoài từ SSO. Nếu bật, bạn nên vô hiệu hóa allow_uploaded_avatars"
     sso_not_approved_url: "Chuyển những tài khoản SSO chưa duyệt tới URL này"
-    enable_local_logins: "Bật tên tài khoản và mật khẩu đăng nhập cục bộ dựa trên tài khoản. (Chú ý: bật thiết lập này để kích hoạt chức năng gửi lời mời)"
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     enable_yahoo_logins: "Cho phé chứng thực qua Yahoo"

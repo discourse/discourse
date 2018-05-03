@@ -583,7 +583,6 @@ et:
       xaxis: "Päev"
       yaxis: "Kirjade hulk"
     user_to_user_private_messages:
-      title: "Kasutajalt kasutajale"
       xaxis: "Päev"
       yaxis: "Sõnumite arv"
     system_private_messages:

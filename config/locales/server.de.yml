@@ -820,11 +820,9 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl der E-Mails"
     user_to_user_private_messages:
-      title: "Benutzer-zu-Benutzer"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
     user_to_user_private_messages_with_replies:
-      title: "Benutzer-zu-Benutzer (mit Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
     system_private_messages:
@@ -1117,7 +1115,6 @@ de:
     sso_overrides_avatar: "Überschreibt das Profilbild des Benutzers mit dem Profilbild aus dem SSO-Payload. Wenn aktiv, dann sollte allow_uploaded_avatars deaktiviert werden."
     sso_not_approved_url: "Nicht genehmigte SSO-Konten zu dieser URL weiterleiten"
     sso_allows_all_return_paths: "Alle Domain für SSO-Return-Paths zulassen (standardmäßig muss der Return Path auf der aktuellen Seite sein)"
-    enable_local_logins: "Aktiviere Login mit lokal gespeicherten Benutzernamen und Passwörtern. (Anmerkung: muss aktiviert sein, damit Einladungen funktionieren)"
     enable_local_logins_via_email: "Erlaube Benutzern, einen einmaligen Anmeldelink anzufordern, der ihnen als E-Mail geschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige wiederkehrenden Gästen einen Hinweis, dass diese sich Anmelden oder Registrieren sollen."

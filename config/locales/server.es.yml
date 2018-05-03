@@ -252,6 +252,10 @@ es:
     delete_reason: "Eliminado vía cola de moderación de posts"
     not_found: "Post no encontrado o ya actualizado."
   groups:
+    success:
+      bulk_add:
+        one: '%{count} usuario ha sido añadido al grupo.'
+        other: '%{count} usuarios han sido añadidos al grupo.'
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' no es un nivel de confianza válido"
       can_not_modify_automatic: "No se puede modificar un grupo automático"
@@ -751,6 +755,12 @@ es:
       title: "Nuevos usuarios"
       xaxis: "Día"
       yaxis: "Número de usuarios nuevos"
+      description: "Usuarios creados para este periodo"
+    new_contributors:
+      title: "Nuevos contribuyentes"
+      xaxis: "Día"
+      yaxis: "Número de nuevos contribuyentes"
+      description: "Número de usuarios que han hecho su primera contribución"
     profile_views:
       title: "Visitas a perfil de usuario"
       xaxis: "Día"
@@ -759,6 +769,7 @@ es:
       title: "Temas nuevos"
       xaxis: "Día"
       yaxis: "Número de topics nuevos"
+      description: "Temas creados para este periodo"
     posts:
       title: "Nuevos posts"
       xaxis: "día"
@@ -803,11 +814,9 @@ es:
       xaxis: "Día"
       yaxis: "Número de correos"
     user_to_user_private_messages:
-      title: "Usuario a usuario"
       xaxis: "Día"
       yaxis: "Número de mensajes"
     user_to_user_private_messages_with_replies:
-      title: "De usuario a usuario (con respuesta)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
     system_private_messages:
@@ -1092,7 +1101,6 @@ es:
     sso_overrides_avatar: "Sustituye el avatar de usuario con el avatar proveniente del sitio externo configurado para el SSO. Si se activa esta opción, se recomienda encarecidamente deshabilitar allow_uploaded_avatars"
     sso_not_approved_url: "Redireccionar cuentas SSO sin aprobar a esta URL"
     sso_allows_all_return_paths: "No restringe el dominio para return_paths provisto por SSO (por defecto, el return_paths debe ser sobre el sitio actual)."
-    enable_local_logins: "Habilitar las cuentas con nombre de usuario y contraseña de forma local. (Nota: esto debe estar habilitado para que funcionen las invitaciones)"
     enable_local_logins_via_email: "Permitir a los usuarios solicitar un enlace de un solo uso para iniciar sesión rápidamente, que les será enviado por email"
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."

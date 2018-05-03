@@ -664,7 +664,6 @@ fa_IR:
       xaxis: "روز"
       yaxis: "تعداد ایمیل‌ها"
     user_to_user_private_messages:
-      title: "کاربر به کاربر"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
     system_private_messages:
@@ -914,7 +913,6 @@ fa_IR:
     sso_overrides_avatar: "لغو آواتار کاربر با آواتار سایت خارجی از محموله SSO. اگر فعال باشد، غیر فعال کردن allow_uploaded_avatars به شدت توصیه می شود"
     sso_not_approved_url: "حساب‌های تأیید نشده SSO را به این URL بفرست"
     sso_allows_all_return_paths: "از دامنه برای return_paths که توسط SSO فراهم شده جلوگیری نکن (به صورت پیشفرض مسیر برگشتی باید در همین سایت باشد)"
-    enable_local_logins: "نام‌کاربری و رمز ورود را بر اسای حساب‌های کاربری فعال کن. (نکته: این باید برای کارکرد دعوتنامه‌ها فعال باشد)"
     allow_new_registrations: "به کاربر جدید اجازه ثبت‌نام بده. لغو این انتخاب برای جلوگیری از ساخت حساب‌کاربری جدید. "
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     enable_yahoo_logins: "احراز هویت یاهو را فعال کن "

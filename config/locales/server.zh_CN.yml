@@ -693,7 +693,6 @@ zh_CN:
       xaxis: "天"
       yaxis: "邮件数"
     user_to_user_private_messages:
-      title: "用户至用户"
       xaxis: "天"
       yaxis: "私信数"
     user_to_user_private_messages_with_replies:
@@ -964,7 +963,6 @@ zh_CN:
     sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
     sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（默认情况下返回地址必须位于当前站点）"
-    enable_local_logins: "启用本地用户名和密码验证。（注意：邀请特性需要该选项）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
     enable_signup_cta: "显示推荐创建账户的提示给那些回访的未注册用户。"
     enable_yahoo_logins: "启用 Yahoo 帐号验证登录"

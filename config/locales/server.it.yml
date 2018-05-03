@@ -718,7 +718,6 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di Email"
     user_to_user_private_messages:
-      title: "Utente-a-Utente"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
     system_private_messages:
@@ -985,7 +984,6 @@ it:
     sso_overrides_avatar: "Sostituisce l'avatar dell'utente con un avatar su un sito esterno usando SSO. Se abilitato, si raccomanda di disabilitare allow_uploaded_avatars"
     sso_not_approved_url: "Ridirigi a questa URL gli account SSO non approvati"
     sso_allows_all_return_paths: "Non restringere il dominio per i return_paths forniti da SSO (per default il return path deve essere sul sito corrente)"
-    enable_local_logins: "Abilita la connessione degli account con nome utente e password locali. (Nota: deve essere abilitato affinché funzionino gli inviti)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
     enable_signup_cta: "Mostra una notifica agli utenti anonimi che ritornano chiedendo loro di registrare un account."
     enable_yahoo_logins: "Abilita l'autenticazione con Yahoo"

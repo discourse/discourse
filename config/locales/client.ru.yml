@@ -615,6 +615,7 @@ ru:
       disable_jump_reply: "Не переходить к вашему новому сообщению после ответа"
       dynamic_favicon: "Показывать количество новых / обновлённых тем на иконке сообщений"
       theme_default_on_all_devices: "Поставить этот стиль по умолчанию на всех моих устройствах"
+      allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Позволить отвечать с цитированием выделенного текста"
       change: "изменить"
@@ -1013,6 +1014,11 @@ ru:
     last_post: Дата
     time_read: Прочитанные
     last_reply_lowercase: последний ответ
+    replies_lowercase:
+      few: ответа
+      many: ответов
+      one: ответ
+      other: ответ
     signup_cta:
       sign_up: "Зарегистрироваться"
       hide_session: "Напомнить мне завтра"
@@ -1281,6 +1287,11 @@ ru:
       more: "посмотреть более ранние уведомления"
       total_flagged: "всего сообщений с жалобами"
       mentioned: "<span>{{username}}</span> {{description}}"
+      liked_many:
+        few: <span>{{username}}, {{username2}} и {{count}} другие</span> {{description}}
+        many: <span>{{username}}, {{username2}} и {{count}} другие</span> {{description}}
+        one: <span>{{username}}, {{username2}} и 1 другой</span> {{description}}
+        other: <span>{{username}}, {{username2}} и {{count}} другие</span> {{description}}
       granted_badge: "Заслужил(а) '{{description}}'"
       watching_first_post: "<span>Новая тема</span> {{description}}"
       group_message_summary:
@@ -1856,6 +1867,18 @@ ru:
         undelete: "отменить удаление"
         share: "поделиться ссылкой на сообщение"
         more: "Ещё"
+        delete_replies:
+          confirm: "Вы также хотите удалить ответы на этот пост?"
+          direct_replies:
+            few: Да, и {{count}} прямых ответов
+            many: Да, и {{count}} прямых ответов
+            one: Да, и 1 прямой ответ
+            other: Да, и {{count}} прямой ответ
+          all_replies:
+            few: Да, и все {{count}} ответа
+            many: Да, и все {{count}} ответы
+            one: Да, и 1 ответ
+            other: Да, и все {{count}} ответы
         admin: "действия администратора над сообщением"
         wiki: "Сделать вики-сообщением"
         unwiki: "Отменить вики-сообщение"
@@ -1881,6 +1904,11 @@ ru:
           notify_user: "отправил сообщение"
           bookmark: "добавить закладку"
           like: "понравилось это"
+          like_capped:
+            few: и {{count}} другим понравилось
+            many: и {{count}} другим понравилось
+            one: и {{count}} понравилось
+            other: и {{count}} другим понравилось
           vote: "проголосовал за это"
         by_you:
           off_topic: "Помечена вами как оффтопик"
@@ -1912,6 +1940,11 @@ ru:
             many: Вы и ещё {{count}} человек отметили это как требующее модерации
             one: Вы и ещё {{count}} человек отметили это как требующее модерации
             other: Вы и ещё {{count}} человек отметили это как требующее модерации
+          notify_user:
+            few: Вы и {{count}} другие люди отправили сообщение этому пользователю
+            many: Вы и {{count}} другие люди отправили сообщение этому пользователю
+            one: Вы и 1 пользователь отправили сообщение этому пользователю
+            other: Вы и {{count}} другие люди отправили сообщение этому пользователю
           bookmark:
             few: Вы и ещё {{count}} человека добавили это сообщение в закладки
             many: Вы и ещё {{count}} человек добавили это сообщение в закладки
@@ -2573,6 +2606,16 @@ ru:
         more: "(ещё ответы...)"
         suspend_user: "Заблокировать пользователя"
         suspend_user_title: "Заблокировать пользователя за это сообщение"
+        replies:
+          few: '[%{count} ответов]'
+          many: '[%{count} ответов]'
+          one: '[1 ответ]'
+          other: '[%{count} ответов]'
+        delete_replies:
+          few: Также удалите %{count} ответов на этот пост?
+          many: Также удалите %{count} ответов на этот пост?
+          one: Также удалите %{count} ответ на этот пост?
+          other: Также удалите %{count} ответов на этот пост?
         dispositions:
           agreed: "принято"
           disagreed: "отклонено"
