@@ -2614,6 +2614,8 @@ en:
 
     posted_by: "Posted by %{username} on %{post_date}"
 
+    pm_participants: "Participants:"
+
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
 
@@ -2738,6 +2740,18 @@ en:
     user_mentioned:
       title: "User Mentioned"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
+    user_mentioned_pm:
+      title: "User Mentioned PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
