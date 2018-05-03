@@ -1,17 +1,7 @@
 class AdminDashboardNextData
   include StatsCacheable
 
-  GLOBAL_REPORTS ||= [
-    'signups',
-    'topics',
-    'trending_search',
-    'new_contributors'
-  ]
-
-  USER_REPORTS ||= [
-    'users_by_trust_level',
-    'users_by_type'
-  ]
+  REPORTS = [ "visits", "posts", "time_to_first_response", "likes", "flags" ]
 
   def initialize(opts = {})
     @opts = opts
@@ -27,8 +17,7 @@ class AdminDashboardNextData
 
   def as_json(_options = nil)
     @json ||= {
-      global_reports: AdminDashboardNextData.reports(GLOBAL_REPORTS),
-      user_reports: AdminDashboardNextData.reports(USER_REPORTS),
+      reports: AdminDashboardNextData.reports(REPORTS),
       last_backup_taken_at: last_backup_taken_at,
       updated_at: Time.zone.now.as_json
     }

@@ -25,21 +25,25 @@ module DateGroupable extend ActiveSupport::Concern
         .order("date_trunc('#{aggregation_unit}', #{column})::DATE")
     end
 
-    def smart_group_by_date(column, start_date, end_date)
+    def aggregation_unit_for_period(start_date, end_date)
       days = (start_date.to_date..end_date.to_date).count
 
       case
       when days <= 40
-        aggregation_unit = :day
-      when days <= 210  # 30 weeks
-        aggregation_unit = :week
-      when days <= 550  # ~18 months
-        aggregation_unit = :month
-      when days <= 1461  # ~4 years
-        aggregation_unit = :quarter
+        return :day
+      when days <= 210 # 30 weeks
+        return :week
+      when days <= 550 # ~18 months
+        return :month
+      when days <= 1461 # ~4 years
+        return :quarter
       else
-        aggregation_unit = :year
+        return :year
       end
+    end
+
+    def smart_group_by_date(column, start_date, end_date)
+      aggregation_unit = aggregation_unit_for_period(start_date, end_date)
 
       where("#{column} BETWEEN ? AND ?", start_date, end_date)
         .group_by_unit(aggregation_unit, column)
