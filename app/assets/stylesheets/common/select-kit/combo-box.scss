@@ -88,10 +88,6 @@
         border: 1px solid $tertiary;
         box-shadow: shadow("focus");
       }
-
-      .select-kit-body {
-        border-radius: 0 0 3px 3px ;
-      }
     }
 
     &.is-expanded.is-above {
@@ -109,10 +105,10 @@
       .select-kit-row {
         font-weight: bold;
       }
+    }
 
-      &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
-        display: none;
-      }
+    &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
+      display: none;
     }
   }
 }
