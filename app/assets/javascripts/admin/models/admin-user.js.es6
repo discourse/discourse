@@ -412,6 +412,7 @@ const AdminUser = Discourse.User.extend({
           location = document.location.pathname;
 
     const performDestroy = function(block) {
+      bootbox.dialog(I18n.t('admin.user.deleting_user'));
       let formData = { context: location };
       if (block) {
         formData["block_email"] = true;
