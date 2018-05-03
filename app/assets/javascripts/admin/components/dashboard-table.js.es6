@@ -1,83 +1,50 @@
-import { ajax } from 'discourse/lib/ajax';
-import computed from 'ember-addons/ember-computed-decorators';
+import { ajax } from "discourse/lib/ajax";
+import Report from "admin/models/report";
+import AsyncReport from "admin/mixins/async-report";
+import computed from "ember-addons/ember-computed-decorators";
+import { number } from 'discourse/lib/formatter';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-table"],
-
-  classNameBindings: ["isLoading"],
-
-  total: null,
-  labels: null,
-  title: null,
-  chartData: null,
-  isLoading: false,
   help: null,
   helpPage: null,
-  model: null,
 
-  transformModel(model) {
-    const data = model.data.sort((a, b) => a.x >= b.x);
-
-    return {
-      labels: model.labels,
-      values: data
-    };
+  @computed("report")
+  values(report) {
+    if (!report) return;
+    return Ember.makeArray(report.data)
+                .sort((a, b) => a.x >= b.x)
+                .map(x => {
+                  return [ x[0], number(x[1]), number(x[2]) ];
+                });
   },
 
-  didInsertElement() {
-    this._super();
-    this._initializeTable();
+  @computed("report")
+  labels(report) {
+    if (!report) return;
+    return Ember.makeArray(report.labels);
   },
 
-  didUpdateAttrs() {
-    this._super();
-    this._initializeTable();
-  },
-
-  @computed("dataSourceName")
-  dataSource(dataSourceName) {
-    return `/admin/reports/${dataSourceName}`;
-  },
-
-  _initializeTable() {
-    if (this.get("model") && !this.get("values")) {
-      this._setPropertiesFromModel(this.get("model"));
-    } else if (this.get("dataSource")) {
-      this._fetchReport();
-    }
-  },
-
-  _fetchReport() {
-    if (this.get("isLoading")) return;
-
+  fetchReport() {
     this.set("isLoading", true);
 
-    let payload = {data: {}};
+    let payload = { data: { async: true } };
 
     if (this.get("startDate")) {
-      payload.data.start_date = this.get("startDate").toISOString();
+      payload.data.start_date = this.get("startDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
     }
 
     if (this.get("endDate")) {
-      payload.data.end_date = this.get("endDate").toISOString();
+      payload.data.end_date = this.get("endDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
     }
 
     ajax(this.get("dataSource"), payload)
       .then((response) => {
-        this._setPropertiesFromModel(response.report);
+        this._setPropertiesFromReport(Report.create(response.report));
       }).finally(() => {
-        this.set("isLoading", false);
+        if (!Ember.isEmpty(this.get("report.data"))) {
+          this.set("isLoading", false);
+        };
       });
-  },
-
-  _setPropertiesFromModel(model) {
-    const { labels, values } = this.transformModel(model);
-
-    this.setProperties({
-      labels,
-      values,
-      total: model.total,
-      title: model.title
-    });
   }
 });

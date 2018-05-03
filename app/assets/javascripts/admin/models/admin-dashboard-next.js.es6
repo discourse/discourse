@@ -1,9 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
-import Report from "admin/models/report";
 
-const ATTRIBUTES = [ "disk_space", "updated_at", "last_backup_taken_at"];
-
-const REPORTS = [ "global_reports", "user_reports" ];
+const ATTRIBUTES = [ "disk_space", "updated_at", "last_backup_taken_at" ];
 
 const AdminDashboardNext = Discourse.Model.extend({});
 
@@ -19,12 +16,7 @@ AdminDashboardNext.reopenClass({
     return ajax("/admin/dashboard-next.json").then(function(json) {
       var model = AdminDashboardNext.create();
 
-      const reports = {};
-      REPORTS.forEach(name => json[name].forEach(r => {
-        if (!reports[name]) reports[name] = {};
-        reports[name][r.type] = Report.create(r);
-      }));
-      model.set("reports", reports);
+      model.set("reports", json.reports);
 
       const attributes = {};
       ATTRIBUTES.forEach(a => attributes[a] = json[a]);

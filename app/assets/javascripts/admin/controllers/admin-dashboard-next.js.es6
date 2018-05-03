@@ -1,14 +1,14 @@
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
-import AdminDashboardNext from 'admin/models/admin-dashboard-next';
+import AdminDashboardNext from "admin/models/admin-dashboard-next";
+import Report from "admin/models/report";
 
 export default Ember.Controller.extend({
   queryParams: ["period"],
   period: "all",
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: Ember.inject.controller('exception'),
-
+  exceptionController: Ember.inject.controller("exception"),
   diskSpace: Ember.computed.alias("model.attributes.disk_space"),
 
   fetchDashboard() {
@@ -18,8 +18,11 @@ export default Ember.Controller.extend({
       this.set("isLoading", true);
 
       AdminDashboardNext.find().then(adminDashboardNextModel => {
-        this.set("dashboardFetchedAt", new Date());
-        this.set("model", adminDashboardNextModel);
+        this.setProperties({
+          dashboardFetchedAt: new Date(),
+          model: adminDashboardNextModel,
+          reports: adminDashboardNextModel.reports.map(x => Report.create(x))
+        });
       }).catch(e => {
         this.get("exceptionController").set("thrown", e.jqXHR);
         this.replaceRoute("exception");

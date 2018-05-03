@@ -73,4 +73,11 @@ describe Cache do
     end
     expect(r).to eq("bill")
   end
+
+  it "can fetch keys with pattern" do
+    cache.write "users:admins", "jeff"
+    cache.write "users:moderators", "bob"
+
+    expect(cache.keys("users:*").count).to eq(2)
+  end
 end

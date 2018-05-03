@@ -7,7 +7,7 @@ acceptance("Dashboard Next", {
   loggedIn: true
 });
 
-QUnit.test("Vist dashboard next page", assert => {
+QUnit.test("Visit dashboard next page", assert => {
   visit("/admin/dashboard-next");
 
   andThen(() => {

@@ -1,6 +1,6 @@
-{{#conditional-loading-spinner condition=isLoading}}
+{{#conditional-loading-section isLoading=isLoading title=report.title}}
   <div class="table-title">
-    <h3>{{title}}</h3>
+    <h3>{{report.title}}</h3>
 
     {{#if help}}
       <a href="{{helpPage}}">{{i18n help}}</a>
@@ -18,11 +18,11 @@
       </thead>
       <tbody>
         <tr>
-          {{#each dataset as |data|}}
-            <td>{{number data}}</td>
+          {{#each values as |value|}}
+            <td>{{number value}}</td>
           {{/each}}
         </tr>
       </tbody>
     </table>
   </div>
-{{/conditional-loading-spinner}}
+{{/conditional-loading-section}}

@@ -840,12 +840,27 @@ en:
       title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
-      description: "Users created for this period"
+      description: "New registrations for this period"
     new_contributors:
       title: "New Contributors"
       xaxis: "Day"
       yaxis: "Number of new contributors"
-      description: "Number of users who made their first contribution"
+      description: "Number of users who made their first post during this period"
+    inactive_users:
+      title: "Inactive Users"
+      xaxis: "Day"
+      yaxis: "Number of new inactive users"
+      description: "Number of users that haven’t logged on for the last 3 months"
+    dau_by_mau:
+      title: "DAU/MAU"
+      xaxis: "Day"
+      yaxis: "DAU/MAY"
+      description: "Daily Active Users / Monthly Active Users"
+    daily_engaged_users:
+      title: "Daily Engaged Users"
+      xaxis: "Day"
+      yaxis: "Engaged Users"
+      description: "Number of users that have liked or posted in the last day"
     profile_views:
       title: "User Profile Views"
       xaxis: "Day"
@@ -854,7 +869,7 @@ en:
       title: "Topics"
       xaxis: "Day"
       yaxis: "Number of new topics"
-      description: "Topics created for this period"
+      description: "New topics created during this period"
     posts:
       title: "Posts"
       xaxis: "Day"

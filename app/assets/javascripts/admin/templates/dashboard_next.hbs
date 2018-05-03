@@ -1,4 +1,4 @@
-{{plugin-outlet name="admin-dashboard-top"}}
+ {{plugin-outlet name="admin-dashboard-top"}}
 
 <div class="community-health section">
   <div class="section-title">
@@ -9,20 +9,33 @@
   <div class="section-body">
     <div class="charts">
       {{dashboard-mini-chart
-        model=model.reports.global_reports.signups
         dataSourceName="signups"
         startDate=startDate
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        model=model.reports.global_reports.topics
         dataSourceName="topics"
         startDate=startDate
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        model=model.reports.global_reports.new_contributors
         dataSourceName="new_contributors"
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceName="dau_by_mau"
+        average=true
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceName="daily_engaged_users"
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceName="inactive_users"
         startDate=startDate
         endDate=endDate}}
     </div>
@@ -32,42 +45,42 @@
 <div class="section-columns">
   <div class="section-column">
     <div class="dashboard-table">
-      <div class="table-title">
-        <h3>{{i18n "admin.dashboard.activity_metrics"}}</h3>
-      </div>
+      {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.activity_metrics")}}
+        <div class="table-title">
+          <h3>{{i18n "admin.dashboard.activity_metrics"}}</h3>
+        </div>
 
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>{{i18n 'admin.dashboard.reports.today'}}</th>
-              <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
-              <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
-              <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
-              <th>{{i18n 'admin.dashboard.reports.all'}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{admin-report-counts report=model.reports.global_reports.topics}}
-            {{admin-report-counts report=model.reports.global_reports.signups}}
-            {{admin-report-counts report=model.reports.global_reports.new_contributors}}
-          </tbody>
-        </table>
-      </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>{{i18n 'admin.dashboard.reports.today'}}</th>
+                <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
+                <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
+                <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
+                <th>{{i18n 'admin.dashboard.reports.all'}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each reports as |report|}}
+                {{admin-report-counts report=report}}
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/conditional-loading-section}}
     </div>
 
     {{dashboard-inline-table
-      model=model.reports.user_reports.users_by_type
-      lastRefreshedAt=lastRefreshedAt
-      isLoading=isLoading}}
+      dataSourceName="users_by_type"
+      lastRefreshedAt=lastRefreshedAt}}
 
     {{dashboard-inline-table
-      model=model.reports.user_reports.users_by_trust_level
-      lastRefreshedAt=lastRefreshedAt
-      isLoading=isLoading}}
+      dataSourceName="users_by_trust_level"
+      lastRefreshedAt=lastRefreshedAt}}
 
-    {{#conditional-loading-spinner isLoading=isLoading}}
+    {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
         <div class="durability">
           {{#if currentUser.admin}}
@@ -99,12 +112,11 @@
           {{i18n "admin.dashboard.whats_new_in_discourse"}}
         </a>
       </div>
-    {{/conditional-loading-spinner}}
+    {{/conditional-loading-section}}
   </div>
 
   <div class="section-column">
     {{dashboard-table-trending-search
-      model=global_reports_trending_search
       dataSourceName="trending_search"
       startDate=startDate
       endDate=endDate}}

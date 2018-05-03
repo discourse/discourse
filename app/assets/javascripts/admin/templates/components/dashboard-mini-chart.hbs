@@ -1,28 +1,31 @@
-{{#conditional-loading-spinner condition=isLoading}}
+{{#conditional-loading-section isLoading=isLoading title=report.title}}
   <div class="chart-title">
-    <h3>{{title}}</h3>
+    <h3 title={{report.description}}>
+      {{report.title}}
 
-    {{#if description}}
-      <span title={{description}}>
+      {{#if report.description}}
         {{d-icon "question-circle"}}
+      {{/if}}
+    </h3>
+
+    <div class="chart-trend {{trend}}">
+      <span title="{{report.thirtyDayCountTitle}}">
+        {{number report.lastThirtyDaysCount}}
       </span>
-    {{/if}}
+
+      {{#if trendIcon}}
+        {{d-icon trendIcon}}
+      {{/if}}
+    </div>
   </div>
 
   <div class="chart-container">
     {{#if oneDataPoint}}
       <span class="data-point">
-        {{number chartData.lastObject.y}}
+        {{number values.lastObject.y}}
       </span>
     {{else}}
-      <div class="chart-trend {{trend}}">
-        <span>{{number prev30Days}}</span>
-
-        {{#if trendIcon}}
-          {{d-icon trendIcon}}
-        {{/if}}
-      </div>
       <canvas class="chart-canvas"></canvas>
     {{/if}}
   </div>
-{{/conditional-loading-spinner}}
+{{/conditional-loading-section}}

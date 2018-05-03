@@ -8,8 +8,24 @@
     display: flex;
     justify-content: space-between;
 
+    @include small-width  {
+      flex-direction: column;
+    }
+
     .section-column {
       min-width: calc(50% - .5em);
+
+      @include small-width  {
+        min-width: 100%;
+
+        &:last-child {
+          order: 1;
+        }
+
+        &:first-child {
+          order: 2;
+        }
+      }
     }
 
     .section-column:last-child {
@@ -18,6 +34,12 @@
 
     .section-column:first-child {
       margin-right: .5em;
+    }
+
+    @include small-width  {
+      .section-column:last-child, .section-column:first-child {
+        margin: 0;
+      }
     }
   }
 
@@ -43,8 +65,12 @@
   .dashboard-table {
     margin-bottom: 1em;
 
-    &.fixed table {
-      table-layout: fixed;
+    @include small-width  {
+      table {
+        tbody tr td {
+          font-size: $font-down-2;
+        }
+      }
     }
 
     &.is-loading {
@@ -63,6 +89,7 @@
 
     table {
       border: 1px solid $primary-low-mid;
+      table-layout: fixed;
 
       thead {
         tr {
@@ -70,7 +97,6 @@
           th {
             border: 1px solid $primary-low-mid;
             text-align: center;
-
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
@@ -80,6 +106,12 @@
 
       tbody {
         tr {
+          td:first-child {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: normal;
+          }
+
           td {
             border: 1px solid $primary-low-mid;
             text-align: center;
@@ -120,22 +152,34 @@
     flex-wrap: wrap;
 
     .dashboard-mini-chart {
-      width: calc(100% * (1/3));
+      max-width: calc(100% * (1/3));
+      width: 100%;
       margin-bottom: 1em;
       flex-grow: 1;
 
+      @include small-width  {
+        max-width: 100%;
+      }
+
       &.is-loading {
-        height: 150px;
+        height: 200px;
+      }
+
+      .loading-container.visible {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        width: 100%;
       }
 
       .d-icon-question-circle {
         cursor: pointer;
-        margin-left: .25em;
       }
 
       .chart-title {
         align-items: center;
         display: flex;
+        justify-content: space-between;
 
         h3 {
           margin: 1em 0;
@@ -174,21 +218,24 @@
       }
     }
 
+    @include small-width  {
+      .dashboard-mini-chart {
+        width: 100%;
+      }
+    }
+
     .chart-container {
       position: relative;
       padding: 0 1em;
-      min-height: 200px;
     }
 
     .chart-trend {
-      font-size: $font-up-5;
-      position: absolute;
-      right: 40px;
-      top: 5px;
+      font-size: $font-up-3;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-weight: bold;
+      margin-right: 1em;
     }
 
     .chart-canvas {
