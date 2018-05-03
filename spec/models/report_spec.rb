@@ -455,6 +455,8 @@ describe Report do
         report = Report.find('inactive_users')
         expect(report.data.first[:y]).to eq(3)
         expect(report.data.last[:y]).to eq(5)
+        expect(report.prev30Days).to eq(3)
+        expect(report.total).to eq(5)
 
         @arpit.user_visits.create(visited_at: 80.days.ago)
         report = Report.find('inactive_users')
