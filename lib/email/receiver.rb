@@ -296,21 +296,21 @@ module Email
     end
 
     HTML_EXTRACTERS ||= [
-      [:gmail, / class="gmail_/],
-      [:outlook, / id="(divRplyFwdMsg|Signature)"/],
-      [:word, / class="WordSection1"/],
-      [:exchange, / name="message(Body|Reply)Section"/],
-      [:apple_mail, / id="AppleMailSignature"/],
-      [:mozilla, / class="moz-/],
-      [:protonmail, / class="protonmail_/],
-      [:zimbra, / data-marker="__/],
+      [:gmail, /class="gmail_(?!default)/],
+      [:outlook, /id="(divRplyFwdMsg|Signature)"/],
+      [:word, /class="WordSection1"/],
+      [:exchange, /name="message(Body|Reply)Section"/],
+      [:apple_mail, /id="AppleMailSignature"/],
+      [:mozilla, /class="moz-/],
+      [:protonmail, /class="protonmail_/],
+      [:zimbra, /data-marker="__/],
       [:newton, /(id|class)="cm_/],
     ]
 
     def extract_from_gmail(doc)
       # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote
-      # Just elide them all
-      elided = doc.css("*[class^='gmail_']").remove
+      # Just elide them all except for 'gmail_default'
+      elided = doc.css("*[class^='gmail_']:not([class*='gmail_default'])").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
