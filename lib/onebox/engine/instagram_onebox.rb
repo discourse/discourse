@@ -7,7 +7,7 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
-      matches_regexp(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)/)
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/p\//)
       always_https
 
       def data
