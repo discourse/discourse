@@ -323,10 +323,6 @@ en:
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
 
-    member_count:
-      one: "1 member"
-      other: "%{count} members"
-
   education:
     until_posts:
       one: "1 post"

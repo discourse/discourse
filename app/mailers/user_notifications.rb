@@ -448,7 +448,7 @@ class UserNotifications < ActionMailer::Base
       participants = "#{I18n.t("user_notifications.pm_participants")} "
       participant_list = []
       post.topic.allowed_groups.each do |group|
-        participant_list.push "[#{group.name} (#{I18n.t("groups.member_count", count: group.users.count)})](#{Discourse.base_url}/groups/#{group.name})"
+        participant_list.push "[#{group.name} (#{group.users.count})](#{Discourse.base_url}/groups/#{group.name})"
       end
       post.topic.allowed_users.each do |user|
         if SiteSetting.prioritize_username_in_ux?
