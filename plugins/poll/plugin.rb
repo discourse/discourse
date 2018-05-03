@@ -171,7 +171,7 @@ after_initialize do
         cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
 
         Nokogiri::HTML(cooked).css("div.poll").map do |p|
-          poll = { "options" => [], "voters" => 0 }
+          poll = { "options" => [], "voters" => 0, "name" => DiscoursePoll::DEFAULT_POLL_NAME }
 
           # attributes
           p.attributes.values.each do |attribute|
