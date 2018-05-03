@@ -15,6 +15,13 @@ RSpec.describe SafeModeController do
         post '/safe-mode'
         expect(response.status).to eq(404)
       end
+
+      it "doesn't raise an error for staff" do
+        SiteSetting.enable_safe_mode = false
+        sign_in(Fabricate(:moderator))
+        post '/safe-mode'
+        expect(response.status).to redirect_to(safe_mode_path)
+      end
     end
 
   end

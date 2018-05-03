@@ -62,8 +62,13 @@ class UserUpdater
     user.locale = attributes.fetch(:locale) { user.locale }
     user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
 
-    if guardian.can_grant_title?(user)
-      user.title = attributes.fetch(:title) { user.title }
+    if attributes[:title] &&
+      attributes[:title] != user.title &&
+      guardian.can_grant_title?(user, attributes[:title])
+      user.title = attributes[:title]
+      if user.badges.where(name: user.title).exists?
+        user_profile.badge_granted_title = true
+      end
     end
 
     CATEGORY_IDS.each do |attribute, level|

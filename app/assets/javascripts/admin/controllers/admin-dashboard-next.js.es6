@@ -1,18 +1,15 @@
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
-import AdminDashboardNext from 'admin/models/admin-dashboard-next';
-import Report from 'admin/models/report';
-
-const ATTRIBUTES = [ "disk_space", "updated_at", "last_backup_taken_at"];
-
-const REPORTS = [ "global_reports", "user_reports" ];
+import AdminDashboardNext from "admin/models/admin-dashboard-next";
+import Report from "admin/models/report";
 
 export default Ember.Controller.extend({
   queryParams: ["period"],
   period: "all",
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: Ember.inject.controller('exception'),
+  exceptionController: Ember.inject.controller("exception"),
+  diskSpace: Ember.computed.alias("model.attributes.disk_space"),
 
   fetchDashboard() {
     if (this.get("isLoading")) return;
@@ -20,14 +17,12 @@ export default Ember.Controller.extend({
     if (!this.get("dashboardFetchedAt") || moment().subtract(30, "minutes").toDate() > this.get("dashboardFetchedAt")) {
       this.set("isLoading", true);
 
-      AdminDashboardNext.find().then(d => {
-        this.set("dashboardFetchedAt", new Date());
-
-        const reports = {};
-        REPORTS.forEach(name => d[name].forEach(r => reports[`${name}_${r.type}`] = Report.create(r)));
-        this.setProperties(reports);
-
-        ATTRIBUTES.forEach(a => this.set(a, d[a]));
+      AdminDashboardNext.find().then(adminDashboardNextModel => {
+        this.setProperties({
+          dashboardFetchedAt: new Date(),
+          model: adminDashboardNextModel,
+          reports: adminDashboardNextModel.reports.map(x => Report.create(x))
+        });
       }).catch(e => {
         this.get("exceptionController").set("thrown", e.jqXHR);
         this.replaceRoute("exception");

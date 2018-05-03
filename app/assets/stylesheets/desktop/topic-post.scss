@@ -95,15 +95,12 @@ nav.post-controls {
     .like-count {
       font-size: $font-up-1;
       margin-left: 0;      
-      i.fa-heart {
-        padding-left: 5px;
+      i.d-icon {
+        padding-left: 10px;
         color: dark-light-choose($primary-low-mid, $secondary-high);
       }
       &.my-likes {
         margin-right: -2px;
-        i.fa-heart-o {
-          padding-left: 10px;
-        }
       }
       &.regular-likes {
         margin-right: -12px;
@@ -406,12 +403,6 @@ nav.post-controls {
     }
     .d-icon-times {
       color: dark-light-choose($primary-medium, $secondary-high);
-    }
-  }
-
-  .topic-links {
-    .badge-notification {
-      margin: 1px 5px 5px 0;
     }
   }
 
@@ -950,10 +941,6 @@ span.highlighted {
 
 .signup-cta {
   width: $topic-body-width;
-  a {
-    float: right;
-    text-decoration: underline;
-  }
 }
 
 /* Tablet (portrait) ----------- */

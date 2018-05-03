@@ -1,5 +1,5 @@
-<div class='group-manage container'>
-  {{#mobile-nav class='group-navigation' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
+<section class='user-navigation'>
+  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=application.currentPath}}
     {{#each tabs as |tab|}}
       <li>
         {{#link-to tab.route model.name}}
@@ -8,8 +8,8 @@
       </li>
     {{/each}}
   {{/mobile-nav}}
+</section>
 
-  <div class="{{if site.mobileView "" "pull-left"}} group-manage-outlet">
-    {{outlet}}
-  </div>
-</div>
+<section class='user-right'>
+  {{outlet}}
+</section>

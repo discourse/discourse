@@ -30,7 +30,6 @@ cs:
     named_poll_with_multiple_choices_has_invalid_parameters: "Hlasování <strong>%{name}</strong> s více možnostmi má neplatné parametry."
     requires_at_least_1_valid_option: "Musíte vybrat alespoň jednu platnou odpověď."
     default_cannot_be_made_public: "Hlasování s hlasy nemůže být zveřejněno."
-    named_cannot_be_made_public: "Hlasování <strong>%{name}</strong> s hlasy nemůže být zveřejněno."
     edit_window_expired:
       op_cannot_edit_options: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních %{minutes} minutách. Kontaktujte prosím moderátora, pokud potřebujete upravit odpověď v hlasování."
       staff_cannot_add_or_remove_options: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních %{minutes} minutách. Měli byste zavřít toto téma a vytvořit místo něj nové."

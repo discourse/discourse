@@ -24,9 +24,10 @@ import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
 import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
+import { disableNameSuppression } from 'discourse/widgets/poster-name';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.19';
+const PLUGIN_API_VERSION = '0.8.20';
 
 class PluginApi {
   constructor(version, container) {
@@ -385,6 +386,16 @@ class PluginApi {
    **/
   customUserAvatarClasses(fn) {
     registerCustomAvatarHelper(fn);
+  }
+
+  /**
+   * Allows you to disable suppression of similar username / names on posts
+   * If a user has the username bob.bob and the name Bob Bob, one of the two
+   * will be suppressed depending on prioritize_username_in_ux.
+   * This allows you to override core behavior
+   **/
+  disableNameSuppressionOnPosts() {
+    disableNameSuppression();
   }
 
   /**

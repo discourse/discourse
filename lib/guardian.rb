@@ -112,6 +112,10 @@ class Guardian
     true
   end
 
+  def can_enable_safe_mode?
+    SiteSetting.enable_safe_mode? || is_staff?
+  end
+
   # Can the user edit the obj
   def can_edit?(obj)
     can_do?(:edit, obj)
@@ -217,6 +221,7 @@ class Guardian
 
   def can_grant_title?(user, title = nil)
     return true if user && is_staff?
+    return false if title.nil?
     return false if user != @user
     return true if user.badges.where(name: title, allow_title: true).exists?
     user.groups.where(title: title).exists?

@@ -16,8 +16,8 @@ sk:
           format: '%n %u'
           units:
             byte:
-              one: bajt
               few: bajtov
+              one: bajt
               other: bajtov
             gb: GB
             kb: KB
@@ -44,87 +44,87 @@ sk:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
-          few: "< %{count}s"
-          other: "< %{count}s"
+          few: < %{count}s
+          one: < 1s
+          other: < %{count}s
         x_seconds:
-          one: "1s"
-          few: "1s"
-          other: "%{count}s"
+          few: 1s
+          one: 1s
+          other: '%{count}s'
         less_than_x_minutes:
-          one: "< 1m"
-          few: "< 1m"
-          other: "< %{count}m"
+          few: < 1m
+          one: < 1m
+          other: < %{count}m
         x_minutes:
-          one: "1m"
-          few: "%{count}m"
-          other: "%{count}m"
+          few: '%{count}m'
+          one: 1m
+          other: '%{count}m'
         about_x_hours:
-          one: "1h"
-          few: "%{count}h"
-          other: "%{count}h"
+          few: '%{count}h'
+          one: 1h
+          other: '%{count}h'
         x_days:
-          one: "1d"
-          few: "%{count}d"
-          other: "%{count}d"
+          few: '%{count}d'
+          one: 1d
+          other: '%{count}d'
         x_months:
-          one: "%{count} mesiac"
-          few: "%{count} mesiace"
-          other: "%{count} mesiace"
+          few: '%{count} mesiace'
+          one: '%{count} mesiac'
+          other: '%{count} mesiace'
         about_x_years:
-          one: "1r"
-          few: "%{count}r"
-          other: "%{count}r"
+          few: '%{count}r'
+          one: 1r
+          other: '%{count}r'
         over_x_years:
-          one: "> 1r"
-          few: "> %{count}r"
-          other: "> %{count}r"
+          few: '> %{count}r'
+          one: '> 1r'
+          other: '> %{count}r'
         almost_x_years:
-          one: "1r"
-          few: "%{count}r"
-          other: "%{count}r"
+          few: '%{count}r'
+          one: 1r
+          other: '%{count}r'
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 minúta"
-          few: "%{count} minúty"
-          other: "%{count} minút"
+          few: '%{count} minúty'
+          one: 1 minúta
+          other: '%{count} minút'
         x_hours:
-          one: "1 hodina"
-          few: "%{count} hodiny"
-          other: "%{count} hodín"
+          few: '%{count} hodiny'
+          one: 1 hodina
+          other: '%{count} hodín'
         x_days:
-          one: "1 deň"
-          few: "%{count} dni"
-          other: "%{count} dní"
+          few: '%{count} dni'
+          one: 1 deň
+          other: '%{count} dní'
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "pred 1 minútou"
-          few: "pred %{count} minútami"
-          other: "pred %{count} minútami"
+          few: pred %{count} minútami
+          one: pred 1 minútou
+          other: pred %{count} minútami
         x_hours:
-          one: "pred 1 hodinou"
-          few: "pred %{count} hodinami"
-          other: "pred %{count} hodinami"
+          few: pred %{count} hodinami
+          one: pred 1 hodinou
+          other: pred %{count} hodinami
         x_days:
-          one: "pred 1 dňom"
-          few: "pred %{count} dňami"
-          other: "pred %{count} dňami"
+          few: pred %{count} dňami
+          one: pred 1 dňom
+          other: pred %{count} dňami
       later:
         x_days:
-          one: "1 deň neskôr"
-          few: "%{count} dni neskôr"
-          other: "%{count} dní neskôr"
+          few: '%{count} dni neskôr'
+          one: 1 deň neskôr
+          other: '%{count} dní neskôr'
         x_months:
-          one: "1 mesiac neskôr"
-          few: "%{count} mesiace neskôr"
-          other: "%{count} mesiacov neskôr"
+          few: '%{count} mesiace neskôr'
+          one: 1 mesiac neskôr
+          other: '%{count} mesiacov neskôr'
         x_years:
-          one: "1 rok neskôr"
-          few: "%{count} roky neskôr"
-          other: "%{count} rokov neskôr"
+          few: '%{count} roky neskôr'
+          one: 1 rok neskôr
+          other: '%{count} rokov neskôr'
       previous_month: 'Predchádzajúci mesiac'
       next_month: 'Nasledujúci mesiac'
       placeholder: Dátum
@@ -202,9 +202,9 @@ sk:
     show_help: "možnosti"
     links: "Odkazy"
     links_lowercase:
-      one: "odkaz"
-      few: "odkazy"
-      other: "odkazy"
+      few: odkazy
+      one: odkaz
+      other: odkazy
     faq: "Časté otázky"
     guidelines: "Pokyny"
     privacy_policy: "Ochrana súkromia"
@@ -228,9 +228,9 @@ sk:
     max_of_count: "najviac {{count}}"
     alternation: "alebo"
     character_count:
-      one: "1 znak"
-      few: "{{count}} znakov"
-      other: "{{count}} znakov"
+      few: '{{count}} znakov'
+      one: 1 znak
+      other: '{{count}} znakov'
     suggested_topics:
       title: "Odporúčané témy"
       pm_title: "Odporúčané správy"
@@ -301,18 +301,18 @@ sk:
       cancel: "Zrušiť"
       view_pending: "zobraziť príspevky čakajúce na schválenie"
       has_pending_posts:
-        one: "Téma má <b>{{count}}</b> príspevkov čakajúci na schválenie"
-        few: "Téma má <b>{{count}}</b> príspevky čakajúce na schválenie"
-        other: "Téma má <b>{{count}}</b> príspevkov čakajúcich na schválenie"
+        few: Téma má <b>{{count}}</b> príspevky čakajúce na schválenie
+        one: Téma má <b>{{count}}</b> príspevkov čakajúci na schválenie
+        other: Téma má <b>{{count}}</b> príspevkov čakajúcich na schválenie
       confirm: "Uložiť zmeny"
       delete_prompt: "Táto akcia zmaže všetky príspevky, zablokuje e-mail a IP adresu používateľa <b>%{username}</b>. Ste si istý, že chcete zmazať tohto používateľa? "
       approval:
         title: "Príspevok vyžaduje schválenie"
         description: "Váš príspevok sme obdžali, ale skôr než bude zverejnený musí byť schválený moderátorom. Prosíme o trpezlivosť."
         pending_posts:
-          one: "Máte <strong>1</strong> neprečítaný príspevok."
-          few: "Máte <strong>{{count}}</strong> neprečítané príspevky."
-          other: "Máte <strong>{{count}}</strong> neprečítaných príspevkov."
+          few: Máte <strong>{{count}}</strong> neprečítané príspevky.
+          one: Máte <strong>1</strong> neprečítaný príspevok.
+          other: Máte <strong>{{count}}</strong> neprečítaných príspevkov.
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> založil <a href='{{topicUrl}}'>tému</a>"
@@ -346,9 +346,9 @@ sk:
       posts_read: "Prečítané"
       posts_read_long: "Prečítaných príspevkov"
       total_rows:
-        one: "1 používateľ"
-        few: "%{count} používatelia"
-        other: "%{count} používateľov"
+        few: '%{count} používatelia'
+        one: 1 používateľ
+        other: '%{count} používateľov'
     group_histories:
       actions:
         change_group_setting: "Zmeniť nastavenia skupiny"
@@ -420,9 +420,9 @@ sk:
         is_group_user: "Člen"
         is_group_owner: "Vlastník"
       title:
-        one: "Skupina"
-        few: "Skupiny"
-        other: "Skupiny"
+        few: Skupiny
+        one: Skupina
+        other: Skupiny
       activity: "Aktivita"
       members:
         title: "Členovia"
@@ -465,18 +465,18 @@ sk:
       flair_preview_icon: "Ikona náhľadu"
       flair_preview_image: "Náhľad obrázku"
     user_action_groups:
-      '1': "Rozdaných 'páči sa mi'"
-      '2': "Obdržaných 'páči sa mi'"
-      '3': "Záložky"
-      '4': "Témy"
-      '5': "Odpovede"
-      '6': "Odozvy"
-      '7': "Zmienky"
-      '9': "Citácie"
-      '11': "Úpravy"
-      '12': "Odoslané správy"
-      '13': "Prijaté správy"
-      '14': "Čakajúce správy"
+      "1": "Rozdaných 'páči sa mi'"
+      "2": "Obdržaných 'páči sa mi'"
+      "3": "Záložky"
+      "4": "Témy"
+      "5": "Odpovede"
+      "6": "Odozvy"
+      "7": "Zmienky"
+      "9": "Citácie"
+      "11": "Úpravy"
+      "12": "Odoslané správy"
+      "13": "Prijaté správy"
+      "14": "Čakajúce správy"
     categories:
       all: "všetky kategórie"
       no_subcategory: "žiadne"
@@ -497,13 +497,13 @@ sk:
       toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
       topic_sentence:
-        one: "1 téma"
-        few: "%{count} témy"
-        other: "%{count} tém"
+        few: '%{count} témy'
+        one: 1 téma
+        other: '%{count} tém'
       topic_stat_sentence:
-        one: "%{count} nová téma za posledných %{unit}."
-        few: "%{count} nové témy za posledných %{unit}."
-        other: "%{count} nových tém za posledných %{unit}."
+        few: '%{count} nové témy za posledných %{unit}.'
+        one: '%{count} nová téma za posledných %{unit}.'
+        other: '%{count} nových tém za posledných %{unit}.'
     ip_lookup:
       title: Vyhľadávanie podľa IP adresy
       hostname: Hostname
@@ -695,9 +695,9 @@ sk:
         authenticated: "Váš email bude autentifikovaný pomocou {{provider}}"
         frequency_immediately: "Odošleme vám email ak ste neprečítali to, čo vám posielame emailom."
         frequency:
-          one: "Odošleme vám email iba ak sme vás nevideli poslednú minútu"
-          few: "Odošleme vám email iba ak sme vás nevideli posledné {{count}} minúty."
-          other: "Odošleme vám email iba ak sme vás nevideli posledných {{count}} minút"
+          few: Odošleme vám email iba ak sme vás nevideli posledné {{count}} minúty.
+          one: Odošleme vám email iba ak sme vás nevideli poslednú minútu
+          other: Odošleme vám email iba ak sme vás nevideli posledných {{count}} minút
       name:
         title: "Meno"
         instructions: "vaše celé meno (nepovinné)"
@@ -727,8 +727,6 @@ sk:
       created: "Vytvorený"
       log_out: "Odhlásiť sa"
       location: "Poloha"
-      card_badge:
-        title: "Odznak karty používateľa"
       website: "Webová stránka"
       email_settings: "Email"
       like_notification_frequency:
@@ -782,9 +780,9 @@ sk:
         sent: "Odoslané"
         none: "Nemáte žiadne pozvánky na zobrazenie."
         truncated:
-          one: "Zobrazuje sa prvá pozvánka."
-          few: "Zobrazujú sa prvé {{count}} pozvánky."
-          other: "Zobrazuje sa prvých {{count}} pozvánok."
+          few: Zobrazujú sa prvé {{count}} pozvánky.
+          one: Zobrazuje sa prvá pozvánka.
+          other: Zobrazuje sa prvých {{count}} pozvánok.
         redeemed: "Využité pozvánky"
         redeemed_tab: "Využité"
         redeemed_tab_with_count: "Využité ({{count}})"
@@ -824,25 +822,25 @@ sk:
         stats: "Štatistiky"
         time_read: "doba čítania"
         topic_count:
-          one: "vytvorená téma"
-          few: "vytvorené témy"
-          other: "vytvorených tém"
+          few: vytvorené témy
+          one: vytvorená téma
+          other: vytvorených tém
         post_count:
-          one: "vytvorený príspevok"
-          few: "vytvorené príspevky"
-          other: "vytvorených príspevkov"
+          few: vytvorené príspevky
+          one: vytvorený príspevok
+          other: vytvorených príspevkov
         days_visited:
-          one: "deň na stránke"
-          few: "dni na stránke"
-          other: "dní na stránke"
+          few: dni na stránke
+          one: deň na stránke
+          other: dní na stránke
         posts_read:
-          one: "prečítaný príspevok"
-          few: "prečítané príspevky"
-          other: "prečítaných príspevkov"
+          few: prečítané príspevky
+          one: prečítaný príspevok
+          other: prečítaných príspevkov
         bookmark_count:
-          one: "záložka"
-          few: "záložky"
-          other: "záložiek"
+          few: záložky
+          one: záložka
+          other: záložiek
         top_replies: "Top odpovede"
         no_replies: "Zatiaľ žiadne odpovede."
         more_replies: "Viac odpovedí"
@@ -922,8 +920,8 @@ sk:
     last_post: Odoslané
     last_reply_lowercase: posledná odpoveď
     replies_lowercase:
-      one: odpoveď
       few: odpovede
+      one: odpoveď
       other: odpovedí
     signup_cta:
       sign_up: "Registrovať sa"
@@ -1062,9 +1060,9 @@ sk:
       similar_topics: "Vaša téma je podobná..."
       drafts_offline: "offline koncepty"
       group_mentioned:
-        one: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>1 človeka</a> – ste si istý?"
-        few: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
-        other: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
+        few: Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?
+        one: Zmienením {{group}}, upozorníte <a href='{{group_link}}'>1 človeka</a> – ste si istý?
+        other: Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?
       error:
         title_missing: "Názov je povinný"
         title_too_short: "Názov musí mať minimálne {{min}} znakov"
@@ -1231,9 +1229,9 @@ sk:
         notification_level: "Upozornenia"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
-          one: "Označíli ste <b>1</b> tému."
-          few: "Označíli ste <b>{{count}}</b> tém.y"
-          other: "Označíli ste <b>{{count}}</b> tém."
+          few: Označíli ste <b>{{count}}</b> tém.y
+          one: Označíli ste <b>1</b> tému.
+          other: Označíli ste <b>{{count}}</b> tém.
         choose_new_tags: "Vyberte pre tému nové štítky:"
         changed_tags: "Štítky tém boli zmenené."
       none:
@@ -1263,9 +1261,9 @@ sk:
         search: "Nenašlo sa viac výsledkov."
     topic:
       filter_to:
-        one: "1 príspevok k téme"
-        few: "{{count}} príspevky k téme"
-        other: "{{count}} príspevkov k téme"
+        few: '{{count}} príspevky k téme'
+        one: 1 príspevok k téme
+        other: '{{count}} príspevkov k téme'
       create: 'Nová téma'
       create_long: 'Vytvoriť novú tému'
       private_message: 'Vytvoríť správu'
@@ -1279,12 +1277,12 @@ sk:
       new: 'nová téma'
       unread: 'neprečítané'
       new_topics:
-        one: '1 nová téma'
         few: '{{count}} nové témy'
+        one: 1 nová téma
         other: '{{count}} nových tém'
       unread_topics:
-        one: '1 neprečítaná téma'
         few: '{{count}} neprečítané témy'
+        one: 1 neprečítaná téma
         other: '{{count}} neprečítaných tém'
       title: 'Témy'
       invalid_access:
@@ -1298,21 +1296,21 @@ sk:
         title: "Téma sa nenašla"
         description: "Ľutujeme, hľadaná téma nebola nájdená. Možno bola odstránená moderátorom?"
       total_unread_posts:
-        one: "máte 1 neprečítaný príspevok k tejto téme"
-        few: "máte {{count}} neprečítanépríspevky k tejto téme"
-        other: "máte {{count}} neprečítaných príspevkov k tejto téme"
+        few: máte {{count}} neprečítanépríspevky k tejto téme
+        one: máte 1 neprečítaný príspevok k tejto téme
+        other: máte {{count}} neprečítaných príspevkov k tejto téme
       unread_posts:
-        one: "máte 1 starší neprečítaný príspevok k tejto téme"
-        few: "máte {{count}} staršie neprečítané príspevky k tejto téme"
-        other: "máte {{count}} starších neprečítaných príspevkov k tejto téme"
+        few: máte {{count}} staršie neprečítané príspevky k tejto téme
+        one: máte 1 starší neprečítaný príspevok k tejto téme
+        other: máte {{count}} starších neprečítaných príspevkov k tejto téme
       new_posts:
-        one: "pribudol 1 nový príspevok odkedy ste čítali túto tému naposledy "
-        few: "pribudlo  {{count}}  nové príspevky odkedy ste čítali túto tému naposledy "
-        other: "pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy "
+        few: 'pribudlo  {{count}}  nové príspevky odkedy ste čítali túto tému naposledy '
+        one: 'pribudol 1 nový príspevok odkedy ste čítali túto tému naposledy '
+        other: 'pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy '
       likes:
-        one: "v tejto téme je jedo \"Páči sa\""
-        few: "v tejto téme je  {{count}} \"Páči sa\""
-        other: "v tejto téme je  {{count}} \"Páči sa\""
+        few: v tejto téme je  {{count}} "Páči sa"
+        one: v tejto téme je jedo "Páči sa"
+        other: v tejto téme je  {{count}} "Páči sa"
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
@@ -1322,7 +1320,7 @@ sk:
       read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='/unread'>1 neprečítanú</a> } other { <a href='/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v  {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Prezrieť všetky kategórie
       view_latest_topics: zobraziť najnošie témy
-      suggest_create_topic: Čo tak vytvoriť novú tému?
+      suggest_create_topic: "Čo tak vytvoriť novú tému?"
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
@@ -1346,9 +1344,9 @@ sk:
         title: "Upozorni ma"
       auto_close_title: 'Nastavenia automatického zatvárania'
       auto_close_immediate:
-        one: "Posledný príspevok k téme je starý už 1 hodinu, takže téma bude okamžite uzavretá. "
-        few: "Posledný príspevok k téme je starý už %{hours} hodiny, takže téma bude okamžite uzavretá. "
-        other: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
+        few: 'Posledný príspevok k téme je starý už %{hours} hodiny, takže téma bude okamžite uzavretá. '
+        one: 'Posledný príspevok k téme je starý už 1 hodinu, takže téma bude okamžite uzavretá. '
+        other: 'Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. '
       timeline:
         back: "Späť"
       progress:
@@ -1364,17 +1362,17 @@ sk:
       notifications:
         title: zmeň ako často dostávaš upozornenia o tejto téme
         reasons:
-          '3_10': 'Budete dostávať upozornenia, pretože sledujete štítok na tejto téme.'
-          '3_6': 'Budete dostávať upozornenia, pretože sledujete túto kategóriu.'
-          '3_5': 'Budete automaticky dostávať upozornenie pretože ste začali sledovať túto tému.'
-          '3_2': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
-          '3_1': 'Budete dostávať upozornenia, pretože ste vytvorili túto tému.'
-          '3': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
-          '1_2': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
-          '1': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
-          '0_7': 'Ignorujete všetky upozornenia v tejto kategórii.'
-          '0_2': 'Ignorujete všetky upozornenia k tejto téme.'
-          '0': 'Ignorujete všetky upozornenia k tejto téme.'
+          "3_10": 'Budete dostávať upozornenia, pretože sledujete štítok na tejto téme.'
+          "3_6": 'Budete dostávať upozornenia, pretože sledujete túto kategóriu.'
+          "3_5": 'Budete automaticky dostávať upozornenie pretože ste začali sledovať túto tému.'
+          "3_2": 'Budete dostávať upozornenia, pretože sledujete túto tému.'
+          "3_1": 'Budete dostávať upozornenia, pretože ste vytvorili túto tému.'
+          "3": 'Budete dostávať upozornenia, pretože sledujete túto tému.'
+          "1_2": 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
+          "1": 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
+          "0_7": 'Ignorujete všetky upozornenia v tejto kategórii.'
+          "0_2": 'Ignorujete všetky upozornenia k tejto téme.'
+          "0": 'Ignorujete všetky upozornenia k tejto téme.'
         watching_pm:
           title: "Sledovať"
           description: "Budete upozornený na každú novú odpoveď na túto správu a zobrazí sa počet nových odpovedí."
@@ -1444,9 +1442,9 @@ sk:
         pin_validation: "Dátum je vyžadovaný k pripnutiu tejto témy."
         not_pinned: "V {{categoryLink}} nie sú pripnuté žiadne témy."
         already_pinned:
-          one: "Téma pripnutá k {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
-          few: "Témy pripnuté ku {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
-          other: "Tém pripnutých k {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          few: 'Témy pripnuté ku {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
+          one: 'Téma pripnutá k {{categoryLink}}: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Tém pripnutých k {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         pin_globally: "Zobrazuj túto tému na vrchu všetkých zoznamov tém do"
         confirm_pin_globally: "Máte už {{count}} globálne pripnutých tém. Príliš veľa pripnutých tém môže byť na príťaž pre nových a anonymných používateľov. Ste si istý že chcete pripnúť ďalšiu globálnu tému?"
         unpin_globally: "Zruš túto tému z vrcholu všetkých zoznamov tém. "
@@ -1454,9 +1452,9 @@ sk:
         global_pin_note: "Užívatelia si môžu sami odopnúť tému."
         not_pinned_globally: "Nie sú pripnuté žiadne globálne témy."
         already_pinned_globally:
-          one: "Globálne pripnutá téma : <strong class='badge badge-notification unread'>1</strong>"
-          few: "Globálne pripnuté témy : <strong class='badge badge-notification unread'>{{count}}</strong>"
-          other: "Globálne pripnutých tém : <strong class='badge badge-notification unread'>{{count}}</strong>"
+          few: 'Globálne pripnuté témy : <strong class=''badge badge-notification unread''>{{count}}</strong>'
+          one: 'Globálne pripnutá téma : <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Globálne pripnutých tém : <strong class=''badge badge-notification unread''>{{count}}</strong>'
         make_banner: "Spraviť z tejto témy baner, ktorý sa zobrazí navrchu každej stránky."
         remove_banner: "Odstrániť baner, ktorý sa zobrazuje navrchu každej stránky."
         banner_note: "Užívatelia môžu banner kedykoľvek zrušiť. Bannerom môže byť v jednom momente len jedna téma."
@@ -1491,9 +1489,9 @@ sk:
       login_reply: 'Príhláste sa ak chcete odpovedať'
       filters:
         n_posts:
-          one: "1 príspevok"
-          few: "{{count}} príspevky"
-          other: "{{count}} príspevkov"
+          few: '{{count}} príspevky'
+          one: 1 príspevok
+          other: '{{count}} príspevkov'
         cancel: "Zruš filter"
       split_topic:
         title: "Presuň na novú tému"
@@ -1501,17 +1499,17 @@ sk:
         topic_name: "Názov novej témy"
         error: "Nastala chyba pri presune príspevku na novú tému."
         instructions:
-          one: "Vytvárate novú tému do ktorej bude vložený príspevok, ktorý ste označili. "
-          few: "Vytvárate novú tému do ktorej bude vložených <b>{{count}}</b> príspevkov, ktoré ste označili. "
-          other: "Vytvárate novú tému do ktorej budú vložené <b>{{count}}</b> príspevky, ktoré ste označili. "
+          few: 'Vytvárate novú tému do ktorej bude vložených <b>{{count}}</b> príspevkov, ktoré ste označili. '
+          one: 'Vytvárate novú tému do ktorej bude vložený príspevok, ktorý ste označili. '
+          other: 'Vytvárate novú tému do ktorej budú vložené <b>{{count}}</b> príspevky, ktoré ste označili. '
       merge_topic:
         title: "Presuň do existujúcej témy."
         action: "presuň do existujúcej témy"
         error: "Nastala chyba pri presune príspevku do tejto témy."
         instructions:
-          one: "Prosím vyberte tému do ktorej chcete presunúť tento príspevok."
-          few: "Prosím vyberte tému do ktorej chcete presunúť tieto <b>{{count}}</b> príspevky."
-          other: "Prosím vyberte tému do ktorej chcete presunúť týchto <b>{{count}}</b> príspevkov."
+          few: Prosím vyberte tému do ktorej chcete presunúť tieto <b>{{count}}</b> príspevky.
+          one: Prosím vyberte tému do ktorej chcete presunúť tento príspevok.
+          other: Prosím vyberte tému do ktorej chcete presunúť týchto <b>{{count}}</b> príspevkov.
       merge_posts:
         title: "Spojiť označené príspevky"
         action: "spojiť označené príspevky"
@@ -1522,9 +1520,9 @@ sk:
         label: "Príspevky nového vlastníka"
         placeholder: "používateľske meno nového vlastnika"
         instructions:
-          one: "Prosím vyberte nového vlastníka  príspevku vytvoreného <b>{{old_user}}</b>."
-          few: "Prosím vyberte nového vlastníka {{count}}  príspevkov vytvorených <b>{{old_user}}</b>."
-          other: "Prosím vyberte nového vlastníka {{count}}  príspevkov vytvorených <b>{{old_user}}</b>."
+          few: Prosím vyberte nového vlastníka {{count}}  príspevkov vytvorených <b>{{old_user}}</b>.
+          one: Prosím vyberte nového vlastníka  príspevku vytvoreného <b>{{old_user}}</b>.
+          other: Prosím vyberte nového vlastníka {{count}}  príspevkov vytvorených <b>{{old_user}}</b>.
         instructions_warn: "Poznámka: Žiadne upozornenie o tomto príspevku nebude spätne zaslané novým používateľom<br>Upozornenie: Momentálne nie sú prenášané žiadne dáta vťahujúce sa k príspevku na nových užívateľov. Používajte opatrne."
       change_timestamp:
         action: "nastavte časovú značku"
@@ -1543,9 +1541,9 @@ sk:
         select_all: označ všetko
         deselect_all: odznač všetko
         description:
-          one: "Označili ste <b>1</b> príspevok"
-          few: "Označili ste <b>{{count}}</b> príspevky"
-          other: "Označili ste <b>{{count}}</b> príspevkov"
+          few: Označili ste <b>{{count}}</b> príspevky
+          one: Označili ste <b>1</b> príspevok
+          other: Označili ste <b>{{count}}</b> príspevkov
     post:
       quote_reply: "Citácia"
       edit_reason: "Dôvod:"
@@ -1557,32 +1555,32 @@ sk:
       show_full: "Zobraziť celý príspevok"
       show_hidden: 'Zobraziť skrytý obsah.'
       deleted_by_author:
-        one: "(príspevky stiahnuté autorom budú automaticky zmazané za jednu hodinu pokiaľ nie sú označené)"
-        few: "(príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodiny pokiaľ nie sú označené)"
-        other: "(príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodín pokiaľ nie sú označené)"
+        few: (príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodiny pokiaľ nie sú označené)
+        one: (príspevky stiahnuté autorom budú automaticky zmazané za jednu hodinu pokiaľ nie sú označené)
+        other: (príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodín pokiaľ nie sú označené)
       expand_collapse: "rozbaliť/zbaliť"
       gap:
-        one: "zobraziť skrytú odpoveď"
-        few: "zobraziť {{count}} skryté odpovede"
-        other: "zobraziť {{count}} skrytých odpovedí"
+        few: zobraziť {{count}} skryté odpovede
+        one: zobraziť skrytú odpoveď
+        other: zobraziť {{count}} skrytých odpovedí
       unread: "Príspevok je neprečítaný."
       has_replies:
-        one: "{{count}} Odpoveď"
-        few: "{{count}} Odpovede"
-        other: "{{count}} Odpovedí"
+        few: '{{count}} Odpovede'
+        one: '{{count}} Odpoveď'
+        other: '{{count}} Odpovedí'
       has_likes:
-        one: "{{count}} \"Páči sa\""
-        few: "{{count}} \"Páči sa\""
-        other: "{{count}} \"Páči sa\""
+        few: '{{count}} "Páči sa"'
+        one: '{{count}} "Páči sa"'
+        other: '{{count}} "Páči sa"'
       has_likes_title:
-        one: "Tento príspevok sa páčil jedej osobe"
-        few: "Tento príspevok sa páčil {{count}}  ľuďom"
-        other: "Tento príspevok sa páčil {{count}}  ľuďom"
+        few: Tento príspevok sa páčil {{count}}  ľuďom
+        one: Tento príspevok sa páčil jedej osobe
+        other: Tento príspevok sa páčil {{count}}  ľuďom
       has_likes_title_only_you: "tento príspevok sa Vám páči"
       has_likes_title_you:
-        one: "Tento príspevok sa páčil Vám a jednej ďalšej osobe"
-        few: "Tento príspevok sa páčil Vám a ďalším {{count}} ľuďom"
-        other: "Tento príspevok sa páčil Vám a ďalším {{count}} ľuďom"
+        few: Tento príspevok sa páčil Vám a ďalším {{count}} ľuďom
+        one: Tento príspevok sa páčil Vám a jednej ďalšej osobe
+        other: Tento príspevok sa páčil Vám a ďalším {{count}} ľuďom
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -1643,70 +1641,70 @@ sk:
           vote: "Hlasoval si za tento príspevok"
         by_you_and_others:
           off_topic:
-            one: "Vy a 1 ďalšia osoba to označílo ako mimo tému"
-            few: "Vy a ďalšie {{count}} osoby to označíli ako mimo tému"
-            other: "Vy a ďalších {{count}} osôb to označílo ako mimo tému"
+            few: Vy a ďalšie {{count}} osoby to označíli ako mimo tému
+            one: Vy a 1 ďalšia osoba to označílo ako mimo tému
+            other: Vy a ďalších {{count}} osôb to označílo ako mimo tému
           spam:
-            one: "Vy a 1 ďalšia osoba to označíla ako spam"
-            few: "Vy a ďalšie {{count}} osoby to označíli ako spam"
-            other: "Vy a ďalších {{count}} osôb to označílo ako spam"
+            few: Vy a ďalšie {{count}} osoby to označíli ako spam
+            one: Vy a 1 ďalšia osoba to označíla ako spam
+            other: Vy a ďalších {{count}} osôb to označílo ako spam
           inappropriate:
-            one: "Vy a jedna ďalšia osoba to označila ako nevhodné"
-            few: "Vy a ďalšie {{count}} osoby to označili ako nevhodné"
-            other: "Vy a ďalších {{count}} osôb to označilo ako nevhodné"
+            few: Vy a ďalšie {{count}} osoby to označili ako nevhodné
+            one: Vy a jedna ďalšia osoba to označila ako nevhodné
+            other: Vy a ďalších {{count}} osôb to označilo ako nevhodné
           notify_moderators:
-            one: "Vy a jedna ďalšia osoba to označila na moderovanie"
-            few: "Vy a ďalšie {{count}} osoby to označili na moderovanie"
-            other: "Vy a ďalších {{count}} osôb to označilo na moderovanie"
+            few: Vy a ďalšie {{count}} osoby to označili na moderovanie
+            one: Vy a jedna ďalšia osoba to označila na moderovanie
+            other: Vy a ďalších {{count}} osôb to označilo na moderovanie
           notify_user:
-            one: "Vy a jedna ďalšia osoba poslala správu tomuto užívateľovi"
-            few: "Vy a ďalšie {{count}} osoby poslali správu tomuto užívateľovi"
-            other: "Vy a ďalších {{count}} osôb poslalo správu tomuto používateľovi"
+            few: Vy a ďalšie {{count}} osoby poslali správu tomuto užívateľovi
+            one: Vy a jedna ďalšia osoba poslala správu tomuto užívateľovi
+            other: Vy a ďalších {{count}} osôb poslalo správu tomuto používateľovi
           bookmark:
-            one: "Vy a jedna ďalšia osoba si vytvorilo záložku na tento príspevok"
-            few: "Vy a ďalšie {{count}} osoby si vytvorili záložku na tento príspevok"
-            other: "Vy a ďalších {{count}} osôb si vytvorilo záložku na tento príspevok"
+            few: Vy a ďalšie {{count}} osoby si vytvorili záložku na tento príspevok
+            one: Vy a jedna ďalšia osoba si vytvorilo záložku na tento príspevok
+            other: Vy a ďalších {{count}} osôb si vytvorilo záložku na tento príspevok
           like:
-            one: "Páči sa to Vám a jendej ďalšej osobe"
-            few: "Páči sa to Vám a ďalším {{count}} osobám"
-            other: "Páči sa to Vám a ďalším {{count}} osobám"
+            few: Páči sa to Vám a ďalším {{count}} osobám
+            one: Páči sa to Vám a jendej ďalšej osobe
+            other: Páči sa to Vám a ďalším {{count}} osobám
           vote:
-            one: "Vy a jenda ďalšia osoba hlasovala za tento príspevok"
-            few: "Vy a ďalšie {{count}} osoby hlasovalo za tento príspevok"
-            other: "Vy a ďalších {{count}} osôb hlasovalo za tento príspevok"
+            few: Vy a ďalšie {{count}} osoby hlasovalo za tento príspevok
+            one: Vy a jenda ďalšia osoba hlasovala za tento príspevok
+            other: Vy a ďalších {{count}} osôb hlasovalo za tento príspevok
         by_others:
           off_topic:
-            one: "1 osoba to označíla ako mimo tému"
-            few: "{{count}} osoby to označíli ako mimo tému"
-            other: "{{count}} osôb to označílo ako mimo tému"
+            few: '{{count}} osoby to označíli ako mimo tému'
+            one: 1 osoba to označíla ako mimo tému
+            other: '{{count}} osôb to označílo ako mimo tému'
           spam:
-            one: "1 osoba to označíla ako spam"
-            few: "{{count}} osoby to označíli ako spam"
-            other: "{{count}} osôb to označílo ako spam"
+            few: '{{count}} osoby to označíli ako spam'
+            one: 1 osoba to označíla ako spam
+            other: '{{count}} osôb to označílo ako spam'
           inappropriate:
-            one: "1 osoba to označila ako nevhodné"
-            few: "{{count}} osoby to označili ako nevhodné"
-            other: "{{count}} osôb to označilo ako nevhodné"
+            few: '{{count}} osoby to označili ako nevhodné'
+            one: 1 osoba to označila ako nevhodné
+            other: '{{count}} osôb to označilo ako nevhodné'
           notify_moderators:
-            one: "1 osoba to označila na moderovanie"
-            few: "{{count}} osoby to označili na moderovanie"
-            other: "{{count}} osôb to označilo na moderovanie"
+            few: '{{count}} osoby to označili na moderovanie'
+            one: 1 osoba to označila na moderovanie
+            other: '{{count}} osôb to označilo na moderovanie'
           notify_user:
-            one: "1 osoba poslala správu tomuto používateľovi"
-            few: "{{count}} osoby poslali správu tomuto používateľovi"
-            other: "{{count}} osôb poslalo správu tomuto používateľovi"
+            few: '{{count}} osoby poslali správu tomuto používateľovi'
+            one: 1 osoba poslala správu tomuto používateľovi
+            other: '{{count}} osôb poslalo správu tomuto používateľovi'
           bookmark:
-            one: "1 osoba si vytvorila záložku na tento príspevok"
-            few: "{{count}} osoby si vytvorili záložku na tento príspevok"
-            other: "{{count}} osôb si vytvorilo záložku na tento príspevok"
+            few: '{{count}} osoby si vytvorili záložku na tento príspevok'
+            one: 1 osoba si vytvorila záložku na tento príspevok
+            other: '{{count}} osôb si vytvorilo záložku na tento príspevok'
           like:
-            one: " {{count}} osobe sa to páčilo"
-            few: " {{count}} osobám sa to páčilo"
-            other: " {{count}} osobám sa to páčilo"
+            few: ' {{count}} osobám sa to páčilo'
+            one: ' {{count}} osobe sa to páčilo'
+            other: ' {{count}} osobám sa to páčilo'
           vote:
-            one: "1 osoba hlasovala za tento príspevok"
-            few: "{{count}} osoby hlasovali za tento príspevok"
-            other: "{{count}} osôb hlasovalo za tento príspevok"
+            few: '{{count}} osoby hlasovali za tento príspevok'
+            one: 1 osoba hlasovala za tento príspevok
+            other: '{{count}} osôb hlasovalo za tento príspevok'
       revisions:
         controls:
           first: "Prvá revízia"
@@ -1820,13 +1818,13 @@ sk:
       custom_placeholder_notify_moderators: "Dajte nám vedieť, z čoho konkrétne máte obavy, a priložte príslušné odkazy a príklady, ak je to možné."
       custom_message:
         more:
-          one: "ešte 1 ..."
-          few: "ešte {{count}} ..."
-          other: "ešte {{count}} ..."
+          few: ešte {{count}} ...
+          one: ešte 1 ...
+          other: ešte {{count}} ...
         left:
-          one: "1 zostáva"
-          few: "{{count}} zostávajú"
-          other: "{{count}} zostáva"
+          few: '{{count}} zostávajú'
+          one: 1 zostáva
+          other: '{{count}} zostáva'
     flagging_topic:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
@@ -1837,14 +1835,14 @@ sk:
       links_title: "Populárne odkazy"
       links_shown: "zobraz viac odkazov..."
       clicks:
-        one: "%{count} kilk"
-        few: "%{count} kliky"
-        other: "%{count} klikov"
+        few: '%{count} kliky'
+        one: '%{count} kilk'
+        other: '%{count} klikov'
     post_links:
       title:
-        one: "1 ďalší"
-        few: "%{count} ďalšie"
-        other: "%{count} ďalších"
+        few: '%{count} ďalšie'
+        one: 1 ďalší
+        other: '%{count} ďalších'
     topic_statuses:
       warning:
         help: "Toto je oficiálne varovanie."
@@ -1878,22 +1876,22 @@ sk:
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
     views_lowercase:
-      one: "zobrazenie"
-      few: "zobrazenia"
-      other: "zobrazení"
+      few: zobrazenia
+      one: zobrazenie
+      other: zobrazení
     replies: "Odpovede"
     activity: "Aktivita"
     likes: "Páči sa mi"
     likes_lowercase:
-      one: "\"Páči sa\""
-      few: "\"Páči sa\""
-      other: "\"Páči sa\""
+      few: '"Páči sa"'
+      one: '"Páči sa"'
+      other: '"Páči sa"'
     likes_long: "v tejto téme je {{number}} \"Páči sa\""
     users: "Používatelia"
     users_lowercase:
-      one: "používateľ"
-      few: "používatelia"
-      other: "používateľov"
+      few: používatelia
+      one: používateľ
+      other: používateľov
     category_title: "Kategória"
     history: "História"
     changed_by: "od {{author}}"
@@ -1906,9 +1904,9 @@ sk:
       latest:
         title: "Najnovšie"
         title_with_count:
-          one: "Posledný (1)"
-          few: "Posledné ({{count}})"
-          other: "Posledných ({{count}})"
+          few: Posledné ({{count}})
+          one: Posledný (1)
+          other: Posledných ({{count}})
         help: "témy s nedávnymi príspevkami"
       hot:
         title: "Horúca"
@@ -1926,25 +1924,25 @@ sk:
       unread:
         title: "Neprečítané"
         title_with_count:
-          one: "Neprečítaná (1)"
-          few: "Neprečítané ({{count}})"
-          other: "Neprečítaných ({{count}})"
+          few: Neprečítané ({{count}})
+          one: Neprečítaná (1)
+          other: Neprečítaných ({{count}})
         help: "témy ktorých neprečítané príspevky v súčastnosti sledujete alebo pozorujete "
         lower_title_with_count:
-          one: "1 neprečítaná"
-          few: "{{count}} neprečítané"
-          other: "{{count}} neprečítaných"
+          few: '{{count}} neprečítané'
+          one: 1 neprečítaná
+          other: '{{count}} neprečítaných'
       new:
         lower_title_with_count:
-          one: "1 nová"
-          few: "{{count}} nové"
-          other: "{{count}} nových"
+          few: '{{count}} nové'
+          one: 1 nová
+          other: '{{count}} nových'
         lower_title: "nový"
         title: "Nové"
         title_with_count:
-          one: "Nová (1)"
-          few: "Nové ({{count}})"
-          other: "Nových ({{count}})"
+          few: Nové ({{count}})
+          one: Nová (1)
+          other: Nových ({{count}})
         help: "témy vytvorené za posledných pár dní"
       posted:
         title: "Moje príspevky"
@@ -1955,9 +1953,9 @@ sk:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} ({{count}})"
-          few: "{{categoryName}} ({{count}})"
-          other: "{{categoryName}} ({{count}})"
+          few: '{{categoryName}} ({{count}})'
+          one: '{{categoryName}} ({{count}})'
+          other: '{{categoryName}} ({{count}})'
         help: "najnovšie témy v kategórii {{categoryName}}"
       top:
         title: "Top"
@@ -2040,16 +2038,16 @@ sk:
         mark_watching: '<b>m</b>, <b>w</b> Pozorovať tému'
     badges:
       earned_n_times:
-        one: "Získal tento odkaz 1-krát"
-        few: "Získal tento odkaz %{count}-krát"
-        other: "Získal tento odkaz %{count}-krát"
+        few: Získal tento odkaz %{count}-krát
+        one: Získal tento odkaz 1-krát
+        other: Získal tento odkaz %{count}-krát
       granted_on: "Udelený dňa %{date}"
       others_count: "Ostatní s týmto odznakom (%{count})"
       title: Odznaky
       granted:
-        one: "1 udelený"
-        few: "%{count} udelené"
-        other: "%{count} udelených"
+        few: '%{count} udelené'
+        one: 1 udelený
+        other: '%{count} udelených'
       badge_grouping:
         getting_started:
           name: Začíname
@@ -2560,13 +2558,13 @@ sk:
           suspect: 'Podozrivý'
         approved: "Schválený?"
         approved_selected:
-          one: "schváliť používateľa"
-          few: "schváliť ({{count}}) používateľov "
-          other: "schváliť ({{count}}) používateľov "
+          few: 'schváliť ({{count}}) používateľov '
+          one: schváliť používateľa
+          other: 'schváliť ({{count}}) používateľov '
         reject_selected:
-          one: "zamietnuť používateľa"
-          few: "zamietnuť ({{count}}) používateľov "
-          other: "zamietnuť ({{count}}) používateľov "
+          few: 'zamietnuť ({{count}}) používateľov '
+          one: zamietnuť používateľa
+          other: 'zamietnuť ({{count}}) používateľov '
         titles:
           active: 'Aktívni používatelia'
           new: 'Noví používatelia'
@@ -2582,13 +2580,13 @@ sk:
           suspended: 'Užívatelia s odobratými právami'
           suspect: 'Podozriví užívatelia'
         reject_successful:
-          one: "Úspešne zamietnutý používateľ"
-          few: "Úspešne zamietnutí %{count} používatelia"
-          other: "Úspešne zamietnutých %{count} používateľov"
+          few: Úspešne zamietnutí %{count} používatelia
+          one: Úspešne zamietnutý používateľ
+          other: Úspešne zamietnutých %{count} používateľov
         reject_failures:
-          one: "Nepodarilo sa zamietnuť 1 používateľa"
-          few: "Nepodarilo sa zamietnuť %{count} používateľov"
-          other: "Nepodarilo sa zamietnuť %{count} používateľov"
+          few: Nepodarilo sa zamietnuť %{count} používateľov
+          one: Nepodarilo sa zamietnuť 1 používateľa
+          other: Nepodarilo sa zamietnuť %{count} používateľov
         not_verified: "Neoverený"
         check_email:
           title: "Odhaliť emailovú adresu tohto používateľa"
@@ -2622,7 +2620,7 @@ sk:
         reputation: Reputácia
         permissions: Práva
         activity: Aktivita
-        like_count: '"Páči sa" Rozdané / Prijaté'
+        like_count: "\"Páči sa\" Rozdané / Prijaté"
         last_100_days: 'za posledných 100 dní'
         private_topics_count: Súkromné témy
         posts_read_count: Prečítané príspevky
@@ -2645,17 +2643,17 @@ sk:
         delete_forbidden_because_staff: "Správcovia a moderátori nemôžu byť vymazaní."
         delete_posts_forbidden_because_staff: "Nedá sa zmazať príspevky správcov a moderátorov."
         delete_forbidden:
-          one: "Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom užívateľa. (Príspevky staršie ako %{count} deň nemožno zmazať)"
-          few: "Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom užívateľa. (Príspevky staršie ako %{count} dni nemožno zmazať)"
-          other: "Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom používateľa. (Príspevky staršie ako %{count} dní nemožno zmazať)"
+          few: Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom užívateľa. (Príspevky staršie ako %{count} dni nemožno zmazať)
+          one: Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom užívateľa. (Príspevky staršie ako %{count} deň nemožno zmazať)
+          other: Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom používateľa. (Príspevky staršie ako %{count} dní nemožno zmazať)
         cant_delete_all_posts:
-          one: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} deň. (Nastavenie delete_user_max_post_age )"
-          few: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dni. (Nastavenie delete_user_max_post_age )"
-          other: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )"
+          few: Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dni. (Nastavenie delete_user_max_post_age )
+          one: Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} deň. (Nastavenie delete_user_max_post_age )
+          other: Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )
         cant_delete_all_too_many_posts:
-          one: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako 1 príspevok.  (delete_all_posts_max)"
-          few: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevky.  (delete_all_posts_max)"
-          other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)"
+          few: Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevky.  (delete_all_posts_max)
+          one: Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako 1 príspevok.  (delete_all_posts_max)
+          other: Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)
         delete_confirm: "Ste si ISTÝ, že chcete zmazať tohoto používateľa? Už sa to nedá obnoviť!"
         delete_and_block: "Zazať a <b>zablokovať</b> tento email a IP adresu"
         delete_dont_block: "Iba vymazať"
@@ -2794,20 +2792,20 @@ sk:
           modal_title: Zoskupovanie odznakov
         granted_by: Udelené používateľom
         granted_at: Udelené dňa
-        reason_help: (Odkaze na príspevok, alebo tému)
+        reason_help: "(Odkaze na príspevok, alebo tému)"
         save: Uložiť
         delete: Odstrániť
-        delete_confirm: Ste si istý, že chcete zmazať tento odznak?
+        delete_confirm: "Ste si istý, že chcete zmazať tento odznak?"
         revoke: Zrušiť
         reason: Dôvod
         expand: Rozbaliť &hellip;
-        revoke_confirm: Ste si istý, že chcete obnoviť tento odznak?
+        revoke_confirm: "Ste si istý, že chcete obnoviť tento odznak?"
         edit_badges: Upraviť odznaky
         grant_badge: Udeliť odznak
         granted_badges: Udelené odznaky
         grant: Udeliť
         no_user_badges: "Používateľovi %{name} nebol udelený žiaden odznak."
-        no_badges: Nie sú žiadne odznaky, ktoré môžu byť udelené.
+        no_badges: "Nie sú žiadne odznaky, ktoré môžu byť udelené."
         none_selected: "Vyberte odznak, aby ste mohli začať"
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne
@@ -2838,15 +2836,15 @@ sk:
             text: "Chýbajú ukážky práv. Toto sa stane, ak dotaz na odznak vráti ID používateľa alebo príspevku, ktorý neexistuje. Toto môže zapríčiniť neskoršie neočakávané výsledky - prosíme znovu overte Váš dotaz."
           no_grant_count: "Žiadne odznaky na pridelenie."
           grant_count:
-            one: "<b>1</b> odznak na pridelenie"
-            few: "<b>%{count}</b> odznaky na pridelenie"
-            other: "<b>%{count}</b> odznakov na pridelenie"
+            few: <b>%{count}</b> odznaky na pridelenie
+            one: <b>1</b> odznak na pridelenie
+            other: <b>%{count}</b> odznakov na pridelenie
           sample: "Vzor:"
           grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> za príspevok v %{link}
-            with_post_time: <span class="username">%{username}</span> za príspevok v %{link} v čase <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> v čase <span class="time">%{time}</span>
+            with: "<span class=\"username\">%{username}</span>"
+            with_post: "<span class=\"username\">%{username}</span> za príspevok v %{link}"
+            with_post_time: "<span class=\"username\">%{username}</span> za príspevok v %{link} v čase <span class=\"time\">%{time}</span>"
+            with_time: "<span class=\"username\">%{username}</span> v čase <span class=\"time\">%{time}</span>"
       emoji:
         title: "Emoji"
         help: "Pridaj nové emoji, ktoré bude dostupné pre všetkých (TIP: môžete pretiahnuť viac súborov naraz)"
@@ -2888,7 +2886,7 @@ sk:
         category_id: "ID kategórie"
         category_title: "Kategória"
         external_url: "Externá URL"
-        delete_confirm: Ste si istý, že chcete zmazať tento trvalý odkaz?
+        delete_confirm: "Ste si istý, že chcete zmazať tento trvalý odkaz?"
         form:
           label: "Nový:"
           add: "Pridať"

@@ -26,7 +26,6 @@ sq:
     named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
     default_cannot_be_made_public: "Sondazhet me vota nuk mund të jenë publikë."
-    named_cannot_be_made_public: "Sondazhi me emrin <strong>%{name}</strong> ka vota që nuk mund të bëhen publike."
     edit_window_expired:
       op_cannot_edit_options: "Nuk mund të shtoni apo hiqni alternativat e një sondazhi pas %{minutes} minutave të para. Ju lutem kontaktoni një moderues nëse keni nevojë të ndryshoni alternativat e një sondazhi."
       staff_cannot_add_or_remove_options: "Nuk mund të shtoni apo hiqni alternativat e një sondazhi pas %{minutes} minutave të para. Ju duhet ta mbyllni këtë temë dhe të krijoni një të re."

@@ -262,6 +262,15 @@ aside.quote {
     padding:1px;
   }
 
+  .topic-links {
+    tr {
+      border: none;
+    }
+    .badge-notification {
+      margin: 1px 5px 2px 0;
+    }
+  }
+
 }
 
 .topic-avatar, .avatar-flair-preview, .user-card-avatar, .topic-map .poster, .user-profile-avatar {
@@ -457,9 +466,6 @@ blockquote > *:last-child {
   td,th {
     padding: 3px 3px 3px 10px;
   }
-  tr {
-    border-bottom: 1px solid lighten($primary, 80%);
-  }
 }
 
 .small-action {
@@ -628,5 +634,15 @@ and (max-width : 767px) {
   .user-title {
     float: left;
     clear: left;
+  }
+}
+
+.signup-cta {
+  a {
+    float: right;
+    text-decoration: underline;
+  }
+  .buttons {
+    margin-bottom: 1em;
   }
 }

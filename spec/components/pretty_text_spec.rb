@@ -980,6 +980,14 @@ HTML
     expect(PrettyText.cook("a[i]b[/i]c")).to eq('<p>a<span class="bbcode-i">b</span>c</p>')
   end
 
+  it "can handle bbcode after a newline" do
+    # this is not 100% ideal cause we get an extra p here, but this is pretty rare
+    expect(PrettyText.cook("a\n[code]code[/code]")).to eq("<p>a</p>\n<pre><code class=\"lang-auto\">code</code></pre>")
+
+    # this is fine
+    expect(PrettyText.cook("a\na[code]code[/code]")).to eq("<p>a<br>\na<code>code</code></p>")
+  end
+
   it "can onebox local topics" do
     op = Fabricate(:post)
     reply = Fabricate(:post, topic_id: op.topic_id)

@@ -140,10 +140,6 @@ $user_card_background: $secondary;
     padding-top: 10px;
   }
 
-  &.has-card-badge-image .bio {
-    width: 75%;
-  }
-
   .bio {
     padding: 10px 0 0 0;
     clear: left;
@@ -294,17 +290,6 @@ $user_card_background: $secondary;
     margin-bottom: 5px;
     clear: left;
     padding-top: 15px;
-  }
-
-  .card-badge {
-    img {
-      max-width: 120px;
-    }
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
-    font-size: $font-up-5;
-    i {color: $user_card_primary;}
   }
 
   .metadata .email .btn {

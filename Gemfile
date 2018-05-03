@@ -24,7 +24,7 @@ else
   gem 'seed-fu'
 end
 
-gem 'mail', require: false
+gem 'mail', '2.7.1.rc1', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.46'
+gem 'onebox', '1.8.47'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 

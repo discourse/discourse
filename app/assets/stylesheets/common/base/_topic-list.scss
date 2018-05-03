@@ -12,17 +12,30 @@
 }
 
 .list-controls {
+  clear: both;
+  .combo-box .combo-box-header {
+    background: $primary-low;
+    color: $primary;
+    border: 1px solid transparent;
+    padding: 5px 6px 5px 10px;
+    font-size: $font-0;
+    transition: none;
+  }
   .select-kit {
     align-self: center;
-
+    .select-kit-collection {
+      font-size: $font-down-1;
+      max-height: 40vh;
+      .texts, .icons {
+        font-size: $font-up-1;
+      }
+    }
     &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
       float: right;
     }
   }
 }
-
-
-
+  
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
@@ -57,7 +70,6 @@
       vertical-align: top;
       margin-top: 2px;
     }
-    border-bottom: 1px solid $primary-low;
 
     &.last-visit {
       border-bottom: none;
@@ -84,10 +96,6 @@
       padding: 0 8px;
       font-size: $font-down-1;
     }
-  }
-
-  > tbody  {
-    border-top: 3px solid $primary-low;
   }
 
   th,
@@ -214,10 +222,6 @@
   }
 }
 
-.list-controls {
-  clear: both;
-}
-
 #list-area {
   margin-bottom: 100px;
   .empty-topic-list {
@@ -251,7 +255,7 @@ ol.category-breadcrumb {
   display: block;
   float: left;
   list-style: none;
-  margin: 0 10px 0 0;
+  margin: 0 10px 10px 0;
   padding: 0;
 
   li {
@@ -295,7 +299,7 @@ div.education {
 
 .table-heading {
   @extend .list-cell;
-  border-bottom: 2px solid $primary-low;
+  border-bottom: 3px solid $primary-low;
 }
 
 // This is not what we want:

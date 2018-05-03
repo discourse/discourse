@@ -14,6 +14,10 @@
   #private-message-users {
     width: 404px;
   }
+
+  .select-kit.is-expanded {
+    z-index: z("composer","dropdown");    
+  }
 }
 
 .category-input {
@@ -81,6 +85,10 @@
   padding: 10px 10px 35px 10px;
   box-shadow: shadow("card");
   background: $highlight-medium;
+  .hide-preview & {
+    z-index: z("composer","dropdown") + 1;    
+  }
+  
 
   &.urgent {
     background: $danger-low;

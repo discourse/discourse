@@ -103,3 +103,17 @@ pre code {
 #offscreen-content {
   display: none;
 }
+
+// Tables
+// --------------------------------------------------
+
+tbody {
+  border-top: 3px solid $primary-low;
+}
+
+tr {
+  border-bottom: 1px solid $primary-low;
+  &.highlighted {
+    animation: background-fade-highlight 2.5s ease-out;
+  }  
+}

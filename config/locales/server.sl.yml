@@ -17,12 +17,12 @@ sl:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januar, Februar, Marec, April, Maj, Junij, Julij, Avgust, September, Oktober, November, December]
+    month_names: [~, Januar, Februar, Marec, April, Maj, Junij, Julij, Avgust, September, Oktober, November, December]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
   loading: "Nalagam"
@@ -34,21 +34,24 @@ sl:
       has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
-      less_than: mora biti manj kot %{count}
-      less_than_or_equal_to: mora biti manj ali enako kot %{count}
+      less_than: "mora biti manj kot %{count}"
+      less_than_or_equal_to: "mora biti manj ali enako kot %{count}"
       not_a_number: ni številka
       not_an_integer: mora biti celo število
       odd: mora biti liho število
       too_long:
-        one: je predolgo (največ 1 znak)
-        two: je predolgo (največ 2 znaka)
         few: je predolgo (največ %{count} znakov)
+        one: je predolgo (največ 1 znak)
         other: je predolgo (največ %{count} znakov)
+        two: je predolgo (največ 2 znaka)
       too_short:
-        one: je prekratko (minimum je 1 znak)
-        two: je prekratko (minimum sta 2 znaka)
         few: je prekratko (minimum je %{count} znakov)
+        one: je prekratko (minimum je 1 znak)
         other: je prekratko (minimum je %{count} znakov)
+        two: je prekratko (minimum sta 2 znaka)
+  activemodel:
+    errors:
+      <<: *errors
   reading_time: "Čas branja"
   likes: "Všečki"
   embed:
@@ -70,11 +73,8 @@ sl:
       everyone: "vsi"
       admins: "administratorji"
       moderators: "moderatorji"
-  site_settings:
-    avatar_sizes: "Seznam avtomatsko generiranih velikosti avatarjev."
-  activemodel:
-    errors:
-      <<: *errors
   activerecord:
     errors:
       <<: *errors
+  site_settings:
+    avatar_sizes: "Seznam avtomatsko generiranih velikosti avatarjev."

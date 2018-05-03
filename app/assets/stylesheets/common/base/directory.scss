@@ -27,10 +27,16 @@
       padding: 0.5em;
       text-align: left;
       border-bottom: 1px solid $primary-low;
+      @media screen and (max-width: $small-width) {
+        padding: .5em .25em;
+      }
 
       .number, .time-read {
         font-size: $font-up-3;
         color: $primary-medium;
+        @media screen and (max-width: $small-width) {
+         font-size: $font-up-1;
+        }          
       }
       .time-read {
         white-space: nowrap;

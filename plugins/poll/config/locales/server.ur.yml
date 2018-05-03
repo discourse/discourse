@@ -28,7 +28,6 @@ ur:
     named_poll_with_multiple_choices_has_invalid_parameters: "ایک سے زیادہ انتخاب والے پول جس کا نام <strong>%{نام}</strong> ہے، کے غلط پیرامیٹرز ہیں۔"
     requires_at_least_1_valid_option: "آپ کو کم از کم 1 جائز آپشن منتخب کرنا ضروری ہے۔"
     default_cannot_be_made_public: "ووٹ کے ساتھ والے پول کو پبلک نہیں کیا جا سکتا۔"
-    named_cannot_be_made_public: "<strong>%{نام}</strong> نام والے پول کے ووٹ ہیں، جو کہ پبلک نہیں کیے جا سکتے۔"
     edit_window_expired:
       op_cannot_edit_options: "پہلے %{منٹ} منٹ بعد آپ پول کی آپشنز میں اضافہ یا کمی نہیں کر سکتے۔ اگر آپ نے کسی پول آپشن میں ترمیم کرنی ہے تو براہ مہربانی کسی ماڈریٹر سے رابطہ کریں۔"
       staff_cannot_add_or_remove_options: "پہلے %{منٹ} منٹ بعد آپ پول کی آپشنز میں اضافہ یا کمی نہیں کر سکتے۔ اِس کے بجاے، آپ کو یہ ٹاپک بند کر کہ ایک نیا ٹاپک بنا لینا چاہیے۔"

@@ -1,28 +1,23 @@
-import { ajax } from 'discourse/lib/ajax';
-import computed from 'ember-addons/ember-computed-decorators';
-import loadScript from 'discourse/lib/load-script';
+import { ajax } from "discourse/lib/ajax";
+import computed from "ember-addons/ember-computed-decorators";
+import AsyncReport from "admin/mixins/async-report";
+import Report from "admin/models/report";
+import { number } from 'discourse/lib/formatter';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-mini-chart"],
-
-  classNameBindings: ["trend", "oneDataPoint", "isLoading"],
-
-  isLoading: false,
-  total: null,
-  trend: null,
-  title: null,
+  classNameBindings: ["thirtyDayTrend", "oneDataPoint"],
+  isLoading: true,
+  thirtyDayTrend: Ember.computed.alias("report.thirtyDayTrend"),
   oneDataPoint: false,
   backgroundColor: "rgba(200,220,240,0.3)",
   borderColor: "#08C",
+  average: false,
 
-  didInsertElement() {
+  willDestroyEelement() {
     this._super();
-    this._initializeChart();
-  },
 
-  didUpdateAttrs() {
-    this._super();
-    this._initializeChart();
+    this.messageBus.unsubscribe(this.get("dataSource"));
   },
 
   @computed("dataSourceName")
@@ -32,140 +27,119 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("trend")
-  trendIcon(trend) {
-    if (trend === "stable") {
-      return null;
-    } else {
-      return `angle-${trend}`;
+  @computed("thirtyDayTrend")
+  trendIcon(thirtyDayTrend) {
+    switch (thirtyDayTrend) {
+      case "trending-up":
+        return "angle-up";
+      case "trending-down":
+        return "angle-down";
+      case "high-trending-up":
+        return "angle-double-up";
+      case "high-trending-down":
+        return "angle-double-down";
+      default:
+        return null;
     }
   },
 
-  _fetchReport() {
-    if (this.get("isLoading")) return;
-
+  fetchReport() {
     this.set("isLoading", true);
 
-    let payload = {data: {}};
+    let payload = {
+      data: { async: true }
+    };
 
     if (this.get("startDate")) {
-      payload.data.start_date = this.get("startDate").toISOString();
+      payload.data.start_date = this.get("startDate").format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
     }
 
     if (this.get("endDate")) {
-      payload.data.end_date = this.get("endDate").toISOString();
+      payload.data.end_date = this.get("endDate").format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
     }
 
     ajax(this.get("dataSource"), payload)
       .then((response) => {
-        this._setPropertiesFromModel(response.report);
+        // if (!Ember.isEmpty(response.report.data)) {
+          this._setPropertiesFromReport(Report.create(response.report));
+        // }
       })
       .finally(() => {
-        this.set("isLoading", false);
+        if (this.get("oneDataPoint")) {
+          this.set("isLoading", false);
+          return;
+        }
 
-        Ember.run.schedule("afterRender", () => {
-          if (!this.get("oneDataPoint")) {
-            this._drawChart();
-          }
-        });
+        if (!Ember.isEmpty(this.get("report.data"))) {
+          this.set("isLoading", false);
+          this.renderReport();
+        }
       });
   },
 
-  _initializeChart() {
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      if (this.get("model") && !this.get("values")) {
-        this._setPropertiesFromModel(this.get("model"));
-        this._drawChart();
-      } else if (this.get("dataSource")) {
-        this._fetchReport();
-      }
+  renderReport() {
+    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+    if (this.get("oneDataPoint")) return;
+
+    Ember.run.schedule("afterRender", () => {
+      const $chartCanvas = this.$(".chart-canvas");
+
+      if (!$chartCanvas.length) return;
+      const context = $chartCanvas[0].getContext("2d");
+
+      const data = {
+        labels: this.get("labels"),
+        datasets: [{
+          data: Ember.makeArray(this.get("values")),
+          backgroundColor: this.get("backgroundColor"),
+          borderColor: this.get("borderColor")
+        }]
+      };
+
+      this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },
 
-  _drawChart() {
-    const $chartCanvas = this.$(".chart-canvas");
-    if (!$chartCanvas.length) return;
+  _setPropertiesFromReport(report) {
+    const oneDataPoint = (this.get("startDate") && this.get("endDate")) &&
+      this.get("startDate").isSame(this.get("endDate"), "day");
 
-    const context = $chartCanvas[0].getContext("2d");
+    report.set("average", this.get("average"));
 
-    const data = {
-      labels: this.get("labels"),
-      datasets: [{
-        data: this.get("values"),
-        backgroundColor: this.get("backgroundColor"),
-        borderColor: this.get("borderColor")
-      }]
-    };
-
-    this._chart = new window.Chart(context, this._buildChartConfig(data));
-  },
-
-  _setPropertiesFromModel(model) {
-    this.setProperties({
-      labels: model.data.map(r => r.x),
-      values: model.data.map(r => r.y),
-      oneDataPoint: (this.get("startDate") && this.get("endDate")) &&
-                    this.get("startDate").isSame(this.get("endDate"), 'day'),
-      total: model.total,
-      title: model.title,
-      trend: this._computeTrend(model.total, model.prev30Days)
-    });
+    this.setProperties({ oneDataPoint, report });
   },
 
   _buildChartConfig(data) {
-    const values = this.get("values");
-    const max = Math.max(...values);
-    const min = Math.min(...values);
-    const stepSize = Math.max(...[Math.ceil((max - min)/5), 20]);
-
-    const startDate = this.get("startDate") || moment();
-    const endDate = this.get("endDate") || moment();
-    const datesDifference = startDate.diff(endDate, "days");
-    let unit = "day";
-    if (datesDifference >= 366) {
-      unit = "quarter";
-    } else if (datesDifference >= 61) {
-      unit = "month";
-    } else if (datesDifference >= 14) {
-      unit = "week";
-    }
-
     return {
       type: "line",
       data,
       options: {
-        legend: { display: false },
+        legend: {
+          display: false
+        },
         responsive: true,
-        layout: { padding: { left: 0, top: 0, right: 0, bottom: 0 } },
+        layout: {
+          padding: {
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0
+          }
+        },
         scales: {
-          yAxes: [
-            {
-              display: true,
-              ticks: { suggestedMin: 0, stepSize, suggestedMax: max + stepSize }
+          yAxes: [{
+            display: true,
+            ticks: { callback: (label) => number(label) }
+          }],
+          xAxes: [{
+            display: true,
+            type: "time",
+            time: {
+              parser: "YYYY-MM-DD"
             }
-          ],
-          xAxes: [
-            {
-              display: true,
-              type: "time",
-              time: {
-                parser: "YYYY-MM-DD",
-                unit
-              }
-            }
-          ],
+          }],
         }
       },
     };
-  },
-
-  _computeTrend(total, prevTotal) {
-    const percentChange = ((total - prevTotal) / prevTotal) * 100;
-
-    if (percentChange > 50) return "double-up";
-    if (percentChange > 0) return "up";
-    if (percentChange === 0) return "stable";
-    if (percentChange < 50) return "double-down";
-    if (percentChange < 0) return "down";
-  },
+  }
 });

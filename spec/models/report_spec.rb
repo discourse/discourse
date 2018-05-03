@@ -250,6 +250,36 @@ describe Report do
     end
   end
 
+  describe 'new contributors report' do
+    let(:report) { Report.find('new_contributors') }
+
+    context "no contributors" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with contributors" do
+      before do
+        jeff = Fabricate(:user)
+        jeff.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 1.day.ago)
+
+        regis = Fabricate(:user)
+        regis.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
+
+        hawk = Fabricate(:user)
+        hawk.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+
+        expect(report.data[0][:y]).to eq 2
+        expect(report.data[1][:y]).to eq 1
+      end
+    end
+  end
+
   describe 'users by types level report' do
     let(:report) { Report.find('users_by_type') }
 
@@ -308,6 +338,76 @@ describe Report do
         expect(report.data[1][0]).to eq("php")
         expect(report.data[1][1]).to eq(1)
         expect(report.data[1][2]).to eq(1)
+      end
+    end
+  end
+
+  describe 'DAU/MAU report' do
+    let(:report) { Report.find('dau_by_mau') }
+
+    context "no activity" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with different users/visits" do
+      before do
+        freeze_time
+
+        arpit = Fabricate(:user)
+        arpit.user_visits.create(visited_at:  1.day.ago)
+
+        sam = Fabricate(:user)
+        sam.user_visits.create(visited_at: 2.days.ago)
+
+        robin = Fabricate(:user)
+        robin.user_visits.create(visited_at: 2.days.ago)
+
+        michael = Fabricate(:user)
+        michael.user_visits.create(visited_at: 35.days.ago)
+
+        gerhard = Fabricate(:user)
+        gerhard.user_visits.create(visited_at: 45.days.ago)
+      end
+
+      it "returns a report with data" do
+        expect(report.data.first[:y]).to eq(100)
+        expect(report.data.last[:y]).to eq(34)
+        expect(report.prev30Days).to eq(75)
+      end
+    end
+  end
+
+  describe 'Daily engaged users' do
+    let(:report) { Report.find('daily_engaged_users') }
+
+    context "no activity" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with different activities" do
+      before do
+        freeze_time
+
+        UserActionCreator.enable
+
+        arpit = Fabricate(:user)
+        sam = Fabricate(:user)
+
+        jeff = Fabricate(:user, created_at: 1.day.ago)
+        topic = Fabricate(:topic, user: jeff, created_at: 1.day.ago)
+        post = Fabricate(:post, topic: topic, user: jeff, created_at: 1.day.ago)
+
+        PostAction.act(arpit, post, PostActionType.types[:like])
+        PostAction.act(sam, post, PostActionType.types[:like])
+      end
+
+      it "returns a report with data" do
+        expect(report.data.first[:y]).to eq(1)
+        expect(report.data.last[:y]).to eq(2)
       end
     end
   end

@@ -26,7 +26,6 @@ ca:
     named_poll_with_multiple_choices_has_invalid_parameters: "La votació anomenada <strong>%{name}</strong> multi-resposta té paràmetres invàlids."
     requires_at_least_1_valid_option: "Has de seleccionar com a mínim 1 opció vàlida."
     default_cannot_be_made_public: "Enquestes amb vots no poden fer-se públiques."
-    named_cannot_be_made_public: "L'enquesta anomenada <strong>%{name}</strong> te vots i no pot fer-se pública."
     edit_window_expired:
       op_cannot_edit_options: "No pots afegir o eliminar opcions d'enquestes passats %{minutes} minuts. Per favor, contacta un moderador si necessites editar una opció de l'enquesta."
       staff_cannot_add_or_remove_options: "No pots afegir o elimiminar opcions d'enquesta passats %{minutes} minuts. Hauries de tancar el tema i crear-ne un de nou."

@@ -27,10 +27,12 @@
         <div class='container'>
           <table class="groups-table">
             <thead>
-              {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
-              {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
-              <th>{{i18n "groups.index.group_type"}}</th>
-              <th>{{i18n "groups.membership"}}</th>
+              <tr>
+                {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
+                {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
+                <th>{{i18n "groups.index.group_type"}}</th>
+                <th>{{i18n "groups.membership"}}</th>
+              </tr>
             </thead>
 
             <tbody>
@@ -48,19 +50,7 @@
                         </span>
                       {{/if}}
 
-                      <span>
-                        <span class='groups-info-name'>{{group.displayName}}</span>
-
-                        {{#if group.full_name}}
-                          <span class='groups-info-full-name'>{{group.full_name}}</span>
-                        {{/if}}
-
-                        {{#if group.title}}
-                          <div>
-                            <span class='groups-info-title'>{{group.title}}</span>
-                          </div>
-                        {{/if}}
-                      </span>
+                      {{groups-info group=group}}
                     {{/link-to}}
                   </td>
 

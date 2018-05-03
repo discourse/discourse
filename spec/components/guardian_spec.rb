@@ -158,6 +158,35 @@ describe Guardian do
     end
   end
 
+  describe "can_enable_safe_mode" do
+    let(:user) { Fabricate.build(:user) }
+    let(:moderator) { Fabricate.build(:moderator) }
+
+    context "when enabled" do
+      before do
+        SiteSetting.enable_safe_mode = true
+      end
+
+      it "can be performed" do
+        expect(Guardian.new.can_enable_safe_mode?).to eq(true)
+        expect(Guardian.new(user).can_enable_safe_mode?).to eq(true)
+        expect(Guardian.new(moderator).can_enable_safe_mode?).to eq(true)
+      end
+    end
+
+    context "when disabled" do
+      before do
+        SiteSetting.enable_safe_mode = false
+      end
+
+      it "can be performed" do
+        expect(Guardian.new.can_enable_safe_mode?).to eq(false)
+        expect(Guardian.new(user).can_enable_safe_mode?).to eq(false)
+        expect(Guardian.new(moderator).can_enable_safe_mode?).to eq(true)
+      end
+    end
+  end
+
   describe "can_defer_flags" do
     let(:post) { Fabricate(:post) }
     let(:user) { post.user }

@@ -8,7 +8,7 @@
   .list-controls {
     .nav {
       float: left;
-      margin-bottom: 18px;
+      margin-bottom: 15px;
     }
 
     .btn {
@@ -58,11 +58,6 @@
       button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium); }
     }
 
-    > tbody > tr {
-      &.highlighted {
-        animation: background-fade-highlight 2.5s ease-out;
-      }
-    }
     button.bulk-select {
       padding: 0;
     }

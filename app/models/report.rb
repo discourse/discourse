@@ -2,7 +2,8 @@ require_dependency 'topic_subtype'
 
 class Report
 
-  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id, :group_id, :labels
+  attr_accessor :type, :data, :total, :prev30Days, :start_date,
+                :end_date, :category_id, :group_id, :labels, :async
 
   def self.default_days
     30
@@ -14,12 +15,23 @@ class Report
     @end_date ||= Time.zone.now.end_of_day
   end
 
+  def self.cache_key(report)
+    "reports:#{report.type}:#{report.start_date.to_date.strftime("%Y%m%d")}:#{report.end_date.to_date.strftime("%Y%m%d")}"
+  end
+
+  def self.clear_cache
+    Discourse.cache.keys("reports:*").each do |key|
+      Discourse.cache.redis.del(key)
+    end
+  end
+
   def as_json(options = nil)
     {
      type: type,
      title: I18n.t("reports.#{type}.title"),
      xaxis: I18n.t("reports.#{type}.xaxis"),
      yaxis: I18n.t("reports.#{type}.yaxis"),
+     description: I18n.t("reports.#{type}.description"),
      data: data,
      total: total,
      start_date: start_date,
@@ -48,10 +60,20 @@ class Report
     report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
+    report.async = opts[:async] || false
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
-      send(report_method, report)
+      cached_report = Discourse.cache.read(cache_key(report))
+      if report.async
+        if cached_report
+          return cached_report
+        else
+          Jobs.enqueue(:retrieve_report, opts.merge(report_type: type))
+        end
+      else
+        send(report_method, report)
+      end
     elsif type =~ /_reqs$/
       req_report(report, type.split(/_reqs$/)[0].to_sym)
     else
@@ -72,7 +94,7 @@ class Report
       end
 
     report.data = []
-    data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
+    data.where('date >= ? AND date <= ?', report.start_date, report.end_date)
       .order(date: :asc)
       .group(:date)
       .sum(:count)
@@ -84,7 +106,7 @@ class Report
 
     report.prev30Days = data.where(
         'date >= ? AND date < ?',
-        (report.start_date - 31.days).to_date, report.start_date.to_date
+        (report.start_date - 31.days), report.start_date
       ).sum(:count)
   end
 
@@ -105,13 +127,78 @@ class Report
       basic_report_about report, User.real, :count_by_signup_date, report.start_date, report.end_date, report.group_id
       add_counts report, User.real, 'users.created_at'
     else
+
       report_about report, User.real, :count_by_signup_date
     end
   end
 
+  def self.report_inactive_users(report)
+    report.data = []
+
+    data = User.real.count_by_inactivity(report.start_date, report.end_date)
+
+    data.each do |data_point|
+      report.data << { x: data_point["date_trunc"], y: data_point["count"] }
+    end
+  end
+
+  def self.report_new_contributors(report)
+    report.data = []
+
+    data = User.real.count_by_first_post(report.start_date, report.end_date)
+
+    prev30DaysData = User.real.count_by_first_post(report.start_date - 30.days, report.start_date)
+    report.prev30Days = prev30DaysData.sum { |k, v| v }
+
+    report.total = User.real.count_by_first_post
+
+    data.each do |key, value|
+      report.data << { x: key, y: value }
+    end
+  end
+
+  def self.report_daily_engaged_users(report)
+    report.data = []
+
+    data = UserAction.count_daily_engaged_users(report.start_date, report.end_date)
+    prev30DaysData = UserAction.count_daily_engaged_users(report.start_date - 30.days, report.start_date)
+
+    report.total = UserAction.count_daily_engaged_users
+
+    report.prev30Days = prev30DaysData.sum { |k, v| v }
+
+    data.each do |key, value|
+      report.data << { x: key, y: value }
+    end
+  end
+
+  def self.report_dau_by_mau(report)
+    data_points = UserVisit.count_by_active_users(report.start_date, report.end_date)
+
+    report.data = []
+
+    compute_dau_by_mau = Proc.new { |data_point|
+      if data_point["mau"] == 0
+        0
+      else
+        ((data_point["dau"].to_f / data_point["mau"].to_f) * 100).ceil
+      end
+    }
+
+    data_points.each do |data_point|
+      report.data << { x: data_point["date"], y: compute_dau_by_mau.call(data_point) }
+    end
+
+    prev_data_points = UserVisit.count_by_active_users(report.start_date - 30.days, report.start_date)
+    if !prev_data_points.empty?
+      sum = prev_data_points.sum { |data_point| compute_dau_by_mau.call(data_point) }
+      report.prev30Days = sum / prev_data_points.count
+    end
+  end
+
   def self.report_profile_views(report)
-    start_date = report.start_date.to_date
-    end_date = report.end_date.to_date
+    start_date = report.start_date
+    end_date = report.end_date
     basic_report_about report, UserProfileView, :profile_views_by_day, start_date, end_date, report.group_id
 
     report.total = UserProfile.sum(:views)
@@ -161,6 +248,7 @@ class Report
 
   def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
+
     subject_class.send(report_method, *args).each do |date, count|
       report.data << { x: date, y: count }
     end

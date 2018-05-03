@@ -6,7 +6,7 @@ module DiscoursePoll
         .pluck(:post_id)
 
       post_ids.each do |post_id|
-        DistributedMutex.synchronize("#{DiscoursePoll::MUTEX_PREFIX}-#{post_id}") do
+        DistributedMutex.synchronize("discourse_poll-#{post_id}") do
           post = Post.find_by(id: post_id)
           update_votes(post, source_user, target_user) if post
         end

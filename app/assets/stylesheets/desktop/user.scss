@@ -110,7 +110,6 @@
 
   th {
     text-align: left;
-    border-bottom: 3px solid $primary-low;
     padding: 0 0 10px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
@@ -191,7 +190,6 @@
       padding: 0 0 12px 0;
       float: right;
       text-align: right;
-      width: 180px;
 
       a {
         width: 140px;

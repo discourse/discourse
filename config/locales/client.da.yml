@@ -43,62 +43,62 @@ da:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
-          other: "< %{count}s"
+          one: < 1s
+          other: < %{count}s
         x_seconds:
-          one: "1s"
-          other: "%{count}s"
+          one: 1s
+          other: '%{count}s'
         x_minutes:
-          one: "1m"
-          other: "%{count}m"
+          one: 1m
+          other: '%{count}m'
         about_x_hours:
-          one: "1t"
-          other: "%{count}t"
+          one: 1t
+          other: '%{count}t'
         x_days:
-          one: "1d"
-          other: "%{count}d"
+          one: 1d
+          other: '%{count}d'
         about_x_years:
-          one: "1å"
-          other: "%{count}å"
+          one: 1å
+          other: '%{count}å'
         over_x_years:
-          one: "> 1å"
-          other: "> %{count}å"
+          one: '> 1å'
+          other: '> %{count}å'
         almost_x_years:
-          one: "1å"
-          other: "%{count}å"
+          one: 1å
+          other: '%{count}å'
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
-          other: "%{count} min"
+          one: 1 min
+          other: '%{count} min'
         x_hours:
-          one: "1 time"
-          other: "%{count} timer"
+          one: 1 time
+          other: '%{count} timer'
         x_days:
-          one: "1 dag"
-          other: "%{count} dage"
+          one: 1 dag
+          other: '%{count} dage'
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 min siden"
-          other: "%{count} min siden"
+          one: 1 min siden
+          other: '%{count} min siden'
         x_hours:
-          one: "1 time siden"
-          other: "%{count} timer siden"
+          one: 1 time siden
+          other: '%{count} timer siden'
         x_days:
-          one: "1 dag siden"
-          other: "%{count} dage siden"
+          one: 1 dag siden
+          other: '%{count} dage siden'
       later:
         x_days:
-          one: "1 dag senere"
-          other: "%{count} dage senere"
+          one: 1 dag senere
+          other: '%{count} dage senere'
         x_months:
-          one: "1 måned senere"
-          other: "%{count} måneder senere"
+          one: 1 måned senere
+          other: '%{count} måneder senere'
         x_years:
-          one: "1 år senere"
-          other: "%{count} år senere"
+          one: 1 år senere
+          other: '%{count} år senere'
       previous_month: 'Forrige måned'
       next_month: 'Næste måned'
     share:
@@ -175,8 +175,8 @@ da:
     show_help: "indstillinger"
     links: "Links"
     links_lowercase:
-      one: "link"
-      other: "links"
+      one: link
+      other: links
     faq: "FAQ"
     guidelines: "Retningslinier"
     privacy_policy: "Privatlivspolitik"
@@ -200,8 +200,8 @@ da:
     max_of_count: "max af {{count}}"
     alternation: "eller"
     character_count:
-      one: "{{count}} tegn"
-      other: "{{count}} tegn"
+      one: '{{count}} tegn'
+      other: '{{count}} tegn'
     suggested_topics:
       title: "Foreslåede emner"
       pm_title: "Foreslåede beskeder"
@@ -270,16 +270,16 @@ da:
       cancel: "Annuller"
       view_pending: "vis afventende indlæg"
       has_pending_posts:
-        one: "Det emne har <b>1</b> indlæg der afventer godkendelse"
-        other: "Dette emne har <b>{{count}}</b> indlæg der afventer godkendelse"
+        one: Det emne har <b>1</b> indlæg der afventer godkendelse
+        other: Dette emne har <b>{{count}}</b> indlæg der afventer godkendelse
       confirm: "Gem ændringer"
       delete_prompt: "Er du sikker på at du vil slette <b>%{username}</b>? Det fjerner alle indlæg og blokerer email og IP-adresse."
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
         pending_posts:
-          one: "Du har <strong>1</strong> afventende indlæg."
-          other: "Du har <strong>{{count}}</strong> afventende indlæg."
+          one: Du har <strong>1</strong> afventende indlæg.
+          other: Du har <strong>{{count}}</strong> afventende indlæg.
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> oprettede <a href='{{topicUrl}}'>emnet</a>"
@@ -313,8 +313,8 @@ da:
       posts_read: "Læste"
       posts_read_long: "Indlæg læst"
       total_rows:
-        one: "1 bruger"
-        other: "%{count} brugere"
+        one: 1 bruger
+        other: '%{count} brugere'
     group_histories:
       actions:
         change_group_setting: "Skift gruppe indstilling"
@@ -386,18 +386,18 @@ da:
       flair_preview_icon: "Forhåndsvisning af ikonet"
       flair_preview_image: "Forhåndsvisning af billede"
     user_action_groups:
-      '1': "Likes givet"
-      '2': "Likes modtaget"
-      '3': "Bogmærker"
-      '4': "Emner"
-      '5': "Svar"
-      '6': "Svar"
-      '7': "Referencer"
-      '9': "Citater"
-      '11': "Ændringer"
-      '12': "Sendte indlæg"
-      '13': "Indbakke"
-      '14': "Afventer"
+      "1": "Likes givet"
+      "2": "Likes modtaget"
+      "3": "Bogmærker"
+      "4": "Emner"
+      "5": "Svar"
+      "6": "Svar"
+      "7": "Referencer"
+      "9": "Citater"
+      "11": "Ændringer"
+      "12": "Sendte indlæg"
+      "13": "Indbakke"
+      "14": "Afventer"
     categories:
       all: "alle kategorier"
       no_subcategory: "ingen"
@@ -418,11 +418,11 @@ da:
       toggle_ordering: "vis/skjul rækkefølgeskifter"
       subcategories: "Underkategorier:"
       topic_sentence:
-        one: "1 emne"
-        other: "%{count} emner"
+        one: 1 emne
+        other: '%{count} emner'
       topic_stat_sentence:
-        one: "%{count} nyt emne i den/det seneste %{unit}."
-        other: "%{count} nye emner i den/det seneste %{unit}."
+        one: '%{count} nyt emne i den/det seneste %{unit}.'
+        other: '%{count} nye emner i den/det seneste %{unit}.'
     ip_lookup:
       title: IP-adresse opslag
       hostname: Værtsnavn
@@ -610,8 +610,8 @@ da:
         authenticated: "Din email er blevet bekræftet af {{provider}}"
         frequency_immediately: "Vi sender dig en email med det samme, hvis du ikke har læst den ting vi emailer dig om."
         frequency:
-          one: "Vi sender dig kun email, hvis vi ikke har set dig i det seneste minut."
-          other: "Vi sender dig kun email. hvis vi ikke har set dig i de sidste {{count}} minutter."
+          one: Vi sender dig kun email, hvis vi ikke har set dig i det seneste minut.
+          other: Vi sender dig kun email. hvis vi ikke har set dig i de sidste {{count}} minutter.
       name:
         title: "Navn"
         instructions: "Dit fulde navn (valgfrit)"
@@ -642,8 +642,6 @@ da:
       created: "Oprettet"
       log_out: "Log ud"
       location: "Sted"
-      card_badge:
-        title: "Brugerkort-Badge"
       website: "Site"
       email_settings: "E-mail"
       like_notification_frequency:
@@ -698,8 +696,8 @@ da:
         user: "Inviteret bruger"
         sent: "Sendt"
         truncated:
-          one: "Viser den første invitation."
-          other: "Viser de første {{count}} invitationer."
+          one: Viser den første invitation.
+          other: Viser de første {{count}} invitationer.
         redeemed: "Brugte invitationer"
         redeemed_tab: "Indløst"
         redeemed_tab_with_count: "Indløst ({{count}})"
@@ -744,20 +742,20 @@ da:
         stats: "Statistik"
         time_read: "læsetid"
         topic_count:
-          one: "emne oprettet"
-          other: "emner oprettet"
+          one: emne oprettet
+          other: emner oprettet
         post_count:
-          one: "Indlæg oprettet"
-          other: "Indlæg oprettet"
+          one: Indlæg oprettet
+          other: Indlæg oprettet
         days_visited:
-          one: "dag besøgt"
-          other: "dage besøgt"
+          one: dag besøgt
+          other: dage besøgt
         posts_read:
-          one: "Indlæg læst"
-          other: "Indlæg læst"
+          one: Indlæg læst
+          other: Indlæg læst
         bookmark_count:
-          one: "bogmærke"
-          other: "bogmærker"
+          one: bogmærke
+          other: bogmærker
         top_replies: "Top svar"
         no_replies: "Ingen svar, endnu."
         more_replies: "Flere svar"
@@ -825,8 +823,8 @@ da:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nåede grænse for konfiguration af sitet på %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overskred grænse for konfiguration af sitet på %{siteSettingRate}."
       rate:
-        one: "1 fejl/%{duration}"
-        other: "%{count} fejl/%{duration}"
+        one: 1 fejl/%{duration}
+        other: '%{count} fejl/%{duration}'
     learn_more: "Læs mere…"
     all_time: 'i alt'
     all_time_desc: 'emner oprettet i alt'
@@ -979,8 +977,8 @@ da:
       similar_topics: "Dit emne minder om…"
       drafts_offline: "kladder offline"
       group_mentioned:
-        one: "Ved at nævne {{group}} sender du en notifikation til <a href='{{group_link}}'>1 person</a> - vil du fortsætte?"
-        other: "Ved at nævne {{group}} sender du en notifikation til <a href='{{group_link}}'>{{count}} personer</a> - vil du fortsætte?"
+        one: Ved at nævne {{group}} sender du en notifikation til <a href='{{group_link}}'>1 person</a> - vil du fortsætte?
+        other: Ved at nævne {{group}} sender du en notifikation til <a href='{{group_link}}'>{{count}} personer</a> - vil du fortsætte?
       cannot_see_mention:
         category: "Du nævnte {{username}}, men de vil ikke blive notificeret fordi de ikke har adgang til denne kategori. Du vil være nødt til at tilføje dem til en gruppe, der har adgang til kategori."
         private: "Du nævnte {{username}}, men de vil ikke blive notificeret fordi de ikke er i stand til at se denne personlige besked. Du vil være nødt til at invitere dem til denne personlige besked."
@@ -1148,8 +1146,8 @@ da:
         archive_topics: "Arkiver Emner"
         choose_new_category: "Vælg den nye kategori for emnerne:"
         selected:
-          one: "Du har valgt <b>1</b> indlæg."
-          other: "Du har valgt <b>{{count}}</b> indlæg."
+          one: Du har valgt <b>1</b> indlæg.
+          other: Du har valgt <b>{{count}}</b> indlæg.
         change_tags: "Erstat Tags"
         append_tags: "Tilføj Tags"
         choose_new_tags: "Vælg nye tags for dette emne"
@@ -1182,8 +1180,8 @@ da:
         search: "Der er ikke flere søgeresultater."
     topic:
       filter_to:
-        one: "1 indlæg i emnet"
-        other: "{{count}} indlæg i emnet"
+        one: 1 indlæg i emnet
+        other: '{{count}} indlæg i emnet'
       create: 'Nyt emne'
       create_long: 'Opret et nyt emne i debatten'
       private_message: 'Start en besked'
@@ -1197,10 +1195,10 @@ da:
       new: 'nyt emne'
       unread: 'ulæste'
       new_topics:
-        one: '1 nyt emne'
+        one: 1 nyt emne
         other: '{{count}} nye emner'
       unread_topics:
-        one: '1 ulæst emne'
+        one: 1 ulæst emne
         other: '{{count}} ulæste emner'
       title: 'Emne'
       invalid_access:
@@ -1214,17 +1212,17 @@ da:
         title: "Emnet findes ikke"
         description: "Beklager, vi kunne ikke finde det emne i databasen. Måske er det blevet fjernet af moderator?"
       total_unread_posts:
-        one: "der er {{count}} indlæg du ikke har læst i dette emne"
-        other: "der er {{count}} indlæg du ikke har læst i dette emne"
+        one: der er {{count}} indlæg du ikke har læst i dette emne
+        other: der er {{count}} indlæg du ikke har læst i dette emne
       unread_posts:
-        one: "der er 1 indlæg du ikke har læst i dette emne"
-        other: "der er {{count}} indlæg du ikke har læst i dette emne"
+        one: der er 1 indlæg du ikke har læst i dette emne
+        other: der er {{count}} indlæg du ikke har læst i dette emne
       new_posts:
-        one: "der er kommet 1 nyt indlæg i dette emne siden du læste det sidst"
-        other: "der er kommet {{count}} nye indlæg i dette emne siden du læste det sidst"
+        one: der er kommet 1 nyt indlæg i dette emne siden du læste det sidst
+        other: der er kommet {{count}} nye indlæg i dette emne siden du læste det sidst
       likes:
-        one: "der er ét like i dette emne"
-        other: "der er {{count}} likes i dette emne"
+        one: der er ét like i dette emne
+        other: der er {{count}} likes i dette emne
       back_to_list: "Tilbage til emneoversigt"
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
@@ -1234,7 +1232,7 @@ da:
       read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='/unread'>1 ulæst</a> } other { er <a href='/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
-      suggest_create_topic: Hvorfor ikke oprette et emne?
+      suggest_create_topic: "Hvorfor ikke oprette et emne?"
       jump_reply_up: hop til tidligere svar
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
@@ -1272,8 +1270,8 @@ da:
         auto_close_based_on_last_post: "Emnet vil lukke %{duration} efter det sidste svar."
       auto_close_title: 'Indstillinger for automatisk lukning'
       auto_close_immediate:
-        one: "Seneste indlæg i emnet er allerede 1 time gammelt så emnet bliver lukket med det samme."
-        other: "Seneste indlæg i emnet er allerede %{hours} timer gammelt så emnet bliver lukket med det samme."
+        one: Seneste indlæg i emnet er allerede 1 time gammelt så emnet bliver lukket med det samme.
+        other: Seneste indlæg i emnet er allerede %{hours} timer gammelt så emnet bliver lukket med det samme.
       timeline:
         back: "Tilbage"
         back_description: "Tilbage til dit seneste ulæste indlæg"
@@ -1294,21 +1292,21 @@ da:
         title: skift hvor ofte du vil blive notificeret om dette emne
         reasons:
           mailing_list_mode: "Du har maillist mode slået til, så du bliver notificeret omkring svar på dette emne via e-mail"
-          '3_10': 'Du får notifikationer fordi du overvåger et tag på dette emne'
-          '3_6': 'Du får notifikationer fordi du overvåger denne kategori.'
-          '3_5': 'Du får notifikationer fordi du overvåger dette emne automatisk.'
-          '3_2': 'Du får notifikationer fordi du overvåger dette emne.'
-          '3_1': 'Du får notifikationer fordi du oprettede dette emne.'
-          '3': 'Du får notifikationer fordi du overvåger dette emne.'
-          '2_8': 'Du vil se antallet af nye svar, fordi du følger denne kategori.'
-          '2_4': 'Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne.'
-          '2_2': 'Du vil se antallet af nye svar, fordi du følger dette emne.'
-          '2': 'Du vil se antallet af nye svar, fordi du <a href="/u/{{username}}/preferences">læste dette emne</a>.'
-          '1_2': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
-          '1': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
-          '0_7': 'Du ignorerer alle notifikationer i denne kategori.'
-          '0_2': 'Du får ingen notifikationer for dette emne.'
-          '0': 'Du får ingen notifikationer for dette emne.'
+          "3_10": 'Du får notifikationer fordi du overvåger et tag på dette emne'
+          "3_6": 'Du får notifikationer fordi du overvåger denne kategori.'
+          "3_5": 'Du får notifikationer fordi du overvåger dette emne automatisk.'
+          "3_2": 'Du får notifikationer fordi du overvåger dette emne.'
+          "3_1": 'Du får notifikationer fordi du oprettede dette emne.'
+          "3": 'Du får notifikationer fordi du overvåger dette emne.'
+          "2_8": 'Du vil se antallet af nye svar, fordi du følger denne kategori.'
+          "2_4": 'Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne.'
+          "2_2": 'Du vil se antallet af nye svar, fordi du følger dette emne.'
+          "2": 'Du vil se antallet af nye svar, fordi du <a href="/u/{{username}}/preferences">læste dette emne</a>.'
+          "1_2": 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
+          "1": 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
+          "0_7": 'Du ignorerer alle notifikationer i denne kategori.'
+          "0_2": 'Du får ingen notifikationer for dette emne.'
+          "0": 'Du får ingen notifikationer for dette emne.'
         watching_pm:
           title: "Følger"
           description: "Du vil modtage en notifikation for hvert nyt svar i denne besked, og en optælling af nye svar vil blive vist."
@@ -1380,8 +1378,8 @@ da:
         pin_validation: "Der skal angives en dato for at fastgøre dette emne"
         not_pinned: "Der er ingen fastgjorte emner i {{categoryLink}}."
         already_pinned:
-          one: "Emner fastgjort i {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Emner fastgjort i {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Emner fastgjort i {{categoryLink}}: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Emner fastgjort i {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         pin_globally: "Fastgør dette emne til toppen af alle emnelister indtil"
         confirm_pin_globally: "Du har allerede {{count}} globalt fastgjorte emner. For mange fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et emne mere globalt?"
         unpin_globally: "Fjern dette emne fra toppen af alle emne lister."
@@ -1389,8 +1387,8 @@ da:
         global_pin_note: "Brugere kan unpinne emnet individuelt."
         not_pinned_globally: "Der er ingen globalt fastgjorte emner."
         already_pinned_globally:
-          one: "Globalt fastgjorte emner: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Globalt fastgjorte emner: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Globalt fastgjorte emner: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Globalt fastgjorte emner: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         make_banner: "Gør dette emne til en banner, der kommer til at stå i toppen på alle sider."
         remove_banner: "Fjern banneret, der står på toppen af alle sider."
         banner_note: "Brugere kan fjernet banneret ved at lukke det. Kun én banner kan være aktiv ad gangen."
@@ -1426,8 +1424,8 @@ da:
       login_reply: 'Log ind for at svare'
       filters:
         n_posts:
-          one: "1 indlæg"
-          other: "{{count}} indlæg"
+          one: 1 indlæg
+          other: '{{count}} indlæg'
         cancel: "Fjern filter"
       split_topic:
         title: "Flyt til nyt emne"
@@ -1435,15 +1433,15 @@ da:
         topic_name: "Navn på nyt emne"
         error: "Der opstod en fejl under flytningen af indlæg til det nye emne."
         instructions:
-          one: "Du er ved at oprette et nyt emne med det valgte indlæg."
-          other: "Du er ved at oprette et nyt emne med de <b>{{count}}</b> valgte indlæg."
+          one: Du er ved at oprette et nyt emne med det valgte indlæg.
+          other: Du er ved at oprette et nyt emne med de <b>{{count}}</b> valgte indlæg.
       merge_topic:
         title: "Flyt til eksisterende emne"
         action: "flyt til eksisterende emne"
         error: "Der opstod en fejl under flytningen af indlæg til emnet."
         instructions:
-          one: "Vælg venligst det emne som indlægget skal flyttes til."
-          other: "Vælg venligst det emne som de  <b>{{count}}</b> indlæg skal flyttes til."
+          one: Vælg venligst det emne som indlægget skal flyttes til.
+          other: Vælg venligst det emne som de  <b>{{count}}</b> indlæg skal flyttes til.
       merge_posts:
         title: "Flet valgte indlæg"
         action: "flet valgte indlæg"
@@ -1455,8 +1453,8 @@ da:
         label: "Ny ejer af emner"
         placeholder: "brugernavn på ny ejer"
         instructions:
-          one: "Vælg den nye ejer af indlægget, oprindeligt skrevet af <b>{{old_user}}</b>."
-          other: "Vælg den nye ejer af {{count}} indlæg, oprindeligt skrevet af <b>{{old_user}}</b>."
+          one: Vælg den nye ejer af indlægget, oprindeligt skrevet af <b>{{old_user}}</b>.
+          other: Vælg den nye ejer af {{count}} indlæg, oprindeligt skrevet af <b>{{old_user}}</b>.
         instructions_warn: "Bemærk at tidligere notifikationer på dette emne vil ikke blive overført til den nye bruger.\n<br>Advarsel: På nuværende tidspunkt, vil ingen data der er afhængig af dette indlæg blive overført til den nye bruger. Brug forsigtigt."
       change_timestamp:
         title: "Tilpas tidsstempel..."
@@ -1472,8 +1470,8 @@ da:
         select_all: marker alle
         deselect_all: marker ingen
         description:
-          one: "Du har valgt <b>1</b> indlæg."
-          other: "Du har valgt <b>{{count}}</b> indlæg."
+          one: Du har valgt <b>1</b> indlæg.
+          other: Du har valgt <b>{{count}}</b> indlæg.
     post:
       quote_reply: "Citér"
       edit_reason: "Reason: "
@@ -1487,26 +1485,26 @@ da:
       show_full: "Vis hele emnet"
       show_hidden: 'Vist skjult indhold.'
       deleted_by_author:
-        one: "(indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} time med mindre det bliver flaget)"
-        other: "(indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} timer med mindre det bliver flaget)"
+        one: (indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} time med mindre det bliver flaget)
+        other: (indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} timer med mindre det bliver flaget)
       expand_collapse: "fold ud/ind"
       gap:
-        one: "se 1 udeladt indlæg "
-        other: "se {{count}} udeladte indlæg "
+        one: 'se 1 udeladt indlæg '
+        other: 'se {{count}} udeladte indlæg '
       unread: "Indlæg er ulæst"
       has_replies:
-        one: "{{count}} svar"
-        other: "{{count}} svar"
+        one: '{{count}} svar'
+        other: '{{count}} svar'
       has_likes:
-        one: "{{count}} like"
-        other: "{{count}} likes"
+        one: '{{count}} like'
+        other: '{{count}} likes'
       has_likes_title:
-        one: "1 likede dette indlæg"
-        other: "{{count}} likede dette indlæg"
+        one: 1 likede dette indlæg
+        other: '{{count}} likede dette indlæg'
       has_likes_title_only_you: "du likede dette indlæg"
       has_likes_title_you:
-        one: "du og 1 anden likede dette indlæg"
-        other: "du og {{count}} andre likede dette indlæg"
+        one: du og 1 anden likede dette indlæg
+        other: du og {{count}} andre likede dette indlæg
       errors:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
@@ -1579,54 +1577,54 @@ da:
           vote: "Du stemte for dette indlæg"
         by_you_and_others:
           off_topic:
-            one: "Du og 1 anden flagede dette som off-topic"
-            other: "Du og {{count}} andre flagede dette som off-topic"
+            one: Du og 1 anden flagede dette som off-topic
+            other: Du og {{count}} andre flagede dette som off-topic
           spam:
-            one: "Du og 1 anden flagede dette som spam"
-            other: "Du og {{count}} andre flagede dette som spam"
+            one: Du og 1 anden flagede dette som spam
+            other: Du og {{count}} andre flagede dette som spam
           inappropriate:
-            one: "Du og 1 anden flagede dettes om upasende"
-            other: "Du og {{count}} andre flagede dettes om upasende"
+            one: Du og 1 anden flagede dettes om upasende
+            other: Du og {{count}} andre flagede dettes om upasende
           notify_moderators:
-            one: "Du og 1 anden flagede dette til moderation"
-            other: "Du og {{count}} andre flagede dette til moderation"
+            one: Du og 1 anden flagede dette til moderation
+            other: Du og {{count}} andre flagede dette til moderation
           notify_user:
-            one: "Dig og en anden har sendt en besked til denne bruger"
-            other: "Dig og {{count}} andre har sendt en besked til denne bruger"
+            one: Dig og en anden har sendt en besked til denne bruger
+            other: Dig og {{count}} andre har sendt en besked til denne bruger
           bookmark:
-            one: "Du og 1 anden bogmærkede dette indlæg"
-            other: "Du og {{count}} andre bogmærkede dette indlæg"
+            one: Du og 1 anden bogmærkede dette indlæg
+            other: Du og {{count}} andre bogmærkede dette indlæg
           like:
-            one: "Du og 1 anden liker dette"
-            other: "Du og {{count}} andre liker dette"
+            one: Du og 1 anden liker dette
+            other: Du og {{count}} andre liker dette
           vote:
-            one: "Du og 1 anden stemte for dette indlæg"
-            other: "Du og {{count}} andre stemte for dette indlæg"
+            one: Du og 1 anden stemte for dette indlæg
+            other: Du og {{count}} andre stemte for dette indlæg
         by_others:
           off_topic:
-            one: "1 person flagede dette som off-topic"
-            other: "{{count}} personer flagede dette som off-topic"
+            one: 1 person flagede dette som off-topic
+            other: '{{count}} personer flagede dette som off-topic'
           spam:
-            one: "1 person flagede dette som spam"
-            other: "{{count}} personer flagede dette som spam"
+            one: 1 person flagede dette som spam
+            other: '{{count}} personer flagede dette som spam'
           inappropriate:
-            one: "1 person flagede dette som upassende"
-            other: "{{count}} personer flagede dette som upassende"
+            one: 1 person flagede dette som upassende
+            other: '{{count}} personer flagede dette som upassende'
           notify_moderators:
-            one: "1 person flagede dette til moderation"
-            other: "{{count}} personer flagede dette til moderation"
+            one: 1 person flagede dette til moderation
+            other: '{{count}} personer flagede dette til moderation'
           notify_user:
-            one: "1 person har sendt en besked til denne bruger"
-            other: "{{count}} har sendt en besked til denne bruger"
+            one: 1 person har sendt en besked til denne bruger
+            other: '{{count}} har sendt en besked til denne bruger'
           bookmark:
-            one: "1 person bogmærkede dette indlæg"
-            other: "{{count}} personer bogmærkede dette indlæg"
+            one: 1 person bogmærkede dette indlæg
+            other: '{{count}} personer bogmærkede dette indlæg'
           like:
-            one: "1 person liker dette"
-            other: "{{count}} personer liker dette"
+            one: 1 person liker dette
+            other: '{{count}} personer liker dette'
           vote:
-            one: "1 person stemte for dette indlæg"
-            other: "{{count}} personer stemte for dette indlæg"
+            one: 1 person stemte for dette indlæg
+            other: '{{count}} personer stemte for dette indlæg'
       revisions:
         controls:
           first: "Første udgave"
@@ -1779,14 +1777,14 @@ da:
       custom_placeholder_notify_moderators: "Lad os vide præcis hvad du er bekymret over og giv relevante links og eksempler hvor det er muligt."
       custom_message:
         at_least:
-          one: "indtast mindst 1 tegn"
-          other: "indtast mindst {{count}} tegn"
+          one: indtast mindst 1 tegn
+          other: indtast mindst {{count}} tegn
         more:
-          one: "1 mere..."
-          other: "{{count}} mere..."
+          one: 1 mere...
+          other: '{{count}} mere...'
         left:
-          one: "1 tilbage"
-          other: "{{count}} tilbage"
+          one: 1 tilbage
+          other: '{{count}} tilbage'
     flagging_topic:
       title: "Tak fordi du hjælper med at holde vores forum civiliseret!"
       action: "Rapporter emne"
@@ -1797,13 +1795,13 @@ da:
       links_title: "Populære Links"
       links_shown: "vis flere links..."
       clicks:
-        one: "1 klik"
-        other: "%{count} klik"
+        one: 1 klik
+        other: '%{count} klik'
     post_links:
       about: "udvid flere links for dette indlæg"
       title:
-        one: "1 mere"
-        other: "%{count} flere"
+        one: 1 mere
+        other: '%{count} flere'
     topic_statuses:
       warning:
         help: "Dette er en officiel advarsel."
@@ -1837,22 +1835,22 @@ da:
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
     views_lowercase:
-      one: "visning"
-      other: "visninger"
+      one: visning
+      other: visninger
     replies: "Svar"
     views_long:
-      one: "emnet er læst 1 gang"
-      other: "emnet er læst {{number}} gange"
+      one: emnet er læst 1 gang
+      other: emnet er læst {{number}} gange
     activity: "Aktivitet"
     likes: "Likes"
     likes_lowercase:
-      one: "like"
-      other: "likes"
+      one: like
+      other: likes
     likes_long: "der er {{number}} likes i dette emne"
     users: "Deltagere"
     users_lowercase:
-      one: "bruger"
-      other: "brugere"
+      one: bruger
+      other: brugere
     category_title: "Kategori"
     history: "Historik"
     changed_by: "af {{author}}"
@@ -1866,8 +1864,8 @@ da:
       latest:
         title: "Seneste"
         title_with_count:
-          one: "Seneste (1)"
-          other: "Seneste ({{count}})"
+          one: Seneste (1)
+          other: Seneste ({{count}})
         help: "de seneste emner"
       hot:
         title: "Populære"
@@ -1885,21 +1883,21 @@ da:
       unread:
         title: "Ulæst"
         title_with_count:
-          one: "Ulæst (1)"
-          other: "Ulæste ({{count}})"
+          one: Ulæst (1)
+          other: Ulæste ({{count}})
         help: "emner du følger med i lige nu med ulæste indlæg"
         lower_title_with_count:
-          one: "1 ulæst"
-          other: "{{count}} ulæste"
+          one: 1 ulæst
+          other: '{{count}} ulæste'
       new:
         lower_title_with_count:
-          one: "1 ny"
-          other: "{{count}} nye"
+          one: 1 ny
+          other: '{{count}} nye'
         lower_title: "Ny"
         title: "Nye"
         title_with_count:
-          one: "Nye (1)"
-          other: "Nye ({{count}})"
+          one: Nye (1)
+          other: Nye ({{count}})
         help: "Emner oprettet i de seneste par dage"
       posted:
         title: "Mine indlæg"
@@ -1910,8 +1908,8 @@ da:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
+          one: '{{categoryName}} (1)'
+          other: '{{categoryName}} ({{count}})'
         help: "populære emner i kategorien {{categoryName}}"
       top:
         title: "Top"
@@ -1995,21 +1993,21 @@ da:
         print: '<b>ctrl</b>+<b>p</b> Print emne'
     badges:
       earned_n_times:
-        one: "Blev tildelt dette badge 1 gang"
-        other: "Blev tildelt dette badge %{count} gange"
+        one: Blev tildelt dette badge 1 gang
+        other: Blev tildelt dette badge %{count} gange
       granted_on: "Tildelt %{date}"
       others_count: "Andre med dette badge (%{count})"
       title: Badges
       badge_count:
-        one: "1 Badge"
-        other: "%{count} Badges"
+        one: 1 Badge
+        other: '%{count} Badges'
       more_badges:
-        one: "+1 Mere"
-        other: "+%{count} Flere"
+        one: +1 Mere
+        other: +%{count} Flere
       granted:
-        one: "1 tildelt"
-        other: "%{count} tildelt"
-      select_badge_for_title: Vælg en badge, du vil bruge som din titel
+        one: 1 tildelt
+        other: '%{count} tildelt'
+      select_badge_for_title: "Vælg en badge, du vil bruge som din titel"
       badge_grouping:
         getting_started:
           name: Sådan kommer du i gang
@@ -2269,11 +2267,11 @@ da:
           none: "Der er ingen relaterede events."
           redeliver: "Genfremsend"
           incoming:
-            one: "Der er et nyt event."
-            other: "Der er {{count}} nye events."
+            one: Der er et nyt event.
+            other: Der er {{count}} nye events.
           completed_in:
-            one: "Fuldført på 1 sekund."
-            other: "Fuldført på {{count}} sekunder."
+            one: Fuldført på 1 sekund.
+            other: Fuldført på {{count}} sekunder.
           request: "Forespørgsel"
           response: "Svar"
           redeliver_confirm: "Er du sikker på at du vil genfremsende det samme payload?"
@@ -2677,11 +2675,11 @@ da:
           suspect: 'Mistænkt'
         approved: "Godkendt?"
         approved_selected:
-          one: "godkend bruger"
-          other: "godkend brugere ({{count}})"
+          one: godkend bruger
+          other: godkend brugere ({{count}})
         reject_selected:
-          one: "afvis bruger"
-          other: "afvis brugere ({{count}})"
+          one: afvis bruger
+          other: afvis brugere ({{count}})
         titles:
           active: 'Aktive brugere'
           new: 'Nye brugere'
@@ -2697,11 +2695,11 @@ da:
           suspended: 'Suspenderede brugere'
           suspect: 'Mistænkte brugere'
         reject_successful:
-          one: "Afviste 1 bruger."
-          other: "Afviste %{count} brugere."
+          one: Afviste 1 bruger.
+          other: Afviste %{count} brugere.
         reject_failures:
-          one: "Kunne ikke afvise 1 bruger."
-          other: "Kunne ikke afvise %{count} brugere."
+          one: Kunne ikke afvise 1 bruger.
+          other: Kunne ikke afvise %{count} brugere.
         not_verified: "Ikke verificeret"
         check_email:
           title: "Vis denne brugers email adresse"
@@ -2761,14 +2759,14 @@ da:
         delete_forbidden_because_staff: "Admins og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle indlæg fra administratorer og moderatorer."
         delete_forbidden:
-          one: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dag siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."
-          other: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dage siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."
+          one: Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dag siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger.
+          other: Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dage siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger.
         cant_delete_all_posts:
-          one: "Kan ikke slette alle indlæg. Der er indlæg der er over %{count} dag gamle. (Juster delete_user_max_post_age indstillingen.)"
-          other: "Kan ikke slette alle indlæg. Der er indlæg der er over %{count} dage gamle. (Juster delete_user_max_post_age indstillingen.)"
+          one: Kan ikke slette alle indlæg. Der er indlæg der er over %{count} dag gamle. (Juster delete_user_max_post_age indstillingen.)
+          other: Kan ikke slette alle indlæg. Der er indlæg der er over %{count} dage gamle. (Juster delete_user_max_post_age indstillingen.)
         cant_delete_all_too_many_posts:
-          one: "Kan ikke slette alle indlæg fordi denne bruger har flere end 1 indlæg. (delete_all_posts_max indstillingen)"
-          other: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
+          one: Kan ikke slette alle indlæg fordi denne bruger har flere end 1 indlæg. (delete_all_posts_max indstillingen)
+          other: Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)
         delete_confirm: "Er du SIKKER på at du slette denne bruger? Det er permanent! "
         delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
         delete_dont_block: "Slet kun"
@@ -2803,8 +2801,8 @@ da:
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
           table_title:
-            one: "I den sidste dag"
-            other: "I de sidste %{count} dage:"
+            one: I den sidste dag
+            other: 'I de sidste %{count} dage:'
           value_heading: "værdi"
           requirement_heading: "Obligatoriske"
           visits: "Besøg"
@@ -2928,17 +2926,17 @@ da:
         reason_help: (Et link til et indlæg eller et emne)
         save: Gem
         delete: Slet
-        delete_confirm: Er du sikker på du vil slette denne badge ?
+        delete_confirm: "Er du sikker på du vil slette denne badge ?"
         revoke: Fratag
         reason: Grund
         expand: Fold ud &hellip;
-        revoke_confirm: Er du sikker på du vil fratage brugeren denne badge ?
+        revoke_confirm: "Er du sikker på du vil fratage brugeren denne badge ?"
         edit_badges: Rediger Badges
         grant_badge: Tildel Badge
         granted_badges: Tildelte Badges
         grant: Givet
         no_user_badges: "%{name} had ikke feet nogen badges."
-        no_badges: Der er ikke nogen badges, der kan tildeles.
+        no_badges: "Der er ikke nogen badges, der kan tildeles."
         none_selected: "Vælg et badge for at komme igang"
         allow_title: Tillad at bruge denne badge som titel
         multiple_grant: Kan gives flere gange
@@ -2970,14 +2968,14 @@ da:
             text: "Der mangler tildelinger. Dette sker når en SQL query returnerer bruger ID'er eller indlægs IS'er der ikke eksisterer. Dette kan give uventede resultater senere - vær venlig at dobbelt checke din SQL query."
           no_grant_count: "Ingen badges til tildeling."
           grant_count:
-            one: "<b>1</b> badge til tildeling."
-            other: "<b>%{count}</b> badges til tildeling."
+            one: <b>1</b> badge til tildeling.
+            other: <b>%{count}</b> badges til tildeling.
           sample: "Eksempel:"
           grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> for indlæg i %{link}
-            with_post_time: <span class="username">%{username}</span> for indlæg i %{link} klokken <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> klokken <span class="time">%{time}</span>
+            with: "<span class=\"username\">%{username}</span>"
+            with_post: "<span class=\"username\">%{username}</span> for indlæg i %{link}"
+            with_post_time: "<span class=\"username\">%{username}</span> for indlæg i %{link} klokken <span class=\"time\">%{time}</span>"
+            with_time: "<span class=\"username\">%{username}</span> klokken <span class=\"time\">%{time}</span>"
       emoji:
         title: "Emoji"
         help: "Tilføj en ny emoji, som vil være tilgængelig for alle. (PROTIP: drag & drop flere filer på én gang)"
@@ -3021,7 +3019,7 @@ da:
         category_id: "Kategori ID"
         category_title: "Kategori"
         external_url: "Ekstern URL"
-        delete_confirm: Er du sikker på at du vil slette dette permalink?
+        delete_confirm: "Er du sikker på at du vil slette dette permalink?"
         form:
           label: "Ny:"
           add: "Tilføj"

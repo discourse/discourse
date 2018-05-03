@@ -53,6 +53,16 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=spf+dkim) in your DNS. See your mail provider instructions for specifics.
 
+### Domain Name
+
+> 🔔 Discourse will not work from an IP address, you must own a domain name such as `example.com` to proceed.
+
+- Already own a domain name? Great. Select a subdomain such as `discourse.example.com` or `talk.example.com` or `forum.example.com` for your Discourse instance.
+
+- No domain name? We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search.aspx?utm_source=SAS&utm_medium=Affiliate&utm_campaign=1632369&affnetwork=sas), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
+
+- Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS A record for the `discourse.example.com` subdomain in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
+
 ### Edit Discourse Configuration
 
 Launch the setup tool at

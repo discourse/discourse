@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   include Roleable
   include HasCustomFields
   include SecondFactorManager
+  include DateGroupable
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -828,14 +829,66 @@ class User < ActiveRecord::Base
     (tl_badge + other_badges).take(limit)
   end
 
-  def self.count_by_signup_date(start_date, end_date, group_id = nil)
-    result = where('users.created_at >= ? AND users.created_at <= ?', start_date, end_date)
+  def self.count_by_inactivity(start_date, end_date)
+    sql = <<SQL
+      SELECT
+        date_trunc('day', d.generated_date) :: DATE,
+        COUNT(u.id)
+      FROM (SELECT generate_series('#{start_date}', '#{end_date}', '1 day' :: INTERVAL) :: DATE AS generated_date) d
+        JOIN users u ON (u.created_at :: DATE <= d.generated_date)
+      WHERE u.active AND
+            u.id > 0 AND
+            NOT EXISTS(
+                SELECT 1
+                FROM user_custom_fields ucf
+                WHERE
+                  ucf.user_id = u.id AND
+                  ucf.name = 'master_id' AND
+                  ucf.value :: int > 0
+            ) AND
+            NOT EXISTS(
+                SELECT 1
+                FROM user_visits v
+                WHERE v.visited_at BETWEEN (d.generated_date - INTERVAL '89 days') :: DATE AND d.generated_date
+                      AND v.user_id = u.id
+            ) AND
+            NOT EXISTS(
+                SELECT 1
+                FROM incoming_emails e
+                WHERE e.user_id = u.id AND
+                      e.post_id IS NOT NULL AND
+                      e.created_at BETWEEN (d.generated_date - INTERVAL '89 days') :: DATE AND d.generated_date
+            )
+      GROUP BY date_trunc('day', d.generated_date) :: DATE
+      ORDER BY date_trunc('day', d.generated_date) :: DATE
+SQL
+
+    exec_sql(sql).to_a
+  end
+
+  def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
+    result = self
+
+    if start_date && end_date
+      result = result.smart_group_by_date("users.created_at", start_date, end_date)
+    end
 
     if group_id
       result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
       result = result.where("group_users.group_id = ?", group_id)
     end
-    result.group('date(users.created_at)').order('date(users.created_at)').count
+
+    result.count
+  end
+
+  def self.count_by_first_post(start_date = nil, end_date = nil)
+    result = joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
+
+    if start_date && end_date
+      result = result.smart_group_by_date("us.first_post_created_at", start_date, end_date)
+    end
+
+    result.count
   end
 
   def secure_category_ids
