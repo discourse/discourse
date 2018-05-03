@@ -16,7 +16,7 @@ class Report
   end
 
   def self.cache_key(report)
-    "reports:#{report.type}:#{report.start_date.strftime("%Y%m%d")}:#{report.end_date.strftime("%Y%m%d")}"
+    "reports:#{report.type}:#{report.start_date.to_date.strftime("%Y%m%d")}:#{report.end_date.to_date.strftime("%Y%m%d")}"
   end
 
   def self.clear_cache
@@ -56,8 +56,8 @@ class Report
 
     # Load the report
     report = Report.new(type)
-    report.start_date = opts[:start_date].to_date if opts[:start_date]
-    report.end_date = opts[:end_date].to_date if opts[:end_date]
+    report.start_date = opts[:start_date] if opts[:start_date]
+    report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
     report.async = opts[:async] || false
@@ -65,10 +65,12 @@ class Report
 
     if respond_to?(report_method)
       cached_report = Discourse.cache.read(cache_key(report))
-      if cached_report
-        return cached_report
-      elsif report.async
-        Jobs.enqueue(:retrieve_report, opts.merge(report_type: type))
+      if report.async
+        if cached_report
+          return cached_report
+        else
+          Jobs.enqueue(:retrieve_report, opts.merge(report_type: type))
+        end
       else
         send(report_method, report)
       end
@@ -125,6 +127,7 @@ class Report
       basic_report_about report, User.real, :count_by_signup_date, report.start_date, report.end_date, report.group_id
       add_counts report, User.real, 'users.created_at'
     else
+
       report_about report, User.real, :count_by_signup_date
     end
   end
@@ -245,6 +248,7 @@ class Report
 
   def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
+
     subject_class.send(report_method, *args).each do |date, count|
       report.data << { x: date, y: count }
     end
