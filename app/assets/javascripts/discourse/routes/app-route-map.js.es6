@@ -1,3 +1,4 @@
+// 路由，好多路由都在这边
 export default function() {
   // Error page
   this.route('exception', { path: '/exception' });

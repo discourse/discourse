@@ -1,5 +1,6 @@
 /**
  * Copy text to the clipboard. Must be called from within a user gesture (Chrome).
+ * 复制内容到剪切板（后面英文 user gesture 的部分没看懂，不是没懂字面意思，而是没懂  Chrome 这里是不是限制了什么机制）
  */
 export default function(text, element) {
   let supported = false;

@@ -7,6 +7,9 @@
 看看后台有什么选项，后台能设置什么。四处都长什么样子，有什么功能。  
 
 
+## 为了和  Discourse 本身代码做区分，所有代码（model, controller等）都用 fm_ 开头
+fm = facial mask = 面膜    
+
 
 ## Discourse 基本介绍
 Discourse 创建于 200x 年，很多决定都是基于当时做的  
@@ -103,9 +106,9 @@ rails s
 view 里面经常看得到 preload_script     
 
 ### Google Tag Manager
+Discourse 代码里有这个，不用管，不碍事
 
-### 多语言是怎么做的？
-
+### 多语言怎么做的？
 
 ### Model
 值得注意的 model 有：   

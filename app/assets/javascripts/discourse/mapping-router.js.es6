@@ -21,6 +21,9 @@ const BareRouter = Ember.Router.extend({
   }
 });
 
+// 为了插件能够定义 route，Ember.js 原生的路由不能胜任
+// 所以这里做了扩展
+//
 // Ember's router can't be extended. We need to allow plugins to add routes to routes that were defined
 // in the core app. This class has the same API as Ember's `Router.map` but saves the results in a tree.
 // The tree is applied after all plugins are defined.

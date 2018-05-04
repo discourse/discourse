@@ -1,3 +1,5 @@
+{{!-- 帖子详情页 --}}
+{{!-- http://localhost:3000/t/topic/20 --}}
 {{#discourse-topic multiSelect=multiSelect enteredAt=enteredAt topic=model hasScrolled=hasScrolled}}
   {{#if model}}
     {{add-category-class category=model.category}}
@@ -77,7 +79,7 @@
       <div class='selected-posts {{unless multiSelect 'hidden'}}'>
         {{partial "selected-posts"}}
       </div>
-
+      {{!-- 最顶部的第一楼 --}}
       {{#topic-navigation topic=model jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderTimeline}}
           {{#if info.renderAdminMenuButton}}
@@ -238,7 +240,7 @@
               {{else}}
                 {{#if currentUser}}
                   {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
-
+                  {{!-- 最后一楼回复下面，那一排底部按钮，左右到右：扳手图标，Bookmark, Share, Flag, Invite, Reply --}}
                   {{topic-footer-buttons
                     topic=model
                     toggleMultiSelect=(action "toggleMultiSelect")

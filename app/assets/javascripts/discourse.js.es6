@@ -3,6 +3,8 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 
 const _pluginCallbacks = [];
 
+// 这个就相当于 Ember.js 里的 app/app.js 了，只是换了名字
+// 因为写了 Ember.Application.extend
 const Discourse = Ember.Application.extend({
   rootElement: '#main',
   _docTitle: document.title,
