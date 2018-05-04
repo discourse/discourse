@@ -761,12 +761,10 @@ de:
       title: "Neue Benutzer"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Benutzer"
-      description: "Erstellte Benutzer in dieser Zeit"
     new_contributors:
       title: "Neue Mitwirkende"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Mitwirkender"
-      description: "Anzahl der Benutzer, die ihren ersten Beitrag geleistet haben"
     profile_views:
       title: "Profilaufrufe"
       xaxis: "Tag"
@@ -775,7 +773,6 @@ de:
       title: "Themen"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Themen"
-      description: "Erstellte Themen in dieser Zeit"
     posts:
       title: "Beiträge"
       xaxis: "Tag"

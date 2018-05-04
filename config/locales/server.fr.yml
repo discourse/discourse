@@ -761,12 +761,27 @@ fr:
       title: "Nouveaux utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux utilisateurs"
-      description: "Utilisateurs crées dans cette période"
+      description: "Nouvelles inscriptions pour cette période"
     new_contributors:
       title: "Nouveaux contributeurs"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux contributeurs"
-      description: "Nombre d'utilisateurs qui ont fait leur première contribution"
+      description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période"
+    inactive_users:
+      title: "Utilisateurs inactifs"
+      xaxis: "Jour"
+      yaxis: "Nombre de nouveaux utilisateurs inactifs"
+      description: "Nombre d'utilisateurs ne s'étant pas connectés dans les derniers 3 mois"
+    dau_by_mau:
+      title: "DAU/MAU"
+      xaxis: "Jour"
+      yaxis: "DAU/MAY"
+      description: "Utilisateurs actifs quotidien / Utilisateurs actifs mensuel"
+    daily_engaged_users:
+      title: "Utilisateurs impliqués au quotidien"
+      xaxis: "Jour"
+      yaxis: "Utilisateurs impliqués"
+      description: "Nombre d'utilisateurs ayant aimé ou publié un message dans les derniers 24h"
     profile_views:
       title: "Vues des profils d'utilisateurs"
       xaxis: "Jour"
@@ -775,7 +790,7 @@ fr:
       title: "Sujets"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux sujets"
-      description: "Sujets crées pour cette période"
+      description: "Nouveaux sujets crées pour cette période"
     posts:
       title: "Messages"
       xaxis: "Jour"
@@ -2306,6 +2321,7 @@ fr:
     visit_link_to_respond: "[Voir le sujet](%{base_url}%{url}) pour répondre."
     visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre."
     posted_by: "Redigé par %{username} le %{post_date}"
+    pm_participants: "Participants :"
     invited_group_to_private_message_body: |
       %{username} a invité @%{group_name} à un message
 
@@ -2419,6 +2435,17 @@ fr:
     user_mentioned:
       title: "Utilisateur a mentionné"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      title: "Utilisateur a mentionné un MD"
+      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
