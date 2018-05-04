@@ -119,7 +119,7 @@ describe Report do
 
   [:http_total, :http_2xx, :http_background, :http_3xx, :http_4xx, :http_5xx, :page_view_crawler, :page_view_logged_in, :page_view_anon].each do |request_type|
     describe "#{request_type} request reports" do
-      let(:report) { Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Date.today.to_time) }
+      let(:report) { Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now) }
 
       context "with no #{request_type} records" do
         it 'returns an empty report' do
@@ -132,7 +132,7 @@ describe Report do
           freeze_time
           ApplicationRequest.create(date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35)
           ApplicationRequest.create(date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8)
-          ApplicationRequest.create(date: Date.today.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
+          ApplicationRequest.create(date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
           ApplicationRequest.create(date: 1.day.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 2)
           ApplicationRequest.create(date: 2.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 3)
         end
