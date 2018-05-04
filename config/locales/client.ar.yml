@@ -331,6 +331,7 @@ ar:
     pasting: "جاري النسخ"
     enable: "فعّل"
     disable: "عطّل"
+    continue: "استمر"
     undo: "تراجع"
     revert: "اعكس"
     failed: "فشل"
@@ -420,6 +421,24 @@ ar:
         make_user_group_owner: "تعيين كمالك"
         remove_user_as_group_owner: "سحب صلاحية المالك"
     groups:
+      add_members:
+        title: "أضف أعضاء"
+        usernames: "أسماء المستخدمين"
+      manage:
+        title: 'إدارة'
+        name: 'الإسم'
+        full_name: 'الإسم الكامل'
+        add_members: "إضافة أعضاء"
+        profile:
+          title: الملف الشخصي
+        interaction:
+          title: تفاعل
+          posting: نشر
+        membership:
+          title: العضوية
+        logs:
+          from: "من"
+          to: "إلى"
       public_admission: "السماح للاعضاء بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
       public_exit: "السماح للأعضاء بمغادرة المجموعة بحرية"
       empty:
@@ -430,6 +449,8 @@ ar:
         topics: "لا موضوعات من أعضاء هذه المجموعة."
         logs: "لا سجلّات لهذه المجموعة."
       add: "أضف"
+      join: "انضم"
+      leave: "غادر"
       message: "رسالة"
       allow_membership_requests: "السماح للأعضاء بأرسال طلب انضمام لمدراء المجموعة"
       membership_request_template: "لوحة مخصص تظهر للأعضاء عندما يرسلون طلب عضوية"
@@ -439,12 +460,14 @@ ar:
         reason: "دع مدراء المجموعة يعرفون لماذا انت تنتمي لهذه المجموعة"
       membership: "العضوية"
       name: "الاسم"
+      user_count: "الأعضاء"
       bio: "عن المجموعة"
       selector_placeholder: "أدخل اسم المستخدم"
       owner: "المالك"
       index:
         title: "المجموعات"
         empty: "لا توجد مجموعات ظاهرة"
+        automatic: "تلقائي"
       title:
         few: المجموعات
         many: المجموعات
@@ -453,6 +476,9 @@ ar:
         two: مجموعتان
         zero: مجموعة
       activity: "النشاط"
+      members:
+        filter_placeholder: "اسم المستخدم"
+        remove_owner: "حذف كمالك"
       topics: "الموضوعات"
       posts: "المنشورات"
       mentions: "الإشارات"
@@ -570,6 +596,7 @@ ar:
       activity_stream: "النّشاط"
       preferences: " التّفضيلات"
       expand_profile: "توسيع"
+      collapse_profile: "إخفاء"
       bookmarks: "العلامات المرجعية"
       bio: "معلومات عنّي"
       invited_by: "مدعو بواسطة"
@@ -649,6 +676,7 @@ ar:
       undo_revoke_access: "ايقاف سحب صلاحيات الوصول"
       api_approved: "موافق عليه:"
       theme: "الواجهة"
+      home: "الصفحة الرئيسية الافتراضية"
       staff_counters:
         flags_given: "البلاغات المفيدة"
         flagged_posts: "المنشورات المبلغ عنها "

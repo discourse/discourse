@@ -901,6 +901,11 @@ ru:
           many: сообщений написал
           one: сообщение написал
           other: сообщений написал
+        likes_given:
+          few: данных
+          many: данных
+          one: данный
+          other: данные
         likes_received:
           few: получил
           many: получил
@@ -1013,6 +1018,9 @@ ru:
     unmute: Включить
     last_post: Дата
     time_read: Прочитанные
+    time_read_recently: '%{time_read} недавно'
+    time_read_tooltip: '%{time_read} общее время чтения'
+    time_read_recently_tooltip: '%{time_read} общее время чтения (%{recent_time_read}за последние 60 дней)'
     last_reply_lowercase: последний ответ
     replies_lowercase:
       few: ответа
@@ -1068,6 +1076,9 @@ ru:
       help: "Электронное письмо не доходит? Для начала проверьте папку «Спам» вашего почтового ящика. <p>Не уверены в том, какой адрес использовали? Введите его и мы подскажем, есть ли он в нашей базе.</p><p>Если вы более не имеете доступа к связанному с вашей учётной записью адресу электронной почты, то, пожалуйста, свяжитесь с <a href='/about'>администрацией.</a></p>"
       button_ok: "ОК"
       button_help: "Помощь"
+    email_login:
+      complete_email: "Если данные аккаунта  совпадают с <b>%{email}</b>, вы должны получить электронное письмо со ссылкой для входа в систему в ближайшее время."
+      complete_email_not_found: "Нет совпадений аккаунта по  <b>%{email}</b>"
     login:
       title: "Войти"
       username: "Пользователь"
@@ -2216,6 +2227,11 @@ ru:
       other {}}
     original_post: "Начальное сообщение"
     views: "Просм."
+    views_lowercase:
+      few: просмотров
+      many: просмотров
+      one: просмотр
+      other: просмотров
     replies: "Ответов"
     views_long:
       few: тема просмотрена {{number}} раза
@@ -2224,8 +2240,18 @@ ru:
       other: тема просмотрена {{number}} раз
     activity: "Активность"
     likes: "Нрав."
+    likes_lowercase:
+      few: симпатий
+      many: симпатий
+      one: симпатия
+      other: симпатий
     likes_long: "{{number}} лайков в теме"
     users: "Пользователи"
+    users_lowercase:
+      few: пользователя
+      many: пользователя
+      one: пользователь
+      other: пользователя
     category_title: "Раздел"
     history: "История"
     changed_by: "автором {{author}}"
