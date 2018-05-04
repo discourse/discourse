@@ -802,4 +802,7 @@ Discourse::Application.routes.draw do
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 
+  post "/push_notifications/subscribe" => "push_notification#subscribe"
+  post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
+
 end

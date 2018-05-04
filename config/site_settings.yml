@@ -229,6 +229,21 @@ basic:
   enable_whispers:
     client: true
     default: false
+  push_notifications_prompt:
+    default: false
+    client: true
+  push_notifications_icon_url:
+    default: ''
+  vapid_public_key_bytes:
+    default: ''
+    client: true
+    hidden: true
+  vapid_public_key:
+    default: ''
+    hidden: true
+  vapid_private_key:
+    default: ''
+    hidden: true
 
 login:
   invite_only:

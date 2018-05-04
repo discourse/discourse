@@ -617,7 +617,7 @@ en:
       notifications: "Notifications"
       statistics: "Stats"
       desktop_notifications:
-        label: "Desktop Notifications"
+        label: "Live Notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn On Notifications"
         perm_denied_btn: "Permission Denied"
@@ -627,6 +627,7 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
+        consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: 'Dismiss'
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
@@ -1439,6 +1440,8 @@ en:
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
         private_message: '{{username}} sent you a personal message in "{{topic}}" - {{site_title}}'
         linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
+        confirm_title: 'Notifications enabled - %{site_title}'
+        confirm_body: 'Success! Notifications have been enabled.'
 
     upload_selector:
       title: "Add an image"
@@ -2699,7 +2702,6 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
-
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -3889,7 +3891,7 @@ en:
           label: "New:"
           add: "Add"
           filter: "Search (URL or External URL)"
-
+    
   wizard_js:
     wizard:
       done: "Done"
