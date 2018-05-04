@@ -6,24 +6,95 @@
 // --------------------------------------------------
 
 .list-controls {
+  margin: 10px -3px 5px -3px;  
   .category-breadcrumb.hidden {
     display: none;
   }
-  margin: 5px 0;
-  .nav {
-    float: left;
-    margin-right: 15px;
-    li {
-      margin-top: 5px;
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    .notifications-button {
+      order: 9;
+    }
+    #create-topic {
+      box-sizing: border-box;
+      order: 99;
+      display: flex;
+      align-self: stretch;
+      margin: 0 3px 10px 3px;      
     }
   }
-  .btn {
-    float: right;
-    margin-left: 8px;
-    margin-top: 5px;
+
+  .dropdown-select-box-header {
+    display: flex;
+    height: 100%;
   }
+  .navigation-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 5px 0;
+    
+    button {
+      margin: 0 3px;
+     
+      &.select-kit-header {
+        display: flex;
+        height: 100%;
+      }
+    }
+  }
+
+  .select-kit {
+    display: flex;
+    margin-bottom: 10px;
+    align-self: stretch;
+  }
+  .btn:not(.select-kit-header) {
+    margin-bottom: 10px;
+  }
+
+  .categories-admin-dropdown {
+    order: 2;
+  }
+  .category-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    .edit-category {
+      order: 9;
+      i {
+        margin: 0;
+      }
+      .d-button-label {
+        display: none;
+      }
+
+    }
+  }
+
   .nav-pills {
+    display: flex;
+    flex: 1 1 auto;
+    margin: 0 3px 5px 3px;
     position: relative;
+    .navigation-toggle {
+      flex: 1 1 100%;
+      margin-bottom: 5px;
+      max-width: 150px;
+    }
+    >li {
+      margin-right: 0;
+    }
+    >li>a {
+      line-height: $line-height-large;
+      display: flex;
+      align-items: center;
+      .d-icon {
+        margin-left: auto;
+      }
+    }
   }
   .nav-pills .drop {
     border: 1px solid $primary-low;
@@ -382,7 +453,16 @@ tr.category-topic-link {
 }
 
 ol.category-breadcrumb {
-  margin: 5px 10px 0 0;
+  margin: 0 0 5px 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  li.select-kit {
+    flex: 1 1 auto;
+    margin: 0 3px 5px 3px;
+
+
+  }
 }
 
 .top-lists {
