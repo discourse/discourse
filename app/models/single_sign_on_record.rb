@@ -18,6 +18,8 @@ end
 #  external_email      :string
 #  external_name       :string
 #  external_avatar_url :string(1000)
+#  external_profile_background_url :string(1000)
+#  external_card_background_url :string(1000)
 #
 # Indexes
 #

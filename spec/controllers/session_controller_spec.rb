@@ -28,8 +28,9 @@ describe SessionController do
     end
   end
 
-  describe '#sso_login' do
+  let(:logo_fixture) { "http://#{Discourse.current_hostname}/uploads/logo.png" }
 
+  describe '#sso_login' do
     before do
       @sso_url = "http://somesite.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
@@ -294,6 +295,11 @@ describe SessionController do
 
     describe 'can act as an SSO provider' do
       before do
+        stub_request(:any, /#{Discourse.current_hostname}\/uploads/).to_return(
+          status: 200,
+          body: lambda { |request| file_from_fixtures("logo.png") }
+        )
+
         SiteSetting.enable_sso_provider = true
         SiteSetting.enable_sso = false
         SiteSetting.enable_local_logins = true
@@ -307,7 +313,15 @@ describe SessionController do
         @user = Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true)
         group = Fabricate(:group)
         group.add(@user)
+
+        @user.create_user_avatar!
+        UserAvatar.import_url_for_user(logo_fixture, @user)
+        UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: false)
+        UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: true)
+
         @user.reload
+        @user.user_avatar.reload
+        @user.user_profile.reload
         EmailToken.update_all(confirmed: true)
       end
 
@@ -334,6 +348,14 @@ describe SessionController do
         expect(sso2.admin).to eq(true)
         expect(sso2.moderator).to eq(false)
         expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+
+        expect(sso2.avatar_url.blank?).to_not eq(true)
+        expect(sso2.profile_background_url.blank?).to_not eq(true)
+        expect(sso2.card_background_url.blank?).to_not eq(true)
+
+        expect(sso2.avatar_url).to start_with(Discourse.base_url)
+        expect(sso2.profile_background_url).to start_with(Discourse.base_url)
+        expect(sso2.card_background_url).to start_with(Discourse.base_url)
       end
 
       it "successfully redirects user to return_sso_url when the user is logged in" do
@@ -353,6 +375,70 @@ describe SessionController do
         expect(sso2.external_id).to eq(@user.id.to_s)
         expect(sso2.admin).to eq(true)
         expect(sso2.moderator).to eq(false)
+        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+
+        expect(sso2.avatar_url.blank?).to_not eq(true)
+        expect(sso2.profile_background_url.blank?).to_not eq(true)
+        expect(sso2.card_background_url.blank?).to_not eq(true)
+
+        expect(sso2.avatar_url).to start_with(Discourse.base_url)
+        expect(sso2.profile_background_url).to start_with(Discourse.base_url)
+        expect(sso2.card_background_url).to start_with(Discourse.base_url)
+      end
+
+      it 'handles non local content correctly' do
+        SiteSetting.avatar_sizes = "100|49"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_access_key_id = "XXX"
+        SiteSetting.s3_secret_access_key = "XXX"
+        SiteSetting.s3_upload_bucket = "test"
+        SiteSetting.s3_cdn_url = "http://cdn.com"
+
+        stub_request(:any, /test.s3.amazonaws.com/).to_return(status: 200, body: "", headers: {})
+
+        @user.create_user_avatar!
+        upload = Fabricate(:upload, url: "//test.s3.amazonaws.com/something")
+
+        Fabricate(:optimized_image,
+          sha1: SecureRandom.hex << "A" * 8,
+          upload: upload,
+          width: 98,
+          height: 98,
+          url: "//test.s3.amazonaws.com/something/else"
+        )
+
+        @user.update_columns(uploaded_avatar_id: upload.id)
+        @user.user_profile.update_columns(
+          profile_background: "//test.s3.amazonaws.com/something",
+          card_background: "//test.s3.amazonaws.com/something"
+        )
+
+        @user.reload
+        @user.user_avatar.reload
+        @user.user_profile.reload
+
+        log_in_user(@user)
+
+        stub_request(:get, "http://cdn.com/something/else").to_return(
+          body: lambda { |request| File.new(Rails.root + 'spec/fixtures/images/logo.png') }
+        )
+
+        get :sso_provider, params: Rack::Utils.parse_query(@sso.payload)
+
+        location = response.header["Location"]
+        # javascript code will handle redirection of user to return_sso_url
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+
+        payload = location.split("?")[1]
+        sso2 = SingleSignOn.parse(payload, "topsecret")
+
+        expect(sso2.avatar_url.blank?).to_not eq(true)
+        expect(sso2.profile_background_url.blank?).to_not eq(true)
+        expect(sso2.card_background_url.blank?).to_not eq(true)
+
+        expect(sso2.avatar_url).to start_with(SiteSetting.s3_cdn_url)
+        expect(sso2.profile_background_url).to start_with(SiteSetting.s3_cdn_url)
+        expect(sso2.card_background_url).to start_with(SiteSetting.s3_cdn_url)
       end
     end
 
@@ -414,6 +500,11 @@ describe SessionController do
 
   describe '#sso_provider' do
     before do
+      stub_request(:any, /#{Discourse.current_hostname}\/uploads/).to_return(
+        status: 200,
+        body: lambda { |request| file_from_fixtures("logo.png") }
+      )
+
       SiteSetting.enable_sso_provider = true
       SiteSetting.enable_sso = false
       SiteSetting.enable_local_logins = true
@@ -425,6 +516,14 @@ describe SessionController do
       @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
       @user = Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true)
+      @user.create_user_avatar!
+      UserAvatar.import_url_for_user(logo_fixture, @user)
+      UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: false)
+      UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: true)
+
+      @user.reload
+      @user.user_avatar.reload
+      @user.user_profile.reload
       EmailToken.update_all(confirmed: true)
     end
 
@@ -450,6 +549,15 @@ describe SessionController do
       expect(sso2.external_id).to eq(@user.id.to_s)
       expect(sso2.admin).to eq(true)
       expect(sso2.moderator).to eq(false)
+      expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+
+      expect(sso2.avatar_url.blank?).to_not eq(true)
+      expect(sso2.profile_background_url.blank?).to_not eq(true)
+      expect(sso2.card_background_url.blank?).to_not eq(true)
+
+      expect(sso2.avatar_url).to start_with(Discourse.base_url)
+      expect(sso2.profile_background_url).to start_with(Discourse.base_url)
+      expect(sso2.card_background_url).to start_with(Discourse.base_url)
     end
 
     it "successfully redirects user to return_sso_url when the user is logged in" do
@@ -469,6 +577,14 @@ describe SessionController do
       expect(sso2.external_id).to eq(@user.id.to_s)
       expect(sso2.admin).to eq(true)
       expect(sso2.moderator).to eq(false)
+
+      expect(sso2.avatar_url.blank?).to_not eq(true)
+      expect(sso2.profile_background_url.blank?).to_not eq(true)
+      expect(sso2.card_background_url.blank?).to_not eq(true)
+
+      expect(sso2.avatar_url).to start_with(Discourse.base_url)
+      expect(sso2.profile_background_url).to start_with(Discourse.base_url)
+      expect(sso2.card_background_url).to start_with(Discourse.base_url)
     end
   end
 

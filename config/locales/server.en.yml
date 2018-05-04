@@ -1231,6 +1231,8 @@ en:
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
+    sso_overrides_profile_background: "Overrides user profile background with external site avatar from SSO payload."
+    sso_overrides_card_background: "Overrides user card background with external site avatar from SSO payload."
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
     sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
 
