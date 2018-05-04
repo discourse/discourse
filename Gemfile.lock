@@ -131,6 +131,7 @@ GEM
     hashie (3.5.5)
     highline (1.7.8)
     hiredis (0.6.1)
+    hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.0.5)
     i18n (0.8.6)
@@ -388,6 +389,9 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
+    webpush (0.3.2)
+      hkdf (~> 0.2)
+      jwt
 
 PLATFORMS
   ruby
@@ -428,6 +432,7 @@ DEPENDENCIES
   gc_tracer
   highline
   hiredis
+  hkdf (= 0.3.0)
   htmlentities
   http_accept_language (~> 2.0.5)
   listen
@@ -498,6 +503,7 @@ DEPENDENCIES
   unf
   unicorn
   webmock
+  webpush (= 0.3.2)
 
 BUNDLED WITH
    1.16.1

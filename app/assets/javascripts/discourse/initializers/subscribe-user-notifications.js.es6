@@ -2,8 +2,14 @@
 import {
   init as initDesktopNotifications,
   onNotification,
-  alertChannel
+  alertChannel,
+  disable as disableDesktopNotifications,
 } from 'discourse/lib/desktop-notifications';
+import {
+  register as registerPushNotifications,
+  unsubscribe as unsubscribePushNotifications,
+  isPushNotificationsEnabled
+} from 'discourse/lib/push-notifications';
 
 export default {
   name: 'subscribe-user-notifications',
@@ -11,13 +17,8 @@ export default {
 
   initialize(container) {
     const user = container.lookup('current-user:main');
-    const keyValueStore = container.lookup('key-value-store:main');
     const bus = container.lookup('message-bus:main');
     const appEvents = container.lookup('app-events:main');
-
-    // clear old cached notifications, we used to store in local storage
-    // TODO 2017 delete this line
-    keyValueStore.remove('recent-notifications');
 
     if (user) {
       if (user.get('staff')) {
@@ -87,6 +88,7 @@ export default {
 
       const site = container.lookup('site:main');
       const siteSettings = container.lookup('site-settings:main');
+      const router = container.lookup('router:main');
 
       bus.subscribe("/categories", data => {
         _.each(data.categories, c => site.updateCategory(c));
@@ -100,9 +102,16 @@ export default {
       });
 
       if (!Ember.testing) {
-        if (!site.mobileView) {
-          bus.subscribe(alertChannel(user), data => onNotification(data, user));
-          initDesktopNotifications(bus, appEvents);
+
+        bus.subscribe(alertChannel(user), data => onNotification(data, user));
+        initDesktopNotifications(bus, appEvents);
+
+        if(isPushNotificationsEnabled(user, site.mobileView)) {
+          disableDesktopNotifications();
+          registerPushNotifications(Discourse.User.current(), site.mobileView, router, appEvents);
+        }
+        else {
+          unsubscribePushNotifications(user);
         }
       }
     }

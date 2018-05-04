@@ -1710,6 +1710,9 @@ en:
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts."
 
+    push_notifications_prompt: "Display user consent prompt."
+    push_notifications_icon_url: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -3853,3 +3856,15 @@ en:
     graph_title: "Search Count"
 
   joined: "Joined"
+
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'
+      quoted: '%{username} quoted you in "%{topic}" - %{site_title}'
+      replied: '%{username} replied to you in "%{topic}" - %{site_title}'
+      posted: '%{username} posted in "%{topic}" - %{site_title}'
+      private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
+      linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
+      confirm_title: 'Notifications enabled - %{site_title}'
+      confirm_body: 'Success! Notifications have been enabled.'
