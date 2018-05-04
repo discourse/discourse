@@ -1,26 +1,32 @@
 # Discourse 定制
-先阅读 Discourse 官网以及 Discourse Github:  https://github.com/discourse/discourse     
-大致扫扫，看一眼。获得一些基本理解，再读下面的内容。        
-
-另外，给刚接触 Discourse，想做定制的人一点建议：
-先别看代码，先在网页端里 localhost:3000 里好好到处点点，四处看看。
-看看后台有什么选项，后台能设置什么。四处都长什么样子，有什么功能。  
+这里基于 Discourse 论坛做定制
 
 
-## 为了和  Discourse 本身代码做区分，所有代码（model, controller等）都用 fm_ 开头
+### Demo
+暂无，开发中
+
+### 起步
+建议先阅读 Discourse 官网以及 Github:  https://github.com/discourse/discourse     
+看看说明文档。获得一些基本理解       
+
+另外给刚接触 Discourse，想做定制的人一点建议：
+先别看代码，先在网页端里 localhost:3000 里到处点点    
+看看后台有什么选项，能设置什么。长什么样子   
+
+
+### 为了和  Discourse 本身代码做区分，所有代码（model, controller等）都用 fm_ 开头
 fm = facial mask = 面膜    
 
 
-## Discourse 基本介绍
+### Discourse 基本介绍
 Discourse 创建于 2013 年，很多决定都是基于当时做的  
 比如没用 Ember Data    
 
-### 建议阅读如下链接
+<!-- ### 建议阅读如下链接
 【链接】
-【理由】
+【理由】 -->
 
-
-### 1. 整体系统
+### 0. 整体系统
 此处会不断更新，只放一些大的，最重要的组件。    
 比如 Discourse 提供的帖子 diff 对比功能就不列了，只是一个功能，不算一个大一点的系统     
 * 用户：注册登录，各类设置
@@ -95,7 +101,7 @@ rails s
 * Discourse 创建于
 
 
-## 7. 代码阅读笔记
+### 7. 代码阅读笔记
 * 代码注释极少: https://meta.discourse.org/t/why-so-little-code-comment-in-discourse-codebase-github/85710
 * Ember 和 Rails 放在一个代码库里。现在大部分教程会建议分开
 * Plugin 没有简单的一键安装方式
