@@ -1,0 +1,16 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+zh_CN:
+  js:
+    discourse_local_dates:
+      title: 插入日期
+      create:
+        modal_title: 插入日期
+        form:
+          insert: 插入
+          advanced_mode: 高级模式

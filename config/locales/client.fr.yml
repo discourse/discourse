@@ -541,9 +541,9 @@ fr:
         confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
         success: "Le téléchargement a démarré ; vous serez notifié par message lorsqu'il est terminé."
         rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
-      new_private_message: "Créer un message privé"
-      private_message: "Message privé"
-      private_messages: "Messages privés"
+      new_private_message: "Créer un message direct"
+      private_message: "Message direct"
+      private_messages: "Messages directs"
       activity_stream: "Activité"
       preferences: "Préférences"
       expand_profile: "Développer"
@@ -778,7 +778,7 @@ fr:
       include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par courriel"
       email_in_reply_to: "Inclure un extrait du message auquel il a été répondu dans les courriels"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
-      email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
+      email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message direct"
       email_always: "Recevoir des notifications par email même lorsque je suis actif sur le site"
       other_settings: "Autre"
       categories_settings: "Catégories"
@@ -841,7 +841,7 @@ fr:
         bulk_invite:
           none: "Vous n'avez encore invité personne. Envoyez des invitations individuelles ou à plusieurs personnes en même temps en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV.</a>"
           text: "Invitation massive depuis un fichier"
-          success: "Le fichier a été correctement importé. Vous serez notifié par message privé lorsque le traitement sera terminé."
+          success: "Le fichier a été correctement importé. Vous serez notifié par message direct lorsque le traitement sera terminé."
           error: "Désolé, le fichier doit être au format CSV."
       password:
         title: "Mot de passe"
@@ -911,7 +911,7 @@ fr:
       stream:
         posted_by: "Rédigé par"
         sent_by: "Envoyé par"
-        private_message: "message privé"
+        private_message: "message direct"
         the_topic: "le sujet"
     loading: "Chargement…"
     errors:
@@ -991,11 +991,11 @@ fr:
       enable: "Cacher les messages supprimés"
       disable: "Afficher les messages supprimés"
     private_message_info:
-      title: "Message privé"
+      title: "Message direct"
       invite: "Inviter d'autres utilisateurs…"
       leave_message: "Êtes-vous sûr de vouloir quitter cette conversation ?"
-      remove_allowed_user: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message privé ?"
-      remove_allowed_group: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message privé ?"
+      remove_allowed_user: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message direct ?"
+      remove_allowed_group: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message direct ?"
     email: 'Courriel'
     username: 'Pseudo'
     last_seen: 'Vu'
@@ -1114,6 +1114,8 @@ fr:
       shift: 'Maj'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Chargement…
     select_kit:
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
@@ -1188,7 +1190,7 @@ fr:
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
-      create_pm: "Message privé"
+      create_pm: "Message direct"
       create_whisper: "Murmurer"
       create_shared_draft: "Créer ébauche partagée"
       edit_shared_draft: "Modifier ébauche partagée"
@@ -1354,7 +1356,7 @@ fr:
         user: "Chercher dans les messages de @{{username}}"
         category: "Rechercher dans la catégorie #{{category}}"
         topic: "Rechercher dans ce sujet"
-        private_messages: "Rechercher des messages privés"
+        private_messages: "Rechercher des messages directs"
       advanced:
         title: Recherche avancée
         posted_by:
@@ -1373,7 +1375,7 @@ fr:
           posted: auxquels j'ai participé
           watching: que je surveille
           tracking: que je suis
-          private: qui sont dans mes messages privés
+          private: qui sont dans mes messages directs
           bookmarks: auxquels j'ai mis un signet
           first: qui sont les premiers messages
           pinned: qui sont épinglés
@@ -3352,6 +3354,7 @@ fr:
         delete_confirm: "Êtes-vous SÛR de vouloir supprimer cet utilisateur ? Cette action est irréversible !"
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse de courriel et adresse IP."
         delete_dont_block: "Supprimer uniquement"
+        deleting_user: "Suppression de l'utilisateur"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurer que tous ses messages ont bien été supprimmés avant d'essayer de supprimer l'utilisateur."
         send_activation_email: "Envoyer le courriel d'activation"

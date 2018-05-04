@@ -2837,6 +2837,7 @@ en:
           type: "Type"
           users: "Users"
           last_flagged: "Last Flagged"
+          no_results: "There are no flagged topics."
 
         short_names:
           off_topic: "off-topic"

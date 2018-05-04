@@ -10,5 +10,5 @@ it:
     details:
       title: Nascondi Dettagli
     composer:
-      details_title: Summary
+      details_title: Riepilogo
       details_text: "Questo testo verrà nascosto"

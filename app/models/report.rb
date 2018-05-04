@@ -138,7 +138,12 @@ class Report
     data = User.real.count_by_inactivity(report.start_date, report.end_date)
 
     data.each do |data_point|
-      report.data << { x: data_point["date_trunc"], y: data_point["count"] }
+      report.data << { x: data_point["date"], y: data_point["count"] }
+    end
+
+    unless report.data.blank?
+      report.prev30Days = report.data.first[:y]
+      report.total = report.data.last[:y]
     end
   end
 

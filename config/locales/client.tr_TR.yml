@@ -242,6 +242,9 @@ tr_TR:
       last_read: "bu okuduğunuz son gönderi; imlerinize eklemek için tıklayın"
       remove: "İmi Kaldır"
       confirm_clear: "Bu konuya ait tüm imleri kaldırmak istediğinize emin misiniz?"
+    topic_count_latest:
+      one: '{{count}} yeni ya da güncellenmiş konu.'
+      other: '{{count}} yeni ya da güncellenmiş konu.'
     preview: "önizleme"
     cancel: "iptal"
     save: "Değişiklikleri Kaydet"
@@ -368,6 +371,8 @@ tr_TR:
         one: Gruplar
         other: Gruplar
       activity: "Etkinlik"
+      members:
+        filter_placeholder_admin: "kullanıcı adı ya da e-posta"
       topics: "Konular"
       posts: "Gönderiler"
       mentions: "Bahsetmeler"
@@ -477,6 +482,7 @@ tr_TR:
       activity_stream: "Etkinlik"
       preferences: "Tercihler"
       expand_profile: "Genişlet"
+      collapse_profile: "Daralt"
       bookmarks: "İmlenenler"
       bio: "Hakkımda"
       invited_by: "Tarafından Davet Edildi"
@@ -499,6 +505,7 @@ tr_TR:
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
       theme_default_on_all_devices: "Seçilen temayı bütün cihazlarımda varsayılan yap"
+      allow_private_messages: "Diğer kullanıcıların bana kişisel mesaj göndermesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"
       change: "değiştir"
@@ -593,6 +600,16 @@ tr_TR:
         set_password: "Parola Belirle"
         choose_new: "Yeni bir parola seçiniz"
         choose: "Paralo seçiniz"
+      second_factor:
+        title: "İki Faktörlü Kimlik Doğrulama"
+        disable: "İki faktörlü kimlik doğrulamayı devre dışı bırak"
+        enable: "gelişmiş hesap güvenliği için"
+        confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
+        enable_description: |
+          Desteklenen bir uygulamada bu QR kodunu tarayın (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> - <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> - <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) ve kimlik doğrulama kodunuzu girin.
+        extended_description: |
+          İki faktörlü kimlik doğrulama, şifrenize ek olarak tek seferlik bir kod gerektirerek hesabınıza ek güvenlik ekler. Kodlar <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, ve <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> cihazlar üzerinde oluşturulabilir.
+        oauth_enabled_warning: "Hesabınızda iki faktörlü kimlik doğrulaması etkinleştirildikten sonra sosyal girişlerin devre dışı bırakılacağını lütfen unutmayın."
       change_about:
         title: "Hakkımda'yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -815,6 +832,7 @@ tr_TR:
         header_title: "profil, iletiler, imler ve tercihler"
       title:
         title: "Başlık"
+        none: "(hiçbiri)"
       filters:
         all: "Hepsi"
       stream:
@@ -928,15 +946,21 @@ tr_TR:
       button_help: "Yardım"
     email_login:
       button_label: "e-posta ile"
+      complete_username: "<b>%{username}</b> kullanıcı adı bir hesap ile eşleşirse, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
+      complete_email: "<b>%{email}</b> e-posta adresi bir hesap ile eşleşirse, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
+      complete_username_found: "<b>%{username}</b> kullanıcı adıyla eşleşen bir hesap bulduk, kısa bir süre içerisinde giriş bağlantısına sahip bir e-posta alacaksınız."
+      complete_email_found: "<b>%{email}</b> e-posta adresi ile eşleşen bir hesap bulduk, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_email_not_found: "%{email}Hiç bir hesap bulunamadı"
     login:
       title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Parola"
+      second_factor_title: "İki Faktörlü Kimlik Doğrulama"
       email_placeholder: "e-posta veya kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
       rate_limit: "Tekrar giriş yapmayı denemeden önce lütfen bekleyin."
+      blank_username: "Lütfen e-posta adresinizi ya da kullanıcı adınızı girin."
       blank_username_or_password: "Lütfen e-posta adresinizi ya da kullanıcı adınızı, ve parolanızı girin."
       reset_password: 'Parola Sıfırlama'
       logging_in: "Oturum açılıyor..."
@@ -949,6 +973,7 @@ tr_TR:
       not_allowed_from_ip_address: "Bu IP adresiyle oturum açamazsınız."
       admin_not_allowed_from_ip_address: "Bu IP adresinden yönetici olarak oturum açamazsınız."
       resend_activation_email: "Etkinleştirme e-postasını tekrar yollamak için buraya tıklayın. "
+      omniauth_disallow_totp: "Hesabınızın iki faktör kimlik doğrulaması etkin. Lütfen şifrenizle giriş yapın."
       resend_title: "Etkinleştirme epostasını tekrar gönder"
       change_email: "Eposta adresini değiştir"
       provide_new_email: "Yeni bir e posta adresi girerek aktivasyon maili gönderin."
@@ -1004,6 +1029,7 @@ tr_TR:
       categories_only: "Yalnızca Kategoriler"
       categories_with_featured_topics: "Kategoriler ve Öne Çıkarılan Konular"
       categories_and_latest_topics: "Kategoriler ve Son Konular"
+      categories_and_top_topics: "Kategoriler ve Popüler Konular"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1029,6 +1055,9 @@ tr_TR:
       medium_tone: Orta cilt tonu
       medium_dark_tone: Orta koyu cilt tonu
       dark_tone: Koyu cilt tonu
+    shared_drafts:
+      notice: "Bu konu, yalnızca <b>{{category}}</b> kategorisini görebilen kişiler tarafından görülebilir."
+      destination_category: "Hedef Kategori"
     composer:
       emoji: "Emoji :)"
       more_emoji: "dahası..."
@@ -1045,6 +1074,7 @@ tr_TR:
       saved_local_draft_tip: "yerele kaydedildi"
       similar_topics: "Konunuz şunlara çok benziyor..."
       drafts_offline: "çevrimdışı taslaklar"
+      group_mentioned_limit: "<b>Uyarı!</b> <a href='{{group_link}}'>{{group}}</a>'den bahsettiniz, ancak bu grubun yönetici tarafından yapılandırılmış olan maksimum {{max}} kullanıcıdan bahsetme sınırını aşan daha fazla üyesi var. Kimse haberdar edilmeyecek."
       group_mentioned:
         one: '{{group}} hakkında konuşarak <a href=''{{group_link}}''>{{count}} kişiyi</a> bilgilendirmek üzeresin, emin misin?'
         other: '{{group}} hakkında konuşarak <a href=''{{group_link}}''>{{count}} kişiyi</a> bilgilendirmek üzeresin, emin misin?'
@@ -1077,6 +1107,7 @@ tr_TR:
       remove_featured_link: "Konudan bağlantıyı kaldır."
       reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."
       reply_placeholder_no_images: "Buraya yazın. Biçimlendirme için Markdown, BBCode ya da HTML kullanın."
+      reply_placeholder_choose_category: "Buraya yazmadan önce bir kategori seçmelisiniz."
       view_new_post: "Yeni gönderinizi görüntüleyin."
       saving: "Kaydediliyor"
       saved: "Kaydedildi!"
@@ -1186,7 +1217,11 @@ tr_TR:
       select_all: "Tümünü Seç"
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
+      result_count:
+        one: <span class='term'>{{term}}</span> <span>için 1 sonuç</span>
+        other: <span class='term'>{{term}}</span> için <span>{{count}} {{plus}} sonuç</span>
       title: "konu, gönderi, kullanıcı veya kategori ara"
+      full_page_title: "konu ya da gönderi ara"
       no_results: "Hiç bir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
       searching: "Aranıyor..."
@@ -1278,6 +1313,7 @@ tr_TR:
         change_tags: "Etiketleri Değiştir"
         append_tags: "Etiketleri Ekle"
         choose_new_tags: "Konular için yeni etiketler seçin:"
+        choose_append_tags: "Konulara uygulanacak yeni etiketleri seçin:"
         changed_tags: "Bu konuların etiketleri değiştirildi."
       none:
         unread: "Okunmamış konunuz yok."
@@ -1438,6 +1474,10 @@ tr_TR:
           "3_2": 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
           "3_1": 'Bu konuyu siz oluşturduğunuz için bildirimlerini alacaksınız.'
           "3": 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
+          "2_8": 'Bu kategoriyi takip ettiğiniz için yeni cevapların sayısını göreceksiniz.'
+          "2_4": 'Bu konuyu yanıtladığınız için yeni cevapların sayısını göreceksiniz.'
+          "2_2": 'Bu konuyu takip ettiğiniz için yeni cevapların sayısını göreceksiniz.'
+          "2": 'Yeni cevapların sayısını göreceksiniz çünkü <a href="/u/{{username}}/preferences">bu konuyu okudunuz</a>.'
           "1_2": 'Birisi @isminizden bahsederse ya da size cevap verirse bildirim alacaksınız.'
           "1": 'Birisi @isminizden bahsederse veya size cevap verirse bildirim alacaksınız.'
           "0_7": 'Bu kategoriye ait tüm bildirimleri görmezden geliyorsunuz.'
@@ -1557,6 +1597,7 @@ tr_TR:
         success_email: "<b>{{emailOrUsername}}</b> kullanıcısına davet e-postalandı. Davet kabul edildiğinde size bir bildiri göndereceğiz. Davetlerinizi takip etmek için kullanıcı sayfanızdaki davetler sekmesine göz atın."
         success_username: "Kullanıcıyı bu konuya katılması için davet ettik."
         error: "Üzgünüz, kullanıcıyı davet edemedik. Zaten davet edilmiş olabilir mi? (Davetler oran sınırlarına tabiidir.)"
+        success_existing_email: "<b>{{emailOrUsername}}</b> e-posta adresine sahip bir kullanıcı zaten var. Bu kullanıcıyı bu konuya katılmaya davet ettik."
       login_reply: 'Cevaplamak için oturum açın'
       filters:
         n_posts:
@@ -1624,7 +1665,8 @@ tr_TR:
       deleted_by_author:
         one: (yazarı tarafından geri alınan gönderi, bildirilmediği takdirde %{count} saat içinde otomatik olarak silinecek.)
         other: (yazarı tarafından geri alınan gönderi, bildirilmediği takdirde %{count} saat içinde otomatik olarak silinecek.)
-      expand_collapse: "aç/kapat"
+      collapse: "daralt"
+      expand_collapse: "genişlet/daralt"
       gap:
         one: gizlenen {{count}} yorumu gör
         other: gizlenen {{count}} yorumu gör
@@ -1688,6 +1730,9 @@ tr_TR:
         change_owner: "Sahipliğini Değiştir"
       actions:
         flag: 'Bildir'
+        defer_flags:
+          one: Bildirimi yoksay
+          other: Bildirimleri yoksay
         undo:
           off_topic: "Bildirimi geri al"
           spam: "Bildirimi geri al"
@@ -1801,6 +1846,8 @@ tr_TR:
       settings: 'Ayarlar'
       topic_template: "Konu Şablonu"
       tags: "Etiketler"
+      tags_allowed_tags: "Bu kategoride yalnızca bu etiketlerin kullanılmasına izin ver:"
+      tags_allowed_tag_groups: "Yalnızca şu gruplardaki etiketlerin bu kategoride kullanılmasına izin ver:"
       tags_placeholder: "(Seçmeli) izin verilen etiketlerin listesi"
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
       topic_featured_link_allowed: " Featured link'lere bu kategoride izin ver"
@@ -2126,6 +2173,7 @@ tr_TR:
         one: '%{count} izin verildi'
         other: '%{count} izin verildi'
       select_badge_for_title: Başlık yazısı olarak kullanılacak bir rozet seçin
+      none: "(hiçbiri)"
       badge_grouping:
         getting_started:
           name: Başlangıç
@@ -2153,6 +2201,7 @@ tr_TR:
       selector_no_tags: "etiket yok"
       changed: "değişen etiketler:"
       tags: "Etiketler"
+      choose_for_topic: "opsiyonel etiketler"
       delete_tag: "Etiketi Sil"
       delete_confirm_no_topics: "Bu etiketi silmek istediğinize emin misiniz?"
       rename_tag: "Etiketi Yeniden Adlandır"
@@ -2319,6 +2368,13 @@ tr_TR:
           notify_user: "özel"
           notify_moderators: "özel"
       groups:
+        manage:
+          interaction:
+            visibility_levels:
+              members: "Grup sahipleri, üyeler ve yöneticiler"
+              owners: "Grup sahipleri ve yöneticiler"
+          membership:
+            trust_levels_none: "Hiçbiri"
         primary: "Ana Grup"
         no_primary: "(ana grup yok)"
         title: "Grup"
@@ -2712,6 +2768,7 @@ tr_TR:
             change_readonly_mode: "Salt-okunur modunu değiştir"
             backup_download: "yedeği yükle"
             backup_destroy: "yedeği sil"
+            disabled_second_factor: "İki Faktör Kimlik Doğrulaması devre dışı bırakıldı"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir eylem gerçekleşecek."
@@ -2981,6 +3038,8 @@ tr_TR:
         go_back: "Aramaya geri dön"
         recommended: "İzleyen metni ihtiyaçlarınıza uygun şekilde özelleştirmenizi öneririz:"
         show_overriden: 'Sadece değiştirdiklerimi göster'
+      settings:
+        none: 'hiçbiri'
       site_settings:
         title: 'Ayarlar'
         no_results: "Hiç sonuç bulunamadı."

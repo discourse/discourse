@@ -169,26 +169,6 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
 
-  it "correctly supports legacy tokens" do
-    user = Fabricate(:user)
-    token = SecureRandom.hex(16)
-    user_token = UserAuthToken.create!(user_id: user.id, auth_token: token,
-                                       prev_auth_token: token, legacy: true,
-                                       rotated_at: Time.zone.now
-                                      )
-
-    prov = provider("/", "HTTP_COOKIE" => "_t=#{user_token.auth_token}")
-    expect(prov.current_user.id).to eq(user.id)
-
-    # sets a new token up cause it got a global token
-    cookies = {}
-    prov.refresh_session(user, {}, cookies)
-    user.reload
-
-    expect(user.user_auth_tokens.count).to eq(2)
-    expect(cookies["_t"][:value]).not_to eq(token)
-  end
-
   it "correctly rotates tokens" do
     SiteSetting.maximum_session_age = 3
     user = Fabricate(:user)

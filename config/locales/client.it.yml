@@ -3133,6 +3133,7 @@ it:
         delete_confirm: "Sei SICURO di voler eliminare questo utente? Non è possibile annullare!"
         delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
         delete_dont_block: "Elimina soltanto"
+        deleting_user: "Cancellazione utente..."
         deleted: "L'utente è stato cancellato."
         delete_failed: "Si è verificato un errore nella cancellazione dell'utente. Assicurati che tutti i messaggi siano stati cancellati prima di provare a cancellare l'utente."
         send_activation_email: "Invia Email Attivazione"
