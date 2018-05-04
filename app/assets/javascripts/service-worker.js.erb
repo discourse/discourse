@@ -165,7 +165,7 @@ self.addEventListener('notificationclick', function(event) {
   );
 });
 
-self.addEventListener('message', event => {
+self.addEventListener('message', function(event) {
   if('lastAction' in event.data){
     lastAction = event.data.lastAction;
   }});
