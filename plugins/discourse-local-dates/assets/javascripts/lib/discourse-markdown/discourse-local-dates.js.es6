@@ -23,10 +23,12 @@ function addLocalDate(buffer, matches, state) {
     ['class', 'discourse-local-date'],
     ['data-date', config.date],
     ['data-time', config.time],
-    ['data-recurring', config.recurring],
     ['data-format', config.format],
     ['data-timezones', config.timezones],
   ];
+  if (config.recurring) {
+    token.attrs.push(['data-recurring', config.recurring]);
+  }
   buffer.push(token);
 
   const previews = config.timezones.split("|").filter(t => t).map(timezone => {
