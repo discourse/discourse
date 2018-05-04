@@ -1,8 +1,4 @@
-import { registerOption } from 'pretty-text/pretty-text';
-
-registerOption((siteSettings, opts) => {
-  opts.features['discourse-cronos'] = !!siteSettings.discourse_cronos_enabled;
-});
+import { parseBBCodeTag } from 'pretty-text/engines/discourse-markdown/bbcode-block';
 
 function addcronos(buffer, matches, state) {
   let token;
@@ -14,11 +10,12 @@ function addcronos(buffer, matches, state) {
     timezones: ""
   };
 
-  const options = matches[1].split(";");
-  options.forEach((option) => {
-    let o = option.split("=");
-    config[o[0]] = o[1];
-  });
+  let parsed = parseBBCodeTag("[date date" + matches[1] + "]", 0, matches[1].length + 11);
+
+  config.date = parsed.attrs.date;
+  config.time = parsed.attrs.time;
+  config.format = parsed.attrs.format || config.format;
+  config.timezones = parsed.attrs.timezones || config.timezones;
 
   token = new state.Token('a_open', 'a', 1);
   token.attrs = [
@@ -67,7 +64,7 @@ export function setup(helper) {
 
   helper.registerPlugin(md => {
     const rule = {
-      matcher: /\[discourse-cronos (.*?)\]/,
+      matcher: /\[date(.*?)\]/,
       onMatch: addcronos
     };
 

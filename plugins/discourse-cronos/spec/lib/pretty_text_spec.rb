@@ -4,7 +4,7 @@ describe PrettyText do
   it 'supports inserting date' do
     freeze_time
     cooked = PrettyText.cook <<~MD
-      [discourse-cronos time=22:00;date=2018-05-08;format=LLL;timezones=Europe/Paris|America/Los_Angeles;][/discourse-cronos]
+      [date=2018-05-08 time=22:00 format=LLL timezones="Europe/Paris|America/Los_Angeles"]
     MD
 
     expect(cooked).to include('class="discourse-cronos"')
