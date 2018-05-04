@@ -141,15 +141,12 @@ class Auth::DefaultCurrentUserProvider
 
       needs_rotation = @user_token.auth_token_seen ? rotated_at < UserAuthToken::ROTATE_TIME.ago : rotated_at < UserAuthToken::URGENT_ROTATE_TIME.ago
 
-      if !@user_token.legacy && needs_rotation
+      if needs_rotation
         if @user_token.rotate!(user_agent: @env['HTTP_USER_AGENT'],
                                client_ip: @request.ip,
                                path: @env['REQUEST_PATH'])
           cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
         end
-      elsif @user_token.legacy
-        # make a new token
-        log_on_user(user, session, cookies)
       end
     end
 
