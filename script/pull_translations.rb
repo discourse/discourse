@@ -22,6 +22,7 @@ end
 YML_DIRS = ['config/locales',
             'plugins/poll/config/locales',
             'plugins/discourse-details/config/locales',
+            'plugins/discourse-local-dates/config/locales',
             'plugins/discourse-narrative-bot/config/locales',
             'plugins/discourse-nginx-performance-report/config/locales',
             'plugins/discourse-presence/config/locales'].map { |dir| expand_path(dir) }
