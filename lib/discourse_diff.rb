@@ -1,3 +1,5 @@
+# Discourse 帖子有个对比版本区别的功能
+# 这里应该就是相关代码了
 require_dependency "onpdiff"
 
 class DiscourseDiff

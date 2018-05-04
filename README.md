@@ -12,9 +12,8 @@ fm = facial mask = 面膜
 
 
 ## Discourse 基本介绍
-Discourse 创建于 200x 年，很多决定都是基于当时做的  
-比如 Ember Data 没有使用   
-每当你疑惑的时候，要记住创建时间是 ... 而不是几个月前  
+Discourse 创建于 2013 年，很多决定都是基于当时做的  
+比如没用 Ember Data    
 
 ### 建议阅读如下链接
 【链接】
@@ -22,16 +21,16 @@ Discourse 创建于 200x 年，很多决定都是基于当时做的
 
 
 ### 1. 整体系统
-此处会不断更新
+此处会不断更新，只放一些大的，最重要的组件。    
+比如 Discourse 提供的帖子 diff 对比功能就不列了，只是一个功能，不算一个大一点的系统     
 * 用户：注册登录，各类设置
-* 搜索：用了什么？
+* 搜索：
 * 备份：后台点了按钮可以直接建，带文件/不带文件，得到一个 .sql.gz 文件可以下载下来
-* 邮件：有模板设置
+* 邮件：可以设置模板
 * 通知系统：轮询和表结构是咋样的？因为轮询间隔还是可以后台控制的
-* 设置：
+* 设置：后台有 N 多设置
 * API：还有 Webhook。API 这个啥时候用的上？
 * 标签
-* 插件：没有简单的安装方式，要改代码。
 * 帖子 / 评论
 * 第三方登录，google yahoo twitter facebook instagram github SSO
 * 小组的概念：http://localhost:3000/admin/groups/custom
@@ -39,7 +38,10 @@ Discourse 创建于 200x 年，很多决定都是基于当时做的
      可以设置敏感词。特定词不允许发布，特定词会被替换，特定词需要审核
 * 搜索log：可以看到用户搜索了什么，搜了多少次	
 * 日志2：http://localhost:3000/logs
-* 标记？flag，http://localhost:3000/admin/flags/active
+* 标记(flag) http://localhost:3000/admin/flags/active
+* 多语言
+* Theme / Theme Component：后台可以根据 gituhb 链接载入，主要是改一些 CSS 和 HTML
+* 插件：要载入，解析和执行
 
 
 ### 1. 版本
@@ -94,10 +96,10 @@ rails s
 
 
 ## 7. 代码阅读笔记
-* 代码注释极少
-* Ember 和 Rails 放在一个代码库里。现在大部分教程都会建议完全分开。
+* 代码注释极少: https://meta.discourse.org/t/why-so-little-code-comment-in-discourse-codebase-github/85710
+* Ember 和 Rails 放在一个代码库里。现在大部分教程会建议分开
 * Plugin 没有简单的一键安装方式
-* 没有使用 Ember Data
+* 没有用 Ember Data
 
 ### Helper
 `app/helpers/` 文件不多(7个)    
@@ -119,4 +121,7 @@ post_ 前缀的一堆
 group_
 incoming_
 category_
+
+### 其他
+* `lib/` 里好多代码
 

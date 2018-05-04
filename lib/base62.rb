@@ -1,3 +1,8 @@
+# 不确定为什么要用 Base62， Base64 似乎是一个更通用的标准
+# 看 Github 链接，Base62 is usually used for short URLs.
+# https://paragonie.com/blog/2015/09/comprehensive-guide-url-parameter-encryption-in-php
+# 这个看起来挺相关的，暂时没时间看完。总之似乎就是为了 URL 编码，方便数据库存
+
 # Modified version of: https://github.com/steventen/base62-rb
 
 module Base62
