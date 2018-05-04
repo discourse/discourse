@@ -1,24 +1,30 @@
 # Discourse 定制
-这里基于 Discourse 论坛做定制
+基于 Discourse 论坛做定制，因为 Theme 和 Plugin 对于我们要做的定制不够。
+所以直接来改代码。自己部署。   
+不是简单换个皮，做个 plugin 加一两个选项就可以的那种轻度定制。    
 
+### Discourse 技术栈
+Ruby on Rails + Ember.js + PostgreSQL 
 
 ### Demo
 暂无，开发中
 
 ### 起步
-建议先阅读 Discourse 官网以及 Github:  https://github.com/discourse/discourse     
-看看说明文档。获得一些基本理解       
+建议先读 Discourse 官网和 GitHub:  https://github.com/discourse/discourse     
+获得一些基本理解（比如 Github 那边写了，有个所谓 Trust Levels 0-4 的系统）       
 
-另外给刚接触 Discourse，想做定制的人一点建议：
-先别看代码，先在网页端里 localhost:3000 里到处点点    
+另外给想做定制的人一点建议：
+先别看代码，在网页端里 localhost:3000 里到处点点    
 看看后台有什么选项，能设置什么。长什么样子   
 
 
-### 为了和  Discourse 本身代码做区分，所有代码（model, controller等）都用 fm_ 开头
-fm = facial mask = 面膜    
+### 1. 定制代码的前缀
+为了一眼区分什么代码是 discourse 的，什么代码是我们加的。
+我们用前缀来做（不管是 controller, models, view, helper, 都用前缀）
+**用 fm_ 开头**
+fm = facial mask = 面膜   
 
-
-### Discourse 基本介绍
+### Discourse 介绍
 Discourse 创建于 2013 年，很多决定都是基于当时做的  
 比如没用 Ember Data    
 
@@ -38,7 +44,7 @@ Discourse 创建于 2013 年，很多决定都是基于当时做的
 * API：还有 Webhook。API 这个啥时候用的上？
 * 标签
 * 帖子 / 评论
-* 第三方登录，google yahoo twitter facebook instagram github SSO
+* 第三方登录，google yahoo twitter facebook instagram GitHub SSO
 * 小组的概念：http://localhost:3000/admin/groups/custom
 * 日志：http://localhost:3000/admin/logs/watched_words/action/block 
      可以设置敏感词。特定词不允许发布，特定词会被替换，特定词需要审核
@@ -46,7 +52,7 @@ Discourse 创建于 2013 年，很多决定都是基于当时做的
 * 日志2：http://localhost:3000/logs
 * 标记(flag) http://localhost:3000/admin/flags/active
 * 多语言
-* Theme / Theme Component：后台可以根据 gituhb 链接载入，主要是改一些 CSS 和 HTML
+* Theme / Theme Component：后台可以根据 GitHub 链接载入，主要是改一些 CSS 和 HTML
 * 插件：要载入，解析和执行
 
 
@@ -66,11 +72,6 @@ Discourse 创建于 2013 年，很多决定都是基于当时做的
 
 
 bundle exec rake stats
-
-### 3. 定制代码的前缀
-为了一眼能区分什么代码是 discourse 原先的，什么代码是我们加的。
-我们用前缀来区分（不管是 controller, models, view, helper, 都用前缀）
-
 
 ### 4. Tech Stack
 * Ruby on Rails
