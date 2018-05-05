@@ -131,7 +131,6 @@ export default Ember.Controller.extend(BufferedContent, {
       return this.get('model.postStream').loadPost(postId).then(post => {
         const composer = this.get('composer');
         const viewOpen = composer.get('model.viewOpen');
-
         const quotedText = Quote.build(post, buffer);
 
         // If we can't create a post, delegate to reply as new topic
