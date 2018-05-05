@@ -82,6 +82,8 @@ module PrettyText
     ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
+    apply_es6_file(ctx, root_path, "discourse/helpers/parse-html")
+    apply_es6_file(ctx, root_path, "discourse/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/lib/utilities")
 
     PrettyText::Helpers.instance_methods.each do |method|
