@@ -24,6 +24,7 @@
   <label class="control-label">{{i18n 'user.desktop_notifications.label'}}</label>
   {{desktop-notification-config}}
   <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
+  {{plugin-outlet name="user-preferences-desktop-notifications" args=(hash model=model save=(action "save"))}}
 </div>
 
 {{#if siteSettings.enable_personal_messages}}
