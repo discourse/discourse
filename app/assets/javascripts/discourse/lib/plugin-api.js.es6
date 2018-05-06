@@ -723,7 +723,12 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
   const mixin = {};
-  mixin["_decorate_" + (_decorateId++)] = function($elem) { cb($elem); }.on(evt);
+  mixin["_decorate_" + (_decorateId++)] = function($elem) {
+    $elem = $elem || this.$();
+    if ($elem) {
+      cb($elem);
+    }
+  }.on(evt);
   klass.reopen(mixin);
 }
 
