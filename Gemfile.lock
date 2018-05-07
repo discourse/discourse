@@ -432,7 +432,6 @@ DEPENDENCIES
   gc_tracer
   highline
   hiredis
-  hkdf (= 0.3.0)
   htmlentities
   http_accept_language (~> 2.0.5)
   listen
@@ -503,7 +502,7 @@ DEPENDENCIES
   unf
   unicorn
   webmock
-  webpush (= 0.3.2)
+  webpush
 
 BUNDLED WITH
    1.16.1
