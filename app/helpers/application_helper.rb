@@ -75,6 +75,13 @@ module ApplicationHelper
       path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
+    if Rails.env == "development"
+      if !path.include?("?")
+        # cache breaker for mobile iOS
+        path = path + "?#{Time.now.to_f}"
+      end
+    end
+
 "<link rel='preload' href='#{path}' as='script'/>
 <script src='#{path}'></script>".html_safe
   end
