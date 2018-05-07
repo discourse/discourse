@@ -598,12 +598,13 @@ class Group < ActiveRecord::Base
 
     def name_format_validator
       self.name.strip!
-      self.name.downcase!
 
       UsernameValidator.perform_validation(self, 'name') || begin
-        if will_save_change_to_name? && name_was&.downcase != self.name
+        name_lower = self.name.downcase
+
+        if self.will_save_change_to_name? && self.name_was&.downcase != name_lower
           existing = Group.exec_sql(
-            User::USERNAME_EXISTS_SQL, username: self.name
+            User::USERNAME_EXISTS_SQL, username: name_lower
           ).values.present?
 
           if existing

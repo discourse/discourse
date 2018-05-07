@@ -21,7 +21,7 @@ describe Group do
       end
     end
 
-    describe '#username' do
+    describe '#name' do
       context 'when a user with a similar name exists' do
         it 'should not be valid' do
           new_group = Fabricate.build(:group, name: admin.username.upcase)
