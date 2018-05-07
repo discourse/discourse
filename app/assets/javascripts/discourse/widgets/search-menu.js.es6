@@ -66,7 +66,7 @@ const SearchHelper = {
 
         searchData.results = content;
 
-        if (searchContext.type === 'topic') {
+        if (searchContext && searchContext.type === 'topic') {
           widget.appEvents.trigger('post-stream:refresh', { force: true });
           searchData.topicId = searchContext.id;
         }
@@ -170,10 +170,15 @@ export default createWidget('search-menu', {
 
   html(attrs) {
     searchData.contextEnabled = attrs.contextEnabled;
+    const searchContext = this.searchContext();
 
     const shouldTriggerSearch = (
       (searchData.contextEnabled !== attrs.contextEnabled) ||
-      (this.searchContext().type === 'topic' && searchData.topicId !== this.searchContext().id)
+      (searchContext &&
+       searchContext.type === 'topic' &&
+       searchData.topicId !== null &&
+       searchData.topicId !== searchContext.id
+      )
     );
 
     if (shouldTriggerSearch && searchData.term) {
