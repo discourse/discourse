@@ -69,6 +69,8 @@ const SearchHelper = {
         if (searchContext && searchContext.type === 'topic') {
           widget.appEvents.trigger('post-stream:refresh', { force: true });
           searchData.topicId = searchContext.id;
+        } else {
+          searchData.topicId = null;
         }
       }).finally(() => {
         searchData.loading = false;
