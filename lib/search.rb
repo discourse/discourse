@@ -660,9 +660,10 @@ class Search
         .joins(:post_search_data, :topic)
         .joins("LEFT JOIN categories ON categories.id = topics.category_id")
         .where("topics.deleted_at" => nil)
-        .where("topics.visible")
 
       is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
+
+      posts = posts.where("topics.visible") unless is_topic_search
 
       if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
         posts = posts.where("topics.archetype =  ?", Archetype.private_message)
