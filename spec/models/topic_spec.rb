@@ -1191,11 +1191,8 @@ describe Topic do
         category.reload
       end
 
-      it 'increases the topic_count' do
-        expect(category.topic_count).to eq(1)
-      end
-
       it "doesn't change the topic_count when the value doesn't change" do
+        expect(category.topic_count).to eq(1)
         expect { topic.change_category_to_id(category.id); category.reload }.not_to change(category, :topic_count)
       end
 
@@ -1213,6 +1210,29 @@ describe Topic do
           expect(topic.reload.category).to eq(new_category)
           expect(new_category.reload.topic_count).to eq(1)
           expect(category.reload.topic_count).to eq(0)
+        end
+
+        describe 'user that watching the new category' do
+          it 'should generate the notification for the topic' do
+            topic.posts << Fabricate(:post)
+
+            CategoryUser.set_notification_level_for_category(
+              user,
+              CategoryUser::notification_levels[:watching],
+              new_category.id
+            )
+
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(1)
+
+            notification = Notification.last
+
+            expect(notification.notification_type).to eq(Notification.types[:posted])
+            expect(notification.topic_id).to eq(topic.id)
+            expect(notification.user_id).to eq(user.id)
+            expect(notification.post_number).to eq(1)
+          end
         end
 
         describe 'when new category is set to auto close by default' do

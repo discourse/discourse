@@ -662,12 +662,26 @@ SQL
 
       if self.category_id != new_category.id
         self.update!(category_id: new_category.id)
-        Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
+
+        if old_category
+          Category
+            .where(id: old_category.id)
+            .update_all("topic_count = topic_count - 1")
+        end
 
         # when a topic changes category we may have to start watching it
         # if we happen to have read state for it
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
+
+        post = self.ordered_posts.first
+
+        if post
+          PostAlerter.new.notify_post_users(
+            post,
+            [post.user, post.last_editor].uniq
+          )
+        end
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
