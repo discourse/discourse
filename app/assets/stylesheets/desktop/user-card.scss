@@ -48,6 +48,11 @@ $user_card_background: $secondary;
     }
   }
 
+  .bio {
+    max-height: 200px;
+    overflow: auto;
+  }
+
   &.no-bg {
     min-height: 50px;
 
