@@ -424,18 +424,15 @@ describe UserNotifications do
     end
 
     it "includes a list of participants, groups first with member lists" do
-      group1 = Fabricate(:group)
-      group2 = Fabricate(:group)
-      group1.name = "group1"
-      group2.name = "group2"
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
-      user1.username = "one"
-      user2.username = "two"
-      user1.groups = [ group1, group2 ]
-      user2.groups = [ group1 ]
-      topic.allowed_users = [ user1, user2 ]
-      topic.allowed_groups = [ group1, group2 ]
+      group1 = Fabricate(:group, name: "group1")
+      group2 = Fabricate(:group, name: "group2")
+
+      user1 = Fabricate(:user, username: "one", groups: [group1, group2])
+      user2 = Fabricate(:user, username: "two", groups: [group1])
+
+      topic.allowed_users = [user1, user2]
+      topic.allowed_groups = [group1, group2]
+
       mail = UserNotifications.user_private_message(
         response.user,
         post: response,
