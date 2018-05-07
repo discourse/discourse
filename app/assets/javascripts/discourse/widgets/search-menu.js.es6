@@ -12,6 +12,7 @@ export function initSearchData() {
   searchData.term = undefined;
   searchData.typeFilter = null;
   searchData.invalidTerm = false;
+  searchData.topicId = null;
 }
 
 initSearchData();
@@ -64,7 +65,11 @@ const SearchHelper = {
         }
 
         searchData.results = content;
-        widget.appEvents.trigger('post-stream:refresh', { force: true });
+
+        if (searchContext.type === 'topic') {
+          widget.appEvents.trigger('post-stream:refresh', { force: true });
+          searchData.topicId = searchContext.id;
+        }
       }).finally(() => {
         searchData.loading = false;
         widget.scheduleRerender();
@@ -164,11 +169,15 @@ export default createWidget('search-menu', {
   },
 
   html(attrs) {
-    if (searchData.contextEnabled !== attrs.contextEnabled) {
-      searchData.contextEnabled = attrs.contextEnabled;
-      if (searchData.term) this.triggerSearch();
-    } else {
-      searchData.contextEnabled = attrs.contextEnabled;
+    searchData.contextEnabled = attrs.contextEnabled;
+
+    const shouldTriggerSearch = (
+      (searchData.contextEnabled !== attrs.contextEnabled) ||
+      (this.searchContext().type === 'topic' && searchData.topicId !== this.searchContext().id)
+    );
+
+    if (shouldTriggerSearch && searchData.term) {
+      this.triggerSearch();
     }
 
     return this.attach('menu-panel', { maxWidth: 500, contents: () => this.panelContents() });
