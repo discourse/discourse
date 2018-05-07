@@ -1,4 +1,5 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import changesDOM from "discourse-common/lib/changes-dom";
 
 export default Ember.Component.extend({
   elementId: 'topic-progress-wrapper',
@@ -90,9 +91,8 @@ export default Ember.Component.extend({
                   .off('topic:current-post-scrolled', this, this._topicScrolled);
   },
 
+  @changesDOM
   _updateProgressBar() {
-    if (this.isDestroyed || this.isDestroying) { return; }
-
     const $topicProgress = this.$('#topic-progress');
     // speeds up stuff, bypass jquery slowness and extra checks
     if (!this._totalWidth) {

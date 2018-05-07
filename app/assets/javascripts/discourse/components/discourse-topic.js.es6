@@ -4,6 +4,7 @@ import ClickTrack from 'discourse/lib/click-track';
 import Scrolling from 'discourse/mixins/scrolling';
 import { selectedText } from 'discourse/lib/utilities';
 import { observes } from 'ember-addons/ember-computed-decorators';
+import changesDOM from "discourse-common/lib/changes-dom";
 
 function highlight(postNumber) {
   const $contents = $(`#post_${postNumber} .topic-body`);
@@ -117,8 +118,9 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   // The user has scrolled the window, or it is finished rendering and ready for processing.
+  @changesDOM
   scrolled() {
-    if (this.isDestroyed || this.isDestroying || this._state !== 'inDOM') {
+    if (this._state !== 'inDOM') {
       return;
     }
 

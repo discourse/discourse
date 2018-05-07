@@ -1,4 +1,5 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
+import changesDOM from "discourse-common/lib/changes-dom";
 
 export default Ember.Component.extend({
   _slug: null,
@@ -8,8 +9,8 @@ export default Ember.Component.extend({
     this.refreshClass();
   },
 
+  @changesDOM
   _updateClass() {
-    if (this.isDestroying || this.isDestroyed) { return; }
     const slug = this.get('category.fullSlug');
     this._removeClass();
     if (slug) {

@@ -1,10 +1,10 @@
+import changesDOM from "discourse-common/lib/changes-dom";
+
 // Ember 2.0 removes buffered rendering, but we can still implement it ourselves.
 // In the long term we'll want to remove this.
-
 const Mixin = {
+  @changesDOM
   _customRender() {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-
     const buffer = [];
     this.buildBuffer(buffer);
     this.element.innerHTML = buffer.join('');

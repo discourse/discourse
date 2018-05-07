@@ -4,6 +4,7 @@ import { cloak, uncloak } from 'discourse/widgets/post-stream';
 import { isWorkaroundActive } from 'discourse/lib/safari-hacks';
 import offsetCalculator from 'discourse/lib/offset-calculator';
 import optionalService from 'discourse/lib/optional-service';
+import changesDOM from "discourse-common/lib/changes-dom";
 
 function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) { return min; }
@@ -60,8 +61,8 @@ export default MountWidget.extend({
     }
   },
 
+  @changesDOM
   scrolled() {
-    if (this.isDestroyed || this.isDestroying) { return; }
     if (isWorkaroundActive()) { return; }
 
     // We use this because watching videos fullscreen in Chrome was super buggy
