@@ -73,7 +73,10 @@ class Search
 
       return if day == 0 || month == 0 || day > 31 || month > 12
 
-      return Time.zone.parse("#{year}-#{month}-#{day}") rescue nil
+      return begin
+        Time.zone.parse("#{year}-#{month}-#{day}")
+      rescue ArgumentError
+      end
     end
 
     if str.downcase == "yesterday"
