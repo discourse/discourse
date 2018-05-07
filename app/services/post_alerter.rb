@@ -133,9 +133,11 @@ class PostAlerter
           .pluck(:user_id)
 
         group_ids = topic.allowed_groups.pluck(:group_id)
-        group_watchers = GroupUser.where(group_id: group_ids,
-                                         notification_level: GroupUser.notification_levels[:watching_first_post])
-          .pluck(:user_id)
+
+        group_watchers = GroupUser.where(
+          group_id: group_ids,
+          notification_level: GroupUser.notification_levels[:watching_first_post]
+        ).pluck(:user_id)
 
         watchers = [cat_watchers, tag_watchers, group_watchers].flatten
 
@@ -146,18 +148,15 @@ class PostAlerter
 
   def notify_first_post_watchers(post, user_ids)
     return if user_ids.blank?
-
     user_ids.uniq!
 
     # Don't notify the OP
     user_ids -= [post.user_id]
-
     users = User.where(id: user_ids)
-
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    user_ids.each do |id|
-      u = User.find_by(id: id)
-      create_notification(u, Notification.types[:watching_first_post], post)
+
+    users.each do |user|
+      create_notification(user, Notification.types[:watching_first_post], post)
     end
   end
 
