@@ -801,6 +801,14 @@ en:
           one: "We'll only email you if we haven't seen you in the last minute."
           other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
 
+      btc_public_key:
+        title: "Public Key"
+        instructions: "Private Key + Message = Signature"
+
+      signature:
+        title: "Signature"
+        instructions: "Sign the message discourse with your private key to generate the signature"
+
       name:
         title: "Name"
         instructions: "your full name (optional)"

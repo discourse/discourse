@@ -29,29 +29,31 @@ export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, U
   resetForm() {
     // We wrap the fields in a structure so we can assign a value
     this.setProperties({
-      accountName: '',
-      accountEmail: '',
+      // accountName: '',
+      // accountEmail: '',
       accountUsername: '',
-      accountPassword: '',
-      authOptions: null,
-      complete: false,
-      formSubmitted: false,
-      rejectedEmails: [],
-      rejectedPasswords: [],
-      prefilledUsername: null,
-      isDeveloper: false
+      accountBtcPublicKey: '',
+      accountSignature: '',
+      // accountPassword: '',
+      // authOptions: null,
+      // complete: false,
+      // formSubmitted: false,
+      // rejectedEmails: [],
+      // rejectedPasswords: [],
+      // prefilledUsername: null,
+      // isDeveloper: false
     });
     this._createUserFields();
   },
 
   submitDisabled: function() {
-    if (!this.get('emailValidation.failed') && !this.get('passwordRequired')) return false; // 3rd party auth
-    if (this.get('formSubmitted')) return true;
-    if (this.get('nameValidation.failed')) return true;
-    if (this.get('emailValidation.failed')) return true;
-    if (this.get('usernameValidation.failed')) return true;
-    if (this.get('passwordValidation.failed')) return true;
-    if (this.get('userFieldsValidation.failed')) return true;
+    // if (!this.get('emailValidation.failed') && !this.get('passwordRequired')) return false; // 3rd party auth
+    // if (this.get('formSubmitted')) return true;
+    // if (this.get('nameValidation.failed')) return true;
+    // if (this.get('emailValidation.failed')) return true;
+    // if (this.get('usernameValidation.failed')) return true;
+    // if (this.get('passwordValidation.failed')) return true;
+    // if (this.get('userFieldsValidation.failed')) return true;
 
     return false;
   }.property('passwordRequired', 'nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'userFieldsValidation.failed', 'formSubmitted'),
@@ -158,7 +160,7 @@ export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, U
 
     createAccount() {
       const self = this,
-          attrs = this.getProperties('accountName', 'accountEmail', 'accountPassword', 'accountUsername', 'accountPasswordConfirm', 'accountChallenge'),
+          attrs = this.getProperties('accountUsername', 'accountBtcPublicKey', 'accountSignature'),
           userFields = this.get('userFields');
 
       // Add the userfields to the data
