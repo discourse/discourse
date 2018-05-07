@@ -50,7 +50,7 @@ export default Ember.Component.extend({
       this._positionPicker();
       this._scrollTo();
       this._updateSelectedDiversity();
-      this._checkVisibleSection();
+      this._checkVisibleSection(true);
     });
   },
 
@@ -106,7 +106,7 @@ export default Ember.Component.extend({
     }
 
     this._updateSelectedDiversity();
-    this._checkVisibleSection();
+    this._checkVisibleSection(true);
   },
 
   @observes("recentEmojis")
@@ -192,7 +192,7 @@ export default Ember.Component.extend({
   _unbindEvents() {
     this.$().off();
     this.$(window).off("resize");
-    this.$modal.off("click");
+    clearInterval(this._refreshInterval);
     $("#reply-control").off("div-resizing");
     $('html').off("mouseup.emoji-picker");
   },
@@ -316,17 +316,26 @@ export default Ember.Component.extend({
   },
 
   _bindSectionsScroll() {
-    this.$list.on("scroll", () => {
-      this.scrollPosition = this.$list.scrollTop();
+    let onScroll = () => {
       run.debounce(this, this._checkVisibleSection, 50);
-    });
+    };
+
+    this.$list.on("scroll", onScroll);
+    this._refreshInterval = setInterval(onScroll, 100);
   },
 
-  _checkVisibleSection() {
+  _checkVisibleSection(force) {
     // make sure we stop loading if picker has been removed
     if(!this.$picker) {
       return;
     }
+
+    const newPosition = this.$list.scrollTop();
+    if (newPosition === this.scrollPosition && !force) {
+      return;
+    }
+
+    this.scrollPosition = newPosition;
 
     const $sections = this.$list.find(".section");
     const listHeight = this.$list.innerHeight();
@@ -523,19 +532,31 @@ export default Ember.Component.extend({
   },
 
   _setButtonBackground(button, diversity) {
-    const $button = $(button);
-    const code = this._codeWithDiversity(
-      $button.attr("title"),
-      diversity || $button.hasClass("diversity")
-    );
 
-    // force visual reloading if needed
-    if($button.css("background-image") !== "none") {
-      $button.css("background-image", "");
+    if (!button) {
+      return;
     }
 
-    $button
-      .attr("data-loaded", 1)
-      .css("background-image", `url("${emojiUrlFor(code)}")`);
+    const $button = $(button);
+    button = $button[0];
+
+    // changing style can force layout events
+    // this could slow down timers and lead to
+    // chrome delaying the request
+    window.requestAnimationFrame(() =>{
+      const code = this._codeWithDiversity(
+        $button.attr("title"),
+        diversity || $button.hasClass("diversity")
+      );
+
+      // // force visual reloading if needed
+      if(button.style.backgroundImage !== "none") {
+        button.style.backgroundImage = "";
+      }
+
+      button.style.backgroundImage = `url("${emojiUrlFor(code)}")`;
+      $button.attr("data-loaded", 1);
+    });
+
   },
 });
