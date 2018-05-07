@@ -11,7 +11,7 @@
           <form>
           <table>
 
-          <tr class="input create-account-email">
+          {{!-- <tr class="input create-account-email">
                 <td class="label"><label for='new-account-email'>{{i18n 'user.email.title'}}</label></td>
                 <td>
                 {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
@@ -21,6 +21,18 @@
           <tr class="instructions create-account-email">
             <td></td>
             <td><label>{{i18n 'user.email.instructions'}}</label></td>
+          </tr> --}}
+
+           <tr class="input create-account-btc-public-key">
+                <td class="label"><label for='new-account-public-key'>{{i18n 'user.btc_public_key.title'}}</label></td>
+                <td>
+                {{input type="text" value=accountBtcPublicKey id="new-account-public-key" name="btc-public-key" autofocus="autofocus"}}
+                &nbsp;{{input-tip validation=btcPublicKeyValidation}}
+                </td>
+          </tr>
+          <tr class="instructions create-account-btc-public-key">
+            <td></td>
+            <td><label>{{i18n 'user.btc_public_key.instructions'}}</label></td>
           </tr>
 
           {{#if usernameRequired}}
@@ -37,7 +49,7 @@
             </tr>
           {{/if}}
 
-          {{#if fullnameRequired}}
+          {{!-- {{#if fullnameRequired}}
             <tr class="input">
               <td class="label">
                 <label for='new-account-name'>{{i18n 'user.name.title'}}</label>
@@ -82,7 +94,7 @@
               {{input type="password" value=accountPasswordConfirm id="new-account-confirmation" autocomplete="new-password"}}
               {{input value=accountChallenge id="new-account-challenge"}}
             </td>
-          </tr>
+          </tr> --}}
 
           </table>
 
