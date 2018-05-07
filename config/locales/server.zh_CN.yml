@@ -961,6 +961,8 @@ zh_CN:
     sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
     sso_overrides_name: "每一次登录时，用 SSO 信息中的外部站点的全名覆盖本地全名，并且阻止本地的全名修改。"
     sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
+    sso_overrides_profile_background: "用单点登录信息中的外部站点个人档背景图片覆盖用户头像。"
+    sso_overrides_card_background: "用单点登录信息中的外部站点用户卡背景图片覆盖用户头像。"
     sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（默认情况下返回地址必须位于当前站点）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"

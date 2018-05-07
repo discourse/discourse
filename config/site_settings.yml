@@ -348,6 +348,8 @@ login:
   sso_overrides_avatar:
     default: false
     client: true
+  sso_overrides_profile_background: false
+  sso_overrides_card_background: false
   sso_not_approved_url: ''
   email_domains_blacklist:
     default: 'mailinator.com'
