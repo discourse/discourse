@@ -20,7 +20,9 @@ export default class PostCooked {
   }
 
   update(prev) {
-    if (prev.attrs.cooked !== this.attrs.cooked) {
+    if ((prev.attrs.cooked !== this.attrs.cooked) ||
+        (prev.attrs.highlightTerm !== this.attrs.highlightTerm)) {
+
       return this.init();
     }
   }
