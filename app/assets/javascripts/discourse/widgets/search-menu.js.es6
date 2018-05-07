@@ -64,6 +64,7 @@ const SearchHelper = {
         }
 
         searchData.results = content;
+        widget.appEvents.trigger('post-stream:refresh', { force: true });
       }).finally(() => {
         searchData.loading = false;
         widget.scheduleRerender();
