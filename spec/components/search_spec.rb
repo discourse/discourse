@@ -251,7 +251,6 @@ describe Search do
       end
 
       it 'displays multiple results within a topic' do
-
         topic = Fabricate(:topic)
         topic2 = Fabricate(:topic)
 
@@ -260,8 +259,7 @@ describe Search do
 
         post1 = new_post('this is the other post I am posting', topic)
         post2 = new_post('this is my first post I am posting', topic)
-        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds
-                         with more stuff bla bla', topic)
+        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds with more stuff bla bla', topic)
         post4 = new_post('this is my fourth post I am posting', topic)
 
         # update posts_count
@@ -279,6 +277,13 @@ describe Search do
 
         # phrase search works as expected
         results = Search.execute('"fourth post I am posting"', search_context: post1.topic)
+        expect(results.posts.length).to eq(1)
+      end
+
+      it "works for unlisted topics" do
+        topic.update_attributes(visible: false)
+        post = new_post('discourse is awesome', topic)
+        results = Search.execute('discourse', search_context: topic)
         expect(results.posts.length).to eq(1)
       end
     end
