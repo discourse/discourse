@@ -1,5 +1,6 @@
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
+require_dependency 'url_helper'
 
 class SessionController < ApplicationController
   class LocalLoginNotAllowed < StandardError; end
@@ -53,6 +54,26 @@ class SessionController < ApplicationController
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
         sso.groups = current_user.groups.pluck(:name).join(",")
+
+        sso.avatar_url = Discourse.store.cdn_url UrlHelper.absolute(
+          "#{Discourse.store.absolute_base_url}/#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
+        ) unless current_user.uploaded_avatar.nil?
+        sso.profile_background_url = UrlHelper.absolute upload_cdn_path(
+          current_user.user_profile.profile_background
+        ) if current_user.user_profile.profile_background.present?
+        sso.card_background_url = UrlHelper.absolute upload_cdn_path(
+          current_user.user_profile.card_background
+        ) if current_user.user_profile.card_background.present?
+
+        sso.avatar_url = Discourse.store.cdn_url UrlHelper.absolute(
+          "#{Discourse.store.absolute_base_url}/#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
+        ) unless current_user.uploaded_avatar.nil?
+        sso.profile_background_url = UrlHelper.absolute upload_cdn_path(
+          current_user.user_profile.profile_background
+        ) if current_user.user_profile.profile_background.present?
+        sso.card_background_url = UrlHelper.absolute upload_cdn_path(
+          current_user.user_profile.card_background
+        ) if current_user.user_profile.card_background.present?
 
         if sso.return_sso_url.blank?
           render plain: "return_sso_url is blank, it must be provided", status: 400
