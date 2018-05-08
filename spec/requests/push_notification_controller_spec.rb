@@ -41,6 +41,54 @@ describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
+    it "should fix duplicate subscriptions" do
+      subscription = {
+        endpoint: "endpoint",
+        keys: {
+          p256dh: "256dh",
+          auth: "auth"
+        }
+      }
+      PushSubscription.create user: user, data: subscription.to_json
+      post '/push_notifications/subscribe.json', params: {
+             username: user.username,
+             subscription: subscription,
+             send_confirmation: false
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions.count).to eq(1)
+    end
+
+    it "should not create duplicate subscriptions" do
+      post '/push_notifications/subscribe.json', params: {
+             username: user.username,
+             subscription: {
+               endpoint: "endpoint",
+               keys: {
+                 p256dh: "256dh",
+                 auth: "auth"
+               }
+             },
+             send_confirmation: false
+           }
+
+      post '/push_notifications/subscribe.json', params: {
+             username: user.username,
+             subscription: {
+               endpoint: "endpoint",
+               keys: {
+                 p256dh: "256dh",
+                 auth: "auth"
+               }
+             },
+             send_confirmation: false
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions.count).to eq(1)
+    end
+
     it "should unsubscribe with existing subscription" do
       sub = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       PushSubscription.create!(user: user, data: sub.to_json)
