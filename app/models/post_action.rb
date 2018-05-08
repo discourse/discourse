@@ -599,7 +599,7 @@ SQL
       options = {
         url: post.url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason: I18n.t("flag_reasons.#{post_action_type}"),
+        flag_reason: I18n.t("flag_reasons.#{post_action_type}", locale: SiteSetting.default_locale),
       }
 
       Jobs.enqueue_in(5.seconds, :send_system_message,
