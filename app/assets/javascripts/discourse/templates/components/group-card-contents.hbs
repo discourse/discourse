@@ -20,7 +20,6 @@
         {{else}}
           <h2 class='username'>{{group.name}}</h2>
         {{/if}}
-        <h2 class='bio'>{{{group.bio_cooked}}}</h2>
       </span>
     </div>
 
@@ -38,9 +37,26 @@
       {{/if}}
     </div>
 
+    {{#if group.bio_cooked}}<div class='bio'>{{{group.bio_cooked}}}</div>{{/if}}
+
     <div class="metadata">
-      <h3><a href={{groupPath}} {{action "showGroup"}}>{{ group.user_count }} {{i18n 'groups.user_count'}}</a></h3>
+      <h3>
+        <span class="desc">
+          {{i18n 'groups.user_count'}}
+        </span>
+        {{ group.user_count }}
+      </h3>
+      <h3>
+        {{#if group.is_group_owner}}
+
+            {{i18n "groups.index.is_group_owner"}}
+        {{else if group.is_group_user}}
+
+            {{i18n "groups.index.is_group_user"}}
+        {{/if}}
+      </h3>
     </div>
+    {{#if group.members}}
     <div class="members metadata">
       <span>
         {{#each group.members as |user|}}
@@ -51,5 +67,6 @@
         {{/if}}
       </span>
     </div>
+    {{/if}}
   </div>
 {{/if}}
