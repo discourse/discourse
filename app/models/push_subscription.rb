@@ -4,10 +4,11 @@ end
 
 # == Schema Information
 #
-# Table name: push_subscription
+# Table name: push_subscriptions
 #
-#  id           :integer          not null, primary key
-#  user_id      :integer          not null
-#  data :string           not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  data       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
