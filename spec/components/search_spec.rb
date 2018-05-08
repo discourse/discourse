@@ -282,7 +282,7 @@ describe Search do
 
       it "works for unlisted topics" do
         topic.update_attributes(visible: false)
-        post = new_post('discourse is awesome', topic)
+        _post = new_post('discourse is awesome', topic)
         results = Search.execute('discourse', search_context: topic)
         expect(results.posts.length).to eq(1)
       end
@@ -310,6 +310,16 @@ describe Search do
         expect(p.id).to eq(reply.id)
         expect(result.blurb(p)).to eq("this reply has no quotes")
       end
+    end
+
+    context 'searching for quoted title' do
+      it "can find quoted title" do
+        create_post(raw: "this is the raw body", title: "I am a title yeah")
+        result = Search.execute('"a title yeah"')
+
+        expect(result.posts.length).to eq(1)
+      end
+
     end
 
     context "search for a topic by id" do

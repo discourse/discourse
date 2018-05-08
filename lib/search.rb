@@ -698,7 +698,7 @@ class Search
           posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
-            posts = posts.where("posts.raw ilike ?", "%#{exact}%")
+            posts = posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
           end
         end
       end
