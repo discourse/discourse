@@ -61,6 +61,15 @@ describe UsersEmailController do
         expect(user.user_stat.reset_bounce_score_after).to eq(nil)
       end
 
+      it 'automatically adds the user to a group when the email matches' do
+        group = Fabricate(:group, automatic_membership_email_domains: "example.com")
+
+        get "/u/authorize-email/#{user.email_tokens.last.token}"
+
+        expect(response).to be_success
+        expect(group.reload.users.include?(user)).to eq(true)
+      end
+
       context 'second factor required' do
         let!(:second_factor) { Fabricate(:user_second_factor, user: user) }
 
@@ -93,8 +102,8 @@ describe UsersEmailController do
 
           response_body = response.body
 
-          expect(response.body).not_to include(I18n.t("login.second_factor_title"))
-          expect(response.body).not_to include(I18n.t("login.invalid_second_factor_code"))
+          expect(response_body).not_to include(I18n.t("login.second_factor_title"))
+          expect(response_body).not_to include(I18n.t("login.invalid_second_factor_code"))
         end
       end
     end
