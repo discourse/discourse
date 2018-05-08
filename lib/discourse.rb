@@ -168,7 +168,7 @@ module Discourse
     @hidden_plugins ||= []
   end
 
-  def self.display_plugins
+  def self.visible_plugins
     self.plugins - self.hidden_plugins
   end
 
