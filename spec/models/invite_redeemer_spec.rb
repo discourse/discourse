@@ -130,7 +130,6 @@ describe InviteRedeemer do
     end
 
     it "only allows one user to be created per invite" do
-      SiteSetting.invite_passthrough_hours = 4800
       user = invite_redeemer.redeem
       invite.reload
 

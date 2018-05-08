@@ -408,7 +408,6 @@ users:
     default: true
   invite_expiry_days:
     default: 30
-  invite_passthrough_hours: 0
   invites_per_page:
     client: true
     default: 40
