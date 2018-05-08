@@ -14,18 +14,19 @@
 }
 
 .group-members-actions {
-  position: absolute;
-  top: -49px;
-  right: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
+  input + .group-members-add {
+    margin-left: auto;
+  }
 
   .group-username-filter {
-    margin: 0px;
+    margin: 0 0 5px 0;
     vertical-align: middle;
   }
 
-  .group-members-dropdown, .group-members-add {
-    vertical-align: middle;
-  }
 }
 
 .group-info {
