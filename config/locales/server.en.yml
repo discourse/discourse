@@ -171,6 +171,12 @@ en:
 
   invite:
     not_found: "Your invite token is invalid. Please contact the site's administrator."
+    not_found_template: |
+      <p>Your invite to <a href="%{base_url}">%{site_name}</a> has already been redeemed.</p>
+
+      <p>If you remember your password you can <a href="%{base_url}/login">Login</a>.</p>
+
+      <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='/u/%{username}/summary'>already have an account!</a>"
 
   bulk_invite:
@@ -1204,7 +1210,6 @@ en:
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
 
     invite_only: "Public registration is disabled, all new users must be explicitly invited by staff."
 
