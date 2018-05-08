@@ -33,7 +33,13 @@ class PushNotificationPusher
   end
 
   def self.subscribe(user, subscription, send_confirmation)
-    PushSubscription.create user: user, data: subscription.to_json
+    subscriptions = PushSubscription.where(user: user, data: subscription.to_json)
+    if subscriptions.length > 1
+      subscriptions.destroy_all
+      PushSubscription.create user: user, data: subscription.to_json
+    elsif subscriptions.length == 0
+      PushSubscription.create user: user, data: subscription.to_json
+    end
     if send_confirmation == "true"
       message = {
         title: I18n.t("discourse_push_notifications.popup.confirm_title",
