@@ -1939,7 +1939,7 @@ en:
         instructions:
           one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
           other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
-        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively."
 
       change_timestamp:
         title: "Change Timestamp..."
