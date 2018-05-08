@@ -5,7 +5,7 @@ class UserMerger
   end
 
   def merge!
-    update_notifications
+    update_username
     move_posts
     update_user_ids
     merge_given_daily_likes
@@ -23,52 +23,10 @@ class UserMerger
 
   protected
 
-  def update_notifications
-    params = {
-      source_user_id: @source_user.id,
-      source_username: @source_user.username,
-      target_username: @target_user.username,
-      notification_types_with_correct_user_id: [
-        Notification.types[:granted_badge],
-        Notification.types[:group_message_summary]
-      ],
-      invitee_accepted_notification_type: Notification.types[:invitee_accepted]
-    }
-
-    Notification.exec_sql(<<~SQL, params)
-      UPDATE notifications AS n
-      SET data = (data :: JSONB ||
-                  jsonb_strip_nulls(
-                      jsonb_build_object(
-                          'original_username', CASE data :: JSONB ->> 'original_username'
-                                               WHEN :source_username
-                                                 THEN :target_username
-                                               ELSE NULL END,
-                          'display_username', CASE data :: JSONB ->> 'display_username'
-                                              WHEN :source_username
-                                                THEN :target_username
-                                              ELSE NULL END,
-                          'username', CASE data :: JSONB ->> 'username'
-                                      WHEN :source_username
-                                        THEN :target_username
-                                      ELSE NULL END
-                      )
-                  )) :: JSON
-      WHERE EXISTS(
-                SELECT 1
-                FROM posts AS p
-                WHERE p.topic_id = n.topic_id
-                      AND p.post_number = n.post_number
-                      AND p.user_id = :source_user_id)
-            OR (n.notification_type IN (:notification_types_with_correct_user_id) AND n.user_id = :source_user_id)
-            OR (n.notification_type = :invitee_accepted_notification_type
-                AND EXISTS(
-                    SELECT 1
-                    FROM invites i
-                    WHERE i.user_id = :source_user_id AND n.user_id = i.invited_by_id
-                )
-            )
-    SQL
+  def update_username
+    Jobs::UpdateUsername.new.execute(user_id: @source_user.id,
+                                     old_username: @source_user.username,
+                                     new_username: @target_user.username)
   end
 
   def move_posts
