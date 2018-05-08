@@ -728,7 +728,7 @@ Discourse::Application.routes.draw do
     # current site before updating to a new Service Worker.
     # Support the old Service Worker path to avoid routing error filling up the
     # logs.
-    get "/service-worker.js" => redirect(relative_url_root + service_worker_asset), format: :js
+    get "/service-worker.js" => redirect(relative_url_root + service_worker_asset, status: 302), format: :js
     get service_worker_asset => "static#service_worker_asset", format: :js
   elsif Rails.env.development?
     get "/service-worker.js" => "static#service_worker_asset", format: :js
