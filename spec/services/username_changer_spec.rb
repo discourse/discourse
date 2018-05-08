@@ -98,12 +98,14 @@ describe UsernameChanger do
       before { UserActionCreator.enable }
       after { UserActionCreator.disable }
 
-      def create_post_and_change_username(args = {})
+      def create_post_and_change_username(args = {}, &block)
         post = create_post(args.merge(topic_id: topic.id))
 
         args.delete(:revisions)&.each do |revision|
           post.revise(post.user, revision, force_new_version: true)
         end
+
+        block.call(post) if block
 
         UsernameChanger.change(user, 'bar')
         post.reload
@@ -231,10 +233,24 @@ describe UsernameChanger do
           expect(post.revisions[2].modifications["cooked"][0]).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a>!</p>))
           expect(post.revisions[2].modifications["cooked"][1]).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a>!!</p>))
         end
+
+        it 'replaces mentions in posts marked for deletion' do
+          post = create_post_and_change_username(raw: "Hello @foo") do |p|
+            PostDestroyer.new(p.user, p).destroy
+          end
+
+          expect(post.raw).to_not include("@foo")
+          expect(post.cooked).to_not include("foo")
+          expect(post.revisions.count).to eq(1)
+
+          expect(post.revisions[0].modifications["raw"][0]).to eq("Hello @bar")
+          expect(post.revisions[0].modifications["cooked"][0]).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a></p>))
+        end
       end
 
       context 'quotes' do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
+        let(:avatar_url) { user.avatar_template.gsub("{size}", "40") }
 
         it 'replaces the username in quote tags' do
           post = create_post_and_change_username(raw: <<~RAW)
@@ -273,8 +289,6 @@ describe UsernameChanger do
             dolor sit amet
           RAW
 
-          avatar_url = user.avatar_template.gsub("{size}", "40")
-
           expect(post.cooked).to match_html(<<~HTML)
             <p>Lorem ipsum</p>
             <aside class="quote no-group" data-post="1" data-topic="#{quoted_post.topic.id}">
@@ -303,6 +317,63 @@ describe UsernameChanger do
             </aside>
             <p>dolor sit amet</p>
           HTML
+        end
+
+        context 'simple quote' do
+          let(:raw) do <<~RAW
+              Lorem ipsum
+
+              [quote="foo, post:1, topic:#{quoted_post.topic.id}"]
+              quoted post
+              [/quote]
+            RAW
+          end
+
+          let(:expected_raw) do
+            <<~RAW.strip
+              Lorem ipsum
+
+              [quote="bar, post:1, topic:#{quoted_post.topic.id}"]
+              quoted post
+              [/quote]
+            RAW
+          end
+
+          let(:expected_cooked) do
+            <<~HTML
+              <p>Lorem ipsum</p>
+              <aside class="quote no-group" data-post="1" data-topic="#{quoted_post.topic.id}">
+              <div class="title">
+              <div class="quote-controls"></div>
+              <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+              <blockquote>
+              <p>quoted post</p>
+              </blockquote>
+              </aside>
+            HTML
+          end
+
+          it 'replaces the username in quote tags when the post is deleted' do
+            post = create_post_and_change_username(raw: raw) do |p|
+              PostDestroyer.new(Discourse.system_user, p).destroy
+            end
+
+            expect(post.raw).to eq(expected_raw)
+            expect(post.cooked).to match_html(expected_cooked)
+          end
+
+          it 'replaces the username in quote tags when the post is marked as deleted' do
+            post = create_post_and_change_username(raw: raw) do |p|
+              PostDestroyer.new(p.user, p).destroy
+            end
+
+            expect(post.raw).to_not include("foo")
+            expect(post.cooked).to_not include("foo")
+            expect(post.revisions.count).to eq(1)
+
+            expect(post.revisions[0].modifications["raw"][0]).to eq(expected_raw)
+            expect(post.revisions[0].modifications["cooked"][0]).to match_html(expected_cooked)
+          end
         end
 
         # TODO spec for quotes in revisions

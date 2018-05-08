@@ -17,7 +17,7 @@ module Jobs
     end
 
     def update_posts
-      Post.where(post_conditions("posts.id"), post_condition_args).find_each do |post|
+      Post.with_deleted.where(post_conditions("posts.id"), post_condition_args).find_each do |post|
         if update_raw!(post.raw)
           post.update_columns(raw: post.raw, cooked: update_cooked(post.cooked))
         end
