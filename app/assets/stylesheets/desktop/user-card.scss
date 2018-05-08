@@ -49,7 +49,7 @@ $user_card_background: $secondary;
   }
 
   .bio {
-    max-height: 200px;
+    max-height: 150px;
     overflow: auto;
   }
 
@@ -88,7 +88,8 @@ $user_card_background: $secondary;
 
   h2 {
     font-size: $font-up-1;
-    line-height: $line-height-medium;
+    line-height: $line-height-large;
+    margin: 0;
     font-weight: normal;
     display: block;
     max-width: 250px;
@@ -126,8 +127,8 @@ $user_card_background: $secondary;
   .metadata {
     width: 100%;
     clear: both;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     h3 {
       display: inline;
       margin-right: 5px;
@@ -146,7 +147,7 @@ $user_card_background: $secondary;
   }
 
   .bio {
-    padding: 10px 0 0 0;
+    margin-top: 80px;
     clear: left;
 
     a {
@@ -195,17 +196,16 @@ $user_card_background: $secondary;
     }
   }
 
-  .user-card-avatar {
+  .user-card-avatar, .group-card-avatar {
     float: left;
     margin-right: 10px;
     margin-top: -53px;
   }
 
   .group-card-avatar {
-    float: left;
-    margin-right: 10px;
-    margin-top: -5px;
-    $size: 50px;
+    $size: 120px;
+    width: $size;
+    height: $size;
     .avatar-flair {
       width: $size;
       height: $size;
@@ -217,12 +217,16 @@ $user_card_background: $secondary;
       color: $primary;
       i {
         margin: auto;
-        font-size: $size !important;
+        font-size: $size / 1.5 !important;
+      }
+      &.rounded {
+        border-radius: 50%;
       }
     }
   }
 
   .members {
+    padding: 0 0 10px 0;
     a {
       color: lighten($primary, 40%);
       &:hover {
