@@ -164,6 +164,14 @@ module Discourse
     @plugins ||= []
   end
 
+  def self.hidden_plugins
+    @hidden_plugins ||= []
+  end
+
+  def self.display_plugins
+    self.plugins - self.hidden_plugins
+  end
+
   def self.plugin_themes
     @plugin_themes ||= plugins.map(&:themes).flatten
   end
