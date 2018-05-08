@@ -19,7 +19,7 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
 
-    if invite.present?
+    if invite.present? && !invite.redeemed?
       store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: invite.email,
@@ -28,7 +28,7 @@ class InvitesController < ApplicationController
 
       render layout: 'application'
     else
-      flash.now[:error] = I18n.t('invite.not_found')
+      flash.now[:error] = I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
       render layout: 'no_ember'
     end
   end
