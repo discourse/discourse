@@ -300,7 +300,8 @@ const AdminUser = Discourse.User.extend({
 
   deactivate() {
     return ajax('/admin/users/' + this.id + '/deactivate', {
-      type: 'PUT'
+      type: 'PUT',
+      data: { context: document.location.pathname }
     }).then(function() {
       window.location.reload();
     }).catch(function(e) {
