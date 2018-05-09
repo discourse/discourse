@@ -126,6 +126,14 @@ class Tag {
       decorate(text) {
         const attr = this.element.attributes;
 
+        if (/^mention/.test(attr.class) && "@" === text[0]) {
+          return text;
+        }
+
+        if ("hashtag" === attr.class && "#" === text[0]) {
+          return text;
+        }
+
         if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
           return "[" + text + "](" + attr.href + ")";
