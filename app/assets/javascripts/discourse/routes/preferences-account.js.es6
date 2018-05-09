@@ -6,14 +6,10 @@ export default RestrictedUserRoute.extend({
 
   model: function() {
     const user = this.modelFor('user');
-    if (this.siteSettings.enable_badges) {
-      return UserBadge.findByUsername(this.modelFor('user').get('username')).then(userBadges => {
-        user.set('badges', userBadges.map(ub => ub.badge));
-        return user;
-      });
-    } else {
-     return user;
-    }
+    return UserBadge.findByUsername(this.modelFor('user').get('username')).then(userBadges => {
+      user.set('badges', userBadges.map(ub => ub.badge));
+      return user;
+    });
   },
 
   setupController(controller, user) {

@@ -4,7 +4,7 @@
 $user_card_primary: $primary;
 $user_card_background: $secondary;
 
-#user-card, #group-card {
+#user-card {
   position: absolute;
   width: 500px;
   left: -9999px;
@@ -27,11 +27,6 @@ $user_card_background: $secondary;
     @include transform(scale(1));
   }
 
-  &.fixed {
-    position: fixed;
-    z-index: z("composer","content") + 1;
-  }
-
   .card-content {
     padding: 12px 12px 0 12px;
     background: rgba($user_card_background, .85);
@@ -45,6 +40,9 @@ $user_card_background: $secondary;
 
     a.card-huge-avatar {
       outline: none;
+    }
+    .staged {
+      font-style: italic;
     }
   }
 
@@ -140,6 +138,10 @@ $user_card_background: $secondary;
     padding-top: 10px;
   }
 
+  &.has-card-badge-image .bio {
+    width: 75%;
+  }
+
   .bio {
     padding: 10px 0 0 0;
     clear: left;
@@ -180,7 +182,7 @@ $user_card_background: $secondary;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: $user_card_primary;
+        color: $user_card_primary;        
     }
     .location {
       margin-right: .5em;
@@ -194,36 +196,6 @@ $user_card_background: $secondary;
     float: left;
     margin-right: 10px;
     margin-top: -53px;
-  }
-
-  .group-card-avatar {
-    float: left;
-    margin-right: 10px;
-    margin-top: -5px;
-    $size: 50px;
-    .avatar-flair {
-      width: $size;
-      height: $size;
-      display: flex;
-      align-items: center;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: $size;
-      color: $primary;
-      i {
-        margin: auto;
-        font-size: $size !important;
-      }
-    }
-  }
-
-  .members {
-    a {
-      color: lighten($primary, 40%);
-      &:hover {
-        color: $primary;
-      }
-    }
   }
 
   p {
@@ -290,6 +262,17 @@ $user_card_background: $secondary;
     margin-bottom: 5px;
     clear: left;
     padding-top: 15px;
+  }
+
+  .card-badge {
+    img {
+      max-width: 120px;
+    }
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    font-size: $font-up-5;
+    i {color: $user_card_primary;}
   }
 
   .metadata .email .btn {

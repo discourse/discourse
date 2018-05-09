@@ -1,5 +1,5 @@
 export default {
-  "/groups/moderators.json":{
+  "/groups/moderators":{
     "group": {
       "id": 50,
       "automatic": true,
@@ -32,7 +32,7 @@ export default {
       "messageable": true
     },
   },
-  "/groups/discourse.json":{
+  "/groups/discourse":{
     "group":{
       "id":47,
       "automatic":false,
@@ -57,12 +57,12 @@ export default {
       {
         "id":2,
         "username":"bruce1",
-        "avatar_template":"/user_avatar/meta.discourse.org/bruce1/{size}/5245.png"
+        "avatar_template":"/letter_avatar_proxy/v2/letter/b/9de053/{size}.png"
       },
       {
         "id":1,
         "username":"bruce0",
-        "avatar_template":"/user_avatar/meta.discourse.org/bruce0/{size}/5245.png"
+        "avatar_template":"/letter_avatar_proxy/v2/letter/b/90ced4/{size}.png"
       }
     ],
     "primary_groups":[],

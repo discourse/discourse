@@ -27,7 +27,7 @@ export function transformBasicPost(post) {
     deleted: post.get('deleted'),
     deleted_at: post.deleted_at,
     user_deleted: post.user_deleted,
-    isDeleted: post.deleted_at || post.user_deleted, // xxxxx
+    isDeleted: post.deleted_at || post.user_deleted,
     deletedByAvatarTemplate: null,
     deletedByUsername: null,
     primary_group_name: post.primary_group_name,
@@ -215,8 +215,7 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
     postAtts.expandablePost = topic.expandable_first_post;
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
-    postAtts.canDelete = postAtts.canDelete && !post.deleted_at &&
-      currentUser && (currentUser.staff || !post.user_deleted);
+    postAtts.canDelete = !postAtts.isDeleted && postAtts.canDelete;
   }
 
   _additionalAttributes.forEach(a => postAtts[a] = post[a]);

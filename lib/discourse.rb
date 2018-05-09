@@ -432,7 +432,7 @@ module Discourse
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
     MessageBus.after_fork
     SiteSetting.after_fork
-    $redis._client.reconnect
+    $redis.client.reconnect
     Rails.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool

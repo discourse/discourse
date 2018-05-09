@@ -8,8 +8,6 @@ const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
 export default Ember.Controller.extend(ModalFunctionality, {
   adminCustomizeThemesShow: Ember.inject.controller(),
 
-  uploadUrl: '/admin/themes/upload_asset',
-
   onShow() {
     this.set('name', null);
     this.set('fileSelected', false);
@@ -54,7 +52,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       options.data.append('file', file);
 
-      ajax(this.get('uploadUrl'), options).then(result => {
+      ajax('/admin/themes/upload_asset', options).then(result => {
         const upload = {
           upload_id: result.upload_id,
           name: this.get('name'),

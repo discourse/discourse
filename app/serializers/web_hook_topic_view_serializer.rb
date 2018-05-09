@@ -10,7 +10,6 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     draft_key
     draft_sequence
     message_bus_last_id
-    suggested_topics
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

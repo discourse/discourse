@@ -1,6 +1,8 @@
 # UserHistory stores information about actions that users have taken,
 # like deleting users, changing site settings, dimissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.
+
+# 存储用户动作，比如删除用户，改 site setting，通知已读，等等
 class UserHistory < ActiveRecord::Base
   belongs_to :acting_user, class_name: 'User'
   belongs_to :target_user, class_name: 'User'
@@ -71,8 +73,7 @@ class UserHistory < ActiveRecord::Base
       disabled_second_factor: 52,
       post_edit: 53,
       topic_published: 54,
-      recover_topic: 55,
-      post_approved: 56
+      recover_topic: 55
     )
   end
 
@@ -122,8 +123,7 @@ class UserHistory < ActiveRecord::Base
       :disabled_second_factor,
       :post_edit,
       :topic_published,
-      :recover_topic,
-      :post_approved
+      :recover_topic
     ]
   end
 

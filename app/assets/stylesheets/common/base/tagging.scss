@@ -237,9 +237,6 @@ header .discourse-tag {color: $tag-color }
     ul {
       margin-bottom: 10px;
     }
-    .btn {
-      margin-left: 10px;
-    }
   }
   .tag-group-content {
     width: 75%;
@@ -252,13 +249,11 @@ header .discourse-tag {color: $tag-color }
       display: inline-block;
       margin-right: 10px;
     }
-    .btn {
-      margin-right: 10px;
-    }
   }
   .group-tags-list .tag-chooser {
     width: 100%;
   }
+  .btn {margin-left: 10px;}
   .saving {
     margin-left: 20px;
   }

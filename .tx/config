@@ -2,13 +2,13 @@
 host = https://www.transifex.com
 lang_map = el_GR: el, es_ES: es, fr_FR: fr, ko_KR: ko, pt_PT: pt, sk_SK: sk, vi_VN: vi
 
-[discourse-org.core-client-yml]
+[discourse-org.clientenyml]
 file_filter = config/locales/client.<lang>.yml
 source_file = config/locales/client.en.yml
 source_lang = en
 type = YML
 
-[discourse-org.core-server-yml]
+[discourse-org.serverenyml]
 file_filter = config/locales/server.<lang>.yml
 source_file = config/locales/server.en.yml
 source_lang = en
@@ -65,18 +65,6 @@ type = YML
 [discourse-org.corepluginnginx-performance-reportserveryml]
 file_filter = plugins/discourse-nginx-performance-report/config/locales/server.<lang>.yml
 source_file = plugins/discourse-nginx-performance-report/config/locales/server.en.yml
-source_lang = en
-type = YML
-
-[discourse-org.core-plugin-local-dates-client-yml]
-file_filter = plugins/discourse-local-dates/config/locales/client.<lang>.yml
-source_file = plugins/discourse-local-dates/config/locales/client.en.yml
-source_lang = en
-type = YML
-
-[discourse-org.core-plugin-local-dates-server-yml]
-file_filter = plugins/discourse-local-dates/config/locales/server.<lang>.yml
-source_file = plugins/discourse-local-dates/config/locales/server.en.yml
 source_lang = en
 type = YML
 

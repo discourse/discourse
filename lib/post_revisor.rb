@@ -405,15 +405,10 @@ class PostRevisor
 
   def remove_flags_and_unhide_post
     return unless editing_a_flagged_and_hidden_post?
-
-    flaggers = []
     @post.post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values).each do |action|
-      flaggers << action.user if action.user
       action.remove_act!(Discourse.system_user)
     end
-
     @post.unhide!
-    PostActionNotifier.after_post_unhide(@post, flaggers)
   end
 
   def editing_a_flagged_and_hidden_post?
@@ -533,7 +528,7 @@ class PostRevisor
   end
 
   def update_topic_excerpt
-    excerpt = @post.excerpt_for_topic
+    excerpt = @post.excerpt(220, strip_links: true)
     @topic.update_column(:excerpt, excerpt)
     if @topic.archetype == "banner"
       ApplicationController.banner_json_cache.clear

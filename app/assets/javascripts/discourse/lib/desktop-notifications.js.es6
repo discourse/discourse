@@ -1,3 +1,4 @@
+// 看名字和内容应该是和桌面浏览器通知相关的代码
 import DiscourseURL from 'discourse/lib/url';
 import KeyValueStore from 'discourse/lib/key-value-store';
 import { formatUsername } from 'discourse/lib/utilities';

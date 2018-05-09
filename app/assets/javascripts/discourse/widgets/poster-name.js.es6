@@ -3,12 +3,8 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { formatUsername } from 'discourse/lib/utilities';
 
-let sanitizeName = function(name){
-  return name.toLowerCase().replace(/[\s\._-]/g,'');
-};
-
-export function disableNameSuppression() {
-  sanitizeName = name => name;
+function sanitizeName(name){
+  return name.toLowerCase().replace(/[\s_-]/g,'');
 }
 
 createWidget('poster-name-title', {
@@ -18,7 +14,7 @@ createWidget('poster-name-title', {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName) {
       const href = Discourse.getURL(`/groups/${attrs.primaryGroupName}`);
-      titleContents = h('a.user-group', { className: attrs.extraClasses, attributes: { href, 'data-group-card': attrs.primaryGroupName } }, attrs.title);
+      titleContents = h('a.user-group', { className: attrs.extraClasses, attributes: { href } }, attrs.title);
     }
     return titleContents;
   }

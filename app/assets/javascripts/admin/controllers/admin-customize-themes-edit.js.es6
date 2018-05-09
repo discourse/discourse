@@ -5,8 +5,6 @@ export default Ember.Controller.extend({
   maximized: false,
   section: null,
 
-  editRouteName: 'adminCustomizeThemes.edit',
-
   targets: [
     { id: 0, name: 'common'   },
     { id: 1, name: 'desktop'  },
@@ -54,7 +52,7 @@ export default Ember.Controller.extend({
 
         let fields = this.get('model.theme_fields');
         let field = fields && fields.find(f => (f.target === target));
-        this.replaceRoute(this.get('editRouteName'), this.get('model.id'), target, field && field.name);
+        this.replaceRoute('adminCustomizeThemes.edit', this.get('model.id'), target, field && field.name);
       }
     }
   },

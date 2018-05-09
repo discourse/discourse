@@ -59,13 +59,12 @@ img.emoji {
 
 .emoji-picker .section-header {
   padding: 8px;
-  margin-top: 2px;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   justify-content: space-between;
   display: flex;
   align-items: center;
-  font-weight: bold;
 }
 
 .emoji-picker .section-header .title {
@@ -164,7 +163,7 @@ img.emoji {
 .emoji-picker .section-group button.emoji:hover, .emoji-picker .results button.emoji:hover {
   display: inline-block;
   vertical-align: top;
-  border-radius: 2px;
+  border-radius: 50%;
   background-color: lighten($tertiary, 40%);
 }
 

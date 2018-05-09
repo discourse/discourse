@@ -1,3 +1,6 @@
+
+<!-- 如果是爬虫抓取，就直接输出 HTML  -->
+<!-- 所以我注释掉一些内容的事情，再访问 http://localhost:3000/about 也不会有效果，因为是给爬虫看的，我只是浏览器里普通访问 -->
 <% if crawler_layout? %>
 
 <% content_for :title do %><%=t "about" %> - <%= SiteSetting.title %><% end %>

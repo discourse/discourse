@@ -118,6 +118,8 @@ export default (filterArg, params) => {
       this.controllerFor('discovery/topics').setProperties(topicOpts);
       this.searchService.set('searchContext', category.get('searchContext'));
       this.set('topics', null);
+
+      this.openTopicDraft(topics);
     },
 
     renderTemplate() {

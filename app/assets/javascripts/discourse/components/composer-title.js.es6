@@ -53,11 +53,7 @@ export default Ember.Component.extend({
     if (this.get('autoPosted') || !this.get('watchForLink')) { return; }
 
     if (Ember.testing) {
-      Em.run.next(() =>
-        // not ideal but we don't want to run this in current
-        // runloop to avoid an error in console
-        this._checkForUrl()
-      );
+      this._checkForUrl();
     } else {
       Ember.run.debounce(this, this._checkForUrl, 500);
     }

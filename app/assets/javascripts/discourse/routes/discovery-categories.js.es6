@@ -89,6 +89,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
       showCategoryAdmin: model.get("can_create_category"),
       canCreateTopic: model.get("can_create_topic"),
     });
+
+    this.openTopicDraft(model);
   },
 
   actions: {
@@ -131,12 +133,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/categories").get('model');
-      if (model.draft) {
-        this.openTopicDraft(model);
-      } else {
-        this.openComposer(this.controllerFor("discovery/categories"));
-      }
+      this.openComposer(this.controllerFor("discovery/categories"));
     },
 
     didTransition() {

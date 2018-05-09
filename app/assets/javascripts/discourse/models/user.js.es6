@@ -588,7 +588,7 @@ const User = RestModel.extend({
       }
     });
 
-    return _.uniq(titles).sort();
+    return titles;
   }
 });
 

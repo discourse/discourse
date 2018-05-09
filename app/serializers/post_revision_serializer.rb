@@ -255,12 +255,8 @@ class PostRevisionSerializer < ApplicationSerializer
     end
 
     def filter_visible_tags(tags)
-      if tags.is_a?(Array) && tags.size > 0
-        @hidden_tag_names ||= DiscourseTagging.hidden_tag_names(scope)
-        tags - @hidden_tag_names
-      else
-        tags
-      end
+      @hidden_tag_names ||= DiscourseTagging.hidden_tag_names(scope)
+      tags.is_a?(Array) ? (tags - @hidden_tag_names) : tags
     end
 
 end

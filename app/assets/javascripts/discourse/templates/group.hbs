@@ -43,14 +43,6 @@
             icon="envelope"
             label="groups.message"}}
       {{/if}}
-
-      {{#if currentUser.admin}}
-        {{d-button action="destroy"
-            disabled=destroying
-            icon="trash"
-            class='btn-danger'
-            label="admin.groups.delete"}}
-      {{/if}}
     </div>
   </div>
 
@@ -60,9 +52,7 @@
     </div>
   </div>
 
-    <div class='user-table'>
-      <div class='wrapper'>
-        {{outlet}}
-      </div>
-    </div>
+  <div class='group-outlet'>
+    {{outlet}}
+  </div>
 </div>

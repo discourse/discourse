@@ -5,7 +5,7 @@ class CategoryGroup < ActiveRecord::Base
   delegate :name, to: :group, prefix: true
 
   def self.permission_types
-    @permission_types ||= Enum.new(full: 1, create_post: 2, readonly: 3)
+    @permission_types ||= Enum.new(:full, :create_post, :readonly)
   end
 
 end

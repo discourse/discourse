@@ -9,6 +9,7 @@ require_dependency 'plugin/filter'
 require 'archetype'
 require 'digest/sha1'
 
+# 应该是帖子
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
@@ -406,10 +407,6 @@ class Post < ActiveRecord::Base
     Post.excerpt(cooked, maxlength, options)
   end
 
-  def excerpt_for_topic
-    Post.excerpt(cooked, 220, strip_links: true)
-  end
-
   def is_first_post?
     post_number.blank? ?
       topic.try(:highest_post_number) == 0 :
@@ -682,39 +679,26 @@ class Post < ActiveRecord::Base
 
   MAX_REPLY_LEVEL ||= 1000
 
-  def reply_ids(guardian = nil, only_replies_to_single_post: true)
-    builder = SqlBuilder.new(<<~SQL, Post)
+  def reply_ids(guardian = nil)
+    replies = Post.exec_sql("
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
         SELECT reply_id, level + 1
-        FROM post_replies AS r
-          JOIN breadcrumb AS b ON (r.post_id = b.id)
-        WHERE r.post_id <> r.reply_id
-              AND b.level < :max_reply_level
+          FROM post_replies, breadcrumb
+         WHERE post_id = id
+           AND post_id <> reply_id
+           AND level < #{MAX_REPLY_LEVEL}
       ), breadcrumb_with_count AS (
-          SELECT
-            id,
-            level,
-            COUNT(*) AS count
-          FROM post_replies AS r
-            JOIN breadcrumb AS b ON (r.reply_id = b.id)
-          WHERE r.reply_id <> r.post_id
-          GROUP BY id, level
+        SELECT id, level, COUNT(*)
+          FROM post_replies, breadcrumb
+         WHERE reply_id = id
+           AND reply_id <> post_id
+         GROUP BY id, level
       )
-      SELECT id, level
-      FROM breadcrumb_with_count
-      /*where*/
-      ORDER BY id
-    SQL
+      SELECT id, level FROM breadcrumb_with_count WHERE level > 0 AND count = 1 ORDER BY id
+    ", post_id: id).to_a
 
-    builder.where("level > 0")
-
-    # ignore posts that aren't replies to exactly one post
-    # for example it skips a post when it contains 2 quotes (which are replies) from different posts
-    builder.where("count = 1") if only_replies_to_single_post
-
-    replies = builder.exec(post_id: id, max_reply_level: MAX_REPLY_LEVEL).to_a
     replies.map! { |r| { id: r["id"].to_i, level: r["level"].to_i } }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set

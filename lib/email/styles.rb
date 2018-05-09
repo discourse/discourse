@@ -97,7 +97,6 @@ module Email
       style('.lightbox-wrapper .meta', 'display: none')
       correct_first_body_margin
       correct_footer_style
-      style('div.undecorated-link-footer a', "font-weight: normal;")
       reset_tables
       onebox_styles
       plugin_styles

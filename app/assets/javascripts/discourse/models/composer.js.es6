@@ -105,11 +105,6 @@ const Composer = RestModel.extend({
     return categoryId ? this.site.categories.findBy('id', categoryId) : null;
   },
 
-  @computed('category')
-  minimumRequiredTags(category) {
-    return (category && category.get('minimum_required_tags') > 0) ? category.get('minimum_required_tags') : null;
-  },
-
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
   creatingSharedDraft: Em.computed.equal('action', CREATE_SHARED_DRAFT),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
@@ -251,48 +246,31 @@ const Composer = RestModel.extend({
     return options;
   },
 
-  @computed
-  isStaffUser() {
-    const currentUser = Discourse.User.current();
-    return currentUser && currentUser.get('staff');
-  },
-
-  @computed('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters', 'tags', 'topicFirstPost', 'minimumRequiredTags', 'isStaffUser')
-  cantSubmitPost(loading, canEditTitle, titleLength, targetUsernames, replyLength, categoryId, missingReplyCharacters, tags, topicFirstPost, minimumRequiredTags, isStaffUser) {
+  // whether to disable the post button
+  cantSubmitPost: function() {
 
     // can't submit while loading
-    if (loading) return true;
+    if (this.get('loading')) return true;
 
     // title is required when
     //  - creating a new topic/private message
     //  - editing the 1st post
-    if (canEditTitle && !this.get('titleLengthValid')) return true;
+    if (this.get('canEditTitle') && !this.get('titleLengthValid')) return true;
 
     // reply is always required
-    if (missingReplyCharacters > 0) return true;
-
-    if (this.site.get('can_tag_topics') && !isStaffUser && topicFirstPost && minimumRequiredTags) {
-      const tagsArray = tags || [];
-      if (tagsArray.length < minimumRequiredTags) {
-        return true;
-      }
-    }
+    if (this.get('missingReplyCharacters') > 0) return true;
 
     if (this.get("privateMessage")) {
       // need at least one user when sending a PM
-      return targetUsernames && (targetUsernames.trim() + ',').indexOf(',') === 0;
+      return this.get('targetUsernames') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0;
     } else {
       // has a category? (when needed)
-      return this.get('requiredCategoryMissing');
+      return this.get('canCategorize') &&
+            !this.siteSettings.allow_uncategorized_topics &&
+            !this.get('categoryId') &&
+            !this.user.get('admin');
     }
-  },
-
-  @computed('canCategorize', 'categoryId')
-  requiredCategoryMissing(canCategorize, categoryId) {
-    return canCategorize && !categoryId &&
-      !this.siteSettings.allow_uncategorized_topics &&
-      !this.user.get('admin');
-  },
+  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
 
   titleLengthValid: function() {
     if (this.user.get('admin') && this.get('post.static_doc') && this.get('titleLength') > 0) return true;
@@ -518,8 +496,7 @@ const Composer = RestModel.extend({
       targetUsernames: opts.usernames,
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
-      whisper: opts.whisper,
-      tags: opts.tags
+      whisper: opts.whisper
     });
 
     if (opts.post) {
@@ -837,8 +814,7 @@ const Composer = RestModel.extend({
       metaData: this.get('metaData'),
       usernames: this.get('targetUsernames'),
       composerTime: this.get('composerTime'),
-      typingTime: this.get('typingTime'),
-      tags: this.get('tags')
+      typingTime: this.get('typingTime')
     };
 
     this.set('draftStatus', I18n.t('composer.saving_draft_tip'));

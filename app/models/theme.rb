@@ -4,6 +4,7 @@ require_dependency 'stylesheet/manager'
 require_dependency 'theme_settings_parser'
 require_dependency 'theme_settings_manager'
 
+# 主题
 class Theme < ActiveRecord::Base
 
   @cache = DistributedCache.new('theme')

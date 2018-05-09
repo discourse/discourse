@@ -1,6 +1,6 @@
 require_dependency 'enum'
 require_dependency 'notification_emailer'
-
+# 通知
 class Notification < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
@@ -35,6 +35,7 @@ class Notification < ActiveRecord::Base
     SQL
   end
 
+  # 通知类型：被点赞，被提到，等等
   def self.types
     @types ||= Enum.new(mentioned: 1,
                         replied: 2,

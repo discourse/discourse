@@ -7,7 +7,8 @@ describe ListController do
     @user = Fabricate(:coding_horror)
     @post = Fabricate(:post, user: @user)
 
-    SiteSetting.top_menu = 'latest|new|unread|categories'
+    # forces tests down some code paths
+    SiteSetting.top_menu = 'latest,-video|new|unread|categories|category/beer'
   end
 
   describe 'indexes' do

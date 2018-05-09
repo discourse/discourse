@@ -5,11 +5,8 @@ RSpec.describe Admin::SearchLogsController do
   let(:user) { Fabricate(:user) }
 
   before do
-    SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
-  end
-
-  after do
     SearchLog.clear_debounce_cache!
+    SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
   end
 
   context "#index" do

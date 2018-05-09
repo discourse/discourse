@@ -17,8 +17,10 @@
       }
 
       .select-kit-body {
-        max-width: 32em;
-        width: 32em;
+        max-width: 500px;
+        width: 500px;
+        border: 1px solid $tertiary;
+        box-shadow: shadow("focus")
       }
 
       .select-kit-header {
@@ -61,7 +63,7 @@
 
           .selected-tags {
             display: flex;
-            padding: 4px 8px;
+            padding: 3px;
             flex-wrap: wrap;
             border-bottom: 1px solid $primary-low;
           }

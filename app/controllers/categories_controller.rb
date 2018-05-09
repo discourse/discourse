@@ -42,8 +42,7 @@ class CategoriesController < ApplicationController
         style = SiteSetting.desktop_category_page_style
         topic_options = {
           per_page: SiteSetting.categories_topics,
-          no_definitions: true,
-          exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+          no_definitions: true
         }
 
         if style == "categories_and_latest_topics".freeze
@@ -284,7 +283,6 @@ class CategoriesController < ApplicationController
                         :default_view,
                         :subcategory_list_style,
                         :default_top_period,
-                        :minimum_required_tags,
                         custom_fields: [params[:custom_fields].try(:keys)],
                         permissions: [*p.try(:keys)],
                         allowed_tags: [],

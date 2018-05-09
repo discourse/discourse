@@ -57,6 +57,7 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
+  # 返回 <link> 和 <script>
   def preload_script(script)
     path = asset_path("#{script}.js")
 
@@ -137,6 +138,7 @@ module ApplicationHelper
     AgeWords.age_words(secs)
   end
 
+  # 短日期？
   def short_date(dt)
     if dt.year == Time.now.year
       I18n.l(dt, format: :short_no_year)
@@ -155,6 +157,7 @@ module ApplicationHelper
 
   def admin?
     current_user.try(:admin?)
+    # try 方法是什么？
   end
 
   def moderator?
@@ -254,10 +257,12 @@ module ApplicationHelper
     Emoji.gsub_emoji_to_unicode(str)
   end
 
+  # Logo 地址
   def application_logo_url
     @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
   end
 
+  # 登录地址
   def login_path
     "#{Discourse::base_uri}/login"
   end

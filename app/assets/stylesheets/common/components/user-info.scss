@@ -41,10 +41,6 @@
 
   &.small {
     width: 333px;
-    @media screen and (max-width: $small-width) {
-      width: auto;
-      display: flex;
-    }
     @media screen and (max-width: 600px) {
       width: 100%;
     }
@@ -76,4 +72,3 @@
     }
   }
 }
-

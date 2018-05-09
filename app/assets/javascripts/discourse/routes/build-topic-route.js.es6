@@ -106,6 +106,8 @@ export default function(filter, extras) {
         }
       }
       this.controllerFor('discovery/topics').setProperties(topicOpts);
+
+      this.openTopicDraft(model);
       this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
     },
 

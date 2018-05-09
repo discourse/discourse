@@ -31,7 +31,7 @@ describe UserAuthToken do
 
   end
 
-  it "can lookup hashed" do
+  it "can lookup both hashed and unhashed" do
     user = Fabricate(:user)
 
     token = UserAuthToken.generate!(user_id: user.id,
@@ -45,6 +45,12 @@ describe UserAuthToken do
     lookup_token = UserAuthToken.lookup(token.auth_token)
 
     expect(lookup_token).to eq(nil)
+
+    token.update_columns(legacy: true)
+
+    lookup_token = UserAuthToken.lookup(token.auth_token)
+
+    expect(user.id).to eq(lookup_token.user.id)
   end
 
   it "can validate token was seen at lookup time" do

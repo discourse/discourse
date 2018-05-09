@@ -18,8 +18,8 @@ export default ComboBoxComponent.extend({
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
-  caretDownIcon: "caret-right",
-  caretUpIcon: "caret-down",
+  caretDownIcon: "caret-right fa-fw",
+  caretUpIcon: "caret-down fa-fw",
 
   init() {
     this._super();

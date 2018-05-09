@@ -1,3 +1,4 @@
+// 路由，好多路由都在这边
 export default function() {
   // Error page
   this.route('exception', { path: '/exception' });
@@ -14,6 +15,7 @@ export default function() {
   });
 
   this.route('topicBySlugOrId', { path: '/t/:slugOrId', resetNamespace: true });
+  this.route('topicUnsubscribe', { path: '/t/:slug/:id/unsubscribe' });
 
   this.route('discovery', { path: '/', resetNamespace: true }, function() {
     // top
@@ -63,8 +65,6 @@ export default function() {
 
     this.route('manage', function() {
       this.route('profile');
-      this.route('membership');
-      this.route('interaction');
       this.route('members');
       this.route('logs');
     });
@@ -126,6 +126,8 @@ export default function() {
       this.route('email');
       this.route('second-factor');
       this.route('about', { path: '/about-me' });
+      this.route('badgeTitle', { path: '/badge_title' });
+      this.route('card-badge', { path: '/card-badge' });
     });
 
     this.route('userInvited', { path: '/invited', resetNamespace: true }, function() {

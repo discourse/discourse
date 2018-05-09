@@ -169,7 +169,4 @@ Object.keys(requirejs.entries).forEach(function(entry) {
   }
 });
 
-// forces 0 as duration for all jquery animations
-jQuery.fx.off = true;
-
 resetSite();

@@ -520,7 +520,9 @@ aside.onebox.stackexchange .onebox-body {
 
 .onebox.githubcommit {
    pre.message {
+     clear: left;
      padding: 0;
+     padding-top: 10px;
    }
 }
 

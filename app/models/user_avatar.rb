@@ -1,6 +1,7 @@
 require_dependency 'letter_avatar'
 require_dependency 'upload_creator'
 
+# 用户头像？
 class UserAvatar < ActiveRecord::Base
   belongs_to :user
   belongs_to :gravatar_upload, class_name: 'Upload', dependent: :destroy

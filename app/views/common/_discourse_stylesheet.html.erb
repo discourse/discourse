@@ -1,13 +1,26 @@
+<%# 看看是不是从右到左的语言，判断输出移动端还是桌面端 CSS  %>
 <%- if rtl? %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
 <%- else %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
 <%- end %>
 
+<%# 如果是管理  %>
 <%- if staff? %>
   <%= discourse_stylesheet_link_tag(:admin) %>
 <%- end %>
 
+<%# 后台定制的 CSS 都在这里  %>
 <%- if theme_key %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
 <%- end %>
+
+<%# 
+CSS 样式全在这个文件输出，最后生成如下结果，（可以在 view-source:http://localhost:3000/ 看到）
+
+<link href="/stylesheets/desktop_9db85835b3fd6646a05eed2a906196bde197e85d.css?__ws=localhost" media="all" rel="stylesheet" data-target="desktop"/>
+
+<link href="/stylesheets/admin_9db85835b3fd6646a05eed2a906196bde197e85d.css?__ws=localhost" media="all" rel="stylesheet" data-target="admin"/>
+
+<link href="/stylesheets/desktop_theme_2_733c6d5ec1c483eec8c9c756b7fba8a0f1fd05a4.css?__ws=localhost" media="all" rel="stylesheet" data-target="desktop_theme"/>
+%>

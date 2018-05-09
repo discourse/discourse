@@ -10,3 +10,7 @@ cs:
     presence:
       replying: "odpovídá"
       editing: "upravuje"
+      replying_to_topic:
+        one: "odpovídá"
+        few: "odpovídají"
+        other: "odpovídá"

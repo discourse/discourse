@@ -138,7 +138,6 @@ createWidget('header-icons', {
                         iconId: 'toggle-hamburger-menu',
                         active: attrs.hamburgerVisible,
                         action: 'toggleHamburger',
-                        href: '',
                         contents() {
                           if (!attrs.flagCount) { return; }
                           return h('div.badge-notification.flagged-posts', { attributes: {

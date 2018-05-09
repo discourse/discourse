@@ -119,7 +119,7 @@ describe Report do
 
   [:http_total, :http_2xx, :http_background, :http_3xx, :http_4xx, :http_5xx, :page_view_crawler, :page_view_logged_in, :page_view_anon].each do |request_type|
     describe "#{request_type} request reports" do
-      let(:report) { Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now) }
+      let(:report) { Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Date.today.to_time) }
 
       context "with no #{request_type} records" do
         it 'returns an empty report' do
@@ -132,7 +132,7 @@ describe Report do
           freeze_time
           ApplicationRequest.create(date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35)
           ApplicationRequest.create(date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8)
-          ApplicationRequest.create(date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
+          ApplicationRequest.create(date: Date.today.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
           ApplicationRequest.create(date: 1.day.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 2)
           ApplicationRequest.create(date: 2.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 3)
         end
@@ -250,168 +250,6 @@ describe Report do
     end
   end
 
-  describe 'new contributors report' do
-    let(:report) { Report.find('new_contributors') }
-
-    context "no contributors" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
-
-    context "with contributors" do
-      before do
-        jeff = Fabricate(:user)
-        jeff.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 1.day.ago)
-
-        regis = Fabricate(:user)
-        regis.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
-
-        hawk = Fabricate(:user)
-        hawk.user_stat = UserStat.new(new_since: 1.hour.ago, first_post_created_at: 2.days.ago)
-      end
-
-      it "returns a report with data" do
-        expect(report.data).to be_present
-
-        expect(report.data[0][:y]).to eq 2
-        expect(report.data[1][:y]).to eq 1
-      end
-    end
-  end
-
-  describe 'users by types level report' do
-    let(:report) { Report.find('users_by_type') }
-
-    context "no users" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
-
-    context "with users at different trust levels" do
-      before do
-        3.times { Fabricate(:user, admin: true) }
-        2.times { Fabricate(:user, moderator: true) }
-        UserSilencer.silence(Fabricate(:user), Fabricate.build(:admin))
-        Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
-      end
-
-      it "returns a report with data" do
-        expect(report.data).to be_present
-
-        label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
-        expect(report.data.find { |d| d[:x] == label.call("admin") }[:y]).to eq 3
-        expect(report.data.find { |d| d[:x] == label.call("moderator") }[:y]).to eq 2
-        expect(report.data.find { |d| d[:x] == label.call("silenced") }[:y]).to eq 1
-        expect(report.data.find { |d| d[:x] == label.call("suspended") }[:y]).to eq 1
-      end
-    end
-  end
-
-  describe 'trending search report' do
-    let(:report) { Report.find('trending_search') }
-
-    context "no searches" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
-
-    context "with different searches" do
-      before do
-        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
-        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
-        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
-        SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
-      end
-
-      after do
-        SearchLog.clear_debounce_cache!
-      end
-
-      it "returns a report with data" do
-        expect(report.data[0][0]).to eq("ruby")
-        expect(report.data[0][1]).to eq(3)
-        expect(report.data[0][2]).to eq(2)
-
-        expect(report.data[1][0]).to eq("php")
-        expect(report.data[1][1]).to eq(1)
-        expect(report.data[1][2]).to eq(1)
-      end
-    end
-  end
-
-  describe 'DAU/MAU report' do
-    let(:report) { Report.find('dau_by_mau') }
-
-    context "no activity" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
-
-    context "with different users/visits" do
-      before do
-        freeze_time
-
-        arpit = Fabricate(:user)
-        arpit.user_visits.create(visited_at:  1.day.ago)
-
-        sam = Fabricate(:user)
-        sam.user_visits.create(visited_at: 2.days.ago)
-
-        robin = Fabricate(:user)
-        robin.user_visits.create(visited_at: 2.days.ago)
-
-        michael = Fabricate(:user)
-        michael.user_visits.create(visited_at: 35.days.ago)
-
-        gerhard = Fabricate(:user)
-        gerhard.user_visits.create(visited_at: 45.days.ago)
-      end
-
-      it "returns a report with data" do
-        expect(report.data.first[:y]).to eq(100)
-        expect(report.data.last[:y]).to eq(34)
-        expect(report.prev30Days).to eq(75)
-      end
-    end
-  end
-
-  describe 'Daily engaged users' do
-    let(:report) { Report.find('daily_engaged_users') }
-
-    context "no activity" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
-
-    context "with different activities" do
-      before do
-        freeze_time
-
-        UserActionCreator.enable
-
-        arpit = Fabricate(:user)
-        sam = Fabricate(:user)
-
-        jeff = Fabricate(:user, created_at: 1.day.ago)
-        topic = Fabricate(:topic, user: jeff, created_at: 1.day.ago)
-        post = Fabricate(:post, topic: topic, user: jeff, created_at: 1.day.ago)
-
-        PostAction.act(arpit, post, PostActionType.types[:like])
-        PostAction.act(sam, post, PostActionType.types[:like])
-      end
-
-      it "returns a report with data" do
-        expect(report.data.first[:y]).to eq(1)
-        expect(report.data.last[:y]).to eq(2)
-      end
-    end
-  end
-
   describe 'posts counts' do
     it "only counts regular posts" do
       post = Fabricate(:post)
@@ -421,59 +259,6 @@ describe Report do
       r = Report.find('posts')
       expect(r.total).to eq(1)
       expect(r.data[0][:y]).to eq(1)
-    end
-  end
-
-  describe "inactive users" do
-    context "no activity" do
-      it "returns an empty report" do
-        report = Report.find('inactive_users')
-        expect(report.data).to be_blank
-      end
-    end
-
-    context "with different users/visits" do
-      before do
-        freeze_time
-
-        @arpit = Fabricate(:user, created_at: 200.days.ago)
-        @sam = Fabricate(:user, created_at: 200.days.ago)
-        @robin = Fabricate(:user, created_at: 200.days.ago)
-        @michael = Fabricate(:user, created_at: 200.days.ago)
-        @gerhard = Fabricate(:user, created_at: 200.days.ago)
-      end
-
-      it "returns all users as inactive" do
-        report = Report.find('inactive_users')
-        expect(report.data.first[:y]).to eq(5)
-        expect(report.data.last[:y]).to eq(5)
-      end
-
-      it "correctly returns inactive users" do
-        @arpit.user_visits.create(visited_at: 100.days.ago)
-        @sam.user_visits.create(visited_at: 100.days.ago)
-        report = Report.find('inactive_users')
-        expect(report.data.first[:y]).to eq(3)
-        expect(report.data.last[:y]).to eq(5)
-        expect(report.prev30Days).to eq(3)
-        expect(report.total).to eq(5)
-
-        @arpit.user_visits.create(visited_at: 80.days.ago)
-        report = Report.find('inactive_users')
-        expect(report.data.first[:y]).to eq(3)
-        expect(report.data.last[:y]).to eq(4)
-
-        @sam.user_visits.create(visited_at: 55.days.ago)
-        @robin.user_visits.create(visited_at: 50.days.ago)
-        report = Report.find('inactive_users')
-        expect(report.data.first[:y]).to eq(2)
-        expect(report.data.last[:y]).to eq(2)
-
-        Fabricate(:incoming_email, user: @michael, created_at: 20.days.ago, post: Fabricate(:post, user: @michael))
-        report = Report.find('inactive_users')
-        expect(report.data.first[:y]).to eq(2)
-        expect(report.data.last[:y]).to eq(1)
-      end
     end
   end
 end

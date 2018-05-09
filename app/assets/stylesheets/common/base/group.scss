@@ -1,31 +1,63 @@
-// We should try to reuse the user page HTML for groups when possible
-// To style group content differently, use the existing classes with a .group parent class.
-// For example: .group .user-navigation 
-
 .group-details-container {
-  background: $primary-very-low;
+  background: rgba(230, 230, 230, 0.3);
   padding: 20px;
   margin-bottom: 15px;
   position: relative;
+
+  .group-details-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
 }
 
 .group-outlet {
   position: relative;
 }
 
-.group-members-actions {
+.group-username-filter {
   position: absolute;
+  right: 0;
   top: -49px;
-  right: 0px;
+}
 
-  .group-username-filter {
-    margin: 0px;
-    vertical-align: middle;
+.group-post {
+  .group-post-header {
+    display: flex;
+
+    .group-post-avatar {
+      margin-right: 0.5em;
+    }
+
+    .time,
+    .delete-info {
+      color: lighten($primary, 40%);
+      font-size: $font-down-1;
+    }
+
+    .group-member-info {
+      display: flex;
+      color: lighten($primary, 40%);
+    }
   }
 
-  .group-members-dropdown, .group-members-add {
-    vertical-align: middle;
+  .group-post-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    .group-post-title {
+      font-size: $font-up-1;
+    }
   }
+
+  .group-post-excerpt {
+    margin: 1em 0;
+    word-wrap: break-word;
+    color: $primary;
+  }
+
+  padding: 1em 0;
+  border-bottom: 1px solid $primary-low;
 }
 
 .group-info {
@@ -74,6 +106,10 @@
 table.group-manage-logs {
   width: 100%;
 
+  th, tr {
+    border-bottom: 1px solid $primary-low;
+  }
+
   th {
     text-align: left;
     padding: 5px 0;
@@ -96,6 +132,10 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
+  tr {
+    border-bottom: 1px solid $primary-low;
+  }
+
   th:first-child {
     width: 30%;
     text-align: left;
@@ -110,6 +150,7 @@ table.group-members {
   }
 
   th {
+    border-bottom: 3px solid $primary-low;
     text-align: center;
     padding: 5px 0 5px 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -138,7 +179,7 @@ table.group-members {
 
     td {
       text-align: center;
-      color: $primary-medium;
+      color: blend-primary-secondary(50%);
       padding: 0.8em 0;
     }
   }
@@ -148,9 +189,23 @@ table.group-members {
   color: $primary;
 }
 
-.form-vertical {
+.form-horizontal {
   .group-flair-inputs {
     display: inline-block;
+
+    input[type="text"] {
+      width: 80% !important;
+      margin-bottom: 10px;
+    }
+
+    .group-flair-left {
+      float: left;
+    }
+
+    .group-flair-right {
+      float: left;
+      margin-left: 30px;
+    }
   }
 
   .avatar-flair-preview {
@@ -167,8 +222,8 @@ table.group-members {
   margin-right: 20px;
 }
 
-.group-add-members {
-  .group-add-members-make-owner {
+.group-manage-members {
+  .group-manage-members-make-owner {
     label {
       display: inline;
       vertical-align: middle;

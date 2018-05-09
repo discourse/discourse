@@ -151,7 +151,6 @@ module JsLocaleHelper
 
     # moment
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
-    result << File.read("#{Rails.root}/lib/javascripts/moment-timezone-with-data.js")
     result << moment_locale(locale_str)
     result << moment_formats
 

@@ -62,6 +62,7 @@ class ApplicationController < ActionController::Base
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
 
+  # 判断是不是爬虫
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
@@ -299,8 +300,6 @@ class ApplicationController < ActionController::Base
   SAFE_MODE = "safe_mode"
 
   def resolve_safe_mode
-    return unless guardian.can_enable_safe_mode?
-
     safe_mode = params[SAFE_MODE]
     if safe_mode
       request.env[NO_CUSTOM] = !!safe_mode.include?(NO_CUSTOM)

@@ -2,7 +2,7 @@ require_dependency "file_helper"
 require_dependency "url_helper"
 require_dependency "db_helper"
 require_dependency "file_store/local_store"
-
+# 图片优化？
 class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 

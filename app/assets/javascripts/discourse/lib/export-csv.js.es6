@@ -1,3 +1,4 @@
+// 应该是让用户可以导出自己的数据
 import { ajax } from 'discourse/lib/ajax';
 function exportEntityByType(type, entity, args) {
   return ajax("/export_csv/export_entity.json", {

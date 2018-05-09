@@ -10,7 +10,6 @@ USERNAME_ROUTE_FORMAT = /[\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
-  relative_url_root = (defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root) ? Rails.configuration.relative_url_root + '/' : '/'
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
@@ -78,6 +77,7 @@ Discourse::Application.routes.draw do
 
     resources :groups, constraints: AdminConstraint.new do
       collection do
+        post "refresh_automatic_groups" => "groups#refresh_automatic_groups"
         get 'bulk'
         get 'bulk-complete' => 'groups#bulk'
         put 'bulk' => 'groups#bulk_perform'
@@ -229,8 +229,6 @@ Discourse::Application.routes.draw do
     resources :permalinks, constraints: AdminConstraint.new
 
     get "version_check" => "versions#show"
-
-    get "dashboard-next" => "dashboard_next#index"
 
     resources :dashboard, only: [:index] do
       collection do
@@ -397,6 +395,8 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/card-badge" => "users#card_badge", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/preferences/card-badge" => "users#update_card_badge", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
@@ -449,7 +449,6 @@ Discourse::Application.routes.draw do
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
   get "posts/:id/reply-history" => "posts#reply_history"
   get "posts/:id/reply-ids"     => "posts#reply_ids"
-  get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: { username: RouteFormat.username }
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: { username: RouteFormat.username }
 
@@ -480,8 +479,6 @@ Discourse::Application.routes.draw do
         manage
         manage/profile
         manage/members
-        manage/membership
-        manage/interaction
         manage/logs
       }.each do |path|
         get path => 'groups#show'
@@ -551,7 +548,7 @@ Discourse::Application.routes.draw do
   get "/badges/:id(/:slug)" => "badges#show"
   resources :user_badges, only: [:index, :create, :destroy]
 
-  get '/c', to: redirect(relative_url_root + 'categories')
+  get '/c', to: redirect('/categories')
 
   resources :categories, except: :show
   post "category/:category_id/move" => "categories#move"
@@ -627,7 +624,7 @@ Discourse::Application.routes.draw do
     get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive"
     get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread"
     get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
-    get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username
+    get "groups/:group_name.json" => "list#group_topics", as: "group_topics"
 
     scope "/private-messages-group/:username", group_name: RouteFormat.username do
       get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"
@@ -649,6 +646,8 @@ Discourse::Application.routes.draw do
   get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
   get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: { topic_id: /\d+/ }
   get "t/:slug/:topic_id/summary" => "topics#show", defaults: { summary: true }, constraints: { topic_id: /\d+/ }
+  get "t/:slug/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: { topic_id: /\d+/ }
+  get "t/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: { topic_id: /\d+/ }
   get "t/:topic_id/summary" => "topics#show", constraints: { topic_id: /\d+/ }
   put "t/:slug/:topic_id" => "topics#update", constraints: { topic_id: /\d+/ }
   put "t/:slug/:topic_id/star" => "topics#star", constraints: { topic_id: /\d+/ }
@@ -709,6 +708,9 @@ Discourse::Application.routes.draw do
     collection do
       post "export_entity" => "export_csv#export_entity"
     end
+    member do
+      get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
+    end
   end
 
   get "onebox" => "onebox#show"
@@ -728,10 +730,8 @@ Discourse::Application.routes.draw do
     # current site before updating to a new Service Worker.
     # Support the old Service Worker path to avoid routing error filling up the
     # logs.
-    get "/service-worker.js" => redirect(relative_url_root + service_worker_asset), format: :js
+    get "/service-worker.js" => redirect(service_worker_asset), format: :js
     get service_worker_asset => "static#service_worker_asset", format: :js
-  elsif Rails.env.development?
-    get "/service-worker.js" => "static#service_worker_asset", format: :js
   end
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
@@ -740,7 +740,6 @@ Discourse::Application.routes.draw do
   get "favicon/proxied" => "static#favicon", format: false
 
   get "robots.txt" => "robots_txt#index"
-  get "robots-builder.json" => "robots_txt#builder"
   get "offline.html" => "offline#index"
   get "manifest.json" => "metadata#manifest", as: :manifest
   get "opensearch" => "metadata#opensearch", format: :xml
@@ -795,10 +794,6 @@ Discourse::Application.routes.draw do
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
   get "/themes/assets/:key" => "themes#assets"
-
-  if Rails.env == "test" || Rails.env == "development"
-    get "/qunit" => "qunit#index"
-  end
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 

@@ -111,36 +111,56 @@ export default Ember.Component.extend({
       const style = `border-right-width: ${borderSize}; width: ${progressWidth}px`;
       $topicProgress.append(`<div class='bg' style="${style}">&nbsp;</div>`);
     } else {
-      $bg.css("border-right-width", borderSize).width(progressWidth - 2);
+      $bg.css("border-right-width", borderSize).width(progressWidth);
     }
   },
 
   _dock() {
-    const $wrapper = this.$();
-    if (!$wrapper || $wrapper.length === 0) return;
+    let maximumOffset = $('#topic-bottom').offset();
+    let composerHeight = $('#reply-control').height() || 0;
+    let $topicProgressWrapper = this.$();
+    let offset = window.pageYOffset || $('html').scrollTop();
 
-    const offset         = window.pageYOffset || $("html").scrollTop();
-    const progressHeight = this.site.mobileView ? 0 : $("#topic-progress").height();
-    const maximumOffset  = $("#topic-bottom").offset().top + progressHeight;
-    const windowHeight   = $(window).height();
-    const composerHeight = $("#reply-control").height() || 0;
-    const isDocked       = offset >= maximumOffset - windowHeight + composerHeight;
-    const bottom         = $("#main").height() - maximumOffset;
+    if (!$topicProgressWrapper || $topicProgressWrapper.length === 0) {
+      return;
+    }
 
+    // Right position
+    let $replyArea = $('#reply-control .reply-area');
+    if ($replyArea && $replyArea.length) {
+      let rightPos = $replyArea.offset().left;
+      $topicProgressWrapper.css('right', `${rightPos}px`);
+    } else {
+      $topicProgressWrapper.css('right', `1em`);
+    }
+
+    let isDocked = false;
+    if (maximumOffset) {
+      let threshold = maximumOffset.top;
+      let windowHeight = $(window).height();
+      let headerHeight = $('header').outerHeight(true);
+
+      if (this.capabilities.isIOS) {
+        isDocked = offset >= (threshold - windowHeight - headerHeight + composerHeight);
+      } else {
+        isDocked = offset >= (threshold - windowHeight + composerHeight);
+      }
+    }
+
+    let dockPos = $(document).height() - $('#topic-bottom').offset().top;
     if (composerHeight > 0) {
-      $wrapper.css("bottom", isDocked ? bottom : composerHeight);
+      if (isDocked) {
+        $topicProgressWrapper.css('bottom', dockPos);
+      } else {
+        let height = composerHeight + "px";
+        if ($topicProgressWrapper.css('bottom') !== height) {
+          $topicProgressWrapper.css('bottom', height);
+        }
+      }
     } else {
-      $wrapper.css("bottom", isDocked ? bottom : "");
+      $topicProgressWrapper.css('bottom', isDocked ? dockPos : '');
     }
-
-    this.set("docked", isDocked);
-
-    const $replyArea = $("#reply-control .reply-area");
-    if ($replyArea && $replyArea.length > 0) {
-      $wrapper.css("right", `${$replyArea.offset().left}px`);
-    } else {
-      $wrapper.css("right", "1em");
-    }
+    this.set('docked', isDocked);
   },
 
   click(e) {
@@ -148,6 +168,7 @@ export default Ember.Component.extend({
       this.send('toggleExpansion');
     }
   },
+
 
   actions: {
     toggleExpansion() {

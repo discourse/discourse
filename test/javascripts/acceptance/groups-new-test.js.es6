@@ -7,8 +7,8 @@ QUnit.test("As an anon user", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.groups-header-new').length, 0,
-      'it should not display the button to create a group'
+      find('.groups-admin-dropdown').length, 0,
+      'it should not display the admin dropdown'
     );
   });
 });
@@ -20,19 +20,11 @@ QUnit.test("Creating a new group", assert => {
   visit("/groups");
 
   click(".groups-header-new");
-
-  andThen(() => {
-    assert.equal(
-      find('.group-form-save[disabled]').length, 1,
-      'save button should be disabled'
-    );
-  });
-
   fillIn("input[name='name']", '1');
 
   andThen(() => {
     assert.equal(
-      find('.tip.bad').text().trim(), I18n.t("admin.groups.new.name.too_short"),
+      find('.tip.bad').text().trim(), I18n.t("groups.new.name.too_short"),
       'it should show the right validation tooltip'
     );
 
@@ -46,7 +38,7 @@ QUnit.test("Creating a new group", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.tip.bad').text().trim(), I18n.t("admin.groups.new.name.too_long"),
+      find('.tip.bad').text().trim(), I18n.t("groups.new.name.too_long"),
       'it should show the right validation tooltip'
     );
   });
@@ -55,7 +47,7 @@ QUnit.test("Creating a new group", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.tip.bad').text().trim(), I18n.t("admin.groups.new.name.blank"),
+      find('.tip.bad').text().trim(), I18n.t("groups.new.name.blank"),
       'it should show the right validation tooltip'
     );
   });
@@ -64,7 +56,7 @@ QUnit.test("Creating a new group", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.tip.good').text().trim(), I18n.t("admin.groups.new.name.available"),
+      find('.tip.good').text().trim(), I18n.t("groups.new.name.available"),
       'it should show the right validation tooltip'
     );
   });

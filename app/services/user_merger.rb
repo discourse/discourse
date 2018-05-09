@@ -261,6 +261,7 @@ class UserMerger
         dismissed_banner_key = COALESCE(t.dismissed_banner_key, s.dismissed_banner_key),
         badge_granted_title  = t.badge_granted_title OR s.badge_granted_title,
         card_background      = COALESCE(t.card_background, s.card_background),
+        card_image_badge_id  = COALESCE(t.card_image_badge_id, s.card_image_badge_id),
         views                = t.views + s.views
       FROM user_profiles AS s
       WHERE t.user_id = :target_user_id AND s.user_id = :source_user_id
@@ -354,7 +355,7 @@ class UserMerger
                    conditions: ["x.action_type = y.action_type",
                                 "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
                                 "x.target_post_id IS NOT DISTINCT FROM y.target_post_id",
-                                "(x.acting_user_id IN (:source_user_id, :target_user_id) OR x.acting_user_id IS NOT DISTINCT FROM y.acting_user_id)"])
+                                "x.acting_user_id IN (:source_user_id, :target_user_id)"])
     update_user_id(:user_actions,
                    user_id_column_name: "acting_user_id",
                    conditions: ["x.action_type = y.action_type",

@@ -196,11 +196,6 @@ class SearchIndexer
         scrubbed << attributes["title"]
         scrubbed << " "
       end
-      if attributes["data-youtube-title"]
-        scrubbed << " "
-        scrubbed << attributes["data-youtube-title"]
-        scrubbed << " "
-      end
     end
 
     def characters(string)

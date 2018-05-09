@@ -1,8 +1,8 @@
-import { acceptance, logIn, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, logIn } from "helpers/qunit-helpers";
 
 acceptance("Managing Group Profile");
 
-QUnit.test("As an admin", assert => {
+QUnit.test("Editing group", assert => {
   logIn();
   Discourse.reset();
 
@@ -13,25 +13,50 @@ QUnit.test("As an admin", assert => {
     assert.ok(find('.group-form-bio').length === 1, 'it should display group bio input');
     assert.ok(find('.group-form-name').length === 1, 'it should display group name input');
     assert.ok(find('.group-form-full-name').length === 1, 'it should display group full name input');
+
+    assert.ok(
+      find('.group-form-public-admission').length === 1,
+      'it should display group public admission input'
+    );
+
+    assert.ok(
+      find('.group-form-public-exit').length === 1,
+      'it should display group public exit input'
+    );
+
+    assert.ok(
+      find('.group-form-allow-membership-requests').length === 1,
+      'it should display group allow_membership_request input'
+    );
+
+    assert.ok(
+      find('.group-form-allow-membership-requests[disabled]').length === 1,
+      'it should disable group allow_membership_request input'
+    );
   });
-});
 
-QUnit.test("As a group owner", assert => {
-  logIn();
-  Discourse.reset();
-  replaceCurrentUser({ staff: false, admin: false });
-
-  visit("/groups/discourse/manage/profile");
+  click('.group-form-public-admission');
+  click('.group-form-allow-membership-requests');
 
   andThen(() => {
+    assert.ok(
+      find('.group-form-public-admission[disabled]').length === 1,
+      'it should disable group public admission input'
+    );
+
+    assert.ok(
+      find('.group-form-public-exit[disabled]').length === 0,
+      'it should not disable group public exit input'
+    );
+
     assert.equal(
-      find('.group-form-name').length, 0,
-      'it should not display group name input'
+      find('.group-form-membership-request-template').length, 1,
+      'it should display the membership request template field'
     );
   });
 });
 
-QUnit.test("As an anonymous user", assert => {
+QUnit.test("Editing group as an anonymous user", assert => {
   visit("/groups/discourse/manage/profile");
 
   andThen(() => {

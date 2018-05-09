@@ -1,6 +1,5 @@
+# 用户动作，点赞，被点赞，发帖，回复，提起，编辑。
 class UserAction < ActiveRecord::Base
-  include DateGroupable
-
   belongs_to :user
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
@@ -119,18 +118,6 @@ SQL
 
     result
 
-  end
-
-  def self.count_daily_engaged_users(start_date = nil, end_date = nil)
-    result = select(:user_id)
-      .distinct
-      .where(action_type: [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE])
-
-    if start_date && end_date
-      result = result.smart_group_by_date(:created_at, start_date, end_date)
-    end
-
-    result.count
   end
 
   def self.stream_item(action_id, guardian)

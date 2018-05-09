@@ -6,6 +6,7 @@ require_dependency "validators/upload_validator"
 require_dependency "file_store/local_store"
 require_dependency "base62"
 
+# 应该是处理图片上传
 class Upload < ActiveRecord::Base
   belongs_to :user
 
@@ -17,7 +18,6 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_group_message
   attr_accessor :for_theme
   attr_accessor :for_private_message
-  attr_accessor :for_export
 
   validates_presence_of :filesize
   validates_presence_of :original_filename

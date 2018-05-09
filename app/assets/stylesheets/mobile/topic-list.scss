@@ -34,7 +34,7 @@
     width: 150px;
     top: 100%;
     margin: 0;
-    li {  
+    li {
       list-style-type: none;
       margin-left: 0;
       margin-top: 5px;
@@ -68,6 +68,12 @@
     margin-left: 55px;
   }
 
+  > tbody > tr {
+    &.highlighted {
+      animation: background-fade-highlight 2.5s ease-out;
+    }
+  }
+
   th,
   td {
     padding: 7px 0;
@@ -79,7 +85,6 @@
 
   .badge-notification, .category-topic-link td.num .badge-notification {
     position: relative;
-    display: inline;
     top: -1px;
     font-size: $font-down-1;
     padding: 4px 6px 3px 6px;
@@ -135,16 +140,17 @@
     vertical-align: top;
   }
 
-  th {
-    padding: 10px 0 0;
-  }
-
   td:first-of-type {
     padding-left: 10px;
   }
 
   tbody {
-
+    tr {
+      border-bottom: 1px solid $primary-low;
+      &:first-of-type {
+        border-top: 3px solid $primary-low;
+      }
+    }
     .category {
       border-left: 6px solid;
     }
@@ -152,9 +158,6 @@
 }
 
 .category-list-item.category {
-  tr:first-of-type {
-    border: none;
-  }
   // Allow percentage widths on table cells to include their padding
   box-sizing: border-box;
   *, *:before, *:after {
@@ -172,10 +175,8 @@
 }
 
 tr.category-topic-link {
-  border-bottom: 1px solid $primary-low;
-  &:last-of-type {
-    border-bottom: none;
-  }
+  border-top: darken($secondary, 3%) 1px solid;
+  border-bottom: darken($secondary, 3%) 1px solid;
 }
 
 .topic-list.categories {
@@ -216,9 +217,8 @@ tr.category-topic-link {
 }
 
 .category-list-item {
-  padding: 5px 0 2px;
+
   border-left: 6px solid;
-  border-top: 1px solid;
 
   h3 {
     display: inline-block;
@@ -280,7 +280,7 @@ tr.category-topic-link {
     float: left;
   }
   > footer {
-    border-top: 1px solid $primary-low;
+    border-top: 0;
     padding: 7px 10px;
     figure {
       float: left;

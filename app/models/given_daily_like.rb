@@ -1,3 +1,4 @@
+# 某日的点赞？
 class GivenDailyLike < ActiveRecord::Base
   belongs_to :user
 

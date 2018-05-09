@@ -8,6 +8,8 @@ require_dependency 'guardian/group_guardian'
 require_dependency 'guardian/tag_guardian'
 
 # The guardian is responsible for confirming access to various site resources and operations
+# 根据上面的英文，Guardian 负责确认 access，包括各种 site resources 和  operations
+# 可以看到这里几乎所有操作都是 ? 结尾，返回 true | false
 class Guardian
   include EnsureMagic
   include CategoryGuardian
@@ -110,10 +112,6 @@ class Guardian
     return send(create_method, parent) if respond_to?(create_method)
 
     true
-  end
-
-  def can_enable_safe_mode?
-    SiteSetting.enable_safe_mode? || is_staff?
   end
 
   # Can the user edit the obj
@@ -221,7 +219,6 @@ class Guardian
 
   def can_grant_title?(user, title = nil)
     return true if user && is_staff?
-    return false if title.nil?
     return false if user != @user
     return true if user.badges.where(name: title, allow_title: true).exists?
     user.groups.where(title: title).exists?

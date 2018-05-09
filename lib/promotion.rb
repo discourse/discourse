@@ -111,16 +111,16 @@ class Promotion
   def self.recalculate(user, performed_by = nil)
     # First, use the manual locked level
     unless user.manual_locked_trust_level.nil?
-      return user.update!(
-        trust_level: user.manual_locked_trust_level
-      )
+      user.trust_level = user.manual_locked_trust_level
+      user.save
+      return
     end
 
     # Then consider the group locked level
     if user.group_locked_trust_level
-      return user.update!(
-        trust_level: user.group_locked_trust_level
-      )
+      user.trust_level = user.group_locked_trust_level
+      user.save
+      return
     end
 
     user.update_column(:trust_level, TrustLevel[0])

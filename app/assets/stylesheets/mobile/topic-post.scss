@@ -28,56 +28,18 @@ span.badge-posts {
 
 .topic-post {
   nav.post-controls {
+    clear: both;
     color: dark-light-choose($primary-low-mid, $secondary-high);
-
-    .actions {
-      display: flex;
-    }
-
-    .like-button {
-      display: flex;
-      flex: 0 1 auto;
-      button {
-        &.like {
-          flex: 1 1 auto;          
-        }
-        &.like-count {
-          padding: 8px 4px 8px 8px;
-          line-height: 1.2;
-
-          &.regular-likes {
-            margin-right: 0;
-          }
-          &.my-likes {
-            display: flex;
-            align-items: baseline;
-            max-width: unset;
-            margin-right: 0;
-            padding: 8px 9px 8px 8px;
-            i {
-              padding-left: 8px;
-            }
-          }
-        }
-        .d-icon {
-          line-height: $line-height-medium;
-        }
-      }
-      button.like-count + button.toggle-like {
-        padding: 8px 9px 8px 4px;
-      }  
-    }
-
     .d-icon {
       opacity: 1.0;
     }
     button {
       border: none;
       font-size: $font-up-1;
-      padding: 10px 8px;
+      padding: 8px 10px;
+      vertical-align: middle;
       background: transparent;
-      flex: 1 1 auto;
-      max-width: 45px;
+      float: left;
       &.hidden {
         display: none;
       }
@@ -88,8 +50,8 @@ span.badge-posts {
         margin:10px 0 10px 0;
       }
       &.reply {
+        float: right;
         color: $primary-high;
-        margin-left: auto;
       }
       &.has-like {
         color: $love;
@@ -99,8 +61,30 @@ span.badge-posts {
       }
     }
 
+    button.like-count {
+      font-size: $font-up-1;
+      padding: 8px 4px;
+      i.fa-heart {
+        padding-left: 8px;
+        color: dark-light-choose($primary-low-mid, $secondary-high);
+      }
+      &.my-likes {
+        margin-right: 5px;
+      }
+      &.regular-likes {
+        margin-right: -5px;
+      }
+    }
   }
 }
+
+
+/* shift post reply button to the right and make it black */
+.post-controls button.create {
+  float: right;
+  color: dark-light-choose($primary-high, $secondary-low);
+}
+
 
 .post-admin-menu {
   background-color: $secondary;
@@ -172,6 +156,7 @@ a.reply-to-tab {
   margin: 10px 0;
 
   h4 {
+    margin: 0 0 3px 0;
     line-height: $line-height-medium;
   }
 
@@ -194,7 +179,7 @@ a.reply-to-tab {
         border-right: 0;
       }
     }
-    .number {
+    a, .number {
       line-height: $line-height-medium;
     }
     .number, i {
@@ -224,6 +209,12 @@ a.reply-to-tab {
 
   .participants { // PMs //
     .user {float: left; margin: 0 10px 10px 0;}
+  }
+
+  .topic-links {
+    .badge-notification {
+      margin: 1px 5px 2px 0;
+    }
   }
 
   .buttons {
@@ -476,6 +467,8 @@ span.highlighted {
   margin-right: auto;
   width: calc(100% - 50px);
   a {
+    float: right;
+    text-decoration: underline;
     margin-top: 7px;
   }
   button {

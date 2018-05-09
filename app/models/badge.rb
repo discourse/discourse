@@ -1,5 +1,5 @@
 require_dependency 'slug'
-
+# 各种勋章
 class Badge < ActiveRecord::Base
   # NOTE: These badge ids are not in order! They are grouped logically.
   #       When picking an id, *search* for it.

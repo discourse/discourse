@@ -190,7 +190,10 @@ const Group = RestModel.extend({
   },
 
   save() {
-    return ajax(`/groups/${this.get('id')}`, {
+    const id = this.get('id');
+    const url = this.get('is_group_owner') ? `/groups/${id}` : `/admin/groups/${id}`;
+
+    return ajax(url, {
       type: "PUT",
       data: { group: this.asJSON() }
     });

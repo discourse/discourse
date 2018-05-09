@@ -1,5 +1,3 @@
-import showModal from 'discourse/lib/show-modal';
-
 export default Discourse.Route.extend({
   titleToken() {
     return I18n.t('groups.members.title');
@@ -22,14 +20,6 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    showAddMembersModal() {
-      showModal('group-add-members', { model: this.modelFor('group') });
-    },
-
-    showBulkAddModal() {
-      showModal('group-bulk-add', { model: this.modelFor('group') });
-    },
-
     didTransition() {
       this.controllerFor("group-index").set("filterInput", this._params.filter);
       return true;

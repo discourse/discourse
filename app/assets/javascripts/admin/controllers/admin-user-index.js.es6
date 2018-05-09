@@ -24,13 +24,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
     'model.can_disable_second_factor'
   ),
 
-  @computed("model.automaticGroups")
-  automaticGroups(automaticGroups) {
-    return automaticGroups.map(group => {
-      const name = Ember.String.htmlSafe(group.name);
-      return `<a href="/groups/${name}">${name}</a>`;
-    }).join(", ");
-  },
+  automaticGroups: function() {
+    return this.get("model.automaticGroups").map((g) => g.name).join(", ");
+  }.property("model.automaticGroups"),
 
   userFields: function() {
     const siteUserFields = this.site.get('user_fields'),

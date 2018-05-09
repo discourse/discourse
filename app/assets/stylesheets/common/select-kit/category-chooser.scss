@@ -3,6 +3,10 @@
     &.category-chooser {
       width: 300px;
 
+      .combo-box-header {
+        padding: 4px;
+      }
+
       .select-kit-row {
         display: -webkit-box;
         display: -ms-flexbox;

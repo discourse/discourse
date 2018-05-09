@@ -22,13 +22,6 @@ function initializePolls(api) {
     }
   });
 
-  let _glued = [];
-  let _interval = null;
-
-  function rerender() {
-    _glued.forEach(g => g.queueRerender());
-  }
-
   api.modifyClass('model:post', {
     _polls: null,
     pollsObject: null,
@@ -48,12 +41,12 @@ function initializePolls(api) {
           }
         });
         this.set("pollsObject", this._polls);
-        rerender();
+        _glued.forEach(g => g.queueRerender());
       }
     }
   });
 
-
+  const _glued = [];
   function attachPolls($elem, helper) {
     const $polls = $('.poll', $elem);
     if (!$polls.length) { return; }
@@ -66,8 +59,6 @@ function initializePolls(api) {
 
     const polls = post.get("pollsObject");
     if (!polls) { return; }
-
-    _interval = _interval || setInterval(rerender, 30000);
 
     $polls.each((idx, pollElem) => {
       const $poll = $(pollElem);
@@ -90,13 +81,7 @@ function initializePolls(api) {
   }
 
   function cleanUpPolls() {
-    if (_interval) {
-      clearInterval(_interval);
-      _interval = null;
-    }
-
     _glued.forEach(g => g.cleanUp());
-    _glued = [];
   }
 
   api.includePostAttributes("polls", "polls_votes");

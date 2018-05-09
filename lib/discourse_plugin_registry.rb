@@ -82,9 +82,6 @@ class DiscoursePluginRegistry
       @vendored_pretty_text ||= Set.new
     end
 
-    def vendored_core_pretty_text
-      @vendored_core_pretty_text ||= Set.new
-    end
   end
 
   def register_js(filename, options = {})
@@ -139,8 +136,6 @@ class DiscoursePluginRegistry
         self.admin_javascripts << asset
       elsif opts == :vendored_pretty_text
         self.vendored_pretty_text << asset
-      elsif opts == :vendored_core_pretty_text
-        self.vendored_core_pretty_text << asset
       else
         self.javascripts << asset
       end
@@ -183,16 +178,6 @@ class DiscoursePluginRegistry
       seed_path_builders.each { |b| result += b.call }
     end
     result.uniq
-  end
-
-  VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "lib/javascripts/moment.js",
-    "moment-timezone.js" => "lib/javascripts/moment-timezone-with-data.js"
-  }
-  def self.core_asset_for_name(name)
-    asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
-    raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset
-    asset
   end
 
   def locales
@@ -250,7 +235,6 @@ class DiscoursePluginRegistry
     asset_globs.clear
     html_builders.clear
     vendored_pretty_text.clear
-    vendored_core_pretty_text.clear
     seed_path_builders.clear
     locales.clear
   end

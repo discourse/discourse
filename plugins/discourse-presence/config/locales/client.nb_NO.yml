@@ -10,3 +10,6 @@ nb_NO:
     presence:
       replying: "svarer"
       editing: "redigerer"
+      replying_to_topic:
+        one: "svarer"
+        other: "svarer"

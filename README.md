@@ -1,104 +1,134 @@
-<a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
+# Discourse 定制
+基于 Discourse 论坛做定制，因为 Theme 和 Plugin 对于我们要做的定制不够。
+所以直接来改代码。自己部署。   
+不是简单换个皮，做个 plugin 加一两个选项就可以的那种轻度定制。    
 
-Discourse is the 100% open source discussion platform built for the next decade of the Internet. Use it as a:
+### Discourse 技术栈
+Ruby on Rails + Ember.js + PostgreSQL 
 
-- mailing list
-- discussion forum
-- long-form chat room
+### Demo
+暂无，开发中
 
-To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
+### 起步
+建议先读 Discourse 官网和 GitHub:  https://github.com/discourse/discourse     
+获得一些基本理解（比如 Github 那边写了，有个所谓 Trust Levels 0-4 的系统）       
 
-## Screenshots
-
-
-<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://cloud.githubusercontent.com/assets/1385470/25397876/3fe6cdac-29c0-11e7-8a41-9d0c0279f5a3.png" width="720px"></a>
-<a href="https://twittercommunity.com/"><img src="https://cloud.githubusercontent.com/assets/1385470/25397920/71b24e4c-29c0-11e7-8bcf-7a47b888412e.png" width="720px"></a>
-<a href="http://discuss.howtogeek.com"><img src="https://cloud.githubusercontent.com/assets/1385470/25398049/f0995962-29c0-11e7-99d7-a3b9c4f0b357.png" width="720px"></a>
-<a href="https://talk.turtlerockstudios.com/"><img src="https://cloud.githubusercontent.com/assets/1385470/25398115/2d560d96-29c1-11e7-9a96-b0134a4fedff.png" width="720px"></a>
-
-<img src="https://www.discourse.org/a/img/about/mobile-devices-2x.jpg" alt="Mobile" width="414">
-
-Browse [lots more notable Discourse instances](https://www.discourse.org/customers).
-
-## Development
-
-1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/).
-
-2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
-
-Before you get started, ensure you have the following minimum versions: [Ruby 2.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.3+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
-
-## Setting up Discourse
-
-If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
-
-If you're looking for business class hosting, see [discourse.org/buy](https://www.discourse.org/buy/).
-
-## Requirements
-
-Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
-
-| Browsers | Tablets |  Phones |
-| -------- | ------- | ----------- |
-| Safari 6.1+ | iPad 3+ |  iOS 8+ |
-| Google Chrome 32+ |  Android 4.3+ | Android 4.3+ |
-| Internet Explorer 11+ |  |  |
-| Firefox 27+ | | |
-
-## Built With
-
-- [Ruby on Rails](https://github.com/rails/rails) &mdash; Our back end API is a Rails app. It responds to requests RESTfully in JSON.
-- [Ember.js](https://github.com/emberjs/ember.js) &mdash; Our front end is an Ember.js app that communicates with the Rails API.
-- [PostgreSQL](http://www.postgresql.org/) &mdash; Our main data store is in Postgres.
-- [Redis](http://redis.io/) &mdash; We use Redis as a cache and for transient data.
-
-Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
-
-## Contributing
-
-[![Build Status](https://api.travis-ci.org/discourse/discourse.svg?branch=master)](https://travis-ci.org/discourse/discourse)
-
-Discourse is **100% free** and **open source**. We encourage and support an active, healthy community that
-accepts contributions from the public &ndash; including you!
-
-Before contributing to Discourse:
-
-1. Please read the complete mission statements on [**discourse.org**](http://www.discourse.org). Yes we actually believe this stuff; you should too.
-2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla).
-3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.
-4. Always strive to collaborate [with mutual respect](https://github.com/discourse/discourse/blob/master/docs/code-of-conduct.md).
-5. Not sure what to work on? [**We've got some ideas.**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
+另外给想做定制的人一点建议：
+先别看代码，在网页端里 localhost:3000 里到处点点    
+看看后台有什么选项，能设置什么。长什么样子   
 
 
-We look forward to seeing your pull requests!
+### 1. 定制代码的前缀
+为了一眼区分什么代码是 discourse 的，什么代码是我们加的。
+我们用前缀来做（不管是 controller, models, view, helper, 都用前缀）
+**用 fm_ 开头**
+fm = facial mask = 面膜   
 
-## Security
+### Discourse 介绍
+Discourse 创建于 2013 年，很多决定都是基于当时做的  
+比如没用 Ember Data    
 
-We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse, or if you wish to report a security issue.
+<!-- ### 建议阅读如下链接
+【链接】
+【理由】 -->
 
-## The Discourse Team
+### 0. 整体系统
+此处会不断更新，只放一些大的，最重要的组件。    
+比如 Discourse 提供的帖子 diff 对比功能就不列了，只是一个功能，不算一个大一点的系统     
+* 用户：注册登录，各类设置
+* 搜索：
+* 备份：后台点了按钮可以直接建，带文件/不带文件，得到一个 .sql.gz 文件可以下载下来
+* 邮件：可以设置模板
+* 通知系统：轮询和表结构是咋样的？因为轮询间隔还是可以后台控制的
+* 设置：后台有 N 多设置
+* API：还有 Webhook。API 这个啥时候用的上？
+* 标签
+* 帖子 / 评论
+* 第三方登录，google yahoo twitter facebook instagram GitHub SSO
+* 小组的概念：http://localhost:3000/admin/groups/custom
+* 日志：http://localhost:3000/admin/logs/watched_words/action/block 
+     可以设置敏感词。特定词不允许发布，特定词会被替换，特定词需要审核
+* 搜索log：可以看到用户搜索了什么，搜了多少次	
+* 日志2：http://localhost:3000/logs
+* 标记(flag) http://localhost:3000/admin/flags/active
+* 多语言
+* Theme / Theme Component：后台可以根据 GitHub 链接载入，主要是改一些 CSS 和 HTML
+* 插件：要载入，解析和执行
 
-The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to [the official Discourse blog](http://blog.discourse.org/2013/02/the-discourse-team/) and [GitHub's list of contributors](https://github.com/discourse/discourse/contributors).
+
+### 1. 版本
+2018年4月 fork Discourse 时，版本是 v2.0.0.beta5
+因为要进行深度定制，不期望能跟着 discourse 更新了。毕竟要改 codebase。  
+4月时最新的 Rails 是 5, Ember 是 3
+  
+
+### 2. 这里的代码定制了什么？和原来的 Discourse 有什么不同
+1. 删去了原来 README.md 里的所有内容，因为直接看官方 Github 库就行了，所以这里写点独特的.  
+1. 加了不少中文注释（各个地方都有加, models, helper, 等等）  
+3. 原则是能不删的代码不删，不理解的代码不删，尽可能做到最少侵入，尽可能和原来的 discourse 差别最小。
+
+暂时没有定制任何功能，如果有，这里会列出来：
+功能1：
 
 
-## Copyright / License
+bundle exec rake stats
 
-Copyright 2014 - 2018 Civilized Discourse Construction Kit, Inc.
+### 4. Tech Stack
+* Ruby on Rails
+* PostgreSQL `gem 'pg', '~> 0.21.0'`
+* Ember.js
+* Bootstrap v2.0.4 `app/assets/stylesheets/vendor/bootstrap.scss`
+Rails 和 Ember.js 是重点   
+* Sidekiq
+* Redis
+* 第三方登录是 omniauth
+* `gem 'ember-rails', '0.18.5'`
 
-Licensed under the GNU General Public License Version 2.0 (or later);
-you may not use this work except in compliance with the License.
-You may obtain a copy of the License in the LICENSE file, or at:
 
-   http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+### 5. Run on local (MacOS)
+```
+# 启动 PostgreSQL
+pg_ctl -D /usr/local/var/postgres start 
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+# Redis
+redis-server &
 
-Discourse logo and “Discourse Forum” ®, Civilized Discourse Construction Kit, Inc.
+# Rails
+rails s
+```
 
-## Dedication
+### 6. Discourse 笔记
+* 自带了等级系统：trust level 0 到 4，如果不喜欢，后台可以直接禁用，无需改代码
+* Discourse 创建于
 
-Discourse is built with [love, Internet style.](http://www.youtube.com/watch?v=Xe1TZaElTAs)
+
+### 7. 代码阅读笔记
+* 代码注释极少: https://meta.discourse.org/t/why-so-little-code-comment-in-discourse-codebase-github/85710
+* Ember 和 Rails 放在一个代码库里。现在大部分教程会建议分开
+* Plugin 没有简单的一键安装方式
+* 没有用 Ember Data
+
+### Helper
+`app/helpers/` 文件不多(7个)    
+但是 `app/helpers/application_helper.rb` 值得读读      
+比如 `def preload_script(script)`      
+view 里面经常看得到 preload_script     
+
+### Google Tag Manager
+Discourse 代码里有这个，不用管，不碍事
+
+### 多语言怎么做的？
+
+### Model
+值得注意的 model 有：   
+
+user_ 前缀的一堆
+topic_ 前缀的一堆
+post_ 前缀的一堆
+group_
+incoming_
+category_
+
+### 其他
+* `lib/` 里好多代码
+

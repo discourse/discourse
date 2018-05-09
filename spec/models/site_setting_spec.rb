@@ -52,19 +52,7 @@ describe SiteSetting do
   end
 
   describe "top_menu" do
-    describe "validations" do
-      it "always demands latest" do
-        expect do
-          SiteSetting.top_menu = 'categories'
-        end.to raise_error(Discourse::InvalidParameters)
-      end
-
-      it "does not allow random text" do
-        expect do
-          SiteSetting.top_menu = 'latest|random'
-        end.to raise_error(Discourse::InvalidParameters)
-      end
-    end
+    before { SiteSetting.top_menu = 'one,-nope|two|three,-not|four,ignored|category/xyz|latest' }
 
     describe "items" do
       let(:items) { SiteSetting.top_menu_items }
@@ -76,8 +64,7 @@ describe SiteSetting do
 
     describe "homepage" do
       it "has homepage" do
-        SiteSetting.top_menu = "bookmarks|latest"
-        expect(SiteSetting.homepage).to eq('bookmarks')
+        expect(SiteSetting.homepage).to eq('one')
       end
     end
   end

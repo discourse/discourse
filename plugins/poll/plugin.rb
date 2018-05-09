@@ -10,21 +10,20 @@ register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 
 PLUGIN_NAME ||= "discourse_poll".freeze
+
 DATA_PREFIX ||= "data-poll-".freeze
 
 after_initialize do
-
-  require File.expand_path("../jobs/regular/close_poll", __FILE__)
-
   module ::DiscoursePoll
-    DEFAULT_POLL_NAME  ||= "poll".freeze
+    DEFAULT_POLL_NAME ||= "poll".freeze
     POLLS_CUSTOM_FIELD ||= "polls".freeze
     VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
+    MUTEX_PREFIX ||= PLUGIN_NAME
 
-    autoload :PostValidator,  "#{Rails.root}/plugins/poll/lib/post_validator"
+    autoload :PostValidator, "#{Rails.root}/plugins/poll/lib/post_validator"
     autoload :PollsValidator, "#{Rails.root}/plugins/poll/lib/polls_validator"
-    autoload :PollsUpdater,   "#{Rails.root}/plugins/poll/lib/polls_updater"
-    autoload :VotesUpdater,   "#{Rails.root}/plugins/poll/lib/votes_updater"
+    autoload :PollsUpdater, "#{Rails.root}/plugins/poll/lib/polls_updater"
+    autoload :VotesUpdater, "#{Rails.root}/plugins/poll/lib/votes_updater"
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -63,12 +62,7 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if poll.blank?
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll["status"] != "open"
-
-          # ensure no race condition when poll is automatically closed
-          if poll["close"].present?
-            close_date = Time.zone.parse(poll["close"]) rescue nil
-            raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if close_date && close_date <= Time.zone.now
-          end
+          public_poll = (poll["public"] == "true")
 
           # remove options that aren't available in the poll
           available_options = poll["options"].map { |o| o["id"] }.to_set
@@ -89,8 +83,6 @@ after_initialize do
             poll["voters"] += 1 if (available_options & votes.to_set).size > 0
           end
 
-          public_poll = (poll["public"] == "true")
-
           poll["options"].each do |option|
             anonymous_votes = option["anonymous_votes"] || 0
             option["votes"] = all_options[option["id"]] + anonymous_votes
@@ -110,11 +102,14 @@ after_initialize do
           post.save_custom_fields(true)
 
           payload = { post_id: post_id, polls: polls }
-          payload.merge!(user: UserNameSerializer.new(user).serializable_hash) if public_poll
+
+          if public_poll
+            payload.merge!(user: UserNameSerializer.new(user).serializable_hash)
+          end
 
           MessageBus.publish("/polls/#{post.topic_id}", payload)
 
-          [poll, options]
+          return [poll, options]
         end
       end
 
@@ -154,40 +149,36 @@ after_initialize do
         end
       end
 
-      def schedule_jobs(post)
-        post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].each do |name, poll|
-          Jobs.cancel_scheduled_job(:close_poll, post_id: post.id, poll_name: name)
-
-          if poll["status"] == "open" && poll["close"].present?
-            close_date = Time.zone.parse(poll["close"]) rescue nil
-            Jobs.enqueue_at(close_date, :close_poll, post_id: post.id, poll_name: name) if close_date && close_date > Time.zone.now
-          end
-        end
-      end
-
       def extract(raw, topic_id, user_id = nil)
         # TODO: we should fix the callback mess so that the cooked version is available
         # in the validators instead of cooking twice
         cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
+        parsed = Nokogiri::HTML(cooked)
 
-        Nokogiri::HTML(cooked).css("div.poll").map do |p|
-          poll = { "options" => [], "voters" => 0, "name" => DiscoursePoll::DEFAULT_POLL_NAME }
+        extracted_polls = []
 
-          # attributes
+        # extract polls
+        parsed.css("div.poll").each do |p|
+          poll = { "options" => [], "voters" => 0 }
+
+          # extract attributes
           p.attributes.values.each do |attribute|
             if attribute.name.start_with?(DATA_PREFIX)
               poll[attribute.name[DATA_PREFIX.length..-1]] = CGI.escapeHTML(attribute.value || "")
             end
           end
 
-          # options
+          # extract options
           p.css("li[#{DATA_PREFIX}option-id]").each do |o|
             option_id = o.attributes[DATA_PREFIX + "option-id"].value || ""
             poll["options"] << { "id" => option_id, "html" => o.inner_html, "votes" => 0 }
           end
 
-          poll
+          # add the poll
+          extracted_polls << poll
         end
+
+        extracted_polls
       end
     end
   end
@@ -237,13 +228,14 @@ after_initialize do
       raise Discourse::InvalidParameters.new("poll_name is invalid") if !poll
 
       voter_limit = (params[:voter_limit] || 25).to_i
-      voter_limit = 0  if voter_limit < 0
+      voter_limit = 0 if voter_limit < 0
       voter_limit = 50 if voter_limit > 50
 
       user_ids = []
       options = poll["options"]
 
       if poll["type"] != "number"
+
         per_option_voters = {}
 
         options.each do |option|
@@ -264,7 +256,7 @@ after_initialize do
 
         result = {}
 
-        User.where(id: user_ids).each do |user|
+        User.where(id: user_ids).map do |user|
           user_hash = UserNameSerializer.new(user).serializable_hash
 
           poll_votes[user.id.to_s][poll_name].each do |option_id|
@@ -285,7 +277,12 @@ after_initialize do
         user_ids.flatten!
         user_ids.uniq!
         user_ids = user_ids.slice((params[:offset].to_i || 0) * voter_limit, voter_limit)
-        result = User.where(id: user_ids).map { |user| UserNameSerializer.new(user).serializable_hash }
+
+        result = []
+
+        User.where(id: user_ids).map do |user|
+          result << UserNameSerializer.new(user).serializable_hash
+        end
       end
 
       render json: { poll_name => result }
@@ -376,19 +373,18 @@ after_initialize do
     if post.nil? || post.trashed?
       fragment.css(".poll, [data-poll-name]").each(&:remove)
     else
-      post_url = post.full_url
+      post_url = "#{Discourse.base_url}#{post.url}"
       fragment.css(".poll, [data-poll-name]").each do |poll|
         poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
       end
     end
   end
 
+  # tells the front-end we have a poll for that post
   on(:post_created) do |post|
     next if post.is_first_post? || post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].blank?
-    # signals the front-end we have polls for that post
-    MessageBus.publish("/polls/#{post.topic_id}", post_id: post.id, polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
-    # schedule automatic close jobs
-    DiscoursePoll::Poll.schedule_jobs(post)
+    MessageBus.publish("/polls/#{post.topic_id}",                          post_id: post.id,
+                                                                           polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
   end
 
   on(:merging_users) do |source_user, target_user|

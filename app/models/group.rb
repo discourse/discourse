@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require_dependency 'enum'
-
+# Group 的概念是权限群组
+# http://localhost:3000/groups
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
@@ -48,7 +49,6 @@ class Group < ActiveRecord::Base
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
   validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0, 3] != 'fa-' }
-  validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
     everyone: 0,
@@ -688,15 +688,6 @@ class Group < ActiveRecord::Base
     end
 
   private
-
-    def validate_grant_trust_level
-      unless TrustLevel.valid?(self.grant_trust_level)
-        self.errors.add(:base, I18n.t(
-          'groups.errors.grant_trust_level_not_valid',
-          trust_level: self.grant_trust_level
-        ))
-      end
-    end
 
     def can_allow_membership_requests
       valid = true

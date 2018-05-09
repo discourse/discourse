@@ -9,7 +9,7 @@ const REPLACEMENTS = {
   'd-watching-first': 'dot-circle-o',
   'd-drop-expanded': 'caret-down',
   'd-drop-collapsed': 'caret-right',
-  'd-unliked': 'heart-o',
+  'd-unliked': 'heart',
   'd-liked': 'heart',
   'notification.mentioned': "at",
   'notification.group_mentioned': "at",

@@ -129,22 +129,18 @@ export default Discourse.Route.extend({
       var controller = this.controllerFor("tags.show"),
           self = this;
 
-      if (controller.get('list.draft')) {
-        this.openTopicDraft(controller.get('list'));
-      } else {
-        this.controllerFor('composer').open({
-          categoryId: controller.get('category.id'),
-          action: Composer.CREATE_TOPIC,
-          draftKey: controller.get('list.draft_key'),
-          draftSequence: controller.get('list.draft_sequence')
-        }).then(function() {
-          // Pre-fill the tags input field
-          if (controller.get('model.id')) {
-            var c = self.controllerFor('composer').get('model');
-            c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTags')));
-          }
-        });
-      }
+      this.controllerFor('composer').open({
+        categoryId: controller.get('category.id'),
+        action: Composer.CREATE_TOPIC,
+        draftKey: controller.get('list.draft_key'),
+        draftSequence: controller.get('list.draft_sequence')
+      }).then(function() {
+        // Pre-fill the tags input field
+        if (controller.get('model.id')) {
+          var c = self.controllerFor('composer').get('model');
+          c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTags')));
+        }
+      });
     },
 
     didTransition() {

@@ -1,6 +1,7 @@
 .select-kit {
   &.combo-box {
     &.category-drop {
+      min-width: auto;
 
       .badge-wrapper {
         font-size: $font-0;
@@ -15,17 +16,30 @@
         }
       }
 
+      &.none.has-selection .category-drop-header {
+        padding: 4.5px 5px 4.5px 10px;
+      }
+
       &.bar.has-selection .category-drop-header {
-        border: none;
+        padding: 3.5px 5px 3.5px 10px;
       }
 
       &.box.has-selection .category-drop-header {
-        padding: 3px 5px 3px 10px;
+        padding: 2.5px 5px 2.5px 10px;
+      }
+
+      &.bullet.has-selection .category-drop-header {
+        padding: 4.5px 5px 4.5px 10px;
       }
 
       .category-drop-header {
-        padding: 5px 5px 5px 10px;
-        
+        background: $primary-low;
+        color: $primary;
+        border: 1px solid transparent;
+        padding: 4.5px 5px 4.5px 10px;
+        font-size: $font-0;
+        transition: none;
+
         &.is-none .selected-name {
           color: inherit;
         }
@@ -34,24 +48,76 @@
           margin-right: 0;
         }
 
+        .fa {
+          font-size: $font-up-1;
+        }
+
+        .caret-icon {
+          opacity: 1;
+          margin: 0;
+        }
+      }
+
+      &.is-expanded .category-drop-header {
+        border: 1px solid $tertiary;
+        box-shadow: shadow("focus");
+      }
+
+      .select-kit-collection {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        min-width: 100px;
+        max-height: 300px;
+        max-width: 30em;
+
+        .collection-header {
+          .category-filter {
+            white-space: nowrap;
+            color: $primary;
+            font-size: $font-down-1;
+            line-height: $line-height-medium;
+            font-weight: bold;
+            display: block;
+            padding: 10px 5px;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
       }
 
       .select-kit-body {
+        width: auto;
         min-width: 300px;
+        border-radius: 0;
+        box-shadow: shadow("dropdown");
       }
 
       .select-kit-row {
+        margin: 0;
+        font-size: $font-down-1;
+        font-weight: bold;
         flex-direction: column;
         align-items: flex-start;
+        padding: 5px;
 
         .category-desc {
           font-weight: normal;
           color: $primary-medium;
-          margin-top: 2px;
         }
 
         .category-status {
           align-items: center;
+        }
+
+        &.no-content {
+          font-weight: normal;
+        }
+
+        &:not(.no-content) {
+          padding: 5px;
         }
 
         .topic-count {
@@ -61,7 +127,6 @@
 
         .badge-wrapper {
           margin: 0;
-          font-weight: bold;
         }
       }
 

@@ -265,15 +265,8 @@ describe Middleware::RequestTracker do
       # ensure pg is warmed up with the select 1 query
       User.where(id: -100).pluck(:id)
 
-      freeze_time
-      start = Time.now.to_f
-
-      freeze_time 1.minute.from_now
-
       tracker = Middleware::RequestTracker.new(app([200, {}, []], sql_calls: 2, redis_calls: 2))
-      tracker.call(env("HTTP_X_REQUEST_START" => "t=#{start}"))
-
-      expect(@data[:queue_seconds]).to eq(60)
+      tracker.call(env)
 
       timing = @data[:timing]
       expect(timing[:total_duration]).to be > 0
@@ -330,9 +323,9 @@ describe Middleware::RequestTracker do
       }.to_not change { ApplicationRequest.count }
     end
 
-    it "blocks json requests" do
+    it "allows json requests" do
       SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
-      expect_blocked_response(*middleware.call(env(
+      expect_success_response(*middleware.call(env(
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)',
         'HTTP_ACCEPT' => 'application/json'
       )))

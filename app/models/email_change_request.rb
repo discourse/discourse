@@ -1,5 +1,5 @@
 require_dependency 'email_validator'
-
+# 应该是记录邮件更改
 class EmailChangeRequest < ActiveRecord::Base
   belongs_to :old_email_token, class_name: 'EmailToken'
   belongs_to :new_email_token, class_name: 'EmailToken'

@@ -1,3 +1,5 @@
+// 看名字和代码，这里是一堆小工具，一堆函数
+// 邮箱验证，从 URL 里抽取域名等等
 import { escape } from 'pretty-text/sanitizer';
 
 const homepageSelector = 'meta[name=discourse_current_homepage]';
@@ -40,11 +42,14 @@ export function avatarUrl(template, size) {
   return template.replace(/\{size\}/g, rawSize);
 }
 
+// 应该是根据比例返回原大小
+// devicePixelRatio 暂时没查具体干嘛的
 export function getRawSize(size) {
   const pixelRatio = window.devicePixelRatio || 1;
   return size * Math.min(3, Math.max(1, Math.round(pixelRatio)));
 }
 
+// 头像的 img 标签
 export function avatarImg(options, getURL) {
   getURL = getURL || Discourse.getURLWithCDN;
 
@@ -78,6 +83,7 @@ export function postUrl(slug, topicId, postNumber) {
   return url;
 }
 
+// 邮箱合法验证
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
   const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
@@ -93,6 +99,9 @@ export function extractDomainFromUrl(url) {
   return url.split(':')[0];
 }
 
+// 应该是返回选中文字
+// 试着在 Chrome console 里跑了一下，$("<div>"); 这行会报错
+// 所以具体干嘛的也不确定
 export function selectedText() {
   const selection = window.getSelection();
   if (selection.isCollapsed) { return ""; }

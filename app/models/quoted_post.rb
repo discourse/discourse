@@ -1,3 +1,4 @@
+# 被  quoted 的帖子？应该是用于通知系统相关
 class QuotedPost < ActiveRecord::Base
   belongs_to :post
   belongs_to :quoted_post, class_name: 'Post'

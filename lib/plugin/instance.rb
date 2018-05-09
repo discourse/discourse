@@ -338,12 +338,7 @@ class Plugin::Instance
   end
 
   def register_asset(file, opts = nil)
-    if opts && opts == :vendored_core_pretty_text
-      full_path = DiscoursePluginRegistry.core_asset_for_name(file)
-    else
-      full_path = File.dirname(path) << "/assets/" << file
-    end
-
+    full_path = File.dirname(path) << "/assets/" << file
     assets << [full_path, opts]
   end
 
@@ -511,7 +506,6 @@ JS
 
   def javascript_includes
     assets.map do |asset, opts|
-      next if opts == :vendored_core_pretty_text
       next if opts == :admin
       next unless asset =~ DiscoursePluginRegistry::JS_REGEX
       asset
@@ -570,8 +564,6 @@ JS
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)
         Rails.configuration.assets.precompile << "locales/#{locale}.js"
-      else
-        Rails.logger.error "Invalid locale! #{opts.inspect}"
       end
     end
   end

@@ -1,4 +1,10 @@
+# 用户导出？
 class UserExport < ActiveRecord::Base
+
+  def self.get_download_path(filename)
+    path = File.join(UserExport.base_directory, filename)
+    File.exists?(path) ? path : nil
+  end
 
   def self.remove_old_exports
     UserExport.where('created_at < ?', 2.days.ago).find_each do |expired_export|
@@ -25,5 +31,4 @@ end
 #  user_id    :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  upload_id  :integer
 #

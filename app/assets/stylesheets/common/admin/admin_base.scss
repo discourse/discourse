@@ -5,7 +5,6 @@
 
 @import "common/admin/customize";
 @import "common/admin/flagging";
-@import "common/admin/dashboard_next";
 @import "common/admin/moderation_history";
 @import "common/admin/suspend";
 
@@ -39,7 +38,10 @@ $mobile-breakpoint: 700px;
 
   tr {text-align: left;}
   td, th {padding: 8px;}
-
+  td {
+    border-bottom: 1px solid $primary-low;
+    border-top: 1px solid $primary-low;
+  }
   th {
     text-align: left;
 
@@ -962,13 +964,13 @@ table.api-keys {
         display: none;
       }
 
-      &.high-trending-up, &.trending-up {
+      &.trending-up {
         i.up {
           color: $success;
           display: inline;
         }
       }
-      &.high-trending-down, &.trending-down {
+      &.trending-down {
         i.down {
           color: $danger;
           display: inline;
@@ -983,10 +985,10 @@ table.api-keys {
     }
 
     tr.reverse-colors {
-      td.value.high-trending-down i.down, td.value.trending-down i.down {
+      td.value.trending-down i.down {
         color: $success;
       }
-      td.value.high-trending-up i.up, td.value.trending-up i.up {
+      td.value.trending-up i.up {
         color: $danger;
       }
     }

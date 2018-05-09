@@ -4,7 +4,7 @@
       {{d-button action="new"
           class="groups-header-new pull-right"
           icon="plus"
-          label="admin.groups.new.title"}}
+          label="groups.new.title"}}
     {{/if}}
 
     <div class="groups-header-filters">
@@ -27,12 +27,10 @@
         <div class='container'>
           <table class="groups-table">
             <thead>
-              <tr>
-                {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
-                {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
-                <th>{{i18n "groups.index.group_type"}}</th>
-                <th>{{i18n "groups.membership"}}</th>
-              </tr>
+              {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
+              {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
+              <th>{{i18n "groups.index.group_type"}}</th>
+              <th>{{i18n "groups.membership"}}</th>
             </thead>
 
             <tbody>
@@ -50,7 +48,19 @@
                         </span>
                       {{/if}}
 
-                      {{groups-info group=group}}
+                      <span>
+                        <span class='groups-info-name'>{{group.displayName}}</span>
+
+                        {{#if group.full_name}}
+                          <span class='groups-info-full-name'>{{group.full_name}}</span>
+                        {{/if}}
+
+                        {{#if group.title}}
+                          <div>
+                            <span class='groups-info-title'>{{group.title}}</span>
+                          </div>
+                        {{/if}}
+                      </span>
                     {{/link-to}}
                   </td>
 

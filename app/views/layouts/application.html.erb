@@ -34,6 +34,26 @@
     <%- if allow_third_party_plugins? %>
     <%= preload_script "plugin-third-party" %>
     <%- end %>
+    <%#
+      备注：preload_script 是 discourse 自己的函数，就是拼接下名字输出 <link> 和 <script> 而已
+      上面这些代码，最后生成这些：
+      <link rel='preload' href='/assets/locales/zh_CN.js' as='script'/>
+      <script src='/assets/locales/zh_CN.js'></script>
+      <link rel='preload' href='/assets/ember_jquery.js' as='script'/>
+      <script src='/assets/ember_jquery.js'></script>
+      <link rel='preload' href='/assets/preload-store.js' as='script'/>
+      <script src='/assets/preload-store.js'></script>
+      <link rel='preload' href='/assets/vendor.js' as='script'/>
+      <script src='/assets/vendor.js'></script>
+      <link rel='preload' href='/assets/pretty-text-bundle.js' as='script'/>
+      <script src='/assets/pretty-text-bundle.js'></script>
+      <link rel='preload' href='/assets/application.js' as='script'/>
+      <script src='/assets/application.js'></script>
+      <link rel='preload' href='/assets/plugin.js' as='script'/>
+      <script src='/assets/plugin.js'></script>
+      <link rel='preload' href='/assets/plugin-third-party.js' as='script'/>
+      <script src='/assets/plugin-third-party.js'></script>
+    %>
 
     <%- if staff? %>
       <script src="<%= ExtraLocalesController.url('admin') %>"></script>

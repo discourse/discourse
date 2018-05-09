@@ -1,3 +1,7 @@
+{{!-- 首页中部 --}}
+
+{{!-- <h1>aad</h1> --}}
+
 <div class="container">
   {{discourse-banner user=currentUser banner=site.banner}}
 </div>
@@ -24,9 +28,11 @@
         {{plugin-outlet name="discovery-list-container-top"
                         args=(hash category=category listLoading=loading)}}
         {{outlet "list-container"}}
+        {{!-- outlet list-container 是首页一条条的列表 --}}
       </div>
     </div>
   </div>
 </div>
 
 {{plugin-outlet name="discovery-below"}}
+{{!-- 应该是给插件的位置 --}}

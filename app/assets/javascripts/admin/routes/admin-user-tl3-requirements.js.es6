@@ -1,5 +1,5 @@
 export default Discourse.Route.extend({
-  model() {
+  model: function() {
     return this.modelFor('adminUser');
   }
 });

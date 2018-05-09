@@ -37,7 +37,7 @@ class GroupsController < ApplicationController
   }
 
   def index
-    unless SiteSetting.enable_group_directory? || current_user&.staff?
+    unless SiteSetting.enable_group_directory?
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
@@ -240,20 +240,20 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    if params[:usernames].present?
-      users = User.where(username: params[:usernames].split(","))
-      raise Discourse::InvalidParameters.new(:usernames) if users.blank?
-    elsif params[:user_ids].present?
-      users = User.where(id: params[:user_ids].split(","))
-      raise Discourse::InvalidParameters.new(:user_ids) if users.blank?
-    elsif params[:user_emails].present?
-      users = User.with_email(params[:user_emails].split(","))
-      raise Discourse::InvalidParameters.new(:user_emails) if users.blank?
-    else
-      raise Discourse::InvalidParameters.new(
-        'user_ids or usernames or user_emails must be present'
-      )
-    end
+    users =
+      if params[:usernames].present?
+        User.where(username: params[:usernames].split(","))
+      elsif params[:user_ids].present?
+        User.find(params[:user_ids].split(","))
+      elsif params[:user_emails].present?
+        User.with_email(params[:user_emails].split(","))
+      else
+        raise Discourse::InvalidParameters.new(
+          'user_ids or usernames or user_emails must be present'
+        )
+      end
+
+    raise Discourse::NotFound if users.blank?
 
     if group.public_admission
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -304,8 +304,7 @@ class GroupsController < ApplicationController
   end
 
   def remove_member
-    group = Group.find_by(id: params[:id])
-    raise Discourse::NotFound unless group
+    group = Group.find(params[:id])
     group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
     user =

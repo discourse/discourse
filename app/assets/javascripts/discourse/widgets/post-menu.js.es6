@@ -12,7 +12,7 @@ function animateHeart($elem, start, end, complete) {
        .animate({ textIndent: end }, {
           complete,
           step(now) {
-            $(this).css('transform','scale('+now+')').addClass("d-liked").removeClass("d-unliked");
+            $(this).css('transform','scale('+now+')');
           },
           duration: 150
         }, 'linear');
@@ -416,14 +416,18 @@ export default createWidget('post-menu', {
     const $heart = $(`[data-post-id=${attrs.id}] .toggle-like .d-icon`);
     $heart.closest('button').addClass('has-like');
 
-    const scale = [1.0, 1.5];
-    return new Ember.RSVP.Promise(resolve => {
-      animateHeart($heart, scale[0], scale[1], () => {
-        animateHeart($heart, scale[1], scale[0], () => {
-          this.sendWidgetAction('toggleLike').then(() => resolve());
+    if (!Ember.testing) {
+      const scale = [1.0, 1.5];
+      return new Ember.RSVP.Promise(resolve => {
+        animateHeart($heart, scale[0], scale[1], () => {
+          animateHeart($heart, scale[1], scale[0], () => {
+            this.sendWidgetAction('toggleLike').then(() => resolve());
+          });
         });
       });
-    });
+    } else {
+      this.sendWidgetAction('toggleLike');
+    }
   },
 
   refreshLikes() {

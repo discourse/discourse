@@ -66,7 +66,7 @@ module Autospec
         end
       end
 
-      cmd = "node #{Rails.root}/vendor/assets/javascripts/run-qunit.js \"#{qunit_url}\" 3000000 ./tmp/qunit_result"
+      cmd = "node #{Rails.root}/lib/autospec/run-qunit.js \"#{qunit_url}\""
 
       @pid = Process.spawn(cmd)
       _, status = Process.wait2(@pid)

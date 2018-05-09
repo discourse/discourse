@@ -46,12 +46,10 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def delete_all_posts
-    hijack do
-      user = User.find_by(id: params[:user_id])
-      user.delete_all_posts!(guardian)
-      # staff action logs will have an entry for each post
-      render body: nil
-    end
+    @user = User.find_by(id: params[:user_id])
+    @user.delete_all_posts!(guardian)
+    # staff action logs will have an entry for each post
+    render body: nil
   end
 
   def suspend
@@ -364,23 +362,20 @@ class Admin::UsersController < Admin::AdminController
   def destroy
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
+    begin
+      options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
+      options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
 
-    options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
-    options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
-
-    hijack do
-      begin
-        if UserDestroyer.new(current_user).destroy(user, options)
-          render json: { deleted: true }
-        else
-          render json: {
-            deleted: false,
-            user: AdminDetailedUserSerializer.new(user, root: false).as_json
-          }
-        end
-      rescue UserDestroyer::PostsExistError
-        raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
+      if UserDestroyer.new(current_user).destroy(user, options)
+        render json: { deleted: true }
+      else
+        render json: {
+          deleted: false,
+          user: AdminDetailedUserSerializer.new(user, root: false).as_json
+        }
       end
+    rescue UserDestroyer::PostsExistError
+      raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
     end
   end
 

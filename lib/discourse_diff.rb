@@ -1,3 +1,5 @@
+# Discourse 帖子有个对比版本区别的功能
+# 这里应该就是相关代码了
 require_dependency "onpdiff"
 
 class DiscourseDiff
@@ -184,13 +186,8 @@ class DiscourseDiff
         # add it right before the ">"
         html_or_text.insert(index_of_next_chevron, " class=\"diff-#{klass}\"")
       else
-        # we have a class, insert it at the beginning if not already present
-        classes = html_or_text[/class=(["'])([^\1]*)\1/, 2]
-        if classes.include?("diff-#{klass}")
-          html_or_text
-        else
-          html_or_text.insert(index_of_class + "class=".length + 1, "diff-#{klass} ")
-        end
+        # we have a class, insert it at the beginning
+        html_or_text.insert(index_of_class + "class=".length + 1, "diff-#{klass} ")
       end
     else
       "<#{klass}>#{html_or_text}</#{klass}>"

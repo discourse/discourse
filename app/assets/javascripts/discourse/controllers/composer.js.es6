@@ -41,8 +41,7 @@ function loadDraft(store, opts) {
       composerState: Composer.DRAFT,
       composerTime: draft.composerTime,
       typingTime: draft.typingTime,
-      whisper: draft.whisper,
-      tags: draft.tags
+      whisper: draft.whisper
     });
     return composer;
   }
@@ -683,7 +682,7 @@ export default Ember.Controller.extend({
     }
 
     if (opts.topicTitle && opts.topicTitle.length <= this.siteSettings.max_topic_title_length) {
-      this.set('model.title', escapeExpression(opts.topicTitle));
+      this.set('model.title', opts.topicTitle);
     }
 
     if (opts.topicCategoryId) {
@@ -708,12 +707,7 @@ export default Ember.Controller.extend({
     }
 
     if (opts.topicTags && !this.site.mobileView && this.site.get('can_tag_topics')) {
-      const self = this;
-      let tags = escapeExpression(opts.topicTags).split(",").slice(0, self.siteSettings.max_tags_per_topic);
-      tags.forEach(function(tag, index, array) {
-        array[index] = tag.substring(0, self.siteSettings.max_tag_length);
-      });
-      self.set('model.tags', tags);
+      this.set('model.tags', opts.topicTags.split(","));
     }
 
     if (opts.topicBody) {
@@ -731,26 +725,25 @@ export default Ember.Controller.extend({
   destroyDraft() {
     const key = this.get('model.draftKey');
     if (key) {
-      if (key === 'new_topic') {
-        this.send('clearTopicDraft');
-      }
       Draft.clear(key, this.get('model.draftSequence'));
     }
   },
 
   cancelComposer() {
-    return new Ember.RSVP.Promise((resolve) => {
-      if (this.get('model.hasMetaData') || this.get('model.replyDirty')) {
+    const self = this;
+
+    return new Ember.RSVP.Promise(function (resolve) {
+      if (self.get('model.hasMetaData') || self.get('model.replyDirty')) {
         bootbox.dialog(I18n.t("post.abandon.confirm"), [
           { label: I18n.t("post.abandon.no_value") },
           {
             label: I18n.t("post.abandon.yes_value"),
             'class': 'btn-danger',
-            callback: (result) => {
+            callback(result) {
               if (result) {
-                this.destroyDraft();
-                this.get('model').clearState();
-                this.close();
+                self.destroyDraft();
+                self.get('model').clearState();
+                self.close();
                 resolve();
               }
             }
@@ -758,9 +751,9 @@ export default Ember.Controller.extend({
         ]);
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
-        this.destroyDraft();
-        this.get('model').clearState();
-        this.close();
+        self.destroyDraft();
+        self.get('model').clearState();
+        self.close();
         resolve();
       }
     });
@@ -786,16 +779,8 @@ export default Ember.Controller.extend({
 
   @computed('model.categoryId', 'lastValidatedAt')
   categoryValidation(categoryId, lastValidatedAt) {
-    if(!this.siteSettings.allow_uncategorized_topics && !categoryId) {
+    if( !this.siteSettings.allow_uncategorized_topics && !categoryId) {
       return InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
-    }
-  },
-
-  @computed('model.category', 'model.tags', 'lastValidatedAt')
-  tagValidation(category, tags, lastValidatedAt) {
-    const tagsArray = tags || [];
-    if (this.site.get('can_tag_topics') && category && category.get('minimum_required_tags') > tagsArray.length) {
-      return InputValidation.create({ failed: true, reason: I18n.t('composer.error.tags_missing', {count: category.get('minimum_required_tags')}), lastShownAt: lastValidatedAt });
     }
   },
 

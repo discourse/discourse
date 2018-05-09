@@ -4,6 +4,7 @@ class SingleSignOn
                :add_groups, :remove_groups, :groups]
   FIXNUMS = []
   BOOLS = [:avatar_force_update, :admin, :moderator, :require_activation, :suppress_welcome_message]
+  ARRAYS = [:groups]
   NONCE_EXPIRY_TIME = 10.minutes
 
   attr_accessor(*ACCESSORS)
@@ -40,6 +41,7 @@ class SingleSignOn
       if BOOLS.include? k
         val = ["true", "false"].include?(val) ? val == "true" : nil
       end
+      val = Array(val) if ARRAYS.include?(k) && !val.nil?
       sso.send("#{k}=", val)
     end
 

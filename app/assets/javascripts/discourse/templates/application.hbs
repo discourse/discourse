@@ -1,3 +1,4 @@
+{{!-- 最核心的模板 --}}
 {{plugin-outlet name="above-site-header"}}
 {{site-header canSignUp=canSignUp
               showCreateAccount=(route-action "showCreateAccount")
@@ -14,7 +15,8 @@
     {{#if showTop}}
       {{custom-html name="top"}}
     {{/if}}
-    {{global-notice}}
+    {{global-notice}}  
+    {{!-- global-notice 全局提醒，比如 『欢迎来到你新安装的 Discourse！让我们开始设置向导✨』--}}
     {{create-topics-notice}}
   </div>
   {{outlet}}

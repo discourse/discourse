@@ -171,7 +171,7 @@ componentTest('with minimum', {
   test(assert) {
     this.get('subject').expand();
 
-    andThen(() => assert.equal(this.get('subject').validationMessage(), 'Select at least 1 item.'));
+    andThen(() => assert.equal(this.get('subject').validationMessage(), 'Select at least 1 item(s).'));
 
     this.get('subject').selectRowByValue('sam');
 

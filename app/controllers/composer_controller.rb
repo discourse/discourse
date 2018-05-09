@@ -1,5 +1,5 @@
 require_dependency 'html_to_markdown'
-
+# 收 html，转成 markdown 返回
 class ComposerController < ApplicationController
 
   requires_login

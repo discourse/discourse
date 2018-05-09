@@ -34,6 +34,7 @@ createWidget('discourse-poll-option', {
 
   html(attrs) {
     const result = [];
+
     const { option, vote } = attrs;
     const chosen = vote.indexOf(option.id) !== -1;
 
@@ -44,7 +45,6 @@ createWidget('discourse-poll-option', {
     }
     result.push(' ');
     result.push(optionHtml(option));
-
     return result;
   },
 
@@ -235,6 +235,7 @@ createWidget('discourse-poll-number-results', {
     const { attrs, state } = this;
 
     if (state.loaded === 'new') {
+
       fetchVoters({
         post_id: attrs.post.id,
         poll_name: attrs.poll.get('name')
@@ -257,7 +258,8 @@ createWidget('discourse-poll-number-results', {
     const voters = poll.voters;
     const average = voters === 0 ? 0 : round(totalScore / voters, -2);
     const averageRating = I18n.t("poll.average_rating", { average });
-    const results = [h('div.poll-results-number-rating', new RawHtml({ html: `<span>${averageRating}</span>` }))];
+    const results = [h('div.poll-results-number-rating',
+                       new RawHtml({ html: `<span>${averageRating}</span>` }))];
 
     if (isPublic) {
       this.fetchVoters();
@@ -281,7 +283,7 @@ createWidget('discourse-poll-container', {
   html(attrs) {
     const { poll } = attrs;
 
-    if (attrs.showResults || attrs.isClosed) {
+    if (attrs.showResults) {
       const type = poll.get('type') === 'number' ? 'number' : 'standard';
       return this.attach(`discourse-poll-${type}-results`, attrs);
     }
@@ -325,37 +327,29 @@ createWidget('discourse-poll-info', {
     const count = poll.get('voters');
     const result = [h('p', [
                      h('span.info-number', count.toString()),
-                     h('span.info-label', I18n.t('poll.voters', { count }))
+                     h('span.info-text', I18n.t('poll.voters', { count }))
                    ])];
 
     if (attrs.isMultiple) {
-      if (attrs.showResults || attrs.isClosed) {
+      if (attrs.showResults) {
         const totalVotes = poll.get('options').reduce((total, o) => {
           return total + parseInt(o.votes, 10);
         }, 0);
 
         result.push(h('p', [
                       h('span.info-number', totalVotes.toString()),
-                      h('span.info-label', I18n.t("poll.total_votes", { count: totalVotes }))
+                      h('span.info-text', I18n.t("poll.total_votes", { count: totalVotes }))
                     ]));
       } else {
         const help = this.multipleHelpText(attrs.min, attrs.max, poll.get('options.length'));
         if (help) {
-          result.push(new RawHtml({ html: `<span class="info-text">${help}</span>` }));
+          result.push(new RawHtml({ html: `<span>${help}</span>` }));
         }
       }
     }
 
-    if (!attrs.isClosed) {
-      if (!attrs.showResults && poll.get('public')) {
-        result.push(h('span.info-text', I18n.t('poll.public.title')));
-      }
-
-      if (poll.close) {
-        const closeDate = moment.utc(poll.close);
-        const timeLeft = moment().to(closeDate.local(), true);
-        result.push(new RawHtml({ html: `<span class="info-text" title="${closeDate.format("LLL")}">${I18n.t("poll.automatic_close.closes_in", { timeLeft })}</span>` }));
-      }
+    if (!attrs.showResults && attrs.poll.get('public')) {
+      result.push(h('p', I18n.t('poll.public.title')));
     }
 
     return result;
@@ -369,8 +363,8 @@ createWidget('discourse-poll-buttons', {
     const results = [];
     const { poll, post } = attrs;
     const topicArchived = post.get('topic.archived');
-    const closed = attrs.isClosed;
-    const hideResultsDisabled = closed || topicArchived;
+    const isClosed = poll.get('status') === 'closed';
+    const hideResultsDisabled = isClosed || topicArchived;
 
     if (attrs.isMultiple && !hideResultsDisabled) {
       const castVotesDisabled = !attrs.canCastVotes;
@@ -384,7 +378,7 @@ createWidget('discourse-poll-buttons', {
       results.push(' ');
     }
 
-    if (attrs.showResults || hideResultsDisabled) {
+    if (attrs.showResults) {
       results.push(this.attach('button', {
         className: 'btn toggle-results',
         label: 'poll.hide-results.label',
@@ -409,16 +403,14 @@ createWidget('discourse-poll-buttons', {
          this.currentUser.get("staff")) &&
         !topicArchived) {
 
-      if (closed) {
-        if (!attrs.isAutomaticallyClosed) {
-          results.push(this.attach('button', {
-            className: 'btn toggle-status',
-            label: 'poll.open.label',
-            title: 'poll.open.title',
-            icon: 'unlock-alt',
-            action: 'toggleStatus'
-          }));
-        }
+      if (isClosed) {
+        results.push(this.attach('button', {
+          className: 'btn toggle-status',
+          label: 'poll.open.label',
+          title: 'poll.open.title',
+          icon: 'unlock-alt',
+          action: 'toggleStatus'
+        }));
       } else {
         results.push(this.attach('button', {
           className: 'btn toggle-status btn-danger',
@@ -429,6 +421,7 @@ createWidget('discourse-poll-buttons', {
         }));
       }
     }
+
 
     return results;
   }
@@ -444,14 +437,14 @@ export default createWidget('discourse-poll', {
       "data-poll-type":   poll.get('type'),
       "data-poll-name":   poll.get('name'),
       "data-poll-status": poll.get('status'),
-      "data-poll-public": poll.get('public'),
-      "data-poll-close":  poll.get('close'),
+      "data-poll-public": poll.get('public')
     };
   },
 
   defaultState(attrs) {
-    const showResults = this.isClosed() || attrs.post.get('topic.archived');
-    return { loading: false, showResults };
+    const { poll, post } = attrs;
+    return { loading: false,
+             showResults: poll.get('isClosed') || post.get('topic.archived') };
   },
 
   html(attrs, state) {
@@ -459,17 +452,18 @@ export default createWidget('discourse-poll', {
     const newAttrs = jQuery.extend({}, attrs, {
       showResults,
       canCastVotes: this.canCastVotes(),
-      isClosed: this.isClosed(),
-      isAutomaticallyClosed: this.isAutomaticallyClosed(),
       min: this.min(),
       max: this.max()
     });
-
     return h('div', [
       this.attach('discourse-poll-container', newAttrs),
       this.attach('discourse-poll-info', newAttrs),
       this.attach('discourse-poll-buttons', newAttrs)
     ]);
+  },
+
+  isClosed() {
+    return this.attrs.poll.get('status') === "closed";
   },
 
   min() {
@@ -485,51 +479,37 @@ export default createWidget('discourse-poll', {
     return max;
   },
 
-  isAutomaticallyClosed() {
-    const { poll } = this.attrs;
-    return poll.get("close") && moment.utc(poll.get("close")) <= moment();
-  },
-
-  isClosed() {
-    const { poll } = this.attrs;
-    return poll.get("status") === "closed" || this.isAutomaticallyClosed();
-  },
-
   canCastVotes() {
     const { state, attrs } = this;
-
     if (this.isClosed() || state.showResults || state.loading) {
       return false;
     }
 
     const selectedOptionCount = attrs.vote.length;
-
     if (attrs.isMultiple) {
       return selectedOptionCount >= this.min() && selectedOptionCount <= this.max();
     }
-
     return selectedOptionCount > 0;
   },
 
   toggleStatus() {
     const { state, attrs } = this;
-    const { post, poll } = attrs;
-
-    if (this.isAutomaticallyClosed()) { return; }
+    const { poll } = attrs;
+    const isClosed = poll.get('status') === 'closed';
 
     bootbox.confirm(
-      I18n.t(this.isClosed() ? "poll.open.confirm" : "poll.close.confirm"),
+      I18n.t(isClosed ? "poll.open.confirm" : "poll.close.confirm"),
       I18n.t("no_value"),
       I18n.t("yes_value"),
       confirmed => {
         if (confirmed) {
           state.loading = true;
-          const status = this.isClosed() ? "open" : "closed";
 
+          const status = isClosed ? "open" : "closed";
           ajax("/polls/toggle_status", {
             type: "PUT",
             data: {
-              post_id: post.get('id'),
+              post_id: attrs.post.get('id'),
               poll_name: poll.get('name'),
               status,
             }
@@ -555,15 +535,15 @@ export default createWidget('discourse-poll', {
   },
 
   showLogin() {
-    this.register.lookup('route:application').send('showLogin');
+    const appRoute = this.register.lookup('route:application');
+    appRoute.send('showLogin');
   },
 
   toggleOption(option) {
-    const { attrs } = this;
-
     if (this.isClosed()) { return; }
     if (!this.currentUser) { this.showLogin(); }
 
+    const { attrs } = this;
     const { vote } = attrs;
 
     const chosenIdx = vote.indexOf(option.id);

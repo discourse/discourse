@@ -10,7 +10,6 @@ class DiscourseLogstashLogger
         event['severity_name'] = event['severity']
         event['severity'] = Object.const_get("Logger::Severity::#{event['severity']}")
         event['type'] = type
-        event['pid'] = Process.pid
       },
     )
   end

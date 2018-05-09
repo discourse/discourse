@@ -9,7 +9,7 @@
 }
 
 .user-main {
-margin-top: 10px;
+
   table.group-members {
     width: 100%;
     p {
@@ -77,8 +77,18 @@ margin-top: 10px;
     }
 
     .secondary {
+      background: $primary-low;
+
       dl {
-        padding: 5px 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 10px;
+
+      }
+
+      dd {
+        margin: 0 15px 0 5px;
       }
     }
 

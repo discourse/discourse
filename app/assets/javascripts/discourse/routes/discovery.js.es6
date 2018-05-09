@@ -45,12 +45,7 @@ export default Discourse.Route.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/topics").get('model');
-      if (model.draft) {
-        this.openTopicDraft(model);
-      } else {
-        this.openComposer(this.controllerFor("discovery/topics"));
-      }
+      this.openComposer(this.controllerFor("discovery/topics"));
     },
 
     dismissReadTopics(dismissTopics) {

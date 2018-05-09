@@ -12,7 +12,6 @@ import { siteDir } from 'discourse/lib/text-direction';
 import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
 import toMarkdown from 'discourse/lib/to-markdown';
 import deprecated from 'discourse-common/lib/deprecated';
-import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -259,15 +258,7 @@ export default Ember.Component.extend({
 
     // disable clicking on links in the preview
     this.$('.d-editor-preview').on('click.preview', e => {
-      if (wantsNewWindow(e)) { return; }
-      const $target = $(e.target);
-      if ($target.is("a.mention")) {
-        this.appEvents.trigger('click.discourse-preview-user-card-mention', $target);
-      }
-      if ($target.is("a.mention-group")) {
-        this.appEvents.trigger('click.discourse-preview-group-card-mention-group', $target);
-      }
-      if ($target.is("a")) {
+      if ($(e.target).is("a")) {
         e.preventDefault();
         return false;
       }
@@ -345,9 +336,6 @@ export default Ember.Component.extend({
         return obj.text;
       },
       dataSource(term) {
-        if (term.match(/\s/)) {
-          return null;
-        }
         return searchCategoryTag(term, siteSettings);
       },
       triggerRule(textarea, opts) {
@@ -762,8 +750,6 @@ export default Ember.Component.extend({
     },
 
     toolbarButton(button) {
-      if (this.get('disabled')) { return; }
-
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
@@ -784,8 +770,6 @@ export default Ember.Component.extend({
     },
 
     showLinkModal() {
-      if (this.get('disabled')) { return; }
-
       this._lastSel = this._getSelected();
 
       if (this._lastSel) {
@@ -796,8 +780,6 @@ export default Ember.Component.extend({
     },
 
     formatCode() {
-      if (this.get('disabled')) { return; }
-
       const sel = this._getSelected('', { lineVal: true });
       const selValue = sel.value;
       const hasNewLine = selValue.indexOf("\n") !== -1;
@@ -851,7 +833,6 @@ export default Ember.Component.extend({
     },
 
     emoji() {
-      if (this.get('disabled')) { return; }
       this.set('emojiPickerIsActive', !this.get('emojiPickerIsActive'));
     }
   }

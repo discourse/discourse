@@ -311,7 +311,9 @@ export default {
   _moveSelection(direction) {
     const $articles = this._findArticles();
 
-    if (typeof $articles === 'undefined') return;
+    if (typeof $articles === 'undefined') {
+      return;
+    }
 
     const $selected = ($articles.filter('.selected').length !== 0)
       ? $articles.filter('.selected')
@@ -320,15 +322,27 @@ export default {
     let index = $articles.index($selected);
 
     if ($selected.length !== 0) {
-      if (direction === -1 && index === 0) return;
-      if (direction ===  1 && index === $articles.length - 1) return;
+      if (direction === -1 && index === 0) { return; }
+      if (direction === 1 && index === ($articles.length - 1) ) { return; }
     }
 
-    // when nothing is selected
+    // if nothing is selected go to the first post on screen
     if ($selected.length === 0) {
-      // select the first post with its top visible
-      const offset = minimumOffset();
-      index = $articles.toArray().findIndex(article => article.getBoundingClientRect().top > offset);
+      const scrollTop = $(document).scrollTop();
+
+      index = 0;
+      $articles.each(function() {
+        const top = $(this).position().top;
+        if (top >= scrollTop) {
+          return false;
+        }
+        index += 1;
+      });
+
+      if (index >= $articles.length) {
+        index = $articles.length - 1;
+      }
+
       direction = 0;
     }
 
@@ -348,11 +362,7 @@ export default {
   },
 
   _scrollToPost($article) {
-    if ($article.find("#post_1").length > 0) {
-      $(window).scrollTop(0);
-    } else {
-      $(window).scrollTop($article.offset().top - minimumOffset());
-    }
+    $(window).scrollTop($article.offset().top - minimumOffset());
   },
 
   _scrollList($article) {
@@ -380,13 +390,14 @@ export default {
 
 
   _findArticles() {
-    const $topicList = $(".topic-list");
-    const $postsWrapper = $(".posts-wrapper");
+    const $topicList = $('.topic-list'),
+        $topicArea = $('.posts-wrapper');
 
-    if ($postsWrapper.length > 0) {
-      return $(".posts-wrapper .topic-post, .topic-list tbody tr");
-    } else if ($topicList.length > 0) {
-      return $topicList.find(".topic-list-item");
+    if ($topicArea.length > 0) {
+      return $('.posts-wrapper .topic-post, .topic-list tbody tr');
+    }
+    else if ($topicList.length > 0) {
+      return $topicList.find('.topic-list-item');
     }
   },
 

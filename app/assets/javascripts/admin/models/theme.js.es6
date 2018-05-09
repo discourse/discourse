@@ -2,10 +2,9 @@ import RestModel from 'discourse/models/rest';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 const THEME_UPLOAD_VAR = 2;
+const FIELDS_IDS = [0, 1];
 
 const Theme = RestModel.extend({
-
-  FIELDS_IDS: [0, 1],
 
   @computed('theme_fields')
   themeFields(fields) {
@@ -17,7 +16,7 @@ const Theme = RestModel.extend({
 
     let hash = {};
     fields.forEach(field => {
-      if (!field.type_id || this.get('FIELDS_IDS').includes(field.type_id)) {
+      if (!field.type_id || FIELDS_IDS.includes(field.type_id)) {
         hash[this.getKey(field)] = field;
       }
     });

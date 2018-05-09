@@ -1,5 +1,6 @@
 module Jobs
 
+  # A daily job that will enqueue digest emails to be sent to users
   class EnqueueDigestEmails < Jobs::Scheduled
     every 30.minutes
 

@@ -7,20 +7,21 @@ acceptance('Composer Actions', {
   }
 });
 
-QUnit.test('replying to post', async assert => {
+QUnit.test('replying to post', assert => {
   const composerActions = selectKit('.composer-actions');
 
   visit('/t/internationalization-localization/280');
   click('article#post_3 button.reply');
 
-  await composerActions.expandAwait();
+  composerActions.expand();
 
-  assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
-  assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
-  assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
-  assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
-  assert.equal(composerActions.rowByIndex(4).value(), undefined);
-
+  andThen(() => {
+    assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
+    assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
+    assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
+    assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
+    assert.equal(composerActions.rowByIndex(4).value(), undefined);
+  });
 });
 
 QUnit.test('replying to post - reply_as_private_message', assert => {

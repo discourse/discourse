@@ -1,3 +1,4 @@
+# 用户搜索数据？
 class UserSearchData < ActiveRecord::Base
   include HasSearchData
 end

@@ -1,4 +1,1 @@
-export default Ember.Component.extend({
-  tagName: '',
-  label: 'topic.create'
-});
+export default Ember.Component.extend({ tagName: '' });

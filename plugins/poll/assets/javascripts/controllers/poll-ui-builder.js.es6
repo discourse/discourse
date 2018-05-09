@@ -13,11 +13,13 @@ export default Ember.Controller.extend({
 
   @computed("regularPollType", "numberPollType", "multiplePollType")
   pollTypes(regularPollType, numberPollType, multiplePollType) {
-    return [
-      { name: I18n.t("poll.ui_builder.poll_type.regular"), value: regularPollType },
-      { name: I18n.t("poll.ui_builder.poll_type.number"), value: numberPollType },
-      { name: I18n.t("poll.ui_builder.poll_type.multiple"), value: multiplePollType },
-    ];
+    let types = [];
+
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.regular"), value: regularPollType });
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.number"), value: numberPollType });
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.multiple"), value: multiplePollType });
+
+    return types;
   },
 
   @computed("pollType", "regularPollType")
@@ -99,8 +101,8 @@ export default Ember.Controller.extend({
     return this._comboboxOptions(1, (parseInt(pollMax) || 1) + 1);
   },
 
-  @computed("isNumber", "showMinMax", "pollType", "publicPoll", "pollOptions", "pollMin", "pollMax", "pollStep", "autoClose", "date", "time")
-  pollOutput(isNumber, showMinMax, pollType, publicPoll, pollOptions, pollMin, pollMax, pollStep, autoClose, date, time) {
+  @computed("isNumber", "showMinMax", "pollType", "publicPoll", "pollOptions", "pollMin", "pollMax", "pollStep")
+  pollOutput(isNumber, showMinMax, pollType, publicPoll, pollOptions, pollMin, pollMax, pollStep) {
     let pollHeader = '[poll';
     let output = '';
 
@@ -111,15 +113,15 @@ export default Ember.Controller.extend({
     };
 
     let step = pollStep;
-    if (step < 1) { step = 1; }
+    if (step < 1) {
+      step = 1;
+    }
 
     if (pollType) pollHeader += ` type=${pollType}`;
     if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
     if (pollMax) pollHeader += ` max=${pollMax}`;
     if (isNumber) pollHeader += ` step=${step}`;
-    if (publicPoll) pollHeader += ` public=true`;
-    if (autoClose) pollHeader += ` close=${moment(date + " " + time, "YYYY-MM-DD HH:mm").toISOString()}`;
-
+    if (publicPoll) pollHeader += ' public=true';
     pollHeader += ']';
     output += `${pollHeader}\n`;
 
@@ -184,10 +186,7 @@ export default Ember.Controller.extend({
       pollOptions: '',
       pollMin: 1,
       pollMax: null,
-      pollStep: 1,
-      autoClose: false,
-      date: moment().add(1, "day").format("YYYY-DD-MM"),
-      time: moment().add(1, "hour").format("HH:mm"),
+      pollStep: 1
     });
   },
 
