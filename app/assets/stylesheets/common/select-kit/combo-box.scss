@@ -1,10 +1,11 @@
 .select-kit {
   &.combo-box {
+    min-width: auto;
     .select-kit-body {
       width: 100%;
       min-width: 150px;
       border-radius: 0;
-      box-shadow: shadow("dropdown");
+      box-shadow: shadow("dropdown");    
     }
 
     .select-kit-row {
@@ -24,10 +25,10 @@
 
       .filter-input {
         margin-right: 5px;
-        width: auto;
+        width: auto;        
       }
     }
-
+    
     .select-kit-header {
       background: $secondary;
       border: 1px solid $primary-medium;
