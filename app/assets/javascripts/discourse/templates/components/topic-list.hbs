@@ -1,4 +1,7 @@
-{{#unless skipHeader}}
+{{!-- 首页顶部的 header --}}
+{{!-- skipHeader 只有在  mobile 情况才会隐藏
+（看 app/assets/javascripts/discourse/components/topic-list.js.es6 里 skipHeader 的定义） --}}
+{{!-- {{#unless skipHeader}}
   <thead>
     {{raw "topic-list-header"
       canBulkSelect=canBulkSelect
@@ -14,7 +17,7 @@
       listTitle=listTitle
       bulkSelectEnabled=bulkSelectEnabled}}
   </thead>
-{{/unless}}
+{{/unless}} --}}
 
 {{plugin-outlet
   name="before-topic-list-body"
@@ -28,7 +31,8 @@
   tagName=""
   connectorTagName=""}}
 
-<tbody>
+{{!-- <tbody> --}}
+  {{!-- topic-list-item 就是首页一条条的帖子 --}}
   {{#each filteredTopics as |topic|}}
     {{topic-list-item topic=topic
                       bulkSelectEnabled=bulkSelectEnabled
@@ -43,6 +47,6 @@
                       lastVisitedTopic=lastVisitedTopic
                       selected=selected
                       tagsForUser=tagsForUser}}
-    {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
+    {{!-- {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}} --}}
   {{/each}}
-</tbody>
+{{!-- </tbody> --}}

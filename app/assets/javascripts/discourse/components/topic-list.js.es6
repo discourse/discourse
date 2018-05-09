@@ -1,7 +1,7 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
-  tagName: 'table',
+  tagName: 'div',
   classNames: ['topic-list'],
   showTopicPostBadges: true,
   listTitle: 'topic.title',
