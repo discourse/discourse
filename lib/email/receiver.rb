@@ -33,6 +33,7 @@ module Email
     class InvalidPostAction            < ProcessingError; end
     class UnsubscribeNotAllowed        < ProcessingError; end
     class EmailNotAllowed              < ProcessingError; end
+    class OldDestinationError          < ProcessingError; end
 
     attr_reader :incoming_email
     attr_reader :raw_email
@@ -42,8 +43,7 @@ module Email
     COMMON_ENCODINGS ||= [-"utf-8", -"windows-1252", -"iso-8859-1"]
 
     def self.formats
-      @formats ||= Enum.new(plaintext: 1,
-                            markdown: 2)
+      @formats ||= Enum.new(plaintext: 1, markdown: 2)
     end
 
     def initialize(mail_string, opts = {})
@@ -163,7 +163,15 @@ module Email
           end
         end
 
-        raise first_exception || BadDestinationAddress
+        raise first_exception if first_exception
+
+        if post = find_related_post(force: true)
+          if Guardian.new(user).can_see_post?(post) && post.created_at < 90.days.ago
+            raise OldDestinationError.new("#{Discourse.base_url}/p/#{post.id}")
+          end
+        end
+
+        raise BadDestinationAddress
       end
     end
 
@@ -728,8 +736,8 @@ module Email
       @category_email_in_regex ||= Regexp.union Category.pluck(:email_in).select(&:present?).map { |e| e.split("|") }.flatten.uniq
     end
 
-    def find_related_post
-      return if SiteSetting.find_related_post_with_key && !sent_to_mailinglist_mirror?
+    def find_related_post(force: false)
+      return if !force && SiteSetting.find_related_post_with_key && !sent_to_mailinglist_mirror?
 
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?

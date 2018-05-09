@@ -78,6 +78,13 @@ describe Email::Receiver do
     expect { process(:bad_destinations) }.to raise_error(Email::Receiver::BadDestinationAddress)
   end
 
+  it "raises an OldDestinationError when notification is too old" do
+    topic = Fabricate(:topic, id: 424242)
+    post  = Fabricate(:post, topic: topic, id: 123456, created_at: 1.year.ago)
+
+    expect { process(:old_destination) }.to raise_error(Email::Receiver::OldDestinationError)
+  end
+
   it "raises a BouncerEmailError when email is a bounced email" do
     expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
     expect(IncomingEmail.last.is_bounce).to eq(true)
