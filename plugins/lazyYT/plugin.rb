@@ -33,18 +33,18 @@ end
 
 after_initialize do
 
-  Email::Styles.register_plugin_style do |fragment|
-    # YouTube onebox can't go in emails, so replace them with clickable links
-    fragment.css('.lazyYT').each do |i|
+  on(:reduce_cooked) do |fragment|
+    fragment.css(".lazyYT").each do |yt|
       begin
-        src = "https://www.youtube.com/embed/#{i['data-youtube-id']}?autoplay=1&#{i['data-parameters']}"
-        src_uri = URI(src)
-        display_src = "https://#{src_uri.host}#{src_uri.path}"
-        i.replace "<p><a href='#{src_uri.to_s}'>#{display_src}</a><p>"
+        youtube_id = yt["data-youtube-id"]
+        parameters = yt["data-parameters"]
+        uri = URI("https://www.youtube.com/embed/#{youtube_id}?autoplay=1&#{parameters}")
+        yt.replace %{<p><a href="#{uri.to_s}">https://#{uri.host}#{uri.path}</a></p>}
       rescue URI::InvalidURIError
-        # If the URL is weird, remove it
-        i.remove
+        # remove any invalid/weird URIs
+        yt.remove
       end
     end
   end
+
 end
