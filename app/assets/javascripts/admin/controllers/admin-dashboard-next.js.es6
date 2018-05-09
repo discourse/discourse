@@ -5,11 +5,14 @@ import Report from "admin/models/report";
 
 export default Ember.Controller.extend({
   queryParams: ["period"],
-  period: "all",
+  period: "monthly",
   isLoading: false,
   dashboardFetchedAt: null,
   exceptionController: Ember.inject.controller("exception"),
   diskSpace: Ember.computed.alias("model.attributes.disk_space"),
+
+  availablePeriods: ["yearly", "quarterly", "monthly", "weekly"],
+
 
   fetchDashboard() {
     if (this.get("isLoading")) return;
