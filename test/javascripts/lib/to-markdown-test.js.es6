@@ -104,7 +104,7 @@ QUnit.test("converts table tags", assert => {
       <tbody>
         <tr><td>Lorem</td><td>ipsum</td></tr>
         <tr><td><b>dolor</b></td> <td><i>sit amet</i></td> </tr>
-        
+
         </tbody>
 </table>
   `;
@@ -284,5 +284,18 @@ QUnit.test("converts list tag from word", assert => {
     <![endif]>Item 4</p>
   <!--EndFragment-->List`;
   const markdown = `Sample\n\n* **Item 1**\n  * *Item 2*\n    * Item 3\n* Item 4\n\nList`;
+  assert.equal(toMarkdown(html), markdown);
+});
+
+QUnit.test("keeps mention/hash class", assert => {
+  const html = `
+    <p>User mention: <a class="mention" href="/u/discourse">@discourse</a></p>
+    <p>Group mention: <a class="mention-group" href="/groups/discourse">@discourse-group</a></p>
+    <p>Category link: <a class="hashtag" href="/c/foo/1">#<span>foo</span></a></p>
+    <p>Sub-category link: <a class="hashtag" href="/c/foo/bar/2">#<span>foo:bar</span></a></p>
+  `;
+
+  const markdown = `User mention: @discourse\n\nGroup mention: @discourse-group\n\nCategory link: #foo\n\nSub-category link: #foo:bar`;
+
   assert.equal(toMarkdown(html), markdown);
 });
