@@ -1,7 +1,6 @@
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import afterTransition from 'discourse/lib/after-transition';
 import DiscourseURL from 'discourse/lib/url';
-import { userPath } from 'discourse/lib/url';
 
 export default Ember.Mixin.create({
   elementId: null, //click detection added for data-{elementId}
@@ -28,7 +27,7 @@ export default Ember.Mixin.create({
 
     // Don't show on mobile
     if (this.site.mobileView) {
-      DiscourseURL.routeTo(userPath(username));
+      DiscourseURL.routeTo($target.attr("href"));
       return false;
     }
 
@@ -38,10 +37,10 @@ export default Ember.Mixin.create({
     }
 
     const postId = $target.parents('article').data('post-id');
-
     const wasVisible = this.get('visible');
     const previousTarget = this.get('cardTarget');
     const target = $target[0];
+
     if (wasVisible) {
       this._close();
       if (target === previousTarget) { return; }
