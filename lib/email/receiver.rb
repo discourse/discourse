@@ -200,33 +200,24 @@ module Email
     end
 
     def self.update_bounce_score(email, score)
-      # only update bounce score once per day
-      key = "bounce_score:#{email}:#{Date.today}"
+      if user = User.find_by_email(email)
+        old_bounce_score = user.user_stat.bounce_score
+        new_bounce_score = old_bounce_score + score
+        range = (old_bounce_score + 1..new_bounce_score)
 
-      if $redis.setnx(key, "1")
-        $redis.expire(key, 25.hours)
+        user.user_stat.bounce_score = new_bounce_score
+        user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
+        user.user_stat.save!
 
-        if user = User.find_by_email(email)
-          user.user_stat.bounce_score += score
-          user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
-          user.user_stat.save!
-
-          bounce_score = user.user_stat.bounce_score
-          if user.active && bounce_score >= SiteSetting.bounce_score_threshold_deactivate
-            user.update!(active: false)
-            reason = I18n.t("user.deactivated", email: user.email)
-            StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
-          elsif bounce_score >= SiteSetting.bounce_score_threshold
-            # NOTE: we check bounce_score before sending emails, nothing to do
-            # here other than log it happened.
-            reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
-            StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
-          end
+        if user.active && range === SiteSetting.bounce_score_threshold_deactivate
+          user.update!(active: false)
+          reason = I18n.t("user.deactivated", email: user.email)
+          StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
+        elsif range === SiteSetting.bounce_score_threshold
+          # NOTE: we check bounce_score before sending emails, nothing to do here other than log it happened.
+          reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
+          StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
         end
-
-        true
-      else
-        false
       end
     end
 
