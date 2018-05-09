@@ -61,29 +61,19 @@ describe PushNotificationController do
     end
 
     it "should not create duplicate subscriptions" do
-      post '/push_notifications/subscribe.json', params: {
-             username: user.username,
-             subscription: {
-               endpoint: "endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth"
-               }
-             },
-             send_confirmation: false
-           }
-
-      post '/push_notifications/subscribe.json', params: {
-             username: user.username,
-             subscription: {
-               endpoint: "endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth"
-               }
-             },
-             send_confirmation: false
-           }
+      2.times do
+        post '/push_notifications/subscribe.json', params: {
+           username: user.username,
+           subscription: {
+             endpoint: "endpoint",
+             keys: {
+               p256dh: "256dh",
+               auth: "auth"
+             }
+           },
+           send_confirmation: false
+         }
+      end
 
       expect(response.status).to eq(200)
       expect(user.push_subscriptions.count).to eq(1)
