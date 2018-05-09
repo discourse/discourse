@@ -3141,6 +3141,10 @@ en:
           upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
           variable_name: "SCSS var name:"
           variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter. Must be unique."
+          variable_name_error:
+            invalid_syntax: "Invalid variable name. Only alphanumeric allowed. Must start with a letter."
+            no_overwrite: "Invalid variable name. Must not overwrite an existing variable."
+            must_be_unique: "Invalid variable name. Must be unique."
           upload: "Upload"
           child_themes_check: "Theme includes other child themes"
           css_html: "Custom CSS/HTML"
@@ -3891,7 +3895,7 @@ en:
           label: "New:"
           add: "Add"
           filter: "Search (URL or External URL)"
-    
+
   wizard_js:
     wizard:
       done: "Done"

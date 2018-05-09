@@ -6,9 +6,9 @@
         {{input id="name" value=name}}<br>
       </label>
       {{#if fileSelected}}
-        {{#unless nameValid}}
-          <span class="alert alert-error">{{i18n "admin.customize.theme.variable_name_invalid"}}</span>
-        {{/unless}}
+        {{#if errorMessage}}
+          <span class="alert alert-error">{{errorMessage}}</span>
+        {{/if}}
       {{/if}}
     </div>
 {{/d-modal-body}}
