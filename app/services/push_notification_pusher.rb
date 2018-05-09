@@ -33,13 +33,17 @@ class PushNotificationPusher
   end
 
   def self.subscribe(user, subscription, send_confirmation)
-    subscriptions = PushSubscription.where(user: user, data: subscription.to_json)
-    if subscriptions.length > 1
+    data = subscription.to_json
+    subscriptions = PushSubscription.where(user: user, data: data)
+    subscriptions_count = subscriptions.count
+
+    if subscriptions_count > 1
       subscriptions.destroy_all
-      PushSubscription.create user: user, data: subscription.to_json
-    elsif subscriptions.length == 0
-      PushSubscription.create user: user, data: subscription.to_json
+      PushSubscription.create!(user: user, data: data)
+    elsif subscriptions_count == 0
+      PushSubscription.create!(user: user, data: data)
     end
+
     if send_confirmation == "true"
       message = {
         title: I18n.t("discourse_push_notifications.popup.confirm_title",
@@ -55,7 +59,7 @@ class PushNotificationPusher
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.find_by(user: user, data: subscription.to_json)&.destroy
+    PushSubscription.find_by(user: user, data: subscription.to_json)&.destroy!
   end
 
   protected
