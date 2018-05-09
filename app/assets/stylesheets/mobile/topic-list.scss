@@ -6,53 +6,121 @@
 // --------------------------------------------------
 
 .list-controls {
+  margin: 10px -3px 5px -3px;  
   .category-breadcrumb.hidden {
     display: none;
   }
-  margin: 5px 0;
-  .nav {
-    float: left;
-    margin-right: 15px;
-    li {
-      margin-top: 5px;
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    #create-topic {
+      box-sizing: border-box;
+      display: flex;
+      align-self: stretch;
+      margin: 0 3px 10px 3px;   
+      order: 10; // always last for consistent placement      
     }
   }
-  .btn {
-    float: right;
-    margin-left: 8px;
-    margin-top: 5px;
+
+  .dropdown-select-box-header {
+    display: flex;
+    height: 100%;
   }
-  .nav-pills {
-    position: relative;
-  }
-  .nav-pills .drop {
-    border: 1px solid $primary-low;
-    position: absolute;
-    z-index: z("dropdown");
-    background-color: $secondary;
-    padding: 0 10px 10px 10px;
-    width: 150px;
-    top: 100%;
-    margin: 0;
-    li {  
-      list-style-type: none;
-      margin-left: 0;
-      margin-top: 5px;
-      padding-top: 10px;
-      a {
-        width: 100%;
-        display: inline-block;
+
+  .navigation-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 5px 0;
+  
+    button {
+      margin: 0 3px;
+     
+      &.select-kit-header {
+        display: flex;
+        height: 100%;
+        flex: 1 1 auto;
       }
     }
-
   }
-  .nav-pills > li {
-    background: $primary-low;
-    font-size: $font-down-1;
-    .d-icon-caret-down {
-      margin-left: 8px;
+
+  .select-kit {
+    display: flex;
+    align-self: stretch;    
+    margin-bottom: 10px;
+  }
+  
+  .btn:not(.select-kit-header) {
+    margin-bottom: 10px;
+  }
+
+  .categories-admin-dropdown {
+    order: 2; // after main nav
+  }
+
+  .category-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    .edit-category {
+      i {
+        margin: 0;
+      }
+      @media screen and (max-width: 374px) { // Hide edit label on very tiny screens
+        .d-button-label {
+          display: none;
+        }
+      }
     }
   }
+
+  .nav-pills {
+    display: flex;
+    flex: 1 1 auto;
+    margin: 0 3px 5px 3px;
+    position: relative;
+    .navigation-toggle {
+      flex: 0 1 auto;
+      margin-bottom: 5px;
+    }
+    >li {
+      margin-right: 0;
+      background: $primary-low;
+      font-size: $font-down-1;
+    }
+    >li>a {
+      line-height: $line-height-large;
+      display: flex;
+      align-items: center;
+      .d-icon {
+        margin-left: 5px;
+      }
+    }
+    .drop {
+      border: 1px solid $primary-low;
+      position: absolute;
+      z-index: z("dropdown");
+      background-color: $secondary;
+      padding: 0 10px 10px 10px;
+      width: 150px;
+      top: 100%;
+      margin: 0;
+      left: 0; // iOS6 alignment
+      li {  
+        list-style-type: none;
+        margin-left: 0;
+        margin-top: 5px;
+        padding-top: 10px;
+        a {
+          width: 100%;
+          display: inline-block;
+        }
+      }
+    }
+  }
+  
 }
 
 .list-container .full-width {
@@ -382,7 +450,20 @@ tr.category-topic-link {
 }
 
 ol.category-breadcrumb {
-  margin: 5px 10px 0 0;
+  margin: 0 0 5px 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 100%;
+  li.select-kit {
+    flex: 1 1 30%;
+    margin: 0 3px 5px 3px;
+    .select-kit-header .selected-name  {   
+      max-width: 80vw;
+      .badge-wrapper {
+        max-width: 100%;
+      }
+    }
+  }
 }
 
 .top-lists {
