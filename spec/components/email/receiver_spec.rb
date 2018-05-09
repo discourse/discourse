@@ -100,17 +100,12 @@ describe Email::Receiver do
     let!(:email_log) { Fabricate(:email_log, user: user, bounce_key: bounce_key) }
     let!(:email_log_2) { Fabricate(:email_log, user: user, bounce_key: bounce_key_2) }
 
-    before do
-      $redis.del("bounce_score:#{user.email}:#{Date.today}")
-      $redis.del("bounce_score:#{user.email}:#{2.days.from_now.to_date}")
-    end
-
     it "deals with soft bounces" do
       expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(1)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
 
     it "deals with hard bounces" do
@@ -118,15 +113,28 @@ describe Email::Receiver do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(2)
-
-      freeze_time 2.days.from_now
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
 
       expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
 
       email_log_2.reload
-      expect(email_log_2.user.user_stat.bounce_score).to eq(4)
+      expect(email_log_2.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score * 2)
       expect(email_log_2.bounced).to eq(true)
+    end
+
+    it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
+      expect(user.active).to eq(true)
+
+      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold_deactivate - 1
+      user.user_stat.save!
+
+      expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      user.reload
+      email_log.reload
+
+      expect(email_log.bounced).to eq(true)
+      expect(user.active).to eq(false)
     end
 
   end
