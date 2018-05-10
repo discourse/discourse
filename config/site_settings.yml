@@ -778,7 +778,8 @@ email:
   unsubscribe_via_email_footer:
     default: false
   delete_email_logs_after_days:
-    default: 365
+    default: 90
+    shadowed_by_global: true
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
