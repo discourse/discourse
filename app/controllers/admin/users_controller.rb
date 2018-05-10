@@ -379,7 +379,10 @@ class Admin::UsersController < Admin::AdminController
           }
         end
       rescue UserDestroyer::PostsExistError
-        raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
+        render json: {
+          deleted: false,
+          message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
+        }
       end
     end
   end
