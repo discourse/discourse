@@ -88,14 +88,12 @@
     }
 
     table {
-      border: 1px solid $primary-low-mid;
       table-layout: fixed;
 
       thead {
         tr {
           background: $primary-low;
           th {
-            border: 1px solid $primary-low-mid;
             text-align: center;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -113,7 +111,7 @@
           }
 
           td {
-            border: 1px solid $primary-low-mid;
+            border: 1px solid $primary-low;
             text-align: center;
           }
 
