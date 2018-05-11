@@ -323,7 +323,7 @@ class Report
 
   def self.report_users_by_trust_level(report)
     report.data = []
-    User.real.group('trust_level').count.each do |level, count|
+    User.real.group('trust_level').count.sort.each do |level, count|
       report.data << { x: level.to_i, y: count }
     end
   end
