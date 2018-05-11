@@ -16,7 +16,7 @@ class UserVisit < ActiveRecord::Base
         SELECT date_trunc('day', user_visits.visited_at)::DATE AS date,
                count(distinct user_visits.user_id) AS dau
         FROM user_visits
-        WHERE user_visits.visited_at::DATE >= :start_date::DATE AND user_visits.visited_at < :end_date::DATE
+        WHERE user_visits.visited_at::DATE >= :start_date::DATE AND user_visits.visited_at <= :end_date::DATE
         GROUP BY date_trunc('day', user_visits.visited_at)::DATE
         ORDER BY date_trunc('day', user_visits.visited_at)::DATE
       )
