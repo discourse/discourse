@@ -77,6 +77,7 @@ class SessionController < ApplicationController
         end
       else
         session[:sso_payload] = request.query_string
+        cookies[:sso_destination_url] = sso.to_url(sso.return_sso_url)
         redirect_to path('/login')
       end
     else
