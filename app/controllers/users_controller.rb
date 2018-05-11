@@ -696,8 +696,8 @@ class UsersController < ApplicationController
 
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
-    if @user = EmailToken.confirm(params[:token])
 
+    if @user = EmailToken.confirm(params[:token])
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -708,14 +708,16 @@ class UsersController < ApplicationController
         elsif destination_url = cookies[:destination_url]
           cookies[:destination_url] = nil
           return redirect_to(destination_url)
+        elsif SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+          return redirect_to(session_sso_provider_url + "?" + payload)
         end
       else
         @needs_approval = true
       end
-
     else
       flash.now[:error] = I18n.t('activation.already_done')
     end
+
     render layout: 'no_ember'
   end
 
@@ -736,7 +738,6 @@ class UsersController < ApplicationController
 
     User.transaction do
       primary_email = @user.primary_email
-
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
