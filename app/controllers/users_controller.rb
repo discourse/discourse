@@ -667,13 +667,10 @@ class UsersController < ApplicationController
 
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
-    @account_created = {
-      message: @message,
-      show_controls: false
-    }
+    @account_created = { message: @message, show_controls: false }
 
     if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
-      if user = User.where(id: session_user_id.to_i).first
+      if user = User.find_by(id: session_user_id.to_i)
         @account_created[:username] = user.username
         @account_created[:email] = user.email
         @account_created[:show_controls] = !user.from_staged?
@@ -696,8 +693,8 @@ class UsersController < ApplicationController
 
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
-    if @user = EmailToken.confirm(params[:token])
 
+    if @user = EmailToken.confirm(params[:token])
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -708,6 +705,9 @@ class UsersController < ApplicationController
         elsif destination_url = cookies[:destination_url]
           cookies[:destination_url] = nil
           return redirect_to(destination_url)
+        elsif sso_destination_url = cookies[:sso_destination_url]
+          cookies[:sso_destination_url] = nil
+          return redirect_to(sso_destination_url)
         end
       else
         @needs_approval = true
