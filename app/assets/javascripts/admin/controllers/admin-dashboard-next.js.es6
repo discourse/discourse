@@ -37,30 +37,34 @@ export default Ember.Controller.extend({
 
   @computed("period")
   startDate(period) {
+    let fullDay = moment().utc().subtract(1, "day");
+
     switch (period) {
       case "yearly":
-        return moment().subtract(1, "year").startOf("day");
+        return fullDay.subtract(1, "year").startOf("day");
         break;
       case "quarterly":
-        return moment().subtract(3, "month").startOf("day");
+        return fullDay.subtract(3, "month").startOf("day");
         break;
       case "weekly":
-        return moment().subtract(1, "week").startOf("day");
+        return fullDay.subtract(1, "week").startOf("day");
         break;
       case "monthly":
-        return moment().subtract(1, "month").startOf("day");
-        break;
-      case "daily":
-        return moment().startOf("day");
+        return fullDay.subtract(1, "month").startOf("day");
         break;
       default:
         return null;
     }
   },
 
-  @computed("period")
-  endDate(period) {
-    return period === "all" ? null : moment().endOf("day");
+  @computed()
+  lastWeek() {
+    return moment().utc().endOf("day").subtract(1, "week");
+  },
+
+  @computed()
+  endDate() {
+    return moment().utc().subtract(1, "day").endOf("day");
   },
 
   @computed("updated_at")

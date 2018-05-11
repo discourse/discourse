@@ -459,7 +459,8 @@ class Topic < ActiveRecord::Base
   end
 
   def self.listable_count_per_day(start_date, end_date, category_id = nil)
-    result = listable_topics.smart_group_by_date("topics.created_at", start_date, end_date)
+    result = listable_topics.where("topics.created_at >= ? AND topics.created_at <= ?", start_date, end_date)
+    result = result.group('date(topics.created_at)').order('date(topics.created_at)')
     result = result.where(category_id: category_id) if category_id
     result.count
   end

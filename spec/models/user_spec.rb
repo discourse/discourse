@@ -94,7 +94,7 @@ describe User do
   describe '#count_by_signup_date' do
     before(:each) do
       User.destroy_all
-      freeze_time
+      freeze_time DateTime.parse('2017-02-01 12:00')
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)

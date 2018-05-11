@@ -22,11 +22,17 @@ class Admin::ReportsController < Admin::AdminController
       group_id = nil
     end
 
+    facets = nil
+    if Array === params[:facets]
+      facets = params[:facets].map { |s| s.to_s.to_sym }
+    end
+
     report = Report.find(report_type,
                           start_date: start_date,
                           end_date: end_date,
                           category_id: category_id,
                           group_id: group_id,
+                          facets: facets,
                           async: params[:async])
 
     raise Discourse::NotFound if report.blank?

@@ -3,7 +3,8 @@ require_dependency 'topic_subtype'
 class Report
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :category_id, :group_id, :labels, :async
+                :end_date, :category_id, :group_id, :labels, :async,
+                :prev_period, :facets
 
   def self.default_days
     30
@@ -16,7 +17,15 @@ class Report
   end
 
   def self.cache_key(report)
-    "reports:#{report.type}:#{report.start_date.to_date.strftime("%Y%m%d")}:#{report.end_date.to_date.strftime("%Y%m%d")}"
+    (+"reports:") <<
+    [
+      report.type,
+      report.category_id,
+      report.start_date.to_date.strftime("%Y%m%d"),
+      report.end_date.to_date.strftime("%Y%m%d"),
+      report.group_id,
+      report.facets
+    ].map(&:to_s).join(':')
   end
 
   def self.clear_cache
@@ -33,14 +42,18 @@ class Report
      yaxis: I18n.t("reports.#{type}.yaxis"),
      description: I18n.t("reports.#{type}.description"),
      data: data,
-     total: total,
      start_date: start_date,
      end_date: end_date,
      category_id: category_id,
      group_id: group_id,
      prev30Days: self.prev30Days,
+     report_key: Report.cache_key(self),
      labels: labels
     }.tap do |json|
+      json[:total] = total if total
+      json[:prev_period] = prev_period if prev_period
+      json[:prev30Days] = self.prev30Days if self.prev30Days
+
       if type == 'page_view_crawler_reqs'
         json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
       end
@@ -61,6 +74,7 @@ class Report
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
     report.async = opts[:async] || false
+    report.facets = opts[:facets] || [:total, :prev30Days]
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
@@ -152,10 +166,19 @@ class Report
 
     data = User.real.count_by_first_post(report.start_date, report.end_date)
 
-    prev30DaysData = User.real.count_by_first_post(report.start_date - 30.days, report.start_date)
-    report.prev30Days = prev30DaysData.sum { |k, v| v }
+    if report.facets.include?(:prev30Days)
+      prev30DaysData = User.real.count_by_first_post(report.start_date - 30.days, report.start_date)
+      report.prev30Days = prev30DaysData.sum { |k, v| v }
+    end
 
-    report.total = User.real.count_by_first_post
+    if report.facets.include?(:total)
+      report.total = User.real.count_by_first_post
+    end
+
+    if report.facets.include?(:prev_period)
+      prev_period_data = User.real.count_by_first_post(report.start_date - (report.end_date - report.start_date), report.start_date)
+      report.prev_period = prev_period_data.sum { |k, v| v }
+    end
 
     data.each do |key, value|
       report.data << { x: key, y: value }
@@ -166,11 +189,20 @@ class Report
     report.data = []
 
     data = UserAction.count_daily_engaged_users(report.start_date, report.end_date)
-    prev30DaysData = UserAction.count_daily_engaged_users(report.start_date - 30.days, report.start_date)
 
-    report.total = UserAction.count_daily_engaged_users
+    if report.facets.include?(:prev30Days)
+      prev30DaysData = UserAction.count_daily_engaged_users(report.start_date - 30.days, report.start_date)
+      report.prev30Days = prev30DaysData.sum { |k, v| v }
+    end
 
-    report.prev30Days = prev30DaysData.sum { |k, v| v }
+    if report.facets.include?(:total)
+      report.total = UserAction.count_daily_engaged_users
+    end
+
+    if report.facets.include?(:prev_period)
+      prev_data = UserAction.count_daily_engaged_users(report.start_date - (report.end_date - report.start_date), report.start_date)
+      report.prev_period = prev_data.sum { |k, v| v }
+    end
 
     data.each do |key, value|
       report.data << { x: key, y: value }
@@ -186,7 +218,15 @@ class Report
       if data_point["mau"] == 0
         0
       else
-        ((data_point["dau"].to_f / data_point["mau"].to_f) * 100).ceil
+        ((data_point["dau"].to_f / data_point["mau"].to_f) * 100).ceil(2)
+      end
+    }
+
+    dau_avg = Proc.new { |start_date, end_date|
+      data_points = UserVisit.count_by_active_users(start_date, end_date)
+      if !data_points.empty?
+        sum = data_points.sum { |data_point| compute_dau_by_mau.call(data_point) }
+        (sum.to_f / data_points.count.to_f).ceil(2)
       end
     }
 
@@ -194,10 +234,12 @@ class Report
       report.data << { x: data_point["date"], y: compute_dau_by_mau.call(data_point) }
     end
 
-    prev_data_points = UserVisit.count_by_active_users(report.start_date - 30.days, report.start_date)
-    if !prev_data_points.empty?
-      sum = prev_data_points.sum { |data_point| compute_dau_by_mau.call(data_point) }
-      report.prev30Days = sum / prev_data_points.count
+    if report.facets.include?(:prev_period)
+      report.prev_period = dau_avg.call(report.start_date - (report.end_date - report.start_date), report.start_date)
+    end
+
+    if report.facets.include?(:prev30Days)
+      report.prev30Days = dau_avg.call(report.start_date - 30.days, report.start_date)
     end
   end
 
@@ -260,8 +302,23 @@ class Report
   end
 
   def self.add_counts(report, subject_class, query_column = 'created_at')
-    report.total      = subject_class.count
-    report.prev30Days = subject_class.where("#{query_column} >= ? and #{query_column} < ?", report.start_date - 30.days, report.start_date).count
+    if report.facets.include?(:prev_period)
+      report.prev_period = subject_class
+        .where("#{query_column} >= ? and #{query_column} < ?",
+          (report.start_date - (report.end_date - report.start_date)),
+          report.start_date).count
+    end
+
+    if report.facets.include?(:total)
+      report.total      = subject_class.count
+    end
+
+    if report.facets.include?(:prev30Days)
+      report.prev30Days = subject_class
+        .where("#{query_column} >= ? and #{query_column} < ?",
+          report.start_date - 30.days,
+          report.start_date).count
+    end
   end
 
   def self.report_users_by_trust_level(report)
@@ -359,24 +416,39 @@ class Report
   def self.report_trending_search(report)
     report.data = []
 
-    trends = SearchLog.select("term,
-       COUNT(*) AS searches,
-       SUM(CASE
+    select_sql = <<~SQL
+      term,
+      COUNT(*) AS searches,
+      SUM(CASE
                WHEN search_result_id IS NOT NULL THEN 1
                ELSE 0
            END) AS click_through,
-       COUNT(DISTINCT ip_address) AS unique")
+      COUNT(DISTINCT ip_address) AS unique_searches
+    SQL
+
+    trends = SearchLog.select(select_sql)
       .where('created_at > ?  AND created_at <= ?', report.start_date, report.end_date)
       .group(:term)
-      .order('COUNT(DISTINCT ip_address) DESC, COUNT(*) DESC')
+      .order('unique_searches DESC, click_through ASC, term ASC')
       .limit(20).to_a
 
-    report.labels = [:term, :searches, :unique].map { |key|
+    report.labels = [:term, :searches, :click_through].map { |key|
       I18n.t("reports.trending_search.labels.#{key}")
     }
 
     trends.each do |trend|
-      report.data << [trend.term, trend.searches, trend.unique]
+      ctr =
+        if trend.click_through == 0
+          0
+        else
+          trend.click_through.to_f / trend.searches.to_f
+        end
+
+      report.data << [
+        trend.term,
+        trend.unique_searches,
+        (ctr * 100).ceil(1).to_s + "%"
+      ]
     end
   end
 end

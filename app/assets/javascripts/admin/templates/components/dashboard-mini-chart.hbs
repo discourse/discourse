@@ -9,9 +9,15 @@
     </h3>
 
     <div class="chart-trend {{trend}}">
-      <span title="{{report.thirtyDayCountTitle}}">
-        {{number report.lastThirtyDaysCount}}
-      </span>
+      {{#if average}}
+        <span title="{{report.trendTitle}}">
+          {{report.currentAverage}}%
+        </span>
+      {{else}}
+        <span title="{{report.trendTitle}}">
+          {{number report.currentTotal noTitle="true"}}
+        </span>
+      {{/if}}
 
       {{#if trendIcon}}
         {{d-icon trendIcon}}
