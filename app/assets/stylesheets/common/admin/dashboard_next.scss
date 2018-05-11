@@ -91,6 +91,7 @@
       table-layout: fixed;
 
       thead {
+        border: 1px solid $primary-low;        
         tr {
           background: $primary-low;
           th {
@@ -224,7 +225,7 @@
 
     .chart-container {
       position: relative;
-      padding: 0 1em;
+      padding: 0 1em 0 0;
     }
 
     .chart-trend {
