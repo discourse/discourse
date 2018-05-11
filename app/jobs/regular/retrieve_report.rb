@@ -5,15 +5,15 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      raise Discourse::InvalidParameters.new(:report_type) if !args["report_type"]
+      raise Discourse::InvalidParameters.new(:report_type) if !args['report_type']
 
-      type = args.delete("report_type")
+      type = args.delete('report_type')
       report = Report.new(type)
-      report.start_date = args["start_date"].to_date if args["start_date"]
-      report.end_date = args["end_date"].to_date if args["end_date"]
-      report.category_id = args["category_id"] if args["category_id"]
-      report.group_id = args["group_id"] if args["group_id"]
-      report.facets = args["facets"].map(&:to_sym) if args["facets"]
+      report.start_date = (args['start_date'].present? ? args['start_date'].to_date : 30.days.ago).beginning_of_day
+      report.end_date = (args['end_date'].present? ? args['end_date'].to_date : start_date + 30.days).end_of_day
+      report.category_id = args['category_id'] if args['category_id']
+      report.group_id = args['group_id'] if args['group_id']
+      report.facets = args['facets'].map(&:to_sym) if args['facets']
 
       Report.send("report_#{type}", report)
 
