@@ -717,10 +717,6 @@ QUnit.test("quotes", assert => {
               "[quote=\"eviltrout, post:1, topic:2, full:true\"]\n**lorem** ipsum\n[/quote]\n\n",
                "keeps BBCode formatting");
 
-  formatQuote("this is <not> a bug",
-              "[quote=\"eviltrout, post:1, topic:2\"]\nthis is &lt;not&gt; a bug\n[/quote]\n\n",
-              "it escapes the contents of the quote");
-
   assert.cooked("[quote]\ntest\n[/quote]",
          "<aside class=\"quote no-group\">\n<blockquote>\n<p>test</p>\n</blockquote>\n</aside>",
          "it supports quotes without params");
