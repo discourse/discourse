@@ -1746,7 +1746,7 @@ describe Topic do
 
   describe '#listable_count_per_day' do
     before(:each) do
-      freeze_time
+      freeze_time DateTime.parse('2017-03-01 12:00')
 
       Fabricate(:topic)
       Fabricate(:topic, created_at: 1.day.ago)

@@ -19,7 +19,7 @@
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        dataSourceName="new_contributors"
+        dataSourceName="posts"
         startDate=startDate
         endDate=endDate}}
 
@@ -35,9 +35,10 @@
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        dataSourceName="inactive_users"
+        dataSourceName="new_contributors"
         startDate=startDate
         endDate=endDate}}
+
     </div>
   </div>
 </div>
@@ -118,7 +119,7 @@
   <div class="section-column">
     {{dashboard-table-trending-search
       dataSourceName="trending_search"
-      startDate=startDate
+      startDate=lastWeek
       endDate=endDate}}
   </div>
 </div>

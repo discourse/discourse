@@ -4,21 +4,36 @@ import AsyncReport from "admin/mixins/async-report";
 import Report from "admin/models/report";
 import { number } from 'discourse/lib/formatter';
 
+function collapseWeekly(data, average) {
+  let aggregate = [];
+  let bucket, i;
+  let offset = data.length % 7;
+  for(i = offset; i < data.length; i++) {
+
+    if (bucket && (i % 7 === offset)) {
+      if (average) {
+        bucket.y = parseFloat((bucket.y / 7.0).toFixed(2));
+      }
+      aggregate.push(bucket);
+      bucket = null;
+    }
+
+    bucket = bucket || { x: data[i].x, y: 0 };
+    bucket.y += data[i].y;
+  }
+  return aggregate;
+}
+
 export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-mini-chart"],
-  classNameBindings: ["thirtyDayTrend", "oneDataPoint"],
+  classNameBindings: ["trend", "oneDataPoint"],
   isLoading: true,
-  thirtyDayTrend: Ember.computed.alias("report.thirtyDayTrend"),
+  trend: Ember.computed.alias("report.trend"),
   oneDataPoint: false,
   backgroundColor: "rgba(200,220,240,0.3)",
   borderColor: "#08C",
   average: false,
-
-  willDestroyEelement() {
-    this._super();
-
-    this.messageBus.unsubscribe(this.get("dataSource"));
-  },
+  total: 0,
 
   @computed("dataSourceName")
   dataSource(dataSourceName) {
@@ -27,9 +42,9 @@ export default Ember.Component.extend(AsyncReport, {
     }
   },
 
-  @computed("thirtyDayTrend")
-  trendIcon(thirtyDayTrend) {
-    switch (thirtyDayTrend) {
+  @computed("trend")
+  trendIcon(trend) {
+    switch (trend) {
       case "trending-up":
         return "angle-up";
       case "trending-down":
@@ -47,7 +62,7 @@ export default Ember.Component.extend(AsyncReport, {
     this.set("isLoading", true);
 
     let payload = {
-      data: { async: true }
+      data: { async: true, facets: ["prev_period"] }
     };
 
     if (this.get("startDate")) {
@@ -58,11 +73,18 @@ export default Ember.Component.extend(AsyncReport, {
       payload.data.end_date = this.get("endDate").format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
     }
 
+    if (this._chart) {
+      this._chart.destroy();
+      this._chart = null;
+    }
+
+    this.set("report", null);
+
     ajax(this.get("dataSource"), payload)
       .then((response) => {
-        // if (!Ember.isEmpty(response.report.data)) {
-          this._setPropertiesFromReport(Report.create(response.report));
-        // }
+        this.set('reportKey', response.report.report_key);
+
+        this.loadReport(response.report);
       })
       .finally(() => {
         if (this.get("oneDataPoint")) {
@@ -75,6 +97,19 @@ export default Ember.Component.extend(AsyncReport, {
           this.renderReport();
         }
       });
+  },
+
+  loadReport(report) {
+    if (report.data) {
+      Report.fillMissingDates(report);
+
+      if (report.data && report.data.length > 40) {
+        report.data = collapseWeekly(report.data, this.get("average"));
+      }
+
+      const model = Report.create(report);
+      this._setPropertiesFromReport(model);
+    }
   },
 
   renderReport() {
@@ -96,6 +131,9 @@ export default Ember.Component.extend(AsyncReport, {
         }]
       };
 
+      if (this._chart) {
+        this._chart.destroy();
+      }
       this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },
@@ -105,7 +143,6 @@ export default Ember.Component.extend(AsyncReport, {
       this.get("startDate").isSame(this.get("endDate"), "day");
 
     report.set("average", this.get("average"));
-
     this.setProperties({ oneDataPoint, report });
   },
 

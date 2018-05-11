@@ -2748,6 +2748,7 @@ en:
         activity_metrics: Activity Metrics
 
         reports:
+          trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           today: "Today"
           yesterday: "Yesterday"
           last_7_days: "Last 7 Days"

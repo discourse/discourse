@@ -880,6 +880,7 @@ en:
       title: "Posts"
       xaxis: "Day"
       yaxis: "Number of new posts"
+      description: "New posts created during this period"
     likes:
       title: "Likes"
       xaxis: "Day"
@@ -914,7 +915,7 @@ en:
       labels:
         term: Term
         searches: Searches
-        unique: Unique
+        click_through: Click Through Rate
     emails:
       title: "Emails Sent"
       xaxis: "Day"

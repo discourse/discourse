@@ -880,7 +880,9 @@ class User < ActiveRecord::Base
     result = self
 
     if start_date && end_date
-      result = result.smart_group_by_date("users.created_at", start_date, end_date)
+      result = result.group("date(users.created_at)")
+      result = result.where("users.created_at >= ? AND users.created_at <= ?", start_date, end_date)
+      result = result.order('date(users.created_at)')
     end
 
     if group_id
@@ -895,7 +897,9 @@ class User < ActiveRecord::Base
     result = joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
 
     if start_date && end_date
-      result = result.smart_group_by_date("us.first_post_created_at", start_date, end_date)
+      result = result.group("date(us.first_post_created_at)")
+      result = result.where("us.first_post_created_at > ? AND us.first_post_created_at < ?", start_date, end_date)
+      result = result.order("date(us.first_post_created_at)")
     end
 
     result.count

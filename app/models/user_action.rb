@@ -127,7 +127,9 @@ SQL
       .where(action_type: [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE])
 
     if start_date && end_date
-      result = result.smart_group_by_date(:created_at, start_date, end_date)
+      result = result.group('date(created_at)')
+      result = result.where('created_at > ? AND created_at < ?', start_date, end_date)
+      result = result.order('date(created_at)')
     end
 
     result.count

@@ -90,6 +90,34 @@ const Report = Discourse.Model.extend({
     }
   },
 
+  @computed('data')
+  currentTotal(data){
+    return _.reduce(data, (cur, pair) => cur + pair.y, 0);
+  },
+
+  @computed('data', 'currentTotal')
+  currentAverage(data, total) {
+    return parseFloat((total / parseFloat(data.length)).toFixed(1));
+  },
+
+  @computed('prev_period', 'currentTotal', 'currentAverage')
+  trend(prev, currentTotal, currentAverage) {
+    const total = this.get('average') ? currentAverage : currentTotal;
+    const change = ((total - prev) / total) * 100;
+
+    if (change > 50) {
+      return "high-trending-up";
+    } else if (change > 0) {
+      return "trending-up";
+    } else if (change === 0) {
+      return "no-change";
+    } else if (change < -50) {
+      return "high-trending-down";
+    } else if (change < 0) {
+      return "trending-down";
+    }
+  },
+
   @computed('prev30Days', 'lastThirtyDaysCount')
   thirtyDayTrend(prev30Days, lastThirtyDaysCount) {
     const currentPeriod = lastThirtyDaysCount;
@@ -138,6 +166,20 @@ const Report = Discourse.Model.extend({
     }
   },
 
+  @computed('prev_period', 'currentTotal', 'currentAverage')
+  trendTitle(prev, currentTotal, currentAverage) {
+    let current = this.get('average') ? currentAverage : currentTotal;
+    let percent = this.percentChangeString(current, prev);
+
+    if (this.get('average')) {
+      prev = prev.toFixed(1);
+      current += '%';
+      prev += '%';
+    }
+
+    return I18n.t('admin.dashboard.reports.trend_title', {percent: percent, prev: prev, current: current});
+  },
+
   changeTitle(val1, val2, prevPeriodString) {
     const percentChange = this.percentChangeString(val1, val2);
     var title = "";
@@ -176,6 +218,14 @@ const Report = Discourse.Model.extend({
 
 Report.reopenClass({
 
+  fillMissingDates(report) {
+    if (report.data.length > 0) {
+      const startDateFormatted = moment.utc(report.start_date).format('YYYY-MM-DD');
+      const endDateFormatted = moment.utc(report.end_date).format('YYYY-MM-DD');
+      report.data = fillMissingDates(report.data, startDateFormatted, endDateFormatted);
+    }
+  },
+
   find(type, startDate, endDate, categoryId, groupId) {
     return ajax("/admin/reports/" + type, {
       data: {
@@ -186,11 +236,7 @@ Report.reopenClass({
       }
     }).then(json => {
       // Add zero values for missing dates
-      if (json.report.data.length > 0) {
-        const startDateFormatted = moment(json.report.start_date).utc().format('YYYY-MM-DD');
-        const endDateFormatted = moment(json.report.end_date).utc().format('YYYY-MM-DD');
-        json.report.data = fillMissingDates(json.report.data, startDateFormatted, endDateFormatted);
-      }
+      Report.filleMissingDates(json.report);
 
       const model = Report.create({ type: type });
       model.setProperties(json.report);

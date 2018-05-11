@@ -13,9 +13,8 @@ export default Ember.Component.extend(AsyncReport, {
   values(report) {
     if (!report) return;
     return Ember.makeArray(report.data)
-                .sort((a, b) => a.x >= b.x)
                 .map(x => {
-                  return [ x[0], number(x[1]), number(x[2]) ];
+                  return [ x[0], number(x[1]), x[2] ];
                 });
   },
 
@@ -23,6 +22,10 @@ export default Ember.Component.extend(AsyncReport, {
   labels(report) {
     if (!report) return;
     return Ember.makeArray(report.labels);
+  },
+
+  loadReport(report_json) {
+    this._setPropertiesFromReport(Report.create(report_json));
   },
 
   fetchReport() {
@@ -40,7 +43,8 @@ export default Ember.Component.extend(AsyncReport, {
 
     ajax(this.get("dataSource"), payload)
       .then((response) => {
-        this._setPropertiesFromReport(Report.create(response.report));
+        this.set('reportKey', response.report.report_key);
+        this.loadReport(response.report);
       }).finally(() => {
         if (!Ember.isEmpty(this.get("report.data"))) {
           this.set("isLoading", false);

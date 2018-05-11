@@ -30,6 +30,7 @@ describe Report do
 
     describe "topics" do
       before do
+        Report.clear_cache
         freeze_time DateTime.parse('2017-03-01 12:00')
 
         ((0..32).to_a + [60, 61, 62, 63]).each do |i|
@@ -37,11 +38,21 @@ describe Report do
         end
       end
 
-      subject(:json) { Report.find("topics").as_json }
-
       it "counts the correct records" do
+        json = Report.find("topics").as_json
         expect(json[:data].size).to eq(31)
         expect(json[:prev30Days]).to eq(3)
+
+        # lets make sure we can ask for the correct options for the report
+        json = Report.find("topics",
+          start_date: 5.days.ago.beginning_of_day,
+          end_date: 1.day.ago.end_of_day,
+          facets: [:prev_period]
+        ).as_json
+
+        expect(json[:prev_period]).to eq(5)
+        expect(json[:data].length).to eq(5)
+        expect(json[:prev30Days]).to eq(nil)
       end
     end
   end
@@ -321,7 +332,9 @@ describe Report do
     context "with different searches" do
       before do
         SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
-        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+
+        SearchLog.create!(term: 'ruby', search_result_id: 1, search_type: 1, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+
         SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
         SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
       end
@@ -332,12 +345,11 @@ describe Report do
 
       it "returns a report with data" do
         expect(report.data[0][0]).to eq("ruby")
-        expect(report.data[0][1]).to eq(3)
-        expect(report.data[0][2]).to eq(2)
+        expect(report.data[0][1]).to eq(2)
+        expect(report.data[0][2]).to eq('33.4%')
 
         expect(report.data[1][0]).to eq("php")
         expect(report.data[1][1]).to eq(1)
-        expect(report.data[1][2]).to eq(1)
       end
     end
   end
@@ -373,7 +385,7 @@ describe Report do
 
       it "returns a report with data" do
         expect(report.data.first[:y]).to eq(100)
-        expect(report.data.last[:y]).to eq(34)
+        expect(report.data.last[:y]).to eq(33.34)
         expect(report.prev30Days).to eq(75)
       end
     end

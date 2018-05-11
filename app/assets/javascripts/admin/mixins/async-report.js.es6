@@ -1,5 +1,4 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import Report from "admin/models/report";
 
 export default Ember.Mixin.create({
   classNameBindings: ["isLoading"],
@@ -9,23 +8,27 @@ export default Ember.Mixin.create({
   init() {
     this._super();
 
-    this.messageBus.subscribe(this.get("dataSource"), report => {
-      const formatDate = (date) => moment(date).format("YYYYMMDD");
-
-      // this check is done to avoid loading a chart after period has changed
-      if (
-          (this.get("startDate") && formatDate(report.start_date) === formatDate(this.get("startDate"))) &&
-          (this.get("endDate") && formatDate(report.end_date) === formatDate(this.get("endDate")))
-         ) {
-        this._setPropertiesFromReport(Report.create(report));
-        this.set("isLoading", false);
-        this.renderReport();
-      } else {
-        this._setPropertiesFromReport(Report.create(report));
-        this.set("isLoading", false);
-        this.renderReport();
+    this._channel = this.get("dataSource");
+    this._callback = (report) => {
+      if (report.report_key = this.get("reportKey")) {
+        Em.run.next(() => {
+          if (report.report_key = this.get("reportKey")) {
+            this.loadReport(report);
+            console.log(report);
+            this.set("isLoading", false);
+            this.renderReport();
+          }
+        });
       }
-    });
+    };
+    // in case we did not subscribe in time ensure we always grab the
+    // last thing on the channel
+    this.messageBus.subscribe(this._channel, this._callback, -2);
+  },
+
+  willDestroyElement() {
+    this._super();
+    this.messageBus.unsubscribe(this._channel, this._callback);
   },
 
   didInsertElement() {
@@ -38,11 +41,12 @@ export default Ember.Mixin.create({
 
   didUpdateAttrs() {
     this._super();
-
     this.fetchReport();
   },
 
   renderReport() {},
+
+  loadReport() {},
 
   @computed("dataSourceName")
   dataSource(dataSourceName) {
