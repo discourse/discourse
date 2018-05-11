@@ -236,7 +236,7 @@ Report.reopenClass({
       }
     }).then(json => {
       // Add zero values for missing dates
-      Report.filleMissingDates(json.report);
+      Report.fillMissingDates(json.report);
 
       const model = Report.create({ type: type });
       model.setProperties(json.report);
