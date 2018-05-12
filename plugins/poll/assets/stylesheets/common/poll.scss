@@ -75,6 +75,10 @@ div.poll {
     button {
       float: none;
     }
+    .info-text {
+      margin: 0 5px;
+      color: $text-color;
+    }
   }
 
   .poll-voters-list {
