@@ -24,11 +24,17 @@ module AnnotatorStore
     end
 
 
+    # --- Class Finder Methods --- #
+
+    def self.with_annotations_count
+      select('annotator_store_tags.*, count(annotator_store_annotations.id) AS annotations_count').
+        joins('LEFT OUTER JOIN annotator_store_annotations on annotator_store_annotations.tag_id = annotator_store_tags.id').
+        group('annotator_store_tags.id')
+    end
+
+
     # --- Instance Methods --- #
 
-    def name_with_count
-      "#{name} (#{annotations.count})"
-    end
 
   end
 end

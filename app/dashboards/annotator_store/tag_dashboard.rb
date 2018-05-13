@@ -19,6 +19,7 @@ module AnnotatorStore
       parent_id: Field::Number,
       created_at: Field::DateTime,
       updated_at: Field::DateTime,
+      annotations: Field::HasMany.with_options(class_name: 'AnnotatorStore::Annotation', limit: 100)
     }.freeze
 
     # COLLECTION_ATTRIBUTES
@@ -36,12 +37,13 @@ module AnnotatorStore
     # an array of attributes that will be displayed on the model's show page.
     SHOW_PAGE_ATTRIBUTES = [
       :id,
-      :parent,
       :name,
+      :parent,
       :description,
       :creator,
       :created_at,
       :updated_at,
+      :annotations,
     ].freeze
 
     # FORM_ATTRIBUTES
@@ -52,7 +54,7 @@ module AnnotatorStore
       :name,
       :description,
       :merge_tag,
-      # :creator,
+      :creator,
       # :parent,
       # :creator_id,
     ].freeze
@@ -60,7 +62,7 @@ module AnnotatorStore
     # Overwrite this method to customize how tags are displayed
     # across all pages of the admin dashboard.
     def display_resource(tag)
-      "Code ##{tag.id}"
+      "Code \"#{tag.name}\""
     end
 
   end

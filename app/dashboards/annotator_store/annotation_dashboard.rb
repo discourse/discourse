@@ -46,14 +46,9 @@ module AnnotatorStore
     # # FORM_ATTRIBUTES
     # # an array of attributes that will be displayed
     # # on the model's form (`new` and `edit`) pages.
-    # FORM_ATTRIBUTES = [
-    #   :parent,
-    #   :name,
-    #   :description,
-    #   # :creator,
-    #   # :parent,
-    #   # :creator_id,
-    # ].freeze
+    FORM_ATTRIBUTES = [
+      :creator,
+    ].freeze
 
     # Overwrite this method to customize how tags are displayed
     # across all pages of the admin dashboard.

@@ -8,7 +8,7 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
               scoped_resource
             else
               # Search or Tree view
-              params[:search].present? ? scoped_resource : scoped_resource.where(ancestry: nil)
+              params[:search].present? ? scoped_resource.with_annotations_count : scoped_resource.with_annotations_count.where(ancestry: nil)
             end
 
     scope = scope.where(creator_id: params[:creator_id]) if params[:creator_id].present?
@@ -81,7 +81,6 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
   def records_per_page
     params[:per_page] || 100
   end
-
 
   private
 

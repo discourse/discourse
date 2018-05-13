@@ -2,5 +2,11 @@
   <%= f.label field.attribute %>
 </div>
 <div class="field-unit__field">
-  <%= f.select :parent_id, nested_dropdown(AnnotatorStore::Tag.where(creator_id: current_user.id).arrange(order: 'name')), include_blank: true %>
+  <% tags = if current_user.admin?
+              AnnotatorStore::Tag.all
+            else
+              AnnotatorStore::Tag.where(creator_id: field.resource.persisted? ? field.resource.creator_id : current_user.id)
+            end
+  %>
+  <%= f.select :parent_id, nested_dropdown_with_counts(tags.with_annotations_count.arrange(order: 'LOWER(name)')), include_blank: true %>
 </div>

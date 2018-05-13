@@ -1,0 +1,7 @@
+<div class="field-unit__label">
+  <%= f.label field.attribute %>
+</div>
+<div class="field-unit__field">
+  <%= f.select :creator_id, (User.where(admin:true)+User.where(moderator:true)).uniq.sort_by(&:username).map {|u| [u.username, u.id] } %>
+</div>
+
