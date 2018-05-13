@@ -32,22 +32,20 @@ class TagsController < ::ApplicationController
       end
 
       format.json do
+        ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships)")
+        ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless guardian.can_admin_tags?
+
         if SiteSetting.tags_listed_by_group
           grouped_tag_counts = TagGroup.allowed(guardian).order('name ASC').includes(:tags).map do |tag_group|
             { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
           end
-
-          ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships) AND tags.topic_count > 0")
 
           render json: {
             tags: self.class.tag_counts_json(ungrouped_tags), # tags that don't belong to a group
             extras: { tag_groups: grouped_tag_counts }
           }
         else
-          unrestricted_tags = DiscourseTagging.filter_visible(
-            Tag.where("tags.id NOT IN (select tag_id from category_tags) AND tags.topic_count > 0"),
-            guardian
-          )
+          unrestricted_tags = DiscourseTagging.filter_visible(ungrouped_tags, guardian)
 
           categories = Category.where("id in (select category_id from category_tags)")
             .where("id in (?)", guardian.allowed_category_ids)
