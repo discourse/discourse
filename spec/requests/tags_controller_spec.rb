@@ -8,8 +8,8 @@ describe TagsController do
   describe '#index' do
 
     before do
-      tag = Fabricate(:tag, name: 'test')
-      topic_tag = Fabricate(:tag, name: 'topic-test', topic_count: 1)
+      Fabricate(:tag, name: 'test')
+      Fabricate(:tag, name: 'topic-test', topic_count: 1)
     end
 
     shared_examples "successfully retrieve tags with topic_count > 0" do
@@ -25,19 +25,28 @@ describe TagsController do
     end
 
     context "with tags_listed_by_group enabled" do
-      before do
-        SiteSetting.tags_listed_by_group = true
-      end
-
+      before { SiteSetting.tags_listed_by_group = true }
       include_examples "successfully retrieve tags with topic_count > 0"
     end
 
     context "with tags_listed_by_group disabled" do
-      before do
-        SiteSetting.tags_listed_by_group = false
+      before { SiteSetting.tags_listed_by_group = false }
+      include_examples "successfully retrieve tags with topic_count > 0"
+    end
+
+    context "when user can admin tags" do
+
+      it "succesfully retrieve all tags" do
+        sign_in(Fabricate(:admin))
+
+        get "/tags.json"
+
+        expect(response).to be_success
+
+        tags = JSON.parse(response.body)["tags"]
+        expect(tags.length).to eq(2)
       end
 
-      include_examples "successfully retrieve tags with topic_count > 0"
     end
   end
 
