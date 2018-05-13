@@ -663,14 +663,17 @@ class UsersController < ApplicationController
   end
 
   def account_created
-    return redirect_to("/") if current_user.present?
+    if current_user.present?
+      if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+        return redirect_to(session_sso_provider_url + "?" + payload)
+      else
+        return redirect_to("/")
+      end
+    end
 
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
-    @account_created = {
-      message: @message,
-      show_controls: false
-    }
+    @account_created = { message: @message, show_controls: false }
 
     if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
       if user = User.where(id: session_user_id.to_i).first
