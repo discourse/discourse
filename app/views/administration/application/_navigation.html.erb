@@ -1,12 +1,17 @@
 <nav class="navigation" role="navigation">
   <%= link_to(
               'Codes',
-              [namespace, :annotator_store, :tags],
+              [namespace, :tags],
               class: "navigation__link navigation__link--#{nav_link_state('annotator_store__tags')}"
       ) %>
   <%= link_to(
+              'Annotations',
+              [namespace, :annotations],
+              class: "navigation__link navigation__link--#{nav_link_state('annotator_store__annotations')}"
+      ) %>
+  <%# link_to(
               'Collections',
-              [namespace, :annotator_store, :collections],
+              [namespace, :collections],
               class: "navigation__link navigation__link--#{nav_link_state('annotator_store__collections')}"
       ) %>
 </nav>

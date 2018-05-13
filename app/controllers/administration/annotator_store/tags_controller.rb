@@ -21,16 +21,16 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
     page = Administrate::Page::Collection.new(dashboard)
 
     respond_to do |format|
-      format.html { render locals: {resources: resources, search_term: search_term, page: page, show_search_bar: show_search_bar?} }
-      format.json { render json: JSON.pretty_generate(JSON.parse(resources.to_json)) }
+      format.html {render locals: {resources: resources, search_term: search_term, page: page, show_search_bar: show_search_bar?}}
+      format.json {render json: JSON.pretty_generate(JSON.parse(resources.to_json))}
     end
   end
 
 
   def show
     respond_to do |format|
-      format.html { render locals: {page: Administrate::Page::Show.new(dashboard, requested_resource)} }
-      format.json { render json: JSON.pretty_generate(JSON.parse(requested_resource.to_json)) }
+      format.html {render locals: {page: Administrate::Page::Show.new(dashboard, requested_resource)}}
+      format.json {render json: JSON.pretty_generate(JSON.parse(requested_resource.to_json))}
     end
   end
 
@@ -40,7 +40,7 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
     resource.creator = current_user
 
     if resource.save
-      redirect_to [namespace, :annotator_store, resource], notice: 'Code was successfully created.'
+      redirect_to [namespace, resource], notice: 'Code was successfully created.'
     else
       render :new, locals: {page: Administrate::Page::Form.new(dashboard, resource)}
     end
@@ -49,7 +49,11 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
 
   def update
     if requested_resource.update(resource_params)
-      redirect_to [namespace, :annotator_store, requested_resource], notice: 'Code was successfully updated.'
+      if resource_params.include?(:merge_tag_id)
+        redirect_to administration_annotator_store_tags_path, notice: 'Codes were successfully merged.'
+      else
+        redirect_to [namespace, requested_resource], notice: 'Code was successfully updated.'
+      end
     else
       render :edit, locals: {page: Administrate::Page::Form.new(dashboard, requested_resource)}
     end

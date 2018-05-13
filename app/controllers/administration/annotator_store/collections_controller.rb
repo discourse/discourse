@@ -1,10 +1,6 @@
 class Administration::AnnotatorStore::CollectionsController < Administration::ApplicationController
 
 
-  def namespace
-    'administration_annotator_store'
-  end
-
   def create
     resource = resource_class.new(resource_params)
     resource.creator = current_user

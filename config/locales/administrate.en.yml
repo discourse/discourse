@@ -1,0 +1,7 @@
+en:
+  helpers:
+    label:
+      annotator_store/annotation:
+        tag: Code
+      annotator_store__annotation:
+        tag: Code

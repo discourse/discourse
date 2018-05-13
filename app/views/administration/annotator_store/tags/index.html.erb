@@ -44,9 +44,10 @@ It renders the `_table` partial to display details about the resources.
   <div>
     <%= link_to(
                 "#{t("administrate.actions.new")} Code",
-                [:new, namespace, page.resource_path],
+                [:new, namespace, :tag],
                 class: "button"
-        ) if valid_action? :new %>
+        )
+    %>
   </div>
 </header>
 

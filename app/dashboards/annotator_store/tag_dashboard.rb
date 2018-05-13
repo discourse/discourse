@@ -11,6 +11,7 @@ module AnnotatorStore
     ATTRIBUTE_TYPES = {
       creator: Administrate::UserField,
       parent: Administrate::ParentTagField.with_options(class_name: 'AnnotatorStore::Tag'),
+      merge_tag: Administrate::MergeTagField.with_options(class_name: 'AnnotatorStore::Tag'),
       id: Field::Number,
       name: Field::String,
       description: Field::Text,
@@ -50,6 +51,7 @@ module AnnotatorStore
       :parent,
       :name,
       :description,
+      :merge_tag,
       # :creator,
       # :parent,
       # :creator_id,

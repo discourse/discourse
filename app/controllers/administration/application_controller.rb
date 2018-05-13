@@ -13,6 +13,11 @@ class Administration::ApplicationController < Administrate::ApplicationControlle
   before_filter :ensure_staff
 
 
+  def namespace
+    'administration_annotator_store'
+  end
+
+
   private
 
   def ensure_logged_in

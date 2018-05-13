@@ -3,28 +3,41 @@
     <% if tag.children.any? %>
         <i class="fa fa-minus-circle" style="color:#aaa;"></i>
     <% end %>
-    <strong class="item" title="<%= tag.annotations.count %> annotations use this tag"><%= tag.name %> (<%= tag.annotations.count %>)</strong>
+    <strong class="item" title="<%= tag.annotations.count %> annotations use this code"><%= tag.name_with_count %></strong>
   </span>
   <% unless params[:creator_id].present? %>
     by <%= tag.creator.username %>&nbsp;&nbsp;
   <% end %>
   <%= link_to(
               t('administrate.actions.show'),
-              [namespace, :annotator_store, tag],
+              [namespace, tag],
               class: "action-edit",
       ) %> |
 
   <%= link_to(
               t('administrate.actions.edit'),
-              [:edit, namespace, :annotator_store, tag],
+              [:edit, namespace, tag],
               class: "action-edit",
+      ) %> |
+
+  <%= link_to(
+              'Annotations',
+              administration_annotator_store_annotations_path(code_id: tag.id),
+              class: "action-edit",
+      ) %>
+
+  |
+  <%= link_to(
+        'Merge',
+        edit_administration_annotator_store_tag_path(tag.id, merge: true),
+        class: "action-edit",
       ) %>
 
   <% if tag.is_childless? %>
       |
       <%= link_to(
                   t('administrate.actions.destroy'),
-                  [namespace, :annotator_store, tag],
+                  [namespace, tag],
                   class: "text-color-red",
                   method: :delete,
                   data: {confirm: "Are you sure? This tag has #{tag.annotations.count} annotations which will also be deleted."}

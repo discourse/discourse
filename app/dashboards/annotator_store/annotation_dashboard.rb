@@ -14,7 +14,7 @@ module AnnotatorStore
       id: Field::Number,
       uri: Field::String,
       tag_id: Field::Number,
-      quote: Field::Text,
+      quote: Field::Text.with_options(truncate: 1000),
       creator_id: Field::Number,
       created_at: Field::DateTime,
       updated_at: Field::DateTime,
@@ -27,22 +27,22 @@ module AnnotatorStore
     # Feel free to add, remove, or rearrange items.
     COLLECTION_ATTRIBUTES = [
       :id,
-      # :name,
-      # :creator,
+      :quote,
+      :tag,
+      :creator,
     ].freeze
 
     # # SHOW_PAGE_ATTRIBUTES
     # # an array of attributes that will be displayed on the model's show page.
-    # SHOW_PAGE_ATTRIBUTES = [
-    #   :id,
-    #   :parent,
-    #   :name,
-    #   :description,
-    #   :creator,
-    #   :created_at,
-    #   :updated_at,
-    # ].freeze
-    #
+    SHOW_PAGE_ATTRIBUTES = [
+      :id,
+      :quote,
+      :tag,
+      :creator,
+      :created_at,
+      :updated_at,
+    ].freeze
+
     # # FORM_ATTRIBUTES
     # # an array of attributes that will be displayed
     # # on the model's form (`new` and `edit`) pages.

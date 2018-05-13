@@ -2,7 +2,6 @@
 #
 class Administration::AnnotatorStore::AnnotationsController < Administration::ApplicationController
 
-
   def index
     scope = scoped_resource
     scope = scope.where(post_id: ::Topic.find(params[:topic_id]).try(:post_ids)) if params[:topic_id].present?
@@ -26,9 +25,11 @@ class Administration::AnnotatorStore::AnnotationsController < Administration::Ap
     resources = resources.includes(*resource_includes) if resource_includes.any?
     resources = order.apply(resources)
     resources = resources.page(params[:page]).per(records_per_page)
-    # page = Administrate::Page::Collection.new(dashboard, order: order)
+    page = Administrate::Page::Collection.new(dashboard, order: order)
 
     respond_to do |format|
+      format.html { render locals: {resources: resources, search_term: search_term, page: page, show_search_bar: show_search_bar?} }
+
       format.json {
         # Rename tag_id to code_id
         r = resources.to_a.map(&:attributes).each { |a|  a['code_id'] = a.delete('tag_id') }

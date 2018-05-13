@@ -26,9 +26,9 @@ as well as a link to its edit page.
   <div>
     <%= link_to(
       "#{t("administrate.actions.edit")} #{page.page_title}",
-      [:edit, namespace, :annotator_store, page.resource],
+      [:edit, namespace, page.resource],
       class: "button",
-    ) if valid_action? :edit %>
+    )  %>
   </div>
 </header>
 
