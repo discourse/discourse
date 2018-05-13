@@ -55,7 +55,6 @@ task "emails:import" => :environment do
   end
 end
 
-
 desc 'Send email test message'
 task 'emails:test', [:email] => [:environment] do |_, args|
   email = args[:email]
