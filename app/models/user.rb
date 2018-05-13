@@ -269,15 +269,18 @@ class User < ActiveRecord::Base
     user
   end
 
+  def unstage
+    self.staged = false
+    self.custom_fields[FROM_STAGED] = true
+    self.notifications.destroy_all
+    DiscourseEvent.trigger(:user_unstaged, self)
+  end
+
   def self.unstage(params)
     if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
       params.each { |k, v| user.send("#{k}=", v) }
-      user.staged = false
       user.active = false
-      user.custom_fields[FROM_STAGED] = true
-      user.notifications.destroy_all
-
-      DiscourseEvent.trigger(:user_unstaged, user)
+      user.unstage
     end
     user
   end

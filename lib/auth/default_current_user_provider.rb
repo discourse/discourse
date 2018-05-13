@@ -131,7 +131,6 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def refresh_session(user, session, cookies)
-
     # if user was not loaded, no point refreshing session
     # it could be an anonymous path, this would add cost
     return if is_api? || !@env.key?(CURRENT_USER_KEY)
@@ -162,6 +161,7 @@ class Auth::DefaultCurrentUserProvider
                                           client_ip: @request.ip)
 
     cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
+    unstage_user(user)
     make_developer_admin(user)
     enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user
@@ -182,6 +182,13 @@ class Auth::DefaultCurrentUserProvider
     hash
   end
 
+  def unstage_user(user)
+    if user.staged
+      user.unstage
+      user.save
+    end
+  end
+
   def make_developer_admin(user)
     if  user.active? &&
         !user.admin &&
@@ -193,11 +200,16 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def enable_bootstrap_mode(user)
-    Jobs.enqueue(:enable_bootstrap_mode, user_id: user.id) if user.admin && user.last_seen_at.nil? && !SiteSetting.bootstrap_mode_enabled && user.is_singular_admin?
+    return if SiteSetting.bootstrap_mode_enabled
+
+    if user.admin && user.last_seen_at.nil? && user.is_singular_admin?
+      Jobs.enqueue(:enable_bootstrap_mode, user_id: user.id)
+    end
   end
 
   def log_off_user(session, cookies)
     user = current_user
+
     if SiteSetting.log_out_strict && user
       user.user_auth_tokens.destroy_all
 

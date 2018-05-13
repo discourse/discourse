@@ -57,7 +57,8 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     # ensure it's not staged anymore
-    user.staged = false
+    user.unstage
+    user.save
 
     # if the user isn't new or it's attached to the SSO record we might be overriding username or email
     unless user.new_record?

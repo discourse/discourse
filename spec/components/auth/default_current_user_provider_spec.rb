@@ -313,6 +313,13 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token}").current_user).to eq(nil)
   end
 
+  it "always unstage users" do
+    staged_user = Fabricate(:user, staged: true)
+    provider("/").log_on_user(staged_user, {}, {})
+    staged_user.reload
+    expect(staged_user.staged).to eq(false)
+  end
+
   context "user api" do
     let :user do
       Fabricate(:user)
