@@ -20,6 +20,7 @@ class UserAnonymizer
       @prev_email = @user.email
       @prev_username = @user.username
 
+      @user.update_attribute(:uploaded_avatar_id, nil)
       raise "Failed to change username" unless UsernameChanger.change(@user, make_anon_username)
 
       @user.reload
@@ -28,7 +29,6 @@ class UserAnonymizer
       @user.name = SiteSetting.full_name_required ? @user.username : nil
       @user.date_of_birth = nil
       @user.title = nil
-      @user.uploaded_avatar_id = nil
 
       anonymize_ips(@opts[:anonymize_ip]) if @opts.has_key?(:anonymize_ip)
 
