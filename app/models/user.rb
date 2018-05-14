@@ -782,7 +782,9 @@ class User < ActiveRecord::Base
   end
 
   def email_confirmed?
-    email_tokens.where(email: email, confirmed: true).present? || email_tokens.empty?
+    email_tokens.where(email: email, confirmed: true).present? ||
+    email_tokens.empty? ||
+    single_sign_on_record&.external_email == email
   end
 
   def activate
@@ -803,8 +805,7 @@ class User < ActiveRecord::Base
   end
 
   def readable_name
-    return "#{name} (#{username})" if name.present? && name != username
-    username
+    name.present? && name != username ? "#{name} (#{username})" : username
   end
 
   def badge_count
@@ -1033,7 +1034,7 @@ class User < ActiveRecord::Base
   end
 
   def set_automatic_groups
-    return unless active && email_confirmed? && !staged
+    return if !active || staged || !email_confirmed?
 
     Group.where(automatic: false)
       .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")

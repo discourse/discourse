@@ -4,10 +4,10 @@ module Jobs
 
     def execute(args)
       group_id = args[:group_id]
-
       raise Discourse::InvalidParameters.new(:group_id) if group_id.blank?
 
-      group = Group.find(group_id)
+      group = Group.find_by(id: group_id)
+      raise Discourse::InvalidParameters.new(:group_id) if group.nil?
 
       return unless group.automatic_membership_retroactive
 
