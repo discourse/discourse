@@ -120,6 +120,14 @@ describe UsernameChanger do
           expect(post.cooked).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a></p>))
         end
 
+        it 'removes the username from the search index' do
+          SearchIndexer.enable
+          create_post_and_change_username(raw: "Hello @foo")
+
+          results = Search.execute('foo', min_search_term_length: 1)
+          expect(results.posts).to be_empty
+        end
+
         it 'ignores case when replacing mentions' do
           post = create_post_and_change_username(raw: "There's no difference between @foo and @Foo")
 
