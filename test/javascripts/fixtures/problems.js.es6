@@ -1,4 +1,4 @@
 export default {
-  "/admin/problems.json": {
+  "/admin/dashboard/problems.json": {
   }
 };
