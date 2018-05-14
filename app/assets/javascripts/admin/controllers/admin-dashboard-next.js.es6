@@ -80,12 +80,12 @@ export default Ember.Controller.extend({
 
   @computed('problemsFetchedAt')
   problemsTimestamp(problemsFetchedAt) {
-    return moment(problemsFetchedAt).format('LLL');
+    return moment(problemsFetchedAt).locale('en').format('LLL');
   },
 
   @computed("period")
   startDate(period) {
-    let fullDay = moment().utc().subtract(1, "day");
+    let fullDay = moment().locale('en').utc().subtract(1, "day");
 
     switch (period) {
       case "yearly":
@@ -107,12 +107,12 @@ export default Ember.Controller.extend({
 
   @computed()
   lastWeek() {
-    return moment().utc().endOf("day").subtract(1, "week");
+    return moment().locale('en').utc().endOf("day").subtract(1, "week");
   },
 
   @computed()
   endDate() {
-    return moment().utc().subtract(1, "day").endOf("day");
+    return moment().locale('en').utc().subtract(1, "day").endOf("day");
   },
 
   @computed("updated_at")
@@ -135,6 +135,6 @@ export default Ember.Controller.extend({
   },
 
   _reportsForPeriodURL(period) {
-    return `/admin/dashboard-next?period=${period}`;
+    return Discourse.getURL(`/admin?period=${period}`);
   }
 });

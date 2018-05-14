@@ -8,14 +8,14 @@ const Report = Discourse.Model.extend({
 
   @computed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {
-    start_date = moment(start_date).format("YYYY-MM-DD");
-    end_date = moment(end_date).format("YYYY-MM-DD");
+    start_date = moment(start_date).locale('en').format("YYYY-MM-DD");
+    end_date = moment(end_date).locale('en').format("YYYY-MM-DD");
     return Discourse.getURL(`/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`);
   },
 
   valueAt(numDaysAgo) {
     if (this.data) {
-      const wantedDate = moment().subtract(numDaysAgo, "days").format("YYYY-MM-DD");
+      const wantedDate = moment().subtract(numDaysAgo, "days").locale('en').format("YYYY-MM-DD");
       const item = this.data.find(d => d.x === wantedDate);
       if (item) {
         return item.y;
@@ -225,8 +225,8 @@ Report.reopenClass({
   fillMissingDates(report) {
     if (_.isArray(report.data)) {
 
-      const startDateFormatted = moment.utc(report.start_date).format('YYYY-MM-DD');
-      const endDateFormatted = moment.utc(report.end_date).format('YYYY-MM-DD');
+      const startDateFormatted = moment.utc(report.start_date).locale('en').format('YYYY-MM-DD');
+      const endDateFormatted = moment.utc(report.end_date).locale('en').format('YYYY-MM-DD');
       report.data = fillMissingDates(report.data, startDateFormatted, endDateFormatted);
     }
   },
