@@ -1,5 +1,9 @@
 <h3>{{model.title}}</h3>
 
+{{#if model.description}}
+  <p>{{model.description}}</p>
+{{/if}}
+
 <div class="admin-reports-filter">
   {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate defaultDate=startDate}}
   {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate defaultDate=endDate}}

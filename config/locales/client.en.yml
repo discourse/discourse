@@ -2765,6 +2765,10 @@ en:
           start_date: "Start Date"
           end_date: "End Date"
           groups: "All groups"
+          disabled: "This report is disabled"
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Search logs</a>'
+            disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
 
       commits:
         latest_changes: "Latest changes: please update often!"

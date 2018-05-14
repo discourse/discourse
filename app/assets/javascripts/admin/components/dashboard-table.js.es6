@@ -6,8 +6,11 @@ import { number } from 'discourse/lib/formatter';
 
 export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-table"],
+  classNameBindings : ["isDisabled"],
   help: null,
   helpPage: null,
+  isDisabled: Ember.computed.not("siteSettings.log_search_queries"),
+  disabledLabel: "admin.dashboard.reports.disabled",
 
   @computed("report")
   values(report) {
@@ -29,6 +32,8 @@ export default Ember.Component.extend(AsyncReport, {
   },
 
   fetchReport() {
+    if (this.get("isDisabled")) return;
+
     this.set("isLoading", true);
 
     let payload = { data: { async: true } };

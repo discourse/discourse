@@ -324,7 +324,7 @@ class Report
   def self.report_users_by_trust_level(report)
     report.data = []
     User.real.group('trust_level').count.sort.each do |level, count|
-      report.data << { x: level.to_i, y: count }
+      report.data << { key: TrustLevel.levels[level.to_i], x: level.to_i, y: count }
     end
   end
 
@@ -401,16 +401,16 @@ class Report
     label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
 
     admins = User.real.admins.count
-    report.data << { x: label.call("admin"), y: admins } if admins > 0
+    report.data << { key: "admin", x: label.call("admin"), y: admins } if admins > 0
 
     moderators = User.real.moderators.count
-    report.data << { x: label.call("moderator"), y: moderators } if moderators > 0
+    report.data << { key: "moderator", x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
-    report.data << { x: label.call("suspended"), y: suspended } if suspended > 0
+    report.data << { key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
 
     silenced = User.real.silenced.count
-    report.data << { x: label.call("silenced"), y: silenced } if silenced > 0
+    report.data << { key: "silenced", x: label.call("silenced"), y: silenced } if silenced > 0
   end
 
   def self.report_trending_search(report)

@@ -65,6 +65,11 @@
   .dashboard-table {
     margin-bottom: 1em;
 
+    &.is-disabled {
+      background: $primary-low;
+      padding: 1em;
+    }
+
     @include small-width  {
       table {
         tbody tr td {
@@ -91,7 +96,7 @@
       table-layout: fixed;
 
       thead {
-        border: 1px solid $primary-low;        
+        border: 1px solid $primary-low;
         tr {
           background: $primary-low;
           th {
