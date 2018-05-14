@@ -33,7 +33,11 @@ class TagsController < ::ApplicationController
 
       format.json do
         ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships)")
-        ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless guardian.can_admin_tags?
+
+        # show all the tags to admins
+        unless guardian.can_admin_tags? && guardian.is_admin?
+          ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0")
+        end
 
         if SiteSetting.tags_listed_by_group
           grouped_tag_counts = TagGroup.allowed(guardian).order('name ASC').includes(:tags).map do |tag_group|
@@ -210,7 +214,7 @@ class TagsController < ::ApplicationController
     end
 
     def self.tag_counts_json(tags)
-      tags.map { |t| { id: t.name, text: t.name, count: t.topic_count } }
+      tags.map { |t| { id: t.name, text: t.name, count: t.topic_count, pm_count: t.pm_topic_count } }
     end
 
     def set_category_from_params
