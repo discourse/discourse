@@ -26,7 +26,8 @@ class UserMerger
   def update_username
     Jobs::UpdateUsername.new.execute(user_id: @source_user.id,
                                      old_username: @source_user.username,
-                                     new_username: @target_user.username)
+                                     new_username: @target_user.username,
+                                     avatar_template: @target_user.avatar_template)
   end
 
   def move_posts
