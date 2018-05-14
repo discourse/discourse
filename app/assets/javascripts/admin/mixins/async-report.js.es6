@@ -47,6 +47,8 @@ export default Ember.Mixin.create({
 
   loadReport() {},
 
+  fetchReport() {},
+
   @computed("dataSourceName")
   dataSource(dataSourceName) {
     return `/admin/reports/${dataSourceName}`;

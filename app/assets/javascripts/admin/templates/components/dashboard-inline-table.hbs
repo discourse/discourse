@@ -18,9 +18,13 @@
       </thead>
       <tbody>
         <tr>
-          {{#each values as |value|}}
-            <td>{{number value}}</td>
-          {{/each}}
+          {{#unless hasBlock}}
+            {{#each values as |value|}}
+              <td>{{number value}}</td>
+            {{/each}}
+          {{else}}
+            {{yield (hash report=report)}}
+          {{/unless}}
         </tr>
       </tbody>
     </table>
