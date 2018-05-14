@@ -66,11 +66,11 @@ export default Ember.Component.extend(AsyncReport, {
     };
 
     if (this.get("startDate")) {
-      payload.data.start_date = this.get("startDate").format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
+      payload.data.start_date = this.get("startDate").locale('en').format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
     }
 
     if (this.get("endDate")) {
-      payload.data.end_date = this.get("endDate").format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
+      payload.data.end_date = this.get("endDate").locale('en').format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
     }
 
     if (this._chart) {
