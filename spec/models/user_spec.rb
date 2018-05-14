@@ -1314,6 +1314,14 @@ describe User do
       expect(group_history.target_user).to eq(user)
     end
 
+    it "is automatically added to a group when the email matches the SSO record" do
+      user = Fabricate(:user, active: true, email: "sso@bar.com")
+      user.create_single_sign_on_record(external_id: 123, external_email: "sso@bar.com", last_payload: "")
+      user.set_automatic_groups
+      group.reload
+      expect(group.users.include?(user)).to eq(true)
+    end
+
     it "get attributes from the group" do
       user = Fabricate.build(:user,
         active: true,
