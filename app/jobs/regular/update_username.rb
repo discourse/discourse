@@ -19,24 +19,19 @@ module Jobs
 
     def update_posts
       Post.with_deleted.where(post_conditions("posts.id"), post_condition_args).find_each do |post|
-        if update_raw!(post.raw)
-          post.update_columns(raw: post.raw, cooked: update_cooked(post.cooked))
-        end
+        post.raw = update_raw(post.raw)
+        post.cooked = update_cooked(post.cooked)
+
+        # update without running validations and hooks
+        post.update_columns(raw: post.raw, cooked: post.cooked)
       end
     end
 
     def update_revisions
       PostRevision.where(post_conditions("post_revisions.post_id"), post_condition_args).find_each do |revision|
-        changed = false
-
-        revision.modifications["raw"]&.each do |raw|
-          changed |= update_raw!(raw)
-        end
-
-        if changed
-          revision.modifications["cooked"].map! { |cooked| update_cooked(cooked) }
-          revision.save!
-        end
+        revision.modifications["raw"].map! { |raw| update_raw(raw) }
+        revision.modifications["cooked"].map! { |cooked| update_cooked(cooked) }
+        revision.save!
       end
     end
 
@@ -112,11 +107,9 @@ module Jobs
       { mentioned: UserAction::MENTION, user_id: @user_id }
     end
 
-    def update_raw!(raw)
-      changed = false
-      changed |= raw.gsub!(@raw_mention_regex, "@#{@new_username}")
-      changed |= raw.gsub!(@raw_quote_regex, "\\1#{@new_username}\\2")
-      changed
+    def update_raw(raw)
+      raw.gsub(@raw_mention_regex, "@#{@new_username}")
+        .gsub(@raw_quote_regex, "\\1#{@new_username}\\2")
     end
 
     # Uses Nokogiri instead of rebake, because it works for posts and revisions
