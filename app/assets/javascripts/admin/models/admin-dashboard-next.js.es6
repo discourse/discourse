@@ -13,10 +13,13 @@ AdminDashboardNext.reopenClass({
     @return {jqXHR} a jQuery Promise object
   **/
   find() {
+
     return ajax("/admin/dashboard-next.json").then(function(json) {
+
       var model = AdminDashboardNext.create();
 
       model.set("reports", json.reports);
+      model.set("version_check", json.version_check);
 
       const attributes = {};
       ATTRIBUTES.forEach(a => attributes[a] = json[a]);
@@ -24,6 +27,25 @@ AdminDashboardNext.reopenClass({
 
       model.set("loaded", true);
 
+      return model;
+    });
+  },
+
+
+  /**
+    Only fetch the list of problems that should be rendered on the dashboard.
+    The model will only have its "problems" attribute set.
+
+    @method fetchProblems
+    @return {jqXHR} a jQuery Promise object
+  **/
+  fetchProblems: function() {
+    return ajax("/admin/dashboard/problems.json", {
+      type: 'GET',
+      dataType: 'json'
+    }).then(function(json) {
+      var model = AdminDashboardNext.create(json);
+      model.set('loaded', true);
       return model;
     });
   }

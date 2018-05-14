@@ -972,7 +972,7 @@ en:
       xaxis: "Day"
       yaxis: "Web Crawler Pageviews"
     page_view_total_reqs:
-      title: "Total"
+      title: "Pageviews"
       xaxis: "Day"
       yaxis: "Total Pageviews"
     page_view_logged_in_mobile_reqs:

@@ -1,4 +1,16 @@
- {{plugin-outlet name="admin-dashboard-top"}}
+{{plugin-outlet name="admin-dashboard-top"}}
+
+<div class="section-top">
+{{#if showVersionChecks}}
+  <div class="dashboard-left">
+    {{partial 'admin/templates/version-checks'}}
+  </div>
+  <div class="dashboard-right">
+    {{partial 'admin/templates/dashboard-problems'}}
+  </div>
+{{/if}}
+  <div class='clearfix'></div>
+</div>
 
 <div class="community-health section">
   <div class="section-title">
@@ -102,6 +114,12 @@
             </p>
           </div>
         </div>
+
+        <hr />
+
+        <p>
+          {{i18n 'admin.dashboard.find_old'}} {{#link-to 'admin.dashboard'}}{{i18n "admin.dashboard.old_link"}}{{/link-to}}
+        </p>
 
         <hr />
 
