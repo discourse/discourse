@@ -35,12 +35,14 @@ class Report
   end
 
   def as_json(options = nil)
+    description = I18n.t("reports.#{type}.description", default: "")
+
     {
      type: type,
      title: I18n.t("reports.#{type}.title"),
      xaxis: I18n.t("reports.#{type}.xaxis"),
      yaxis: I18n.t("reports.#{type}.yaxis"),
-     description: I18n.t("reports.#{type}.description"),
+     description: description.presence ? description : nil,
      data: data,
      start_date: start_date&.iso8601,
      end_date: end_date&.iso8601,
