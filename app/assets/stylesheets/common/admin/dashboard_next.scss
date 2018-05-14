@@ -182,6 +182,9 @@
 
         h3 {
           margin: 1em 0;
+          a, a:visited {
+            color: $primary;
+          }
         }
       }
 

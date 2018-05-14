@@ -1,13 +1,17 @@
 import { ajax } from 'discourse/lib/ajax';
 import round from "discourse/lib/round";
-import { fmt } from 'discourse/lib/computed';
 import { fillMissingDates } from 'discourse/lib/utilities';
 import computed from 'ember-addons/ember-computed-decorators';
 
 const Report = Discourse.Model.extend({
   average: false,
 
-  reportUrl: fmt("type", "/admin/reports/%@"),
+  @computed("type", "start_date", "end_date")
+  reportUrl(type, start_date, end_date) {
+    start_date = moment(start_date).format("YYYY-MM-DD");
+    end_date = moment(end_date).format("YYYY-MM-DD");
+    return Discourse.getURL(`/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`);
+  },
 
   valueAt(numDaysAgo) {
     if (this.data) {

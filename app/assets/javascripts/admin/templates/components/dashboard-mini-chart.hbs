@@ -1,11 +1,9 @@
 {{#conditional-loading-section isLoading=isLoading title=report.title}}
   <div class="chart-title">
     <h3 title={{report.description}}>
-      {{report.title}}
-
-      {{#if report.description}}
-        {{d-icon "question-circle"}}
-      {{/if}}
+      <a href="{{report.reportUrl}}">
+        {{report.title}}
+      </a>
     </h3>
 
     <div class="chart-trend {{trend}}">
