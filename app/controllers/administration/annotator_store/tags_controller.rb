@@ -62,7 +62,7 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
 
   def destroy
     requested_resource.destroy
-    flash[:notice] = translate_with_resource("destroy.success")
+    flash[:notice] = 'Code was successfully destroyed.'
     redirect_to :back
   end
 

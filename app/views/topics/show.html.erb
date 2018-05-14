@@ -16,6 +16,12 @@
         .annotator-viewer .annotator-controls + div {
             display: none;
         }
+        <% tags = AnnotatorStore::Annotation.where(post_id: @topic_view.posts.map(&:id)).where.not(creator_id: current_user.id) %>
+        <% if tags.present? %>
+            <%= tags.map {|tag| "[data-annotation-id=\"#{tag.id}\"]"}.join(', ').html_safe %> {
+              background-color: rgba(182, 223, 236, 0.3) !important;
+            }
+        <% end %>
     </style>
 <% end %>
 <%# -------------------------------------- -%>
@@ -110,7 +116,9 @@
             <script>
                 jQuery(function ($) {
 
-                    var content = $('#post-<%= post.id %> > .post').annotator().annotator('addPlugin', 'Tags');
+                    var content = $('#post-<%= post.id %> > .post').annotator();
+
+                    content.annotator('addPlugin', 'Tags');
 
                     $('#post-<%= post.id %> > .post').data('annotator').plugins.Tags.input.autocomplete({
                         source: availableTags,
