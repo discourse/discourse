@@ -24,6 +24,8 @@ module Jobs
 
         # update without running validations and hooks
         post.update_columns(raw: post.raw, cooked: post.cooked)
+
+        SearchIndexer.index(post, force: true)
       end
     end
 
