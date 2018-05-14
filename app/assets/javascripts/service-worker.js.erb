@@ -37,6 +37,8 @@ self.addEventListener('install', function(event) {
       return caches.open(CURRENT_CACHES.offline).then(function(cache) {
         return cache.put(OFFLINE_URL, response);
       });
+    }).then(function(cache) {
+      self.skipWaiting();
     })
   );
 });
@@ -60,6 +62,8 @@ self.addEventListener('activate', function(event) {
           }
         })
       );
+    }).then(function() {
+      self.clients.claim()
     })
   );
 });
