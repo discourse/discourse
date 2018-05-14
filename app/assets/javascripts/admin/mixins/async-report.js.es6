@@ -14,7 +14,6 @@ export default Ember.Mixin.create({
         Em.run.next(() => {
           if (report.report_key = this.get("reportKey")) {
             this.loadReport(report);
-            console.log(report);
             this.set("isLoading", false);
             this.renderReport();
           }

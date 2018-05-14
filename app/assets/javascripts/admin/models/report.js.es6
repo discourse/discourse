@@ -97,7 +97,7 @@ const Report = Discourse.Model.extend({
 
   @computed('data', 'currentTotal')
   currentAverage(data, total) {
-    return parseFloat((total / parseFloat(data.length)).toFixed(1));
+    return data.length === 0 ? 0 : parseFloat((total / parseFloat(data.length)).toFixed(1));
   },
 
   @computed('prev_period', 'currentTotal', 'currentAverage')
@@ -172,7 +172,7 @@ const Report = Discourse.Model.extend({
     let percent = this.percentChangeString(current, prev);
 
     if (this.get('average')) {
-      prev = prev.toFixed(1);
+      prev = prev ? prev.toFixed(1) : "0";
       current += '%';
       prev += '%';
     }
@@ -219,7 +219,8 @@ const Report = Discourse.Model.extend({
 Report.reopenClass({
 
   fillMissingDates(report) {
-    if (report.data.length > 0) {
+    if (_.isArray(report.data)) {
+
       const startDateFormatted = moment.utc(report.start_date).format('YYYY-MM-DD');
       const endDateFormatted = moment.utc(report.end_date).format('YYYY-MM-DD');
       report.data = fillMissingDates(report.data, startDateFormatted, endDateFormatted);
