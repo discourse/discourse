@@ -1323,7 +1323,9 @@ search:
   search_recent_posts_size:
     default: 100000
     max: 100000
-  log_search_queries: true
+  log_search_queries:
+    client: true
+    default: true
   search_query_log_max_size:
     default: 1000000
     max: 1000000

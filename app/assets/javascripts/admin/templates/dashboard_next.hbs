@@ -1,14 +1,14 @@
 {{plugin-outlet name="admin-dashboard-top"}}
 
 <div class="section-top">
-{{#if showVersionChecks}}
-  <div class="dashboard-left">
-    {{partial 'admin/templates/version-checks'}}
-  </div>
-  <div class="dashboard-right">
-    {{partial 'admin/templates/dashboard-problems'}}
-  </div>
-{{/if}}
+  {{#if showVersionChecks}}
+    <div class="dashboard-left">
+      {{partial 'admin/templates/version-checks'}}
+    </div>
+    <div class="dashboard-right">
+      {{partial 'admin/templates/dashboard-problems'}}
+    </div>
+  {{/if}}
   <div class='clearfix'></div>
 </div>
 
@@ -85,13 +85,25 @@
       {{/conditional-loading-section}}
     </div>
 
-    {{dashboard-inline-table
-      dataSourceName="users_by_type"
-      lastRefreshedAt=lastRefreshedAt}}
+    {{#dashboard-inline-table dataSourceName="users_by_type" lastRefreshedAt=lastRefreshedAt as |context|}}
+      {{#each context.report.data as |data|}}
+        <td>
+          <a href="/admin/users/list/{{data.key}}">
+            {{number data.y}}
+          </a>
+        </td>
+      {{/each}}
+    {{/dashboard-inline-table}}
 
-    {{dashboard-inline-table
-      dataSourceName="users_by_trust_level"
-      lastRefreshedAt=lastRefreshedAt}}
+    {{#dashboard-inline-table dataSourceName="users_by_trust_level" lastRefreshedAt=lastRefreshedAt as |context|}}
+      {{#each context.report.data as |data|}}
+        <td>
+          <a href="/admin/users/list/{{data.key}}">
+            {{number data.y}}
+          </a>
+        </td>
+      {{/each}}
+    {{/dashboard-inline-table}}
 
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
@@ -135,9 +147,13 @@
   </div>
 
   <div class="section-column">
-    {{dashboard-table-trending-search
+    {{#dashboard-table-trending-search
       dataSourceName="trending_search"
+      isEnabled=logSearchQueriesEnabled
+      disabledLabel="admin.dashboard.reports.trending_search.disabled"
       startDate=lastWeek
       endDate=endDate}}
+      {{{i18n "admin.dashboard.reports.trending_search.more"}}}
+    {{/dashboard-table-trending-search}}
   </div>
 </div>
