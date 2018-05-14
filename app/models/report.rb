@@ -438,7 +438,7 @@ class Report
 
     trends.each do |trend|
       ctr =
-        if trend.click_through == 0
+        if trend.click_through == 0 || trend.searches == 0
           0
         else
           trend.click_through.to_f / trend.searches.to_f
