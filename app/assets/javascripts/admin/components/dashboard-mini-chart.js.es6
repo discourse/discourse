@@ -83,7 +83,6 @@ export default Ember.Component.extend(AsyncReport, {
     ajax(this.get("dataSource"), payload)
       .then((response) => {
         this.set('reportKey', response.report.report_key);
-
         this.loadReport(response.report);
       })
       .finally(() => {
@@ -100,7 +99,7 @@ export default Ember.Component.extend(AsyncReport, {
   },
 
   loadReport(report) {
-    if (report.data) {
+    if (_.isArray(report.data)) {
       Report.fillMissingDates(report);
 
       if (report.data && report.data.length > 40) {

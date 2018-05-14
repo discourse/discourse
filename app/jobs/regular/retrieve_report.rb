@@ -16,8 +16,8 @@ module Jobs
       report.facets = args['facets'].map(&:to_sym) if args['facets']
 
       Report.send("report_#{type}", report)
-
       json = report.as_json
+
       Discourse.cache.write(Report.cache_key(report), json, force: true, expires_in: 30.minutes)
 
       MessageBus.publish("/admin/reports/#{type}", json, user_ids: User.staff.pluck(:id))

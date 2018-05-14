@@ -494,7 +494,7 @@ export function fillMissingDates(data, startDate, endDate) {
 
   for (let i = 0; i <= countDays; i++) {
     let date = (data[i]) ? moment(data[i].x, "YYYY-MM-DD") : null;
-    if (i === 0 && date.isAfter(startMoment)) {
+    if (i === 0 && (!date || date.isAfter(startMoment))) {
       data.splice(i, 0, { "x" : startMoment.format("YYYY-MM-DD"), 'y': 0 });
     } else {
       if (!date || date.isAfter(moment(currentMoment))) {
