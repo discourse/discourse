@@ -767,11 +767,6 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux contributeurs"
       description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période"
-    inactive_users:
-      title: "Utilisateurs inactifs"
-      xaxis: "Jour"
-      yaxis: "Nombre de nouveaux utilisateurs inactifs"
-      description: "Nombre d'utilisateurs ne s'étant pas connectés dans les derniers 3 mois"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
