@@ -275,10 +275,18 @@ module SiteSettingExtension
     end
   end
 
+  SECRET_SETTINGS ||= %w{
+    google_oauth2_client_secret twitter_consumer_secret instagram_consumer_secret
+    facebook_app_secret github_client_secret s3_secret_access_key
+  }
+
   def set_and_log(name, value, user = Discourse.system_user)
     prev_value = send(name)
     set(name, value)
-    StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
+    if has_setting?(name)
+      value = prev_value = "[FILTERED]" if SECRET_SETTINGS.include?(name)
+      StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+    end
   end
 
   protected
