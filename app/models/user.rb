@@ -270,10 +270,12 @@ class User < ActiveRecord::Base
   end
 
   def unstage
-    self.staged = false
-    self.custom_fields[FROM_STAGED] = true
-    self.notifications.destroy_all
-    DiscourseEvent.trigger(:user_unstaged, self)
+    if self.staged
+      self.staged = false
+      self.custom_fields[FROM_STAGED] = true
+      self.notifications.destroy_all
+      DiscourseEvent.trigger(:user_unstaged, self)
+    end
   end
 
   def self.unstage(params)
