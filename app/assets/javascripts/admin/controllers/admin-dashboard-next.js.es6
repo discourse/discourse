@@ -1,7 +1,11 @@
+import { setting } from 'discourse/lib/computed';
 import DiscourseURL from "discourse/lib/url";
 import computed from "ember-addons/ember-computed-decorators";
 import AdminDashboardNext from "admin/models/admin-dashboard-next";
 import Report from "admin/models/report";
+import VersionCheck from 'admin/models/version-check';
+
+const PROBLEMS_CHECK_MINUTES = 1;
 
 export default Ember.Controller.extend({
   queryParams: ["period"],
@@ -9,10 +13,28 @@ export default Ember.Controller.extend({
   isLoading: false,
   dashboardFetchedAt: null,
   exceptionController: Ember.inject.controller("exception"),
+  showVersionChecks: setting('version_checks'),
   diskSpace: Ember.computed.alias("model.attributes.disk_space"),
 
   availablePeriods: ["yearly", "quarterly", "monthly", "weekly"],
 
+  @computed('problems.length')
+  foundProblems(problemsLength) {
+    return this.currentUser.get('admin') && (problemsLength || 0) > 0;
+  },
+
+
+  @computed('foundProblems')
+  thereWereProblems(foundProblems) {
+    if (!this.currentUser.get('admin')) { return false; }
+
+    if (foundProblems) {
+      this.set('hadProblems', true);
+      return true;
+    } else {
+      return this.get('hadProblems') || false;
+    }
+  },
 
   fetchDashboard() {
     if (this.get("isLoading")) return;
@@ -20,7 +42,14 @@ export default Ember.Controller.extend({
     if (!this.get("dashboardFetchedAt") || moment().subtract(30, "minutes").toDate() > this.get("dashboardFetchedAt")) {
       this.set("isLoading", true);
 
+      const versionChecks = this.siteSettings.version_checks;
+
       AdminDashboardNext.find().then(adminDashboardNextModel => {
+
+        if (versionChecks) {
+          this.set('versionCheck', VersionCheck.create(adminDashboardNextModel.version_check));
+        }
+
         this.setProperties({
           dashboardFetchedAt: new Date(),
           model: adminDashboardNextModel,
@@ -33,6 +62,25 @@ export default Ember.Controller.extend({
         this.set("isLoading", false);
       });
     }
+
+    if (!this.get('problemsFetchedAt') || moment().subtract(PROBLEMS_CHECK_MINUTES, 'minutes').toDate() > this.get('problemsFetchedAt')) {
+      this.loadProblems();
+    }
+  },
+
+  loadProblems() {
+    this.set('loadingProblems', true);
+    this.set('problemsFetchedAt', new Date());
+    AdminDashboardNext.fetchProblems().then(d => {
+      this.set('problems', d.problems);
+    }).finally(() => {
+      this.set('loadingProblems', false);
+    });
+  },
+
+  @computed('problemsFetchedAt')
+  problemsTimestamp(problemsFetchedAt) {
+    return moment(problemsFetchedAt).format('LLL');
   },
 
   @computed("period")
@@ -80,7 +128,10 @@ export default Ember.Controller.extend({
   actions: {
     changePeriod(period) {
       DiscourseURL.routeTo(this._reportsForPeriodURL(period));
-    }
+    },
+    refreshProblems() {
+      this.loadProblems();
+    },
   },
 
   _reportsForPeriodURL(period) {

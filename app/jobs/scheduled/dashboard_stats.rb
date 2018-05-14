@@ -15,8 +15,8 @@ module Jobs
       end
 
       # TODO: decide if we want to keep caching this every 30 minutes
-      AdminDashboardData.refresh_stats
       AdminDashboardNextData.refresh_stats
+      AdminDashboardData.refresh_stats
     end
   end
 end
