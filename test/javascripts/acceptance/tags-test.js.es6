@@ -24,19 +24,19 @@ QUnit.test("list the tags in groups", assert => {
       200,
       { "Content-Type": "application/json" },
       {
-        "tags":[{id: 'planned', text: 'planned', count: 7}],
+        "tags":[{id: 'planned', text: 'planned', count: 7, pm_count: 0}],
         "extras": { "tag_groups": [
           {id: 2, name: "Ford Cars", tags: [
-            {id: 'escort', text: 'escort', count: 1},
-            {id: 'focus', text: 'focus', count: 3}
+            {id: 'escort', text: 'escort', count: 1, pm_count: 0},
+            {id: 'focus', text: 'focus', count: 3, pm_count: 0}
           ]},
           {id: 1, name: "Honda Cars", tags: [
-            {id: 'civic', text: 'civic', count: 4},
-            {id: 'accord', text: 'accord', count: 2}
+            {id: 'civic', text: 'civic', count: 4, pm_count: 0},
+            {id: 'accord', text: 'accord', count: 2, pm_count: 0}
           ]},
           {id: 1, name: "Makes", tags: [
-            {id: 'ford', text: 'ford', count: 5},
-            {id: 'honda', text: 'honda', count: 6}
+            {id: 'ford', text: 'ford', count: 5, pm_count: 0},
+            {id: 'honda', text: 'honda', count: 6, pm_count: 0}
           ]}
         ]}
       }
