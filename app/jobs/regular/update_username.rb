@@ -5,6 +5,7 @@ module Jobs
       @user_id = args[:user_id]
       @old_username = args[:old_username]
       @new_username = args[:new_username]
+      @avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
 
       @raw_mention_regex = /(?:(?<![\w`_])|(?<=_))@#{@old_username}(?:(?![\w\-\.])|(?=[\-\.](?:\s|$)))/i
       @raw_quote_regex = /(\[quote\s*=\s*["'']?)#{@old_username}(\,?[^\]]*\])/i
@@ -131,14 +132,10 @@ module Jobs
         div.children.each do |child|
           child.content = child.content.gsub(@cooked_quote_username_regex, @new_username) if child.text?
         end
-        div.at_css("img.avatar")&.replace(avatar_img)
+        div.at_css("img.avatar")&.replace(@avatar_img)
       end
 
       doc.to_html
-    end
-
-    def avatar_img
-      @avatar_img ||= PrettyText.avatar_img(User.find_by_id(@user_id).avatar_template, "tiny")
     end
   end
 end

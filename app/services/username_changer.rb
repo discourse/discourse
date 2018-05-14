@@ -24,7 +24,8 @@ class UsernameChanger
       args = {
         user_id: @user.id,
         old_username: @old_username,
-        new_username: @new_username
+        new_username: @new_username,
+        avatar_template: @user.avatar_template
       }
 
       if asynchronous
