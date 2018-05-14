@@ -852,11 +852,6 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period"
-    inactive_users:
-      title: "Inactive Users"
-      xaxis: "Day"
-      yaxis: "Number of new inactive users"
-      description: "Number of users that haven’t logged on for the last 3 months"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"

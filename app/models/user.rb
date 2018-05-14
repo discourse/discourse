@@ -835,51 +835,6 @@ class User < ActiveRecord::Base
     (tl_badge + other_badges).take(limit)
   end
 
-  def self.count_by_inactivity(start_date, end_date)
-    aggregation_unit = aggregation_unit_for_period(start_date, end_date)
-
-    sql = <<~SQL
-      SELECT
-        date_trunc('#{aggregation_unit}', generated_date) :: DATE AS "date",
-        max("count") AS "count"
-      FROM (
-             SELECT
-               d.generated_date,
-               COUNT(1) AS "count"
-             FROM (SELECT generate_series(:start_date, :end_date, '1 day' :: INTERVAL) :: DATE AS generated_date) d
-               JOIN users u ON (u.created_at :: DATE <= d.generated_date)
-             WHERE u.active AND
-                   u.id > 0 AND
-                   NOT EXISTS(
-                       SELECT 1
-                       FROM user_custom_fields ucf
-                       WHERE
-                         ucf.user_id = u.id AND
-                         ucf.name = 'master_id' AND
-                         ucf.value :: int > 0
-                   ) AND
-                   NOT EXISTS(
-                       SELECT 1
-                       FROM user_visits v
-                       WHERE v.visited_at BETWEEN (d.generated_date - INTERVAL '89 days') :: DATE AND d.generated_date
-                             AND v.user_id = u.id
-                   ) AND
-                   NOT EXISTS(
-                       SELECT 1
-                       FROM incoming_emails e
-                       WHERE e.user_id = u.id AND
-                             e.post_id IS NOT NULL AND
-                             e.created_at :: DATE BETWEEN (d.generated_date - INTERVAL '89 days') :: DATE AND d.generated_date
-                   )
-             GROUP BY d.generated_date
-           ) AS x
-      GROUP BY date_trunc('#{aggregation_unit}', generated_date) :: DATE
-      ORDER BY date_trunc('#{aggregation_unit}', generated_date) :: DATE
-    SQL
-
-    exec_sql(sql, start_date: start_date, end_date: end_date).to_a
-  end
-
   def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
     result = self
 
