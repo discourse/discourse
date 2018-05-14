@@ -31,9 +31,11 @@ module Jobs
 
     def update_revisions
       PostRevision.where(post_conditions("post_revisions.post_id"), post_condition_args).find_each do |revision|
-        revision.modifications["raw"].map! { |raw| update_raw(raw) }
-        revision.modifications["cooked"].map! { |cooked| update_cooked(cooked) }
-        revision.save!
+        if revision.modifications.key?("raw") || revision.modifications.key?("cooked")
+          revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
+          revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
+          revision.save!
+        end
       end
     end
 
