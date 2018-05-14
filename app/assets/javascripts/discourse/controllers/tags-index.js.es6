@@ -1,7 +1,7 @@
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-  sortProperties: ['count:desc', 'id'],
+  sortProperties: ['totalCount:desc', 'id'],
   sortedByCount: true,
   sortedByName: false,
 
@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
   actions: {
     sortByCount() {
       this.setProperties({
-        sortProperties: ['count:desc', 'id'],
+        sortProperties: ['totalCount:desc', 'id'],
         sortedByCount: true,
         sortedByName: false
       });
