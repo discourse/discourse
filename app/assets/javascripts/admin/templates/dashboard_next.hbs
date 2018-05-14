@@ -72,12 +72,11 @@
                 <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
                 <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
                 <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
-                <th>{{i18n 'admin.dashboard.reports.all'}}</th>
               </tr>
             </thead>
             <tbody>
               {{#each reports as |report|}}
-                {{admin-report-counts report=report}}
+                {{admin-report-counts report=report allTime=false}}
               {{/each}}
             </tbody>
           </table>
