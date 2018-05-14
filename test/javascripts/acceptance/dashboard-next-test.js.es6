@@ -8,7 +8,7 @@ acceptance("Dashboard Next", {
 });
 
 QUnit.test("Visit dashboard next page", assert => {
-  visit("/admin/dashboard-next");
+  visit("/admin");
 
   andThen(() => {
     assert.ok($('.dashboard-next').length, "has dashboard-next class");
