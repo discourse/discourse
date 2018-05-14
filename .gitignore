@@ -78,6 +78,7 @@ discourse.sublime-workspace
 *~
 *.swp
 *.swo
+*.swm
 
 # don't check in multisite config
 config/multisite.yml
