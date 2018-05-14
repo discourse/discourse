@@ -252,7 +252,7 @@ describe UsernameChanger do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
         let(:avatar_url) { user.avatar_template.gsub("{size}", "40") }
 
-        it 'replaces the username in quote tags' do
+        it 'replaces the username in quote tags and updates avatar' do
           post = create_post_and_change_username(raw: <<~RAW)
             Lorem ipsum
 
@@ -375,8 +375,47 @@ describe UsernameChanger do
             expect(post.revisions[0].modifications["cooked"][0]).to match_html(expected_cooked)
           end
         end
+      end
 
-        # TODO spec for quotes in revisions
+      context 'oneboxes' do
+        let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
+        let(:avatar_url) { user.avatar_template.gsub("{size}", "40") }
+
+        def protocol_relative_url(url)
+          url.sub(/^https?:/, '')
+        end
+
+        it 'updates avatar for linked topics and posts' do
+          raw = "#{quoted_post.full_url}\n#{quoted_post.topic.url}"
+          post = create_post_and_change_username(raw: raw)
+
+          expect(post.raw).to eq(raw)
+
+          expect(post.cooked).to match_html(<<~HTML)
+            <p><aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
+              <div class="title">
+                <div class="quote-controls"></div>
+                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
+              </div>
+              <blockquote>
+                quoted post
+              </blockquote>
+            </aside>
+            <br>
+            <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
+              <div class="title">
+                <div class="quote-controls"></div>
+                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <a href="#{protocol_relative_url(quoted_post.topic.url)}">#{quoted_post.topic.title}</a>
+              </div>
+              <blockquote>
+                quoted post
+              </blockquote>
+            </aside>
+            </p>
+          HTML
+        end
       end
     end
 
