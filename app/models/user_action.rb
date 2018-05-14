@@ -1,5 +1,4 @@
 class UserAction < ActiveRecord::Base
-  include DateGroupable
 
   belongs_to :user
   belongs_to :target_post, class_name: "Post"

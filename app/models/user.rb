@@ -19,7 +19,6 @@ class User < ActiveRecord::Base
   include Roleable
   include HasCustomFields
   include SecondFactorManager
-  include DateGroupable
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
