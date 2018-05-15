@@ -6,9 +6,10 @@ export default {
           (location.hostname === "localhost");
 
     const isSupported= isSecured && ('serviceWorker' in navigator);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
     if (isSupported) {
-      if (Discourse.ServiceWorkerURL) {
+      if (Discourse.ServiceWorkerURL && !isSafari) {
         navigator.serviceWorker
           .register(`${Discourse.BaseUri}/${Discourse.ServiceWorkerURL}`)
           .catch(error => {
