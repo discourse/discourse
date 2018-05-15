@@ -344,12 +344,12 @@ describe Report do
       end
 
       it "returns a report with data" do
-        expect(report.data[0][0]).to eq("ruby")
-        expect(report.data[0][1]).to eq(2)
-        expect(report.data[0][2]).to eq('33.4%')
+        expect(report.data[0][:term]).to eq("ruby")
+        expect(report.data[0][:unique_searches]).to eq(2)
+        expect(report.data[0][:ctr]).to eq('33.4%')
 
-        expect(report.data[1][0]).to eq("php")
-        expect(report.data[1][1]).to eq(1)
+        expect(report.data[1][:term]).to eq("php")
+        expect(report.data[1][:unique_searches]).to eq(1)
       end
     end
   end
