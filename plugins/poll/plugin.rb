@@ -10,6 +10,7 @@ register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 
 enabled_site_setting :poll_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
 
 PLUGIN_NAME ||= "discourse_poll".freeze
 DATA_PREFIX ||= "data-poll-".freeze

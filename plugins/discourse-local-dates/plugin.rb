@@ -2,6 +2,7 @@
 # about: Display a date in your local timezone
 # version: 0.1
 # author: Joffrey Jaffeux
+hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset "javascripts/discourse-local-dates.js"
 register_asset "stylesheets/discourse-local-dates.scss"

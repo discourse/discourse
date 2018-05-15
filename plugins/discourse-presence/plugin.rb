@@ -5,6 +5,7 @@
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-presence
 
 enabled_site_setting :presence_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset 'stylesheets/presence.scss'
 
