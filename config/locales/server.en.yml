@@ -856,7 +856,7 @@ en:
       title: "DAU/MAU"
       xaxis: "Day"
       yaxis: "DAU/MAY"
-      description: "Daily Active Users / Monthly Active Users"
+      description: "DAU / MAU – no. of members that logged in in the last day divided by no. of members that logged in in the last month – returns a %"
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"
