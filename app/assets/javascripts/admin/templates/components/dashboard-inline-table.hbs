@@ -17,15 +17,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          {{#unless hasBlock}}
-            {{#each values as |value|}}
+        {{#unless hasBlock}}
+          {{#each values as |value|}}
+            <tr>
               <td>{{number value}}</td>
-            {{/each}}
-          {{else}}
-            {{yield (hash report=report)}}
-          {{/unless}}
-        </tr>
+            </tr>
+          {{/each}}
+        {{else}}
+          {{yield (hash report=report)}}
+        {{/unless}}
       </tbody>
     </table>
   </div>

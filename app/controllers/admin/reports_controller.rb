@@ -27,12 +27,18 @@ class Admin::ReportsController < Admin::AdminController
       facets = params[:facets].map { |s| s.to_s.to_sym }
     end
 
+    limit = nil
+    if params.has_key?(:limit) && params[:limit].to_i > 0
+      limit = params[:limit].to_i
+    end
+
     report = Report.find(report_type,
                           start_date: start_date,
                           end_date: end_date,
                           category_id: category_id,
                           group_id: group_id,
                           facets: facets,
+                          limit: limit,
                           async: params[:async])
 
     raise Discourse::NotFound if report.blank?
