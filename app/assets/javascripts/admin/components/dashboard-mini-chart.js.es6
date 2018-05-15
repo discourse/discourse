@@ -1,5 +1,4 @@
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
 import AsyncReport from "admin/mixins/async-report";
 import Report from "admin/models/report";
 import { number } from 'discourse/lib/formatter';
@@ -26,41 +25,20 @@ function collapseWeekly(data, average) {
 
 export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-mini-chart"],
-  classNameBindings: ["trend", "oneDataPoint"],
-  isLoading: true,
-  trend: Ember.computed.alias("report.trend"),
-  oneDataPoint: false,
-  backgroundColor: "rgba(200,220,240,0.3)",
-  borderColor: "#08C",
-  average: false,
-  percent: false,
   total: 0,
 
-  @computed("dataSourceName")
-  dataSource(dataSourceName) {
-    if (dataSourceName) {
-      return `/admin/reports/${dataSourceName}`;
-    }
+  init() {
+    this._super();
+
+    this._colorsPool = ["rgb(0,136,204)", "rgb(235,83,148)"];
   },
 
-  @computed("trend")
-  trendIcon(trend) {
-    switch (trend) {
-      case "trending-up":
-        return "angle-up";
-      case "trending-down":
-        return "angle-down";
-      case "high-trending-up":
-        return "angle-double-up";
-      case "high-trending-down":
-        return "angle-double-down";
-      default:
-        return null;
-    }
+  pickColorAtIndex(index) {
+    return this._colorsPool[index] || this._colorsPool[0];
   },
 
   fetchReport() {
-    this.set("isLoading", true);
+    this._super();
 
     let payload = {
       data: { async: true, facets: ["prev_period"] }
@@ -79,56 +57,56 @@ export default Ember.Component.extend(AsyncReport, {
       this._chart = null;
     }
 
-    this.set("report", null);
+    this.set("reports", Ember.Object.create());
+    this.set("reportKeys", []);
 
-    ajax(this.get("dataSource"), payload)
-      .then((response) => {
-        this.set('reportKey', response.report.report_key);
-        this.loadReport(response.report);
-      })
-      .finally(() => {
-        if (this.get("oneDataPoint")) {
-          this.set("isLoading", false);
-          return;
-        }
-
-        if (!Ember.isEmpty(this.get("report.data"))) {
-          this.set("isLoading", false);
-          this.renderReport();
-        }
-      });
+    return Ember.RSVP.Promise.all(this.get("dataSources").map(dataSource => {
+      return ajax(dataSource, payload)
+        .then(response => {
+          this.set(`reports.${response.report.report_key}`, this.loadReport(response.report));
+          this.get("reportKeys").pushObject(response.report.report_key);
+        });
+    }));
   },
 
-  loadReport(report) {
-    if (_.isArray(report.data)) {
-      Report.fillMissingDates(report);
+  loadReport(report, previousReport) {
+    Report.fillMissingDates(report);
 
-      if (report.data && report.data.length > 40) {
-        report.data = collapseWeekly(report.data, this.get("average"));
-      }
-
-      const model = Report.create(report);
-      this._setPropertiesFromReport(model);
+    if (report.data && report.data.length > 40) {
+      report.data = collapseWeekly(report.data, report.average);
     }
+
+    if (previousReport && previousReport.color.length) {
+      report.color = previousReport.color;
+    } else {
+      const dataSourceNameIndex = this.get("dataSourceNames").split(",").indexOf(report.type);
+      report.color = this.pickColorAtIndex(dataSourceNameIndex);
+    }
+
+    return Report.create(report);
   },
 
   renderReport() {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-    if (this.get("oneDataPoint")) return;
+    this._super();
 
     Ember.run.schedule("afterRender", () => {
       const $chartCanvas = this.$(".chart-canvas");
-
       if (!$chartCanvas.length) return;
       const context = $chartCanvas[0].getContext("2d");
 
+      const reports = _.values(this.get("reports"));
+
+      const labels = Ember.makeArray(reports.get("firstObject.data")).map(d => d.x);
+
       const data = {
-        labels: this.get("labels"),
-        datasets: [{
-          data: Ember.makeArray(this.get("values")),
-          backgroundColor: this.get("backgroundColor"),
-          borderColor: this.get("borderColor")
-        }]
+        labels,
+        datasets: reports.map(report => {
+          return {
+            data: Ember.makeArray(report.data).map(d => d.y),
+            backgroundColor: "rgba(200,220,240,0.3)",
+            borderColor: report.color
+          };
+        })
       };
 
       if (this._chart) {
@@ -136,15 +114,6 @@ export default Ember.Component.extend(AsyncReport, {
       }
       this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
-  },
-
-  _setPropertiesFromReport(report) {
-    const oneDataPoint = (this.get("startDate") && this.get("endDate")) &&
-      this.get("startDate").isSame(this.get("endDate"), "day");
-
-    report.set("average", this.get("average"));
-    report.set("percent", this.get("percent"));
-    this.setProperties({ oneDataPoint, report });
   },
 
   _buildChartConfig(data) {
@@ -171,6 +140,7 @@ export default Ember.Component.extend(AsyncReport, {
           }],
           xAxes: [{
             display: true,
+            gridLines: { display: false },
             type: "time",
             time: {
               parser: "YYYY-MM-DD"

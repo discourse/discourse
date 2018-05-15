@@ -155,14 +155,69 @@
 
   .charts {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
 
-    .dashboard-mini-chart {
-      max-width: calc(100% * (1/3));
-      width: 100%;
+    .dashboard-mini-statuses {
       margin-bottom: 1em;
+      display: inline-flex;
+    }
+
+    .dashboard-mini-status {
+      flex-direction: row;
+      margin-right: 1em;
+      display: flex;
+
+      .indicator {
+        margin-right: .5em;
+        width: .33em;
+        height: 35px;
+      }
+
+      .legend {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          a {color: black;}
+
+          font-size: $font-down-2;
+          font-weight: 700;
+          margin: 0;
+        }
+
+        .trend {
+          flex-direction: row;
+
+          .d-icon {
+            font-weight: 700;
+
+            &.d-icon-angle-down, &.d-icon-angle-double-down {
+              color: $danger;
+            }
+
+            &.d-icon-angle-up, &.d-icon-angle-double-up {
+              color: rgb(17, 141, 0);
+            }
+          }
+        }
+      }
+    }
+
+    .dashboard-mini-chart {
+      max-width: calc(100% * 1/3);
+      width: 100%;
       flex-grow: 1;
+      flex-basis: 100%;
+      display: flex;
+      margin-bottom: 1em;
+
+      .conditional-loading-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+      }
 
       @include small-width  {
         max-width: 100%;
@@ -207,36 +262,12 @@
           color: $danger;
         }
       }
-
-      &.one-data-point {
-        .chart-container {
-          min-height: 150px;
-          justify-content: center;
-          align-items: center;
-          display: flex;
-        }
-
-        .data-point {
-          width: 100%;
-          font-size: 6em;
-          font-weight: bold;
-          border-radius: 3px;
-          background: rgba(200,220,240,0.3);
-          text-align: center;
-          padding: .5em 0;
-        }
-      }
     }
 
     @include small-width  {
       .dashboard-mini-chart {
         width: 100%;
       }
-    }
-
-    .chart-container {
-      position: relative;
-      padding: 0 1em 0 0;
     }
 
     .chart-trend {
@@ -246,6 +277,11 @@
       align-items: center;
       font-weight: bold;
       margin-right: 1em;
+    }
+
+    .chart-canvas-container {
+      position: relative;
+      padding: 0 1em 0 0;
     }
 
     .chart-canvas {

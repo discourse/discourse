@@ -21,38 +21,29 @@
   <div class="section-body">
     <div class="charts">
       {{dashboard-mini-chart
-        dataSourceName="signups"
+        dataSourceNames="signups"
         startDate=startDate
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        dataSourceName="topics"
+        dataSourceNames="topics,posts"
         startDate=startDate
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        dataSourceName="posts"
+        dataSourceNames="dau_by_mau"
         startDate=startDate
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        dataSourceName="dau_by_mau"
-        average=true
-        percent=true
+        dataSourceNames="daily_engaged_users"
         startDate=startDate
         endDate=endDate}}
 
       {{dashboard-mini-chart
-        dataSourceName="daily_engaged_users"
-        average=true
+        dataSourceNames="new_contributors"
         startDate=startDate
         endDate=endDate}}
-
-      {{dashboard-mini-chart
-        dataSourceName="new_contributors"
-        startDate=startDate
-        endDate=endDate}}
-
     </div>
   </div>
 </div>
@@ -86,27 +77,15 @@
       {{/conditional-loading-section}}
     </div>
 
-    {{#dashboard-inline-table dataSourceName="users_by_type" lastRefreshedAt=lastRefreshedAt as |context|}}
+    {{#dashboard-inline-table dataSourceNames="users_by_trust_level,users_by_type" lastRefreshedAt=lastRefreshedAt as |context|}}
       <tr>
-      {{#each context.report.data as |data|}}
-        <td>
-          <a href="/admin/users/list/{{data.key}}">
-            {{number data.y}}
-          </a>
-        </td>
-      {{/each}}
-      </tr>
-    {{/dashboard-inline-table}}
-
-    {{#dashboard-inline-table dataSourceName="users_by_trust_level" lastRefreshedAt=lastRefreshedAt as |context|}}
-      <tr>
-      {{#each context.report.data as |data|}}
-        <td>
-          <a href="/admin/users/list/{{data.key}}">
-            {{number data.y}}
-          </a>
-        </td>
-      {{/each}}
+        {{#each context.report.data as |data|}}
+          <td>
+            <a href="/admin/users/list/{{data.key}}">
+              {{number data.y}}
+            </a>
+          </td>
+        {{/each}}
       </tr>
     {{/dashboard-inline-table}}
 
@@ -115,7 +94,9 @@
         <div class="durability">
           {{#if currentUser.admin}}
             <div class="backups">
-              <h3 class="durability-title"><a href="/admin/backups">{{i18n "admin.dashboard.backups"}}</a></h3>
+              <h3 class="durability-title">
+                <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
+              </h3>
               <p>
                 {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
                 <br />
@@ -125,7 +106,7 @@
           {{/if}}
 
           <div class="uploads">
-            <h3 class="durability-title">{{i18n "admin.dashboard.uploads"}}</h3>
+            <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
             <p>
               {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
             </p>
@@ -153,7 +134,7 @@
 
   <div class="section-column">
     {{#dashboard-inline-table
-        dataSourceName="top_referred_topics"
+        dataSourceNames="top_referred_topics"
         lastRefreshedAt=lastRefreshedAt
         limit=8
         as |context|}}
@@ -173,7 +154,7 @@
 
     {{#dashboard-inline-table
       limit=8
-      dataSourceName="trending_search"
+      dataSourceNames="trending_search"
       isEnabled=logSearchQueriesEnabled
       disabledLabel="admin.dashboard.reports.trending_search.disabled"
       startDate=lastWeek
@@ -194,5 +175,5 @@
       {{{i18n "admin.dashboard.reports.trending_search.more"}}}
     {{/dashboard-inline-table}}
 
-    </div>
+  </div>
 </div>

@@ -15,6 +15,9 @@ module Jobs
       report.group_id = args['group_id'] if args['group_id']
       report.facets = args['facets'].map(&:to_sym) if args['facets']
       report.limit = args['limit'].to_i if args['limit']
+      report.processing = false
+      report.average = args[:average] || false
+      report.percent = args[:percent] || false
 
       Report.send("report_#{type}", report)
       json = report.as_json
