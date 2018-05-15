@@ -177,8 +177,10 @@ const Report = Discourse.Model.extend({
 
     if (this.get('average')) {
       prev = prev ? prev.toFixed(1) : "0";
-      current += '%';
-      prev += '%';
+      if (this.get('percent')) {
+        current += '%';
+        prev += '%';
+      }
     }
 
     return I18n.t('admin.dashboard.reports.trend_title', {percent: percent, prev: prev, current: current});

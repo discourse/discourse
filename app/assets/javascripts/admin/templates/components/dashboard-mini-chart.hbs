@@ -9,7 +9,7 @@
     <div class="chart-trend {{trend}}">
       {{#if average}}
         <span title="{{report.trendTitle}}">
-          {{report.currentAverage}}%
+          {{report.currentAverage}}{{if percent "%"}}
         </span>
       {{else}}
         <span title="{{report.trendTitle}}">

@@ -33,6 +33,7 @@ export default Ember.Component.extend(AsyncReport, {
   backgroundColor: "rgba(200,220,240,0.3)",
   borderColor: "#08C",
   average: false,
+  percent: false,
   total: 0,
 
   @computed("dataSourceName")
@@ -142,6 +143,7 @@ export default Ember.Component.extend(AsyncReport, {
       this.get("startDate").isSame(this.get("endDate"), "day");
 
     report.set("average", this.get("average"));
+    report.set("percent", this.get("percent"));
     this.setProperties({ oneDataPoint, report });
   },
 
