@@ -5,6 +5,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 
 const Report = Discourse.Model.extend({
   average: false,
+  percent: false,
 
   @computed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {
@@ -101,7 +102,23 @@ const Report = Discourse.Model.extend({
 
   @computed('data', 'currentTotal')
   currentAverage(data, total) {
-    return data.length === 0 ? 0 : parseFloat((total / parseFloat(data.length)).toFixed(1));
+    return Ember.makeArray(data).length === 0 ? 0 : parseFloat((total / parseFloat(data.length)).toFixed(1));
+  },
+
+  @computed("trend")
+  trendIcon(trend) {
+    switch (trend) {
+      case "trending-up":
+        return "angle-up";
+      case "trending-down":
+        return "angle-down";
+      case "high-trending-up":
+        return "angle-double-up";
+      case "high-trending-down":
+        return "angle-double-down";
+      default:
+        return null;
+    }
   },
 
   @computed('prev_period', 'currentTotal', 'currentAverage')

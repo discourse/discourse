@@ -1,35 +1,33 @@
-{{#conditional-loading-section isLoading=isLoading title=report.title}}
-  <div class="chart-title">
-    <h3 title={{report.description}}>
-      <a href="{{report.reportUrl}}">
-        {{report.title}}
-      </a>
-    </h3>
+{{#conditional-loading-section isLoading=isLoading title=loadingTitle}}
+  <div class="dashboard-mini-statuses">
+    {{#each-in reports as |key report|}}
+      <div class="dashboard-mini-status" title="{{report.trendTitle}}">
+        <span class="indicator" style="background-color:{{report.color}}"></span>
+        <div class="legend">
+          <h4 class="title">
+            <a href="{{report.reportUrl}}">
+              {{report.title}}
+            </a>
+          </h4>
 
-    <div class="chart-trend {{trend}}">
-      {{#if average}}
-        <span title="{{report.trendTitle}}">
-          {{report.currentAverage}}{{if percent "%"}}
-        </span>
-      {{else}}
-        <span title="{{report.trendTitle}}">
-          {{number report.currentTotal noTitle="true"}}
-        </span>
-      {{/if}}
-
-      {{#if trendIcon}}
-        {{d-icon trendIcon}}
-      {{/if}}
-    </div>
+          <div class="trend">
+            <span class="value" title="{{report.trendTitle}}">
+              {{#if report.average}}
+                {{report.currentAverage}}
+              {{else}}
+                {{number report.currentTotal noTitle="true"}}
+              {{/if}}
+            </span>
+            {{#if report.trendIcon}}
+              {{d-icon report.trendIcon}}
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    {{/each-in}}
   </div>
 
-  <div class="chart-container">
-    {{#if oneDataPoint}}
-      <span class="data-point">
-        {{number values.lastObject.y}}
-      </span>
-    {{else}}
-      <canvas class="chart-canvas"></canvas>
-    {{/if}}
+  <div class="chart-canvas-container">
+    <canvas class="chart-canvas"></canvas>
   </div>
 {{/conditional-loading-section}}
