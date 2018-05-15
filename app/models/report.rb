@@ -4,7 +4,7 @@ class Report
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :category_id, :group_id, :labels, :async,
-                :prev_period, :facets, :limit
+                :prev_period, :facets, :limit, :processing, :average, :percent
 
   def self.default_days
     30
@@ -51,7 +51,10 @@ class Report
      group_id: group_id,
      prev30Days: self.prev30Days,
      report_key: Report.cache_key(self),
-     labels: labels
+     labels: labels,
+     processing: self.processing,
+     average: self.average,
+     percent: self.percent
     }.tap do |json|
       json[:total] = total if total
       json[:prev_period] = prev_period if prev_period
@@ -80,6 +83,9 @@ class Report
     report.async = opts[:async] || false
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
+    report.processing = false
+    report.average = opts[:average] || false
+    report.percent = opts[:percent] || false
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
@@ -89,6 +95,7 @@ class Report
           return cached_report
         else
           Jobs.enqueue(:retrieve_report, opts.merge(report_type: type))
+          report.processing = true
         end
       else
         send(report_method, report)
@@ -176,6 +183,8 @@ class Report
   end
 
   def self.report_daily_engaged_users(report)
+    report.average = true
+
     report.data = []
 
     data = UserAction.count_daily_engaged_users(report.start_date, report.end_date)
@@ -205,6 +214,9 @@ class Report
   end
 
   def self.report_dau_by_mau(report)
+    report.average = true
+    report.percent = true
+
     data_points = UserVisit.count_by_active_users(report.start_date, report.end_date)
 
     report.data = []
