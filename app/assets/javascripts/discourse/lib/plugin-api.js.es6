@@ -45,11 +45,19 @@ class PluginApi {
   }
 
   /**
-   * Allows you to overwrite or extend methods in a class.
+   * Allows you to overwrite or extend methods and properties in a class.
+   *
+   * To modify class methods and properties, add `classMethods` to `opts` with a truthy value.
+   *
+   * If you need to modify both class methods and instance methods, you must call this twice.
    *
    * For example:
    *
    * ```
+   * api.modifyClass('model:user', {
+   *     createAccount(attrs) { }
+   * }, { classMethods: true });
+   *
    * api.modifyClass('controller:composer', {
    *   actions: {
    *     newActionHere() { }
@@ -72,7 +80,8 @@ class PluginApi {
       return;
     }
 
-    klass.class.reopen(changes);
+    opts.classMethods ? klass.class.reopenClass(changes) : klass.class.reopen(changes);
+
     return klass;
   }
 
