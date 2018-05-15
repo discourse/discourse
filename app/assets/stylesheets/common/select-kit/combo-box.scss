@@ -5,7 +5,7 @@
       width: 100%;
       min-width: 150px;
       border-radius: 0;
-      box-shadow: shadow("dropdown");    
+      box-shadow: shadow("dropdown");
     }
 
     .select-kit-row {
@@ -23,12 +23,18 @@
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
-      .filter-input {
-        margin-right: 5px;
-        width: auto;        
+      .filter-input,
+      .filter-input:focus,
+      .filter-input:active {
+        width: auto;
+        max-width: 90%; // Firefox quirk
+      }
+
+      .filter-icon {
+        padding-left: 5px;
       }
     }
-    
+
     .select-kit-header {
       background: $secondary;
       border: 1px solid $primary-medium;
@@ -101,14 +107,16 @@
       }
     }
 
-    &.tag-drop, &.group-dropdown {
+    &.tag-drop,
+    &.group-dropdown {
       min-width: auto;
       .select-kit-row {
         font-weight: bold;
       }
     }
 
-    &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
+    &.is-expanded .select-kit-wrapper,
+    .select-kit-wrapper {
       display: none;
     }
   }
