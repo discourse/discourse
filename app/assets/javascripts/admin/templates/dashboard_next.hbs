@@ -87,6 +87,7 @@
     </div>
 
     {{#dashboard-inline-table dataSourceName="users_by_type" lastRefreshedAt=lastRefreshedAt as |context|}}
+      <tr>
       {{#each context.report.data as |data|}}
         <td>
           <a href="/admin/users/list/{{data.key}}">
@@ -94,9 +95,11 @@
           </a>
         </td>
       {{/each}}
+      </tr>
     {{/dashboard-inline-table}}
 
     {{#dashboard-inline-table dataSourceName="users_by_trust_level" lastRefreshedAt=lastRefreshedAt as |context|}}
+      <tr>
       {{#each context.report.data as |data|}}
         <td>
           <a href="/admin/users/list/{{data.key}}">
@@ -104,6 +107,7 @@
           </a>
         </td>
       {{/each}}
+      </tr>
     {{/dashboard-inline-table}}
 
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
@@ -148,13 +152,47 @@
   </div>
 
   <div class="section-column">
-    {{#dashboard-table-trending-search
+    {{#dashboard-inline-table
+        dataSourceName="top_referred_topics"
+        lastRefreshedAt=lastRefreshedAt
+        limit=8
+        as |context|}}
+      {{#each context.report.data as |data|}}
+        <tr>
+        <td class='left'>
+          <a href="{{data.topic_url}}">
+            {{data.topic_title}}
+          </a>
+        </td>
+        <td>
+          {{data.num_clicks}}
+        </td>
+        </tr>
+      {{/each}}
+    {{/dashboard-inline-table}}
+
+    {{#dashboard-inline-table
+      limit=8
       dataSourceName="trending_search"
       isEnabled=logSearchQueriesEnabled
       disabledLabel="admin.dashboard.reports.trending_search.disabled"
       startDate=lastWeek
-      endDate=endDate}}
+      endDate=endDate as |context|}}
+      {{#each context.report.data as |data|}}
+        <tr>
+        <td class='left'>
+          {{data.term}}
+        </td>
+        <td>
+          {{number data.unique_searches}}
+        </td>
+        <td>
+          {{data.ctr}}
+        </td>
+        </tr>
+      {{/each}}
       {{{i18n "admin.dashboard.reports.trending_search.more"}}}
-    {{/dashboard-table-trending-search}}
-  </div>
+    {{/dashboard-inline-table}}
+
+    </div>
 </div>

@@ -57,7 +57,11 @@ export default Ember.Mixin.create({
   @computed("report")
   labels(report) {
     if (!report) return;
-    return Ember.makeArray(report.data).map(r => r.x);
+    if (report.labels) {
+      return Ember.makeArray(report.labels);
+    } else {
+      return Ember.makeArray(report.data).map(r => r.x);
+    }
   },
 
   @computed("report")

@@ -4,7 +4,7 @@ class Report
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :category_id, :group_id, :labels, :async,
-                :prev_period, :facets
+                :prev_period, :facets, :limit
 
   def self.default_days
     30
@@ -24,7 +24,8 @@ class Report
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
       report.group_id,
-      report.facets
+      report.facets,
+      report.limit
     ].map(&:to_s).join(':')
   end
 
@@ -55,6 +56,7 @@ class Report
       json[:total] = total if total
       json[:prev_period] = prev_period if prev_period
       json[:prev30Days] = self.prev30Days if self.prev30Days
+      json[:limit] = self.limit if self.limit
 
       if type == 'page_view_crawler_reqs'
         json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
@@ -77,6 +79,7 @@ class Report
     report.group_id = opts[:group_id] if opts[:group_id]
     report.async = opts[:async] || false
     report.facets = opts[:facets] || [:total, :prev30Days]
+    report.limit = opts[:limit] if opts[:limit]
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
@@ -405,11 +408,18 @@ class Report
     report.data << { key: "silenced", x: label.call("silenced"), y: silenced } if silenced > 0
   end
 
+  def self.report_top_referred_topics(report)
+    report.labels = [I18n.t("reports.top_referred_topics.xaxis"),
+      I18n.t("reports.top_referred_topics.num_clicks")]
+    result = IncomingLinksReport.find(:top_referred_topics, start_date: 7.days.ago, limit: report.limit)
+    report.data = result.data
+  end
+
   def self.report_trending_search(report)
     report.data = []
 
     select_sql = <<~SQL
-      term,
+      lower(term) term,
       COUNT(*) AS searches,
       SUM(CASE
                WHEN search_result_id IS NOT NULL THEN 1
@@ -420,9 +430,9 @@ class Report
 
     trends = SearchLog.select(select_sql)
       .where('created_at > ?  AND created_at <= ?', report.start_date, report.end_date)
-      .group(:term)
+      .group('lower(term)')
       .order('unique_searches DESC, click_through ASC, term ASC')
-      .limit(20).to_a
+      .limit(report.limit || 20).to_a
 
     report.labels = [:term, :searches, :click_through].map { |key|
       I18n.t("reports.trending_search.labels.#{key}")
@@ -436,11 +446,11 @@ class Report
           trend.click_through.to_f / trend.searches.to_f
         end
 
-      report.data << [
-        trend.term,
-        trend.unique_searches,
-        (ctr * 100).ceil(1).to_s + "%"
-      ]
+      report.data << {
+        term: trend.term,
+        unique_searches: trend.unique_searches,
+        ctr: (ctr * 100).ceil(1).to_s + "%"
+      }
     end
   end
 end

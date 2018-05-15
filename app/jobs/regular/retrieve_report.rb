@@ -14,6 +14,7 @@ module Jobs
       report.category_id = args['category_id'] if args['category_id']
       report.group_id = args['group_id'] if args['group_id']
       report.facets = args['facets'].map(&:to_sym) if args['facets']
+      report.limit = args['limit'].to_i if args['limit']
 
       Report.send("report_#{type}", report)
       json = report.as_json
