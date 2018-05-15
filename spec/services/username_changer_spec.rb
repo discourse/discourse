@@ -95,8 +95,14 @@ describe UsernameChanger do
       let(:user) { Fabricate(:user, username: 'foo') }
       let(:topic) { Fabricate(:topic, user: user) }
 
-      before { UserActionCreator.enable }
-      after { UserActionCreator.disable }
+      before do
+        UserActionCreator.enable
+        Discourse.expects(:warn_exception).never
+      end
+
+      after do
+        UserActionCreator.disable
+      end
 
       def create_post_and_change_username(args = {}, &block)
         post = create_post(args.merge(topic_id: topic.id))
@@ -255,6 +261,13 @@ describe UsernameChanger do
 
           expect(post.revisions[0].modifications["raw"][0]).to eq("Hello @bar")
           expect(post.revisions[0].modifications["cooked"][0]).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a></p>))
+        end
+
+        it 'works when users are mentioned with HTML' do
+          post = create_post_and_change_username(raw: '<a class="mention">@foo</a> and <a class="mention">@someuser</a>')
+
+          expect(post.raw).to eq('<a class="mention">@bar</a> and <a class="mention">@someuser</a>')
+          expect(post.cooked).to match_html('<p><a class="mention">@bar</a> and <a class="mention">@someuser</a></p>')
         end
       end
 
@@ -426,6 +439,16 @@ describe UsernameChanger do
             </p>
           HTML
         end
+      end
+
+      it 'updates username in small action posts' do
+        invited_by = Fabricate(:user)
+        p1 = topic.add_small_action(invited_by, 'invited_user', 'foo')
+        p2 = topic.add_small_action(invited_by, 'invited_user', 'foobar')
+        UsernameChanger.change(user, 'bar')
+
+        expect(p1.reload.custom_fields['action_code_who']).to eq('bar')
+        expect(p2.reload.custom_fields['action_code_who']).to eq('foobar')
       end
     end
 
