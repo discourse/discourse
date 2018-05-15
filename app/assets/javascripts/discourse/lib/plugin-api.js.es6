@@ -27,7 +27,7 @@ import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
 import { disableNameSuppression } from 'discourse/widgets/poster-name';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.20';
+const PLUGIN_API_VERSION = '0.8.21';
 
 class PluginApi {
   constructor(version, container) {
@@ -44,20 +44,7 @@ class PluginApi {
     return this.container.lookup('current-user:main');
   }
 
-  /**
-   * Allows you to overwrite or extend methods in a class.
-   *
-   * For example:
-   *
-   * ```
-   * api.modifyClass('controller:composer', {
-   *   actions: {
-   *     newActionHere() { }
-   *   }
-   * });
-   * ```
-   **/
-  modifyClass(resolverName, changes, opts) {
+  _resolveClass(resolverName, opts) {
     opts = opts || {};
 
     if (this.container.cache[resolverName]) {
@@ -72,7 +59,48 @@ class PluginApi {
       return;
     }
 
-    klass.class.reopen(changes);
+    return klass;
+  }
+
+  /**
+   * Allows you to overwrite or extend methods in a class.
+   *
+   * For example:
+   *
+   * ```
+   * api.modifyClass('controller:composer', {
+   *   actions: {
+   *     newActionHere() { }
+   *   }
+   * });
+   * ```
+   **/
+  modifyClass(resolverName, changes, opts) {
+
+    const klass = this._resolveClass(resolverName, opts);
+    if (klass) {
+      klass.class.reopen(changes);
+    }
+    return klass;
+  }
+
+  /**
+   * Allows you to overwrite or extend static methods in a class.
+   *
+   * For example:
+   *
+   * ```
+   * api.modifyClassStatic('controller:composer', {
+   *   superFinder: function() { return []; }
+   * });
+   * ```
+   **/
+  modifyClassStatic(resolverName, changes, opts) {
+
+    const klass = this._resolveClass(resolverName, opts);
+    if (klass) {
+      klass.class.reopenClass(changes);
+    }
     return klass;
   }
 
