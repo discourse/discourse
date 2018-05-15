@@ -181,9 +181,7 @@ module DiscourseTagging
   end
 
   def self.hidden_tag_names(guardian = nil)
-    return [] if guardian&.is_staff?
-
-    hidden_tags_query.pluck(:name)
+    guardian&.is_staff? ? [] : hidden_tags_query.pluck(:name)
   end
 
   def self.hidden_tags_query
