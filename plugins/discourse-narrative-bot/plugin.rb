@@ -5,6 +5,7 @@
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
 
 enabled_site_setting :discourse_narrative_bot_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
 
 if Rails.env == "development"
   # workaround, teach reloader to reload jobs
