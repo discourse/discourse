@@ -38,8 +38,8 @@ class IncomingLinksReport
     report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
 
-    num_clicks = link_count_per_user
-    num_topics = topic_count_per_user
+    num_clicks = link_count_per_user(start_date: report.start_date)
+    num_topics = topic_count_per_user(start_date: report.start_date)
     user_id_lookup = User.where(username: num_clicks.keys).select(:id, :username).inject({}) { |sum, v| sum[v.username] = v.id; sum; }
     report.data = []
     num_clicks.each_key do |username|
@@ -69,7 +69,7 @@ class IncomingLinksReport
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
     report.y_titles[:num_users] = I18n.t("reports.#{report.type}.num_users")
 
-    num_clicks = link_count_per_domain(start_date: start_date)
+    num_clicks = link_count_per_domain(start_date: report.start_date)
     num_topics = topic_count_per_domain(num_clicks.keys)
     report.data = []
     num_clicks.each_key do |domain|
