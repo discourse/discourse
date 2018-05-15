@@ -1,4 +1,5 @@
 // Common styles for "/user" section
+// These styles are also used for "/groups" — test those pages if making significant changes
 .user-right {
   .list-actions {
     margin-bottom: 10px;
@@ -25,6 +26,7 @@
   .about {
     overflow: hidden;
     width: 100%;
+    margin-bottom: 15px;
 
     .secondary {
       background: $secondary;
@@ -390,11 +392,6 @@
 
 .user-nav {
   margin: 5px 0;
-  padding-top: 10px;
-
-  li a {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
 }
 
 .top-section {

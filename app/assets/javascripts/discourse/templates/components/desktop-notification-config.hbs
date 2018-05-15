@@ -1,15 +1,10 @@
-
 {{#if isNotSupported}}
   {{d-button icon="bell-slash" label="user.desktop_notifications.not_supported" disabled="true"}}
-{{/if}}
-{{#if isDefaultPermission}}
-  {{d-button icon="bell-slash" label="user.desktop_notifications.perm_default" action="requestPermission"}}
 {{/if}}
 {{#if isDeniedPermission}}
   {{d-button icon="bell-slash" label="user.desktop_notifications.perm_denied_btn" action="recheckPermission" disabled='true'}}
   {{i18n "user.desktop_notifications.perm_denied_expl"}}
-{{/if}}
-{{#if isGrantedPermission}}
+{{else}}
   {{#if isEnabled}}
     {{d-button icon="bell-slash-o" label="user.desktop_notifications.disable" action="turnoff"}}
     {{i18n "user.desktop_notifications.currently_enabled"}}

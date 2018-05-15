@@ -94,6 +94,17 @@ Migration::ColumnDropper.drop(
   }
 )
 
+Migration::ColumnDropper.drop(
+  table: 'user_auth_tokens',
+  after_migration: 'RemoveLegacyAuthToken',
+  columns: %w[
+    legacy
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing user_auth_token legacy column!'
+  }
+)
+
 # User for the smoke tests
 if ENV["SMOKE"] == "1"
   UserEmail.seed do |ue|

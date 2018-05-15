@@ -624,7 +624,6 @@ zh_TW:
       xaxis: "天"
       yaxis: "郵件數量"
     user_to_user_private_messages:
-      title: "用戶對用戶"
       xaxis: "天"
       yaxis: "訊息數量"
     system_private_messages:
@@ -870,7 +869,6 @@ zh_TW:
     sso_overrides_avatar: "用 SSO 訊息中的外部網站頭像覆蓋用戶頭像。如果啟用，建議禁用 allow_uploaded_avatars"
     sso_not_approved_url: "重定向未受許可的單點登錄賬號至這個 URL"
     sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（預設情況下返回地址必須位於當前站點）"
-    enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
     enable_signup_cta: "顯示推薦創建賬戶的提示給那些回訪的未註冊用戶。"
     enable_yahoo_logins: "啟用雅虎（Yahoo）帳號驗證登入"

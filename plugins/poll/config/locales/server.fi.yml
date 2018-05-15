@@ -28,7 +28,6 @@ fi:
     named_poll_with_multiple_choices_has_invalid_parameters: "Kysely nimeltä <strong>%{name}</strong>, jossa on useampia vaihtoehtoja sisältää epäkelpoja parametreja"
     requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
     default_cannot_be_made_public: "Kyselyä, johon on vastattu, ei voi muuttaa julkiseksi."
-    named_cannot_be_made_public: "Äänestys <strong>%{name}</strong> on ääniä, joita ei voi julkistaa."
     edit_window_expired:
       op_cannot_edit_options: "Vastausvaihtoehtoja ei enää voi lisätä tai poistaa, kun on kulunut %{minutes} minuuttia. Ota yhteyttä valvojaan, jos vastausvaihtoehtoa tulisi muokata."
       staff_cannot_add_or_remove_options: "Vastausvaihtoehtoja ei enää voi lisätä tai poistaa, kun on kulunut %{minutes} minuuttia. Tämä ketju tulisi sulkea ja aloittaa uusi ketju."

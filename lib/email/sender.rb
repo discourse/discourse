@@ -114,20 +114,20 @@ module Email
 
         # https://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
-          list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
+          list_id = "#{SiteSetting.title} | #{topic.category.name} <#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
           # subcategory case
           if !topic.category.parent_category_id.nil?
             parent_category_name = Category.find_by(id: topic.category.parent_category_id).name
-            list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{parent_category_name.downcase.tr(' ', '-')}.#{host}>"
+            list_id = "#{SiteSetting.title} | #{parent_category_name} #{topic.category.name} <#{topic.category.name.downcase.tr(' ', '-')}.#{parent_category_name.downcase.tr(' ', '-')}.#{host}>"
           end
         else
-          list_id = "<#{host}>"
+          list_id = "#{SiteSetting.title} <#{host}>"
         end
 
         # https://www.ietf.org/rfc/rfc3834.txt
-        @message.header['Precedence']   = 'list'
-        @message.header['List-ID']      = list_id
+        @message.header['Precedence'] = 'list'
+        @message.header['List-ID']    = list_id
 
         if topic
           if SiteSetting.private_email?

@@ -26,7 +26,6 @@ et:
     named_poll_with_multiple_choices_has_invalid_parameters: "Mitme valikuga küsitlusel nimega <strong>%{name}</strong> on vigaseid parameetreid."
     requires_at_least_1_valid_option: "Pead tegema vähemalt 1 korrektse valiku."
     default_cannot_be_made_public: "Küsitlust millel on vastused, ei saa muuta avalikuks."
-    named_cannot_be_made_public: "Küsitlus nimega <strong>%{name}</strong> sisaldab hääli ja seda ei saa teha avalikuks."
     edit_window_expired:
       op_cannot_edit_options: "Pärast %{minutes} minutit ei saa küsitluse valikuid lisada ega eemaldada. Palun võta administraatoriga ühendust, kui on vaja küsitluse valikuid muuta."
       staff_cannot_add_or_remove_options: "Pärast %{minutes} minutit ei saa küsitluse valikuid lisada ega eemaldada. Peaksid teema sulgema ning uue tegema."

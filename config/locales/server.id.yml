@@ -347,7 +347,6 @@ id:
       xaxis: "Hari"
       yaxis: "Jumlah Surel"
     user_to_user_private_messages:
-      title: "Pengguna-ke-Pengguna"
       xaxis: "Hari"
       yaxis: "Jumlah Pesan"
     system_private_messages:

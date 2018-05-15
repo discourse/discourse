@@ -141,6 +141,17 @@ describe PostAction do
       expect(PostAction.flagged_posts_count).to eq(0)
     end
 
+    it "respects min_flags_staff_visibility" do
+      SiteSetting.min_flags_staff_visibility = 2
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      PostAction.act(eviltrout, post, PostActionType.types[:off_topic])
+      expect(PostAction.flagged_posts_count).to eq(1)
+    end
+
     it "should reset counts when a topic is deleted" do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.topic.trash!

@@ -278,7 +278,10 @@ module SiteSettingExtension
   def set_and_log(name, value, user = Discourse.system_user)
     prev_value = send(name)
     set(name, value)
-    StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
+    if has_setting?(name)
+      value = prev_value = "[FILTERED]" if name.to_s =~ /_secret/
+      StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+    end
   end
 
   protected

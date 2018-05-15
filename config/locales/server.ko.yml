@@ -648,7 +648,6 @@ ko:
       xaxis: "일"
       yaxis: "이메일 수"
     user_to_user_private_messages:
-      title: "사용자대 사용자"
       xaxis: "일"
       yaxis: "메세지 수"
     system_private_messages:
@@ -900,7 +899,6 @@ ko:
     sso_overrides_avatar: "SSO로 접속 시 사용자 아바타 이미지 갱신. 활성화하고 allow_uploaded_avatars를 비활성화를 매우 권장합니다."
     sso_not_approved_url: "승인안된 SSO 계정은 이 URL로 이동"
     sso_allows_all_return_paths: "SSO로 제공된 return_paths를 위한 도메인 제한 해제 (기본 return path는 현재 사이트로 설정)"
-    enable_local_logins: "기존의 로컬 username, password에 의한 인증을 허용. (초대 기능이 필요하다면 이 기능을 허용해야 함)"
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
     enable_signup_cta: "재방문한 익명 사용자에게 가입 권유 공지 표시"
     enable_yahoo_logins: "야후 인증 활성화"

@@ -675,7 +675,6 @@ cs:
       xaxis: "Den"
       yaxis: "Počet emailů"
     user_to_user_private_messages:
-      title: "Uživatelské soukromé zprávy"
       xaxis: "Den"
       yaxis: "Počet zpráv"
     system_private_messages:

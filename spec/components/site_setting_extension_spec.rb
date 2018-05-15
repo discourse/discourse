@@ -393,10 +393,29 @@ describe SiteSettingExtension do
   end
 
   describe ".set_and_log" do
+    before do
+      settings.setting(:s3_secret_access_key, "old_secret_key")
+      settings.setting(:title, "Discourse v1")
+      settings.refresh!
+    end
+
     it "raises an error when set for an invalid setting name" do
       expect {
         settings.set_and_log("provider", "haxxed")
       }.to raise_error(ArgumentError)
+    end
+
+    it "scrubs secret setting values from logs" do
+      settings.set_and_log("s3_secret_access_key", "new_secret_key")
+      expect(UserHistory.last.previous_value).to eq("[FILTERED]")
+      expect(UserHistory.last.new_value).to eq("[FILTERED]")
+    end
+
+    it "works" do
+      settings.set_and_log("title", "Discourse v2")
+      expect(settings.title).to eq("Discourse v2")
+      expect(UserHistory.last.previous_value).to eq("Discourse v1")
+      expect(UserHistory.last.new_value).to eq("Discourse v2")
     end
   end
 

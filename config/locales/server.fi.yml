@@ -722,7 +722,6 @@ fi:
       xaxis: "Päivä"
       yaxis: "Sähköpostien lukumäärä"
     user_to_user_private_messages:
-      title: "Käyttäjältä käyttäjälle"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
     system_private_messages:
@@ -987,7 +986,6 @@ fi:
     sso_overrides_avatar: "Syrjäyttää käyttäjän avatarin ulkopuolisella kertakirjautumisen kautta haetulla avatarilla. Jos tämä otetaan käyttöön, suositellaan samalla allow_uploaded_avatars -asetuksen poistamista käytöstä."
     sso_not_approved_url: "Uudelleenohjaa hyväksymättömät SSO-tilit tähän osoitteeseen"
     sso_allows_all_return_paths: "Älä rajoita SSO:n antamien palautuspolkujen verkkotunnusta (oletuksena palautuspolun on oltava nykyisellä sivustolla)"
-    enable_local_logins: "Ota käyttöön käyttäjätunnus/salasana -perusteinen kirjautuminen. (Huom: tämän täytyy olla käytössä kutsujen toimimiseksi)"
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
     enable_signup_cta: "Näytä palaaville anonyymeille käyttäjille ilmoitus, jossa kehoitetaan heitä luomaan tili."
     enable_yahoo_logins: "Ota käyttöön Yahoo kirjautuminen"

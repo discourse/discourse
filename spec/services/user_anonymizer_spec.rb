@@ -4,6 +4,24 @@ describe UserAnonymizer do
 
   let(:admin) { Fabricate(:admin) }
 
+  describe "event" do
+    let(:user) { Fabricate(:user, username: "edward") }
+    subject(:make_anonymous) { described_class.make_anonymous(user, admin, anonymize_ip: '2.2.2.2') }
+
+    it "triggers the event" do
+      events = DiscourseEvent.track_events do
+        make_anonymous
+      end
+
+      anon_event = events.detect { |e| e[:event_name] == :user_anonymized }
+      expect(anon_event).to be_present
+      params_hash = anon_event[:params][0]
+
+      expect(params_hash[:user]).to eq(user)
+      expect(params_hash[:opts][:anonymize_ip]).to eq('2.2.2.2')
+    end
+  end
+
   describe "make_anonymous" do
     let(:user) { Fabricate(:user, username: "edward") }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
@@ -99,6 +117,33 @@ describe UserAnonymizer do
       user.reload
       expect(user.user_avatar).to eq(nil)
       expect(user.uploaded_avatar_id).to eq(nil)
+    end
+
+    it "updates the avatar in posts" do
+      upload = Fabricate(:upload, user: user)
+      user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
+      user.uploaded_avatar_id = upload.id # chosen in user preferences
+      user.save!
+
+      topic = Fabricate(:topic, user: user)
+      quoted_post = create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
+      post = create_post(raw: <<~RAW)
+        Lorem ipsum
+
+        [quote="#{quoted_post.username}, post:1, topic:#{quoted_post.topic.id}"]
+        quoted post
+        [/quote]
+      RAW
+
+      old_avatar_url = user.avatar_template.gsub("{size}", "40")
+      expect(post.cooked).to include(old_avatar_url)
+
+      make_anonymous
+      post.reload
+      new_avatar_url = user.reload.avatar_template.gsub("{size}", "40")
+
+      expect(post.cooked).to_not include(old_avatar_url)
+      expect(post.cooked).to include(new_avatar_url)
     end
 
     it "logs the action with the original details" do

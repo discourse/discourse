@@ -46,13 +46,13 @@ bootsnap-compile-cache/
 
 # Ignore plugins except for the bundled ones.
 /plugins/*
-!/plugins/emoji/
 !/plugins/lazyYT/
 !/plugins/poll/
 !/plugins/discourse-details/
 !/plugins/discourse-nginx-performance-report
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
+!/plugins/discourse-local-dates
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -78,6 +78,7 @@ discourse.sublime-workspace
 *~
 *.swp
 *.swo
+*.swm
 
 # don't check in multisite config
 config/multisite.yml

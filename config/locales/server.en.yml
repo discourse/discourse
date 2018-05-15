@@ -171,6 +171,12 @@ en:
 
   invite:
     not_found: "Your invite token is invalid. Please contact the site's administrator."
+    not_found_template: |
+      <p>Your invite to <a href="%{base_url}">%{site_name}</a> has already been redeemed.</p>
+
+      <p>If you remember your password you can <a href="%{base_url}/login">Login</a>.</p>
+
+      <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='/u/%{username}/summary'>already have an account!</a>"
 
   bulk_invite:
@@ -840,12 +846,22 @@ en:
       title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
-      description: "Users created for this period"
+      description: "New registrations for this period"
     new_contributors:
       title: "New Contributors"
       xaxis: "Day"
       yaxis: "Number of new contributors"
-      description: "Number of users who made their first contribution"
+      description: "Number of users who made their first post during this period"
+    dau_by_mau:
+      title: "DAU/MAU"
+      xaxis: "Day"
+      yaxis: "DAU/MAY"
+      description: "DAU / MAU – no. of members that logged in in the last day divided by no. of members that logged in in the last month – returns a %"
+    daily_engaged_users:
+      title: "Daily Engaged Users"
+      xaxis: "Day"
+      yaxis: "Engaged Users"
+      description: "Number of users that have liked or posted in the last day"
     profile_views:
       title: "User Profile Views"
       xaxis: "Day"
@@ -854,11 +870,12 @@ en:
       title: "Topics"
       xaxis: "Day"
       yaxis: "Number of new topics"
-      description: "Topics created for this period"
+      description: "New topics created during this period"
     posts:
       title: "Posts"
       xaxis: "Day"
       yaxis: "Number of new posts"
+      description: "New posts created during this period"
     likes:
       title: "Likes"
       xaxis: "Day"
@@ -893,17 +910,17 @@ en:
       labels:
         term: Term
         searches: Searches
-        unique: Unique
+        click_through: Click Through Rate
     emails:
       title: "Emails Sent"
       xaxis: "Day"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
-      title: "User-to-User"
+      title: "User-to-User (excluding replies)"
       xaxis: "Day"
       yaxis: "Number of messages"
     user_to_user_private_messages_with_replies:
-      title: "User-to-User (with replies)"
+      title: "User-to-User (including replies)"
       xaxis: "Day"
       yaxis: "Number of messages"
     system_private_messages:
@@ -950,7 +967,7 @@ en:
       xaxis: "Day"
       yaxis: "Web Crawler Pageviews"
     page_view_total_reqs:
-      title: "Total"
+      title: "Pageviews"
       xaxis: "Day"
       yaxis: "Total Pageviews"
     page_view_logged_in_mobile_reqs:
@@ -1189,7 +1206,6 @@ en:
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
 
     invite_only: "Public registration is disabled, all new users must be explicitly invited by staff."
 
@@ -1216,6 +1232,8 @@ en:
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
+    sso_overrides_profile_background: "Overrides user profile background with external site avatar from SSO payload."
+    sso_overrides_card_background: "Overrides user card background with external site avatar from SSO payload."
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
     sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
 
@@ -1458,6 +1476,7 @@ en:
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
     flags_default_topics: "Show flagged topics by default in the admin section"
+    min_flags_staff_visibility: "The minimum amount of flags on a post must have before staff can see it in the admin section"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -1607,7 +1626,7 @@ en:
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
-    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to staff. Set to 0 to disable."
+    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
@@ -1694,6 +1713,9 @@ en:
     company_domain: "Company Domain"
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts."
+
+    push_notifications_prompt: "Display user consent prompt."
+    push_notifications_icon_url: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
 
     errors:
       invalid_email: "Invalid email address."
@@ -2412,6 +2434,14 @@ en:
 
         None of the destination email addresses are recognized, or the Message-ID header in the email has been modified. Please make sure that you are sending to the correct email address provided by staff.
 
+    email_reject_old_destination:
+      title: "Email Reject Old Destination"
+      subject_template: "[%{email_prefix}] Email issue -- You are trying to reply to an old notification"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        For security reasons we only accept replies to original notifications for 90 days. Please [visit the topic](%{short_url}) to continue the conversation.
+
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
       subject_template: "[%{email_prefix}] Email issue -- Topic Not Found"
@@ -2599,6 +2629,8 @@ en:
 
     posted_by: "Posted by %{username} on %{post_date}"
 
+    pm_participants: "Participants:"
+
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
 
@@ -2723,6 +2755,18 @@ en:
     user_mentioned:
       title: "User Mentioned"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
+    user_mentioned_pm:
+      title: "User Mentioned PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3824,3 +3868,15 @@ en:
     graph_title: "Search Count"
 
   joined: "Joined"
+
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'
+      quoted: '%{username} quoted you in "%{topic}" - %{site_title}'
+      replied: '%{username} replied to you in "%{topic}" - %{site_title}'
+      posted: '%{username} posted in "%{topic}" - %{site_title}'
+      private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
+      linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
+      confirm_title: 'Notifications enabled - %{site_title}'
+      confirm_body: 'Success! Notifications have been enabled.'

@@ -1,15 +1,21 @@
 import { ajax } from 'discourse/lib/ajax';
 import round from "discourse/lib/round";
-import { fmt } from 'discourse/lib/computed';
 import { fillMissingDates } from 'discourse/lib/utilities';
 import computed from 'ember-addons/ember-computed-decorators';
 
 const Report = Discourse.Model.extend({
-  reportUrl: fmt("type", "/admin/reports/%@"),
+  average: false,
+
+  @computed("type", "start_date", "end_date")
+  reportUrl(type, start_date, end_date) {
+    start_date = moment(start_date).locale('en').format("YYYY-MM-DD");
+    end_date = moment(end_date).locale('en').format("YYYY-MM-DD");
+    return Discourse.getURL(`/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`);
+  },
 
   valueAt(numDaysAgo) {
     if (this.data) {
-      const wantedDate = moment().subtract(numDaysAgo, "days").format("YYYY-MM-DD");
+      const wantedDate = moment().subtract(numDaysAgo, "days").locale('en').format("YYYY-MM-DD");
       const item = this.data.find(d => d.x === wantedDate);
       if (item) {
         return item.y;
@@ -35,30 +41,43 @@ const Report = Discourse.Model.extend({
     }
   },
 
-  todayCount:          function() { return this.valueAt(0); }.property("data"),
-  yesterdayCount:      function() { return this.valueAt(1); }.property("data"),
-  sevenDaysAgoCount:   function() { return this.valueAt(7); }.property("data"),
-  thirtyDaysAgoCount:  function() { return this.valueAt(30); }.property("data"),
+  todayCount:          function() { return this.valueAt(0); }.property("data", "average"),
+  yesterdayCount:      function() { return this.valueAt(1); }.property("data", "average"),
+  sevenDaysAgoCount:   function() { return this.valueAt(7); }.property("data", "average"),
+  thirtyDaysAgoCount:  function() { return this.valueAt(30); }.property("data", "average"),
+  lastSevenDaysCount:  function() {
+    return this.averageCount(7, this.valueFor(1, 7));
+  }.property("data", "average"),
+  lastThirtyDaysCount: function() {
+    return this.averageCount(30, this.valueFor(1, 30));
+  }.property("data", "average"),
 
-  lastSevenDaysCount:  function() { return this.valueFor(1, 7); }.property("data"),
-  lastThirtyDaysCount: function() { return this.valueFor(1, 30); }.property("data"),
+  averageCount(count, value) {
+    return this.get("average") ? value / count : value;
+  },
 
-  @computed('data')
-  yesterdayTrend() {
-    const yesterdayVal = this.valueAt(1);
+  @computed('yesterdayCount')
+  yesterdayTrend(yesterdayCount) {
+    const yesterdayVal = yesterdayCount;
     const twoDaysAgoVal = this.valueAt(2);
-    if (yesterdayVal > twoDaysAgoVal) {
+    const change = ((yesterdayVal - twoDaysAgoVal) / yesterdayVal) * 100;
+
+    if (change > 50) {
+      return "high-trending-up";
+    } else if (change > 0) {
       return "trending-up";
-    } else if (yesterdayVal < twoDaysAgoVal) {
-      return "trending-down";
-    } else {
+    } else if (change === 0) {
       return "no-change";
+    } else if (change < -50) {
+      return "high-trending-down";
+    } else if (change < 0) {
+      return "trending-down";
     }
   },
 
-  @computed('data')
-  sevenDayTrend() {
-    const currentPeriod = this.valueFor(1, 7);
+  @computed('lastSevenDaysCount')
+  sevenDayTrend(lastSevenDaysCount) {
+    const currentPeriod = lastSevenDaysCount;
     const prevPeriod = this.valueFor(8, 14);
     const change = ((currentPeriod - prevPeriod) / prevPeriod) * 100;
 
@@ -75,17 +94,50 @@ const Report = Discourse.Model.extend({
     }
   },
 
-  @computed('prev30Days', 'data')
-  thirtyDayTrend(prev30Days) {
-    if (prev30Days) {
-      const currentPeriod = this.valueFor(1, 30);
-      if (currentPeriod > this.get("prev30Days")) {
-        return "trending-up";
-      } else if (currentPeriod < prev30Days) {
-        return "trending-down";
-      }
+  @computed('data')
+  currentTotal(data){
+    return _.reduce(data, (cur, pair) => cur + pair.y, 0);
+  },
+
+  @computed('data', 'currentTotal')
+  currentAverage(data, total) {
+    return data.length === 0 ? 0 : parseFloat((total / parseFloat(data.length)).toFixed(1));
+  },
+
+  @computed('prev_period', 'currentTotal', 'currentAverage')
+  trend(prev, currentTotal, currentAverage) {
+    const total = this.get('average') ? currentAverage : currentTotal;
+    const change = ((total - prev) / total) * 100;
+
+    if (change > 50) {
+      return "high-trending-up";
+    } else if (change > 0) {
+      return "trending-up";
+    } else if (change === 0) {
+      return "no-change";
+    } else if (change < -50) {
+      return "high-trending-down";
+    } else if (change < 0) {
+      return "trending-down";
     }
-    return "no-change";
+  },
+
+  @computed('prev30Days', 'lastThirtyDaysCount')
+  thirtyDayTrend(prev30Days, lastThirtyDaysCount) {
+    const currentPeriod = lastThirtyDaysCount;
+    const change = ((currentPeriod - prev30Days) / currentPeriod) * 100;
+
+    if (change > 50) {
+      return "high-trending-up";
+    } else if (change > 0) {
+      return "trending-up";
+    } else if (change === 0) {
+      return "no-change";
+    } else if (change < -50) {
+      return "high-trending-down";
+    } else if (change < 0) {
+      return "trending-down";
+    }
   },
 
   @computed('type')
@@ -118,6 +170,22 @@ const Report = Discourse.Model.extend({
     }
   },
 
+  @computed('prev_period', 'currentTotal', 'currentAverage')
+  trendTitle(prev, currentTotal, currentAverage) {
+    let current = this.get('average') ? currentAverage : currentTotal;
+    let percent = this.percentChangeString(current, prev);
+
+    if (this.get('average')) {
+      prev = prev ? prev.toFixed(1) : "0";
+      if (this.get('percent')) {
+        current += '%';
+        prev += '%';
+      }
+    }
+
+    return I18n.t('admin.dashboard.reports.trend_title', {percent: percent, prev: prev, current: current});
+  },
+
   changeTitle(val1, val2, prevPeriodString) {
     const percentChange = this.percentChangeString(val1, val2);
     var title = "";
@@ -126,19 +194,19 @@ const Report = Discourse.Model.extend({
     return title;
   },
 
-  @computed('data')
-  yesterdayCountTitle() {
-    return this.changeTitle(this.valueAt(1), this.valueAt(2), "two days ago");
+  @computed('yesterdayCount')
+  yesterdayCountTitle(yesterdayCount) {
+    return this.changeTitle(yesterdayCount, this.valueAt(2), "two days ago");
   },
 
-  @computed('data')
-  sevenDayCountTitle() {
-    return this.changeTitle(this.valueFor(1, 7), this.valueFor(8, 14), "two weeks ago");
+  @computed('lastSevenDaysCount')
+  sevenDayCountTitle(lastSevenDaysCount) {
+    return this.changeTitle(lastSevenDaysCount, this.valueFor(8, 14), "two weeks ago");
   },
 
-  @computed('prev30Days', 'data')
-  thirtyDayCountTitle(prev30Days) {
-    return this.changeTitle(this.valueFor(1, 30), prev30Days, "in the previous 30 day period");
+  @computed('prev30Days', 'lastThirtyDaysCount')
+  thirtyDayCountTitle(prev30Days, lastThirtyDaysCount) {
+    return this.changeTitle(lastThirtyDaysCount, prev30Days, "in the previous 30 day period");
   },
 
   @computed('data')
@@ -156,6 +224,15 @@ const Report = Discourse.Model.extend({
 
 Report.reopenClass({
 
+  fillMissingDates(report) {
+    if (_.isArray(report.data)) {
+
+      const startDateFormatted = moment.utc(report.start_date).locale('en').format('YYYY-MM-DD');
+      const endDateFormatted = moment.utc(report.end_date).locale('en').format('YYYY-MM-DD');
+      report.data = fillMissingDates(report.data, startDateFormatted, endDateFormatted);
+    }
+  },
+
   find(type, startDate, endDate, categoryId, groupId) {
     return ajax("/admin/reports/" + type, {
       data: {
@@ -166,11 +243,7 @@ Report.reopenClass({
       }
     }).then(json => {
       // Add zero values for missing dates
-      if (json.report.data.length > 0) {
-        const startDateFormatted = moment(json.report.start_date).utc().format('YYYY-MM-DD');
-        const endDateFormatted = moment(json.report.end_date).utc().format('YYYY-MM-DD');
-        json.report.data = fillMissingDates(json.report.data, startDateFormatted, endDateFormatted);
-      }
+      Report.fillMissingDates(json.report);
 
       const model = Report.create({ type: type });
       model.setProperties(json.report);

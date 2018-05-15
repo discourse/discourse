@@ -94,7 +94,7 @@ describe User do
   describe '#count_by_signup_date' do
     before(:each) do
       User.destroy_all
-      freeze_time
+      freeze_time DateTime.parse('2017-02-01 12:00')
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
@@ -1312,6 +1312,14 @@ describe User do
       expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
       expect(group_history.acting_user).to eq(Discourse.system_user)
       expect(group_history.target_user).to eq(user)
+    end
+
+    it "is automatically added to a group when the email matches the SSO record" do
+      user = Fabricate(:user, active: true, email: "sso@bar.com")
+      user.create_single_sign_on_record(external_id: 123, external_email: "sso@bar.com", last_payload: "")
+      user.set_automatic_groups
+      group.reload
+      expect(group.users.include?(user)).to eq(true)
     end
 
     it "get attributes from the group" do

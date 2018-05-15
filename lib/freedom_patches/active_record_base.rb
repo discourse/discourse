@@ -4,7 +4,7 @@ class ActiveRecord::Base
   def self.exec_sql(*args)
     conn = ActiveRecord::Base.connection
     sql = ActiveRecord::Base.send(:sanitize_sql_array, args)
-    conn.raw_connection.exec(sql)
+    conn.raw_connection.async_exec(sql)
   end
 
   def self.exec_sql_row_count(*args)

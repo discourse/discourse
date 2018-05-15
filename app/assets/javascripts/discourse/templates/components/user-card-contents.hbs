@@ -156,6 +156,7 @@
     {{/if}}
 
     {{#if showBadges}}
+      {{#if user.featured_user_badges}}
       <div class="badge-section">
         {{#each user.featured_user_badges as |ub|}}
           {{user-badge badge=ub.badge user=user}}
@@ -166,6 +167,7 @@
           {{/link-to}}
         {{/if}}
       </div>
+     {{/if}}
     {{/if}}
   </div>
 {{/if}}

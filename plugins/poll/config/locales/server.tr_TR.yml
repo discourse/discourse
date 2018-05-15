@@ -27,7 +27,6 @@ tr_TR:
     named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong> ile adlandırılmış ve çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
     requires_at_least_1_valid_option: "En az 1 geçerli seçim yapmalısınız."
     default_cannot_be_made_public: "Oy içeren anketler herkese açık olamaz. "
-    named_cannot_be_made_public: "<strong>%{name}</strong> isimli ankette oylamalar herkese açık yapılamaz."
     edit_window_expired:
       op_cannot_edit_options: "İlk %{minutes} dakikadan sonra anket ekleyemez veya silemezsiniz. Eğer anket seçeneklerini düzenlemeniz gerekiyorsa lütfen moderatör ile iletişime geçin."
       staff_cannot_add_or_remove_options: "İlk %{minutes} dakikadan sonra anket ekleyemez veya silemezsiniz. Bu konuyu kapatıp, yerine yeni bir konu oluşturmalısınız."

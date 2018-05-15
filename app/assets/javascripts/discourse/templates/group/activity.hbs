@@ -1,16 +1,14 @@
-<div class='group-activity container'>
-  {{#mobile-nav class='group-activity-nav group-navigation' desktopClass="pull-left nav nav-stacked" currentPath=application.currentPath}}
+<section class="user-navigation">
+  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=application.currentPath}}
     {{group-activity-filter filter="posts" categoryId=category_id}}
     {{group-activity-filter filter="topics" categoryId=category_id}}
     {{#if siteSettings.enable_mentions}}
       {{group-activity-filter filter="mentions" categoryId=category_id}}
     {{/if}}
-    {{plugin-outlet name="below-group-activity-nav" tagName='' connectorTagName='li'}}
+    {{plugin-outlet name="group-activity-bottom" tagName='' connectorTagName='li'}}
   {{/mobile-nav}}
+</section>
 
-  <div class="{{if site.mobileView "" "pull-left"}} group-activity-outlet">
-    <div class='user-main'>
-      {{outlet}}
-    </div>
-  </div>
-</div>
+<section class='user-right'>
+  {{outlet}}
+</section>

@@ -1,28 +1,35 @@
-{{#conditional-loading-spinner condition=isLoading}}
+{{#conditional-loading-section isLoading=isLoading title=report.title}}
   <div class="chart-title">
-    <h3>{{title}}</h3>
+    <h3 title={{report.description}}>
+      <a href="{{report.reportUrl}}">
+        {{report.title}}
+      </a>
+    </h3>
 
-    {{#if description}}
-      <span title={{description}}>
-        {{d-icon "question-circle"}}
-      </span>
-    {{/if}}
+    <div class="chart-trend {{trend}}">
+      {{#if average}}
+        <span title="{{report.trendTitle}}">
+          {{report.currentAverage}}{{if percent "%"}}
+        </span>
+      {{else}}
+        <span title="{{report.trendTitle}}">
+          {{number report.currentTotal noTitle="true"}}
+        </span>
+      {{/if}}
+
+      {{#if trendIcon}}
+        {{d-icon trendIcon}}
+      {{/if}}
+    </div>
   </div>
 
   <div class="chart-container">
     {{#if oneDataPoint}}
       <span class="data-point">
-        {{number chartData.lastObject.y}}
+        {{number values.lastObject.y}}
       </span>
     {{else}}
-      <div class="chart-trend {{trend}}">
-        <span>{{number prev30Days}}</span>
-
-        {{#if trendIcon}}
-          {{d-icon trendIcon}}
-        {{/if}}
-      </div>
       <canvas class="chart-canvas"></canvas>
     {{/if}}
   </div>
-{{/conditional-loading-spinner}}
+{{/conditional-loading-section}}

@@ -1,5 +1,5 @@
-<div class='group-activity container'>
-  {{#mobile-nav class='group-navigation' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
+<section class="user-navigation">
+  {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=application.currentPath}}
 
     <li>
       {{#link-to 'group.messages.inbox' model.name}}
@@ -12,10 +12,7 @@
       {{/link-to}}
     </li>
   {{/mobile-nav}}
-
-  <div class="{{if site.mobileView "" "pull-left"}} group-messages-outlet">
-    <div class='user-main'>
-      {{outlet}}
-    </div>
-  </div>
-</div>
+</section>
+<section class='user-right messages'>
+    {{outlet}}
+</section>

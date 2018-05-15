@@ -724,7 +724,6 @@ el:
       xaxis: "Ημέρα"
       yaxis: "Αριθμός Emails"
     user_to_user_private_messages:
-      title: "Μέλος-προς-Μέλος"
       xaxis: "Ημέρα"
       yaxis: "Αριθμός μηνυμάτων"
     system_private_messages:
@@ -993,7 +992,6 @@ el:
     sso_overrides_avatar: "Παράκαμψη τοπικού άβαταρ χρήστη με το άβαταρ από τον εξωτερικό ιστότοπο SSO Εάν ενεργοποιημένο, η αποσύνδεση του allow_uploaded_avatars συνιστάται."
     sso_not_approved_url: "Ανακατευθύνετε μη εγκεκριμένους λογαριασμούς SSO σε αυτό το URL"
     sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
-    enable_local_logins: "Ενεργοποίηση τοπικών λογαριασμών χρήστη με βάση το όνομα χρήστη και τον κωδικό πρόσβασης. (Σημείωση: αυτό πρέπει να είναι ενεργοποιημένο για να λειτουργούν οι προσκλήσεις)"
     allow_new_registrations: "Επιτρέψτε τις νέες εγγραφές χρηστών. Απενεργοποιήστε την επιλογή αυτή για να αποτρέψετε σε οποιονδήποτε  να δημιουργήσει ένα νέο λογαριασμό"
     enable_signup_cta: "Δείξε μια ανακοίνωση στους ανώνυμους χρήστες που επιστρέφουν, η οποία να τους παροτρύνει να δημιουργήσουν λογαριασμό."
     enable_yahoo_logins: "Ενεργοποιήστε την επαλήθευση μέσω Yahoo"

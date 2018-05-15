@@ -300,7 +300,8 @@ const AdminUser = Discourse.User.extend({
 
   deactivate() {
     return ajax('/admin/users/' + this.id + '/deactivate', {
-      type: 'PUT'
+      type: 'PUT',
+      data: { context: document.location.pathname }
     }).then(function() {
       window.location.reload();
     }).catch(function(e) {
@@ -412,6 +413,7 @@ const AdminUser = Discourse.User.extend({
           location = document.location.pathname;
 
     const performDestroy = function(block) {
+      bootbox.dialog(I18n.t('admin.user.deleting_user'));
       let formData = { context: location };
       if (block) {
         formData["block_email"] = true;

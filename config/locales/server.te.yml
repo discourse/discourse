@@ -383,7 +383,6 @@ te:
       xaxis: "రోజు"
       yaxis: "ఈమెయిల్ల సంఖ్య"
     user_to_user_private_messages:
-      title: "సభ్యుని నుండి సభ్యునికి"
       xaxis: "రోజు"
     system_private_messages:
       title: "వ్వవస్థ"

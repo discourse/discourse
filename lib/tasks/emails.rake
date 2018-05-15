@@ -54,3 +54,10 @@ task "emails:import" => :environment do
     RateLimiter.enable
   end
 end
+
+desc 'Send email test message'
+task 'emails:test', [:email] => [:environment] do |_, args|
+  email = args[:email]
+
+  Email::Sender.new(TestMailer.send_test(email), :test_message).send
+end

@@ -2565,6 +2565,9 @@ es:
         replies:
           one: '[1 respuesta]'
           other: '[%{count} respuestas]'
+        delete_replies:
+          one: ¿También borrar la respuesta a este post?
+          other: ¿También borrar las %{count} respuestas a este post?
         dispositions:
           agreed: "coincidió"
           disagreed: "no coincidió"
@@ -3392,6 +3395,8 @@ es:
           likes_received: "Likes recibidos"
           likes_received_days: "'Me gusta' Recibidos: días únicos"
           likes_received_users: "'Me gusta' Recibidos: usuarios únicos."
+          suspended: "Suspendido (siempre)"
+          silenced: "Silenciado (siempre)"
           qualifies: "Califica para el nivel de confianza 3."
           does_not_qualify: "No califica para el nivel de confianza 3."
           will_be_promoted: "Será promovido pronto."

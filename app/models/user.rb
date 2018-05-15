@@ -19,7 +19,6 @@ class User < ActiveRecord::Base
   include Roleable
   include HasCustomFields
   include SecondFactorManager
-  include DateGroupable
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -79,6 +78,8 @@ class User < ActiveRecord::Base
   has_many :muted_users, through: :muted_user_records
 
   has_one :api_key, dependent: :destroy
+
+  has_many :push_subscriptions, dependent: :destroy
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
@@ -267,15 +268,20 @@ class User < ActiveRecord::Base
     user
   end
 
+  def unstage
+    if self.staged
+      self.staged = false
+      self.custom_fields[FROM_STAGED] = true
+      self.notifications.destroy_all
+      DiscourseEvent.trigger(:user_unstaged, self)
+    end
+  end
+
   def self.unstage(params)
     if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
       params.each { |k, v| user.send("#{k}=", v) }
-      user.staged = false
       user.active = false
-      user.custom_fields[FROM_STAGED] = true
-      user.notifications.destroy_all
-
-      DiscourseEvent.trigger(:user_unstaged, user)
+      user.unstage
     end
     user
   end
@@ -776,7 +782,9 @@ class User < ActiveRecord::Base
   end
 
   def email_confirmed?
-    email_tokens.where(email: email, confirmed: true).present? || email_tokens.empty?
+    email_tokens.where(email: email, confirmed: true).present? ||
+    email_tokens.empty? ||
+    single_sign_on_record&.external_email == email
   end
 
   def activate
@@ -797,8 +805,7 @@ class User < ActiveRecord::Base
   end
 
   def readable_name
-    return "#{name} (#{username})" if name.present? && name != username
-    username
+    name.present? && name != username ? "#{name} (#{username})" : username
   end
 
   def badge_count
@@ -829,8 +836,14 @@ class User < ActiveRecord::Base
     (tl_badge + other_badges).take(limit)
   end
 
-  def self.count_by_signup_date(start_date, end_date, group_id = nil)
-    result = smart_group_by_date("users.created_at", start_date, end_date)
+  def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
+    result = self
+
+    if start_date && end_date
+      result = result.group("date(users.created_at)")
+      result = result.where("users.created_at >= ? AND users.created_at <= ?", start_date, end_date)
+      result = result.order('date(users.created_at)')
+    end
 
     if group_id
       result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
@@ -840,10 +853,16 @@ class User < ActiveRecord::Base
     result.count
   end
 
-  def self.count_by_first_post(start_date, end_date)
-    joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
-      .smart_group_by_date("us.first_post_created_at", start_date, end_date)
-      .count
+  def self.count_by_first_post(start_date = nil, end_date = nil)
+    result = joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
+
+    if start_date && end_date
+      result = result.group("date(us.first_post_created_at)")
+      result = result.where("us.first_post_created_at > ? AND us.first_post_created_at < ?", start_date, end_date)
+      result = result.order("date(us.first_post_created_at)")
+    end
+
+    result.count
   end
 
   def secure_category_ids
@@ -1015,7 +1034,7 @@ class User < ActiveRecord::Base
   end
 
   def set_automatic_groups
-    return unless active && email_confirmed? && !staged
+    return if !active || staged || !email_confirmed?
 
     Group.where(automatic: false)
       .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")

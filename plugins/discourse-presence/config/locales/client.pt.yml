@@ -10,3 +10,6 @@ pt:
     presence:
       replying: "a responder"
       editing: "a editar"
+      replying_to_topic:
+        one: "a responder"
+        other: "a responder"

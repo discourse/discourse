@@ -60,16 +60,16 @@ PLUGIN_API_JS
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
 
+      is_raw = name =~ /\.raw$/
       setting_helpers = ''
       theme.cached_settings.each do |k, v|
         val = v.is_a?(String) ? "\"#{v.gsub('"', "\\u0022")}\"" : v
-        setting_helpers += "{{theme-setting-injector context=this key=\"#{k}\" value=#{val}}}\n"
+        setting_helpers += "{{theme-setting-injector #{is_raw ? "" : "context=this"} key=\"#{k}\" value=#{val}}}\n"
       end
       hbs_template = setting_helpers + node.inner_html
 
-      is_raw = name =~ /\.raw$/
       if is_raw
-        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
+        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(hbs_template)})"
         node.replace <<COMPILED
           <script>
             (function() {

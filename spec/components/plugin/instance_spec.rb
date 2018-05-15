@@ -381,4 +381,19 @@ describe Plugin::Instance do
     end
   end
 
+  describe '#enabled_site_setting_filter' do
+    describe 'when filter is blank' do
+      it 'should return the right value' do
+        expect(Plugin::Instance.new.enabled_site_setting_filter).to eq(nil)
+      end
+    end
+
+    it 'should set the right value' do
+      instance = Plugin::Instance.new
+      instance.enabled_site_setting_filter('test')
+
+      expect(instance.enabled_site_setting_filter).to eq('test')
+    end
+  end
+
 end

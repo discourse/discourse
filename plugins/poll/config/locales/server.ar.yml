@@ -34,7 +34,6 @@ ar:
     named_poll_with_multiple_choices_has_invalid_parameters: "للتصويت متعدد الخيارات ذو الاسم <strong>%{name}</strong> معلمات غير صالحة."
     requires_at_least_1_valid_option: "عليك اختيار خيار واحد صالح على الأقل."
     default_cannot_be_made_public: "التصويت المدرج به اصوات لا يمكن أن يكون مفتوح للجميع."
-    named_cannot_be_made_public: "التصويت المسمى <strong>%{name}</strong> مدرج بة أصوات ولا يمكن فتحة للجميع."
     edit_window_expired:
       op_cannot_edit_options: "لا يمكنك إضافة خيارات التصويت او حذفها بعد مضي %{minutes} دقائق الاولى. من فضلك راسل مشرفا إن احتجت إلى تعديل أحد خيارات التصويت."
       staff_cannot_add_or_remove_options: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي %{minutes}  دقائق. عليك إغلاق هذا الموضوع وإنشاء آخر جديد عوضاً عنه."

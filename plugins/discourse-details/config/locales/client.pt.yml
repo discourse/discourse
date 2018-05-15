@@ -5,4 +5,10 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-pt: {}
+pt:
+  js:
+    details:
+      title: Ocultar detalhes
+    composer:
+      details_title: Resumo
+      details_text: "Este texto será ocultado"

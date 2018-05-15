@@ -263,7 +263,6 @@ uk:
       xaxis: "День"
       yaxis: "Кількість листів"
     user_to_user_private_messages:
-      title: "Користувач користувачу"
       xaxis: "День"
     system_private_messages:
       title: "Системні"

@@ -44,7 +44,7 @@ en:
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
 
     default_cannot_be_made_public: "Poll with votes cannot be made public."
-    named_cannot_be_made_public: "Poll named <strong>%{name}</strong> has votes cannot be made public."
+    named_cannot_be_made_public: "Poll named <strong>%{name}</strong> has votes and cannot be made public."
 
     edit_window_expired:
       op_cannot_edit_options: "You cannot add or remove poll options after the first %{minutes} minutes. Please contact a moderator if you need to edit a poll option."

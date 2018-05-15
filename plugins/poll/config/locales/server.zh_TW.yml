@@ -24,7 +24,6 @@ zh_TW:
     named_poll_with_multiple_choices_has_invalid_parameters: "“<strong>%{name}</strong>”多選投票有無效參數。"
     requires_at_least_1_valid_option: "你必須選擇至少 1 個有效的選項。"
     default_cannot_be_made_public: "投票調查不能公開。"
-    named_cannot_be_made_public: "投票“<strong>%{name}</strong>”有投票不能公開。"
     edit_window_expired:
       op_cannot_edit_options: "在創建話題%{minutes}分鐘後，你不可以增加、刪除投票選項。如果你需要修改投票選項，請聯繫管理員。"
       staff_cannot_add_or_remove_options: "在創建話題%{minutes}分鐘後，你不能增加或者刪除投票選項。你可以選擇刪除該話題然後重新創建一個。"

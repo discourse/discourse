@@ -426,21 +426,24 @@
   }
 }
 
-.change-timestamp {
+.change-timestamp,
+.poll-ui-builder {
 
     .date-picker {
-      width: 10em;
+      width: 9em;
     }
 
     #date-container {
       .pika-single {
         position: relative !important; // overriding another important
         display: inline-block;
+        margin-top: 5px;
       }
     }
 
     input[type=time] {
       width: 6em;
+      text-align: center;
     }
 
     form {

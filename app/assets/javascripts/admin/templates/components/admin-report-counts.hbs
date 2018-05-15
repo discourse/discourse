@@ -19,4 +19,6 @@
   {{number report.lastThirtyDaysCount}} {{d-icon "caret-up" class="up"}} {{d-icon "caret-down" class="down"}}
 </td>
 
-<td class="value">{{number report.total}}</td>
+{{#if allTime}}
+  <td class="value">{{number report.total}}</td>
+{{/if}}

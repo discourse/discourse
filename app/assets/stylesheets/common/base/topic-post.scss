@@ -262,6 +262,15 @@ aside.quote {
     padding:1px;
   }
 
+  .topic-links {
+    tr {
+      border: none;
+    }
+    .badge-notification {
+      margin: 1px 5px 2px 0;
+    }
+  }
+
 }
 
 .topic-avatar, .avatar-flair-preview, .user-card-avatar, .topic-map .poster, .user-profile-avatar {

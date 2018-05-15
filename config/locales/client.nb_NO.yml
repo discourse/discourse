@@ -344,17 +344,24 @@ nb_NO:
         make_user_group_owner: "Gjør til eier"
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
+      add_members:
+        usernames: "Brukernavn"
       manage:
         title: 'Behandle'
         name: 'Navn'
         full_name: 'Fullt navn'
         add_members: "Legg til medlemmer"
+        delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
         profile:
           title: Profil
+        membership:
+          title: Medlemskap
+          access: Tilgang
         logs:
           title: "Logger"
           when: "Når"
           action: "Handling"
+          subject: "Emne"
           details: "Detaljer"
           from: "Fra"
           to: "Til"
@@ -368,6 +375,7 @@ nb_NO:
         topics: "Det finnes ingen tråder opprettet av medlemmer av denne gruppen."
         logs: "Det finnes ingen logger for denne gruppen."
       add: "Legg til"
+      request: "Forespørsel"
       message: "Melding"
       allow_membership_requests: "Tillat brukere å sende forespørsler om medlemskap av gruppen til eiere"
       membership_request_template: "Egendefinert mal å vise brukere når du sender en medlemskapsforespørsel."

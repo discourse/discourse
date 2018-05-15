@@ -444,6 +444,20 @@ class UserNotifications < ActionMailer::Base
         else
           I18n.t('subject_pm')
         end
+
+      participants = "#{I18n.t("user_notifications.pm_participants")} "
+      participant_list = []
+      post.topic.allowed_groups.each do |group|
+        participant_list.push "[#{group.name} (#{group.users.count})](#{Discourse.base_url}/groups/#{group.name})"
+      end
+      post.topic.allowed_users.each do |user|
+        if SiteSetting.prioritize_username_in_ux?
+          participant_list.push "[#{user.username}](#{Discourse.base_url}/u/#{user.username_lower})"
+        else
+          participant_list.push "[#{user.name.blank? ? user.username : user.name}](#{Discourse.base_url}/u/#{user.username_lower})"
+        end
+      end
+      participants += participant_list.join(", ")
     end
 
     if SiteSetting.private_email?
@@ -548,6 +562,7 @@ class UserNotifications < ActionMailer::Base
       show_category_in_subject: show_category_in_subject,
       private_reply: post.topic.private_message?,
       subject_pm: subject_pm,
+      participants: participants,
       include_respond_instructions: !(user.suspended? || user.staged?),
       template: template,
       site_description: SiteSetting.site_description,

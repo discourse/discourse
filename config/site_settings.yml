@@ -229,6 +229,21 @@ basic:
   enable_whispers:
     client: true
     default: false
+  push_notifications_prompt:
+    default: false
+    client: true
+  push_notifications_icon_url:
+    default: ''
+  vapid_public_key_bytes:
+    default: ''
+    client: true
+    hidden: true
+  vapid_public_key:
+    default: ''
+    hidden: true
+  vapid_private_key:
+    default: ''
+    hidden: true
 
 login:
   invite_only:
@@ -333,6 +348,8 @@ login:
   sso_overrides_avatar:
     default: false
     client: true
+  sso_overrides_profile_background: false
+  sso_overrides_card_background: false
   sso_not_approved_url: ''
   email_domains_blacklist:
     default: 'mailinator.com'
@@ -391,7 +408,6 @@ users:
     default: true
   invite_expiry_days:
     default: 30
-  invite_passthrough_hours: 0
   invites_per_page:
     client: true
     default: 40
@@ -762,7 +778,8 @@ email:
   unsubscribe_via_email_footer:
     default: false
   delete_email_logs_after_days:
-    default: 365
+    default: 90
+    shadowed_by_global: true
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
@@ -1096,6 +1113,7 @@ spam:
   flags_default_topics:
     default: false
     client: true
+  min_flags_staff_visibility: 1
 
 rate_limits:
   unique_posts_mins: 5
@@ -1305,7 +1323,9 @@ search:
   search_recent_posts_size:
     default: 100000
     max: 100000
-  log_search_queries: true
+  log_search_queries:
+    client: true
+    default: true
   search_query_log_max_size:
     default: 1000000
     max: 1000000

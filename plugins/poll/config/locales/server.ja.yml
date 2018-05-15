@@ -24,7 +24,6 @@ ja:
     named_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ投票 <strong>%{name}</strong> に無効なパラメータがあります。"
     requires_at_least_1_valid_option: "少なくとも1つの有効なオプションを選択する必要があります。"
     default_cannot_be_made_public: "得票済みの投票は公開することができません。"
-    named_cannot_be_made_public: "投票 <strong>%{name}</strong> は得票済みのため公開することができません。"
     edit_window_expired:
       op_cannot_edit_options: "最初の%{minutes}分が経過したため投票の選択肢を編集することはできません。投票の選択肢を編集したい場合はモデレータへ連絡してください。"
       staff_cannot_add_or_remove_options: "最初の%{minutes}分が経過したため投票の選択肢を編集することはできません。このトピックを閉じて代わりに新しいトピックを作成する必要があります。"
