@@ -1198,22 +1198,22 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Delete unactivated accounts (without verified email) that are over a week old
   def self.purge_unactivated
     return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
 
-    to_destroy = User.where(active: false)
-      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
-      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
-      .where('NOT admin AND NOT moderator')
-      .limit(200)
-
     destroyer = UserDestroyer.new(Discourse.system_user)
-    to_destroy.each do |u|
+
+    User
+      .where(active: false)
+      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
+      .where("NOT admin AND NOT moderator")
+      .where("NOT EXISTS (SELECT 1 FROM topic_allowed_users WHERE user_id = users.id LIMIT 1)")
+      .limit(200)
+      .find_each do |user|
       begin
-        destroyer.destroy(u, context: I18n.t(:purge_reason))
+        destroyer.destroy(user, context: I18n.t(:purge_reason))
       rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
-        # if for some reason the user can't be deleted, continue on to the next one
+        # keep going
       end
     end
   end
