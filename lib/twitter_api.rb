@@ -54,14 +54,14 @@ class TwitterApi
 
     def link_handles_in(text)
       text.scan(/(?:^|\s)@(\w+)/).flatten.uniq.each do |handle|
-        text.gsub!("@#{handle}", [
-          "<a href='https://twitter.com/#{handle}' target='_blank'>",
+        text.gsub!(/(?:^|\s)@#{handle}/, [
+          " <a href='https://twitter.com/#{handle}' target='_blank'>",
             "@#{handle}",
           "</a>"
         ].join)
       end
 
-      text
+      text.strip
     end
 
     def link_hashtags_in(text)
