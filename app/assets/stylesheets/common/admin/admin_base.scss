@@ -854,25 +854,81 @@ section.details {
   }
 }
 
-.version-check {
+.version-checks {
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap; 
 
-  th {
-    text-align: left !important;
+  h2 {
+    flex: 1 1 100%;
+    border-bottom: 1px solid $primary-low;
+    padding-bottom: .5em;
+  }
+}
+
+.version-check {
+  display: flex;
+  flex: 1 1 50%;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-self: flex-start;
+  justify-content: space-between;
+  padding: 20px 0 10px 0;
+
+  .upgrade-header {
+    flex: 1 1 100%;
+    margin: 1em 0 1em 0;
+    @media screen and (max-width: 650px) {
+       margin: 0;
+    }      
+    tr {
+      border: none;
+    }
+    th {
+      background: transparent;
+      text-align: left;
+      padding: 0;
+    }
+  }
+
+  h2 {
+    flex: 1 1 100%;
   }
 
   .version-number {
-    font-size: $font-up-3;
-    font-weight: bold;
+    font-size: $font-up-2;
     line-height: $line-height-medium;
+    font-weight: bold;
+    margin: 0 5% 1em 0;
+    flex: 1 1 auto; 
+    min-width: 100px;
+    h3 {
+      flex: 1 0 auto;
+      white-space: nowrap;
+    }
+    h4 {
+      font-size: $font-down-2; 
+      margin-bottom: 0;
+    }
   }
 
-  .face {
-    width: 20px;
+  .version-status {
+    display: flex;
+    align-items: center;
+    margin: 0 0 1em 0;
+    flex: 1 1 50%;
+    min-width: 250px;
+    max-width: 300px;  
+    padding-right: 20px; 
+    @include small-width {
+      max-width: unset;
+    }
+    .face {
+      margin: 0 .75em 0 0;
+      font-size: $font-up-3;
+    }
   }
 
-  .version-notes .fa {
-    vertical-align: bottom;
-  }
 
   &.critical .version-notes .normal-note {
     display: none;
@@ -921,11 +977,25 @@ table.api-keys {
 }
 
 .dashboard-stats {
+  box-sizing: border-box;
   margin-bottom: 30px;
-  margin-right: 40px;
+  flex: 1 1 50%;
+  box-sizing: border-box;
+  &.version-check {
+    margin: 0;
+  }
+  &.detected-problems {
+    border-left: 1px solid $primary-low;
+    margin: 20px 0 0 0;
+    padding-left: 20px;
+  }
   h4 {
     font-weight: normal;
     margin-bottom: 8px;
+  }
+
+  @media screen and (max-width: 650px) {
+    flex: 1 1 100%;
   }
 
   table {
@@ -993,38 +1063,54 @@ table.api-keys {
   }
 
   &.detected-problems {
-    background: $primary-low;
-    margin-bottom: 20px;
+    display: flex;    
+    margin-bottom: 30px;
 
     .look-here {
-      float: left;
-      margin: 20px 10px 0 10px;
+      margin: 10px 20px;
 
       .fa {
         font-size: $font-up-5;
-        vertical-align: middle;
-        color: $primary
+        color: $danger
       }
     }
+    @media screen and (max-width: 650px) {
+        border-left: none;
+        border-top: 1px solid $primary-low;
+        padding: 20px 0 0 0;
+        .look-here {
+          margin-left: 0;
+        }
+    }
+    h3 {
+      display: flex;
+    }
+
 
     .problem-messages {
-      float: left;
-      width: 80%;
-      margin-left: 1%;
+      display: flex;
+
       a {
         text-decoration: underline;
       }
-      .actions {
-        text-align: right;
-      }
+
       .btn {
         background: $primary-low;
       }
       ul {
         margin-left: 0;
-        padding-left: 20px;
+        padding-left: 90px;
+        @media screen and (max-width:650px) {
+          padding-left: 20px;
+        }
       li {
         margin-bottom: 10px;
+        }
+      }
+      p.actions {
+        padding-left: 75px;
+        @media screen and (max-width:650px) {
+          padding-left: 0;
         }
       }
   }
