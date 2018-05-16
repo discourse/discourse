@@ -781,7 +781,7 @@ class Post < ActiveRecord::Base
   end
 
   def create_reply_relationship_with(post)
-    return if post.nil?
+    return if post.nil? || self.deleted_at.present?
     post_reply = post.post_replies.new(reply_id: id)
     if post_reply.save
       if Topic.visible_post_types.include?(self.post_type)
