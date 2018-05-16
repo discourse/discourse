@@ -16,7 +16,7 @@ export default Ember.Component.extend(AsyncReport, {
   fetchReport() {
     this._super();
 
-    let payload = { data: { async: true, facets: ["total", "prev30Days"] } };
+    let payload = { data: { cache: true, facets: ["total", "prev30Days"] } };
 
     if (this.get("startDate")) {
       payload.data.start_date = this.get("startDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
@@ -31,13 +31,11 @@ export default Ember.Component.extend(AsyncReport, {
     }
 
     this.set("reports", Ember.Object.create());
-    this.set("reportKeys", []);
 
     return Ember.RSVP.Promise.all(this.get("dataSources").map(dataSource => {
       return ajax(dataSource, payload)
         .then(response => {
           this.set(`reports.${response.report.report_key}`, this.loadReport(response.report));
-          this.get("reportKeys").pushObject(response.report.report_key);
         });
     }));
   }
