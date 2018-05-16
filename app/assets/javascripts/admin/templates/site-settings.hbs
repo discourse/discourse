@@ -18,9 +18,7 @@
       <li class="{{category.nameKey}}">
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
-          {{#if filtered}}
-            {{#if category.count}}<span class="count">({{category.count}})</span>{{/if}}
-          {{/if}}
+          {{#if category.count}}<span class="count">({{category.count}})</span>{{/if}}
         {{/link-to}}
       </li>
     {{/each}}
