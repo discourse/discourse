@@ -136,6 +136,7 @@
   </div>
 
   <div class="section-column">
+    <div class="top-referred-topics">
     {{#dashboard-inline-table
         dataSourceNames="top_referred_topics"
         lastRefreshedAt=lastRefreshedAt
@@ -154,7 +155,9 @@
         </tr>
       {{/each}}
     {{/dashboard-inline-table}}
+    </div>
 
+    <div class="trending-search">
     {{#dashboard-inline-table
       limit=8
       dataSourceNames="trending_search"
@@ -175,8 +178,8 @@
         </td>
         </tr>
       {{/each}}
-      {{{i18n "admin.dashboard.reports.trending_search.more"}}}
     {{/dashboard-inline-table}}
-
+      {{{i18n "admin.dashboard.reports.trending_search.more"}}}
+  </div>
   </div>
 </div>

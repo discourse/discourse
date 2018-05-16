@@ -862,10 +862,10 @@ section.details {
   display: flex;
   flex-wrap: wrap;
 
-  h2 {
+  .section-title {
     flex: 1 1 100%;
     border-bottom: 1px solid $primary-low;
-    padding-bottom: .5em;
+    margin-bottom: .5em;
   }
 }
 
