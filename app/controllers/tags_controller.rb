@@ -32,27 +32,26 @@ class TagsController < ::ApplicationController
       end
 
       format.json do
-        ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships)")
-
-        # show all the tags to admins
-        unless guardian.can_admin_tags? && guardian.is_admin?
-          ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0")
-        end
+        show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
 
         if SiteSetting.tags_listed_by_group
-          grouped_tag_counts = TagGroup.allowed(guardian).order('name ASC').includes(:tags).map do |tag_group|
+          ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
+          ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless show_all_tags
+
+          grouped_tag_counts = TagGroup.visible(guardian).order('name ASC').includes(:tags).map do |tag_group|
             { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
           end
 
           render json: {
-            tags: self.class.tag_counts_json(ungrouped_tags), # tags that don't belong to a group
+            tags: self.class.tag_counts_json(ungrouped_tags),
             extras: { tag_groups: grouped_tag_counts }
           }
         else
-          unrestricted_tags = DiscourseTagging.filter_visible(ungrouped_tags, guardian)
+          tags = show_all_tags ? Tag.all : Tag.where("tags.topic_count > 0")
+          unrestricted_tags = DiscourseTagging.filter_visible(tags, guardian)
 
-          categories = Category.where("id in (select category_id from category_tags)")
-            .where("id in (?)", guardian.allowed_category_ids)
+          categories = Category.where("id IN (SELECT category_id FROM category_tags)")
+            .where("id IN (?)", guardian.allowed_category_ids)
             .includes(:tags)
 
           category_tag_counts = categories.map do |c|
