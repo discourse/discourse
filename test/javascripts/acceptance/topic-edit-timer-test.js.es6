@@ -1,4 +1,4 @@
-import { acceptance } from 'helpers/qunit-helpers';
+import { acceptance, replaceCurrentUser } from 'helpers/qunit-helpers';
 acceptance('Topic - Edit timer', { loggedIn: true });
 
 QUnit.test('default', assert => {
@@ -159,6 +159,22 @@ QUnit.test('schedule', assert => {
     const regex = /will be published to #dev/g;
     const text = find('.future-date-input .topic-status-info').text().trim();
     assert.ok(regex.test(text));
+  });
+});
+
+QUnit.test("TL4 can't auto-delete", assert => {
+  replaceCurrentUser({ staff: false, trust_level: 4 });
+
+  visit('/t/internationalization-localization');
+  click('.toggle-admin-menu');
+  click('.topic-admin-status-update button');
+
+  const timerType = selectKit('.select-kit.timer-type');
+
+  timerType.expand();
+
+  andThen(() => {
+    assert.ok(!timerType.rowByValue("delete").exists());
   });
 });
 
