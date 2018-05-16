@@ -66,15 +66,15 @@ class TwitterApi
 
     def link_hashtags_in(text)
       text.scan(/(?:^|\s)#(\w+)/).flatten.uniq.each do |hashtag|
-        text.gsub!("##{hashtag}", [
-          "<a href='https://twitter.com/search?q=%23#{hashtag}' ",
+        text.gsub!(/(?:^|\s)##{hashtag}/, [
+          " <a href='https://twitter.com/search?q=%23#{hashtag}' ",
           "target='_blank'>",
             "##{hashtag}",
           "</a>"
         ].join)
       end
 
-      text
+      text.strip
     end
 
     def user_timeline_uri_for(screen_name)
