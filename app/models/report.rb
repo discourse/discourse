@@ -71,7 +71,7 @@ class Report
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
   end
 
-  def self.find(type, opts = nil)
+  def self._get(type, opts = nil)
     opts ||= {}
 
     # Load the report
@@ -80,26 +80,30 @@ class Report
     report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
-    report.async = opts[:async] || false
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.processing = false
     report.average = opts[:average] || false
     report.percent = opts[:percent] || false
+
+    report
+  end
+
+  def self.find_cached(type, opts = nil)
+    report = _get(type, opts)
+    Discourse.cache.read(cache_key(report))
+  end
+
+  def self.cache(report, duration)
+    Discourse.cache.write(Report.cache_key(report), report.as_json, force: true, expires_in: duration)
+  end
+
+  def self.find(type, opts = nil)
+    report = _get(type, opts)
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
-      cached_report = Discourse.cache.read(cache_key(report))
-      if report.async
-        if cached_report
-          return cached_report
-        else
-          Jobs.enqueue(:retrieve_report, opts.merge(report_type: type))
-          report.processing = true
-        end
-      else
-        send(report_method, report)
-      end
+      send(report_method, report)
     elsif type =~ /_reqs$/
       req_report(report, type.split(/_reqs$/)[0].to_sym)
     else
