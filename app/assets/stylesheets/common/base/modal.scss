@@ -114,6 +114,10 @@
   height: 100%;
   z-index: z("modal","content");
   overflow: auto;
+
+  .modal-body {
+    max-height: none !important;
+  }
 }
 
 .modal-form {
