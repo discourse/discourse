@@ -1,7 +1,10 @@
 .dashboard-next {
-
   &.admin-contents {
     margin: 0;
+  }
+
+  .section-top {
+    margin-bottom: 1em;
   }
 
   .section-columns {
@@ -62,221 +65,24 @@
     }
   }
 
-  .dashboard-table {
-    margin-bottom: 1em;
-
-    &.is-disabled {
-      background: $primary-low;
-      padding: 1em;
-    }
-
-    @include small-width  {
-      table {
-        tbody tr td {
-          font-size: $font-down-2;
-        }
-      }
-    }
-
-    &.is-loading {
-      height: 150px;
-    }
-
-    .table-title {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-
-      h3 {
-        margin: .5em 0;
-      }
-    }
-
-    table {
-      table-layout: fixed;
-
-      thead {
-        border: 1px solid $primary-low;
-        tr {
-          background: $primary-low;
-          th {
-            text-align: center;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-          }
-        }
-      }
-
-      tbody {
-        tr {
-          td:first-child {
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: normal;
-          }
-
-          td {
-            border: 1px solid $primary-low;
-            text-align: center;
-          }
-          td.left {
-            text-align: left;
-          }
-
-          td.value {
-            i {
-              display: none;
-            }
-
-            &.high-trending-up, &.trending-up {
-              i.up {
-                color: $success;
-                display: inline;
-              }
-            }
-            &.high-trending-down, &.trending-down {
-              i.down {
-                color: $danger;
-                display: inline;
-              }
-            }
-            &.no-change {
-              i.down {
-                display: inline;
-                visibility: hidden;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   .charts {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
 
-    .dashboard-mini-statuses {
-      margin-bottom: 1em;
-      display: inline-flex;
-    }
-
-    .dashboard-mini-status {
-      flex-direction: row;
-      margin-right: 1em;
-      display: flex;
-
-      .indicator {
-        margin-right: .5em;
-        width: .33em;
-        height: 35px;
-      }
-
-      .legend {
-        display: flex;
-        flex-direction: column;
-
-        .title {
-          a {color: black;}
-
-          font-size: $font-down-2;
-          font-weight: 700;
-          margin: 0;
-        }
-
-        .trend {
-          flex-direction: row;
-
-          .d-icon {
-            font-weight: 700;
-
-            &.d-icon-angle-down, &.d-icon-angle-double-down {
-              color: $danger;
-            }
-
-            &.d-icon-angle-up, &.d-icon-angle-double-up {
-              color: rgb(17, 141, 0);
-            }
-          }
-        }
-      }
-    }
-
-    .dashboard-mini-chart {
+    .chart {
       max-width: calc(100% * 1/3);
       width: 100%;
       flex-grow: 1;
       flex-basis: 100%;
       display: flex;
       margin-bottom: 1em;
-
-      .conditional-loading-section {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        flex: 1;
-      }
-
-      @include small-width  {
-        max-width: 100%;
-      }
-
-      &.is-loading {
-        height: 200px;
-      }
-
-      .loading-container.visible {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-      }
-
-      .d-icon-question-circle {
-        cursor: pointer;
-      }
-
-      .chart-title {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-
-        h3 {
-          margin: 1em 0;
-          a, a:visited {
-            color: $primary;
-          }
-        }
-      }
-
-      &.high-trending-up, &.trending-up {
-        .chart-trend, .data-point {
-          color: rgb(17, 141, 0);
-        }
-      }
-
-      &.high-trending-down, &.trending-down {
-        .chart-trend, .data-point {
-          color: $danger;
-        }
-      }
     }
 
     @include small-width  {
-      .dashboard-mini-chart {
-        width: 100%;
+      .chart {
+        max-width: 100%;
       }
-    }
-
-    .chart-trend {
-      font-size: $font-up-3;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: bold;
-      margin-right: 1em;
     }
 
     .chart-canvas-container {
@@ -297,6 +103,206 @@
 
       .durability-title {
         text-transform: capitalize;
+      }
+    }
+  }
+
+  .community-health {
+    .period-chooser .period-chooser-header {
+      .selected-name, .d-icon {
+        font-size: $font-up-1;
+      }
+
+      .d-icon {
+        margin: 0;
+      }
+    }
+  }
+}
+
+
+.dashboard-mini-chart {
+  .status {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+
+    .title {
+      font-size: $font-0;
+      font-weight: 700;
+      margin: 0;
+
+      a { color: $primary; }
+
+      .info {
+        cursor: pointer;
+        margin-left: .25em;
+        color: $primary-medium;
+      }
+    }
+
+    .trend {
+      margin-right: 1em;
+      align-items: center;
+
+      &.trending-down, &.high-trending-down {
+        color: $danger;
+      }
+
+      &.trending-up, &.high-trending-up {
+        color: $success;
+      }
+
+      .trend-value {
+        font-size: $font-up-1;
+        font-weight: 700;
+      }
+
+      .trend-icon {
+        font-size: $font-up-1;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .conditional-loading-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  @include small-width  {
+    max-width: 100%;
+  }
+
+  &.is-loading {
+    height: 200px;
+  }
+
+  .loading-container.visible {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .d-icon-question-circle {
+    cursor: pointer;
+  }
+
+  .chart-title {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+      margin: 1em 0;
+      a, a:visited {
+        color: $primary;
+      }
+    }
+  }
+
+  &.high-trending-up, &.trending-up {
+    .chart-trend, .data-point {
+      color: $success;
+    }
+  }
+
+  &.high-trending-down, &.trending-down {
+    .chart-trend, .data-point {
+      color: $danger;
+    }
+  }
+}
+
+.dashboard-table {
+  margin-bottom: 1em;
+
+  &.is-disabled {
+    background: $primary-low;
+    padding: 1em;
+  }
+
+  @include small-width  {
+    table {
+      tbody tr td {
+        font-size: $font-down-2;
+      }
+    }
+  }
+
+  &.is-loading {
+    height: 150px;
+  }
+
+  .table-title {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+      margin: .5em 0;
+    }
+  }
+
+  table {
+    table-layout: fixed;
+
+    thead {
+      border: 1px solid $primary-low;
+      tr {
+        background: $primary-low;
+        th {
+          text-align: center;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td:first-child {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: normal;
+        }
+
+        td {
+          border: 1px solid $primary-low;
+          text-align: center;
+        }
+        td.left {
+          text-align: left;
+        }
+
+        td.value {
+          i {
+            display: none;
+          }
+
+          &.high-trending-up, &.trending-up {
+            i.up {
+              color: $success;
+              display: inline;
+            }
+          }
+          &.high-trending-down, &.trending-down {
+            i.down {
+              color: $danger;
+              display: inline;
+            }
+          }
+          &.no-change {
+            i.down {
+              display: inline;
+              visibility: hidden;
+            }
+          }
+        }
       }
     }
   }
