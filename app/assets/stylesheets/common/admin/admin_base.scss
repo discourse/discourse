@@ -578,6 +578,10 @@ $mobile-breakpoint: 700px;
       background-color: $highlight-medium;
     }
   }
+
+  .warning {
+    color: $danger;
+  }
 }
 
 section.details {
@@ -856,7 +860,7 @@ section.details {
 
 .version-checks {
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 
   h2 {
     flex: 1 1 100%;
@@ -879,7 +883,7 @@ section.details {
     margin: .25em 0 1em 0;
     @media screen and (max-width: 650px) {
        margin: 0;
-    }      
+    }
     tr {
       border: none;
     }
@@ -901,13 +905,13 @@ section.details {
     font-weight: bold;
     margin: 0 0 1em 0;
     padding-right: 20px;
-    flex: 1 1 33.33%; 
+    flex: 1 1 33.33%;
     h3 {
       flex: 1 0 auto;
       white-space: nowrap;
     }
     h4 {
-      font-size: $font-down-2; 
+      font-size: $font-down-2;
       margin-bottom: 0;
     }
   }
@@ -917,8 +921,8 @@ section.details {
     align-items: center;
     margin: 0 0 1em 0;
     flex: 1 1 33.33%;
-    box-sizing: border-box;    
-    padding-right: 20px; 
+    box-sizing: border-box;
+    padding-right: 20px;
     min-width: 250px;
     @include small-width {
       max-width: unset;
@@ -1063,7 +1067,7 @@ table.api-keys {
   }
 
   &.detected-problems {
-    display: flex;    
+    display: flex;
     margin-bottom: 30px;
 
     .look-here {
