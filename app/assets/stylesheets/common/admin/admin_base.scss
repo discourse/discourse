@@ -855,7 +855,6 @@ section.details {
 }
 
 .version-checks {
-  margin-bottom: 15px;
   display: flex;
   flex-wrap: wrap; 
 
@@ -873,7 +872,7 @@ section.details {
   align-items: flex-start;
   align-self: flex-start;
   justify-content: space-between;
-  padding: 20px 0 10px 0;
+  padding: 10px 0 10px 0;
 
   .upgrade-header {
     flex: 1 1 100%;
@@ -986,7 +985,7 @@ table.api-keys {
   }
   &.detected-problems {
     border-left: 1px solid $primary-low;
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
     padding-left: 20px;
   }
   h4 {
