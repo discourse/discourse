@@ -53,6 +53,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     @max_start_id = Post.maximum(:id)
 
+    import_groups
     import_categories
     import_users
     import_topics
@@ -70,15 +71,15 @@ class ImportScripts::Lithium < ImportScripts::Base
     puts "", "importing groups..."
 
     groups = mysql_query <<-SQL
-        SELECT usergroupid, title
-          FROM usergroup
-      ORDER BY usergroupid
+        SELECT DISTINCT name
+          FROM roles
+      ORDER BY name
     SQL
 
     create_groups(groups) do |group|
       {
-        id: group["usergroupid"],
-        name: @htmlentities.decode(group["title"]).strip
+        id: group["name"],
+        name: @htmlentities.decode(group["name"]).strip
       }
     end
   end
