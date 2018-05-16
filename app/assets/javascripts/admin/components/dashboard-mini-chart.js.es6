@@ -2,6 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import AsyncReport from "admin/mixins/async-report";
 import Report from "admin/models/report";
 import { number } from 'discourse/lib/formatter';
+import loadScript from "discourse/lib/load-script";
 
 function collapseWeekly(data, average) {
   let aggregate = [];
@@ -110,7 +111,10 @@ export default Ember.Component.extend(AsyncReport, {
       if (this._chart) {
         this._chart.destroy();
       }
-      this._chart = new window.Chart(context, this._buildChartConfig(data));
+
+      loadScript("/javascripts/Chart.min.js").then(() => {
+        this._chart = new window.Chart(context, this._buildChartConfig(data));
+      });
     });
   },
 
