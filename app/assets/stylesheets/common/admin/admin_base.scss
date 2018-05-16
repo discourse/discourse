@@ -876,7 +876,7 @@ section.details {
 
   .upgrade-header {
     flex: 1 1 100%;
-    margin: 1em 0 1em 0;
+    margin: .25em 0 1em 0;
     @media screen and (max-width: 650px) {
        margin: 0;
     }      
@@ -897,10 +897,11 @@ section.details {
   .version-number {
     font-size: $font-up-2;
     line-height: $line-height-medium;
+    box-sizing: border-box;
     font-weight: bold;
-    margin: 0 5% 1em 0;
-    flex: 1 1 auto; 
-    min-width: 100px;
+    margin: 0 0 1em 0;
+    padding-right: 20px;
+    flex: 1 1 33.33%; 
     h3 {
       flex: 1 0 auto;
       white-space: nowrap;
@@ -915,10 +916,10 @@ section.details {
     display: flex;
     align-items: center;
     margin: 0 0 1em 0;
-    flex: 1 1 50%;
-    min-width: 250px;
-    max-width: 300px;  
+    flex: 1 1 33.33%;
+    box-sizing: border-box;    
     padding-right: 20px; 
+    min-width: 250px;
     @include small-width {
       max-width: unset;
     }
