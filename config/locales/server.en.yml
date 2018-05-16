@@ -910,7 +910,7 @@ en:
       labels:
         term: Term
         searches: Searches
-        click_through: Click Through Rate
+        click_through: CTR
     emails:
       title: "Emails Sent"
       xaxis: "Day"
