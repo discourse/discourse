@@ -1,4 +1,4 @@
-{{#conditional-loading-section isLoading=isLoading title=loadingTitle}}
+{{#conditional-loading-section isLoading=isLoading}}
   <div class="table-title">
     <h3>{{title}}</h3>
 
@@ -7,7 +7,7 @@
     {{/if}}
   </div>
 
-  {{#each-in reports as |key report|}}
+  {{#each reportsForPeriod as |report|}}
     <div class="table-container">
       <table>
         <thead>
@@ -36,5 +36,5 @@
         </tbody>
       </table>
     </div>
-  {{/each-in}}
+  {{/each}}
 {{/conditional-loading-section}}

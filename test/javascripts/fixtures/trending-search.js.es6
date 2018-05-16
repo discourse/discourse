@@ -12,7 +12,8 @@ export default {
       "category_id": null,
       "group_id": null,
       "prev30Days": null,
-      "labels": ["Term", "Searches", "Unique"]
+      "labels": ["Term", "Searches", "Unique"],
+      "report_key": ""
     }
   }
 };

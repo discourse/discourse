@@ -3,6 +3,7 @@ import AsyncReport from "admin/mixins/async-report";
 import Report from "admin/models/report";
 import { number } from 'discourse/lib/formatter';
 import loadScript from "discourse/lib/load-script";
+import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
 
 function collapseWeekly(data, average) {
   let aggregate = [];
@@ -25,13 +26,25 @@ function collapseWeekly(data, average) {
 }
 
 export default Ember.Component.extend(AsyncReport, {
-  classNames: ["dashboard-mini-chart"],
+  classNames: ["chart", "dashboard-mini-chart"],
   total: 0,
 
   init() {
     this._super();
 
     this._colorsPool = ["rgb(0,136,204)", "rgb(235,83,148)"];
+  },
+
+  didRender() {
+    this._super();
+
+    registerTooltip($(this.element).find("[data-tooltip]"));
+  },
+
+  willDestroyElement() {
+    this._super();
+
+    unregisterTooltip($(this.element).find("[data-tooltip]"));
   },
 
   pickColorAtIndex(index) {
@@ -58,12 +71,10 @@ export default Ember.Component.extend(AsyncReport, {
       this._chart = null;
     }
 
-    this.set("reports", Ember.Object.create());
-
     return Ember.RSVP.Promise.all(this.get("dataSources").map(dataSource => {
       return ajax(dataSource, payload)
         .then(response => {
-          this.set(`reports.${response.report.report_key}`, this.loadReport(response.report));
+          this.get("reports").pushObject(this.loadReport(response.report));
         });
     }));
   },
@@ -93,13 +104,13 @@ export default Ember.Component.extend(AsyncReport, {
       if (!$chartCanvas.length) return;
       const context = $chartCanvas[0].getContext("2d");
 
-      const reports = _.values(this.get("reports"));
+      const reportsForPeriod = this.get("reportsForPeriod");
 
-      const labels = Ember.makeArray(reports.get("firstObject.data")).map(d => d.x);
+      const labels = Ember.makeArray(reportsForPeriod.get("firstObject.data")).map(d => d.x);
 
       const data = {
         labels,
-        datasets: reports.map(report => {
+        datasets: reportsForPeriod.map(report => {
           return {
             data: Ember.makeArray(report.data).map(d => d.y),
             backgroundColor: "rgba(200,220,240,0.3)",
@@ -127,6 +138,11 @@ export default Ember.Component.extend(AsyncReport, {
       type: "line",
       data,
       options: {
+        tooltips: {
+          callbacks: {
+            title: (context) => moment(context[0].xLabel, "YYYY-MM-DD").format("LL")
+          }
+        },
         legend: {
           display: false
         },

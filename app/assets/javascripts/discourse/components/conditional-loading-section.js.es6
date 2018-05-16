@@ -3,5 +3,7 @@ export default Ember.Component.extend({
 
   classNameBindings: ["isLoading"],
 
-  isLoading: false
+  isLoading: false,
+
+  title: I18n.t("conditional_loading_section.loading")
 });

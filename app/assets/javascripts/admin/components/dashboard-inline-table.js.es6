@@ -6,8 +6,6 @@ export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-table", "dashboard-inline-table", "fixed"],
   help: null,
   helpPage: null,
-  title: null,
-  loadingTitle: null,
 
   loadReport(report_json) {
     return Report.create(report_json);
@@ -30,12 +28,10 @@ export default Ember.Component.extend(AsyncReport, {
       payload.data.limit = this.get("limit");
     }
 
-    this.set("reports", Ember.Object.create());
-
     return Ember.RSVP.Promise.all(this.get("dataSources").map(dataSource => {
       return ajax(dataSource, payload)
         .then(response => {
-          this.set(`reports.${response.report.report_key}`, this.loadReport(response.report));
+          this.get("reports").pushObject(this.loadReport(response.report));
         });
     }));
   }
