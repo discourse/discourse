@@ -50,9 +50,11 @@ $discourse-tooltip-border: $primary-medium;
   }
 
   .tooltip-content {
-    padding: 0 0.5em;
+    padding: 1em;
+    max-width: 250px;
     font-size: $font-down-1;
-    color: $primary-medium;
+    color: $primary;
+    box-shadow: shadow("dropdown");
     line-height: 1.4em;
   }
 }

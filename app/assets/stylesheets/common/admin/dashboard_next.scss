@@ -31,12 +31,12 @@
       }
     }
 
-    .section-column:last-child {
-      margin-left: .5em;
+    .section-column:last-child, {
+      margin-left: 1em;
     }
 
     .section-column:first-child {
-      margin-right: .5em;
+      margin-right: 1em;
     }
 
     @include small-width  {
@@ -67,11 +67,11 @@
 
   .charts {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     flex-wrap: wrap;
 
     .chart {
-      max-width: calc(100% * 1/3);
+      max-width: calc(100% * 1/3.2);
       width: 100%;
       flex-grow: 1;
       flex-basis: 100%;
@@ -87,7 +87,7 @@
 
     .chart-canvas-container {
       position: relative;
-      padding: 0 1em 0 0;
+      margin-left: -5px;
     }
 
     .chart-canvas {
@@ -97,6 +97,8 @@
   }
 
   .misc {
+    border: 1px solid $primary-low;
+    padding: 20px;
     .durability {
       display: flex;
       justify-content: space-between;
@@ -125,10 +127,11 @@
   .status {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1em;
+    margin-bottom: .5em;
+    padding: 0 .45em 0 0;
 
     .title {
-      font-size: $font-0;
+      font-size: $font-up-1;
       font-weight: 700;
       margin: 0;
 
@@ -137,12 +140,11 @@
       .info {
         cursor: pointer;
         margin-left: .25em;
-        color: $primary-medium;
+        color: $primary-low-mid;
       }
     }
 
     .trend {
-      margin-right: 1em;
       align-items: center;
 
       &.trending-down, &.high-trending-down {
@@ -155,7 +157,6 @@
 
       .trend-value {
         font-size: $font-up-1;
-        font-weight: 700;
       }
 
       .trend-icon {
@@ -217,6 +218,12 @@
   }
 }
 
+.top-referred-topics, .trending-search {
+  th:first-of-type {
+    text-align: left;
+  }
+}
+
 .dashboard-table {
   margin-bottom: 1em;
 
@@ -243,17 +250,17 @@
     justify-content: space-between;
 
     h3 {
-      margin: .5em 0;
+      margin: 1em 0 0 0;
     }
   }
 
   table {
     table-layout: fixed;
+    border: 1px solid $primary-low;
 
     thead {
       border: 1px solid $primary-low;
       tr {
-        background: $primary-low;
         th {
           text-align: center;
           text-overflow: ellipsis;
@@ -264,6 +271,7 @@
     }
 
     tbody {
+      border-top: none;
       tr {
         td:first-child {
           text-overflow: ellipsis;
@@ -272,16 +280,23 @@
         }
 
         td {
-          border: 1px solid $primary-low;
           text-align: center;
+          padding: 8px 20px 8px 8px;
         }
         td.left {
           text-align: left;
         }
 
+        td.title {
+          text-align: left;
+        }
+
         td.value {
+          text-align: right;
+          transform: translateX(-30%);
           i {
             display: none;
+            margin-right: -12px;
           }
 
           &.high-trending-up, &.trending-up {
