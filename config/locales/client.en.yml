@@ -3496,6 +3496,7 @@ en:
           suspended: 'Suspended'
           silenced: 'Silenced'
           suspect: 'Suspect'
+          staged: 'Staged'
         approved: "Approved?"
         approved_selected:
           one: "approve user"
@@ -3518,6 +3519,7 @@ en:
           silenced: 'Silenced Users'
           suspended: 'Suspended Users'
           suspect: 'Suspect Users'
+          staged: 'Staged Users'
         reject_successful:
           one: "Successfully rejected 1 user."
           other: "Successfully rejected %{count} users."

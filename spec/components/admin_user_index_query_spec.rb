@@ -176,6 +176,17 @@ describe AdminUserIndexQuery do
 
   end
 
+  describe "with a staged user" do
+
+    let!(:user) { Fabricate(:user, staged: true) }
+
+    it "finds the staged user" do
+      query = ::AdminUserIndexQuery.new(query: 'staged')
+      expect(query.find_users.count).to eq(1)
+    end
+
+  end
+
   describe "filtering" do
 
     context "exact email bypass" do
