@@ -326,7 +326,7 @@
 
         td {
           text-align: center;
-          padding: 8px 20px 8px 8px;
+          padding: 8px;
         }
         td.left {
           text-align: left;
@@ -338,10 +338,13 @@
 
         td.value {
           text-align: right;
-          transform: translateX(-30%);
+          transform: translateX(-40%);
           i {
             display: none;
-            margin-right: -12px;
+            margin-right: -12px; // align on caret
+            @media screen and (max-width: 650px) {
+              margin-right: -9px;
+            }
           }
 
           &.high-trending-up, &.trending-up {
