@@ -269,6 +269,12 @@
   }
 }
 
+.top-referred-topics {
+  .dashboard-table table {
+    table-layout: auto;
+  }
+}
+
 .dashboard-table {
   margin-bottom: 1em;
 
