@@ -21,7 +21,10 @@
         </div>
       {{else}}
         {{#if versionCheck.stale_data}}
-          <div class="version-number">{{#if versionCheck.version_check_pending}}{{dash-if-empty versionCheck.installed_version}}{{/if}}</div>
+          <div class="version-number">
+            <h4>{{i18n 'admin.dashboard.latest_version'}}</h4>  
+            <h3>{{#if versionCheck.version_check_pending}}{{dash-if-empty versionCheck.installed_version}}{{/if}}</h3>
+            </div>
           <div class="version-status">
             <div class="face">
               {{#if versionCheck.version_check_pending}}
@@ -41,7 +44,10 @@
             </div>
           </div>
         {{else}}
-          <div class="version-number">{{dash-if-empty versionCheck.latest_version}}</div>
+          <div class="version-number">
+            <h4>{{i18n 'admin.dashboard.latest_version'}}</h4>  
+            <h3>{{dash-if-empty versionCheck.latest_version}}</h3>
+          </div>
           <div class="version-status">
             <div class="face">
               {{#if versionCheck.upToDate }}
