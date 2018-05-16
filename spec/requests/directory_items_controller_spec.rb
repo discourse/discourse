@@ -5,7 +5,7 @@ describe DirectoryItemsController do
   let!(:evil_trout) { Fabricate(:evil_trout) }
   let!(:walter_white) { Fabricate(:walter_white) }
   let!(:stage_user) { Fabricate(:staged, username: 'stage_user') }
-  let!(:group) { Fabricate(:group, users: [evil_trout,stage_user]) }
+  let!(:group) { Fabricate(:group, users: [evil_trout, stage_user]) }
 
   it "requires a `period` param" do
     get '/directory_items.json'

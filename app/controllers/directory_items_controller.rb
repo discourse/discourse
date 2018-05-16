@@ -11,11 +11,11 @@ class DirectoryItemsController < ApplicationController
     result = DirectoryItem.where(period_type: period_type).includes(:user)
 
     if params[:group]
-      result = result.includes(user: :groups).where(users: {groups: {name: params[:group]}})
+      result = result.includes(user: :groups).where(users: { groups: { name: params[:group] } })
     end
 
     if params[:exclude_usernames]
-      result = result.references(:user).where.not(users: {username: params[:exclude_usernames].split(",")})
+      result = result.references(:user).where.not(users: { username: params[:exclude_usernames].split(",") })
     end
 
     order = params[:order] || DirectoryItem.headings.first
