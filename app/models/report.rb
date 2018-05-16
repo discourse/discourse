@@ -408,10 +408,10 @@ class Report
     label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
 
     admins = User.real.admins.count
-    report.data << { key: "admin", x: label.call("admin"), y: admins } if admins > 0
+    report.data << { key: "admins", x: label.call("admin"), y: admins } if admins > 0
 
     moderators = User.real.moderators.count
-    report.data << { key: "moderator", x: label.call("moderator"), y: moderators } if moderators > 0
+    report.data << { key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
     report.data << { key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
