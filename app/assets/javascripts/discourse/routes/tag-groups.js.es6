@@ -1,4 +1,6 @@
 export default Discourse.Route.extend({
+  showFooter: true,
+
   model() {
     return this.store.findAll('tagGroup');
   },

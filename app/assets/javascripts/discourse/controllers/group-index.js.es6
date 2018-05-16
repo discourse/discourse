@@ -14,6 +14,7 @@ export default Ember.Controller.extend({
   showActions: false,
   filter: null,
   filterInput: null,
+  application: Ember.inject.controller(),
 
   @observes("filterInput")
   _setFilter: debounce(function() {
@@ -27,7 +28,10 @@ export default Ember.Controller.extend({
 
     if (model) {
       model.findMembers(this.get('memberParams'))
-        .finally(() => this.set('loading', false));
+        .finally(() => {
+          this.set('application.showFooter', model.members.length >= model.user_count);
+          this.set('loading', false);
+        });
     }
   },
 
@@ -81,7 +85,10 @@ export default Ember.Controller.extend({
 
     loadMore() {
       if (this.get("loading")) { return; }
-      if (this.get("model.members.length") >= this.get("model.user_count")) { return; }
+      if (this.get("model.members.length") >= this.get("model.user_count")) {
+        this.set("application.showFooter", true);
+        return;
+      }
 
       this.set("loading", true);
 
