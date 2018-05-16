@@ -97,17 +97,62 @@
   }
 
   .misc {
+    display: flex;
     border: 1px solid $primary-low;
-    padding: 20px;
+
+    .durability, .last-dashboard-update {
+      flex: 1 1 50%;
+      box-sizing: border-box;
+      margin: 20px 0;
+      padding: 0 20px;
+    }
+
     .durability {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
+      .backups, .uploads {
+        flex: 1 1 100%; 
+      }
+
+      .uploads p:last-of-type {
+        margin-bottom: 0;
+      }
 
       .durability-title {
         text-transform: capitalize;
       }
     }
+
+    @media screen and (max-width: 400px) {
+      flex-wrap: wrap;
+      .durability, .last-dashboard-update {
+        flex: 1 1 100%;
+        text-align: left;
+      }
+      .last-dashboard-update {
+        display: block;
+        margin: 0 20px 20px 20px;
+        padding: 20px 0 0 0;
+        border-top: 1px solid $primary-low;
+        border-left: none;
+      }
+    }
+    .last-dashboard-update {
+      border-left: 1px solid $primary-low;
+      text-align: center;
+      display: flex;
+      justify-content: center;    
+      div {
+        align-self: center;
+        h4 {
+          margin-bottom: 0;
+        }
+      }
+    }
   }
+
+
 
   .community-health {
     .period-chooser .period-chooser-header {
@@ -232,10 +277,10 @@
     padding: 1em;
   }
 
-  @include small-width  {
+  @media screen and (max-width: 650px)  {
     table {
       tbody tr td {
-        font-size: $font-down-2;
+        font-size: $font-down-1;
       }
     }
   }
