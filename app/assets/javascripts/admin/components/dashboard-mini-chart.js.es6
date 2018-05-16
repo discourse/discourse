@@ -110,9 +110,13 @@ export default Ember.Component.extend(AsyncReport, {
 
       if (this._chart) {
         this._chart.destroy();
+        this._chart = null;
       }
 
       loadScript("/javascripts/Chart.min.js").then(() => {
+        if (this._chart) {
+          this._chart.destroy();
+        }
         this._chart = new window.Chart(context, this._buildChartConfig(data));
       });
     });
