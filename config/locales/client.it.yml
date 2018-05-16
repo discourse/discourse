@@ -225,8 +225,6 @@ it:
       our_moderators: "I Nostri Moderatori"
       stat:
         all_time: "Sempre"
-        last_7_days: "ultimi 7 giorni"
-        last_30_days: "ultimi 30 giorni"
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
@@ -555,7 +553,6 @@ it:
       notifications: "Notifiche"
       statistics: "Statistiche"
       desktop_notifications:
-        label: "Notifiche Desktop"
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
         perm_default: "Attiva Notifiche"
         perm_denied_btn: "Permesso Negato"
@@ -1694,7 +1691,6 @@ it:
         instructions:
           one: Seleziona il nuovo proprietario del messaggio di <b>{{old_user}}</b>.
           other: Seleziona il nuovo proprietario dei {{count}} messaggi di <b>{{old_user}}</b>.
-        instructions_warn: "Nota che ogni notifica circa questo messaggio non verrà trasferita al nuovo utente in modo retroattivo.<br>Attenzione: al momento nessun dato messaggio-dipendente è stato trasferito al nuovo utente. Usare con cautela."
       change_timestamp:
         title: "Cambia Marca Temporale..."
         action: "cambia marca temporale"
@@ -2408,8 +2404,6 @@ it:
         reports:
           today: "Oggi"
           yesterday: "Ieri"
-          last_7_days: "Ultimi 7 Giorni"
-          last_30_days: "Ultimi 30 Giorni"
           all_time: "Di Sempre"
           7_days_ago: "7 Giorni Fa"
           30_days_ago: "30 Giorni Fa"

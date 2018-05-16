@@ -213,8 +213,6 @@ pt_BR:
       our_moderators: "Nossos moderadores"
       stat:
         all_time: "Desde o começo"
-        last_7_days: "Últimos 7 dias"
-        last_30_days: "Últimos 30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
@@ -462,7 +460,6 @@ pt_BR:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificações de Área de Trabalho"
         not_supported: "Notificações não são suportadas nesse browser. Desculpe-nos."
         perm_default: "Habilitar Notificações"
         perm_denied_btn: "Permissão Negada"
@@ -1499,7 +1496,6 @@ pt_BR:
         instructions:
           one: Por favor, escolha o novo dono do post por  <b>{{old_user}}</b>.
           other: Por favor, escolha o novo autor dessas {{count}} mensagens que eram de <b>{{old_user}}</b>.
-        instructions_warn: "Note que qualquer notificação sobre esta mensagem não irá ser transferida para o novo usuário retroativamente.<br>Alerta: Atualmente, nenhum dado dependente da mensagem será transferido para o novo usuário. Use com cuidado."
       change_timestamp:
         action: "alterar horário"
         invalid_timestamp: "Horário não pode ser no futuro."
@@ -2184,8 +2180,6 @@ pt_BR:
         reports:
           today: "Hoje"
           yesterday: "Ontem"
-          last_7_days: "Últimos 7 Dias"
-          last_30_days: "Últimos 30 Dias"
           all_time: "Todo Tempo"
           7_days_ago: "7 Dias Atrás"
           30_days_ago: "30 Dias Atrás"

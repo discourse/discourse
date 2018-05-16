@@ -217,8 +217,6 @@ et:
       our_moderators: "Meie moderaatorid"
       stat:
         all_time: "Alates algusest"
-        last_7_days: "Viimased 7 päeva"
-        last_30_days: "Viimased 30 päeva"
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
@@ -465,7 +463,6 @@ et:
       notifications: "Teavitused"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Töölaua teavitused"
         not_supported: "See brauser ei toeta teavitusi. Kahju."
         perm_default: "Lülita teavitused sisse"
         perm_denied_btn: "Pole lubatud"
@@ -1519,7 +1516,6 @@ et:
         instructions:
           one: Palun vali <b>{{old_user}}</b> postitusele uus omanik.
           other: Palun vali <b>{{old_user}}</b> {{count}} postitusele uus omanik.
-        instructions_warn: "Pane tähele, et ühtegi teavitust selle postituse kohta ei kanta uuele kasutajale üle tagasiulatuvalt.<br>Hoiatus: Hetkel ei kanta uuele kasutajale üle mingeid postitustest sõltuvaid andmeid. Kasuta ettevaatlikult."
       change_timestamp:
         action: "muuda ajatemplit"
         invalid_timestamp: "Ajatempel ei saa olla tulevikus."
@@ -2198,8 +2194,6 @@ et:
         reports:
           today: "Täna"
           yesterday: "Eile"
-          last_7_days: "Viimased 7 päeva"
-          last_30_days: "Viimased 30 päeva"
           all_time: "Alates algusest"
           7_days_ago: "7 päeva tagasi"
           30_days_ago: "30 päeva tagasi"

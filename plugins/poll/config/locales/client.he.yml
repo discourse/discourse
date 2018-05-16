@@ -10,9 +10,11 @@ he:
     poll:
       voters:
         one: "מצביע"
+        two: "מצביעים"
         other: "מצביעים"
       total_votes:
         one: "מספר הצבעות כולל"
+        two: "מספר הצבעות כולל"
         other: "מספר הצבעות כולל"
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
       public:
@@ -21,12 +23,15 @@ he:
         help:
           at_least_min_options:
             one: "בחרו לפחות אפשרות אחת"
+            two: "בחרו לפחות <strong>%{count}</strong> אפשרויות"
             other: "בחרו לפחות <strong>%{count}</strong> אפשרויות"
           up_to_max_options:
             one: "בחרו לכל היותר אפשרות אחת."
+            two: "בחרו עד <strong>%{count}</strong> אפשרויות"
             other: "בחרו עד <strong>%{count}</strong> אפשרויות"
           x_options:
             one: "בחרו אפשרות אחת"
+            two: "בחרו <strong>%{count}</strong> אפשרויות"
             other: "בחרו <strong>%{count}</strong> אפשרויות"
           between_min_and_max_options: "בחרו בין <strong>%{min}</strong> ל-<strong>%{max}</strong> אפשרויות"
       cast-votes:

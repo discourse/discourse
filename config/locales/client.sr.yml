@@ -243,8 +243,6 @@ sr:
       our_moderators: "Naši moderatori"
       stat:
         all_time: "Sve vreme"
-        last_7_days: "Posledjih 7 dana"
-        last_30_days: "Poslednjih 30 dana"
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
@@ -425,8 +423,6 @@ sr:
       trust_level: "Nivo poverenja"
       notifications: "Obaveštenja"
       statistics: "Statistike"
-      desktop_notifications:
-        label: "Obaveštenja na radnoj površini"
       dismiss_notifications_tooltip: "Označi sve nepročitana obavestenja kao pročitana"
       disable_jump_reply: "Ne uskači u moju poruku nakon mog odgovora"
       external_links_in_new_tab: "Otvori sve spoljne linkove u novom tabu"
@@ -1079,7 +1075,6 @@ sr:
           few: Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>.
           one: Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>.
           other: Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>.
-        instructions_warn: "Primetite da se obaveštenja o ovoj poruci neće retroaktivno preneti novom korisniku. <br> Upozorenje: Trenutno se nikakvi podaci vezani uz poruke ne prenose novom korisniku. Koristiti pažljivo."
       multi_select:
         select: 'odaberi'
         selected: 'odabrano ({{count}})'
@@ -1455,8 +1450,6 @@ sr:
         reports:
           today: "Danas"
           yesterday: "Juče"
-          last_7_days: "Zadnjih 7 Dana"
-          last_30_days: "Zadnjih 30 Dana"
           all_time: "Oduvek"
           7_days_ago: "Pre 7 Dana"
           30_days_ago: "Pre 30 Dana"

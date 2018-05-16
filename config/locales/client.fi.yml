@@ -191,8 +191,8 @@ fi:
       other: linkit
     faq: "UKK"
     guidelines: "Ohjeet"
-    privacy_policy: "Rekisteriseloste"
-    privacy: "Yksityisyys"
+    privacy_policy: "Tietosuojaseloste"
+    privacy: "Tietosuoja"
     terms_of_service: "Käyttöehdot"
     mobile_view: "Mobiilinäkymä"
     desktop_view: "Työpöytänäkymä"
@@ -225,8 +225,6 @@ fi:
       our_moderators: "Valvojat"
       stat:
         all_time: "Yhteensä"
-        last_7_days: "7 päivän aikana"
-        last_30_days: "30 päivän aikana"
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
@@ -549,7 +547,6 @@ fi:
       notifications: "Ilmoitukset"
       statistics: "Tilastot"
       desktop_notifications:
-        label: "Työpöytäilmoitukset"
         not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
         perm_default: "Näytä ilmoituksia"
         perm_denied_btn: "Ei oikeuksia"
@@ -998,7 +995,7 @@ fi:
     trust_level: 'Luottamustaso'
     search_hint: 'käyttäjätunnus, sähköposti tai IP-osoite'
     create_account:
-      disclaimer: "Rekisteröitymällä hyväksyt sivuston <a href='{{privacy_link}}'>rekisteriselosteen</a> ja <a href='{{tos_link}}'>käyttöehdot</a>."
+      disclaimer: "Rekisteröitymällä hyväksyt sivuston <a href='{{privacy_link}}'>tietosuojaselosteen</a> ja <a href='{{tos_link}}'>käyttöehdot</a>."
       title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."
     forgot_password:
@@ -1750,7 +1747,6 @@ fi:
         instructions:
           one: Valitse uusi omistaja viestille käyttäjältä <b>{{old_user}}</b>.
           other: Valitse uusi omistaja {{count}} viestille käyttäjältä <b>{{old_user}}</b>.
-        instructions_warn: "Huomaa, että viestin ilmoitukset eivät siirry uudelle käyttäjälle automaattisesti. <br> Varoitus: Tällä hetkellä mikään viestikohtainen data ei siirry uudelle käyttäjälle. Käytä varoen."
       change_timestamp:
         title: "Muuta aikaleimaa..."
         action: "muuta aikaleimaa"
@@ -2511,8 +2507,6 @@ fi:
         reports:
           today: "Tänään"
           yesterday: "Eilen"
-          last_7_days: "Edellisenä 7 päivänä"
-          last_30_days: "Edellisenä 30 päivänä"
           all_time: "Kaikilta ajoilta"
           7_days_ago: "7 päivää sitten"
           30_days_ago: "30 päivää sitten"

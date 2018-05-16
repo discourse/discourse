@@ -221,8 +221,6 @@ ca:
       our_moderators: "El nostre equip moderador"
       stat:
         all_time: "Sempre"
-        last_7_days: "Els darrers 7 dies"
-        last_30_days: "Els darrers 30 dies"
       like_count: "M'agrades"
       topic_count: "Temes"
       post_count: "Publicacions"
@@ -465,7 +463,6 @@ ca:
       notifications: "Notificacions"
       statistics: "Estats"
       desktop_notifications:
-        label: "Notificacions d'escriptori"
         not_supported: "Aquest navegador no suporta les notificacions. Disculpa."
         perm_default: "Apaga les notificacions"
         perm_denied_btn: "Permís denegat"
@@ -1440,7 +1437,6 @@ ca:
         instructions:
           one: Si us plau, selecciona la nova persona propietària de la publicació per <b>{{old_user}}</b>.
           other: Si us plau, selecciona la nova persona propietària de les {{count}} publicacions per <b>{{old_user}}</b>.
-        instructions_warn: "Fixa't que qualsevol alerta sobre aquesta publicació no serà transferida a la nova persona usuària retroactivament. <br>Atenció: hores d'ara, no hi ha dades post-dependents transferides a la nova persona usuària. Fes-ho servir amb prudència."
       change_timestamp:
         action: "canvia la marca de temps"
         invalid_timestamp: "La hi haurà marca en el futur."
@@ -2106,8 +2102,6 @@ ca:
         reports:
           today: "Avui"
           yesterday: "Ahir"
-          last_7_days: "Els darrers 7 dies"
-          last_30_days: "Els darrers 30 dies"
           all_time: "Sempre"
           7_days_ago: "Fa 7 dies"
           30_days_ago: "Fa 30 dies"

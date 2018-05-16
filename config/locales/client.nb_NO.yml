@@ -9,8 +9,8 @@ nb_NO:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: " "
       human:
         storage_units:
           format: '%n %u'
@@ -149,6 +149,8 @@ nb_NO:
     topic_admin_menu: "administratorhandlinger for tråd"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
+    bootstrap_mode_enabled: "For å gjøre lansering av siden enklere er den nå i oppstartsmodus. Alle nye brukere vil få tillitsnivå 1 og daglige oppsummeringer på e-post aktivert. Oppstartsmodus vil bli slått av når antall brukere overstiger %{min_users}."
+    bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
     themes:
       default_description: "Forvalg"
     s3:
@@ -223,8 +225,6 @@ nb_NO:
       our_moderators: "Våre moderatorer"
       stat:
         all_time: "Gjennom tidene"
-        last_7_days: "Siste 7 dager"
-        last_30_days: "Siste 30 dager"
       like_count: "Likes"
       topic_count: "Tråder"
       post_count: "Innlegg"
@@ -345,6 +345,7 @@ nb_NO:
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
       add_members:
+        title: "Legg til medlemmer"
         usernames: "Brukernavn"
       manage:
         title: 'Behandle'
@@ -375,6 +376,8 @@ nb_NO:
         topics: "Det finnes ingen tråder opprettet av medlemmer av denne gruppen."
         logs: "Det finnes ingen logger for denne gruppen."
       add: "Legg til"
+      join: "Bli medlem"
+      leave: "Forlat"
       request: "Forespørsel"
       message: "Melding"
       allow_membership_requests: "Tillat brukere å sende forespørsler om medlemskap av gruppen til eiere"
@@ -543,7 +546,6 @@ nb_NO:
       notifications: "Varsler"
       statistics: "Statistikk"
       desktop_notifications:
-        label: "Skrivebordsvarslinger"
         not_supported: "Varsler er ikke støttet på denne nettleseren. Beklager."
         perm_default: "Slå på varslinger"
         perm_denied_btn: "Tillatelse avslått"
@@ -1008,6 +1010,8 @@ nb_NO:
       title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
+      second_factor_title: "Totrinnsverifisering"
+      second_factor_description: "Skriv inn verifiseringskoden fra din app:"
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
@@ -1085,11 +1089,16 @@ nb_NO:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Laster…
     select_kit:
       default_header_text: Velg…
       no_content: Ingen treff funnet
       filter_placeholder: Søk…
       create: "Opprett: {{content}}"
+      max_content_reached:
+        one: Du kan kun velge {{count}} gjenstand.
+        other: Du kan kun velge {{count}} gjenstander.
     emoji_picker:
       filter_placeholder: Søk etter emoji
       people: Folk
@@ -1712,7 +1721,6 @@ nb_NO:
         instructions:
           one: Velg den nye eieren til innlegget av <b>{{old_user}}</b>.
           other: Velg den nye eieren til {{count}} innlegg av  <b>{{old_user}}</b>.
-        instructions_warn: "Merk at ingen varsler om dette innlegget vil overføres til den nye eieren i etterkant.<br>Advarsel: For øyeblikket blir ingen innleggsavhengige data overført til den nye brukeren. Bruk med omhu."
       change_timestamp:
         title: "Endre tidsstempel…"
         action: "endre tidsstempel"
@@ -2464,8 +2472,6 @@ nb_NO:
         reports:
           today: "I dag"
           yesterday: "I går"
-          last_7_days: "Siste 7 Dager"
-          last_30_days: "Siste 30 Dager"
           all_time: "Gjennom tidene"
           7_days_ago: "7 dager siden"
           30_days_ago: "30 dager siden"
@@ -2547,6 +2553,19 @@ nb_NO:
           notify_user: "egendefinert"
           notify_moderators: "egendefinert"
       groups:
+        new:
+          title: "Ny gruppe"
+          name:
+            too_short: "Gruppenavnet er for kort"
+            too_long: "Gruppenavnet er for langt"
+            available: "Gruppenavn tilgjengelig"
+            not_available: "Gruppenavn ikke tilgjengelig"
+            blank: "Gruppenavnet kan ikke være tomt"
+        manage:
+          membership:
+            automatic: Automatisk
+            trust_level: Tillitsnivå
+            trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"
         primary: "Primærgruppe"
         no_primary: "(ingen primærgruppe)"
         title: "Grupper"

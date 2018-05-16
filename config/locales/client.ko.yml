@@ -197,8 +197,6 @@ ko:
       our_moderators: "운영자"
       stat:
         all_time: "전체"
-        last_7_days: "지난 7일"
-        last_30_days: "최근 30일"
       like_count: "좋아요"
       topic_count: "토픽"
       post_count: "게시글"
@@ -445,7 +443,6 @@ ko:
       notifications: "알림"
       statistics: "통계"
       desktop_notifications:
-        label: "데스크탑 알림"
         not_supported: "안타깝게도 지금 사용하고 계시는 브라우저는 알림을 지원하지 않습니다."
         perm_default: "알림 켜기"
         perm_denied_btn: "권한 거부"
@@ -1497,7 +1494,6 @@ ko:
         placeholder: "새로운 작성자의 아이디"
         instructions:
           other: <b>{{old_user}}</b>(이)가 작성한 글의 새로운 작성자를 선택해주세요.
-        instructions_warn: "이 글에 대한 알림이 새 사용자에게 자동으로 이전되지 않습니다.\n<br>경고: 글과 연관된 데이터가 새로운 사용자로 이전되지 않습니다. 주의해서 사용하세요."
       change_timestamp:
         title: "타임스탬프 변경하기..."
         action: "타임스탬프 변경"
@@ -2152,8 +2148,6 @@ ko:
         reports:
           today: "오늘"
           yesterday: "어제"
-          last_7_days: "최근 7일"
-          last_30_days: "최근 30일"
           all_time: "모든 시간"
           7_days_ago: "7일"
           30_days_ago: "30일"

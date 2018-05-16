@@ -225,8 +225,6 @@ de:
       our_moderators: "Unsere Moderatoren"
       stat:
         all_time: "Gesamt"
-        last_7_days: "Letzte 7 Tage"
-        last_30_days: "Letzte 30 Tage"
       like_count: "Likes"
       topic_count: "Themen"
       post_count: "Beiträge"
@@ -555,7 +553,7 @@ de:
       notifications: "Benachrichtigungen"
       statistics: "Statistiken"
       desktop_notifications:
-        label: "Desktop-Benachrichtigungen"
+        label: "Live-Benachrichtigungen"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen einschalten"
         perm_denied_btn: "Zugriff verweigert"
@@ -563,6 +561,7 @@ de:
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
+        consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: 'Alles gelesen'
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
@@ -1113,6 +1112,8 @@ de:
       shift: 'Umschalt'
       ctrl: 'Strg'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Wird geladen…
     select_kit:
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
@@ -1307,6 +1308,8 @@ de:
         posted: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag verfasst'
         private_message: '{{username}} hat dir eine Nachricht geschickt in „{{topic}}“ – {{site_title}}'
         linked: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag von dir verlinkt'
+        confirm_title: 'Benachrichtigungen aktiviert – %{site_title}'
+        confirm_body: 'Erfolgreich! Benachrichtigungen wurden aktiviert.'
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -1755,7 +1758,6 @@ de:
         instructions:
           one: Bitte wähle den neuen Eigentümer für den Beitrag von <b>{{old_user}}</b>.
           other: Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>.
-        instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden.<br>Warnung: Aktuell werden keine Daten, die mit dem Beitrag zusammenhängen an den neuen Benutzer übertragen. Mit Bedacht verwenden."
       change_timestamp:
         title: "Zeitstempel ändern…"
         action: "Erstelldatum ändern"
@@ -2510,10 +2512,9 @@ de:
         whats_new_in_discourse: "Was ist neu in Discourse?"
         activity_metrics: Aktivitätsmetriken
         reports:
+          trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           today: "Heute"
           yesterday: "Gestern"
-          last_7_days: "Letzte 7 Tage"
-          last_30_days: "Letzte 30 Tage"
           all_time: "Gesamt"
           7_days_ago: "vor 7 Tagen"
           30_days_ago: "vor 30 Tagen"
@@ -2594,6 +2595,7 @@ de:
           type: "Art"
           users: "Benutzer"
           last_flagged: "Zuletzt gemeldet"
+          no_results: "Es gibt keine gemeldeten Themen."
         short_names:
           off_topic: "off-topic"
           inappropriate: "unangemessen"
@@ -2724,6 +2726,7 @@ de:
           details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
         flag_event:
           name: "Meldung-Ereignis"
+          details: "Wenn eine Meldung erstellt, akzeptiert, abgelehnt oder ignoriert wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -2885,6 +2888,10 @@ de:
           upload_file_tip: "Wähle einen hochzuladenen Medieninhalt aus (png, woff2, usw.)"
           variable_name: "SCSS Variablen-Name:"
           variable_name_invalid: "Ungültiger Variablenname. Nur alphanumerische Zeichen sind erlaubt. Muss mit einem Buchstaben beginnen. Muss eindeutig sein."
+          variable_name_error:
+            invalid_syntax: "Ungültiger Variablenname. Nur alphanumerische Zeichen erlaubt. Muss mit einem Buchstaben beginnen."
+            no_overwrite: "Ungültiger Variablenname. Darf keine existierende Variable überschreiben."
+            must_be_unique: "Ungültiger Variablenname. Muss eindeutig sein."
           upload: "Hochladen"
           child_themes_check: "Theme beinhaltet andere Kinder-Themes"
           css_html: "Benutzerdefiniertes CSS/HTML"
@@ -3346,6 +3353,7 @@ de:
         delete_confirm: "Bist du dir SICHER, dass du diesen Benutzer löschen willst? Dies kann nicht rückgängig gemacht werden!"
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
+        deleting_user: "Benutzer wird gelöscht…"
         deleted: "Der Benutzer wurde gelöscht."
         delete_failed: "Beim Löschen des Benutzers ist ein Fehler aufgetreten. Stelle sicher, dass dieser Benutzer keine Beiträge mehr hat."
         send_activation_email: "Aktivierungsmail senden"

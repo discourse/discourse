@@ -215,8 +215,6 @@ pt:
       our_moderators: "Os Nossos Moderadores"
       stat:
         all_time: "Sempre"
-        last_7_days: "Últimos 7 Dias"
-        last_30_days: "Últimos 30 Dias"
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Publicações"
@@ -461,7 +459,6 @@ pt:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificações de Desktop"
         not_supported: "Não são suportadas notificações neste navegador. Desculpe."
         perm_default: "Ligar Notificações"
         perm_denied_btn: "Permissão Negada"
@@ -1526,7 +1523,6 @@ pt:
         instructions:
           one: Por favor seleccione o novo dono da publicação de <b>{{old_user}}</b>.
           other: Por favor selecione o novo dono das {{count}} publicações de <b>{{old_user}}</b>.
-        instructions_warn: "Note que quaisquer notificações relacionadas com esta publicação serão transferidas retroativamente para o novo utilizador. <br>Aviso: Atualmente nenhum dado dependente da publicação é transferido para o novo utilizador. Usar com cautela."
       change_timestamp:
         action: "alterar selo temporal"
         invalid_timestamp: "O selo temporal não pode ser no futuro."
@@ -2174,8 +2170,6 @@ pt:
         reports:
           today: "Hoje"
           yesterday: "Ontem"
-          last_7_days: "Últimos 7 Dias"
-          last_30_days: "Últimos 30 Dias"
           all_time: "Desde Sempre"
           7_days_ago: "7 Dias Atrás"
           30_days_ago: "30 Dias Atrás"

@@ -19,10 +19,12 @@ cs:
     default_poll_must_have_less_options:
       one: "Hlasování nesmí mít více než 1 možnost."
       few: "Hlasování nesmí mít více než %{count} možnosti."
+      many: "Hlasování nesmí mít více než %{count} možností."
       other: "Hlasování nesmí mít více než %{count} možností."
     named_poll_must_have_less_options:
       one: "Hlasování <strong>%{name}</strong> nesmí mít více než 1 možnost."
       few: "Hlasování <strong>%{name}</strong> nesmí mít více než %{count} možnosti."
+      many: "Hlasování <strong>%{name}</strong> nesmí mít více než %{count} možností."
       other: "Hlasování <strong>%{name}</strong> nesmí mít více než %{count} možností."
     default_poll_must_have_different_options: "Hlasování musí mít různé odpovědi."
     named_poll_must_have_different_options: "Hlasování <strong>%{name}</strong> musí mít různé odpovědi."
