@@ -1236,24 +1236,28 @@ describe User do
 
   describe "#purge_unactivated" do
     let!(:user) { Fabricate(:user) }
-    let!(:inactive) { Fabricate(:user, active: false) }
-    let!(:inactive_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    let!(:unactivated) { Fabricate(:user, active: false) }
+    let!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    let!(:unactivated_old_with_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+
+    before do
+      PostCreator.new(Discourse.system_user,
+        title: "Welcome to our Discourse",
+        raw: "This is a welcome message",
+        archetype: Archetype.private_message,
+        target_usernames: [unactivated_old_with_pm.username],
+      ).create
+    end
 
     it 'should only remove old, unactivated users' do
       User.purge_unactivated
-      all_users = User.all
-      expect(all_users.include?(user)).to eq(true)
-      expect(all_users.include?(inactive)).to eq(true)
-      expect(all_users.include?(inactive_old)).to eq(false)
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_pm])
     end
 
     it "does nothing if purge_unactivated_users_grace_period_days is 0" do
       SiteSetting.purge_unactivated_users_grace_period_days = 0
       User.purge_unactivated
-      all_users = User.all
-      expect(all_users.include?(user)).to eq(true)
-      expect(all_users.include?(inactive)).to eq(true)
-      expect(all_users.include?(inactive_old)).to eq(true)
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old, unactivated_old_with_pm])
     end
   end
 
