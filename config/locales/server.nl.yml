@@ -746,7 +746,6 @@ nl:
       xaxis: "Dag"
       yaxis: "Webcrawler-paginaweergaven"
     page_view_total_reqs:
-      title: "Totaal"
       xaxis: "Dag"
       yaxis: "Totale paginaweergaven"
     page_view_logged_in_mobile_reqs:
@@ -917,7 +916,6 @@ nl:
     version_checks: "Ping de Discourse-Hub voor updates en laat meldingen van nieuwe versies zien op het dashboard van de beheerder."
     new_version_emails: "Stuur een email naar het contact_email adres wanneer een nieuwe versie van Discourse beschikbaar is."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
-    invite_passthrough_hours: "Hoe lang een gebruiker een eerder verkregen uitnodigingssleutel kan gebruiken om in te loggen, in uren gespecificeerd"
     invite_only: "Openbare registratie is uitgeschakeld; alle nieuwe gebruikers moeten expliciet worden uitgenodigd door stafleden."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
     min_password_length: "Minimum lengte wachtwoord."

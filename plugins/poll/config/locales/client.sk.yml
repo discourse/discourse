@@ -11,10 +11,12 @@ sk:
       voters:
         one: "volič"
         few: "voliči"
+        many: "účastníci"
         other: "účastníci"
       total_votes:
         one: "hlas celkom"
         few: "hlasy celkom"
+        many: "hlasov celkom"
         other: "hlasov celkom"
       average_rating: "Priemerné hodnotenie: <strong>%{average}</strong>."
       public:
@@ -24,14 +26,17 @@ sk:
           at_least_min_options:
             one: "Vyberte aspoň <strong>1</strong> možnosť"
             few: "Vyberte aspoň <strong>%{count}</strong> možnosti"
+            many: "Vyberte aspoň <strong>%{count}</strong> možností"
             other: "Vyberte aspoň <strong>%{count}</strong> možností"
           up_to_max_options:
             one: "Vyberte najviac <strong>1</strong> možnosť"
             few: "Vyberte najviac <strong>%{count}</strong> možnosti"
+            many: "Vyberte najviac <strong>%{count}</strong> možností"
             other: "Vyberte najviac <strong>%{count}</strong> možností"
           x_options:
             one: "Vyberte <strong>1</strong> možnosť"
             few: "Vyberte <strong>%{count}</strong> možnosti"
+            many: "Vyberte <strong>%{count}</strong> možností"
             other: "Vyberte <strong>%{count}</strong> možností"
           between_min_and_max_options: "Vyberte medzi <strong>%{min}</strong> a <strong>%{max}</strong> možnosťami"
       cast-votes:

@@ -138,6 +138,7 @@ ro:
       email: 'Drimite pe email'
     action_codes:
       public_topic: "a făcut acest subiect public %{when}"
+      private_topic: "fă acest subiect un mesaj personal %{when}"
       split_topic: "desparte această discuție %{when}"
       invited_user: "a invitat pe %{who}  %{when}"
       invited_group: "a invitat pe %{who}  %{when}"
@@ -191,6 +192,7 @@ ro:
     not_implemented: "Această funcționalitate nu a fost implementată încă."
     no_value: "Nu"
     yes_value: "Da"
+    submit: "Trimite"
     generic_error: "A apărut o eroare."
     generic_error_with_reason: "A apărut o eroare: %{error}"
     sign_up: "Înregistrare"
@@ -243,8 +245,6 @@ ro:
       our_moderators: "Moderatori"
       stat:
         all_time: "Tot timpul"
-        last_7_days: "Ultimele 7 zile"
-        last_30_days: "Ultimele 30 de zile"
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
@@ -281,6 +281,7 @@ ro:
     pasting: "Lipire..."
     enable: "Activează"
     disable: "Dezactivează"
+    continue: "Continuă"
     undo: "Anulează acțiunea"
     revert: "Revenire la starea inițială"
     failed: "Eșuat"
@@ -361,6 +362,32 @@ ro:
         make_user_group_owner: "Fă proprietar"
         remove_user_as_group_owner: "Revocă proprietar"
     groups:
+      add_members:
+        title: "Adaugă membri"
+        usernames: "Nume de utilizatori"
+      manage:
+        title: 'Gestionează'
+        name: 'Nume'
+        full_name: 'Nume și prenume'
+        add_members: "Adaugă membri"
+        delete_member_confirm: "Elimini „%{username}” din grupul „%{group}”?"
+        profile:
+          title: Profil
+        interaction:
+          title: Interacțiune
+          posting: Publicare
+          notification: Notificare
+        membership:
+          title: Abonare
+          access: Acces
+        logs:
+          title: "Jurnale"
+          when: "Când"
+          action: "țiune"
+          subject: "Subiect"
+          details: "Detalii"
+          from: "De la"
+          to: "Către"
       public_admission: "Permite utilizatorilor să adere la grup fără restricții (Presupune ca grupul să fie vizibil)"
       public_exit: "Permite utilizatorilor să părăsească grupul în mod liber."
       empty:
@@ -371,6 +398,9 @@ ro:
         topics: "Nu există nici un subiect creat de vreun membru al acestui grup."
         logs: "Nu există nici un jurnal pentru acest grup."
       add: "Adaugă"
+      join: "Alătură-te"
+      leave: "Părăsește"
+      request: "Cerere"
       message: "Mesaj"
       allow_membership_requests: "Permite utilizatorilor să trimită cereri de membru către proprietarul grupului."
       membership_request_template: "Șablonul personalizat pentru a fi afișat utilizatorilor atunci când trimiteți o solicitare de membru"
@@ -380,16 +410,47 @@ ro:
         reason: "Aduceți la cunoștință proprietarilor grupului motivul pentru care dorești să aderi la acest grup"
       membership: "Apartenență"
       name: "Nume"
+      group_name: "Nume grup"
+      user_count: "Utilizatori"
       bio: "Despre grup"
+      selector_placeholder: "introdu username"
       owner: "Proprietar"
       index:
         title: "Grupuri"
+        all: "Toate grupurile"
         empty: "Nu există nici un grup vizibil."
+        filter: "Filtrează după tipul grupului"
+        all_groups: "Toate grupurile"
+        owner_groups: "Grupuri pe care le dețin"
+        close_groups: "Grupuri închise"
+        automatic_groups: "Grupuri automate"
+        automatic: "Automat"
+        closed: "Închis"
+        public: "Public"
+        private: "Privat"
+        public_groups: "Grupuri publice"
+        automatic_group: Grup automat
+        close_group: Grup închis
+        my_groups: "Grupurile mele"
+        group_type: "Tip grup"
+        is_group_user: "Membru"
+        is_group_owner: "Deținător"
       title:
         few: Grupuri
         one: Grup
         other: Grupuri
       activity: "Activitate"
+      members:
+        title: "Membrii"
+        filter_placeholder_admin: "nume de utilizator sau email"
+        filter_placeholder: "nume de utilizator"
+        remove_member: "Elimină membru"
+        remove_member_description: "Elimină <b>%{username}</b> din acest grup"
+        make_owner: "Fă-l deținător"
+        make_owner_description: "Fă utilizatorul <b>%{username}</b> un deținător al acestui grup"
+        remove_owner: "Elimină ca deținător"
+        remove_owner_description: "Elimină <b>%{username}</b> ca deținător al acestui grup"
+        owner: "Deținător"
       topics: "Subiecte"
       posts: "Postări"
       mentions: "Mențiuni"
@@ -502,6 +563,7 @@ ro:
       activity_stream: "Activitate"
       preferences: "Preferințe"
       expand_profile: "Extinde"
+      collapse_profile: "Colaps"
       bookmarks: "Semne de carte"
       bio: "Despre mine"
       invited_by: "Invitat de"
@@ -509,7 +571,7 @@ ro:
       notifications: "Notificări"
       statistics: "Statistici"
       desktop_notifications:
-        label: "Notificări desktop"
+        label: "Notificări live"
         not_supported: "Acest browser nu suportă notificări. Ne pare rău."
         perm_default: "Activează notificări"
         perm_denied_btn: "Notificări blocate"
@@ -1635,7 +1697,6 @@ ro:
           few: Alege noul autor pentru cele {{count}} mesaje postate de <b>{{old_user}}</b>.
           one: Alege noul autor pentru mesajul postat de <b>{{old_user}}</b>.
           other: Alege noul autor pentru cele {{count}} de mesaje postate de <b>{{old_user}}</b>.
-        instructions_warn: "NB: nicio notificare ce privește această postare nu va fi transferabilă retroactiv către noul utilizator.<br>Avertisment: Acum, nicio informație ce depinde de postare nu va fi transferată noului utilizator. Folosește cu atenție."
       change_timestamp:
         action: "schimbă data publicării"
         invalid_timestamp: "Marcajul de timp nu poate fi în viitor."
@@ -2390,8 +2451,6 @@ ro:
         reports:
           today: "Astăzi"
           yesterday: "Ieri"
-          last_7_days: "Din ultimele 7 zile"
-          last_30_days: "Din ultimele 30 de zile"
           all_time: "Dintotdeauna"
           7_days_ago: "Acum 7 zile"
           30_days_ago: "Acum 30 de zile"

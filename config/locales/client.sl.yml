@@ -250,8 +250,6 @@ sl:
       our_moderators: "Naši Moderatorji"
       stat:
         all_time: "Vse"
-        last_7_days: "Zadnjih 7 dni"
-        last_30_days: "Zadnjih 30 dni"
       like_count: "Všečki"
       topic_count: "Teme"
       post_count: "Objave"
@@ -514,7 +512,6 @@ sl:
       notifications: "Obvestila"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Namizna obvestila"
         not_supported: "Oprosti. Obvestila niso podprta s tem brekalnikom."
         perm_default: "Vklopi Obvestila"
         perm_denied_btn: "Dovoljenje Zavrnjeno"
@@ -1376,8 +1373,6 @@ sl:
         reports:
           today: "Danes"
           yesterday: "Včeraj"
-          last_7_days: "Zadnjih 7 dni"
-          last_30_days: "Zadnjih 30 dni"
           7_days_ago: "pred 7 dnevi"
           30_days_ago: "pred 30 dnevi"
           view_table: "tabela"

@@ -647,7 +647,6 @@ sv:
       xaxis: "Dag"
       yaxis: "Sökrobotars sidvisningar"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Dag"
       yaxis: "Totalt antal sidvisningar"
     page_view_logged_in_mobile_reqs:
@@ -822,7 +821,6 @@ sv:
     version_checks: "Pinga Discourse Hubben för versionsuppdatering och visa nya versionsmeddelanden på /admin översiktspanelen"
     new_version_emails: "Skicka ett mejl till contact_email när en ny version av Discourse finns tillgängligt."
     invite_expiry_days: "Hur länge användarinbjudningsnycklar är giltiga, i dagar"
-    invite_passthrough_hours: "Hur länge en användare kan använda en tidigare utlöst inbjudningsnyckel för att logga in, i timmar"
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
     min_username_length: "Minsta längd på användarnamnet. Varning: om någon existerande användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
     max_username_length: "Längsta användarnamn. Varning: om någon existerande användare eller grupp har ett namn längre än detta, er sida kommer att gå sönder."
@@ -1229,6 +1227,7 @@ sv:
     incorrect_username_email_or_password: "Felaktigt användarnamn, e-post eller lösenord"
     wait_approval: "Tack för din registrering. Vi meddelar dig när ditt konto blivit godkänt."
     active: "Ditt konto är aktiverat och redo att användas."
+    activate_email: "Du är nästan där! Vi har skickat ett aktiveringsmejl till %{email}. Vänligen följ instruktionerna i mejlet och aktivera ditt konto. Får du inget mejl, kolla skräpposten. "
     not_activated: "Du kan inte logga in ännu. Vi har skickat ett aktiveringsmejl till dig. Vänligen följ instruktionerna i mejlet för att aktivera ditt konto."
     not_allowed_from_ip_address: "Du kan inte logga in som %{username} från den IP-adressen."
     admin_not_allowed_from_ip_address: "Du kan inte logga in som admin från den IP-adressen."
@@ -1605,6 +1604,14 @@ sv:
       subject_template: "Du har blivit godkänd på %{site_name}!"
     signup:
       title: "Bli medlem"
+      subject_template: "%{email_prefix}Bekräfta ditt nya konto"
+      text_body_template: |
+        Välkommen till %{site_name}!
+
+        Klicka på följande länk för att bekräfta och aktivera ditt nya konto:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Om ovan länk inte är klickbar, försök kopiera och klistra in den i adressfältet i din webbläsare.
   page_not_found:
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"

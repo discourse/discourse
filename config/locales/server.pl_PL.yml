@@ -813,7 +813,6 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Odsłony botów indeksujących"
     page_view_total_reqs:
-      title: "Łącznie"
       xaxis: "Dzień"
       yaxis: "Wszystkie odsłony"
     page_view_logged_in_mobile_reqs:
@@ -1003,7 +1002,6 @@ pl_PL:
     version_checks: "Odpytuj Discourse Hub o aktualizacje i wyświetlaj wiadomości o nowej wersji w panelu /admin"
     new_version_emails: "Wyślij email na adres contact_email, kiedy nowa wersja Discourse będzie dostępna."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
-    invite_passthrough_hours: "Jak długo użytkownik może użyć poprzednio wykorzystanego klucza zaproszenia by się zalogować, w godzinach"
     invite_only: "Rejestracja jest wyłączona. Nowi użytkownicy muszą zostać zaproszeni przez administrację."
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
     min_username_length: "Minimalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy krótsze niż ta, twój serwis się uszkodzi!"

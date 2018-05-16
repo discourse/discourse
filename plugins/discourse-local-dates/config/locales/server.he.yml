@@ -7,6 +7,5 @@
 
 he:
   site_settings:
-    discourse_local_dates_enabled: "הפעלת התוסף discourse-local-dates. שינוי ההגדרה הזאת יאלץ אותך לאפות את כל הרשומות מחדש עם: „rake posts:rebake”."
     discourse_local_dates_default_formats: "תבניות זמן נפוצות, ניתן לעיין ב: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>תבנית מחרוזת momentjs</a>"
     discourse_local_dates_default_timezones: "רשימת בררת מחדל של אזורי זמן, חיי להיות <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> תקני"

@@ -742,7 +742,6 @@ zh_CN:
       xaxis: "天"
       yaxis: "Web 爬虫页面访问"
     page_view_total_reqs:
-      title: "总量"
       xaxis: "天"
       yaxis: "总浏览量"
     page_view_logged_in_mobile_reqs:
@@ -941,7 +940,6 @@ zh_CN:
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示新版本信息"
     new_version_emails: "当新版本发布时，发送一封邮件至 contact_email 设置的地址。"
     invite_expiry_days: "多少天以内用户的邀请码是有效的"
-    invite_passthrough_hours: "用户多久才能使用一个已经使用过的邀请代码，以小时计"
     invite_only: "公开注册已被禁用，所有新用户必须由管理人员邀请进来。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
     min_username_length: "最小用户名长度。警告：如果任何现存的用户或小组名字长度比这短，站点将无法正常工作！"
@@ -961,8 +959,6 @@ zh_CN:
     sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
     sso_overrides_name: "每一次登录时，用 SSO 信息中的外部站点的全名覆盖本地全名，并且阻止本地的全名修改。"
     sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
-    sso_overrides_profile_background: "用单点登录信息中的外部站点个人档背景图片覆盖用户头像。"
-    sso_overrides_card_background: "用单点登录信息中的外部站点用户卡背景图片覆盖用户头像。"
     sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（默认情况下返回地址必须位于当前站点）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"

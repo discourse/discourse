@@ -17,6 +17,7 @@ uk:
           units:
             byte:
               few: Байтів
+              many: Байт
               one: Байт
               other: Байт
             gb: ГБ
@@ -34,23 +35,28 @@ uk:
       medium:
         x_minutes:
           few: '%{count} хвилини'
+          many: '%{count} хвилин'
           one: 1 хвилина
           other: '%{count} хвилин'
         x_hours:
           few: '%{count} години'
+          many: '%{count} годин'
           one: 1 година
           other: '%{count} годин'
         x_days:
           few: '%{count} дні'
+          many: '%{count} днів'
           one: 1 день
           other: '%{count} днів'
       medium_with_ago:
         x_hours:
           few: 'годин тому: %{count}'
+          many: '%{count} годин тому'
           one: 1 годину тому
           other: '%{count} годин тому'
         x_days:
           few: 'днів тому: %{count}'
+          many: '%{count} днів тому'
           one: 1 день тому
           other: '%{count} днів тому'
       previous_month: 'Попередній місяць'
@@ -94,6 +100,7 @@ uk:
     links: "Посилання"
     links_lowercase:
       few: посилань
+      many: посилання
       one: посилання
       other: посилання
     faq: "Часті запитання"
@@ -120,6 +127,7 @@ uk:
     alternation: "або"
     character_count:
       few: '{{count}} символи'
+      many: '{{count}} символів'
       one: '{{count}} символ'
       other: '{{count}} символів'
     suggested_topics:
@@ -132,8 +140,6 @@ uk:
       our_moderators: "Модератори"
       stat:
         all_time: "Весь час"
-        last_7_days: "Останні 7 днів"
-        last_30_days: "Останні 30 днів"
       like_count: "Вподобання"
       topic_count: "Теми"
       post_count: "Дописи:"
@@ -217,6 +223,7 @@ uk:
       posts_read_long: "Повідомлень Прочитано"
       total_rows:
         few: '%{count} користувачі'
+        many: '%{count} користувачів'
         one: '%{count} користувач'
         other: '%{count} користувачів'
     group_histories:
@@ -297,7 +304,6 @@ uk:
       notifications: "Сповіщення"
       statistics: "Статистика"
       desktop_notifications:
-        label: "Сповіщення"
         perm_default: "Ввімкнути сповіщення"
         perm_denied_btn: "Немає доступу"
         disable: "Вимкнути сповіщення"
@@ -814,9 +820,9 @@ uk:
         placeholder: "ім'я користувача нового власника"
         instructions:
           few: Будь ласка, оберіть нового власника {{count}} дописів, що належали <b>{{old_user}}</b>.
+          many: Будь ласка, оберіть нового власника {{count}} дописів, що належали <b>{{old_user}}</b>.
           one: Будь ласка, оберіть нового власника допису, що належав <b>{{old_user}}</b>.
           other: Будь ласка, оберіть нового власника {{count}} дописів, що належали <b>{{old_user}}</b>.
-        instructions_warn: "Зверніть увагу, що будь-які повідомлення про цей допис не будуть передані новому користувачеві заднім числом.<br>Увага: В даний час залежні від допису дані не передаються по новому користувачеві. Використовуйте з обережністю."
       multi_select:
         select: 'вибрати'
         selected: 'вибрано ({{count}})'
@@ -826,6 +832,7 @@ uk:
         deselect_all: скасувати вибір всього
         description:
           few: 'Ви обрали дописів: <b>{{count}}</b>.'
+          many: 'Ви обрали дописів: <b>{{count}}</b>.'
           one: Ви обрали <b>1</b> допис.
           other: 'Ви обрали дописів: <b>{{count}}</b>.'
     post:
@@ -1097,8 +1104,6 @@ uk:
         reports:
           today: "Сьогодні"
           yesterday: "Вчора"
-          last_7_days: "Останні 7 днів"
-          last_30_days: "Останні 30 днів"
           all_time: "Весь час"
           7_days_ago: "7 днів тому"
           30_days_ago: "30 днів тому"
@@ -1634,6 +1639,7 @@ uk:
         edit: "редагувати"
         category: "Допис у Категорію"
         add_host: "Додати Хост"
+        embed_by_username: "Ім'я користувача для створення теми"
         embed_post_limit: "Максимальна кількість дописів для вставки"
         embed_classname_whitelist: "Дозволені імена класів CSS"
         feed_polling_enabled: "Імпортувати дописи через RSS/ATOM"

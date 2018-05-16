@@ -670,7 +670,6 @@ zh_TW:
       xaxis: "天"
       yaxis: "Web 爬蟲頁面訪問"
     page_view_total_reqs:
-      title: "總數"
       xaxis: "天"
       yaxis: "總瀏覽量"
     page_view_logged_in_mobile_reqs:
@@ -850,7 +849,6 @@ zh_TW:
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
-    invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     login_required: "需要登入才能進入網站，不允許匿名操作"
     min_username_length: "最短用戶名長度。警告：如果任何現有帳號或群組名稱短於此，你的網站會炸掉。"
     max_username_length: "最長用戶名長度。警告：如果任何現有帳號或群組名稱長於此，你的網站會炸掉。"

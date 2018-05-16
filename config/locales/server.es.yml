@@ -805,7 +805,6 @@ es:
       labels:
         term: Término
         searches: Búsquedas
-        unique: Único
     emails:
       title: "Correos enviados"
       xaxis: "Día"
@@ -860,7 +859,6 @@ es:
       xaxis: "Día"
       yaxis: "Páginas vistas de rastreadores web"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Día"
       yaxis: "Total páginas vistas"
     page_view_logged_in_mobile_reqs:
@@ -1076,7 +1074,6 @@ es:
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
     invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
-    invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
     invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por el staff."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
     min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: si existen usuarios o grupos con nombres de menor longitud que ésta, tu sitio se romperá."
@@ -1383,7 +1380,6 @@ es:
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
     embed_post_limit: "Número máximo de posts a embeber."
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
-    notify_about_flags_after: "Si hay reportes que no han sido atendidos después de este número de horas, enviar un mensaje personal al staff. Dejar en 0 para desactivar."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
     bootstrap_mode_min_users: "Mínimo número de usuarios requerido para desactivar el modo bootstrap (pon 0 para desactivar esta opción)"

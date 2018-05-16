@@ -5,6 +5,4 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fr:
-  site_settings:
-    details_enabled: "Activer le plugin details. Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\"."
+fr: {}

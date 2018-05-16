@@ -258,8 +258,6 @@ pl_PL:
       our_moderators: "Moderatoratorzy"
       stat:
         all_time: "Ogółem"
-        last_7_days: "Ostatnich 7 dni"
-        last_30_days: "Ostatnie 30 dni"
       like_count: "Lajki"
       topic_count: "Tematy"
       post_count: "Wpisy"
@@ -525,7 +523,6 @@ pl_PL:
       notifications: "Powiadomienia"
       statistics: "Statystyki"
       desktop_notifications:
-        label: "Powiadomienia systemowe"
         not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
         perm_default: "Włącz powiadomienia"
         perm_denied_btn: "Brak uprawnień"
@@ -1686,7 +1683,6 @@ pl_PL:
           many: Wybierz nowego właściciela dla {{count}} wpisów autorstwa <b>{{old_user}}</b>.
           one: Wybierz nowego właściciela wpisu autorstwa <b>{{old_user}}</b>.
           other: Wybierz nowego właściciela dla {{count}} wpisów autorstwa <b>{{old_user}}</b>.
-        instructions_warn: "Przeszłe powiadomienia dla tego wpisu nie zostaną przypisane do nowego użytkownika. <br>Uwaga: Aktualnie, żadne dane uzależnione od wpisu nie są przenoszone do nowego użytkownika. Zachowaj ostrożność."
       change_timestamp:
         title: "zmień znacznik czasu"
         action: "zmień znacznik czasu"
@@ -2481,8 +2477,6 @@ pl_PL:
         reports:
           today: "Dzisiaj"
           yesterday: "Wczoraj"
-          last_7_days: "Ostatnie 7 dni"
-          last_30_days: "Ostatnie 30 dni"
           all_time: "Przez cały czas"
           7_days_ago: "7 dni temu"
           30_days_ago: "30 dni temu"

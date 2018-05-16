@@ -147,6 +147,12 @@ fr:
       <<: *errors
   invite:
     not_found: "Votre jeton d'invitation est invalide. Veuillez contacter l'administrateur du site."
+    not_found_template: |
+      <p>Votre invitation à <a href="%{base_url}">%{site_name}</a> a déjà été utilisée.</p>
+
+      <p>Si vous vous rappelez de votre mot de passe vous pouvez vous <a href="%{base_url}/login">Connecter</a>.</p>
+
+      <p>Sinon, veuillez <a href="%{base_url}/password-reset">Réinitialiser mot de passe</a>.</p>
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='/u/%{username}/summary'>a déjà un compte</a> !"
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
@@ -771,7 +777,7 @@ fr:
       title: "DAU/MAU"
       xaxis: "Jour"
       yaxis: "DAU/MAY"
-      description: "Utilisateurs actifs quotidien / Utilisateurs actifs mensuel"
+      description: "DAU / MAU – nombre d'utilisateurs qui se sont connectés dans la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés dans le dernier mois – en %"
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
@@ -790,6 +796,7 @@ fr:
       title: "Messages"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux messages"
+      description: "Nouveaux messages crées pour cette période"
     likes:
       title: "J'aime"
       xaxis: "Jour"
@@ -824,7 +831,7 @@ fr:
       labels:
         term: Terme
         searches: Recherches
-        unique: Unique
+        click_through: Taux de clics suivis
     emails:
       title: "Courriels envoyés"
       xaxis: "Jour"
@@ -881,7 +888,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les robots d'indexation"
     page_view_total_reqs:
-      title: "Total"
+      title: "Pages vues"
       xaxis: "Jour"
       yaxis: "Total de pages vues"
     page_view_logged_in_mobile_reqs:
@@ -1104,7 +1111,6 @@ fr:
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
     invite_expiry_days: "Combien de temps (en jours) les clés d'invitation sont-elles valides"
-    invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "Les inscriptions publiques sont désactivées, elles ne peuvent se faire uniquement sur invitation par les responsables."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
     min_username_length: "Longueur minimale du nom d'utilisateur en caractères. ATTENTION : si des utilisateurs ou groupes existants ont des noms plus courts que celui-ci, votre site se cassera !"
@@ -1125,6 +1131,8 @@ fr:
     sso_overrides_username: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : des écarts peuvent se produire dûes aux différences de longueur et d'exigences sur les pseudos)"
     sso_overrides_name: "Surcharger les noms complets locaux avec les noms complets externes d'un SSO à chaque connexion, et prévenir les modifications locales."
     sso_overrides_avatar: "Surcharge les avatars des utilisateurs avec les avatars d'un SSO. Si activé, il est fortement recommandé de désactiver allow_uploaded_avatars."
+    sso_overrides_profile_background: "Remplacer arrière-plan du profil utilisateur avec un avatar d'un site externe à travers SSO payload."
+    sso_overrides_card_background: "Remplacer arrière-plan de la carte de l'utilisateur avec un avatar d'un site externe à travers SSO payload."
     sso_not_approved_url: "Rediriger les comptes SSO non validés vers cette URL"
     sso_allows_all_return_paths: "Ne pas restreindre le domaine pour les return_paths fournis par le SSO (par défaut, le chemin de retour doit être sur le site actuel)"
     enable_local_logins: "Activer les comptes locaux avec pseudo et mot de passe. Ceci doit être activé pour que les invitations fonctionnent. ATTENTION : si désactivé, vous ne pourrez peut-être plus vous connecter si vous n'avez pas configuré au préalable au moins une autre méthode de connection."
@@ -1312,6 +1320,7 @@ fr:
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximum pour automatiquement mettre sous silence les utilisateurs rédigeant des messages trop rapidement."
     auto_silence_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, mettre sous silence le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a mettre sous slience les premiers messages contenant rageux ou aba ou aca."
     flags_default_topics: "Afficher les sujets signalés par défaut dans la section administrateur"
+    min_flags_staff_visibility: "Le nombre minimum de signalements sur un message avant qu'un responsable puisse le voir sous admin."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1423,7 +1432,7 @@ fr:
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
-    notify_about_flags_after: "S'il y a des signalements qui n'ont pas été traités après ce nombre d'heures, envoyer un message direct aux responsables. Mettre 0 pour désactiver."
+    notify_about_flags_after: "S'il y a des signalements qui n'ont pas été gérés après ce nombre d'heures, envoyer un message direct aux modérateurs. 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
@@ -1491,6 +1500,8 @@ fr:
     company_full_name: "Nom de société (complet)"
     company_domain: "Domaine de la société"
     shared_drafts_category: "Activez la fonction Ébauches partagées en désignant une catégorie pour les ébauches de sujet."
+    push_notifications_prompt: "Afficher la demande de consentement de l'utilisateur"
+    push_notifications_icon_url: "L'icône de badge qui apparait dans le coin notifications. Taille recommandée: 96px x 96px."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -2152,6 +2163,13 @@ fr:
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Aucune des adresses de destination n'est reconnue, ou l'entête Message-ID dans le courriel a été modifié. Veuillez vérifier que vous envoyez bien à l'adresse de courriel fournie par les responsables.
+    email_reject_old_destination:
+      title: "Courriel rejeté - Mauvaise ancienne destination"
+      subject_template: "[%{email_prefix}] Problème de courriel -- Vous essayez de répondre à une ancienne notification"
+      text_body_template: |
+        Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Pour des raisons de sécurité, nous n'acceptons des réponses aux notifications que pendant 90 jours. Veuillez vous rendre sur [le sujet](%{short_url}) pour continuer la conversation.
     email_reject_topic_not_found:
       title: "Courriel rejeté - Sujet introuvable"
       subject_template: "[%{email_prefix}] Problème de courriel -- Sujet introuvable"
@@ -3303,3 +3321,14 @@ fr:
   search_logs:
     graph_title: "Nombre de recherches"
   joined: "Inscrit"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} vous a mentionné dans « %{topic} » - %{site_title}'
+      group_mentioned: '%{username} vous a mentionné dans « %{topic} » - %{site_title}'
+      quoted: '%{username} vous a cité dans « %{topic} » - %{site_title}'
+      replied: '%{username} vous a répondu dans « %{topic} » - %{site_title}'
+      posted: '%{username} a posté dans « %{topic} » - %{site_title}'
+      private_message: '%{username} vous a envoyé un message direct dans « %{topic} » - %{site_title}'
+      linked: '%{username} a créé un lien vers votre message posté dans « %{topic} » - %{site_title}'
+      confirm_title: 'Notifications activées - %{site_title}'
+      confirm_body: 'Les notifications ont été activées.'

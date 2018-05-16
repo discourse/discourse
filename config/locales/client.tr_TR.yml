@@ -170,6 +170,7 @@ tr_TR:
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
     no_value: "Hayır"
     yes_value: "Evet"
+    submit: "Gönder"
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
     sign_up: "Kayıt Ol"
@@ -220,8 +221,6 @@ tr_TR:
       our_moderators: "Moderatörlerimiz"
       stat:
         all_time: "Tüm Zamanlar"
-        last_7_days: "Son 7 gün"
-        last_30_days: "Son 30 gün"
       like_count: "Beğeni"
       topic_count: "Konular"
       post_count: "Gönderiler"
@@ -245,6 +244,9 @@ tr_TR:
     topic_count_latest:
       one: '{{count}} yeni ya da güncellenmiş konu.'
       other: '{{count}} yeni ya da güncellenmiş konu.'
+    topic_count_unread:
+      one: '{{count}} Okunmamış konuyu görün'
+      other: '{{count}} Okunmamış konuları görün'
     preview: "önizleme"
     cancel: "iptal"
     save: "Değişiklikleri Kaydet"
@@ -257,6 +259,7 @@ tr_TR:
     pasting: "Yapıştırılıyor..."
     enable: "Etkinleştir"
     disable: "Devredışı Bırak"
+    continue: "Devam et"
     undo: "Geri Al"
     revert: "Eski Haline Getir"
     failed: "Başarısız oldu"
@@ -334,9 +337,33 @@ tr_TR:
         make_user_group_owner: "Sahip yap"
         remove_user_as_group_owner: "Sahipliğini İptal Et"
     groups:
+      add_members:
+        title: "Üyeleri ekle"
+        usernames: "Kullanıcı adları"
       manage:
+        title: 'Yönet'
+        name: 'İsim'
+        full_name: 'Tam İsim'
+        add_members: "Üyeleri ekle"
+        delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
+        profile:
+          title: Profil
+        interaction:
+          title: Etkileşim
+          notification: Bildirim
+        membership:
+          title: Üyelik
+          access: Erişim
         logs:
+          title: "Kayıtlar"
+          when: "Ne zaman"
+          action: "Eylem"
+          acting_user: "Temsili kullanıcı"
+          target_user: "Hedef Kullanıcı"
+          subject: "Konu"
+          details: "Ayrıntılar"
           from: "Kimden"
+          to: "Kime"
       public_admission: "Kullanıcıların gruba özgürce katılmalarına izin ver (grubun Herkese açık olması gerekir)"
       public_exit: "Kullanıcıların grubu özgürce terk etmesine izin ver"
       empty:
@@ -349,6 +376,7 @@ tr_TR:
       add: "Ekle"
       join: "Katıl"
       leave: "Ayrıl"
+      request: "İstek"
       message: "ileti"
       allow_membership_requests: "Kullanıcılar'ın grup sahiplerine üyelik talepleri göndermesine izin ver"
       membership_request:
@@ -366,7 +394,14 @@ tr_TR:
         title: "Gruplar"
         all: "Tüm Gruplar"
         empty: "Görünen hiç bir grup bulunmamaktadır."
+        filter: "Grup tipine göre filtrele"
+        all_groups: "Tüm Gruplar"
+        close_groups: "Kapanmış Gruplar"
+        automatic_groups: "Otomatik Gruplar"
         automatic: "Otomatik"
+        closed: "Kapanmış"
+        public: "Herkese Açık"
+        private: "Özel"
       title:
         one: Gruplar
         other: Gruplar
@@ -490,7 +525,6 @@ tr_TR:
       notifications: "Bildirimler"
       statistics: "Sayıtımlar"
       desktop_notifications:
-        label: "Masaüstü Bildirimleri"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
         perm_default: "Bildirimleri Etkinleştirin"
         perm_denied_btn: "Erişim İzni Reddedildi"
@@ -1632,7 +1666,6 @@ tr_TR:
         instructions:
           one: Lütfen <b>{{old_user}}</b> kullanıcısına ait {{count}} gönderinin yeni sahibini seçin.
           other: Lütfen <b>{{old_user}}</b> kullanıcısına ait {{count}} gönderinin yeni sahibini seçin.
-        instructions_warn: "Bu gönderi ile ilgili geriye dönük biriken bildirimler yeni kullanıcıya aktarılmayacak.<br>Uyarı: Şu an, yeni kullanıcıya hiç bir gönderi-tabanlı ek bilgi aktarılmıyor. Dikkatli olun."
       change_timestamp:
         action: "Zaman Bilgisini Değiştir"
         invalid_timestamp: "Zaman bilgisi gelecekte olamaz."
@@ -2309,8 +2342,6 @@ tr_TR:
         reports:
           today: "Bugün"
           yesterday: "Dün"
-          last_7_days: "Son 7 Gün"
-          last_30_days: "Son 30 Gün"
           all_time: "Tüm Zamanlar"
           7_days_ago: "7 Gün Önce"
           30_days_ago: "30 Gün Önce"
@@ -2485,6 +2516,7 @@ tr_TR:
         change_settings: "Ayarları Değiştir"
         change_settings_short: "Ayarlar"
         howto: "Nasıl eklenti yükleyebilirim?"
+        official: "Resmi eklenti"
       backups:
         title: "Yedekler"
         menu:
@@ -2564,6 +2596,8 @@ tr_TR:
         color: "Renk"
         opacity: "Opaklık"
         copy: "Kopyala"
+        copy_to_clipboard: "Kopyala"
+        copied_to_clipboard: "Kopyalandı"
         email_templates:
           title: "E-posta Şablonları"
           subject: "Konu"
@@ -2799,16 +2833,31 @@ tr_TR:
           roll_up:
             text: "Topla"
             title: "En az 'min_ban_entries_for_roll_up' adet giriş olduğu takdirde yeni subnet engelleme girişleri yaratır."
+        search_logs:
+          searches: "Aramalar"
+          click_through: "Buraya tıklayın"
+          unique: "Benzersiz"
+          types:
+            all_search_types: "Tüm arama türleri"
+            header: "Üst kısım"
+            full_page: "Tam Sayfa"
         logster:
           title: "Hata Kayıtları"
       watched_words:
         search: "ara"
         clear_filter: "Temizle"
+        show_words: "kelimeleri göster"
+        word_count:
+          one: 1 kelime
+          other: '%{count} kelimeler'
         actions:
+          censor: 'Sansür'
+          require_approval: 'Onay gerektir'
           flag: 'Bildir'
         form:
           label: 'Yeni Kelime: '
           add: 'Ekle'
+          success: 'Başarılı'
           upload: "Yükle"
           upload_successful: "Yükleme başarılı oldu. Kelimeler eklendi."
       impersonate:
@@ -2830,6 +2879,7 @@ tr_TR:
           pending: "Bekleyen"
           staff: 'Görevli'
           suspended: 'Uzaklaştırılmış'
+          silenced: 'Susturuldu'
           suspect: 'Kuşkulanılan'
         approved: "Onaylanmış mı?"
         approved_selected:
@@ -2850,6 +2900,7 @@ tr_TR:
           staff: "Görevli"
           admins: 'Yöneticiler'
           moderators: 'Moderatörler'
+          silenced: 'Susturulmuş Kullanıcılar'
           suspended: 'Uzaklaştırılmış Kullanıcılar'
           suspect: 'Kuşkulanılan Kullanıcılar'
         reject_successful:
@@ -2871,10 +2922,23 @@ tr_TR:
         suspend_reason_placeholder: "Askıya alma sebebi"
         suspend_message: "E Posta Mesajı"
         suspended_by: "Uzaklaştıran"
+        silence_reason: "Neden"
+        silenced_by: "Tarafından susturuldu"
+        silence_modal_title: "Kullanıcıyı Sustur"
+        silence_duration: "Kullanıcı ne kadar uzun bir süre için susturulacak?"
+        silence_reason_label: "Neden bu kullanıcıyı susturuyorsunuz?"
+        silence_reason_placeholder: "Susturulma sebebi"
+        silence_message: "E-posta Mesajı"
         silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
         delete_all_posts: "Tüm gönderileri sil"
+        penalty_post_delete: "Gönderiyi sil"
+        penalty_post_edit: "Gönderiyi düzenle"
+        penalty_post_none: "Hiçbir şey yapma"
         delete_all_posts_confirm_MF: "{POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Emin misiniz?"
+        silence: "Sustur"
+        unsilence: "Susturma"
+        silenced: "Susturuldu?"
         moderator: "Moderatör mü?"
         admin: "Yönetici mi?"
         suspended: "Uzaklaştırıldı mı?"
@@ -2890,10 +2954,12 @@ tr_TR:
         logged_out: "Kullanıcının tüm cihazlarda oturumu kapatılmış"
         revoke_admin: 'Yöneticiliğini İptal Et'
         grant_admin: 'Yönetici Yetkisi Ver'
+        grant_admin_confirm: "Yeni yöneticiyi onaylamanız için size bir e-posta gönderdik. Lütfen onaylama talimatlarını uygulayınız."
         revoke_moderation: 'Moderasyonu İptal Et'
         grant_moderation: 'Moderasyon Yetkisi Ver'
         unsuspend: 'Uzaklaştırmayı geri al'
         suspend: 'Uzaklaştır'
+        show_flags_received: "Alınan Bildirimleri Göster"
         reputation: İtibar
         permissions: İzinler
         activity: Etkinlik
@@ -2902,6 +2968,7 @@ tr_TR:
         private_topics_count: Özel Konular
         posts_read_count: Okuduğu Gönderiler
         post_count: Oluşturduğu Gönderiler
+        second_factor_enabled: İki Faktörlü Kimlik Doğrulama etkinleştirildi
         topics_entered: Görüntülediği Konular
         flags_given_count: Yapılan Bildirimler
         flags_received_count: Alınan Bildirimler
@@ -2931,6 +2998,7 @@ tr_TR:
         delete_confirm: "Bu kullanıcıyı silmek istediğinize EMİN misiniz? Bu işlem geri alınamaz!"
         delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
         delete_dont_block: "Sadece sil"
+        deleting_user: "Kullanıcı siliniyor..."
         deleted: "Kullanıcı silinmiş."
         delete_failed: "Kullanıcı silinirken bir hata oluştu. Kullanıcıyı silmeye çalışmadan önce tüm gönderilerin silindiğinden emin olun. "
         send_activation_email: "Etkinleştirme E-postası Gönder"
@@ -2940,6 +3008,10 @@ tr_TR:
         activate_failed: "Kullanıcı etkinleştirilirken bir sorun yaşandı."
         deactivate_account: "Hesabı Pasifleştir"
         deactivate_failed: "Kullanıcı deaktive edilirken bir sorun yaşandı."
+        unsilence_failed: 'Kullanıcının susturulması kaldırılırken bir sorun yaşandı.'
+        silence_failed: 'Kullanıcı susturulurken bir sorun yaşandı.'
+        silence_confirm: 'Bu kullanıcıyı susturmak istediğinize emin misiniz? Bunu yaparsanız yeni başlık ya da gönderi oluşturamayacak.'
+        silence_accept: 'Evet, bu kullanıcıyı sustur'
         bounce_score: "Geri Sekme Skoru"
         reset_bounce_score:
           label: "Sıfırla"
@@ -2947,6 +3019,7 @@ tr_TR:
         visit_profile: "Profilini güncellemek için <a href='%{url}'>kullanıcı tercihleri sayfası</a> 'nı ziyaret edebilirsin"
         deactivate_explanation: "Deaktive edilmiş bir kullanıcı e-postasını tekrar doğrulamalı."
         suspended_explanation: "Uzaklaştırılmış kullanıcılar sistemde oturum açamaz."
+        silence_explanation: "Susturulmuş bir kullanıcı gönderi oluşturamaz veya konu başlatamaz."
         staged_explanation: "Aşamalı bir kullanıcı sadece belirli konularda e-posta ile gönderide bulunabilir."
         bounce_score_explanation:
           none: "Bu e-posta adresinden yakın zamanda hiç geri sekme alınmadı."
@@ -2980,6 +3053,8 @@ tr_TR:
           likes_received: "Alınan Beğeniler"
           likes_received_days: "Alınan beğeniler: tekil günlük"
           likes_received_users: "Alınan beğeniler: tekil kullanıcı"
+          suspended: "Askıya alındı ​​(tüm zamanlar)"
+          silenced: "Susturuldu (her zaman)"
           qualifies: "Güven seviyesi 3 için yeterli."
           does_not_qualify: "Güven seviyesi 3 için yeterli değil."
           will_be_promoted: "Yakinda terfi ettirilecek."
@@ -3039,6 +3114,8 @@ tr_TR:
         recommended: "İzleyen metni ihtiyaçlarınıza uygun şekilde özelleştirmenizi öneririz:"
         show_overriden: 'Sadece değiştirdiklerimi göster'
       settings:
+        show_overriden: 'Sadece değiştirdiklerimi göster'
+        reset: 'sıfırla'
         none: 'hiçbiri'
       site_settings:
         title: 'Ayarlar'
@@ -3063,6 +3140,7 @@ tr_TR:
           developer: 'Geliştirici'
           embedding: "Yerleştirme"
           legal: "Yasal"
+          api: 'API'
           user_api: 'Kullanıcı APIsi'
           uncategorized: 'Diğer'
           backups: "Yedekler"
@@ -3173,6 +3251,7 @@ tr_TR:
         embed_classname_whitelist: "İzin verilen CSS sınıf isimleri"
         feed_polling_enabled: "Konuları RSS/ATOM aracılığıyla içe aktar"
         feed_polling_url: "İstila etmek için RSS/ATOM beslemesi URL'i"
+        feed_polling_frequency_mins: "Besleme yoklama sıklığı (dakika cinsinden)"
         save: "Gömme Ayarlarını Kaydet"
       permalink:
         title: "Kalıcı Bağlantılar"
