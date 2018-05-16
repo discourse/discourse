@@ -100,7 +100,7 @@ export default Ember.Controller.extend({
         return fullDay.subtract(1, "month").startOf("day");
         break;
       default:
-        return null;
+        return fullDay.subtract(1, "month").startOf("day");
     }
   },
 

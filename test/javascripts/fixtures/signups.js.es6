@@ -39,7 +39,8 @@ export default {
       "category_id": null,
       "group_id": null,
       "prev30Days": 0,
-      "labels": null
+      "labels": null,
+      "report_key": ""
     }
   }
 };

@@ -1,31 +1,31 @@
-{{#conditional-loading-section isLoading=isLoading title=loadingTitle}}
-  <div class="dashboard-mini-statuses">
-    {{#each-in reports as |key report|}}
-      <div class="dashboard-mini-status" title="{{report.trendTitle}}">
-        <span class="indicator" style="background-color:{{report.color}}"></span>
-        <div class="legend">
-          <h4 class="title">
-            <a href="{{report.reportUrl}}">
-              {{report.title}}
-            </a>
-          </h4>
+{{#conditional-loading-section isLoading=isLoading}}
+  {{#each reportsForPeriod as |report|}}
+    <div class="status">
+      <h4 class="title">
+        <a href="{{report.reportUrl}}">
+          {{report.title}}
+        </a>
 
-          <div class="trend">
-            <span class="value" title="{{report.trendTitle}}">
-              {{#if report.average}}
-                {{report.currentAverage}}
-              {{else}}
-                {{number report.currentTotal noTitle="true"}}
-              {{/if}}
-            </span>
-            {{#if report.trendIcon}}
-              {{d-icon report.trendIcon}}
-            {{/if}}
-          </div>
-        </div>
+        <span class="info" data-tooltip="{{report.description}}">
+          {{d-icon "question-circle"}}
+        </span>
+      </h4>
+
+      <div class="trend {{report.trend}}">
+        <span class="trend-value" title="{{report.trendTitle}}">
+          {{#if report.average}}
+            {{number report.currentAverage}}{{#if report.percent}}%{{/if}}
+          {{else}}
+            {{number report.currentTotal noTitle="true"}}{{#if report.percent}}%{{/if}}
+          {{/if}}
+        </span>
+
+        {{#if report.trendIcon}}
+          {{d-icon report.trendIcon class="trend-icon"}}
+        {{/if}}
       </div>
-    {{/each-in}}
-  </div>
+    </div>
+  {{/each}}
 
   <div class="chart-canvas-container">
     <canvas class="chart-canvas"></canvas>
