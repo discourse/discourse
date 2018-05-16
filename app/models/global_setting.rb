@@ -85,6 +85,10 @@ class GlobalSetting
       end) == :true
   end
 
+  def self.s3_bucket_name
+    @s3_bucket_name ||= s3_bucket.downcase.split("/")[0]
+  end
+
   # for testing
   def self.reset_s3_cache!
     @use_s3 = nil
