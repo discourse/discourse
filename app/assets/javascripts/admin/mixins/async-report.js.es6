@@ -1,7 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
-  classNameBindings: ["isLoading"],
+  classNameBindings: ["isLoading", "dataSourceNames"],
   reports: null,
   isLoading: false,
   dataSourceNames: "",
@@ -25,7 +25,6 @@ export default Ember.Mixin.create({
     // the array contains only unique values
     reports = reports.uniqBy("report_key");
 
-
     const sort = (r) => {
       if (r.length > 1)  {
         return dataSourceNames
@@ -39,7 +38,6 @@ export default Ember.Mixin.create({
     if (!startDate || !endDate) {
       return sort(reports);
     }
-
 
     return sort(reports.filter(report => {
       return report.report_key.includes(startDate.format("YYYYMMDD")) &&
