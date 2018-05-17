@@ -37,13 +37,11 @@ export default Ember.Component.extend(AsyncReport, {
 
   didRender() {
     this._super();
-
     registerTooltip($(this.element).find("[data-tooltip]"));
   },
 
   willDestroyElement() {
     this._super();
-
     unregisterTooltip($(this.element).find("[data-tooltip]"));
   },
 
@@ -147,6 +145,7 @@ export default Ember.Component.extend(AsyncReport, {
           display: false
         },
         responsive: true,
+        maintainAspectRatio: false,
         layout: {
           padding: {
             left: 0,
