@@ -27,7 +27,6 @@ class ImportScripts::Lithium < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   DATABASE = "wd"
   PASSWORD = "password"
-  CATEGORY_CSV = "/tmp/wd-cats.csv"
   UPLOAD_DIR = '/tmp/uploads'
 
   OLD_DOMAIN = 'community.wd.com'
@@ -184,72 +183,72 @@ class ImportScripts::Lithium < ImportScripts::Base
   def import_categories
     puts "", "importing top level categories..."
 
-    categories = mysql_query("SELECT node_id, display_id, position, parent_node_id from nodes").to_a
+    categories = mysql_query <<-SQL
+        SELECT n.node_id, n.display_id, c.nvalue c_title, b.nvalue b_title, n.position, n.parent_node_id, n.type_id
+          FROM nodes n
+          LEFT JOIN settings c ON n.node_id = c.node_id AND c.param = 'category.title'
+          LEFT JOIN settings b ON n.node_id = b.node_id AND b.param = 'board.title'
+          ORDER BY n.type_id DESC, n.node_id ASC
+    SQL
 
-    category_info = {}
-    top_level_ids = Set.new
-    child_ids = Set.new
+    categories = categories.map { |c| (c["name"] = c["c_title"] || c["b_title"] || c["display_id"]) && c }
 
-    parent = nil
-    CSV.foreach(CATEGORY_CSV) do |row|
-      display_id = row[2].strip
-
-      node = {
-        name: (row[0] || row[1]).strip,
-        secure: row[3] == "x",
-        top_level: !!row[0]
-      }
-
-      if row[0]
-        top_level_ids << display_id
-        parent = node
-      else
-        child_ids << display_id
-        node[:parent] = parent
-      end
-
-      category_info[display_id] = node
-
+    # To prevent duplicate category names
+    categories = categories.map do |category|
+      count = categories.to_a.count { |c| c["name"].present? && c["name"] == category["name"] }
+      category["name"] << " (#{category["node_id"]})" if count > 1
+      category
     end
 
-    top_level_categories = categories.select { |c| top_level_ids.include? c["display_id"] }
+    parent_categories = categories.select { |c| c["parent_node_id"] <= 2 }
 
-    create_categories(top_level_categories) do |category|
-      info = category_info[category["display_id"]]
-      info[:id] = category["node_id"]
-
+    create_categories(parent_categories) do |category|
       {
-        id: info[:id],
-        name:  info[:name],
-        position: category["position"]
+        id: category["node_id"],
+        name:  category["name"],
+        position: category["position"],
+        post_create_action: lambda do |record|
+          after_category_create(record, category)
+        end
       }
     end
 
     puts "", "importing children categories..."
 
-    children_categories = categories.select { |c| child_ids.include? c["display_id"] }
+    children_categories = categories.select { |c| c["parent_node_id"] > 2 }
 
     create_categories(children_categories) do |category|
-      info = category_info[category["display_id"]]
-      info[:id] = category["node_id"]
-
       {
-        id: info[:id],
-        name: info[:name],
+        id: category["node_id"],
+        name: category["name"],
         position: category["position"],
-        parent_category_id: category_id_from_imported_category_id(info[:parent][:id])
+        parent_category_id: category_id_from_imported_category_id(category["parent_node_id"]),
+        post_create_action: lambda do |record|
+          after_category_create(record, category)
+        end
       }
     end
+  end
 
-    puts "", "securing categories"
-    category_info.each do |_, info|
-      if info[:secure]
-        id = category_id_from_imported_category_id(info[:id])
-        if id
-          cat = Category.find(id)
-          cat.set_permissions({})
-          cat.save
-          putc "."
+  def after_category_create(category, params)
+    node_id = category.custom_fields["import_id"]
+    roles = mysql_query <<-SQL
+      SELECT name
+        FROM roles
+      WHERE node_id = #{node_id}
+    SQL
+
+    if roles.count > 0
+      category.update(read_restricted: true)
+
+      roles.each do |role|
+        group_id = group_id_from_imported_group_id(role["name"])
+        if group_id.present?
+          CategoryGroup.find_or_create_by(category: category, group_id: group_id) do |cg|
+            cg.permission_type = CategoryGroup.permission_types[:full]
+          end
+        else
+          puts "", "Group not found for id '#{role["name"]}'"
         end
       end
     end
