@@ -159,6 +159,9 @@ const Report = Discourse.Model.extend({
 
   @computed('type')
   icon(type) {
+    if (type.indexOf("message") > -1) {
+      return "envelope";
+    }
     switch (type) {
       case "flags": return "flag";
       case "likes": return "heart";

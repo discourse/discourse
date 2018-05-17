@@ -1,7 +1,14 @@
 class AdminDashboardNextData
   include StatsCacheable
 
-  REPORTS = ["page_view_total_reqs", "visits", "posts", "time_to_first_response", "likes", "flags" ]
+  REPORTS = %w{
+    page_view_total_reqs
+    visits
+    time_to_first_response
+    likes
+    flags
+    user_to_user_private_messages_with_replies
+  }
 
   def initialize(opts = {})
     @opts = opts
