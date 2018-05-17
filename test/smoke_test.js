@@ -53,9 +53,6 @@ const path = require('path');
 
   page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
 
-  page.setRequestInterception(true);
-
-  page.on('request', req => { return req.continue(); });
   page.on('response', resp => {
     if (resp.status !== 200) {
       console.log("FAILED HTTP REQUEST TO " + resp.url + " Status is: " + resp.status);
