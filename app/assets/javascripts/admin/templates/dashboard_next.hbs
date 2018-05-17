@@ -80,7 +80,7 @@
       {{/conditional-loading-section}}
     </div>
 
-    {{#dashboard-inline-table dataSourceNames="users_by_trust_level,users_by_type" lastRefreshedAt=lastRefreshedAt as |context|}}
+    {{#dashboard-inline-table dataSourceNames="users_by_type,users_by_trust_level" lastRefreshedAt=lastRefreshedAt as |context|}}
       <tr>
         {{#each context.report.data as |data|}}
           <td>
@@ -124,9 +124,7 @@
              <a rel="noopener" target="_blank" href="https://meta.discourse.org/tags/release-notes" class="btn">
           {{i18n "admin.dashboard.whats_new_in_discourse"}}
                   </a>
-
           </div>
-     
         </div>
       </div>
 
