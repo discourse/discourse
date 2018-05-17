@@ -17,22 +17,34 @@ export default Ember.Mixin.create({
     return dataSourceNames.split(",").map(source => `/admin/reports/${source}`);
   },
 
-  @computed("reports.[]", "startDate", "endDate")
-  reportsForPeriod(reports, startDate, endDate) {
+  @computed("reports.[]", "startDate", "endDate", "dataSourceNames")
+  reportsForPeriod(reports, startDate, endDate, dataSourceNames) {
     // on a slow network fetchReport could be called multiple times between
     // T and T+x, and all the ajax responses would occur after T+(x+y)
     // to avoid any inconsistencies we filter by period and make sure
     // the array contains only unique values
     reports = reports.uniqBy("report_key");
 
+
+    const sort = (r) => {
+      if (r.length > 1)  {
+        return dataSourceNames
+          .split(",")
+          .map(name => r.findBy("type", name));
+      } else {
+        return r;
+      }
+    };
+
     if (!startDate || !endDate) {
-      return reports;
+      return sort(reports);
     }
 
-    return reports.filter(report => {
+
+    return sort(reports.filter(report => {
       return report.report_key.includes(startDate.format("YYYYMMDD")) &&
              report.report_key.includes(endDate.format("YYYYMMDD"));
-    });
+    }));
   },
 
   didInsertElement() {
