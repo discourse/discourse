@@ -54,6 +54,9 @@
       }
 
       display: flex;
+      @media screen and (max-width: 400px) {
+        flex-wrap: wrap;
+      }
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid $primary-low;
@@ -62,7 +65,7 @@
     }
 
     .section-body {
-      padding: 1em 0;
+      padding: 1em 0 0;
     }
   }
 
@@ -266,6 +269,17 @@
   }
 }
 
+.dashboard-table.activity-metrics {
+  table {
+    @media screen and (min-width: 400px) {
+      table-layout: auto;
+    }
+    tr th {
+      text-align: right;
+    }
+  }
+}
+
 .top-referred-topics, .trending-search {
   th:first-of-type {
     text-align: left;
@@ -347,7 +361,10 @@
 
         td.value {
           text-align: right;
-          transform: translateX(-40%);
+          padding: 8px 21px 8px 8px; // accounting for negative right caret margin
+          &:nth-of-type(2) {
+            padding: 8px 12px 8px;
+          }
           i {
             display: none;
             margin-right: -12px; // align on caret
