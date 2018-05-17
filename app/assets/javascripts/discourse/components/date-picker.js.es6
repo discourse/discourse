@@ -36,7 +36,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _destroy() {
-    this._picker = null;
+    this._picker.destroy();
   },
 
   @computed()
