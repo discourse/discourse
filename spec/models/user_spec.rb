@@ -449,6 +449,14 @@ describe User do
     it 'is able to guess a decent name from an email' do
       expect(User.suggest_name('sam.saffron@gmail.com')).to eq('Sam Saffron')
     end
+
+    it 'is able to guess a decent name from username' do
+      expect(User.suggest_name('@sam.saffron')).to eq('Sam Saffron')
+    end
+
+    it 'is able to guess a decent name from name' do
+      expect(User.suggest_name('sam saffron')).to eq('Sam Saffron')
+    end
   end
 
   describe 'username format' do
