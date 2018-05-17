@@ -288,9 +288,7 @@ class User < ActiveRecord::Base
 
   def self.suggest_name(string)
     return "" if string.blank?
-    local_part = string[/\A[^@]+/]
-    suggestion = local_part.present? ? local_part : string[/[^@]+\z/]
-    suggestion.tr(".", " ").titleize
+    (string[/\A[^@]+/].presence || string[/[^@]+\z/]).tr(".", " ").titleize
   end
 
   def self.find_by_username_or_email(username_or_email)
