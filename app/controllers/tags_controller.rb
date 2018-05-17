@@ -277,10 +277,14 @@ class TagsController < ::ApplicationController
     def construct_url_with(action, opts)
       method = url_method(opts)
 
-      url = if action == :prev
-        public_send(method, opts.merge(prev_page_params(opts)))
-      else # :next
-        public_send(method, opts.merge(next_page_params(opts)))
+      begin
+        url = if action == :prev
+          public_send(method, opts.merge(prev_page_params(opts)))
+        else # :next
+          public_send(method, opts.merge(next_page_params(opts)))
+        end
+      rescue
+        raise Discourse::NotFound
       end
       url.sub('.json?', '?')
     end

@@ -50,6 +50,22 @@ describe TagsController do
     end
   end
 
+  describe '#show' do
+    before do
+      Fabricate(:tag, name: 'test')
+    end
+
+    it "should return the right response" do
+      get "/tags/test"
+      expect(response).to be_success
+    end
+
+    it "should handle invalid tags" do
+      get "/tags/%2ftest%2f"
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe '#check_hashtag' do
     let(:tag) { Fabricate(:tag, name: 'test') }
 
