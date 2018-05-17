@@ -288,7 +288,13 @@ class User < ActiveRecord::Base
 
   def self.suggest_name(email)
     return "" if email.blank?
-    email[/\A[^@]+/].tr(".", " ").titleize
+    if email[/\A[^@]+/].present?
+      # email provided
+      email[/\A[^@]+/].tr(".", " ").titleize
+    else
+      # username/name provided
+      email[/[^@]+\z/].tr(".", " ").titleize
+    end
   end
 
   def self.find_by_username_or_email(username_or_email)
