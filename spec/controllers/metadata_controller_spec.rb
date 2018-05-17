@@ -17,10 +17,10 @@ RSpec.describe MetadataController do
     end
 
     it 'can guess mime types' do
-      SiteSetting.large_icon_url = "http://big.square/ico.ico"
+      SiteSetting.large_icon_url = "http://big.square/ico.jpg"
       get :manifest
       manifest = JSON.parse(response.body)
-      expect(manifest["icons"].first["type"]).to eq("image/x-icon")
+      expect(manifest["icons"].first["type"]).to eq("image/jpeg")
     end
 
     it 'defaults to png' do

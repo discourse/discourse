@@ -14,6 +14,7 @@ class MetadataController < ApplicationController
 
   def default_manifest
     logo = SiteSetting.large_icon_url.presence || SiteSetting.logo_small_url.presence || SiteSetting.apple_touch_icon_url.presence
+    file_info = get_file_info(logo)
 
     manifest = {
       name: SiteSetting.title,
@@ -29,8 +30,8 @@ class MetadataController < ApplicationController
       icons: [
         {
           src: logo,
-          sizes: "512x512",
-          type: guess_mime(logo)
+          sizes: file_info[:size],
+          type: file_info[:type]
         }
       ]
     }
@@ -50,10 +51,10 @@ class MetadataController < ApplicationController
     manifest
   end
 
-  def guess_mime(filename)
-    extension = filename.split(".").last
-    valid_image_mimes = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", ico: "image/x-icon" }
-    valid_image_mimes[extension.to_sym] || "image/png"
+  def get_file_info(filename)
+    type = MiniMime.lookup_by_filename(filename)&.content_type || "image/png"
+    upload = Upload.find_by_url(filename)
+    { size: "#{upload&.width || 512}x#{upload&.height || 512}", type: type }
   end
 
 end
