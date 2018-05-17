@@ -1,0 +1,53 @@
+.admin-reports {
+  h3 {
+    border-bottom: 1px solid $primary-low;
+    margin-bottom: .5em;
+    padding-bottom: .5em;
+  }
+
+  .report-container {
+    display: flex;
+
+    .loading-container {
+      width: 100%;
+    }
+
+    .visualization {
+      display: flex;
+      flex: 4;
+    }
+
+    .filters {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      flex-direction: column;
+      margin-left: 2em;
+
+      .date-picker  {
+        margin: 0;
+        width: 195px;
+      }
+
+      .combo-box, .date-picker-wrapper, .btn {
+        width: 100%;
+        margin-bottom: 1em;
+      }
+    }
+
+    @include small-width  {
+      flex-direction: column;
+      min-width: 100%;
+
+      .visualization {
+        order: 2;
+      }
+
+      .filters {
+        order: 1;
+        margin: 0;
+        align-items: flex-start;
+      }
+    }
+  }
+}
