@@ -30,7 +30,7 @@ class MetadataController < ApplicationController
         {
           src: logo,
           sizes: "512x512",
-          type: "image/png"
+          type: guess_mime(logo)
         }
       ]
     }
@@ -49,4 +49,11 @@ class MetadataController < ApplicationController
 
     manifest
   end
+
+  def guess_mime(filename)
+    extension = filename.split(".").last
+    valid_image_mimes = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", ico: "image/x-icon" }
+    valid_image_mimes[extension.to_sym] || "image/png"
+  end
+
 end
