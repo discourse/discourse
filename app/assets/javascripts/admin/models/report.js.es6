@@ -113,6 +113,9 @@ const Report = Discourse.Model.extend({
       return "envelope";
     }
     switch (type) {
+      case "page_view_total_reqs": return "file";       
+      case "visits": return "user";       
+      case "time_to_first_response": return "reply";
       case "flags": return "flag";
       case "likes": return "heart";
       case "bookmarks": return "bookmark";

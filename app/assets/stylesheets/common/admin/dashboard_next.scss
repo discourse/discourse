@@ -378,5 +378,16 @@
     tr th {
       text-align: right;
     }
+    .d-icon {
+      color: $primary-low-mid;
+      min-width: 14px;
+      text-align: center;      
+    }
+    @media screen and (max-width: 400px) {
+      .d-icon { display: none; }
+      td.title {
+        padding: 8px 0 8px 4px;
+      }
+    }
   }
 }
