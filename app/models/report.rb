@@ -4,7 +4,8 @@ class Report
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :category_id, :group_id, :labels, :async,
-                :prev_period, :facets, :limit, :processing, :average, :percent
+                :prev_period, :facets, :limit, :processing, :average, :percent,
+                :higher_is_better
 
   def self.default_days
     30
@@ -14,6 +15,9 @@ class Report
     @type = type
     @start_date ||= Report.default_days.days.ago.beginning_of_day
     @end_date ||= Time.zone.now.end_of_day
+    @average = false
+    @percent = false
+    @higher_is_better = true
   end
 
   def self.cache_key(report)
@@ -54,7 +58,8 @@ class Report
      labels: labels,
      processing: self.processing,
      average: self.average,
-     percent: self.percent
+     percent: self.percent,
+     higher_is_better: self.higher_is_better
     }.tap do |json|
       json[:total] = total if total
       json[:prev_period] = prev_period if prev_period
@@ -83,8 +88,9 @@ class Report
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.processing = false
-    report.average = opts[:average] || false
-    report.percent = opts[:percent] || false
+    report.average = opts[:average] if opts[:average]
+    report.percent = opts[:percent] if opts[:percent]
+    report.higher_is_better = opts[:higher_is_better] if opts[:higher_is_better]
 
     report
   end
@@ -278,6 +284,7 @@ class Report
   end
 
   def self.report_time_to_first_response(report)
+    report.higher_is_better = false
     report.data = []
     Topic.time_to_first_response_per_day(report.start_date, report.end_date, category_id: report.category_id).each do |r|
       report.data << { x: Date.parse(r["date"]), y: r["hours"].to_f.round(2) }

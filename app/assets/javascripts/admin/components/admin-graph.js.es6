@@ -1,4 +1,5 @@
 import loadScript from 'discourse/lib/load-script';
+import { number } from 'discourse/lib/formatter';
 
 export default Ember.Component.extend({
   tagName: 'canvas',
@@ -22,10 +23,16 @@ export default Ember.Component.extend({
       data: data,
       options: {
         responsive: true,
+        tooltips: {
+          callbacks: {
+            title: (context) => moment(context[0].xLabel, "YYYY-MM-DD").format("LL")
+          }
+        },
         scales: {
           yAxes: [{
             display: true,
             ticks: {
+              callback: (label) => number(label),
               suggestedMin: 0
             }
           }]
