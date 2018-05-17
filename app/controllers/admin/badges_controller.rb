@@ -15,10 +15,8 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   def preview
-
     unless SiteSetting.enable_badge_sql
-      render json: "preview not allowed", status: 403
-      return
+      return render json: "preview not allowed", status: 403
     end
 
     render json: BadgeGranter.preview(params[:sql],
@@ -39,13 +37,12 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   def save_badge_groupings
-
     badge_groupings = BadgeGrouping.all.order(:position).to_a
     ids = params[:ids].map(&:to_i)
 
     params[:names].each_with_index do |name, index|
       id = ids[index].to_i
-      group = badge_groupings.find { |b| b.id == id } || BadgeGrouping.new()
+      group = badge_groupings.find { |b| b.id == id } || BadgeGrouping.new
       group.name = name
       group.position = index
       group.save
@@ -66,24 +63,27 @@ class Admin::BadgesController < Admin::AdminController
     if errors.present?
       render_json_error errors
     else
+      StaffActionLogger.new(current_user).log_badge_creation(badge)
       render_serialized(badge, AdminBadgeSerializer, root: "badge")
     end
   end
 
   def update
     badge = find_badge
-
     errors = update_badge_from_params(badge)
 
     if errors.present?
       render_json_error errors
     else
+      StaffActionLogger.new(current_user).log_badge_change(badge)
       render_serialized(badge, AdminBadgeSerializer, root: "badge")
     end
   end
 
   def destroy
-    find_badge.destroy
+    badge = find_badge
+    StaffActionLogger.new(current_user).log_badge_deletion(badge)
+    badge.destroy
     render body: nil
   end
 
