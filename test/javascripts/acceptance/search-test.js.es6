@@ -69,6 +69,11 @@ QUnit.test("Search with context", assert => {
 
   andThen(() => {
     assert.ok(exists('.search-menu .results ul li'), 'it shows results');
+
+    assert.ok(
+      exists('.cooked span.highlight-strong'),
+      'it should highlight the search term'
+    );
   });
 
   visit("/");

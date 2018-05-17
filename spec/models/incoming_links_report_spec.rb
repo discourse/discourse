@@ -56,6 +56,45 @@ describe IncomingLinksReport do
         { topic_id: p2.topic.id, topic_title: p2.topic.title, topic_url: p2.topic.relative_url, num_clicks: 2 + 3 },
       ]
     end
+
+    it "does not report PMs" do
+      public_topic = Fabricate(:topic)
+      message_topic = Fabricate(:private_message_topic)
+
+      public_post = Fabricate(:post, topic: public_topic)
+      message_post = Fabricate(:post, topic: message_topic)
+
+      IncomingLink.add(
+        referer: "http://foo.com",
+        host: "http://discourse.example.com",
+        topic_id: public_topic.id,
+        id_address: "1.2.3.4",
+        username: public_post.user.username,
+      )
+
+      IncomingLink.add(
+        referer: "http://foo.com",
+        host: "http://discourse.example.com",
+        topic_id: message_topic.id,
+        id_address: "5.6.7.8",
+        username: message_post.user.username,
+      )
+
+      r = IncomingLinksReport.find('top_referrers').as_json
+      expect(r[:data]).to eq [
+        { username: public_post.user.username, user_id: public_post.user.id, num_clicks: 1, num_topics: 1 },
+      ]
+
+      r = IncomingLinksReport.find('top_traffic_sources').as_json
+      expect(r[:data]).to eq [
+        { domain: 'foo.com', num_clicks: 1, num_topics: 1 },
+      ]
+
+      r = IncomingLinksReport.find('top_referred_topics').as_json
+      expect(r[:data]).to eq [
+        { topic_id: public_topic.id, topic_title: public_topic.title, topic_url: public_topic.relative_url, num_clicks: 1 },
+      ]
+    end
   end
 
   describe 'top_referrers' do
@@ -161,7 +200,9 @@ describe IncomingLinksReport do
       topic1 = Fabricate.build(:topic, id: 123); topic2 = Fabricate.build(:topic, id: 234)
       # TODO: OMG OMG THE STUBBING
       IncomingLinksReport.stubs(:link_count_per_topic).returns(topic1.id => 8, topic2.id => 3)
-      Topic.stubs(:select).returns(Topic); Topic.stubs(:where).returns(Topic) # bypass some activerecord methods
+      # bypass some activerecord methods
+      Topic.stubs(:select).returns(Topic)
+      Topic.stubs(:where).returns(Topic)
       Topic.stubs(:all).returns([topic1, topic2])
       expect(top_referred_topics[:data][0]).to eq(topic_id: topic1.id, topic_title: topic1.title, topic_url: topic1.relative_url, num_clicks: 8)
       expect(top_referred_topics[:data][1]).to eq(topic_id: topic2.id, topic_title: topic2.title, topic_url: topic2.relative_url, num_clicks: 3)

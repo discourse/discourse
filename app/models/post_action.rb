@@ -52,13 +52,22 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.update_flagged_posts_count
-    posts_flagged_count = PostAction.active
+    flagged_relation = PostAction.active
       .flags
       .joins(post: :topic)
       .where('posts.deleted_at' => nil)
       .where('topics.deleted_at' => nil)
       .where('posts.user_id > 0')
-      .count('DISTINCT posts.id')
+      .group("posts.id")
+
+    if SiteSetting.min_flags_staff_visibility > 1
+      flagged_relation = flagged_relation
+        .having("count(*) >= ?", SiteSetting.min_flags_staff_visibility)
+    end
+
+    posts_flagged_count = flagged_relation
+      .pluck("posts.id")
+      .count
 
     $redis.set('posts_flagged_count', posts_flagged_count)
     user_ids = User.staff.pluck(:id)
@@ -590,7 +599,7 @@ SQL
       options = {
         url: post.url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason: I18n.t("flag_reasons.#{post_action_type}"),
+        flag_reason: I18n.t("flag_reasons.#{post_action_type}", locale: SiteSetting.default_locale),
       }
 
       Jobs.enqueue_in(5.seconds, :send_system_message,

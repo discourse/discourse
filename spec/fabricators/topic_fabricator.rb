@@ -17,7 +17,6 @@ Fabricator(:banner_topic, from: :topic) do
 end
 
 Fabricator(:private_message_topic, from: :topic) do
-  user
   category_id { nil }
   title { sequence(:title) { |i| "This is a private message #{i}" } }
   archetype "private_message"

@@ -692,7 +692,6 @@ pt:
       xaxis: "Dia"
       yaxis: "Vistas de Página de Web Crawler"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Dia"
       yaxis: "Total de Vistas de Página"
     page_view_logged_in_mobile_reqs:
@@ -869,7 +868,6 @@ pt:
     version_checks: "Fazer o ping do Discourse Hub para atualização de versões e mostrar mensagens sobre novas versões no painel de administração"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
-    invite_passthrough_hours: "Quanto tempo pode um utilizador utilizar uma chave de convite previamente recuperada, em horas"
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."

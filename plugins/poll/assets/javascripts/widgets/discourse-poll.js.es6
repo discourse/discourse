@@ -7,6 +7,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import { avatarFor } from 'discourse/widgets/post';
 import round from "discourse/lib/round";
+import { relativeAge } from 'discourse/lib/formatter';
 
 function optionHtml(option) {
   return new RawHtml({ html: `<span>${option.html}</span>` });
@@ -353,8 +354,12 @@ createWidget('discourse-poll-info', {
 
       if (poll.close) {
         const closeDate = moment.utc(poll.close);
+        const title = closeDate.format("LLL");
         const timeLeft = moment().to(closeDate.local(), true);
-        result.push(new RawHtml({ html: `<span class="info-text" title="${closeDate.format("LLL")}">${I18n.t("poll.automatic_close.closes_in", { timeLeft })}</span>` }));
+
+        result.push(new RawHtml({
+          html: `<span class="info-text" title="${title}">${I18n.t("poll.automatic_close.closes_in", { timeLeft })}</span>`
+        }));
       }
     }
 
@@ -401,6 +406,16 @@ createWidget('discourse-poll-buttons', {
         icon: 'eye',
         disabled: poll.get('voters') === 0,
         action: 'toggleResults'
+      }));
+    }
+
+    if (attrs.isAutomaticallyClosed) {
+      const closeDate = moment.utc(poll.get("close"));
+      const title = closeDate.format("LLL");
+      const age = relativeAge(closeDate.toDate(), { addAgo: true });
+
+      results.push(new RawHtml({
+        html: `<span class="info-text" title="${title}">${I18n.t("poll.automatic_close.age", { age })}</span>`
       }));
     }
 

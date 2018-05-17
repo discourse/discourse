@@ -764,7 +764,6 @@ it:
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina da Spider web"
     page_view_total_reqs:
-      title: "Totali"
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina totali"
     page_view_logged_in_mobile_reqs:
@@ -962,7 +961,6 @@ it:
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
-    invite_passthrough_hours: "Per quanto tempo un utente può usare una chiave d'invito per connettersi, espresso in ore"
     invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere esplicitamente invitati dallo staff."
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
     min_username_length: "Lunghezza minima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più brevi di questo, il tuo sito si romperà!"

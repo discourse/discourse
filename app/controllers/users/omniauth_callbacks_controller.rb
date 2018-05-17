@@ -125,7 +125,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
-      user.update!(staged: false)
+      user.unstage
+      user.save
 
       # ensure there is an active email token
       unless EmailToken.where(email: user.email, confirmed: true).exists? ||

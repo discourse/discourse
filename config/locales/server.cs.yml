@@ -85,14 +85,17 @@ cs:
         many: "Nelze smazat záznam protože na něm závisí %{record}."
       too_long:
         few: je to příliš dlouhé (maximálně %{count} znaků)
+        many: je to příliš dlouhé (maximálně %{count} znaků)
         one: je příliš dlouhý ( maximálně %{count} znak)
         other: je to příliš dlouhé (maximálně %{count} znaků)
       too_short:
         few: je to příliš krátké (minimum je %{count} znaků)
+        many: je to příliš krátké (minimum je %{count} znaků)
         one: je to příliš krátké (minimum je %{count} znak)
         other: je to příliš krátké (minimum je %{count} znaků)
       wrong_length:
         few: špatná délka (má být %{count} znaků)
+        many: špatná délka (má být %{count} znaků)
         one: špatná délka (má být %{count} znak)
         other: špatná délka (má být %{count} znaků)
       other_than: "musí být jiný než %{count}"
@@ -100,6 +103,7 @@ cs:
       body: 'Nastaly problémy s následujícími poli: '
       header:
         few: '%{count} chyb zamezilo uložení modelu %{model}'
+        many: '%{count} chyb zamezilo uložení modelu %{model}'
         one: 1 chyba zamezila uložení modelu %{model}
         other: '%{count} chyb zamezilo uložení modelu %{model}'
     embed:
@@ -137,6 +141,7 @@ cs:
   likes: "Líbí se"
   too_many_replies:
     few: Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědi v tématu.
+    many: Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu.
     one: Je nám líto, ale noví uživatelé jsou dočasně omezeni na 1 odpověď v tématu.
     other: Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu.
   embed:
@@ -144,6 +149,7 @@ cs:
     continue: "Pokračovat v diskuzi"
     more_replies:
       few: '%{count} další odpověďi'
+      many: '%{count} dalších odpověďí'
       one: 1 další odpověď
       other: '%{count} dalších odpověďí'
     loading: "Načítám diskuzi..."
@@ -152,32 +158,38 @@ cs:
     in_reply_to: "▶ %{username}"
     replies:
       few: '%{count} reakce'
+      many: '%{count} reakcí'
       one: 1 reakce
       other: '%{count} reakcí'
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
   too_many_mentions:
     few: Bohužel, můžete zmínit jen %{count} uživatele v jednom příspěvku.
+    many: Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku.
     one: Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku.
     other: Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku.
   no_mentions_allowed_newuser: "Bohužel, noví uživatelé nemohou zmiňovat ostatní uživatele."
   too_many_mentions_newuser:
     few: Bohužel, noví uživatelé mohou zmínit jen %{count} uživatele v příspěvku.
+    many: Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku.
     one: Bohužel, noví uživatelé mohou zmínit jen jednoho uživatele v příspěvku.
     other: Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku.
   no_images_allowed: "Bohužel, noví uživatelé nemohou vkládat obrázky do příspěvků."
   too_many_images:
     few: Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázky.
+    many: Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázků.
     one: Bohužel, noví uživatelé mohou do příspěvku vložit jen jeden obrázek.
     other: Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázků.
   no_attachments_allowed: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
   too_many_attachments:
     few: Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} přílohy.
+    many: Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} příloh.
     one: Bohužel, noví uživatelé mohou do příspěvku vložit jen jednu přílohu.
     other: Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} příloh.
   no_links_allowed: "Bohužel, noví uživatelé nemohou vkládat odkazy do příspěvků."
   links_require_trust: "Bohužel, nemůžete vkládat odkazy do příspěvků."
   too_many_links:
     few: Bohužel, noví uživatelé mohou do příspěvku vložit maximálně %{count} odkazy.
+    many: Bohužel, noví uživatelé mohou do příspěvku vložit maximálně %{count} odkazů.
     one: Bohužel, noví uživatelé mohou do příspěvku vložit maximálně jeden odkaz.
     other: Bohužel, noví uživatelé mohou do příspěvku vložit maximálně %{count} odkazů.
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
@@ -247,6 +259,7 @@ cs:
   education:
     until_posts:
       few: '%{count} příspěvky'
+      many: '%{count} příspěvků'
       one: příspěvek
       other: '%{count} příspěvků'
     'new-topic': |
@@ -407,6 +420,7 @@ cs:
       has_subcategories: "Tato kategorie nejde smazat protože obsahuje podkategorie."
       topic_exists:
         few: Tato kategorie nejde smazat protože obsahuje %{count} témata. Nejstarší téma je %{topic_link}.
+        many: Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}.
         one: 'Tato kategorie nejde smazat protože obsahuje 1 téma: %{topic_link}.'
         other: Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}.
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
@@ -429,14 +443,17 @@ cs:
   rate_limiter:
     hours:
       few: '%{count} hodiny'
+      many: '%{count} hodin'
       one: 1 hodina
       other: '%{count} hodin'
     minutes:
       few: '%{count} minuty'
+      many: '%{count} minut'
       one: 1 minuta
       other: '%{count} minut'
     seconds:
       few: '%{count} sekundy'
+      many: '%{count} sekund'
       one: 1 sekunda
       other: '%{count} sekund'
   datetime:
@@ -444,92 +461,114 @@ cs:
       half_a_minute: "< 1m"
       less_than_x_seconds:
         few: < %{count}s
+        many: < %{count}s
         one: < 1s
         other: < %{count}s
       x_seconds:
         few: '%{count}s'
+        many: '%{count}s'
         one: 1s
         other: '%{count}s'
       less_than_x_minutes:
         few: < %{count}m
+        many: < %{count}m
         one: < 1m
         other: < %{count}m
       x_minutes:
         few: '%{count}m'
+        many: '%{count}m'
         one: 1m
         other: '%{count}m'
       about_x_hours:
         few: '%{count}h'
+        many: '%{count}h'
         one: 1h
         other: '%{count}h'
       x_days:
         few: '%{count}d'
+        many: '%{count}d'
         one: 1d
         other: '%{count}d'
       about_x_months:
         few: '%{count}měs'
+        many: '%{count}měs'
         one: 1měs
         other: '%{count}měs'
       x_months:
         few: '%{count}měs'
+        many: '%{count}měs'
         one: 1měs
         other: '%{count}měs'
       about_x_years:
         few: '%{count}r'
+        many: '%{count}let'
         one: 1r
         other: '%{count}let'
       over_x_years:
         few: '> %{count}r'
+        many: '> %{count}let'
         one: '> 1r'
         other: '> %{count}let'
       almost_x_years:
         few: '%{count}r'
+        many: '%{count}let'
         one: 1r
         other: '%{count}let'
     distance_in_words_verbose:
       half_a_minute: "právě teď"
       less_than_x_seconds:
         few: právě teď
+        many: právě teď
         one: právě teď
         other: právě teď
       x_seconds:
         few: před %{count} sekundami
+        many: před %{count} sekundami
         one: před 1 sekundou
         other: před %{count} sekundami
       less_than_x_minutes:
         few: před méně než %{count} minutami
+        many: před méně než %{count} minutami
         one: před méně než 1 minutou
         other: před méně než %{count} minutami
       x_minutes:
         few: před %{count} minutami
+        many: před %{count} minutami
         one: před 1 minutou
         other: před %{count} minutami
       about_x_hours:
         few: před %{count} hodinami
+        many: před %{count} hodinami
         one: před 1 hodinou
         other: před %{count} hodinami
       x_days:
         few: před %{count} dny
+        many: před %{count} dny
         one: před 1 dnem
         other: před %{count} dny
       about_x_months:
         few: asi před %{count} měsíci
+        many: asi před %{count} měsíci
         one: asi před 1 měsícem
         other: asi před %{count} měsíci
       x_months:
         few: před %{count} měsíci
+        many: před %{count} měsíci
         one: před 1 měsícem
         other: před %{count} měsíci
       about_x_years:
         few: asi před %{count} roky
+        many: asi před %{count} roky
         one: asi před 1 rokem
         other: asi před %{count} roky
       over_x_years:
         few: před více než %{count} roky
+        many: před více než %{count} roky
         one: před více než 1 rokem
         other: před více než %{count} roky
       almost_x_years:
         few: téměř před %{count} roky
+        many: téměř před %{count} roky
         one: téměř před 1 rokem
         other: téměř před %{count} roky
   password_reset:
@@ -717,7 +756,6 @@ cs:
     page_view_crawler_reqs:
       xaxis: "Den"
     page_view_total_reqs:
-      title: "Celkem"
       xaxis: "Den"
       yaxis: "Celkové pageviews"
     page_view_logged_in_mobile_reqs:
@@ -838,6 +876,7 @@ cs:
   move_posts:
     new_topic_moderator_post:
       few: '%{count}příspěvky byly odděleny do nového tématu: %{topic_link}'
+      many: '%{count}příspěvky byly odděleny do nového tématu: %{topic_link}'
       one: 'Příspěvek byl oddělen do nového tématu: %{topic_link}'
       other: '%{count}příspěvky byly odděleny do nového tématu: %{topic_link}'
   topic_statuses:
@@ -884,6 +923,7 @@ cs:
     pending_users_reminder:
       subject_template:
         few: '%{count} users waiting for approval'
+        many: '%{count} users waiting for approval'
         one: 1 user waiting for approval
         other: '%{count} users waiting for approval'
       text_body_template: |

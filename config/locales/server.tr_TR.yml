@@ -367,7 +367,7 @@ tr_TR:
         one: '%{count}yıl'
         other: '%{count}yıl'
     distance_in_words_verbose:
-      half_a_minute: "şu anda"
+      half_a_minute: "hemen şimdi"
       less_than_x_seconds:
         one: hemen şimdi
         other: hemen şimdi
@@ -419,7 +419,7 @@ tr_TR:
       description: "Doğrulama için yeni adresine şimdi e-posta gönderiyoruz."
   activation:
     action: "Hesabınızı etkinleştirmek için buraya tıklayın"
-    already_done: "Üzgünüz, hesap doğrulama linki artık geçerli değil. Hesabınız zaten etkin olabilir mi?"
+    already_done: "Üzgünüz, hesap doğrulama bağlantısı artık geçerli değil. Hesabınız zaten etkin olabilir mi?"
     please_continue: "Hesabınız doğrulandı; şimdi ana sayfaya yönlendirileceksiniz."
     continue_button: "%{site_name} adresine devam edin"
     welcome_to: "%{site_name} topluluğuna hoş geldiniz!"
@@ -597,7 +597,6 @@ tr_TR:
       title: "Arama botları"
       xaxis: "Gün"
     page_view_total_reqs:
-      title: "Toplam"
       xaxis: "Gün"
       yaxis: "Toplam Sayfa Görüntülemeleri"
     page_view_logged_in_mobile_reqs:
@@ -763,7 +762,6 @@ tr_TR:
     version_checks: "Discourse Hub'a sürüm güncellemeleri için haber yolla ve yeni versiyon iletilerine /admin gösterge panelinde yer ver"
     new_version_emails: "Discourse'un yeni sürümü çıktığında contact_email adresine e-posta gönder."
     invite_expiry_days: "Kullanıcı davet anahtarlarının geçerlilik süresi, gün olarak"
-    invite_passthrough_hours: "Daha önce kabul edilmiş davetiye anahtarının kullanım süresi, saat olarak"
     login_required: "Bu sitede içerik görüntülenebilmesi için kimlik doğrulamayı zorunlu kıl, isimsiz girişe izin verme."
     min_password_length: "Parolanın en az uzunluğu."
     min_admin_password_length: "Yönetici için parolanın en az uzunluğu."
@@ -1697,10 +1695,10 @@ tr_TR:
         fields:
           title:
             label: "Topluluğunuzun ismi"
-            placeholder: "Oktay'ın Yeri"
+            placeholder: "Ali'nin Yeri"
           site_description:
             label: "Topluluğunuzu kısa bir cümle ile tanımlayın"
-            placeholder: "Oktay ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
+            placeholder: "Ali ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
       introduction:
         title: "Tanıtım"
         fields:

@@ -20,6 +20,7 @@ class IncomingLink < ActiveRecord::Base
       u = User.select(:id).find_by(username_lower: username.downcase)
       user_id = u.id if u
     end
+    ip_address = opts[:ip_address]
 
     if opts[:referer].present?
       begin
@@ -38,6 +39,7 @@ class IncomingLink < ActiveRecord::Base
         .pluck(:id).first
 
       cid = current_user ? (current_user.id) : (nil)
+      ip_address = nil if cid
 
       unless cid && cid == user_id
 
@@ -45,7 +47,7 @@ class IncomingLink < ActiveRecord::Base
                user_id: user_id,
                post_id: post_id,
                current_user_id: cid,
-               ip_address: opts[:ip_address]) if post_id
+               ip_address: ip_address) if post_id
 
       end
     end

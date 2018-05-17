@@ -5,6 +5,4 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-de:
-  site_settings:
-    details_enabled: "Aktiviert das Details-Plugin. Wenn du dies änderst, musst du alle Beiträge neu „backen“ mit: \"rake posts:rebake\"."
+de: {}

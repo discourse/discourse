@@ -21,7 +21,6 @@ class Topic < ActiveRecord::Base
   include Searchable
   include LimitedEdit
   extend Forwardable
-  include DateGroupable
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
   def_delegator :featured_users, :choose, :feature_topic_users
@@ -459,7 +458,8 @@ class Topic < ActiveRecord::Base
   end
 
   def self.listable_count_per_day(start_date, end_date, category_id = nil)
-    result = listable_topics.smart_group_by_date("topics.created_at", start_date, end_date)
+    result = listable_topics.where("topics.created_at >= ? AND topics.created_at <= ?", start_date, end_date)
+    result = result.group('date(topics.created_at)').order('date(topics.created_at)')
     result = result.where(category_id: category_id) if category_id
     result.count
   end
@@ -662,12 +662,26 @@ SQL
 
       if self.category_id != new_category.id
         self.update!(category_id: new_category.id)
-        Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
+
+        if old_category
+          Category
+            .where(id: old_category.id)
+            .update_all("topic_count = topic_count - 1")
+        end
 
         # when a topic changes category we may have to start watching it
         # if we happen to have read state for it
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
+
+        post = self.ordered_posts.first
+
+        if post
+          PostAlerter.new.notify_post_users(
+            post,
+            [post.user, post.last_editor].uniq
+          )
+        end
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")

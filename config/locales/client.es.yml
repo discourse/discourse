@@ -225,8 +225,6 @@ es:
       our_moderators: "Nuestros Moderadores"
       stat:
         all_time: "Todo el tiempo"
-        last_7_days: "Últimos 7 días"
-        last_30_days: "Últimos 30 días"
       like_count: "Me gusta"
       topic_count: "Temas"
       post_count: "Mensajes"
@@ -555,7 +553,6 @@ es:
       notifications: "Notificaciones"
       statistics: "Estadísticas"
       desktop_notifications:
-        label: "Notificaciones de escritorio"
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
         perm_default: "Activar notificaciones"
         perm_denied_btn: "Permiso denegado"
@@ -1749,7 +1746,6 @@ es:
         instructions:
           one: Por favor escoge el nuevo dueño del {{count}} post de <b>{{old_user}}</b>.
           other: Por favor escoge el nuevo dueño de los {{count}} posts de <b>{{old_user}}</b>.
-        instructions_warn: "Ten en cuenta que las notificaciones sobre este post no serán transferidas al nuevo usuario de forma retroactiva.<br>Aviso: actualmente, los datos que no dependen del post son transferidos al nuevo usuario. Usar con precaución."
       change_timestamp:
         title: "Cambiar fecha..."
         action: "cambiar fecha"
@@ -2509,8 +2505,6 @@ es:
         reports:
           today: "Hoy"
           yesterday: "Ayer"
-          last_7_days: "Últimos 7 días"
-          last_30_days: "Últimos 30 días"
           all_time: "Todo el tiempo"
           7_days_ago: "Hace 7 días"
           30_days_ago: "Hace 30 días"

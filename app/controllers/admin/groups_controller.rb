@@ -105,7 +105,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def remove_owner
-    group = Group.find_by(params.require(:id))
+    group = Group.find_by(id: params.require(:id))
     raise Discourse::NotFound unless group
 
     return can_not_modify_automatic if group.automatic

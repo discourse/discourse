@@ -260,8 +260,8 @@ en:
       our_moderators: "Our Moderators"
       stat:
         all_time: "All Time"
-        last_7_days: "Last 7 Days"
-        last_30_days: "Last 30 Days"
+        last_7_days: "Last 7"
+        last_30_days: "Last 30"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
@@ -617,7 +617,7 @@ en:
       notifications: "Notifications"
       statistics: "Stats"
       desktop_notifications:
-        label: "Desktop Notifications"
+        label: "Live Notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn On Notifications"
         perm_denied_btn: "Permission Denied"
@@ -627,6 +627,7 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
+        consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: 'Dismiss'
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
@@ -1439,6 +1440,8 @@ en:
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
         private_message: '{{username}} sent you a personal message in "{{topic}}" - {{site_title}}'
         linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
+        confirm_title: 'Notifications enabled - %{site_title}'
+        confirm_body: 'Success! Notifications have been enabled.'
 
     upload_selector:
       title: "Add an image"
@@ -1936,7 +1939,7 @@ en:
         instructions:
           one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
           other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
-        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively."
 
       change_timestamp:
         title: "Change Timestamp..."
@@ -2699,7 +2702,6 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
-
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -2711,6 +2713,8 @@ en:
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard last updated:"
+        find_old: "Looking for the old dashboard?"
+        old_link: "visit it here"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
@@ -2746,10 +2750,11 @@ en:
         activity_metrics: Activity Metrics
 
         reports:
+          trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           today: "Today"
           yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
+          last_7_days: "Last 7"
+          last_30_days: "Last 30"
           all_time: "All Time"
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
@@ -2760,6 +2765,10 @@ en:
           start_date: "Start Date"
           end_date: "End Date"
           groups: "All groups"
+          disabled: "This report is disabled"
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Search logs</a>'
+            disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
 
       commits:
         latest_changes: "Latest changes: please update often!"
@@ -3139,6 +3148,10 @@ en:
           upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
           variable_name: "SCSS var name:"
           variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter. Must be unique."
+          variable_name_error:
+            invalid_syntax: "Invalid variable name. Only alphanumeric allowed. Must start with a letter."
+            no_overwrite: "Invalid variable name. Must not overwrite an existing variable."
+            must_be_unique: "Invalid variable name. Must be unique."
           upload: "Upload"
           child_themes_check: "Theme includes other child themes"
           css_html: "Custom CSS/HTML"
@@ -3483,6 +3496,7 @@ en:
           suspended: 'Suspended'
           silenced: 'Silenced'
           suspect: 'Suspect'
+          staged: 'Staged'
         approved: "Approved?"
         approved_selected:
           one: "approve user"
@@ -3505,6 +3519,7 @@ en:
           silenced: 'Silenced Users'
           suspended: 'Suspended Users'
           suspect: 'Suspect Users'
+          staged: 'Staged Users'
         reject_successful:
           one: "Successfully rejected 1 user."
           other: "Successfully rejected %{count} users."
@@ -3736,6 +3751,7 @@ en:
       site_settings:
         title: 'Settings'
         no_results: "No results found."
+        more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"

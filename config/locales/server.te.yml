@@ -421,7 +421,6 @@ te:
       title: "జాల క్రాలర్లు"
       xaxis: "రోజు"
     page_view_total_reqs:
-      title: "మొత్తం"
       xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"

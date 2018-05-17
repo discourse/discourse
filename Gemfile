@@ -185,3 +185,5 @@ if ENV["IMPORT"] == "1"
   gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
   gem 'reverse_markdown'
 end
+
+gem 'webpush', require: false

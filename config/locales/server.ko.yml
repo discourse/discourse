@@ -694,7 +694,6 @@ ko:
       xaxis: "일"
       yaxis: "로봇 페이지뷰"
     page_view_total_reqs:
-      title: "총"
       xaxis: "일"
       yaxis: "총 페이지뷰"
     page_view_logged_in_mobile_reqs:
@@ -877,7 +876,6 @@ ko:
     version_checks: "Dicousre Hub에 ping을 날려 버전 업데이트와 새 버전 알림을 /admin 대시보드에 보이게 합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
     invite_expiry_days: "사용자 초대키 유효 기간, 일"
-    invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
     invite_only: "가입 비공개화, 운영진에 의한 초대로만 신규 사용자 가입."
     login_required: "글을 읽으려면 인증(로그인)이 필요함"
     min_username_length: "최소 아이디 글자수. 경고: 이미 가입한 사용자나 그룹의 아이디 길이가 이 값보다 작으면 사이트가 깨집니다!"

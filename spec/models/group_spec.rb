@@ -21,7 +21,7 @@ describe Group do
       end
     end
 
-    describe '#username' do
+    describe '#name' do
       context 'when a user with a similar name exists' do
         it 'should not be valid' do
           new_group = Fabricate.build(:group, name: admin.username.upcase)
@@ -685,7 +685,7 @@ describe Group do
       it "should publish the group's categories to the client" do
         group.update!(public_admission: true, categories: [category])
 
-        message = MessageBus.track_publish { group.add(user) }.first
+        message = MessageBus.track_publish("/categories") { group.add(user) }.first
 
         expect(message.data[:categories].count).to eq(1)
         expect(message.data[:categories].first[:id]).to eq(category.id)

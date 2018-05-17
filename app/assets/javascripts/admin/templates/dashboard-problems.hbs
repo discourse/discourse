@@ -1,0 +1,36 @@
+{{#if foundProblems}}
+  <div class="dashboard-stats detected-problems">
+    <div class="problem-messages">
+      {{#conditional-loading-spinner condition=loadingProblems}}
+        <div>
+          <h3>
+            <span class="look-here">{{d-icon "exclamation-triangle"}}</span>
+            {{i18n 'admin.dashboard.problems_found'}}</h3>
+          <ul class="{{if loadingProblems 'invisible'}}">
+            {{#each problems as |problem|}}
+              <li>{{{problem}}}</li>
+            {{/each}}
+          </ul>
+        </div>
+        <p class="actions">
+          <small>{{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}</small>
+          {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
+        </p>
+      {{/conditional-loading-spinner}}
+    </div>
+    <div class="clearfix"></div>
+  </div>
+{{else}}
+  {{#if thereWereProblems}}
+    <div class="dashboard-stats detected-problems">
+      <div class="look-here">&nbsp;</div>
+      <div class="problem-messages">
+        <p>
+          {{i18n 'admin.dashboard.no_problems'}}
+          {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  {{/if}}
+{{/if}}

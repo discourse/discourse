@@ -1,68 +1,80 @@
-import computed from 'ember-addons/ember-computed-decorators';
-import Report from "admin/models/report";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
   classNameBindings: ["isLoading"],
-
-  report: null,
+  reports: null,
+  isLoading: false,
+  dataSourceNames: "",
+  title: null,
 
   init() {
     this._super();
+    this.set("reports", []);
+  },
 
-    this.messageBus.subscribe(this.get("dataSource"), report => {
-      const formatDate = (date) => moment(date).format("YYYYMMDD");
+  @computed("dataSourceNames")
+  dataSources(dataSourceNames) {
+    return dataSourceNames.split(",").map(source => `/admin/reports/${source}`);
+  },
 
-      // this check is done to avoid loading a chart after period has changed
-      if (
-          (this.get("startDate") && formatDate(report.start_date) === formatDate(this.get("startDate"))) &&
-          (this.get("endDate") && formatDate(report.end_date) === formatDate(this.get("endDate")))
-         ) {
-        this._setPropertiesFromReport(Report.create(report));
-        this.set("isLoading", false);
-        this.renderReport();
+  @computed("reports.[]", "startDate", "endDate", "dataSourceNames")
+  reportsForPeriod(reports, startDate, endDate, dataSourceNames) {
+    // on a slow network fetchReport could be called multiple times between
+    // T and T+x, and all the ajax responses would occur after T+(x+y)
+    // to avoid any inconsistencies we filter by period and make sure
+    // the array contains only unique values
+    reports = reports.uniqBy("report_key");
+
+
+    const sort = (r) => {
+      if (r.length > 1)  {
+        return dataSourceNames
+          .split(",")
+          .map(name => r.findBy("type", name));
       } else {
-        this._setPropertiesFromReport(Report.create(report));
-        this.set("isLoading", false);
-        this.renderReport();
+        return r;
       }
-    });
+    };
+
+    if (!startDate || !endDate) {
+      return sort(reports);
+    }
+
+
+    return sort(reports.filter(report => {
+      return report.report_key.includes(startDate.format("YYYYMMDD")) &&
+             report.report_key.includes(endDate.format("YYYYMMDD"));
+    }));
   },
 
   didInsertElement() {
     this._super();
 
-    Ember.run.later(this, function() {
-      this.fetchReport();
-    }, 500);
+    this.fetchReport()
+        .finally(() => {
+          this.renderReport();
+        });
   },
 
   didUpdateAttrs() {
     this._super();
 
-    this.fetchReport();
+    this.fetchReport()
+        .finally(() => {
+          this.renderReport();
+        });
   },
 
-  renderReport() {},
-
-  @computed("dataSourceName")
-  dataSource(dataSourceName) {
-    return `/admin/reports/${dataSourceName}`;
+  renderReport() {
+    if (!this.element || this.isDestroying || this.isDestroyed) return;
+    this.set("title", this.get("reportsForPeriod").map(r => r.title).join(", "));
+    this.set("isLoading", false);
   },
 
-  @computed("report")
-  labels(report) {
-    if (!report) return;
-    return Ember.makeArray(report.data).map(r => r.x);
-  },
+  loadReport() {},
 
-  @computed("report")
-  values(report) {
-    if (!report) return;
-    return Ember.makeArray(report.data).map(r => r.y);
+  fetchReport() {
+    this.set("reports", []);
+    this.set("isLoading", true);
   },
-
-  _setPropertiesFromReport(report) {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-    this.setProperties({ report });
-  }
 });

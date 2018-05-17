@@ -1,5 +1,6 @@
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
+require_dependency 'url_helper'
 
 class SessionController < ApplicationController
   class LocalLoginNotAllowed < StandardError; end
@@ -43,8 +44,15 @@ class SessionController < ApplicationController
 
   def sso_provider(payload = nil)
     payload ||= request.query_string
+
     if SiteSetting.enable_sso_provider
       sso = SingleSignOn.parse(payload, SiteSetting.sso_secret)
+
+      if sso.return_sso_url.blank?
+        render plain: "return_sso_url is blank, it must be provided", status: 400
+        return
+      end
+
       if current_user
         sso.name = current_user.name
         sso.username = current_user.username
@@ -54,9 +62,17 @@ class SessionController < ApplicationController
         sso.moderator = current_user.moderator?
         sso.groups = current_user.groups.pluck(:name).join(",")
 
-        if sso.return_sso_url.blank?
-          render plain: "return_sso_url is blank, it must be provided", status: 400
-          return
+        if current_user.uploaded_avatar.present?
+          avatar_url = "#{Discourse.store.absolute_base_url}/#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
+          sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
+        end
+
+        if current_user.user_profile.profile_background.present?
+          sso.profile_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.profile_background)
+        end
+
+        if current_user.user_profile.card_background.present?
+          sso.card_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.card_background)
         end
 
         if request.xhr?
@@ -65,7 +81,7 @@ class SessionController < ApplicationController
           redirect_to sso.to_url(sso.return_sso_url)
         end
       else
-        session[:sso_payload] = request.query_string
+        cookies[:sso_payload] = request.query_string
         redirect_to path('/login')
       end
     else
@@ -388,7 +404,7 @@ class SessionController < ApplicationController
     session.delete(ACTIVATE_USER_KEY)
     log_on_user(user)
 
-    if payload = session.delete(:sso_payload)
+    if payload = cookies.delete(:sso_payload)
       sso_provider(payload)
     else
       render_serialized(user, UserSerializer)

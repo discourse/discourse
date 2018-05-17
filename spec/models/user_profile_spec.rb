@@ -202,4 +202,39 @@ describe UserProfile do
       end
     end
   end
+
+  context '.import_url_for_user' do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      stub_request(:any, "thisfakesomething.something.com")
+        .to_return(body: "abc", status: 404, headers: { 'Content-Length' => 3 })
+    end
+
+    describe 'when profile_background_url returns an invalid status code' do
+      it 'should not do anything' do
+        url = "http://thisfakesomething.something.com/"
+
+        UserProfile.import_url_for_user(url, user, is_card_background: false)
+
+        user.reload
+
+        expect(user.user_profile.profile_background).to eq(nil)
+      end
+    end
+
+    describe 'when card_background_url returns an invalid status code' do
+      it 'should not do anything' do
+        url = "http://thisfakesomething.something.com/"
+
+        UserProfile.import_url_for_user(url, user, is_card_background: true)
+
+        user.reload
+
+        expect(user.user_profile.card_background).to eq(nil)
+      end
+    end
+
+  end
+
 end

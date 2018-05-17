@@ -2,6 +2,10 @@ require 'rails_helper'
 
 describe DirectoryItemsController do
   let!(:user) { Fabricate(:user) }
+  let!(:evil_trout) { Fabricate(:evil_trout) }
+  let!(:walter_white) { Fabricate(:walter_white) }
+  let!(:stage_user) { Fabricate(:staged, username: 'stage_user') }
+  let!(:group) { Fabricate(:group, users: [evil_trout, stage_user]) }
 
   it "requires a `period` param" do
     get '/directory_items.json'
@@ -28,10 +32,6 @@ describe DirectoryItemsController do
 
   context "with data" do
     before do
-      Fabricate(:evil_trout)
-      Fabricate(:walter_white)
-      Fabricate(:staged, username: 'stage_user')
-
       DirectoryItem.refresh!
     end
 
@@ -76,6 +76,30 @@ describe DirectoryItemsController do
       expect(json['directory_items'].length).to eq(1)
       expect(json['total_rows_directory_items']).to eq(1)
       expect(json['directory_items'][0]['user']['username']).to eq('stage_user')
+    end
+
+    it "excludes users by username" do
+      get '/directory_items.json', params: { period: 'all', exclude_usernames: "stage_user,eviltrout" }
+      expect(response).to be_success
+
+      json = ::JSON.parse(response.body)
+      expect(json).to be_present
+      expect(json['directory_items'].length).to eq(2)
+      expect(json['total_rows_directory_items']).to eq(2)
+      expect(json['directory_items'][0]['user']['username']).to eq(walter_white.username) | eq(user.username)
+      expect(json['directory_items'][1]['user']['username']).to eq(walter_white.username) | eq(user.username)
+    end
+
+    it "filters users by group" do
+      get '/directory_items.json', params: { period: 'all', group: group.name }
+      expect(response).to be_success
+
+      json = ::JSON.parse(response.body)
+      expect(json).to be_present
+      expect(json['directory_items'].length).to eq(2)
+      expect(json['total_rows_directory_items']).to eq(2)
+      expect(json['directory_items'][0]['user']['username']).to eq(evil_trout.username) | eq(stage_user.username)
+      expect(json['directory_items'][1]['user']['username']).to eq(evil_trout.username) | eq(stage_user.username)
     end
   end
 end

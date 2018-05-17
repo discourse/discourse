@@ -722,7 +722,6 @@ da:
       xaxis: "Dag"
       yaxis: "Web Crawler Sidevisninger"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Dag"
       yaxis: "Totalt antal Sidevisninger"
     page_view_logged_in_mobile_reqs:
@@ -884,7 +883,6 @@ da:
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
-    invite_passthrough_hours: "Hvor længe kan en bruger benytte en tidligere benyttet invitation til at logge ind, i timer."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
     min_password_length: "Mindste adgangskodelængde."
     min_admin_password_length: "Minimumslængde for Admin adgangskoder."

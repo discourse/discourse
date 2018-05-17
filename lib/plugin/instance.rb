@@ -493,6 +493,18 @@ JS
     PluginGem.load(path, name, version, opts)
   end
 
+  def hide_plugin
+    Discourse.hidden_plugins << self
+  end
+
+  def enabled_site_setting_filter(filter = nil)
+    if filter
+      @enabled_setting_filter = filter
+    else
+      @enabled_setting_filter
+    end
+  end
+
   def enabled_site_setting(setting = nil)
     if setting
       @enabled_site_setting = setting

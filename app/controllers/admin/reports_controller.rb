@@ -22,16 +22,46 @@ class Admin::ReportsController < Admin::AdminController
       group_id = nil
     end
 
-    report = Report.find(report_type,
-                          start_date: start_date,
-                          end_date: end_date,
-                          category_id: category_id,
-                          group_id: group_id,
-                          async: params[:async])
+    facets = nil
+    if Array === params[:facets]
+      facets = params[:facets].map { |s| s.to_s.to_sym }
+    end
 
-    raise Discourse::NotFound if report.blank?
+    limit = nil
+    if params.has_key?(:limit) && params[:limit].to_i > 0
+      limit = params[:limit].to_i
+    end
 
-    render_json_dump(report: report)
+    args = {
+      start_date: start_date,
+      end_date: end_date,
+      category_id: category_id,
+      group_id: group_id,
+      facets: facets,
+      limit: limit
+    }
+
+    report = nil
+    if (params[:cache])
+      report = Report.find_cached(report_type, args)
+    end
+
+    if report
+      return render_json_dump(report: report)
+    end
+
+    hijack do
+      report = Report.find(report_type, args)
+
+      raise Discourse::NotFound if report.blank?
+
+      if (params[:cache])
+        Report.cache(report, 35.minutes)
+      end
+
+      render_json_dump(report: report)
+    end
+
   end
 
 end

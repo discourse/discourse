@@ -57,7 +57,8 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     # ensure it's not staged anymore
-    user.staged = false
+    user.unstage
+    user.save
 
     # if the user isn't new or it's attached to the SSO record we might be overriding username or email
     unless user.new_record?
@@ -190,13 +191,31 @@ class DiscourseSingleSignOn < SingleSignOn
             )
           end
 
+          if profile_background_url.present?
+            Jobs.enqueue(:download_profile_background_from_url,
+              url: profile_background_url,
+              user_id: user.id,
+              is_card_background: false
+            )
+          end
+
+          if card_background_url.present?
+            Jobs.enqueue(:download_profile_background_from_url,
+              url: card_background_url,
+              user_id: user.id,
+              is_card_background: true
+            )
+          end
+
           user.create_single_sign_on_record!(
             last_payload: unsigned_payload,
             external_id: external_id,
             external_username: username,
             external_email: email,
             external_name: name,
-            external_avatar_url: avatar_url
+            external_avatar_url: avatar_url,
+            external_profile_background_url: profile_background_url,
+            external_card_background_url: card_background_url
           )
         end
       end
@@ -233,10 +252,36 @@ class DiscourseSingleSignOn < SingleSignOn
       end
     end
 
+    profile_background_missing = user.user_profile.profile_background.blank? || Upload.get_from_url(user.user_profile.profile_background).blank?
+    if (profile_background_missing || SiteSetting.sso_overrides_profile_background) && profile_background_url.present?
+      profile_background_changed = sso_record.external_profile_background_url != profile_background_url
+      if profile_background_changed || profile_background_missing
+        Jobs.enqueue(:download_profile_background_from_url,
+            url: profile_background_url,
+            user_id: user.id,
+            is_card_background: false
+        )
+      end
+    end
+
+    card_background_missing = user.user_profile.card_background.blank? || Upload.get_from_url(user.user_profile.card_background).blank?
+    if (card_background_missing || SiteSetting.sso_overrides_profile_background) && card_background_url.present?
+      card_background_changed = sso_record.external_card_background_url != card_background_url
+      if card_background_changed || card_background_missing
+        Jobs.enqueue(:download_profile_background_from_url,
+            url: card_background_url,
+            user_id: user.id,
+            is_card_background: true
+        )
+      end
+    end
+
     # change external attributes for sso record
     sso_record.external_username = username
     sso_record.external_email = email
     sso_record.external_name = name
     sso_record.external_avatar_url = avatar_url
+    sso_record.external_profile_background_url = profile_background_url
+    sso_record.external_card_background_url = card_background_url
   end
 end

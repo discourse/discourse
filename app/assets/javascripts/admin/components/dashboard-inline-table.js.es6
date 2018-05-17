@@ -1,23 +1,38 @@
-import { ajax } from 'discourse/lib/ajax';
+import { ajax } from "discourse/lib/ajax";
 import Report from "admin/models/report";
 import AsyncReport from "admin/mixins/async-report";
 
 export default Ember.Component.extend(AsyncReport, {
   classNames: ["dashboard-table", "dashboard-inline-table", "fixed"],
-  isLoading: true,
   help: null,
   helpPage: null,
 
-  fetchReport() {
-    this.set("isLoading", true);
+  loadReport(report_json) {
+    return Report.create(report_json);
+  },
 
-    ajax(this.get("dataSource"))
-      .then((response) => {
-        this._setPropertiesFromReport(Report.create(response.report));
-      }).finally(() => {
-        if (!Ember.isEmpty(this.get("report.data"))) {
-          this.set("isLoading", false);
-        };
-      });
+  fetchReport() {
+    this._super();
+
+    let payload = { data: { cache: true, facets: ["total", "prev30Days"] } };
+
+    if (this.get("startDate")) {
+      payload.data.start_date = this.get("startDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
+    }
+
+    if (this.get("endDate")) {
+      payload.data.end_date = this.get("endDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
+    }
+
+    if (this.get("limit")) {
+      payload.data.limit = this.get("limit");
+    }
+
+    return Ember.RSVP.Promise.all(this.get("dataSources").map(dataSource => {
+      return ajax(dataSource, payload)
+        .then(response => {
+          this.get("reports").pushObject(this.loadReport(response.report));
+        });
+    }));
   }
 });

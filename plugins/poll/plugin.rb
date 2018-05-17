@@ -9,6 +9,9 @@ register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 
+enabled_site_setting :poll_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
+
 PLUGIN_NAME ||= "discourse_poll".freeze
 DATA_PREFIX ||= "data-poll-".freeze
 
@@ -66,7 +69,12 @@ after_initialize do
 
           # ensure no race condition when poll is automatically closed
           if poll["close"].present?
-            close_date = Time.zone.parse(poll["close"]) rescue nil
+            close_date =
+              begin
+                close_date = Time.zone.parse(poll["close"])
+              rescue ArgumentError
+              end
+
             raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if close_date && close_date <= Time.zone.now
           end
 
@@ -159,7 +167,12 @@ after_initialize do
           Jobs.cancel_scheduled_job(:close_poll, post_id: post.id, poll_name: name)
 
           if poll["status"] == "open" && poll["close"].present?
-            close_date = Time.zone.parse(poll["close"]) rescue nil
+            close_date =
+              begin
+                Time.zone.parse(poll["close"])
+              rescue ArgumentError
+              end
+
             Jobs.enqueue_at(close_date, :close_poll, post_id: post.id, poll_name: name) if close_date && close_date > Time.zone.now
           end
         end

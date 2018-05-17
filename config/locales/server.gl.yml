@@ -350,7 +350,6 @@ gl:
       title: "Extractores web"
       xaxis: "Día"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Día"
     page_view_logged_in_mobile_reqs:
       xaxis: "Día"

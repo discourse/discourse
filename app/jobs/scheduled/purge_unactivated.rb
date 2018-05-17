@@ -1,5 +1,5 @@
 module Jobs
-  class PurgeInactive < Jobs::Scheduled
+  class PurgeUnactived < Jobs::Scheduled
     every 1.day
 
     def execute(args)

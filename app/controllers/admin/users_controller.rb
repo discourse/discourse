@@ -276,7 +276,7 @@ class Admin::UsersController < Admin::AdminController
   def deactivate
     guardian.ensure_can_deactivate!(@user)
     @user.deactivate
-    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'))
+    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
     refresh_browser @user
     render body: nil
   end
@@ -379,7 +379,10 @@ class Admin::UsersController < Admin::AdminController
           }
         end
       rescue UserDestroyer::PostsExistError
-        raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
+        render json: {
+          deleted: false,
+          message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
+        }
       end
     end
   end

@@ -1,17 +1,22 @@
 import { ajax } from 'discourse/lib/ajax';
 import round from "discourse/lib/round";
-import { fmt } from 'discourse/lib/computed';
 import { fillMissingDates } from 'discourse/lib/utilities';
 import computed from 'ember-addons/ember-computed-decorators';
 
 const Report = Discourse.Model.extend({
   average: false,
+  percent: false,
 
-  reportUrl: fmt("type", "/admin/reports/%@"),
+  @computed("type", "start_date", "end_date")
+  reportUrl(type, start_date, end_date) {
+    start_date = moment(start_date).locale('en').format("YYYY-MM-DD");
+    end_date = moment(end_date).locale('en').format("YYYY-MM-DD");
+    return Discourse.getURL(`/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`);
+  },
 
   valueAt(numDaysAgo) {
     if (this.data) {
-      const wantedDate = moment().subtract(numDaysAgo, "days").format("YYYY-MM-DD");
+      const wantedDate = moment().subtract(numDaysAgo, "days").locale('en').format("YYYY-MM-DD");
       const item = this.data.find(d => d.x === wantedDate);
       if (item) {
         return item.y;
@@ -90,6 +95,50 @@ const Report = Discourse.Model.extend({
     }
   },
 
+  @computed('data')
+  currentTotal(data){
+    return _.reduce(data, (cur, pair) => cur + pair.y, 0);
+  },
+
+  @computed('data', 'currentTotal')
+  currentAverage(data, total) {
+    return Ember.makeArray(data).length === 0 ? 0 : parseFloat((total / parseFloat(data.length)).toFixed(1));
+  },
+
+  @computed("trend")
+  trendIcon(trend) {
+    switch (trend) {
+      case "trending-up":
+        return "angle-up";
+      case "trending-down":
+        return "angle-down";
+      case "high-trending-up":
+        return "angle-double-up";
+      case "high-trending-down":
+        return "angle-double-down";
+      default:
+        return null;
+    }
+  },
+
+  @computed('prev_period', 'currentTotal', 'currentAverage')
+  trend(prev, currentTotal, currentAverage) {
+    const total = this.get('average') ? currentAverage : currentTotal;
+    const change = ((total - prev) / total) * 100;
+
+    if (change > 50) {
+      return "high-trending-up";
+    } else if (change > 0) {
+      return "trending-up";
+    } else if (change === 0) {
+      return "no-change";
+    } else if (change < -50) {
+      return "high-trending-down";
+    } else if (change < 0) {
+      return "trending-down";
+    }
+  },
+
   @computed('prev30Days', 'lastThirtyDaysCount')
   thirtyDayTrend(prev30Days, lastThirtyDaysCount) {
     const currentPeriod = lastThirtyDaysCount;
@@ -110,6 +159,9 @@ const Report = Discourse.Model.extend({
 
   @computed('type')
   icon(type) {
+    if (type.indexOf("message") > -1) {
+      return "envelope";
+    }
     switch (type) {
       case "flags": return "flag";
       case "likes": return "heart";
@@ -136,6 +188,22 @@ const Report = Discourse.Model.extend({
     } else {
       return val.toFixed(0) + "%";
     }
+  },
+
+  @computed('prev_period', 'currentTotal', 'currentAverage')
+  trendTitle(prev, currentTotal, currentAverage) {
+    let current = this.get('average') ? currentAverage : currentTotal;
+    let percent = this.percentChangeString(current, prev);
+
+    if (this.get('average')) {
+      prev = prev ? prev.toFixed(1) : "0";
+      if (this.get('percent')) {
+        current += '%';
+        prev += '%';
+      }
+    }
+
+    return I18n.t('admin.dashboard.reports.trend_title', {percent: percent, prev: prev, current: current});
   },
 
   changeTitle(val1, val2, prevPeriodString) {
@@ -176,6 +244,15 @@ const Report = Discourse.Model.extend({
 
 Report.reopenClass({
 
+  fillMissingDates(report) {
+    if (_.isArray(report.data)) {
+
+      const startDateFormatted = moment.utc(report.start_date).locale('en').format('YYYY-MM-DD');
+      const endDateFormatted = moment.utc(report.end_date).locale('en').format('YYYY-MM-DD');
+      report.data = fillMissingDates(report.data, startDateFormatted, endDateFormatted);
+    }
+  },
+
   find(type, startDate, endDate, categoryId, groupId) {
     return ajax("/admin/reports/" + type, {
       data: {
@@ -186,11 +263,7 @@ Report.reopenClass({
       }
     }).then(json => {
       // Add zero values for missing dates
-      if (json.report.data.length > 0) {
-        const startDateFormatted = moment(json.report.start_date).utc().format('YYYY-MM-DD');
-        const endDateFormatted = moment(json.report.end_date).utc().format('YYYY-MM-DD');
-        json.report.data = fillMissingDates(json.report.data, startDateFormatted, endDateFormatted);
-      }
+      Report.fillMissingDates(json.report);
 
       const model = Report.create({ type: type });
       model.setProperties(json.report);
