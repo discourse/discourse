@@ -855,8 +855,8 @@ en:
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
-      yaxis: "DAU/MAY"
-      description: "DAU / MAU – no. of members that logged in in the last day divided by no. of members that logged in in the last month – returns a %"
+      yaxis: "DAU/MAU"
+      description: "No. of members that logged in in the last day divided by no of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >30%."
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"
