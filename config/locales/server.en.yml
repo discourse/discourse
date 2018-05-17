@@ -920,7 +920,7 @@ en:
       xaxis: "Day"
       yaxis: "Number of messages"
     user_to_user_private_messages_with_replies:
-      title: "User-to-User (including replies)"
+      title: "User-to-User (with replies)"
       xaxis: "Day"
       yaxis: "Number of messages"
     system_private_messages:
