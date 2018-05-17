@@ -43,7 +43,7 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def include_has_messages?
-    staff?
+    staff? || scope.can_see_group_messages?(object)
   end
 
   def include_bio_raw?
