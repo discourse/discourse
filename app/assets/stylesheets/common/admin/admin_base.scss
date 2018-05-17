@@ -6,6 +6,7 @@
 @import "common/admin/customize";
 @import "common/admin/flagging";
 @import "common/admin/dashboard_next";
+@import "common/admin/admin_reports";
 @import "common/admin/moderation_history";
 @import "common/admin/suspend";
 
@@ -1967,6 +1968,12 @@ table#user-badges {
 .inline-edit label {
   display: inline-block;
   margin-right: 20px;
+}
+
+.admin-reports, .dashboard-next {
+  &.admin-contents {
+    margin: 0;
+  }
 }
 
 .cbox0 { background: blend-primary-secondary(0%); }
