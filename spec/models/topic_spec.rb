@@ -1212,7 +1212,7 @@ describe Topic do
           expect(category.reload.topic_count).to eq(0)
         end
 
-        describe 'user that watching the new category' do
+        describe 'user that is watching the new category' do
           it 'should generate the notification for the topic' do
             topic.posts << Fabricate(:post)
 
@@ -1222,16 +1222,31 @@ describe Topic do
               new_category.id
             )
 
+            another_user = Fabricate(:user)
+
+            CategoryUser.set_notification_level_for_category(
+              another_user,
+              CategoryUser::notification_levels[:watching_first_post],
+              new_category.id
+            )
+
             expect do
               topic.change_category_to_id(new_category.id)
-            end.to change { Notification.count }.by(1)
+            end.to change { Notification.count }.by(2)
 
-            notification = Notification.last
+            expect(Notification.where(
+              user_id: user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:posted]
+            ).exists?).to eq(true)
 
-            expect(notification.notification_type).to eq(Notification.types[:posted])
-            expect(notification.topic_id).to eq(topic.id)
-            expect(notification.user_id).to eq(user.id)
-            expect(notification.post_number).to eq(1)
+            expect(Notification.where(
+              user_id: another_user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:watching_first_post]
+            ).exists?).to eq(true)
           end
         end
 

@@ -101,26 +101,29 @@ class PostAlerter
       topic = post.topic
 
       if topic.present?
-        cat_watchers = topic.category_users
-          .where(notification_level: CategoryUser.notification_levels[:watching_first_post])
-          .pluck(:user_id)
-
-        tag_watchers = topic.tag_users
-          .where(notification_level: TagUser.notification_levels[:watching_first_post])
-          .pluck(:user_id)
-
-        group_ids = topic.allowed_groups.pluck(:group_id)
-
-        group_watchers = GroupUser.where(
-          group_id: group_ids,
-          notification_level: GroupUser.notification_levels[:watching_first_post]
-        ).pluck(:user_id)
-
-        watchers = [cat_watchers, tag_watchers, group_watchers].flatten
-
+        watchers = category_watchers(topic) + tag_watchers(topic) + group_watchers(topic)
         notify_first_post_watchers(post, watchers)
       end
     end
+  end
+
+  def group_watchers(topic)
+    GroupUser.where(
+      group_id: topic.allowed_groups.pluck(:group_id),
+      notification_level: GroupUser.notification_levels[:watching_first_post]
+    ).pluck(:user_id)
+  end
+
+  def tag_watchers(topic)
+    topic.tag_users
+      .where(notification_level: TagUser.notification_levels[:watching_first_post])
+      .pluck(:user_id)
+  end
+
+  def category_watchers(topic)
+    topic.category_users
+      .where(notification_level: CategoryUser.notification_levels[:watching_first_post])
+      .pluck(:user_id)
   end
 
   def notify_first_post_watchers(post, user_ids)

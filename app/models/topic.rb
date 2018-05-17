@@ -677,9 +677,15 @@ SQL
         post = self.ordered_posts.first
 
         if post
-          PostAlerter.new.notify_post_users(
+          post_alerter = PostAlerter.new
+
+          post_alerter.notify_post_users(
             post,
             [post.user, post.last_editor].uniq
+          )
+
+          post_alerter.notify_first_post_watchers(
+            post, post_alerter.category_watchers(self)
           )
         end
       end
