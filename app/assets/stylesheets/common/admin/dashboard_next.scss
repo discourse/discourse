@@ -17,6 +17,7 @@
 
     .section-column {
       min-width: calc(50% - .5em);
+      max-width: 100%;
 
       @include small-width  {
         min-width: 100%;
