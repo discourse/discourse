@@ -13,9 +13,12 @@ enabled_site_setting :discourse_local_dates_enabled
 
 after_initialize do
   on(:reduce_cooked) do |fragment|
-    container = fragment.children[0].children[0]
-    preview = container.attributes["data-email-preview"].value
-    container.content = preview
+    container = fragment.css(".discourse-local-date").first
+
+    if container
+      preview = container.attributes["data-email-preview"].value
+      container.content = preview
+    end
   end
 end
 
