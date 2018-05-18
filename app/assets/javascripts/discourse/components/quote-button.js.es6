@@ -78,7 +78,10 @@ export default Ember.Component.extend({
     const $quoteButton = this.$();
 
     // remove the marker
-    markerElement.parentNode.removeChild(markerElement);
+    const parent = markerElement.parentNode;
+    parent.removeChild(markerElement);
+    // merge back all text nodes so they don't get messed up
+    parent.normalize();
 
     // work around Safari that would sometimes lose the selection
     if (isSafari) {
