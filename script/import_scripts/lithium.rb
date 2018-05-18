@@ -340,7 +340,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       topics = mysql_query <<-SQL
           SELECT id, subject, body, deleted, user_id,
-                 post_date, views, node_id, unique_id
+                 post_date, views, node_id, unique_id, row_version
             FROM message2
         WHERE id = root_id #{TEMP}
         ORDER BY node_id, id
@@ -355,10 +355,10 @@ class ImportScripts::Lithium < ImportScripts::Base
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 
         category_id = category_id_from_imported_category_id(topic["node_id"])
-
+        deleted_at = topic["deleted"] == 1 ? topic["row_version"] : nil
         raw = topic["body"]
 
-        if category_id
+        if category_id.present? && raw.present?
           {
             id: "#{topic["node_id"]} #{topic["id"]}",
             user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
@@ -366,11 +366,16 @@ class ImportScripts::Lithium < ImportScripts::Base
             category: category_id,
             raw: raw,
             created_at: unix_time(topic["post_date"]),
+            deleted_at: deleted_at,
             views: topic["views"],
             custom_fields: { import_unique_id: topic["unique_id"] },
             import_mode: true
           }
         else
+          message = "Unknown"
+          message = "Category '#{category_id}' not exist" if category_id.blank?
+          message = "Topic 'body' is empty" if raw.blank?
+          PluginStoreRow.create(plugin_name: "topic_import_log", key: topic["unique_id"].to_s, value: message)
           nil
         end
 
@@ -388,9 +393,9 @@ class ImportScripts::Lithium < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query <<-SQL
           SELECT id, body, deleted, user_id,
-                 post_date, parent_id, root_id, node_id, unique_id
+                 post_date, parent_id, root_id, node_id, unique_id, row_version
             FROM message2
-        WHERE id <> root_id #{TEMP} AND deleted = 0
+        WHERE id <> root_id #{TEMP}
         ORDER BY node_id, root_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -404,27 +409,32 @@ class ImportScripts::Lithium < ImportScripts::Base
         raw = post["raw"]
         next unless topic = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]}")
 
+        deleted_at = topic["deleted"] == 1 ? topic["row_version"] : nil
         raw = post["body"]
 
-        new_post = {
-          id: "#{post["node_id"]} #{post["root_id"]} #{post["id"]}",
-          user_id: user_id_from_imported_user_id(post["user_id"]) || Discourse::SYSTEM_USER_ID,
-          topic_id: topic[:topic_id],
-          raw: raw,
-          created_at: unix_time(post["post_date"]),
-          custom_fields: { import_unique_id: post["unique_id"] },
-          import_mode: true
-        }
+        if raw.present?
+          new_post = {
+            id: "#{post["node_id"]} #{post["root_id"]} #{post["id"]}",
+            user_id: user_id_from_imported_user_id(post["user_id"]) || Discourse::SYSTEM_USER_ID,
+            topic_id: topic[:topic_id],
+            raw: raw,
+            created_at: unix_time(post["post_date"]),
+            deleted_at: deleted_at,
+            custom_fields: { import_unique_id: post["unique_id"] },
+            import_mode: true
+          }
 
-        if post["deleted"] > 0
-          new_post["deleted_at"] = Time.now
+          if parent = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]} #{post["parent_id"]}")
+            new_post[:reply_to_post_number] = parent[:post_number]
+          end
+
+          new_post
+        else
+          message = "Unknown"
+          message = "Post 'body' is empty" if raw.blank?
+          PluginStoreRow.create(plugin_name: "post_import_log", key: post["unique_id"].to_s, value: message)
+          nil
         end
-
-        if parent = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]} #{post["parent_id"]}")
-          new_post[:reply_to_post_number] = parent[:post_number]
-        end
-
-        new_post
       end
     end
   end
