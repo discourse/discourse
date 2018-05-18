@@ -11,4 +11,12 @@ register_asset "moment-timezone.js", :vendored_core_pretty_text
 
 enabled_site_setting :discourse_local_dates_enabled
 
+after_initialize do
+  on(:reduce_cooked) do |fragment|
+    container = fragment.children[0].children[0]
+    preview = container.attributes["data-email-preview"].value
+    container.content = preview
+  end
+end
+
 load File.expand_path('../lib/discourse_local_dates/engine.rb', __FILE__)
