@@ -127,10 +127,6 @@ describe UserAction do
 
   end
 
-  describe "mentions" do
-    it "returns the mention in the stream" do
-    end
-  end
   describe 'when user likes' do
 
     let(:post) { Fabricate(:post) }
