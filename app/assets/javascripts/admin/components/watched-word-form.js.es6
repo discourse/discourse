@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   classNames: ['watched-word-form'],
   formSubmitted: false,
   actionKey: null,
-  showSuccessMessage: false,
+  showMessage: false,
 
   @computed('regularExpressions')
   placeholderKey(regularExpressions) {
@@ -14,21 +14,33 @@ export default Ember.Component.extend({
   },
 
   @observes('word')
-  removeSuccessMessage() {
-    if (this.get('showSuccessMessage') && !Ember.isEmpty(this.get('word'))) {
-      this.set('showSuccessMessage', false);
+  removeMessage() {
+    if (this.get('showMessage') && !Ember.isEmpty(this.get('word'))) {
+      this.set('showMessage', false);
     }
+  },
+
+  @computed('word')
+  isUniqueWord(word) {
+    const words = this.get("filteredContent") || [];
+    const filtered = words.filter(content => content.action === this.get("actionKey"));
+    return filtered.every(content => content.word.toLowerCase() !== word.toLowerCase());
   },
 
   actions: {
     submit() {
+      if (!this.get("isUniqueWord")) {
+        this.setProperties({ showMessage: true, message: I18n.t('admin.watched_words.form.exists') });
+        return;
+      }
+
       if (!this.get('formSubmitted')) {
         this.set('formSubmitted', true);
 
         const watchedWord = WatchedWord.create({ word: this.get('word'), action: this.get('actionKey') });
 
         watchedWord.save().then(result => {
-          this.setProperties({ word: '', formSubmitted: false, showSuccessMessage: true });
+          this.setProperties({ word: '', formSubmitted: false, showMessage: true, message: I18n.t('admin.watched_words.form.success') });
           this.sendAction('action', WatchedWord.create(result));
           Ember.run.schedule('afterRender', () => this.$('.watched-word-input').focus());
         }).catch(e => {
