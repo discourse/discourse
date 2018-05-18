@@ -430,9 +430,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
           new_post
         else
-          message = "Unknown"
-          message = "Post 'body' is empty" if raw.blank?
-          PluginStoreRow.create(plugin_name: "post_import_log", key: post["unique_id"].to_s, value: message)
+          PluginStoreRow.create(plugin_name: "post_import_log", key: post["unique_id"].to_s, value: "Post 'body' is empty")
           nil
         end
       end
@@ -467,7 +465,7 @@ class ImportScripts::Lithium < ImportScripts::Base
   def import_likes
     puts "\nimporting likes..."
 
-    sql = "select source_id user_id, target_id post_id, row_version created_at from wd.tag_events_score_message"
+    sql = "select source_id user_id, target_id post_id, row_version created_at from tag_events_score_message"
     results = mysql_query(sql)
 
     puts "loading unique id map"
@@ -697,23 +695,28 @@ class ImportScripts::Lithium < ImportScripts::Base
 
         raw = topic["body"]
 
-        msg = {
-          id: "pm_#{topic["note_id"]}",
-          user_id: user_id,
-          raw: raw,
-          created_at: unix_time(topic["sent_time"]),
-          import_mode: true
-        }
+        if raw.present?
+          msg = {
+            id: "pm_#{topic["note_id"]}",
+            user_id: user_id,
+            raw: raw,
+            created_at: unix_time(topic["sent_time"]),
+            import_mode: true
+          }
 
-        unless topic_id
-          msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
-          msg[:archetype] = Archetype.private_message
-          msg[:target_usernames] = usernames.join(',')
+          unless topic_id
+            msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
+            msg[:archetype] = Archetype.private_message
+            msg[:target_usernames] = usernames.join(',')
+          else
+            msg[:topic_id] = topic_id
+          end
+
+          msg
         else
-          msg[:topic_id] = topic_id
+          PluginStoreRow.create(plugin_name: "pm_import_log", key: topic["note_id"].to_s, value: "PM 'body' is empty")
+          nil
         end
-
-        msg
       end
     end
 
