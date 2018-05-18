@@ -58,6 +58,8 @@ end
 class ThemeSerializer < ChildThemeSerializer
   attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id, :settings
 
+  has_one :user, serializer: UserNameSerializer, embed: :object
+
   has_many :theme_fields, serializer: ThemeFieldSerializer, embed: :objects
   has_many :child_themes, serializer: ChildThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects

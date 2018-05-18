@@ -5,6 +5,7 @@
     {{#each sortedThemes as |theme|}}
       <li>
         {{#link-to 'adminCustomizeThemes.show' theme replace=true}}
+          {{plugin-outlet name="admin-customize-themes-list-item" connectorTagName='span' args=(hash theme=theme)}}
           {{theme.name}}
           {{#if theme.user_selectable}}
             {{d-icon "user"}}
