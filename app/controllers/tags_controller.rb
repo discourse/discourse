@@ -283,7 +283,7 @@ class TagsController < ::ApplicationController
         else # :next
           public_send(method, opts.merge(next_page_params(opts)))
         end
-      rescue
+      rescue ActionController::UrlGenerationError
         raise Discourse::NotFound
       end
       url.sub('.json?', '?')
