@@ -2,7 +2,7 @@ export default {
   "/admin/reports/signups": {
     "report": {
       "type": "signups",
-      "title": "New Users",
+      "title": "Signups",
       "xaxis": "Day",
       "yaxis": "Number of new users",
       "data": [{

@@ -843,10 +843,10 @@ en:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "New Users"
+      title: "Signups"
       xaxis: "Day"
-      yaxis: "Number of new users"
-      description: "New registrations for this period"
+      yaxis: "Number of signups"
+      description: "New account registrations for this period"
     new_contributors:
       title: "New Contributors"
       xaxis: "Day"
