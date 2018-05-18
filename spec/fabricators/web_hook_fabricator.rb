@@ -21,9 +21,6 @@ Fabricator(:wildcard_web_hook, from: :web_hook) do
   wildcard_web_hook true
 end
 
-Fabricator(:post_web_hook, from: :web_hook) do
-end
-
 Fabricator(:topic_web_hook, from: :web_hook) do
   transient topic_hook: WebHookEventType.find_by(name: 'topic')
 
