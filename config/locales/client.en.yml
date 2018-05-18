@@ -3474,6 +3474,7 @@ en:
           placeholder_regexp: "regular expression"
           add: 'Add'
           success: 'Success'
+          exists: 'Already exists'
           upload: "Upload"
           upload_successful: "Upload successful. Words have been added."
 
