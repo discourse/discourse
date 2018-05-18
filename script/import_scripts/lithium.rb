@@ -27,11 +27,25 @@ class ImportScripts::Lithium < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   DATABASE = "wd"
   PASSWORD = "password"
+  AVATARS_DIR = '/tmp/avatars'
   UPLOAD_DIR = '/tmp/uploads'
 
   OLD_DOMAIN = 'community.wd.com'
 
   TEMP = ""
+
+  USER_CUSTOM_FIELDS = [
+    { name: "sso_id", user: "sso_id" },
+    { name: "user_field_1", profile: "jobtitle" },
+    { name: "user_field_2", profile: "company" },
+    { name: "user_field_3", profile: "industry" },
+  ]
+
+  LITHIUM_PROFILE_FIELDS = "'profile.jobtitle', 'profile.company', 'profile.industry', 'profile.location'"
+
+  USERNAME_MAPPINGS = {
+    "admins": "admin_user"
+  }.with_indifferent_access
 
   def initialize
     super
@@ -87,10 +101,11 @@ class ImportScripts::Lithium < ImportScripts::Base
     puts "", "importing users"
 
     user_count = mysql_query("SELECT COUNT(*) count FROM users").first["count"]
+    avatar_files = Dir.entries(AVATARS_DIR)
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
-          SELECT id, nlogin, login_canon, email, registration_time
+          SELECT id, nlogin, login_canon, email, registration_time, sso_id
             FROM users
         ORDER BY id
            LIMIT #{BATCH_SIZE}
@@ -101,23 +116,85 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       next if all_records_exist? :users, users.map { |u| u["id"].to_i }
 
+      users = users.to_a
+      first_id = users.first["id"]
+      last_id = users.last["id"]
+
+      profiles = mysql_query <<-SQL
+          SELECT user_id, param, nvalue
+            FROM user_profile
+          WHERE nvalue IS NOT NULL AND param IN (#{LITHIUM_PROFILE_FIELDS}) AND user_id >= #{first_id} AND user_id <= #{last_id}
+        ORDER BY user_id
+      SQL
+
       create_users(users, total: user_count, offset: offset) do |user|
+        profile = profiles.select { |p|  p["user_id"] == user["id"] }
+        result = profile.select { |p|  p["param"] == "profile.location" }
+        location = result.count > 0 ? result.first["nvalue"] : nil
+        username = user["login_canon"]
+        username = USERNAME_MAPPINGS[username] if USERNAME_MAPPINGS[username].present?
 
         {
           id: user["id"],
           name: user["nlogin"],
-          username: user["login-canon"],
+          username: username,
           email: user["email"].presence || fake_email,
+          location: location,
+          custom_fields: user_custom_fields(user, profile),
           # website: user["homepage"].strip,
           # title: @htmlentities.decode(user["usertitle"]).strip,
           # primary_group_id: group_id_from_imported_group_id(user["usergroupid"]),
           created_at: unix_time(user["registration_time"]),
           post_create_action: proc do |u|
-            @old_username_to_new_usernames[user["username"]] = u.username
+            @old_username_to_new_usernames[user["login_canon"]] = u.username
+
+            # import user avatar
+            sso_id = u.custom_fields["sso_id"]
+            if sso_id.present?
+              prefix = "#{UPLOAD_DIR}/#{sso_id}_"
+              file = get_file(prefix + "actual.jpeg")
+              file ||= get_file(prefix + "profile.jpeg")
+
+              if file.present?
+                upload = UploadCreator.new(file, file.path, type: "avatar").create_for(user.id)
+                user.create_user_avatar unless user.user_avatar
+
+                if !user.user_avatar.contains_upload?(upload.id)
+                  user.user_avatar.update_columns(custom_upload_id: upload.id)
+
+                  if user.uploaded_avatar_id.nil? ||
+                    !user.user_avatar.contains_upload?(user.uploaded_avatar_id)
+                    user.update_columns(uploaded_avatar_id: upload.id)
+                  end
+                end
+              end
+            end
           end
         }
       end
     end
+  end
+
+  def user_custom_fields(user, profile)
+    fields = Hash.new
+
+    USER_CUSTOM_FIELDS.each do |attr|
+      name = attr[:name]
+
+      if attr[:user].present?
+        fields[name] = user[attr[:user]]
+      elsif attr[:profile].present? && profile.count > 0
+        result = profile.select { |p|  p["param"] == "profile.#{attr[:profile]}" }
+        fields[name] = result.first["nvalue"] if result.count > 0
+      end
+    end
+
+    fields
+  end
+
+  def get_file(path)
+    return File.open(path) if File.exist?(path)
+    nil
   end
 
   def unix_time(t)
@@ -265,7 +342,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           SELECT id, subject, body, deleted, user_id,
                  post_date, views, node_id, unique_id
             FROM message2
-        WHERE id = root_id #{TEMP} AND deleted = 0
+        WHERE id = root_id #{TEMP}
         ORDER BY node_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
