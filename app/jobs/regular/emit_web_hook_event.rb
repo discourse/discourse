@@ -51,25 +51,25 @@ module Jobs
     end
 
     def setup_group(args)
-      group = Group.find_by(args[:group_id])
+      group = Group.find_by(id: args[:group_id])
       return if group.blank?
       args[:payload] = WebHookGroupSerializer.new(group, scope: guardian, root: false).as_json
     end
 
     def setup_category(args)
-      category = Category.find_by(args[:category_id])
+      category = Category.find_by(id: args[:category_id])
       return if category.blank?
       args[:payload] = WebHookCategorySerializer.new(category, scope: guardian, root: false).as_json
     end
 
     def setup_tag(args)
-      tag = Tag.find_by(args[:tag_id])
+      tag = Tag.find_by(id: args[:tag_id])
       return if tag.blank?
       args[:payload] = TagSerializer.new(tag, scope: guardian, root: false).as_json
     end
 
     def setup_flag(args)
-      flag = PostAction.find_by(args[:flag_id])
+      flag = PostAction.find_by(id: args[:flag_id])
       return if flag.blank?
       args[:payload] = WebHookFlagSerializer.new(flag, scope: guardian, root: false).as_json
     end
