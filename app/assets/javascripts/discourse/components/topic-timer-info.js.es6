@@ -18,7 +18,6 @@ export default Ember.Component.extend(bufferedRender({
     if (!this.get('executeAt')) return;
 
     let statusUpdateAt = moment(this.get('executeAt'));
-    if (statusUpdateAt < new Date()) return;
 
     let duration = moment.duration(statusUpdateAt - moment());
     let minutesLeft = duration.asMinutes();

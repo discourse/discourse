@@ -46,5 +46,12 @@ export default Ember.Component.extend({
     }
 
     this.set("topicTimer.updateTime", time);
-  }
+  },
+
+  @observes("selection")
+  _updateBasedOnLastPost() {
+    if (!this.get('autoClose')) {
+      this.set('topicTimer.based_on_last_post', false);
+    }
+  },
 });
