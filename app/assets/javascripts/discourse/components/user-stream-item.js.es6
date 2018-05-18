@@ -11,5 +11,5 @@ export default Ember.Component.extend({
   ],
 
   moderatorAction: propertyEqual("item.post_type", "site.post_types.moderator_action"),
-  actionDescription: actionDescription("item.action_code", "item.created_at", "item.username"),
+  actionDescription: actionDescription("item.action_code", "item.created_at", "item.action_code_who"),
 });
