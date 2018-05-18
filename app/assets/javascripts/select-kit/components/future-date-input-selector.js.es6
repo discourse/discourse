@@ -155,7 +155,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   },
 
   mutateValue(value) {
-    if (this.get("isCustom") || this.get("isBasedOnLastPost")) {
+    if (value === 'pick_date_and_time' || this.get("isBasedOnLastPost")) {
       this.set("value", value);
     } else {
       let input = null;
