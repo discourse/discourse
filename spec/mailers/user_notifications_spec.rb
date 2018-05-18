@@ -224,7 +224,7 @@ describe UserNotifications do
     it 'generates a correct email' do
 
       # Fabricator is not fabricating this ...
-      SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tag}%{topic_title}"
+      SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
       mail = UserNotifications.user_replied(response.user,
