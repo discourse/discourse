@@ -332,10 +332,20 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   end
 
+  def staff_guardian
+    @_staff_guardian ||= Guardian.new(Discourse.system_user)
+  end
+
   def import_topics
     puts "", "importing topics..."
+    SiteSetting.tagging_enabled = true
+    default_max_tags_per_topic = SiteSetting.max_tags_per_topic
+    default_max_tag_length = SiteSetting.max_tag_length
+    SiteSetting.max_tags_per_topic = 10
+    SiteSetting.max_tag_length = 100
 
     topic_count = mysql_query("SELECT COUNT(*) count FROM message2 where id = root_id").first["count"]
+    topic_tags = mysql_query("SELECT e.target_id, GROUP_CONCAT(l.tag_text SEPARATOR ',') tags FROM tag_events_label_message e LEFT JOIN tags_label l ON e.tag_id = l.tag_id GROUP BY e.target_id")
 
     batches(BATCH_SIZE) do |offset|
       topics = mysql_query <<-SQL
@@ -369,18 +379,28 @@ class ImportScripts::Lithium < ImportScripts::Base
             deleted_at: deleted_at,
             views: topic["views"],
             custom_fields: { import_unique_id: topic["unique_id"] },
-            import_mode: true
+            import_mode: true,
+            post_create_action: proc do |post|
+              result = topic_tags.select { |t| t["target_id"] == topic["unique_id"] }
+              if result.count > 0
+                tag_names = result.first["tags"].split(",")
+                DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
+              end
+            end
           }
         else
           message = "Unknown"
           message = "Category '#{category_id}' not exist" if category_id.blank?
           message = "Topic 'body' is empty" if raw.blank?
-          PluginStoreRow.create(plugin_name: "topic_import_log", key: topic["unique_id"].to_s, value: message)
+          PluginStoreRow.find_or_create_by(plugin_name: "topic_import_log", key: topic["unique_id"].to_s, value: message, type_name: 'String')
           nil
         end
 
       end
     end
+
+    SiteSetting.max_tags_per_topic = default_max_tags_per_topic
+    SiteSetting.max_tag_length = default_max_tag_length
   end
 
   def import_posts
@@ -430,7 +450,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
           new_post
         else
-          PluginStoreRow.create(plugin_name: "post_import_log", key: post["unique_id"].to_s, value: "Post 'body' is empty")
+          PluginStoreRow.find_or_create_by(plugin_name: "post_import_log", key: post["unique_id"].to_s, value: "Post 'body' is empty", type_name: 'String')
           nil
         end
       end
@@ -714,7 +734,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
           msg
         else
-          PluginStoreRow.create(plugin_name: "pm_import_log", key: topic["note_id"].to_s, value: "PM 'body' is empty")
+          PluginStoreRow.find_or_create_by(plugin_name: "pm_import_log", key: topic["note_id"].to_s, value: "PM 'body' is empty", type_name: 'String')
           nil
         end
       end
