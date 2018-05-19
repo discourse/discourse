@@ -23,7 +23,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
                      "system_messages.unsilenced", "system_messages.user_automatically_silenced",
                      "system_messages.welcome_invite", "system_messages.welcome_user", "test_mailer",
                      "user_notifications.account_created", "user_notifications.admin_login",
-                     "user_notifications.confirm_new_email", "user_notifications.confirm_old_email",
+                     "user_notifications.confirm_new_email",
                      "user_notifications.notify_old_email", "user_notifications.forgot_password",
                      "user_notifications.set_password", "user_notifications.signup",
                      "user_notifications.signup_after_approval",
