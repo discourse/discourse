@@ -89,7 +89,6 @@ module Jobs
       def parsed_feed
         raw_feed = fetch_rss
         return nil if raw_feed.blank?
-        raw_feed.encode!("UTF-8", invalid: :replace, undef: :replace, replace: "")
 
         if SiteSetting.embed_username_key_from_feed.present?
           FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, raw_feed)
