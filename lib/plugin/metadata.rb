@@ -27,7 +27,7 @@ class Plugin::Metadata
     "discourse-oauth2-basic",
     "discourse-math",
     "discourse-bbcode-color",
-    "BBCode",
+    "discourse-bbcode",
     "discourse-affiliate",
     "discourse-translator",
     "discourse-patreon",
