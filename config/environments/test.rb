@@ -50,6 +50,10 @@ Discourse::Application.configure do
     config.log_level = :fatal
   end
 
+  if defined? RspecErrorTracker
+    config.middleware.insert_after ActionDispatch::Flash, RspecErrorTracker
+  end
+
   config.after_initialize do
     SiteSetting.defaults.tap do |s|
       s.set_regardless_of_locale(:s3_upload_bucket, 'bucket')
