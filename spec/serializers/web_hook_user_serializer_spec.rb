@@ -21,7 +21,7 @@ RSpec.describe WebHookUserSerializer do
 
   it 'should only include the required keys' do
     count = serializer.as_json.keys.count
-    difference = count - 42
+    difference = count - 43
 
     expect(difference).to eq(0), lambda {
       message = ""
