@@ -38,7 +38,7 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
 
     sudo -s
     mkdir /var/discourse
-    git clone https://github.com/discourse/discourse_docker.git /var/discourse
+    git clone https://github.com/discourse/discourse.git /var/discourse
     cd /var/discourse
 
 You will need to be root through the rest of the setup and bootstrap process.
