@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+begin
+  if !RUBY_VERSION.match?(/^2\.[456]/)
+    STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+    exit 1
+  end
+rescue
+  # no String#match?
+  STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+  exit 1
+end
+
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
