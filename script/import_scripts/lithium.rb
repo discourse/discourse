@@ -27,7 +27,8 @@ class ImportScripts::Lithium < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   DATABASE = "wd"
   PASSWORD = "password"
-  AVATARS_DIR = '/tmp/avatars'
+  AVATAR_DIR = '/tmp/avatars'
+  ATTACHMENT_DIR = '/tmp/attachments'
   UPLOAD_DIR = '/tmp/uploads'
 
   OLD_DOMAIN = 'community.wd.com'
@@ -101,7 +102,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     puts "", "importing users"
 
     user_count = mysql_query("SELECT COUNT(*) count FROM users").first["count"]
-    avatar_files = Dir.entries(AVATARS_DIR)
+    avatar_files = Dir.entries(AVATAR_DIR)
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
@@ -796,27 +797,15 @@ SQL
 
   end
 
-  # find the uploaded file information from the db
-  def find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
-                  a.caption caption
-             FROM attachment a
-            WHERE a.attachmentid = #{attachment_id}"
-    results = mysql_query(sql)
+  def find_upload(user_id, attachment_id, real_filename)
+    filename = File.join(ATTACHMENT_DIR, "#{attachment_id.to_s.rjust(4, "0")}.dat")
 
-    unless (row = results.first)
-      puts "Couldn't find attachment record for post.id = #{post.id}, import_id = #{post.custom_fields['import_id']}"
-      return nil
-    end
-
-    filename = File.join(ATTACHMENT_DIR, row['user_id'].to_s.split('').join('/'), "#{row['file_id']}.attach")
     unless File.exists?(filename)
       puts "Attachment file doesn't exist: #{filename}"
       return nil
     end
-    real_filename = row['filename']
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
-    upload = create_upload(post.user.id, filename, real_filename)
+    upload = create_upload(user_id, filename, real_filename)
 
     if upload.nil? || !upload.valid?
       puts "Upload not valid :("
@@ -825,20 +814,21 @@ SQL
     end
 
     return upload, real_filename
-  rescue Mysql2::Error => e
-    puts "SQL Error"
-    puts e.message
-    puts sql
-    return nil
   end
 
   def post_process_posts
     puts "", "Postprocessing posts..."
 
+    default_extensions = SiteSetting.authorized_extensions
+    default_max_att_size = SiteSetting.max_attachment_size_kb
+    SiteSetting.authorized_extensions = "*"
+    SiteSetting.max_attachment_size_kb = 307200
+
     current = 0
     max = Post.count
 
     mysql_query("create index idxUniqueId on message2(unique_id)") rescue nil
+    attachments = mysql_query("SELECT a.attachment_id, a.file_name, m.message_uid FROM tblia_attachment a INNER JOIN tblia_message_attachments m ON a.attachment_id = m.attachment_id")
 
     Post.where('id > ?', @max_start_id).find_each do |post|
       begin
@@ -850,8 +840,16 @@ SQL
           next
         end
         new_raw = postprocess_post_raw(raw, post.user_id)
-        post.raw = new_raw
-        post.save
+        files = attachments.select { |a| a["message_uid"].to_s == id }
+        new_raw << html_for_attachments(post.user_id, files)
+        unless post.raw == new_raw
+          post.raw = new_raw
+          post.cooked = post.cook(new_raw)
+          cpp = CookedPostProcessor.new(post)
+          cpp.keep_reverse_index_up_to_date
+          post.custom_fields["import_post_process"] = true
+          post.save
+        end
       rescue PrettyText::JavaScriptError
         puts "GOT A JS error on post: #{post.id}"
         nil
@@ -859,56 +857,89 @@ SQL
         print_status(current += 1, max)
       end
     end
+
+    SiteSetting.authorized_extensions = default_extensions
+    SiteSetting.max_attachment_size_kb = default_max_att_size
   end
 
   def postprocess_post_raw(raw, user_id)
 
     doc = Nokogiri::HTML.fragment(raw)
 
-    doc.css("a,img").each do |l|
-      uri = URI.parse(l["href"] || l["src"]) rescue nil
-      if uri && uri.hostname == OLD_DOMAIN
-        uri.hostname = nil
+    doc.css("a,img,li-image").each do |l|
+      upload_name, image, linked_upload = [nil] * 3
+
+      if l.name == "li-image" && l["id"]
+        upload_name = l["id"]
+      else
+        uri = URI.parse(l["href"] || l["src"]) rescue nil
+        uri.hostname = nil if uri && uri.hostname == OLD_DOMAIN
+
+        if uri && !uri.hostname
+          if l["href"]
+            l["href"] = uri.path
+            # we have an internal link, lets see if we can remap it?
+            permalink = Permalink.find_by_url(uri.path) rescue nil
+
+            if l["href"]
+              if permalink && permalink.target_url
+                l["href"] = permalink.target_url
+              elsif l["href"] =~ /^\/gartner\/attachments\/gartner\/([^.]*).(\w*)/
+                linked_upload = "#{$1}.#{$2}"
+              end
+            end
+          elsif l["src"]
+
+            # we need an upload here
+            upload_name = $1 if uri.path =~ /image-id\/([^\/]+)/
+          end
+        end
       end
 
-      if uri && !uri.hostname
-        if l["href"]
-          l["href"] = uri.path
-          # we have an internal link, lets see if we can remap it?
-          permalink = Permalink.find_by_url(uri.path) rescue nil
-          if l["href"] && permalink && permalink.target_url
-            l["href"] = permalink.target_url
-          end
-        elsif l["src"]
+      if upload_name
+        png = UPLOAD_DIR + "/" + upload_name + ".png"
+        jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
+        gif = UPLOAD_DIR + "/" + upload_name + ".gif"
 
-          # we need an upload here
-          upload_name = $1 if uri.path =~ /image-id\/([^\/]+)/
-          if upload_name
-            png = UPLOAD_DIR + "/" + upload_name + ".png"
-            jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
-            gif = UPLOAD_DIR + "/" + upload_name + ".gif"
-
-            # check to see if we have it
-            if File.exist?(png)
-              image = png
-            elsif File.exists?(jpg)
-              image = jpg
-            elsif File.exists?(gif)
-              image = gif
-            end
-          end
-
-          if image
-            File.open(image) do |file|
-              upload = UploadCreator.new(file, "image." + (image.ends_with?(".png") ? "png" : "jpg")).create_for(user_id)
-              l["src"] = upload.url
-            end
-          else
-            puts "image was missing #{l["src"]}"
-          end
-
+        # check to see if we have it
+        if File.exist?(png)
+          image = png
+        elsif File.exists?(jpg)
+          image = jpg
+        elsif File.exists?(gif)
+          image = gif
         end
 
+        if image
+          File.open(image) do |file|
+            upload = UploadCreator.new(file, "image." + (image.ends_with?(".png") ? "png" : "jpg")).create_for(user_id)
+            l.name = "img" if l.name == "li-image"
+            l["src"] = upload.url
+          end
+        else
+          puts "image was missing #{l["src"]}"
+        end
+      elsif linked_upload
+        segments = linked_upload.match(/\/(\d*)\/(\d)\/([^.]*).(\w*)$/)
+
+        if segments.present?
+          lithium_post_id = segments[1]
+          attachment_number = segments[2]
+
+          result = mysql_query("select a.attachment_id, f.file_name from tblia_message_attachments a
+            INNER JOIN message2 m ON a.message_uid = m.unique_id
+            INNER JOIN tblia_attachment f ON a.attachment_id = f.attachment_id
+            where m.id = #{lithium_post_id} AND a.attach_num = #{attachment_number} limit 0, 1")
+
+          result.each do |row|
+            upload, filename = find_upload(user_id, row["attachment_id"], row["file_name"])
+            if upload.present?
+              l["href"] = upload.url
+            else
+              puts "attachment was missing #{l["href"]}"
+            end
+          end
+        end
       end
 
     end
@@ -923,6 +954,20 @@ SQL
     # nbsp central
     raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/, "\\1 \\2")
     raw
+  end
+
+  def html_for_attachments(user_id, files)
+    html = "";
+
+    files.each do |file|
+      upload, filename = find_upload(user_id, file["attachment_id"], file["file_name"])
+      if upload.present?
+        html << "\n" if html.present?
+        html << html_for_upload(upload, filename)
+      end
+    end
+
+    html
   end
 
   def fake_email
