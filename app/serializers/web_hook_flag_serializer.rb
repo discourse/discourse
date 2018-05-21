@@ -8,7 +8,7 @@ class WebHookFlagSerializer < ApplicationSerializer
              :resolved_by
 
   def post
-    BasicPostSerializer.new(object.post, scope: scope, root: false).as_json
+    WebHookPostSerializer.new(object.post, scope: scope, root: false).as_json
   end
 
   def flag_type
@@ -32,9 +32,7 @@ class WebHookFlagSerializer < ApplicationSerializer
   end
 
   def resolved_by
-    if object.disposed_by_id.present?
-      User.find(object.disposed_by_id).username
-    end
+    User.find(object.disposed_by_id).username
   end
 
   def include_resolved_by?
