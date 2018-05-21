@@ -23,7 +23,7 @@ QUnit.test('replying to post', async assert => {
 
 });
 
-QUnit.test('replying to post - reply_as_private_message', assert => {
+QUnit.skip('replying to post - reply_as_private_message', assert => {
   const composerActions = selectKit('.composer-actions');
 
   visit('/t/internationalization-localization/280');
@@ -107,7 +107,7 @@ QUnit.test('shared draft', assert => {
   });
 });
 
-QUnit.test('interactions', assert => {
+QUnit.skip('interactions', assert => {
   const composerActions = selectKit('.composer-actions');
   const quote = 'Life is like riding a bicycle.';
 
