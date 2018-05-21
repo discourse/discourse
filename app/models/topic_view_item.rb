@@ -58,13 +58,12 @@ end
 #  topic_id   :integer          not null
 #  viewed_at  :date             not null
 #  user_id    :integer
-#  ip_address :inet             not null
+#  ip_address :inet
 #
 # Indexes
 #
 #  index_topic_views_on_topic_id_and_viewed_at  (topic_id,viewed_at)
 #  index_topic_views_on_user_id_and_viewed_at   (user_id,viewed_at)
 #  index_topic_views_on_viewed_at_and_topic_id  (viewed_at,topic_id)
-#  ip_address_topic_id_topic_views              (ip_address,topic_id) UNIQUE
-#  user_id_topic_id_topic_views                 (user_id,topic_id) UNIQUE
+#  uniq_ip_or_user_id_topic_views               (user_id,ip_address,topic_id) UNIQUE
 #
