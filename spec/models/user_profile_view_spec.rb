@@ -34,6 +34,8 @@ RSpec.describe UserProfileView do
     ['1.1.1.1', '2.2.2.2'].each do |ip|
       add(user_profile_id, ip, other_user.id, time)
       expect(described_class.count).to eq(1)
+      # should not actually log IPs
+      expect(UserProfileView.where(user_id: other_user.id).count(:ip_address)).to eq(0)
     end
   end
 
