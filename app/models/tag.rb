@@ -17,6 +17,7 @@ class Tag < ActiveRecord::Base
   after_save :index_search
 
   after_commit :trigger_tag_created_event, on: :create
+  after_commit :trigger_tag_updated_event, on: :update
   after_commit :trigger_tag_destroyed_event, on: :destroy
 
   def self.ensure_consistency!
@@ -124,14 +125,15 @@ class Tag < ActiveRecord::Base
     SearchIndexer.index(self)
   end
 
-  def trigger_tag_created_event
-    DiscourseEvent.trigger(:tag_created, self)
-    true
-  end
-
-  def trigger_tag_destroyed_event
-    DiscourseEvent.trigger(:tag_destroyed, self)
-    true
+  %i{
+    tag_created
+    tag_updated
+    tag_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
   end
 end
 

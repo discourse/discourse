@@ -36,6 +36,7 @@ class Group < ActiveRecord::Base
   after_destroy :expire_cache
 
   after_commit :trigger_group_created_event, on: :create
+  after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
 
   def expire_cache
@@ -584,14 +585,15 @@ class Group < ActiveRecord::Base
     self.member_of(groups, user).where("gu.owner")
   end
 
-  def trigger_group_created_event
-    DiscourseEvent.trigger(:group_created, self)
-    true
-  end
-
-  def trigger_group_destroyed_event
-    DiscourseEvent.trigger(:group_destroyed, self)
-    true
+  %i{
+    group_created
+    group_updated
+    group_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
   end
 
   protected
