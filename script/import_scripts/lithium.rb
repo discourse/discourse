@@ -944,6 +944,21 @@ SQL
 
     end
 
+    # for user mentions
+    doc.css("li-user").each do |l|
+      uid = l["uid"]
+
+      if uid.present?
+        user = UserCustomField.find_by(name: 'import_id', value: uid).try(:user)
+        if user.present?
+          username = user.username
+          span = doc.create_element "span"
+          span.inner_html = "@#{username}"
+          l.replace span
+        end
+      end
+    end
+
     raw = ReverseMarkdown.convert(doc.to_s)
     raw.gsub!(/^\s*&nbsp;\s*$/, "")
     # ugly quotes
