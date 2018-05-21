@@ -41,6 +41,7 @@ class SearchLog < ActiveRecord::Base
     search_type = search_types[search_type]
     return [:error] unless search_type.present? && ip_address.present?
 
+    ip_address = nil if user_id
     key = redis_key(user_id: user_id, ip_address: ip_address)
 
     result = nil
@@ -143,7 +144,7 @@ end
 #  id                 :integer          not null, primary key
 #  term               :string           not null
 #  user_id            :integer
-#  ip_address         :inet             not null
+#  ip_address         :inet
 #  search_result_id   :integer
 #  search_type        :integer          not null
 #  created_at         :datetime         not null
