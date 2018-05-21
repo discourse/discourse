@@ -721,7 +721,7 @@ describe PostAction do
     end
   end
 
-  describe "triggers webhook events" do
+  describe "triggers Discourse events" do
     let(:post) { Fabricate(:post) }
 
     it 'flag created' do

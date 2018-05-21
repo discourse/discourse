@@ -73,7 +73,7 @@ end
   tag_destroyed
 ).each do |event|
   DiscourseEvent.on(event) do |tag|
-    WebHook.enqueue_object_hooks(:tag, tag, event)
+    WebHook.enqueue_object_hooks(:tag, tag, event, TagSerializer)
   end
 end
 
@@ -84,6 +84,6 @@ end
   flag_deferred
 ).each do |event|
   DiscourseEvent.on(event) do |flag|
-    WebHook.enqueue_object_hooks(:flag, flag, event, WebHookFlagSerializer)
+    WebHook.enqueue_object_hooks(:flag, flag, event)
   end
 end
