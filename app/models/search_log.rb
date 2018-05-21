@@ -1,7 +1,7 @@
 require_dependency 'enum'
 
 class SearchLog < ActiveRecord::Base
-  validates_presence_of :term, :ip_address
+  validates_presence_of :term
 
   def self.search_types
     @search_types ||= Enum.new(
