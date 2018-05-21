@@ -5,6 +5,31 @@ class WebHookUserSerializer < UserSerializer
   def staff_attributes(*attrs)
   end
 
+  %i{
+    can_edit
+    can_edit_username
+    can_edit_email
+    can_edit_name
+    can_send_private_messages
+    can_send_private_message_to_user
+    uploaded_avatar_id
+    has_title_badges
+    bio_cooked
+    custom_fields
+    can_be_deleted
+    can_delete_all_posts
+    system_avatar_upload_id
+    gravatar_avatar_upload_id
+    custom_avatar_upload_id
+    can_change_bio
+    user_api_keys
+    group_users
+  }.each do |attr|
+    define_method("include_#{attr}?") do
+      false
+    end
+  end
+
   def include_email?
     scope.is_admin?
   end
