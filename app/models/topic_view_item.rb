@@ -7,7 +7,7 @@ class TopicViewItem < ActiveRecord::Base
   validates_presence_of :topic_id, :ip_address, :viewed_at
 
   def self.add(topic_id, ip, user_id = nil, at = nil, skip_redis = false)
-    # Only store a view once per day per thing per user per ip
+    # Only store a view once per day per thing per (user || ip)
     at ||= Date.today
     redis_key = "view:#{topic_id}:#{at}"
     if user_id
@@ -34,6 +34,7 @@ class TopicViewItem < ActiveRecord::Base
           builder.where("ip_address = :ip_address AND topic_id = :topic_id AND user_id IS NULL")
         else
           builder.where("user_id = :user_id AND topic_id = :topic_id")
+          ip = nil # do not store IP of logged in users
         end
 
         result = builder.exec(topic_id: topic_id, ip_address: ip, viewed_at: at, user_id: user_id)
