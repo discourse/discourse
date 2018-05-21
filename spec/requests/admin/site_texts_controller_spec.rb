@@ -45,7 +45,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "works as expectd with correct keys" do
-        put '/admin/customize/site_texts/title.json', params: {
+        put '/admin/customize/site_texts/login_required.welcome_message.json', params: {
           site_text: { value: 'foo' }
         }
 
@@ -54,7 +54,7 @@ RSpec.describe Admin::SiteTextsController do
         json = ::JSON.parse(response.body)
         site_text = json['site_text']
 
-        expect(site_text['id']).to eq('title')
+        expect(site_text['id']).to eq('login_required.welcome_message')
         expect(site_text['value']).to eq('foo')
       end
 
