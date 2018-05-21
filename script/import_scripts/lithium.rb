@@ -152,7 +152,7 @@ class ImportScripts::Lithium < ImportScripts::Base
             # import user avatar
             sso_id = u.custom_fields["sso_id"]
             if sso_id.present?
-              prefix = "#{UPLOAD_DIR}/#{sso_id}_"
+              prefix = "#{AVATAR_DIR}/#{sso_id}_"
               file = get_file(prefix + "actual.jpeg")
               file ||= get_file(prefix + "profile.jpeg")
 
