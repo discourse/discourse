@@ -134,6 +134,7 @@ class SearchLog < ActiveRecord::Base
     if search_id.present?
       SearchLog.where('id < ?', search_id[0]).delete_all
     end
+    SearchLog.where('created_at < TIMESTAMP ?', SiteSetting.search_query_log_max_retention_days.days.ago).delete_all
   end
 end
 
