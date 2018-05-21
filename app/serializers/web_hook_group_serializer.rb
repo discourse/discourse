@@ -1,4 +1,4 @@
-class WebHookGroupSerializer < GroupShowSerializer
+class WebHookGroupSerializer < BasicGroupSerializer
 
   %i{
     is_group_user
