@@ -157,15 +157,15 @@ class ImportScripts::Lithium < ImportScripts::Base
               file ||= get_file(prefix + "profile.jpeg")
 
               if file.present?
-                upload = UploadCreator.new(file, file.path, type: "avatar").create_for(user.id)
-                user.create_user_avatar unless user.user_avatar
+                upload = UploadCreator.new(file, file.path, type: "avatar").create_for(u.id)
+                u.create_user_avatar unless u.user_avatar
 
-                if !user.user_avatar.contains_upload?(upload.id)
-                  user.user_avatar.update_columns(custom_upload_id: upload.id)
+                if !u.user_avatar.contains_upload?(upload.id)
+                  u.user_avatar.update_columns(custom_upload_id: upload.id)
 
-                  if user.uploaded_avatar_id.nil? ||
-                    !user.user_avatar.contains_upload?(user.uploaded_avatar_id)
-                    user.update_columns(uploaded_avatar_id: upload.id)
+                  if u.uploaded_avatar_id.nil? ||
+                    !u.user_avatar.contains_upload?(u.uploaded_avatar_id)
+                    u.update_columns(uploaded_avatar_id: upload.id)
                   end
                 end
               end
