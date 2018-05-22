@@ -3061,7 +3061,7 @@ en:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include files)"
+            without_uploads: "Yes (do not include uploads)"
           download:
             label: "Download"
             title: "Send email with download link"
