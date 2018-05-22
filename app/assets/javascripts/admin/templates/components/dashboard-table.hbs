@@ -1,0 +1,36 @@
+{{#conditional-loading-section isLoading=isLoading}}
+  <div class="table-title">
+    <h3>{{title}}</h3>
+  </div>
+
+  {{#each reportsForPeriod as |report|}}
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            {{#if report.labels}}
+              {{#each report.labels as |label|}}
+                <th>{{label}}</th>
+              {{/each}}
+            {{else}}
+              {{#each report.data as |data|}}
+                <th>{{data.x}}</th>
+              {{/each}}
+            {{/if}}
+          </tr>
+        </thead>
+        <tbody>
+          {{#unless hasBlock}}
+            {{#each report.data as |data|}}
+              <tr>
+                <td>{{number data.y}}</td>
+              </tr>
+            {{/each}}
+          {{else}}
+            {{yield (hash report=report)}}
+          {{/unless}}
+        </tbody>
+      </table>
+    </div>
+  {{/each}}
+{{/conditional-loading-section}}
