@@ -405,10 +405,16 @@ describe UsernameChanger do
 
       context 'oneboxes' do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
-        let(:avatar_url) { user.avatar_template.gsub("{size}", "40") }
+        let(:avatar_url) { user_avatar_url(user) }
+        let(:evil_trout) { Fabricate(:evil_trout) }
+        let(:another_quoted_post) { create_post(user: evil_trout, topic: topic, post_number: 2, raw: "evil post") }
 
         def protocol_relative_url(url)
           url.sub(/^https?:/, '')
+        end
+
+        def user_avatar_url(u)
+          u.avatar_template.gsub("{size}", "40")
         end
 
         it 'updates avatar for linked topics and posts' do
@@ -437,6 +443,38 @@ describe UsernameChanger do
               </div>
               <blockquote>
                 quoted post
+              </blockquote>
+            </aside>
+            </p>
+          HTML
+        end
+
+        it 'does not update the wrong avatar' do
+          raw = "#{quoted_post.full_url}\n#{another_quoted_post.full_url}"
+          post = create_post_and_change_username(raw: raw)
+
+          expect(post.raw).to eq(raw)
+
+          expect(post.cooked).to match_html(<<~HTML)
+            <p><aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
+              <div class="title">
+                <div class="quote-controls"></div>
+                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
+              </div>
+              <blockquote>
+                quoted post
+              </blockquote>
+            </aside>
+            <br>
+            <aside class="quote" data-post="#{another_quoted_post.post_number}" data-topic="#{another_quoted_post.topic.id}">
+              <div class="title">
+                <div class="quote-controls"></div>
+                <img alt="" width="20" height="20" src="#{user_avatar_url(evil_trout)}" class="avatar">
+                <a href="#{protocol_relative_url(another_quoted_post.full_url)}">#{another_quoted_post.topic.title}</a>
+              </div>
+              <blockquote>
+                evil post
               </blockquote>
             </aside>
             </p>
