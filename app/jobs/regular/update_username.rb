@@ -133,14 +133,32 @@ module Jobs
         a["href"] = a["href"].gsub(@cooked_mention_user_path_regex, "/u/#{@new_username}") if a["href"]
       end
 
-      doc.css("aside.quote > div.title").each do |div|
+      doc.css("aside.quote").each do |aside|
+        next unless div = aside.at_css("div.title")
+
+        username_replaced = false
+
         div.children.each do |child|
-          child.content = child.content.gsub(@cooked_quote_username_regex, @new_username) if child.text?
+          if child.text?
+            content = child.content
+            username_replaced = content.gsub!(@cooked_quote_username_regex, @new_username).present?
+            child.content = content if username_replaced
+          end
         end
-        div.at_css("img.avatar")&.replace(@avatar_img)
+
+        if username_replaced || quotes_correct_user?(aside)
+          div.at_css("img.avatar")&.replace(@avatar_img)
+        end
       end
 
       doc.to_html
+    end
+
+    def quotes_correct_user?(aside)
+      Post.where(
+        topic_id: aside["data-topic"],
+        post_number: aside["data-post"]
+      ).pluck(:user_id).first == @user_id
     end
   end
 end
