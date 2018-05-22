@@ -4,7 +4,7 @@ class S3Helper
 
   class SettingMissing < StandardError; end
 
-  attr_reader :s3_bucket_name
+  attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_options = default_s3_options.merge(options)
