@@ -208,7 +208,8 @@ class User < ActiveRecord::Base
   def self.username_available?(username, email = nil)
     lower = username.downcase
     return false if reserved_username?(lower)
-    return true  if !User.exists?(username_lower: lower)
+    return true  if User.exec_sql(User::USERNAME_EXISTS_SQL, username: lower).count == 0
+
     # staged users can use the same username since they will take over the account
     email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
   end
