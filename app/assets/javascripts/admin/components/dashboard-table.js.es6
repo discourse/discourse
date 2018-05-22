@@ -2,7 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import AsyncReport from "admin/mixins/async-report";
 
 export default Ember.Component.extend(AsyncReport, {
-  classNames: ["dashboard-inline-table"],
+  classNames: ["dashboard-table"],
 
   fetchReport() {
     this._super();
