@@ -531,7 +531,7 @@ describe Admin::UsersController do
 
         it "returns an api response that the user can't be deleted because it has posts" do
           delete :destroy, params: { id: delete_me.id }, format: :json
-          expect(response).to be_success
+          expect(response).to be_forbidden
           json = ::JSON.parse(response.body)
           expect(json['deleted']).to eq(false)
         end
