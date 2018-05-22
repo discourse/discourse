@@ -25,20 +25,20 @@ id:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "j:mm a"
+      time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "BBB H j:mm a"
-      long_no_year_no_time: "BBB H"
+      long_no_year: "BBB D h:mm a"
+      long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
-      long_with_year: "BBB H, TTTT j:mm a"
-      long_with_year_no_time: "BBB H, TTTT"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "BBB H, 'TT LT"
-      long_date_without_year: "BBB H, LT"
-      long_date_with_year_without_time: "BBB H, 'TT"
-      long_date_without_year_with_linebreak: "BBB H <br/>LT"
-      long_date_with_year_with_linebreak: "BBB H, 'TT <br/>LT"
-      wrap_ago: "%{date} lalu"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      wrap_ago: "%{date} yang lalu"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -61,8 +61,8 @@ id:
           other: '> %{count}y'
         almost_x_years:
           other: '%{count}y'
-        date_month: "BBB H"
-        date_year: "BBB 'TT"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           other: '%{count} menit'
@@ -70,7 +70,7 @@ id:
           other: '%{count} jam'
         x_days:
           other: '%{count} hari'
-        date_year: "BBB H, 'TT"
+        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           other: '%{count} menit yang lalu'
