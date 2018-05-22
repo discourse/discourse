@@ -73,6 +73,22 @@ describe TopicLinkClick do
 
       end
 
+      context 'while logged in' do
+        let(:other_user) { Fabricate(:user) }
+        before do
+          @url = TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1', user_id: other_user.id)
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click without an IP' do
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@click.user_id).to eq(other_user.id)
+          expect(@click.ip_address).to eq(nil)
+        end
+
+      end
+
       context "relative urls" do
         let(:host) { URI.parse(Discourse.base_url).host }
 
