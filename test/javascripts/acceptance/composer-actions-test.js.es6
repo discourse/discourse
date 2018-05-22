@@ -23,7 +23,7 @@ QUnit.test('replying to post', async assert => {
 
 });
 
-QUnit.test('replying to post - reply_as_private_message', assert => {
+QUnit.skip('replying to post - reply_as_private_message', assert => {
   const composerActions = selectKit('.composer-actions');
 
   visit('/t/internationalization-localization/280');
