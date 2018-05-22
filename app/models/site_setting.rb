@@ -133,7 +133,7 @@ class SiteSetting < ActiveRecord::Base
     end
 
     def self.absolute_base_url
-      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket
+      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       if SiteSetting.Upload.s3_region == "us-east-1"
