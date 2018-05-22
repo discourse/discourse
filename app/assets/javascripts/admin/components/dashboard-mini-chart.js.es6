@@ -52,17 +52,7 @@ export default Ember.Component.extend(AsyncReport, {
   fetchReport() {
     this._super();
 
-    let payload = {
-      data: { cache: true, facets: ["prev_period"] }
-    };
-
-    if (this.get("startDate")) {
-      payload.data.start_date = this.get("startDate").locale('en').format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
-    }
-
-    if (this.get("endDate")) {
-      payload.data.end_date = this.get("endDate").locale('en').format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
-    }
+    let payload = this.buildPayload(["prev_period"]);
 
     if (this._chart) {
       this._chart.destroy();

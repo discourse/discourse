@@ -1,4 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
+import Report from "admin/models/report";
 
 export default Ember.Mixin.create({
   classNameBindings: ["isLoading", "dataSourceNames"],
@@ -15,6 +16,24 @@ export default Ember.Mixin.create({
   @computed("dataSourceNames")
   dataSources(dataSourceNames) {
     return dataSourceNames.split(",").map(source => `/admin/reports/${source}`);
+  },
+
+  buildPayload(facets) {
+    let payload = { data: { cache: true, facets } };
+
+    if (this.get("startDate")) {
+      payload.data.start_date = this.get("startDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
+    }
+
+    if (this.get("endDate")) {
+      payload.data.end_date = this.get("endDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
+    }
+
+    if (this.get("limit")) {
+      payload.data.limit = this.get("limit");
+    }
+
+    return payload;
   },
 
   @computed("reports.[]", "startDate", "endDate", "dataSourceNames")
@@ -69,7 +88,9 @@ export default Ember.Mixin.create({
     this.set("isLoading", false);
   },
 
-  loadReport() {},
+  loadReport(jsonReport) {
+    return Report.create(jsonReport);
+  },
 
   fetchReport() {
     this.set("reports", []);

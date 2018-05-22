@@ -370,6 +370,32 @@
   }
 }
 
+.dashboard-inline-table {
+  margin-bottom: 1em;
+
+  .table-title {
+    border-bottom: 1px solid $primary-low;
+    margin-bottom: 1em;
+    padding-bottom: .5em;
+  }
+
+  .table-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .table-cell {
+    margin-right: .5em;
+    display: flex;
+
+    .label {
+      font-weight: 700;
+      margin-right: .5em;
+    }
+  }
+}
+
 .dashboard-table.activity-metrics {
   table {
     @media screen and (min-width: 400px) {
@@ -381,7 +407,7 @@
     .d-icon {
       color: $primary-low-mid;
       min-width: 14px;
-      text-align: center;      
+      text-align: center;
     }
     @media screen and (max-width: 400px) {
       .d-icon { display: none; }
