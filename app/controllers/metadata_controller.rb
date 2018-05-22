@@ -14,6 +14,9 @@ class MetadataController < ApplicationController
 
   def default_manifest
     logo = SiteSetting.large_icon_url.presence || SiteSetting.logo_small_url.presence || SiteSetting.apple_touch_icon_url.presence
+    if !logo
+      logo = path('/images/d-logo-sketch-small.png')
+    end
     file_info = get_file_info(logo)
 
     manifest = {
