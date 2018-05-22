@@ -47,22 +47,25 @@ class SearchLog < ActiveRecord::Base
 
     if existing = $redis.get(key)
       id, old_term = existing.split(",", 2)
+
       if term.start_with?(old_term)
         where(id: id.to_i).update_all(
           created_at: Time.zone.now,
           term: term
         )
+
         result = [:updated, id.to_i]
       end
     end
 
     if !result
-      log = create(
+      log = self.create!(
         term: term,
         search_type: search_type,
         ip_address: ip_address,
         user_id: user_id
       )
+
       result = [:created, log.id]
     end
 

@@ -97,6 +97,7 @@ class PostActionNotifier
     return unless post
     return if post_revision.user.blank?
     return if post_revision.user_id == post.user_id
+    return if post.topic.blank?
     return if post.topic.private_message?
     return if SiteSetting.disable_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
 
@@ -109,4 +110,17 @@ class PostActionNotifier
     )
   end
 
+  def self.after_post_unhide(post, flaggers)
+    return if @disabled || post.last_editor.blank? || flaggers.blank?
+
+    flaggers.each do |flagger|
+      alerter.create_notification(
+        flagger,
+        Notification.types[:edited],
+        post,
+        display_username: post.last_editor.username,
+        acting_user_id: post.last_editor.id
+      )
+    end
+  end
 end

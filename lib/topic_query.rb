@@ -44,7 +44,8 @@ class TopicQuery
          per_page
          visible
          guardian
-         no_definitions)
+         no_definitions
+         destination_category_id)
   end
 
   # Maps `order` to a columns in `topics`
@@ -220,6 +221,16 @@ class TopicQuery
       .where('um.user_id IS NULL')
   end
 
+  def list_group_topics(group)
+    list = default_results.where("
+      topics.user_id IN (
+        SELECT user_id FROM group_users gu WHERE gu.group_id = #{group.id.to_i}
+      )
+    ")
+
+    create_list(:group_topics, {}, list)
+  end
+
   def list_private_messages(user)
     list = private_messages_for(user, :user)
 
@@ -278,8 +289,8 @@ class TopicQuery
 
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
-    pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id).limit(nil).order('pinned_at DESC').pluck(:id)
-    non_pinned_ids = query.where('pinned_at IS NULL OR category_id <> ?', category.id).pluck(:id)
+    pinned_ids = query.where('topics.pinned_at IS NOT NULL AND topics.category_id = ?', category.id).limit(nil).order('pinned_at DESC').pluck(:id)
+    non_pinned_ids = query.where('topics.pinned_at IS NULL OR topics.category_id <> ?', category.id).pluck(:id)
     (pinned_ids + non_pinned_ids)
   end
 
@@ -424,11 +435,21 @@ class TopicQuery
 
       if type == :group
         result = result.includes(:allowed_users)
-        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups
-                                              WHERE group_id IN (
-                                                  SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}) AND
-                                                         group_id IN (SELECT id FROM groups WHERE name ilike ?)
-                                             )", @options[:group_name])
+        result = result.where("
+          topics.id IN (
+            SELECT topic_id FROM topic_allowed_groups
+            WHERE (
+              group_id IN (
+                SELECT group_id
+                FROM group_users
+                WHERE user_id = #{user.id.to_i}
+                OR #{user.staff?}
+              )
+            )
+            AND group_id IN (SELECT id FROM groups WHERE name ilike ?)
+          )",
+          @options[:group_name]
+        )
       elsif type == :user
         result = result.includes(:allowed_users)
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
@@ -457,6 +478,25 @@ class TopicQuery
         offset = options[:page].to_i * options[:per_page]
         result = result.offset(offset) if offset > 0
       end
+      result
+    end
+
+    def apply_shared_drafts(result, category_id, options)
+      drafts_category_id = SiteSetting.shared_drafts_category.to_i
+      viewing_shared = category_id && category_id == drafts_category_id
+
+      if guardian.can_create_shared_draft?
+        if options[:destination_category_id]
+          destination_category_id = get_category_id(options[:destination_category_id])
+          topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
+          return result.where(id: topic_ids)
+        elsif viewing_shared
+          result = result.includes(:shared_draft).references(:shared_draft)
+        else
+          return result.where('topics.category_id != ?', drafts_category_id)
+        end
+      end
+
       result
     end
 
@@ -585,6 +625,7 @@ class TopicQuery
 
       result = apply_ordering(result, options)
       result = result.listable_topics.includes(:category)
+      result = apply_shared_drafts(result, category_id, options)
 
       if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
         result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids]).references(:categories)

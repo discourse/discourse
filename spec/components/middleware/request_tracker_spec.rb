@@ -9,6 +9,7 @@ describe Middleware::RequestTracker do
       "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
+      "HTTP_ACCEPT" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
       "rack.input" => ""
     }.merge(opts)
   end
@@ -191,6 +192,28 @@ describe Middleware::RequestTracker do
       expect(status).to eq(200)
     end
 
+    it "allows assets for more requests" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'block'
+      global_setting :max_asset_reqs_per_ip_per_10_seconds, 3
+
+      env1 = env("REMOTE_ADDR" => "1.1.1.1", "DISCOURSE_IS_ASSET_PATH" => 1)
+
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(429)
+
+      env2 = env("REMOTE_ADDR" => "1.1.1.1")
+
+      status, _ = middleware.call(env2)
+      expect(status).to eq(429)
+    end
+
     it "does block if rate limiter is enabled" do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :max_reqs_per_ip_mode, 'block'
@@ -199,13 +222,13 @@ describe Middleware::RequestTracker do
       env2 = env("REMOTE_ADDR" => "1.1.1.2")
 
       status, _ = middleware.call(env1)
-      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
 
+      status, _ = middleware.call(env1)
       expect(status).to eq(429)
 
       status, _ = middleware.call(env2)
       expect(status).to eq(200)
-
     end
   end
 
@@ -213,7 +236,7 @@ describe Middleware::RequestTracker do
     def app(result, sql_calls: 0, redis_calls: 0)
       lambda do |env|
         sql_calls.times do
-          User.where(id: -100).first
+          User.where(id: -100).pluck(:id)
         end
         redis_calls.times do
           $redis.get("x")
@@ -238,8 +261,19 @@ describe Middleware::RequestTracker do
     end
 
     it "can correctly log detailed data" do
+
+      # ensure pg is warmed up with the select 1 query
+      User.where(id: -100).pluck(:id)
+
+      freeze_time
+      start = Time.now.to_f
+
+      freeze_time 1.minute.from_now
+
       tracker = Middleware::RequestTracker.new(app([200, {}, []], sql_calls: 2, redis_calls: 2))
-      tracker.call(env)
+      tracker.call(env("HTTP_X_REQUEST_START" => "t=#{start}"))
+
+      expect(@data[:queue_seconds]).to eq(60)
 
       timing = @data[:timing]
       expect(timing[:total_duration]).to be > 0
@@ -251,4 +285,58 @@ describe Middleware::RequestTracker do
       expect(timing[:redis][:calls]).to eq 2
     end
   end
+
+  context "crawler blocking" do
+    let :middleware do
+      app = lambda do |env|
+        [200, {}, ['OK']]
+      end
+
+      Middleware::RequestTracker.new(app)
+    end
+
+    def expect_success_response(status, _, response)
+      expect(status).to eq(200)
+      expect(response).to eq(['OK'])
+    end
+
+    def expect_blocked_response(status, _, response)
+      expect(status).to eq(403)
+      expect(response).to eq(['Crawler is not allowed'])
+    end
+
+    it "applies whitelisted_crawler_user_agents correctly" do
+      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
+    end
+
+    it "applies blacklisted_crawler_user_agents correctly" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
+    end
+
+    it "blocked crawlers shouldn't log page views" do
+      ApplicationRequest.clear_cache!
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect {
+        middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'))
+        ApplicationRequest.write_cache!
+      }.to_not change { ApplicationRequest.count }
+    end
+
+    it "blocks json requests" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect_blocked_response(*middleware.call(env(
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)',
+        'HTTP_ACCEPT' => 'application/json'
+      )))
+    end
+  end
+
 end

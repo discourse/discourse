@@ -9,11 +9,11 @@
     {{component noneRowComponent
       computedContent=noneRowComputedContent
       templateForRow=templateForNoneRow
-      highlightedValue=highlightedValue
-      clearSelection=clearSelection
-      highlight=highlight
+      highlighted=highlighted
+      onMouseoverRow=onMouseoverRow
       computedValue=computedValue
       options=rowComponentOptions
+      onClickRow=onClickRow
     }}
   {{/if}}
 {{/if}}
@@ -21,35 +21,34 @@
 {{#if createRowComputedContent}}
   {{component createRowComponent
     computedContent=createRowComputedContent
-    highlightedValue=highlightedValue
+    highlighted=highlighted
     computedValue=computedValue
     templateForRow=templateForCreateRow
-    highlight=highlight
-    select=create
+    onMouseoverRow=onMouseoverRow
+    onClickRow=onClickRow
     options=rowComponentOptions
   }}
 {{/if}}
 
-{{#if maxContentRow}}
-  <li class="select-kit-row max-content">
-    {{maxContentRow}}
+{{#if noContentRow}}
+  <li class="select-kit-row no-content">
+    {{noContentRow}}
   </li>
 {{else}}
-  {{#if noContentRow}}
-    <li class="select-kit-row no-content">
-      {{noContentRow}}
-    </li>
-  {{else}}
-    {{#each collectionComputedContent as |computedContent|}}
-      {{component rowComponent
-        computedContent=computedContent
-        highlightedValue=highlightedValue
-        computedValue=computedValue
-        templateForRow=templateForRow
-        select=select
-        highlight=highlight
-        options=rowComponentOptions
-      }}
-    {{/each}}
+  {{#if validationMessage}}
+    <div class="validation-message">
+      {{validationMessage}}
+    </div>
   {{/if}}
+  {{#each collectionComputedContent as |computedContent|}}
+    {{component rowComponent
+      computedContent=computedContent
+      highlighted=highlighted
+      computedValue=computedValue
+      templateForRow=templateForRow
+      onClickRow=onClickRow
+      onMouseoverRow=onMouseoverRow
+      options=rowComponentOptions
+    }}
+  {{/each}}
 {{/if}}

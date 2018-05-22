@@ -176,6 +176,11 @@ describe PostAnalyzer do
       expect(post_analyzer.link_count).to eq(0)
     end
 
+    it "returns links with href=''" do
+      post_analyzer = PostAnalyzer.new('<a href="">Hello world</a>', nil)
+      expect(post_analyzer.link_count).to eq(1)
+    end
+
     it "finds links from markdown" do
       Oneboxer.stubs :onebox
       post_analyzer = PostAnalyzer.new(raw_post_one_link_md, default_topic_id)

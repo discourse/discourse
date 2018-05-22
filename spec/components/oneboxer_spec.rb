@@ -98,4 +98,13 @@ describe Oneboxer do
 
   end
 
+  context ".onebox_raw" do
+    it "should escape the onebox URL before processing" do
+      post = Fabricate(:post, raw: Discourse.base_url + "/new?'class=black")
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process_oneboxes
+      expect(cpp.html).to eq("<p><a href=\"#{Discourse.base_url}/new?%27class=black\">http://test.localhost/new?%27class=black</a></p>")
+    end
+  end
+
 end

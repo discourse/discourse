@@ -135,6 +135,49 @@ describe Validators::PostValidator do
     end
   end
 
+  context "too_many_images" do
+    before do
+      SiteSetting.min_trust_to_post_images = 0
+      SiteSetting.newuser_max_images = 2
+    end
+
+    it "should be invalid when new user exceeds max mentions limit" do
+      post.acting_user = build(:newuser)
+      post.expects(:image_count).returns(3)
+      validator.max_images_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid when new user does not exceed max mentions limit" do
+      post.acting_user = build(:newuser)
+      post.expects(:image_count).returns(2)
+      validator.max_images_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be invalid when user trust level is not sufficient" do
+      SiteSetting.min_trust_to_post_images = 4
+      post.acting_user = build(:leader)
+      post.expects(:image_count).returns(2)
+      validator.max_images_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid for moderator in all cases" do
+      post.acting_user = build(:moderator)
+      post.expects(:image_count).never
+      validator.max_images_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for admin in all cases" do
+      post.acting_user = build(:admin)
+      post.expects(:image_count).never
+      validator.max_images_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+  end
+
   context "invalid post" do
     it "should be invalid" do
       validator.validate(post)

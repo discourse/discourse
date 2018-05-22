@@ -229,7 +229,7 @@ class DiscourseRedis
   end
 
   def reconnect
-    @redis.client.reconnect
+    @redis._client.reconnect
   end
 
   def namespace_key(key)

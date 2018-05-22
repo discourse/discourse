@@ -29,10 +29,12 @@ class InlineOneboxer
       return cached if cached.present?
     end
 
+    return unless url
+
     if route = Discourse.route_for(url)
       if route[:controller] == "topics" &&
         route[:action] == "show" &&
-        topic = (Topic.where(id: route[:topic_id].to_i).first rescue nil)
+        topic = Topic.where(id: route[:topic_id].to_i).first
 
         return onebox_for(url, topic.title, opts) if Guardian.new.can_see?(topic)
       end
@@ -42,7 +44,10 @@ class InlineOneboxer
     domains = SiteSetting.inline_onebox_domains_whitelist&.split('|') unless always_allow
 
     if always_allow || domains
-      uri = URI(url) rescue nil
+      uri = begin
+        URI(url)
+      rescue URI::InvalidURIError
+      end
 
       if uri.present? &&
         uri.hostname.present? &&

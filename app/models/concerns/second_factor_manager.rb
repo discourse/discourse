@@ -27,7 +27,7 @@ module SecondFactorManager
       last_used = self.user_second_factor.last_used.to_i
     end
 
-    authenticated = !token.blank? && totp.verify_with_drift_and_prior(token, 0, last_used)
+    authenticated = !token.blank? && totp.verify_with_drift_and_prior(token, 30, last_used)
     self.user_second_factor.update!(last_used: DateTime.now) if authenticated
     !!authenticated
   end

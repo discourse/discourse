@@ -471,7 +471,7 @@ describe Topic do
 
     context 'rate limits' do
       before do
-        SiteSetting.max_topic_invitations_per_day = 2
+        SiteSetting.max_topic_invitations_per_day = 1
         RateLimiter.enable
       end
 
@@ -481,7 +481,6 @@ describe Topic do
       end
 
       it "rate limits topic invitations" do
-
         start = Time.now.tomorrow.beginning_of_day
         freeze_time(start)
 
@@ -489,10 +488,23 @@ describe Topic do
         topic = Fabricate(:topic, user: trust_level_2)
 
         topic.invite(topic.user, user.username)
-        topic.invite(topic.user, "walter@white.com")
 
         expect {
-          topic.invite(topic.user, "user@example.com")
+          topic.invite(topic.user, another_user.username)
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
+
+      it "rate limits PM invitations" do
+        start = Time.now.tomorrow.beginning_of_day
+        freeze_time(start)
+
+        trust_level_2 = Fabricate(:user, trust_level: 2)
+        topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+        topic.invite(topic.user, user.username)
+
+        expect {
+          topic.invite(topic.user, another_user.username)
         }.to raise_error(RateLimiter::LimitExceeded)
       end
     end
@@ -542,6 +554,17 @@ describe Topic do
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
+          end
+        end
+
+        context "when PMs are enabled for TL3 or higher only" do
+          before do
+            SiteSetting.min_trust_to_send_messages = 3
+          end
+
+          it 'should raise error' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::UserExists)
           end
         end
       end
@@ -675,6 +698,7 @@ describe Topic do
 
             group.add(user)
             group.add(user_2)
+            group.add(topic.user)
 
             group.group_users.find_by(user: user_2).update!(
               notification_level: NotificationLevels.all[:muted]
@@ -733,8 +757,8 @@ describe Topic do
 
       it "doesn't bump the topic on an edit to the last post that doesn't result in a new version" do
         expect {
-          SiteSetting.expects(:editing_grace_period).returns(5.minutes)
-          @last_post.revise(@last_post.user, { raw: 'updated contents' }, revised_at: @last_post.created_at + 10.seconds)
+          SiteSetting.editing_grace_period = 5.minutes
+          @last_post.revise(@last_post.user, { raw: @last_post.raw + "a" }, revised_at: @last_post.created_at + 10.seconds)
           @topic.reload
         }.not_to change(@topic, :bumped_at)
       end
@@ -1167,11 +1191,8 @@ describe Topic do
         category.reload
       end
 
-      it 'increases the topic_count' do
-        expect(category.topic_count).to eq(1)
-      end
-
       it "doesn't change the topic_count when the value doesn't change" do
+        expect(category.topic_count).to eq(1)
         expect { topic.change_category_to_id(category.id); category.reload }.not_to change(category, :topic_count)
       end
 
@@ -1189,6 +1210,44 @@ describe Topic do
           expect(topic.reload.category).to eq(new_category)
           expect(new_category.reload.topic_count).to eq(1)
           expect(category.reload.topic_count).to eq(0)
+        end
+
+        describe 'user that is watching the new category' do
+          it 'should generate the notification for the topic' do
+            topic.posts << Fabricate(:post)
+
+            CategoryUser.set_notification_level_for_category(
+              user,
+              CategoryUser::notification_levels[:watching],
+              new_category.id
+            )
+
+            another_user = Fabricate(:user)
+
+            CategoryUser.set_notification_level_for_category(
+              another_user,
+              CategoryUser::notification_levels[:watching_first_post],
+              new_category.id
+            )
+
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(2)
+
+            expect(Notification.where(
+              user_id: user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:posted]
+            ).exists?).to eq(true)
+
+            expect(Notification.where(
+              user_id: another_user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:watching_first_post]
+            ).exists?).to eq(true)
+          end
         end
 
         describe 'when new category is set to auto close by default' do
@@ -1366,6 +1425,18 @@ describe Topic do
 
       expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 19, 5, 0))
       expect(topic.topic_timers.first.errors[:execute_at]).to be_present
+    end
+
+    it "sets a validation error when give a timestamp of an invalid format" do
+      freeze_time now
+
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '۲۰۱۸-۰۳-۲۶ ۱۸:۰۰+۰۸:۰۰',
+          by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     it "can take a timestamp with timezone" do
@@ -1690,7 +1761,7 @@ describe Topic do
 
   describe '#listable_count_per_day' do
     before(:each) do
-      freeze_time
+      freeze_time DateTime.parse('2017-03-01 12:00')
 
       Fabricate(:topic)
       Fabricate(:topic, created_at: 1.day.ago)
@@ -1939,12 +2010,21 @@ describe Topic do
     expect(topic.message_archived?(user)).to eq(false)
 
     group = Fabricate(:group)
+    group2 = Fabricate(:group)
+
     group.add(user)
 
     TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
+    TopicAllowedGroup.create!(topic_id: topic.id, group_id: group2.id)
     GroupArchivedMessage.create!(topic_id: topic.id, group_id: group.id)
 
     expect(topic.message_archived?(user)).to eq(true)
+
+    # here is a pickle, we add another group, make the user a
+    # member of that new group... now this message is not properly archived
+    # for the user any more
+    group2.add(user)
+    expect(topic.message_archived?(user)).to eq(false)
   end
 
   it 'will trigger :topic_status_updated' do

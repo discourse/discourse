@@ -63,27 +63,18 @@
         {{i18n 'user.change_password.action'}}
       {{/if}}
     </a>
+
     {{passwordProgress}}
   </div>
-</div>
 
-<div class="control-group pref-second-factor">
-  <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
-
-  <div class="instructions">
-    <a href {{action "showTwoFactorModal"}}>{{i18n 'user.second_factor.info_prompt'}}</a>
-  </div>
-
-  <div class="controls">
-    <b class="{{secondFactorStatusClass}}">
-      {{#if model.second_factor_enabled}}
-        {{i18n 'user.second_factor.enabled_status'}}
-        {{d-icon 'check'}}
-      {{else}}
-        {{i18n 'user.second_factor.disabled_status'}}
-        {{d-icon 'times'}}
-      {{/if}}
-    </b>
+  <div class="controls pref-second-factor">
+    {{#if model.second_factor_enabled}}
+      {{i18n 'user.second_factor.disable'}}
+    {{else}}
+      {{i18n 'enable'}}
+      <a href {{action "showTwoFactorModal"}}>{{showTwoFactorModalText}}</a>
+      {{i18n 'user.second_factor.enable'}}
+    {{/if}}
 
     {{#if isCurrentUser}}
       {{#link-to "preferences.second-factor" class="btn btn-small btn-icon pad-left no-text"}}
@@ -109,8 +100,10 @@
   <div class="control-group pref-title">
     <label class="control-label">{{i18n 'user.title.title'}}</label>
     <div class="controls">
-      <span class="static">{{model.title}}</span>
-      {{#link-to "preferences.badgeTitle" class="btn btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+      {{combo-box
+        value=newTitleInput
+        content=model.availableTitles
+        none="user.title.none"}}
     </div>
   </div>
 {{/if}}

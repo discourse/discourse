@@ -58,6 +58,16 @@ class ApplicationController < ActionController::Base
 
   layout :set_layout
 
+  if Rails.env == "development"
+    after_action :remember_theme_key
+
+    def remember_theme_key
+      if @theme_key
+        Stylesheet::Watcher.theme_key = @theme_key if defined? Stylesheet::Watcher
+      end
+    end
+  end
+
   def has_escaped_fragment?
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
@@ -107,7 +117,15 @@ class ApplicationController < ActionController::Base
   end
 
   def render_rate_limit_error(e)
-    render_json_error e.description, type: :rate_limit, status: 429, extras: { wait_seconds: e&.available_in }
+    retry_time_in_seconds = e&.available_in
+
+    render_json_error(
+      e.description,
+      type: :rate_limit,
+      status: 429,
+      extras: { wait_seconds: retry_time_in_seconds },
+      headers: { 'Retry-After': retry_time_in_seconds },
+    )
   end
 
   # If they hit the rate limiter
@@ -291,6 +309,8 @@ class ApplicationController < ActionController::Base
   SAFE_MODE = "safe_mode"
 
   def resolve_safe_mode
+    return unless guardian.can_enable_safe_mode?
+
     safe_mode = params[SAFE_MODE]
     if safe_mode
       request.env[NO_CUSTOM] = !!safe_mode.include?(NO_CUSTOM)
@@ -307,7 +327,7 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key]
+    theme_key = request[:preview_theme_key]
 
     user_option = current_user&.user_option
 
@@ -460,6 +480,7 @@ class ApplicationController < ActionController::Base
     def preload_anonymous_data
       store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
+      store_preloaded("themeSettings", Theme.settings_for_client(@theme_key))
       store_preloaded("customHTML", custom_html_json)
       store_preloaded("banner", banner_json)
       store_preloaded("customEmoji", custom_emoji)
@@ -522,12 +543,15 @@ class ApplicationController < ActionController::Base
 
     # Render action for a JSON error.
     #
-    # obj      - a translated string, an ActiveRecord model, or an array of translated strings
+    # obj       - a translated string, an ActiveRecord model, or an array of translated strings
     # opts:
-    #   type   - a machine-readable description of the error
-    #   status - HTTP status code to return
+    #   type    - a machine-readable description of the error
+    #   status  - HTTP status code to return
+    #   headers - extra headers for the response
     def render_json_error(obj, opts = {})
       opts = { status: opts } if opts.is_a?(Integer)
+      opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
+
       render json: MultiJson.dump(create_errors_json(obj, opts)), status: opts[:status] || 422
     end
 
@@ -629,10 +653,12 @@ class ApplicationController < ActionController::Base
           # save original URL in a session so we can redirect after login
           session[:destination_url] = destination_url
           redirect_to path('/session/sso')
+        elsif params[:authComplete].present?
+          redirect_to path("/login?authComplete=true")
         else
           # save original URL in a cookie (javascript redirects after login in this case)
           cookies[:destination_url] = destination_url
-          redirect_to "/login"
+          redirect_to path("/login")
         end
       end
     end
@@ -656,6 +682,10 @@ class ApplicationController < ActionController::Base
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.tr!('-', ' ')
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
+    end
+
+    def is_asset_path
+      request.env['DISCOURSE_IS_ASSET_PATH'] = 1
     end
 
   protected

@@ -12,6 +12,7 @@ describe ReplyByEmailAddressValidator do
 
     it "returns false if value is not an email address" do
       expect(validator.valid_value?('WAT%{reply_key}.com')).to eq(false)
+      expect(validator.valid_value?('word +%{reply_key}@example.com')).to eq(false)
     end
 
     it "returns false if value does not contain '%{reply_key}'" do

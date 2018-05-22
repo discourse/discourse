@@ -5,6 +5,8 @@ export default function() {
 
   this.route('about', { path: '/about', resetNamespace: true });
 
+  this.route('post', { path: '/p/:id' });
+
   // Topic routes
   this.route('topic', { path: '/t/:slug/:id', resetNamespace: true }, function() {
     this.route('fromParams', { path: '/' });
@@ -12,7 +14,6 @@ export default function() {
   });
 
   this.route('topicBySlugOrId', { path: '/t/:slugOrId', resetNamespace: true });
-  this.route('topicUnsubscribe', { path: '/t/:slug/:id/unsubscribe' });
 
   this.route('discovery', { path: '/', resetNamespace: true }, function() {
     // top
@@ -47,7 +48,9 @@ export default function() {
     this.route('categoryWithID', { path: '/c/:parentSlug/:slug/:id' });
   });
 
-  this.route('groups', { resetNamespace: true });
+  this.route('groups', { resetNamespace: true }, function() {
+    this.route("new", { path: "custom/new" });
+  });
 
   this.route('group', { path: '/groups/:name', resetNamespace: true }, function() {
     this.route('members');
@@ -56,11 +59,20 @@ export default function() {
       this.route('posts');
       this.route('topics');
       this.route('mentions');
-      this.route('messages');
     });
 
-    this.route('logs');
-    this.route('edit');
+    this.route('manage', function() {
+      this.route('profile');
+      this.route('membership');
+      this.route('interaction');
+      this.route('members');
+      this.route('logs');
+    });
+
+    this.route('messages', function() {
+      this.route('inbox');
+      this.route('archive');
+    });
   });
 
   // User routes
@@ -96,7 +108,8 @@ export default function() {
       this.route('archive');
       this.route('group', { path: 'group/:name'});
       this.route('groupArchive', { path: 'group/:name/archive'});
-      this.route('tag', { path: 'tag/:id'});
+      this.route('tags');
+      this.route('tagsShow', { path: 'tags/:id'});
     });
 
     this.route('preferences', { resetNamespace: true }, function() {
@@ -113,8 +126,6 @@ export default function() {
       this.route('email');
       this.route('second-factor');
       this.route('about', { path: '/about-me' });
-      this.route('badgeTitle', { path: '/badge_title' });
-      this.route('card-badge', { path: '/card-badge' });
     });
 
     this.route('userInvited', { path: '/invited', resetNamespace: true }, function() {

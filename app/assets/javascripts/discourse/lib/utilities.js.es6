@@ -1,4 +1,5 @@
 import { escape } from 'pretty-text/sanitizer';
+import toMarkdown from 'discourse/lib/to-markdown';
 
 const homepageSelector = 'meta[name=discourse_current_homepage]';
 
@@ -113,12 +114,8 @@ export function selectedText() {
   $div.find(".clicks").remove();
   // replace emojis
   $div.find("img.emoji").replaceWith(function() { return this.title; });
-  // replace br with newlines
-  $div.find("br").replaceWith(() => "\n");
-  // enforce newline at the end of paragraphs
-  $div.find("p").append(() => "\n");
 
-  return String($div.text()).trim().replace(/(^\s*\n)+/gm, "\n");
+  return toMarkdown($div.html());
 }
 
 // Determine the row and col of the caret in an element
@@ -497,7 +494,7 @@ export function fillMissingDates(data, startDate, endDate) {
 
   for (let i = 0; i <= countDays; i++) {
     let date = (data[i]) ? moment(data[i].x, "YYYY-MM-DD") : null;
-    if (i === 0 && date.isAfter(startMoment)) {
+    if (i === 0 && (!date || date.isAfter(startMoment))) {
       data.splice(i, 0, { "x" : startMoment.format("YYYY-MM-DD"), 'y': 0 });
     } else {
       if (!date || date.isAfter(moment(currentMoment))) {

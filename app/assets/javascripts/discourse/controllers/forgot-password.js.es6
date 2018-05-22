@@ -41,16 +41,25 @@ export default Ember.Controller.extend(ModalFunctionality, {
         const accountEmailOrUsername = escapeExpression(this.get("accountEmailOrUsername"));
         const isEmail = accountEmailOrUsername.match(/@/);
         let key = `forgot_password.complete_${isEmail ? 'email' : 'username'}`;
-        if (data.user_found) {
-          this.set('offerHelp', I18n.t(`${key}_found`, {
+        let extraClass;
+
+        if (data.user_found === true) {
+          key += '_found';
+          this.set('accountEmailOrUsername', '');
+          this.set('offerHelp', I18n.t(key, {
             email: accountEmailOrUsername,
             username: accountEmailOrUsername
           }));
         } else {
-          this.flash(I18n.t(`${key}_not_found`, {
+          if (data.user_found === false) {
+            key += '_not_found';
+            extraClass = 'error';
+          }
+
+          this.flash(I18n.t(key, {
             email: accountEmailOrUsername,
             username: accountEmailOrUsername
-          }), 'error');
+          }), extraClass);
         }
       }).catch(e => {
         this.flash(extractError(e), 'error');

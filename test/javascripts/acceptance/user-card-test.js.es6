@@ -1,7 +1,8 @@
 import { acceptance } from "helpers/qunit-helpers";
+
 acceptance("User Card");
 
-QUnit.test("card", assert => {
+QUnit.test("user card", assert => {
   visit('/');
 
   assert.ok(invisible('#user-card'), 'user card is invisible by default');

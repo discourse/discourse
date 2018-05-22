@@ -116,6 +116,10 @@
       color: $primary-medium;
     }
   }
+
+  .group-member-info {
+    display: flex;
+  }
 }
 
 .user-stream .child-actions, // DEPRECATED: '.user-stream .child-actions' selector

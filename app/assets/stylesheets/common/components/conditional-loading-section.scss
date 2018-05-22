@@ -1,0 +1,16 @@
+.conditional-loading-section {
+  &.is-loading {
+    padding: 2em;
+    margin: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $primary-very-low;
+    flex-direction: column;
+
+    .title {
+      font-size: $font-up-1;
+      font-weight: 700;
+    }
+  }
+}

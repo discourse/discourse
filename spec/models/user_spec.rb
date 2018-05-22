@@ -5,10 +5,36 @@ describe User do
   let(:user) { Fabricate(:user) }
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :username }
-    it { is_expected.to validate_presence_of :primary_email }
+    describe '#username' do
+      it { is_expected.to validate_presence_of :username }
+
+      describe 'when username already exists' do
+        it 'should not be valid' do
+          new_user = Fabricate.build(:user, username: user.username.upcase)
+
+          expect(new_user).to_not be_valid
+
+          expect(new_user.errors.full_messages.first)
+            .to include(I18n.t(:'user.username.unique'))
+        end
+      end
+
+      describe 'when group with a same name already exists' do
+        it 'should not be valid' do
+          group = Fabricate(:group)
+          new_user = Fabricate.build(:user, username: group.name.upcase)
+
+          expect(new_user).to_not be_valid
+
+          expect(new_user.errors.full_messages.first)
+            .to include(I18n.t(:'user.username.unique'))
+        end
+      end
+    end
 
     describe 'emails' do
+      it { is_expected.to validate_presence_of :primary_email }
+
       let(:user) { Fabricate.build(:user) }
 
       describe 'when record has a valid email' do
@@ -25,6 +51,19 @@ describe User do
 
           expect(user).to_not be_valid
           expect(user.errors.messages).to include(:primary_email)
+        end
+      end
+
+      describe 'when record has an email that as already been taken' do
+        it 'should not be valid' do
+          user2 = Fabricate(:user)
+          user.email = user2.email.upcase
+
+          expect(user).to_not be_valid
+
+          expect(user.errors.messages[:primary_email]).to include(I18n.t(
+            'activerecord.errors.messages.taken'
+          ))
         end
       end
 
@@ -55,7 +94,7 @@ describe User do
   describe '#count_by_signup_date' do
     before(:each) do
       User.destroy_all
-      freeze_time
+      freeze_time DateTime.parse('2017-02-01 12:00')
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
@@ -409,6 +448,14 @@ describe User do
   describe 'name heuristics' do
     it 'is able to guess a decent name from an email' do
       expect(User.suggest_name('sam.saffron@gmail.com')).to eq('Sam Saffron')
+    end
+
+    it 'is able to guess a decent name from username' do
+      expect(User.suggest_name('@sam.saffron')).to eq('Sam Saffron')
+    end
+
+    it 'is able to guess a decent name from name' do
+      expect(User.suggest_name('sam saffron')).to eq('Sam Saffron')
     end
   end
 
@@ -1197,24 +1244,28 @@ describe User do
 
   describe "#purge_unactivated" do
     let!(:user) { Fabricate(:user) }
-    let!(:inactive) { Fabricate(:user, active: false) }
-    let!(:inactive_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    let!(:unactivated) { Fabricate(:user, active: false) }
+    let!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    let!(:unactivated_old_with_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+
+    before do
+      PostCreator.new(Discourse.system_user,
+        title: "Welcome to our Discourse",
+        raw: "This is a welcome message",
+        archetype: Archetype.private_message,
+        target_usernames: [unactivated_old_with_pm.username],
+      ).create
+    end
 
     it 'should only remove old, unactivated users' do
       User.purge_unactivated
-      all_users = User.all
-      expect(all_users.include?(user)).to eq(true)
-      expect(all_users.include?(inactive)).to eq(true)
-      expect(all_users.include?(inactive_old)).to eq(false)
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_pm])
     end
 
     it "does nothing if purge_unactivated_users_grace_period_days is 0" do
       SiteSetting.purge_unactivated_users_grace_period_days = 0
       User.purge_unactivated
-      all_users = User.all
-      expect(all_users.include?(user)).to eq(true)
-      expect(all_users.include?(inactive)).to eq(true)
-      expect(all_users.include?(inactive_old)).to eq(true)
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old, unactivated_old_with_pm])
     end
   end
 
@@ -1273,6 +1324,14 @@ describe User do
       expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
       expect(group_history.acting_user).to eq(Discourse.system_user)
       expect(group_history.target_user).to eq(user)
+    end
+
+    it "is automatically added to a group when the email matches the SSO record" do
+      user = Fabricate(:user, active: true, email: "sso@bar.com")
+      user.create_single_sign_on_record(external_id: 123, external_email: "sso@bar.com", last_payload: "")
+      user.set_automatic_groups
+      group.reload
+      expect(group.users.include?(user)).to eq(true)
     end
 
     it "get attributes from the group" do
@@ -1635,6 +1694,49 @@ describe User do
       token.update_column(:confirmed, true)
       inactive.activate
       expect(inactive.active).to eq(true)
+    end
+  end
+
+  def filter_by(method)
+    username = 'someuniqueusername'
+    user.update!(username: username)
+
+    username2 = 'awesomeusername'
+    user2 = Fabricate(:user, username: username2)
+
+    expect(User.public_send(method, username))
+      .to eq([user])
+
+    expect(User.public_send(method, 'UNiQuE'))
+      .to eq([user])
+
+    expect(User.public_send(method, [username, username2]))
+      .to contain_exactly(user, user2)
+
+    expect(User.public_send(method, ['UNiQuE', 'sOME']))
+      .to contain_exactly(user, user2)
+  end
+
+  describe '#filter_by_username' do
+    it 'should be able to filter by username' do
+      filter_by(:filter_by_username)
+    end
+  end
+
+  describe '#filter_by_username_or_email' do
+    it 'should be able to filter by email' do
+      email = 'veryspecialtest@discourse.org'
+      user.update!(email: email)
+
+      expect(User.filter_by_username_or_email(email))
+        .to eq([user])
+
+      expect(User.filter_by_username_or_email('veryspeCiaLtest'))
+        .to eq([user])
+    end
+
+    it 'should be able to filter by username' do
+      filter_by(:filter_by_username_or_email)
     end
   end
 end

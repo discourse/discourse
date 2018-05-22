@@ -11,12 +11,14 @@
   {{number report.yesterdayCount}} {{d-icon "caret-up" class="up"}} {{d-icon "caret-down" class="down"}}
 </td>
 
-<td class="value {{report.sevenDayTrend}}" title={{report.sevenDayCountTitle}}>
+<td class="value {{report.sevenDaysTrend}}" title={{report.sevenDaysCountTitle}}>
   {{number report.lastSevenDaysCount}} {{d-icon "caret-up" class="up"}} {{d-icon "caret-down" class="down"}}
 </td>
 
-<td class="value {{report.thirtyDayTrend}}" title={{report.thirtyDayCountTitle}}>
+<td class="value {{report.thirtyDaysTrend}}" title={{report.thirtyDaysCountTitle}}>
   {{number report.lastThirtyDaysCount}} {{d-icon "caret-up" class="up"}} {{d-icon "caret-down" class="down"}}
 </td>
 
-<td class="value">{{number report.total}}</td>
+{{#if allTime}}
+  <td class="value">{{number report.total}}</td>
+{{/if}}

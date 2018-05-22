@@ -40,13 +40,6 @@
       {{/if}}
     {{/if}}
 
-    <div class="input-group">
-      <label>
-        {{input type='checkbox' checked=publicPoll}}
-        {{i18n "poll.ui_builder.poll_public.label"}}
-      </label>
-    </div>
-
     {{#unless isNumber}}
       <div class="input-group">
         <label>{{i18n 'poll.ui_builder.poll_options.label'}}</label>
@@ -54,6 +47,28 @@
         {{textarea value=pollOptions}}
       </div>
     {{/unless}}
+
+    <div class="input-group">
+      <label>
+        {{input type='checkbox' checked=publicPoll}}
+        {{i18n "poll.ui_builder.poll_public.label"}}
+      </label>
+    </div>
+
+    <div class="input-group">
+      <label>
+        {{input type="checkbox" checked=autoClose}}
+        {{i18n "poll.ui_builder.automatic_close.label"}}
+      </label>
+    </div>
+
+    {{#if autoClose}}
+      <div class="input-group">
+        {{date-picker-future value=date containerId="date-container"}}
+        {{input type="time" value=time}}
+        <div id="date-container"></div>
+      </div>
+    {{/if}}
   </form>
 {{/d-modal-body}}
 

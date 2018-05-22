@@ -78,7 +78,7 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     puts "Warming up Rails server"
     begin
       Net::HTTP.get(uri)
-    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout
       sleep 1
       retry unless elapsed() > 60
       puts "Timed out. Can no connect to forked server!"
@@ -86,16 +86,7 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     end
     puts "Rails server is warmed up"
 
-    # wait for server to respond, will exception out on failure
-    tries = 0
-    begin
-      sh(cmd)
-    rescue
-      exit if ENV['RETRY'].present? && ENV['RETRY'] == 'false'
-      sleep 2
-      tries += 1
-      retry unless tries == 3
-    end
+    sh(cmd)
 
     # A bit of a hack until we can figure this out on Travis
     tries = 0

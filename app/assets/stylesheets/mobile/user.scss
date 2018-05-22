@@ -9,7 +9,7 @@
 }
 
 .user-main {
-
+margin-top: 10px;
   table.group-members {
     width: 100%;
     p {
@@ -77,18 +77,8 @@
     }
 
     .secondary {
-      background: $primary-low;
-
       dl {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        padding: 10px;
-
-      }
-
-      dd {
-        margin: 0 15px 0 5px;
+        padding: 5px 0;
       }
     }
 
@@ -143,20 +133,20 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        
+
       }
 
       li {
         display: flex;
-        flex: 1 1 auto; 
-        margin: 0 5px;       
+        flex: 1 1 auto;
+        margin: 0 5px;
       }
 
       span {
         flex: 0 1 100%;
-        margin: 0 5px;               
+        margin: 0 5px;
       }
-      
+
       .user-profile-controls-outlet {
         margin: 0;
         li {
@@ -165,7 +155,7 @@
       }
 
       a {
-        flex: 1 1 auto;        
+        flex: 1 1 auto;
         min-width: 120px;
       }
     }
@@ -214,7 +204,7 @@
 }
 
 .stats-section {
-  li {    
+  li {
     margin: 0 15px 10px 0;
     padding: 0;
     &.linked-stat {
@@ -277,11 +267,12 @@
 
   .checkbox-label {
     display: flex;
-    overflow: auto;    
+    overflow: auto;
     width: 100%;
     padding: 5px 0;
     input {
       margin-right: 5px;
+      flex: 0 0 auto;
     }
   }
 

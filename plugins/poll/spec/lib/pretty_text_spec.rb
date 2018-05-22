@@ -106,12 +106,9 @@ describe PrettyText do
       <div class="poll-info">
       <p>
       <span class="info-number">0</span>
-      <span class="info-text">voters</span>
+      <span class="info-label">voters</span>
       </p>
       </div>
-      </div>
-      <div class="poll-buttons">
-      <a title="Display the poll results">Show results</a>
       </div>
       </div>
     MD

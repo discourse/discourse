@@ -63,6 +63,7 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
     return {
       value: function() { return header.attr('data-value'); },
       name: function() { return header.attr('data-name'); },
+      label: function() { return header.text().trim(); },
       icon: function() { return header.find('.icon'); },
       title: function() { return header.attr('title'); },
       el: function() { return header; }
@@ -104,6 +105,10 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
   };
 
   return {
+    expandAwait: function() {
+      return expandSelectKit(selector);
+    },
+
     expand: function() {
       expandSelectKit(selector);
       return selectKit(selector);
@@ -117,6 +122,10 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
     selectRowByIndex: function(index) {
       selectKitSelectRowByIndex(index, selector);
       return selectKit(selector);
+    },
+
+    selectRowByValueAwait: function(value) {
+      return selectKitSelectRowByValue(value, selector);
     },
 
     selectRowByValue: function(value) {
@@ -181,6 +190,16 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
 
     noneRow: function() {
       return rowHelper(find(selector).find('.select-kit-row.none'));
+    },
+
+    validationMessage: function() {
+      var validationMessage = find(selector).find('.validation-message');
+
+      if (validationMessage.length) {
+        return validationMessage.html().trim();
+      } else {
+        return null;
+      }
     },
 
     selectedRow: function() {

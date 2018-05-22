@@ -182,9 +182,13 @@ class PostMover
     move_type_str = PostMover.move_types[@move_type].to_s
 
     message = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t("move_posts.#{move_type_str}_moderator_post",
-             count: posts.length,
-             topic_link: "[#{destination_topic.title}](#{destination_topic.relative_url})")
+      I18n.t(
+        "move_posts.#{move_type_str}_moderator_post",
+        count: posts.length,
+        topic_link: posts.first.is_first_post? ?
+          "[#{destination_topic.title}](#{destination_topic.relative_url})" :
+          "[#{destination_topic.title}](#{posts.first.url})"
+      )
     end
 
     original_topic.add_moderator_post(

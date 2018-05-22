@@ -6,6 +6,8 @@ module Slug
   MAX_LENGTH = 255
 
   def self.for(string, default = 'topic', max_length = MAX_LENGTH)
+    string = string.gsub(/:([\w\-+]+(?::t\d)?):/, '') if string.present? # strip emoji strings
+
     slug =
       case (SiteSetting.slug_generation_method || :ascii).to_sym
       when :ascii then self.ascii_generator(string)

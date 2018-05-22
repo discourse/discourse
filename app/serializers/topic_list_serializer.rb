@@ -8,13 +8,19 @@ class TopicListSerializer < ApplicationSerializer
              :for_period,
              :per_page,
              :top_tags,
-             :tags
+             :tags,
+             :shared_drafts
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
+  has_many :shared_drafts, serializer: TopicListItemSerializer, embed: :objects
   has_many :tags, serializer: TagSerializer, embed: :objects
 
   def can_create_topic
     scope.can_create?(Topic)
+  end
+
+  def include_shared_drafts?
+    object.shared_drafts.present?
   end
 
   def include_for_period?

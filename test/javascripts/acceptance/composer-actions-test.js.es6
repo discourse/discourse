@@ -7,21 +7,20 @@ acceptance('Composer Actions', {
   }
 });
 
-QUnit.test('replying to post', assert => {
+QUnit.test('replying to post', async assert => {
   const composerActions = selectKit('.composer-actions');
 
   visit('/t/internationalization-localization/280');
   click('article#post_3 button.reply');
 
-  composerActions.expand();
+  await composerActions.expandAwait();
 
-  andThen(() => {
-    assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
-    assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
-    assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
-    assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
-    assert.equal(composerActions.rowByIndex(4).value(), undefined);
-  });
+  assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
+  assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
+  assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
+  assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
+  assert.equal(composerActions.rowByIndex(4).value(), undefined);
+
 });
 
 QUnit.test('replying to post - reply_as_private_message', assert => {
@@ -38,19 +37,19 @@ QUnit.test('replying to post - reply_as_private_message', assert => {
   });
 });
 
-QUnit.test('replying to post - reply_to_topic', assert => {
+QUnit.test('replying to post - reply_to_topic', async assert => {
   const composerActions = selectKit('.composer-actions');
 
-  visit('/t/internationalization-localization/280');
-  click('article#post_3 button.reply');
-  fillIn('.d-editor-input', 'test replying to topic when initially replied to post');
-  composerActions.expand().selectRowByValue('reply_to_topic');
+  await visit('/t/internationalization-localization/280');
+  await click('article#post_3 button.reply');
+  await fillIn('.d-editor-input', 'test replying to topic when initially replied to post');
 
-  andThen(() => {
-    assert.equal(find('.action-title .topic-link').text().trim(), 'Internationalization / localization');
-    assert.equal(find('.action-title .topic-link').attr("href"), '/t/internationalization-localization/280');
-    assert.equal(find('.d-editor-input').val(), 'test replying to topic when initially replied to post');
-  });
+  await composerActions.expandAwait();
+  await composerActions.selectRowByValueAwait('reply_to_topic');
+
+  assert.equal(find('.action-title .topic-link').text().trim(), 'Internationalization / localization');
+  assert.equal(find('.action-title .topic-link').attr("href"), '/t/internationalization-localization/280');
+  assert.equal(find('.d-editor-input').val(), 'test replying to topic when initially replied to post');
 });
 
 QUnit.test('replying to post - toggle_whisper', assert => {
@@ -91,8 +90,24 @@ QUnit.test('replying to post - reply_as_new_topic', assert => {
   });
 });
 
+QUnit.test('shared draft', assert => {
+  let composerActions = selectKit('.composer-actions');
 
-QUnit.test('interactions', assert => {
+  visit("/");
+  click('#create-topic');
+  andThen(() => {
+    composerActions.expand().selectRowByValue('shared_draft');
+  });
+  andThen(() => {
+    assert.equal(
+      find('#reply-control .btn-primary.create .d-button-label').text(),
+      I18n.t('composer.create_shared_draft')
+    );
+    assert.ok(find('#reply-control.composing-shared-draft').length === 1);
+  });
+});
+
+QUnit.skip('interactions', assert => {
   const composerActions = selectKit('.composer-actions');
   const quote = 'Life is like riding a bicycle.';
 
@@ -137,7 +152,7 @@ QUnit.test('interactions', assert => {
     assert.equal(composerActions.rowByIndex(0).value(), 'reply_to_post');
     assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
     assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
-    assert.equal(composerActions.rowByIndex(3).value(), undefined);
+    assert.equal(composerActions.rowByIndex(3).value(), 'shared_draft');
   });
 
   composerActions.selectRowByValue('reply_as_private_message').expand();

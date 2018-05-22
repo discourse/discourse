@@ -1541,12 +1541,14 @@ describe UsersController do
         it 'allows the update' do
           user2 = Fabricate(:user)
           user3 = Fabricate(:user)
+          tags = [Fabricate(:tag), Fabricate(:tag)]
 
           put :update, params: {
             username: user.username,
             name: 'Jim Tom',
             custom_fields: { test: :it },
-            muted_usernames: "#{user2.username},#{user3.username}"
+            muted_usernames: "#{user2.username},#{user3.username}",
+            watched_tags: "#{tags[0].name},#{tags[1].name}"
           }, format: :json
 
           expect(response).to be_success
@@ -1556,6 +1558,10 @@ describe UsersController do
           expect(user.name).to eq 'Jim Tom'
           expect(user.custom_fields['test']).to eq 'it'
           expect(user.muted_users.pluck(:username).sort).to eq [user2.username, user3.username].sort
+          expect(TagUser.where(
+            user: user,
+            notification_level: TagUser.notification_levels[:watching]
+          ).pluck(:tag_id)).to contain_exactly(tags[0].id, tags[1].id)
 
           theme = Theme.create(name: "test", user_selectable: true, user_id: -1)
 
@@ -1678,35 +1684,6 @@ describe UsersController do
           expect(user.reload.name).not_to eq 'Jim Tom'
         end
       end
-    end
-  end
-
-  describe "badge_card" do
-    let(:user) { Fabricate(:user) }
-    let(:badge) { Fabricate(:badge) }
-    let(:user_badge) { BadgeGranter.grant(badge, user) }
-
-    it "sets the user's card image to the badge" do
-      log_in_user user
-      put :update_card_badge, params: {
-        user_badge_id: user_badge.id, username: user.username
-      }, format: :json
-
-      expect(user.user_profile.reload.card_image_badge_id).to be_blank
-      badge.update_attributes image: "wat.com/wat.jpg"
-
-      put :update_card_badge, params: {
-        user_badge_id: user_badge.id, username: user.username
-      }, format: :json
-
-      expect(user.user_profile.reload.card_image_badge_id).to eq(badge.id)
-
-      # Can set to nothing
-      put :update_card_badge, params: {
-        username: user.username
-      }, format: :json
-
-      expect(user.user_profile.reload.card_image_badge_id).to be_blank
     end
   end
 

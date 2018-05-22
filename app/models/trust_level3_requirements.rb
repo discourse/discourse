@@ -2,6 +2,19 @@
 # the Leader (3) trust level.
 class TrustLevel3Requirements
 
+  class PenaltyCounts
+    attr_reader :silenced, :suspended
+
+    def initialize(row)
+      @silenced = row['silence_count'] || 0
+      @suspended = row['suspend_count'] || 0
+    end
+
+    def total
+      @silenced + @suspended
+    end
+  end
+
   include ActiveModel::Serialization
 
   LOW_WATER_MARK = 0.9
@@ -29,6 +42,7 @@ class TrustLevel3Requirements
 
     (!@user.suspended?) &&
       (!@user.silenced?) &&
+      penalty_counts.total == 0 &&
       days_visited >= min_days_visited &&
       num_topics_replied_to >= min_topics_replied_to &&
       topics_viewed >= min_topics_viewed &&
@@ -48,6 +62,7 @@ class TrustLevel3Requirements
 
     @user.suspended? ||
       @user.silenced? ||
+      penalty_counts.total > 0 ||
       days_visited < min_days_visited * LOW_WATER_MARK ||
       num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
       topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
@@ -76,6 +91,38 @@ class TrustLevel3Requirements
 
   def days_visited
     @user.user_visits.where("visited_at > ? and posts_read > 0", time_period.days.ago).count
+  end
+
+  def penalty_counts
+    args = {
+      user_id: @user.id,
+      silence_user: UserHistory.actions[:silence_user],
+      unsilence_user: UserHistory.actions[:unsilence_user],
+      suspend_user: UserHistory.actions[:suspend_user],
+      unsuspend_user: UserHistory.actions[:unsuspend_user]
+    }
+
+    sql = <<~SQL
+      SELECT SUM(
+          CASE
+            WHEN action = :silence_user THEN 1
+            WHEN action = :unsilence_user THEN -1
+            ELSE 0
+          END
+        ) AS silence_count,
+        SUM(
+          CASE
+            WHEN action = :suspend_user THEN 1
+            WHEN action = :unsuspend_user THEN -1
+            ELSE 0
+          END
+        ) AS suspend_count
+      FROM user_histories AS uh
+      WHERE uh.target_user_id = :user_id
+        AND uh.action IN (:silence_user, :unsilence_user, :suspend_user, :unsuspend_user)
+    SQL
+
+    PenaltyCounts.new(UserHistory.exec_sql(sql, args).first)
   end
 
   def min_days_visited

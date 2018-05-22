@@ -1,0 +1,58 @@
+{{#if currentUser.admin}}
+  <div class="control-group">
+    <label class="control-label">{{i18n 'admin.groups.manage.interaction.visibility'}}</label>
+    <label for="visiblity">{{i18n 'admin.groups.manage.interaction.visibility_levels.title'}}</label>
+
+    {{combo-box name="alias"
+        valueAttribute="value"
+        value=model.visibility_level
+        content=visibilityLevelOptions
+        castInteger=true
+        class="groups-form-visibility-level"}}
+  </div>
+{{/if}}
+
+<div class="control-group">
+  <label class="control-label">{{i18n 'groups.manage.interaction.posting'}}</label>
+  <label for="alias">{{i18n 'groups.alias_levels.mentionable'}}</label>
+
+  {{combo-box name="alias"
+      valueAttribute="value"
+      value=model.mentionable_level
+      content=aliasLevelOptions
+      class="groups-form-mentionable-level"}}
+</div>
+
+<div class="control-group">
+  <label for="alias">{{i18n 'groups.alias_levels.messageable'}}</label>
+
+  {{combo-box name="alias"
+      valueAttribute="value"
+      value=model.messageable_level
+      content=aliasLevelOptions
+      class="groups-form-messageable-level"}}
+</div>
+
+{{#if showEmailSettings}}
+  <div class="control-group">
+    <label class="control-label">{{i18n 'admin.groups.manage.interaction.email'}}</label>
+    <label for="incoming_email">{{i18n 'admin.groups.manage.interaction.incoming_email'}}</label>
+
+    {{text-field name="incoming_email"
+        class="input-xxlarge groups-form-incoming-email"
+        value=model.incoming_email
+        placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"}}
+
+    {{plugin-outlet name="group-email-in" args=(hash model=model)}}
+  </div>
+{{/if}}
+
+<label class="control-label">{{i18n 'groups.manage.interaction.notification'}}</label>
+
+<div class="control-group">
+  <label>{{i18n 'groups.notification_level'}}</label>
+
+  {{notifications-button i18nPrefix='groups.notifications'
+      value=model.default_notification_level
+      class="groups-form-default-notification-level"}}
+</div>

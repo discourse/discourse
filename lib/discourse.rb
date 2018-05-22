@@ -128,7 +128,11 @@ module Discourse
     if Rails.env.development?
       plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
       hash_file = "#{Rails.root}/tmp/plugin-hash"
-      old_hash = File.read(hash_file) rescue nil
+
+      old_hash = begin
+        File.read(hash_file)
+      rescue Errno::ENOENT
+      end
 
       if old_hash && old_hash != plugin_hash
         puts "WARNING: It looks like your discourse plugins have recently changed."
@@ -158,6 +162,14 @@ module Discourse
 
   def self.plugins
     @plugins ||= []
+  end
+
+  def self.hidden_plugins
+    @hidden_plugins ||= []
+  end
+
+  def self.visible_plugins
+    self.plugins - self.hidden_plugins
   end
 
   def self.plugin_themes
@@ -236,7 +248,13 @@ module Discourse
   end
 
   def self.route_for(uri)
-    uri = URI(uri) rescue nil unless uri.is_a?(URI)
+    unless uri.is_a?(URI)
+      uri = begin
+        URI(uri)
+      rescue URI::InvalidURIError
+      end
+    end
+
     return unless uri
 
     path = uri.path || ""
@@ -422,7 +440,7 @@ module Discourse
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
     MessageBus.after_fork
     SiteSetting.after_fork
-    $redis.client.reconnect
+    $redis._client.reconnect
     Rails.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool

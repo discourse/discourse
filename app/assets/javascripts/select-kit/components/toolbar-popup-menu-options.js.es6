@@ -14,7 +14,7 @@ export default DropdownSelectBoxComponent.extend({
 
   mutateValue(value) {
     this.sendAction("onPopupMenuAction", value);
-    this.setProperties({ value: null, highlightedValue: null });
+    this.setProperties({ value: null, highlighted: null });
   },
 
   computeContent(content) {

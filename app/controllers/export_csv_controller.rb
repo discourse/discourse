@@ -8,24 +8,7 @@ class ExportCsvController < ApplicationController
     render json: success_json
   end
 
-  # download
-  def show
-    params.require(:id)
-    filename = params.fetch(:id)
-    export_id = filename.split('-')[-1].split('.')[0]
-    export_initiated_by_user_id = 0
-    export_initiated_by_user_id = UserExport.where(id: export_id)[0].user_id unless UserExport.where(id: export_id).empty?
-    export_csv_path = UserExport.get_download_path(filename)
-
-    if export_csv_path && current_user.present? && export_initiated_by_user_id == current_user.id
-      send_file export_csv_path
-    else
-      render body: nil, status: 404
-    end
-  end
-
   private
-
     def export_params
       @_export_params ||= begin
         params.require(:entity)

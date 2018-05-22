@@ -189,7 +189,7 @@
   .category-input {
     display: flex;
     flex: 1 0 35%;
-    margin: 0 5px 5px 10px;
+    margin: 0 0 5px 10px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
       margin-left: 0;
@@ -205,6 +205,11 @@
     .category-input {
       flex-basis: 25%;
       margin-left: 0;
+      margin-right: 5px;
+      @media screen and (max-width: 920px) {
+        flex-basis: 100%;
+        margin-right: 0;
+      }
     }
   }
 
@@ -225,12 +230,17 @@
     flex: 1 1 25%;
     margin: 0 0 5px 0;
     background: $secondary;
+    z-index: z("composer","dropdown");
     @media all and (max-width: 900px) {
       margin: 0;
       flex: 1 1 100%;
     }
   }
 
+  .popup-tip {
+    z-index: z("composer","dropdown");
+  }
+    
   .wmd-controls {
     position: relative;
     display: flex;
@@ -240,7 +250,8 @@
   }
 
   .d-editor-button-bar .btn {
-    padding: 3px 8px;
+    padding: 4px 8px;
+    display: inline-block;
     @media all and (max-width: 800px) {
       padding: 5px;
     }
@@ -249,7 +260,7 @@
   .submit-panel {
     display: flex;
     flex-shrink: 0;
-    margin-top: 10px;
+    margin: 7px 0 3px 0;
   }
 
   .save-or-cancel {
@@ -260,7 +271,13 @@
       flex: 0 0 auto;
     }
     .cancel {
-      margin-left: 10px;
+      margin-left: 1.25em;
+      line-height: normal;
+      color: $primary-high;
+      transition: color 250ms;
+      &:hover {
+        color: $danger;
+      }
     }
     #draft-status,
     #file-uploading {
@@ -268,6 +285,7 @@
     }
     #file-uploading {
       display: flex;
+      align-items: center;
       a {
         margin-left: 5px;
         color: $primary-high;
@@ -287,10 +305,6 @@
     }
   }
 
-  .create {
-    margin-right: 5px;
-  }
-
   #draft-status, #file-uploading {
     color: $primary-high;
   }
@@ -301,7 +315,7 @@
 }
 
 .autocomplete {
-  z-index: z("dropdown");
+  z-index: z("composer","dropdown") + 1;
   position: absolute;
   width: 240px;
   background-color: $secondary;

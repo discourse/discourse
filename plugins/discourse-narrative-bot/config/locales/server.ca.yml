@@ -220,6 +220,8 @@ ca:
 
           Seleccionant qualsevol text de la meva publicació farà que aparegui el botó <kbd>**Cita**</kbd>. També funcionarà clicant **Resposta** amb qualsevol text seleccionat. Pots tornar-ho a provar?
       bookmark:
+        instructions: |-
+          Si vols saber-ne més, selecciona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marca com a preferit aquest missatge privat**. Si ho fas, potser tindràs un :gift: més endavant!
         reply: |-
           Fantàstic! Ara pots trobar fàcilment com tornar a la nostra conversa privada en qualsevol moment, exactament des de [la pestanya de favorits del teu perfil](%{profile_page_url}/activity/bookmarks). Només has de seleccionar la teva imatge de perfil a la part superior dreta &#8599;
         not_found: |-
@@ -353,6 +355,12 @@ ca:
         reply: |-
           Genial! Recorda que això funciona per les dues categories _i_ etiquetes, si les etiquetes estan activades.
       change_topic_notification_level:
+        instructions: |-
+          Tots els temes tenen un nivell de notificació. Comença en 'normal', el que significa que normalment només se't notificarà quan algú et parli directament.
+
+          De manera predeterminada, el nivell de notificació d'un missatge privat està establert al nivell més alt de 'veure', cosa que significa que se't notificarà cada resposta nova. Però podeu anul·lar el nivell de notificació de _cada_tema per "mirar", "seguint" o "silenciat".
+
+          Intentem canviar el nivell de notificació d'aquest tema. A la part inferior del tema, trobareu un botó que mostra que estàs **veient ** aquest tema. Es pot canviar el nivell de notificació al **seguint**?
         not_found: |-
           Sembla que encara estàs mirant :eyes: aquest tema! Si tens problemes per trobar-lo, el botó de nivell de notificació es troba a la part inferior del tema.
         reply: |-
@@ -381,6 +389,20 @@ ca:
           *: -1:
           [/poll]
       details:
+        instructions: |-
+          A vegades potser voldràs **amagar detalls** a les teves respostes:
+
+          - Quan estiguis debatent punts de la trama d'una pel·lícula o programa de televisió que podría ser considerat una filtració.
+
+          - Quan la teva publicació necessita molts detalls opcionals que puguin resultar aclaparadors quan es llegeixin alhora.
+
+          [details = Selecciona-ho per veure com funciona!]
+          1. Selecciona l'engranatge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor.
+          2. Selecciona "Amaga els detalls".
+          3. Edita el resum de les dades i afegeix el teu contingut.
+          [/ detalls]
+
+          Pots utilitzar l'engranatge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor per afegir una secció de detalls a la seva pròxima resposta?
         not_found: |-
           Tens problemes per crear un giny de detalls? Prova d'incloure el següent a la teva pròxima resposta:
 

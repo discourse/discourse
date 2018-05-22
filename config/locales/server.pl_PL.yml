@@ -17,12 +17,12 @@ pl_PL:
       date_only: "%-d %b %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień]
+    month_names: [~, Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "rano"
     pm: "po południu"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Tematy"
   posts: "posty"
@@ -67,18 +67,18 @@ pl_PL:
       present: musi być puste
       confirmation: "nie zgadza się z %{attribute}"
       empty: nie może być puste
-      equal_to: musi być równe do %{count}
+      equal_to: "musi być równe do %{count}"
       even: musi być parzyste
       exclusion: jest zarezerwowane
-      greater_than: musi być większe niż %{count}
-      greater_than_or_equal_to: musi być większe lub równe %{count}
+      greater_than: "musi być większe niż %{count}"
+      greater_than_or_equal_to: "musi być większe lub równe %{count}"
       has_already_been_used: "został już użyty"
       inclusion: nie jest zawarty w liście
       invalid: jest nieprawidłowy
       is_invalid: "wygląda niejasno, czy to cała wypowiedz ?"
       contains_censored_words: "zawiera następujące niedozwolone słowa: %{censored_words}"
-      less_than: musi być mniejszy niż %{count}
-      less_than_or_equal_to: musi być mniejszy lub równy %{count}
+      less_than: "musi być mniejszy niż %{count}"
+      less_than_or_equal_to: "musi być mniejszy lub równy %{count}"
       not_a_number: nie jest liczbą
       not_an_integer: musi być liczbą całkowitą
       odd: musi być nieparzysty
@@ -87,27 +87,27 @@ pl_PL:
         one: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
         many: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
       too_long:
-        one: jest za długa (maksymalnie 1 znak)
         few: jest za długa (maksymalnie %{count} znaków)
         many: jest za długa (maksymalnie %{count} znaków)
+        one: jest za długa (maksymalnie 1 znak)
         other: jest za długa (maksymalnie %{count} znaków)
       too_short:
-        one: jest za krótka (minimalnie 1 znak)
         few: jest za krótka (minimalnie %{count} znaków)
         many: jest za długa (minimum to %{count} znaków)
+        one: jest za krótka (minimalnie 1 znak)
         other: jest za długa (minimum to %{count} znaków)
       wrong_length:
-        one: ma nieprawidłową długość (powinna być 1 znakiem)
         few: jest nieprawidłowej długości (powinna mieć %{count} znaków)
         many: jest nieprawidłowej długości (powinna mieć %{count} znaków)
+        one: ma nieprawidłową długość (powinna być 1 znakiem)
         other: jest nieprawidłowej długości (powinna mieć %{count} znaków)
       other_than: "musi być różna od %{count}"
     template:
       body: 'Wystąpiły problemy z następującymi polami:'
       header:
-        one: 1 błąd uniemożliwił zapisanie %{model}
         few: '%{count} błędy uniemożliwiły zapisanie %{model}'
         many: '%{count} błędów uniemożliwiło zapisanie %{model}'
+        one: 1 błąd uniemożliwił zapisanie %{model}
         other: '%{count} błędów uniemożliwiło zapisanie %{model}'
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
@@ -118,6 +118,9 @@ pl_PL:
       max_username_length_range: "Nie możesz ustawić maksimum poniżej minimum."
       default_categories_already_selected: "Nie możesz wybrać kategorii użytej w innej liście."
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "Link do zaproszenia nie istnieje. Skontaktuj się z administratorem strony"
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='/u/%{username}/summary'>obecnie posiada konto!"
@@ -139,10 +142,10 @@ pl_PL:
   reading_time: "Czas odczytu"
   likes: "Lajki"
   too_many_replies:
-    one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do 1 odpowiedzi w ramach  jednego tematu."
-    few: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
-    many: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
-    other: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
+    few: Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu.
+    many: Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu.
+    one: Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do 1 odpowiedzi w ramach  jednego tematu.
+    other: Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu.
   embed:
     start_discussion: "Rozpocznij dyskusję"
     continue: "Kontynuuj dyskusję"
@@ -152,45 +155,24 @@ pl_PL:
     no_hosts: "Brak ustawionych hostów do osadzenia."
     configure: "Konfiguracja osadzenia"
     more_replies:
-      one: "1 odpowiedź więcej"
-      few: "%{count} odpowiedzi więcej"
-      many: "%{count} odpowiedzi więcej"
-      other: "%{count} odpowiedzi więcej"
+      few: '%{count} odpowiedzi więcej'
+      many: '%{count} odpowiedzi więcej'
+      one: 1 odpowiedź więcej
+      other: '%{count} odpowiedzi więcej'
     loading: "Wczytuję dyskusję…"
     permalink: "Link bezpośredni"
     imported_from: "Ten temat jest powiązany ze źródłową dyskusją: %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 odpowiedź"
-      few: "%{count} odpowiedzi"
-      many: "%{count} odpowiedzi"
-      other: "%{count} odpowiedzi"
+      few: '%{count} odpowiedzi'
+      many: '%{count} odpowiedzi'
+      one: 1 odpowiedź
+      other: '%{count} odpowiedzi'
   no_mentions_allowed: "Przepraszamy, nie możesz odwoływać się do innych użytkowników."
-  too_many_mentions:
-    one: "Przepraszamy, możesz wspomnieć tylko o jednym użytkowniku w poście."
-    few: "Przepraszamy, możesz wspomnieć tylko o %{count} osobach w poście."
-    other: "Przepraszamy, możesz wspomnieć tylko o %{count} osobach w poście."
   no_mentions_allowed_newuser: "Przepraszamy, nowi użytkownicy nie mogą odwoływać się do innych użytkowników."
-  too_many_mentions_newuser:
-    one: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o jednym użytkowniku w poście."
-    few: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
-    other: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
   no_images_allowed: "Przepraszamy, nowi użytkownicy nie mogą dodawać zdjęć do postów."
-  too_many_images:
-    one: "Przepraszamy, nowi użytkownicy mogą dodać tylko 1 zdjęcie we wpisie. "
-    few: "Przepraszamy, nowi użytkownicy mogą umieścić tylko %{count} zdjęcia we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą umieścić tylko %{count} zdjęć we wpisie."
   no_attachments_allowed: "Przepraszamy, nowi użytkownicy nie mogą dodawać załączników do postów."
-  too_many_attachments:
-    one: "Przepraszamy, nowi użytkownicy mogą dodać tylko jeden załącznik do wpisu."
-    few: "Przepraszamy, nowi użytkownicy mogą dodać %{count} załączniki do wpisu."
-    other: "Przepraszamy, nowi użytkownicy mogą dodać %{count} załączników do wpisu."
   no_links_allowed: "Przepraszamy, nowi użytkownicy nie mogą umieszczać linków w wiadomościach."
-  too_many_links:
-    one: "Przepraszamy, nowi użytkownicy mogą dodać tylko jeden link we wpisie."
-    few: "Przepraszamy, nowi użytkownicy mogą dodać tylko %{count} linki we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą dodać tylko %{count} linków we wpisie."
-  contains_blocked_words: "Twój wpis zawiera niedozwolone słowa"
   spamming_host: "Przepraszamy, nie możesz umieścić linka do tej strony."
   user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
@@ -235,11 +217,8 @@ pl_PL:
     delete_reason: "Skasowany z poziomu kolejki moderacji."
     not_found: "Post nie został znaleziony lub jest już zaktualizowany."
   groups:
-    success:
-      bulk_add: "%{users_added} użytkowników zostało dodanych do grupy"
     errors:
       can_not_modify_automatic: "Nie można modyfikować automatyczną grupę"
-      member_already_exist: "'%{username}' należy już do tej grupy."
       invalid_domain: "'%{domain}' nie jest poprawną domeną."
       invalid_incoming_email: "'%{domain}' nie jest poprawną domeną."
       email_already_used_in_group: "'%{email}' jest już używany przez grupę '%{group_name}'."
@@ -259,11 +238,11 @@ pl_PL:
       title: "Prośba o członkostwo w grupie @%{group_name}"
   education:
     until_posts:
-      one: "1 wpis"
-      few: "%{count} wpisy"
-      many: "%{count} wpisów"
-      other: "%{count} wpisów"
-    new-topic: |+
+      few: '%{count} wpisy'
+      many: '%{count} wpisów'
+      one: 1 wpis
+      other: '%{count} wpisów'
+    'new-topic': |+
       Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**
 
       - Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?
@@ -275,7 +254,7 @@ pl_PL:
       Aby dowiedzieć się więcej, [zobacz przewodnik społeczności](/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.
 
 
-    new-reply: |
+    'new-reply': |
       Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**
 
       - Czy twoja odpowiedź wnosi coś pozytywnego do dyskusji?
@@ -334,6 +313,7 @@ pl_PL:
       user_profile:
         bio_raw: "O mnie"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -377,7 +357,6 @@ pl_PL:
           attributes:
             word:
               too_many: "Za długi opis akcji"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>pole \"O mnie\" w profilu jest obecnie puste, <a href='/u/%{username_lower}/preferences/about-me'>Czy chcesz je wypełnić?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
@@ -393,41 +372,41 @@ pl_PL:
     title: "Witaj w Discourse"
     body: |2
 
-      Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
+        Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
 
-      **Edytuj go** żeby zwięźle opisać swoje społeczeństwo.
+        **Edytuj go** żeby zwięźle opisać swoje społeczeństwo.
 
-      - Dla kogo jest?
-      - Co mogą tutaj znaleźć?
-      - Dlaczego powinni tutaj przychodzić?
-      - Gdzie mogą przeczytać więcej (link, zasoby, itp.)?
+        - Dla kogo jest?
+        - Co mogą tutaj znaleźć?
+        - Dlaczego powinni tutaj przychodzić?
+        - Gdzie mogą przeczytać więcej (link, zasoby, itp.)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
+        Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
   lounge_welcome:
     title: "Witaj w Salonie"
     body: |2
 
-      Gratulacje! :confetti_ball:
+        Gratulacje! :confetti_ball:
 
-      Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
+        Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
 
-      Od teraz możesz &hellip;
+        Od teraz możesz &hellip;
 
-      * Edytować tytuł każdego tematu
-      * Przenieść temat do innej kategorii
-      * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
-      * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
-      * Przyznawać polubienia i flagi o większej wadze
+        * Edytować tytuł każdego tematu
+        * Przenieść temat do innej kategorii
+        * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
+        * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
+        * Przyznawać polubienia i flagi o większej wadze
 
-      Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
+        Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
 
-      Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
+        Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
 
-      (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
+        (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "(Zamień ten pierwszy paragraf na krótki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go krótszego niż 200 znaków. **Dopóki nie zmienisz tego opisu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.**)"
@@ -444,10 +423,10 @@ pl_PL:
       uncategorized: "Nie można usunąć kategorii Inne"
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
       topic_exists:
-        one: "Nie można usunąć tej kategorii ponieważ zawiera temat: %{topic_link}."
-        few: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematy. Najstarszy z nich: %{topic_link}."
-        many: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}."
-        other: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}."
+        few: 'Nie można usunąć tej kategorii ponieważ zawiera %{count} tematy. Najstarszy z nich: %{topic_link}.'
+        many: 'Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}.'
+        one: 'Nie można usunąć tej kategorii ponieważ zawiera temat: %{topic_link}.'
+        other: 'Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}.'
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
     uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
   trust_levels:
@@ -466,152 +445,136 @@ pl_PL:
     image_placeholder:
       broken: "Ten obraz jest uszkodzony"
   rate_limiter:
-    slow_down: "Powtórzyłeś to działanie zbyt wiele razy, spróbuj ponownie później."
-    by_type:
-      first_day_replies_per_day: "Osiągnąłeś maksymalną liczbę odpowiedzi, jakie może napisać nowy użytkownik pierwszego dnia. Musisz odczekać %{time_left} zanim znów spróbujesz."
-      first_day_topics_per_day: "Osiągnąłeś maksymalną liczbę tematów, jakie może napisać nowy użytkownik pierwszego dnia. Musisz odczekać %{time_left}, zanim znów spróbujesz."
-      create_topic: "Zbyt szybko tworzysz tematy. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      create_post: "Odpowiadasz zbyt szybko. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      delete_post: "Zbyt szybko usuwasz posty. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      public_group_membership: "Dołączasz/opuszczasz grupy zbyt często. Odczekaj %{time_left} przed kolejną próbą."
-      topics_per_day: "Osiągnąłeś maksymalną liczbę nowych tematów na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      pms_per_day: "Osiągnąłeś maksymalną liczbę wiadomości na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      create_like: "Osiągnąłeś maksymalną liczbę lajków na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      create_bookmark: "Wyczerpałeś na dziś możliwość dodawania zakładek. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      edit_post: "Wyczerpałeś na dziś możliwość edytowania. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      live_post_counts: "Zbyt szybko prosisz o bieżące zliczanie postów . Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      unsubscribe_via_email: "Osiągnąłeś maksymalną liczbę wypisań przez maila na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      topic_invitations_per_day: "Osiągnąłeś maksymalną liczbę zaproszeń do tematów na dziś. Odczekaj %{time_left} przed kolejną próbą."
     hours:
-      one: "1 godzina"
-      few: "%{count} godziny"
-      many: "%{count} godzin"
-      other: "%{count} godzin"
+      few: '%{count} godziny'
+      many: '%{count} godzin'
+      one: 1 godzina
+      other: '%{count} godzin'
     minutes:
-      one: "1 minuta"
-      few: "%{count} minuty"
-      many: "%{count} minut"
-      other: "%{count} minut"
+      few: '%{count} minuty'
+      many: '%{count} minut'
+      one: 1 minuta
+      other: '%{count} minut'
     seconds:
-      one: "1 sekunda"
-      few: "%{count} sekundy"
-      many: "%{count} sekund"
-      other: "%{count} sekund"
+      few: '%{count} sekundy'
+      many: '%{count} sekund'
+      one: 1 sekunda
+      other: '%{count} sekund'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< %{count}s"
-        few: "< %{count}s"
-        many: "< %{count}s"
-        other: "< %{count}s"
+        few: < %{count}s
+        many: < %{count}s
+        one: < %{count}s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        few: "%{count}s"
-        many: "%{count}s"
-        other: "%{count}s"
+        few: '%{count}s'
+        many: '%{count}s'
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        few: "< %{count}m"
-        many: "< %{count}m"
-        other: "< %{count}m"
+        few: < %{count}m
+        many: < %{count}m
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        few: "%{count}m"
-        many: "%{count}m"
-        other: "%{count}m"
+        few: '%{count}m'
+        many: '%{count}m'
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1h"
-        few: "%{count}h"
-        many: "%{count}h"
-        other: "%{count}h"
+        few: '%{count}h'
+        many: '%{count}h'
+        one: 1h
+        other: '%{count}h'
       x_days:
-        one: "1d"
-        few: "%{count}d"
-        many: "%{count}d"
-        other: "%{count}d"
+        few: '%{count}d'
+        many: '%{count}d'
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1mie"
-        few: "%{count}mie"
-        many: "%{count}mie"
-        other: "%{count}mie"
+        few: '%{count}mie'
+        many: '%{count}mie'
+        one: 1mie
+        other: '%{count}mie'
       x_months:
-        one: "1mie"
-        few: "%{count}mie"
-        many: "%{count}mie"
-        other: "%{count}mie"
+        few: '%{count}mie'
+        many: '%{count}mie'
+        one: 1mie
+        other: '%{count}mie'
       about_x_years:
-        one: "1r"
-        few: "%{count}l"
-        many: "%{count}l"
-        other: "%{count}l"
+        few: '%{count}l'
+        many: '%{count}l'
+        one: 1r
+        other: '%{count}l'
       over_x_years:
-        one: "> 1r"
-        few: "> %{count}l"
-        many: "> %{count}l"
-        other: "> %{count}l"
+        few: '> %{count}l'
+        many: '> %{count}l'
+        one: '> 1r'
+        other: '> %{count}l'
       almost_x_years:
-        one: "1r"
-        few: "%{count}l"
-        many: "%{count}l"
-        other: "%{count}l"
+        few: '%{count}l'
+        many: '%{count}l'
+        one: 1r
+        other: '%{count}l'
     distance_in_words_verbose:
       half_a_minute: "przed chwilą"
       less_than_x_seconds:
-        one: "przed chwilą"
-        few: "przed chwilą"
-        many: "przed chwilą"
-        other: "przed chwilą"
+        few: przed chwilą
+        many: przed chwilą
+        one: przed chwilą
+        other: przed chwilą
       x_seconds:
-        one: "1 sekundę temu"
-        few: "%{count} sekundy temu"
-        many: "%{count} sekund temu"
-        other: "%{count} sekund temu"
+        few: '%{count} sekundy temu'
+        many: '%{count} sekund temu'
+        one: 1 sekundę temu
+        other: '%{count} sekund temu'
       less_than_x_minutes:
-        one: "mniej niż 1 minutę temu"
-        few: "mniej niż %{count} minuty temu"
-        many: "mniej niż %{count} minut temu"
-        other: "mniej niż %{count} minut temu"
+        few: mniej niż %{count} minuty temu
+        many: mniej niż %{count} minut temu
+        one: mniej niż 1 minutę temu
+        other: mniej niż %{count} minut temu
       x_minutes:
-        one: "1 minutę temu"
-        few: "%{count} minuty temu"
-        many: "%{count} minut temu"
-        other: "%{count} minut temu"
+        few: '%{count} minuty temu'
+        many: '%{count} minut temu'
+        one: 1 minutę temu
+        other: '%{count} minut temu'
       about_x_hours:
-        one: "godzinę temu"
-        few: "%{count} godziny temu"
-        many: "%{count} godzin temu"
-        other: "%{count} godzin temu"
+        few: '%{count} godziny temu'
+        many: '%{count} godzin temu'
+        one: godzinę temu
+        other: '%{count} godzin temu'
       x_days:
-        one: "1 dzień temu"
-        few: "%{count} dni temu"
-        many: "%{count} dni temu"
-        other: "%{count} dni temu"
+        few: '%{count} dni temu'
+        many: '%{count} dni temu'
+        one: 1 dzień temu
+        other: '%{count} dni temu'
       about_x_months:
-        one: "około 1 miesiąca temu"
-        few: "około %{count} miesiące temu"
-        many: "około %{count} miesięcy temu"
-        other: "około %{count} miesięcy temu"
+        few: około %{count} miesiące temu
+        many: około %{count} miesięcy temu
+        one: około 1 miesiąca temu
+        other: około %{count} miesięcy temu
       x_months:
-        one: "1 miesiąc temu"
-        few: "%{count} miesiące temu"
-        many: "%{count} miesięcy temu"
-        other: "%{count} miesięcy temu"
+        few: '%{count} miesiące temu'
+        many: '%{count} miesięcy temu'
+        one: 1 miesiąc temu
+        other: '%{count} miesięcy temu'
       about_x_years:
-        one: "około 1 rok temu"
-        few: "około %{count} lata temu"
-        many: "około %{count} lat temu"
-        other: "około %{count} lat temu"
+        few: około %{count} lata temu
+        many: około %{count} lat temu
+        one: około 1 rok temu
+        other: około %{count} lat temu
       over_x_years:
-        one: "ponad 1 rok temu"
-        few: "ponad %{count} lata temu"
-        many: "ponad %{count} lat temu"
-        other: "ponad %{count} lat temu"
+        few: ponad %{count} lata temu
+        many: ponad %{count} lat temu
+        one: ponad 1 rok temu
+        other: ponad %{count} lat temu
       almost_x_years:
-        one: "prawie 1 rok temu"
-        few: "prawie %{count} lata temu"
-        many: "prawie %{count} lat temu"
-        other: "prawie %{count} lat temu"
+        few: prawie %{count} lata temu
+        many: prawie %{count} lat temu
+        one: prawie 1 rok temu
+        other: prawie %{count} lat temu
   password_reset:
     no_token: "Przepraszamy, ten link do zmiany hasła jest zbyt stary. Wybierz przycisk \"Zaloguj\", a następnie \"Zapomniałem hasła\", by uzyskać nowy link."
     choose_new: "Wprowadź nowe hasło"
@@ -665,8 +628,6 @@ pl_PL:
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
       title: 'Wyślij @{{username}} wiadomość'
-      description: 'Chciałbym porozmawiać o tym poście z tą osobą prywatnie'
-      short_description: 'Chciałbym porozmawiać o tym poście bezpośrednio z tą osobą.'
       long_form: 'użytkownik został powiadomiony'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -806,7 +767,6 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Liczba emaili"
     user_to_user_private_messages:
-      title: "Użytkownik-do-użytkownika"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
     system_private_messages:
@@ -853,7 +813,6 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Odsłony botów indeksujących"
     page_view_total_reqs:
-      title: "Łącznie"
       xaxis: "Dzień"
       yaxis: "Wszystkie odsłony"
     page_view_logged_in_mobile_reqs:
@@ -917,10 +876,10 @@ pl_PL:
     failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są poprawne. <a href="/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
     subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
     email_polling_errored_recently:
-      one: "Email polling wygenerował 1 błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>."
-      few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>."
-      many: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>."
-      other: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>."
+      few: Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>.
+      many: Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>.
+      one: Email polling wygenerował 1 błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>.
+      other: Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>.
     bad_favicon_url: "Nie można załadować favikony. Sprawdź ustawiony favicon_url w <a href='/admin/site_settings'>Ustawieniach Strony</a>."
     poll_pop3_timeout: "Połączenie z serwerem POP3 zostało zerwane. Przychodząca wiadomość mogła nie zostać odebrany. Proszę sprawdź swoje <a href='/admin/site_settings/category/email'ustawienia POP3</a> i dostawcę usług."
     poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='/admin/site_settings/category/email'>ustawienia POP3</a>."
@@ -1002,7 +961,6 @@ pl_PL:
     tl4_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl4 (lider), mnożąc przez tę liczbę"
     flag_sockpuppets: "Jeśli nowy użytkownik odpowiada na dany temat z tego samego adresu IP co nowy użytkownik, który założył temat, oznacz ich posty jako potencjalny spam."
     traditional_markdown_linebreaks: "Używaj tradycyjnych znaków końca linii w Markdown, to znaczy dwóch spacji na końcu linii."
-    enable_markdown_typographer: "Używaj podstawowych zasad typografii, aby poprawić czytelność poszczególnych paragrafów tekstu, zastąpienie (c)(tm) itd, z symbolami, zmniejsza liczbę znaków zapytania itd"
     post_undo_action_window_mins: "Przez tyle minut użytkownicy mogą cofnąć swoje ostatnie działania przy danym poście (lajki, flagowanie, itd.)."
     must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu. UWAGA: włączenie tego dla już udostępnionej strony sprawi, że zostanie odebrany dostęp wszystkim istniejącym użytkownikom spoza zespołu."
     pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
@@ -1044,7 +1002,6 @@ pl_PL:
     version_checks: "Odpytuj Discourse Hub o aktualizacje i wyświetlaj wiadomości o nowej wersji w panelu /admin"
     new_version_emails: "Wyślij email na adres contact_email, kiedy nowa wersja Discourse będzie dostępna."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
-    invite_passthrough_hours: "Jak długo użytkownik może użyć poprzednio wykorzystanego klucza zaproszenia by się zalogować, w godzinach"
     invite_only: "Rejestracja jest wyłączona. Nowi użytkownicy muszą zostać zaproszeni przez administrację."
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
     min_username_length: "Minimalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy krótsze niż ta, twój serwis się uszkodzi!"
@@ -1066,7 +1023,6 @@ pl_PL:
     sso_overrides_avatar: "Nadpisuje avatar użytkownika z pomocą avatarów z zewnętrznych stron poprzez SSO. Jeśli włączone, wyłączanie allow_uploaded_avatars wysoce polecane"
     sso_not_approved_url: "Przekieruj niezatwierdzone konta SSO na ten URL"
     sso_allows_all_return_paths: "Nie ograniczaj domen dla return_paths dostarczanych przez SSO (domyślnie zwracana ścieżka musi być na aktualnej stronie)"
-    enable_local_logins: "Włącz konta oparte o lokalne nazwy użytkownika i hasła logowania. (Pamiętaj: to musi być włączone dla zaproszeń, aby działało)"
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
     enable_yahoo_logins: "Włącz autoryzację Yahoo"
@@ -1074,15 +1030,12 @@ pl_PL:
     google_oauth2_client_id: "Client ID twojej aplikacji w Google"
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     enable_twitter_logins: "Włącz autoryzację Twitter, wymagane twitter_consumer_key oraz twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
     enable_instagram_logins: "Włącz uwierzytelnienie za pomocą Instagramu, wymaga instagram_consumer_key i instagram_consumer_secret."
     instagram_consumer_key: "Klucz konsumenta dla uwierzytelnienia Instragram"
     instagram_consumer_secret: "Sekret konsumenta dla uwierzytelnienia Instragram"
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "Poproś o mnie, lokalizację i stronę z facebooka. (wymaga, aby twoja aplikacja autoryzacyjna była zaakceptowana przez Facebooka)"
     enable_github_logins: "Włacz autoryzację Github, wymagane github_client_id oraz github_client_secret"
     github_client_id: "Client id dla autoryzacji Github, zarejestrowany w https://github.com/settings/applications"
     github_client_secret: "Client secret dla autoryzacji Github, zarejestrowany w https://github.com/settings/applications"
@@ -1090,7 +1043,6 @@ pl_PL:
     allow_restore: "Dopuść przywracanie, które może zamienić WSZYSTKIE dane strony! Zostaw fałsz, chyba że planujesz przywrócić kopię zapasową"
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
     automatic_backups_enabled: "Uruchom automatyczne kopie zapasowe zgodnie z ustawioną częstotliwością kopii"
-    backup_frequency: "Jak często możemy utworzyć kopię zapasową strony, w dniach."
     enable_s3_backups: "Wysyłaj kopie zapasowe do S3 kiedy gotowe. WAŻNE: wymaga poprawnych poświadczeń S3 wprowadzonych w ustawieniach Plików."
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
     s3_disable_cleanup: "Dezaktywuj usuwanie kopii zapasowych z S3 kiedy usunięte lokalnie."
@@ -1382,7 +1334,6 @@ pl_PL:
     max_tags_in_filter_list: "Maksymalna liczba tagów do pokazania w rozwijanym filtrze. Pokazane będą najczęściej używane tagi."
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tag_style: "Styl etykiet tagów"
-    staff_tags: "Lista tagów może być zaakceptowana tylko przez moderatorów."
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów z tagiem z wyciszonymi tagami w ostatniej liście tematów."
@@ -1437,24 +1388,24 @@ pl_PL:
     not_seen_in_a_month: "Witamy ponownie! Długo tu nie zaglądałeś. Oto najpopularniejsze tematy z czasów, kiedy cię tu nie było."
   merge_posts:
     edit_reason:
-      one: "%{username} dołączył 1 post"
-      few: "%{username} dołączył %{count} posty"
-      many: "%{username} dołączył %{count} postów"
-      other: "%{username} dołączył %{count} postów"
+      few: '%{username} dołączył %{count} posty'
+      many: '%{username} dołączył %{count} postów'
+      one: '%{username} dołączył 1 post'
+      other: '%{username} dołączył %{count} postów'
     errors:
       different_topics: "Nie można połączyć postów z różnych wątków."
       different_users: "Nie można połączyć postów różnych użytkowników."
   move_posts:
     new_topic_moderator_post:
-      one: "Wydzielono 1 post tworząc nowy wątek: %{topic_link}"
-      few: "Wydzielono %{count} posty tworząc nowy wątek: %{topic_link}"
-      many: "Wydzielono %{count} postów tworząc nowy wątek: %{topic_link}"
-      other: "Wydzielono %{count} postów tworząc nowy wątek: %{topic_link}"
+      few: 'Wydzielono %{count} posty tworząc nowy wątek: %{topic_link}'
+      many: 'Wydzielono %{count} postów tworząc nowy wątek: %{topic_link}'
+      one: 'Wydzielono 1 post tworząc nowy wątek: %{topic_link}'
+      other: 'Wydzielono %{count} postów tworząc nowy wątek: %{topic_link}'
     existing_topic_moderator_post:
-      one: "1 post przeniesiono do wątku: %{topic_link}"
-      few: "%{count} posty przeniesiono do wątku: %{topic_link}"
-      many: "%{count} postów przeniesiono do wątku: %{topic_link}"
-      other: "%{count} postów przeniesiono do wątku: %{topic_link}"
+      few: '%{count} posty przeniesiono do wątku: %{topic_link}'
+      many: '%{count} postów przeniesiono do wątku: %{topic_link}'
+      one: '1 post przeniesiono do wątku: %{topic_link}'
+      other: '%{count} postów przeniesiono do wątku: %{topic_link}'
   change_owner:
     post_revision_text: "Zmieniono właściciela z %{old_user} na %{new_user}"
     deleted_user: "usunięty użytkownik"
@@ -1464,45 +1415,45 @@ pl_PL:
     closed_enabled: "Temat został zamknięty. Dodawanie nowych odpowiedzi nie jest możliwe."
     closed_disabled: "Temat został otwarty. Dodawanie odpowiedzi jest ponownie możliwe."
     autoclosed_message_max_posts:
-      one: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby 1 odpowiedzi."
-      few: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
-      many: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
-      other: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
+      few: Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi.
+      many: Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi.
+      one: Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby 1 odpowiedzi.
+      other: Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi.
     autoclosed_topic_max_posts:
-      one: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby 1 odpowiedzi."
-      few: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
-      many: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
-      other: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
+      few: Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi.
+      many: Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi.
+      one: Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby 1 odpowiedzi.
+      other: Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi.
     autoclosed_enabled_days:
-      one: "Ten temat został automatycznie zamknięty po 1 dniu. Tworzenie nowych odpowiedzi nie jest możliwe."
-      few: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest możliwe."
-      many: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      other: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest możliwe.
+      many: Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      one: Ten temat został automatycznie zamknięty po 1 dniu. Tworzenie nowych odpowiedzi nie jest możliwe.
+      other: Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest już możliwe.
     autoclosed_enabled_hours:
-      one: "Ten temat został automatycznie zamknięty po 1 godzinie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      few: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      many: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      other: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      many: Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      one: Ten temat został automatycznie zamknięty po 1 godzinie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      other: Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe.
     autoclosed_enabled_minutes:
-      one: "Ten temat został automatycznie zamknięty po 1 minucie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      few: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      many: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      other: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      many: Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      one: Ten temat został automatycznie zamknięty po 1 minucie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      other: Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe.
     autoclosed_enabled_lastpost_days:
-      one: "Ten temat został automatycznie zamknięty 1 dzień po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      few: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      many: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      other: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      many: Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      one: Ten temat został automatycznie zamknięty 1 dzień po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      other: Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
     autoclosed_enabled_lastpost_hours:
-      one: "Ten temat został automatycznie zamknięty 1 godzinę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      few: "Ten temat został automatycznie zamknięty %{count} godziny po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      many: "Ten temat został automatycznie zamknięty %{count} godzin po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      other: "Ten temat został automatycznie zamknięty %{count} godzin po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: Ten temat został automatycznie zamknięty %{count} godziny po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      many: Ten temat został automatycznie zamknięty %{count} godzin po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      one: Ten temat został automatycznie zamknięty 1 godzinę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      other: Ten temat został automatycznie zamknięty %{count} godzin po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
     autoclosed_enabled_lastpost_minutes:
-      one: "Ten temat został automatycznie zamknięty 1 minutę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      few: "Ten temat został automatycznie zamknięty %{count} minuty po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      many: "Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
-      other: "Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: Ten temat został automatycznie zamknięty %{count} minuty po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      many: Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      one: Ten temat został automatycznie zamknięty 1 minutę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
+      other: Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe.
     autoclosed_disabled: "Temat został otwarty. Dodawanie odpowiedzi jest ponownie możliwe."
     autoclosed_disabled_lastpost: "Temat został otwarty. Pisanie odpowiedzi jest możliwe."
     pinned_enabled: "Temat został przypięty. Będzie pojawiać się na początku swojej kategorii dopóki nie zostanie odpięty przez obsługę lub prywatnie przez użytkownika."
@@ -1563,10 +1514,10 @@ pl_PL:
       domain_not_allowed: "Błędny adres strony internetowej. Dozwolone domeny: %{domains}"
   flags_reminder:
     subject_template:
-      one: "1 flaga oczekuje na reakcję"
-      few: "%{count} flagi oczekują na reakcję"
-      many: "%{count} flagi oczekują na reakcję"
-      other: "%{count} flagi oczekują na reakcję"
+      few: '%{count} flagi oczekują na reakcję'
+      many: '%{count} flagi oczekują na reakcję'
+      one: 1 flaga oczekuje na reakcję
+      other: '%{count} flagi oczekują na reakcję'
   unsubscribe_mailer:
     title: "Unsubscribe Mailer"
     subject_template: "Potwierdź, że nie chcesz już otrzymywać powiadomień mailowych ze strony %{site_title}"
@@ -1623,47 +1574,6 @@ pl_PL:
   test_mailer:
     title: "Test Powiadomień"
     subject_template: "[%{site_name}] Test dostarczania poczty"
-    text_body_template: |
-      To testowy mail z serwisu:
-
-      [**%{base_url}**][0]
-
-      Mail nie bez powodu jest tak długi! Powinieneś jeszcze sprawdzić kilka rzeczy:
-
-      - **Upewnij się**, że prawidłowo ustawiłeś pole "od" dla powiadomień mailowych w ustawieniach serwisu. **Względem tej domeny twoje maile będą weryfikowane!**
-
-      - Dowiedz się, jak wyświetlić surowy kod źródłowy wiadomości mailowej w twoim programie pocztowym, tak abyś mógł przeglądać nagłówki maili szukając istotnych wskazówek. W przypadku GMaila nad każdym mailem, po rozwinięciu menu, dostępna jest opcja "Pokaż oryginał".
-
-      - **WAŻNE:** Czy twój ISP skonfigurował odwrotny rekord DNS (reverse DNS record), by powiązać nazwy domenowe z adresami IP, spod których wysyłasz maile? [Sprawdź swój odwrotny rekord PTR][2] tutaj. Jeśli ISP nie skonfigurował tego prawidłowo, twoje maile mogą nie docierać do adresatów.
-
-      - Czy [rekord SPF][8] twojej domeny jest prawidłowy? [Sprawdź swój rekord SPF][1] tutaj. Pamiętaj, że oficjalnym prawidłowym typem rekordu SPF jest TXT.
-
-      - Czy [rekord DKIM][3] twojej domeny jest prawidłowy? To znacznie zwiększy prawdopodobieństwo docierania twoich maili do adresatów. [Sprawdź swój rekord DKIM][7] tutaj.
-
-      - Jeśli korzystasz z własnego serwera poczty, upewnij się, że adresy IP twojego serwera [nie znajdują się na czarnych listach][4]. Ponadto upewnij się, że serwer wysyła w pełni kwalifikowaną nazwę hosta, rozwiązywaną przez serwery DNS w wiadomościach HELO. W przeciwnym wypadku wielu usługodawców mailowych będzie odrzucać twoje maile.
-
-      - Mocno zalecamy, byś **wysłał testowego maila do [mail-tester.com][mt]**, aby potwierdzić, że wszystko o czym wspomnieliśmy działa prawidłowo.
-
-      (*Najłatwiej* założyć darmowe konto w jednym z serwisów: [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] lub [Mailjet][mj]. Mają one wiele bezpłatnych ofert mailingowych, w sam raz dla małej społeczności. Pamiętaj, że i tak musisz skonfigurować rekordy SPF i DKIM w twoim serwerze DNS!)
-
-      Mamy nadzieję, że bez problemu otrzymałeś tego maila potwierdzającego docieranie maili wysyłanych przez forum.
-
-      Powodzenia,
-
-      Koledzy z [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Nowa wersja powiadomień"
     subject_template: "[%{site_name}] Aktualizacja do nowej wersji Discourse jest dostępna."
@@ -1789,7 +1699,6 @@ pl_PL:
 
     csv_export_succeeded:
       title: "Eksport CSV udany "
-      subject_template: "Zakończono eksport danych"
       text_body_template: |
         Eksport danych zakończył się sukcesem! :dvd:
 
@@ -1955,10 +1864,10 @@ pl_PL:
     pending_users_reminder:
       title: "Oczekujący użytkownicy przypomnienie"
       subject_template:
-        one: "1 użytkownik czeka na zatwierdzenie"
-        few: "%{count} użytkowników czeka na zatwierdzenie"
-        many: "%{count} użytkowników czeka na zatwierdzenie"
-        other: "%{count} użytkowników czeka na zatwierdzenie"
+        few: '%{count} użytkowników czeka na zatwierdzenie'
+        many: '%{count} użytkowników czeka na zatwierdzenie'
+        one: 1 użytkownik czeka na zatwierdzenie
+        other: '%{count} użytkowników czeka na zatwierdzenie'
       text_body_template: |+
         Są nowi zarejestrowani użytkownicy, oczekujący na zaakceptowanie (lub odrzucenie) przed rozpoczęciem użytkowania forum.
 
@@ -2160,7 +2069,7 @@ pl_PL:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Krótkie podsumowanie aktywności na %{site_link} od twojej ostatniej wizyty w dniu %{last_seen_at}."
       since_last_visit: "Od twojej ostatniej wizyty"
@@ -2522,22 +2431,22 @@ pl_PL:
         Ta odznaka jest przyznawana, gdy po raz pierwszy dokonasz edycji jednego z twoich postów. Nie będziesz miał możliwości dokonywania zmian w postach na zawsze, edytowanie to jest zawsze dobry pomysł - możesz dokonać ulepszenia swoich postów, naprawić małe błędy, lub dodać tekst, który przez przypadek pominąłeś w oryginalnym poście. Edytuj by twoje posty stawały się coraz lepsze!
     basic_user:
       name: Podstawowy
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Przyznano</a> wszystkie podstawowe funkcje
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Przyznano</a> wszystkie podstawowe funkcje"
       long_description: |
         To odznaka jest przyznawana, gdy osiągniesz poziom zaufania 1. Dziękujemy, że z nami jesteś i czytasz różne wątki, aby dowiedzieć się jak działa  nasza społeczność. Ograniczenia dla nowego użytkownika zostały usunięte; przyznano ci wszystkie niezbędne funkcję społecznościowe, jak na przykład wysyłanie wiadomości prywatnych, edytowanie wiki, flagowanie i możliwość dodawania wielu obrazków i linków w postach.
     member:
       name: Zwykły
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Przyznano</a> zaproszenia, wysyłanie wiadomości do grup, więcej lajków
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Przyznano</a> zaproszenia, wysyłanie wiadomości do grup, więcej lajków"
       long_description: |
         Ta odznaka jest przyznawana, gdy osiągniesz poziom zaufania 2. Dziękujemy za to, że udzielasz się przez czas kilku tygodni, aby w pełni dołączyć do społeczności. Możesz teraz wysyłać zaproszenia ze strony użytkownika lub z wątków, tworzyć konwersacje grupowe i mieć kilka polubień więcej na dzień.
     regular:
       name: Regularny
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Przyznano</a> możliwość zmiany kategorii, nazwy, linków oraz salon, więcej lajków
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Przyznano</a> możliwość zmiany kategorii, nazwy, linków oraz salon, więcej lajków"
       long_description: |
         Ta odznaka jest przyznawana, gdy osiągniesz poziom zaufania 3. Dziękujemy, że regularnie udzielasz się w naszej społeczności od miesięcy. Jesteś teraz jednym z najbardziej aktywnych czytelników i masz realny wkład w tworzenie tej społeczności. Możesz teraz dokonywać zmian kategorii i zmieniać nazwy tematów, wykorzystaj bardziej skuteczne oflagowania, dostęp do obszaru prywatnego pokoju i możliwość dawania dużo większej liczby polubień na dzień.
     leader:
       name: Weteran
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Przyznano</a> możliwość globalnej edycji, przypinania, zamykania, archiwizacji, podziału i scalania, więcej lajków
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Przyznano</a> możliwość globalnej edycji, przypinania, zamykania, archiwizacji, podziału i scalania, więcej lajków"
       long_description: |
         Ta odznaka jest przyznawana, gdy osiągniesz poziom zaufania 4. Obsługa ocenia, że jesteś liderem w tej społeczności i dajesz dobry przykład reszcie społeczności poprzez swoje akcje i wypowiedzi. Masz możliwość edycji wszystkich postów, dokonywania akcji zarezerwowanych dla moderatorów takich jak przypinanie, zamykanie, usuwanie z katalogu, archiwizowanie, rozdzielanie i łącznie, jak również otrzymujesz całe tony polubień do rozdania dziennie.
     welcome:
@@ -2549,7 +2458,7 @@ pl_PL:
       name: Autobiograf
     anniversary:
       name: Rocznica
-      description: Aktywność przez rok, co najmniej jeden wpis
+      description: "Aktywność przez rok, co najmniej jeden wpis"
       long_description: |
         Ta odznaka jest przyznawana w momencie, gdy jesteś członkiem przynajmniej rok i napisałeś przynajmniej jeden post przez rok. Dziękujemy, że z nami jesteś i udzielasz się w naszej społeczności. Nie moglibyśmy funkcjonować bez ciebie.
     nice_post:
@@ -2584,17 +2493,17 @@ pl_PL:
         Ta odznaka jest przyznawana, gdy twój wątek otrzymał 50 polubień. Rozpocząłeś fascynującą konwersację, a społeczeństwu spodobała się dynamiczna dyskusja, która z tego wynikła.
     nice_share:
       name: Miłe udostępnienie
-      description: 'Udostępniono post z 25 unikalnymi odwiedzającymi. '
+      description: "Udostępniono post z 25 unikalnymi odwiedzającymi. "
       long_description: |
         Ta odznaka przyznawana jest za udostępnienie linku, który został naciśnięty przez co najmniej 25 osób. Dziękujemy za rozpowszechnianie naszych konwersacji i tej społeczności.
     good_share:
       name: Dobre udostępnienie
-      description: 'Udostępniono post z 300 unikalnymi odwiedzającymi. '
+      description: "Udostępniono post z 300 unikalnymi odwiedzającymi. "
       long_description: |
         Ta odznaka jest przyznawana za udostępnienie linku, który został naciśnięty przez co najmniej 300 osób. Dobra robota! Pokazałeś jak wygląda prawdziwa dyskusja grupie nowych osób i wspomogłeś rozrost tej społeczności.
     great_share:
       name: Świetne udostępnienie
-      description: 'Udostępniono post z 1000 unikalnych odwiedzających. '
+      description: "Udostępniono post z 1000 unikalnych odwiedzających. "
       long_description: |
         Ta odznaka jest przyznawana za udostępnienie linku, który został naciśnięty przez co najmniej 1000 osób. Wow! Dokonałeś promocji naprawdę interesującej dyskusji w dużym gronie odbiorców i wspomogłeś w istotny sposób rozrost naszej społeczności!
     first_like:
@@ -2610,11 +2519,9 @@ pl_PL:
     promoter:
       name: Promotor
       description: Zaproszenie użytkownika
-      long_description: |
-        Ta odznaka jest przyznawana, gdy zaprosisz kogoś do społeczności poprzez przycisk zaproś na stronie użytkownika, lub na dole wątku. Zapraszanie przyjaciół, którzy mogą być zainteresowani dyskusjami to świetny sposób aby wprowadzić nowe osoby do naszej społeczności, dzięki!
     campaigner:
       name: Działacz
-      description: 'Zaproszenie 3 użytkowników '
+      description: "Zaproszenie 3 użytkowników "
       long_description: |
         Ta odznaka jest przyznawana, gdy zaprosisz przynajmniej 3 osoby, które później spędzą wystarczająco dużo czasu na stronie, aby zostać regularnymi użytkownikami. Żyjąca społeczność potrzebuje regularnego wpływu nowych użytkowników, którzy regularnie udzielają się na forum i przedstawiają swój nowy punkt widzenia w konwersacjach.
     champion:
@@ -2647,17 +2554,17 @@ pl_PL:
         Ta odznaka jest przyznawana, gdy po raz pierwszy przeczytasz dłuższy wątek z więcej niż 100 odpowiedziami. Dokładne czytanie konwersacji pozwala na śledzenie dyskusji, zrozumienie różnych punktów widzenia i prowadzi do bardziej interesującej konwersacji. Im więcej czytasz, tym lepsza staję się konwersacja. Lubimy powtarzać, że czytanie to właśnie fundament! :slight_smile:
     popular_link:
       name: Popularny link
-      description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 50 kliknięć
+      description: "Opublikowanie zewnętrznego linku, który otrzymał co najmniej 50 kliknięć"
       long_description: |
         Ta odznaka jest przyznawana, gdy link, który udostępniłeś zostanie otwarty przynajmniej 50 razy. Dziękujemy za dodawanie przydatnych linków, które mają wyraźny wkład w zawartość konwersacji!
     hot_link:
       name: Gorący link
-      description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 300 kliknięć
+      description: "Opublikowanie zewnętrznego linku, który otrzymał co najmniej 300 kliknięć"
       long_description: |
         Ta odznaka jest przyznawana, gdy link, który udostępniłeś zostanie otwarty przynajmniej 300 razy. Dziękujemy za udostępnienie ciekawe linku, który pozwolił rozwinąć konwersację i dodać nowy punkt widzenia dyskusji!
     famous_link:
       name: Popularny link
-      description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 1000 kliknięć
+      description: "Opublikowanie zewnętrznego linku, który otrzymał co najmniej 1000 kliknięć"
       long_description: |
         Ta odznaka jest przyznawana, gdy link, który udostępniłeś zostanie otwarty przynajmniej 1000 razy. Wow! Udostępniłeś link, który wyraźnie przyczynił się do ulepszenia konwersacji poprzez dodanie niezbędnych szczegółów, zawartości i informacji. Dobra robota!
     appreciated:
@@ -2708,16 +2615,14 @@ pl_PL:
     first_emoji:
       name: Pierwszy Emoji
       description: Użyto Emoji w Poście
-      long_description: |
-        Ta odznaka jest przyznawana, gdy po raz pierwszy dodasz emoji do twojego posta  :thumbsup:. Emoji pozwala ci przenosić emocje do twojego posta, od szczęścia  :smiley: do smutku  :anguished:, gniewu :angry: i wszystkie pomiędzy  :sunglasses:. Po prostu rozpocznij od: (dwukropka) lub naciśnij na przycisk paska Emoji w edytorze, aby wybrać z spośród setek emoji :ok_hand:.
     first_mention:
       name: Pierwsze Wspomnienie
       description: Wspomniano o użytkowniku w poście
-      long_description: Ta odznaka jest przyznawana, gdy po raz pierwszy wspomnisz o którymś użytkowniku *nazwa użytkownika w swoim poście. Każde wspomnienie powoduje wysłanie powiadomienia do tej osoby, tak aby wiedział o twoim poście. Po prostu rozpocznij pisanie od @(symbolu) aby wspomnieć o użytkowniku lub jeśli można o grupie - jest to wygodny sposób, aby zwrócić czyjąś uwagę.
+      long_description: "Ta odznaka jest przyznawana, gdy po raz pierwszy wspomnisz o którymś użytkowniku *nazwa użytkownika w swoim poście. Każde wspomnienie powoduje wysłanie powiadomienia do tej osoby, tak aby wiedział o twoim poście. Po prostu rozpocznij pisanie od @(symbolu) aby wspomnieć o użytkowniku lub jeśli można o grupie - jest to wygodny sposób, aby zwrócić czyjąś uwagę."
     first_onebox:
       name: Pierwszy Onebox
       description: Dodany link został poddany funkcji oneboxe
-      long_description: Ta odznaka jest przyznawana, gdy po raz pierwszy umieścisz link w swoim poście, który został automatycznie rozszerzony przez funkcję onebox z krótkim podsumowaniem linku; tytuł i (jeśli dozwolone) zdjęcie.
+      long_description: "Ta odznaka jest przyznawana, gdy po raz pierwszy umieścisz link w swoim poście, który został automatycznie rozszerzony przez funkcję onebox z krótkim podsumowaniem linku; tytuł i (jeśli dozwolone) zdjęcie."
     first_reply_by_email:
       name: Pierwsza Odpowiedz przez Email
       description: Odpowiedział na post poprzez email
@@ -2734,8 +2639,8 @@ pl_PL:
     email_input: "Email administratora. "
     submit_button: "Wyślij Email. "
   performance_report:
-    initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
-    initial_topic_title: 'Testy wydajności witryny. '
+    initial_post_raw: "Ten temat zawiera codzienne raporty wydajności dla twojej witryny. "
+    initial_topic_title: "Testy wydajności witryny. "
   tags:
     title: "Etykiety"
     staff_tag_disallowed: "Etykieta \"%{tag}\" może być zatwierdzona przez personel."
@@ -2874,6 +2779,3 @@ pl_PL:
         description: |
           <p>Jeśli kiedykolwiek będziesz chciał dokonać zmian w tych ustawieniach, przejdź <a href='/admin' target='_blank'>do sekcji admina</a>; znajdziesz ją obok ikony klucza w menu witryny.</p>
           <p>Baw się dobrze i powodzenia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>w budowaniu nowej społeczności!</a></p>
-  activemodel:
-    errors:
-      <<: *errors

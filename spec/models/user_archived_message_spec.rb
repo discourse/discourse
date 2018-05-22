@@ -10,11 +10,11 @@ describe UserArchivedMessage do
                         target_usernames: [user2.username, user.username].join(","),
                         archetype: Archetype.private_message).topic
 
-    UserArchivedMessage.archive!(user.id, topic.id)
+    UserArchivedMessage.archive!(user.id, topic)
     expect(topic.message_archived?(user)).to eq(true)
 
     TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:muted])
-    UserArchivedMessage.move_to_inbox!(user.id, topic.id)
+    UserArchivedMessage.move_to_inbox!(user.id, topic)
     expect(topic.message_archived?(user)).to eq(true)
   end
 end

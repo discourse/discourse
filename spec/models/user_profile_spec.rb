@@ -71,6 +71,13 @@ describe UserProfile do
         user_profile.website = "http://discourse.org"
         expect(user_profile).to be_valid
       end
+
+      it "doesn't blow up with an invalid URI" do
+        SiteSetting.user_website_domains_whitelist = "discourse.org"
+
+        user_profile.website = 'user - https://forum.example.com/user'
+        expect { user_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
     end
 
     describe 'after save' do
@@ -118,7 +125,8 @@ describe UserProfile do
     end
 
     it 'supports emoji images' do
-      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"/uploads/default/original/1X/f588830852fc8091a094cf0be0be0e6559dc8304.png?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=5\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\"> <img src=\"/images/emoji/twitter/thinking.png?v=5\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\">")
+
+      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"/uploads/default/original/1X/#{Upload.find(1).sha1}.png?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=5\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\"> <img src=\"/images/emoji/twitter/thinking.png?v=5\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\">")
     end
   end
 
@@ -201,4 +209,39 @@ describe UserProfile do
       end
     end
   end
+
+  context '.import_url_for_user' do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      stub_request(:any, "thisfakesomething.something.com")
+        .to_return(body: "abc", status: 404, headers: { 'Content-Length' => 3 })
+    end
+
+    describe 'when profile_background_url returns an invalid status code' do
+      it 'should not do anything' do
+        url = "http://thisfakesomething.something.com/"
+
+        UserProfile.import_url_for_user(url, user, is_card_background: false)
+
+        user.reload
+
+        expect(user.user_profile.profile_background).to eq(nil)
+      end
+    end
+
+    describe 'when card_background_url returns an invalid status code' do
+      it 'should not do anything' do
+        url = "http://thisfakesomething.something.com/"
+
+        UserProfile.import_url_for_user(url, user, is_card_background: true)
+
+        user.reload
+
+        expect(user.user_profile.card_background).to eq(nil)
+      end
+    end
+
+  end
+
 end

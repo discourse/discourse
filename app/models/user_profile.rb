@@ -1,4 +1,9 @@
+require_dependency 'upload_creator'
 class UserProfile < ActiveRecord::Base
+
+  # TODO: remove this after Nov 1, 2018
+  self.ignored_columns = %w{card_image_badge_id}
+
   belongs_to :user, inverse_of: :user_profile
 
   validates :bio_raw, length: { maximum: 3000 }
@@ -12,7 +17,6 @@ class UserProfile < ActiveRecord::Base
 
   validate :website_domain_validator, if: Proc.new { |c| c.new_record? || c.website_changed? }
 
-  belongs_to :card_image_badge, class_name: 'Badge'
   has_many :user_profile_views, dependent: :destroy
 
   BAKED_VERSION = 1
@@ -75,6 +79,36 @@ class UserProfile < ActiveRecord::Base
     update_columns(bio_cooked: cooked, bio_cooked_version: BAKED_VERSION)
   end
 
+  def self.import_url_for_user(background_url, user, options = nil)
+    tempfile = FileHelper.download(
+      background_url,
+      max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+      tmp_file_name: "sso-profile-background",
+      follow_redirect: true
+    )
+
+    return unless tempfile
+
+    ext = FastImage.type(tempfile).to_s
+    tempfile.rewind
+
+    is_card_background = !options || options[:is_card_background]
+    type = is_card_background ? "card_background" : "profile_background"
+
+    upload = UploadCreator.new(tempfile, "external-profile-background." + ext, origin: background_url, type: type).create_for(user.id)
+
+    if (is_card_background)
+      user.user_profile.upload_card_background(upload)
+    else
+      user.user_profile.upload_profile_background(upload)
+    end
+
+  rescue Net::ReadTimeout, OpenURI::HTTPError
+    # skip saving, we are not connected to the net
+  ensure
+    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
+  end
+
   protected
 
   def trigger_badges
@@ -106,7 +140,10 @@ class UserProfile < ActiveRecord::Base
     allowed_domains = SiteSetting.user_website_domains_whitelist
     return if (allowed_domains.blank? || self.website.blank?)
 
-    domain = URI.parse(self.website).host
+    domain = begin
+      URI.parse(self.website).host
+    rescue URI::InvalidURIError
+    end
     self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.split('|').join(", "))) unless allowed_domains.split('|').include?(domain)
   end
 
@@ -126,7 +163,6 @@ end
 #  bio_cooked_version   :integer
 #  badge_granted_title  :boolean          default(FALSE)
 #  card_background      :string(255)
-#  card_image_badge_id  :integer
 #  views                :integer          default(0), not null
 #
 # Indexes

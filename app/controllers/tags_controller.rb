@@ -19,7 +19,7 @@ class TagsController < ::ApplicationController
   skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
 
   before_action :set_category_from_params, except: [:index, :update, :destroy,
-    :tag_feed, :search, :notifications, :update_notifications]
+    :tag_feed, :search, :notifications, :update_notifications, :personal_messages]
 
   def index
     @description_meta = I18n.t("tags.title")
@@ -32,22 +32,26 @@ class TagsController < ::ApplicationController
       end
 
       format.json do
+        show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
+
         if SiteSetting.tags_listed_by_group
-          grouped_tag_counts = TagGroup.allowed(guardian).order('name ASC').includes(:tags).map do |tag_group|
+          ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
+          ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless show_all_tags
+
+          grouped_tag_counts = TagGroup.visible(guardian).order('name ASC').includes(:tags).map do |tag_group|
             { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
           end
 
-          ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships)")
-
           render json: {
-            tags: self.class.tag_counts_json(ungrouped_tags), # tags that don't belong to a group
+            tags: self.class.tag_counts_json(ungrouped_tags),
             extras: { tag_groups: grouped_tag_counts }
           }
         else
-          unrestricted_tags = Tag.where("tags.id NOT IN (select tag_id from category_tags)")
+          tags = show_all_tags ? Tag.all : Tag.where("tags.topic_count > 0")
+          unrestricted_tags = DiscourseTagging.filter_visible(tags, guardian)
 
-          categories = Category.where("id in (select category_id from category_tags)")
-            .where("id in (?)", guardian.allowed_category_ids)
+          categories = Category.where("id IN (SELECT category_id FROM category_tags)")
+            .where("id IN (?)", guardian.allowed_category_ids)
             .includes(:tags)
 
           category_tag_counts = categories.map do |c|
@@ -191,6 +195,16 @@ class TagsController < ::ApplicationController
     render json: { valid: valid_tags }
   end
 
+  def personal_messages
+    guardian.ensure_can_tag_pms!
+    allowed_user = fetch_user_from_params
+    raise Discourse::NotFound if allowed_user.blank?
+    raise Discourse::NotFound if current_user.id != allowed_user.id && !@guardian.is_admin?
+    pm_tags = Tag.pm_tags(guardian: guardian, allowed_user: allowed_user)
+
+    render json: { tags: pm_tags }
+  end
+
   private
 
     def ensure_tags_enabled
@@ -198,7 +212,7 @@ class TagsController < ::ApplicationController
     end
 
     def self.tag_counts_json(tags)
-      tags.map { |t| { id: t.name, text: t.name, count: t.topic_count } }
+      tags.map { |t| { id: t.name, text: t.name, count: t.topic_count, pm_count: t.pm_topic_count } }
     end
 
     def set_category_from_params
@@ -262,10 +276,14 @@ class TagsController < ::ApplicationController
     def construct_url_with(action, opts)
       method = url_method(opts)
 
-      url = if action == :prev
-        public_send(method, opts.merge(prev_page_params(opts)))
-      else # :next
-        public_send(method, opts.merge(next_page_params(opts)))
+      begin
+        url = if action == :prev
+          public_send(method, opts.merge(prev_page_params(opts)))
+        else # :next
+          public_send(method, opts.merge(next_page_params(opts)))
+        end
+      rescue ActionController::UrlGenerationError
+        raise Discourse::NotFound
       end
       url.sub('.json?', '?')
     end

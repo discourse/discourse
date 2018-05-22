@@ -6,6 +6,7 @@
     {{tag-chooser
       tags=model.tag_names
       everyTag=true
+      allowCreate=true
       unlimitedTagCount=true}}
   </section>
 
@@ -14,7 +15,8 @@
     {{tag-chooser
       tags=model.parent_tag_name
       everyTag=true
-      limit=1
+      maximum=1
+      allowCreate=true
       filterPlaceholder="tagging.groups.parent_tag_placeholder"}}
     <span class="description">{{i18n 'tagging.groups.parent_tag_description'}}</span>
   </section>
@@ -24,6 +26,21 @@
       {{input type="checkbox" checked=model.one_per_topic name="onepertopic"}}
       {{i18n 'tagging.groups.one_per_topic_label'}}
     </label>
+  </section>
+
+  <section class="group-visibility">
+    <div>
+      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="public" id="public-permission" selection=model.permissionName onChange="changed"}}
+      <label class="radio" for="public-permission">{{i18n 'tagging.groups.everyone_can_use'}}</label>
+    </div>
+    <div>
+      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="visible" id="visible-permission" selection=model.permissionName onChange="changed"}}
+      <label class="radio" for="visible-permission">{{i18n 'tagging.groups.usable_only_by_staff'}}</label>
+    </div>
+    <div>
+      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="private" id="private-permission" selection=model.permissionName onChange="changed"}}
+      <label class="radio" for="private-permission">{{i18n 'tagging.groups.visible_only_to_staff'}}</label>
+    </div>
   </section>
 
   <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'tagging.groups.save'}}</button>

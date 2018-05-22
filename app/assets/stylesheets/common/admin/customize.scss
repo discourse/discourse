@@ -55,6 +55,21 @@
     }
   }
 
+  .theme.settings {
+    .theme-setting {
+      padding-bottom: 0;
+      padding-top: 18px;
+      min-height: 35px;
+    }
+    .setting-label {
+      width: 25%;
+      h3 {
+        margin-top: 0;
+        margin-bottom: .5rem;
+      }
+    }
+  }
+
   .current-style.maximized {
     position: fixed;
     top: 0;
@@ -224,3 +239,23 @@
 #custom_emoji {
   width: 27%;
 }
+
+.modal-body .inputs .check-private {
+  margin-top: 10px;
+  label {
+    padding-left: 0;
+  }
+  label input {
+    width: auto;
+    margin: 3px 0;
+  }
+
+  .public-key {
+    margin-top: 10px;
+    textarea {
+      cursor: auto;
+      height: 150px;
+    }
+  }
+}
+

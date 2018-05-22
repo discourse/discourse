@@ -29,13 +29,13 @@
 .modal-header {
   display: flex;
   align-items: center;
-  padding: 10px 15px;  
+  padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
   h3 {
     margin-bottom: 0;
   }
   .modal-close {
-    order: 2; 
+    order: 2;
     margin-left: auto;
   }
 }
@@ -114,6 +114,10 @@
   height: 100%;
   z-index: z("modal","content");
   overflow: auto;
+
+  .modal-body {
+    max-height: none !important;
+  }
 }
 
 .modal-form {
@@ -372,6 +376,12 @@
       }
     }
   }
+
+  section.minimum-required-tags {
+    input[type=number] {
+      width: 50px;
+    }
+  }
 }
 
 .incoming-email-modal {
@@ -420,23 +430,26 @@
   }
 }
 
-.change-timestamp {
-  
+.change-timestamp,
+.poll-ui-builder {
+
     .date-picker {
-      width: 10em;
+      width: 9em;
     }
-  
+
     #date-container {
       .pika-single {
         position: relative !important; // overriding another important
         display: inline-block;
+        margin-top: 5px;
       }
     }
-  
+
     input[type=time] {
       width: 6em;
+      text-align: center;
     }
-  
+
     form {
       margin: 0;
     }
@@ -491,4 +504,3 @@
   width: 95%;
 }
 
-  

@@ -259,6 +259,11 @@ class PostsController < ApplicationController
     render json: post.reply_ids(guardian).to_json
   end
 
+  def all_reply_ids
+    post = find_post_from_params
+    render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
+  end
+
   def destroy
     post = find_post_from_params
     RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
@@ -639,6 +644,12 @@ class PostsController < ApplicationController
       result[:is_warning] = (params[:is_warning] == "true")
     else
       result[:is_warning] = false
+    end
+
+    if params[:shared_draft] == 'true'
+      raise Discourse::InvalidParameters.new(:shared_draft) unless guardian.can_create_shared_draft?
+
+      result[:shared_draft] = true
     end
 
     if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"

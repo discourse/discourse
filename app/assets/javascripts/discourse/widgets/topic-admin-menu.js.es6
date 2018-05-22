@@ -146,12 +146,11 @@ export default createWidget('topic-admin-menu', {
                      icon: 'lock',
                      label: 'actions.close' });
     }
-    if (this.currentUser.get('staff')) {
-      buttons.push({ className: 'topic-admin-status-update',
+
+    buttons.push({ className: 'topic-admin-status-update',
                    action: 'showTopicStatusUpdate',
                    icon: 'clock-o',
                    label: 'actions.timed_update' });
-    }
 
     const isPrivateMessage = topic.get('isPrivateMessage');
 

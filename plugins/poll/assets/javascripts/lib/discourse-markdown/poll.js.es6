@@ -2,35 +2,7 @@
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL_NAME = "poll";
-const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status", "public"];
-
-function getHelpText(count, min, max) {
-
-  // default values
-  if (isNaN(min) || min < 1) { min = 1; }
-  if (isNaN(max) || max > count) { max = count; }
-
-  // add some help text
-  let help;
-
-  if (max > 0) {
-    if (min === max) {
-      if (min > 1) {
-        help = I18n.t("poll.multiple.help.x_options", { count: min });
-      }
-    } else if (min > 1) {
-      if (max < count) {
-        help = I18n.t("poll.multiple.help.between_min_and_max_options", { min: min, max: max });
-      } else {
-        help = I18n.t("poll.multiple.help.at_least_min_options", { count: min });
-      }
-    } else if (max <= count) {
-      help = I18n.t("poll.multiple.help.up_to_max_options", { count: max });
-    }
-  }
-
-  return help;
-}
+const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status", "public", "close"];
 
 function replaceToken(tokens, target, list) {
   let pos = tokens.indexOf(target);
@@ -50,7 +22,6 @@ function replaceToken(tokens, target, list) {
 
 // analyzes the block to that we have poll options
 function getListItems(tokens, startToken) {
-
   let i = tokens.length-1;
   let listItems = [];
   let buffer = [];
@@ -217,63 +188,14 @@ const rule = {
 
     token = state.push('span_open', 'span', 1);
     token.block = false;
-    token.attrs = [['class', 'info-text']];
+    token.attrs = [['class', 'info-label']];
     token = state.push('text', '', 0);
     token.content = I18n.t("poll.voters", { count: 0 });
     state.push('span_close', 'span', -1);
 
     state.push('paragraph_close', 'p', -1);
 
-    // multiple help text
-    if (attributes[DATA_PREFIX + "type"] === "multiple") {
-      let help = getHelpText(items.length, min, max);
-      if (help) {
-        state.push('paragraph_open', 'p', 1);
-        token = state.push('html_inline', '', 0);
-        token.content = help;
-        state.push('paragraph_close', 'p', -1);
-      }
-    }
-
-    if (attributes[DATA_PREFIX + 'public'] === 'true') {
-      state.push('paragraph_open', 'p', 1);
-      token = state.push('text', '', 0);
-      token.content = I18n.t('poll.public.title');
-      state.push('paragraph_close', 'p', -1);
-    }
-
     state.push('poll_close', 'div', -1);
-    state.push('poll_close', 'div', -1);
-
-    token = state.push('poll_open', 'div', 1);
-    token.attrs = [['class', 'poll-buttons']];
-
-    if (attributes[DATA_PREFIX + 'type'] === 'multiple') {
-      token = state.push('link_open', 'a', 1);
-      token.block = false;
-      token.attrs = [
-        ['class', 'button cast-votes'],
-        ['title', I18n.t('poll.cast-votes.title')]
-      ];
-
-      token = state.push('text', '', 0);
-      token.content = I18n.t('poll.cast-votes.label');
-
-      state.push('link_close', 'a', -1);
-    }
-
-    token = state.push('link_open', 'a', 1);
-    token.block = false;
-    token.attrs = [
-      ['class', 'button toggle-results'],
-      ['title', I18n.t('poll.show-results.title')]
-    ];
-
-    token = state.push('text', '', 0);
-    token.content = I18n.t("poll.show-results.label");
-
-    state.push('link_close', 'a', -1);
-
     state.push('poll_close', 'div', -1);
     state.push('poll_close', 'div', -1);
   }
@@ -299,6 +221,7 @@ export function setup(helper) {
     'div[data-*]',
     'span.info-number',
     'span.info-text',
+    'span.info-label',
     'a.button.cast-votes',
     'a.button.toggle-results',
     'li[data-*]'

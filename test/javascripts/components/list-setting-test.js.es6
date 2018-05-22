@@ -63,7 +63,7 @@ componentTest('interactions', {
       assert.equal(listSetting.header().value(), 'bold,italic,underline');
     });
 
-    listSetting.fillInFilter('strike');
+    listSetting.expand().fillInFilter('strike');
 
     andThen(() => {
       assert.equal(listSetting.highlightedRow().value(), 'strike');

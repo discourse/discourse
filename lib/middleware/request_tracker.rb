@@ -83,6 +83,7 @@ class Middleware::RequestTracker
     if track_view
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
+        WebCrawlerRequest.increment!(data[:user_agent])
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
@@ -128,9 +129,11 @@ class Middleware::RequestTracker
       is_background: !!(request.path =~ /^\/message-bus\// || request.path =~ /\/topics\/timings/),
       is_mobile: helper.is_mobile?,
       track_view: track_view,
-      timing: timing
-    }
-
+      timing: timing,
+      queue_seconds: env['REQUEST_QUEUE_SECONDS']
+    }.tap do |h|
+      h[:user_agent] = env['HTTP_USER_AGENT'] if h[:is_crawler]
+    end
   end
 
   def log_request_info(env, result, info)
@@ -155,9 +158,26 @@ class Middleware::RequestTracker
 
   def call(env)
     result = nil
+    log_request = true
 
-    if rate_limit(env)
+    # doing this as early as possible so we have an
+    # accurate counter
+    if queue_start = env['HTTP_X_REQUEST_START']
+      queue_start = queue_start.split("t=")[1].to_f
+      queue_time = (Time.now.to_f - queue_start)
+      env['REQUEST_QUEUE_SECONDS'] = queue_time
+    end
+
+    request = Rack::Request.new(env)
+
+    if rate_limit(request)
       result = [429, {}, ["Slow down, too Many Requests from this IP Address"]]
+      return result
+    end
+
+    if block_crawler(request)
+      log_request = false
+      result = [403, { 'Content-Type' => 'text/plain' }, ['Crawler is not allowed']]
       return result
     end
 
@@ -169,9 +189,24 @@ class Middleware::RequestTracker
     if info && (headers = result[1])
       headers["X-Runtime"] = "%0.6f" % info[:total_duration]
     end
+
+    if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN] && (headers = result[1])
+      headers['Discourse-Logged-Out'] = '1'
+    end
+
     result
   ensure
-    log_request_info(env, result, info) unless env["discourse.request_tracker.skip"]
+    if (limiters = env['DISCOURSE_RATE_LIMITERS']) && env['DISCOURSE_IS_ASSET_PATH']
+      limiters.each(&:rollback!)
+      env['DISCOURSE_ASSET_RATE_LIMITERS'].each do |limiter|
+        begin
+          limiter.performed!
+        rescue RateLimiter::LimitExceeded
+          # skip
+        end
+      end
+    end
+    log_request_info(env, result, info) unless !log_request || env["discourse.request_tracker.skip"]
   end
 
   PRIVATE_IP ||= /^(127\.)|(192\.168\.)|(10\.)|(172\.1[6-9]\.)|(172\.2[0-9]\.)|(172\.3[0-1]\.)|(::1$)|([fF][cCdD])/
@@ -181,7 +216,7 @@ class Middleware::RequestTracker
     !!(ip && ip.to_s.match?(PRIVATE_IP))
   end
 
-  def rate_limit(env)
+  def rate_limit(request)
 
     if (
       GlobalSetting.max_reqs_per_ip_mode == "block" ||
@@ -189,7 +224,7 @@ class Middleware::RequestTracker
       GlobalSetting.max_reqs_per_ip_mode == "warn+block"
     )
 
-      ip = Rack::Request.new(env).ip
+      ip = request.ip
 
       if !GlobalSetting.max_reqs_rate_limit_on_private
         return false if is_private_ip?(ip)
@@ -213,23 +248,50 @@ class Middleware::RequestTracker
         global: true
       )
 
+      limiter_assets10 = RateLimiter.new(
+        nil,
+        "global_ip_limit_10_assets_#{ip}",
+        GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
+        10,
+        global: true
+      )
+
+      request.env['DISCOURSE_RATE_LIMITERS'] = [limiter10, limiter60]
+      request.env['DISCOURSE_ASSET_RATE_LIMITERS'] = [limiter_assets10]
+
+      warn = GlobalSetting.max_reqs_per_ip_mode == "warn" ||
+        GlobalSetting.max_reqs_per_ip_mode == "warn+block"
+
+      if !limiter_assets10.can_perform?
+        if warn
+          Rails.logger.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit, uri: #{request.env["REQUEST_URI"]}")
+        end
+
+        return !(GlobalSetting.max_reqs_per_ip_mode == "warn")
+      end
+
       type = 10
       begin
         limiter10.performed!
         type = 60
         limiter60.performed!
+        false
       rescue RateLimiter::LimitExceeded
-        if (
-          GlobalSetting.max_reqs_per_ip_mode == "warn" ||
-          GlobalSetting.max_reqs_per_ip_mode == "warn+block"
-        )
-          Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{env["REQUEST_URI"]}")
+        if warn
+          Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{request.env["REQUEST_URI"]}")
           !(GlobalSetting.max_reqs_per_ip_mode == "warn")
         else
           true
         end
       end
     end
+  end
+
+  def block_crawler(request)
+    request.get? &&
+      !request.xhr? &&
+      !request.path.ends_with?('robots.txt') &&
+      CrawlerDetection.is_blocked_crawler?(request.env['HTTP_USER_AGENT'])
   end
 
   def log_later(data, host)

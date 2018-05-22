@@ -121,3 +121,19 @@ QUnit.test("second factor", assert => {
     );
   });
 });
+
+acceptance("User Preferences when badges are disabled", {
+  loggedIn: true,
+  settings: {
+    enable_badges: false
+  }
+});
+
+QUnit.test("visit my preferences", assert => {
+  visit("/u/eviltrout/preferences");
+  andThen(() => {
+    assert.ok($('body.user-preferences-page').length, "has the body class");
+    assert.equal(currentURL(), '/u/eviltrout/preferences/account', "defaults to account tab");
+    assert.ok(exists('.user-preferences'), 'it shows the preferences');
+  });
+});

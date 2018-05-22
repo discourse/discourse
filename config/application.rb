@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+begin
+  if !RUBY_VERSION.match?(/^2\.[456]/)
+    STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+    exit 1
+  end
+rescue
+  # no String#match?
+  STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+  exit 1
+end
+
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
@@ -74,6 +85,11 @@ module Discourse
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
+
+    if Rails.env == "development" || Rails.env == "test"
+      config.assets.paths << "#{config.root}/test/javascripts"
+      config.assets.paths << "#{config.root}/test/stylesheets"
+    end
 
     # Allows us to skip minifincation on some files
     config.assets.skip_minification = []

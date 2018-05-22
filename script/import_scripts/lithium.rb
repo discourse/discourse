@@ -27,12 +27,26 @@ class ImportScripts::Lithium < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   DATABASE = "wd"
   PASSWORD = "password"
-  CATEGORY_CSV = "/tmp/wd-cats.csv"
+  AVATAR_DIR = '/tmp/avatars'
+  ATTACHMENT_DIR = '/tmp/attachments'
   UPLOAD_DIR = '/tmp/uploads'
 
   OLD_DOMAIN = 'community.wd.com'
 
   TEMP = ""
+
+  USER_CUSTOM_FIELDS = [
+    { name: "sso_id", user: "sso_id" },
+    { name: "user_field_1", profile: "jobtitle" },
+    { name: "user_field_2", profile: "company" },
+    { name: "user_field_3", profile: "industry" },
+  ]
+
+  LITHIUM_PROFILE_FIELDS = "'profile.jobtitle', 'profile.company', 'profile.industry', 'profile.location'"
+
+  USERNAME_MAPPINGS = {
+    "admins": "admin_user"
+  }.with_indifferent_access
 
   def initialize
     super
@@ -53,6 +67,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     @max_start_id = Post.maximum(:id)
 
+    import_groups
     import_categories
     import_users
     import_topics
@@ -70,15 +85,15 @@ class ImportScripts::Lithium < ImportScripts::Base
     puts "", "importing groups..."
 
     groups = mysql_query <<-SQL
-        SELECT usergroupid, title
-          FROM usergroup
-      ORDER BY usergroupid
+        SELECT DISTINCT name
+          FROM roles
+      ORDER BY name
     SQL
 
     create_groups(groups) do |group|
       {
-        id: group["usergroupid"],
-        name: @htmlentities.decode(group["title"]).strip
+        id: group["name"],
+        name: @htmlentities.decode(group["name"]).strip
       }
     end
   end
@@ -87,10 +102,11 @@ class ImportScripts::Lithium < ImportScripts::Base
     puts "", "importing users"
 
     user_count = mysql_query("SELECT COUNT(*) count FROM users").first["count"]
+    avatar_files = Dir.entries(AVATAR_DIR)
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
-          SELECT id, nlogin, login_canon, email, registration_time
+          SELECT id, nlogin, login_canon, email, registration_time, sso_id
             FROM users
         ORDER BY id
            LIMIT #{BATCH_SIZE}
@@ -101,23 +117,85 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       next if all_records_exist? :users, users.map { |u| u["id"].to_i }
 
+      users = users.to_a
+      first_id = users.first["id"]
+      last_id = users.last["id"]
+
+      profiles = mysql_query <<-SQL
+          SELECT user_id, param, nvalue
+            FROM user_profile
+          WHERE nvalue IS NOT NULL AND param IN (#{LITHIUM_PROFILE_FIELDS}) AND user_id >= #{first_id} AND user_id <= #{last_id}
+        ORDER BY user_id
+      SQL
+
       create_users(users, total: user_count, offset: offset) do |user|
+        profile = profiles.select { |p|  p["user_id"] == user["id"] }
+        result = profile.select { |p|  p["param"] == "profile.location" }
+        location = result.count > 0 ? result.first["nvalue"] : nil
+        username = user["login_canon"]
+        username = USERNAME_MAPPINGS[username] if USERNAME_MAPPINGS[username].present?
 
         {
           id: user["id"],
           name: user["nlogin"],
-          username: user["login-canon"],
+          username: username,
           email: user["email"].presence || fake_email,
+          location: location,
+          custom_fields: user_custom_fields(user, profile),
           # website: user["homepage"].strip,
           # title: @htmlentities.decode(user["usertitle"]).strip,
           # primary_group_id: group_id_from_imported_group_id(user["usergroupid"]),
           created_at: unix_time(user["registration_time"]),
           post_create_action: proc do |u|
-            @old_username_to_new_usernames[user["username"]] = u.username
+            @old_username_to_new_usernames[user["login_canon"]] = u.username
+
+            # import user avatar
+            sso_id = u.custom_fields["sso_id"]
+            if sso_id.present?
+              prefix = "#{AVATAR_DIR}/#{sso_id}_"
+              file = get_file(prefix + "actual.jpeg")
+              file ||= get_file(prefix + "profile.jpeg")
+
+              if file.present?
+                upload = UploadCreator.new(file, file.path, type: "avatar").create_for(u.id)
+                u.create_user_avatar unless u.user_avatar
+
+                if !u.user_avatar.contains_upload?(upload.id)
+                  u.user_avatar.update_columns(custom_upload_id: upload.id)
+
+                  if u.uploaded_avatar_id.nil? ||
+                    !u.user_avatar.contains_upload?(u.uploaded_avatar_id)
+                    u.update_columns(uploaded_avatar_id: upload.id)
+                  end
+                end
+              end
+            end
           end
         }
       end
     end
+  end
+
+  def user_custom_fields(user, profile)
+    fields = Hash.new
+
+    USER_CUSTOM_FIELDS.each do |attr|
+      name = attr[:name]
+
+      if attr[:user].present?
+        fields[name] = user[attr[:user]]
+      elsif attr[:profile].present? && profile.count > 0
+        result = profile.select { |p|  p["param"] == "profile.#{attr[:profile]}" }
+        fields[name] = result.first["nvalue"] if result.count > 0
+      end
+    end
+
+    fields
+  end
+
+  def get_file(path)
+    return File.open(path) if File.exist?(path)
+    nil
   end
 
   def unix_time(t)
@@ -183,89 +261,99 @@ class ImportScripts::Lithium < ImportScripts::Base
   def import_categories
     puts "", "importing top level categories..."
 
-    categories = mysql_query("SELECT node_id, display_id, position, parent_node_id from nodes").to_a
+    categories = mysql_query <<-SQL
+        SELECT n.node_id, n.display_id, c.nvalue c_title, b.nvalue b_title, n.position, n.parent_node_id, n.type_id
+          FROM nodes n
+          LEFT JOIN settings c ON n.node_id = c.node_id AND c.param = 'category.title'
+          LEFT JOIN settings b ON n.node_id = b.node_id AND b.param = 'board.title'
+          ORDER BY n.type_id DESC, n.node_id ASC
+    SQL
 
-    category_info = {}
-    top_level_ids = Set.new
-    child_ids = Set.new
+    categories = categories.map { |c| (c["name"] = c["c_title"] || c["b_title"] || c["display_id"]) && c }
 
-    parent = nil
-    CSV.foreach(CATEGORY_CSV) do |row|
-      display_id = row[2].strip
-
-      node = {
-        name: (row[0] || row[1]).strip,
-        secure: row[3] == "x",
-        top_level: !!row[0]
-      }
-
-      if row[0]
-        top_level_ids << display_id
-        parent = node
-      else
-        child_ids << display_id
-        node[:parent] = parent
-      end
-
-      category_info[display_id] = node
-
+    # To prevent duplicate category names
+    categories = categories.map do |category|
+      count = categories.to_a.count { |c| c["name"].present? && c["name"] == category["name"] }
+      category["name"] << " (#{category["node_id"]})" if count > 1
+      category
     end
 
-    top_level_categories = categories.select { |c| top_level_ids.include? c["display_id"] }
+    parent_categories = categories.select { |c| c["parent_node_id"] <= 2 }
 
-    create_categories(top_level_categories) do |category|
-      info = category_info[category["display_id"]]
-      info[:id] = category["node_id"]
-
+    create_categories(parent_categories) do |category|
       {
-        id: info[:id],
-        name:  info[:name],
-        position: category["position"]
+        id: category["node_id"],
+        name:  category["name"],
+        position: category["position"],
+        post_create_action: lambda do |record|
+          after_category_create(record, category)
+        end
       }
     end
 
     puts "", "importing children categories..."
 
-    children_categories = categories.select { |c| child_ids.include? c["display_id"] }
+    children_categories = categories.select { |c| c["parent_node_id"] > 2 }
 
     create_categories(children_categories) do |category|
-      info = category_info[category["display_id"]]
-      info[:id] = category["node_id"]
-
       {
-        id: info[:id],
-        name: info[:name],
+        id: category["node_id"],
+        name: category["name"],
         position: category["position"],
-        parent_category_id: category_id_from_imported_category_id(info[:parent][:id])
+        parent_category_id: category_id_from_imported_category_id(category["parent_node_id"]),
+        post_create_action: lambda do |record|
+          after_category_create(record, category)
+        end
       }
     end
+  end
 
-    puts "", "securing categories"
-    category_info.each do |_, info|
-      if info[:secure]
-        id = category_id_from_imported_category_id(info[:id])
-        if id
-          cat = Category.find(id)
-          cat.set_permissions({})
-          cat.save
-          putc "."
+  def after_category_create(category, params)
+    node_id = category.custom_fields["import_id"]
+    roles = mysql_query <<-SQL
+      SELECT name
+        FROM roles
+      WHERE node_id = #{node_id}
+    SQL
+
+    if roles.count > 0
+      category.update(read_restricted: true)
+
+      roles.each do |role|
+        group_id = group_id_from_imported_group_id(role["name"])
+        if group_id.present?
+          CategoryGroup.find_or_create_by(category: category, group_id: group_id) do |cg|
+            cg.permission_type = CategoryGroup.permission_types[:full]
+          end
+        else
+          puts "", "Group not found for id '#{role["name"]}'"
         end
       end
     end
 
   end
 
+  def staff_guardian
+    @_staff_guardian ||= Guardian.new(Discourse.system_user)
+  end
+
   def import_topics
     puts "", "importing topics..."
+    SiteSetting.tagging_enabled = true
+    default_max_tags_per_topic = SiteSetting.max_tags_per_topic
+    default_max_tag_length = SiteSetting.max_tag_length
+    SiteSetting.max_tags_per_topic = 10
+    SiteSetting.max_tag_length = 100
 
     topic_count = mysql_query("SELECT COUNT(*) count FROM message2 where id = root_id").first["count"]
+    topic_tags = mysql_query("SELECT e.target_id, GROUP_CONCAT(l.tag_text SEPARATOR ',') tags FROM tag_events_label_message e LEFT JOIN tags_label l ON e.tag_id = l.tag_id GROUP BY e.target_id")
 
     batches(BATCH_SIZE) do |offset|
       topics = mysql_query <<-SQL
           SELECT id, subject, body, deleted, user_id,
-                 post_date, views, node_id, unique_id
+                 post_date, views, node_id, unique_id, row_version
             FROM message2
-        WHERE id = root_id #{TEMP} AND deleted = 0
+        WHERE id = root_id #{TEMP}
         ORDER BY node_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -278,10 +366,10 @@ class ImportScripts::Lithium < ImportScripts::Base
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 
         category_id = category_id_from_imported_category_id(topic["node_id"])
-
+        deleted_at = topic["deleted"] == 1 ? topic["row_version"] : nil
         raw = topic["body"]
 
-        if category_id
+        if category_id.present? && raw.present?
           {
             id: "#{topic["node_id"]} #{topic["id"]}",
             user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
@@ -289,16 +377,31 @@ class ImportScripts::Lithium < ImportScripts::Base
             category: category_id,
             raw: raw,
             created_at: unix_time(topic["post_date"]),
+            deleted_at: deleted_at,
             views: topic["views"],
             custom_fields: { import_unique_id: topic["unique_id"] },
-            import_mode: true
+            import_mode: true,
+            post_create_action: proc do |post|
+              result = topic_tags.select { |t| t["target_id"] == topic["unique_id"] }
+              if result.count > 0
+                tag_names = result.first["tags"].split(",")
+                DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
+              end
+            end
           }
         else
+          message = "Unknown"
+          message = "Category '#{category_id}' not exist" if category_id.blank?
+          message = "Topic 'body' is empty" if raw.blank?
+          PluginStoreRow.find_or_create_by(plugin_name: "topic_import_log", key: topic["unique_id"].to_s, value: message, type_name: 'String')
           nil
         end
 
       end
     end
+
+    SiteSetting.max_tags_per_topic = default_max_tags_per_topic
+    SiteSetting.max_tag_length = default_max_tag_length
   end
 
   def import_posts
@@ -311,9 +414,9 @@ class ImportScripts::Lithium < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query <<-SQL
           SELECT id, body, deleted, user_id,
-                 post_date, parent_id, root_id, node_id, unique_id
+                 post_date, parent_id, root_id, node_id, unique_id, row_version
             FROM message2
-        WHERE id <> root_id #{TEMP} AND deleted = 0
+        WHERE id <> root_id #{TEMP}
         ORDER BY node_id, root_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -327,27 +430,30 @@ class ImportScripts::Lithium < ImportScripts::Base
         raw = post["raw"]
         next unless topic = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]}")
 
+        deleted_at = topic["deleted"] == 1 ? topic["row_version"] : nil
         raw = post["body"]
 
-        new_post = {
-          id: "#{post["node_id"]} #{post["root_id"]} #{post["id"]}",
-          user_id: user_id_from_imported_user_id(post["user_id"]) || Discourse::SYSTEM_USER_ID,
-          topic_id: topic[:topic_id],
-          raw: raw,
-          created_at: unix_time(post["post_date"]),
-          custom_fields: { import_unique_id: post["unique_id"] },
-          import_mode: true
-        }
+        if raw.present?
+          new_post = {
+            id: "#{post["node_id"]} #{post["root_id"]} #{post["id"]}",
+            user_id: user_id_from_imported_user_id(post["user_id"]) || Discourse::SYSTEM_USER_ID,
+            topic_id: topic[:topic_id],
+            raw: raw,
+            created_at: unix_time(post["post_date"]),
+            deleted_at: deleted_at,
+            custom_fields: { import_unique_id: post["unique_id"] },
+            import_mode: true
+          }
 
-        if post["deleted"] > 0
-          new_post["deleted_at"] = Time.now
+          if parent = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]} #{post["parent_id"]}")
+            new_post[:reply_to_post_number] = parent[:post_number]
+          end
+
+          new_post
+        else
+          PluginStoreRow.find_or_create_by(plugin_name: "post_import_log", key: post["unique_id"].to_s, value: "Post 'body' is empty", type_name: 'String')
+          nil
         end
-
-        if parent = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]} #{post["parent_id"]}")
-          new_post[:reply_to_post_number] = parent[:post_number]
-        end
-
-        new_post
       end
     end
   end
@@ -380,7 +486,7 @@ class ImportScripts::Lithium < ImportScripts::Base
   def import_likes
     puts "\nimporting likes..."
 
-    sql = "select source_id user_id, target_id post_id, row_version created_at from wd.tag_events_score_message"
+    sql = "select source_id user_id, target_id post_id, row_version created_at from tag_events_score_message"
     results = mysql_query(sql)
 
     puts "loading unique id map"
@@ -610,23 +716,28 @@ class ImportScripts::Lithium < ImportScripts::Base
 
         raw = topic["body"]
 
-        msg = {
-          id: "pm_#{topic["note_id"]}",
-          user_id: user_id,
-          raw: raw,
-          created_at: unix_time(topic["sent_time"]),
-          import_mode: true
-        }
+        if raw.present?
+          msg = {
+            id: "pm_#{topic["note_id"]}",
+            user_id: user_id,
+            raw: raw,
+            created_at: unix_time(topic["sent_time"]),
+            import_mode: true
+          }
 
-        unless topic_id
-          msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
-          msg[:archetype] = Archetype.private_message
-          msg[:target_usernames] = usernames.join(',')
+          unless topic_id
+            msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
+            msg[:archetype] = Archetype.private_message
+            msg[:target_usernames] = usernames.join(',')
+          else
+            msg[:topic_id] = topic_id
+          end
+
+          msg
         else
-          msg[:topic_id] = topic_id
+          PluginStoreRow.find_or_create_by(plugin_name: "pm_import_log", key: topic["note_id"].to_s, value: "PM 'body' is empty", type_name: 'String')
+          nil
         end
-
-        msg
       end
     end
 
@@ -686,27 +797,15 @@ SQL
 
   end
 
-  # find the uploaded file information from the db
-  def find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
-                  a.caption caption
-             FROM attachment a
-            WHERE a.attachmentid = #{attachment_id}"
-    results = mysql_query(sql)
+  def find_upload(user_id, attachment_id, real_filename)
+    filename = File.join(ATTACHMENT_DIR, "#{attachment_id.to_s.rjust(4, "0")}.dat")
 
-    unless (row = results.first)
-      puts "Couldn't find attachment record for post.id = #{post.id}, import_id = #{post.custom_fields['import_id']}"
-      return nil
-    end
-
-    filename = File.join(ATTACHMENT_DIR, row['user_id'].to_s.split('').join('/'), "#{row['file_id']}.attach")
     unless File.exists?(filename)
       puts "Attachment file doesn't exist: #{filename}"
       return nil
     end
-    real_filename = row['filename']
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
-    upload = create_upload(post.user.id, filename, real_filename)
+    upload = create_upload(user_id, filename, real_filename)
 
     if upload.nil? || !upload.valid?
       puts "Upload not valid :("
@@ -715,20 +814,21 @@ SQL
     end
 
     return upload, real_filename
-  rescue Mysql2::Error => e
-    puts "SQL Error"
-    puts e.message
-    puts sql
-    return nil
   end
 
   def post_process_posts
     puts "", "Postprocessing posts..."
 
+    default_extensions = SiteSetting.authorized_extensions
+    default_max_att_size = SiteSetting.max_attachment_size_kb
+    SiteSetting.authorized_extensions = "*"
+    SiteSetting.max_attachment_size_kb = 307200
+
     current = 0
     max = Post.count
 
     mysql_query("create index idxUniqueId on message2(unique_id)") rescue nil
+    attachments = mysql_query("SELECT a.attachment_id, a.file_name, m.message_uid FROM tblia_attachment a INNER JOIN tblia_message_attachments m ON a.attachment_id = m.attachment_id")
 
     Post.where('id > ?', @max_start_id).find_each do |post|
       begin
@@ -740,8 +840,16 @@ SQL
           next
         end
         new_raw = postprocess_post_raw(raw, post.user_id)
-        post.raw = new_raw
-        post.save
+        files = attachments.select { |a| a["message_uid"].to_s == id }
+        new_raw << html_for_attachments(post.user_id, files)
+        unless post.raw == new_raw
+          post.raw = new_raw
+          post.cooked = post.cook(new_raw)
+          cpp = CookedPostProcessor.new(post)
+          cpp.keep_reverse_index_up_to_date
+          post.custom_fields["import_post_process"] = true
+          post.save
+        end
       rescue PrettyText::JavaScriptError
         puts "GOT A JS error on post: #{post.id}"
         nil
@@ -749,58 +857,106 @@ SQL
         print_status(current += 1, max)
       end
     end
+
+    SiteSetting.authorized_extensions = default_extensions
+    SiteSetting.max_attachment_size_kb = default_max_att_size
   end
 
   def postprocess_post_raw(raw, user_id)
 
     doc = Nokogiri::HTML.fragment(raw)
 
-    doc.css("a,img").each do |l|
-      uri = URI.parse(l["href"] || l["src"]) rescue nil
-      if uri && uri.hostname == OLD_DOMAIN
-        uri.hostname = nil
+    doc.css("a,img,li-image").each do |l|
+      upload_name, image, linked_upload = [nil] * 3
+
+      if l.name == "li-image" && l["id"]
+        upload_name = l["id"]
+      else
+        uri = URI.parse(l["href"] || l["src"]) rescue nil
+        uri.hostname = nil if uri && uri.hostname == OLD_DOMAIN
+
+        if uri && !uri.hostname
+          if l["href"]
+            l["href"] = uri.path
+            # we have an internal link, lets see if we can remap it?
+            permalink = Permalink.find_by_url(uri.path) rescue nil
+
+            if l["href"]
+              if permalink && permalink.target_url
+                l["href"] = permalink.target_url
+              elsif l["href"] =~ /^\/gartner\/attachments\/gartner\/([^.]*).(\w*)/
+                linked_upload = "#{$1}.#{$2}"
+              end
+            end
+          elsif l["src"]
+
+            # we need an upload here
+            upload_name = $1 if uri.path =~ /image-id\/([^\/]+)/
+          end
+        end
       end
 
-      if uri && !uri.hostname
-        if l["href"]
-          l["href"] = uri.path
-          # we have an internal link, lets see if we can remap it?
-          permalink = Permalink.find_by_url(uri.path) rescue nil
-          if l["href"] && permalink && permalink.target_url
-            l["href"] = permalink.target_url
-          end
-        elsif l["src"]
+      if upload_name
+        png = UPLOAD_DIR + "/" + upload_name + ".png"
+        jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
+        gif = UPLOAD_DIR + "/" + upload_name + ".gif"
 
-          # we need an upload here
-          upload_name = $1 if uri.path =~ /image-id\/([^\/]+)/
-          if upload_name
-            png = UPLOAD_DIR + "/" + upload_name + ".png"
-            jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
-            gif = UPLOAD_DIR + "/" + upload_name + ".gif"
-
-            # check to see if we have it
-            if File.exist?(png)
-              image = png
-            elsif File.exists?(jpg)
-              image = jpg
-            elsif File.exists?(gif)
-              image = gif
-            end
-          end
-
-          if image
-            File.open(image) do |file|
-              upload = UploadCreator.new(file, "image." + (image.ends_with?(".png") ? "png" : "jpg")).create_for(user_id)
-              l["src"] = upload.url
-            end
-          else
-            puts "image was missing #{l["src"]}"
-          end
-
+        # check to see if we have it
+        if File.exist?(png)
+          image = png
+        elsif File.exists?(jpg)
+          image = jpg
+        elsif File.exists?(gif)
+          image = gif
         end
 
+        if image
+          File.open(image) do |file|
+            upload = UploadCreator.new(file, "image." + (image.ends_with?(".png") ? "png" : "jpg")).create_for(user_id)
+            l.name = "img" if l.name == "li-image"
+            l["src"] = upload.url
+          end
+        else
+          puts "image was missing #{l["src"]}"
+        end
+      elsif linked_upload
+        segments = linked_upload.match(/\/(\d*)\/(\d)\/([^.]*).(\w*)$/)
+
+        if segments.present?
+          lithium_post_id = segments[1]
+          attachment_number = segments[2]
+
+          result = mysql_query("select a.attachment_id, f.file_name from tblia_message_attachments a
+            INNER JOIN message2 m ON a.message_uid = m.unique_id
+            INNER JOIN tblia_attachment f ON a.attachment_id = f.attachment_id
+            where m.id = #{lithium_post_id} AND a.attach_num = #{attachment_number} limit 0, 1")
+
+          result.each do |row|
+            upload, filename = find_upload(user_id, row["attachment_id"], row["file_name"])
+            if upload.present?
+              l["href"] = upload.url
+            else
+              puts "attachment was missing #{l["href"]}"
+            end
+          end
+        end
       end
 
+    end
+
+    # for user mentions
+    doc.css("li-user").each do |l|
+      uid = l["uid"]
+
+      if uid.present?
+        user = UserCustomField.find_by(name: 'import_id', value: uid).try(:user)
+        if user.present?
+          username = user.username
+          span = doc.create_element "span"
+          span.inner_html = "@#{username}"
+          l.replace span
+        end
+      end
     end
 
     raw = ReverseMarkdown.convert(doc.to_s)
@@ -813,6 +969,20 @@ SQL
     # nbsp central
     raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/, "\\1 \\2")
     raw
+  end
+
+  def html_for_attachments(user_id, files)
+    html = "";
+
+    files.each do |file|
+      upload, filename = find_upload(user_id, file["attachment_id"], file["file_name"])
+      if upload.present?
+        html << "\n" if html.present?
+        html << html_for_upload(upload, filename)
+      end
+    end
+
+    html
   end
 
   def fake_email

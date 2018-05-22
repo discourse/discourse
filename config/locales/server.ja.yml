@@ -17,12 +17,12 @@ ja:
       date_only: "%B%-d、%Y"
       long: "%B%-d、%Y、%I:%M%P"
   date:
-    month_names: [null, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "午前"
     pm: "午後"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -50,16 +50,17 @@ ja:
       present: は入力しないでください
       confirmation: "と%{attribute}の入力が一致しません"
       empty: 本文が入力されていません
-      equal_to: は%{count}にしてください
+      equal_to: "は%{count}にしてください"
       even: は偶数にしてください
       exclusion: はすでに使われています
-      greater_than: は%{count}より大きい値にしてください
-      greater_than_or_equal_to: は%{count}以上の値にしてください
+      greater_than: "は%{count}より大きい値にしてください"
+      greater_than_or_equal_to: "は%{count}以上の値にしてください"
       has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
       invalid: は正しくありません
-      less_than: は%{count}より小さい値にしてください
-      less_than_or_equal_to: は%{count}以下の値にしてください
+      is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
+      less_than: "は%{count}より小さい値にしてください"
+      less_than_or_equal_to: "は%{count}以下の値にしてください"
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
@@ -82,6 +83,9 @@ ja:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       min_username_length_range: "最小値を最大値より上にすることはできません。"
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
@@ -96,18 +100,18 @@ ja:
   reading_time: "閲覧時間"
   likes: "いいね！"
   too_many_replies:
-    other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
+    other: 申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。
   embed:
     start_discussion: "会話をする"
     continue: "会話を続ける"
     more_replies:
-      other: "%{count} 以上の返信"
+      other: '%{count} 以上の返信'
     loading: "会話を読み込んでいます…"
     permalink: "パーマリンク"
     imported_from: "これは、オリジナルエントリ%{link}に対するディスカッショントピックです"
     in_reply_to: "▶ %{username}"
     replies:
-      other: "%{count} 通の返信"
+      other: '%{count} 通の返信'
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
@@ -115,6 +119,7 @@ ja:
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
   just_posted_that: "は最近の投稿と内容がほぼ一緒です"
   invalid_characters: "は不正な文字を含んでいます"
+  is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
@@ -140,8 +145,6 @@ ja:
   queue:
     delete_reason: "投稿の承認機能を用いて削除されました"
   groups:
-    errors:
-      member_already_exist: "'%{username}'はすでにこのグループのメンバーです。"
     default_names:
       everyone: "みなさん"
       admins: "管理者"
@@ -154,8 +157,8 @@ ja:
       trust_level_4: "トラストレベル4"
   education:
     until_posts:
-      other: "%{count} 投稿"
-    new-topic: |
+      other: '%{count} 投稿'
+    'new-topic': |
       %{site_name} へようこそ！&mdash; **新たなトピックの作成ありがとうございます!**
 
       - タイトルはトピックの内容を正しく説明していますか？他の人にとって興味深いタイトルになっていますか？
@@ -163,7 +166,7 @@ ja:
       - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
 
       - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このメッセージは最初の %{education_posts_text} まで表示されます。
-    new-reply: |
+    'new-reply': |
       %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
       - あなたの回答は議論に何らかの形で貢献していますか?
       - 会話は礼儀正しく、マナーを守りましょう。
@@ -178,6 +181,7 @@ ja:
       user_profile:
         bio_raw: "自己紹介"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -197,7 +201,6 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
   vip_category_name: "ラウンジ"
@@ -212,24 +215,24 @@ ja:
     title: "ラウンジへようこそ"
     body: |2
 
-      素晴らしい! :confetti_ball:
+        素晴らしい! :confetti_ball:
 
-      このトピックが見えるという事は、**レギュラー**へ昇格したようですね！(トラストレベル3)。
+        このトピックが見えるという事は、**レギュラー**へ昇格したようですね！(トラストレベル3)。
 
-      これであなたは.... &hellip;
+        これであなたは.... &hellip;
 
-      * トピックのタイトルを好きに編集する事ができます。
-      * トピックのカテゴリを好きに変更する事ができます。
-      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-      * トラストレベルが3以上が利用出来るプライベートラウンジへのアクセス
-      * 一度の報告でスパムを非表示にできます
+        * トピックのタイトルを好きに編集する事ができます。
+        * トピックのカテゴリを好きに変更する事ができます。
+        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+        * トラストレベルが3以上が利用出来るプライベートラウンジへのアクセス
+        * 一度の報告でスパムを非表示にできます
 
-      [現在レギュラーに所属している人の一覧](/badges/3/regular)からリストを確認する事ができます。
+        [現在レギュラーに所属している人の一覧](/badges/3/regular)からリストを確認する事ができます。
 
-      コミュニティを支えていただき、ありがとうございます！
-      (トラストレベルに関する詳しい説明は [こちら][trust]をご覧ください。 レギュラーの条件を満たし続けることで維持する事ができます。)
+        コミュニティを支えていただき、ありがとうございます！
+        (トラストレベルに関する詳しい説明は [こちら][trust]をご覧ください。 レギュラーの条件を満たし続けることで維持する事ができます。)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category}カテゴリについて"
     errors:
@@ -240,7 +243,7 @@ ja:
       uncategorized: "未分類カテゴリは削除出来ません"
       has_subcategories: "サブカテゴリを持っているため、このカテゴリを削除できません。"
       topic_exists:
-        other: "%{count}個のトピックを持っているため、このカテゴリを削除できません。一番古いトピックは%{topic_link}です。"
+        other: '%{count}個のトピックを持っているため、このカテゴリを削除できません。一番古いトピックは%{topic_link}です。'
       topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
   trust_levels:
     newuser:
@@ -249,63 +252,61 @@ ja:
       title: "ベーシックユーザー"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
-    by_type:
-      public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
-      other: "%{count} 時間"
+      other: '%{count} 時間'
     minutes:
-      other: "%{count} 分"
+      other: '%{count} 分'
     seconds:
-      other: "%{count} 秒"
+      other: '%{count} 秒'
   datetime:
     distance_in_words:
       half_a_minute: "1分前"
       less_than_x_seconds:
-        other: "< %{count} 秒"
+        other: < %{count} 秒
       x_seconds:
-        other: "%{count} 秒"
+        other: '%{count} 秒'
       less_than_x_minutes:
-        other: "%{count}分前"
+        other: '%{count}分前'
       x_minutes:
-        other: "%{count}分"
+        other: '%{count}分'
       about_x_hours:
-        other: "%{count} 時間"
+        other: '%{count} 時間'
       x_days:
-        other: "%{count} 日"
+        other: '%{count} 日'
       about_x_months:
-        other: "%{count}ヶ月"
+        other: '%{count}ヶ月'
       x_months:
-        other: "%{count}ヶ月"
+        other: '%{count}ヶ月'
       about_x_years:
-        other: "%{count} 年"
+        other: '%{count} 年'
       over_x_years:
-        other: "> %{count} 年"
+        other: '> %{count} 年'
       almost_x_years:
-        other: "%{count} 年"
+        other: '%{count} 年'
     distance_in_words_verbose:
       half_a_minute: "たった今"
       less_than_x_seconds:
-        other: "現在"
+        other: 現在
       x_seconds:
-        other: "%{count} 秒前"
+        other: '%{count} 秒前'
       less_than_x_minutes:
-        other: "%{count}分未満"
+        other: '%{count}分未満'
       x_minutes:
-        other: "%{count}分前"
+        other: '%{count}分前'
       about_x_hours:
-        other: "%{count} 時間前"
+        other: '%{count} 時間前'
       x_days:
-        other: "%{count} 日前"
+        other: '%{count} 日前'
       about_x_months:
-        other: "約 %{count}ヶ月前"
+        other: 約 %{count}ヶ月前
       x_months:
-        other: "%{count}ヶ月前"
+        other: '%{count}ヶ月前'
       about_x_years:
-        other: "約 %{count} 年前"
+        other: 約 %{count} 年前
       over_x_years:
-        other: "%{count} 年以上前"
+        other: '%{count} 年以上前'
       almost_x_years:
-        other: "だいたい %{count} 年前"
+        other: だいたい %{count} 年前
   password_reset:
     no_token: "申し訳ありません。パスワード変更のためのリンクは古いようです。ログインボタンを選択し、再度パスワード変更を行ってください"
     update: 'パスワード更新'
@@ -440,7 +441,6 @@ ja:
       xaxis: "日"
       yaxis: "メールの数"
     user_to_user_private_messages:
-      title: "ユーザーからユーザーへ"
       xaxis: "日"
       yaxis: "メッセージ数"
     system_private_messages:
@@ -487,7 +487,6 @@ ja:
       xaxis: "日"
       yaxis: "ウェブクローラからの閲覧数"
     page_view_total_reqs:
-      title: "全体"
       xaxis: "日"
       yaxis: "合計閲覧数"
     page_view_logged_in_mobile_reqs:
@@ -630,7 +629,6 @@ ja:
     version_checks: "Discourse Hubからのアップデートを確認し、管理ページにバージョンやアップデートメッセージを表示する"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
     invite_expiry_days: "招待キーの有効期間 (日)"
-    invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
@@ -642,15 +640,12 @@ ja:
     sso_overrides_name: "ログインする度に、SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きし、ローカルでの変更を防ぐ"
     sso_overrides_avatar: "SSOペイロードから取得した外部サイトのプロフィール画像でローカルのプロフィール画像を上書きする。有効にする場合、プロフィール画像のアップデートを無効にする事を強く薦めます"
     sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
-    enable_local_logins: "ローカルのユーザ名、パスワードでのログインを有効にする (注意: 招待を使用するには有効にする必要があります)"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
     enable_google_oauth2_logins: "グーグル Oauth2 認証を有効にします。これはグーグルが現在サポートしている認証方式です。key と secret が必要です。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"
     enable_twitter_logins: "Twitter 認証を有効にする (twitter_consumer_key と twitter_consumer_secret の設定が必要)"
-    twitter_consumer_key: "Twitter 認証用の consumer key。http://dev.twitter.com で入手可能"
-    twitter_consumer_secret: "Twitter 認証用の consumer secret。http://dev.twitter.com で入手可能"
     enable_facebook_logins: "Facebook 認証を有効にする (facebook_app_id と facebook_app_secret の設定が必要)"
     facebook_app_id: "Facebook 認証用の app id。https://developers.facebook.com/apps で入手可能"
     facebook_app_secret: "Facebook 認証用の app secret。https://developers.facebook.com/apps で入手可能"
@@ -659,7 +654,6 @@ ja:
     github_client_secret: "Github 認証用の client secret。https://github.com/settings/applications で入手可能"
     allow_restore: "すべてのサイトデータを置き換える復元を許可します\n。バックアップからの復元を行うとき以外はfalseのままにしてください。"
     maximum_backups: "ディスクに保存するバックアップの最大数。古いバックアップは自動的に削除されます"
-    backup_frequency: "サイトのバックアップを作成する頻度（日）"
     enable_s3_backups: "完了時にS3にバックアップをアップロードします。重要: 有効なS3 credentialsがファイル設定に必要です"
     s3_backup_bucket: "バックアップを保持するバケット。　警告: 必ずプライベートバケットになっていることを確認してください"
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"
@@ -839,6 +833,8 @@ ja:
       category: 'カテゴリ'
       topic: '結果'
       user: 'ユーザ'
+  sso:
+    timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度トップページからログインしてください。"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
@@ -848,9 +844,9 @@ ja:
     not_seen_in_a_month: "お帰りなさい！　最近見かけませんでしたね。　これらがあなたが離れてから最も人気のトピックです"
   move_posts:
     new_topic_moderator_post:
-      other: "%{count}件の投稿を新しいトピックに分割しました: %{topic_link}"
+      other: '%{count}件の投稿を新しいトピックに分割しました: %{topic_link}'
     existing_topic_moderator_post:
-      other: "%{count} 件のポストを既存のトピックにマージしました: %{topic_link}"
+      other: '%{count} 件のポストを既存のトピックにマージしました: %{topic_link}'
   change_owner:
     post_revision_text: "%{old_user} から %{new_user}にownershipを移動させました"
     deleted_user: "削除されたユーザ"
@@ -860,17 +856,17 @@ ja:
     closed_enabled: "このトピックはクローズされました。返信することはできません。"
     closed_disabled: "このトピックはオープンされました。新たに回答を投稿することができます。"
     autoclosed_enabled_days:
-      other: "このトピックは%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: このトピックは%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。
     autoclosed_enabled_hours:
-      other: "このトピックは%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: このトピックは%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。
     autoclosed_enabled_minutes:
-      other: "このトピックは%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: このトピックは%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。
     autoclosed_enabled_lastpost_days:
-      other: "このトピックは最後の返信から%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: このトピックは最後の返信から%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。
     autoclosed_enabled_lastpost_hours:
-      other: "このトピックは最後の返信から%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: このトピックは最後の返信から%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。
     autoclosed_enabled_lastpost_minutes:
-      other: "このトピックは最後の返信から%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: このトピックは最後の返信から%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。
     autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
     autoclosed_disabled_lastpost: "このトピックは再オープンされました。新しい回答が投稿できます"
     pinned_enabled: "このトピックはピン留めされました。スタッフによって全てのユーザのピン留めが解除されるか、ユーザ自身がピン留め解除するまで、カテゴリのトップに表示されます"
@@ -914,7 +910,7 @@ ja:
       max_new_accounts_per_registration_ip: "あなたのIPアドレスからの新規登録は行えません(登録可能な数を超えています)。スタッフへお問い合わせください。"
   flags_reminder:
     subject_template:
-      other: "%{count}件の通報が対応待ちです"
+      other: '%{count}件の通報が対応待ちです'
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
   flag_reasons:
@@ -947,8 +943,6 @@ ja:
       text_body_template: "ユーザの一括招待が処理され、%{sent}通の招待メールを送信しました"
     bulk_invite_failed:
       subject_template: "ユーザの一括招待中にエラーが発生しました"
-    csv_export_succeeded:
-      subject_template: "データのダウンロード準備が完了しました"
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
     email_reject_parsing:
@@ -957,7 +951,7 @@ ja:
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
     pending_users_reminder:
       subject_template:
-        other: "%{count} 人のユーザか承認を待っています。"
+        other: '%{count} 人のユーザか承認を待っています。'
       text_body_template: |
         新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
 
@@ -1188,6 +1182,3 @@ ja:
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
-  activemodel:
-    errors:
-      <<: *errors

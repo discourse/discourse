@@ -77,8 +77,8 @@ class WebhooksController < ActionController::Base
   def mandrill
     events = params["mandrill_events"]
     events.each do |event|
-      message_id = event["msg"]["metadata"]["message_id"] rescue nil
-      to_address = event["msg"]["email"] rescue nil
+      message_id = event.dig("msg", "metadata", "message_id")
+      to_address = event.dig("msg", "email")
 
       case event["event"]
       when "hard_bounce"
@@ -94,12 +94,12 @@ class WebhooksController < ActionController::Base
   def sparkpost
     events = params["_json"] || [params]
     events.each do |event|
-      message_event = event["msys"]["message_event"] rescue nil
+      message_event = event.dig("msys", "message_event")
       next unless message_event
 
-      message_id   = message_event["rcpt_meta"]["message_id"] rescue nil
-      to_address   = message_event["rcpt_to"]                 rescue nil
-      bounce_class = message_event["bounce_class"]            rescue nil
+      message_id   = message_event.dig("rcpt_meta", "message_id")
+      to_address   = message_event["rcpt_to"]
+      bounce_class = message_event["bounce_class"]
       next unless bounce_class
 
       bounce_class = bounce_class.to_i

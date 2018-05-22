@@ -7,12 +7,13 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController, {
 
-  saveAttrNames: ['name'],
+  saveAttrNames: ['name', 'title'],
 
   canEditName: setting('enable_names'),
   canSaveUser: true,
 
   newNameInput: null,
+  newTitleInput: null,
 
   passwordProgress: null,
 
@@ -30,9 +31,9 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
     return I18n.t(this.siteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
   },
 
-  @computed("model.has_title_badges")
-  canSelectTitle(hasTitleBadges) {
-    return this.siteSettings.enable_badges && hasTitleBadges;
+  @computed('model.availableTitles')
+  canSelectTitle(availableTitles) {
+    return availableTitles.length > 0;
   },
 
   @computed()
@@ -40,9 +41,9 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
   },
 
-  @computed("model.second_factor_enabled")
-  secondFactorStatusClass(secondFactorEnabled) {
-    return secondFactorEnabled ? 'tip good' : 'tip bad';
+  @computed
+  showTwoFactorModalText() {
+    return I18n.t('user.second_factor.title').toLowerCase();
   },
 
   actions: {
@@ -52,6 +53,7 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
       const model = this.get('model');
 
       model.set('name', this.get('newNameInput'));
+      model.set('title', this.get('newTitleInput'));
 
       return model.save(this.get('saveAttrNames')).then(() => {
         this.set('saved', true);

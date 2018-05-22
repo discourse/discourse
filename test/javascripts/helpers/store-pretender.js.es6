@@ -53,7 +53,7 @@ export default function(helpers) {
   this.get('/widgets/:widget_id', function(request) {
     const w = _widgets.findBy('id', parseInt(request.params.widget_id));
     if (w) {
-      return response({widget: w});
+      return response({ widget: w, extras: { hello: 'world' }});
     } else {
       return response(404);
     }

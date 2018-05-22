@@ -62,11 +62,74 @@ export default Post.extend({
   },
 
   deferFlags(deletePost) {
-    return ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false, data: { delete_post: deletePost } }).catch(popupAjaxError);
+    const action = () => {
+      return ajax('/admin/flags/defer/' + this.id, {
+        type: 'POST', cache: false, data: { delete_post: deletePost }
+      });
+    };
+
+    if (deletePost && this._hasDeletableReplies()) {
+      return this._actOnFlagAndDeleteReplies(action);
+    } else {
+      return action().catch(popupAjaxError);
+    }
   },
 
   agreeFlags(actionOnPost) {
-    return ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false, data: { action_on_post: actionOnPost } }).catch(popupAjaxError);
+    const action = () => {
+      return ajax('/admin/flags/agree/' + this.id, {
+        type: 'POST', cache: false, data: { action_on_post: actionOnPost }
+      });
+    };
+
+    if (actionOnPost === 'delete' && this._hasDeletableReplies()) {
+      return this._actOnFlagAndDeleteReplies(action);
+    } else {
+      return action().catch(popupAjaxError);
+    }
+  },
+
+  _hasDeletableReplies() {
+    return this.get('post_number') > 1 && this.get('reply_count') > 0;
+  },
+
+  _actOnFlagAndDeleteReplies(action) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      return ajax(`/posts/${this.id}/reply-ids/all.json`).then(replies => {
+        const buttons = [];
+
+        buttons.push({
+          label: I18n.t('no_value'),
+          callback() {
+            action()
+              .then(resolve)
+              .catch(error => {
+                popupAjaxError(error);
+                reject();
+              });
+          }
+        });
+
+        buttons.push({
+          label: I18n.t('yes_value'),
+          class: "btn-danger",
+          callback() {
+            Post.deleteMany(replies.map(r => r.id))
+              .then(action)
+              .then(resolve)
+              .catch(error => {
+                popupAjaxError(error);
+                reject();
+              });
+          }
+        });
+
+        bootbox.dialog(I18n.t("admin.flags.delete_replies", { count: replies.length }), buttons);
+      }).catch(error => {
+        popupAjaxError(error);
+        reject();
+      });
+    });
   },
 
   postHidden: Ember.computed.alias('hidden'),

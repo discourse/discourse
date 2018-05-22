@@ -55,20 +55,13 @@ describe Jobs do
           Jobs::ProcessPost.any_instance.stubs(:execute).returns(true)
         end
 
-        it 'should not execute the job' do
-          Jobs::ProcessPost.any_instance.expects(:execute).never
-          Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db') rescue nil
-        end
-
         it 'should raise an exception' do
+          Jobs::ProcessPost.any_instance.expects(:execute).never
+          RailsMultisite::ConnectionManagement.expects(:establish_connection).never
+
           expect {
             Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db')
           }.to raise_error(ArgumentError)
-        end
-
-        it 'should not connect to the given database' do
-          RailsMultisite::ConnectionManagement.expects(:establish_connection).never
-          Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db') rescue nil
         end
       end
     end
@@ -76,13 +69,16 @@ describe Jobs do
   end
 
   describe 'cancel_scheduled_job' do
+    let(:scheduled_jobs) { Sidekiq::ScheduledSet.new }
+
+    after do
+      scheduled_jobs.clear
+    end
 
     it 'deletes the matching job' do
       SiteSetting.queue_jobs = true
 
       Sidekiq::Testing.disable! do
-        scheduled_jobs = Sidekiq::ScheduledSet.new
-
         expect(scheduled_jobs.size).to eq(0)
 
         Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 123)

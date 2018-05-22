@@ -8,3 +8,4 @@
 it:
   site_settings:
     presence_enabled: 'Mostrare gli utenti mentre stanno rispondendo ad un argomento oppure modificando il messaggio corrente?'
+    presence_max_users_shown: 'Massimo numero di utenti visualizzati.'

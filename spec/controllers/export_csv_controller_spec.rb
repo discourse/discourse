@@ -3,15 +3,6 @@ require "rails_helper"
 describe ExportCsvController do
   let(:export_filename) { "user-archive-codinghorror-150115-234817-999.csv.gz" }
 
-  context "while not logged in" do
-    describe ".download" do
-      it "returns 404 when the unauthorized user tries to export csv file" do
-        get :show, params: { id: export_filename }
-        expect(response.status).to eq(404)
-      end
-    end
-  end
-
   context "while logged in as normal user" do
     before { @user = log_in(:user) }
 
@@ -34,30 +25,6 @@ describe ExportCsvController do
         expect(response).not_to be_success
       end
     end
-
-    describe ".download" do
-      it "uses send_file to transmit the export file" do
-        file = UserExport.create(file_name: "user-archive-codinghorror-150116-003249", user_id: @user.id)
-        file_name = "user-archive-codinghorror-150116-003249-#{file.id}.csv.gz"
-        controller.stubs(:render)
-        export = UserExport.new()
-        UserExport.expects(:get_download_path).with(file_name).returns(export)
-        subject.expects(:send_file).with(export)
-        get :show, params: { id: file_name }
-        expect(response).to be_success
-      end
-
-      it "returns 404 when the user tries to export another user's csv file" do
-        get :show, params: { id: export_filename }
-        expect(response).to be_not_found
-      end
-
-      it "returns 404 when the export file does not exist" do
-        UserExport.expects(:get_download_path).returns(nil)
-        get :show, params: { id: export_filename }
-        expect(response).to be_not_found
-      end
-    end
   end
 
   context "while logged in as an admin" do
@@ -77,25 +44,5 @@ describe ExportCsvController do
         expect(response).to be_success
       end
     end
-
-    describe ".download" do
-      it "uses send_file to transmit the export file" do
-        file = UserExport.create(file_name: "screened-email-150116-010145", user_id: @admin.id)
-        file_name = "screened-email-150116-010145-#{file.id}.csv.gz"
-        controller.stubs(:render)
-        export = UserExport.new()
-        UserExport.expects(:get_download_path).with(file_name).returns(export)
-        subject.expects(:send_file).with(export)
-        get :show, params: { id: file_name }
-        expect(response).to be_success
-      end
-
-      it "returns 404 when the export file does not exist" do
-        UserExport.expects(:get_download_path).returns(nil)
-        get :show, params: { id: export_filename }
-        expect(response).to be_not_found
-      end
-    end
   end
-
 end

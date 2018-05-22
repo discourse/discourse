@@ -1,9 +1,10 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
+const { isEmpty, makeArray } = Ember;
 
 export default Ember.Component.extend({
   layoutName: "select-kit/templates/components/select-kit/select-kit-header",
   classNames: ["select-kit-header"],
-  classNameBindings: ["isFocused"],
+  classNameBindings: ["isFocused", "isNone"],
   attributeBindings: [
     "tabindex",
     "ariaLabel:aria-label",
@@ -12,6 +13,8 @@ export default Ember.Component.extend({
     "value:data-value",
     "name:data-name",
   ],
+
+  isNone: Ember.computed.none("computedContent.value"),
 
   ariaHasPopup: true,
 
@@ -33,10 +36,10 @@ export default Ember.Component.extend({
 
   @computed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {
-    return Ember.makeArray(icon).concat(icons).filter(i => !Ember.isEmpty(i));
+    return makeArray(icon).concat(icons).filter(i => !isEmpty(i));
   },
 
   click() {
-    this.sendAction("toggle");
+    this.sendAction("onToggle");
   }
 });

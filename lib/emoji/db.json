@@ -5793,6 +5793,10 @@
       "name": "mage"
     },
     {
+      "code": "1f9d9-200d-2640-fe0f",
+      "name": "woman_mage"
+    },
+    {
       "code": "1f9da",
       "name": "fairy"
     },
@@ -5802,7 +5806,11 @@
     },
     {
       "code": "1f9dc",
-      "name": "merperson"
+      "name": "mermaid"
+    },
+    {
+      "code": "1f9dc-200d-2642-fe0f",
+      "name": "merman"
     },
     {
       "code": "1f9dd",
@@ -5813,20 +5821,40 @@
       "name": "genie"
     },
     {
+      "code": "1f9de-200d-2640",
+      "name": "woman_genie"
+    },
+    {
       "code": "1f9df",
       "name": "zombie"
+    },
+    {
+      "code": "1f9df-200d-2640",
+      "name": "woman_zombie"
     },
     {
       "code": "1f9d6",
       "name": "person_in_steamy_room"
     },
     {
+      "code": "1f9d6-200d-2640-fe0f",
+      "name": "woman_in_steamy_room"
+    },
+    {
       "code": "1f9d7",
       "name": "person_climbing"
     },
     {
+      "code": "1f9d7-200d-2640-fe0f",
+      "name": "woman_climbing"
+    },
+    {
       "code": "1f9d8",
       "name": "person_in_lotus_position"
+    },
+    {
+      "code": "1f9d8-200d-2640-fe0f",
+      "name": "woman_in_lotus_position"
     },
     {
       "code": "1f91f",
@@ -6150,13 +6178,18 @@
     "bearded_person",
     "breast_feeding",
     "mage",
+    "woman_mage",
     "fairy",
     "vampire",
-    "merperson",
+    "mermaid",
+    "merman",
     "elf",
     "person_in_steamy_room",
+    "woman_in_steamy_room",
     "person_climbing",
+    "woman_climbing",
     "person_in_lotus_position",
+    "woman_in_lotus_position",
     "love_you_gesture",
     "palms_up_together"
   ],
@@ -6761,6 +6794,18 @@
     ],
     "face_vomiting": [
       "puke"
+    ]
+  },
+  "searchAliases": {
+    "sad": [
+      "frowning_face",
+      "slightly_frowning_face",
+      "sob",
+      "crying_cat_face",
+      "cry"
+    ],
+    "cry": [
+      "sob"
     ]
   }
 }

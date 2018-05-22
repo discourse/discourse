@@ -182,4 +182,17 @@ RSpec.describe SessionController do
       end
     end
   end
+
+  context 'logoff support' do
+    it 'can log off users cleanly' do
+      user = Fabricate(:user)
+      sign_in(user)
+
+      UserAuthToken.destroy_all
+
+      # we need a route that will call current user
+      post '/draft.json', params: {}
+      expect(response.headers['Discourse-Logged-Out']).to eq("1")
+    end
+  end
 end

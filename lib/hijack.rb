@@ -78,6 +78,10 @@ module Hijack
           headers['Content-Length'] = body.bytesize
           headers['Connection'] = "close"
 
+          if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
+            headers['Discourse-Logged-Out'] = '1'
+          end
+
           status_string = Rack::Utils::HTTP_STATUS_CODES[response.status.to_i] || "Unknown"
           io.write "#{response.status} #{status_string}\r\n"
 

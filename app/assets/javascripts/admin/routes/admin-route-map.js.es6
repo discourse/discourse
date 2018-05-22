@@ -1,6 +1,7 @@
 export default function() {
   this.route('admin', { resetNamespace: true }, function() {
-    this.route('dashboard', { path: '/' });
+    this.route('dashboard', { path: '/dashboard-old' });
+    this.route('dashboardNext', { path: '/' });
     this.route('adminSiteSettings', { path: '/site_settings', resetNamespace: true }, function() {
       this.route('adminSiteSettingsCategory', { path: 'category/:category_id', resetNamespace: true} );
     });
@@ -73,14 +74,6 @@ export default function() {
       this.route('adminWatchedWords', { path: '/watched_words', resetNamespace: true}, function() {
         this.route('index', { path: '/' });
         this.route('action', { path: '/action/:action_id' });
-      });
-    });
-
-    this.route('adminGroups', { path: '/groups', resetNamespace: true }, function() {
-      this.route('bulk');
-      this.route('bulkComplete', { path: 'bulk-complete' });
-      this.route('adminGroupsType', { path: '/:type', resetNamespace: true }, function() {
-        this.route('adminGroup', { path: '/:name', resetNamespace: true });
       });
     });
 

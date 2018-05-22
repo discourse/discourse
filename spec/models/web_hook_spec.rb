@@ -42,69 +42,76 @@ describe WebHook do
       expect(post_hook.payload_url).to eq("https://example.com")
     end
 
-    describe '#find_by_type' do
+    describe '#active_web_hooks' do
       it "returns unique hooks" do
         post_hook.web_hook_event_types << WebHookEventType.find_by(name: 'topic')
         post_hook.update!(wildcard_web_hook: true)
 
-        expect(WebHook.find_by_type(:post)).to eq([post_hook])
+        expect(WebHook.active_web_hooks(:post)).to eq([post_hook])
       end
 
       it 'find relevant hooks' do
-        expect(WebHook.find_by_type(:post)).to eq([post_hook])
-        expect(WebHook.find_by_type(:topic)).to eq([topic_hook])
+        expect(WebHook.active_web_hooks(:post)).to eq([post_hook])
+        expect(WebHook.active_web_hooks(:topic)).to eq([topic_hook])
       end
 
       it 'excludes inactive hooks' do
-        post_hook.update_attributes!(active: false)
+        post_hook.update!(active: false)
 
-        expect(WebHook.find_by_type(:post)).to eq([])
-        expect(WebHook.find_by_type(:topic)).to eq([topic_hook])
+        expect(WebHook.active_web_hooks(:post)).to eq([])
+        expect(WebHook.active_web_hooks(:topic)).to eq([topic_hook])
+      end
+
+      describe 'wildcard web hooks' do
+        let!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
+
+        it 'should include wildcard hooks' do
+          expect(WebHook.active_web_hooks(:wildcard)).to eq([wildcard_hook])
+
+          expect(WebHook.active_web_hooks(:post)).to contain_exactly(
+            post_hook, wildcard_hook
+          )
+
+          expect(WebHook.active_web_hooks(:topic)).to contain_exactly(
+            topic_hook, wildcard_hook
+          )
+        end
       end
     end
 
     describe '#enqueue_hooks' do
-      it 'enqueues hooks with id and name' do
-        Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, event_type: 'post')
-
-        WebHook.enqueue_hooks(:post)
+      before do
+        SiteSetting.queue_jobs = true
       end
 
       it 'accepts additional parameters' do
-        Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, post_id: 1, event_type: 'post')
+        payload = { test: 'some payload' }.to_json
+        WebHook.enqueue_hooks(:post, payload: payload)
 
-        WebHook.enqueue_hooks(:post, post_id: 1)
-      end
-    end
+        job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
 
-    context 'includes wildcard hooks' do
-      let!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
-
-      describe '#find_by_type' do
-        it 'can find wildcard hooks' do
-          expect(WebHook.find_by_type(:wildcard)).to eq([wildcard_hook])
-        end
-
-        it 'can include wildcard hooks' do
-          expect(WebHook.find_by_type(:post).sort_by(&:id)).to eq([post_hook, wildcard_hook])
-          expect(WebHook.find_by_type(:topic).sort_by(&:id)).to eq([topic_hook, wildcard_hook])
-
-        end
+        expect(job_args["web_hook_id"]).to eq(post_hook.id)
+        expect(job_args["event_type"]).to eq('post')
+        expect(job_args["payload"]).to eq(payload)
       end
 
-      describe '#enqueue_hooks' do
-        it 'enqueues hooks with ids' do
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, event_type: 'post')
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: wildcard_hook.id, event_type: 'post')
+      context 'includes wildcard hooks' do
+        let!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
 
-          WebHook.enqueue_hooks(:post)
-        end
+        describe '#enqueue_hooks' do
+          it 'enqueues hooks with ids' do
+            WebHook.enqueue_hooks(:post)
 
-        it 'accepts additional parameters' do
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, post_id: 1, event_type: 'post')
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: wildcard_hook.id, post_id: 1, event_type: 'post')
+            job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
 
-          WebHook.enqueue_hooks(:post, post_id: 1)
+            expect(job_args["web_hook_id"]).to eq(post_hook.id)
+            expect(job_args["event_type"]).to eq('post')
+
+            job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+            expect(job_args["web_hook_id"]).to eq(wildcard_hook.id)
+            expect(job_args["event_type"]).to eq('post')
+          end
         end
       end
     end
@@ -115,39 +122,51 @@ describe WebHook do
     let(:admin) { Fabricate(:admin) }
     let(:topic) { Fabricate(:topic, user: user) }
     let(:post) { Fabricate(:post, topic: topic, user: user) }
+    let(:topic_web_hook) { Fabricate(:topic_web_hook) }
 
     before do
       SiteSetting.queue_jobs = true
+      topic_web_hook
+    end
+
+    describe 'when there are no active hooks' do
+      it 'should not enqueue anything' do
+        topic_web_hook.destroy!
+        post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
+        expect(Jobs::EmitWebHookEvent.jobs.length).to eq(0)
+      end
     end
 
     it 'should enqueue the right hooks for topic events' do
-      Fabricate(:topic_web_hook)
-
       post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
-      topic_id = post.topic_id
+      topic_id = post.topic.id
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("topic_created")
-      expect(job_args["topic_id"]).to eq(topic_id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
 
       PostDestroyer.new(user, post).destroy
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("topic_destroyed")
-      expect(job_args["topic_id"]).to eq(topic_id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
 
       PostDestroyer.new(user, post).recover
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("topic_recovered")
-      expect(job_args["topic_id"]).to eq(topic_id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
 
       %w{archived closed visible}.each do |status|
         post.topic.update_status(status, true, topic.user)
         job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
         expect(job_args["event_name"]).to eq("topic_#{status}_status_updated")
-        expect(job_args["topic_id"]).to eq(topic_id)
+        payload = JSON.parse(job_args["payload"])
+        expect(payload["id"]).to eq(topic_id)
       end
     end
 
@@ -172,10 +191,7 @@ describe WebHook do
     it 'should enqueue the right hooks for post events' do
       Fabricate(:web_hook)
 
-      user
-      topic
-
-      post = PostCreator.create(user,
+      post = PostCreator.create!(user,
         raw: 'post',
         topic_id: topic.id,
         reply_to_post_number: 1,
@@ -183,30 +199,57 @@ describe WebHook do
       )
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-      Sidekiq::Worker.clear_all
 
       expect(job_args["event_name"]).to eq("post_created")
-      expect(job_args["post_id"]).to eq(post.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post.id)
+
+      Jobs::EmitWebHookEvent.jobs.clear
 
       # post destroy or recover triggers a moderator post
       expect { PostDestroyer.new(user, post).destroy }
-        .to change { Jobs::EmitWebHookEvent.jobs.count }.by(2)
+        .to change { Jobs::EmitWebHookEvent.jobs.count }.by(3)
 
-      job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
+      job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
 
       expect(job_args["event_name"]).to eq("post_edited")
-      expect(job_args["post_id"]).to eq(post.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post.id)
 
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      job_args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
 
       expect(job_args["event_name"]).to eq("post_destroyed")
-      expect(job_args["post_id"]).to eq(post.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post.id)
 
-      PostDestroyer.new(user, post).recover
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      job_args = Jobs::EmitWebHookEvent.jobs[2]["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_destroyed")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post.topic.id)
+
+      Jobs::EmitWebHookEvent.jobs.clear
+
+      expect { PostDestroyer.new(user, post).recover }
+        .to change { Jobs::EmitWebHookEvent.jobs.count }.by(3)
+
+      job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+
+      expect(job_args["event_name"]).to eq("post_edited")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post.id)
+
+      job_args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
 
       expect(job_args["event_name"]).to eq("post_recovered")
-      expect(job_args["post_id"]).to eq(post.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post.id)
+
+      job_args = Jobs::EmitWebHookEvent.jobs[2]["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_recovered")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post.topic.id)
     end
 
     it 'should enqueue the right hooks for user events' do
@@ -216,37 +259,161 @@ describe WebHook do
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_created")
-      expect(job_args["user_id"]).to eq(user.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
 
       admin
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_created")
-      expect(job_args["user_id"]).to eq(admin.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(admin.id)
 
       user.approve(admin)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_approved")
-      expect(job_args["user_id"]).to eq(user.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
 
       UserUpdater.new(admin, user).update(username: 'testing123')
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_updated")
-      expect(job_args["user_id"]).to eq(user.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
 
       user.logged_out
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_logged_out")
-      expect(job_args["user_id"]).to eq(user.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
 
       user.logged_in
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_logged_in")
-      expect(job_args["user_id"]).to eq(user.id)
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
+    end
+
+    it 'should enqueue the right hooks for category events' do
+      Fabricate(:category_web_hook)
+      category = Fabricate(:category)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("category_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(category.id)
+
+      category.update!(slug: 'testing')
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("category_updated")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(category.id)
+      expect(payload["slug"]).to eq('testing')
+
+      category.destroy!
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("category_destroyed")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(category.id)
+    end
+
+    it 'should enqueue the right hooks for group events' do
+      Fabricate(:group_web_hook)
+      group = Fabricate(:group)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("group_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(group.id)
+
+      group.update!(full_name: 'testing')
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("group_updated")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(group.id)
+      expect(payload["full_name"]).to eq('testing')
+
+      group.destroy!
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("group_destroyed")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["full_name"]).to eq('testing')
+    end
+
+    it 'should enqueue the right hooks for tag events' do
+      Fabricate(:tag_web_hook)
+      tag = Fabricate(:tag)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("tag_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(tag.id)
+
+      tag.update!(name: 'testing')
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("tag_updated")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(tag.id)
+      expect(payload["name"]).to eq('testing')
+
+      tag.destroy!
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("tag_destroyed")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(tag.id)
+    end
+
+    it 'should enqueue the right hooks for flag events' do
+      post = Fabricate(:post)
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      Fabricate(:flag_web_hook)
+
+      post_action = PostAction.act(admin, post, PostActionType.types[:spam])
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("flag_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post_action.id)
+
+      PostAction.agree_flags!(post, moderator)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("flag_agreed")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post_action.id)
+
+      PostAction.clear_flags!(post, moderator)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("flag_disagreed")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post_action.id)
+
+      post = Fabricate(:post)
+      post_action = PostAction.act(admin, post, PostActionType.types[:spam])
+      PostAction.defer_flags!(post, moderator)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("flag_deferred")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(post_action.id)
     end
   end
 end

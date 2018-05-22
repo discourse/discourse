@@ -1,0 +1,14 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+he:
+  js:
+    details:
+      title: הסתרת פרטים
+    composer:
+      details_title: תקציר
+      details_text: "טקסט זה יוסתר"

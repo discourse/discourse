@@ -36,7 +36,6 @@ class TopicViewSerializer < ApplicationSerializer
                         :deleted_at,
                         :pending_posts_count,
                         :user_id,
-                        :pm_with_non_human_user?,
                         :featured_link,
                         :featured_link_root_domain,
                         :pinned_globally,
@@ -50,6 +49,7 @@ class TopicViewSerializer < ApplicationSerializer
              :unpinned,
              :pinned,
              :details,
+             :current_post_number,
              :highest_post_number,
              :last_read_post_number,
              :last_read_post_id,
@@ -65,7 +65,9 @@ class TopicViewSerializer < ApplicationSerializer
              :private_topic_timer,
              :unicode_title,
              :message_bus_last_id,
-             :participant_count
+             :participant_count,
+             :destination_category_id,
+             :pm_with_non_human_user,
 
   # TODO: Split off into proper object / serializer
   def details
@@ -171,6 +173,14 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic_user.present?
   end
 
+  def current_post_number
+    [object.post_number, object.highest_post_number].min
+  end
+
+  def include_current_post_number?
+    object.highest_post_number.present?
+  end
+
   def highest_post_number
     object.highest_post_number
   end
@@ -271,8 +281,22 @@ class TopicViewSerializer < ApplicationSerializer
     private_message?(object.topic)
   end
 
+  def pm_with_non_human_user
+    object.topic.pm_with_non_human_user?
+  end
+
   def participant_count
     object.participant_count
+  end
+
+  def destination_category_id
+    object.topic.shared_draft.category_id
+  end
+
+  def include_destination_category_id?
+    scope.can_create_shared_draft? &&
+      object.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+      object.topic.shared_draft.present?
   end
 
   private

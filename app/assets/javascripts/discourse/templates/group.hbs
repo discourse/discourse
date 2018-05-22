@@ -29,25 +29,40 @@
         <p>{{{model.bio_cooked}}}</p>
       </div>
     {{/if}}
+
+    <div class="group-details-button">
+      {{group-membership-button
+          class="inline"
+          model=model
+          showLogin='showLogin'}}
+
+      {{#if displayGroupMessageButton}}
+        {{d-button
+            action="messageGroup"
+            class="btn-primary group-message-button inline"
+            icon="envelope"
+            label="groups.message"}}
+      {{/if}}
+
+      {{#if currentUser.admin}}
+        {{d-button action="destroy"
+            disabled=destroying
+            icon="trash"
+            class='btn-danger'
+            label="admin.groups.delete"}}
+      {{/if}}
+    </div>
   </div>
 
   <div class="list-controls">
     <div class="container">
       {{group-navigation group=model currentPath=application.currentPath tabs=tabs}}
-
-      {{#if displayGroupMessageButton}}
-        {{d-button
-            action="messageGroup"
-            class="btn-primary group-message-button"
-            icon="envelope"
-            label="groups.message"}}
-      {{/if}}
-
-      {{group-membership-button model=model showLogin='showLogin'}}
     </div>
   </div>
 
-  <div class='group-outlet'>
-    {{outlet}}
-  </div>
+    <div class='user-table'>
+      <div class='wrapper'>
+        {{outlet}}
+      </div>
+    </div>
 </div>

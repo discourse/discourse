@@ -17,10 +17,19 @@
       }
 
       .select-kit-body {
-        max-width: 500px;
-        width: 500px;
-        border: 1px solid $tertiary;
-        box-shadow: shadow("focus")
+        max-width: 32em;
+        width: 32em;
+      }
+
+      .select-kit-header {
+        .selected-name {
+          margin: 0;
+          border: 0;
+          padding: 0;
+          outline: none;
+          box-shadow: none;
+          cursor: pointer;
+        }
       }
 
       .select-kit-filter {
@@ -52,7 +61,7 @@
 
           .selected-tags {
             display: flex;
-            padding: 3px;
+            padding: 4px 8px;
             flex-wrap: wrap;
             border-bottom: 1px solid $primary-low;
           }

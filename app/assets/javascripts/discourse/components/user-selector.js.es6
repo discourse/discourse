@@ -33,7 +33,8 @@ export default TextField.extend({
         excludeCurrentUser = bool('excludeCurrentUser'),
         single = bool('single'),
         allowAny = bool('allowAny'),
-        disabled = bool('disabled');
+        disabled = bool('disabled'),
+        disallowEmails = bool('disallowEmails');
 
     function excludedUsernames() {
       // hack works around some issues with allowAny eventing
@@ -64,7 +65,8 @@ export default TextField.extend({
           allowedUsers,
           includeMentionableGroups,
           includeMessageableGroups,
-          group: self.get("group")
+          group: self.get("group"),
+          disallowEmails,
         });
 
         return results;

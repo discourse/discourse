@@ -21,6 +21,7 @@ class AdminDashboardData
 
   PRIVATE_MESSAGE_REPORTS ||= [
     'user_to_user_private_messages',
+    'user_to_user_private_messages_with_replies',
     'system_private_messages',
     'notify_moderators_private_messages',
     'notify_user_private_messages',

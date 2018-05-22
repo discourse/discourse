@@ -47,7 +47,8 @@ module JsLocaleHelper
         translations = {
           locale_str => {
             'js' => {},
-            'admin_js' => {}
+            'admin_js' => {},
+            'wizard_js' => {}
           }
         }
       end
@@ -56,6 +57,7 @@ module JsLocaleHelper
       if translations[locale_str] && plugin_translations(locale_str)
         translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if plugin_translations(locale_str)['js']
         translations[locale_str]['admin_js'].deep_merge!(plugin_translations(locale_str)['admin_js']) if plugin_translations(locale_str)['admin_js']
+        translations[locale_str]['wizard_js'].deep_merge!(plugin_translations(locale_str)['wizard_js']) if plugin_translations(locale_str)['wizard_js']
       end
 
       translations
@@ -149,6 +151,7 @@ module JsLocaleHelper
 
     # moment
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
+    result << File.read("#{Rails.root}/lib/javascripts/moment-timezone-with-data.js")
     result << moment_locale(locale_str)
     result << moment_formats
 

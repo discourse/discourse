@@ -43,68 +43,68 @@ ca:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
-          other: "< %{count}s"
+          one: < 1s
+          other: < %{count}s
         x_seconds:
-          one: "1s"
-          other: "%{count}s"
+          one: 1s
+          other: '%{count}s'
         less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
+          one: < 1m
+          other: < %{count}m
         x_minutes:
-          one: "1m"
-          other: "%{count}m"
+          one: 1m
+          other: '%{count}m'
         about_x_hours:
-          one: "1h"
-          other: "%{count}h"
+          one: 1h
+          other: '%{count}h'
         x_days:
-          one: "1d"
-          other: "%{count}d"
+          one: 1d
+          other: '%{count}d'
         x_months:
-          one: "1mes"
-          other: "%{count}mes"
+          one: 1mes
+          other: '%{count}mes'
         about_x_years:
-          one: "1a"
-          other: "%{count}a"
+          one: 1a
+          other: '%{count}a'
         over_x_years:
-          one: "> 1a"
-          other: "> %{count}a"
+          one: '> 1a'
+          other: '> %{count}a'
         almost_x_years:
-          one: "1a"
-          other: "%{count}a"
+          one: 1a
+          other: '%{count}a'
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
-          other: "%{count} mins"
+          one: 1 min
+          other: '%{count} mins'
         x_hours:
-          one: "1 hora"
-          other: "%{count} hores"
+          one: 1 hora
+          other: '%{count} hores'
         x_days:
-          one: "1 dia"
-          other: "%{count} dies"
+          one: 1 dia
+          other: '%{count} dies'
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "fa 1 min"
-          other: "fa %{count} mins"
+          one: fa 1 min
+          other: fa %{count} mins
         x_hours:
-          one: "fa 1 hora"
-          other: "fa %{count} hores"
+          one: fa 1 hora
+          other: fa %{count} hores
         x_days:
-          one: "fa 1 dia"
-          other: "fa %{count} dies"
+          one: fa 1 dia
+          other: fa %{count} dies
       later:
         x_days:
-          one: "1 dia després"
-          other: "%{count} dies després"
+          one: 1 dia després
+          other: '%{count} dies després'
         x_months:
-          one: "1 mes després"
-          other: "%{count} mesos després"
+          one: 1 mes després
+          other: '%{count} mesos després'
         x_years:
-          one: "1 any després"
-          other: "%{count} anys després"
+          one: 1 any després
+          other: '%{count} anys després'
       previous_month: 'Mes anterior'
       next_month: 'Següent mes'
       placeholder: data
@@ -118,7 +118,6 @@ ca:
       email: 'envia aquest enllaç per correu electrònic'
     action_codes:
       public_topic: "va fer públic aquest tema %{when}"
-      private_topic: "va fer privat aquest tema %{when}"
       split_topic: "va dividir aquest tema %{when}"
       invited_user: "va invitar %{who} %{when}"
       invited_group: "va invitar %{who} %{when}"
@@ -149,8 +148,6 @@ ca:
     topic_admin_menu: "accions d'administració de tema"
     wizard_required: "Et donem la benvinguda al teu nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap  notificació de cap tipus per correu electrònic."
-    bootstrap_mode_enabled: "Per llançar el teu nou lloc més fàcilment, ets en mode d'arrencada. Tots les noves persones usuàries obtindran el nivell 1 de confiança i tindran activats els avisos diaris via correu electrònic sobre actualitzacions. Es cancel·len automàticament quan el recompte total supera %{min_users} persones usuàries."
-    bootstrap_mode_disabled: "El mode <i>Bootstrap</i> es desactivarà durant les properes 24 hores."
     themes:
       default_description: "Per defecte"
     s3:
@@ -186,8 +183,8 @@ ca:
     show_help: "opcions"
     links: "Enllaços"
     links_lowercase:
-      one: "enllaç"
-      other: "enllaços"
+      one: enllaç
+      other: enllaços
     faq: "PMF"
     guidelines: "Directrius"
     privacy_policy: "Política de privadesa"
@@ -211,8 +208,8 @@ ca:
     max_of_count: "màx de {{count}}"
     alternation: "o"
     character_count:
-      one: "{{count}} caràcter"
-      other: "{{count}} caràcters"
+      one: '{{count}} caràcter'
+      other: '{{count}} caràcters'
     suggested_topics:
       title: "Temes suggerits"
       pm_title: "Missatges proposats"
@@ -224,8 +221,6 @@ ca:
       our_moderators: "El nostre equip moderador"
       stat:
         all_time: "Sempre"
-        last_7_days: "Els darrers 7 dies"
-        last_30_days: "Els darrers 30 dies"
       like_count: "M'agrades"
       topic_count: "Temes"
       post_count: "Publicacions"
@@ -246,16 +241,6 @@ ca:
       last_read: "aquesta és la darrera publicació que has llegit; clica per marcar-la com a preferit"
       remove: "Elimina Preferit"
       confirm_clear: "Segur que vols eliminar tots els preferits d'aquest tema?"
-    topic_count_latest:
-      one: "{{count}} tema nou o actualitzat."
-      other: "{{count}} temes nous o actualitzats."
-    topic_count_unread:
-      one: "{{count}} tema sense llegir."
-      other: "{{count}} temes sense llegir."
-    topic_count_new:
-      one: "{{count}} nou tema."
-      other: "{{count}} nous temes."
-    click_to_show: "Clica per mostrar-ho"
     preview: "previsualitza"
     cancel: "cancel·la"
     save: "Desa els canvis"
@@ -292,16 +277,16 @@ ca:
       cancel: "Cancel·la"
       view_pending: "mira publicacions pendents"
       has_pending_posts:
-        one: "Aquest tema té <b>1</b> publicació esperant l'aprovació"
-        other: "Aquest tema té <b>{{count}}</b> publicacions esperant l'aprovació"
+        one: Aquest tema té <b>1</b> publicació esperant l'aprovació
+        other: Aquest tema té <b>{{count}}</b> publicacions esperant l'aprovació
       confirm: "Desa els canvis"
       delete_prompt: "Segur que vols esborrar <b>%{username}</b>? Això eliminarà totes les seves publicacions i blocarà el correu electrònic i l'adreça IP."
       approval:
         title: "La publicació necessita ser aprovada"
         description: "Hem rebut la teva nova publicació, però cal que sigui aprovada per una persona moderadora abans d'aparèixer. Si us plau, una mica de paciència."
         pending_posts:
-          one: "Tens <strong>1</strong> publicació pendent."
-          other: "Tens <strong>{{count}}</strong> publicacions pendents."
+          one: Tens <strong>1</strong> publicació pendent.
+          other: Tens <strong>{{count}}</strong> publicacions pendents.
         ok: "D'acord"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> va enviar <a href='{{topicUrl}}'>el tema</a>"
@@ -335,8 +320,8 @@ ca:
       posts_read: "Llegit"
       posts_read_long: "Publicacions llegides"
       total_rows:
-        one: "1 persona usuària"
-        other: "%{count} persones usuàries"
+        one: 1 persona usuària
+        other: '%{count} persones usuàries'
     group_histories:
       actions:
         change_group_setting: "Canvia la configuració del grup"
@@ -345,22 +330,6 @@ ca:
         make_user_group_owner: "Crea persona propietària"
         remove_user_as_group_owner: "Elimina persona propietària"
     groups:
-      logs:
-        title: "Registres"
-        when: "Quan"
-        action: "Acció"
-        acting_user: "Persona usuària activa"
-        target_user: "Persona usuària destinatària"
-        subject: "Tema"
-        details: "Detalls"
-        from: "De"
-        to: "A"
-      edit:
-        title: 'Edita grup'
-        full_name: 'Nom complet'
-        add_members: "Afegeix membres"
-        delete_member_confirm: "Elimina '%{username}' del '%{group}' grup?"
-      name_placeholder: "Nom del grup, sense espais, igual que la regla del nom de la identitat"
       empty:
         posts: "No hi ha publicacions de membres d'aquest grup."
         members: "No hi ha membres a aquest grup."
@@ -369,43 +338,28 @@ ca:
         topics: "No hi ha temes de membres d'aquest grup."
         logs: "No hi ha registres per a aquest grup."
       add: "Afegegix"
-      join: "Uneix-te al grup"
-      leave: "Abandona el grup"
-      request: "Demana afegir-te al grup"
       message: "Missatge"
-      automatic_group: Grup Automàtic
-      closed_group: Grup Tancat
-      is_group_user: "Ets membre d'aquest grup"
       membership: "Afiliació"
       name: "Nom"
-      user_count: "Quantitat de membres"
       bio: "Sobre el Grup"
-      selector_placeholder: "Afegeix membres"
       owner: "propietari"
       index:
         title: "Grups"
         empty: "No hi ha grups visibles"
       title:
-        one: "Grup"
-        other: "Grups"
+        one: Grup
+        other: Grups
       activity: "Activitat"
-      members: "Membres"
       topics: "Temes"
       posts: "Publicacions"
       mentions: "Mencions"
       messages: "Missatges"
-      visibility_levels:
-        title: "Qui pot veure aquest grup?"
-        public: "Tothom"
       alias_levels:
         nobody: "Ningú"
         only_admins: "Només persones administradores"
         mods_and_admins: "Només persones moderadores o administradores"
         members_mods_and_admins: "Només mebres de grups, persones moderadores i administradores"
         everyone: "Tothom"
-      trust_levels:
-        title: "El nivell de confiança atorgat automàticament a membres quan s'afegeixen:"
-        none: "Cap"
       notifications:
         watching:
           title: "Mirant"
@@ -430,22 +384,22 @@ ca:
       flair_color_placeholder: "(Opcional) Valor de color Hex"
       flair_preview_icon: "Vista prèvia d'icona"
       flair_preview_image: "Vista prèvia d'imatge"
-      flair_note: "Nota: l'adornament només es mostrarà per a un grup primari de persones usuàries."
     user_action_groups:
-      '1': "Donats"
-      '2': "Rebuts"
-      '3': "Preferits"
-      '4': "Temes"
-      '5': "Respostes"
-      '6': "Reaccions"
-      '7': "Mencions"
-      '9': "Cites"
-      '11': "Edicions"
-      '12': "Elements enviats"
-      '13': "Safata d'entrada"
-      '14': "Pendents"
+      "1": "Donats"
+      "2": "Rebuts"
+      "3": "Preferits"
+      "4": "Temes"
+      "5": "Respostes"
+      "6": "Reaccions"
+      "7": "Mencions"
+      "9": "Cites"
+      "11": "Edicions"
+      "12": "Elements enviats"
+      "13": "Safata d'entrada"
+      "14": "Pendents"
     categories:
       all: "totes les categories"
+      all_subcategories: "Tot a %{categoryName}"
       no_subcategory: "cap"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
@@ -464,11 +418,11 @@ ca:
       toggle_ordering: "alterna el control de l'ordre"
       subcategories: "Subcategories"
       topic_sentence:
-        one: "1 tema"
-        other: "%{count} temes"
+        one: 1 tema
+        other: '%{count} temes'
       topic_stat_sentence:
-        one: "%{count} nou tema als passats %{unit}."
-        other: "%{count} nous temes als passats %{unit}."
+        one: '%{count} nou tema als passats %{unit}.'
+        other: '%{count} nous temes als passats %{unit}.'
     ip_lookup:
       title: Explora adreça IP
       hostname: Nom d'amfitrió
@@ -509,7 +463,6 @@ ca:
       notifications: "Notificacions"
       statistics: "Estats"
       desktop_notifications:
-        label: "Notificacions d'escriptori"
         not_supported: "Aquest navegador no suporta les notificacions. Disculpa."
         perm_default: "Apaga les notificacions"
         perm_denied_btn: "Permís denegat"
@@ -561,10 +514,10 @@ ca:
       watched_first_post_tags_instructions: "Et notificarem la primera publicació per cada nou tema a aquestes etqieuetes."
       muted_categories: "Silenciades"
       muted_categories_instructions: "No et notificarem res sobre nous temes amb aquestes categories i no apareixeran a les darreres.."
+      no_category_access: "Com a moderador/a tens accés limitat a la categoria. Desar està inhabilitat."
       delete_account: "Esborra el meu compte"
       delete_account_confirm: "Segur que vols esborrar el teu compte permanentment? Aquesta acció no es pot desfer!"
       deleted_yourself: "El teu compte ha estat esborrat amb èxit."
-      delete_yourself_not_allowed: "No pots esborrar el teu compte ara mateix. Posa't en contacte amb la persona administradora per fer-ho."
       unread_message_count: "Missatges"
       admin_delete: "Esborra"
       users: "Persones usuàries"
@@ -651,8 +604,8 @@ ca:
         authenticated: "El teu correu electrònic ha estat autenticat per {{provider}}"
         frequency_immediately: "T'enviarem un correu electrònic immediatament si no has llegit el que t'hem fet arribar."
         frequency:
-          one: "Només t'enviarem un correu electrònic si no t'hem vist en el darrer minut."
-          other: "Només t'enviarem un correu electrònic si no t'hem vist en els darrers {{count}} minuts."
+          one: Només t'enviarem un correu electrònic si no t'hem vist en el darrer minut.
+          other: Només t'enviarem un correu electrònic si no t'hem vist en els darrers {{count}} minuts.
       name:
         title: "Nom"
         instructions: "el teu nom complet (opcional)"
@@ -683,8 +636,6 @@ ca:
       created: "Es va regsitrar"
       log_out: "Sortir"
       location: "Ubicació"
-      card_badge:
-        title: "Targeta distintiva de persona usuària"
       website: "Lloc web"
       email_settings: "Correu electrònic"
       like_notification_frequency:
@@ -739,8 +690,8 @@ ca:
         user: "Persona usuària convidada"
         sent: "Enviat"
         truncated:
-          one: "Mostrant la primera invitació."
-          other: "Mostrant les primeres {{count}} invitacions."
+          one: Mostrant la primera invitació.
+          other: Mostrant les primeres {{count}} invitacions.
         redeemed: "Invitacions recuperades"
         redeemed_tab: "Recuperada"
         redeemed_tab_with_count: "Recuperades ({{count}})"
@@ -782,26 +733,26 @@ ca:
         stats: "Estadístiques"
         time_read: "temps de lectura"
         topic_count:
-          one: "tema creat"
-          other: "temes creats"
+          one: tema creat
+          other: temes creats
         post_count:
-          one: "publicació creada"
-          other: "publicacions creades"
+          one: publicació creada
+          other: publicacions creades
         likes_given:
-          one: "donada"
-          other: "donada"
+          one: donada
+          other: donada
         likes_received:
-          one: "Rebuda"
-          other: "Rebudes"
+          one: Rebuda
+          other: Rebudes
         days_visited:
-          one: "dia visitat"
-          other: "dies visitats"
+          one: dia visitat
+          other: dies visitats
         posts_read:
-          one: "publicació llegida"
-          other: "publicacions llegides"
+          one: publicació llegida
+          other: publicacions llegides
         bookmark_count:
-          one: "preferit"
-          other: "preferits"
+          one: preferit
+          other: preferits
         top_replies: "Principals respostes"
         no_replies: "Encara sense respostes"
         more_replies: "Més respostes"
@@ -869,8 +820,8 @@ ca:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha arribat al límit de configuració de %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha superat el límit de configuració de %{siteSettingRate}."
       rate:
-        one: "1 error/%{duration}"
-        other: "%{count} errors/%{duration}"
+        one: 1 error/%{duration}
+        other: '%{count} errors/%{duration}'
     learn_more: "saber-ne més..."
     all_time: 'total'
     all_time_desc: 'total de temes creats'
@@ -1026,8 +977,8 @@ ca:
       similar_topics: "El teu tema és semblant a..."
       drafts_offline: "esborranys fora de línia"
       group_mentioned:
-        one: "En mencionar {{group}}, estàs a punt de notificar-ho a <a href='{{group_link}}'>{{count}} aquesta persona</a> – Segur?"
-        other: "En mencionar {{group}}, estàs a punt de notificar-ho a <a href='{{group_link}}'>{{count}} aquestes persones</a> – Segur?"
+        one: En mencionar {{group}}, estàs a punt de notificar-ho a <a href='{{group_link}}'>{{count}} aquesta persona</a> – Segur?
+        other: En mencionar {{group}}, estàs a punt de notificar-ho a <a href='{{group_link}}'>{{count}} aquestes persones</a> – Segur?
       cannot_see_mention:
         category: "Has mencionat {{username}} però no es notificarà res perquè aquesta gent no gaudeix d'accés a aquesta categoria. Et caldrà afegir-la a un grup que tingui accés a aquesta categoria."
         private: "Has mencionat {{username}} però no es notificarà res perquè aquesta gent no pot veure aquest missatge. Et caldrà convidar aquesta gent a aquest Missatge Personal."
@@ -1092,6 +1043,10 @@ ca:
         body: "Ara mateix aquest missatge només s'està enviant a la teva bústia!"
       admin_options_title: "Configuracions opcionals de l'equip per a aquest tema"
     notifications:
+      tooltip:
+        regular:
+          one: 1 notificació no vista
+          other: '{{count}} notificacions no vistes'
       title: "notificacions de mencions via @nom, respostes a les teves entrades, missatges, etc"
       none: "Impossible carregar ara mateix les notificacions"
       empty: "No s'hi han trobat notificacions."
@@ -1099,26 +1054,13 @@ ca:
       total_flagged: "total publicacions amb bandera"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
-      alt:
-        mentioned: "Mencionat per"
-        quoted: "Citat per"
-        replied: "Respost"
-        posted: "Publicat per"
-        edited: "Edita la teva publicació per"
-        liked: "Ha agradat la teva publicació"
-        invited_to_topic: "Ha convidat a un tema de"
-        invitee_accepted: "Invitació acceptada per"
-        moved_post: "La teva publicació ha estat moguda per"
-        linked: "Enllaç a la teva publicació"
-        granted_badge: "Distintiu atorgat"
-        group_message_summary: "Missatges a la bústia d'entrada del grup"
       popup:
         mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'
         quoted: '{{username}} t''ha citat a "{{topic}}" - {{site_title}}'
         replied: '{{username}} t''ha respost a "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicat a "{{topic}}" - {{site_title}}'
-        linked: 'A {{username}} li ha agradat la teva publicació de "{{topic}}" - {{site_title}}'
+        linked: '{{username}} ha enllaçat la teva entrada en "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Afegeix una imatge"
       title_with_attachments: "Afegeix una imatge o arxiu"
@@ -1196,7 +1138,7 @@ ca:
         select_all: "Selecciona-ho tot"
         clear_all: "Neteja-ho tot"
         unlist_topics: "Desllista temes"
-        reset_read: "Reinicia la la lectura"
+        reset_read: "Restableix llegit"
         delete: "Esborra temes"
         dismiss: "Descarta-ho"
         dismiss_read: "Descarta tots els llegits"
@@ -1206,14 +1148,16 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "canvia la selecció massiva de temes"
         actions: "Accions massives"
+        change_category: "Defineix la Categoria"
         close_topics: "Tanca temes"
         archive_topics: "Arxiva temes"
+        notification_level: "Notificacions"
         choose_new_category: "Tria la nova categoria per als temes:"
         selected:
-          one: "Has triat <b>1</b> tema."
-          other: "Has triat <b>{{count}}</b> temes."
-        change_tags: "Reemplaçar Etiquetes"
-        append_tags: "Annexar Etiquetes"
+          one: Has triat <b>1</b> tema.
+          other: Has triat <b>{{count}}</b> temes.
+        change_tags: "Reemplaça Etiquetes"
+        append_tags: "Annexa Etiquetes"
         choose_new_tags: "Tria noves etiquetes per a aquests temes:"
         choose_append_tags: "Escollir noves etiquetes per annexar a aquest topics:"
         changed_tags: "Les etiquetes d'aquests temes han estat canviades."
@@ -1243,12 +1187,9 @@ ca:
         bookmarks: "No hi ha més temes marcats com a preferits."
         search: "No hi ha més resultats de la cerca."
     topic:
-      unsubscribe:
-        stop_notifications: "Ara rebràs menys alertes per a <strong>{{title}}</strong>"
-        change_notification_state: "L'estat actual d'alerta és"
       filter_to:
-        one: "1 publicació al tema"
-        other: "{{count}} publicacions al tema"
+        one: 1 publicació al tema
+        other: '{{count}} publicacions al tema'
       create: 'Nou tema'
       create_long: 'Crea un tema nou'
       private_message: 'Comença un missatge'
@@ -1262,10 +1203,10 @@ ca:
       new: 'nou tema'
       unread: 'sense llegir'
       new_topics:
-        one: '1 tema nou'
+        one: 1 tema nou
         other: '{{count}} temes nous '
       unread_topics:
-        one: '1 tema sense llegir'
+        one: 1 tema sense llegir
         other: '{{count}} temes sense llegir'
       title: 'Tema'
       invalid_access:
@@ -1279,17 +1220,17 @@ ca:
         title: "Tema no trobat"
         description: "Disculpa, no hem pogut trobar aquest tema. Que potser ha estat esborrat per una persona moderadora?"
       total_unread_posts:
-        one: "tens 1 missatge sense llegir a aquest tema"
-        other: "tens {{count}} missatges sense llegir a aquest tema"
+        one: tens 1 missatge sense llegir a aquest tema
+        other: tens {{count}} missatges sense llegir a aquest tema
       unread_posts:
-        one: "tens 1 publicació antiga sense llegir a aquest tema"
-        other: "tens {{count}} publicacions antigues sense llegir a aquest tema"
+        one: tens 1 publicació antiga sense llegir a aquest tema
+        other: tens {{count}} publicacions antigues sense llegir a aquest tema
       new_posts:
-        one: "hi ha 1 nova publicació a aquest tema des de la teva darrera lectura"
-        other: "hi ha {{count}} noves publicacions a aquest tema des de la teva darrera lectura"
+        one: hi ha 1 nova publicació a aquest tema des de la teva darrera lectura
+        other: hi ha {{count}} noves publicacions a aquest tema des de la teva darrera lectura
       likes:
-        one: "hi ha 1 M'agrada a aquest tema"
-        other: "hi ha {{count}} m'agrades en aquest tema"
+        one: hi ha 1 M'agrada a aquest tema
+        other: hi ha {{count}} m'agrades en aquest tema
       back_to_list: "Torna al llistat de temes"
       options: "Opcions de tema"
       show_links: "mostra enllaços dins d'aquest tema"
@@ -1299,7 +1240,7 @@ ca:
       read_more_MF: "Hi ha { UNREAD, plural, =0 {} one { <a href='/unread'>1 no llegit</a> } other { <a href='/unread'># no llegits</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {i } other{}} <a href='/new'>1 nou</a> topic} other { {BOTH, select, true{i } false {són } other{}} <a href='/new'># nous</a> topics} } restants, o {CATEGORY, select, true {navega altres temes a {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Navega per totes les categories
       view_latest_topics: mostra els darrers temes
-      suggest_create_topic: Per què no crear un tema?
+      suggest_create_topic: "Per què no crear un tema?"
       jump_reply_up: salta a la resposta anterior
       jump_reply_down: salta a la darrera resposta
       deleted: "El tema ha estat esborrat"
@@ -1308,10 +1249,12 @@ ca:
         three_months: "Tres mesos"
         six_months: "Sis mesos"
         one_year: "Un any"
+      status_update_notice:
+        auto_publish_to_category: "Aquest tema serà publicat a la categoria <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
       auto_close_title: 'Configuració del tancament automàtic'
       auto_close_immediate:
-        one: "La darrera publicació al tema ja té 1 hora, per això el tema es tancarà immediatament."
-        other: "La darrera publicació al tema ja té %{count} hores, per això el tema es tancarà immediatament."
+        one: La darrera publicació al tema ja té 1 hora, per això el tema es tancarà immediatament.
+        other: La darrera publicació al tema ja té %{count} hores, per això el tema es tancarà immediatament.
       timeline:
         back: "Enrere"
         back_description: "Torna a la teva darrera publicació sense llegir"
@@ -1332,21 +1275,21 @@ ca:
         title: canvia la freqüència d'alertes que reps sobre aquest tema
         reasons:
           mailing_list_mode: "Tens activat el mode de llista de correu, així et notificarem les respostes a aquest tema per correu electrònic."
-          '3_10': 'Rebràs alertes perquè estàs mirant una etiqueta sobre aquest tema.'
-          '3_6': 'Rebràs alertes perquè estàs mirant aquesta categoria.'
-          '3_5': 'Rebràs alertes perquè has començat a veure aquest tema automàticament.'
-          '3_2': 'Rebràs alertes perquè estàs mirant aquest tema.'
-          '3_1': 'Rebràs alertes perquè has creat aquest tema.'
-          '3': 'Rebràs alertes perquè estàs mirant aquest tema.'
-          '2_8': 'Rebràs notificacions, perquè estàs seguint aquesta categoria.'
-          '2_4': 'Rebràs notificacions, perquè has escrit una resposta a aquest tema.'
-          '2_2': 'Rebràs notificacions, perquè estàs seguint aquest tema.'
-          '2': 'Rebràs notificacions, perquè has <a href="/users/{{username}}/preferences">llegit aquest tema</a>.'
-          '1_2': 'Només se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
-          '1': 'Se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
-          '0_7': 'No estàs fent cas de les alertes d''aquesta categoria.'
-          '0_2': 'No estàs fent cas de les alertes d''aquest tema.'
-          '0': 'No estàs fent cas de les alertes sobre aquest tema.'
+          "3_10": 'Rebràs alertes perquè estàs mirant una etiqueta sobre aquest tema.'
+          "3_6": 'Rebràs alertes perquè estàs mirant aquesta categoria.'
+          "3_5": 'Rebràs alertes perquè has començat a veure aquest tema automàticament.'
+          "3_2": 'Rebràs alertes perquè estàs mirant aquest tema.'
+          "3_1": 'Rebràs alertes perquè has creat aquest tema.'
+          "3": 'Rebràs alertes perquè estàs mirant aquest tema.'
+          "2_8": 'Rebràs notificacions, perquè estàs seguint aquesta categoria.'
+          "2_4": 'Rebràs notificacions, perquè has escrit una resposta a aquest tema.'
+          "2_2": 'Rebràs notificacions, perquè estàs seguint aquest tema.'
+          "2": 'Rebràs notificacions, perquè has <a href="/users/{{username}}/preferences">llegit aquest tema</a>.'
+          "1_2": 'Només se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
+          "1": 'Se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
+          "0_7": 'No estàs fent cas de les alertes d''aquesta categoria.'
+          "0_2": 'No estàs fent cas de les alertes d''aquest tema.'
+          "0": 'No estàs fent cas de les alertes sobre aquest tema.'
         watching_pm:
           title: "Vigilant-lo"
           description: "Et notificarem cada resposta nova a aquest missatge i et mostrarem un nou recompte de respostes."
@@ -1383,7 +1326,7 @@ ca:
         archive: "Arxiva tema"
         invisible: "Desllista"
         visible: "Fes llistats"
-        reset_read: "Reinicia la lectura de dades"
+        reset_read: "Restableix dades de lectura"
         make_public: "Fes públic el tema"
       feature:
         pin: "Clava tema"
@@ -1417,8 +1360,8 @@ ca:
         pin_validation: "Cal una data per clavar aquest tema."
         not_pinned: "No hi ha temes clavats a {{categoryLink}}."
         already_pinned:
-          one: "Temes clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Temes clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Temes clavats a hores d''ara{{categoryLink}}: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Temes clavats a hores d''ara{{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         pin_globally: "Fes que aquest tema aparegui al començament de tots fins "
         confirm_pin_globally: "Ja has arribat globalment a {{count}} temes clavats. Massa temes clavats poden carregar les persones usuàries noves o anònimes. Segur que vols clavar un altre tema globalment?"
         unpin_globally: "Eiimina aquest tema del principi del començament de tots."
@@ -1426,8 +1369,8 @@ ca:
         global_pin_note: "Individualment, les mateixes persones usuàries poden desclavar el tema."
         not_pinned_globally: "No hi ha temes clavats globalment."
         already_pinned_globally:
-          one: "Temes globalment clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Temes globalment clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: 'Temes globalment clavats a hores d''ara{{categoryLink}}: <strong class=''badge badge-notification unread''>1</strong>'
+          other: 'Temes globalment clavats a hores d''ara{{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
         make_banner: "Fes que aquest tema aparegui emmarcat al començament de totes les pàgines."
         remove_banner: "Eiimina el marc que apareix al començament de totes les pàgines."
         banner_note: "Les persones usuàries poden descartar el marc en tancar-lo. Només es pot emmarcar un tema en qualsevol moment."
@@ -1463,8 +1406,8 @@ ca:
       login_reply: 'Identifica''t per respondre'
       filters:
         n_posts:
-          one: "1 publicació"
-          other: "{{count}} publicacions"
+          one: 1 publicació
+          other: '{{count}} publicacions'
         cancel: "Filtre remot"
       split_topic:
         title: "Mou a un nou tema"
@@ -1472,15 +1415,15 @@ ca:
         topic_name: "Nom del nou tema"
         error: "Hi ha hagut una errada en moure publicacions a aquest nou tema."
         instructions:
-          one: "Estàs a punt de crear un nou tema i difondre'l amb la publicació que has triat."
-          other: "Estàs a punt de crear un nou tema i difondre'l amb les <b>{{count}}</b> publicacions que has triat."
+          one: Estàs a punt de crear un nou tema i difondre'l amb la publicació que has triat.
+          other: Estàs a punt de crear un nou tema i difondre'l amb les <b>{{count}}</b> publicacions que has triat.
       merge_topic:
         title: "Mou a un tema existent"
         action: "mou a un tema existent"
         error: "Hi ha hagut una errada en moure publicacions a aquest tema."
         instructions:
-          one: "Si us plau, tria el tema al qual t'agradaria moure aquesta publicació."
-          other: "Si us plau, tria el tema al qual t'agradaria moure aquestes <b>{{count}}</b> publicacions."
+          one: Si us plau, tria el tema al qual t'agradaria moure aquesta publicació.
+          other: Si us plau, tria el tema al qual t'agradaria moure aquestes <b>{{count}}</b> publicacions.
       merge_posts:
         title: "Uneix les publicacions seleccionades"
         action: "uneix les publicacions seleccionades"
@@ -1492,9 +1435,8 @@ ca:
         label: "Nova persona propietària de les publicacions"
         placeholder: "identitat de la nova persona propietària"
         instructions:
-          one: "Si us plau, selecciona la nova persona propietària de la publicació per <b>{{old_user}}</b>."
-          other: "Si us plau, selecciona la nova persona propietària de les {{count}} publicacions per <b>{{old_user}}</b>."
-        instructions_warn: "Fixa't que qualsevol alerta sobre aquesta publicació no serà transferida a la nova persona usuària retroactivament. <br>Atenció: hores d'ara, no hi ha dades post-dependents transferides a la nova persona usuària. Fes-ho servir amb prudència."
+          one: Si us plau, selecciona la nova persona propietària de la publicació per <b>{{old_user}}</b>.
+          other: Si us plau, selecciona la nova persona propietària de les {{count}} publicacions per <b>{{old_user}}</b>.
       change_timestamp:
         action: "canvia la marca de temps"
         invalid_timestamp: "La hi haurà marca en el futur."
@@ -1523,26 +1465,26 @@ ca:
       show_full: "Mostra la publicació sencera"
       show_hidden: 'Mostra el contingut amagat.'
       deleted_by_author:
-        one: "(publicació retirada per la persona autora, s'esborrarà automàticament en 1 hora, si no és marcada amb bandera)"
-        other: "(publicació retirada per la persona autora, s'esborrarà automàticament en %{count} hores, si no és marcada amb bandera)"
+        one: (publicació retirada per la persona autora, s'esborrarà automàticament en 1 hora, si no és marcada amb bandera)
+        other: (publicació retirada per la persona autora, s'esborrarà automàticament en %{count} hores, si no és marcada amb bandera)
       expand_collapse: "eixampla/contrau"
       gap:
-        one: "mira 1 resposta amagada"
-        other: "mira {{count}} respostes amagades"
+        one: mira 1 resposta amagada
+        other: mira {{count}} respostes amagades
       unread: "Publicació no llegida"
       has_replies:
-        one: "{{count}} Resposta"
-        other: "{{count}} Respostes"
+        one: '{{count}} Resposta'
+        other: '{{count}} Respostes'
       has_likes:
-        one: "{{count}}  M'agrada"
-        other: "{{count}} M'agrades"
+        one: '{{count}}  M''agrada'
+        other: '{{count}} M''agrades'
       has_likes_title:
-        one: "La publicació agrada a 1 persona"
-        other: "La publicació agrada a {{count}} persones"
+        one: La publicació agrada a 1 persona
+        other: La publicació agrada a {{count}} persones
       has_likes_title_only_you: "t'ha agradat aquesta publicació"
       has_likes_title_you:
-        one: "La publicació t'agrada a tu i a 1 persona"
-        other: "La publicació t'agrada a tu i a {{count}} persones"
+        one: La publicació t'agrada a tu i a 1 persona
+        other: La publicació t'agrada a tu i a {{count}} persones
       errors:
         create: "Disculpa, s'ha produït una errada en crear la teva publicació. Si us plau, torna-ho a provar."
         edit: "Disculpa, s'ha produït una errada en editar la teva publicació. Si us plau, torna-ho a provar."
@@ -1615,54 +1557,54 @@ ca:
           vote: "Has votat per aquesta publicació"
         by_you_and_others:
           off_topic:
-            one: "Tu i 1 altra persona més heu marcat això amb bandera de fora de context"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera de fora de context"
+            one: Tu i 1 altra persona més heu marcat això amb bandera de fora de context
+            other: Tu i {{count}} persones més heu marcat això amb bandera de fora de context
           spam:
-            one: "Tu i 1 persona més heu marcat això amb bandera de brossa"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera de brossa"
+            one: Tu i 1 persona més heu marcat això amb bandera de brossa
+            other: Tu i {{count}} persones més heu marcat això amb bandera de brossa
           inappropriate:
-            one: "Tu i 1 persona més heu marcat això amb bandera d'inapropiat"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera d'inapropiat"
+            one: Tu i 1 persona més heu marcat això amb bandera d'inapropiat
+            other: Tu i {{count}} persones més heu marcat això amb bandera d'inapropiat
           notify_moderators:
-            one: "Tu i 1 persona més heu marcat això amb bandera per moderar"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera per moderar"
+            one: Tu i 1 persona més heu marcat això amb bandera per moderar
+            other: Tu i {{count}} persones més heu marcat això amb bandera per moderar
           notify_user:
-            one: "Tu i 1 persona més li heu enviat un missatge"
-            other: "Tu i {{count}} persones més li heu enviat un missatge"
+            one: Tu i 1 persona més li heu enviat un missatge
+            other: Tu i {{count}} persones més li heu enviat un missatge
           bookmark:
-            one: "Tu i 1 persona més heu marcat aquesta publicació com a preferit"
-            other: "Tu i {{count}} persones més heu marcat aquesta publicació com a preferit"
+            one: Tu i 1 persona més heu marcat aquesta publicació com a preferit
+            other: Tu i {{count}} persones més heu marcat aquesta publicació com a preferit
           like:
-            one: "Aquesta publicació us ha agradat a tu i a 1 persona més"
-            other: "Aquesta publicació us ha agradat a tu i a {{count}} persones més"
+            one: Aquesta publicació us ha agradat a tu i a 1 persona més
+            other: Aquesta publicació us ha agradat a tu i a {{count}} persones més
           vote:
-            one: "Tu i 1 persona més heu votat per aquesta publicació"
-            other: "Tu i {{count}} persones més heu votat per aquesta publicació"
+            one: Tu i 1 persona més heu votat per aquesta publicació
+            other: Tu i {{count}} persones més heu votat per aquesta publicació
         by_others:
           off_topic:
-            one: "1 person ha marcat aquesta publicació amb bandera de fora de context"
-            other: "{{count}} persones han marcat aquesta publicació amb bandera de fora de context"
+            one: 1 person ha marcat aquesta publicació amb bandera de fora de context
+            other: '{{count}} persones han marcat aquesta publicació amb bandera de fora de context'
           spam:
-            one: "1 persona ha marcat aquesta publicació amb bandera de brossa"
-            other: "{{count}} persones han marcat aquesta publicació amb bandera de brossa"
+            one: 1 persona ha marcat aquesta publicació amb bandera de brossa
+            other: '{{count}} persones han marcat aquesta publicació amb bandera de brossa'
           inappropriate:
-            one: "1 persona ha marcat aquesta publicació amb bandera d'inapropiat"
-            other: "{{count}} persones han marcat aquesta publicació amb bandera d'inapropiat"
+            one: 1 persona ha marcat aquesta publicació amb bandera d'inapropiat
+            other: '{{count}} persones han marcat aquesta publicació amb bandera d''inapropiat'
           notify_moderators:
-            one: "1 persona ha marcat aquesta publicació per moderar"
-            other: "{{count}} persones han marcat aquesta publicació per moderar"
+            one: 1 persona ha marcat aquesta publicació per moderar
+            other: '{{count}} persones han marcat aquesta publicació per moderar'
           notify_user:
-            one: "1 ha enviat un missatge a aquesta persona"
-            other: "{{count}} han enviat un missatge a aquesta persona"
+            one: 1 ha enviat un missatge a aquesta persona
+            other: '{{count}} han enviat un missatge a aquesta persona'
           bookmark:
-            one: "1 persona ha marcat aquesta publicació com a preferit"
-            other: "{{count}} persones han marcat aquesta publicació com a preferit"
+            one: 1 persona ha marcat aquesta publicació com a preferit
+            other: '{{count}} persones han marcat aquesta publicació com a preferit'
           like:
-            one: "això ha agradat a 1 persona"
-            other: "això ha agradat a {{count}} persones"
+            one: això ha agradat a 1 persona
+            other: això ha agradat a {{count}} persones
           vote:
-            one: "1 persona ha votat per aquesta publicació"
-            other: "{{count}} persones han votat per aquesta publicació"
+            one: 1 persona ha votat per aquesta publicació
+            other: '{{count}} persones han votat per aquesta publicació'
       revisions:
         controls:
           first: "Primera revisió"
@@ -1697,6 +1639,8 @@ ca:
       settings: 'Configuracions'
       topic_template: "Plantilla de tema"
       tags: "Etiquetes"
+      tags_allowed_tags: "Permet l'ús de només aquestes etiquetes en aquesta categoria:"
+      tags_allowed_tag_groups: "Permet només l'ús d'etiquetes d'aquests grups en aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
@@ -1731,9 +1675,11 @@ ca:
       email_in_allow_strangers: "Accepta correus des de persones usuàries anònimes sense compte"
       email_in_disabled: "Les publicacions des del correu electrònic estan desactivades a les preferències del lloc. Per activar les publicacions des del correu electrònic, "
       email_in_disabled_click: 'activa l''opció "email in".'
-      suppress_from_homepage: "Suprimeix aquesta categoria des de la pàgina principal."
+      mailinglist_mirror: "La categoria replica una llista de correu"
       show_subcategory_list: "Mostrar les publicacions de les subcategories llistades a continuació d'aquesta categoria."
+      subcategory_num_featured_topics: "Nombre de temes destacats en la pàgina mare de la categoria:"
       all_topics_wiki: "Fes nou temes de wiki per defecte."
+      subcategory_list_style: "Estil de llista de la subcategoria:"
       allow_badges_label: "Permet concedir distintius dins aquesta categoria"
       edit_permissions: "Edita permisos"
       add_permission: "Afegeix permisos"
@@ -1794,14 +1740,14 @@ ca:
       custom_placeholder_notify_moderators: "Deixa'ns saber que t'amoïna i passa'ns tants enllaços rellevants i exemples com sigui possible."
       custom_message:
         at_least:
-          one: "introdueix almenys 1 caràcter"
-          other: "introdueix almenys {{count}} caràcters"
+          one: introdueix almenys 1 caràcter
+          other: introdueix almenys {{count}} caràcters
         more:
-          one: "1 per anar..."
-          other: "{{count}} per anar..."
+          one: 1 per anar...
+          other: '{{count}} per anar...'
         left:
-          one: "1 restant"
-          other: "{{count}} restants"
+          one: 1 restant
+          other: '{{count}} restants'
     flagging_topic:
       title: "Gràcies per ajudar-nos a mantenir polida la nostra comunitat!"
       action: "Marca el tema amb bandera "
@@ -1812,13 +1758,13 @@ ca:
       links_title: "Enllaços populars"
       links_shown: "mostra més enllaços..."
       clicks:
-        one: "1 clic"
-        other: "%{count} clics"
+        one: 1 clic
+        other: '%{count} clics'
     post_links:
       about: "eixampla més enllaços per a aquesta publicació"
       title:
-        one: "1 més"
-        other: "%{count} més"
+        one: 1 més
+        other: '%{count} més'
     topic_statuses:
       warning:
         help: "Aquest és un avís oficial."
@@ -1852,22 +1798,22 @@ ca:
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:
-      one: "vista"
-      other: "vistes"
+      one: vista
+      other: vistes
     replies: "Respostes"
     views_long:
-      one: "aquest tema ha estat vist 1 cop"
-      other: "aquest tema ha estat vist {{number}} cops"
+      one: aquest tema ha estat vist 1 cop
+      other: aquest tema ha estat vist {{number}} cops
     activity: "Activitat"
     likes: "Ha agradat"
     likes_lowercase:
-      one: "agrada"
-      other: "Agrada"
+      one: agrada
+      other: Agrada
     likes_long: "aquest tema ha agradat {{number}} cops"
     users: "Persones usuàries"
     users_lowercase:
-      one: "persona usuària"
-      other: "persones usuàries"
+      one: persona usuària
+      other: persones usuàries
     category_title: "Categoria"
     history: "Història"
     changed_by: "per {{author}}"
@@ -1880,8 +1826,8 @@ ca:
       latest:
         title: "Darrers"
         title_with_count:
-          one: "Darrer (1)"
-          other: "Darrers ({{count}})"
+          one: Darrer (1)
+          other: Darrers ({{count}})
         help: "temes amb publicacions recents"
       hot:
         title: "Candent"
@@ -1899,21 +1845,21 @@ ca:
       unread:
         title: "No llegits"
         title_with_count:
-          one: "No llegit (1)"
-          other: "No llegits ({{count}})"
+          one: No llegit (1)
+          other: No llegits ({{count}})
         help: "temes que estàs mirant o seguint amb publicacions no llegides"
         lower_title_with_count:
-          one: "1 no llegit"
-          other: "{{count}} no llegits"
+          one: 1 no llegit
+          other: '{{count}} no llegits'
       new:
         lower_title_with_count:
-          one: "1 nou"
-          other: "{{count}} nous"
+          one: 1 nou
+          other: '{{count}} nous'
         lower_title: "nou"
         title: "Nous"
         title_with_count:
-          one: "Nou (1)"
-          other: "Nous ({{count}})"
+          one: Nou (1)
+          other: Nous ({{count}})
         help: "temes creats durant els darrers dies"
       posted:
         title: "Les meves publicacions"
@@ -1924,8 +1870,8 @@ ca:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
+          one: '{{categoryName}} (1)'
+          other: '{{categoryName}} ({{count}})'
         help: "darrers temes a la categoria {{categoryName}} "
       top:
         title: "Més actius"
@@ -2009,20 +1955,20 @@ ca:
         print: '<b>ctrl</b>+<b>p</b> Imprimeix tema'
     badges:
       earned_n_times:
-        one: "Ha rebut distintiu 1 cop"
-        other: "Ha rebut distintiu %{count} cops"
+        one: Ha rebut distintiu 1 cop
+        other: Ha rebut distintiu %{count} cops
       granted_on: "Concedit %{date}"
       others_count: "Altres amb aquest distintiu (%{count})"
       title: Distintius
       badge_count:
-        one: "1 Distintiu"
-        other: "%{count} Distintius"
+        one: 1 Distintiu
+        other: '%{count} Distintius'
       more_badges:
-        one: "+1 Més"
-        other: "+%{count} Més"
+        one: +1 Més
+        other: +%{count} Més
       granted:
-        one: "1 concedit"
-        other: "%{count} concedits"
+        one: 1 concedit
+        other: '%{count} concedits'
       select_badge_for_title: Tria un distintiu per fer-lo servir com al teu títol
       badge_grouping:
         getting_started:
@@ -2066,19 +2012,15 @@ ca:
       notifications:
         watching:
           title: "Mirant"
-          description: "Miraràs automàticament tots els temes amb aquesta etiqueta. Et notificarem totes les noves publicacions i els nous temes, així com un recompte de noves publicacions que apareixerà al costat del tema."
         watching_first_post:
           title: "Mirant la primera publicació"
-          description: "Només et notificarem la primera publicació per cada nou tema amb aquesta etiqueta."
         tracking:
           title: "Seguint"
-          description: "Seguiràs automàticament tots els temes amb aquesta etiqueta. Apareixerà al costat del tema un recompte de publicacions noves i no llegides."
         regular:
           title: "Ordinari"
           description: "Rebràs alertes si una persona menciona el teu @nom o respon la teva publicació."
         muted:
           title: "Silenciat"
-          description: "No et notificarem res sobre nous temes amb aquesta etiqueta i no apareixeran a la teva pestanya de no llegits."
       groups:
         title: "Grups d'etiquetes"
         about: "Afegeix etiquetes a grups per gestionar-ho més fàcilment."
@@ -2160,8 +2102,6 @@ ca:
         reports:
           today: "Avui"
           yesterday: "Ahir"
-          last_7_days: "Els darrers 7 dies"
-          last_30_days: "Els darrers 30 dies"
           all_time: "Sempre"
           7_days_ago: "Fa 7 dies"
           30_days_ago: "Fa 30 dies"
@@ -2212,8 +2152,6 @@ ca:
         title: "Grups"
         edit: "Edita grups"
         refresh: "Actualitza"
-        new: "Nou"
-        selector_placeholder: "escriu nom de persona usuària"
         about: "Edita aquí la teva pertinença de grup i noms"
         group_members: "Membres de grup"
         delete: "Esborra"
@@ -2221,21 +2159,10 @@ ca:
         delete_failed: "Impossible esborrar aquest grup. Si és un grup automàtic, no pot ser destruït."
         delete_owner_confirm: "Esborra privilegis propietaris per a '%{username}'?"
         add: "Afegegix"
-        add_members: "Afegeix membres"
         custom: "Personalitza"
-        bulk_complete: "Les persones usuàries s'han afegit al grup."
-        bulk: "Afegeix a grup massivament"
-        bulk_paste: "Enganxa una llista de persones o correus, un per línia:"
-        bulk_select: "(tria un grup)"
         automatic: "Automàtic"
-        automatic_membership_email_domains: "Les persones registrades amb un domini de correu que coincideix amb un de la llista s'afegiran automàticament a aquest grup:"
-        automatic_membership_retroactive: "Aplica la mateixa regla de domini de correu per afegir persones registrades existents"
-        default_title: "Títol per defecte per a totes les persones a aquest grup"
-        primary_group: "Estableix automàticament com a grup primari"
         group_owners: Persones propietàries
         add_owners: Afegeix persones propietàries
-        incoming_email: "Personalitza l'adreça de correu electrònic entrant:"
-        incoming_email_placeholder: "introdueix una adreça de correu electrònic"
       api:
         generate_master: "Genera una clau mestra API"
         none: "No hi ha claus API actives ara mateix"
@@ -2298,11 +2225,11 @@ ca:
           none: "No hi ha esdeveniments relacionats"
           redeliver: "Relliura"
           incoming:
-            one: "Hi ha un nou esdeveniment."
-            other: "Hi ha {{count}} esdeveniments nous."
+            one: Hi ha un nou esdeveniment.
+            other: Hi ha {{count}} esdeveniments nous.
           completed_in:
-            one: "Completat en 1 segon."
-            other: "Completat en {{count}} segons."
+            one: Completat en 1 segon.
+            other: Completat en {{count}} segons.
           request: "Sol·licita"
           response: "Reacció"
           redeliver_confirm: "Segur que vols tornar a lliurar la mateixa càrrega útil?"
@@ -2639,11 +2566,11 @@ ca:
           suspect: 'Sospita'
         approved: "Aprovat?"
         approved_selected:
-          one: "Aprova persona usuària"
-          other: "Aprova persones usuàries ({{count}})"
+          one: Aprova persona usuària
+          other: Aprova persones usuàries ({{count}})
         reject_selected:
-          one: "Refusa persona usuària"
-          other: "Refusa persones usuàries ({{count}})"
+          one: Refusa persona usuària
+          other: Refusa persones usuàries ({{count}})
         titles:
           active: 'Persones usuàries actives'
           new: 'Nova persones usuàries'
@@ -2659,11 +2586,11 @@ ca:
           suspended: 'Persones usuàries suspeses'
           suspect: 'Persones usuàries sospitoses'
         reject_successful:
-          one: "1 persona usuària refusada amb èxit"
-          other: "%{count} persones usuàries refusades amb èxit"
+          one: 1 persona usuària refusada amb èxit
+          other: '%{count} persones usuàries refusades amb èxit'
         reject_failures:
-          one: "Ha fallat en refusar 1 persona usuària."
-          other: "Ha fallat en refusar %{count} persones usuàries."
+          one: Ha fallat en refusar 1 persona usuària.
+          other: Ha fallat en refusar %{count} persones usuàries.
         not_verified: "No verificat"
         check_email:
           title: "Mostra correu electrònic d'aquesta persona"
@@ -2722,14 +2649,14 @@ ca:
         delete_forbidden_because_staff: "No es poden esborrar les persones administradores i moderadores."
         delete_posts_forbidden_because_staff: "No es poden esborrar totes les publicacions de les persones administradores i moderadores."
         delete_forbidden:
-          one: "No es poden esborrar les persones usuàries si tenen publicacions. Esborra totes les publicacions abans d'eliminar una persona usuària. (No es poden esborrar les publicacions amb més d'%{count} dia)"
-          other: "No es poden esborrar les persones usuàries si tenen publicacions. Esborra totes les publicacions abans d'eliminar una persona usuària. (No es poden esborrar les publicacions amb més de %{count} dies)"
+          one: No es poden esborrar les persones usuàries si tenen publicacions. Esborra totes les publicacions abans d'eliminar una persona usuària. (No es poden esborrar les publicacions amb més d'%{count} dia)
+          other: No es poden esborrar les persones usuàries si tenen publicacions. Esborra totes les publicacions abans d'eliminar una persona usuària. (No es poden esborrar les publicacions amb més de %{count} dies)
         cant_delete_all_posts:
-          one: "No es poden esborrar totes les publicacions. Algunes publicacions tenen més d'%{count} dia. (La configuració delete_user_max_post_age)"
-          other: "No es poden esborrar totes les publicacions. Algunes publicacions tenen més de %{count} dies. (La configuració delete_user_max_post_age)"
+          one: No es poden esborrar totes les publicacions. Algunes publicacions tenen més d'%{count} dia. (La configuració delete_user_max_post_age)
+          other: No es poden esborrar totes les publicacions. Algunes publicacions tenen més de %{count} dies. (La configuració delete_user_max_post_age)
         cant_delete_all_too_many_posts:
-          one: "No es poden esborrar totes les publicacions perquè la persona usuària té més d'1 publicació.  (delete_all_posts_max)"
-          other: "No es poden esborrar totes les publicacions perquè la persona usuària té més de %{count} publicacions.  (delete_all_posts_max)"
+          one: No es poden esborrar totes les publicacions perquè la persona usuària té més d'1 publicació.  (delete_all_posts_max)
+          other: No es poden esborrar totes les publicacions perquè la persona usuària té més de %{count} publicacions.  (delete_all_posts_max)
         delete_confirm: "Segur que vols esborrar aquesta persona? Això és permanent!"
         delete_and_block: "Esborra i <b>bloca</i> aquest correu electrònic i adreça IP"
         delete_dont_block: "Només esborra"
@@ -2764,8 +2691,8 @@ ca:
         tl3_requirements:
           title: "Requisits per al nivell de confiança 3"
           table_title:
-            one: "durant el darrer dia:"
-            other: "durant els darrers %{count} dies:"
+            one: 'durant el darrer dia:'
+            other: 'durant els darrers %{count} dies:'
           value_heading: "Valor"
           requirement_heading: "Requisit"
           visits: "Visites"
@@ -2840,10 +2767,7 @@ ca:
         recommended: "Recomanem personalitzar el següent text segons les teves necessitats:"
         show_overriden: 'Només mostra anul·lat'
       site_settings:
-        show_overriden: 'Només mostra anul·lat'
         title: 'Configuració'
-        reset: 'restableix'
-        none: 'cap'
         no_results: "Sense resultats"
         clear_filter: "Neteja"
         add_url: "afegeix URL"
@@ -2892,11 +2816,11 @@ ca:
         reason_help: (Un enllaç a una publicació o un tema)
         save: Desa
         delete: Esborra
-        delete_confirm: Segur que vols esborrar aquest distintiu?
+        delete_confirm: "Segur que vols esborrar aquest distintiu?"
         revoke: Revoca
         reason: Motiu
-        expand: 'Expandeix &hellip; '
-        revoke_confirm: Segur que vols revocar aquest distintiu?
+        expand: "Expandeix &hellip; "
+        revoke_confirm: "Segur que vols revocar aquest distintiu?"
         edit_badges: Edita distintius
         grant_badge: Atorga distintiu
         granted_badges: Distintius concedits
@@ -2934,14 +2858,14 @@ ca:
             text: "Hi ha mostres perdudes de concessions. Això passa quan la consulta de distintius retorna ID de persona usuària o de publicacions que no existeixen. Després això pot provocar resultats inesperats - si us plau, torna a revisar la teva consulta."
           no_grant_count: "No hi ha distintius per assignar."
           grant_count:
-            one: "<b>1</b> distintiu per assignar."
-            other: "<b>%{count}</b> distintius per assignar."
+            one: <b>1</b> distintiu per assignar.
+            other: <b>%{count}</b> distintius per assignar.
           sample: "Exemple:"
           grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> per a publicació dins %{link}
-            with_post_time: <span class="username">%{username}</span> per a publicació dins %{link} a <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> a <span class="time">%{time}</span>
+            with: "<span class=\"username\">%{username}</span>"
+            with_post: "<span class=\"username\">%{username}</span> per a publicació dins %{link}"
+            with_post_time: "<span class=\"username\">%{username}</span> per a publicació dins %{link} a <span class=\"time\">%{time}</span>"
+            with_time: "<span class=\"username\">%{username}</span> a <span class=\"time\">%{time}</span>"
       emoji:
         title: "Emoji"
         help: "Afegeix un nou emoji que serà disponible per a tothom. (GRAN CONSELL: arrossega i deixa anar molts fitxers d'un sol cop)"
@@ -2985,7 +2909,7 @@ ca:
         category_id: "ID de categoria"
         category_title: "Categoria"
         external_url: "URL externa"
-        delete_confirm: Segur que vols esborrar aquest enllaç permanent?
+        delete_confirm: "Segur que vols esborrar aquest enllaç permanent?"
         form:
           label: "Nou:"
           add: "Afegegix"

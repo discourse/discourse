@@ -86,7 +86,7 @@ class OptimizedImage < ActiveRecord::Base
 
       # make sure we remove the cached copy from external stores
       if Discourse.store.external?
-        external_copy.try(:close!) rescue nil
+        external_copy&.close
       end
 
       thumbnail
@@ -293,15 +293,15 @@ class OptimizedImage < ActiveRecord::Base
           DbHelper.remap(previous_url, optimized_image.url)
           # remove the old file (when local)
           unless external
-            FileUtils.rm(path, force: true) rescue nil
+            FileUtils.rm(path, force: true)
           end
         rescue => e
           problems << { optimized_image: optimized_image, ex: e }
           # just ditch the optimized image if there was any errors
           optimized_image.destroy
         ensure
-          file.try(:unlink) rescue nil
-          file.try(:close) rescue nil
+          file&.unlink
+          file&.close
         end
       end
     end

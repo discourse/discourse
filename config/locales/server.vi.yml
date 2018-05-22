@@ -16,12 +16,12 @@ vi:
       short_no_year: "%B %-d"
       date_only: "%b %-d, %Y"
   date:
-    month_names: [null, Tháng Một, Tháng Hai, Tháng Ba, Tháng Tư, Tháng Năm, Tháng Sáu, Tháng Bảy, Tháng Tám, Tháng Chín, Tháng Mười, Tháng Mười Một, Tháng Mười Hai]
+    month_names: [~, Tháng Một, Tháng Hai, Tháng Ba, Tháng Tư, Tháng Năm, Tháng Sáu, Tháng Bảy, Tháng Tám, Tháng Chín, Tháng Mười, Tháng Mười Một, Tháng Mười Hai]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "sa"
     pm: "ch"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Chủ đề"
   posts: "bài viết"
@@ -54,16 +54,16 @@ vi:
       present: phải để trống
       confirmation: "%{attribute} không khớp"
       empty: không thể để trống
-      equal_to: phải bằng %{count}
+      equal_to: "phải bằng %{count}"
       even: phải là số chẵn
       exclusion: được dành riêng
-      greater_than: phải lớn hơn %{count}
-      greater_than_or_equal_to: phải lớn hơn hoặc bằng %{count}
+      greater_than: "phải lớn hơn %{count}"
+      greater_than_or_equal_to: "phải lớn hơn hoặc bằng %{count}"
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
-      less_than: phải nhỏ hơn %{count}
-      less_than_or_equal_to: phải nhỏ hơn hoặc bằng %{count}
+      less_than: "phải nhỏ hơn %{count}"
+      less_than_or_equal_to: "phải nhỏ hơn hoặc bằng %{count}"
       not_a_number: không phải là số
       not_an_integer: phải là một số nguyên
       odd: phải là số lẻ
@@ -91,6 +91,9 @@ vi:
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   topic_invite:
     user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
   backup:
@@ -104,33 +107,33 @@ vi:
   reading_time: "Thời gian đọc"
   likes: "Lượt Thích"
   too_many_replies:
-    other: "Xin lỗi bạn, người dùng mới tạm thời bị giới hạn với %{count} câu trả lời trong một chủ đề."
+    other: Xin lỗi bạn, người dùng mới tạm thời bị giới hạn với %{count} câu trả lời trong một chủ đề.
   embed:
     start_discussion: "Bắt đầu cuộc thảo luận"
     continue: "Tiếp tục cuộc thảo luận"
     more_replies:
-      other: "còn %{count} câu trả lời"
+      other: còn %{count} câu trả lời
     loading: "Đang tải cuộc thảo luận"
     permalink: "Liên kết cố định"
     imported_from: "Đây là cuộc thảo luận đi kèm chủ đề gốc tại %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      other: "%{count} câu trả lời"
+      other: '%{count} câu trả lời'
   no_mentions_allowed: "Xin lỗi, bạn không thể nhắc tới thành viên khác."
   too_many_mentions:
-    other: "Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một bài viết."
+    other: Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một bài viết.
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
-    other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
+    other: Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết.
   no_images_allowed: "Xin lỗi, thành viên mới chưa được chèn hình ảnh vào bài viết."
   too_many_images:
-    other: "Xin lỗi, thành viên mới chỉ có thể chèn %{count} hình ảnh trong một bài viết."
+    other: Xin lỗi, thành viên mới chỉ có thể chèn %{count} hình ảnh trong một bài viết.
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong bài viết."
   too_many_attachments:
-    other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một bài viết."
+    other: Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một bài viết.
   no_links_allowed: "Xin lỗi, thành viên mới chưa được chèn liên kết trong bài viết."
   too_many_links:
-    other: "Xin lỗi, thành viên mới chỉ được chèn %{count} liên kết trong một bài viết."
+    other: Xin lỗi, thành viên mới chỉ được chèn %{count} liên kết trong một bài viết.
   spamming_host: "Xin lỗi bạn không thể chèn liên kết tới trang đó."
   user_is_suspended: "Người dùng đang bị treo không được phép đăng bài."
   topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
@@ -166,7 +169,6 @@ vi:
   groups:
     errors:
       can_not_modify_automatic: "Bạn không thể sửa một nhóm tự động"
-      member_already_exist: "'%{username}' đã là thành viên của nhóm"
       invalid_domain: "'%{domain}' không phải là tên miền hợp lệ."
       invalid_incoming_email: "'%{email}' không phải là email hợp lệ."
       email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
@@ -183,8 +185,8 @@ vi:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      other: "%{count} bài đăng"
-    new-topic: |
+      other: '%{count} bài đăng'
+    'new-topic': |
       Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã đăng cuộc thảo luận mới!**
 
       - Bạn có cảm thấy tiêu đề có thú vị không khi bạn đọc to nó? Đó có phải là một đoạn tóm tắt tốt không?
@@ -194,7 +196,7 @@ vi:
       - Sử dụng những từ khóa phổ biến để người khác có thể tìm thấy chủ đề của bạn dễ hơn. Để nhóm chủ đề của bạn với các chủ đề liên quan khác, hãy chọn chuyên mục cho chủ đề của mình.
 
       Xem thêm, [hướng dẫn cộng đồng của chúng tôi](/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện vào lần đầu %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Chào mừng bạn đến với %{site_name} &mdash; **cám ơn vì đã đóng góp!**
 
       - Câu trả lời của bạn có làm cuộc thảo luận tốt hơn về mặt nào đó?
@@ -215,6 +217,7 @@ vi:
       user_profile:
         bio_raw: "GIới thiệu bản thân"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -233,7 +236,6 @@ vi:
           attributes:
             hex:
               invalid: "không phải là một màu không hợp lệ"
-      <<: *errors
   user_profile:
     no_info_other: "<div class = 'missing-profile'>%{name} đã không nhập bất cứ điều gì nói về bản thân của họ </ div>"
   vip_category_name: "Phòng khách"
@@ -246,25 +248,25 @@ vi:
     title: "Chào mừng bạn đến với Phòng khách"
     body: |2
 
-      Chúc mừng! :confetti_ball:
+        Chúc mừng! :confetti_ball:
 
-      Nếu bạn có thể xem chủ đề này, bạn đã được thăng lên bậc **thường xuyên** (bậc tin tưởng 3).
+        Nếu bạn có thể xem chủ đề này, bạn đã được thăng lên bậc **thường xuyên** (bậc tin tưởng 3).
 
-      Bạn có thể &hellip;
+        Bạn có thể &hellip;
 
-      * Sửa tiêu đề của bất kì chủ đề nào
-      * Sửa chuyên mục của bất kì chủ đề nào
-      * Tất cả liên kết ở trạng thái follow ([những liên kết nofollow](http://en.wikipedia.org/wiki/Nofollow) sẽ được loại bỏ)
-      * Truy cập vào phòng khách dành riêng cho thành viên với bậc tin tưởng 3 hoặc cao hơn
-      * Ẩn bài viết spam với 1 lần đánh dấu.
+        * Sửa tiêu đề của bất kì chủ đề nào
+        * Sửa chuyên mục của bất kì chủ đề nào
+        * Tất cả liên kết ở trạng thái follow ([những liên kết nofollow](http://en.wikipedia.org/wiki/Nofollow) sẽ được loại bỏ)
+        * Truy cập vào phòng khách dành riêng cho thành viên với bậc tin tưởng 3 hoặc cao hơn
+        * Ẩn bài viết spam với 1 lần đánh dấu.
 
-      Đây là danh sách [của các thành viên thường xuyên](/badges/3/regular). Hãy chào họ đi nào.
+        Đây là danh sách [của các thành viên thường xuyên](/badges/3/regular). Hãy chào họ đi nào.
 
-      Cảm ơn vì đã trở thành một phần không thể thiếu đối với cộng đồng.
+        Cảm ơn vì đã trở thành một phần không thể thiếu đối với cộng đồng.
 
-      (Để biết thêm chi tiết về bậc tin tưởng, [xem chủ đề này][trust]. Hãy nhớ rằng bạn phải tiếp tục đạt được các yêu cầu để duy trì bậc tin tưởng của mình.)
+        (Để biết thêm chi tiết về bậc tin tưởng, [xem chủ đề này][trust]. Hãy nhớ rằng bạn phải tiếp tục đạt được các yêu cầu để duy trì bậc tin tưởng của mình.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
     replace_paragraph: "(Thay thế đoạn này với miêu tả về category mới. Bản hướng dẫn này sẽ được xuất hiện trong vùng chọn của category, vì thế nó chỉ giới hạn trong 200 kí tự. **Cho đến khi bạn chỉnh sửa phần miêu tả này hoặc tạo topic cho nó, category này sẽ không xuất hiện trên trang web.**)"
@@ -280,7 +282,7 @@ vi:
       uncategorized: "Không thể xoá mục Chưa phân loại"
       has_subcategories: "Không thể xoá chuyên mục này được vì nó có chuyên mục con."
       topic_exists:
-        other: "Không thể xoá phân loại này được bởi vì nó có %{count} chủ đề. Các chủ đề cũ là  %{topic_link}."
+        other: Không thể xoá phân loại này được bởi vì nó có %{count} chủ đề. Các chủ đề cũ là  %{topic_link}.
       topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count}  chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
@@ -296,75 +298,61 @@ vi:
       title: "người khởi xướng"
     change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name}  xuống '%{new_trust_level}'. Tuy nhiên cấp độ  tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
   rate_limiter:
-    slow_down: "Hành động này đã được thực hiện quá nhiều lần. Bạn vui lòng thử lại sau."
-    by_type:
-      first_day_replies_per_day: "Bạn vừa vượt quá số lần trả lời tối đa trong ngày đầu của thành viên mới. Xin hãy chờ %{time_left} và thử lại sau."
-      first_day_topics_per_day: "Bạn vừa đạt tới số lần mở topic tối đa cho thành viên mới. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      create_topic: "Bạn đang tạo topic quá nhanh. Vui lòng chờ %{time_left} trước khi thử lại."
-      create_post: "Bạn đang trả lời quá nhanh. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      delete_post: "Bạn đang xóa bài viết quá nhanh, hãy đợi %{time_left} trước khi thử lại."
-      topics_per_day: "Bạn vừa đạt tới số lần mở topic mới tối đa trong ngày hôm nay. Vui lòng chờ %{time_left} trước khi thử lại."
-      pms_per_day: "Bạn vừa đạt tới số lần gửi tin nhắn tối đa trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      create_like: "Bạn vừa đạt tới số lần tối đa được Like trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      create_bookmark: "Bạn vừa đạt tới số lần đánh dấu tối đa trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
-      live_post_counts: "Bạn đang yêu cầu bộ đếm bài viết quá nhanh, hãy đợi %{time_left} trước khi thử lại."
-      unsubscribe_via_email: "Bạn đã vượt quá số lần hủy nhận tin qua email của ngày hôm nay, hãy đợi %{time_left} trước khi thử lại."
-      topic_invitations_per_day: "Bạn đã vượt quá số lần mời chủ đề của ngày hôm nay, hãy đợi %{time_left} trước khi thử lại."
     hours:
-      other: "%{count} giờ"
+      other: '%{count} giờ'
     minutes:
-      other: "%{count} phút"
+      other: '%{count} phút'
     seconds:
-      other: "%{count} giây"
+      other: '%{count} giây'
   datetime:
     distance_in_words:
       half_a_minute: "< 1 phút"
       less_than_x_seconds:
-        other: "< %{count} giây"
+        other: < %{count} giây
       x_seconds:
-        other: "%{count} giây"
+        other: '%{count} giây'
       less_than_x_minutes:
-        other: "< %{count} phút"
+        other: < %{count} phút
       x_minutes:
-        other: "%{count} phút"
+        other: '%{count} phút'
       about_x_hours:
-        other: "%{count} giờ"
+        other: '%{count} giờ'
       x_days:
-        other: "%{count} ngày"
+        other: '%{count} ngày'
       about_x_months:
-        other: "%{count} tháng"
+        other: '%{count} tháng'
       x_months:
-        other: "%{count} tháng"
+        other: '%{count} tháng'
       about_x_years:
-        other: "%{count} năm"
+        other: '%{count} năm'
       over_x_years:
-        other: "> %{count} năm"
+        other: '> %{count} năm'
       almost_x_years:
-        other: "%{count} năm"
+        other: '%{count} năm'
     distance_in_words_verbose:
       half_a_minute: "ngay bây giờ"
       less_than_x_seconds:
-        other: "ngay bây giờ"
+        other: ngay bây giờ
       x_seconds:
-        other: "%{count} giây trước"
+        other: '%{count} giây trước'
       less_than_x_minutes:
-        other: "ít hơn %{count} phút trước"
+        other: ít hơn %{count} phút trước
       x_minutes:
-        other: "%{count} phút trước"
+        other: '%{count} phút trước'
       about_x_hours:
-        other: "%{count} giờ trước"
+        other: '%{count} giờ trước'
       x_days:
-        other: "%{count} ngày trước"
+        other: '%{count} ngày trước'
       about_x_months:
-        other: "khoảng %{count} tháng trước"
+        other: khoảng %{count} tháng trước
       x_months:
-        other: " %{count} tháng trước"
+        other: ' %{count} tháng trước'
       about_x_years:
-        other: "khoảng %{count} năm trước"
+        other: khoảng %{count} năm trước
       over_x_years:
-        other: "hơn %{count} năm trước"
+        other: hơn %{count} năm trước
       almost_x_years:
-        other: "gần %{count} năm trước"
+        other: gần %{count} năm trước
   password_reset:
     no_token: "Xin lỗi, liên kết đổi mật khẩu đã cũ. Chọn \"Đăng nhập\" và sử dụng chức năng \"Quên mật khẩu\" để lấy liên kết mới."
     update: 'Cập nhật mật khẩu'
@@ -404,7 +392,6 @@ vi:
       long_form: 'đánh dấu cái này không thích hợp'
     notify_user:
       title: 'Gửi tin nhắn cho @{{username}}.'
-      description: 'Tôi muốn trao đổi riêng, trực tiếp với người này về bài viết của họ.'
       long_form: 'đã nhắn tin cho thành viên'
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -502,7 +489,6 @@ vi:
       xaxis: "Ngày"
       yaxis: "Số lượng emails"
     user_to_user_private_messages:
-      title: "Người dùng tới người dùng"
       xaxis: "Ngày"
       yaxis: "Số lượng tin nhắn"
     system_private_messages:
@@ -546,7 +532,6 @@ vi:
       title: "Thu thập thông tin web"
       xaxis: "Ngày"
     page_view_total_reqs:
-      title: "Tổng số"
       xaxis: "Ngày"
       yaxis: "Tổng lượt xem trang"
     page_view_logged_in_mobile_reqs:
@@ -604,7 +589,7 @@ vi:
     failing_emails_warning: 'Có %{num_failed_jobs} email jobs thấ bại. Kiểm tra app.yml và chắc chắn rằng cấu hình máy chủ email đúng. <a href="/sidekiq/retries" target="_blank">Xem jobs thất bại ở Sidekiq</a>.'
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
     email_polling_errored_recently:
-      other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
+      other: Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết.
     bad_favicon_url: "Favicon không tải được, bạn hãy kiểm tra lại favicon_url trong <a href='/admin/site_settings'>Thiết Lập Website</a>."
     poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
     poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='/admin/site_settings/category/email'>thiết lập POP3</a>."
@@ -700,7 +685,6 @@ vi:
     version_checks: "Ping Discourse Hub để cập nhật phiên bản và hiện thông báo phiên bản mới trong bảng điều khiển quản trị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
-    invite_passthrough_hours: "Bao lâu người dùng có thể sử dụng mã lời mời trước đó để đăng nhập, theo giờ"
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
     min_password_length: "Chiều dài mật khẩu tối thiểu."
     min_admin_password_length: "Chiều dài mật khẩu tối thiểu đối với Admin."
@@ -715,7 +699,6 @@ vi:
     sso_overrides_name: "Ghi đè tên thành viên cục bộ với tên thành viên trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ."
     sso_overrides_avatar: "Ghi đè avatar thành viên cục bộ với avatar thành viên trang ngoài từ SSO. Nếu bật, bạn nên vô hiệu hóa allow_uploaded_avatars"
     sso_not_approved_url: "Chuyển những tài khoản SSO chưa duyệt tới URL này"
-    enable_local_logins: "Bật tên tài khoản và mật khẩu đăng nhập cục bộ dựa trên tài khoản. (Chú ý: bật thiết lập này để kích hoạt chức năng gửi lời mời)"
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     enable_yahoo_logins: "Cho phé chứng thực qua Yahoo"
@@ -723,8 +706,6 @@ vi:
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
     enable_twitter_logins: "Cho phép chứng thực qua Twitter, yêu cầu twitter_consumer_key và twitter_consumser_secret"
-    twitter_consumer_key: "Consumer key cho chứng thực Twitter, đăng ký tại http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret cho chứng thực Twitter, đăng ký tại http://dev.twitter.com"
     enable_instagram_logins: "Bật chứng thực Instagram, yêu cầu instagram_consumer_key và instagram_consumer_secret"
     instagram_consumer_key: "Khóa người dùng để chứng thực Instagram"
     instagram_consumer_secret: "Khóa bảo mật để chứng thực Instagram"
@@ -737,7 +718,6 @@ vi:
     allow_restore: "Cho phép phục hồi, nó có thể thay thế TẤT CẢ dữ liệu trang web! Bỏ chọn, trừ khi bạn có kế hoạch phục hồi một bản sao lưu"
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
-    backup_frequency: "Tần số sao lưu trang web, trong ngày."
     enable_s3_backups: "Tải bản sao lưu lên S3 khi hoàn tất. QUAN TRỌNG: yêu cầu chứng thực S3 đã được nhập trong cấu hình File."
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
     s3_disable_cleanup: "Vô hiệu hóa việc loại bỏ các bản sao lưu từ S3 khi lấy ra tại địa phương."
@@ -987,9 +967,9 @@ vi:
     not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những bài viết phổ biến từ lúc bạn đ."
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} bài viết đã được chia thành chủ đề mới: %{topic_link}"
+      other: '%{count} bài viết đã được chia thành chủ đề mới: %{topic_link}'
     existing_topic_moderator_post:
-      other: "%{count} bài viết đã được hợp nhất vào chủ đề: %{topic_link}"
+      other: '%{count} bài viết đã được hợp nhất vào chủ đề: %{topic_link}'
   change_owner:
     post_revision_text: "Chuyển quyền sở hữu từ %{old_user} sang %{new_user}"
     deleted_user: "xóa người dùng"
@@ -999,17 +979,17 @@ vi:
     closed_enabled: "Chủ đề này được đóng lại. Các trả lời mới sẽ không được chấp nhận."
     closed_disabled: "Chủ đề này được mở ra. Các trả lời mới sẽ được chấp nhận."
     autoclosed_enabled_days:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày, sẽ không được gửi trả lời."
+      other: Chủ đề này sẽ được tự động đóng sau %{count} ngày, sẽ không được gửi trả lời.
     autoclosed_enabled_hours:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} giờ, sẽ không được gửi trả lời."
+      other: Chủ đề này sẽ được tự động đóng sau %{count} giờ, sẽ không được gửi trả lời.
     autoclosed_enabled_minutes:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} phút, sẽ không được gửi trả lời."
+      other: Chủ đề này sẽ được tự động đóng sau %{count} phút, sẽ không được gửi trả lời.
     autoclosed_enabled_lastpost_days:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày sau lần trả lời cuối, sẽ không được gửi trả lời."
+      other: Chủ đề này sẽ được tự động đóng sau %{count} ngày sau lần trả lời cuối, sẽ không được gửi trả lời.
     autoclosed_enabled_lastpost_hours:
-      other: "Chủ đề này đã được đóng tự động %{count} giờ sau phản hồi cuối cùng. Không còn cho phép phản hồi mới."
+      other: Chủ đề này đã được đóng tự động %{count} giờ sau phản hồi cuối cùng. Không còn cho phép phản hồi mới.
     autoclosed_enabled_lastpost_minutes:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} phút sau lần trả lời cuối, sẽ không được gửi trả lời."
+      other: Chủ đề này sẽ được tự động đóng sau %{count} phút sau lần trả lời cuối, sẽ không được gửi trả lời.
     autoclosed_disabled: "Chủ đề này đã được mở. Bạn có thể bình luận"
     autoclosed_disabled_lastpost: "Chủ đề này đã được mở. Bạn có thể bình luận"
     pinned_enabled: "Chủ đề này đang được ghim, nó sẽ hiển thị ở trên cùng chuyên mục cho đến khi được BQT bỏ ghim, hoặc bởi chính thành viên cá nhân."
@@ -1058,7 +1038,7 @@ vi:
       max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
   flags_reminder:
     subject_template:
-      other: "%{count} đánh dấu đang đợi xử lý"
+      other: '%{count} đánh dấu đang đợi xử lý'
   unsubscribe_mailer:
     subject_template: "Xác nhận bạn không còn muốn nhận email cập nhật từ %{site_title}"
   invite_password_instructions:
@@ -1092,8 +1072,6 @@ vi:
       text_body_template: "File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi."
     bulk_invite_failed:
       subject_template: "Có lỗi khi thực hiện mời thành viên hàng loạt"
-    csv_export_succeeded:
-      subject_template: "Xuất dữ liệu hoàn tất"
     csv_export_failed:
       subject_template: "Xuất dữ liệu thất bại"
     email_reject_inactive_user:
@@ -1141,7 +1119,7 @@ vi:
         Nếu có một giao diện web cho các tài khoản email POP, bạn có thể cần phải đăng nhập vào website và kiểm tra các thiết lập này.
     pending_users_reminder:
       subject_template:
-        other: "%{count} thành viên đang chờ duyệt"
+        other: '%{count} thành viên đang chờ duyệt'
       text_body_template: |
         Có tài khoản mới đăng ký đang chờ duyệt (hoặc từ chối) trước khi họ có thể truy cập diễn đàn.
 
@@ -1243,22 +1221,22 @@ vi:
         Huy hiệu này được trao lần đầu tiên khi bạn chỉnh sửa một trong những bài viết của mình. Chỉnh sửa luôn luôn là một ý tưởng tốt — bạn có thể cải thiện bài viết của mình, sửa chữa những lỗi nhỏ, hoặc thêm bất cứ điều gì còn thiếu. Chỉnh sửa có thể làm cho bài viết của bạn thậm chí còn tốt hơn!
     basic_user:
       name: Cơ bản
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Các cấp</a> chức năng cần thiết của cộng đồng
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Các cấp</a> chức năng cần thiết của cộng đồng"
       long_description: |
         Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 1. Cám ơn bạn đã nán lại một chút đọc một vài chủ đề để tìm hiểu về cộng đồng của chúng tôi. Hạn chế đối với thành viên mới của bạn đã được dỡ bỏ; bạn đã được cấp tất cả các khả năng cần thiết của cộng đồng, chẳng hạn như tin nhắn cá nhân, gắn cờ, chỉnh sửa wiki, và khả năng gửi nhiều ảnh và liên kết.
     member:
       name: Thành viên
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Các cấp</a> lời mời, nhắn tin nhóm, và thêm lượt like
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Các cấp</a> lời mời, nhắn tin nhóm, và thêm lượt like"
       long_description: |
         Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 2. Cám ơn bạn đã tham gia trong một thời gian vài tuần để thực sự gia nhập cộng đồng của chúng tôi. Bây giờ bạn có thể gửi lời mời từ trang tài khoản hay tạo chủ đề cá nhân, tạo nhóm tin nhắn cá nhân, và có thể thêm một vài lượt like mỗi ngày.
     regular:
       name: Thường xuyên
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Cấp độ</a> phân hạng, đổi tên, theo đuôi liên kết, wiki, và thêm lượt like
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Cấp độ</a> phân hạng, đổi tên, theo đuôi liên kết, wiki, và thêm lượt like"
       long_description: |
         Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 3. Cám ơn bạn đã tham gia cộng đồng của chúng tôi trong thời gian vài tháng. Bây giờ bạn đã là một trong những độc giả tích cực nhất, và là một đóng góp tin cậy giúp cho cộng đồng của chúng tôi tuyệt vời hơn. Bây giờ bạn có thể phân loại và đổi tên chủ đề, tận dụng lợi thế để gắn cờ spam mạnh mẽ hơn, truy cập vào một khu vực phòng riêng, và bạn cũng có thể nhận được nhiều lượt like hơn mỗi ngày.
     leader:
       name: Lãnh đạo
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Cấp độ</a> sửa toàn trang, ghim, đóng, lưu trữ, tách và hợp nhất, và thêm lượt like
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Cấp độ</a> sửa toàn trang, ghim, đóng, lưu trữ, tách và hợp nhất, và thêm lượt like"
       long_description: |
         Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 4. Bạn là một nhà lãnh đạo trong cộng đồng theo sự lựa chọn của BQT, bạn là một ví dụ về sự tích cực cho phần còn lại của cộng đồng trong hành động và lời nói. Bạn có khả năng chỉnh sửa tất cả các bài viết, thực hiện hành động quản trị như ghim, đóng, lưu trữ, tách và hợp nhất, và bạn có thể có hàng ngàn lượt like mỗi ngày.
     welcome:
@@ -1270,7 +1248,7 @@ vi:
       name: Tự truyện
     anniversary:
       name: Ngày kỷ niệm
-      description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
+      description: "Thành viên hoạt động trong một năm, gửi bài ít nhất một lần"
       long_description: |
         Huy hiệu này được cấp khi bạn đã là thành viên của cộng đồng trong một năm và gửi ít nhất một bài trong năm đó. Cám ơn bạn đã nán lại và đóng góp cho cộng đồng của chúng tôi. Chúng tôi không thể làm điều đó mà không có bạn.
     nice_post:
@@ -1331,8 +1309,6 @@ vi:
     promoter:
       name: Người Khởi Xướng
       description: Đã mời 1 người dùng
-      long_description: |
-        Huy hiệu này được cấp khi bạn đã mời 1 người tham gia cộng đồng thông qua nút mời trên trang tài khoản của bạn, hoặc nút mời ở dưới cùng của chủ đề. Mời bạn bè tham gia thảo luận là một cách tuyệt vời để giới thiệu những người mới đến với cộng đồng, cám ơn bạn!
     campaigner:
       name: Người Vận Động
       description: Đã mời 3 người dùng
@@ -1427,6 +1403,3 @@ vi:
     initial_topic_title: Báo cáo hiệu suất website
   tags:
     title: "Thẻ"
-  activemodel:
-    errors:
-      <<: *errors

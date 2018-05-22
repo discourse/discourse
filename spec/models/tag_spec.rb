@@ -18,6 +18,28 @@ describe Tag do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
+  describe 'new' do
+    subject { Fabricate.build(:tag) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.last
+
+      expect(event[:event_name]).to eq(:tag_created)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
+  describe 'destroy' do
+    subject { Fabricate(:tag) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.destroy! }.last
+
+      expect(event[:event_name]).to eq(:tag_destroyed)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
   it "can delete tags on deleted topics" do
     topic.trash!
     expect { tag.destroy }.to change { Tag.count }.by(-1)
@@ -93,6 +115,55 @@ describe Tag do
       it "for no category arg, lists all tags" do
         expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
       end
+    end
+
+    context "with hidden tags" do
+      let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+      let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+      let!(:topic2) { Fabricate(:topic, tags: [tag, hidden_tag]) }
+
+      it "returns all tags to staff" do
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(hidden_tag.name)
+      end
+
+      it "doesn't return hidden tags to anon" do
+        expect(Tag.top_tags).to_not include(hidden_tag.name)
+      end
+
+      it "doesn't return hidden tags to non-staff" do
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:user)))).to_not include(hidden_tag.name)
+      end
+    end
+  end
+
+  describe '#pm_tags' do
+    let(:regular_user) { Fabricate(:trust_level_4) }
+    let(:admin) { Fabricate(:admin) }
+    let(:personal_message) do
+      Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: regular_user),
+        Fabricate.build(:topic_allowed_user, user: admin)
+      ])
+    end
+
+    before do
+      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
+    end
+
+    it "returns nothing if user is not a staff" do
+      expect(described_class.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
+    end
+
+    it "returns nothing if allow_staff_to_tag_pms setting is disabled" do
+      SiteSetting.allow_staff_to_tag_pms = false
+      expect(described_class.pm_tags(guardian: Guardian.new(admin)).sort).to be_empty
+    end
+
+    it "returns all pm tags if user is a staff and pm tagging is enabled" do
+      SiteSetting.allow_staff_to_tag_pms = true
+      tags = described_class.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
+      expect(tags.length).to eq(2)
+      expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
     end
   end
 

@@ -44,10 +44,9 @@
 }
 
 .private-message-glyph {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
   float: left;
-  margin-right: 5px;
 }
+
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 .topic-error {
@@ -76,8 +75,7 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 50%;
-  width: 0;
+  right: 1em;
   bottom: 0;
   z-index: z("timeline");
   &.docked {
@@ -170,6 +168,7 @@
     top: 0;
     bottom: 0;
     width: 0;
+    max-width: 145px;
     border-right: 1px solid  $tertiary-low;
     background-color:  $tertiary-low;
     transition: width .75s;

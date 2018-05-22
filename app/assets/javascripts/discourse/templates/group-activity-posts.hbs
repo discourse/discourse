@@ -1,11 +1,11 @@
-{{#load-more selector=".group-post" action=(action "loadMore")}}
-  <div class='group-posts'>
-    {{#each model as |post|}}
-      {{group-post post=post class="group-post"}}
-    {{else}}
-      <div>{{i18n emptyText}}</div>
-    {{/each}}
+{{#load-more selector=".user-stream-item" action="loadMore"}}
+  <div class="user-stream">
+      {{#each model as |post|}}
+        {{group-post post=post class="user-stream-item item"}}
+      {{else}}
+        <div>{{i18n emptyText}}</div>
+      {{/each}}
   </div>
+  {{conditional-loading-spinner condition=loading}}
 {{/load-more}}
 
-{{conditional-loading-spinner condition=loading}}

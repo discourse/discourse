@@ -9,6 +9,11 @@ export default Ember.Component.extend(bufferedRender({
   buildBuffer(buffer) {
     let notices = [];
 
+    if ($.cookie("dosp") === "1") {
+      $.cookie("dosp", null, { path: '/' });
+      notices.push([I18n.t("forced_anonymous"), 'forced-anonymous']);
+    }
+
     if (this.session.get('safe_mode')) {
       notices.push([I18n.t("safe_mode.enabled"), 'safe-mode']);
     }

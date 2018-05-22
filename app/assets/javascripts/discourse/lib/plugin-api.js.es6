@@ -24,9 +24,10 @@ import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
 import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
+import { disableNameSuppression } from 'discourse/widgets/poster-name';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.18';
+const PLUGIN_API_VERSION = '0.8.21';
 
 class PluginApi {
   constructor(version, container) {
@@ -43,20 +44,7 @@ class PluginApi {
     return this.container.lookup('current-user:main');
   }
 
-  /**
-   * Allows you to overwrite or extend methods in a class.
-   *
-   * For example:
-   *
-   * ```
-   * api.modifyClass('controller:composer', {
-   *   actions: {
-   *     newActionHere() { }
-   *   }
-   * });
-   * ```
-   **/
-  modifyClass(resolverName, changes, opts) {
+  _resolveClass(resolverName, opts) {
     opts = opts || {};
 
     if (this.container.cache[resolverName]) {
@@ -71,7 +59,48 @@ class PluginApi {
       return;
     }
 
-    klass.class.reopen(changes);
+    return klass;
+  }
+
+  /**
+   * Allows you to overwrite or extend methods in a class.
+   *
+   * For example:
+   *
+   * ```
+   * api.modifyClass('controller:composer', {
+   *   actions: {
+   *     newActionHere() { }
+   *   }
+   * });
+   * ```
+   **/
+  modifyClass(resolverName, changes, opts) {
+
+    const klass = this._resolveClass(resolverName, opts);
+    if (klass) {
+      klass.class.reopen(changes);
+    }
+    return klass;
+  }
+
+  /**
+   * Allows you to overwrite or extend static methods in a class.
+   *
+   * For example:
+   *
+   * ```
+   * api.modifyClassStatic('controller:composer', {
+   *   superFinder: function() { return []; }
+   * });
+   * ```
+   **/
+  modifyClassStatic(resolverName, changes, opts) {
+
+    const klass = this._resolveClass(resolverName, opts);
+    if (klass) {
+      klass.class.reopenClass(changes);
+    }
     return klass;
   }
 
@@ -385,6 +414,16 @@ class PluginApi {
    **/
   customUserAvatarClasses(fn) {
     registerCustomAvatarHelper(fn);
+  }
+
+  /**
+   * Allows you to disable suppression of similar username / names on posts
+   * If a user has the username bob.bob and the name Bob Bob, one of the two
+   * will be suppressed depending on prioritize_username_in_ux.
+   * This allows you to override core behavior
+   **/
+  disableNameSuppressionOnPosts() {
+    disableNameSuppression();
   }
 
   /**
@@ -712,7 +751,12 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
   const mixin = {};
-  mixin["_decorate_" + (_decorateId++)] = function($elem) { cb($elem); }.on(evt);
+  mixin["_decorate_" + (_decorateId++)] = function($elem) {
+    $elem = $elem || this.$();
+    if ($elem) {
+      cb($elem);
+    }
+  }.on(evt);
   klass.reopen(mixin);
 }
 

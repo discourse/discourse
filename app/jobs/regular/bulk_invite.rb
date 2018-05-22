@@ -17,15 +17,15 @@ module Jobs
       filename = args[:filename]
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:filename) if filename.blank?
+      csv_path = "#{Invite.base_directory}/#{filename}"
 
       # read csv file, and send out invitations
-      read_csv_file("#{Invite.base_directory}/#{filename}")
+      read_csv_file(csv_path)
     ensure
       # send notification to user regarding progress
       notify_user
 
-      # since emails have already been sent out, delete the uploaded csv file
-      FileUtils.rm_rf(csv_path) rescue nil
+      FileUtils.rm_rf(csv_path) if csv_path
     end
 
     def read_csv_file(csv_path)

@@ -12,6 +12,17 @@ EMOJI_IMAGES_PATH ||= "public/images/emoji"
 
 EMOJI_ORDERING_URL ||= "http://www.unicode.org/emoji/charts/emoji-ordering.html"
 
+# Format is search pattern => associated emojis
+# eg: "cry" => [ "sob" ]
+# for a "cry" query should return: cry and sob
+SEARCH_ALIASES ||= {
+  "sad" => [ "frowning_face", "slightly_frowning_face", "sob", "crying_cat_face", "cry" ],
+  "cry" => [ "sob" ]
+}
+
+# emoji aliases are actually created as images
+# eg: "right_anger_bubble" => [ "anger_right" ]
+# your app will physically have right_anger_bubble.png and anger_right.png
 EMOJI_ALIASES ||= {
   "right_anger_bubble" => [ "anger_right" ],
   "ballot_box" => [ "ballot_box_with_ballot" ],
@@ -508,7 +519,8 @@ def write_db_json(emojis)
   db = {
     "emojis" => emojis_without_tones,
     "tonableEmojis" => emoji_with_tones,
-    "aliases" => EMOJI_ALIASES
+    "aliases" => EMOJI_ALIASES,
+    "searchAliases" => SEARCH_ALIASES
   }
 
   File.write(EMOJI_DB_PATH, JSON.pretty_generate(db))

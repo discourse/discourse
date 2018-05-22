@@ -96,6 +96,13 @@ module Email
         html_override.gsub!("%{respond_instructions}", "")
       end
 
+      if @template_args[:participants].present?
+        participants = PrettyText.cook(@template_args[:participants], sanitize: false).html_safe
+        html_override.gsub!("%{participants}", participants)
+      else
+        html_override.gsub!("%{participants}", "")
+      end
+
       styled = Email::Styles.new(html_override, @opts)
       styled.format_basic
       if style = @opts[:style]
@@ -111,6 +118,12 @@ module Email
     def body
       body = @opts[:body]
       body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup if @opts[:template]
+
+      if @template_args[:participants].present?
+        body << "\n"
+        body << @template_args[:participants]
+        body << "\n"
+      end
 
       if @template_args[:unsubscribe_instructions].present?
         body << "\n"

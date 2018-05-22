@@ -31,9 +31,7 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: dark-light-choose($primary-low-mid, $secondary-high); }
 .private_message #topic-title .private-message-glyph { display: inline; }
-
 
 /* both blocks that appear under the standard post control buttons */
 .notification-options, .pinned-options {

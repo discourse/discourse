@@ -2,8 +2,8 @@ require 'rails_helper'
 require_dependency 'admin_user_index_query'
 
 describe AdminUserIndexQuery do
-  def real_users_count(query)
-    query.find_users_query.where('users.id > 0').count
+  def real_users(query)
+    query.find_users_query.where('users.id > 0')
   end
 
   describe "sql order" do
@@ -70,7 +70,7 @@ describe AdminUserIndexQuery do
     TrustLevel.levels.each do |key, value|
       it "#{key} returns no records" do
         query = ::AdminUserIndexQuery.new(query: key.to_s)
-        expect(real_users_count(query)).to eq(0)
+        expect(real_users(query)).to eq([])
       end
     end
 
@@ -80,9 +80,11 @@ describe AdminUserIndexQuery do
 
     TrustLevel.levels.each do |key, value|
       it "finds user with trust #{key}" do
-        Fabricate(:user, trust_level: TrustLevel.levels[key])
+        user = Fabricate(:user, trust_level: value)
+        Fabricate(:user, trust_level: value + 1)
+
         query = ::AdminUserIndexQuery.new(query: key.to_s)
-        expect(real_users_count(query)).to eq(1)
+        expect(real_users(query)).to eq([user])
       end
     end
 
@@ -146,10 +148,11 @@ describe AdminUserIndexQuery do
   describe "with an admin user" do
 
     let!(:user) { Fabricate(:user, admin: true) }
+    let!(:user2) { Fabricate(:user, admin: false) }
 
     it "finds the admin" do
       query = ::AdminUserIndexQuery.new(query: 'admins')
-      expect(real_users_count(query)).to eq(1)
+      expect(real_users(query)).to eq([user])
     end
 
   end
@@ -157,10 +160,11 @@ describe AdminUserIndexQuery do
   describe "with a moderator" do
 
     let!(:user) { Fabricate(:user, moderator: true) }
+    let!(:user2) { Fabricate(:user, moderator: false) }
 
     it "finds the moderator" do
       query = ::AdminUserIndexQuery.new(query: 'moderators')
-      expect(real_users_count(query)).to eq(1)
+      expect(real_users(query)).to eq([user])
     end
 
   end
@@ -168,10 +172,23 @@ describe AdminUserIndexQuery do
   describe "with a silenced user" do
 
     let!(:user) { Fabricate(:user, silenced_till: 1.year.from_now) }
+    let!(:user2) { Fabricate(:user) }
 
     it "finds the silenced user" do
       query = ::AdminUserIndexQuery.new(query: 'silenced')
-      expect(query.find_users.count).to eq(1)
+      expect(real_users(query)).to eq([user])
+    end
+
+  end
+
+  describe "with a staged user" do
+
+    let!(:user) { Fabricate(:user, staged: true) }
+    let!(:user2) { Fabricate(:user, staged: false) }
+
+    it "finds the staged user" do
+      query = ::AdminUserIndexQuery.new(query: 'staged')
+      expect(real_users(query)).to eq([user])
     end
 
   end

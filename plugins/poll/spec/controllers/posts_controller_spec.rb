@@ -35,6 +35,21 @@ describe PostsController do
       expect(json["polls"]["poll"]).to be
     end
 
+    it "schedules auto-close job" do
+      name = "auto_close"
+      close_date = 1.month.from_now
+
+      post :create, params: {
+        title: title, raw: "[poll name=#{name} close=#{close_date.iso8601}]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["polls"][name]["close"]).to be
+
+      expect(Jobs.scheduled_for(:close_poll, post_id: Post.last.id, poll_name: name)).to be
+    end
+
     it "should have different options" do
       post :create, params: {
         title: title, raw: "[poll]\n- A\n- A\n[/poll]"

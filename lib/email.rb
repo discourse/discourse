@@ -8,16 +8,7 @@ module Email
 
   def self.is_valid?(email)
     return false unless String === email
-
-    parsed = Mail::Address.new(email)
-
-    # Don't allow for a TLD by itself list (sam@localhost)
-    # The Grammar is: (local_part "@" domain) / local_part ... need to discard latter
-    parsed.address == email &&
-    parsed.local != parsed.address &&
-    parsed&.domain.split(".").size > 1
-  rescue Mail::Field::ParseError
-    false
+    !!(EmailValidator.email_regex =~ email)
   end
 
   def self.downcase(email)

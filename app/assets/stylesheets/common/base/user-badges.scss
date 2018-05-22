@@ -206,7 +206,7 @@
     vertical-align: top;
     flex: 0 0 32%;
     margin-right: calc(2% - 3px);
-    &:nth-of-type(3n+1) {
+    &:nth-of-type(3n) {
       margin-right: 0;
     }
     @include small-width {
@@ -228,8 +228,10 @@
   }
   &.large {
     width: 100%;
+    align-self: flex-start;
     @media screen and (min-width: 767px) {
       max-width: calc(#{$large-width} / 2);
+      margin-right: 1.5em;      
     }
     .badge-contents {
       .badge-link {
@@ -251,7 +253,6 @@
   }
 }
 
-
 .badge-groups {
   margin: 20px 0;
   color: dark-light-choose($primary-medium, $secondary-medium);
@@ -260,7 +261,13 @@
   }
 }
 
-.badge-grouping {
+.badge-title {
+  .user-content {
+    padding: 0;
+  }
+}
+
+.badge-group-list {
   margin-bottom: 1.5em;
   display: flex;
   flex-wrap: wrap;
@@ -282,24 +289,37 @@
   margin-top: 1em;
 
   .badge-grant-info {
-    display: flex;
-    align-items: center;
-    width: 100%;
     &.hidden {
       display: none;
     }
   }
+
   .grant-info-item {
     margin-bottom: 1em;
     color: dark-light-choose($primary-medium, $secondary-medium);
+    &:first-of-type {
+      margin-right: 10px;
+    }
+  }
+
+  .badge-set-title {
+    padding: 1.5em;
+    border: 1px solid $primary-low;
+    
+    .user-content {
+      padding: 0;
+      .control-group {
+        margin-bottom: 1em;
+      }
+    }
   }
 
   .badge-title .form-horizontal .controls {
-    margin-left: 20px;
+    margin-left: 0;
   }
 
-  .close-btn {
-    margin: -20px 0 0 20px;
+  .form-horizontal {
+    margin-bottom: 0;
   }
 }
 

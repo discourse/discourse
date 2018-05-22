@@ -80,14 +80,17 @@ class RateLimiter
     PERFORM_LUA_SHA = Digest::SHA1.hexdigest(PERFORM_LUA)
   end
 
-  def performed!
-    return if rate_unlimited?
+  def performed!(raise_error: true)
+    return true if rate_unlimited?
     now = Time.now.to_i
 
     if ((max || 0) <= 0) ||
        (eval_lua(PERFORM_LUA, PERFORM_LUA_SHA, [prefixed_key], [now, @secs, @max]) == 0)
 
-      raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type)
+      raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type) if raise_error
+      false
+    else
+      true
     end
   rescue Redis::CommandError => e
     if e.message =~ /READONLY/

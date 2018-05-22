@@ -14,12 +14,13 @@
     {{#if showAdminControls}}
       {{d-button action="deleteTag" icon="trash-o" class="admin-tag btn-danger"}}
       {{d-button action="renameTag" actionParam=tag icon="pencil" class="admin-tag"}}
-    {{else}}
-      {{create-topic-button
-        canCreateTopic=canCreateTopic
-        disabled=createTopicDisabled
-        action=(route-action "createTopic")}}
     {{/if}}
+
+    {{create-topic-button
+      canCreateTopic=canCreateTopic
+      disabled=createTopicDisabled
+      label=createTopicLabel
+      action=(route-action "createTopic")}}
 
     {{#if showTagFilter}}
       {{bread-crumbs categories=categories
@@ -65,7 +66,7 @@
   {{else}}
     <footer class='topic-list-bottom'>
       <h3>
-        {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}
+        {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}.
       </h3>
     </footer>
   {{/if}}

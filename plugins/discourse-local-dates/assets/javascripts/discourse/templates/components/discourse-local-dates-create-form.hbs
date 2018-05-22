@@ -1,0 +1,77 @@
+{{#d-modal-body
+  title="discourse_local_dates.create.modal_title"
+  class="discourse-local-dates-create-modal"
+  style="overflow: auto"}}
+
+  <div class="form">
+    <div class="control-group">
+      <div class="controls date-time">
+        {{date-picker-future class="date" value=date defaultDate="DD-MM-YYYY"}}
+        {{input type="time" value=time class="time"}}
+        <span>{{currentUserTimezone}}</span>
+      </div>
+    </div>
+
+    <h3>{{i18n "discourse_local_dates.create.form.recurring_title"}}</h3>
+    <div class="control-group">
+      {{#if advancedMode}}
+        <label>{{{i18n "discourse_local_dates.create.form.recurring_description"}}}</label>
+      {{/if}}
+      <div class="controls">
+        {{combo-box content=recurringOptions value=recurring none="discourse_local_dates.create.form.recurring_none"}}
+      </div>
+    </div>
+
+    {{d-button
+      class="advanced-mode-btn"
+      action=(action "advancedMode")
+      icon="cog"
+      label="discourse_local_dates.create.form.advanced_mode"}}
+
+    {{#if advancedMode}}
+      <div class="advanced-options">
+        <div class="control-group">
+          <label>
+            {{i18n "discourse_local_dates.create.form.format_description"}}
+            (<a target="_blank" rel="noopener" href="https://momentjs.com/docs/#/parsing/string-format/">?</a>)
+          </label>
+          <div class="controls">
+            {{text-field value=format}}
+          </div>
+        </div>
+        <div class="control-group">
+          <ul class="formats">
+            {{#each formats as |format|}}
+              <li class="format">
+                <a href {{action "fillFormat" format}}>{{format}}</a>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+
+        <h3>{{i18n "discourse_local_dates.create.form.timezones_title"}}</h3>
+        <div class="control-group">
+          <label>{{i18n "discourse_local_dates.create.form.timezones_description"}}</label>
+          <div class="controls">
+            {{multi-select allowAny=false maximum=5 content=allTimezones values=timezones}}
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+{{/d-modal-body}}
+
+<div class="modal-footer discourse-local-dates-create-modal-footer">
+
+  {{#if validDate}}
+    {{d-button class="btn"
+      action="save"
+      label="discourse_local_dates.create.form.insert"}}
+  {{else}}
+    <span class="validation-error">{{i18n "discourse_local_dates.create.form.invalid_date"}}</span>
+  {{/if}}
+
+  <a href {{action "cancel"}}>
+    {{i18n 'cancel'}}
+  </a>
+</div>

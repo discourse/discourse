@@ -55,7 +55,7 @@ export default Ember.Component.extend({
     },
 
     removeMember(member) {
-      const message = I18n.t("groups.edit.delete_member_confirm",{
+      const message = I18n.t("groups.manage.delete_member_confirm",{
         username: member.get("username"),
         group: this.get("model.name")
       });

@@ -52,7 +52,19 @@ describe SiteSetting do
   end
 
   describe "top_menu" do
-    before { SiteSetting.top_menu = 'one,-nope|two|three,-not|four,ignored|category/xyz|latest' }
+    describe "validations" do
+      it "always demands latest" do
+        expect do
+          SiteSetting.top_menu = 'categories'
+        end.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "does not allow random text" do
+        expect do
+          SiteSetting.top_menu = 'latest|random'
+        end.to raise_error(Discourse::InvalidParameters)
+      end
+    end
 
     describe "items" do
       let(:items) { SiteSetting.top_menu_items }
@@ -64,7 +76,8 @@ describe SiteSetting do
 
     describe "homepage" do
       it "has homepage" do
-        expect(SiteSetting.homepage).to eq('one')
+        SiteSetting.top_menu = "bookmarks|latest"
+        expect(SiteSetting.homepage).to eq('bookmarks')
       end
     end
   end
@@ -119,7 +132,22 @@ describe SiteSetting do
     it "returns https when using ssl" do
       expect(SiteSetting.scheme).to eq("https")
     end
+  end
 
+  context "shared_drafts_enabled?" do
+    it "returns false by default" do
+      expect(SiteSetting.shared_drafts_enabled?).to eq(false)
+    end
+
+    it "returns false when the category is uncategorized" do
+      SiteSetting.shared_drafts_category = SiteSetting.uncategorized_category_id
+      expect(SiteSetting.shared_drafts_enabled?).to eq(false)
+    end
+
+    it "returns true when the category is valid" do
+      SiteSetting.shared_drafts_category = Fabricate(:category).id
+      expect(SiteSetting.shared_drafts_enabled?).to eq(true)
+    end
   end
 
   context 'deprecated site settings' do

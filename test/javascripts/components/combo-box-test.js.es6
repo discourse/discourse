@@ -192,3 +192,20 @@ componentTest('with empty string as value', {
     });
   }
 });
+
+componentTest('with noneLabel', {
+  template: '{{combo-box content=items allowAutoSelectFirst=false noneLabel=noneLabel}}',
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = {none: 'none'};
+    this.set('items', ['evil', 'trout', 'hat']);
+    this.set('noneLabel', 'test.none');
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => {
+      assert.equal(this.get('subject').header().name(), 'none', 'it displays noneLabel as the header name');
+    });
+  }
+});

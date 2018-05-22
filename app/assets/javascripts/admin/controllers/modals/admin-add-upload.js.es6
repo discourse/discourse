@@ -3,8 +3,30 @@ import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
+const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
+
+const SCSS_VARIABLE_NAMES = [
+  // common/foundation/colors.scss
+  "primary", "secondary", "tertiary", "quaternary", "header_background",
+  "header_primary", "highlight", "danger", "success", "love",
+  // common/foundation/math.scss
+  "E", "PI", "LN2", "SQRT2",
+  // common/foundation/variables.scss
+  "small-width", "medium-width", "large-width",
+  "google", "instagram", "facebook", "cas", "twitter", "yahoo", "github",
+  "base-font-size", "base-line-height", "base-font-family",
+  "primary-low", "primary-medium",
+  "secondary-low", "secondary-medium",
+  "tertiary-low", "quaternary-low",
+  "highlight-low", "highlight-medium",
+  "danger-low", "danger-medium",
+  "success-low", "love-low",
+];
+
 export default Ember.Controller.extend(ModalFunctionality, {
   adminCustomizeThemesShow: Ember.inject.controller(),
+
+  uploadUrl: '/admin/themes/upload_asset',
 
   onShow() {
     this.set('name', null);
@@ -14,9 +36,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
   enabled: Em.computed.and('nameValid', 'fileSelected'),
   disabled: Em.computed.not('enabled'),
 
-  @computed('name')
-  nameValid(name) {
-    return name && name.match(/^[a-z_][a-z0-9_-]*$/i);
+  @computed('name', 'adminCustomizeThemesShow.model.theme_fields')
+  errorMessage(name, themeFields) {
+    if (name) {
+      if (!name.match(/^[a-z_][a-z0-9_-]*$/i)) {
+        return I18n.t("admin.customize.theme.variable_name_error.invalid_syntax");
+      } else if (SCSS_VARIABLE_NAMES.includes(name.toLowerCase())) {
+        return I18n.t("admin.customize.theme.variable_name_error.no_overwrite");
+      } else if (themeFields.some(tf => THEME_FIELD_VARIABLE_TYPE_IDS.includes(tf.type_id) && name === tf.name)) {
+        return I18n.t("admin.customize.theme.variable_name_error.must_be_unique");
+      }
+    }
+
+    return null;
+  },
+
+  @computed('errorMessage')
+  nameValid(errorMessage) {
+    return null === errorMessage;
   },
 
   @observes('name')
@@ -48,7 +85,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       options.data.append('file', file);
 
-      ajax('/admin/themes/upload_asset', options).then(result => {
+      ajax(this.get('uploadUrl'), options).then(result => {
         const upload = {
           upload_id: result.upload_id,
           name: this.get('name'),

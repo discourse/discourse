@@ -145,7 +145,7 @@ en:
 
     action_codes:
       public_topic: "made this topic public %{when}"
-      private_topic: "made this topic private %{when}"
+      private_topic: "made this topic a personal message %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       invited_group: "invited %{who} %{when}"
@@ -179,8 +179,8 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
-    bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
+    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when %{min_users} users have joined."
+    bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
 
     themes:
       default_description: "Default"
@@ -260,8 +260,8 @@ en:
       our_moderators: "Our Moderators"
       stat:
         all_time: "All Time"
-        last_7_days: "Last 7 Days"
-        last_30_days: "Last 30 Days"
+        last_7_days: "Last 7"
+        last_30_days: "Last 30"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
@@ -286,18 +286,17 @@ en:
       confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
 
     topic_count_latest:
-      one: "{{count}} new or updated topic."
-      other: "{{count}} new or updated topics."
+      one: "See {{count}} new or updated topic"
+      other: "See {{count}} new or updated topics"
 
     topic_count_unread:
-      one: "{{count}} unread topic."
-      other: "{{count}} unread topics."
+      one: "See {{count}} unread topic"
+      other: "See {{count}} unread topics"
 
     topic_count_new:
-      one: "{{count}} new topic."
-      other: "{{count}} new topics."
+      one: "See {{count}} new topic"
+      other: "See {{count}} new topics"
 
-    click_to_show: "Click to show."
     preview: "preview"
     cancel: "cancel"
 
@@ -314,6 +313,7 @@ en:
 
     enable: "Enable"
     disable: "Disable"
+    continue: "Continue"
     undo: "Undo"
     revert: "Revert"
     failed: "Failed"
@@ -403,22 +403,35 @@ en:
         remove_user_as_group_owner: "Revoke owner"
 
     groups:
-      logs:
-        title: "Logs"
-        when: "When"
-        action: "Action"
-        acting_user: "Acting user"
-        target_user: "Target user"
-        subject: "Subject"
-        details: "Details"
-        from: "From"
-        to: "To"
-      edit:
-        title: 'Edit Group'
+      add_members:
+        title: "Add Members"
+        description: "Manage the membership of this group"
+        usernames: "Usernames"
+      manage:
+        title: 'Manage'
+        name: 'Name'
         full_name: 'Full Name'
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
-      name_placeholder: "Group name, no spaces, same as username rule"
+        profile:
+          title: Profile
+        interaction:
+          title: Interaction
+          posting: Posting
+          notification: Notification
+        membership:
+          title: Membership
+          access: Access
+        logs:
+          title: "Logs"
+          when: "When"
+          action: "Action"
+          acting_user: "Acting user"
+          target_user: "Target user"
+          subject: "Subject"
+          details: "Details"
+          from: "From"
+          to: "To"
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
@@ -429,45 +442,63 @@ en:
         topics: "There are no topics by members of this group."
         logs: "There are no logs for this group."
       add: "Add"
-      join: "Join Group"
-      leave: "Leave Group"
-      request: "Request to Join Group"
+      join: "Join"
+      leave: "Leave"
+      request: "Request"
       message: "Message"
-      automatic_group: Automatic Group
-      closed_group: Closed Group
-      is_group_user: "You are a member of this group"
       allow_membership_requests: "Allow users to send membership requests to group owners"
       membership_request_template: "Custom template to display to users when sending a membership request"
       membership_request:
         submit: "Submit Request"
         title: "Request to join @%{group_name}"
         reason: "Let the group owners know why you belong in this group"
-
       membership: "Membership"
       name: "Name"
-      user_count: "Number of Members"
+      group_name: "Group name"
+      user_count: "Users"
       bio: "About Group"
       selector_placeholder: "enter username"
       owner: "owner"
       index:
         title: "Groups"
+        all: "All Groups"
         empty: "There are no visible groups."
+        filter: "Filter by group type"
+        all_groups: "All Groups"
+        owner_groups: "Groups I am an owner of"
+        close_groups: "Closed Groups"
+        automatic_groups: "Automatic Groups"
+        automatic: "Automatic"
+        closed: "Closed"
+        public: "Public"
+        private: "Private"
+        public_groups: "Public Groups"
+        automatic_group: Automatic Group
+        close_group: Close Group
+        my_groups: "My Groups"
+        group_type: "Group type"
+        is_group_user: "Member"
+        is_group_owner: "Owner"
       title:
         one: "Group"
         other: "Groups"
       activity: "Activity"
-      members: "Members"
+      members:
+        title: "Members"
+        filter_placeholder_admin: "username or email"
+        filter_placeholder: "username"
+        remove_member: "Remove Member"
+        remove_member_description: "Remove <b>%{username}</b> from this group"
+        make_owner: "Make Owner"
+        make_owner_description: "Make <b>%{username}</b> an owner of this group"
+        remove_owner: "Remove as Owner"
+        remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
+        owner: "Owner"
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
-      visibility_levels:
-        title: "Who can see this group?"
-        public: "Everyone"
-        members: "Group owners, members and admins"
-        staff: "Group owners and staff"
-        owners: "Group owners and admins"
       alias_levels:
         mentionable: "Who can @mention this group?"
         messageable: "Who can message this group?"
@@ -476,9 +507,6 @@ en:
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
         everyone: "Everyone"
-      trust_levels:
-        title: "Trust level automatically granted to members when they're added:"
-        none: "None"
       notifications:
         watching:
           title: "Watching"
@@ -503,7 +531,6 @@ en:
       flair_color_placeholder: "(Optional) Hex color value"
       flair_preview_icon: "Preview Icon"
       flair_preview_image: "Preview Image"
-      flair_note: "Note: Flair will only show for a user's primary group."
 
     user_action_groups:
       "1": "Likes Given"
@@ -582,6 +609,7 @@ en:
       activity_stream: "Activity"
       preferences: "Preferences"
       expand_profile: "Expand"
+      collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
       bio: "About me"
       invited_by: "Invited By"
@@ -589,7 +617,7 @@ en:
       notifications: "Notifications"
       statistics: "Stats"
       desktop_notifications:
-        label: "Desktop Notifications"
+        label: "Live Notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn On Notifications"
         perm_denied_btn: "Permission Denied"
@@ -599,6 +627,7 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
+        consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: 'Dismiss'
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
@@ -652,7 +681,7 @@ en:
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
-      delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
+      delete_yourself_not_allowed: "Please contact a staff member if you wish your account to be deleted."
       unread_message_count: "Messages"
       admin_delete: "Delete"
       users: "Users"
@@ -688,6 +717,7 @@ en:
         move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
+        tags: "Tags"
 
       preferences_nav:
         account: "Account"
@@ -710,25 +740,17 @@ en:
 
       second_factor:
         title: "Two Factor Authentication"
-        disable: "Disable Two Factor Authentication"
-        enabled_status: "Status: On"
-        disabled_status: "Status: Off"
-        confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication"
+        disable: "Disable two factor authentication"
+        enable: "for enhanced account security"
+        confirm_password_description: "Please confirm your password to continue"
+        label: "Code"
         enable_description: |
-          To complete Two Factor Authentication setup, scan the following QR code
-          in one of the supported apps
-          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android and iOS</a>,
-          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
-          and submit the generated Two Factor Authentication code.
-        disable_description: "Enter the authentication code from your app"
-        show_key_description: "Or enter the secret key manually."
-        info_prompt: "What is Two Factor Authentication?"
+          Scan this QR code in a supported app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) and enter your authentication code.
+        disable_description: "Please enter the authentication code from your app"
+        show_key_description: "Enter manually"
         extended_description: |
-          Two Factor Authentication adds an extra security step to logging in by
-          requiring a one-time token in addition to your password. These tokens
-          can be generated on Android and iOS by <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
-          and on Windows Phone by <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
-        oauth_enabled_warning: "Note that logins via social methods will be disabled once Two Factor Authentication has been enabled on your account."
+          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, and <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> devices.
+        oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
 
       change_about:
         title: "Change About Me"
@@ -813,8 +835,6 @@ en:
       created: "Joined"
       log_out: "Log Out"
       location: "Location"
-      card_badge:
-        title: "User Card Badge"
 
       website: "Web Site"
       email_settings: "Email"
@@ -977,6 +997,7 @@ en:
         header_title: "profile, messages, bookmarks and preferences"
       title:
         title: "Title"
+        none: "(none)"
 
       filters:
         all: "All"
@@ -1108,12 +1129,12 @@ en:
       button_help: "Help"
 
     email_login:
-      link_label: "Email me a magic link"
+      link_label: "Email me a login link"
       button_label: "with email"
-      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
-      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
-      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
-      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
+      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
+      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a login link shortly."
+      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
+      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a login link shortly."
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
 
@@ -1121,9 +1142,8 @@ en:
       title: "Log In"
       username: "User"
       password: "Password"
-      second_factor_title: "Two Factor Authentication Required"
-      second_factor_description: "Enter the authentication code from your app."
-      second_factor_label: "Code"
+      second_factor_title: "Two Factor Authentication"
+      second_factor_description: "Please enter the authentication code from your app:"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -1141,7 +1161,7 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
-      omniauth_disallow_totp: "Your account has 2FA enabled. Please login with your password."
+      omniauth_disallow_totp: "Your account has two factor authentication enabled. Please log in with your password."
 
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
@@ -1202,18 +1222,27 @@ en:
       categories_only: "Categories Only"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
+      categories_and_top_topics: "Categories and Top Topics"
 
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
 
+    conditional_loading_section:
+      loading: Loading...
+
     select_kit:
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...
       create: "Create: '{{content}}'"
-      max_content_reached: "You can only select {{count}} items."
+      max_content_reached:
+        one: "You can only select {{count}} item."
+        other: "You can only select {{count}} items."
+      min_content_not_reached:
+        one: "Select at least {{count}} item."
+        other: "Select at least {{count}} items."
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -1232,6 +1261,14 @@ en:
       medium_tone: Medium skin tone
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
+
+    shared_drafts:
+      title: "Shared Drafts"
+      notice: "This topic is only visible to those who can see the <b>{{category}}</b> category."
+      destination_category: "Destination Category"
+      publish: "Publish Shared Draft"
+      confirm_publish: "Are you sure you want to publish this draft?"
+      publishing: "Publishing Topic..."
 
     composer:
       emoji: "Emoji :)"
@@ -1268,6 +1305,7 @@ en:
         post_length: "Post must be at least {{min}} characters"
         try_like: 'Have you tried the <i class="fa fa-heart"></i> button?'
         category_missing: "You must choose a category"
+        tags_missing: "You must choose at least {{count}} tags"
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
@@ -1277,6 +1315,8 @@ en:
       create_topic: "Create Topic"
       create_pm: "Message"
       create_whisper: "Whisper"
+      create_shared_draft: "Create Shared Draft"
+      edit_shared_draft: "Edit Shared Draft"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
@@ -1288,6 +1328,7 @@ en:
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
+      reply_placeholder_choose_category: "You must select a category before typing here."
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
@@ -1345,10 +1386,13 @@ en:
           label: Reply to topic
           desc: Reply to the topic, not any specific post
         toggle_whisper:
-          label: Toggle whipser
+          label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
+        shared_draft:
+          label: "Shared Draft"
+          desc: "Draft a topic that will only be visible to staff"
 
     notifications:
       tooltip:
@@ -1388,23 +1432,6 @@ en:
           one: "{{count}} message in your {{group_name}} inbox"
           other: "{{count}} messages in your {{group_name}} inbox"
 
-      alt:
-        mentioned: "Mentioned by"
-        quoted: "Quoted by"
-        replied: "Replied"
-        posted: "Post by"
-        edited: "Edit your post by"
-        liked: "Liked your post"
-        private_message: "Personal message from"
-        invited_to_private_message: "Invited to a personal message from"
-        invited_to_topic: "Invited to a topic from"
-        invitee_accepted: "Invite accepted by"
-        moved_post: "Your post was moved by"
-        linked: "Link to your post"
-        granted_badge: "Badge granted"
-        group_message_summary: "Messages in group inbox"
-        topic_reminder: "A reminder"
-
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
@@ -1413,6 +1440,8 @@ en:
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
         private_message: '{{username}} sent you a personal message in "{{topic}}" - {{site_title}}'
         linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
+        confirm_title: 'Notifications enabled - %{site_title}'
+        confirm_body: 'Success! Notifications have been enabled.'
 
     upload_selector:
       title: "Add an image"
@@ -1441,9 +1470,10 @@ en:
       clear_all: "Clear All"
       too_short: "Your search term is too short."
       result_count:
-        one: "1 result for <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} results for <span class='term'>{{term}}</span>"
+        one: "<span>1 result for</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} results for</span><span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
+      full_page_title: "search topics or posts"
       no_results: "No results found."
       no_more_results: "No more results found."
       searching: "Searching ..."
@@ -1570,14 +1600,12 @@ en:
         search: "There are no more search results."
 
     topic:
-      unsubscribe:
-        stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
-        change_notification_state: "Your current notification state is "
       filter_to:
         one: "1 post in topic"
         other: "{{count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
+      open_draft: "Open Draft"
       private_message: 'Start a message'
       archive_message:
         help: 'Move message to your archive'
@@ -1911,7 +1939,7 @@ en:
         instructions:
           one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
           other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
-        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively."
 
       change_timestamp:
         title: "Change Timestamp..."
@@ -2243,6 +2271,7 @@ en:
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
+      minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
       notifications:
         watching:
@@ -2608,19 +2637,19 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+          description: "You will automatically watch all topics with this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic in this tag."
+          description: "You will only be notified of the first post in each new topic with this tag."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all topics in this tag. A count of unread and new posts will appear next to the topic."
+          description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
-          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
+          description: "You will not be notified of anything about new topics with this tag, and they will not appear on your unread tab."
 
       groups:
         title: "Tag Groups"
@@ -2635,6 +2664,9 @@ en:
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
+        everyone_can_use: "Tags can be used by everyone"
+        usable_only_by_staff: "Tags are visible to everyone, but only staff can use them"
+        visible_only_to_staff: "Tags are visible only to staff"
 
       topics:
         none:
@@ -2665,9 +2697,10 @@ en:
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
+    forced_anonymous: "Due to extreme load, this is temporarily being shown to everyone as a logged out user would see it."
+
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
-
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -2680,6 +2713,8 @@ en:
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard last updated:"
+        find_old: "Looking for the old dashboard?"
+        old_link: "visit it here"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
@@ -2704,17 +2739,22 @@ en:
         space_free: "{{size}} free"
         uploads: "uploads"
         backups: "backups"
+        lastest_backup: "Latest: %{date}"
         traffic_short: "Traffic"
         traffic: "Application web requests"
         page_views: "Pageviews"
         page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
+        community_health: Community health
+        whats_new_in_discourse: What’s new in Discourse?
+        activity_metrics: Activity Metrics
 
         reports:
+          trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           today: "Today"
           yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
+          last_7_days: "Last 7"
+          last_30_days: "Last 30"
           all_time: "All Time"
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
@@ -2725,6 +2765,10 @@ en:
           start_date: "Start Date"
           end_date: "End Date"
           groups: "All groups"
+          disabled: "This report is disabled"
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Search logs</a>'
+            disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
 
       commits:
         latest_changes: "Latest changes: please update often!"
@@ -2770,6 +2814,12 @@ en:
         more: "(more replies...)"
         suspend_user: "Suspend User"
         suspend_user_title: "Suspend user for this post"
+        replies:
+          one: "[1 reply]"
+          other: "[%{count} replies]"
+        delete_replies:
+          one: "Also delete the %{count} reply to this post?"
+          other: "Also delete the %{count} replies to this post?"
 
         dispositions:
           agreed: "agreed"
@@ -2796,6 +2846,7 @@ en:
           type: "Type"
           users: "Users"
           last_flagged: "Last Flagged"
+          no_results: "There are no flagged topics."
 
         short_names:
           off_topic: "off-topic"
@@ -2805,12 +2856,48 @@ en:
           notify_moderators: "custom"
 
       groups:
+        new:
+          title: "New Group"
+          create: "Create"
+          name:
+            too_short: "Group name is too short"
+            too_long: "Group name is too long"
+            checking: "Checking group name availability..."
+            available: "Group name is available"
+            not_available: "Group name is not available"
+            blank: "Group name cannot be blank"
+        bulk_add:
+          title: "Bulk Add to Group"
+          complete_users_not_added: "These users were not added (make sure they have an account):"
+          paste: "Paste a list of usernames or emails, one per line:"
+        add_members:
+          as_owner: "Set user(s) as owner(s) of this group"
+        manage:
+          interaction:
+            email: Email
+            incoming_email: "Custom incoming email address"
+            incoming_email_placeholder: "enter email address"
+            visibility: Visibility
+            visibility_levels:
+              title: "Who can see this group?"
+              public: "Everyone"
+              members: "Group owners, members and admins"
+              staff: "Group owners and staff"
+              owners: "Group owners and admins"
+          membership:
+            automatic: Automatic
+            trust_level: Trust Level
+            trust_levels_title: "Trust level automatically granted to members when they're added:"
+            trust_levels_none: "None"
+            automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
+            automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+            primary_group: "Automatically set as primary group"
+        name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
         no_primary: "(no primary group)"
         title: "Groups"
         edit: "Edit Groups"
         refresh: "Refresh"
-        new: "New"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
@@ -2818,22 +2905,12 @@ en:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
-        add_members: "Add members"
         custom: "Custom"
-        bulk_complete: "The users have been added to the group."
-        bulk_complete_users_not_added: "These users were not added (make sure they have an account):"
-        bulk: "Bulk Add to Group"
-        bulk_paste: "Paste a list of usernames or emails, one per line:"
-        bulk_select: "(select a group)"
         automatic: "Automatic"
-        automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-        automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
-        default_title: "Default title for all users in this group"
-        primary_group: "Automatically set as primary group"
+        default_title: "Default title"
+        default_title_description: "will be applied to all users in the group"
         group_owners: Owners
         add_owners: Add owners
-        incoming_email: "Custom incoming email address"
-        incoming_email_placeholder: "enter email address"
         none_selected: "Select a group to get started"
         no_custom_groups: "Create a new custom group"
 
@@ -2893,6 +2970,18 @@ en:
         user_event:
           name: "User Event"
           details: "When a user logs in, logs out, is created, approved or updated."
+        group_event:
+          name: "Group Event"
+          details: "When a group is created, updated or destroyed."
+        category_event:
+          name: "Category Event"
+          details: "When a category is created, updated or destroyed."
+        tag_event:
+          name: "Tag Event"
+          details: "When a tag is created, updated or destroyed."
+        flag_event:
+          name: "Flag Event"
+          details: "When a flag is created, agreed, disagreed or ignored."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -2934,6 +3023,7 @@ en:
         change_settings: "Change Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
+        official: "Official Plugin"
 
       backups:
         title: "Backups"
@@ -3044,6 +3134,7 @@ en:
           common: "Common"
           desktop: "Desktop"
           mobile: "Mobile"
+          settings: "Settings"
           preview: "Preview"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
@@ -3056,6 +3147,11 @@ en:
           add_upload: "Add Upload"
           upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
           variable_name: "SCSS var name:"
+          variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter. Must be unique."
+          variable_name_error:
+            invalid_syntax: "Invalid variable name. Only alphanumeric allowed. Must start with a letter."
+            no_overwrite: "Invalid variable name. Must not overwrite an existing variable."
+            must_be_unique: "Invalid variable name. Must be unique."
           upload: "Upload"
           child_themes_check: "Theme includes other child themes"
           css_html: "Custom CSS/HTML"
@@ -3064,6 +3160,8 @@ en:
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
           import_file_tip: ".dcstyle.json file containing theme"
+          is_private: "Theme is in a private git repository"
+          public_key: "Grant the following public key access to the repo:"
           about_theme: "About Theme"
           license: "License"
           component_of: "Theme is a component of:"
@@ -3072,6 +3170,8 @@ en:
           updating: "Updating..."
           up_to_date: "Theme is up-to-date, last checked:"
           add: "Add"
+          theme_settings: "Theme Settings"
+          no_settings: "This theme has no settings."
           commits_behind:
             one: "Theme is 1 commit behind!"
             other: "Theme is {{count}} commits behind!"
@@ -3096,6 +3196,9 @@ en:
           body_tag:
             text: "</body>"
             title: "HTML that will be inserted before the </body> tag"
+          yaml:
+            text: "YAML"
+            title: "Define theme settings in YAML format"
         colors:
           select_base:
             title: "Select base color scheme"
@@ -3264,6 +3367,7 @@ en:
             revoke_badge: "revoke badge"
             check_email: "check email"
             delete_topic: "delete topic"
+            recover_topic: "un-delete topic"
             delete_post: "delete post"
             impersonate: "impersonate"
             anonymize_user: "anonymize user"
@@ -3291,9 +3395,15 @@ en:
             reviewed_post: "reviewed post"
             custom_staff: "plugin custom action"
             post_locked: "post locked"
+            post_edit: "post edit"
             post_unlocked: "post unlocked"
             check_personal_message: "check personal message"
             disabled_second_factor: "disable Two Factor Authentication"
+            topic_published: "topic published"
+            post_approved: "post approved"
+            create_badge: "create badge"
+            change_badge: "change badge"
+            delete_badge: "delete badge"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3364,6 +3474,7 @@ en:
           placeholder_regexp: "regular expression"
           add: 'Add'
           success: 'Success'
+          exists: 'Already exists'
           upload: "Upload"
           upload_successful: "Upload successful. Words have been added."
 
@@ -3389,6 +3500,7 @@ en:
           suspended: 'Suspended'
           silenced: 'Silenced'
           suspect: 'Suspect'
+          staged: 'Staged'
         approved: "Approved?"
         approved_selected:
           one: "approve user"
@@ -3411,6 +3523,7 @@ en:
           silenced: 'Silenced Users'
           suspended: 'Suspended Users'
           suspect: 'Suspect Users'
+          staged: 'Staged Users'
         reject_successful:
           one: "Successfully rejected 1 user."
           other: "Successfully rejected %{count} users."
@@ -3515,6 +3628,7 @@ en:
         delete_confirm: "Are you SURE you want to delete this user? This is permanent!"
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
+        deleting_user: "Deleting user..."
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"
@@ -3570,6 +3684,8 @@ en:
           likes_received: "Likes Received"
           likes_received_days: "Likes Received: unique days"
           likes_received_users: "Likes Received: unique users"
+          suspended: "Suspended (all time)"
+          silenced: "Silenced (all time)"
           qualifies: "Qualifies for trust level 3."
           does_not_qualify: "Doesn't qualify for trust level 3."
           will_be_promoted: "Will be promoted soon."
@@ -3632,12 +3748,14 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: 'Only show overridden'
 
-      site_settings:
+      settings: # used by theme and site settings
         show_overriden: 'Only show overridden'
-        title: 'Settings'
         reset: 'reset'
         none: 'none'
+      site_settings:
+        title: 'Settings'
         no_results: "No results found."
+        more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"

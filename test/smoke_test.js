@@ -14,8 +14,8 @@ const path = require('path');
 
 (async () => {
   const browser = await puppeteer.launch({
-    // headless: false,
-    // slowMo: 10,
+    // when debugging localy setting headless to "false" can be very helpful
+    headless: true,
     args: ["--disable-local-storage"]
   });
   const page = await browser.newPage();
@@ -52,6 +52,13 @@ const path = require('path');
   };
 
   page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
+
+  page.on('response', resp => {
+    if (resp.status !== 200) {
+      console.log("FAILED HTTP REQUEST TO " + resp.url + " Status is: " + resp.status);
+    }
+    return resp;
+  });
 
   if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
     await exec("basic authentication", () => {

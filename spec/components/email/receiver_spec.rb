@@ -78,6 +78,13 @@ describe Email::Receiver do
     expect { process(:bad_destinations) }.to raise_error(Email::Receiver::BadDestinationAddress)
   end
 
+  it "raises an OldDestinationError when notification is too old" do
+    topic = Fabricate(:topic, id: 424242)
+    post  = Fabricate(:post, topic: topic, id: 123456, created_at: 1.year.ago)
+
+    expect { process(:old_destination) }.to raise_error(Email::Receiver::OldDestinationError)
+  end
+
   it "raises a BouncerEmailError when email is a bounced email" do
     expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
     expect(IncomingEmail.last.is_bounce).to eq(true)
@@ -100,17 +107,12 @@ describe Email::Receiver do
     let!(:email_log) { Fabricate(:email_log, user: user, bounce_key: bounce_key) }
     let!(:email_log_2) { Fabricate(:email_log, user: user, bounce_key: bounce_key_2) }
 
-    before do
-      $redis.del("bounce_score:#{user.email}:#{Date.today}")
-      $redis.del("bounce_score:#{user.email}:#{2.days.from_now.to_date}")
-    end
-
     it "deals with soft bounces" do
       expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(1)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
 
     it "deals with hard bounces" do
@@ -118,15 +120,28 @@ describe Email::Receiver do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(2)
-
-      freeze_time 2.days.from_now
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
 
       expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
 
       email_log_2.reload
-      expect(email_log_2.user.user_stat.bounce_score).to eq(4)
+      expect(email_log_2.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score * 2)
       expect(email_log_2.bounced).to eq(true)
+    end
+
+    it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
+      expect(user.active).to eq(true)
+
+      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold_deactivate - 1
+      user.user_stat.save!
+
+      expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      user.reload
+      email_log.reload
+
+      expect(email_log.bounced).to eq(true)
+      expect(user.active).to eq(false)
     end
 
   end
@@ -183,7 +198,7 @@ describe Email::Receiver do
 
     it "works" do
       expect { process(:text_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a text reply :)")
+      expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
       expect(topic.posts.last.via_email).to eq(true)
       expect(topic.posts.last.cooked).not_to match(/<br/)
 
@@ -233,7 +248,7 @@ describe Email::Receiver do
     it "uses text when prefer_html site setting is enabled but no html is available" do
       SiteSetting.incoming_email_prefer_html = true
       expect { process(:text_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a text reply :)")
+      expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
     end
 
     it "removes the 'on <date>, <contact> wrote' quoting line" do
@@ -412,7 +427,7 @@ describe Email::Receiver do
       expect(topic.posts.last.created_at).to be_within(1.minute).of(DateTime.now)
     end
 
-    it "accepts emails with wrong reply key if the system knows about the forwareded email" do
+    it "accepts emails with wrong reply key if the system knows about the forwarded email" do
       Fabricate(:incoming_email,
                 raw: <<~RAW,
                   Return-Path: <discourse@bar.com>
@@ -549,6 +564,27 @@ describe Email::Receiver do
 
     end
 
+    context "when message sent to a group has no key and find_related_post_with_key is enabled" do
+      let!(:topic) do
+        SiteSetting.find_related_post_with_key = true
+        process(:email_reply_1)
+        Topic.last
+      end
+
+      it "creates a reply when the sender and referenced message id are known" do
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+      end
+
+      it "creates a new topic when the sender is not known" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+
+      it "creates a new topic when the referenced message id is not known" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(message_id: '99@foo.bar.mail')
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+    end
   end
 
   context "new topic in a category" do
@@ -885,5 +921,13 @@ describe Email::Receiver do
         expect { process(:mailinglist_reply) }.to change { topic.posts.count }
       end
     end
+  end
+
+  it "tries to fix unparsable email addresses in To and CC headers" do
+    expect { process(:unparsable_email_addresses) }.to raise_error(Email::Receiver::BadDestinationAddress)
+
+    email = IncomingEmail.last
+    expect(email.to_addresses).to eq("foo@bar.com")
+    expect(email.cc_addresses).to eq("bob@example.com;carol@example.com")
   end
 end

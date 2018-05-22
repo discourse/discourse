@@ -36,6 +36,7 @@ class AnonymousShadowCreator
       shadow = User.create!(
         password: SecureRandom.hex,
         email: "#{SecureRandom.hex}@anon.#{Discourse.current_hostname}",
+        skip_email_validation: true,
         name: username, # prevents error when names are required
         username: username,
         active: true,

@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 describe TopicViewSerializer do
-  def serialize_topic(topic, user)
-    topic_view = TopicView.new(topic.id, user)
-    described_class.new(topic_view, scope: Guardian.new(user), root: false).as_json
+  def serialize_topic(topic, user_arg)
+    topic_view = TopicView.new(topic.id, user_arg)
+    described_class.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
   end
 
   let(:topic) { Fabricate(:topic) }
   let(:user) { Fabricate(:user) }
+  let(:admin) { Fabricate(:admin) }
 
   describe '#featured_link and #featured_link_root_domain' do
     let(:featured_link) { 'http://meta.discourse.org' }
@@ -69,7 +70,6 @@ describe TopicViewSerializer do
 
   describe 'when tags added to private message topics' do
     let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
     let(:tag) { Fabricate(:tag) }
     let(:pm) do
       Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
@@ -102,6 +102,27 @@ describe TopicViewSerializer do
         json = serialize_topic(pm, user)
         expect(json[:tags]).to eq(nil)
       end
+    end
+  end
+
+  describe 'with hidden tags' do
+    let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+    let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      staff_tag_group
+      topic.tags << hidden_tag
+    end
+
+    it 'returns hidden tag to staff' do
+      json = serialize_topic(topic, admin)
+      expect(json[:tags]).to eq([hidden_tag.name])
+    end
+
+    it 'does not return hidden tag to non-staff' do
+      json = serialize_topic(topic, user)
+      expect(json[:tags]).to eq([])
     end
   end
 end

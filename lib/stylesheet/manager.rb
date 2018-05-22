@@ -110,7 +110,11 @@ class Stylesheet::Manager
       if File.exists?(stylesheet_fullpath)
         unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
           begin
-            source_map = File.read(source_map_fullpath) rescue nil
+            source_map = begin
+              File.read(source_map_fullpath)
+            rescue Errno::ENOENT
+            end
+
             StylesheetCache.add(qualified_target, digest, File.read(stylesheet_fullpath), source_map)
           rescue => e
             Rails.logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"
@@ -252,7 +256,11 @@ class Stylesheet::Manager
       raise "attempting to look up theme digest for invalid field"
     end
 
-    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s)
+    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest)
+  end
+
+  def settings_digest
+    Digest::SHA1.hexdigest((theme&.included_settings || {}).to_json)
   end
 
   def color_scheme_digest

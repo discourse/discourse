@@ -1,3 +1,5 @@
+require_dependency 'theme_settings_parser'
+
 class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
@@ -7,7 +9,8 @@ class ThemeField < ActiveRecord::Base
                         scss: 1,
                         theme_upload_var: 2,
                         theme_color_var: 3,
-                        theme_var: 4)
+                        theme_var: 4,
+                        yaml: 5)
   end
 
   def self.theme_var_type_ids
@@ -21,10 +24,28 @@ class ThemeField < ActiveRecord::Base
 
   belongs_to :theme
 
+  def settings(source)
+
+    settings = {}
+
+    theme.cached_settings.each do |k, v|
+      if source.include?("settings.#{k}")
+        settings[k] = v
+      end
+    end
+
+    if settings.length > 0
+      "let settings = #{settings.to_json};"
+    else
+      ""
+    end
+  end
+
   def transpile(es6_source, version)
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<PLUGIN_API_JS
 Discourse._registerPluginCode('#{version}', api => {
+  #{settings(es6_source)}
   #{es6_source}
 });
 PLUGIN_API_JS
@@ -38,9 +59,17 @@ PLUGIN_API_JS
     doc = Nokogiri::HTML.fragment(html)
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
+
       is_raw = name =~ /\.raw$/
+      setting_helpers = ''
+      theme.cached_settings.each do |k, v|
+        val = v.is_a?(String) ? "\"#{v.gsub('"', "\\u0022")}\"" : v
+        setting_helpers += "{{theme-setting-injector #{is_raw ? "" : "context=this"} key=\"#{k}\" value=#{val}}}\n"
+      end
+      hbs_template = setting_helpers + node.inner_html
+
       if is_raw
-        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
+        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(hbs_template)})"
         node.replace <<COMPILED
           <script>
             (function() {
@@ -49,7 +78,7 @@ PLUGIN_API_JS
           </script>
 COMPILED
       else
-        template = "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(node.inner_html)})"
+        template = "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(hbs_template)})"
         node.replace <<COMPILED
           <script>
             (function() {
@@ -77,11 +106,54 @@ COMPILED
     [doc.to_s, errors&.join("\n")]
   end
 
+  def validate_yaml!
+    return unless self.name == "yaml"
+
+    errors = []
+    begin
+      ThemeSettingsParser.new(self).load do |name, default, type, opts|
+        setting = ThemeSetting.new(name: name, data_type: type, theme: theme)
+        translation_key = "themes.settings_errors"
+
+        if setting.invalid?
+          setting.errors.details.each_pair do |attribute, _errors|
+            _errors.each do |hash|
+              errors << I18n.t("#{translation_key}.#{attribute}_#{hash[:error]}", name: name)
+            end
+          end
+        end
+
+        if default.nil?
+          errors << I18n.t("#{translation_key}.default_value_missing", name: name)
+        end
+
+        if (min = opts[:min]) && (max = opts[:max])
+          unless ThemeSetting.value_in_range?(default, (min..max), type)
+            errors << I18n.t("#{translation_key}.default_out_range", name: name)
+          end
+        end
+
+        unless ThemeSetting.acceptable_value_for_type?(default, type)
+          errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
+        end
+      end
+    rescue ThemeSettingsParser::InvalidYaml => e
+      errors << e.message
+    end
+
+    self.error = errors.join("\n").presence unless self.destroyed?
+    if will_save_change_to_error?
+      update_columns(error: self.error)
+    end
+  end
+
   def self.guess_type(name)
     if html_fields.include?(name.to_s)
       types[:html]
     elsif scss_fields.include?(name.to_s)
       types[:scss]
+    elsif name.to_s === "yaml"
+      types[:yaml]
     end
   end
 
@@ -121,7 +193,7 @@ COMPILED
                                     )
         self.error = nil unless error.nil?
       rescue SassC::SyntaxError => e
-        self.error = e.message
+        self.error = e.message unless self.destroyed?
       end
 
       if will_save_change_to_error?
@@ -143,6 +215,8 @@ COMPILED
   after_commit do
     ensure_baked!
     ensure_scss_compiles!
+    validate_yaml!
+    theme.clear_cached_settings!
 
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
 

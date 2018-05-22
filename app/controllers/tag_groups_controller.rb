@@ -33,7 +33,7 @@ class TagGroupsController < ApplicationController
     if @tag_group.save
       render_serialized(@tag_group, TagGroupSerializer)
     else
-      return render_json_error(@tag_group)
+      render_json_error(@tag_group)
     end
   end
 
@@ -52,8 +52,7 @@ class TagGroupsController < ApplicationController
 
   def search
     matches = if params[:q].present?
-      term = params[:q].strip.downcase
-      TagGroup.where('lower(name) like ?', "%#{term}%")
+      TagGroup.where('lower(name) ILIKE ?', "%#{params[:q].strip}%")
     else
       TagGroup.all
     end
@@ -70,7 +69,20 @@ class TagGroupsController < ApplicationController
     end
 
     def tag_groups_params
-      result = params.permit(:id, :name, :one_per_topic, tag_names: [], parent_tag_name: [])
+      if permissions = params[:permissions]
+        permissions.each do |k, v|
+          permissions[k] = v.to_i
+        end
+      end
+
+      result = params.permit(
+        :id,
+        :name,
+        :one_per_topic,
+        tag_names: [],
+        parent_tag_name: [],
+        permissions: permissions&.keys,
+      )
       result[:tag_names] ||= []
       result[:parent_tag_name] ||= []
       result[:one_per_topic] = (params[:one_per_topic] == "true")

@@ -1,5 +1,6 @@
 import { CANCELLED_STATUS } from 'discourse/lib/autocomplete';
 import { userPath } from 'discourse/lib/url';
+import { emailValid } from 'discourse/lib/utilities';
 
 var cache = {},
     cacheTopicId,
@@ -61,7 +62,7 @@ function organizeResults(r, options) {
     });
   }
 
-  if (options.term.match(/@/)) {
+  if (!options.disallowEmails && emailValid(options.term)) {
     let e = { username: options.term };
     emails = [ e ];
     results.push(e);

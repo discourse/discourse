@@ -107,6 +107,11 @@ export default Ember.Object.extend({
     var adapter = this.adapterFor(type);
     return adapter.find(this, type, findArgs, opts).then(result => {
       var hydrated = this._hydrateFindResults(result, type, findArgs, opts);
+
+      if (result.extras) {
+        hydrated.set('extras', result.extras);
+      }
+
       if (adapter.cache) {
         const stale = adapter.findStale(this, type, findArgs, opts);
         hydrated = this._updateStale(stale, hydrated);

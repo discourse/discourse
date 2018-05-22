@@ -7,9 +7,8 @@ export default Ember.Component.extend({
   classNameBindings: ["isFocused", "isHidden"],
   isHidden: Ember.computed.not("shouldDisplayFilter"),
 
-  @computed("placeholder", "hasSelection")
-  computedPlaceholder(placeholder, hasSelection) {
-    if (hasSelection) return "";
+  @computed("placeholder")
+  computedPlaceholder(placeholder) {
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
   }
 });

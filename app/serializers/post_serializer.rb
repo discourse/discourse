@@ -374,6 +374,10 @@ class PostSerializer < BasicPostSerializer
     object.revisions.size > 0
   end
 
+  def include_hidden_reason_id?
+    object.hidden
+  end
+
   private
 
     def topic

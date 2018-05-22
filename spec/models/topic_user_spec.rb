@@ -267,6 +267,31 @@ describe TopicUser do
         expect(TopicUser.get(topic, another_user).notification_level)
           .to eq(TopicUser.notification_levels[:regular])
       end
+
+      describe 'inviting a group' do
+        let(:group) do
+          Fabricate(:group,
+            default_notification_level: NotificationLevels.topic_levels[:tracking]
+          )
+        end
+
+        it "should use group's default notification level" do
+          another_user = Fabricate(:user)
+          group.add(another_user)
+          topic.invite_group(target_user, group)
+          TopicUser.track_visit!(topic.id, another_user.id)
+
+          expect(TopicUser.get(topic, another_user).notification_level)
+            .to eq(TopicUser.notification_levels[:tracking])
+
+          another_user = Fabricate(:user)
+          topic.invite(target_user, another_user.username)
+          TopicUser.track_visit!(topic.id, another_user.id)
+
+          expect(TopicUser.get(topic, another_user).notification_level)
+            .to eq(TopicUser.notification_levels[:watching])
+        end
+      end
     end
 
     context 'auto tracking' do

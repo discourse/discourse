@@ -42,25 +42,25 @@ export default MultiSelectComponent.extend(Tags, {
   actions: {
     onFilter(filter) {
       this.expand();
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, filter, 200));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, filter, 200));
     },
 
     onExpand() {
       if (isEmpty(this.get("collectionComputedContent"))) {
-        this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
+        this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
       }
     },
 
     onDeselect() {
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
     },
 
     onSelect() {
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 50));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 50));
     }
   },
 
-  prepareSearch(query) {
+  _prepareSearch(query) {
     const data = {
       q: query,
       limit: this.get("siteSettings.max_tag_search_results")
@@ -72,8 +72,16 @@ export default MultiSelectComponent.extend(Tags, {
   _transformJson(context, json) {
     let results = json.results.sort((a, b) => a.id > b.id);
 
-    return results.map(result => {
+    results = results.map(result => {
       return { id: result.text, name: result.text, count: result.count };
     });
+
+    // if forbidden we probably have an existing tag which is not in the list of
+    // returned tags, so we manually add it at the top
+    if (json.forbidden) {
+      results.unshift({ id: json.forbidden, name: json.forbidden, count: 0 });
+    }
+
+    return results;
   },
 });

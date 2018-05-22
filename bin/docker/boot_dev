@@ -38,7 +38,7 @@ echo "Using data in:   ${DATA_DIR}"
 
 mkdir -p "${DATA_DIR}"
 
-docker run -d -p 1080:1080 -p 3000:3000 -v "$DATA_DIR:/shared/postgres_data" -v "$SOURCE_DIR:/src" --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:release /sbin/boot
+docker run -d -p 1080:1080 -p 3000:3000 -v "$DATA_DIR:/shared/postgres_data:delegated" -v "$SOURCE_DIR:/src:delegated" --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:release /sbin/boot
 
 if [ "${initialize}" = "initialize" ]; then
     echo "Installing gems..."

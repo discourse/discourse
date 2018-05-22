@@ -127,7 +127,7 @@ class UploadsController < ApplicationController
 
     upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
   ensure
-    tempfile&.close! rescue nil
+    tempfile&.close!
   end
 
 end

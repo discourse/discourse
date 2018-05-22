@@ -54,6 +54,11 @@ const Site = RestModel.extend({
     return result;
   },
 
+  @computed
+  baseUri() {
+    return Discourse.baseUri;
+  },
+
   // Returns it in the correct order, by setting
   @computed
   categoriesList() {

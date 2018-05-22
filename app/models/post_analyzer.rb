@@ -111,9 +111,9 @@ class PostAnalyzer
     return @raw_links if @raw_links.present?
 
     @raw_links = []
-    cooked_stripped.css("a[href]").each do |l|
+    cooked_stripped.css("a").each do |l|
       # Don't include @mentions in the link count
-      next if l['href'].blank? || link_is_a_mention?(l)
+      next if link_is_a_mention?(l)
       @raw_links << l['href'].to_s
     end
 
@@ -130,7 +130,7 @@ class PostAnalyzer
     def cooked_stripped
       @cooked_stripped ||= begin
         doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
-        doc.css("pre, code, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
+        doc.css("pre .mention, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
         doc
       end
     end

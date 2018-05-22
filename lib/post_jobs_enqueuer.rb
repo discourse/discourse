@@ -17,6 +17,10 @@ class PostJobsEnqueuer
       after_post_create
       after_topic_create
     end
+
+    if @topic.private_message?
+      TopicTrackingState.publish_private_message(@topic, post: @post)
+    end
   end
 
   private
@@ -35,7 +39,7 @@ class PostJobsEnqueuer
 
   def after_post_create
     TopicTrackingState.publish_unread(@post) if @post.post_number > 1
-    TopicTrackingState.publish_latest(@topic, @post.post_type == Post.types[:whisper])
+    TopicTrackingState.publish_latest(@topic, @post.whisper?)
 
     Jobs.enqueue_in(
         SiteSetting.email_time_window_mins.minutes,

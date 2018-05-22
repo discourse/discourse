@@ -161,7 +161,10 @@ module ImportExport
     end
 
     def new_category_id(external_category_id)
-      CategoryCustomField.where(name: "import_id", value: "#{external_category_id}#{import_source}").first.category_id rescue nil
+      CategoryCustomField.where(
+        name: "import_id",
+        value: "#{external_category_id}#{import_source}"
+      ).first&.category_id
     end
 
     def import_source

@@ -17,12 +17,12 @@ sq:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Janar, Shkurt, Mars, Prill, Maj, Qershor, Korrik, Gusht, Shtator, Tetor, Nëntor, Dhjetor]
+    month_names: [~, Janar, Shkurt, Mars, Prill, Maj, Qershor, Korrik, Gusht, Shtator, Tetor, Nëntor, Dhjetor]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "pd"
     pm: "md"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Tema"
   posts: "postime"
@@ -54,7 +54,7 @@ sq:
       present: mund të lihet bosh
       confirmation: "nuk përputhet %{attribute}"
       empty: nuk mund të lihet bosh
-      equal_to: duhet të jetë baraz me %{count}
+      equal_to: "duhet të jetë baraz me %{count}"
       exclusion: është i rezervuar
       invalid: është i pavlefshëm
       not_a_number: nuk është një numër
@@ -63,6 +63,9 @@ sq:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
@@ -73,18 +76,18 @@ sq:
     start_discussion: "Fillo Diskutim"
     continue: "Vazhdo Diskutimin"
     more_replies:
-      one: "edhe 1 përgjigje "
-      other: "janë %{count} përgjigje"
+      one: 'edhe 1 përgjigje '
+      other: janë %{count} përgjigje
     loading: "Duke Ngarkuar Diskutimin..."
     permalink: "Permalink"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 përgjigje"
-      other: "%{count} përgjigje"
+      one: 1 përgjigje
+      other: '%{count} përgjigje'
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
   too_many_mentions_newuser:
-    one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm 1 anëtar në një postim."
-    other: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtarë në një postim."
+    one: Na vjen keq, anëtarët e rinj mund të citojnë vetëm 1 anëtar në një postim.
+    other: Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtarë në një postim.
   no_images_allowed: "Na vjen keq, anëtarët e rinj nuk kanë të drejtë të vendosin imazhe në një postim."
   spamming_host: "Na vjen keq, you cannot post a link to that host."
   invalid_characters: "përmban karaktere  jo të vlefshëm"
@@ -117,9 +120,9 @@ sq:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      one: "1 postim"
-      other: "%{count} postime"
-    new-topic: |
+      one: 1 postim
+      other: '%{count} postime'
+    'new-topic': |
       Mirë se vini te %{site_name} &mdash; **faleminderit që nisët një bisedë të re!**
 
       - A ju duket tërheqës titulli nëse e lexoni me zë të lartë? A është e mirë përmbledhja?
@@ -129,7 +132,7 @@ sq:
       - Përfshini fjalë të përdorura zakonisht në temën tuaj kështu që të tjerët mund **ta gjejnë** atë. Për të grupuar temën tuaj me të ngjashmet, zgjidhni një kategori.
 
       Për më tepër, [lexoni porositë e bashkësisë](/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
-    new-reply: |
+    'new-reply': |
       Mirë se vini tek %{site_name} &mdash; **faleminderit për pjesëmarrjen!**
 
       - Jini të sjellshëm me anëtarët e tjerë të faqes.
@@ -148,6 +151,7 @@ sq:
       user_profile:
         bio_raw: "Rreth Meje"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -161,32 +165,31 @@ sq:
           attributes:
             hex:
               invalid: "nuk është një ngjyrë e vlefshme"
-      <<: *errors
   meta_category_name: "Reagimet e Faqes"
   staff_category_name: "Stafi"
   lounge_welcome:
     title: "Mirë se vini në Lounge"
     body: |2
 
-      Congratulations! :confetti_ball:
+        Congratulations! :confetti_ball:
 
-      If you can see this topic, you were recently promoted to **regular** (trust level 3).
+        If you can see this topic, you were recently promoted to **regular** (trust level 3).
 
-      You can now &hellip;
+        You can now &hellip;
 
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-      * Hide spam with a single flag
+        * Edit the title of any topic
+        * Change the category of any topic
+        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+        * Access a private Lounge category only visible to users at trust level 3 and higher
+        * Hide spam with a single flag
 
-      Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+        Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
 
-      Thanks for being an important part of this community!
+        Thanks for being an important part of this community!
 
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+        (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Rreth kategorisë %{category}"
     errors:
@@ -198,8 +201,8 @@ sq:
       uncategorized: "Nuk fshij dot kategorinë \"Uncategorized\""
       has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
       topic_exists:
-        one: "Nuk e fshini dot këtë kategori sepse këtu ka 1 temë. Tema më e vjetër është %{topic_link}."
-        other: "Nuk e fshini dot këtë kategori sepse këtu ka %{count} tema. Tema më e vjetër është %{topic_link}."
+        one: Nuk e fshini dot këtë kategori sepse këtu ka 1 temë. Tema më e vjetër është %{topic_link}.
+        other: Nuk e fshini dot këtë kategori sepse këtu ka %{count} tema. Tema më e vjetër është %{topic_link}.
       topic_exists_no_oldest: "Nuk e fshini dot këtë kategori sepse numri i temave është %{count}."
   trust_levels:
     newuser:
@@ -213,94 +216,86 @@ sq:
     leader:
       title: "udhëheqës"
   rate_limiter:
-    slow_down: "E keni bërë këtë veprim shumë shpesh, prisni pak e provoni më vonë. "
-    by_type:
-      first_day_replies_per_day: "Keni arritur maksimumin e përgjigjeve që një përdorues i ri mund të postojë në ditën e parë. Prisni %{time_left} dhe provoni përsëri."
-      first_day_topics_per_day: "Keni postuar maksimumin e temave që një anëtar i ri mund të krijojë në ditën e parë. Prisni %{time_left} para se të provoni përsëri. "
-      create_topic: "Po nxitoheni shumë për të krijuar tema të reja. Prisni %{time_left} dhe provoni përsëri."
-      create_post: "Po përgjigjeni shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      delete_post: "Po fshini postimet shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      topics_per_day: "Keni arritur maksimumin e temave të reja për sot. Prisni %{time_left} dhe provoni përsëri."
     hours:
-      one: "1 orë"
-      other: "%{count} orë"
+      one: 1 orë
+      other: '%{count} orë'
     minutes:
-      one: "1 minutë"
-      other: "%{count} minuta"
+      one: 1 minutë
+      other: '%{count} minuta'
     seconds:
-      one: "1 sekondë"
-      other: "%{count} sekonda"
+      one: 1 sekondë
+      other: '%{count} sekonda'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        other: "%{count}s"
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        other: "%{count}m"
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1h"
-        other: "%{count}h"
+        one: 1h
+        other: '%{count}h'
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1muaj"
-        other: "%{count}muaj"
+        one: 1muaj
+        other: '%{count}muaj'
       x_months:
-        one: "1muaj"
-        other: "%{count}muaj"
+        one: 1muaj
+        other: '%{count}muaj'
       about_x_years:
-        one: "1y"
-        other: "%{count}y"
+        one: 1y
+        other: '%{count}y'
       over_x_years:
-        one: "> 1v"
-        other: "> %{count}v"
+        one: '> 1v'
+        other: '> %{count}v'
       almost_x_years:
-        one: "1v"
-        other: "%{count}v"
+        one: 1v
+        other: '%{count}v'
     distance_in_words_verbose:
       half_a_minute: "tani"
       less_than_x_seconds:
-        one: "tani"
-        other: "tani"
+        one: tani
+        other: tani
       x_seconds:
-        one: "1 sekondë më parë"
-        other: "%{count} sekonda më parë"
+        one: 1 sekondë më parë
+        other: '%{count} sekonda më parë'
       less_than_x_minutes:
-        one: "më pak se 1 minutë më parë"
-        other: "më pak se %{count} minuta më parë"
+        one: më pak se 1 minutë më parë
+        other: më pak se %{count} minuta më parë
       x_minutes:
-        one: "1 minutë më parë"
-        other: "%{count} minuta më parë"
+        one: 1 minutë më parë
+        other: '%{count} minuta më parë'
       about_x_hours:
-        one: "para 1 ore"
-        other: "para %{count} orësh"
+        one: para 1 ore
+        other: para %{count} orësh
       x_days:
-        one: "para 1 dite"
-        other: "para %{count} ditësh"
+        one: para 1 dite
+        other: para %{count} ditësh
       about_x_months:
-        one: "rreth 1 muaj më parë"
-        other: "rreth %{count} muaj më parë"
+        one: rreth 1 muaj më parë
+        other: rreth %{count} muaj më parë
       x_months:
-        one: "1 muaj më parë"
-        other: "%{count} muaj më parë"
+        one: 1 muaj më parë
+        other: '%{count} muaj më parë'
       about_x_years:
-        one: "rreth 1 vit më parë"
-        other: "rreth %{count} vjet më parë"
+        one: rreth 1 vit më parë
+        other: rreth %{count} vjet më parë
       over_x_years:
-        one: "mbi 1 vit më parë"
-        other: "mbi %{count} vite më parë"
+        one: mbi 1 vit më parë
+        other: mbi %{count} vite më parë
       almost_x_years:
-        one: "pothuajse 1 vit më parë"
-        other: "pothuajse %{count} vite më parë"
+        one: pothuajse 1 vit më parë
+        other: pothuajse %{count} vite më parë
   password_reset:
     no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
     update: 'Rifresko Fjalëkalimin'
@@ -338,7 +333,6 @@ sq:
       long_form: 'sinjalizoi këtë postim si të papërshtatshëm'
     notify_user:
       title: 'Dërgoji @{{username}} një mesazh'
-      description: 'Dëshiroj të flas me këtë person drejtpërdrejt dhe privatish rreth këtij postimi.'
       long_form: 'messaged user'
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -441,7 +435,6 @@ sq:
       xaxis: "Ditë"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
-      title: "User-to-User"
       xaxis: "Ditë"
       yaxis: "Numri i mesazheve"
     system_private_messages:
@@ -485,7 +478,6 @@ sq:
       title: "Web Crawlers"
       xaxis: "Day"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Day"
     page_view_logged_in_mobile_reqs:
       xaxis: "Ditë"
@@ -624,7 +616,6 @@ sq:
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
@@ -636,15 +627,12 @@ sq:
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
-    enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
@@ -653,7 +641,6 @@ sq:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
-    backup_frequency: "How frequently we create a site backup, in days."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -841,11 +828,11 @@ sq:
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
   move_posts:
     new_topic_moderator_post:
-      one: "A post was split to a new topic: %{topic_link}"
-      other: "%{count} posts were split to a new topic: %{topic_link}"
+      one: 'A post was split to a new topic: %{topic_link}'
+      other: '%{count} posts were split to a new topic: %{topic_link}'
     existing_topic_moderator_post:
-      one: "A post was merged into an existing topic: %{topic_link}"
-      other: "%{count} posts were merged into an existing topic: %{topic_link}"
+      one: 'A post was merged into an existing topic: %{topic_link}'
+      other: '%{count} posts were merged into an existing topic: %{topic_link}'
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
     deleted_user: "a deleted user"
@@ -855,29 +842,29 @@ sq:
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_message_max_posts:
-      one: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
-      other: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
+      one: Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje.
+      other: Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve.
     autoclosed_topic_max_posts:
-      one: "Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
-      other: "Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
+      one: Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje.
+      other: Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve.
     autoclosed_enabled_days:
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-      other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
+      one: This topic was automatically closed after 1 day. New replies are no longer allowed.
+      other: This topic was automatically closed after %{count} days. New replies are no longer allowed.
     autoclosed_enabled_hours:
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
-      other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
+      one: This topic was automatically closed after 1 hour. New replies are no longer allowed.
+      other: This topic was automatically closed after %{count} hours. New replies are no longer allowed.
     autoclosed_enabled_minutes:
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
-      other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
+      one: This topic was automatically closed after 1 minute. New replies are no longer allowed.
+      other: This topic was automatically closed after %{count} minutes. New replies are no longer allowed.
     autoclosed_enabled_lastpost_days:
-      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
-      other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
+      one: This topic was automatically closed 1 day after the last reply. New replies are no longer allowed.
+      other: This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed.
     autoclosed_enabled_lastpost_hours:
-      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
-      other: "This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed."
+      one: This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed.
+      other: This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed.
     autoclosed_enabled_lastpost_minutes:
-      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
-      other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
+      one: This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed.
+      other: This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed.
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
@@ -912,8 +899,8 @@ sq:
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
   flags_reminder:
     subject_template:
-      one: "1 sinjalizim në pritje për t'u trajtuar"
-      other: "%{count} sinjalizime në pritje për t'u trajtuar"
+      one: 1 sinjalizim në pritje për t'u trajtuar
+      other: '%{count} sinjalizime në pritje për t''u trajtuar'
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
   admin_confirmation_mailer:
@@ -952,8 +939,6 @@ sq:
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
     bulk_invite_failed:
       subject_template: "Bulk user invite processed with errors"
-    csv_export_succeeded:
-      subject_template: "Data export complete"
     csv_export_failed:
       subject_template: "Data export failed"
     email_reject_parsing:
@@ -963,8 +948,8 @@ sq:
         We couldn't find your reply in the email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
     pending_users_reminder:
       subject_template:
-        one: "1 user waiting for approval"
-        other: "%{count} users waiting for approval"
+        one: 1 user waiting for approval
+        other: '%{count} users waiting for approval'
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
@@ -1105,7 +1090,7 @@ sq:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       subject_template: "[%{email_prefix}] Përmbledhja"
@@ -1200,22 +1185,22 @@ sq:
         Kjo stemë jepet kur ndryshoni një nga postimet tuaja për herë të parë. Ndërkohë që nuk do jetë e mundur të ndryshoni postimet tuaja përgjithmonë, ndryshimi është gjithmonë një ide e mirë - ju mund të përmirësoni postimet tuaja, të korigjoni gabime të vogla, apo të shtoni çdo gjë që mungonte nga postimi i parë. Ndryshojini postimet që t'i bëni akoma më të mira!
     basic_user:
       name: Anëtar i Thjeshtë
-      description: Ka të drejtat bazë të një anëtari në këtë komunitet <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Informacion shtesë në anglisht</a>
+      description: "Ka të drejtat bazë të një anëtari në këtë komunitet <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Informacion shtesë në anglisht</a>"
       long_description: |
         Kjo stemë jepet kur ju arrini nivelin e bisedës 1. Falemindeit që jeni përreth prej ca kohësh dhe që lexoni disa tema për të mësuar më tepër rreth komunitetit tonë. Limitet e përdoruesit të ri janë hequr, keni mundësi të përdorni të gjitha aftësitë kryesore të komunitetit, si mesazhet private, sinjalizimet, ndryshim për wiki, dhe aftësinë për të postuar disa imazhe njëherazi dhe lidhje.
     member:
       name: Anëtar
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">U dha</a> mundësia për ftesa, mesazhe në grup, më shumë pëlqime
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">U dha</a> mundësia për ftesa, mesazhe në grup, më shumë pëlqime"
       long_description: |
         Kjo stemë jepet kur ju arrini nivelin e besimit 2. Faleminderit që jeni pjesë prej më shumë se disa javësh e komunitetit tonë. Ju tashmë mund të dërgoni ftesa nga faqja juaj e përdoruesit ose nga tema të veçanta, të krijoni mesazhe në grup, dhe të keni ca pëlqime më shumë në ditë.
     regular:
       name: I zakonshëm
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">U dha</a> mundësia për ri-kategorizim, ri-emërtim, lidhje ndjekëse, wiki, dhe më shumë pëlqime
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">U dha</a> mundësia për ri-kategorizim, ri-emërtim, lidhje ndjekëse, wiki, dhe më shumë pëlqime"
       long_description: |
         Kjo stemë jepet kur ju arrini nivelin e besimit 3. Faleminderit që jeni pjesë e komutetit tonë prej disa muajsh. Ju jeni tashmë një prej lexuesve më aktivë, dhe një bashkëpunëtor i besueshëm që përmirëson komunitetin tonë. Ju mundet tashmë të ri-kategorizoni dhe ri-emëroni temat, të keni cilësime të mëtejshme për sinjalizime spam-esh, të keni hyrje në zona private të faqes, gjithashtu dhe më tepër pëlqime ditore.
     leader:
       name: Udhëheqës
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Dhënë</a> mundësia për ndryshim të gjithanshëm, ngjitje në krye, mbyllje, arkivim, ndarje dhe ngjitje, më tepër pëlqime
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Dhënë</a> mundësia për ndryshim të gjithanshëm, ngjitje në krye, mbyllje, arkivim, ndarje dhe ngjitje, më tepër pëlqime"
       long_description: |
         Kjo stemë jepet kur ju arrini nivelin e besimit 4. Jeni një udhëheqës në këtë komunitet si i përzgjedhur nga stafi, dhe ju jeni një shembull për pjesën tjetër të anëtarëve me veprimet dhe fjalët tuaja këtu. Ju keni mundësinë të ndryshoni të gjitha postimet, të aftë për moderime të tjera siç janë ngjitja në krye, mbyllja, çlistimi, arkivimi, ndarja dhe ngjitja, dhe ju keni tonelata pëlqimesh ditore.
     welcome:
@@ -1227,7 +1212,7 @@ sq:
       name: Autobiograf
     anniversary:
       name: Përvjetor
-      description: Anëtar aktiv për një vit, postoi të paktën një herë
+      description: "Anëtar aktiv për një vit, postoi të paktën një herë"
       long_description: |
         Kjo stemë jepet kur keni qenë një anëtar për një vit me të paktën një postim për atë vit. Faleminderit që jeni përreth dhe jepni ndihmën tuaj për komunitetin tonë. Ne nuk mund t'ia dilnim pa ju.
     nice_post:
@@ -1288,8 +1273,6 @@ sq:
     promoter:
       name: Promotor
       description: Ftoi një anëtar të ri në faqe
-      long_description: |
-        Kjo stemë jepet kur ftoni dikë për t'u bërë pjesë e komunitetit nëpërmjet butonit të ftesave në faqen e përdoruesit, ose në fund të faqes. Duke ftuar miq që mund të jenë të interesuar në biseda të veçanta është një mënyrë shumë e mirë të paraqesësh njerëz të rinj në komunitet, kështu që faleminderit!
     campaigner:
       name: Ambasador
       description: Ftoi 3 anëtarë të thjeshtë
@@ -1386,15 +1369,13 @@ sq:
     first_emoji:
       name: Emoji i parë
       description: Përdori Emoji në një postim
-      long_description: |
-        Kjo stemë jepet kur ju shtoni një Emoji në postimin tuaj për herë të parë :thumbsup:. Emoji ju lejon të përçoni emocionet në postimet tuaja, prej kënaqësisë :smiley: tek mërzitja :anguished: e deri tek inati :angry: dhe çdo gjë midis :sunglasses:. Thjesht filloni të shkruani : (dy pika) ose shtypni butonin Emoji në shiritin e veglave të fushës së shkrimit për të zgjedhur mes qindra llojesh :ok_hand:
     first_mention:
       name: Përmendja e parë
-      long_description: Kjo stemë jepet herën e parë kur ju përmendni @username e dikujt në një postim. Secila përmendje krijon një njoftim për atë person, që të vihen në dijeni për postimin tuaj. Thjesht filloni të shtypni @ (simbolin te) për të përmendur çdo përdorues ose, nëse e mundur, çdo grup - është një mënyrë e volitshme për të patur vëmendjen e dikujt.
+      long_description: "Kjo stemë jepet herën e parë kur ju përmendni @username e dikujt në një postim. Secila përmendje krijon një njoftim për atë person, që të vihen në dijeni për postimin tuaj. Thjesht filloni të shtypni @ (simbolin te) për të përmendur çdo përdorues ose, nëse e mundur, çdo grup - është një mënyrë e volitshme për të patur vëmendjen e dikujt."
     first_onebox:
       name: Onebox i Parë
       description: Postoi një lidhje në onebox
-      long_description: Kjo stemë jepet herën e parë kur postoni një lidhje në një rresht të vetëm, i cili shpaloset automatikisht në një onebox me një përmbledhje të shkurtër të lidhjes, një titull, dhe (kur është e mundur) një imazh.
+      long_description: "Kjo stemë jepet herën e parë kur postoni një lidhje në një rresht të vetëm, i cili shpaloset automatikisht në një onebox me një përmbledhje të shkurtër të lidhjes, një titull, dhe (kur është e mundur) një imazh."
     first_reply_by_email:
       name: Përgjigja e parë me email
       long_description: |
@@ -1413,6 +1394,3 @@ sq:
     step:
       emoji:
         title: "Emoji"
-  activemodel:
-    errors:
-      <<: *errors

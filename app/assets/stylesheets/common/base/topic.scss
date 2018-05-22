@@ -122,6 +122,11 @@ a.badge-category {
   }
 }
 
+.private-message-glyph {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+  margin-right: 5px;
+}
+
 .archetype-private_message #topic-title .edit-topic-title .tag-chooser {
   margin-left: 19px;
 }
@@ -145,7 +150,6 @@ a.badge-category {
   .badge-wrapper {
     float: left;
   }
-
 }
 
 .has-pending-posts {
@@ -183,18 +187,9 @@ a.badge-category {
   max-width: 150px;
 }
 
-.topic-unsubscribe {
-  .notifications-button {
-    display: inline-block;
-    float: none;
-    line-height: $line-height-large;
-    .dropdown-toggle {
-      float: none;
-    }
-    .dropdown-menu {
-      bottom: initial;
-    }
-  }
+#suggested-topics .suggested-topics-title {
+  display: flex;
+  align-items: center;
 }
 
 .post-links-container {

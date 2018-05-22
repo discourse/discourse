@@ -17,6 +17,7 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_group_message
   attr_accessor :for_theme
   attr_accessor :for_private_message
+  attr_accessor :for_export
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -82,7 +83,11 @@ class Upload < ActiveRecord::Base
     url = url.sub(SiteSetting.Upload.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.Upload.s3_cdn_url.present?
 
     # always try to get the path
-    uri = URI(url) rescue nil
+    uri = begin
+      URI(URI.unescape(url))
+    rescue URI::InvalidURIError, URI::InvalidComponentError
+    end
+
     url = uri.path if uri.try(:scheme)
 
     Upload.find_by(url: url)
@@ -96,7 +101,7 @@ class Upload < ActiveRecord::Base
       local_store = FileStore::LocalStore.new
 
       scope = Upload.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
-      scope.limit(limit) if limit
+      scope = scope.limit(limit) if limit
 
       scope.each do |upload|
         begin
@@ -134,13 +139,13 @@ class Upload < ActiveRecord::Base
           DbHelper.remap(previous_url, upload.url)
           # remove the old file (when local)
           unless external
-            FileUtils.rm(path, force: true) rescue nil
+            FileUtils.rm(path, force: true)
           end
         rescue => e
           problems << { upload: upload, ex: e }
         ensure
-          file.try(:unlink) rescue nil
-          file.try(:close) rescue nil
+          file&.unlink
+          file&.close
         end
       end
     end

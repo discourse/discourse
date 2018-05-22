@@ -17,12 +17,12 @@ bs_BA:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
+    month_names: [~, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Topics"
   posts: "posts"
@@ -41,6 +41,9 @@ bs_BA:
       taken: "has already been taken"
     embed:
       load_from_remote: "There was an error loading that post."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -85,7 +88,7 @@ bs_BA:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
   education:
-    new-topic: |
+    'new-topic': |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
       - Does the title accurately describe your topic? Does it sound interesting?
@@ -95,7 +98,7 @@ bs_BA:
       - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
       - Does your reply improve the conversation in some way?
@@ -112,6 +115,7 @@ bs_BA:
       user_profile:
         bio_raw: "O Meni"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -127,7 +131,6 @@ bs_BA:
           attributes:
             hex:
               invalid: "is not a valid color"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_name: "Lounge"
@@ -139,25 +142,25 @@ bs_BA:
     title: "Welcome to the Lounge"
     body: |2
 
-      Congratulations! :confetti_ball:
+        Congratulations! :confetti_ball:
 
-      If you can see this topic, you were recently promoted to **regular** (trust level 3).
+        If you can see this topic, you were recently promoted to **regular** (trust level 3).
 
-      You can now &hellip;
+        You can now &hellip;
 
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-      * Hide spam with a single flag
+        * Edit the title of any topic
+        * Change the category of any topic
+        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+        * Access a private Lounge category only visible to users at trust level 3 and higher
+        * Hide spam with a single flag
 
-      Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+        Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
 
-      Thanks for being an important part of this community!
+        Thanks for being an important part of this community!
 
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+        (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "About the %{category} category"
     errors:
@@ -176,18 +179,18 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      one: "1 sat"
-      few: "Par sati"
-      other: "%{count} sati"
+      few: Par sati
+      one: 1 sat
+      other: '%{count} sati'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
       about_x_hours:
-        one: "Pred 1 sat"
-        few: "Pred par sati"
-        other: "Pred %{count} sata"
+        few: Pred par sati
+        one: Pred 1 sat
+        other: Pred %{count} sata
   password_reset:
     update: 'Obnovi Šifru'
     save: 'Namjesti Šifru'
@@ -302,7 +305,6 @@ bs_BA:
       xaxis: "Day"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
-      title: "User-to-User"
       xaxis: "Day"
       yaxis: "Number of private messages"
     system_private_messages:
@@ -421,21 +423,17 @@ bs_BA:
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
-    enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
@@ -659,8 +657,6 @@ bs_BA:
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
     bulk_invite_failed:
       subject_template: "Bulk user invite processed with errors"
-    csv_export_succeeded:
-      subject_template: "Data Export completed successfully"
     csv_export_failed:
       subject_template: "Export failed"
     pending_users_reminder:
@@ -731,6 +727,3 @@ bs_BA:
     title: "Terms of Service"
   privacy_topic:
     title: "Privacy Policy"
-  activemodel:
-    errors:
-      <<: *errors

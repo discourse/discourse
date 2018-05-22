@@ -28,6 +28,22 @@
 $label-width: 92px;
 $input-width: 220px;
 
+.login-modal, .create-account {
+  tr {
+    border: none;
+  }
+  tr:not(.instructions) {
+    td {
+      padding: 10px 0 0 0;
+    }
+  }
+  td {
+    label, input {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .create-account {
   table {
     td.label {

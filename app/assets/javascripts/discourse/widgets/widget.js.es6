@@ -32,6 +32,10 @@ export function applyDecorators(widget, type, attrs, state) {
   return [];
 }
 
+export function resetDecorators() {
+  Object.keys(_decorators).forEach(key => delete _decorators[key]);
+}
+
 const _customSettings = {};
 export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName] = _customSettings[widgetName] || {};

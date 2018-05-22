@@ -16,7 +16,10 @@ class TopicLinkClick < ActiveRecord::Base
     url = args[:url][0...TopicLink.max_url_length]
     return nil if url.blank?
 
-    uri = URI.parse(url) rescue nil
+    uri = begin
+      URI.parse(url)
+    rescue URI::InvalidURIError
+    end
 
     urls = Set.new
     urls << url
@@ -43,7 +46,11 @@ class TopicLinkClick < ActiveRecord::Base
     # add a cdn link
     if uri
       if Discourse.asset_host.present?
-        cdn_uri = URI.parse(Discourse.asset_host) rescue nil
+        cdn_uri = begin
+          URI.parse(Discourse.asset_host)
+        rescue URI::InvalidURIError
+        end
+
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
           urls << uri.path[cdn_uri.path.length..-1]
@@ -51,7 +58,11 @@ class TopicLinkClick < ActiveRecord::Base
       end
 
       if SiteSetting.Upload.s3_cdn_url.present?
-        cdn_uri = URI.parse(SiteSetting.Upload.s3_cdn_url) rescue nil
+        cdn_uri = begin
+          URI.parse(SiteSetting.Upload.s3_cdn_url)
+        rescue URI::InvalidURIError
+        end
+
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
           path = uri.path[cdn_uri.path.length..-1]

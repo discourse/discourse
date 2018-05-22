@@ -73,7 +73,10 @@ class Search
 
       return if day == 0 || month == 0 || day > 31 || month > 12
 
-      return Time.zone.parse("#{year}-#{month}-#{day}") rescue nil
+      return begin
+        Time.zone.parse("#{year}-#{month}-#{day}")
+      rescue ArgumentError
+      end
     end
 
     if str.downcase == "yesterday"
@@ -657,9 +660,10 @@ class Search
         .joins(:post_search_data, :topic)
         .joins("LEFT JOIN categories ON categories.id = topics.category_id")
         .where("topics.deleted_at" => nil)
-        .where("topics.visible")
 
       is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
+
+      posts = posts.where("topics.visible") unless is_topic_search
 
       if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
         posts = posts.where("topics.archetype =  ?", Archetype.private_message)
@@ -694,7 +698,7 @@ class Search
           posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
-            posts = posts.where("posts.raw ilike ?", "%#{exact}%")
+            posts = posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
           end
         end
       end

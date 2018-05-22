@@ -10,9 +10,19 @@ class ScreenedIpAddress < ActiveRecord::Base
   default_action :block
 
   validates :ip_address, ip_address_format: true, presence: true
+  after_validation :check_for_match
 
   def self.watch(ip_address, opts = {})
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
+  end
+
+  def check_for_match
+    unless self.errors[:ip_address].present?
+      matched = self.class.match_for_ip_address(self.ip_address)
+      if matched && matched.action_type == self.action_type
+        self.errors.add(:ip_address, :ip_address_already_screened)
+      end
+    end
   end
 
   # In Rails 4.0.0, validators are run to handle invalid assignments to inet columns (as they should).

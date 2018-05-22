@@ -52,13 +52,22 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.update_flagged_posts_count
-    posts_flagged_count = PostAction.active
+    flagged_relation = PostAction.active
       .flags
       .joins(post: :topic)
       .where('posts.deleted_at' => nil)
       .where('topics.deleted_at' => nil)
       .where('posts.user_id > 0')
-      .count('DISTINCT posts.id')
+      .group("posts.id")
+
+    if SiteSetting.min_flags_staff_visibility > 1
+      flagged_relation = flagged_relation
+        .having("count(*) >= ?", SiteSetting.min_flags_staff_visibility)
+    end
+
+    posts_flagged_count = flagged_relation
+      .pluck("posts.id")
+      .count
 
     $redis.set('posts_flagged_count', posts_flagged_count)
     user_ids = User.staff.pluck(:id)
@@ -155,6 +164,7 @@ SQL
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
     DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_agreed, actions.first) if actions.first.present?
 
     update_flagged_posts_count
   end
@@ -188,6 +198,7 @@ SQL
 
     Post.with_deleted.where(id: post.id).update_all(cached)
     DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_disagreed, actions.first) if actions.first.present?
 
     update_flagged_posts_count
   end
@@ -206,6 +217,7 @@ SQL
     end
 
     DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_deferred, actions.first) if actions.first.present?
     update_flagged_posts_count
   end
 
@@ -304,6 +316,10 @@ SQL
       if post_action && post_action.errors.count == 0
         BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: post_action)
       end
+    end
+
+    if post_action && PostActionType.notify_flag_type_ids.include?(post_action_type_id)
+      DiscourseEvent.trigger(:flag_created, post_action)
     end
 
     GivenDailyLike.increment_for(user.id) if post_action_type_id == PostActionType.types[:like]
@@ -542,7 +558,8 @@ SQL
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
-    return if post.hidden || post.user.staff?
+    return if post.hidden?
+    return if (!acting_user.staff?) && post.user.staff?
 
     if post_action_type == :spam &&
        acting_user.has_trust_level?(TrustLevel[3]) &&
@@ -568,6 +585,8 @@ SQL
       reason = guess_hide_reason(post)
     end
 
+    hiding_again = post.hidden_at.present?
+
     post.hidden = true
     post.hidden_at = Time.zone.now
     post.hidden_reason_id = reason
@@ -580,10 +599,13 @@ SQL
       options = {
         url: post.url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason: I18n.t("flag_reasons.#{post_action_type}"),
+        flag_reason: I18n.t("flag_reasons.#{post_action_type}", locale: SiteSetting.default_locale),
       }
 
-      Jobs.enqueue_in(5.seconds, :send_system_message, user_id: post.user.id, message_type: :post_hidden, message_options: options)
+      Jobs.enqueue_in(5.seconds, :send_system_message,
+                      user_id: post.user.id,
+                      message_type: hiding_again ? :post_hidden_again : :post_hidden,
+                      message_options: options)
     end
   end
 

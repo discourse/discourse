@@ -196,28 +196,4 @@ describe UserSerializer do
       expect(json[:custom_fields]['secret_field']).to eq(nil)
     end
   end
-
-  context "when SSO is enabled" do
-    it "sets the external_id field" do
-      SiteSetting.sso_url = "http://example.com/discourse_sso"
-      SiteSetting.sso_secret = "abcdefghijklmnop"
-      SiteSetting.enable_sso = true
-      sso = DiscourseSingleSignOn.new
-      sso.username = "test"
-      sso.email = "test@example.com"
-      sso.external_id = "1"
-      user = sso.lookup_or_create_user
-      json = UserSerializer.new(user, scope: Guardian.new, root: false).as_json
-      expect(json[:external_id]).to eq("1")
-    end
-  end
-
-  context "when SSO is not enabled" do
-    let(:user) { Fabricate(:user) }
-    let(:json) { UserSerializer.new(user, scope: Guardian.new, root: false).as_json }
-    it "doesn't include the external_id field" do
-      SiteSetting.enable_sso = false
-      expect(json).not_to have_key(:external_id)
-    end
-  end
 end

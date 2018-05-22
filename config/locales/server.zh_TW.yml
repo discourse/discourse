@@ -17,12 +17,12 @@ zh_TW:
       date_only: "%Y年%m月%d日"
       long: "%Y年%m月%d日%H:%M"
   date:
-    month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
+    month_names: [~, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "上午"
     pm: "下午"
-    <<: *datetime_formats
   title: "論壇"
   topics: "討論話題"
   posts: "文章"
@@ -63,18 +63,18 @@ zh_TW:
       present: 必須空白
       confirmation: "不匹配 %{attribute}"
       empty: 不能空白
-      equal_to: 必須等於 %{count}
+      equal_to: "必須等於 %{count}"
       even: 必須是雙數
       exclusion: 被保留
-      greater_than: 必須大於 %{count}
-      greater_than_or_equal_to: 必須大於或等於 %{count}
+      greater_than: "必須大於 %{count}"
+      greater_than_or_equal_to: "必須大於或等於 %{count}"
       has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
       contains_censored_words: "包含下列過濾詞彙: %{censored_words}"
-      less_than: 必須少於 %{count}
-      less_than_or_equal_to: 必須少於或等於 %{count}
+      less_than: "必須少於 %{count}"
+      less_than_or_equal_to: "必須少於或等於 %{count}"
       not_a_number: 不是數字
       not_an_integer: 必須是整數
       odd: 必須是單數
@@ -102,6 +102,9 @@ zh_TW:
       max_username_length_range: "你不能設定「最大」小於「最小」。"
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "您的邀請碼無效。請聯絡管理人員。"
     user_exists: "無需邀請 <b>%{email}</b>，他 <a href='/u/%{username}/summary'>已經有帳號了</a>！"
@@ -122,7 +125,7 @@ zh_TW:
   reading_time: "閱讀時間"
   likes: "個讚"
   too_many_replies:
-    other: "我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次"
+    other: 我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次
   embed:
     start_discussion: "開始討論"
     continue: "繼續討論"
@@ -132,29 +135,28 @@ zh_TW:
     no_hosts: "未設置內嵌用的主機。"
     configure: "配置嵌入"
     more_replies:
-      other: "%{count} 個更多回覆"
+      other: '%{count} 個更多回覆'
     loading: "討論串載入中⋯"
     permalink: "永久連結"
     imported_from: "這是一個已從原 %{link} 中分離的主題"
     in_reply_to: "▶ %{username}"
     replies:
-      other: "%{count} 個回覆"
+      other: '%{count} 個回覆'
   no_mentions_allowed: "抱歉，您無法提及其他用戶。"
   too_many_mentions:
-    other: "抱歉，您的文章中只能提及 %{count} 位用戶。"
+    other: 抱歉，您的文章中只能提及 %{count} 位用戶。
   no_mentions_allowed_newuser: "抱歉，新用戶不能提及其他用戶。"
   too_many_mentions_newuser:
-    other: "抱歉，新使用者在文章中只能提及 %{count} 位用戶。"
+    other: 抱歉，新使用者在文章中只能提及 %{count} 位用戶。
   no_images_allowed: "抱歉，新用戶不能在貼文中放置圖片。"
   too_many_images:
-    other: "抱歉，新使用者只能在文章中放置 %{count} 張圖片。"
+    other: 抱歉，新使用者只能在文章中放置 %{count} 張圖片。
   no_attachments_allowed: "抱歉，新用戶不能在貼文中放置附件。"
   too_many_attachments:
-    other: "抱歉，新使用者只能在文章中放置 %{count} 個附件。"
+    other: 抱歉，新使用者只能在文章中放置 %{count} 個附件。
   no_links_allowed: "抱歉，新用戶不能在貼文中放置連結。"
   too_many_links:
-    other: "抱歉，新使用者只能在文章中放置 %{count} 個連結。"
-  contains_blocked_words: "你的文章包含禁用的字詞"
+    other: 抱歉，新使用者只能在文章中放置 %{count} 個連結。
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
@@ -193,7 +195,6 @@ zh_TW:
   groups:
     errors:
       can_not_modify_automatic: "你不能修改自動組"
-      member_already_exist: "'%{username}' 已經是群組成員了。"
       invalid_domain: "'%{domain}' 不是有效的域名."
       invalid_incoming_email: "「%{email}」不是有效的電子郵件位址。"
       email_already_used_in_group: "「%{email}」已經被「%{group_name}」群組使用。"
@@ -210,8 +211,8 @@ zh_TW:
       trust_level_4: "信任等級 4"
   education:
     until_posts:
-      other: "%{count} 篇文章"
-    new-topic: |
+      other: '%{count} 篇文章'
+    'new-topic': |
       歡迎來到%{site_name} &mdash; **衷心感謝你參與討論！**
 
       - 標題是否清晰明了地描述了主題？看起來有意思麼？
@@ -221,7 +222,7 @@ zh_TW:
       - 選擇恰當的詞句以便別人能找到你的主題。若想要給主題分組，選擇一個分類。
 
       更多的幫助信息，[請查看我們的社群準則](/guidelines)。此信息面板只在你發佈前 %{education_posts_text}時顯示。
-    new-reply: |
+    'new-reply': |
       歡迎來到 %{site_name} — **感謝你的參與！**
 
       - 你的回應是否以某些方式改善了討論？
@@ -280,6 +281,7 @@ zh_TW:
       user_profile:
         bio_raw: "關於我"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -311,7 +313,6 @@ zh_TW:
           attributes:
             name:
               taken: 已被其他表情符號使用
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>你的個人檔案中，「關於我」的部分目前還沒有內容，<a href='/u/%{username_lower}/preferences/about-me'>不如來自我介紹一下吧？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
@@ -327,41 +328,41 @@ zh_TW:
     title: "歡迎來到 Discourse"
     body: |2
 
-      置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
+        置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
 
-      **編輯**它作為社群的簡要介紹：
+        **編輯**它作為社群的簡要介紹：
 
-      - 什麼人想參與？
-      - 他們能在這找到什麼？
-      - 為什麼他們要來這？
-      - 他們能在哪裡閲讀更多的內容（連結、資源等）？
+        - 什麼人想參與？
+        - 他們能在這找到什麼？
+        - 為什麼他們要來這？
+        - 他們能在哪裡閲讀更多的內容（連結、資源等）？
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
+        你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
   lounge_welcome:
     title: "歡迎來到貴賓室"
     body: |2
 
-      恭喜！ :confetti_ball:
+        恭喜！ :confetti_ball:
 
-      如果你看到了這個主題，說明你已經被提升至**常規**（信任等級3）了。
+        如果你看到了這個主題，說明你已經被提升至**常規**（信任等級3）了。
 
-      你現在可以&hellip;
+        你現在可以&hellip;
 
-      * 編輯任何主題的標題
-      * 改變任何主題的分類
-      * 讓你的連結設置為 follow 屬性（[自動 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已經移除）
-      * 訪問一個只有信任等級3及更高才能見到的貴賓室分類
-      * 一次標記即可隱藏垃圾信息
+        * 編輯任何主題的標題
+        * 改變任何主題的分類
+        * 讓你的連結設置為 follow 屬性（[自動 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已經移除）
+        * 訪問一個只有信任等級3及更高才能見到的貴賓室分類
+        * 一次標記即可隱藏垃圾信息
 
-      這裡是[目前達到常規的用戶列表](/badges/3/regular)。一定要來問個好！
+        這裡是[目前達到常規的用戶列表](/badges/3/regular)。一定要來問個好！
 
-      感謝成為社群的重要一員！
+        感謝成為社群的重要一員！
 
-      （想瞭解關於信任等級的更多信息，[參見這個主題][trust]。請注意成員需要在將來也維持一定的選擇條件的成員才能保持在常規。）
+        （想瞭解關於信任等級的更多信息，[參見這個主題][trust]。請注意成員需要在將來也維持一定的選擇條件的成員才能保持在常規。）
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "對於分類：%{category} 的定義"
     replace_paragraph: "（將第一段話修改成你的新分類的簡述。這段文字將出現在用戶選擇分類的地方，所以嘗試保持在 200 個字元內。 **除非你編輯了這段文字或者在這分類中創建了主題，這個分類不會出現在分類頁面中。**）"
@@ -377,7 +378,7 @@ zh_TW:
       uncategorized: "不能刪除該分類"
       has_subcategories: "不能刪除該分類，因為它有子分類"
       topic_exists:
-        other: "不能刪除該分類，因為它有 %{count} 個話題，最老的話題是 %{topic_link}"
+        other: 不能刪除該分類，因為它有 %{count} 個話題，最老的話題是 %{topic_link}
       topic_exists_no_oldest: "不能刪除該分類，因為有 %{count} 個話題"
     uncategorized_description: "不需要分類或者不適合放在現在的任何分類中的主題。"
   trust_levels:
@@ -393,77 +394,61 @@ zh_TW:
       title: "資深"
     change_failed_explanation: "你嘗試將%{user_name}降至%{new_trust_level}。然而他們的信任等級已經是%{current_trust_level}。%{user_name}將仍處于%{current_trust_level}——如果你想要降級用戶，先鎖定信任等級。"
   rate_limiter:
-    slow_down: "您這個動作重複太多次，請稍後再試。"
-    by_type:
-      first_day_replies_per_day: "你回帖的數量已經超出身為新用戶當天允許的上限，請等待%{time_left}之後再試。"
-      first_day_topics_per_day: "你創建新主題的數量已經超出身為新用戶當天允許的上限，請等待%{time_left}之後再試。"
-      create_topic: "您創建討論話題過於倉猝。請稍等 %{time_left} 再試一次。"
-      create_post: "你的回覆過快。請等待%{time_left}再重試。"
-      delete_post: "您刪除討論話題過於倉猝。請稍待 %{time_left} 後再試一次。"
-      public_group_membership: "您加入/離開群組過於頻繁。請稍等 %{time_left} 後再試一次。"
-      topics_per_day: "您今天新發佈的討論話題已經達到上限。請稍待 %{time_left} 後再試一次。"
-      pms_per_day: "您今天發表的訊息數已經達到上限。請等待 %{time_left} 後再行嘗試。"
-      create_like: "您今天給予讚的次數已經達到上限。請等待 %{time_left} 再行嘗試。"
-      create_bookmark: "您今天加入書籤的數目已經達到上限。請等待 %{time_left} 再行嘗試。"
-      edit_post: "您已達到單日編輯次數上限。請等待 %{time_left} 後再行嘗試。"
-      live_post_counts: "您要求的即時文章計數過於快速。請等待 %{time_left} 再行嘗試。"
-      unsubscribe_via_email: "你已經達到了今日用郵件解除訂閲的最大數量限制。請等待%{time_left}之後再試。"
-      topic_invitations_per_day: "你已經達到了今日主題邀請的最大數量限制。請等待%{time_left}之後再試。"
     hours:
-      other: "%{count} 小時"
+      other: '%{count} 小時'
     minutes:
-      other: "%{count} 分"
+      other: '%{count} 分'
     seconds:
-      other: "%{count} 秒"
+      other: '%{count} 秒'
   datetime:
     distance_in_words:
       half_a_minute: "< 1分"
       less_than_x_seconds:
-        other: "< %{count} 秒鐘"
+        other: < %{count} 秒鐘
       x_seconds:
-        other: "%{count} 秒"
+        other: '%{count} 秒'
       less_than_x_minutes:
-        other: "< %{count} 分鐘"
+        other: < %{count} 分鐘
       x_minutes:
-        other: "%{count} 分鐘"
+        other: '%{count} 分鐘'
       about_x_hours:
-        other: "%{count} 小時"
+        other: '%{count} 小時'
       x_days:
-        other: "%{count} 天"
+        other: '%{count} 天'
       about_x_months:
-        other: "%{count} 月"
+        other: '%{count} 月'
       x_months:
-        other: "%{count} 月"
+        other: '%{count} 月'
       about_x_years:
-        other: "%{count} 年"
+        other: '%{count} 年'
       over_x_years:
-        other: "> %{count} 年"
+        other: '> %{count} 年'
       almost_x_years:
-        other: "%{count} 年"
+        other: '%{count} 年'
     distance_in_words_verbose:
       half_a_minute: "剛剛"
       less_than_x_seconds:
-        other: "剛才"
+        other: 剛才
       x_seconds:
-        other: "%{count} 秒前"
+        other: '%{count} 秒前'
       less_than_x_minutes:
-        other: "不到 %{count} 分鐘前"
+        other: 不到 %{count} 分鐘前
       x_minutes:
-        other: "%{count} 分鐘前"
+        other: '%{count} 分鐘前'
       about_x_hours:
-        other: "%{count} 小時前"
+        other: '%{count} 小時前'
       x_days:
-        other: "%{count} 天前"
+        other: '%{count} 天前'
       about_x_months:
-        other: "約 %{count} 個月前"
+        other: 約 %{count} 個月前
       x_months:
-        other: "%{count} 個月前"
+        other: '%{count} 個月前'
       about_x_years:
-        other: "約 %{count} 年前"
+        other: 約 %{count} 年前
       over_x_years:
-        other: "超過 %{count} 年前"
+        other: 超過 %{count} 年前
       almost_x_years:
-        other: "約 %{count} 年前"
+        other: 約 %{count} 年前
   password_reset:
     no_token: "抱歉，密碼修改連結已過期。選擇登錄按鈕再使用“我忘記了密碼”獲得一個新連結。"
     choose_new: "選擇一個新密碼"
@@ -510,7 +495,6 @@ zh_TW:
       long_form: '投訴為不當內容'
     notify_user:
       title: '給 @{{username}} 送出一則訊息'
-      description: '我想要直接且私下地和這位朋友討論其文章。'
       long_form: '傳訊給用戶'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -640,7 +624,6 @@ zh_TW:
       xaxis: "天"
       yaxis: "郵件數量"
     user_to_user_private_messages:
-      title: "用戶對用戶"
       xaxis: "天"
       yaxis: "訊息數量"
     system_private_messages:
@@ -687,7 +670,6 @@ zh_TW:
       xaxis: "天"
       yaxis: "Web 爬蟲頁面訪問"
     page_view_total_reqs:
-      title: "總數"
       xaxis: "天"
       yaxis: "總瀏覽量"
     page_view_logged_in_mobile_reqs:
@@ -751,7 +733,7 @@ zh_TW:
     failing_emails_warning: '有 %{num_failed_jobs} 個郵件任務失敗。請檢查 app.yml 檔案是否正確配置了郵件伺服器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失敗的任務</a>。'
     subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
     email_polling_errored_recently:
-      other: "郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='/logs' target='_blank'>日誌</a>尋找詳情。"
+      other: 郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='/logs' target='_blank'>日誌</a>尋找詳情。
     bad_favicon_url: "網站表徵圖無法載入。檢查<a href='/admin/site_settings'>站點設置</a>中的 favicon_url。"
     poll_pop3_timeout: "至 POP3 伺服器的連接超時。無法獲取進站郵件。請檢查<a href='/admin/site_settings/category/email'>POP3 設置</a>和服務商。"
     poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='/admin/site_settings/category/email'>POP3 設置</a>。"
@@ -867,7 +849,6 @@ zh_TW:
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
-    invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     login_required: "需要登入才能進入網站，不允許匿名操作"
     min_username_length: "最短用戶名長度。警告：如果任何現有帳號或群組名稱短於此，你的網站會炸掉。"
     max_username_length: "最長用戶名長度。警告：如果任何現有帳號或群組名稱長於此，你的網站會炸掉。"
@@ -886,7 +867,6 @@ zh_TW:
     sso_overrides_avatar: "用 SSO 訊息中的外部網站頭像覆蓋用戶頭像。如果啟用，建議禁用 allow_uploaded_avatars"
     sso_not_approved_url: "重定向未受許可的單點登錄賬號至這個 URL"
     sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（預設情況下返回地址必須位於當前站點）"
-    enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
     enable_signup_cta: "顯示推薦創建賬戶的提示給那些回訪的未註冊用戶。"
     enable_yahoo_logins: "啟用雅虎（Yahoo）帳號驗證登入"
@@ -894,15 +874,12 @@ zh_TW:
     google_oauth2_client_id: "你的 Google 應用程式的客戶端 ID"
     google_oauth2_client_secret: "你的 Google 應用程式的客戶端 secret"
     enable_twitter_logins: "啟用推特（Twitter）帳號驗證登入，需要 twitter_consumer_key 和 twitter_consumer_secret"
-    twitter_consumer_key: "推特帳號驗證的客戶密匙（Consumer key），到 http://dev.twitter.com 來註冊獲取"
-    twitter_consumer_secret: "推特帳號驗證的客戶密碼（Consumer secret），到 http://dev.twitter.com 來註冊獲取"
     enable_instagram_logins: "啟用 Instagram 驗證，需要 instagram_consumer_key 和 instagram_consumer_secret"
     instagram_consumer_key: "Instagram 驗證的 Consumer key"
     instagram_consumer_secret: "Instagram 驗證的 Consumer secret"
     enable_facebook_logins: "啟用臉書（Facebook）帳號驗證登入，需要 facebook_app_id 和 facebook_app_secret"
     facebook_app_id: "臉書帳號驗證的應用帳號（App id），到 https://developers.facebook.com/apps 來註冊獲取"
     facebook_app_secret: "臉書帳號驗證的應用密碼（App secret），到 https://developers.facebook.com/apps 來註冊獲取"
-    facebook_request_extra_profile_details: "從 Facebook 中請求關於我、地點和網站。（需要 Facebook 許可你的登錄應用）"
     enable_github_logins: "啟用 Github 帳號驗證登入，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帳號驗證的用戶端帳號（Client id），到 https://github.com/settings/applications 來註冊獲取"
     github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"
@@ -910,7 +887,6 @@ zh_TW:
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
     automatic_backups_enabled: "按照定義的備份頻率運行自動備份計劃"
-    backup_frequency: "自動創建站點備份的頻率，以天為單位。"
     enable_s3_backups: "當完成備份後上傳備份到 S3。重要：需要在文件設定中填寫有效的 S3 驗證資料。"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_disable_cleanup: "當在本地刪除備份時不刪除 S3 上的備份。"
@@ -1190,7 +1166,6 @@ zh_TW:
     max_tags_in_filter_list: "過濾下拉選單中顯示的標籤數上限。優先顯示最常用的標籤。"
     tags_sort_alphabetically: "按照字母順序顯示標籤。預設按流行度顯示。"
     tag_style: "標籤的視覺樣式。"
-    staff_tags: "只可由管理人員使用的標籤列表"
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     remove_muted_tags_from_latest: "在最新主題列表中，不顯示有靜音標籤的主題。"
@@ -1240,15 +1215,15 @@ zh_TW:
     not_seen_in_a_month: "歡迎回來！我們已經好久沒見到你了。這些是你不在時的最熱門主題。"
   merge_posts:
     edit_reason:
-      other: "%{username}合併了 %{count} 個帖子"
+      other: '%{username}合併了 %{count} 個帖子'
     errors:
       different_topics: "無法合並不同主題的帖子。"
       different_users: "無法合並不同用戶的帖子。"
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} 個帖子被分離到了新主題：%{topic_link}"
+      other: '%{count} 個帖子被分離到了新主題：%{topic_link}'
     existing_topic_moderator_post:
-      other: "%{count} 個帖子被合併到現存主題：%{topic_link}"
+      other: '%{count} 個帖子被合併到現存主題：%{topic_link}'
   change_owner:
     post_revision_text: "所有權從 %{old_user} 轉移至 %{new_user}"
     deleted_user: "已經刪除的用戶"
@@ -1258,21 +1233,21 @@ zh_TW:
     closed_enabled: "此討論話題已關閉，不再接受新的回覆。"
     closed_disabled: "此討論話題已開放，可以發表新的回覆。"
     autoclosed_message_max_posts:
-      other: "消息中回覆已經達到上限 %{count}，自動鎖定。"
+      other: 消息中回覆已經達到上限 %{count}，自動鎖定。
     autoclosed_topic_max_posts:
-      other: "主題中回覆已經達到上限 %{count}，自動關閉。"
+      other: 主題中回覆已經達到上限 %{count}，自動關閉。
     autoclosed_enabled_days:
-      other: "該主題在創建%{count}天后自動關閉。不再允許添加新回覆。"
+      other: 該主題在創建%{count}天后自動關閉。不再允許添加新回覆。
     autoclosed_enabled_hours:
-      other: "該主題在創建%{count}小時後自動關閉。不再允許新的回覆。"
+      other: 該主題在創建%{count}小時後自動關閉。不再允許新的回覆。
     autoclosed_enabled_minutes:
-      other: "該主題在創建%{count}分鐘後自動關閉。不再允許新的回覆。"
+      other: 該主題在創建%{count}分鐘後自動關閉。不再允許新的回覆。
     autoclosed_enabled_lastpost_days:
-      other: "該主題在最後一個回覆創建後%{count}天后自動關閉。不再允許新的回覆。"
+      other: 該主題在最後一個回覆創建後%{count}天后自動關閉。不再允許新的回覆。
     autoclosed_enabled_lastpost_hours:
-      other: "該主題在最後一個回覆創建後%{count}小時後自動關閉。不再允許添加新回覆。"
+      other: 該主題在最後一個回覆創建後%{count}小時後自動關閉。不再允許添加新回覆。
     autoclosed_enabled_lastpost_minutes:
-      other: "本主題在最後一個回覆創建後%{count}分鐘後自動鎖定。不再允許添加新回覆。"
+      other: 本主題在最後一個回覆創建後%{count}分鐘後自動鎖定。不再允許添加新回覆。
     autoclosed_disabled: "此討論話題已開放，可以發表新的回覆。"
     autoclosed_disabled_lastpost: "本主題現在開放了。可以添加新的回覆。"
     pinned_enabled: "本主題已置頂，它將始終顯示在它所屬分類的頂部。可由管理人員對所有人解除置頂，或者由用戶自己取消置頂。"
@@ -1329,7 +1304,7 @@ zh_TW:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
   flags_reminder:
     subject_template:
-      other: "%{count} 個標記需要被處理"
+      other: '%{count} 個標記需要被處理'
   unsubscribe_mailer:
     title: "取消訂閱 Mailer"
     subject_template: "確認你不想要收到%{site_title}的電子郵件更新"
@@ -1365,47 +1340,6 @@ zh_TW:
   test_mailer:
     title: "測試 Mailer"
     subject_template: "[%{email_prefix}] 電子郵件發送測試"
-    text_body_template: |
-      這是一封測試電子郵件，發自：
-
-      [**%{base_url}**][0]
-
-      電子郵件分發很複雜。以下是一些你應該檢查的重點：
-
-      - 確定你在站點設置中為 `notification email` 設置了正確的地址。**這是系統發送郵件裡的“發自”地址，並需要你的域名配置正確以供相關驗證。**。
-
-      - 學習使用郵件客戶端查看電子郵件原始碼，這樣你可以通過查看郵件頭部來排查重要線索。在 Gmail 中，可以通過每一封郵件下拉菜單中的“顯示原始消息”來查看。
-
-      - **重要：** 你的 ISP 是否對你發送郵件的域名和 IP 作了反向 DNS 解析？你可以在此[測試你的反向枚舉指針（PTR）記錄][2]。如果你的 ISP 沒有設置正確的反向 DNS 記錄，那麼很可能你的任何電子郵件都不會被成功發送。
-
-      - 你的域名的[發件人策略框架（SPF）記錄][8]是否正確？你可以在此[測試你的SPF記錄][1]。注意 TXT 是一種正確的官方 SPF 記錄。
-
-      - 你域名的[域名密鑰身份識別郵件（DKIM）記錄][3]設置是否正確？這將顯著提高郵件分發的成功率。在此[測試你的 DKIM 記錄][7]。
-
-      - 如果你自己運行郵件伺服器，檢查確認你發送電子郵件的伺服器 IP [不在任何郵件黑名單中][4]。驗證你的 DNS 記錄的 HELO 消息中設置了符合要求的主機名。如果沒有，那麼會導致很多郵件服務商拒收你的郵件。
-
-      - 我們強烈建議你**發送測試郵件至 [mail-tester.com][mt]**，這樣可以檢查上述設置是否正確。
-
-      （最簡單的方法是在 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 和 [Mailjet][mj]註冊免費賬戶，他們的免費賬戶對一個小社群是足夠的。不過你仍然需要在 DNS 設置中設定 SPF 和 DKIM 記錄！）
-
-      我們衷心希望你成功完成郵件發送測試！
-
-      祝好運！
-
-      你的朋友，[Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "新版本 Mailer"
     subject_template: "[%{email_prefix}] 有可用的 Discourse 更新"
@@ -1424,7 +1358,7 @@ zh_TW:
     deferred: "感謝你讓我們知道。我們正在調查。"
     deferred_and_deleted: "感謝通知我們。我們已經刪除了帖子。"
   temporarily_closed_due_to_flags:
-    other: "這個話題因為大量的社群投訴暫時關閉 %{count} 小時。"
+    other: 這個話題因為大量的社群投訴暫時關閉 %{count} 小時。
   system_messages:
     post_hidden:
       title: "文章已隱藏"
@@ -1518,7 +1452,6 @@ zh_TW:
         ```
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
-      subject_template: "資料匯出完成"
       text_body_template: |
         資料成功匯出了！:dvd:
 
@@ -1615,7 +1548,7 @@ zh_TW:
     pending_users_reminder:
       title: "待審用戶提醒"
       subject_template:
-        other: "%{count} 個用戶等待審核"
+        other: '%{count} 個用戶等待審核'
       text_body_template: |
         有新註冊的用戶在訪問論壇前需要被確認（或者拒絶）。
 
@@ -1647,7 +1580,7 @@ zh_TW:
   user_notifications:
     previous_discussion: "之前的回覆"
     reached_limit:
-      other: "注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！"
+      other: 注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！
     in_reply_to: "回覆給"
     unsubscribe:
       title: "取消訂閱"
@@ -1802,7 +1735,7 @@ zh_TW:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       since_last_visit: "自你上次訪問至今"
@@ -2155,22 +2088,22 @@ zh_TW:
         該徽章授予給第一次編輯自己帖子的你。雖然你不能永遠在編輯自己的帖子，但是編輯他們總是一個好辦法——你可以改進你的帖子、修正小錯誤，或者是增補你原來沒有寫的內容。編輯能讓你的帖子質量變得更好！
     basic_user:
       name: 初級用戶
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">授予</a>所有常用社群功能"
       long_description: |
         該徽章授予給用戶等級達到 1 的成員。感謝你在社群裡花了一些時間並且閲讀了一些帖子，瞭解了我們的社群。你的新用戶限制已經被取消；並且你已經被授予了所有基本的社群權限，必須個人消息、標記、維基編輯和發佈多張圖片和多個連結的能力。
     member:
       name: 成員
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀請、群組消息和更多的贊
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">授予</a>邀請、群組消息和更多的贊"
       long_description: |
         該徽章授予給達到用戶等級 2 的你。感謝你在社群待了幾周，真正融入到了社群中。你現在可以在你的用戶頁或者主題中邀請他人或者創建群組消息了。每天你也可以點更多次讚了。
     regular:
       name: 活躍用戶
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a>重分類、重命名、跟蹤連結、維基功能和更多的贊
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">授予</a>重分類、重命名、跟蹤連結、維基功能和更多的贊"
       long_description: |
         該徽章授予給達到用戶等級 3 的你。感謝你在這幾個月持續地參與社群。你現在是我們之中最活躍的讀者之一了，你持續的貢獻極大地幫助了我們的社群。你現在可以社群待了幾周，真正融入到了社群中。你現在可以重新分類或者重命名主題、使用能力強大的垃圾標記功能以及訪問隱藏的貴賓分類了。而且每天你可以點更多次讚了。
     leader:
       name: 資深
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a>全局編輯、固定、鎖定、存檔、分割、合併和更多的贊
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">授予</a>全局編輯、固定、鎖定、存檔、分割、合併和更多的贊"
       long_description: |
         該徽章授予給達到用戶等級 4 的你。你被管理人員選作了社群的領導力量，你用你的行動和言辭為社群樹立了正面的形象。你現在可以修改所有帖子，使用常見的版主的主題管理功能，比如置頂、鎖定、隱藏、存檔、分割和合併功能。你每天可以點更多的讚了。
     welcome:
@@ -2244,8 +2177,6 @@ zh_TW:
     promoter:
       name: 推廣者
       description: 已邀請了 1 個用戶
-      long_description: |
-        該徽章授予給邀請他人加入社群的你。你曾使用了用戶頁面的邀請按鈕或主題底部的邀請按鈕。邀請對某個討論感興趣的朋友是引介新人的好辦法，非常感謝！
     campaigner:
       name: 活動家
       description: 已邀請了 3 個初級用戶
@@ -2342,8 +2273,6 @@ zh_TW:
     first_emoji:
       name: 首個表情
       description: 在文章中使用表情符號
-      long_description: |
-        該徽章授予給第一次在文章中使用表情符號的你 :thumbsup:。表情符號讓你在文章中表達快樂 :smiley:、悲傷 :anguished:、憤怒 :angry: 以及任何東西 :sunglasses:。輸入 : (冒號) 或在編輯器中的表情符號工具列中按鈕選擇吧 :ok_hand:
     first_mention:
       name: 首次提及
       long_description: 該徽章授予給第一次在帖子中@別人的你。每個提及都將通知對方，讓他們知道你發了貼。輸入 @ 提及任何用戶，如果可以的話，也可以提及群組——這是個獲得他們注意的好辦法。
@@ -2502,6 +2431,3 @@ zh_TW:
         description: |
           <p>如果你覺得需要修改這些設置，訪問<a href='/admin' target='_blank'>管理員分塊</a>；你可以在站點菜單找到扳手表徵圖旁找到。</p>
           <p>祝你玩得開心，還有祝你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建設新社區好運！</a></p>
-  activemodel:
-    errors:
-      <<: *errors

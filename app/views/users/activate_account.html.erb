@@ -17,26 +17,18 @@
 
 <script language="javascript">
   (function() {
-    function activateAccount() {
-      $('#activate-account-button').prop('disabled', true);
-      $.ajax("<%= path "/u/hp" %>").then(function(hp) {
-        $('#password_confirmation').val(hp.value);
-        $('#challenge').val(hp.challenge.split("").reverse().join(""));
-        $('#activate-account-form').submit();
-      }).fail(function() {
-        $('#activate-account-button').prop('disabled', false);
+    setTimeout(function() {
+      var $activateButton = $('#activate-account-button');
+      $activateButton.on('click', function() {
+        $activateButton.prop('disabled', true);
+        $.ajax("<%= path "/u/hp" %>").then(function(hp) {
+          $('#password_confirmation').val(hp.value);
+          $('#challenge').val(hp.challenge.split("").reverse().join(""));
+          $('#activate-account-form').submit();
+        }).fail(function() {
+          $activateButton.prop('disabled', false);
+        });
       });
-    }
-
-    var t0 = new Date().getTime();
-    $('#activate-account-button').on('click', function() {
-      var diff = new Date().getTime() - t0;
-
-      // Ensure the form has been visible for a few ms before allowing the
-      // user to submit.
-      if (diff > 50) {
-        activateAccount();
-      }
-    });
+    }, 50);
   })();
 </script>

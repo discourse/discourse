@@ -5,7 +5,6 @@ import { propertyNotEqual } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ApiKey from 'admin/models/api-key';
 import Group from 'discourse/models/group';
-import TL3Requirements from 'admin/models/tl3-requirements';
 import { userPath } from 'discourse/lib/url';
 
 const wrapAdmin = user => user ? AdminUser.create(user) : null;
@@ -301,7 +300,8 @@ const AdminUser = Discourse.User.extend({
 
   deactivate() {
     return ajax('/admin/users/' + this.id + '/deactivate', {
-      type: 'PUT'
+      type: 'PUT',
+      data: { context: document.location.pathname }
     }).then(function() {
       window.location.reload();
     }).catch(function(e) {
@@ -413,6 +413,7 @@ const AdminUser = Discourse.User.extend({
           location = document.location.pathname;
 
     const performDestroy = function(block) {
+      bootbox.dialog(I18n.t('admin.user.deleting_user'));
       let formData = { context: location };
       if (block) {
         formData["block_email"] = true;
@@ -472,11 +473,12 @@ const AdminUser = Discourse.User.extend({
     });
   },
 
-  tl3Requirements: function() {
-    if (this.get('tl3_requirements')) {
-      return TL3Requirements.create(this.get('tl3_requirements'));
+  @computed('tl3_requirements')
+  tl3Requirements(requirements) {
+    if (requirements) {
+      return this.store.createRecord('tl3Requirements', requirements);
     }
-  }.property('tl3_requirements'),
+  },
 
   @computed('suspended_by')
   suspendedBy: wrapAdmin,

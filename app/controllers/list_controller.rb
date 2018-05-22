@@ -50,6 +50,7 @@ class ListController < ApplicationController
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
     TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
+    :group_topics
   ].flatten
 
   # Create our filters
@@ -69,6 +70,27 @@ class ListController < ApplicationController
       end
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
+
+      if guardian.can_create_shared_draft? && @category.present?
+        if @category.id == SiteSetting.shared_drafts_category.to_i
+          # On shared drafts, show the destination category
+          list.topics.each do |t|
+            t.includes_destination_category = true
+          end
+        else
+          # When viewing a non-shared draft category, find topics whose
+          # destination are this category
+          shared_drafts = TopicQuery.new(
+            user,
+            category: SiteSetting.shared_drafts_category,
+            destination_category_id: list_opts[:category]
+          ).list_latest
+
+          if shared_drafts.present? && shared_drafts.topics.present?
+            list.shared_drafts = shared_drafts.topics
+          end
+        end
+      end
 
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -126,6 +148,18 @@ class ListController < ApplicationController
     list_opts = build_topic_list_options
     target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) }, [:user_stat, :user_option])
     list = generate_list_for("topics_by", target_user, list_opts)
+    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
+    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    respond_with_list(list)
+  end
+
+  def group_topics
+    group = Group.find_by(name: params[:group_name])
+    raise Discourse::NotFound unless group
+    guardian.ensure_can_see_group!(group)
+
+    list_opts = build_topic_list_options
+    list = generate_list_for("group_topics", group, list_opts)
     list.more_topics_url = url_for(construct_url_with(:next, list_opts))
     list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
     respond_with_list(list)
@@ -334,7 +368,7 @@ class ListController < ApplicationController
   def build_topic_list_options
     options = {}
     params[:page] = params[:page].to_i rescue 1
-    params[:tags] = [params[:tag_id]] if params[:tag_id].present? && guardian.can_tag_pms?
+    params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
       options[key] = params[key]

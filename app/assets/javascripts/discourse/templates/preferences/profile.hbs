@@ -50,17 +50,7 @@
   </div>
 {{/if}}
 
-<div class="control-group pref-card-badge">
-  <label class="control-label">{{i18n 'user.card_badge.title'}}</label>
-  <div class="controls">
-    {{#if model.card_image_badge}}
-      {{icon-or-image model.card_image_badge}}
-    {{/if}}
-    {{#link-to "preferences.card-badge" class="btn btn-small pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
-  </div>
-</div>
-
-{{plugin-outlet name="user-preferences-profile"}}
+{{plugin-outlet name="user-preferences-profile" args=(hash model=model save=(action "save"))}}
 
 {{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
 

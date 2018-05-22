@@ -1,4 +1,4 @@
-require 'table_migration_helper'
+require 'migration/table_dropper'
 
 class CreateTopicStatusUpdatesAgain < ActiveRecord::Migration[4.2]
   def up
@@ -14,7 +14,7 @@ class CreateTopicStatusUpdatesAgain < ActiveRecord::Migration[4.2]
       t.integer :category_id
     end
 
-    TableMigrationHelper.read_only_table('topic_status_updates')
+    Migration::TableDropper.read_only_table('topic_status_updates')
   end
 
   def down

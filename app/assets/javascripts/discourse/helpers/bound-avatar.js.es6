@@ -8,6 +8,5 @@ export default htmlHelper((user, size) => {
   }
 
   const avatarTemplate = Ember.get(user, 'avatar_template');
-  return avatarImg({ size, avatarTemplate });
   return avatarImg(addExtraUserClasses(user, { size, avatarTemplate }));
 });

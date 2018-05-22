@@ -41,8 +41,13 @@ describe TopicEmbed do
       end
 
       it "Supports updating the post" do
-        post = TopicEmbed.import(user, url, title, "muhahaha new contents!")
+        new_user = Fabricate(:user)
+
+        post = TopicEmbed.import(new_user, url, "I am a new title", "muhahaha new contents!")
+
         expect(post.cooked).to match(/new contents/)
+        expect(post.topic.title).to eq("I am a new title")
+        expect(post.user).to eq(new_user)
       end
 
       it "Should leave uppercase Feed Entry URL untouched in content" do
@@ -58,6 +63,19 @@ describe TopicEmbed do
       end
     end
 
+    context "post creation supports markdown rendering" do
+      before do
+        SiteSetting.embed_support_markdown = true
+      end
+
+      it "works as expected" do
+        post = TopicEmbed.import(user, url, title, "some random content")
+        expect(post).to be_present
+
+        # It uses regular rendering
+        expect(post.cook_method).to eq(Post.cook_methods[:regular])
+      end
+    end
   end
 
   context '.topic_id_for_embed' do

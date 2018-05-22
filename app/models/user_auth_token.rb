@@ -4,6 +4,9 @@ require 'digest/sha1'
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
 
+  # TODO 2019: remove this line
+  self.ignored_columns = ["legacy"]
+
   ROTATE_TIME = 10.minutes
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
@@ -48,9 +51,8 @@ class UserAuthToken < ActiveRecord::Base
     expire_before = SiteSetting.maximum_session_age.hours.ago
 
     user_token = find_by("(auth_token = :token OR
-                          prev_auth_token = :token OR
-                          (auth_token = :unhashed_token AND legacy)) AND rotated_at > :expire_before",
-                          token: token, unhashed_token: unhashed_token, expire_before: expire_before)
+                          prev_auth_token = :token) AND rotated_at > :expire_before",
+                          token: token, expire_before: expire_before)
 
     if !user_token
 
@@ -180,7 +182,6 @@ end
 #  prev_auth_token :string           not null
 #  user_agent      :string
 #  auth_token_seen :boolean          default(FALSE), not null
-#  legacy          :boolean          default(FALSE), not null
 #  client_ip       :inet
 #  rotated_at      :datetime         not null
 #  created_at      :datetime         not null

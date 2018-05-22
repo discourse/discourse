@@ -1,0 +1,15 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+he:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          format_description: "תבנית להצגת תאריך המשתמש. יש להשתמש ב־„‎\\T\\Z” כדי להציג את אזור הזמן של המשתמש במילים (אסיה/ירושלים)"
+          timezones_title: אזורי זמן
+          timezones_description: באזורי זמן נעשה שימוש לטובת הצגת תאריך בתצוגה מקדימה וכבררת מחדל.

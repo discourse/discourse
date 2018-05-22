@@ -87,6 +87,8 @@ describe Upload do
 
     it "doesn't blow up with an invalid URI" do
       expect { Upload.get_from_url("http://ip:port/index.html") }.not_to raise_error
+      expect { Upload.get_from_url("mailto:admin%40example.com") }.not_to raise_error
+      expect { Upload.get_from_url("mailto:example") }.not_to raise_error
     end
 
     describe "s3 store" do

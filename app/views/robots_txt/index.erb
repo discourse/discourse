@@ -1,31 +1,18 @@
-# See http://www.robotstxt.org/wc/norobots.html for documentation on how to use the robots.txt file
+<%= @robots_info[:header] %>
+<% if Discourse.base_uri.present? %>
+# This robots.txt file is not used. Please append the content below in the robots.txt file located at the root
+<% end %>
 #
-User-agent: *
-Disallow: /auth/cas
-Disallow: /auth/facebook/callback
-Disallow: /auth/twitter/callback
-Disallow: /auth/google/callback
-Disallow: /auth/yahoo/callback
-Disallow: /auth/github/callback
-Disallow: /auth/cas/callback
-Disallow: /assets/browser-update*.js
-Disallow: /users/
-Disallow: /u/
-Disallow: /badges/
-Disallow: /search
-Disallow: /search/
-Disallow: /tags
-Disallow: /tags/
-Disallow: /email/
-Disallow: /session
-Disallow: /session/
-Disallow: /admin
-Disallow: /admin/
-Disallow: /user-api-key
-Disallow: /user-api-key/
-Disallow: /*?api_key*
-Disallow: /*?*api_key*
-Disallow: /groups
-Disallow: /groups/
+<% @robots_info[:agents].each do |agent| %>
+User-agent: <%= agent[:name] %>
+<%- if agent[:delay] -%>
+Crawl-delay: <%= agent[:delay] %>
+<%- end -%>
+<% agent[:disallow].each do |path| %>
+Disallow: <%= path %>
+<% end %>
+
+
+<% end %>
 
 <%= server_plugin_outlet "robots_txt_index" %>

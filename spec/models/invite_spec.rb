@@ -301,25 +301,8 @@ describe Invite do
         end
 
         context 'again' do
-          context "without a passthrough" do
-            before do
-              SiteSetting.invite_passthrough_hours = 0
-            end
-
-            it 'will not redeem twice' do
-              expect(invite.redeem).to be_blank
-            end
-          end
-
-          context "with a passthrough" do
-            before do
-              SiteSetting.invite_passthrough_hours = 1
-            end
-
-            it 'will not redeem twice' do
-              expect(invite.redeem).to be_present
-              expect(invite.redeem.send_welcome_message).to eq(false)
-            end
+          it 'will not redeem twice' do
+            expect(invite.redeem).to be_blank
           end
         end
       end

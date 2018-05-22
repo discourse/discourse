@@ -20,7 +20,9 @@ export default class PostCooked {
   }
 
   update(prev) {
-    if (prev.attrs.cooked !== this.attrs.cooked) {
+    if ((prev.attrs.cooked !== this.attrs.cooked) ||
+        (prev.attrs.highlightTerm !== this.attrs.highlightTerm)) {
+
       return this.init();
     }
   }
@@ -101,7 +103,7 @@ export default class PostCooked {
         // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
         if (valid && isValidLink($link)) {
           const title = I18n.t("topic_map.clicks", {count: lc.clicks});
-          $link.append(`<span class='badge badge-notification clicks' title='${title}'>${number(lc.clicks)}</span>`);
+          $link.append(` <span class='badge badge-notification clicks' title='${title}'>${number(lc.clicks)}</span>`);
         }
       });
     });

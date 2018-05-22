@@ -1,6 +1,24 @@
 .groups-page {
   h1 {
-    margin: 20px 0;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+}
+
+.groups-header {
+  margin-bottom: 30px;
+}
+
+.groups-header-filters {
+  display: inline-block;
+
+  .groups-header-filters-type {
+    vertical-align: middle;
+  }
+
+  .groups-header-filters-name {
+    vertical-align: middle;
+    margin: 0;
   }
 }
 
@@ -9,22 +27,55 @@
 
   th {
     border-bottom: 1px solid $primary-low;
-    padding: 5px 0;
+    padding: 0.5em;
     text-align: left;
   }
 
+  .sortable {
+    &:hover {
+      background-color: $primary-low;
+      cursor: pointer;
+    }
+  }
+
   tr {
-    border-bottom: 1px solid $primary-low; 
 
     td {
-      color: blend-primary-secondary(50%);
-      padding: 0.8em 0;
+      padding: 0.8em;
+      color: $primary-medium;
+    }
+
+    td.groups-info {
+      width: 50%;
+    }
+
+    td.group-user-status {
+      i {
+        color: $primary;
+      }
     }
 
     td.groups-user-count {
-      font-size: $font-up-2
+      width: 17%;
+      font-size: $font-up-2;
     }
-  }
+
+    td.groups-table-type {
+      width: 17%;
+      font-size: $font-up-1;
+    }
+
+    td.groups-table-membership {
+      .group-membership-button {
+        display: inline-block;
+      }
+
+      > span {
+        margin-right: 5px;
+        font-size: $font-up-1;
+      }
+    }
+   }
 
   .groups-info {
     .groups-info-name {

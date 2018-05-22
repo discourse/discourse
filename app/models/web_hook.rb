@@ -30,30 +30,82 @@ class WebHook < ActiveRecord::Base
     [WebHookEventType.find(WebHookEventType::POST)]
   end
 
-  def self.find_by_type(type)
+  def strip_url
+    self.payload_url = (payload_url || "").strip.presence
+  end
+
+  def self.active_web_hooks(type)
     WebHook.where(active: true)
       .joins(:web_hook_event_types)
       .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, type.to_s)
       .uniq
   end
 
-  def self.enqueue_hooks(type, opts = {})
-    find_by_type(type).each do |w|
-      Jobs.enqueue(:emit_web_hook_event, opts.merge(web_hook_id: w.id, event_type: type.to_s))
+  def self.enqueue_hooks(type, opts = {}, web_hooks = nil)
+    (web_hooks || active_web_hooks(type)).each do |web_hook|
+      Jobs.enqueue(:emit_web_hook_event, opts.merge(
+        web_hook_id: web_hook.id, event_type: type.to_s
+      ))
     end
   end
 
-  def self.enqueue_topic_hooks(event, topic, user = nil)
-    WebHook.enqueue_hooks(:topic, topic_id: topic.id, category_id: topic&.category_id, event_name: event.to_s)
+  def self.enqueue_object_hooks(type, object, event, serializer = nil)
+    Scheduler::Defer.later("Enqueue User Webhook") do
+      web_hooks = active_web_hooks(type)
+      unless web_hooks.empty?
+        serializer ||= "WebHook#{type.capitalize}Serializer".constantize
+
+        WebHook.enqueue_hooks(type, {
+          event_name: event.to_s,
+          payload: serializer.new(object,
+            scope: self.guardian,
+            root: false
+          ).to_json
+        }, web_hooks)
+      end
+    end
   end
 
-  def self.enqueue_post_hooks(event, post, user = nil)
-    WebHook.enqueue_hooks(:post, post_id: post.id, category_id: post&.topic&.category_id, event_name: event.to_s)
+  def self.enqueue_topic_hooks(event, topic)
+    Scheduler::Defer.later("Enqueue Topic Webhook") do
+      web_hooks = active_web_hooks('topic')
+      unless web_hooks.empty?
+        topic_view = TopicView.new(topic.id, Discourse.system_user)
+
+        WebHook.enqueue_hooks(:topic, {
+          category_id: topic&.category_id,
+          event_name: event.to_s,
+          payload: WebHookTopicViewSerializer.new(topic_view,
+            scope: self.guardian,
+            root: false
+          ).to_json
+        }, web_hooks)
+      end
+    end
   end
 
-  def strip_url
-    self.payload_url = (payload_url || "").strip.presence
+  def self.enqueue_post_hooks(event, post)
+    Scheduler::Defer.later("Enqueue Post Webhook") do
+      web_hooks = active_web_hooks('post')
+
+      unless web_hooks.empty?
+        WebHook.enqueue_hooks(:post, {
+          category_id: post&.topic&.category_id,
+          event_name: event.to_s,
+          payload: WebHookPostSerializer.new(post,
+            scope: self.guardian,
+            root: false
+          ).to_json
+        }, web_hooks)
+      end
+    end
   end
+
+  private
+
+    def self.guardian
+      @guardian ||= Guardian.new(Discourse.system_user)
+    end
 end
 
 # == Schema Information

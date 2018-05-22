@@ -131,7 +131,7 @@ module ImportScripts::Mbox
         INSERT INTO user (email, name, date_of_first_message)
         SELECT from_email, MIN(from_name) AS from_name, MIN(email_date)
         FROM email
-        WHERE from_email IS NOT NULL
+        WHERE from_email IS NOT NULL AND email_date IS NOT NULL
         GROUP BY from_email
         ORDER BY from_email
       SQL

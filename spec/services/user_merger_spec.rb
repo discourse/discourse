@@ -289,69 +289,6 @@ describe UserMerger do
       expect(Notification.where(user_id: target_user.id).count).to eq(2)
       expect(Notification.where(user_id: source_user.id).count).to eq(0)
     end
-
-    def create_notification(type, notified_user, post, data = {})
-      Fabricate(
-        :notification,
-        notification_type: Notification.types[type],
-        user: notified_user,
-        data: data.to_json,
-        topic: post&.topic,
-        post_number: post&.post_number
-      )
-    end
-
-    def notification_data(notification)
-      JSON.parse(notification.reload.data, symbolize_names: true)
-    end
-
-    def original_and_display_username(user)
-      { original_username: user.username, display_username: user.username, foo: "bar" }
-    end
-
-    def original_username_and_some_text_as_display_username(user)
-      { original_username: user.username, display_username: "some text", foo: "bar" }
-    end
-
-    def only_display_username(user)
-      { display_username: user.username }
-    end
-
-    def username_and_something_else(user)
-      { username: user.username, foo: "bar" }
-    end
-
-    it "updates notification data" do
-      notified_user = Fabricate(:user)
-      p1 = Fabricate(:post, post_number: 1, user: source_user)
-      p2 = Fabricate(:post, post_number: 1, user: walter)
-      Fabricate(:invite, invited_by: notified_user, user: source_user)
-      Fabricate(:invite, invited_by: notified_user, user: walter)
-
-      n01 = create_notification(:mentioned, notified_user, p1, original_and_display_username(source_user))
-      n02 = create_notification(:mentioned, notified_user, p2, original_and_display_username(walter))
-      n03 = create_notification(:mentioned, notified_user, p1, original_username_and_some_text_as_display_username(source_user))
-      n04 = create_notification(:mentioned, notified_user, p1, only_display_username(source_user))
-      n05 = create_notification(:invitee_accepted, notified_user, nil, only_display_username(source_user))
-      n06 = create_notification(:invitee_accepted, notified_user, nil, only_display_username(walter))
-      n07 = create_notification(:granted_badge, source_user, nil, username_and_something_else(source_user))
-      n08 = create_notification(:granted_badge, walter, nil, username_and_something_else(walter))
-      n09 = create_notification(:group_message_summary, source_user, nil, username_and_something_else(source_user))
-      n10 = create_notification(:group_message_summary, walter, nil, username_and_something_else(walter))
-
-      merge_users!
-
-      expect(notification_data(n01)).to eq(original_and_display_username(target_user))
-      expect(notification_data(n02)).to eq(original_and_display_username(walter))
-      expect(notification_data(n03)).to eq(original_username_and_some_text_as_display_username(target_user))
-      expect(notification_data(n04)).to eq(only_display_username(target_user))
-      expect(notification_data(n05)).to eq(only_display_username(target_user))
-      expect(notification_data(n06)).to eq(only_display_username(walter))
-      expect(notification_data(n07)).to eq(username_and_something_else(target_user))
-      expect(notification_data(n08)).to eq(username_and_something_else(walter))
-      expect(notification_data(n09)).to eq(username_and_something_else(target_user))
-      expect(notification_data(n10)).to eq(username_and_something_else(walter))
-    end
   end
 
   context "post actions" do
@@ -503,17 +440,23 @@ describe UserMerger do
     expect(post3.reload.rejected_by).to eq(target_user)
   end
 
-  it "updates search log entries" do
-    SearchLog.log(term: 'hello', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-    SearchLog.log(term: 'world', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-    SearchLog.log(term: 'star trek', search_type: :full_page, ip_address: '192.168.0.2', user_id: target_user.id)
-    SearchLog.log(term: 'bad', search_type: :full_page, ip_address: '192.168.0.3', user_id: walter.id)
+  describe 'search logs' do
+    after do
+      SearchLog.clear_debounce_cache!
+    end
 
-    merge_users!
+    it "updates search log entries" do
+      SearchLog.log(term: 'hello', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
+      SearchLog.log(term: 'world', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
+      SearchLog.log(term: 'star trek', search_type: :full_page, ip_address: '192.168.0.2', user_id: target_user.id)
+      SearchLog.log(term: 'bad', search_type: :full_page, ip_address: '192.168.0.3', user_id: walter.id)
 
-    expect(SearchLog.where(user_id: target_user.id).count).to eq(3)
-    expect(SearchLog.where(user_id: source_user.id).count).to eq(0)
-    expect(SearchLog.where(user_id: walter.id).count).to eq(1)
+      merge_users!
+
+      expect(SearchLog.where(user_id: target_user.id).count).to eq(3)
+      expect(SearchLog.where(user_id: source_user.id).count).to eq(0)
+      expect(SearchLog.where(user_id: walter.id).count).to eq(1)
+    end
   end
 
   it "merges tag notification settings" do
@@ -696,7 +639,7 @@ describe UserMerger do
 
   context "user actions" do
     # action_type and user_id are not nullable
-    # target_topic_id and acting_user_id are nullable, but always a value
+    # target_topic_id and acting_user_id are nullable, but always have a value
 
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }
@@ -716,6 +659,14 @@ describe UserMerger do
                              acting_user_id: acting_user.id,
                              target_topic_id: post.topic_id,
                              target_post_id: post.id)
+    end
+
+    def log_got_private_message(acting_user, user, topic)
+      UserAction.log_action!(action_type: UserAction::GOT_PRIVATE_MESSAGE,
+                             user_id: user.id,
+                             acting_user_id: acting_user.id,
+                             target_topic_id: topic.id,
+                             target_post_id: -1)
     end
 
     it "merges when target_post_id is not set" do
@@ -748,6 +699,42 @@ describe UserMerger do
                                     acting_user_id: target_user.id).pluck(:id)
       expect(action_ids).to contain_exactly(a2.id, a3.id)
     end
+
+    it "merges when acting_user is neither source_user nor target_user" do
+      coding_horror = Fabricate(:coding_horror)
+
+      pm_topic1 = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: walter),
+        Fabricate.build(:topic_allowed_user, user: source_user),
+        Fabricate.build(:topic_allowed_user, user: target_user),
+        Fabricate.build(:topic_allowed_user, user: coding_horror),
+      ])
+
+      pm_topic2 = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: walter),
+        Fabricate.build(:topic_allowed_user, user: source_user)
+      ])
+
+      pm_topic3 = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: walter),
+        Fabricate.build(:topic_allowed_user, user: target_user)
+      ])
+
+      a1 = log_got_private_message(walter, source_user, pm_topic1)
+      a2 = log_got_private_message(walter, target_user, pm_topic1)
+      a3 = log_got_private_message(walter, coding_horror, pm_topic1)
+      a4 = log_got_private_message(walter, source_user, pm_topic2)
+      a5 = log_got_private_message(walter, target_user, pm_topic3)
+
+      merge_users!
+
+      expect(UserAction.count).to eq(4)
+
+      action_ids = UserAction.where(action_type: UserAction::GOT_PRIVATE_MESSAGE,
+                                    user_id: target_user.id,
+                                    acting_user_id: walter.id).pluck(:id)
+      expect(action_ids).to contain_exactly(a2.id, a4.id, a5.id)
+    end
   end
 
   it "merges archived messages" do
@@ -762,10 +749,10 @@ describe UserMerger do
       Fabricate.build(:topic_allowed_user, user: source_user)
     ])
 
-    UserArchivedMessage.archive!(source_user.id, pm_topic1.id)
-    UserArchivedMessage.archive!(target_user.id, pm_topic1.id)
-    UserArchivedMessage.archive!(source_user.id, pm_topic2.id)
-    UserArchivedMessage.archive!(walter.id, pm_topic2.id)
+    UserArchivedMessage.archive!(source_user.id, pm_topic1)
+    UserArchivedMessage.archive!(target_user.id, pm_topic1)
+    UserArchivedMessage.archive!(source_user.id, pm_topic2)
+    UserArchivedMessage.archive!(walter.id, pm_topic2)
 
     merge_users!
 
@@ -1017,5 +1004,17 @@ describe UserMerger do
     expect(UserAvatar.where(user_id: source_user.id).count).to eq(0)
 
     expect(User.find_by_username(source_user.username)).to be_nil
+  end
+
+  it "updates the username" do
+    Jobs::UpdateUsername.any_instance
+      .expects(:execute)
+      .with(user_id: source_user.id,
+            old_username: 'alice1',
+            new_username: 'alice',
+            avatar_template: target_user.avatar_template)
+      .once
+
+    merge_users!
   end
 end

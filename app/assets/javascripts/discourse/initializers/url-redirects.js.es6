@@ -21,7 +21,7 @@ export default {
     }
 
     DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, "/u/$1/summary", {
-      exceptions: ['/u/account-created', '/users/account-created']
+      exceptions: ['/u/account-created', '/users/account-created', '/u/password-reset', '/users/password-reset']
     });
   }
 };

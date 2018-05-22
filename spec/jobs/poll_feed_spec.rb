@@ -82,6 +82,18 @@ describe Jobs::PollFeed do
             expect { poller.poll_feed }.to change { Topic.count }.by(1)
             expect(Topic.last.user).to eq(feed_author)
           end
+
+          it "updates the post if it had been polled" do
+            embed_url = 'https://blog.discourse.org/2017/09/poll-feed-spec-fixture'
+            post = TopicEmbed.import(Fabricate(:user), embed_url, 'old title', 'old content')
+
+            expect { poller.poll_feed }.to_not change { Topic.count }
+
+            post.reload
+            expect(post.topic.title).to eq('Poll Feed Spec Fixture')
+            expect(post.raw).to include('<p>This is the body &amp; content. </p>')
+            expect(post.user).to eq(feed_author)
+          end
         end
       end
 

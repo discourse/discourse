@@ -9,6 +9,8 @@ $small-width: 800px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
 
+$input-padding: 4px 10px;
+
 // Brand color variables
 // --------------------------------------------------
 
@@ -26,13 +28,13 @@ $github: #6d6d6d !default;
 $base-font-size: 14px !default;
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
-// Font-size defintions, multiplier ^ (step / interval) 
+// Font-size defintions, multiplier ^ (step / interval)
 $font-up-6: 2.296em;
 $font-up-5: 2em;
 $font-up-4: 1.7511em;
 $font-up-3: 1.5157em;
 $font-up-2: 1.3195em;
-$font-up-1: 1.1487em; // 2^(1/5) 
+$font-up-1: 1.1487em; // 2^(1/5)
 $font-0: 1em;
 $font-down-1: .8706em; // 2^(-1/5)
 $font-down-2: .7579em; // Smallest size we use based on the 1em base
@@ -46,7 +48,7 @@ $line-height-small: 1;
 $line-height-medium: 1.2; // Headings or large text
 $line-height-large: 1.4; // Normal or small text
 
-// These files don't actually exist. They're injected by Stylesheet::Compiler. 
+// These files don't actually exist. They're injected by Stylesheet::Compiler.
 // --------------------------------------------------
 
 @import "theme_variables";
@@ -57,10 +59,10 @@ $line-height-large: 1.4; // Normal or small text
 // --------------------------------------------------
 
 $z-layers: (
-  "max":              9999, 
+  "max":              9999,
   "fullscreen":       1700,
   "modal": (
-    "tooltip":        1600,   
+    "tooltip":        1600,
     "popover":        1500,
     "dropdown":       1400,
     "content":        1300,
@@ -70,10 +72,12 @@ $z-layers: (
   "header":           1000,
   "tooltip":          600,
   "composer": (
+      "dropdown":     700,
+      "tooltip":      600,      
       "popover":      500,
       "content":      400,
   ),
-  "dropdown":         300,  
+  "dropdown":         300,
   "usercard":         200,
   "timeline":         100,
   "base":             1

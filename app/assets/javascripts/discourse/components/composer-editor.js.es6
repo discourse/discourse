@@ -37,10 +37,19 @@ export default Ember.Component.extend({
     return `[${I18n.t('uploading')}]() `;
   },
 
-  @computed()
-  replyPlaceholder() {
-    const key = authorizesOneOrMoreImageExtensions() ? "reply_placeholder" : "reply_placeholder_no_images";
-    return `composer.${key}`;
+  @computed('composer.requiredCategoryMissing')
+  replyPlaceholder(requiredCategoryMissing) {
+    if (requiredCategoryMissing) {
+      return 'composer.reply_placeholder_choose_category';
+    } else {
+      const key = authorizesOneOrMoreImageExtensions() ? "reply_placeholder" : "reply_placeholder_no_images";
+      return `composer.${key}`;
+    }
+  },
+
+  @computed('composer.requiredCategoryMissing', 'composer.replyLength')
+  disableTextarea(requiredCategoryMissing, replyLength) {
+    return requiredCategoryMissing && replyLength === 0;
   },
 
   @observes('composer.uploadCancelled')
@@ -416,8 +425,16 @@ export default Ember.Component.extend({
         let name = $e.data('name');
 
         if (found.indexOf(name) === -1) {
-          this.sendAction('cannotSeeMention', [{ name: name }]);
-          found.push(name);
+
+          // add a delay to allow for typing, so you don't open the warning right away
+          // previously we would warn after @bob even if you were about to mention @bob2
+          Em.run.later(this, () => {
+            if ($preview.find('.mention.cannot-see[data-name="' + name + '"]').length > 0) {
+              this.sendAction('cannotSeeMention', [{ name: name }]);
+              found.push(name);
+            }
+          }, 2000);
+
         }
       });
 

@@ -168,6 +168,13 @@ describe DiscoursePluginRegistry do
       expect(registry.admin_javascripts.count).to eq(1)
       expect(registry.javascripts.count).to eq(0)
     end
+
+    it "registers vendored_core_pretty_text properly" do
+      registry.register_asset("my_lib.js", :vendored_core_pretty_text)
+
+      expect(registry.vendored_core_pretty_text.count).to eq(1)
+      expect(registry.javascripts.count).to eq(0)
+    end
   end
 
   context '#register_seed_data' do

@@ -2,33 +2,6 @@ require 'rails_helper'
 
 describe InvitesController do
 
-  context '.show' do
-    render_views
-
-    it "shows error if invite not found" do
-      get :show, params: { id: 'nopeNOPEnope' }
-
-      expect(response).to be_success
-
-      body = response.body
-
-      expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found'))
-    end
-
-    it "renders the accept invite page if invite exists" do
-      i = Fabricate(:invite)
-      get :show, params: { id: i.invite_key }
-
-      expect(response).to be_success
-
-      body = response.body
-
-      expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to_not include(I18n.t('invite.not_found'))
-    end
-  end
-
   context '.destroy' do
 
     it 'requires you to be logged in' do

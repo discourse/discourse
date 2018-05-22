@@ -103,6 +103,8 @@ class StaticController < ApplicationController
   # instead we cache the favicon in redis and serve it out real quick with
   # a huge expiry, we also cache these assets in nginx so it bypassed if needed
   def favicon
+    is_asset_path
+
     hijack do
       data = DistributedMemoizer.memoize(FAVICON + SiteSetting.favicon_url, 60 * 30) do
         begin
@@ -138,16 +140,22 @@ class StaticController < ApplicationController
   end
 
   def brotli_asset
+    is_asset_path
+
     serve_asset(".br") do
       response.headers["Content-Encoding"] = 'br'
     end
   end
 
   def cdn_asset
+    is_asset_path
+
     serve_asset
   end
 
   def service_worker_asset
+    is_asset_path
+
     respond_to do |format|
       format.js do
         # https://github.com/w3c/ServiceWorker/blob/master/explainer.md#updating-a-service-worker

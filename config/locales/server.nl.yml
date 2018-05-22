@@ -17,12 +17,12 @@ nl:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y om %H:%M"
   date:
-    month_names: [null, januari, februari, maart, april, mei, juni, juli, augustus, september, oktober, november, december]
+    month_names: [~, januari, februari, maart, april, mei, juni, juli, augustus, september, oktober, november, december]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Topics"
   posts: "berichten"
@@ -67,18 +67,18 @@ nl:
       present: moet leeg zijn
       confirmation: "komt niet overeen met %{attribute}"
       empty: mag niet leeg zijn
-      equal_to: moet gelijk zijn aan %{count}
+      equal_to: "moet gelijk zijn aan %{count}"
       even: moet even zijn
       exclusion: is gereserveerd
-      greater_than: moet groter zijn dan %{count}
-      greater_than_or_equal_to: moet groter zijn dan of gelijk zijn aan %{count}
+      greater_than: "moet groter zijn dan %{count}"
+      greater_than_or_equal_to: "moet groter zijn dan of gelijk zijn aan %{count}"
       has_already_been_used: "is al gebruikt"
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
       is_invalid: "lijkt onduidelijk, is het een volledige zin?"
       contains_censored_words: "bevat de volgende gecensureerde woorden: %{censored_words}"
-      less_than: moet minder zijn dan %{count}
-      less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
+      less_than: "moet minder zijn dan %{count}"
+      less_than_or_equal_to: "moet minder zijn dan of gelijk zijn aan %{count}"
       not_a_number: is niet een getal
       not_an_integer: moet een integer zijn
       odd: moet oneven zijn
@@ -110,6 +110,9 @@ nl:
       max_username_length_range: "U kunt het maximum niet lager instellen dan het minimum."
       default_categories_already_selected: "U kunt geen categorie selecteren die in een andere lijst wordt gebruikt."
       s3_upload_bucket_is_required: "U kunt geen uploads naar S3 toestaan voordat u de 's3_upload_bucket' hebt opgegeven."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "Uw uitnodigingstoken is ongeldig. Neem contact op met de beheerder van de website."
     user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='/u/%{username}/summary'>heeft al een account!</a>"
@@ -130,8 +133,8 @@ nl:
   reading_time: "Leestijd"
   likes: "Likes"
   too_many_replies:
-    one: "Sorry, maar nieuwe gebruikers mogen tijdelijk maar 1 antwoord in hetzelfde topic plaatsen."
-    other: "Sorry, maar nieuwe gebruikers mogen tijdelijk maar %{count} antwoorden in hetzelfde topic plaatsen."
+    one: Sorry, maar nieuwe gebruikers mogen tijdelijk maar 1 antwoord in hetzelfde topic plaatsen.
+    other: Sorry, maar nieuwe gebruikers mogen tijdelijk maar %{count} antwoorden in hetzelfde topic plaatsen.
   embed:
     start_discussion: "Discussie starten"
     continue: "Discussie voortzetten"
@@ -141,36 +144,35 @@ nl:
     no_hosts: "Er zijn geen hosts ingesteld voor embedding."
     configure: "Embedden configureren"
     more_replies:
-      one: "Nog 1 antwoord"
-      other: "Nog %{count} antwoorden"
+      one: Nog 1 antwoord
+      other: Nog %{count} antwoorden
     loading: "Discussie laden..."
     permalink: "Permalink"
     imported_from: "Dit discussietopic is een voortzetting van het oorspronkelijke topic op %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 antwoord"
-      other: "%{count} antwoorden"
+      one: 1 antwoord
+      other: '%{count} antwoorden'
   no_mentions_allowed: "Sorry, u kunt geen andere gebruikers noemen."
   too_many_mentions:
-    one: "Sorry, u kunt maar één andere gebruiker in een bericht noemen."
-    other: "Sorry, u kunt maar %{count} gebruikers in een bericht noemen."
+    one: Sorry, u kunt maar één andere gebruiker in een bericht noemen.
+    other: Sorry, u kunt maar %{count} gebruikers in een bericht noemen.
   no_mentions_allowed_newuser: "Sorry, nieuwe gebruikers kunnen geen andere gebruikers noemen."
   too_many_mentions_newuser:
-    one: "Sorry, nieuwe gebruikers kunnen maar één andere gebruiker in een bericht noemen."
-    other: "Sorry, nieuwe gebruikers kunnen maar %{count} gebruikers in een bericht noemen."
+    one: Sorry, nieuwe gebruikers kunnen maar één andere gebruiker in een bericht noemen.
+    other: Sorry, nieuwe gebruikers kunnen maar %{count} gebruikers in een bericht noemen.
   no_images_allowed: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen in berichten plaatsen."
   too_many_images:
-    one: "Sorry, nieuwe gebruikers kunnen maar één afbeelding in een bericht plaatsen."
-    other: "Sorry, nieuwe gebruikers kunnen maar %{count} afbeeldingen in een bericht plaatsen."
+    one: Sorry, nieuwe gebruikers kunnen maar één afbeelding in een bericht plaatsen.
+    other: Sorry, nieuwe gebruikers kunnen maar %{count} afbeeldingen in een bericht plaatsen.
   no_attachments_allowed: "Sorry, nieuwe gebruikers kunnen geen bijlagen in berichten plaatsen."
   too_many_attachments:
-    one: "Sorry, nieuwe gebruikers kunnen maar één bijlage in een bericht plaatsen."
-    other: "Sorry, nieuwe gebruikers kunnen maar %{count} bijlagen in een bericht plaatsen."
+    one: Sorry, nieuwe gebruikers kunnen maar één bijlage in een bericht plaatsen.
+    other: Sorry, nieuwe gebruikers kunnen maar %{count} bijlagen in een bericht plaatsen.
   no_links_allowed: "Sorry, nieuwe gebruikers kunnen geen koppelingen in berichten plaatsen."
   too_many_links:
-    one: "Sorry, nieuwe gebruikers kunnen maar één koppeling in een bericht plaatsen."
-    other: "Sorry, nieuwe gebruikers kunnen maar %{count} koppelingen in een bericht plaatsen."
-  contains_blocked_words: "Je bericht bevat woorden die niet zijn toegestaan."
+    one: Sorry, nieuwe gebruikers kunnen maar één koppeling in een bericht plaatsen.
+    other: Sorry, nieuwe gebruikers kunnen maar %{count} koppelingen in een bericht plaatsen.
   spamming_host: "Sorry, u kunt geen koppeling naar die host plaatsen."
   user_is_suspended: "Geschorste gebruikers mogen geen berichten plaatsen."
   topic_not_found: "Er is iets fout gegaan. Misschien is het topic gesloten of verwijderd terwijl u het bekeek?"
@@ -213,11 +215,8 @@ nl:
   queue:
     delete_reason: "Verwijderd via wachtrij voor berichtmoderatie"
   groups:
-    success:
-      bulk_add: "Er zijn %{users_added} gebruikers aan de groep toegevoegd."
     errors:
       can_not_modify_automatic: "U kunt een automatische groep niet wijzigen"
-      member_already_exist: "'%{username}' is al lid van deze groep."
       invalid_domain: "%{domain}' is geen geldig domein."
       invalid_incoming_email: "%{email}' is geen geldig e-mailadres."
       email_already_used_in_group: "'%{email}' wordt al gebruikt door de groep '%{group_name}'."
@@ -236,9 +235,9 @@ nl:
       title: "Lidmaatschapsverzoek voor @%{group_name}"
   education:
     until_posts:
-      one: "1 bericht"
-      other: "%{count} berichten"
-    new-topic: |
+      one: 1 bericht
+      other: '%{count} berichten'
+    'new-topic': |
       Welkom op %{site_name} &ndash; **bedankt voor het starten van een nieuwe conversatie!**
 
       - Klinkt de titel interessant als u deze hardop leest? Is het een goede samenvatting?
@@ -248,7 +247,7 @@ nl:
       - Gebruik algemeen gebruikte woorden, zodat anderen uw topic kunnen *vinden*. Selecteer een categorie om uw topic met verwante topics te groeperen.
 
       [Bekijk onze gemeenschapsrichtlijnen](/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Welkom op %{site_name} &ndash; **bedankt voor uw bijdrage!**
 
       - Levert uw antwoord een nuttige bijdrage aan de conversatie, hoe klein dan ook?
@@ -306,6 +305,7 @@ nl:
       user_profile:
         bio_raw: "Over mij"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -349,7 +349,6 @@ nl:
           attributes:
             word:
               too_many: "Te veel woorden voor die aktie"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>het veld Over mij van uw profiel is momenteel leeg; <a href='/u/%{username_lower}/preferences/about-me'>zou u dit willen invullen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niets in het veld Over mij van zijn of haar profiel ingevoerd</div>"
@@ -365,41 +364,41 @@ nl:
     title: "Welkom bij Discourse"
     body: |2
 
-      De eerste alinea van dit vastgemaakte topic is op uw startpagina zichtbaar als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
+        De eerste alinea van dit vastgemaakte topic is op uw startpagina zichtbaar als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
 
-      **Bewerk dit** naar een korte beschrijving van uw gemeenschap:
+        **Bewerk dit** naar een korte beschrijving van uw gemeenschap:
 
-      - Voor wie is deze bestemd?
-      - Wat kunnen ze hier vinden?
-      - Waarom zouden ze hier moeten komen?
-      - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
+        - Voor wie is deze bestemd?
+        - Wat kunnen ze hier vinden?
+        - Waarom zouden ze hier moeten komen?
+        - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
+        Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
   lounge_welcome:
     title: "Welkom in de Lounge"
     body: |2
 
-      Gefeliciteerd! :confetti_ball:
+        Gefeliciteerd! :confetti_ball:
 
-      Als u dit bericht kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
+        Als u dit bericht kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
 
-      U kunt nu &hellip;
+        U kunt nu &hellip;
 
-      * De titel van elk topic bewerken
-      * De categorie van elk topic wijzigen
-      * Al uw koppelingen laten volgen ([automatische nofollow](http://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
-      * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
-      * Spam verbergen met één markering
+        * De titel van elk topic bewerken
+        * De categorie van elk topic wijzigen
+        * Al uw koppelingen laten volgen ([automatische nofollow](http://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
+        * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
+        * Spam verbergen met één markering
 
-      Hier is de [huidige lijst van vaste gebruikers](/badges/3/regular). Zeg zeker even hallo.
+        Hier is de [huidige lijst van vaste gebruikers](/badges/3/regular). Zeg zeker even hallo.
 
-      Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
+        Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
 
-      ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
+        ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "(Vervang deze eerste alinea door een korte beschrijving van uw nieuwe categorie. Deze leidraad verschijnt in het categorieselectiegebied, dus probeer deze onder de 200 tekens te houden. **Voordat u deze beschrijving bewerkt of topics aanmaakt, verschijnt deze categorie niet op de categoriepagina.**)"
@@ -416,8 +415,8 @@ nl:
       uncategorized: "Ongecategoriseerd kan niet worden verwijderd"
       has_subcategories: "Deze categorie kan niet worden verwijderd, omdat deze subcategorieën bevat"
       topic_exists:
-        one: "Deze categorie kan niet worden verwijderd, omdat deze 1 topic bevat. Het oudste topic is %{topic_link}."
-        other: "Deze categorie kan niet worden verwijderd, omdat deze %{count} topics bevat. Het oudste topic is %{topic_link}."
+        one: Deze categorie kan niet worden verwijderd, omdat deze 1 topic bevat. Het oudste topic is %{topic_link}.
+        other: Deze categorie kan niet worden verwijderd, omdat deze %{count} topics bevat. Het oudste topic is %{topic_link}.
       topic_exists_no_oldest: "Deze categorie kan niet worden verwijderd, omdat het aantal topics %{count} is."
     uncategorized_description: "Topics die geen categorie nodig hebben of niet in een andere bestaande categorie passen."
   trust_levels:
@@ -433,102 +432,86 @@ nl:
       title: "leider"
     change_failed_explanation: "U probeerde %{user_name} naar '%{new_trust_level}' te degraderen. Zijn of haar vertrouwensniveau is echter al '%{current_trust_level}'. %{user_name} blijft op vertrouwensniveau '%{current_trust_level}'. Als u de gebruiker wil degraderen, vergrendel dan eerst het vertrouwensniveau."
   rate_limiter:
-    slow_down: "U hebt deze actie te vaak uitgevoerd; probeer het later opnieuw."
-    by_type:
-      first_day_replies_per_day: "U hebt het maximale aantal antwoorden dat een nieuwe gebruiker op de eerste dag kan plaatsen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      first_day_topics_per_day: "U hebt het maximale aantal topics dat een nieuwe gebruiker op de eerste dag kan plaatsen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_topic: "U maakt te snel topics aan. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_post: "U antwoordt te snel. Wacht %{time_left} voordat u het opnieuw probeert."
-      delete_post: "U verwijdert berichten te snel. Wacht %{time_left} voor u het opnieuw probeert."
-      public_group_membership: "U neemt deel aan of verlaat groepen te regelmatig. Wacht %{time_left} voordat u het opnieuw probeert."
-      topics_per_day: "U hebt het maximale aantal nieuwe topics voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      pms_per_day: "U hebt het maximale aantal berichten voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_like: "U hebt het maximale aantal likes voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_bookmark: "U hebt het maximale aantal bladwijzers voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      edit_post: "U hebt het maximale aantal bewerkingen voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      live_post_counts: "U vraagt te snel om live berichtaantallen. Wacht %{time_left} voordat u het opnieuw probeert."
-      unsubscribe_via_email: "U hebt het maximale aantal uitschrijvingen via e-mail voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      topic_invitations_per_day: "U hebt het maximale aantal topicuitnodigingen voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
     hours:
-      one: "1 uur"
-      other: "%{count} uur"
+      one: 1 uur
+      other: '%{count} uur'
     minutes:
-      one: "1 minuut"
-      other: "%{count} minuten"
+      one: 1 minuut
+      other: '%{count} minuten'
     seconds:
-      one: "1 seconde"
-      other: "%{count} seconden"
+      one: 1 seconde
+      other: '%{count} seconden'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        other: "%{count}s"
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one: "1m"
-        other: "%{count}m"
+        one: 1m
+        other: '%{count}m'
       about_x_hours:
-        one: "1u"
-        other: "%{count}u"
+        one: 1u
+        other: '%{count}u'
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1mnd"
-        other: "%{count}mnd"
+        one: 1mnd
+        other: '%{count}mnd'
       x_months:
-        one: "1mnd"
-        other: "%{count}mnd"
+        one: 1mnd
+        other: '%{count}mnd'
       about_x_years:
-        one: "1j"
-        other: "%{count}j"
+        one: 1j
+        other: '%{count}j'
       over_x_years:
-        one: "> 1j"
-        other: "> %{count}j"
+        one: '> 1j'
+        other: '> %{count}j'
       almost_x_years:
-        one: "1j"
-        other: "%{count}j"
+        one: 1j
+        other: '%{count}j'
     distance_in_words_verbose:
       half_a_minute: "zojuist"
       less_than_x_seconds:
-        one: "zojuist"
-        other: "zojuist"
+        one: zojuist
+        other: zojuist
       x_seconds:
-        one: "1 seconde geleden"
-        other: "%{count} seconden geleden"
+        one: 1 seconde geleden
+        other: '%{count} seconden geleden'
       less_than_x_minutes:
-        one: "minder dan 1 minuut geleden"
-        other: "minder dan %{count} minuten geleden"
+        one: minder dan 1 minuut geleden
+        other: minder dan %{count} minuten geleden
       x_minutes:
-        one: "1 minuut geleden"
-        other: "%{count} minuten geleden"
+        one: 1 minuut geleden
+        other: '%{count} minuten geleden'
       about_x_hours:
-        one: "1 uur geleden"
-        other: "%{count} uur geleden"
+        one: 1 uur geleden
+        other: '%{count} uur geleden'
       x_days:
-        one: "1 dag geleden"
-        other: "%{count} dagen geleden"
+        one: 1 dag geleden
+        other: '%{count} dagen geleden'
       about_x_months:
-        one: "ongeveer 1 maand geleden"
-        other: "ongeveer %{count} maanden geleden"
+        one: ongeveer 1 maand geleden
+        other: ongeveer %{count} maanden geleden
       x_months:
-        one: "1 maand geleden"
-        other: "%{count} maanden geleden"
+        one: 1 maand geleden
+        other: '%{count} maanden geleden'
       about_x_years:
-        one: "ongeveer 1 jaar geleden"
-        other: "ongeveer %{count} jaar geleden"
+        one: ongeveer 1 jaar geleden
+        other: ongeveer %{count} jaar geleden
       over_x_years:
-        one: "meer dan 1 jaar geleden"
-        other: "meer dan %{count} jaar geleden"
+        one: meer dan 1 jaar geleden
+        other: meer dan %{count} jaar geleden
       almost_x_years:
-        one: "bijna 1 jaar geleden"
-        other: "bijna %{count} jaar geleden"
+        one: bijna 1 jaar geleden
+        other: bijna %{count} jaar geleden
   password_reset:
     no_token: "Sorry, die koppeling voor het wijzigen van uw wachtwoord is te oud. Selecteer de knop Aanmelden en gebruik 'Ik ben mijn wachtwoord vergeten' om een nieuwe koppeling te ontvangen."
     choose_new: "Een nieuw wachtwoord kiezen"
@@ -582,8 +565,6 @@ nl:
       long_form: 'heeft dit als ongepast gemarkeerd'
     notify_user:
       title: '@{{username}} een bericht sturen'
-      description: 'I wil rechtstreeks en privé met deze persoon over zijn of haar bericht praten.'
-      short_description: 'I wil rechtstreeks en privé met deze persoon over zijn of haar bericht praten.'
       long_form: 'bericht verstuurd naar gebruiker'
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
@@ -719,7 +700,6 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal e-mails"
     user_to_user_private_messages:
-      title: "Gebruiker-naar-gebruiker"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
     system_private_messages:
@@ -766,7 +746,6 @@ nl:
       xaxis: "Dag"
       yaxis: "Webcrawler-paginaweergaven"
     page_view_total_reqs:
-      title: "Totaal"
       xaxis: "Dag"
       yaxis: "Totale paginaweergaven"
     page_view_logged_in_mobile_reqs:
@@ -830,8 +809,8 @@ nl:
     failing_emails_warning: 'Er zijn %{num_failed_jobs} mislukte e-mailtaken. Controleer uw bestand app.yml en zorg ervoor dat de mailserverinstellingen juist zijn. <a href="/sidekiq/retries" target="_blank">Bekijk de mislukte taken in Sidekiq</a>.'
     subfolder_ends_in_slash: "Uw submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
     email_polling_errored_recently:
-      one: "E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Bekijk <a href='/logs' target='_blank'>de logboeken</a> voor meer details."
-      other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='/logs' target='_blank'>de logboeken</a> voor meer details."
+      one: E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Bekijk <a href='/logs' target='_blank'>de logboeken</a> voor meer details.
+      other: E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='/logs' target='_blank'>de logboeken</a> voor meer details.
     bad_favicon_url: "De favicon wordt niet geladen. Controleer uw favicon_url-instelling in de <a href='/admin/site_settings'>Website-instellingen</a>."
     poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Binnenkomende e-mail kon niet worden opgehaald. Controleer uw <a href='/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
     poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='/admin/site_settings/category/email'>POP3-instellingen</a>."
@@ -937,7 +916,6 @@ nl:
     version_checks: "Ping de Discourse-Hub voor updates en laat meldingen van nieuwe versies zien op het dashboard van de beheerder."
     new_version_emails: "Stuur een email naar het contact_email adres wanneer een nieuwe versie van Discourse beschikbaar is."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
-    invite_passthrough_hours: "Hoe lang een gebruiker een eerder verkregen uitnodigingssleutel kan gebruiken om in te loggen, in uren gespecificeerd"
     invite_only: "Openbare registratie is uitgeschakeld; alle nieuwe gebruikers moeten expliciet worden uitgenodigd door stafleden."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
     min_password_length: "Minimum lengte wachtwoord."
@@ -954,7 +932,6 @@ nl:
     sso_overrides_name: "Overschrijft bij elke aanmelding lokaal opgegeven volledige naam door volledige naam uit SSO payload van externe site, en voorkomt lokaal wijzigen"
     sso_overrides_avatar: "Overschrijft gebruikers avatar door avatar uit SSO payload van externe site, uitschakelen van allow_uploaded_avatars is sterk aanbevolen."
     sso_not_approved_url: "Stuur niet geaccepteerde SSO accounts door naar deze URL"
-    enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. (Let op: dit moet aan staan voor toegang op basis van een uitnodiging.)"
     allow_new_registrations: "Nieuwe gebruikers registreren toestaan. Uitschakelen om te voorkomen dat iedereen een nieuw account kan maken."
     enable_signup_cta: "Een melding tonen voor terugkerende anonieme gebruikers waarin wordt gevraagd zich voor een account te registreren"
     enable_yahoo_logins: "Yahoo-authenticatie inschakelen"
@@ -962,8 +939,6 @@ nl:
     google_oauth2_client_id: "Client-ID van uw Google-toepassing."
     google_oauth2_client_secret: "Client-geheim van uw Google-toepassing."
     enable_twitter_logins: "Twitter-authenticatie inschakelen; vereist twitter_consumer_key en twitter_consumer_secret."
-    twitter_consumer_key: "consumer_key (registreer op dev.twitter.com)"
-    twitter_consumer_secret: "consumer secret (registreer op dev.twitter.com)"
     enable_instagram_logins: "Instagram-authenticatie inschakelen; vereist instagram_consumer_key en instagram_consumer_secret."
     enable_facebook_logins: "Facebook-authenticatie inschakelen; vereist facebook_app_id en facebook_app_secret."
     facebook_app_id: "app_id (registreer op https://developers.facebook.com/apps)"
@@ -975,7 +950,6 @@ nl:
     allow_restore: "Herstellen van data toestaan, waarbij ALLE site-data wordt overschreven! Laat op 'false' staan, tenzij je een back-up terug wil zetten."
     maximum_backups: "Het maximale aantal back-ups om op schijf te bewaren. Oudere back-ups worden automatisch verwijderd."
     automatic_backups_enabled: "Automatische back-ups uitvoeren volgens de opgegeven back-up frequentie."
-    backup_frequency: "Hoe vaak we een back-up van de site maken, in dagen."
     enable_s3_backups: "Upload voltooide back-ups naar S3. LET OP: Zorg ervoor dat je je S3 inloggegevens hebt ingevuld in de Bestanden instellingen."
     s3_backup_bucket: "De S3 bucket voor de backups. WAARSCHUWING: zorg er voor dat dit een privébucket is."
     s3_disable_cleanup: "Backups van S3 niet verwijderen als het lokaal wordt verwijdert."
@@ -1230,11 +1204,11 @@ nl:
     not_seen_in_a_month: "Welkom terug! We hebben u een tijdje niet gezien. Dit zijn de meest populaire topics sinds uw afwezigheid."
   move_posts:
     new_topic_moderator_post:
-      one: "Een bericht is gesplitst naar een nieuw topic: %{topic_link}"
-      other: "%{count} berichten zijn gesplitst naar een nieuw topic: %{topic_link}"
+      one: 'Een bericht is gesplitst naar een nieuw topic: %{topic_link}'
+      other: '%{count} berichten zijn gesplitst naar een nieuw topic: %{topic_link}'
     existing_topic_moderator_post:
-      one: "Een bericht is samengevoegd in een bestaand topic: %{topic_link}"
-      other: "%{count} berichten zijn samengevoegd in een bestaand topic: %{topic_link}"
+      one: 'Een bericht is samengevoegd in een bestaand topic: %{topic_link}'
+      other: '%{count} berichten zijn samengevoegd in een bestaand topic: %{topic_link}'
   change_owner:
     post_revision_text: "Eigendom overgezet van %{old_user} naar %{new_user}"
     deleted_user: "een verwijderde gebruiker"
@@ -1244,47 +1218,47 @@ nl:
     closed_enabled: "Dit topic is nu gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     closed_disabled: "Dit topic is nu geopend. Nieuwe antwoorden zijn toegestaan."
     autoclosed_message_max_posts:
-      one: "Dit bericht is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten."
-      other: "Dit bericht is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten."
+      one: Dit bericht is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten.
+      other: Dit bericht is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten.
     autoclosed_topic_max_posts:
-      one: "Dit topic is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten."
-      other: "Dit topic is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten."
+      one: Dit topic is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten.
+      other: Dit topic is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten.
     autoclosed_enabled_days:
-      one: "Dit topic is na 1 dag automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
-      other: "Dit topic is na %{count} dagen automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: Dit topic is na 1 dag automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
+      other: Dit topic is na %{count} dagen automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
     autoclosed_enabled_hours:
-      one: "Dit topic is na 1 uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
-      other: "Dit topic is na %{count} uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: Dit topic is na 1 uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
+      other: Dit topic is na %{count} uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
     autoclosed_enabled_minutes:
-      one: "Dit topic is na 1 minuut automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
-      other: "Dit topic is na %{count} minuten automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: Dit topic is na 1 minuut automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
+      other: Dit topic is na %{count} minuten automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
     autoclosed_enabled_lastpost_days:
-      one: "Dit topic is 1 dag na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
-      other: "Dit topic is %{count} dagen na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: Dit topic is 1 dag na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
+      other: Dit topic is %{count} dagen na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
     autoclosed_enabled_lastpost_hours:
-      one: "Dit topic is 1 uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
-      other: "Dit topic is %{count} uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: Dit topic is 1 uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
+      other: Dit topic is %{count} uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
     autoclosed_enabled_lastpost_minutes:
-      one: "Dit topic is 1 minuut na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
-      other: "Dit topic is %{count} minuten na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: Dit topic is 1 minuut na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
+      other: Dit topic is %{count} minuten na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan.
     autoclosed_disabled_days:
-      one: "Dit topic is na 1 dag automatisch geopend."
-      other: "Dit topic is na %{count} dagen automatisch geopend."
+      one: Dit topic is na 1 dag automatisch geopend.
+      other: Dit topic is na %{count} dagen automatisch geopend.
     autoclosed_disabled_hours:
-      one: "Dit topic is na 1 uur automatisch geopend."
-      other: "Dit topic is na %{count} uur automatisch geopend."
+      one: Dit topic is na 1 uur automatisch geopend.
+      other: Dit topic is na %{count} uur automatisch geopend.
     autoclosed_disabled_minutes:
-      one: "Dit topic is na 1 minuut automatisch geopend."
-      other: "Dit topic is na %{count} minuten automatisch geopend."
+      one: Dit topic is na 1 minuut automatisch geopend.
+      other: Dit topic is na %{count} minuten automatisch geopend.
     autoclosed_disabled_lastpost_days:
-      one: "Dit topic is 1 dag na het laatste antwoord automatisch geopend."
-      other: "Dit topic is %{count} dagen na het laatste antwoord automatisch geopend."
+      one: Dit topic is 1 dag na het laatste antwoord automatisch geopend.
+      other: Dit topic is %{count} dagen na het laatste antwoord automatisch geopend.
     autoclosed_disabled_lastpost_hours:
-      one: "Dit topic is 1 uur na het laatste antwoord automatisch geopend."
-      other: "Dit topic is %{count} uur na het laatste antwoord automatisch geopend."
+      one: Dit topic is 1 uur na het laatste antwoord automatisch geopend.
+      other: Dit topic is %{count} uur na het laatste antwoord automatisch geopend.
     autoclosed_disabled_lastpost_minutes:
-      one: "Dit topic is 1 minuut na het laatste antwoord automatisch geopend."
-      other: "Dit topic is %{count} minuten na het laatste antwoord automatisch geopend."
+      one: Dit topic is 1 minuut na het laatste antwoord automatisch geopend.
+      other: Dit topic is %{count} minuten na het laatste antwoord automatisch geopend.
     autoclosed_disabled: "Dit topic is nu geopend. Nieuwe antwoorden zijn toegestaan."
     autoclosed_disabled_lastpost: "Dit topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
     pinned_enabled: "Dit topic is nu vastgemaakt. Het verschijnt bovenaan de categorie ervan totdat het door een staflid wordt losgemaakt voor iedereen, of door individuele gebruikers voor henzelf."
@@ -1333,8 +1307,8 @@ nl:
       max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf uw IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een staflid."
   flags_reminder:
     subject_template:
-      one: "Eén vlag af te handelen"
-      other: "%{count} vlaggen af te handelen"
+      one: Eén vlag af te handelen
+      other: '%{count} vlaggen af te handelen'
   invite_password_instructions:
     subject_template: "Geeft wachtwoord voor je %{site_name} account"
   flag_reasons:
@@ -1374,7 +1348,6 @@ nl:
       subject_template: "Massale uitnodiging aan gebruikers verwerkt, met fouten"
     csv_export_succeeded:
       title: "CSV Export Geslaagd"
-      subject_template: "Export succesvol afgerond."
     csv_export_failed:
       title: "CSV Export Mislukt"
       subject_template: "Export mislukt"
@@ -1418,8 +1391,8 @@ nl:
         De plaatsingsactie werd niet herkend. Probeer het opnieuw of plaats je bericht via de website als het nog steeds niet lukt.
     pending_users_reminder:
       subject_template:
-        one: "1 gebruiker wacht op goedkeuring"
-        other: "%{count} gebruikers wachten op goedkeuring"
+        one: 1 gebruiker wacht op goedkeuring
+        other: '%{count} gebruikers wachten op goedkeuring'
       text_body_template: |
         Er zijn nieuwe gebruikers die zich hebben ingeschreven en wachten op goedkeuring (of afwijzing) voor zij het forum op kunnen.
 
@@ -1436,6 +1409,8 @@ nl:
     unsubscribe:
       title: "Uitschrijven"
       description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
+    reply_by_email: "[Bezoek topic (het)](%{base_url}%{url}) of beantwoord deze e-mail om te reageren."
+    visit_link_to_respond: "[Bezoek topic (het)](%{base_url}%{url}) om te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
@@ -1590,6 +1565,3 @@ nl:
         description: |
           <p>Als u deze instellingen ooit wilt wijzigen, bezoek dan <a href='/admin' target='_blank'>uw beheersectie</a>; deze vindt u naast het moersleutelpictogram in het websitemenu.</p>
           <p>Veel plezier, en succes met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>het opbouwen van uw nieuwe gemeenschap!</a></p>
-  activemodel:
-    errors:
-      <<: *errors

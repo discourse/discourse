@@ -13,7 +13,7 @@ RSpec.describe WebHookTopicViewSerializer do
 
   it 'should only include the required keys' do
     count = serializer.as_json.keys.count
-    difference = count - 35
+    difference = count - 30
 
     expect(difference).to eq(0), lambda {
       message = ""

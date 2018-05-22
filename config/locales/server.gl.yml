@@ -16,7 +16,9 @@ gl:
       short_no_year: "%-d de %B"
       date_only: "%-d de %B, %Y"
   date:
-    month_names: [null, Xaneiro, Febreiro, Marzo, Abril, Maio, Xuño, Xullo, Agosto, Setembro, Outubro, Novembro, Decembro]
+    month_names: [~, Xaneiro, Febreiro, Marzo, Abril, Maio, Xuño, Xullo, Agosto, Setembro, Outubro, Novembro, Decembro]
+    <<: *datetime_formats
+  time:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Temas"
@@ -33,15 +35,15 @@ gl:
       present: debe quedar baleiro
       confirmation: "%{attribute} non coincide"
       empty: non pode quedar baleiro
-      equal_to: debe ser igual a %{count}
+      equal_to: "debe ser igual a %{count}"
       exclusion: está reservado
-      greater_than: debe ser maior de %{count}
-      greater_than_or_equal_to: debe ser igual ou maior de %{count}
+      greater_than: "debe ser maior de %{count}"
+      greater_than_or_equal_to: "debe ser igual ou maior de %{count}"
       has_already_been_used: "xa está en uso"
       inclusion: no está incluído na lista
       invalid: é incorrecto
-      less_than: debe ser menor de %{count}
-      less_than_or_equal_to: debe ser igual ou menor de %{count}
+      less_than: "debe ser menor de %{count}"
+      less_than_or_equal_to: "debe ser igual ou menor de %{count}"
       not_a_number: non é un número
       not_an_integer: debe ser un enteiro
       odd: debe ser impar
@@ -62,6 +64,9 @@ gl:
       load_from_remote: "Produciuse un erro cargando esta publicación."
     site_settings:
       min_username_length_range: "O mínimo non pode ser maior que o máximo."
+  activemodel:
+    errors:
+      <<: *errors
   not_logged_in: "Debes iniciar sesión para facer iso."
   not_found: "Non foi posíbel atopar o recurso ou URL solicitado."
   invalid_access: "Non se che permite ver o recurso solicitado."
@@ -72,14 +77,14 @@ gl:
     start_discussion: "Comezar a discusión"
     continue: "Continuar a discusión"
     more_replies:
-      one: "Unha resposta máis"
-      other: "%{count} respostas máis"
+      one: Unha resposta máis
+      other: '%{count} respostas máis'
     loading: "Cargando a discusión..."
     permalink: "Ligazón permanente"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "Unha resposta"
-      other: "%{count} respostas"
+      one: Unha resposta
+      other: '%{count} respostas'
   no_mentions_allowed: "Sentímolo pero non podes mencionar outros usuarios"
   invalid_characters: "contén caracteres incorrectos"
   next_page: "páxina seguinte →"
@@ -113,8 +118,8 @@ gl:
       trust_level_4: "nivel_de_confianza_4"
   education:
     until_posts:
-      one: "Unha publicación"
-      other: "%{count} publicacións"
+      one: Unha publicación
+      other: '%{count} publicacións'
   activerecord:
     attributes:
       category:
@@ -124,6 +129,7 @@ gl:
       user_profile:
         bio_raw: "Verbo de min"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -141,7 +147,6 @@ gl:
           attributes:
             hex:
               invalid: "non é unha cor válida"
-      <<: *errors
   vip_category_name: "Taberna"
   vip_category_description: "Unha categoría exclusiva para membros cun nivel de confianza igual ou maior a 3."
   meta_category_name: "Opinións sobre o sitio"
@@ -167,41 +172,41 @@ gl:
       title: "líder"
   rate_limiter:
     hours:
-      one: "Unha hora"
-      other: "%{count} horas"
+      one: Unha hora
+      other: '%{count} horas'
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one: "1s"
-        other: "%{count}s"
+        one: 1s
+        other: '%{count}s'
       less_than_x_minutes:
-        one: "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       about_x_hours:
-        one: "1h"
-        other: "%{count}h"
+        one: 1h
+        other: '%{count}h'
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: 1d
+        other: '%{count}d'
       about_x_months:
-        one: "1mes"
-        other: "%{count}mes"
+        one: 1mes
+        other: '%{count}mes'
       x_months:
-        one: "1mes"
-        other: "%{count}mes"
+        one: 1mes
+        other: '%{count}mes'
       about_x_years:
-        one: "1ano"
-        other: "%{count}ano"
+        one: 1ano
+        other: '%{count}ano'
       over_x_years:
-        one: "> 1ano"
-        other: "> %{count}ano"
+        one: '> 1ano'
+        other: '> %{count}ano'
       almost_x_years:
-        one: "1ano"
-        other: "%{count}ano"
+        one: 1ano
+        other: '%{count}ano'
     distance_in_words_verbose:
       half_a_minute: "agora mesmiño"
   password_reset:
@@ -304,7 +309,6 @@ gl:
       xaxis: "Día"
       yaxis: "Número de correos-e enviados"
     user_to_user_private_messages:
-      title: "Entre usuarios"
       xaxis: "Día"
       yaxis: "Número de mensaxes"
     system_private_messages:
@@ -346,7 +350,6 @@ gl:
       title: "Extractores web"
       xaxis: "Día"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Día"
     page_view_logged_in_mobile_reqs:
       xaxis: "Día"
@@ -426,8 +429,6 @@ gl:
       subject_template: "A copia de seguranza completouse correctamente"
     bulk_invite_succeeded:
       subject_template: "O convite en bloque procesouse correctamente"
-    csv_export_succeeded:
-      subject_template: "Completouse a exportación dos datos"
   page_not_found:
     see_more: "Máis"
     search_google: "Google"
@@ -445,8 +446,3 @@ gl:
     title: "Política de intimidade"
   admin_login:
     submit_button: "Enviar correo-e"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

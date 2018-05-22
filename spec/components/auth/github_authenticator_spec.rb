@@ -57,6 +57,32 @@ describe Auth::GithubAuthenticator do
       expect(result.email_valid).to eq(true)
     end
 
+    it 'should use primary email for new user creation over other available emails' do
+      hash = {
+        extra: {
+          all_emails: [{
+            email: "bob@example.com",
+            primary: false,
+            verified: true,
+          }, {
+            email: "john@example.com",
+            primary: true,
+            verified: true,
+          }]
+        },
+        info: {
+          email: "john@example.com",
+          nickname: "john",
+          name: "John Bob",
+        },
+        uid: "100"
+      }
+
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email).to eq("john@example.com")
+    end
+
     it 'will not authenticate for already existing users with an unverified email' do
       hash = {
         extra: {

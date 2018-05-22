@@ -10,7 +10,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
     'watching_first_post_tags'
   ],
 
-  @computed("model.watched_tags", "model.watching_first_post_tags", "model.tracked_tags", "model.muted_tags")
+  @computed("model.watched_tags.[]", "model.watching_first_post_tags.[]", "model.tracked_tags.[]", "model.muted_tags.[]")
   selectedTags(watched, watchedFirst, tracked, muted) {
     return [].concat(watched, watchedFirst, tracked, muted).filter(t => t);
   },

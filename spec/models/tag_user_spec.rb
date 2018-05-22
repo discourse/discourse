@@ -156,7 +156,7 @@ describe TagUser do
         staff = Fabricate(:admin)
         topic = create_post.topic
 
-        SiteSetting.staff_tags = "foo"
+        create_staff_tags(['foo'])
 
         result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["foo"])
         expect(result).to eq(false)

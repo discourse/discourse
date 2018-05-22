@@ -7,8 +7,9 @@ export default Ember.Component.extend({
 
   @computed('topic')
   suggestedTitle(topic) {
-    return topic.get('isPrivateMessage') ?
-      `<a href="${this.get('pmPath')}">${iconHTML('envelope', { class: 'private-message-glyph' })}</a> ${I18n.t("suggested_topics.pm_title")}` :
+    const href = this.currentUser && this.currentUser.pmPath(topic);
+    return topic.get('isPrivateMessage') && href ?
+      `<a href="${href}">${iconHTML('envelope', { class: 'private-message-glyph' })}</a><span>${I18n.t("suggested_topics.pm_title")}</span>` :
       I18n.t("suggested_topics.title");
   },
 

@@ -7,8 +7,8 @@ class Admin::ReportsController < Admin::AdminController
 
     raise Discourse::NotFound unless report_type =~ /^[a-z0-9\_]+$/
 
-    start_date = (params[:start_date].present? ? Time.zone.parse(params[:start_date]) : 30.days.ago).beginning_of_day
-    end_date = (params[:end_date].present? ? Time.zone.parse(params[:end_date]) : start_date + 30.days).end_of_day
+    start_date = (params[:start_date].present? ? params[:start_date].to_date : 30.days.ago).beginning_of_day
+    end_date = (params[:end_date].present? ? params[:end_date].to_date : start_date + 30.days).end_of_day
 
     if params.has_key?(:category_id) && params[:category_id].to_i > 0
       category_id = params[:category_id].to_i
@@ -22,11 +22,46 @@ class Admin::ReportsController < Admin::AdminController
       group_id = nil
     end
 
-    report = Report.find(report_type, start_date: start_date, end_date: end_date, category_id: category_id, group_id: group_id)
+    facets = nil
+    if Array === params[:facets]
+      facets = params[:facets].map { |s| s.to_s.to_sym }
+    end
 
-    raise Discourse::NotFound if report.blank?
+    limit = nil
+    if params.has_key?(:limit) && params[:limit].to_i > 0
+      limit = params[:limit].to_i
+    end
 
-    render_json_dump(report: report)
+    args = {
+      start_date: start_date,
+      end_date: end_date,
+      category_id: category_id,
+      group_id: group_id,
+      facets: facets,
+      limit: limit
+    }
+
+    report = nil
+    if (params[:cache])
+      report = Report.find_cached(report_type, args)
+    end
+
+    if report
+      return render_json_dump(report: report)
+    end
+
+    hijack do
+      report = Report.find(report_type, args)
+
+      raise Discourse::NotFound if report.blank?
+
+      if (params[:cache])
+        Report.cache(report, 35.minutes)
+      end
+
+      render_json_dump(report: report)
+    end
+
   end
 
 end

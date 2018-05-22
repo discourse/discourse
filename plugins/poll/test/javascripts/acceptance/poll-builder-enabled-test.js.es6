@@ -1,6 +1,5 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
-import { replaceCurrentUser } from "discourse/plugins/poll/helpers/replace-current-user";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
 acceptance("Poll Builder - polls are enabled", {

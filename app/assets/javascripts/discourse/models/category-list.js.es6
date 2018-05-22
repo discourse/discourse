@@ -37,7 +37,6 @@ CategoryList.reopenClass({
         c.topics = c.topics.map(t => Discourse.Topic.create(t));
       }
 
-
       switch(statPeriod) {
         case "week":
         case "month":

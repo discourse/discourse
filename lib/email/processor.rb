@@ -55,6 +55,7 @@ module Email
                          when ActiveRecord::Rollback                       then :email_reject_invalid_post
                          when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
                          when Discourse::InvalidAccess                     then :email_reject_invalid_access
+                         when Email::Receiver::OldDestinationError         then :email_reject_old_destination
                          else                                                   :email_reject_unrecognized_error
       end
 
@@ -73,6 +74,10 @@ module Email
         msg += "\n\nMail:\n#{mail_string}"
 
         Rails.logger.error(msg)
+      end
+
+      if message_template == :email_reject_old_destination
+        template_args[:short_url] = e.message
       end
 
       if message_template

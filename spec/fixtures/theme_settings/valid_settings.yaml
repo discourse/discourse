@@ -1,0 +1,60 @@
+boolean_setting: true
+
+boolean_setting_02:
+  default: false
+
+string_setting: "string value"
+
+string_setting_02:
+  default: "string value"
+  min: 2
+  max: 20
+
+integer_setting: 51
+
+integer_setting_02:
+  type: integer
+  default: 51
+  min: 1
+  max: 60
+  description:
+    fr: "French text"
+    es: "Spanish text"
+
+integer_setting_03:
+  default: 15
+  max: 60
+  description:
+    xyz: "invalid language"
+
+float_setting:
+  default: 2.5
+  min: 1.5
+  max: 10
+
+list_setting:
+  type: list
+  description: "help text"
+  default: "name|age|last name"
+
+enum_setting:
+  default: "trust level 4"
+  type: enum
+  choices:
+    - "trust level 0"
+    - "trust level 1"
+
+enum_setting_02:
+  type: enum
+  default: 10
+  description:
+    en: "English text"
+    ar: "Arabic text"
+
+enum_setting_03:
+  type: enum
+  default: 1
+  choices:
+    - 10
+    - 100
+    - 1000

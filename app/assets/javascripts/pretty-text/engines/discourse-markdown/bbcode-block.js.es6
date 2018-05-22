@@ -51,6 +51,8 @@ export function parseBBCodeTag(src, start, max, multiline) {
         return;
       }
 
+      tag = tag.toLowerCase();
+
       return {tag, length: tag.length+3, closing: true};
     }
     return;
@@ -240,7 +242,14 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   state.lineMax = nextLine;
 
   if (rule.replace) {
-    let content = state.src.slice(state.bMarks[startLine+1], state.eMarks[nextLine-1]);
+    let content;
+
+    if (startLine === nextLine) {
+      content = state.src.slice(start + info.length, closeTag.start);
+    } else {
+      content = state.src.slice(state.bMarks[startLine+1], state.eMarks[nextLine-1]);
+    }
+
     if (!rule.replace.call(this, state, info, content)) {
       return false;
     }

@@ -45,7 +45,7 @@
   </div>
 {{/unless}}
 
-{{plugin-outlet name="user-preferences-emails"}}
+{{plugin-outlet name="user-preferences-emails" args=(hash model=model save=(action "save"))}}
 
 <br/>
 

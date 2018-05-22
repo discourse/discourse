@@ -18,7 +18,17 @@ export default Ember.Controller.extend({
 
   @computed('loading')
   submitButtonText(loading) {
-    return loading ? 'loading' : 'submit';
+    return loading ? 'loading' : 'continue';
+  },
+
+  @computed('loading')
+  enableButtonText(loading) {
+    return loading ? 'loading' : 'enable';
+  },
+
+  @computed('loading')
+  disableButtonText(loading) {
+    return loading ? 'loading' : 'disable';
   },
 
   @computed

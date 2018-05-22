@@ -36,12 +36,20 @@ export default Ember.Mixin.create({
   },
 
   _findComputedContentItemByGuid(guid) {
-    return this.get("computedContent").find(c => {
+    if (guidFor(this.get("createRowComputedContent")) === guid) {
+      return this.get("createRowComputedContent");
+    }
+
+    if (guidFor(this.get("noneRowComputedContent")) === guid) {
+      return this.get("noneRowComputedContent");
+    }
+
+    return this.get("collectionComputedContent").find(c => {
       return guidFor(c) === guid;
     });
   },
 
   _filterRemovableComputedContents(computedContent) {
-    return computedContent.filter(c => c.created === true);
+    return computedContent.filter(c => c.created);
   }
 });

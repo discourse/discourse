@@ -2,6 +2,10 @@ require 'rails_helper'
 require_dependency 'user_destroyer'
 
 describe UserDestroyer do
+
+  let(:user) { Fabricate(:user) }
+  let(:admin) { Fabricate(:admin) }
+
   describe 'new' do
     it 'raises an error when user is nil' do
       expect { UserDestroyer.new(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -74,8 +78,6 @@ describe UserDestroyer do
     end
 
     context "with a queued post" do
-      let(:user) { Fabricate(:user) }
-      let(:admin) { Fabricate(:admin) }
       let!(:qp) { Fabricate(:queued_post, user: user) }
 
       it "removes the queued post" do
@@ -85,8 +87,6 @@ describe UserDestroyer do
     end
 
     context "with a directory item record" do
-      let(:user) { Fabricate(:user) }
-      let(:admin) { Fabricate(:admin) }
 
       it "removes the directory item" do
         DirectoryItem.create!(
@@ -104,8 +104,6 @@ describe UserDestroyer do
     end
 
     context "with a draft" do
-      let(:user) { Fabricate(:user) }
-      let(:admin) { Fabricate(:admin) }
       let!(:draft) { Draft.set(user, 'test', 1, 'test') }
 
       it "removed the draft" do
@@ -127,17 +125,10 @@ describe UserDestroyer do
           @user.stubs(:first_post_created_at).returns(Time.zone.now)
         end
 
-        it 'should not delete the user' do
-          expect { destroy rescue nil }.to_not change { User.count }
-        end
-
-        it 'should raise an error' do
-          expect { destroy }.to raise_error(UserDestroyer::PostsExistError)
-        end
-
-        it 'should not log the action' do
+        it 'should raise the right error' do
           StaffActionLogger.any_instance.expects(:log_user_deletion).never
-          destroy rescue nil
+          expect { destroy }.to raise_error(UserDestroyer::PostsExistError)
+          expect(user.reload.id).to be_present
         end
       end
 
@@ -319,7 +310,6 @@ describe UserDestroyer do
     end
 
     context 'user got an email' do
-      let(:user) { Fabricate(:user) }
       let!(:email_log) { Fabricate(:email_log, user: user) }
 
       it "deletes the email log" do
@@ -341,6 +331,21 @@ describe UserDestroyer do
           UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
         }.to change { PostAction.count }.by(-1)
         expect(@post.reload.like_count).to eq(0)
+      end
+    end
+
+    context 'user belongs to groups that grant trust level' do
+      let(:group) { Fabricate(:group, grant_trust_level: 2) }
+
+      before do
+        group.add(user)
+      end
+
+      it 'can delete the user' do
+        d = UserDestroyer.new(admin)
+        expect {
+          d.destroy(user)
+        }.to change { User.count }.by(-1)
       end
     end
   end

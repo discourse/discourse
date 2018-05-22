@@ -111,8 +111,42 @@ describe PostRevisor do
         expect(subject.category_changed).to be_blank
       end
 
+      it "does create a new version if a large diff happens" do
+        SiteSetting.editing_grace_period_max_diff = 10
+
+        post = Fabricate(:post, raw: 'hello world')
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world123456789' }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+
+        expect(post.version).to eq(1)
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world12345678901' }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+        expect(post.version).to eq(2)
+
+        expect(post.revisions.first.modifications["raw"][0]).to eq("hello world")
+        expect(post.revisions.first.modifications["cooked"][0]).to eq("<p>hello world</p>")
+
+        SiteSetting.editing_grace_period_max_diff_high_trust = 100
+
+        post.user.update_columns(trust_level: 2)
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world12345678901 123456789012' }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+
+      end
+
       it "doesn't create a new version" do
         SiteSetting.editing_grace_period = 1.minute
+        SiteSetting.editing_grace_period_max_diff = 100
 
         # making a revision
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
@@ -317,48 +351,34 @@ describe PostRevisor do
     end
 
     describe 'with a new body' do
+      before do
+        SiteSetting.editing_grace_period_max_diff = 1000
+      end
+
       let(:changed_by) { Fabricate(:coding_horror) }
       let!(:result) { subject.revise!(changed_by, raw: "lets update the body. Здравствуйте") }
 
-      it 'returns true' do
+      it 'correctly updates raw' do
         expect(result).to eq(true)
-      end
-
-      it 'updates the body' do
         expect(post.raw).to eq("lets update the body. Здравствуйте")
-      end
-
-      it 'sets the invalidate oneboxes attribute' do
         expect(post.invalidate_oneboxes).to eq(true)
-      end
-
-      it 'increased the versions' do
         expect(post.version).to eq(2)
         expect(post.public_version).to eq(2)
-      end
-
-      it 'has the new revision' do
         expect(post.revisions.size).to eq(1)
-      end
-
-      it "saved the user who made the change in the revisions" do
         expect(post.revisions.first.user_id).to eq(changed_by.id)
-      end
 
-      it "updates the word count" do
+        # updates word count
         expect(post.word_count).to eq(5)
         post.topic.reload
         expect(post.topic.word_count).to eq(5)
       end
 
       context 'second poster posts again quickly' do
-        before do
+
+        it 'is a ninja edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
-        end
-
-        it 'is a ninja edit, because the second poster posted again quickly' do
           expect(post.version).to eq(2)
           expect(post.public_version).to eq(2)
           expect(post.revisions.size).to eq(1)
@@ -417,21 +437,69 @@ describe PostRevisor do
       end
     end
 
+    context "logging staff edits" do
+      let(:moderator) { Fabricate(:moderator) }
+
+      it "doesn't log when a regular user revises a post" do
+        subject.revise!(
+          post.user,
+          raw: "lets totally update the body"
+        )
+        log = UserHistory.where(
+          acting_user_id: post.user.id,
+          action: UserHistory.actions[:post_edit]
+        )
+        expect(log).to be_blank
+      end
+
+      it "logs an edit when a staff member revises a post" do
+        subject.revise!(
+          moderator,
+          raw: "lets totally update the body"
+        )
+        log = UserHistory.where(
+          acting_user_id: moderator.id,
+          action: UserHistory.actions[:post_edit]
+        ).first
+        expect(log).to be_present
+        expect(log.details).to eq("Hello world\n\n---\n\nlets totally update the body")
+      end
+
+      it "doesn't log an edit when a staff member edits their own post" do
+        revisor = PostRevisor.new(
+          Fabricate(:post, user: moderator)
+        )
+        revisor.revise!(
+          moderator,
+          raw: "my own edit to my own thing"
+        )
+
+        log = UserHistory.where(
+          acting_user_id: moderator.id,
+          action: UserHistory.actions[:post_edit]
+        )
+        expect(log).to be_blank
+      end
+    end
+
     context "staff_edit_locks_post" do
 
       context "disabled" do
+        let(:moderator) { Fabricate(:moderator) }
+
         before do
           SiteSetting.staff_edit_locks_post = false
         end
 
         it "does not lock the post when revised" do
           result = subject.revise!(
-            Fabricate(:moderator),
+            moderator,
             raw: "lets totally update the body"
           )
           expect(result).to eq(true)
           post.reload
           expect(post).not_to be_locked
+
         end
       end
 
@@ -452,6 +520,16 @@ describe PostRevisor do
           expect(post).to be_locked
         end
 
+        it "doesn't wiki posts" do
+          post.wiki = true
+          result = subject.revise!(
+            moderator,
+            raw: "some new raw content"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post).not_to be_locked
+        end
         it "doesn't lock the post when the raw did not change" do
           result = subject.revise!(
             moderator,
@@ -567,14 +645,14 @@ describe PostRevisor do
           end
 
           it "can't add staff-only tags" do
-            SiteSetting.staff_tags = "important"
+            create_staff_tags(['important'])
             result = subject.revise!(Fabricate(:user), raw: "lets totally update the body", tags: ['important', 'stuff'])
             expect(result).to eq(false)
             expect(post.topic.errors.present?).to eq(true)
           end
 
           it "staff can add staff-only tags" do
-            SiteSetting.staff_tags = "important"
+            create_staff_tags(['important'])
             result = subject.revise!(Fabricate(:admin), raw: "lets totally update the body", tags: ['important', 'stuff'])
             expect(result).to eq(true)
             post.reload
@@ -583,9 +661,9 @@ describe PostRevisor do
 
           context "with staff-only tags" do
             before do
-              SiteSetting.staff_tags = "important"
+              create_staff_tags(['important'])
               topic = post.topic
-              topic.tags = [Fabricate(:tag, name: "super"), Fabricate(:tag, name: "important"), Fabricate(:tag, name: "stuff")]
+              topic.tags = [Fabricate(:tag, name: "super"), Tag.where(name: "important").first, Fabricate(:tag, name: "stuff")]
             end
 
             it "staff-only tags can't be removed" do

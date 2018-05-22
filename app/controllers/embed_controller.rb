@@ -103,9 +103,12 @@ class EmbedController < ApplicationController
     end
 
     def ensure_embeddable
+      if !(Rails.env.development? && current_user&.admin?)
+        referer = request.referer
 
-      if !(Rails.env.development? && current_user.try(:admin?))
-        raise Discourse::InvalidAccess.new('invalid referer host') unless EmbeddableHost.url_allowed?(request.referer)
+        unless referer && EmbeddableHost.url_allowed?(referer)
+          raise Discourse::InvalidAccess.new('invalid referer host')
+        end
       end
 
       response.headers['X-Frame-Options'] = "ALLOWALL"

@@ -120,19 +120,19 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   headerComponent: "future-date-input-selector/future-date-input-selector-header",
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
     content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
-    content.name = this.get("selectedComputedContent.name") || content.name;
+    content.name = this.get("selection.name") || content.name;
     content.hasSelection = this.get("hasSelection");
     content.icons = this._computeIconsForValue(this.get("computedValue"));
     return content;
   },
 
   computeContentItem(contentItem, name) {
-    let item = this.baseComputedContentItem(contentItem, name);
-    item.datetime = this._computeDatetimeForValue(contentItem.id);
-    item.icons = this._computeIconsForValue(contentItem.id);
-    return item;
+    let computedContentItem = this._super(contentItem, name);
+    computedContentItem.datetime = this._computeDatetimeForValue(contentItem.id);
+    computedContentItem.icons = this._computeIconsForValue(contentItem.id);
+    return computedContentItem;
   },
 
   computeContent() {
@@ -155,14 +155,14 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   },
 
   mutateValue(value) {
-    if (this.get("isCustom") || this.get("isBasedOnLastPost")) {
+    if (value === 'pick_date_and_time' || this.get("isBasedOnLastPost")) {
       this.set("value", value);
     } else {
       let input = null;
       const { time } = this._updateAt(value);
 
       if (time && !Ember.isEmpty(value)) {
-        input = time.format(FORMAT);
+        input = time.locale('en').format(FORMAT);
       }
 
       this.setProperties({ input, value });

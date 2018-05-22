@@ -2,13 +2,13 @@
 host = https://www.transifex.com
 lang_map = el_GR: el, es_ES: es, fr_FR: fr, ko_KR: ko, pt_PT: pt, sk_SK: sk, vi_VN: vi
 
-[discourse-org.clientenyml]
+[discourse-org.core-client-yml]
 file_filter = config/locales/client.<lang>.yml
 source_file = config/locales/client.en.yml
 source_lang = en
 type = YML
 
-[discourse-org.serverenyml]
+[discourse-org.core-server-yml]
 file_filter = config/locales/server.<lang>.yml
 source_file = config/locales/server.en.yml
 source_lang = en
@@ -47,6 +47,36 @@ type = YML
 [discourse-org.discourse-presenceserverenyml]
 file_filter = plugins/discourse-presence/config/locales/server.<lang>.yml
 source_file = plugins/discourse-presence/config/locales/server.en.yml
+source_lang = en
+type = YML
+
+[discourse-org.coreplugindetailsclientyml]
+file_filter = plugins/discourse-details/config/locales/client.<lang>.yml
+source_file = plugins/discourse-details/config/locales/client.en.yml
+source_lang = en
+type = YML
+
+[discourse-org.coreplugindetailsserveryml]
+file_filter = plugins/discourse-details/config/locales/server.<lang>.yml
+source_file = plugins/discourse-details/config/locales/server.en.yml
+source_lang = en
+type = YML
+
+[discourse-org.corepluginnginx-performance-reportserveryml]
+file_filter = plugins/discourse-nginx-performance-report/config/locales/server.<lang>.yml
+source_file = plugins/discourse-nginx-performance-report/config/locales/server.en.yml
+source_lang = en
+type = YML
+
+[discourse-org.core-plugin-local-dates-client-yml]
+file_filter = plugins/discourse-local-dates/config/locales/client.<lang>.yml
+source_file = plugins/discourse-local-dates/config/locales/client.en.yml
+source_lang = en
+type = YML
+
+[discourse-org.core-plugin-local-dates-server-yml]
+file_filter = plugins/discourse-local-dates/config/locales/server.<lang>.yml
+source_file = plugins/discourse-local-dates/config/locales/server.en.yml
 source_lang = en
 type = YML
 

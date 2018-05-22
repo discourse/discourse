@@ -2,9 +2,10 @@
 # about: Show which users are writing a reply to a topic
 # version: 1.0
 # authors: André Pereira, David Taylor
-# url: https://github.com/discourse/discourse-presence.git
+# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-presence
 
 enabled_site_setting :presence_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset 'stylesheets/presence.scss'
 
@@ -58,7 +59,7 @@ after_initialize do
 
       topic = type == 'post' ? Post.find_by(id: id).topic : Topic.find_by(id: id)
 
-      if topic.archetype == Archetype.private_message
+      if topic.private_message?
         user_ids = User.where('admin OR moderator').pluck(:id) + topic.allowed_users.pluck(:id)
         group_ids = topic.allowed_groups.pluck(:id)
 

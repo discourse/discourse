@@ -3,6 +3,7 @@
 
 require_dependency 'url_helper'
 require_dependency 'pretty_text'
+require_dependency 'quote_comparer'
 
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
@@ -33,6 +34,7 @@ class CookedPostProcessor
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       post_process_oneboxes
       post_process_images
+      post_process_quotes
       keep_reverse_index_up_to_date
       optimize_urls
       update_post_image
@@ -86,6 +88,24 @@ class CookedPostProcessor
       else
         limit_size!(img)
         convert_to_link!(img)
+      end
+    end
+  end
+
+  def post_process_quotes
+    @doc.css("aside.quote").each do |q|
+      post_number = q['data-post']
+      topic_id = q['data-topic']
+      if topic_id && post_number
+        comparer = QuoteComparer.new(
+          topic_id.to_i,
+          post_number.to_i,
+          q.css('blockquote').text
+        )
+
+        if comparer.modified?
+          q['class'] = ((q['class'] || '') + " quote-modified").strip
+        end
       end
     end
   end
@@ -398,8 +418,10 @@ class CookedPostProcessor
       next if img["class"]&.include?('onebox-avatar')
 
       parent_class = img.parent && img.parent["class"]
-      if parent_class&.include?("onebox-body") && (width = img["width"].to_i) > 0 && (height = img["height"].to_i) > 0
+      width = img["width"].to_i
+      height = img["height"].to_i
 
+      if parent_class&.include?("onebox-body") && width > 0 && height > 0
         # special instruction for width == height, assume we are dealing with an avatar
         if (img["width"].to_i == img["height"].to_i)
           found = false
@@ -425,8 +447,16 @@ class CookedPostProcessor
           new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
           new_parent.first.add_child(img)
         end
-
+      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images")) && width > 0 && height > 0
+        img.remove_attribute("width")
+        img.remove_attribute("height")
+        img.parent["class"] = "aspect-image-full-size"
+        img.parent["style"] = "--aspect-ratio:#{width}/#{height};"
       end
+    end
+
+    if @cooking_options[:omit_nofollow] || !SiteSetting.add_rel_nofollow_to_user_content
+      @doc.css(".onebox-body a, .onebox a").each { |a| a.remove_attribute("rel") }
     end
   end
 

@@ -23,9 +23,6 @@ class Category < ActiveRecord::Base
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
 
-  has_many :category_featured_users
-  has_many :featured_users, through: :category_featured_users, source: :user
-
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
@@ -57,11 +54,16 @@ class Category < ActiveRecord::Base
 
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
+  after_destroy :remove_site_settings
 
   after_create :delete_category_permalink
 
   after_update :rename_category_definition, if: :saved_change_to_name?
   after_update :create_category_permalink, if: :saved_change_to_slug?
+
+  after_commit :trigger_category_created_event, on: :create
+  after_commit :trigger_category_updated_event, on: :update
+  after_commit :trigger_category_destroyed_event, on: :destroy
 
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
@@ -199,7 +201,7 @@ SQL
     t.delete_topic_timer(TopicTimer.types[:close])
     t.save!(validate: false)
     update_column(:topic_id, t.id)
-    t.posts.create(raw: post_template, user: user)
+    t.posts.create(raw: description || post_template, user: user)
   end
 
   def topic_url
@@ -251,6 +253,15 @@ SQL
   def publish_category
     group_ids = self.groups.pluck(:id) if self.read_restricted
     MessageBus.publish('/categories', { categories: ActiveModel::ArraySerializer.new([self]).as_json }, group_ids: group_ids)
+  end
+
+  def remove_site_settings
+    SiteSetting.all_settings.each do |s|
+      if s[:type] == 'category' && s[:value].to_i == self.id
+        SiteSetting.send("#{s[:setting]}=", '')
+      end
+    end
+
   end
 
   def publish_category_deletion
@@ -314,6 +325,30 @@ SQL
     end
   end
 
+  def self.resolve_permissions(permissions)
+    read_restricted = true
+
+    everyone = Group::AUTO_GROUPS[:everyone]
+    full = CategoryGroup.permission_types[:full]
+
+    mapped = permissions.map do |group, permission|
+      group_id = Group.group_id_from_param(group)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
+
+      [group_id, permission]
+    end
+
+    mapped.each do |group, permission|
+      if group == everyone && permission == full
+        return [false, []]
+      end
+
+      read_restricted = false if group == everyone
+    end
+
+    [read_restricted, mapped]
+  end
+
   def allowed_tags=(tag_names_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
   end
@@ -372,41 +407,14 @@ SQL
     self.update_attributes(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
   end
 
-  def self.resolve_permissions(permissions)
-    read_restricted = true
-
-    everyone = Group::AUTO_GROUPS[:everyone]
-    full = CategoryGroup.permission_types[:full]
-
-    mapped = permissions.map do |group, permission|
-      group = group.id if group.is_a?(Group)
-
-      # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless group.is_a?(Integer)
-      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
-
-      [group, permission]
-    end
-
-    mapped.each do |group, permission|
-      if group == everyone && permission == full
-        return [false, []]
-      end
-
-      read_restricted = false if group == everyone
-    end
-
-    [read_restricted, mapped]
-  end
-
   def self.query_parent_category(parent_slug)
     self.where(slug: parent_slug, parent_category_id: nil).pluck(:id).first ||
     self.where(id: parent_slug.to_i).pluck(:id).first
   end
 
   def self.query_category(slug_or_id, parent_category_id)
-    self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    self.where(slug: slug_or_id, parent_category_id: parent_category_id).first ||
+    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
 
   def self.find_by_email(email)
@@ -504,6 +512,17 @@ SQL
   def subcategory_list_includes_topics?
     subcategory_list_style.end_with?("with_featured_topics")
   end
+
+  %i{
+    category_created
+    category_updated
+    category_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
+  end
 end
 
 # == Schema Information
@@ -542,7 +561,6 @@ end
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
-#  suppress_from_latest          :boolean          default(FALSE)
 #  contains_messages             :boolean
 #  sort_order                    :string
 #  sort_ascending                :boolean
@@ -556,6 +574,8 @@ end
 #  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
 #  default_top_period            :string(20)       default("all")
 #  mailinglist_mirror            :boolean          default(FALSE), not null
+#  suppress_from_latest          :boolean          default(FALSE)
+#  minimum_required_tags         :integer          default(0)
 #
 # Indexes
 #

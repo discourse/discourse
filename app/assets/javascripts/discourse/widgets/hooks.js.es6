@@ -54,11 +54,12 @@ let _watchingDocument = false;
 let _dragging;
 
 const DRAG_NAME       = "mousemove.discourse-widget-drag";
-const DRAG_NAME_TOUCH = "touchmove.discourse-widget-drag";
 
 function cancelDrag(e) {
   $('body').removeClass('widget-dragging');
-  $(document).off(DRAG_NAME).off(DRAG_NAME_TOUCH);
+  $(document).off(DRAG_NAME);
+
+  // We leave the touchmove event cause touch needs it always bound on iOS
 
   if (_dragging) {
     if (_dragging.dragEnd) { _dragging.dragEnd(e); }
@@ -69,25 +70,38 @@ function cancelDrag(e) {
 WidgetClickHook.setupDocumentCallback = function() {
   if (_watchingDocument) { return; }
 
+  let widget;
+  let onDrag = dragE => {
+    const tt = dragE.targetTouches[0];
+    if (tt && widget) {
+      dragE.preventDefault();
+      dragE.stopPropagation();
+      widget.drag(tt);
+    }
+  };
+
+  document.addEventListener('touchmove', onDrag, { passive: false, capture: true });
+
   $(document).on('mousedown.discource-widget-drag, touchstart.discourse-widget-drag', e => {
     cancelDrag(e);
-    const widget = findWidget(e.target, DRAG_ATTRIBUTE_NAME);
+    widget = findWidget(e.target, DRAG_ATTRIBUTE_NAME);
     if (widget) {
       e.preventDefault();
       e.stopPropagation();
       _dragging = widget;
       $('body').addClass('widget-dragging');
-      $(document).on(DRAG_NAME, dragE => widget.drag(dragE));
-      $(document).on(DRAG_NAME_TOUCH, dragE => {
-        const tt = dragE.originalEvent.targetTouches[0];
-        if (tt) {
-          widget.drag(tt);
+      $(document).on(DRAG_NAME, dragE => {
+        if (widget) {
+          widget.drag(dragE);
         }
       });
     }
   });
 
-  $(document).on('mouseup.discourse-widget-drag, touchend.discourse-widget-drag', e => cancelDrag(e));
+  $(document).on('mouseup.discourse-widget-drag, touchend.discourse-widget-drag', e => {
+    widget = null;
+    cancelDrag(e);
+  });
 
   $(document).on('click.discourse-widget', e => {
     nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, w => w.click(e));
@@ -96,9 +110,9 @@ WidgetClickHook.setupDocumentCallback = function() {
     const $outside = $('[data-click-outside]');
     $outside.each((i, outNode) => {
       if (outNode.contains(node)) { return; }
-      const widget = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
-      if (widget) {
-        widget.clickOutside(e);
+      const widget2 = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
+      if (widget2) {
+        widget2.clickOutside(e);
       }
     });
   });

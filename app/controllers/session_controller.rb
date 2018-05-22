@@ -1,5 +1,6 @@
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
+require_dependency 'url_helper'
 
 class SessionController < ApplicationController
   class LocalLoginNotAllowed < StandardError; end
@@ -10,7 +11,7 @@ class SessionController < ApplicationController
   before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
   before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login become sso_provider destroy email_login)
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -43,8 +44,15 @@ class SessionController < ApplicationController
 
   def sso_provider(payload = nil)
     payload ||= request.query_string
+
     if SiteSetting.enable_sso_provider
       sso = SingleSignOn.parse(payload, SiteSetting.sso_secret)
+
+      if sso.return_sso_url.blank?
+        render plain: "return_sso_url is blank, it must be provided", status: 400
+        return
+      end
+
       if current_user
         sso.name = current_user.name
         sso.username = current_user.username
@@ -52,11 +60,19 @@ class SessionController < ApplicationController
         sso.external_id = current_user.id.to_s
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
-        sso.groups = current_user.groups.pluck(:name)
+        sso.groups = current_user.groups.pluck(:name).join(",")
 
-        if sso.return_sso_url.blank?
-          render plain: "return_sso_url is blank, it must be provided", status: 400
-          return
+        if current_user.uploaded_avatar.present?
+          avatar_url = "#{Discourse.store.absolute_base_url}/#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
+          sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
+        end
+
+        if current_user.user_profile.profile_background.present?
+          sso.profile_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.profile_background)
+        end
+
+        if current_user.user_profile.card_background.present?
+          sso.card_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.card_background)
         end
 
         if request.xhr?
@@ -65,7 +81,7 @@ class SessionController < ApplicationController
           redirect_to sso.to_url(sso.return_sso_url)
         end
       else
-        session[:sso_payload] = request.query_string
+        cookies[:sso_payload] = request.query_string
         redirect_to path('/login')
       end
     else
@@ -75,13 +91,17 @@ class SessionController < ApplicationController
 
   # For use in development mode only when login options could be limited or disabled.
   # NEVER allow this to work in production.
-  def become
-    raise Discourse::InvalidAccess.new unless Rails.env.development?
-    user = User.find_by_username(params[:session_id])
-    raise "User #{params[:session_id]} not found" if user.blank?
+  if !Rails.env.production?
+    skip_before_action :check_xhr, only: [:become]
 
-    log_on_user(user)
-    redirect_to path("/")
+    def become
+      raise Discourse::InvalidAccess if Rails.env.production?
+      user = User.find_by_username(params[:session_id])
+      raise "User #{params[:session_id]} not found" if user.blank?
+
+      log_on_user(user)
+      redirect_to path("/")
+    end
   end
 
   def sso_login
@@ -384,7 +404,7 @@ class SessionController < ApplicationController
     session.delete(ACTIVATE_USER_KEY)
     log_on_user(user)
 
-    if payload = session.delete(:sso_payload)
+    if payload = cookies.delete(:sso_payload)
       sso_provider(payload)
     else
       render_serialized(user, UserSerializer)

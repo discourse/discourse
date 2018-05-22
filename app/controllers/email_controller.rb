@@ -41,6 +41,8 @@ class EmailController < ApplicationController
   end
 
   def perform_unsubscribe
+    RateLimiter.new(nil, "unsubscribe_#{request.ip}", 10, 1.minute).performed!
+
     key = UnsubscribeKey.find_by(key: params[:key])
     raise Discourse::NotFound unless key && key.user
 
@@ -99,19 +101,27 @@ class EmailController < ApplicationController
     unless updated
       redirect_back fallback_location: path("/")
     else
+
+      key = "unsub_#{SecureRandom.hex}"
+      $redis.setex key, 1.hour, user.email
+
+      url = path("/email/unsubscribed?key=#{key}")
       if topic
-        redirect_to path("/email/unsubscribed?topic_id=#{topic.id}&email=#{user.email}")
-      else
-        redirect_to path("/email/unsubscribed?email=#{user.email}")
+        url += "&topic_id=#{topic.id}"
       end
+
+      redirect_to url
     end
 
   end
 
   def unsubscribed
-    @email = params[:email]
-    raise Discourse::NotFound if !User.find_by_email(params[:email])
-    @topic = Topic.find_by(id: params[:topic_id].to_i) if params[:topic_id]
+    @email = $redis.get(params[:key])
+    @topic_id = params[:topic_id]
+    user = User.find_by_email(@email)
+    raise Discourse::NotFound unless user
+    topic = Topic.find_by(id: params[:topic_id].to_i) if @topic_id
+    @topic = topic if topic && Guardian.new(nil).can_see?(topic)
   end
 
 end

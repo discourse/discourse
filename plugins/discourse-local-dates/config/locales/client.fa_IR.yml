@@ -1,0 +1,13 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fa_IR:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          timezones_title: نمایش منطقه زمانی

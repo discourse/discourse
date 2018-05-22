@@ -5,8 +5,8 @@ describe PostOwnerChanger do
     let!(:editor) { Fabricate(:admin) }
     let(:topic) { Fabricate(:topic) }
     let(:user_a) { Fabricate(:user) }
-    let(:p1) { Fabricate(:post, topic_id: topic.id) }
-    let(:p2) { Fabricate(:post, topic_id: topic.id) }
+    let(:p1) { Fabricate(:post, topic_id: topic.id, post_number: 1) }
+    let(:p2) { Fabricate(:post, topic_id: topic.id, post_number: 2) }
     let(:p3) { Fabricate(:post) }
 
     it "raises an error with a parameter missing" do
@@ -73,6 +73,30 @@ describe PostOwnerChanger do
 
       PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
       expect(p1.reload.user).to eq(user_a)
+    end
+
+    it "changes the owner when the post is deleted" do
+      p4 = Fabricate(:post, topic_id: topic.id, reply_to_post_number: p2.post_number)
+      PostDestroyer.new(editor, p4).destroy
+
+      PostOwnerChanger.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      expect(p4.reload.user).to eq(user_a)
+    end
+
+    context "sets topic notification level for the new owner" do
+      let(:p4) { Fabricate(:post, post_number: 2, topic_id: topic.id) }
+
+      it "'watching' if the first post gets a new owner" do
+        described_class.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
+        expect(tu.notification_level).to eq(3)
+      end
+
+      it "'tracking' if other than the first post gets a new owner" do
+        described_class.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
+        expect(tu.notification_level).to eq(2)
+      end
     end
 
     context "integration tests" do

@@ -3,6 +3,8 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
 import { propertyGreaterThan, propertyLessThan } from 'discourse/lib/computed';
 import { on } from 'ember-addons/ember-computed-decorators';
+import { default as WhiteLister } from 'pretty-text/white-lister';
+import { sanitize } from 'pretty-text/sanitizer';
 
 function customTagArray(fieldName) {
   return function() {
@@ -187,7 +189,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed('viewMode', 'model.body_changes')
   bodyDiff(viewMode) {
-    return this.get("model.body_changes." + viewMode);
+    const html = this.get(`model.body_changes.${viewMode}`);
+    if (viewMode === "side_by_side_markdown") {
+      return html;
+    } else {
+      const whiteLister = new WhiteLister({ features: { editHistory: true }});
+      whiteLister.whiteListFeature("editHistory", { custom: () => true });
+      return sanitize(html, whiteLister);
+    }
   },
 
   actions: {

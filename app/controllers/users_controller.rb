@@ -48,8 +48,7 @@ class UsersController < ApplicationController
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
-      { include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) },
-      [{ user_profile: :card_image_badge }]
+      include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts)
     )
 
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
@@ -88,23 +87,6 @@ class UsersController < ApplicationController
   def badges
     raise Discourse::NotFound unless SiteSetting.enable_badges?
     show
-  end
-
-  def card_badge
-  end
-
-  def update_card_badge
-    user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
-
-    user_badge = UserBadge.find_by(id: params[:user_badge_id].to_i)
-    if user_badge && user_badge.user == user && user_badge.badge.image.present?
-      user.user_profile.update_column(:card_image_badge_id, user_badge.badge.id)
-    else
-      user.user_profile.update_column(:card_image_badge_id, nil)
-    end
-
-    render body: nil
   end
 
   def user_preferences_redirect
@@ -592,7 +574,7 @@ class UsersController < ApplicationController
         end
 
         email_token_user = EmailToken.confirmable(token)&.user
-        totp_enabled = email_token_user.totp_enabled?
+        totp_enabled = email_token_user&.totp_enabled?
         second_factor_token = params[:second_factor_token]
         confirm_email = false
 
@@ -681,14 +663,17 @@ class UsersController < ApplicationController
   end
 
   def account_created
-    return redirect_to("/") if current_user.present?
+    if current_user.present?
+      if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+        return redirect_to(session_sso_provider_url + "?" + payload)
+      else
+        return redirect_to("/")
+      end
+    end
 
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
-    @account_created = {
-      message: @message,
-      show_controls: false
-    }
+    @account_created = { message: @message, show_controls: false }
 
     if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
       if user = User.where(id: session_user_id.to_i).first
@@ -714,8 +699,8 @@ class UsersController < ApplicationController
 
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
-    if @user = EmailToken.confirm(params[:token])
 
+    if @user = EmailToken.confirm(params[:token])
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -726,14 +711,16 @@ class UsersController < ApplicationController
         elsif destination_url = cookies[:destination_url]
           cookies[:destination_url] = nil
           return redirect_to(destination_url)
+        elsif SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+          return redirect_to(session_sso_provider_url + "?" + payload)
         end
       else
         @needs_approval = true
       end
-
     else
       flash.now[:error] = I18n.t('activation.already_done')
     end
+
     render layout: 'no_ember'
   end
 
@@ -754,7 +741,6 @@ class UsersController < ApplicationController
 
     User.transaction do
       primary_email = @user.primary_email
-
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
@@ -970,7 +956,7 @@ class UsersController < ApplicationController
     )
 
     render json: success_json.merge(
-      key: current_user.user_second_factor.data,
+      key: current_user.user_second_factor.data.scan(/.{4}/).join(" "),
       qr: qrcode_svg
     )
   end
@@ -1064,7 +1050,7 @@ class UsersController < ApplicationController
 
       permitted.concat UserUpdater::OPTION_ATTR
       permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
-      permitted.concat UserUpdater::TAG_NAMES.keys.map { |k| { k => [] } }
+      permitted.concat UserUpdater::TAG_NAMES.keys
 
       result = params
         .permit(permitted)

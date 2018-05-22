@@ -80,7 +80,11 @@ self.addEventListener('fetch', function(event) {
         // If fetch() returns a valid HTTP response with an response code in the 4xx or 5xx
         // range, the catch() will NOT be called. If you need custom handling for 4xx or 5xx
         // errors, see https://github.com/GoogleChrome/samples/tree/gh-pages/service-worker/fallback-response
-        return caches.match(OFFLINE_URL);
+        if (!navigator.onLine) {
+          return caches.match(OFFLINE_URL);
+        } else {
+          throw error;
+        }
       })
     );
   }
@@ -91,6 +95,80 @@ self.addEventListener('fetch', function(event) {
   // handled by the browser as if there were no service worker involvement.
 });
 
+
+const idleThresholdTime = 1000 * 10; // 10 seconds
+var lastAction = -1;
+
+function isIdle() {
+  return lastAction + idleThresholdTime < Date.now();
+}
+
+function showNotification(title, body, icon, badge, tag, baseUrl, url) {
+  var notificationOptions = {
+    body: body,
+    icon: icon,
+    badge: badge,
+    data: { url: url, baseUrl: baseUrl },
+    tag: tag
+  }
+
+  return self.registration.showNotification(title, notificationOptions);
+}
+
+self.addEventListener('push', function(event) {
+  var payload = event.data.json();
+  if(!isIdle() && payload.hide_when_active) {
+    return false;
+  }
+
+  event.waitUntil(
+    self.registration.getNotifications({ tag: payload.tag }).then(function(notifications) {
+      if (notifications && notifications.length > 0) {
+        notifications.forEach(function(notification) {
+          notification.close();
+        });
+      }
+
+      return showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url);
+    })
+  );
+});
+
+self.addEventListener('notificationclick', function(event) {
+  // Android doesn't close the notification when you click on it
+  // See: http://crbug.com/463146
+  event.notification.close();
+  var url = event.notification.data.url;
+  var baseUrl = event.notification.data.baseUrl;
+
+  // This looks to see if the current window is already open and
+  // focuses if it is
+  event.waitUntil(
+    clients.matchAll({ type: "window" })
+      .then(function(clientList) {
+        var reusedClientWindow = clientList.some(function(client) {
+          if (client.url === baseUrl + url && 'focus' in client) {
+            client.focus();
+            return true;
+          }
+
+          if ('postMessage' in client && 'focus' in client) {
+            client.focus();
+            client.postMessage({ url: url });
+            return true;
+          }
+          return false;
+        });
+
+        if (!reusedClientWindow && clients.openWindow) return clients.openWindow(baseUrl + url);
+      })
+  );
+});
+
+self.addEventListener('message', function(event) {
+  if('lastAction' in event.data){
+    lastAction = event.data.lastAction;
+  }});
 <% DiscoursePluginRegistry.service_workers.each do |js| %>
 <%=raw "#{File.read(js)}" %>
 <% end %>

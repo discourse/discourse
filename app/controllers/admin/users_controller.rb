@@ -46,10 +46,12 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def delete_all_posts
-    @user = User.find_by(id: params[:user_id])
-    @user.delete_all_posts!(guardian)
-    # staff action logs will have an entry for each post
-    render body: nil
+    hijack do
+      user = User.find_by(id: params[:user_id])
+      user.delete_all_posts!(guardian)
+      # staff action logs will have an entry for each post
+      render body: nil
+    end
   end
 
   def suspend
@@ -274,7 +276,7 @@ class Admin::UsersController < Admin::AdminController
   def deactivate
     guardian.ensure_can_deactivate!(@user)
     @user.deactivate
-    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'))
+    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
     refresh_browser @user
     render body: nil
   end
@@ -308,7 +310,8 @@ class Admin::UsersController < Admin::AdminController
         silenced: true,
         silence_reason: silencer.user_history.try(:details),
         silenced_till: @user.silenced_till,
-        suspended_at: @user.silenced_at
+        suspended_at: @user.silenced_at,
+        silenced_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
   end
@@ -361,20 +364,26 @@ class Admin::UsersController < Admin::AdminController
   def destroy
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
-    begin
-      options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
-      options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
 
-      if UserDestroyer.new(current_user).destroy(user, options)
-        render json: { deleted: true }
-      else
+    options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
+    options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+
+    hijack do
+      begin
+        if UserDestroyer.new(current_user).destroy(user, options)
+          render json: { deleted: true }
+        else
+          render json: {
+            deleted: false,
+            user: AdminDetailedUserSerializer.new(user, root: false).as_json
+          }
+        end
+      rescue UserDestroyer::PostsExistError
         render json: {
           deleted: false,
-          user: AdminDetailedUserSerializer.new(user, root: false).as_json
+          message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
         }
       end
-    rescue UserDestroyer::PostsExistError
-      raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
     end
   end
 
@@ -389,7 +398,13 @@ class Admin::UsersController < Admin::AdminController
     ip = params[:ip]
 
     # should we cache results in redis?
-    location = Excon.get("https://ipinfo.io/#{ip}/json", read_timeout: 10, connect_timeout: 10).body rescue nil
+    begin
+      location = Excon.get(
+        "https://ipinfo.io/#{ip}/json",
+        read_timeout: 10, connect_timeout: 10
+      )&.body
+    rescue Excon::Error
+    end
 
     render json: location
   end
@@ -423,7 +438,7 @@ class Admin::UsersController < Admin::AdminController
     }
 
     AdminUserIndexQuery.new(params).find_users(50).each do |user|
-      user_destroyer.destroy(user, options) rescue nil
+      user_destroyer.destroy(user, options)
     end
 
     render json: success_json
@@ -504,7 +519,8 @@ class Admin::UsersController < Admin::AdminController
           revisor.revise!(
             current_user,
             { raw:  params[:post_edit] },
-            skip_validations: true, skip_revision: true
+            skip_validations: true,
+            skip_revision: true
           )
         end
       end

@@ -111,6 +111,7 @@ aside.onebox {
   @include onebox-favicon('githubissue', 'github');
   @include onebox-favicon('githubgist', 'github');
   @include onebox-favicon('amazon', 'amazon');
+  @include onebox-favicon('instagram', 'instagram');
   @include onebox-favicon('googledocs', 'google_branding/logo_drive_48px');
 
 
@@ -178,6 +179,23 @@ aside.onebox {
           margin-right: none;
         }
       }
+
+      // full size images for instagram, twitter, etc.
+      .aspect-image-full-size {
+        max-height: 500px;
+        width: calc(500px * var(--aspect-ratio));
+        max-width: 100%;
+
+        img {
+          width: 100%;
+          height: inherit;
+          max-width: initial;
+          max-height: initial;
+          float: none;
+          padding: 5px 5px 5px 5px;
+        }
+      }
+
       [style*="--aspect-ratio"] {
         position: relative;
       }
@@ -222,6 +240,17 @@ aside.onebox {
       }
     }
 
+    // instagram fixes
+    .instagram-images {
+      clear: both;
+
+      .instagram-image {
+        padding: 5px 5px 5px 5px;
+        max-width: 100%;
+        max-height: 100%;
+        float: none;
+      }
+    }
   }
 }
 
@@ -300,7 +329,7 @@ pre.onebox code li{
 
 pre.onebox code ol.lines{
 	position:relative;
-	margin-left: 40px;
+	margin: 0 0 0 40px;
 }
 
 pre.onebox code ol.lines li {
@@ -482,11 +511,16 @@ aside.onebox.stackexchange .onebox-body {
   }
 }
 
+.onebox.instagram {
+  div.instagram-description {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    padding-top: 10px;
+  }
+}
+
 .onebox.githubcommit {
    pre.message {
-     clear: left;
      padding: 0;
-     padding-top: 10px;
    }
 }
 

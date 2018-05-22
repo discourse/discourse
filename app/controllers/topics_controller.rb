@@ -4,12 +4,14 @@ require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
+require_dependency 'topic_publisher'
 
 class TopicsController < ApplicationController
   requires_login only: [
     :timings,
     :destroy_timings,
     :update,
+    :update_shared_draft,
     :destroy,
     :recover,
     :status,
@@ -30,12 +32,13 @@ class TopicsController < ApplicationController
     :archive_message,
     :move_to_inbox,
     :convert_topic,
-    :bookmark
+    :bookmark,
+    :publish
   ]
 
   before_action :consider_user_for_promotion, only: :show
 
-  skip_before_action :check_xhr, only: [:show, :unsubscribe, :feed]
+  skip_before_action :check_xhr, only: [:show, :feed]
 
   def id_for_slug
     topic = Topic.find_by(slug: params[:slug].downcase)
@@ -114,6 +117,14 @@ class TopicsController < ApplicationController
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
 
+    # provide hint to crawlers only for now
+    # we would like to give them a bit more signal about age of data
+    if use_crawler_layout?
+      if last_modified = @topic_view.posts&.map { |p| p.updated_at }&.max&.httpdate
+        response.headers['Last-Modified'] = last_modified
+      end
+    end
+
     perform_show_response
 
   rescue Discourse::InvalidAccess => ex
@@ -131,28 +142,16 @@ class TopicsController < ApplicationController
     raise ex
   end
 
-  def unsubscribe
-    if current_user.blank?
-      cookies[:destination_url] = request.fullpath
-      return redirect_to "/login-preferences"
-    end
+  def publish
+    params.permit(:id, :destination_category_id)
 
-    @topic_view = TopicView.new(params[:topic_id], current_user)
+    topic = Topic.find(params[:id])
+    category = Category.find(params[:destination_category_id])
 
-    if slugs_do_not_match || (!request.format.json? && params[:slug].blank?)
-      return redirect_to @topic_view.topic.unsubscribe_url, status: 301
-    end
+    guardian.ensure_can_publish_topic!(topic, category)
+    topic = TopicPublisher.new(topic, current_user, category.id).publish!
 
-    tu = TopicUser.find_by(user_id: current_user.id, topic_id: params[:topic_id])
-
-    if tu && tu.notification_level > TopicUser.notification_levels[:regular]
-      tu.notification_level = TopicUser.notification_levels[:regular]
-      tu.save!
-    else
-      TopicUser.change(current_user.id, params[:topic_id].to_i, notification_level: TopicUser.notification_levels[:muted])
-    end
-
-    perform_show_response
+    render_serialized(topic.reload, BasicTopicSerializer)
   end
 
   def wordpress
@@ -220,6 +219,21 @@ class TopicsController < ApplicationController
   def destroy_timings
     PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
     render body: nil
+  end
+
+  def update_shared_draft
+    topic = Topic.find_by(id: params[:id])
+    guardian.ensure_can_edit!(topic)
+
+    category = Category.where(id: params[:category_id].to_i).first
+    guardian.ensure_can_publish_topic!(topic, category)
+
+    row_count = SharedDraft.where(topic_id: topic.id).update_all(category_id: category.id)
+    if row_count == 0
+      SharedDraft.create(topic_id: topic.id, category_id: category.id)
+    end
+
+    render json: success_json
   end
 
   def update
@@ -386,19 +400,19 @@ class TopicsController < ApplicationController
         .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
       allowed_groups.each do |id|
         if archive
-          GroupArchivedMessage.archive!(id, topic.id)
+          GroupArchivedMessage.archive!(id, topic)
           group_id = id
         else
-          GroupArchivedMessage.move_to_inbox!(id, topic.id)
+          GroupArchivedMessage.move_to_inbox!(id, topic)
         end
       end
     end
 
     if topic.allowed_users.include?(current_user)
       if archive
-        UserArchivedMessage.archive!(current_user.id, topic.id)
+        UserArchivedMessage.archive!(current_user.id, topic)
       else
-        UserArchivedMessage.move_to_inbox!(current_user.id, topic.id)
+        UserArchivedMessage.move_to_inbox!(current_user.id, topic)
       end
     end
 
@@ -436,7 +450,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_recover_topic!(topic)
 
     first_post = topic.posts.with_deleted.order(:post_number).first
-    PostDestroyer.new(current_user, first_post).recover
+    PostDestroyer.new(current_user, first_post, context: params[:context]).recover
 
     render body: nil
   end
@@ -638,9 +652,10 @@ class TopicsController < ApplicationController
       raise ActionController::ParameterMissing.new(:topic_ids)
     end
 
-    operation = params.require(:operation)
-    operation.permit!
-    operation = operation.to_h.symbolize_keys
+    operation = params
+      .require(:operation)
+      .permit(:type, :group, :category_id, :notification_level_id, tags: [])
+      .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])

@@ -158,6 +158,35 @@ describe Guardian do
     end
   end
 
+  describe "can_enable_safe_mode" do
+    let(:user) { Fabricate.build(:user) }
+    let(:moderator) { Fabricate.build(:moderator) }
+
+    context "when enabled" do
+      before do
+        SiteSetting.enable_safe_mode = true
+      end
+
+      it "can be performed" do
+        expect(Guardian.new.can_enable_safe_mode?).to eq(true)
+        expect(Guardian.new(user).can_enable_safe_mode?).to eq(true)
+        expect(Guardian.new(moderator).can_enable_safe_mode?).to eq(true)
+      end
+    end
+
+    context "when disabled" do
+      before do
+        SiteSetting.enable_safe_mode = false
+      end
+
+      it "can be performed" do
+        expect(Guardian.new.can_enable_safe_mode?).to eq(false)
+        expect(Guardian.new(user).can_enable_safe_mode?).to eq(false)
+        expect(Guardian.new(moderator).can_enable_safe_mode?).to eq(true)
+      end
+    end
+  end
+
   describe "can_defer_flags" do
     let(:post) { Fabricate(:post) }
     let(:user) { post.user }
@@ -473,6 +502,11 @@ describe Guardian do
 
       it 'returns true for a group owner' do
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
+      end
+
+      it 'returns true for normal user when inviting to topic and PM disabled' do
+        SiteSetting.enable_personal_messages = false
+        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
       end
     end
 
@@ -1094,6 +1128,11 @@ describe Guardian do
 
     it 'returns true when an admin' do
       expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
+    end
+
+    it 'returns false when personal messages are disabled' do
+      SiteSetting.enable_personal_messages = false
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
     end
   end
 
@@ -2009,6 +2048,7 @@ describe Guardian do
 
       it "is true if user is not an admin and first post is not too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(9.days.ago)
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
@@ -2020,20 +2060,33 @@ describe Guardian do
 
       it "is false if user's first post is too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(11.days.ago)
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_falsey
       end
     end
 
+    shared_examples "can_delete_user staff examples" do
+      it "is true if posts are less than or equal to 5" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(4)
+        user.stubs(:first_post_created_at).returns(11.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
+      end
+    end
+
     context "for moderators" do
       let(:actor) { moderator }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
 
     context "for admins" do
       let(:actor) { admin }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
   end
 
@@ -2161,6 +2214,35 @@ describe Guardian do
 
     it 'is false without a user to look at' do
       expect(Guardian.new(admin).can_grant_title?(nil)).to be_falsey
+    end
+
+    context 'with title argument' do
+      let(:title_badge) { Fabricate(:badge, name: 'Helper', allow_title: true) }
+      let(:no_title_badge) { Fabricate(:badge, name: 'Writer', allow_title: false) }
+      let(:group) { Fabricate(:group, title: 'Groupie') }
+
+      it 'returns true if title belongs to a badge that user has' do
+        BadgeGranter.grant(title_badge, user)
+        expect(Guardian.new(user).can_grant_title?(user, title_badge.name)).to eq(true)
+      end
+
+      it "returns false if title belongs to a badge that user doesn't have" do
+        expect(Guardian.new(user).can_grant_title?(user, title_badge.name)).to eq(false)
+      end
+
+      it "returns false if title belongs to a badge that user has but can't be used as a title" do
+        BadgeGranter.grant(no_title_badge, user)
+        expect(Guardian.new(user).can_grant_title?(user, no_title_badge.name)).to eq(false)
+      end
+
+      it 'returns true if title is from a group the user belongs to' do
+        group.add(user)
+        expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(true)
+      end
+
+      it "returns false if title is from a group the user doesn't belong to" do
+        expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(false)
+      end
     end
   end
 

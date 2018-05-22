@@ -1,4 +1,4 @@
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 const Tab = Ember.Object.extend({
   init() {
@@ -13,17 +13,49 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
   counts: null,
   showing: 'members',
+  destroying: null,
 
-  tabs: [
-    Tab.create({ name: 'members', route: 'group.index', icon: 'users' }),
-    Tab.create({ name: 'activity' }),
-    Tab.create({
-      name: 'edit', i18nKey: 'edit.title', icon: 'pencil', admin: true
-    }),
-    Tab.create({
-      name: 'logs', i18nKey: 'logs.title', icon: 'list-alt', admin: true
-    })
-  ],
+  @computed('showMessages', 'model.user_count', 'canManageGroup')
+  tabs(showMessages, userCount, canManageGroup) {
+    const membersTab = Tab.create({
+      name: 'members',
+      route: 'group.index',
+      icon: 'users',
+      i18nKey: "members.title"
+    });
+
+    membersTab.set('count', userCount);
+
+    const defaultTabs = [
+      membersTab,
+      Tab.create({ name: 'activity' })
+    ];
+
+    if (showMessages) {
+      defaultTabs.push(Tab.create({
+        name: 'messages', i18nKey: 'messages'
+      }));
+    }
+
+    if (canManageGroup) {
+      defaultTabs.push(
+        Tab.create({
+          name: 'manage', i18nKey: 'manage.title', icon: 'wrench'
+        })
+      );
+    }
+
+    return defaultTabs;
+  },
+
+  @computed('model.is_group_user')
+  showMessages(isGroupUser) {
+    if (!this.siteSettings.enable_personal_messages) {
+      return false;
+    }
+
+    return isGroupUser || (this.currentUser && this.currentUser.admin);
+  },
 
   @computed('model.is_group_owner', 'model.automatic')
   canEditGroup(isGroupOwner, automatic) {
@@ -50,14 +82,40 @@ export default Ember.Controller.extend({
     return this.currentUser && messageable;
   },
 
-  @observes('model.user_count')
-  _setMembersTabCount() {
-    this.get('tabs')[0].set('count', this.get('model.user_count'));
+  @computed('model', 'model.automatic')
+  canManageGroup(model, automatic) {
+    return this.currentUser && (
+      this.currentUser.canManageGroup(model) ||
+      (this.currentUser.admin && automatic)
+    );
   },
 
   actions: {
     messageGroup() {
       this.send('createNewMessageViaParams', this.get('model.name'));
-    }
+    },
+
+    destroy() {
+      const group = this.get('model');
+      this.set('destroying', true);
+
+      bootbox.confirm(
+        I18n.t("admin.groups.delete_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        confirmed => {
+          if (confirmed) {
+            group.destroy().then(() => {
+              this.transitionToRoute('groups.index');
+            }).catch(error => {
+              Ember.Logger.error(error);
+              bootbox.alert(I18n.t("admin.groups.delete_failed"));
+            }).finally(() => this.set('destroying', false));
+          } else {
+            this.set('destroying', false);
+          }
+        }
+      );
+    },
   }
 });

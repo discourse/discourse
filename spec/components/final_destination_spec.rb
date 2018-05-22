@@ -22,8 +22,7 @@ describe FinalDestination do
         when 'force.get.com' then '22.102.29.40'
         when 'wikipedia.com' then '1.2.3.4'
         else
-          as_ip = IPAddr.new(host) rescue nil
-          raise "couldn't lookup #{host}" if as_ip.nil?
+          as_ip = IPAddr.new(host)
           host
         end
       end

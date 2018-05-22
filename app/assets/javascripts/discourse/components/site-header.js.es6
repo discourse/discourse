@@ -112,7 +112,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
       $panel.removeClass('drop-down').removeClass('slide-in').addClass(viewMode);
 
       const $panelBody = $('.panel-body', $panel);
-      let contentHeight = parseInt($('.panel-body-contents', $panel).height());
+      // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
+      let contentHeight = parseInt($('.panel-body-contents', $panel).height()) + 2;
 
       // We use a mutationObserver to check for style changes, so it's important
       // we don't set it if it doesn't change. Same goes for the $panelBody!

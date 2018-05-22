@@ -18,6 +18,8 @@ export default ComboBoxComponent.extend({
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   mutateAttributes() {},
   fullWidthOnMobile: true,
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
 
   init() {
     this._super();
@@ -32,7 +34,10 @@ export default ComboBoxComponent.extend({
     this.get("rowComponentOptions").setProperties({
       hideParentCategory: this.get("subCategory"),
       allowUncategorized: true,
-      displayCategoryDescription: true
+      displayCategoryDescription: !(
+        this.currentUser &&
+        (this.currentUser.get("staff") || this.currentUser.trust_level > 0)
+      )
     });
   },
 
@@ -63,7 +68,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);

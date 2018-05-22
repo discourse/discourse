@@ -5,7 +5,11 @@ max_image_pixels = [ARGV[0].to_i, 1_000_000].max
 
 puts '', "Downsizing uploads size to no more than #{max_image_pixels} pixels"
 
+count = 0
+
 Upload.where("lower(extension) in (?)", ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'tif', 'tiff']).find_each do |upload|
+  count += 1
+  print "\r%8d".freeze % count
   absolute_path = Discourse.store.path_for(upload)
   if absolute_path && FileHelper.is_image?(upload.original_filename)
     file = File.new(absolute_path) rescue nil

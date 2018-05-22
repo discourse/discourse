@@ -14,6 +14,10 @@ class MetadataController < ApplicationController
 
   def default_manifest
     logo = SiteSetting.large_icon_url.presence || SiteSetting.logo_small_url.presence || SiteSetting.apple_touch_icon_url.presence
+    if !logo
+      logo = path('/images/d-logo-sketch-small.png')
+    end
+    file_info = get_file_info(logo)
 
     manifest = {
       name: SiteSetting.title,
@@ -21,13 +25,16 @@ class MetadataController < ApplicationController
       display: 'standalone',
       orientation: 'natural',
       start_url: "#{Discourse.base_uri}/",
+      share_target: {
+        url_template: 'new-topic?title={title}&body={text}%0A%0A{url}'
+      },
       background_color: "##{ColorScheme.hex_for_name('secondary')}",
       theme_color: "##{ColorScheme.hex_for_name('header_background')}",
       icons: [
         {
           src: logo,
-          sizes: "512x512",
-          type: "image/png"
+          sizes: file_info[:size],
+          type: file_info[:type]
         }
       ]
     }
@@ -46,4 +53,11 @@ class MetadataController < ApplicationController
 
     manifest
   end
+
+  def get_file_info(filename)
+    type = MiniMime.lookup_by_filename(filename)&.content_type || "image/png"
+    upload = Upload.find_by_url(filename)
+    { size: "#{upload&.width || 512}x#{upload&.height || 512}", type: type }
+  end
+
 end

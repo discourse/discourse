@@ -1,0 +1,82 @@
+{{#if currentUser.admin}}
+  <div class="control-group">
+    <label class="control-label">{{i18n "admin.groups.manage.membership.automatic"}}</label>
+
+    <label for="automatic_membership">
+      {{i18n 'admin.groups.manage.membership.automatic_membership_email_domains'}}
+    </label>
+
+    {{list-setting name="automatic_membership"
+        settingValue=model.emailDomains
+        class="group-form-automatic-membership-automatic"}}
+
+    <label>
+      {{input type="checkbox"
+          checked=model.automatic_membership_retroactive
+          class="groups-form-automatic-membership-retroactive"}}
+
+      {{i18n 'admin.groups.manage.membership.automatic_membership_retroactive'}}
+    </label>
+
+    <label>
+      {{input type="checkbox"
+          checked=model.primary_group
+          class="groups-form-primary-group"}}
+
+      {{i18n 'admin.groups.manage.membership.primary_group'}}
+    </label>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n "admin.groups.manage.membership.trust_level"}}</label>
+    <label for="grant_trust_level">{{i18n 'admin.groups.manage.membership.trust_levels_title'}}</label>
+
+    {{combo-box name="grant_trust_level"
+        valueAttribute="value"
+        value=model.grant_trust_level
+        content=trustLevelOptions
+        class="groups-form-grant-trust-level"}}
+  </div>
+{{/if}}
+
+<div class="control-group">
+  <label class="control-label">{{i18n "groups.manage.membership.access"}}</label>
+
+  <label>
+    {{input type="checkbox"
+        class="group-form-public-admission"
+        checked=model.public_admission
+        disabled=disablePublicSetting}}
+
+    {{i18n 'groups.public_admission'}}
+  </label>
+
+  <label>
+    {{input type='checkbox'
+        class='group-form-public-exit'
+        checked=model.public_exit}}
+
+    {{i18n 'groups.public_exit'}}
+  </label>
+
+  <label>
+    {{input type="checkbox"
+        class="group-form-allow-membership-requests"
+        checked=model.allow_membership_requests
+        disabled=disableMembershipRequestSetting}}
+
+    {{i18n 'groups.allow_membership_requests'}}
+  </label>
+
+  {{#if model.allow_membership_requests}}
+    <div>
+      <label for="membership-request-template">
+        {{i18n 'groups.membership_request_template'}}
+      </label>
+
+      {{expanding-text-area name="membership-request-template"
+          class='group-form-membership-request-template input-xxlarge'
+          value=model.membership_request_template}}
+    </div>
+  {{/if}}
+</div>

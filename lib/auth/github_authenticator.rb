@@ -47,6 +47,8 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       # Potentially use *any* of the emails from GitHub to find a match or
       # register a new user, with preference given to the primary email.
       all_emails = Array.new(auth_token[:extra][:all_emails])
+      primary = all_emails.detect { |email| email[:primary] && email[:verified] }
+      all_emails.unshift(primary) if primary.present?
 
       # Only consider verified emails to match an existing user.  We don't want
       # someone to be able to create a GitHub account with an unverified email

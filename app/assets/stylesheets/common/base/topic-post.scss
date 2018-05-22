@@ -53,37 +53,37 @@
   }
 
   h1 {
-    font-size: $font-up-4;
-  }
-
-  h2 {
     font-size: $font-up-3;
   }
 
-  h3 {
+  h2 {
     font-size: $font-up-2;
   }
 
-  h4 {
+  h3 {
     font-size: $font-up-1;
   }
 
-  h5 {
+  h4 {
     font-size: $font-0;
   }
 
-  h6 {
+  h5 {
     font-size: $font-down-1;
+  }
+
+  h6 {
+    font-size: $font-down-2;
   }
 
   a { word-wrap: break-word; }
   ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
   del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
   // Prevents users from breaking posts with tag nesting
-  big { font-size: 2rem; }
+  big { font-size: 1.5rem; }
   small { font-size: 0.75rem; }
   small small { font-size: .75em; }
-  big big { font-size: 1em; } 
+  big big { font-size: 1em; }
   sub sub sub {bottom: 0;}
   sup sup sup {top: 0;}
 }
@@ -110,7 +110,7 @@
   .clearfix > .topic-meta-data > .names {
     span.user-title {
       background-color: dark-light-choose($highlight-low, $highlight-medium);
-      color: dark-light-choose($primary-high, $secondary-low);      
+      color: dark-light-choose($primary-high, $secondary-low);
       padding-left: 4px;
       padding-right: 4px;
     }
@@ -159,13 +159,14 @@ aside.quote {
 }
 
 .post-hidden {
-  opacity: 0.5;
+  opacity: 0.5;       // opacity sets a new z-index context,
+  position: relative; // so the positioning is required,
+  z-index: z("base"); // otherwise post controls are stacked too low
 }
 
 .topic-post.staged {
   opacity: 0.4;
 }
-
 
 .quote-controls {
   float: right;
@@ -202,7 +203,7 @@ aside.quote {
   background: blend-primary-secondary(5%);
   border: 1px solid $primary-low;
   border-top: none; // would cause double top border
-  
+
   .avatars {
     > div {
       float: left;
@@ -259,6 +260,15 @@ aside.quote {
   td {
     vertical-align: top;
     padding:1px;
+  }
+
+  .topic-links {
+    tr {
+      border: none;
+    }
+    .badge-notification {
+      margin: 1px 5px 2px 0;
+    }
   }
 
 }
@@ -402,7 +412,7 @@ kbd
   background: dark-light-choose(#fafafa, #333);
   border: 1px solid dark-light-choose(#ccc, #555);
   border-bottom: medium none dark-light-choose(#fff, #000);
-  
+
   color: $primary;
   display: inline-block;
   font-size: $font-down-1;
@@ -456,9 +466,6 @@ blockquote > *:last-child {
   td,th {
     padding: 3px 3px 3px 10px;
   }
-  tr {
-    border-bottom: 1px solid lighten($primary, 80%);
-  }
 }
 
 .small-action {
@@ -467,7 +474,7 @@ blockquote > *:last-child {
   max-width: 755px;
   border-top: 1px solid $primary-low;
   .topic-avatar {
-    align-self: flex-start;    
+    align-self: flex-start;
     padding: .7em 0;
     border-top: none;
     margin-right: 11px;
@@ -488,7 +495,7 @@ blockquote > *:last-child {
   }
 
   .small-action-desc {
-    display: flex; 
+    display: flex;
     flex-wrap: wrap;
     flex: 1 1 100%;
     align-items: center;
@@ -499,7 +506,7 @@ blockquote > *:last-child {
     color: $primary-medium;
 
     .custom-message {
-      flex: 1 1 100%;      
+      flex: 1 1 100%;
       text-transform: none;
       font-weight: normal;
       font-size: $font-up-1;
@@ -627,5 +634,15 @@ and (max-width : 767px) {
   .user-title {
     float: left;
     clear: left;
+  }
+}
+
+.signup-cta {
+  a {
+    float: right;
+    text-decoration: underline;
+  }
+  .buttons {
+    margin-bottom: 1em;
   }
 }

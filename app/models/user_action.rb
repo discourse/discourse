@@ -1,4 +1,5 @@
 class UserAction < ActiveRecord::Base
+
   belongs_to :user
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
@@ -119,6 +120,20 @@ SQL
 
   end
 
+  def self.count_daily_engaged_users(start_date = nil, end_date = nil)
+    result = select(:user_id)
+      .distinct
+      .where(action_type: [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE])
+
+    if start_date && end_date
+      result = result.group('date(created_at)')
+      result = result.where('created_at > ? AND created_at < ?', start_date, end_date)
+      result = result.order('date(created_at)')
+    end
+
+    result.count
+  end
+
   def self.stream_item(action_id, guardian)
     stream(action_id: action_id, guardian: guardian).first
   end
@@ -197,6 +212,7 @@ SQL
         p.hidden,
         p.post_type,
         p.action_code,
+        pc.value AS action_code_who,
         p.edit_reason,
         t.category_id
       FROM user_actions as a
@@ -207,6 +223,7 @@ SQL
       JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
       JOIN users au on au.id = a.user_id
       LEFT JOIN categories c on c.id = t.category_id
+      LEFT JOIN post_custom_fields pc ON pc.post_id = a.target_post_id AND pc.name = 'action_code_who'
       /*where*/
       /*order_by*/
       /*offset*/
