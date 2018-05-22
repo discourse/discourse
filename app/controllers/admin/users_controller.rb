@@ -382,7 +382,7 @@ class Admin::UsersController < Admin::AdminController
         render json: {
           deleted: false,
           message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
-        }
+        }, status: 403
       end
     end
   end
