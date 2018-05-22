@@ -37,19 +37,19 @@ QUnit.test('replying to post - reply_as_private_message', assert => {
   });
 });
 
-QUnit.test('replying to post - reply_to_topic', assert => {
+QUnit.test('replying to post - reply_to_topic', async assert => {
   const composerActions = selectKit('.composer-actions');
 
-  visit('/t/internationalization-localization/280');
-  click('article#post_3 button.reply');
-  fillIn('.d-editor-input', 'test replying to topic when initially replied to post');
-  composerActions.expand().selectRowByValue('reply_to_topic');
+  await visit('/t/internationalization-localization/280');
+  await click('article#post_3 button.reply');
+  await fillIn('.d-editor-input', 'test replying to topic when initially replied to post');
 
-  andThen(() => {
-    assert.equal(find('.action-title .topic-link').text().trim(), 'Internationalization / localization');
-    assert.equal(find('.action-title .topic-link').attr("href"), '/t/internationalization-localization/280');
-    assert.equal(find('.d-editor-input').val(), 'test replying to topic when initially replied to post');
-  });
+  await composerActions.expandAwait();
+  await composerActions.selectRowByValueAwait('reply_to_topic');
+
+  assert.equal(find('.action-title .topic-link').text().trim(), 'Internationalization / localization');
+  assert.equal(find('.action-title .topic-link').attr("href"), '/t/internationalization-localization/280');
+  assert.equal(find('.d-editor-input').val(), 'test replying to topic when initially replied to post');
 });
 
 QUnit.test('replying to post - toggle_whisper', assert => {
