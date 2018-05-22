@@ -554,6 +554,11 @@ describe User do
       user = Fabricate(:user, email: "bar@foo.com")
       expect(User.username_available?(user.username, user.primary_email.email)).to eq(false)
     end
+
+    it 'returns false when a username equals an existing group name' do
+      Fabricate(:group, name: 'foo')
+      expect(User.username_available?('Foo')).to eq(false)
+    end
   end
 
   describe '.reserved_username?' do
