@@ -107,7 +107,7 @@ QUnit.test('shared draft', assert => {
   });
 });
 
-QUnit.test('interactions', async assert => {
+QUnit.skip('interactions', async assert => {
   const composerActions = selectKit('.composer-actions');
   const quote = 'Life is like riding a bicycle.';
 
