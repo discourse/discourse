@@ -446,7 +446,7 @@ class UserNotifications < ActionMailer::Base
     # tag names
     if opts[:show_tags_in_subject] && post.topic_id
       tags = Topic.find_by(id: post.topic_id)&.tags.first(3)
-      show_tags_in_subject = tags.any? ? tags.map{ |t| "[#{t.name}]" }.join : nil
+      show_tags_in_subject = tags.any? ? tags.map { |t| "[#{t.name}]" }.join : nil
     end
 
     if post.topic.private_message?
