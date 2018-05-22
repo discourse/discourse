@@ -370,28 +370,44 @@
   }
 }
 
+.user-metrics {
+  display: flex; 
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-left: -5%;
+  margin: 2em 0 .75em -5%;   // Negative margin allows for a margin when in 2-columns, 
+  .dashboard-inline-table { //  and "hides" margin when the item spans 100% width
+    flex: 1 0 auto;
+    max-width: 95%;
+  }
+}
+
 .dashboard-inline-table {
-  margin-bottom: 1em;
+  margin-left: 5%;
+  margin-bottom: 1.25em;
 
   .table-title {
     border-bottom: 1px solid $primary-low;
     margin-bottom: 1em;
-    padding-bottom: .5em;
   }
 
   .table-container {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    flex: 1 1 auto;
   }
 
   .table-cell {
-    margin-right: .5em;
     display: flex;
-
+    flex: 0 1 auto;
+    margin: 0 2em .5em 0;
     .label {
-      font-weight: 700;
+      display: flex;
+      align-items: center;
       margin-right: .5em;
+      .d-icon {
+        margin-right: 5px;
+      }
     }
   }
 }

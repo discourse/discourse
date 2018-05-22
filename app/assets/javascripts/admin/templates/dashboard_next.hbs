@@ -79,11 +79,11 @@
         </div>
       {{/conditional-loading-section}}
     </div>
-
+    <div class="user-metrics">
     {{dashboard-inline-table dataSourceNames="users_by_type" lastRefreshedAt=lastRefreshedAt}}
 
     {{dashboard-inline-table dataSourceNames="users_by_trust_level" lastRefreshedAt=lastRefreshedAt}}
-
+    </div>
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
         <div class="durability">
