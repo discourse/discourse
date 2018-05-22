@@ -442,7 +442,7 @@ class ImportScripts::Base
       user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
       parent_category_id: opts[:parent_category_id],
-      color: opts[:color] || "AB9364",
+      color: opts[:color] || category_color,
       text_color: opts[:text_color] || "FFF",
       read_restricted: opts[:read_restricted] || false,
     )
@@ -461,6 +461,15 @@ class ImportScripts::Base
     post_create_action.try(:call, new_category)
 
     new_category
+  end
+
+  def category_color
+    @category_colors ||= SiteSetting.category_colors.split('|')
+
+    index = @next_category_color_index.presence || 0
+    @next_category_color_index = index + 1 >= @category_colors.count ? 0 : index + 1
+
+    @category_colors[index]
   end
 
   def created_post(post)
