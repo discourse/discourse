@@ -98,6 +98,15 @@ describe HasCustomFields do
     end
 
     it "handles arrays properly" do
+
+      CustomFieldsTestItem.register_custom_field_type "array", [:integer]
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "array" => ["1"] }
+      test_item.save
+
+      db_item = CustomFieldsTestItem.find(test_item.id)
+      expect(db_item.custom_fields).to eq("array" => [1])
+
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = { "a" => ["b", "c", "d"] }
       test_item.save
