@@ -380,29 +380,29 @@
     flex: 1 0 auto;
     max-width: 95%;
   }
-}
-
   .table-cell {
     display: flex;
     flex: 0 1 auto;
-    margin: 0 1em .5em 0;
-    padding: 0 .5em 0 0;
+    margin: 0 10px 5px 0;
     border: 1px solid $primary-low;
     border-radius: 10px;
-  
     .label {
       display: flex;
       align-items: center;
-      margin-right: .25em;
       color: $primary;
       background: $primary-very-low;
-      padding: 0 .5em;
       justify-content: center;
-      border-radius: 10px 0 0 10px;
+      border-radius: 9px 0 0 9px;
+      padding: 0 5px 0 8px;
+      
       .d-icon {
         margin-right: 5px;
         font-size: $font-down-1;
       }
+    }
+
+    .value {
+      padding: 0 8px 0 5px;
     }
     &.user-newuser{
       .label {
@@ -434,6 +434,7 @@
       }
     }
   }
+}
 
 .dashboard-inline-table {
   margin-left: 5%;
