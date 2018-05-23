@@ -7,12 +7,12 @@
     <div class="table-container">
       {{#unless hasBlock}}
         {{#each report.data as |data|}}
-          <div class="table-cell">
+          <div class="table-cell user-{{data.key}}">
             <span class="label">
               {{#if data.icon}}
                 {{d-icon data.icon}}
               {{/if}}
-              {{data.x}}:
+              {{data.x}}
             </span>
             <span class="value">
               {{#if data.url}}
