@@ -4,6 +4,8 @@ import { h } from 'virtual-dom';
 import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import RawHtml from 'discourse/widgets/raw-html';
+import renderTags from 'discourse/lib/render-tags';
+import renderTopicFeaturedLink from 'discourse/lib/render-topic-featured-link';
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
@@ -382,6 +384,7 @@ export default createWidget('topic-timeline', {
     const createdAt = new Date(topic.created_at);
     const stream = attrs.topic.get('postStream.stream');
     const { currentUser } = this;
+    const { tagging_enabled, topic_featured_link_enabled } = this.siteSettings;
 
     attrs["currentUser"] = currentUser;
 
@@ -398,6 +401,34 @@ export default createWidget('topic-timeline', {
         className: 'fancy-title',
         action: 'jumpTop'
       }))];
+
+      // duplicate of the {{topic-category}} component
+      let category = [];
+
+      if (!topic.get("isPrivateMessage")) {
+        if (topic.category.parentCategory) {
+          category.push(this.attach("category-link", { category: topic.category.parentCategory }));
+        }
+        category.push(this.attach("category-link", { category: topic.category }));
+      }
+
+      const showTags = tagging_enabled && topic.tags && topic.tags.length > 0;
+
+      if (showTags || topic_featured_link_enabled) {
+        let extras = [];
+        if (showTags) {
+          const tagsHtml = new RawHtml({ html: renderTags(topic, { mode: "list" }) });
+          extras.push(h("div.list-tags", tagsHtml));
+        }
+        if (topic_featured_link_enabled) {
+          extras.push(new RawHtml({ html: renderTopicFeaturedLink(topic) }));
+        }
+        category.push(h("div.topic-header-extra", extras));
+      }
+
+      if (category.length > 0) {
+        elems.push(h("div.topic-category", category));
+      }
 
       if (this.state.excerpt) {
         elems.push(new RawHtml({
