@@ -3824,7 +3824,7 @@ en:
         icon: Icon
         image: Image
         icon_help: "Use a Font Awesome class"
-        image_help: "Enter the URL of the image"
+        image_help: "Enter the URL of the image (overrides icon field if both are set)"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily
