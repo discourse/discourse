@@ -104,6 +104,15 @@ QUnit.test('shared draft', async assert => {
   assert.ok(find('#reply-control.composing-shared-draft').length === 1);
 });
 
+QUnit.test('hide component if no content', async assert => {
+  const composerActions = selectKit('.composer-actions');
+
+  await visit('/u/eviltrout/messages');
+  await click('.new-private-message');
+
+  assert.ok(composerActions.el().hasClass("is-hidden"));
+});
+
 QUnit.test('interactions', async assert => {
   const composerActions = selectKit('.composer-actions');
   const quote = 'Life is like riding a bicycle.';
