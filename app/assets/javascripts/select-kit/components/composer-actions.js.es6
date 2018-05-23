@@ -28,6 +28,7 @@ export default DropdownSelectBoxComponent.extend({
   allowInitialValueMutation: false,
   allowAutoSelectFirst: false,
   showFullTitle: false,
+  isHidden: Ember.computed.empty("content"),
 
   didReceiveAttrs() {
     this._super();
@@ -68,7 +69,7 @@ export default DropdownSelectBoxComponent.extend({
   content(options, canWhisper, action) {
     let items = [];
 
-    if (action !== CREATE_TOPIC && action !== CREATE_SHARED_DRAFT) {
+    if (action !== CREATE_TOPIC && action !== CREATE_SHARED_DRAFT && _topicSnapshot) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_as_new_topic.label"),
         description: I18n.t("composer.composer_actions.reply_as_new_topic.desc"),
