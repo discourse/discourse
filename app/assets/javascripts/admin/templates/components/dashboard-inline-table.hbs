@@ -7,7 +7,7 @@
     <div class="table-container">
       {{#unless hasBlock}}
         {{#each report.data as |data|}}
-          <div class="table-cell user-{{data.key}}">
+          <a class="table-cell user-{{data.key}}" href="{{data.url}}">
             <span class="label">
               {{#if data.icon}}
                 {{d-icon data.icon}}
@@ -15,13 +15,9 @@
               {{data.x}}
             </span>
             <span class="value">
-              {{#if data.url}}
-                <a href="{{data.url}}">{{number data.y}}</a>
-              {{else}}
                 {{number data.y}}
-              {{/if}}
             </span>
-          </div>
+          </a>
         {{/each}}
       {{else}}
         {{yield (hash report=report)}}
