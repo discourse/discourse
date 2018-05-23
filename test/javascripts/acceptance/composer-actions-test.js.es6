@@ -1,10 +1,14 @@
 import { acceptance } from 'helpers/qunit-helpers';
+import { _clearSnapshots } from 'select-kit/components/composer-actions';
 
 acceptance('Composer Actions', {
   loggedIn: true,
   settings: {
     enable_whispers: true
-  }
+  },
+  beforeEach() {
+    _clearSnapshots();
+  },
 });
 
 QUnit.test('replying to post', async assert => {
