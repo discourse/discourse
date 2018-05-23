@@ -21,7 +21,7 @@ module Scheduler
       @paused = false
     end
 
-    # for test
+    # for test and sidekiq
     def async=(val)
       @async = val
     end
