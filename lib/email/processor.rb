@@ -36,6 +36,7 @@ module Email
     def handle_failure(mail_string, e)
       message_template = case e
                          when Email::Receiver::NoSenderDetectedError       then return nil
+                         when Email::Receiver::FromReplyByAddressError     then return nil
                          when Email::Receiver::EmptyEmailError             then :email_reject_empty
                          when Email::Receiver::NoBodyDetectedError         then :email_reject_empty
                          when Email::Receiver::UserNotFoundError           then :email_reject_user_not_found
