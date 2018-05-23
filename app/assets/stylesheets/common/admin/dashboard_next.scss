@@ -382,6 +382,59 @@
   }
 }
 
+  .table-cell {
+    display: flex;
+    flex: 0 1 auto;
+    margin: 0 1em .5em 0;
+    padding: 0 .5em 0 0;
+    border: 1px solid $primary-low;
+    border-radius: 10px;
+  
+    .label {
+      display: flex;
+      align-items: center;
+      margin-right: .25em;
+      color: $primary;
+      background: $primary-very-low;
+      padding: 0 .5em;
+      justify-content: center;
+      border-radius: 10px 0 0 10px;
+      .d-icon {
+        margin-right: 5px;
+        font-size: $font-down-1;
+      }
+    }
+    &.user-newuser{
+      .label {
+        color: $primary-high;
+      }
+    }
+    &.user-basic , &.user-member {
+      border-color: $bronze;
+      .label {
+        border-color: $bronze;        
+        background: $bronze;
+        color: $secondary;
+      } 
+    }
+    &.user-regular {
+      border-color: $silver;
+      .label {
+        border-color: $silver;        
+        background: $silver;
+        color: $secondary;
+      } 
+    }
+    &.user-leader { 
+      border-color: $gold;
+      .label {
+        background: $gold;
+        border-color: $gold;      
+        color: $secondary;
+      }
+    }
+  }
+
 .dashboard-inline-table {
   margin-left: 5%;
   margin-bottom: 1.25em;
@@ -395,20 +448,6 @@
     display: flex;
     flex-wrap: wrap;
     flex: 1 1 auto;
-  }
-
-  .table-cell {
-    display: flex;
-    flex: 0 1 auto;
-    margin: 0 2em .5em 0;
-    .label {
-      display: flex;
-      align-items: center;
-      margin-right: .5em;
-      .d-icon {
-        margin-right: 5px;
-      }
-    }
   }
 }
 
