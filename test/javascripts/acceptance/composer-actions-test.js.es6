@@ -36,7 +36,7 @@ QUnit.test('replying to post - reply_as_private_message', async assert => {
   assert.ok(find('.d-editor-input').val().indexOf('Continuing the discussion') >= 0);
 });
 
-QUnit.test('replying to post - reply_to_topic', async assert => {
+QUnit.skip('replying to post - reply_to_topic', async assert => {
   const composerActions = selectKit('.composer-actions');
 
   visit('/t/internationalization-localization/280');
