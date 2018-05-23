@@ -681,6 +681,7 @@ class ApplicationController < ActionController::Base
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.tr!('-', ' ')
+      @hide_google = true if SiteSetting.login_required
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
 
