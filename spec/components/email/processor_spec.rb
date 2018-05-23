@@ -87,6 +87,20 @@ describe Email::Processor do
 
   end
 
+  context "from reply to email address" do
+
+    let(:mail) { "From: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
+
+    it "ignores the email" do
+      Email::Receiver.any_instance.stubs(:process_internal).raises(Email::Receiver::FromReplyByAddressError.new)
+
+      expect {
+        Email::Processor.process!(mail)
+      }.to change { EmailLog.count }.by(0)
+    end
+
+  end
+
   context "mailinglist mirror" do
     before do
       SiteSetting.email_in = true
