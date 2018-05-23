@@ -63,6 +63,12 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS A record for the `discourse.example.com` subdomain in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
 
+### Ports
+
+- Ensure that no other applications listen on port 80 and 443 already. You can check that with `netstat -an | grep 80` for example.
+
+- Enable tcp/80 and tcp/443 in your firewall, if not already done.
+
 ### Edit Discourse Configuration
 
 Launch the setup tool at
