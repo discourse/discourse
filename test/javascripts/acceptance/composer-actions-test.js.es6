@@ -23,18 +23,17 @@ QUnit.test('replying to post', async assert => {
 
 });
 
-QUnit.test('replying to post - reply_as_private_message', assert => {
+QUnit.test('replying to post - reply_as_private_message', async assert => {
   const composerActions = selectKit('.composer-actions');
 
-  visit('/t/internationalization-localization/280');
-  click('article#post_3 button.reply');
+  await visit('/t/internationalization-localization/280');
+  await click('article#post_3 button.reply');
 
-  composerActions.expand().selectRowByValue('reply_as_private_message');
+  await composerActions.expandAwait();
+  await composerActions.selectRowByValueAwait('reply_as_private_message');
 
-  andThen(() => {
-    assert.equal(find('.users-input .item:eq(0)').text(), 'codinghorror');
-    assert.ok(find('.d-editor-input').val().indexOf('Continuing the discussion') >= 0);
-  });
+  assert.equal(find('.users-input .item:eq(0)').text(), 'codinghorror');
+  assert.ok(find('.d-editor-input').val().indexOf('Continuing the discussion') >= 0);
 });
 
 QUnit.test('replying to post - reply_to_topic', async assert => {
