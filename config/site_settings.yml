@@ -717,8 +717,15 @@ email:
   digest_topics:
     default: 5
     min: 1
-  digest_posts: 3
-  digest_other_topics: 5
+    max: 20
+  digest_posts:
+    default: 5
+    min: 0
+    max: 20
+  digest_other_topics:
+    default: 5
+    min: 0
+    max: 20
   suppress_digest_email_after_days:
     default: 365
   digest_suppress_categories:
