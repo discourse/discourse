@@ -134,11 +134,9 @@ class PostAlerter
     user_ids -= [post.user_id]
     users = User.where(id: user_ids)
 
-    Scheduler::Defer.later("Notify First Post Watchers") do
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |user|
-        create_notification(user, Notification.types[:watching_first_post], post)
-      end
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |user|
+      create_notification(user, Notification.types[:watching_first_post], post)
     end
   end
 
@@ -406,6 +404,7 @@ class PostAlerter
         DiscourseEvent.trigger(:post_notification_alert, user, payload)
       end
     end
+
     created.id ? created : nil
   end
 
@@ -486,11 +485,9 @@ class PostAlerter
     users = [users] unless users.is_a?(Array)
     users = users.reject { |u| u.staged? } if post.topic&.private_message?
 
-    Scheduler::Defer.later("Notify Users") do
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |u|
-        create_notification(u, Notification.types[type], post, opts)
-      end
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |u|
+      create_notification(u, Notification.types[type], post, opts)
     end
 
     users
@@ -499,28 +496,26 @@ class PostAlerter
   def notify_pm_users(post, reply_to_user, notified)
     return unless post.topic
 
-    Scheduler::Defer.later("Notify PM Users") do
-      # users that aren't part of any mentioned groups
-      users = directly_targeted_users(post).reject { |u| notified.include?(u) }
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |user|
-        notification_level = TopicUser.get(post.topic, user)&.notification_level
-        if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
-          create_notification(user, Notification.types[:private_message], post)
-        end
+    # users that aren't part of any mentioned groups
+    users = directly_targeted_users(post).reject { |u| notified.include?(u) }
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |user|
+      notification_level = TopicUser.get(post.topic, user)&.notification_level
+      if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
+        create_notification(user, Notification.types[:private_message], post)
       end
+    end
 
-      # users that are part of all mentionned groups
-      users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |user|
-        case TopicUser.get(post.topic, user)&.notification_level
-        when TopicUser.notification_levels[:watching]
-          # only create a notification when watching the group
-          create_notification(user, Notification.types[:private_message], post)
-        when TopicUser.notification_levels[:tracking]
-          notify_group_summary(user, post)
-        end
+    # users that are part of all mentionned groups
+    users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |user|
+      case TopicUser.get(post.topic, user)&.notification_level
+      when TopicUser.notification_levels[:watching]
+        # only create a notification when watching the group
+        create_notification(user, Notification.types[:private_message], post)
+      when TopicUser.notification_levels[:tracking]
+        notify_group_summary(user, post)
       end
     end
   end
@@ -575,12 +570,10 @@ class PostAlerter
     exclude_user_ids = notified.map(&:id)
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
-    Scheduler::Defer.later("Notify Post Users") do
-      DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
-      notify.pluck(:id).each do |user_id|
-        user = User.find_by(id: user_id)
-        create_notification(user, Notification.types[:posted], post)
-      end
+    DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
+    notify.pluck(:id).each do |user_id|
+      user = User.find_by(id: user_id)
+      create_notification(user, Notification.types[:posted], post)
     end
   end
 

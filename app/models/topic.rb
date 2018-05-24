@@ -675,19 +675,9 @@ SQL
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        post = self.ordered_posts.first
-
-        if post
-          post_alerter = PostAlerter.new
-
-          post_alerter.notify_post_users(
-            post,
-            [post.user, post.last_editor].uniq
-          )
-
-          post_alerter.notify_first_post_watchers(
-            post, post_alerter.category_watchers(self)
-          )
+        if post = self.ordered_posts.first
+          notified_user_ids = [post.user_id, post.last_editor_id].uniq
+          Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
         end
       end
 
@@ -788,8 +778,7 @@ SQL
 
     last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
-      # ensure all the notifications are out
-      PostAlerter.new.after_save_post(last_post)
+      Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
 
       group_id = group.id

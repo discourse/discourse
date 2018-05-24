@@ -26,7 +26,11 @@ class PostJobsEnqueuer
   private
 
   def enqueue_post_alerts
-    Jobs.enqueue(:post_alert, post_id: @post.id, options: @opts[:post_alert_options])
+    Jobs.enqueue(:post_alert,
+      post_id: @post.id,
+      new_record: true,
+      options: @opts[:post_alert_options],
+  )
   end
 
   def feature_topic_users
