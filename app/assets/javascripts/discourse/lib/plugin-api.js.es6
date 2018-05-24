@@ -25,9 +25,10 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
 import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
 import { disableNameSuppression } from 'discourse/widgets/poster-name';
+import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from 'discourse/controllers/topic';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.21';
+const PLUGIN_API_VERSION = '0.8.22';
 
 class PluginApi {
   constructor(version, container) {
@@ -424,6 +425,24 @@ class PluginApi {
    **/
   disableNameSuppressionOnPosts() {
     disableNameSuppression();
+  }
+
+  /**
+   * Registers a callback that will be invoked when the server calls
+   * Post#publish_change_to_clients! please ensure your type does not
+   * match acted,revised,rebaked,recovered, created,move_to_inbox or archived
+   *
+   * callback will be called with topicController and Message
+   *
+   * Example:
+   *
+   * api.registerCustomPostMessageCallback("applied_color", (topicController, message) => {
+   *   let stream = topicController.get("model.postStream");
+   *   // etc
+   * });
+   */
+  registerCustomPostMessageCallback(type, callback) {
+    registerCustomPostMessageCallback1(type, callback);
   }
 
   /**
