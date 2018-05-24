@@ -232,6 +232,33 @@ componentTest('supports converting select value to integer', {
   }
 });
 
+componentTest('supports converting string as boolean to boolean', {
+  template: '{{single-select value=value content=content castBoolean=true}}',
+
+  beforeEach() {
+    this.set('value', true);
+    this.set('content', [{ id: 'true', name: 'ASC'}, {id: 'false', name: 'DESC' }]);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').selectedRow().name(), 'ASC') );
+
+    andThen(() => {
+      this.set('value', false);
+    });
+
+    andThen(() => {
+      assert.equal(
+        this.get('subject').selectedRow().name(),
+        'DESC',
+        'it works with dynamic content'
+      );
+    });
+  }
+});
+
 componentTest('supports keyboard events', {
   template: '{{single-select content=content filterable=true}}',
 
