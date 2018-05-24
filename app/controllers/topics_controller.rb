@@ -622,9 +622,12 @@ class TopicsController < ApplicationController
     topic_time = allowed_params[:topic_time].to_i
     timings = allowed_params[:timings].to_h || {}
 
+    # ensure we capture current user for the block
+    user = current_user
+
     hijack do
       PostTiming.process_timings(
-        current_user,
+        user,
         topic_id,
         topic_time,
         timings.map { |post_number, t| [post_number.to_i, t.to_i] },
