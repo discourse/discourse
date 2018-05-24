@@ -1508,6 +1508,7 @@ en:
           label: Tagged
         filters:
           label: Only return topics/posts...
+          title: Matching in title only
           likes: I liked
           posted: I posted in
           watching: I'm watching
