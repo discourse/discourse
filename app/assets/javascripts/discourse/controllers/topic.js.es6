@@ -14,7 +14,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import { userPath } from 'discourse/lib/url';
 
-const customPostMessageCallbacks = {};
+let customPostMessageCallbacks = {};
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
