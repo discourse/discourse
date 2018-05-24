@@ -26,4 +26,12 @@ describe PrettyText do
 
     expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
   end
+
+  it 'needs attributes to convert to a local date' do
+    cooked = PrettyText.cook <<~MD
+      [date]
+    MD
+
+    expect(cooked).to include("<p>[date]</p>")
+  end
 end
