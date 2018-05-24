@@ -41,8 +41,8 @@ class WebHook < ActiveRecord::Base
       .distinct
   end
 
-  def self.enqueue_hooks(type, opts = {}, web_hooks = nil)
-    (web_hooks || active_web_hooks(type)).each do |web_hook|
+  def self.enqueue_hooks(type, opts = {})
+    active_web_hooks(type).each do |web_hook|
       Jobs.enqueue(:emit_web_hook_event, opts.merge(
         web_hook_id: web_hook.id, event_type: type.to_s
       ))
@@ -50,54 +50,44 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_object_hooks(type, object, event, serializer = nil)
-    Scheduler::Defer.later("Enqueue User Webhook") do
-      web_hooks = active_web_hooks(type)
-      unless web_hooks.empty?
-        serializer ||= "WebHook#{type.capitalize}Serializer".constantize
+    if active_web_hooks(type).exists?
+      serializer ||= "WebHook#{type.capitalize}Serializer".constantize
 
-        WebHook.enqueue_hooks(type, {
-          event_name: event.to_s,
-          payload: serializer.new(object,
-            scope: self.guardian,
-            root: false
-          ).to_json
-        }, web_hooks)
-      end
+      WebHook.enqueue_hooks(type,
+        event_name: event.to_s,
+        payload: serializer.new(object,
+          scope: self.guardian,
+          root: false
+        ).to_json
+      )
     end
   end
 
   def self.enqueue_topic_hooks(event, topic)
-    Scheduler::Defer.later("Enqueue Topic Webhook") do
-      web_hooks = active_web_hooks('topic')
-      unless web_hooks.empty?
-        topic_view = TopicView.new(topic.id, Discourse.system_user)
+    if active_web_hooks('topic').exists?
+      topic_view = TopicView.new(topic.id, Discourse.system_user)
 
-        WebHook.enqueue_hooks(:topic, {
-          category_id: topic&.category_id,
-          event_name: event.to_s,
-          payload: WebHookTopicViewSerializer.new(topic_view,
-            scope: self.guardian,
-            root: false
-          ).to_json
-        }, web_hooks)
-      end
+      WebHook.enqueue_hooks(:topic,
+        category_id: topic&.category_id,
+        event_name: event.to_s,
+        payload: WebHookTopicViewSerializer.new(topic_view,
+          scope: self.guardian,
+          root: false
+        ).to_json
+      )
     end
   end
 
   def self.enqueue_post_hooks(event, post)
-    Scheduler::Defer.later("Enqueue Post Webhook") do
-      web_hooks = active_web_hooks('post')
-
-      unless web_hooks.empty?
-        WebHook.enqueue_hooks(:post, {
-          category_id: post&.topic&.category_id,
-          event_name: event.to_s,
-          payload: WebHookPostSerializer.new(post,
-            scope: self.guardian,
-            root: false
-          ).to_json
-        }, web_hooks)
-      end
+    if active_web_hooks('post').exists?
+      WebHook.enqueue_hooks(:post,
+        category_id: post&.topic&.category_id,
+        event_name: event.to_s,
+        payload: WebHookPostSerializer.new(post,
+          scope: self.guardian,
+          root: false
+        ).to_json
+      )
     end
   end
 
