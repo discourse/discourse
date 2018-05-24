@@ -76,8 +76,9 @@
     float: left;
     background-color: transparent;
     display: inline-flex;
-    margin: 0.25em 0.5em;
-    width: 43%;
+    padding: 0.25em 0.5em;
+    width: 50%;
+    box-sizing: border-box;
     .badge-notification {
       color: dark-light-choose($primary-medium, $secondary-medium);
       background-color: transparent;
