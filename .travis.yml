@@ -3,6 +3,8 @@ language: ruby
 branches:
   only:
     - master
+    - beta
+    - stable
 
 env:
   global:
