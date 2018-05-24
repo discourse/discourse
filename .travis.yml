@@ -1,5 +1,9 @@
 language: ruby
 
+branches:
+  only:
+    - master
+
 env:
   global:
     - DISCOURSE_HOSTNAME=www.example.com
