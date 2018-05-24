@@ -379,7 +379,7 @@ class PostAlerter
     end
 
     # Create the notification
-    created = user.notifications.create(
+    created = user.notifications.create!(
       notification_type: type,
       topic_id: post.topic_id,
       post_number: post.post_number,
