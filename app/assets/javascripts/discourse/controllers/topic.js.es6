@@ -14,6 +14,16 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import { userPath } from 'discourse/lib/url';
 
+const customPostMessageCallbacks = {};
+
+export function registerCustomPostMessageCallback(type, callback) {
+  if (customPostMessageCallbacks[type]) {
+    throw `Error ${type} is an already registered post message!`;
+  }
+
+  customPostMessageCallbacks[type] = callback;
+}
+
 export default Ember.Controller.extend(BufferedContent, {
   composer: Ember.inject.controller(),
   application: Ember.inject.controller(),
@@ -935,7 +945,12 @@ export default Ember.Controller.extend(BufferedContent, {
           break;
         }
         default: {
-          Em.Logger.warn("unknown topic bus message type", data);
+          let callback = customPostMessageCallbacks[data.type];
+          if (callback) {
+            callback(this, data);
+          } else {
+            Em.Logger.warn("unknown topic bus message type", data);
+          }
         }
       }
 
