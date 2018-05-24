@@ -108,10 +108,16 @@ describe TopicTrackingState do
           )
         end
 
-        expect(messages.count).to eq(3)
+        expect(messages.map(&:channel)).to contain_exactly(
+          '/private-messages/inbox',
+          "/private-messages/group/#{group1.name}",
+          "/private-messages/group/#{group2.name}"
+        )
 
-        message = messages.first
-        expect(message.channel).to eq('/private-messages/inbox')
+        message = messages.find do |message|
+          message.channel == '/private-messages/inbox'
+        end
+
         expect(message.data["topic_id"]).to eq(private_message_topic.id)
         expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
 
@@ -134,10 +140,18 @@ describe TopicTrackingState do
             )
           end
 
-          expect(messages.count).to eq(5)
+          expect(messages.map(&:channel)).to contain_exactly(
+            '/private-messages/inbox',
+            "/private-messages/group/#{group1.name}",
+            "/private-messages/group/#{group1.name}/archive",
+            "/private-messages/group/#{group2.name}",
+            "/private-messages/group/#{group2.name}/archive",
+          )
 
-          message = messages.first
-          expect(message.channel).to eq('/private-messages/inbox')
+          message = messages.find do |message|
+            message.channel == '/private-messages/inbox'
+          end
+
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
           expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
 
@@ -149,7 +163,7 @@ describe TopicTrackingState do
               "#{group_channel}/archive"
             ].each do |channel|
               message = messages.find do |message|
-                message.channel == "/private-messages/group/#{group.name}"
+                message.channel == channel
               end
 
               expect(message.data["topic_id"]).to eq(private_message_topic.id)
@@ -184,13 +198,19 @@ describe TopicTrackingState do
           )
         end
 
-        expect(messages.count).to eq(3)
+        expected_channels = [
+          '/private-messages/inbox',
+          '/private-messages/sent',
+          "/private-messages/group/#{group.name}"
+        ]
 
-        [
-          ['/private-messages/inbox', private_message_topic.allowed_users.map(&:id)],
-          ['/private-messages/sent', [user.id]],
-          ["/private-messages/group/#{group.name}", [group.users.first.id]]
-        ].each do |channel, user_ids|
+        expect(messages.map(&:channel)).to contain_exactly(*expected_channels)
+
+        expected_channels.zip([
+          private_message_topic.allowed_users.map(&:id),
+          [user.id],
+          [group.users.first.id]
+        ]).each do |channel, user_ids|
           message = messages.find do |message|
             message.channel == channel
           end
@@ -210,13 +230,15 @@ describe TopicTrackingState do
           )
         end
 
-        expect(messages.count).to eq(3)
-
-        [
+        expected_channels = [
           "/private-messages/archive",
           "/private-messages/inbox",
           "/private-messages/sent",
-        ].each do |channel|
+        ]
+
+        expect(messages.map(&:channel)).to eq(expected_channels)
+
+        expected_channels.each do |channel|
           message = messages.find do |message|
             message.channel = channel
           end
