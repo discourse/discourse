@@ -183,11 +183,11 @@ module Jobs
 
       report_hash = {}
       Report.find(@extra[:name], @extra).data.each do |row|
-        report_hash[row[:x].to_s(:db)] = row[:y].to_s(:db)
+        report_hash[row[:x].to_s] = row[:y].to_s
       end
 
       (@extra[:start_date].to_date..@extra[:end_date].to_date).each do |date|
-        yield [date.to_s(:db), report_hash.fetch(date.to_s(:db), 0)]
+        yield [date.to_s(:db), report_hash.fetch(date.to_s, 0)]
       end
     end
 
