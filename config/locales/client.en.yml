@@ -659,6 +659,7 @@ en:
         individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
+        warning: "Mailing list mode enabled. Email notification settings are overridden."
       tag_settings: "Tags"
       watched_tags: "Watched"
       watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
