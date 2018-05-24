@@ -10,6 +10,7 @@ import { flushMap } from 'discourse/models/store';
 import { clearRewrites } from 'discourse/lib/url';
 import { initSearchData } from 'discourse/widgets/search-menu';
 import { resetDecorators } from 'discourse/widgets/widget';
+import { resetCustomPostMessageCallbacks } from 'discourse/controllers/topic';
 
 export function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
@@ -107,6 +108,7 @@ export function acceptance(name, options) {
       clearRewrites();
       initSearchData();
       resetDecorators();
+      resetCustomPostMessageCallbacks();
       Discourse.reset();
     }
   });

@@ -16,6 +16,10 @@ import { userPath } from 'discourse/lib/url';
 
 const customPostMessageCallbacks = {};
 
+export function resetCustomPostMessageCallbacks() {
+  customPostMessageCallbacks = {};
+}
+
 export function registerCustomPostMessageCallback(type, callback) {
   if (customPostMessageCallbacks[type]) {
     throw `Error ${type} is an already registered post message!`;
