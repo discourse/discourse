@@ -130,6 +130,8 @@ class PostAlerter
     return if user_ids.blank?
     user_ids.uniq!
 
+    warn_if_not_sidekiq
+
     # Don't notify the OP
     user_ids -= [post.user_id]
     users = User.where(id: user_ids)
@@ -485,6 +487,8 @@ class PostAlerter
     users = [users] unless users.is_a?(Array)
     users = users.reject { |u| u.staged? } if post.topic&.private_message?
 
+    warn_if_not_sidekiq
+
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |u|
       create_notification(u, Notification.types[type], post, opts)
@@ -495,6 +499,8 @@ class PostAlerter
 
   def notify_pm_users(post, reply_to_user, notified)
     return unless post.topic
+
+    warn_if_not_sidekiq
 
     # users that aren't part of any mentioned groups
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
@@ -522,6 +528,8 @@ class PostAlerter
 
   def notify_post_users(post, notified)
     return unless post.topic
+
+    warn_if_not_sidekiq
 
     condition = <<~SQL
       id IN (
@@ -575,6 +583,10 @@ class PostAlerter
       user = User.find_by(id: user_id)
       create_notification(user, Notification.types[:posted], post)
     end
+  end
+
+  def warn_if_not_sidekiq
+    Rails.logger.warn("PostAlerter.#{caller_locations(1, 1)[0].label} was called outside of sidekiq") unless Sidekiq.server?
   end
 
 end
