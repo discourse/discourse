@@ -446,6 +446,7 @@ class Topic < ActiveRecord::Base
     @post_numbers = nil
     @public_topic_timer = nil
     @private_topic_timer = nil
+    @is_category_topic = nil
     super(options)
   end
 
@@ -1345,6 +1346,10 @@ SQL
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
     private_messages.with_subtype(topic_subtype).where('topics.created_at >= ? AND topics.created_at <= ?', start_date, end_date).group('date(topics.created_at)').order('date(topics.created_at)').count
+  end
+
+  def is_category_topic?
+    @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
   private
