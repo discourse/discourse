@@ -27,6 +27,19 @@ export default Ember.Mixin.create({
     return !isNaN(parseFloat(input)) && isFinite(input);
   },
 
+  _cast(value) {
+    if (value === this.noneValue) return value;
+    return this._castInteger(this._castBoolean(value));
+  },
+
+  _castBoolean(value) {
+    if (this.get("castBoolean") && Ember.isPresent(value) && typeof(value) === "string") {
+      return value === "true";
+    }
+
+    return value;
+  },
+
   _castInteger(value) {
     if (this.get("castInteger") && Ember.isPresent(value) && this._isNumeric(value)) {
       return parseInt(value, 10);
