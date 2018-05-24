@@ -57,7 +57,7 @@ async function runAllTests() {
     // If it's a simple test result, write without newline
     if(message === "." || message === "F"){
       process.stdout.write(message);
-    } else if (message.startsWith("AUTOSPEC:")) {
+    } else if (message && message.startsWith("AUTOSPEC:")) {
       fs.appendFileSync(QUNIT_RESULT, `${message.slice(10)}\n`);
     } else {
       console.log(message);

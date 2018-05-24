@@ -175,16 +175,23 @@ QUnit.test("update category through advanced search ui", assert => {
 //     });
 //   });
 // });
+//
+QUnit.test("update in:title filter through advanced search ui", async assert => {
+  await visit("/search");
+  await fillIn('.search-query', 'none');
+  await click('.search-advanced-options .in-title');
 
-QUnit.test("update in:likes filter through advanced search ui", assert => {
-  visit("/search");
-  fillIn('.search-query', 'none');
-  click('.search-advanced-options .in-likes');
+  assert.ok(exists('.search-advanced-options .in-title:checked'), 'has "in title" populated');
+  assert.equal(find('.search-query').val(), "none in:title", 'has updated search term to "none in:title"');
+});
 
-  andThen(() => {
-    assert.ok(exists('.search-advanced-options .in-likes:checked'), 'has "I liked" populated');
-    assert.equal(find('.search-query').val(), "none in:likes", 'has updated search term to "none in:likes"');
-  });
+QUnit.test("update in:likes filter through advanced search ui", async assert => {
+  await visit("/search");
+  await fillIn('.search-query', 'none');
+  await click('.search-advanced-options .in-likes');
+
+  assert.ok(exists('.search-advanced-options .in-likes:checked'), 'has "I liked" populated');
+  assert.equal(find('.search-query').val(), "none in:likes", 'has updated search term to "none in:likes"');
 });
 
 QUnit.test("update in:private filter through advanced search ui", assert => {
