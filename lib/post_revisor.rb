@@ -577,7 +577,7 @@ class PostRevisor
 
   def alert_users
     return if @editor.id == Discourse::SYSTEM_USER_ID
-    PostAlerter.new.after_save_post(@post)
+    Jobs.enqueue(:post_alert, post_id: @post.id)
   end
 
   def publish_changes
