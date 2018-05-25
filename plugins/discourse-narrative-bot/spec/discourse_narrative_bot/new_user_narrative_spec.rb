@@ -211,6 +211,22 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
         end
 
+        describe 'when rate_limit_new_user_create_post site setting is disabled' do
+          before do
+            SiteSetting.rate_limit_new_user_create_post = 0
+          end
+
+          it 'should create the right reply' do
+            narrative.input(:reply, user, post: post)
+            new_post = Post.last
+
+            expect(new_post.raw).to eq(I18n.t(
+              'discourse_narrative_bot.new_user_narrative.bookmark.not_found',
+              base_uri: ''
+            ))
+          end
+        end
+
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
             post.update!(raw: "@#{discobot_user.username} #{skip_trigger.upcase}")
