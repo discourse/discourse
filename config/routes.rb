@@ -103,6 +103,7 @@ Discourse::Application.routes.draw do
         put "approve-bulk" => "users#approve_bulk"
         delete "reject-bulk" => "users#reject_bulk"
       end
+      delete "penalty_history", constraints: AdminConstraint.new
       put "suspend"
       put "delete_all_posts"
       put "unsuspend"

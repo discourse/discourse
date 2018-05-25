@@ -3365,6 +3365,8 @@ en:
             change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
+            removed_suspend_user: "suspend user (removed)"
+            removed_unsuspend_user: "unsuspend user (removed)"
             grant_badge: "grant badge"
             revoke_badge: "revoke badge"
             check_email: "check email"
@@ -3379,6 +3381,8 @@ en:
             create_category: "create category"
             silence_user: "silence user"
             unsilence_user: "unsilence user"
+            removed_silence_user: "silence user (removed)"
+            removed_unsilence_user: "unsilence user (removed)"
             grant_admin: "grant admin"
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
@@ -3563,6 +3567,10 @@ en:
         penalty_post_delete: "Delete the post"
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
+        penalty_count: "Penalty Count"
+        clear_penalty_history:
+          title: "Clear Penalty History"
+          description: "users with penalties cannot reach TL3"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"

@@ -103,6 +103,16 @@ export default Ember.Controller.extend(CanCheckEmails, {
     anonymize() { return this.get('model').anonymize(); },
     disableSecondFactor() { return this.get('model').disableSecondFactor(); },
 
+
+    clearPenaltyHistory() {
+      let user = this.get('model');
+      return ajax(`/admin/users/${user.get('id')}/penalty_history`, {
+        type: 'DELETE'
+      }).then(() => {
+        user.set('tl3_requirements.penalty_counts.total', 0);
+      }).catch(popupAjaxError);
+    },
+
     destroy() {
       const postCount = this.get('model.post_count');
       if (postCount <= 5) {

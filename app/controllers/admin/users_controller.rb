@@ -54,6 +54,46 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
+  # DELETE action to delete penalty history for a user
+  def penalty_history
+
+    # We don't delete any history, we merely remove the action type
+    # with a removed type. It can still be viewed in the logs but
+    # will not affect TL3 promotions.
+    sql = <<~SQL
+      UPDATE user_histories
+      SET action = CASE
+        WHEN action = :silence_user THEN :removed_silence_user
+        WHEN action = :unsilence_user THEN :removed_unsilence_user
+        WHEN action = :suspend_user THEN :removed_suspend_user
+        WHEN action = :unsuspend_user THEN :removed_unsuspend_user
+      END
+      WHERE target_user_id = :user_id
+        AND action IN (
+          :silence_user,
+          :suspend_user,
+          :unsilence_user,
+          :unsuspend_user
+        )
+    SQL
+
+    UserHistory.exec_sql(
+      sql,
+      UserHistory.actions.slice(
+        :silence_user,
+        :suspend_user,
+        :unsilence_user,
+        :unsuspend_user,
+        :removed_silence_user,
+        :removed_unsilence_user,
+        :removed_suspend_user,
+        :removed_unsuspend_user
+      ).merge(user_id: params[:user_id].to_i)
+    )
+
+    render json: success_json
+  end
+
   def suspend
     guardian.ensure_can_suspend!(@user)
     @user.suspended_till = params[:suspend_until]
