@@ -408,6 +408,21 @@
     </div>
   {{/if}}
 
+  {{#if model.tl3_requirements.penalty_counts.total}}
+    <div class='display-row clear-penalty-history'>
+      <div class='field'>{{i18n 'admin.user.penalty_count'}}</div>
+      <div class='value'>{{model.tl3_requirements.penalty_counts.total}}</div>
+      {{#if currentUser.admin}}
+        <div class='controls'>
+          {{d-button label="admin.user.clear_penalty_history.title"
+                     icon="times"
+                     action=(action "clearPenaltyHistory")}}
+          {{i18n "admin.user.clear_penalty_history.description"}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+
 </section>
 
 {{#if currentUser.admin}}
