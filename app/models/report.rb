@@ -351,6 +351,8 @@ class Report
 
   # Post action counts:
   def self.report_flags(report)
+    report.higher_is_better = false
+
     basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date, report.category_id
     countable = PostAction.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
     countable = countable.joins(post: :topic).where("topics.category_id = ?", report.category_id) if report.category_id
