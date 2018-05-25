@@ -267,8 +267,15 @@ describe PostAlerter do
     end
 
     it 'notifies a user by username' do
+      topic = Fabricate(:topic)
+
       expect {
-        create_post_with_alerts(raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+        2.times do
+          create_post_with_alerts(
+            raw: '[quote="EvilTrout, post:1"]whatup[/quote]',
+            topic: topic
+          )
+        end
       }.to change(evil_trout.notifications, :count).by(1)
     end
 
