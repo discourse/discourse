@@ -80,20 +80,25 @@ const Report = Discourse.Model.extend({
     return Ember.makeArray(data).length === 0 ? 0 : parseFloat((total / parseFloat(data.length)).toFixed(1));
   },
 
-  @computed("trend")
-  trendIcon(trend) {
-    switch (trend) {
-      case "trending-up":
-        return "angle-up";
-      case "trending-down":
-        return "angle-down";
-      case "high-trending-up":
-        return "angle-double-up";
-      case "high-trending-down":
-        return "angle-double-down";
-      default:
-        return null;
-    }
+  @computed("trend", "higher_is_better")
+  trendIcon(trend, higherIsBetter) {
+    return this._iconForTrend(trend, higherIsBetter);
+  },
+
+  @computed("sevenDaysTrend", "higher_is_better")
+  sevenDaysTrendIcon(sevenDaysTrend, higherIsBetter) {
+    return this._iconForTrend(sevenDaysTrend, higherIsBetter);
+  },
+
+  @computed("thirtyDaysTrend", "higher_is_better")
+  thirtyDaysTrendIcon(thirtyDaysTrend, higherIsBetter) {
+    return this._iconForTrend(thirtyDaysTrend, higherIsBetter);
+  },
+
+  @computed("yesterdayTrend", "higher_is_better")
+  yesterdayTrendIcon(yesterdayTrend, higherIsBetter) {
+    console.log("yesterdayTrendIcon", yesterdayTrend, higherIsBetter, this._iconForTrend(yesterdayTrend, higherIsBetter))
+    return this._iconForTrend(yesterdayTrend, higherIsBetter);
   },
 
   @computed("prev_period", "currentTotal", "currentAverage")
@@ -215,6 +220,21 @@ const Report = Discourse.Model.extend({
       return higherIsBetter ? "high-trending-down" : "high-trending-up";
     } else if (change < 0) {
       return higherIsBetter ? "trending-down" : "trending-up";
+    }
+  },
+
+  _iconForTrend(trend, higherIsBetter) {
+    switch (trend) {
+      case "trending-up":
+        return higherIsBetter ? "angle-up" : "angle-down";
+      case "trending-down":
+        return higherIsBetter ? "angle-down" : "angle-up";
+      case "high-trending-up":
+        return higherIsBetter ? "angle-double-up" : "angle-double-down";
+      case "high-trending-down":
+        return higherIsBetter ? "angle-double-down" : "angle-double-up";
+      default:
+        return null;
     }
   }
 });
