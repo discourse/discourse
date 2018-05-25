@@ -1,12 +1,5 @@
 {{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
   {{#d-modal-body title="login.title" class="login-modal"}}
-    {{#if showLoginButtons}}
-      {{login-buttons
-        canLoginLocalWithEmail=canLoginLocalWithEmail
-        processingEmailLink=processingEmailLink
-        emailLogin='emailLogin'
-        externalLogin='externalLogin'}}
-    {{/if}}
 
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>
@@ -30,7 +23,7 @@
             </tr>
             <tr>
               <td></td>
-              <td><div class="caps-lock-warning {{unless capsLockOn 'invisible'}}">{{d-icon "exclamation-triangle"}} {{i18n 'login.caps_lock_warning'}}</div></td>
+              <td><div class="caps-lock-warning {{unless capsLockOn 'hidden'}}">{{d-icon "exclamation-triangle"}} {{i18n 'login.caps_lock_warning'}}</div></td>
               <td></td>
             </tr>
           </table>
@@ -42,6 +35,14 @@
     {{/if}}
     {{authMessage}}
     <div id='login-alert' class={{alertClass}}>{{alert}}</div>
+    
+    {{#if showLoginButtons}}
+      {{login-buttons
+        canLoginLocalWithEmail=canLoginLocalWithEmail
+        processingEmailLink=processingEmailLink
+        emailLogin='emailLogin'
+        externalLogin='externalLogin'}}
+    {{/if}}
   {{/d-modal-body}}
 
   <div class="modal-footer">
