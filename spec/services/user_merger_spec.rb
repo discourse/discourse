@@ -877,6 +877,8 @@ describe UserMerger do
   end
 
   it "merges user visits" do
+    freeze_time DateTime.parse('2010-01-01 12:00')
+
     UserVisit.create!(user_id: source_user.id, visited_at: 2.days.ago, posts_read: 22, mobile: false, time_read: 400)
     UserVisit.create!(user_id: source_user.id, visited_at: Date.yesterday, posts_read: 8, mobile: false, time_read: 100)
     UserVisit.create!(user_id: target_user.id, visited_at: Date.yesterday, posts_read: 12, mobile: true, time_read: 270)
