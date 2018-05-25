@@ -339,7 +339,6 @@
             padding: 8px 12px 8px;
           }
           i {
-            display: none;
             margin-right: -12px; // align on caret
             @media screen and (max-width: 650px) {
               margin-right: -9px;
@@ -347,22 +346,10 @@
           }
 
           &.high-trending-up, &.trending-up {
-            i.up {
-              color: $success;
-              display: inline;
-            }
+            i { color: $success; }
           }
           &.high-trending-down, &.trending-down {
-            i.down {
-              color: $danger;
-              display: inline;
-            }
-          }
-          &.no-change {
-            i.down {
-              display: inline;
-              visibility: hidden;
-            }
+            i { color: $danger; }
           }
         }
       }
@@ -371,11 +358,11 @@
 }
 
 .user-metrics {
-  display: flex; 
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-left: -5%;
-  margin: 2em 0 .75em -5%;   // Negative margin allows for a margin when in 2-columns, 
+  margin: 2em 0 .75em -5%;   // Negative margin allows for a margin when in 2-columns,
   .dashboard-inline-table { //  and "hides" margin when the item spans 100% width
     flex: 1 0 auto;
     max-width: 95%;
@@ -394,7 +381,7 @@
       justify-content: center;
       border-radius: 9px 0 0 9px;
       padding: 0 5px 0 8px;
-      
+
       .d-icon {
         margin-right: 5px;
         font-size: $font-down-1;
@@ -412,24 +399,24 @@
     &.user-basic , &.user-member {
       border-color: $bronze;
       .label {
-        border-color: $bronze;        
+        border-color: $bronze;
         background: $bronze;
         color: $secondary;
-      } 
+      }
     }
     &.user-regular {
       border-color: $silver;
       .label {
-        border-color: $silver;        
+        border-color: $silver;
         background: $silver;
         color: $secondary;
-      } 
+      }
     }
-    &.user-leader { 
+    &.user-leader {
       border-color: $gold;
       .label {
         background: $gold;
-        border-color: $gold;      
+        border-color: $gold;
         color: $secondary;
       }
     }
