@@ -4,6 +4,24 @@ require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
 
+  # We disable message bus here to avoid a large amount
+  # of uneeded messaging, tests are careful to call refresh
+  # when they need to.
+  #
+  # DistributedCache used by locale handler can under certain
+  # cases take a tiny bit to stabalize.
+  #
+  # TODO: refactor SiteSettingExtension not to rely on statics in
+  # DefaultsProvider
+  #
+  before do
+    MessageBus.off
+  end
+
+  after do
+    MessageBus.on
+  end
+
   describe '#types' do
     context "verify enum sequence" do
       before do
@@ -25,8 +43,11 @@ describe SiteSettingExtension do
   end
 
   def new_settings(provider)
+    # we want to avoid leaking a big pile of MessageBus subscriptions here (1 per class)
+    # so we set listen_for_changes to false
     Class.new do
       extend SiteSettingExtension
+      self.listen_for_changes = false
       self.provider = provider
     end
   end
@@ -37,6 +58,30 @@ describe SiteSettingExtension do
 
   let :settings2 do
     new_settings(provider_local)
+  end
+
+  it "Does not leak state cause changes are not linked" do
+    t1 = Thread.new do
+      5.times do
+        settings = new_settings(SiteSettings::LocalProcessProvider.new)
+        settings.setting(:title, 'test')
+        settings.title = 'title1'
+        expect(settings.title).to eq 'title1'
+
+      end
+    end
+
+    t2 = Thread.new do
+      5.times do
+        settings = new_settings(SiteSettings::LocalProcessProvider.new)
+        settings.setting(:title, 'test')
+        settings.title = 'title2'
+        expect(settings.title).to eq 'title2'
+      end
+    end
+
+    t1.join
+    t2.join
   end
 
   describe "refresh!" do

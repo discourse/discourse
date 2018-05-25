@@ -12,7 +12,10 @@ module SiteSettingExtension
   def_delegator :defaults, :has_setting?
   def_delegators 'SiteSettings::TypeSupervisor', :types, :supported_types
 
-  # part 1 of refactor, centralizing the dependency here
+  def listen_for_changes=(val)
+    @listen_for_changes = val
+  end
+
   def provider=(val)
     @provider = val
     refresh!
@@ -190,6 +193,8 @@ module SiteSettingExtension
   end
 
   def ensure_listen_for_changes
+    return if @listen_for_changes == false
+
     unless @subscribed
       MessageBus.subscribe("/site_settings") do |message|
         process_message(message)
