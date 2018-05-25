@@ -62,6 +62,26 @@ task "users:rename", [:old_username, :new_username] => [:environment] do |_, arg
   puts "", "User renamed!", ""
 end
 
+desc "Updates username in quotes and mentions. Use this if the user was renamed before proper renaming existed."
+task "users:update_posts", [:old_username, :current_username] => [:environment] do |_, args|
+  old_username = args[:old_username]
+  current_username = args[:current_username]
+
+  if !old_username || !current_username
+    puts "ERROR: Expecting rake posts:update_posts[old_username,current_username]"
+    exit 1
+  end
+
+  user = find_user(current_username)
+  Jobs::UpdateUsername.new.execute(
+    user_id: user.id,
+    old_username: old_username,
+    new_username: user.username,
+    avatar_template: user.avatar_template)
+
+  puts "", "Username updated!", ""
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 
