@@ -178,13 +178,15 @@ class PostAlerter
     return if user.blank?
     return unless Guardian.new(user).can_see?(topic)
 
-    user.notifications.where(
-      notification_type: types,
-      topic_id: topic.id
-    ).destroy_all
+    User.transaction do
+      user.notifications.where(
+        notification_type: types,
+        topic_id: topic.id
+      ).destroy_all
 
-    # HACK so notification counts sync up correctly
-    user.reload
+      # Reload so notification counts sync up correctly
+      user.reload
+    end
   end
 
   NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned].map { |t|
