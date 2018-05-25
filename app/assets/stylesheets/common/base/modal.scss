@@ -80,6 +80,8 @@
 }
 
 .modal-inner-container {
+  display: table;
+  min-width: 320px;
   max-width: 700px;
   margin: 0 auto;
   background-color: $secondary;

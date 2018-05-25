@@ -13,6 +13,9 @@
 }
 
 #login-form {
+  table {
+    width: 100%;
+  }
   a {
     color: dark-light-choose($primary-high, $secondary-low);
   }
@@ -40,6 +43,7 @@ $input-width: 220px;
   td {
     label, input {
       margin-bottom: 0;
+      width: 100%;
     }
   }
 }
@@ -56,9 +60,8 @@ $input-width: 220px;
   }
 
   .disclaimer {
-    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-medium);
-    clear: both;
+    margin-top: .5em;
   }
 
   .user-field.confirm {
@@ -135,6 +138,11 @@ $input-width: 220px;
   }
 }
 
+.modal tr.instructions {
+  label {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
 
 // alternate login / create new account buttons should be de-emphasized
 

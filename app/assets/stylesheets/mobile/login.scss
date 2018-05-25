@@ -8,42 +8,35 @@
 // create account modals
 .login-modal,
 .create-account {
-  .modal-body {
-    display: -webkit-flex;
-    -webkit-align-items: center;
-    -webkit-flex-direction: column-reverse;
-    display: flex;
-    align-items: center;
-    flex-direction: column-reverse;
-  }
 
   .modal-inner-container {
     max-width: 350px;
   }
 
+  .close {
+    padding: 0;
+  }
+
   #login-buttons:not(.hidden) {
     display: -webkit-flex;
-    -webkit-flex-wrap: wrap;
-    -webkit-justify-content: center;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    width: 100%;
-    padding-bottom: 1em;
-
+    width: 102%;
+    padding-bottom: 10px;
+    margin-left: -2%;
+    
     button {
-      margin: 0.15em;
+      flex: 1 1 48%; 
       max-width: 50%;
-      min-width: 158px;
+      margin: 1% 0 1% 2%;
       font-size: $font-up-1;
-      overflow: hidden;
       white-space: nowrap;
     }
-  }
 
-  #login-form,
-  .login-form {
-    border-top: 1px solid $primary-low;
+    + #login-form {
+      border-top: 1px solid $primary-low;
+    }
   }
 
   form {
@@ -51,13 +44,11 @@
     -webkit-justify-content: center;
     display: flex;
     justify-content: center;
-    width: 320px;
   }
 
   table {
     width: 100%;
-    max-width: 90vw; // Iphone 5s
-    margin: 0 auto;
+    padding: 10px;
   }
 
   tr {
@@ -81,11 +72,6 @@
     &:not(:empty) + td {
       display: none;
     }
-
-    &:not(:empty),
-    &:empty + td {
-      font-size: $font-down-1;
-    }
   }
 
   .modal-body input[type="text"],
@@ -97,14 +83,9 @@
   }
 
   .modal-footer {
-    width: 330px;
     box-sizing: border-box;
     margin: 0 auto;
-  }
-
-  .btn-primary {
-    margin-bottom: 10px;
-    float: left;
+    font-size: $font-down-1;
   }
 
   .alert.alert-error {
@@ -120,11 +101,6 @@
 // Styles for the
 // login modal only
 .d-modal.login-modal {
-  .modal-body {
-    -webkit-flex-direction: column;
-    flex-direction: column;
-  }
-
   #credentials {
     width: 100%;
     tr {
@@ -136,6 +112,7 @@
   }
 
   #login-form {
+    margin-bottom: 0.75em;
     td {
       padding: 0;
       width: 100%;
@@ -167,10 +144,19 @@
 // create account
 // modal only
 .create-account .modal-body {
+  display: flex;
+  flex-direction: column;
   tr.instructions {
     label {
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
+  }
+
+  #login-buttons + .login-form {
+      border-top: 1px solid $primary-low;
+  }
+  .login-form {
+    margin-bottom: 0.75em;
   }
 }
 

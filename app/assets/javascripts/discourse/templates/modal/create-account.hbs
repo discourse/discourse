@@ -1,7 +1,11 @@
 {{#create-account email=accountEmail disabled=submitDisabled action="createAccount"}}
   {{#unless complete}}
     {{#d-modal-body title="create_account.title"}}
-    
+          
+      {{#unless hasAuthOptions}}
+        {{login-buttons externalLogin="externalLogin"}}
+      {{/unless}}
+      
       {{#if showCreateForm}}
         <div class="login-form">
           <form>
@@ -95,10 +99,7 @@
           </form>
         </div>
       {{/if}}
-      
-      {{#unless hasAuthOptions}}
-        {{login-buttons externalLogin="externalLogin"}}
-      {{/unless}}
+
     {{/d-modal-body}}
 
     {{#if showCreateForm}}

@@ -9,18 +9,15 @@
 .login-modal,
 .create-account {
   #login-buttons:not(.hidden) {
-    display: -webkit-flex;
-    -webkit-flex-direction: column;
-    -webkit-justify-content: center;
-    -webkit-flex-basis: 50%;
-    -webkit-align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-basis: 50%;
+    flex-basis: 40%;
     align-items: center;
-    min-height: 200px;
+    min-height: 175px;
     border-left: 1px solid $primary-low;
+    padding: 15px;
+    order: 2;
 
     button {
       margin: 0.35em;
@@ -31,10 +28,13 @@
     }
   }
 
+  .modal-inner-container {
+    min-width: 475px;
+  }
+
   #login-form {
-    -webkit-flex: 1 0 auto;
     flex: 1 0 auto;
-    padding: 1em 0;
+    padding: 0 15px;
   }
 
   tr:not(.instructions) {
@@ -55,12 +55,9 @@
 .d-modal.login-modal {
   .modal-body,
   #credentials {
-    display: -webkit-flex;
-    -webkit-align-items: center;
-    -webkit-justify-content: center;
     display: flex;
     align-items: center;
-    justify-content: center;
+    padding: 15px 0;
 
     tr {
       display: -webkit-flex;
@@ -76,10 +73,8 @@
 // modal only
 .d-modal.create-account {
   .modal-body {
-    display: -webkit-flex;
-    -webkit-justify-content: space-evenly;
     display: flex;
-    justify-content: space-evenly;
+    padding: 15px 0;
   }
 
   .create-account-form tr {
@@ -90,30 +85,29 @@
   }
 
   .login-form {
-    display: -webkit-flex;
-    -webkit-flex-basis: 50%;
-    -webkit-align-items: center;
     display: flex;
-    flex-basis: 50%;
+    flex: 1 1 50%;
     align-items: center;
+    padding: 0 15px;
+    form, table {
+      width: 100%;
+    }
 
-    tr:not(.password-confirmation) {
-      display: -webkit-flex;
-      -webkit-flex-direction: column;
+    tr {
       display: flex;
       flex-direction: column;
       margin-top: 0.15em;
+      &.password-confirmation {
+        display: none;
+      }
     }
-  }
-
-  form {
-    margin: 0 auto;
   }
 
   tr.input {
     input,
     label {
       margin-bottom: 0;
+      width: 100%;      
     }
     .tip {
       max-width: 340px;
@@ -129,7 +123,6 @@
     &:empty + td {
       min-height: 1.75em;
       width: 240px;
-      font-size: $font-down-1;
     }
   }
 
@@ -192,12 +185,6 @@
 
   .disclaimer {
     margin-top: 15px;
-  }
-
-  .instructions {
-    label {
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
   }
 
   .user-fields {
