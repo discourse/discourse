@@ -318,18 +318,18 @@
     </div>
   </div>
 
-    <div class="user-suspended display-row {{if model.isSuspended 'highlight-danger'}}">
-      <div class='field'>{{i18n 'admin.user.suspended'}}</div>
-      <div class='value'>
-        {{i18n-yes-no model.isSuspended}}
-        {{#if model.isSuspended}}
-          {{#unless model.suspendedForever}}
-            {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
-          {{/unless}}
-        {{/if}}
-      </div>
-      <div class='controls'>
-      {{#if model.isSuspended}}
+  <div class="user-suspended display-row {{if model.suspended 'highlight-danger'}}">
+    <div class='field'>{{i18n 'admin.user.suspended'}}</div>
+    <div class='value'>
+      {{i18n-yes-no model.suspended}}
+      {{#if model.suspended}}
+        {{#unless model.suspendedForever}}
+          {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
+        {{/unless}}
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if model.suspended}}
         {{d-button
           class="btn-danger unsuspend-user"
           action=(action "unsuspend")
@@ -349,7 +349,7 @@
     </div>
   </div>
 
-  {{#if model.isSuspended}}
+  {{#if model.suspended}}
     <div class='display-row highlight-danger suspension-info'>
       <div class='field'>{{i18n 'admin.user.suspended_by'}}</div>
       <div class='value'>
@@ -367,7 +367,7 @@
     <div class='field'>{{i18n 'admin.user.silenced'}}</div>
     <div class='value'>
       {{i18n-yes-no model.silenced}}
-      {{#if model.isSilenced}}
+      {{#if model.silenced}}
         {{#unless model.silencedForever}}
           {{i18n "admin.user.suspended_until" until=model.silencedTillDate}}
         {{/unless}}
@@ -394,7 +394,7 @@
     </div>
   </div>
 
-  {{#if model.isSilenced}}
+  {{#if model.silenced}}
     <div class='display-row highlight-danger silence-info'>
       <div class='field'>{{i18n 'admin.user.silenced_by'}}</div>
       <div class='value'>
@@ -407,6 +407,7 @@
       </div>
     </div>
   {{/if}}
+
 
 </section>
 
