@@ -1,35 +1,188 @@
-// style that apply to the login popup
+// -webkit- prefix needed for 
+// flexbox on Safari 8
+// can be removed once support
+// for safari 8 is dropped
 
-#login-buttons {
-  button {
-    margin: 0 5px 5px 0;
-    min-width: 180px;
-    &:lang(zh_CN) {
-      min-width: 200px;
+// shared styles used
+// on both the login and
+// create accont modals
+.login-modal,
+.create-account {
+  #login-buttons:not(.hidden) {
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: center;
+    -webkit-flex-basis: 50%;
+    -webkit-align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-basis: 50%;
+    align-items: center;
+    min-height: 200px;
+    border-left: 1px solid $primary-low;
+
+    button {
+      margin: 0.35em;
+      width: 160px;
+      &:lang(zh_CN) {
+        min-width: 200px;
+      }
     }
   }
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
 
-// Create account
+  #login-form {
+    -webkit-flex: 1 0 auto;
+    flex: 1 0 auto;
+    padding: 1em 0;
+  }
 
-.create-account {
-  form {
+  tr:not(.instructions) {
+    td {
+      display: -webkit-flex;
+      display: flex;
+      padding: 5px 0 0 0;
+    }
+  }
+
+  tr.input label {
     margin-bottom: 0;
   }
-  table {
-    width: 100%;
-  }
-  tr.input {
-    td {
-      padding-top: 10px;
+}
+
+// styles used on
+// login modal only
+.d-modal.login-modal {
+  .modal-body,
+  #credentials {
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    tr {
+      display: -webkit-flex;
+      -webkit-flex-direction: column;
+      display: flex;
+      flex-direction: column;
     }
-    input, label {
+  }
+}
+
+// styles used on the
+// create account
+// modal only
+.d-modal.create-account {
+  .modal-body {
+    display: -webkit-flex;
+    -webkit-justify-content: space-evenly;
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .create-account-form tr {
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .login-form {
+    display: -webkit-flex;
+    -webkit-flex-basis: 50%;
+    -webkit-align-items: center;
+    display: flex;
+    flex-basis: 50%;
+    align-items: center;
+
+    tr:not(.password-confirmation) {
+      display: -webkit-flex;
+      -webkit-flex-direction: column;
+      display: flex;
+      flex-direction: column;
+      margin-top: 0.15em;
+    }
+  }
+
+  form {
+    margin: 0 auto;
+  }
+
+  tr.input {
+    input,
+    label {
       margin-bottom: 0;
     }
     .tip {
       max-width: 340px;
+    }
+  }
+
+  .tip {
+    &:not(:empty) + td {
+      display: none;
+    }
+
+    &:not(:empty),
+    &:empty + td {
+      min-height: 1.75em;
+      width: 240px;
+      font-size: $font-down-1;
+    }
+  }
+
+  .invites-show {
+    padding-top: 20px;
+
+    .two-col {
+      margin-top: 30px;
+    }
+    .col-image {
+      width: 200px;
+      img {
+        width: 200px;
+      }
+    }
+    .col-form {
+      margin-left: 200px;
+      .inline-invite-img {
+        display: none;
+      }
+    }
+    form {
+      .controls,
+      .input {
+        margin-left: 20px;
+      }
+      input,
+      label {
+        margin-bottom: 0;
+      }
+      .user-field .control-label:not(.checkbox-label) {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .password-reset,
+  .invites-show {
+    .col-form {
+      padding-left: 20px;
+    }
+    h2 {
+      margin-bottom: 12px;
+    }
+    .col-image img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  .password-reset {
+    .col-form {
+      padding-top: 40px;
     }
   }
 
@@ -50,55 +203,5 @@
   .user-fields {
     border-top: 1px solid $primary-low;
     padding-top: 20px;
-  }
-}
-
-.password-reset, .invites-show {
-  .col-form {
-    padding-left: 20px;
-  }
-  h2 {
-    margin-bottom: 12px;
-  }
-  .col-image img {
-    width: 200px;
-    height: 200px;
-  }
-}
-
-.password-reset {
-  .col-form {
-    padding-top: 40px;
-  }
-}
-
-.invites-show {
-  padding-top: 20px;
-
-  .two-col {
-    margin-top: 30px;
-  }
-  .col-image {
-    width: 200px;
-    img {
-      width: 200px;
-    }
-  }
-  .col-form {
-    margin-left: 200px;
-    .inline-invite-img {
-      display: none;
-    }
-  }
-  form {
-    .controls, .input {
-      margin-left: 20px;
-    }
-    input, label {
-      margin-bottom: 0;
-    }
-    .user-field .control-label:not(.checkbox-label) {
-      margin-left: 20px;
-    }
   }
 }
