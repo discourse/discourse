@@ -169,8 +169,6 @@ const User = RestModel.extend({
   isElder: Em.computed.equal('trust_level', 4),
   canManageTopic: Em.computed.or('staff', 'isElder'),
 
-  isSuspended: Em.computed.equal('suspended', true),
-
   @computed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
     return new Date(previous_visit_at);
