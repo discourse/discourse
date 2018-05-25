@@ -50,6 +50,36 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return userPath(`${username}/preferences`);
   },
 
+  @computed('model.can_delete_all_posts', 'model.staff', 'model.post_count')
+  deleteAllPostsExplanation(canDeleteAllPosts, staff, postCount) {
+    if (canDeleteAllPosts) {
+      return null;
+    }
+
+    if (staff) {
+      return I18n.t('admin.user.delete_posts_forbidden_because_staff');
+    }
+    if (postCount > this.siteSettings.delete_all_posts_max) {
+      return I18n.t('admin.user.cant_delete_all_too_many_posts', {count: this.siteSettings.delete_all_posts_max});
+    } else {
+      return I18n.t('admin.user.cant_delete_all_posts', {count: this.siteSettings.delete_user_max_post_age});
+    }
+  },
+
+  @computed('model.canBeDeleted', 'model.staff')
+  deleteExplanation(canBeDeleted, staff) {
+    if (canBeDeleted) {
+      return null;
+    }
+
+    if (staff) {
+      return I18n.t('admin.user.delete_forbidden_because_staff');
+    } else {
+      return I18n.t('admin.user.delete_forbidden', {count: this.siteSettings.delete_user_max_post_age});
+    }
+  },
+
+
   actions: {
 
     impersonate() { return this.get("model").impersonate(); },
