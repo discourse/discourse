@@ -51,8 +51,7 @@
         {{/second-factor-form}}
       </form>
     {{/if}}
-    {{authMessage}}
-    <div id='login-alert' class={{alertClass}}>{{alert}}</div>
+  
   {{/d-modal-body}}
 
   <div class="modal-footer">
@@ -74,4 +73,6 @@
       {{/if}}
     {{/if}}
   </div>
+  <div class="auth-message">{{authMessage}}</div>
+  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 {{/login-modal}}

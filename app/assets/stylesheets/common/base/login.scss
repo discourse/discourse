@@ -46,6 +46,11 @@ $input-width: 220px;
       width: 100%;
     }
   }
+  .modal-footer {
+    .inline-spinner {
+      display: inline-flex;
+    }
+  }
 }
 
 .create-account {
@@ -136,6 +141,10 @@ $input-width: 220px;
       line-height: $line-height-medium;
     }
   }
+}
+
+.auth-message {
+  padding: 0 15px 15px 15px
 }
 
 .modal tr.instructions {
