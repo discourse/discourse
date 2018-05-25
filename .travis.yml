@@ -17,7 +17,7 @@ env:
 
 addons:
   chrome: stable
-  postgresql: 10
+  postgresql: 9.6
   apt:
     packages:
     - gifsicle
