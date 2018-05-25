@@ -95,7 +95,7 @@ describe Report do
 
       context "with #{pluralized}" do
         before(:each) do
-          freeze_time
+          freeze_time DateTime.parse('2017-03-01 12:00')
           fabricator = case arg
                        when :signup
                          :user
@@ -140,7 +140,7 @@ describe Report do
 
       context "with #{request_type}" do
         before(:each) do
-          freeze_time
+          freeze_time DateTime.parse('2017-03-01 12:00')
           ApplicationRequest.create(date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35)
           ApplicationRequest.create(date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8)
           ApplicationRequest.create(date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
@@ -365,7 +365,7 @@ describe Report do
 
     context "with different users/visits" do
       before do
-        freeze_time
+        freeze_time DateTime.parse('2017-03-01 12:00')
 
         arpit = Fabricate(:user)
         arpit.user_visits.create(visited_at:  1.day.ago)
@@ -402,7 +402,7 @@ describe Report do
 
     context "with different activities" do
       before do
-        freeze_time
+        freeze_time DateTime.parse('2017-03-01 12:00')
 
         UserActionCreator.enable
 
