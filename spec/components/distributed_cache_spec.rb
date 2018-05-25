@@ -17,12 +17,16 @@ describe DistributedCache do
     DistributedCache.new(name, manager: @manager)
   end
 
+  let :cache_name do
+    SecureRandom.hex
+  end
+
   let! :cache1 do
-    cache("test")
+    cache(cache_name)
   end
 
   let! :cache2 do
-    cache("test")
+    cache(cache_name)
   end
 
   it 'allows us to store Set' do
