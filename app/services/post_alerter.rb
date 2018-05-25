@@ -174,12 +174,15 @@ class PostAlerter
     unread_posts(user, topic).count
   end
 
-  def destroy_notifications(user, type, topic)
+  def destroy_notifications(user, types, topic)
     return if user.blank?
     return unless Guardian.new(user).can_see?(topic)
 
-    user.notifications.where(notification_type: type,
-                             topic_id: topic.id).destroy_all
+    user.notifications.where(
+      notification_type: types,
+      topic_id: topic.id
+    ).destroy_all
+
     # HACK so notification counts sync up correctly
     user.reload
   end
@@ -326,9 +329,7 @@ class PostAlerter
     collapsed = false
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      COLLAPSED_NOTIFICATION_TYPES.each do |t|
-        destroy_notifications(user, t, post.topic)
-      end
+      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, post.topic)
       collapsed = true
     end
 
