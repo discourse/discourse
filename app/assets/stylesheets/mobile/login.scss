@@ -1,62 +1,175 @@
-// style that apply to the login popup
+// -webkit- prefix needed for 
+// flexbox on Safari 8
+// can be removed once support
+// for safari 8 is dropped
 
-.btn-social {
-  width: 150px;
-  font-size: $font-up-1;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-#login-buttons {
-  button {
-    margin: 0 0 5px 0;
+// shared styles
+// used in both login and
+// create account modals
+.login-modal,
+.create-account {
+  .modal-body {
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-flex-direction: column-reverse;
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
   }
-  display: inline-block;
-}
 
-#login-form {
- 
-  label { float: left; display: block; }
-  textarea, input, select {
-    font-size: $font-up-1;
-    clear: left;
-    margin-top: 0;
+  .modal-inner-container {
+    max-width: 350px;
+  }
+
+  #login-buttons:not(.hidden) {
+    display: -webkit-flex;
+    -webkit-flex-wrap: wrap;
+    -webkit-justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding-bottom: 1em;
+
+    button {
+      margin: 0.15em;
+      max-width: 50%;
+      min-width: 158px;
+      font-size: $font-up-1;
+      overflow: hidden;
+      white-space: nowrap;
     }
-  td { padding: 4px; }
-}
+  }
 
-a#new-account-link { white-space:nowrap; }
+  #login-form,
+  .login-form {
+    border-top: 1px solid $primary-low;
+  }
 
-// Create account
+  form {
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    display: flex;
+    justify-content: center;
+    width: 320px;
+  }
 
-.login-modal, .create-account {
+  table {
+    width: 100%;
+    max-width: 90vw; // Iphone 5s
+    margin: 0 auto;
+  }
+
+  tr {
+    &.input td label {
+      margin-top: 0.75em;
+    }
+
+    &:not(.instructions) td {
+      padding: 2px 0 0 0;
+    }
+
+    &:not(.password-confirmation) {
+      display: -webkit-flex;
+      -webkit-flex-direction: column;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .tip {
+    &:not(:empty) + td {
+      display: none;
+    }
+
+    &:not(:empty),
+    &:empty + td {
+      font-size: $font-down-1;
+    }
+  }
+
+  .modal-body input[type="text"],
+  .modal-body input[type="email"],
+  .modal-body input[type="password"] {
+    margin-top: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .modal-footer {
+    width: 330px;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+
   .btn-primary {
     margin-bottom: 10px;
     float: left;
   }
-}
 
-
-$label-width: 85px;
-$input-width: 184px;
-
-.create-account .modal-body {
-  input[type=text], input[type=email], input[type=password] {
-    display: inline-block;
-    margin-bottom: 5px;
-    margin-top: 10px;
-    width: $input-width;
+  .alert.alert-error {
+    padding: 0.5em 1em;
+    margin: 0;
   }
 
-  tr.instructions {
-    label {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+  #new-account-link {
+    white-space: nowrap;
+  }
+}
+
+// Styles for the
+// login modal only
+.d-modal.login-modal {
+  .modal-body {
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+
+  #credentials {
+    width: 100%;
+    tr {
+      display: -webkit-flex;
+      -webkit-flex-direction: column;
+      display: flex;
+      flex-direction: column;
     }
   }
 
-  tr.input {
-    td.label {
-      width: $label-width;
+  #login-form {
+    td {
+      padding: 0;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    label {
+      float: left;
+      display: block;
+    }
+    textarea,
+    input,
+    select {
+      font-size: $font-up-1;
+      clear: left;
+      margin-top: 0;
+    }
+  }
+
+  tr {
+    td label {
+      margin-top: 0.75em;
+      padding: 4px 0;
+    }
+  }
+}
+
+// styles for the
+// create account
+// modal only
+.create-account .modal-body {
+  tr.instructions {
+    label {
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 }
@@ -65,31 +178,17 @@ $input-width: 184px;
   .user-fields {
     margin-top: 10px;
     padding-top: 15px;
-    border-top: 1px solid #e9e9e9;
+    border-top: 1px solid $primary-low;
   }
 
   .user-field.confirm {
     margin-top: 10px;
     margin-bottom: 10px;
   }
-  
-  .user-field {
-    label {
-      width: $label-width;
-    }
-
-    input[type=text] {
-      margin-top: 0;
-      width: $input-width;
-    }
-    .controls {
-      margin-left: $label-width;
-    }
-  }
 }
 
-
-.password-reset, .invites-show {
+.password-reset,
+.invites-show {
   margin-top: 30px;
   .col-image {
     padding-top: 12px;
@@ -119,7 +218,6 @@ $input-width: 184px;
     margin-bottom: 16px;
   }
 }
-
 
 .invites-show {
   .col-image {
