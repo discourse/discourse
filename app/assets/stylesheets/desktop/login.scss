@@ -114,18 +114,6 @@
     }
   }
 
-  .tip {
-    &:not(:empty) + td {
-      display: none;
-    }
-
-    &:not(:empty),
-    &:empty + td {
-      min-height: 1.75em;
-      width: 240px;
-    }
-  }
-
   .invites-show {
     padding-top: 20px;
 
@@ -190,5 +178,18 @@
   .user-fields {
     border-top: 1px solid $primary-low;
     padding-top: 20px;
+  }
+}
+
+.login-form {
+  .tip {
+    &:not(:empty) + td {
+      display: none;
+    }
+    &:not(:empty),
+    &:empty + td {
+      min-height: 1.75em;
+      width: 240px;
+    }
   }
 }

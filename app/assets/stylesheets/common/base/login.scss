@@ -139,6 +139,9 @@ $input-width: 220px;
 }
 
 .modal tr.instructions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.15em;
   label {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
