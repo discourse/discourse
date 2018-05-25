@@ -408,7 +408,6 @@
     </div>
   {{/if}}
 
-
 </section>
 
 {{#if currentUser.admin}}
@@ -469,7 +468,7 @@
           {{d-button class="btn-danger" action="deleteAllPosts" icon="trash-o" label="admin.user.delete_all_posts"}}
         {{/if}}
       {{else}}
-        {{model.deleteAllPostsExplanation}}
+        {{deleteAllPostsExplanation}}
       {{/if}}
     </div>
   </div>
@@ -550,28 +549,26 @@
       {{/if}}
     {{/if}}
 
-    {{#unless model.anonymizeForbidden}}
+    {{#if model.can_be_anonymized}}
       {{d-button label="admin.user.anonymize"
                  icon="exclamation-triangle"
                  class="btn-danger"
-                 disabled=model.anonymizeForbidden
                  action="anonymize"}}
-    {{/unless}}
+    {{/if}}
 
-    {{#unless model.deleteForbidden}}
+    {{#if model.canBeDeleted}}
       {{d-button label="admin.user.delete"
                  icon="exclamation-triangle"
                  class="btn-danger"
-                 disabled=model.deleteForbidden
                  action="destroy"}}
-    {{/unless}}
+    {{/if}}
   </div>
 
-  {{#if model.deleteExplanation}}
+  {{#if deleteExplanation}}
     <div class="clearfix"></div>
     <br>
     <div class="pull-right">
-      {{d-icon "exclamation-triangle"}} {{model.deleteExplanation}}
+      {{d-icon "exclamation-triangle"}} {{deleteExplanation}}
     </div>
   {{/if}}
 </section>
