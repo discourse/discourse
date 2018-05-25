@@ -5,9 +5,15 @@
   }
   .radios {
     height: 60px;
+    display: flex;
+    align-items: flex-start;
+    label {
+      flex: 1 0 auto;
+      margin-right: 1em;
+      margin-top: 1px;
+    }
     .inputs {
-      float: right;
-      width: 75%;
+      width: 100%;
       input {
         width: 90%;
         margin: 0 0 5px 0;
