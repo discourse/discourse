@@ -11,9 +11,11 @@ module Jobs
 
       @raw_mention_regex = /(?:(?<![\w`_])|(?<=_))@#{@old_username}(?:(?![\w\-\.])|(?=[\-\.](?:\s|$)))/i
       @raw_quote_regex = /(\[quote\s*=\s*["'']?)#{@old_username}(\,?[^\]]*\])/i
-      @cooked_mention_username_regex = /^@#{@old_username}$/i
-      @cooked_mention_user_path_regex = /^\/u(?:sers)?\/#{@old_username}$/i
-      @cooked_quote_username_regex = /(?<=\s)#{@old_username}(?=:)/i
+
+      cooked_username = PrettyText::Helpers.format_username(@old_username)
+      @cooked_mention_username_regex = /^@#{cooked_username}$/i
+      @cooked_mention_user_path_regex = /^\/u(?:sers)?\/#{cooked_username}$/i
+      @cooked_quote_username_regex = /(?<=\s)#{cooked_username}(?=:)/i
 
       update_posts
       update_revisions
