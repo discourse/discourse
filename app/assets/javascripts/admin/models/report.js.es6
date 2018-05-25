@@ -97,7 +97,6 @@ const Report = Discourse.Model.extend({
 
   @computed("yesterdayTrend", "higher_is_better")
   yesterdayTrendIcon(yesterdayTrend, higherIsBetter) {
-    console.log("yesterdayTrendIcon", yesterdayTrend, higherIsBetter, this._iconForTrend(yesterdayTrend, higherIsBetter))
     return this._iconForTrend(yesterdayTrend, higherIsBetter);
   },
 
