@@ -33,9 +33,7 @@
         {{/second-factor-form}}
       </form>
     {{/if}}
-    {{authMessage}}
-    <div id='login-alert' class={{alertClass}}>{{alert}}</div>
-    
+ 
     {{#if showLoginButtons}}
       {{login-buttons
         canLoginLocalWithEmail=canLoginLocalWithEmail
@@ -66,4 +64,7 @@
 
     {{conditional-loading-spinner condition=showSpinner size="small"}}
   </div>
+
+  <div class="auth-message">{{authMessage}}</div>
+  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 {{/login-modal}}
