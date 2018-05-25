@@ -190,6 +190,7 @@ class PostRevisor
     # WARNING: do not pull this into the transaction
     # it can fire events in sidekiq before the post is done saving
     # leading to corrupt state
+    QuotedPost.extract_from(@post)
     post_process_post
 
     update_topic_word_counts
@@ -198,7 +199,6 @@ class PostRevisor
     grant_badge
 
     TopicLink.extract_from(@post)
-    QuotedPost.extract_from(@post)
 
     successfully_saved_post_and_topic
   end

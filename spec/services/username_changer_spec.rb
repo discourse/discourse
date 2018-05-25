@@ -387,19 +387,6 @@ describe UsernameChanger do
             expect(post.raw).to eq(expected_raw)
             expect(post.cooked).to match_html(expected_cooked)
           end
-
-          it 'replaces the username in quote tags when the post is marked as deleted' do
-            post = create_post_and_change_username(raw: raw) do |p|
-              PostDestroyer.new(p.user, p).destroy
-            end
-
-            expect(post.raw).to_not include("foo")
-            expect(post.cooked).to_not include("foo")
-            expect(post.revisions.count).to eq(1)
-
-            expect(post.revisions[0].modifications["raw"][0]).to eq(expected_raw)
-            expect(post.revisions[0].modifications["cooked"][0]).to match_html(expected_cooked)
-          end
         end
       end
 
