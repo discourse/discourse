@@ -65,7 +65,7 @@ class Notification < ActiveRecord::Base
       .where(read: false)
       .update_all(read: true)
 
-    user.publish_notifications_state if count > 0
+    refresh_notification_count if count > 0
 
     count
   end
@@ -77,7 +77,7 @@ class Notification < ActiveRecord::Base
       .where(read: false)
       .update_all(read: true)
 
-    user.publish_notifications_state if count > 0
+    refresh_notification_count if count > 0
   end
 
   def self.interesting_after(min_date)
