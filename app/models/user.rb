@@ -377,14 +377,15 @@ class User < ActiveRecord::Base
 
   def unread_notifications_of_type(notification_type)
     # perf critical, much more efficient than AR
-    sql = "
-       SELECT COUNT(*) FROM notifications n
-       LEFT JOIN topics t ON n.topic_id = t.id
-       WHERE
-        t.deleted_at IS NULL AND
-        n.notification_type = :type AND
-        n.user_id = :user_id AND
-        NOT read"
+    sql = <<~SQL
+        SELECT COUNT(*)
+          FROM notifications n
+     LEFT JOIN topics t ON t.id = n.topic_id
+         WHERE t.deleted_at IS NULL
+           AND n.notification_type = :type
+           AND n.user_id = :user_id
+           AND NOT read
+    SQL
 
     User.exec_sql(sql, user_id: id, type: notification_type).getvalue(0, 0).to_i
   end
@@ -394,24 +395,25 @@ class User < ActiveRecord::Base
   end
 
   def unread_notifications
-    @unread_notifications ||=
-      begin
-        # perf critical, much more efficient than AR
-        sql = "
-           SELECT COUNT(*) FROM notifications n
-           LEFT JOIN topics t ON n.topic_id = t.id
-           WHERE
-            t.deleted_at IS NULL AND
-            n.notification_type <> :pm AND
-            n.user_id = :user_id AND
-            NOT read AND
-            n.id > :seen_notification_id"
+    @unread_notifications ||= begin
+      # perf critical, much more efficient than AR
+      sql = <<~SQL
+          SELECT COUNT(*)
+            FROM notifications n
+       LEFT JOIN topics t ON t.id = n.topic_id
+           WHERE t.deleted_at IS NULL
+             AND n.notification_type <> :pm
+             AND n.user_id = :user_id
+             AND n.id > :seen_notification_id
+             AND NOT read
+      SQL
 
-        User.exec_sql(sql, user_id: id,
-                           seen_notification_id: seen_notification_id,
-                           pm:  Notification.types[:private_message])
-          .getvalue(0, 0).to_i
-      end
+      User.exec_sql(sql,
+        user_id: id,
+        seen_notification_id: seen_notification_id,
+        pm:  Notification.types[:private_message]
+    ).getvalue(0, 0).to_i
+    end
   end
 
   def total_unread_notifications
@@ -440,8 +442,7 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
-    # publish last notification json with the message so we
-    # can apply an update
+    # publish last notification json with the message so we can apply an update
     notification = notifications.visible.order('notifications.id desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
@@ -477,17 +478,17 @@ class User < ActiveRecord::Base
       [id.to_i, read]
     end
 
-    MessageBus.publish("/notification/#{id}",
-                       { unread_notifications: unread_notifications,
-                         unread_private_messages: unread_private_messages,
-                         total_unread_notifications: total_unread_notifications,
-                         read_first_notification: read_first_notification?,
-                         last_notification: json,
-                         recent: recent,
-                         seen_notification_id: seen_notification_id
-                       },
-                       user_ids: [id] # only publish the notification to this user
-    )
+    payload = {
+      unread_notifications: unread_notifications,
+      unread_private_messages: unread_private_messages,
+      total_unread_notifications: total_unread_notifications,
+      read_first_notification: read_first_notification?,
+      last_notification: json,
+      recent: recent,
+      seen_notification_id: seen_notification_id,
+    }
+
+    MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
   # A selection of people to autocomplete on @mention

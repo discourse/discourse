@@ -30,7 +30,7 @@ class PostJobsEnqueuer
       post_id: @post.id,
       new_record: true,
       options: @opts[:post_alert_options],
-  )
+    )
   end
 
   def feature_topic_users
@@ -45,10 +45,9 @@ class PostJobsEnqueuer
     TopicTrackingState.publish_unread(@post) if @post.post_number > 1
     TopicTrackingState.publish_latest(@topic, @post.whisper?)
 
-    Jobs.enqueue_in(
-        SiteSetting.email_time_window_mins.minutes,
-        :notify_mailing_list_subscribers,
-        post_id: @post.id
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+      :notify_mailing_list_subscribers,
+      post_id: @post.id,
     )
   end
 

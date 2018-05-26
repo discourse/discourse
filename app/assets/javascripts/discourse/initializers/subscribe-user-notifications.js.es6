@@ -35,7 +35,6 @@ export default {
 
       bus.subscribe(`/notification/${user.get('id')}`, data => {
         const store = container.lookup('service:store');
-
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
 
@@ -66,7 +65,7 @@ export default {
             oldNotifications.insertAt(insertPosition, Em.Object.create(lastNotification));
           }
 
-          for (let idx=0; idx < data.recent.length; idx++) {
+          for (let idx = 0; idx < data.recent.length; idx++) {
             let old;
             while(old = oldNotifications[idx]) {
               const info = data.recent[idx];
@@ -96,21 +95,16 @@ export default {
       });
 
       bus.subscribe("/client_settings", data => Ember.set(siteSettings, data.name, data.value));
-
-      bus.subscribe("/refresh_client", data => {
-        Discourse.set("assetVersion", data);
-      });
+      bus.subscribe("/refresh_client", data => Discourse.set("assetVersion", data));
 
       if (!Ember.testing) {
-
         bus.subscribe(alertChannel(user), data => onNotification(data, user));
         initDesktopNotifications(bus, appEvents);
 
-        if(isPushNotificationsEnabled(user, site.mobileView)) {
+        if (isPushNotificationsEnabled(user, site.mobileView)) {
           disableDesktopNotifications();
           registerPushNotifications(Discourse.User.current(), site.mobileView, router, appEvents);
-        }
-        else {
+        } else {
           unsubscribePushNotifications(user);
         }
       }
