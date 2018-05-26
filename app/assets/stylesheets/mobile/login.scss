@@ -1,8 +1,3 @@
-// -webkit- prefix needed for 
-// flexbox on Safari 8
-// can be removed once support
-// for safari 8 is dropped
-
 // shared styles
 // used in both login and
 // create account modals
@@ -18,7 +13,6 @@
   }
 
   #login-buttons:not(.hidden) {
-    display: -webkit-flex;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -32,6 +26,9 @@
       margin: 1% 0 1% 2%;
       font-size: $font-up-1;
       white-space: nowrap;
+      @media screen and (max-width: 360px) {
+        font-size: $font-0;
+      }
     }
 
     + #login-form {
@@ -40,8 +37,6 @@
   }
 
   form {
-    display: -webkit-flex;
-    -webkit-justify-content: center;
     display: flex;
     justify-content: center;
   }
@@ -61,8 +56,6 @@
     }
 
     &:not(.password-confirmation) {
-      display: -webkit-flex;
-      -webkit-flex-direction: column;
       display: flex;
       flex-direction: column;
     }
@@ -104,8 +97,6 @@
   #credentials {
     width: 100%;
     tr {
-      display: -webkit-flex;
-      -webkit-flex-direction: column;
       display: flex;
       flex-direction: column;
     }

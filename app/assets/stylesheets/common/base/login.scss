@@ -144,7 +144,10 @@ $input-width: 220px;
 }
 
 .auth-message {
-  padding: 0 15px 15px 15px
+  padding: 0 15px 15px 15px;
+  &:empty {
+    padding: 0;
+  }
 }
 
 .modal tr.instructions {

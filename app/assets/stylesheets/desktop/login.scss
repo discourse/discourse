@@ -1,11 +1,6 @@
-// -webkit- prefix needed for 
-// flexbox on Safari 8
-// can be removed once support
-// for safari 8 is dropped
-
 // shared styles used
 // on both the login and
-// create accont modals
+// create account modals
 .login-modal,
 .create-account {
   #login-buttons:not(.hidden) {
@@ -39,7 +34,6 @@
 
   tr:not(.instructions) {
     td {
-      display: -webkit-flex;
       display: flex;
       padding: 5px 0 0 0;
     }
@@ -60,8 +54,6 @@
     padding: 15px 0;
 
     tr {
-      display: -webkit-flex;
-      -webkit-flex-direction: column;
       display: flex;
       flex-direction: column;
     }
@@ -78,8 +70,6 @@
   }
 
   .create-account-form tr {
-    display: -webkit-flex;
-    -webkit-flex-direction: column;
     display: flex;
     flex-direction: column;
   }
@@ -169,10 +159,6 @@
 
   .tos-agree {
     margin-bottom: 12px;
-  }
-
-  .disclaimer {
-    margin-top: 15px;
   }
 
   .user-fields {
