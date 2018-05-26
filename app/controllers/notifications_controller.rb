@@ -59,9 +59,10 @@ class NotificationsController < ApplicationController
     else
       Notification.where(user_id: current_user.id).includes(:topic).where(read: false).update_all(read: true)
       current_user.saw_notification_id(Notification.recent_report(current_user, 1).max.try(:id))
-      current_user.reload
-      current_user.publish_notifications_state
     end
+
+    current_user.reload
+    current_user.publish_notifications_state
 
     render json: success_json
   end

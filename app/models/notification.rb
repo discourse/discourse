@@ -58,26 +58,20 @@ class Notification < ActiveRecord::Base
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
-    count = Notification
+    Notification
       .where(user_id: user.id)
       .where(topic_id: topic_id)
       .where(post_number: post_numbers)
       .where(read: false)
       .update_all(read: true)
-
-    refresh_notification_count if count > 0
-
-    count
   end
 
   def self.read(user, notification_ids)
-    count = Notification
+    Notification
       .where(id: notification_ids)
       .where(user_id: user.id)
       .where(read: false)
       .update_all(read: true)
-
-    refresh_notification_count if count > 0
   end
 
   def self.interesting_after(min_date)
