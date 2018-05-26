@@ -201,7 +201,11 @@ class Notification < ActiveRecord::Base
   protected
 
   def refresh_notification_count
-    user.reload.publish_notifications_state
+    begin
+      user.reload.publish_notifications_state
+    rescue ActiveRecord::RecordNotFound
+      # happens when we delete a user
+    end
   end
 
   def send_email
