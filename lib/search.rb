@@ -48,8 +48,10 @@ class Search
 
   def self.prepare_data(search_data, purpose = :query)
     data = search_data.squish
-    # TODO cppjieba_rb is designed for chinese, we need something else for Korean / Japanese
-    if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
+    # TODO cppjieba_rb is designed for chinese, we need something else for Japanese
+    # Korean appears to be safe cause words are already space seperated
+    # For Japanese we should investigate using kakasi
+    if ['zh_TW', 'zh_CN', 'ja'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
       require 'cppjieba_rb' unless defined? CppjiebaRb
       mode = (purpose == :query ? :query : :mix)
       data = CppjiebaRb.segment(search_data, mode: mode)
