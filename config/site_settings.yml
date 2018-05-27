@@ -1324,6 +1324,8 @@ search:
     locale_default:
       zh_CN: 2
       zh_TW: 2
+      ko: 2
+      ja: 2
 
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
