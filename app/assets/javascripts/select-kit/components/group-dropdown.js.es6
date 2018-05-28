@@ -29,11 +29,15 @@ export default ComboBoxComponent.extend({
 
   @computed
   collectionHeader() {
-    return `
-      <a href="${Discourse.getURL("/groups")}" class="group-dropdown-filter">
-        ${I18n.t("groups.index.all").toLowerCase()}
-      </a>
-    `.htmlSafe();
+    if (this.siteSettings.enable_group_directory ||
+        (this.currentUser && this.currentUser.get('staff'))) {
+
+      return `
+        <a href="${Discourse.getURL("/groups")}" class="group-dropdown-filter">
+          ${I18n.t("groups.index.all").toLowerCase()}
+        </a>
+      `.htmlSafe();
+    }
   },
 
   actions: {
