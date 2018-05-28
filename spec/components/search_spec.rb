@@ -837,6 +837,9 @@ describe Search do
 
       results = Search.new('#777').execute
       expect(results.posts.length).to eq(0)
+
+      results = Search.new('xxx #:').execute
+      expect(results.posts.length).to eq(0)
     end
 
     context 'tags' do
