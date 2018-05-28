@@ -84,7 +84,7 @@ QUnit.test("sevenDaysTrend", assert => {
 
   report = reportWithData([0, 1,1,1,1,1,1,0, 1,1,1,1,1,1,1]);
   trend = report.get("sevenDaysTrend");
-  assert.ok(trend === "trending-down");;
+  assert.ok(trend === "trending-down");
 });
 
 QUnit.test("yesterdayTrend", assert => {
@@ -109,7 +109,7 @@ QUnit.test("yesterdayTrend", assert => {
 
   report = reportWithData([0, 1, 1.1]);
   trend = report.get("yesterdayTrend");
-  assert.ok(trend === "trending-down");;
+  assert.ok(trend === "trending-down");
 });
 
 QUnit.test("thirtyDaysTrend", assert => {
@@ -139,7 +139,7 @@ QUnit.test("thirtyDaysTrend", assert => {
   report = reportWithData([0, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]);
   report.set("prev30Days", 35);
   trend = report.get("thirtyDaysTrend");
-  assert.ok(trend === "trending-down");;
+  assert.ok(trend === "trending-down");
 });
 
 QUnit.test("higher is better false", assert => {
@@ -164,7 +164,20 @@ QUnit.test("higher is better false", assert => {
   report = reportWithData([0, 1, 1.1]);
   report.set("higher_is_better", false);
   trend = report.get("yesterdayTrend");
-  assert.ok(trend === "trending-up");;
+  assert.ok(trend === "trending-up");
+});
+
+QUnit.test("small variation (-2/+2% change) is no-change", assert => {
+  let report;
+  let trend;
+
+  report = reportWithData([0, 1,1,1,1,1,1,0.9, 1,1,1,1,1,1,1]);
+  trend = report.get("sevenDaysTrend");
+  assert.ok(trend === "no-change");
+
+  report = reportWithData([0, 1,1,1,1,1,1,1.1, 1,1,1,1,1,1,1]);
+  trend = report.get("sevenDaysTrend");
+  assert.ok(trend === "no-change");
 });
 
 QUnit.test("average", assert => {
