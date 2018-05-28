@@ -139,7 +139,7 @@ class Invite < ActiveRecord::Base
       end
     else
       if topic && topic.category && Guardian.new(invited_by).can_invite_to?(topic)
-        group_ids = topic.category.groups.pluck(:id) - invite.invited_groups.pluck(:group_id)
+        group_ids = topic.category.groups.pluck(:id) - invite.invited_groups.pluck(:group_id) - Group.where(automatic: true).pluck(:id)
         group_ids.each { |group_id| invite.invited_groups.create!(group_id: group_id) }
       end
     end
