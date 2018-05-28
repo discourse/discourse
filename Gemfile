@@ -115,7 +115,7 @@ group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
-  gem 'fabrication', '2.9.8', require: false
+  gem 'fabrication', require: false
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
