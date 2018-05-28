@@ -60,14 +60,14 @@ const Report = Discourse.Model.extend({
     return this.get("average") ? value / count : value;
   },
 
-  @computed("yesterdayCount")
-  yesterdayTrend(yesterdayCount) {
-    return this._computeTrend(this.valueAt(2), yesterdayCount);
+  @computed("yesterdayCount", "higher_is_better")
+  yesterdayTrend(yesterdayCount, higherIsBetter) {
+    return this._computeTrend(this.valueAt(2), yesterdayCount, higherIsBetter);
   },
 
-  @computed("lastSevenDaysCount")
-  sevenDaysTrend(lastSevenDaysCount) {
-    return this._computeTrend(this.valueFor(8, 14), lastSevenDaysCount);
+  @computed("lastSevenDaysCount", "higher_is_better")
+  sevenDaysTrend(lastSevenDaysCount, higherIsBetter) {
+    return this._computeTrend(this.valueFor(8, 14), lastSevenDaysCount, higherIsBetter);
   },
 
   @computed("data")
@@ -100,15 +100,15 @@ const Report = Discourse.Model.extend({
     return this._iconForTrend(yesterdayTrend, higherIsBetter);
   },
 
-  @computed("prev_period", "currentTotal", "currentAverage")
-  trend(prev, currentTotal, currentAverage) {
+  @computed("prev_period", "currentTotal", "currentAverage", "higher_is_better")
+  trend(prev, currentTotal, currentAverage, higherIsBetter) {
     const total = this.get("average") ? currentAverage : currentTotal;
-    return this._computeTrend(prev, total);
+    return this._computeTrend(prev, total, higherIsBetter);
   },
 
-  @computed("prev30Days", "lastThirtyDaysCount")
-  thirtyDaysTrend(prev30Days, lastThirtyDaysCount) {
-    return this._computeTrend(prev30Days, lastThirtyDaysCount);
+  @computed("prev30Days", "lastThirtyDaysCount", "higher_is_better")
+  thirtyDaysTrend(prev30Days, lastThirtyDaysCount, higherIsBetter) {
+    return this._computeTrend(prev30Days, lastThirtyDaysCount, higherIsBetter);
   },
 
   @computed("type")
@@ -205,19 +205,18 @@ const Report = Discourse.Model.extend({
     return ((valAtT2 - valAtT1) / valAtT1) * 100;
   },
 
-  _computeTrend(valAtT1, valAtT2) {
+  _computeTrend(valAtT1, valAtT2, higherIsBetter) {
     const change = this._computeChange(valAtT1, valAtT2);
-    const higherIsBetter = this.get("higher_is_better");
 
     if (change > 50) {
       return higherIsBetter ? "high-trending-up" : "high-trending-down";
-    } else if (change > 0) {
+    } else if (change > 2) {
       return higherIsBetter ? "trending-up" : "trending-down";
-    } else if (change === 0) {
+    } else if (change <= 2 && change >= -2) {
       return "no-change";
     } else if (change < -50) {
       return higherIsBetter ? "high-trending-down" : "high-trending-up";
-    } else if (change < 0) {
+    } else if (change < -2) {
       return higherIsBetter ? "trending-down" : "trending-up";
     }
   },
