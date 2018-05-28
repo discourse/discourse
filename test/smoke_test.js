@@ -20,10 +20,10 @@ const path = require('path');
   });
   const page = await browser.newPage();
 
-  page.setViewport = {
+  await page.setViewport({
     width: 1366,
     height: 768
-  };
+  });
 
   const exec = (description, fn, assertion) => {
     const start = +new Date();
