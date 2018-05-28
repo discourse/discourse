@@ -4,6 +4,8 @@ class PostRevision < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
 
+  default_scope { order('number ASC') }
+
   serialize :modifications, Hash
 
   after_create :create_notification
