@@ -334,7 +334,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   stopLoading() {
-    this.focus();
+    if (this.site && !this.site.isMobileDevice) {
+      this.focusFilterOrHeader();
+    }
+
     this.set("isLoading", false);
     this._boundaryActionHandler("onStopLoading");
   },
