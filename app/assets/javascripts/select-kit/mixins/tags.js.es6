@@ -28,7 +28,6 @@ export default Ember.Mixin.create({
     })
     .finally(() => {
       self.stopLoading();
-      self.focusFilterOrHeader();
     });
   },
 
