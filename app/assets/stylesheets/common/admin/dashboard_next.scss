@@ -211,6 +211,10 @@
         color: $success;
       }
 
+      &.no-change {
+        color: $primary-medium;
+      }
+
       .trend-value {
         font-size: $font-up-1;
       }
