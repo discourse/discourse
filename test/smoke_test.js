@@ -25,23 +25,31 @@ const path = require('path');
     height: 768
   });
 
+  const takeFailureScreenshot = function() {
+    const screenshotPath = '/tmp/smoke-test.png';
+    console.log(`Screenshot of failure taken at ${screenshotPath}`);
+    return page.screenshot({ path: screenshotPath, fullPage: true });
+  };
+
   const exec = (description, fn, assertion) => {
     const start = +new Date();
 
-    return fn.call().then(output => {
+    return fn.call().then(async output => {
       if (assertion) {
         if (assertion.call(this, output)) {
           console.log(`PASSED: ${description} - ${(+new Date()) - start}ms`);
         } else {
           console.log(`FAILED: ${description} - ${(+new Date()) - start}ms`);
+          await takeFailureScreenshot();
           console.log("SMOKE TEST FAILED");
           process.exit(1);
         }
       } else {
         console.log(`PASSED: ${description} - ${(+new Date()) - start}ms`);
       }
-    }).catch(error => {
+    }).catch(async error => {
       console.log(`ERROR (${description}): ${error.message} - ${(+new Date()) - start}ms`);
+      await takeFailureScreenshot();
       console.log("SMOKE TEST FAILED");
       process.exit(1);
     });
