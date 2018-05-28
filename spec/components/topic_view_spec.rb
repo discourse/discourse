@@ -13,6 +13,11 @@ describe TopicView do
     expect { TopicView.new(1231232, evil_trout) }.to raise_error(Discourse::NotFound)
   end
 
+  it "accepts a topic or a topic id" do
+    expect(TopicView.new(topic, evil_trout).topic).to eq(topic)
+    expect(TopicView.new(topic.id, evil_trout).topic).to eq(topic)
+  end
+
   # see also spec/controllers/topics_controller_spec.rb TopicsController::show::permission errors
   it "raises an error if the user can't see the topic" do
     Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
