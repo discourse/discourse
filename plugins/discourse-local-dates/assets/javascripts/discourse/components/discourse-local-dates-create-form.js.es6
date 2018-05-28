@@ -76,7 +76,7 @@ export default Ember.Component.extend({
     let text = `[date=${config.date} `;
     if (config.recurring) text += `recurring=${config.recurring} `;
     text += `time=${config.time} `;
-    text += `format=${config.format} `;
+    text += `format="${config.format}" `;
     text += `timezones="${config.timezones.join("|")}"`;
     text += `]`;
     return text;
