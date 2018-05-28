@@ -53,6 +53,7 @@
           {{/if}}
 
           {{plugin-outlet name="create-account-before-password"
+                          noTags=true
                           args=(hash accountName=accountName
                                      accountUsername=accountUsername
                                      accountPassword=accountPassword
@@ -83,6 +84,13 @@
               {{input value=accountChallenge id="new-account-challenge"}}
             </td>
           </tr>
+
+          {{plugin-outlet name="create-account-after-password"
+                          noTags=true
+                          args=(hash accountName=accountName
+                                     accountUsername=accountUsername
+                                     accountPassword=accountPassword
+                                     userFields=userFields)}}
 
           </table>
 
