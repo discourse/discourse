@@ -59,18 +59,22 @@ class Notification < ActiveRecord::Base
 
   def self.mark_posts_read(user, topic_id, post_numbers)
     Notification
-      .where(user_id: user.id)
-      .where(topic_id: topic_id)
-      .where(post_number: post_numbers)
-      .where(read: false)
+      .where(
+        user_id: user.id,
+        topic_id: topic_id,
+        post_number: post_numbers,
+        read: false
+      )
       .update_all(read: true)
   end
 
   def self.read(user, notification_ids)
     Notification
-      .where(id: notification_ids)
-      .where(user_id: user.id)
-      .where(read: false)
+      .where(
+        id: notification_ids,
+        user_id: user.id,
+        read: false
+      )
       .update_all(read: true)
   end
 
