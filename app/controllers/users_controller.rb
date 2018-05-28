@@ -357,7 +357,7 @@ class UsersController < ApplicationController
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
-      return render body: nil, status: 500
+      return render body: nil, status: :forbidden
     end
 
     authentication.start
