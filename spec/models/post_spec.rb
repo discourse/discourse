@@ -1095,4 +1095,11 @@ describe Post do
     expect(hidden_topic.visible).to eq(false)
   end
 
+  it "automatically orders post revisions by number ascending" do
+    post = Fabricate(:post)
+    post.revisions.create!(user_id: 1, post_id: post.id, number: 2)
+    post.revisions.create!(user_id: 1, post_id: post.id, number: 1)
+    expect(post.revisions.pluck(:number)).to eq([1, 2])
+  end
+
 end
