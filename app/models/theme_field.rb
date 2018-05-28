@@ -186,7 +186,14 @@ COMPILED
   def ensure_scss_compiles!
     if ThemeField.scss_fields.include?(self.name)
       begin
-        Stylesheet::Compiler.compile("@import \"theme_variables\"; @import \"theme_field\";",
+        parent_themes = self.theme.dependant_themes.map do |theme|\
+          if self.name == :embedded_scss
+            "@import \"themes/#{theme.id}/#{self.target_name}_embedded\";"
+          else
+            "@import \"themes/#{theme.id}/#{self.target_name}\";"
+          end
+        end
+        Stylesheet::Compiler.compile("@import \"theme_variables\"; #{parent_themes.join(' ')} @import \"theme_field\";",
                                      "theme.scss",
                                      theme_field: self.value.dup,
                                      theme: self.theme
