@@ -37,14 +37,15 @@ class TopicView
     wpcf.flatten.uniq
   end
 
-  def initialize(topic_id, user = nil, options = {})
-    @message_bus_last_id = MessageBus.last_id("/topic/#{topic_id}")
+  def initialize(topic_or_topic_id, user = nil, options = {})
+    @topic = find_topic(topic_or_topic_id)
     @user = user
     @guardian = Guardian.new(@user)
-    @topic = find_topic(topic_id)
-    @print = options[:print].present?
 
     check_and_raise_exceptions
+
+    @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
+    @print = options[:print].present?
 
     options.each do |key, value|
       self.instance_variable_set("@#{key}".to_sym, value)
@@ -435,10 +436,14 @@ class TopicView
     @posts
   end
 
-  def find_topic(topic_id)
-    # with_deleted covered in #check_and_raise_exceptions
-    finder = Topic.with_deleted.where(id: topic_id).includes(:category)
-    finder.first
+  def find_topic(topic_or_topic_id)
+    if topic_or_topic_id.is_a?(Topic)
+      topic_or_topic_id
+    else
+      # with_deleted covered in #check_and_raise_exceptions
+      finder = Topic.with_deleted.where(id: topic_or_topic_id).includes(:category)
+      finder.first
+    end
   end
 
   def unfiltered_posts
