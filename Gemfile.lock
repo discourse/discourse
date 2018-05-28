@@ -421,7 +421,7 @@ DEPENDENCIES
   ember-source (= 2.13.3)
   excon
   execjs
-  fabrication (= 2.9.8)
+  fabrication
   fakeweb (~> 1.3.0)
   fast_blank
   fast_xor
