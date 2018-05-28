@@ -374,6 +374,8 @@ class Search
     exact = true
 
     slug = match.to_s.split(":")
+    next if slug.empty?
+
     if slug[1]
       # sub category
       parent_category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
