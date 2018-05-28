@@ -170,24 +170,33 @@ const Report = Discourse.Model.extend({
   changeTitle(valAtT1, valAtT2, prevPeriodString) {
     const change = this.percentChangeString(valAtT1, valAtT2);
     let title = "";
-    if (change) { title += `${change} change. `; }
-    title += `Was ${number(valAtT1)} ${prevPeriodString}.`;
+
+    if (change) {
+      const changeString = I18n.t("admin.dashboard.reports.percent_change", { percent: change });
+      title += `${changeString} `;
+    }
+
+    title += I18n.t("admin.dashboard.reports.previous_value", {
+      previousValue: number(valAtT1),
+      when: prevPeriodString
+    });
+
     return title;
   },
 
   @computed("yesterdayCount")
   yesterdayCountTitle(yesterdayCount) {
-    return this.changeTitle(this.valueAt(2), yesterdayCount, "two days ago");
+    return this.changeTitle(this.valueAt(2), yesterdayCount, I18n.t("admin.dashboard.reports.two_days_ago"));
   },
 
   @computed("lastSevenDaysCount")
   sevenDaysCountTitle(lastSevenDaysCount) {
-    return this.changeTitle(this.valueFor(8, 14), lastSevenDaysCount, "two weeks ago");
+    return this.changeTitle(this.valueFor(8, 14), lastSevenDaysCount, I18n.t("admin.dashboard.reports.two_weeks_ago"));
   },
 
   @computed("prev30Days", "lastThirtyDaysCount")
   thirtyDaysCountTitle(prev30Days, lastThirtyDaysCount) {
-    return this.changeTitle(prev30Days, lastThirtyDaysCount, "in the previous 30 day period");
+    return this.changeTitle(prev30Days, lastThirtyDaysCount, I18n.t("admin.dashboard.reports.previous_30_days_period"));
   },
 
   @computed("data")
