@@ -3,7 +3,7 @@ task 'export:categories', [:category_ids] => [:environment] do |_, args|
   require "import_export/import_export"
   ids = args[:category_ids].split(" ")
 
-  ImportExport.export_categories(args[:category_ids])
+  ImportExport.export_categories(ids)
   puts "", "Done", ""
 end
 
