@@ -747,7 +747,10 @@ describe UsersController do
 
       context 'authentication records for' do
         let(:user) { Fabricate(:user) }
+
         before do
+          OmniAuth.config.test_mode = true
+
           OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
             provider: 'twitter',
             uid: '123545',
@@ -760,6 +763,11 @@ describe UsersController do
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
           SiteSetting.enable_twitter_logins = true
           get "/auth/twitter/callback.json"
+        end
+
+        after do
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter] = nil
+          OmniAuth.config.test_mode = false
         end
 
         it 'should create twitter user info if required' do
