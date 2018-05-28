@@ -464,7 +464,6 @@ en:
         all: "All Groups"
         empty: "There are no visible groups."
         filter: "Filter by group type"
-        all_groups: "All Groups"
         owner_groups: "Groups I am an owner of"
         close_groups: "Closed Groups"
         automatic_groups: "Automatic Groups"

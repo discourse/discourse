@@ -1,6 +1,10 @@
 import { acceptance, logIn } from "helpers/qunit-helpers";
 
-acceptance("Group");
+acceptance("Group", {
+  settings: {
+    enable_group_directory: true
+  }
+});
 
 const response = object => {
   return [
@@ -10,50 +14,53 @@ const response = object => {
   ];
 };
 
-QUnit.test("Anonymous Viewing Group", assert => {
-  visit("/groups/discourse");
+QUnit.test("Anonymous Viewing Group", async assert => {
+  await visit("/groups/discourse");
 
-  andThen(() => {
-    assert.equal(
-      count(".nav-pills li a[title='Messages']"),
-      0,
-      'it deos not show group messages navigation link'
-    );
-  });
+  assert.equal(
+    count(".nav-pills li a[title='Messages']"),
+    0,
+    'it deos not show group messages navigation link'
+  );
 
-  click(".nav-pills li a[title='Activity']");
+  await click(".nav-pills li a[title='Activity']");
 
-  andThen(() => {
-    assert.ok(count('.user-stream-item') > 0, "it lists stream items");
-  });
+  assert.ok(count('.user-stream-item') > 0, "it lists stream items");
 
-  click(".activity-nav li a[href='/groups/discourse/activity/topics']");
+  await click(".activity-nav li a[href='/groups/discourse/activity/topics']");
 
-  andThen(() => {
-    assert.ok(find('.topic-list'), "it shows the topic list");
-    assert.equal(count('.topic-list-item'), 2, "it lists stream items");
-  });
+  assert.ok(find('.topic-list'), "it shows the topic list");
+  assert.equal(count('.topic-list-item'), 2, "it lists stream items");
 
-  click(".activity-nav li a[href='/groups/discourse/activity/mentions']");
+  await click(".activity-nav li a[href='/groups/discourse/activity/mentions']");
 
-  andThen(() => {
-    assert.ok(count('.user-stream-item') > 0, "it lists stream items");
-  });
+  assert.ok(count('.user-stream-item') > 0, "it lists stream items");
+  assert.ok(find(".nav-pills li a[title='Edit Group']").length === 0, 'it should not show messages tab if user is not admin');
+  assert.ok(find(".nav-pills li a[title='Logs']").length === 0, 'it should not show Logs tab if user is not admin');
+  assert.ok(count('.user-stream-item') > 0, "it lists stream items");
 
-  andThen(() => {
-    assert.ok(find(".nav-pills li a[title='Edit Group']").length === 0, 'it should not show messages tab if user is not admin');
-    assert.ok(find(".nav-pills li a[title='Logs']").length === 0, 'it should not show Logs tab if user is not admin');
-    assert.ok(count('.user-stream-item') > 0, "it lists stream items");
-  });
+  await expandSelectKit('.group-dropdown');
 
-  selectKit('.group-dropdown').expand();
+  assert.equal(
+    find('.select-kit-row').text().trim(), 'discourse',
+    'it displays the right row'
+  );
 
-  andThen(() => {
-    assert.equal(
-      find('.select-kit-row').text().trim(), 'discourse',
-      'it displays the right row'
-    );
-  });
+  assert.equal(
+    find('.group-dropdown-filter').text().trim(), I18n.t("groups.index.all").toLowerCase(),
+    'it displays the right header'
+  );
+
+  Discourse.SiteSettings.enable_group_directory = false;
+
+  await visit("/groups");
+  await visit("/groups/discourse");
+  await expandSelectKit('.group-dropdown');
+
+  assert.equal(
+    find('.group-dropdown-filter').length, 0,
+    'it should not display the default header'
+  );
 });
 
 QUnit.test("Anonymous Viewing Automatic Group", assert => {
