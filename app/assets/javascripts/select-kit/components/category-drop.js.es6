@@ -20,6 +20,7 @@ export default ComboBoxComponent.extend({
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
+  subCategory: false,
 
   init() {
     this._super();
@@ -50,11 +51,7 @@ export default ComboBoxComponent.extend({
   collectionHeader(allCategoriesUrl, allCategoriesLabel, noCategoriesUrl, noCategoriesLabel) {
     let shortcuts = "";
 
-    const currentRoute = Ember.getOwner(this)
-                              .lookup("controller:application")
-                              .get("currentRouteName");
-
-    if (currentRoute !== "discovery.parentCategory") {
+    if (this.get("hasSelection") || (this.get("noSubcategories") && this.get("subCategory"))) {
       shortcuts += `
         <a href="${allCategoriesUrl}" class="category-filter">
           ${allCategoriesLabel}
@@ -62,7 +59,7 @@ export default ComboBoxComponent.extend({
       `;
     }
 
-    if (this.get("subCategory") && currentRoute !== "discovery.categoryNone") {
+    if (this.get("subCategory") && (this.get("hasSelection") || !this.get("noSubcategories"))) {
       shortcuts += `
         <a href="${noCategoriesUrl}" class="category-filter">
           ${noCategoriesLabel}

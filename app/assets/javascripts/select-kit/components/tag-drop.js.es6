@@ -79,10 +79,6 @@ export default ComboBoxComponent.extend({
   collectionHeader(allTagsUrl, allTagsLabel, noTagsUrl, noTagsLabel) {
     let content = "";
 
-    const currentRoute = Ember.getOwner(this)
-                              .lookup("controller:application")
-                              .get("currentRouteName");
-
     if (this.get("tagId") !== "none") {
       content += `
         <a href="${noTagsUrl}" class="tag-filter">
@@ -91,7 +87,7 @@ export default ComboBoxComponent.extend({
       `;
     }
 
-    if (currentRoute === "tags.showCategory") {
+    if (this.get("hasSelection") || this.get("tagId") === "none") {
       content += `
         <a href="${allTagsUrl}" class="tag-filter">
           ${allTagsLabel}
