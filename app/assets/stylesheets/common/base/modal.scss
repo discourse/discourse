@@ -81,12 +81,18 @@
 
 .modal-inner-container {
   display: table;
+  width: 100%;  
   min-width: 320px;
   max-width: 700px;
   margin: 0 auto;
   background-color: $secondary;
   background-clip: padding-box;
   box-shadow: shadow("modal");
+  
+  @media screen and (min-width: 475px) {
+    min-width: 475px;
+    width: auto;
+  }
 
   .select-kit {
     width: 220px;
