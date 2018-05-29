@@ -71,9 +71,7 @@
     {{#if model.second_factor_enabled}}
       {{i18n 'user.second_factor.disable'}}
     {{else}}
-      {{i18n 'enable'}}
-      <a href {{action "showTwoFactorModal"}}>{{showTwoFactorModalText}}</a>
-      {{i18n 'user.second_factor.enable'}}
+      {{discourse-linked-text action="showTwoFactorModal" text="user.second_factor.enable"}}
     {{/if}}
 
     {{#if isCurrentUser}}
