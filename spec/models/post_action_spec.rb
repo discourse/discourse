@@ -619,6 +619,13 @@ describe PostAction do
       end
     end
 
+    it "should succeed even with low max title length" do
+      SiteSetting.max_topic_title_length = 50
+      post.topic.title = 'This is a test topic ' * 2
+      post.topic.save!
+      message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[:notify_moderators], message: "WAT")
+      expect(message_id).to be_present
+    end
   end
 
   describe ".lookup_for" do
