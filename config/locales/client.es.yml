@@ -225,6 +225,8 @@ es:
       our_moderators: "Nuestros Moderadores"
       stat:
         all_time: "Todo el tiempo"
+        last_7_days: "Últimos 7"
+        last_30_days: "Últimos 30"
       like_count: "Me gusta"
       topic_count: "Temas"
       post_count: "Mensajes"
@@ -405,7 +407,6 @@ es:
         all: "Todos los grupos"
         empty: "No hay grupos visibles."
         filter: "Filtrar por tipo de grupo"
-        all_groups: "Todos los grupos"
         owner_groups: "Grupos de los que soy dueño"
         close_groups: "Grupos cerrados"
         automatic_groups: "Grupos automáticos"
@@ -553,6 +554,7 @@ es:
       notifications: "Notificaciones"
       statistics: "Estadísticas"
       desktop_notifications:
+        label: "Notificaciones en tiempo real"
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
         perm_default: "Activar notificaciones"
         perm_denied_btn: "Permiso denegado"
@@ -560,6 +562,7 @@ es:
         disable: "Desactivar notificaciones"
         enable: "Activar notificaciones"
         each_browser_note: "Nota: Tendrás que cambiar esta opción para cada navegador que uses."
+        consent_prompt: "¿Quieres recibir notificaciones en tiempo real cuando alguien te responda?"
       dismiss: 'Descartar'
       dismiss_notifications: "Descartar todos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
@@ -667,7 +670,6 @@ es:
       second_factor:
         title: "Verificación en dos pasos"
         disable: "Verificación en dos pasos"
-        enable: "para mejorar la seguridad de tu cuenta"
         confirm_password_description: "Por favor, confirma tu contraseña para continuar"
         label: "Código"
         enable_description: |
@@ -1110,11 +1112,16 @@ es:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Cargando...
     select_kit:
       default_header_text: Seleccionar...
       no_content: Ninguna coincidencia encontrada
       filter_placeholder: Buscar...
       create: "Crear: `{{content}}'"
+      max_content_reached:
+        one: Solo puedes seleccionar {{count}} elemento.
+        other: Solo puedes seleccionar {{count}} elementos.
     emoji_picker:
       filter_placeholder: Buscar emoji
       people: Personas
@@ -1298,6 +1305,8 @@ es:
         posted: '{{username}} publicó en "{{topic}}" - {{site_title}}'
         private_message: '{{username}} te ha enviado un mensaje personal en "{{topic}}" - {{site_title}}'
         linked: '{{username}} enlazó tu publicación desde "{{topic}}" - {{site_title}}'
+        confirm_title: 'Notificaciones activadas - %{site_title}'
+        confirm_body: '¡Hecho! Las notificaciones han sido activadas.'
     upload_selector:
       title: "Añadir imagen"
       title_with_attachments: "Añadir una imagen o archivo"
@@ -2470,6 +2479,8 @@ es:
       dashboard:
         title: "Panel"
         last_updated: "Panel actualizado el:"
+        find_old: "¿Buscas el antiguo panel?"
+        old_link: "visítalo aquí"
         version: "Versión"
         up_to_date: "¡Estás al día!"
         critical_available: "Actualización crítica disponible."
@@ -2502,9 +2513,12 @@ es:
         show_traffic_report: "Mostrar informe detallado del tráfico"
         community_health: Salud de la comunidad
         whats_new_in_discourse: "¿Qué hay nuevo en Discourse?"
+        activity_metrics: Métricas de actividad
         reports:
           today: "Hoy"
           yesterday: "Ayer"
+          last_7_days: "Últimos 7"
+          last_30_days: "Últimos 30"
           all_time: "Todo el tiempo"
           7_days_ago: "Hace 7 días"
           30_days_ago: "Hace 30 días"
@@ -2515,6 +2529,7 @@ es:
           start_date: "Desde fecha"
           end_date: "Hasta fecha"
           groups: "Todos los grupos"
+          disabled: "Este informe está desactivado"
       commits:
         latest_changes: "Cambios recientes: ¡actualiza a menudo!"
         by: "por"
@@ -2791,7 +2806,6 @@ es:
             label: "Backup"
             title: "Crear una copia de seguridad"
             confirm: "¿Quieres iniciar una nueva copia de seguridad?"
-            without_uploads: "Sí (no incluir archivos)"
           download:
             label: "Descargar"
             title: "Enviar email con enlace de descarga"
@@ -3522,7 +3536,6 @@ es:
         enabled: Activar distintivo
         icon: Icono
         image: Imagen
-        icon_help: "Usa ya sea una clase Font Awesome o una URL a la imagen"
         query: Consulta (SQL) para otorgar el distintivo
         target_posts: La consulta tiene como objetivo posts
         auto_revoke: Ejecutar diariamente la consulta de revocación

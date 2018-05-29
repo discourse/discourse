@@ -2468,7 +2468,6 @@ nl:
             label: "Back-up maken"
             title: "Een back-up maken"
             confirm: "Wilt u een nieuwe back-up starten?"
-            without_uploads: "Ja (geen bestanden bijvoegen)"
           download:
             label: "Downloaden"
             title: "E-mail met downloadkoppeling verzenden"
@@ -3125,7 +3124,6 @@ nl:
         enabled: Badge inschakelen
         icon: Pictogram
         image: Afbeelding
-        icon_help: "Gebruik ofwel een Font Awesome-klasse of een URL naar een afbeelding"
         query: Badgequery (SQL)
         target_posts: Geassocieerde berichten opvragen
         auto_revoke: Intrekkingsquery dagelijks uitvoeren

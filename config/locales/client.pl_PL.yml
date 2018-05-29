@@ -54,6 +54,11 @@ pl_PL:
           many: '%{count}s'
           one: 1s
           other: '%{count}s'
+        less_than_x_minutes:
+          few: < %{count} min
+          many: '< %{count} min '
+          one: < 1 min
+          other: '< %{count} min '
         x_minutes:
           few: '%{count}m'
           many: '%{count}m'
@@ -142,6 +147,7 @@ pl_PL:
           other: '%{count} lat później'
       previous_month: 'Poprzedni miesiąc'
       next_month: 'Następny miesiąc'
+      placeholder: data
     share:
       topic: 'udostępnij odnośnik do tego tematu'
       post: 'wpis #%{postNumber}'
@@ -155,6 +161,7 @@ pl_PL:
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
       invited_group: "%{who} został zaproszony %{when}"
+      user_left: "%{who} usunął siebie z tej konwersacji %{when}"
       removed_user: "%{who} został usunięty %{when}"
       removed_group: "%{who} został usunięty %{when}"
       autoclosed:
@@ -204,6 +211,7 @@ pl_PL:
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
     yes_value: "Tak"
+    submit: "Prześlij"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
     sign_up: "Rejestracja"
@@ -258,6 +266,8 @@ pl_PL:
       our_moderators: "Moderatoratorzy"
       stat:
         all_time: "Ogółem"
+        last_7_days: "Ostatnie 7"
+        last_30_days: "Ostatnie 30"
       like_count: "Lajki"
       topic_count: "Tematy"
       post_count: "Wpisy"
@@ -278,6 +288,21 @@ pl_PL:
       last_read: "to ostatni przeczytany przez ciebie wpis: kliknij, aby dodać zakładkę"
       remove: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie zakładki ustawione w tym temacie?"
+    topic_count_latest:
+      few: Zobacz {{count}} nowe albo zaktualizowane tematy
+      many: Zobacz {{count}} nowych albo zaktualizowanych tematów
+      one: Zobacz {{count}} nowy albo zaktualizowany temat
+      other: Zobacz {{count}} nowych albo zaktualizowanych tematów
+    topic_count_unread:
+      few: Zobacz {{count}} nieprzeczytane tematy
+      many: Zobacz {{count}} nieprzeczytanych tematów
+      one: Zobacz {{count}} nieprzeczytany temat
+      other: Zobacz {{count}} nieprzeczytanych tematów
+    topic_count_new:
+      few: Zobacz {{count}} nowe tematy
+      many: Zobacz {{count}} nowych tematów
+      one: Zobacz {{count}} nowy temat
+      other: Zobacz {{count}} nowych tematów
     preview: "podgląd"
     cancel: "anuluj"
     save: "Zapisz zmiany"
@@ -290,6 +315,7 @@ pl_PL:
     pasting: "Wklejanie..."
     enable: "Włącz"
     disable: "Wyłącz"
+    continue: "Kontynuuj"
     undo: "Cofnij"
     revert: "Przywróć"
     failed: "Niepowodzenie"
@@ -373,6 +399,31 @@ pl_PL:
         make_user_group_owner: "Nadaj prawa właściciela"
         remove_user_as_group_owner: "Usuń prawa właściciela"
     groups:
+      add_members:
+        title: "Dodaj członków"
+        usernames: "Nazwy użytkowników"
+      manage:
+        title: 'Zarządzaj'
+        name: 'Nazwa'
+        full_name: 'Pełna nazwa'
+        add_members: "Dodaj członków"
+        delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}'?"
+        profile:
+          title: Profil
+        interaction:
+          title: Interakcja
+          notification: Powiadomienie
+        membership:
+          title: Członkostwo
+          access: Dostęp
+        logs:
+          title: "Logi"
+          when: "Kiedy"
+          action: "Akcja"
+          subject: "Temat"
+          details: "Szczegóły"
+          from: "Od"
+          to: "Do"
       public_admission: "Zezwól wszystkim użytkownikom na dołączanie do tej grupy (widoczność grupy musi być ustawiona na publiczną)"
       public_exit: "Zezwól wszystkim użytkownikom na opuszczanie tej grupy"
       empty:
@@ -383,6 +434,8 @@ pl_PL:
         topics: "Nie ma wątków stworzonych przez użytkowników tej grupy"
         logs: "Nie ma logów dla tej grupy"
       add: "Dodaj"
+      join: "Dołącz"
+      leave: "Opuść"
       message: "Wiadomość"
       allow_membership_requests: "Zezwól użytkownikom na wysyłanie zaproszeń do właścicieli grupy."
       membership_request_template: "Wyświetl niestandardowy szablon użytkownikom, w momencie wysyłania wniosku o członkostwo."
@@ -392,17 +445,43 @@ pl_PL:
         reason: "Poinformuj właścicieli grupy dlaczego do niej należysz."
       membership: "Członkostwo"
       name: "Nazwa"
+      group_name: "Nazwa grupy"
+      user_count: "Użytkownicy"
       bio: "O grupie"
+      selector_placeholder: "podaj nazwę użytkownika"
       owner: "właściciel"
       index:
         title: "Grupy"
+        all: "Wszystkie grupy"
         empty: "Nie ma widocznych grup"
+        owner_groups: "Grupy, które do mnie należą"
+        close_groups: "Zamknięte grupy"
+        closed: "Zamknięta"
+        public: "Publiczna"
+        private: "Prywatna"
+        public_groups: "Publiczne grupy"
+        close_group: Zamknij grupę
+        my_groups: "Moje grupy"
+        group_type: "Rodzaj grupy"
+        is_group_user: "Członek"
+        is_group_owner: "Właściciel"
       title:
         few: Grupy
         many: Grup
         one: Grupa
         other: Grup
       activity: "Aktywność"
+      members:
+        title: "Członkowie"
+        filter_placeholder_admin: "nazwa użytkownika lub adres e-mail"
+        filter_placeholder: "nazwa użytkownika"
+        remove_member: "Usuń członka"
+        remove_member_description: "Usuń <b>%{username}</b> z tej grupy"
+        make_owner: "Uczyń właścicielem"
+        make_owner_description: "Uczyń <b>%{username}</b> właścicielem tej grupy"
+        remove_owner: "Usuń z funkcji właściciela"
+        remove_owner_description: "Usuń <b>%{username}</b> z funkcji właściciela tej grupy"
+        owner: "Właściciel"
       topics: "Tematy"
       posts: "Wpisów"
       mentions: "Wzmianki"
@@ -455,6 +534,7 @@ pl_PL:
       "14": "Oczekujące"
     categories:
       all: "wszystkie kategorie"
+      all_subcategories: "wszystkie w %{categoryName}"
       no_subcategory: "żadne"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
@@ -516,6 +596,7 @@ pl_PL:
       activity_stream: "Aktywność"
       preferences: "Ustawienia"
       expand_profile: "Rozwiń"
+      collapse_profile: "Zwiń"
       bookmarks: "Zakładki"
       bio: "O mnie"
       invited_by: "Zaproszono przez"
@@ -523,6 +604,7 @@ pl_PL:
       notifications: "Powiadomienia"
       statistics: "Statystyki"
       desktop_notifications:
+        label: "Natychmiastowe powiadomienia"
         not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
         perm_default: "Włącz powiadomienia"
         perm_denied_btn: "Brak uprawnień"
@@ -530,6 +612,7 @@ pl_PL:
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
         each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
+        consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowie na twój post?"
       dismiss: 'Odrzuć'
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
@@ -581,6 +664,7 @@ pl_PL:
       delete_account: "Usuń moje konto"
       delete_account_confirm: "Czy na pewno chcesz usunąć swoje konto? To nieodwracalne!"
       deleted_yourself: "Twoje konto zostało usunięte."
+      delete_yourself_not_allowed: "Skontaktuj się z członkiem ekipy jeśli chcesz, aby twoje konto zostało usunięte."
       unread_message_count: "Wiadomości"
       admin_delete: "Usuń"
       users: "Użytkownicy"
@@ -613,6 +697,7 @@ pl_PL:
         move_to_archive: "Archiwum"
         failed_to_move: "Nie udało się przenieść zaznaczonych wiadomości (prawdopodobnie wystąpił problem z Twoim połączeniem)"
         select_all: "Zaznacz wszystko"
+        tags: "Tagi"
       preferences_nav:
         account: "Konto"
         profile: "Profil"
@@ -632,6 +717,15 @@ pl_PL:
         choose: "Wybierz hasło"
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
+        disable: "Wyłącz dwuskładnikowe uwierzytelnianie"
+        confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
+        label: "Kod"
+        enable_description: |
+          Zeskanuj ten kod QR za pomocą wspieranej aplikacji (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a>– <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) i podaj swój kod uwierzytelniający.
+        disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
+        show_key_description: "Wpisz ręcznie"
+        extended_description: |
+          Dwuskładnikowe uwierzytelnianie zwiększa bezpieczeństwo twojego konta dzięki wymogowi podawanie jednorazowego tokenu oprócz twego hasła przy każdej próbie zalogowania. Tokeny można generować na urządzeniach z systemem <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> lub <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -759,6 +853,7 @@ pl_PL:
         title: "Zaproszenia"
         user: "Zaproszony(-a) użytkownik(-czka)"
         sent: "Wysłane"
+        none: "Brak zaproszeń do wyświetlenia."
         truncated:
           few: Wyświetlanie {{count}} pierwszych zaproszeń.
           many: Wyświetlanie {{count}} pierwszych zaproszeń.
@@ -833,6 +928,11 @@ pl_PL:
           many: dni odwiedzin
           one: dzień odwiedzin
           other: dni odwiedzin
+        topics_entered:
+          few: przeczytane tematy
+          many: przeczytane tematy
+          one: przeczytany temat
+          other: przeczytane tematy
         posts_read:
           few: przeczytanych postów
           many: przeczytane posty
@@ -868,6 +968,7 @@ pl_PL:
         header_title: "profil, wiadomości, zakładki i ustawienia"
       title:
         title: "Tytuł"
+        none: "(brak)"
       filters:
         all: "Wszystkie"
       stream:
@@ -987,10 +1088,13 @@ pl_PL:
       title: "Logowanie"
       username: "Użytkownik"
       password: "Hasło"
+      second_factor_title: "Dwuskładnikowe uwierzytelnianie"
+      second_factor_description: "Podaj kod uwierzytelniający ze swojej aplikacji:"
       email_placeholder: "adres email lub nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
       rate_limit: "Poczekaj, zanim ponowisz próbę logowania."
+      blank_username: "Podaj swój adres e-mail lub nazwę użytkownika."
       blank_username_or_password: "Podaj swój email lub nazwę użytkownika i hasło"
       reset_password: 'Resetuj hasło'
       logging_in: "Uwierzytelnianie…"
@@ -1058,14 +1162,28 @@ pl_PL:
       categories_only: "Tylko kategorie"
       categories_with_featured_topics: "Kategorie z wybranymi tematami"
       categories_and_latest_topics: "Kategorie i ostatnie tematy"
+      categories_and_top_topics: "Kategorie i najlepsze tematy"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Ładowanie...
     select_kit:
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
       filter_placeholder: Wyszukiwanie...
+      create: "Stwórz: '{{content}}'"
+      max_content_reached:
+        few: Może wybrać tylko {{count}} elementy.
+        many: Możesz wybrać tylko {{count}} elementów.
+        one: Możesz wybrać tylko jeden element.
+        other: Możesz wybrać tylko {{count}} elementów.
+      min_content_not_reached:
+        few: Wybierz co najmniej {{count}} elementy.
+        many: Wybierz co najmniej {{count}} elementów.
+        one: Wybierz co najmniej jeden element.
+        other: Wybierz co najmniej {{count}} elementów.
     emoji_picker:
       filter_placeholder: Szukaj emoji
       people: Ludzie
@@ -1083,6 +1201,10 @@ pl_PL:
       medium_tone: Średni kolor skóry
       medium_dark_tone: Średnio ciemny kolor skóry
       dark_tone: Ciemny kolor skóry
+    shared_drafts:
+      notice: "Ten temat jest widoczny tylko użytkowników mających dostęp do kategorii <b>{{category}}</b>."
+      destination_category: "Kategoria docelowa"
+      publishing: "Publikowanie tematu..."
     composer:
       emoji: "Emoji :)"
       more_emoji: "więcej…"
@@ -1116,6 +1238,7 @@ pl_PL:
         post_length: "Wpis musi zawierać przynajmniej {{min}} znaków"
         try_like: 'Może warto użyć przycisku <i class="fa fa-heart"></i>?'
         category_missing: "Musisz wybrać kategorię"
+        tags_missing: "Musisz wybrać co najmniej {{count}} tagów"
       save_edit: "Zapisz zmiany"
       reply_original: "Odpowiedz na Oryginalny Temat"
       reply_here: "Odpowiedz tutaj"
@@ -2697,7 +2820,6 @@ pl_PL:
             label: "Kopia zapasowa"
             title: "Wykonaj kopię zapasową"
             confirm: "Czy chcesz wykonać kopię zapasową?"
-            without_uploads: "Tak (bez załączników)"
           download:
             label: "Pobierz"
             title: "Wyślij email z linkiem do pobrania"
@@ -3410,7 +3532,6 @@ pl_PL:
         enabled: Włącz odznakę
         icon: Ikona
         image: Grafika
-        icon_help: "Użyj jednej z klas Font Awesome lub adresu URL do grafiki"
         query: "Zapytanie odznaki (SQL) "
         target_posts: Wpisy powiązane z odznaką
         auto_revoke: Codziennie uruchamiaj zapytanie odbierające odznakę

@@ -608,9 +608,7 @@ ko:
       xaxis: "일"
       yaxis: "방문자 수"
     signups:
-      title: "새 사용자"
       xaxis: "일"
-      yaxis: "새로운 사용자 수"
     profile_views:
       title: "회원 프로필 조회수"
       xaxis: "일"

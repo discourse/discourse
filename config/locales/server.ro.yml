@@ -610,9 +610,7 @@ ro:
       xaxis: "Zi"
       yaxis: "Număr de vizite"
     signups:
-      title: "Utilizatori noi"
       xaxis: "Zi"
-      yaxis: "Număr de noi utilizatori"
     profile_views:
       title: "Vizualizări profil utilizator"
       xaxis: "Zi"

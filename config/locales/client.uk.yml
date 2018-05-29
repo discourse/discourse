@@ -1221,7 +1221,6 @@ uk:
             confirm: "Are you sure you want to cancel the current operation?"
           backup:
             title: "Create a backup"
-            without_uploads: "Так (не включати файли)"
           download:
             label: "Завантажити"
           destroy:

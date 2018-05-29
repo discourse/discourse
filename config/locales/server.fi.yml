@@ -682,9 +682,7 @@ fi:
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
     signups:
-      title: "Uudet käyttäjät"
       xaxis: "Päivä"
-      yaxis: "Uusien käyttäjien määrä"
     profile_views:
       title: "Käyttäjäprofiilin katselut"
       xaxis: "Päivä"

@@ -1984,7 +1984,6 @@ vi:
             label: "Sao lưu"
             title: "Tạo bản sao lưu"
             confirm: "Bạn muốn bắt đầu một bản sao lưu mới?"
-            without_uploads: "Đúng (không bao gồm những tập tin)"
           download:
             label: "Tải xuống"
           destroy:
@@ -2485,7 +2484,6 @@ vi:
         enabled: Bật huy hiệu
         icon: Biểu tượng
         image: Hình ảnh
-        icon_help: "Sử dụng Font Awesome class hoặc URL của ảnh"
         query: Truy vấn huy hiệu (SQL)
         target_posts: Truy vấn bài viết mục tiêu
         auto_revoke: Chạy truy vấn hủy bỏ hàng ngày

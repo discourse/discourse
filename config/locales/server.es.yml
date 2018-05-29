@@ -752,13 +752,14 @@ es:
       xaxis: "Día"
       yaxis: "Número de visitas"
     signups:
-      title: "Nuevos usuarios"
       xaxis: "Día"
-      yaxis: "Número de usuarios nuevos"
     new_contributors:
       title: "Nuevos contribuyentes"
       xaxis: "Día"
       yaxis: "Número de nuevos contribuyentes"
+      description: "Número de usuarios que han hecho su primer post durante este periodo"
+    dau_by_mau:
+      xaxis: "Día"
     profile_views:
       title: "Visitas a perfil de usuario"
       xaxis: "Día"

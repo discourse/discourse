@@ -2359,7 +2359,6 @@ pt:
             label: "Fazer Cópia de segurança"
             title: "Criar uma cópia de segurança"
             confirm: "Deseja criar uma nova cópia de segurança?"
-            without_uploads: "Sim (não incluir ficheiros)"
           download:
             label: "Transferir"
             title: "Enviar mensagem com hiperligação de transferência"
@@ -2898,7 +2897,6 @@ pt:
         enabled: Ativar distintivos
         icon: Ícone
         image: Imagem
-        icon_help: "Use uma classe Font Awesome ou um URL para uma imagem"
         query: "\"Query\" de Distintivo (SQL)"
         target_posts: "\"Query\" direcionada a publicações"
         auto_revoke: "Executar diariamente a \"query\" de revogação "

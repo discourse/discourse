@@ -746,9 +746,7 @@ ur:
       xaxis: "دن"
       yaxis: "وِزِٹس کی تعداد"
     signups:
-      title: "نئے صارفین"
       xaxis: "دن"
-      yaxis: "نئے صارفین کی تعداد"
     profile_views:
       title: "صارف پروفائل وِیوز"
       xaxis: "دن"

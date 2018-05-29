@@ -427,7 +427,6 @@ sk:
         title: "Skupiny"
         all: "Všetky skupiny"
         empty: "Nenašli sa viditeľné skupiny."
-        all_groups: "Všetky skupiny"
         owner_groups: "Skupiny, ktorých som vlastníkom"
         close_groups: "Uzavreté skupina"
         automatic_groups: "Automatické skupiny"
@@ -2386,7 +2385,6 @@ sk:
             label: "Záloha"
             title: "Vytvoriť zálohu"
             confirm: "Prajete si spustiť novú zálohu?"
-            without_uploads: "Áno (nezahŕňať súbory)"
           download:
             label: "Stiahnuť"
           destroy:
@@ -2904,7 +2902,6 @@ sk:
         enabled: Povoliť odznak
         icon: Ikona
         image: Obrázok
-        icon_help: "Použi buď font z triedy Awesome, alebo URL na obrázok"
         query: Požiadavka na Odznak (SQL)
         target_posts: Požiadavka cieli príspevky
         auto_revoke: Spúšťať stornovaciu požiadavku denne

@@ -678,9 +678,7 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero visite"
     signups:
-      title: "Nuovi Utenti"
       xaxis: "Giorno"
-      yaxis: "Numero di nuovi utenti"
     profile_views:
       title: "Visite Profilo Utente"
       xaxis: "Giorno"

@@ -753,9 +753,7 @@ ar:
       xaxis: "اليوم"
       yaxis: "مرّات الزّيارة"
     signups:
-      title: "المستخدمون الجدد"
       xaxis: "اليوم"
-      yaxis: "عدد المستخدمين الجدد"
     profile_views:
       title: "مشاهدات الحساب الشخصي للعضو"
       xaxis: "اليوم"

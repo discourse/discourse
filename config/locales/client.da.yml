@@ -2328,7 +2328,6 @@ da:
             label: "Backup"
             title: "Start backup"
             confirm: "Vil du starte en ny backup?"
-            without_uploads: "Ja (inkluder ikke filer)"
           download:
             label: "Download"
             title: "Send e-mail med downloadlink"
@@ -2938,7 +2937,6 @@ da:
         enabled: Aktiver badge
         icon: Icon
         image: Billede
-        icon_help: "Bruge enten en \"Font Awesome\" klasse eller URL til et billede"
         query: Badge Forespørgesel (SQL)
         target_posts: Forespørg mål indlæg
         auto_revoke: Kør tilbagekaldelses forespørgsel hver dag

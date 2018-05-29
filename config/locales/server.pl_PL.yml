@@ -727,9 +727,7 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Liczba wizyt"
     signups:
-      title: "Nowi Użytkownicy"
       xaxis: "Dzień"
-      yaxis: "Liczba nowych użytkowników"
     profile_views:
       title: "Wyświetlenia profilu użytkownika"
       xaxis: "Dzień"

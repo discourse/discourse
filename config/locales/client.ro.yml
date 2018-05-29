@@ -420,7 +420,6 @@ ro:
         all: "Toate grupurile"
         empty: "Nu există nici un grup vizibil."
         filter: "Filtrează după tipul grupului"
-        all_groups: "Toate grupurile"
         owner_groups: "Grupuri pe care le dețin"
         close_groups: "Grupuri închise"
         automatic_groups: "Grupuri automate"
@@ -2294,7 +2293,7 @@ ro:
         few: A primit acest ecuson de %{count} ori
         one: A primit acest ecuson o dată
         other: A primit acest ecuson de %{count} de ori
-      granted_on: "Acordat acum %{date}"
+      granted_on: "Acordat %{date}"
       others_count: "Alții cu acest ecuson (%{count})"
       title: Ecusoane
       multiple_grant: "Poți primi asta de mai multe ori"
@@ -2670,7 +2669,6 @@ ro:
             label: "Backup"
             title: "Creează un backup"
             confirm: "Ești sigur că vei să începi o nouă operațiune de backup?"
-            without_uploads: "Da (nu include fişierele)"
           download:
             label: "Descărcare"
             title: "Trimite email cu link de descărcare"
@@ -3323,7 +3321,6 @@ ro:
         enabled: Activează ecuson
         icon: Pictogramă
         image: Imagine
-        icon_help: "Folosiţi o clasă de fonturi Font Awesome sau un URL pentru imagine"
         query: Interogare ecusoane (SQL)
         target_posts: Interogarea mesajelor utilizatorilor-ţintă
         auto_revoke: Pornește verificarea de revocare în fiecare zi

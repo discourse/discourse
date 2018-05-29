@@ -646,9 +646,7 @@ zh_CN:
       xaxis: "天"
       yaxis: "访问量"
     signups:
-      title: "新用户"
       xaxis: "天"
-      yaxis: "新用户数"
     profile_views:
       title: "查看用户资料"
       xaxis: "天"

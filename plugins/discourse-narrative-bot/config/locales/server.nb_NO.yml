@@ -147,7 +147,7 @@ nb_NO:
         message: |-
           Velkommen til %{title}, takk for at du ville bli medlem!
 
-          - Jeg er bare en robot, men [det vennlige personalet](/about) er også her for å hjelpe hvis du trenger assistanse fra en person.
+          - Jeg er bare en robot, men [den vennlige staben](/about) er også her for å hjelpe hvis du trenger assistanse fra en person.
 
           - Av sikkerhetshensyn begrenser vi hva nye brukere kan gjøre helt i starten. Du vil gradvis få flere tillatelser (og [merker](/badges)) etterhvert som vi blir kjent med deg.
 
@@ -259,12 +259,12 @@ nb_NO:
           (Og ja, brukernavnet mitt er stavet _disco_, som i 1970s farsott på dansegulvet. Jeg er en stor [fan av nattelivet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Vi liker å holde diskusjonene våre vennlige, og vi trenger din hjelp til å [holde ting sivilisert](%{guidelines_url}). Hvis du oppdager et problem, vær grei og flagg innlegget slik at enten den som skrev det eller [vårt hjelpsomme personal](%{about_url}) blir klar over det.
+          Vi liker å holde diskusjonene våre vennlige, og vi trenger din hjelp til å [holde ting sivilisert](%{guidelines_url}). Hvis du oppdager et problem, vær grei og flagg innlegget slik at enten den som skrev det eller [vår hjelpsomme stab](%{about_url}) blir klar over det.
           > :imp: jeg skrev noe utrivelig her!
 
           Jeg tror du vet hva du bør gjøre. Prøv å **flagge dette innlegget**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende
         reply: |-
-          [Personalet vårt](/groups/staff) vil bli informert privat om flagget ditt. Hvis nok av medlemmene våre flagger en post, vil den også bli skjult for sikkerhets skyld. (Siden jeg ikke egentlig skrev noe utrivelig :angel: har jeg tatt meg den frihet å fjerne flagget igjen inntil videre.)
+          [Staben vår](/groups/staff) vil bli informert privat om flagget ditt. Hvis nok av medlemmene våre flagger en post, vil den også bli skjult for sikkerhets skyld. (Siden jeg ikke egentlig skrev noe utrivelig :angel: har jeg tatt meg den frihet å fjerne flagget igjen inntil videre.)
         not_found: |-
           Å nei, det ekle inlegget mitt har ikke blitt flagget enda. :worried: Klarer du å flagge det som upassende med **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ikke glem at du kan trykke "vis mer" knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">for å vise flere handlinger for hvert inlegg.
       search:

@@ -660,9 +660,7 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
     signups:
-      title: "Nieuwe gebruikers"
       xaxis: "Dag"
-      yaxis: "Aantal nieuwe gebruikers"
     profile_views:
       title: "Gebruikersprofielweergaven"
       xaxis: "Dag"

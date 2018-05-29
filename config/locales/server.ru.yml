@@ -654,9 +654,7 @@ ru:
       xaxis: "Дата"
       yaxis: "Количество визитов"
     signups:
-      title: "Регистрации"
       xaxis: "Дата"
-      yaxis: "Количество регистраций"
     profile_views:
       title: "Просмотры профилей"
       xaxis: "Дата"

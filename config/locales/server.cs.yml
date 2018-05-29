@@ -674,9 +674,7 @@ cs:
       xaxis: "Den"
       yaxis: "Počet návštěv"
     signups:
-      title: "Noví uživatelé"
       xaxis: "Den"
-      yaxis: "Počet nových uživatelů"
     profile_views:
       title: "Zobrazení uživatelských profilů"
       xaxis: "Den"

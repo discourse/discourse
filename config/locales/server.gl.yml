@@ -269,9 +269,7 @@ gl:
       xaxis: "Día"
       yaxis: "Número de visitas"
     signups:
-      title: "Novos usuarios"
       xaxis: "Día"
-      yaxis: "Número de novos usuarios"
     profile_views:
       title: "Vistas dos perfís de usuario"
       xaxis: "Día"
