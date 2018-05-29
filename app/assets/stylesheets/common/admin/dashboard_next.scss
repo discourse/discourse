@@ -464,3 +464,44 @@
     }
   }
 }
+
+
+.rtl .dashboard-next {
+  .section-column {
+    &:last-child, {
+      margin-right: 1em;
+      margin-left: 0;
+    }
+
+    &:first-child {
+      margin-left: 1em;
+      margin-right: 0;
+    }
+  }
+
+  .dashboard-table table tbody tr {
+    td.title {
+      text-align: right;
+    }
+
+    td.value i {
+      margin-right: 0;
+      margin-left: -12px;
+    }
+  }
+
+  .user-metrics .table-cell {
+    margin: 0 0 5px 10px;
+  }
+
+  .table-cell {
+    .label {
+      border-radius: 0 9px 9px 0;
+
+      .d-icon {
+        margin-right: 0;
+        margin-left: 5px;
+      }
+    }
+  }
+}
