@@ -197,6 +197,10 @@
         cursor: pointer;
         margin-left: .25em;
         color: $primary-low-mid;
+
+        &:hover {
+          color: $primary-medium;
+        }
       }
     }
 
