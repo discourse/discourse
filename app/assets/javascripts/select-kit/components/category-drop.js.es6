@@ -50,13 +50,19 @@ export default ComboBoxComponent.extend({
   collectionHeader(allCategoriesUrl, allCategoriesLabel, noCategoriesUrl, noCategoriesLabel) {
     let shortcuts = "";
 
-    shortcuts += `
-      <a href="${allCategoriesUrl}" class="category-filter">
-        ${allCategoriesLabel}
-      </a>
-    `;
+    const currentRoute = Ember.getOwner(this)
+                              .lookup("controller:application")
+                              .get("currentRouteName");
 
-    if (this.get("subCategory")) {
+    if (currentRoute !== "discovery.parentCategory") {
+      shortcuts += `
+        <a href="${allCategoriesUrl}" class="category-filter">
+          ${allCategoriesLabel}
+        </a>
+      `;
+    }
+
+    if (this.get("subCategory") && currentRoute !== "discovery.categoryNone") {
       shortcuts += `
         <a href="${noCategoriesUrl}" class="category-filter">
           ${noCategoriesLabel}
