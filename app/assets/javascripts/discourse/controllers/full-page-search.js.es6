@@ -146,6 +146,11 @@ export default Ember.Controller.extend({
     }
   },
 
+  @computed('q')
+  isPrivateMessage(q) {
+    return q && this.currentUser && (q.indexOf("in:private") > -1 || q.indexOf(`private_messages:${this.currentUser.get('username_lower')}`) > -1);
+  },
+
   @observes('loading')
   _showFooter() {
     this.set("application.showFooter", !this.get("loading"));
