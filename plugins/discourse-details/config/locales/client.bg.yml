@@ -1,0 +1,7 @@
+bg:
+  js:
+    details:
+      title: Скрий детайлите
+    composer:
+      details_title: Сумарно
+      details_text: "Този текст ще бъде скрит."
