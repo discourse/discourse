@@ -4,6 +4,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setting } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController, {
 
@@ -39,11 +40,6 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
   @computed()
   canChangePassword() {
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
-  },
-
-  @computed
-  showTwoFactorModalText() {
-    return I18n.t('user.second_factor.title').toLowerCase();
   },
 
   actions: {
@@ -105,6 +101,10 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
           }
         ];
       bootbox.dialog(message, buttons, {"classes": "delete-account"});
+    },
+
+    showTwoFactorModal() {
+      showModal('second-factor-intro');
     }
   }
 });
