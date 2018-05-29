@@ -85,7 +85,7 @@
                   {{/if}}
                   {{category-link result.topic.category hideParent=true}}
                   {{#each result.topic.tags as |tag|}}
-                    {{discourse-tag tag}}
+                    {{discourse-tag tag isPrivateMessage=isPrivateMessage}}
                   {{/each}}
                   {{plugin-outlet name="full-page-search-category" args=(hash result=result)}}
                 </div>
