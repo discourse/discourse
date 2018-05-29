@@ -592,7 +592,6 @@ zh_CN:
       second_factor:
         title: "双重验证"
         disable: "停用双重验证"
-        enable: "为了加强账户安全"
         confirm_password_description: "确认密码以继续"
         label: "编码"
         disable_description: "请输入来自  app  的验证码"
@@ -2475,7 +2474,6 @@ zh_CN:
             label: "备份"
             title: "建立一个备份"
             confirm: "你确定要开始建立一个备份吗？"
-            without_uploads: "是（不包括文件）"
           download:
             label: "下载"
             title: "发送含下载链接的邮件"
@@ -3183,7 +3181,6 @@ zh_CN:
         enabled: 启用徽章系统
         icon: 图标
         image: 图片
-        icon_help: "使用 Font Awesome class 或者图片的链接"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询

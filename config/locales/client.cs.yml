@@ -454,7 +454,6 @@ cs:
         all: "Všechny skupiny"
         empty: "Žádné viditelné skupiny."
         filter: "Filtrovat podle typu skupiny"
-        all_groups: "Všechny skupiny"
         owner_groups: "Skupiny, jejichž jsem majitelem"
         close_groups: "Uzavřené skupiny"
         automatic_groups: "Automatické skupiny"
@@ -2962,7 +2961,6 @@ cs:
             label: "Záloha"
             title: "Vytvořit zálohu"
             confirm: "Chcete začít novou zálohu?"
-            without_uploads: "Ano (nepřikládej soubory)"
           download:
             label: "Stáhnout"
             title: "Poslat e-mail s odkazem ke stažení"
@@ -3708,7 +3706,6 @@ cs:
         enabled: Povolit odznaky
         icon: Ikona
         image: Obrázek
-        icon_help: "Použijte buď Font Awesome nebo URL k obrázku."
         query: Dotaz na odznak (SQL)
         target_posts: Zeptat se na cílový příspěvek
         auto_revoke: Denně spouštět zrušení dotazu

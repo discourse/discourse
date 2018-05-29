@@ -112,6 +112,7 @@ sv:
       email: 'skicka denna länk i ett e-postmeddelande'
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
+      private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
       split_topic: "splitta det här ämnet %{when}"
       invited_user: "bjöd in %{who} %{when}"
       invited_group: "bjöd in %{who} %{when}"
@@ -142,6 +143,7 @@ sv:
     topic_admin_menu: "administratörsåtgärder för ämne"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång genom <a href='%{url}' data-auto-route='true'>uppsättnings guiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
+    bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
     bootstrap_mode_disabled: "Bootstrap-läge stängs av om 24 timmar."
     themes:
       default_description: "Standard"
@@ -166,6 +168,7 @@ sv:
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
     yes_value: "Ja"
+    submit: "Skicka"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
     sign_up: "Registrera"
@@ -216,6 +219,8 @@ sv:
       our_moderators: "Våra moderatorer"
       stat:
         all_time: "Alla dagar"
+        last_7_days: "Senaste 7"
+        last_30_days: "Senaste 30"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
@@ -2300,7 +2305,6 @@ sv:
             label: "Säkerhetskopia"
             title: "Skapa en säkerhetskopia"
             confirm: "Vill du skapa en ny säkerhetskopiering?"
-            without_uploads: "Ja (inkludera inte filer)"
           download:
             label: "Ladda ner"
             title: "Skicka mail med nedladdningslänk"
@@ -2845,7 +2849,6 @@ sv:
         enabled: Aktivera utmärkelse
         icon: Ikon
         image: Bild
-        icon_help: "Använd antingen en Font Awesome-klass eller en URL till en bild"
         query: Utmärkelsesökning (SQL)
         target_posts: Sök målets inlägg
         auto_revoke: Kör återkallelsesökning dagligen

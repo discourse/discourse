@@ -1541,7 +1541,6 @@ sr:
           backup:
             title: "Napravi sigurnosnu kopiju"
             confirm: "Želite li pokrenuti novu sigurnosnu kopiju?"
-            without_uploads: "Da (ne uključuj datoteke)"
           destroy:
             title: "Ukloni kopiju"
             confirm: "Jeste li sigurni da želite uništiti ovu sigurnosnu kopiju?"
@@ -1965,7 +1964,6 @@ sr:
         enabled: Omogući značku
         icon: Ikona
         image: Slika
-        icon_help: "Koristite ili Font Awesome klase ili URL za neku sliku"
         query: Upitnik Značke (SQL)
         target_posts: Upitnik cilja poruke
         auto_revoke: Svakodnevno pokreni upitnik o povlačenju

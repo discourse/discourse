@@ -611,9 +611,7 @@ ca:
       xaxis: "Dia"
       yaxis: "Quantitat de visites"
     signups:
-      title: "Noves persones usuàries"
       xaxis: "Dia"
-      yaxis: "Quantitat de noves persones usuàries"
     profile_views:
       title: "Vistes de perfils de persones usuàries"
       xaxis: "Dia"

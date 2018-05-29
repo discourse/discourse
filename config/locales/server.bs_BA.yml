@@ -267,9 +267,7 @@ bs_BA:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
       xaxis: "Day"
-      yaxis: "Number of new users"
     profile_views:
       xaxis: "Dan"
     topics:

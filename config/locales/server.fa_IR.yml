@@ -663,9 +663,7 @@ fa_IR:
       xaxis: "روز"
       yaxis: "تعداد بازدید ها"
     signups:
-      title: "کاربران جدید"
       xaxis: "روز"
-      yaxis: "تعداد کاربران جدید"
     profile_views:
       title: "بازدید‌های نمایه کاربر"
       xaxis: "روز"

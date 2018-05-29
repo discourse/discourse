@@ -561,9 +561,7 @@ sv:
       xaxis: "Dag"
       yaxis: "Antal besök"
     signups:
-      title: "Nya användare"
       xaxis: "Dag"
-      yaxis: "Antalet nya användare"
     profile_views:
       title: "Användarprofilvisningar"
       xaxis: "Dag"

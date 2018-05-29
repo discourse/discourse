@@ -407,7 +407,6 @@ fr:
         all: "Tous les groupes"
         empty: "Il n'y a aucun groupe visible."
         filter: "Filtrer par type de groupe"
-        all_groups: "Tous les groupes"
         owner_groups: "Groupes dont je suis propriétaire"
         close_groups: "Groupes fermés"
         automatic_groups: "Groupes automatiques"
@@ -671,7 +670,6 @@ fr:
       second_factor:
         title: "Authentification à deux facteurs"
         disable: "Désactiver l'authentification à deux facteurs"
-        enable: "pour une sécurité accrue des comptes"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
         enable_description: |
@@ -2821,7 +2819,7 @@ fr:
             label: "Sauvegarder"
             title: "Créer une sauvegarde"
             confirm: "Voulez-vous démarrer une nouvelle sauvegarde ?"
-            without_uploads: "Oui (ne pas inclure les fichiers)"
+            without_uploads: "Oui (n'incluez pas de téléversements)"
           download:
             label: "Télécharger"
             title: "Envoyer un courriel avec un lien de téléchargement"
@@ -3154,6 +3152,9 @@ fr:
             disabled_second_factor: "désactiver l'authentification à deux facteurs"
             topic_published: "sujet publié"
             post_approved: "message approuvé"
+            create_badge: "créer un badge"
+            change_badge: "Modifier un badge"
+            delete_badge: "supprimer un badge"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3223,6 +3224,7 @@ fr:
           placeholder_regexp: "expression régulière"
           add: 'Ajouter'
           success: 'Succès'
+          exists: 'Existe déjà'
           upload: "Envoyer"
           upload_successful: "Envoi réussi. Les mots ont été ajoutés."
       impersonate:
@@ -3246,6 +3248,7 @@ fr:
           suspended: 'Suspendus'
           silenced: 'Sous silence'
           suspect: 'Suspects'
+          staged: 'Distant'
         approved: "Approuvé ?"
         approved_selected:
           one: approuver l'utilisateur
@@ -3268,6 +3271,7 @@ fr:
           silenced: 'Utilisateurs sous silence'
           suspended: 'Utilisateurs suspendus'
           suspect: 'Utilisateurs suspects'
+          staged: 'Utilisateurs distants'
         reject_successful:
           one: Utilisateur rejeté avec succès.
           other: '%{count} utilisateurs rejetés avec succès.'
@@ -3491,6 +3495,7 @@ fr:
       site_settings:
         title: 'Paramètres'
         no_results: "Aucun résultat trouvé."
+        more_than_30_results: "Il y a plus de 30 résultats. Veuillez affiner votre recherche ou sélectionner une catégorie."
         clear_filter: "Effacer"
         add_url: "ajouter URL"
         add_host: "ajouter hôte"
@@ -3557,7 +3562,8 @@ fr:
         enabled: Activer le badge
         icon: Icône
         image: Image
-        icon_help: "Utilisez une classe CSS Font Awesome ou une URL d'image"
+        icon_help: "Utiliser une classe de Font Awesome"
+        image_help: "Entrez l'URL de l'image (remplace le champ de l'icône si les deux sont définis)"
         query: Requête du badge (SQL)
         target_posts: Requête sur les messages
         auto_revoke: Exécuter la requête de révocation quotidiennement

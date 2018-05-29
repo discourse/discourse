@@ -336,7 +336,6 @@ id:
       index:
         title: "Grup"
         all: "Semua Grup"
-        all_groups: "Semua Grup"
         close_groups: "Grup Tertutup"
         automatic_groups: "Grup Otomatis"
         automatic: "Otomatis"

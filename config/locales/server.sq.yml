@@ -399,9 +399,7 @@ sq:
       xaxis: "Ditë"
       yaxis: "Numri i vizitave"
     signups:
-      title: "Përdorues të rinj"
       xaxis: "Ditë"
-      yaxis: "Numri i përdoruesve të rinj"
     profile_views:
       xaxis: "Ditë"
     topics:

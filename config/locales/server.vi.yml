@@ -27,14 +27,14 @@ vi:
   posts: "bài viết"
   loading: "Đang tải"
   log_in: "Đăng nhập"
-  disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì thiếu dung lượng."
+  disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
   emails:
     incoming:
-      show_trimmed_content: "Hiện nội dung đã cắt"
+      show_trimmed_content: "Hiện nội dung đã ẩn"
       errors:
-        empty_email_error: "Xảy ra khi thư nguồn hệ thống nhận được trống."
-        no_message_id_error: "Xảy ra khi thư không có tiêu đề."
+        empty_email_error: "Xảy ra khi hệ thống nhận được một thư rỗng."
+        no_message_id_error: "Xảy ra khi thư không có phần 'Message-Id'."
         auto_generated_email_error: "Xảy ra khi tiêu đề 'ưu tiên' được đặt là: danh sách, rác, theo lô hoặc tự động trả lời, hoặc khi có tiêu đề khác bao gồm: tự động gửi, tự động trả lời hoặc tự động tạo."
         inactive_user_error: "Xảy ra khi người gửi không hoạt động."
         bad_destination_address: "Xảy ra khi không có địa chỉ email trong các trường Tới/Cc/Bcc khớp với địa chỉ email đến đã được cấu hình."
@@ -449,9 +449,7 @@ vi:
       xaxis: "Ngày"
       yaxis: "Số lần truy cập"
     signups:
-      title: "Thành viên mới"
       xaxis: "Ngày"
-      yaxis: "Số lượng thành viên mới"
     profile_views:
       title: "Xem hồ sơ người dùng"
       xaxis: "Ngày"

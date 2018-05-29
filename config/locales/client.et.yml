@@ -2400,7 +2400,6 @@ et:
             label: "Varukoopia"
             title: "Loo varukoopia"
             confirm: "Kas Sa soovid alustada uut varukoopiat?"
-            without_uploads: "Jah (ära kaasa faile)"
           download:
             label: "Lae alla"
           destroy:
@@ -3024,7 +3023,6 @@ et:
         enabled: Luba märgis
         icon: Ikoon
         image: Pilt
-        icon_help: "Kasuta kas Font Awesome klassi või URL-viidet pildile"
         query: Märgise päring (SQL)
         target_posts: Päri sihtmärkide postitusi
         auto_revoke: Jooksuta tühistamispäringut igapäevaselt

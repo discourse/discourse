@@ -512,9 +512,7 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
     signups:
-      title: "Yeni Kullanıcılar"
       xaxis: "Gün"
-      yaxis: "Yeni kullanıcı sayısı"
     profile_views:
       title: "Kullanıcı Profil Görüntülemeleri"
       xaxis: "Gün"

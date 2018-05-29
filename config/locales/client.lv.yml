@@ -2423,7 +2423,6 @@ lv:
             label: "Rezerves kopija"
             title: "Izveidot rezerves kopiju"
             confirm: "Vai jūs vēlaties uzsākt jaunas rezerves kopijas veidošanu?"
-            without_uploads: "Jā (neiekļaut failus)"
           download:
             label: "Lejuplādēt"
             title: "Nosūtīt e-pastu ar lejuplādes saiti"
@@ -3007,7 +3006,6 @@ lv:
         enabled: Atļaut žetonu
         icon: Ikona
         image: Bilde
-        icon_help: "Izmanto vainu Fontu klasi vai URL uz bildi"
         query: Vaicājums Žetons  (SQL)
         target_posts: Vaicājums ir vērsts uz ierakstiem
         auto_revoke: Palaist anulēšanas vaicājumu ikdienā

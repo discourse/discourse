@@ -395,7 +395,6 @@ tr_TR:
         all: "Tüm Gruplar"
         empty: "Görünen hiç bir grup bulunmamaktadır."
         filter: "Grup tipine göre filtrele"
-        all_groups: "Tüm Gruplar"
         close_groups: "Kapanmış Gruplar"
         automatic_groups: "Otomatik Gruplar"
         automatic: "Otomatik"
@@ -548,7 +547,7 @@ tr_TR:
       moderator_tooltip: "Bu kullanıcı bir moderatör"
       admin_tooltip: "Bu kullanıcı bir yönetici."
       silenced_tooltip: "Bu kullanıcı susturuldu"
-      suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
+      suspended_notice: "Bu kullanıcı {{date}} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı askıya alındı."
       suspended_reason: "Neden:"
       github_profile: "Github"
@@ -637,7 +636,6 @@ tr_TR:
       second_factor:
         title: "İki Faktörlü Kimlik Doğrulama"
         disable: "İki faktörlü kimlik doğrulamayı devre dışı bırak"
-        enable: "gelişmiş hesap güvenliği için"
         confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
         enable_description: |
           Desteklenen bir uygulamada bu QR kodunu tarayın (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> - <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> - <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) ve kimlik doğrulama kodunuzu girin.
@@ -2552,7 +2550,6 @@ tr_TR:
             label: "Yedek Oluştur"
             title: "Yedek oluştur"
             confirm: "Yeni bir yedekleme başlatmak istiyor musunuz?"
-            without_uploads: "Evet (dosya eklemeyin)"
           download:
             label: "İndir"
           destroy:
@@ -3186,7 +3183,6 @@ tr_TR:
         enabled: Rozeti etkinleştir
         icon: İkon
         image: Görsel
-        icon_help: "Font Awesome sınıfı veya görsel URL'i kullanın"
         query: Rozet Sorgusu (SQL)
         target_posts: Sorgu gönderileri hedefliyor
         auto_revoke: Geri alma sorgusunu her gün çalıştır.

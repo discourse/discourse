@@ -309,7 +309,6 @@ th:
       index:
         title: "กลุ่ม"
         empty: "ไม่มีกลุ่มที่เห็นได้"
-        all_groups: "ทุกกลุ่ม"
       activity: "กิจกรรม"
       topics: "กระทู้"
       posts: "โพสต์"

@@ -2522,7 +2522,6 @@ sq:
         enabled: Aktivizoni stemën
         icon: Ikonë
         image: Imazh
-        icon_help: "Përdor një klas FontAwesome ose URL-në e një imazhi"
         query: Query Steme (SQL)
         show_posts: Trego postimin që akordoi stemën në faqen e stemave
         trigger_type:

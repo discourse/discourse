@@ -7,6 +7,7 @@
 
 vi:
   site_settings:
+    poll_enabled: "Cho phép bình chọn?"
     poll_maximum_options: "Số lượng tối đa tùy chọn trong một cuộc thăm dò.  "
     poll_edit_window_mins: "Số phút tình từ lúc tạo bài viết mà người dùng có quyền sửa thăm dò."
   poll:
