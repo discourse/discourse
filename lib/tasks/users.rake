@@ -6,7 +6,7 @@ task "users:change_post_ownership", [:old_username, :new_username, :archetype] =
   archetype = archetype.downcase if archetype
 
   if !old_username || !new_username
-    puts "ERROR: Expecting rake posts:change_post_ownership[old_username,new_username,archetype]"
+    puts "ERROR: Expecting rake users:change_post_ownership[old_username,new_username,archetype]"
     exit 1
   end
 
@@ -18,7 +18,7 @@ task "users:change_post_ownership", [:old_username, :new_username, :archetype] =
   elsif archetype == "public" || !archetype
     posts = Post.public_posts.where(user_id: old_user.id)
   else
-    puts "ERROR: Expecting rake posts:change_post_ownership[old_username,new_username,archetype] where archetype is public or private"
+    puts "ERROR: Expecting rake users:change_post_ownership[old_username,new_username,archetype] where archetype is public or private"
     exit 1
   end
 
@@ -37,7 +37,7 @@ task "users:merge", [:source_username, :target_username] => [:environment] do |_
   target_username = args[:target_username]
 
   if !source_username || !target_username
-    puts "ERROR: Expecting rake posts:merge[source_username,target_username]"
+    puts "ERROR: Expecting rake users:merge[source_username,target_username]"
     exit 1
   end
 
@@ -53,7 +53,7 @@ task "users:rename", [:old_username, :new_username] => [:environment] do |_, arg
   new_username = args[:new_username]
 
   if !old_username || !new_username
-    puts "ERROR: Expecting rake posts:rename[old_username,new_username]"
+    puts "ERROR: Expecting rake users:rename[old_username,new_username]"
     exit 1
   end
 
@@ -68,7 +68,7 @@ task "users:update_posts", [:old_username, :current_username] => [:environment] 
   current_username = args[:current_username]
 
   if !old_username || !current_username
-    puts "ERROR: Expecting rake posts:update_posts[old_username,current_username]"
+    puts "ERROR: Expecting rake users:update_posts[old_username,current_username]"
     exit 1
   end
 
