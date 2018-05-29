@@ -77,14 +77,29 @@ export default ComboBoxComponent.extend({
 
   @computed("allTagsUrl", "allTagsLabel", "noTagsUrl", "noTagsLabel")
   collectionHeader(allTagsUrl, allTagsLabel, noTagsUrl, noTagsLabel) {
-    return `
-      <a href="${allTagsUrl}" class="tag-filter">
-        ${allTagsLabel}
-      </a>
-      <a href="${noTagsUrl}" class="tag-filter">
-        ${noTagsLabel}
-      </a>
-    `;
+    let content = "";
+
+    const currentRoute = Ember.getOwner(this)
+                              .lookup("controller:application")
+                              .get("currentRouteName");
+
+    if (this.get("tagId") !== "none") {
+      content += `
+        <a href="${noTagsUrl}" class="tag-filter">
+          ${noTagsLabel}
+        </a>
+      `;
+    }
+
+    if (currentRoute === "tags.showCategory") {
+      content += `
+        <a href="${allTagsUrl}" class="tag-filter">
+          ${allTagsLabel}
+        </a>
+      `;
+    }
+
+    return content;
   },
 
   @computed("tag")
