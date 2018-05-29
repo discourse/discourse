@@ -741,7 +741,7 @@ en:
       second_factor:
         title: "Two Factor Authentication"
         disable: "Disable two factor authentication"
-        enable: "for enhanced account security"
+        enable: "Enable <a href>two factor authentication</a> for enhanced account security"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
         enable_description: |
