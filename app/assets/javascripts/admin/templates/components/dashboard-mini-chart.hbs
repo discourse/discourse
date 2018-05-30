@@ -14,9 +14,9 @@
       <div class="trend {{report.trend}}">
         <span class="trend-value" title="{{report.trendTitle}}">
           {{#if report.average}}
-            {{number report.currentAverage}}{{#if report.percent}}%{{/if}}
+            {{number report.currentAverage ceil=true}}{{#if report.percent}}%{{/if}}
           {{else}}
-            {{number report.currentTotal noTitle="true"}}{{#if report.percent}}%{{/if}}
+            {{number report.currentTotal ceil=true noTitle="true"}}{{#if report.percent}}%{{/if}}
           {{/if}}
         </span>
 

@@ -8,6 +8,10 @@ registerUnbound('raw-date', dt => longDate(new Date(dt)));
 registerUnbound('age-with-tooltip', dt => new safe(autoUpdatingRelativeAge(new Date(dt), {title: true})));
 
 registerUnbound('number', (orig, params) => {
+  if (params.ceil) {
+    orig = Math.ceil(orig);
+  }
+
   orig = parseInt(orig, 10);
   if (isNaN(orig)) { orig = 0; }
 
