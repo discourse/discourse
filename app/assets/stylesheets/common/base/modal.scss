@@ -31,9 +31,17 @@
   align-items: center;
   padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
-  h3 {
-    margin-bottom: 0;
+
+  .title {
+    h3 {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin: 0;
+    }
   }
+
   .modal-close {
     order: 2;
     margin-left: auto;
@@ -81,14 +89,14 @@
 
 .modal-inner-container {
   display: table;
-  width: 100%;  
+  width: 100%;
   min-width: 320px;
   max-width: 700px;
   margin: 0 auto;
   background-color: $secondary;
   background-clip: padding-box;
   box-shadow: shadow("modal");
-  
+
   @media screen and (min-width: 475px) {
     min-width: 475px;
     width: auto;
@@ -511,4 +519,3 @@
   position: absolute;
   width: 95%;
 }
-
