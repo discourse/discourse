@@ -223,7 +223,6 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to eq(user.id)
     end
   end
-  
 
   describe '#sso_login' do
     before do
