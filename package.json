@@ -11,6 +11,7 @@
     "chrome-launcher": "^0.10.0",
     "chrome-remote-interface": "^0.25.4",
     "eslint": "^4.13.1",
+    "prettier": "1.13.2",
     "puppeteer": "^0.13.0"
   }
 }

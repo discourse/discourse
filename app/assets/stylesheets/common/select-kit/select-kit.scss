@@ -59,14 +59,14 @@
   .select-kit-header {
     box-sizing: border-box;
     overflow: hidden;
-    transition: all .25s;
+    transition: all 0.25s;
     cursor: pointer;
     outline: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-  
+
     .selected-name {
       text-align: left;
       flex: 1 1 auto;
@@ -148,7 +148,8 @@
       background: $tertiary-low;
     }
 
-    .discourse-tag, .discourse-tag-count {
+    .discourse-tag,
+    .discourse-tag-count {
       color: $primary;
     }
   }
@@ -203,7 +204,9 @@
     align-items: center;
     justify-content: space-between;
 
-    .filter-input, .filter-input:focus, .filter-input:active {
+    .filter-input,
+    .filter-input:focus,
+    .filter-input:active {
       background: none;
       margin: 0;
       padding: 0;

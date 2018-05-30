@@ -1,7 +1,6 @@
 .select-kit {
   &.combo-box {
     &.category-drop {
-
       .badge-wrapper {
         font-size: $font-0;
         font-weight: normal;
@@ -25,7 +24,7 @@
 
       .category-drop-header {
         padding: 5px 5px 5px 10px;
-        
+
         &.is-none .selected-name {
           color: inherit;
         }
@@ -33,7 +32,6 @@
         .badge-wrapper {
           margin-right: 0;
         }
-
       }
 
       .select-kit-body {
@@ -65,7 +63,8 @@
         }
       }
 
-      &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
+      &.is-expanded .select-kit-wrapper,
+      .select-kit-wrapper {
         display: none;
       }
     }

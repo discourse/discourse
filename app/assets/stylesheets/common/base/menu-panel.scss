@@ -55,11 +55,13 @@
 }
 
 .menu-panel {
-  ul.menu-links li, ul li.heading {
+  ul.menu-links li,
+  ul li.heading {
     a {
       padding: 0.25em 0.5em;
       display: block;
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         background-color: $highlight-medium;
         outline: none;
       }
@@ -90,7 +92,8 @@
     .badge-wrapper {
       overflow: hidden;
       text-overflow: ellipsis;
-      &.bar, &.bullet {
+      &.bar,
+      &.bullet {
         color: $primary;
       }
       &.box {
@@ -104,7 +107,7 @@
       }
     }
   }
-  
+
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -112,7 +115,7 @@
     font-size: $font-down-1;
   }
   .box + b.topics-count {
-      padding-top: 2px;      
+    padding-top: 2px;
   }
 
   span.badge-category {
@@ -120,11 +123,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
 }
 
 .search-menu {
-
   .search-input {
     position: relative;
   }
@@ -140,7 +141,7 @@
     }
   }
 
-  input[type='text'] {
+  input[type="text"] {
     margin: 0.5em 3px;
     box-sizing: border-box;
     width: calc(100% - 6px);
@@ -149,7 +150,9 @@
 
   .search-context {
     padding: 0 5px;
-    label { margin-bottom: 0; }
+    label {
+      margin-bottom: 0;
+    }
   }
 
   .searching {
@@ -172,7 +175,9 @@
 
   .filter {
     padding: 0;
-    &:hover {background: transparent;}
+    &:hover {
+      background: transparent;
+    }
   }
 
   .search-link {
@@ -207,7 +212,7 @@
         display: block;
         padding: 5px;
       }
-      transition: all linear .15s;
+      transition: all linear 0.15s;
 
       .user-results {
         color: dark-light-choose($primary-high, $secondary-low);
@@ -218,12 +223,13 @@
       background-color: $highlight-medium;
     }
 
-    button {margin-left: 5px;}
+    button {
+      margin-left: 5px;
+    }
   }
 }
 
 .user-menu {
-
   .notifications {
     width: 100%;
     display: table;
@@ -234,8 +240,12 @@
       margin: 0.5em 0;
     }
 
-    .fa { color: dark-light-choose($primary-medium, $secondary-medium); }
-    .icon { color: dark-light-choose($primary-high, $secondary-low); }
+    .fa {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
+    .icon {
+      color: dark-light-choose($primary-high, $secondary-low);
+    }
     li {
       background-color: $tertiary-low;
 
@@ -245,17 +255,18 @@
         display: none;
       }
 
-      span { 
-        color: $primary; 
+      span {
+        color: $primary;
       }
 
-      &:hover, &:focus { 
-        background-color: $highlight-medium; 
-        outline: none; 
+      &:hover,
+      &:focus {
+        background-color: $highlight-medium;
+        outline: none;
       }
 
-      a { 
-        padding: 0; 
+      a {
+        padding: 0;
       }
 
       p {
@@ -308,7 +319,8 @@
     @include unselectable;
   }
 
-  .logout-link, .dismiss-link {
+  .logout-link,
+  .dismiss-link {
     display: inline-block;
   }
   .dismiss-link {
@@ -336,10 +348,11 @@ div.menu-links-header {
         display: inline-flex;
         min-width: 15px;
         justify-content: center;
-      } 
+      }
     }
   }
-  a:hover, a:focus {
+  a:hover,
+  a:focus {
     background-color: $highlight-medium;
     outline: none;
   }
@@ -366,7 +379,8 @@ div.menu-links-header {
   li:last-child {
     text-align: right;
   }
-  .fa, a {
+  .fa,
+  a {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 

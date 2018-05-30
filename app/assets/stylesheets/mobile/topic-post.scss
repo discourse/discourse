@@ -39,7 +39,7 @@ span.badge-posts {
       flex: 0 1 auto;
       button {
         &.like {
-          flex: 1 1 auto;          
+          flex: 1 1 auto;
         }
         &.like-count {
           padding: 8px 4px 8px 8px;
@@ -65,11 +65,11 @@ span.badge-posts {
       }
       button.like-count + button.toggle-like {
         padding: 8px 9px 8px 4px;
-      }  
+      }
     }
 
     .d-icon {
-      opacity: 1.0;
+      opacity: 1;
     }
     button {
       border: none;
@@ -85,7 +85,7 @@ span.badge-posts {
         position: relative;
       }
       &.expand-post {
-        margin:10px 0 10px 0;
+        margin: 10px 0 10px 0;
       }
       &.reply {
         color: $primary-high;
@@ -98,7 +98,6 @@ span.badge-posts {
         color: $tertiary;
       }
     }
-
   }
 }
 
@@ -134,7 +133,6 @@ span.badge-posts {
     }
   }
 }
-
 
 .embedded-posts {
   .topic-meta-data h5 a {
@@ -197,7 +195,8 @@ a.reply-to-tab {
     .number {
       line-height: $line-height-medium;
     }
-    .number, i {
+    .number,
+    i {
       color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-1;
     }
@@ -210,7 +209,9 @@ a.reply-to-tab {
     display: none;
   }
 
-  .links, .information, .avatars {
+  .links,
+  .information,
+  .avatars {
     padding: 10px;
     color: $primary;
     overflow: auto;
@@ -222,8 +223,12 @@ a.reply-to-tab {
     }
   }
 
-  .participants { // PMs //
-    .user {float: left; margin: 0 10px 10px 0;}
+  .participants {
+    // PMs //
+    .user {
+      float: left;
+      margin: 0 10px 10px 0;
+    }
   }
 
   .buttons {
@@ -251,7 +256,9 @@ a.reply-to-tab {
 #topic-footer-buttons {
   @include clearfix;
   padding: 20px 0 0 0;
-  .d-icon-bookmark.bookmarked { color: $tertiary; }
+  .d-icon-bookmark.bookmarked {
+    color: $tertiary;
+  }
 
   .combobox {
     float: left;
@@ -260,7 +267,6 @@ a.reply-to-tab {
     margin-bottom: 0.5em;
   }
 }
-
 
 #topic-footer-buttons p {
   clear: both; /* this is to force the drop-down notification state description para below the button */
@@ -276,22 +282,27 @@ a.reply-to-tab {
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
-    th.views, td.views, td.activity, th.activity, th.likes, td.likes {
+  th.views,
+  td.views,
+  td.activity,
+  th.activity,
+  th.likes,
+  td.likes {
     display: none;
-    }
+  }
 
-   a.badge-category, a.badge-category-parent {
+  a.badge-category,
+  a.badge-category-parent {
     font-size: $font-down-1;
     vertical-align: top;
-    }
+  }
 }
 
 span.post-count {
   background: $primary;
   color: $secondary;
-  opacity: .8;
+  opacity: 0.8;
 }
-
 
 #topic-footer-buttons {
   .btn {
@@ -308,7 +319,7 @@ span.post-count {
 
 // mobile has no fixed width on topic-body so overflow: hidden causes problems
 .topic-body {
-  overflow:inherit;
+  overflow: inherit;
 }
 
 // instead, for mobile we set overflow hidden on the cooked part of post body
@@ -330,11 +341,11 @@ iframe {
   display: none;
 }
 
-.open>.dropdown-menu {
+.open > .dropdown-menu {
   display: block;
 }
 
-.dropdown-menu li  {
+.dropdown-menu li {
   margin: 5px 0;
   .fa {
     float: left;
@@ -381,7 +392,9 @@ iframe {
 }
 
 // hide the full set of selection buttons on mobile
-.select-posts button { display: none; }
+.select-posts button {
+  display: none;
+}
 
 // unhide the simple "select just this post" button
 button.select-post {
@@ -394,18 +407,20 @@ button.select-post {
   padding: 5px;
 }
 
-
 .post-select {
   float: right;
   margin-right: 20px;
   margin-top: -20px;
 }
 
-
-
 .deleted {
   .topic-body {
-    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+    background-color: dark-light-diff(
+      rgba($danger, 0.7),
+      $secondary,
+      50%,
+      -60%
+    );
   }
 }
 
@@ -413,10 +428,12 @@ button.select-post {
   font-size: $font-up-5;
 }
 
-span.btn-text {display: none;}
+span.btn-text {
+  display: none;
+}
 
 blockquote {
-  clear:both;
+  clear: both;
   /* leave browser defaults for top and bottom here */
   margin-left: 0;
   margin-right: 0;
@@ -426,9 +443,13 @@ blockquote {
   padding: 0.25em 0;
 }
 
-.gutter { display: none; }
+.gutter {
+  display: none;
+}
 
-.posts-wrapper {  position: relative; }
+.posts-wrapper {
+  position: relative;
+}
 
 span.highlighted {
   background-color: dark-light-choose($highlight-low, $highlight);
@@ -452,7 +473,9 @@ span.highlighted {
   }
   .post-info {
     float: right;
-    .edits { margin-right: 5px; }
+    .edits {
+      margin-right: 5px;
+    }
   }
 }
 
