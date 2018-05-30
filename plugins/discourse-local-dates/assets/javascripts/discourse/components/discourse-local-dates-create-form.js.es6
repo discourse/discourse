@@ -18,6 +18,7 @@ export default Ember.Component.extend({
 
     this.set("date", moment().format(this.dateFormat));
     this.set("time", moment().format(this.timeFormat));
+    this.set("currentMoment", moment());
     this.set("format", `LLL`);
     this.set("timezones", (this.siteSettings.discourse_local_dates_default_timezones || "").split("|").filter(f => f));
     this.set("formats", (this.siteSettings.discourse_local_dates_default_formats || "").split("|"));
@@ -32,6 +33,16 @@ export default Ember.Component.extend({
   @computed
   currentUserTimezone() {
     return moment.tz.guess();
+  },
+
+  @computed("formats")
+  previewedFormats(formats) {
+    return formats.map(format => {
+      return {
+        format: format,
+        preview: moment().format(format)
+      };
+    });
   },
 
   @computed
@@ -86,6 +97,11 @@ export default Ember.Component.extend({
   validDate(dateTime) {
     if (!dateTime) return false;
     return dateTime.isValid();
+  },
+
+  @computed("advancedMode")
+  toggleModeBtnLabel(advancedMode) {
+    return advancedMode ? "discourse_local_dates.create.form.simple_mode" : "discourse_local_dates.create.form.advanced_mode";
   },
 
   actions: {
