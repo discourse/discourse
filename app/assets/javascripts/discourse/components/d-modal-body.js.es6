@@ -42,7 +42,9 @@ export default Ember.Component.extend({
       this.getProperties(
         'title',
         'rawTitle',
-        'fixed'
+        'fixed',
+        'subtitle',
+        'rawSubtitle'
       )
     );
   },
