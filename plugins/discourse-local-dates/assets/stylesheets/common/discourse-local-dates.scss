@@ -91,6 +91,19 @@
       .preview {
         margin-top: 16px;
       }
+
+      @include small-width {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .date .date-input .date-picker {
+          width: 200px;
+        }
+
+        .time .time-input {
+          width: 200px;
+        }
+      }
     }
 
     .validation-error {
