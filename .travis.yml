@@ -19,6 +19,7 @@ addons:
   chrome: stable
   postgresql: 9.6
   apt:
+    update: true
     packages:
     - gifsicle
     - jpegoptim
