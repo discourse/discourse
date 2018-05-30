@@ -56,10 +56,10 @@ before_install:
   - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
-  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
-  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
-  - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint; fi"
-  - bash -c "if [ '$QUNIT_RUN' == '1' ]; then yarn install --dev; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu > /dev/null; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3 > /dev/null; fi"
+  - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint > /dev/null; fi"
+  - bash -c "if [ '$QUNIT_RUN' == '1' ]; then yarn install --dev > /dev/null; fi"
 
 script:
   - |
