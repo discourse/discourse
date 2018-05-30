@@ -24,9 +24,8 @@ describe Auth::GithubAuthenticator do
   let(:user) { Fabricate(:user) }
 
   context 'after_authenticate' do
-
-    it 'can authenticate and create a user record for already existing users' do
-      hash = {
+    let(:data) do
+      {
         extra: {
           all_emails: [{
             email: user.email,
@@ -41,12 +40,20 @@ describe Auth::GithubAuthenticator do
         },
         uid: "100"
       }
+    end
 
-      result = authenticator.after_authenticate(hash)
+    it 'can authenticate and create a user record for already existing users' do
+      result = authenticator.after_authenticate(data)
 
       expect(result.user.id).to eq(user.id)
       expect(result.username).to eq(user.username)
       expect(result.name).to eq(user.name)
+      expect(result.email).to eq(user.email)
+      expect(result.email_valid).to eq(true)
+
+      # Authenticates again when user has Github user info
+      result = authenticator.after_authenticate(data)
+
       expect(result.email).to eq(user.email)
       expect(result.email_valid).to eq(true)
     end
