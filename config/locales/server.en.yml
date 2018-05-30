@@ -1686,6 +1686,7 @@ en:
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+    retry_web_hook_events: "Retry web hook events if failed."
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
