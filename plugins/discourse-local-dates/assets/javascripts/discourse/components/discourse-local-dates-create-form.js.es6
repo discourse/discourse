@@ -18,7 +18,6 @@ export default Ember.Component.extend({
 
     this.set("date", moment().format(this.dateFormat));
     this.set("time", moment().format(this.timeFormat));
-    this.set("currentMoment", moment());
     this.set("format", `LLL`);
     this.set("timezones", (this.siteSettings.discourse_local_dates_default_timezones || "").split("|").filter(f => f));
     this.set("formats", (this.siteSettings.discourse_local_dates_default_formats || "").split("|"));
