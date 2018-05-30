@@ -17,7 +17,6 @@ RSpec.describe TopicsController do
 
       expect(response).to be_success
       json = ::JSON.parse(response.body)
-      expect(json).to be_present
 
       # The JSON has the data the wordpress plugin needs
       expect(json['id']).to eq(topic.id)
@@ -61,7 +60,7 @@ RSpec.describe TopicsController do
       let(:moderator) { Fabricate(:moderator) }
       let(:p1) { Fabricate(:post, user: user, post_number: 1) }
       let(:p2) { Fabricate(:post, user: user, post_number: 2, topic: p1.topic) }
-      let(:topic) { p1.topic }
+      let!(:topic) { p1.topic }
 
       it "raises an error without post_ids" do
         sign_in(moderator)
@@ -98,9 +97,8 @@ RSpec.describe TopicsController do
         before { sign_in(Fabricate(:admin)) }
 
         it "returns success" do
-          t = topic
           expect do
-            post "/t/#{t.id}/move-posts.json", params: {
+            post "/t/#{topic.id}/move-posts.json", params: {
               title: 'Logan is a good movie',
               post_ids: [p2.id],
               category_id: 123
@@ -272,7 +270,9 @@ RSpec.describe TopicsController do
     end
 
     describe 'forbidden to moderators' do
-      let!(:moderator) { sign_in(Fabricate(:moderator)) }
+      before do
+        sign_in(Fabricate(:moderator))
+      end
       it 'correctly denies' do
         post "/t/111/change-owner.json", params: {
           topic_id: 111, username: 'user_a', post_ids: [1, 2, 3]
@@ -282,7 +282,9 @@ RSpec.describe TopicsController do
     end
 
     describe 'forbidden to trust_level_4s' do
-      let!(:trust_level_4) { sign_in(Fabricate(:trust_level_4)) }
+      before do
+        sign_in(Fabricate(:trust_level_4))
+      end
 
       it 'correctly denies' do
         post "/t/111/change-owner.json", params: {
@@ -300,20 +302,24 @@ RSpec.describe TopicsController do
       let(:p2) { Fabricate(:post, topic_id: topic.id) }
 
       it "raises an error with a parameter missing" do
-        post "/t/111/change-owner.json", params: { post_ids: [1, 2, 3] }
-        expect(response.status).to eq(400)
-
-        post "/t/111/change-owner.json", params: { username: 'user_a' }
-        expect(response.status).to eq(400)
+        [
+          { post_ids: [1, 2, 3] },
+          { username: 'user_a' }
+        ].each do |params|
+          post "/t/111/change-owner.json", params: params
+          expect(response.status).to eq(400)
+        end
       end
 
-      it "calls PostOwnerChanger" do
-        PostOwnerChanger.any_instance.expects(:change_owner!).returns(true)
+      it "changes the topic and posts ownership" do
         post "/t/#{topic.id}/change-owner.json", params: {
           username: user_a.username_lower, post_ids: [p1.id]
         }
-
+        topic.reload
+        p1.reload
         expect(response).to be_success
+        expect(topic.user.username).to eq(user_a.username)
+        expect(p1.user.username).to eq(user_a.username)
       end
 
       it "changes multiple posts" do
@@ -334,9 +340,6 @@ RSpec.describe TopicsController do
         deleted_user = Fabricate(:user)
         t2 = Fabricate(:topic, user: deleted_user)
         p3 = Fabricate(:post, topic_id: t2.id, user: deleted_user)
-        deleted_user.save
-        t2.save
-        p3.save
 
         UserDestroyer.new(editor).destroy(deleted_user, delete_posts: true, context: 'test', delete_as_spammer: true)
 
@@ -418,12 +421,6 @@ RSpec.describe TopicsController do
       end
 
       describe 'when the user can see the topic' do
-        it "calls clear_pin_for if the user can see the topic" do
-          Topic.any_instance.expects(:clear_pin_for).with(user).once
-          put "/t/#{topic.id}/clear-pin.json"
-          expect(response).to be_success
-        end
-
         it "succeeds" do
           expect do
             put "/t/#{topic.id}/clear-pin.json"
@@ -616,7 +613,6 @@ RSpec.describe TopicsController do
       get "/t/id_for/#{topic.slug}.json"
       expect(response).to be_success
       json = ::JSON.parse(response.body)
-      expect(json).to be_present
       expect(json['topic_id']).to eq(topic.id)
       expect(json['url']).to eq(topic.url)
       expect(json['slug']).to eq(topic.slug)
@@ -639,6 +635,7 @@ RSpec.describe TopicsController do
 
       before do
         Fabricate(:post, topic: topic)
+        SiteSetting.editing_grace_period = 0
         sign_in(user)
       end
 
@@ -718,11 +715,11 @@ RSpec.describe TopicsController do
         end
 
         it "doesn't call the PostRevisor when there is no changes" do
-          PostRevisor.any_instance.expects(:revise!).never
-
-          put "/t/#{topic.slug}/#{topic.id}.json", params: {
-            category_id: topic.category_id
-          }
+          expect do
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: topic.category_id
+            }
+          end.not_to change(PostRevision.all, :count)
 
           expect(response.status).to eq(200)
         end
@@ -738,11 +735,11 @@ RSpec.describe TopicsController do
 
           context 'when there are no changes' do
             it 'does not call the PostRevisor' do
-              PostRevisor.any_instance.expects(:revise!).never
-
-              put "/t/#{topic.slug}/#{topic.id}.json", params: {
-                category_id: topic.category_id
-              }
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                  category_id: topic.category_id
+                }
+              end.not_to change(PostRevision.all, :count)
 
               expect(response.status).to eq(200)
             end
@@ -880,8 +877,8 @@ RSpec.describe TopicsController do
 
     context 'a topic with nil slug exists' do
       before do
-        @nil_slug_topic = Fabricate(:topic)
-        Topic.connection.execute("update topics set slug=null where id = #{@nil_slug_topic.id}") # can't find a way to set slug column to null using the model
+        nil_slug_topic = Fabricate(:topic)
+        Topic.connection.execute("update topics set slug=null where id = #{nil_slug_topic.id}") # can't find a way to set slug column to null using the model
       end
 
       it 'returns a 404 when slug and topic id do not match a topic' do
@@ -893,13 +890,14 @@ RSpec.describe TopicsController do
     context 'permission errors' do
       let(:allowed_user) { Fabricate(:user) }
       let(:allowed_group) { Fabricate(:group) }
-      let(:secure_category) {
+      let(:secure_category) do
         c = Fabricate(:category)
         c.permissions = [[allowed_group, :full]]
         c.save
         allowed_user.groups = [allowed_group]
         allowed_user.save
-        c }
+        c
+      end
       let(:normal_topic) { Fabricate(:topic) }
       let(:secure_topic) { Fabricate(:topic, category: secure_category) }
       let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
@@ -1026,11 +1024,11 @@ RSpec.describe TopicsController do
     it 'records incoming links' do
       user = Fabricate(:user)
 
-      get "/t/#{topic.slug}/#{topic.id}", params: {
-        u: user.username
-      }
-
-      expect(IncomingLink.count).to eq(1)
+      expect do
+        get "/t/#{topic.slug}/#{topic.id}", params: {
+          u: user.username
+        }
+      end.to change { IncomingLink.count }.by(1)
     end
 
     context 'print' do
@@ -1063,7 +1061,6 @@ RSpec.describe TopicsController do
       sign_in(user)
       get "/t/#{topic.slug}/#{topic.id}"
       topic_user = TopicUser.where(user: user, topic: topic).first
-      expect(topic_user).to be_present
       expect(topic_user.last_visited_at).to eq(topic_user.first_visited_at)
     end
 
@@ -1085,27 +1082,41 @@ RSpec.describe TopicsController do
     end
 
     context 'filters' do
+      def extract_post_stream
+        json = JSON.parse(response.body)
+        json["post_stream"]["posts"].map { |post| post["id"] }
+      end
+
+      before do
+        @post_ids = topic.posts.pluck(:id)
+        22.times do
+          @post_ids << Fabricate(:post, topic: topic).id
+        end
+      end
+
       it 'grabs first page when no filter is provided' do
-        TopicView.any_instance.expects(:filter_posts_in_range).with(0, 19)
         get "/t/#{topic.slug}/#{topic.id}.json"
+        expect(response).to be_success
+        expect(extract_post_stream).to eq(@post_ids[0..19])
       end
 
       it 'grabs first page when first page is provided' do
-        TopicView.any_instance.expects(:filter_posts_in_range).with(0, 19)
-
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
+        expect(response).to be_success
+        expect(extract_post_stream).to eq(@post_ids[0..19])
       end
 
       it 'grabs correct range when a page number is provided' do
-        TopicView.any_instance.expects(:filter_posts_in_range).with(20, 39)
-
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
+        expect(response).to be_success
+        expect(extract_post_stream).to eq(@post_ids[20..39])
       end
 
-      it 'delegates a post_number param to TopicView#filter_posts_near' do
-        TopicView.any_instance.expects(:filter_posts_near).with(p2.post_number)
-
-        get "/t/#{topic.slug}/#{topic.id}/#{p2.post_number}.json"
+      it 'grabs the correct set of posts when post_number param is passed' do
+        post_number = topic.posts.pluck(:post_number).sort[21]
+        get "/t/#{topic.slug}/#{topic.id}/#{post_number}.json"
+        expect(response).to be_success
+        expect(extract_post_stream).to eq(@post_ids[-20..-1])
       end
     end
 
@@ -1135,7 +1146,6 @@ RSpec.describe TopicsController do
 
           expect(response).to be_successful
           topic.reload
-          # free test, only costs a reload
           expect(topic.views).to eq(1)
         end
 
