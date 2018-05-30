@@ -37,7 +37,7 @@ services:
   - redis-server
 
 sudo: required
-dist: xenial
+dist: trusty
 
 cache:
   apt: true
