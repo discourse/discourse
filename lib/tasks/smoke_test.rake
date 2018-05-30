@@ -26,7 +26,7 @@ task "smoke:test" do
     request.basic_auth(ENV['AUTH_USER'], ENV['AUTH_PASSWORD'])
   end
 
-  dir = 'tmp/smoke-test-screenshots'
+  dir = ENV["SMOKE_TEST_SCREENSHOT_PATH"] || 'tmp/smoke-test-screenshots'
   FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
 
   start = Time.now

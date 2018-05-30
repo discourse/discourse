@@ -26,7 +26,7 @@ const path = require('path');
   });
 
   const takeFailureScreenshot = function() {
-    const screenshotPath = `${process.env.SCREENSHOT_PATH || 'tmp/smoke-test-screenshots'}/smoke-test-${Date.now()}.png`;
+    const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH || 'tmp/smoke-test-screenshots'}/smoke-test-${Date.now()}.png`;
     console.log(`Screenshot of failure taken at ${screenshotPath}`);
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
