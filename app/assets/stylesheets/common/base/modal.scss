@@ -420,6 +420,8 @@
   }
   .incoming-email-content {
     height: 300px;
+    max-width: 700px;  
+    width: 90vw; // forcing textarea wider
     textarea, .incoming-email-html-part {
       height: 95%;
       border: none;
