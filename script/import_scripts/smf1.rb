@@ -5,9 +5,22 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 class ImportScripts::Smf1 < ImportScripts::Base
 
   BATCH_SIZE  ||= 5000
-  UPLOADS_DIR ||= "/mnt/hgfs/downloads/attachments"
+  UPLOADS_DIR ||= ENV["UPLOADS_DIR"].presence
+  FORUM_URL   ||= ENV["FORUM_URL"].presence
 
   def initialize
+    fail "UPLOADS_DIR env variable is required (example: '/path/to/attachments')"   unless UPLOADS_DIR
+    fail "FORUM_URL env variable is required (example: 'https://domain.com/forum')" unless FORUM_URL
+
+    @client = Mysql2::Client.new(
+      host: ENV["DB_HOST"] || "localhost",
+      username: ENV["DB_USER"] || "root",
+      password: ENV["DB_PW"],
+      database: ENV["DB_NAME"],
+    )
+
+    check_version!
+
     super
 
     @htmlentities = HTMLEntities.new
@@ -33,17 +46,9 @@ class ImportScripts::Smf1 < ImportScripts::Base
       @pm_mapping[users][title] << topic_id
     end
 
-    @client = Mysql2::Client.new(
-      host: ENV["DB_HOST"] || "localhost",
-      username: ENV["DB_USER"] || "root",
-      password: ENV["DB_PW"],
-      database: ENV["DB_NAME"],
-    )
   end
 
   def execute
-    check_version!
-
     SiteSetting.permalink_normalizations = "/(.+)\\?.*/\\1"
 
     import_groups
@@ -163,9 +168,9 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
             # avatar
             avatar_url = if u["attachmentType"] == 0 && u["id_attach"].present?
-              "https://yoyoexpert.com/forums/index.php?action=dlattach;attach=#{u["id_attach"]};type=avatar"
+              "#{FORUM_URL}/index.php?action=dlattach;attach=#{u["id_attach"]};type=avatar"
             elsif u["attachmentType"] == 1 && u["filename"].present?
-              "https://yoyoexpert.com/forums/avatar-members/#{u["filename"]}"
+              "#{FORUM_URL}/avatar-members/#{u["filename"]}"
             end
 
             if avatar_url.present?
