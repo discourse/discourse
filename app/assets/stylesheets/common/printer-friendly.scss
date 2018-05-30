@@ -35,21 +35,45 @@
   .alert-info,
   .badge-category,
   .badge-category-bg,
-  .badge-notification.clicks{
+  .badge-notification.clicks {
     display: none !important;
   }
   /* bottom border to help separate posts */
   div.row {
-    border-top: 1px solid #AAA;
+    border-top: 1px solid #aaa;
   }
-  .cooked pre code { max-height: none; }
-  #main-outlet { padding: 0 !important; }
-  html,body { min-width: 0; height: auto; }
-  .lightbox-wrapper img { max-width: 500px !important; height: auto !important; }
-  .topic-body { width: auto; margin: 0; padding: 0; float: none; }
-  .topic-post article.boxed .select-posts { width: auto; left: auto; right: 0; }
-  .gap { width: auto; }
-  .gutter { padding: 0; }
+  .cooked pre code {
+    max-height: none;
+  }
+  #main-outlet {
+    padding: 0 !important;
+  }
+  html,
+  body {
+    min-width: 0;
+    height: auto;
+  }
+  .lightbox-wrapper img {
+    max-width: 500px !important;
+    height: auto !important;
+  }
+  .topic-body {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    float: none;
+  }
+  .topic-post article.boxed .select-posts {
+    width: auto;
+    left: auto;
+    right: 0;
+  }
+  .gap {
+    width: auto;
+  }
+  .gutter {
+    padding: 0;
+  }
   /* restyle div#topic-title */
   #topic-title {
     margin: 0;
@@ -62,8 +86,9 @@
     font-weight: normal;
     font-size: normal;
   }
-  a, a:visited {
-    color: #DDD;
+  a,
+  a:visited {
+    color: #ddd;
     font-weight: bold;
   }
   /* hide OP Solved plugin stuff */

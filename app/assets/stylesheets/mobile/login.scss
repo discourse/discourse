@@ -3,7 +3,6 @@
 // create account modals
 .login-modal,
 .create-account {
-
   .modal-inner-container {
     max-width: 350px;
   }
@@ -19,9 +18,9 @@
     width: 102%;
     padding-bottom: 10px;
     margin-left: -2%;
-    
+
     button {
-      flex: 1 1 48%; 
+      flex: 1 1 48%;
       max-width: 50%;
       margin: 1% 0 1% 2%;
       font-size: $font-up-1;
@@ -144,7 +143,7 @@
   }
 
   #login-buttons + .login-form {
-      border-top: 1px solid $primary-low;
+    border-top: 1px solid $primary-low;
   }
   .login-form {
     margin-bottom: 0.75em;

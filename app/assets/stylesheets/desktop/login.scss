@@ -79,7 +79,8 @@
     flex: 1 1 50%;
     align-items: center;
     padding: 0 15px;
-    form, table {
+    form,
+    table {
       width: 100%;
     }
 
@@ -97,7 +98,7 @@
     input,
     label {
       margin-bottom: 0;
-      width: 100%;      
+      width: 100%;
     }
     .tip {
       max-width: 340px;
