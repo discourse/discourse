@@ -41,7 +41,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       # If there's existing user info with the given GitHub ID, that's all we
       # need to know.
       user = user_info.user
-      result.email = data[:email],
+      result.email = data[:email]
       result.email_valid = data[:email].present?
     else
       # Potentially use *any* of the emails from GitHub to find a match or
