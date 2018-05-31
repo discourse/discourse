@@ -357,7 +357,7 @@ class UsersController < ApplicationController
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
-      return render body: nil, status: 500
+      return render body: nil, status: :forbidden
     end
 
     authentication.start
@@ -749,7 +749,7 @@ class UsersController < ApplicationController
         enqueue_activation_email
         render json: success_json
       else
-        render_json_error(@user)
+        render_json_error(primary_email)
       end
     end
   end

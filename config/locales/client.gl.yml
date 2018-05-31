@@ -210,8 +210,6 @@ gl:
       our_moderators: "Os moderadores"
       stat:
         all_time: "Todos"
-        last_7_days: "Últimos 7 días"
-        last_30_days: "Últimos 30 días"
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
@@ -406,7 +404,6 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificacións en escritorio"
         not_supported: "Este navegador non admite notificacións. Desculpe."
         perm_default: "Acender notificacións"
         perm_denied_btn: "Permiso denegado"
@@ -1140,7 +1137,6 @@ gl:
         instructions:
           one: Selecciona o novo propietario da publicación de <b>{{old_user}}</b>.
           other: Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>.
-        instructions_warn: "Decátate que ningunha notificación sobre esta publicación se transferirá retroactivamente ao novo usuario.<br>Aviso: actualmente, non se transfire ao novo usuario ningún dato relacionado cunha publicación. Usa isto con tino."
       change_timestamp:
         action: "cambiar a marca data/hora"
         invalid_timestamp: "A marca data/hora non pode ser no futuro."
@@ -1577,8 +1573,6 @@ gl:
         reports:
           today: "Hoxe"
           yesterday: "Onte"
-          last_7_days: "Últimos 7 días"
-          last_30_days: "Últimos 30 días"
           all_time: "Todos"
           7_days_ago: "Hai 7 días"
           30_days_ago: "Hai 30 días"
@@ -1692,7 +1686,6 @@ gl:
             label: "Copia de seguranza"
             title: "Crear unha copia de seguranza"
             confirm: "Confirmas a execución dunha nova copia de seguranza?"
-            without_uploads: "Si (non incluír ficheiros)"
           download:
             label: "Descargar"
           destroy:
@@ -2194,7 +2187,6 @@ gl:
         enabled: Activar insignia
         icon: Icona
         image: Imaxe
-        icon_help: "Usar a clase Font Awesome ou unha URL a unha imaxe"
         query: Consulta sobre insignia (SQL)
         target_posts: Consulta dirixida a mensaxes
         auto_revoke: Executar a consulta de revogación diariamente

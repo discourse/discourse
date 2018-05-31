@@ -1,77 +1,99 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
+import Report from "admin/models/report";
 
 export default Ember.Mixin.create({
-  classNameBindings: ["isLoading"],
-
-  report: null,
+  classNameBindings: ["isLoading", "dataSourceNames"],
+  reports: null,
+  isLoading: false,
+  dataSourceNames: "",
+  title: null,
 
   init() {
     this._super();
-
-    this._channel = this.get("dataSource");
-    this._callback = (report) => {
-      if (report.report_key = this.get("reportKey")) {
-        Em.run.next(() => {
-          if (report.report_key = this.get("reportKey")) {
-            this.loadReport(report);
-            this.set("isLoading", false);
-            this.renderReport();
-          }
-        });
-      }
-    };
-    // in case we did not subscribe in time ensure we always grab the
-    // last thing on the channel
-    this.messageBus.subscribe(this._channel, this._callback, -2);
+    this.set("reports", []);
   },
 
-  willDestroyElement() {
-    this._super();
-    this.messageBus.unsubscribe(this._channel, this._callback);
+  @computed("dataSourceNames")
+  dataSources(dataSourceNames) {
+    return dataSourceNames.split(",").map(source => `/admin/reports/${source}`);
+  },
+
+  buildPayload(facets) {
+    let payload = { data: { cache: true, facets } };
+
+    if (this.get("startDate")) {
+      payload.data.start_date = this.get("startDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
+    }
+
+    if (this.get("endDate")) {
+      payload.data.end_date = this.get("endDate").format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
+    }
+
+    if (this.get("limit")) {
+      payload.data.limit = this.get("limit");
+    }
+
+    return payload;
+  },
+
+  @computed("reports.[]", "startDate", "endDate", "dataSourceNames")
+  reportsForPeriod(reports, startDate, endDate, dataSourceNames) {
+    // on a slow network fetchReport could be called multiple times between
+    // T and T+x, and all the ajax responses would occur after T+(x+y)
+    // to avoid any inconsistencies we filter by period and make sure
+    // the array contains only unique values
+    reports = reports.uniqBy("report_key");
+
+    const sort = (r) => {
+      if (r.length > 1)  {
+        return dataSourceNames
+          .split(",")
+          .map(name => r.findBy("type", name));
+      } else {
+        return r;
+      }
+    };
+
+    if (!startDate || !endDate) {
+      return sort(reports);
+    }
+
+    return sort(reports.filter(report => {
+      return report.report_key.includes(startDate.format("YYYYMMDD")) &&
+             report.report_key.includes(endDate.format("YYYYMMDD"));
+    }));
   },
 
   didInsertElement() {
     this._super();
 
-    Ember.run.later(this, function() {
-      this.fetchReport();
-    }, 500);
+    this.fetchReport()
+        .finally(() => {
+          this.renderReport();
+        });
   },
 
   didUpdateAttrs() {
     this._super();
-    this.fetchReport();
+
+    this.fetchReport()
+        .finally(() => {
+          this.renderReport();
+        });
   },
 
-  renderReport() {},
-
-  loadReport() {},
-
-  fetchReport() {},
-
-  @computed("dataSourceName")
-  dataSource(dataSourceName) {
-    return `/admin/reports/${dataSourceName}`;
+  renderReport() {
+    if (!this.element || this.isDestroying || this.isDestroyed) return;
+    this.set("title", this.get("reportsForPeriod").map(r => r.title).join(", "));
+    this.set("isLoading", false);
   },
 
-  @computed("report")
-  labels(report) {
-    if (!report) return;
-    if (report.labels) {
-      return Ember.makeArray(report.labels);
-    } else {
-      return Ember.makeArray(report.data).map(r => r.x);
-    }
+  loadReport(jsonReport) {
+    return Report.create(jsonReport);
   },
 
-  @computed("report")
-  values(report) {
-    if (!report) return;
-    return Ember.makeArray(report.data).map(r => r.y);
+  fetchReport() {
+    this.set("reports", []);
+    this.set("isLoading", true);
   },
-
-  _setPropertiesFromReport(report) {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-    this.setProperties({ report });
-  }
 });

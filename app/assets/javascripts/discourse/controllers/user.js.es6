@@ -39,9 +39,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   showStaffCounters: Ember.computed.or('hasGivenFlags', 'hasFlaggedPosts', 'hasDeletedPosts', 'hasBeenSuspended', 'hasReceivedWarnings'),
 
-  @computed('model.isSuspended', 'currentUser.staff')
-  isNotSuspendedOrIsStaff(isSuspended, isStaff) {
-    return !isSuspended || isStaff;
+  @computed('model.suspended', 'currentUser.staff')
+  isNotSuspendedOrIsStaff(suspended, isStaff) {
+    return !suspended || isStaff;
   },
 
   linkWebsite: Em.computed.not('model.isBasic'),

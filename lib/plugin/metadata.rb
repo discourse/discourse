@@ -50,6 +50,9 @@ class Plugin::Metadata
     "discourse-styleguide",
     "discourse-saved-searches",
     "discourse-user-card-badges",
+    "discourse-policy",
+    "discourse-github-linkback",
+
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]

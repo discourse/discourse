@@ -7,4 +7,4 @@
 
 de:
   site_settings:
-    details_enabled: "Aktiviert das Details-Plugin. Wenn du dies änderst, musst du alle Beiträge neu „backen“ mit: \"rake posts:rebake\"."
+    details_enabled: "Aktiviert die Details-Funktion. Wenn du dies änderst, musst du alle Beiträge neu „backen“ mit: \"rake posts:rebake\"."

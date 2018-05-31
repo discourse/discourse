@@ -48,7 +48,7 @@ class Post < ActiveRecord::Base
   has_many :post_details
 
   has_many :post_revisions
-  has_many :revisions, foreign_key: :post_id, class_name: 'PostRevision'
+  has_many :revisions, -> { order(:number) }, foreign_key: :post_id, class_name: 'PostRevision'
 
   has_many :user_actions, foreign_key: :target_post_id
 
@@ -781,7 +781,7 @@ class Post < ActiveRecord::Base
   end
 
   def create_reply_relationship_with(post)
-    return if post.nil?
+    return if post.nil? || self.deleted_at.present?
     post_reply = post.post_replies.new(reply_id: id)
     if post_reply.save
       if Topic.visible_post_types.include?(self.post_type)

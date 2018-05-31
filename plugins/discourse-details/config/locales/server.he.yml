@@ -5,6 +5,4 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-he:
-  site_settings:
-    details_enabled: "הפעלת תוסף הפרטים. שינוי הגדרה זו יאלץ אותך לאפות את הרשומות שלך מחדש עם: „rake posts:rebake”"
+he: {}

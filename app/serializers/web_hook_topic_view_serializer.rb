@@ -1,6 +1,8 @@
 require_dependency 'pinned_check'
 
 class WebHookTopicViewSerializer < TopicViewSerializer
+  attributes :created_by,
+             :last_poster
 
   %i{
     post_stream
@@ -11,9 +13,24 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     draft_sequence
     message_bus_last_id
     suggested_topics
+    has_summary
+    actions_summary
+    current_post_number
+    chunk_size
+    topic_timer
+    private_topic_timer
+    details
   }.each do |attr|
     define_method("include_#{attr}?") do
       false
     end
+  end
+
+  def created_by
+    BasicUserSerializer.new(object.topic.user, scope: scope, root: false)
+  end
+
+  def last_poster
+    BasicUserSerializer.new(object.topic.last_poster, scope: scope, root: false)
   end
 end

@@ -194,8 +194,6 @@ th:
       our_moderators: "พิธีกรของพวกเรา"
       stat:
         all_time: "ทุกเวลา"
-        last_7_days: "7 วันที่แล้ว"
-        last_30_days: "30 วันที่แล้ว"
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพส"
@@ -311,7 +309,6 @@ th:
       index:
         title: "กลุ่ม"
         empty: "ไม่มีกลุ่มที่เห็นได้"
-        all_groups: "ทุกกลุ่ม"
       activity: "กิจกรรม"
       topics: "กระทู้"
       posts: "โพสต์"
@@ -412,7 +409,6 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
-        label: "การแจ้งเตือนบนเดสท๊อป"
         not_supported: "การแจ้งเตือนยังไม่สนับสนุนบนบาวเซอร์นี้ ขอโทษด้วย"
         perm_default: "เปิดการแจ้งเตือน"
         perm_denied_btn: "ไม่มีสิทธิ์เข้าถึง"
@@ -1319,8 +1315,6 @@ th:
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"
-          last_7_days: "เมื่อ 7 วันที่ผ่านมา"
-          last_30_days: "เมื่อ 30 วันที่ผ่านมา"
           all_time: "ตลอดเวลา"
           7_days_ago: "7 วันที่แล้ว"
           30_days_ago: "30 วันที่แล้ว"

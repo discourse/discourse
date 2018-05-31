@@ -151,6 +151,7 @@ ja:
     not_implemented: "この機能はまだ実装されていません！"
     no_value: "いいえ"
     yes_value: "はい"
+    submit: "送信"
     generic_error: "申し訳ありません、エラーが発生しました。"
     generic_error_with_reason: "エラーが発生しました: %{error}"
     sign_up: "サインアップ"
@@ -199,8 +200,6 @@ ja:
       our_moderators: "モデレータ"
       stat:
         all_time: "すべて"
-        last_7_days: "過去7日間"
-        last_30_days: "過去30日間"
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
@@ -317,6 +316,15 @@ ja:
         title: "メンバーを追加する"
         description: "このグループのメンバーシップを管理する"
         usernames: "ユーザーネーム"
+      manage:
+        membership:
+          title: メンバーシップ
+          access: アクセス
+        logs:
+          title: "ログ"
+          when: "いつ"
+          action: "アクション"
+          target_user: "ターゲットユーザー"
       public_admission: "ユーザーがグループへ自由に参加できるようにする (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に離脱できるようにする"
       empty:
@@ -458,7 +466,6 @@ ja:
       notifications: "お知らせ"
       statistics: "統計"
       desktop_notifications:
-        label: "デスクトップ通知"
         not_supported: "申し訳ありません。そのブラウザは通知をサポートしていません。"
         perm_default: "通知を有効にする"
         perm_denied_btn: "アクセス拒否"
@@ -1500,7 +1507,6 @@ ja:
         placeholder: "新しい所有者のユーザ名"
         instructions:
           other: この {{count}} つの投稿の新しいオーナーを選択してください。（前のオーナー：<b>{{old_user}}</b>）
-        instructions_warn: "この投稿についての通知が新しいユーザにさかのぼって移動されることはないので注意してください。<br>警告: 投稿の関連データの所有権は、新しいユーザに転送されません。 注意して使用してください。"
       change_timestamp:
         title: "タイムスタンプを変更してください。"
         action: "タイムスタンプを変更"
@@ -2065,8 +2071,6 @@ ja:
         reports:
           today: "今日"
           yesterday: "昨日"
-          last_7_days: "過去7日"
-          last_30_days: "過去30日"
           all_time: "All Time"
           7_days_ago: "7日前"
           30_days_ago: "30日前"
@@ -2198,7 +2202,6 @@ ja:
             label: "バックアップ"
             title: "バックアップを行います"
             confirm: "新しくバックアップを行ってもよろしいですか？"
-            without_uploads: "はい(ファイルは含まない)"
           download:
             label: "ダウンロード"
             title: "ダウンロードリンクをメールで送る"
@@ -2766,7 +2769,6 @@ ja:
         enabled: バッジを有効にする
         icon: アイコン
         image: 画像
-        icon_help: "Font Awesomeのクラスか画像のURLを使用してください"
         query: バッジクエリ(SQL)
         target_posts: 投稿を対象
         auto_revoke: 毎日クエリの取り消しを実行

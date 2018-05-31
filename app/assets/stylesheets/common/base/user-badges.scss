@@ -20,15 +20,15 @@
   }
 
   &.badge-type-gold .fa {
-    color: rgb(231, 195, 0) !important;
+    color: $gold !important;
   }
 
   &.badge-type-silver .fa {
-    color: #c0c0c0 !important;
+    color: $silver !important;
   }
 
   &.badge-type-bronze .fa {
-    color: #cd7f32 !important;
+    color: $bronze !important;
   }
 
   &.disabled {

@@ -15,6 +15,20 @@ RSpec.describe MetadataController do
       expect(manifest["name"]).to eq(title)
       expect(manifest["icons"].first["src"]).to eq("http://big.square/png")
     end
+
+    it 'can guess mime types' do
+      SiteSetting.large_icon_url = "http://big.square/ico.jpg"
+      get :manifest
+      manifest = JSON.parse(response.body)
+      expect(manifest["icons"].first["type"]).to eq("image/jpeg")
+    end
+
+    it 'defaults to png' do
+      SiteSetting.large_icon_url = "http://big.square/noidea.bogus"
+      get :manifest
+      manifest = JSON.parse(response.body)
+      expect(manifest["icons"].first["type"]).to eq("image/png")
+    end
   end
 
   describe 'opensearch.xml' do

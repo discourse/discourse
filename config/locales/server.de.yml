@@ -68,6 +68,7 @@ de:
         auto_generated_email_error: "Passiert wenn die Kopfzeile 'precedence' folgendes enthält: list, junk, bulk oder auto_reply, oder eine der anderen Kopfzeilen enthält: auto-submitted, auto-replied oder auto-generated."
         no_body_detected_error: "Passiert, wenn wir keinen Textkörper extrahieren konnten und keine Anhänge gefunden wurden."
         no_sender_detected_error: "Kommt vor, wenn wir keine gültige E-Mail-Adresse im From-Header finden konnten."
+        from_reply_by_address_error: "Passiert wenn der From-Header mit der Antwort E-Mail-Adresse übereinstimmt."
         inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
         silenced_user_error: "Kommt vor, wenn der Absender stummgeschaltet wurde."
         bad_destination_address: "Passiert wenn keine der E-Mail Adressen in den Feldern To/Cc/Bcc zu einer konfigurierten Eingangs-E-Mail-Adresse passt."
@@ -147,6 +148,12 @@ de:
       <<: *errors
   invite:
     not_found: "Dein Einladungsschlüssel ist ungültig. Bitte kontaktiere den Administrator der Seite."
+    not_found_template: |
+      <p>Deine Einladung zu <a href="%{base_url}">%{site_name}</a> wurde bereits zurückgezogen.</p>
+
+      <p>Wenn du dein Passwort noch weißt, kannst du dich <a href="%{base_url}/login">anmelden</a>.</p>
+
+      <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, er/sie <a href='/u/%{username}/summary'>hat schon ein Konto!</a>"
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
@@ -761,10 +768,22 @@ de:
       title: "Neue Benutzer"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Benutzer"
+      description: "Neue Registrierungen in dieser Zeit"
     new_contributors:
       title: "Neue Mitwirkende"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Mitwirkender"
+      description: "Anzahl der Benutzer, die ihren ersten Beitrag in dieser Zeit erstellt haben"
+    dau_by_mau:
+      title: "TAB/MAB"
+      xaxis: "Tag"
+      yaxis: "TAB/MAB"
+      description: "Anzahl der Mitglieder, die sich am vergangenen Tag angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, die das „Klebeverhalten“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
+    daily_engaged_users:
+      title: "Täglich engagierte Benutzer"
+      xaxis: "Tag"
+      yaxis: "Engagierte Benutzer"
+      description: "Anzahl der Benutzer, die innerhalb des letzten Tages einen Beitrag geschrieben oder mit einem Like markiert haben"
     profile_views:
       title: "Profilaufrufe"
       xaxis: "Tag"
@@ -773,10 +792,12 @@ de:
       title: "Themen"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Themen"
+      description: "Neue Themen, die in dieser Zeit erstellt wurden"
     posts:
       title: "Beiträge"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Beiträge"
+      description: "Neue Beiträge, die in dieser Zeit erstellt wurden"
     likes:
       title: "Likes"
       xaxis: "Tag"
@@ -811,15 +832,17 @@ de:
       labels:
         term: Begriff
         searches: Suchen
-        unique: Eindeutig
+        click_through: CTR
     emails:
       title: "Gesendete E-Mails"
       xaxis: "Tag"
       yaxis: "Anzahl der E-Mails"
     user_to_user_private_messages:
+      title: "Benutzer-an-Benutzer (ohne Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
     user_to_user_private_messages_with_replies:
+      title: "Benutzer-zu-Benutzer (mit Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
     system_private_messages:
@@ -866,7 +889,7 @@ de:
       xaxis: "Tag"
       yaxis: "Aufrufe durch Suchmaschinen"
     page_view_total_reqs:
-      title: "Gesamt"
+      title: "Seitenaufrufe"
       xaxis: "Tag"
       yaxis: "Seitenaufrufe insgesamt"
     page_view_logged_in_mobile_reqs:
@@ -1089,7 +1112,6 @@ de:
     version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen auf der Administratorkonsole an."
     new_version_emails: "Sende eine E-Mail an die contact_email Adresse wenn eine neue Version von Discourse verfügbar ist."
     invite_expiry_days: "Tage, die Benutzereinladungen gültig bleiben."
-    invite_passthrough_hours: "Wie viele Stunden ein Benutzer einen bereits eingelösten Einladungsschlüssel zum Anmelden verwenden kann"
     invite_only: "Die öffentliche Registrierungen ist deaktiviert, neue Benutzer müssen explizit vom Team eingeladen werden."
     login_required: "Nur angemeldete Benutzer dürfen Inhalte der Site lesen, anonyme Zugriffe sind verboten."
     min_username_length: "Minimale Zeichenlänge für Benutzernamen. WARNUNG: Wenn bestehende Benutzer oder Gruppen kürzere Namen haben, wird deine Seite nicht mehr funktionieren!"
@@ -1110,8 +1132,11 @@ de:
     sso_overrides_username: "Überschreibt lokalen Benutzernamen mit dem Benutzernamen der externen Site aus dem SSO-Payload (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Benutzernamen auftreten)"
     sso_overrides_name: "Überschreibt den vollen Namen des Benutzers mit den Daten von der externen Site aus dem SSO-Payload bei jedem Login. Außerdem werden lokale Änderungen verhindert."
     sso_overrides_avatar: "Überschreibt das Profilbild des Benutzers mit dem Profilbild aus dem SSO-Payload. Wenn aktiv, dann sollte allow_uploaded_avatars deaktiviert werden."
+    sso_overrides_profile_background: "Ersetzt das Hintergrundbild des Benutzerprofils mit dem Avatar der externen Seite aus den SSO-Daten"
+    sso_overrides_card_background: "Ersetzt das Hintergrundbild der Benutzerkarte mit dem Avatar der externen Seite aus den SSO-Daten"
     sso_not_approved_url: "Nicht genehmigte SSO-Konten zu dieser URL weiterleiten"
     sso_allows_all_return_paths: "Alle Domain für SSO-Return-Paths zulassen (standardmäßig muss der Return Path auf der aktuellen Seite sein)"
+    enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. Dies muss aktiviert sein, damit Einladungen funktionieren. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Login-Methode konfiguriert hast."
     enable_local_logins_via_email: "Erlaube Benutzern, einen einmaligen Anmeldelink anzufordern, der ihnen als E-Mail geschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige wiederkehrenden Gästen einen Hinweis, dass diese sich Anmelden oder Registrieren sollen."
@@ -1296,6 +1321,7 @@ de:
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
     auto_silence_first_post_regex: "Regulärer Ausdruck (ohne Groß- und Kleinschreibung), der dafür sorgt dass entsprechende erste Beiträge von Benutzern stummgeschaltet und in die Genehmigungswarteschlange verschoben werden. Beispiel: raging|a[bc]a sorgt dafür, dass Beiträge, die raging, aba oder aca enthalten, zunächst stummgeschaltet werden. Dies betrifft jedoch nur den ersten Beitrag."
     flags_default_topics: "Zeige gemeldete Themen standardmäßig im Administrationsbereich"
+    min_flags_staff_visibility: "Die minimale Anzahl an Meldungen, die ein Beitrag haben muss, bevor ihn das Team im Administrationsbereich sehen kann."
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste alternativer Vorlagen für eingehende E-Mail-Adressen für das Antworten per E-Mail. Beispiel: %{reply_key}@antwort.example.com|antworten+%{reply_key}@example.com"
@@ -1407,7 +1433,7 @@ de:
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig"
-    notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden behandelt wurden, sende eine Nachricht an das Team. Ein Wert von 0 deaktiviert die Funktion."
+    notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden behandelt wurden, sende eine Nachricht an die Moderatoren. Ein Wert von 0 deaktiviert die Funktion."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die mehr als (n) Tage alt sind."
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (0 = ausgeschaltet)"
@@ -1475,6 +1501,8 @@ de:
     company_full_name: "Firmenname (komplett)"
     company_domain: "Firmendomain"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Vorlagen“, indem du eine Kategorie für Themen-Vorlagen bestimmst."
+    push_notifications_prompt: "Zeige eine Aufforderung zur Benutzerzustimmung an."
+    push_notifications_icon_url: "Das Abzeichen-Icon, das in der Benachrichtigungsecke erscheint. Empfohlene Größe ist 96px × 96px."
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -1651,7 +1679,7 @@ de:
       revoked: "Sende keine E-Mails an '%{email}' bis %{date}."
     ip_address:
       blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
-      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (limit erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
+      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
     website:
       domain_not_allowed: "Webseite ist ungültig. Erlaubte Domains sind: %{domains}"
     auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Seiteneinstellung auto_handle_queued_age."
@@ -2132,6 +2160,13 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Betreff %{former_title}) hat nicht funktioniert.
 
         Keine der Empfängeradressen wurden erkannt oder der Message-ID-Header in der E-Mail ist verändert worden. Bitte stelle sicher, dass du an die richtige E-Mail-Adresse schickst, die vom Team bekanntgegeben wurde.
+    email_reject_old_destination:
+      title: "E-Mail abgelehnt weil alter Empfänger"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Du versuchst, auf eine alte Benachrichtigung zu antworten"
+      text_body_template: |
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination}(mit dem Betreff ) konnte nicht zugestellt werden.
+
+        Aus Sicherheitsgründen akzeptieren wir Antworten auf ursprüngliche Benachrichtigungen nur innerhalb von 90 Tagen. Bitte [besuche das Thema](%{short_url}), um die Unterhaltung fortzusetzen.
     email_reject_topic_not_found:
       title: "E-Mail abgelehnt weil Thema nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema nicht gefunden"
@@ -2296,6 +2331,7 @@ de:
     visit_link_to_respond: "[Rufe das Thema auf](%{base_url}%{url}), um zu antworten."
     visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}), um zu antworten."
     posted_by: "Erstellt von %{username} am %{post_date}"
+    pm_participants: "Teilnehmer:"
     invited_group_to_private_message_body: |
       %{username} hat @%{group_name} eingeladen zu einer Nachricht
 
@@ -2409,6 +2445,17 @@ de:
     user_mentioned:
       title: "Benutzer wurde erwähnt"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      title: "Benutzer hat Nachricht erwähnt"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2955,9 +3002,9 @@ de:
 
       ## [Welche Informationen sammeln wir?](#collect)
 
-      Wir sammeln Informationen von dir, wenn du dich auf unserer Seite registrierst, und erfassten Daten, wenn du dich hier am Forum durch Lesen, Schreiben und Bewertung der geteilten Inhalte beteiligst.
+      Wir sammeln Informationen von dir, wenn du dich auf unserer Seite registrierst, und erfassen Daten, wenn du dich hier am Forum durch Lesen, Schreiben und Bewertung der geteilten Inhalte beteiligst.
 
-      Wenn du dich auf unserer Seite registrierst, wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse einzugeben. Du kannst unsere Seite jedoch möglicherweise auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail verifiziert, die einen eindeutigen Link enthält. Wenn der Link aufgerufen wird, wissen wir, dass du die Kontrolle über die E-Mail-Adresse hast.
+      Wenn du dich auf unserer Seite registrierst, wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse einzugeben. Du kannst unsere Seite jedoch auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail verifiziert, die einen eindeutigen Link enthält. Wenn der Link aufgerufen wird, wissen wir, dass du die Kontrolle über die E-Mail-Adresse hast.
 
       Wenn du registrierst bist und etwas schreibst, erfassen wir die IP-Adresse, von der der Beitrag stammt. Wir behalten möglicherweise Serverprotokolle, die die IP-Adresse jeder Anfrage an unseren Server enthält.
 
@@ -2967,7 +3014,7 @@ de:
 
       Jede der Informationen, die wir von dir sammeln, kann auf eine der folgenden Arten genutzt werden:
 
-      *   Um deine Erfahrung zu personalisieren &mdash; deine Information hilft uns dabei, besser auf deine individuellen Bedürfnise einzugehen.
+      *   Um deine Erfahrung zu personalisieren &mdash; deine Information hilft uns dabei, besser auf deine individuellen Bedürfnisse einzugehen.
       *   Um unsere Seite zu verbessern &mdash; wir streben kontinuierlich dazu, das Angebot unserer Seite auf Grundlage der Informationen und des Feedbacks zu verbessern, das wir von dir erhalten.
       *   Um unseren Kundendienst zu verbessern &mdash; deine Information hilft uns, effizienter auf deine Anfragen an den Kundendienst und deine Hilfsbedürfnisse einzugehen.
       *   Um wiederkehrende E-Mails zu senden &mdash; Die E-Mail-Adresse, die du angibst, kann genutzt werden, um dir Informationen und Benachrichtigungen zu senden, die du zu Änderungen an Themen oder in Bezug auf deinen Benutzernamen angefordert hast, um dir auf Nachfragen, Anfragen oder Fragen zu antworten.
@@ -2980,18 +3027,18 @@ de:
 
       <a name="data-retention"></a>
 
-      ## [Was sehen eure Bestimmungen zur Datenaufbewahrung aus?](#data-retention)
+      ## [Wie sehen unsere Bestimmungen zur Datenaufbewahrung aus?](#data-retention)
 
       Wir bemühen uns nach bestem Wissen und Gewissen:
 
-      *   Serverprotokolle, die IP-Adressen aller Anfragen an unseren Server erhalten, nicht länger als 90 Tage zu speichern.
+      *   Serverprotokolle, die IP-Adressen aller Anfragen an unseren Server enthalten, nicht länger als 90 Tage zu speichern.
       *   IP-Adressen, die mit registrierten Benutzern und ihren Beiträgen verknüpft sind, nicht länger als 5 Jahre zu speichern.
 
       <a name="cookies"></a>
 
       ## [Verwenden wir Cookies?](#cookies)
 
-      Ja. Cookies sind kleine Dateien, die eine Seite bzw. ihr Dienstleister über einen Browser auf die Festplatte deines Computers überträgst (sofern du zustimmst). Diese Cookies erlauben es der Seite, deinen Browser wiederzuerkennen und, sofern du ein registriertes Konto hast, diesen deinem registrierten Konto zuzuordnen.
+      Ja. Cookies sind kleine Dateien, die eine Seite bzw. ihr Dienstleister über einen Browser auf die Festplatte deines Computers überträgt (sofern du zustimmst). Diese Cookies erlauben es der Seite, deinen Browser wiederzuerkennen und, sofern du ein registriertes Konto hast, diesen deinem registrierten Konto zuzuordnen.
 
       Wir verwenden Cookies, um deine Einstellungen für deine nächsten Besuche zu verstehen und zu speichern und um aggregierte Daten über unseren Internetverkehr und Interaktionen auf der Seite zu berechnen, damit wir in der Zukunft eine bessere Seitenerfahrung und bessere Werkzeuge anbieten können. Wir beauftragen möglicherweise Drittanbieter, die uns dabei unterstützen, unsere Seitenbesucher besser zu verstehen. Diese Dienstleister sind nicht befugt, unsere gesammelten Informationen anders zu verwenden als zur Unterstützung und Verbesserung unseres Geschäfts.
 
@@ -2999,39 +3046,39 @@ de:
 
       ## [Geben wir irgendwelche Informationen an Dritte weiter?](#disclose)
 
-      Weder verkaufen oder handeln wir deine personenbezogenen Daten noch übermitteln wir diese an Dritte. Dies schließt nicht Drittanbieter ein, die uns beim Betrieb unserer Seite, bei der Durchführung unseres Geschäfts oder dir helfen, solange diese Parteien einwilligen, diese Informationen vertraulich zu behandeln. We geben deine Informationen möglicherweise frei, wenn wir glauben, dass die Freigabe zweckmäßig ist, um das Gesetz einzuhalten, unsere Seitenrichtlinien durchzusetzen oder unsere oder fremde Rechte, Werte oder Sicherheit zu schützen. Nicht-personenbezogene Daten werden möglcherweise anderen Parteien für Marketing, Werbung und andere Zwecke zugänglich gemacht.
+      Weder verkaufen oder handeln wir deine personenbezogenen Daten noch übermitteln wir diese an Dritte. Dies schließt nicht Drittanbieter ein, die uns beim Betrieb unserer Seite, bei der Durchführung unseres Geschäfts oder dir helfen, solange diese Parteien einwilligen, diese Informationen vertraulich zu behandeln. Wir geben deine Informationen möglicherweise frei, wenn wir glauben, dass die Freigabe zweckmäßig ist, um das Gesetz einzuhalten, unsere Nutzungsbedingungen durchzusetzen oder unsere oder fremde Rechte, Werte oder Sicherheit zu schützen. Nicht-personenbezogene Daten werden möglicherweise anderen Parteien für Marketing, Werbung und andere Zwecke zugänglich gemacht.
 
       <a name="third-party"></a>
 
-      ## [Linsk auf fremde Webseiten](#third-party)
+      ## [Links auf fremde Webseiten](#third-party)
 
-      Gelegentlich können wir Produkte oder Dienste von Dritten nach unserer Wahl auf unserer Seite einbinden oder darauf bewerben. Diese Drittanbieter haben eigene und unabhängige Datenschutzbestimmungen. Wir übernehmen daher keine Verantwortung oder Haftung für den Inhalt und die Aktivitäten dieser verknüpften Seite. Dennoch sind wir bemüht, die Integrität unserer Seite zu schützen und freuen uns über jedes Feedback zu diesen Seiten.
+      Gelegentlich können wir Produkte oder Dienste von Dritten nach unserer Wahl auf unserer Seite einbinden oder darauf bewerben. Diese Drittanbieter haben eigene und unabhängige Datenschutzrichtlinien. Wir übernehmen daher keine Verantwortung oder Haftung für den Inhalt und die Aktivitäten dieser verknüpften Seite. Dennoch sind wir bemüht, die Integrität unserer Seite zu schützen und freuen uns über jedes Feedback zu diesen Seiten.
 
       <a name="coppa"></a>
 
       ## [Gesetz zum Schutz der Privatsphäre von Kindern im Internet](#coppa)
 
-      Unsere Seite, Produkte und Dienstleistungen richten sich alle an Menschen, die mindestens 13 Jahre oder älter sind. Wenn sich dieser Server in der USA befindet und du unter 13 Jahre alt bist, so benutze diese Seite gemäß der Anforderungen des COPPA-Gesetzes ([Children's Online Privacy Protection Act](https://de.wikipedia.org/wiki/Children%E2%80%99s_Online_Privacy_Protection_Act)) nicht.
+      Unsere Seite, Produkte und Dienstleistungen richten sich alle an Menschen, die mindestens 13 Jahre oder älter sind. Wenn sich dieser Server in der USA befindet und du unter 13 Jahre alt bist, so benutze diese Seite gemäß der Anforderungen des COPPA-Gesetzes ([Children's Online Privacy Protection Act](https://de.wikipedia.org/wiki/Children%27ss_Online_Privacy_Protection_Act)) nicht.
 
       <a name="online"></a>
 
-      ## [Online-Datenschutzbestimmungen](#online)
+      ## [Online-Datenschutzrichtlinie](#online)
 
-      Diese Online-Datenschutzbestimmungen gilt nur für Informationen, die durch unsere Seite gesammelt werden, und nicht für offline erfasste Informationen.
+      Diese Online-Datenschutzrichtlinie gilt nur für Informationen, die durch unsere Seite gesammelt werden, und nicht für offline erfasste Informationen.
 
       <a name="consent"></a>
 
       ## [Deine Zustimmung](#consent)
 
-      Indem du unsere Seite benutzt, stimmst du den Datenschutzschutzbestimmungen unserer Webseite zu.
+      Indem du unsere Seite benutzt, stimmst du der Datenschutzrichtlinie unserer Webseite zu.
 
       <a name="changes"></a>
 
-      ## [Änderungen unserer Datenschutzbestimmungen](#changes)
+      ## [Änderungen unserer Datenschutzrichtlinie](#changes)
 
-      Wenn wir uns dazu entscheiden, unsere Datenschutzbestimmungen zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
+      Wenn wir uns dazu entscheiden, unsere Datenschutzrichtlinie zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
 
-      Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am am 31. Mai 2013.
+      Dieses Dokument ist als CC-BY-SA lizenziert. Es wurde zuletzt aktualisiert am 31. Mai 2013.
   badges:
     editor:
       name: Bearbeiter
@@ -3417,3 +3464,14 @@ de:
   search_logs:
     graph_title: "Anzahl Suchen"
   joined: "Beigetreten"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} hat dich erwähnt in "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} hat dich erwähnt in "%{topic}" - %{site_title}'
+      quoted: '%{username} hat dich zitiert in "%{topic}" - %{site_title}'
+      replied: '%{username} hat dir geantwortet in "%{topic}" - %{site_title}'
+      posted: '%{username} hat geschrieben in "%{topic}" - %{site_title}'
+      private_message: '%{username} hat dir eine Nachricht geschickt in "%{topic}" - %{site_title}'
+      linked: '%{username} hat deinen Beitrag verlinkt in "%{topic}" - %{site_title}'
+      confirm_title: 'Benachrichtigungen aktiviert – %{site_title}'
+      confirm_body: 'Erfolgreich! Benachrichtigungen wurden aktiviert.'

@@ -10,7 +10,7 @@ tr_TR:
     poll:
       voters:
         one: "oylayan"
-        other: "oylayan"
+        other: "oylayanlar"
       total_votes:
         one: "toplam oy"
         other: "toplam oy"

@@ -98,6 +98,7 @@ class AdminUserIndexQuery
     when 'suspended'  then @query.suspended
     when 'pending'    then @query.not_suspended.where(approved: false, active: true)
     when 'suspect'    then suspect_users
+    when 'staged'     then @query.where(staged: true)
     end
   end
 

@@ -359,7 +359,7 @@ const tags = [
   ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
-  Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
+  Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"), Tag.keep("kbd"),
   Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(), Tag.table(), Tag.tr(), Tag.ol(), Tag.list("ul"),
 ];
 

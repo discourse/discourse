@@ -225,8 +225,8 @@ fr:
       our_moderators: "Nos modérateurs"
       stat:
         all_time: "Depuis toujours"
-        last_7_days: "Les 7 derniers jours"
-        last_30_days: "Les 30 derniers jours"
+        last_7_days: "Derniers 7"
+        last_30_days: "Derniers 30"
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
@@ -407,7 +407,6 @@ fr:
         all: "Tous les groupes"
         empty: "Il n'y a aucun groupe visible."
         filter: "Filtrer par type de groupe"
-        all_groups: "Tous les groupes"
         owner_groups: "Groupes dont je suis propriétaire"
         close_groups: "Groupes fermés"
         automatic_groups: "Groupes automatiques"
@@ -555,7 +554,7 @@ fr:
       notifications: "Notifications"
       statistics: "Statistiques"
       desktop_notifications:
-        label: "Notifications de bureau"
+        label: "Notifications actives"
         not_supported: "Les notifications ne sont pas supportées avec ce navigateur. Désolé."
         perm_default: "Activer les notifications"
         perm_denied_btn: "Permission refusée"
@@ -563,6 +562,7 @@ fr:
         disable: "Désactiver les notifications"
         enable: "Activer les notifications"
         each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
+        consent_prompt: "Souhaitez-vous recevoir des notifications actives quand on répond à vos messages ?"
       dismiss: 'Ignorer'
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
@@ -670,7 +670,6 @@ fr:
       second_factor:
         title: "Authentification à deux facteurs"
         disable: "Désactiver l'authentification à deux facteurs"
-        enable: "pour une sécurité accrue des comptes"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
         enable_description: |
@@ -1310,6 +1309,8 @@ fr:
         posted: '{{username}} a posté dans « {{topic}} » - {{site_title}}'
         private_message: '{{username}} vous a envoyé un message direct dans « {{topic}} » - {{site_title}}'
         linked: '{{username}} a créé un lien vers votre message posté dans « {{topic}} » - {{site_title}}'
+        confirm_title: 'Notifications activées - %{site_title}'
+        confirm_body: 'Les notifications ont été activées.'
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -1758,7 +1759,7 @@ fr:
         instructions:
           one: Veuillez choisir un nouvel auteur pour le message de <b>{{old_user}}</b>.
           other: Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>.
-        instructions_warn: "Aucune notification à propos de ce message ne sera transférée rétroactivement au nouvel utilisateur. <br>Attention : actuellement, aucune donnée liée aux messages n'est transféré vers le nouvel utilisateur. À utiliser avec précaution."
+        instructions_warn: "Notez que les notifications au sujet de ce message ne seront pas transferrés au nouvel utilisateur de façon rétroactive."
       change_timestamp:
         title: "Modifier la date/heure…"
         action: "modifier la date/heure"
@@ -2483,6 +2484,8 @@ fr:
       dashboard:
         title: "Tableau de bord"
         last_updated: "Tableau de bord actualisé le :"
+        find_old: "Vous cherchez l'ancien tableau de bord ?"
+        old_link: "retrouvez-le ici"
         version: "Version"
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
@@ -2517,10 +2520,11 @@ fr:
         whats_new_in_discourse: "Quoi de neuf dans Discourse ?"
         activity_metrics: Mesures d'activité
         reports:
+          trend_title: "%{percent} modifié. Actuellement %{current}, était %{prev} pour la période précédente."
           today: "Aujourd'hui"
           yesterday: "Hier"
-          last_7_days: "Les 7 derniers jours"
-          last_30_days: "Les 30 derniers jours"
+          last_7_days: "Derniers 7"
+          last_30_days: "Derniers 30"
           all_time: "Depuis toujours"
           7_days_ago: "il y a 7 jours"
           30_days_ago: "il y a 30 jours"
@@ -2531,6 +2535,10 @@ fr:
           start_date: "Date de début"
           end_date: "Date de fin"
           groups: "Tous les groupes"
+          disabled: "Ce rapport est désactivé"
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Journal des recherches</a>'
+            disabled: 'Rapport sur les tendances de recherche désactivé. Activé <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collectioner les données.'
       commits:
         latest_changes: "Dernières modifications : veuillez mettre à jour régulièrement !"
         by: "par"
@@ -2601,6 +2609,7 @@ fr:
           type: "Type"
           users: "Utilisateurs"
           last_flagged: "Derniers signalés"
+          no_results: "Il n'y a pas de sujets signalés."
         short_names:
           off_topic: "hors-sujet"
           inappropriate: "inapproprié"
@@ -2810,7 +2819,7 @@ fr:
             label: "Sauvegarder"
             title: "Créer une sauvegarde"
             confirm: "Voulez-vous démarrer une nouvelle sauvegarde ?"
-            without_uploads: "Oui (ne pas inclure les fichiers)"
+            without_uploads: "Oui (n'incluez pas de téléversements)"
           download:
             label: "Télécharger"
             title: "Envoyer un courriel avec un lien de téléchargement"
@@ -2893,6 +2902,10 @@ fr:
           upload_file_tip: "Choisir un fichier à téléverser (png, woff2, etc.)"
           variable_name: "Nom de variable SCSS :"
           variable_name_invalid: "Nom de variable invalide. Seuls les caractères alphanumériques sont autorisés. Doit commencer par une lettre. Doit être unique."
+          variable_name_error:
+            invalid_syntax: "Nom de variable invalide. Seuls les caractères alphanumériques sont autorisés. Doit commencer par une lettre."
+            no_overwrite: "Nom de variable invalide. Ne doit pas écraser une variable existante."
+            must_be_unique: "Nom de variable invalide. Doit être unique."
           upload: "Upload"
           child_themes_check: "Thème incluant d'autres thèmes"
           css_html: "CSS/HTML personnalisé"
@@ -3139,6 +3152,9 @@ fr:
             disabled_second_factor: "désactiver l'authentification à deux facteurs"
             topic_published: "sujet publié"
             post_approved: "message approuvé"
+            create_badge: "créer un badge"
+            change_badge: "Modifier un badge"
+            delete_badge: "supprimer un badge"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3208,6 +3224,7 @@ fr:
           placeholder_regexp: "expression régulière"
           add: 'Ajouter'
           success: 'Succès'
+          exists: 'Existe déjà'
           upload: "Envoyer"
           upload_successful: "Envoi réussi. Les mots ont été ajoutés."
       impersonate:
@@ -3231,6 +3248,7 @@ fr:
           suspended: 'Suspendus'
           silenced: 'Sous silence'
           suspect: 'Suspects'
+          staged: 'Distant'
         approved: "Approuvé ?"
         approved_selected:
           one: approuver l'utilisateur
@@ -3253,6 +3271,7 @@ fr:
           silenced: 'Utilisateurs sous silence'
           suspended: 'Utilisateurs suspendus'
           suspect: 'Utilisateurs suspects'
+          staged: 'Utilisateurs distants'
         reject_successful:
           one: Utilisateur rejeté avec succès.
           other: '%{count} utilisateurs rejetés avec succès.'
@@ -3476,6 +3495,7 @@ fr:
       site_settings:
         title: 'Paramètres'
         no_results: "Aucun résultat trouvé."
+        more_than_30_results: "Il y a plus de 30 résultats. Veuillez affiner votre recherche ou sélectionner une catégorie."
         clear_filter: "Effacer"
         add_url: "ajouter URL"
         add_host: "ajouter hôte"
@@ -3542,7 +3562,8 @@ fr:
         enabled: Activer le badge
         icon: Icône
         image: Image
-        icon_help: "Utilisez une classe CSS Font Awesome ou une URL d'image"
+        icon_help: "Utiliser une classe de Font Awesome"
+        image_help: "Entrez l'URL de l'image (remplace le champ de l'icône si les deux sont définis)"
         query: Requête du badge (SQL)
         target_posts: Requête sur les messages
         auto_revoke: Exécuter la requête de révocation quotidiennement

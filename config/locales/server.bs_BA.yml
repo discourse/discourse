@@ -267,9 +267,7 @@ bs_BA:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
       xaxis: "Day"
-      yaxis: "Number of new users"
     profile_views:
       xaxis: "Dan"
     topics:
@@ -423,7 +421,6 @@ bs_BA:
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."

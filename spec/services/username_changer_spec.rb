@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe UsernameChanger do
+  before do
+    SiteSetting.queue_jobs = false
+  end
 
   describe '#change' do
     let(:user) { Fabricate(:user) }
@@ -8,21 +11,13 @@ describe UsernameChanger do
     context 'success' do
       let(:new_username) { "#{user.username}1234" }
 
-      before do
-        @result = UsernameChanger.change(user, new_username)
-      end
-
-      it 'returns true' do
-        expect(@result).to eq(true)
-      end
-
       it 'should change the username' do
+        @result = UsernameChanger.change(user, new_username)
+
+        expect(@result).to eq(true)
+
         user.reload
         expect(user.username).to eq(new_username)
-      end
-
-      it 'should change the username_lower' do
-        user.reload
         expect(user.username_lower).to eq(new_username.downcase)
       end
     end
@@ -32,21 +27,12 @@ describe UsernameChanger do
       let(:username_before_change) { user.username }
       let(:username_lower_before_change) { user.username_lower }
 
-      before do
-        @result = UsernameChanger.change(user, wrong_username)
-      end
-
-      it 'returns false' do
-        expect(@result).to eq(false)
-      end
-
       it 'should not change the username' do
+        @result = UsernameChanger.change(user, wrong_username)
+        expect(@result).to eq(false)
+
         user.reload
         expect(user.username).to eq(username_before_change)
-      end
-
-      it 'should not change the username_lower' do
-        user.reload
         expect(user.username_lower).to eq(username_lower_before_change)
       end
     end
@@ -54,18 +40,16 @@ describe UsernameChanger do
     describe 'change the case of my username' do
       let!(:myself) { Fabricate(:user, username: 'hansolo') }
 
-      it 'should return true' do
-        expect(UsernameChanger.change(myself, "HanSolo")).to eq(true)
-      end
-
       it 'should change the username' do
-        UsernameChanger.change(myself, "HanSolo")
-        expect(myself.reload.username).to eq('HanSolo')
-      end
+        expect do
+          expect(UsernameChanger.change(myself, "HanSolo", myself)).to eq(true)
+        end.to change { UserHistory.count }.by(1)
 
-      it "logs the action" do
-        expect { UsernameChanger.change(myself, "HanSolo", myself) }.to change { UserHistory.count }.by(1)
-        expect { UsernameChanger.change(myself, "HanSolo", myself) }.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
+        expect(myself.reload.username).to eq('HanSolo')
+
+        expect do
+          UsernameChanger.change(myself, "HanSolo", myself)
+        end.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
       end
     end
 
@@ -95,8 +79,14 @@ describe UsernameChanger do
       let(:user) { Fabricate(:user, username: 'foo') }
       let(:topic) { Fabricate(:topic, user: user) }
 
-      before { UserActionCreator.enable }
-      after { UserActionCreator.disable }
+      before do
+        UserActionCreator.enable
+        Discourse.expects(:warn_exception).never
+      end
+
+      after do
+        UserActionCreator.disable
+      end
 
       def create_post_and_change_username(args = {}, &block)
         post = create_post(args.merge(topic_id: topic.id))
@@ -256,6 +246,13 @@ describe UsernameChanger do
           expect(post.revisions[0].modifications["raw"][0]).to eq("Hello @bar")
           expect(post.revisions[0].modifications["cooked"][0]).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a></p>))
         end
+
+        it 'works when users are mentioned with HTML' do
+          post = create_post_and_change_username(raw: '<a class="mention">@foo</a> and <a class="mention">@someuser</a>')
+
+          expect(post.raw).to eq('<a class="mention">@bar</a> and <a class="mention">@someuser</a>')
+          expect(post.cooked).to match_html('<p><a class="mention">@bar</a> and <a class="mention">@someuser</a></p>')
+        end
       end
 
       context 'quotes' do
@@ -371,28 +368,21 @@ describe UsernameChanger do
             expect(post.raw).to eq(expected_raw)
             expect(post.cooked).to match_html(expected_cooked)
           end
-
-          it 'replaces the username in quote tags when the post is marked as deleted' do
-            post = create_post_and_change_username(raw: raw) do |p|
-              PostDestroyer.new(p.user, p).destroy
-            end
-
-            expect(post.raw).to_not include("foo")
-            expect(post.cooked).to_not include("foo")
-            expect(post.revisions.count).to eq(1)
-
-            expect(post.revisions[0].modifications["raw"][0]).to eq(expected_raw)
-            expect(post.revisions[0].modifications["cooked"][0]).to match_html(expected_cooked)
-          end
         end
       end
 
       context 'oneboxes' do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
-        let(:avatar_url) { user.avatar_template.gsub("{size}", "40") }
+        let(:avatar_url) { user_avatar_url(user) }
+        let(:evil_trout) { Fabricate(:evil_trout) }
+        let(:another_quoted_post) { create_post(user: evil_trout, topic: topic, post_number: 2, raw: "evil post") }
 
         def protocol_relative_url(url)
           url.sub(/^https?:/, '')
+        end
+
+        def user_avatar_url(u)
+          u.avatar_template.gsub("{size}", "40")
         end
 
         it 'updates avatar for linked topics and posts' do
@@ -426,6 +416,48 @@ describe UsernameChanger do
             </p>
           HTML
         end
+
+        it 'does not update the wrong avatar' do
+          raw = "#{quoted_post.full_url}\n#{another_quoted_post.full_url}"
+          post = create_post_and_change_username(raw: raw)
+
+          expect(post.raw).to eq(raw)
+
+          expect(post.cooked).to match_html(<<~HTML)
+            <p><aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
+              <div class="title">
+                <div class="quote-controls"></div>
+                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
+              </div>
+              <blockquote>
+                quoted post
+              </blockquote>
+            </aside>
+            <br>
+            <aside class="quote" data-post="#{another_quoted_post.post_number}" data-topic="#{another_quoted_post.topic.id}">
+              <div class="title">
+                <div class="quote-controls"></div>
+                <img alt="" width="20" height="20" src="#{user_avatar_url(evil_trout)}" class="avatar">
+                <a href="#{protocol_relative_url(another_quoted_post.full_url)}">#{another_quoted_post.topic.title}</a>
+              </div>
+              <blockquote>
+                evil post
+              </blockquote>
+            </aside>
+            </p>
+          HTML
+        end
+      end
+
+      it 'updates username in small action posts' do
+        invited_by = Fabricate(:user)
+        p1 = topic.add_small_action(invited_by, 'invited_user', 'foo')
+        p2 = topic.add_small_action(invited_by, 'invited_user', 'foobar')
+        UsernameChanger.change(user, 'bar')
+
+        expect(p1.reload.custom_fields['action_code_who']).to eq('bar')
+        expect(p2.reload.custom_fields['action_code_who']).to eq('foobar')
       end
     end
 

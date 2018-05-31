@@ -18,7 +18,6 @@ export default Ember.Component.extend(CardContentsBase, CanCheckEmails, CleansUp
   showFilter: Ember.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
   showName: propertyNotEqual('user.name', 'user.username'),
   hasUserFilters: Ember.computed.gt('postStream.userFilters.length', 0),
-  isSuspended: Ember.computed.notEmpty('user.suspend_reason'),
   showMoreBadges: Ember.computed.gt('moreBadgesCount', 0),
   showDelete: Ember.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: Ember.computed.not('user.isBasic'),

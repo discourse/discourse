@@ -16,7 +16,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   _topic: null,
 
   @observes('currentUser.unread_notifications', 'currentUser.unread_private_messages')
-  _notificationsChanged() {
+  notificationsChanged() {
     this.queueRerender();
   },
 

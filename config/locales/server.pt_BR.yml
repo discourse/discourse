@@ -615,9 +615,7 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Número de visitas"
     signups:
-      title: "Novos Usuários"
       xaxis: "Dia"
-      yaxis: "Número de usuários novos"
     profile_views:
       title: "Visualizações de Perfil de Usuário"
       xaxis: "Dia"
@@ -701,7 +699,6 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Visualizações por indexadores web"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Dia"
       yaxis: "Visualizações totais"
     page_view_logged_in_mobile_reqs:
@@ -874,7 +871,6 @@ pt_BR:
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Quantos dias as chaves de convite são válidas."
-    invite_passthrough_hours: "Quando tempo um usuário pode usar uma chave de convite previamente usada para logar, em horas"
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
     min_password_length: "Comprimento mínimo da senha."
     min_admin_password_length: "Tamanho de senha mínima para Administradores."

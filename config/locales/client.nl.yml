@@ -215,8 +215,6 @@ nl:
       our_moderators: "Onze moderators"
       stat:
         all_time: "Sinds het begin"
-        last_7_days: "Afgelopen 7 dagen"
-        last_30_days: "Afgelopen 30 dagen"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Berichten"
@@ -493,7 +491,6 @@ nl:
       notifications: "Meldingen"
       statistics: "Statistieken "
       desktop_notifications:
-        label: "Bureaubladmeldingen"
         not_supported: "Meldingen worden in deze browser niet ondersteund. Sorry."
         perm_default: "Meldingen inschakelen"
         perm_denied_btn: "Toestemming geweigerd"
@@ -1567,7 +1564,6 @@ nl:
         instructions:
           one: Kies de nieuwe eigenaar van het bericht door <b>{{old_user}}</b>.
           other: Kies de nieuwe eigenaar van de {{count}} berichten door <b>{{old_user}}</b>.
-        instructions_warn: "Let er op dat meldingen over dit bericht niet met terugwerkende kracht aan de nieuwe gebruiker worden overgedragen. <br>Waarschuwing: momenteel worden geen berichtafhankelijke gegevens aan de nieuwe gebruiker overgedragen. Wees dus voorzichtig met het gebruik hiervan."
       change_timestamp:
         title: "Tijdstempel wijzigen..."
         action: "tijdstempel wijzigen"
@@ -2266,8 +2262,6 @@ nl:
         reports:
           today: "Vandaag"
           yesterday: "Gisteren"
-          last_7_days: "Afgelopen 7 dagen"
-          last_30_days: "Afgelopen 30 dagen"
           all_time: "Sinds het begin"
           7_days_ago: "7 dagen geleden"
           30_days_ago: "30 dagen geleden"
@@ -2474,7 +2468,6 @@ nl:
             label: "Back-up maken"
             title: "Een back-up maken"
             confirm: "Wilt u een nieuwe back-up starten?"
-            without_uploads: "Ja (geen bestanden bijvoegen)"
           download:
             label: "Downloaden"
             title: "E-mail met downloadkoppeling verzenden"
@@ -3131,7 +3124,6 @@ nl:
         enabled: Badge inschakelen
         icon: Pictogram
         image: Afbeelding
-        icon_help: "Gebruik ofwel een Font Awesome-klasse of een URL naar een afbeelding"
         query: Badgequery (SQL)
         target_posts: Geassocieerde berichten opvragen
         auto_revoke: Intrekkingsquery dagelijks uitvoeren

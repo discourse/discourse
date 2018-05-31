@@ -399,9 +399,7 @@ sq:
       xaxis: "Ditë"
       yaxis: "Numri i vizitave"
     signups:
-      title: "Përdorues të rinj"
       xaxis: "Ditë"
-      yaxis: "Numri i përdoruesve të rinj"
     profile_views:
       xaxis: "Ditë"
     topics:
@@ -478,7 +476,6 @@ sq:
       title: "Web Crawlers"
       xaxis: "Day"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Day"
     page_view_logged_in_mobile_reqs:
       xaxis: "Ditë"
@@ -617,7 +614,6 @@ sq:
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."

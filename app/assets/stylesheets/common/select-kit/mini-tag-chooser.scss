@@ -58,6 +58,7 @@
         .collection-header {
           max-height: 125px;
           overflow-y: auto;
+          flex: 1 0 auto;
 
           .selected-tags {
             display: flex;

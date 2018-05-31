@@ -16,8 +16,10 @@ fa_IR:
     default_poll_must_have_at_least_2_options: "نظرسنجی باید حداقل 2 گزینه داشته باشد."
     named_poll_must_have_at_least_2_options: "اسم نظرسنجی <strong>%{name}</strong> باید  حداقل 2 گزینه داشته باشد. "
     default_poll_must_have_less_options:
+      one: "نظرسنجی باید کمتر از %{count} گزینه داشته باشد."
       other: "نظرسنجی باید کمتر از %{count} گزینه داشته باشد."
     named_poll_must_have_less_options:
+      one: "نظرسنجی با نام <strong>%{name}</strong> باید کمتر از %{count} گزینه داشته باشد."
       other: "نظرسنجی با نام <strong>%{name}</strong> باید کمتر از %{count} گزینه داشته باشد."
     default_poll_must_have_different_options: "نظرسنجی باید گزینه های متفاوت داشته باشد. "
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."

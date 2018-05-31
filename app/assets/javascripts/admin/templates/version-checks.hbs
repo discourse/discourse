@@ -1,73 +1,83 @@
-<div class="dashboard-stats version-check {{if versionCheck.critical_updates 'critical' 'normal'}}">
-  <table class="table table-condensed table-hover">
-    {{custom-html name="upgrade-header" versionCheck=versionCheck tagName="thead"}}
-  </table>
+      <div class="section-title">
+        <h2>{{i18n 'admin.dashboard.version'}}</h2>
+      </div>
+      <div class="dashboard-stats version-check {{if versionCheck.critical_updates 'critical' 'normal'}}">
 
-  <table class="table table-condensed table-hover">
-    <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>{{i18n 'admin.dashboard.installed_version'}}</th>
-        <th colspan="3">{{i18n 'admin.dashboard.latest_version'}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <td class="title">{{i18n 'admin.dashboard.version'}}</td>
-      <td class="version-number"><a href={{versionCheck.gitLink}} target="_blank">{{dash-if-empty versionCheck.installed_describe}}</a></td>
+      <div class="version-number">
+        <h4>{{i18n 'admin.dashboard.installed_version'}}</h4>
+        <h3><a href={{versionCheck.gitLink}} target="_blank">{{dash-if-empty versionCheck.installed_describe}}</a></h3>
+      </div>
 
       {{#if versionCheck.noCheckPerformed}}
-        <td class="version-number">&mdash;</td>
-        <td class="face">
-          <span class="icon critical-updates-available">{{d-icon "frown-o"}}</span>
-        </td>
-        <td class="version-notes">
-          <span class="normal-note">{{i18n 'admin.dashboard.no_check_performed'}}</span>
-        </td>
+        <div class="version-number"> 
+          <h4>{{i18n 'admin.dashboard.latest_version'}}</h4>  
+          <h3>&mdash;</h3>
+        </div>
+        <div class="version-status">
+          <div class="face">
+            <span class="icon critical-updates-available">{{d-icon "frown-o"}}</span>
+          </div>
+          <div class="version-notes">
+            <span class="normal-note">{{i18n 'admin.dashboard.no_check_performed'}}</span>
+          </div>
+        </div>
       {{else}}
         {{#if versionCheck.stale_data}}
-          <td class="version-number">{{#if versionCheck.version_check_pending}}{{dash-if-empty versionCheck.installed_version}}{{/if}}</td>
-          <td class="face">
-            {{#if versionCheck.version_check_pending}}
-              <span class='icon up-to-date'>{{d-icon "smile-o"}}</span>
-            {{else}}
-              <span class="icon critical-updates-available">{{d-icon "frown-o"}}</span>
-            {{/if}}
-          </td>
-          <td class="version-notes">
-            <span class="normal-note">
+          <div class="version-number">
+            <h4>{{i18n 'admin.dashboard.latest_version'}}</h4>  
+            <h3>{{#if versionCheck.version_check_pending}}{{dash-if-empty versionCheck.installed_version}}{{/if}}</h3>
+            </div>
+          <div class="version-status">
+            <div class="face">
               {{#if versionCheck.version_check_pending}}
-                {{i18n 'admin.dashboard.version_check_pending'}}
+                <span class='icon up-to-date'>{{d-icon "smile-o"}}</span>
               {{else}}
-                {{i18n 'admin.dashboard.stale_data'}}
+                <span class="icon critical-updates-available">{{d-icon "frown-o"}}</span>
               {{/if}}
-            </span>
-          </td>
-        {{else}}
-          <td class="version-number">{{dash-if-empty versionCheck.latest_version}}</td>
-          <td class="face">
-            {{#if versionCheck.upToDate }}
-            <span class='icon up-to-date'>{{d-icon "smile-o"}}</span>
-            {{else}}
-              <span class="icon {{if versionCheck.critical_updates 'critical-updates-available' 'updates-available'}}">
-                {{#if versionCheck.behindByOneVersion}}
-                  {{d-icon "meh-o"}}
+            </div>
+            <div class="version-notes">
+              <span class="normal-note">
+                {{#if versionCheck.version_check_pending}}
+                  {{i18n 'admin.dashboard.version_check_pending'}}
                 {{else}}
-                  {{d-icon "frown-o"}}
+                  {{i18n 'admin.dashboard.stale_data'}}
                 {{/if}}
               </span>
-            {{/if}}
-          </td>
-          <td class="version-notes">
-            {{#if versionCheck.upToDate }}
-              {{i18n 'admin.dashboard.up_to_date'}}
-            {{else}}
-              <span class="critical-note">{{i18n 'admin.dashboard.critical_available'}}</span>
-              <span class="normal-note">{{i18n 'admin.dashboard.updates_available'}}</span>
-              {{i18n 'admin.dashboard.please_upgrade'}}
-            {{/if}}
-          </td>
+            </div>
+          </div>
+        {{else}}
+          <div class="version-number">
+            <h4>{{i18n 'admin.dashboard.latest_version'}}</h4>  
+            <h3>{{dash-if-empty versionCheck.latest_version}}</h3>
+          </div>
+          <div class="version-status">
+            <div class="face">
+              {{#if versionCheck.upToDate }}
+              <span class='icon up-to-date'>{{d-icon "smile-o"}}</span>
+              {{else}}
+                <span class="icon {{if versionCheck.critical_updates 'critical-updates-available' 'updates-available'}}">
+                  {{#if versionCheck.behindByOneVersion}}
+                    {{d-icon "meh-o"}}
+                  {{else}}
+                    {{d-icon "frown-o"}}
+                  {{/if}}
+                </span>
+              {{/if}}
+            </div>
+            <div class="version-notes">
+              {{#if versionCheck.upToDate }}
+                {{i18n 'admin.dashboard.up_to_date'}}
+              {{else}}
+                <span class="critical-note">{{i18n 'admin.dashboard.critical_available'}}</span>
+                <span class="normal-note">{{i18n 'admin.dashboard.updates_available'}}</span>
+                {{i18n 'admin.dashboard.please_upgrade'}}
+              {{/if}}
+            </div>
+          </div>
+
         {{/if}}
       {{/if}}
-    </tbody>
-  </table>
+
+      {{custom-html name="upgrade-header" versionCheck=versionCheck tagName="div" classNames="upgrade-header"}}
+
 </div>

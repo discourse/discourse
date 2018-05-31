@@ -297,8 +297,6 @@ ar:
       our_moderators: "المشرفين"
       stat:
         all_time: "منذ التأسيس"
-        last_7_days: "آخر 7 أيام "
-        last_30_days: "آخر 30 يوما"
       like_count: "الإعجابات"
       topic_count: "الموضوعات"
       post_count: "المنشورات"
@@ -434,9 +432,15 @@ ar:
         interaction:
           title: تفاعل
           posting: نشر
+          notification: اشعار
         membership:
           title: العضوية
+          access: صلاحية
         logs:
+          title: "السّجلّات"
+          when: "متى"
+          action: "إجراء"
+          subject: "الموضوع"
           from: "من"
           to: "إلى"
       public_admission: "السماح للاعضاء بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
@@ -466,8 +470,13 @@ ar:
       owner: "المالك"
       index:
         title: "المجموعات"
+        all: "كل المجموعات"
         empty: "لا توجد مجموعات ظاهرة"
         automatic: "تلقائي"
+        my_groups: "مجموعاتي"
+        group_type: "نوع المجموعة"
+        is_group_user: "عضو"
+        is_group_owner: "المالك"
       title:
         few: المجموعات
         many: المجموعات
@@ -477,8 +486,10 @@ ar:
         zero: مجموعة
       activity: "النشاط"
       members:
+        title: "الأعضاء"
         filter_placeholder: "اسم المستخدم"
         remove_owner: "حذف كمالك"
+        owner: "المالك"
       topics: "الموضوعات"
       posts: "المنشورات"
       mentions: "الإشارات"
@@ -604,7 +615,6 @@ ar:
       notifications: "الإشعارات"
       statistics: "الأحصائيات"
       desktop_notifications:
-        label: "إشعارات سطح المكتب"
         not_supported: "نأسف، لا يدعم المتصفّح الإشعارات."
         perm_default: "فعّل الإشعارات"
         perm_denied_btn: "رُفض التّصريح"
@@ -694,6 +704,7 @@ ar:
         move_to_archive: "الارشيف"
         failed_to_move: "فشل في نقل الرسائل المحددة (ربما يكون اتصالك ضعيفاً)"
         select_all: "تحديد الكل"
+        tags: "الأوسمة"
       preferences_nav:
         account: "الحساب"
         profile: "الملف الشخصي"
@@ -711,6 +722,9 @@ ar:
         set_password: " إعادة تعين كلمة المرور"
         choose_new: "اختر كلمة المرور الجديدة"
         choose: "اختر كلمة المرور"
+      second_factor:
+        label: "كود"
+        show_key_description: "أضف يدويا"
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -891,6 +905,7 @@ ar:
         title: "ملخص"
         stats: "إحصائيات"
         time_read: "وقت القراءة"
+        recent_time_read: "وقت القراءة الحديث"
         topic_count:
           few: عدد المواضيع المنشأة
           many: عدد المواضيع المنشأة
@@ -1070,6 +1085,8 @@ ar:
       help: "لم يصل البريد؟ تفحص مجلد السبام<p>لست متأكداً اي عنوان بريد الكتروني قمت بأستخدامة؟ قم بأدخال عنوان البريد الالكتروني و سنعلمك ان كان موجوداً هنا</p><p> ان لم يعد بأمكانك الوصول الى البريد الالكتروني في حسابك, رجاء اتصل بـ <a href='/about'>طاقم الدعم الخاص بنا</a></p>"
       button_ok: "حسنا"
       button_help: "مساعدة"
+    email_login:
+      button_label: "مع البريد الإلكتروني"
     login:
       title: "تسجيل دخول"
       username: "اسم المستخدم"
@@ -1789,7 +1806,6 @@ ar:
           other: الرجاء اختيار الكاتب الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>.
           two: الرجاء اختيار المالك الجديد لمنشورين نُشروا بواسطة <b>{{old_user}}</b>.
           zero: لم يتم تحديد أي منشورات!
-        instructions_warn: "ملاحطة لن يتم نقل الاشعارت القديمة الخاصة بالمنشور للكاتب الجديد <br>تحذير:لن يتم نقل اي بيانات عن المنشور للكاتب الجديد. استعملها بحذر."
       change_timestamp:
         title: "غير تاريخ النشر..."
         action: "غير تاريخ النشر..."
@@ -2663,8 +2679,6 @@ ar:
         reports:
           today: "اليوم"
           yesterday: "امس"
-          last_7_days: "اخر ٧ ايام "
-          last_30_days: "اخر ٣٠ يوم"
           all_time: "كل الوقت"
           7_days_ago: "منذ ٧ ايام"
           30_days_ago: "منذ ٣٠ يوم"
@@ -2873,7 +2887,6 @@ ar:
             label: "أجرِ نسخ احتياطي"
             title: "أنشئ نسخة احتياطية"
             confirm: "أتريد إجراء نسخة احتياطية جديدة؟"
-            without_uploads: "نعم (لا تضمن الملفات)"
           download:
             label: "حمل"
             title: "أرسل بريدًا إلكترونيا فيه رابط التحميل"
@@ -3557,7 +3570,6 @@ ar:
         enabled: تفعيل الشارة
         icon: أيقونة
         image: صورة
-        icon_help: "استخدم اسم ايقونة منFont Awesome أو عنوانًا URL إلى صورة"
         query: إستعلام عن شارة (SQL)
         target_posts: إستعلام عن المنشورات
         auto_revoke: إلغاء الاستعلام اليومي

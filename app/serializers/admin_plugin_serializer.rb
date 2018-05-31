@@ -30,11 +30,11 @@ class AdminPluginSerializer < ApplicationSerializer
   end
 
   def include_enabled_setting?
-    object.enabled_site_setting
+    enabled_setting.present?
   end
 
   def enabled_setting
-    true
+    object.enabled_site_setting
   end
 
   def include_enabled_setting_filter?

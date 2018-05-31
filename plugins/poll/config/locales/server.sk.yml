@@ -19,10 +19,12 @@ sk:
     default_poll_must_have_less_options:
       one: "Hlasovanie musí mať menej ako jednu možnosť."
       few: "Hlasovanie musí mať menej ako %{count} možnosti."
+      many: "Hlasovanie musí mať menej ako %{count} možnosti."
       other: "Hlasovanie musí mať menej ako %{count} možnosti."
     named_poll_must_have_less_options:
       one: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako 1 možnost."
       few: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možnosti."
+      many: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možností."
       other: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možností."
     default_poll_must_have_different_options: "Hlasovanie musí mať rôzne možnosti."
     named_poll_must_have_different_options: "Hlasovanie s názvom <strong>%{name}</strong> musí mať rôzne možnosti."

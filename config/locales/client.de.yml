@@ -62,7 +62,7 @@ de:
           other: '%{count}d'
         x_months:
           one: 1 Monat
-          other: '%{count}Monate'
+          other: '%{count}m'
         about_x_years:
           one: 1a
           other: '%{count}a'
@@ -225,8 +225,8 @@ de:
       our_moderators: "Unsere Moderatoren"
       stat:
         all_time: "Gesamt"
-        last_7_days: "Letzte 7 Tage"
-        last_30_days: "Letzte 30 Tage"
+        last_7_days: "Letzte 7"
+        last_30_days: "Letzte 30"
       like_count: "Likes"
       topic_count: "Themen"
       post_count: "Beiträge"
@@ -407,7 +407,6 @@ de:
         all: "Alle Gruppen"
         empty: "Es gibt keine sichtbaren Gruppen."
         filter: "Filtern nach Art der Gruppe"
-        all_groups: "Alle Gruppen"
         owner_groups: "Gruppen, deren Eigentümer ich bin"
         close_groups: "Geschlossene Gruppe"
         automatic_groups: "Automatische Gruppen"
@@ -555,14 +554,15 @@ de:
       notifications: "Benachrichtigungen"
       statistics: "Statistiken"
       desktop_notifications:
-        label: "Desktop-Benachrichtigungen"
+        label: "Live-Benachrichtigungen"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen einschalten"
         perm_denied_btn: "Zugriff verweigert"
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
-        each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
+        each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser einzeln ändern."
+        consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: 'Alles gelesen'
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
@@ -594,9 +594,10 @@ de:
         individual_no_echo: "Sende für alle fremden Beträge eine Email"
         many_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa {{dailyEmailEstimate}} pro Tag)"
         few_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa 2 pro Tag)"
+        warning: "Mailinglisten-Modus aktiviert. Einstellungen zur Benachrichtigung per E-Mail werden nicht berücksichtigt."
       tag_settings: "Schlagwörter"
       watched_tags: "Beobachtet"
-      watched_tags_instructions: "Du wirst automatisch alle neuen Themen imit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      watched_tags_instructions: "Du wirst automatisch alle neuen Themen mit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       tracked_tags: "Verfolgt"
       tracked_tags_instructions: "Du wirst automatisch alle Themen mit diesen Schlagwörtern verfolgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       muted_tags: "Stummgeschaltet"
@@ -620,7 +621,7 @@ de:
       admin_delete: "Löschen"
       users: "Benutzer"
       muted_users: "Stummgeschaltet"
-      muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
+      muted_users_instructions: "Benachrichtigungen von diesen Benutzern werden unterdrückt."
       muted_topics_link: "Zeige stummgeschaltete Themen"
       watched_topics_link: "Zeige beobachtete Themen"
       tracked_topics_link: "Zeige verfolgte Themen"
@@ -668,9 +669,9 @@ de:
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
       second_factor:
-        title: "Zwei-Faktor Authentifizierung"
+        title: "Zwei-Faktor-Authentifizierung"
         disable: "Zwei-Faktor-Authentifizierung deaktivieren"
-        enable: "für verstärkte Konto-Sicherheit"
+        enable: "<a href>Zwei-Faktor-Authentifizierung</a> aktivieren, um das Benutzerkonto besser zu schützen"
         confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
         label: "Code"
         enable_description: |
@@ -758,8 +759,8 @@ de:
       like_notification_frequency:
         title: "Benachrichtigung für erhaltene Likes anzeigen"
         always: "immer"
-        first_time_and_daily: "erster Like eines Beitrags und täglich"
-        first_time: "nur erster Like eines Beitrags"
+        first_time_and_daily: "für den ersten Like sowie maximal täglich"
+        first_time: "nur für den ersten Like eines Beitrags"
         never: "nie"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
@@ -782,14 +783,14 @@ de:
       other_settings: "Andere"
       categories_settings: "Kategorien"
       new_topic_duration:
-        label: "Themen als neu ansehen, wenn"
+        label: "Themen als neu anzeigen, wenn"
         not_viewed: "ich diese noch nicht betrachtet habe"
         last_here: "seit meinem letzten Besuch erstellt"
         after_1_day: "innerhalb des letzten Tages erstellt"
         after_2_days: "in den letzten 2 Tagen erstellt"
         after_1_week: "in der letzten Woche erstellt"
         after_2_weeks: "in den letzten 2 Wochen erstellt"
-      auto_track_topics: "Betrachteten Themen automatisch folgen"
+      auto_track_topics: "Betrachtete Themen automatisch folgen"
       auto_track_options:
         never: "nie"
         immediately: "sofort"
@@ -1113,6 +1114,8 @@ de:
       shift: 'Umschalt'
       ctrl: 'Strg'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Wird geladen…
     select_kit:
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
@@ -1216,9 +1219,9 @@ de:
       italic_label: "K"
       italic_title: "Betonung"
       italic_text: "Betonter Text"
-      link_title: "Hyperlink"
+      link_title: "Link"
       link_description: "gib hier eine Link-Beschreibung ein"
-      link_dialog_title: "Hyperlink einfügen"
+      link_dialog_title: "Link einfügen"
       link_optional_text: "Optionaler Titel"
       link_url_placeholder: "http://example.com"
       quote_title: "Zitat"
@@ -1229,7 +1232,7 @@ de:
       upload_title: "Upload"
       upload_description: "gib hier eine Beschreibung des Uploads ein"
       olist_title: "Nummerierte Liste"
-      ulist_title: "Liste mit Aufzählungszeichen"
+      ulist_title: "Liste"
       list_item: "Listenelement"
       toggle_direction: "Schreibrichtung wechseln"
       help: "Hilfe zur Markdown-Formatierung"
@@ -1307,6 +1310,8 @@ de:
         posted: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag verfasst'
         private_message: '{{username}} hat dir eine Nachricht geschickt in „{{topic}}“ – {{site_title}}'
         linked: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag von dir verlinkt'
+        confirm_title: 'Benachrichtigungen aktiviert – %{site_title}'
+        confirm_body: 'Erfolgreich! Benachrichtigungen wurden aktiviert.'
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -1368,6 +1373,7 @@ de:
           label: Mit dem Schlagwort
         filters:
           label: "Themen/Beiträge einschränken:"
+          title: mit Treffer im Titel
           likes: "Themen/Beiträge, die mir gefallen"
           posted: Themen mit Beiträgen von mir
           watching: "Themen, die ich beobachte"
@@ -1755,7 +1761,7 @@ de:
         instructions:
           one: Bitte wähle den neuen Eigentümer für den Beitrag von <b>{{old_user}}</b>.
           other: Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>.
-        instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden.<br>Warnung: Aktuell werden keine Daten, die mit dem Beitrag zusammenhängen an den neuen Benutzer übertragen. Mit Bedacht verwenden."
+        instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden."
       change_timestamp:
         title: "Zeitstempel ändern…"
         action: "Erstelldatum ändern"
@@ -2476,6 +2482,8 @@ de:
       dashboard:
         title: "Übersicht"
         last_updated: "Übersicht zuletzt aktualisiert:"
+        find_old: "Suchst du das alte Dashboard?"
+        old_link: "besuche es hier"
         version: "Version"
         up_to_date: "Du verwendest die neueste Version!"
         critical_available: "Ein kritisches Update ist verfügbar."
@@ -2510,10 +2518,11 @@ de:
         whats_new_in_discourse: "Was ist neu in Discourse?"
         activity_metrics: Aktivitätsmetriken
         reports:
+          trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           today: "Heute"
           yesterday: "Gestern"
-          last_7_days: "Letzte 7 Tage"
-          last_30_days: "Letzte 30 Tage"
+          last_7_days: "Letzte 7"
+          last_30_days: "Letzte 30"
           all_time: "Gesamt"
           7_days_ago: "vor 7 Tagen"
           30_days_ago: "vor 30 Tagen"
@@ -2524,6 +2533,10 @@ de:
           start_date: "Startdatum"
           end_date: "Enddatum"
           groups: "Alle Gruppen"
+          disabled: "Dieser Bericht ist deaktiviert"
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Suchprotokoll</a>'
+            disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
       commits:
         latest_changes: "Letzte Änderungen: bitte häufig updaten!"
         by: "von"
@@ -2594,6 +2607,7 @@ de:
           type: "Art"
           users: "Benutzer"
           last_flagged: "Zuletzt gemeldet"
+          no_results: "Es gibt keine gemeldeten Themen."
         short_names:
           off_topic: "off-topic"
           inappropriate: "unangemessen"
@@ -2724,6 +2738,7 @@ de:
           details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
         flag_event:
           name: "Meldung-Ereignis"
+          details: "Wenn eine Meldung erstellt, akzeptiert, abgelehnt oder ignoriert wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -2885,6 +2900,10 @@ de:
           upload_file_tip: "Wähle einen hochzuladenen Medieninhalt aus (png, woff2, usw.)"
           variable_name: "SCSS Variablen-Name:"
           variable_name_invalid: "Ungültiger Variablenname. Nur alphanumerische Zeichen sind erlaubt. Muss mit einem Buchstaben beginnen. Muss eindeutig sein."
+          variable_name_error:
+            invalid_syntax: "Ungültiger Variablenname. Nur alphanumerische Zeichen erlaubt. Muss mit einem Buchstaben beginnen."
+            no_overwrite: "Ungültiger Variablenname. Darf keine existierende Variable überschreiben."
+            must_be_unique: "Ungültiger Variablenname. Muss eindeutig sein."
           upload: "Hochladen"
           child_themes_check: "Theme beinhaltet andere Kinder-Themes"
           css_html: "Benutzerdefiniertes CSS/HTML"
@@ -3093,6 +3112,8 @@ de:
             change_site_text: "Text ändern"
             suspend_user: "Benutzer sperren"
             unsuspend_user: "Benutzer entsperren"
+            removed_suspend_user: "Benutzer sperren (entfernt)"
+            removed_unsuspend_user: "Benutzer entsperren (entfernt)"
             grant_badge: "Abzeichen verleihen"
             revoke_badge: "Abzeichen entziehen"
             check_email: "E-Mail abrufen"
@@ -3107,6 +3128,8 @@ de:
             create_category: "Kategorie erstellen"
             silence_user: "Benutzer stummschalten"
             unsilence_user: "Benutzer nicht mehr stummschalten"
+            removed_silence_user: "Benutzer stummschalten (entfernt)"
+            removed_unsilence_user: "Benutzer nicht mehr stummschalten (entfernt)"
             grant_admin: "Administration gewähren"
             revoke_admin: "Administration entziehen"
             grant_moderation: "Moderation gewähren"
@@ -3131,6 +3154,9 @@ de:
             disabled_second_factor: "Zwei-Faktor-Authentifizierung deaktiviert"
             topic_published: "Thema veröffentlicht"
             post_approved: "Beitrag genehmigt"
+            create_badge: "Abzeichen erstellen"
+            change_badge: "Abzeichen ändern"
+            delete_badge: "Abzeichen löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -3200,6 +3226,7 @@ de:
           placeholder_regexp: "regulärer Ausdruck"
           add: 'Hinzufügen'
           success: 'Erfolg'
+          exists: 'Existiert bereits'
           upload: "Hochladen"
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
       impersonate:
@@ -3223,6 +3250,7 @@ de:
           suspended: 'Gesperrt'
           silenced: 'Stummgeschaltet'
           suspect: 'Verdächtig'
+          staged: 'Vorbereitet'
         approved: "Genehmigt?"
         approved_selected:
           one: Benutzer genehmigen
@@ -3245,6 +3273,7 @@ de:
           silenced: 'Stummgeschaltete Benutzer'
           suspended: 'Gesperrte Benutzer'
           suspect: 'Verdächtige Benutzer'
+          staged: 'Vorbereite Benutzer'
         reject_successful:
           one: Erfolgreich 1 Benutzer abgelehnt.
           other: Erfolgreich %{count} Benutzer abgelehnt.
@@ -3281,6 +3310,10 @@ de:
         penalty_post_delete: "Beitrag löschen"
         penalty_post_edit: "Beitrag bearbeiten"
         penalty_post_none: "Nichts tun"
+        penalty_count: "Anzahl der Strafen"
+        clear_penalty_history:
+          title: "Lösche die Strafenhistorie"
+          description: "Benutzer mit Strafen können TL3 nicht erreichen"
         delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {einen Beitrag} other {# Beiträge}} und {TOPICS, plural, one {ein Thema} other {# Themen}} löschen. Bist du dir sicher?"
         silence: "Stummschalten"
         unsilence: "Stummschaltung aufheben"
@@ -3346,6 +3379,7 @@ de:
         delete_confirm: "Bist du dir SICHER, dass du diesen Benutzer löschen willst? Dies kann nicht rückgängig gemacht werden!"
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
+        deleting_user: "Benutzer wird gelöscht…"
         deleted: "Der Benutzer wurde gelöscht."
         delete_failed: "Beim Löschen des Benutzers ist ein Fehler aufgetreten. Stelle sicher, dass dieser Benutzer keine Beiträge mehr hat."
         send_activation_email: "Aktivierungsmail senden"
@@ -3467,6 +3501,7 @@ de:
       site_settings:
         title: 'Einstellungen'
         no_results: "Keine Ergebnisse gefunden."
+        more_than_30_results: "Es gibt mehr als 30 Ergebnisse. Bitte grenze deine Suche weiter ein oder wähle eine Kategorie aus."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"
@@ -3533,7 +3568,8 @@ de:
         enabled: Abzeichen aktivieren
         icon: Symbol
         image: Bild
-        icon_help: "Benutze eine Font Awesome class oder die URL eines Bildes"
+        icon_help: "Benutze eine Font Awesome class"
+        image_help: "Gebe die URL eines Bildes ein (überschreibt Symbol Feld wenn beide aktiv sind)"
         query: Abzeichen-Abfrage (SQL)
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus

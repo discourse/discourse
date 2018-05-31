@@ -1,9 +1,15 @@
 language: ruby
 
+branches:
+  only:
+    - master
+    - beta
+    - stable
+
 env:
   global:
     - DISCOURSE_HOSTNAME=www.example.com
-    - RUBY_GC_MALLOC_LIMIT=50000000
+    - RUBY_GLOBAL_METHOD_CACHE_SIZE=131072
   matrix:
     - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=0"
     - "RAILS_MASTER=0 QUNIT_RUN=1 RUN_LINT=0"
@@ -11,8 +17,9 @@ env:
 
 addons:
   chrome: stable
-  postgresql: 9.5
+  postgresql: 9.6
   apt:
+    update: true
     packages:
     - gifsicle
     - jpegoptim
@@ -23,9 +30,8 @@ matrix:
   fast_finish: true
 
 rvm:
-  - 2.5.0
-  - 2.4.2
-  - 2.3.4
+  - 2.5.1
+  - 2.4.4
 
 services:
   - redis-server
@@ -34,6 +40,7 @@ sudo: required
 dist: trusty
 
 cache:
+  apt: true
   yarn: true
   directories:
     - vendor/bundle
@@ -51,10 +58,11 @@ before_install:
   - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
-  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
-  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
-  - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint; fi"
-  - bash -c "if [ '$QUNIT_RUN' == '1' ]; then yarn install --dev; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu > /dev/null; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3 > /dev/null; fi"
+  - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint > /dev/null; fi"
+  - bash -c "if [ '$QUNIT_RUN' == '1' ]; then yarn install --dev > /dev/null; fi"
+  - bash -c "if [ '$RUN_LINT' != '1' ]; then bundle exec rake db:create db:migrate > /dev/null; fi"
 
 script:
   - |
@@ -67,8 +75,6 @@ script:
         eslint --ext .es6 plugins/**/test/javascripts && \
         eslint app/assets/javascripts test/javascripts
       else
-        bundle exec rake db:create db:migrate
-
         if [ '$QUNIT_RUN' == '1' ]; then
           bundle exec rake qunit:test['500000'] && \
           bundle exec rake plugin:qunit

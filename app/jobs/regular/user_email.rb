@@ -6,6 +6,8 @@ module Jobs
   # Asynchronously send an email to a user
   class UserEmail < Jobs::Base
 
+    sidekiq_options queue: 'low'
+
     def execute(args)
       raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
       raise Discourse::InvalidParameters.new(:type)    unless args[:type].present?

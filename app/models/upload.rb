@@ -84,8 +84,8 @@ class Upload < ActiveRecord::Base
 
     # always try to get the path
     uri = begin
-      URI(url)
-    rescue URI::InvalidURIError
+      URI(URI.unescape(url))
+    rescue URI::InvalidURIError, URI::InvalidComponentError
     end
 
     url = uri.path if uri.try(:scheme)

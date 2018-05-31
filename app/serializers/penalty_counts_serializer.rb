@@ -1,5 +1,9 @@
 class PenaltyCountsSerializer < ApplicationSerializer
-  attributes :silenced, :suspended
+  attributes :silenced, :suspended, :total
+
+  def total
+    object.silenced + object.suspended
+  end
 
   def silenced
     object.silenced

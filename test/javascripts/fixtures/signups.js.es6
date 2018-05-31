@@ -2,7 +2,7 @@ export default {
   "/admin/reports/signups": {
     "report": {
       "type": "signups",
-      "title": "New Users",
+      "title": "Signups",
       "xaxis": "Day",
       "yaxis": "Number of new users",
       "data": [{
@@ -39,7 +39,8 @@ export default {
       "category_id": null,
       "group_id": null,
       "prev30Days": 0,
-      "labels": null
+      "labels": null,
+      "report_key": ""
     }
   }
 };

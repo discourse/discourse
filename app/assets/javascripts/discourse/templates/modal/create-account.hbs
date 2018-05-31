@@ -1,13 +1,13 @@
 {{#create-account email=accountEmail disabled=submitDisabled action="createAccount"}}
-
   {{#unless complete}}
     {{#d-modal-body title="create_account.title"}}
+          
       {{#unless hasAuthOptions}}
         {{login-buttons externalLogin="externalLogin"}}
       {{/unless}}
-
+      
       {{#if showCreateForm}}
-        <div>
+        <div class="login-form">
           <form>
           <table>
 
@@ -15,12 +15,13 @@
                 <td class="label"><label for='new-account-email'>{{i18n 'user.email.title'}}</label></td>
                 <td>
                 {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
-                &nbsp;{{input-tip validation=emailValidation}}
                 </td>
           </tr>
+          
           <tr class="instructions create-account-email">
             <td></td>
-            <td><label>{{i18n 'user.email.instructions'}}</label></td>
+                {{input-tip validation=emailValidation}}
+                <td><label>{{i18n 'user.email.instructions'}}</label></td>
           </tr>
 
           {{#if usernameRequired}}
@@ -28,11 +29,11 @@
                   <td class="label"><label for='new-account-username'>{{i18n 'user.username.title'}}</label></td>
                   <td>
                   {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
-                  &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
                   </td>
             </tr>
             <tr class="instructions">
               <td></td>
+              {{input-tip validation=usernameValidation id="username-validation"}}
               <td><label>{{i18n 'user.username.instructions'}}</label></td>
             </tr>
           {{/if}}
@@ -43,11 +44,12 @@
                 <label for='new-account-name'>{{i18n 'user.name.title'}}</label>
               </td>
               <td>
-                {{text-field value=accountName id="new-account-name"}}&nbsp;{{input-tip validation=nameValidation}}
+                {{text-field value=accountName id="new-account-name"}}
               </td>
             </tr>
             <tr class="instructions">
               <td></td>
+              {{input-tip validation=nameValidation}}
               <td><label>{{nameInstructions}}</label></td>
             </tr>
           {{/if}}
@@ -63,14 +65,14 @@
                 <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>
                 <td>
                 {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-                &nbsp;{{input-tip validation=passwordValidation}}
                 </td>
             </tr>
             <tr class="instructions">
               <td></td>
+              {{input-tip validation=passwordValidation}}
               <td>
                 <label>{{passwordInstructions}}</label>
-                <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}">
+                <div class="caps-lock-warning {{unless capsLockOn 'hidden'}}">
                   {{d-icon "exclamation-triangle"}} {{i18n 'login.caps_lock_warning'}}</div>
               </td>
             </tr>
@@ -97,6 +99,7 @@
           </form>
         </div>
       {{/if}}
+
     {{/d-modal-body}}
 
     {{#if showCreateForm}}

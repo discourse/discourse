@@ -310,9 +310,7 @@ id:
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
-      title: "Pengguna Baru"
       xaxis: "Hari"
-      yaxis: "Jumlah pengguna baru"
     profile_views:
       xaxis: "Hari"
     topics:
@@ -386,7 +384,6 @@ id:
       title: "Penjelajah Web"
       xaxis: "Hari"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Hari"
     page_view_logged_in_mobile_reqs:
       xaxis: "Hari"

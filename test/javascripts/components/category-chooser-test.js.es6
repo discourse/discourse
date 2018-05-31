@@ -54,7 +54,7 @@ componentTest('with allowUncategorized=null', {
   test(assert) {
     andThen(() => {
       assert.equal(this.get('subject').header().value(), null);
-      assert.equal(this.get('subject').header().title(), "Select a category&hellip;");
+      assert.equal(this.get('subject').header().title(), "Select a category");
     });
   }
 });
@@ -69,7 +69,7 @@ componentTest('with allowUncategorized=null rootNone=true', {
   test(assert) {
     andThen(() => {
       assert.equal(this.get('subject').header().value(), null);
-      assert.equal(this.get('subject').header().title(), 'Select a category&hellip;');
+      assert.equal(this.get('subject').header().title(), 'Select a category');
     });
   }
 });
@@ -85,7 +85,7 @@ componentTest('with disallowed uncategorized, rootNone and rootNoneLabel', {
   test(assert) {
     andThen(() => {
       assert.equal(this.get('subject').header().value(), null);
-      assert.equal(this.get('subject').header().title(), 'Select a category&hellip;');
+      assert.equal(this.get('subject').header().title(), 'Select a category');
     });
   }
 });

@@ -260,8 +260,8 @@ en:
       our_moderators: "Our Moderators"
       stat:
         all_time: "All Time"
-        last_7_days: "Last 7 Days"
-        last_30_days: "Last 30 Days"
+        last_7_days: "Last 7"
+        last_30_days: "Last 30"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
@@ -464,7 +464,6 @@ en:
         all: "All Groups"
         empty: "There are no visible groups."
         filter: "Filter by group type"
-        all_groups: "All Groups"
         owner_groups: "Groups I am an owner of"
         close_groups: "Closed Groups"
         automatic_groups: "Automatic Groups"
@@ -659,6 +658,7 @@ en:
         individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
+        warning: "Mailing list mode enabled. Email notification settings are overridden."
       tag_settings: "Tags"
       watched_tags: "Watched"
       watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
@@ -741,7 +741,7 @@ en:
       second_factor:
         title: "Two Factor Authentication"
         disable: "Disable two factor authentication"
-        enable: "for enhanced account security"
+        enable: "Enable <a href>two factor authentication</a> for enhanced account security"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
         enable_description: |
@@ -1507,6 +1507,7 @@ en:
           label: Tagged
         filters:
           label: Only return topics/posts...
+          title: Matching in title only
           likes: I liked
           posted: I posted in
           watching: I'm watching
@@ -2753,8 +2754,8 @@ en:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           today: "Today"
           yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
+          last_7_days: "Last 7"
+          last_30_days: "Last 30"
           all_time: "All Time"
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
@@ -3061,7 +3062,7 @@ en:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include files)"
+            without_uploads: "Yes (do not include uploads)"
           download:
             label: "Download"
             title: "Send email with download link"
@@ -3363,6 +3364,8 @@ en:
             change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
+            removed_suspend_user: "suspend user (removed)"
+            removed_unsuspend_user: "unsuspend user (removed)"
             grant_badge: "grant badge"
             revoke_badge: "revoke badge"
             check_email: "check email"
@@ -3377,6 +3380,8 @@ en:
             create_category: "create category"
             silence_user: "silence user"
             unsilence_user: "unsilence user"
+            removed_silence_user: "silence user (removed)"
+            removed_unsilence_user: "unsilence user (removed)"
             grant_admin: "grant admin"
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
@@ -3401,6 +3406,9 @@ en:
             disabled_second_factor: "disable Two Factor Authentication"
             topic_published: "topic published"
             post_approved: "post approved"
+            create_badge: "create badge"
+            change_badge: "change badge"
+            delete_badge: "delete badge"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3471,6 +3479,7 @@ en:
           placeholder_regexp: "regular expression"
           add: 'Add'
           success: 'Success'
+          exists: 'Already exists'
           upload: "Upload"
           upload_successful: "Upload successful. Words have been added."
 
@@ -3496,6 +3505,7 @@ en:
           suspended: 'Suspended'
           silenced: 'Silenced'
           suspect: 'Suspect'
+          staged: 'Staged'
         approved: "Approved?"
         approved_selected:
           one: "approve user"
@@ -3518,6 +3528,7 @@ en:
           silenced: 'Silenced Users'
           suspended: 'Suspended Users'
           suspect: 'Suspect Users'
+          staged: 'Staged Users'
         reject_successful:
           one: "Successfully rejected 1 user."
           other: "Successfully rejected %{count} users."
@@ -3555,6 +3566,10 @@ en:
         penalty_post_delete: "Delete the post"
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
+        penalty_count: "Penalty Count"
+        clear_penalty_history:
+          title: "Clear Penalty History"
+          description: "users with penalties cannot reach TL3"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
@@ -3749,6 +3764,7 @@ en:
       site_settings:
         title: 'Settings'
         no_results: "No results found."
+        more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
@@ -3816,7 +3832,8 @@ en:
         enabled: Enable badge
         icon: Icon
         image: Image
-        icon_help: "Use either a Font Awesome class or URL to an image"
+        icon_help: "Use a Font Awesome class"
+        image_help: "Enter the URL of the image (overrides icon field if both are set)"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily

@@ -46,6 +46,10 @@ export default Ember.Controller.extend({
   actions: {
     clearFilter() {
       this.setProperties({ filter: '' });
+    },
+
+    toggleMenu() {
+      $('.admin-detail').toggleClass('mobile-closed mobile-open');
     }
   }
 

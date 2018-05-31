@@ -213,8 +213,6 @@ da:
       our_moderators: "Vores Moderatorer"
       stat:
         all_time: "Alt"
-        last_7_days: "De sidste 7 Dage"
-        last_30_days: "De sidste 30 dage"
       like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
@@ -463,7 +461,6 @@ da:
       notifications: "Underretninger"
       statistics: "Statistik"
       desktop_notifications:
-        label: "Desktop-notifikationer"
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
         perm_default: "Slå notifikationer til"
         perm_denied_btn: "Tilladelse nægtet"
@@ -1455,7 +1452,6 @@ da:
         instructions:
           one: Vælg den nye ejer af indlægget, oprindeligt skrevet af <b>{{old_user}}</b>.
           other: Vælg den nye ejer af {{count}} indlæg, oprindeligt skrevet af <b>{{old_user}}</b>.
-        instructions_warn: "Bemærk at tidligere notifikationer på dette emne vil ikke blive overført til den nye bruger.\n<br>Advarsel: På nuværende tidspunkt, vil ingen data der er afhængig af dette indlæg blive overført til den nye bruger. Brug forsigtigt."
       change_timestamp:
         title: "Tilpas tidsstempel..."
         action: "ret tidsstempel"
@@ -2140,8 +2136,6 @@ da:
         reports:
           today: "I dag"
           yesterday: "I går"
-          last_7_days: "Seneste 7 dage"
-          last_30_days: "Seneste 30 dage"
           all_time: "Altid"
           7_days_ago: "7 dage siden"
           30_days_ago: "30 dage siden"
@@ -2334,7 +2328,6 @@ da:
             label: "Backup"
             title: "Start backup"
             confirm: "Vil du starte en ny backup?"
-            without_uploads: "Ja (inkluder ikke filer)"
           download:
             label: "Download"
             title: "Send e-mail med downloadlink"
@@ -2944,7 +2937,6 @@ da:
         enabled: Aktiver badge
         icon: Icon
         image: Billede
-        icon_help: "Bruge enten en \"Font Awesome\" klasse eller URL til et billede"
         query: Badge Forespørgesel (SQL)
         target_posts: Forespørg mål indlæg
         auto_revoke: Kør tilbagekaldelses forespørgsel hver dag

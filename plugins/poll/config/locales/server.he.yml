@@ -16,9 +16,13 @@ he:
     named_poll_must_have_at_least_2_options: "לסקר בשם <strong>%{name}</strong> צריך שיהיו לפחות שתי אפשרויות."
     default_poll_must_have_less_options:
       one: "לסקר חייבת להיות פחות מאפשרות אחת."
+      two: "לסקר חייבות להיות פחות מ-%{count} אפשרויות."
+      many: "לסקר חייבות להיות פחות מ-%{count} אפשרויות."
       other: "לסקר חייבות להיות פחות מ-%{count} אפשרויות."
     named_poll_must_have_less_options:
       one: "לסקר בשם <strong>%{name}</strong> צריכה להיות פחות מאפשרות אחת."
+      two: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ-%{count} אפשרויות."
+      many: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ-%{count} אפשרויות."
       other: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ-%{count} אפשרויות."
     default_poll_must_have_different_options: "לסקר צריך שתהיינה אפשרויות שונות. "
     named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong> צריך שתהינה אפשרויות שונות."

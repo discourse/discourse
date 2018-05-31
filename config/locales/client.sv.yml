@@ -112,6 +112,7 @@ sv:
       email: 'skicka denna länk i ett e-postmeddelande'
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
+      private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
       split_topic: "splitta det här ämnet %{when}"
       invited_user: "bjöd in %{who} %{when}"
       invited_group: "bjöd in %{who} %{when}"
@@ -142,6 +143,8 @@ sv:
     topic_admin_menu: "administratörsåtgärder för ämne"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång genom <a href='%{url}' data-auto-route='true'>uppsättnings guiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
+    bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
+    bootstrap_mode_disabled: "Bootstrap-läge stängs av om 24 timmar."
     themes:
       default_description: "Standard"
     s3:
@@ -165,6 +168,7 @@ sv:
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
     yes_value: "Ja"
+    submit: "Skicka"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
     sign_up: "Registrera"
@@ -215,8 +219,8 @@ sv:
       our_moderators: "Våra moderatorer"
       stat:
         all_time: "Alla dagar"
-        last_7_days: "Senaste 7 dagarna"
-        last_30_days: "Senaste 30 dagarna"
+        last_7_days: "Senaste 7"
+        last_30_days: "Senaste 30"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
@@ -252,6 +256,7 @@ sv:
     pasting: "Klistrar in..."
     enable: "Aktivera"
     disable: "Inaktivera"
+    continue: "Fortsätt"
     undo: "Ångra"
     revert: "Återställ"
     failed: "Misslyckades"
@@ -329,6 +334,24 @@ sv:
         make_user_group_owner: "Gör till ägare"
         remove_user_as_group_owner: "Återkalla ägare"
     groups:
+      add_members:
+        title: "Lägg till medlemmar"
+        usernames: "Användarnamn"
+      manage:
+        title: 'Hantera'
+        name: 'Namn'
+        full_name: 'Fullständigt namn'
+        add_members: "Lägg till medlemmar"
+        profile:
+          title: Profil
+        interaction:
+          title: Interaktion
+          notification: Notifikation
+        membership:
+          access: Tillgång
+        logs:
+          title: "Loggar"
+          subject: "Ämne"
       empty:
         posts: "Det är inga kommentarer från medlemmar i denna grupp"
         members: "Det finns inga medlemmar i denna grupp"
@@ -337,6 +360,8 @@ sv:
         topics: "Det finns inga trådar från medlemmar av denna grupp"
         logs: "Det finns inga loggar för denna grupp"
       add: "Lägg till"
+      join: "Gå med"
+      leave: "Lämna"
       allow_membership_requests: "Tillåt användare att skicka medlemskapsförfrågan till gruppägare"
       membership: "Medlemskap"
       name: "Namn"
@@ -345,6 +370,7 @@ sv:
       index:
         title: "Grupper"
         empty: "Det finns inga synliga grupper"
+        is_group_user: "Medlem"
       activity: "Aktivitet"
       topics: "Ämnen"
       posts: "Inlägg"
@@ -454,7 +480,6 @@ sv:
       notifications: "Notifieringar"
       statistics: "Statistik"
       desktop_notifications:
-        label: "Skrivbordsaviseringar"
         not_supported: "Aviseringar stöds inte i den här webbläsaren. Tyvärr!"
         perm_default: "Sätt på aviseringar"
         perm_denied_btn: "Behörighet saknas"
@@ -867,6 +892,7 @@ sv:
       caps_lock_warning: "Caps Lock är aktiverad"
       error: "Okänt fel"
       rate_limit: "Var god vänta innan du försöker logga in igen."
+      blank_username: "Vänligen ange din mail eller ditt användarnamn"
       blank_username_or_password: "Vänligen ange din e-post eller användarnamn och lösenord."
       reset_password: 'Återställ lösenord'
       logging_in: "Loggar in..."
@@ -1412,7 +1438,6 @@ sv:
         instructions:
           one: Vänligen välj ny ägare till inlägget av <b>{{old_user}}</b>.
           other: Vänligen välj ny ägare till de {{count}} inläggen av <b>{{old_user}}</b>.
-        instructions_warn: "Notera att inga notifieringar om detta inlägg kommer överföras till den nya användaren retroaktivt.<br>Varning: Just nu överförs inga inläggskritiska data till den nya användaren. Använd med försiktighet. "
       change_timestamp:
         action: "ändra tidsstämpeln"
         invalid_timestamp: "Tidsstämpeln kan inte sättas till ett framtida datum."
@@ -2089,8 +2114,6 @@ sv:
         reports:
           today: "Idag"
           yesterday: "Igår"
-          last_7_days: "De senaste 7 dagarna"
-          last_30_days: "De senaste 30 dagarna"
           all_time: "Alltid"
           7_days_ago: "7 dagar sedan"
           30_days_ago: "30 dagar sedan"
@@ -2282,7 +2305,6 @@ sv:
             label: "Säkerhetskopia"
             title: "Skapa en säkerhetskopia"
             confirm: "Vill du skapa en ny säkerhetskopiering?"
-            without_uploads: "Ja (inkludera inte filer)"
           download:
             label: "Ladda ner"
             title: "Skicka mail med nedladdningslänk"
@@ -2827,7 +2849,6 @@ sv:
         enabled: Aktivera utmärkelse
         icon: Ikon
         image: Bild
-        icon_help: "Använd antingen en Font Awesome-klass eller en URL till en bild"
         query: Utmärkelsesökning (SQL)
         target_posts: Sök målets inlägg
         auto_revoke: Kör återkallelsesökning dagligen

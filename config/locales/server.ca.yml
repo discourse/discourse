@@ -611,9 +611,7 @@ ca:
       xaxis: "Dia"
       yaxis: "Quantitat de visites"
     signups:
-      title: "Noves persones usuàries"
       xaxis: "Dia"
-      yaxis: "Quantitat de noves persones usuàries"
     profile_views:
       title: "Vistes de perfils de persones usuàries"
       xaxis: "Dia"
@@ -697,7 +695,6 @@ ca:
       xaxis: "Dia"
       yaxis: "Vistes de pàgina de rastrejadors de web"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Dia"
       yaxis: "Total de vistes de pàgina"
     page_view_logged_in_mobile_reqs:
@@ -876,7 +873,6 @@ ca:
     version_checks: "Clava l'activitat de Discourse per a actualitzacions de versió i mostra els missatges de la nova versió al tauler /admin"
     new_version_emails: "Envia un correu al contact_email address quan hi hagi una nova versió del Discourse disponible."
     invite_expiry_days: "Quant és vàlida la clau d'invitació a una persona, en dies"
-    invite_passthrough_hours: "Quant pot la persona fer servir una clau d'invitació prèviament recuperada per connectar-s'hi, en hores"
     login_required: "Exigeix l'autenticació per llegir el contingut del lloc, impedeix-ne l'accés anònim."
     min_username_length: "La mida mínima de nom de persona usuària en caràcters. ATENCIÓ: si cap altra persona o grup té noms més breus que aquest, el teu lloc caurà!"
     max_username_length: "Mida màxima de nom de persona usuària en caràcters. ATENCIÓ: si cap altra persona o grup té noms més llargs que aquest, el teu lloc caurà!"

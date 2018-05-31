@@ -87,21 +87,6 @@ const AdminUser = Discourse.User.extend({
     }).then(() => this.set('api_key', null));
   },
 
-  deleteAllPostsExplanation: function() {
-    if (!this.get('can_delete_all_posts')) {
-      if (this.get('deleteForbidden') && this.get('staff')) {
-        return I18n.t('admin.user.delete_posts_forbidden_because_staff');
-      }
-      if (this.get('post_count') > Discourse.SiteSettings.delete_all_posts_max) {
-        return I18n.t('admin.user.cant_delete_all_too_many_posts', {count: Discourse.SiteSettings.delete_all_posts_max});
-      } else {
-        return I18n.t('admin.user.cant_delete_all_posts', {count: Discourse.SiteSettings.delete_user_max_post_age});
-      }
-    } else {
-      return null;
-    }
-  }.property('can_delete_all_posts', 'deleteForbidden'),
-
   deleteAllPosts() {
     const user = this,
           message = I18n.messageFormat('admin.user.delete_all_posts_confirm_MF', { "POSTS": user.get('post_count'), "TOPICS": user.get('topic_count') }),
@@ -240,8 +225,6 @@ const AdminUser = Discourse.User.extend({
     return this.get('trust_level') < 4;
   }.property('trust_level'),
 
-  isSuspended: Em.computed.equal('suspended', true),
-  isSilenced: Ember.computed.equal('silenced', true),
   canSuspend: Em.computed.not('staff'),
 
   suspendDuration: function() {
@@ -353,8 +336,6 @@ const AdminUser = Discourse.User.extend({
     }).catch(popupAjaxError);
   },
 
-  anonymizeForbidden: Em.computed.not("can_be_anonymized"),
-
   anonymize() {
     const user = this,
           message = I18n.t("admin.user.anonymize_confirm");
@@ -392,20 +373,6 @@ const AdminUser = Discourse.User.extend({
 
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
   },
-
-  deleteForbidden: Em.computed.not("canBeDeleted"),
-
-  deleteExplanation: function() {
-    if (this.get('deleteForbidden')) {
-      if (this.get('staff')) {
-        return I18n.t('admin.user.delete_forbidden_because_staff');
-      } else {
-        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_post_age});
-      }
-    } else {
-      return null;
-    }
-  }.property('deleteForbidden'),
 
   destroy(opts) {
     const user = this,

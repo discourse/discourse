@@ -58,6 +58,16 @@ class ApplicationController < ActionController::Base
 
   layout :set_layout
 
+  if Rails.env == "development"
+    after_action :remember_theme_key
+
+    def remember_theme_key
+      if @theme_key
+        Stylesheet::Watcher.theme_key = @theme_key if defined? Stylesheet::Watcher
+      end
+    end
+  end
+
   def has_escaped_fragment?
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
@@ -244,6 +254,8 @@ class ApplicationController < ActionController::Base
       if notifications.present?
         notification_ids = notifications.split(",").map(&:to_i)
         Notification.read(current_user, notification_ids)
+        current_user.reload
+        current_user.publish_notifications_state
         cookies.delete('cn')
       end
     end
@@ -671,6 +683,7 @@ class ApplicationController < ActionController::Base
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.tr!('-', ' ')
+      @hide_google = true if SiteSetting.login_required
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
 

@@ -5,6 +5,7 @@
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-details
 
 enabled_site_setting :details_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset "javascripts/details.js"
 register_asset "stylesheets/details.scss"

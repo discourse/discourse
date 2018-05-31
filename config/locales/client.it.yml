@@ -225,8 +225,6 @@ it:
       our_moderators: "I Nostri Moderatori"
       stat:
         all_time: "Sempre"
-        last_7_days: "ultimi 7 giorni"
-        last_30_days: "ultimi 30 giorni"
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
@@ -407,7 +405,6 @@ it:
         all: "Tutti i gruppi"
         empty: "Non ci sono gruppi visibili."
         filter: "Filtra per tipo di gruppo"
-        all_groups: "Tutti i gruppi"
         owner_groups: "Gruppi di cui sono proprietario"
         close_groups: "Gruppi Chiusi"
         automatic_groups: "Gruppi Automatici"
@@ -555,7 +552,6 @@ it:
       notifications: "Notifiche"
       statistics: "Statistiche"
       desktop_notifications:
-        label: "Notifiche Desktop"
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
         perm_default: "Attiva Notifiche"
         perm_denied_btn: "Permesso Negato"
@@ -670,7 +666,6 @@ it:
       second_factor:
         title: "Autenticazione a Due Fattori"
         disable: "Disabilita l'autenticazione a due fattori"
-        enable: "per una maggiore sicurezza dell'account"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         label: "Codice"
         enable_description: |
@@ -1694,7 +1689,6 @@ it:
         instructions:
           one: Seleziona il nuovo proprietario del messaggio di <b>{{old_user}}</b>.
           other: Seleziona il nuovo proprietario dei {{count}} messaggi di <b>{{old_user}}</b>.
-        instructions_warn: "Nota che ogni notifica circa questo messaggio non verrà trasferita al nuovo utente in modo retroattivo.<br>Attenzione: al momento nessun dato messaggio-dipendente è stato trasferito al nuovo utente. Usare con cautela."
       change_timestamp:
         title: "Cambia Marca Temporale..."
         action: "cambia marca temporale"
@@ -2408,8 +2402,6 @@ it:
         reports:
           today: "Oggi"
           yesterday: "Ieri"
-          last_7_days: "Ultimi 7 Giorni"
-          last_30_days: "Ultimi 30 Giorni"
           all_time: "Di Sempre"
           7_days_ago: "7 Giorni Fa"
           30_days_ago: "30 Giorni Fa"
@@ -2630,7 +2622,6 @@ it:
             label: "Backup"
             title: "Crea un backup"
             confirm: "Vuoi creare un nuovo backup?"
-            without_uploads: "Sì (non includere i file)"
           download:
             label: "Scarica"
             title: "Invia una email con il collegamento per il download"
@@ -3315,7 +3306,6 @@ it:
         enabled: Attiva distintivo
         icon: Icona
         image: Immagine
-        icon_help: "Usa una classe Font Awesome o la URL di un'immagine"
         query: Query Distintivo (SQL)
         target_posts: Interroga i messaggi destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente

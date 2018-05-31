@@ -79,7 +79,7 @@ export default SelectKitComponent.extend({
   shouldDisplayFilter() { return true; },
 
   _beforeWillComputeValues(values) {
-    return values.map(v => this._castInteger(v === "" ? null : v));
+    return values.map(v => this._cast(v === "" ? null : v));
   },
   willComputeValues(values) { return values; },
   computeValues(values) { return values; },

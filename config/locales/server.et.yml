@@ -546,9 +546,7 @@ et:
       xaxis: "Päev"
       yaxis: "Külastajate arv"
     signups:
-      title: "Uued kasutajad"
       xaxis: "Päev"
-      yaxis: "Uute kasutajate arv"
     profile_views:
       title: "Kasutaja profiili vaatamisi"
       xaxis: "Päev"
@@ -626,7 +624,6 @@ et:
     page_view_crawler_reqs:
       xaxis: "Päev"
     page_view_total_reqs:
-      title: "Kokku"
       xaxis: "Päev"
     page_view_logged_in_mobile_reqs:
       xaxis: "Päev"

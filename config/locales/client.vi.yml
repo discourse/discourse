@@ -199,8 +199,6 @@ vi:
       our_moderators: "Các điều hành viên"
       stat:
         all_time: "Từ trước tới nay"
-        last_7_days: "7 ngày qua"
-        last_30_days: "30 ngày vừa qua"
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
@@ -445,7 +443,6 @@ vi:
       notifications: "Thông báo"
       statistics: "Thống kê"
       desktop_notifications:
-        label: "Desktop Notifications"
         not_supported: "Xin lỗi. Trình duyệt của bạn không hỗ trợ Notification."
         perm_default: "Mở thông báo"
         perm_denied_btn: "Không có quyền"
@@ -1361,7 +1358,6 @@ vi:
         placeholder: "tên đăng nhập của chủ sở hữu mới"
         instructions:
           other: Hãy chọn chủ sở hữu mới cho {{count}} bài viết của <b>{{old_user}}</b>.
-        instructions_warn: "Lưu ý rằng bất kỳ thông báo nào về bài viết này sẽ không được chuyển giao cho thành viên mới trở về trước.<br>Cảnh báo: Hiện không có dữ liệu bài viết phụ thuộc được chuyển giao cho thành viên mới. Hãy thận trọng!"
       change_timestamp:
         action: "đổi timestamp"
         invalid_timestamp: "Timestamp không thể trong tương lai."
@@ -1867,8 +1863,6 @@ vi:
         reports:
           today: "Hôm nay"
           yesterday: "Hôm qua"
-          last_7_days: "7 Ngày gần nhất"
-          last_30_days: "30 Ngày gần nhất"
           all_time: "Từ trước tới nay"
           7_days_ago: "7 Ngày trước"
           30_days_ago: "30 Ngày trước"
@@ -1990,7 +1984,6 @@ vi:
             label: "Sao lưu"
             title: "Tạo bản sao lưu"
             confirm: "Bạn muốn bắt đầu một bản sao lưu mới?"
-            without_uploads: "Đúng (không bao gồm những tập tin)"
           download:
             label: "Tải xuống"
           destroy:
@@ -2491,7 +2484,6 @@ vi:
         enabled: Bật huy hiệu
         icon: Biểu tượng
         image: Hình ảnh
-        icon_help: "Sử dụng Font Awesome class hoặc URL của ảnh"
         query: Truy vấn huy hiệu (SQL)
         target_posts: Truy vấn bài viết mục tiêu
         auto_revoke: Chạy truy vấn hủy bỏ hàng ngày

@@ -87,15 +87,19 @@ fa_IR:
         one: "نمی توان رکورد را پاک کرد زیرا یک %{record} وابسته وجود دارد."
         many: "نمی توان رکورد را پاک کرد زیرا یک %{record} وابسته وجود دارد."
       too_long:
+        one: خیلی طولانی است ( حداکثر مقدار قابل قبول %{count} نویسه است)
         other: خیلی طولانی است ( حداکثر مقدار قابل قبول %{count} نویسه است)
       too_short:
+        one: خیلی کوتاه است (حداقل مقدار قابل قبول %{count} نویسه است)
         other: خیلی کوتاه است (حداقل مقدار قابل قبول %{count} نویسه است)
       wrong_length:
+        one: مقدار طول اشتباه است (باید %{count} نویسه باشد)
         other: مقدار طول اشتباه است (باید %{count} نویسه باشد)
       other_than: "باید غیر از {count}% باشد"
     template:
       body: 'مشکلاتی با زمینه‌های دنبال شده وجود دارد:'
       header:
+        one: '%{count} خطا از ذخیره شدن %{model} جلوگیری می‌کنند.'
         other: '%{count} خطا از ذخیره شدن %{model} جلوگیری می‌کنند.'
     embed:
       load_from_remote: "خطایی در بارگذاری آن نوشته رخ داده است."
@@ -129,6 +133,7 @@ fa_IR:
   reading_time: "زمان مطالعه"
   likes: "پسند‌ها"
   too_many_replies:
+    one: متأسفیم، ولی کاربران جدید موقتا محدود به {count}% پاسخ در یک موضوع هستند.
     other: متأسفیم، ولی کاربران جدید موقتا محدود به {count}% پاسخ در یک موضوع هستند.
   embed:
     start_discussion: "شروع بحث"
@@ -139,27 +144,34 @@ fa_IR:
     no_hosts: "میزبانی برای قرارگیری فایل‌ها تعبیه نشده."
     configure: "پیکربندی کد‌های جاسازی شده"
     more_replies:
+      one: '%{count} پاسخ دیگر'
       other: '%{count} پاسخ دیگر'
     loading: "بارگزاری بحث..."
     permalink: " پیوند یکتا"
     imported_from: "این بحث‌وگفتگوی همراه برای ورود اصلی در %{link} است"
     in_reply_to: "◀ %{username}"
     replies:
+      one: '%{count} پاسخ'
       other: '%{count} پاسخ'
   no_mentions_allowed: "متأسفیم، شما نمی‌توانید به کاربران دیگر اشاره کنید."
   too_many_mentions:
+    one: متأسفیم، شما در هر نوشته تنها می‌توانید به %{count} کاربر اشاره کنید.
     other: متأسفیم، شما در هر نوشته تنها می‌توانید به %{count} کاربر اشاره کنید.
   no_mentions_allowed_newuser: "متأسفیم، کاربران تازه نمی‌توانند به کاربران دیگر اشاره کنند."
   too_many_mentions_newuser:
+    one: متأسفیم، کاربران تازه در هر نوشته تنها می‌توانند به %{count} کاربر دیگر اشاره کنند.
     other: متأسفیم، کاربران تازه در هر نوشته تنها می‌توانند به %{count} کاربر دیگر اشاره کنند.
   no_images_allowed: "متأسفیم، کاربران تازه نمی‌توانند در نوشته‌ها تصویر بگذارند."
   too_many_images:
+    one: متأسفیم، کاربران تازه تنها می‌توانند %{count} تصویر در هر نوشته بگذارند.
     other: متأسفیم، کاربران تازه تنها می‌توانند %{count} تصویر در هر نوشته بگذارند.
   no_attachments_allowed: "متأسفیم، کاربران تازه امکان قرار دادن پیوست را در نوشته هایشان ندارند."
   too_many_attachments:
+    one: متأسفیم ، کاربران تازه تنها میتوانند %{count} پیوست در هر نوشته قرار بدهند.
     other: متأسفیم ، کاربران تازه تنها میتوانند %{count} پیوست در هر نوشته قرار بدهند.
   no_links_allowed: "متأسفیم، کاربران تازه نمی‌توانند در نوشته‌ها پیوند بگذارند."
   too_many_links:
+    one: متأسفیم، کاربران تازه تنها می‌توانند در هر نوشته %{count} پیوند بگذارند.
     other: متأسفیم، کاربران تازه تنها می‌توانند در هر نوشته %{count} پیوند بگذارند.
   spamming_host: "متأسفانه شما نمی‌توانید پیوندی با آن میزبان را بفرستید."
   user_is_suspended: "کاربر تعلیق شده نمی‌تواند نوشته‌ای ارسال کند."
@@ -224,6 +236,7 @@ fa_IR:
       title: "درخواست عضویت در @%{group_name}"
   education:
     until_posts:
+      one: '%{count} نوشته'
       other: '%{count} نوشته'
     'new-topic': |
       به  %{site_name} &mdash خوش آمدید؛ **با تشکر از شما برای شروع گفتگو!**
@@ -401,6 +414,7 @@ fa_IR:
       uncategorized: "بدون دسته‌بندی را نمی توان حذف کرد"
       has_subcategories: "این دسته‌بندی به دلیل داشتن زیردسته قابل پاک شدن نیست."
       topic_exists:
+        one: این دسته‌بندی باید پاک شود زیرا این موضوع دارای %{count} است. قدیمی ترین موضوع  %{topic_link}.
         other: این دسته‌بندی باید پاک شود زیرا این موضوع دارای %{count} است. قدیمی ترین موضوع  %{topic_link}.
       topic_exists_no_oldest: "این دسته را نمی توان پاک کرد زیرا تعداد موضوع %{count} است "
     uncategorized_description: "موضوعاتی که نیاز به دسته‌بندی ندارند، یا قابل دسته‌بندی نیستند."
@@ -421,59 +435,84 @@ fa_IR:
       broken: "عکس خراب شده است."
   rate_limiter:
     hours:
+      one: '%{count} ساعت'
       other: '%{count} ساعت'
     minutes:
+      one: '%{count} دقیقه'
       other: '%{count} دقیقه'
     seconds:
+      one: '%{count} ثانیه'
       other: '%{count} ثانیه'
   datetime:
     distance_in_words:
       half_a_minute: "<  1 دقیقه"
       less_than_x_seconds:
+        one: < %{count} ثانیه
         other: < %{count} ثانیه
       x_seconds:
+        one: '%{count} ثانیه'
         other: '%{count} ثانیه'
       less_than_x_minutes:
+        one: < %{count} دقیقه
         other: < %{count} دقیقه
       x_minutes:
+        one: '%{count} دقیقه'
         other: '%{count} دقیقه'
       about_x_hours:
+        one: '%{count} ساعت'
         other: '%{count} ساعت'
       x_days:
+        one: '%{count} روز'
         other: '%{count} روز'
       about_x_months:
+        one: '%{count} ماه'
         other: '%{count} ماه'
       x_months:
+        one: '%{count} ماه'
         other: '%{count} ماه'
       about_x_years:
+        one: '%{count} سال'
         other: '%{count} سال'
       over_x_years:
+        one: '> %{count} سال'
         other: '> %{count} سال'
       almost_x_years:
+        one: '%{count} سال'
         other: '%{count} سال'
     distance_in_words_verbose:
       half_a_minute: "هم اکنون"
       less_than_x_seconds:
+        one: هم اکنون
         other: هم اکنون
       x_seconds:
+        one: '%{count} ثانیه قبل'
         other: '%{count} ثانیه قبل'
       less_than_x_minutes:
+        one: کمتر از %{count} دقیقه قبل
         other: کمتر از %{count} دقیقه قبل
       x_minutes:
+        one: '%{count} دقیقه قبل'
         other: '%{count} دقیقه قبل'
       about_x_hours:
+        one: '%{count} ساعت قبل'
         other: '%{count} ساعت قبل'
       x_days:
+        one: '%{count} روز قبل'
         other: '%{count} روز قبل'
       about_x_months:
+        one: حدود %{count} ماه قبل
         other: حدود %{count} ماه قبل
       x_months:
+        one: '%{count} ماه قبل'
         other: '%{count} ماه قبل'
       about_x_years:
+        one: حدود %{count} سال قبل
         other: حدود %{count} سال قبل
       over_x_years:
+        one: بیش از %{count} سال قبل
         other: بیش از %{count} سال قبل
       almost_x_years:
+        one: تقریبا %{count} سال قبل
         other: تقریبا %{count} سال قبل
   password_reset:
     no_token: "متآسفیم, پیوند تغییر رمز عبور بسیار قدیمی است. دکمه ورود را انتخاب کنید و از 'من رمز عبور خود را فراموش کرده ام' برای دریافت یک پیوند جدید استفاده کنید."
@@ -624,9 +663,7 @@ fa_IR:
       xaxis: "روز"
       yaxis: "تعداد بازدید ها"
     signups:
-      title: "کاربران جدید"
       xaxis: "روز"
-      yaxis: "تعداد کاربران جدید"
     profile_views:
       title: "بازدید‌های نمایه کاربر"
       xaxis: "روز"
@@ -710,7 +747,6 @@ fa_IR:
       xaxis: "روز"
       yaxis: "نمایش صفحات به خزندگان وب"
     page_view_total_reqs:
-      title: "مجموع"
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
     page_view_logged_in_mobile_reqs:
@@ -774,6 +810,7 @@ fa_IR:
     failing_emails_warning: '%{num_failed_jobs} ایمیل زمانبندی شده نا‌موفق وجود دارد. فایل app.yml  را بررسی کنید و مطمئن شوید که تنظیمات سرور ایمیل درست است.  <a href="/sidekiq/retries" target="_blank"> نمایش زمابندی‌های ناموفق Sidekiq </a>.'
     subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
     email_polling_errored_recently:
+      one: رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='/logs' target='_blank'>گزارشات</a> را ببینید.
       other: رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='/logs' target='_blank'>گزارشات</a> را ببینید.
     bad_favicon_url: "favicon نمی‌تواند بارگذاری شود. مقدار favicon_url را در <a href='/admin/site_settings'>تنظیمات سایت</a> بررسی کنید."
     poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا  <a href='/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
@@ -891,7 +928,6 @@ fa_IR:
     version_checks: "Discourse Hub را پینگ کن برای  نسخه بروزرسانی و پیام نسخه جدید را صفحه آمار ادمین نشان بده."
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید  Discourse موجود است. "
     invite_expiry_days: "کلید دعوتنامه فراخوان برای چه مدت اعتبار دارد، واحد روز"
-    invite_passthrough_hours: "کاربر برای چه مدت می تواند از کلید فراخوان استفاده شده برای ورود به سیستم استفاده کند، واحد ساعت"
     invite_only: "ثبت‌نام عمومی غیر‌فعال است، تمام کاربران جدید باید توسط کارمندان دعوت شوند."
     login_required: "برای خواندن محتوا در سایت نیاز به تصدیق است، دسترسی  ناشناس رد شود."
     min_username_length: "حداقل طول نام کاربری به نویسه. توجه: اگر کاربری در حال حاضر نام کاربری کوتاه تر از این مقدار داشته باشد سایت به مشکل برمی‌خورد."
@@ -1274,14 +1310,17 @@ fa_IR:
     not_seen_in_a_month: "خوش آمدید دوباره!‌ شما را برای مدت طولانی ندیده‌ایم. اینها بهترین موضعات از وقتی که شما نبودید، هستند."
   merge_posts:
     edit_reason:
+      one: '%{count} نوشته ترکیب شده توسط %{username}'
       other: '%{count} نوشته ترکیب شده توسط %{username}'
     errors:
       different_topics: "نوشته‌ها به موضوعات مختلفی تعلق دارند و امکان ترکیب آن‌ها وجود ندارد."
       different_users: "نوشته‌ها به کاربران مختلفی تعلق دارند و امکان ترکیب آن‌ها وجود ندارد."
   move_posts:
     new_topic_moderator_post:
+      one: '%{count} نوشته تبدیل به یک موضوع جدید شدند: %{topic_link}'
       other: '%{count} نوشته تبدیل به یک موضوع جدید شدند: %{topic_link}'
     existing_topic_moderator_post:
+      one: '%{count} نوشته با یک موضوع موجود ترکیب شدند: %{topic_link}'
       other: '%{count} نوشته با یک موضوع موجود ترکیب شدند: %{topic_link}'
   change_owner:
     post_revision_text: "حق مالکیت از کاربر {old_user}% به کاربر {new_user}% منتقل شد"
@@ -1292,32 +1331,46 @@ fa_IR:
     closed_enabled: "این موضوع در حال حاضر بسته شده است. پاسخ جدید دیگر مجاز نیست."
     closed_disabled: "موضوع در حال حاضر باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
     autoclosed_message_max_posts:
+      one: این پیام بعد از رسیدن به حداکثر تعداد پاسخ‌ها %{count} بسته شد.
       other: این پیام بعد از رسیدن به حداکثر تعداد پاسخ‌ها %{count} بسته شد.
     autoclosed_topic_max_posts:
+      one: این موضوع بعد از رسیدن به حداکثر تعداد پاسخ‌ها %{count} بسته شد.
       other: این موضوع بعد از رسیدن به حداکثر تعداد پاسخ‌ها %{count} بسته شد.
     autoclosed_enabled_days:
+      one: این موضوع به صورت خود کار بعد از %{count} روز بسته شد. پاسخ جدید دیگر مجاز نیست.
       other: این موضوع به صورت خود کار بعد از %{count} روز بسته شد. پاسخ جدید دیگر مجاز نیست.
     autoclosed_enabled_hours:
+      one: این موضوع به صورت خود کار بعد از %{count} ساعت بسته شد. پاسخ جدید دیگر مجاز نیست.
       other: این موضوع به صورت خود کار بعد از %{count} ساعت بسته شد. پاسخ جدید دیگر مجاز نیست.
     autoclosed_enabled_minutes:
+      one: این موضوع به صورت خود کار بعد از %{count} دقیقه بسته شد. پاسخ جدید دیگر مجاز نیست.
       other: این موضوع به صورت خود کار بعد از %{count} دقیقه بسته شد. پاسخ جدید دیگر مجاز نیست.
     autoclosed_enabled_lastpost_days:
+      one: این موضوع به صورت خود کار بعد از %{count} روز بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست.
       other: این موضوع به صورت خود کار بعد از %{count} روز بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست.
     autoclosed_enabled_lastpost_hours:
+      one: این موضوع به صورت خود کار بعد از %{count} ساعت بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست.
       other: این موضوع به صورت خود کار بعد از %{count} ساعت بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست.
     autoclosed_enabled_lastpost_minutes:
+      one: این موضوع به صورت خود کار بعد از %{count} دقیقه بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست.
       other: این موضوع به صورت خود کار بعد از %{count} دقیقه بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست.
     autoclosed_disabled_days:
+      one: این موضوع بعد از %{count} روز به صورت خودکار باز شد.
       other: این موضوع بعد از %{count} روز به صورت خودکار باز شد.
     autoclosed_disabled_hours:
+      one: این موضوع بعد از %{count} ساعت به صورت خودکار باز شد.
       other: این موضوع بعد از %{count} ساعت به صورت خودکار باز شد.
     autoclosed_disabled_minutes:
+      one: این موضوع بعد از %{count} دقیقه به صورت خودکار باز شد.
       other: این موضوع بعد از %{count} دقیقه به صورت خودکار باز شد.
     autoclosed_disabled_lastpost_days:
+      one: این موضوع %{count} روز بعد از آخرین پاسخ به صورت خودکار باز شد.
       other: این موضوع %{count} روز بعد از آخرین پاسخ به صورت خودکار باز شد.
     autoclosed_disabled_lastpost_hours:
+      one: این موضوع %{count} ساعت بعد از آخرین پاسخ به صورت خودکار باز شد.
       other: این موضوع %{count} ساعت بعد از آخرین پاسخ به صورت خودکار باز شد.
     autoclosed_disabled_lastpost_minutes:
+      one: این موضوع %{count} دقیقه بعد از آخرین پاسخ به صورت خودکار باز شد.
       other: این موضوع %{count} دقیقه بعد از آخرین پاسخ به صورت خودکار باز شد.
     autoclosed_disabled: "این موضوع در حال حاضر باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
     autoclosed_disabled_lastpost: "این موضوع در حال حاضر باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
@@ -1378,8 +1431,10 @@ fa_IR:
       domain_not_allowed: "سایت نامعتبر است. دامنه‌های مجاز: %{domains}"
   flags_reminder:
     flags_were_submitted:
+      one: پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](/admin/flags).
       other: پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](/admin/flags).
     subject_template:
+      one: '%{count} نشانه ها منتظر استفاده'
       other: '%{count} نشانه ها منتظر استفاده'
   unsubscribe_mailer:
     title: "لغو اشتراک نامه‌رسان"
@@ -1450,6 +1505,7 @@ fa_IR:
     deferred: "ممنون از اینکه به ما اطلاع دادید. ما بررسی می کنیم"
     deferred_and_deleted: "ممنون از اینکه به ما اطلاع دادید. ما نوشته را حذف کردیم."
   temporarily_closed_due_to_flags:
+    one: این موضوع موقتا به دلیل دریافت تعداد زیادی پرچم به مدت %{count}  ساعت بسته می‌شود.
     other: این موضوع موقتا به دلیل دریافت تعداد زیادی پرچم به مدت %{count}  ساعت بسته می‌شود.
   system_messages:
     private_topic_title: "موضوع #%{id}"
@@ -1669,6 +1725,7 @@ fa_IR:
     pending_users_reminder:
       title: "یاداور کاربران در انتظار"
       subject_template:
+        one: '%{count} کاربران منتظر تایید'
         other: '%{count} کاربران منتظر تایید'
       text_body_template: |
         تعدادی درخواست کاربران جدید عضو شده برای تایید (یا رد شدن) منتظر هستند. قبل از اینکه به انجمن دسترسی داشته باشند.
@@ -1692,6 +1749,7 @@ fa_IR:
     queued_posts_reminder:
       title: "یادآور نوشته‌های زمانبندی شده"
       subject_template:
+        one: '%{count} نوشته منتظر بررسی است'
         other: '%{count} نوشته منتظر بررسی است'
   unsubscribe_link: |
     برای لغو اشتراک از این ایمیل‌ها،  [کلیک کنید](%{unsubscribe_url}).
@@ -1706,6 +1764,7 @@ fa_IR:
   user_notifications:
     previous_discussion: "پاسخ‌های قبلی"
     reached_limit:
+      one: 'توجه کنید: ما حداکثر %{count} ایمیل در روز ارسال می‌کنیم. برای دیدن موارد ارسال نشده سایت را بررسی کنید. پ.ن: از شما برای محبوب بودنتان تشکر می‌کنیم!'
       other: 'توجه کنید: ما حداکثر %{count} ایمیل در روز ارسال می‌کنیم. برای دیدن موارد ارسال نشده سایت را بررسی کنید. پ.ن: از شما برای محبوب بودنتان تشکر می‌کنیم!'
     in_reply_to: "در پاسخ به"
     unsubscribe:

@@ -610,9 +610,7 @@ ro:
       xaxis: "Zi"
       yaxis: "Număr de vizite"
     signups:
-      title: "Utilizatori noi"
       xaxis: "Zi"
-      yaxis: "Număr de noi utilizatori"
     profile_views:
       title: "Vizualizări profil utilizator"
       xaxis: "Zi"
@@ -696,7 +694,6 @@ ro:
       xaxis: "Zi"
       yaxis: "Vizualizări de pagină făcute de roboți web"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Zi"
       yaxis: "Total vizualizări de pagină"
     page_view_logged_in_mobile_reqs:
@@ -874,7 +871,6 @@ ro:
     version_checks: "Verifică Hub-ul Discourse pentru actualizări și arată notificările de versiuni noi pe spațiul de lucru /admin ."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
-    invite_passthrough_hours: "Cât timp un utilizator poate folosi o cheie de invitație acceptată anterior pentru autentificare, în ore"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
     min_password_length: "Lungimea minimă a parolei."
     min_admin_password_length: "Lungimea maximă a parolei pentru Admin."

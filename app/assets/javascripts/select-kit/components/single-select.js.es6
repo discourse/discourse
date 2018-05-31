@@ -63,7 +63,7 @@ export default SelectKitComponent.extend({
     switch (typeof value) {
     case "string":
     case "number":
-      return this._castInteger(value === "" ? null : value);
+      return this._cast(value === "" ? null : value);
     default:
       return value;
     }

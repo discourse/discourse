@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+bg:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Включете Дискорс бот-а'
+  badges:
+    certified:
+      long_description: |
+        Тази значка се присъжда при успешното преминаване на интерактивното обучение за нови потребители. Вие поехте инциативата да научите основните инструменти на дискусията и сега сте сертифицирани за това.
+  discourse_narrative_bot:
+    new_user_narrative:
+      hello:
+        title: ":robot: Привет!"

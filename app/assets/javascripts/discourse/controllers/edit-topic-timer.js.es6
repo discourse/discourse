@@ -15,12 +15,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("model.closed")
   publicTimerTypes(closed) {
-    return [
+    let types = [
       { id: CLOSE_STATUS_TYPE, name: I18n.t(closed ? 'topic.temp_open.title' : 'topic.auto_close.title'), },
       { id: OPEN_STATUS_TYPE, name: I18n.t(closed ? 'topic.auto_reopen.title' : 'topic.temp_close.title') },
       { id: PUBLISH_TO_CATEGORY_STATUS_TYPE, name: I18n.t('topic.publish_to_category.title') },
-      { id: DELETE_STATUS_TYPE, name: I18n.t('topic.auto_delete.title') }
     ];
+    if (this.currentUser.get("staff")) {
+      types.push({ id: DELETE_STATUS_TYPE, name: I18n.t('topic.auto_delete.title') });
+    }
+    return types;
   },
 
   @computed()
@@ -32,20 +35,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("isPublic", 'publicTimerTypes', 'privateTimerTypes')
   selections(isPublic, publicTimerTypes, privateTimerTypes) {
-    if (isPublic === 'true') {
-      return publicTimerTypes;
-    } else {
-      return privateTimerTypes;
-    }
+    return "true" === isPublic ? publicTimerTypes : privateTimerTypes;
   },
 
   @computed('isPublic', 'model.topic_timer', 'model.private_topic_timer')
   topicTimer(isPublic, publicTopicTimer, privateTopicTimer) {
-    if (isPublic === 'true') {
-      return publicTopicTimer;
-    } else {
-      return privateTopicTimer;
-    }
+    return "true" === isPublic ? publicTopicTimer : privateTopicTimer;
   },
 
   _setTimer(time, statusType) {

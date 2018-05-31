@@ -402,9 +402,7 @@ ja:
       xaxis: "日"
       yaxis: "アクセス数"
     signups:
-      title: "新規ユーザー"
       xaxis: "日"
-      yaxis: "新規ユーザー数"
     profile_views:
       xaxis: "日"
       yaxis: "ユーザープロフィールの閲覧数"
@@ -487,7 +485,6 @@ ja:
       xaxis: "日"
       yaxis: "ウェブクローラからの閲覧数"
     page_view_total_reqs:
-      title: "全体"
       xaxis: "日"
       yaxis: "合計閲覧数"
     page_view_logged_in_mobile_reqs:
@@ -630,7 +627,6 @@ ja:
     version_checks: "Discourse Hubからのアップデートを確認し、管理ページにバージョンやアップデートメッセージを表示する"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
     invite_expiry_days: "招待キーの有効期間 (日)"
-    invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"

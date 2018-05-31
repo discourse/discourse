@@ -200,8 +200,6 @@ zh_CN:
       our_moderators: "我们的版主"
       stat:
         all_time: "全部"
-        last_7_days: "7天以内"
-        last_30_days: "30天以内"
       like_count: "赞"
       topic_count: "主题"
       post_count: "帖子"
@@ -481,7 +479,6 @@ zh_CN:
       notifications: "通知"
       statistics: "统计"
       desktop_notifications:
-        label: "桌面通知"
         not_supported: "通知功能暂不支持该浏览器。抱歉。"
         perm_default: "启用通知"
         perm_denied_btn: "拒绝授权"
@@ -595,7 +592,6 @@ zh_CN:
       second_factor:
         title: "双重验证"
         disable: "停用双重验证"
-        enable: "为了加强账户安全"
         confirm_password_description: "确认密码以继续"
         label: "编码"
         disable_description: "请输入来自  app  的验证码"
@@ -1576,7 +1572,6 @@ zh_CN:
         placeholder: "新作者的用户名"
         instructions:
           other: 请选择<b>{{old_user}}</b>创建的 {{count}} 个帖子的新作者。
-        instructions_warn: "要注意关于帖子的通知不会被转移给新作者。<br>警告：目前，与帖子关联的任何数据都不会转移至新用户。谨慎使用。"
       change_timestamp:
         title: "修改时间"
         action: "修改时间"
@@ -2254,8 +2249,6 @@ zh_CN:
         reports:
           today: "今天"
           yesterday: "昨天"
-          last_7_days: "7天以内"
-          last_30_days: "30天以内"
           all_time: "所有时间内"
           7_days_ago: "7天之前"
           30_days_ago: "30天之前"
@@ -2481,7 +2474,6 @@ zh_CN:
             label: "备份"
             title: "建立一个备份"
             confirm: "你确定要开始建立一个备份吗？"
-            without_uploads: "是（不包括文件）"
           download:
             label: "下载"
             title: "发送含下载链接的邮件"
@@ -3189,7 +3181,6 @@ zh_CN:
         enabled: 启用徽章系统
         icon: 图标
         image: 图片
-        icon_help: "使用 Font Awesome class 或者图片的链接"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询

@@ -1,16 +1,17 @@
 {{#if foundProblems}}
   <div class="dashboard-stats detected-problems">
-    <div class="look-here">{{d-icon "exclamation-triangle"}}</div>
     <div class="problem-messages">
       {{#conditional-loading-spinner condition=loadingProblems}}
-        <p>
-          {{i18n 'admin.dashboard.problems_found'}}
+        <div>
+          <h3>
+            <span class="look-here">{{d-icon "exclamation-triangle"}}</span>
+            {{i18n 'admin.dashboard.problems_found'}}</h3>
           <ul class="{{if loadingProblems 'invisible'}}">
             {{#each problems as |problem|}}
               <li>{{{problem}}}</li>
             {{/each}}
           </ul>
-        </p>
+        </div>
         <p class="actions">
           <small>{{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}</small>
           {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}

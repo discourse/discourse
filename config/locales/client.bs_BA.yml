@@ -65,7 +65,7 @@ bs_BA:
         x_hours:
           few: Par sahati
           one: 1 sahat
-          other: '%{count} sahati'
+          other: '%{count} sati'
         x_days:
           few: Par dana
           one: 1 dan
@@ -99,6 +99,7 @@ bs_BA:
           other: '%{count} godine/a prije'
       previous_month: 'Prošli mjesec'
       next_month: 'Sljedeći mjesec'
+      placeholder: datum
     share:
       topic: 'podijeli link ka ovoj temi'
       post: 'podijeli link ka ovom postu #%{postNumber}'
@@ -168,7 +169,7 @@ bs_BA:
       few: Link
       one: Link
       other: Linkovi
-    faq: "Upoznavanje Foruma"
+    faq: "Česta pitanja"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
     privacy: "Privacy"
@@ -205,8 +206,6 @@ bs_BA:
       our_moderators: "Naši Moderatori"
       stat:
         all_time: "Svih Vremena"
-        last_7_days: "Zadnjih 7 Dana"
-        last_30_days: "Zadnjih 30 dana"
       like_count: "Broj Lajkova"
       topic_count: "Broj Tema"
       post_count: "Broj Postova"
@@ -318,6 +317,22 @@ bs_BA:
         make_user_group_owner: "Napravi vlasnika"
         remove_user_as_group_owner: "Ukloni vlasnika"
     groups:
+      manage:
+        name: 'Ime'
+        full_name: 'Puno ime'
+        add_members: "Dodaj članove"
+        delete_member_confirm: "Ukloni '%{username}' iz grupe '%{group}'?"
+        profile:
+          title: Profil
+        interaction:
+          title: Interakcija
+          posting: Objavljivanje
+          notification: Obavijest
+        membership:
+          title: Članstvo
+          access: Pristup
+        logs:
+          title: "Dnevnički zapisi"
       empty:
         posts: "Ne postoje postovi člana ove grupe."
         members: "Nema članova u grupi."
@@ -439,7 +454,6 @@ bs_BA:
       notifications: "Obaviještenja"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Desktop notifikacije"
         not_supported: "Notifikacije nisu podržane na ovom browseru."
         perm_default: "Upali notifikacije"
         perm_denied_btn: "Zabranje pristup"
@@ -1297,7 +1311,6 @@ bs_BA:
         error: "There was an error changing the ownership of the posts."
         label: "New Owner of Posts"
         placeholder: "username of new owner"
-        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
       change_timestamp:
         action: "izmijeni vrijeme"
         invalid_timestamp: "Vrijeme ne može biti u budućnosti."
@@ -1558,6 +1571,8 @@ bs_BA:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
       readonly: "Vidi"
+    keyboard_shortcuts_help:
+      title: 'Kratice tipkovnice'
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
@@ -1593,8 +1608,6 @@ bs_BA:
         reports:
           today: "Today"
           yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
           all_time: "All Time"
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
@@ -1697,7 +1710,6 @@ bs_BA:
           backup:
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include files)"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"

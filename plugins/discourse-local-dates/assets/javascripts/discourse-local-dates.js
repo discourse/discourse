@@ -46,10 +46,12 @@
       html += relativeTime.replace("TZ", _formatTimezone(moment.tz.guess()).join(": "));
       html += "</span>";
 
+      var joinedPreviews = previews.join("\n");
+
       $element
         .html(html)
-        .attr("title", previews.join("\n"))
-        .attr("onclick", "alert('" + previews.join("\\n") + "');return false;")
+        .attr("title", joinedPreviews)
+        .attr("data-tooltip", joinedPreviews)
         .addClass("cooked");
 
       if (repeat) {

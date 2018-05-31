@@ -1,35 +1,33 @@
-{{#conditional-loading-section isLoading=isLoading title=report.title}}
-  <div class="chart-title">
-    <h3 title={{report.description}}>
-      <a href="{{report.reportUrl}}">
-        {{report.title}}
-      </a>
-    </h3>
+{{#conditional-loading-section isLoading=isLoading}}
+  {{#each reportsForPeriod as |report|}}
+    <div class="status">
+      <h4 class="title">
+        <a href="{{report.reportUrl}}">
+          {{report.title}}
+        </a>
 
-    <div class="chart-trend {{trend}}">
-      {{#if average}}
-        <span title="{{report.trendTitle}}">
-          {{report.currentAverage}}{{if percent "%"}}
+        <span class="info" data-tooltip="{{report.description}}">
+          {{d-icon "question-circle"}}
         </span>
-      {{else}}
-        <span title="{{report.trendTitle}}">
-          {{number report.currentTotal noTitle="true"}}
-        </span>
-      {{/if}}
+      </h4>
 
-      {{#if trendIcon}}
-        {{d-icon trendIcon}}
-      {{/if}}
+      <div class="trend {{report.trend}}">
+        <span class="trend-value" title="{{report.trendTitle}}">
+          {{#if report.average}}
+            {{number report.currentAverage ceil=true}}{{#if report.percent}}%{{/if}}
+          {{else}}
+            {{number report.currentTotal ceil=true noTitle="true"}}{{#if report.percent}}%{{/if}}
+          {{/if}}
+        </span>
+
+        {{#if report.trendIcon}}
+          {{d-icon report.trendIcon class="trend-icon"}}
+        {{/if}}
+      </div>
     </div>
-  </div>
+  {{/each}}
 
-  <div class="chart-container">
-    {{#if oneDataPoint}}
-      <span class="data-point">
-        {{number values.lastObject.y}}
-      </span>
-    {{else}}
-      <canvas class="chart-canvas"></canvas>
-    {{/if}}
+  <div class="chart-canvas-container">
+    <canvas class="chart-canvas"></canvas>
   </div>
 {{/conditional-loading-section}}

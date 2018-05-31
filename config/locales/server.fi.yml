@@ -682,9 +682,7 @@ fi:
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
     signups:
-      title: "Uudet käyttäjät"
       xaxis: "Päivä"
-      yaxis: "Uusien käyttäjien määrä"
     profile_views:
       title: "Käyttäjäprofiilin katselut"
       xaxis: "Päivä"
@@ -768,7 +766,6 @@ fi:
       xaxis: "Päivä"
       yaxis: "Hakurobottien sivunlataukset"
     page_view_total_reqs:
-      title: "Yhteensä"
       xaxis: "Päivä"
       yaxis: "Sivunlatauksia yhteensä"
     page_view_logged_in_mobile_reqs:
@@ -964,7 +961,6 @@ fi:
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä viesti /admin hallintapaneelissa kun uusi versio on saatavilla"
     new_version_emails: "Lähetä sähköposti contact_email osoitteeseen kun uusi versio Discoursesta on saatavilla."
     invite_expiry_days: "Kuinka monta päivää käyttäjäkutsujen avaimet ovat voimassa"
-    invite_passthrough_hours: "Kuinka pitkään käyttäjä voi käyttää vastatun kutsun avainta kirjautuakseen sisään, tunneissa"
     invite_only: "Julkinen rekisteröityminen ei ole käytössä, uuden tilin luominen vaatii kutsun henkilökunnalta."
     login_required: "Vaadi kirjautumista sivuston lukemiseen, epää anonyymi pääsy."
     min_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä lyhyempi nimi, sivustosi hajoaa!"
@@ -1131,7 +1127,7 @@ fi:
     topic_post_like_heat_high: "Kun tykkäysten suhde viestien määrään ylittää tämän, viestien lukumäärän saraketta korostetaan voimakkaasti."
     faq_url: "Jos haluat käyttää sivuston ulkopuolella ylläpidettyä UKK-listaa, syötä URL tähän."
     tos_url: "Jos haluat ylläpitää käyttöehtoja sivuston ulkopuolella, syötä URL tähän."
-    privacy_policy_url: "Jos haluat ylläpitää rekisteriselostetta sivuston ulkopuolella, syötä URL tähän."
+    privacy_policy_url: "Jos haluat ylläpitää tietosuojaselostetta sivuston ulkopuolella, syötä URL tähän."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi linkittää samalle sivustolle `newuser_spam_host_posts` viesteissään, ennen kuin se tulkitaan roskapostin lähettämiseksi."
     white_listed_spam_host_domains: "Lista verkkotunnuksista, joita ei oteta huomioon roskapostin tunnistamisessa. Uusilla käyttäjillä ei ole rajoituksia linkkaamisessa näihin tunnuksiin."
     staff_like_weight: "Kuinka suuri ylimääräinen arvo on henkilökunnan tykkäyksillä."
@@ -2440,7 +2436,7 @@ fi:
     light_theme_name: "Vaalea"
   about: "Tietoja"
   guidelines: "Ohjeet"
-  privacy: "Yksityisyys"
+  privacy: "Tietosuoja"
   edit_this_page: "Muokkaa tätä sivua"
   csv_export:
     boolean_yes: "Kyllä"
@@ -2546,11 +2542,11 @@ fi:
 
       ## [Käyttöehdot](#tos)
 
-      Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](/tos), jotka säätelevät sinun (ja meidän) toimintaa ja oikeuksia sisältöön, yksityisyyteen ja lakeihin liittyen. Jotta voit käyttää palvelua, sinun on hyväksyttävä [käyttöehdot](/tos).
+      Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](/tos), jotka säätelevät sinun (ja meidän) toimintaa ja oikeuksia sisältöön, tietosuojaan ja lakeihin liittyen. Jotta voit käyttää palvelua, sinun on hyväksyttävä [käyttöehdot](/tos).
   tos_topic:
     title: "Käyttöehdot"
   privacy_topic:
-    title: "Rekisteriseloste"
+    title: "Tietosuojaseloste"
     body: |
       <a name="collect"></a>
 
@@ -2618,7 +2614,7 @@ fi:
 
       ## [Tietosuojaseloste koskee vain internetiä](#online)
 
-      Tämä tietosuojakäytäntö koskee vain sivustomme kautta kerättyä tietoa eikä siten koske verkon ulkopuolelta kerättyä tietoa.
+      Tämä tietosuojaseloste koskee vain sivustomme kautta kerättyä tietoa eikä siten koske verkon ulkopuolelta kerättyä tietoa.
 
       <a name="consent"></a>
 
@@ -2949,7 +2945,7 @@ fi:
             description: "Tämän käyttäjän nimissä Discourse lähettää käyttäjille kaikki automaattiset yksityisviestit, kuten liputusvaroitukset ja ilmoitukset valmistuneista varmuuskopioista."
       corporate:
         title: "Organisaatio"
-        description: "Nämä nimet näkyvät <a href='/privacy' target='blank'>rekisteriselosteen</a> ja <a href='/tos' target='blank'>käyttöehtojen</a> yhteydessä, joita voit milloin vain muokata henkilökunta-alueella. Jos taustalla ei ole yritystä, voit hypätä tämän vaiheen yli toistaiseksi."
+        description: "Nämä nimet näkyvät <a href='/privacy' target='blank'>tietosuojaselosteen</a> ja <a href='/tos' target='blank'>käyttöehtojen</a> yhteydessä, joita voit milloin vain muokata henkilökunta-alueella. Jos taustalla ei ole yritystä, voit hypätä tämän vaiheen yli toistaiseksi."
         fields:
           company_short_name:
             label: "Yrityksen nimi (lyhyesti)"

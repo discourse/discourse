@@ -4,6 +4,7 @@ export default Ember.Controller.extend({
   group: Ember.inject.controller(),
   loading: false,
   offset: 0,
+  application: Ember.inject.controller(),
 
   init() {
     this._super();
@@ -25,6 +26,11 @@ export default Ember.Controller.extend({
         all_loaded: results.all_loaded
       });
     });
+  },
+
+  @observes("model.all_loaded")
+  _showFooter() {
+    this.set("application.showFooter", this.get("model.all_loaded"));
   },
 
   reset() {

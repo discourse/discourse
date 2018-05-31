@@ -235,8 +235,6 @@ lv:
       our_moderators: "Mūsu moderatori"
       stat:
         all_time: "Visi"
-        last_7_days: "Pēdējās 7 dienas"
-        last_30_days: "Pēdējās 30 dienas"
       like_count: "Atzinības"
       topic_count: "Tēmas"
       post_count: "Ieraksti"
@@ -483,7 +481,6 @@ lv:
       notifications: "Paziņojumi"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Darbvirsmas paziņojumi"
         not_supported: "Atvainojiet, bet šī pārlūkprogramma neatbalsta paziņojumus."
         perm_default: "Ieslēgt paziņojumus"
         perm_denied_btn: "Piekļuve liegta"
@@ -1536,7 +1533,6 @@ lv:
           one: Lūdzu, izvēlieties jauno īpašnieku <b>{{old_user}}</b> ierakstam.
           other: Lūdzu, izvēlieties jauno īpašnieku {{count}} <b>{{old_user}}</b> ierakstiem.
           zero: Lūdzu, izvēlieties jauno īpašnieku <b>{{old_user}}</b> ierakstiem.
-        instructions_warn: "Ņemiet vērā, ka pagātnes paziņojumi par šo ieraksti netiks pārsūtīti jaunajam lietotājam. Uzmanību: šobrīd nekādi no ieraksta atkarīgi dati netiek pārsūtīti jaunajam lietotājam. Lietojiet uzmanīgi."
       change_timestamp:
         title: "Nomainīt laika zīmogu..."
         action: "nomainīt laika zīmogu"
@@ -2253,8 +2249,6 @@ lv:
         reports:
           today: "Šodien"
           yesterday: "Vakar"
-          last_7_days: "Pēdējās 7 dienās"
-          last_30_days: "Pēdējās 30 dienās"
           all_time: "Vienmēr"
           7_days_ago: "Pirms 7 dienām"
           30_days_ago: "Pirms 30 dienām"
@@ -2429,7 +2423,6 @@ lv:
             label: "Rezerves kopija"
             title: "Izveidot rezerves kopiju"
             confirm: "Vai jūs vēlaties uzsākt jaunas rezerves kopijas veidošanu?"
-            without_uploads: "Jā (neiekļaut failus)"
           download:
             label: "Lejuplādēt"
             title: "Nosūtīt e-pastu ar lejuplādes saiti"
@@ -3013,7 +3006,6 @@ lv:
         enabled: Atļaut žetonu
         icon: Ikona
         image: Bilde
-        icon_help: "Izmanto vainu Fontu klasi vai URL uz bildi"
         query: Vaicājums Žetons  (SQL)
         target_posts: Vaicājums ir vērsts uz ierakstiem
         auto_revoke: Palaist anulēšanas vaicājumu ikdienā

@@ -13,6 +13,9 @@
 }
 
 #login-form {
+  table {
+    width: 100%;
+  }
   a {
     color: dark-light-choose($primary-high, $secondary-low);
   }
@@ -40,6 +43,12 @@ $input-width: 220px;
   td {
     label, input {
       margin-bottom: 0;
+      width: 100%;
+    }
+  }
+  .modal-footer {
+    .inline-spinner {
+      display: inline-flex;
     }
   }
 }
@@ -56,9 +65,8 @@ $input-width: 220px;
   }
 
   .disclaimer {
-    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-medium);
-    clear: both;
+    margin-top: .5em;
   }
 
   .user-field.confirm {
@@ -106,12 +114,16 @@ $input-width: 220px;
 .invites-show {
   .two-col {
     position: relative;
+    display: flex;
   }
 
   .col-image {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;    
+    width: 150px;
+    margin-right: 20px;
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
   }
 
   form {
@@ -135,6 +147,21 @@ $input-width: 220px;
   }
 }
 
+.auth-message {
+  padding: 0 15px 15px 15px;
+  &:empty {
+    padding: 0;
+  }
+}
+
+.modal tr.instructions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.15em;
+  label {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
 
 // alternate login / create new account buttons should be de-emphasized
 

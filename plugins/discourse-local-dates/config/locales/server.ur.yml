@@ -7,6 +7,5 @@
 
 ur:
   site_settings:
-    discourse_local_dates_enabled: "ڈِسکورس-کرَونَوس پلگ اِن فعال کریں۔ اگر آپ اس کو تبدیل کرتے ہیں تو، آپ کو تمام پوسٹس کو دوبارہ رِیبَیک کرنا ہوگا: \"rake posts:rebake\""
     discourse_local_dates_default_formats: "اکثر استعمال ہونے والے تاریخ ٹائم فارمیٹس، دیکھیے: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs سٹرِنگ فارمَیٹ</a>"
     discourse_local_dates_default_timezones: "ٹائم زَونَوں کی ڈِیفالٹ فہرست، ایک درست <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> ہونا لازمی ہے"

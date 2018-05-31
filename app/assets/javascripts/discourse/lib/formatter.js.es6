@@ -301,8 +301,12 @@ export function relativeAge(date, options) {
   return "UNKNOWN FORMAT";
 }
 
-export function number(val) {
+export function number(val, options = {}) {
   let formattedNumber;
+
+  if (options.ceil) {
+    val = Math.ceil(val);
+  }
 
   val = parseInt(val, 10);
   if (isNaN(val)) val = 0;

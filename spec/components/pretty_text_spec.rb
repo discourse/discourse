@@ -725,6 +725,29 @@ describe PrettyText do
 
       test_s3_cdn
     end
+
+    def test_s3_with_subfolder_cdn
+      raw = <<~RAW
+        <img src='https:#{Discourse.store.absolute_base_url}/subfolder/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+      RAW
+
+      html = <<~HTML
+        <p><img src="https://awesome.cdn/subfolder/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
+      HTML
+
+      expect(PrettyText.cook(raw)).to eq(html.strip)
+    end
+
+    it 'can substitute s3 with subfolder cdn when added via global setting' do
+
+      global_setting :s3_access_key_id, 'XXX'
+      global_setting :s3_secret_access_key, 'XXX'
+      global_setting :s3_bucket, 'XXX/subfolder'
+      global_setting :s3_region, 'XXX'
+      global_setting :s3_cdn_url, 'https://awesome.cdn/subfolder'
+
+      test_s3_with_subfolder_cdn
+    end
   end
 
   describe "emoji" do

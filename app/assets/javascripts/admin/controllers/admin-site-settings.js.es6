@@ -3,7 +3,6 @@ import debounce from 'discourse/lib/debounce';
 export default Ember.Controller.extend({
   filter: null,
   onlyOverridden: false,
-  filtered: Ember.computed.notEmpty('filter'),
 
   filterContentNow(category) {
     // If we have no content, don't bother filtering anything
@@ -14,9 +13,9 @@ export default Ember.Controller.extend({
       filter = this.get('filter').toLowerCase();
     }
 
-    if ((filter === undefined || filter.length < 1) && !this.get('onlyOverridden')) {
+    if ((!filter || 0 === filter.length) && !this.get('onlyOverridden')) {
       this.set('model', this.get('allSiteSettings'));
-      this.transitionToRoute("adminSiteSettings");
+      this.transitionToRoute('adminSiteSettings');
       return;
     }
 
@@ -28,11 +27,11 @@ export default Ember.Controller.extend({
       const siteSettings = settingsCategory.siteSettings.filter(item => {
         if (this.get('onlyOverridden') && !item.get('overridden')) return false;
         if (filter) {
-          if (item.get('setting').toLowerCase().indexOf(filter) > -1) return true;
-          if (item.get('setting').toLowerCase().replace(/_/g, ' ').indexOf(filter) > -1) return true;
-          if (item.get('description').toLowerCase().indexOf(filter) > -1) return true;
-          if ((item.get('value') || '').toLowerCase().indexOf(filter) > -1) return true;
-          return false;
+          const setting = item.get('setting').toLowerCase();
+          return setting.includes(filter) ||
+                 setting.replace(/_/g, ' ').includes(filter) ||
+                 item.get('description').toLowerCase().includes(filter) ||
+                 (item.get('value') || '').toLowerCase().includes(filter);
         } else {
           return true;
         }
@@ -49,15 +48,16 @@ export default Ember.Controller.extend({
     });
 
     all.siteSettings.pushObjects(matches.slice(0, 30));
-    all.count = matches.length;
+    all.hasMore = matches.length > 30;
+    all.count = all.hasMore ? '30+' : matches.length;
 
     this.set('model', matchesGroupedByCategory);
-    this.transitionToRoute("adminSiteSettingsCategory", category || "all_results");
+    this.transitionToRoute('adminSiteSettingsCategory', category || 'all_results');
   },
 
   filterContent: debounce(function() {
-    if (this.get("_skipBounce")) {
-      this.set("_skipBounce", false);
+    if (this.get('_skipBounce')) {
+      this.set('_skipBounce', false);
     } else {
       this.filterContentNow();
     }

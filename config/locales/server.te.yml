@@ -347,9 +347,7 @@ te:
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
     signups:
-      title: "కొత్త వినియోగదారులు"
       xaxis: "రోజు"
-      yaxis: "కొత్త సభ్యుల సంఖ్య"
     topics:
       title: "విషయాలు"
       xaxis: "రోజు"
@@ -421,7 +419,6 @@ te:
       title: "జాల క్రాలర్లు"
       xaxis: "రోజు"
     page_view_total_reqs:
-      title: "మొత్తం"
       xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"

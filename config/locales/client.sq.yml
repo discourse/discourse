@@ -210,8 +210,6 @@ sq:
       our_moderators: "Moderatorët tanë"
       stat:
         all_time: "Gjithë kohës"
-        last_7_days: "7 ditët e fundit"
-        last_30_days: "30 ditët e fundit"
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
@@ -436,7 +434,6 @@ sq:
       notifications: "Njoftimet"
       statistics: "Statistikat"
       desktop_notifications:
-        label: "Njoftimet në desktop"
         not_supported: "Ky shfletues nuk është i aftë të ruajë njoftimet. "
         perm_default: "Aktivizo njoftimet"
         perm_denied_btn: "Nuk lejohet"
@@ -1948,8 +1945,6 @@ sq:
         reports:
           today: "Sot"
           yesterday: "Dje"
-          last_7_days: "7 Ditët e Fundit"
-          last_30_days: "30 Ditët e Fundit"
           all_time: "Gjithë Kohës"
           7_days_ago: "7 Ditë më parë"
           30_days_ago: "30 Ditë më parë"
@@ -2527,7 +2522,6 @@ sq:
         enabled: Aktivizoni stemën
         icon: Ikonë
         image: Imazh
-        icon_help: "Përdor një klas FontAwesome ose URL-në e një imazhi"
         query: Query Steme (SQL)
         show_posts: Trego postimin që akordoi stemën në faqen e stemave
         trigger_type:

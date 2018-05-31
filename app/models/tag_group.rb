@@ -39,9 +39,6 @@ class TagGroup < ActiveRecord::Base
     mapped = permissions.map do |group, permission|
       group_id = Group.group_id_from_param(group)
       permission = TagGroupPermission.permission_types[permission] unless permission.is_a?(Integer)
-
-      return [] if group_id == everyone_group_id && permission == full
-
       [group_id, permission]
     end
   end
@@ -65,27 +62,21 @@ class TagGroup < ActiveRecord::Base
     end
   end
 
-  def self.allowed(guardian)
+  def self.visible(guardian)
     if guardian.is_staff?
       TagGroup
     else
-      category_permissions_filter_sql = <<~SQL
-        (id IN ( SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
-        OR id NOT IN (SELECT tag_group_id FROM category_tag_groups))
-        AND id IN (
-          SELECT tag_group_id
-          FROM tag_group_permissions
-          WHERE group_id = ?
-            AND permission_type = ?
+      filter_sql = <<~SQL
+        (
+          id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
+        ) OR (
+          id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+          AND
+          id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
         )
       SQL
 
-      TagGroup.where(
-        category_permissions_filter_sql,
-        guardian.allowed_category_ids,
-        Group::AUTO_GROUPS[:everyone],
-        TagGroupPermission.permission_types[:full]
-      )
+      TagGroup.where(filter_sql, guardian.allowed_category_ids, Group::AUTO_GROUPS[:everyone])
     end
   end
 end

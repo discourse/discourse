@@ -12,5 +12,11 @@ QUnit.test("Visit dashboard next page", assert => {
 
   andThen(() => {
     assert.ok($('.dashboard-next').length, "has dashboard-next class");
+
+    assert.ok($('.dashboard-mini-chart.signups').length, "has a signups chart");
+    assert.ok($('.dashboard-mini-chart.posts').length, "has a posts chart");
+    assert.ok($('.dashboard-mini-chart.dau_by_mau').length, "has a dau_by_mau chart");
+    assert.ok($('.dashboard-mini-chart.daily_engaged_users').length, "has a daily_engaged_users chart");
+    assert.ok($('.dashboard-mini-chart.new_contributors').length, "has a new_contributors chart");
   });
 });

@@ -3,7 +3,12 @@ require 'rails_helper'
 describe TopicViewSerializer do
   def serialize_topic(topic, user_arg)
     topic_view = TopicView.new(topic.id, user_arg)
-    described_class.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
+    TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
+  end
+
+  before do
+    # ensure no suggested ids are cached cause that can muck up suggested
+    RandomTopicSelector.clear_cache!
   end
 
   let(:topic) { Fabricate(:topic) }

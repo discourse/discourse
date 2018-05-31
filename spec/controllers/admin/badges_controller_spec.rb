@@ -48,6 +48,8 @@ describe Admin::BadgesController do
         expect(response.status).to eq(200)
         expect(json["badge"]["name"]).to eq('test')
         expect(json["badge"]["query"]).to eq('select 1 as user_id, null as granted_at')
+
+        expect(UserHistory.where(acting_user_id: user.id, action: UserHistory.actions[:create_badge]).exists?).to eq(true)
       end
     end
 
@@ -83,14 +85,11 @@ describe Admin::BadgesController do
     end
 
     context '.destroy' do
-      it 'returns success' do
-        delete :destroy, params: { id: badge.id }, format: :json
-        expect(response).to be_success
-      end
-
       it 'deletes the badge' do
         delete :destroy, params: { id: badge.id }, format: :json
-        expect(Badge.where(id: badge.id).count).to eq(0)
+        expect(response).to be_success
+        expect(Badge.where(id: badge.id).exists?).to eq(false)
+        expect(UserHistory.where(acting_user_id: user.id, action: UserHistory.actions[:delete_badge]).exists?).to eq(true)
       end
     end
 
@@ -108,6 +107,8 @@ describe Admin::BadgesController do
         expect(response).to be_success
         editor_badge.reload
         expect(editor_badge.name).to eq(editor_badge_name)
+
+        expect(UserHistory.where(acting_user_id: user.id, action: UserHistory.actions[:change_badge]).exists?).to eq(true)
       end
 
       it 'does not allow query updates if badge_sql is disabled' do

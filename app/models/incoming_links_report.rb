@@ -49,7 +49,7 @@ class IncomingLinksReport
   end
 
   def self.per_user(start_date:)
-    @per_user_query ||= IncomingLink
+    @per_user_query ||= public_incoming_links
       .where('incoming_links.created_at > ? AND incoming_links.user_id IS NOT NULL', start_date)
       .joins(:user)
       .group('users.username')
@@ -79,15 +79,17 @@ class IncomingLinksReport
   end
 
   def self.link_count_per_domain(limit: 10, start_date:)
-    IncomingLink.where('incoming_links.created_at > ?', start_date)
+    public_incoming_links
+      .where('incoming_links.created_at > ?', start_date)
       .joins(incoming_referer: :incoming_domain)
       .group('incoming_domains.name')
       .order('count_all DESC')
-      .limit(limit).count
+      .limit(limit)
+      .count
   end
 
   def self.per_domain(domains)
-    IncomingLink
+    public_incoming_links
       .joins(incoming_referer: :incoming_domain)
       .where('incoming_links.created_at > ? AND incoming_domains.name IN (?)', 30.days.ago, domains)
       .group('incoming_domains.name')
@@ -95,7 +97,7 @@ class IncomingLinksReport
 
   def self.topic_count_per_domain(domains)
     # COUNT(DISTINCT) is slow
-    per_domain(domains).joins(:post).count("DISTINCT posts.topic_id")
+    per_domain(domains).count("DISTINCT posts.topic_id")
   end
 
   def self.report_top_referred_topics(report)
@@ -114,9 +116,15 @@ class IncomingLinksReport
   end
 
   def self.link_count_per_topic(start_date:)
-    IncomingLink.joins(:post)
+    public_incoming_links
       .where('incoming_links.created_at > ? AND topic_id IS NOT NULL', start_date)
       .group('topic_id')
       .count
+  end
+
+  def self.public_incoming_links
+    IncomingLink
+      .joins(post: :topic)
+      .where("topics.archetype = ?", Archetype.default)
   end
 end
