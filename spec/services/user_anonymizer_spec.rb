@@ -120,7 +120,6 @@ describe UserAnonymizer do
     end
 
     it "updates the avatar in posts" do
-      SiteSetting.queue_jobs = false
       upload = Fabricate(:upload, user: user)
       user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
       user.uploaded_avatar_id = upload.id # chosen in user preferences

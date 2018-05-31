@@ -76,6 +76,8 @@ describe Jobs do
     end
 
     it 'deletes the matching job' do
+      SiteSetting.queue_jobs = true
+
       Sidekiq::Testing.disable! do
         expect(scheduled_jobs.size).to eq(0)
 

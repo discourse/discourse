@@ -207,6 +207,8 @@ describe Auth::GithubAuthenticator do
   describe 'avatar retrieval' do
     let(:job_klass) { Jobs::DownloadAvatarFromUrl }
 
+    before { SiteSetting.queue_jobs = true }
+
     context 'when user has a custom avatar' do
       let(:user_avatar) { Fabricate(:user_avatar, custom_upload: Fabricate(:upload)) }
       let(:user_with_custom_avatar) { Fabricate(:user, user_avatar: user_avatar) }

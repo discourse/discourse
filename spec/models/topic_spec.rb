@@ -1214,8 +1214,6 @@ describe Topic do
 
         describe 'user that is watching the new category' do
           it 'should generate the notification for the topic' do
-            SiteSetting.queue_jobs = false
-
             topic.posts << Fabricate(:post)
 
             CategoryUser.set_notification_level_for_category(
@@ -1271,6 +1269,7 @@ describe Topic do
 
           describe 'when topic is already closed' do
             before do
+              SiteSetting.queue_jobs = true
               topic.update_status('closed', true, Discourse.system_user)
             end
 
@@ -1520,8 +1519,6 @@ describe Topic do
       let(:topic) { Fabricate(:topic, category: category) }
 
       it "should be able to override category's default auto close" do
-        SiteSetting.queue_jobs = false
-
         expect(topic.topic_timers.first.duration).to eq(4)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)

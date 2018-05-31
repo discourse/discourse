@@ -2,8 +2,6 @@ require 'rails_helper'
 
 describe QuotedPost do
   it 'correctly extracts quotes' do
-    SiteSetting.queue_jobs = false
-
     topic = Fabricate(:topic)
     post1 = create_post(topic: topic, post_number: 1, raw: "foo bar")
     post2 = create_post(topic: topic, post_number: 2, raw: "lorem ipsum")

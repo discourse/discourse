@@ -1,9 +1,6 @@
 require 'rails_helper'
 
 describe UsernameChanger do
-  before do
-    SiteSetting.queue_jobs = false
-  end
 
   describe '#change' do
     let(:user) { Fabricate(:user) }

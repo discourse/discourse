@@ -15,6 +15,8 @@ RSpec.describe Admin::UsersController do
       end
 
       it 'should able to disable the second factor for another user' do
+        SiteSetting.queue_jobs = true
+
         expect do
           put "/admin/users/#{user.id}/disable_second_factor.json"
         end.to change { Jobs::CriticalUserEmail.jobs.length }.by(1)
