@@ -261,6 +261,7 @@ describe InvitesController do
 
           it 'redirects to the first topic the user was invited to' do
             put "/invites/show/#{invite.invite_key}.json"
+            expect(response.status).to eq(200)
             json = JSON.parse(response.body)
             expect(json["success"]).to eq(true)
             expect(json["redirect_to"]).to eq(topic.relative_url)
@@ -280,9 +281,6 @@ describe InvitesController do
         context '.post_process_invite' do
           before do
             SiteSetting.queue_jobs = true
-            #Invite.any_instance.stubs(:redeem).returns(user)
-            #Jobs.expects(:enqueue).with(:invite_email, has_key(:invite_id))
-            #user.password_hash = nil
           end
 
           it 'sends a welcome message if set' do
@@ -330,6 +328,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         put "/invites/show/#{invite.invite_key}.json"
+        expect(response.status).to eq(200)
         invite.reload
         expect(invite.user_id).to be_blank
         expect(invite.redeemed?).to be_falsey
@@ -344,6 +343,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+        expect(response.status).to eq(200)
         invite.reload
         expect(invite.user_id).to be_blank
         expect(invite.redeemed?).to be_falsey
