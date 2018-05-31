@@ -1095,7 +1095,19 @@ RSpec.describe TopicsController do
         end
       end
 
-      it 'grabs the correct set of posts when post_number param is passed' do
+      it 'grabs the correct set of posts' do
+        get "/t/#{topic.slug}/#{topic.id}.json"
+        expect(response).to be_success
+        expect(extract_post_stream).to eq(@post_ids[0..1])
+
+        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
+        expect(response).to be_success
+        expect(extract_post_stream).to eq(@post_ids[0..1])
+
+        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
+        expect(response).to be_success
+        expect(extract_post_stream).to eq(@post_ids[2..3])
+
         post_number = topic.posts.pluck(:post_number).sort[3]
         get "/t/#{topic.slug}/#{topic.id}/#{post_number}.json"
         expect(response).to be_success
