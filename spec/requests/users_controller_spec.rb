@@ -2200,7 +2200,7 @@ describe UsersController do
           email: 'updatedemail@example.com'
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.email).to eq('updatedemail@example.com')
@@ -2219,7 +2219,7 @@ describe UsersController do
           email: 'updatedemail@example.com'
         }
 
-        expect(response).to_not be_success
+        expect(response.status).to eq(403)
       end
 
       it "raises an error with an invalid password" do
@@ -2229,7 +2229,7 @@ describe UsersController do
           email: 'updatedemail@example.com'
         }
 
-        expect(response).to_not be_success
+        expect(response.status).to eq(403)
       end
 
       it "raises an error for an active user" do
@@ -2239,7 +2239,7 @@ describe UsersController do
           email: 'updatedemail@example.com'
         }
 
-        expect(response).to_not be_success
+        expect(response.status).to eq(403)
       end
 
       it "raises an error when logged in" do
@@ -2251,7 +2251,7 @@ describe UsersController do
           email: 'updatedemail@example.com'
         }
 
-        expect(response).to_not be_success
+        expect(response.status).to eq(403)
       end
 
       it "raises an error when the new email is taken" do
@@ -2263,7 +2263,7 @@ describe UsersController do
           email: user.email
         }
 
-        expect(response).to_not be_success
+        expect(response.status).to eq(422)
       end
 
       it "can be updated" do
@@ -2276,7 +2276,7 @@ describe UsersController do
           email: 'updatedemail@example.com'
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.email).to eq('updatedemail@example.com')
