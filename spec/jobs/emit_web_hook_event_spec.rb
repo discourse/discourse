@@ -28,7 +28,7 @@ describe Jobs::EmitWebHookEvent do
     before do
       SiteSetting.retry_web_hook_events = true
       stub_request(:post, "https://meta.discourse.org/webhook_listener")
-          .to_return(body: 'Invalid Access', status: 403)
+        .to_return(body: 'Invalid Access', status: 403)
     end
 
     it 'raises an error' do
