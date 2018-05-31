@@ -266,7 +266,6 @@ describe PostCreator do
       it 'creates a post with featured link' do
         SiteSetting.topic_featured_link_enabled = true
         SiteSetting.min_first_post_length = 100
-        SiteSetting.queue_jobs = true
 
         post = creator_with_featured_link.create
         expect(post.topic.featured_link).to eq('http://www.discourse.org')
@@ -290,10 +289,6 @@ describe PostCreator do
       end
 
       describe "topic's auto close" do
-        before do
-          SiteSetting.queue_jobs = true
-        end
-
         it "doesn't update topic's auto close when it's not based on last post" do
           freeze_time
 
@@ -838,6 +833,8 @@ describe PostCreator do
     end
 
     it 'can post to a group correctly' do
+      SiteSetting.queue_jobs = false
+
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.topic_allowed_users.count).to eq(1)
       expect(post.topic.topic_allowed_groups.count).to eq(1)

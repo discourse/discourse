@@ -28,7 +28,6 @@ describe Topic do
 
     context 'jobs may be queued' do
       before do
-        SiteSetting.queue_jobs = true
         freeze_time
       end
 
