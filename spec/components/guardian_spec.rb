@@ -2243,6 +2243,10 @@ describe Guardian do
       it "returns false if title is from a group the user doesn't belong to" do
         expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(false)
       end
+
+      it "returns true if the title is set to an empty string" do
+        expect(Guardian.new(user).can_grant_title?(user, '')).to eq(true)
+      end
     end
   end
 
