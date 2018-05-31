@@ -1088,18 +1088,18 @@ RSpec.describe TopicsController do
       end
 
       before do
-        TopicView.stubs(:chunk_size).returns(4)
+        TopicView.stubs(:chunk_size).returns(2)
         @post_ids = topic.posts.pluck(:id)
-        5.times do
+        3.times do
           @post_ids << Fabricate(:post, topic: topic).id
         end
       end
 
       it 'grabs the correct set of posts when post_number param is passed' do
-        post_number = topic.posts.pluck(:post_number).sort[4]
+        post_number = topic.posts.pluck(:post_number).sort[3]
         get "/t/#{topic.slug}/#{topic.id}/#{post_number}.json"
         expect(response).to be_success
-        expect(extract_post_stream).to eq(@post_ids[-4..-1])
+        expect(extract_post_stream).to eq(@post_ids[-2..-1])
       end
     end
 
