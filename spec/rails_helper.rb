@@ -158,6 +158,10 @@ RSpec.configure do |config|
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
 
+    # Running jobs are expensive and most of our tests are not concern with
+    # code that runs inside jobs
+    SiteSetting.queue_jobs = true
+
     Discourse.clear_readonly!
     Sidekiq::Worker.clear_all
 

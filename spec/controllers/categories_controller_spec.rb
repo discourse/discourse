@@ -10,6 +10,7 @@ describe CategoriesController do
 
     describe "logged in" do
       before do
+        SiteSetting.queue_jobs = false
         @user = log_in(:admin)
       end
 
@@ -48,8 +49,6 @@ describe CategoriesController do
             name: @category.name, color: "ff0", text_color: "fff"
           }, format: :json
         end
-
-        it { is_expected.not_to respond_with(:success) }
 
         it "returns errors on a duplicate category name" do
           expect(response.status).to eq(422)
@@ -157,6 +156,9 @@ describe CategoriesController do
   end
 
   describe "update" do
+    before do
+      SiteSetting.queue_jobs = false
+    end
 
     it "requires the user to be logged in" do
       put :update, params: { id: 'category' }, format: :json

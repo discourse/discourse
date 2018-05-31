@@ -568,6 +568,7 @@ describe PostsController do
       end
 
       it 'allows to create posts in import_mode' do
+        SiteSetting.queue_jobs = false
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
         user = Fabricate(:user)
@@ -782,8 +783,6 @@ describe PostsController do
       end
 
       it 'can create a reply to a post' do
-        SiteSetting.queue_jobs = true
-
         topic = Fabricate(:private_message_post, user: user).topic
         post_2 = Fabricate(:private_message_post, user: user, topic: topic)
 

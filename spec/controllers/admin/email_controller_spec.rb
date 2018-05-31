@@ -83,7 +83,6 @@ describe Admin::EmailController do
   context '#handle_mail' do
     before do
       log_in_user(Fabricate(:admin))
-      SiteSetting.queue_jobs = true
     end
 
     it 'should enqueue the right job' do
