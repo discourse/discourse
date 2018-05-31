@@ -27,7 +27,7 @@ export function transformBasicPost(post) {
     deleted: post.get('deleted'),
     deleted_at: post.deleted_at,
     user_deleted: post.user_deleted,
-    isDeleted: post.deleted_at || post.user_deleted,
+    isDeleted: post.deleted_at || post.user_deleted, // xxxxx
     deletedByAvatarTemplate: null,
     deletedByUsername: null,
     primary_group_name: post.primary_group_name,
@@ -77,6 +77,7 @@ export function transformBasicPost(post) {
     cooked_hidden: !!post.cooked_hidden,
     expandablePost: false,
     replyCount: post.reply_count,
+    locked: post.locked
   };
 
   _additionalAttributes.forEach(a => postAtts[a] = post[a]);
@@ -137,10 +138,12 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
     postAtts.topicCreatedAt = topic.created_at;
     postAtts.createdByUsername = createdBy.username;
     postAtts.createdByAvatarTemplate = createdBy.avatar_template;
+    postAtts.createdByName = createdBy.name;
 
     postAtts.lastPostUrl = topic.get('lastPostUrl');
     postAtts.lastPostUsername = details.last_poster.username;
     postAtts.lastPostAvatarTemplate = details.last_poster.avatar_template;
+    postAtts.lastPostName = details.last_poster.name;
     postAtts.lastPostAt = topic.last_posted_at;
 
     postAtts.topicReplyCount = topic.get('replyCount');
@@ -212,7 +215,8 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
     postAtts.expandablePost = topic.expandable_first_post;
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
-    postAtts.canDelete = !postAtts.isDeleted && postAtts.canDelete;
+    postAtts.canDelete = postAtts.canDelete && !post.deleted_at &&
+      currentUser && (currentUser.staff || !post.user_deleted);
   }
 
   _additionalAttributes.forEach(a => postAtts[a] = post[a]);

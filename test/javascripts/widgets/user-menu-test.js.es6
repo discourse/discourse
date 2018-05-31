@@ -35,7 +35,7 @@ widgetTest('log out', {
 widgetTest('private messages - disabled', {
   template: '{{mount-widget widget="user-menu"}}',
   beforeEach() {
-    this.siteSettings.enable_private_messages = false;
+    this.siteSettings.enable_personal_messages = false;
   },
 
   test(assert) {
@@ -46,7 +46,7 @@ widgetTest('private messages - disabled', {
 widgetTest('private messages - enabled', {
   template: '{{mount-widget widget="user-menu"}}',
   beforeEach() {
-    this.siteSettings.enable_private_messages = true;
+    this.siteSettings.enable_personal_messages = true;
   },
 
   test(assert) {

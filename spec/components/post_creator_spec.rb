@@ -266,7 +266,6 @@ describe PostCreator do
       it 'creates a post with featured link' do
         SiteSetting.topic_featured_link_enabled = true
         SiteSetting.min_first_post_length = 100
-        SiteSetting.queue_jobs = true
 
         post = creator_with_featured_link.create
         expect(post.topic.featured_link).to eq('http://www.discourse.org')
@@ -290,10 +289,6 @@ describe PostCreator do
       end
 
       describe "topic's auto close" do
-        before do
-          SiteSetting.queue_jobs = true
-        end
-
         it "doesn't update topic's auto close when it's not based on last post" do
           freeze_time
 
@@ -306,23 +301,64 @@ describe PostCreator do
           expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
         end
 
-        it "updates topic's auto close date when it's based on last post" do
-          freeze_time
-          topic = Fabricate(:topic_timer,
-            based_on_last_post: true,
-            execute_at: Time.zone.now - 12.hours,
-            created_at: Time.zone.now - 24.hours
-          ).topic
+        describe "topic's auto close based on last post" do
+          let(:topic_timer) do
+            Fabricate(:topic_timer,
+              based_on_last_post: true,
+              execute_at: Time.zone.now - 12.hours,
+              created_at: Time.zone.now - 24.hours
+            )
+          end
 
-          Fabricate(:post, topic: topic)
+          let(:topic) { topic_timer.topic }
 
-          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          let(:post) do
+            Fabricate(:post, topic: topic)
+          end
 
-          topic_status_update = TopicTimer.last
-          expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
-          expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
+          it "updates topic's auto close date" do
+            freeze_time
+            post
+
+            PostCreator.new(
+              topic.user,
+              topic_id: topic.id,
+              raw: "this is a second post"
+            ).create
+
+            topic_timer.reload
+
+            expect(topic_timer.execute_at).to eq(Time.zone.now + 12.hours)
+            expect(topic_timer.created_at).to eq(Time.zone.now)
+          end
+
+          describe "when auto_close_topics_post_count has been reached" do
+            before do
+              SiteSetting.auto_close_topics_post_count = 2
+            end
+
+            it "closes the topic and deletes the topic timer" do
+              freeze_time
+              post
+
+              PostCreator.new(
+                topic.user,
+                topic_id: topic.id,
+                raw: "this is a second post"
+              ).create
+
+              topic.reload
+
+              expect(topic.posts.last.raw).to eq(I18n.t(
+                'topic_statuses.autoclosed_topic_max_posts',
+                count: SiteSetting.auto_close_topics_post_count
+              ))
+
+              expect(topic.closed).to eq(true)
+              expect(topic_timer.reload.deleted_at).to eq(Time.zone.now)
+            end
+          end
         end
-
       end
 
       context "tags" do
@@ -742,9 +778,17 @@ describe PostCreator do
       post1 = create_post(archetype: Archetype.private_message,
                           target_usernames: [admin.username])
 
-      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+      expect do
+        create_post(user: post1.user, topic_id: post1.topic_id)
+      end.to change { Post.count }.by(2)
 
       post1.topic.reload
+
+      expect(post1.topic.posts.last.raw).to eq(I18n.t(
+        'topic_statuses.autoclosed_message_max_posts',
+        count: SiteSetting.auto_close_messages_post_count
+      ))
+
       expect(post1.topic.closed).to eq(true)
     end
 
@@ -752,11 +796,18 @@ describe PostCreator do
       SiteSetting.auto_close_topics_post_count = 2
 
       post1 = create_post
-      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+
+      expect do
+        create_post(user: post1.user, topic_id: post1.topic_id)
+      end.to change { Post.count }.by(2)
 
       post1.topic.reload
 
-      expect(post1.topic.posts_count).to eq(3)
+      expect(post1.topic.posts.last.raw).to eq(I18n.t(
+        'topic_statuses.autoclosed_topic_max_posts',
+        count: SiteSetting.auto_close_topics_post_count
+      ))
+
       expect(post1.topic.closed).to eq(true)
     end
   end
@@ -782,6 +833,8 @@ describe PostCreator do
     end
 
     it 'can post to a group correctly' do
+      SiteSetting.queue_jobs = false
+
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.topic_allowed_users.count).to eq(1)
       expect(post.topic.topic_allowed_groups.count).to eq(1)

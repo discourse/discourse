@@ -11,15 +11,15 @@
   max-width: 1475px;
   width: 100%;
   &.hide-preview {
-    max-width:740px;  
+    max-width:740px;
   }
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
-  z-index: 999;
+  z-index: z("composer","content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
   background-color: $secondary;
-  box-shadow: 0 -1px 40px rgba(0,0,0, .12);
+  box-shadow: shadow("composer");
 
   .reply-area {
     display: flex;
@@ -29,7 +29,7 @@
   .saving-text,
   .draft-text {
     display: none;
-    padding-left: 10px;   
+    padding-left: 10px;
     .spinner {
       margin-left: 5px;
       border-color: $secondary;
@@ -88,18 +88,56 @@
   }
 
   .reply-to {
-    color: $primary-medium;
+    color: $primary-high;
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
     i {
-      color: $primary-medium;
+      color: $primary-high;
     }
     .reply-details {
-      overflow: hidden;
-      text-overflow: ellipsis;
+      max-width: calc(100% - 60px);
+      flex: 1 1 auto;
       white-space: nowrap;
-      max-width: calc(100% - 100px);
+    }
+    .composer-action-title {
+      display: inline-flex;
+      align-items: center;
+      width: auto;
+      max-width: 100%;
+
+      .avatar {
+        width: 20px;
+      }
+
+      .action-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .topic-link, .user-link, .post-link {
+        margin-right: 5px;
+      }
+
+      .username {
+        margin-right: 5px;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @media screen and (max-width: 500px) {
+          display: none;
+        }
+      }
+
+      .d-icon {
+        margin-right: 5px;
+      }
+
+      img.avatar {
+        margin-right: 3px;
+      }
     }
     .composer-controls {
       margin-left: auto;
@@ -167,6 +205,11 @@
     .category-input {
       flex-basis: 25%;
       margin-left: 0;
+      margin-right: 5px;
+      @media screen and (max-width: 920px) {
+        flex-basis: 100%;
+        margin-right: 0;
+      }
     }
   }
 
@@ -179,28 +222,25 @@
   }
 
   #reply-title {
-    padding: 6px 10px;
     margin: 0 0 5px 0;
     flex-basis: 50%;
   }
 
-  .tag-chooser {
+  .mini-tag-chooser {
     flex: 1 1 25%;
-    margin: 0 0 5px 10px;
-    border: 1px solid $primary-medium;
+    margin: 0 0 5px 0;
     background: $secondary;
+    z-index: z("composer","dropdown");
     @media all and (max-width: 900px) {
       margin: 0;
       flex: 1 1 100%;
     }
-    .select2-choices {
-      border: none;
-    }
-    &.select2-dropdown-open, &.select2-container-active {
-      border-color: $tertiary;
-    }
   }
 
+  .popup-tip {
+    z-index: z("composer","dropdown");
+  }
+    
   .wmd-controls {
     position: relative;
     display: flex;
@@ -210,7 +250,8 @@
   }
 
   .d-editor-button-bar .btn {
-    padding: 3px 8px;
+    padding: 4px 8px;
+    display: inline-block;
     @media all and (max-width: 800px) {
       padding: 5px;
     }
@@ -219,7 +260,7 @@
   .submit-panel {
     display: flex;
     flex-shrink: 0;
-    margin-top: 10px;
+    margin: 7px 0 3px 0;
   }
 
   .save-or-cancel {
@@ -230,7 +271,13 @@
       flex: 0 0 auto;
     }
     .cancel {
-      margin-left: 10px;
+      margin-left: 1.25em;
+      line-height: normal;
+      color: $primary-high;
+      transition: color 250ms;
+      &:hover {
+        color: $danger;
+      }
     }
     #draft-status,
     #file-uploading {
@@ -238,9 +285,10 @@
     }
     #file-uploading {
       display: flex;
+      align-items: center;
       a {
         margin-left: 5px;
-        color: $primary-medium;
+        color: $primary-high;
       }
       .spinner {
         margin-right: 5px;
@@ -257,12 +305,8 @@
     }
   }
 
-  .create {
-    margin-right: 5px;
-  }
-
   #draft-status, #file-uploading {
-    color: $primary-medium;
+    color: $primary-high;
   }
 }
 
@@ -271,7 +315,7 @@
 }
 
 .autocomplete {
-  z-index: 999999;
+  z-index: z("composer","dropdown") + 1;
   position: absolute;
   width: 240px;
   background-color: $secondary;
@@ -300,7 +344,7 @@
           color: $primary;
         }
         span.name {
-          font-size: .857em;
+          font-size: $font-down-1;
           vertical-align: middle;
         }
         &.selected {
@@ -326,12 +370,11 @@ div.ac-wrap.disabled {
 
 div.ac-wrap div.item a.remove, .remove-link {
   margin-left: 4px;
-  font-size: .857em;
-  line-height: 10px;
-  padding: 1.5px 1.5px 1.5px 2.5px;
+  font-size: $font-down-1;
+  line-height: $line-height-small;
+  padding: 1px 3.5px;
   border-radius: 12px;
-  width: 10px;
-  display: inline-block;
+  box-sizing: border-box;
   border: 1px solid $primary-low;
   &:hover {
     background-color: $danger-low;
@@ -344,17 +387,17 @@ div.ac-wrap div.item a.remove, .remove-link {
 div.ac-wrap {
   overflow: auto;
   max-height: 150px;
+  display: flex;
+  flex-wrap: wrap;
   background-color: $secondary;
   border: 1px solid $primary-medium;
-  padding: 5px 4px 1px 10px;
   div.item {
     float: left;
-    margin-bottom: 4px;
-    margin-right: 10px;
+    padding: 4px 10px;
+    line-height: $line-height-large;
     span {
-      height: 24px;
       display: inline-block;
-      line-height: 20px;
+      line-height: $line-height-medium;
     }
   }
 
@@ -368,12 +411,11 @@ div.ac-wrap {
 
   input[type="text"] {
     float: left;
-    margin-bottom: 4px;
-    height: 24px;
     display: block;
-    border: 0;
-    padding: 0;
     box-shadow: none;
+    border: 0;
+    margin: 0;
+    background: transparent;
   }
 }
 

@@ -15,7 +15,7 @@ a.loading-onebox {
 
   margin-top: 15px;
   padding: 12px;
-  font-size: 1em;
+  font-size: $font-0;
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
@@ -30,7 +30,7 @@ a.loading-onebox {
         padding-right: 10px;
       }
       position: absolute;
-      font-size: 1em;
+      font-size: $font-0;
       img.favicon {
         margin-right: 3px;
       }
@@ -90,9 +90,9 @@ a.loading-onebox {
 
 aside.onebox {
   border: 5px solid $primary-low;
-
+  margin-bottom: 1em;
   padding: 12px 25px 12px 12px;
-  font-size: 1em;
+  font-size: $font-0;
 
   header {
     margin-bottom: 8px;
@@ -111,6 +111,7 @@ aside.onebox {
   @include onebox-favicon('githubissue', 'github');
   @include onebox-favicon('githubgist', 'github');
   @include onebox-favicon('amazon', 'amazon');
+  @include onebox-favicon('instagram', 'instagram');
   @include onebox-favicon('googledocs', 'google_branding/logo_drive_48px');
 
 
@@ -118,7 +119,7 @@ aside.onebox {
     clear: both;
 
     h3, h4 {
-      font-size: 1.143em;
+      font-size: $font-up-1;
       margin: 0 0 10px 0;
     }
 
@@ -178,6 +179,23 @@ aside.onebox {
           margin-right: none;
         }
       }
+
+      // full size images for instagram, twitter, etc.
+      .aspect-image-full-size {
+        max-height: 500px;
+        width: calc(500px * var(--aspect-ratio));
+        max-width: 100%;
+
+        img {
+          width: 100%;
+          height: inherit;
+          max-width: initial;
+          max-height: initial;
+          float: none;
+          padding: 5px 5px 5px 5px;
+        }
+      }
+
       [style*="--aspect-ratio"] {
         position: relative;
       }
@@ -212,6 +230,27 @@ aside.onebox {
       }
     }
 
+    &.user-onebox {
+      .fa {
+        margin-right: 5px;
+      }
+      .full-name,
+      .location {
+        margin-right: 10px;
+      }
+    }
+
+    // instagram fixes
+    .instagram-images {
+      clear: both;
+
+      .instagram-image {
+        padding: 5px 5px 5px 5px;
+        max-width: 100%;
+        max-height: 100%;
+        float: none;
+      }
+    }
   }
 }
 
@@ -270,16 +309,16 @@ pre.onebox code ol.lines li:before {
   color:#AFAFAF;
   text-align:right;
   padding-right:5px;
-  font-size:.857em;
-  line-height: 1.9em;
+  font-size: $font-down-1;
+  line-height: $line-height-large;
   content: counter(li-counter);
   counter-increment: li-counter;
 }
 
 
 pre.onebox code ol{
-	margin-left:0px;
-	line-height:1.5em;
+	margin-left:0;
+	line-height: $line-height-large;
 }
 pre.onebox code {
   background-color: dark-light-choose(#fff, #000);
@@ -290,13 +329,13 @@ pre.onebox code li{
 
 pre.onebox code ol.lines{
 	position:relative;
-	margin-left: 40px;
+	margin: 0 0 0 40px;
 }
 
 pre.onebox code ol.lines li {
 	list-style-type: none;
 	padding-left: 5px;
-	margin-left: 0px;
+	margin-left: 0;
 	border-left: 1px solid #CFCFCF;
 	min-height: 1.5em; //show empty li lines
   white-space: pre;
@@ -314,7 +353,7 @@ pre.onebox code {
 .onebox-body .github-commit-status {
   background: #F5F5F5;
   border-radius: 5px;
-  margin:0px 0px 5px 100px;
+  margin:0 0 5px 100px;
   padding: 10px;
 }
 
@@ -331,7 +370,7 @@ pre.onebox code {
 .onebox-body .build_status
 {
   padding: 2px;
-  font-size:.857em;
+  font-size: $font-down-1;
 }
 
 .onebox-body .status_tag.open {
@@ -376,14 +415,14 @@ aside.onebox.twitterstatus .onebox-body {
 .onebox.imgur-album {
   .outer-box {
     position: absolute;
-    z-index: 935;
-    height: 30px;
+    z-index: z("base");
     overflow: hidden;
-    font-size: .857em;
+    font-size: $font-down-1;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
     max-width: 100%;
+    padding: 5px 0;
 
     .inner-box {
       padding-left: 10px;
@@ -395,8 +434,8 @@ aside.onebox.twitterstatus .onebox-body {
 
       .album-title {
         width: 100%;
-        font-size: 1.143em;
-        line-height: 30px;
+        font-size: $font-up-1;
+        line-height: $line-height-large;
         color: #ccc;
         text-decoration: none;
       }
@@ -453,18 +492,35 @@ aside.onebox.stackexchange .onebox-body {
   .label2 {
     float: right;
   }
-  .site-icon {
-    width: 16px;
-    height: 16px;
-    margin-right: 3px;
+}
+
+.onebox {
+  &.whitelistedgeneric,
+  &.gfycat {
+    .site-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 3px;
+    }
+  }
+}
+
+.onebox.gfycat p {
+  span.label1 a {
+    white-space: nowrap;
+  }
+}
+
+.onebox.instagram {
+  div.instagram-description {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    padding-top: 10px;
   }
 }
 
 .onebox.githubcommit {
    pre.message {
-     clear: left;
      padding: 0;
-     padding-top: 10px;
    }
 }
 

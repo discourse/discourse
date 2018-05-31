@@ -7,11 +7,13 @@ export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['order', 'desc'],
 
   buildBuffer(buffer) {
+    buffer.push("<span class='header-contents'>");
     buffer.push(I18n.t(this.get('i18nKey')));
 
     if (this.get('field') === this.get('order')) {
       buffer.push(iconHTML(this.get('desc') ? 'chevron-down' : 'chevron-up'));
     }
+    buffer.push("</span>");
   },
 
   click() {

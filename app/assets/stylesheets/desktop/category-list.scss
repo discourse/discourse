@@ -35,10 +35,10 @@
     text-align: right;
 
     .value {
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
     .unit {
-      font-size: .857em;
+      font-size: $font-down-1;
     }
     .badge-notification {
       display: block;
@@ -48,15 +48,10 @@
     }
   }
 
-  .category-description,
-  .subcategories {
-    margin-top: 10px;
-  }
-
   .subcategories {
     .badge-notification.new-posts {
       padding: 0;
-      margin: 0 5px 0 0;
+      margin: 0 10px 0 0;
     }
   }
 
@@ -69,7 +64,7 @@
 
     a.last-posted-at,
     a.last-posted-at:visited {
-      font-size: 0.857em;
+      font-size: $font-down-1;
       color: dark-light-choose($primary-medium, $secondary-high);
     }
 
@@ -88,17 +83,12 @@
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid $primary-low;
-      &:first-of-type {
-        border-top: 3px solid $primary-low;
-      }
-    }
 
     .category {
       border-left: 6px solid;
       h3 {
-        font-size: 1.286em;
+        font-size: $font-up-2;
+        line-height: $line-height-medium;
         a[href] {
           color: $primary;
         }
@@ -114,7 +104,7 @@
   }
 }
 
-.categories-and-latest {
+.categories-and-latest, .categories-and-top {
   display: flex;
   flex-flow: row wrap;
 
@@ -137,7 +127,7 @@
   }
 
   .discourse-tag {
-    font-size: 0.786em;
+    font-size: $font-down-2;
   }
 
   .topic-featured-link {

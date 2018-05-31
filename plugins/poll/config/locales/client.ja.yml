@@ -50,6 +50,7 @@ ja:
         help:
           options_count: 少なくとも2つの選択肢を入力してください
           invalid_values: 最小値は最大値より小さくなければなりません。
+          min_step_value: 最小ステップ単位は 1 です
         poll_type:
           label: タイプ
           regular: 一つだけ選択

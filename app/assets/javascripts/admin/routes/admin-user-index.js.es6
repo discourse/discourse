@@ -21,15 +21,5 @@ export default Discourse.Route.extend({
       availableGroups: this._availableGroups,
       model
     });
-  },
-
-  actions: {
-    viewActionLogs(username) {
-      const controller = this.controllerFor('adminLogs.staffActionLogs');
-      this.transitionTo('adminLogs.staffActionLogs').then(() => {
-        controller.set('filters', Ember.Object.create());
-        controller._changeFilters({ target_user: username });
-      });
-    }
   }
 });

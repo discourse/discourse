@@ -1,4 +1,4 @@
-.latest-topic-list {
+.latest-topic-list, .top-topic-list {
   @extend .topic-list-icons;
 
   .table-heading {
@@ -23,12 +23,19 @@
   }
   .main-link {
     @extend .topic-list-main-link;
-    flex: 15;
-    font-size: 1em;
+    flex: 0 1 auto;
+    max-width: 65%;
+    font-size: $font-0;
+    .badge-wrapper {
+      max-width: 100%;
+      .badge-category-bg {
+        flex-shrink: 0;
+      }
+    }
 
     .top-row {
       margin-bottom: 0.1em;
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
   }
   .topic-stats {

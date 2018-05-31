@@ -3,6 +3,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 const { get, isNone, isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
@@ -14,6 +15,15 @@ export default ComboBoxComponent.extend({
   rowComponent: "category-row",
   noneRowComponent: "none-category-row",
   allowSubCategories: true,
+  permissionType: PermissionType.FULL,
+
+  init() {
+    this._super();
+
+    this.get("rowComponentOptions").setProperties({
+      allowUncategorized: this.get("allowUncategorized"),
+    });
+  },
 
   filterComputedContent(computedContent, computedValue, filter) {
     if (isEmpty(filter)) { return computedContent; }
@@ -48,6 +58,36 @@ export default ComboBoxComponent.extend({
     }
   },
 
+  computeHeaderContent() {
+    let content = this._super();
+
+    if (this.get("hasSelection")) {
+      const category = Category.findById(content.value);
+      const parentCategoryId = category.get("parent_category_id");
+      const hasParentCategory = Ember.isPresent(parentCategoryId);
+
+      let badge = "";
+
+      if (hasParentCategory) {
+        const parentCategory = Category.findById(parentCategoryId);
+        badge += categoryBadgeHTML(parentCategory, {
+          link: false,
+          allowUncategorized: true
+        }).htmlSafe();
+      }
+
+      badge += categoryBadgeHTML(category, {
+        link: false,
+        hideParent: hasParentCategory ? true : false,
+        allowUncategorized: true
+      }).htmlSafe();
+
+      content.label = badge;
+    }
+
+    return content;
+  },
+
   @on("didRender")
   _bindComposerResizing() {
     this.appEvents.on("composer:resized", this, this.applyDirection);
@@ -56,6 +96,12 @@ export default ComboBoxComponent.extend({
   @on("willDestroyElement")
   _unbindComposerResizing() {
     this.appEvents.off("composer:resized");
+  },
+
+  didSelect(computedContentItem) {
+    if (this.attrs.onChooseCategory) {
+      this.attrs.onChooseCategory(computedContentItem.originalContent);
+    }
   },
 
   computeContent() {
@@ -86,7 +132,11 @@ export default ComboBoxComponent.extend({
         return false;
       }
 
-      return get(c, "permission") === PermissionType.FULL;
+      if (this.get("permissionType")) {
+        return this.get("permissionType") === get(c, "permission");
+      }
+
+      return true;
     });
   }
 });

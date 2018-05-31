@@ -6,9 +6,6 @@ class RandomTopicSelector
   def self.backfill(category = nil)
     exclude = category&.topic_id
 
-    # don't leak private categories into the "everything" group
-    user = category ? CategoryFeaturedTopic.fake_admin : nil
-
     options = {
       per_page: category ? category.num_featured_topics : 3,
       visible: true,
@@ -16,9 +13,20 @@ class RandomTopicSelector
     }
 
     options[:except_topic_ids] = [category.topic_id] if exclude
-    options[:category] = category.id if category
 
-    query = TopicQuery.new(user, options)
+    if category
+      options[:category] = category.id
+      # NOTE: at the moment this site setting scopes tightly to a category (excluding subcats)
+      # this is done so we don't populate a junk cache
+      if SiteSetting.limit_suggested_to_category
+        options[:no_subcategories] = true
+      end
+
+      # don't leak private categories into the "everything" group
+      options[:guardian] = Guardian.new(CategoryFeaturedTopic.fake_admin)
+    end
+
+    query = TopicQuery.new(nil, options)
 
     results = query.latest_results.order('RANDOM()')
       .where(closed: false, archived: false)
@@ -81,6 +89,10 @@ class RandomTopicSelector
 
   def self.cache_key(category = nil)
     "random_topic_cache_#{category&.id}"
+  end
+
+  def self.clear_cache!
+    $redis.delete_prefixed(cache_key)
   end
 
 end

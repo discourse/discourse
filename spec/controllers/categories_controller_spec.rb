@@ -4,11 +4,13 @@ describe CategoriesController do
   describe "create" do
 
     it "requires the user to be logged in" do
-      expect { post :create, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      post :create, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe "logged in" do
       before do
+        SiteSetting.queue_jobs = false
         @user = log_in(:admin)
       end
 
@@ -47,8 +49,6 @@ describe CategoriesController do
             name: @category.name, color: "ff0", text_color: "fff"
           }, format: :json
         end
-
-        it { is_expected.not_to respond_with(:success) }
 
         it "returns errors on a duplicate category name" do
           expect(response.status).to eq(422)
@@ -90,8 +90,8 @@ describe CategoriesController do
   describe "destroy" do
 
     it "requires the user to be logged in" do
-      expect { delete :destroy, params: { id: "category" }, format: :json }
-        .to raise_error(Discourse::NotLoggedIn)
+      delete :destroy, params: { id: "category" }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe "logged in" do
@@ -156,9 +156,13 @@ describe CategoriesController do
   end
 
   describe "update" do
+    before do
+      SiteSetting.queue_jobs = false
+    end
 
     it "requires the user to be logged in" do
-      expect { put :update, params: { id: 'category' }, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      put :update, params: { id: 'category' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe "logged in" do
@@ -302,9 +306,8 @@ describe CategoriesController do
 
   describe 'update_slug' do
     it 'requires the user to be logged in' do
-      expect do
-        put :update_slug, params: { category_id: 'category' }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :update_slug, params: { category_id: 'category' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'logged in' do

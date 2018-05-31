@@ -10,10 +10,18 @@
       align-items: center;
     }
   }
+
+  #private-message-users {
+    width: 404px;
+  }
+
+  .select-kit.is-expanded {
+    z-index: z("composer","dropdown");    
+  }
 }
 
 .category-input {
-  margin-left: 10px;  
+  margin-left: 10px;
 }
 
 .edit-title {
@@ -23,16 +31,16 @@
   &:not(.private-message) {
     .d-editor-preview-wrapper {
       @media screen and (max-width: 955px) {
-        margin-top: -79px;
+        margin-top: -77px;
       }
     }
   }
-  
+
   .with-tags {
     .d-editor-preview-wrapper {
-      margin-top: -79px;
+      margin-top: -77px;
       @media screen and (max-width: 900px) {
-        margin-top: -116px;
+        margin-top: -105px;
       }
     }
   }
@@ -47,7 +55,7 @@
 .open {
   .grippie {
     cursor: row-resize;
-    padding: 4px 0px;
+    padding: 4px 0;
     background: $tertiary;
     &:before {
       content: '';
@@ -73,10 +81,14 @@
   bottom: 10px;
   left: 51%;
   overflow-y: auto;
-  z-index: 110;
+  z-index: z("composer","popover");
   padding: 10px 10px 35px 10px;
-  box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
+  box-shadow: shadow("card");
   background: $highlight-medium;
+  .hide-preview & {
+    z-index: z("composer","dropdown") + 1;    
+  }
+  
 
   &.urgent {
     background: $danger-low;
@@ -100,10 +112,10 @@
     bottom: 10px;
     color: $primary;
     opacity: 0.5;
-    font-size: 1.143em;
+    font-size: $font-up-1;
     &:before {
       content: 'esc';
-      font-size: 0.857em;
+      font-size: $font-down-1;
       margin-right: 0.5em;
     }
   }
@@ -142,7 +154,7 @@
   background-color: $tertiary-low;
 
   a[href] {
-    color: $primary-medium;
+    color: $primary;
   }
 
   .posts-count {
@@ -158,9 +170,13 @@
     .fa, .blurb {
       color: dark-light-choose($primary-high, $secondary-medium);
     }
+    span.topic {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
   .badge-wrapper {
-    padding-left: 5px;
+    margin-left: 5px;
   }
 }
 
@@ -171,7 +187,7 @@
 
 .composer-bottom-right {
   a {
-    color: $primary-medium;
+    color: $primary-high;
     &:hover {
       color: $tertiary;
     }

@@ -3,6 +3,7 @@ import { flushMap } from 'discourse/models/store';
 import RestModel from 'discourse/models/rest';
 import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
+import { isRTL } from 'discourse/lib/text-direction';
 import computed from 'ember-addons/ember-computed-decorators';
 import ActionSummary from 'discourse/models/action-summary';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
@@ -58,7 +59,13 @@ const Topic = RestModel.extend({
 
   @computed('fancy_title')
   fancyTitle(title) {
-    return censor(emojiUnescape(title || ""), Discourse.Site.currentProp('censored_words'));
+    let fancyTitle = censor(emojiUnescape(title || ""), Discourse.Site.currentProp('censored_words'));
+
+    if (Discourse.SiteSettings.support_mixed_text_direction) {
+      let titleDir = isRTL(title) ? 'rtl' : 'ltr';
+      return `<span dir="${titleDir}">${fancyTitle}</span>`;
+    }
+    return fancyTitle;
   },
 
   // returns createdAt if there's no bumped date
@@ -94,7 +101,7 @@ const Topic = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function(tag){
-      if (title.toLowerCase().indexOf(tag) === -1 || Discourse.SiteSettings.staff_tags.indexOf(tag) !== -1) {
+      if (title.toLowerCase().indexOf(tag) === -1) {
         newTags.push(tag);
       }
     });
@@ -348,7 +355,7 @@ const Topic = RestModel.extend({
       'details.can_delete': false,
       'details.can_recover': true
     });
-    return ajax("/t/" + this.get('id'), {
+    return ajax(`/t/${this.get('id')}`, {
       data: { context: window.location.pathname },
       type: 'DELETE'
     });
@@ -362,7 +369,10 @@ const Topic = RestModel.extend({
       'details.can_delete': true,
       'details.can_recover': false
     });
-    return ajax("/t/" + this.get('id') + "/recover", { type: 'PUT' });
+    return ajax(`/t/${this.get('id')}/recover`, {
+      data: { context: window.location.pathname },
+      type: 'PUT'
+    });
   },
 
   // Update our attributes from a JSON result
@@ -467,6 +477,23 @@ const Topic = RestModel.extend({
     }).finally(()=>this.set('archiving', false));
 
     return promise;
+  },
+
+  publish() {
+    return ajax(`/t/${this.get('id')}/publish`, {
+      type: 'PUT',
+      data: this.getProperties('destination_category_id')
+    }).then(() => {
+      this.set('destination_category_id', null);
+    }).catch(popupAjaxError);
+  },
+
+  updateDestinationCategory(categoryId) {
+    this.set('destination_category_id', categoryId);
+    return ajax(`/t/${this.get('id')}/shared-draft`, {
+      method: 'PUT',
+      data: { category_id: categoryId }
+    });
   },
 
   convertTopic(type) {

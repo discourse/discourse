@@ -4,6 +4,24 @@ require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
 
+  # We disable message bus here to avoid a large amount
+  # of uneeded messaging, tests are careful to call refresh
+  # when they need to.
+  #
+  # DistributedCache used by locale handler can under certain
+  # cases take a tiny bit to stabalize.
+  #
+  # TODO: refactor SiteSettingExtension not to rely on statics in
+  # DefaultsProvider
+  #
+  before do
+    MessageBus.off
+  end
+
+  after do
+    MessageBus.on
+  end
+
   describe '#types' do
     context "verify enum sequence" do
       before do
@@ -25,8 +43,11 @@ describe SiteSettingExtension do
   end
 
   def new_settings(provider)
+    # we want to avoid leaking a big pile of MessageBus subscriptions here (1 per class)
+    # so we set listen_for_changes to false
     Class.new do
       extend SiteSettingExtension
+      self.listen_for_changes = false
       self.provider = provider
     end
   end
@@ -37,6 +58,30 @@ describe SiteSettingExtension do
 
   let :settings2 do
     new_settings(provider_local)
+  end
+
+  it "Does not leak state cause changes are not linked" do
+    t1 = Thread.new do
+      5.times do
+        settings = new_settings(SiteSettings::LocalProcessProvider.new)
+        settings.setting(:title, 'test')
+        settings.title = 'title1'
+        expect(settings.title).to eq 'title1'
+
+      end
+    end
+
+    t2 = Thread.new do
+      5.times do
+        settings = new_settings(SiteSettings::LocalProcessProvider.new)
+        settings.setting(:title, 'test')
+        settings.title = 'title2'
+        expect(settings.title).to eq 'title2'
+      end
+    end
+
+    t1.join
+    t2.join
   end
 
   describe "refresh!" do
@@ -393,10 +438,29 @@ describe SiteSettingExtension do
   end
 
   describe ".set_and_log" do
+    before do
+      settings.setting(:s3_secret_access_key, "old_secret_key")
+      settings.setting(:title, "Discourse v1")
+      settings.refresh!
+    end
+
     it "raises an error when set for an invalid setting name" do
       expect {
         settings.set_and_log("provider", "haxxed")
       }.to raise_error(ArgumentError)
+    end
+
+    it "scrubs secret setting values from logs" do
+      settings.set_and_log("s3_secret_access_key", "new_secret_key")
+      expect(UserHistory.last.previous_value).to eq("[FILTERED]")
+      expect(UserHistory.last.new_value).to eq("[FILTERED]")
+    end
+
+    it "works" do
+      settings.set_and_log("title", "Discourse v2")
+      expect(settings.title).to eq("Discourse v2")
+      expect(UserHistory.last.previous_value).to eq("Discourse v1")
+      expect(UserHistory.last.new_value).to eq("Discourse v2")
     end
   end
 
@@ -584,6 +648,17 @@ describe SiteSettingExtension do
       Discourse.expects(:request_refresh!)
       settings.default_locale = 'zh_CN'
     end
+  end
+
+  describe "get_hostname" do
+
+    it "properly extracts the hostname" do
+      expect(settings.send(:get_hostname, "discourse.org")).to eq("discourse.org")
+      expect(settings.send(:get_hostname, " discourse.org ")).to eq("discourse.org")
+      expect(settings.send(:get_hostname, "@discourse.org")).to eq("discourse.org")
+      expect(settings.send(:get_hostname, "https://discourse.org")).to eq("discourse.org")
+    end
+
   end
 
 end

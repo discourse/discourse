@@ -17,12 +17,12 @@ ro:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, ianuarie, februarie, martie, aprilie, mai, iunie, iulie, august, septembrie, octombrie, noiembrie, decembrie]
+    month_names: [~, ianuarie, februarie, martie, aprilie, mai, iunie, iulie, august, septembrie, octombrie, noiembrie, decembrie]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "AM"
     pm: "PM"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Subiecte"
   posts: "Postări"
@@ -62,17 +62,17 @@ ro:
       present: trebuie să fie gol
       confirmation: "nu se potrivește cu %{attribute}"
       empty: nu poate fi gol
-      equal_to: trebuie sa fie egal cu %{count}
+      equal_to: "trebuie sa fie egal cu %{count}"
       even: trebuie să fie par
       exclusion: este rezervat
-      greater_than: trebuie să fie mai mare decât %{count}
-      greater_than_or_equal_to: trebuie să fie mai mare sau egal cu %{count}
+      greater_than: "trebuie să fie mai mare decât %{count}"
+      greater_than_or_equal_to: "trebuie să fie mai mare sau egal cu %{count}"
       has_already_been_used: "a fost deja folosit"
       inclusion: nu este inclus in listă
       invalid: nu este valid
       is_invalid: "pare neclar, e completă propoziția?"
-      less_than: trebuie să fie mai mic decât %{count}
-      less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
+      less_than: "trebuie să fie mai mic decât %{count}"
+      less_than_or_equal_to: "trebuie să fie mai mic sau egal cu %{count}"
       not_a_number: nu este un număr
       not_an_integer: trebuie sa fie un număr întreg
       odd: trebuie sa fie impar
@@ -81,23 +81,23 @@ ro:
         one: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
         many: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
       too_long:
-        one: este prea lung (maximum un caracter)
         few: este prea lung (maximum %{count} caractere)
+        one: este prea lung (maximum un caracter)
         other: este prea lung (maximum %{count} de caractere)
       too_short:
-        one: este prea scurt (minimum un caracter)
         few: este prea scurt (minimum %{count} caractere)
+        one: este prea scurt (minimum un caracter)
         other: este prea scurt (minimum %{count} de caractere)
       wrong_length:
-        one: are lungimea greşită (trebuie sa fie un caracter)
         few: are lungimea greşită (trebuie sa fie %{count} caractere)
+        one: are lungimea greşită (trebuie sa fie un caracter)
         other: are lungimea greşită (trebuie sa fie %{count} de caractere)
       other_than: "trebuie sa fie diferit de %{count}"
     template:
       body: 'Au apărut probleme cu următoarele câmpuri:'
       header:
-        one: O eroare a împiedicat acest %{model} să fie salvat
         few: '%{count} erori au împiedicat acest %{model} să fie salvat'
+        one: O eroare a împiedicat acest %{model} să fie salvat
         other: '%{count} de erori au împiedicat acest %{model} să fie salvat'
     embed:
       load_from_remote: "A apărut o eroare la încărcarea postării."
@@ -108,6 +108,9 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -125,9 +128,9 @@ ro:
   reading_time: "Durata citirii"
   likes: "Aprecieri"
   too_many_replies:
-    one: "Ne pare rău, dar utilizatorii noi sunt limitați la 1 răspuns pe discuție."
-    few: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție."
-    other: "Ne pare rău, dar utilizatori noi sunt limitați la %{count} de răspunsuri pe discuție."
+    few: Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție.
+    one: Ne pare rău, dar utilizatorii noi sunt limitați la 1 răspuns pe discuție.
+    other: Ne pare rău, dar utilizatori noi sunt limitați la %{count} de răspunsuri pe discuție.
   embed:
     start_discussion: "Pornește discuție"
     continue: "Continuă discuție"
@@ -137,42 +140,42 @@ ro:
     no_hosts: "Nu s-a setat nicio gazdă pentru încorporare."
     configure: "Configurează încorporarea"
     more_replies:
-      one: "Încă un răspuns"
-      few: "Încă %{count} răspunsuri"
-      other: "Încă %{count} de răspunsuri"
+      few: Încă %{count} răspunsuri
+      one: Încă un răspuns
+      other: Încă %{count} de răspunsuri
     loading: "Încarcă discuția..."
     permalink: "Link permanent"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "Un răspuns"
-      few: "%{count} răspunsuri"
-      other: "%{count} de răspunsuri"
+      few: '%{count} răspunsuri'
+      one: Un răspuns
+      other: '%{count} de răspunsuri'
   no_mentions_allowed: "Ne pare rău, nu poți menționa alți utilizatori."
   too_many_mentions:
-    one: "Ne pare rău, poți menționa doar un utilizator într-o postare."
-    few: "Ne pare rău, poți menționa doar %{count} utilizatori într-o postare."
-    other: "Ne pare rău, poți menționa doar %{count} de utilizatori într-o postare."
+    few: Ne pare rău, poți menționa doar %{count} utilizatori într-o postare.
+    one: Ne pare rău, poți menționa doar un utilizator într-o postare.
+    other: Ne pare rău, poți menționa doar %{count} de utilizatori într-o postare.
   no_mentions_allowed_newuser: "Ne pare rău, noii utilizatori nu pot menționa alți utilizatori."
   too_many_mentions_newuser:
-    one: "Ne pare rău, noii utilizatori pot menționa doar un utilizator într-o postare."
-    few: "Ne pare rău, noii utilizatori pot menționa doar %{count} utilizatori într-o postare."
-    other: "Ne pare rău, noii utilizatori pot menționa doar %{count} de utilizatori într-o postare."
+    few: Ne pare rău, noii utilizatori pot menționa doar %{count} utilizatori într-o postare.
+    one: Ne pare rău, noii utilizatori pot menționa doar un utilizator într-o postare.
+    other: Ne pare rău, noii utilizatori pot menționa doar %{count} de utilizatori într-o postare.
   no_images_allowed: "Ne pare rău, nu poți pune imagini în postări."
   too_many_images:
-    one: "Ne pare rău, noii utilizatori pot pune numai o imagine într-o postare."
-    few: "Ne pare rău, noii utilizatori pot pune numai %{count} imagini într-o postare."
-    other: "Ne pare rău, noii utilizatori pot pune numai %{count} de imagini într-o postare."
+    few: Ne pare rău, noii utilizatori pot pune numai %{count} imagini într-o postare.
+    one: Ne pare rău, noii utilizatori pot pune numai o imagine într-o postare.
+    other: Ne pare rău, noii utilizatori pot pune numai %{count} de imagini într-o postare.
   no_attachments_allowed: "Ne pare rău, noii utilizatori nu pot pune atașamente la postări."
   too_many_attachments:
-    one: "Ne pare rău, noii utilizatori pot pune doar un atașament la o postare."
-    few: "Ne pare rău, noii utilizatori pot pune doar %{count} atașamente la o postare."
-    other: "Ne pare rău, noii utilizatori pot pune doar %{count} de atașamente la o postare."
+    few: Ne pare rău, noii utilizatori pot pune doar %{count} atașamente la o postare.
+    one: Ne pare rău, noii utilizatori pot pune doar un atașament la o postare.
+    other: Ne pare rău, noii utilizatori pot pune doar %{count} de atașamente la o postare.
   no_links_allowed: "Ne pare rău, noii utilizatori nu pot pune link-uri în postări."
   too_many_links:
-    one: "Ne pare rău, noii utilizatori pot pune doar un link într-o postare."
-    few: "Ne pare rău, noii utilizatori pot pune doar %{count} link-uri într-o postare."
-    other: "Ne pare rău, noii utilizatori pot pune doar %{count} de link-uri într-o postare."
+    few: Ne pare rău, noii utilizatori pot pune doar %{count} link-uri într-o postare.
+    one: Ne pare rău, noii utilizatori pot pune doar un link într-o postare.
+    other: Ne pare rău, noii utilizatori pot pune doar %{count} de link-uri într-o postare.
   spamming_host: "Nu poți adăuga un link pentru acest domeniu."
   user_is_suspended: "Utilizatorii suspendați nu au dreptul de a posta."
   topic_not_found: "Ceva n-a mers bine. Poate că acest subiect a fost închis sau șters în timp ce te uitai la el?"
@@ -197,7 +200,6 @@ ro:
     hot: "Subiecte fierbinți"
     top: "Subiecte fierbinți"
     posts: "Ultimele postări"
-    private_posts: "Ultimele mesaje private"
     group_posts: "Ultimele postări de la %{group_name}"
     group_mentions: "Ultimele menționări de la %{group_name}"
     user_posts: "Ultimele postări ale lui @%{username}"
@@ -211,7 +213,6 @@ ro:
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
-      member_already_exist: "'%{username}' este deja membru al acestui grup"
       invalid_domain: "'%{domain}' nu este un domeniu valid."
       invalid_incoming_email: "'%{email}' nu este o adresa validă de email."
       email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
@@ -228,10 +229,10 @@ ro:
       trust_level_4: "nivel_de_încredere_4"
   education:
     until_posts:
-      one: "o postare"
-      few: "%{count} postări"
-      other: "%{count} de postări"
-    new-topic: |
+      few: '%{count} postări'
+      one: o postare
+      other: '%{count} de postări'
+    'new-topic': |
       Bun venit pe %{site_name} &mdash; **îți mulțumim că ai început o nouă conversație!**
 
       - Atunci când îl citești cu voce tare, titlul sună interesant ? Rezumă bine conținutul?
@@ -241,7 +242,7 @@ ro:
       - Include în subiect cuvinte folosite în mod obișnuit pentru a le da altora posibilitatea să îl *găsească*. Pentru a grupa subiectul tău laolaltă cu alte subiecte asemănătoare, alege o anumită categorie.
 
       Pentru mai multe îndrumări, [citește ghidul comunității](/guidelines). Această secțiune de pagină va apărea doar pentru prima/primele %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Bine ai venit la %{site_name} &mdash; **Îți mulțumim pentru contribuție!**
 
       - Răspunsul tău îmbunătațește discuția în vreun fel?
@@ -259,12 +260,6 @@ ro:
       Ai luat în considerare să **[îți actualizezi profilul](%{profile_path})** cu o imagine care te reprezintă?
 
       Este mai ușor să urmărești o discuție și să găsești oameni interesanți într-o conversație atunci când fiecare are o imagine unică!
-    reviving_old_topic: |
-      ### Reînvii această discuție?
-
-      Ultimul răspuns în această discuție a fost în urmă cu **%{days}** zile. Răspunsul tău va pune discuția pe prima pagină și îi va notifica pe toți cei ce au fost implicați în discuție.
-
-      Ești sigur că vrei să continui această discuție veche?
   activerecord:
     attributes:
       category:
@@ -277,13 +272,12 @@ ro:
       user_profile:
         bio_raw: "Despre mine"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Poți ataşa avertizări doar la mesajele private."
               too_many_users: "Poți trimite avertizări la un singur utilizator odată."
-              cant_send_pm: "Ne pare rău, nu poți trimite un mesaj privat acestui utilizator."
               no_user_selected: "Trebuie selectat un nume de utilizator valid."
             featured_link:
               invalid: "e invalid. URL-ul trebuie să includă http:// sau https://."
@@ -310,7 +304,6 @@ ro:
           attributes:
             name:
               taken: este deja folosit de un alt emoji
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} încă nu a introdus nimic în câmpul Despre mine din profilul său</div>"
   vip_category_name: "Sufragerie"
@@ -323,25 +316,25 @@ ro:
     title: "Bine ai venit în sufragerie"
     body: |2
 
-      Felicitări! :confetti_ball:
+        Felicitări! :confetti_ball:
 
-      Dacă poți vedea acest subiect, ai fost promovat recent la **utilizator frecvent** (nivel de încredere 3).
+        Dacă poți vedea acest subiect, ai fost promovat recent la **utilizator frecvent** (nivel de încredere 3).
 
-      Acum poți să &hellip;
+        Acum poți să &hellip;
 
-      * Editezi titlul oricărui subiect
-      * Schimbi categoria oricărui subiect
-      * Setezi ca toate link-urile tale să fie urmărite ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) este dezactivat)
-      * Accesezi secțiunea privată din categoria Sufragerie unde au acces numai utilizatorii de nivel 3 sau mai mare
-      * Ascunzi spam-ul folosind un singur marcaj de avertizare
+        * Editezi titlul oricărui subiect
+        * Schimbi categoria oricărui subiect
+        * Setezi ca toate link-urile tale să fie urmărite ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) este dezactivat)
+        * Accesezi secțiunea privată din categoria Sufragerie unde au acces numai utilizatorii de nivel 3 sau mai mare
+        * Ascunzi spam-ul folosind un singur marcaj de avertizare
 
-      Aici este [lista colegilor utilizatori ce au ajuns la nivelul de încredere 3](/badges/3/regular). Salută-i!
+        Aici este [lista colegilor utilizatori ce au ajuns la nivelul de încredere 3](/badges/3/regular). Salută-i!
 
-      Îți mulțumim că ești o parte importantă a acestei comunități!
+        Îți mulțumim că ești o parte importantă a acestei comunități!
 
-      (Pentru mai multe informații cu privire la nivelurile de încredere, [vezi subiectul ăsta][încredere]. Ține aminte că doar membrii ce vor îndeplini constant criteriile cerute vor rămâne la nivelul de încredere 3.)
+        (Pentru mai multe informații cu privire la nivelurile de încredere, [vezi subiectul ăsta][încredere]. Ține aminte că doar membrii ce vor îndeplini constant criteriile cerute vor rămâne la nivelul de încredere 3.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Despre categoria %{category}"
     replace_paragraph: "(Înlocuiește acest prim paragraf cu o scurtă descriere a noii tale categorii. Acest îndreptar va apărea în zona de selecție a categoriei, așa că încearcă să îl limitezi la maxim 200 de caractere. **Această categorie nu va apărea în pagina categoriilor până ce nu editezi această descriere sau până ce nu creezi subiecte**)"
@@ -357,9 +350,9 @@ ro:
       uncategorized: "Nu se poate șterge Necategorizat"
       has_subcategories: "Nu putem șterge categoria aceasta pentru că are sub-categorii."
       topic_exists:
-        one: "Nu poți șterge categoria aceasta pentru că are un subiect. Cel mai vechi subiect este %{topic_link}."
-        few: "Nu poți șterge categoria aceasta pentru că are %{count} subiecte. Cel mai vechi subiect este %{topic_link}."
-        other: "Nu poți șterge categoria aceasta pentru că are %{count} de subiecte. Cel mai vechi subiect este %{topic_link}."
+        few: Nu poți șterge categoria aceasta pentru că are %{count} subiecte. Cel mai vechi subiect este %{topic_link}.
+        one: Nu poți șterge categoria aceasta pentru că are un subiect. Cel mai vechi subiect este %{topic_link}.
+        other: Nu poți șterge categoria aceasta pentru că are %{count} de subiecte. Cel mai vechi subiect este %{topic_link}.
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
@@ -375,127 +368,111 @@ ro:
       title: "lider"
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
-    slow_down: "Ai executat această acțiune de prea multe ori. Încearcă mai târziu."
-    too_many_requests: "Există o limită zilnică de executare a acestei acțiuni. Te rugăm așteaptă %{time_left} până să încerci iar."
-    by_type:
-      first_day_replies_per_day: "Ai atins numărul maxim de răspunsuri pe care un nou utilizator le poate crea în prima sa zi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      first_day_topics_per_day: "Ai atins numărul maxim de subiecte pe care un nou utilizator poate să le creeze în prima sa zi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_topic: "Ai atins numărul maxim de subiecte. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_post: "Răspunzi prea rapid. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      delete_post: "ștergi postările prea rapid. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      public_group_membership: "Ieși/intri din/în grupuri prea frecvent. Te rugăm așteaptă %{time_left} până să încerci din nou."
-      topics_per_day: "Ai atins numărul maxim de subiecte noi pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      pms_per_day: "Ai atins numărul maxim de mesaje pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_like: "Ai atins numărul maxim de aprecieri pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_bookmark: "Ai atins numărul maxim de semne de carte pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      live_post_counts: "Ceri prea rapid contorizarea live a numărului de postări. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      unsubscribe_via_email: "Ai atins numărul maxim de dezabonări prin email pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      topic_invitations_per_day: "Ai atins numărul maxim de invitații la subiecte pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
     hours:
-      one: "o oră"
-      few: "%{count} ore"
-      other: "%{count} de ore"
+      few: '%{count} ore'
+      one: o oră
+      other: '%{count} de ore'
     minutes:
-      one: "un minut"
-      few: "%{count} minute"
-      other: "%{count} de minute"
+      few: '%{count} minute'
+      one: un minut
+      other: '%{count} de minute'
     seconds:
-      one: "o secundă"
-      few: "%{count} secunde"
-      other: "%{count} de secunde"
+      few: '%{count} secunde'
+      one: o secundă
+      other: '%{count} de secunde'
   datetime:
     distance_in_words:
       half_a_minute: "de < 1m"
       less_than_x_seconds:
-        one: "de < 1s"
-        few: "de < %{count}s"
-        other: "de < %{count}s"
+        few: de < %{count}s
+        one: de < 1s
+        other: de < %{count}s
       x_seconds:
-        one: "de 1s"
-        few: "de %{count}s"
-        other: "de %{count}s"
+        few: de %{count}s
+        one: de 1s
+        other: de %{count}s
       less_than_x_minutes:
-        one: "de < 1m"
-        few: " < %{count}m"
-        other: "de < %{count}m"
+        few: ' < %{count}m'
+        one: de < 1m
+        other: de < %{count}m
       x_minutes:
-        one: "de 1m"
-        few: " de %{count}m"
-        other: "de %{count}m"
+        few: ' de %{count}m'
+        one: de 1m
+        other: de %{count}m
       about_x_hours:
-        one: "de 1h"
-        few: " %{count}h"
-        other: "de %{count}h"
+        few: ' %{count}h'
+        one: de 1h
+        other: de %{count}h
       x_days:
-        one: "de 1z"
-        few: " %{count}z"
-        other: "de %{count}z"
+        few: ' %{count}z'
+        one: de 1z
+        other: de %{count}z
       about_x_months:
-        one: "de o lună"
-        few: " de %{count} luni"
-        other: "de %{count} de luni"
+        few: ' de %{count} luni'
+        one: de o lună
+        other: de %{count} de luni
       x_months:
-        one: "de o lună"
-        few: "de %{count} luni"
-        other: "de %{count} de luni"
+        few: de %{count} luni
+        one: de o lună
+        other: de %{count} de luni
       about_x_years:
-        one: "de %{count}an"
-        few: "de %{count} ani"
-        other: "de %{count} de ani"
+        few: de %{count} ani
+        one: de %{count}an
+        other: de %{count} de ani
       over_x_years:
-        one: "de > 1an"
-        few: "de > %{count}ani"
-        other: "de > %{count} de ani"
+        few: de > %{count}ani
+        one: de > 1an
+        other: de > %{count} de ani
       almost_x_years:
-        one: "de un an"
-        few: "de %{count} ani"
-        other: "de %{count} de ani"
+        few: de %{count} ani
+        one: de un an
+        other: de %{count} de ani
     distance_in_words_verbose:
       half_a_minute: "chiar acum"
       less_than_x_seconds:
-        one: "chiar acum"
-        few: "chiar acum"
-        other: "chiar acum"
+        few: chiar acum
+        one: chiar acum
+        other: chiar acum
       x_seconds:
-        one: "cu o secundă în urmă"
-        few: "cu %{count} secunde în urmă"
-        other: "cu %{count} de secunde în urmă"
+        few: cu %{count} secunde în urmă
+        one: cu o secundă în urmă
+        other: cu %{count} de secunde în urmă
       less_than_x_minutes:
-        one: "cu mai puțin de 1 minut în urmă"
-        few: "cu mai puțin de %{count} minute în urmă"
-        other: "mai puțin de %{count} de minute în urmă"
+        few: cu mai puțin de %{count} minute în urmă
+        one: cu mai puțin de 1 minut în urmă
+        other: mai puțin de %{count} de minute în urmă
       x_minutes:
-        one: "acum un minut"
-        few: "acum %{count} minute"
-        other: "acum %{count} de minute"
+        few: acum %{count} minute
+        one: acum un minut
+        other: acum %{count} de minute
       about_x_hours:
-        one: "acum o ora"
-        few: "acum %{count} ore"
-        other: "acum %{count} de ore"
+        few: acum %{count} ore
+        one: acum o ora
+        other: acum %{count} de ore
       x_days:
-        one: "acum o zi"
-        few: "acum %{count} zile"
-        other: "acum %{count} de zile"
+        few: acum %{count} zile
+        one: acum o zi
+        other: acum %{count} de zile
       about_x_months:
-        one: "cu aproape o lună în urmă"
-        few: "cu aproape %{count} luni în urmă"
-        other: "cu aproape %{count} de luni în urmă"
+        few: cu aproape %{count} luni în urmă
+        one: cu aproape o lună în urmă
+        other: cu aproape %{count} de luni în urmă
       x_months:
-        one: "acum o lună"
-        few: "acum %{count} luni"
-        other: "acum %{count} de luni"
+        few: acum %{count} luni
+        one: acum o lună
+        other: acum %{count} de luni
       about_x_years:
-        one: "cu aproape un an în urmă"
-        few: "cu aproape %{count} ani în urmă"
-        other: "cu aproape %{count} de ani în urmă"
+        few: cu aproape %{count} ani în urmă
+        one: cu aproape un an în urmă
+        other: cu aproape %{count} de ani în urmă
       over_x_years:
-        one: "cu peste un an în urmă"
-        few: "cu peste %{count} ani în urmă"
-        other: "cu peste %{count} de ani în urmă"
+        few: cu peste %{count} ani în urmă
+        one: cu peste un an în urmă
+        other: cu peste %{count} de ani în urmă
       almost_x_years:
-        one: "cu aproape un an în urmă"
-        few: "cu aproape %{count} ani în urmă"
-        other: "cu aproape %{count} de ani în urmă"
+        few: cu aproape %{count} ani în urmă
+        one: cu aproape un an în urmă
+        other: cu aproape %{count} de ani în urmă
   password_reset:
     no_token: "Ne pare rău, dar link-ul de schimbare a parolei este prea vechi. Selectează butonul Înregistrare și folosește 'Mi-am uitat parola' pentru a obține un nou link."
     choose_new: "Alege o parolă nouă"
@@ -545,7 +522,6 @@ ro:
       long_form: 'marcat ca necorespunzător'
     notify_user:
       title: 'Trimite-i un mesaj lui @{{username}}'
-      description: 'Vreau să îi vorbesc direct și în mod privat acestei persoane cu privire la postarea sa.'
       long_form: 'utilizator căruia i-a fost trimis mesaj'
       email_title: 'Postarea ta din "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -634,9 +610,7 @@ ro:
       xaxis: "Zi"
       yaxis: "Număr de vizite"
     signups:
-      title: "Utilizatori noi"
       xaxis: "Zi"
-      yaxis: "Număr de noi utilizatori"
     profile_views:
       title: "Vizualizări profil utilizator"
       xaxis: "Zi"
@@ -674,7 +648,6 @@ ro:
       xaxis: "Zi"
       yaxis: "Numărul de emailuri"
     user_to_user_private_messages:
-      title: "De la utilizator la utilizator"
       xaxis: "Zi"
       yaxis: "Număr de mesaje"
     system_private_messages:
@@ -721,7 +694,6 @@ ro:
       xaxis: "Zi"
       yaxis: "Vizualizări de pagină făcute de roboți web"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Zi"
       yaxis: "Total vizualizări de pagină"
     page_view_logged_in_mobile_reqs:
@@ -783,29 +755,24 @@ ro:
     failing_emails_warning: 'Există %{num_failed_jobs} (de) sarcini email care au eșuat. Verifică app.yml și asigură-te că setările serverului de mail sunt corecte. <a href="/sidekiq/retries" target="_blank">Vizualizează sarcini eșuate în Sidekiq</a>.'
     subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
     email_polling_errored_recently:
-      one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-      few: "Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-      other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-    missing_mailgun_api_key: "Serverul este configurat să trimită emailuri printr-un mailgun dar nu ai furnizat nici o cheie API folosită pentru a verifica mesajele webhook."
+      few: Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii.
+      one: Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii.
+      other: Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii.
     bad_favicon_url: "Eroare la încărcarea Favicon. Verifică setarea favicon_url în <a href='/admin/site_settings'>Setările site-ului</a>."
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='/admin/site_settings/category/email'>setările POP3</a>."
   site_settings:
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Modelul Regex va fi înlocuit automat cu  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "șterge automat toate postările ascunse care stau ascunse mai mult de 30 de zile."
-    default_locale: "Limba implicită a acestei instanțe de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
     set_locale_from_accept_language_header: "setează limba interfeței pentru utilizatorii anonimi pe baza header-elor de limbă ale web browser-elor lor. (EXPERIMENTAL, nu funcționează cu cache anonim)"
     min_post_length: "Lungimea minimă a postării, în caractere"
     min_first_post_length: "Numărul minim de caractere permis pentru prima postare (în corpul mesajului)"
-    min_private_message_post_length: "Numărul minim de caractere permis pentru mesaje, per postare"
     max_post_length: "Lungimea maximă permisă a postării, în caractere"
     topic_featured_link_enabled: "Activează postarea unui link cu subiecte."
     show_topic_featured_link_in_digest: "Arată link-ul promovat al subiectului în rezumatul pe email."
     min_topic_title_length: "Minimul de caractere permis în titlul unui subiect"
     max_topic_title_length: "Maximul de caractere permis în titlul unui subiect"
-    min_private_message_title_length: "Numărul minim de caractere permis în titlul unui mesaj"
     min_search_term_length: "Lungimea minimă a unui termen de căutare valid, în caractere."
     search_tokenize_chinese_japanese_korean: "Forțează căutarea să utilizeze tokens chineză/japoneză/coreană chiar și pe site-uri care nu sunt CJK."
     search_prefer_recent_posts: "Dacă ai un forum mare și căutarea este prea lentă, această opțiune încearcă să indexeze mai multe postări recente întâi."
@@ -851,7 +818,6 @@ ro:
     summary_likes_required: "Minimul de aprecieri într-un subiect înainte de a se activa 'Rezumă acest subiect'."
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
     summary_max_results: "Numărul maxim de postări returnate de \"Rezumatul acestui subiect\""
-    enable_private_messages: "Acordă nivelul de încredere 1 (configurabil via nivel minim de încredere pentru trimiterea de mesaje) utilizatorilor, pentru a le permite să creeze și să răspundă la mesaje. Atenție: echipa poate oricând să trimită mesaje, indiferent de setări."
     enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
     long_polling_base_url: "URL de bază folosit pentru long polling (atunci când un CDN servește conținut dinamic, asigură-te că setezi asta pe origin pull) ex: http://origin.site.com"
     long_polling_interval: "Durata cât serverul va trebui să aștepte înainte de a răspunde clienților atunci când nu există date de trimis (exclusiv utilizatori autentificați)"
@@ -905,7 +871,6 @@ ro:
     version_checks: "Verifică Hub-ul Discourse pentru actualizări și arată notificările de versiuni noi pe spațiul de lucru /admin ."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
-    invite_passthrough_hours: "Cât timp un utilizator poate folosi o cheie de invitație acceptată anterior pentru autentificare, în ore"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
     min_password_length: "Lungimea minimă a parolei."
     min_admin_password_length: "Lungimea maximă a parolei pentru Admin."
@@ -922,7 +887,6 @@ ro:
     sso_overrides_avatar: "Suprascrie avatarul utilizatorului cu avatarul din datele SSO. Dacă este activat, se recomandă călduros dezactivarea allow_uploaded_avatars"
     sso_not_approved_url: "Redirecționează conturile neaprobate SSO către acest URL"
     sso_allows_all_return_paths: "Nu restricționa domeniul pentru return_paths furnizate de SSO (implicit, calea de întoarcere trebuie să fie pe site-ul curent)"
-    enable_local_logins: "Activează numele de utilizator local și conturile bazate pe autentificare cu parolă. (Notă: Pentru ca invitațiile să funcționeze, această opțiune trebuie să fie activată)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     enable_yahoo_logins: "Activează autentificarea cu Yahoo"
@@ -930,15 +894,12 @@ ro:
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     enable_twitter_logins: "Activează autentificarea cu Twitter, necesită twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Cheie consumator pentru autentificarea cu Twitter, înregistrată la http://dev.twitter.com"
-    twitter_consumer_secret: "Secret consumator pentru autentificarea cu Twitter, înregistrat la http://dev.twitter.com"
     enable_instagram_logins: "Activează autentificarea prin Instagram, necesită instagram_consumer_key și instagram_consumer_secret"
     instagram_consumer_key: "Cheie consumator pentru autentificarea Instagram"
     instagram_consumer_secret: "Autentificare Instagram pe bază de secret consumator"
     enable_facebook_logins: "Activează autentificarea cu Facebook, necesită facebook_app_id și facebook_app_secret"
     facebook_app_id: "ID-ul aplicației pentru autentificarea cu Facebook, înregistrată la https://developers.facebook.com/apps"
     facebook_app_secret: "App secret pentru autentificarea cu Facebook, înregistrat la https://developers.facebook.com/apps"
-    facebook_request_extra_profile_details: "Solicită informațiile despre mine, locație și website de la Facebook. (necesită ca aplicația ta de autentificare să fie aprobată de Facebook)"
     enable_github_logins: "Activează autentificarea cu Github, requires github_client_id and github_client_secret"
     github_client_id: "ID client pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
     github_client_secret: "Secretul clientului pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
@@ -946,7 +907,6 @@ ro:
     allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
-    backup_frequency: "Cât de frecvent facem backup la site, în zile."
     enable_s3_backups: "Încarcă fișierele backup pe s3 când sunt complete. IMPORTANT: sunt necesare date de autentificare valide pentru S3 în secțiunea FIșIERE."
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     s3_disable_cleanup: "Dezactivează eliminarea backup-urilor de pe S3 când sunt șterse local."
@@ -968,7 +928,6 @@ ro:
     max_bookmarks_per_day: "Numărul maxim zilnic de semne de carte per utilizator."
     max_edits_per_day: "Numărul maxim zilnic de editări per utilizator."
     max_topics_per_day: "Numărul maxim de subiecte pe care un utilizator le poare crea zilnic."
-    max_private_messages_per_day: "Număr maxim de mesaje pe care utilizatorii le pot crea pe zi."
     max_invites_per_day: "Număr maxim de invitații pe care un utilizator le poate trimite pe zi."
     max_topic_invitations_per_day: "Numărul maxim de invitații la subiect pe care un utilizator le poate trimite pe zi."
     alert_admins_if_errors_per_minute: "Numărul de erori pe minut la care să se declanșeze o alerta admin. Valoarea 0 dezactivează această funcționalitate. NOTĂ: necesită restart."
@@ -981,7 +940,6 @@ ro:
     clean_orphan_uploads_grace_period_hours: "Perioada de grație (în ore) înainte ca o reîncărcare orfană să fie ștearsă."
     purge_deleted_uploads_grace_period_days: "Perioada de grație (în zile) înainte ca o încărcare ștearsă să fie eliminată."
     enable_s3_uploads: "Pune încărcările pe spațiul Amazon S3. IMPORTANT: necesită un acces valid (atât identificatorul cheii de acces cât și cheia secretă)."
-    s3_use_iam_profile: 'Folosește rolul AWS EC2 IAM pentru retragerea cheilor. NOTĂ: activarea va suprascrie setările pentru "s3 access key id" și "s3 secret access key".'
     s3_upload_bucket: "Numele containerului Amazon S3 unde vor fi încărcate fișierele. ATENȚIE: trebuie să fie scris cu litere mici, fără puncte și fără underscore."
     s3_access_key_id: "Id cheie de acces Amazon S3 ce va fi folosit la încărcarea imaginilor."
     s3_secret_access_key: "Cheie secretă de acces Amazon S3 ce va fi folosită la încărcarea imaginilor."
@@ -1024,7 +982,6 @@ ro:
     min_trust_to_edit_wiki_post: "Nivelul de încredere minim necesar pentru a edita o postare marcată ca wiki."
     min_trust_to_edit_post: "Nivelul de încredere minim necesar pentru a edita postări."
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
-    min_trust_to_send_messages: "Nivelul minim de încredere necesar pentru a crea noi mesaje private."
     newuser_max_links: "Câte linkuri poate adăuga un nou utilizator într-o postare."
     newuser_max_images: "Câte imagini poate adăuga un nou utilizator într-o postare."
     newuser_max_attachments: "Câte atașamente poate adăuga un nou utilizator într-o postare."
@@ -1034,7 +991,6 @@ ro:
     max_users_notified_per_group_mention: "Numărul maxim de utilizatori care pot primi o notificare dacă un grup este menționat (dacă pragul este atins, nici o notificare nu va fi trimisă)"
     create_thumbnails: "Creează previzualizări de tipul thumbnail și lightbox ale imaginilor ce sunt prea mari să încapă într-o postare."
     email_time_window_mins: "Așteaptă (n) minute până să trimiți un email de notificare, pentru a da utilizatorilor șansa să-și editeze și să-și finalizeze postările."
-    private_email_time_window_seconds: "Așteaptă (n) secunde înainte de a trimite emailuri de notificare privată, pentru a-i da utilizatorului șansa să își editeze sau finalizeze mesajele."
     email_posts_context: "Câte răspunsuri precedente să fie incluse drept context în email-urile de notificare."
     flush_timings_secs: "Cât de frecvent se resetează datele legate de timp de pe server, în secunde."
     title_max_word_length: "Numărul maxim de caractere din titlul unui subiect."
@@ -1185,13 +1141,11 @@ ro:
     approve_post_count: "Numărul de postări de la un utilizator simplu trebuie să fie aprobat"
     approve_unless_trust_level: "Postările utilizatorilor care au un nivel de încredere mai mic decât acesta trebuie să fie aprobate."
     approve_new_topics_unless_trust_level: "Crearea de subiecte noi pentru utilizatorii care se află sub acest nivel de încredere, trebuie aprobată"
-    notify_about_queued_posts_after: "Dacă există postări care au așteptat să fie verificate mai mult de atâtea ore, un email va fi trimis către contact_email. Setează la 0 pentru a dezactiva aceste emailuri."
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
     auto_close_topics_post_count: "Numărul maxim de postări permise într-un subiect înainte ca acesta să fie închis automat (0 pentru dezactivare)"
     code_formatting_style: "Butonul Cod din cadrul editorului va fi setat cu opțiunea implicită pe acest stil de formatare cod "
     default_email_digest_frequency: "Frecvența implicită cu care utilizatorii primesc emailuri-rezumat."
     default_include_tl0_in_digests: "Implicit, include postări de la utilizatori noi în emailurile-rezumat. Utilizatorii pot schimba această opțiune din preferințele lor."
-    default_email_private_messages: "Implicit, trimite un email atunci când cineva trimite un mesaj unui utilizator."
     default_email_direct: "Implicit, trimite un mesaj când cineva citează/răspunde/menționează sau invită un utilizator."
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."
     default_email_mailing_list_mode_frequency: "Implicit, utilizatorii care activează modul mailing list vor primi emailuri cu această frecvență."
@@ -1227,7 +1181,6 @@ ro:
     max_tags_in_filter_list: "Numărul maxim de etichete care să se afișeze într-un drop-down filtru. Vor fi afișate etichetele cele mai folosite."
     tags_sort_alphabetically: "Afișează etichetele în ordine alfabetică. Implicit, etichetele sunt afișate în ordinea popularității."
     tag_style: "Stil vizual pentru ecusoanele etichetă."
-    staff_tags: "O listă de etichete care nu poate fi aplicată decât de către membrii echipei."
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     remove_muted_tags_from_latest: "Nu afișa în lista subiectelor recente, subiectele ce au fost etichetate cu etichete setate pe silențios"
@@ -1277,21 +1230,21 @@ ro:
     not_seen_in_a_month: "Bun venit! Nu te-am mai văzut de ceva vreme. Aici sunt cele mai populare subiecte ce au apărut în timpul absenței tale."
   merge_posts:
     edit_reason:
-      one: "o postare a fost comasată de către %{username}"
-      few: "%{count} postări au fost comasate de către  %{username}"
-      other: "%{count} de postări au fost comasate de către  %{username}"
+      few: '%{count} postări au fost comasate de către  %{username}'
+      one: o postare a fost comasată de către %{username}
+      other: '%{count} de postări au fost comasate de către  %{username}'
     errors:
       different_topics: "Postările care aparțin unor subiecte diferite nu pot fi comasate."
       different_users: "Postările care aparțin unor utilizatori diferiți nu pot fi comasate."
   move_posts:
     new_topic_moderator_post:
-      one: "o postare a fost mutată într-un nou subiect: %{topic_link}"
-      few: "%{count}  postări au fost mutate într-un nou subiect: %{topic_link}"
-      other: "%{count} de postări au fost mutate într-un nou subiect: %{topic_link}"
+      few: '%{count}  postări au fost mutate într-un nou subiect: %{topic_link}'
+      one: 'o postare a fost mutată într-un nou subiect: %{topic_link}'
+      other: '%{count} de postări au fost mutate într-un nou subiect: %{topic_link}'
     existing_topic_moderator_post:
-      one: "o postare a fost comasată într-un subiect existent: %{topic_link}"
-      few: "%{count} postări au fost comasate într-un subiect existent: %{topic_link}"
-      other: "%{count} de postări au fost comasate într-un subiect existent: %{topic_link}"
+      few: '%{count} postări au fost comasate într-un subiect existent: %{topic_link}'
+      one: 'o postare a fost comasată într-un subiect existent: %{topic_link}'
+      other: '%{count} de postări au fost comasate într-un subiect existent: %{topic_link}'
   change_owner:
     post_revision_text: "Autor schimbat din %{old_user} în %{new_user}"
     deleted_user: "un utilizator șters"
@@ -1301,37 +1254,37 @@ ro:
     closed_enabled: "Acest subiect este acum închis. Nu mai sunt permise răspunsuri noi."
     closed_disabled: "Acest subiect este acum deschis. Sunt permise răspunsuri noi."
     autoclosed_message_max_posts:
-      one: "Acest mesaj va fi închis automat după ce atinge limita de maximă de un răspuns."
-      few: "Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count}  răspunsuri."
-      other: "Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count} de răspunsuri."
+      few: Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count}  răspunsuri.
+      one: Acest mesaj va fi închis automat după ce atinge limita de maximă de un răspuns.
+      other: Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count} de răspunsuri.
     autoclosed_topic_max_posts:
-      one: "Acest subiect a fost închis automat după ce a atins limita maximă de un răspuns."
-      few: "Acest subiect a fost închis automat după ce a atins limita maximă de %{count}  răspunsuri."
-      other: "Acest subiect a fost închis automat după ce a atins limita maximă de %{count} de răspunsuri."
+      few: Acest subiect a fost închis automat după ce a atins limita maximă de %{count}  răspunsuri.
+      one: Acest subiect a fost închis automat după ce a atins limita maximă de un răspuns.
+      other: Acest subiect a fost închis automat după ce a atins limita maximă de %{count} de răspunsuri.
     autoclosed_enabled_days:
-      one: "Acest subiect a fost închis automat după o zi. Nu mai sunt permise răspunsuri noi."
-      few: "Acest subiect a fost închis automat după %{count}  zile. Nu mai sunt permise răspunsuri noi."
-      other: "Acest subiect a fost închis automat după %{count} de zile. Nu mai sunt permise răspunsuri noi."
+      few: Acest subiect a fost închis automat după %{count}  zile. Nu mai sunt permise răspunsuri noi.
+      one: Acest subiect a fost închis automat după o zi. Nu mai sunt permise răspunsuri noi.
+      other: Acest subiect a fost închis automat după %{count} de zile. Nu mai sunt permise răspunsuri noi.
     autoclosed_enabled_hours:
-      one: "Acest subiect a fost închis automat după o oră. Nu mai sunt permise răspunsuri noi."
-      few: "Acest subiect a fost închis automat după %{count}  ore. Nu mai sunt permise răspunsuri noi."
-      other: "Acest subiect a fost închis automat după %{count} de ore. Nu mai sunt permise răspunsuri noi."
+      few: Acest subiect a fost închis automat după %{count}  ore. Nu mai sunt permise răspunsuri noi.
+      one: Acest subiect a fost închis automat după o oră. Nu mai sunt permise răspunsuri noi.
+      other: Acest subiect a fost închis automat după %{count} de ore. Nu mai sunt permise răspunsuri noi.
     autoclosed_enabled_minutes:
-      one: "Acest subiect a fost închis automat după un minut. Nu mai sunt permise răspunsuri noi."
-      few: "Acest subiect a fost închis automat după %{count}  minute. Nu mai sunt permise răspunsuri noi."
-      other: "Acest subiect a fost închis automat după %{count} de minute. Nu mai sunt permise răspunsuri noi."
+      few: Acest subiect a fost închis automat după %{count}  minute. Nu mai sunt permise răspunsuri noi.
+      one: Acest subiect a fost închis automat după un minut. Nu mai sunt permise răspunsuri noi.
+      other: Acest subiect a fost închis automat după %{count} de minute. Nu mai sunt permise răspunsuri noi.
     autoclosed_enabled_lastpost_days:
-      one: "Acest subiect a fost închis automat după o zi de la primul răspuns. Nu mai sunt permise răspunsuri noi."
-      few: "Acest subiect a fost închis automat după %{count}  zile de la primul răspuns. Nu mai sunt permise răspunsuri noi."
-      other: "Acest subiect a fost închis automat după %{count} de zile de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      few: Acest subiect a fost închis automat după %{count}  zile de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      one: Acest subiect a fost închis automat după o zi de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      other: Acest subiect a fost închis automat după %{count} de zile de la primul răspuns. Nu mai sunt permise răspunsuri noi.
     autoclosed_enabled_lastpost_hours:
-      one: "Acest subiect a fost închis automat după o oră de la primul răspuns. Nu mai sunt permise răspunsuri noi."
-      few: "Acest subiect a fost închis automat după %{count}  ore de la primul răspuns. Nu mai sunt permise răspunsuri noi."
-      other: "Acest subiect a fost închis automat după %{count} de ore de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      few: Acest subiect a fost închis automat după %{count}  ore de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      one: Acest subiect a fost închis automat după o oră de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      other: Acest subiect a fost închis automat după %{count} de ore de la primul răspuns. Nu mai sunt permise răspunsuri noi.
     autoclosed_enabled_lastpost_minutes:
-      one: "Acest subiect a fost închis automat după un minut de la primul răspuns. Nu mai sunt permise răspunsuri noi."
-      few: "Acest subiect a fost închis automat după %{count}  minute de la primul răspuns. Nu mai sunt permise răspunsuri noi."
-      other: "Acest subiect a fost închis automat după %{count} de minute de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      few: Acest subiect a fost închis automat după %{count}  minute de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      one: Acest subiect a fost închis automat după un minut de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      other: Acest subiect a fost închis automat după %{count} de minute de la primul răspuns. Nu mai sunt permise răspunsuri noi.
     autoclosed_disabled: "Acest subiect este acum deschis. Sunt permise răspunsuri noi."
     autoclosed_disabled_lastpost: "Acest subiect este acum deschis. Sunt permise răspunsuri noi."
     pinned_enabled: "Acest subiect este fixat. Va apărea în vârful listei de categorii până când echipa îl va dezactiva opțiunea de fixare pentru toată lumea odată,  sau până când utilizatorii vor dezactiva opțiunea, individual, pentru ei înșiși."
@@ -1383,55 +1336,13 @@ ro:
       max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
   flags_reminder:
     subject_template:
-      one: "un marcaj de avertizare așteptând să fie gestionat"
-      few: "%{count}  marcaje de avertizare așteptând să fie gestionate"
-      other: "%{count} de marcaje de avertizare așteptând să fie gestionate"
+      few: '%{count}  marcaje de avertizare așteptând să fie gestionate'
+      one: un marcaj de avertizare așteptând să fie gestionat
+      other: '%{count} de marcaje de avertizare așteptând să fie gestionate'
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
-  test_mailer:
-    text_body_template: |
-      Acesta este un email de test de la
-
-      [**%{base_url}**][0]
-
-      A te asigura că emailul se poate livra este o chestiune complicată. Aici sunt câteva lucruri pe care ar trebui să le verifici înainte de toate:
-
-      - Asigură-te *cu rigurozitate* că la setările site-ului, câmpul from: din `emailul de notificare` are adresa corectă. **Domeniul menționat în adresa din câmpul "from" al emailurilor pe care le trimiți este domeniul în raport cu care se va face validarea emailului tău**.
-
-      - ști cum să vizualizezi sursa brută a emailului în clientul tău de mail, astfel încât să poți extrage indicii prețioase din header. În Gmail, acest lucru se face cu opțiunea "arată originalul" din meniu drop-down aflat în partea din dreapta-sus a fiecărui mail.
-
-      - **IMPORTANT:** ISP-ul tău are introdusă înregistrarea pentru reverse DNS astfel încât sa asocieze numele domeniilor cu adresele IP de pe care trimiți mailuri? [Verifică-ți înregistrarea Reverse PTR][2] aici. Dacă ISP-ul tău nu a introdus corect înregistrarea reverse DNS, este foarte puțin probabil că emailul ți se va livra corect.
-
-      -  [Înregistrarea SPF][8] a domeniului tău este corectă? [Verifică-ți înregistrarea SPF][1] aici. Observă că TXT reprezintă tipul de înregistrare corect pentru SPF.
-
-      - [Înregistrarea DKIM][3] a domeniului tău este corectă? Aceasta îți poate crește semnificativ capacitatea emailului de a fi livrat. [Verifică-ți înregistrarea DKIM][7] aici.
-
-      - Dacă operezi propriul tău server de mail, asigură-te că IP-urile sale nu sunt listate pe [nicio listă neagră de emailuri][4]. Verifică, de asemenea, că trimite un hostname calificat în întregime, care se rezolvă în DNS prin mesajul său HELO. În caz contrar, multe servicii de mail îți vor respinge emailul.
-
-      - Îți recomandăm călduros să **trimiți un mail de probă [mail-tester.com][mt]** pentru a verifica dacă toate cele de mai sus funcționează corect.
-
-      (Modalitatea *ușoară* de a face asta este să îți faci un cont gratuit pe [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] sau pe [Mailjet][mj], care au planuri generoase de email gratuit și suficiente pentru comunități mici. Însă tot va trebui să îți setezi înregistrările SPF și DKIM în DNS!)
-
-      Sperăm că vei primi acest test de livrare a emailurilor cu calificativul OK!
-
-      Mult noroc,
-
-      Prietenii tăi de la [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
     inappropriate: "Postarea ta a fost marcată cu marcaj de avertizare **inadecvat**: comunitatea simte că este ofensatoare, abuzivă sau în contradicție cu [ghidul comunității noastre](/guidelines)."
@@ -1446,6 +1357,20 @@ ro:
   system_messages:
     post_hidden:
       subject_template: "Postare ascunsă din cauza marcajelor de avertizare ale comunității"
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că mesajul tău a fost ascuns.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Mai mulți membri ai comunității au marcat acestă postare cu marcaje de avertizare înainte ca ea să fie ascunsă, așa că te rugăm să îți revizuiești postarea pentru a ține cont de feedback-ul primit. **Îți poți edita postarea după %{edit_delay} minute, și ea va fi automat re-afișată**
+
+        Totuși, dacă postarea este ascunsă de comunitate pentru a doua oară, va rămâne așa până ce va fi gestionată de un membru al echipei -- și asta ar putea atrage și alte consecințe, inclusiv posibilitatea suspendării contului tău.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
     welcome_invite:
@@ -1497,8 +1422,6 @@ ro:
       text_body_template: "Fișierul tău de invitații multiple a fost procesat, %{sent} (de) invitații trimise."
     bulk_invite_failed:
       subject_template: "Invitația multiplă a fost procesată cu erori"
-    csv_export_succeeded:
-      subject_template: "Exportul datelor s-a terminat"
     csv_export_failed:
       subject_template: "Exportul datelor a eșuat"
     email_reject_inactive_user:
@@ -1546,13 +1469,46 @@ ro:
         Dacă există interfață utilizator web pentru contul tău POP, ar trebui să te autentifici pe ea și să îți verifici acolo setările.
     too_many_spam_flags:
       subject_template: "Cont nou suspendat"
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că postările tale au fost temporar ascunse pentru că au fost marcate cu marcaje de avertizare de către comunitate..
+
+        Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Cont nou suspendat"
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că ți-a fost suspendat contul din cauza unui număr mare de marcaje de avertizare primite de la comunitate.
+
+        Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+    silenced_by_staff:
+      text_body_template: |+
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că ți-a fost suspendat temporar contul, ca măsură de precauție.
+
+        Poți să continui să răsfoiești, dar nu vei mai putea să răspunzi sau să creezi subiecte până când un [membru al echipei](%{base_url}/about) nu îți verifică postările recente. Ne cerem scuze pentru inconveniență.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+
+    unsilenced:
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat din partea %{site_name} pentru a vă informa cu privire la deblocarea contului dumneavoastră după o revizie a personalului.
+
+        Acum puteți crea discuții și răspunsuri noi.
     pending_users_reminder:
       subject_template:
-        one: "un utilizator în așteptarea aprobării"
-        few: "%{count}  utilizatori în așteptarea aprobării"
-        other: "%{count} de utilizatori în așteptarea aprobării"
+        few: '%{count}  utilizatori în așteptarea aprobării'
+        one: un utilizator în așteptarea aprobării
+        other: '%{count} de utilizatori în așteptarea aprobării'
       text_body_template: |
         Exista înscrieri de noi utilizatori ce așteaptă să fie aprobate (sau respinse) înainte de a putea accesa forumul.
 
@@ -1694,7 +1650,7 @@ ro:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
       since_last_visit: "De la ultima ta vizită"
@@ -1781,141 +1737,6 @@ ro:
     title: "FAQ/Ghid"
   tos_topic:
     title: "Condiții generale de utilizare"
-    body: |
-      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
-
-      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
-
-      <a name="1"></a>
-
-      ## [1. Your %{company_domain} Account](#1)
-
-      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
-
-      <a name="2"></a>
-
-      ## [2. Responsibility of Contributors](#2)
-
-      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
-
-      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
-      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
-      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
-      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
-      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
-      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
-      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
-      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
-      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
-
-      <a name="3"></a>
-
-      ## [3. User Content License](#3)
-
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
-
-
-      <a name="4"></a>
-
-      ## [4. Payment and Renewal](#4)
-
-      ### General Terms
-
-      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
-
-      ### Automatic Renewal
-
-      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
-
-      <a name="5"></a>
-
-      ## [5. Services](#5)
-
-      ### Hosting, Support Services
-
-      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
-
-      <a name="6"></a>
-
-      ## [6. Responsibility of Website Visitors](#6)
-
-      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
-
-      <a name="7"></a>
-
-      ## [7. Content Posted on Other Websites](#7)
-
-      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
-
-      <a name="8"></a>
-
-      ## [8. Copyright Infringement and DMCA Policy](#8)
-
-      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Intellectual Property](#9)
-
-      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
-
-      <a name="10"></a>
-
-      ## [10. Advertisements](#10)
-
-      %{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.
-
-      <a name="11"></a>
-
-      ## [11. Attribution](#11)
-
-      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.
-
-      <a name="12"></a>
-
-      ## [12. Changes](#12)
-
-      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
-
-      <a name="13"></a>
-
-      ## [13. Termination](#13)
-
-      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
-
-      <a name="14"></a>
-
-      ## [14. Disclaimer of Warranties](#14)
-
-      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that access thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
-
-      <a name="15"></a>
-
-      ## [15. Limitation of Liability](#15)
-
-      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
-
-      <a name="16"></a>
-
-      ## [16. General Representation and Warranty](#16)
-
-      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
-
-      <a name="17"></a>
-
-      ## [17. Indemnification](#17)
-
-      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
-
-      <a name="18"></a>
-
-      ## [18. Miscellaneous](#18)
-
-      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
-
-      This document is CC-BY-SA. It was last updated May 31, 2013.
-
-      Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Politica de confidențialitate"
     body: |
@@ -2007,22 +1828,22 @@ ro:
         Acest ecuson se acordă când, pentru prima dată, îți editezi una din postări. Deși nu poți să îți editezi postările la infinit, editarea este întotdeauna o idee buna: poți să îți îmbunătățești postările, să corectezi micile greșeli sau să adaugi chestii pe care le-ai uitat când ai postat prima dată. Editează ca să îți faci postările să strălucească.
     basic_user:
       name: Simplu utilizator
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Ți-au fost acordate</a> toate funcțiile esențiale ale comunității
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Ți-au fost acordate</a> toate funcțiile esențiale ale comunității"
       long_description: |
         Acest ecuson se acordă când ai ajuns la nivelul de încredere 1. Îți mulțumim că stai nițel pe aici ca să citești câteva subiecte și să înveți despre ce anume e comunitatea noastră. Restricțiile de utilizator nou ți-au fost ridicate; ți-au fost acordate toate capacitățile esențiale, precum trimiterea de mesaje personale, marcarea cu marcaje de avertizare, editare wiki, și capacitatea de a posta imagini și link-uri multiple.
     member:
       name: Membru
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ți s-au acordat</a> invitații, mesaje în grup, mai multe aprecieri
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Ți s-au acordat</a> invitații, mesaje în grup, mai multe aprecieri"
       long_description: |
         Acest ecuson se acordă când ajungi la nivelul de încredere 2. Îți mulțumim că încerci de câteva săptămâni să te alături cu adevărat comunității noastre.
     regular:
       name: Utilizator frecvent
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ți s-au acordat</a> recategorizare, redenumire, link-uri urmărite, wiki, mai multe aprecieri
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Ți s-au acordat</a> recategorizare, redenumire, link-uri urmărite, wiki, mai multe aprecieri"
       long_description: |
         Acest ecuson se acordă atunci când ai atins nivelul de încredere 3. Îți mulțumim că ești un utilizator frecvent, „adevărat client al casei” în comunitatea noastră, deja de câteva luni de zile. Acum ești unul dintre cei mai activi cititori și un contributor de încredere care ne ridică întreaga comunitate. Acum vei avea posibilitatea să recategorisești și redenumești subiecte, să utilizezi marcaje de avertizare spam mai puternice, să ai acces la zona privată de sufragerie, și o să primești mult mai multe aprecieri în fiecare zi.
     leader:
       name: Lider
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ți s-au acordat</a> editare globală, fixare, închidere, arhivare, divizare și comasare, mai multe aprecieri
+      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Ți s-au acordat</a> editare globală, fixare, închidere, arhivare, divizare și comasare, mai multe aprecieri"
       long_description: |
         Acest ecuson se acordă când ajungi la nivelul de încredere 4. Ești un lider al acestei comunități, după cum te-a selectat echipa și, reprezinți un exemplu pozitiv prin acțiunile și cuvintele tale. Ai capacitatea să editezi toate postările, să aplici acțiuni de moderare obișnuite precum fixare, închidere, delistare, arhivare, divizare și comasare, și ai tone de aprecieri pe zi.
     welcome:
@@ -2034,7 +1855,7 @@ ro:
       name: Autobiograf
     anniversary:
       name: Aniversare
-      description: Ești membru activ de un an, ai postat cel puțin odată
+      description: "Ești membru activ de un an, ai postat cel puțin odată"
       long_description: |
         Acest ecuson se acordă când ai împlinit un an de când ești membru și ai avut cel puțin o postare în acest timp. Îți mulțumim că stai prin zonă și contribui la comunitatea noastră. Nu ne-am putea descurca fără tine.
     nice_post:
@@ -2095,8 +1916,6 @@ ro:
     promoter:
       name: Promotor
       description: Ai invitat un utilizator
-      long_description: |
-        Acest ecuson se acordă când ai invitat pe cineva să se alăture comunității noastre prin intermediul butonului Invită din pagina ta de utilizator, sau de la sfârșitul unui subiect. Invitarea prietenilor care pot fi interesați în discuții specifice reprezintă o metodă minunată de a introduce oameni noi în comunitatea noastră, asa că mulțumim!
     campaigner:
       name: șef de campanie
       description: Ai invitat 3 utilizatori simpli
@@ -2192,22 +2011,19 @@ ro:
     first_emoji:
       name: Primul emoji
       description: Ai folosit un emoji într-o postare.
-      long_description: |
-        Acest ecuson se acordă prima data când adaugi un emoji la postarea ta :thumbsup:. Emoji permit transmiterea de emoții prin postări, de la fericire :smiley: la tristețe :anguished: la furie :angry: și întreaga planetă :sunglasses: . Apasă un : (două puncte) sau apasă pe butonul Emoji toolbar din editor pentru a alege dintre sute de opțiuni :ok_hand:
     first_mention:
       name: Prima mențiune
-      long_description: Acest ecuson se acordă când, pentru prima oară, ai menționat @numele de utilizator al cuiva într-o postare de-a ta. Fiecare menționare generează o notificare către acea persoană, astfel încât ea să știe despre postarea ta. Începi prin a apăsa tasta @ (simbolul at) ca să menționezi orice utilizator sau, dacă îți este permis, grup. E o metodă convenabilă să atragi atenția cuiva.
+      long_description: "Acest ecuson se acordă când, pentru prima oară, ai menționat @numele de utilizator al cuiva într-o postare de-a ta. Fiecare menționare generează o notificare către acea persoană, astfel încât ea să știe despre postarea ta. Începi prin a apăsa tasta @ (simbolul at) ca să menționezi orice utilizator sau, dacă îți este permis, grup. E o metodă convenabilă să atragi atenția cuiva."
     first_onebox:
       name: Primul onebox
       description: Ai postat un link care a devenit onebox
-      long_description: Acest ecuson se acordă când, pentru prima data, ai postat un link singur pe line, ceea ce a făcut ca automat să fie expandat într-un onebox cu un scurt rezumat al link-ului, un titlu și (dacă e disponibilă) cu o poză.
+      long_description: "Acest ecuson se acordă când, pentru prima data, ai postat un link singur pe line, ceea ce a făcut ca automat să fie expandat într-un onebox cu un scurt rezumat al link-ului, un titlu și (dacă e disponibilă) cu o poză."
     first_reply_by_email:
       name: Forum prin email
       long_description: |
         Acest ecuosn se acordă când ai răspuns pentru prima dată la o postare prin email :e-mail:.
   admin_login:
     success: "Emailul a fost trimis"
-    error: "Eroare!"
     email_input: "Email Admin"
     submit_button: "Trimite email"
   performance_report:
@@ -2342,6 +2158,3 @@ ro:
         description: |
           <p>Dacă vei dori vreodată să schimbi aceste setări, vizitează <a href='/admin' target='_blank'>secțiunea admin</a>; care se găsește lângă iconița cu cheia franceză din meniul site-ului.</p>
           <p>Distracție plăcută și mult succes<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>la construcția noii comunități!</a></p>
-  activemodel:
-    errors:
-      <<: *errors

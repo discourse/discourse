@@ -49,7 +49,7 @@ class UserSearch
 
     if @term.present?
       if SiteSetting.enable_names? && @term !~ /[_\.-]/
-        query = Search.ts_query(@term, "simple")
+        query = Search.ts_query(term: @term, ts_config: "simple")
 
         users = users.includes(:user_search_data)
           .references(:user_search_data)

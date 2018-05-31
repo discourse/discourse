@@ -234,13 +234,63 @@ describe TopicUser do
     end
 
     context 'private messages' do
+      let(:target_user) { Fabricate(:user) }
+
+      let(:post) do
+        create_post(
+          archetype: Archetype.private_message,
+          target_usernames: target_user.username
+        );
+      end
+
+      let(:topic) { post.topic }
+
       it 'should ensure recepients and senders are watching' do
+        expect(TopicUser.get(topic, post.user).notification_level)
+          .to eq(TopicUser.notification_levels[:watching])
 
-        target_user = Fabricate(:user)
-        post = create_post(archetype: Archetype.private_message, target_usernames: target_user.username);
+        expect(TopicUser.get(topic, target_user).notification_level)
+          .to eq(TopicUser.notification_levels[:watching])
+      end
 
-        expect(TopicUser.get(post.topic, post.user).notification_level).to eq(TopicUser.notification_levels[:watching])
-        expect(TopicUser.get(post.topic, target_user).notification_level).to eq(TopicUser.notification_levels[:watching])
+      it 'should ensure invited user is watching once visited' do
+        another_user = Fabricate(:user)
+        topic.invite(target_user, another_user.username)
+        TopicUser.track_visit!(topic.id, another_user.id)
+
+        expect(TopicUser.get(topic, another_user).notification_level)
+          .to eq(TopicUser.notification_levels[:watching])
+
+        another_user = Fabricate(:user)
+        TopicUser.track_visit!(topic.id, another_user.id)
+
+        expect(TopicUser.get(topic, another_user).notification_level)
+          .to eq(TopicUser.notification_levels[:regular])
+      end
+
+      describe 'inviting a group' do
+        let(:group) do
+          Fabricate(:group,
+            default_notification_level: NotificationLevels.topic_levels[:tracking]
+          )
+        end
+
+        it "should use group's default notification level" do
+          another_user = Fabricate(:user)
+          group.add(another_user)
+          topic.invite_group(target_user, group)
+          TopicUser.track_visit!(topic.id, another_user.id)
+
+          expect(TopicUser.get(topic, another_user).notification_level)
+            .to eq(TopicUser.notification_levels[:tracking])
+
+          another_user = Fabricate(:user)
+          topic.invite(target_user, another_user.username)
+          TopicUser.track_visit!(topic.id, another_user.id)
+
+          expect(TopicUser.get(topic, another_user).notification_level)
+            .to eq(TopicUser.notification_levels[:watching])
+        end
       end
     end
 
@@ -387,6 +437,7 @@ describe TopicUser do
     it "will receive email notification for every topic" do
       user1 = Fabricate(:user)
 
+      SiteSetting.queue_jobs = false
       SiteSetting.default_email_mailing_list_mode = true
       SiteSetting.default_email_mailing_list_mode_frequency = 1
 

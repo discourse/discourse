@@ -6,9 +6,18 @@ describe SiteSettings::DefaultsProvider do
     SiteSettings::LocalProcessProvider.new
   end
 
+  before do
+    MessageBus.off
+  end
+
+  after do
+    MessageBus.on
+  end
+
   def new_settings(provider)
     Class.new do
       extend SiteSettingExtension
+      self.listen_for_changes = false
       self.provider = provider
     end
   end

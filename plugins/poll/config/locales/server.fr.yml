@@ -7,7 +7,7 @@
 
 fr:
   site_settings:
-    poll_enabled: "Autoriser les sondages ?"
+    poll_enabled: "Permettre les sondages ?"
     poll_maximum_options: "Nombre maximum d'options autorisées dans un sondage."
     poll_edit_window_mins: "Nombre de minutes après la création du message durant lesquelles les sondages peuvent être modifiés."
     poll_minimum_trust_level_to_create: "Définir le niveau de confiance minimum requis pour créer des sondages."
@@ -28,18 +28,18 @@ fr:
     named_poll_with_multiple_choices_has_invalid_parameters: "Le sondage <strong>%{name}</strong> à choix multiples possède des paramètres invalides."
     requires_at_least_1_valid_option: "Vous devez sélectionner au moins 1 option valide."
     default_cannot_be_made_public: "Un sondage avec des votes ne peut pas être rendu public."
-    named_cannot_be_made_public: "Le sondage <strong>%{name}</strong> a des votes et ne peut être rendu public."
+    named_cannot_be_made_public: "Sondage <strong>%{name}</strong> a déjà des votes et ne peut pas être rendu public."
     edit_window_expired:
-      cannot_change_polls: "Vous ne pouvez pas ajouter, supprimer ou renommer les sondages après les %{minutes} premières minutes."
       op_cannot_edit_options: "Vous nous pouvez pas ajouter ou supprimer d'options de sondage après les %{minutes} premières minutes. Veuillez contacter un modérateur si vous avez besoin de le faire."
       staff_cannot_add_or_remove_options: "Vous nous pouvez pas ajouter ou supprimer d'options de sondage après les %{minutes} premières minutes. Vous devriez plutôt fermer ce sujet et en créer un nouveau."
     no_polls_associated_with_this_post: "Aucun sondage n'est associé à ce message."
     no_poll_with_this_name: "Aucun sondage nommé <strong>%{name}</strong> n'est associé avec ce message."
     post_is_deleted: "Impossible d'agir sur un message supprimé."
+    user_cant_post_in_topic: "Vous ne pouvez pas voter parce que vous ne pouvez pas publier dans ce sujet."
     topic_must_be_open_to_vote: "Le sujet doit être ouvert pour pouvoir voter."
     poll_must_be_open_to_vote: "Le sondage doit être ouvert pour pouvoir voter."
     topic_must_be_open_to_toggle_status: "Le sujet doit être ouvert pour modifier le statut."
     only_staff_or_op_can_toggle_status: "Seul un responsable ou le créateur du sujet peut modifier le statut d'un sondage."
-    insufficient_rights_to_create: "Vous n'êtes pas autorisés à créer des sondages."
+    insufficient_rights_to_create: "Vous n'avez pas la permission de créer des sondages."
     email:
       link_to_poll: "Cliquer pour voir le sondage."

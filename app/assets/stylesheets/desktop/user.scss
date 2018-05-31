@@ -8,6 +8,10 @@
       margin-top: 10px;
     }
   }
+
+  .show-mores {
+    position: absolute;
+  }
 }
 
 .profile-image {
@@ -75,6 +79,11 @@
   margin-bottom: 10px;
   box-sizing: border-box;
 
+  &.user-badges-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .btn.right {
     float: right
   }
@@ -91,13 +100,16 @@
   }
 }
 
+.pref-second-factor {
+  margin-top: 10px;
+}
+
 .user-invite-list {
   width: 100%;
   margin-top: 15px;
 
   th {
     text-align: left;
-    border-bottom: 3px solid $primary-low;
     padding: 0 0 10px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
@@ -107,12 +119,6 @@
     padding: 10px 0 10px 0;
     border-bottom: 1px solid $primary-low;
   }
-}
-
-.user-invite-controls {
-  background-color: $primary-low;
-  padding: 5px 10px 0px 0;
-  height: 35px;
 }
 
 .user-invite-search {
@@ -134,29 +140,9 @@
 
     &.group {
       .details {
-        padding: 15px 0px;
+        padding: 15px 0;
         margin: 0;
         color: dark-light-choose(lighten($primary, 10%), $secondary);
-      }
-    }
-
-  .secondary {
-    background: $secondary;
-    border-top: 1px solid $primary-low;
-    border-bottom: 1px solid $primary-low;
-
-      dl {
-        padding: 8px 10px;
-      }
-
-      dd {
-        display: inline;
-        margin: 0 10px 0 0;
-      }
-
-      dt {
-        margin: 0 5px 0 0;
-        padding: 0;
       }
     }
 
@@ -175,6 +161,12 @@
           padding: 3px;
           a[href] {
             text-decoration: underline;
+          }
+          .location-and-website {
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
         }
 
@@ -198,7 +190,6 @@
       padding: 0 0 12px 0;
       float: right;
       text-align: right;
-      width: 180px;
 
       a {
         width: 140px;
@@ -279,10 +270,12 @@
     width: 530px;
   }
 
+  .category-selector, .tag-chooser {
+    width: 530px;
+  }
+
   input {
-    &.category-selector,
-    &.user-selector,
-    &.tag-chooser {
+    &.user-selector {
       width: 530px;
     }
 

@@ -16,7 +16,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   _topic: null,
 
   @observes('currentUser.unread_notifications', 'currentUser.unread_private_messages')
-  _notificationsChanged() {
+  notificationsChanged() {
     this.queueRerender();
   },
 
@@ -112,7 +112,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
       $panel.removeClass('drop-down').removeClass('slide-in').addClass(viewMode);
 
       const $panelBody = $('.panel-body', $panel);
-      let contentHeight = parseInt($('.panel-body-contents', $panel).height());
+      // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
+      let contentHeight = parseInt($('.panel-body-contents', $panel).height()) + 2;
 
       // We use a mutationObserver to check for style changes, so it's important
       // we don't set it if it doesn't change. Same goes for the $panelBody!
@@ -139,7 +140,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         if ($panelBody.height() !== contentHeight) {
           $panelBody.height(contentHeight);
         }
-        $('body').addClass('drop-down-visible');
+        $('body').addClass('drop-down-mode');
       } else {
         const menuTop = headerHeight();
 
@@ -157,7 +158,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         if (style.top !== menuTop + "px" || style.height !== height) {
           $panel.css({ top: menuTop + "px", height });
         }
-        $('body').removeClass('drop-down-visible');
+        $('body').removeClass('drop-down-mode');
       }
 
       $panel.width(width);

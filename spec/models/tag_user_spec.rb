@@ -74,6 +74,9 @@ describe TagUser do
     let(:tracked_tag) { Fabricate(:tag) }
 
     context "with some tag notification settings" do
+      before do
+        SiteSetting.queue_jobs = false
+      end
 
       let :watched_post do
         TagUser.create!(user: user, tag: watched_tag, notification_level: TagUser.notification_levels[:watching])
@@ -156,7 +159,7 @@ describe TagUser do
         staff = Fabricate(:admin)
         topic = create_post.topic
 
-        SiteSetting.staff_tags = "foo"
+        create_staff_tags(['foo'])
 
         result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["foo"])
         expect(result).to eq(false)

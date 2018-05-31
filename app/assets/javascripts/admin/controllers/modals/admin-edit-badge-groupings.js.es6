@@ -1,5 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
-export default Ember.Controller.extend({
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
+
+export default Ember.Controller.extend(ModalFunctionality, {
 
   modelChanged: function(){
     const model = this.get('model');

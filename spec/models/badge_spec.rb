@@ -61,4 +61,23 @@ describe Badge do
     expect(b.grant_count).to eq(1)
   end
 
+  describe '#manually_grantable?' do
+    let(:badge) { Fabricate(:badge, name: 'Test Badge') }
+    subject { badge.manually_grantable? }
+
+    context 'when system badge' do
+      before { badge.system = true }
+      it { is_expected.to be false }
+    end
+
+    context 'when has query' do
+      before { badge.query = 'SELECT id FROM users' }
+      it { is_expected.to be false }
+    end
+
+    context 'when neither system nor has query' do
+      before { badge.update_columns(system: false, query: nil) }
+      it { is_expected.to be true }
+    end
+  end
 end

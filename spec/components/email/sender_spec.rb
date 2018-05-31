@@ -211,9 +211,9 @@ describe Email::Sender do
         email_sender.send
 
         references = [
+          "<topic/#{topic.id}@test.localhost>",
           "<topic/#{topic.id}/#{post_3.id}@test.localhost>",
           "<topic/#{topic.id}/#{post_2.id}@test.localhost>",
-          "<topic/#{topic.id}@test.localhost>",
         ]
 
         expect(message.header['References'].to_s).to eq(references.join(" "))
@@ -231,9 +231,9 @@ describe Email::Sender do
         expect(message.header['Message-Id'].to_s).to eq("<#{post_4_incoming_email.message_id}>")
 
         references = [
+          "<#{topic_incoming_email.message_id}>",
           "<topic/#{topic.id}/#{post_3.id}@test.localhost>",
           "<#{post_2_incoming_email.message_id}>",
-          "<#{topic_incoming_email.message_id}>",
         ]
 
         expect(message.header['References'].to_s).to eq(references.join(" "))

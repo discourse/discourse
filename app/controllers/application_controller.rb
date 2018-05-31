@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'current_user'
 require_dependency 'canonical_url'
 require_dependency 'discourse'
@@ -46,8 +48,9 @@ class ApplicationController < ActionController::Base
   before_action :set_mobile_view
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
-  before_action :preload_json
   before_action :redirect_to_login_if_required
+  before_action :block_if_requires_login
+  before_action :preload_json
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
@@ -55,12 +58,26 @@ class ApplicationController < ActionController::Base
 
   layout :set_layout
 
+  if Rails.env == "development"
+    after_action :remember_theme_key
+
+    def remember_theme_key
+      if @theme_key
+        Stylesheet::Watcher.theme_key = @theme_key if defined? Stylesheet::Watcher
+      end
+    end
+  end
+
   def has_escaped_fragment?
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
 
   def use_crawler_layout?
-    @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
+    @use_crawler_layout ||=
+      request.user_agent &&
+      (request.content_type.blank? || request.content_type.include?('html')) &&
+      !['json', 'rss'].include?(params[:format]) &&
+      (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
   end
 
   def add_readonly_header
@@ -100,7 +117,15 @@ class ApplicationController < ActionController::Base
   end
 
   def render_rate_limit_error(e)
-    render_json_error e.description, type: :rate_limit, status: 429
+    retry_time_in_seconds = e&.available_in
+
+    render_json_error(
+      e.description,
+      type: :rate_limit,
+      status: 429,
+      extras: { wait_seconds: retry_time_in_seconds },
+      headers: { 'Retry-After': retry_time_in_seconds },
+    )
   end
 
   # If they hit the rate limiter
@@ -115,11 +140,19 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
-    raise e if Rails.env.test?
     if (request.format && request.format.json?) || request.xhr? || !request.get?
       rescue_discourse_actions(:not_logged_in, 403, include_ember: true)
     else
       rescue_discourse_actions(:not_found, 404)
+    end
+  end
+
+  rescue_from Discourse::InvalidParameters do |e|
+    message = I18n.t('invalid_params', message: e.message)
+    if (request.format && request.format.json?) || request.xhr? || !request.get?
+      rescue_discourse_actions(:invalid_parameters, 400, include_ember: true, custom_message_translated: message)
+    else
+      rescue_discourse_actions(:not_found, 400, custom_message_translated: message)
     end
   end
 
@@ -139,11 +172,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound, PluginDisabled  do
+  rescue_from Discourse::NotFound, PluginDisabled, ActionController::RoutingError  do
     rescue_discourse_actions(:not_found, 404)
   end
 
   rescue_from Discourse::InvalidAccess do |e|
+
+    if e.opts[:delete_cookie].present?
+      cookies.delete(e.opts[:delete_cookie])
+    end
     rescue_discourse_actions(
       :invalid_access,
       403,
@@ -162,18 +199,22 @@ class ApplicationController < ActionController::Base
                        (request.xhr?) ||
                        ((params[:external_id] || '').ends_with? '.json')
 
+    message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
+
     if show_json_errors
       # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
-        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : I18n.t(type)
+        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : message
       end
 
-      render_json_error I18n.t(opts[:custom_message] || type), type: type, status: status_code
+      render_json_error message, type: type, status: status_code
     else
       begin
+        # 404 pages won't have the session and theme_keys without these:
         current_user
+        handle_theme
       rescue Discourse::InvalidAccess
-        return render plain: I18n.t(opts[:custom_message] || type), status: status_code
+        return render plain: message, status: status_code
       end
 
       render html: build_not_found_page(status_code, opts[:include_ember] ? 'application' : 'no_ember')
@@ -199,12 +240,12 @@ class ApplicationController < ActionController::Base
   def clear_notifications
     if current_user && !@readonly_mode
 
-      cookie_notifications = cookies['cn'.freeze]
-      notifications = request.headers['Discourse-Clear-Notifications'.freeze]
+      cookie_notifications = cookies['cn']
+      notifications = request.headers['Discourse-Clear-Notifications']
 
       if cookie_notifications
         if notifications.present?
-          notifications += "," << cookie_notifications
+          notifications += ",#{cookie_notifications}"
         else
           notifications = cookie_notifications
         end
@@ -213,6 +254,8 @@ class ApplicationController < ActionController::Base
       if notifications.present?
         notification_ids = notifications.split(",").map(&:to_i)
         Notification.read(current_user, notification_ids)
+        current_user.reload
+        current_user.publish_notifications_state
         cookies.delete('cn')
       end
     end
@@ -221,13 +264,15 @@ class ApplicationController < ActionController::Base
   def set_locale
     if !current_user
       if SiteSetting.set_locale_from_accept_language_header
-        I18n.locale = locale_from_header
+        locale = locale_from_header
       else
-        I18n.locale = SiteSetting.default_locale
+        locale = SiteSetting.default_locale
       end
     else
-      I18n.locale = current_user.effective_locale
+      locale = current_user.effective_locale
     end
+
+    I18n.locale = I18n.locale_available?(locale) ? locale : :en
     I18n.ensure_all_loaded!
   end
 
@@ -260,12 +305,14 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-  NO_CUSTOM = "no_custom".freeze
-  NO_PLUGINS = "no_plugins".freeze
-  ONLY_OFFICIAL = "only_official".freeze
-  SAFE_MODE = "safe_mode".freeze
+  NO_CUSTOM = "no_custom"
+  NO_PLUGINS = "no_plugins"
+  ONLY_OFFICIAL = "only_official"
+  SAFE_MODE = "safe_mode"
 
   def resolve_safe_mode
+    return unless guardian.can_enable_safe_mode?
+
     safe_mode = params[SAFE_MODE]
     if safe_mode
       request.env[NO_CUSTOM] = !!safe_mode.include?(NO_CUSTOM)
@@ -276,13 +323,13 @@ class ApplicationController < ActionController::Base
 
   def handle_theme
 
-    return if request.xhr? || request.format.json?
+    return if request.xhr? || request.format == "json" || request.format == "js"
     return if request.method != "GET"
 
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key]
+    theme_key = request[:preview_theme_key]
 
     user_option = current_user&.user_option
 
@@ -377,10 +424,8 @@ class ApplicationController < ActionController::Base
   end
 
   def post_ids_including_replies
-    post_ids = params[:post_ids].map { |p| p.to_i }
-    if params[:reply_post_ids]
-      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map { |p| p.to_i }).pluck(:reply_id)
-    end
+    post_ids  = params[:post_ids].map(&:to_i)
+    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_id) if params[:reply_post_ids]
     post_ids
   end
 
@@ -437,6 +482,7 @@ class ApplicationController < ActionController::Base
     def preload_anonymous_data
       store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
+      store_preloaded("themeSettings", Theme.settings_for_client(@theme_key))
       store_preloaded("customHTML", custom_html_json)
       store_preloaded("banner", banner_json)
       store_preloaded("customEmoji", custom_emoji)
@@ -499,12 +545,15 @@ class ApplicationController < ActionController::Base
 
     # Render action for a JSON error.
     #
-    # obj      - a translated string, an ActiveRecord model, or an array of translated strings
+    # obj       - a translated string, an ActiveRecord model, or an array of translated strings
     # opts:
-    #   type   - a machine-readable description of the error
-    #   status - HTTP status code to return
+    #   type    - a machine-readable description of the error
+    #   status  - HTTP status code to return
+    #   headers - extra headers for the response
     def render_json_error(obj, opts = {})
       opts = { status: opts } if opts.is_a?(Integer)
+      opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
+
       render json: MultiJson.dump(create_errors_json(obj, opts)), status: opts[:status] || 422
     end
 
@@ -554,6 +603,28 @@ class ApplicationController < ActionController::Base
       raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
     end
 
+    def self.requires_login(arg = {})
+      @requires_login_arg = arg
+    end
+
+    def self.requires_login_arg
+      @requires_login_arg
+    end
+
+    def block_if_requires_login
+      if arg = self.class.requires_login_arg
+        check =
+          if except = arg[:except]
+            !except.include?(action_name.to_sym)
+          elsif only = arg[:only]
+            only.include?(action_name.to_sym)
+          else
+            true
+          end
+        ensure_logged_in if check
+      end
+    end
+
     def ensure_logged_in
       raise Discourse::NotLoggedIn.new unless current_user.present?
     end
@@ -584,10 +655,12 @@ class ApplicationController < ActionController::Base
           # save original URL in a session so we can redirect after login
           session[:destination_url] = destination_url
           redirect_to path('/session/sso')
+        elsif params[:authComplete].present?
+          redirect_to path("/login?authComplete=true")
         else
           # save original URL in a cookie (javascript redirects after login in this case)
           cookies[:destination_url] = destination_url
-          redirect_to "/login"
+          redirect_to path("/login")
         end
       end
     end
@@ -610,7 +683,12 @@ class ApplicationController < ActionController::Base
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.tr!('-', ' ')
+      @hide_google = true if SiteSetting.login_required
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
+    end
+
+    def is_asset_path
+      request.env['DISCOURSE_IS_ASSET_PATH'] = 1
     end
 
   protected

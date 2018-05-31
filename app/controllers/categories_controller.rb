@@ -2,10 +2,11 @@ require_dependency 'category_serializer'
 
 class CategoriesController < ApplicationController
 
-  before_action :ensure_logged_in, except: [:index, :categories_and_latest, :show, :redirect, :find_by_slug]
+  requires_login except: [:index, :categories_and_latest, :categories_and_top, :show, :redirect, :find_by_slug]
+
   before_action :fetch_category, only: [:show, :update, :destroy]
   before_action :initialize_staff_action_logger, only: [:create, :update, :destroy]
-  skip_before_action :check_xhr, only: [:index, :categories_and_latest, :redirect]
+  skip_before_action :check_xhr, only: [:index, :categories_and_latest, :categories_and_top, :redirect]
 
   def redirect
     redirect_to path("/c/#{params[:path]}")
@@ -26,7 +27,10 @@ class CategoriesController < ApplicationController
 
     @category_list = CategoryList.new(guardian, category_options)
     @category_list.draft_key = Draft::NEW_TOPIC
-    @category_list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
+    @category_list.draft_sequence = DraftSequence.current(
+      current_user,
+      Draft::NEW_TOPIC
+    )
     @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence) if current_user
 
     @title = "#{I18n.t('js.filters.categories.title')} - #{SiteSetting.title}" unless category_options[:is_homepage]
@@ -35,10 +39,24 @@ class CategoriesController < ApplicationController
       format.html do
         store_preloaded(@category_list.preload_key, MultiJson.dump(CategoryListSerializer.new(@category_list, scope: guardian)))
 
-        if SiteSetting.desktop_category_page_style == "categories_and_latest_topics".freeze
-          topic_options = { per_page: SiteSetting.categories_topics, no_definitions: true }
-          topic_list = TopicQuery.new(current_user, topic_options).list_latest
-          store_preloaded(topic_list.preload_key, MultiJson.dump(TopicListSerializer.new(topic_list, scope: guardian)))
+        style = SiteSetting.desktop_category_page_style
+        topic_options = {
+          per_page: SiteSetting.categories_topics,
+          no_definitions: true,
+          exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+        }
+
+        if style == "categories_and_latest_topics".freeze
+          @topic_list = TopicQuery.new(current_user, topic_options).list_latest
+        elsif style == "categories_and_top_topics".freeze
+          @topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+        end
+
+        if @topic_list.present?
+          store_preloaded(
+            @topic_list.preload_key,
+            MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian))
+          )
         end
 
         render
@@ -49,35 +67,11 @@ class CategoriesController < ApplicationController
   end
 
   def categories_and_latest
-    discourse_expires_in 1.minute
+    categories_and_topics(:latest)
+  end
 
-    category_options = {
-      is_homepage: current_homepage == "categories".freeze,
-      parent_category_id: params[:parent_category_id],
-      include_topics: false
-    }
-
-    topic_options = {
-      per_page: SiteSetting.categories_topics,
-      no_definitions: true,
-      exclude_category_ids: Category.where(suppress_from_homepage: true).pluck(:id)
-    }
-
-    result = CategoryAndTopicLists.new
-    result.category_list = CategoryList.new(guardian, category_options)
-    result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
-
-    draft_key = Draft::NEW_TOPIC
-    draft_sequence = DraftSequence.current(current_user, draft_key)
-    draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
-
-    %w{category topic}.each do |type|
-      result.send(:"#{type}_list").draft = draft
-      result.send(:"#{type}_list").draft_key = draft_key
-      result.send(:"#{type}_list").draft_sequence = draft_sequence
-    end
-
-    render_serialized(result, CategoryAndTopicListsSerializer, root: false)
+  def categories_and_top
+    categories_and_topics(:top)
   end
 
   def move
@@ -207,6 +201,42 @@ class CategoriesController < ApplicationController
   end
 
   private
+    def categories_and_topics(topics_filter)
+      discourse_expires_in 1.minute
+
+      category_options = {
+        is_homepage: current_homepage == "categories".freeze,
+        parent_category_id: params[:parent_category_id],
+        include_topics: false
+      }
+
+      topic_options = {
+        per_page: SiteSetting.categories_topics,
+        no_definitions: true,
+        exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+      }
+
+      result = CategoryAndTopicLists.new
+      result.category_list = CategoryList.new(guardian, category_options)
+
+      if topics_filter == :latest
+        result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
+      elsif topics_filter == :top
+        result.topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+      end
+
+      draft_key = Draft::NEW_TOPIC
+      draft_sequence = DraftSequence.current(current_user, draft_key)
+      draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
+
+      %w{category topic}.each do |type|
+        result.send(:"#{type}_list").draft = draft
+        result.send(:"#{type}_list").draft_key = draft_key
+        result.send(:"#{type}_list").draft_sequence = draft_sequence
+      end
+
+      render_serialized(result, CategoryAndTopicListsSerializer, root: false)
+    end
 
     def required_param_keys
       [:name, :color, :text_color]
@@ -234,7 +264,7 @@ class CategoriesController < ApplicationController
                         :email_in,
                         :email_in_allow_strangers,
                         :mailinglist_mirror,
-                        :suppress_from_homepage,
+                        :suppress_from_latest,
                         :all_topics_wiki,
                         :parent_category_id,
                         :auto_close_hours,
@@ -252,6 +282,7 @@ class CategoriesController < ApplicationController
                         :default_view,
                         :subcategory_list_style,
                         :default_top_period,
+                        :minimum_required_tags,
                         custom_fields: [params[:custom_fields].try(:keys)],
                         permissions: [*p.try(:keys)],
                         allowed_tags: [],
@@ -268,9 +299,11 @@ class CategoriesController < ApplicationController
     end
 
     def include_topics(parent_category = nil)
+      style = SiteSetting.desktop_category_page_style
       view_context.mobile_view? ||
-      params[:include_topics] ||
-      (parent_category && parent_category.subcategory_list_includes_topics?) ||
-      SiteSetting.desktop_category_page_style == "categories_with_featured_topics".freeze
+        params[:include_topics] ||
+        (parent_category && parent_category.subcategory_list_includes_topics?) ||
+        style == "categories_with_featured_topics".freeze ||
+        style == "categories_with_top_topics".freeze
     end
 end

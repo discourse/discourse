@@ -5,18 +5,10 @@ RSpec.describe 'Multisite SiteSettings' do
 
   before do
     conn.config_filename = "spec/fixtures/multisite/two_dbs.yml"
-    conn.load_settings!
-    conn.remove_class_variable(:@@current_db)
   end
 
   after do
     conn.clear_settings!
-
-    [:@@db_spec_cache, :@@host_spec_cache, :@@default_spec].each do |class_variable|
-      conn.remove_class_variable(class_variable)
-    end
-
-    conn.set_current_db
   end
 
   def cache(name, namespace: true)

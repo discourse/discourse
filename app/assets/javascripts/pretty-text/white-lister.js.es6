@@ -137,6 +137,12 @@ const DEFAULT_LIST = [
   'div.quote-controls',
   'div.title',
   'div[align]',
+  'div[data-*]', /* This may seem a bit much but polls does
+                    it anyway and this is needed for themes,
+                    special code in sanitizer handles data-*
+                    nothing exists for data-theme-* and we
+                    don't want to slow sanitize for this case
+                  */
   'div[dir]',
   'dl',
   'dt',

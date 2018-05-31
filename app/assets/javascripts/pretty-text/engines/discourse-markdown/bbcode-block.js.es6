@@ -11,7 +11,7 @@ function trailingSpaceOnly(src, start, max) {
   return true;
 }
 
-const ATTR_REGEX = /^\s*=(.+)$|((([a-z0-9]*)\s*)=)(["“”'].*["“”']|\S+)/ig;
+const ATTR_REGEX = /^\s*=(.+)$|((([a-z0-9]*)\s*)=)(["“”'].*?["“”']|\S+)/ig;
 
 // parse a tag [test a=1 b=2] to a data structure
 // {tag: "test", attrs={a: "1", b: "2"}
@@ -50,6 +50,8 @@ export function parseBBCodeTag(src, start, max, multiline) {
       if (multiline && !trailingSpaceOnly(src, i+1, max)) {
         return;
       }
+
+      tag = tag.toLowerCase();
 
       return {tag, length: tag.length+3, closing: true};
     }
@@ -240,7 +242,14 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   state.lineMax = nextLine;
 
   if (rule.replace) {
-    let content = state.src.slice(state.bMarks[startLine+1], state.eMarks[nextLine-1]);
+    let content;
+
+    if (startLine === nextLine) {
+      content = state.src.slice(start + info.length, closeTag.start);
+    } else {
+      content = state.src.slice(state.bMarks[startLine+1], state.eMarks[nextLine-1]);
+    }
+
     if (!rule.replace.call(this, state, info, content)) {
       return false;
     }

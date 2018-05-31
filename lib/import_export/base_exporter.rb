@@ -5,7 +5,7 @@ module ImportExport
 
     CATEGORY_ATTRS = [:id, :name, :color, :created_at, :user_id, :slug, :description, :text_color,
                       :auto_close_hours, :parent_category_id, :auto_close_based_on_last_post,
-                      :topic_template, :suppress_from_homepage, :all_topics_wiki, :permissions_params]
+                      :topic_template, :suppress_from_latest, :all_topics_wiki, :permissions_params]
 
     GROUP_ATTRS = [ :id, :name, :created_at, :mentionable_level, :messageable_level, :visibility_level,
                     :automatic_membership_email_domains, :automatic_membership_retroactive,
@@ -75,10 +75,10 @@ module ImportExport
       end
 
       user_ids.uniq!
-      return [] if user_ids.empty?
+      return User.none if user_ids.empty?
 
       users = User.where(id: user_ids)
-      export_users(users.to_a)
+      export_users(users)
     end
 
     def export_group_users!
@@ -118,10 +118,9 @@ module ImportExport
       return if @export_data[:topics].blank?
       topic_ids = @export_data[:topics].pluck(:id)
 
-      users = User.joins(:topics).where('topics.id IN (?)', topic_ids).to_a
-      users.uniq!
+      users = User.joins(:posts).where('posts.topic_id IN (?)', topic_ids).distinct
 
-      export_users(users.to_a)
+      export_users(users)
     end
 
     def export_topic_users!
@@ -132,9 +131,9 @@ module ImportExport
 
     def export_users(users)
       data = []
-      users.reject! { |u| u.id == Discourse::SYSTEM_USER_ID }
 
-      users.each do |u|
+      users.find_each do |u|
+        next if u.id == Discourse::SYSTEM_USER_ID
         x = USER_ATTRS.inject({}) { |h, a| h[a] = u.send(a); h; }
         x.merge(bio_raw: u.user_profile.bio_raw,
                 website: u.user_profile.website,

@@ -28,15 +28,14 @@ export const ButtonClass = {
 
   buildAttributes() {
     const attrs = this.attrs;
+    const attributes = {};
 
-    let title;
     if (attrs.title) {
-      title = I18n.t(attrs.title, attrs.titleOptions);
-    } else if (attrs.label) {
-      title = I18n.t(attrs.label, attrs.labelOptions);
+      const title = I18n.t(attrs.title, attrs.titleOptions);
+      attributes["aria-label"] = title;
+      attributes.title = title;
     }
 
-    const attributes = { "aria-label": title, title };
     if (attrs.disabled) { attributes.disabled = "true"; }
 
     if (attrs.data) {
@@ -71,7 +70,7 @@ export const ButtonClass = {
     if (attrs.sendActionEvent) {
       return this.sendWidgetAction(attrs.action, e);
     }
-    return this.sendWidgetAction(attrs.action);
+    return this.sendWidgetAction(attrs.action, attrs.actionParam);
   }
 };
 

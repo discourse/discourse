@@ -36,7 +36,8 @@ export default Discourse.Route.extend({
         return null;
       }
     }).then(results => {
-      const model = (results && translateResults(results)) || {};
+      const grouped_search_result = results ? results.grouped_search_result : {};
+      const model = (results && translateResults(results)) || { grouped_search_result };
       setTransient('lastSearch', { searchKey, model }, 5);
       return model;
     });

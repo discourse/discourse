@@ -1,0 +1,12 @@
+<div class='control-group buttons'>
+  {{#d-button action="save"
+      disabled=saving
+      class='btn btn-primary group-manage-save'}}
+
+      {{savingText}}
+  {{/d-button}}
+
+  {{#if saved}}
+    <span>{{i18n 'saved'}}</span>
+  {{/if}}
+</div>

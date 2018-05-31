@@ -8,12 +8,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
       end
     end
 
-    # If `invite_passthrough_hours` is defined, allow them to re-use the invite link
-    # to login again.
-    if invite.redeemed_at && invite.redeemed_at >= SiteSetting.invite_passthrough_hours.hours.ago
-      return invited_user
-    end
-
     nil
   end
 
@@ -26,7 +20,16 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     end
     available_name = name || available_username
 
-    user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
+    user_params = {
+      email: invite.email,
+      username: available_username,
+      name: available_name,
+      active: true,
+      trust_level: SiteSetting.default_invitee_trust_level
+    }
+
+    user = User.unstage(user_params)
+    user = User.new(user_params) if user.nil?
 
     if !SiteSetting.must_approve_users? || (SiteSetting.must_approve_users? && invite.invited_by.staff?)
       user.approved = true
@@ -91,7 +94,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def get_existing_user
-    User.where(admin: false).find_by_email(invite.email)
+    User.where(admin: false, staged: false).find_by_email(invite.email)
   end
 
   def add_to_private_topics_if_invited

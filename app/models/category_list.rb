@@ -72,7 +72,6 @@ class CategoryList
         subcategories: [:topic_only_relative_url]
       ).secured(@guardian)
 
-      @categories = @categories.where(suppress_from_homepage: false) if @options[:is_homepage]
       @categories = @categories.where("categories.parent_category_id = ?", @options[:parent_category_id].to_i) if @options[:parent_category_id].present?
 
       if SiteSetting.fixed_category_positions

@@ -24,9 +24,14 @@ module ImportScripts::Mbox
 
     def execute
       index_messages
-      import_categories
-      import_users
-      import_posts
+
+      if @settings.index_only
+        @skip_updates = true
+      else
+        import_categories
+        import_users
+        import_posts
+      end
     end
 
     def index_messages
@@ -64,8 +69,8 @@ module ImportScripts::Mbox
             email: row['email'],
             name: row['name'],
             trust_level: @settings.trust_level,
-            staged: true,
-            active: false,
+            staged: @settings.staged,
+            active: !@settings.staged,
             created_at: to_time(row['date_of_first_message'])
           }
         end

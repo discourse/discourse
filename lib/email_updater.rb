@@ -86,6 +86,7 @@ class EmailUpdater
         when EmailChangeRequest.states[:authorizing_new]
           change_req.update_column(:change_state, EmailChangeRequest.states[:complete])
           user.primary_email.update!(email: token.email)
+          user.set_automatic_groups
           confirm_result = :complete
         end
       else

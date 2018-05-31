@@ -27,10 +27,9 @@ h1 .topic-statuses .topic-status i {
   }
 
   .reply-to-tab {
-    z-index: 400;
-    font-size: 0.929em;
+    z-index: z("base") + 1;
     float: right;
-    margin: 1px 25px 0 0;
+    margin: -2px 25px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
@@ -55,9 +54,63 @@ nav.post-controls {
 
   padding: 0;
 
-  .like-count {
-    font-size: inherit;
-    margin-right: -5px;
+  .like-button {
+    display: inline-flex;
+
+    .like-count {
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+    }
+
+    .widget-button {
+      background: none;
+    }
+
+    &:hover {
+      background: $primary-low;
+      .like-count {
+        color: $primary-medium;
+        &.d-hover {
+          color: $primary;
+        }
+      }
+      .d-hover {
+        background: none;
+      }
+    }
+
+    &:active {
+      box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
+
+      .widget-button {
+        box-shadow: none;
+      }
+    }
+
+    .like {
+      &:focus {
+        background: none;
+      }
+    }
+
+    .like-count {
+      font-size: $font-up-1;
+      margin-left: 0;      
+      i.d-icon {
+        padding-left: 10px;
+        color: dark-light-choose($primary-low-mid, $secondary-high);
+      }
+      &.my-likes {
+        margin-right: -2px;
+      }
+      &.regular-likes {
+        margin-right: -12px;
+      }
+    }
+
+    .toggle-like {
+      padding: 8px 8px;
+      margin-left: 2px;
+    }
   }
 
   .highlight-action {
@@ -105,7 +158,7 @@ nav.post-controls {
     }
     i {
       margin-left: 5px;
-      font-size: .857em;
+      font-size: $font-down-1;
     }
   }
 
@@ -120,14 +173,14 @@ nav.post-controls {
   }
 
   button {
-    font-size: 1.143em;
+    font-size: $font-up-1;
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
     border: none;
     margin-left: 3px;
 
-    &.d-hover {
+    &.d-hover, &:focus {
       background: $primary-low;
       color: $primary;
     }
@@ -143,12 +196,12 @@ nav.post-controls {
       position: relative;
     }
 
-    &.delete.d-hover {
+    &.delete.d-hover, &.delete:focus {
       background: $danger;
       color: $secondary;
     }
 
-    &.like.d-hover {
+    &.like.d-hover, &.like:focus {
       color: $love;
       background: $love-low;
     }
@@ -178,12 +231,12 @@ nav.post-controls {
     text-align: left;
     bottom: -2px;
     right: 15px;
-    z-index: 1000;
+    z-index: z("dropdown");
 
     h3 {
       margin-top: 0;
       color: $primary;
-      font-size: 1em;
+      font-size: $font-0;
     }
 
     ul {
@@ -205,14 +258,15 @@ nav.post-controls {
 
 .embedded-posts {
   h1, h2, h3 { margin: 10px 0; }
+  border:  1px solid $primary-low;
 
   .topic-body {
     box-sizing: border-box;
-    width: calc(100% - 60px); // [100% - .topic-avatar width]
+    width: calc(100% - 70px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
-    padding: 15px 15px 0 15px;
+    padding: 15px 25px 0 15px;
   }
 
   // this is covered by .topic-body .regular on a normal post
@@ -222,27 +276,58 @@ nav.post-controls {
   }
 
   .topic-avatar {
-    padding-left: 15px;
+    padding-left: 25px;
     padding-top: 15px;
+  }
+
+  .collapse-down, .collapse-up {
+    position: absolute;
+    color: $primary-medium;
+    background: $secondary;
+    border:  1px solid $primary-low;
+    padding: 6px 9px 8px;
+    z-index: 99; // Needs to be higher than topic-avatar
+    &:hover {
+      background: $primary-low;
+      color: $primary;
+    }
   }
 
   // bottom means "reply expansion" below a post
   &.bottom {
+    border-top: none;
+    margin-bottom: 20px;
     &.hidden {
       display: block;
       opacity: 0;
     }
   }
   &.bottom {
+    .collapse-up {
+      transform: translate(-50%, -164%);
+    }
     .row {
-      padding-top: 7px;
+      padding-bottom: .5em;
+      .topic-avatar, .topic-body {
+        border-top: 1px solid $primary-low;
+      }
     }
   }
 
   // top means "in reply to expansion" above a post
   &.top {
+    border-bottom: none;
+    .collapse-down {
+      transform: translate(-50%, 55%);
+    }
     margin-left: 56px;
-    width: 701px;
+    width: 699px;
+    .row {
+      border-bottom: none;
+      .topic-avatar, .topic-body {
+        border-top: 1px solid $primary-low;
+      }
+    }
   }
   &.top.topic-body {
     padding: 0;
@@ -257,8 +342,8 @@ nav.post-controls {
   }
   .topic-meta-data h5 {
     position: absolute;
-    z-index: 1;
-    font-size: 0.929em;
+    z-index: z("base");
+    font-size: $font-down-1;
     a {
       font-weight: bold;
       color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -274,69 +359,8 @@ nav.post-controls {
   .avatar { margin-right: 2px; }
 }
 
-a.star {
-  display: inline-block;
-  float: left;
-}
-
 .topic-map {
-  margin: 20px 0 0 0;
-  background: blend-primary-secondary(5%);
-  border: 1px solid $primary-low;
-  border-top: none; // would cause double top border
-
-  section {
-    border-top: 1px solid $primary-low;
-  }
-
-  h3 {
-    margin-bottom: 4px;
-    color: dark-light-choose($primary-high, $secondary-low);
-    line-height: 23px;
-    font-weight: normal;
-    font-size: 1em;
-  }
-
-  h4 {
-    margin: 1px 0 2px 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-    font-size: 0.857em;
-    line-height: 15px;
-  }
-
-  ul {
-    margin: 0;
-    list-style: none;
-  }
-
-  span.domain {
-    font-size: 0.786em;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-
-  .avatars {
-    > div {
-      float: left;
-      position: relative;
-      margin: 3px 0;
-    }
-    .post-count {
-      position: absolute;
-      right: 0;
-      border-radius: 100px;
-      padding: 4px 5px 2px 5px;
-      text-align: center;
-      font-weight: normal;
-      font-size: .786em;
-      line-height: 1;
-    }
-  }
-
-  .avatar {
-    float: left;
-    margin-right: 4px;
-  }
+  margin: 20px 0;
 
   .map {
     .secondary {text-align: center;}
@@ -349,14 +373,18 @@ a.star {
       &:nth-child(3) { text-align:center; }
     }
     a, .number {
-      line-height: 20px;
+      line-height: $line-height-large;
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 1.286em;
+      font-size: $font-up-2;
+      line-height: $line-height-medium;
     }
     .avatar  a {
       float: left;
+    }
+    .topic-map-post {
+      margin-top: 6px;
     }
   }
   .avatars,
@@ -371,22 +399,11 @@ a.star {
     .user a {
       color: dark-light-choose($primary-high, $secondary-low);
       font-weight: bold;
-      font-size: 0.929em;
+      font-size: $font-down-1;
     }
     .d-icon-times {
       color: dark-light-choose($primary-medium, $secondary-high);
     }
-  }
-
-  .topic-links {
-    .badge-notification {
-      margin: 1px 5px 5px 0;
-    }
-  }
-
-  td {
-    vertical-align: top;
-    padding:1px;
   }
 
   .buttons {
@@ -397,7 +414,7 @@ a.star {
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       border-left: 1px solid $primary-low;
-      border-top: 1px solid $primary-low;
+      border-top: 1px solid transparent;
       &:hover {
         color: $primary;
         background: $primary-low;
@@ -408,7 +425,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 1.286em;
+        font-size: $font-up-2;
         line-height: 52px;
       }
     }
@@ -425,11 +442,6 @@ a.star {
   }
 }
 
-@mixin topic-footer-buttons-text {
-  line-height: 32px;
-  color: dark-light-choose($primary-medium, $secondary-medium);
-}
-
 @mixin topic-footer-button {
   margin-bottom: 5px;
   margin-right: 10px;
@@ -439,7 +451,7 @@ a.star {
   padding: 10px 10px 0 0;
   float: left;
   p {
-    @include topic-footer-buttons-text;
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
   .btn {
     @include topic-footer-button;
@@ -459,7 +471,6 @@ a.star {
   clear: left;
   padding: 20px 0 15px 0;
   table {
-    table-layout: fixed;
     margin-top: 10px;
   }
 
@@ -520,6 +531,7 @@ video {
   .topic-statuses {
     i { color: $header_primary; }
     .d-icon-envelope { color: $danger; }
+    .d-icon-lock {padding-top: .15em;}
     .unpinned { color: $header_primary; }
   }
 
@@ -533,7 +545,6 @@ video {
 
   .topic-header-extra {
     margin: 0 0 0 5px;
-    padding-top: 5px;
   }
 }
 
@@ -541,8 +552,9 @@ video {
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
-    font-size: 1.429em;
-    line-height: 1.3em;
+    font-size: $font-up-3;
+    line-height: $line-height-large;
+    width: 100%;
   }
 
   .topic-statuses {
@@ -553,8 +565,9 @@ video {
 /* override docked header CSS for topics with categories */
 .extra-info.two-rows {
   h1 {
-    line-height: 1.1em;
+    line-height: $line-height-medium;
     margin: 0;
+    width: 100%;
   }
 }
 
@@ -591,7 +604,7 @@ video {
 }
 
 .deleted-user-avatar {
-  font-size: 2.571em;
+  font-size: $font-up-6;
 }
 
 .info-line {
@@ -638,9 +651,9 @@ $topic-avatar-width: 45px;
   width: $topic-body-width;
   float: left;
   position: relative;
-  z-index: 2;
+  z-index: z("base");
   border-top: 1px solid $primary-low;
-  padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
+  padding: 12px $topic-body-width-padding 0 $topic-body-width-padding;
 }
 
 .topic-avatar {
@@ -648,7 +661,7 @@ $topic-avatar-width: 45px;
   padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
-  z-index: 3;
+  z-index: z("base") + 1;
 }
 
 .gap {
@@ -660,6 +673,11 @@ $topic-avatar-width: 45px;
 .time-gap + .topic-post .topic-avatar {
   border-top: none;
 }
+
+.time-gap + .topic-post .embedded-posts.top {
+  border-bottom: 1px solid $primary-low;
+}
+
 
 .posts-wrapper {
   position: relative;
@@ -684,7 +702,7 @@ $topic-avatar-width: 45px;
   position: absolute;
   bottom: 115%;
   left: 0;
-  z-index: 999;
+  z-index: z("dropdown");
   display: none;
   float: left;
   width: 550px;
@@ -692,16 +710,16 @@ $topic-avatar-width: 45px;
   list-style: none;
   background-color: $secondary;
   border: 1px solid $primary-low;
-  box-shadow: 0 1px 5px rgba(0,0,0, .4);
+  box-shadow: shadow("dropdown");
   background-clip: padding-box;
   span {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
   span.title {
     font-weight: bold;
     display: block;
-    font-size: 1em;
+    font-size: $font-0;
     color: $primary;
   }
 }
@@ -710,7 +728,7 @@ $topic-avatar-width: 45px;
   padding: 9px;
   clear: both;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
   color: $primary;
   transition: all linear .15s;
 
@@ -738,7 +756,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .icon {
   margin-top: 3px;
   float: left;
-  font-size: 1.286em;
+  font-size: $font-up-2;
 }
 
 .open > .dropdown-menu {
@@ -749,7 +767,7 @@ $topic-avatar-width: 45px;
 .selected-posts {
   width: 200px;
   position: fixed;
-  z-index: 1000;
+  z-index: z("dropdown");
   background-color: $tertiary-low;
   border: 1px solid $tertiary;
   padding: 5px;
@@ -776,14 +794,14 @@ $topic-avatar-width: 45px;
     margin-top: 10px;
   }
   p {
-    font-size: 0.929em;
+    font-size: $font-down-1;
     margin: 0 0 10px 0;
   }
   p.cancel {
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: 1.857em;
+    font-size: $font-up-4;
     color: $primary;
     margin-bottom: 5px;
     i {
@@ -807,13 +825,12 @@ $topic-avatar-width: 45px;
     }
     &:active {
       @include linear-gradient(darken($tertiary, 18%), darken($tertiary, 12%));
-      box-shadow: inset 0 1px 3px rgba(0,0,0, 0.2);
       color: $secondary;
     }
     &[disabled] {
       text-shadow: 0 1px 0 rgba($primary, 0.2);
       @include linear-gradient($tertiary, darken($tertiary, 20%));
-      @include box-shadow((inset 0 1px 0 rgba(0,0,0, 0.33), inset 0 -1px 2px rgba($primary, 0.2)));
+      @include box-shadow(inset 0 1px 0 rgba(0,0,0, 0.33));
     }
   }
 }
@@ -840,7 +857,7 @@ $topic-avatar-width: 45px;
     .select-posts {
       position: absolute;
       right: 0;
-      z-index: 490;
+      z-index: z("base") + 1;
       top: 3em;
       height: 100px;
 
@@ -872,7 +889,7 @@ a.attachment:before {
   color: rgba($primary-low, .8);
   font: 6.429em/1 FontAwesome;
   content: "\f014";
-  z-index: -5;
+  z-index: z("base");
 }
 
 .topic-meta-data {
@@ -889,8 +906,6 @@ a.attachment:before {
  .post-info  {
    display: inline-block;
    float: right;
-   font-size: 0.929em;
-   margin-top: 1px;
    a {color: dark-light-choose($primary-medium, $secondary-medium); }
  }
 
@@ -898,7 +913,7 @@ a.attachment:before {
 
 .who-liked {
   margin-top: 20px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   width: 100%;
   text-align: right;
 }
@@ -914,8 +929,8 @@ span.highlighted {
 .read-state {
   color: $tertiary-medium;
   position: absolute;
-  right: 0px;
-  top: 13px;
+  right: 0;
+  top: 2em;
   font-size: 0.571em;
 }
 
@@ -926,10 +941,6 @@ span.highlighted {
 
 .signup-cta {
   width: $topic-body-width;
-  a {
-    float: right;
-    text-decoration: underline;
-  }
 }
 
 /* Tablet (portrait) ----------- */

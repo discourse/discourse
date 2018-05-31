@@ -17,19 +17,20 @@ module Jobs
       filename = args[:filename]
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:filename) if filename.blank?
+      csv_path = "#{Invite.base_directory}/#{filename}"
 
       # read csv file, and send out invitations
-      read_csv_file("#{Invite.base_directory}/#{filename}")
+      read_csv_file(csv_path)
     ensure
       # send notification to user regarding progress
       notify_user
 
-      # since emails have already been sent out, delete the uploaded csv file
-      FileUtils.rm_rf(csv_path) rescue nil
+      FileUtils.rm_rf(csv_path) if csv_path
     end
 
     def read_csv_file(csv_path)
-      CSV.foreach(csv_path, encoding: "bom|utf-8") do |csv_info|
+      file = File.open(csv_path, encoding: 'bom|utf-8')
+      CSV.new(file).each do |csv_info|
         if csv_info[0]
           if (EmailValidator.email_regex =~ csv_info[0])
             # email is valid
@@ -45,6 +46,8 @@ module Jobs
     rescue Exception => e
       log "Bulk Invite Process Failed -- '#{e.message}'"
       @failed += 1
+    ensure
+      file.close
     end
 
     def get_group_ids(group_names, csv_line_number)

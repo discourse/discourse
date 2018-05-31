@@ -93,6 +93,17 @@ describe RateLimiter do
       end
     end
 
+    context 'max is less than or equal to zero' do
+
+      it 'should raise the right error' do
+        [-1, 0, nil].each do |max|
+          expect do
+            RateLimiter.new(user, "a", max, 60).performed!
+          end.to raise_error(RateLimiter::LimitExceeded)
+        end
+      end
+    end
+
     context "multiple calls" do
       before do
         rate_limiter.performed!

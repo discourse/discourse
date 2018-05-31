@@ -12,7 +12,7 @@
     }
 
     .reason {
-      line-height: 16px;
+      line-height: $line-height-medium;
       margin: 0 0 0 10px;
     }
   }
@@ -38,7 +38,7 @@
   }
 
   .pinned-options {
-    .select-box-kit-body, .select-kit-body {
+    .select-kit-body {
       min-width: unset;
       max-width: unset;
       width: 550px;

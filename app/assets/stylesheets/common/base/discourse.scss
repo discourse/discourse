@@ -46,15 +46,14 @@ body {
   @include clearfix;
 }
 
+// setting a static limit on big and small prevents nesting abuse
 big {
-  font-size: 2.286em;
+  font-size: $font-up-5;
 }
-
 small {
-  font-size: .786em;
+  font-size: $font-down-2;
 }
 
-//setting a static limit on big and small prevents nesting abuse
 blockquote {
   @include post-aside;
   clear: both;
@@ -120,7 +119,7 @@ input {
   &[type="radio"],
   &[type="checkbox"] {
     margin: 3px 0;
-    line-height: normal;
+    line-height: $line-height-medium;
     cursor: pointer;
   }
   &[type="submit"],
@@ -166,7 +165,7 @@ textarea {
 
   &:focus:required:invalid:focus {
     border-color: $danger;
-    box-shadow: 0 0 6px $danger;
+    box-shadow: shadow("focus-danger");
   }
 }
 
@@ -187,18 +186,17 @@ input {
   &[type="color"] {
     @include appearance-none;
     display: inline-block;
-    height: 18px;
-    padding: 4px 10px;
+    padding: $input-padding;
     margin-bottom: 9px;
-    font-size:  1em;
-    line-height: 1.25;
+    font-size:  $font-0;
+    line-height: $line-height-large;
     color: $primary;
     background-color: $secondary;
     border: 1px solid $primary-medium;
     border-radius: 0;
     &:focus {
       border-color: $tertiary;
-      box-shadow: $tertiary 0px 0px 6px 0px;
+      box-shadow: shadow("focus");
       outline: 0;
     }
   }
@@ -210,13 +208,13 @@ textarea {
   border: 1px solid $primary-medium;
   &:focus {
     border-color: $tertiary;
-    box-shadow: $tertiary 0px 0px 6px 0px;    
+    box-shadow: shadow("focus");
     outline: 0;
   }
 }
 
 select {
-  border: 1px solid $primary-low;  
+  border: 1px solid $primary-low;
 }
 
 // Common Classes
@@ -353,7 +351,7 @@ select {
   top: -18px !important;
   right: -18px !important;
   box-shadow: 0 0 0 9999px rgba($primary, 0.85);
-  z-index: 1040;
+  z-index: z("modal","overlay");
 }
 
 .ring-first-notification {
@@ -363,7 +361,7 @@ select {
   right: 70px;
   top: 60px;
   width: 230px;
-  line-height: 30px;
+  line-height: $line-height-medium;
 }
 
 .ring {
@@ -423,7 +421,7 @@ select {
 .content-list {
   h3 {
     color: $primary-medium;
-    font-size: 1.143em;
+    font-size: $font-up-1;
     padding-left: 5px;
     margin-bottom: 10px;
   }
@@ -474,8 +472,8 @@ select {
 
   .control-label {
     font-weight: bold;
-    font-size: 1.286em;
-    line-height: 2;
+    font-size: $font-up-2;
+    line-height: $line-height-large;
   }
 
   .controls {
@@ -517,7 +515,7 @@ select {
 
 #loading-message {
   position: absolute;
-  font-size: 2.286em;
+  font-size: $font-up-5;
   text-align: center;
   top: 120px;
   left: 500px;
@@ -534,4 +532,8 @@ select {
       }
     }
   }
+}
+
+.inline {
+  display: inline;
 }

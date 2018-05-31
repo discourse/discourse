@@ -115,7 +115,14 @@ SQL
 
       PrettyText
         .extract_links(post.cooked)
-        .map { |u| [u, URI.parse(u.url)] rescue nil }
+        .map do |u|
+          uri = begin
+            URI.parse(u.url)
+          rescue URI::Error
+          end
+
+          [u, uri]
+        end
         .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
         .uniq { |_, p| p }
         .each do |link, parsed|
@@ -284,16 +291,16 @@ end
 #  reflection    :boolean          default(FALSE)
 #  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string(255)
+#  title         :string
 #  crawled_at    :datetime
 #  quote         :boolean          default(FALSE), not null
 #  extension     :string(10)
 #
 # Indexes
 #
-#  index_forum_thread_links_on_forum_thread_id                      (topic_id)
-#  index_forum_thread_links_on_forum_thread_id_and_post_id_and_url  (topic_id,post_id,url) UNIQUE
-#  index_topic_links_on_extension                                   (extension)
-#  index_topic_links_on_link_post_id_and_reflection                 (link_post_id,reflection)
-#  index_topic_links_on_post_id                                     (post_id)
+#  index_topic_links_on_extension                    (extension)
+#  index_topic_links_on_link_post_id_and_reflection  (link_post_id,reflection)
+#  index_topic_links_on_post_id                      (post_id)
+#  index_topic_links_on_topic_id                     (topic_id)
+#  unique_post_links                                 (topic_id,post_id,url) UNIQUE
 #

@@ -195,7 +195,8 @@ export function buildResolver(baseName) {
     findAdminTemplate(parsedName) {
       var decamelized = parsedName.fullNameWithoutType.decamelize();
       if (decamelized.indexOf('components') === 0) {
-        const compTemplate = Ember.TEMPLATES['admin/templates/' + decamelized];
+        let comPath = `admin/templates/${decamelized}`;
+        const compTemplate = Ember.TEMPLATES[`javascripts/${comPath}`] || Ember.TEMPLATES[comPath];
         if (compTemplate) { return compTemplate; }
       }
 

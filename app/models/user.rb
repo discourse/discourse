@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   include Searchable
   include Roleable
   include HasCustomFields
+  include SecondFactorManager
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -49,6 +50,11 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+
+  has_many :group_users, dependent: :destroy
+  has_many :groups, through: :group_users
+  has_many :secure_categories, through: :groups, source: :categories
+
   has_many :user_emails, dependent: :destroy
 
   has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
@@ -60,20 +66,20 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :instagram_user_info, dependent: :destroy
+  has_one :user_second_factor, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
 
-  has_many :group_users, dependent: :destroy
-  has_many :groups, through: :group_users
-  has_many :secure_categories, through: :groups, source: :categories
-
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
 
   has_one :api_key, dependent: :destroy
+
+  has_many :push_subscriptions, dependent: :destroy
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
@@ -130,7 +136,9 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  scope :with_email, ->(email) { joins(:user_emails).where(user_emails: { email: email }) }
+  scope :with_email, ->(email) do
+    joins(:user_emails).where("lower(user_emails.email) IN (?)", email)
+  end
 
   scope :human_users, -> { where('users.id > 0') }
 
@@ -153,6 +161,37 @@ class User < ActiveRecord::Base
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
 
+  scope :filter_by_username, ->(filter) do
+    if filter.is_a?(Array)
+      where('username_lower ~* ?', "(#{filter.join('|')})")
+    else
+      where('username_lower ILIKE ?', "%#{filter}%")
+    end
+  end
+
+  scope :filter_by_username_or_email, ->(filter) do
+    if filter =~ /.+@.+/
+      # probably an email so try the bypass
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+        return where('users.id = ?', user_id)
+      end
+    end
+
+    users = joins(:primary_email)
+
+    if filter.is_a?(Array)
+      users.where(
+        'username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter',
+        filter: "(#{filter.join('|')})"
+      )
+    else
+      users.where(
+        'username_lower ILIKE :filter OR lower(user_emails.email) ILIKE :filter',
+        filter: "%#{filter}%"
+      )
+    end
+  end
+
   module NewTopicDuration
     ALWAYS = -1
     LAST_VISIT = -2
@@ -169,7 +208,8 @@ class User < ActiveRecord::Base
   def self.username_available?(username, email = nil)
     lower = username.downcase
     return false if reserved_username?(lower)
-    return true  if !User.exists?(username_lower: lower)
+    return true  if User.exec_sql(User::USERNAME_EXISTS_SQL, username: lower).count == 0
+
     # staged users can use the same username since they will take over the account
     email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
   end
@@ -218,6 +258,7 @@ class User < ActiveRecord::Base
   end
 
   EMAIL = %r{([^@]+)@([^\.]+)}
+  FROM_STAGED = "from_staged".freeze
 
   def self.new_from_params(params)
     user = User.new
@@ -228,9 +269,27 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.suggest_name(email)
-    return "" if email.blank?
-    email[/\A[^@]+/].tr(".", " ").titleize
+  def unstage
+    if self.staged
+      self.staged = false
+      self.custom_fields[FROM_STAGED] = true
+      self.notifications.destroy_all
+      DiscourseEvent.trigger(:user_unstaged, self)
+    end
+  end
+
+  def self.unstage(params)
+    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
+      params.each { |k, v| user.send("#{k}=", v) }
+      user.active = false
+      user.unstage
+    end
+    user
+  end
+
+  def self.suggest_name(string)
+    return "" if string.blank?
+    (string[/\A[^@]+/].presence || string[/[^@]+\z/]).tr(".", " ").titleize
   end
 
   def self.find_by_username_or_email(username_or_email)
@@ -318,14 +377,15 @@ class User < ActiveRecord::Base
 
   def unread_notifications_of_type(notification_type)
     # perf critical, much more efficient than AR
-    sql = "
-       SELECT COUNT(*) FROM notifications n
-       LEFT JOIN topics t ON n.topic_id = t.id
-       WHERE
-        t.deleted_at IS NULL AND
-        n.notification_type = :type AND
-        n.user_id = :user_id AND
-        NOT read"
+    sql = <<~SQL
+        SELECT COUNT(*)
+          FROM notifications n
+     LEFT JOIN topics t ON t.id = n.topic_id
+         WHERE t.deleted_at IS NULL
+           AND n.notification_type = :type
+           AND n.user_id = :user_id
+           AND NOT read
+    SQL
 
     User.exec_sql(sql, user_id: id, type: notification_type).getvalue(0, 0).to_i
   end
@@ -335,24 +395,25 @@ class User < ActiveRecord::Base
   end
 
   def unread_notifications
-    @unread_notifications ||=
-      begin
-        # perf critical, much more efficient than AR
-        sql = "
-           SELECT COUNT(*) FROM notifications n
-           LEFT JOIN topics t ON n.topic_id = t.id
-           WHERE
-            t.deleted_at IS NULL AND
-            n.notification_type <> :pm AND
-            n.user_id = :user_id AND
-            NOT read AND
-            n.id > :seen_notification_id"
+    @unread_notifications ||= begin
+      # perf critical, much more efficient than AR
+      sql = <<~SQL
+          SELECT COUNT(*)
+            FROM notifications n
+       LEFT JOIN topics t ON t.id = n.topic_id
+           WHERE t.deleted_at IS NULL
+             AND n.notification_type <> :pm
+             AND n.user_id = :user_id
+             AND n.id > :seen_notification_id
+             AND NOT read
+      SQL
 
-        User.exec_sql(sql, user_id: id,
-                           seen_notification_id: seen_notification_id,
-                           pm:  Notification.types[:private_message])
-          .getvalue(0, 0).to_i
-      end
+      User.exec_sql(sql,
+        user_id: id,
+        seen_notification_id: seen_notification_id,
+        pm:  Notification.types[:private_message]
+    ).getvalue(0, 0).to_i
+    end
   end
 
   def total_unread_notifications
@@ -372,7 +433,7 @@ class User < ActiveRecord::Base
 
   def read_first_notification?
     if (trust_level > TrustLevel[1] ||
-        created_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago)
+        (first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago))
 
       return true
     end
@@ -381,8 +442,7 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
-    # publish last notification json with the message so we
-    # can apply an update
+    # publish last notification json with the message so we can apply an update
     notification = notifications.visible.order('notifications.id desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
@@ -418,17 +478,17 @@ class User < ActiveRecord::Base
       [id.to_i, read]
     end
 
-    MessageBus.publish("/notification/#{id}",
-                       { unread_notifications: unread_notifications,
-                         unread_private_messages: unread_private_messages,
-                         total_unread_notifications: total_unread_notifications,
-                         read_first_notification: read_first_notification?,
-                         last_notification: json,
-                         recent: recent,
-                         seen_notification_id: seen_notification_id
-                       },
-                       user_ids: [id] # only publish the notification to this user
-    )
+    payload = {
+      unread_notifications: unread_notifications,
+      unread_private_messages: unread_private_messages,
+      total_unread_notifications: total_unread_notifications,
+      read_first_notification: read_first_notification?,
+      last_notification: json,
+      recent: recent,
+      seen_notification_id: seen_notification_id,
+    }
+
+    MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
   # A selection of people to autocomplete on @mention
@@ -724,12 +784,15 @@ class User < ActiveRecord::Base
   end
 
   def email_confirmed?
-    email_tokens.where(email: email, confirmed: true).present? || email_tokens.empty?
+    email_tokens.where(email: email, confirmed: true).present? ||
+    email_tokens.empty? ||
+    single_sign_on_record&.external_email == email
   end
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
-      EmailToken.confirm(email_token.token)
+      user = EmailToken.confirm(email_token.token)
+      self.update!(active: true) if user.nil?
     else
       self.update!(active: true)
     end
@@ -744,8 +807,7 @@ class User < ActiveRecord::Base
   end
 
   def readable_name
-    return "#{name} (#{username})" if name.present? && name != username
-    username
+    name.present? && name != username ? "#{name} (#{username})" : username
   end
 
   def badge_count
@@ -776,14 +838,33 @@ class User < ActiveRecord::Base
     (tl_badge + other_badges).take(limit)
   end
 
-  def self.count_by_signup_date(start_date, end_date, group_id = nil)
-    result = where('users.created_at >= ? AND users.created_at <= ?', start_date, end_date)
+  def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
+    result = self
+
+    if start_date && end_date
+      result = result.group("date(users.created_at)")
+      result = result.where("users.created_at >= ? AND users.created_at <= ?", start_date, end_date)
+      result = result.order('date(users.created_at)')
+    end
 
     if group_id
       result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
       result = result.where("group_users.group_id = ?", group_id)
     end
-    result.group('date(users.created_at)').order('date(users.created_at)').count
+
+    result.count
+  end
+
+  def self.count_by_first_post(start_date = nil, end_date = nil)
+    result = joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
+
+    if start_date && end_date
+      result = result.group("date(us.first_post_created_at)")
+      result = result.where("us.first_post_created_at > ? AND us.first_post_created_at < ?", start_date, end_date)
+      result = result.order("date(us.first_post_created_at)")
+    end
+
+    result.count
   end
 
   def secure_category_ids
@@ -870,7 +951,8 @@ class User < ActiveRecord::Base
     result << "Twitter(#{twitter_user_info.screen_name})"               if twitter_user_info
     result << "Facebook(#{facebook_user_info.username})"                if facebook_user_info
     result << "Google(#{google_user_info.email})"                       if google_user_info
-    result << "Github(#{github_user_info.screen_name})"                 if github_user_info
+    result << "GitHub(#{github_user_info.screen_name})"                 if github_user_info
+    result << "Instagram(#{instagram_user_info.screen_name})"           if instagram_user_info
     result << "#{oauth2_user_info.provider}(#{oauth2_user_info.email})" if oauth2_user_info
 
     user_open_ids.each do |oid|
@@ -954,7 +1036,7 @@ class User < ActiveRecord::Base
   end
 
   def set_automatic_groups
-    return unless active && email_confirmed? && !staged
+    return if !active || staged || !email_confirmed?
 
     Group.where(automatic: false)
       .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
@@ -973,11 +1055,11 @@ class User < ActiveRecord::Base
     primary_email.email
   end
 
-  def email=(email)
+  def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = email : primary_email.update(email: email)
+      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      build_primary_email(email: email)
+      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true)
     end
   end
 
@@ -985,6 +1067,10 @@ class User < ActiveRecord::Base
     self.created_at && self.created_at < 60.days.ago ?
       self.user_visits.where('visited_at >= ?', 60.days.ago).sum(:time_read) :
       self.user_stat&.time_read
+  end
+
+  def from_staged?
+    custom_fields[User::FROM_STAGED]
   end
 
   protected
@@ -1064,11 +1150,25 @@ class User < ActiveRecord::Base
     self.username_lower = username.downcase
   end
 
+  USERNAME_EXISTS_SQL = <<~SQL
+  (SELECT users.id AS user_id FROM users
+  WHERE users.username_lower = :username)
+
+  UNION ALL
+
+  (SELECT groups.id AS group_id FROM groups
+  WHERE lower(groups.name) = :username)
+  SQL
+
   def username_validator
     username_format_validator || begin
       lower = username.downcase
-      existing = User.find_by(username_lower: lower)
-      if will_save_change_to_username? && existing && existing.id != self.id
+
+      existing = User.exec_sql(
+        USERNAME_EXISTS_SQL, username: lower
+      ).to_a.first
+
+      if will_save_change_to_username? && existing.present? && existing["user_id"] != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end
@@ -1078,8 +1178,7 @@ class User < ActiveRecord::Base
     if SiteSetting.must_approve_users
       Jobs.enqueue(:critical_user_email,
         type: :signup_after_approval,
-        user_id: id,
-        email_token: email_tokens.first.token
+        user_id: id
       )
     end
   end
@@ -1101,22 +1200,22 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Delete unactivated accounts (without verified email) that are over a week old
   def self.purge_unactivated
     return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
 
-    to_destroy = User.where(active: false)
-      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
-      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
-      .where('NOT admin AND NOT moderator')
-      .limit(200)
-
     destroyer = UserDestroyer.new(Discourse.system_user)
-    to_destroy.each do |u|
+
+    User
+      .where(active: false)
+      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
+      .where("NOT admin AND NOT moderator")
+      .where("NOT EXISTS (SELECT 1 FROM topic_allowed_users WHERE user_id = users.id LIMIT 1)")
+      .limit(200)
+      .find_each do |user|
       begin
-        destroyer.destroy(u, context: I18n.t(:purge_reason))
+        destroyer.destroy(user, context: I18n.t(:purge_reason))
       rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
-        # if for some reason the user can't be deleted, continue on to the next one
+        # keep going
       end
     end
   end
@@ -1157,7 +1256,7 @@ end
 #  username                  :string(60)       not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  name                      :string(255)
+#  name                      :string
 #  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
@@ -1179,10 +1278,10 @@ end
 #  flag_level                :integer          default(0), not null
 #  ip_address                :inet
 #  moderator                 :boolean          default(FALSE)
-#  title                     :string(255)
+#  title                     :string
 #  uploaded_avatar_id        :integer
-#  primary_group_id          :integer
 #  locale                    :string(10)
+#  primary_group_id          :integer
 #  registration_ip_address   :inet
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime

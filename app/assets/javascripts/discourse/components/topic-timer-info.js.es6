@@ -18,7 +18,6 @@ export default Ember.Component.extend(bufferedRender({
     if (!this.get('executeAt')) return;
 
     let statusUpdateAt = moment(this.get('executeAt'));
-    if (statusUpdateAt < new Date()) return;
 
     let duration = moment.duration(statusUpdateAt - moment());
     let minutesLeft = duration.asMinutes();
@@ -54,7 +53,7 @@ export default Ember.Component.extend(bufferedRender({
       }, options);
     }
 
-    buffer.push(I18n.t(this._noticeKey(), options));
+    buffer.push(`<span>${I18n.t(this._noticeKey(), options)}</span>`);
     buffer.push('</h3>');
 
     // TODO Sam: concerned this can cause a heavy rerender loop

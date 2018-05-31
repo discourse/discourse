@@ -82,6 +82,18 @@ describe Jobs::PollFeed do
             expect { poller.poll_feed }.to change { Topic.count }.by(1)
             expect(Topic.last.user).to eq(feed_author)
           end
+
+          it "updates the post if it had been polled" do
+            embed_url = 'https://blog.discourse.org/2017/09/poll-feed-spec-fixture'
+            post = TopicEmbed.import(Fabricate(:user), embed_url, 'old title', 'old content')
+
+            expect { poller.poll_feed }.to_not change { Topic.count }
+
+            post.reload
+            expect(post.topic.title).to eq('Poll Feed Spec Fixture')
+            expect(post.raw).to include('<p>This is the body &amp; content. </p>')
+            expect(post.user).to eq(feed_author)
+          end
         end
       end
 
@@ -99,9 +111,8 @@ describe Jobs::PollFeed do
         SiteSetting.feed_polling_url = 'https://blog.discourse.org/feed/'
         SiteSetting.embed_by_username = embed_by_username
 
-        stub_request(:head, SiteSetting.feed_polling_url).to_return(status: 200)
+        stub_request(:head, SiteSetting.feed_polling_url)
         stub_request(:get, SiteSetting.feed_polling_url).to_return(
-          status: 200,
           body: file_from_fixtures('feed.rss', 'feed').read,
           headers: { "Content-Type" => "application/rss+xml" }
         )
@@ -116,9 +127,8 @@ describe Jobs::PollFeed do
         SiteSetting.feed_polling_url = 'https://blog.discourse.org/feed/atom/'
         SiteSetting.embed_by_username = embed_by_username
 
-        stub_request(:head, SiteSetting.feed_polling_url).to_return(status: 200)
+        stub_request(:head, SiteSetting.feed_polling_url)
         stub_request(:get, SiteSetting.feed_polling_url).to_return(
-          status: 200,
           body: file_from_fixtures('feed.atom', 'feed').read,
           headers: { "Content-Type" => "application/atom+xml" }
         )

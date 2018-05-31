@@ -45,6 +45,74 @@ describe Middleware::AnonymousCache::Helper do
     end
   end
 
+  context 'force_anonymous!' do
+    before do
+      RateLimiter.enable
+    end
+
+    after do
+      RateLimiter.disable
+    end
+
+    it 'will revert to anonymous once we reach the limit' do
+
+      RateLimiter.clear_all!
+
+      is_anon = false
+
+      app = Middleware::AnonymousCache.new(
+        lambda do |env|
+          is_anon = env["HTTP_COOKIE"].nil?
+          [200, {}, ["ok"]]
+        end
+      )
+
+      global_setting :force_anonymous_min_per_10_seconds, 2
+      global_setting :force_anonymous_min_queue_seconds, 1
+
+      env = {
+        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+        "HOST" => "site.com",
+        "REQUEST_METHOD" => "GET",
+        "REQUEST_URI" => "/somewhere/rainbow",
+        "REQUEST_QUEUE_SECONDS" => 2.1,
+        "rack.input" => StringIO.new
+      }
+
+      is_anon = false
+      app.call(env.dup)
+      expect(is_anon).to eq(false)
+
+      is_anon = false
+      app.call(env.dup)
+      expect(is_anon).to eq(false)
+
+      is_anon = false
+      app.call(env.dup)
+      expect(is_anon).to eq(true)
+
+      is_anon = false
+      _status, headers, _body = app.call(env.dup)
+      expect(is_anon).to eq(true)
+      expect(headers['Set-Cookie']).to eq('dosp=1; Path=/')
+
+      # tricky change, a 50ms delay still will trigger protection
+      # once it is tripped
+
+      env["REQUEST_QUEUE_SECONDS"] = 0.05
+      is_anon = false
+
+      app.call(env.dup)
+      expect(is_anon).to eq(true)
+
+      is_anon = false
+      env["REQUEST_QUEUE_SECONDS"] = 0.01
+
+      app.call(env.dup)
+      expect(is_anon).to eq(false)
+    end
+  end
+
   context "cached" do
     let!(:helper) do
       new_helper("ANON_CACHE_DURATION" => 10)

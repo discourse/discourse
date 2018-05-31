@@ -46,6 +46,9 @@ nb_NO:
         title: "Lukk avstemning"
         label: "Lukk"
         confirm: "Er du sikker på at du vil lukke avstemningen?"
+      automatic_close:
+        closes_in: "stenger om <strong>%{timeLeft}</strong>"
+        age: "stengt <strong>%{age}</strong>"
       error_while_toggling_status: "Beklager, det oppstod en feil ved endring av status på denne avstemningen."
       error_while_casting_votes: "Beklager, det oppstod en feil da du ga din stemme."
       error_while_fetching_voters: "Beklager, det oppstod en feil når stemmegivere skulle vises."
@@ -69,3 +72,5 @@ nb_NO:
           label: Vis hvem som har stemt
         poll_options:
           label: Oppgi et valgalternativ for avstemning per linje
+        automatic_close:
+          label: Steng avstemningen automatisk

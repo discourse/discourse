@@ -28,6 +28,7 @@ export default Ember.Component.extend({
 
     this.appEvents.on('modal:body-shown', data => {
       if (this.isDestroying || this.isDestroyed) { return; }
+
       if (data.fixed) {
         this.$().removeClass('hidden');
       }
@@ -36,6 +37,16 @@ export default Ember.Component.extend({
         this.set('title', I18n.t(data.title));
       } else if (data.rawTitle) {
         this.set('title', data.rawTitle);
+      }
+
+      if (data.subtitle) {
+        this.set('subtitle', I18n.t(data.subtitle));
+      } else if (data.rawSubtitle) {
+        this.set('subtitle', data.rawSubtitle);
+      } else {
+        // if no subtitle provided, makes sure the previous subtitle
+        // of another modal is not used
+        this.set('subtitle', null);
       }
     });
   },

@@ -23,7 +23,8 @@ describe ::Presence::PresencesController do
 
   context 'when not logged in' do
     it 'should raise the right error' do
-      expect { post '/presence/publish.json' }.to raise_error(Discourse::NotLoggedIn)
+      post '/presence/publish.json'
+      expect(response.status).to eq(403)
     end
   end
 

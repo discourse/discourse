@@ -1,10 +1,23 @@
 # name: discourse-narrative-bot
 # about: Introduces staff to Discourse
-# version: 0.0.1
-# authors: Nick Sahler (@nicksahler)
+# version: 1.0
+# authors: Nick Sahler, Alan Tan
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
 
 enabled_site_setting :discourse_narrative_bot_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
+
+if Rails.env == "development"
+  # workaround, teach reloader to reload jobs
+  # if we do not do this then
+  #
+  # 1. on reload rails goes and undefines Jobs::Base
+  # 2. as a side effect this undefines Jobs::BotInput
+  # 3. we have a post_edited hook that queues a job for bot input
+  # 4. if you are not running sidekiq in dev every time you save a post it will trigger it
+  # 5. but the constant can not be autoloaded
+  Rails.configuration.autoload_paths << File.expand_path('../autoload', __FILE__)
+end
 
 require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
 
@@ -14,12 +27,12 @@ after_initialize do
   Mime::Type.register "image/svg+xml", :svg
 
   [
-    '../jobs/bot_input.rb',
-    '../jobs/narrative_timeout.rb',
-    '../jobs/narrative_init.rb',
-    '../jobs/send_default_welcome_message.rb',
-    '../jobs/onceoff/grant_badges.rb',
-    '../jobs/onceoff/remap_old_bot_images.rb',
+    '../autoload/jobs/bot_input.rb',
+    '../autoload/jobs/narrative_timeout.rb',
+    '../autoload/jobs/narrative_init.rb',
+    '../autoload/jobs/send_default_welcome_message.rb',
+    '../autoload/jobs/onceoff/grant_badges.rb',
+    '../autoload/jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
     '../lib/discourse_narrative_bot/base.rb',
     '../lib/discourse_narrative_bot/new_user_narrative.rb',
@@ -110,6 +123,10 @@ after_initialize do
     if SiteSetting.discourse_narrative_bot_welcome_post_delay > 0
       user.enqueue_bot_welcome_post
     end
+  end
+
+  self.on(:user_unstaged) do |user|
+    user.enqueue_bot_welcome_post
   end
 
   self.add_to_class(:user, :enqueue_bot_welcome_post) do

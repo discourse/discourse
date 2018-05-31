@@ -66,6 +66,7 @@ export default class {
     this._totalTimings = {};
     this._topicTime = 0;
     this._onscreen = [];
+    this._inProgress = false;
   }
 
   scrolled() {
@@ -108,6 +109,7 @@ export default class {
 
     if (!$.isEmptyObject(newTimings)) {
       if (this.currentUser) {
+        this._inProgress = true;
         ajax('/topics/timings', {
           data: {
             timings: newTimings,
@@ -128,6 +130,9 @@ export default class {
         }).catch(e => {
           const error = e.jqXHR;
           if (error.status === 405 && error.responseJSON.error_type === "read_only") return;
+        }).finally(() => {
+          this._inProgress = false;
+          this._lastFlush = 0;
         });
       } else if (this._anonCallback) {
         // Anonymous viewer - save to localStorage
@@ -182,7 +187,7 @@ export default class {
       return timings[postNumber] > 0 && !totalTimings[postNumber];
     });
 
-    if (this._lastFlush > nextFlush || rush) {
+    if (!this._inProgress && (this._lastFlush > nextFlush || rush)) {
       this.flush();
     }
 

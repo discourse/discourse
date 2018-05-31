@@ -3,6 +3,10 @@ require 'rails_helper'
 RSpec.describe GroupMentionsUpdater do
   let(:post) { Fabricate(:post) }
 
+  before do
+    SiteSetting.queue_jobs = false
+  end
+
   describe '.update' do
     it 'should update valid group mentions' do
       new_group_name = 'awesome_team'

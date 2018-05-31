@@ -7,7 +7,6 @@ class TopicLinkClick < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :topic_link_id
-  validates_presence_of :ip_address
 
   WHITELISTED_REDIRECT_HOSTNAMES = Set.new(%W{www.youtube.com youtu.be})
 
@@ -16,7 +15,10 @@ class TopicLinkClick < ActiveRecord::Base
     url = args[:url][0...TopicLink.max_url_length]
     return nil if url.blank?
 
-    uri = URI.parse(url) rescue nil
+    uri = begin
+      URI.parse(url)
+    rescue URI::InvalidURIError
+    end
 
     urls = Set.new
     urls << url
@@ -43,7 +45,11 @@ class TopicLinkClick < ActiveRecord::Base
     # add a cdn link
     if uri
       if Discourse.asset_host.present?
-        cdn_uri = URI.parse(Discourse.asset_host) rescue nil
+        cdn_uri = begin
+          URI.parse(Discourse.asset_host)
+        rescue URI::InvalidURIError
+        end
+
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
           urls << uri.path[cdn_uri.path.length..-1]
@@ -51,7 +57,11 @@ class TopicLinkClick < ActiveRecord::Base
       end
 
       if SiteSetting.Upload.s3_cdn_url.present?
-        cdn_uri = URI.parse(SiteSetting.Upload.s3_cdn_url) rescue nil
+        cdn_uri = begin
+          URI.parse(SiteSetting.Upload.s3_cdn_url)
+        rescue URI::InvalidURIError
+        end
+
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
           path = uri.path[cdn_uri.path.length..-1]
@@ -97,6 +107,7 @@ class TopicLinkClick < ActiveRecord::Base
     rate_key = "link-clicks:#{link.id}:#{args[:user_id] || args[:ip]}"
     if $redis.setnx(rate_key, "1")
       $redis.expire(rate_key, 1.day.to_i)
+      args[:ip] = nil if args[:user_id]
       create!(topic_link_id: link.id, user_id: args[:user_id], ip_address: args[:ip])
     end
 
@@ -114,9 +125,9 @@ end
 #  user_id       :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  ip_address    :inet             not null
+#  ip_address    :inet
 #
 # Indexes
 #
-#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
+#  by_link  (topic_link_id)
 #

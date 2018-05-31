@@ -10,54 +10,39 @@ describe Tag do
     end
   end
 
+  let(:tag) { Fabricate(:tag) }
+  let(:topic) { Fabricate(:topic, tags: [tag]) }
+
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
-  describe '#tags_by_count_query' do
-    it "returns empty hash if nothing is tagged" do
-      expect(described_class.tags_by_count_query.count(Tag::COUNT_ARG)).to eq({})
+  describe 'new' do
+    subject { Fabricate.build(:tag) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.last
+
+      expect(event[:event_name]).to eq(:tag_created)
+      expect(event[:params].first).to eq(subject)
     end
+  end
 
-    context "with some tagged topics" do
-      before do
-        @topics = []
-        3.times { @topics << Fabricate(:topic) }
-        make_some_tags(count: 2)
-        @topics[0].tags << @tags[0]
-        @topics[0].tags << @tags[1]
-        @topics[1].tags << @tags[0]
-      end
+  describe 'destroy' do
+    subject { Fabricate(:tag) }
 
-      it "returns tag names with topic counts in a hash" do
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[@tags[0].name]).to eq(2)
-        expect(counts[@tags[1].name]).to eq(1)
-      end
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.destroy! }.last
 
-      it "can be used to filter before doing the count" do
-        counts = described_class.tags_by_count_query.where("topics.id = ?", @topics[1].id).count(Tag::COUNT_ARG)
-        expect(counts).to eq(@tags[0].name => 1)
-      end
-
-      it "returns unused tags too" do
-        unused = Fabricate(:tag)
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[unused.name]).to eq(0)
-      end
-
-      it "doesn't include deleted topics in counts" do
-        deleted_topic_tag = Fabricate(:tag)
-        delete_topic = Fabricate(:topic)
-        post = Fabricate(:post, topic: delete_topic, user: delete_topic.user)
-        delete_topic.tags << deleted_topic_tag
-        PostDestroyer.new(Fabricate(:admin), post).destroy
-
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[deleted_topic_tag.name]).to eq(0)
-      end
+      expect(event[:event_name]).to eq(:tag_destroyed)
+      expect(event[:params].first).to eq(subject)
     end
+  end
+
+  it "can delete tags on deleted topics" do
+    topic.trash!
+    expect { tag.destroy }.to change { Tag.count }.by(-1)
   end
 
   describe '#top_tags' do
@@ -130,6 +115,65 @@ describe Tag do
       it "for no category arg, lists all tags" do
         expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
       end
+    end
+
+    context "with hidden tags" do
+      let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+      let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+      let!(:topic2) { Fabricate(:topic, tags: [tag, hidden_tag]) }
+
+      it "returns all tags to staff" do
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(hidden_tag.name)
+      end
+
+      it "doesn't return hidden tags to anon" do
+        expect(Tag.top_tags).to_not include(hidden_tag.name)
+      end
+
+      it "doesn't return hidden tags to non-staff" do
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:user)))).to_not include(hidden_tag.name)
+      end
+    end
+  end
+
+  describe '#pm_tags' do
+    let(:regular_user) { Fabricate(:trust_level_4) }
+    let(:admin) { Fabricate(:admin) }
+    let(:personal_message) do
+      Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: regular_user),
+        Fabricate.build(:topic_allowed_user, user: admin)
+      ])
+    end
+
+    before do
+      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
+    end
+
+    it "returns nothing if user is not a staff" do
+      expect(described_class.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
+    end
+
+    it "returns nothing if allow_staff_to_tag_pms setting is disabled" do
+      SiteSetting.allow_staff_to_tag_pms = false
+      expect(described_class.pm_tags(guardian: Guardian.new(admin)).sort).to be_empty
+    end
+
+    it "returns all pm tags if user is a staff and pm tagging is enabled" do
+      SiteSetting.allow_staff_to_tag_pms = true
+      tags = described_class.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
+      expect(tags.length).to eq(2)
+      expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
+    end
+  end
+
+  context "topic counts" do
+    it "should exclude private message topics" do
+      topic
+      Fabricate(:private_message_topic, tags: [tag])
+      described_class.ensure_consistency!
+      tag.reload
+      expect(tag.topic_count).to eq(1)
     end
   end
 end

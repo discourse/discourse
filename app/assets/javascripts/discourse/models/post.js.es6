@@ -168,7 +168,8 @@ const Post = RestModel.extend({
       this.setProperties({
         deleted_at: new Date(),
         deleted_by: deletedBy,
-        can_delete: false
+        can_delete: false,
+        can_recover: true
       });
     } else {
       promise = cookAsync(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})).then(cooked => {

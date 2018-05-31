@@ -34,7 +34,7 @@ export default Ember.Component.extend({
 
     if (flairHexColor) style += `color: #${flairHexColor};`;
 
-    return style;
+    return Ember.String.htmlSafe(style);
   },
 
   @computed('model.flairBackgroundHexColor')

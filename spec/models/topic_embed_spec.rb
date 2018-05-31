@@ -41,8 +41,13 @@ describe TopicEmbed do
       end
 
       it "Supports updating the post" do
-        post = TopicEmbed.import(user, url, title, "muhahaha new contents!")
+        new_user = Fabricate(:user)
+
+        post = TopicEmbed.import(new_user, url, "I am a new title", "muhahaha new contents!")
+
         expect(post.cooked).to match(/new contents/)
+        expect(post.topic.title).to eq("I am a new title")
+        expect(post.user).to eq(new_user)
       end
 
       it "Should leave uppercase Feed Entry URL untouched in content" do
@@ -58,6 +63,38 @@ describe TopicEmbed do
       end
     end
 
+    context "post creation supports markdown rendering" do
+      before do
+        SiteSetting.embed_support_markdown = true
+      end
+
+      it "works as expected" do
+        post = TopicEmbed.import(user, url, title, "some random content")
+        expect(post).to be_present
+
+        # It uses regular rendering
+        expect(post.cook_method).to eq(Post.cook_methods[:regular])
+      end
+    end
+  end
+
+  context '.topic_id_for_embed' do
+    it "returns correct topic id irrespective of url protocol" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248")
+
+      expect(TopicEmbed.topic_id_for_embed('http://exAMPle.com/post/248')).to eq(topic_embed.topic_id)
+      expect(TopicEmbed.topic_id_for_embed('https://example.com/post/248/')).to eq(topic_embed.topic_id)
+
+      expect(TopicEmbed.topic_id_for_embed('http://example.com/post/248/2')).to eq(nil)
+      expect(TopicEmbed.topic_id_for_embed('http://examples.com/post/248')).to eq(nil)
+      expect(TopicEmbed.topic_id_for_embed('http://example.com/post/24')).to eq(nil)
+      expect(TopicEmbed.topic_id_for_embed('http://example.com/post')).to eq(nil)
+    end
+
+    it "finds the topic id when the embed_url contains a query string" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248?key=foo")
+      expect(TopicEmbed.topic_id_for_embed('http://example.com/post/248?key=foo')).to eq(topic_embed.topic_id)
+    end
   end
 
   context '.topic_id_for_embed' do

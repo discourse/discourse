@@ -26,12 +26,24 @@ task "smoke:test" do
     request.basic_auth(ENV['AUTH_USER'], ENV['AUTH_PASSWORD'])
   end
 
-  response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
-    http.request(request)
-  end
+  dir = ENV["SMOKE_TEST_SCREENSHOT_PATH"] || 'tmp/smoke-test-screenshots'
+  FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
 
-  if response.code != "200"
-    raise "TRIVIAL GET FAILED WITH #{response.code}"
+  start = Time.now
+  while true
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      http.request(request)
+    end
+
+    break if response.code == "200"
+
+    # retry for up to 5 minutes
+    if Time.now - start < 300
+      puts "Connection failed with #{response.code}. Retrying in 5 seconds..."
+      sleep(5)
+    else
+      raise "TRIVIAL GET FAILED WITH #{response.code}"
+    end
   end
 
   results = ""

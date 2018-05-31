@@ -4,31 +4,21 @@ export default {
   name: 'localization',
   after: 'inject-objects',
 
-  enableVerboseLocalization() {
-    let counter = 0;
-    let keys = {};
-    let t = I18n.t;
 
-    I18n.noFallbacks = true;
+  isVerboseLocalizationEnabled(container) {
+    const siteSettings = container.lookup('site-settings:main');
+    if (siteSettings.verbose_localization) return true;
 
-    I18n.t = I18n.translate = function(scope, value){
-      let current = keys[scope];
-      if (!current) {
-        current = keys[scope] = ++counter;
-        let message = "Translation #" + current + ": " + scope;
-        if (!_.isEmpty(value)) {
-          message += ", parameters: " + JSON.stringify(value);
-        }
-        Em.Logger.info(message);
-      }
-      return t.apply(I18n, [scope, value]) + " (#" + current + ")";
-    };
+    try {
+      return sessionStorage && sessionStorage.getItem("verbose_localization");
+    } catch (e) {
+      return false;
+    }
   },
 
   initialize(container) {
-    const siteSettings = container.lookup('site-settings:main');
-    if (siteSettings.verbose_localization) {
-      this.enableVerboseLocalization();
+    if (this.isVerboseLocalizationEnabled(container)) {
+      I18n.enableVerboseLocalization();
     }
 
     // Merge any overrides into our object

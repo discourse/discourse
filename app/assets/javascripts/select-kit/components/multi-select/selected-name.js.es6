@@ -38,9 +38,14 @@ export default Ember.Component.extend({
     return this.getWithDefault("computedContent.locked", false);
   }),
 
+  @computed("computedContent", "highlightedSelection.[]")
+  isHighlighted(computedContent, highlightedSelection) {
+    return highlightedSelection.includes(this.get("computedContent"));
+  },
+
   click() {
-    if (this.get("isLocked") === true) { return false; }
-    this.toggleProperty("isHighlighted");
+    if (this.get("isLocked")) return false;
+    this.sendAction("onClickSelectionItem", [this.get("computedContent")]);
     return false;
   }
 });

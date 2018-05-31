@@ -17,13 +17,16 @@
   width: 300px;
   margin-bottom: 1em;
   float: left;
+  vertical-align: middle;
 
   .discourse-tag {
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .tag-count {
-    font-size: 0.857em;
+    font-size: $font-down-1;
+    vertical-align: middle;
+    line-height: $line-height-small;
   }
 }
 
@@ -34,70 +37,58 @@
 
 .bullet + .topic-header-extra {
   display: block;
-  line-height: 15px;
-  font-size: .857em;
-  .list-tags { font-size: 1em; }
-}
-
-.bar + .topic-header-extra {
-  line-height: 1.25;
 }
 
 .box + .topic-header-extra {
   display: inline-block;
-  margin: 0 0 0 5px;
-  padding-top: 5px;
 }
 
 .topic-category {
-  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
 
   .topic-header-extra {
-    display: inline;
+    display: inline-block;
     vertical-align: baseline;
-    margin: 0;
   }
 
   .badge-wrapper {
-    display: inline-block;
-    vertical-align: baseline;
     margin-top: 0;
 
     &.bullet .badge-category {
-      vertical-align: middle;
     }
 
     &.box, &.bullet {
-      vertical-align: middle;
     }
 
     &.box + .topic-header-extra,
     &.bullet + .topic-header-extra,
     &.bar + .topic-header-extra {
-      vertical-align: middle;
     }
   }
-}
-
-.add-tags .select2 {
-  margin: 0;
 }
 
 $tag-color: $primary-medium;
 
 .discourse-tag-count {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   color: $tag-color;
+  line-height: $line-height-small;
+  vertical-align: middle;
 }
-
-.select2-result-label .discourse-tag {
-  margin-right: 0;
-}
-
 
 .discourse-tag {
-  padding: 0;
-  margin: 0 5px 0 0;
+  max-width: 14em;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.discourse-tag {
+  margin: 0;
   color: $tag-color;
 
   &:visited, &:hover {
@@ -119,7 +110,7 @@ $tag-color: $primary-medium;
   }
 
   &.simple, &.simple:visited, &.simple:hover {
-    margin-right: 0px;
+    margin-right: 0;
     color: $primary-high;
   }
 }
@@ -132,20 +123,12 @@ $tag-color: $primary-medium;
 }
 
 .d-header .topic-header-extra {
-  display: inline-block;
-  .discourse-tags { display: inline-block; }
+  .discourse-tags {
+    display: inline-block;
+    font-size: $font-down-1;
+  }
   .topic-featured-link { margin-left: 8px; }
 }
-
-.select2-container-multi .select2-choices .select2-search-choice.discourse-tag-select2 {
-  padding-top: 5px;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  border: 0;
-  border-radius: 0;
-  background-color: transparent;
-}
-
 
 .fps-result .add-full-page-tags {
   display: inline-block;
@@ -153,10 +136,9 @@ $tag-color: $primary-medium;
 
 .topic-list-item .discourse-tags {
   display: block;
-  font-size: 0.786em;
+  font-size: $font-down-2;
   font-weight: normal;
   clear: both;
-  margin-top: 5px;
 
   .discourse-tag.box {
     position:relative;
@@ -169,9 +151,13 @@ $tag-color: $primary-medium;
 }
 
 .mobile-view .topic-list-item .discourse-tags {
-  display: inline-block;
-  font-size: 0.857em;
+  display: inline-flex;
+  flex-wrap: wrap;
+  font-size: $font-down-1;
   margin-top: 0;
+  .discourse-tag {
+    margin-right: .2em;
+  }
   .discourse-tag.box {
     position:relative;
     top: 0;
@@ -179,33 +165,29 @@ $tag-color: $primary-medium;
 }
 
 
-
-.discourse-tag.bullet:before {
-  content: "\f04d";
-  font-family: FontAwesome;
-  color: $primary-low-mid;
-  margin-right: 5px;
-  font-size: 0.786em;
-  position:relative;
-  top: -0.1em;
+.discourse-tag.bullet {
+  margin-right: .25em;
+  &:before {
+    content: "\f04d";
+    font-family: FontAwesome;
+    color: $primary-low-mid;
+    margin-right: 5px;
+    font-size: $font-down-2;
+    position:relative;
+  }
 }
 
 header .discourse-tag {color: $tag-color }
 
 .list-tags {
+  display: inline-block;
   margin-right: 3px;
-  display: inline;
-  font-size: 0.857em;
+  font-size: $font-down-1;
 }
 
 .tag-chooser {
   width: 100%;
   max-width: 100%;
-  margin: 5px 0;
-  ul.select2-choices {
-    max-height: 30px;
-    overflow-y: auto;
-  }
 }
 
 .title-wrapper .tag-chooser {
@@ -222,6 +204,9 @@ header .discourse-tag {color: $tag-color }
   margin-bottom: 20px;
   a {
     text-decoration: underline;
+  }
+  span.active a {
+    font-weight: bold;
   }
 }
 
@@ -252,6 +237,9 @@ header .discourse-tag {color: $tag-color }
     ul {
       margin-bottom: 10px;
     }
+    .btn {
+      margin-left: 10px;
+    }
   }
   .tag-group-content {
     width: 75%;
@@ -260,18 +248,17 @@ header .discourse-tag {color: $tag-color }
       margin-bottom: 20px;
     }
     label {
-      font-size: 1em;
+      font-size: $font-0;
       display: inline-block;
+      margin-right: 10px;
+    }
+    .btn {
       margin-right: 10px;
     }
   }
   .group-tags-list .tag-chooser {
-    height: 250px !important;
-    .select2-choices {
-      height: 250px !important; // to fight with select2.scss's important
-    }
+    width: 100%;
   }
-  .btn {margin-left: 10px;}
   .saving {
     margin-left: 20px;
   }

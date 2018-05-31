@@ -2,41 +2,13 @@ require 'rails_helper'
 
 describe InvitesController do
 
-  context '.show' do
-    render_views
-
-    it "shows error if invite not found" do
-      get :show, params: { id: 'nopeNOPEnope' }
-
-      expect(response).to be_success
-
-      body = response.body
-
-      expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found'))
-    end
-
-    it "renders the accept invite page if invite exists" do
-      i = Fabricate(:invite)
-      get :show, params: { id: i.invite_key }
-
-      expect(response).to be_success
-
-      body = response.body
-
-      expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to_not include(I18n.t('invite.not_found'))
-    end
-  end
-
   context '.destroy' do
 
     it 'requires you to be logged in' do
-      expect do
-        delete :destroy,
-          params: { email: 'jake@adventuretime.ooo' },
-          format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      delete :destroy,
+        params: { email: 'jake@adventuretime.ooo' },
+        format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -49,15 +21,13 @@ describe InvitesController do
       end
 
       it "raises an error when the email cannot be found" do
-        expect do
-          delete :destroy, params: { email: 'finn@adventuretime.ooo' }, format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        delete :destroy, params: { email: 'finn@adventuretime.ooo' }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it 'raises an error when the invite is not yours' do
-        expect do
-          delete :destroy, params: { email: another_invite.email }, format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        delete :destroy, params: { email: another_invite.email }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it "destroys the invite" do
@@ -71,9 +41,8 @@ describe InvitesController do
 
   context '#create' do
     it 'requires you to be logged in' do
-      expect do
-        post :create, params: { email: 'jake@adventuretime.ooo' }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      post :create, params: { email: 'jake@adventuretime.ooo' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -136,11 +105,10 @@ describe InvitesController do
 
   context '.create_invite_link' do
     it 'requires you to be logged in' do
-      expect {
-        post :create_invite_link, params: {
-          email: 'jake@adventuretime.ooo'
-        }, format: :json
-      }.to raise_error(Discourse::NotLoggedIn)
+      post :create_invite_link, params: {
+        email: 'jake@adventuretime.ooo'
+      }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -363,9 +331,8 @@ describe InvitesController do
   context '.resend_invite' do
 
     it 'requires you to be logged in' do
-      expect {
-        delete :resend_invite, params: { email: 'first_name@example.com' }, format: :json
-      }.to raise_error(Discourse::NotLoggedIn)
+      delete :resend_invite, params: { email: 'first_name@example.com' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -378,15 +345,13 @@ describe InvitesController do
       end
 
       it "raises an error when the email cannot be found" do
-        expect do
-          post :resend_invite, params: { email: 'first_name@example.com' }, format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        post :resend_invite, params: { email: 'first_name@example.com' }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it 'raises an error when the invite is not yours' do
-        expect do
-          post :resend_invite, params: { email: another_invite.email }, format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        post :resend_invite, params: { email: another_invite.email }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it "resends the invite" do
@@ -400,9 +365,8 @@ describe InvitesController do
 
   context '.upload_csv' do
     it 'requires you to be logged in' do
-      expect {
-        post :upload_csv, format: :json
-      }.to raise_error(Discourse::NotLoggedIn)
+      post :upload_csv, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do

@@ -1,8 +1,8 @@
 {{input
   tabindex=-1
   class="filter-input"
-  placeholder=placeholder
-  key-up=onFilter
+  placeholder=computedPlaceholder
+  key-up=onFilterComputedContent
   autocomplete="off"
   autocorrect="off"
   autocapitalize="off"
@@ -10,6 +10,10 @@
   value=filter
 }}
 
-{{#if icon}}
-  {{d-icon icon class="filter-icon"}}
+{{#if isLoading}}
+  {{loading-spinner size="small"}}
+{{else}}
+  {{#if icon}}
+    {{d-icon icon class="filter-icon"}}
+  {{/if}}
 {{/if}}

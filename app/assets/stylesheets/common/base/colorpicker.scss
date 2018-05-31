@@ -3,19 +3,19 @@
 .category-color-editor {
   input {
     width: 70px;
+    margin-right: 10px;
   }
 
   .color-title {
     display: inline-block;
-    width: 130px;
+    width: 120px;
   }
 
   .colors-container {
     display: inline-block;
     vertical-align: middle;
     padding-top: 4px;
-    padding-left: 15px;
-    max-width: 300px;
+    max-width: 240px;
 
     .colorpicker {
       border: 1px solid $primary-low; 

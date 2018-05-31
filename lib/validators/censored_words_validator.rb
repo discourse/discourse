@@ -5,11 +5,6 @@ class CensoredWordsValidator < ActiveModel::EachValidator
         attribute, :contains_censored_words,
         censored_words: join_censored_words(censored_words)
       )
-    elsif SiteSetting.censored_pattern.present? && (censored_words = censor_words(value, /#{SiteSetting.censored_pattern}/i)).present?
-      record.errors.add(
-        attribute, :matches_censored_pattern,
-        censored_words: join_censored_words(censored_words)
-      )
     end
   end
 

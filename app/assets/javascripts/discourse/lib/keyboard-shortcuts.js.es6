@@ -1,6 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
-import { scrollTopFor } from 'discourse/lib/offset-calculator';
+import { minimumOffset } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
@@ -12,6 +12,7 @@ const bindings = {
   '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics
   'b':               {handler: 'toggleBookmark'},
   'c':               {handler: 'createTopic'},
+  'C':               {handler: 'focusComposer'},
   'ctrl+f':          {handler: 'showPageSearch', anonymous: true},
   'command+f':       {handler: 'showPageSearch', anonymous: true},
   'ctrl+p':          {handler: 'printTopic', anonymous: true},
@@ -67,6 +68,12 @@ export default {
     this.searchService = this.container.lookup('search-service:main');
     this.appEvents = this.container.lookup('app-events:main');
     this.currentUser = this.container.lookup('current-user:main');
+    let siteSettings = this.container.lookup('site-settings:main');
+
+    // Disable the shortcut if private messages are disabled
+    if (!siteSettings.enable_personal_messages) {
+      delete bindings['g m'];
+    }
 
     Object.keys(bindings).forEach(key => {
       const binding = bindings[key];
@@ -171,6 +178,15 @@ export default {
   createTopic() {
     if (this.currentUser && this.currentUser.can_create_topic) {
       this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    }
+  },
+
+  focusComposer() {
+    const composer = this.container.lookup('controller:composer');
+    if (composer.get('model.viewOpen')) {
+      setTimeout(() => $('textarea.d-editor-input').focus(), 0);
+    } else {
+      composer.send('openIfDraft');
     }
   },
 
@@ -295,52 +311,36 @@ export default {
   _moveSelection(direction) {
     const $articles = this._findArticles();
 
-    if (typeof $articles === 'undefined') {
-      return;
-    }
+    if (typeof $articles === 'undefined') return;
 
     const $selected = ($articles.filter('.selected').length !== 0)
       ? $articles.filter('.selected')
       : $articles.filter('[data-islastviewedtopic=true]');
+
     let index = $articles.index($selected);
 
-    if ($selected.length !== 0) { //boundries check
-      // loop is not allowed
-      if (direction === -1 && index === 0) { return; }
-      if (direction === 1 && index === ($articles.size()-1) ) { return; }
+    if ($selected.length !== 0) {
+      if (direction === -1 && index === 0) return;
+      if (direction ===  1 && index === $articles.length - 1) return;
     }
 
-    // if nothing is selected go to the first post on screen
+    // when nothing is selected
     if ($selected.length === 0) {
-      const scrollTop = $(document).scrollTop();
-
-      index = 0;
-      $articles.each(function() {
-        const top = $(this).position().top;
-        if (top >= scrollTop) {
-          return false;
-        }
-        index += 1;
-      });
-
-      if (index >= $articles.length) {
-        index = $articles.length - 1;
-      }
-
+      // select the first post with its top visible
+      const offset = minimumOffset();
+      index = $articles.toArray().findIndex(article => article.getBoundingClientRect().top > offset);
       direction = 0;
     }
 
     const $article = $articles.eq(index + direction);
 
-    if ($article.size() > 0) {
-
+    if ($article.length > 0) {
       $articles.removeClass('selected');
       $article.addClass('selected');
 
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();
         this._scrollToPost($article);
-
       } else {
         this._scrollList($article, direction);
       }
@@ -348,8 +348,11 @@ export default {
   },
 
   _scrollToPost($article) {
-    const pos = $article.offset();
-    $(window).scrollTop(Math.ceil(pos.top - scrollTopFor(pos.top)));
+    if ($article.find("#post_1").length > 0) {
+      $(window).scrollTop(0);
+    } else {
+      $(window).scrollTop($article.offset().top - minimumOffset());
+    }
   },
 
   _scrollList($article) {
@@ -377,14 +380,13 @@ export default {
 
 
   _findArticles() {
-    const $topicList = $('.topic-list'),
-        $topicArea = $('.posts-wrapper');
+    const $topicList = $(".topic-list");
+    const $postsWrapper = $(".posts-wrapper");
 
-    if ($topicArea.size() > 0) {
-      return $('.posts-wrapper .topic-post, .topic-list tbody tr');
-    }
-    else if ($topicList.size() > 0) {
-      return $topicList.find('.topic-list-item');
+    if ($postsWrapper.length > 0) {
+      return $(".posts-wrapper .topic-post, .topic-list tbody tr");
+    } else if ($topicList.length > 0) {
+      return $topicList.find(".topic-list-item");
     }
   },
 

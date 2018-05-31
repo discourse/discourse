@@ -32,6 +32,8 @@ module ImportExport
     def import_users
       return if @users.blank?
 
+      puts "Importing users..."
+
       @users.each do |u|
         import_id = "#{u[:id]}#{import_source}"
         existing = User.with_email(u[:email]).first
@@ -52,6 +54,8 @@ module ImportExport
     def import_groups
       return if @groups.blank?
 
+      puts "Importing groups..."
+
       @groups.each do |group_data|
         g = group_data.dup
         user_ids = g.delete(:user_ids)
@@ -67,6 +71,8 @@ module ImportExport
 
     def import_categories
       return if @categories.blank?
+
+      puts "Importing categories..."
 
       import_ids = @categories.collect { |c| "#{c[:id]}#{import_source}" }
       existing_categories = CategoryCustomField.where("name = 'import_id' AND value IN (?)", import_ids).select(:category_id, :value).to_a
@@ -105,6 +111,8 @@ module ImportExport
 
     def import_topics
       return if @topics.blank?
+
+      puts "Importing topics...", ''
 
       @topics.each do |t|
         puts ""
@@ -153,7 +161,10 @@ module ImportExport
     end
 
     def new_category_id(external_category_id)
-      CategoryCustomField.where(name: "import_id", value: "#{external_category_id}#{import_source}").first.category_id rescue nil
+      CategoryCustomField.where(
+        name: "import_id",
+        value: "#{external_category_id}#{import_source}"
+      ).first&.category_id
     end
 
     def import_source

@@ -10,3 +10,6 @@ ca:
     presence:
       replying: "responent"
       editing: "editant"
+      replying_to_topic:
+        one: "responent"
+        other: "responent"

@@ -10,6 +10,8 @@ uk:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  date:
+    month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
   title: "Discourse"
   topics: "Теми"
   posts: "дописи"
@@ -27,14 +29,18 @@ uk:
       not_a_number: це не цифра
       not_an_integer: має бути цілим числом
       too_long:
-        one: надто довге (максимум 1 символ)
         few: надто довге (максимум %{count} символів)
+        many: надто довге (максимум %{count} символів)
+        one: надто довге (максимум 1 символ)
         other: надто довге (максимум %{count} символів)
       other_than: "має бути іншим ніж %{count}"
     template:
       body: 'Проблеми на цих полях:'
     embed:
       load_from_remote: "Під час завантаження допису виникла проблема."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -47,31 +53,36 @@ uk:
     start_discussion: "Розпочати Дискусію"
     continue: "Продовжити Дискусію"
     more_replies:
-      one: "1 більше відповідей"
-      few: "%{count} більше відповідей"
-      other: "%{count} більше відповідей"
+      few: '%{count} більше відповідей'
+      many: '%{count} більше відповідей'
+      one: 1 більше відповідей
+      other: '%{count} більше відповідей'
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
     replies:
-      one: "1 відповідь"
-      few: "%{count} відповідей"
-      other: "%{count} відповідей"
+      few: '%{count} відповідей'
+      many: '%{count} відповідей'
+      one: 1 відповідь
+      other: '%{count} відповідей'
   no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
   too_many_images:
-    one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."
-    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
+    few: Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис.
+    many: Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис.
+    one: Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис.
+    other: Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис.
   no_attachments_allowed: "Даруйте, нові користувачі не можуть вставляти прикріплення в дописи."
   too_many_attachments:
-    one: "Даруйте, нові користувачі можуть вставляти тільки одне прикріплення в допис."
-    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
+    few: Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис.
+    many: Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис.
+    one: Даруйте, нові користувачі можуть вставляти тільки одне прикріплення в допис.
+    other: Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис.
   no_links_allowed: "Даруйте, нові користувачі не можуть вставляти посилання в дописи."
   too_many_links:
-    one: "Даруйте, нові користувачі можуть вставляти тільки одне посилання в допис."
-    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
+    few: Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис.
+    many: Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис.
+    one: Даруйте, нові користувачі можуть вставляти тільки одне посилання в допис.
+    other: Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис.
   spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
   topic_not_found: "Щось пішло не так. Можливо цей допис було закрито або видалено, під час того як ви його переглядали?"
   just_posted_that: "це дуже схоже на те, що ви нещодавно дописували"
@@ -90,7 +101,6 @@ uk:
     latest: "Останні теми"
     hot: "Гарячі теми"
     posts: "Останні дописи"
-    private_posts: "Останні приватні повідомлення"
     group_posts: "Останні дописи від %{group_name}"
     user_posts: "Останні дописи @%{username}"
     user_topics: "Останні теми @%{username}"
@@ -117,6 +127,7 @@ uk:
       user_profile:
         bio_raw: "Про мене"
     errors:
+      <<: *errors
       models:
         user:
           attributes:
@@ -126,7 +137,6 @@ uk:
           attributes:
             payload_url:
               invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
@@ -144,28 +154,31 @@ uk:
     member:
       title: "учасник"
   rate_limiter:
-    too_many_requests: "У нас є обмеження щодо того, скільки разів за добу можна виконати цю дію. Будь ласка, зачекайте %{time_left} перед тим, як спробувати ще раз."
     hours:
-      one: "1 година"
-      few: "%{count} години"
-      other: "%{count} годин"
+      few: '%{count} години'
+      many: '%{count} годин'
+      one: 1 година
+      other: '%{count} годин'
     minutes:
-      one: "1 хвилина"
-      few: "%{count} хвилини"
-      other: "%{count} хвилин"
+      few: '%{count} хвилини'
+      many: '%{count} хвилин'
+      one: 1 хвилина
+      other: '%{count} хвилин'
     seconds:
-      one: "1 секунда"
-      few: "%{count} секунди"
-      other: "%{count} секунд"
+      few: '%{count} секунди'
+      many: '%{count} секунд'
+      one: 1 секунда
+      other: '%{count} секунд'
   datetime:
     distance_in_words:
       half_a_minute: "< 1 хв"
     distance_in_words_verbose:
       half_a_minute: "щойно"
       x_seconds:
-        one: "1 секунда тому"
-        few: "%{count} секунд тому"
-        other: "%{count} секунд тому"
+        few: '%{count} секунд тому'
+        many: '%{count} секунд тому'
+        one: 1 секунда тому
+        other: '%{count} секунд тому'
   password_reset:
     update: 'Оновити пароль'
     save: 'Встановити пароль'
@@ -226,7 +239,6 @@ uk:
       yaxis: "Кількість відвідин"
     signups:
       xaxis: "День"
-      yaxis: "Кількість нових користувачів"
     topics:
       title: "Теми"
       xaxis: "День"
@@ -260,7 +272,6 @@ uk:
       xaxis: "День"
       yaxis: "Кількість листів"
     user_to_user_private_messages:
-      title: "Користувач користувачу"
       xaxis: "День"
     system_private_messages:
       title: "Системні"
@@ -300,7 +311,6 @@ uk:
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
   site_settings:
-    default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
@@ -318,8 +328,6 @@ uk:
     min_password_length: "Мінімальна довжина пароля."
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret для входу через Twitter, зареєстрований на http://dev.twitter.com"
     enable_facebook_logins: "Увімкнути вхід через Facebook; потребує facebook_app_id та facebook_app_secret"
     facebook_app_id: "App id для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
     facebook_app_secret: "App secret для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
@@ -454,6 +462,3 @@ uk:
   edit_this_page: "Редагувати цю сторінку"
   guidelines_topic:
     title: "ЧаПи/Інструкції"
-  activemodel:
-    errors:
-      <<: *errors

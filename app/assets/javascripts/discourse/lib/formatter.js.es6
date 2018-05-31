@@ -301,8 +301,12 @@ export function relativeAge(date, options) {
   return "UNKNOWN FORMAT";
 }
 
-export function number(val) {
+export function number(val, options = {}) {
   let formattedNumber;
+
+  if (options.ceil) {
+    val = Math.ceil(val);
+  }
 
   val = parseInt(val, 10);
   if (isNaN(val)) val = 0;
@@ -311,7 +315,7 @@ export function number(val) {
     formattedNumber = I18n.toNumber(val / 1000000, {precision: 1});
     return I18n.t("number.short.millions", {number: formattedNumber});
   } else if (val > 99999) {
-    formattedNumber = I18n.toNumber(val / 1000, {precision: 0});
+    formattedNumber = I18n.toNumber(Math.floor(val / 1000), {precision: 0});
     return I18n.t("number.short.thousands", {number: formattedNumber});
   } else if (val > 999) {
     formattedNumber = I18n.toNumber(val / 1000, {precision: 1});

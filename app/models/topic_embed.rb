@@ -48,11 +48,17 @@ class TopicEmbed < ActiveRecord::Base
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
 
+        cook_method = if SiteSetting.embed_support_markdown
+          Post.cook_methods[:regular]
+        else
+          Post.cook_methods[:raw_html]
+        end
+
         creator = PostCreator.new(user,
                                   title: title,
                                   raw: absolutize_urls(url, contents),
                                   skip_validations: true,
-                                  cook_method: Post.cook_methods[:raw_html],
+                                  cook_method: cook_method,
                                   category: eh.try(:category_id))
         post = creator.create
         if post.present?
@@ -67,7 +73,13 @@ class TopicEmbed < ActiveRecord::Base
       post = embed.post
       # Update the topic if it changed
       if post && post.topic && content_sha1 != embed.content_sha1
-        post.revise(user, { raw: absolutize_urls(url, contents) }, skip_validations: true, bypass_rate_limiter: true)
+        post_revision_args = {
+          raw: absolutize_urls(url, contents),
+          user_id: user.id,
+          title: title,
+        }
+
+        post.revise(user, post_revision_args, skip_validations: true, bypass_rate_limiter: true)
         embed.update_column(:content_sha1, content_sha1)
       end
     end
@@ -183,7 +195,7 @@ class TopicEmbed < ActiveRecord::Base
 
   def self.topic_id_for_embed(embed_url)
     embed_url = normalize_url(embed_url).sub(/^https?\:\/\//, '')
-    TopicEmbed.where("embed_url ~* '^https?://#{embed_url}$'").pluck(:topic_id).first
+    TopicEmbed.where("embed_url ~* '^https?://#{Regexp.escape(embed_url)}$'").pluck(:topic_id).first
   end
 
   def self.first_paragraph_from(html)

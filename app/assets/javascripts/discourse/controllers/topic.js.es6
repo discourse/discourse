@@ -14,6 +14,20 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import { userPath } from 'discourse/lib/url';
 
+let customPostMessageCallbacks = {};
+
+export function resetCustomPostMessageCallbacks() {
+  customPostMessageCallbacks = {};
+}
+
+export function registerCustomPostMessageCallback(type, callback) {
+  if (customPostMessageCallbacks[type]) {
+    throw `Error ${type} is an already registered post message!`;
+  }
+
+  customPostMessageCallbacks[type] = callback;
+}
+
 export default Ember.Controller.extend(BufferedContent, {
   composer: Ember.inject.controller(),
   application: Ember.inject.controller(),
@@ -44,6 +58,12 @@ export default Ember.Controller.extend(BufferedContent, {
       // force update lazily loaded titles
       this.send('refreshTitle');
     }
+  },
+
+  @computed('model.postStream.loaded', 'model.category_id')
+  showSharedDraftControls(loaded, categoryId) {
+    let draftCat = this.site.shared_drafts_category_id;
+    return loaded && draftCat && categoryId && draftCat === categoryId;
   },
 
   @computed('site.mobileView', 'model.posts_count')
@@ -104,7 +124,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
   @computed('model.isPrivateMessage')
   canEditTags(isPrivateMessage) {
-    return !isPrivateMessage && this.site.get('can_tag_topics');
+    return this.site.get('can_tag_topics') && (!isPrivateMessage || this.site.get('can_tag_pms'));
   },
 
   actions: {
@@ -125,7 +145,6 @@ export default Ember.Controller.extend(BufferedContent, {
       return this.get('model.postStream').loadPost(postId).then(post => {
         const composer = this.get('composer');
         const viewOpen = composer.get('model.viewOpen');
-
         const quotedText = Quote.build(post, buffer);
 
         // If we can't create a post, delegate to reply as new topic
@@ -199,7 +218,7 @@ export default Ember.Controller.extend(BufferedContent, {
       });
     },
 
-    // Called the the topmost visible post on the page changes.
+    // Called when the topmost visible post on the page changes.
     topVisibleChanged(event) {
       const { post, refresh } = event;
       if (!post) { return; }
@@ -263,6 +282,23 @@ export default Ember.Controller.extend(BufferedContent, {
       } else {
         topic.archiveMessage().then(backToInbox);
       }
+    },
+
+    editFirstPost() {
+      const postStream = this.get('model.postStream');
+      let firstPost = postStream.get('posts.firstObject');
+
+      if (firstPost.get('post_number') !== 1) {
+        const postId = postStream.findPostIdForPostNumber(1);
+        // try loading from identity map first
+        firstPost = postStream.findLoadedPost(postId);
+        if (firstPost === undefined) {
+          return this.get('model.postStream').loadPost(postId).then(post => {
+            this.send("editPost", post);
+          });
+        }
+      }
+      this.send("editPost", firstPost);
     },
 
     // Post related methods
@@ -386,16 +422,29 @@ export default Ember.Controller.extend(BufferedContent, {
       }
 
       const composer = this.get("composer");
+      let topic = this.get('model');
       const composerModel = composer.get("model");
+      let editingFirst = composerModel && (post.get('firstPost') || composerModel.get('editingFirstPost'));
+
+      let editingSharedDraft = false;
+      let draftsCategoryId = this.get('site.shared_drafts_category_id');
+      if (draftsCategoryId && draftsCategoryId === topic.get('category.id')) {
+        editingSharedDraft = post.get('firstPost');
+      }
+
       const opts = {
         post,
-        action: Composer.EDIT,
+        action: editingSharedDraft ? Composer.EDIT_SHARED_DRAFT : Composer.EDIT,
         draftKey: post.get("topic.draft_key"),
         draftSequence: post.get("topic.draft_sequence")
       };
 
+      if (editingSharedDraft) {
+        opts.destinationCategoryId = topic.get('destination_category_id');
+      }
+
       // Cancel and reopen the composer for the first post
-      if (composerModel && (post.get('firstPost') || composerModel.get('editingFirstPost'))) {
+      if (editingFirst) {
         composer.cancelComposer().then(() => composer.open(opts));
       } else {
         composer.open(opts);
@@ -416,17 +465,17 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     jumpToIndex(index) {
-      this._jumpToPostId(this.get('model.postStream.stream')[index - 1]);
+      this._jumpToIndex(index);
     },
 
     jumpToPostPrompt() {
       const postText = prompt(I18n.t('topic.progress.jump_prompt_long'));
       if (postText === null) { return; }
 
-      const postNumber = parseInt(postText, 10);
-      if (postNumber === 0) { return; }
+      const postIndex = parseInt(postText, 10);
+      if (postIndex === 0) { return; }
 
-      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
+      this._jumpToIndex(postIndex);
     },
 
     jumpToPost(postNumber) {
@@ -452,6 +501,10 @@ export default Ember.Controller.extend(BufferedContent, {
 
     jumpUnread() {
       this._jumpToPostId(this.get('model.last_read_post_id'));
+    },
+
+    jumpToPostId(postId) {
+      this._jumpToPostId(postId);
     },
 
     toggleMultiSelect() {
@@ -516,6 +569,19 @@ export default Ember.Controller.extend(BufferedContent, {
     changePostOwner(post) {
       this.set("selectedPostIds", [post.id]);
       this.send('changeOwner');
+    },
+
+    lockPost(post) {
+      return post.updatePostField('locked', true);
+    },
+
+    unlockPost(post) {
+      return post.updatePostField('locked', false);
+    },
+
+    grantBadge(post) {
+      this.set("selectedPostIds", [post.id]);
+      this.send('showGrantBadgeModal');
     },
 
     toggleParticipant(user) {
@@ -702,6 +768,12 @@ export default Ember.Controller.extend(BufferedContent, {
     }
   },
 
+  _jumpToIndex(index) {
+    const stream = this.get("model.postStream.stream");
+    index = Math.max(1, Math.min(stream.length, index));
+    this._jumpToPostId(stream[index - 1]);
+  },
+
   _jumpToPostId(postId) {
     if (!postId) {
       Ember.Logger.warn("jump-post code broken - requested an index outside the stream array");
@@ -767,9 +839,12 @@ export default Ember.Controller.extend(BufferedContent, {
     return selectedPostsCount > 0 && (selectedAllPosts || selectedPosts.every(p => p.can_delete));
   },
 
-  @computed('canMergeTopic', 'selectedAllPosts')
-  canSplitTopic(canMergeTopic, selectedAllPosts) {
-    return canMergeTopic && !selectedAllPosts;
+  @computed('canMergeTopic', 'selectedAllPosts', 'selectedPosts', 'selectedPosts.[]')
+  canSplitTopic(canMergeTopic, selectedAllPosts, selectedPosts) {
+    return canMergeTopic &&
+           !selectedAllPosts &&
+           selectedPosts.length > 0 &&
+           selectedPosts.sort((a, b) => a.post_number - b.post_number)[0].post_type === 1;
   },
 
   @computed('model.details.can_move_posts', 'selectedPostsCount')
@@ -874,7 +949,12 @@ export default Ember.Controller.extend(BufferedContent, {
           break;
         }
         default: {
-          Em.Logger.warn("unknown topic bus message type", data);
+          let callback = customPostMessageCallbacks[data.type];
+          if (callback) {
+            callback(this, data);
+          } else {
+            Em.Logger.warn("unknown topic bus message type", data);
+          }
         }
       }
 

@@ -15,6 +15,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
                       'composer.createdPost:created-post',
                       'composer.creatingTopic:topic',
                       'composer.whisper:composing-whisper',
+                      'composer.sharedDraft:composing-shared-draft',
                       'showPreview:show-preview:hide-preview',
                       'currentUserPrimaryGroupClass'],
 

@@ -43,6 +43,9 @@
       word-wrap: break-word;
 
       .flagged-post-user-details {
+        display: flex;
+        justify-content: space-between;
+
         .username {
           font-weight: bold;
           color: $primary;
@@ -62,6 +65,10 @@
       }
       margin-right: 1em;
     }
+  }
+
+  .flagged-post-reply-count {
+    font-weight: normal;
   }
 
   .flag-user-lists {
@@ -167,7 +174,7 @@
 
   .type-count {
     color: $primary-medium;
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 }
 

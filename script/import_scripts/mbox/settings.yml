@@ -1,10 +1,18 @@
-# PostgreSQL mailing lists
-#data_dir: /shared/import/data
-#split_regex: "^From .*@postgresql.org.*"
-
-# ruby-talk mailing list
 data_dir: /shared/import/data
-split_regex: ""
+
+# mbox files
+split_regex: "^From .+"
+#split_regex: "^From .+@example.com.+"
+
+# individual emails
+#split_regex: ""
+
+# Listserv files
+#split_regex: "^========================================================================="
 
 default_trust_level: 1
 prefer_html: false
+staged: true
+index_only: false
+
+group_messages_by_subject: false

@@ -72,6 +72,7 @@ componentTest('interactions', {
       assert.equal(this.get('categories').length, 3);
     });
 
+    this.get('subject').expand();
     this.get('subject').keyboard().backspace();
     this.get('subject').keyboard().backspace();
 

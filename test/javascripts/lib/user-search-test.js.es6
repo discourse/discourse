@@ -48,6 +48,10 @@ QUnit.module("lib:user-search", {
           ],
           groups: [
             {
+              "name": "bob",
+              "usernames": []
+            },
+            {
               "name": "team",
               "usernames": []
             }
@@ -57,8 +61,7 @@ QUnit.module("lib:user-search", {
   }
 });
 
-QUnit.test("it places groups unconditionally for exact match", assert => {
-  return userSearch({term: 'Team'}).then((results)=>{
-     assert.equal(results[results.length-1]["name"], "team");
-  });
+QUnit.test("it places groups unconditionally for exact match", async assert => {
+  let results = await userSearch({term: 'Team'});
+  assert.equal(results[results.length-1]["name"], "team");
 });

@@ -87,6 +87,8 @@ describe Upload do
 
     it "doesn't blow up with an invalid URI" do
       expect { Upload.get_from_url("http://ip:port/index.html") }.not_to raise_error
+      expect { Upload.get_from_url("mailto:admin%40example.com") }.not_to raise_error
+      expect { Upload.get_from_url("mailto:example") }.not_to raise_error
     end
 
     describe "s3 store" do
@@ -110,6 +112,22 @@ describe Upload do
         SiteSetting.s3_cdn_url = s3_cdn_url
 
         expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
+      end
+
+      it "should return the right upload when using one CDN for both s3 and assets" do
+        begin
+          original_asset_host = Rails.configuration.action_controller.asset_host
+          cdn_url = 'http://my.cdn.com'
+          Rails.configuration.action_controller.asset_host = cdn_url
+          SiteSetting.s3_cdn_url = cdn_url
+          upload
+
+          expect(Upload.get_from_url(
+            URI.join(cdn_url, path).to_s
+          )).to eq(upload)
+        ensure
+          Rails.configuration.action_controller.asset_host = original_asset_host
+        end
       end
     end
   end

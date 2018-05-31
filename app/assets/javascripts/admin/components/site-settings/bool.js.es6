@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   enabled: {
     get(value) {
       if (Ember.isEmpty(value)) { return false; }
-      return value === "true";
+      return value.toString() === "true";
     },
     set(value) {
       this.set("value", value ? "true" : "false");

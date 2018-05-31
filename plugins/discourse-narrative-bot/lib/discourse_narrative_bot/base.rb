@@ -119,10 +119,12 @@ module DiscourseNarrativeBot
         date: Time.zone.now.strftime('%b %d %Y'),
         format: :svg
       }
-
       options.merge!(type: type) if type
+
       src = Discourse.base_url + DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_path(options)
-      "<img class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{I18n.t("#{self.class::I18N_KEY}.certificate.alt")}'>"
+      alt = CGI.escapeHTML(I18n.t("#{self.class::I18N_KEY}.certificate.alt"))
+
+      "<img class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{alt}'>"
     end
 
     protected

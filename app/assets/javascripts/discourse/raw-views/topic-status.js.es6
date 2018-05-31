@@ -53,7 +53,7 @@ export default Ember.Object.extend({
 
     results.forEach(result => {
       result.title = I18n.t(`topic_statuses.${result.key}.help`);
-      if (!self.disableActions && (result.key === "pinned" ||result.key === "unpinned")) {
+      if (this.currentUser && (result.key === "pinned" || result.key === "unpinned")) {
         result.openTag = 'a href';
         result.closeTag = 'a';
       } else {

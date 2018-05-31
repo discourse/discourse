@@ -6,7 +6,7 @@ module HasCustomFields
     def self.append_field(target, key, value, types)
       if target.has_key?(key)
         target[key] = [target[key]] if !target[key].is_a? Array
-        target[key] << cast_custom_field(key, value, types)
+        target[key] << cast_custom_field(key, value, types, _return_array = false)
       else
         target[key] = cast_custom_field(key, value, types)
       end
@@ -28,16 +28,26 @@ module HasCustomFields
       types[key]
     end
 
-    def self.cast_custom_field(key, value, types)
+    def self.cast_custom_field(key, value, types, return_array = true)
       return value unless type = get_custom_field_type(types, key)
 
-      case type
-      when :boolean then !!CUSTOM_FIELD_TRUE.include?(value)
-      when :integer then value.to_i
-      when :json    then ::JSON.parse(value)
-      else
-        value
+      array = nil
+
+      if Array === type
+        type = type[0]
+        array = true if return_array
       end
+
+      result =
+        case type
+        when :boolean then !!CUSTOM_FIELD_TRUE.include?(value)
+        when :integer then value.to_i
+        when :json    then ::JSON.parse(value)
+        else
+          value
+        end
+
+      array ? [result] : result
     end
   end
 
@@ -153,6 +163,20 @@ module HasCustomFields
   def custom_fields_clean?
     # Check whether the cached version has been changed on this model
     !@custom_fields || @custom_fields_orig == @custom_fields
+  end
+
+  # `upsert_custom_fields` will only insert/update existing fields, and will not
+  # delete anything. It is safer under concurrency and is recommended when
+  # you just want to attach fields to things without maintaining a specific
+  # set of fields.
+  def upsert_custom_fields(fields)
+    fields.each do |k, v|
+      row_count = _custom_fields.where(name: k).update_all(value: v)
+      if row_count == 0
+        _custom_fields.create!(name: k, value: v)
+      end
+      custom_fields[k] = v
+    end
   end
 
   def save_custom_fields(force = false)

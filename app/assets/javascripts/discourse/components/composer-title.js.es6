@@ -53,7 +53,11 @@ export default Ember.Component.extend({
     if (this.get('autoPosted') || !this.get('watchForLink')) { return; }
 
     if (Ember.testing) {
-      this._checkForUrl();
+      Em.run.next(() =>
+        // not ideal but we don't want to run this in current
+        // runloop to avoid an error in console
+        this._checkForUrl()
+      );
     } else {
       Ember.run.debounce(this, this._checkForUrl, 500);
     }
@@ -80,7 +84,14 @@ export default Ember.Component.extend({
       const link = document.createElement('a');
       link.href = this.get('composer.title');
 
-      let loadOnebox = load(link, false, ajax, this.currentUser.id, true);
+      const loadOnebox = load({
+        elem: link,
+        refresh: false,
+        ajax,
+        synchronous: true,
+        categoryId: this.get('composer.category.id'),
+        topicId: this.get('composer.topic.id')
+      });
 
       if (loadOnebox && loadOnebox.then) {
         loadOnebox.then( () => {

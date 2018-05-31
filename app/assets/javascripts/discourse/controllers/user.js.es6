@@ -1,16 +1,24 @@
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import computed from 'ember-addons/ember-computed-decorators';
 import User from 'discourse/models/user';
+import optionalService from 'discourse/lib/optional-service';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   application: Ember.inject.controller(),
   userNotifications: Ember.inject.controller('user-notifications'),
   currentPath: Ember.computed.alias('application.currentPath'),
+  adminTools: optionalService(),
 
-  @computed("content.username")
+  @computed('model.username')
   viewingSelf(username) {
-    return username === User.currentProp('username');
+    let currentUser = this.currentUser;
+    return currentUser && username === currentUser.get('username');
+  },
+
+  @computed('viewingSelf')
+  canExpandProfile(viewingSelf) {
+    return viewingSelf;
   },
 
   @computed('model.profileBackground')
@@ -31,9 +39,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   showStaffCounters: Ember.computed.or('hasGivenFlags', 'hasFlaggedPosts', 'hasDeletedPosts', 'hasBeenSuspended', 'hasReceivedWarnings'),
 
-  @computed('model.isSuspended', 'currentUser.staff')
-  isNotSuspendedOrIsStaff(isSuspended, isStaff) {
-    return !isSuspended || isStaff;
+  @computed('model.suspended', 'currentUser.staff')
+  isNotSuspendedOrIsStaff(suspended, isStaff) {
+    return !suspended || isStaff;
   },
 
   linkWebsite: Em.computed.not('model.isBasic'),
@@ -50,7 +58,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed('viewingSelf', 'currentUser.admin')
   showPrivateMessages(viewingSelf, isAdmin) {
-    return this.siteSettings.enable_private_messages && (viewingSelf || isAdmin);
+    return this.siteSettings.enable_personal_messages && (viewingSelf || isAdmin);
   },
 
   @computed('viewingSelf', 'currentUser.staff')
@@ -89,15 +97,23 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   actions: {
+    collapseProfile() {
+      this.set('forceExpand', false);
+    },
+
     expandProfile() {
       this.set('forceExpand', true);
     },
 
-    adminDelete() {
-      // I really want this deferred, don't want to bring in all this code till used
-      const AdminUser = requirejs('admin/models/admin-user').default;
-      AdminUser.find(this.get('model.id')).then(user => user.destroy({deletePosts: true}));
+    showSuspensions() {
+      this.get('adminTools').showActionLogs(this, {
+        target_user: this.get('model.username'),
+        action_name: 'suspend_user'
+      });
     },
 
+    adminDelete() {
+      this.get('adminTools').deleteUser(this.get('model.id'));
+    }
   }
 });

@@ -8,6 +8,7 @@ import { userPath } from 'discourse/lib/url';
 export default Ember.Controller.extend(PasswordValidation, {
   isDeveloper: Ember.computed.alias('model.is_developer'),
   admin: Ember.computed.alias('model.admin'),
+  secondFactorRequired: Ember.computed.alias('model.second_factor_required'),
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,
@@ -32,7 +33,8 @@ export default Ember.Controller.extend(PasswordValidation, {
         url: userPath(`password-reset/${this.get('model.token')}.json`),
         type: 'PUT',
         data: {
-          password: this.get('accountPassword')
+          password: this.get('accountPassword'),
+          second_factor_token: this.get('secondFactor')
         }
       }).then(result => {
         if (result.success) {
@@ -45,10 +47,22 @@ export default Ember.Controller.extend(PasswordValidation, {
             DiscourseURL.redirectTo(result.redirect_to || '/');
           }
         } else {
-          if (result.errors && result.errors.password && result.errors.password.length > 0) {
+          if (result.errors && result.errors.user_second_factor) {
+            this.setProperties({
+              secondFactorRequired: true,
+              password: null,
+              errorMessage: result.message
+            });
+          } else if (this.get('secondFactorRequired')) {
+            this.setProperties({
+              secondFactorRequired: false,
+              errorMessage: null
+            });
+          } else if (result.errors && result.errors.password && result.errors.password.length > 0) {
             this.get('rejectedPasswords').pushObject(this.get('accountPassword'));
             this.get('rejectedPasswordsMessages').set(this.get('accountPassword'), result.errors.password[0]);
           }
+
           if (result.message) {
             this.set('errorMessage', result.message);
           }

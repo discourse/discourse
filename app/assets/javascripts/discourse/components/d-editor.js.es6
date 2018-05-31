@@ -8,9 +8,11 @@ import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { siteDir } from 'discourse/lib/text-direction';
 import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
 import toMarkdown from 'discourse/lib/to-markdown';
 import deprecated from 'discourse-common/lib/deprecated';
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -44,7 +46,8 @@ const isInside = (text, regex) => {
 
 class Toolbar {
 
-  constructor(site) {
+  constructor(opts) {
+    const { site, siteSettings } = opts;
     this.shortcuts = {};
 
     this.groups = [
@@ -73,7 +76,14 @@ class Toolbar {
       perform: e => e.applySurround('_', '_', 'italic_text')
     });
 
-    this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
+    if (opts.showLink) {
+      this.addButton({
+        id: 'link',
+        group: 'insertions',
+        shortcut: 'K',
+        action: 'showLinkModal'
+      });
+    }
 
     this.addButton({
       id: 'quote',
@@ -106,6 +116,17 @@ class Toolbar {
       title: 'composer.olist_title',
       perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
     });
+
+    if (siteSettings.support_mixed_text_direction) {
+      this.addButton({
+        id: 'toggle-direction',
+        group: 'extras',
+        icon: 'exchange',
+        shortcut: 'Shift+6',
+        title: 'composer.toggle_direction',
+        perform: e => e.toggleDirection(),
+      });
+    }
 
     if (site.mobileView) {
       this.groups.push({group: 'mobileExtras', buttons: []});
@@ -188,6 +209,7 @@ export default Ember.Component.extend({
   lastSel: null,
   _mouseTrap: null,
   emojiPickerIsActive: false,
+  showLink: true,
 
   @computed('placeholder')
   placeholderTranslated(placeholder) {
@@ -237,7 +259,15 @@ export default Ember.Component.extend({
 
     // disable clicking on links in the preview
     this.$('.d-editor-preview').on('click.preview', e => {
-      if ($(e.target).is("a")) {
+      if (wantsNewWindow(e)) { return; }
+      const $target = $(e.target);
+      if ($target.is("a.mention")) {
+        this.appEvents.trigger('click.discourse-preview-user-card-mention', $target);
+      }
+      if ($target.is("a.mention-group")) {
+        this.appEvents.trigger('click.discourse-preview-group-card-mention-group', $target);
+      }
+      if ($target.is("a")) {
         e.preventDefault();
         return false;
       }
@@ -254,6 +284,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _shutDown() {
     if (this.get('composerEvents')) {
+      this.appEvents.off('composer:insert-block');
       this.appEvents.off('composer:insert-text');
       this.appEvents.off('composer:replace-text');
     }
@@ -266,7 +297,9 @@ export default Ember.Component.extend({
 
   @computed
   toolbar() {
-    const toolbar = new Toolbar(this.site);
+    const toolbar = new Toolbar(
+      this.getProperties('site', 'siteSettings', 'showLink')
+    );
     _createCallbacks.forEach(cb => cb(toolbar));
     this.sendAction('extraButtons', toolbar);
     return toolbar;
@@ -312,6 +345,9 @@ export default Ember.Component.extend({
         return obj.text;
       },
       dataSource(term) {
+        if (term.match(/\s/)) {
+          return null;
+        }
         return searchCategoryTag(term, siteSettings);
       },
       triggerRule(textarea, opts) {
@@ -333,7 +369,11 @@ export default Ember.Component.extend({
       },
 
       onKeyUp(text, cp) {
-        return text.substring(0, cp).match(/(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/g);
+        const matches = /(?:^|[^a-z])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(text.substring(0, cp));
+
+        if (matches && matches[1]) {
+          return [ matches[1] ];
+        }
       },
 
       transformComplete(v) {
@@ -646,6 +686,14 @@ export default Ember.Component.extend({
     return null;
   },
 
+  _toggleDirection() {
+    const $textArea = $(".d-editor-input");
+    let currentDir = $textArea.attr('dir') ? $textArea.attr('dir') : siteDir(),
+        newDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
+
+    $textArea.attr('dir', newDir).focus();
+  },
+
   paste(e) {
     if (!$(".d-editor-input").is(":focus")) {
       return;
@@ -714,6 +762,8 @@ export default Ember.Component.extend({
     },
 
     toolbarButton(button) {
+      if (this.get('disabled')) { return; }
+
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
@@ -723,6 +773,7 @@ export default Ember.Component.extend({
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({pre: '', post: ''}, text),
         getText: () => this.get('value'),
+        toggleDirection: () => this._toggleDirection(),
       };
 
       if (button.sendAction) {
@@ -733,11 +784,20 @@ export default Ember.Component.extend({
     },
 
     showLinkModal() {
+      if (this.get('disabled')) { return; }
+
       this._lastSel = this._getSelected();
+
+      if (this._lastSel) {
+        this.set("linkText", this._lastSel.value.trim());
+      }
+
       this.set('insertLinkHidden', false);
     },
 
     formatCode() {
+      if (this.get('disabled')) { return; }
+
       const sel = this._getSelected('', { lineVal: true });
       const selValue = sel.value;
       const hasNewLine = selValue.indexOf("\n") !== -1;
@@ -791,6 +851,7 @@ export default Ember.Component.extend({
     },
 
     emoji() {
+      if (this.get('disabled')) { return; }
       this.set('emojiPickerIsActive', !this.get('emojiPickerIsActive'));
     }
   }

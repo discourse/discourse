@@ -1,31 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
-const SiteSetting = Discourse.Model.extend({
-  overridden: function() {
-    let val = this.get('value'),
-        defaultVal = this.get('default');
+import Setting from 'admin/mixins/setting-object';
 
-    if (val === null) val = '';
-    if (defaultVal === null) defaultVal = '';
-
-    return val.toString() !== defaultVal.toString();
-  }.property('value', 'default'),
-
-  validValues: function() {
-    const vals = [],
-          translateNames = this.get('translate_names');
-
-    this.get('valid_values').forEach(function(v) {
-      if (v.name && v.name.length > 0) {
-        vals.addObject(translateNames ? {name: I18n.t(v.name), value: v.value} : v);
-      }
-    });
-    return vals;
-  }.property('valid_values'),
-
-  allowsNone: function() {
-    if ( _.indexOf(this.get('valid_values'), '') >= 0 ) return 'admin.site_settings.none';
-  }.property('valid_values')
-});
+const SiteSetting = Discourse.Model.extend(Setting, {});
 
 SiteSetting.reopenClass({
   findAll() {

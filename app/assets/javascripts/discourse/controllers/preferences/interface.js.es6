@@ -57,16 +57,24 @@ export default Ember.Controller.extend(PreferencesTabController, {
   },
 
   homeChanged() {
-    const siteHome = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+    const siteHome = this.siteSettings.top_menu.split("|")[0].split(",")[0];
     const userHome = USER_HOMES[this.get('model.user_option.homepage_id')];
+
     setDefaultHomepage(userHome || siteHome);
   },
 
   @computed()
   userSelectableHome() {
-    return _.map(USER_HOMES, (name, num) => {
-      return {name: I18n.t('filters.' + name + '.title'), value: Number(num)};
+    let homeValues = _.invert(USER_HOMES);
+
+    let result = [];
+    this.siteSettings.top_menu.split('|').forEach(m => {
+      let id = homeValues[m];
+      if (id) {
+        result.push({ name: I18n.t(`filters.${m}.title`), value: Number(id) });
+      }
     });
+    return result;
   },
 
   actions: {

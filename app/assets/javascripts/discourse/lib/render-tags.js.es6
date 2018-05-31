@@ -20,9 +20,16 @@ export function addTagsHtmlCallback(callback, options) {
 export default function(topic, params){
   let tags = topic.tags;
   let buffer = "";
+  let tagsForUser = null;
+  const isPrivateMessage = topic.get('isPrivateMessage');
 
-  if (params && params.mode === "list") {
-    tags = topic.get("visibleListTags");
+  if (params) {
+    if (params.mode === "list") {
+      tags = topic.get("visibleListTags");
+    }
+    if (params.tagsForUser) {
+      tagsForUser = params.tagsForUser;
+    }
   }
 
   let customHtml = null;
@@ -43,7 +50,7 @@ export default function(topic, params){
     buffer = "<div class='discourse-tags'>";
     if (tags) {
       for(let i=0; i<tags.length; i++){
-        buffer += renderTag(tags[i]) + ' ';
+        buffer += renderTag(tags[i], { isPrivateMessage, tagsForUser }) + ' ';
       }
     }
 

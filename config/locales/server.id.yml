@@ -17,7 +17,9 @@ id:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januari, Februari, Maret, April, Mei, Juni, Juli, Agustus, September, Oktober, November, Desember]
+    month_names: [~, Januari, Februari, Maret, April, Mei, Juni, Juli, Agustus, September, Oktober, November, Desember]
+    <<: *datetime_formats
+  time:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Topik"
@@ -43,16 +45,16 @@ id:
       present: harus kosong
       confirmation: "tidak cocok dengan %{attribute}"
       empty: tidak boleh kosong
-      equal_to: harus sebanyak %{count}
+      equal_to: "harus sebanyak %{count}"
       even: harus genap
       exclusion: telah dipratentukan oleh sistem
-      greater_than: harus lebih besar dari %{count}
-      greater_than_or_equal_to: harus sama dengan atau lebih besar dari %{count}
+      greater_than: "harus lebih besar dari %{count}"
+      greater_than_or_equal_to: "harus sama dengan atau lebih besar dari %{count}"
       has_already_been_used: "telah digunakan"
       inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
-      less_than: harus kurang dari %{count}
-      less_than_or_equal_to: harus sama dengan atau kurang dari %{count}
+      less_than: "harus kurang dari %{count}"
+      less_than_or_equal_to: "harus sama dengan atau kurang dari %{count}"
       not_a_number: bukan numerik
       not_an_integer: harus integer
       odd: harus ganjil
@@ -79,6 +81,9 @@ id:
       max_username_length_exists: "Anda tidak boleh menentukan jumlah karakter maksimum username dibawah username terpendek. "
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       default_categories_already_selected: "Anda tidak boleh memilih kategori yang digunakan di daftar lainnya."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
@@ -90,32 +95,32 @@ id:
   reading_time: "Waktu bacaan"
   likes: "Suka"
   too_many_replies:
-    other: "Maaft, bagi pengguna baru sementara ini hanya dibatasi hingga %{count} jawaban dalam topik yang sama."
+    other: Maaft, bagi pengguna baru sementara ini hanya dibatasi hingga %{count} jawaban dalam topik yang sama.
   embed:
     start_discussion: "Mulai Diskusi"
     continue: "Lanjutkan Diskusi"
     more_replies:
-      other: "%{count} jawaban lainnya"
+      other: '%{count} jawaban lainnya'
     loading: "Sedang memuat diskusi..."
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      other: "%{count} balasan"
+      other: '%{count} balasan'
   no_mentions_allowed: "Maaf, Anda tidak dapat menyebut pengguna lain."
   too_many_mentions:
-    other: "Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
+    other: Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting.
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
-    other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
+    other: Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting.
   no_images_allowed: "Maaf, pengguna baru tidak diperbolehkan untuk memasang gambar/foto dalam posting."
   too_many_images:
-    other: "Maaf, pengguna baru hanya diperbolehkan untuk memasang %{count} gambar/foto dalam satu posting."
+    other: Maaf, pengguna baru hanya diperbolehkan untuk memasang %{count} gambar/foto dalam satu posting.
   no_attachments_allowed: "Maaf, pengguna baru tidak diijinkan untuk mengunggah file/attachment dalam posting."
   too_many_attachments:
-    other: "Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting."
+    other: Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting.
   no_links_allowed: "Maaf, pengguna baru tidak diijinkan untuk menulis tautan dalam posting."
   too_many_links:
-    other: "Maaf, pengguna baru hanya diijinkan untuk menulis %{count} tautan dalam satu posting."
+    other: Maaf, pengguna baru hanya diijinkan untuk menulis %{count} tautan dalam satu posting.
   spamming_host: "Maaf, Anda tidak dapat mencantumkan tautan ke host tersebut."
   user_is_suspended: "Pengguna yang dalam masa suspensi tidak diperbolehkan untuk membuat posting."
   topic_not_found: "Ada yang salah. Mungkin topik ini ditutup atau dihapus ketika Anda sedang menjelajahinya?"
@@ -138,7 +143,6 @@ id:
     hot: "Topik Terpanas"
     top: "Topik unggulan"
     posts: "Pos terbaru"
-    private_posts: "pesan pribadi terkini"
     group_posts: "Posting terkini dari %{group_name}"
     group_mentions: "Mention terkini dari %{group_name}"
     user_topics: "Topik terakhir oleh @%{username}"
@@ -146,7 +150,6 @@ id:
   groups:
     errors:
       can_not_modify_automatic: "Anda tidak bisa mengubah grup otomatis."
-      member_already_exist: "'%{username}' telah menjadi anggota grup ini."
       invalid_domain: "'%{domain}' bukan domain yang valid."
       invalid_incoming_email: "'%{email}' bukanlah alamat email yang valid."
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
@@ -163,7 +166,7 @@ id:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      other: "%{count} post"
+      other: '%{count} post'
   activerecord:
     attributes:
       category:
@@ -175,12 +178,11 @@ id:
       user_profile:
         bio_raw: "Tentang Saya"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Anda hanya dapat melampirkan peringatan pada pesan pribadi."
-              cant_send_pm: "Mohon maaf, Anda tidak dapat mengirimkan pesan pribadi pada pengguna tersebut."
               no_user_selected: "Anda harus memilih pengguna yang valid."
         user:
           attributes:
@@ -195,7 +197,6 @@ id:
           attributes:
             hex:
               invalid: "bukan warna yang valid."
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"
   vip_category_name: "Lounge / Santai"
@@ -222,38 +223,37 @@ id:
     leader:
       title: "pemimpin"
   rate_limiter:
-    too_many_requests: "Kami membatasi jumlah tindakan itu dapat dilakukan dalam satu hari. Mohon tunggu %{time_left} sebelum mencoba lagi."
     hours:
-      other: "%{count} jam"
+      other: '%{count} jam'
     minutes:
-      other: "%{count} menit"
+      other: '%{count} menit'
     seconds:
-      other: "%{count} detik"
+      other: '%{count} detik'
   datetime:
     distance_in_words_verbose:
       half_a_minute: "baru saja"
       less_than_x_seconds:
-        other: "baru saja"
+        other: baru saja
       x_seconds:
-        other: "%{count} detik yang lalu"
+        other: '%{count} detik yang lalu'
       less_than_x_minutes:
-        other: "kurang dari %{count} menit yang lalu"
+        other: kurang dari %{count} menit yang lalu
       x_minutes:
-        other: "%{count} menit yang lalu"
+        other: '%{count} menit yang lalu'
       about_x_hours:
-        other: "%{count} jam yang lalu"
+        other: '%{count} jam yang lalu'
       x_days:
-        other: "%{count} hari yang lalu"
+        other: '%{count} hari yang lalu'
       about_x_months:
-        other: "sekitar %{count} bulan yang lalu"
+        other: sekitar %{count} bulan yang lalu
       x_months:
-        other: "%{count} bulan yang lalu"
+        other: '%{count} bulan yang lalu'
       about_x_years:
-        other: "sekitar %{count} tahun yang lalu"
+        other: sekitar %{count} tahun yang lalu
       over_x_years:
-        other: "lebih dari %{count} tahun yang lalu"
+        other: lebih dari %{count} tahun yang lalu
       almost_x_years:
-        other: "hampir %{count} tahun yang lalu"
+        other: hampir %{count} tahun yang lalu
   password_reset:
     update: 'Perbaharui Kata Sandi'
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
@@ -310,9 +310,7 @@ id:
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
-      title: "Pengguna Baru"
       xaxis: "Hari"
-      yaxis: "Jumlah pengguna baru"
     profile_views:
       xaxis: "Hari"
     topics:
@@ -347,7 +345,6 @@ id:
       xaxis: "Hari"
       yaxis: "Jumlah Surel"
     user_to_user_private_messages:
-      title: "Pengguna-ke-Pengguna"
       xaxis: "Hari"
       yaxis: "Jumlah Pesan"
     system_private_messages:
@@ -387,7 +384,6 @@ id:
       title: "Penjelajah Web"
       xaxis: "Hari"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Hari"
     page_view_logged_in_mobile_reqs:
       xaxis: "Hari"
@@ -447,7 +443,7 @@ id:
   system_messages:
     pending_users_reminder:
       subject_template:
-        other: "%{count} pengguna sedang menunggu persetujuan"
+        other: '%{count} pengguna sedang menunggu persetujuan'
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
@@ -467,8 +463,3 @@ id:
     title: "Ketentuan Layanan"
   privacy_topic:
     title: "Kebijakan Privasi"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

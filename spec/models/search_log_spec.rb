@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.describe SearchLog, type: :model do
 
+  after do
+    SearchLog.clear_debounce_cache!
+  end
+
   describe ".log" do
 
     context "invalid arguments" do
@@ -122,6 +126,7 @@ RSpec.describe SearchLog, type: :model do
         expect(action).to eq(:created)
 
         freeze_time(10.minutes.from_now)
+        $redis.del(SearchLog.redis_key(ip_address: '192.168.0.1', user_id: user.id))
 
         action, _ = SearchLog.log(
           term: 'hello',
@@ -172,6 +177,7 @@ RSpec.describe SearchLog, type: :model do
 
       SearchLog.where(term: 'ruby', ip_address: '127.0.0.2').update_all(search_result_id: 24)
       term_click_through_details = SearchLog.term_details("ruby", :all, :click_through_only)
+      expect(term_click_through_details[:period]).to eq("all")
       expect(term_click_through_details[:data][0][:y]).to eq(1)
     end
   end

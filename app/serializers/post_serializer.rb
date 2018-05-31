@@ -69,7 +69,8 @@ class PostSerializer < BasicPostSerializer
              :is_auto_generated,
              :action_code,
              :action_code_who,
-             :last_wiki_edit
+             :last_wiki_edit,
+             :locked
 
   def initialize(object, opts)
     super(object, opts)
@@ -81,7 +82,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def topic_slug
-    object.topic && object.topic.slug
+    topic&.slug
   end
 
   def include_topic_title?
@@ -97,15 +98,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def topic_title
-    object.topic.title
+    topic&.title
   end
 
   def topic_html_title
-    object.topic.fancy_title
+    topic&.fancy_title
   end
 
   def category_id
-    object.topic.category_id
+    topic&.category_id
   end
 
   def moderator?
@@ -354,6 +355,15 @@ class PostSerializer < BasicPostSerializer
     include_action_code? && action_code_who.present?
   end
 
+  def locked
+    true
+  end
+
+  # Only show locked posts to the users who made the post and staff
+  def include_locked?
+    object.locked? && (yours || scope.is_staff?)
+  end
+
   def last_wiki_edit
     object.revisions.last.updated_at
   end
@@ -364,7 +374,17 @@ class PostSerializer < BasicPostSerializer
     object.revisions.size > 0
   end
 
+  def include_hidden_reason_id?
+    object.hidden
+  end
+
   private
+
+    def topic
+      @topic = object.topic
+      @topic ||= Topic.with_deleted.find(object.topic_id) if scope.is_staff?
+      @topic
+    end
 
     def post_actions
       @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]

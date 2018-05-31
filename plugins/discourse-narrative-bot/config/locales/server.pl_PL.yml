@@ -297,12 +297,6 @@ pl_PL:
         reply: |-
           Wspaniale! Pamiętaj, że działa to zarówno dla kategorii _i_ tagów, jeśli taka możliwość jest dostępna.
       change_topic_notification_level:
-        instructions: |-
-          Każdy temat ma swój poziom notyfikacji. Pierwszym poziomem jest "normalny', co oznacza, że będziesz informowany jedynie w przypadku, gdy ktoś zwróci się bezpośrednio do ciebie.
-
-          Domyślnie, poziom notyfikacji dla wiadomości prywatnych jest ustawiony na najwyższym poziomie, oznacza to, że będziesz informowany o każdej nowej odpowiedzi. Możesz zmienić poziom notyfikacji dla _każdego_ tematu na "obserwuj", "śledź" lub "wycisz".
-
-          Spróbujmy zmienić poziom notyfikacji dla tego tematu. Na dole każdego tematu znajdziesz przycisk, który pokaże, że **obserwujesz** ten temat. Czy możesz zmienić poziom notyfikacji na **śledź**?
         not_found: |-
           Wygląda na to, że ciągle obserwujesz :eyes: ten temat! Jeśli masz problem w znalezieniu, przycisk poziomu notyfikacji znajduję się na dole tego tematu.
         reply: |-

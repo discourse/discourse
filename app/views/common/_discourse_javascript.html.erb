@@ -42,13 +42,15 @@
     Discourse.BaseUri = '<%= Discourse::base_uri %>';
     Discourse.Environment = '<%= Rails.env %>';
     Discourse.SiteSettings = ps.get('siteSettings');
+    Discourse.ThemeSettings = ps.get('themeSettings');
     Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
     Discourse.MarkdownItURL = '<%= asset_url('markdown-it-bundle.js') %>';
+    Discourse.ServiceWorkerURL = Discourse.Environment != "development" ? '<%= Rails.application.assets_manifest.assets['service-worker.js'] %>' : 'service-worker.js';
     I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
     Discourse.start();
     Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
     Discourse.Session.currentProp("disableCustomCSS", <%= loading_admin? %>);
-    <%- if params["safe_mode"] %>
+    <%- if guardian.can_enable_safe_mode? && params["safe_mode"] %>
     Discourse.Session.currentProp("safe_mode", <%= normalized_safe_mode.inspect.html_safe %>);
     <%- end %>
     Discourse.HighlightJSPath = <%= HighlightJs.path.inspect.html_safe %>;

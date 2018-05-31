@@ -116,6 +116,9 @@ describe Scheduler::Manager do
 
   describe 'per host jobs' do
     it "correctly schedules on multiple hosts" do
+
+      freeze_time
+
       Testing::PerHostJob.runs = 0
 
       hosts = ['a', 'b', 'c']
@@ -126,7 +129,7 @@ describe Scheduler::Manager do
         manager.ensure_schedule!(Testing::PerHostJob)
 
         info = manager.schedule_info(Testing::PerHostJob)
-        info.next_run = Time.now.to_i - 1
+        info.next_run = Time.now.to_i - 10
         info.write!
 
         manager
@@ -137,6 +140,7 @@ describe Scheduler::Manager do
         manager.stop!
 
       end
+
       expect(Testing::PerHostJob.runs).to eq(3)
     end
   end

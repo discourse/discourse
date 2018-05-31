@@ -7,6 +7,10 @@ export default SelectKitRowComponent.extend({
   layoutName: "select-kit/templates/components/category-row",
   classNames: "category-row",
 
+  hideParentCategory: Ember.computed.bool("options.hideParentCategory"),
+  allowUncategorized: Ember.computed.bool("options.allowUncategorized"),
+  categoryLink: Ember.computed.bool("options.categoryLink"),
+
   @computed("options.displayCategoryDescription")
   displayCategoryDescription(displayCategoryDescription) {
     if (Ember.isNone(displayCategoryDescription)) {
@@ -14,6 +18,12 @@ export default SelectKitRowComponent.extend({
     }
 
     return displayCategoryDescription;
+  },
+
+  @computed("description", "category.name")
+  title(categoryDescription, categoryName) {
+    if (categoryDescription) return categoryDescription;
+    return categoryName;
   },
 
   @computed("computedContent.value", "computedContent.name")
@@ -28,18 +38,21 @@ export default SelectKitRowComponent.extend({
     }
   },
 
-  @computed("category")
-  badgeForCategory(category) {
+  @computed("category", "parentCategory")
+  badgeForCategory(category, parentCategory) {
     return categoryBadgeHTML(category, {
-      link: false,
-      allowUncategorized: true,
-      hideParent: true
+      link: this.get("categoryLink"),
+      allowUncategorized: this.get("allowUncategorized"),
+      hideParent: parentCategory ? true : false
     }).htmlSafe();
   },
 
   @computed("parentCategory")
   badgeForParentCategory(parentCategory) {
-    return categoryBadgeHTML(parentCategory, {link: false}).htmlSafe();
+    return categoryBadgeHTML(parentCategory, {
+      link: this.get("categoryLink"),
+      allowUncategorized: this.get("allowUncategorized")
+    }).htmlSafe();
   },
 
   @computed("parentCategoryid")
@@ -57,7 +70,10 @@ export default SelectKitRowComponent.extend({
     return category.get("parent_category_id");
   },
 
-  topicCount: Ember.computed.alias("category.topic_count"),
+  @computed("category.topic_count")
+  topicCount(topicCount) {
+    return `&times; ${topicCount}`.htmlSafe();
+  },
 
   @computed("displayCategoryDescription", "category.description")
   shouldDisplayDescription(displayCategoryDescription, description) {
@@ -66,6 +82,8 @@ export default SelectKitRowComponent.extend({
 
   @computed("category.description")
   description(description) {
-    return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    if (description) {
+      return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    }
   }
 });

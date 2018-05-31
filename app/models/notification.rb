@@ -58,27 +58,24 @@ class Notification < ActiveRecord::Base
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
-    count = Notification
-      .where(user_id: user.id,
-             topic_id: topic_id,
-             post_number: post_numbers,
-             read: false)
-      .update_all("read = 't'")
-
-    if count > 0
-      user.publish_notifications_state
-    end
-
-    count
+    Notification
+      .where(
+        user_id: user.id,
+        topic_id: topic_id,
+        post_number: post_numbers,
+        read: false
+      )
+      .update_all(read: true)
   end
 
   def self.read(user, notification_ids)
-    count = Notification.where(user_id: user.id)
-      .where(id: notification_ids)
-      .where(read: false)
+    Notification
+      .where(
+        id: notification_ids,
+        user_id: user.id,
+        read: false
+      )
       .update_all(read: true)
-
-    user.publish_notifications_state if count > 0
   end
 
   def self.interesting_after(min_date)
@@ -202,7 +199,11 @@ class Notification < ActiveRecord::Base
   protected
 
   def refresh_notification_count
-    user.publish_notifications_state
+    begin
+      user.reload.publish_notifications_state
+    rescue ActiveRecord::RecordNotFound
+      # happens when we delete a user
+    end
   end
 
   def send_email

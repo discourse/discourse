@@ -48,13 +48,17 @@ export default Ember.Component.extend({
           action_name: this.get('actionName')
         });
         screenedIpAddress.save().then(result => {
-          this.setProperties({ ip_address: '', formSubmitted: false });
-          this.sendAction('action', ScreenedIpAddress.create(result.screened_ip_address));
-          Ember.run.schedule('afterRender', () => this.$('.ip-address-input').focus());
+          if (result.success) {
+            this.setProperties({ ip_address: '', formSubmitted: false });
+            this.sendAction('action', ScreenedIpAddress.create(result.screened_ip_address));
+            Ember.run.schedule('afterRender', () => this.$('.ip-address-input').focus());
+          } else {
+            bootbox.alert(result.errors);
+          }
         }).catch(e => {
           this.set('formSubmitted', false);
-          const msg = (e.responseJSON && e.responseJSON.errors) ?
-                      I18n.t("generic_error_with_reason", {error: e.responseJSON.errors.join('. ')}) :
+          const msg = (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) ?
+                      I18n.t("generic_error_with_reason", {error: e.jqXHR.responseJSON.errors.join('. ')}) :
                       I18n.t("generic_error");
           bootbox.alert(msg, () => this.$('.ip-address-input').focus());
         });

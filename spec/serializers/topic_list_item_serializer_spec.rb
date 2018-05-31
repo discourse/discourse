@@ -43,4 +43,25 @@ describe TopicListItemSerializer do
       expect(serialized[:featured_link_root_domain]).to eq(nil)
     end
   end
+
+  describe 'hidden tags' do
+    let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+    let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      staff_tag_group
+      topic.tags << hidden_tag
+    end
+
+    it 'returns hidden tag to staff' do
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+      expect(json[:tags]).to eq([hidden_tag.name])
+    end
+
+    it 'does not return hidden tag to non-staff' do
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(Fabricate(:user)), root: false).as_json
+      expect(json[:tags]).to eq([])
+    end
+  end
 end

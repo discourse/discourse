@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_cache'
 
 class ColorScheme < ActiveRecord::Base
@@ -43,12 +45,7 @@ class ColorScheme < ActiveRecord::Base
 
   alias_method :colors, :color_scheme_colors
 
-  before_save do
-    if self.id
-      self.version += 1
-    end
-  end
-
+  before_save :bump_version
   after_save :publish_discourse_stylesheet
   after_save :dump_hex_cache
   after_destroy :dump_hex_cache
@@ -113,12 +110,12 @@ class ColorScheme < ActiveRecord::Base
 
   def self.lookup_hex_for_name(name)
     enabled_color_scheme = Theme.where(key: SiteSetting.default_theme_key).first&.color_scheme
-    (enabled_color_scheme || base).colors.find { |c| c.name == name }.try(:hex) || :nil
+    (enabled_color_scheme || base).colors.find { |c| c.name == name }.try(:hex) || "nil"
   end
 
   def self.hex_for_name(name)
     hex_cache[name] ||= lookup_hex_for_name(name)
-    hex_cache[name] == :nil ? nil : hex_cache[name]
+    hex_cache[name] == "nil" ? nil : hex_cache[name]
   end
 
   def colors=(arr)
@@ -180,6 +177,12 @@ class ColorScheme < ActiveRecord::Base
     self.class.hex_cache.clear
   end
 
+  def bump_version
+    if self.id
+      self.version += 1
+    end
+  end
+
 end
 
 # == Schema Information
@@ -187,7 +190,7 @@ end
 # Table name: color_schemes
 #
 #  id             :integer          not null, primary key
-#  name           :string(255)      not null
+#  name           :string           not null
 #  version        :integer          default(1), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null

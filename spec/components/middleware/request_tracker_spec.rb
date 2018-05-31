@@ -6,8 +6,10 @@ describe Middleware::RequestTracker do
   def env(opts = {})
     {
       "HTTP_HOST" => "http://test.com",
+      "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
+      "HTTP_ACCEPT" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
       "rack.input" => ""
     }.merge(opts)
   end
@@ -104,7 +106,7 @@ describe Middleware::RequestTracker do
     end
 
     it "does nothing by default" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
 
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
@@ -112,9 +114,76 @@ describe Middleware::RequestTracker do
       expect(status).to eq(200)
     end
 
+    it "blocks private IPs if not skipped" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn+block'
+      global_setting :max_reqs_rate_limit_on_private, true
+
+      env1 = env("REMOTE_ADDR" => "127.0.0.2")
+
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
+
+      expect(Rails.logger.warnings).to eq(1)
+      expect(status).to eq(429)
+    end
+
+    describe "register_ip_skipper" do
+      before do
+        Middleware::RequestTracker.register_ip_skipper do |ip|
+          ip == "1.1.1.2"
+        end
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, 'block'
+      end
+
+      after do
+        Middleware::RequestTracker.unregister_ip_skipper
+      end
+
+      it "won't block if the ip is skipped" do
+        env1 = env("REMOTE_ADDR" => "1.1.1.2")
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+      end
+
+      it "blocks if the ip isn't skipped" do
+        env1 = env("REMOTE_ADDR" => "1.1.1.1")
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        expect(status).to eq(429)
+      end
+    end
+
+    it "does nothing for private IPs if skipped" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn+block'
+      global_setting :max_reqs_rate_limit_on_private, false
+
+      env1 = env("REMOTE_ADDR" => "127.0.3.1")
+
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
+
+      expect(Rails.logger.warnings).to eq(0)
+      expect(status).to eq(200)
+    end
+
+    it "does warn if rate limiter is enabled via warn+block" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn+block'
+
+      status, _ = middleware.call(env)
+      status, _ = middleware.call(env)
+
+      expect(Rails.logger.warnings).to eq(1)
+      expect(status).to eq(429)
+    end
+
     it "does warn if rate limiter is enabled" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
-      global_setting :max_requests_per_ip_mode, 'warn'
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn'
 
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
@@ -123,21 +192,43 @@ describe Middleware::RequestTracker do
       expect(status).to eq(200)
     end
 
+    it "allows assets for more requests" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'block'
+      global_setting :max_asset_reqs_per_ip_per_10_seconds, 3
+
+      env1 = env("REMOTE_ADDR" => "1.1.1.1", "DISCOURSE_IS_ASSET_PATH" => 1)
+
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(429)
+
+      env2 = env("REMOTE_ADDR" => "1.1.1.1")
+
+      status, _ = middleware.call(env2)
+      expect(status).to eq(429)
+    end
+
     it "does block if rate limiter is enabled" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
-      global_setting :max_requests_per_ip_mode, 'block'
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'block'
 
       env1 = env("REMOTE_ADDR" => "1.1.1.1")
       env2 = env("REMOTE_ADDR" => "1.1.1.2")
 
       status, _ = middleware.call(env1)
-      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
 
+      status, _ = middleware.call(env1)
       expect(status).to eq(429)
 
       status, _ = middleware.call(env2)
       expect(status).to eq(200)
-
     end
   end
 
@@ -145,7 +236,7 @@ describe Middleware::RequestTracker do
     def app(result, sql_calls: 0, redis_calls: 0)
       lambda do |env|
         sql_calls.times do
-          User.where(id: -100).first
+          User.where(id: -100).pluck(:id)
         end
         redis_calls.times do
           $redis.get("x")
@@ -166,12 +257,23 @@ describe Middleware::RequestTracker do
     end
 
     after do
-      Middleware::RequestTracker.register_detailed_request_logger(logger)
+      Middleware::RequestTracker.unregister_detailed_request_logger(logger)
     end
 
     it "can correctly log detailed data" do
+
+      # ensure pg is warmed up with the select 1 query
+      User.where(id: -100).pluck(:id)
+
+      freeze_time
+      start = Time.now.to_f
+
+      freeze_time 1.minute.from_now
+
       tracker = Middleware::RequestTracker.new(app([200, {}, []], sql_calls: 2, redis_calls: 2))
-      tracker.call(env)
+      tracker.call(env("HTTP_X_REQUEST_START" => "t=#{start}"))
+
+      expect(@data[:queue_seconds]).to eq(60)
 
       timing = @data[:timing]
       expect(timing[:total_duration]).to be > 0
@@ -183,4 +285,58 @@ describe Middleware::RequestTracker do
       expect(timing[:redis][:calls]).to eq 2
     end
   end
+
+  context "crawler blocking" do
+    let :middleware do
+      app = lambda do |env|
+        [200, {}, ['OK']]
+      end
+
+      Middleware::RequestTracker.new(app)
+    end
+
+    def expect_success_response(status, _, response)
+      expect(status).to eq(200)
+      expect(response).to eq(['OK'])
+    end
+
+    def expect_blocked_response(status, _, response)
+      expect(status).to eq(403)
+      expect(response).to eq(['Crawler is not allowed'])
+    end
+
+    it "applies whitelisted_crawler_user_agents correctly" do
+      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
+    end
+
+    it "applies blacklisted_crawler_user_agents correctly" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
+    end
+
+    it "blocked crawlers shouldn't log page views" do
+      ApplicationRequest.clear_cache!
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect {
+        middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'))
+        ApplicationRequest.write_cache!
+      }.to_not change { ApplicationRequest.count }
+    end
+
+    it "blocks json requests" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect_blocked_response(*middleware.call(env(
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)',
+        'HTTP_ACCEPT' => 'application/json'
+      )))
+    end
+  end
+
 end

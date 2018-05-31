@@ -6,6 +6,10 @@
     </div>
   {{/if}}
 
+  {{#if showSharedDraftControls}}
+    {{shared-draft-controls topic=model}}
+  {{/if}}
+
   {{plugin-outlet name="topic-above-post-stream" args=(hash model=model)}}
 
   {{#if model.postStream.loaded}}
@@ -22,7 +26,7 @@
             {{/if}}
 
             {{#if canEditTags}}
-              {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
+              {{mini-tag-chooser filterable=true tags=buffered.tags categoryId=buffered.category_id}}
             {{/if}}
 
             {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
@@ -42,9 +46,13 @@
         {{else}}
           <h1>
             {{#unless model.is_warning}}
-              <a href={{pmPath}}>
+              {{#if siteSettings.enable_personal_messages}}
+                <a href={{pmPath}}>
+                  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+                </a>
+              {{else}}
                 <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-              </a>
+              {{/if}}
             {{/unless}}
 
             {{#if model.details.loaded}}
@@ -59,12 +67,11 @@
             {{/if}}
           </h1>
 
-          {{#unless model.isPrivateMessage}}
-            {{topic-category topic=model class="topic-category"}}
-          {{/unless}}
+          {{topic-category topic=model class="topic-category"}}
         {{/if}}
       {{/topic-title}}
     {{/if}}
+
 
     <div class="container posts">
       <div class='selected-posts {{unless multiSelect 'hidden'}}'>
@@ -170,6 +177,9 @@
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
+                grantBadge=(action "grantBadge")
+                lockPost=(action "lockPost")
+                unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
@@ -246,6 +256,7 @@
                     showFlagTopic=(action "topicRouteAction" "showFlagTopic")
                     showInvite=(action "topicRouteAction" "showInvite")
                     toggleArchiveMessage=(action "toggleArchiveMessage")
+                    editFirstPost=(action "editFirstPost")
                     replyToPost=(action "replyToPost")
                     }}
                 {{else}}

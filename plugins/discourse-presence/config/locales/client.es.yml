@@ -11,5 +11,5 @@ es:
       replying: "respondiendo"
       editing: "editando"
       replying_to_topic:
-        one: "está respondiendo"
-        other: "están respondiendo"
+        one: "respondiendo"
+        other: "respondiendo"

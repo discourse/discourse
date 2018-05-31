@@ -6,7 +6,13 @@
           <a class="close" {{action closeModal}}>{{d-icon "times"}}</a>
         </div>
 
-        <h3>{{title}}</h3>
+        <div class="title">
+          <h3>{{title}}</h3>
+
+          {{#if subtitle}}
+            <p>{{subtitle}}</p>
+          {{/if}}
+        </div>
       </div>
 
       <div id='modal-alert'></div>

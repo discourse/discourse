@@ -1,0 +1,50 @@
+{{#component headerComponent
+  tabindex=tabindex
+  isFocused=isFocused
+  isExpanded=isExpanded
+  highlightedSelection=highlightedSelection
+  onClickSelectionItem=(action "onClickSelectionItem")
+  computedContent=headerComputedContent
+  onToggle=(action "onToggle")
+  options=headerComponentOptions
+}}
+  {{component filterComponent
+    icon=filterIcon
+    placeholder=filterPlaceholder
+    filter=filter
+    hasSelection=hasSelection
+    isLoading=isLoading
+    shouldDisplayFilter=shouldDisplayFilter
+    isFocused=isFocused
+    onFilterComputedContent=(action "onFilterComputedContent")
+  }}
+{{/component}}
+
+<div class="select-kit-body">
+  {{#if renderedBodyOnce}}
+  {{#unless isLoading}}
+    {{component collectionComponent
+      collectionHeaderComputedContent=collectionHeaderComputedContent
+      hasSelection=hasSelection
+      noneRowComputedContent=noneRowComputedContent
+      createRowComputedContent=createRowComputedContent
+      collectionComputedContent=collectionComputedContent
+      rowComponent=rowComponent
+      noneRowComponent=noneRowComponent
+      createRowComponent=createRowComponent
+      templateForRow=templateForRow
+      templateForNoneRow=templateForNoneRow
+      templateForCreateRow=templateForCreateRow
+      onClickRow=(action "onClickRow")
+      onMouseoverRow=(action "onMouseoverRow")
+      highlighted=highlighted
+      computedValue=computedValue
+      rowComponentOptions=rowComponentOptions
+      noContentRow=noContentRow
+      validationMessage=validationMessage
+    }}
+  {{/unless}}
+  {{/if}}
+</div>
+
+<div class="select-kit-wrapper"></div>

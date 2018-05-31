@@ -12,17 +12,17 @@ class UserNotifications < ActionMailer::Base
   include Email::BuildEmailHelper
 
   def signup(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.signup",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.signup",
+      user,
+      opts[:email_token]
+    )
   end
 
   def signup_after_approval(user, opts = {})
     build_email(user.email,
                 template: 'user_notifications.signup_after_approval',
                 locale: user_locale(user),
-                email_token: opts[:email_token],
                 new_user_tips: I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url, locale: locale))
   end
 
@@ -34,38 +34,51 @@ class UserNotifications < ActionMailer::Base
   end
 
   def confirm_old_email(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.confirm_old_email",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.confirm_old_email",
+      user,
+      opts[:email_token]
+    )
   end
 
   def confirm_new_email(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.confirm_new_email",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.confirm_new_email",
+      user,
+      opts[:email_token]
+    )
   end
 
   def forgot_password(user, opts = {})
-    build_email(user.email,
-                template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
+      user,
+      opts[:email_token]
+    )
+  end
+
+  def email_login(user, opts = {})
+    build_user_email_token_by_template(
+      "user_notifications.email_login",
+      user,
+      opts[:email_token]
+    )
   end
 
   def admin_login(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.admin_login",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.admin_login",
+      user,
+      opts[:email_token]
+    )
   end
 
   def account_created(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.account_created",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.account_created",
+      user,
+      opts[:email_token]
+    )
   end
 
   def account_silenced(user, opts = nil)
@@ -102,6 +115,15 @@ class UserNotifications < ActionMailer::Base
     build_email(
       user.email,
       template: 'user_notifications.account_exists',
+      locale: user_locale(user),
+      email: user.email
+    )
+  end
+
+  def account_second_factor_disabled(user, opts = {})
+    build_email(
+      user.email,
+      template: 'user_notifications.account_second_factor_disabled',
       locale: user_locale(user),
       email: user.email
     )
@@ -245,6 +267,7 @@ class UserNotifications < ActionMailer::Base
     opts[:use_site_subject] = true
     opts[:add_re_to_subject] = true
     opts[:show_category_in_subject] = false
+    opts[:show_group_in_subject] = true if SiteSetting.group_in_subject
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
     opts[:notification_type] = 'posted'
@@ -359,6 +382,7 @@ class UserNotifications < ActionMailer::Base
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],
       show_category_in_subject: opts[:show_category_in_subject],
+      show_group_in_subject: opts[:show_group_in_subject],
       notification_type: notification_type,
       use_invite_template: opts[:use_invite_template],
       user: user
@@ -397,7 +421,7 @@ class UserNotifications < ActionMailer::Base
     end
 
     # category name
-    category = Topic.find_by(id: post.topic_id).category
+    category = Topic.find_by(id: post.topic_id)&.category
     if opts[:show_category_in_subject] && post.topic_id && category && !category.uncategorized?
       show_category_in_subject = category.name
 
@@ -407,6 +431,33 @@ class UserNotifications < ActionMailer::Base
       end
     else
       show_category_in_subject = nil
+    end
+
+    if post.topic.private_message?
+      subject_pm =
+        if opts[:show_group_in_subject] && group = post.topic.allowed_groups&.first
+          if group.full_name
+            "[#{group.full_name}] "
+          else
+            "[#{group.name}] "
+          end
+        else
+          I18n.t('subject_pm')
+        end
+
+      participants = "#{I18n.t("user_notifications.pm_participants")} "
+      participant_list = []
+      post.topic.allowed_groups.each do |group|
+        participant_list.push "[#{group.name} (#{group.users.count})](#{Discourse.base_url}/groups/#{group.name})"
+      end
+      post.topic.allowed_users.each do |user|
+        if SiteSetting.prioritize_username_in_ux?
+          participant_list.push "[#{user.username}](#{Discourse.base_url}/u/#{user.username_lower})"
+        else
+          participant_list.push "[#{user.name.blank? ? user.username : user.name}](#{Discourse.base_url}/u/#{user.username_lower})"
+        end
+      end
+      participants += participant_list.join(", ")
     end
 
     if SiteSetting.private_email?
@@ -510,6 +561,8 @@ class UserNotifications < ActionMailer::Base
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
       private_reply: post.topic.private_message?,
+      subject_pm: subject_pm,
+      participants: participants,
       include_respond_instructions: !(user.suspended? || user.staged?),
       template: template,
       site_description: SiteSetting.site_description,
@@ -532,6 +585,15 @@ class UserNotifications < ActionMailer::Base
   end
 
   private
+
+  def build_user_email_token_by_template(template, user, email_token)
+    build_email(
+      user.email,
+      template: template,
+      locale: user_locale(user),
+      email_token: email_token
+    )
+  end
 
   def build_summary_for(user)
     @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title # used by I18n

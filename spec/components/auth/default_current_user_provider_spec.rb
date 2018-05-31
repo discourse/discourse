@@ -88,6 +88,19 @@ describe Auth::DefaultCurrentUserProvider do
       expect(provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
     end
 
+    it "finds a user for a correct system api key with external id" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", created_by_id: -1)
+      SingleSignOnRecord.create(user_id: user.id, external_id: "abc", last_payload: '')
+      expect(provider("/?api_key=hello&api_user_external_id=abc").current_user.id).to eq(user.id)
+    end
+
+    it "finds a user for a correct system api key with id" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", created_by_id: -1)
+      expect(provider("/?api_key=hello&api_user_id=#{user.id}").current_user.id).to eq(user.id)
+    end
+
     context "rate limiting" do
       before do
         RateLimiter.enable
@@ -154,26 +167,6 @@ describe Auth::DefaultCurrentUserProvider do
   it "should update last seen for non ajax" do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
-  end
-
-  it "correctly supports legacy tokens" do
-    user = Fabricate(:user)
-    token = SecureRandom.hex(16)
-    user_token = UserAuthToken.create!(user_id: user.id, auth_token: token,
-                                       prev_auth_token: token, legacy: true,
-                                       rotated_at: Time.zone.now
-                                      )
-
-    prov = provider("/", "HTTP_COOKIE" => "_t=#{user_token.auth_token}")
-    expect(prov.current_user.id).to eq(user.id)
-
-    # sets a new token up cause it got a global token
-    cookies = {}
-    prov.refresh_session(user, {}, cookies)
-    user.reload
-
-    expect(user.user_auth_tokens.count).to eq(2)
-    expect(cookies["_t"][:value]).not_to eq(token)
   end
 
   it "correctly rotates tokens" do
@@ -318,6 +311,13 @@ describe Auth::DefaultCurrentUserProvider do
 
     freeze_time 3.hours.from_now
     expect(provider("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token}").current_user).to eq(nil)
+  end
+
+  it "always unstage users" do
+    staged_user = Fabricate(:user, staged: true)
+    provider("/").log_on_user(staged_user, {}, {})
+    staged_user.reload
+    expect(staged_user.staged).to eq(false)
   end
 
   context "user api" do

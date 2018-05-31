@@ -501,8 +501,8 @@ module BackupRestore
 
     def log(message)
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-      puts(message) rescue nil
-      publish_log(message, timestamp) rescue nil
+      puts(message)
+      publish_log(message, timestamp)
       save_log(message, timestamp)
     end
 

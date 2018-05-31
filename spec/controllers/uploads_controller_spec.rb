@@ -5,7 +5,8 @@ describe UploadsController do
   context '.create' do
 
     it 'requires you to be logged in' do
-      expect { post :create, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      post :create, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'logged in' do
@@ -58,21 +59,20 @@ describe UploadsController do
         expect(id).to be
       end
 
-      it 'is successful with synchronous api' do
+      it 'is successful with api' do
         SiteSetting.authorized_extensions = "*"
         controller.stubs(:is_api?).returns(true)
 
+        FinalDestination.stubs(:lookup_ip).returns("1.2.3.4")
+
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
 
-        stub_request(:head, 'http://example.com/image.png')
-        stub_request(:get, "http://example.com/image.png").to_return(body: File.read('spec/fixtures/images/logo.png'))
+        url = "http://example.com/image.png"
+        png = File.read(Rails.root + "spec/fixtures/images/logo.png")
 
-        post :create, params: {
-          url: 'http://example.com/image.png',
-          type: "avatar",
-          synchronous: true,
-          format: :json
-        }
+        stub_request(:get, url).to_return(status: 200, body: png)
+
+        post :create, params: { url: url, type: "avatar", format: :json }
 
         json = ::JSON.parse(response.body)
 
@@ -145,6 +145,36 @@ describe UploadsController do
         expect(response).to be_success
         id = JSON.parse(response.body)["id"]
         expect(id).to be
+      end
+
+      it 'respects `authorized_extensions_for_staff` setting when staff upload file' do
+        SiteSetting.authorized_extensions = ""
+        SiteSetting.authorized_extensions_for_staff = "*"
+        @user.update_columns(moderator: true)
+
+        post :create, params: {
+          file: text_file,
+          type: "composer",
+          format: :json
+        }
+
+        expect(response).to be_success
+        data = JSON.parse(response.body)
+        expect(data["id"]).to be
+      end
+
+      it 'ignores `authorized_extensions_for_staff` setting when non-staff upload file' do
+        SiteSetting.authorized_extensions = ""
+        SiteSetting.authorized_extensions_for_staff = "*"
+
+        post :create, params: {
+          file: text_file,
+          type: "composer",
+          format: :json
+        }
+
+        data = JSON.parse(response.body)
+        expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ''))
       end
 
       it 'returns an error when it could not determine the dimensions of an image' do

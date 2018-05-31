@@ -13,7 +13,7 @@ def run_or_fail(command)
 end
 
 unless ENV['NO_UPDATE']
-  run_or_fail("git remote update")
+  run_or_fail("git pull")
 
   checkout = ENV['COMMIT_HASH'] || "HEAD"
   run_or_fail("git checkout #{checkout}")

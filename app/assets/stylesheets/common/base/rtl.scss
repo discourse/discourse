@@ -2,9 +2,9 @@
 // *** These styles are all going to be flipped by the r2 gem ***
 // Adding the !important declaration to a rule prevents it from being flipped.
 
-// Keep the topic admin menu on the page
-.rtl .popup-menu {
-  right: 0 !important;
+.rtl #topic-progress-wrapper .topic-admin-popup-menu.right-side,
+.rtl #topic-progress-wrapper.docked .topic-admin-popup-menu.right-side {
+  right: 80px;
 }
 
 // This is used to flip the .d-icon-caret-right

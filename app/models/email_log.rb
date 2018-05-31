@@ -74,8 +74,8 @@ end
 # Table name: email_logs
 #
 #  id             :integer          not null, primary key
-#  to_address     :string(255)      not null
-#  email_type     :string(255)      not null
+#  to_address     :string           not null
+#  email_type     :string           not null
 #  user_id        :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
@@ -83,16 +83,19 @@ end
 #  post_id        :integer
 #  topic_id       :integer
 #  skipped        :boolean          default(FALSE)
-#  skipped_reason :string(255)
+#  skipped_reason :string
 #  bounce_key     :string
 #  bounced        :boolean          default(FALSE), not null
 #  message_id     :string
 #
 # Indexes
 #
+#  idx_email_logs_user_created_filtered        (user_id,created_at)
 #  index_email_logs_on_created_at              (created_at)
 #  index_email_logs_on_message_id              (message_id)
+#  index_email_logs_on_post_id                 (post_id)
 #  index_email_logs_on_reply_key               (reply_key)
 #  index_email_logs_on_skipped_and_created_at  (skipped,created_at)
+#  index_email_logs_on_topic_id                (topic_id)
 #  index_email_logs_on_user_id_and_created_at  (user_id,created_at)
 #

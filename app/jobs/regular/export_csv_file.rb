@@ -1,5 +1,6 @@
 require 'csv'
 require_dependency 'system_message'
+require_dependency 'upload_creator'
 
 module Jobs
 
@@ -31,12 +32,20 @@ module Jobs
 
       file_name_prefix = if @entity == "user_archive"
         "#{@entity.split('_').join('-')}-#{@current_user.username}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+      elsif @entity == "report" && @extra[:name].present?
+        "#{@extra[:name].split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
       else
         "#{@entity.split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
       end
 
-      file = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
-      file_name = "#{file_name_prefix}-#{file.id}.csv"
+      export_title = if @entity == "report" && @extra[:name].present?
+        I18n.t("reports.#{@extra[:name]}.title")
+      else
+        @entity.split('_').join(' ').titleize
+      end
+
+      user_export = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
+      file_name = "#{file_name_prefix}-#{user_export.id}.csv"
       absolute_path = "#{UserExport.base_directory}/#{file_name}"
 
       # ensure directory exists
@@ -50,8 +59,33 @@ module Jobs
 
       # compress CSV file
       system('gzip', '-5', absolute_path)
+
+      # create upload
+      download_link = nil
+      compressed_file_path = "#{absolute_path}.gz"
+      file_size = number_to_human_size(File.size(compressed_file_path))
+
+      if File.exist?(compressed_file_path)
+        File.open(compressed_file_path) do |file|
+          upload = UploadCreator.new(
+            file,
+            File.basename(compressed_file_path),
+            type: 'csv_export',
+            for_export: 'true'
+          ).create_for(@current_user.id)
+
+          if upload.persisted?
+            user_export.update_columns(upload_id: upload.id)
+            download_link = upload.url
+          else
+            Rails.logger.warn("Failed to upload the file #{Discourse.base_uri}/export_csv/#{file_name}.gz")
+          end
+        end
+        File.delete(compressed_file_path)
+      end
+
     ensure
-      notify_user(file_name, absolute_path)
+      notify_user(download_link, file_name, file_size, export_title)
     end
 
     def user_archive_export
@@ -142,12 +176,18 @@ module Jobs
     def report_export
       return enum_for(:report_export) unless block_given?
 
-      @extra[:start_date] = @extra[:start_date].to_date if @extra[:start_date].is_a?(String)
-      @extra[:end_date] = @extra[:end_date].to_date if @extra[:end_date].is_a?(String)
+      @extra[:start_date] = @extra[:start_date].to_date.beginning_of_day if @extra[:start_date].is_a?(String)
+      @extra[:end_date] = @extra[:end_date].to_date.end_of_day if @extra[:end_date].is_a?(String)
       @extra[:category_id] = @extra[:category_id].present? ? @extra[:category_id].to_i : nil
       @extra[:group_id] = @extra[:group_id].present? ? @extra[:group_id].to_i : nil
+
+      report_hash = {}
       Report.find(@extra[:name], @extra).data.each do |row|
-        yield [row[:x].to_s(:db), row[:y].to_s(:db)]
+        report_hash[row[:x].to_s] = row[:y].to_s
+      end
+
+      (@extra[:start_date].to_date..@extra[:end_date].to_date).each do |date|
+        yield [date.to_s(:db), report_hash.fetch(date.to_s, 0)]
       end
     end
 
@@ -319,15 +359,16 @@ module Jobs
         screened_url_array
       end
 
-      def notify_user(file_name, absolute_path)
+      def notify_user(download_link, file_name, file_size, export_title)
         if @current_user
-          if file_name.present? && File.exists?("#{absolute_path}.gz")
+          if download_link.present?
             SystemMessage.create_from_system_user(
               @current_user,
               :csv_export_succeeded,
-              download_link: "#{Discourse.base_uri}/export_csv/#{file_name}.gz",
+              download_link: download_link,
               file_name: "#{file_name}.gz",
-              file_size: number_to_human_size(File.size("#{absolute_path}.gz"))
+              file_size: file_size,
+              export_title: export_title
             )
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)

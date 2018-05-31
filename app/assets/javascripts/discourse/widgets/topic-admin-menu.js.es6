@@ -63,8 +63,13 @@ createWidget('topic-admin-menu-button', {
 
     const $button = $(e.target).closest('button');
     const position = $button.position();
+    const rtl = $('html').hasClass('rtl');
     position.left = position.left;
     position.outerHeight = $button.outerHeight();
+
+    if (rtl) {
+        position.left -= 217 - $button.outerWidth();
+    }
 
     if (this.attrs.fixed) {
       position.left += $button.width() - 203;
@@ -141,12 +146,11 @@ export default createWidget('topic-admin-menu', {
                      icon: 'lock',
                      label: 'actions.close' });
     }
-    if (this.currentUser.get('staff')) {
-      buttons.push({ className: 'topic-admin-status-update',
+
+    buttons.push({ className: 'topic-admin-status-update',
                    action: 'showTopicStatusUpdate',
                    icon: 'clock-o',
                    label: 'actions.timed_update' });
-    }
 
     const isPrivateMessage = topic.get('isPrivateMessage');
 

@@ -1,13 +1,15 @@
-<div class='group-post-header'>
-  <div class='group-post-avatar'>
+<div class='clearfix info'>
     <a href="{{unbound post.user.userUrl}}" data-user-card="{{unbound post.user.username}}" class='avatar-link'>
       {{avatar post.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}
     </a>
-  </div>
-  <div class='group-post-info'>
-    <div class="group-post-topic">
-      <div class='group-post-title'>
-        <a href={{post.url}}>{{{post.topic.fancyTitle}}}</a>
+    <span class='time'>{{format-date post.created_at leaveAgo="true"}}</span>
+    {{expand-post item=post}}
+
+  <div class='stream-topic-details'>
+      <div class='stream-topic-title'>
+        <span class='title'>
+          <a href={{postUrl}}>{{{post.topic.fancyTitle}}}</a>
+        </span>
       </div>
       <div class="group-post-category">{{category-link post.category}}</div>
       {{#if post.user.name}}
@@ -16,14 +18,11 @@
           {{#if post.user.title}}<span class="title">, {{post.user.title}}</span>{{/if}}
         </div>
       {{/if}}
-    </div>
-    <div class='group-post-controls'>
-      {{expand-post item=post}}
-      <span class='time'>{{format-date post.created_at leaveAgo="true"}}</span>
-    </div>
   </div>
+  
 </div>
-<div class='group-post-excerpt'>
+
+<div class='excerpt'>
   {{#if post.expandedExcerpt}}
     {{{post.expandedExcerpt}}}
   {{else}}

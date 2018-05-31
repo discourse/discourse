@@ -1,0 +1,14 @@
+.select-kit {
+  &.multi-select {
+    &.tag-chooser {
+      .select-kit-row {
+        display: flex;
+        align-items: center;
+
+        .discourse-tag-count {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}

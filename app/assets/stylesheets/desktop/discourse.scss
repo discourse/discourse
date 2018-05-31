@@ -24,9 +24,10 @@ header {
   .topic-status {
     padding: 0 2px 0 0;
     margin: 0;
+    line-height: $line-height-small;
 
     i {
-        font-size: 1.071em;
+        font-size: $font-down-1;
       }
   }
 
@@ -59,7 +60,7 @@ h4,
 h5,
 h6 {
   + p {
-    margin-top:0px;
+    margin-top:0;
   }
 }
 
@@ -72,9 +73,9 @@ input,
 button,
 select,
 textarea {
-  font-size: 1em;
+  font-size: $font-0;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
 }
 
 select,
@@ -82,8 +83,8 @@ textarea {
   display: inline-block;
   padding: 4px;
   margin-bottom: 9px;
-  font-size: 1em;
-  line-height: 18px;
+  font-size: $font-0;
+  line-height: $line-height-large;
   color: $primary;
 }
 
@@ -93,7 +94,7 @@ input, textarea {
 
 select,
 input[type="file"] {
-  line-height: 28px;
+  line-height: $line-height-large;
 }
 
 select {
@@ -139,7 +140,7 @@ input {
       vertical-align: middle;
 
       &:focus {
-        z-index: 2;
+        z-index: z("base") + 1;
       }
     }
 
@@ -150,7 +151,7 @@ input {
       min-width: 16px;
       padding: 4px 5px;
       font-weight: normal;
-      line-height: 18px;
+      line-height: $line-height-medium;
       text-align: center;
       vertical-align: middle;
       background-color: $secondary;
@@ -224,6 +225,11 @@ input {
   margin-bottom: 10px;
 }
 
+.control-instructions {
+  color: dark-light-choose($primary-medium, $secondary-medium);
+  font-size: 0.875rem;
+}
+
 .control-group {
   margin-bottom: 9px;
 
@@ -243,7 +249,7 @@ input {
 
       &:focus {
         border-color: scale-color($danger, $lightness: -30%);
-        box-shadow: 0 0 6px $danger;
+        box-shadow: shadow("focus-danger");
       }
     }
 
@@ -286,7 +292,7 @@ input {
 
       &:focus {
         border-color: $success;
-        box-shadow: 0 0 6px $success;
+        box-shadow: shadow("focus");
       }
     }
 
@@ -326,6 +332,7 @@ input {
   }
 
   .control-label {
+    margin: 6.5px;
     float: left;
     width: 140px;
     text-align: right;
@@ -350,46 +357,6 @@ input {
   @include clearfix;
 }
 
-.span {
-  &4 {
-    width: 196px;
-    margin-right: 12px;
-    float: left;
-  }
-
-  &6 {
-    width: 27.027%;
-    float: left;
-  }
-
-  &8 {
-    width: 404px;
-    float: left;
-  }
-
-  &10 {
-    width: 508px;
-    float: left;
-  }
-
-  &13 {
-    width: 59.8198%;
-    float: left;
-  }
-
-  &15 {
-    /* intentionally no width set here, do not add one */
-    margin-left: 12px;
-    float: left;
-  }
-
-  &24 {
-    width: 1236px;
-    float: left;
-    color: amarillo;
-  }
-}
-
 .offset {
   &2 {
     margin-left: 116px;
@@ -400,25 +367,7 @@ input {
   }
 }
 
-// Special elements
-#main {
-  a.star {
-    color: $secondary-medium;
 
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f005";
-    }
-
-    @include hover {
-      opacity: 0.6;
-    }
-
-    &:active {
-      opacity: 1;
-    }
-  }
-}
 
 // Media Queries
 @media all

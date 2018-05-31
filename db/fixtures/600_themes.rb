@@ -18,7 +18,7 @@ if !Theme.exists?
   default_theme.set_default!
 end
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'theme_fields',
   after_migration: 'AddUploadIdToThemeFields',
   columns: ['target'],

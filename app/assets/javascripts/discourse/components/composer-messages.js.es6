@@ -1,5 +1,7 @@
 import LinkLookup from 'discourse/lib/link-lookup';
 
+let _messagesCache = {};
+
 export default Ember.Component.extend({
   classNameBindings: [':composer-popup-container', 'hidden'],
   checkedMessages: false,
@@ -165,7 +167,9 @@ export default Ember.Component.extend({
     if (topicId) { args.topic_id = topicId; }
     if (postId)  { args.post_id = postId; }
 
-    composer.store.find('composer-message', args).then(messages => {
+    const cacheKey = `${args.composer_action}${args.topic_id}${args.post_id}`;
+
+    const processMessages = messages => {
       if (this.isDestroying || this.isDestroyed) { return; }
 
       // Checking composer messages on replies can give us a list of links to check for
@@ -177,6 +181,15 @@ export default Ember.Component.extend({
       this.set('checkedMessages', true);
       const queuedForTyping = this.get('queuedForTyping');
       messages.forEach(msg => msg.wait_for_typing ? queuedForTyping.addObject(msg) : this.send('popup', msg));
-    });
+    };
+
+    if (_messagesCache.cacheKey === cacheKey) {
+      processMessages(_messagesCache.messages);
+    } else {
+      composer.store.find('composer-message', args).then(messages => {
+        _messagesCache = {messages, cacheKey};
+        processMessages(messages);
+      });
+    }
   }
 });

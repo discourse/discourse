@@ -1,13 +1,9 @@
-{{#if isLocked}}
-  <span class="delete-icon">
-    {{d-icon "lock"}}
-  </span>
-{{else}}
-  <span class="locked-icon" {{action onDeselect computedContent bubbles=false}}>
-    {{d-icon "times"}}
-  </span>
-{{/if}}
+{{#if headerContent}}<div class="header">{{headerContent}}</div>{{/if}}
 
-<span class="name">
-  {{{label}}}
-</span>
+<div class="body">
+  <span class="name">
+    {{{label}}}
+  </span>
+</div>
+
+{{#if footerContent}}<div class="footer">{{footerContent}}</div>{{/if}}

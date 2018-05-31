@@ -17,8 +17,24 @@ export default Ember.Service.extend({
     this.siteSettings = getOwner(this).lookup('site-settings:main');
   },
 
+  showActionLogs(target, filters) {
+    const controller = getOwner(target).lookup('controller:adminLogs.staffActionLogs');
+    target.transitionToRoute('adminLogs.staffActionLogs').then(() => {
+      controller.set('filters', Ember.Object.create());
+      controller._changeFilters(filters);
+    });
+  },
+
+  showFlagsReceived(user) {
+    showModal(`admin-flags-received`, { admin: true, model: user });
+  },
+
   checkSpammer(userId) {
     return AdminUser.find(userId).then(au => this.spammerDetails(au));
+  },
+
+  deleteUser(id) {
+    AdminUser.find(id).then(user => user.destroy({ deletePosts: true }));
   },
 
   spammerDetails(adminUser) {
@@ -36,17 +52,20 @@ export default Ember.Service.extend({
       modalClass: `${type}-user-modal`
     });
     if (opts.post) {
-      controller.set('post', opts.post);
+      controller.setProperties({
+        post: opts.post,
+        postEdit: opts.post.get('raw')
+      });
     }
 
-    let promise = user.adminUserView ?
+    return (user.adminUserView ?
       Ember.RSVP.resolve(user) :
-      AdminUser.find(user.get('id'));
-
-    promise.then(loadedUser => {
+      AdminUser.find(user.get('id'))
+    ).then(loadedUser => {
       controller.setProperties({
         user: loadedUser,
         loadingUser: false,
+        before: opts.before,
         successCallback: opts.successCallback
       });
     });

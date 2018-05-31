@@ -1,25 +1,16 @@
 .mobile-view .select-kit.is-expanded {
-  z-index: 1000;
+  z-index: z("dropdown");
 }
 
-.select-box-kit, .select-kit {
+.select-kit {
   border: none;
   min-width: 220px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   display: inline-block;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   position: relative;
   vertical-align: middle;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
 
   &.is-hidden {
     display: none;
@@ -30,22 +21,17 @@
   }
 
   &.is-expanded {
-    z-index: 999;
+    z-index: z("dropdown");
 
     .select-kit-body {
-      display: -webkit-box;
-      display: -ms-flexbox;
       display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: column;
-              flex-direction: column;
+      flex-direction: column;
       left: 0;
       position: absolute;
       top: 0;
     }
 
-    .select-kit-collection, {
+    .select-kit-collection {
       border-radius: inherit;
     }
   }
@@ -70,43 +56,28 @@
     opacity: 0.7;
   }
 
-  .select-box-kit-header, .select-kit-header {
+  .select-kit-header {
     box-sizing: border-box;
     overflow: hidden;
-    -webkit-transition: all .25s;
-    -o-transition: all .25s;
     transition: all .25s;
     cursor: pointer;
     outline: none;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    align-items: center;
     justify-content: space-between;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-
+    flex-direction: row;
+  
     .selected-name {
       text-align: left;
-      -webkit-box-flex: 10;
-          -ms-flex: 10;
-              flex: 10;
-      -o-text-overflow: ellipsis;
-         text-overflow: ellipsis;
+      flex: 1 1 auto;
+      text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
       color: inherit;
     }
 
     .btn-clear {
-      padding: 0px 10px;
+      padding: 0 10px;
       border: 0;
       background: none;
     }
@@ -121,14 +92,11 @@
     }
 
     .d-button-label {
-      display: -webkit-box;
-      display: -ms-flexbox;
       display: flex;
-      -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center;
+      align-items: center;
       white-space: nowrap;
       overflow: hidden;
+      line-height: $line-height-medium;
 
       .d-icon {
         margin-left: 5px;
@@ -137,34 +105,30 @@
     }
   }
 
-  .select-box-kit-body, .select-kit-body {
+  .select-kit-body {
     display: none;
     background: $secondary;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
   }
 
-  .select-box-kit-row, .select-kit-row {
+  .select-kit-row {
     cursor: pointer;
-    line-height: normal;
+    line-height: $line-height-medium;
     outline: none;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: start;
-        -ms-flex-pack: start;
-            justify-content: flex-start;
+    flex: 1 0 auto;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
+
+    &.no-content {
+      white-space: nowrap;
+    }
 
     .name {
       margin: 0;
       overflow: hidden;
-      -o-text-overflow: ellipsis;
-         text-overflow: ellipsis;
+      text-overflow: ellipsis;
       flex: 10;
     }
 
@@ -183,15 +147,29 @@
     &.is-selected.is-highlighted {
       background: $tertiary-low;
     }
+
+    .discourse-tag, .discourse-tag-count {
+      color: $primary;
+    }
   }
 
-  .select-box-kit-collection, .select-kit-collection {
+  .select-kit-collection {
     background: $secondary;
     overflow-x: hidden;
     overflow-y: auto;
     border-radius: inherit;
     -webkit-overflow-scrolling: touch;
     margin: 0;
+    padding: 0;
+    max-height: 200px;
+
+    .validation-message {
+      white-space: nowrap;
+      color: $danger;
+      flex: 1 0 auto;
+      margin: 5px;
+      padding: 0 2px;
+    }
 
     .select-kit-collection {
       padding: 0;
@@ -219,30 +197,21 @@
     }
   }
 
-  .select-box-kit-filter, .select-kit-filter {
-    display: -webkit-box;
-    display: -ms-flexbox;
+  .select-kit-filter {
     display: flex;
     box-sizing: border-box;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    align-items: center;
+    justify-content: space-between;
 
     .filter-input, .filter-input:focus, .filter-input:active {
       background: none;
       margin: 0;
       padding: 0;
-      -webkit-box-flex: 1;
-          -ms-flex: 1;
-              flex: 1;
+      flex: 1;
       outline: none;
       border: 0;
       border-radius: 0;
-      -webkit-box-shadow: none;
-              box-shadow: none;
+      box-shadow: none;
       width: 100%;
     }
 
@@ -255,19 +224,18 @@
       overflow: hidden;
       position: fixed;
       outline: 0;
-      left: 0px;
-      top: 0px;
+      left: 0;
+      top: 0;
     }
   }
 
-  .select-box-kit-wrapper, .select-kit-wrapper {
+  .select-kit-wrapper {
     position: absolute;
     top: 0;
     left: 0;
     background: none;
     display: none;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
     pointer-events: none;
   }
 }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+#
 require_dependency 'archetype'
 
 class PostTiming < ActiveRecord::Base
@@ -76,7 +78,7 @@ class PostTiming < ActiveRecord::Base
   MAX_READ_TIME_PER_BATCH = 60 * 1000.0
 
   def self.process_timings(current_user, topic_id, topic_time, timings, opts = {})
-    current_user.user_stat.update_time_read!
+    UserStat.update_time_read!(current_user.id)
 
     max_time_per_post = ((Time.now - current_user.created_at) * 1000.0)
     max_time_per_post = MAX_READ_TIME_PER_BATCH if max_time_per_post > MAX_READ_TIME_PER_BATCH
@@ -103,8 +105,7 @@ class PostTiming < ActiveRecord::Base
     end
 
     if join_table.length > 0
-      sql = <<SQL
-
+      sql = <<~SQL
       UPDATE post_timings t
       SET msecs = t.msecs + x.msecs
       FROM (#{join_table.join(" UNION ALL ")}) x
@@ -117,7 +118,16 @@ SQL
       result = exec_sql(sql)
       result.type_map = SqlBuilder.pg_type_map
       existing = Set.new(result.column_values(0))
-      new_posts_read = timings.size - existing.size if Topic.where(id: topic_id, archetype: Archetype.default).exists?
+
+      sql = <<~SQL
+      SELECT 1 FROM topics
+      WHERE deleted_at IS NULL AND
+        archetype = 'regular' AND
+        id = :topic_id
+      SQL
+
+      is_regular = Post.exec_sql(sql, topic_id: topic_id).cmd_tuples == 1
+      new_posts_read = timings.size - existing.size if is_regular
 
       timings.each_with_index do |(post_number, time), index|
         unless existing.include?(index)

@@ -29,6 +29,7 @@ class Plugin::Instance
    :color_schemes,
    :initializers,
    :javascripts,
+   :locales,
    :service_workers,
    :styles,
    :themes].each do |att|
@@ -319,6 +320,14 @@ class Plugin::Instance
     javascripts << js
   end
 
+  # @option opts [String] :name
+  # @option opts [String] :nativeName
+  # @option opts [String] :fallbackLocale
+  # @option opts [Hash] :plural
+  def register_locale(locale, opts = {})
+    locales << [locale, opts]
+  end
+
   def register_custom_html(hash)
     DiscoursePluginRegistry.custom_html ||= {}
     DiscoursePluginRegistry.custom_html.merge!(hash)
@@ -329,7 +338,12 @@ class Plugin::Instance
   end
 
   def register_asset(file, opts = nil)
-    full_path = File.dirname(path) << "/assets/" << file
+    if opts && opts == :vendored_core_pretty_text
+      full_path = DiscoursePluginRegistry.core_asset_for_name(file)
+    else
+      full_path = File.dirname(path) << "/assets/" << file
+    end
+
     assets << [full_path, opts]
   end
 
@@ -427,7 +441,7 @@ JS
     end
 
     register_assets! unless assets.blank?
-
+    register_locales!
     register_service_workers!
 
     seed_data.each do |key, value|
@@ -479,6 +493,18 @@ JS
     PluginGem.load(path, name, version, opts)
   end
 
+  def hide_plugin
+    Discourse.hidden_plugins << self
+  end
+
+  def enabled_site_setting_filter(filter = nil)
+    if filter
+      @enabled_setting_filter = filter
+    else
+      @enabled_setting_filter
+    end
+  end
+
   def enabled_site_setting(setting = nil)
     if setting
       @enabled_site_setting = setting
@@ -497,6 +523,7 @@ JS
 
   def javascript_includes
     assets.map do |asset, opts|
+      next if opts == :vendored_core_pretty_text
       next if opts == :admin
       next unless asset =~ DiscoursePluginRegistry::JS_REGEX
       asset
@@ -532,6 +559,35 @@ JS
     end
   end
 
+  def register_locales!
+    root_path = File.dirname(@path)
+
+    locales.each do |locale, opts|
+      opts = opts.dup
+      opts[:client_locale_file] = File.join(root_path, "config/locales/client.#{locale}.yml")
+      opts[:server_locale_file] = File.join(root_path, "config/locales/server.#{locale}.yml")
+      opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
+
+      locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
+      lib_locale_path = File.join(root_path, "lib/javascripts/locale")
+
+      path = File.join(lib_locale_path, "message_format")
+      opts[:message_format] = find_locale_file(locale_chain, path)
+      opts[:message_format] = JsLocaleHelper.find_message_format_locale(locale_chain, false) unless opts[:message_format]
+
+      path = File.join(lib_locale_path, "moment_js")
+      opts[:moment_js] = find_locale_file(locale_chain, path)
+      opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
+
+      if valid_locale?(opts)
+        DiscoursePluginRegistry.register_locale(locale, opts)
+        Rails.configuration.assets.precompile << "locales/#{locale}.js"
+      else
+        Rails.logger.error "Invalid locale! #{opts.inspect}"
+      end
+    end
+  end
+
   private
 
   def write_asset(path, contents)
@@ -553,4 +609,18 @@ JS
     yield plugin
   end
 
+  def valid_locale?(custom_locale)
+    File.exist?(custom_locale[:client_locale_file]) &&
+      File.exist?(custom_locale[:server_locale_file]) &&
+      File.exist?(custom_locale[:js_locale_file]) &&
+      custom_locale[:message_format] && custom_locale[:moment_js]
+  end
+
+  def find_locale_file(locale_chain, path)
+    locale_chain.each do |locale|
+      filename = File.join(path, "#{locale}.js")
+      return [locale, filename] if File.exist?(filename)
+    end
+    nil
+  end
 end

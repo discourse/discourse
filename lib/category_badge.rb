@@ -88,12 +88,14 @@ module CategoryBadge
         when :bar
           'color: #222222; padding: 3px; vertical-align: text-top; margin-top: -3px; display: inline-block;'
         when :box
-          "color: #{category.text_color}; #{show_parent ? 'margin-left: 5px; ' : ''} position: relative; padding: 0 5px; margin-top: 2px;"
+          "color: ##{category.text_color}; #{show_parent ? 'margin-left: 5px; ' : ''} position: relative; padding: 0 5px; margin-top: 2px;"
         when :bullet
           'color: #222222; vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;'
         when :none
           ''
         end + 'max-width: 150px; overflow: hidden; text-overflow: ellipsis;'
+      elsif (SiteSetting.category_style).to_sym == :box
+        "color: ##{category.text_color}"
       else
         ''
       end

@@ -43,7 +43,7 @@ module UserGuardian
     if is_me?(user)
       user.post_count <= 1
     else
-      is_staff? && (user.first_post_created_at.nil? || user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
+      is_staff? && (user.first_post_created_at.nil? || user.post_count <= 5 || user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
     end
   end
 
@@ -70,6 +70,10 @@ module UserGuardian
   def can_see_suspension_reason?(user)
     return true unless SiteSetting.hide_suspension_reasons?
     user == @user || is_staff?
+  end
+
+  def can_disable_second_factor?(user)
+    user && can_administer_user?(user)
   end
 
 end

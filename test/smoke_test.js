@@ -14,34 +14,42 @@ const path = require('path');
 
 (async () => {
   const browser = await puppeteer.launch({
-    // headless: false,
-    // slowMo: 10,
+    // when debugging localy setting headless to "false" can be very helpful
+    headless: true,
     args: ["--disable-local-storage"]
   });
   const page = await browser.newPage();
 
-  page.setViewport = {
+  await page.setViewport({
     width: 1366,
     height: 768
+  });
+
+  const takeFailureScreenshot = function() {
+    const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH || 'tmp/smoke-test-screenshots'}/smoke-test-${Date.now()}.png`;
+    console.log(`Screenshot of failure taken at ${screenshotPath}`);
+    return page.screenshot({ path: screenshotPath, fullPage: true });
   };
 
   const exec = (description, fn, assertion) => {
     const start = +new Date();
 
-    return fn.call().then(output => {
+    return fn.call().then(async output => {
       if (assertion) {
         if (assertion.call(this, output)) {
           console.log(`PASSED: ${description} - ${(+new Date()) - start}ms`);
         } else {
           console.log(`FAILED: ${description} - ${(+new Date()) - start}ms`);
+          await takeFailureScreenshot();
           console.log("SMOKE TEST FAILED");
           process.exit(1);
         }
       } else {
         console.log(`PASSED: ${description} - ${(+new Date()) - start}ms`);
       }
-    }).catch(error => {
+    }).catch(async error => {
       console.log(`ERROR (${description}): ${error.message} - ${(+new Date()) - start}ms`);
+      await takeFailureScreenshot();
       console.log("SMOKE TEST FAILED");
       process.exit(1);
     });
@@ -53,11 +61,17 @@ const path = require('path');
 
   page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
 
+  page.on('response', resp => {
+    if (resp.status !== 200) {
+      console.log("FAILED HTTP REQUEST TO " + resp.url + " Status is: " + resp.status);
+    }
+    return resp;
+  });
+
   if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
     await exec("basic authentication", () => {
-      return page.authenticate({
-        username: process.env.AUTH_USER,
-        password: process.env.AUTH_PASSWORD
+      return page.setExtraHTTPHeaders({
+        'Authorization': `Basic ${new Buffer(`${process.env.AUTH_USER}:${process.env.AUTH_PASSWORD}`).toString('base64')}`
       });
     });
   }

@@ -8,3 +8,4 @@
 es:
   site_settings:
     presence_enabled: '¿Mostrar usuarios que estén respondiendo al tema, o editando el post actual?'
+    presence_max_users_shown: 'Número máximo de usuarios mostrados.'

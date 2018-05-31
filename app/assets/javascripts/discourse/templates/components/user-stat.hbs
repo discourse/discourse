@@ -1,6 +1,8 @@
 <span class='value'>
   {{#if isNumber}}
     {{number value}}
+  {{else if isDuration}}
+    {{format-duration value}}
   {{else}}
     {{value}}
   {{/if}}

@@ -117,7 +117,7 @@ end
 
 if ENV['COMPRESS_BROTLI']&.to_i == 1
   # different brotli versions use different parameters
-  ver_out, ver_err, ver_status = Open3.capture3('brotli --version')
+  ver_out, _ver_err, ver_status = Open3.capture3('brotli --version')
   if !ver_status.success?
     # old versions of brotli don't respond to --version
     def brotli_command(path)
@@ -125,7 +125,7 @@ if ENV['COMPRESS_BROTLI']&.to_i == 1
     end
   elsif ver_out >= "brotli 1.0.0"
     def brotli_command(path)
-      "brotli --quality=11 #{path} --output=#{path}.br"
+      "brotli -f --quality=11 #{path} --output=#{path}.br"
     end
   else
     # not sure what to do here, not expecting this

@@ -6,7 +6,6 @@ export default DropdownSelectBoxComponent.extend({
   classNames: ["toolbar-popup-menu-options"],
   isHidden: Ember.computed.empty("computedContent"),
   showFullTitle: false,
-  collectionHeight: "auto",
 
   @computed("title")
   collectionHeader(title) {
@@ -15,7 +14,7 @@ export default DropdownSelectBoxComponent.extend({
 
   mutateValue(value) {
     this.sendAction("onPopupMenuAction", value);
-    this.setProperties({ value: null, highlightedValue: null });
+    this.setProperties({ value: null, highlighted: null });
   },
 
   computeContent(content) {

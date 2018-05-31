@@ -18,9 +18,9 @@ export default MultiSelectComponent.extend({
   },
 
   computeContentItem(contentItem, name) {
-    let computedContent = this.baseComputedContentItem(contentItem, name);
-    computedContent.locked = contentItem.automatic;
-    return computedContent;
+    let computedContentItem = this._super(contentItem, name);
+    computedContentItem.locked = contentItem.automatic;
+    return computedContentItem;
   },
 
   mutateValues(values) {

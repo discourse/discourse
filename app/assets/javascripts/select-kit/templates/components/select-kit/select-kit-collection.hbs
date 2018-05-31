@@ -1,6 +1,6 @@
-{{#if collectionHeader}}
+{{#if collectionHeaderComputedContent}}
   <div class="collection-header">
-    {{{collectionHeader}}}
+    {{{collectionHeaderComputedContent}}}
   </div>
 {{/if}}
 
@@ -9,11 +9,11 @@
     {{component noneRowComponent
       computedContent=noneRowComputedContent
       templateForRow=templateForNoneRow
-      highlightedValue=highlightedValue
-      onClear=onClear
-      onHighlight=onHighlight
+      highlighted=highlighted
+      onMouseoverRow=onMouseoverRow
       computedValue=computedValue
       options=rowComponentOptions
+      onClickRow=onClickRow
     }}
   {{/if}}
 {{/if}}
@@ -21,31 +21,34 @@
 {{#if createRowComputedContent}}
   {{component createRowComponent
     computedContent=createRowComputedContent
-    templateForRow=templateForCreateRow
-    highlightedValue=highlightedValue
-    onHighlight=onHighlight
-    onCreate=onCreate
+    highlighted=highlighted
     computedValue=computedValue
+    templateForRow=templateForCreateRow
+    onMouseoverRow=onMouseoverRow
+    onClickRow=onClickRow
     options=rowComponentOptions
   }}
 {{/if}}
 
-{{#each filteredComputedContent as |computedContent|}}
-  {{component rowComponent
-    computedContent=computedContent
-    templateForRow=templateForRow
-    highlightedValue=highlightedValue
-    onSelect=onSelect
-    onHighlight=onHighlight
-    computedValue=computedValue
-    options=rowComponentOptions
-  }}
-{{/each}}
-
-{{#if shouldDisplayNoContentRow}}
-  {{#if noContentLabel}}
-    <li class="select-kit-row no-content">
-      {{i18n noContentLabel}}
-    </li>
+{{#if noContentRow}}
+  <li class="select-kit-row no-content">
+    {{noContentRow}}
+  </li>
+{{else}}
+  {{#if validationMessage}}
+    <div class="validation-message">
+      {{validationMessage}}
+    </div>
   {{/if}}
+  {{#each collectionComputedContent as |computedContent|}}
+    {{component rowComponent
+      computedContent=computedContent
+      highlighted=highlighted
+      computedValue=computedValue
+      templateForRow=templateForRow
+      onClickRow=onClickRow
+      onMouseoverRow=onMouseoverRow
+      options=rowComponentOptions
+    }}
+  {{/each}}
 {{/if}}

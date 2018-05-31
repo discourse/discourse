@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # this class is used to mirror unread and new status back to end users
 # in JavaScript there is a mirror class that is kept in-sync using the mssage bus
 # the allows end users to always know which topics have unread posts in them
@@ -8,6 +10,8 @@ class TopicTrackingState
   include ActiveModel::SerializerSupport
 
   CHANNEL = "/user-tracking"
+  UNREAD_MESSAGE_TYPE = "unread".freeze
+  LATEST_MESSAGE_TYPE = "latest".freeze
 
   attr_accessor :user_id,
                 :topic_id,
@@ -18,6 +22,7 @@ class TopicTrackingState
                 :notification_level
 
   def self.publish_new(topic)
+    return unless topic.regular?
 
     message = {
       topic_id: topic.id,
@@ -39,14 +44,13 @@ class TopicTrackingState
   end
 
   def self.publish_latest(topic, staff_only = false)
-    return unless topic.archetype == "regular"
+    return unless topic.regular?
 
     message = {
       topic_id: topic.id,
-      message_type: "latest",
+      message_type: LATEST_MESSAGE_TYPE,
       payload: {
         bumped_at: topic.bumped_at,
-        topic_id: topic.id,
         category_id: topic.category_id,
         archetype: topic.archetype
       }
@@ -61,7 +65,12 @@ class TopicTrackingState
     MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
   end
 
+  def self.unread_channel_key(user_id)
+    "/unread/#{user_id}"
+  end
+
   def self.publish_unread(post)
+    return unless post.topic.regular?
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
 
@@ -79,19 +88,18 @@ class TopicTrackingState
 
       message = {
         topic_id: post.topic_id,
-        message_type: "unread",
+        message_type: UNREAD_MESSAGE_TYPE,
         payload: {
           last_read_post_number: tu.last_read_post_number,
           highest_post_number: post.post_number,
           created_at: post.created_at,
-          topic_id: post.topic_id,
           category_id: post.topic.category_id,
           notification_level: tu.notification_level,
           archetype: post.topic.archetype
         }
       }
 
-      MessageBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
+      MessageBus.publish(self.unread_channel_key(tu.user_id), message.as_json, group_ids: group_ids)
     end
 
   end
@@ -101,10 +109,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "recover",
-      payload: {
-        topic_id: topic.id,
-      }
+      message_type: "recover"
     }
 
     MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
@@ -116,17 +121,13 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "delete",
-      payload: {
-        topic_id: topic.id,
-      }
+      message_type: "delete"
     }
 
     MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
-
     highest_post_number = Topic.where(id: topic_id).pluck(:highest_post_number).first
 
     message = {
@@ -140,8 +141,7 @@ class TopicTrackingState
       }
     }
 
-    MessageBus.publish("/unread/#{user_id}", message.as_json, user_ids: [user_id])
-
+    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
   def self.treat_as_new_topic_clause
@@ -175,8 +175,7 @@ class TopicTrackingState
     sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, staff: user.staff?)
 
     SqlBuilder.new(sql)
-      .map_exec(TopicTrackingState, user_id: user.id, topic_id: topic_id)
-
+      .map_exec(TopicTrackingState, user_id: user.id, topic_id: topic_id, min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime)
   end
 
   def self.report_raw_sql(opts = nil)
@@ -196,7 +195,8 @@ class TopicTrackingState
       if opts && opts[:skip_new]
         "1=0"
       else
-        TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
+        TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause) +
+          " AND topics.created_at > :min_new_topic_date"
       end
 
     select = (opts && opts[:select]) || "
@@ -208,7 +208,7 @@ class TopicTrackingState
            c.id AS category_id,
            tu.notification_level"
 
-    sql = <<SQL
+    sql = +<<SQL
     SELECT #{select}
     FROM topics
     JOIN users u on u.id = :user_id
@@ -246,4 +246,54 @@ SQL
     sql
   end
 
+  def self.publish_private_message(topic, archive_user_id: nil,
+                                          post: nil,
+                                          group_archive: false)
+
+    return unless topic.private_message?
+    channels = {}
+
+    allowed_user_ids = topic.allowed_users.pluck(:id)
+
+    if post && allowed_user_ids.include?(post.user_id)
+      channels["/private-messages/sent"] = [post.user_id]
+    end
+
+    if archive_user_id
+      user_ids = [archive_user_id]
+
+      [
+        "/private-messages/archive",
+        "/private-messages/inbox",
+        "/private-messages/sent",
+      ].each do |channel|
+        channels[channel] = user_ids
+      end
+    end
+
+    if channels.except("/private-messages/sent").blank?
+      channels["/private-messages/inbox"] = allowed_user_ids
+    end
+
+    topic.allowed_groups.each do |group|
+      group_user_ids = group.users.pluck(:id)
+      next if group_user_ids.blank?
+      group_channels = []
+      group_channels << "/private-messages/group/#{group.name.downcase}"
+      group_channels << "#{group_channels.first}/archive" if group_archive
+      group_channels.each { |channel| channels[channel] = group_user_ids }
+    end
+
+    message = {
+      topic_id: topic.id
+    }
+
+    channels.each do |channel, user_ids|
+      MessageBus.publish(
+        channel,
+        message.as_json,
+        user_ids: user_ids
+      )
+    end
+  end
 end

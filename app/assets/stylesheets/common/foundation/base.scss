@@ -9,7 +9,7 @@ html {
   color: $primary;
   font-family: $base-font-family;
   font-size: $base-font-size;
-  line-height: $base-line-height;
+  line-height: $line-height-large;
   background-color: $secondary;
   overflow-y: scroll;
   direction: ltr;
@@ -102,4 +102,18 @@ pre code {
 
 #offscreen-content {
   display: none;
+}
+
+// Tables
+// --------------------------------------------------
+
+tbody {
+  border-top: 3px solid $primary-low;
+}
+
+tr {
+  border-bottom: 1px solid $primary-low;
+  &.highlighted {
+    animation: background-fade-highlight 2.5s ease-out;
+  }  
 }

@@ -9,7 +9,7 @@ describe UserAction do
   it { is_expected.to validate_presence_of :action_type }
   it { is_expected.to validate_presence_of :user_id }
 
-  describe 'lists' do
+  describe '#stream' do
 
     let(:public_post) { Fabricate(:post) }
     let(:public_topic) { public_post.topic }
@@ -46,8 +46,8 @@ describe UserAction do
         UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r["action_type"].to_i }.sort
       end
 
-      def stream_count(viewer = nil)
-        UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer)).count
+      def stream(viewer = nil)
+        UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer))
       end
 
       it 'includes the events correctly' do
@@ -56,38 +56,38 @@ describe UserAction do
         mystats = stats_for_user(user)
         expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
         expect(mystats).to eq(expecting)
-        expect(stream_count(user)).to eq(4)
+
+        expect(stream(user).map(&:action_type))
+          .to contain_exactly(*expecting)
 
         other_stats = stats_for_user
         expecting = [UserAction::NEW_TOPIC]
-        expect(stream_count).to eq(1)
-
+        expect(stream.map(&:action_type)).to contain_exactly(*expecting)
         expect(other_stats).to eq(expecting)
 
         public_topic.trash!(user)
         expect(stats_for_user).to eq([])
-        expect(stream_count).to eq(0)
+        expect(stream).to eq([])
 
         # groups
         category = Fabricate(:category, read_restricted: true)
 
         public_topic.recover!
-        public_topic.category = category
-        public_topic.save
+        public_topic.update!(category: category)
 
         expect(stats_for_user).to eq([])
-        expect(stream_count).to eq(0)
+        expect(stream).to eq([])
 
         group = Fabricate(:group)
         u = Fabricate(:coding_horror)
         group.add(u)
-        group.save
 
         category.set_permissions(group => :full)
-        category.save
+        category.save!
 
-        expect(stats_for_user(u)).to eq([UserAction::NEW_TOPIC])
-        expect(stream_count(u)).to eq(1)
+        expecting = [UserAction::NEW_TOPIC]
+        expect(stats_for_user(u)).to eq(expecting)
+        expect(stream(u).map(&:action_type)).to contain_exactly(*expecting)
 
         # duplicate should not exception out
         log_test_action
@@ -100,6 +100,29 @@ describe UserAction do
         action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
         expect(action.acting_user_id).to eq(admin.id)
         expect(action.action_type).to eq(UserAction::EDIT)
+      end
+    end
+
+    describe 'assignments' do
+      let(:stream) do
+        UserAction.stream(user_id: user.id, guardian: Guardian.new(user))
+      end
+
+      before do
+        log_test_action(action_type: UserAction::ASSIGNED)
+        private_post.custom_fields ||= {}
+        private_post.custom_fields["action_code_who"] = 'testing'
+        private_post.custom_fields["random_field"] = 'random_value'
+        private_post.save!
+      end
+
+      it 'should include the right attributes in the stream' do
+        expect(stream.count).to eq(1)
+
+        user_action_row = stream.first
+
+        expect(user_action_row.action_type).to eq(UserAction::ASSIGNED)
+        expect(user_action_row.action_code_who).to eq('testing')
       end
     end
 
@@ -116,7 +139,8 @@ describe UserAction do
       end
 
       it "is returned by the stream" do
-        expect(stream).to be_present
+        expect(stream.count).to eq(1)
+        expect(stream.first.action_type).to eq(UserAction::MENTION)
       end
 
       it "isn't returned when mentions aren't enabled" do
@@ -127,10 +151,6 @@ describe UserAction do
 
   end
 
-  describe "mentions" do
-    it "returns the mention in the stream" do
-    end
-  end
   describe 'when user likes' do
 
     let(:post) { Fabricate(:post) }

@@ -2,7 +2,8 @@ require "mini_mime"
 require_dependency 'upload_creator'
 
 class UploadsController < ApplicationController
-  before_action :ensure_logged_in, except: [:show]
+  requires_login except: [:show]
+
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create
@@ -126,7 +127,7 @@ class UploadsController < ApplicationController
 
     upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
   ensure
-    tempfile&.close! rescue nil
+    tempfile&.close!
   end
 
 end

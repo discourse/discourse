@@ -10,18 +10,8 @@
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
-  position: fixed;
   top: 10%;
-  z-index: 1050;
-  overflow: auto;
   width: 100%;
-  height: auto;
-  background-color: $secondary;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-
-  @include border-radius-all (6px);
-  box-shadow: 0 3px 7px rgba(0,0,0, 0.3);
-  background-clip: padding-box;
 }
 
 .modal.fade {
@@ -32,39 +22,24 @@
   top: 50%;
 }
 .modal-body {
-  overflow-y: auto;
-  max-height: 400px;
   padding: 10px;
 }
 
 // we need a little extra room on mobile for the
 // stuff inside the footer to fit
 .modal-footer {
-  padding-left: 7px;
-  padding-right: 7px;
-}
-
-.modal-footer .btn + .btn {
-  margin-left: 5px;
-  margin-bottom: 0;
-}
-
-.modal-close {
-  display: inline-block;
-  float: right;
+  padding: 10px
 }
 
 .modal-header {
-  padding: 10px 0px 10px 10px;
-
+  padding: 10px;  
   h3 {
-    display: inline;
-    font-size: 1.286em;
-    margin: 0px;
+    font-size: $font-up-2;
   }
 }
+
 .close {
-  font-size: 1.857em;
+  font-size: $font-up-4;
   padding: 10px 15px 5px 5px;
   color: $primary;
 }
@@ -93,25 +68,10 @@
   }
 }
 
-.flag-modal {
-  max-height: 450px;
-}
-
 @media only screen and (max-device-width: 568px) {
   .modal .flag-modal .flag-message {
-    height: 1.2em;
+    height: 3em;
   }
-}
-
-.custom-message-length {
-  margin: -4px 0 10px 20px;
-  color: dark-light-choose($primary-high, $secondary-low);
-  font-size: .857em;
-}
-
-.flag-message {
-  margin-left: 20px;
-  width: 95% !important;
 }
 
 .edit-category-modal {
@@ -123,37 +83,12 @@
   &.small .modal-body {
     height: 310px;
   }
-  .secure-category-options {
-    margin: 10px 0 0 16px;
-    .badge-list {
-      margin: 10px 0;
-      li {
-        margin: 0 4px 8px 0;
-        a {
-          color: #888;
-          cursor: pointer;
-        }
-      }
-    }
-  }
 
   .disable_info_wrap .cannot_delete_reason {
     top: -114px;
     right: 8px;
     min-width: 200px;
   }
-}
-
-.tabbed-modal {
-  .modal-body {
-    position: relative;
-    height: 350px;
-  }
-}
-
-
-.modal-tab {
-  position: absolute;
 }
 
 /* fixes for the new account confirm dialog on mobile */

@@ -70,12 +70,13 @@ class Guardian
   def is_developer?
     @user &&
     is_admin? &&
-    (Rails.env.development? ||
+    (
+      Rails.env.development? ||
+      Developer.user_ids.include?(@user.id) ||
       (
         Rails.configuration.respond_to?(:developer_emails) &&
         Rails.configuration.developer_emails.include?(@user.email)
-      ) ||
-      Developer.user_ids.include?(@user.id)
+      )
     )
   end
 
@@ -111,6 +112,10 @@ class Guardian
     true
   end
 
+  def can_enable_safe_mode?
+    SiteSetting.enable_safe_mode? || is_staff?
+  end
+
   # Can the user edit the obj
   def can_edit?(obj)
     can_do?(:edit, obj)
@@ -127,6 +132,16 @@ class Guardian
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
   alias :can_close? :can_moderate?
+
+  def can_tag?(topic)
+    return false if topic.blank?
+
+    topic.private_message? ? can_tag_pms? : can_tag_topics?
+  end
+
+  def can_see_tags?(topic)
+    SiteSetting.tagging_enabled && topic.present? && (!topic.private_message? || can_tag_pms?)
+  end
 
   def can_send_activation_email?(user)
     user && is_staff? && !SiteSetting.must_approve_users?
@@ -204,8 +219,12 @@ class Guardian
     can_administer?(user) && !user.moderator?
   end
 
-  def can_grant_title?(user)
-    user && is_staff?
+  def can_grant_title?(user, title = nil)
+    return true if user && is_staff?
+    return false if title.nil?
+    return false if user != @user
+    return true if user.badges.where(name: title, allow_title: true).exists?
+    user.groups.where(title: title).exists?
   end
 
   def can_change_primary_group?(user)
@@ -246,10 +265,13 @@ class Guardian
   def can_invite_to?(object, groups = nil)
     return false unless authenticated?
     return true if is_admin?
-    return false unless SiteSetting.enable_private_messages?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false unless can_see?(object)
     return false if groups.present?
+
+    if object.is_a?(Topic) && object.private_message?
+      return false unless SiteSetting.enable_personal_messages?
+    end
 
     if object.is_a?(Topic) && object.category
       if object.category.groups.any?
@@ -302,7 +324,7 @@ class Guardian
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # PMs are enabled
-    (is_staff? || SiteSetting.enable_private_messages) &&
+    (is_staff? || SiteSetting.enable_personal_messages) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
@@ -319,7 +341,7 @@ class Guardian
     # User is trusted enough
     @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages) &&
     # PMs to email addresses are enabled
-    (is_staff? || SiteSetting.enable_private_email_messages)
+    (is_staff? || SiteSetting.enable_personal_email_messages)
   end
 
   def can_see_emails?

@@ -17,7 +17,7 @@ module Jobs
         cooking_options = args[:cooking_options] || {}
         cooking_options[:topic_id] = post.topic_id
         recooked = post.cook(post.raw, cooking_options.symbolize_keys)
-        post.update_column(:cooked, recooked)
+        post.update_columns(cooked: recooked, baked_at: Time.zone.now, baked_version: Post::BAKED_VERSION)
       end
 
       cp = CookedPostProcessor.new(post, args)

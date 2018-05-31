@@ -1,7 +1,7 @@
 <div id='simple-container'>
   <%if flash[:error]%>
     <div class='alert alert-error'>
-      <%=flash[:error]%>
+      <%=flash[:error].html_safe%>
     </div>
   <%end%>
 </div>

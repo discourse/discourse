@@ -1,4 +1,4 @@
-.select-box-kit, .select-kit {
+.select-kit {
   &.dropdown-select-box {
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
@@ -7,24 +7,21 @@
     border: none;
 
     &.is-expanded {
-      .select-box-kit-collection,
-      .select-box-kit-body,
       .select-kit-collection,
       .select-kit-body {
         border-radius: 0;
       }
     }
 
-    .select-box-kit-body, .select-kit-body {
+    .select-kit-body {
       border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       background-clip: padding-box;
-      -webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-              box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+      box-shadow: shadow("dropdown");
       max-width: 300px;
       width: 300px;
     }
 
-    .select-box-kit-row, .select-kit-row {
+    .select-kit-row {
       margin: 0;
       padding: 10px 5px;
 
@@ -45,7 +42,7 @@
         width: 30px;
 
         .d-icon {
-          font-size: 1.286em;
+          font-size: $font-up-2;
           -ms-flex-item-align: center;
               align-self: center;
           margin-right: 0;
@@ -54,7 +51,8 @@
       }
 
       .texts {
-        line-height: 18px;
+        min-width: 0;
+        line-height: $line-height-large;
         -webkit-box-flex: 1;
             -ms-flex: 1;
                 flex: 1;
@@ -76,16 +74,20 @@
               -ms-flex: 1;
                   flex: 1;
           font-weight: bold;
-          font-size: 1em;
+          font-size: $font-0;
           color: $primary;
           padding: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 100%;
         }
 
         .desc {
           -webkit-box-flex: 1;
               -ms-flex: 1;
                   flex: 1;
-          font-size: 0.857em;
+          font-size: $font-down-1;
           font-weight: normal;
           color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));;
           white-space: normal;
@@ -93,8 +95,9 @@
       }
     }
 
-    .select-box-kit-collection, .select-kit-collection {
+    .select-kit-collection {
       padding: 0;
+      max-height: 100%;
     }
 
     .dropdown-select-box-header {
@@ -102,7 +105,6 @@
          -moz-box-sizing: border-box;
               box-sizing: border-box;
       border: 0;
-      height: 30px;
 
       -webkit-box-align: center;
           -ms-flex-align: center;
@@ -120,6 +122,12 @@
 
       .d-icon + .d-icon {
         margin-left: 5px;
+      }
+
+      &:hover {
+        .d-icon {
+          color: $primary-low;
+        }
       }
 
       &.is-focused {

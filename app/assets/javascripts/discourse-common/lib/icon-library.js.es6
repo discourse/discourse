@@ -9,7 +9,7 @@ const REPLACEMENTS = {
   'd-watching-first': 'dot-circle-o',
   'd-drop-expanded': 'caret-down',
   'd-drop-collapsed': 'caret-right',
-  'd-unliked': 'heart',
+  'd-unliked': 'heart-o',
   'd-liked': 'heart',
   'notification.mentioned': "at",
   'notification.group_mentioned': "at",
@@ -90,7 +90,7 @@ registerIconRenderer({
     if (params.label) { html += " aria-hidden='true'"; }
     html += `></${tagName}>`;
     if (params.label) {
-      html += "<span class='sr-only'>" + I18n.t(params.label) + "</span>";
+      html += `<span class='sr-only'>${params.label}</span>`;
     }
     return html;
   },

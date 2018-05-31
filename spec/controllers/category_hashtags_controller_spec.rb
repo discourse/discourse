@@ -44,9 +44,8 @@ describe CategoryHashtagsController do
 
     describe "not logged in" do
       it 'raises an exception' do
-        expect do
-          get :check, params: { category_slugs: [] }, format: :json
-        end.to raise_error(Discourse::NotLoggedIn)
+        get :check, params: { category_slugs: [] }, format: :json
+        expect(response.status).to eq(403)
       end
     end
   end

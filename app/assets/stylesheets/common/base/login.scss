@@ -1,6 +1,6 @@
 .caps-lock-warning {
   color: $danger;
-  font-size: 0.857em;
+  font-size: $font-down-1;
   font-weight: bold;
 }
 
@@ -12,9 +12,46 @@
   display: none;
 }
 
+#login-form {
+  table {
+    width: 100%;
+  }
+  a {
+    color: dark-light-choose($primary-high, $secondary-low);
+  }
+  td {
+    padding-right: 5px;
+  }
+}
+
+#new-account-link {
+  cursor: pointer;
+}
 
 $label-width: 92px;
 $input-width: 220px;
+
+.login-modal, .create-account {
+  tr {
+    border: none;
+  }
+  tr:not(.instructions) {
+    td {
+      padding: 10px 0 0 0;
+    }
+  }
+  td {
+    label, input {
+      margin-bottom: 0;
+      width: 100%;
+    }
+  }
+  .modal-footer {
+    .inline-spinner {
+      display: inline-flex;
+    }
+  }
+}
 
 .create-account {
   table {
@@ -28,9 +65,8 @@ $input-width: 220px;
   }
 
   .disclaimer {
-    font-size: 0.857em;
     color: dark-light-choose($primary-medium, $secondary-medium);
-    clear: both;
+    margin-top: .5em;
   }
 
   .user-field.confirm {
@@ -38,7 +74,7 @@ $input-width: 220px;
   }
 
   .user-field {
-    label {
+    > label {
       width: $label-width;
       float: left;
     }
@@ -58,9 +94,9 @@ $input-width: 220px;
       .instructions {
         color: dark-light-choose($primary-medium, $secondary-medium);
         margin: 0;
-        font-size: 0.857em;
+        font-size: $font-down-1;
         font-weight: normal;
-        line-height: 18px;
+        line-height: $line-height-medium;
       }
     }
     clear: both;
@@ -100,13 +136,28 @@ $input-width: 220px;
     .instructions {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin: 0;
-      font-size: 0.857em;
+      font-size: $font-down-1;
       font-weight: normal;
-      line-height: 18px;
+      line-height: $line-height-medium;
     }
   }
 }
 
+.auth-message {
+  padding: 0 15px 15px 15px;
+  &:empty {
+    padding: 0;
+  }
+}
+
+.modal tr.instructions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.15em;
+  label {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
 
 // alternate login / create new account buttons should be de-emphasized
 

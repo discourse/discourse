@@ -37,6 +37,7 @@
   {{#if userBadges}}
     <div class="user-badges {{model.slug}}">
       {{#load-more selector=".badge-info" action="loadMore"}}
+      <div class="badges-granted">
         {{#each userBadges as |ub|}}
           {{#user-info user=ub.user size="medium" class="badge-info" date=ub.granted_at}}
             <div class="granted-on">{{i18n 'badges.granted_on' date=(inline-date ub.granted_at)}}</div>
@@ -45,6 +46,7 @@
             {{/if}}
           {{/user-info}}
         {{/each}}
+        </div>
       {{/load-more}}
 
       {{#unless canLoadMore}}

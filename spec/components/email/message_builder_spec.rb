@@ -247,6 +247,17 @@ describe Email::MessageBuilder do
 
   end
 
+  context "PM multiple participants" do
+    let(:pm_multiple) { Email::MessageBuilder.new(to_address,
+                                                               body: 'hello world',
+                                                               private_reply: true,
+                                                               participants: "user1, user2") }
+
+    it "lists participants out" do
+      expect(pm_multiple.body).to match('hello world\nuser1, user2')
+    end
+  end
+
   context "from field" do
 
     it "has the default from" do

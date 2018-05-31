@@ -22,9 +22,13 @@ import { registerIconRenderer, replaceIcon } from 'discourse-common/lib/icon-lib
 import { addNavItem } from 'discourse/models/nav-item';
 import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
+import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
+import { disableNameSuppression } from 'discourse/widgets/poster-name';
+import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from 'discourse/controllers/topic';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.13';
+const PLUGIN_API_VERSION = '0.8.22';
 
 class PluginApi {
   constructor(version, container) {
@@ -41,20 +45,7 @@ class PluginApi {
     return this.container.lookup('current-user:main');
   }
 
-  /**
-   * Allows you to overwrite or extend methods in a class.
-   *
-   * For example:
-   *
-   * ```
-   * api.modifyClass('controller:composer', {
-   *   actions: {
-   *     newActionHere() { }
-   *   }
-   * });
-   * ```
-   **/
-  modifyClass(resolverName, changes, opts) {
+  _resolveClass(resolverName, opts) {
     opts = opts || {};
 
     if (this.container.cache[resolverName]) {
@@ -69,7 +60,48 @@ class PluginApi {
       return;
     }
 
-    klass.class.reopen(changes);
+    return klass;
+  }
+
+  /**
+   * Allows you to overwrite or extend methods in a class.
+   *
+   * For example:
+   *
+   * ```
+   * api.modifyClass('controller:composer', {
+   *   actions: {
+   *     newActionHere() { }
+   *   }
+   * });
+   * ```
+   **/
+  modifyClass(resolverName, changes, opts) {
+
+    const klass = this._resolveClass(resolverName, opts);
+    if (klass) {
+      klass.class.reopen(changes);
+    }
+    return klass;
+  }
+
+  /**
+   * Allows you to overwrite or extend static methods in a class.
+   *
+   * For example:
+   *
+   * ```
+   * api.modifyClassStatic('controller:composer', {
+   *   superFinder: function() { return []; }
+   * });
+   * ```
+   **/
+  modifyClassStatic(resolverName, changes, opts) {
+
+    const klass = this._resolveClass(resolverName, opts);
+    if (klass) {
+      klass.class.reopenClass(changes);
+    }
     return klass;
   }
 
@@ -350,8 +382,67 @@ class PluginApi {
     ```
   **/
   onPageChange(fn) {
+    this.onAppEvent('page:changed', data => fn(data.url, data.title));
+  }
+
+  /**
+    Listen for a triggered `AppEvent` from Discourse.
+
+    ```javascript
+      api.onAppEvent('inserted-custom-html', () => {
+        console.log('a custom footer was rendered');
+      });
+    ```
+  **/
+  onAppEvent(name, fn) {
     let appEvents = this.container.lookup('app-events:main');
-    appEvents.on('page:changed', data => fn(data.url, data.title));
+    appEvents.on(name, fn);
+  }
+
+  /**
+    Registers a function to generate custom avatar CSS classes
+    for a particular user.
+
+    Takes a function that will accept a user as a parameter
+    and return an array of CSS classes to apply.
+
+    ```javascript
+    api.customUserAvatarClasses(user => {
+      if (Ember.get(user, 'primary_group_name') === 'managers') {
+        return ['managers'];
+      }
+    });
+   **/
+  customUserAvatarClasses(fn) {
+    registerCustomAvatarHelper(fn);
+  }
+
+  /**
+   * Allows you to disable suppression of similar username / names on posts
+   * If a user has the username bob.bob and the name Bob Bob, one of the two
+   * will be suppressed depending on prioritize_username_in_ux.
+   * This allows you to override core behavior
+   **/
+  disableNameSuppressionOnPosts() {
+    disableNameSuppression();
+  }
+
+  /**
+   * Registers a callback that will be invoked when the server calls
+   * Post#publish_change_to_clients! please ensure your type does not
+   * match acted,revised,rebaked,recovered, created,move_to_inbox or archived
+   *
+   * callback will be called with topicController and Message
+   *
+   * Example:
+   *
+   * api.registerCustomPostMessageCallback("applied_color", (topicController, message) => {
+   *   let stream = topicController.get("model.postStream");
+   *   // etc
+   * });
+   */
+  registerCustomPostMessageCallback(type, callback) {
+    registerCustomPostMessageCallback1(type, callback);
   }
 
   /**
@@ -605,6 +696,20 @@ class PluginApi {
   modifySelectKit(pluginApiKey) {
     return modifySelectKit(pluginApiKey);
   }
+
+  /**
+  *
+  * Registers a function that can inspect and modify the data that
+  * will be sent to Google Tag Manager when a page changed event is triggered.
+  *
+  * Example:
+  *
+  * addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
+  *
+  */
+  addGTMPageChangedCallback(fn) {
+    addGTMPageChangedCallback(fn);
+  }
 }
 
 let _pluginv01;
@@ -665,7 +770,12 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
   const mixin = {};
-  mixin["_decorate_" + (_decorateId++)] = function($elem) { cb($elem); }.on(evt);
+  mixin["_decorate_" + (_decorateId++)] = function($elem) {
+    $elem = $elem || this.$();
+    if ($elem) {
+      cb($elem);
+    }
+  }.on(evt);
   klass.reopen(mixin);
 }
 

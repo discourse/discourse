@@ -98,6 +98,15 @@ QUnit.test('fancyTitle', assert => {
         "supports emojis");
 });
 
+QUnit.test('fancyTitle direction', assert => {
+  const rtlTopic = Topic.create({ fancy_title: "هذا اختبار" });
+  const ltrTopic = Topic.create({ fancy_title: "This is a test"});
+
+  Discourse.SiteSettings.support_mixed_text_direction = true;
+  assert.equal(rtlTopic.get('fancyTitle'), `<span dir="rtl">هذا اختبار</span>`, "sets the dir-span to rtl");
+  assert.equal(ltrTopic.get('fancyTitle'), `<span dir="ltr">This is a test</span>`, "sets the dir-span to ltr");
+});
+
 QUnit.test('excerpt', assert => {
   const topic = Topic.create({ excerpt: "This is a test topic :smile:", pinned: true });
 

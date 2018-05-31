@@ -1,3 +1,5 @@
+require_dependency 'staff_message_format'
+
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
 
@@ -10,11 +12,16 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:admin) unless @admin && @admin.is_a?(User)
   end
 
+  USER_FIELDS ||= %i{id username name created_at trust_level last_seen_at last_emailed_at}
+
   def log_user_deletion(deleted_user, opts = {})
     raise Discourse::InvalidParameters.new(:deleted_user) unless deleted_user && deleted_user.is_a?(User)
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:delete_user],
-                                          ip_address: deleted_user.ip_address.to_s,
-                                          details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{deleted_user.send(x)}" }.join("\n")))
+    details = USER_FIELDS.map { |x| "#{x}: #{deleted_user.send(x)}" }.join("\n")
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:delete_user],
+      ip_address: deleted_user.ip_address.to_s,
+      details: details
+    ))
   end
 
   def log_custom(custom_type, details = nil)
@@ -31,7 +38,7 @@ class StaffActionLogger
     attrs[:action] = UserHistory.actions[:custom_staff]
     attrs[:custom_type] = custom_type
 
-    UserHistory.create(attrs)
+    UserHistory.create!(attrs)
   end
 
   def log_post_deletion(deleted_post, opts = {})
@@ -52,53 +59,89 @@ class StaffActionLogger
       "raw: #{deleted_post.raw}"
     ]
 
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:delete_post],
-                                          post_id: deleted_post.id,
-                                          details: details.join("\n")))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:delete_post],
+      post_id: deleted_post.id,
+      details: details.join("\n")
+    ))
   end
 
-  def log_topic_deletion(deleted_topic, opts = {})
-    raise Discourse::InvalidParameters.new(:deleted_topic) unless deleted_topic && deleted_topic.is_a?(Topic)
+  def log_topic_delete_recover(topic, action = "delete_topic", opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
 
-    user = deleted_topic.user ? "#{deleted_topic.user.username} (#{deleted_topic.user.name})" : "(deleted user)"
+    user = topic.user ? "#{topic.user.username} (#{topic.user.name})" : "(deleted user)"
 
     details = [
-      "id: #{deleted_topic.id}",
-      "created_at: #{deleted_topic.created_at}",
+      "id: #{topic.id}",
+      "created_at: #{topic.created_at}",
       "user: #{user}",
-      "title: #{deleted_topic.title}"
+      "title: #{topic.title}"
     ]
 
-    if first_post = deleted_topic.ordered_posts.first
+    if first_post = topic.ordered_posts.with_deleted.first
       details << "raw: #{first_post.raw}"
     end
 
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:delete_topic],
-                                          topic_id: deleted_topic.id,
-                                          details: details.join("\n")))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[action.to_sym],
+      topic_id: topic.id,
+      details: details.join("\n")
+    ))
   end
 
   def log_trust_level_change(user, old_trust_level, new_trust_level, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user && user.is_a?(User)
     raise Discourse::InvalidParameters.new(:old_trust_level) unless TrustLevel.valid? old_trust_level
     raise Discourse::InvalidParameters.new(:new_trust_level) unless TrustLevel.valid? new_trust_level
-    UserHistory.create!(params(opts).merge(action: UserHistory.actions[:change_trust_level],
-                                           target_user_id: user.id,
-                                           details: "old trust level: #{old_trust_level}\nnew trust level: #{new_trust_level}"))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_trust_level],
+      target_user_id: user.id,
+      details: "old trust level: #{old_trust_level}\nnew trust level: #{new_trust_level}"
+    ))
   end
 
   def log_lock_trust_level(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user && user.is_a?(User)
-    UserHistory.create!(params(opts).merge(action: UserHistory.actions[user.manual_locked_trust_level.nil? ? :unlock_trust_level : :lock_trust_level],
-                                           target_user_id: user.id))
+    action = UserHistory.actions[user.manual_locked_trust_level.nil? ? :unlock_trust_level : :lock_trust_level]
+    UserHistory.create!(params(opts).merge(
+      action: action,
+      target_user_id: user.id
+    ))
+  end
+
+  def log_topic_published(topic, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:topic_published],
+      topic_id: topic.id)
+    )
+  end
+
+  def log_post_lock(post, opts = {})
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[opts[:locked] ? :post_locked : :post_unlocked],
+      post_id: post.id)
+    )
+  end
+
+  def log_post_edit(post, opts = {})
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:post_edit],
+      post_id: post.id,
+      details: "#{opts[:old_raw]}\n\n---\n\n#{post.raw}"
+    ))
   end
 
   def log_site_setting_change(setting_name, previous_value, new_value, opts = {})
     raise Discourse::InvalidParameters.new(:setting_name) unless setting_name.present? && SiteSetting.respond_to?(setting_name)
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:change_site_setting],
-                                          subject: setting_name,
-                                          previous_value: previous_value,
-                                          new_value: new_value))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_site_setting],
+      subject: setting_name,
+      previous_value: previous_value,
+      new_value: new_value
+    ))
   end
 
   def theme_json(theme)
@@ -130,48 +173,57 @@ class StaffActionLogger
 
     old_json, new_json = strip_duplicates(old_json, new_json)
 
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:change_theme],
-                                          subject: new_theme.name,
-                                          previous_value: old_json,
-                                          new_value: new_json))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_theme],
+      subject: new_theme.name,
+      previous_value: old_json,
+      new_value: new_json
+    ))
   end
 
   def log_theme_destroy(theme, opts = {})
     raise Discourse::InvalidParameters.new(:theme) unless theme
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:delete_theme],
-                                          subject: theme.name,
-                                          previous_value: theme_json(theme)))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:delete_theme],
+      subject: theme.name,
+      previous_value: theme_json(theme)
+    ))
   end
 
   def log_site_text_change(subject, new_text = nil, old_text = nil, opts = {})
     raise Discourse::InvalidParameters.new(:subject) unless subject.present?
-    UserHistory.create!(params(opts).merge(action: UserHistory.actions[:change_site_text],
-                                           subject: subject,
-                                           previous_value: old_text,
-                                           new_value: new_text))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_site_text],
+      subject: subject,
+      previous_value: old_text,
+      new_value: new_text
+    ))
   end
 
   def log_username_change(user, old_username, new_username, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:change_username],
-                                          target_user_id: user.id,
-                                          previous_value: old_username,
-                                          new_value: new_username))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_username],
+      target_user_id: user.id,
+      previous_value: old_username,
+      new_value: new_username
+    ))
   end
 
   def log_name_change(user_id, old_name, new_name, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user_id
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:change_name],
-                                          target_user_id: user_id,
-                                          previous_value: old_name,
-                                          new_value: new_name))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_name],
+      target_user_id: user_id,
+      previous_value: old_name,
+      new_value: new_name
+    ))
   end
 
   def log_user_suspend(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
 
-    details = (reason || '').dup
-    details << "\n\n#{opts[:message]}" if opts[:message].present?
+    details = StaffMessageFormat.new(:suspend, reason, opts[:message]).format
 
     args = params(opts).merge(
       action: UserHistory.actions[:suspend_user],
@@ -179,50 +231,96 @@ class StaffActionLogger
       details: details
     )
     args[:post_id] = opts[:post_id] if opts[:post_id]
-    UserHistory.create(args)
+    UserHistory.create!(args)
   end
 
   def log_user_unsuspend(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:unsuspend_user],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:unsuspend_user],
+      target_user_id: user.id
+    ))
+  end
+
+  BADGE_FIELDS ||= %i{id name description long_description icon image badge_type_id
+    badge_grouping_id query allow_title multiple_grant listable target_posts
+    enabled auto_revoke show_posts system}
+
+  def log_badge_creation(badge)
+    raise Discourse::InvalidParameters.new(:badge) unless badge
+    details = BADGE_FIELDS.map { |f| [f, badge.send(f)] }.select { |f, v| v.present? }.map { |f, v| "#{f}: #{v}" }
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:create_badge],
+      details: details.join("\n")
+    ))
+  end
+
+  def log_badge_change(badge)
+    raise Discourse::InvalidParameters.new(:badge) unless badge
+    details = ["id: #{badge.id}"]
+    badge.previous_changes.each { |f, values| details << "#{f}: #{values[1]}" if BADGE_FIELDS.include?(f.to_sym) }
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:change_badge],
+      details: details.join("\n")
+    ))
+  end
+
+  def log_badge_deletion(badge)
+    raise Discourse::InvalidParameters.new(:badge) unless badge
+    details = BADGE_FIELDS.map { |f| [f, badge.send(f)] }.select { |f, v| v.present? }.map { |f, v| "#{f}: #{v}" }
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:delete_badge],
+      details: details.join("\n")
+    ))
   end
 
   def log_badge_grant(user_badge, opts = {})
     raise Discourse::InvalidParameters.new(:user_badge) unless user_badge
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:grant_badge],
-                                          target_user_id: user_badge.user_id,
-                                          details: user_badge.badge.name))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:grant_badge],
+      target_user_id: user_badge.user_id,
+      details: user_badge.badge.name
+    ))
   end
 
   def log_badge_revoke(user_badge, opts = {})
     raise Discourse::InvalidParameters.new(:user_badge) unless user_badge
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:revoke_badge],
-                                          target_user_id: user_badge.user_id,
-                                          details: user_badge.badge.name))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:revoke_badge],
+      target_user_id: user_badge.user_id,
+      details: user_badge.badge.name
+    ))
   end
 
   def log_check_email(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:check_email],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:check_email],
+      target_user_id: user.id
+    ))
   end
 
   def log_show_emails(users, opts = {})
     return if users.blank?
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:check_email],
-                                          details: users.map { |u| "[#{u.id}] #{u.username}" }.join("\n")))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:check_email],
+      details: users.map { |u| "[#{u.id}] #{u.username}" }.join("\n")
+    ))
   end
 
   def log_impersonate(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:impersonate],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:impersonate],
+      target_user_id: user.id
+    ))
   end
 
   def log_roll_up(subnets, opts = {})
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:roll_up],
-                                          details: subnets.join(", ")))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:roll_up],
+      details: subnets.join(", ")
+    ))
   end
 
   def log_category_settings_change(category, category_params, old_permissions = nil)
@@ -235,12 +333,14 @@ class StaffActionLogger
     end
 
     changed_attributes.each do |key, value|
-      UserHistory.create(params.merge(action: UserHistory.actions[:change_category_settings],
-                                      category_id: category.id,
-                                      context: category.url,
-                                      subject: key,
-                                      previous_value: value[0],
-                                      new_value: value[1]))
+      UserHistory.create!(params.merge(
+        action: UserHistory.actions[:change_category_settings],
+        category_id: category.id,
+        context: category.url,
+        subject: key,
+        previous_value: value[0],
+        new_value: value[1]
+      ))
     end
   end
 
@@ -257,10 +357,12 @@ class StaffActionLogger
       details << "parent_category: #{parent_category.name}"
     end
 
-    UserHistory.create(params.merge(action: UserHistory.actions[:delete_category],
-                                    category_id: category.id,
-                                    details: details.join("\n"),
-                                    context: category.url))
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:delete_category],
+      category_id: category.id,
+      details: details.join("\n"),
+      context: category.url
+    ))
   end
 
   def log_category_creation(category)
@@ -271,103 +373,157 @@ class StaffActionLogger
       "name: #{category.name}"
     ]
 
-    UserHistory.create(params.merge(action: UserHistory.actions[:create_category],
-                                    details: details.join("\n"),
-                                    category_id: category.id,
-                                    context: category.url))
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:create_category],
+      details: details.join("\n"),
+      category_id: category.id,
+      context: category.url
+    ))
   end
 
   def log_silence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
 
-    UserHistory.create(
-      params(opts).merge(
-        action: UserHistory.actions[:silence_user],
-        target_user_id: user.id,
-        details: opts[:details]
-      )
+    create_args = params(opts).merge(
+      action: UserHistory.actions[:silence_user],
+      target_user_id: user.id,
+      details: opts[:details]
     )
+    create_args[:post_id] = opts[:post_id] if opts[:post_id]
+
+    UserHistory.create!(create_args)
   end
 
   def log_unsilence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:unsilence_user],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:unsilence_user],
+      target_user_id: user.id
+    ))
+  end
+
+  def log_disable_second_factor_auth(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:disabled_second_factor],
+      target_user_id: user.id
+    ))
   end
 
   def log_grant_admin(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:grant_admin],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:grant_admin],
+      target_user_id: user.id
+    ))
   end
 
   def log_revoke_admin(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:revoke_admin],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:revoke_admin],
+      target_user_id: user.id
+    ))
   end
 
   def log_grant_moderation(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:grant_moderation],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:grant_moderation],
+      target_user_id: user.id
+    ))
   end
 
   def log_revoke_moderation(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:revoke_moderation],
-                                          target_user_id: user.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:revoke_moderation],
+      target_user_id: user.id
+    ))
   end
 
   def log_backup_create(opts = {})
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:backup_create],
-                                          ip_address: @admin.ip_address.to_s))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:backup_create],
+      ip_address: @admin.ip_address.to_s
+    ))
   end
 
   def log_backup_download(backup, opts = {})
     raise Discourse::InvalidParameters.new(:backup) unless backup
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:backup_download],
-                                          ip_address: @admin.ip_address.to_s,
-                                          details: backup.filename))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:backup_download],
+      ip_address: @admin.ip_address.to_s,
+      details: backup.filename
+    ))
   end
 
   def log_backup_destroy(backup, opts = {})
     raise Discourse::InvalidParameters.new(:backup) unless backup
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:backup_destroy],
-                                          ip_address: @admin.ip_address.to_s,
-                                          details: backup.filename))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:backup_destroy],
+      ip_address: @admin.ip_address.to_s,
+      details: backup.filename
+    ))
   end
 
   def log_revoke_email(user, reason, opts = {})
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:revoke_email],
-                                          target_user_id: user.id,
-                                          details: reason))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:revoke_email],
+      target_user_id: user.id,
+      details: reason
+    ))
   end
 
   def log_user_deactivate(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:deactivate_user],
-                                          target_user_id: user.id,
-                                          details: reason))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:deactivate_user],
+      target_user_id: user.id,
+      details: reason
+    ))
   end
 
   def log_user_activate(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:activate_user],
-                                          target_user_id: user.id,
-                                          details: reason))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:activate_user],
+      target_user_id: user.id,
+      details: reason
+    ))
   end
 
   def log_wizard_step(step, opts = {})
     raise Discourse::InvalidParameters.new(:step) unless step
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:wizard_step],
-                                          context: step.id))
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:wizard_step],
+      context: step.id
+    ))
   end
 
   def log_change_readonly_mode(state)
-    UserHistory.create(params.merge(action: UserHistory.actions[:change_readonly_mode],
-                                    previous_value: !state,
-                                    new_value: state))
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:change_readonly_mode],
+      previous_value: !state,
+      new_value: state
+    ))
+  end
+
+  def log_check_personal_message(topic, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:check_personal_message],
+      topic_id: topic.id,
+      context: topic.relative_url
+    ))
+  end
+
+  def log_post_approved(post, opts = {})
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:post_approved],
+      post_id: post.id
+    ))
   end
 
   private

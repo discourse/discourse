@@ -11,6 +11,7 @@
       order=order
       ascending=ascending
       sortable=sortable
+      listTitle=listTitle
       bulkSelectEnabled=bulkSelectEnabled}}
   </thead>
 {{/unless}}
@@ -40,7 +41,8 @@
                       expandGloballyPinned=expandGloballyPinned
                       expandAllPinned=expandAllPinned
                       lastVisitedTopic=lastVisitedTopic
-                      selected=selected}}
+                      selected=selected
+                      tagsForUser=tagsForUser}}
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}
 </tbody>

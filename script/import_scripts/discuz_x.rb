@@ -273,7 +273,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         description: row['description'],
         position: row['position'].to_i + max_position,
         color: color,
-        suppress_from_homepage: (row['status'] == (0) || row['status'] == (3)),
+        suppress_from_latest: (row['status'] == (0) || row['status'] == (3)),
         post_create_action: lambda do |category|
           if slug = @category_slug[row['id']]
             category.update(slug: slug)

@@ -125,19 +125,17 @@ describe SearchController do
 
   context "search context" do
     it "raises an error with an invalid context type" do
-      expect do
-        get :query, params: {
-          term: 'test', search_context: { type: 'security', id: 'hole' }
-        }, format: :json
-      end.to raise_error(Discourse::InvalidParameters)
+      get :query, params: {
+        term: 'test', search_context: { type: 'security', id: 'hole' }
+      }, format: :json
+      expect(response.status).to eq(400)
     end
 
     it "raises an error with a missing id" do
-      expect do
-        get :query,
-          params: { term: 'test', search_context: { type: 'user' } },
-          format: :json
-      end.to raise_error(Discourse::InvalidParameters)
+      get :query,
+        params: { term: 'test', search_context: { type: 'user' } },
+        format: :json
+      expect(response.status).to eq(400)
     end
 
     context "with a user" do
@@ -148,7 +146,6 @@ describe SearchController do
         get :query, params: {
           term: 'test', search_context: { type: 'user', id: user.username }
         }, format: :json
-
         expect(response).not_to be_success
       end
 
@@ -164,6 +161,10 @@ describe SearchController do
   end
 
   context "#click" do
+    after do
+      SearchLog.clear_debounce_cache!
+    end
+
     it "doesn't work wthout the necessary parameters" do
       expect do
         post :click, format: :json

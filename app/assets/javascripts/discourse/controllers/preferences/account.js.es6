@@ -4,15 +4,17 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setting } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController, {
 
-  saveAttrNames: ['name'],
+  saveAttrNames: ['name', 'title'],
 
   canEditName: setting('enable_names'),
   canSaveUser: true,
 
   newNameInput: null,
+  newTitleInput: null,
 
   passwordProgress: null,
 
@@ -30,9 +32,9 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
     return I18n.t(this.siteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
   },
 
-  @computed("model.has_title_badges")
-  canSelectTitle(hasTitleBadges) {
-    return this.siteSettings.enable_badges && hasTitleBadges;
+  @computed('model.availableTitles')
+  canSelectTitle(availableTitles) {
+    return availableTitles.length > 0;
   },
 
   @computed()
@@ -47,6 +49,7 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
       const model = this.get('model');
 
       model.set('name', this.get('newNameInput'));
+      model.set('title', this.get('newTitleInput'));
 
       return model.save(this.get('saveAttrNames')).then(() => {
         this.set('saved', true);
@@ -98,6 +101,10 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
           }
         ];
       bootbox.dialog(message, buttons, {"classes": "delete-account"});
+    },
+
+    showTwoFactorModal() {
+      showModal('second-factor-intro');
     }
   }
 });

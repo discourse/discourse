@@ -1,8 +1,3 @@
-#reply-control .d-editor-button-bar .toolbar-popup-menu-options .btn.select-kit-header {
-  padding: 7px 8px;
-  height: auto;
-}
-
 .select-kit {
   &.dropdown-select-box {
     &.toolbar-popup-menu-options {
@@ -20,7 +15,7 @@
         transition: all .25s;
 
         .name, .d-icon {
-          font-size: 1em;
+          font-size: $font-0;
           font-weight: normal;
           color: $primary;
         }
@@ -33,7 +28,6 @@
           background: $primary-medium;
 
           .name, .d-icon {
-            color: $secondary;
             color: $secondary;
           }
         }

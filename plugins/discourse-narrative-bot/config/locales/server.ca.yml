@@ -221,7 +221,7 @@ ca:
           Seleccionant qualsevol text de la meva publicació farà que aparegui el botó <kbd>**Cita**</kbd>. També funcionarà clicant **Resposta** amb qualsevol text seleccionat. Pots tornar-ho a provar?
       bookmark:
         instructions: |-
-          Si vols saber-ne més, selecciona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marca aquest missatge privat**. Si ho fas, potser tindràs un :gift: més endavant!
+          Si vols saber-ne més, selecciona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marca com a preferit aquest missatge privat**. Si ho fas, potser tindràs un :gift: més endavant!
         reply: |-
           Fantàstic! Ara pots trobar fàcilment com tornar a la nostra conversa privada en qualsevol moment, exactament des de [la pestanya de favorits del teu perfil](%{profile_page_url}/activity/bookmarks). Només has de seleccionar la teva imatge de perfil a la part superior dreta &#8599;
         not_found: |-
@@ -392,14 +392,14 @@ ca:
         instructions: |-
           A vegades potser voldràs **amagar detalls** a les teves respostes:
 
-          - Quan estiguis debatent punts de la trama d'una pel·lícula o programa de televisió que podría ser considerat un spoiler.
+          - Quan estiguis debatent punts de la trama d'una pel·lícula o programa de televisió que podría ser considerat una filtració.
 
-          - Quan la teva publicació necessita molts detalls opcionals que puguin resultar aclaparadors quan es llegeixin alhora
+          - Quan la teva publicació necessita molts detalls opcionals que puguin resultar aclaparadors quan es llegeixin alhora.
 
-          [details = Selecciona-ho per veure com funciona!] 「
-          1. Selecciona l'engranatge<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor
-          2. Selecciona "Amaga els detalls"
-          3. Edita el resum de les dades i afegeix el teu contingut
+          [details = Selecciona-ho per veure com funciona!]
+          1. Selecciona l'engranatge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor.
+          2. Selecciona "Amaga els detalls".
+          3. Edita el resum de les dades i afegeix el teu contingut.
           [/ detalls]
 
           Pots utilitzar l'engranatge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor per afegir una secció de detalls a la seva pròxima resposta?

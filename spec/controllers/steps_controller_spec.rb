@@ -7,11 +7,10 @@ describe StepsController do
   end
 
   it 'needs you to be logged in' do
-    expect do
-      put :update, params: {
-        id: 'made-up-id', fields: { forum_title: "updated title" }
-      }, format: :json
-    end.to raise_error(Discourse::NotLoggedIn)
+    put :update, params: {
+      id: 'made-up-id', fields: { forum_title: "updated title" }
+    }, format: :json
+    expect(response.status).to eq(403)
   end
 
   it "raises an error if you aren't an admin" do

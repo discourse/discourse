@@ -119,9 +119,6 @@ eo:
 es:
   name: Spanish
   nativeName: Español
-es_MX:
-  name: Spanish
-  nativeName: Español (MX)
 et:
   name: Estonian
   nativeName: eesti
@@ -439,7 +436,7 @@ sk:
   nativeName: slovenčina
 sl:
   name: Slovene
-  nativeName: slovenski jezik
+  nativeName: slovenščina
 sm:
   name: Samoan
   nativeName: gagana fa'a Samoa

@@ -6,11 +6,10 @@ RSpec.describe ComposerController do
   describe '#parse_html' do
 
     it "should not be able access without sign in" do
-      expect {
-        post "/composer/parse_html.json", params: {
-          html: "<strong>hello</strong>"
-        }
-      }.to raise_error(Discourse::NotLoggedIn)
+      post "/composer/parse_html.json", params: {
+        html: "<strong>hello</strong>"
+      }
+      expect(response.status).to eq(403)
     end
 
     it "should convert html tags to markdown text" do

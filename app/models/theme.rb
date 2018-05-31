@@ -1,13 +1,17 @@
 require_dependency 'distributed_cache'
 require_dependency 'stylesheet/compiler'
 require_dependency 'stylesheet/manager'
+require_dependency 'theme_settings_parser'
+require_dependency 'theme_settings_manager'
 
 class Theme < ActiveRecord::Base
 
   @cache = DistributedCache.new('theme')
 
+  belongs_to :user
   belongs_to :color_scheme
   has_many :theme_fields, dependent: :destroy
+  has_many :theme_settings, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
   has_many :child_themes, through: :child_theme_relation, source: :child_theme
   has_many :color_schemes
@@ -23,8 +27,16 @@ class Theme < ActiveRecord::Base
   end
 
   after_save do
-    changed_colors.each(&:save!)
+    color_schemes = {}
+    changed_colors.each do |color|
+      color.save!
+      color_schemes[color.color_scheme_id] ||= color.color_scheme
+    end
+
+    color_schemes.values.each(&:save!)
+
     changed_colors.clear
+
     changed_fields.each(&:save!)
     changed_fields.clear
 
@@ -34,11 +46,13 @@ class Theme < ActiveRecord::Base
     @included_themes = nil
 
     remove_from_cache!
+    clear_cached_settings!
     notify_scheme_change if saved_change_to_color_scheme_id?
   end
 
   after_destroy do
     remove_from_cache!
+    clear_cached_settings!
     if SiteSetting.default_theme_key == self.key
       Theme.clear_default!
     end
@@ -72,7 +86,7 @@ class Theme < ActiveRecord::Base
     if keys = @cache["user_theme_keys"]
       return keys
     end
-    @cache["theme_keys"] = Set.new(
+    @cache["user_theme_keys"] = Set.new(
       Theme
       .where('user_selectable OR key = ?', SiteSetting.default_theme_key)
       .pluck(:key)
@@ -122,7 +136,11 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3)
+  end
+
+  def self.lookup_target(target_id)
+    self.targets.invert[target_id]
   end
 
   def notify_scheme_change(clear_manager_cache = true)
@@ -288,6 +306,56 @@ class Theme < ActiveRecord::Base
     child_themes.reload
     save!
   end
+
+  def settings
+    field = theme_fields.where(target_id: Theme.targets[:settings], name: "yaml").first
+    return [] unless field && field.error.nil?
+
+    settings = []
+    ThemeSettingsParser.new(field).load do |name, default, type, opts|
+      settings << ThemeSettingsManager.create(name, default, type, self, opts)
+    end
+    settings
+  end
+
+  def cached_settings
+    Rails.cache.fetch("settings_for_theme_#{self.key}", expires_in: 30.minutes) do
+      hash = {}
+      self.settings.each do |setting|
+        hash[setting.name] = setting.value
+      end
+      hash
+    end
+  end
+
+  def clear_cached_settings!
+    Rails.cache.delete("settings_for_theme_#{self.key}")
+  end
+
+  def included_settings
+    hash = {}
+
+    self.included_themes.each do |theme|
+      hash.merge!(theme.cached_settings)
+    end
+
+    hash.merge!(self.cached_settings)
+    hash
+  end
+
+  def self.settings_for_client(key)
+    theme = Theme.find_by(key: key)
+    return {}.to_json unless theme
+
+    theme.included_settings.to_json
+  end
+
+  def update_setting(setting_name, new_value)
+    target_setting = settings.find { |setting| setting.name == setting_name }
+    raise Discourse::NotFound unless target_setting
+
+    target_setting.value = new_value
+  end
 end
 
 # == Schema Information
@@ -295,9 +363,9 @@ end
 # Table name: themes
 #
 #  id               :integer          not null, primary key
-#  name             :string(255)      not null
+#  name             :string           not null
 #  user_id          :integer          not null
-#  key              :string(255)      not null
+#  key              :string           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  compiler_version :integer          default(0), not null

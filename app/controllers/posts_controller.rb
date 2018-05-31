@@ -4,12 +4,34 @@ require_dependency 'post_destroyer'
 require_dependency 'post_merger'
 require_dependency 'distributed_memoizer'
 require_dependency 'new_post_result_serializer'
+require_dependency 'post_locker'
 
 class PostsController < ApplicationController
 
-  before_action :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :replyIids, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
+  requires_login except: [
+    :show,
+    :replies,
+    :by_number,
+    :short_link,
+    :reply_history,
+    :replyIids,
+    :revisions,
+    :latest_revision,
+    :expand_embed,
+    :markdown_id,
+    :markdown_num,
+    :cooked,
+    :latest,
+    :user_posts_feed
+  ]
 
-  skip_before_action :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest, :user_posts_feed]
+  skip_before_action :preload_json, :check_xhr, only: [
+    :markdown_id,
+    :markdown_num,
+    :short_link,
+    :latest,
+    :user_posts_feed
+  ]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)
@@ -237,6 +259,11 @@ class PostsController < ApplicationController
     render json: post.reply_ids(guardian).to_json
   end
 
+  def all_reply_ids
+    post = find_post_from_params
+    render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
+  end
+
   def destroy
     post = find_post_from_params
     RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
@@ -388,6 +415,13 @@ class PostsController < ApplicationController
     end
 
     render_json_dump(result)
+  end
+
+  def locked
+    post = find_post_from_params
+    locker = PostLocker.new(post, current_user)
+    params[:locked] === "true" ? locker.lock : locker.unlock
+    render_json_dump(locked: post.locked?)
   end
 
   def bookmark
@@ -610,6 +644,12 @@ class PostsController < ApplicationController
       result[:is_warning] = (params[:is_warning] == "true")
     else
       result[:is_warning] = false
+    end
+
+    if params[:shared_draft] == 'true'
+      raise Discourse::InvalidParameters.new(:shared_draft) unless guardian.can_create_shared_draft?
+
+      result[:shared_draft] = true
     end
 
     if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"

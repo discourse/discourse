@@ -90,23 +90,35 @@ export default createWidget('hamburger-menu', {
     const { siteSettings } = this;
     const links = [];
 
-    links.push({ route: 'discovery.latest', className: 'latest-topics-link', label: 'filters.latest.title' });
+    links.push({
+      route: 'discovery.latest',
+      className: 'latest-topics-link',
+      label: 'filters.latest.title',
+      title: 'filters.latest.help'
+    });
 
     if (this.currentUser) {
       links.push({ route: 'discovery.new',
                    className: 'new-topics-link',
                    labelCount: 'filters.new.title_with_count',
                    label: 'filters.new.title',
+                   title: 'filters.new.help',
                    count: this.lookupCount('new') });
 
       links.push({ route: 'discovery.unread',
                    className: 'unread-topics-link',
                    labelCount: 'filters.unread.title_with_count',
                    label: 'filters.unread.title',
+                   title: 'filters.unread.help',
                    count: this.lookupCount('unread') });
     }
 
-    links.push({ route: 'discovery.top', className: 'top-topics-link', label: 'filters.top.title' });
+    links.push({
+      route: 'discovery.top',
+      className: 'top-topics-link',
+      label: 'filters.top.title',
+      title: 'filters.top.help'
+    });
 
     if (siteSettings.enable_badges) {
       links.push({ route: 'badges', className: 'badge-link', label: 'badges.title' });
@@ -116,7 +128,7 @@ export default createWidget('hamburger-menu', {
       links.push({ route: 'users', className: 'user-directory-link', label: 'directory.title' });
     }
 
-    if (this.siteSettings.enable_group_directory) {
+    if (this.siteSettings.enable_group_directory || (this.currentUser && this.currentUser.staff)) {
       links.push({ route: 'groups', className: 'groups-link', label: 'groups.index.title' });
     }
 
@@ -153,7 +165,7 @@ export default createWidget('hamburger-menu', {
 
     const { site } = this;
     if (!site.mobileView && !this.capabilities.touch) {
-      links.push({ action: 'showKeyboard', className: 'keyboard-shortcuts-link', label: 'keyboard_shortcuts_help.title' });
+      links.push({ href: '', action: 'showKeyboard', className: 'keyboard-shortcuts-link', label: 'keyboard_shortcuts_help.title' });
     }
 
     if (this.site.mobileView || (this.siteSettings.enable_mobile_theme && this.capabilities.touch)) {

@@ -7,10 +7,10 @@ class Demon::Base
     @demons
   end
 
-  def self.start(count = 1)
+  def self.start(count = 1, verbose: false)
     @demons ||= {}
     count.times do |i|
-      (@demons["#{prefix}_#{i}"] ||= new(i)).start
+      (@demons["#{prefix}_#{i}"] ||= new(i, verbose: verbose)).start
     end
   end
 
@@ -38,16 +38,18 @@ class Demon::Base
   attr_reader :pid, :parent_pid, :started, :index
   attr_accessor :stop_timeout
 
-  def initialize(index)
+  def initialize(index, rails_root: nil, parent_pid: nil, verbose: false)
     @index = index
     @pid = nil
-    @parent_pid = Process.pid
+    @parent_pid = parent_pid || Process.pid
     @started = false
     @stop_timeout = 10
+    @rails_root = rails_root || Rails.root
+    @verbose = verbose
   end
 
   def pid_file
-    "#{Rails.root}/tmp/pids/#{self.class.prefix}_#{@index}.pid"
+    "#{@rails_root}/tmp/pids/#{self.class.prefix}_#{@index}.pid"
   end
 
   def alive?(pid = nil)
@@ -153,8 +155,15 @@ class Demon::Base
 
   private
 
+  def verbose(msg)
+    if @verbose
+      puts msg
+    end
+  end
+
   def write_pid_file
-    FileUtils.mkdir_p(Rails.root + "tmp/pids")
+    verbose("writing pid file #{pid_file} for #{@pid}")
+    FileUtils.mkdir_p(@rails_root + "tmp/pids")
     File.open(pid_file, 'w') do |f|
       f.write(@pid)
     end
@@ -190,7 +199,7 @@ class Demon::Base
   end
 
   def establish_app
-    Discourse.after_fork
+    Discourse.after_fork if defined?(Discourse)
 
     Signal.trap("HUP") do
       begin

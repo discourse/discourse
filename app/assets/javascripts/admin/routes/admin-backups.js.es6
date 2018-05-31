@@ -9,26 +9,24 @@ const LOG_CHANNEL = "/admin/backups/logs";
 export default Discourse.Route.extend({
 
   activate() {
-    this.messageBus.subscribe(LOG_CHANNEL, this._processLogMessage.bind(this));
-  },
-
-  _processLogMessage(log) {
-    if (log.message === "[STARTED]") {
-      this.controllerFor("adminBackups").set("model.isOperationRunning", true);
-      this.controllerFor("adminBackupsLogs").get('logs').clear();
-    } else if (log.message === "[FAILED]") {
-      this.controllerFor("adminBackups").set("model.isOperationRunning", false);
-      bootbox.alert(I18n.t("admin.backups.operations.failed", { operation: log.operation }));
-    } else if (log.message === "[SUCCESS]") {
-      Discourse.User.currentProp("hideReadOnlyAlert", false);
-      this.controllerFor("adminBackups").set("model.isOperationRunning", false);
-      if (log.operation === "restore") {
-        // redirect to homepage when the restore is done (session might be lost)
-        window.location.pathname = Discourse.getURL("/");
+    this.messageBus.subscribe(LOG_CHANNEL, (log) => {
+      if (log.message === "[STARTED]") {
+        this.controllerFor("adminBackups").set("model.isOperationRunning", true);
+        this.controllerFor("adminBackupsLogs").get('logs').clear();
+      } else if (log.message === "[FAILED]") {
+        this.controllerFor("adminBackups").set("model.isOperationRunning", false);
+        bootbox.alert(I18n.t("admin.backups.operations.failed", { operation: log.operation }));
+      } else if (log.message === "[SUCCESS]") {
+        Discourse.User.currentProp("hideReadOnlyAlert", false);
+        this.controllerFor("adminBackups").set("model.isOperationRunning", false);
+        if (log.operation === "restore") {
+          // redirect to homepage when the restore is done (session might be lost)
+          window.location.pathname = Discourse.getURL("/");
+        }
+      } else {
+        this.controllerFor("adminBackupsLogs").get('logs').pushObject(Em.Object.create(log));
       }
-    } else {
-      this.controllerFor("adminBackupsLogs").get('logs').pushObject(Em.Object.create(log));
-    }
+    });
   },
 
   model() {
@@ -122,12 +120,7 @@ export default Discourse.Route.extend({
     },
 
     uploadSuccess(filename) {
-      const self = this;
-      bootbox.alert(I18n.t("admin.backups.upload.success", { filename: filename }), function() {
-        Backup.find().then(function (backups) {
-          self.controllerFor("adminBackupsIndex").set("model", backups);
-        });
-      });
+      bootbox.alert(I18n.t("admin.backups.upload.success", { filename: filename }));
     },
 
     uploadError(filename, message) {

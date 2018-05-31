@@ -4,6 +4,16 @@ describe ExtraLocalesController do
 
   context 'show' do
 
+    it "caches for 24 hours if version is provided and it matches current hash" do
+      get :show, params: { bundle: 'admin', v: ExtraLocalesController.bundle_js_hash('admin') }
+      expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
+    end
+
+    it "does not cache at all if version is invalid" do
+      get :show, params: { bundle: 'admin', v: 'a' * 32 }
+      expect(response.headers["Cache-Control"]).not_to eq("max-age=86400, public, immutable")
+    end
+
     it "needs a valid bundle" do
       get :show, params: { bundle: 'made-up-bundle' }
       expect(response).to_not be_success

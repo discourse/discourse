@@ -8,12 +8,12 @@
   position: absolute;
   background-color: black;
   opacity: 0.8;
-  z-index: 1000;
+  z-index: z("modal","overlay");
 }
 
 .d-editor-modals {
   position: absolute;
-  z-index: 1001;
+  z-index: z("modal","content");
 }
 
 .d-editor {
@@ -52,11 +52,17 @@
   background-color: $secondary;
   position: relative;
   border: 1px solid $primary-medium;
-  
+
   textarea {
     background: transparent;
   }
 
+  &.disabled {
+    cursor: not-allowed;
+    .d-editor-button-bar {
+      visibility: hidden;
+    }
+  }
 }
 
 .d-editor-preview-wrapper {
@@ -73,14 +79,14 @@
   min-height: 30px;
   padding-left: 3px;
   border-bottom: 1px solid $primary-low;
-  
+
   button {
     background-color: transparent;
     color: $primary-high;
   }
 
   .btn:not(.no-text) {
-    font-size: 1.2em;
+    font-size: $font-up-1;
   }
 
   .btn.bold {
@@ -108,13 +114,13 @@
 .d-editor-input,
 .d-editor-preview {
   box-sizing: border-box;
-  flex: 1 1 100%;  
-  width: 100%;  
+  flex: 1 1 100%;
+  width: 100%;
   margin: 0;
   min-height: auto;
   word-wrap: break-word;
   -webkit-appearance: none;
-  border-radius: 0;  
+  border-radius: 0;
   &:focus {
     box-shadow: none;
     border: 0;
@@ -127,7 +133,7 @@
   padding: 10px;
   height: 100%;
   overflow-x: hidden;
-  resize: none; 
+  resize: none;
 }
 
 .d-editor-preview {
@@ -155,6 +161,7 @@
 }
 
 .user-preferences .bio-composer,
+.group-form-bio,
 .edit-category-tab-topic-template {
   textarea {
     width: 100%;
@@ -164,6 +171,7 @@
   }
   .d-editor-textarea-wrapper {
     border: 1px solid $primary-low;
+    min-height: 14em;
   }
   .d-editor-button-bar .btn {
     padding: 6px 8px;
@@ -178,7 +186,8 @@
   }
 }
 
-.user-preferences .bio-composer {
+.user-preferences .bio-composer,
+.group-form-bio {
   padding: 10px;
   border: 1px solid $primary-low;
 }

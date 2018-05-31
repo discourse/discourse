@@ -5,7 +5,6 @@ import { propertyNotEqual } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ApiKey from 'admin/models/api-key';
 import Group from 'discourse/models/group';
-import TL3Requirements from 'admin/models/tl3-requirements';
 import { userPath } from 'discourse/lib/url';
 
 const wrapAdmin = user => user ? AdminUser.create(user) : null;
@@ -88,21 +87,6 @@ const AdminUser = Discourse.User.extend({
     }).then(() => this.set('api_key', null));
   },
 
-  deleteAllPostsExplanation: function() {
-    if (!this.get('can_delete_all_posts')) {
-      if (this.get('deleteForbidden') && this.get('staff')) {
-        return I18n.t('admin.user.delete_posts_forbidden_because_staff');
-      }
-      if (this.get('post_count') > Discourse.SiteSettings.delete_all_posts_max) {
-        return I18n.t('admin.user.cant_delete_all_too_many_posts', {count: Discourse.SiteSettings.delete_all_posts_max});
-      } else {
-        return I18n.t('admin.user.cant_delete_all_posts', {count: Discourse.SiteSettings.delete_user_max_post_age});
-      }
-    } else {
-      return null;
-    }
-  }.property('can_delete_all_posts', 'deleteForbidden'),
-
   deleteAllPosts() {
     const user = this,
           message = I18n.messageFormat('admin.user.delete_all_posts_confirm_MF', { "POSTS": user.get('post_count'), "TOPICS": user.get('topic_count') }),
@@ -165,6 +149,14 @@ const AdminUser = Discourse.User.extend({
         can_grant_moderation: false,
         can_revoke_moderation: true
       });
+    }).catch(popupAjaxError);
+  },
+
+  disableSecondFactor() {
+    return ajax(`/admin/users/${this.get('id')}/disable_second_factor`, {
+      type: 'PUT'
+    }).then(() => {
+      this.set('second_factor_enabled', false);
     }).catch(popupAjaxError);
   },
 
@@ -233,8 +225,6 @@ const AdminUser = Discourse.User.extend({
     return this.get('trust_level') < 4;
   }.property('trust_level'),
 
-  isSuspended: Em.computed.equal('suspended', true),
-  isSilenced: Ember.computed.equal('silenced', true),
   canSuspend: Em.computed.not('staff'),
 
   suspendDuration: function() {
@@ -293,7 +283,8 @@ const AdminUser = Discourse.User.extend({
 
   deactivate() {
     return ajax('/admin/users/' + this.id + '/deactivate', {
-      type: 'PUT'
+      type: 'PUT',
+      data: { context: document.location.pathname }
     }).then(function() {
       window.location.reload();
     }).catch(function(e) {
@@ -345,8 +336,6 @@ const AdminUser = Discourse.User.extend({
     }).catch(popupAjaxError);
   },
 
-  anonymizeForbidden: Em.computed.not("can_be_anonymized"),
-
   anonymize() {
     const user = this,
           message = I18n.t("admin.user.anonymize_confirm");
@@ -385,26 +374,13 @@ const AdminUser = Discourse.User.extend({
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
   },
 
-  deleteForbidden: Em.computed.not("canBeDeleted"),
-
-  deleteExplanation: function() {
-    if (this.get('deleteForbidden')) {
-      if (this.get('staff')) {
-        return I18n.t('admin.user.delete_forbidden_because_staff');
-      } else {
-        return I18n.t('admin.user.delete_forbidden', {count: Discourse.SiteSettings.delete_user_max_post_age});
-      }
-    } else {
-      return null;
-    }
-  }.property('deleteForbidden'),
-
   destroy(opts) {
     const user = this,
           message = I18n.t("admin.user.delete_confirm"),
           location = document.location.pathname;
 
     const performDestroy = function(block) {
+      bootbox.dialog(I18n.t('admin.user.deleting_user'));
       let formData = { context: location };
       if (block) {
         formData["block_email"] = true;
@@ -464,11 +440,12 @@ const AdminUser = Discourse.User.extend({
     });
   },
 
-  tl3Requirements: function() {
-    if (this.get('tl3_requirements')) {
-      return TL3Requirements.create(this.get('tl3_requirements'));
+  @computed('tl3_requirements')
+  tl3Requirements(requirements) {
+    if (requirements) {
+      return this.store.createRecord('tl3Requirements', requirements);
     }
-  }.property('tl3_requirements'),
+  },
 
   @computed('suspended_by')
   suspendedBy: wrapAdmin,

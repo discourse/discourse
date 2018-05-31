@@ -18,13 +18,15 @@ RawHandlebars.helpers['get'] = function(context, options) {
   var firstContext =  options.contexts[0];
   var val = firstContext[context];
 
-  if (context.indexOf('controller') === 0) {
-    context = context.replace(/^controller\./, '');
+  if (context.indexOf('controller.') === 0) {
+    context = context.slice(context.indexOf('.') + 1);
   }
 
-  if (val && val.isDescriptor) { return Em.get(firstContext, context); }
-  val = val === undefined ? Em.get(firstContext, context): val;
-  return val;
+  if (val && val.isDescriptor) {
+    return Em.get(firstContext, context);
+  }
+
+  return val === undefined ? Em.get(firstContext, context) : val;
 };
 
 // adds compatability so this works with stringParams

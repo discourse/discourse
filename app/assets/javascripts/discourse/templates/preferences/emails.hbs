@@ -1,3 +1,10 @@
+{{#unless siteSettings.disable_mailing_list_mode}}
+  <div class="warning-wrap">
+    {{#if model.user_option.mailing_list_mode}}
+      <div class="warning">{{i18n 'user.mailing_list_mode.warning'}}</div>
+    {{/if}}
+  </div>
+{{/unless}}
 <div class="control-group pref-email-settings">
   <label class="control-label">{{i18n 'user.email_settings'}}</label>
   <div class='controls controls-dropdown'>
@@ -45,7 +52,7 @@
   </div>
 {{/unless}}
 
-{{plugin-outlet name="user-preferences-emails"}}
+{{plugin-outlet name="user-preferences-emails" args=(hash model=model save=(action "save"))}}
 
 <br/>
 

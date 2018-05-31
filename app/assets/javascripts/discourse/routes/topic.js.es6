@@ -85,6 +85,10 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
+    showGrantBadgeModal() {
+      showModal('grant-badge', { model: this.modelFor('topic'), title: 'admin.badges.grant_badge' });
+    },
+
     showRawEmail(model) {
       showModal('raw-email', { model });
       this.controllerFor('raw_email').loadRawEmail(model.get("id"));

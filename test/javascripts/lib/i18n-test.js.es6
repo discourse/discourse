@@ -1,17 +1,30 @@
 QUnit.module("lib:i18n", {
   _locale: I18n.locale,
+  _fallbackLocale: I18n.fallbackLocale,
   _translations: I18n.translations,
 
   beforeEach() {
     I18n.locale = "fr";
 
     I18n.translations = {
+      "fr_FOO": {
+        "js": {
+          "topic": {
+            "reply": {
+              "title": "Foo"
+            }
+          },
+        }
+      },
       "fr": {
         "js": {
           "hello": "Bonjour",
           "topic": {
             "reply": {
-              "title": "Répondre",
+              "title": "Répondre"
+            },
+            "share": {
+              "title": "Partager"
             }
           },
           "character_count": {
@@ -56,6 +69,7 @@ QUnit.module("lib:i18n", {
 
   afterEach() {
     I18n.locale = this._locale;
+    I18n.fallbackLocale = this._fallbackLocale;
     I18n.translations = this._translations;
   }
 });
@@ -92,4 +106,13 @@ QUnit.test("pluralizations", assert => {
   assert.equal(I18n.t("word_count", { count: 3 }), "3 words");
   assert.equal(I18n.t("word_count", { count: 10 }), "10 words");
   assert.equal(I18n.t("word_count", { count: 100 }), "100 words");
+});
+
+QUnit.test("fallback", assert => {
+  I18n.locale = "fr_FOO";
+  I18n.fallbackLocale = "fr";
+
+  assert.equal(I18n.t("topic.reply.title"), "Foo", "uses locale translations when they exist");
+  assert.equal(I18n.t("topic.share.title"), "Partager", "falls back to fallbackLocale translations when they exist");
+  assert.equal(I18n.t("topic.reply.help"), "begin composing a reply to this topic", "falls back to English translations");
 });

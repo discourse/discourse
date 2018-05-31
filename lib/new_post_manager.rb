@@ -68,7 +68,7 @@ class NewPostManager
   end
 
   def self.exempt_user?(user)
-    user.staff? || user.staged
+    user.staff?
   end
 
   def self.post_needs_approval?(manager)
@@ -81,7 +81,8 @@ class NewPostManager
     (manager.args[:title].present? && user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i) ||
     is_fast_typer?(manager) ||
     matches_auto_silence_regex?(manager) ||
-    WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
+    WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval? ||
+    (SiteSetting.approve_unless_staged && user.staged)
   end
 
   def self.default_handler(manager)
@@ -123,6 +124,7 @@ class NewPostManager
     SiteSetting.approve_post_count > 0 ||
     SiteSetting.approve_unless_trust_level.to_i > 0 ||
     SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
+    SiteSetting.approve_unless_staged ||
     WordWatcher.words_for_action_exists?(:require_approval) ||
     handlers.size > 1
   end
@@ -133,9 +135,9 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
+    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
       result = NewPostResult.new(:created_post, false)
-      result.errors[:base] << I18n.t('contains_blocked_words')
+      result.errors[:base] << I18n.t('contains_blocked_words', word: matches[0])
       return result
     end
 

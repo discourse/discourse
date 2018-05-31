@@ -3,13 +3,10 @@
 .modal.history-modal {
 
   .modal-inner-container {
-    min-width: 960px;
     min-height: 500px;
+    max-width: 960px;
   }
   #revision-controls {
-    float: left;
-    padding-right: 5px;
-
     .btn[disabled] {
       cursor: not-allowed;
       background-color: $primary-low; 
@@ -32,11 +29,7 @@
       font-weight: bold;
     }
   }
-  #revision-details {
-    padding: 5px;
-    margin-top: 10px;
-    border-bottom: 3px solid $primary-low; 
-  }
+
   #revisions {
     word-wrap: break-word;
     table {
@@ -52,7 +45,7 @@
   }
   .markdown {
     font-family: monospace;
-    font-size: 0.857em;
+    font-size: $font-down-1;
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -64,9 +57,10 @@
       white-space: pre-wrap;
     }
   }
-  .span8, .markdown {
+  .revision-content, .markdown {
     img {
-      max-width: 400px;
+      max-width: 100%;
+      box-sizing: border-box;
     }
   }
   .modal-header {

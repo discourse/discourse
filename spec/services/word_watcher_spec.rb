@@ -76,6 +76,21 @@ describe WordWatcher do
           m = WordWatcher.new("trooooooooot").word_matches_for_action?(:require_approval)
           expect(m[1]).to eq("trooooooooot")
         end
+
+        it "support uppercase" do
+          Fabricate(
+            :watched_word,
+            word: /a\S+ce/,
+            action: WatchedWord.actions[:require_approval]
+          )
+
+          m = WordWatcher.new('Amazing place').word_matches_for_action?(:require_approval)
+          expect(m).to be_nil
+          m = WordWatcher.new('Amazing applesauce').word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq('applesauce')
+          m = WordWatcher.new('Amazing AppleSauce').word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq('AppleSauce')
+        end
       end
 
     end

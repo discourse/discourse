@@ -7,6 +7,7 @@
 # max                - For a string setting, the maximum length. For an integer setting, the maximum value.
 # regex              - A regex that the value must match.
 # validator          - The name of the class that will be use to validate the value of the setting.
+# allow_any          - For choice settings allow items not specified in the choice list (default true)
 # enum               - The setting has a fixed set of allowed values, and only one can be chosen.
 #                      Set to the class name that defines the set.
 # shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
@@ -79,6 +80,9 @@ basic:
   set_locale_from_accept_language_header:
     default: false
     validator: "AllowUserLocaleEnabledValidator"
+  support_mixed_text_direction:
+    client: true
+    default: false
   categories_topics:
     default: 20
     min: 5
@@ -117,6 +121,8 @@ basic:
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
+    validator: RegexPresenceValidator
+    allow_any: false
     choices:
      - latest
      - new
@@ -130,6 +136,7 @@ basic:
     client: true
     type: list
     default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
+    allow_any: false
     choices:
      - like-count
      - like
@@ -144,6 +151,7 @@ basic:
     client: true
     type: list
     default: 'flag|bookmark|edit|delete|admin'
+    allow_any: false
     choices:
      - like
      - edit
@@ -157,6 +165,7 @@ basic:
     client: true
     type: list
     default: 'twitter|facebook|email'
+    allow_any: false
     choices:
      - twitter
      - facebook
@@ -220,6 +229,21 @@ basic:
   enable_whispers:
     client: true
     default: false
+  push_notifications_prompt:
+    default: false
+    client: true
+  push_notifications_icon_url:
+    default: ''
+  vapid_public_key_bytes:
+    default: ''
+    client: true
+    hidden: true
+  vapid_public_key:
+    default: ''
+    hidden: true
+  vapid_private_key:
+    default: ''
+    hidden: true
 
 login:
   invite_only:
@@ -236,6 +260,10 @@ login:
   enable_local_logins:
     client: true
     default: true
+  enable_local_logins_via_email:
+    client: true
+    default: false
+    validator: "EnableLocalLoginsViaEmailValidator"
   allow_new_registrations:
     client: true
     default: true
@@ -247,6 +275,16 @@ login:
     default: false
   google_oauth2_client_id: ''
   google_oauth2_client_secret: ''
+  google_oauth2_prompt:
+    default: ''
+    type: list
+    choices:
+      - ''
+      - 'none'
+      - 'consent'
+      - 'select_account'
+  google_oauth2_hd:
+    default: ''
   enable_yahoo_logins:
     client: true
     default: false
@@ -277,8 +315,6 @@ login:
   facebook_app_secret:
     default: ''
     regex: "^[a-f0-9]+$"
-  facebook_request_extra_profile_details:
-    default: false
   enable_github_logins:
     client: true
     default: false
@@ -302,6 +338,7 @@ login:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
+  sso_overrides_groups: false
   sso_overrides_bio: false
   sso_overrides_email:
     default: false
@@ -311,6 +348,8 @@ login:
   sso_overrides_avatar:
     default: false
     client: true
+  sso_overrides_profile_background: false
+  sso_overrides_card_background: false
   sso_not_approved_url: ''
   email_domains_blacklist:
     default: 'mailinator.com'
@@ -327,7 +366,6 @@ login:
     default: 1440
     min: 1
     max: 175200
-
 users:
   min_username_length:
     client: true
@@ -341,7 +379,7 @@ users:
     max: 60
   reserved_usernames:
     type: list
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|account-created"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|hp|account-created|password-reset|admin-login|confirm-admin|account-created|activate-account|confirm-email-token|authorize-email"
   min_password_length:
     client: true
     default: 10
@@ -370,7 +408,6 @@ users:
     default: true
   invite_expiry_days:
     default: 30
-  invite_passthrough_hours: 0
   invites_per_page:
     client: true
     default: 40
@@ -424,11 +461,14 @@ users:
   hide_suspension_reasons:
     default: false
     client: true
+  log_personal_messages_views: false
 
 groups:
   enable_group_directory:
     client: true
     default: true
+  group_in_subject:
+    default: false
 
 posting:
   min_post_length:
@@ -445,7 +485,7 @@ posting:
     locale_default:
       zh_CN: 8
       zh_TW: 8
-  min_private_message_post_length:
+  min_personal_message_post_length:
     client: true
     min: 1
     default: 10
@@ -488,10 +528,11 @@ posting:
       zh_CN: false
       zh_TW: false
   title_fancy_entities: true
-  min_private_message_title_length:
+  min_personal_message_title_length:
     client: true
     default: 2
     min: 1
+  max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
     default: true
@@ -503,14 +544,22 @@ posting:
     locale_default:
       zh_CN: 4
       zh_TW: 4
-  enable_private_messages:
+  enable_personal_messages:
     default: true
     client: true
-  enable_private_email_messages:
+  enable_system_message_replies:
+    default: true
+  enable_personal_email_messages:
     default: false
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
+  editing_grace_period_max_diff: 100
+  editing_grace_period_max_diff_high_trust: 400
+  staff_edit_locks_post: false
+  shared_drafts_category:
+    type: category
+    default: ''
   post_edit_time_limit:
     default: 86400
     max: 525600
@@ -526,6 +575,13 @@ posting:
   enable_markdown_typographer:
     client: true
     default: true
+  enable_markdown_linkify:
+    client: true
+    default: true
+  markdown_linkify_tlds:
+    client: true
+    type: list
+    default: 'com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov'
   enable_rich_text_paste:
     client: true
     default: false
@@ -590,12 +646,10 @@ posting:
     type: list
     client: true
   delete_old_hidden_posts: true
-  censored_pattern:
-    client: true
-    default: ''
-    refresh: true
-    type: regex
   enable_emoji:
+    default: true
+    client: true
+  enable_emoji_shortcuts:
     default: true
     client: true
   emoji_set:
@@ -612,10 +666,16 @@ posting:
   approve_new_topics_unless_trust_level:
     default: 0
     enum: 'TrustLevelSetting'
+  approve_unless_staged:
+    default: false
   notify_about_queued_posts_after:
     default: 24
-  auto_close_messages_post_count: 500
-  auto_close_topics_post_count: 10000
+  auto_close_messages_post_count:
+    default: 500
+    shadowed_by_global: true
+  auto_close_topics_post_count:
+    default: 10000
+    shadowed_by_global: true
   code_formatting_style:
     client: true
     type: enum
@@ -625,6 +685,8 @@ posting:
      - code-fences
   embed_truncate:
     default: true
+  embed_support_markdown:
+    default: false
   allowed_href_schemes:
     client: true
     default: ''
@@ -633,6 +695,7 @@ posting:
     default: 30
     min: 1
   watched_words_regular_expressions:
+    client: true
     default: false
   enable_advanced_editor_preview_sync:
     hidden: true
@@ -644,7 +707,7 @@ email:
   email_time_window_mins:
     default: 10
     client: true
-  private_email_time_window_seconds: 20
+  personal_email_time_window_seconds: 20
   email_posts_context: 5
   digest_min_excerpt_length:
     default: 100
@@ -654,8 +717,15 @@ email:
   digest_topics:
     default: 5
     min: 1
-  digest_posts: 3
-  digest_other_topics: 5
+    max: 20
+  digest_posts:
+    default: 5
+    min: 0
+    max: 20
+  digest_other_topics:
+    default: 5
+    min: 0
+    max: 20
   suppress_digest_email_after_days:
     default: 365
   digest_suppress_categories:
@@ -675,6 +745,7 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
+    validator: "ReplyByEmailAddressValidator"
   alternative_reply_by_email_addresses:
     default: ''
     validator: "AlternativeReplyByEmailAddressesValidator"
@@ -693,7 +764,7 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
-  incoming_email_prefer_html: false
+  incoming_email_prefer_html: true
   email_in:
     default: false
     client: true
@@ -714,7 +785,8 @@ email:
   unsubscribe_via_email_footer:
     default: false
   delete_email_logs_after_days:
-    default: 365
+    default: 90
+    shadowed_by_global: true
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
@@ -771,6 +843,15 @@ files:
     client: true
     default: 'jpg|jpeg|png|gif'
     refresh: true
+    type: list
+  authorized_extensions_for_staff:
+    client: true
+    default: ''
+    refresh: true
+    type: list
+  export_authorized_extensions:
+    hidden: true
+    default: 'gz'
     type: list
   crawl_images:
     default: true
@@ -875,6 +956,16 @@ trust:
   min_trust_to_send_email_messages:
     default: 4
     enum: 'TrustLevelSetting'
+  min_trust_to_flag_posts:
+    default: 1
+    enum: 'TrustLevelSetting'
+  min_trust_to_post_links:
+    default: 0
+    enum: 'TrustLevelSetting'
+  min_trust_to_post_images:
+    default: 0
+    enum: 'TrustLevelSetting'
+  allow_flagging_staff: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30
@@ -922,6 +1013,8 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
+  trusted_users_can_edit_others:
+    default: true
 
 security:
   force_https:
@@ -938,9 +1031,13 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_moderators_to_create_categories: false
+  non_crawler_user_agents:
+    hidden: true
+    default: 'trident|webkit|gecko|chrome|safari|msie|opera|goanna'
+    type: list
   crawler_user_agents:
     hidden: true
-    default: 'Googlebot|Mediapartners|AdsBot|curl|HTTrack|Twitterbot|facebookexternalhit|bingbot|Baiduspider|ia_archiver|archive.org_bot|Wayback Save Page|360Spider|Swiftbot|YandexBot'
+    default: 'rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor'
     type: list
   cors_origins:
     default: ''
@@ -956,9 +1053,19 @@ security:
     default: ''
     type: list
   allowed_iframes:
-    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?'
+    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?'
     type: list
     client: true
+  whitelisted_crawler_user_agents:
+    type: list
+    default: ''
+  blacklisted_crawler_user_agents:
+    type: list
+    default: ''
+  slow_down_crawler_user_agents:
+    type: list
+    default: 'bingbot'
+  slow_down_crawler_rate: 60
 
 onebox:
   enable_flash_video_onebox: false
@@ -1013,6 +1120,7 @@ spam:
   flags_default_topics:
     default: false
     client: true
+  min_flags_staff_visibility: 1
 
 rate_limits:
   unique_posts_mins: 5
@@ -1021,7 +1129,7 @@ rate_limits:
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
   max_topics_per_day: 20
-  max_private_messages_per_day: 20
+  max_personal_messages_per_day: 20
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day: 20
@@ -1121,6 +1229,9 @@ developer:
   bootstrap_error_pages:
     hidden: true
     default: false
+  enable_safe_mode:
+    default: true
+    client: true
 
 embedding:
   feed_polling_enabled:
@@ -1167,6 +1278,8 @@ legal:
   faq_url:
     client: true
     default: ''
+  log_anonymizer_details:
+    default: true
 
 backups:
   enable_backups:
@@ -1211,13 +1324,17 @@ search:
     locale_default:
       zh_CN: 2
       zh_TW: 2
+      ko: 2
+      ja: 2
 
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size:
     default: 100000
     max: 100000
-  log_search_queries: true
+  log_search_queries:
+    client: true
+    default: true
   search_query_log_max_size:
     default: 1000000
     max: 1000000
@@ -1401,7 +1518,7 @@ user_preferences:
     enum: 'DigestEmailSiteSetting'
     default: 10080
   default_include_tl0_in_digests: false
-  default_email_private_messages: true
+  default_email_personal_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
@@ -1520,10 +1637,11 @@ tags:
     client: true
     default: false
     refresh: true
-  staff_tags:
-    type: list
+  tags_listed_by_group:
     client: true
-    default: ''
+    default: false
+  allow_staff_to_tag_pms:
+    default: false
   suppress_overlapping_tags_in_list:
     default: false
     client: true

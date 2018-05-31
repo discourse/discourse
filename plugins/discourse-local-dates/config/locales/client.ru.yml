@@ -1,0 +1,23 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ru:
+  js:
+    discourse_local_dates:
+      title: Вставить дату
+      create:
+        modal_title: Вставить дату
+        form:
+          insert: Вставить
+          advanced_mode: Расширенный режим
+          format_description: "Формат, используемый для отображения даты пользователю. Используйте \"\\T\\Z\" для отображения часового пояса пользователя в словах (Europe/Paris)"
+          timezones_title: Часовые пояса для отображения
+          timezones_description: Часовые пояса будут использоваться для отображения дат в режиме предварительного просмотра и отката назад.
+          recurring_title: Повторение
+          recurring_description: "Определите повторение события. Кроме того, можно вручную изменить параметр повтора, созданный формой, и использовать один из следующих ключей: годы, кварталы, месяцы, недели, дни, часы, минуты, секунды, миллисекунды."
+          recurring_none: Отсутствие рецидивирования
+          invalid_date: Недействительная дата, убедитесь, что дата и время верны

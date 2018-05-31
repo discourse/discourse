@@ -2,8 +2,8 @@ import { on, observes } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { emojis } from "pretty-text/emoji/data";
-import { extendedEmojiList, isSkinTonableEmoji } from "pretty-text/emoji";
+import { extendedEmojiList, isSkinTonableEmoji, emojiSearch } from "pretty-text/emoji";
+const { run } = Ember;
 
 const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
@@ -44,13 +44,13 @@ export default Ember.Component.extend({
     this.set("selectedDiversity", keyValueStore.getObject(EMOJI_SELECTED_DIVERSITY) || 1);
     this.set("recentEmojis", keyValueStore.getObject(EMOJI_USAGE) || []);
 
-    Ember.run.scheduleOnce("afterRender", this, function() {
+    run.scheduleOnce("afterRender", this, function() {
       this._bindEvents();
-      this._sectionLoadingCheck();
       this._loadCategoriesEmojis();
       this._positionPicker();
       this._scrollTo();
       this._updateSelectedDiversity();
+      this._checkVisibleSection(true);
     });
   },
 
@@ -83,13 +83,14 @@ export default Ember.Component.extend({
 
   @on("didUpdateAttrs")
   _setState() {
-    this.get("active") === true ? this.show() : this.close();
+    this.get("active") ? this.show() : this.close();
   },
 
   @observes("filter")
   filterChanged() {
     this.$filter.find(".clear-filter").toggle(!_.isEmpty(this.get("filter")));
-    Ember.run.debounce(this, this._filterEmojisList, 250);
+    const filterDelay = this.site.isMobileDevice ? 400 : 250;
+    run.debounce(this, this._filterEmojisList, filterDelay);
   },
 
   @observes("selectedDiversity")
@@ -105,6 +106,7 @@ export default Ember.Component.extend({
     }
 
     this._updateSelectedDiversity();
+    this._checkVisibleSection(true);
   },
 
   @observes("recentEmojis")
@@ -146,11 +148,6 @@ export default Ember.Component.extend({
       .addClass("selected");
   },
 
-  _sectionLoadingCheck() {
-    this._checkTimeout = setTimeout(() => { this._sectionLoadingCheck(); }, 500);
-    Ember.run.throttle(this, this._checkVisibleSection, 100);
-  },
-
   _loadCategoriesEmojis() {
     $.each(this.$picker.find(".categories-column button.emoji"), (_, button) => {
       const $button = $(button);
@@ -177,13 +174,17 @@ export default Ember.Component.extend({
   _bindModalClick() {
     this.$modal.on("click", () => this.set("active", false));
 
-    this.$(document).on("click.emoji-picker", (event) => {
-      const onPicker = $(event.target).parents(".emoji-picker").length === 1;
-      const onGrippie = event.target.className.indexOf("grippie") > -1;
-      if(!onPicker && !onGrippie) {
-        this.set("active", false);
-        return false;
+    $('html').on("mouseup.emoji-picker", event => {
+      let $target = $(event.target);
+      if ($target.closest(".emoji-picker").length ||
+          $target.closest('.emoji.btn').length ||
+          $target.hasClass('grippie')) {
+        return;
       }
+
+      // Close the popup if clicked outside
+      this.set("active", false);
+      return false;
     });
   },
 
@@ -191,22 +192,19 @@ export default Ember.Component.extend({
   _unbindEvents() {
     this.$().off();
     this.$(window).off("resize");
-    this.$modal.off("click");
+    clearInterval(this._refreshInterval);
     $("#reply-control").off("div-resizing");
-    this.$(document).off("click.emoji-picker");
+    $('html').off("mouseup.emoji-picker");
   },
 
   _filterEmojisList() {
     if (this.get("filter") === "") {
       this.$filter.find("input[name='filter']").val("");
       this.$results.empty().hide();
-      this.$list.show();
+      this.$list.css("visibility", "visible");
     } else {
       const lowerCaseFilter = this.get("filter").toLowerCase();
-      const filterableEmojis = emojis.concat(_.keys(extendedEmojiList()));
-      const filteredCodes = _.filter(filterableEmojis, code => {
-        return code.indexOf(lowerCaseFilter) > -1;
-      }).slice(0, 30);
+      const filteredCodes = emojiSearch(lowerCaseFilter, { maxResults: 30});
       this.$results.empty().html(
         _.map(filteredCodes, (code) => {
           const hasDiversity = isSkinTonableEmoji(code);
@@ -217,7 +215,7 @@ export default Ember.Component.extend({
       ).show();
       this._bindHover(this.$results);
       this._bindEmojiClick(this.$results);
-      this.$list.hide();
+      this.$list.css("visibility", "hidden");
     }
   },
 
@@ -239,7 +237,7 @@ export default Ember.Component.extend({
     this.$picker.find(".category-icon").on("click", "button.emoji", (event) => {
       this.set("filter", "");
       this.$results.empty();
-      this.$list.show();
+      this.$list.css("visibility", "visible");
 
       const section = $(event.currentTarget).data("section");
       const $section = this.$list.find(`.section[data-section="${section}"]`);
@@ -264,11 +262,11 @@ export default Ember.Component.extend({
 
   _bindResizing() {
     this.$(window).on("resize", () => {
-      Ember.run.throttle(this, this._positionPicker, 16);
+      run.throttle(this, this._positionPicker, 16);
     });
 
     $("#reply-control").on("div-resizing", () => {
-      Ember.run.throttle(this, this._positionPicker, 16);
+      run.throttle(this, this._positionPicker, 16);
     });
   },
 
@@ -318,17 +316,26 @@ export default Ember.Component.extend({
   },
 
   _bindSectionsScroll() {
-    this.$list.on("scroll", () => {
-      this.scrollPosition = this.$list.scrollTop();
-      Ember.run.throttle(this, this._checkVisibleSection, 150);
-    });
+    let onScroll = () => {
+      run.debounce(this, this._checkVisibleSection, 50);
+    };
+
+    this.$list.on("scroll", onScroll);
+    this._refreshInterval = setInterval(onScroll, 100);
   },
 
-  _checkVisibleSection() {
+  _checkVisibleSection(force) {
     // make sure we stop loading if picker has been removed
     if(!this.$picker) {
       return;
     }
+
+    const newPosition = this.$list.scrollTop();
+    if (newPosition === this.scrollPosition && !force) {
+      return;
+    }
+
+    this.scrollPosition = newPosition;
 
     const $sections = this.$list.find(".section");
     const listHeight = this.$list.innerHeight();
@@ -362,15 +369,19 @@ export default Ember.Component.extend({
     }
 
     const listHeight = this.$list.innerHeight();
+
+
     this.$visibleSections.forEach(visibleSection => {
       const $unloadedEmojis = $(visibleSection).find("button.emoji[data-loaded!='1']");
       $.each($unloadedEmojis, (_, button) => {
-        const $button = $(button);
-        const buttonTop = $button.position().top;
-        const buttonHeight = $button.height();
 
-        if(buttonTop + buttonHeight > 0 && buttonTop - buttonHeight < listHeight) {
-          this._setButtonBackground($button);
+        let offsetTop = button.offsetTop;
+
+        if (offsetTop < this.scrollPosition + listHeight + 200) {
+          if (offsetTop + 200 > this.scrollPosition) {
+            const $button = $(button);
+            this._setButtonBackground($button);
+          }
         }
       });
     });
@@ -415,12 +426,12 @@ export default Ember.Component.extend({
 
     const mobilePositioning = options => {
       let attributes = {
-        width: windowWidth - 12,
-        marginLeft: 5,
-        marginTop: -130,
+        width: windowWidth,
+        marginLeft: 0,
+        marginTop: "auto",
         left: 0,
         bottom: "",
-        top: "50%",
+        top: 0,
         display: "flex"
       };
 
@@ -445,7 +456,7 @@ export default Ember.Component.extend({
       this.$picker.css(_.merge(attributes, options));
     };
 
-    if(Ember.testing || this.get("automaticPositioning") === false) {
+    if(Ember.testing || !this.get("automaticPositioning")) {
       desktopPositioning();
       return;
     }
@@ -510,7 +521,7 @@ export default Ember.Component.extend({
     this.$list.scrollTop(yPosition);
 
     // if we don’t actually scroll we need to force it
-    if(yPosition === 0) {
+    if (yPosition === 0) {
       this.$list.scroll();
     }
   },
@@ -521,19 +532,31 @@ export default Ember.Component.extend({
   },
 
   _setButtonBackground(button, diversity) {
-    const $button = $(button);
-    const code = this._codeWithDiversity(
-      $button.attr("title"),
-      diversity || $button.hasClass("diversity")
-    );
 
-    // force visual reloading if needed
-    if($button.css("background-image") !== "none") {
-      $button.css("background-image", "");
+    if (!button) {
+      return;
     }
 
-    $button
-      .attr("data-loaded", 1)
-      .css("background-image", `url("${emojiUrlFor(code)}")`);
+    const $button = $(button);
+    button = $button[0];
+
+    // changing style can force layout events
+    // this could slow down timers and lead to
+    // chrome delaying the request
+    window.requestAnimationFrame(() =>{
+      const code = this._codeWithDiversity(
+        $button.attr("title"),
+        diversity || $button.hasClass("diversity")
+      );
+
+      // // force visual reloading if needed
+      if(button.style.backgroundImage !== "none") {
+        button.style.backgroundImage = "";
+      }
+
+      button.style.backgroundImage = `url("${emojiUrlFor(code)}")`;
+      $button.attr("data-loaded", 1);
+    });
+
   },
 });

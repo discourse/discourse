@@ -13,7 +13,9 @@
     float: left;
     width: 70%;
     padding-left: 5px;
-    font-size: .929em;
+    @media screen and (max-width: 600px) {
+      font-size: $font-down-1;
+    }
 
     .name-line {
       white-space: nowrap;
@@ -39,6 +41,10 @@
 
   &.small {
     width: 333px;
+    @media screen and (max-width: $small-width) {
+      width: auto;
+      display: flex;
+    }
     @media screen and (max-width: 600px) {
       width: 100%;
     }
@@ -57,6 +63,7 @@
 
     &.badge-info {
       min-height: 80px;
+      min-width: 250px;
 
       .granted-on {
         color: dark-light-choose($primary-medium, $secondary-medium);
@@ -69,3 +76,4 @@
     }
   }
 }
+

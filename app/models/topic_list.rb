@@ -26,16 +26,21 @@ class TopicList
     end
   end
 
-  attr_accessor :more_topics_url,
-                :prev_topics_url,
-                :draft,
-                :draft_key,
-                :draft_sequence,
-                :filter,
-                :for_period,
-                :per_page,
-                :tags,
-                :current_user
+  attr_accessor(
+    :more_topics_url,
+    :prev_topics_url,
+    :draft,
+    :draft_key,
+    :draft_sequence,
+    :filter,
+    :for_period,
+    :per_page,
+    :top_tags,
+    :current_user,
+    :tags,
+    :shared_drafts,
+    :category
+  )
 
   def initialize(filter, current_user, topics, opts = nil)
     @filter = filter
@@ -46,9 +51,13 @@ class TopicList
     if @opts[:category]
       @category = Category.find_by(id: @opts[:category_id])
     end
+
+    if @opts[:tags]
+      @tags = Tag.where(id: @opts[:tags]).all
+    end
   end
 
-  def tags
+  def top_tags
     opts = @category ? { category: @category } : {}
     opts[:guardian] = Guardian.new(@current_user)
     Tag.top_tags(opts)

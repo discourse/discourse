@@ -19,23 +19,6 @@ AdminDashboard.reopenClass({
     });
   },
 
-  /**
-    Only fetch the list of problems that should be rendered on the dashboard.
-    The model will only have its "problems" attribute set.
-
-    @method fetchProblems
-    @return {jqXHR} a jQuery Promise object
-  **/
-  fetchProblems: function() {
-    return ajax("/admin/dashboard/problems.json", {
-      type: 'GET',
-      dataType: 'json'
-    }).then(function(json) {
-      var model = AdminDashboard.create(json);
-      model.set('loaded', true);
-      return model;
-    });
-  }
 });
 
 export default AdminDashboard;

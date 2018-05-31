@@ -1,21 +1,24 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
+const { isEmpty, makeArray } = Ember;
 
 export default Ember.Component.extend({
   layoutName: "select-kit/templates/components/select-kit/select-kit-header",
-  classNames: ["select-kit-header", "select-box-kit-header"],
-  classNameBindings: ["isFocused"],
+  classNames: ["select-kit-header"],
+  classNameBindings: ["isFocused", "isNone"],
   attributeBindings: [
     "tabindex",
     "ariaLabel:aria-label",
     "ariaHasPopup:aria-haspopup",
-    "title",
+    "sanitizedTitle:title",
     "value:data-value",
     "name:data-name",
   ],
 
+  isNone: Ember.computed.none("computedContent.value"),
+
   ariaHasPopup: true,
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
+  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "sanitizedTitle"),
 
   @computed("computedContent.title", "name")
   title(computedContentTitle, name) {
@@ -23,6 +26,13 @@ export default Ember.Component.extend({
     if (name) return name;
 
     return null;
+  },
+
+  // this might need a more advanced solution
+  // but atm it's the only case we have to handle
+  @computed("title")
+  sanitizedTitle(title) {
+    return String(title).replace("&hellip;", "");
   },
 
   label: Ember.computed.or("computedContent.label", "title", "name"),
@@ -33,7 +43,7 @@ export default Ember.Component.extend({
 
   @computed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {
-    return Ember.makeArray(icon).concat(icons).filter(i => !Ember.isEmpty(i));
+    return makeArray(icon).concat(icons).filter(i => !isEmpty(i));
   },
 
   click() {

@@ -2,6 +2,8 @@ require 'rails_helper'
 
 describe IncomingLink do
 
+  let(:sharing_user) { Fabricate(:user, name: 'Alice') }
+  let(:current_user) { Fabricate(:user, name: 'Bob') }
   let(:post) { Fabricate(:post) }
   let(:topic) { post.topic }
 
@@ -82,11 +84,42 @@ describe IncomingLink do
     end
 
     it "is able to look up user_id and log it from the GET params" do
-      user = Fabricate(:user, username: "Bob")
-      add(host: 'test.com', username: "bob", post_id: 1)
+      add(host: 'test.com', username: sharing_user.username, post_id: 1)
 
       first = IncomingLink.first
-      expect(first.user_id).to eq user.id
+      expect(first.user_id).to eq sharing_user.id
+    end
+
+    it "logs an incoming and stores IP with no current user" do
+      add(referer: 'https://example.social/@alice/1234',
+          post_id: post.id,
+          username: sharing_user.username,
+          current_user: nil,
+          ip_address: '100.64.1.1')
+      expect(IncomingLink.count).to eq 1
+      il = IncomingLink.last
+      expect(il.ip_address).to eq '100.64.1.1'
+    end
+
+    it "does not log when the sharing user clicks their own link" do
+      add(referer: 'https://example.social/@alice/1234',
+          post_id: post.id,
+          username: sharing_user.username,
+          current_user: sharing_user,
+          ip_address: '100.64.1.2')
+      expect(IncomingLink.count).to eq 0
+    end
+
+    it "does not store ip address when a logged-in user clicks" do
+      add(referer: 'https://example.social/@alice/1234',
+          post_id: post.id,
+          username: sharing_user.username,
+          current_user: current_user,
+          ip_address: '100.64.1.3')
+      expect(IncomingLink.count).to eq 1
+      il = IncomingLink.last
+      expect(il.ip_address).to eq nil
+      expect(il.current_user_id).to eq current_user.id
     end
   end
 

@@ -82,15 +82,8 @@ class GroupUser < ActiveRecord::Base
       .includes(:group)
       .maximum("groups.grant_trust_level")
 
-    if highest_level.nil?
-      # If the user no longer has a group with a trust level,
-      # unlock them, start at 0 and consider promotions.
-      user.update!(group_locked_trust_level: nil)
-      Promotion.recalculate(user)
-    else
-      user.update!(group_locked_trust_level: highest_level)
-      user.change_trust_level!(highest_level)
-    end
+    user.update!(group_locked_trust_level: highest_level)
+    Promotion.recalculate(user)
   end
 
 end

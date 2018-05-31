@@ -19,9 +19,18 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   primaryGroupDirty: propertyNotEqual('originalPrimaryGroupId', 'model.primary_group_id'),
 
-  automaticGroups: function() {
-    return this.get("model.automaticGroups").map((g) => g.name).join(", ");
-  }.property("model.automaticGroups"),
+  canDisableSecondFactor: Ember.computed.and(
+    'model.second_factor_enabled',
+    'model.can_disable_second_factor'
+  ),
+
+  @computed("model.automaticGroups")
+  automaticGroups(automaticGroups) {
+    return automaticGroups.map(group => {
+      const name = Ember.String.htmlSafe(group.name);
+      return `<a href="/groups/${name}">${name}</a>`;
+    }).join(", ");
+  },
 
   userFields: function() {
     const siteUserFields = this.site.get('user_fields'),
@@ -40,6 +49,36 @@ export default Ember.Controller.extend(CanCheckEmails, {
   preferencesPath(username) {
     return userPath(`${username}/preferences`);
   },
+
+  @computed('model.can_delete_all_posts', 'model.staff', 'model.post_count')
+  deleteAllPostsExplanation(canDeleteAllPosts, staff, postCount) {
+    if (canDeleteAllPosts) {
+      return null;
+    }
+
+    if (staff) {
+      return I18n.t('admin.user.delete_posts_forbidden_because_staff');
+    }
+    if (postCount > this.siteSettings.delete_all_posts_max) {
+      return I18n.t('admin.user.cant_delete_all_too_many_posts', {count: this.siteSettings.delete_all_posts_max});
+    } else {
+      return I18n.t('admin.user.cant_delete_all_posts', {count: this.siteSettings.delete_user_max_post_age});
+    }
+  },
+
+  @computed('model.canBeDeleted', 'model.staff')
+  deleteExplanation(canBeDeleted, staff) {
+    if (canBeDeleted) {
+      return null;
+    }
+
+    if (staff) {
+      return I18n.t('admin.user.delete_forbidden_because_staff');
+    } else {
+      return I18n.t('admin.user.delete_forbidden', {count: this.siteSettings.delete_user_max_post_age});
+    }
+  },
+
 
   actions: {
 
@@ -62,8 +101,36 @@ export default Ember.Controller.extend(CanCheckEmails, {
     silence() { return this.get("model").silence(); },
     deleteAllPosts() { return this.get("model").deleteAllPosts(); },
     anonymize() { return this.get('model').anonymize(); },
-    destroy() { return this.get('model').destroy(); },
+    disableSecondFactor() { return this.get('model').disableSecondFactor(); },
 
+
+    clearPenaltyHistory() {
+      let user = this.get('model');
+      return ajax(`/admin/users/${user.get('id')}/penalty_history`, {
+        type: 'DELETE'
+      }).then(() => {
+        user.set('tl3_requirements.penalty_counts.total', 0);
+      }).catch(popupAjaxError);
+    },
+
+    destroy() {
+      const postCount = this.get('model.post_count');
+      if (postCount <= 5) {
+        return this.get('model').destroy({ deletePosts: true });
+      } else {
+        return this.get('model').destroy();
+      }
+    },
+
+    viewActionLogs() {
+      this.get('adminTools').showActionLogs(this, {
+        target_user: this.get('model.username'),
+      });
+    },
+
+    showFlagsReceived() {
+      this.get('adminTools').showFlagsReceived(this.get('model'));
+    },
     showSuspendModal() {
       this.get('adminTools').showSuspendModal(this.get('model'));
     },

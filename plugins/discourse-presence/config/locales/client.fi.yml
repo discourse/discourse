@@ -10,6 +10,3 @@ fi:
     presence:
       replying: "kirjoittaa vastausta"
       editing: "muokkaa viestiä"
-      replying_to_topic:
-        one: "kirjoittaa vastausta"
-        other: "kirjoittavat vastausta"

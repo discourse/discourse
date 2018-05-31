@@ -4,7 +4,7 @@
 
 .timeline-container {
   box-sizing: border-box;
-  z-index: 499;
+  z-index: z("timeline");
   margin-left: 757px;
 
   @media all and (min-width: 1140px) {
@@ -32,6 +32,9 @@
   &.timeline-fullscreen.show {
     max-height: 700px;
     transition: max-height 0.4s ease-out;
+    @media screen and (max-height: 425px) {
+      max-height: 75vh;
+    }
     .topic-timeline {
       .timeline-footer-controls {
         display: inherit;
@@ -49,9 +52,12 @@
     left: 0;
     right: 0;
     border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
-    box-shadow: 0px -2px 4px -1px rgba(0,0,0,.25);
+    box-shadow: shadow("composer");
     padding-top: 20px;
-    z-index: 100000;
+    z-index: z("fullscreen");
+    @media screen and (max-height: 425px) {
+      padding-top: 10px;
+    }
     .back-button {
       display: none;
     }
@@ -66,18 +72,20 @@
       .timeline-date-wrapper {
         float: right;
         text-align: right;
-        font-size: 1.1em;
       }
       .post-excerpt {
         max-width: 650px;
-        max-height: 155px;
-        line-height: 1.4em;
+        max-height: 165px;
+        line-height: $line-height-large;
         overflow: hidden;
         word-wrap: break-word;
         text-overflow: ellipsis;
         display: block;
         display: -webkit-box;
         -webkit-line-clamp: 8;
+        @media screen and (max-height: 425px) {
+          -webkit-line-clamp: 5;          
+        }
         -webkit-box-orient: vertical;
       }
       .username {
@@ -98,18 +106,18 @@
           -webkit-line-clamp: 4;
           -webkit-box-orient: vertical;
           max-height: 110px;
-          line-height: 1.3em;
+          line-height: $line-height-medium;
           word-wrap: break-word;
           text-overflow: ellipsis;
           overflow: hidden;
-          font-size: 1.3em;
+          font-size: $font-up-2;
         }
         a {
           color: $primary;
         }
       }
       .timeline-last-read {
-        right: 0px;
+        right: 0;
         margin-left: 0;
         i.progress {
           display: none
@@ -186,8 +194,7 @@
     }
 
     .timeline-footer-controls {
-      margin-top: 1em;
-      line-height: 2.5em;
+      margin-top: 1.5em;
       transition: opacity 0.2s ease-in;
 
       button {
@@ -227,7 +234,7 @@
       background-color: dark-light-choose($tertiary-low, $tertiary-high);
       height: 100%;
       float: left;
-      z-index: 501;
+      z-index: z("base") + 1;
     }
 
     .timeline-scroller-content {
@@ -263,7 +270,7 @@
         color: $tertiary;
         margin-right: 1em;
       }
-      z-index: 502;
+      z-index: z("base") + 2; // above timeline-handle
     }
 
     .back-button {

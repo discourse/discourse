@@ -31,6 +31,7 @@ class ImportScripts::Base
     @site_settings_during_import = {}
     @old_site_settings = {}
     @start_times = { import: Time.now }
+    @skip_updates = false
   end
 
   def preload_i18n
@@ -46,14 +47,17 @@ class ImportScripts::Base
 
     puts ""
 
-    update_bumped_at
-    update_last_posted_at
-    update_last_seen_at
-    update_user_stats
-    update_feature_topic_users
-    update_category_featured_topics
-    update_topic_count_replies
-    reset_topic_counters
+    unless @skip_updates
+      update_topic_status
+      update_bumped_at
+      update_last_posted_at
+      update_last_seen_at
+      update_user_stats
+      update_feature_topic_users
+      update_category_featured_topics
+      update_topic_count_replies
+      reset_topic_counters
+    end
 
     elapsed = Time.now - @start_times[:import]
     puts '', '', 'Done (%02dh %02dmin %02dsec)' % [elapsed / 3600, elapsed / 60 % 60, elapsed % 60]
@@ -68,8 +72,8 @@ class ImportScripts::Base
       min_topic_title_length: 1,
       min_post_length: 1,
       min_first_post_length: 1,
-      min_private_message_post_length: 1,
-      min_private_message_title_length: 1,
+      min_personal_message_post_length: 1,
+      min_personal_message_title_length: 1,
       allow_duplicate_topic_titles: true,
       disable_emails: true,
       max_attachment_size_kb: 102400,
@@ -85,6 +89,10 @@ class ImportScripts::Base
       @old_site_settings[key] = SiteSetting.send(key)
       SiteSetting.set(key, value)
     end
+
+    # Some changes that should not be rolled back after the script is done
+    SiteSetting.purge_unactivated_users_grace_period_days = 60
+    SiteSetting.purge_deleted_uploads_grace_period_days = 90
 
     RateLimiter.disable
   end
@@ -151,7 +159,7 @@ class ImportScripts::Base
     results.each do |result|
       g = yield(result)
 
-      if group_id_from_imported_group_id(g[:id])
+      if g.nil? || group_id_from_imported_group_id(g[:id])
         skipped += 1
       else
         new_group = create_group(g, g[:id])
@@ -166,7 +174,7 @@ class ImportScripts::Base
         end
       end
 
-      print_status created + skipped + failed + (opts[:offset] || 0), total
+      print_status(created + skipped + failed + (opts[:offset] || 0), total, get_start_time("groups"))
     end
 
     [created, skipped]
@@ -174,11 +182,13 @@ class ImportScripts::Base
 
   def create_group(opts, import_id)
     opts = opts.dup.tap { |o| o.delete(:id) }
-    import_name = opts[:name]
+
+    import_name = opts[:name].presence || opts[:full_name]
     opts[:name] = UserNameSuggester.suggest(import_name)
 
-    existing = Group.where(name: opts[:name]).first
-    return existing if existing && existing.custom_fields["import_id"].to_s == (import_id.to_s)
+    existing = Group.find_by(name: opts[:name])
+    return existing if existing && existing.custom_fields["import_id"].to_s == import_id.to_s
+
     g = existing || Group.new(opts)
     g.custom_fields["import_id"] = import_id
     g.custom_fields["import_name"] = import_name
@@ -200,6 +210,7 @@ class ImportScripts::Base
     existing = existing.where(name: 'import_id')
       .joins('JOIN import_ids ON val = value')
       .count
+
     if existing == import_ids.length
       puts "Skipping #{import_ids.length} already imported #{type}"
       return true
@@ -258,7 +269,7 @@ class ImportScripts::Base
         end
       end
 
-      print_status created + skipped + failed + (opts[:offset] || 0), total
+      print_status(created + skipped + failed + (opts[:offset] || 0), total, get_start_time("users"))
     end
 
     [created, skipped]
@@ -417,7 +428,7 @@ class ImportScripts::Base
         created += 1
       end
 
-      print_status created + skipped, total
+      print_status(created + skipped, total, get_start_time("categories"))
     end
 
     [created, skipped]
@@ -433,9 +444,8 @@ class ImportScripts::Base
       name: opts[:name],
       user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
-      description: opts[:description],
       parent_category_id: opts[:parent_category_id],
-      color: opts[:color] || "AB9364",
+      color: opts[:color] || category_color,
       text_color: opts[:text_color] || "FFF",
       read_restricted: opts[:read_restricted] || false,
     )
@@ -443,11 +453,26 @@ class ImportScripts::Base
     new_category.custom_fields["import_id"] = import_id if import_id
     new_category.save!
 
+    if opts[:description].present?
+      changes = { raw: opts[:description] }
+      opts = { skip_revision: true, skip_validations: true, bypass_bump: true }
+      new_category.topic.first_post.revise(Discourse.system_user, changes, opts)
+    end
+
     add_category(import_id, new_category)
 
     post_create_action.try(:call, new_category)
 
     new_category
+  end
+
+  def category_color
+    @category_colors ||= SiteSetting.category_colors.split('|')
+
+    index = @next_category_color_index.presence || 0
+    @next_category_color_index = index + 1 >= @category_colors.count ? 0 : index + 1
+
+    @category_colors[index]
   end
 
   def created_post(post)
@@ -519,6 +544,13 @@ class ImportScripts::Base
     opts[:custom_fields] ||= {}
     opts[:custom_fields]['import_id'] = import_id
 
+    unless opts[:topic_id]
+      opts[:meta_data] = meta_data = {}
+      meta_data["import_closed"] = true if opts[:closed]
+      meta_data["import_archived"] = true if opts[:archived]
+      meta_data["import_topic_id"] = opts[:import_topic_id] if opts[:import_topic_id]
+    end
+
     opts[:guardian] = STAFF_GUARDIAN
     if @bbcode_to_md
       opts[:raw] = opts[:raw].bbcode_to_md(false) rescue opts[:raw]
@@ -570,7 +602,7 @@ class ImportScripts::Base
         end
       end
 
-      print_status created + skipped + (opts[:offset] || 0), total
+      print_status(created + skipped + (opts[:offset] || 0), total, get_start_time("bookmarks"))
     end
 
     [created, skipped]
@@ -587,17 +619,46 @@ class ImportScripts::Base
     query.find_each do |topic|
       topic.update_status('closed', true, Discourse.system_user)
       closed_count += 1
-      print_status(closed_count, total_count)
+      print_status(closed_count, total_count, get_start_time("close_inactive_topics"))
     end
   end
 
+  def update_topic_status
+    puts "", "Updating topic status"
+
+    Topic.exec_sql(<<~SQL)
+      UPDATE topics AS t
+      SET closed = TRUE
+      WHERE EXISTS(
+          SELECT 1
+          FROM topic_custom_fields AS f
+          WHERE f.topic_id = t.id AND f.name = 'import_closed' AND f.value = 't'
+      )
+    SQL
+
+    Topic.exec_sql(<<~SQL)
+      UPDATE topics AS t
+      SET archived = TRUE
+      WHERE EXISTS(
+          SELECT 1
+          FROM topic_custom_fields AS f
+          WHERE f.topic_id = t.id AND f.name = 'import_archived' AND f.value = 't'
+      )
+    SQL
+
+    TopicCustomField.exec_sql(<<~SQL)
+      DELETE FROM topic_custom_fields
+      WHERE name IN ('import_closed', 'import_archived')
+    SQL
+  end
+
   def update_bumped_at
-    puts "", "updating bumped_at on topics"
+    puts "", "Updating bumped_at on topics"
     Post.exec_sql("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type = #{Post.types[:regular]}), bumped_at)")
   end
 
   def update_last_posted_at
-    puts "", "updating last posted at on users"
+    puts "", "Updating last posted at on users"
 
     sql = <<-SQL
       WITH lpa AS (
@@ -619,20 +680,18 @@ class ImportScripts::Base
   def update_user_stats
     puts "", "Updating topic reply counts..."
 
-    start_time = Time.now
-    progress_count = 0
-    total_count = User.real.count
+    count = 0
+    total = User.real.count
 
-    User.find_each do |u|
+    User.real.find_each do |u|
       u.create_user_stat if u.user_stat.nil?
       us = u.user_stat
       us.update_topic_reply_count
       us.save
-      progress_count += 1
-      print_status(progress_count, total_count, start_time)
+      print_status(count += 1, total, get_start_time("user_stats"))
     end
 
-    puts "." "Updating first_post_created_at..."
+    puts "", "Updating first_post_created_at..."
 
     sql = <<-SQL
       WITH sub AS (
@@ -650,7 +709,7 @@ class ImportScripts::Base
 
     User.exec_sql(sql)
 
-    puts "Updating user post_count..."
+    puts "", "Updating user post_count..."
 
     sql = <<-SQL
       WITH sub AS (
@@ -668,7 +727,7 @@ class ImportScripts::Base
 
     User.exec_sql(sql)
 
-    puts "Updating user topic_count..."
+    puts "", "Updating user topic_count..."
 
     sql = <<-SQL
       WITH sub AS (
@@ -689,96 +748,88 @@ class ImportScripts::Base
 
   # scripts that are able to import last_seen_at from the source data should override this method
   def update_last_seen_at
-    puts "", "updating last seen at on users"
+    puts "", "Updating last seen at on users"
 
     User.exec_sql("UPDATE users SET last_seen_at = created_at WHERE last_seen_at IS NULL")
     User.exec_sql("UPDATE users SET last_seen_at = last_posted_at WHERE last_posted_at IS NOT NULL")
   end
 
   def update_feature_topic_users
-    puts "", "updating featured topic users"
+    puts "", "Updating featured topic users"
 
-    total_count = Topic.count
-    progress_count = 0
+    count = 0
+    total = Topic.count
 
     Topic.find_each do |topic|
       topic.feature_topic_users
-      progress_count += 1
-      print_status(progress_count, total_count)
+      print_status(count += 1, total, get_start_time("feature_topic_user"))
     end
   end
 
   def reset_topic_counters
-    puts "", "resetting topic counters"
+    puts "", "Resetting topic counters"
 
-    total_count = Topic.count
-    progress_count = 0
+    count = 0
+    total = Topic.count
 
     Topic.find_each do |topic|
       Topic.reset_highest(topic.id)
-      progress_count += 1
-      print_status(progress_count, total_count)
+      print_status(count += 1, total, get_start_time("topic_counters"))
     end
   end
 
   def update_category_featured_topics
-    puts "", "updating featured topics in categories"
+    puts "", "Updating featured topics in categories"
 
-    total_count = Category.count
-    progress_count = 0
+    count = 0
+    total = Category.count
 
     Category.find_each do |category|
       CategoryFeaturedTopic.feature_topics_for(category)
-      progress_count += 1
-      print_status(progress_count, total_count)
+      print_status(count += 1, total, get_start_time("category_featured_topics"))
     end
   end
 
   def update_topic_count_replies
-    puts "", "updating user topic reply counts"
+    puts "", "Updating user topic reply counts"
 
-    total_count = User.real.count
-    progress_count = 0
+    count = 0
+    total = User.real.count
 
     User.real.find_each do |u|
       u.user_stat.update_topic_reply_count
       u.user_stat.save!
-      progress_count += 1
-      print_status(progress_count, total_count)
+      print_status(count += 1, total, get_start_time("topic_count_replies"))
     end
   end
 
   def update_tl0
-    puts "", "setting users with no posts to trust level 0"
+    puts "", "Setting users with no posts to trust level 0"
 
-    total_count = User.count
-    progress_count = 0
+    count = 0
+    total = User.count
 
     User.includes(:user_stat).find_each do |user|
       begin
         user.update_columns(trust_level: 0) if user.trust_level > 0 && user.post_count == 0
       rescue Discourse::InvalidAccess
-        nil
       end
-      progress_count += 1
-      print_status(progress_count, total_count)
+      print_status(count += 1, total, get_start_time("update_tl0"))
     end
   end
 
   def update_user_signup_date_based_on_first_post
-    puts "", "setting users' signup date based on the date of their first post"
+    puts "", "Setting users' signup date based on the date of their first post"
 
-    total_count = User.count
-    progress_count = 0
+    count = 0
+    total = User.count
 
     User.find_each do |user|
-      first = user.posts.order('created_at ASC').first
-      if first
+      if first = user.posts.order('created_at ASC').first
         user.created_at = first.created_at
         user.save!
       end
-      progress_count += 1
-      print_status(progress_count, total_count)
+      print_status(count += 1, total, get_start_time("user_signup"))
     end
   end
 

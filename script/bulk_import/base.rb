@@ -1,9 +1,11 @@
 require "pg"
 require "set"
 require "redcarpet"
+require "htmlentities"
 
 puts "Loading application..."
 require_relative "../../config/environment"
+require_relative '../import_scripts/base/uploader'
 
 module BulkImport; end
 
@@ -12,10 +14,53 @@ class BulkImport::Base
   NOW ||= "now()".freeze
   PRIVATE_OFFSET ||= 2**30
 
+  CHARSET_MAP = {
+    "armscii8" => nil,
+    "ascii"    => Encoding::US_ASCII,
+    "big5"     => Encoding::Big5,
+    "binary"   => Encoding::ASCII_8BIT,
+    "cp1250"   => Encoding::Windows_1250,
+    "cp1251"   => Encoding::Windows_1251,
+    "cp1256"   => Encoding::Windows_1256,
+    "cp1257"   => Encoding::Windows_1257,
+    "cp850"    => Encoding::CP850,
+    "cp852"    => Encoding::CP852,
+    "cp866"    => Encoding::IBM866,
+    "cp932"    => Encoding::Windows_31J,
+    "dec8"     => nil,
+    "eucjpms"  => Encoding::EucJP_ms,
+    "euckr"    => Encoding::EUC_KR,
+    "gb2312"   => Encoding::EUC_CN,
+    "gbk"      => Encoding::GBK,
+    "geostd8"  => nil,
+    "greek"    => Encoding::ISO_8859_7,
+    "hebrew"   => Encoding::ISO_8859_8,
+    "hp8"      => nil,
+    "keybcs2"  => nil,
+    "koi8r"    => Encoding::KOI8_R,
+    "koi8u"    => Encoding::KOI8_U,
+    "latin1"   => Encoding::ISO_8859_1,
+    "latin2"   => Encoding::ISO_8859_2,
+    "latin5"   => Encoding::ISO_8859_9,
+    "latin7"   => Encoding::ISO_8859_13,
+    "macce"    => Encoding::MacCentEuro,
+    "macroman" => Encoding::MacRoman,
+    "sjis"     => Encoding::SHIFT_JIS,
+    "swe7"     => nil,
+    "tis620"   => Encoding::TIS_620,
+    "ucs2"     => Encoding::UTF_16BE,
+    "ujis"     => Encoding::EucJP_ms,
+    "utf8"     => Encoding::UTF_8,
+  }
+
   def initialize
+    charset = ENV["DB_CHARSET"] || "utf8"
     db = ActiveRecord::Base.connection_config
     @encoder = PG::TextEncoder::CopyRow.new
     @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port])
+    @uploader = ImportScripts::Uploader.new
+    @html_entities = HTMLEntities.new
+    @encoding = CHARSET_MAP[charset]
 
     @markdown = Redcarpet::Markdown.new(
       Redcarpet::Render::HTML.new(hard_wrap: true),
@@ -27,6 +72,7 @@ class BulkImport::Base
 
   def run
     puts "Starting..."
+    Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
     preload_i18n
     fix_highest_post_numbers
     load_imported_ids
@@ -87,33 +133,38 @@ class BulkImport::Base
     @last_imported_private_post_id = imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
   end
 
+  def last_id(klass)
+    # the first record created will have id of this value + 1
+    [klass.unscoped.maximum(:id) || 0, 0].max
+  end
+
   def load_indexes
     puts "Loading groups indexes..."
     @last_group_id = Group.unscoped.maximum(:id)
     @group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
     puts "Loading users indexes..."
-    @last_user_id = User.unscoped.maximum(:id)
-    @last_user_email_id = UserEmail.unscoped.maximum(:id)
+    @last_user_id = last_id(User)
+    @last_user_email_id = last_id(UserEmail)
     @emails = User.unscoped.joins(:user_emails).pluck(:"user_emails.email").to_set
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @mapped_usernames = UserCustomField.joins(:user).where(name: "import_username").pluck("user_custom_fields.value", "users.username").to_h
 
     puts "Loading categories indexes..."
-    @last_category_id = Category.unscoped.maximum(:id)
+    @last_category_id = last_id(Category)
     @category_names = Category.unscoped.pluck(:parent_category_id, :name).map { |pci, name| "#{pci}-#{name}" }.to_set
 
     puts "Loading topics indexes..."
-    @last_topic_id = Topic.unscoped.maximum(:id)
+    @last_topic_id = last_id(Topic)
     @highest_post_number_by_topic_id = Topic.unscoped.pluck(:id, :highest_post_number).to_h
 
     puts "Loading posts indexes..."
-    @last_post_id = Post.unscoped.maximum(:id)
+    @last_post_id = last_id(Post)
     @post_number_by_post_id = Post.unscoped.pluck(:id, :post_number).to_h
     @topic_id_by_post_id = Post.unscoped.pluck(:id, :topic_id).to_h
 
     puts "Loading post actions indexes..."
-    @last_post_action_id = PostAction.unscoped.maximum(:id) || 0
+    @last_post_action_id = last_id(PostAction)
   end
 
   def execute
@@ -122,13 +173,13 @@ class BulkImport::Base
 
   def fix_primary_keys
     puts "Updating primary key sequences..."
-    @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
-    @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
-    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
-    @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
-    @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
-    @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
-    @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
+    @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})") if @last_group_id > 0
+    @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})") if @last_user_id > 0
+    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})") if @last_user_email_id > 0
+    @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})") if @last_category_id > 0
+    @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})") if @last_topic_id > 0
+    @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})") if @last_post_id > 0
+    @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})") if @last_post_action_id > 0
   end
 
   def group_id_from_imported_id(id); @groups[id.to_s]; end
@@ -194,6 +245,10 @@ class BulkImport::Base
     topic_id user_id created_at updated_at
   }
 
+  TOPIC_TAG_COLUMNS ||= %i{
+    topic_id tag_id created_at updated_at
+  }
+
   def create_groups(rows, &block); create_records(rows, "group", GROUP_COLUMNS, &block); end
 
   def create_users(rows, &block)
@@ -209,6 +264,14 @@ class BulkImport::Base
     end
   end
 
+  def create_categories(rows, &block)
+    create_records(rows, "category", CATEGORY_COLUMNS, &block)
+
+    Category.where(topic_id: nil).each do |c|
+      c.create_category_definition
+    end
+  end
+
   def create_user_emails(rows, &block) create_records(rows, "user_email", USER_EMAIL_COLUMNS, &block); end
   def create_user_stats(rows, &block) create_records(rows, "user_stat", USER_STAT_COLUMNS, &block); end
   def create_user_profiles(rows, &block); create_records(rows, "user_profile", USER_PROFILE_COLUMNS, &block); end
@@ -218,6 +281,7 @@ class BulkImport::Base
   def create_posts(rows, &block); create_records(rows, "post", POST_COLUMNS, &block); end
   def create_post_actions(rows, &block); create_records(rows, "post_action", POST_ACTION_COLUMNS, &block); end
   def create_topic_allowed_users(rows, &block); create_records(rows, "topic_allowed_user", TOPIC_ALLOWED_USER_COLUMNS, &block); end
+  def create_topic_tags(rows, &block); create_records(rows, "topic_tag", TOPIC_TAG_COLUMNS, &block); end
 
   def process_group(group)
     @groups[group[:imported_id].to_s] = group[:id] = @last_group_id += 1
@@ -281,9 +345,6 @@ class BulkImport::Base
     user_email[:updated_at] ||= user_email[:created_at]
     user_email[:email] ||= random_email
     user_email[:email].downcase!
-
-    # unique email
-    user_email[:email] = random_email until user_email[:email] =~ EmailValidator.email_regex && @emails.add?(user_email[:email])
 
     user_email
   end
@@ -386,6 +447,12 @@ class BulkImport::Base
     topic_allowed_user
   end
 
+  def process_topic_tag(topic_tag)
+    topic_tag[:created_at] = NOW
+    topic_tag[:updated_at] = NOW
+    topic_tag
+  end
+
   def process_raw(raw)
     # fix whitespaces
     raw.gsub!(/(\\r)?\\n/, "\n")
@@ -436,6 +503,9 @@ class BulkImport::Base
     # [IMG]...[/IMG]
     raw.gsub!(/(?:\s*\[IMG\]\s*)+(.+?)(?:\s*\[\/IMG\]\s*)+/im) { "\n\n#{$1}\n\n" }
 
+    # [IMG=url]
+    raw.gsub!(/\[IMG=([^\]]*)\]/im) { "\n\n#{$1}\n\n" }
+
     # [URL=...]...[/URL]
     raw.gsub!(/\[URL="?(.+?)"?\](.+?)\[\/URL\]/im) { "[#{$2.strip}](#{$1})" }
 
@@ -462,14 +532,19 @@ class BulkImport::Base
     raw.gsub!(/\[TD="?.*?"?\](.*?)\[\/TD\]/im, "\\1")
 
     # [QUOTE]...[/QUOTE]
-    raw.gsub!(/\[QUOTE\](.+?)\[\/QUOTE\]/im) { |quote|
-      quote.gsub!(/\[QUOTE\](.+?)\[\/QUOTE\]/im) { "\n#{$1}\n" }
-      quote.gsub!(/\n(.+?)/) { "\n> #{$1}" }
-    }
+    raw.gsub!(/\[QUOTE="([^\]]+)"\]/i) { "[QUOTE=#{$1}]" }
 
-    # [QUOTE=<username>;<postid>]...[/QUOTE]
-    raw.gsub!(/\[QUOTE=([^;]+);(\d+)\](.+?)\[\/QUOTE\]/im) do
-      imported_username, imported_postid, quote = $1, $2, $3
+    # Nested Quotes
+    raw.gsub!(/(\[\/?QUOTE.*?\])/mi) { |q| "\n#{q}\n" }
+
+    # raw.gsub!(/\[QUOTE\](.+?)\[\/QUOTE\]/im) { |quote|
+    #   quote.gsub!(/\[QUOTE\](.+?)\[\/QUOTE\]/im) { "\n#{$1}\n" }
+    #   quote.gsub!(/\n(.+?)/) { "\n> #{$1}" }
+    # }
+
+    # [QUOTE=<username>;<postid>]
+    raw.gsub!(/\[QUOTE=([^;\]]+);(\d+)\]/i) do
+      imported_username, imported_postid = $1, $2
 
       username = @mapped_usernames[imported_username] || imported_username
       post_id = post_id_from_imported_id(imported_postid)
@@ -477,9 +552,9 @@ class BulkImport::Base
       topic_id = @topic_id_by_post_id[post_id]
 
       if post_number && topic_id
-        "\n[quote=\"#{username}, post:#{post_number}, topic:#{topic_id}\"]\n#{quote}\n[/quote]"
+        "\n[quote=\"#{username}, post:#{post_number}, topic:#{topic_id}\"]\n"
       else
-        "\n[quote=\"#{username}\"]\n#{quote}\n[/quote]\n"
+        "\n[quote=\"#{username}\"]\n"
       end
     end
 
@@ -545,6 +620,10 @@ class BulkImport::Base
     end
   end
 
+  def create_upload(user_id, path, source_filename)
+    @uploader.create_upload(user_id, path, source_filename)
+  end
+
   def fix_name(name)
     name.scrub! if name.valid_encoding? == false
     return if name.blank?
@@ -608,6 +687,16 @@ class BulkImport::Base
 
   def pre_fancy(title)
     Redcarpet::Render::SmartyPants.render(ERB::Util.html_escape(title)).scrub.strip
+  end
+
+  def normalize_text(text)
+    return nil unless text.present?
+    @html_entities.decode(normalize_charset(text.presence || "").scrub)
+  end
+
+  def normalize_charset(text)
+    return text if @encoding == Encoding::UTF_8
+    return text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
   end
 
 end

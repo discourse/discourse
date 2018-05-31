@@ -77,6 +77,9 @@ class QueuedPost < ActiveRecord::Base
 
       unless created_post && creator.errors.blank?
         raise StandardError.new(creator.errors.full_messages.join(" "))
+      else
+        # Log post approval
+        StaffActionLogger.new(approved_by).log_post_approved(created_post)
       end
     end
 
@@ -121,7 +124,7 @@ end
 # Table name: queued_posts
 #
 #  id             :integer          not null, primary key
-#  queue          :string(255)      not null
+#  queue          :string           not null
 #  state          :integer          not null
 #  user_id        :integer          not null
 #  raw            :text             not null
@@ -131,8 +134,8 @@ end
 #  approved_at    :datetime
 #  rejected_by_id :integer
 #  rejected_at    :datetime
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #
 # Indexes
 #

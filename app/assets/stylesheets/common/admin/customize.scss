@@ -4,10 +4,10 @@
     margin-bottom: 10px;
     input {
       margin-bottom: 0;
-      font-size: 1rem;
+      font-size: $font-down-2;
     }
     .btn-small {
-      font-size: 1rem;
+      font-size: $font-down-2;
     }
   }
 
@@ -36,7 +36,7 @@
   .admin-footer {
     margin-top: 20px;
   }
-  .select2-chosen, .color-schemes li {
+  .color-schemes li {
     .fa {
       margin-right: 6px;
       color: dark-light-choose($primary-medium, $secondary-medium);
@@ -55,13 +55,28 @@
     }
   }
 
+  .theme.settings {
+    .theme-setting {
+      padding-bottom: 0;
+      padding-top: 18px;
+      min-height: 35px;
+    }
+    .setting-label {
+      width: 25%;
+      h3 {
+        margin-top: 0;
+        margin-bottom: .5rem;
+      }
+    }
+  }
+
   .current-style.maximized {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 100000;
+    z-index: z("fullscreen");
     background-color: white;
     width: 100%;
     padding: 0;
@@ -111,7 +126,7 @@
       .d-icon-mobile {
         position: relative;
         top: -3px;
-        font-size: 1.5em;
+        font-size: $font-up-3;
         max-height: 20px;
       }
     }
@@ -194,7 +209,7 @@
 
   .status-message {
     display: block;
-    font-size: 0.857em;
+    font-size:  $font-down-1;
     margin-top: 8px;
   }
 
@@ -220,3 +235,27 @@
     margin-top: 20px;
   }
 }
+
+#custom_emoji {
+  width: 27%;
+}
+
+.modal-body .inputs .check-private {
+  margin-top: 10px;
+  label {
+    padding-left: 0;
+  }
+  label input {
+    width: auto;
+    margin: 3px 0;
+  }
+
+  .public-key {
+    margin-top: 10px;
+    textarea {
+      cursor: auto;
+      height: 150px;
+    }
+  }
+}
+

@@ -2,6 +2,8 @@ require_dependency 'retrieve_title'
 
 class InlineOneboxer
 
+  MIN_TITLE_LENGTH = 2
+
   def initialize(urls, opts = nil)
     @urls = urls
     @opts = opts || {}
@@ -27,10 +29,12 @@ class InlineOneboxer
       return cached if cached.present?
     end
 
+    return unless url
+
     if route = Discourse.route_for(url)
       if route[:controller] == "topics" &&
         route[:action] == "show" &&
-        topic = (Topic.where(id: route[:topic_id].to_i).first rescue nil)
+        topic = Topic.where(id: route[:topic_id].to_i).first
 
         return onebox_for(url, topic.title, opts) if Guardian.new.can_see?(topic)
       end
@@ -40,12 +44,16 @@ class InlineOneboxer
     domains = SiteSetting.inline_onebox_domains_whitelist&.split('|') unless always_allow
 
     if always_allow || domains
-      uri = URI(url) rescue nil
+      uri = begin
+        URI(url)
+      rescue URI::InvalidURIError
+      end
 
       if uri.present? &&
         uri.hostname.present? &&
         (always_allow || domains.include?(uri.hostname)) &&
         title = RetrieveTitle.crawl(url)
+        title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
       end
     end
@@ -58,7 +66,7 @@ class InlineOneboxer
     def self.onebox_for(url, title, opts)
       onebox = {
         url: url,
-        title: Emoji.gsub_emoji_to_unicode(title)
+        title: title && Emoji.gsub_emoji_to_unicode(title)
       }
       unless opts[:skip_cache]
         Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)

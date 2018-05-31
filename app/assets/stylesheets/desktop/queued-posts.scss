@@ -9,7 +9,7 @@
      .post-info  {
        display: inline-block;
        float: right;
-       font-size: 0.929em;
+       font-size: $font-down-1;
        margin-top: 1px;
        span {color: dark-light-choose($primary-medium, $secondary-medium); }
      }
@@ -21,6 +21,15 @@
       .d-editor-input {
         width: 98%;
         height: 15em;
+      }
+    }
+
+    .tag-chooser {
+      width: 100%;
+      margin-bottom: .5em;
+
+      .select-kit-collection {
+        padding: 0;
       }
     }
 

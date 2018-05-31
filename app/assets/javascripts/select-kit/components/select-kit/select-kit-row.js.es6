@@ -5,7 +5,7 @@ import UtilsMixin from "select-kit/mixins/utils";
 
 export default Ember.Component.extend(UtilsMixin, {
   layoutName: "select-kit/templates/components/select-kit/select-kit-row",
-  classNames: ["select-kit-row", "select-box-kit-row"],
+  classNames: ["select-kit-row"],
   tagName: "li",
   tabIndex: -1,
   attributeBindings: [
@@ -13,7 +13,8 @@ export default Ember.Component.extend(UtilsMixin, {
     "title",
     "value:data-value",
     "name:data-name",
-    "ariaLabel:aria-label"
+    "ariaLabel:aria-label",
+    "guid:data-guid"
   ],
   classNameBindings: ["isHighlighted", "isSelected"],
 
@@ -27,6 +28,9 @@ export default Ember.Component.extend(UtilsMixin, {
     return null;
   },
 
+  @computed("computedContent")
+  guid(computedContent) { return Ember.guidFor(computedContent); },
+
   label: Ember.computed.or("computedContent.label", "title", "name"),
 
   name: Ember.computed.alias("computedContent.name"),
@@ -39,7 +43,7 @@ export default Ember.Component.extend(UtilsMixin, {
   @on("didReceiveAttrs")
   _setSelectionState() {
     this.set("isSelected", this.get("computedValue") === this.get("value"));
-    this.set("isHighlighted", this.get("highlightedValue") === this.get("value"));
+    this.set("isHighlighted", this.get("highlighted.value") === this.get("value"));
   },
 
   @on("willDestroyElement")
@@ -57,14 +61,14 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   mouseEnter() {
-    this.set("hoverDebounce", run.debounce(this, this._sendOnHighlightAction, 32));
+    this.set("hoverDebounce", run.debounce(this, this._sendMouseoverAction, 32));
   },
 
   click() {
-    this.sendAction("onSelect", this.get("computedContent"));
+    this.sendAction("onClickRow", this.get("computedContent"));
   },
 
-  _sendOnHighlightAction() {
-    this.sendAction("onHighlight", this.get("computedContent"));
+  _sendMouseoverAction() {
+    this.sendAction("onMouseoverRow", this.get("computedContent"));
   }
 });

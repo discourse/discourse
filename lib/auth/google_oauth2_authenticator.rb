@@ -44,22 +44,28 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
   def after_create_account(user, auth)
     data = auth[:extra_data]
     GoogleUserInfo.create({ user_id: user.id }.merge(data))
-    if auth[:email_valid].to_s == 'true' && data[:email]&.downcase == user.email
-      EmailToken.confirm(user.email_tokens.first.token)
-      user.set_automatic_groups
-    end
   end
 
   def register_middleware(omniauth)
+    options = {
+      setup: lambda { |env|
+        strategy = env["omniauth.strategy"]
+         strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
+         strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
+      },
+      skip_jwt: true
+    }
+
+    if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
+      options[:prompt] = google_oauth2_prompt.gsub("|", " ")
+    end
+
+    google_oauth2_hd = SiteSetting.google_oauth2_hd
+    options[:hd] = google_oauth2_hd if google_oauth2_hd.present?
+
     # jwt encoding is causing auth to fail in quite a few conditions
     # skipping
-    omniauth.provider :google_oauth2,
-           setup: lambda { |env|
-             strategy = env["omniauth.strategy"]
-              strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
-              strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
-           },
-           skip_jwt: true
+    omniauth.provider :google_oauth2, options
   end
 
   protected

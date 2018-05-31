@@ -5,7 +5,8 @@ describe ComposerMessagesController do
   context '.index' do
 
     it 'requires you to be logged in' do
-      expect { get :index, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      get :index, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'when logged in' do

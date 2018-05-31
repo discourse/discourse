@@ -25,7 +25,7 @@ module I18n
       end
 
       def fallbacks(locale)
-        [locale, SiteSetting.default_locale.to_sym, :en].uniq.compact
+        I18n.fallbacks[locale]
       end
 
       def exists?(locale, key)

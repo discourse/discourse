@@ -25,7 +25,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :user_fields,
              :bounce_score,
              :reset_bounce_score_after,
-             :can_view_action_logs
+             :can_view_action_logs,
+             :second_factor_enabled,
+             :can_disable_second_factor
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
@@ -33,6 +35,14 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
+
+  def second_factor_enabled
+    object.totp_enabled?
+  end
+
+  def can_disable_second_factor
+    object&.id != scope.user.id
+  end
 
   def can_revoke_admin
     scope.can_revoke_admin?(object)

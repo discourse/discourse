@@ -251,7 +251,6 @@ describe Search do
       end
 
       it 'displays multiple results within a topic' do
-
         topic = Fabricate(:topic)
         topic2 = Fabricate(:topic)
 
@@ -260,8 +259,7 @@ describe Search do
 
         post1 = new_post('this is the other post I am posting', topic)
         post2 = new_post('this is my first post I am posting', topic)
-        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds
-                         with more stuff bla bla', topic)
+        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds with more stuff bla bla', topic)
         post4 = new_post('this is my fourth post I am posting', topic)
 
         # update posts_count
@@ -279,6 +277,13 @@ describe Search do
 
         # phrase search works as expected
         results = Search.execute('"fourth post I am posting"', search_context: post1.topic)
+        expect(results.posts.length).to eq(1)
+      end
+
+      it "works for unlisted topics" do
+        topic.update_attributes(visible: false)
+        _post = new_post('discourse is awesome', topic)
+        results = Search.execute('discourse', search_context: topic)
         expect(results.posts.length).to eq(1)
       end
     end
@@ -305,6 +310,16 @@ describe Search do
         expect(p.id).to eq(reply.id)
         expect(result.blurb(p)).to eq("this reply has no quotes")
       end
+    end
+
+    context 'searching for quoted title' do
+      it "can find quoted title" do
+        create_post(raw: "this is the raw body", title: "I am a title yeah")
+        result = Search.execute('"a title yeah"')
+
+        expect(result.posts.length).to eq(1)
+      end
+
     end
 
     context "search for a topic by id" do
@@ -395,6 +410,27 @@ describe Search do
     let(:tag_group) { Fabricate(:tag_group) }
     let(:category) { Fabricate(:category) }
 
+    context 'post searching' do
+      it 'can find posts with tags' do
+        SiteSetting.tagging_enabled = true
+
+        post = Fabricate(:post, raw: 'I am special post')
+        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name])
+        post.topic.save
+
+        # we got to make this index (it is deferred)
+        Jobs::ReindexSearch.new.rebuild_problem_posts
+
+        result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(1)
+
+        SiteSetting.tagging_enabled = false
+
+        result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(0)
+      end
+    end
+
     context 'tagging is disabled' do
       before { SiteSetting.tagging_enabled = false }
 
@@ -411,11 +447,10 @@ describe Search do
       end
 
       it 'shows staff tags' do
-        staff_tag = Fabricate(:tag, name: "#{tag.name}9")
-        SiteSetting.staff_tags = "#{staff_tag.name}"
+        create_staff_tags(["#{tag.name}9"])
 
-        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags).to contain_exactly(tag, staff_tag)
-        expect(search.tags).to contain_exactly(tag, staff_tag)
+        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
+        expect(search.tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
       end
 
       it 'includes category-restricted tags' do
@@ -802,6 +837,9 @@ describe Search do
 
       results = Search.new('#777').execute
       expect(results.posts.length).to eq(0)
+
+      results = Search.new('xxx #:').execute
+      expect(results.posts.length).to eq(0)
     end
 
     context 'tags' do
@@ -856,7 +894,7 @@ describe Search do
     str = " grigio:babel deprecated? "
     str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
-    ts_query = Search.ts_query(str, "simple")
+    ts_query = Search.ts_query(term: str, ts_config: "simple")
     Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
   end
 
@@ -914,6 +952,25 @@ describe Search do
       )
       results = s.execute
       expect(results.search_log_id).to be_present
+    end
+
+    it "does not log search if search_type is not present" do
+      s = Search.new('foo bar', ip_address: '127.0.0.1')
+      results = s.execute
+      expect(results.search_log_id).not_to be_present
+    end
+  end
+
+  context 'in:title' do
+    it 'allows for search in title' do
+      topic = Fabricate(:topic, title: 'I am testing a title search')
+      _post = Fabricate(:post, topic_id: topic.id, raw: 'this is the first post')
+
+      results = Search.execute('title in:title')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('first in:title')
+      expect(results.posts.length).to eq(0)
     end
   end
 

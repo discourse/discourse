@@ -15,6 +15,9 @@ describe AdminDashboardData do
 
       AdminDashboardData.fetch_problems
       expect(called).to eq(true)
+
+      AdminDashboardData.fetch_problems(check_force_https: true)
+      expect(called).to eq(true)
     end
 
     it 'calls the passed method' do
@@ -278,6 +281,32 @@ describe AdminDashboardData do
       let(:setting_key) { :enable_s3_backups }
       let(:bucket_key) { :s3_backup_bucket }
       include_examples 'problem detection for s3-dependent setting'
+    end
+  end
+
+  describe 'force_https_check' do
+    subject { described_class.new(check_force_https: true).force_https_check }
+
+    it 'returns nil if force_https site setting enabled' do
+      SiteSetting.force_https = true
+      expect(subject).to be_nil
+    end
+
+    it 'returns nil if force_https site setting not enabled' do
+      SiteSetting.force_https = false
+      expect(subject).to eq(I18n.t('dashboard.force_https_warning'))
+    end
+  end
+
+  describe 'ignore force_https_check' do
+    subject { described_class.new(check_force_https: false).force_https_check }
+
+    it 'returns nil' do
+      SiteSetting.force_https = true
+      expect(subject).to be_nil
+
+      SiteSetting.force_https = false
+      expect(subject).to be_nil
     end
   end
 

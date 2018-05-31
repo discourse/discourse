@@ -12,7 +12,10 @@ module SiteSettingExtension
   def_delegator :defaults, :has_setting?
   def_delegators 'SiteSettings::TypeSupervisor', :types, :supported_types
 
-  # part 1 of refactor, centralizing the dependency here
+  def listen_for_changes=(val)
+    @listen_for_changes = val
+  end
+
   def provider=(val)
     @provider = val
     refresh!
@@ -190,6 +193,8 @@ module SiteSettingExtension
   end
 
   def ensure_listen_for_changes
+    return if @listen_for_changes == false
+
     unless @subscribed
       MessageBus.subscribe("/site_settings") do |message|
         process_message(message)
@@ -252,13 +257,17 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
+  HOSTNAME_SETTINGS ||= %w{
+    disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains
+    email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains
+  }
+
   def filter_value(name, value)
-    if %w[disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
-      domain_array = []
-      value.split('|').each { |url| domain_array << get_hostname(url) }
-      value = domain_array.join("|")
+    if HOSTNAME_SETTINGS.include?(name)
+      value.split("|").map { |url| get_hostname(url) }.compact.uniq.join("|")
+    else
+      value
     end
-    value
   end
 
   def set(name, value)
@@ -274,7 +283,10 @@ module SiteSettingExtension
   def set_and_log(name, value, user = Discourse.system_user)
     prev_value = send(name)
     set(name, value)
-    StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
+    if has_setting?(name)
+      value = prev_value = "[FILTERED]" if name.to_s =~ /_secret/
+      StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+    end
   end
 
   protected
@@ -339,11 +351,21 @@ module SiteSettingExtension
   end
 
   def get_hostname(url)
-    unless (URI.parse(url).scheme rescue nil).nil?
-      url = "http://#{url}" if URI.parse(url).scheme.nil?
-      url = URI.parse(url).host
+    url.strip!
+
+    host = begin
+      URI.parse(url)&.host
+    rescue URI::InvalidURIError
+      nil
     end
-    url
+
+    host ||= begin
+      URI.parse("http://#{url}")&.host
+    rescue URI::InvalidURIError
+      nil
+    end
+
+    host.presence || url
   end
 
   private

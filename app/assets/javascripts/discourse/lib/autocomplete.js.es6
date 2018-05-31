@@ -276,7 +276,6 @@ export default function(options) {
       }
 
       if (Discourse.Site.currentProp('mobileView')) {
-        div.css('width', 'auto');
 
         if ((me.height() / 2) >= pos.top) { vOffset = -23; }
         if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }

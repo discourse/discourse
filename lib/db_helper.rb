@@ -18,6 +18,8 @@ class DbHelper
       column_name = rc["column_name"]
       connection.async_exec("UPDATE #{table_name} SET #{column_name} = REPLACE(#{column_name}, $1, $2) WHERE #{column_name} LIKE $3", args) rescue nil
     end
+
+    SiteSetting.refresh!
   end
 
 end

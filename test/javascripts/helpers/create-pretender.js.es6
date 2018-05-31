@@ -151,6 +151,7 @@ export default function() {
 
     this.delete('/t/:id', success);
     this.put('/t/:id/recover', success);
+    this.put('/t/:id/publish', success);
 
     this.get("/404-body", () => {
       return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];
@@ -227,6 +228,17 @@ export default function() {
                           current_email: 'current@example.com' });
       }
 
+      if (data.password === 'need-second-factor') {
+        if (data.second_factor_token) {
+          return response({ username: 'eviltrout' });
+        }
+
+        return response({ error: "Invalid Second Factor",
+                          reason: "invalid_second_factor",
+                          sent_to_email: 'eviltrout@example.com',
+                          current_email: 'current@example.com' });
+      }
+
       return response(400, {error: 'invalid login'});
     });
 
@@ -284,8 +296,8 @@ export default function() {
       return response(200, []);
     });
 
-    this.get("/groups/discourse/topics.json", () => {
-      return response(200, fixturesByUrl['/groups/discourse/posts.json']);
+    this.get("/topics/groups/discourse.json", () => {
+      return response(200, fixturesByUrl['/topics/groups/discourse.json']);
     });
 
     this.get("/groups/discourse/mentions.json", () => {
@@ -294,6 +306,10 @@ export default function() {
 
     this.get("/groups/discourse/messages.json", () => {
       return response(200, fixturesByUrl['/groups/discourse/posts.json']);
+    });
+
+    this.get("/groups/moderators/members.json", () => {
+      return response(200, fixturesByUrl['/groups/discourse/members.json']);
     });
 
     this.get('/t/:topic_id/posts.json', request => {

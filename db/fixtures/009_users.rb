@@ -33,7 +33,7 @@ UserOption.where(user_id: -1).update_all(
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'users',
   after_migration: 'DropEmailFromUsers',
   columns: %w[
@@ -61,7 +61,7 @@ ColumnDropper.drop(
   }
 )
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'users',
   after_migration: 'RenameBlockedSilence',
   columns: %w[
@@ -72,7 +72,7 @@ ColumnDropper.drop(
   }
 )
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'users',
   after_migration: 'AddSilencedTillToUsers',
   columns: %w[
@@ -83,7 +83,7 @@ ColumnDropper.drop(
   }
 )
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'users',
   after_migration: 'AddTrustLevelLocksToUsers',
   columns: %w[
@@ -91,6 +91,17 @@ ColumnDropper.drop(
   ],
   on_drop: ->() {
     STDERR.puts 'Removing user trust_level_locked!'
+  }
+)
+
+Migration::ColumnDropper.drop(
+  table: 'user_auth_tokens',
+  after_migration: 'RemoveLegacyAuthToken',
+  columns: %w[
+    legacy
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing user_auth_token legacy column!'
   }
 )
 

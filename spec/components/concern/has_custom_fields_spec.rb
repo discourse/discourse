@@ -98,6 +98,15 @@ describe HasCustomFields do
     end
 
     it "handles arrays properly" do
+
+      CustomFieldsTestItem.register_custom_field_type "array", [:integer]
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "array" => ["1"] }
+      test_item.save
+
+      db_item = CustomFieldsTestItem.find(test_item.id)
+      expect(db_item.custom_fields).to eq("array" => [1])
+
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = { "a" => ["b", "c", "d"] }
       test_item.save
@@ -214,6 +223,32 @@ describe HasCustomFields do
 
       test_item.save_custom_fields(true)
       expect(test_item.reload.custom_fields).to eq(expected)
+    end
+
+    describe "upsert_custom_fields" do
+      it 'upserts records' do
+        test_item = CustomFieldsTestItem.create
+        test_item.upsert_custom_fields('hello' => 'world', 'abc' => 'def')
+
+        # In memory
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # In memory
+        test_item.upsert_custom_fields('abc' => 'ghi')
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+      end
     end
   end
 end

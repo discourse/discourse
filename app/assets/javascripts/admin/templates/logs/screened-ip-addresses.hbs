@@ -58,7 +58,7 @@
             {{#unless item.editing}}
               {{d-button action="destroy" actionParam=item icon="trash-o" class="btn-danger"}}
               {{d-button action="edit" actionParam=item icon="pencil"}}
-              {{#if isBlocked}}
+              {{#if item.isBlocked}}
                 {{d-button action="allow" actionParam=item icon="check" label="admin.logs.screened_ips.actions.do_nothing"}}
               {{else}}
                 {{d-button action="block" actionParam=item icon="ban" label="admin.logs.screened_ips.actions.block"}}

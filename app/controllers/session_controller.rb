@@ -1,5 +1,6 @@
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
+require_dependency 'url_helper'
 
 class SessionController < ApplicationController
   class LocalLoginNotAllowed < StandardError; end
@@ -7,9 +8,10 @@ class SessionController < ApplicationController
     render body: nil, status: 500
   end
 
-  before_action :check_local_login_allowed, only: %i(create forgot_password)
+  before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
+  before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -42,8 +44,15 @@ class SessionController < ApplicationController
 
   def sso_provider(payload = nil)
     payload ||= request.query_string
+
     if SiteSetting.enable_sso_provider
       sso = SingleSignOn.parse(payload, SiteSetting.sso_secret)
+
+      if sso.return_sso_url.blank?
+        render plain: "return_sso_url is blank, it must be provided", status: 400
+        return
+      end
+
       if current_user
         sso.name = current_user.name
         sso.username = current_user.username
@@ -51,11 +60,19 @@ class SessionController < ApplicationController
         sso.external_id = current_user.id.to_s
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
-        sso.groups = current_user.groups.pluck(:name)
+        sso.groups = current_user.groups.pluck(:name).join(",")
 
-        if sso.return_sso_url.blank?
-          render plain: "return_sso_url is blank, it must be provided", status: 400
-          return
+        if current_user.uploaded_avatar.present?
+          avatar_url = "#{Discourse.store.absolute_base_url}/#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
+          sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
+        end
+
+        if current_user.user_profile.profile_background.present?
+          sso.profile_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.profile_background)
+        end
+
+        if current_user.user_profile.card_background.present?
+          sso.card_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.card_background)
         end
 
         if request.xhr?
@@ -64,7 +81,7 @@ class SessionController < ApplicationController
           redirect_to sso.to_url(sso.return_sso_url)
         end
       else
-        session[:sso_payload] = request.query_string
+        cookies[:sso_payload] = request.query_string
         redirect_to path('/login')
       end
     else
@@ -74,13 +91,17 @@ class SessionController < ApplicationController
 
   # For use in development mode only when login options could be limited or disabled.
   # NEVER allow this to work in production.
-  def become
-    raise Discourse::InvalidAccess.new unless Rails.env.development?
-    user = User.find_by_username(params[:session_id])
-    raise "User #{params[:session_id]} not found" if user.blank?
+  if !Rails.env.production?
+    skip_before_action :check_xhr, only: [:become]
 
-    log_on_user(user)
-    redirect_to path("/")
+    def become
+      raise Discourse::InvalidAccess if Rails.env.production?
+      user = User.find_by_username(params[:session_id])
+      raise "User #{params[:session_id]} not found" if user.blank?
+
+      log_on_user(user)
+      redirect_to path("/")
+    end
   end
 
   def sso_login
@@ -187,8 +208,9 @@ class SessionController < ApplicationController
   end
 
   def create
-    RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
-    RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
+    unless params[:second_factor_token].blank?
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    end
 
     params.require(:login)
     params.require(:password)
@@ -208,7 +230,7 @@ class SessionController < ApplicationController
 
       # If the site requires user approval and the user is not approved yet
       if login_not_approved_for?(user)
-        login_not_approved
+        render json: login_not_approved
         return
       end
 
@@ -220,20 +242,53 @@ class SessionController < ApplicationController
       return
     end
 
-    if user.suspended?
-      failed_to_login(user)
-      return
+    if payload = login_error_check(user)
+      render json: payload
+    else
+      if user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+        return render json: failed_json.merge(
+          error: I18n.t("login.invalid_second_factor_code"),
+          reason: "invalid_second_factor"
+        )
+      end
+
+      (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
+    end
+  end
+
+  def email_login
+    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
+    second_factor_token = params[:second_factor_token]
+    token = params[:token]
+    valid_token = !!EmailToken.valid_token_format?(token)
+    user = EmailToken.confirmable(token)&.user
+
+    if valid_token && user&.totp_enabled?
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+      if !second_factor_token.present?
+        @second_factor_required = true
+        return render layout: 'no_ember'
+      elsif !user.authenticate_totp(second_factor_token)
+        @error = I18n.t('login.invalid_second_factor_code')
+        return render layout: 'no_ember'
+      end
     end
 
-    if ScreenedIpAddress.should_block?(request.remote_ip)
-      return not_allowed_from_ip_address(user)
+    if user = EmailToken.confirm(token)
+      if login_not_approved_for?(user)
+        @error = login_not_approved[:error]
+      elsif payload = login_error_check(user)
+        @error = payload[:error]
+      else
+        log_on_user(user)
+        return redirect_to path("/")
+      end
+    else
+      @error = I18n.t('email_login.invalid_token')
     end
 
-    if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-      return admin_not_allowed_from_ip_address(user)
-    end
-
-    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
+    render layout: 'no_ember'
   end
 
   def forgot_password
@@ -252,7 +307,7 @@ class SessionController < ApplicationController
       Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
 
-    json = { result: "ok" }
+    json = success_json
     unless SiteSetting.hide_email_address_taken
       json[:user_found] = user_presence
     end
@@ -291,6 +346,18 @@ class SessionController < ApplicationController
 
   private
 
+  def login_error_check(user)
+    return failed_to_login(user) if user.suspended?
+
+    if ScreenedIpAddress.should_block?(request.remote_ip)
+      return not_allowed_from_ip_address(user)
+    end
+
+    if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+      return admin_not_allowed_from_ip_address(user)
+    end
+  end
+
   def login_not_approved_for?(user)
     SiteSetting.must_approve_users? && !user.approved? && !user.admin?
   end
@@ -300,7 +367,7 @@ class SessionController < ApplicationController
   end
 
   def login_not_approved
-    render json: { error: I18n.t("login.not_approved") }
+    { error: I18n.t("login.not_approved") }
   end
 
   def not_activated(user)
@@ -314,19 +381,21 @@ class SessionController < ApplicationController
   end
 
   def not_allowed_from_ip_address(user)
-    render json: { error: I18n.t("login.not_allowed_from_ip_address", username: user.username) }
+    { error: I18n.t("login.not_allowed_from_ip_address", username: user.username) }
   end
 
   def admin_not_allowed_from_ip_address(user)
-    render json: { error: I18n.t("login.admin_not_allowed_from_ip_address", username: user.username) }
+    { error: I18n.t("login.admin_not_allowed_from_ip_address", username: user.username) }
   end
 
   def failed_to_login(user)
     message = user.suspend_reason ? "login.suspended_with_reason" : "login.suspended"
 
-    render json: {
-      error: I18n.t(message, date: I18n.l(user.suspended_till, format: :date_only),
-                             reason: Rack::Utils.escape_html(user.suspend_reason)),
+    {
+      error: I18n.t(message,
+        date: I18n.l(user.suspended_till, format: :date_only),
+        reason: Rack::Utils.escape_html(user.suspend_reason)
+      ),
       reason: 'suspended'
     }
   end
@@ -335,11 +404,27 @@ class SessionController < ApplicationController
     session.delete(ACTIVATE_USER_KEY)
     log_on_user(user)
 
-    if payload = session.delete(:sso_payload)
+    if payload = cookies.delete(:sso_payload)
       sso_provider(payload)
     else
       render_serialized(user, UserSerializer)
     end
+  end
+
+  def rate_limit_login
+    RateLimiter.new(
+      nil,
+      "login-hr-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_hour,
+      1.hour
+    ).performed!
+
+    RateLimiter.new(
+      nil,
+      "login-min-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_minute,
+      1.minute
+    ).performed!
   end
 
   def render_sso_error(status:, text:)

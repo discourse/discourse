@@ -1,31 +1,31 @@
 module ImportScripts
   class LookupContainer
     def initialize
-      puts 'loading existing groups...'
+      puts 'Loading existing groups...'
       @groups = {}
       GroupCustomField.where(name: 'import_id').pluck(:group_id, :value).each do |group_id, import_id|
         @groups[import_id] = group_id
       end
 
-      puts 'loading existing users...'
+      puts 'Loading existing users...'
       @users = {}
       UserCustomField.where(name: 'import_id').pluck(:user_id, :value).each do |user_id, import_id|
         @users[import_id] = user_id
       end
 
-      puts 'loading existing categories...'
+      puts 'Loading existing categories...'
       @categories = {}
       CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
         @categories[import_id] = category_id
       end
 
-      puts 'loading existing posts...'
+      puts 'Loading existing posts...'
       @posts = {}
       PostCustomField.where(name: 'import_id').pluck(:post_id, :value).each do |post_id, import_id|
         @posts[import_id] = post_id
       end
 
-      puts 'loading existing topics...'
+      puts 'Loading existing topics...'
       @topics = {}
       Post.joins(:topic).pluck('posts.id, posts.topic_id, posts.post_number, topics.slug').each do |p|
         @topics[p[0]] = {

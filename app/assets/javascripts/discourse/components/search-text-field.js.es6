@@ -6,7 +6,7 @@ import { applySearchAutocomplete } from "discourse/lib/search";
 export default TextField.extend({
   @computed('searchService.searchContextEnabled')
   placeholder(searchContextEnabled) {
-    return searchContextEnabled ? "" : I18n.t('search.title');
+    return searchContextEnabled ? "" : I18n.t('search.full_page_title');
   },
 
   @on("didInsertElement")

@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+es:
+  js:
+    discourse_local_dates:
+      title: Insertar fecha
+      create:
+        modal_title: Insertar fecha
+        modal_subtitle: "Convertiremos automáticamente la fecha y la hora en la zona horaria local del lector."
+        form:
+          insert: Insertar
+          advanced_mode: Modo Avanzado
+          simple_mode: Modo simple
+          format_description: "Formato usado para mostrar la fecha al usuario. Use \"\\T\\Z\" para mostrar la zona horaria del usuario en palabras (Europe/Paris)"
+          timezones_title: Zonas Horarias a mostrar
+          timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retroceso.
+          recurring_title: Recurrencia
+          recurring_description: "Definir la recurrencia de un evento. También puede editar manualmente la opción recurrente generada por el formulario y usar una de las siguientes claves: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Sin recurrencia
+          invalid_date: Fecha inválida, asegúrese de que la fecha y la hora sean correctas
+          date_title: Fecha
+          time_title: Hora
+          format_title: Formato de Fecha

@@ -60,42 +60,42 @@ describe DiscourseDiff do
   describe "side_by_side_html" do
 
     it "returns two empty divs when no content is diffed" do
-      expect(DiscourseDiff.new("", "").side_by_side_html).to eq("<div class=\"span8\"></div><div class=\"span8 offset1\"></div>")
+      expect(DiscourseDiff.new("", "").side_by_side_html).to eq("<div class=\"revision-content\"></div><div class=\"revision-content\"></div>")
     end
 
     it "returns the diffed content on both sides when there is no difference" do
       before = after = "<p>this is a paragraph</p>"
-      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p>this is a paragraph</p></div><div class=\"span8 offset1\"><p>this is a paragraph</p></div>")
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p>this is a paragraph</p></div><div class=\"revision-content\"><p>this is a paragraph</p></div>")
     end
 
     it "adds <ins> tags around added text on the right div" do
       before = "<p>this is a paragraph</p>"
       after = "<p>this is a great paragraph</p>"
-      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p>this is a paragraph</p></div><div class=\"span8 offset1\"><p>this is a <ins>great </ins>paragraph</p></div>")
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p>this is a paragraph</p></div><div class=\"revision-content\"><p>this is a <ins>great </ins>paragraph</p></div>")
     end
 
     it "adds <del> tags around removed text on the left div" do
       before = "<p>this is a great paragraph</p>"
       after = "<p>this is a paragraph</p>"
-      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p>this is a <del>great </del>paragraph</p></div><div class=\"span8 offset1\"><p>this is a paragraph</p></div>")
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p>this is a <del>great </del>paragraph</p></div><div class=\"revision-content\"><p>this is a paragraph</p></div>")
     end
 
     it "adds .diff-ins class when a paragraph is added" do
       before = "<p>this is the first paragraph</p>"
       after = "<p>this is the first paragraph</p><p>this is the second paragraph</p>"
-      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p>this is the first paragraph</p></div><div class=\"span8 offset1\"><p>this is the first paragraph</p><p class=\"diff-ins\">this is the second paragraph</p></div>")
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p>this is the first paragraph</p></div><div class=\"revision-content\"><p>this is the first paragraph</p><p class=\"diff-ins\">this is the second paragraph</p></div>")
     end
 
     it "adds .diff-del class when a paragraph is removed" do
       before = "<p>this is the first paragraph</p><p>this is the second paragraph</p>"
       after = "<p>this is the second paragraph</p>"
-      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p class=\"diff-del\">this is the first paragraph</p><p>this is the second paragraph</p></div><div class=\"span8 offset1\"><p>this is the second paragraph</p></div>")
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p class=\"diff-del\">this is the first paragraph</p><p>this is the second paragraph</p></div><div class=\"revision-content\"><p>this is the second paragraph</p></div>")
     end
 
     it "does not break diff on character references" do
       before = "<p>'</p>"
       after = "<p></p>"
-      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p><del>&#39;</del></p></div><div class=\"span8 offset1\"><p></p></div>")
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p><del>&#39;</del></p></div><div class=\"revision-content\"><p></p></div>")
     end
 
   end

@@ -4,11 +4,19 @@ import { h } from 'virtual-dom';
 import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import RawHtml from 'discourse/widgets/raw-html';
+import renderTags from 'discourse/lib/render-tags';
+import renderTopicFeaturedLink from 'discourse/lib/render-topic-featured-link';
 
-const SCROLLAREA_HEIGHT = 300;
 const SCROLLER_HEIGHT = 50;
-const SCROLLAREA_REMAINING = SCROLLAREA_HEIGHT - SCROLLER_HEIGHT;
 const LAST_READ_HEIGHT = 20;
+
+function scrollareaHeight() {
+  return ($(window).height() < 425) ? 150 : 300;
+}
+
+function scrollareaRemaining() {
+  return scrollareaHeight() - SCROLLER_HEIGHT;
+}
 
 function clamp(p, min=0.0, max=1.0) {
   return Math.max(Math.min(p, max), min);
@@ -27,7 +35,7 @@ createWidget('timeline-last-read', {
   tagName: 'div.timeline-last-read',
 
   buildAttributes(attrs) {
-    const bottom = SCROLLAREA_HEIGHT - (LAST_READ_HEIGHT / 2);
+    const bottom = scrollareaHeight() - (LAST_READ_HEIGHT / 2);
     const top = attrs.top > bottom ? bottom : attrs.top;
     return { style: `height: ${LAST_READ_HEIGHT}px; top: ${top}px` };
   },
@@ -115,7 +123,7 @@ createWidget('timeline-scrollarea', {
   buildKey: () => `timeline-scrollarea`,
 
   buildAttributes() {
-    return { style: `height: ${SCROLLAREA_HEIGHT}px` };
+    return { style: `height: ${scrollareaHeight()}px` };
   },
 
   defaultState(attrs) {
@@ -168,8 +176,8 @@ createWidget('timeline-scrollarea', {
     const percentage = state.percentage;
     if (percentage === null) { return; }
 
-    const before = SCROLLAREA_REMAINING * percentage;
-    const after = (SCROLLAREA_HEIGHT - before) - SCROLLER_HEIGHT;
+    const before = scrollareaRemaining() * percentage;
+    const after = (scrollareaHeight() - before) - SCROLLER_HEIGHT;
 
     let showButton = false;
     const hasBackPosition =
@@ -179,13 +187,13 @@ createWidget('timeline-scrollarea', {
       (position.lastRead && position.lastRead !== position.total);
 
     if (hasBackPosition) {
-      const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
+      const lastReadTop = Math.round(position.lastReadPercentage * scrollareaHeight());
       showButton = ((before + SCROLLER_HEIGHT - 5) < lastReadTop) ||
                     (before > (lastReadTop + 25));
 
 
       // Don't show if at the bottom of the timeline
-      if (lastReadTop > (SCROLLAREA_HEIGHT - (LAST_READ_HEIGHT / 2))) {
+      if (lastReadTop > (scrollareaHeight() - (LAST_READ_HEIGHT / 2))) {
         showButton = false;
       }
     }
@@ -200,7 +208,7 @@ createWidget('timeline-scrollarea', {
     ];
 
     if (hasBackPosition) {
-      const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
+      const lastReadTop = Math.round(position.lastReadPercentage * scrollareaHeight());
       result.push(this.attach('timeline-last-read', {
         top: lastReadTop,
         lastRead: position.lastRead,
@@ -376,6 +384,7 @@ export default createWidget('topic-timeline', {
     const createdAt = new Date(topic.created_at);
     const stream = attrs.topic.get('postStream.stream');
     const { currentUser } = this;
+    const { tagging_enabled, topic_featured_link_enabled } = this.siteSettings;
 
     attrs["currentUser"] = currentUser;
 
@@ -392,6 +401,34 @@ export default createWidget('topic-timeline', {
         className: 'fancy-title',
         action: 'jumpTop'
       }))];
+
+      // duplicate of the {{topic-category}} component
+      let category = [];
+
+      if (!topic.get("isPrivateMessage")) {
+        if (topic.category.parentCategory) {
+          category.push(this.attach("category-link", { category: topic.category.parentCategory }));
+        }
+        category.push(this.attach("category-link", { category: topic.category }));
+      }
+
+      const showTags = tagging_enabled && topic.tags && topic.tags.length > 0;
+
+      if (showTags || topic_featured_link_enabled) {
+        let extras = [];
+        if (showTags) {
+          const tagsHtml = new RawHtml({ html: renderTags(topic, { mode: "list" }) });
+          extras.push(h("div.list-tags", tagsHtml));
+        }
+        if (topic_featured_link_enabled) {
+          extras.push(new RawHtml({ html: renderTopicFeaturedLink(topic) }));
+        }
+        category.push(h("div.topic-header-extra", extras));
+      }
+
+      if (category.length > 0) {
+        elems.push(h("div.topic-category", category));
+      }
 
       if (this.state.excerpt) {
         elems.push(new RawHtml({

@@ -85,6 +85,10 @@ class GlobalSetting
       end) == :true
   end
 
+  def self.s3_bucket_name
+    @s3_bucket_name ||= s3_bucket.downcase.split("/")[0]
+  end
+
   # for testing
   def self.reset_s3_cache!
     @use_s3 = nil
@@ -92,7 +96,21 @@ class GlobalSetting
 
   def self.database_config
     hash = { "adapter" => "postgresql" }
-    %w{pool connect_timeout timeout socket host port username password replica_host replica_port}.each do |s|
+
+    %w{
+      pool
+      connect_timeout
+      timeout
+      socket
+      host
+      backup_host
+      port
+      backup_port
+      username
+      password
+      replica_host
+      replica_port
+    }.each do |s|
       if val = self.send("db_#{s}")
         hash[s] = val
       end
@@ -102,6 +120,8 @@ class GlobalSetting
 
     hostnames = [ hostname ]
     hostnames << backup_hostname if backup_hostname.present?
+
+    hostnames << URI.parse(cdn_url).host if cdn_url.present?
 
     hash["host_names"] = hostnames
     hash["database"] = db_name

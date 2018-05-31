@@ -40,6 +40,7 @@ module Jobs
         .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
         .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
         .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
+        .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
         .where("pu.upload_id IS NULL")
         .where("u.uploaded_avatar_id IS NULL")
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
@@ -47,6 +48,7 @@ module Jobs
         .where("c.uploaded_logo_id IS NULL AND c.uploaded_background_id IS NULL")
         .where("ce.upload_id IS NULL")
         .where("tf.upload_id IS NULL")
+        .where("ue.upload_id IS NULL")
 
       result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
 

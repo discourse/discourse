@@ -8,7 +8,7 @@ export default ComboBoxComponent.extend({
   allowInitialValueMutation: false,
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
     content.name = I18n.t("topic.controls");
     return content;
   },
@@ -45,7 +45,7 @@ export default ComboBoxComponent.extend({
       return;
     }
 
-    const refresh = () => this.send("onDeselect", value);
+    const refresh = () => this.deselect(this.get("selection"));
 
     switch(value) {
       case "invite":

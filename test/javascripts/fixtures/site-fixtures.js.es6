@@ -3,6 +3,7 @@ export default {
     "site":{
       "default_archetype":"regular",
       "disabled_plugins":[],
+      "shared_drafts_category_id":24,
       "notification_types":{
         "mentioned":1,
         "replied":2,
@@ -171,17 +172,16 @@ export default {
         },
         {
           "id":24,
-          "name":"sso",
+          "name":"Shared Drafts",
           "color":"92278F",
           "text_color":"FFFFFF",
-          "slug":"sso",
+          "slug":"shared-drafts",
           "topic_count":13,
           "post_count":53,
-          "description":"Only include actual maintained SSO (single sign on) implementations in this category. See the <a href=\"https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045\">official documentation on Discourse's SSO support</a>.",
-          "topic_url":"/t/about-the-sso-category/13110",
-          "read_restricted":false,
+          "description":"An area for staff members to post shared drafts",
+          "topic_url":"/t/about-the-shared-drafts-category/13110",
+          "read_restricted":true,
           "permission":1,
-          "parent_category_id":5,
           "notification_level":null,
           "logo_url":null,
           "background_url":null

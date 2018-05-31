@@ -79,6 +79,28 @@ describe UserNotifications do
 
   end
 
+  describe '.email_login' do
+    let(:email_token) { user.email_tokens.create!(email: user.email).token }
+    subject { UserNotifications.email_login(user, email_token: email_token) }
+
+    it "generates the right email" do
+      expect(subject.to).to eq([user.email])
+      expect(subject.from).to eq([SiteSetting.notification_email])
+
+      expect(subject.subject).to eq(I18n.t(
+        'user_notifications.email_login.subject_template',
+        email_prefix: SiteSetting.title
+      ))
+
+      expect(subject.body.to_s).to match(I18n.t(
+        'user_notifications.email_login.text_body_template',
+        site_name: SiteSetting.title,
+        base_url: Discourse.base_url,
+        email_token: email_token
+      ))
+    end
+  end
+
   describe '.digest' do
 
     subject { UserNotifications.digest(user) }
@@ -357,7 +379,7 @@ describe UserNotifications do
       expect(mail[:from].display_names).to eql(['john'])
 
       # subject should include "[PM]"
-      expect(mail.subject).to match("[PM]")
+      expect(mail.subject).to include("[PM] ")
 
       # 1 "visit message" link
       expect(mail.html_part.to_s.scan(/Visit Message/).count).to eq(1)
@@ -386,6 +408,91 @@ describe UserNotifications do
       expect(mail.html_part.to_s).to_not include(topic.url)
       expect(mail.text_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(topic.url)
+    end
+
+    it "doesn't include group name in subject" do
+      group = Fabricate(:group)
+      topic.allowed_groups = [ group ]
+      mail = UserNotifications.user_private_message(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.subject).to include("[PM] ")
+    end
+
+    it "includes a list of participants, groups first with member lists" do
+      group1 = Fabricate(:group, name: "group1")
+      group2 = Fabricate(:group, name: "group2")
+
+      user1 = Fabricate(:user, username: "one", groups: [group1, group2])
+      user2 = Fabricate(:user, username: "two", groups: [group1])
+
+      topic.allowed_users = [user1, user2]
+      topic.allowed_groups = [group1, group2]
+
+      mail = UserNotifications.user_private_message(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.body).to include("#{I18n.t("user_notifications.pm_participants")} [group1 (2)](http://test.localhost/groups/group1), [group2 (1)](http://test.localhost/groups/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
+    end
+
+    context "when SiteSetting.group_name_in_subject is true" do
+      before do
+        SiteSetting.group_in_subject = true
+      end
+
+      let(:group) { Fabricate(:group, name: "my_group") }
+      let(:mail) { UserNotifications.user_private_message(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      ) }
+
+      shared_examples "includes first group name" do
+        it "includes first group name in subject" do
+          expect(mail.subject).to include("[my_group] ")
+        end
+
+        context "when first group has full name" do
+          it "includes full name in subject" do
+            group.full_name = "My Group"
+            group.save
+            expect(mail.subject).to include("[My Group] ")
+          end
+        end
+      end
+
+      context "one group in pm" do
+        before do
+          topic.allowed_groups = [ group ]
+        end
+
+        include_examples "includes first group name"
+      end
+
+      context "multiple groups in pm" do
+        let(:group2) { Fabricate(:group) }
+
+        before do
+          topic.allowed_groups = [ group, group2 ]
+        end
+
+        include_examples "includes first group name"
+      end
+
+      context "no groups in pm" do
+        it "includes %{optional_pm} in subject" do
+          expect(mail.subject).to include("[PM] ")
+        end
+      end
     end
   end
 

@@ -5,7 +5,7 @@ end
 
 Group.where(name: 'everyone').update_all(visibility_level: Group.visibility_levels[:owners])
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'groups',
   after_migration: 'SplitAliasLevels',
   columns:  %w[visible public alias_level],

@@ -2,7 +2,7 @@ require 'sqlite3'
 
 module ImportScripts::Mbox
   class Database
-    SCHEMA_VERSION = 1
+    SCHEMA_VERSION = 2
 
     def initialize(directory, batch_size)
       @db = SQLite3::Database.new("#{directory}/index.db", results_as_hash: true)
@@ -15,6 +15,15 @@ module ImportScripts::Mbox
       create_table_for_emails
       create_table_for_replies
       create_table_for_users
+    end
+
+    def transaction
+      @db.transaction
+      yield self
+      @db.commit
+
+    rescue
+      @db.rollback
     end
 
     def insert_category(category)
@@ -35,10 +44,10 @@ module ImportScripts::Mbox
       @db.execute(<<-SQL, email)
         INSERT OR REPLACE INTO email (msg_id, from_email, from_name, subject,
           email_date, raw_message, body, elided, format, attachment_count, charset,
-          category, filename, first_line_number, last_line_number)
+          category, filename, first_line_number, last_line_number, index_duration)
         VALUES (:msg_id, :from_email, :from_name, :subject,
           :email_date, :raw_message, :body, :elided, :format, :attachment_count, :charset,
-          :category, :filename, :first_line_number, :last_line_number)
+          :category, :filename, :first_line_number, :last_line_number, :index_duration)
       SQL
     end
 
@@ -69,7 +78,21 @@ module ImportScripts::Mbox
       SQL
     end
 
-    def sort_emails
+    def update_in_reply_to_by_email_subject
+      @db.execute <<-SQL
+        UPDATE email
+        SET in_reply_to = NULLIF((
+          SELECT e.msg_id
+          FROM email e
+            JOIN email_order o ON (e.msg_id = o.msg_id)
+          WHERE e.subject = email.subject
+          ORDER BY o.ROWID
+          LIMIT 1
+        ), msg_id)
+      SQL
+    end
+
+    def sort_emails_by_date_and_reply_level
       @db.execute 'DELETE FROM email_order'
 
       @db.execute <<-SQL
@@ -90,6 +113,17 @@ module ImportScripts::Mbox
       SQL
     end
 
+    def sort_emails_by_subject
+      @db.execute 'DELETE FROM email_order'
+
+      @db.execute <<-SQL
+        INSERT INTO email_order (msg_id)
+        SELECT msg_id
+        FROM email
+        ORDER BY subject, filename, ROWID
+      SQL
+    end
+
     def fill_users_from_emails
       @db.execute 'DELETE FROM user'
 
@@ -97,7 +131,7 @@ module ImportScripts::Mbox
         INSERT INTO user (email, name, date_of_first_message)
         SELECT from_email, MIN(from_name) AS from_name, MIN(email_date)
         FROM email
-        WHERE from_email IS NOT NULL
+        WHERE from_email IS NOT NULL AND email_date IS NOT NULL
         GROUP BY from_email
         ORDER BY from_email
       SQL
@@ -164,10 +198,17 @@ module ImportScripts::Mbox
 
     def configure_database
       @db.execute 'PRAGMA journal_mode = OFF'
+      @db.execute 'PRAGMA locking_mode = EXCLUSIVE'
     end
 
     def upgrade_schema_version
-      # current_version = query("PRAGMA user_version").last[0]
+      current_version = @db.get_first_value("PRAGMA user_version")
+
+      case current_version
+      when 1
+        @db.execute "ALTER TABLE email ADD COLUMN index_duration REAL"
+      end
+
       @db.execute "PRAGMA user_version = #{SCHEMA_VERSION}"
     end
 
@@ -211,11 +252,13 @@ module ImportScripts::Mbox
           filename TEXT NOT NULL,
           first_line_number INTEGER,
           last_line_number INTEGER,
+          index_duration REAL,
           FOREIGN KEY(category) REFERENCES category(name)
         )
       SQL
 
       @db.execute 'CREATE INDEX IF NOT EXISTS email_by_from ON email (from_email)'
+      @db.execute 'CREATE INDEX IF NOT EXISTS email_by_subject ON email (subject)'
       @db.execute 'CREATE INDEX IF NOT EXISTS email_by_in_reply_to ON email (in_reply_to)'
       @db.execute 'CREATE INDEX IF NOT EXISTS email_by_date ON email (email_date)'
 

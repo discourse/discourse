@@ -13,8 +13,12 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    externalLogin: function(provider) {
-      this.sendAction('action', provider);
+    emailLogin() {
+      this.sendAction('emailLogin');
+    },
+
+    externalLogin(provider) {
+      this.sendAction('externalLogin', provider);
     }
   }
 });

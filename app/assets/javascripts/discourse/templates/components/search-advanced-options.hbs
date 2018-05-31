@@ -40,7 +40,12 @@
     <div class="control-group">
       <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
       <div class="controls">
-        {{tag-chooser tags=searchedTerms.tags blacklist=searchedTerms.tags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true" width="70%"}}
+        {{tag-chooser
+          tags=searchedTerms.tags
+          allowCreate=false
+          filterPlaceholder=null
+          everyTag=true
+          unlimitedTagCount=true}}
       <section class="field">
           <label>{{ input type="checkbox" class="all-tags" checked=searchedTerms.special.all_tags}} {{i18n "search.advanced.filters.all_tags"}} </label>
       </section>
@@ -55,6 +60,7 @@
     <div class="controls">
       {{#if currentUser}}
         <section class='field'>
+          <label>{{input type="checkbox" class="in-title" checked=searchedTerms.special.in.title}} {{i18n "search.advanced.filters.title"}}</label>
           <label>{{input type="checkbox" class="in-likes" checked=searchedTerms.special.in.likes}} {{i18n "search.advanced.filters.likes"}}</label>
           <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.private}} {{i18n "search.advanced.filters.private"}}</label>
           <label>{{input type="checkbox" class="in-seen" checked=searchedTerms.special.in.seen}} {{i18n "search.advanced.filters.seen"}}</label>

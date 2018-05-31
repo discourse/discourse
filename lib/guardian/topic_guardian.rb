@@ -10,6 +10,14 @@ module TopicGuardian
     )
   end
 
+  def can_create_shared_draft?
+    is_staff? && SiteSetting.shared_drafts_enabled?
+  end
+
+  def can_publish_topic?(topic, category)
+    is_staff? && can_see?(topic) && can_create_topic?(category)
+  end
+
   # Creating Methods
   def can_create_topic?(parent)
     is_staff? ||
@@ -20,8 +28,7 @@ module TopicGuardian
 
   def can_create_topic_on_category?(category)
     # allow for category to be a number as well
-    category_id = category
-    category_id = category.id if Category === category
+    category_id = Category === category ? category.id : category
 
     can_create_topic?(nil) &&
     (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
@@ -50,10 +57,22 @@ module TopicGuardian
     return false if !can_create_topic_on_category?(topic.category)
 
     # TL4 users can edit archived topics, but can not edit private messages
-    return true if (topic.archived && !topic.private_message? && user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic))
+    return true if (
+      SiteSetting.trusted_users_can_edit_others? &&
+      topic.archived &&
+      !topic.private_message? &&
+      user.has_trust_level?(TrustLevel[4]) &&
+      can_create_post?(topic)
+    )
 
     # TL3 users can not edit archived topics and private messages
-    return true if (!topic.archived && !topic.private_message? && user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic))
+    return true if (
+      SiteSetting.trusted_users_can_edit_others? &&
+      !topic.archived &&
+      !topic.private_message? &&
+      user.has_trust_level?(TrustLevel[3]) &&
+      can_create_post?(topic)
+    )
 
     return false if topic.archived
     is_my_own?(topic) && !topic.edit_time_limit_expired?
@@ -67,14 +86,15 @@ module TopicGuardian
   def can_delete_topic?(topic)
     !topic.trashed? &&
     is_staff? &&
-    !(Category.exists?(topic_id: topic.id)) &&
+    !(topic.is_category_topic?) &&
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
   def can_convert_topic?(topic)
+    return false unless SiteSetting.enable_personal_messages?
     return false if topic.blank?
-    return false if topic && topic.trashed?
-    return false if Category.where("topic_id = ?", topic.id).exists?
+    return false if topic.trashed?
+    return false if topic.is_category_topic?
     return true if is_admin?
     is_moderator? && can_create_post?(topic)
   end

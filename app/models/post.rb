@@ -48,7 +48,7 @@ class Post < ActiveRecord::Base
   has_many :post_details
 
   has_many :post_revisions
-  has_many :revisions, foreign_key: :post_id, class_name: 'PostRevision'
+  has_many :revisions, -> { order(:number) }, foreign_key: :post_id, class_name: 'PostRevision'
 
   has_many :user_actions, foreign_key: :target_post_id
 
@@ -164,7 +164,7 @@ class Post < ActiveRecord::Base
     }.merge(options)
 
     if Topic.visible_post_types.include?(post_type)
-      if topic.archetype == Archetype.private_message
+      if topic.private_message?
         user_ids = User.where('admin or moderator').pluck(:id)
         user_ids |= topic.allowed_users.pluck(:id)
         MessageBus.publish(channel, msg, user_ids: user_ids)
@@ -222,7 +222,13 @@ class Post < ActiveRecord::Base
     @post_analyzers[raw_hash] ||= PostAnalyzer.new(raw, topic_id)
   end
 
-  %w{raw_mentions linked_hosts image_count attachment_count link_count raw_links}.each do |attr|
+  %w{raw_mentions
+    linked_hosts
+    image_count
+    attachment_count
+    link_count
+    raw_links
+    has_oneboxes?}.each do |attr|
     define_method(attr) do
       post_analyzer.send(attr)
     end
@@ -400,6 +406,10 @@ class Post < ActiveRecord::Base
     Post.excerpt(cooked, maxlength, options)
   end
 
+  def excerpt_for_topic
+    Post.excerpt(cooked, 220, strip_links: true)
+  end
+
   def is_first_post?
     post_number.blank? ?
       topic.try(:highest_post_number) == 0 :
@@ -475,20 +485,21 @@ class Post < ActiveRecord::Base
     problems = []
     Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
       .order('id desc')
-      .limit(limit).each do |p|
+      .limit(limit).pluck(:id).each do |id|
       begin
-        p.rebake!
+        post = Post.find(id)
+        post.rebake!
       rescue => e
-        problems << { post: p, ex: e }
+        problems << { post: post, ex: e }
 
-        attempts = p.custom_fields["rebake_attempts"].to_i
+        attempts = post.custom_fields["rebake_attempts"].to_i
 
         if attempts > 3
-          p.update_columns(baked_version: BAKED_VERSION)
+          post.update_columns(baked_version: BAKED_VERSION)
           Discourse.warn_exception(e, message: "Can not rebake post# #{p.id} after 3 attempts, giving up")
         else
-          p.custom_fields["rebake_attempts"] = attempts + 1
-          p.save_custom_fields
+          post.custom_fields["rebake_attempts"] = attempts + 1
+          post.save_custom_fields
         end
 
       end
@@ -520,16 +531,17 @@ class Post < ActiveRecord::Base
     return if user_id == new_user.id
 
     edit_reason = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t('change_owner.post_revision_text',
-             old_user: (self.user.username_lower rescue nil) || I18n.t('change_owner.deleted_user'),
-             new_user: new_user.username_lower
+      I18n.t(
+        'change_owner.post_revision_text',
+        old_user: self.user&.username_lower || I18n.t('change_owner.deleted_user'),
+        new_user: new_user.username_lower
       )
     end
 
     revise(
       actor,
       { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
-      bypass_bump: true, skip_revision: skip_revision
+      bypass_bump: true, skip_revision: skip_revision, skip_validations: true
     )
 
     if post_number == topic.highest_post_number
@@ -670,26 +682,39 @@ class Post < ActiveRecord::Base
 
   MAX_REPLY_LEVEL ||= 1000
 
-  def reply_ids(guardian = nil)
-    replies = Post.exec_sql("
+  def reply_ids(guardian = nil, only_replies_to_single_post: true)
+    builder = SqlBuilder.new(<<~SQL, Post)
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
         SELECT reply_id, level + 1
-          FROM post_replies, breadcrumb
-         WHERE post_id = id
-           AND post_id <> reply_id
-           AND level < #{MAX_REPLY_LEVEL}
+        FROM post_replies AS r
+          JOIN breadcrumb AS b ON (r.post_id = b.id)
+        WHERE r.post_id <> r.reply_id
+              AND b.level < :max_reply_level
       ), breadcrumb_with_count AS (
-        SELECT id, level, COUNT(*)
-          FROM post_replies, breadcrumb
-         WHERE reply_id = id
-           AND reply_id <> post_id
-         GROUP BY id, level
+          SELECT
+            id,
+            level,
+            COUNT(*) AS count
+          FROM post_replies AS r
+            JOIN breadcrumb AS b ON (r.reply_id = b.id)
+          WHERE r.reply_id <> r.post_id
+          GROUP BY id, level
       )
-      SELECT id, level FROM breadcrumb_with_count WHERE level > 0 AND count = 1 ORDER BY id
-    ", post_id: id).to_a
+      SELECT id, level
+      FROM breadcrumb_with_count
+      /*where*/
+      ORDER BY id
+    SQL
 
+    builder.where("level > 0")
+
+    # ignore posts that aren't replies to exactly one post
+    # for example it skips a post when it contains 2 quotes (which are replies) from different posts
+    builder.where("count = 1") if only_replies_to_single_post
+
+    replies = builder.exec(post_id: id, max_reply_level: MAX_REPLY_LEVEL).to_a
     replies.map! { |r| { id: r["id"].to_i, level: r["level"].to_i } }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
@@ -734,6 +759,10 @@ class Post < ActiveRecord::Base
     UserActionCreator.log_post(self)
   end
 
+  def locked?
+    locked_by_id.present?
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -752,7 +781,7 @@ class Post < ActiveRecord::Base
   end
 
   def create_reply_relationship_with(post)
-    return if post.nil?
+    return if post.nil? || self.deleted_at.present?
     post_reply = post.post_replies.new(reply_id: id)
     if post_reply.save
       if Topic.visible_post_types.include?(self.post_type)
@@ -803,7 +832,7 @@ end
 #  notify_user_count       :integer          default(0), not null
 #  like_score              :integer          default(0), not null
 #  deleted_by_id           :integer
-#  edit_reason             :string(255)
+#  edit_reason             :string
 #  word_count              :integer
 #  version                 :integer          default(1), not null
 #  cook_method             :integer          default(1), not null
@@ -816,8 +845,9 @@ end
 #  via_email               :boolean          default(FALSE), not null
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
-#  action_code             :string(255)
+#  action_code             :string
 #  image_url               :string
+#  locked_by_id            :integer
 #
 # Indexes
 #

@@ -5,6 +5,22 @@ describe MethodProfiler do
   class Sneetch
     def beach
     end
+
+    def recurse(count = 5)
+      if count > 0
+        recurse(count - 1)
+      end
+    end
+  end
+
+  it "can bypass recursion on demand" do
+    MethodProfiler.patch(Sneetch, [:recurse], :recurse, no_recurse: true)
+
+    MethodProfiler.start
+    Sneetch.new.recurse
+    result = MethodProfiler.stop
+
+    expect(result[:recurse][:calls]).to eq(1)
   end
 
   it "can transfer data between threads" do

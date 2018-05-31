@@ -36,6 +36,10 @@ describe DiscourseNarrativeBot::TrackSelector do
     end_message.chomp
   end
 
+  before do
+    SiteSetting.queue_jobs = false
+  end
+
   describe '#select' do
     context 'in a PM with discobot' do
       let(:first_post) { Fabricate(:post, user: discobot_user) }

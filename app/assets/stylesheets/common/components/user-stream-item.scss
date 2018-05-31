@@ -36,16 +36,17 @@
     display: block;
     float: right;
     color: lighten($primary, 40%);
-    font-size: .786em;
+    font-size: $font-down-2;
   }
 
   .delete-info i {
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .expand-item, .collapse-item {
     float: right;
     margin-right: 0.5em;
+    line-height: $line-height-small;
     color: lighten($primary, 40%);
   }
 
@@ -62,7 +63,7 @@
   }
 
   .name {
-    font-size: 1em;
+    font-size: $font-0;
     max-width: 400px;
     white-space: nowrap;
     overflow: hidden;
@@ -101,19 +102,23 @@
     // common/base/header.scss
     .fa, .icon {
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 1.714em;
+      font-size: $font-up-4;
     }
   }
 
   .excerpt {
     margin: 5px 0;
-    font-size: 0.929em;
+    font-size: $font-0;
     word-wrap: break-word;
     color: $primary;
 
     details.disabled {
       color: $primary-medium;
     }
+  }
+
+  .group-member-info {
+    display: flex;
   }
 }
 

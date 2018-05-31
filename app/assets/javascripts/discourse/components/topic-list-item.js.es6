@@ -33,6 +33,11 @@ export default Ember.Component.extend(bufferedRender({
   attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('topic.id'),
 
+  @computed
+  newDotText() {
+    return (this.currentUser && this.currentUser.trust_level > 0) ? "" : I18n.t('filters.new.lower_title');
+  },
+
   actions: {
     toggleBookmark() {
       this.get('topic').toggleBookmark().finally(() => this.rerenderBuffer());
@@ -58,8 +63,15 @@ export default Ember.Component.extend(bufferedRender({
       classes.push('has-excerpt');
     }
 
+    if (topic.get('unseen')) {
+      classes.push("unseen-topic");
+    }
 
-    ['liked', 'archived', 'bookmarked', 'pinned'].forEach(name => {
+    if (topic.get('displayNewPosts')) {
+      classes.push("new-posts");
+    }
+
+    ['liked', 'archived', 'bookmarked', 'pinned', 'closed'].forEach(name => {
       if (topic.get(name)) {
         classes.push(name);
       }

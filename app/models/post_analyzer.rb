@@ -13,6 +13,13 @@ class PostAnalyzer
     @found_oneboxes
   end
 
+  def has_oneboxes?
+    return false unless @raw.present?
+
+    cooked_stripped
+    found_oneboxes?
+  end
+
   # What we use to cook posts
   def cook(raw, opts = {})
     cook_method = opts[:cook_method]
@@ -24,7 +31,7 @@ class PostAnalyzer
       cooked = PrettyText.cook(raw, opts)
     end
 
-    result = Oneboxer.apply(cooked, topic_id: @topic_id) do |url, _|
+    result = Oneboxer.apply(cooked) do |url|
       @found_oneboxes = true
       Oneboxer.invalidate(url) if opts[:invalidate_oneboxes]
       Oneboxer.cached_onebox(url)
@@ -104,10 +111,9 @@ class PostAnalyzer
     return @raw_links if @raw_links.present?
 
     @raw_links = []
-
-    cooked_stripped.css("a[href]").each do |l|
+    cooked_stripped.css("a").each do |l|
       # Don't include @mentions in the link count
-      next if l['href'].blank? || link_is_a_mention?(l)
+      next if link_is_a_mention?(l)
       @raw_links << l['href'].to_s
     end
 
@@ -124,7 +130,7 @@ class PostAnalyzer
     def cooked_stripped
       @cooked_stripped ||= begin
         doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
-        doc.css("pre, code, aside.quote, .onebox, .elided").remove
+        doc.css("pre .mention, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
         doc
       end
     end

@@ -50,13 +50,12 @@ describe FinishInstallationController do
       end
 
       it "raises an error when the email is not in the allowed list" do
-        expect do
-          post :register, params: {
-            email: 'notrobin@example.com',
-            username: 'eviltrout',
-            password: 'disismypasswordokay'
-          }, format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        post :register, params: {
+          email: 'notrobin@example.com',
+          username: 'eviltrout',
+          password: 'disismypasswordokay'
+        }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it "doesn't redirect when fields are wrong" do

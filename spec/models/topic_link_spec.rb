@@ -169,6 +169,14 @@ http://b.com/#{'a' * 500}
       end
     end
 
+    context "email address" do
+      it "does not extract a link" do
+        post = topic.posts.create(user: user, raw: "Valid email: foo@bar.com\n\nInvalid email: rfc822;name@domain.com")
+        TopicLink.extract_from(post)
+        expect(topic.topic_links).to be_blank
+      end
+    end
+
     context "mail link" do
       let(:post) { topic.posts.create(user: user, raw: "[email]bar@example.com[/email]") }
 

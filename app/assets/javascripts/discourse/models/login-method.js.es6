@@ -22,12 +22,21 @@ const LoginMethod = Ember.Object.extend({
 let methods;
 let preRegister;
 
+export const LOGIN_METHODS = [
+  "google_oauth2",
+  "facebook",
+  "twitter",
+  "yahoo",
+  "instagram",
+  "github"
+];
+
 export function findAll(siteSettings, capabilities, isMobileDevice) {
   if (methods) { return methods; }
 
   methods = [];
 
-  [ "google_oauth2", "facebook", "cas", "twitter", "yahoo", "instagram", "github" ].forEach(name => {
+  LOGIN_METHODS.forEach(name => {
     if (siteSettings["enable_" + name + "_logins"]) {
       const params = { name };
       if (name === "google_oauth2") {

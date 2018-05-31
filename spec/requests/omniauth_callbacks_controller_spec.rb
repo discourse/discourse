@@ -12,6 +12,29 @@ RSpec.describe Users::OmniauthCallbacksController do
     OmniAuth.config.test_mode = false
   end
 
+  describe ".find_authenticator" do
+    it "fails if a provider is disabled" do
+      SiteSetting.enable_twitter_logins = false
+
+      expect do
+        Users::OmniauthCallbacksController.find_authenticator("twitter")
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "fails for unknown" do
+      expect do
+        Users::OmniauthCallbacksController.find_authenticator("twitter1")
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "finds an authenticator when enabled" do
+      SiteSetting.enable_twitter_logins = true
+
+      expect(Users::OmniauthCallbacksController.find_authenticator("twitter"))
+        .not_to eq(nil)
+    end
+  end
+
   context 'Google Oauth2' do
     before do
       SiteSetting.enable_google_oauth2_logins = true
@@ -109,6 +132,29 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.registration_ip_address).to be_present
       end
 
+      context 'when user has second factor enabled' do
+        before do
+          user.create_totp(enabled: true)
+        end
+
+        it 'should return the right response' do
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(200)
+
+          response_body = JSON.parse(response.body)
+
+          expect(response_body["email"]).to eq(user.email)
+          expect(response_body["omniauth_disallow_totp"]).to eq(true)
+
+          user.update!(email: 'different@user.email')
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)["email"]).to eq(user.email)
+        end
+      end
+
       context 'when user has not verified his email' do
         before do
           GoogleUserInfo.create!(google_user_id: '12345', user: user)
@@ -176,6 +222,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
 
         get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(200)
         JSON.parse(response.body)
       end
 

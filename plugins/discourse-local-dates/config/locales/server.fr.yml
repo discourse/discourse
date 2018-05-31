@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fr:
+  site_settings:
+    discourse_local_dates_enabled: "Activer la fonctionnalité discourse-local-dates. Ceci ajoutera la gestion des dates locales dans les messages, en utilisant l'élément [date]."
+    discourse_local_dates_default_formats: "Formats de date fréquemment utilisés, voir : <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Liste de fuseaux horaires par défaut, doit être un fuseaux horaire valide <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>Wikipedia (anglais)</a>"

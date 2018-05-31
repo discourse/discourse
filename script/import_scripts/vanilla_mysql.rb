@@ -59,8 +59,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       results = mysql_query(
         "SELECT UserID, Name, Title, Location, About, Email,
                 DateInserted, DateLastActive, InsertIPAddress, Admin
-         WHERE id > #{@last_user_id}
          FROM #{TABLE_PREFIX}User
+         WHERE UserID > #{@last_user_id}
          ORDER BY UserID ASC
          LIMIT #{BATCH_SIZE};")
 
@@ -204,8 +204,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       discussions = mysql_query(
         "SELECT DiscussionID, CategoryID, Name, Body,
                 DateInserted, InsertUserID
-         WHERE DiscussionID > #{@last_topic_id}
          FROM #{TABLE_PREFIX}Discussion
+         WHERE DiscussionID > #{@last_topic_id}
          ORDER BY DiscussionID ASC
          LIMIT #{BATCH_SIZE};")
 
@@ -241,8 +241,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       comments = mysql_query(
         "SELECT CommentID, DiscussionID, Body,
                 DateInserted, InsertUserID
-         WHERE CommentID > #{@last_post_id}
          FROM #{TABLE_PREFIX}Comment
+         WHERE CommentID > #{@last_post_id}
          ORDER BY CommentID ASC
          LIMIT #{BATCH_SIZE};")
 

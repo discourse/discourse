@@ -1,22 +1,23 @@
-.select-box-kit, .select-kit {
+.select-kit {
   &.multi-select {
     width: 300px;
     background: $secondary;
     border-radius: 0;
 
-    .select-box-kit-body, .select-kit-body {
+    .select-kit-body {
       width: 100%;
     }
 
-    .select-box-kit-row, .select-kit-row {
+    .select-kit-row {
       margin: 5px;
       min-height: 1px;
       padding: 5px;
       border-radius: 0;
     }
 
-    .select-box-kit-filter, .select-kit-filter {
+    .select-kit-filter {
       border: 0;
+      flex: 1;
     }
 
     .multi-select-header {
@@ -24,7 +25,7 @@
       border: 1px solid $primary-medium;
 
       &.is-focused {
-        box-shadow: $tertiary 0px 0px 6px 0px;
+        box-shadow: shadow("focus");
         border-radius: 0;
       }
     }
@@ -40,15 +41,15 @@
       .multi-select-header {
         border-radius: 0;
         border-bottom: 1px solid transparent;
-        box-shadow: $tertiary 0px 0px 6px 0px;
+        box-shadow: shadow("focus");
       }
     }
 
     &.is-expanded {
-      .select-box-kit-wrapper, .select-kit-wrapper {
+      .select-kit-wrapper {
         display: block;
         border: 1px solid $tertiary;
-        box-shadow: $tertiary 0px 0px 6px 0px;
+        box-shadow: shadow("focus");
         border-radius: 0;
       }
 
@@ -57,14 +58,13 @@
         box-shadow: none;
       }
 
-      .select-box-kit-body, .select-kit-body {
+      .select-kit-body {
         border-radius: 0;
       }
     }
 
     .choices {
       margin: 0;
-      padding: 2.5px;
       box-sizing: border-box;
       display: inline-flex;
       justify-content: flex-start;
@@ -79,7 +79,7 @@
         justify-content: space-between;
         flex-wrap: wrap;
         flex-direction: row;
-        margin: 2.5px;
+        margin: 2px;
       }
 
       .filter {
@@ -89,6 +89,7 @@
         min-width: 50px;
         padding: 0;
         outline: none;
+        flex: 1;
 
         .filter-input, .filter-input:focus {
           border: none;
@@ -101,7 +102,6 @@
           margin: 0;
           outline: 0;
           border: 0;
-          -webkit-box-shadow: none;
           box-shadow: none;
           border-radius: 0;
           height: 21px;
@@ -118,53 +118,81 @@
         .color-preview {
           height: 5px;
           margin: 0 2px 2px 2px;
-          border-radius: 5px;
+          display: flex;
+          width: 100%;
+        }
+      }
+
+      .selected-category {
+        .badge-wrapper {
+          &.bullet {
+            margin-right: 2.5px;
+          }
+
+          margin: auto 2.5px;
+          padding: 2px 4px;
+          line-height: $line-height-medium;
+          display: flex;
+          flex: 1;
+          align-items: center;
+
+          &:after {
+            content: '\f00d';
+            color: $primary-low-mid;
+            font-family: 'FontAwesome';
+            font-size: $font-down-2;
+            margin-left: 5px;
+          }
         }
       }
 
       .selected-name {
-        align-items: center;
-        justify-content: flex-start;
         color: $primary;
-        cursor: default;
-        border: 1px solid $primary-medium;
-        border-radius: 3px;
-        box-shadow: 0 0 2px $secondary inset, 0 1px 0 rgba(0,0,0,0.05);
         background-clip: padding-box;
         -webkit-touch-callout: none;
         user-select: none;
         background-color: $primary-low;
         cursor: pointer;
         outline: none;
-        line-height: normal;
+        line-height: $line-height-medium;
         overflow: hidden;
         flex: 0 1 auto;
         flex-wrap: nowrap;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .footer {
+          display: flex;
+          width: 100%;
+        }
+
+        .body {
+          display: flex;
+          align-items: center;
+          flex: 1;
+        }
 
         .name {
-          padding: 0 5px;
-          line-height: 18px;
+          padding: 2px 4px;
+          line-height: $line-height-medium;
+
+          &:after {
+            content: '\f00d';
+            color: $primary-low-mid;
+            font-family: 'FontAwesome';
+            font-size: $font-down-2;
+          }
+
+          &:hover {
+            &:after {
+              color: $danger;
+            }
+          }
         }
 
         &.is-highlighted {
           box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
-        }
-
-        .locked-icon, .delete-icon {
-          justify-content: center;
-          align-items: center;
-          width: 21px;
-          height: 21px;
-          display: inline-flex;
-          .d-icon {
-            color: $primary-medium;
-            cursor: pointer;
-            font-size: 1em;
-
-            &:hover {
-              color: $primary;
-            }
-          }
         }
       }
     }

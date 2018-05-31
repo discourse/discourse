@@ -26,28 +26,26 @@
     td, th {
       padding: 0.5em;
       text-align: left;
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
+      @media screen and (max-width: $small-width) {
+        padding: .5em .25em;
+      }
 
       .number, .time-read {
-        font-size: 1.429em;
-        color: $primary-medium; 
+        font-size: $font-up-3;
+        color: $primary-medium;
+        @media screen and (max-width: $small-width) {
+         font-size: $font-up-1;
+        }          
       }
-    }
-
-    tr.me {
-      td {
-        background-color: dark-light-choose($highlight-low, $highlight-medium);
-
-        .username a, .name, .title, .number, .time-read {
-          color: $primary-medium;           
-        }
+      .time-read {
+        white-space: nowrap;
       }
     }
 
     th.sortable {
       cursor: pointer;
       white-space: nowrap;
-
       width: 13%;
       .d-icon-heart {
         color: $love;
@@ -58,8 +56,14 @@
       }
 
       &:hover {
-        background-color: $primary-low; 
+        background-color: $primary-low;
       }
+    }
+  }
+  .me {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    .username a, .name, .title, .number, .time-read {
+      color: $primary-medium;
     }
   }
 }

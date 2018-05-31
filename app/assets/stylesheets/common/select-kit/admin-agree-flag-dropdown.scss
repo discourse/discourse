@@ -1,14 +1,12 @@
-.select-box-kit-body, .select-kit {
+.select-kit {
   &.dropdown-select-box {
 
     &.admin-agree-flag-dropdown {
-      .select-box-kit-body {
+      .select-kit-body {
         width: 485px;
         max-width: 485px;
       }
-      .select-box-kit-row[data-value="delete-spammer"] .texts .name,
       .select-kit-row[data-value="delete-spammer"] .texts .name,
-      .select-box-kit-row[data-value="delete-spammer"] .icons .d-icon,
       .select-kit-row[data-value="delete-spammer"] .icons .d-icon {
         color: $danger;
       }

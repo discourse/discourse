@@ -24,11 +24,7 @@ module IntegrationHelpers
   end
 
   def sign_in(user)
-    password = 'somecomplicatedpassword'
-    user.update!(password: password)
-    Fabricate(:email_token, confirmed: true, user: user)
-    post "/session.json", params: { login: user.username, password: password }
-    expect(response).to be_success
+    get "/session/#{user.username}/become"
     user
   end
 end

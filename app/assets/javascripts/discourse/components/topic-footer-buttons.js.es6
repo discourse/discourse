@@ -6,6 +6,16 @@ export default Ember.Component.extend({
   // Allow us to extend it
   layoutName: 'components/topic-footer-buttons',
 
+  @computed('topic.isPrivateMessage')
+  canArchive(isPM) {
+    return this.siteSettings.enable_personal_messages && isPM;
+  },
+
+  @computed('topic.isPrivateMessage')
+  showNotificationsButton(isPM) {
+    return (!isPM) || this.siteSettings.enable_personal_messages;
+  },
+
   @computed('topic.details.can_invite_to')
   canInviteTo(result) {
     return !this.site.mobileView && result;
@@ -17,6 +27,11 @@ export default Ember.Component.extend({
   showAdminButton() {
     return !this.site.mobileView && this.currentUser && this.currentUser.get('canManageTopic');
   },
+
+  showEditOnFooter: Ember.computed.and(
+    'topic.isPrivateMessage',
+    'site.can_tag_pms'
+  ),
 
   @computed('topic.message_archived')
   archiveIcon: archived => archived ? '' : 'folder',

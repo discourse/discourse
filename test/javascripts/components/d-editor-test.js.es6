@@ -248,6 +248,9 @@ testCase('link modal (simple link) with selected text', function(assert, textare
   textarea.selectionEnd = 12;
 
   click('button.link');
+  andThen(() => {
+    assert.equal(this.$('input.link-text')[0].value, 'hello world.');
+  });
   fillIn('.insert-link input.link-url', 'http://eviltrout.com');
   click('.insert-link button.btn-primary');
   andThen(() => {
@@ -710,6 +713,26 @@ testCase(`list button with line sequence`, function(assert, textarea) {
     assert.equal(textarea.selectionStart, 0);
     assert.equal(textarea.selectionEnd, 18);
   });
+});
+
+componentTest('clicking the toggle-direction button toggles the direction', {
+  template: '{{d-editor value=value}}',
+  beforeEach() {
+    this.siteSettings.support_mixed_text_direction = true;
+    this.siteSettings.default_locale = "en";
+  },
+
+  test(assert) {
+    const textarea = this.$('textarea.d-editor-input');
+    click('button.toggle-direction');
+    andThen(() => {
+      assert.equal(textarea.attr('dir'), 'rtl');
+    });
+    click('button.toggle-direction');
+    andThen(() => {
+      assert.equal(textarea.attr('dir'), 'ltr');
+    });
+  }
 });
 
 testCase(`doesn't jump to bottom with long text`, function(assert, textarea) {

@@ -64,12 +64,12 @@ module Discourse
 
   # When they don't have permission to do something
   class InvalidAccess < StandardError
-    attr_reader :obj, :custom_message
+    attr_reader :obj, :custom_message, :opts
     def initialize(msg = nil, obj = nil, opts = nil)
       super(msg)
 
-      opts ||= {}
-      @custom_message = opts[:custom_message] if opts[:custom_message]
+      @opts = opts || {}
+      @custom_message = opts[:custom_message] if @opts[:custom_message]
       @obj = obj
     end
   end
@@ -128,7 +128,11 @@ module Discourse
     if Rails.env.development?
       plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
       hash_file = "#{Rails.root}/tmp/plugin-hash"
-      old_hash = File.read(hash_file) rescue nil
+
+      old_hash = begin
+        File.read(hash_file)
+      rescue Errno::ENOENT
+      end
 
       if old_hash && old_hash != plugin_hash
         puts "WARNING: It looks like your discourse plugins have recently changed."
@@ -158,6 +162,14 @@ module Discourse
 
   def self.plugins
     @plugins ||= []
+  end
+
+  def self.hidden_plugins
+    @hidden_plugins ||= []
+  end
+
+  def self.visible_plugins
+    self.plugins - self.hidden_plugins
   end
 
   def self.plugin_themes
@@ -236,15 +248,17 @@ module Discourse
   end
 
   def self.route_for(uri)
+    unless uri.is_a?(URI)
+      uri = begin
+        URI(uri)
+      rescue URI::InvalidURIError
+      end
+    end
 
-    uri = URI(uri) rescue nil unless (uri.is_a?(URI))
     return unless uri
 
     path = uri.path || ""
-    if (uri.host == Discourse.current_hostname &&
-      path.start_with?(Discourse.base_uri)) ||
-      !uri.host
-
+    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
       path.slice!(Discourse.base_uri)
       return Rails.application.routes.recognize_path(path)
     end
@@ -426,7 +440,7 @@ module Discourse
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
     MessageBus.after_fork
     SiteSetting.after_fork
-    $redis.client.reconnect
+    $redis._client.reconnect
     Rails.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
@@ -446,6 +460,10 @@ module Discourse
   # report a warning maintaining backtrack for logster
   def self.warn_exception(e, message: "", env: nil)
     if Rails.logger.respond_to? :add_with_opts
+
+      env ||= {}
+      env[:current_db] ||= RailsMultisite::ConnectionManagement.current_db
+
       # logster
       Rails.logger.add_with_opts(
         ::Logger::Severity::WARN,
@@ -505,7 +523,7 @@ module Discourse
   def self.reset_active_record_cache_if_needed(e)
     last_cache_reset = Discourse.last_ar_cache_reset
     if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
-      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+      Rails.logger.warn "Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate."
       Discourse.last_ar_cache_reset = Time.zone.now
       Discourse.reset_active_record_cache
     end

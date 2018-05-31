@@ -33,14 +33,19 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
   end
 
   def subject
-    @mail.subject.presence || "(no subject)"
+    @mail.subject.presence || I18n.t("emails.incoming.no_subject")
   end
 
   def body
     body   = @mail.text_part.decoded rescue nil
     body ||= @mail.html_part.decoded rescue nil
     body ||= @mail.body.decoded      rescue nil
-    body.strip.truncate_words(100, escape: false)
+
+    return I18n.t("emails.incoming.no_body") if body.blank?
+
+    body.encode("utf-8", invalid: :replace, undef: :replace, replace: "")
+      .strip
+      .truncate_words(100, escape: false)
   end
 
 end

@@ -24,7 +24,9 @@ class BasicGroupSerializer < ApplicationSerializer
              :allow_membership_requests,
              :full_name,
              :default_notification_level,
-             :membership_request_template
+             :membership_request_template,
+             :is_group_user,
+             :is_group_owner
 
   def include_display_name?
     object.automatic
@@ -40,17 +42,41 @@ class BasicGroupSerializer < ApplicationSerializer
     staff?
   end
 
-  def include_has_messages
-    staff?
+  def include_has_messages?
+    staff? || scope.can_see_group_messages?(object)
   end
 
-  def include_bio_raw
-    staff?
+  def include_bio_raw?
+    staff? || (include_is_group_owner? && is_group_owner)
+  end
+
+  def include_is_group_user?
+    user_group_ids.present?
+  end
+
+  def is_group_user
+    user_group_ids.include?(object.id)
+  end
+
+  def include_is_group_owner?
+    owner_group_ids.present?
+  end
+
+  def is_group_owner
+    owner_group_ids.include?(object.id)
   end
 
   private
 
-  def staff?
-    @staff ||= scope.is_staff?
-  end
+    def staff?
+      @staff ||= scope.is_staff?
+    end
+
+    def user_group_ids
+      @options[:user_group_ids]
+    end
+
+    def owner_group_ids
+      @options[:owner_group_ids]
+    end
 end

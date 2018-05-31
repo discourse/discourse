@@ -69,7 +69,10 @@ class PostDestroyer
     topic.update_statistics
     recover_user_actions
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
-    DiscourseEvent.trigger(:topic_recovered, topic, @user) if @post.is_first_post?
+    if @post.is_first_post?
+      DiscourseEvent.trigger(:topic_recovered, topic, @user)
+      StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
+    end
   end
 
   def staff_recovered
@@ -115,7 +118,7 @@ class PostDestroyer
       remove_associated_replies
       remove_associated_notifications
       if @post.topic && @post.is_first_post?
-        StaffActionLogger.new(@user).log_topic_deletion(@post.topic, @opts.slice(:context)) if @user.id != @post.user_id
+        StaffActionLogger.new(@user).log_topic_delete_recover(@post.topic, "delete_topic", @opts.slice(:context)) if @user.id != @post.user_id
         @post.topic.trash!(@user)
       elsif @user.id != @post.user_id
         StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))

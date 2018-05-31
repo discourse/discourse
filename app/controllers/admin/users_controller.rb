@@ -25,7 +25,8 @@ class Admin::UsersController < Admin::AdminController
                                     :generate_api_key,
                                     :revoke_api_key,
                                     :anonymize,
-                                    :reset_bounce_score]
+                                    :reset_bounce_score,
+                                    :disable_second_factor]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -45,10 +46,52 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def delete_all_posts
-    @user = User.find_by(id: params[:user_id])
-    @user.delete_all_posts!(guardian)
-    # staff action logs will have an entry for each post
-    render body: nil
+    hijack do
+      user = User.find_by(id: params[:user_id])
+      user.delete_all_posts!(guardian)
+      # staff action logs will have an entry for each post
+      render body: nil
+    end
+  end
+
+  # DELETE action to delete penalty history for a user
+  def penalty_history
+
+    # We don't delete any history, we merely remove the action type
+    # with a removed type. It can still be viewed in the logs but
+    # will not affect TL3 promotions.
+    sql = <<~SQL
+      UPDATE user_histories
+      SET action = CASE
+        WHEN action = :silence_user THEN :removed_silence_user
+        WHEN action = :unsilence_user THEN :removed_unsilence_user
+        WHEN action = :suspend_user THEN :removed_suspend_user
+        WHEN action = :unsuspend_user THEN :removed_unsuspend_user
+      END
+      WHERE target_user_id = :user_id
+        AND action IN (
+          :silence_user,
+          :suspend_user,
+          :unsilence_user,
+          :unsuspend_user
+        )
+    SQL
+
+    UserHistory.exec_sql(
+      sql,
+      UserHistory.actions.slice(
+        :silence_user,
+        :suspend_user,
+        :unsilence_user,
+        :unsuspend_user,
+        :removed_silence_user,
+        :removed_unsilence_user,
+        :removed_suspend_user,
+        :removed_unsuspend_user
+      ).merge(user_id: params[:user_id].to_i)
+    )
+
+    render json: success_json
   end
 
   def suspend
@@ -82,10 +125,24 @@ class Admin::UsersController < Admin::AdminController
       )
     end
 
+    DiscourseEvent.trigger(
+      :user_suspended,
+      user: @user,
+      reason: params[:reason],
+      message: message,
+      user_history: user_history,
+      post_id: params[:post_id],
+      suspended_till: params[:suspend_until],
+      suspended_at: DateTime.now
+    )
+
+    perform_post_action
+
     render_json_dump(
       suspension: {
         suspended: true,
         suspend_reason: params[:reason],
+        full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
         suspended_at: @user.suspended_at
       }
@@ -259,7 +316,7 @@ class Admin::UsersController < Admin::AdminController
   def deactivate
     guardian.ensure_can_deactivate!(@user)
     @user.deactivate
-    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'))
+    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
     refresh_browser @user
     render body: nil
   end
@@ -275,7 +332,8 @@ class Admin::UsersController < Admin::AdminController
       silenced_till: params[:silenced_till],
       reason: params[:reason],
       message_body: message,
-      keep_posts: true
+      keep_posts: true,
+      post_id: params[:post_id]
     )
     if silencer.silence && message.present?
       Jobs.enqueue(
@@ -285,13 +343,15 @@ class Admin::UsersController < Admin::AdminController
         user_history_id: silencer.user_history.id
       )
     end
+    perform_post_action
 
     render_json_dump(
       silence: {
         silenced: true,
-        silence_reason: params[:reason],
+        silence_reason: silencer.user_history.try(:details),
         silenced_till: @user.silenced_till,
-        suspended_at: @user.silenced_at
+        suspended_at: @user.silenced_at,
+        silenced_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
   end
@@ -324,23 +384,46 @@ class Admin::UsersController < Admin::AdminController
     }
   end
 
+  def disable_second_factor
+    guardian.ensure_can_disable_second_factor!(@user)
+    user_second_factor = @user.user_second_factor
+    raise Discourse::InvalidParameters unless user_second_factor
+
+    user_second_factor.destroy!
+    StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
+
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :account_second_factor_disabled,
+      user_id: @user.id
+    )
+
+    render json: success_json
+  end
+
   def destroy
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
-    begin
-      options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
-      options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
 
-      if UserDestroyer.new(current_user).destroy(user, options)
-        render json: { deleted: true }
-      else
+    options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
+    options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+
+    hijack do
+      begin
+        if UserDestroyer.new(current_user).destroy(user, options)
+          render json: { deleted: true }
+        else
+          render json: {
+            deleted: false,
+            user: AdminDetailedUserSerializer.new(user, root: false).as_json
+          }
+        end
+      rescue UserDestroyer::PostsExistError
         render json: {
           deleted: false,
-          user: AdminDetailedUserSerializer.new(user, root: false).as_json
-        }
+          message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
+        }, status: 403
       end
-    rescue UserDestroyer::PostsExistError
-      raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
     end
   end
 
@@ -355,7 +438,13 @@ class Admin::UsersController < Admin::AdminController
     ip = params[:ip]
 
     # should we cache results in redis?
-    location = Excon.get("https://ipinfo.io/#{ip}/json", read_timeout: 10, connect_timeout: 10).body rescue nil
+    begin
+      location = Excon.get(
+        "https://ipinfo.io/#{ip}/json",
+        read_timeout: 10, connect_timeout: 10
+      )&.body
+    rescue Excon::Error
+    end
 
     render json: location
   end
@@ -389,7 +478,7 @@ class Admin::UsersController < Admin::AdminController
     }
 
     AdminUserIndexQuery.new(params).find_users(50).each do |user|
-      user_destroyer.destroy(user, options) rescue nil
+      user_destroyer.destroy(user, options)
     end
 
     render json: success_json
@@ -454,6 +543,28 @@ class Admin::UsersController < Admin::AdminController
   end
 
   private
+
+    def perform_post_action
+      return unless params[:post_id].present? &&
+        params[:post_action].present?
+
+      if post = Post.where(id: params[:post_id]).first
+        case params[:post_action]
+        when 'delete'
+          PostDestroyer.new(current_user, post).destroy
+        when 'edit'
+          revisor = PostRevisor.new(post)
+
+          # Take what the moderator edited in as gospel
+          revisor.revise!(
+            current_user,
+            { raw:  params[:post_edit] },
+            skip_validations: true,
+            skip_revision: true
+          )
+        end
+      end
+    end
 
     def fetch_user
       @user = User.find_by(id: params[:user_id])

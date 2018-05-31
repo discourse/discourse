@@ -97,7 +97,7 @@ const Category = RestModel.extend({
         allow_badges: this.get('allow_badges'),
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
-        suppress_from_homepage: this.get('suppress_from_homepage'),
+        suppress_from_latest: this.get('suppress_from_latest'),
         all_topics_wiki: this.get('all_topics_wiki'),
         allowed_tags: this.get('allowed_tags'),
         allowed_tag_groups: this.get('allowed_tag_groups'),
@@ -108,7 +108,8 @@ const Category = RestModel.extend({
         num_featured_topics: this.get('num_featured_topics'),
         default_view: this.get('default_view'),
         subcategory_list_style: this.get('subcategory_list_style'),
-        default_top_period: this.get('default_top_period')
+        default_top_period: this.get('default_top_period'),
+        minimum_required_tags: this.get('minimum_required_tags')
       },
       type: id ? 'PUT' : 'POST'
     });

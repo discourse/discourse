@@ -1,5 +1,6 @@
 import { CANCELLED_STATUS } from 'discourse/lib/autocomplete';
 import { userPath } from 'discourse/lib/url';
+import { emailValid } from 'discourse/lib/utilities';
 
 var cache = {},
     cacheTopicId,
@@ -61,7 +62,7 @@ function organizeResults(r, options) {
     });
   }
 
-  if (options.term.match(/@/)) {
+  if (!options.disallowEmails && emailValid(options.term)) {
     let e = { username: options.term };
     emails = [ e ];
     results.push(e);
@@ -69,10 +70,11 @@ function organizeResults(r, options) {
 
   if (r.groups) {
     r.groups.every(function(g) {
-      if (results.length > limit && options.term.toLowerCase() !== g.name.toLowerCase()) return false;
-      if (exclude.indexOf(g.name) === -1) {
-        groups.push(g);
-        results.push(g);
+      if (options.term.toLowerCase() === g.name.toLowerCase() || results.length < limit) {
+        if (exclude.indexOf(g.name) === -1) {
+          groups.push(g);
+          results.push(g);
+        }
       }
       return true;
     });

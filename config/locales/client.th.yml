@@ -42,47 +42,48 @@ th:
       tiny:
         half_a_minute: "< 1 นาที"
         less_than_x_seconds:
-          other: "< %{count} วินาที"
+          other: < %{count} วินาที
         x_seconds:
-          other: "%{count} วินาที"
+          other: '%{count} วินาที'
         x_minutes:
-          other: "%{count} นาที"
+          other: '%{count} นาที'
         about_x_hours:
-          other: "%{count} ชั่วโมง"
+          other: '%{count} ชั่วโมง'
         x_days:
-          other: "%{count} วัน"
+          other: '%{count} วัน'
         about_x_years:
-          other: "%{count} ปี"
+          other: '%{count} ปี'
         over_x_years:
-          other: "> %{count} ปี"
+          other: '> %{count} ปี'
         almost_x_years:
-          other: "%{count} ปี"
+          other: '%{count} ปี'
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          other: "%{count} นาที"
+          other: '%{count} นาที'
         x_hours:
-          other: "%{count} ชั่วโมง"
+          other: '%{count} ชั่วโมง'
         x_days:
-          other: "%{count} วัน"
+          other: '%{count} วัน'
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          other: "%{count} นาทีที่แล้ว"
+          other: '%{count} นาทีที่แล้ว'
         x_hours:
-          other: "%{count} ชั่วโมงที่แล้ว"
+          other: '%{count} ชั่วโมงที่แล้ว'
         x_days:
-          other: "%{count} วันที่แล้ว"
+          other: '%{count} วันที่แล้ว'
       later:
         x_days:
-          other: "%{count} วันหลังจากนั้น"
+          other: '%{count} วันหลังจากนั้น'
         x_months:
-          other: "%{count} เดือนหลังจากนั้น"
+          other: '%{count} เดือนหลังจากนั้น'
         x_years:
-          other: "%{count} ปีหลังจากนั้น"
+          other: '%{count} ปีหลังจากนั้น'
       previous_month: 'เดือนที่แล้ว'
       next_month: 'เดือนถัดไป'
+      placeholder: วัน
     share:
       topic: 'แบ่งปันลิงก์ไปยังกระทู้นี้'
       post: 'โพส #%{postNumber}'
@@ -93,7 +94,7 @@ th:
       email: 'ส่งลิงก์นี้ทางอีเมล'
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
-      private_topic: "ทำให้กระทู้นี้ส่วนตัว %{when} "
+      private_topic: "ทำให้กระทู้นี้เป็นข้อความส่วนตัว"
       split_topic: "แบ่งกระทู้นี้เมื่อ %{when}"
       invited_user: "ได้เชิญ %{who} %{when}"
       invited_group: "ได้เชิญ %{who} %{when}"
@@ -117,20 +118,26 @@ th:
       visible:
         enabled: 'ถูกแสดงเมื่อ %{when}'
         disabled: 'ถูกซ่อนเมื่อ %{when}'
+      banner:
+        enabled: 'ทำให้เป็นแบนเนอร์%{when} มันจะปรากฎที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ'
+        disabled: 'ลบแบนเนอร์นี้%{when} มันจะไม่ปรากฎที่ด้านบนของหน้าใดๆ'
     topic_admin_menu: "จัดการกระทู้ "
     emails_are_disabled: "อีเมลขาออกทั้งหมดจะถูกปิดโดยผู้ดูแลระบบ ไม่มีอีเมลแจ้งเตือนใดๆจะถูกส่งออกไป"
-    bootstrap_mode_enabled: "ตอนนี้คุณอยู่ในการใช้งานแบบ Bootstrap เพื่อให้การเปิดเว็บไซต์ใหม่ง่ายขึ้น ผู้ใช้งานใหม่ทุกคนจะได้ระบบความเชื่อถือที่ 1 และจะได้รับอีเมลสรุปทุกวัน แล้วจะเลิกส่งต่อเมื่อจำนวนผู้ใช้งานทั้งหมดเกิน %{min_users} คน"
-    bootstrap_mode_disabled: "การใช้งานแบบ Bootstrap ในอีก 24 ชั่วโมง"
+    themes:
+      default_description: "ค่าเริ่มต้น"
     s3:
       regions:
         ap_northeast_1: "เอเชียแปซิฟิก (โตเกียว)"
         ap_northeast_2: "เอเชียแปซิฟิก (โซล)"
+        ap_south_1: "เอเชียแปซิฟิก (มุมไบ)"
         ap_southeast_1: "เอเชียแปซิฟิก (สิงคโปร)"
         ap_southeast_2: "เอเชียแปซิฟิก (ซิสนี่)"
+        cn_north_1: "จีน (ปักกิ่ง)"
         eu_central_1: "อียู (แฟรงก์เฟิร์ต)"
         eu_west_1: "อียู (ไอร์แลนด์)"
         sa_east_1: "อเมริกาใต้ (ซาวเปาโล)"
-        us_east_1: "อเมริกาตะวันออก (เวอร์จินเนียเหนือ)"
+        us_east_1: "สหรัฐอเมริกาซีกตะวันออก (เวอร์จิเนียเหนือ)"
+        us_east_2: "สหรัฐอเมริกาตะวันออก (โอไฮโอ)"
         us_gov_west_1: "AWS GovCloud (อเมริกา)"
         us_west_1: "อเมริกาตะวันตก (แคริฟอเนียเหนือ)"
         us_west_2: "อเมริกาตะวันตก (โอเลก้อน)"
@@ -138,6 +145,7 @@ th:
     not_implemented: "เสียใจด้วย!! คุณสมบัตินั้นยังไม่เสร็จสมบูรณ์ในตอนนี้"
     no_value: "ไม่ใช่"
     yes_value: "ใช่"
+    submit: "ตกลง"
     generic_error: "เสียใจด้วย, มีความผิดพลาดขึ้น"
     generic_error_with_reason: "มีข้อผิดพลาดเกิดขึ้น: %{error}"
     sign_up: "สมัครสมาชิก"
@@ -150,7 +158,7 @@ th:
     show_help: "ตัวเลือก"
     links: "ลิงก์"
     links_lowercase:
-      other: "ลิงค์"
+      other: ลิงค์
     faq: "ถามตอบ"
     guidelines: "คู่มือ"
     privacy_policy: "นโยบายความเป็นส่วนตัว"
@@ -174,7 +182,7 @@ th:
     max_of_count: "สูงสุดของ  {{count}}"
     alternation: "หรือ"
     character_count:
-      other: "{{count}} ตัวอักษร"
+      other: '{{count}} ตัวอักษร'
     suggested_topics:
       title: "กระทู้แนะนำ"
       pm_title: "ข้อความที่แนะนำ"
@@ -186,8 +194,6 @@ th:
       our_moderators: "พิธีกรของพวกเรา"
       stat:
         all_time: "ทุกเวลา"
-        last_7_days: "7 วันที่แล้ว"
-        last_30_days: "30 วันที่แล้ว"
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพส"
@@ -208,12 +214,7 @@ th:
       remove: "ลบบุ๊คม๊าค"
       confirm_clear: "คุณแน่ใจไหม ที่จะลบบุ๊คมาร์กในกระทู้นี้ทั้งหมด"
     topic_count_latest:
-      other: "{{count}} กระทู้ใหม่หรือกระทู้อัพเดต"
-    topic_count_unread:
-      other: "{{count}} กระทู้ยังไม่อ่าน"
-    topic_count_new:
-      other: "{{count}} กระทู้ใหม่"
-    click_to_show: "กดเพื่อเปิด"
+      other: เห็น {{count}} กระทู้ใหม่ หรือที่ถูกอัพเดต
     preview: "แสดงตัวอย่าง"
     cancel: "ยกเลิก"
     save: "บันทึกการเปลี่ยนแปลง"
@@ -249,14 +250,14 @@ th:
       cancel: "ยกเลิก"
       view_pending: "ดูโพสที่กำลังรออยู่"
       has_pending_posts:
-        other: "กระทู้นี้มีโพสอีก <b>{{count}}</b> โพสที่รอบตรวจสอบอยู่"
+        other: กระทู้นี้มีโพสอีก <b>{{count}}</b> โพสที่รอบตรวจสอบอยู่
       confirm: "บันทึกการเปลี่ยนแปลง"
       delete_prompt: "คุณแน่ใจหรือว่าจะลบ <b>%{username}</b>? นี่จะทำให้เราลบโพสและบล็อกอีเมลและไอพีของคนนี้"
       approval:
         title: "โพสต์นี้ต้องได้รับการอนุมัติ"
         description: "เราได้รับโพสของคุณแล้วแต่จำเป็นต้องมีการอนุมัตโดยผู้ดูแลก่อนจึงจะปรากฎขึ้น กรุณารอสักครู่"
         pending_posts:
-          other: "คุณมี <strong>{{count}}</strong> กระทู้ที่รอการยืนยัน"
+          other: คุณมี <strong>{{count}}</strong> กระทู้ที่รอการยืนยัน
         ok: "ตกลง"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> โพส <a href='{{topicUrl}}'>กระทู้</a>"
@@ -290,55 +291,37 @@ th:
       posts_read: "อ่าน"
       posts_read_long: "อ่านโพส"
       total_rows:
-        other: "%{count} ผู้ใช้"
+        other: '%{count} ผู้ใช้'
     group_histories:
       actions:
+        change_group_setting: "แก้ไขการตั้งค่ากลุ่ม"
         add_user_to_group: "เพิ่มผู้ใช้"
         remove_user_from_group: "ลบผู้ใช้"
     groups:
-      logs:
-        acting_user: "ผู้ใช้ชั่วคราว"
-        target_user: "ผู้ใช้เป้าหมาย"
-        subject: "หัวข้อ"
-        details: "รายละเอียด"
-        from: "จาก"
-        to: "ถึง"
-      edit:
-        title: 'แก้ไขกลุ่ม'
-        full_name: 'ชื่อ-นามสกุล'
-        add_members: "เพิ่มสมาชิก"
-        delete_member_confirm: "ลบ '%{username}' ออกจาก '%{group}' กลุ่ม?"
+      public_exit: "อนุญาตให้ผู้ใช้ออกจากกลุ่มอย่างอิสระ"
       add: "เพิ่ม"
-      join: "เข้าร่วมกลุ่ม"
-      leave: "ออกจากกลุ่ม"
-      request: "ส่งคำขอเข้าร่วมกลุ่ม"
-      automatic_group: กลุ่มอัตโนมัติ
-      closed_group: กลุ่มปิด
-      is_group_user: "คุณเป็นสมาชิกของกลุ่มนี้"
+      message: "ข้อความ<br><div><br data-mce-bogus=\"1\"></div>"
       membership: "การเป็นสมาชิก"
       name: "ชื่อ"
-      user_count: "จำนวนสมาชิก"
       bio: "เกี่ยวกับกลุ่ม"
-      selector_placeholder: "เพิ่มสมาชิก"
+      selector_placeholder: "กรอกชื่อผู้ใช้"
       owner: "เจ้าของ"
       index:
         title: "กลุ่ม"
         empty: "ไม่มีกลุ่มที่เห็นได้"
       activity: "กิจกรรม"
-      members: "สมาชิก"
       topics: "กระทู้"
       posts: "โพสต์"
       mentions: "พูดถึง"
       messages: "ข้อความ"
       alias_levels:
+        mentionable: "ใครสามารถ @กล่าวถึง กลุ่มนี้"
+        messageable: "ใครสามารถส่งข้อความในกลุ่มนี้?"
         nobody: "ไม่มี"
         only_admins: "เฉพาะผู้ดูแลระบบ"
         mods_and_admins: "ผู้ดูแลระบบและผู้ตรวจสอบ"
         members_mods_and_admins: "สมาชิกกลุ่ม ผู้ดูแลกระทู้ และผู้ดูแลเว็บ"
         everyone: "ทุกคน"
-      trust_levels:
-        title: "ระดับความไว้ใจจะถูกให้ไปยังผู้ใช้โดยอัตโนมัติเมื่อพวกเขาเพิ่ม:"
-        none: "ไม่มี"
       notifications:
         watching:
           title: "กำลังดู"
@@ -355,22 +338,23 @@ th:
         muted:
           title: "ปิด"
           description: "คุณจะไม่ได้รับการแจ้งเตือนเกี่ยวกับกระทู้ใหม่ๆในกลุ่มนี้"
+      flair_preview_icon: "ไอคอนตัวอย่าง"
+      flair_preview_image: "รูปภาพตัวอย่าง"
     user_action_groups:
-      '1': "ให้ถูกใจ"
-      '2': "ได้รับการถูกใจ"
-      '3': "บุ๊คมาร์ค"
-      '4': "กระทู้"
-      '5': "ตอบ"
-      '6': "ตอบสนอง"
-      '7': "พูดถึง"
-      '9': "อ้างอิง"
-      '11': "แก้ไข"
-      '12': "รายการที่ส่งแล้ว"
-      '13': "กล่องข้อความ"
-      '14': "อยู่ระหว่างการพิจารณา"
+      "1": "ให้ถูกใจ"
+      "2": "ได้รับการถูกใจ"
+      "3": "บุ๊คมาร์ค"
+      "4": "กระทู้"
+      "5": "ตอบ"
+      "6": "ตอบสนอง"
+      "7": "พูดถึง"
+      "9": "อ้างอิง"
+      "11": "แก้ไข"
+      "12": "รายการที่ส่งแล้ว"
+      "13": "กล่องข้อความ"
+      "14": "อยู่ระหว่างการพิจารณา"
     categories:
       all: "ดูทุกหมวดหมู่"
-      all_subcategories: "ทั้งหมด"
       no_subcategory: "ไม่มี"
       category: "หมวดหมู่"
       category_list: "แสดงหมวดหมู่ทั้งหมด"
@@ -389,7 +373,7 @@ th:
       toggle_ordering: "เปลี่ยนวิธีการจัดลำดับ"
       subcategories: "หมวดหมู่ย่อย"
       topic_stat_sentence:
-        other: "%{count} กระทู้ใหม่ในเวลาที่ผ่านมา %{unit}."
+        other: '%{count} กระทู้ใหม่ในเวลาที่ผ่านมา %{unit}.'
     ip_lookup:
       title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
@@ -425,7 +409,6 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
-        label: "การแจ้งเตือนบนเดสท๊อป"
         not_supported: "การแจ้งเตือนยังไม่สนับสนุนบนบาวเซอร์นี้ ขอโทษด้วย"
         perm_default: "เปิดการแจ้งเตือน"
         perm_denied_btn: "ไม่มีสิทธิ์เข้าถึง"
@@ -467,7 +450,6 @@ th:
       delete_account: "ลบบัญชีของคุณ"
       delete_account_confirm: "คุณแน่ใจใหม่ที่จะลบบัญชีอย่างถาวร? การกระทำนี้ไม่สามารถยกเลิกได้"
       deleted_yourself: "คุณลบบัญชีเสร็จเเรียบร้อยแล้ว"
-      delete_yourself_not_allowed: "คุณไม่สามารถลบบัญชีได้ในขณะนี้ กรุณาติดต่อผู้ดูแลระบบเพื่อลบบัญชีของคุณ"
       unread_message_count: "ข้อความ"
       admin_delete: "ลบ"
       users: "ผู้ใช้"
@@ -492,12 +474,18 @@ th:
         move_to_archive: "เก็บ"
         failed_to_move: "เกิดความผิดพลาดในการย้ายหัวข้อที่เลือก (อาจเกิดจาดเครือข่ายของคุณล่ม)"
         select_all: "เลือกทั้งหมด"
+      preferences_nav:
+        profile: "ข้อมูลผู้ใช้<br><div><br data-mce-bogus=\"1\"></div>"
+        emails: "อีเมล"
+        tags: "ป้าย"
       change_password:
         success: "(อีเมลที่ส่งแล้ว)"
         in_progress: "(กำลังส่งอีเมล)"
         error: "(ผิดพลาด)"
         action: "ส่งอีเมลรีเซ็ทรหัสผ่าน"
         set_password: "ตั้งรหัสผ่าน"
+        choose_new: "เลือกรหัสผู้ใช้ใหม่"
+        choose: "เลือกรหัสผู้ใช้"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -535,14 +523,16 @@ th:
         authenticated: "อีเมลของคุณได้รับการยืนยันโดย {{provider}}"
         frequency_immediately: "เราจะอีเมลถึงคุณทันทีหากคุณยังไม่ได้อ่านสิ่งที่เราอีเมลหาคุณ"
         frequency:
-          other: "เราจะอีเมลหาคุณเฉพาะสิ่งที่คุณไม่ได้เห็นในช่วง {{count}} นาที"
+          other: เราจะอีเมลหาคุณเฉพาะสิ่งที่คุณไม่ได้เห็นในช่วง {{count}} นาที
       name:
         title: "ชื่อ"
+        instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)"
         instructions_required: "ชื่อเต็มของคุณ"
         too_short: "ชื่อของคุณสั้นไป"
         ok: "ชื่อของคุณมีลักษณะที่ดี"
       username:
         title: "ชื่อผู้ใช้"
+        instructions: "ไม่เหมือนใคร, ไม่มีช่องว่าง, สั้น"
         short_instructions: "ผู้คนสามารถพูดถึงคุณ @{{username}}"
         available: "ชื่อผู้ใช้ของคุณสามารถใช้ได้"
         not_available: "ใช้การไม่ได้ ลอง{{suggestion}}?"
@@ -562,8 +552,6 @@ th:
       created: "สมัครสมาชิกเมื่อ"
       log_out: "ออกจากระบบ"
       location: "ที่อยู่"
-      card_badge:
-        title: "ตราประจำบัตร"
       website: "เว็บไซต์"
       email_settings: "อีเมล์"
       like_notification_frequency:
@@ -615,9 +603,8 @@ th:
         title: "เชิญชวน"
         user: "เชิญชวนผู้ใช้"
         sent: "ส่ง"
-        none: "ไม่มีคำเชิญที่รออยู่ให้แสดง"
         truncated:
-          other: "กำลังแสดงคำเชิญ {{count}} รายการแรก"
+          other: กำลังแสดงคำเชิญ {{count}} รายการแรก
         redeemed: "ยืนยันการเชิญชวน"
         redeemed_tab: "ยืนยัน"
         redeemed_tab_with_count: "ยืนยันแล้ว ({{count}})"
@@ -655,15 +642,15 @@ th:
         stats: "สถิติ"
         time_read: "เวลาอ่าน"
         topic_count:
-          other: "กระทู้สร้าง"
+          other: กระทู้สร้าง
         post_count:
-          other: "โพสถูกสร้าง"
+          other: โพสถูกสร้าง
         days_visited:
-          other: "วันที่ดู"
+          other: วันที่ดู
         posts_read:
-          other: "โพสที่อ่าน"
+          other: โพสที่อ่าน
         bookmark_count:
-          other: "บุ๊คมาร์ค"
+          other: บุ๊คมาร์ค
         top_replies: "ตอบสูงสุด"
         no_replies: "ยังไม่มีใครตอบ"
         more_replies: "การตอบอื่น"
@@ -726,7 +713,7 @@ th:
       logout_disabled: "การออกจากระบบนั้นไม่สามารถทำได้ในเวลาที่เว็บนั้นอยู่ในโหมด read only"
     logs_error_rate_notice:
       rate:
-        other: "%{count} ผิดพลาด/%{duration}"
+        other: '%{count} ผิดพลาด/%{duration}'
     learn_more: "เรียนรู้เพิ่มเติม..."
     year: 'ปี'
     year_desc: 'กระทู้ที่ถูกตั้งเมื่อ365 วันที่ผ่านมา'
@@ -902,28 +889,12 @@ th:
       none: "ไม่สามารถโหลดการแจ้งเตือนในขณะนี้"
       more: "ดูการแจ้งเตือนก่อนหน้านี้"
       total_flagged: "โพสที่ปักธงทั้งหมด"
-      alt:
-        mentioned: "ถูกพูดถึงโดย"
-        quoted: "ถูกอ้างอิงโดย"
-        replied: "ตอบแล้ว"
-        posted: "โพสโดย"
-        edited: "แก้ไขโพสของคุณโดย"
-        liked: "ได้ถูกใจโพสของคุณ"
-        private_message: "ข้อความส่วนตัวจาก"
-        invited_to_private_message: "ได้รับคำเชิญเพื่อข้อความส่วนตัวจาก"
-        invited_to_topic: "เชิญไปยังกระทู้จาก"
-        invitee_accepted: "การเชิญได้ตอบรับโดย"
-        moved_post: "โพสของคุณได้ถูกย้ายโดย"
-        linked: "ลิงค์ไปยังโพสของคุณ"
-        granted_badge: "ได้รับป้าย"
-        group_message_summary: "ข้อความในกล่องข้อความกลุ่ม"
       popup:
         mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
         quoted: '{{username}} อ้างอิงถึงคุณใน "{{topic}}" - {{site_title}}'
         replied: '{{username}} ตอบคุณใน "{{topic}}" - {{site_title}}'
         posted: '{{username}} โพสท์ใน "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} ส่งข้อความส่วนตัวถึงคุณใน "{{topic}}" - {{site_title}}'
         linked: '{{username}} ลิงค์โพสของคุณจาก "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "เพิ่มรูปภาพ"
@@ -979,7 +950,7 @@ th:
         archive_topics: "คลังกระทู้"
         choose_new_category: "เลือกหมวดใหม่ให้กระทู้"
         selected:
-          other: "คุณได้เลือก <b>{{count}}</b> กระทู้"
+          other: คุณได้เลือก <b>{{count}}</b> กระทู้
       none:
         unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"
         new: "คุณไม่มีกระทู้ใหม่"
@@ -996,6 +967,8 @@ th:
         new: "ไม่มีกระทู้ใหม่"
         bookmarks: "ไม่มีบุ๊คมาร์คในหัวข้อใดอีกแล้ว"
     topic:
+      filter_to:
+        other: ' {{count}} โพสในกระทู้'
       create: 'กระทู้ใหม่'
       create_long: 'สร้างกระทู้ใหม่'
       private_message: 'สร้างข้อความใหม่'
@@ -1022,9 +995,9 @@ th:
       not_found:
         title: "ไม่พบกระทู้"
       total_unread_posts:
-        other: "คุณมี {{count}} ความคิดเห็น ที่ยังไม่ได้อ่านในกระทู้นี้"
+        other: คุณมี {{count}} ความคิดเห็น ที่ยังไม่ได้อ่านในกระทู้นี้
       unread_posts:
-        other: "คุณมี {{count}} ความคิดเห็นเก่า ที่ยังไม่ได้อ่านในกระทู้นี้"
+        other: คุณมี {{count}} ความคิดเห็นเก่า ที่ยังไม่ได้อ่านในกระทู้นี้
       back_to_list: "กลับไปที่รายชื่อกระทู้"
       show_links: "แสดงลิงค์ในกระทู้นี้"
       read_more_in_category: "ต้องการจะอ่านเพิ่มเหรอ? ลองดูกระทู้อื่นใน {{catLink}} หรือ {{latestLink}}"
@@ -1035,13 +1008,15 @@ th:
       auto_close_title: 'ปิดการตั้งค่าอัตโนมัติ'
       timeline:
         back: "กลับ"
+      progress:
+        go_top: "บน"
       notifications:
         reasons:
-          '3_2': 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'
-          '3_1': 'คุณจะได้รับการแจ้งเตือนเพราะคุณสร้างกระทู้นี้'
-          '3': 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'
-          '0_2': 'คุณไม่ต้องการรับการแจ้งเตือนของกระทู้นี้'
-          '0': 'คุณไม่ต้องการรับการแจ้งเตือนของกระทู้นี้'
+          "3_2": 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'
+          "3_1": 'คุณจะได้รับการแจ้งเตือนเพราะคุณสร้างกระทู้นี้'
+          "3": 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'
+          "0_2": 'คุณไม่ต้องการรับการแจ้งเตือนของกระทู้นี้'
+          "0": 'คุณไม่ต้องการรับการแจ้งเตือนของกระทู้นี้'
         watching_pm:
           title: "กำลังดู"
         watching:
@@ -1072,7 +1047,6 @@ th:
         visible: "ทำให้แสดงในรายชื่อ"
         reset_read: "ล้างข้อมูลวันที่"
         make_public: "ทำให้กระทู้เป็นสาธารณะ"
-        make_private: "ทำเป็นข้อความส่วนตัว"
       feature:
         pin: "ปักหมุดกระทู้"
         unpin: "ยกเลิกปักหมุดกระทู้"
@@ -1108,7 +1082,7 @@ th:
       login_reply: 'เข้าสู่ระบบเพื่อตอบ'
       filters:
         n_posts:
-          other: "{{count}} โพส"
+          other: '{{count}} โพส'
         cancel: "เอาการกรองออก"
       split_topic:
         title: "ย้ายไปหัวข้อใหม่"
@@ -1135,8 +1109,6 @@ th:
         description:
           other: คุณได้เลือก <b>{{count}}</b> โพสต์.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       edit_reason: "เหตุผล:"
       post_number: "โพสต์ {{number}}"
       last_edited_on: "โพสแก้ไขล่าสุดเมื่อ"
@@ -1145,15 +1117,15 @@ th:
       show_full: "แสดงโพสแบบเต็ม"
       show_hidden: 'ดูเนื้อหาที่ถูกซ่อน'
       deleted_by_author:
-        other: "(โพสถูกแจ้งลบโดยเจ้าของ และจะถูกลบใน %{count} ชั่วโมงเว้นแต่จะถูกปักธง)"
+        other: (โพสถูกแจ้งลบโดยเจ้าของ และจะถูกลบใน %{count} ชั่วโมงเว้นแต่จะถูกปักธง)
       expand_collapse: "ขยาย/หด"
       unread: "โพสนี้ยังไม่ถูกอ่าน"
       has_replies:
-        other: "{{count}} ตอบ"
+        other: '{{count}} ตอบ'
       has_likes:
-        other: "{{count}} ชอบ"
+        other: '{{count}} ชอบ'
       has_likes_title:
-        other: "{{count}} ผู้คนที่ชอบโพสนี้"
+        other: '{{count}} ผู้คนที่ชอบโพสนี้'
       has_likes_title_only_you: "คุณชอบโพสนี้"
       errors:
         create: "ขอโทษ, เกิดความผิดพลาดขณะกำลังสร้างโพสของคุณ โปรดลองใหม่อีกครั้ง"
@@ -1188,10 +1160,10 @@ th:
           bookmark: "บุ๊คมาร์คโพสนี้"
         by_you_and_others:
           bookmark:
-            other: "คุณและอีก {{count}} คนได้บุ๊คมาร์คโพสนี้"
+            other: คุณและอีก {{count}} คนได้บุ๊คมาร์คโพสนี้
         by_others:
           bookmark:
-            other: "{{count}} คน ได้บุ๊คมาร์คโพสนี้"
+            other: '{{count}} คน ได้บุ๊คมาร์คโพสนี้'
     category:
       delete: 'ลบหมวดหมู่'
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก?"
@@ -1224,15 +1196,15 @@ th:
     original_post: "โพสต้นฉบับ"
     views: "ดู"
     views_lowercase:
-      other: "ดู"
+      other: ดู
     replies: "ตอบ"
     activity: "กิจกรรม"
     likes: "ชอบ"
     likes_lowercase:
-      other: "ชอบ"
+      other: ชอบ
     users: "ผู้ใช้"
     users_lowercase:
-      other: "ผู้ใช้"
+      other: ผู้ใช้
     category_title: "หมวดหมู่"
     history: "ประวัติ"
     changed_by: "โดย {{author}}"
@@ -1245,7 +1217,7 @@ th:
       latest:
         title: "ล่าสุด"
         title_with_count:
-          other: "ล่าสุด ({{count}})"
+          other: ล่าสุด ({{count}})
         help: "หัวข้อพร้อมโพสล่าสุด"
       hot:
         title: "ร้อนแรง"
@@ -1261,17 +1233,17 @@ th:
       unread:
         title: "ยังไม่อ่าน"
         title_with_count:
-          other: "ยังไม่ได้อ่าน ({{count}})"
+          other: ยังไม่ได้อ่าน ({{count}})
         help: "หัวข้อที่คุณกำลังจับตาหรือติดตามพร้อมโพสที่ยังไม่อ่าน"
         lower_title_with_count:
-          other: "{{count}} ไม่ได้อ่าน"
+          other: '{{count}} ไม่ได้อ่าน'
       new:
         lower_title_with_count:
-          other: "{{count}} ใหม่"
+          other: '{{count}} ใหม่'
         lower_title: "ใหม่"
         title: "ใหม่"
         title_with_count:
-          other: "ใหม่ ({{count}})"
+          other: ใหม่ ({{count}})
         help: "หัวข้อที่ถูกสร้างในช่วงไม่กี่วัน"
       posted:
         title: "โพสของฉัน"
@@ -1282,7 +1254,7 @@ th:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          other: "{{categoryName}} ({{count}})"
+          other: '{{categoryName}} ({{count}})'
         help: "หัวข้อล่าสุดในหมวดหมู่ {{categoryName}}"
       top:
         title: "บน"
@@ -1343,8 +1315,6 @@ th:
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"
-          last_7_days: "เมื่อ 7 วันที่ผ่านมา"
-          last_30_days: "เมื่อ 30 วันที่ผ่านมา"
           all_time: "ตลอดเวลา"
           7_days_ago: "7 วันที่แล้ว"
           30_days_ago: "30 วันที่แล้ว"
@@ -1385,8 +1355,6 @@ th:
         title: "กลุ่ม"
         edit: "แก้กลุ่ม"
         refresh: "รีโหลด"
-        new: "ใหม่"
-        selector_placeholder: "ชื่อผู้ใช้ใหม่"
         about: "แก้ไขสมาชิกและชื่อกลุ่มของคุณได้ที่นี่"
         group_members: "ชื่อสมาชิก"
         delete: "ลบ"
@@ -1394,11 +1362,8 @@ th:
         delete_failed: "ไม่สามารถลงกลุ่มได้ ถ้ากลุ่มนี้เป็นกลุ่มอัตโนมัติมันจะไม่สามารถถูกทำลายได้"
         delete_owner_confirm: "ลบสิทธิ์การเป็นเจ้าของ ของ '%{username}'?"
         add: "เพิ่ม"
-        add_members: "เพิ่มสมาชิก"
         group_owners: เจ้าของ
         add_owners: เพิ่มเจ้าของ
-        incoming_email: "ตั้งที่อยู่สำหรับอีเมลขาเข้า"
-        incoming_email_placeholder: "ใส่อีเมล"
       api:
         user: "ผู้ใช้"
         title: "API"
@@ -1475,9 +1440,9 @@ th:
           suspect: 'ต้องสงสัย'
         approved: "ยืนยันหรือไม่"
         approved_selected:
-          other: "ผู้ใช้งานที่ได้รับยืนยันแล้ว ({{count}})"
+          other: ผู้ใช้งานที่ได้รับยืนยันแล้ว ({{count}})
         reject_selected:
-          other: "ผู้ใช้งานที่ไม่ได้รับยืนยันแล้ว ({{count}})"
+          other: ผู้ใช้งานที่ไม่ได้รับยืนยันแล้ว ({{count}})
         titles:
           active: 'ผู้ใช้ที่ใช้งานอยู่'
           new: 'ผู้ใช้งานใหม่'
@@ -1590,8 +1555,6 @@ th:
         recommended: "เราแนะนำให้คุณแก้ไขข้อความให้ตรงกับความต้องการของคุณ:"
       site_settings:
         title: 'การตั้งค่า'
-        reset: 'ล้าง'
-        none: 'ไม่มี'
         no_results: "ไม่มีผลการค้นหา"
         clear_filter: "ล้าง"
         add_url: "เพิ่ม URL"
@@ -1641,10 +1604,10 @@ th:
             header: "อันตราย!"
           sample: "ตัวอย่าง:"
           grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link}
-            with_post_time: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> เมื่อ <span class="time">%{time}</span>
+            with: "<span class=\"username\">%{username}</span>"
+            with_post: "<span class=\"username\">%{username}</span> สำหรับโพสต์ใน %{link}"
+            with_post_time: "<span class=\"username\">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class=\"time\">%{time}</span>"
+            with_time: "<span class=\"username\">%{username}</span> เมื่อ <span class=\"time\">%{time}</span>"
       emoji:
         title: "Emoji"
         add: "เพิ่ม Emoji ใหม่"
@@ -1671,7 +1634,7 @@ th:
         category_id: "เลขที่หมวดหมู่"
         category_title: "หมวดหมู่"
         external_url: "ลิงก์ภายนอก"
-        delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
+        delete_confirm: "คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?"
         form:
           label: "ใหม่:"
           add: "เพิ่ม"

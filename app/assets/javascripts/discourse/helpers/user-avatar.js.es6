@@ -1,6 +1,31 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
 import { avatarImg, formatUsername } from 'discourse/lib/utilities';
 
+let _customAvatarHelpers;
+
+export function registerCustomAvatarHelper(fn) {
+  _customAvatarHelpers = _customAvatarHelpers || [];
+  _customAvatarHelpers.push(fn);
+}
+
+export function addExtraUserClasses(u, args) {
+  let extraClasses = classesForUser(u).join(' ');
+  if (extraClasses && extraClasses.length) {
+    args.extraClasses = extraClasses;
+  }
+  return args;
+}
+
+export function classesForUser(u) {
+  let result = [];
+  if (_customAvatarHelpers) {
+    for (let i=0; i<_customAvatarHelpers.length; i++) {
+      result = result.concat(_customAvatarHelpers[i](u));
+    }
+  }
+  return result;
+}
+
 function renderAvatar(user, options) {
   options = options || {};
 
@@ -11,7 +36,7 @@ function renderAvatar(user, options) {
 
     if (!username || !avatarTemplate) { return ''; }
 
-    let formattedUsername = formatUsername(username);
+    let displayName = Ember.get(user, 'name') || formatUsername(username);
 
     let title = options.title;
     if (!title && !options.ignoreTitle) {
@@ -24,7 +49,7 @@ function renderAvatar(user, options) {
         // if a description has been provided
         if (description && description.length > 0) {
           // preprend the username before the description
-          title = formattedUsername + " - " + description;
+          title = displayName + " - " + description;
         }
       }
     }
@@ -32,7 +57,7 @@ function renderAvatar(user, options) {
     return avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
-      title: title || formattedUsername,
+      title: title || displayName,
       avatarTemplate: avatarTemplate
     });
   } else {

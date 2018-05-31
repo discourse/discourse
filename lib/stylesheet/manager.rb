@@ -34,7 +34,8 @@ class Stylesheet::Manager
       theme_key = SiteSetting.default_theme_key
     end
 
-    cache_key = "#{target}_#{theme_key}"
+    current_hostname = Discourse.current_hostname
+    cache_key = "#{target}_#{theme_key}_#{current_hostname}"
     tag = cache[cache_key]
 
     return tag.dup.html_safe if tag
@@ -45,7 +46,7 @@ class Stylesheet::Manager
         tag = ""
       else
         builder.compile unless File.exists?(builder.stylesheet_fullpath)
-        tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
+        tag = %[<link href="#{builder.stylesheet_path(current_hostname)}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
       end
 
       cache[cache_key] = tag
@@ -109,7 +110,11 @@ class Stylesheet::Manager
       if File.exists?(stylesheet_fullpath)
         unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
           begin
-            source_map = File.read(source_map_fullpath) rescue nil
+            source_map = begin
+              File.read(source_map_fullpath)
+            rescue Errno::ENOENT
+            end
+
             StylesheetCache.add(qualified_target, digest, File.read(stylesheet_fullpath), source_map)
           rescue => e
             Rails.logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"
@@ -181,12 +186,12 @@ class Stylesheet::Manager
     "#{cache_fullpath}/#{stylesheet_filename_no_digest}"
   end
 
-  def stylesheet_cdnpath
-    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{Discourse.current_hostname}"
+  def stylesheet_cdnpath(hostname)
+    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{hostname}"
   end
 
-  def stylesheet_path
-    stylesheet_cdnpath
+  def stylesheet_path(hostname)
+    stylesheet_cdnpath(hostname)
   end
 
   def root_path
@@ -251,7 +256,22 @@ class Stylesheet::Manager
       raise "attempting to look up theme digest for invalid field"
     end
 
-    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s)
+    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest)
+  end
+
+  # this protects us from situations where new versions of a plugin removed a file
+  # old instances may still be serving CSS and not aware of the change
+  # so we could end up poisoning the cache with a bad file that can not be removed
+  def plugins_digest
+    assets = []
+    assets += DiscoursePluginRegistry.stylesheets.to_a
+    assets += DiscoursePluginRegistry.mobile_stylesheets.to_a
+    assets += DiscoursePluginRegistry.desktop_stylesheets.to_a
+    Digest::SHA1.hexdigest(assets.sort.join)
+  end
+
+  def settings_digest
+    Digest::SHA1.hexdigest((theme&.included_settings || {}).to_json)
   end
 
   def color_scheme_digest

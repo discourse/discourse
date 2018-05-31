@@ -9,6 +9,7 @@ export default MultiSelectComponent.extend({
   rowComponent: "category-row",
   categories: null,
   blacklist: null,
+  allowUncategorized: true,
 
   init() {
     this._super();
@@ -21,6 +22,7 @@ export default MultiSelectComponent.extend({
     });
 
     this.get("rowComponentOptions").setProperties({
+      allowUncategorized: this.get("allowUncategorized"),
       displayCategoryDescription: false
     });
   },

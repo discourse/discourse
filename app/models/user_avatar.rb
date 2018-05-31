@@ -35,7 +35,7 @@ class UserAvatar < ActiveRecord::Base
           upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
 
           if gravatar_upload_id != upload.id
-            gravatar_upload.try(:destroy!) rescue nil
+            gravatar_upload&.destroy!
             self.gravatar_upload = upload
             save!
           end

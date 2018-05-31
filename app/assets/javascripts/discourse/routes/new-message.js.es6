@@ -4,10 +4,12 @@ import Group from 'discourse/models/group';
 export default Discourse.Route.extend({
 
   beforeModel(transition) {
+    const self = this;
     const params = transition.queryParams;
+    const groupName = params.groupname || params.group_name;
 
-    if (this.currentUser) {
-      this.replaceWith("discovery.latest").then(e => {
+    if (self.currentUser) {
+      self.replaceWith("discovery.latest").then(e => {
         if (params.username) {
           // send a message to a user
           User.findByUsername(params.username).then(user => {
@@ -19,13 +21,13 @@ export default Discourse.Route.extend({
           }).catch(function() {
             bootbox.alert(I18n.t("generic_error"));
           });
-        } else if (params.groupname) {
+        } else if (groupName) {
           // send a message to a group
-          Group.messageable(params.groupname).then(result => {
+          Group.messageable(groupName).then(result => {
             if (result.messageable) {
-              Ember.run.next(() => e.send("createNewMessageViaParams", params.groupname, params.title, params.body));
+              Ember.run.next(() => e.send("createNewMessageViaParams", groupName, params.title, params.body));
             } else {
-              bootbox.alert(I18n.t("composer.cant_send_pm", { username: params.groupname }));
+              bootbox.alert(I18n.t("composer.cant_send_pm", { username: groupName }));
             }
           }).catch(function() {
             bootbox.alert(I18n.t("generic_error"));

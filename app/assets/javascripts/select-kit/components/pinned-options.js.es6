@@ -10,7 +10,7 @@ export default DropdownSelectBoxComponent.extend({
   autoHighlight() {},
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
     const pinnedGlobally = this.get("topic.pinned_globally");
     const pinned = this.get("computedValue");
     const globally = pinnedGlobally ? "_globally" : "";
@@ -44,13 +44,15 @@ export default DropdownSelectBoxComponent.extend({
     ]);
   },
 
-  mutateValue(value) {
-    const topic = this.get("topic");
+  actions: {
+    onSelect() {
+      const topic = this.get("topic");
 
-    if (value === "unpinned") {
-      topic.clearPin();
-    } else {
-      topic.rePin();
+      if (this.get("computedValue") === "unpinned") {
+        topic.clearPin();
+      } else {
+        topic.rePin();
+      }
     }
   }
 });

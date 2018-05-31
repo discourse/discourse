@@ -103,7 +103,7 @@ componentTest('custom search icon', {
 
     andThen(() => {
       assert.ok(
-        this.get('subject').filter().icon().hasClass("fa-shower"),
+        this.get('subject').filter().icon().hasClass("d-icon-shower"),
         "it has a the correct icon"
       );
     });
@@ -154,23 +154,6 @@ componentTest('doesn’t render collection content before first expand', {
 
     andThen(() => {
       assert.ok(exists(find(".select-kit-collection")));
-    });
-  }
-});
-
-componentTest('supports options to limit size', {
-  template: '{{single-select collectionHeight=20 content=content}}',
-
-  beforeEach() {
-    this.set("content", ["robin", "régis"]);
-  },
-
-  test(assert) {
-    this.get('subject').expand();
-
-    andThen(() => {
-      const height = find(".select-kit-collection").height();
-      assert.equal(parseInt(height, 10), 20, "it limits the height");
     });
   }
 });
@@ -243,6 +226,33 @@ componentTest('supports converting select value to integer', {
       assert.equal(
         this.get('subject').selectedRow().name(),
         'robin',
+        'it works with dynamic content'
+      );
+    });
+  }
+});
+
+componentTest('supports converting string as boolean to boolean', {
+  template: '{{single-select value=value content=content castBoolean=true}}',
+
+  beforeEach() {
+    this.set('value', true);
+    this.set('content', [{ id: 'true', name: 'ASC'}, {id: 'false', name: 'DESC' }]);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').selectedRow().name(), 'ASC') );
+
+    andThen(() => {
+      this.set('value', false);
+    });
+
+    andThen(() => {
+      assert.equal(
+        this.get('subject').selectedRow().name(),
+        'DESC',
         'it works with dynamic content'
       );
     });
@@ -469,58 +479,6 @@ componentTest('with collection header', {
   }
 });
 
-componentTest('with onToggle', {
-  template: '{{single-select onToggle=onToggle}}',
-
-  beforeEach() {
-    this.set("onToggle", () => $(".select-kit").append("<span class='onToggleTest'></span>"));
-  },
-
-  test(assert) {
-    andThen(() => assert.notOk(exists(".onToggleTest")));
-
-    this.get('subject').expand();
-
-    andThen(() => assert.ok(exists(".onToggleTest")));
-  }
-});
-
-componentTest('with onExpand', {
-  template: '{{single-select onExpand=onExpand}}',
-
-  beforeEach() {
-    this.set("onExpand", () => $(".select-kit").append("<span class='onExpandTest'></span>"));
-  },
-
-  test(assert) {
-    andThen(() => assert.notOk(exists(".onExpandTest")));
-
-    this.get('subject').expand();
-
-    andThen(() => assert.ok(exists(".onExpandTest")));
-  }
-});
-
-componentTest('with onCollapse', {
-  template: '{{single-select onCollapse=onCollapse}}',
-
-  beforeEach() {
-    this.set("onCollapse", () => $(".select-kit").append("<span class='onCollapseTest'></span>"));
-  },
-
-  test(assert) {
-    andThen(() => assert.notOk(exists(".onCollapseTest")));
-
-    this.get('subject').expand();
-
-    andThen(() => assert.notOk(exists(".onCollapseTest")));
-
-    this.get('subject').collapse();
-
-    andThen(() => assert.ok(exists(".onCollapseTest")));
-  }
-});
-
 componentTest('with title', {
   template: '{{single-select title=(i18n "test.title")}}',
 
@@ -530,5 +488,84 @@ componentTest('with title', {
 
   test(assert) {
     andThen(() => assert.equal(this.get('subject').header().title(), 'My title') );
+  }
+});
+
+componentTest('support modifying header computed content through plugin api', {
+  template: '{{single-select content=content}}',
+
+  beforeEach() {
+    withPluginApi('0.8.15', api => {
+      api.modifySelectKit("select-kit")
+        .modifyHeaderComputedContent((context, computedContent) => {
+          computedContent.title = "Not so evil";
+          return computedContent;
+        });
+    });
+
+    this.set("content", [{ id: "1", name: "robin"}]);
+  },
+
+  test(assert) {
+    andThen(() => {
+      assert.equal(this.get('subject').header().title(), "Not so evil");
+    });
+
+    andThen(() => clearCallbacks());
+  }
+});
+
+componentTest('with limitMatches', {
+  template: '{{single-select content=content limitMatches=2}}',
+
+  beforeEach() {
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').el().find(".select-kit-row").length, 2));
+  }
+});
+
+componentTest('with minimum', {
+  template: '{{single-select content=content minimum=1 allowAutoSelectFirst=false}}',
+
+  beforeEach() {
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').validationMessage(), 'Select at least 1 item.'));
+
+    this.get('subject').selectRowByValue('sam');
+
+    andThen(() => {
+      assert.equal(this.get('subject').header().label(), 'sam');
+    });
+  }
+});
+
+componentTest('with minimumLabel', {
+  template: '{{single-select content=content minimum=1 minimumLabel="test.minimum" allowAutoSelectFirst=false}}',
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = { minimum: 'min %{count}' };
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').validationMessage(), 'min 1'));
+
+    this.get('subject').selectRowByValue('jeff');
+
+    andThen(() => {
+      assert.equal(this.get('subject').header().label(), 'jeff');
+    });
   }
 });

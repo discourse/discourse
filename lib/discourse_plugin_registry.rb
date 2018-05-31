@@ -14,6 +14,7 @@ class DiscoursePluginRegistry
     attr_writer :handlebars
     attr_writer :serialized_current_user_fields
     attr_writer :seed_data
+    attr_writer :locales
     attr_accessor :custom_html
 
     def plugins
@@ -65,6 +66,10 @@ class DiscoursePluginRegistry
       @seed_data ||= HashWithIndifferentAccess.new({})
     end
 
+    def locales
+      @locales ||= HashWithIndifferentAccess.new({})
+    end
+
     def html_builders
       @html_builders ||= {}
     end
@@ -77,6 +82,9 @@ class DiscoursePluginRegistry
       @vendored_pretty_text ||= Set.new
     end
 
+    def vendored_core_pretty_text
+      @vendored_core_pretty_text ||= Set.new
+    end
   end
 
   def register_js(filename, options = {})
@@ -90,6 +98,10 @@ class DiscoursePluginRegistry
 
   def register_css(filename)
     self.class.stylesheets << filename
+  end
+
+  def self.register_locale(locale, options = {})
+    self.locales[locale] = options
   end
 
   def register_archetype(name, options = {})
@@ -127,6 +139,8 @@ class DiscoursePluginRegistry
         self.admin_javascripts << asset
       elsif opts == :vendored_pretty_text
         self.vendored_pretty_text << asset
+      elsif opts == :vendored_core_pretty_text
+        self.vendored_core_pretty_text << asset
       else
         self.javascripts << asset
       end
@@ -171,6 +185,20 @@ class DiscoursePluginRegistry
     result.uniq
   end
 
+  VENDORED_CORE_PRETTY_TEXT_MAP = {
+    "moment.js" => "lib/javascripts/moment.js",
+    "moment-timezone.js" => "lib/javascripts/moment-timezone-with-data.js"
+  }
+  def self.core_asset_for_name(name)
+    asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
+    raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset
+    asset
+  end
+
+  def locales
+    self.class.locales
+  end
+
   def javascripts
     self.class.javascripts
   end
@@ -207,6 +235,7 @@ class DiscoursePluginRegistry
     self.desktop_stylesheets = nil
     self.sass_variables = nil
     self.handlebars = nil
+    self.locales = nil
   end
 
   def self.reset!
@@ -221,7 +250,9 @@ class DiscoursePluginRegistry
     asset_globs.clear
     html_builders.clear
     vendored_pretty_text.clear
+    vendored_core_pretty_text.clear
     seed_path_builders.clear
+    locales.clear
   end
 
   def self.setup(plugin_class)

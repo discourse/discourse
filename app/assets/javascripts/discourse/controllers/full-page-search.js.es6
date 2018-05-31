@@ -146,6 +146,11 @@ export default Ember.Controller.extend({
     }
   },
 
+  @computed('q')
+  isPrivateMessage(q) {
+    return q && this.currentUser && (q.indexOf("in:private") > -1 || q.indexOf(`private_messages:${this.currentUser.get('username_lower')}`) > -1);
+  },
+
   @observes('loading')
   _showFooter() {
     this.set("application.showFooter", !this.get("loading"));
@@ -167,14 +172,14 @@ export default Ember.Controller.extend({
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
-  @computed('expanded', 'model.grouped_search_result.can_create_topic')
-  canCreateTopic(expanded, userCanCreateTopic) {
-    return this.currentUser && userCanCreateTopic && !this.site.mobileView && !expanded;
+  @computed('model.grouped_search_result.can_create_topic')
+  canCreateTopic(userCanCreateTopic) {
+    return this.currentUser && userCanCreateTopic;
   },
 
   @computed('expanded')
   searchAdvancedIcon(expanded) {
-    return iconHTML(expanded ? "caret-down" : "caret-right");
+    return iconHTML(expanded ? "caret-down fa-fw" : "caret-right fa-fw");
   },
 
   @computed('page')
@@ -231,6 +236,7 @@ export default Ember.Controller.extend({
         }
       }else{
         setTransient('lastSearch', { searchKey, model }, 5);
+        model.grouped_search_result = results.grouped_search_result;
         this.set("model", model);
       }
     }).finally(() => {

@@ -11,7 +11,7 @@ describe I18n::Backend::DiscourseI18n do
     backend.store_translations(:en, foo: 'Foo in :en', bar: 'Bar in :en', wat: "Hello %{count}")
     backend.store_translations(:en, items: { one: 'one item', other: "%{count} items" })
     backend.store_translations(:de, bar: 'Bar in :de')
-    backend.store_translations(:'de-AT', baz: 'Baz in :de-AT')
+    backend.store_translations(:ru, baz: 'Baz in :ru')
   end
 
   after do
@@ -41,9 +41,23 @@ describe I18n::Backend::DiscourseI18n do
     expect(results['items.other']).to eq('%{count} items')
   end
 
-  it 'uses fallback locales for searching' do
-    expect(backend.search(:de, 'bar')).to eq('bar' => 'Bar in :de')
-    expect(backend.search(:de, 'foo')).to eq('foo' => 'Foo in :en')
+  describe 'fallbacks' do
+    it 'uses fallback locales for searching' do
+      expect(backend.search(:de, 'bar')).to eq('bar' => 'Bar in :de')
+      expect(backend.search(:de, 'foo')).to eq('foo' => 'Foo in :en')
+    end
+
+    it 'uses fallback locales for translating' do
+      expect(backend.translate(:de, 'bar')).to eq('Bar in :de')
+      expect(backend.translate(:de, 'foo')).to eq('Foo in :en')
+    end
+
+    it 'uses default_locale as fallback when key exists' do
+      SiteSetting.default_locale = 'ru'
+      expect(backend.translate(:de, 'bar')).to eq('Bar in :de')
+      expect(backend.translate(:de, 'baz')).to eq('Baz in :ru')
+      expect(backend.translate(:de, 'foo')).to eq('Foo in :en')
+    end
   end
 
   describe '#exists?' do
@@ -58,23 +72,23 @@ describe I18n::Backend::DiscourseI18n do
     it 'returns true when an existing key and an existing locale is given' do
       expect(backend.exists?(:en, :foo)).to eq(true)
       expect(backend.exists?(:de, :bar)).to eq(true)
-      expect(backend.exists?(:'de-AT', :baz)).to eq(true)
+      expect(backend.exists?(:ru, :baz)).to eq(true)
     end
 
     it 'returns false when a non-existing key and an existing locale is given' do
       expect(backend.exists?(:en, :bogus)).to eq(false)
       expect(backend.exists?(:de, :bogus)).to eq(false)
-      expect(backend.exists?(:'de-AT', :bogus)).to eq(false)
+      expect(backend.exists?(:ru, :bogus)).to eq(false)
     end
 
     it 'returns true when a key is given which is missing from the given locale and exists in a fallback locale' do
       expect(backend.exists?(:de, :foo)).to eq(true)
-      expect(backend.exists?(:'de-AT', :foo)).to eq(true)
+      expect(backend.exists?(:ru, :foo)).to eq(true)
     end
 
     it 'returns true when a key is given which is missing from the given locale and all its fallback locales' do
       expect(backend.exists?(:de, :baz)).to eq(false)
-      expect(backend.exists?(:'de-AT', :bogus)).to eq(false)
+      expect(backend.exists?(:ru, :bogus)).to eq(false)
     end
   end
 
