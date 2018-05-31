@@ -274,6 +274,10 @@
   .modal-body.forgot-password-modal p {
     font-size: $font-0;
   }
+
+  pre code {
+    white-space: pre-wrap;
+  }
 }
 
 .reply-where-modal {

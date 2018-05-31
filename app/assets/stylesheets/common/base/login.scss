@@ -114,12 +114,16 @@ $input-width: 220px;
 .invites-show {
   .two-col {
     position: relative;
+    display: flex;
   }
 
   .col-image {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;    
+    width: 150px;
+    margin-right: 20px;
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
   }
 
   form {
