@@ -71,6 +71,13 @@ describe UserProfile do
         user_profile.website = "http://discourse.org"
         expect(user_profile).to be_valid
       end
+
+      it "doesn't blow up with an invalid URI" do
+        SiteSetting.user_website_domains_whitelist = "discourse.org"
+
+        user_profile.website = 'user - https://forum.example.com/user'
+        expect { user_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
     end
 
     describe 'after save' do

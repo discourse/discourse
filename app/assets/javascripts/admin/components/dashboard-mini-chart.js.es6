@@ -52,17 +52,7 @@ export default Ember.Component.extend(AsyncReport, {
   fetchReport() {
     this._super();
 
-    let payload = {
-      data: { cache: true, facets: ["prev_period"] }
-    };
-
-    if (this.get("startDate")) {
-      payload.data.start_date = this.get("startDate").locale('en').format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
-    }
-
-    if (this.get("endDate")) {
-      payload.data.end_date = this.get("endDate").locale('en').format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ');
-    }
+    let payload = this.buildPayload(["prev_period"]);
 
     if (this._chart) {
       this._chart.destroy();
@@ -110,7 +100,7 @@ export default Ember.Component.extend(AsyncReport, {
         labels,
         datasets: reportsForPeriod.map(report => {
           return {
-            data: Ember.makeArray(report.data).map(d => d.y),
+            data: Ember.makeArray(report.data).map(d => number(d.y, { ceil: true })),
             backgroundColor: "rgba(200,220,240,0.3)",
             borderColor: report.color
           };
@@ -157,7 +147,7 @@ export default Ember.Component.extend(AsyncReport, {
         scales: {
           yAxes: [{
             display: true,
-            ticks: { callback: (label) => number(label) }
+            ticks: { callback: (label) => number(label, { ceil: true }) }
           }],
           xAxes: [{
             display: true,

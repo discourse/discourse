@@ -34,6 +34,16 @@ export default Ember.Component.extend({
     return moment.tz.guess();
   },
 
+  @computed("formats")
+  previewedFormats(formats) {
+    return formats.map(format => {
+      return {
+        format: format,
+        preview: moment().format(format)
+      };
+    });
+  },
+
   @computed
   recurringOptions() {
     return [
@@ -76,7 +86,7 @@ export default Ember.Component.extend({
     let text = `[date=${config.date} `;
     if (config.recurring) text += `recurring=${config.recurring} `;
     text += `time=${config.time} `;
-    text += `format=${config.format} `;
+    text += `format="${config.format}" `;
     text += `timezones="${config.timezones.join("|")}"`;
     text += `]`;
     return text;
@@ -86,6 +96,11 @@ export default Ember.Component.extend({
   validDate(dateTime) {
     if (!dateTime) return false;
     return dateTime.isValid();
+  },
+
+  @computed("advancedMode")
+  toggleModeBtnLabel(advancedMode) {
+    return advancedMode ? "discourse_local_dates.create.form.simple_mode" : "discourse_local_dates.create.form.advanced_mode";
   },
 
   actions: {

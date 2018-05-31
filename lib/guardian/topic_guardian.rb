@@ -86,15 +86,15 @@ module TopicGuardian
   def can_delete_topic?(topic)
     !topic.trashed? &&
     is_staff? &&
-    !(Category.exists?(topic_id: topic.id)) &&
+    !(topic.is_category_topic?) &&
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
   def can_convert_topic?(topic)
     return false unless SiteSetting.enable_personal_messages?
     return false if topic.blank?
-    return false if topic && topic.trashed?
-    return false if Category.where("topic_id = ?", topic.id).exists?
+    return false if topic.trashed?
+    return false if topic.is_category_topic?
     return true if is_admin?
     is_moderator? && can_create_post?(topic)
   end

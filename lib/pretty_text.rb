@@ -142,25 +142,13 @@ module PrettyText
     protect do
       context = v8
 
-      paths = {
-        baseUri: Discourse::base_uri,
-        CDN: Rails.configuration.action_controller.asset_host,
-      }
-
-      if SiteSetting.Upload.enable_s3_uploads
-        if SiteSetting.Upload.s3_cdn_url.present?
-          paths[:S3CDN] = SiteSetting.Upload.s3_cdn_url
-        end
-        paths[:S3BaseUrl] = Discourse.store.absolute_base_url
-      end
-
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
       buffer = <<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
-        __paths = #{paths.to_json};
+        __paths = #{paths_json};
         __optInput.getURL = __getURL;
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
@@ -215,10 +203,29 @@ module PrettyText
     baked
   end
 
+  def self.paths_json
+    paths = {
+      baseUri: Discourse::base_uri,
+      CDN: Rails.configuration.action_controller.asset_host,
+    }
+
+    if SiteSetting.Upload.enable_s3_uploads
+      if SiteSetting.Upload.s3_cdn_url.present?
+        paths[:S3CDN] = SiteSetting.Upload.s3_cdn_url
+      end
+      paths[:S3BaseUrl] = Discourse.store.absolute_base_url
+    end
+
+    paths.to_json
+  end
+
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
     protect do
-      v8.eval("__utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);")
+      v8.eval(<<~JS)
+        __paths = #{paths_json};
+        __utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
+      JS
     end
   end
 
@@ -227,7 +234,10 @@ module PrettyText
 
     set = SiteSetting.emoji_set.inspect
     protect do
-      v8.eval("__performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set} })")
+      v8.eval(<<~JS)
+        __paths = #{paths_json};
+        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set} });
+      JS
     end
   end
 

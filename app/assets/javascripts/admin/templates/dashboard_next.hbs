@@ -53,7 +53,7 @@
 
 <div class="section-columns">
   <div class="section-column">
-    <div class="dashboard-table">
+    <div class="dashboard-table activity-metrics">
       {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.activity_metrics")}}
         <div class="table-title">
           <h3>{{i18n "admin.dashboard.activity_metrics"}}</h3>
@@ -79,19 +79,11 @@
         </div>
       {{/conditional-loading-section}}
     </div>
+    <div class="user-metrics">
+    {{dashboard-inline-table dataSourceNames="users_by_type" lastRefreshedAt=lastRefreshedAt}}
 
-    {{#dashboard-inline-table dataSourceNames="users_by_type,users_by_trust_level" lastRefreshedAt=lastRefreshedAt as |context|}}
-      <tr>
-        {{#each context.report.data as |data|}}
-          <td>
-            <a href="/admin/users/list/{{data.key}}">
-              {{number data.y}}
-            </a>
-          </td>
-        {{/each}}
-      </tr>
-    {{/dashboard-inline-table}}
-
+    {{dashboard-inline-table dataSourceNames="users_by_trust_level" lastRefreshedAt=lastRefreshedAt}}
+    </div>
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
         <div class="durability">
@@ -116,7 +108,6 @@
           </div>
         </div>
 
-
         <div class="last-dashboard-update">
           <div>
           <h4>{{i18n "admin.dashboard.last_updated"}} </h4>
@@ -128,58 +119,57 @@
         </div>
       </div>
 
-        <p>
-          {{i18n 'admin.dashboard.find_old'}} {{#link-to 'admin.dashboard'}}{{i18n "admin.dashboard.old_link"}}{{/link-to}}
-        </p>
-
+      <p>
+        {{i18n 'admin.dashboard.find_old'}} {{#link-to 'admin.dashboard'}}{{i18n "admin.dashboard.old_link"}}{{/link-to}}
+      </p>
     {{/conditional-loading-section}}
   </div>
 
   <div class="section-column">
     <div class="top-referred-topics">
-    {{#dashboard-inline-table
-        dataSourceNames="top_referred_topics"
-        lastRefreshedAt=lastRefreshedAt
-        limit=8
-        as |context|}}
-      {{#each context.report.data as |data|}}
-        <tr>
-        <td class='left'>
-          <a href="{{data.topic_url}}">
-            {{data.topic_title}}
-          </a>
-        </td>
-        <td>
-          {{data.num_clicks}}
-        </td>
-        </tr>
-      {{/each}}
-    {{/dashboard-inline-table}}
+      {{#dashboard-table
+          dataSourceNames="top_referred_topics"
+          lastRefreshedAt=lastRefreshedAt
+          limit=8
+          as |context|}}
+        {{#each context.report.data as |data|}}
+          <tr>
+            <td class='left'>
+              <a href="{{data.topic_url}}">
+                {{data.topic_title}}
+              </a>
+            </td>
+            <td>
+              {{data.num_clicks}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/dashboard-table}}
     </div>
 
     <div class="trending-search">
-    {{#dashboard-inline-table
-      limit=8
-      dataSourceNames="trending_search"
-      isEnabled=logSearchQueriesEnabled
-      disabledLabel="admin.dashboard.reports.trending_search.disabled"
-      startDate=lastWeek
-      endDate=endDate as |context|}}
-      {{#each context.report.data as |data|}}
-        <tr>
-        <td class='left'>
-          {{data.term}}
-        </td>
-        <td>
-          {{number data.unique_searches}}
-        </td>
-        <td>
-          {{data.ctr}}
-        </td>
-        </tr>
-      {{/each}}
-    {{/dashboard-inline-table}}
+      {{#dashboard-table
+        limit=8
+        dataSourceNames="trending_search"
+        isEnabled=logSearchQueriesEnabled
+        disabledLabel="admin.dashboard.reports.trending_search.disabled"
+        startDate=lastWeek
+        endDate=endDate as |context|}}
+        {{#each context.report.data as |data|}}
+          <tr>
+            <td class='left'>
+              {{data.term}}
+            </td>
+            <td>
+              {{number data.unique_searches}}
+            </td>
+            <td>
+              {{data.ctr}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/dashboard-table}}
       {{{i18n "admin.dashboard.reports.trending_search.more"}}}
-  </div>
+    </div>
   </div>
 </div>

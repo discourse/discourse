@@ -606,9 +606,7 @@ pt:
       xaxis: "Dia"
       yaxis: "Número de visitas"
     signups:
-      title: "Novos Utilizadores"
       xaxis: "Dia"
-      yaxis: "Número de novos utilizadores"
     profile_views:
       title: "Vistas do Perfil de Utilizador"
       xaxis: "Dia"

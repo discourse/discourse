@@ -2381,7 +2381,6 @@ pt_BR:
             label: "Backup"
             title: "Cria um backup"
             confirm: "Você quer iniciar um novo backup?"
-            without_uploads: "Sim (não inclua arquivos)"
           download:
             label: "Download"
             title: "Enviar email com link para download"
@@ -2958,7 +2957,6 @@ pt_BR:
         enabled: Habilitar emblema
         icon: Ícone
         image: Imagem
-        icon_help: "Use uma classe do Font Awesome ou uma URL de uma imagem"
         query: Badge Query (SQL)
         target_posts: Consultar respostas selecionadas
         auto_revoke: Rodar revocation query todo dia

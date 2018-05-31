@@ -28,12 +28,13 @@ RSpec.describe UserProfileView do
     end
   end
 
-  it "should not create duplicated profile view for signed in user" do
+  it "should not create duplicated profile view or log IP for signed in user" do
     time = Time.zone.now
 
     ['1.1.1.1', '2.2.2.2'].each do |ip|
       add(user_profile_id, ip, other_user.id, time)
       expect(described_class.count).to eq(1)
+      expect(UserProfileView.find_by(user_id: other_user.id).ip_address).to eq(nil)
     end
   end
 

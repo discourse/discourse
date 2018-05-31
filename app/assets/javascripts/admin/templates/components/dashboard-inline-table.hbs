@@ -1,40 +1,27 @@
 {{#conditional-loading-section isLoading=isLoading}}
   <div class="table-title">
     <h3>{{title}}</h3>
-
-    {{#if help}}
-      <a href="{{helpPage}}">{{i18n help}}</a>
-    {{/if}}
   </div>
 
   {{#each reportsForPeriod as |report|}}
     <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            {{#if report.labels}}
-              {{#each report.labels as |label|}}
-                <th>{{label}}</th>
-              {{/each}}
-            {{else}}
-              {{#each report.data as |data|}}
-                <th>{{data.x}}</th>
-              {{/each}}
-            {{/if}}
-          </tr>
-        </thead>
-        <tbody>
-          {{#unless hasBlock}}
-            {{#each report.data as |data|}}
-              <tr>
-                <td>{{number data.y}}</td>
-              </tr>
-            {{/each}}
-          {{else}}
-            {{yield (hash report=report)}}
-          {{/unless}}
-        </tbody>
-      </table>
+      {{#unless hasBlock}}
+        {{#each report.data as |data|}}
+          <a class="table-cell user-{{data.key}}" href="{{data.url}}">
+            <span class="label">
+              {{#if data.icon}}
+                {{d-icon data.icon}}
+              {{/if}}
+              {{data.x}}
+            </span>
+            <span class="value">
+                {{number data.y}}
+            </span>
+          </a>
+        {{/each}}
+      {{else}}
+        {{yield (hash report=report)}}
+      {{/unless}}
     </div>
   {{/each}}
 {{/conditional-loading-section}}

@@ -77,14 +77,25 @@ export default ComboBoxComponent.extend({
 
   @computed("allTagsUrl", "allTagsLabel", "noTagsUrl", "noTagsLabel")
   collectionHeader(allTagsUrl, allTagsLabel, noTagsUrl, noTagsLabel) {
-    return `
-      <a href="${allTagsUrl}" class="tag-filter">
-        ${allTagsLabel}
-      </a>
-      <a href="${noTagsUrl}" class="tag-filter">
-        ${noTagsLabel}
-      </a>
-    `;
+    let content = "";
+
+    if (this.get("tagId") !== "none") {
+      content += `
+        <a href="${noTagsUrl}" class="tag-filter">
+          ${noTagsLabel}
+        </a>
+      `;
+    }
+
+    if (this.get("hasSelection") || this.get("tagId") === "none") {
+      content += `
+        <a href="${allTagsUrl}" class="tag-filter">
+          ${allTagsLabel}
+        </a>
+      `;
+    }
+
+    return content;
   },
 
   @computed("tag")

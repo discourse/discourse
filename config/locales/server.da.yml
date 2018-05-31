@@ -636,9 +636,7 @@ da:
       xaxis: "Dag"
       yaxis: "Antal besøg"
     signups:
-      title: "Nye brugere"
       xaxis: "Dag"
-      yaxis: "Antal nye brugere"
     profile_views:
       title: "Bruger Profil Visninger"
       xaxis: "Dag"

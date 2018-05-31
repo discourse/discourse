@@ -80,6 +80,10 @@ describe EmbedController do
     context "success" do
       let(:headers) { { 'REFERER' => embed_url } }
 
+      before do
+        SiteSetting.queue_jobs = false
+      end
+
       after do
         expect(response).to be_success
         expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")

@@ -318,18 +318,18 @@
     </div>
   </div>
 
-    <div class="user-suspended display-row {{if model.isSuspended 'highlight-danger'}}">
-      <div class='field'>{{i18n 'admin.user.suspended'}}</div>
-      <div class='value'>
-        {{i18n-yes-no model.isSuspended}}
-        {{#if model.isSuspended}}
-          {{#unless model.suspendedForever}}
-            {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
-          {{/unless}}
-        {{/if}}
-      </div>
-      <div class='controls'>
-      {{#if model.isSuspended}}
+  <div class="user-suspended display-row {{if model.suspended 'highlight-danger'}}">
+    <div class='field'>{{i18n 'admin.user.suspended'}}</div>
+    <div class='value'>
+      {{i18n-yes-no model.suspended}}
+      {{#if model.suspended}}
+        {{#unless model.suspendedForever}}
+          {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
+        {{/unless}}
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if model.suspended}}
         {{d-button
           class="btn-danger unsuspend-user"
           action=(action "unsuspend")
@@ -349,7 +349,7 @@
     </div>
   </div>
 
-  {{#if model.isSuspended}}
+  {{#if model.suspended}}
     <div class='display-row highlight-danger suspension-info'>
       <div class='field'>{{i18n 'admin.user.suspended_by'}}</div>
       <div class='value'>
@@ -367,7 +367,7 @@
     <div class='field'>{{i18n 'admin.user.silenced'}}</div>
     <div class='value'>
       {{i18n-yes-no model.silenced}}
-      {{#if model.isSilenced}}
+      {{#if model.silenced}}
         {{#unless model.silencedForever}}
           {{i18n "admin.user.suspended_until" until=model.silencedTillDate}}
         {{/unless}}
@@ -394,7 +394,7 @@
     </div>
   </div>
 
-  {{#if model.isSilenced}}
+  {{#if model.silenced}}
     <div class='display-row highlight-danger silence-info'>
       <div class='field'>{{i18n 'admin.user.silenced_by'}}</div>
       <div class='value'>
@@ -405,6 +405,21 @@
         <b>{{i18n 'admin.user.silence_reason'}}</b>:
         <div class='full-reason'>{{model.silence_reason}}</div>
       </div>
+    </div>
+  {{/if}}
+
+  {{#if model.tl3_requirements.penalty_counts.total}}
+    <div class='display-row clear-penalty-history'>
+      <div class='field'>{{i18n 'admin.user.penalty_count'}}</div>
+      <div class='value'>{{model.tl3_requirements.penalty_counts.total}}</div>
+      {{#if currentUser.admin}}
+        <div class='controls'>
+          {{d-button label="admin.user.clear_penalty_history.title"
+                     icon="times"
+                     action=(action "clearPenaltyHistory")}}
+          {{i18n "admin.user.clear_penalty_history.description"}}
+        </div>
+      {{/if}}
     </div>
   {{/if}}
 
@@ -468,7 +483,7 @@
           {{d-button class="btn-danger" action="deleteAllPosts" icon="trash-o" label="admin.user.delete_all_posts"}}
         {{/if}}
       {{else}}
-        {{model.deleteAllPostsExplanation}}
+        {{deleteAllPostsExplanation}}
       {{/if}}
     </div>
   </div>
@@ -549,28 +564,26 @@
       {{/if}}
     {{/if}}
 
-    {{#unless model.anonymizeForbidden}}
+    {{#if model.can_be_anonymized}}
       {{d-button label="admin.user.anonymize"
                  icon="exclamation-triangle"
                  class="btn-danger"
-                 disabled=model.anonymizeForbidden
                  action="anonymize"}}
-    {{/unless}}
+    {{/if}}
 
-    {{#unless model.deleteForbidden}}
+    {{#if model.canBeDeleted}}
       {{d-button label="admin.user.delete"
                  icon="exclamation-triangle"
                  class="btn-danger"
-                 disabled=model.deleteForbidden
                  action="destroy"}}
-    {{/unless}}
+    {{/if}}
   </div>
 
-  {{#if model.deleteExplanation}}
+  {{#if deleteExplanation}}
     <div class="clearfix"></div>
     <br>
     <div class="pull-right">
-      {{d-icon "exclamation-triangle"}} {{model.deleteExplanation}}
+      {{d-icon "exclamation-triangle"}} {{deleteExplanation}}
     </div>
   {{/if}}
 </section>

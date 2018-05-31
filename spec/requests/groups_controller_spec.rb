@@ -496,7 +496,6 @@ describe GroupsController do
       before do
         user.update_attributes!(admin: true)
         sign_in(user)
-        SiteSetting.queue_jobs = true
       end
 
       it 'should be able to update the group' do

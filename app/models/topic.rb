@@ -446,6 +446,7 @@ class Topic < ActiveRecord::Base
     @post_numbers = nil
     @public_topic_timer = nil
     @private_topic_timer = nil
+    @is_category_topic = nil
     super(options)
   end
 
@@ -674,13 +675,9 @@ SQL
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        post = self.ordered_posts.first
-
-        if post
-          PostAlerter.new.notify_post_users(
-            post,
-            [post.user, post.last_editor].uniq
-          )
+        if post = self.ordered_posts.first
+          notified_user_ids = [post.user_id, post.last_editor_id].uniq
+          Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
         end
       end
 
@@ -781,8 +778,7 @@ SQL
 
     last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
-      # ensure all the notifications are out
-      PostAlerter.new.after_save_post(last_post)
+      Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
 
       group_id = group.id
@@ -1339,6 +1335,10 @@ SQL
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
     private_messages.with_subtype(topic_subtype).where('topics.created_at >= ? AND topics.created_at <= ?', start_date, end_date).group('date(topics.created_at)').order('date(topics.created_at)').count
+  end
+
+  def is_category_topic?
+    @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
   private

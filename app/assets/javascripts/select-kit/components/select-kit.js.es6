@@ -62,6 +62,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   horizontalOffset: 0,
   fullWidthOnMobile: false,
   castInteger: false,
+  castBoolean: false,
   allowAny: false,
   allowInitialValueMutation: false,
   content: null,
@@ -169,7 +170,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     }
 
     let computedContentItem = {
-      value: this._castInteger(this.valueForContentItem(contentItem)),
+      value: this._cast(this.valueForContentItem(contentItem)),
       name: name || this._nameForContent(contentItem),
       locked: false,
       created: options.created || false,
@@ -333,7 +334,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   stopLoading() {
-    this.focus();
+    if (this.site && !this.site.isMobileDevice) {
+      this.focusFilterOrHeader();
+    }
+
     this.set("isLoading", false);
     this._boundaryActionHandler("onStopLoading");
   },

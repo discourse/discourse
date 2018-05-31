@@ -111,7 +111,6 @@ class TagsController < ::ApplicationController
     tag.name = new_tag_name
     if tag.save
       StaffActionLogger.new(current_user).log_custom('renamed_tag', previous_value: params[:tag_id], new_value: new_tag_name)
-      DiscourseEvent.trigger(:tag_updated, tag)
       render json: { tag: { id: new_tag_name } }
     else
       render_json_error tag.errors.full_messages
@@ -277,10 +276,14 @@ class TagsController < ::ApplicationController
     def construct_url_with(action, opts)
       method = url_method(opts)
 
-      url = if action == :prev
-        public_send(method, opts.merge(prev_page_params(opts)))
-      else # :next
-        public_send(method, opts.merge(next_page_params(opts)))
+      begin
+        url = if action == :prev
+          public_send(method, opts.merge(prev_page_params(opts)))
+        else # :next
+          public_send(method, opts.merge(next_page_params(opts)))
+        end
+      rescue ActionController::UrlGenerationError
+        raise Discourse::NotFound
       end
       url.sub('.json?', '?')
     end

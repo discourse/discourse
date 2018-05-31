@@ -91,4 +91,8 @@ class RandomTopicSelector
     "random_topic_cache_#{category&.id}"
   end
 
+  def self.clear_cache!
+    $redis.delete_prefixed(cache_key)
+  end
+
 end

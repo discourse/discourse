@@ -162,6 +162,13 @@ describe Invite do
       invite = group_private_topic.invite_by_email(tl2_user, 'foo@bar.com')
       expect(invite.groups.count).to eq(0)
     end
+
+    context 'automatic groups' do
+      it 'should not add invited user to automatic groups' do
+        group.update!(automatic: true)
+        expect(group_private_topic.invite_by_email(Fabricate(:admin), iceking).groups.count).to eq(0)
+      end
+    end
   end
 
   context 'an existing user' do

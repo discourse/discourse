@@ -764,10 +764,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de visites"
     signups:
-      title: "Nouveaux utilisateurs"
       xaxis: "Jour"
-      yaxis: "Nombre de nouveaux utilisateurs"
-      description: "Nouvelles inscriptions pour cette période"
     new_contributors:
       title: "Nouveaux contributeurs"
       xaxis: "Jour"
@@ -776,8 +773,6 @@ fr:
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
-      yaxis: "DAU/MAY"
-      description: "DAU / MAU – nombre d'utilisateurs qui se sont connectés dans la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés dans le dernier mois – en %"
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
@@ -831,7 +826,6 @@ fr:
       labels:
         term: Terme
         searches: Recherches
-        click_through: Taux de clics suivis
     emails:
       title: "Courriels envoyés"
       xaxis: "Jour"
@@ -841,7 +835,6 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     user_to_user_private_messages_with_replies:
-      title: "Utilisateur à utilisateur (y compris réponses)"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     system_private_messages:

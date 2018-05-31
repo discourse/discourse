@@ -339,22 +339,36 @@ class UserSerializer < BasicUserSerializer
     User.system_avatar_template(object.username)
   end
 
+  def include_gravatar_avatar_upload_id?
+    object.user_avatar&.gravatar_upload_id
+  end
+
   def gravatar_avatar_upload_id
-    object.user_avatar.try(:gravatar_upload_id)
+    object.user_avatar.gravatar_upload_id
+  end
+
+  def include_gravatar_avatar_template?
+    include_gravatar_avatar_upload_id?
   end
 
   def gravatar_avatar_template
-    return unless gravatar_upload_id = object.user_avatar.try(:gravatar_upload_id)
-    User.avatar_template(object.username, gravatar_upload_id)
+    User.avatar_template(object.username, object.user_avatar.gravatar_upload_id)
+  end
+
+  def include_custom_avatar_upload_id?
+    object.user_avatar&.custom_upload_id
   end
 
   def custom_avatar_upload_id
-    object.user_avatar.try(:custom_upload_id)
+    object.user_avatar.custom_upload_id
+  end
+
+  def include_custom_avatar_template?
+    include_custom_avatar_upload_id?
   end
 
   def custom_avatar_template
-    return unless custom_upload_id = object.user_avatar.try(:custom_upload_id)
-    User.avatar_template(object.username, custom_upload_id)
+    User.avatar_template(object.username, object.user_avatar.custom_upload_id)
   end
 
   def has_title_badges

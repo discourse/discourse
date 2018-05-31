@@ -74,6 +74,7 @@ task 'docker:test' do
 
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
+        @good &&= run_or_fail("bundle exec rails r 'puts \"installing all gems\"'")
       end
 
       unless ENV["JS_ONLY"]

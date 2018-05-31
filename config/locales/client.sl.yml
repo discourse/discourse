@@ -1466,7 +1466,6 @@ sl:
             label: "Varnostna kopija"
             title: "Ustvari varnostno kopijo"
             confirm: "Želite ustvariti varnostno kopijo?"
-            without_uploads: "Ja (ne vključi datotek)"
           download:
             label: "Naloži"
       export_csv:

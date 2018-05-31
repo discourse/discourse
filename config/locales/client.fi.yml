@@ -225,6 +225,8 @@ fi:
       our_moderators: "Valvojat"
       stat:
         all_time: "Yhteensä"
+        last_7_days: "Viimeiset 7"
+        last_30_days: "Viimeiset 30"
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
@@ -400,7 +402,6 @@ fi:
         all: "Kaikki ryhmät"
         empty: "Näkyvillä olevia ryhmiä ei ole."
         filter: "Suodata ryhmän tyypin mukaan"
-        all_groups: "Kaikki ryhmät"
         owner_groups: "Ryhmät joiden isäntä olen"
         close_groups: "Suljetut ryhmät"
         automatic_groups: "Automaattiset ryhmät"
@@ -540,6 +541,7 @@ fi:
       activity_stream: "Toiminta"
       preferences: "Asetukset"
       expand_profile: "Laajenna"
+      collapse_profile: "Supista"
       bookmarks: "Kirjanmerkit"
       bio: "Tietoa minusta"
       invited_by: "Kutsuja"
@@ -547,6 +549,7 @@ fi:
       notifications: "Ilmoitukset"
       statistics: "Tilastot"
       desktop_notifications:
+        label: "Live-ilmoitukset"
         not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
         perm_default: "Näytä ilmoituksia"
         perm_denied_btn: "Ei oikeuksia"
@@ -554,6 +557,7 @@ fi:
         disable: "Poista ilmoitukset käytöstä"
         enable: "Näytä ilmoituksia"
         each_browser_note: "Huom: Asetus on säädettävä erikseen jokaisessa selaimessa, jota käytät."
+        consent_prompt: "Haluatko liveilmoituksia kun muut vastaavat viesteihisi?"
       dismiss: 'Unohda'
       dismiss_notifications: "Unohda kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
@@ -586,6 +590,7 @@ fi:
         individual_no_echo: "Lähetä sähköposti jokaisesta uudesta viestistä lukuun ottamatta omiani"
         many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
         few_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin 2 päivässä)"
+        warning: "Postituslistatila käytössä. Sähköposti-ilmoitusasetukset syrjäytetty."
       tag_settings: "Tunnisteet"
       watched_tags: "Tarkkailtavat"
       watched_tags_instructions: "Ketjut joilla on joku näistä tunnisteista asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
@@ -662,7 +667,6 @@ fi:
       second_factor:
         title: "Kaksivaiheinen tunnistautuminen"
         disable: "Poista kaksivaiheinen tunnistautuminen käytöstä"
-        enable: "tilin tietoturvan parantamiseksi"
         confirm_password_description: "Jatka vahvistamalla salasanasi"
         label: "Koodi"
         enable_description: |
@@ -1105,6 +1109,8 @@ fi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Ladataan...
     select_kit:
       default_header_text: Valitse...
       no_content: Ei osumia
@@ -1299,6 +1305,8 @@ fi:
         posted: '{{username}} vastasi ketjuun "{{topic}}" - {{site_title}}'
         private_message: '{{username}} lähetti sinulle yksityisviestin keskustelussa "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkitti viestiisi ketjusta "{{topic}}" - {{site_title}}'
+        confirm_title: 'Ilmoitukset käytössä - %{site_title}'
+        confirm_body: 'Onnistui! Ilmoitukset ovat nyt käytössä.'
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tiedosto"
@@ -1360,6 +1368,7 @@ fi:
           label: Ketjulla on tunniste
         filters:
           label: Tuloksiin vain ketjuja/viestejä...
+          title: Etsi vain otsikoista
           likes: joista olen tykännyt
           posted: joihin olen kirjoittanut
           watching: joita tarkkailen
@@ -1747,6 +1756,7 @@ fi:
         instructions:
           one: Valitse uusi omistaja viestille käyttäjältä <b>{{old_user}}</b>.
           other: Valitse uusi omistaja {{count}} viestille käyttäjältä <b>{{old_user}}</b>.
+        instructions_warn: "Huomioi, ettei viestiin liittyviä ilmoituksia siirretä viestin uudelle omistajalle näin jälkikäteen."
       change_timestamp:
         title: "Muuta aikaleimaa..."
         action: "muuta aikaleimaa"
@@ -2471,6 +2481,8 @@ fi:
       dashboard:
         title: "Hallintapaneeli"
         last_updated: "Hallintapaneeli on päivitetty viimeksi:"
+        find_old: "Haeskeletko vanhaa hallintapaneelia?"
+        old_link: "katsele sitä tästä"
         version: "Versio"
         up_to_date: "Sivusto on ajan tasalla!"
         critical_available: "Kriittinen päivitys on saatavilla."
@@ -2505,8 +2517,11 @@ fi:
         whats_new_in_discourse: "Mitä uutta Discoursessa?"
         activity_metrics: Aktiivisuusmittareita
         reports:
+          trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
           today: "Tänään"
           yesterday: "Eilen"
+          last_7_days: "Viimeiset 7"
+          last_30_days: "Viimeiset 30"
           all_time: "Kaikilta ajoilta"
           7_days_ago: "7 päivää sitten"
           30_days_ago: "30 päivää sitten"
@@ -2517,6 +2532,10 @@ fi:
           start_date: "Alkupäivämäärä"
           end_date: "Loppupäivämäärä"
           groups: "Kaikki ryhmät"
+          disabled: "Raportti ei ole käytössä"
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Hakulokit</a>'
+            disabled: 'Trendaavat haut eivät ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>.'
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"
@@ -2587,6 +2606,7 @@ fi:
           type: "Tyyppi"
           users: "Käyttäjät"
           last_flagged: "Viimeksi liputettu"
+          no_results: "Ei ole liputettuja ketjuja."
         short_names:
           off_topic: "eksyy aiheesta"
           inappropriate: "sopimaton"
@@ -2716,6 +2736,7 @@ fi:
           details: "Kun tunniste luodaan, päivitetään tai poistetaan."
         flag_event:
           name: "Lipputapahtuma"
+          details: "Kun lippu luodaan tai sen kanssa ollaan yhtä tai eri mieltä tai se sivuutetaan."
         delivery_status:
           title: "Toimituksen tila"
           inactive: "Ei toiminnassa"
@@ -2794,7 +2815,7 @@ fi:
             label: "Varmuuskopioi"
             title: "Luo varmuuskopio"
             confirm: "Haluatko luoda uuden varmuuskopion?"
-            without_uploads: "Kyllä (älä sisällytä tiedostoja)"
+            without_uploads: "Kyllä (älä sisällytä ladattuja tiedostoja)"
           download:
             label: "Lataa"
             title: "Lähetä sähköposti, jossa on latauslinkki"
@@ -2876,6 +2897,10 @@ fi:
           add_upload: "Lisää tiedosto"
           upload_file_tip: "Valitse ladattava tiedosto (png, woff2 jne.)"
           variable_name_invalid: "Muuttujan nimi ei kelpaa. Vain aakkosnumeeriset sallittu. Täytyy alkaa kirjaimella. Täytyy olla uniikki."
+          variable_name_error:
+            invalid_syntax: "Muuttujan nimi ei kelpaa - Vain aakkosnumeeriset sallittu. Täytyy alkaa kirjaimella."
+            no_overwrite: "Muuttujan nimi ei kelpaa. Nimi on toisen muuttujan käytössä."
+            must_be_unique: "Muuttujan nimi ei kelpaa. Täytyy olla uniikki."
           upload: "Lataa"
           child_themes_check: "Teemaan kuuluu tytärteemoja"
           css_html: "Mukautettu CSS/HTML"
@@ -3120,6 +3145,9 @@ fi:
             disabled_second_factor: "poista kaksivaiheinen tunnistautuminen"
             topic_published: "ketju julkaistu"
             post_approved: "viesti hyväksytty"
+            create_badge: "luo ansiomerkki"
+            change_badge: "muuta ansiomerkkiä"
+            delete_badge: "poista ansiomerkki"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -3506,7 +3534,6 @@ fi:
         enabled: Ota ansiomerkki käyttöön
         icon: Ikoni
         image: Kuva
-        icon_help: "Käytä joko Font Awesome -luokkaa tai kuvan URL-osoitetta"
         query: Ansiomerkkien haku tietokannasta (SQL)
         target_posts: Tietokantakyselyn kohdeviestit
         auto_revoke: Aja kumoamis-ajo päivittäin

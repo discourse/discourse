@@ -684,9 +684,7 @@ el:
       xaxis: "Ημέρα"
       yaxis: "Αριθμός επισκέψεων"
     signups:
-      title: "Νέοι Χρήστες"
       xaxis: "Ημέρα"
-      yaxis: "Αριθμός νέων χρηστών"
     profile_views:
       title: "Προβολές Προφίλ Χρήστη"
       xaxis: "Ημέρα"

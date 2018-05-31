@@ -140,12 +140,18 @@ RSpec.describe Users::OmniauthCallbacksController do
         it 'should return the right response' do
           get "/auth/google_oauth2/callback.json"
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           response_body = JSON.parse(response.body)
 
           expect(response_body["email"]).to eq(user.email)
           expect(response_body["omniauth_disallow_totp"]).to eq(true)
+
+          user.update!(email: 'different@user.email')
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)["email"]).to eq(user.email)
         end
       end
 

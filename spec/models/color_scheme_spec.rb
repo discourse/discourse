@@ -62,11 +62,11 @@ describe ColorScheme do
       end
 
       it "returns nil for a missing attribute" do
-        expect(described_class.hex_for_name('undefined')).to eq nil
+        expect(ColorScheme.hex_for_name('undefined')).to eq nil
       end
 
       it "returns the base color for an attribute" do
-        expect(described_class.hex_for_name('second_one')).to eq base_colors[:second_one]
+        expect(ColorScheme.hex_for_name('second_one')).to eq base_colors[:second_one]
       end
     end
   end

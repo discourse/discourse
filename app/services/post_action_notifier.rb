@@ -41,7 +41,6 @@ class PostActionNotifier
   end
 
   def self.post_action_deleted(post_action)
-
     return if @disabled
 
     # We only care about deleting post actions for now
@@ -69,7 +68,6 @@ class PostActionNotifier
   end
 
   def self.post_action_created(post_action)
-
     return if @disabled
 
     # We only notify on likes for now
@@ -89,7 +87,6 @@ class PostActionNotifier
   end
 
   def self.after_create_post_revision(post_revision)
-
     return if @disabled
 
     post = post_revision.post

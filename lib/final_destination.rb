@@ -288,8 +288,7 @@ class FinalDestination
   end
 
   def log(log_level, message)
-    # blacklist 404 on gravatar.com
-    return if @status_code == 404 && @uri.hostname["gravatar.com"]
+    return if @status_code == 404
 
     Rails.logger.public_send(
       log_level,

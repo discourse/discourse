@@ -618,9 +618,7 @@ sk:
       xaxis: "Deň"
       yaxis: "Počet návštev"
     signups:
-      title: "Noví používatelia"
       xaxis: "Deň"
-      yaxis: "Počet nových používateľov"
     profile_views:
       title: "Prezreté používateľské profily"
       xaxis: "Deň"

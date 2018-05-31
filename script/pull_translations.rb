@@ -28,8 +28,9 @@ YML_DIRS = ['config/locales',
             'plugins/discourse-presence/config/locales'].map { |dir| expand_path(dir) }
 YML_FILE_PREFIXES = ['server', 'client']
 TX_CONFIG = expand_path('.tx/config')
+JS_LOCALE_DIR = expand_path('app/assets/javascripts/locales')
 
-if TranslationsManager::SUPPORTED_LOCALES != supported_locales
+if ARGV.empty? && TranslationsManager::SUPPORTED_LOCALES != supported_locales
   STDERR.puts <<~MESSAGE
 
     The supported locales are out of sync.
@@ -40,8 +41,19 @@ if TranslationsManager::SUPPORTED_LOCALES != supported_locales
 
   MESSAGE
 
-  STDERR.puts locales.map { |l| "'#{l}'" }.join(",\n")
+  STDERR.puts supported_locales.map { |l| "'#{l}'" }.join(",\n")
   exit 1
 end
 
 TranslationsManager::TransifexUpdater.new(YML_DIRS, YML_FILE_PREFIXES, *ARGV).perform(tx_config_filename: TX_CONFIG)
+
+TranslationsManager::SUPPORTED_LOCALES.each do |locale|
+  filename = File.join(JS_LOCALE_DIR, "#{locale}.js.erb")
+  next if File.exists?(filename)
+
+  File.write(filename, <<~ERB)
+    //= depend_on 'client.#{locale}.yml'
+    //= require locales/i18n
+    <%= JsLocaleHelper.output_locale(:#{locale}) %>
+  ERB
+end

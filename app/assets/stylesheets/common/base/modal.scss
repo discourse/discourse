@@ -31,9 +31,17 @@
   align-items: center;
   padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
-  h3 {
-    margin-bottom: 0;
+
+  .title {
+    h3 {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin: 0;
+    }
   }
+
   .modal-close {
     order: 2;
     margin-left: auto;
@@ -80,11 +88,19 @@
 }
 
 .modal-inner-container {
+  display: table;
+  width: 100%;
+  min-width: 320px;
   max-width: 700px;
   margin: 0 auto;
   background-color: $secondary;
   background-clip: padding-box;
   box-shadow: shadow("modal");
+
+  @media screen and (min-width: 475px) {
+    min-width: 475px;
+    width: auto;
+  }
 
   .select-kit {
     width: 220px;
@@ -143,6 +159,11 @@
   .modal-body {
     textarea {
       height: 10em;
+    }
+  }
+  @media screen and (min-width: 524px) {
+    .modal-inner-container {
+     min-width: 525px; 
     }
   }
 }
@@ -253,6 +274,11 @@
   .modal-body.forgot-password-modal p {
     font-size: $font-0;
   }
+
+  pre code {
+    white-space: pre-wrap;
+    max-width: 700px;
+  }
 }
 
 .reply-where-modal {
@@ -308,6 +334,7 @@
 
   label {
     margin-top: 7px;
+    max-width: 450px;
   }
 
   .optional {
@@ -404,6 +431,8 @@
   }
   .incoming-email-content {
     height: 300px;
+    max-width: 700px;  
+    width: 90vw; // forcing textarea wider
     textarea, .incoming-email-html-part {
       height: 95%;
       border: none;
@@ -503,4 +532,3 @@
   position: absolute;
   width: 95%;
 }
-

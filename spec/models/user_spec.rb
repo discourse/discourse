@@ -449,6 +449,14 @@ describe User do
     it 'is able to guess a decent name from an email' do
       expect(User.suggest_name('sam.saffron@gmail.com')).to eq('Sam Saffron')
     end
+
+    it 'is able to guess a decent name from username' do
+      expect(User.suggest_name('@sam.saffron')).to eq('Sam Saffron')
+    end
+
+    it 'is able to guess a decent name from name' do
+      expect(User.suggest_name('sam saffron')).to eq('Sam Saffron')
+    end
   end
 
   describe 'username format' do
@@ -545,6 +553,11 @@ describe User do
 
       user = Fabricate(:user, email: "bar@foo.com")
       expect(User.username_available?(user.username, user.primary_email.email)).to eq(false)
+    end
+
+    it 'returns false when a username equals an existing group name' do
+      Fabricate(:group, name: 'foo')
+      expect(User.username_available?('Foo')).to eq(false)
     end
   end
 
@@ -1053,6 +1066,7 @@ describe User do
 
       context "with a reply" do
         before do
+          SiteSetting.queue_jobs = false
           PostCreator.new(Fabricate(:user),
                             raw: 'whatever this is a raw post',
                             topic_id: topic.id,
@@ -1224,7 +1238,6 @@ describe User do
   describe "refresh_avatar" do
     it "enqueues the update_gravatar job when automatically downloading gravatars" do
       SiteSetting.automatically_download_gravatars = true
-      SiteSetting.queue_jobs = true
 
       user = Fabricate(:user)
 

@@ -68,6 +68,7 @@ de:
         auto_generated_email_error: "Passiert wenn die Kopfzeile 'precedence' folgendes enthält: list, junk, bulk oder auto_reply, oder eine der anderen Kopfzeilen enthält: auto-submitted, auto-replied oder auto-generated."
         no_body_detected_error: "Passiert, wenn wir keinen Textkörper extrahieren konnten und keine Anhänge gefunden wurden."
         no_sender_detected_error: "Kommt vor, wenn wir keine gültige E-Mail-Adresse im From-Header finden konnten."
+        from_reply_by_address_error: "Passiert wenn der From-Header mit der Antwort E-Mail-Adresse übereinstimmt."
         inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
         silenced_user_error: "Kommt vor, wenn der Absender stummgeschaltet wurde."
         bad_destination_address: "Passiert wenn keine der E-Mail Adressen in den Feldern To/Cc/Bcc zu einer konfigurierten Eingangs-E-Mail-Adresse passt."
@@ -776,7 +777,8 @@ de:
     dau_by_mau:
       title: "TAB/MAB"
       xaxis: "Tag"
-      yaxis: "TAB/MAJ"
+      yaxis: "TAB/MAB"
+      description: "Anzahl der Mitglieder, die sich am vergangenen Tag angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, die das „Klebeverhalten“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
@@ -830,7 +832,7 @@ de:
       labels:
         term: Begriff
         searches: Suchen
-        click_through: Klickrate
+        click_through: CTR
     emails:
       title: "Gesendete E-Mails"
       xaxis: "Tag"
@@ -840,7 +842,7 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
     user_to_user_private_messages_with_replies:
-      title: "Benutzer-an-Benutzer (mit Antworten)"
+      title: "Benutzer-zu-Benutzer (mit Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
     system_private_messages:
@@ -887,6 +889,7 @@ de:
       xaxis: "Tag"
       yaxis: "Aufrufe durch Suchmaschinen"
     page_view_total_reqs:
+      title: "Seitenaufrufe"
       xaxis: "Tag"
       yaxis: "Seitenaufrufe insgesamt"
     page_view_logged_in_mobile_reqs:
@@ -1676,7 +1679,7 @@ de:
       revoked: "Sende keine E-Mails an '%{email}' bis %{date}."
     ip_address:
       blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
-      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (limit erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
+      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
     website:
       domain_not_allowed: "Webseite ist ungültig. Erlaubte Domains sind: %{domains}"
     auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Seiteneinstellung auto_handle_queued_age."
@@ -2999,9 +3002,9 @@ de:
 
       ## [Welche Informationen sammeln wir?](#collect)
 
-      Wir sammeln Informationen von dir, wenn du dich auf unserer Seite registrierst, und erfassten Daten, wenn du dich hier am Forum durch Lesen, Schreiben und Bewertung der geteilten Inhalte beteiligst.
+      Wir sammeln Informationen von dir, wenn du dich auf unserer Seite registrierst, und erfassen Daten, wenn du dich hier am Forum durch Lesen, Schreiben und Bewertung der geteilten Inhalte beteiligst.
 
-      Wenn du dich auf unserer Seite registrierst, wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse einzugeben. Du kannst unsere Seite jedoch möglicherweise auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail verifiziert, die einen eindeutigen Link enthält. Wenn der Link aufgerufen wird, wissen wir, dass du die Kontrolle über die E-Mail-Adresse hast.
+      Wenn du dich auf unserer Seite registrierst, wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse einzugeben. Du kannst unsere Seite jedoch auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail verifiziert, die einen eindeutigen Link enthält. Wenn der Link aufgerufen wird, wissen wir, dass du die Kontrolle über die E-Mail-Adresse hast.
 
       Wenn du registrierst bist und etwas schreibst, erfassen wir die IP-Adresse, von der der Beitrag stammt. Wir behalten möglicherweise Serverprotokolle, die die IP-Adresse jeder Anfrage an unseren Server enthält.
 
@@ -3011,7 +3014,7 @@ de:
 
       Jede der Informationen, die wir von dir sammeln, kann auf eine der folgenden Arten genutzt werden:
 
-      *   Um deine Erfahrung zu personalisieren &mdash; deine Information hilft uns dabei, besser auf deine individuellen Bedürfnise einzugehen.
+      *   Um deine Erfahrung zu personalisieren &mdash; deine Information hilft uns dabei, besser auf deine individuellen Bedürfnisse einzugehen.
       *   Um unsere Seite zu verbessern &mdash; wir streben kontinuierlich dazu, das Angebot unserer Seite auf Grundlage der Informationen und des Feedbacks zu verbessern, das wir von dir erhalten.
       *   Um unseren Kundendienst zu verbessern &mdash; deine Information hilft uns, effizienter auf deine Anfragen an den Kundendienst und deine Hilfsbedürfnisse einzugehen.
       *   Um wiederkehrende E-Mails zu senden &mdash; Die E-Mail-Adresse, die du angibst, kann genutzt werden, um dir Informationen und Benachrichtigungen zu senden, die du zu Änderungen an Themen oder in Bezug auf deinen Benutzernamen angefordert hast, um dir auf Nachfragen, Anfragen oder Fragen zu antworten.
@@ -3024,18 +3027,18 @@ de:
 
       <a name="data-retention"></a>
 
-      ## [Was sehen eure Bestimmungen zur Datenaufbewahrung aus?](#data-retention)
+      ## [Wie sehen unsere Bestimmungen zur Datenaufbewahrung aus?](#data-retention)
 
       Wir bemühen uns nach bestem Wissen und Gewissen:
 
-      *   Serverprotokolle, die IP-Adressen aller Anfragen an unseren Server erhalten, nicht länger als 90 Tage zu speichern.
+      *   Serverprotokolle, die IP-Adressen aller Anfragen an unseren Server enthalten, nicht länger als 90 Tage zu speichern.
       *   IP-Adressen, die mit registrierten Benutzern und ihren Beiträgen verknüpft sind, nicht länger als 5 Jahre zu speichern.
 
       <a name="cookies"></a>
 
       ## [Verwenden wir Cookies?](#cookies)
 
-      Ja. Cookies sind kleine Dateien, die eine Seite bzw. ihr Dienstleister über einen Browser auf die Festplatte deines Computers überträgst (sofern du zustimmst). Diese Cookies erlauben es der Seite, deinen Browser wiederzuerkennen und, sofern du ein registriertes Konto hast, diesen deinem registrierten Konto zuzuordnen.
+      Ja. Cookies sind kleine Dateien, die eine Seite bzw. ihr Dienstleister über einen Browser auf die Festplatte deines Computers überträgt (sofern du zustimmst). Diese Cookies erlauben es der Seite, deinen Browser wiederzuerkennen und, sofern du ein registriertes Konto hast, diesen deinem registrierten Konto zuzuordnen.
 
       Wir verwenden Cookies, um deine Einstellungen für deine nächsten Besuche zu verstehen und zu speichern und um aggregierte Daten über unseren Internetverkehr und Interaktionen auf der Seite zu berechnen, damit wir in der Zukunft eine bessere Seitenerfahrung und bessere Werkzeuge anbieten können. Wir beauftragen möglicherweise Drittanbieter, die uns dabei unterstützen, unsere Seitenbesucher besser zu verstehen. Diese Dienstleister sind nicht befugt, unsere gesammelten Informationen anders zu verwenden als zur Unterstützung und Verbesserung unseres Geschäfts.
 
@@ -3043,39 +3046,39 @@ de:
 
       ## [Geben wir irgendwelche Informationen an Dritte weiter?](#disclose)
 
-      Weder verkaufen oder handeln wir deine personenbezogenen Daten noch übermitteln wir diese an Dritte. Dies schließt nicht Drittanbieter ein, die uns beim Betrieb unserer Seite, bei der Durchführung unseres Geschäfts oder dir helfen, solange diese Parteien einwilligen, diese Informationen vertraulich zu behandeln. We geben deine Informationen möglicherweise frei, wenn wir glauben, dass die Freigabe zweckmäßig ist, um das Gesetz einzuhalten, unsere Seitenrichtlinien durchzusetzen oder unsere oder fremde Rechte, Werte oder Sicherheit zu schützen. Nicht-personenbezogene Daten werden möglcherweise anderen Parteien für Marketing, Werbung und andere Zwecke zugänglich gemacht.
+      Weder verkaufen oder handeln wir deine personenbezogenen Daten noch übermitteln wir diese an Dritte. Dies schließt nicht Drittanbieter ein, die uns beim Betrieb unserer Seite, bei der Durchführung unseres Geschäfts oder dir helfen, solange diese Parteien einwilligen, diese Informationen vertraulich zu behandeln. Wir geben deine Informationen möglicherweise frei, wenn wir glauben, dass die Freigabe zweckmäßig ist, um das Gesetz einzuhalten, unsere Nutzungsbedingungen durchzusetzen oder unsere oder fremde Rechte, Werte oder Sicherheit zu schützen. Nicht-personenbezogene Daten werden möglicherweise anderen Parteien für Marketing, Werbung und andere Zwecke zugänglich gemacht.
 
       <a name="third-party"></a>
 
-      ## [Linsk auf fremde Webseiten](#third-party)
+      ## [Links auf fremde Webseiten](#third-party)
 
-      Gelegentlich können wir Produkte oder Dienste von Dritten nach unserer Wahl auf unserer Seite einbinden oder darauf bewerben. Diese Drittanbieter haben eigene und unabhängige Datenschutzbestimmungen. Wir übernehmen daher keine Verantwortung oder Haftung für den Inhalt und die Aktivitäten dieser verknüpften Seite. Dennoch sind wir bemüht, die Integrität unserer Seite zu schützen und freuen uns über jedes Feedback zu diesen Seiten.
+      Gelegentlich können wir Produkte oder Dienste von Dritten nach unserer Wahl auf unserer Seite einbinden oder darauf bewerben. Diese Drittanbieter haben eigene und unabhängige Datenschutzrichtlinien. Wir übernehmen daher keine Verantwortung oder Haftung für den Inhalt und die Aktivitäten dieser verknüpften Seite. Dennoch sind wir bemüht, die Integrität unserer Seite zu schützen und freuen uns über jedes Feedback zu diesen Seiten.
 
       <a name="coppa"></a>
 
       ## [Gesetz zum Schutz der Privatsphäre von Kindern im Internet](#coppa)
 
-      Unsere Seite, Produkte und Dienstleistungen richten sich alle an Menschen, die mindestens 13 Jahre oder älter sind. Wenn sich dieser Server in der USA befindet und du unter 13 Jahre alt bist, so benutze diese Seite gemäß der Anforderungen des COPPA-Gesetzes ([Children's Online Privacy Protection Act](https://de.wikipedia.org/wiki/Children%E2%80%99s_Online_Privacy_Protection_Act)) nicht.
+      Unsere Seite, Produkte und Dienstleistungen richten sich alle an Menschen, die mindestens 13 Jahre oder älter sind. Wenn sich dieser Server in der USA befindet und du unter 13 Jahre alt bist, so benutze diese Seite gemäß der Anforderungen des COPPA-Gesetzes ([Children's Online Privacy Protection Act](https://de.wikipedia.org/wiki/Children%27ss_Online_Privacy_Protection_Act)) nicht.
 
       <a name="online"></a>
 
-      ## [Online-Datenschutzbestimmungen](#online)
+      ## [Online-Datenschutzrichtlinie](#online)
 
-      Diese Online-Datenschutzbestimmungen gilt nur für Informationen, die durch unsere Seite gesammelt werden, und nicht für offline erfasste Informationen.
+      Diese Online-Datenschutzrichtlinie gilt nur für Informationen, die durch unsere Seite gesammelt werden, und nicht für offline erfasste Informationen.
 
       <a name="consent"></a>
 
       ## [Deine Zustimmung](#consent)
 
-      Indem du unsere Seite benutzt, stimmst du den Datenschutzschutzbestimmungen unserer Webseite zu.
+      Indem du unsere Seite benutzt, stimmst du der Datenschutzrichtlinie unserer Webseite zu.
 
       <a name="changes"></a>
 
-      ## [Änderungen unserer Datenschutzbestimmungen](#changes)
+      ## [Änderungen unserer Datenschutzrichtlinie](#changes)
 
-      Wenn wir uns dazu entscheiden, unsere Datenschutzbestimmungen zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
+      Wenn wir uns dazu entscheiden, unsere Datenschutzrichtlinie zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
 
-      Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am am 31. Mai 2013.
+      Dieses Dokument ist als CC-BY-SA lizenziert. Es wurde zuletzt aktualisiert am 31. Mai 2013.
   badges:
     editor:
       name: Bearbeiter

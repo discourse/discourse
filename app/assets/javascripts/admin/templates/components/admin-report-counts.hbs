@@ -5,18 +5,18 @@
   <a href="{{report.reportUrl}}">{{report.title}}</a>
 </td>
 
-<td class="value">{{number report.todayCount}}</td>
+<td class="value">{{number report.todayCount ceil=true}}</td>
 
 <td class="value {{report.yesterdayTrend}}" title={{report.yesterdayCountTitle}}>
-  {{number report.yesterdayCount}} {{d-icon "caret-up" class="up"}} {{d-icon "caret-down" class="down"}}
+  {{number report.yesterdayCount ceil=true}} {{d-icon report.yesterdayTrendIcon}}
 </td>
 
-<td class="value {{report.sevenDayTrend}}" title={{report.sevenDayCountTitle}}>
-  {{number report.lastSevenDaysCount}} {{d-icon "caret-up" class="up"}} {{d-icon "caret-down" class="down"}}
+<td class="value {{report.sevenDaysTrend}}" title={{report.sevenDaysCountTitle}}>
+  {{number report.lastSevenDaysCount ceil=true}} {{d-icon report.sevenDaysTrendIcon}}
 </td>
 
-<td class="value {{report.thirtyDayTrend}}" title={{report.thirtyDayCountTitle}}>
-  {{number report.lastThirtyDaysCount}} {{d-icon "caret-up" class="up"}} {{d-icon "caret-down" class="down"}}
+<td class="value {{report.thirtyDaysTrend}}" title={{report.thirtyDaysCountTitle}}>
+  {{number report.lastThirtyDaysCount ceil=true}} {{d-icon report.thirtyDaysTrendIcon}}
 </td>
 
 {{#if allTime}}

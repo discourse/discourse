@@ -2358,7 +2358,6 @@ ko:
             label: "백업"
             title: "백업 생성"
             confirm: "새로운 백업을 시작할까요?"
-            without_uploads: "예 (파일을 포함하지 않음)"
           download:
             label: "다운로드"
             title: "다운로드 링크를 붙여서 이메일 보내기"
@@ -3005,7 +3004,6 @@ ko:
         enabled: 배지 기능 사용
         icon: 아이콘
         image: 이미지
-        icon_help: "이미지 주소로 Font Awesome 클래스 또는 URL을 사용합니다"
         query: 배지 쿼리(SQL)
         target_posts: 글들을 대상으로 하는 쿼리
         auto_revoke: 회수 쿼리를 매일 실행

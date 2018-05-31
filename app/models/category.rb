@@ -62,6 +62,7 @@ class Category < ActiveRecord::Base
   after_update :create_category_permalink, if: :saved_change_to_slug?
 
   after_commit :trigger_category_created_event, on: :create
+  after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
 
   belongs_to :parent_category, class_name: 'Category'
@@ -512,14 +513,15 @@ SQL
     subcategory_list_style.end_with?("with_featured_topics")
   end
 
-  def trigger_category_created_event
-    DiscourseEvent.trigger(:category_created, self)
-    true
-  end
-
-  def trigger_category_destroyed_event
-    DiscourseEvent.trigger(:category_destroyed, self)
-    true
+  %i{
+    category_created
+    category_updated
+    category_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
   end
 end
 

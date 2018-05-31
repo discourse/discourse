@@ -176,6 +176,10 @@ RSpec.describe TopicTimer, type: :model do
         )
       end
 
+      before do
+        SiteSetting.queue_jobs = false
+      end
+
       it 'should close the topic' do
         topic_timer
         expect(topic.reload.closed).to eq(true)
@@ -199,6 +203,10 @@ RSpec.describe TopicTimer, type: :model do
           status_type: described_class.types[:close],
           topic: topic
         )
+      end
+
+      before do
+        SiteSetting.queue_jobs = false
       end
 
       it 'should open the topic' do
@@ -239,10 +247,6 @@ RSpec.describe TopicTimer, type: :model do
   end
 
   describe '.ensure_consistency!' do
-    before do
-      SiteSetting.queue_jobs = true
-    end
-
     it 'should enqueue jobs that have been missed' do
       close_topic_timer = Fabricate(:topic_timer,
         execute_at: Time.zone.now - 1.hour,

@@ -196,6 +196,9 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     font-size: $font-up-1;
     padding: 5px;
   }
+  .topic-category {
+    margin-bottom: .5rem;
+  }
 }
 
 .edit-topic-timer-modal {

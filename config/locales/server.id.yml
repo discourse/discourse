@@ -310,9 +310,7 @@ id:
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
-      title: "Pengguna Baru"
       xaxis: "Hari"
-      yaxis: "Jumlah pengguna baru"
     profile_views:
       xaxis: "Hari"
     topics:

@@ -254,6 +254,8 @@ class ApplicationController < ActionController::Base
       if notifications.present?
         notification_ids = notifications.split(",").map(&:to_i)
         Notification.read(current_user, notification_ids)
+        current_user.reload
+        current_user.publish_notifications_state
         cookies.delete('cn')
       end
     end
@@ -681,6 +683,7 @@ class ApplicationController < ActionController::Base
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.tr!('-', ' ')
+      @hide_google = true if SiteSetting.login_required
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
 

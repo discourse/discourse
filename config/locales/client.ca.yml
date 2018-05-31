@@ -2292,7 +2292,6 @@ ca:
             label: "Còpia de seguretat"
             title: "Crea una còpia de seguretat"
             confirm: "Vols iniciar una nova còpia de seguretat?"
-            without_uploads: "Sí (no hi incloguis fitxers)"
           download:
             label: "Descarrega"
           destroy:
@@ -2834,7 +2833,6 @@ ca:
         enabled: Activa distintiu
         icon: Icona
         image: Imatge
-        icon_help: "Fes servir la classe Font Awesome o una URL a una imatge"
         query: Consulta distintius (SQL)
         target_posts: La consulta apunta les publicacions
         auto_revoke: Executa la consulta diària de revocacions

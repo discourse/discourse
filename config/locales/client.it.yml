@@ -405,7 +405,6 @@ it:
         all: "Tutti i gruppi"
         empty: "Non ci sono gruppi visibili."
         filter: "Filtra per tipo di gruppo"
-        all_groups: "Tutti i gruppi"
         owner_groups: "Gruppi di cui sono proprietario"
         close_groups: "Gruppi Chiusi"
         automatic_groups: "Gruppi Automatici"
@@ -667,7 +666,6 @@ it:
       second_factor:
         title: "Autenticazione a Due Fattori"
         disable: "Disabilita l'autenticazione a due fattori"
-        enable: "per una maggiore sicurezza dell'account"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         label: "Codice"
         enable_description: |
@@ -2624,7 +2622,6 @@ it:
             label: "Backup"
             title: "Crea un backup"
             confirm: "Vuoi creare un nuovo backup?"
-            without_uploads: "Sì (non includere i file)"
           download:
             label: "Scarica"
             title: "Invia una email con il collegamento per il download"
@@ -3309,7 +3306,6 @@ it:
         enabled: Attiva distintivo
         icon: Icona
         image: Immagine
-        icon_help: "Usa una classe Font Awesome o la URL di un'immagine"
         query: Query Distintivo (SQL)
         target_posts: Interroga i messaggi destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente

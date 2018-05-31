@@ -18,7 +18,7 @@ function addLocalDate(buffer, matches, state) {
   config.format = parsed.attrs.format || config.format;
   config.timezones = parsed.attrs.timezones || config.timezones;
 
-  token = new state.Token('a_open', 'a', 1);
+  token = new state.Token('span_open', 'span', 1);
   token.attrs = [
     ['class', 'discourse-local-date'],
     ['data-date', config.date],
@@ -46,19 +46,21 @@ function addLocalDate(buffer, matches, state) {
     }
   });
 
+  token.attrs.push(['data-email-preview', previews[0]]);
+
   token = new state.Token('text', '', 0);
   token.content = previews.join(", ");
   buffer.push(token);
 
-  token = new state.Token('a_close', 'a', -1);
+  token = new state.Token('span_close', 'span', -1);
   buffer.push(token);
 }
 
 export function setup(helper) {
   helper.whiteList([
-    'a.discourse-local-date',
-    'a[data-*]',
-    'a[title]'
+    'span.discourse-local-date',
+    'span[data-*]',
+    'span[title]'
   ]);
 
   helper.registerOptions((opts, siteSettings) => {
@@ -67,7 +69,7 @@ export function setup(helper) {
 
   helper.registerPlugin(md => {
     const rule = {
-      matcher: /\[date(.*?)\]/,
+      matcher: /\[date(.+?)\]/,
       onMatch: addLocalDate
     };
 

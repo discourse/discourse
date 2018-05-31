@@ -570,6 +570,10 @@ describe PostRevisor do
 
       let(:mentioned_user) { Fabricate(:user) }
 
+      before do
+        SiteSetting.queue_jobs = false
+      end
+
       it "generates a notification for a mention" do
         expect {
           subject.revise!(Fabricate(:user), raw: "Random user is mentioning @#{mentioned_user.username_lower}")

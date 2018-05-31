@@ -89,6 +89,7 @@ en:
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
+        from_reply_by_address_error: "Happens when the From header matches the reply by email address."
         inactive_user_error: "Happens when the sender is not active."
         silenced_user_error: "Happens when the sender has been silenced."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
@@ -843,10 +844,10 @@ en:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "New Users"
+      title: "Signups"
       xaxis: "Day"
-      yaxis: "Number of new users"
-      description: "New registrations for this period"
+      yaxis: "Number of signups"
+      description: "New account registrations for this period"
     new_contributors:
       title: "New Contributors"
       xaxis: "Day"
@@ -855,8 +856,8 @@ en:
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
-      yaxis: "DAU/MAY"
-      description: "DAU / MAU – no. of members that logged in in the last day divided by no. of members that logged in in the last month – returns a %"
+      yaxis: "DAU/MAU"
+      description: "No. of members that logged in in the last day divided by no of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >30%."
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"

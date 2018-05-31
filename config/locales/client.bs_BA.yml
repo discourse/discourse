@@ -1710,7 +1710,6 @@ bs_BA:
           backup:
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include files)"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"

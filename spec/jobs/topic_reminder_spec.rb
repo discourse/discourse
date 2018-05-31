@@ -10,10 +10,6 @@ describe Jobs::TopicReminder do
     ).topic
   end
 
-  before do
-    SiteSetting.queue_jobs = true
-  end
-
   it "should be able to create a reminder" do
     topic_timer = topic.topic_timers.first
     freeze_time 1.day.from_now

@@ -239,7 +239,6 @@ uk:
       yaxis: "Кількість відвідин"
     signups:
       xaxis: "День"
-      yaxis: "Кількість нових користувачів"
     topics:
       title: "Теми"
       xaxis: "День"

@@ -546,9 +546,7 @@ et:
       xaxis: "Päev"
       yaxis: "Külastajate arv"
     signups:
-      title: "Uued kasutajad"
       xaxis: "Päev"
-      yaxis: "Uute kasutajate arv"
     profile_views:
       title: "Kasutaja profiili vaatamisi"
       xaxis: "Päev"

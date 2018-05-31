@@ -402,9 +402,7 @@ ja:
       xaxis: "日"
       yaxis: "アクセス数"
     signups:
-      title: "新規ユーザー"
       xaxis: "日"
-      yaxis: "新規ユーザー数"
     profile_views:
       xaxis: "日"
       yaxis: "ユーザープロフィールの閲覧数"

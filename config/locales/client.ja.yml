@@ -2202,7 +2202,6 @@ ja:
             label: "バックアップ"
             title: "バックアップを行います"
             confirm: "新しくバックアップを行ってもよろしいですか？"
-            without_uploads: "はい(ファイルは含まない)"
           download:
             label: "ダウンロード"
             title: "ダウンロードリンクをメールで送る"
@@ -2770,7 +2769,6 @@ ja:
         enabled: バッジを有効にする
         icon: アイコン
         image: 画像
-        icon_help: "Font Awesomeのクラスか画像のURLを使用してください"
         query: バッジクエリ(SQL)
         target_posts: 投稿を対象
         auto_revoke: 毎日クエリの取り消しを実行
