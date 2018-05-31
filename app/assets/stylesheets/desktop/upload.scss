@@ -4,7 +4,7 @@
     padding-left: 10px;
   }
   .radios {
-    height: 60px;
+    min-height: 60px;
     display: flex;
     align-items: flex-start;
     label {
@@ -32,8 +32,8 @@
       }
     }
   }
-  .radios:last-child {
-    height: 20px;
+  .radios:last-child:not(:nth-child(2)) { // last child for composer modal, but not theme import modal
+    min-height: 20px;
   }
 }
 

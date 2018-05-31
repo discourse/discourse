@@ -161,6 +161,11 @@
       height: 10em;
     }
   }
+  @media screen and (min-width: 524px) {
+    .modal-inner-container {
+     min-width: 525px; 
+    }
+  }
 }
 
 .modal {
@@ -324,6 +329,7 @@
 
   label {
     margin-top: 7px;
+    max-width: 450px;
   }
 
   .optional {
