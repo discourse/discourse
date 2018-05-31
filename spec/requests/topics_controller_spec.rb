@@ -1088,35 +1088,18 @@ RSpec.describe TopicsController do
       end
 
       before do
+        TopicView.stubs(:chunk_size).returns(4)
         @post_ids = topic.posts.pluck(:id)
-        22.times do
+        5.times do
           @post_ids << Fabricate(:post, topic: topic).id
         end
       end
 
-      it 'grabs first page when no filter is provided' do
-        get "/t/#{topic.slug}/#{topic.id}.json"
-        expect(response).to be_success
-        expect(extract_post_stream).to eq(@post_ids[0..19])
-      end
-
-      it 'grabs first page when first page is provided' do
-        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
-        expect(response).to be_success
-        expect(extract_post_stream).to eq(@post_ids[0..19])
-      end
-
-      it 'grabs correct range when a page number is provided' do
-        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-        expect(response).to be_success
-        expect(extract_post_stream).to eq(@post_ids[20..39])
-      end
-
       it 'grabs the correct set of posts when post_number param is passed' do
-        post_number = topic.posts.pluck(:post_number).sort[21]
+        post_number = topic.posts.pluck(:post_number).sort[4]
         get "/t/#{topic.slug}/#{topic.id}/#{post_number}.json"
         expect(response).to be_success
-        expect(extract_post_stream).to eq(@post_ids[-20..-1])
+        expect(extract_post_stream).to eq(@post_ids[-4..-1])
       end
     end
 
