@@ -11,21 +11,13 @@ describe UsernameChanger do
     context 'success' do
       let(:new_username) { "#{user.username}1234" }
 
-      before do
-        @result = UsernameChanger.change(user, new_username)
-      end
-
-      it 'returns true' do
-        expect(@result).to eq(true)
-      end
-
       it 'should change the username' do
+        @result = UsernameChanger.change(user, new_username)
+
+        expect(@result).to eq(true)
+
         user.reload
         expect(user.username).to eq(new_username)
-      end
-
-      it 'should change the username_lower' do
-        user.reload
         expect(user.username_lower).to eq(new_username.downcase)
       end
     end
@@ -35,21 +27,12 @@ describe UsernameChanger do
       let(:username_before_change) { user.username }
       let(:username_lower_before_change) { user.username_lower }
 
-      before do
-        @result = UsernameChanger.change(user, wrong_username)
-      end
-
-      it 'returns false' do
-        expect(@result).to eq(false)
-      end
-
       it 'should not change the username' do
+        @result = UsernameChanger.change(user, wrong_username)
+        expect(@result).to eq(false)
+
         user.reload
         expect(user.username).to eq(username_before_change)
-      end
-
-      it 'should not change the username_lower' do
-        user.reload
         expect(user.username_lower).to eq(username_lower_before_change)
       end
     end
@@ -57,18 +40,16 @@ describe UsernameChanger do
     describe 'change the case of my username' do
       let!(:myself) { Fabricate(:user, username: 'hansolo') }
 
-      it 'should return true' do
-        expect(UsernameChanger.change(myself, "HanSolo")).to eq(true)
-      end
-
       it 'should change the username' do
-        UsernameChanger.change(myself, "HanSolo")
-        expect(myself.reload.username).to eq('HanSolo')
-      end
+        expect do
+          expect(UsernameChanger.change(myself, "HanSolo", myself)).to eq(true)
+        end.to change { UserHistory.count }.by(1)
 
-      it "logs the action" do
-        expect { UsernameChanger.change(myself, "HanSolo", myself) }.to change { UserHistory.count }.by(1)
-        expect { UsernameChanger.change(myself, "HanSolo", myself) }.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
+        expect(myself.reload.username).to eq('HanSolo')
+
+        expect do
+          UsernameChanger.change(myself, "HanSolo", myself)
+        end.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
       end
     end
 
