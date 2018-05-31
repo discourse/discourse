@@ -323,6 +323,11 @@ zh_TW:
           title: "記錄"
           when: "時間"
           action: "動作"
+          target_user: "目標使用者"
+          subject: "主旨"
+          details: "詳情"
+          from: "從"
+          to: "到"
       empty:
         posts: "群組成員沒有發佈帖子。"
         members: "這個團隊裡面沒有成員"
@@ -513,6 +518,7 @@ zh_TW:
       moderator_tooltip: "此用戶為板主"
       admin_tooltip: "此用戶為管理員"
       suspended_notice: "此用戶已被停權至 {{date}}。"
+      suspended_permanently: "此用戶已被停權。"
       suspended_reason: "原因: "
       github_profile: "Github"
       email_activity_summary: "活動摘要"
@@ -527,14 +533,14 @@ zh_TW:
         many_per_day: "每當有新文章時，寄給我郵件通知（每天約有  {{dailyEmailEstimate}}  封）。"
         few_per_day: "每當有新文章時，寄給我郵件通知（每天約有 2  封）。"
       tag_settings: "標籤"
-      watched_tags: "已觀看"
-      watched_tags_instructions: "您將會自動監視所有這些添加的主題。您會收到新文章或新主題的通知，新文章數量將出現在每個主題後。"
+      watched_tags: "已關注"
+      watched_tags_instructions: "您將會自動關注該標籤中的所有主題。您會收到新文章或新主題的通知，新文章數量將出現在每個主題後。"
       tracked_tags: "已追蹤"
       tracked_tags_instructions: "您將會自動監視所有這些添加的主題。新文章數量將出現在每個主題後。"
       muted_tags: "靜音"
       muted_tags_instructions: "你將不會收到有這些標籤的新主題任何通知，它們也不會出現在“最新”主題列表。"
-      watched_categories: "關注"
-      watched_categories_instructions: "你將自動監看這些分類中的所有主題。所有新帖子和新主題會通知你，新帖數量也將顯示在主題旁邊。"
+      watched_categories: "已關注"
+      watched_categories_instructions: "你將自動關注這些分類中的所有主題。所有新帖子和新主題會通知你，新帖數量也將顯示在主題旁邊。"
       tracked_categories: "追蹤"
       tracked_categories_instructions: "你將自動跟蹤這些分類中的所有主題。新帖數量將會顯示在主題旁邊。"
       watched_first_post_categories: "關注第一則帖子"
@@ -552,12 +558,13 @@ zh_TW:
       muted_users: "靜音"
       muted_users_instructions: "禁止來自這些用戶的所有通知。"
       muted_topics_link: "顯示已靜音的主題"
-      watched_topics_link: "顯示已觀看的討論話題"
+      watched_topics_link: "顯示已關注的討論話題"
       automatically_unpin_topics: "當我完整閲讀了主題時自動解除置頂。"
       apps: "應用"
       revoke_access: "撤銷許可"
       undo_revoke_access: "解除撤銷許可"
       api_approved: "已批准："
+      theme: "佈景"
       home: "預設首頁"
       staff_counters:
         flags_given: "有幫助的投訴"
@@ -595,6 +602,9 @@ zh_TW:
         choose_new: "選擇一個新密碼"
         choose: "選擇一個密碼"
       second_factor:
+        title: "兩步驟驗證"
+        disable: "停用兩步驟驗證"
+        enable: "啟用<a href>兩步驟驗證</a>來增加帳號安全性"
         disable_description: "請從您的應用程式輸入驗證碼"
         show_key_description: "手動輸入"
       change_about:
@@ -763,14 +773,19 @@ zh_TW:
         title: "摘要"
         stats: "統計"
         time_read: "閱讀時間"
+        recent_time_read: "最近的閱讀時間"
         topic_count:
           other: 討論話題已建立
         post_count:
           other: 帖子已建立
+        likes_given:
+          other: 已送出
         likes_received:
           other: 已接收
         days_visited:
           other: 到訪天數
+        topics_entered:
+          other: 已讀討論話題
         posts_read:
           other: 讀過的文章
         bookmark_count:
@@ -800,6 +815,7 @@ zh_TW:
         header_title: "個人頁面、消息、書籤和設置"
       title:
         title: "頭銜"
+        none: "(無)"
       filters:
         all: "全部"
       stream:
@@ -857,6 +873,8 @@ zh_TW:
     mute: 靜音
     unmute: 取消靜音
     time_read: 已讀
+    time_read_recently: '最近'
+    time_read_recently_tooltip: '%{time_read} 總共閱讀時間 (%{recent_time_read} 在最近 60 天)'
     last_reply_lowercase: 最新回覆
     replies_lowercase:
       other: 回覆
@@ -910,6 +928,7 @@ zh_TW:
       title: "登入"
       username: "用戶"
       password: "密碼"
+      second_factor_title: "兩步驟驗證"
       email_placeholder: "電子郵件地址或用戶名稱"
       caps_lock_warning: "大寫鎖定中"
       error: "未知的錯誤"
@@ -1078,6 +1097,7 @@ zh_TW:
       empty: "未找到任何通知。"
       more: "檢視較舊的通知"
       total_flagged: "所有被投訴的文章"
+      granted_badge: "得到 '{{description}}'"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
@@ -1129,7 +1149,7 @@ zh_TW:
         filters:
           likes: 我給了讚的
           posted: 我參與發帖
-          watching: 我正在監看
+          watching: 我正在關注
           tracking: 我正在追蹤
           first: 是第一帖
           pinned: 是置頂的
@@ -1279,12 +1299,16 @@ zh_TW:
         title: 改變你收到該主題通知的頻率
         reasons:
           mailing_list_mode: "郵件列表模式已啟用，將以郵件通知你關於該主題的回覆。"
-          "3_10": '因為你正監看該主題上的標籤，你將會收到通知。'
+          "3_10": '因為你正關注該主題上的標籤，你將會收到通知。'
           "3_6": '你將會收到通知，因為你正在關注此分類。'
-          "3_5": '你將會收到通知，因為你在觀看此討論話題。'
+          "3_5": '你將會收到通知，因為你自動關注此討論話題。'
           "3_2": '你將收到關於此討論話題的通知，因為你正在關注此討論話題。'
           "3_1": '你將收到關於此討論話題的通知，因為你建立了此討論話題。'
           "3": '你將收到關於此討論話題的通知，因為你正在關注此討論話題。'
+          "2_8": '您將會看到新回覆的數量，因為你正在追蹤這個分類。'
+          "2_4": '您將會看到新回覆的數量，因為你回覆了此討論話題。'
+          "2_2": '您將會看到新回覆的數量，因為你正在追蹤這個話題。'
+          "2": '您將會看到新回覆的數量，因為你<a href="/u/{{username}}/preferences">看過這個話題</a>。'
           "1_2": '如果有人@你或回覆你，將通知你。'
           "1": '如果有人@你或回覆你，將通知你。'
           "0_7": '你正忽略此分類中的所有通知。'
@@ -1658,7 +1682,7 @@ zh_TW:
       notifications:
         watching:
           title: "關注"
-          description: "你將自動監看這些分類中的所有主題。每一個主題的每一個新帖，將通知你，還將顯示新回覆的數量。"
+          description: "你將自動關注這些分類中的所有主題。每一個主題的每一個新帖，將通知你，還將顯示新回覆的數量。"
         watching_first_post:
           title: "關注新的發文"
           description: "在這些分類裡面，只是每一個新主題的第一帖，才會通知你。"
@@ -1917,6 +1941,7 @@ zh_TW:
       granted:
         other: '%{count} 授予'
       select_badge_for_title: 選擇一個徽章作為你的頭銜使用
+      none: "(無)"
       badge_grouping:
         getting_started:
           name: 開始
@@ -1958,7 +1983,8 @@ zh_TW:
         untagged_with_category: "%{category}無標籤的%{filter}主題"
       notifications:
         watching:
-          title: "監看"
+          title: "關注"
+          description: "你將自動監看該標籤中的所有主題。新帖子和新主題會通知你，再者未讀和新帖的數量也將顯示在主題旁邊。"
         watching_first_post:
           title: "關注新的發文"
         tracking:
@@ -2094,6 +2120,9 @@ zh_TW:
         was_edited: "文章已在第一次標記後被編輯"
         previous_flags_count: "這篇文章已經被標記  {{count}} 次。"
       groups:
+        manage:
+          membership:
+            trust_levels_none: "無"
         primary: "主要群組"
         no_primary: "( 沒有主要群組 )"
         title: "群組"
@@ -2275,6 +2304,7 @@ zh_TW:
         new_style: "新增樣式"
         import: "匯入"
         delete: "刪除"
+        delete_confirm: "刪除這個佈景？"
         about: "修改網站的 CSS 和 HTML headers。請新增一個自定樣式來開始使用。"
         color: "顏色"
         opacity: "不透明度"
@@ -2287,6 +2317,9 @@ zh_TW:
           none_selected: "選擇一個電子郵件範本開始編輯"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
+        theme:
+          import_theme: "匯入佈景"
+          title: "佈景"
         colors:
           title: "顏色"
           long_title: "顏色樣式"
@@ -2456,6 +2489,7 @@ zh_TW:
             change_readonly_mode: "變更唯讀模式"
             backup_download: "下載備份"
             backup_destroy: "刪除備份"
+            disabled_second_factor: "停用兩步驟驗證"
         screened_emails:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新用戶。"
@@ -2488,6 +2522,8 @@ zh_TW:
             title: "如果有至少 'min_ban_entries_for_roll_up' 個記錄，建立一個子網域封鎖記錄"
         logster:
           title: "錯誤紀錄"
+      watched_words:
+        title: "已關注的文字"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以用戶的檢視角度進行除錯。完成後將需登出。"
@@ -2706,6 +2742,7 @@ zh_TW:
         show_overriden: '只顯示修改過的項目'
       settings:
         reset: '重置'
+        none: '無'
       site_settings:
         title: '設定'
         no_results: "未找到任何結果。"

@@ -34,40 +34,41 @@ es:
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   anonymous: "Anónimos"
   remove_posts_deleted_by_author: "Eliminado por su autor"
-  redirect_warning: "No hemos podido comprobar que el enlace que has seleccionado haya sido publicado en el foro. Si quieres continuar aun así, selecciona el enlace abajo."
+  redirect_warning: "No pudimos verificar que el enlace que seleccionó se haya publicado en el foro. Si desea continuar de todos modos, seleccione el enlace a continuación."
   themes:
     bad_color_scheme: "No puedes actualizar theme, esquema de color inválido"
     other_error: "Algo salió mal actualizando el theme"
-    error_importing: "Error al clonar el repositorio de git. El acceso ha sido denegado o el repositorio no se encuentra."
+    error_importing: "Error al clonar el repositorio de git, acceso denegado o no se encuentra el repositorio"
     settings_errors:
-      invalid_yaml: "El YAML no es válido."
-      data_type_not_a_number: "El tipo de ajuste `%{name}` no está soportado. Los tipos soportados son `integer`, `bool`, `list` y `enum`"
-      name_too_long: "Hay un ajuste con un nombre demasiado largo. La longitud máxima es 255"
-      default_value_missing: "El ajuste `%{name}` no tiene un valor por defecto"
-      default_not_match_type: "El tipo del valor por defecto del ajuste `%{name}`  no coincide con el tipo del ajuste"
-      default_out_range: "El valor por defecto del ajuste `%{name}` no está en el rango especificado."
-      enum_value_not_valid: "El valor seleccionado no es una de las opciones"
-      number_value_not_valid: "El nuevo valor está fuera del rango permitido"
+      invalid_yaml: "YAML provisto es inválido."
+      data_type_not_a_number: "Tipo de ajuste `%{name}` no está soportado. Tipos soportados: `integer`, `bool`, `list` and `enum`"
+      name_too_long: "Hay un ajuste con un nombre muy largo. Cantidad máxima de caracteres es 255"
+      default_value_missing: "Ajuste `%{name}`` no tiene valor por defecto"
+      default_not_match_type: "Tipo de valor por defecto para el ajuste `%{name}` no coincide con el tipo de ajuste."
+      default_out_range: "Valor por defecto del ajuste `%{name}` no está en el rango específico."
+      enum_value_not_valid: "El valor seleccionado no es una de las opciones enumeradas."
+      number_value_not_valid: "El nuevo valor no está dentro del rango permitido."
       number_value_not_valid_min_max: "Debe ser entre %{min} y %{max}."
       number_value_not_valid_min: "Debe ser mayor o igual que %{min}."
-      number_value_not_valid_max: "Debe ser más pequeño o igual que %{max}."
-      string_value_not_valid: "La longitud del nuevo valor está fuera del rango permitido."
-      string_value_not_valid_min_max: "Debe tener entre %{min} y %{max} caracteres de longitud."
-      string_value_not_valid_min: "Debe tener al menos %{min} caracteres."
-      string_value_not_valid_max: "Debe tener al menos %{max} caracteres de longitud."
+      number_value_not_valid_max: "Debe ser menor o igual que %{max}."
+      string_value_not_valid: "La nueva longitud del valor no está dentro del rango permitido."
+      string_value_not_valid_min_max: "Debe ser entre %{min} y %{max} de longitud de caracteres."
+      string_value_not_valid_min: "Debe ser al menos de %{min} caracteres de longitud."
+      string_value_not_valid_max: "Debe ser como máximo de %{max} caracteres de longitud."
   emails:
     incoming:
       default_subject: "Este tema necesita un título"
       show_trimmed_content: "Mostrar contenido recortado"
       maximum_staged_user_per_email_reached: "Alcanzado el número máximo de usuarios provisionales creados por email."
-      no_subject: "(sin asunto)"
-      no_body: "(sin contenido)"
+      no_subject: "(sin título)"
+      no_body: "(sin mensaje)"
       errors:
         empty_email_error: "Sucede cuando el texto en bruto del email que recibimos está en blanco."
         no_message_id_error: "Sucede cuando el email no tiene Id del mensaje en el encabezado."
         auto_generated_email_error: "Sucede cuando la 'prioridad' en el encabezado está establecida en: lista, basura, en masa o auto_respuesta, o cuando algún otro encabezado contiene: auto-enviado, auto-respondido o auto-generado."
         no_body_detected_error: "Sucede cuando no podemos extraer el cuerpo del mensaje y no hay archivos adjuntos."
         no_sender_detected_error: "Sucede cuando no podemos encontrar una dirección de email válida desde el encabezado From."
+        from_reply_by_address_error: "Ocurre cuando el encabezado From coincide con la respuesta por dirección de correo electrónico."
         inactive_user_error: "Sucede cuando el emisor no está activo."
         silenced_user_error: "Ocurre cuando el remitente ha sido silenciado."
         bad_destination_address: "Sucede cuando ninguna de las direcciones de email en los campos Para/Cc/Bcc coincide con un email configurado como dirección de correo entrante."
@@ -101,7 +102,7 @@ es:
       has_already_been_used: "ya se está utilizando"
       inclusion: no está incluido en la lista
       invalid: no es válido
-      is_invalid: "parece poco claro, ¿es una oración completa?"
+      is_invalid: "parece poco claro, es una oración completa?"
       contains_censored_words: "contiene las siguientes palabras censuradas: %{censored_words}"
       less_than: "debe ser menor que %{count}"
       less_than_or_equal_to: "debe ser menor o igual que %{count}"
@@ -109,8 +110,8 @@ es:
       not_an_integer: debe ser un valor entero
       odd: debe ser impar
       record_invalid: 'Error en la validación: %{errors}'
-      max_emojis: "no puedes tener más de %{max_emojis_count} emojis"
-      ip_address_already_screened: "ya está incluido en una regla existente"
+      max_emojis: "no puede tener más de %{max_emojis_count} emoji"
+      ip_address_already_screened: "ya se está incluido en una regla existente"
       restrict_dependent_destroy:
         one: "No se pudo eliminar el registro porque existe otro %{record} dependiente"
         many: "No se puede eliminar el registro porque existen otros %{record} dependientes"
@@ -132,18 +133,27 @@ es:
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
     site_settings:
+      invalid_choice:
+        one: Has especificado la opción inválida %{name}
+        other: Has especificado las opciones inválidas %{name}
       min_username_length_exists: "No se puede establecer una longitud mínima para nombre de usuario mayor que el nombre de usuario más corto ya existente."
       min_username_length_range: "No se puede establecer el mínimo por encima del máximo."
       max_username_length_exists: "No se puede establecer una longitud máxima de nombre de usuario menor que el nombre de usuario más largo ya existente."
       max_username_length_range: "No puedes poner el máximo por debajo del mínimo."
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a 's3_upload_bucket'."
-    conflicting_google_user_id: 'La ID de la cuenta de Google para esta cuenta ha cambiado; por motivos de seguridad, hace falta que un miembro del staff intervenga. Por favor, ponte en contacto con el staff y mándales a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, póngase en contacto con miembros del staff y envíe esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
   invite:
     not_found: "El código de la invitación es inválido. Por favor, ponte en contacto con un administrador."
+    not_found_template: |
+      <p>Tu invitación a <a href="%{base_url}">%{site_name}</a> ya ha sido redimida.</p>
+
+      <p>Si recuerdas tu contraseña puedes <a href="%{base_url}/login">Ingresar</a>.</p>
+
+      <p>O bien, por favor <a href="%{base_url}/password-reset">Resetear Contraseña</a>.</p>
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, ya <a href='/u/%{username}/summary'>tiene una cuenta!</a>"
   bulk_invite:
     file_should_be_csv: "El archivo subido debería ser de formato csv."
@@ -155,7 +165,7 @@ es:
     backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
     invalid_filename: "El nombre de archivo del backup contiene caracteres no válidos. Los válidos son a-z 0-9 . - _."
-  invalid_params: "Has incluido parámetros no válidos a la solicitud: %{message}"
+  invalid_params: "Proporcionó parámetros no válidos para la solicitud: %{message}"
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permiso para ver el recurso solicitado."
@@ -167,8 +177,8 @@ es:
     one: Lo sentimos, pero los usuarios nuevos están limitados a 1 respuesta en el mismo tema.
     other: Lo sentimos, pero los usuarios nuevos están limitados a %{count} respuestas en el mismo tema.
   embed:
-    start_discussion: "Empezar debate"
-    continue: "Continuar debate"
+    start_discussion: "Empezar discusión"
+    continue: "Continuar discusión"
     error: "Error al insertar"
     referer: "Referente:"
     mismatch: "El referente no ha coincidido con ninguno de los siguientes hosts:"
@@ -192,7 +202,7 @@ es:
   too_many_mentions_newuser:
     one: Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post.
     other: Lo sentimos, pero los usuarios nuevos solo pueden mencionar a %{count} usuarios en un post.
-  no_images_allowed_trust: "Lo sentimos, pero no puedes incluir imágenes en tus mensajes en estos momentos"
+  no_images_allowed_trust: "Lo sentimos, no puedes poner imágenes en una publicación"
   no_images_allowed: "Lo sentimos, pero los usuarios nuevos no pueden poner imágenes en los mensajes."
   too_many_images:
     one: Lo sentimos, pero los usuarios nuevos solo pueden poner una imagen por post.
@@ -202,11 +212,11 @@ es:
     one: Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por post
     other: Lo sentimos, los usuarios nuevos solo pueden adjuntar %{count} archivos por post.
   no_links_allowed: "Lo sentimos, los nuevos usuarios no pueden poner enlaces en los posts."
-  links_require_trust: "Lo sentimos, pero no puedes incluir enlaces en tus mensajes en estos momentos"
+  links_require_trust: "Lo sentimos, no puedes incluir enlaces en tus posts."
   too_many_links:
     one: Lo sentimos, los nuevos usuarios solo pueden poner un link en un post.
     other: Lo sentimos, los nuevos usuarios solo pueden poner %{count} enlaces en un post.
-  contains_blocked_words: "Tu mensaje contiene una palabra no permitida: %{word}"
+  contains_blocked_words: "Tu post contiene una palabra que no está permitida: %{word}"
   spamming_host: "Lo sentimos, no puedes publicar un enlace a esa web."
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
   topic_not_found: "Algo ha salido mal. ¿Tal vez este tema ha sido cerrado o eliminado mientras estabas lo estabas mirando?"
@@ -214,7 +224,7 @@ es:
   max_pm_recepients: "Lo sentimos, puedes enviar un mensaje a un máximo de %{recipients_limit} destinatarios."
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
   invalid_characters: "contiene caracteres no válidos"
-  is_invalid: "parece poco claro, ¿es una oración completa?"
+  is_invalid: "parece poco claro, es una oración completa?"
   next_page: "siguiente página →"
   prev_page: "← página anterior"
   page_num: "Página %{num}"
@@ -238,7 +248,7 @@ es:
     top_weekly: "Semanal: Temas Top"
     top_daily: "Diario: Temas Top"
     posts: "Últimos posts"
-    private_posts: "Últimos mensajes personales"
+    private_posts: "Últimos mensajes privados"
     group_posts: "Últimos posts de %{group_name}"
     group_mentions: "Últimas menciones de %{group_name}"
     user_posts: "Posts recientes por @%{username}"
@@ -249,16 +259,19 @@ es:
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
   excerpt_image: "imagen"
   queue:
-    delete_reason: "Eliminado vía cola de moderación de posts"
-    not_found: "Post no encontrado o ya actualizado."
+    delete_reason: "Eliminado vía moderación"
+    not_found: "Post no encontrado o ya se actualizó."
   groups:
     success:
       bulk_add:
-        one: '%{count} usuario ha sido añadido al grupo.'
-        other: '%{count} usuarios han sido añadidos al grupo.'
+        one: '%{count} usuario ha sido agregado al grupo.'
+        other: '%{count} usuarios han sido agregados al grupo.'
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}' no es un nivel de confianza válido"
+      grant_trust_level_not_valid: "'%{trust_level}' no es un nivel de confianza válido."
       can_not_modify_automatic: "No se puede modificar un grupo automático"
+      member_already_exist:
+        one: '''%{username}'' ya es miembro de este grupo.'
+        other: 'Los siguientes usuarios ya son miembros de éste grupo: %{username}'
       invalid_domain: "'%{domain}' no es un dominio válido."
       invalid_incoming_email: "'%{email}' no es una dirección de email válida."
       email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
@@ -281,7 +294,7 @@ es:
       one: 1 post
       other: '%{count} posts'
     'new-topic': |
-      Bienvenido a %{site_name} &mdash; **¡gracias por empezar una nueva conversación!**
+      Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
 
       - ¿El título describe de forma precisa tu tema? ¿Suena interesante?
 
@@ -303,11 +316,11 @@ es:
     avatar: |
       ### Por qué no una imagen para tu cuenta?
 
-      Has publicado unos cuantos temas y respuestas, pero tu imagen de perfil no es único como lo eres tú., es sólo una letra.
+      Has publicado pocos temas y respuestas, pero tu imagen de perfil no es único como lo eres tú., es sólo una letra.
 
-      ¿Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
+      Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
 
-      ¡Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
+      Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
     sequential_replies: |
       ### Considera la posibilidad de responder a varios posts a la vez
 
@@ -327,7 +340,7 @@ es:
 
       Has respondido %{count} veces a @%{reply_username} sólo en este tema.
 
-      ¿Has considerado que puedes responder a las *otras* personas en el debate también? Una buena conversación incluye muchas respuestas y perspectivas.
+      Has considerado que puedes responder a las *otras* personas en el debate también? Una buena conversación incluye muchas respuestas y perspectivas.
 
       Si necesitas mantener la conversación con ese usuario en particular, puedes [enviarle un mensaje privado](/u/%{reply_username}).
     too_many_replies: |
@@ -339,9 +352,9 @@ es:
     reviving_old_topic: |
       ### ¿Revivir este tema?
 
-      La última respuesta a este tema fue **%{time_ago}**. Tu respuesta revivirá el tema y lo subirá al principio de la lista, notificando a los que hayan participado anteriormente.
+      La última respuesta a este tema fue hace **%{time_ago}**. Tu post reactivará el tema subiéndolo a las primeras posiciones de la lista y notificará a aquellos involucrados previamente en la conversación.
 
-      ¿Seguro que quieres continuar esta conversación antigua?
+      ¿Estás seguro de que quieres continuar esta conversación antigua?
   activerecord:
     attributes:
       category:
@@ -359,12 +372,12 @@ es:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Solo puedes adjuntar advertencias a mensajes personales."
+              warning_requires_pm: "Solamente puedes enviar advertencias por mensajes privado."
               too_many_users: "Solamente puedes enviar advertencias a un usuario a la vez."
-              cant_send_pm: "Lo sentimos, no puedes enviarle mensajes personales a ese usuario."
+              cant_send_pm: "Lo sentimos, no puedes enviar un mensaje personal a este usuario."
               no_user_selected: "Debes seleccionar un usuario válido."
               reply_by_email_disabled: "Respuestas por email han sido desactivadas."
-              target_user_not_found: "Uno de los usuarios a los que le estás enviando el mensaje no ha sido encontrado."
+              target_user_not_found: "No se pudo encontrar uno de los usuarios a los que envía este mensaje."
             featured_link:
               invalid: "es inválido. La dirección debería incluir http:// o https://."
               invalid_category: "no puede ser editado en esta categoría."
@@ -373,7 +386,7 @@ es:
             password:
               common: "es una de las 10000 contraseñas más comunes. Por favor usa una contraseña más segura"
               same_as_username: "es la misma que tu nombre de usuario. Por favor, escoge una contraseña más segura."
-              same_as_email: "es la misma que tu email. Por favor, utiliza una contraseña más segura."
+              same_as_email: "es el mismo que tu email. Por favor, utiliza una contraseña más segura."
               same_as_current: "es la misma que tu contraseña actual."
               unique_characters: "tiene demasiados caracteres repetidos. Por favor usa una contraseña más segura."
             ip_address:
@@ -381,7 +394,7 @@ es:
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "No se puede reasignar un correo primario a otro usuario."
+              reassigning_primary_email: "Reasignar un email primario a otro usuario no está permitido."
         color_scheme_color:
           attributes:
             hex:
@@ -419,9 +432,9 @@ es:
   staff_category_name: "Staff"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del staff."
   assets_topic_title: "Recursos para el diseño del sitio"
-  assets_topic_body: "Este tema, visible únicamente para miembros del staff,  tiene como fin el almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
+  assets_topic_body: "Este tema, es visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   discourse_welcome_topic:
-    title: "Te damos la bienvenida a Discourse"
+    title: "Bienvenido a Discourse"
     body: |2
 
         El primer párrafo de este tema destacado (tema fijo) será visible para todos los usuarios como mensaje de bienvenida en tu página principal. Es importante!
@@ -460,7 +473,7 @@ es:
 
         [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
-    topic_prefix: "Acerca de la categoría %{category}"
+    topic_prefix: "Definición de la categoría %{category}"
     replace_paragraph: "(Sustituye este primer párrafo con una descripción breve de tu nueva categoría. Esta descripción aparecerá en el área de selección de categoría, por ello, intenta que sea inferior a 200 caracteres. **Hasta que edites esta descripción o se creen temas, esta categoría no aparecerá en la página de categorías.**)"
     post_template: "%{replace_paragraph}\n\nUtiliza los siguientes párrafos para una descripción más detallada, o establece las directrices o reglas de la categoría::\n\n- ¿Para qué podrían usar los usuarios esta categoría? ¿De qué trata?\n\n- ¿Cómo se distingue de otras categorías existentes?\n\n- ¿Qué temas debería contener esta categoría normalmente?\n\n- ¿Necesitamos esta categoría? ¿Podría agruparse o converger con otra categoría o subcategoría?\n"
     errors:
@@ -497,22 +510,22 @@ es:
       broken: "Esta imagen está rota"
   rate_limiter:
     slow_down: "Has realizado esta acción muchas veces, por favor inténtalo de nuevo más tarde."
-    too_many_requests: "Has realizado esta acción demasiadas veces. Por favor, espera %{time_left} antes de volverlo a intentar."
+    too_many_requests: "Has realizado esta acción muchas veces. Por favor espera %{time_left} antes de intentar nuevamente."
     by_type:
-      first_day_replies_per_day: "Has llegado al límite de respuestas que un nuevo usuario puede crear en su primer día. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      first_day_topics_per_day: "Has llegado al límite de temas que un nuevo usuario puede crear en su primer día. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      create_topic: "Estás creando temas demasiado rápido. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      create_post: "Estás respondiendo demasiado rápido. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      delete_post: "Estás eliminando mensajes demasiado rápido. Por favor espera %{time_left} antes de intentarlo de nuevo."
-      public_group_membership: "Estás uniéndote o saliendo de grupos con mucha frecuencia. Por favor, espera %{time_left} antes de volver a intentarlo."
-      topics_per_day: "Has llegado al límite de nuevos temas. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      pms_per_day: "Has llegado al límite de mensajes. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      create_like: "Has llegado al límite de Me gusta. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      create_bookmark: "Has llegado al límite de marcadores. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      edit_post: "Has llegado al límite de ediciones. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      live_post_counts: "Estás solicitando actualizaciones de posts demasiado rápido. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      unsubscribe_via_email: "Has alcanzado el máximo de bajas de suscripción vía email. Por favor, espera %{time_left} antes de intentarlo de nuevo."
-      topic_invitations_per_day: "Has alcanzado el máximo de invitaciones a temas. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      first_day_replies_per_day: "Has alcanzado el número máximo de respuestas que un nuevo usuario puede publicar en su primer día. Por favor espera %{time_left} antes de intentar de nuevo."
+      first_day_topics_per_day: "Has alcanzado el número máximo de temas que un nuevo usuario puede publicar en su primer día. Por favor espera %{time_left} antes de intentar de nuevo."
+      create_topic: "Has creado temas muy rápido. Por favor espera %{time_left} antes de intentar de nuevo."
+      create_post: "Has respondido muy rápido. Por favor espera %{time_left} antes de intentar de nuevo."
+      delete_post: "Estás borrando posts muy rápido. Por favor espera %{time_left} antes de intentar de nuevo."
+      public_group_membership: "Estás ingresando/saliendo de grupos muy frecuentemente. Por favor espera %{time_left} antes de intentar de nuevo."
+      topics_per_day: "Has alcanzado el número máximo de nuevos temas. Por favor espera %{time_left} antes de intentar de nuevo."
+      pms_per_day: "Has alcanzado el número máximo de mensajes. Por favor espera %{time_left} antes de intentar de nuevo."
+      create_like: "Has alcanzado el número máximo de likes. Por favor espera %{time_left} antes de intentar de nuevo."
+      create_bookmark: "Has alcanzado el número máximo de favoritos. Por favor espera %{time_left} antes de intentar de nuevo."
+      edit_post: "Has alcanzado el número máximo de ediciones. Por favor espera %{time_left} antes de intentar de nuevo."
+      live_post_counts: "Estás pidiendo recuentos de posts en vivo muy rápido. Por favor espera %{time_left} antes de intentar de nuevo."
+      unsubscribe_via_email: "Has alcanzado el número máximo de desuscripciones por email. Por favor espera %{time_left} antes de intentar de nuevo."
+      topic_invitations_per_day: "Has alcanzado el número máximo de invitaciones al tema. Por favor espera %{time_left} antes de intentar de nuevo."
     hours:
       one: 1 hora
       other: '%{count} horas'
@@ -544,20 +557,20 @@ es:
         one: 1d
         other: '%{count}d'
       about_x_months:
-        one: 1mes
-        other: '%{count}mes'
+        one: 1mon
+        other: '%{count}mon'
       x_months:
-        one: 1mes
-        other: '%{count}mes'
+        one: 1mon
+        other: '%{count}mon'
       about_x_years:
-        one: 1a
-        other: '%{count}a'
+        one: 1y
+        other: '%{count}y'
       over_x_years:
-        one: '> 1a'
-        other: '> %{count}a'
+        one: '> 1y'
+        other: '> %{count}y'
       almost_x_years:
-        one: 1a
-        other: '%{count}a'
+        one: 1y
+        other: '%{count}y'
     distance_in_words_verbose:
       half_a_minute: "ahora mismo"
       less_than_x_seconds:
@@ -596,15 +609,15 @@ es:
   password_reset:
     no_token: "Lo sentimos, ese enlace para cambiar la contraseña es demasiado antiguo. Haz clic en el botón Iniciar sesión y utiliza el 'olvidé mi contraseña' para obtener un nuevo enlace. "
     choose_new: "Escoge una nueva contraseña"
-    choose: "Escoge una contraseña"
+    choose: "Escoge una contraseñ"
     update: 'Actualizar contraseña'
     save: 'Establecer contraseña'
     title: 'Restablecer contraseña'
     success: "Has cambiado tu contraseña correctamente y ahora has iniciado sesión."
     success_unapproved: "Has cambiado tu password correctamente."
   email_login:
-    invalid_token: "Lo sentimos, este enlace de inicio de sesión por email es demasiado antiguo. Selecciona el botón de Iniciar sesión y usa la opción 'Olvidé mi contraseña' para obtener un nuevo enlace. "
-    title: "Inicio de sesión con email"
+    invalid_token: "Lo sentimos, ese enlace de inicio de sesión de correo electrónico es demasiado viejo. Seleccione el botón Iniciar sesión y use 'Olvidé mi contraseña' para obtener un nuevo enlace."
+    title: "Email login"
   change_email:
     confirmed: "Tu email ha sido actualizado."
     please_continue: "Continuar a %{site_name}"
@@ -619,22 +632,22 @@ es:
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
     please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
     continue_button: "Continuar a %{site_name}"
-    welcome_to: "¡Te damos la bienvenida a %{site_name}!"
-    approval_required: "Un moderador o moderadora debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un email cuando tu cuenta sea aprobada!"
-    missing_session: "No hemos podido detectar si tu cuenta ha sido creada. Por favor, asegúrate de tener activadas las cookies en tu navegador."
+    welcome_to: "Bienvenido a %{site_name}!"
+    approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un email cuando tu cuenta sea aprobada!"
+    missing_session: "No hemos podido detectar si tu cuenta fue creada. Por favor, asegúrate de tener activadas las cookies en tu navegador."
     activated: "Disculpa, esta cuenta ya ha sido activada."
     admin_confirm:
-      title: "Confirmar cuenta administrativa"
+      title: "Confirmar Cuenta Administrador"
       description: "Estás seguro que quieres que <b>%{target_username}</b> sea un administrador?"
-      grant: "Conceder acceso de administración"
+      grant: "Conceder acceso de Admin"
       complete: "<b>%{target_username}</b> es ahora un administrador."
       back_to: "Volver al %{title}"
   post_action_types:
     off_topic:
-      title: 'Fuera de tema'
+      title: 'Off-Topic'
       description: 'Este post se desvía demasiado o no es relevante para el tema en cuestión (definido por el título del tema y su primer post), probablemente debería ser movido a otro hilo.'
-      short_description: 'No es relevante para el debate'
-      long_form: 'reportado como fuera de tema'
+      short_description: 'No es relevante para la discusión'
+      long_form: 'reportado como off-topic'
     spam:
       title: 'Spam'
       description: 'Este post es publicidad, o vandalismo. No es útil o relevante para el tema.'
@@ -649,8 +662,8 @@ es:
       long_form: 'reportado como inapropiado'
     notify_user:
       title: 'Enviar un mensaje a @{{username}}'
-      description: 'Quiero hablar con esta persona de forma directa y personal sobre su mensaje.'
-      short_description: 'Quiero hablar con esta persona de forma directa y personal sobre su mensaje.'
+      description: 'Quiero hablar con esta persona directa y personalmente sobre su post.'
+      short_description: 'Quiero hablar con esta persona directa y personalmente sobre su post.'
       long_form: 'usuario notificado vía mensaje'
       email_title: 'Tu publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -667,7 +680,7 @@ es:
       short_description: 'Guarda este post'
       long_form: 'Post marcado'
     like:
-      title: 'Me gusta'
+      title: 'Like'
       description: 'Te gusta este post'
       short_description: 'Te gusta este post'
       long_form: 'Te gusta esto'
@@ -675,7 +688,7 @@ es:
       title: 'Vota'
       description: 'Vota por este post'
       short_description: 'Vota por este post'
-      long_form: 'votado por este post'
+      long_form: 'Votado para este post'
   user_activity:
     no_default:
       self: "No tienes actividad aún."
@@ -711,15 +724,15 @@ es:
     regular:
       title: "Tema normal"
     banner:
-      title: "Tema de encabezado"
+      title: "Tema de Encabezado"
       message:
         make: "Este tema se utiliza ahora como banner. Aparecerá en la parte superior de cada página hasta que sea descartada por el usuario."
         remove: "Este tema ya no se utiliza como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Suscripción cancelada!"
-    description: "<b>%{email}</b> se ha desuscrito. Para cambiar la configuración del email, <a href='%{url}'>visita las preferencias del usuario</a>."
+    description: "<b>%{email}</b> ha sido desuscrito. Para cambiar la configuración del email <a href='%{url}'>visita las preferencias del usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, utiliza el desplegable de notificación al pie o en la parte derecha del tema."
-    private_topic_description: "Para volver a suscribirte, usa el control de notificaciones en la parte de abajo a la derecha del tema."
+    private_topic_description: "Para volver a suscribirte, use el control de notificación al pie o en la parte derecha del tema."
   unsubscribe:
     title: "Cancelar suscripción"
     stop_watching_topic: "Dejar de vigilar este tema, %{link}"
@@ -752,14 +765,25 @@ es:
       xaxis: "Día"
       yaxis: "Número de visitas"
     signups:
+      title: "Registros"
       xaxis: "Día"
+      yaxis: "Número de Registros"
+      description: "Nuevos registros de cuentas para este periodo"
     new_contributors:
-      title: "Nuevos contribuyentes"
+      title: "Nuevos Colaboradores"
       xaxis: "Día"
-      yaxis: "Número de nuevos contribuyentes"
-      description: "Número de usuarios que han hecho su primer post durante este periodo"
+      yaxis: "Número de nuevos colaboradores"
+      description: "Número de usuarios quienes hicieron su primer post en este periodo"
     dau_by_mau:
+      title: "UAD/UAM"
       xaxis: "Día"
+      yaxis: "UAD/UAM"
+      description: "Nro. de miembros que se loguearon en el último día dividido el núm. de miembros que se loguearon en el último mes – devuelve un % que indica la 'adhesión' de la comunidad. Apunta al >30%."
+    daily_engaged_users:
+      title: "Usuarios comprometidos a diario"
+      xaxis: "Día"
+      yaxis: "Usuarios Comprometidos"
+      description: "Número de usuarios que le han gustado o publicado en el último día"
     profile_views:
       title: "Visitas a perfil de usuario"
       xaxis: "Día"
@@ -768,10 +792,12 @@ es:
       title: "Temas nuevos"
       xaxis: "Día"
       yaxis: "Número de topics nuevos"
+      description: "Nuevos temas creados durante este período"
     posts:
       title: "Nuevos posts"
       xaxis: "día"
       yaxis: "Número de posts nuevos"
+      description: "Nuevos posts creados durante este periodo"
     likes:
       title: "Me gusta"
       xaxis: "Día"
@@ -793,27 +819,30 @@ es:
       xaxis: "Día"
       yaxis: "Número de usuarios"
     users_by_type:
-      title: "Usuarios por tipo"
-      xaxis: "Tip"
-      yaxis: "Número de usuarios"
+      title: "Usuarios por Tipos"
+      xaxis: "Tipo"
+      yaxis: "Número de Usuarios"
       xaxis_labels:
-        admin: Administrador
+        admin: Admin
         moderator: Moderador
-        suspended: Suspendido
-        silenced: Silenciado
+        suspended: Suspendidos
+        silenced: Silenciados
     trending_search:
-      title: Tendencias de búsqueda
+      title: Trending search
       labels:
         term: Término
         searches: Búsquedas
+        click_through: CTR
     emails:
       title: "Correos enviados"
       xaxis: "Día"
       yaxis: "Número de correos"
     user_to_user_private_messages:
+      title: "Usuario a usuario (respuestas excluidas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
     user_to_user_private_messages_with_replies:
+      title: "Usuario a usuario (con respuestas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
     system_private_messages:
@@ -860,6 +889,7 @@ es:
       xaxis: "Día"
       yaxis: "Páginas vistas de rastreadores web"
     page_view_total_reqs:
+      title: "Páginas vistas"
       xaxis: "Día"
       yaxis: "Total páginas vistas"
     page_view_logged_in_mobile_reqs:
@@ -907,8 +937,8 @@ es:
       xaxis: "Día"
       yaxis: "Número de visita"
     web_crawlers:
-      title: "Solicitudes de crawlers"
-      xaxis: "Agente del usuario"
+      title: "Solicitudes de Rastreadores Web"
+      xaxis: "User Agent"
       yaxis: "Páginas vistas"
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
@@ -929,28 +959,28 @@ es:
     email_polling_errored_recently:
       one: El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles.
       other: El email polling ha generado %{count} errores en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles.
-    missing_mailgun_api_key: "El servidor está configurado para enviar emails con Mailgun pero no has añadido una clave de API para verificar los mensajes de webhook."
+    missing_mailgun_api_key: "El servidor está configurado para enviar correos electrónicos a través de Mailgun pero no ha proporcionado una clave API utilizada para verificar los mensajes de webhook."
     bad_favicon_url: "El favicon está dando fallos en su carga. Revisa la opción favicon_url en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     poll_pop3_timeout: "La conexión al servidor POP3 está rebasando el tiempo de espera. Los emails entrantes no han podido ser recogidos. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes POP3</a>."
-    force_https_warning: "La página está usando SSL, pero el ajuste `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` no está activado."
+    force_https_warning: "Tu sitio web está usando SSL. Pero  `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` no está aún habilitado en la configuración de tu sitio."
   site_settings:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
-    default_locale: "El idioma por defecto de este sitio de Discourse"
+    default_locale: "El idioma por defecto para esta instancia de Discourse "
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
     set_locale_from_accept_language_header: "Establece el lenguaje de la interfaz para usuarios anónimos desde el lenguaje declarado por su navegador web. (EXPERIMENTAL, no funciona con caché anónimo)"
-    support_mixed_text_direction: "Aceptar mezcla de textos tanto de derecha a izquierda como de izquierda a derecha."
+    support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda."
     min_post_length: "Extensión mínima de los posts, en número de caracteres"
     min_first_post_length: "Extensión mínima permitida en el primer mensaje (cuerpo del tema) en caracteres"
-    min_personal_message_post_length: "La longitud mínima en caracteres para los mensajes personales"
+    min_personal_message_post_length: "Longitud mínima permitida de publicación en caracteres para mensajes"
     max_post_length: "Extensión máxima de los posts, en número de caracteres"
     topic_featured_link_enabled: "Activar publicar temas a partir de un enlace."
     show_topic_featured_link_in_digest: "Mostrar el enlace destacado por el tema en el email de resumen."
     min_topic_title_length: "Extensión mínima del título de los temas, en número de caracteres"
     max_topic_title_length: "Extensión máxima del título de los temas, en número de caracteres"
-    min_personal_message_title_length: "La longitud mínima en caracteres para los títulos de los mensajes personales"
-    max_emojis_in_title: "Número máximo de emojis que se pueden incluir en el título de un tema"
+    min_personal_message_title_length: "Longitud mínima permitida del título para un mensaje en caracteres"
+    max_emojis_in_title: "Emojis máximos permitidos en el título del tema"
     min_search_term_length: "Extensión mínima de una búsqueda válida, en número de caracteres"
     search_tokenize_chinese_japanese_korean: "Forzar la búsqueda a tokenizar Chino/Japonés/Coreano incluso en sitios que no basados en esos idiomas"
     search_prefer_recent_posts: "Si la búsqueda en tu foro gigante es lenta, esta opción prueba primero un índice de posts más recientes"
@@ -971,9 +1001,9 @@ es:
     download_remote_images_max_days_old: "No descargar imágenes remotas de posts que sean más antiguos de n días."
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
     editing_grace_period: "Durante (n) segundos después de publicar un post, se puede editar ese post sin crear una nueva versión en el historial."
-    editing_grace_period_max_diff: "El número de caracteres que se permitirán cambiar en el periodo de gracia de edición, si se cambian más se creará una nueva revisión (niveles de confianza 0 y 1)"
-    editing_grace_period_max_diff_high_trust: "El número de caracteres que se permitirán cambiar en el periodo de gracia de edición, si se cambian más se creará una nueva revisión (niveles de confianza 2 y superiores)"
-    staff_edit_locks_post: "Los mensajes serán bloqueados y no podrán ser editados por usuarios si son editados por miembros del staff."
+    editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacene otra revisión de publicación (nivel de confianza 0 y 1)"
+    editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacene otra revisión de publicación (nivel de confianza 2 y superior)"
+    staff_edit_locks_post: "Se bloqueará la publicación de las publicaciones si son editadas por miembros del staff."
     post_edit_time_limit: "El autor puede editar o eliminar su post durante (n) minutos después de publicarlo. Pon un 0 para que pueda hacerlo siempre."
     edit_history_visible_to_public: "Permitir a todos ver las versiones previas de un post editado. Si se deshabilita, solo los miembros del staff podrán verlas."
     delete_removed_posts_after: "Los posts borrados por su autor serán automáticamente eliminados después de (n) horas. Si se establece este valor a 0, los posts serán eliminados automáticamente."
@@ -1008,7 +1038,9 @@ es:
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
     summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
     summary_max_results: "Máximo de posts devueltos en \"Resumen de este  tema\""
-    enable_system_message_replies: "Permitir a los usuarios responder a mensajes del sistema incluso si los mensajes personales están desactivados"
+    enable_personal_messages: "Permitir que los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Tenga en cuenta que el staff  siempre puede enviar mensajes pase lo que pase."
+    enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes privados están inhabilitados."
+    enable_personal_email_messages: "Permita que el nivel de confianza 4 (configurable a través del nivel mínimo de confianza para enviar mensajes) envíe mensajes de correo electrónico privados. Tenga en cuenta que el personal siempre puede enviar mensajes, pase lo que pase."
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_base_url: "URL base usada para el 'long polling' (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al 'pull' de origen) ejemplo: http://origin.site.com"
     long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos enviados (solamente usuarios con sesión iniciada)."
@@ -1029,8 +1061,9 @@ es:
     notify_mods_when_user_silenced: "Si un usuario es silenciado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
-    enable_markdown_linkify: "Tratar como enlaces el texto que parezca uno automáticamente: www.sitio.com y http://sitio.com serán enlazados automáticamente"
-    markdown_linkify_tlds: "Lista de dominios de nivel superior que serán tratados automáticamente como enlaces"
+    enable_markdown_typographer: "Utilice reglas de tipografía para mejorar la legibilidad de texto: remplace citas rectas 'con comillas', (c) (tm) con símbolos, - con emdash -, etc."
+    enable_markdown_linkify: "Trate automáticamente el texto que se ve como un enlace como un enlace: www.site.com y http://site.com se vincularán automáticamente"
+    markdown_linkify_tlds: "Lista de dominios de nivel superior que se tratan automáticamente como enlaces"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
@@ -1046,6 +1079,10 @@ es:
     blacklist_ip_blocks: "Una lista de IPs bloqueadas privadas que nunca deberían ser rastreadas por Discourse"
     whitelist_internal_hosts: "Una lista con hosts internos que discourse puede rastrear de forma segura para oneboxing y otros propósitos"
     allowed_iframes: "Una lista de dominios para iframe src donde discourse pueda permitir de forma segura en mensajes"
+    whitelisted_crawler_user_agents: 'User agents de rastreadores web a los que se debe permitir el acceso al sitio.'
+    blacklisted_crawler_user_agents: 'Palabra única insensible a mayúsculas y minúsculas en la cadena del user agent que identifica rastreadores web a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista blanca.'
+    slow_down_crawler_user_agents: 'User agents de rastreadores web a los que se debe aplicar una tarifa limitada en robots.txt utilizando la directiva de retardo de rastreo'
+    slow_down_crawler_rate: 'Si slow_down_crawler_user_agents es especificado, este ratio aplicará para todos los crawlers (la solicitud demora número de segundos)'
     top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
@@ -1063,7 +1100,7 @@ es:
     top_page_default_timeframe: "Período de tiempo por defecto para la página de temas top"
     show_email_on_profile: "Mostrar el e-mail los usuarios en su perfil (solamente visibles para ellos mismos y el staff)"
     prioritize_username_in_ux: "Mostrar username primero en la página de usuario, tarjeta de usuario y mensajes (cuando el nombre ha sido desactivado se muestra primero)"
-    enable_rich_text_paste: "Activar la conversión automática de HTML a Markdown al pegar texto en el editor. (Experimental)"
+    enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown cuando pegues texto en el compositor. (Experimental)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
     enable_badges: "Activar el sistema de distintivos"
     enable_whispers: "Permitir a los miembros del staff comunicarse privadamente entre ellos en temas públicos."
@@ -1090,20 +1127,28 @@ es:
     sso_url: "URL del endpoint para el single sign on (debe incluir http:// o https://)"
     sso_secret: "Cadena secreta utilizada para autenticar criptográficamente la información del SSO, asegúrate de que es de 10 caracteres o más"
     sso_overrides_bio: "Sobreescribe la bio del usuario en su perfil y deshabilita que pueda cambiarla"
+    sso_overrides_groups: "Sincronice toda la membresía del grupo manual con los grupos especificados en el atributo sso de grupos (ADVERTENCIA: si no especifica grupos, todos los miembros del grupo manual serán borrados para el usuario)"
     sso_overrides_email: "Sobreescribe el email local con el email que provea sitio externo desde el payload del SSO en cada registro, y previene cambios locales. (AVISO: pueden ocasionarse discrepancias debido a la normalización de los emails locales)"
     sso_overrides_username: "Sobreescribe el usuario local con el usuario que provea el payload del SSO en cada registro, y previene cambios locales. (AVISO: pueden ocasionarse discrepancias debido a las diferencias en los requirimientos/longitud del usuario)"
     sso_overrides_name: "Sobreescribe el nombre completo con el que provee el payload del SSO en cada registro, y previene cambios locales."
     sso_overrides_avatar: "Sustituye el avatar de usuario con el avatar proveniente del sitio externo configurado para el SSO. Si se activa esta opción, se recomienda encarecidamente deshabilitar allow_uploaded_avatars"
+    sso_overrides_profile_background: "Sobrescribe el fondo del perfil del usuario con el avatar del sitio externo desde SSO payload."
+    sso_overrides_card_background: "Sobrescribe el fondo de la tarjeta de usuario con el avatar de sitio externo desde SSO payload."
     sso_not_approved_url: "Redireccionar cuentas SSO sin aprobar a esta URL"
     sso_allows_all_return_paths: "No restringe el dominio para return_paths provisto por SSO (por defecto, el return_paths debe ser sobre el sitio actual)."
-    enable_local_logins_via_email: "Permitir a los usuarios solicitar un enlace de un solo uso para iniciar sesión rápidamente, que les será enviado por email"
+    enable_local_logins: "Habilite las cuentas locales de inicio de sesión con nombre de usuario y contraseña. Esto debe estar habilitado para que las invitaciones funcionen. ADVERTENCIA: si está deshabilitado, es posible que no pueda iniciar sesión si no ha configurado previamente al menos un método de inicio de sesión alternativo."
+    enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión con un solo clic que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
     enable_yahoo_logins: "Activar autenticación por Yahoo"
     enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación a la que Google da soporte actualmente. Requiere de una clave de cliente y una clave secreta."
     google_oauth2_client_id: "Client ID de tu aplicación Google."
     google_oauth2_client_secret: "Client secret de tu aplicación Google."
+    google_oauth2_prompt: "Una lista delimitada por espacios de valores de cadena que especifica si el servidor de autorizaciones solicita al usuario la reautenticación y el consentimiento. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#prompt para conocer los valores posibles."
+    google_oauth2_hd: "Dominio hospedado de Google Apps al que se limitará el inicio de sesión. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#hd-param para obtener más detalles."
     enable_twitter_logins: "Activar autenticación por Twitter, requiere una twitter_consumer_key y un twitter_consumer_secret"
+    twitter_consumer_key: "Clave del consumidor para la autenticación de Twitter, registrado en  https://apps.twitter.com/"
+    twitter_consumer_secret: "Secreto del consumidor para la autenticación de Twitter, registrado en https://apps.twitter.com/"
     enable_instagram_logins: "Activar la autenticación por Instagram, requiere instagram_consumer_key y instagram_consumer_secret"
     instagram_consumer_key: "Consumer key para autenticación por Instagram"
     instagram_consumer_secret: "Consumer secret para autenticación por Instagram"
@@ -1114,11 +1159,11 @@ es:
     github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
     readonly_mode_during_backup: "Habilitar el modo de 'solo-lectura' mientras se hace el backup"
-    enable_backups: "Permitir a los administradores crear copias de seguridad del foro"
+    enable_backups: "Permitir a los administradores crear backups del foro"
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     automatic_backups_enabled: "Ejecutar backups automáticos definidos por la opción de frecuencia de backups"
-    backup_frequency: "Número de días entre copias de seguridad."
+    backup_frequency: "El número de días entre backups."
     enable_s3_backups: "Sube copias de seguridad a S3 cuando complete. IMPORTANTE: requiere credenciales validas de S3 puestas Archivos configuración."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     s3_disable_cleanup: "Desactivar el eliminado de backups de S3 cuando se eliminen de forma local."
@@ -1131,6 +1176,7 @@ es:
     top_topics_formula_first_post_likes_multiplier: "valor del multiplicador de me gusta en el primer post (n) en la fórmula de temas top:: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor del multiplicador de me gusta por post (n) en la fórmula de temas top: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rebake_old_posts_count: "Número de publicaciones antiguas objeto de rebake cada 15 minutos."
+    enable_safe_mode: "Permitir a los usuarios ingresar al modo seguro para depurar plugins."
     rate_limit_create_topic: "Después de crear un tema, los usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_create_post: "Después de publicar un post, los usuarios deben esperar (n) segundos antes de crear otro post."
     rate_limit_new_user_create_topic: "Después de crear un tema, los nuevos usuarios deben esperar (n) segundos antes de crear otro tema."
@@ -1140,7 +1186,7 @@ es:
     max_bookmarks_per_day: "Máximo número de marcadores por usuario y día."
     max_edits_per_day: "Máximo número de ediciones por usuario y día."
     max_topics_per_day: "Máximo número de temas que un usuario puede crear al día."
-    max_personal_messages_per_day: "Máximo número de mensajes personales que los usuarios pueden crear por día."
+    max_personal_messages_per_day: "Número máximo de mensajes que los usuarios pueden crear por día."
     max_invites_per_day: "Máximo número de invitaciones que un usuario puede enviar al día."
     max_topic_invitations_per_day: "Máximo número de invitaciones a un tema que un usuario puede enviar por día."
     max_logins_per_ip_per_hour: "Máximo número de inicios de sesión permitidos por direcciones IP por hora."
@@ -1156,6 +1202,7 @@ es:
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
     purge_unactivated_users_grace_period_days: "Periodo de gracia (en días) antes de que un usuario que no ha activado su cuenta sea borrado. Configurar a 0 para que nunca se purgue a usuarios no activados."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
+    s3_use_iam_profile: 'Utilice un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil de instancia de AWS EC2</a> para otorgar acceso al S3 bucket. NOTA: habilitar esto requiere que Discourse se ejecute en una instancia EC2 configurada apropiadamente, y anula las configuraciones de "clave de acceso s3" y "clave secreta s3".'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
     s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se utilizará para subir imágenes."
@@ -1197,16 +1244,17 @@ es:
     tl3_requires_likes_given: "El mínimo número de me gusta que un usuario debe dar en los últimos (tl3 time period) días para promocionar a nivel de confianza 3."
     tl3_requires_likes_received: "El mínimo número de me gusta que un usuario debe recibir en los últimos (tl3 time period) días para promocionar a nivel de confianza 3."
     tl3_links_no_follow: "No remover rel=nofollow de los enlaces publicados por usuarios con nivel de confianza 3."
-    trusted_users_can_edit_others: "Permitir a usuarios con niveles de confianza altos editar contenido de otros usuarios"
+    trusted_users_can_edit_others: "Permitir usuarios con alto nivel de confianza editar contenido de otros usuarios"
     min_trust_to_create_topic: "El mínimo nivel de confianza requerido para crear un nuevo tema."
-    allow_flagging_staff: "Si se activa, los usuarios pueden reportar mensajes publicados por miembros del staff"
+    allow_flagging_staff: "Si está habilitado, los usuarios pueden reportar las publicaciones de las cuentas del staff."
     min_trust_to_edit_wiki_post: "El mínimo nivel de confianza requerido para editar un post marcado como wiki."
     min_trust_to_edit_post: "El mínimo nivel de confianza requerido para editar posts."
     min_trust_to_allow_self_wiki: "El mínimo nivel de confianza requerido para que un usuario convierta sus propios posts a wiki."
-    min_trust_to_send_messages: "El nivel de confianza mínimo necesario para crear nuevos mensajes personales."
-    min_trust_to_flag_posts: "El nivel de confianza mínimo necesario para reportar posts"
-    min_trust_to_post_links: "El nivel de confianza mínimo necesario para incluir enlace en posts"
-    min_trust_to_post_images: "El nivel de confianza mínimo necesario para incluir imágenes en un post"
+    min_trust_to_send_messages: "El mínimo nivel de confianza requerido para crear nuevos mensajes personales."
+    min_trust_to_send_email_messages: "El nivel de confianza mínimo necesario para enviar nuevos mensajes privados por correo electrónico (a los usuarios staged)."
+    min_trust_to_flag_posts: "El mínimo nivel de confianza requerido para reportar posts"
+    min_trust_to_post_links: "El mínimo nivel de confianza requerido para incluir enlaces en posts"
+    min_trust_to_post_images: "El nivel mínimo de confianza requerido para incluir imágenes en una publicación"
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
     newuser_max_images: "Cuántas imágenes puede un nuevo usuario añadir a un post."
     newuser_max_attachments: "Cuántos adjuntos puede un nuevo usuario añadir a un post."
@@ -1214,10 +1262,10 @@ es:
     newuser_max_replies_per_topic: "Máximo número de respuestas que un nuevo usuario puede realizar en el mismo tema antes de que alguien responda a su vez a alguna de ellas."
     max_mentions_per_post: "Máximo número de menciones a @usuarios que alguien puede usar en un post."
     max_users_notified_per_group_mention: "Número de usuarios máximos que serán notificados si un grupo es mencionado (si se llega al límite no se mandarán las notificaciones)"
-    enable_mentions: "Permitir a los usuarios mencionar a otros usuarios."
+    enable_mentions: "Permitir a usuarios mencionar a otros usuarios."
     create_thumbnails: "Crear miniaturas de imágenes y lightbox cuando estas son demasiado grandes para encajar en un post."
     email_time_window_mins: "Esperar (n) minutos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus posts."
-    personal_email_time_window_seconds: "Esperar (n) segundos antes de enviar notificaciones de nuevos mensajes personales por email para dar la oportunidad de editar y terminar sus mensajes a los usuarios."
+    personal_email_time_window_seconds: "Espera (n) segundos antes de enviar cualquier mensaje email personal de notificación, para dar a los usuarios margen con el que editar y finalizar sus mensajes."
     email_posts_context: "Cuántas respuestas previas se incluirán como contexto en los emails de notificación."
     flush_timings_secs: "Cuán frecuente, en segundos, se alinean los datos de sincronización con el servidor."
     title_max_word_length: "La longitud máxima permitida de una palabra, en caracteres, en el título del tema."
@@ -1233,7 +1281,7 @@ es:
     max_image_size_kb: "El tamaño máximo, en kB, para subir imágenes. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     max_attachment_size_kb: "El tamaño máximo, en kB, para adjuntar archivos. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir (usa \"*\" para habilitar todos los tipos de archivo)"
-    authorized_extensions_for_staff: "Una lista de extensiones de archivo que el staff puede subir además de la lista definida en el ajuste `authorized_extensions` (usar '*' para permitir todos los tipos de archivo)"
+    authorized_extensions_for_staff: "Una lista de las extensiones de archivo permitidas para subir por miembros del staff en adición a la lista definida en la configuración `authorized_extensions`. (Usa '*' para habilitar todos los tipos)"
     theme_authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir (usa \"*\" para habilitar todos los tipos)"
     max_similar_results: "Cuántos temas similares se mostrarán encima del editor cuando estés creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
     max_image_megapixels: "Máximo de megapíxeles permitidos por una imagen."
@@ -1253,6 +1301,7 @@ es:
     faq_url: "Si tienes un documento de Preguntas Frecuentes alojado que quieras utilizar, introduce la URL completa aquí."
     tos_url: "Si tienes un documento de Condiciones de Servicio alojado en algún sitio quieras utilizar, facilita la URL aquí."
     privacy_policy_url: "Si tienes un documento de Preguntas Frecuentes alojado en algún sitio quieras utilizar, facilita la URL aquí."
+    log_anonymizer_details: "Si mantienes los detalles de un usuario en el log después de ser anonimizados. Al cumplir con GDPR, deberá apagarlo."
     newuser_spam_host_threshold: "¿Cuántas veces un nuevo usuario puede publicar un enlace al mismo host en `newuser_spam_host_threshold` posts antes de ser considerado spam."
     white_listed_spam_host_domains: "Una lista de dominios a excluir de las pruebas de spam. A los nuevos usuarios no se les restringirá la posibilidad de crear posts con enlaces a estos dominios."
     staff_like_weight: "Qué ponderación extra otorgan los me gusta provenientes de los miembros del Staff."
@@ -1272,11 +1321,12 @@ es:
     auto_silence_fast_typers_max_trust_level: "Máximo nivel de confianza por debajo del cual se podrán silenciar usuarios que escriban demasiado rápido en su primer post"
     auto_silence_first_post_regex: "Expresión regular que no distingue mayúsculas y minúsculas que si es detectada hará que el primer post de un usuario sea silenciado y enviado a la cola de aprobación. Ejemplo: raging|a[bc]a hará que todos los posts que contengan gaging, aba o aca sean silenciados. Sólo tiene efecto en el primer mensaje de un usuario."
     flags_default_topics: "Mostrar temas reportados por defecto en la sección de administración"
+    min_flags_staff_visibility: "La cantidad mínima de reportes que una publicación debe tener antes de que el staff pueda verla en la sección de administración"
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Usar HTML en vez de texto para email entrante"
-    disable_emails: "Impedir que Discourse envíe cualquier tipo de emails"
+    incoming_email_prefer_html: "Usar el HTML en vez del texto para email entrante."
+    disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
@@ -1319,7 +1369,7 @@ es:
     relative_date_duration: "Número de días desde el último post antes de los cuales las fechas se mostrarán en formato relativo (7d) en vez de absoluto (20 Feb)."
     delete_user_max_post_age: "No permitir eliminar usuarios cuyo primer post tenga una antigüedad de (x) días."
     delete_all_posts_max: "El máximo número de posts que pueden ser eliminados a la vez con el botón \"Eliminar todos los posts\". Si un usuario tiene un mayor número de posts que este valor, éstos no podrán ser eliminados de una vez y el usuario no podrá ser eliminado."
-    username_change_period: "Número máximo de días después del registro en los que las cuentas pueden cambiar su nombre de usuario (0 para desactivar los cambios de usuario)."
+    username_change_period: "El número máximo de días después de registrarse entre los cuales una cuenta puede cambiar su nombre de usuario (0 para deshabilitar el cambio de nombre)"
     email_editable: "Permitir a los usuarios cambiar su dirección de email después de registrarse."
     logout_redirect: "Destino hacia donde redirigir el navegador después de cerrar sesión (ej: http://sitio.com/salida)"
     allow_uploaded_avatars: "Permitir a los usuarios subir imágenes de perfil personalizadas."
@@ -1343,13 +1393,14 @@ es:
     staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados a los moderadores o admin."
     enable_user_directory: "Proporcionar un directorio de usuarios"
     enable_group_directory: "Activa un directorio de grupos para explorar"
+    group_in_subject: "Configura %{optional_pm} en el título del email para nombrar el primer grupo en MP, ver: https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para activar el modo anónimo"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde el último post Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
-    show_inactive_accounts: "Permitir a los usuarios con sesión iniciada ver perfiles de cuentas inactivas."
+    show_inactive_accounts: "Permitir a usuarios logueados visualizar perfiles de cuentas inactivas."
     hide_suspension_reasons: "No mostrar la razón de suspensión públicamente en el perfil de usuario."
-    log_personal_messages_views: "Registrar en el log cuando los Administradores vean mensajes personales de otros usuarios/grupos."
+    log_personal_messages_views: "Log de mensajes personales vistos por Admin para otros usuarios/grupos."
     user_website_domains_whitelist: "El sitio web del usuario será automáticamente verificado con estos dominios. Lista delimitada por barras |"
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
     sequential_replies_threshold: "Número de mensajes que un usuario tiene que publicar seguidos antes de que se le recuerde sobre demasiadas respuestas consecutivas."
@@ -1378,21 +1429,25 @@ es:
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) mira: https://highlightjs.org/static/demo/ para ver una demo"
     embed_truncate: "Truncar los posts embebidos."
+    embed_support_markdown: "Soporte de formato Markdown para publicaciones incrustadas."
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
     embed_post_limit: "Número máximo de posts a embeber."
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
+    notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un mensaje personal a los moderadores. Poner 0 para inhabilitar."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
     bootstrap_mode_min_users: "Mínimo número de usuarios requerido para desactivar el modo bootstrap (pon 0 para desactivar esta opción)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     slug_generation_method: "Elegir un método de generación de slug. 'encoded' generará cadenas con código porciento. 'none' hara que no se genere slug."
     enable_emoji: "Habilitar emoji"
-    enable_emoji_shortcuts: "Los emoticonos comunes como :) :p :( serán convertidos automáticamente a emojis"
+    enable_emoji_shortcuts: "Texto común de emoticones como :) :p :( serán convertidos a emojis"
     emoji_set: "¿De qué tipo os gustan los emoji?"
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     approve_new_topics_unless_trust_level: "Los nuevos temas de usuarios por debajo de este nivel de confianza deben ser aprobados"
+    approve_unless_staged: "Nuevos temas y mensajes de usuarios temporales deben ser aprovados"
+    notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, enviar una notificación a todos los moderadores. Pon 0 para desactivar estas notificaciones."
     auto_close_messages_post_count: "Máximo número de publicaciones permitidas en un mensaje antes de que sea cerrado automáticamente (0 para desactivar)"
     auto_close_topics_post_count: "Máximo número de publicaciones permitidas en un tema antes de que sea cerrado automáticamente (0 para desactivar)"
     code_formatting_style: "El botón de código en el editor se establecerá por defecto a este estilo de formato de código"
@@ -1400,6 +1455,7 @@ es:
     watched_words_regular_expressions: "Palabras observadas son expresiones regulares."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios emails de resumen por defecto."
     default_include_tl0_in_digests: "Incluir temas de usuarios nuevos en los emails de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
+    default_email_personal_messages: "Enviar un correo electrónico cuando alguien envíe un mensaje al usuario de manera predeterminada."
     default_email_direct: "Enviar un email cuando alguien cite/responda/mencione o invite al usuario por defecto."
     default_email_mailing_list_mode: "Enviar un email por cada nuevo post por defecto."
     default_email_mailing_list_mode_frequency: "Los usuarios que activen el modo lista de correo recibirán correos con esta frecuencia por defecto."
@@ -1435,13 +1491,18 @@ es:
     show_filter_by_tag: "Mostrar un desplegable para filtrar una lista de temas por etiqueta."
     max_tags_in_filter_list: "Máximo número de etiquetas en el desplegable. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
+    tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la página Etiquetas (/tags)."
     tag_style: "Estilo visual de las etiquetas."
+    allow_staff_to_tag_pms: "Permitir a los miembros del staff etiquetar cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coinciden con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No mostrar temas con etiquetas silenciadas en la lista de temas recientes."
     company_short_name: "Nombre de la empresa (corto)"
     company_full_name: "Nombre de la empresa (largo)"
     company_domain: "Dominio de la empresa"
+    shared_drafts_category: "Habilite la característica de Borradores Compartidos designando una categoría para borradores de temas."
+    push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
+    push_notifications_icon_url: "El icono del distintivo que aparece en la esquina de notificaciones. El tamaño recomendado es 96px por 96px."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1469,7 +1530,8 @@ es:
       enable_sso_disabled: "Debes activar primero 'enable sso' antes de activar esta opción."
       staged_users_disabled: "Primero debes habilitar 'staged users' antes, para habilitar esta configuración."
       reply_by_email_disabled: "Primero debes habilitar 'reply by email' antes de habilitar esta configuración."
-      sso_url_is_empty: "Debes establecer un valor en 'sso url' antes de activar este ajuste."
+      sso_url_is_empty: "Debe establecer una 'sso url' antes de habilitar esta configuración."
+      enable_local_logins_disabled: "Primero debes habilitar 'enable local logins'  antes de habilitar esta configuración."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1490,8 +1552,8 @@ es:
   most_recent_poster: "Autor más reciente"
   frequent_poster: "Autor frecuente"
   redirected_to_top_reasons:
-    new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes más populares."
-    not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto en un tiempo. Estos son los temas más populares desde estuviste por aquí."
+    new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes mas populares."
+    not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto en un tiempo. Estos son los temas mas populares desde que no has estado."
   merge_posts:
     edit_reason:
       one: Un tema fue juntado por %{username}
@@ -1568,7 +1630,7 @@ es:
   login:
     not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por email cuando todo esté listo para iniciar sesión."
     incorrect_username_email_or_password: "Nombre de usuario, dirección de correo o contraseña incorrectos"
-    incorrect_password: "Contraseña incorrecta"
+    incorrect_password: "Password incorrecto"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
     activate_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a <b>%{email}</b>. Por favor sigue las instrucciones de ese correo para activar tu cuenta.</p><p>Si no llega, mira en la carpeta de spam.</p>"
@@ -1591,11 +1653,11 @@ es:
     auth_complete: "Autenticación completa."
     click_to_continue: "Clic aquí para continuar."
     already_logged_in: "Ups, parece que estás intentando aceptar una invitación dirigida a otro usuariol. Si no eres %{current_user}, por favor cierra sesión e inténtalo de nuevo."
-    second_factor_title: "Autentificación de dos factores"
-    second_factor_description: "Por favor, introduce el código de autentificación obtenido en tu aplicación:"
-    invalid_second_factor_code: "Código de autentificación no válido"
+    second_factor_title: "Autenticación Dos Factores"
+    second_factor_description: "Por favor ingrese el código de autenticación desde tu aplicación:"
+    invalid_second_factor_code: "Código de Autenticación inválido"
   user:
-    no_accounts_associated: "No hay cuentas asociadas"
+    no_accounts_associated: "No hay cuentas relacionadas."
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
     activated_by_staff: "Activado por el staff"
@@ -1742,6 +1804,47 @@ es:
   test_mailer:
     title: "Mail de prueba"
     subject_template: "[%{email_prefix}] Prueba de envío de email"
+    text_body_template: |
+      Este es un correo electrónico de prueba de
+
+      [**%{base_url}**][0]
+
+      La entrega de correo electrónico es complicada. Aquí hay unas cuantas cosas importantes que deberías comprobar primero:
+
+      - *Asegúrate* de configurar la dirección correctamente en los ajustes de tu sitio de `notification email`. **El dominio especificado en la dirección "from" de los emails que envíes es el dominio contra el que se validará tu email**.
+
+      - Entérate de como ver el código fuente del email desde tu cliente de correo, para que así puedas examinar las cabeceras para ver pistas importantes. En Gmail está la opción "mostrar original" en el menú de lista desplegable en la parte superior derecha de cada email.
+
+      - **IMPORTANTE:** ¿Tu ISP tiene registros de DNS inversa para asociar los nombres de dominio y las direcciones IP desde donde envías los correos? [Comprueba tu registro PTR Inverso][2] aquí. Si tu ISP no introduce el puntero de registro DNS inverso adecuado, es muy improbable que cualquiera de tus correos pueda ser entregado.
+
+      - ¿Es el [registro SPF][8] de tu dominio correcto? [Comprueba tu registro SPF][1] aquí. Ten en cuenta que TXT es el tipo de registro oficial correcto para SPF.
+
+      - ¿Es el [registro DKIM][3] de tu dominio correcto? Esto puede mejorar significativamente la entregabilidad de correos. [Comprueba tu registro DKIM][7] aquí.
+
+      - Si estás corriendo tu propio servidor de correo, asegúrate de que las IPs de tu servidor de correo [no están en ninguna lista negra de correos][4]. También verifica que definitivamente se está enviando un nombre de huésped "hostname" completamente cualificado que resuelva en DNS en su mensaje HELO. Si no es así, esto causará que tu correo sea denegado por muchos servicios de correo.
+
+      - Recomendamos **enviar un email de prueba a [mail-tester.com][mt]** para verificar que todo está funcionando correctamente.
+
+      (La forma *fácil* es crear una cuenta gratuita en [Sendgrip][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que proveen generosamente planes de mailing gratuitos y serán adecuados para pequeñas comunidades. ¡De todas formas todavía tendrás que configurar los registros SPF y DKIM en tus DNS!)
+
+      ¡Esperamos que recibas esta prueba de entregabilidad de correo electrónico correctamente!
+
+      Buena suerte,
+
+      Tus amigos de [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Email de Nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
@@ -1798,32 +1901,32 @@ es:
       text_body_template: |
         Hola,
 
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tu mensaje ha sido ocultado.
+        Este es un mensaje automático desde %{site_name} para notificarte que tu mensaje ha sido ocultado.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        Varios miembros de la comunidad han reportado este mensaje antes de que fuera ocultado, por lo que por favor considera cómo podrías editar tu mensaje para reflejar sus comentarios. **Podrás editar tu mensaje en %{edit_delay} minutos, y será automáticamente desocultado**.
+        Varios miembros de la comunidad han reportado tu mensaje antes de que éste se haya ocultado, así que por favor considera cómo vas a editar tu mensaje. **Puedes editar tu mensaje después de  %{edit_delay} minutos, y será automáticamente mostrado de nuevo.**
 
-        Sin embargo, si el mensaje es ocultado por la comunidad una segunda vez, se mantendrá oculto hasta que sea revisado por un miembro del staff.
+        Sin embargo, si el mensaje es ocultado por la comunidad por segunda vez, permanecerá en ese estado hasta que sea revisado por alguien del staff.
 
-        Para obtener más información sobre el comportamiento esperado, revisa por favor las [directrices de la comunidad](%{base_url}/guidelines).
+        Para aprender más, por favor leer nuestra [guía de la comunidad](%{base_url}/guidelines).
     post_hidden_again:
       title: "Mensaje ocultado de nuevo"
-      subject_template: "Mensaje ocultado por reportes de la comunidad, se ha notificado al staff"
+      subject_template: "Mensaje ocultado debido a reportes de la comunidad, staff notificado"
       text_body_template: |
         Hola,
 
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tu mensaje ha vuelto a ser ocultado de nuevo.
+        Este es un mensaje automático desde %{site_name} para notificarte que tu mensaje ha sido ocultado nuevamente.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        Varios miembros de la comunidad han reportado este mensaje antes de que se ocultara. **Debido a que este mensaje ha sido ocultado anteriormente, se mantendrá oculto hasta que sea revisado por un miembro del staff.**
+        Varios miembros de la comunidad han reportado tu mensaje antes de que éste se haya ocultado.  **Porque este post ha sido ocultado más de una vez, permanecerá oculto hasta que personal del staff lo revise.**
 
-        Para más información, lee las [directrices de la comunidad](%{base_url}/guidelines).
+        Para aprender más, por favor leer nuestra [guía de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -1841,7 +1944,7 @@ es:
 
         ¡Disfruta de tu estancia!
     welcome_invite:
-      title: "Bienvenido, Invitado"
+      title: "Bienvenido Invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
@@ -1861,7 +1964,7 @@ es:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Copia de seguridad completada con éxito"
-      subject_template: "La copia de seguridad se ha completado con éxito"
+      subject_template: "La copia de seguridad se completo exitosamente"
       text_body_template: |+
         Copia de seguridad realizada con éxito.
 
@@ -1875,7 +1978,7 @@ es:
 
     backup_failed:
       title: "Error en la copia de seguridad"
-      subject_template: "La copia de seguridad ha fallado"
+      subject_template: "La copia de seguridad falló"
       text_body_template: |
         La copia de seguridad ha fallado.
 
@@ -1886,7 +1989,7 @@ es:
         ```
     restore_succeeded:
       title: "Restauración completada con éxito"
-      subject_template: "Restauración completada con éxito"
+      subject_template: "Restauración completada exitosamente."
       text_body_template: |
         La restauración se ha completado con éxito.
 
@@ -1897,7 +2000,7 @@ es:
         ```
     restore_failed:
       title: "Error en la restauración"
-      subject_template: "La restauración ha fallado."
+      subject_template: "La restauración falló."
       text_body_template: |
         La restauración ha fallado.
 
@@ -1923,6 +2026,7 @@ es:
         ```
     csv_export_succeeded:
       title: "Exportación de datos en CSV completada con éxito"
+      subject_template: "[%{export_title}] exportación de datos completa"
       text_body_template: |
         ¡Se han exportado tus datos correctamente! :dvd:
 
@@ -2060,6 +2164,13 @@ es:
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         Ninguna de las direcciones de emails ha sido reconocida, o el Message-ID de la cabecera en el email ha sido modificado. Por favor asegúrate de que estás enviando los correos a las direcciones correctas provistas por el staff.
+    email_reject_old_destination:
+      title: "Correo electrónico rechazo antiguo destino"
+      subject_template: "[%{email_prefix}] Problema con el correo -- Estás intentando responder a una notificación antigua"
+      text_body_template: |
+        Lo sentimos, pero tu mensaje de correo a %{destination} (titulado %{former_title}) no ha funcionado.
+
+        Por razones de seguridad nosotros solo aceptamos respuestas a notificaciones originales para 90 días. Por favor [visita el tema](%{short_url}) para continuar esta conversación.
     email_reject_topic_not_found:
       title: "Email rechazado, tema no encontrado"
       subject_template: "[%{email_prefix}] Problema con el correo -- Tema no encontrado"
@@ -2106,7 +2217,7 @@ es:
 
         Esto es un mensaje automático de %{site_name} para hacerte saber que tus mensajes han sido ocultados temporalmente porque han sido reportados muchas veces por la comunidad.
 
-        Como medida cautelar, tu cuenta nueva ha sido silenciada y no puede crear nuevas respuestas o debates hasta que un miembro del staff la revise. Sentimos las molestias ocasionadas.
+        Como medida cautelar, tu cuenta nueva ha sido silenciada de crear nuevas respuestas o debates hasta que un miembro del staff la revise tu cuenta. Sentimos las molestias ocasionadas.
 
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -2115,13 +2226,13 @@ es:
       text_body_template: |
         Hola,
 
-        Este es un mensaje automático de %{site_name} para hacerte saber que tu cuenta ha sido retenida porque ha sido reportada muchas veces por la comunidad.
+        Esto es un mensaje automático de %{site_name} para hacerte saber que tu cuenta ha sido retenida porque ha sido reportada muchas veces por la comunidad.
 
-        Como medida cautelar, tu cuenta nueva ha sido silenciada y no puede crear nuevas respuestas o debates hasta que un miembro del staff la revise. Sentimos las molestias ocasionadas.
+        Como medida cautelar, tu cuenta nueva ha sido silenciada de crear nuevas respuestas o debates hasta que un miembro del staff la revise tu cuenta. Sentimos las molestias ocasionadas.
 
         Para más información, por favor lee las [directrices de la comunidad](%{base_url}/guidelines).
     silenced_by_staff:
-      title: "Silenciado por el Staff"
+      title: "Silenciado por Staff"
       subject_template: "Cuenta temporalmente retenida"
       text_body_template: |
         Hola,
@@ -2143,23 +2254,23 @@ es:
 
         Esto puede ser cambiado con el ajuste `silence_new_user` en configuración del sitio.
     spam_post_blocked:
-      title: "Post spam bloqueado"
-      subject_template: "Bloqueado nuevo usuario %{username} debido a enlaces repetidos"
+      title: "Post con Spam Bloqueado"
+      subject_template: "Nuevo usuario %{username} posts bloqueados debido a repetición de enlaces."
       text_body_template: |
         Este es un mensaje automático.
 
-        El nuevo usuario [%{username}](%{user_url}) ha intentado crear múltiples posts con enlaces a %{domains}, pero han sido bloqueados para evitar spam. El usuario podrá seguir creando nuevos posts si no enlazan a %{domains}.
+        El usuario nuevo [%{username}](%{user_url}) ha intentado crear múltiples temas con enlaces a %{domains}, pero han sido bloqueados para evitar spam. El usuario todavía puede crear temas, siempre y cuando no contengan enlaces a %{domains}.
 
-        Por favor, [revisa el usuario](%{user_url}).
+        Por favor, [echa un vistazo al usuario](%{user_url}).
 
-        Esto puede ser modificado a través de los ajustes `newuser_spam_host_threshold` y `newuser_spam_host_threshold`.
+        Esto puede ser modificado con los ajustes `newuser_spam_host_threshold` y `white_listed_spam_host_domains`.
     unsilenced:
       title: "Dejar de silenciar"
-      subject_template: "Tu cuenta ya no está retenida"
+      subject_template: "Cuenta no retenida"
       text_body_template: |
         Hola,
 
-        Este es un mensaje automático de %{site_name} para informarte que tu cuenta ya no se encuentra retenida y ha sido revisada por miembros del staff.
+        Este es un mensaje automático desde %{site_name} para informarte que tu cuenta no se encuentra retenida debido a la revisión de miembros del staff.
 
         Ahora puedes crear temas, y responder a otros usuarios. Gracias por tu paciencia.
     pending_users_reminder:
@@ -2186,7 +2297,7 @@ es:
       title: "¡Eres el Nuevo Usuario del Mes!"
       subject_template: "¡Eres el Nuevo Usuario del Mes!"
       text_body_template: |
-        ¡Felicitaciones, has ganado el **premio Nuevo Usuario del Mes para %{month_year}**. :trophy:!
+        ¡Felicitaciones, has ganado el **premio Nuevo Usuario del Mes para %{month_year}**. :trophy: !
 
         Este premio solo lo ganan dos de los nuevos miembros por mes, y será visible permanentemente en [la página de distintivos](%{url}).
 
@@ -2225,6 +2336,7 @@ es:
     visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} el %{post_date}"
+    pm_participants: "Participantes:"
     invited_group_to_private_message_body: |
       %{username} te invitó en @%{group_name} al mensaje
 
@@ -2346,6 +2458,17 @@ es:
         %{context}
 
         %{respond_instructions}
+    user_mentioned_pm:
+      title: "Usuario Mencionado MP"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned:
       title: "Grupo del usuario mencionado"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2426,14 +2549,14 @@ es:
 
         Si tienes alguna pregunta, [contactar a nuestro amigable staff](%{base_url}/about).
     account_second_factor_disabled:
-      title: "Autentificación de dos factores desactivada"
-      subject_template: "[%{email_prefix}] Autentificación de dos factores desactivada "
+      title: "Autenticación de dos factores inhabilitada"
+      subject_template: "[%{email_prefix}] Autenticación de dos factores inhabilitada"
       text_body_template: |
-        La autentificación de dos factores ha sido desactivada en tu cuenta de %{site_name}. Ahora puedes iniciar sesión solo con tu contraseña. No hace falta que nos facilites el código adicional al iniciar sesión.
+        La autenticación de dos factores de tu cuenta en %{site_name} ha sido inhabilitada. Puedes ingresar únicamente con tu contraseña; no será necesario que ingreses con el código de autenticación adicional.
 
-        Si no has elegido desactivar la autentificación de dos factores, alguien podría tener acceso no autorizado a tu cuenta.
+        Si no seleccionaste inhabilitar la autenticación de dos factores, alguien puede haber comprometido tu cuenta.
 
-        Si tienes alguna pregunta, [ponte en contacto con nuestro staff](%{base_url}/about).
+        Si tienes alguna pregunta.  [contacta nuestro amigable staff](%{base_url}/about).
     digest:
       why: "Un breve resumen de %{site_link} desde tu última visita el %{last_seen_at}"
       since_last_visit: "Desde tu última visita"
@@ -2465,14 +2588,14 @@ es:
         Haz clic en el siguiente enlace para cambiar tu contraseña:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
-      title: "Iniciar sesión con enlace"
-      subject_template: "[%{email_prefix}] Iniciar sesión con enlace"
+      title: "Ingreso vía enlace"
+      subject_template: "[%{email_prefix}] Ingreso vía enlace"
       text_body_template: |
-        Aquí tienes tu enlace para iniciar sesión en [%{site_name}](%{base_url}).
+        Aquí tienes tu enlace para ingresar a [%{site_name}](%{base_url}).
 
-        Si no has solicitado este enlace, puedes ignorar sin problema este email.
+        Si no has solicitado este enlace, puedes simplemente ignorar este correo electrónico.
 
-        Haz clic en el siguiente enlace para iniciar sesión:
+        Clic en el siguiente enlace para ingresar:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Pon una contraseña"
@@ -2531,20 +2654,20 @@ es:
       title: "Entra después de ser aprobado"
       subject_template: "¡Tu solicitud ha sido aprobada en %{site_name}!"
       text_body_template: |
-        ¡Te damos la bienvenida a %{site_name}!
+        ¡Bienvenido a %{site_name}!
 
-        Un miembro del staff ha aprobado tu cuenta de %{site_name}.
+        Un miembro del staff aprobó tu cuenta en %{site_name}.
 
-        Ahora puedes acceder a ella iniciando sesión en:
+        Puedes ahora acceder a tu nueva cuenta ingresando en:
         %{base_url}
 
-        Si el enlace de arriba no funciona, prueba a copiarlo y pegarlo en la barra de direcciones de tu navegador web.
+        Si no puedes hacer clic en el enlace, intenta copiándolo y pegándolo en la barra de direcciones de tu navegador.
 
         %{new_user_tips}
 
-        Creemos en un [comportamiento civilizado de la comunidad](%{base_url}/guidelines) en todo momento.
+        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
 
-        ¡Disfruta de tu estancia!
+        ¡Disfruta tu estadía!
     signup:
       title: "Registrate"
       subject_template: "[%{email_prefix}] Confirma tu nueva cuenta"
@@ -2563,8 +2686,8 @@ es:
     search_title: "Busca en este sitio"
     search_google: "Google"
   offline:
-    title: "No se ha podido cargar"
-    offline_page_message: "¡Parece que no tienes conexión! Por favor, revisa tu conexión a internet e inténtalo de nuevo."
+    title: "No carga app"
+    offline_page_message: "¡Parece que estás offline! Por favor revisa tu conexión a internet e intenta de nuevo."
   login_required:
     welcome_message: |
       ## [Bienvenido a %{title}](#welcome)
@@ -2581,7 +2704,7 @@ es:
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
     file_missing: "Lo sentimos, debes incluir un archivo a subir."
     empty: "Disculpa, pero el archivo que proporcionaste está vacío."
-    png_to_jpg_conversion_failure_message: "Ha ocurrido un error al convertir de PNG a JPG."
+    png_to_jpg_conversion_failure_message: "Ha ocurrido un error cuando se convertía desde PNG a JPG."
     attachments:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:
@@ -2732,9 +2855,144 @@ es:
 
       Sí, estos temas aburren, pero debemos protegernos &ndash; y, por extensión, a ti y a tus datos &ndash; frente a gente poco amigable. Tenemos unos [Términos del Servicio](/tos) que describen nuestra forma de actuar (y la tuya), y los derechos con relación al contenido, la privacidad y las leyes, Para usar nuestros servicios, debes aceptar nuestros [Términos y Condiciones](/tos).
   tos_topic:
-    title: "Términos del servicio"
+    title: "Términos de Servicio"
+    body: |
+      Los siguientes términos y condiciones rigen el uso del sitio web %{company_domain} y todo el contenido, servicios y productos disponibles a través del sitio web, incluidos, entre otros, el software del foro %{company_domain}, el foro de soporte de %{company_domain} y el servicio de alojamiento de alojamiento ("Hosting") si existiese, (en conjunto, el sitio web). El sitio web pertenece y es operado por %{company_full_name} ("%{company_name}"). El sitio web se ofrece sujeto a su aceptación sin modificación de todos los términos y condiciones aquí contenidos y todas las demás reglas operativas y políticas (incluyendo, sin limitación, las [Política de privacidad](/privacy) y las [Guías de la Comunidad](/faq) de %{company_domain}) y los procedimientos que pueden publicarse de vez en cuando en este Sitio por %{company_name} (colectivamente, el "Acuerdo").
+
+      Lea este Acuerdo detenidamente antes de acceder o utilizar el sitio web. Al acceder o usar cualquier parte del sitio web, usted acepta quedar sujeto a los términos y condiciones de este acuerdo. Si no acepta todos los términos y condiciones de este acuerdo, entonces no podrá acceder al sitio web ni utilizar ningún servicio. Si estos términos y condiciones se consideran una oferta de %{company_name}, la aceptación está expresamente limitada a estos términos. El sitio web está disponible solo para personas que tienen al menos 13 años de edad.
+
+      <a name="1"></a>
+
+      ## [1. Tu cuenta en %{company_domain}](#1)
+
+      Si crea una cuenta en el sitio web, usted es responsable de mantener la seguridad de su cuenta y usted es totalmente responsable de todas las actividades que ocurran en la cuenta. Debe notificar de inmediato a %{company_name} cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad. %{company_name} no será responsable de ningún acto u omisión por su parte, incluidos los daños y perjuicios de cualquier tipo incurridos como resultado de dichos actos u omisiones.
+      <a name="2"></a>
+
+      ## [2. Responsabilidad de los Colaboradores](#2)
+
+      Si publica material en el sitio web, ya sea publica enlaces en el sitio web o crea (o permite que un tercero lo haga) material disponible por medio del sitio web (cualquier material se considera "Contenido"), usted es completamente responsable del contenido y cualquier daño resultante de ese contenido. Este caso independientemente de si el Contenido en cuestión constituye texto, gráficos, un archivo de audio o software de computadora. Al hacer que el Contenido esté disponible, usted declara y garantiza que:
+
+      * la descarga, copia y uso del Contenido no infringirá los derechos de propiedad, incluidos, entre otros, los derechos de autor, patente, marca comercial o secreto comercial de terceros;
+      * si su empleador tiene derechos de propiedad intelectual que usted crea, usted (i) ha recibido permiso de su empleador para publicar o poner a disposición el Contenido, incluido, entre otros, cualquier software, o (ii) ha obtenido una exención de su empleador como a todos los derechos en o al Contenido;
+      * usted ha cumplido completamente con las licencias de terceros relacionadas con el Contenido, y ha hecho todo lo necesario para transmitir con éxito a los usuarios finales los términos requeridos;
+      * el contenido no contiene ni instala virus, gusanos, malware, caballos de Troya u otro contenido dañino o destructivo;
+      * el contenido no es correo no deseado, no se genera de forma automática o aleatoria, y no contiene contenido comercial no ético o no deseado diseñado para dirigir el tráfico a sitios de terceros o aumentar la clasificación de motores de búsqueda de sitios de terceros o actos ilegales (como phishing) o engañar a los destinatarios sobre el origen del material (como spoofing);
+      * el Contenido no es pornográfico, no contiene amenazas ni incita a la violencia, y no viola los derechos de privacidad o publicidad de ningún tercero;
+      * su contenido no se anuncia a través de mensajes electrónicos no deseados, como enlaces de spam en grupos de noticias, listas de correo electrónico, blogs y sitios web, y métodos de promoción no solicitados similares;
+      * su contenido no se nombra de una manera que induzca a error a sus lectores a pensar que usted es otra persona o empresa; y
+      * usted tiene, en el caso de Contenido que incluye código de computadora, categorizado y/o descrito con precisión el tipo, naturaleza, usos y efectos de los materiales, ya sea que lo solicite %{company_name} o de otra manera.
+
+      <a name="3"></a>
+
+      ## [3. Licencia de Contenido de Usuario](#3)
+
+      Las contribuciones de los usuarios están autorizadas bajo una [Reconocimiento-NoComercial-CompartirIgual 3.0 Unported (CC BY-NC-SA 3.0)](https://creativecommons.org/licenses/by-nc-sa/3.0/deed.es_ES). Sin limitar ninguna de esas representaciones o garantías, %{company_name} tiene el derecho (aunque no la obligación) de, en el exclusivo criterio de %{company_name} (i) rechazar o eliminar cualquier contenido que en opinión razonable de %{company_name}, viola cualquier política de %{company_name} o es de alguna manera dañina u objetable, o (ii) cancela o niega el acceso y uso del sitio web a cualquier individuo o entidad por cualquier motivo, en la única propiedad de %{company_name} discreción. %{company_name} no tendrá obligación de proporcionar un reembolso de los montos pagados previamente.
+
+      <a name="4"></a>
+
+      ## [4. Pago y Renovación](#4)
+
+      ### Términos Generales
+
+      Servicios pagos opcionales o actualizaciones pueden estar disponibles en el sitio web. Al utilizar un servicio o actualización pagada opcional, usted acepta pagar a %{company_name} las tarifas de suscripción mensuales o anuales indicadas. Los pagos se cobrarán de forma prepaga el día que comience a utilizar el servicio o la actualización, y cubrirá el uso de ese servicio o la actualización por un período de suscripción mensual o anual según lo indicado. Estas tarifas no son reembolsables.
+
+      ### Renovación Automática
+
+      A menos que notifique a %{company_name} antes del final del período de suscripción correspondiente que desea cancelar un servicio o una actualización, su suscripción se renovará automáticamente y usted nos autorizará a cobrar la tarifa de suscripción anual o mensual aplicable en ese momento (así como cualquier impuestos) utilizando cualquier tarjeta de crédito u otro mecanismo de pago que tengamos registrado para usted. Las suscripciones pueden cancelarse en cualquier momento.
+
+      <a name="5"></a>
+
+      ## [5. Servicios](#5)
+
+      ### Hosting, Servicios de Soporte
+
+      Servicios opcionales de Hosting y Soporte pueden ser provistos por %{company_name} bajo los términos y condiciones para cada servicio. Al suscribirse a una cuenta de servicios de Hosting/Soporte o Soporte, acepta cumplir con dichos términos y condiciones.
+
+      ### HTTPS
+
+      Ofrecemos HTTPS como un complemento pago. Al registrarse y utilizar un dominio personalizado en %{company_domain}, nos autoriza a actuar en nombre del registrante del nombre de dominio (al solicitar los certificados necesarios, por ejemplo) con el único propósito de proporcionar HTTPS en su sitio.
+
+      ### Enterprise
+
+      Los servicios de Enterprise Hosting son provistos por %{company_name} bajo los términos y condiciones para cada servicio, que están determinados por un contrato específico del cliente. Al registrarse en una cuenta de Enterprise Hosting, acepta cumplir con dichos términos y condiciones.
+
+      <a name="6"></a>
+
+      ## [6. Responsabilidad de los visitantes del sitio web](#6)
+
+      %{company_name} no ha revisado, y no puede revisar, todo el material, incluido el software informático, publicado en el sitio web, y no puede ser responsable del contenido, uso o efectos de ese material. Al operar el sitio web, %{company_name} no representa ni implica que respalda el material allí publicado, o que considera que dicho material es preciso, útil o no dañino. Usted es responsable de tomar las precauciones necesarias para protegerse a usted mismo y a sus sistemas informáticos contra virus, gusanos, caballos de Troya y otros contenidos dañinos o destructivos. El sitio web puede contener contenido ofensivo, indecente u objetable, así como contenido que contenga inexactitudes técnicas, errores tipográficos y otros errores. El sitio web también puede contener material que viole los derechos de privacidad o publicidad, o que infrinja la propiedad intelectual y otros derechos de propiedad de terceros, o cuya descarga, copia o uso esté sujeto a términos y condiciones adicionales, establecidos o no. %{company_name} se exime de cualquier responsabilidad por cualquier daño que resulte del uso por parte de los visitantes del sitio web, o de cualquier descarga por parte de los visitantes del contenido allí publicado.
+
+      <a name="7"></a>
+
+      ## [7. Contenido publicado en otros sitios web](#7)
+
+      No hemos revisado, y no podemos revisar, todo el material, incluido el software de computadora, disponible a través de los sitios web y páginas web a los cuales %{company_domain} vincula, y ese enlace a %{company_domain}. %{company_name} no tiene ningún control sobre los sitios web y páginas web que no sean del %{company_domain}, y no es responsable de sus contenidos o su uso. Al vincular a un sitio web o página web que no sea de %{company_domain}, %{company_name} no representa ni implica que respalde dicho sitio web o página web. Usted es responsable de tomar las precauciones necesarias para protegerse a usted mismo y a sus sistemas informáticos contra virus, gusanos, caballos de Troya y otros contenidos dañinos o destructivos. %{company_name} no se responsabiliza por ningún daño derivado de su uso de sitios web y páginas web que no sean del %{company_domain}.
+
+      <a name="8"></a>
+
+      ## [8. Infracción de derechos de autor y política de DMCA](#8)
+
+      Como %{company_name} pide a los demás que respeten sus derechos de propiedad intelectual, respeta los derechos de propiedad intelectual de los demás. Si cree que el material ubicado en o vinculado a %{company_domain} infringe sus derechos de autor, y si este sitio web reside en los EE. UU., Le recomendamos que notifique a %{company_name} de acuerdo con %{company_name} [Digital Millennium Copyright Ley](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Política. %{company_name} responderá a todos los avisos, incluidos los necesarios o apropiados, eliminando el material infractor o deshabilitando todos los enlaces al material infractor. %{company_name} dará por terminado el acceso y uso del visitante del sitio web si, bajo circunstancias apropiadas, se determina que el visitante es un infractor recurrente de los derechos de autor u otros derechos de propiedad intelectual de %{company_name} u otros. En el caso de dicha finalización, %{company_name} no tendrá obligación de proporcionar un reembolso de los montos pagados previamente a %{company_name}.
+
+      <a name="9"></a>
+
+      ## [9. Propiedad Intelectual](#9)
+
+      Este Acuerdo no transfiere de %{company_name} ninguna propiedad intelectual de %{company_name} o de terceros, y todos los derechos, títulos e intereses en y para dicha propiedad se mantendrán (entre las partes) únicamente con %{company_name}. %{company_name}, %{company_domain}, el logotipo de %{company_domain} y todas las demás marcas comerciales, marcas de servicio, gráficos y logotipos utilizados en relación con %{company_domain}, o el sitio web son marcas comerciales o marcas comerciales registradas de %{company_name} o los licenciantes de %{company_name}. Otras marcas comerciales, marcas de servicio, gráficos y logotipos utilizados en relación con el sitio web pueden ser marcas comerciales de otros terceros. Su uso del sitio web no le concede ningún derecho o licencia para reproducir o usar cualquier %{company_name} o marcas comerciales de terceros.
+
+      <a name="10"></a>
+
+      ## [10. Atribución](#10)
+
+      %{company_name} se reserva el derecho de mostrar vínculos de atribución como 'Desarrollado por %{company_domain},' autor del tema y atribución de fuentes en su pie de página de contenido.
+
+      <a name="11"></a>
+
+      ## [11. Cambios](#11)
+
+      %{company_name} se reserva el derecho, a su entera discreción, de modificar o reemplazar cualquier parte de este Acuerdo. Es su responsabilidad verificar este Acuerdo periódicamente para ver los cambios. Su uso continuo o acceso al sitio web después de la publicación de cualquier cambio en este Acuerdo constituye la aceptación de dichos cambios. %{company_name} también puede, en el futuro, ofrecer nuevos servicios y/o características a través del sitio web (incluido el lanzamiento de nuevas herramientas y recursos). Tales nuevas características y/o servicios estarán sujetos a los términos y condiciones de este Acuerdo.
+
+      <a name="12"></a>
+
+      ## [12. Terminación](#12)
+
+      %{company_name} puede finalizar su acceso a todo o a cualquier parte del sitio web en cualquier momento, con o sin causa, con o sin aviso, y con efecto inmediato. Si desea rescindir este Acuerdo o su cuenta de %{company_domain} (si tiene una), simplemente puede dejar de usar el sitio web. Todas las disposiciones de este Acuerdo que por su naturaleza deben seguir vigentes después de la terminación seguirán vigentes después de la terminación, incluidas, entre otras, las disposiciones de propiedad, los descargos de garantía, la indemnización y las limitaciones de responsabilidad.
+
+      <a name="13"></a>
+
+      ## [13. Descargo de garantías](#13)
+
+      El sitio web se proporciona "tal cual". %{company_name} y sus proveedores y licenciantes renuncian a todas las garantías de cualquier tipo, expresas o implícitas, incluidas, entre otras, las garantías de comerciabilidad, adecuación para un propósito particular y no infracción. Ni %{company_name} ni sus proveedores y licenciantes hacen ninguna garantía de que el sitio web esté libre de errores o que el acceso al mismo sea continuo o ininterrumpido. Usted entiende que la descarga u obtención de contenido o servicios a través del sitio web, a su propia discreción y riesgo.
+
+      <a name="14"></a>
+
+      ## [14. Limitación de Responsabilidad](#14)
+
+      En ningún caso %{company_name}, ni sus proveedores o licenciantes, serán responsables con respecto a cualquier tema de este acuerdo bajo ningún contrato, negligencia, responsabilidad estricta u otra teoría legal o equitativa para: (i) cualquier especial, incidental o daños generados; (ii) el costo de adquisición de productos o servicios sustitutos; (iii) por interrupción de uso o pérdida o corrupción de datos; o (iv) para cualquier cantidad que exceda las tarifas pagadas por usted a %{company_name} en virtud de este acuerdo durante el período de doce (12) meses anterior a la causa de la acción. %{company_name} no tendrá ninguna responsabilidad por cualquier falla o retraso debido a asuntos fuera de su control razonable. Lo anterior no se aplicará en la medida en que lo prohíba la ley aplicable.
+
+      <a name="15"></a>
+
+      ## [15. Representación general y garantía](#15)
+
+      Usted declara y garantiza que (i) su uso del sitio web será estrictamente de acuerdo con %{company_name} [Política de privacidad](/privacy), [Pautas de la comunidad](/guidelines), con este Acuerdo y con todas las leyes aplicables y normativas (incluidas, entre otras, leyes o normativas locales de su país, estado, ciudad u otra área gubernamental, relacionadas con la conducta en línea y el contenido aceptable, e incluidas todas las leyes aplicables relativas a la transmisión de datos técnicos exportados del país en el que se encuentra este sitio web reside o el país en el que usted reside) y (ii) su uso del sitio web no infringirá o mal apropiará los derechos de propiedad intelectual de ningún tercero.
+
+      <a name="16"></a>
+
+      ## [16. Indemnización](#16)
+
+      Usted acepta indemnizar y mantener indemne a %{company_name}, sus contratistas y sus licenciantes, y sus respectivos directores, funcionarios, empleados y agentes de y contra todos los reclamos y gastos, incluidos los honorarios de abogados, que surjan de su uso de el sitio web, incluyendo pero no limitado a su violación de este Acuerdo.
+
+      <a name="17"></a>
+
+      ## [17. Diversos](#17)
+
+      Este acuerdo constituye el acuerdo completo entre %{company_name} y usted con respecto al tema del presente documento, y solo se puede modificar mediante una enmienda escrita firmada por un ejecutivo autorizado de %{company_name}, o mediante la publicación por parte de %{company_name} de una versión revisada. Excepto en la medida en que la ley aplicable, de existir alguna, establezca lo contrario, este Acuerdo, cualquier acceso o uso del Sitio web se regirá por las leyes del estado de California, EE. UU., excluyendo las disposiciones sobre conflicto de leyes y el lugar adecuado para cualquier disputa que surja de o esté relacionada con cualquiera de los mismos será a los tribunales estatales y federales ubicados en el condado de San Francisco, California. A excepción de las reclamaciones por orden judicial o equitativo o reclamaciones relativas a los derechos de propiedad intelectual (que pueden ser llevados ante los tribunales competentes sin la fijación de un enlace), cualquier disputa que surja de este Acuerdo será resuelta de acuerdo con las Reglas completas de Arbitraje de la Judicial Arbitration and Mediation Service, Inc. ("JAMS") por tres árbitros designados de acuerdo con dichas Reglas. El arbitraje se llevará a cabo en San Francisco, California, en idioma inglés y la decisión de arbitraje se puede hacer cumplir en cualquier tribunal. La parte que prevalezca en cualquier acción o procedimiento para hacer cumplir este Acuerdo tendrá derecho a los costos y honorarios de abogados. Si alguna parte de este Acuerdo se considera inválida o no exigible, se interpretará que esa parte refleja la intención original de las partes, y las partes restantes permanecerán en pleno vigor y efecto. Una renuncia por cualquiera de las partes de cualquier término o condición de este Acuerdo o cualquier incumplimiento del mismo, en cualquier instancia, no renunciará a dicho término o condición o cualquier incumplimiento posterior de los mismos. Puede ceder sus derechos bajo este Acuerdo a cualquier parte que consienta y acuerde estar sujeto a sus términos y condiciones; %{company_name} puede asignar sus derechos bajo este Acuerdo sin condición. Este Acuerdo será vinculante y redundará en beneficio de las partes, sus sucesores y cesionarios permitidos.
+
+      Este documento es CC-BY-SA. Se actualizó por última vez el 1 de enero de 2017.
+
+      Originalmente adaptado de los [Términos del servicio de WordPress](http://en.wordpress.com/tos/) en inglés.
   privacy_topic:
-    title: "Política de privacidad"
+    title: "Políticas de Privacidad"
     body: |
       <a name="collect"></a>
 
@@ -2920,7 +3178,7 @@ es:
       name: Promotor
       description: Invitó a un usuario
       long_description: |
-        Esta insignia se concede cuanto invitas a alguien a unirse a la comunidad a través del botón de invitar en tu página de usuario o al final de un tema. Invitar amigos que puedan estar interesados en debates específicos es una gran manera de traer gente nueva a la comunidad, así que ¡gracias!
+        Este distintivo se concede cuando invitas a alguien a unirse a la comunidad a través del botón de invitación en tu página del perfil o al final de un tema. Invitar a amigos que puedan estar interesados en debates específicos es la manera perfecta para introducirles a la comunidad, ¡así que gracias!
     campaigner:
       name: Paladín
       description: Invitó a 3 usuarios
@@ -3020,7 +3278,7 @@ es:
       name: Primer emoji
       description: Utilizó un emoji en un post
       long_description: |
-        Esta insignia se te concede la primera vez que añades un Emoji a un mensaje :thumbsup:. Los Emoji te permiten mostrar tus emociones en tus mensajes: de alegría :smiley: a tristeza :anguished: o :angry: enfado, y todo lo que esté entre medias :sunglasses:. Basta con escribir : (dos puntos) o pulsar el botón de Emojis en el editor para seleccionar de cientos de opciones :ok_hand:
+        Este distintivo se concede la primera vez que añades un Emoji a tu post :thumbsup:. Los Emoji te permiten añadir emociones a tu publicación, desde felicidad :smiley: a tristeza :anguished: pasando por enfado :angry: o cualquier otra expresión :sunglasses: . Comienza escribiendo : (dos puntos) o haz clic en el botón Emoji de la barra del editor para seleccionar entre cientos de opciones :ok_hand:
     first_mention:
       name: Primera mención
       description: Mencionó a un usuario en un post
@@ -3066,7 +3324,7 @@ es:
     title: "Etiquetas"
     staff_tag_disallowed: "La etiqueta \"%{tag}\" solo puede ser insertada por moderadores."
     staff_tag_remove_disallowed: "La etiqueta \"%{tag}\" solo puede ser eliminada por moderadores."
-    minimum_required_tags: "Debes seleccionar al menos %{count} etiquetas."
+    minimum_required_tags: "Debes seleccionar al menos %{count} etiquetas,"
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "Enhorabuena, ¡has instalado Discourse!"
@@ -3203,5 +3461,16 @@ es:
           <p>Si alguna vez quieres cambiar alguno de estos ajustes, visita <a href='/admin' target='_blank'>tu sección de administrador</a>; la puedes encontrar el lado del icono de una llave inglesa en el menú de la página..</p>
           <p>Diviértete, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
   search_logs:
-    graph_title: "Número de búsquedas"
-  joined: "Se unió"
+    graph_title: "Cuenta de Búsquedas"
+  joined: "Registrado"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} te mencionó en "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} te mencionó en "%{topic}" - %{site_title}'
+      quoted: '%{username} te cito en "%{topic}" - %{site_title}'
+      replied: '%{username} te respondió en "%{topic}" - %{site_title}'
+      posted: '%{username} publicó en "%{topic}" - %{site_title}'
+      private_message: '%{username} te envió un mensaje privado en "%{topic}" - %{site_title}'
+      linked: '%{username} enlazó tu publicación desde "%{topic}" - %{site_title}'
+      confirm_title: 'Notificaciones habilitadas - %{site_title}'
+      confirm_body: '¡Éxito! Las notificaciones han sido habilitadas.'
