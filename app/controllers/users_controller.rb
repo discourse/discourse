@@ -749,7 +749,7 @@ class UsersController < ApplicationController
         enqueue_activation_email
         render json: success_json
       else
-        render_json_error(@user)
+        render_json_error(primary_email)
       end
     end
   end
