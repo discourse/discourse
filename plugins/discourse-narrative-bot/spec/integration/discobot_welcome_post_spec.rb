@@ -4,6 +4,7 @@ describe "Discobot welcome post" do
   let(:user) { Fabricate(:user) }
 
   before do
+    SiteSetting.queue_jobs = true
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 

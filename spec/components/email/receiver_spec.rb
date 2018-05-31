@@ -389,6 +389,7 @@ describe Email::Receiver do
 
     it "supports attached images in TEXT part" do
       SiteSetting.incoming_email_prefer_html = false
+      SiteSetting.queue_jobs = true
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<img/)
@@ -398,6 +399,7 @@ describe Email::Receiver do
     end
 
     it "supports attached images in HTML part" do
+      SiteSetting.queue_jobs = true
       SiteSetting.incoming_email_prefer_html = true
 
       expect { process(:inline_image) }.to change { topic.posts.count }

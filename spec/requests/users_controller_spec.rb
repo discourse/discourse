@@ -25,6 +25,10 @@ describe UsersController do
 
     context 'valid token' do
       context 'welcome message' do
+        before do
+          SiteSetting.queue_jobs = true
+        end
+
         it 'enqueues a welcome message if the user object indicates so' do
           user.update(active: false)
           put "/u/activate-account/#{token}"
@@ -349,6 +353,7 @@ describe UsersController do
 
     context 'enqueues mail' do
       it 'enqueues mail with admin email and sso enabled' do
+        SiteSetting.queue_jobs = true
         put "/u/admin-login", params: { email: admin.email }
         expect(response.status).to eq(200)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
@@ -464,7 +469,8 @@ describe UsersController do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
       SiteSetting.allow_new_registrations = true
-      @user = Fabricate.build(:user, password: "strongpassword")
+      @user = Fabricate.build(:user)
+      @user.password = "strongpassword"
     end
 
     let(:post_user_params) do
@@ -518,6 +524,8 @@ describe UsersController do
       end
 
       it 'creates a user correctly' do
+        SiteSetting.queue_jobs = true
+
         post_user
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)['active']).to be_falsey
@@ -537,6 +545,8 @@ describe UsersController do
         before { SiteSetting.must_approve_users = true }
 
         it 'creates a user correctly' do
+          SiteSetting.queue_jobs = true
+
           post_user
           expect(response.status).to eq(200)
 
@@ -609,6 +619,7 @@ describe UsersController do
         let(:api_key) { Fabricate(:api_key, user: admin) }
 
         it "creates the user as active with a regular key" do
+          SiteSetting.queue_jobs = true
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
@@ -689,6 +700,7 @@ describe UsersController do
       before { User.any_instance.stubs(:active?).returns(true) }
 
       it 'enqueues a welcome email' do
+        SiteSetting.queue_jobs = true
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
 
         post_user
@@ -1586,8 +1598,7 @@ describe UsersController do
         password: "strongpassword",
         email: "dsdsds@sasa.com"
       }
-
-      User.find_by(username: "osamatest")
+      User.where(username: "osamatest").first
     end
 
     context 'for an existing user' do
@@ -1687,12 +1698,10 @@ describe UsersController do
         end
 
         it 'should send an email' do
-          expect do
-            post "/u/action/send_activation_email.json", params: {
-              username: user.username
-            }
-          end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+          SiteSetting.queue_jobs = true
+          post "/u/action/send_activation_email.json", params: { username: user.username }
 
+          expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
           expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
         end
       end
@@ -1700,6 +1709,7 @@ describe UsersController do
 
     context 'when username does not exist' do
       it 'should not send an email' do
+        SiteSetting.queue_jobs = true
         post "/u/action/send_activation_email.json", params: { username: 'nopenopenopenope' }
         expect(response.status).to eq(404)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -2681,6 +2691,7 @@ describe UsersController do
 
   describe '#email_login' do
     before do
+      SiteSetting.queue_jobs = true
       SiteSetting.enable_local_logins_via_email = true
     end
 

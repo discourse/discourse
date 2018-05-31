@@ -258,6 +258,8 @@ RSpec.describe TopicsController do
 
       describe 'publishing topic to category in the future' do
         it 'should be able to create the topic status update' do
+          SiteSetting.queue_jobs = true
+
           post "/t/#{topic.id}/timer.json", params: {
             time: 24,
             status_type: TopicTimer.types[3],

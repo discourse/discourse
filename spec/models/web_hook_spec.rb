@@ -80,6 +80,10 @@ describe WebHook do
     end
 
     describe '#enqueue_hooks' do
+      before do
+        SiteSetting.queue_jobs = true
+      end
+
       it 'accepts additional parameters' do
         payload = { test: 'some payload' }.to_json
         WebHook.enqueue_hooks(:post, payload: payload)
@@ -121,6 +125,7 @@ describe WebHook do
     let(:topic_web_hook) { Fabricate(:topic_web_hook) }
 
     before do
+      SiteSetting.queue_jobs = true
       topic_web_hook
     end
 
