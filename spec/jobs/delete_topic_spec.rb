@@ -9,10 +9,6 @@ describe Jobs::DeleteTopic do
 
   let(:first_post) { create_post(topic: topic) }
 
-  before do
-    SiteSetting.queue_jobs = true
-  end
-
   it "can delete a topic" do
     first_post
 

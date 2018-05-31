@@ -7,10 +7,6 @@ describe Jobs::ToggleTopicClosed do
     Fabricate(:topic_timer, user: admin).topic
   end
 
-  before do
-    SiteSetting.queue_jobs = true
-  end
-
   it 'should be able to close a topic' do
     topic
 

@@ -435,7 +435,6 @@ RSpec.describe SessionController do
         end
 
         it 'sends an activation email' do
-          SiteSetting.queue_jobs = true
           sso = get_sso('/a/')
           sso.external_id = '666' # the number of the beast
           sso.email = 'bob@bob.com'
@@ -1200,7 +1199,6 @@ RSpec.describe SessionController do
 
     context 'for a non existant username' do
       it "doesn't generate a new token for a made up username" do
-        SiteSetting.queue_jobs = true
         expect do
           post "/session/forgot_password.json", params: { login: 'made_up' }
         end.not_to change(EmailToken, :count)
@@ -1238,7 +1236,6 @@ RSpec.describe SessionController do
       end
 
       it "enqueues an email" do
-        SiteSetting.queue_jobs = true
         post "/session/forgot_password.json", params: { login: user.username }
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
       end
@@ -1254,7 +1251,6 @@ RSpec.describe SessionController do
       end
 
       it 'enqueues no email' do
-        SiteSetting.queue_jobs = true
         post "/session/forgot_password.json", params: { login: system.username }
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
@@ -1270,7 +1266,6 @@ RSpec.describe SessionController do
       end
 
       it 'enqueues no email' do
-        SiteSetting.queue_jobs = true
         post "/session/forgot_password.json", params: { login: staged.username }
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end

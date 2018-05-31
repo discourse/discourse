@@ -39,6 +39,7 @@ describe PostMover do
     let(:p6) { Fabricate(:post, topic: topic) }
 
     before do
+      SiteSetting.queue_jobs = false
       p1.replies << p3
       p2.replies << p4
       UserActionCreator.enable

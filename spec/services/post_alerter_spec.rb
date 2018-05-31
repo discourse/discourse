@@ -307,6 +307,10 @@ describe PostAlerter do
     let(:user) { post1.user }
     let(:linking_post) { create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}") }
 
+    before do
+      SiteSetting.queue_jobs = false
+    end
+
     it "will notify correctly on linking" do
       linking_post
 
@@ -378,6 +382,10 @@ describe PostAlerter do
 
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout') }
     let(:topic) { mention_post.topic }
+
+    before do
+      SiteSetting.queue_jobs = false
+    end
 
     it 'notifies a user' do
       expect {
@@ -629,7 +637,6 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
 
     it "pushes nothing to suspended users" do
-      SiteSetting.queue_jobs = true
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       evil_trout.update_columns(suspended_till: 1.year.from_now)
@@ -647,6 +654,7 @@ describe PostAlerter do
     end
 
     it "correctly pushes notifications if configured correctly" do
+      SiteSetting.queue_jobs = false
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       2.times do |i|
