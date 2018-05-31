@@ -24,6 +24,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
+    SiteSetting.queue_jobs = false
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 

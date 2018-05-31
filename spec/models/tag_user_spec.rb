@@ -74,6 +74,9 @@ describe TagUser do
     let(:tracked_tag) { Fabricate(:tag) }
 
     context "with some tag notification settings" do
+      before do
+        SiteSetting.queue_jobs = false
+      end
 
       let :watched_post do
         TagUser.create!(user: user, tag: watched_tag, notification_level: TagUser.notification_levels[:watching])

@@ -429,7 +429,6 @@ describe PostAction do
       post = create_post
       walterwhite = Fabricate(:walter_white)
 
-      SiteSetting.queue_jobs = true
       SiteSetting.flags_required_to_hide_post = 2
       Discourse.stubs(:site_contact_user).returns(admin)
 
@@ -658,6 +657,7 @@ describe PostAction do
     end
 
     it "should create a notification in the related topic" do
+      SiteSetting.queue_jobs = false
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:spam], message: "WAT")

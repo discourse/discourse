@@ -5,6 +5,7 @@ describe User do
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
 
   before do
+    SiteSetting.queue_jobs = false
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 
@@ -78,7 +79,6 @@ describe User do
         describe 'when welcome message is configured to be delayed' do
           before do
             SiteSetting.discourse_narrative_bot_welcome_post_delay = 100
-            SiteSetting.queue_jobs = true
           end
 
           it 'should delay the welcome post until user logs in' do

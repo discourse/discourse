@@ -1066,6 +1066,7 @@ describe User do
 
       context "with a reply" do
         before do
+          SiteSetting.queue_jobs = false
           PostCreator.new(Fabricate(:user),
                             raw: 'whatever this is a raw post',
                             topic_id: topic.id,
@@ -1237,7 +1238,6 @@ describe User do
   describe "refresh_avatar" do
     it "enqueues the update_gravatar job when automatically downloading gravatars" do
       SiteSetting.automatically_download_gravatars = true
-      SiteSetting.queue_jobs = true
 
       user = Fabricate(:user)
 

@@ -36,12 +36,14 @@ RSpec.describe Admin::FlagsController do
   context '#agree' do
     it 'should work' do
       SiteSetting.allow_user_locale = true
+      SiteSetting.queue_jobs = false
+
       post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
       admin.update!(locale: 'ja')
 
       post "/admin/flags/agree/#{post_1.id}.json"
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       post_action.reload
 

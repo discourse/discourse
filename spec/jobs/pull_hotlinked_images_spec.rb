@@ -32,6 +32,7 @@ describe Jobs::PullHotlinkedImages do
 
   describe '#execute' do
     before do
+      SiteSetting.queue_jobs = false
       FastImage.expects(:size).returns([100, 100]).at_least_once
     end
 
