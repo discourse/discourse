@@ -454,12 +454,11 @@ task "import:remap_old_phpbb_permalinks" => :environment do
   log 'Remapping Permalinks...'
 
   i = 0
-  # discussions.flightaware.com
-  Post.where("raw LIKE ?", "%discussions.flightaware.com%").each do |p|
+  Post.where("raw LIKE ?", "%discussions.example.com%").each do |p|
     begin
       new_raw = p.raw.dup
-      # \((https?:\/\/discussions\.flightaware\.com\/\S*-t\d+.html)\)
-      new_raw.gsub!(/\((https?:\/\/discussions\.flightaware\.com\/\S*-t\d+.html)\)/) do
+      # \((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)
+      new_raw.gsub!(/\((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)/) do
         normalized_url = Permalink.normalize_url($1)
         permalink = Permalink.find_by_url(normalized_url) rescue nil
         if permalink && permalink.target_url
