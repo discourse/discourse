@@ -655,7 +655,7 @@ SQL
   end
 
   def changed_to_category(new_category)
-    return true if new_category.blank? || Category.find_by(topic_id: id).present?
+    return true if new_category.blank? || Category.exists?(topic_id: id)
     return false if new_category.id == SiteSetting.uncategorized_category_id && !SiteSetting.allow_uncategorized_topics
 
     Topic.transaction do
