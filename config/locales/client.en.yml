@@ -3406,6 +3406,7 @@ en:
             disabled_second_factor: "disable Two Factor Authentication"
             topic_published: "topic published"
             post_approved: "post approved"
+            post_rejected: "post rejected"
             create_badge: "create badge"
             change_badge: "change badge"
             delete_badge: "delete badge"
