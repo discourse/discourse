@@ -279,7 +279,7 @@ export default {
   },
 
   _bindToPath(path, key) {
-    this.keyTrapper.bind(key, () => DiscourseURL.routeTo(path));
+    this.keyTrapper.bind(key, () => DiscourseURL.routeTo(Discourse.BaseUri + path));
   },
 
   _bindToClick(selector, binding) {
