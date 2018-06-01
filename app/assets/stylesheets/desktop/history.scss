@@ -3,8 +3,10 @@
 .modal.history-modal {
 
   .modal-inner-container {
-    min-height: 500px;
     max-width: 960px;
+  }
+  .modal-body {
+    height: 70vh;
   }
   #revision-controls {
     .btn[disabled] {
