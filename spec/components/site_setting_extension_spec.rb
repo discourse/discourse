@@ -505,6 +505,15 @@ describe SiteSettingExtension do
   end
 
   describe "shadowed_by_global" do
+
+    context "default_locale" do
+      it "supports adding a default locale via a global" do
+        global_setting :default_locale, 'zh_CN'
+        settings.default_locale = 'en'
+        expect(settings.default_locale).to eq('zh_CN')
+      end
+    end
+
     context "without global setting" do
       before do
         settings.setting(:trout_api_key, 'evil', shadowed_by_global: true)
