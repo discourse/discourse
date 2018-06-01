@@ -47,6 +47,7 @@ class QueuedPost < ActiveRecord::Base
 
   def reject!(rejected_by)
     change_to!(:rejected, rejected_by)
+    StaffActionLogger.new(rejected_by).log_post_rejected(self)
     DiscourseEvent.trigger(:rejected_post, self)
   end
 

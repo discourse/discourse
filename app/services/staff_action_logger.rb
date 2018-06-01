@@ -526,6 +526,28 @@ class StaffActionLogger
     ))
   end
 
+  def log_post_rejected(rejected_post, opts = {})
+    raise Discourse::InvalidParameters.new(:rejected_post) unless rejected_post && rejected_post.is_a?(QueuedPost)
+
+    topic = rejected_post.topic || Topic.with_deleted.find_by(id: rejected_post.topic_id)
+    topic_title = topic&.title || "not found"
+    username = rejected_post.user&.username || "unknown"
+    name = rejected_post.user&.name || "unknown"
+
+    details = [
+      "created_at: #{rejected_post.created_at}",
+      "rejected_at: #{rejected_post.rejected_at}",
+      "user: #{username} (#{name})",
+      "topic: #{topic_title}",
+      "raw: #{rejected_post.raw}",
+    ]
+
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:post_rejected],
+      details: details.join("\n")
+    ))
+  end
+
   private
 
     def params(opts = nil)

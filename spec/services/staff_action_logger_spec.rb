@@ -488,4 +488,22 @@ describe StaffActionLogger do
       expect { log_post_approved }.to change { UserHistory.count }.by(1)
     end
   end
+
+  describe 'log_post_rejected' do
+    let(:rejected_post) { Fabricate(:queued_post) }
+
+    subject(:log_post_rejected) { described_class.new(admin).log_post_rejected(rejected_post) }
+
+    it 'raises an error when post is nil' do
+      expect { logger.log_post_rejected(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when post is not a QueuedPosts' do
+      expect { logger.log_post_rejected(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_post_rejected }.to change { UserHistory.count }.by(1)
+    end
+  end
 end
