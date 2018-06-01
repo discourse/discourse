@@ -347,7 +347,11 @@ class UserMerger
 
   def delete_source_user
     @source_user.reload
-    @source_user.update_attribute(:admin, false)
+    @source_user.update_attributes(
+      admin: false,
+      email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"
+    )
+
     UserDestroyer.new(Discourse.system_user).destroy(@source_user)
   end
 
