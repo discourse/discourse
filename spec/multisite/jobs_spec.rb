@@ -5,7 +5,6 @@ RSpec.describe "Running Sidekiq Jobs in Multisite" do
 
   before do
     conn.config_filename = "spec/fixtures/multisite/two_dbs.yml"
-    SiteSetting.defaults.refresh_site_locale!
   end
 
   after do

@@ -12,14 +12,18 @@ describe Admin::SiteSettingsController do
     end
 
     context 'index' do
-      it 'returns success' do
+      it 'returns valid info' do
         get :index, format: :json
-        expect(response).to be_successful
-      end
+        json = ::JSON.parse(response.body)
+        expect(json).to be_present
+        expect(response.status).to eq(200)
+        expect(json["site_settings"].length).to be > 100
 
-      it 'returns JSON' do
-        get :index, format: :json
-        expect(::JSON.parse(response.body)).to be_present
+        locale = json["site_settings"].select do |s|
+          s["setting"] == "default_locale"
+        end
+
+        expect(locale.length).to eq(1)
       end
     end
 
