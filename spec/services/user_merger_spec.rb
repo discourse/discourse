@@ -953,6 +953,15 @@ describe UserMerger do
     expect(User.find_by_username(source_user.username)).to be_nil
   end
 
+  it "deletes the source user even when it is a member of a group that grants a trust level" do
+    group = Fabricate(:group, grant_trust_level: 3)
+    group.bulk_add([source_user.id, target_user.id])
+
+    merge_users!
+
+    expect(User.find_by_username(source_user.username)).to be_nil
+  end
+
   it "deletes external auth infos of source user" do
     FacebookUserInfo.create(user_id: source_user.id, facebook_user_id: "example")
     GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")
