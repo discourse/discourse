@@ -504,6 +504,9 @@ describe StaffActionLogger do
 
     it 'creates a new UserHistory record' do
       expect { log_post_rejected }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:post_rejected])
+      expect(user_history.details).to include(rejected_post.raw)
     end
   end
 end
