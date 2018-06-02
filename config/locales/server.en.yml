@@ -3881,3 +3881,7 @@ en:
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
       confirm_title: 'Notifications enabled - %{site_title}'
       confirm_body: 'Success! Notifications have been enabled.'
+
+  staff_action_logs:
+    not_found: "not found"
+    unknown: "unknown"

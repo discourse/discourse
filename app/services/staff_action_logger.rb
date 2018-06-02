@@ -46,9 +46,9 @@ class StaffActionLogger
 
     topic = deleted_post.topic || Topic.with_deleted.find_by(id: deleted_post.topic_id)
 
-    username = deleted_post.user.try(:username) || "unknown"
-    name = deleted_post.user.try(:name) || "unknown"
-    topic_title = topic.try(:title) || "not found"
+    username = deleted_post.user.try(:username) || I18n.t('staff_action_logs.unknown')
+    name = deleted_post.user.try(:name) || I18n.t('staff_action_logs.unknown')
+    topic_title = topic.try(:title) || I18n.t('staff_action_logs.not_found')
 
     details = [
       "id: #{deleted_post.id}",
@@ -530,9 +530,9 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:rejected_post) unless rejected_post && rejected_post.is_a?(QueuedPost)
 
     topic = rejected_post.topic || Topic.with_deleted.find_by(id: rejected_post.topic_id)
-    topic_title = topic&.title || "not found"
-    username = rejected_post.user&.username || "unknown"
-    name = rejected_post.user&.name || "unknown"
+    topic_title = topic&.title || I18n.t('staff_action_logs.not_found')
+    username = rejected_post.user&.username || I18n.t('staff_action_logs.unknown')
+    name = rejected_post.user&.name || I18n.t('staff_action_logs.unknown')
 
     details = [
       "created_at: #{rejected_post.created_at}",
