@@ -8,6 +8,7 @@
 # regex              - A regex that the value must match.
 # validator          - The name of the class that will be use to validate the value of the setting.
 # allow_any          - For choice settings allow items not specified in the choice list (default true)
+# secret             - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
 # enum               - The setting has a fixed set of allowed values, and only one can be chosen.
 #                      Set to the class name that defines the set.
 # shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
@@ -274,7 +275,9 @@ login:
     client: true
     default: false
   google_oauth2_client_id: ''
-  google_oauth2_client_secret: ''
+  google_oauth2_client_secret:
+    default: ''
+    secret: true
   google_oauth2_prompt:
     default: ''
     type: list
@@ -297,6 +300,7 @@ login:
   twitter_consumer_secret:
     default: ''
     regex: "^[\\w+-]+$"
+    secret: true
   enable_instagram_logins:
     client: true
     default: false
@@ -306,6 +310,7 @@ login:
   instagram_consumer_secret:
     default: ''
     regex: "^[a-z0-9]+$"
+    secret: true
   enable_facebook_logins:
     client: true
     default: false
@@ -315,6 +320,7 @@ login:
   facebook_app_secret:
     default: ''
     regex: "^[a-f0-9]+$"
+    secret: true
   enable_github_logins:
     client: true
     default: false
@@ -324,6 +330,7 @@ login:
   github_client_secret:
     default: ''
     regex: "^[a-f0-9]+$"
+    secret: true
   enable_sso:
     client: true
     default: false
@@ -337,7 +344,9 @@ login:
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
-  sso_secret: ''
+  sso_secret:
+    default: ''
+    secret: true
   sso_overrides_groups: false
   sso_overrides_bio: false
   sso_overrides_email:
@@ -884,7 +893,9 @@ files:
     client: true
   s3_use_iam_profile: false
   s3_access_key_id: ''
-  s3_secret_access_key: ''
+  s3_secret_access_key:
+    default: ''
+    secret: true
   s3_region:
     default: 'us-east-1'
     enum: 'S3RegionSiteSetting'

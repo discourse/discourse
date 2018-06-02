@@ -575,7 +575,7 @@ $mobile-breakpoint: 700px;
   }
 
   .setting.overridden.string {
-    input[type=text], textarea {
+    input[type=text], input[type=password], textarea {
       background-color: $highlight-medium;
     }
   }
