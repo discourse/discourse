@@ -16,6 +16,7 @@ export default Ember.Mixin.create({
   classNameBindings: [':row', ':setting', 'setting.overridden', 'typeClass'],
   content: Ember.computed.alias('setting'),
   validationMessage: null,
+  isSecret: Ember.computed.oneWay('setting.secret'),
 
   @computed("buffered.value", "setting.value")
   dirty(bufferVal, settingVal) {
@@ -95,13 +96,17 @@ export default Ember.Mixin.create({
       });
     },
 
+    cancel() {
+      this.rollbackBuffer();
+    },
+
     resetDefault() {
       this.set('buffered.value', this.get('setting.default'));
       this._save();
     },
 
-    cancel() {
-      this.rollbackBuffer();
+    toggleSecret() {
+      this.toggleProperty('isSecret');
     }
   }
 });

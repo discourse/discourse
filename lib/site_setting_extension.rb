@@ -66,6 +66,10 @@ module SiteSettingExtension
     @previews ||= {}
   end
 
+  def secret_settings
+    @secret_settings ||= []
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
 
@@ -104,6 +108,10 @@ module SiteSettingExtension
 
       if opts[:preview]
         previews[name] = opts[:preview]
+      end
+
+      if opts[:secret]
+        secret_settings << name
       end
 
       type_supervisor.load_setting(
@@ -149,7 +157,8 @@ module SiteSettingExtension
         default: defaults[s].to_s,
         value: value.to_s,
         category: categories[s],
-        preview: previews[s]
+        preview: previews[s],
+        secret: secret_settings.include?(s)
       }.merge(type_supervisor.type_hash(s))
 
       opts
@@ -284,7 +293,7 @@ module SiteSettingExtension
     prev_value = send(name)
     set(name, value)
     if has_setting?(name)
-      value = prev_value = "[FILTERED]" if name.to_s =~ /_secret/
+      value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
     end
   end
