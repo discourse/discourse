@@ -1,17 +1,14 @@
 require 'rails_helper'
 
 describe UploadsController do
-
-  context '.create' do
-
+  describe '#create' do
     it 'requires you to be logged in' do
-      post :create, format: :json
+      post "/uploads.json"
       expect(response.status).to eq(403)
     end
 
     context 'logged in' do
-
-      before { @user = log_in :user }
+      let!(:user) { sign_in(Fabricate(:user)) }
 
       let(:logo) do
         Rack::Test::UploadedFile.new(file_from_fixtures("logo.png"))
@@ -26,151 +23,132 @@ describe UploadsController do
       end
 
       it 'expects a type' do
-        expect do
-          post :create, params: { format: :json, file: logo }
-        end.to raise_error(ActionController::ParameterMissing)
-      end
-
-      it 'can look up long urls' do
-        upload = Fabricate(:upload)
-        post :lookup_urls, params: { short_urls: [upload.short_url], format: :json }
-        result = JSON.parse(response.body)
-        expect(result[0]["url"]).to eq(upload.url)
+        post "/uploads.json", params: { file: logo }
+        expect(response.status).to eq(400)
       end
 
       it 'is successful with an image' do
-        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
-
-        post :create, params: { file: logo, type: "avatar", format: :json }
-
+        post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body)["id"]).to be
+        expect(JSON.parse(response.body)["id"]).to be_present
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
       end
 
       it 'is successful with an attachment' do
         SiteSetting.authorized_extensions = "*"
 
-        Jobs.expects(:enqueue).never
-
-        post :create, params: { file: text_file, type: "composer", format: :json }
-
+        post "/uploads.json", params: { file: text_file, type: "composer" }
         expect(response.status).to eq 200
+
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         id = JSON.parse(response.body)["id"]
         expect(id).to be
       end
 
       it 'is successful with api' do
         SiteSetting.authorized_extensions = "*"
-        controller.stubs(:is_api?).returns(true)
-
-        FinalDestination.stubs(:lookup_ip).returns("1.2.3.4")
-
-        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
+        api_key = Fabricate(:api_key, user: user).key
 
         url = "http://example.com/image.png"
         png = File.read(Rails.root + "spec/fixtures/images/logo.png")
 
         stub_request(:get, url).to_return(status: 200, body: png)
 
-        post :create, params: { url: url, type: "avatar", format: :json }
+        post "/uploads.json", params: { url: url, type: "avatar", api_key: api_key, api_username: user.username }
 
         json = ::JSON.parse(response.body)
 
-        expect(response.status).to eq 200
-        expect(json["id"]).to be
+        expect(response.status).to eq(200)
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
+        expect(json["id"]).to be_present
         expect(json["short_url"]).to eq("upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png")
       end
 
       it 'correctly sets retain_hours for admins' do
-        log_in :admin
-        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
+        sign_in(Fabricate(:admin))
 
-        post :create, params: {
+        post "/uploads.json", params: {
           file: logo,
           retain_hours: 100,
           type: "profile_background",
-          format: :json
         }
 
         id = JSON.parse(response.body)["id"]
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         expect(Upload.find(id).retain_hours).to eq(100)
       end
 
       it 'requires a file' do
-        Jobs.expects(:enqueue).never
+        post "/uploads.json", params: { type: "composer" }
 
-        post :create, params: { type: "composer", format: :json }
-
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         message = JSON.parse(response.body)
         expect(response.status).to eq 422
         expect(message["errors"]).to contain_exactly(I18n.t("upload.file_missing"))
       end
 
       it 'properly returns errors' do
+        SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 1
 
-        Jobs.expects(:enqueue).never
+        post "/uploads.json", params: { file: text_file, type: "avatar" }
 
-        post :create, params: { file: text_file, type: "avatar", format: :json }
-
-        expect(response.status).to eq 422
+        expect(response.status).to eq(422)
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         errors = JSON.parse(response.body)["errors"]
-        expect(errors).to be
+        expect(errors.first).to eq(I18n.t("upload.attachments.too_large", max_size_kb: 1))
       end
 
       it 'ensures allow_uploaded_avatars is enabled when uploading an avatar' do
         SiteSetting.allow_uploaded_avatars = false
-        post :create, params: { file: logo, type: "avatar", format: :json }
-        expect(response).to_not be_success
+        post "/uploads.json", params: { file: logo, type: "avatar" }
+        expect(response.status).to eq(422)
       end
 
       it 'ensures sso_overrides_avatar is not enabled when uploading an avatar' do
         SiteSetting.sso_overrides_avatar = true
-        post :create, params: { file: logo, type: "avatar", format: :json }
-        expect(response).to_not be_success
+        post "/uploads.json", params: { file: logo, type: "avatar" }
+        expect(response.status).to eq(422)
       end
 
       it 'allows staff to upload any file in PM' do
         SiteSetting.authorized_extensions = "jpg"
         SiteSetting.allow_staff_to_upload_any_file_in_pm = true
-        @user.update_columns(moderator: true)
+        user.update_columns(moderator: true)
 
-        post :create, params: {
+        post "/uploads.json", params: {
           file: text_file,
           type: "composer",
           for_private_message: "true",
-          format: :json
         }
 
         expect(response).to be_success
         id = JSON.parse(response.body)["id"]
-        expect(id).to be
+        expect(id).to be_present
       end
 
       it 'respects `authorized_extensions_for_staff` setting when staff upload file' do
         SiteSetting.authorized_extensions = ""
         SiteSetting.authorized_extensions_for_staff = "*"
-        @user.update_columns(moderator: true)
+        user.update_columns(moderator: true)
 
-        post :create, params: {
+        post "/uploads.json", params: {
           file: text_file,
           type: "composer",
-          format: :json
         }
 
         expect(response).to be_success
         data = JSON.parse(response.body)
-        expect(data["id"]).to be
+        expect(data["id"]).to be_present
       end
 
       it 'ignores `authorized_extensions_for_staff` setting when non-staff upload file' do
         SiteSetting.authorized_extensions = ""
         SiteSetting.authorized_extensions_for_staff = "*"
 
-        post :create, params: {
+        post "/uploads.json", params: {
           file: text_file,
           type: "composer",
-          format: :json
         }
 
         data = JSON.parse(response.body)
@@ -178,73 +156,87 @@ describe UploadsController do
       end
 
       it 'returns an error when it could not determine the dimensions of an image' do
-        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
+        post "/uploads.json", params: { file: fake_jpg, type: "composer" }
 
-        post :create, params: { file: fake_jpg, type: "composer", format: :json }
-
-        expect(response.status).to eq 422
+        expect(response.status).to eq(422)
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         message = JSON.parse(response.body)["errors"]
         expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
-
     end
-
   end
 
-  context '.show' do
-
+  describe '#show' do
     let(:site) { "default" }
     let(:sha) { Digest::SHA1.hexdigest("discourse") }
+    let(:user) { Fabricate(:user) }
+
+    def upload_file(file)
+      fake_logo = Rack::Test::UploadedFile.new(file_from_fixtures(file))
+      SiteSetting.authorized_extensions = "*"
+      sign_in(user)
+
+      post "/uploads.json", params: {
+        file: fake_logo,
+        type: "composer",
+      }
+      url = JSON.parse(response.body)["url"]
+      upload = Upload.where(url: url).first
+      upload
+    end
 
     it "returns 404 when using external storage" do
-      store = stub(internal?: false)
-      Discourse.stubs(:store).returns(store)
-      Upload.expects(:find_by).never
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_access_key_id = "fakeid7974664"
+      SiteSetting.s3_secret_access_key = "fakesecretid7974664"
 
-      get :show, params: { site: site, sha: sha, extension: "pdf" }
+      get "/uploads/#{site}/#{sha}.pdf"
       expect(response.response_code).to eq(404)
     end
 
     it "returns 404 when the upload doesn't exist" do
-      Upload.stubs(:find_by).returns(nil)
-
-      get :show, params: { site: site, sha: sha, extension: "pdf" }
-      expect(response.response_code).to eq(404)
+      get "/uploads/#{site}/#{sha}.pdf"
+      expect(response.status).to eq(404)
     end
 
     it 'uses send_file' do
-      upload = build(:upload)
-      Upload.expects(:find_by).with(sha1: sha).returns(upload)
-
-      controller.stubs(:render)
-      controller.expects(:send_file)
-
-      get :show, params: { site: site, sha: sha, extension: "zip" }
+      upload = upload_file("logo.png")
+      get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"logo.png\"")
     end
 
     it "handles file without extension" do
       SiteSetting.authorized_extensions = "*"
-      Fabricate(:upload, original_filename: "image_file", sha1: sha)
-      controller.stubs(:render)
-      controller.expects(:send_file)
+      upload = upload_file("image_no_extension")
 
-      get :show, params: { site: site, sha: sha, format: :json }
-      expect(response).to be_success
+      get "/uploads/#{site}/#{upload.sha1}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"image_no_extension\"")
     end
 
     context "prevent anons from downloading files" do
-
-      before { SiteSetting.prevent_anons_from_downloading_files = true }
-
       it "returns 404 when an anonymous user tries to download a file" do
-        Upload.expects(:find_by).never
+        upload = upload_file("logo.png")
+        delete "/session/#{user.username}.json" # upload a file, then sign out
 
-        get :show, params: { site: site, sha: sha, extension: "pdf", format: :json }
-        expect(response.response_code).to eq(404)
+        SiteSetting.prevent_anons_from_downloading_files = true
+        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+        expect(response.status).to eq(404)
       end
-
     end
-
   end
 
+  describe '#lookup_urls' do
+    it 'can look up long urls' do
+      sign_in(Fabricate(:user))
+      upload = Fabricate(:upload)
+
+      post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+      expect(response.status).to eq(200)
+
+      result = JSON.parse(response.body)
+      expect(result[0]["url"]).to eq(upload.url)
+    end
+  end
 end
