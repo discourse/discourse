@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe SearchController do
-
   context "integration" do
     before do
       SearchIndexer.enable
@@ -10,9 +9,9 @@ describe SearchController do
     it "can search correctly" do
       my_post = Fabricate(:post, raw: 'this is my really awesome post')
 
-      get :query, params: {
+      get "/search/query.json", params: {
         term: 'awesome', include_blurb: true
-      }, format: :json
+      }
 
       expect(response).to be_success
       data = JSON.parse(response.body)
@@ -25,9 +24,9 @@ describe SearchController do
       user = Fabricate(:user)
       my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
 
-      get :query, params: {
+      get "/search/query.json", params: {
         term: user.username, type_filter: 'topic'
-      }, format: :json
+      }
 
       expect(response).to be_success
       data = JSON.parse(response.body)
@@ -35,9 +34,9 @@ describe SearchController do
       expect(data['posts'][0]['id']).to eq(my_post.id)
       expect(data['users']).to be_blank
 
-      get :query, params: {
+      get "/search/query.json", params: {
         term: user.username, type_filter: 'user'
-      }, format: :json
+      }
 
       expect(response).to be_success
       data = JSON.parse(response.body)
@@ -52,11 +51,11 @@ describe SearchController do
 
         post = Fabricate(:post)
 
-        get :query, params: {
+        get "/search/query.json", params: {
           term: post.topic_id,
           type_filter: 'topic',
           search_for_id: true
-        }, format: :json
+        }
 
         expect(response).to be_success
         data = JSON.parse(response.body)
@@ -68,11 +67,11 @@ describe SearchController do
         user = Fabricate(:user)
         my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
 
-        get :query, params: {
+        get "/search/query.json", params: {
           term: my_post.topic_id,
           type_filter: 'topic',
           search_for_id: true
-        }, format: :json
+        }
 
         expect(response).to be_success
         data = JSON.parse(response.body)
@@ -85,7 +84,7 @@ describe SearchController do
   context "#query" do
     it "logs the search term" do
       SiteSetting.log_search_queries = true
-      get :query, params: { term: 'wookie' }, format: :json
+      get "/search/query.json", params: { term: 'wookie' }
 
       expect(response).to be_success
       expect(SearchLog.where(term: 'wookie')).to be_present
@@ -101,7 +100,7 @@ describe SearchController do
 
     it "doesn't log when disabled" do
       SiteSetting.log_search_queries = false
-      get :query, params: { term: 'wookie' }, format: :json
+      get "/search/query.json", params: { term: 'wookie' }
       expect(response).to be_success
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
@@ -110,14 +109,14 @@ describe SearchController do
   context "#show" do
     it "logs the search term" do
       SiteSetting.log_search_queries = true
-      get :show, params: { q: 'bantha' }, format: :json
+      get "/search.json", params: { q: 'bantha' }
       expect(response).to be_success
       expect(SearchLog.where(term: 'bantha')).to be_present
     end
 
     it "doesn't log when disabled" do
       SiteSetting.log_search_queries = false
-      get :show, params: { q: 'bantha' }, format: :json
+      get "/search.json", params: { q: 'bantha' }
       expect(response).to be_success
       expect(SearchLog.where(term: 'bantha')).to be_blank
     end
@@ -125,16 +124,15 @@ describe SearchController do
 
   context "search context" do
     it "raises an error with an invalid context type" do
-      get :query, params: {
+      get "/search/query.json", params: {
         term: 'test', search_context: { type: 'security', id: 'hole' }
-      }, format: :json
+      }
       expect(response.status).to eq(400)
     end
 
     it "raises an error with a missing id" do
-      get :query,
-        params: { term: 'test', search_context: { type: 'user' } },
-        format: :json
+      get "/search/query.json",
+        params: { term: 'test', search_context: { type: 'user' } }
       expect(response.status).to eq(400)
     end
 
@@ -142,17 +140,16 @@ describe SearchController do
       let(:user) { Fabricate(:user) }
 
       it "raises an error if the user can't see the context" do
-        Guardian.any_instance.expects(:can_see?).with(user).returns(false)
-        get :query, params: {
-          term: 'test', search_context: { type: 'user', id: user.username }
-        }, format: :json
-        expect(response).not_to be_success
+        get "/search/query.json", params: {
+          term: 'test', search_context: { type: 'private_messages', id: user.username }
+        }
+        expect(response).to be_forbidden
       end
 
       it 'performs the query with a search context' do
-        get :query, params: {
+        get "/search/query.json", params: {
           term: 'test', search_context: { type: 'user', id: user.username }
-        }, format: :json
+        }
 
         expect(response).to be_success
       end
@@ -166,13 +163,12 @@ describe SearchController do
     end
 
     it "doesn't work wthout the necessary parameters" do
-      expect do
-        post :click, format: :json
-      end.to raise_error(ActionController::ParameterMissing)
+      post "/search/click.json"
+      expect(response.status).to eq(400)
     end
 
     it "doesn't record the click for a different user" do
-      log_in(:user)
+      sign_in(Fabricate(:user))
 
       _, search_log_id = SearchLog.log(
         term: 'kitty',
@@ -181,7 +177,7 @@ describe SearchController do
         ip_address: '127.0.0.1'
       )
 
-      post :click, params: {
+      post "/search/click", params: {
         search_log_id: search_log_id,
         search_result_id: 12345,
         search_result_type: 'topic'
@@ -192,7 +188,7 @@ describe SearchController do
     end
 
     it "records the click for a logged in user" do
-      user = log_in(:user)
+      user = sign_in(Fabricate(:user))
 
       _, search_log_id = SearchLog.log(
         term: 'foobar',
@@ -201,11 +197,11 @@ describe SearchController do
         ip_address: '127.0.0.1'
       )
 
-      post :click, params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 12345,
         search_result_type: 'user'
-      }, format: :json
+      }
 
       expect(response).to be_success
       expect(SearchLog.find(search_log_id).search_result_id).to eq(12345)
@@ -213,19 +209,20 @@ describe SearchController do
     end
 
     it "records the click for an anonymous user" do
-      request.remote_addr = '192.168.0.1';
+      get "/"
+      ip_address = request.remote_ip
 
       _, search_log_id = SearchLog.log(
         term: 'kitty',
         search_type: :header,
-        ip_address: '192.168.0.1'
+        ip_address: ip_address
       )
 
-      post :click, params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 22222,
         search_result_type: 'topic'
-      }, format: :json
+      }
 
       expect(response).to be_success
       expect(SearchLog.find(search_log_id).search_result_id).to eq(22222)
@@ -233,15 +230,13 @@ describe SearchController do
     end
 
     it "doesn't record the click for a different IP" do
-      request.stubs(:remote_ip).returns('192.168.0.2')
-
       _, search_log_id = SearchLog.log(
         term: 'kitty',
         search_type: :header,
-        ip_address: '192.168.0.1'
+        ip_address: '192.168.0.19'
       )
 
-      post :click, params: {
+      post "/search/click", params: {
         search_log_id: search_log_id,
         search_result_id: 22222,
         search_result_type: 'topic'
@@ -252,19 +247,20 @@ describe SearchController do
     end
 
     it "records the click for search result type category" do
-      request.remote_addr = '192.168.0.1';
+      get "/"
+      ip_address = request.remote_ip
 
       _, search_log_id = SearchLog.log(
         term: 'dev',
         search_type: :header,
-        ip_address: '192.168.0.1'
+        ip_address: ip_address
       )
 
-      post :click, params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 23456,
         search_result_type: 'category'
-      }, format: :json
+      }
 
       expect(response).to be_success
       expect(SearchLog.find(search_log_id).search_result_id).to eq(23456)
@@ -272,20 +268,21 @@ describe SearchController do
     end
 
     it "records the click for search result type tag" do
-      request.remote_addr = '192.168.0.1';
-       tag = Fabricate(:tag, name: 'test')
+      get "/"
+      ip_address = request.remote_ip
+      tag = Fabricate(:tag, name: 'test')
 
       _, search_log_id = SearchLog.log(
         term: 'test',
         search_type: :header,
-        ip_address: '192.168.0.1'
+        ip_address: ip_address
       )
 
-      post :click, params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: tag.name,
         search_result_type: 'tag'
-      }, format: :json
+      }
 
       expect(response).to be_success
       expect(SearchLog.find(search_log_id).search_result_id).to eq(tag.id)
