@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe CategoriesController do
-  let!(:admin) { Fabricate(:admin) }
+  let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
 
   context 'index' do
@@ -39,7 +39,6 @@ describe CategoriesController do
   end
 
   context '#create' do
-    let(:admin) { Fabricate(:admin) }
     it "requires the user to be logged in" do
       post "/categories.json"
       expect(response.status).to eq(403)
