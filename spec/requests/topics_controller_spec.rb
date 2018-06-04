@@ -1042,10 +1042,23 @@ RSpec.describe TopicsController do
 
       it 'renders the print view when enabled' do
         SiteSetting.max_prints_per_hour_per_user = 10
-
-        get "/t/#{topic.slug}/#{topic.id}/print"
+        get "/t/#{topic.slug}/#{topic.id}/print", headers: { HTTP_USER_AGENT: "Rails Testing" }
 
         expect(response).to be_successful
+        body = response.body
+
+        expect(body).to have_tag(:body, class: 'crawler')
+        expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
+      end
+
+      it "uses the application layout when there's no param" do
+        SiteSetting.max_prints_per_hour_per_user = 10
+        get "/t/#{topic.slug}/#{topic.id}", headers: { HTTP_USER_AGENT: "Rails Testing" }
+
+        body = response.body
+
+        expect(body).to have_tag(:script, src: '/assets/application.js')
+        expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
     end
 
@@ -1167,6 +1180,219 @@ RSpec.describe TopicsController do
       get "/t/#{topic.slug}/#{topic.id}.json"
 
       expect(response.headers['X-Robots-Tag']).to eq(nil)
+    end
+
+    describe "themes" do
+      let(:theme) { Theme.create!(user_id: -1, name: 'bob', user_selectable: true) }
+      let(:theme2) { Theme.create!(user_id: -1, name: 'bobbob', user_selectable: true) }
+
+      before do
+        sign_in(user)
+      end
+
+      it "selects the theme the user has selected" do
+        user.user_option.update_columns(theme_key: theme.key)
+
+        get "/t/666"
+        expect(controller.theme_key).to eq(theme.key)
+
+        theme.update_attribute(:user_selectable, false)
+
+        get "/t/666"
+        expect(controller.theme_key).not_to eq(theme.key)
+      end
+
+      it "can be overridden with a cookie" do
+        user.user_option.update_columns(theme_key: theme.key)
+
+        cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq}"
+
+        get "/t/666"
+        expect(controller.theme_key).to eq(theme2.key)
+      end
+
+      it "cookie can fail back to user if out of sync" do
+        user.user_option.update_columns(theme_key: theme.key)
+        cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq - 1}"
+
+        get "/t/666"
+        expect(controller.theme_key).to eq(theme.key)
+      end
+    end
+
+    it "doesn't store an incoming link when there's no referer" do
+      expect {
+        get "/t/#{topic.id}.json"
+      }.not_to change(IncomingLink, :count)
+    end
+
+    it "doesn't raise an error on a very long link" do
+      get "/t/#{topic.id}.json", headers: { HTTP_REFERER: "http://#{'a' * 2000}.com" }
+      expect(response.status).to eq(200)
+    end
+
+    describe "has_escaped_fragment?" do
+      context "when the SiteSetting is disabled" do
+        it "uses the application layout even with an escaped fragment param" do
+          SiteSetting.enable_escaped_fragments = false
+
+          get "/t/#{topic.slug}/#{topic.id}", params: {
+            _escaped_fragment_: 'true'
+          }
+
+          body = response.body
+
+          expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+          expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
+        end
+      end
+
+      context "when the SiteSetting is enabled" do
+        before do
+          SiteSetting.enable_escaped_fragments = true
+        end
+
+        it "uses the application layout when there's no param" do
+          get "/t/#{topic.slug}/#{topic.id}"
+
+          body = response.body
+
+          expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+          expect(body).to have_tag(:meta, with: { name: 'fragment' })
+        end
+
+        it "uses the crawler layout when there's an _escaped_fragment_ param" do
+          get "/t/#{topic.slug}/#{topic.id}", params: {
+            _escaped_fragment_: true
+          }, headers: { HTTP_USER_AGENT: "Rails Testing" }
+
+          body = response.body
+
+          expect(body).to have_tag(:body, with: { class: 'crawler' })
+          expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
+        end
+      end
+    end
+
+    describe 'clear_notifications' do
+      it 'correctly clears notifications if specified via cookie' do
+        notification = Fabricate(:notification)
+        sign_in(notification.user)
+
+        cookies['cn'] = "2828,100,#{notification.id}"
+
+        get "/t/100.json"
+
+        expect(response.cookies['cn']).to eq(nil)
+
+        notification.reload
+        expect(notification.read).to eq(true)
+      end
+
+      it 'correctly clears notifications if specified via header' do
+        notification = Fabricate(:notification)
+        sign_in(notification.user)
+
+        get "/t/100.json", headers: { "Discourse-Clear-Notifications" => "2828,100,#{notification.id}" }
+
+        notification.reload
+        expect(notification.read).to eq(true)
+      end
+    end
+
+    describe "set_locale" do
+      def headers(locale)
+        { HTTP_ACCEPT_LANGUAGE: locale }
+      end
+
+      context "allow_user_locale disabled" do
+        context "accept-language header differs from default locale" do
+          before do
+            SiteSetting.allow_user_locale = false
+            SiteSetting.default_locale = "en"
+          end
+
+          context "with an anonymous user" do
+            it "uses the default locale" do
+              get "/t/#{topic.id}.json", headers: headers("fr")
+
+              expect(I18n.locale).to eq(:en)
+            end
+          end
+
+          context "with a logged in user" do
+            it "it uses the default locale" do
+              user = Fabricate(:user, locale: :fr)
+              sign_in(user)
+
+              get "/t/#{topic.id}.json", headers: headers("fr")
+
+              expect(I18n.locale).to eq(:en)
+            end
+          end
+        end
+      end
+
+      context "set_locale_from_accept_language_header enabled" do
+        context "accept-language header differs from default locale" do
+          before do
+            SiteSetting.allow_user_locale = true
+            SiteSetting.set_locale_from_accept_language_header = true
+            SiteSetting.default_locale = "en"
+          end
+
+          context "with an anonymous user" do
+            it "uses the locale from the headers" do
+              get "/t/#{topic.id}.json", headers: headers("fr")
+              expect(I18n.locale).to eq(:fr)
+            end
+          end
+
+          context "with a logged in user" do
+            it "uses the user's preferred locale" do
+              user = Fabricate(:user, locale: :fr)
+              sign_in(user)
+
+              get "/t/#{topic.id}.json", headers: headers("fr")
+              expect(I18n.locale).to eq(:fr)
+            end
+          end
+        end
+
+        context "the preferred locale includes a region" do
+          it "returns the locale and region separated by an underscore" do
+            SiteSetting.allow_user_locale = true
+            SiteSetting.set_locale_from_accept_language_header = true
+            SiteSetting.default_locale = "en"
+
+            get "/t/#{topic.id}.json", headers: headers("zh-CN")
+            expect(I18n.locale).to eq(:zh_CN)
+          end
+        end
+
+        context 'accept-language header is not set' do
+          it 'uses the site default locale' do
+            SiteSetting.allow_user_locale = true
+            SiteSetting.default_locale = 'en'
+
+            get "/t/#{topic.id}.json", headers: headers("")
+            expect(I18n.locale).to eq(:en)
+          end
+        end
+      end
+    end
+
+    describe "read only header" do
+      it "returns no read only header by default" do
+        get "/t/#{topic.id}.json"
+        expect(response.headers['Discourse-Readonly']).to eq(nil)
+      end
+
+      it "returns a readonly header if the site is read only" do
+        Discourse.received_readonly!
+        get "/t/#{topic.id}.json"
+        expect(response.headers['Discourse-Readonly']).to eq('true')
+      end
     end
   end
 
