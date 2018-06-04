@@ -46,8 +46,8 @@ describe UserApiKeysController do
 
   context 'new' do
     it "supports a head request cleanly" do
-      head :new
-      expect(response.code).to eq("200")
+      head "/user-api-key/new"
+      expect(response.status).to eq(200)
       expect(response.headers["Auth-Api-Version"]).to eq("2")
     end
   end
@@ -55,14 +55,14 @@ describe UserApiKeysController do
   context 'create' do
 
     it "does not allow anon" do
-      post :create, params: args, format: :json
+      post "/user-api-key.json", params: args
       expect(response.status).to eq(403)
     end
 
     it "refuses to redirect to disallowed place" do
-      log_in_user(Fabricate(:user))
-      post :create, params: args, format: :json
-      expect(response.code).to eq("403")
+      sign_in(Fabricate(:user))
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(403)
     end
 
     it "will allow tokens for staff without TL" do
@@ -71,10 +71,10 @@ describe UserApiKeysController do
 
       user = Fabricate(:user, trust_level: 1, moderator: true)
 
-      log_in_user(user)
+      sign_in(user)
 
-      post :create, params: args, format: :json
-      expect(response.code).to eq("302")
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(302)
     end
 
     it "will not create token unless TL is met" do
@@ -82,36 +82,29 @@ describe UserApiKeysController do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
       user = Fabricate(:user, trust_level: 1)
+      sign_in(user)
 
-      log_in_user(user)
-
-      post :create, params: args, format: :json
-      expect(response.code).to eq("403")
-
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(403)
     end
 
     it "will deny access if requesting more rights than allowed" do
-
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       SiteSetting.allow_user_api_key_scopes = "write"
 
       user = Fabricate(:user, trust_level: 0)
+      sign_in(user)
 
-      log_in_user(user)
-
-      post :create, params: args, format: :json
-      expect(response.code).to eq("403")
-
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(403)
     end
 
     it "allows for a revoke with no id" do
       key = Fabricate(:readonly_user_api_key)
-      request.env['HTTP_USER_API_KEY'] = key.key
-      post :revoke, format: :json
+      post "/user-api-key/revoke.json", headers: { HTTP_USER_API_KEY: key.key }
 
       expect(response.status).to eq(200)
-
       key.reload
       expect(key.revoked_at).not_to eq(nil)
     end
@@ -120,19 +113,20 @@ describe UserApiKeysController do
       key1 = Fabricate(:readonly_user_api_key)
       key2 = Fabricate(:readonly_user_api_key)
 
-      request.env['HTTP_USER_API_KEY'] = key1.key
-      post :revoke, params: { id: key2.id }, format: :json
+      post "/user-api-key/revoke.json",
+        params: { id: key2.id },
+        headers: { HTTP_USER_API_KEY: key1.key }
 
       expect(response.status).to eq(403)
     end
 
     it "will allow readonly api keys to revoke self" do
       key = Fabricate(:readonly_user_api_key)
-      request.env['HTTP_USER_API_KEY'] = key.key
-      post :revoke, params: { id: key.id }, format: :json
+      post "/user-api-key/revoke.json",
+        params: { id: key.id },
+        headers: { HTTP_USER_API_KEY: key.key }
 
       expect(response.status).to eq(200)
-
       key.reload
       expect(key.revoked_at).not_to eq(nil)
     end
@@ -145,11 +139,10 @@ describe UserApiKeysController do
       args[:push_url] = "https://push.it/here"
 
       user = Fabricate(:user, trust_level: 0)
+      sign_in(user)
 
-      log_in_user(user)
-
-      post :create, params: args, format: :json
-      expect(response.code).to eq("302")
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(302)
 
       uri = URI.parse(response.redirect_url)
 
@@ -168,7 +161,6 @@ describe UserApiKeysController do
       key = user.user_api_keys.first
       expect(key.scopes).to include("push")
       expect(key.push_url).to eq("https://push.it/here")
-
     end
 
     it "will redirect correctly with valid token" do
@@ -180,11 +172,10 @@ describe UserApiKeysController do
       args[:push_url] = "https://push.it/here"
 
       user = Fabricate(:user, trust_level: 0)
+      sign_in(user)
 
-      log_in_user(user)
-
-      post :create, params: args, format: :json
-      expect(response.code).to eq("302")
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(302)
 
       uri = URI.parse(response.redirect_url)
 
@@ -210,10 +201,9 @@ describe UserApiKeysController do
 
       # should overwrite if needed
       args["access"] = "pr"
-      post :create, params: args, format: :json
+      post "/user-api-key.json", params: args
 
-      expect(response.code).to eq("302")
+      expect(response.status).to eq(302)
     end
-
   end
 end
