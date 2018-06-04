@@ -83,10 +83,7 @@ export default Ember.Component.extend({
 
   _webShare(url) {
     // We can pass title and text too, but most share targets do their own oneboxing
-    navigator.share({
-      url: url
-    })
-    .catch((error) => console.warn('Error sharing', error));
+    return navigator.share({ url });
   },
 
   didInsertElement() {
@@ -118,7 +115,13 @@ export default Ember.Component.extend({
       // use native webshare only when the user clicks on the "chain" icon
       // navigator.share needs HTTPS, returns undefined on HTTP
       if (navigator.share && !$currentTarget.hasClass('post-date')) {
-        this._webShare(url);
+        this._webShare(url)
+            .catch(error => {
+              console.warn('Error sharing', error);
+
+              // if navigator fails for unexpected reason fallback to popup
+              this._showUrl($currentTarget, url);
+            });
       } else {
         this._showUrl($currentTarget, url);
       }
