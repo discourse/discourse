@@ -9,7 +9,7 @@ module Jobs
       Upload
         .where("retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours")
         .where("created_at < ?", grace_period.hour.ago)
-        .where(url: nil)
+        .where(url: "")
         .destroy_all
       
       return unless SiteSetting.clean_up_uploads?
