@@ -310,7 +310,9 @@ SQL
   def permissions_params
     hash = {}
     category_groups.includes(:group).each do |category_group|
-      hash[category_group.group_name] = category_group.permission_type
+      if category_group.group.present?
+        hash[category_group.group_name] = category_group.permission_type
+      end
     end
     hash
   end
