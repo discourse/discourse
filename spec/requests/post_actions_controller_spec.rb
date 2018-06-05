@@ -79,7 +79,7 @@ RSpec.describe PostActionsController do
           id: post_1.id, post_action_type_id: PostActionType.types[:off_topic]
         }
 
-        expect(response).to_not be_success
+        expect(response).to_not be_successful
       end
 
       it 'passes the message through' do
@@ -133,7 +133,7 @@ RSpec.describe PostActionsController do
           take_action: 'true'
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         post_action = PostAction.last
 
@@ -149,7 +149,7 @@ RSpec.describe PostActionsController do
           post_action_type_id: PostActionType.types[:like]
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         post_action = PostAction.last
 

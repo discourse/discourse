@@ -66,7 +66,7 @@ describe Admin::ThemesController do
         upload.destroy
 
         post :import, params: { theme: uploaded_json }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
         temp.unlink
 
         theme = Theme.last
@@ -79,7 +79,7 @@ describe Admin::ThemesController do
 
       it 'imports a theme' do
         post :import, params: { theme: theme_file }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
 
         json = ::JSON.parse(response.body)
 
@@ -113,7 +113,7 @@ describe Admin::ThemesController do
 
         get :index, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         json = ::JSON.parse(response.body)
 
@@ -133,7 +133,7 @@ describe Admin::ThemesController do
           }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         json = ::JSON.parse(response.body)
 
@@ -186,7 +186,7 @@ describe Admin::ThemesController do
           }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         json = ::JSON.parse(response.body)
 

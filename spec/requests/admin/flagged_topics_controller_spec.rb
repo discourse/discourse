@@ -6,7 +6,7 @@ RSpec.describe Admin::FlaggedTopicsController do
   shared_examples "successfully retrieve list of flagged topics" do
     it "returns a list of flagged topics" do
       get "/admin/flagged_topics.json"
-      expect(response).to be_success
+      expect(response).to be_successful
 
       data = ::JSON.parse(response.body)
       expect(data['flagged_topics']).to be_present

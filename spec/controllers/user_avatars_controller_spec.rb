@@ -72,7 +72,7 @@ describe UserAvatarsController do
         size: 51, username: user.username, version: upload.id, hostname: 'default'
       }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 end

@@ -12,7 +12,7 @@ describe InlineOneboxController do
 
     it "returns empty JSON for empty input" do
       get :show, params: { urls: [] }, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
       json = JSON.parse(response.body)
       expect(json['inline-oneboxes']).to eq([])
     end
@@ -22,7 +22,7 @@ describe InlineOneboxController do
 
       it "returns information for a valid link" do
         get :show, params: { urls: [ topic.url ] }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
         json = JSON.parse(response.body)
         onebox = json['inline-oneboxes'][0]
 

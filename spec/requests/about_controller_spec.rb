@@ -8,7 +8,7 @@ describe AboutController do
       SiteSetting.login_required = false
       get "/about"
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'should redirect to login page for anonymous user when login_required is true' do
@@ -23,7 +23,7 @@ describe AboutController do
       sign_in(Fabricate(:user))
       get "/about"
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 end

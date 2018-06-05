@@ -15,7 +15,7 @@ describe Admin::UsersController do
     context '#index' do
       it 'returns success' do
         get :index, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'returns JSON' do
@@ -48,14 +48,14 @@ describe Admin::UsersController do
       context 'an existing user' do
         it 'returns success' do
           get :show, params: { id: @user.id }, format: :json
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
 
       context 'an existing user' do
         it 'returns success' do
           get :show, params: { id: 0 }, format: :json
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
         end
       end
     end
@@ -135,7 +135,7 @@ describe Admin::UsersController do
             format: :json
           }
         )
-        expect(response).to be_success
+        expect(response).to be_successful
 
         user.reload
         expect(user).to be_suspended
@@ -160,7 +160,7 @@ describe Admin::UsersController do
 
         it "can have an associated post" do
           put(:suspend, params: suspend_params)
-          expect(response).to be_success
+          expect(response).to be_successful
 
           log = UserHistory.where(target_user_id: user.id).order('id desc').first
           expect(log).to be_present
@@ -171,7 +171,7 @@ describe Admin::UsersController do
           put(:suspend, params: suspend_params.merge(post_action: 'delete'))
           post.reload
           expect(post.deleted_at).to be_present
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it "can edit an associated post" do
@@ -182,7 +182,7 @@ describe Admin::UsersController do
           post.reload
           expect(post.deleted_at).to be_blank
           expect(post.raw).to eq("this is the edited content")
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
 
@@ -205,7 +205,7 @@ describe Admin::UsersController do
             format: :json
           }
         )
-        expect(response).to be_success
+        expect(response).to be_successful
 
         log = UserHistory.where(target_user_id: user.id).order('id desc').first
         expect(log).to be_present
@@ -274,7 +274,7 @@ describe Admin::UsersController do
           group_id: group.id, user_id: user.id
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(GroupUser.where(user_id: user.id, group_id: group.id).exists?).to eq(true)
 
         group_history = GroupHistory.last
@@ -288,7 +288,7 @@ describe Admin::UsersController do
           group_id: group.id, user_id: user.id
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -358,7 +358,7 @@ describe Admin::UsersController do
           user_id: @another_user.id
         }, format: :json
 
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
 
       it "returns a 404 if the username doesn't exist" do
@@ -366,7 +366,7 @@ describe Admin::UsersController do
           user_id: 123123
         }, format: :json
 
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
 
       it "upgrades the user's trust level" do
@@ -378,7 +378,7 @@ describe Admin::UsersController do
 
         @another_user.reload
         expect(@another_user.trust_level).to eq(2)
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "raises no error when demoting a user below their current trust level (locks trust level)" do
@@ -394,7 +394,7 @@ describe Admin::UsersController do
           level: TrustLevel[0]
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         @another_user.reload
         expect(@another_user.trust_level).to eq(TrustLevel[0])
         expect(@another_user.manual_locked_trust_level).to eq(TrustLevel[0])
@@ -474,7 +474,7 @@ describe Admin::UsersController do
           users: [reject_me.id, reject_me_too.id]
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         json = ::JSON.parse(response.body)
         expect(json['success'].to_i).to eq(2)
         expect(json['failed'].to_i).to eq(0)
@@ -493,7 +493,7 @@ describe Admin::UsersController do
             users: [reject_me.id, reject_me_too.id]
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
           json = ::JSON.parse(response.body)
           expect(json['success'].to_i).to eq(1)
           expect(json['failed'].to_i).to eq(1)
@@ -506,7 +506,7 @@ describe Admin::UsersController do
             users: [reject_me.id]
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
           json = ::JSON.parse(response.body)
           expect(json['success'].to_i).to eq(0)
           expect(json['failed'].to_i).to eq(1)
@@ -538,7 +538,7 @@ describe Admin::UsersController do
 
         it "doesn't return an error if delete_posts == true" do
           delete :destroy, params: { id: delete_me.id, delete_posts: true }, format: :json
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
 
@@ -555,7 +555,7 @@ describe Admin::UsersController do
 
       it "returns success" do
         put :activate, params: { user_id: @reg_user.id }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
         json = ::JSON.parse(response.body)
         expect(json['success']).to eq("OK")
       end
@@ -567,7 +567,7 @@ describe Admin::UsersController do
         expect(@reg_user.email_confirmed?).to eq(false)
 
         put :activate, params: { user_id: @reg_user.id }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
 
         @reg_user.reload
         expect(@reg_user.email_confirmed?).to eq(true)
@@ -581,14 +581,14 @@ describe Admin::UsersController do
 
       it "returns success" do
         put :log_out, params: { user_id: @reg_user.id }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
         json = ::JSON.parse(response.body)
         expect(json['success']).to eq("OK")
       end
 
       it "returns 404 when user_id does not exist" do
         put :log_out, params: { user_id: 123123 }, format: :json
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
     end
 
@@ -612,7 +612,7 @@ describe Admin::UsersController do
 
       it "punishes the user for spamming" do
         put :silence, params: { user_id: @reg_user.id }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
         @reg_user.reload
         expect(@reg_user).to be_silenced
       end
@@ -626,7 +626,7 @@ describe Admin::UsersController do
           post_action: 'edit',
           post_edit: "this is the new contents for the post"
         }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
 
         silence_post.reload
         expect(silence_post.raw).to eq("this is the new contents for the post")
@@ -731,7 +731,7 @@ describe Admin::UsersController do
           name: 'Bill', username: 'bill22', email: 'bill@bill.com'
         }, format: :json
 
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
 
       it 'should invite admin' do
@@ -742,7 +742,7 @@ describe Admin::UsersController do
           name: 'Bill', username: 'bill22', email: 'bill@bill.com'
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         u = User.find_by_email('bill@bill.com')
         expect(u.name).to eq("Bill")
@@ -758,7 +758,7 @@ describe Admin::UsersController do
           name: 'Bill', username: 'bill22', email: 'bill@bill.com', send_email: '0'
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         json = ::JSON.parse(response.body)
         expect(json["password_url"]).to be_present
       end
@@ -806,7 +806,7 @@ describe Admin::UsersController do
       sso.email = "bob2@bob.com"
 
       post :sync_sso, params: Rack::Utils.parse_query(sso.payload), format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       user.reload
       expect(user.email).to eq("bob2@bob.com")
@@ -820,7 +820,7 @@ describe Admin::UsersController do
       sso.email = "dr@claw.com"
       sso.external_id = "2"
       post :sync_sso, params: Rack::Utils.parse_query(sso.payload), format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       user = User.find_by_email('dr@claw.com')
       expect(user).to be_present

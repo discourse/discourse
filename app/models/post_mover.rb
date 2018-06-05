@@ -217,7 +217,7 @@ class PostMover
       attrs[:last_posted_at] = post.created_at
       attrs[:last_post_user_id] = post.user_id
       attrs[:bumped_at] = post.created_at unless post.no_bump
-      attrs[:updated_at] = 'now()'
+      attrs[:updated_at] = Time.now
       destination_topic.update_columns(attrs)
     end
   end

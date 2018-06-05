@@ -11,7 +11,7 @@ describe UserBadgesController do
       UserBadge.create!(badge: badge, user: user, post_id: p.id, granted_by_id: -1, granted_at: Time.now)
 
       get "/user_badges.json", params: { badge_id: badge.id }
-      expect(response).to be_success
+      expect(response).to be_successful
 
       parsed = JSON.parse(response.body)
       expect(parsed["topics"]).to eq(nil)

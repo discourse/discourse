@@ -7,7 +7,7 @@ RSpec.describe SessionController do
 
   shared_examples 'failed to continue local login' do
     it 'should return the right response' do
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
       expect(response.status).to eq(500)
     end
   end
@@ -28,7 +28,7 @@ RSpec.describe SessionController do
       it 'returns the right response' do
         get "/session/email-login/adasdad"
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         expect(CGI.unescapeHTML(response.body)).to match(
           I18n.t('email_login.invalid_token')
@@ -41,7 +41,7 @@ RSpec.describe SessionController do
 
           get "/session/email-login/#{email_token.token}"
 
-          expect(response).to be_success
+          expect(response).to be_successful
 
           expect(CGI.unescapeHTML(response.body)).to match(
             I18n.t('email_login.invalid_token')
@@ -823,7 +823,7 @@ RSpec.describe SessionController do
             login: user.username, password: 'sssss'
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(::JSON.parse(response.body)['error']).to eq(
             I18n.t("login.incorrect_username_email_or_password")
           )
@@ -837,7 +837,7 @@ RSpec.describe SessionController do
             login: user.username, password: ('s' * (User.max_password_length + 1))
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(::JSON.parse(response.body)['error']).to eq(
             I18n.t("login.incorrect_username_email_or_password")
           )
@@ -855,7 +855,7 @@ RSpec.describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(JSON.parse(response.body)['error']).to eq(I18n.t('login.suspended_with_reason',
             date: I18n.l(user.suspended_till, format: :date_only),
             reason: Rack::Utils.escape_html(user.suspend_reason)
@@ -872,7 +872,7 @@ RSpec.describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(JSON.parse(response.body)['error']).to eq(I18n.t('login.not_activated'))
         end
       end
@@ -885,7 +885,7 @@ RSpec.describe SessionController do
             }
           end
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(events.map { |event| event[:event_name] }).to contain_exactly(
             :user_logged_in, :user_first_logged_in
           )
@@ -908,7 +908,7 @@ RSpec.describe SessionController do
               password: 'myawesomepassword',
             }
 
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(JSON.parse(response.body)['error']).to eq(I18n.t(
               'login.invalid_second_factor_code'
             ))
@@ -923,7 +923,7 @@ RSpec.describe SessionController do
               second_factor_token: '00000000'
             }
 
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(JSON.parse(response.body)['error']).to eq(I18n.t(
               'login.invalid_second_factor_code'
             ))
@@ -937,7 +937,7 @@ RSpec.describe SessionController do
               password: 'myawesomepassword',
               second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
             }
-            expect(response).to be_success
+            expect(response).to be_successful
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
@@ -957,7 +957,7 @@ RSpec.describe SessionController do
           post "/session.json", params: {
             login: "@" + user.username, password: 'myawesomepassword'
           }
-          expect(response).to be_success
+          expect(response).to be_successful
           user.reload
 
           expect(session[:current_user_id]).to be_nil
@@ -969,7 +969,7 @@ RSpec.describe SessionController do
           post "/session.json", params: {
             login: "@" + user.username, password: 'myawesomepassword'
           }
-          expect(response).to be_success
+          expect(response).to be_successful
           user.reload
 
           expect(session[:current_user_id]).to eq(user.id)
@@ -981,7 +981,7 @@ RSpec.describe SessionController do
           post "/session.json", params: {
             login: user.email, password: 'myawesomepassword'
           }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
@@ -994,7 +994,7 @@ RSpec.describe SessionController do
           post "/session.json", params: {
             login: username, password: 'myawesomepassword'
           }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(::JSON.parse(response.body)['error']).not_to be_present
         end
 
@@ -1002,7 +1002,7 @@ RSpec.describe SessionController do
           post "/session.json", params: {
             login: email, password: 'myawesomepassword'
           }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(::JSON.parse(response.body)['error']).not_to be_present
         end
       end
@@ -1020,12 +1020,12 @@ RSpec.describe SessionController do
           end
 
           it "doesn't log in the user" do
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(session[:current_user_id]).to be_blank
           end
 
           it "shows the 'not approved' error message" do
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(JSON.parse(response.body)['error']).to eq(
               I18n.t('login.not_approved')
             )
@@ -1040,7 +1040,7 @@ RSpec.describe SessionController do
             post "/session.json", params: {
               login: user.email, password: 'myawesomepassword'
             }
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(session[:current_user_id]).to eq(user.id)
           end
         end
@@ -1063,7 +1063,7 @@ RSpec.describe SessionController do
           post "/session.json", params: {
             login: user.username, password: 'myawesomepassword'
           }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(session[:current_user_id]).to eq(user.id)
         end
 
@@ -1076,7 +1076,7 @@ RSpec.describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(JSON.parse(response.body)['error']).to be_present
           expect(session[:current_user_id]).not_to eq(user.id)
         end
@@ -1090,7 +1090,7 @@ RSpec.describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
@@ -1105,13 +1105,13 @@ RSpec.describe SessionController do
 
       it "doesn't log in the user" do
         post_login
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(session[:current_user_id]).to be_blank
       end
 
       it "shows the 'not activated' error message" do
         post_login
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(JSON.parse(response.body)['error']).to eq(
           I18n.t 'login.not_activated'
         )
@@ -1122,7 +1122,7 @@ RSpec.describe SessionController do
 
         it "shows the 'not approved' error message" do
           post_login
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(JSON.parse(response.body)['error']).to eq(
             I18n.t 'login.not_approved'
           )
@@ -1141,7 +1141,7 @@ RSpec.describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         post "/session.json", params: {
@@ -1164,7 +1164,7 @@ RSpec.describe SessionController do
             second_factor_token: '000000'
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         post "/session.json", params: {
@@ -1285,7 +1285,7 @@ RSpec.describe SessionController do
 
       it "returns the JSON for the user" do
         get "/session/current.json"
-        expect(response).to be_success
+        expect(response).to be_successful
         json = ::JSON.parse(response.body)
         expect(json['current_user']).to be_present
         expect(json['current_user']['id']).to eq(user.id)

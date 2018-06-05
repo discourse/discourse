@@ -10,7 +10,7 @@ describe FinishInstallationController do
 
       it "doesn't allow access" do
         get :index
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
     end
 
@@ -21,7 +21,7 @@ describe FinishInstallationController do
 
       it "allows access" do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end
@@ -34,7 +34,7 @@ describe FinishInstallationController do
 
       it "doesn't allow access" do
         get :register
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
     end
 
@@ -46,7 +46,7 @@ describe FinishInstallationController do
 
       it "allows access" do
         get :register
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "raises an error when the email is not in the allowed list" do
@@ -92,7 +92,7 @@ describe FinishInstallationController do
 
       it "shows the page" do
         get :confirm_email
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end
@@ -112,7 +112,7 @@ describe FinishInstallationController do
     it "resends the email" do
       Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
       get :resend_email
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 end

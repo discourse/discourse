@@ -6,7 +6,7 @@ describe QueuedPostsController do
   context 'without authentication' do
     it 'fails' do
       get :index, format: :json
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
   end
 
@@ -14,7 +14,7 @@ describe QueuedPostsController do
     let!(:user) { log_in(:user) }
     it 'fails' do
       get :index, format: :json
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
   end
 
@@ -23,7 +23,7 @@ describe QueuedPostsController do
 
     it 'returns the queued posts' do
       get :index, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -52,7 +52,7 @@ describe QueuedPostsController do
           id: qp.id, queued_post: { state: 'approved' }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         qp.reload
         expect(qp.state).to eq(QueuedPost.states[:approved])
@@ -66,7 +66,7 @@ describe QueuedPostsController do
           id: qp.id, queued_post: { state: 'rejected' }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         qp.reload
         expect(qp.state).to eq(QueuedPost.states[:rejected])
@@ -91,7 +91,7 @@ describe QueuedPostsController do
             id: queued_topic.id, queued_post: changes
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it 'updates raw' do
@@ -119,7 +119,7 @@ describe QueuedPostsController do
             id: queued_reply.id, queued_post: changes
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it 'updates raw' do

@@ -278,7 +278,7 @@ class Topic < ActiveRecord::Base
 
   def ensure_topic_has_a_category
     if category_id.nil? && (archetype.nil? || self.regular?)
-      self.category_id = SiteSetting.uncategorized_category_id
+      self.category_id = category&.id || SiteSetting.uncategorized_category_id
     end
   end
 
@@ -1334,7 +1334,12 @@ SQL
   end
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
-    private_messages.with_subtype(topic_subtype).where('topics.created_at >= ? AND topics.created_at <= ?', start_date, end_date).group('date(topics.created_at)').order('date(topics.created_at)').count
+    private_messages
+      .with_subtype(topic_subtype)
+      .where('topics.created_at >= ? AND topics.created_at <= ?', start_date, end_date)
+      .group('date(topics.created_at)')
+      .order('date(topics.created_at)')
+      .count
   end
 
   def is_category_topic?

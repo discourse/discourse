@@ -64,7 +64,7 @@ describe UserActionsController do
           get :index, params: {
             username: user.username, filter: UserAction::PENDING
           }, format: :json
-          expect(response).to_not be_success
+          expect(response).to_not be_successful
 
         end
       end

@@ -13,19 +13,19 @@ RSpec.describe ListController do
   describe '#index' do
     it "doesn't throw an error with a negative page" do
       get "/#{Discourse.anonymous_filters[1]}", params: { page: -1024 }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "doesn't throw an error with page params as an array" do
       get "/#{Discourse.anonymous_filters[1]}", params: { page: ['7'] }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "#{filter}" do
         it "succeeds" do
           get "/#{filter}"
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe ListController do
       p = create_post
 
       get "/latest.json", params: { topic_ids: "#{p.topic_id}" }
-      expect(response).to be_success
+      expect(response).to be_successful
       parsed = JSON.parse(response.body)
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
@@ -238,20 +238,20 @@ RSpec.describe ListController do
   describe 'RSS feeds' do
     it 'renders latest RSS' do
       get "/latest.rss"
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.content_type).to eq('application/rss+xml')
     end
 
     it 'renders top RSS' do
       get "/top.rss"
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.content_type).to eq('application/rss+xml')
     end
 
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
         get "/top/#{period}.rss"
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.content_type).to eq('application/rss+xml')
       end
     end
@@ -312,7 +312,7 @@ RSpec.describe ListController do
 
         it 'uses the correct category' do
           get "/c/#{other_category.slug}/l/latest.json"
-          expect(response).to be_success
+          expect(response).to be_successful
           body = JSON.parse(response.body)
           expect(body["topic_list"]["topics"].first["category_id"])
             .to eq(other_category.id)
@@ -340,7 +340,7 @@ RSpec.describe ListController do
       describe 'feed' do
         it 'renders RSS' do
           get "/c/#{category.slug}.rss"
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(response.content_type).to eq('application/rss+xml')
         end
       end
@@ -349,7 +349,7 @@ RSpec.describe ListController do
         it "has a top default view" do
           category.update_attributes!(default_view: 'top', default_top_period: 'monthly')
           get "/c/#{category.slug}.json"
-          expect(response).to be_success
+          expect(response).to be_successful
           json = JSON.parse(response.body)
           expect(json["topic_list"]["for_period"]).to eq("monthly")
         end
@@ -357,7 +357,7 @@ RSpec.describe ListController do
         it "has a default view of nil" do
           category.update_attributes!(default_view: nil)
           get "/c/#{category.slug}.json"
-          expect(response).to be_success
+          expect(response).to be_successful
           json = JSON.parse(response.body)
           expect(json["topic_list"]["for_period"]).to be_blank
         end
@@ -365,7 +365,7 @@ RSpec.describe ListController do
         it "has a default view of ''" do
           category.update_attributes!(default_view: '')
           get "/c/#{category.slug}.json"
-          expect(response).to be_success
+          expect(response).to be_successful
           json = JSON.parse(response.body)
           expect(json["topic_list"]["for_period"]).to be_blank
         end
@@ -373,7 +373,7 @@ RSpec.describe ListController do
         it "has a default view of latest" do
           category.update_attributes!(default_view: 'latest')
           get "/c/#{category.slug}.json"
-          expect(response).to be_success
+          expect(response).to be_successful
           json = JSON.parse(response.body)
           expect(json["topic_list"]["for_period"]).to be_blank
         end
@@ -382,13 +382,13 @@ RSpec.describe ListController do
       describe "renders canonical tag" do
         it 'for category default view' do
           get "/c/#{category.slug}"
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
 
         it 'for category latest view' do
           get "/c/#{category.slug}/l/latest"
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
       end
@@ -403,7 +403,7 @@ RSpec.describe ListController do
 
     it "should respond with a list" do
       get "/topics/created-by/#{user.username}.json"
-      expect(response).to be_success
+      expect(response).to be_successful
       json = JSON.parse(response.body)
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
@@ -421,7 +421,7 @@ RSpec.describe ListController do
       pm.topic_allowed_users.create!(user: user)
       sign_in(user)
       get "/topics/private-messages/#{user.username}.json"
-      expect(response).to be_success
+      expect(response).to be_successful
       json = JSON.parse(response.body)
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
@@ -442,7 +442,7 @@ RSpec.describe ListController do
     it "succeeds when the user can see private messages" do
       sign_in(user)
       get "/topics/private-messages-sent/#{user.username}.json"
-      expect(response).to be_success
+      expect(response).to be_successful
       json = JSON.parse(response.body)
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
@@ -465,7 +465,7 @@ RSpec.describe ListController do
     it "succeeds when the user can see private messages" do
       sign_in(user)
       get "/topics/private-messages-unread/#{user.username}.json"
-      expect(response).to be_success
+      expect(response).to be_successful
       json = JSON.parse(response.body)
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
@@ -481,7 +481,7 @@ RSpec.describe ListController do
       it "succeeds" do
         sign_in(user)
         get "/read"
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end
@@ -546,7 +546,7 @@ RSpec.describe ListController do
 
     it "suppresses categories from the latest list" do
       get "/#{SiteSetting.homepage}.json"
-      expect(response).to be_success
+      expect(response).to be_successful
 
       topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
       expect(topic_titles).not_to include(topic_in_sub_category.title, topic_in_category_two.title)
@@ -554,7 +554,7 @@ RSpec.describe ListController do
 
     it "does not suppress" do
       get "/#{SiteSetting.homepage}.json", params: { category: category_one.id }
-      expect(response).to be_success
+      expect(response).to be_successful
 
       topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
       expect(topic_titles).to include(topic_in_sub_category.title)

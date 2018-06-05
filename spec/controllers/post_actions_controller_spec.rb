@@ -46,7 +46,7 @@ describe PostActionsController do
 
         it 'returns success' do
           delete :destroy, params: { id: post.id, post_action_type_id: 1 }, format: :json
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it 'deletes the action' do
@@ -113,7 +113,7 @@ describe PostActionsController do
             id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it "works with a deleted post" do
@@ -123,7 +123,7 @@ describe PostActionsController do
             id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
       end

@@ -43,7 +43,6 @@ class BadgeGranter
         end
 
         if SiteSetting.enable_badges?
-
           unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
             I18n.with_locale(@user.effective_locale) do
               notification = @user.notifications.create(

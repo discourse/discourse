@@ -2,7 +2,7 @@ module IntegrationHelpers
   def create_user
     get "/u/hp.json"
 
-    expect(response).to be_success
+    expect(response).to be_successful
 
     body = JSON.parse(response.body)
     honeypot = body["value"]
@@ -17,7 +17,7 @@ module IntegrationHelpers
       challenge: challenge.reverse
     }
 
-    expect(response).to be_success
+    expect(response).to be_successful
 
     body = JSON.parse(response.body)
     User.find(body["user_id"])

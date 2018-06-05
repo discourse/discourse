@@ -13,7 +13,7 @@ describe Admin::ScreenedEmailsController do
     end
 
     subject { response }
-    it { is_expected.to be_success }
+    it { is_expected.to be_successful }
 
     it 'returns JSON' do
       expect(::JSON.parse(subject.body)).to be_a(Array)
