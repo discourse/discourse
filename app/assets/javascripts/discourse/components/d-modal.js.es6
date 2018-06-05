@@ -3,6 +3,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 export default Ember.Component.extend({
   classNameBindings: [':modal', ':d-modal', 'modalClass', 'modalStyle'],
   attributeBindings: ['data-keyboard'],
+  dismissable: true,
 
   init() {
     this._super(...arguments);
@@ -21,7 +22,7 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   setUp() {
     $('html').on('keydown.discourse-modal', e => {
-      if (e.which === 27) {
+      if (e.which === 27 && this.get('dismissable')) {
         Em.run.next(() => $('.modal-header a.close').click());
       }
     });
@@ -48,6 +49,12 @@ export default Ember.Component.extend({
         // of another modal is not used
         this.set('subtitle', null);
       }
+
+      if ('dismissable' in data) {
+        this.set('dismissable', data.dismissable);
+      } else {
+        this.set('dismissable', true);
+      }
     });
   },
 
@@ -57,6 +64,9 @@ export default Ember.Component.extend({
   },
 
   click(e) {
+    if(!this.get('dismissable')) {
+      return;
+    }
     const $target = $(e.target);
     if ($target.hasClass("modal-middle-container") ||
         $target.hasClass("modal-outer-container")) {
