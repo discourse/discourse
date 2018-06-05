@@ -383,19 +383,39 @@ describe GroupsController do
       group.update_attributes!(name: 'test')
 
       get "/groups/test/mentionable.json", params: { name: group.name }
-
       expect(response).to be_success
 
       response_body = JSON.parse(response.body)
       expect(response_body["mentionable"]).to eq(false)
 
-      group.update_attributes!(mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      group.update_attributes!(mentionable_level: Group::ALIAS_LEVELS[:everyone], visibility_level: Group.visibility_levels[:staff])
 
       get "/groups/test/mentionable.json", params: { name: group.name }
       expect(response).to be_success
 
       response_body = JSON.parse(response.body)
       expect(response_body["mentionable"]).to eq(true)
+    end
+  end
+
+  describe '#messageable' do
+    it "should return the right response" do
+      sign_in(user)
+      group.update_attributes!(name: 'test')
+
+      get "/groups/test/messageable.json", params: { name: group.name }
+      expect(response).to be_success
+
+      response_body = JSON.parse(response.body)
+      expect(response_body["messageable"]).to eq(false)
+
+      group.update_attributes!(messageable_level: Group::ALIAS_LEVELS[:everyone], visibility_level: Group.visibility_levels[:staff])
+
+      get "/groups/test/messageable.json", params: { name: group.name }
+      expect(response).to be_success
+
+      response_body = JSON.parse(response.body)
+      expect(response_body["messageable"]).to eq(true)
     end
   end
 
