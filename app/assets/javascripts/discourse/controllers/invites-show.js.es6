@@ -77,8 +77,8 @@ export default Ember.Controller.extend(PasswordValidation, UsernameValidation, N
             this.set('errorMessage', result.message);
           }
         }
-      }).catch(response => {
-        throw response;
+      }).catch(error => {
+        throw new Error(error);
       });
     }
   }

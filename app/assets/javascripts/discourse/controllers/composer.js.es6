@@ -590,7 +590,7 @@ export default Ember.Controller.extend({
 
     if (!opts.draftKey) {
       alert("composer was opened without a draft key");
-      throw "composer opened without a proper draft key";
+      throw new Error("composer opened without a proper draft key");
     }
     const self = this;
     let composerModel = this.get('model');

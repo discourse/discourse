@@ -44,7 +44,9 @@ const RestModel = Ember.Object.extend({
     const self = this;
     self.set('isSaving', true);
     return adapter.createRecord(store, type, props).then(function(res) {
-      if (!res) { throw "Received no data back from createRecord"; }
+      if (!res) {
+        throw new Error("Received no data back from createRecord");
+      }
 
       // We can get a response back without properties, for example
       // when a post is queued.
@@ -59,7 +61,7 @@ const RestModel = Ember.Object.extend({
   },
 
   createProperties() {
-    throw "You must overwrite `createProperties()` before saving a record";
+    throw new Error("You must overwrite `createProperties()` before saving a record");
   },
 
   save(props) {
