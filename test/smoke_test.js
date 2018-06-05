@@ -16,7 +16,7 @@ const path = require('path');
   const browser = await puppeteer.launch({
     // when debugging localy setting headless to "false" can be very helpful
     headless: false,
-    args: ["--disable-local-storage"]
+    args: ["--disable-local-storage", "--no-sandbox"]
   });
   const page = await browser.newPage();
 
