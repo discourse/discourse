@@ -8,6 +8,8 @@ task "smoke:test" do
     abort "Chrome 59 or higher is required to run smoke tests in headless mode."
   end
 
+  system("yarn install --dev")
+
   url = ENV["URL"]
   if !url
     require "#{Rails.root}/config/environment"
