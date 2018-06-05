@@ -22,12 +22,8 @@ class ImportScripts::StackOverflow < ImportScripts::Base
 
     # TODO: import_groups
     import_users
-
-    import_topics
     import_posts
-
     import_likes
-
     mark_topics_as_solved
   end
 
@@ -89,11 +85,12 @@ class ImportScripts::StackOverflow < ImportScripts::Base
     end
   end
 
-  def import_topics
-    puts "", "Importing topics..."
+  def import_posts
+    puts "", "Importing posts..."
 
     last_post_id = -1
-    total = query("SELECT COUNT(*) count FROM Posts WHERE PostTypeId IN (1,3)").first["count"]
+    total = query("SELECT COUNT(*) count FROM Posts WHERE PostTypeId IN (1,2,3)").first["count"] +
+      query("SELECT COUNT(*) count FROM PostComments WHERE PostId IN (SELECT Id FROM Posts WHERE PostTypeId IN (1,2,3))").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       posts = query(<<~SQL
@@ -102,59 +99,15 @@ class ImportScripts::StackOverflow < ImportScripts::Base
              , PostTypeId
              , CreationDate
              , Body
-             , OwnerUserId
+             , OwnerUserId AS UserId
              , Title
              , Tags
              , DeletionDate
-             , CASE WHEN (ClosedDate IS NOT NULL OR LockedDate IS NOT NULL) THEN 1 ELSE 0 END AS Closed
-          FROM Posts
-         WHERE PostTypeId IN (1,3)
-           AND Id > #{last_post_id}
-         ORDER BY Id
-      SQL
-      ).to_a
-
-      break if posts.empty?
-
-      last_post_id = posts[-1]["Id"]
-      post_ids = posts.map { |p| p["Id"] }
-
-      next if all_records_exist?(:posts, post_ids)
-
-      create_posts(posts, total: total, offset: offset) do |p|
-        {
-          id: p["Id"],
-          wiki: p["PostTypeId"] == 3,
-          created_at: p["CreationDate"],
-          raw: HtmlToMarkdown.new(p["Body"]).to_markdown,
-          user_id: user_id_from_imported_user_id(p["OwnerUserId"]) || -1,
-          title: p["Title"],
-          tags: p["Tags"].split("|"),
-          deleted_at: p["DeletionDate"],
-          closed: p["Closed"] == 1,
-        }
-      end
-    end
-  end
-
-  def import_posts
-    puts "", "Importing posts..."
-
-    last_post_id = -1
-    total = query("SELECT COUNT(*) count FROM Posts WHERE PostTypeId = 2").first["count"] +
-      query("SELECT COUNT(*) count FROM PostComments WHERE PostId IN (SELECT Id FROM Posts WHERE PostTypeId = 2)").first["count"]
-
-    batches(BATCH_SIZE) do |offset|
-      posts = query(<<~SQL
-        SELECT TOP #{BATCH_SIZE}
-               Id
-             , CreationDate
-             , Body
-             , OwnerUserId AS UserId
              , ParentId
              , IsAcceptedAnswer
+             , CASE WHEN (ClosedDate IS NOT NULL OR LockedDate IS NOT NULL) THEN 1 ELSE 0 END AS Closed
           FROM Posts
-         WHERE PostTypeId = 2
+         WHERE PostTypeId IN (1,2,3)
            AND Id > #{last_post_id}
          ORDER BY Id
       SQL
@@ -168,7 +121,7 @@ class ImportScripts::StackOverflow < ImportScripts::Base
       comments = query(<<~SQL
         SELECT CONCAT('Comment-', Id) AS Id
              , PostId AS ParentId
-             , Text AS Body
+             , Text
              , CreationDate
              , UserId
           FROM PostComments
@@ -182,19 +135,30 @@ class ImportScripts::StackOverflow < ImportScripts::Base
 
       next if all_records_exist?(:posts, post_and_comment_ids)
 
-      create_posts(posts_and_comments) do |p|
-        next unless t = topic_lookup_from_imported_post_id(p["ParentId"])
+      create_posts(posts_and_comments, total: total, offset: offset) do |p|
+        raw = p["Body"].present? ? HtmlToMarkdown.new(p["Body"]).to_markdown : p["Text"]
 
         post = {
           id: p["Id"],
           created_at: p["CreationDate"],
-          raw: HtmlToMarkdown.new(p["Body"]).to_markdown,
+          raw: raw,
           user_id: user_id_from_imported_user_id(p["UserId"]) || -1,
-          topic_id: t[:topic_id],
-          reply_to_post_number: t[:post_number],
         }
 
-        post[:custom_fields] = { is_accepted_answer: true } if p["IsAcceptedAnswer"]
+        if p["Title"].present?
+          post[:wiki] = p["PostTypeId"] = 3
+          post[:title] = p["Title"]
+          post[:tags] = p["Tags"].split("|")
+          post[:deleted_at] = p["DeletionDate"]
+          post[:closed] = p["Closed"] == 1
+        elsif t = topic_lookup_from_imported_post_id(p["ParentId"])
+          post[:custom_fields] = { is_accepted_answer: true } if p["IsAcceptedAnswer"]
+          post[:topic_id] = t[:topic_id]
+          post[:reply_to_post_number] = t[:post_number]
+        else
+          puts "", "", "#{p["Id"]} was not imported", "", ""
+          next
+        end
 
         post
       end
@@ -204,10 +168,9 @@ class ImportScripts::StackOverflow < ImportScripts::Base
   LIKE ||= PostActionType.types[:like]
 
   def import_likes
-    puts "", "Importing likes..."
+    puts "", "Importing post likes..."
 
     last_like_id = -1
-    total = query("SELECT COUNT(*) count FROM Posts2Votes WHERE VoteTypeId = 2 AND DeletionDate IS NULL").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       likes = query(<<~SQL
@@ -236,6 +199,8 @@ class ImportScripts::StackOverflow < ImportScripts::Base
         PostAction.act(user, post, LIKE) rescue nil
       end
     end
+
+    puts "", "Importing comment likes..."
 
     last_like_id = -1
     total = query("SELECT COUNT(*) count FROM Comments2Votes WHERE VoteTypeId = 2 AND DeletionDate IS NULL").first["count"]
