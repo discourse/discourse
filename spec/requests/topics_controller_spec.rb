@@ -1193,12 +1193,14 @@ RSpec.describe TopicsController do
       it "selects the theme the user has selected" do
         user.user_option.update_columns(theme_key: theme.key)
 
-        get "/t/666"
+        get "/t/#{topic.id}"
+        expect(response).to be_redirect
         expect(controller.theme_key).to eq(theme.key)
 
         theme.update_attribute(:user_selectable, false)
 
-        get "/t/666"
+        get "/t/#{topic.id}"
+        expect(response).to be_redirect
         expect(controller.theme_key).not_to eq(theme.key)
       end
 
@@ -1207,7 +1209,8 @@ RSpec.describe TopicsController do
 
         cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq}"
 
-        get "/t/666"
+        get "/t/#{topic.id}"
+        expect(response).to be_redirect
         expect(controller.theme_key).to eq(theme2.key)
       end
 
@@ -1215,7 +1218,8 @@ RSpec.describe TopicsController do
         user.user_option.update_columns(theme_key: theme.key)
         cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq - 1}"
 
-        get "/t/666"
+        get "/t/#{topic.id}"
+        expect(response).to be_redirect
         expect(controller.theme_key).to eq(theme.key)
       end
     end
@@ -1224,6 +1228,7 @@ RSpec.describe TopicsController do
       expect {
         get "/t/#{topic.id}.json"
       }.not_to change(IncomingLink, :count)
+      expect(response).to be_success
     end
 
     it "doesn't raise an error on a very long link" do
@@ -1242,6 +1247,7 @@ RSpec.describe TopicsController do
 
           body = response.body
 
+          expect(response).to be_success
           expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
           expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         end
@@ -1268,6 +1274,7 @@ RSpec.describe TopicsController do
 
           body = response.body
 
+          expect(response).to be_success
           expect(body).to have_tag(:body, with: { class: 'crawler' })
           expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         end
@@ -1281,8 +1288,9 @@ RSpec.describe TopicsController do
 
         cookies['cn'] = "2828,100,#{notification.id}"
 
-        get "/t/100.json"
+        get "/t/#{topic.id}.json"
 
+        expect(response).to be_success
         expect(response.cookies['cn']).to eq(nil)
 
         notification.reload
@@ -1293,8 +1301,9 @@ RSpec.describe TopicsController do
         notification = Fabricate(:notification)
         sign_in(notification.user)
 
-        get "/t/100.json", headers: { "Discourse-Clear-Notifications" => "2828,100,#{notification.id}" }
+        get "/t/#{topic.id}.json", headers: { "Discourse-Clear-Notifications" => "2828,100,#{notification.id}" }
 
+        expect(response).to be_success
         notification.reload
         expect(notification.read).to eq(true)
       end
@@ -1316,6 +1325,7 @@ RSpec.describe TopicsController do
             it "uses the default locale" do
               get "/t/#{topic.id}.json", headers: headers("fr")
 
+              expect(response).to be_success
               expect(I18n.locale).to eq(:en)
             end
           end
@@ -1327,6 +1337,7 @@ RSpec.describe TopicsController do
 
               get "/t/#{topic.id}.json", headers: headers("fr")
 
+              expect(response).to be_success
               expect(I18n.locale).to eq(:en)
             end
           end
@@ -1344,6 +1355,7 @@ RSpec.describe TopicsController do
           context "with an anonymous user" do
             it "uses the locale from the headers" do
               get "/t/#{topic.id}.json", headers: headers("fr")
+              expect(response).to be_success
               expect(I18n.locale).to eq(:fr)
             end
           end
@@ -1354,6 +1366,7 @@ RSpec.describe TopicsController do
               sign_in(user)
 
               get "/t/#{topic.id}.json", headers: headers("fr")
+              expect(response).to be_success
               expect(I18n.locale).to eq(:fr)
             end
           end
@@ -1366,6 +1379,7 @@ RSpec.describe TopicsController do
             SiteSetting.default_locale = "en"
 
             get "/t/#{topic.id}.json", headers: headers("zh-CN")
+            expect(response).to be_success
             expect(I18n.locale).to eq(:zh_CN)
           end
         end
@@ -1376,6 +1390,7 @@ RSpec.describe TopicsController do
             SiteSetting.default_locale = 'en'
 
             get "/t/#{topic.id}.json", headers: headers("")
+            expect(response).to be_success
             expect(I18n.locale).to eq(:en)
           end
         end
@@ -1385,12 +1400,14 @@ RSpec.describe TopicsController do
     describe "read only header" do
       it "returns no read only header by default" do
         get "/t/#{topic.id}.json"
+        expect(response).to be_success
         expect(response.headers['Discourse-Readonly']).to eq(nil)
       end
 
       it "returns a readonly header if the site is read only" do
         Discourse.received_readonly!
         get "/t/#{topic.id}.json"
+        expect(response).to be_success
         expect(response.headers['Discourse-Readonly']).to eq('true')
       end
     end

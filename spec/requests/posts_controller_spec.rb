@@ -436,7 +436,11 @@ describe PostsController do
         }
 
         expect(response).to be_success
-        expect(PostAction.where(post: post, user: user).count).to eq(1)
+        expect(PostAction.where(
+          post: post,
+          user: user,
+          post_action_type_id: PostActionType.types[:bookmark]
+        ).count).to eq(1)
       end
 
       it 'raises an error with a user key that does not match an optionally specified username' do
@@ -457,6 +461,11 @@ describe PostsController do
         }
 
         expect(response).to be_success
+        expect(PostAction.where(
+          post: post,
+          user: user,
+          post_action_type_id: PostActionType.types[:bookmark]
+        ).count).to eq(1)
       end
 
       it 'disallows phonies to bookmark posts' do
