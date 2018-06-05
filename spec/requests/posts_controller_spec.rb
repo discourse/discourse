@@ -356,14 +356,14 @@ describe PostsController do
 
   describe '#bookmark' do
     include_examples 'action requires login', :put, "/posts/2/bookmark.json"
+    let(:post) { Fabricate(:post, user: user) }
+    let(:user) { Fabricate(:user) }
 
     describe 'when logged in' do
       before do
         sign_in(user)
       end
 
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user) }
       let(:private_message) { Fabricate(:private_message_post) }
 
       it "raises an error if the user doesn't have permission to see the post" do
@@ -421,6 +421,71 @@ describe PostsController do
             expect(PostAction.find_by(id: post_action.id)).to eq(nil)
           end
         end
+      end
+    end
+
+    context "api" do
+      let(:api_key) { user.generate_api_key(user) }
+      let(:master_key) { ApiKey.create_master_key }
+
+      # choosing an arbitrarily easy to mock trusted activity
+      it 'allows users with api key to bookmark posts' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: api_key.key
+        }
+
+        expect(response).to be_success
+        expect(PostAction.where(
+          post: post,
+          user: user,
+          post_action_type_id: PostActionType.types[:bookmark]
+        ).count).to eq(1)
+      end
+
+      it 'raises an error with a user key that does not match an optionally specified username' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: api_key.key,
+          api_username: 'made_up'
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'allows users with a master api key to bookmark posts' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: master_key.key,
+          api_username: user.username
+        }
+
+        expect(response).to be_success
+        expect(PostAction.where(
+          post: post,
+          user: user,
+          post_action_type_id: PostActionType.types[:bookmark]
+        ).count).to eq(1)
+      end
+
+      it 'disallows phonies to bookmark posts' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: SecureRandom.hex(32),
+          api_username: user.username
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'disallows blank api' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: "",
+          api_username: user.username
+        }
+
+        expect(response.status).to eq(403)
       end
     end
   end
