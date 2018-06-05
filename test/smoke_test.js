@@ -231,7 +231,14 @@ const path = require('path');
 
       return promise;
     }, output => {
-      return output.match("I can even write a reply");
+      const expected = "I can even write a reply";
+      const matched = output.match(expected);
+
+      if (!matched) {
+        console.log(`Expected '${output}' to match '${expected}'`);
+      }
+
+      return matched;
     });
 
     await exec("submit the topic", () => {
