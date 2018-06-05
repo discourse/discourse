@@ -16,13 +16,13 @@ describe ExtraLocalesController do
 
     it "needs a valid bundle" do
       get :show, params: { bundle: 'made-up-bundle' }
-      expect(response).to_not be_success
+      expect(response).to_not be_successful
       expect(response.body).to be_blank
     end
 
     it "won't work with a weird parameter" do
       get :show, params: { bundle: '-invalid..character!!' }
-      expect(response).to_not be_success
+      expect(response).to_not be_successful
     end
 
     it "includes plugin translations" do
@@ -43,7 +43,7 @@ describe ExtraLocalesController do
 
       get :show, params: { bundle: "admin" }
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.body.include?("github_badges")).to eq(true)
     end
 

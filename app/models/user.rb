@@ -844,7 +844,7 @@ class User < ActiveRecord::Base
     if start_date && end_date
       result = result.group("date(users.created_at)")
       result = result.where("users.created_at >= ? AND users.created_at <= ?", start_date, end_date)
-      result = result.order('date(users.created_at)')
+      result = result.order("date(users.created_at)")
     end
 
     if group_id

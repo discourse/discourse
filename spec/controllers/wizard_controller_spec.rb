@@ -37,13 +37,13 @@ describe WizardController do
     it "renders the wizard if you are an admin" do
       log_in(:admin)
       get :index, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "returns JSON when the mime type is appropriate" do
       log_in(:admin)
       get :index, format: 'json'
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(::JSON.parse(response.body).has_key?('wizard')).to eq(true)
     end
   end

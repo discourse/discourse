@@ -11,7 +11,7 @@ describe Admin::ApiController do
   context '.index' do
     it "succeeds" do
       get :index, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -20,7 +20,7 @@ describe Admin::ApiController do
 
     it "returns 404 when there is no key" do
       put :regenerate_key, params: { id: 1234 }, format: :json
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
       expect(response.status).to eq(404)
     end
 
@@ -35,7 +35,7 @@ describe Admin::ApiController do
 
     it "returns 404 when there is no key" do
       delete :revoke_key, params: { id: 1234 }, format: :json
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
       expect(response.status).to eq(404)
     end
 

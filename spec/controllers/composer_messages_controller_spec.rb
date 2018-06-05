@@ -15,7 +15,7 @@ describe ComposerMessagesController do
 
       it 'redirects to your user preferences' do
         get :index, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'delegates args to the finder' do

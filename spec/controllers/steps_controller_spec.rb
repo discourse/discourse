@@ -41,7 +41,7 @@ describe StepsController do
         id: 'contact', fields: { contact_email: "eviltrout@example.com" }
       }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
     end
 
@@ -50,7 +50,7 @@ describe StepsController do
         id: 'contact', fields: { contact_email: "not-an-email" }
       }, format: :json
 
-      expect(response).to_not be_success
+      expect(response).to_not be_successful
     end
   end
 

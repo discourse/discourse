@@ -15,7 +15,7 @@ RSpec.describe TopicsController do
 
       get "/t/#{topic.id}/wordpress.json", params: { best: 3 }
 
-      expect(response).to be_success
+      expect(response).to be_successful
       json = ::JSON.parse(response.body)
 
       # The JSON has the data the wordpress plugin needs
@@ -105,7 +105,7 @@ RSpec.describe TopicsController do
             }
           end.to change { Topic.count }.by(1)
 
-          expect(response).to be_success
+          expect(response).to be_successful
 
           result = ::JSON.parse(response.body)
 
@@ -127,7 +127,7 @@ RSpec.describe TopicsController do
               }
             end.to change { Topic.count }.by(1)
 
-            expect(response).to be_success
+            expect(response).to be_successful
 
             result = JSON.parse(response.body)
 
@@ -143,7 +143,7 @@ RSpec.describe TopicsController do
           post "/t/#{topic.id}/move-posts.json", params: {
             post_ids: [p2.id]
           }
-          expect(response).to be_success
+          expect(response).to be_successful
           result = ::JSON.parse(response.body)
           expect(result['success']).to eq(false)
           expect(result['url']).to be_blank
@@ -193,7 +193,7 @@ RSpec.describe TopicsController do
             destination_topic_id: dest_topic.id
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           result = ::JSON.parse(response.body)
           expect(result['success']).to eq(true)
           expect(result['url']).to be_present
@@ -207,7 +207,7 @@ RSpec.describe TopicsController do
             post_ids: [p2.id]
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           result = ::JSON.parse(response.body)
           expect(result['success']).to eq(false)
           expect(result['url']).to be_blank
@@ -251,7 +251,7 @@ RSpec.describe TopicsController do
             destination_topic_id: dest_topic.id
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
           result = ::JSON.parse(response.body)
           expect(result['success']).to eq(true)
           expect(result['url']).to be_present
@@ -298,8 +298,8 @@ RSpec.describe TopicsController do
       let!(:editor) { sign_in(Fabricate(:admin)) }
       let(:topic) { Fabricate(:topic) }
       let(:user_a) { Fabricate(:user) }
-      let(:p1) { Fabricate(:post, topic_id: topic.id) }
-      let(:p2) { Fabricate(:post, topic_id: topic.id) }
+      let(:p1) { Fabricate(:post, topic: topic) }
+      let(:p2) { Fabricate(:post, topic: topic) }
 
       it "raises an error with a parameter missing" do
         [
@@ -317,7 +317,7 @@ RSpec.describe TopicsController do
         }
         topic.reload
         p1.reload
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(topic.user.username).to eq(user_a.username)
         expect(p1.user.username).to eq(user_a.username)
       end
@@ -327,7 +327,7 @@ RSpec.describe TopicsController do
           username: user_a.username_lower, post_ids: [p1.id, p2.id]
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         p1.reload
         p2.reload
@@ -339,7 +339,7 @@ RSpec.describe TopicsController do
       it "works with deleted users" do
         deleted_user = Fabricate(:user)
         t2 = Fabricate(:topic, user: deleted_user)
-        p3 = Fabricate(:post, topic_id: t2.id, user: deleted_user)
+        p3 = Fabricate(:post, topic: t2, user: deleted_user)
 
         UserDestroyer.new(editor).destroy(deleted_user, delete_posts: true, context: 'test', delete_as_spammer: true)
 
@@ -347,7 +347,7 @@ RSpec.describe TopicsController do
           username: user_a.username_lower, post_ids: [p3.id]
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
         t2.reload
         p3.reload
         expect(t2.deleted_at).to be_nil
@@ -380,20 +380,19 @@ RSpec.describe TopicsController do
       let(:old_timestamp) { Time.zone.now }
       let(:new_timestamp) { old_timestamp - 1.day }
       let!(:topic) { Fabricate(:topic, created_at: old_timestamp) }
-      let!(:p1) { Fabricate(:post, topic_id: topic.id, created_at: old_timestamp) }
-      let!(:p2) { Fabricate(:post, topic_id: topic.id, created_at: old_timestamp + 1.day) }
-
-      it 'raises an error with a missing parameter' do
-        put "/t/1/change-timestamp.json"
-        expect(response.status).to eq(400)
-      end
+      let!(:p1) { Fabricate(:post, topic: topic, created_at: old_timestamp) }
+      let!(:p2) { Fabricate(:post, topic: topic, created_at: old_timestamp + 1.day) }
 
       it 'should update the timestamps of selected posts' do
+        # try to see if we fail with invalid first
+        put "/t/1/change-timestamp.json"
+        expect(response.status).to eq(400)
+
         put "/t/#{topic.id}/change-timestamp.json", params: {
           timestamp: new_timestamp.to_f
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(topic.reload.created_at).to be_within_one_second_of(new_timestamp)
         expect(p1.reload.created_at).to be_within_one_second_of(new_timestamp)
         expect(p2.reload.created_at).to be_within_one_second_of(old_timestamp)
@@ -425,7 +424,7 @@ RSpec.describe TopicsController do
           expect do
             put "/t/#{topic.id}/clear-pin.json"
           end.to change { TopicUser.where(topic_id: topic.id, user_id: user.id).count }.by(1)
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
     end
@@ -473,15 +472,14 @@ RSpec.describe TopicsController do
       end
 
       it 'should update the status of the topic correctly' do
-        topic = Fabricate(:topic, user: user, closed: true, topic_timers: [
-          Fabricate(:topic_timer, status_type: TopicTimer.types[:open])
-        ])
+        topic = Fabricate(:topic, user: user, closed: true)
+        Fabricate(:topic_timer, topic: topic, status_type: TopicTimer.types[:open])
 
         put "/t/#{topic.id}/status.json", params: {
           status: 'closed', enabled: 'false'
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(topic.reload.closed).to eq(false)
         expect(topic.topic_timers).to eq([])
 
@@ -562,7 +560,7 @@ RSpec.describe TopicsController do
           put "/t/#{topic.id}/recover.json"
           topic.reload
           post.reload
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(topic.trashed?).to be_falsey
           expect(post.trashed?).to be_falsey
         end
@@ -597,7 +595,7 @@ RSpec.describe TopicsController do
 
         it 'succeeds' do
           delete "/t/#{topic.id}.json"
-          expect(response).to be_success
+          expect(response).to be_successful
           topic.reload
           expect(topic.trashed?).to be_truthy
         end
@@ -611,7 +609,7 @@ RSpec.describe TopicsController do
 
     it "returns JSON for the slug" do
       get "/t/id_for/#{topic.slug}.json"
-      expect(response).to be_success
+      expect(response).to be_successful
       json = ::JSON.parse(response.body)
       expect(json['topic_id']).to eq(topic.id)
       expect(json['url']).to eq(topic.url)
@@ -787,9 +785,9 @@ RSpec.describe TopicsController do
     it 'correctly renders canoicals' do
       get "/t/#{topic.id}", params: { slug: topic.slug }
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(css_select("link[rel=canonical]").length).to eq(1)
-      expect(response.headers["Cache-Control"]).to eq("no-store, must-revalidate, no-cache, private")
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
 
     it 'returns 301 even if slug does not match URL' do
@@ -804,7 +802,7 @@ RSpec.describe TopicsController do
       Fabricate(:post, topic: topic)
 
       get "/t/#{topic.id}.json", params: { slug: topic.slug }
-      expect(response).to be_success
+      expect(response).to be_successful
 
       get "/t/#{topic.id}.json", params: { slug: "just-guessing" }
       expect(response.status).to eq(301)
@@ -815,7 +813,7 @@ RSpec.describe TopicsController do
 
     it 'shows a topic correctly' do
       get "/t/#{topic.slug}/#{topic.id}.json"
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'return 404 for an invalid page' do
@@ -1110,20 +1108,20 @@ RSpec.describe TopicsController do
 
       it 'grabs the correct set of posts' do
         get "/t/#{topic.slug}/#{topic.id}.json"
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(extract_post_stream).to eq(@post_ids[0..1])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(extract_post_stream).to eq(@post_ids[0..1])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(extract_post_stream).to eq(@post_ids[2..3])
 
         post_number = topic.posts.pluck(:post_number).sort[3]
         get "/t/#{topic.slug}/#{topic.id}/#{post_number}.json"
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(extract_post_stream).to eq(@post_ids[-2..-1])
       end
     end
@@ -1228,7 +1226,7 @@ RSpec.describe TopicsController do
       expect {
         get "/t/#{topic.id}.json"
       }.not_to change(IncomingLink, :count)
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "doesn't raise an error on a very long link" do
@@ -1247,7 +1245,7 @@ RSpec.describe TopicsController do
 
           body = response.body
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
           expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         end
@@ -1274,7 +1272,7 @@ RSpec.describe TopicsController do
 
           body = response.body
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(body).to have_tag(:body, with: { class: 'crawler' })
           expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         end
@@ -1290,7 +1288,7 @@ RSpec.describe TopicsController do
 
         get "/t/#{topic.id}.json"
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.cookies['cn']).to eq(nil)
 
         notification.reload
@@ -1303,7 +1301,7 @@ RSpec.describe TopicsController do
 
         get "/t/#{topic.id}.json", headers: { "Discourse-Clear-Notifications" => "2828,100,#{notification.id}" }
 
-        expect(response).to be_success
+        expect(response).to be_successful
         notification.reload
         expect(notification.read).to eq(true)
       end
@@ -1325,7 +1323,7 @@ RSpec.describe TopicsController do
             it "uses the default locale" do
               get "/t/#{topic.id}.json", headers: headers("fr")
 
-              expect(response).to be_success
+              expect(response).to be_successful
               expect(I18n.locale).to eq(:en)
             end
           end
@@ -1337,7 +1335,7 @@ RSpec.describe TopicsController do
 
               get "/t/#{topic.id}.json", headers: headers("fr")
 
-              expect(response).to be_success
+              expect(response).to be_successful
               expect(I18n.locale).to eq(:en)
             end
           end
@@ -1355,7 +1353,7 @@ RSpec.describe TopicsController do
           context "with an anonymous user" do
             it "uses the locale from the headers" do
               get "/t/#{topic.id}.json", headers: headers("fr")
-              expect(response).to be_success
+              expect(response).to be_successful
               expect(I18n.locale).to eq(:fr)
             end
           end
@@ -1366,7 +1364,7 @@ RSpec.describe TopicsController do
               sign_in(user)
 
               get "/t/#{topic.id}.json", headers: headers("fr")
-              expect(response).to be_success
+              expect(response).to be_successful
               expect(I18n.locale).to eq(:fr)
             end
           end
@@ -1379,7 +1377,7 @@ RSpec.describe TopicsController do
             SiteSetting.default_locale = "en"
 
             get "/t/#{topic.id}.json", headers: headers("zh-CN")
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(I18n.locale).to eq(:zh_CN)
           end
         end
@@ -1390,7 +1388,7 @@ RSpec.describe TopicsController do
             SiteSetting.default_locale = 'en'
 
             get "/t/#{topic.id}.json", headers: headers("")
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(I18n.locale).to eq(:en)
           end
         end
@@ -1400,14 +1398,14 @@ RSpec.describe TopicsController do
     describe "read only header" do
       it "returns no read only header by default" do
         get "/t/#{topic.id}.json"
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.headers['Discourse-Readonly']).to eq(nil)
       end
 
       it "returns a readonly header if the site is read only" do
         Discourse.received_readonly!
         get "/t/#{topic.id}.json"
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.headers['Discourse-Readonly']).to eq('true')
       end
     end
@@ -1418,7 +1416,7 @@ RSpec.describe TopicsController do
 
     it 'returns first posts of the topic' do
       get "/t/#{topic.id}/posts.json"
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.content_type).to eq('application/json')
     end
   end
@@ -1428,7 +1426,7 @@ RSpec.describe TopicsController do
 
     it 'renders rss of the topic' do
       get "/t/foo/#{topic.id}.rss"
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.content_type).to eq('application/rss+xml')
     end
   end
@@ -1475,7 +1473,7 @@ RSpec.describe TopicsController do
         topic = Fabricate(:topic, user: sign_in(Fabricate(:admin)))
 
         put "/t/#{topic.id}/make-banner.json"
-        expect(response).to be_success
+        expect(response).to be_successful
         topic.reload
         expect(topic.archetype).to eq(Archetype.banner)
       end
@@ -1494,7 +1492,7 @@ RSpec.describe TopicsController do
         topic = Fabricate(:topic, user: sign_in(Fabricate(:admin)), archetype: Archetype.banner)
 
         put "/t/#{topic.id}/remove-banner.json"
-        expect(response).to be_success
+        expect(response).to be_successful
         topic.reload
         expect(topic.archetype).to eq(Archetype.default)
       end
@@ -1603,7 +1601,7 @@ RSpec.describe TopicsController do
       user.user_stat.update_column(:new_since, old_date)
 
       put "/topics/reset-new.json"
-      expect(response).to be_success
+      expect(response).to be_successful
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
     end
@@ -1613,7 +1611,7 @@ RSpec.describe TopicsController do
     it "works" do
       get "/topics/feature_stats.json", params: { category_id: 1 }
 
-      expect(response).to be_success
+      expect(response).to be_successful
       json = JSON.parse(response.body)
       expect(json["pinned_in_category_count"]).to eq(0)
       expect(json["pinned_globally_count"]).to eq(0)
@@ -1673,12 +1671,12 @@ RSpec.describe TopicsController do
 
       context "success" do
         it "returns success" do
-          admin = sign_in(Fabricate(:admin))
+          sign_in(Fabricate(:admin))
           put "/t/#{topic.id}/convert-topic/private.json"
 
           topic.reload
           expect(topic.archetype).to eq(Archetype.private_message)
-          expect(response).to be_success
+          expect(response).to be_successful
 
           result = ::JSON.parse(response.body)
           expect(result['success']).to eq(true)
@@ -1699,12 +1697,12 @@ RSpec.describe TopicsController do
 
       context "success" do
         it "returns success" do
-          admin = sign_in(Fabricate(:admin))
+          sign_in(Fabricate(:admin))
           put "/t/#{topic.id}/convert-topic/public.json"
 
           topic.reload
           expect(topic.archetype).to eq(Archetype.default)
-          expect(response).to be_success
+          expect(response).to be_successful
 
           result = ::JSON.parse(response.body)
           expect(result['success']).to eq(true)
@@ -1726,7 +1724,7 @@ RSpec.describe TopicsController do
         timings: { post_1.post_number => 2 }
       }
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       post_timing = PostTiming.first
 
@@ -1774,7 +1772,7 @@ RSpec.describe TopicsController do
           status_type: TopicTimer.types[1]
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
 
         topic_status_update = TopicTimer.last
 
@@ -1800,7 +1798,7 @@ RSpec.describe TopicsController do
           status_type: TopicTimer.types[1]
         }
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(topic.reload.public_topic_timer).to eq(nil)
 
         json = JSON.parse(response.body)
@@ -1818,7 +1816,7 @@ RSpec.describe TopicsController do
             category_id: topic.category_id
           }
 
-          expect(response).to be_success
+          expect(response).to be_successful
 
           topic_status_update = TopicTimer.last
 
@@ -2038,7 +2036,7 @@ RSpec.describe TopicsController do
           let!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
           it "allows staff to update the category id" do
             put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
-            expect(response).to be_success
+            expect(response).to be_successful
             topic.reload
             expect(topic.shared_draft.category_id).to eq(other_cat.id)
           end
@@ -2047,7 +2045,7 @@ RSpec.describe TopicsController do
         context "without a shared draft" do
           it "allows staff to update the category id" do
             put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
-            expect(response).to be_success
+            expect(response).to be_successful
             topic.reload
             expect(topic.shared_draft.category_id).to eq(other_cat.id)
           end
@@ -2113,15 +2111,15 @@ RSpec.describe TopicsController do
         freeze_time page1_time
 
         topic = Fabricate(:topic)
-        Fabricate(:post, topic_id: topic.id)
-        Fabricate(:post, topic_id: topic.id)
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: topic)
 
         freeze_time page2_time
-        Fabricate(:post, topic_id: topic.id)
-        Fabricate(:post, topic_id: topic.id)
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: topic)
 
         freeze_time page3_time
-        Fabricate(:post, topic_id: topic.id)
+        Fabricate(:post, topic: topic)
 
         # ugly, but no inteface to set this and we don't want to create
         # 100 posts to test this thing

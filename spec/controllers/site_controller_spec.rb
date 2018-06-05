@@ -34,7 +34,7 @@ describe SiteController do
       get :statistics, format: :json
       json = JSON.parse(response.body)
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(json["topic_count"]).to be_present
       expect(json["post_count"]).to be_present
       expect(json["user_count"]).to be_present

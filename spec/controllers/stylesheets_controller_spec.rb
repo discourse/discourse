@@ -12,7 +12,7 @@ describe StylesheetsController do
     StylesheetCache.destroy_all
 
     get :show, params: { name: "desktop_rtl_#{digest}" }, format: :json
-    expect(response).to be_success
+    expect(response).to be_successful
 
     cached = StylesheetCache.first
     expect(cached.target).to eq 'desktop_rtl'
@@ -22,7 +22,7 @@ describe StylesheetsController do
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
 
     get :show, params: { name: "desktop_rtl_#{digest}" }, format: :json
-    expect(response).to be_success
+    expect(response).to be_successful
 
     # there is an edge case which is ... disk and db cache is nuked, very unlikely to happen
 
@@ -41,13 +41,13 @@ describe StylesheetsController do
       name: builder.stylesheet_filename.sub(".css", "")
     }, format: :json
 
-    expect(response).to be_success
+    expect(response).to be_successful
 
     get :show, params: {
       name: builder.stylesheet_filename_no_digest.sub(".css", "")
     }, format: :json
 
-    expect(response).to be_success
+    expect(response).to be_successful
 
     builder = Stylesheet::Manager.new(:desktop_theme, theme.key)
     builder.compile
@@ -58,13 +58,13 @@ describe StylesheetsController do
       name: builder.stylesheet_filename.sub(".css", "")
     }, format: :json
 
-    expect(response).to be_success
+    expect(response).to be_successful
 
     get :show, params: {
       name: builder.stylesheet_filename_no_digest.sub(".css", "")
     }, format: :json
 
-    expect(response).to be_success
+    expect(response).to be_successful
   end
 
 end

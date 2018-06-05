@@ -56,13 +56,13 @@ describe OneboxController do
       bypass_limiting
       Rails.cache.delete("onebox__#{url}")
       get "/onebox.json", params: { url: url }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.body).to include("Onebox1")
 
       bypass_limiting
       stub_request(:get, url).to_return(status: 200, body: html2).then.to_raise
       get "/onebox.json", params: { url: url, refresh: 'true' }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.body).to include("Onebox2")
     end
 
@@ -75,12 +75,12 @@ describe OneboxController do
 
         get "/onebox.json", params: { url: url, refresh: "true" }
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.body).to include('Onebox1')
         expect(response.body).to include('bodycontent')
 
         get "/onebox.json", params: { url: url }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.body).to include('Onebox1')
         expect(response.body).to include('bodycontent')
       end
@@ -104,7 +104,7 @@ describe OneboxController do
         stub_request(:get, url).to_return(body: html).then.to_raise
         get "/onebox.json", params: { url: url, refresh: "true" }
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.body).to include("Onebox1")
       end
     end

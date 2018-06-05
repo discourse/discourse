@@ -24,7 +24,7 @@ describe WebhooksController do
         "Message-Id" => "<12345@il.com>"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -50,7 +50,7 @@ describe WebhooksController do
         ]
       }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -72,7 +72,7 @@ describe WebhooksController do
         "CustomID"    => message_id
       }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -99,7 +99,7 @@ describe WebhooksController do
         }]
       }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -128,7 +128,7 @@ describe WebhooksController do
         }]
       }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       email_log.reload
       expect(email_log.bounced).to eq(true)

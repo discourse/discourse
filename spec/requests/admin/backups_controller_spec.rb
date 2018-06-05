@@ -11,7 +11,7 @@ RSpec.describe Admin::BackupsController do
     it "raises an error when backups are disabled" do
       SiteSetting.enable_backups = false
       get "/admin/backups.json"
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
   end
 
@@ -21,7 +21,7 @@ RSpec.describe Admin::BackupsController do
 
       post "/admin/backups/rollback.json"
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'should not allow rollback via a GET request' do
@@ -36,7 +36,7 @@ RSpec.describe Admin::BackupsController do
 
       delete "/admin/backups/cancel.json"
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'should not allow cancel via a GET request' do
@@ -59,7 +59,7 @@ RSpec.describe Admin::BackupsController do
 
       put "/admin/backups/#{backup_filename}.json"
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "returns 404 when the backup does not exist" do

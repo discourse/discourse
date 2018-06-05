@@ -45,7 +45,7 @@ describe Admin::ReportsController do
           end
 
           it "renders the report as JSON" do
-            expect(response).to be_success
+            expect(response).to be_successful
           end
 
           it "renders the report as JSON" do
@@ -67,7 +67,7 @@ describe Admin::ReportsController do
 
           get :show, params: { type: 'topics', category_id: category.id }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
 
           report = JSON.parse(response.body)["report"]
 
@@ -87,7 +87,7 @@ describe Admin::ReportsController do
 
           get :show, params: { type: 'signups', group_id: group.id }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
 
           report = JSON.parse(response.body)["report"]
 

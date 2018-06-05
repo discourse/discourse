@@ -14,7 +14,7 @@ describe Admin::SiteSettingsController do
     context 'index' do
       it 'returns success' do
         get :index, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'returns JSON' do

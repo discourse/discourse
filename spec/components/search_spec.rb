@@ -964,7 +964,7 @@ describe Search do
   context 'in:title' do
     it 'allows for search in title' do
       topic = Fabricate(:topic, title: 'I am testing a title search')
-      _post = Fabricate(:post, topic_id: topic.id, raw: 'this is the first post')
+      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
 
       results = Search.execute('title in:title')
       expect(results.posts.length).to eq(1)

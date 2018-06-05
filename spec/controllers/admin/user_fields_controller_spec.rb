@@ -16,7 +16,7 @@ describe Admin::UserFieldsController do
             user_field: { name: 'hello', description: 'hello desc', field_type: 'text' }
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
         }.to change(UserField, :count).by(1)
       end
 
@@ -31,7 +31,7 @@ describe Admin::UserFieldsController do
             }
           }, format: :json
 
-          expect(response).to be_success
+          expect(response).to be_successful
         end.to change(UserField, :count).by(1)
 
         expect(UserFieldOption.count).to eq(3)
@@ -43,7 +43,7 @@ describe Admin::UserFieldsController do
 
       it "returns a list of user fields" do
         get :index, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
         json = ::JSON.parse(response.body)
         expect(json['user_fields']).to be_present
       end
@@ -55,7 +55,7 @@ describe Admin::UserFieldsController do
       it "deletes the user field" do
         expect {
           delete :destroy, params: { id: user_field.id }, format: :json
-          expect(response).to be_success
+          expect(response).to be_successful
         }.to change(UserField, :count).by(-1)
       end
     end
@@ -69,7 +69,7 @@ describe Admin::UserFieldsController do
           user_field: { name: 'fraggle', field_type: 'confirm', description: 'muppet' }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         user_field.reload
         expect(user_field.name).to eq('fraggle')
         expect(user_field.field_type).to eq('confirm')
@@ -86,7 +86,7 @@ describe Admin::UserFieldsController do
           }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         user_field.reload
         expect(user_field.name).to eq('fraggle')
         expect(user_field.field_type).to eq('dropdown')
@@ -105,7 +105,7 @@ describe Admin::UserFieldsController do
           }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)
 
@@ -119,7 +119,7 @@ describe Admin::UserFieldsController do
           }
         }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)
       end

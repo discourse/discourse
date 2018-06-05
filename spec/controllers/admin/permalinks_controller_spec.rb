@@ -17,7 +17,7 @@ describe Admin::PermalinksController do
 
       get :index, params: { filter: "topic" }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
       result = JSON.parse(response.body)
       expect(result.length).to eq(2)
     end
@@ -30,7 +30,7 @@ describe Admin::PermalinksController do
 
       get :index, params: { filter: "discourse" }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
       result = JSON.parse(response.body)
       expect(result.length).to eq(2)
     end
@@ -43,7 +43,7 @@ describe Admin::PermalinksController do
 
       get :index, params: { filter: "discourse" }, format: :json
 
-      expect(response).to be_success
+      expect(response).to be_successful
       result = JSON.parse(response.body)
       expect(result.length).to eq(3)
     end

@@ -5,6 +5,10 @@ RSpec.describe TopicTimer, type: :model do
   let(:topic) { Fabricate(:topic) }
   let(:admin) { Fabricate(:admin) }
 
+  before do
+    freeze_time Time.new(2018)
+  end
+
   context "validations" do
     describe '#status_type' do
       it 'should ensure that only one active public topic status update exists' do

@@ -27,7 +27,7 @@ describe EmbedController do
     it "allows a topic to be embedded by id" do
       topic = Fabricate(:topic)
       get '/embed/comments', params: { topic_id: topic.id }, headers: headers
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -85,7 +85,7 @@ describe EmbedController do
       end
 
       after do
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")
       end
 
@@ -139,7 +139,7 @@ describe EmbedController do
           params: { embed_url: embed_url },
           headers: { 'REFERER' => "http://eviltrout.com/wat/1-2-3.html" }
 
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "works with the second host" do
@@ -147,7 +147,7 @@ describe EmbedController do
           params: { embed_url: embed_url },
           headers: { 'REFERER' => "http://eviltrout.com/wat/1-2-3.html" }
 
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "works with a host with a path" do
@@ -155,7 +155,7 @@ describe EmbedController do
           params: { embed_url: embed_url },
           headers: { 'REFERER' => "https://example.com/some-other-path" }
 
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "contains custom class name" do
