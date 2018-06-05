@@ -633,9 +633,9 @@ EOM
 
     Post.find_each do |post|
       begin
-        old_raw = post.raw
+        old_raw = post.raw.dup
         new_raw = postprocess_post_raw(post.raw)
-        if new_raw != post.raw
+        if new_raw != old_raw
           post.raw = new_raw
           post.save
         end
