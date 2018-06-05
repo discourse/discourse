@@ -106,6 +106,13 @@ describe Upload do
         SiteSetting.enable_s3_uploads = false
       end
 
+      it "should return the right upload when using base url (not CDN) for s3" do
+        upload
+        url = "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}"
+
+        expect(Upload.get_from_url(url)).to eq(upload)
+      end
+
       it "should return the right upload when using a CDN for s3" do
         upload
         s3_cdn_url = 'https://mycdn.slowly.net'
