@@ -49,7 +49,7 @@ export default Ember.Object.extend(ValidState, {
       data: { fields }
     }).catch(response => {
       response.responseJSON.errors.forEach(err => this.fieldError(err.field, err.description));
-      throw response;
+      throw new Error(response);
     });
   }
 });

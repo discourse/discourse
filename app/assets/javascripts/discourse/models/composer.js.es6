@@ -506,8 +506,8 @@ const Composer = RestModel.extend({
     }
 
     if (opts.action === REPLY && isEdit(this.get('action'))) this.set('reply', '');
-    if (!opts.draftKey) throw 'draft key is required';
-    if (opts.draftSequence === null) throw 'draft sequence is required';
+    if (!opts.draftKey) throw new Error('draft key is required');
+    if (opts.draftSequence === null) throw new Error('draft sequence is required');
 
     this.setProperties({
       draftKey: opts.draftKey,
@@ -668,7 +668,7 @@ const Composer = RestModel.extend({
         this.clearState();
         return result;
       }).catch(error => {
-        throw error;
+        throw new Error(error);
       });
     }).catch(rollback);
   },

@@ -138,7 +138,7 @@ class Toolbar {
   addButton(button) {
     const g = this.groups.findBy('group', button.group);
     if (!g) {
-      throw `Couldn't find toolbar group ${button.group}`;
+      throw new Error(`Couldn't find toolbar group ${button.group}`);
     }
 
     const createdButton = {

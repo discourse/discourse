@@ -20,7 +20,7 @@ export function Result(payload, responseJson) {
 // We use this to make sure 404s are caught
 function rethrow(error) {
   if (error.status === 404) {
-    throw "404: " + error.responseText;
+    throw new Error("404: " + error.responseText);
   }
   throw(error);
 }

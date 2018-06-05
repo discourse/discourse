@@ -22,7 +22,7 @@ export function resetCustomPostMessageCallbacks() {
 
 export function registerCustomPostMessageCallback(type, callback) {
   if (customPostMessageCallbacks[type]) {
-    throw `Error ${type} is an already registered post message!`;
+    throw new Error(`Error ${type} is an already registered post message!`);
   }
 
   customPostMessageCallbacks[type] = callback;

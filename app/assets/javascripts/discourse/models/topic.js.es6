@@ -652,7 +652,7 @@ function moveResult(result) {
     flushMap();
     return result;
   }
-  throw "error moving posts topic";
+  throw new Error("error moving posts topic");
 }
 
 export function movePosts(topicId, data) {

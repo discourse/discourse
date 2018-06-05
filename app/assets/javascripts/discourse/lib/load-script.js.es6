@@ -82,7 +82,7 @@ export default function loadScript(url, opts) {
     // option.
     if (opts.scriptTag) {
       if (Ember.testing) {
-        throw `In test mode scripts cannot be loaded async ${cdnUrl}`;
+        throw new Error(`In test mode scripts cannot be loaded async ${cdnUrl}`);
       }
       loadWithTag(cdnUrl, cb);
     } else {

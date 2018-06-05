@@ -217,7 +217,7 @@ export default RestModel.extend({
       this.setProperties({ loadingFilter: false, timelineLookup: json.timeline_lookup, loaded: true });
     }).catch(result => {
       this.errorLoading(result);
-      throw result;
+      throw new Error(result);
     }).finally(() => {
       this.set('loadingNearPost', null);
     });

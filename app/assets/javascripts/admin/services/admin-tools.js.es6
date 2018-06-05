@@ -127,7 +127,7 @@ export default Ember.Service.extend({
                 if (result.deleted) {
                   resolve();
                 } else {
-                  throw 'failed to delete';
+                  throw new Error('failed to delete');
                 }
               }).catch(() => {
                 bootbox.alert(I18n.t("admin.user.delete_failed"));

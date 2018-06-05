@@ -302,10 +302,14 @@ export default Ember.Object.extend({
   },
 
   _hydrate(type, obj, root) {
-    if (!obj) { throw "Can't hydrate " + type + " of `null`"; }
+    if (!obj) {
+      throw new Error("Can't hydrate " + type + " of `null`");
+    }
 
     const id = obj.id;
-    if (!id) { throw "Can't hydrate " + type + " without an `id`"; }
+    if (!id) {
+      throw new Error("Can't hydrate " + type + " without an `id`");
+    }
 
     root = root || obj;
 
