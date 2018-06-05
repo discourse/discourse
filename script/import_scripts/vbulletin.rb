@@ -709,6 +709,7 @@ EOM
     raw.gsub! /\[COLOR=#.*?\](.*?)\[\/COLOR\]/im, '\1'
 
     raw.gsub! /\[SIZE=.*?\](.*?)\[\/SIZE\]/im, '\1'
+    raw.gsub! /\[SUP\](.*?)\[\/SUP\]/im, '\1'
     raw.gsub! /\[h=.*?\](.*?)\[\/h\]/im, '\1'
 
     # [CENTER]...[/CENTER]
@@ -739,6 +740,9 @@ EOM
 
     # [VIDEO=youtube;<id>]...[/VIDEO]
     raw.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
+
+    # Fix uppercase B U and I tags
+    raw.gsub!(/(\[\/?[BUI]\])/i) { $1.downcase }
 
     # More Additions ....
 
