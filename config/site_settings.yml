@@ -1064,7 +1064,7 @@ security:
     default: ''
     type: list
   allowed_iframes:
-    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?'
+    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/'
     type: list
     client: true
   whitelisted_crawler_user_agents:
