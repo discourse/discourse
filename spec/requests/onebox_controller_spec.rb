@@ -11,7 +11,7 @@ describe OneboxController do
 
   describe "logged in" do
     let(:user) { Fabricate(:user) }
-    let(:html) {
+    let(:html) do
       html = <<~HTML
         <html>
         <head>
@@ -23,10 +23,10 @@ describe OneboxController do
         </body>
         <html>
       HTML
-      html # /
-    }
+      html
+    end
 
-    let(:html2) {
+    let(:html2) do
       html = <<~HTML
         <html>
         <head>
@@ -38,8 +38,9 @@ describe OneboxController do
         </body>
         <html>
       HTML
-      html # /
-    }
+      html
+    end
+
     def bypass_limiting
       Oneboxer.onebox_previewed!(user.id)
     end
