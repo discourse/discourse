@@ -6,6 +6,10 @@ describe SearchController do
       SearchIndexer.enable
     end
 
+    after do
+      $redis.flushall
+    end
+
     it "can search correctly" do
       my_post = Fabricate(:post, raw: 'this is my really awesome post')
 
