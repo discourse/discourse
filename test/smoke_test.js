@@ -15,7 +15,7 @@ const path = require('path');
 (async () => {
   const browser = await puppeteer.launch({
     // when debugging localy setting headless to "false" can be very helpful
-    headless: true,
+    headless: false,
     args: ["--disable-local-storage"]
   });
   const page = await browser.newPage();
@@ -59,11 +59,11 @@ const path = require('path');
     return exec(description, fn, assertion);
   };
 
-  page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
+  page.on('console', msg => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on('response', resp => {
-    if (resp.status !== 200) {
-      console.log("FAILED HTTP REQUEST TO " + resp.url + " Status is: " + resp.status);
+    if (resp.status() !== 200) {
+      console.log("FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status());
     }
     return resp;
   });
@@ -218,27 +218,10 @@ const path = require('path');
       return page.type("#reply-control .d-editor-input", post);
     });
 
-    await assert("waiting for the preview", () => {
-      let promise = page.waitForSelector(".d-editor-preview p",
+    await exec("waiting for the preview", () => {
+      return page.waitForXPath("//div[contains(@class, 'd-editor-preview') and contains(.//p, 'I can even write a reply')]",
         { visible: true }
       );
-
-      promise = promise.then(() => {
-        return page.evaluate(() => {
-          return document.querySelector(".d-editor-preview").innerText;
-        });
-      });
-
-      return promise;
-    }, output => {
-      const expected = "I can even write a reply";
-      const matched = output.match(expected);
-
-      if (!matched) {
-        console.log(`Expected '${output}' to match '${expected}'`);
-      }
-
-      return matched;
     });
 
     await exec("submit the topic", () => {
