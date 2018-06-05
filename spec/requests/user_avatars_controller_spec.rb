@@ -5,19 +5,12 @@ describe UserAvatarsController do
   context 'show_proxy_letter' do
     it 'returns not found if external avatar is set somewhere else' do
       SiteSetting.external_system_avatars_url = "https://somewhere.else.com/avatar.png"
-
-      get :show_proxy_letter, params: {
-        version: 'v2', letter: 'a', color: 'aaaaaa', size: 20
-      }, format: :json
-
+      get "/letter_avatar_proxy/v2/letter/a/aaaaaa/20.png"
       expect(response.status).to eq(404)
     end
 
     it 'returns an avatar if we are allowing the proxy' do
-      get :show_proxy_letter, params: {
-        version: 'v2', letter: 'a', color: 'aaaaaa', size: 360
-      }, format: :json
-
+      get "/letter_avatar_proxy/v2/letter/a/aaaaaa/360.png"
       expect(response.status).to eq(200)
     end
   end
@@ -47,16 +40,12 @@ describe UserAvatarsController do
 
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
 
-      get :show, params: {
-        size: 97, username: user.username, version: upload.id, hostname: 'default'
-      }, format: :json
+      get "/user_avatar/default/#{user.username}/97/#{upload.id}.png"
 
       # 98 is closest which is 49 * 2 for retina
       expect(response).to redirect_to("http://awesome.com/boom/user_avatar/default/#{user.username_lower}/98/#{upload.id}_#{OptimizedImage::VERSION}.png")
 
-      get :show, params: {
-        size: 98, username: user.username, version: upload.id, hostname: 'default'
-      }, format: :json
+      get "/user_avatar/default/#{user.username}/98/#{upload.id}.png"
 
       expect(response.body).to eq("image")
       expect(response.headers["Cache-Control"]).to eq('max-age=31556952, public, immutable')
@@ -68,9 +57,7 @@ describe UserAvatarsController do
       upload = Fabricate(:upload)
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
 
-      get :show, params: {
-        size: 51, username: user.username, version: upload.id, hostname: 'default'
-      }, format: :json
+      get "/user_avatar/default/#{user.username}/51/#{upload.id}.png"
 
       expect(response).to be_successful
     end
