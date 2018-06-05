@@ -34,7 +34,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def initialize
     super
 
-    @old_username_to_new_usernames = {}
+    @usernames = {}
 
     @tz = TZInfo::Timezone.get(TIMEZONE)
 
@@ -107,6 +107,14 @@ EOM
     end
   end
 
+  def get_username_for_old_username(old_username)
+    if @usernames.has_key?(old_username)
+      User.find(@usernames[old_username]).username
+    else
+      old_username
+    end
+  end
+
   def import_users
     puts "", "importing users"
 
@@ -147,13 +155,18 @@ EOM
           created_at: parse_timestamp(user["joindate"]),
           last_seen_at: parse_timestamp(user["lastvisit"]),
           post_create_action: proc do |u|
-            @old_username_to_new_usernames[user["username"]] = u.username
             import_profile_picture(user, u)
             import_profile_background(user, u)
           end
         }
       end
     end
+
+    @usernames = {}
+    UserCustomField.where(name: 'import_username').pluck(:user_id, :value).each do |user_id, import_username|
+      @usernames[import_username] = user_id
+    end
+
   end
 
   def create_groups_membership
@@ -620,6 +633,7 @@ EOM
 
     Post.find_each do |post|
       begin
+        old_raw = post.raw
         new_raw = postprocess_post_raw(post.raw)
         if new_raw != post.raw
           post.raw = new_raw
@@ -685,11 +699,8 @@ EOM
 
     # [MENTION]<username>[/MENTION]
     raw.gsub!(/\[mention\](.+?)\[\/mention\]/i) do
-      old_username = $1
-      if @old_username_to_new_usernames.has_key?(old_username)
-        old_username = @old_username_to_new_usernames[old_username]
-      end
-      "@#{old_username}"
+      new_username = get_username_for_old_username($1)
+      "@#{new_username}"
     end
 
     # [FONT=blah] and [COLOR=blah]
@@ -719,10 +730,8 @@ EOM
     # [QUOTE=<username>]...[/QUOTE]
     raw.gsub!(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
       old_username, quote = $1, $2
-      if @old_username_to_new_usernames.has_key?(old_username)
-        old_username = @old_username_to_new_usernames[old_username]
-      end
-      "\n[quote=\"#{old_username}\"]\n#{quote}\n[/quote]\n"
+      new_username = get_username_for_old_username(old_username)
+      "\n[quote=\"#{new_username}\"]\n#{quote}\n[/quote]\n"
     end
 
     # [YOUTUBE]<id>[/YOUTUBE]
@@ -760,16 +769,19 @@ EOM
     raw.gsub!(/\[quote=([^;]+);(\d+)\](.+?)\[\/quote\]/im) do
       old_username, post_id, quote = $1, $2, $3
 
-      if @old_username_to_new_usernames.has_key?(old_username)
-        old_username = @old_username_to_new_usernames[old_username]
-      end
+      new_username = get_username_for_old_username(old_username)
+
+      # There is a bug here when the first post in a topic is quoted.
+      # The first post in a topic does not have an post_custom_field referring to the post number,
+      # but it refers to thread-XXX instead, so this lookup fails miserably then.
+      # Fixing this would imply rewriting that logic completely.
 
       if topic_lookup = topic_lookup_from_imported_post_id(post_id)
         post_number = topic_lookup[:post_number]
         topic_id    = topic_lookup[:topic_id]
-        "\n[quote=\"#{old_username},post:#{post_number},topic:#{topic_id}\"]\n#{quote}\n[/quote]\n"
+        "\n[quote=\"#{new_username},post:#{post_number},topic:#{topic_id}\"]\n#{quote}\n[/quote]\n"
       else
-        "\n[quote=\"#{old_username}\"]\n#{quote}\n[/quote]\n"
+        "\n[quote=\"#{new_username}\"]\n#{quote}\n[/quote]\n"
       end
     end
 
