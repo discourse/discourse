@@ -1,6 +1,7 @@
 export default Ember.Component.extend({
   classNames: ['modal-body'],
   fixed: false,
+  dismissable: true,
 
   didInsertElement() {
     this._super();
@@ -44,7 +45,8 @@ export default Ember.Component.extend({
         'rawTitle',
         'fixed',
         'subtitle',
-        'rawSubtitle'
+        'rawSubtitle',
+        'dismissable'
       )
     );
   },
