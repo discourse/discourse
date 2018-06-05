@@ -2,15 +2,15 @@ require 'rails_helper'
 
 describe FinishInstallationController do
 
-  describe '.index' do
+  describe '#index' do
     context "has_login_hint is false" do
       before do
         SiteSetting.has_login_hint = false
       end
 
       it "doesn't allow access" do
-        get :index
-        expect(response).not_to be_successful
+        get "/finish-installation"
+        expect(response).to be_forbidden
       end
     end
 
@@ -20,21 +20,21 @@ describe FinishInstallationController do
       end
 
       it "allows access" do
-        get :index
-        expect(response).to be_successful
+        get "/finish-installation"
+        expect(response.status).to eq(200)
       end
     end
   end
 
-  describe '.register' do
+  describe '#register' do
     context "has_login_hint is false" do
       before do
         SiteSetting.has_login_hint = false
       end
 
       it "doesn't allow access" do
-        get :register
-        expect(response).not_to be_successful
+        get "/finish-installation/register"
+        expect(response).to be_forbidden
       end
     end
 
@@ -45,21 +45,21 @@ describe FinishInstallationController do
       end
 
       it "allows access" do
-        get :register
-        expect(response).to be_successful
+        get "/finish-installation/register"
+        expect(response.status).to eq(200)
       end
 
       it "raises an error when the email is not in the allowed list" do
-        post :register, params: {
+        post "/finish-installation/register.json", params: {
           email: 'notrobin@example.com',
           username: 'eviltrout',
           password: 'disismypasswordokay'
-        }, format: :json
+        }
         expect(response.status).to eq(400)
       end
 
       it "doesn't redirect when fields are wrong" do
-        post :register, params: {
+        post "/finish-installation/register", params: {
           email: 'robin@example.com',
           username: '',
           password: 'disismypasswordokay'
@@ -69,40 +69,39 @@ describe FinishInstallationController do
       end
 
       it "registers the admin when the email is in the list" do
-        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
-
-        post :register, params: {
-          email: 'robin@example.com',
-          username: 'eviltrout',
-          password: 'disismypasswordokay'
-        }, format: :json
+        expect do
+          post "/finish-installation/register.json", params: {
+            email: 'robin@example.com',
+            username: 'eviltrout',
+            password: 'disismypasswordokay'
+          }
+        end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
 
         expect(response).to be_redirect
         expect(User.where(username: 'eviltrout').exists?).to eq(true)
       end
-
     end
   end
 
-  describe '.confirm_email' do
+  describe '#confirm_email' do
     context "has_login_hint is false" do
       before do
         SiteSetting.has_login_hint = false
       end
 
       it "shows the page" do
-        get :confirm_email
-        expect(response).to be_successful
+        get "/finish-installation/confirm-email"
+        expect(response.status).to eq(200)
       end
     end
   end
 
-  describe '.resend_email' do
+  describe '#resend_email' do
     before do
       SiteSetting.has_login_hint = true
       GlobalSetting.stubs(:developer_emails).returns("robin@example.com")
 
-      post :register, params: {
+      post "/finish-installation/register", params: {
         email: 'robin@example.com',
         username: 'eviltrout',
         password: 'disismypasswordokay'
@@ -110,9 +109,11 @@ describe FinishInstallationController do
     end
 
     it "resends the email" do
-      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
-      get :resend_email
-      expect(response).to be_successful
+      expect do
+        put "/finish-installation/resend-email"
+      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+
+      expect(response.status).to eq(200)
     end
   end
 end
