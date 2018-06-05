@@ -273,10 +273,10 @@ const Post = RestModel.extend({
       .then(function(result){
         self.set("topic.bookmarked", result.topic_bookmarked);
       })
-      .catch(function(e) {
+      .catch(function(error) {
         self.toggleProperty("bookmarked");
         if (bookmarkedTopic) {self.set("topic.bookmarked", false); }
-        throw e;
+        throw new Error(error);
       });
   },
 

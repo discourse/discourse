@@ -179,9 +179,9 @@ export default class Widget {
     if (Discourse.Environment === "development" || Ember.testing) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
-        throw `defaultState must return an object`;
+        throw new Error(`defaultState must return an object`);
       } else if (Object.keys(ds).length > 0 && !this.key) {
-        throw `you need a key when using state in ${this.name}`;
+        throw new Error(`you need a key when using state in ${this.name}`);
       }
     }
 
@@ -279,7 +279,7 @@ export default class Widget {
       result.dirtyKeys = this.dirtyKeys;
       return result;
     } else {
-      throw `Couldn't find ${widgetName} factory`;
+      throw new Error(`Couldn't find ${widgetName} factory`);
     }
   }
 
