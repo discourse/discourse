@@ -630,7 +630,7 @@ RSpec.describe SessionController do
         expect(sso2.profile_background_url.blank?).to_not eq(true)
         expect(sso2.card_background_url.blank?).to_not eq(true)
 
-        expect(sso2.avatar_url).to start_with(SiteSetting.s3_cdn_url)
+        expect(sso2.avatar_url).to start_with("#{SiteSetting.s3_cdn_url}/original")
         expect(sso2.profile_background_url).to start_with(SiteSetting.s3_cdn_url)
         expect(sso2.card_background_url).to start_with(SiteSetting.s3_cdn_url)
       end
@@ -774,7 +774,7 @@ RSpec.describe SessionController do
       expect(sso2.profile_background_url.blank?).to_not eq(true)
       expect(sso2.card_background_url.blank?).to_not eq(true)
 
-      expect(sso2.avatar_url).to start_with(Discourse.base_url)
+      expect(sso2.avatar_url).to start_with("#{Discourse.store.absolute_base_url}/original")
       expect(sso2.profile_background_url).to start_with(Discourse.base_url)
       expect(sso2.card_background_url).to start_with(Discourse.base_url)
     end
