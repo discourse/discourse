@@ -1,9 +1,7 @@
 require 'rails_helper'
 
 describe StylesheetsController do
-
   it 'can survive cache miss' do
-
     StylesheetCache.destroy_all
     builder = Stylesheet::Manager.new('desktop_rtl', nil)
     builder.compile
@@ -11,8 +9,8 @@ describe StylesheetsController do
     digest = StylesheetCache.first.digest
     StylesheetCache.destroy_all
 
-    get :show, params: { name: "desktop_rtl_#{digest}" }, format: :json
-    expect(response).to be_successful
+    get "/stylesheets/desktop_rtl_#{digest}.css"
+    expect(response.status).to eq(200)
 
     cached = StylesheetCache.first
     expect(cached.target).to eq 'desktop_rtl'
@@ -21,11 +19,10 @@ describe StylesheetsController do
     # tmp folder destruction and cached
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
 
-    get :show, params: { name: "desktop_rtl_#{digest}" }, format: :json
-    expect(response).to be_successful
+    get "/stylesheets/desktop_rtl_#{digest}.css"
+    expect(response.status).to eq(200)
 
     # there is an edge case which is ... disk and db cache is nuked, very unlikely to happen
-
   end
 
   it 'can lookup theme specific css' do
@@ -37,34 +34,25 @@ describe StylesheetsController do
 
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
 
-    get :show, params: {
-      name: builder.stylesheet_filename.sub(".css", "")
-    }, format: :json
+    get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
 
-    expect(response).to be_successful
+    expect(response.status).to eq(200)
 
-    get :show, params: {
-      name: builder.stylesheet_filename_no_digest.sub(".css", "")
-    }, format: :json
+    get "/stylesheets/#{builder.stylesheet_filename_no_digest.sub(".css", "")}.css"
 
-    expect(response).to be_successful
+    expect(response.status).to eq(200)
 
     builder = Stylesheet::Manager.new(:desktop_theme, theme.key)
     builder.compile
 
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
 
-    get :show, params: {
-      name: builder.stylesheet_filename.sub(".css", "")
-    }, format: :json
+    get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
 
-    expect(response).to be_successful
+    expect(response.status).to eq(200)
 
-    get :show, params: {
-      name: builder.stylesheet_filename_no_digest.sub(".css", "")
-    }, format: :json
+    get "/stylesheets/#{builder.stylesheet_filename_no_digest.sub(".css", "")}.css"
 
-    expect(response).to be_successful
+    expect(response.status).to eq(200)
   end
-
 end
