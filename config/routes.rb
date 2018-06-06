@@ -803,9 +803,9 @@ Discourse::Application.routes.draw do
     get "/qunit" => "qunit#index"
   end
 
-  get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
-
   post "/push_notifications/subscribe" => "push_notification#subscribe"
   post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
+
+  get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 
 end
