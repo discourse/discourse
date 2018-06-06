@@ -1,28 +1,27 @@
 require 'rails_helper'
 
 describe ExtraLocalesController do
-
   context 'show' do
-
     it "caches for 24 hours if version is provided and it matches current hash" do
-      get :show, params: { bundle: 'admin', v: ExtraLocalesController.bundle_js_hash('admin') }
+      get "/extra-locales/admin", params: { v: ExtraLocalesController.bundle_js_hash('admin') }
+      expect(response.status).to eq(200)
       expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
     end
 
     it "does not cache at all if version is invalid" do
-      get :show, params: { bundle: 'admin', v: 'a' * 32 }
+      get "/extra-locales/admin", params: { v: 'a' * 32 }
+      expect(response.status).to eq(200)
       expect(response.headers["Cache-Control"]).not_to eq("max-age=86400, public, immutable")
     end
 
     it "needs a valid bundle" do
-      get :show, params: { bundle: 'made-up-bundle' }
-      expect(response).to_not be_successful
-      expect(response.body).to be_blank
+      get "/extra-locales/made-up-bundle"
+      expect(response.status).to eq(403)
     end
 
     it "won't work with a weird parameter" do
-      get :show, params: { bundle: '-invalid..character!!' }
-      expect(response).to_not be_successful
+      get "/extra-locales/-invalid..character!!"
+      expect(response.status).to eq(404)
     end
 
     it "includes plugin translations" do
@@ -41,12 +40,10 @@ describe ExtraLocalesController do
           }
         }).at_least_once
 
-      get :show, params: { bundle: "admin" }
+      get "/extra-locales/admin"
 
       expect(response).to be_successful
       expect(response.body.include?("github_badges")).to eq(true)
     end
-
   end
-
 end
