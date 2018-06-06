@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe SiteController do
   describe '.basic_info' do
-
     it 'is visible always even for sites requiring login' do
       SiteSetting.login_required = true
 
@@ -13,7 +12,7 @@ describe SiteController do
       SiteSetting.apple_touch_icon_url = "https://boom.com/apple/logo.png"
       SiteSetting.mobile_logo_url = "https://a.a/a.png"
 
-      get :basic_info, format: :json
+      get "/site/basic-info.json"
       json = JSON.parse(response.body)
 
       expect(json["title"]).to eq("Hammer Time")
@@ -26,12 +25,11 @@ describe SiteController do
   end
 
   describe '.statistics' do
-
     it 'is visible for sites requiring login' do
       SiteSetting.login_required = true
       SiteSetting.share_anonymized_statistics = true
 
-      get :statistics, format: :json
+      get "/site/statistics.json"
       json = JSON.parse(response.body)
 
       expect(response).to be_successful
@@ -54,7 +52,7 @@ describe SiteController do
     it 'is not visible if site setting share_anonymized_statistics is disabled' do
       SiteSetting.share_anonymized_statistics = false
 
-      get :statistics, format: :json
+      get "/site/statistics.json"
       expect(response).to redirect_to '/'
     end
   end
