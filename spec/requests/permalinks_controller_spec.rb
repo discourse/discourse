@@ -1,46 +1,49 @@
 require 'rails_helper'
 
 describe PermalinksController do
+  let(:topic) { Fabricate(:topic) }
+  let(:permalink) { Fabricate(:permalink, url: "deadroutee/topic/546") }
+
   describe 'show' do
     it "should redirect to a permalink's target_url with status 301" do
-      permalink = Fabricate(:permalink)
-      Permalink.any_instance.stubs(:target_url).returns('/t/the-topic-slug/42')
-      get :show, params: { url: permalink.url }
-      expect(response).to redirect_to('/t/the-topic-slug/42')
+      permalink.update!(topic_id: topic.id)
+
+      get "/#{permalink.url}"
+
+      expect(response).to redirect_to(topic.relative_url)
       expect(response.status).to eq(301)
     end
 
     it "should work for subfolder installs too" do
+      permalink.update!(topic_id: topic.id)
       GlobalSetting.stubs(:relative_url_root).returns('/forum')
       Discourse.stubs(:base_uri).returns("/forum")
-      permalink = Fabricate(:permalink)
-      Permalink.any_instance.stubs(:target_url).returns('/forum/t/the-topic-slug/42')
-      get :show, params: { url: permalink.url }
-      expect(response).to redirect_to('/forum/t/the-topic-slug/42')
+
+      get "/#{permalink.url}"
+
+      expect(response).to redirect_to(topic.relative_url)
       expect(response.status).to eq(301)
     end
 
     it "should apply normalizations" do
+      permalink.update!(external_url: '/topic/100')
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1"
 
-      permalink = Fabricate(:permalink, url: '/topic/bla', external_url: '/topic/100')
-
-      get :show, params: { url: permalink.url, test: "hello" }
+      get "/#{permalink.url}", params: { test: "hello" }
 
       expect(response).to redirect_to('/topic/100')
       expect(response.status).to eq(301)
 
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1X"
 
-      get :show, params: { url: permalink.url, test: "hello" }
+      get "/#{permalink.url}", params: { test: "hello" }
 
       expect(response.status).to eq(404)
     end
 
     it 'return 404 if permalink record does not exist' do
-      get :show, params: { url: '/not/a/valid/url' }
+      get '/not/a/valid/url'
       expect(response.status).to eq(404)
     end
   end
-
 end
