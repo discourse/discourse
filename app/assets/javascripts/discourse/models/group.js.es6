@@ -262,11 +262,11 @@ Group.reopenClass({
   },
 
   mentionable(name) {
-    return ajax(`/groups/${name}/mentionable`, { data: { name } });
+    return ajax(`/groups/${name}/mentionable`);
   },
 
   messageable(name) {
-    return ajax(`/groups/${name}/messageable`, { data: { name } });
+    return ajax(`/groups/${name}/messageable`);
   }
 });
 

@@ -282,7 +282,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:group_id, ensure_can_see: false)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -292,7 +292,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:group_id, ensure_can_see: false)
 
     if group
       render json: { messageable: Group.messageable(current_user).where(id: group.id).present? }
