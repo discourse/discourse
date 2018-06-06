@@ -3,7 +3,6 @@
 // create account modals
 .login-modal,
 .create-account {
-
   .modal-inner-container {
     max-width: 350px;
   }
@@ -19,9 +18,9 @@
     width: 102%;
     padding-bottom: 10px;
     margin-left: -2%;
-    
+
     button {
-      flex: 1 1 48%; 
+      flex: 1 1 48%;
       max-width: 50%;
       margin: 1% 0 1% 2%;
       font-size: $font-up-1;
@@ -39,10 +38,11 @@
   form {
     display: flex;
     justify-content: center;
+    flex-direction: column;
   }
 
   table {
-    width: 100%;
+    // width: 100%;
     padding: 10px;
   }
 
@@ -144,7 +144,7 @@
   }
 
   #login-buttons + .login-form {
-      border-top: 1px solid $primary-low;
+    border-top: 1px solid $primary-low;
   }
   .login-form {
     margin-bottom: 0.75em;
@@ -156,11 +156,32 @@
     margin-top: 10px;
     padding-top: 15px;
     border-top: 1px solid $primary-low;
+    display: flex;
+    flex-direction: column;
   }
 
   .user-field.confirm {
     margin-top: 10px;
-    margin-bottom: 10px;
+  }
+
+  .user-field {
+    display: flex;
+    flex-direction: column;
+
+    .required {
+      display: none; // needs more work
+    }
+    > label {
+      width: auto;
+      font-weight: bold;
+    }
+    .controls {
+      margin-left: 0;
+
+      .instructions {
+        margin-top: 5px;
+      }
+    }
   }
 }
 
