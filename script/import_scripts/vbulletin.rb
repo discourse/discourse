@@ -124,7 +124,8 @@ EOM
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query(<<-SQL
-          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email
+          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email,
+                 CONCAT(password, ':', salt) AS crypted_password
             FROM #{TABLE_PREFIX}user
            WHERE userid > #{last_user_id}
         ORDER BY userid
@@ -148,6 +149,7 @@ EOM
           id: user["userid"],
           name: username,
           username: username,
+          password: user["crypted_password"],
           email: email,
           website: user["homepage"].strip,
           title: @htmlentities.decode(user["usertitle"]).strip,
