@@ -282,7 +282,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:name)
+    group = find_group(:name, ensure_can_see: false)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -292,7 +292,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:name)
+    group = find_group(:name, ensure_can_see: false)
 
     if group
       render json: { messageable: Group.messageable(current_user).where(id: group.id).present? }
@@ -468,12 +468,11 @@ class GroupsController < ApplicationController
     params.require(:group).permit(*permitted_params)
   end
 
-  def find_group(param_name)
+  def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
     group = Group
     group = group.find_by("lower(name) = ?", name.downcase)
-    guardian.ensure_can_see!(group)
+    guardian.ensure_can_see!(group) if ensure_can_see
     group
   end
-
 end
