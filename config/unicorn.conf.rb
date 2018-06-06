@@ -210,7 +210,10 @@ before_fork do |server, worker|
 
   end
 
-  ActiveRecord::Base.connection.disconnect!
+  RailsMultisite::ConnectionManagement.each_connection do
+    ActiveRecord::Base.connection_pool.disconnect!
+  end
+
   $redis._client.disconnect
 
   # Throttle the master from forking too quickly by sleeping.  Due
