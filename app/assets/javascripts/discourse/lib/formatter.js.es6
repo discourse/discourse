@@ -304,7 +304,7 @@ export function relativeAge(date, options) {
 export function number(val) {
   let formattedNumber;
 
-  val = parseInt(Math.round(val), 10);
+  val = Math.round(parseFloat(val));
   if (isNaN(val)) val = 0;
 
   if (val > 999999) {
