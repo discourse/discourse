@@ -128,6 +128,8 @@ class ImportScripts::Lithium < ImportScripts::Base
         ORDER BY user_id
       SQL
 
+      duplicate_emails = mysql_query("SELECT email FROM users GROUP BY email HAVING COUNT(email) > 1").map { |e| [e["email"], 0] }.to_h
+
       create_users(users, total: user_count, offset: offset) do |user|
         profile = profiles.select { |p|  p["user_id"] == user["id"] }
         result = profile.select { |p|  p["param"] == "profile.location" }
@@ -135,11 +137,17 @@ class ImportScripts::Lithium < ImportScripts::Base
         username = user["login_canon"]
         username = USERNAME_MAPPINGS[username] if USERNAME_MAPPINGS[username].present?
 
+        email = user["email"].presence || fake_email
+        if duplicate_emails.key?(email)
+          duplicate_emails[email] += 1
+          email.sub!("@", "+#{duplicate_emails[email]}@")
+        end
+
         {
           id: user["id"],
           name: user["nlogin"],
           username: username,
-          email: user["email"].presence || fake_email,
+          email: email,
           location: location,
           custom_fields: user_custom_fields(user, profile),
           # website: user["homepage"].strip,
