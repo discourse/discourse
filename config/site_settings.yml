@@ -783,8 +783,13 @@ email:
   email_prefix: ''
   email_site_title: ''
   disable_emails:
-    default: false
     client: true
+    type: enum
+    default: 'no'
+    choices:
+      - 'no'
+      - 'yes'
+      - 'non-staff'
   strip_images_from_short_emails: true
   short_email_length: 2800
   display_name_on_email_from:
