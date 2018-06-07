@@ -108,7 +108,7 @@ GEM
     erubi (1.7.1)
     excon (0.62.0)
     execjs (2.7.0)
-    exifr (1.3.4)
+    exifr (1.2.5)
     fabrication (2.20.1)
     fakeweb (1.3.0)
     faraday (0.12.2)
