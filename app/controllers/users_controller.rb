@@ -994,104 +994,104 @@ class UsersController < ApplicationController
 
   private
 
-    def honeypot_value
-      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+  def honeypot_value
+    Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+  end
+
+  def challenge_value
+    challenge = $redis.get('SECRET_CHALLENGE')
+    unless challenge && challenge.length == 16 * 2
+      challenge = SecureRandom.hex(16)
+      $redis.set('SECRET_CHALLENGE', challenge)
     end
 
-    def challenge_value
-      challenge = $redis.get('SECRET_CHALLENGE')
-      unless challenge && challenge.length == 16 * 2
-        challenge = SecureRandom.hex(16)
-        $redis.set('SECRET_CHALLENGE', challenge)
-      end
+    challenge
+  end
 
-      challenge
+  def respond_to_suspicious_request
+    if suspicious?(params)
+      render json: {
+        success: true,
+        active: false,
+        message: I18n.t("login.activate_email", email: params[:email])
+      }
+    end
+  end
+
+  def suspicious?(params)
+    return false if current_user && is_api? && current_user.admin?
+    honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
+  end
+
+  def honeypot_or_challenge_fails?(params)
+    return false if is_api?
+    params[:password_confirmation] != honeypot_value ||
+    params[:challenge] != challenge_value.try(:reverse)
+  end
+
+  def user_params
+    permitted = [
+      :name,
+      :email,
+      :password,
+      :username,
+      :title,
+      :date_of_birth,
+      :muted_usernames,
+      :theme_key,
+      :locale,
+      :bio_raw,
+      :location,
+      :website,
+      :dismissed_banner_key,
+      :profile_background,
+      :card_background
+    ]
+
+    permitted.concat UserUpdater::OPTION_ATTR
+    permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
+    permitted.concat UserUpdater::TAG_NAMES.keys
+
+    result = params
+      .permit(permitted)
+      .reverse_merge(
+        ip_address: request.remote_ip,
+        registration_ip_address: request.remote_ip,
+        locale: user_locale
+      )
+
+    if !UsernameCheckerService.is_developer?(result['email']) &&
+        is_api? &&
+        current_user.present? &&
+        current_user.admin?
+
+      result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    def respond_to_suspicious_request
-      if suspicious?(params)
-        render json: {
-          success: true,
-          active: false,
-          message: I18n.t("login.activate_email", email: params[:email])
-        }
-      end
+    modify_user_params(result)
+  end
+
+  # Plugins can use this to modify user parameters
+  def modify_user_params(attrs)
+    attrs
+  end
+
+  def user_locale
+    I18n.locale
+  end
+
+  def fail_with(key)
+    render json: { success: false, message: I18n.t(key) }
+  end
+
+  def track_visit_to_user_profile
+    user_profile_id = @user.user_profile.id
+    ip = request.remote_ip
+    user_id = (current_user.id if current_user)
+
+    Scheduler::Defer.later 'Track profile view visit' do
+      UserProfileView.add(user_profile_id, ip, user_id)
     end
-
-    def suspicious?(params)
-      return false if current_user && is_api? && current_user.admin?
-      honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
-    end
-
-    def honeypot_or_challenge_fails?(params)
-      return false if is_api?
-      params[:password_confirmation] != honeypot_value ||
-      params[:challenge] != challenge_value.try(:reverse)
-    end
-
-    def user_params
-      permitted = [
-        :name,
-        :email,
-        :password,
-        :username,
-        :title,
-        :date_of_birth,
-        :muted_usernames,
-        :theme_key,
-        :locale,
-        :bio_raw,
-        :location,
-        :website,
-        :dismissed_banner_key,
-        :profile_background,
-        :card_background
-      ]
-
-      permitted.concat UserUpdater::OPTION_ATTR
-      permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
-      permitted.concat UserUpdater::TAG_NAMES.keys
-
-      result = params
-        .permit(permitted)
-        .reverse_merge(
-          ip_address: request.remote_ip,
-          registration_ip_address: request.remote_ip,
-          locale: user_locale
-        )
-
-      if !UsernameCheckerService.is_developer?(result['email']) &&
-          is_api? &&
-          current_user.present? &&
-          current_user.admin?
-
-        result.merge!(params.permit(:active, :staged, :approved))
-      end
-
-      modify_user_params(result)
-    end
-
-    # Plugins can use this to modify user parameters
-    def modify_user_params(attrs)
-      attrs
-    end
-
-    def user_locale
-      I18n.locale
-    end
-
-    def fail_with(key)
-      render json: { success: false, message: I18n.t(key) }
-    end
-
-    def track_visit_to_user_profile
-      user_profile_id = @user.user_profile.id
-      ip = request.remote_ip
-      user_id = (current_user.id if current_user)
-
-      Scheduler::Defer.later 'Track profile view visit' do
-        UserProfileView.add(user_profile_id, ip, user_id)
-      end
-    end
+  end
 
 end

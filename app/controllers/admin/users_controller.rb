@@ -544,34 +544,34 @@ class Admin::UsersController < Admin::AdminController
 
   private
 
-    def perform_post_action
-      return unless params[:post_id].present? &&
-        params[:post_action].present?
+  def perform_post_action
+    return unless params[:post_id].present? &&
+      params[:post_action].present?
 
-      if post = Post.where(id: params[:post_id]).first
-        case params[:post_action]
-        when 'delete'
-          PostDestroyer.new(current_user, post).destroy
-        when 'edit'
-          revisor = PostRevisor.new(post)
+    if post = Post.where(id: params[:post_id]).first
+      case params[:post_action]
+      when 'delete'
+        PostDestroyer.new(current_user, post).destroy
+      when 'edit'
+        revisor = PostRevisor.new(post)
 
-          # Take what the moderator edited in as gospel
-          revisor.revise!(
-            current_user,
-            { raw:  params[:post_edit] },
-            skip_validations: true,
-            skip_revision: true
-          )
-        end
+        # Take what the moderator edited in as gospel
+        revisor.revise!(
+          current_user,
+          { raw:  params[:post_edit] },
+          skip_validations: true,
+          skip_revision: true
+        )
       end
     end
+  end
 
-    def fetch_user
-      @user = User.find_by(id: params[:user_id])
-    end
+  def fetch_user
+    @user = User.find_by(id: params[:user_id])
+  end
 
-    def refresh_browser(user)
-      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
-    end
+  def refresh_browser(user)
+    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+  end
 
 end

@@ -36,11 +36,11 @@ class UserArchivedMessage < ActiveRecord::Base
 
   private
 
-    def self.publish_topic_tracking_state(topic, user_id)
-      TopicTrackingState.publish_private_message(
-        topic, archive_user_id: user_id
-      )
-    end
+  def self.publish_topic_tracking_state(topic, user_id)
+    TopicTrackingState.publish_private_message(
+      topic, archive_user_id: user_id
+    )
+  end
 end
 
 # == Schema Information

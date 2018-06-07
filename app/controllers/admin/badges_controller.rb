@@ -88,44 +88,44 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   private
-    def find_badge
-      params.require(:id)
-      Badge.find(params[:id])
-    end
+  def find_badge
+    params.require(:id)
+    Badge.find(params[:id])
+  end
 
-    # Options:
-    #   :new - reset the badge id to nil before saving
-    def update_badge_from_params(badge, opts = {})
-      errors = []
-      Badge.transaction do
-        allowed  = Badge.column_names.map(&:to_sym)
-        allowed -= [:id, :created_at, :updated_at, :grant_count]
-        allowed -= Badge.protected_system_fields if badge.system?
-        allowed -= [:query] unless SiteSetting.enable_badge_sql
+  # Options:
+  #   :new - reset the badge id to nil before saving
+  def update_badge_from_params(badge, opts = {})
+    errors = []
+    Badge.transaction do
+      allowed  = Badge.column_names.map(&:to_sym)
+      allowed -= [:id, :created_at, :updated_at, :grant_count]
+      allowed -= Badge.protected_system_fields if badge.system?
+      allowed -= [:query] unless SiteSetting.enable_badge_sql
 
-        params.permit(*allowed)
+      params.permit(*allowed)
 
-        allowed.each do |key|
-          badge.send("#{key}=" , params[key]) if params[key]
-        end
-
-        # Badge query contract checks
-        begin
-          if SiteSetting.enable_badge_sql
-            BadgeGranter.contract_checks!(badge.query, target_posts: badge.target_posts, trigger: badge.trigger)
-          end
-        rescue => e
-          errors << e.message
-          raise ActiveRecord::Rollback
-        end
-
-        badge.id = nil if opts[:new]
-        badge.save!
+      allowed.each do |key|
+        badge.send("#{key}=" , params[key]) if params[key]
       end
 
-      errors
-    rescue ActiveRecord::RecordInvalid
-      errors.push(*badge.errors.full_messages)
-      errors
+      # Badge query contract checks
+      begin
+        if SiteSetting.enable_badge_sql
+          BadgeGranter.contract_checks!(badge.query, target_posts: badge.target_posts, trigger: badge.trigger)
+        end
+      rescue => e
+        errors << e.message
+        raise ActiveRecord::Rollback
+      end
+
+      badge.id = nil if opts[:new]
+      badge.save!
     end
+
+    errors
+  rescue ActiveRecord::RecordInvalid
+    errors.push(*badge.errors.full_messages)
+    errors
+  end
 end

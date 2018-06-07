@@ -77,13 +77,13 @@ class UserAnonymizer
 
   private
 
-    def make_anon_username
-      100.times do
-        new_username = "anon#{(SecureRandom.random_number * 100000000).to_i}"
-        return new_username unless User.where(username_lower: new_username).exists?
-      end
-      raise "Failed to generate an anon username"
+  def make_anon_username
+    100.times do
+      new_username = "anon#{(SecureRandom.random_number * 100000000).to_i}"
+      return new_username unless User.where(username_lower: new_username).exists?
     end
+    raise "Failed to generate an anon username"
+  end
 
   def ip_where(column = 'user_id')
     ["#{column} = :user_id AND ip_address IS NOT NULL", user_id: @user.id]

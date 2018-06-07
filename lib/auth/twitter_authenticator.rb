@@ -69,28 +69,28 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
 
   protected
 
-    def retrieve_avatar(user, data)
-      return unless user
-      return if user.user_avatar.try(:custom_upload_id).present?
+  def retrieve_avatar(user, data)
+    return unless user
+    return if user.user_avatar.try(:custom_upload_id).present?
 
-      if (avatar_url = data[:twitter_image]).present?
-        url = avatar_url.sub("_normal", "")
-        Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
-      end
+    if (avatar_url = data[:twitter_image]).present?
+      url = avatar_url.sub("_normal", "")
+      Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
     end
+  end
 
-    def retrieve_profile(user, data)
-      return unless user
+  def retrieve_profile(user, data)
+    return unless user
 
-      bio = data[:twitter_description]
-      location = data[:twitter_location]
+    bio = data[:twitter_description]
+    location = data[:twitter_location]
 
-      if bio || location
-        profile = user.user_profile
-        profile.bio_raw  = bio      unless profile.bio_raw.present?
-        profile.location = location unless profile.location.present?
-        profile.save
-      end
+    if bio || location
+      profile = user.user_profile
+      profile.bio_raw  = bio      unless profile.bio_raw.present?
+      profile.location = location unless profile.location.present?
+      profile.save
     end
+  end
 
 end

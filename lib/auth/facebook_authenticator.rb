@@ -63,58 +63,58 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
   protected
 
-    def parse_auth_token(auth_token)
-      raw_info = auth_token["extra"]["raw_info"]
-      info = auth_token["info"]
+  def parse_auth_token(auth_token)
+    raw_info = auth_token["extra"]["raw_info"]
+    info = auth_token["info"]
 
-      email = auth_token["info"][:email]
+    email = auth_token["info"][:email]
 
-      website = (info["urls"] && info["urls"]["Website"]) || nil
+    website = (info["urls"] && info["urls"]["Website"]) || nil
 
-      {
-        facebook: {
-          facebook_user_id: auth_token["uid"],
-          link: raw_info["link"],
-          username: raw_info["username"],
-          first_name: raw_info["first_name"],
-          last_name: raw_info["last_name"],
-          email: email,
-          gender: raw_info["gender"],
-          name: raw_info["name"],
-          avatar_url: info["image"],
-          location: info["location"],
-          website: website,
-          about_me: info["description"]
-        },
+    {
+      facebook: {
+        facebook_user_id: auth_token["uid"],
+        link: raw_info["link"],
+        username: raw_info["username"],
+        first_name: raw_info["first_name"],
+        last_name: raw_info["last_name"],
         email: email,
-        email_valid: true
-      }
+        gender: raw_info["gender"],
+        name: raw_info["name"],
+        avatar_url: info["image"],
+        location: info["location"],
+        website: website,
+        about_me: info["description"]
+      },
+      email: email,
+      email_valid: true
+    }
+  end
+
+  def retrieve_avatar(user, data)
+    return unless user
+    return if user.user_avatar.try(:custom_upload_id).present?
+
+    if (avatar_url = data[:avatar_url]).present?
+      url = "#{avatar_url}?height=#{AVATAR_SIZE}&width=#{AVATAR_SIZE}"
+      Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
     end
+  end
 
-    def retrieve_avatar(user, data)
-      return unless user
-      return if user.user_avatar.try(:custom_upload_id).present?
+  def retrieve_profile(user, data)
+    return unless user
 
-      if (avatar_url = data[:avatar_url]).present?
-        url = "#{avatar_url}?height=#{AVATAR_SIZE}&width=#{AVATAR_SIZE}"
-        Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
-      end
+    bio = data[:about_me] || data[:about]
+    location = data[:location]
+    website = data[:website]
+
+    if bio || location || website
+      profile = user.user_profile
+      profile.bio_raw  = bio      unless profile.bio_raw.present?
+      profile.location = location unless profile.location.present?
+      profile.website  = website  unless profile.website.present?
+      profile.save
     end
-
-    def retrieve_profile(user, data)
-      return unless user
-
-      bio = data[:about_me] || data[:about]
-      location = data[:location]
-      website = data[:website]
-
-      if bio || location || website
-        profile = user.user_profile
-        profile.bio_raw  = bio      unless profile.bio_raw.present?
-        profile.location = location unless profile.location.present?
-        profile.website  = website  unless profile.website.present?
-        profile.save
-      end
-    end
+  end
 
 end

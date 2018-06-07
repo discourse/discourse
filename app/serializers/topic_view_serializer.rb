@@ -301,8 +301,8 @@ class TopicViewSerializer < ApplicationSerializer
 
   private
 
-    def private_message?(topic)
-      @private_message ||= topic.private_message?
-    end
+  def private_message?(topic)
+    @private_message ||= topic.private_message?
+  end
 
 end

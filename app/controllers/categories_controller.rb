@@ -201,109 +201,109 @@ class CategoriesController < ApplicationController
   end
 
   private
-    def categories_and_topics(topics_filter)
-      discourse_expires_in 1.minute
+  def categories_and_topics(topics_filter)
+    discourse_expires_in 1.minute
 
-      category_options = {
-        is_homepage: current_homepage == "categories".freeze,
-        parent_category_id: params[:parent_category_id],
-        include_topics: false
-      }
+    category_options = {
+      is_homepage: current_homepage == "categories".freeze,
+      parent_category_id: params[:parent_category_id],
+      include_topics: false
+    }
 
-      topic_options = {
-        per_page: SiteSetting.categories_topics,
-        no_definitions: true,
-        exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
-      }
+    topic_options = {
+      per_page: SiteSetting.categories_topics,
+      no_definitions: true,
+      exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+    }
 
-      result = CategoryAndTopicLists.new
-      result.category_list = CategoryList.new(guardian, category_options)
+    result = CategoryAndTopicLists.new
+    result.category_list = CategoryList.new(guardian, category_options)
 
-      if topics_filter == :latest
-        result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
-      elsif topics_filter == :top
-        result.topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+    if topics_filter == :latest
+      result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
+    elsif topics_filter == :top
+      result.topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+    end
+
+    draft_key = Draft::NEW_TOPIC
+    draft_sequence = DraftSequence.current(current_user, draft_key)
+    draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
+
+    %w{category topic}.each do |type|
+      result.send(:"#{type}_list").draft = draft
+      result.send(:"#{type}_list").draft_key = draft_key
+      result.send(:"#{type}_list").draft_sequence = draft_sequence
+    end
+
+    render_serialized(result, CategoryAndTopicListsSerializer, root: false)
+  end
+
+  def required_param_keys
+    [:name, :color, :text_color]
+  end
+
+  def category_params
+    @category_params ||= begin
+      required_param_keys.each do |key|
+        params.require(key)
       end
 
-      draft_key = Draft::NEW_TOPIC
-      draft_sequence = DraftSequence.current(current_user, draft_key)
-      draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
-
-      %w{category topic}.each do |type|
-        result.send(:"#{type}_list").draft = draft
-        result.send(:"#{type}_list").draft_key = draft_key
-        result.send(:"#{type}_list").draft_sequence = draft_sequence
+      if p = params[:permissions]
+        p.each do |k, v|
+          p[k] = v.to_i
+        end
       end
 
-      render_serialized(result, CategoryAndTopicListsSerializer, root: false)
-    end
-
-    def required_param_keys
-      [:name, :color, :text_color]
-    end
-
-    def category_params
-      @category_params ||= begin
-        required_param_keys.each do |key|
-          params.require(key)
-        end
-
-        if p = params[:permissions]
-          p.each do |k, v|
-            p[k] = v.to_i
-          end
-        end
-
-        if SiteSetting.tagging_enabled
-          params[:allowed_tags] ||= []
-          params[:allowed_tag_groups] ||= []
-        end
-
-        params.permit(*required_param_keys,
-                        :position,
-                        :email_in,
-                        :email_in_allow_strangers,
-                        :mailinglist_mirror,
-                        :suppress_from_latest,
-                        :all_topics_wiki,
-                        :parent_category_id,
-                        :auto_close_hours,
-                        :auto_close_based_on_last_post,
-                        :uploaded_logo_id,
-                        :uploaded_background_id,
-                        :slug,
-                        :allow_badges,
-                        :topic_template,
-                        :sort_order,
-                        :sort_ascending,
-                        :topic_featured_link_allowed,
-                        :show_subcategory_list,
-                        :num_featured_topics,
-                        :default_view,
-                        :subcategory_list_style,
-                        :default_top_period,
-                        :minimum_required_tags,
-                        custom_fields: [params[:custom_fields].try(:keys)],
-                        permissions: [*p.try(:keys)],
-                        allowed_tags: [],
-                        allowed_tag_groups: [])
+      if SiteSetting.tagging_enabled
+        params[:allowed_tags] ||= []
+        params[:allowed_tag_groups] ||= []
       end
-    end
 
-    def fetch_category
-      @category = Category.find_by(slug: params[:id]) || Category.find_by(id: params[:id].to_i)
+      params.permit(*required_param_keys,
+                      :position,
+                      :email_in,
+                      :email_in_allow_strangers,
+                      :mailinglist_mirror,
+                      :suppress_from_latest,
+                      :all_topics_wiki,
+                      :parent_category_id,
+                      :auto_close_hours,
+                      :auto_close_based_on_last_post,
+                      :uploaded_logo_id,
+                      :uploaded_background_id,
+                      :slug,
+                      :allow_badges,
+                      :topic_template,
+                      :sort_order,
+                      :sort_ascending,
+                      :topic_featured_link_allowed,
+                      :show_subcategory_list,
+                      :num_featured_topics,
+                      :default_view,
+                      :subcategory_list_style,
+                      :default_top_period,
+                      :minimum_required_tags,
+                      custom_fields: [params[:custom_fields].try(:keys)],
+                      permissions: [*p.try(:keys)],
+                      allowed_tags: [],
+                      allowed_tag_groups: [])
     end
+  end
 
-    def initialize_staff_action_logger
-      @staff_action_logger = StaffActionLogger.new(current_user)
-    end
+  def fetch_category
+    @category = Category.find_by(slug: params[:id]) || Category.find_by(id: params[:id].to_i)
+  end
 
-    def include_topics(parent_category = nil)
-      style = SiteSetting.desktop_category_page_style
-      view_context.mobile_view? ||
-        params[:include_topics] ||
-        (parent_category && parent_category.subcategory_list_includes_topics?) ||
-        style == "categories_with_featured_topics".freeze ||
-        style == "categories_with_top_topics".freeze
-    end
+  def initialize_staff_action_logger
+    @staff_action_logger = StaffActionLogger.new(current_user)
+  end
+
+  def include_topics(parent_category = nil)
+    style = SiteSetting.desktop_category_page_style
+    view_context.mobile_view? ||
+      params[:include_topics] ||
+      (parent_category && parent_category.subcategory_list_includes_topics?) ||
+      style == "categories_with_featured_topics".freeze ||
+      style == "categories_with_top_topics".freeze
+  end
 end

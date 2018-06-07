@@ -37,36 +37,36 @@ module RetrieveTitle
 
   private
 
-    def self.max_chunk_size(uri)
+  def self.max_chunk_size(uri)
 
-      # Amazon and YouTube leave the title until very late. Exceptions are bad
-      # but these are large sites.
-      return 500 if uri.host =~ /amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)$/
-      return 300 if uri.host =~ /youtube\.com$/ || uri.host =~ /youtu.be/
+    # Amazon and YouTube leave the title until very late. Exceptions are bad
+    # but these are large sites.
+    return 500 if uri.host =~ /amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)$/
+    return 300 if uri.host =~ /youtube\.com$/ || uri.host =~ /youtu.be/
 
-      # default is 10k
-      10
-    end
+    # default is 10k
+    10
+  end
 
-    # Fetch the beginning of a HTML document at a url
-    def self.fetch_title(url)
-      fd = FinalDestination.new(url, timeout: CRAWL_TIMEOUT)
+  # Fetch the beginning of a HTML document at a url
+  def self.fetch_title(url)
+    fd = FinalDestination.new(url, timeout: CRAWL_TIMEOUT)
 
-      current = nil
-      title = nil
+    current = nil
+    title = nil
 
-      fd.get do |_response, chunk, uri|
+    fd.get do |_response, chunk, uri|
 
-        if current
-          current << chunk
-        else
-          current = chunk
-        end
-
-        max_size = max_chunk_size(uri) * 1024
-        title = extract_title(current)
-        throw :done if title || max_size < current.length
+      if current
+        current << chunk
+      else
+        current = chunk
       end
-      return title
+
+      max_size = max_chunk_size(uri) * 1024
+      title = extract_title(current)
+      throw :done if title || max_size < current.length
     end
+    return title
+  end
 end

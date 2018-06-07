@@ -503,399 +503,399 @@ class Search
 
   private
 
-    def process_advanced_search!(term)
+  def process_advanced_search!(term)
 
-      term.to_s.scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/).to_a.map do |(word, _)|
-        next if word.blank?
+    term.to_s.scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/).to_a.map do |(word, _)|
+      next if word.blank?
 
-        found = false
+      found = false
 
-        Search.advanced_filters.each do |matcher, block|
-          cleaned = word.gsub(/["']/, "")
-          if cleaned =~ matcher
-            (@filters ||= []) << [block, $1]
-            found = true
+      Search.advanced_filters.each do |matcher, block|
+        cleaned = word.gsub(/["']/, "")
+        if cleaned =~ matcher
+          (@filters ||= []) << [block, $1]
+          found = true
+        end
+      end
+
+      @in_title = false
+
+      if word == 'order:latest' || word == 'l'
+        @order = :latest
+        nil
+      elsif word == 'order:latest_topic'
+        @order = :latest_topic
+        nil
+      elsif word == 'in:title'
+        @in_title = true
+        nil
+      elsif word =~ /topic:(\d+)/
+        topic_id = $1.to_i
+        if topic_id > 1
+          topic = Topic.find_by(id: topic_id)
+          if @guardian.can_see?(topic)
+            @search_context = topic
           end
         end
-
-        @in_title = false
-
-        if word == 'order:latest' || word == 'l'
-          @order = :latest
-          nil
-        elsif word == 'order:latest_topic'
-          @order = :latest_topic
-          nil
-        elsif word == 'in:title'
-          @in_title = true
-          nil
-        elsif word =~ /topic:(\d+)/
-          topic_id = $1.to_i
-          if topic_id > 1
-            topic = Topic.find_by(id: topic_id)
-            if @guardian.can_see?(topic)
-              @search_context = topic
-            end
-          end
-          nil
-        elsif word == 'order:views'
-          @order = :views
-          nil
-        elsif word == 'order:likes'
-          @order = :likes
-          nil
-        elsif word == 'in:private'
-          @search_pms = true
-          nil
-        elsif word =~ /^private_messages:(.+)$/
-          @search_pms = true
-          nil
-        else
-          found ? nil : word
-        end
-      end.compact.join(' ')
-    end
-
-    def find_grouped_results
-
-      if @results.type_filter.present?
-        raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
-        send("#{@results.type_filter}_search")
+        nil
+      elsif word == 'order:views'
+        @order = :views
+        nil
+      elsif word == 'order:likes'
+        @order = :likes
+        nil
+      elsif word == 'in:private'
+        @search_pms = true
+        nil
+      elsif word =~ /^private_messages:(.+)$/
+        @search_pms = true
+        nil
       else
-        unless @search_context
-          user_search if @term.present?
-          category_search if @term.present?
-          tags_search if @term.present?
+        found ? nil : word
+      end
+    end.compact.join(' ')
+  end
+
+  def find_grouped_results
+
+    if @results.type_filter.present?
+      raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
+      send("#{@results.type_filter}_search")
+    else
+      unless @search_context
+        user_search if @term.present?
+        category_search if @term.present?
+        tags_search if @term.present?
+      end
+      topic_search
+    end
+
+    add_more_topics_if_expected
+    @results
+  rescue ActiveRecord::StatementInvalid
+    # In the event of a PG:Error return nothing, it is likely they used a foreign language whose
+    # locale is not supported by postgres
+  end
+
+  # Add more topics if we expected them
+  def add_more_topics_if_expected
+    expected_topics = 0
+    expected_topics = Search.facets.size unless @results.type_filter.present?
+    expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
+    expected_topics -= @results.posts.length
+    if expected_topics > 0
+      extra_posts = posts_query(expected_topics * Search.burst_factor)
+      extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.posts.map(&:topic_id)) if @results.posts.present?
+      extra_posts.each do |post|
+        @results.add(post)
+        expected_topics -= 1
+        break if expected_topics == 0
+      end
+    end
+  end
+
+  # If we're searching for a single topic
+  def single_topic(id)
+    post = Post.find_by(topic_id: id, post_number: 1)
+    return nil unless @guardian.can_see?(post)
+
+    @results.add(post)
+    @results
+  end
+
+  def secure_category_ids
+    return @secure_category_ids unless @secure_category_ids.nil?
+    @secure_category_ids = @guardian.secure_category_ids
+  end
+
+  def category_search
+    # scope is leaking onto Category, this is not good and probably a bug in Rails
+    # the secure_category_ids will invoke the same method on User, it calls Category.where
+    # however the scope from the query below is leaking in to Category, this works around
+    # the issue while we figure out what is up in Rails
+    secure_category_ids
+
+    categories = Category.includes(:category_search_data)
+      .where("category_search_data.search_data @@ #{ts_query}")
+      .references(:category_search_data)
+      .order("topics_month DESC")
+      .secured(@guardian)
+      .limit(limit)
+
+    categories.each do |category|
+      @results.add(category)
+    end
+  end
+
+  def user_search
+    return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
+
+    users = User.includes(:user_search_data)
+      .references(:user_search_data)
+      .where(active: true)
+      .where(staged: false)
+      .where("user_search_data.search_data @@ #{ts_query("simple")}")
+      .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
+      .order("last_posted_at DESC")
+      .limit(limit)
+
+    users.each do |user|
+      @results.add(user)
+    end
+  end
+
+  def tags_search
+    return unless SiteSetting.tagging_enabled
+
+    tags = Tag.includes(:tag_search_data)
+      .where("tag_search_data.search_data @@ #{ts_query}")
+      .references(:tag_search_data)
+      .order("name asc")
+      .limit(limit)
+
+    tags.each do |tag|
+      @results.add(tag)
+    end
+  end
+
+  def posts_query(limit, opts = nil)
+    opts ||= {}
+    posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
+      .joins(:post_search_data, :topic)
+      .joins("LEFT JOIN categories ON categories.id = topics.category_id")
+      .where("topics.deleted_at" => nil)
+
+    is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
+
+    posts = posts.where("topics.visible") unless is_topic_search
+
+    if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
+      posts = posts.where("topics.archetype =  ?", Archetype.private_message)
+
+       unless @guardian.is_admin?
+         posts = posts.private_posts_for_user(@guardian.user)
+       end
+    else
+      posts = posts.where("topics.archetype <> ?", Archetype.private_message)
+    end
+
+    if @term.present?
+      if is_topic_search
+
+        term_without_quote = @term
+        if @term =~ /"(.+)"/
+          term_without_quote = $1
         end
-        topic_search
-      end
 
-      add_more_topics_if_expected
-      @results
-    rescue ActiveRecord::StatementInvalid
-      # In the event of a PG:Error return nothing, it is likely they used a foreign language whose
-      # locale is not supported by postgres
-    end
-
-    # Add more topics if we expected them
-    def add_more_topics_if_expected
-      expected_topics = 0
-      expected_topics = Search.facets.size unless @results.type_filter.present?
-      expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
-      expected_topics -= @results.posts.length
-      if expected_topics > 0
-        extra_posts = posts_query(expected_topics * Search.burst_factor)
-        extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.posts.map(&:topic_id)) if @results.posts.present?
-        extra_posts.each do |post|
-          @results.add(post)
-          expected_topics -= 1
-          break if expected_topics == 0
+        if @term =~ /'(.+)'/
+          term_without_quote = $1
         end
-      end
-    end
 
-    # If we're searching for a single topic
-    def single_topic(id)
-      post = Post.find_by(topic_id: id, post_number: 1)
-      return nil unless @guardian.can_see?(post)
-
-      @results.add(post)
-      @results
-    end
-
-    def secure_category_ids
-      return @secure_category_ids unless @secure_category_ids.nil?
-      @secure_category_ids = @guardian.secure_category_ids
-    end
-
-    def category_search
-      # scope is leaking onto Category, this is not good and probably a bug in Rails
-      # the secure_category_ids will invoke the same method on User, it calls Category.where
-      # however the scope from the query below is leaking in to Category, this works around
-      # the issue while we figure out what is up in Rails
-      secure_category_ids
-
-      categories = Category.includes(:category_search_data)
-        .where("category_search_data.search_data @@ #{ts_query}")
-        .references(:category_search_data)
-        .order("topics_month DESC")
-        .secured(@guardian)
-        .limit(limit)
-
-      categories.each do |category|
-        @results.add(category)
-      end
-    end
-
-    def user_search
-      return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
-
-      users = User.includes(:user_search_data)
-        .references(:user_search_data)
-        .where(active: true)
-        .where(staged: false)
-        .where("user_search_data.search_data @@ #{ts_query("simple")}")
-        .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
-        .order("last_posted_at DESC")
-        .limit(limit)
-
-      users.each do |user|
-        @results.add(user)
-      end
-    end
-
-    def tags_search
-      return unless SiteSetting.tagging_enabled
-
-      tags = Tag.includes(:tag_search_data)
-        .where("tag_search_data.search_data @@ #{ts_query}")
-        .references(:tag_search_data)
-        .order("name asc")
-        .limit(limit)
-
-      tags.each do |tag|
-        @results.add(tag)
-      end
-    end
-
-    def posts_query(limit, opts = nil)
-      opts ||= {}
-      posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
-        .joins(:post_search_data, :topic)
-        .joins("LEFT JOIN categories ON categories.id = topics.category_id")
-        .where("topics.deleted_at" => nil)
-
-      is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
-
-      posts = posts.where("topics.visible") unless is_topic_search
-
-      if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
-        posts = posts.where("topics.archetype =  ?", Archetype.private_message)
-
-         unless @guardian.is_admin?
-           posts = posts.private_posts_for_user(@guardian.user)
-         end
+        posts = posts.joins('JOIN users u ON u.id = posts.user_id')
+        posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
       else
-        posts = posts.where("topics.archetype <> ?", Archetype.private_message)
-      end
-
-      if @term.present?
-        if is_topic_search
-
-          term_without_quote = @term
-          if @term =~ /"(.+)"/
-            term_without_quote = $1
-          end
-
-          if @term =~ /'(.+)'/
-            term_without_quote = $1
-          end
-
-          posts = posts.joins('JOIN users u ON u.id = posts.user_id')
-          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
-        else
-          # A is for title
-          # B is for category
-          # C is for tags
-          # D is for cooked
-          weights = @in_title ? 'A' : (SiteSetting.tagging_enabled ? 'ABCD' : 'ABD')
-          posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
-          exact_terms = @term.scan(/"([^"]+)"/).flatten
-          exact_terms.each do |exact|
-            posts = posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
-          end
+        # A is for title
+        # B is for category
+        # C is for tags
+        # D is for cooked
+        weights = @in_title ? 'A' : (SiteSetting.tagging_enabled ? 'ABCD' : 'ABD')
+        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        exact_terms = @term.scan(/"([^"]+)"/).flatten
+        exact_terms.each do |exact|
+          posts = posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
         end
       end
+    end
 
-      @filters.each do |block, match|
-        if block.arity == 1
-          posts = instance_exec(posts, &block) || posts
-        else
-          posts = instance_exec(posts, match, &block) || posts
-        end
-      end if @filters
-
-      # If we have a search context, prioritize those posts first
-      if @search_context.present?
-
-        if @search_context.is_a?(User)
-
-          if opts[:private_messages]
-            posts = posts.private_posts_for_user(@search_context)
-          else
-            posts = posts.where("posts.user_id = #{@search_context.id}")
-          end
-
-        elsif @search_context.is_a?(Category)
-          category_ids = [@search_context.id] + Category.where(parent_category_id: @search_context.id).pluck(:id)
-          posts = posts.where("topics.category_id in (?)", category_ids)
-        elsif @search_context.is_a?(Topic)
-          posts = posts.where("topics.id = #{@search_context.id}")
-            .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
-        end
-
-      end
-
-      if @order == :latest || (@term.blank? && !@order)
-        if opts[:aggregate_search]
-          posts = posts.order("MAX(posts.created_at) DESC")
-        else
-          posts = posts.reorder("posts.created_at DESC")
-        end
-      elsif @order == :latest_topic
-        if opts[:aggregate_search]
-          posts = posts.order("MAX(topics.created_at) DESC")
-        else
-          posts = posts.order("topics.created_at DESC")
-        end
-      elsif @order == :views
-        if opts[:aggregate_search]
-          posts = posts.order("MAX(topics.views) DESC")
-        else
-          posts = posts.order("topics.views DESC")
-        end
-      elsif @order == :likes
-        if opts[:aggregate_search]
-          posts = posts.order("MAX(posts.like_count) DESC")
-        else
-          posts = posts.order("posts.like_count DESC")
-        end
+    @filters.each do |block, match|
+      if block.arity == 1
+        posts = instance_exec(posts, &block) || posts
       else
-        data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
-        if opts[:aggregate_search]
-          posts = posts.order("MAX(#{data_ranking}) DESC")
+        posts = instance_exec(posts, match, &block) || posts
+      end
+    end if @filters
+
+    # If we have a search context, prioritize those posts first
+    if @search_context.present?
+
+      if @search_context.is_a?(User)
+
+        if opts[:private_messages]
+          posts = posts.private_posts_for_user(@search_context)
         else
-          posts = posts.order("#{data_ranking} DESC")
+          posts = posts.where("posts.user_id = #{@search_context.id}")
         end
-        posts = posts.order("topics.bumped_at DESC")
+
+      elsif @search_context.is_a?(Category)
+        category_ids = [@search_context.id] + Category.where(parent_category_id: @search_context.id).pluck(:id)
+        posts = posts.where("topics.category_id in (?)", category_ids)
+      elsif @search_context.is_a?(Topic)
+        posts = posts.where("topics.id = #{@search_context.id}")
+          .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
       end
 
-      if secure_category_ids.present?
-        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
+    end
+
+    if @order == :latest || (@term.blank? && !@order)
+      if opts[:aggregate_search]
+        posts = posts.order("MAX(posts.created_at) DESC")
       else
-        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
+        posts = posts.reorder("posts.created_at DESC")
       end
-
-      posts = posts.offset(offset)
-      posts.limit(limit)
-    end
-
-    def self.default_ts_config
-      "'#{Search.ts_config}'"
-    end
-
-    def default_ts_config
-      self.class.default_ts_config
-    end
-
-    def self.ts_query(term: , ts_config:  nil, joiner: "&", weight_filter: nil)
-
-      data = Post.exec_sql("SELECT TO_TSVECTOR(:config, :term)",
-                           config: 'simple',
-                           term: term).values[0][0]
-
-      ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-      all_terms = data.scan(/'([^']+)'\:\d+/).flatten
-      all_terms.map! do |t|
-        t.split(/[\)\(&']/)[0]
-      end.compact!
-
-      query = ActiveRecord::Base.connection.quote(
-        all_terms
-          .map { |t| "'#{PG::Connection.escape_string(t)}':*#{weight_filter}" }
-          .join(" #{joiner} ")
-      )
-
-      "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
-    end
-
-    def ts_query(ts_config = nil, weight_filter: nil)
-      @ts_query_cache ||= {}
-      @ts_query_cache["#{ts_config || default_ts_config} #{@term} #{weight_filter}"] ||=
-        Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
-    end
-
-    def wrap_rows(query)
-      "SELECT *, row_number() over() row_number FROM (#{query.to_sql}) xxx"
-    end
-
-    def aggregate_post_sql(opts)
-      min_or_max = @order == :latest ? "max" : "min"
-
-      query =
-        if @order == :likes
-          # likes are a pain to aggregate so skip
-          posts_query(limit, private_messages: opts[:private_messages])
-            .select('topics.id', "posts.post_number")
-        else
-          posts_query(limit, aggregate_search: true, private_messages: opts[:private_messages])
-            .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
-            .group('topics.id')
-        end
-
-      min_id = Search.min_post_id
-      if min_id > 0
-        low_set = query.dup.where("post_search_data.post_id < #{min_id}")
-        high_set = query.where("post_search_data.post_id >= #{min_id}")
-
-        return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
-      end
-
-      # double wrapping so we get correct row numbers
-      { default: wrap_rows(query) }
-    end
-
-    def aggregate_posts(post_sql)
-      return [] unless post_sql
-
-      posts_eager_loads(Post)
-        .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
-        .order('row_number')
-    end
-
-    def aggregate_search(opts = {})
-      post_sql = aggregate_post_sql(opts)
-
-      added = 0
-
-      aggregate_posts(post_sql[:default]).each do |p|
-        @results.add(p)
-        added += 1
-      end
-
-      if added < limit
-        aggregate_posts(post_sql[:remaining]).each { |p| @results.add(p) }
-      end
-    end
-
-    def private_messages_search
-      raise Discourse::InvalidAccess.new("anonymous can not search PMs") unless @guardian.user
-
-      aggregate_search(private_messages: true)
-    end
-
-    def topic_search
-      if @search_context.is_a?(Topic)
-        posts = posts_eager_loads(posts_query(limit))
-          .where('posts.topic_id = ?', @search_context.id)
-
-        posts.each do |post|
-          @results.add(post)
-        end
+    elsif @order == :latest_topic
+      if opts[:aggregate_search]
+        posts = posts.order("MAX(topics.created_at) DESC")
       else
-        aggregate_search
+        posts = posts.order("topics.created_at DESC")
       end
+    elsif @order == :views
+      if opts[:aggregate_search]
+        posts = posts.order("MAX(topics.views) DESC")
+      else
+        posts = posts.order("topics.views DESC")
+      end
+    elsif @order == :likes
+      if opts[:aggregate_search]
+        posts = posts.order("MAX(posts.like_count) DESC")
+      else
+        posts = posts.order("posts.like_count DESC")
+      end
+    else
+      data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
+      if opts[:aggregate_search]
+        posts = posts.order("MAX(#{data_ranking}) DESC")
+      else
+        posts = posts.order("#{data_ranking} DESC")
+      end
+      posts = posts.order("topics.bumped_at DESC")
     end
 
-    def posts_eager_loads(query)
-      query = query.includes(:user)
-      topic_eager_loads = [:category]
+    if secure_category_ids.present?
+      posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
+    else
+      posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
+    end
 
-      if SiteSetting.tagging_enabled
-        topic_eager_loads << :tags
+    posts = posts.offset(offset)
+    posts.limit(limit)
+  end
+
+  def self.default_ts_config
+    "'#{Search.ts_config}'"
+  end
+
+  def default_ts_config
+    self.class.default_ts_config
+  end
+
+  def self.ts_query(term: , ts_config:  nil, joiner: "&", weight_filter: nil)
+
+    data = Post.exec_sql("SELECT TO_TSVECTOR(:config, :term)",
+                         config: 'simple',
+                         term: term).values[0][0]
+
+    ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
+    all_terms = data.scan(/'([^']+)'\:\d+/).flatten
+    all_terms.map! do |t|
+      t.split(/[\)\(&']/)[0]
+    end.compact!
+
+    query = ActiveRecord::Base.connection.quote(
+      all_terms
+        .map { |t| "'#{PG::Connection.escape_string(t)}':*#{weight_filter}" }
+        .join(" #{joiner} ")
+    )
+
+    "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
+  end
+
+  def ts_query(ts_config = nil, weight_filter: nil)
+    @ts_query_cache ||= {}
+    @ts_query_cache["#{ts_config || default_ts_config} #{@term} #{weight_filter}"] ||=
+      Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
+  end
+
+  def wrap_rows(query)
+    "SELECT *, row_number() over() row_number FROM (#{query.to_sql}) xxx"
+  end
+
+  def aggregate_post_sql(opts)
+    min_or_max = @order == :latest ? "max" : "min"
+
+    query =
+      if @order == :likes
+        # likes are a pain to aggregate so skip
+        posts_query(limit, private_messages: opts[:private_messages])
+          .select('topics.id', "posts.post_number")
+      else
+        posts_query(limit, aggregate_search: true, private_messages: opts[:private_messages])
+          .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
+          .group('topics.id')
       end
 
-      query.includes(topic: topic_eager_loads)
+    min_id = Search.min_post_id
+    if min_id > 0
+      low_set = query.dup.where("post_search_data.post_id < #{min_id}")
+      high_set = query.where("post_search_data.post_id >= #{min_id}")
+
+      return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
     end
+
+    # double wrapping so we get correct row numbers
+    { default: wrap_rows(query) }
+  end
+
+  def aggregate_posts(post_sql)
+    return [] unless post_sql
+
+    posts_eager_loads(Post)
+      .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
+      .order('row_number')
+  end
+
+  def aggregate_search(opts = {})
+    post_sql = aggregate_post_sql(opts)
+
+    added = 0
+
+    aggregate_posts(post_sql[:default]).each do |p|
+      @results.add(p)
+      added += 1
+    end
+
+    if added < limit
+      aggregate_posts(post_sql[:remaining]).each { |p| @results.add(p) }
+    end
+  end
+
+  def private_messages_search
+    raise Discourse::InvalidAccess.new("anonymous can not search PMs") unless @guardian.user
+
+    aggregate_search(private_messages: true)
+  end
+
+  def topic_search
+    if @search_context.is_a?(Topic)
+      posts = posts_eager_loads(posts_query(limit))
+        .where('posts.topic_id = ?', @search_context.id)
+
+      posts.each do |post|
+        @results.add(post)
+      end
+    else
+      aggregate_search
+    end
+  end
+
+  def posts_eager_loads(query)
+    query = query.includes(:user)
+    topic_eager_loads = [:category]
+
+    if SiteSetting.tagging_enabled
+      topic_eager_loads << :tags
+    end
+
+    query.includes(topic: topic_eager_loads)
+  end
 
 end

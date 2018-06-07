@@ -225,13 +225,13 @@ class Badge < ActiveRecord::Base
 
   protected
 
-    def ensure_not_system
-      self.id = [Badge.maximum(:id) + 1, 100].max unless id
-    end
+  def ensure_not_system
+    self.id = [Badge.maximum(:id) + 1, 100].max unless id
+  end
 
-    def i18n_name
-      self.name.downcase.tr(' ', '_')
-    end
+  def i18n_name
+    self.name.downcase.tr(' ', '_')
+  end
 
 end
 

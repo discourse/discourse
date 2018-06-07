@@ -127,19 +127,19 @@ class PostAnalyzer
 
   private
 
-    def cooked_stripped
-      @cooked_stripped ||= begin
-        doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
-        doc.css("pre .mention, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
-        doc
-      end
+  def cooked_stripped
+    @cooked_stripped ||= begin
+      doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
+      doc.css("pre .mention, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
+      doc
     end
+  end
 
-    def link_is_a_mention?(l)
-      html_class = l['class']
-      return false if html_class.blank?
-      href = l['href'].to_s
-      html_class.to_s['mention'] && href[/^\/u\//] || href[/^\/users\//]
-    end
+  def link_is_a_mention?(l)
+    html_class = l['class']
+    return false if html_class.blank?
+    href = l['href'].to_s
+    html_class.to_s['mention'] && href[/^\/u\//] || href[/^\/users\//]
+  end
 
 end

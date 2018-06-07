@@ -23,32 +23,32 @@ class CommonPasswords
 
   private
 
-    class RedisPasswordList
-      def include?(password)
-        CommonPasswords.redis.sismember CommonPasswords::LIST_KEY, password
-      end
+  class RedisPasswordList
+    def include?(password)
+      CommonPasswords.redis.sismember CommonPasswords::LIST_KEY, password
     end
+  end
 
-    def self.password_list
-      @mutex.synchronize do
-        load_passwords unless redis.scard(LIST_KEY) > 0
-      end
-      RedisPasswordList.new
+  def self.password_list
+    @mutex.synchronize do
+      load_passwords unless redis.scard(LIST_KEY) > 0
     end
+    RedisPasswordList.new
+  end
 
-    def self.redis
-      $redis.without_namespace
-    end
+  def self.redis
+    $redis.without_namespace
+  end
 
-    def self.load_passwords
-      passwords = File.readlines(PASSWORD_FILE)
-      passwords.map!(&:chomp).each do |pwd|
-        # slower, but a tad more compatible
-        redis.sadd LIST_KEY, pwd
-      end
-    rescue Errno::ENOENT
-      # tolerate this so we don't block signups
-      Rails.logger.error "Common passwords file #{PASSWORD_FILE} is not found! Common password checking is skipped."
+  def self.load_passwords
+    passwords = File.readlines(PASSWORD_FILE)
+    passwords.map!(&:chomp).each do |pwd|
+      # slower, but a tad more compatible
+      redis.sadd LIST_KEY, pwd
     end
+  rescue Errno::ENOENT
+    # tolerate this so we don't block signups
+    Rails.logger.error "Common passwords file #{PASSWORD_FILE} is not found! Common password checking is skipped."
+  end
 
 end

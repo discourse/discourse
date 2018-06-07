@@ -30,15 +30,15 @@ class POP3PollingEnabledSettingValidator
 
   private
 
-    def authentication_works?
-      @authentication_works ||= begin
-        pop3 = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
-        pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE) if SiteSetting.pop3_polling_ssl
-        pop3.auth_only(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password)
-      rescue Net::POPAuthenticationError
-        false
-      else
-        true
-      end
+  def authentication_works?
+    @authentication_works ||= begin
+      pop3 = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
+      pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE) if SiteSetting.pop3_polling_ssl
+      pop3.auth_only(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password)
+    rescue Net::POPAuthenticationError
+      false
+    else
+      true
     end
+  end
 end
