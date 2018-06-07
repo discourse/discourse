@@ -33,7 +33,7 @@ class DbHelper
       column_name = rc["column_name"]
       result = connection.async_exec("SELECT #{column_name} FROM #{table_name} WHERE #{column_name} LIKE $1", args) rescue nil
       if result&.ntuples > 0
-        found["#{table_name}.#{column_name}"] = result.map {|r| r[column_name]}
+        found["#{table_name}.#{column_name}"] = result.map { |r| r[column_name] }
       end
     end
     found
