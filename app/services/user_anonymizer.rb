@@ -63,6 +63,16 @@ class UserAnonymizer
         acting_user_id: @actor ? @actor.id : @user.id,
       }
 
+      Invite.with_deleted.where(user_id: @user.id).destroy_all
+      EmailToken.where(user_id: @user.id).destroy_all
+      EmailLog.where(user_id: @user.id).delete_all
+      IncomingEmail.where("user_id = ? OR from_address = ?", @user.id, @prev_email).delete_all
+
+      Post.with_deleted
+        .where(user_id: @user.id)
+        .where.not(raw_email: nil)
+        .update_all(raw_email: nil)
+
       if SiteSetting.log_anonymizer_details?
         history_details[:email] = @prev_email
         history_details[:details] = "username: #{@prev_username}"
