@@ -114,12 +114,12 @@ export default Ember.Controller.extend({
     return moment().locale("en").utc().subtract(1, "day").endOf("day");
   },
 
-  @computed("updated_at")
+  @computed("model.attributes.updated_at")
   updatedTimestamp(updatedAt) {
     return moment(updatedAt).format("LLL");
   },
 
-  @computed("last_backup_taken_at")
+  @computed("model.attributes.last_backup_taken_at")
   backupTimestamp(lastBackupTakenAt) {
     return moment(lastBackupTakenAt).format("LLL");
   },
