@@ -108,15 +108,17 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions', base_uri: '')}
         RAW
 
-        new_post = topic.ordered_posts.last(2).first
+        new_post = Topic.last.ordered_posts.last(2).first
 
-        expect(narrative.get_data(user)).to eq("topic_id" => new_post.topic.id,
-                                               "state" => "tutorial_edit",
-                                               "last_post_id" => new_post.id,
-                                               "track" => described_class.to_s,
-                                               "tutorial_edit" => {
+        expect(narrative.get_data(user)).to eq(
+          "topic_id" => new_post.topic.id,
+          "state" => "tutorial_edit",
+          "last_post_id" => new_post.id,
+          "track" => described_class.to_s,
+          "tutorial_edit" => {
             "post_id" => Post.last.id
-          })
+          }
+        )
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to_not eq(topic.id)
