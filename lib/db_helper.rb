@@ -22,4 +22,21 @@ class DbHelper
     SiteSetting.refresh!
   end
 
+  def self.find(needle)
+    connection = ActiveRecord::Base.connection.raw_connection
+    text_columns = connection.async_exec(REMAP_SQL).to_a
+    args = ["%#{needle}%"]
+    found = {}
+
+    text_columns.each do |rc|
+      table_name = rc["table_name"]
+      column_name = rc["column_name"]
+      result = connection.async_exec("SELECT #{column_name} FROM #{table_name} WHERE #{column_name} LIKE $1", args) rescue nil
+      if result&.ntuples > 0
+        found["#{column_name}.#{table_name}"] = result.map {|r| r[column_name]}
+      end
+    end
+    found
+  end
+
 end
