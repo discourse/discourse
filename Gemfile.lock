@@ -405,13 +405,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionmailer (~> 5.2)
-  actionpack (~> 5.2)
-  actionview (~> 5.2)
+  actionmailer (~> 5.1)
+  actionpack (~> 5.1)
+  actionview (~> 5.1)
   active_model_serializers (~> 0.8.3)
-  activemodel (~> 5.2)
-  activerecord (~> 5.2)
-  activesupport (~> 5.2)
+  activemodel (~> 5.1)
+  activerecord (~> 5.1)
+  activesupport (~> 5.1)
   annotate
   aws-sdk-s3
   barber
@@ -479,7 +479,7 @@ DEPENDENCIES
   rack-mini-profiler
   rack-protection
   rails_multisite
-  railties (~> 5.2)
+  railties (~> 5.1)
   rake
   rb-fsevent
   rb-inotify (~> 0.9)
