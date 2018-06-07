@@ -118,16 +118,11 @@ before_fork do |server, worker|
       puts "Starting up #{sidekiqs} supervised sidekiqs"
 
       require 'demon/sidekiq'
-      if @stats_socket_dir
-        Demon::Sidekiq.after_fork do
-          start_stats_socket(server)
-          DiscourseEvent.trigger(:sidekiq_fork_started)
-        end
-      else
-        Demon::Sidekiq.after_fork do
-          DiscourseEvent.trigger(:sidekiq_fork_started)
-        end
+      Demon::Sidekiq.after_fork do
+        start_stats_socket(server) if @stats_socket_dir
+        DiscourseEvent.trigger(:sidekiq_fork_started)
       end
+
       Demon::Sidekiq.start(sidekiqs)
 
       Signal.trap("SIGTSTP") do
