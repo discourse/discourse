@@ -1,6 +1,10 @@
 # Speeds up #pluck so its about 2.2x faster, importantly makes pluck avoid creation of a slew
 # of AR objects
 #
+#
+
+# until we upgrade rails
+return
 
 require_dependency 'sql_builder'
 
