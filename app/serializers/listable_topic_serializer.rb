@@ -121,8 +121,8 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   protected
 
-    def unread_helper
-      @unread_helper ||= Unread.new(object, object.user_data, scope)
-    end
+  def unread_helper
+    @unread_helper ||= Unread.new(object, object.user_data, scope)
+  end
 
 end

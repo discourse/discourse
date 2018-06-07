@@ -52,53 +52,53 @@ module I18n
 
       protected
 
-        def find_results(regexp, results, translations, path = nil)
-          return results if translations.blank?
+      def find_results(regexp, results, translations, path = nil)
+        return results if translations.blank?
 
-          translations.each do |k_sym, v|
-            k = k_sym.to_s
-            key_path = path ? "#{path}.#{k}" : k
-            if v.is_a?(String)
-              unless results.has_key?(key_path)
-                results[key_path] = v if key_path =~ regexp || v =~ regexp
-              end
-            elsif v.is_a?(Hash)
-              find_results(regexp, results, v, key_path)
+        translations.each do |k_sym, v|
+          k = k_sym.to_s
+          key_path = path ? "#{path}.#{k}" : k
+          if v.is_a?(String)
+            unless results.has_key?(key_path)
+              results[key_path] = v if key_path =~ regexp || v =~ regexp
             end
+          elsif v.is_a?(Hash)
+            find_results(regexp, results, v, key_path)
           end
-          results
         end
+        results
+      end
 
-        # Support interpolation and pluralization of overrides by first looking up
-        # the original translations before applying our overrides.
-        def lookup(locale, key, scope = [], options = {})
-          existing_translations = super(locale, key, scope, options)
-          return existing_translations if scope.is_a?(Array) && scope.include?(:models)
+      # Support interpolation and pluralization of overrides by first looking up
+      # the original translations before applying our overrides.
+      def lookup(locale, key, scope = [], options = {})
+        existing_translations = super(locale, key, scope, options)
+        return existing_translations if scope.is_a?(Array) && scope.include?(:models)
 
-          overrides = options.dig(:overrides, locale)
+        overrides = options.dig(:overrides, locale)
 
-          if overrides
-            if existing_translations && options[:count]
-              remapped_translations =
-                if existing_translations.is_a?(Hash)
-                  Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
-                elsif existing_translations.is_a?(String)
-                  Hash[[[key, existing_translations]]]
-                end
-
-              result = {}
-
-              remapped_translations.merge(overrides).each do |k, v|
-                result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
+        if overrides
+          if existing_translations && options[:count]
+            remapped_translations =
+              if existing_translations.is_a?(Hash)
+                Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
+              elsif existing_translations.is_a?(String)
+                Hash[[[key, existing_translations]]]
               end
-              return result if result.size > 0
-            end
 
-            return overrides[key] if overrides[key]
+            result = {}
+
+            remapped_translations.merge(overrides).each do |k, v|
+              result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
+            end
+            return result if result.size > 0
           end
 
-          existing_translations
+          return overrides[key] if overrides[key]
         end
+
+        existing_translations
+      end
 
     end
   end

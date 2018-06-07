@@ -51,13 +51,13 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
 
   private
 
-    def allowed_params
-      params.require(:ip_address)
-      params.permit(:ip_address, :action_name)
-    end
+  def allowed_params
+    params.require(:ip_address)
+    params.permit(:ip_address, :action_name)
+  end
 
-    def fetch_screened_ip_address
-      @screened_ip_address = ScreenedIpAddress.find(params[:id])
-    end
+  def fetch_screened_ip_address
+    @screened_ip_address = ScreenedIpAddress.find(params[:id])
+  end
 
 end

@@ -141,10 +141,10 @@ class UserOption < ActiveRecord::Base
 
   private
 
-    def update_tracked_topics
-      return unless saved_change_to_auto_track_topics_after_msecs?
-      TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
-    end
+  def update_tracked_topics
+    return unless saved_change_to_auto_track_topics_after_msecs?
+    TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
+  end
 
 end
 

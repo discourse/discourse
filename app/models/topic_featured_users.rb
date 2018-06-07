@@ -84,8 +84,8 @@ SQL
 
   private
 
-    def update_participant_count
-      count = topic.posts.where('NOT hidden AND post_type in (?)', Topic.visible_post_types).count('distinct user_id')
-      topic.update_columns(participant_count: count)
-    end
+  def update_participant_count
+    count = topic.posts.where('NOT hidden AND post_type in (?)', Topic.visible_post_types).count('distinct user_id')
+    topic.update_columns(participant_count: count)
+  end
 end

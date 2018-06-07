@@ -550,13 +550,13 @@ class StaffActionLogger
 
   private
 
-    def params(opts = nil)
-      opts ||= {}
-      { acting_user_id: @admin.id, context: opts[:context] }
-    end
+  def params(opts = nil)
+    opts ||= {}
+    { acting_user_id: @admin.id, context: opts[:context] }
+  end
 
-    def validate_category(category)
-      raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
-    end
+  def validate_category(category)
+    raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
+  end
 
 end

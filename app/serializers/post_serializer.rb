@@ -380,26 +380,26 @@ class PostSerializer < BasicPostSerializer
 
   private
 
-    def topic
-      @topic = object.topic
-      @topic ||= Topic.with_deleted.find(object.topic_id) if scope.is_staff?
-      @topic
-    end
+  def topic
+    @topic = object.topic
+    @topic ||= Topic.with_deleted.find(object.topic_id) if scope.is_staff?
+    @topic
+  end
 
-    def post_actions
-      @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
-    end
+  def post_actions
+    @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
+  end
 
-    def active_flags
-      @active_flags ||= (@topic_view&.all_active_flags || {})[object.id]
-    end
+  def active_flags
+    @active_flags ||= (@topic_view&.all_active_flags || {})[object.id]
+  end
 
-    def post_custom_fields
-      @post_custom_fields ||= if @topic_view
-        (@topic_view.post_custom_fields || {})[object.id] || {}
-      else
-        object.custom_fields
-      end
+  def post_custom_fields
+    @post_custom_fields ||= if @topic_view
+      (@topic_view.post_custom_fields || {})[object.id] || {}
+    else
+      object.custom_fields
     end
+  end
 
 end

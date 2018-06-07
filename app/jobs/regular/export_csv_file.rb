@@ -211,169 +211,169 @@ module Jobs
 
     private
 
-      def escape_comma(string)
-        if string && string =~ /,/
-          return "#{string}"
-        else
-          return string
+    def escape_comma(string)
+      if string && string =~ /,/
+        return "#{string}"
+      else
+        return string
+      end
+    end
+
+    def get_base_user_array(user)
+      user_array = []
+      user_array.push(user.id, escape_comma(user.name), user.username, user.email, escape_comma(user.title), user.created_at, user.last_seen_at, user.last_posted_at, user.last_emailed_at, user.trust_level, user.approved, user.suspended_at, user.suspended_till, user.silenced_till, user.active, user.admin, user.moderator, user.ip_address, user.staged, user.user_stat.topics_entered, user.user_stat.posts_read_count, user.user_stat.time_read, user.user_stat.topic_count, user.user_stat.post_count, user.user_stat.likes_given, user.user_stat.likes_received, escape_comma(user.user_profile.location), user.user_profile.website, user.user_profile.views)
+    end
+
+    def add_single_sign_on(user, user_info_array)
+      if user.single_sign_on_record
+        user_info_array.push(user.single_sign_on_record.external_id, user.single_sign_on_record.external_email, user.single_sign_on_record.external_username, escape_comma(user.single_sign_on_record.external_name), user.single_sign_on_record.external_avatar_url)
+      else
+        user_info_array.push(nil, nil, nil, nil, nil)
+      end
+      user_info_array
+    end
+
+    def add_custom_fields(user, user_info_array, user_field_ids)
+      if user_field_ids.present?
+        user.user_fields.each do |custom_field|
+          user_info_array << escape_comma(custom_field[1])
         end
       end
+      user_info_array
+    end
 
-      def get_base_user_array(user)
-        user_array = []
-        user_array.push(user.id, escape_comma(user.name), user.username, user.email, escape_comma(user.title), user.created_at, user.last_seen_at, user.last_posted_at, user.last_emailed_at, user.trust_level, user.approved, user.suspended_at, user.suspended_till, user.silenced_till, user.active, user.admin, user.moderator, user.ip_address, user.staged, user.user_stat.topics_entered, user.user_stat.posts_read_count, user.user_stat.time_read, user.user_stat.topic_count, user.user_stat.post_count, user.user_stat.likes_given, user.user_stat.likes_received, escape_comma(user.user_profile.location), user.user_profile.website, user.user_profile.views)
+    def add_group_names(user, user_info_array)
+      group_names = user.groups.each_with_object("") do |group, names|
+        names << "#{group.name};"
       end
+      user_info_array << group_names[0..-2] unless group_names.blank?
+      group_names = nil
+      user_info_array
+    end
 
-      def add_single_sign_on(user, user_info_array)
-        if user.single_sign_on_record
-          user_info_array.push(user.single_sign_on_record.external_id, user.single_sign_on_record.external_email, user.single_sign_on_record.external_username, escape_comma(user.single_sign_on_record.external_name), user.single_sign_on_record.external_avatar_url)
-        else
-          user_info_array.push(nil, nil, nil, nil, nil)
-        end
-        user_info_array
-      end
-
-      def add_custom_fields(user, user_info_array, user_field_ids)
-        if user_field_ids.present?
-          user.user_fields.each do |custom_field|
-            user_info_array << escape_comma(custom_field[1])
+    def get_user_archive_fields(user_archive)
+      user_archive_array = []
+      topic_data = user_archive.topic
+      user_archive = user_archive.as_json
+      topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
+      return user_archive_array if topic_data.nil?
+      category = topic_data.category
+      sub_category_name = "-"
+      if category
+        category_name = category.name
+        if category.parent_category_id.present?
+          # sub category
+          if parent_category = Category.find_by(id: category.parent_category_id)
+            category_name = parent_category.name
+            sub_category_name = category.name
           end
         end
-        user_info_array
+      else
+        # PM
+        category_name = "-"
+      end
+      is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
+      url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
+
+      topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category_name, "is_pm" => is_pm, "url" => url }
+      user_archive.merge!(topic_hash)
+
+      HEADER_ATTRS_FOR['user_archive'].each do |attr|
+        user_archive_array.push(user_archive[attr])
       end
 
-      def add_group_names(user, user_info_array)
-        group_names = user.groups.each_with_object("") do |group, names|
-          names << "#{group.name};"
-        end
-        user_info_array << group_names[0..-2] unless group_names.blank?
-        group_names = nil
-        user_info_array
-      end
+      user_archive_array
+    end
 
-      def get_user_archive_fields(user_archive)
-        user_archive_array = []
-        topic_data = user_archive.topic
-        user_archive = user_archive.as_json
-        topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
-        return user_archive_array if topic_data.nil?
-        category = topic_data.category
-        sub_category_name = "-"
-        if category
-          category_name = category.name
-          if category.parent_category_id.present?
-            # sub category
-            if parent_category = Category.find_by(id: category.parent_category_id)
-              category_name = parent_category.name
-              sub_category_name = category.name
-            end
-          end
-        else
-          # PM
-          category_name = "-"
-        end
-        is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
-        url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
+    def get_staff_action_fields(staff_action)
+      staff_action_array = []
 
-        topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category_name, "is_pm" => is_pm, "url" => url }
-        user_archive.merge!(topic_hash)
-
-        HEADER_ATTRS_FOR['user_archive'].each do |attr|
-          user_archive_array.push(user_archive[attr])
-        end
-
-        user_archive_array
-      end
-
-      def get_staff_action_fields(staff_action)
-        staff_action_array = []
-
-        HEADER_ATTRS_FOR['staff_action'].each do |attr|
-          data =
-            if attr == 'action'
-              UserHistory.actions.key(staff_action.attributes[attr]).to_s
-            elsif attr == 'staff_user'
-              user = User.find_by(id: staff_action.attributes['acting_user_id'])
-              user.username if !user.nil?
-            elsif attr == 'subject'
-              user = User.find_by(id: staff_action.attributes['target_user_id'])
-              user.nil? ? staff_action.attributes[attr] : "#{user.username} #{staff_action.attributes[attr]}"
-            else
-              staff_action.attributes[attr]
-            end
-
-            staff_action_array.push(data)
-        end
-        staff_action_array
-      end
-
-      def get_screened_email_fields(screened_email)
-        screened_email_array = []
-
-        HEADER_ATTRS_FOR['screened_email'].each do |attr|
-          data =
-            if attr == 'action'
-              ScreenedEmail.actions.key(screened_email.attributes['action_type']).to_s
-            else
-              screened_email.attributes[attr]
-            end
-
-          screened_email_array.push(data)
-        end
-
-        screened_email_array
-      end
-
-      def get_screened_ip_fields(screened_ip)
-        screened_ip_array = []
-
-        HEADER_ATTRS_FOR['screened_ip'].each do |attr|
-          data =
-            if attr == 'action'
-              ScreenedIpAddress.actions.key(screened_ip.attributes['action_type']).to_s
-            else
-              screened_ip.attributes[attr]
-            end
-
-          screened_ip_array.push(data)
-        end
-
-        screened_ip_array
-      end
-
-      def get_screened_url_fields(screened_url)
-        screened_url_array = []
-
-        HEADER_ATTRS_FOR['screened_url'].each do |attr|
-          data =
-            if attr == 'action'
-              action = ScreenedUrl.actions.key(screened_url.attributes['action_type']).to_s
-              action = "do nothing" if action.blank?
-            else
-              screened_url.attributes[attr]
-            end
-
-          screened_url_array.push(data)
-        end
-
-        screened_url_array
-      end
-
-      def notify_user(download_link, file_name, file_size, export_title)
-        if @current_user
-          if download_link.present?
-            SystemMessage.create_from_system_user(
-              @current_user,
-              :csv_export_succeeded,
-              download_link: download_link,
-              file_name: "#{file_name}.gz",
-              file_size: file_size,
-              export_title: export_title
-            )
+      HEADER_ATTRS_FOR['staff_action'].each do |attr|
+        data =
+          if attr == 'action'
+            UserHistory.actions.key(staff_action.attributes[attr]).to_s
+          elsif attr == 'staff_user'
+            user = User.find_by(id: staff_action.attributes['acting_user_id'])
+            user.username if !user.nil?
+          elsif attr == 'subject'
+            user = User.find_by(id: staff_action.attributes['target_user_id'])
+            user.nil? ? staff_action.attributes[attr] : "#{user.username} #{staff_action.attributes[attr]}"
           else
-            SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
+            staff_action.attributes[attr]
           end
+
+          staff_action_array.push(data)
+      end
+      staff_action_array
+    end
+
+    def get_screened_email_fields(screened_email)
+      screened_email_array = []
+
+      HEADER_ATTRS_FOR['screened_email'].each do |attr|
+        data =
+          if attr == 'action'
+            ScreenedEmail.actions.key(screened_email.attributes['action_type']).to_s
+          else
+            screened_email.attributes[attr]
+          end
+
+        screened_email_array.push(data)
+      end
+
+      screened_email_array
+    end
+
+    def get_screened_ip_fields(screened_ip)
+      screened_ip_array = []
+
+      HEADER_ATTRS_FOR['screened_ip'].each do |attr|
+        data =
+          if attr == 'action'
+            ScreenedIpAddress.actions.key(screened_ip.attributes['action_type']).to_s
+          else
+            screened_ip.attributes[attr]
+          end
+
+        screened_ip_array.push(data)
+      end
+
+      screened_ip_array
+    end
+
+    def get_screened_url_fields(screened_url)
+      screened_url_array = []
+
+      HEADER_ATTRS_FOR['screened_url'].each do |attr|
+        data =
+          if attr == 'action'
+            action = ScreenedUrl.actions.key(screened_url.attributes['action_type']).to_s
+            action = "do nothing" if action.blank?
+          else
+            screened_url.attributes[attr]
+          end
+
+        screened_url_array.push(data)
+      end
+
+      screened_url_array
+    end
+
+    def notify_user(download_link, file_name, file_size, export_title)
+      if @current_user
+        if download_link.present?
+          SystemMessage.create_from_system_user(
+            @current_user,
+            :csv_export_succeeded,
+            download_link: download_link,
+            file_name: "#{file_name}.gz",
+            file_size: file_size,
+            export_title: export_title
+          )
+        else
+          SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
         end
       end
+    end
   end
 end

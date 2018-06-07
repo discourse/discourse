@@ -14,8 +14,8 @@ class ExceptionsController < ApplicationController
 
   private
 
-    def hide_google
-      @hide_google = true if SiteSetting.login_required
-    end
+  def hide_google
+    @hide_google = true if SiteSetting.login_required
+  end
 
 end

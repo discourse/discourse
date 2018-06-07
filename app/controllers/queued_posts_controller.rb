@@ -52,18 +52,18 @@ class QueuedPostsController < ApplicationController
 
   private
 
-    def user_deletion_opts
-      base = {
-        context:           I18n.t('queue.delete_reason', performed_by: current_user.username),
-        delete_posts:      true,
-        delete_as_spammer: true
-      }
+  def user_deletion_opts
+    base = {
+      context:           I18n.t('queue.delete_reason', performed_by: current_user.username),
+      delete_posts:      true,
+      delete_as_spammer: true
+    }
 
-      if Rails.env.production? && ENV["Staging"].nil?
-        base.merge!(block_email: true, block_ip: true)
-      end
-
-      base
+    if Rails.env.production? && ENV["Staging"].nil?
+      base.merge!(block_email: true, block_ip: true)
     end
+
+    base
+  end
 
 end
