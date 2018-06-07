@@ -183,3 +183,5 @@ Migration::TableDropper.delayed_drop(
 STDERR.puts "Resetting Active Record Cache"
 Discourse.reset_active_record_cache
 ActiveRecord::Base.connection.close
+# for some reason connection tables may be off?
+User.reset_column_information
