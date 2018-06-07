@@ -301,14 +301,10 @@ export function relativeAge(date, options) {
   return "UNKNOWN FORMAT";
 }
 
-export function number(val, options = {}) {
+export function number(val) {
   let formattedNumber;
 
-  if (options.ceil) {
-    val = Math.ceil(val);
-  }
-
-  val = parseInt(val, 10);
+  val = parseInt(Math.round(val), 10);
   if (isNaN(val)) val = 0;
 
   if (val > 999999) {
