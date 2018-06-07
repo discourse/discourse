@@ -55,7 +55,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
     # SiteSetting.port = 3000
     # SiteSetting.automatic_backups_enabled = false
-    # SiteSetting.disable_emails = true
+    # SiteSetting.disable_emails = "non-staff"
     # etc.
 
     import_users

@@ -24,7 +24,7 @@ class ImportScripts::Modx < ImportScripts::Base
   def initialize
     super
 
-    SiteSetting.disable_emails = true
+    SiteSetting.disable_emails = "non-staff"
 
     @old_username_to_new_usernames = {}
 

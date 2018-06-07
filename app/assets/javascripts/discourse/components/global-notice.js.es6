@@ -22,7 +22,7 @@ export default Ember.Component.extend(bufferedRender({
       notices.push([I18n.t("read_only_mode.enabled"), 'alert-read-only']);
     }
 
-    if (this.siteSettings.disable_emails) {
+    if (this.siteSettings.disable_emails === "yes" || this.siteSettings.disable_emails === "non-staff") {
       notices.push([I18n.t("emails_are_disabled"), 'alert-emails-disabled']);
     }
 
