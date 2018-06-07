@@ -78,7 +78,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions', base_uri: '')}
         RAW
 
-        new_post = Post.offset(1).last
+        new_post = topic.ordered_posts.last(2).first
 
         expect(narrative.get_data(user)).to eq("topic_id" => topic.id,
                                                "state" => "tutorial_edit",
@@ -108,7 +108,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions', base_uri: '')}
         RAW
 
-        new_post = Post.offset(1).last
+        new_post = topic.ordered_posts.last(2).first
 
         expect(narrative.get_data(user)).to eq("topic_id" => new_post.topic.id,
                                                "state" => "tutorial_edit",
@@ -231,7 +231,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.offset(1).last
+            new_post = topic.ordered_posts.last(2).first
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.advanced_user_narrative.recover.instructions', base_uri: '')
@@ -267,7 +267,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           RAW
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
-          expect(Post.offset(1).last.raw).to eq(expected_raw.chomp)
+          expect(topic.ordered_posts.last(2).first.raw).to eq(expected_raw.chomp)
         end
 
         context 'when user is an admin' do
@@ -675,7 +675,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
         narrative.input(:reply, user, post: post)
 
-        expect(Post.offset(1).last.raw).to eq(I18n.t(
+        expect(topic.ordered_posts.last(2).first.raw).to eq(I18n.t(
           'discourse_narrative_bot.advanced_user_narrative.details.reply', base_uri: ''
         ))
 
