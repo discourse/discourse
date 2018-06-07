@@ -3,12 +3,12 @@ require 'rails_helper'
 RSpec.describe MetadataController do
   describe 'manifest.json' do
     it 'returns the right output' do
-
       title = 'MyApp'
       SiteSetting.title = title
       SiteSetting.large_icon_url = "http://big.square/png"
 
-      get :manifest
+      get "/manifest.json"
+      expect(response.status).to eq(200)
       expect(response.content_type).to eq('application/json')
       manifest = JSON.parse(response.body)
 
@@ -18,14 +18,16 @@ RSpec.describe MetadataController do
 
     it 'can guess mime types' do
       SiteSetting.large_icon_url = "http://big.square/ico.jpg"
-      get :manifest
+      get "/manifest.json"
+      expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
       expect(manifest["icons"].first["type"]).to eq("image/jpeg")
     end
 
     it 'defaults to png' do
       SiteSetting.large_icon_url = "http://big.square/noidea.bogus"
-      get :manifest
+      get "/manifest.json"
+      expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
       expect(manifest["icons"].first["type"]).to eq("image/png")
     end
@@ -37,7 +39,8 @@ RSpec.describe MetadataController do
       favicon_path = '/uploads/something/23432.png'
       SiteSetting.title = title
       SiteSetting.favicon_url = favicon_path
-      get :opensearch, format: :xml
+      get "/opensearch.xml"
+      expect(response.status).to eq(200)
       expect(response.body).to include(title)
       expect(response.body).to include("/search?q={searchTerms}")
       expect(response.body).to include('image/png')
