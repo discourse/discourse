@@ -213,8 +213,8 @@ QUnit.test("number", assert => {
   assert.equal(number(2499999), "2.5M", "it abbreviates millions");
   assert.equal(number(1000000), "1.0M", "it abbreviates a million");
   assert.equal(number(999999), "999k", "it abbreviates hundreds of thousands");
-  assert.equal(number(18.2), "18", "it returns a float number converted to an integer as a string");
-  assert.equal(number(18.6, { ceil: true }), "19", "it ceils the value if requested");
+  assert.equal(number(18.2), "18", "it returns a float number rounded to an integer as a string");
+  assert.equal(number(18.6), "19", "it returns a float number rounded to an integer as a string");
 });
 
 QUnit.test("durationTiny", assert => {

@@ -100,7 +100,7 @@ export default Ember.Component.extend(AsyncReport, {
         labels,
         datasets: reportsForPeriod.map(report => {
           return {
-            data: Ember.makeArray(report.data).map(d => number(d.y, { ceil: true })),
+            data: Ember.makeArray(report.data).map(d => number(d.y)),
             backgroundColor: "rgba(200,220,240,0.3)",
             borderColor: report.color
           };
@@ -147,7 +147,7 @@ export default Ember.Component.extend(AsyncReport, {
         scales: {
           yAxes: [{
             display: true,
-            ticks: { callback: (label) => number(label, { ceil: true }) }
+            ticks: { callback: (label) => number(label) }
           }],
           xAxes: [{
             display: true,
