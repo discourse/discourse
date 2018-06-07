@@ -32,7 +32,7 @@ describe SiteController do
       get "/site/statistics.json"
       json = JSON.parse(response.body)
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(json["topic_count"]).to be_present
       expect(json["post_count"]).to be_present
       expect(json["user_count"]).to be_present

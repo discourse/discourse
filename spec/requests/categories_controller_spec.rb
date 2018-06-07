@@ -136,7 +136,7 @@ describe CategoriesController do
         expect do
           delete "/categories/#{category.slug}.json"
         end.to change(Category, :count).by(-1)
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(UserHistory.count).to eq(1)
       end
     end
@@ -321,14 +321,14 @@ describe CategoriesController do
       it 'accepts valid custom slug' do
         put "/category/#{category.id}/slug.json", params: { slug: 'valid-slug' }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(category.reload.slug).to eq('valid-slug')
       end
 
       it 'accepts not well formed custom slug' do
         put "/category/#{category.id}/slug.json", params: { slug: ' valid slug' }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(category.reload.slug).to eq('valid-slug')
       end
 
@@ -336,7 +336,7 @@ describe CategoriesController do
         SiteSetting.slug_generation_method = 'none'
         put "/category/#{category.id}/slug.json", params: { slug: ' another !_ slug @' }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(category.reload.slug).to eq('another-slug')
         SiteSetting.slug_generation_method = 'ascii'
       end

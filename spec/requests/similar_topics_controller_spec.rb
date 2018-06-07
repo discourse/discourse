@@ -30,7 +30,7 @@ describe SimilarTopicsController do
       reindex_posts
 
       get "/topics/similar_to.json", params: { title: title, raw: raw }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["similar_topics"].size).to eq(0)
     end
@@ -48,7 +48,7 @@ describe SimilarTopicsController do
 
           get "/topics/similar_to.json", params: { title: title, raw: raw }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           similar_topics = ::JSON.parse(response.body)["similar_topics"]
           expect(similar_topics.size).to eq(1)
           expect(similar_topics.first["topic_id"]).to eq(topic.id)
@@ -66,7 +66,7 @@ describe SimilarTopicsController do
           it "passes a user through if logged in" do
             get "/topics/similar_to.json", params: { title: title, raw: raw }
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             similar_topics = ::JSON.parse(response.body)["similar_topics"].map { |topic| topic["topic_id"] }
             expect(similar_topics.size).to eq(2)
             expect(similar_topics).to include(topic.id)
@@ -82,7 +82,7 @@ describe SimilarTopicsController do
 
         get "/topics/similar_to.json", params: { title: title, raw: raw }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json["similar_topics"].size).to eq(0)
       end

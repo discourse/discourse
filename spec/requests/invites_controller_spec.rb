@@ -8,7 +8,7 @@ describe InvitesController do
     it "returns error if invite not found" do
       get "/invites/nopeNOPEnope"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
@@ -18,7 +18,7 @@ describe InvitesController do
     it "renders the accept invite page if invite exists" do
       get "/invites/#{invite.invite_key}"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       body = response.body
       expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
@@ -29,7 +29,7 @@ describe InvitesController do
       invite.update_attributes!(redeemed_at: 1.day.ago)
       get "/invites/#{invite.invite_key}"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
@@ -100,7 +100,7 @@ describe InvitesController do
         group = Fabricate(:group)
         sign_in(Fabricate(:admin))
         post "/invites.json", params: { email: email, group_names: group.name }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
@@ -112,7 +112,7 @@ describe InvitesController do
 
         post "/invites.json", params: { email: email, group_names: group.name }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
@@ -120,7 +120,7 @@ describe InvitesController do
         user = sign_in(Fabricate(:admin))
         invite = Invite.invite_by_email("invite@example.com", user)
         post "/invites.json", params: { email: invite.email }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "responds with error message in case of validation failure" do
@@ -182,7 +182,7 @@ describe InvitesController do
           email: email, group_names: group.name
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
@@ -195,7 +195,7 @@ describe InvitesController do
           email: email, group_names: "security,support"
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(2)
       end
     end
@@ -205,7 +205,7 @@ describe InvitesController do
     context 'with an invalid invite id' do
       it "redirects to the root and doesn't change the session" do
         put "/invites/show/doesntexist.json"
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
         expect(json["message"]).to eq(I18n.t('invite.not_found'))
@@ -223,7 +223,7 @@ describe InvitesController do
       it "redirects to the root" do
         put "/invites/show/#{invite.invite_key}.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
         expect(json["message"]).to eq(I18n.t('invite.not_found'))
@@ -254,7 +254,7 @@ describe InvitesController do
               :user_logged_in, :user_first_logged_in
             )
             invite.reload
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             expect(session[:current_user_id]).to eq(invite.user_id)
             expect(invite.redeemed?).to be_truthy
           end
@@ -271,7 +271,7 @@ describe InvitesController do
         context 'failure' do
           it "doesn't log in the user if there's a validation error" do
             put "/invites/show/#{invite.invite_key}.json", params: { password: "password" }
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             json = JSON.parse(response.body)
             expect(json["success"]).to eq(false)
             expect(json["errors"]["password"]).to be_present
@@ -286,13 +286,13 @@ describe InvitesController do
           it 'sends a welcome message if set' do
             user.send_welcome_message = true
             put "/invites/show/#{invite.invite_key}.json"
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
           end
 
           it "sends password reset email if password is not set" do
             put "/invites/show/#{invite.invite_key}.json"
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(1)
           end
 
@@ -300,20 +300,20 @@ describe InvitesController do
             SiteSetting.sso_url = "https://www.example.com/sso"
             SiteSetting.enable_sso = true
             put "/invites/show/#{invite.invite_key}.json"
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
           end
 
           it "does not send password reset email if local login is disabled" do
             SiteSetting.enable_local_logins = false
             put "/invites/show/#{invite.invite_key}.json"
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
           end
 
           it 'sends an activation email if password is set' do
             put "/invites/show/#{invite.invite_key}.json", params: { password: "verystrongpassword" }
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
             expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
           end
@@ -381,7 +381,7 @@ describe InvitesController do
       it "resends the invite" do
         SiteSetting.queue_jobs = true
         post "/invites/reinvite.json", params: { email: invite.email }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
       end
     end
@@ -412,7 +412,7 @@ describe InvitesController do
         SiteSetting.queue_jobs = true
         sign_in(Fabricate(:admin))
         post "/invites/upload_csv.json", params: { file: file, name: filename }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
       end
     end

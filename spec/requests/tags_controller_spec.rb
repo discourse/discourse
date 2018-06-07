@@ -16,7 +16,7 @@ describe TagsController do
       it "should return the right response" do
         get "/tags.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         tags = JSON.parse(response.body)["tags"]
         expect(tags.length).to eq(1)
@@ -41,7 +41,7 @@ describe TagsController do
 
         get "/tags.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         tags = JSON.parse(response.body)["tags"]
         expect(tags.length).to eq(2)
@@ -57,7 +57,7 @@ describe TagsController do
 
     it "should return the right response" do
       get "/tags/test"
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
 
     it "should handle invalid tags" do
@@ -72,7 +72,7 @@ describe TagsController do
     it "should return the right response" do
       get "/tags/check.json", params: { tag_values: [tag.name] }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       tag = JSON.parse(response.body)["valid"].first
       expect(tag["value"]).to eq('test')
@@ -141,7 +141,7 @@ describe TagsController do
       it "can see their own pm tags" do
         get "/tags/personal_messages/#{moderator.username}.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         tag = JSON.parse(response.body)['tags']
         expect(tag[0]["id"]).to eq('test')
@@ -156,7 +156,7 @@ describe TagsController do
       it "can see pm tags for regular user" do
         get "/tags/personal_messages/#{regular_user.username}.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         tag = JSON.parse(response.body)['tags']
         expect(tag[0]["id"]).to eq('test')
@@ -165,7 +165,7 @@ describe TagsController do
       it "can see their own pm tags" do
         get "/tags/personal_messages/#{admin.username}.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         tag = JSON.parse(response.body)['tags']
         expect(tag[0]["id"]).to eq('test')
@@ -195,7 +195,7 @@ describe TagsController do
     context 'tagging enabled' do
       it "can filter by tag" do
         get "/tags/#{tag.name}/l/latest.json"
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "can filter by two tags" do
@@ -205,7 +205,7 @@ describe TagsController do
           additional_tag_ids: other_tag.name
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
           .map { |topic| topic["id"] }
@@ -222,7 +222,7 @@ describe TagsController do
           additional_tag_ids: "#{other_tag.name}/#{third_tag.name}"
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
           .map { |topic| topic["id"] }
@@ -239,7 +239,7 @@ describe TagsController do
           additional_tag_ids: "notatag"
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
           .map { |topic| topic["id"] }
@@ -249,17 +249,17 @@ describe TagsController do
 
       it "can filter by category and tag" do
         get "/tags/c/#{category.slug}/#{tag.name}/l/latest.json"
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "can filter by category, sub-category, and tag" do
         get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}/l/latest.json"
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "can filter by category, no sub-category, and tag" do
         get "/tags/c/#{category.slug}/none/#{tag.name}/l/latest.json"
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "can handle subcategories with the same name" do
@@ -272,7 +272,7 @@ describe TagsController do
         t = Fabricate(:topic, category_id: subcategory2.id, tags: [other_tag])
         get "/tags/c/#{category2.slug}/#{subcategory2.slug}/#{other_tag.name}/l/latest.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
           .map { |topic| topic["id"] }
@@ -284,7 +284,7 @@ describe TagsController do
         sign_in(Fabricate(:user))
         get "/tags/#{tag.name}/l/bookmarks.json"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -303,7 +303,7 @@ describe TagsController do
         tag_names = ['stuff', 'stinky', 'stumped']
         tag_names.each { |name| Fabricate(:tag, name: name) }
         get "/tags/filter/search.json", params: { q: 'stu' }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
       end
@@ -312,7 +312,7 @@ describe TagsController do
         yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
         category = Fabricate(:category, tags: [yup])
         get "/tags/filter/search.json", params: { q: 'nope', categoryId: category.id }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }.sort).to eq([])
         expect(json["forbidden"]).to be_present
@@ -322,7 +322,7 @@ describe TagsController do
         c = Fabricate(:private_category, group: Fabricate(:group))
         Fabricate(:topic, category: c, tags: [Fabricate(:tag, name: "cooltag")])
         get "/tags/filter/search.json", params: { q: "cool" }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }).to eq(['cooltag'])
       end
@@ -332,12 +332,12 @@ describe TagsController do
         tag_names.each { |name| Fabricate(:tag, name: name) }
 
         get "/tags/filter/search.json", params: { q: '房' }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }).to eq(['房地产'])
 
         get "/tags/filter/search.json", params: { q: 'тема' }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
       end
@@ -354,7 +354,7 @@ describe TagsController do
         it 'deletes the tag' do
           tag = Fabricate(:tag)
           delete "/tags/#{tag.name}.json"
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
           expect(Tag.where(id: tag.id)).to be_empty
         end
       end

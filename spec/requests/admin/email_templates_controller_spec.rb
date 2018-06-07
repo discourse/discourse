@@ -33,7 +33,7 @@ RSpec.describe Admin::EmailTemplatesController do
       sign_in(admin)
       get '/admin/customize/email_templates.json'
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json['email_templates']).to be_present
@@ -169,7 +169,7 @@ RSpec.describe Admin::EmailTemplatesController do
             email_template: { subject: email_subject, body: email_body }
           }, headers: headers
 
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
 
           json = ::JSON.parse(response.body)
           expect(json).to be_present
@@ -265,7 +265,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
         it "returns the restored email template" do
           delete '/admin/customize/email_templates/user_notifications.admin_login', headers: headers
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
 
           json = ::JSON.parse(response.body)
           expect(json).to be_present

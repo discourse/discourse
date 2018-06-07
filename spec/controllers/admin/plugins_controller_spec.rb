@@ -11,7 +11,7 @@ describe Admin::PluginsController do
 
     it 'should return JSON' do
       get :index, format: :json
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(::JSON.parse(response.body).has_key?('plugins')).to eq(true)
     end
   end

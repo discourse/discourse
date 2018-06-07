@@ -17,7 +17,7 @@ describe SearchController do
         term: 'awesome', include_blurb: true
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       data = JSON.parse(response.body)
       expect(data['posts'][0]['id']).to eq(my_post.id)
       expect(data['posts'][0]['blurb']).to eq('this is my really awesome post')
@@ -32,7 +32,7 @@ describe SearchController do
         term: user.username, type_filter: 'topic'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       data = JSON.parse(response.body)
 
       expect(data['posts'][0]['id']).to eq(my_post.id)
@@ -42,7 +42,7 @@ describe SearchController do
         term: user.username, type_filter: 'user'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       data = JSON.parse(response.body)
 
       expect(data['posts']).to be_blank
@@ -61,7 +61,7 @@ describe SearchController do
           search_for_id: true
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         data = JSON.parse(response.body)
 
         expect(data['topics'][0]['id']).to eq(post.topic_id)
@@ -77,7 +77,7 @@ describe SearchController do
           search_for_id: true
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         data = JSON.parse(response.body)
 
         expect(data['topics'][0]['id']).to eq(my_post.topic_id)
@@ -90,7 +90,7 @@ describe SearchController do
       SiteSetting.log_search_queries = true
       get "/search/query.json", params: { term: 'wookie' }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'wookie')).to be_present
 
       json = JSON.parse(response.body)
@@ -105,7 +105,7 @@ describe SearchController do
     it "doesn't log when disabled" do
       SiteSetting.log_search_queries = false
       get "/search/query.json", params: { term: 'wookie' }
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
   end
@@ -114,14 +114,14 @@ describe SearchController do
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'bantha')).to be_present
     end
 
     it "doesn't log when disabled" do
       SiteSetting.log_search_queries = false
       get "/search.json", params: { q: 'bantha' }
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'bantha')).to be_blank
     end
   end
@@ -155,7 +155,7 @@ describe SearchController do
           term: 'test', search_context: { type: 'user', id: user.username }
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
     end
 
@@ -187,7 +187,7 @@ describe SearchController do
         search_result_type: 'topic'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.find(search_log_id).search_result_id).to be_blank
     end
 
@@ -207,7 +207,7 @@ describe SearchController do
         search_result_type: 'user'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.find(search_log_id).search_result_id).to eq(12345)
       expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:user])
     end
@@ -228,7 +228,7 @@ describe SearchController do
         search_result_type: 'topic'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.find(search_log_id).search_result_id).to eq(22222)
       expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:topic])
     end
@@ -246,7 +246,7 @@ describe SearchController do
         search_result_type: 'topic'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.find(search_log_id).search_result_id).to be_blank
     end
 
@@ -266,7 +266,7 @@ describe SearchController do
         search_result_type: 'category'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.find(search_log_id).search_result_id).to eq(23456)
       expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:category])
     end
@@ -288,7 +288,7 @@ describe SearchController do
         search_result_type: 'tag'
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SearchLog.find(search_log_id).search_result_id).to eq(tag.id)
       expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:tag])
     end

@@ -42,7 +42,7 @@ describe ExtraLocalesController do
 
       get "/extra-locales/admin"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(response.body.include?("github_badges")).to eq(true)
     end
   end

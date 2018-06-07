@@ -98,7 +98,7 @@ describe StaticController do
       it "should return the right response" do
         get "/faq"
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t('js.faq'))
       end
     end
@@ -113,7 +113,7 @@ describe StaticController do
           it "renders the #{id} page" do
             get "/#{id}"
 
-            expect(response).to be_successful
+            expect(response.status).to eq(200)
             expect(response.body).to include(text)
           end
         end
@@ -150,7 +150,7 @@ describe StaticController do
 
       get "/login"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       expect(response.body).to include(PrettyText.cook(I18n.t(
         'login_required.welcome_message', title: SiteSetting.title
@@ -177,7 +177,7 @@ describe StaticController do
 
         get '/faq'
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t('js.faq'))
       end
 
@@ -186,7 +186,7 @@ describe StaticController do
 
         get '/guidelines'
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t('guidelines'))
       end
     end

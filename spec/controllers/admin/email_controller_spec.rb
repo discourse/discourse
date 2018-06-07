@@ -76,7 +76,7 @@ describe Admin::EmailController do
         last_seen_at: 1.week.ago, username: user.username
       }, format: :json
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
   end
 

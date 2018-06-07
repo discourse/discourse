@@ -21,7 +21,7 @@ RSpec.describe Admin::BackupsController do
 
       post "/admin/backups/rollback.json"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
 
     it 'should not allow rollback via a GET request' do
@@ -36,7 +36,7 @@ RSpec.describe Admin::BackupsController do
 
       delete "/admin/backups/cancel.json"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
 
     it 'should not allow cancel via a GET request' do
@@ -59,7 +59,7 @@ RSpec.describe Admin::BackupsController do
 
       put "/admin/backups/#{backup_filename}.json"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
 
     it "returns 404 when the backup does not exist" do

@@ -36,12 +36,12 @@ describe NotificationsController do
       describe '#index' do
         it 'should succeed for recent' do
           get "/notifications", params: { recent: true }
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
         end
 
         it 'should succeed for history' do
           get "/notifications"
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
         end
 
         it 'should mark notifications as viewed' do
@@ -72,14 +72,14 @@ describe NotificationsController do
 
       it 'should succeed' do
         put "/notifications/mark-read.json"
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "can update a single notification" do
         notification = Fabricate(:notification, user: user)
         notification2 = Fabricate(:notification, user: user)
         put "/notifications/mark-read.json", params: { id: notification.id }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         notification.reload
         notification2.reload

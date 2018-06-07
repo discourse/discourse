@@ -40,7 +40,7 @@ describe StepsController do
         fields: { contact_email: "eviltrout@example.com" }
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
     end
 

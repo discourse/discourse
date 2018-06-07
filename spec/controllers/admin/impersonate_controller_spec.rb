@@ -13,7 +13,7 @@ describe Admin::ImpersonateController do
     context 'index' do
       it 'returns success' do
         get :index, format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
     end
 
@@ -48,7 +48,7 @@ describe Admin::ImpersonateController do
 
         it "returns success" do
           post :create, params: { username_or_email: user.email }, format: :json
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
         end
 
         it "also works with an email address" do

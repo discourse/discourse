@@ -13,7 +13,7 @@ RSpec.describe Admin::FlagsController do
     it 'should return the right response when nothing is flagged' do
       get '/admin/flags.json'
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = ::JSON.parse(response.body)
       expect(data["users"]).to eq([])
@@ -25,7 +25,7 @@ RSpec.describe Admin::FlagsController do
 
       get '/admin/flags.json'
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = ::JSON.parse(response.body)
       expect(data["users"].length).to eq(2)

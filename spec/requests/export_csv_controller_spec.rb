@@ -10,7 +10,7 @@ describe ExportCsvController do
     describe ".export_entity" do
       it "enqueues export job" do
         post "/export_csv/export_entity.json", params: { entity: "user_archive" }
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
 
         job_data = Jobs::ExportCsvFile.jobs.first["args"].first
@@ -40,7 +40,7 @@ describe ExportCsvController do
     describe ".export_entity" do
       it "enqueues export job" do
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
 
         job_data = Jobs::ExportCsvFile.jobs.first["args"].first
@@ -51,7 +51,7 @@ describe ExportCsvController do
       it "should not rate limit export for staff" do
         UserExport.create(file_name: "screened-email-150116-010145", user_id: admin.id)
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
 
         job_data = Jobs::ExportCsvFile.jobs.first["args"].first
