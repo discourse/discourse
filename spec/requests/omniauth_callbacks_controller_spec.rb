@@ -80,7 +80,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         response_body = JSON.parse(response.body)
 
@@ -106,7 +106,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.email_confirmed?).to eq(true)
@@ -125,7 +125,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.staged).to eq(false)
@@ -185,7 +185,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         it 'should return the right response' do
           get "/auth/google_oauth2/callback.json"
 
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
 
           response_body = JSON.parse(response.body)
 

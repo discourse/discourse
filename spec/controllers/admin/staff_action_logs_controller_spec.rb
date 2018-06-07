@@ -17,7 +17,7 @@ describe Admin::StaffActionLogsController do
       get :index, params: { action_id: UserHistory.actions[:delete_topic] }, format: :json
 
       json = JSON.parse(response.body)
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       expect(json["staff_action_logs"].length).to eq(1)
       expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
@@ -41,7 +41,7 @@ describe Admin::StaffActionLogsController do
         .log_theme_change(original_json, theme)
 
       get :diff, params: { id: record.id }, format: :json
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       parsed = JSON.parse(response.body)
       expect(parsed["side_by_side"]).to include("up")

@@ -145,7 +145,7 @@ RSpec.describe EmailController do
         key = SecureRandom.hex
         $redis.set(key, user.email)
         get '/email/unsubscribed', params: { key: key, topic_id: topic.id }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(response.body).to include(topic.title)
       end
     end
@@ -155,7 +155,7 @@ RSpec.describe EmailController do
         key = SecureRandom.hex
         $redis.set(key, user.email)
         get '/email/unsubscribed', params: { key: key, topic_id: private_topic.id }
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(response.body).to_not include(private_topic.title)
       end
     end

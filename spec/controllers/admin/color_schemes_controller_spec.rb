@@ -21,7 +21,7 @@ describe Admin::ColorSchemesController do
         Fabricate(:color_scheme)
         get :index, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(::JSON.parse(response.body)).to be_present
       end
     end
@@ -30,7 +30,7 @@ describe Admin::ColorSchemesController do
       it "returns JSON" do
         post :create, params: valid_params, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(::JSON.parse(response.body)['id']).to be_present
       end
 
@@ -51,7 +51,7 @@ describe Admin::ColorSchemesController do
       it "returns success" do
         ColorSchemeRevisor.expects(:revise).returns(existing)
         put :update, params: valid_params.merge(id: existing.id), format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "returns JSON" do
@@ -78,7 +78,7 @@ describe Admin::ColorSchemesController do
         expect {
           delete :destroy, params: { id: existing.id }, format: :json
         }.to change { ColorScheme.count }.by(-1)
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
     end
   end

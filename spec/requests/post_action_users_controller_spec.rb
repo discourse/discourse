@@ -53,7 +53,7 @@ describe PostActionUsersController do
       id: post.id, post_action_type_id: PostActionType.types[:like]
     }
 
-    expect(response).to be_successful
+    expect(response.status).to eq(200)
   end
 
   it "paginates post actions" do

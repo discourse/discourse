@@ -122,7 +122,7 @@ describe UploadsController do
           for_private_message: "true",
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         id = JSON.parse(response.body)["id"]
         expect(id).to be_present
       end
@@ -137,7 +137,7 @@ describe UploadsController do
           type: "composer",
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         data = JSON.parse(response.body)
         expect(data["id"]).to be_present
       end

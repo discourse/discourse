@@ -28,7 +28,7 @@ describe Admin::WebHooksController do
           }
         }, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
         expect(json["web_hook"]["payload_url"]).to be_present
@@ -62,7 +62,7 @@ describe Admin::WebHooksController do
 
         post :ping, params: { id: web_hook.id }, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
     end
   end

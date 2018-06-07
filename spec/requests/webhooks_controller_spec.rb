@@ -27,7 +27,7 @@ describe WebhooksController do
         "signature" => signature
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -51,7 +51,7 @@ describe WebhooksController do
         ]
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -71,7 +71,7 @@ describe WebhooksController do
         "CustomID"    => message_id
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -96,7 +96,7 @@ describe WebhooksController do
         }]
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
@@ -123,7 +123,7 @@ describe WebhooksController do
         }]
       }
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)

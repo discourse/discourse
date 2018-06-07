@@ -28,7 +28,7 @@ describe Admin::BackupsController do
 
           get :index, format: :html, xhr: true
 
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
         end
 
       end
@@ -40,7 +40,7 @@ describe Admin::BackupsController do
 
           get :index, format: :json, xhr: true
 
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
 
           json = JSON.parse(response.body)
           expect(json[0]["filename"]).to eq("backup1")
@@ -58,7 +58,7 @@ describe Admin::BackupsController do
 
         get :status, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
     end
@@ -72,7 +72,7 @@ describe Admin::BackupsController do
           with_uploads: false, client_id: "foo"
         }, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
     end
@@ -139,7 +139,7 @@ describe Admin::BackupsController do
 
         delete :destroy, params: { id: backup_filename }, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
       it "doesn't remove the backup if not found" do
@@ -162,7 +162,7 @@ describe Admin::BackupsController do
 
         get :logs, format: :html, xhr: true
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
     end
 
@@ -175,7 +175,7 @@ describe Admin::BackupsController do
         post :restore, params: { id: backup_filename, client_id: "foo" }, format: :json
 
         expect(SiteSetting.disable_emails).to eq(true)
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
 
     end
@@ -188,7 +188,7 @@ describe Admin::BackupsController do
         expect { put :readonly, params: { enable: true }, format: :json }
           .to change { UserHistory.count }.by(1)
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         user_history = UserHistory.last
 
@@ -202,7 +202,7 @@ describe Admin::BackupsController do
         expect { put :readonly, params: { enable: false }, format: :json }
           .to change { UserHistory.count }.by(1)
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         user_history = UserHistory.last
 

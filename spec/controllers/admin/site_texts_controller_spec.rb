@@ -14,7 +14,7 @@ describe Admin::SiteTextsController do
     context '.index' do
       it 'returns json' do
         get :index, params: {  q: 'title' }, format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(::JSON.parse(response.body)).to be_present
       end
     end
@@ -22,7 +22,7 @@ describe Admin::SiteTextsController do
     context '.show' do
       it 'returns a site text for a key that exists' do
         get :show, params: { id: 'title' }, format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
         expect(json).to be_present
@@ -71,7 +71,7 @@ describe Admin::SiteTextsController do
         orig_title = I18n.t(:title)
 
         put :update, params: { id: 'title', site_text: { value: 'hello' } }, format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
         expect(json).to be_present
@@ -84,7 +84,7 @@ describe Admin::SiteTextsController do
 
         # Revert
         put :revert, params: { id: 'title' }, format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
         expect(json).to be_present

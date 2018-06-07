@@ -18,13 +18,13 @@ describe Admin::ScreenedIpAddressesController do
 
       get :index, params: { filter: "1.2.*" }, format: :json
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       result = JSON.parse(response.body)
       expect(result.length).to eq(3)
 
       get :index, params: { filter: "4.5.6.7" }, format: :json
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
       result = JSON.parse(response.body)
       expect(result.length).to eq(1)
     end
@@ -45,7 +45,7 @@ describe Admin::ScreenedIpAddressesController do
       SiteSetting.min_ban_entries_for_roll_up = 3
 
       post :roll_up, format: :json
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       subnet = ScreenedIpAddress.where(ip_address: "1.2.3.0/24").first
       expect(subnet).to be_present
@@ -65,7 +65,7 @@ describe Admin::ScreenedIpAddressesController do
       SiteSetting.min_ban_entries_for_roll_up = 5
 
       post :roll_up, format: :json
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       subnet = ScreenedIpAddress.where(ip_address: "1.2.0.0/16").first
       expect(subnet).to be_present

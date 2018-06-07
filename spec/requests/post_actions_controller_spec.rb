@@ -37,7 +37,7 @@ RSpec.describe PostActionsController do
 
         it 'returns success' do
           delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:bookmark] }
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         it 'deletes the action' do
@@ -45,7 +45,7 @@ RSpec.describe PostActionsController do
             post_action_type_id: PostActionType.types[:bookmark]
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           expect(PostAction.exists?(
             user_id: user.id,
             post_id: post.id,
@@ -137,7 +137,7 @@ RSpec.describe PostActionsController do
 
         post_action = PostAction.last
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(post_action.post_id).to eq(post_1.id)
         expect(post_action.post_action_type_id).to eq(PostActionType.types[:like])
       end
@@ -165,7 +165,7 @@ RSpec.describe PostActionsController do
           message: message
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(PostAction.last.post_id).to eq(post_1.id)
         expect(Post.last.raw).to include(message)
       end
@@ -180,7 +180,7 @@ RSpec.describe PostActionsController do
           is_warning: true
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(PostAction.last.post_id).to eq(post_1.id)
 
         post = Post.last
@@ -209,7 +209,7 @@ RSpec.describe PostActionsController do
           take_action: 'true'
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         post_action = PostAction.last
 
@@ -225,7 +225,7 @@ RSpec.describe PostActionsController do
           post_action_type_id: PostActionType.types[:like]
         }
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
 
         post_action = PostAction.last
 
@@ -282,7 +282,7 @@ RSpec.describe PostActionsController do
             id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           flag.reload
           expect(flag.deferred_at).to be_present
         end
@@ -294,7 +294,7 @@ RSpec.describe PostActionsController do
             id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           flag.reload
           expect(flag.deferred_at).to be_present
         end

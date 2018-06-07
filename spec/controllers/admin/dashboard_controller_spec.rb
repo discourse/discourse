@@ -23,7 +23,7 @@ describe Admin::DashboardController do
         it 'returns discourse version info' do
           get :index, format: :json
 
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['version_check']).to be_present
         end
       end
@@ -50,7 +50,7 @@ describe Admin::DashboardController do
         it 'returns an empty array' do
           get :problems, format: :json
 
-          expect(response).to be_successful
+          expect(response.status).to eq(200)
           json = JSON.parse(response.body)
           expect(json['problems'].size).to eq(0)
         end

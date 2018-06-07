@@ -11,7 +11,7 @@ describe Admin::ApiController do
   context '.index' do
     it "succeeds" do
       get :index, format: :json
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
   end
 

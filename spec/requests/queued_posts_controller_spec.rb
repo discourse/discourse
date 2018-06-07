@@ -24,7 +24,7 @@ describe QueuedPostsController do
 
     it 'returns the queued posts' do
       get "/queued-posts.json"
-      expect(response).to be_success
+      expect(response.status).to eq(200)
     end
   end
 
@@ -53,7 +53,7 @@ describe QueuedPostsController do
           queued_post: { state: 'approved' }
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         qp.reload
         expect(qp.state).to eq(QueuedPost.states[:approved])
@@ -67,7 +67,7 @@ describe QueuedPostsController do
           queued_post: { state: 'rejected' }
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         qp.reload
         expect(qp.state).to eq(QueuedPost.states[:rejected])
@@ -92,7 +92,7 @@ describe QueuedPostsController do
             queued_post: changes
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           queued_topic.reload
 
           expect(queued_topic.raw).to eq(changes[:raw])
@@ -111,7 +111,7 @@ describe QueuedPostsController do
           }
 
           original_category = queued_reply.post_options['category']
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           queued_reply.reload
 
           expect(queued_reply.raw).to eq(changes[:raw])

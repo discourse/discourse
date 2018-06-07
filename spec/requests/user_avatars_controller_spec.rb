@@ -59,7 +59,7 @@ describe UserAvatarsController do
 
       get "/user_avatar/default/#{user.username}/51/#{upload.id}.png"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
   end
 end

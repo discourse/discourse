@@ -9,7 +9,7 @@ describe Admin::BadgesController do
     context 'index' do
       it 'returns badge index' do
         get :index, format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
       end
     end
 
@@ -79,7 +79,7 @@ describe Admin::BadgesController do
       it 'returns JSON' do
         get :badge_types, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(::JSON.parse(response.body)["badge_types"]).to be_present
       end
     end
@@ -87,7 +87,7 @@ describe Admin::BadgesController do
     context '.destroy' do
       it 'deletes the badge' do
         delete :destroy, params: { id: badge.id }, format: :json
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         expect(Badge.where(id: badge.id).exists?).to eq(false)
         expect(UserHistory.where(acting_user_id: user.id, action: UserHistory.actions[:delete_badge]).exists?).to eq(true)
       end
@@ -104,7 +104,7 @@ describe Admin::BadgesController do
           name: "123456"
         }, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         editor_badge.reload
         expect(editor_badge.name).to eq(editor_badge_name)
 
@@ -127,7 +127,7 @@ describe Admin::BadgesController do
           enabled: true
         }, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         badge.reload
         expect(badge.name).to eq('123456')
         expect(badge.query).to eq('select 123')
@@ -147,7 +147,7 @@ describe Admin::BadgesController do
           enabled: true
         }, format: :json
 
-        expect(response).to be_successful
+        expect(response.status).to eq(200)
         badge.reload
         expect(badge.name).to eq('123456')
         expect(badge.query).to eq(sql)
