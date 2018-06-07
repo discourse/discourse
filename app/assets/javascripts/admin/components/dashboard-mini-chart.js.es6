@@ -100,7 +100,7 @@ export default Ember.Component.extend(AsyncReport, {
         labels,
         datasets: reportsForPeriod.map(report => {
           return {
-            data: Ember.makeArray(report.data).map(d => number(d.y)),
+            data: Ember.makeArray(report.data).map(d => Math.round(parseFloat(d.y))),
             backgroundColor: "rgba(200,220,240,0.3)",
             borderColor: report.color
           };
@@ -116,6 +116,7 @@ export default Ember.Component.extend(AsyncReport, {
         if (this._chart) {
           this._chart.destroy();
         }
+
         this._chart = new window.Chart(context, this._buildChartConfig(data));
       });
     });
