@@ -845,12 +845,17 @@ describe Search do
     context 'tags' do
       let(:tag1) { Fabricate(:tag, name: 'lunch') }
       let(:tag2) { Fabricate(:tag, name: 'eggs') }
+      let(:tag3) { Fabricate(:tag, name: 'sandwiches') }
       let(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
       let(:topic2) { Fabricate(:topic, tags: [tag2]) }
       let(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
+      let(:topic4) { Fabricate(:topic, tags: [tag1, tag2, tag3]) }
+      let(:topic5) { Fabricate(:topic, tags: [tag2, tag3]) }
       let!(:post1) { Fabricate(:post, topic: topic1) }
       let!(:post2) { Fabricate(:post, topic: topic2) }
       let!(:post3) { Fabricate(:post, topic: topic3) }
+      let!(:post4) { Fabricate(:post, topic: topic4) }
+      let!(:post5) { Fabricate(:post, topic: topic5) }
 
       it 'can find posts with tag' do
         post4 = Fabricate(:post, topic: topic3, raw: "It probably doesn't help that they're green...")
@@ -862,12 +867,18 @@ describe Search do
       it 'can find posts with any tag from multiple tags' do
         Fabricate(:post)
 
-        expect(Search.execute('tags:eggs,lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id].sort)
+        expect(Search.execute('tags:eggs,lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id, post4.id, post5.id].sort)
       end
 
       it 'can find posts which contains all provided tags' do
-        expect(Search.execute('tags:lunch+eggs').posts.map(&:id)).to eq([post3.id])
-        expect(Search.execute('tags:eggs+lunch').posts.map(&:id)).to eq([post3.id])
+        expect(Search.execute('tags:lunch+eggs+sandwiches').posts.map(&:id)).to eq([post4.id].sort)
+        expect(Search.execute('tags:eggs+lunch+sandwiches').posts.map(&:id)).to eq([post4.id].sort)
+      end
+
+      it 'can find posts which contains provided tags and does not contain selected ones' do
+        expect(Search.execute('tags:eggs -tags:lunch').posts.map(&:id)).to eq([post1.id, post2.id, post5.id].sort)
+        expect(Search.execute('tags:eggs -tags:lunch+sandwiches').posts.map(&:id)).to eq([post1.id, post2.id, post3.id, post5.id].sort)
+        expect(Search.execute('tags:eggs -tags:lunch,sandwiches').posts.map(&:id)).to eq([post1.id, post2.id].sort)
       end
     end
 
