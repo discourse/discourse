@@ -70,11 +70,13 @@ task 'docker:test' do
 
       ENV["RAILS_ENV"] = "test"
 
+      @good &&= run_or_fail("bundle exec rake db:create")
+
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
 
-      @good &&= run_or_fail("bundle exec rake db:create db:migrate")
+      @good &&= run_or_fail("bundle exec rake db:migrate")
 
       unless ENV["JS_ONLY"]
 
