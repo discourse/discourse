@@ -211,10 +211,13 @@ QUnit.test("number", assert => {
   assert.equal(number(NaN), "0", "it returns 0 for NaN");
   assert.equal(number(3333), "3.3k", "it abbreviates thousands");
   assert.equal(number(2499999), "2.5M", "it abbreviates millions");
+  assert.equal(number("2499999.5"), "2.5M", "it abbreviates millions");
   assert.equal(number(1000000), "1.0M", "it abbreviates a million");
   assert.equal(number(999999), "999k", "it abbreviates hundreds of thousands");
   assert.equal(number(18.2), "18", "it returns a float number rounded to an integer as a string");
   assert.equal(number(18.6), "19", "it returns a float number rounded to an integer as a string");
+  assert.equal(number("12.3"), "12", "it returns a string float rounded to an integer as a string");
+  assert.equal(number("12.6"), "13", "it returns a string float rounded to an integer as a string");
 });
 
 QUnit.test("durationTiny", assert => {
