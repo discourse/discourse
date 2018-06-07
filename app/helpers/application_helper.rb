@@ -329,7 +329,7 @@ module ApplicationHelper
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
-    result = ""
+    result = +""
     erbs.each { |erb| result << render(file: erb) }
     result.html_safe
   end
