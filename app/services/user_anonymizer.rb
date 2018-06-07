@@ -25,12 +25,15 @@ class UserAnonymizer
 
       @user.reload
       @user.password = SecureRandom.hex
-      @user.email = "#{@user.username}@example.com"
+      @user.email = "#{@user.username}@anonymized.invalid"
       @user.name = SiteSetting.full_name_required ? @user.username : nil
       @user.date_of_birth = nil
       @user.title = nil
 
-      anonymize_ips(@opts[:anonymize_ip]) if @opts.has_key?(:anonymize_ip)
+      if @opts.has_key?(:anonymize_ip)
+        @user.ip_address = @opts[:anonymize_ip]
+        @user.registration_ip_address = @opts[:anonymize_ip]
+      end
 
       @user.save
 
@@ -57,29 +60,13 @@ class UserAnonymizer
       @user.user_open_ids.find_each { |x| x.destroy }
       @user.api_key.try(:destroy)
 
-      history_details = {
-        action: UserHistory.actions[:anonymize_user],
-        target_user_id: @user.id,
-        acting_user_id: @actor ? @actor.id : @user.id,
-      }
-
-      Invite.with_deleted.where(user_id: @user.id).destroy_all
-      EmailToken.where(user_id: @user.id).destroy_all
-      EmailLog.where(user_id: @user.id).delete_all
-      IncomingEmail.where("user_id = ? OR from_address = ?", @user.id, @prev_email).delete_all
-
-      Post.with_deleted
-        .where(user_id: @user.id)
-        .where.not(raw_email: nil)
-        .update_all(raw_email: nil)
-
-      if SiteSetting.log_anonymizer_details?
-        history_details[:email] = @prev_email
-        history_details[:details] = "username: #{@prev_username}"
-      end
-
-      @user_history = UserHistory.create(history_details)
+      @user_history = log_action
     end
+
+    Jobs.enqueue(:anonymize_user,
+                 user_id: @user.id,
+                 prev_email: @prev_email,
+                 anonymize_ip: @opts[:anonymize_ip])
 
     DiscourseEvent.trigger(:user_anonymized, user: @user, opts: @opts)
     @user
@@ -95,29 +82,18 @@ class UserAnonymizer
     raise "Failed to generate an anon username"
   end
 
-  def ip_where(column = 'user_id')
-    ["#{column} = :user_id AND ip_address IS NOT NULL", user_id: @user.id]
+  def log_action
+    history_details = {
+      action: UserHistory.actions[:anonymize_user],
+      target_user_id: @user.id,
+      acting_user_id: @actor ? @actor.id : @user.id,
+    }
+
+    if SiteSetting.log_anonymizer_details?
+      history_details[:email] = @prev_email
+      history_details[:details] = "username: #{@prev_username}"
+    end
+
+    UserHistory.create(history_details)
   end
-
-  def anonymize_ips(new_ip)
-    @user.ip_address = new_ip
-    @user.registration_ip_address = new_ip
-
-    IncomingLink.where(ip_where('current_user_id')).update_all(ip_address: new_ip)
-    ScreenedEmail.where(email: @prev_email).update_all(ip_address: new_ip)
-    SearchLog.where(ip_where).update_all(ip_address: new_ip)
-    TopicLinkClick.where(ip_where).update_all(ip_address: new_ip)
-    TopicViewItem.where(ip_where).update_all(ip_address: new_ip)
-    UserHistory.where(ip_where('acting_user_id')).update_all(ip_address: new_ip)
-    UserProfileView.where(ip_where).update_all(ip_address: new_ip)
-
-    # UserHistory for delete_user logs the user's IP. Note this is quite ugly but we don't
-    # have a better way of querying on details right now.
-    UserHistory.where(
-      "action = :action AND details LIKE 'id: #{@user.id}\n%'",
-      action: UserHistory.actions[:delete_user]
-    ).update_all(ip_address: new_ip)
-
-  end
-
 end

@@ -35,7 +35,7 @@ describe UserAnonymizer do
 
     it "changes email address" do
       make_anonymous
-      expect(user.reload.email).to eq("#{user.username}@example.com")
+      expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
     end
 
     it "turns off all notifications" do
@@ -203,48 +203,54 @@ describe UserAnonymizer do
       expect(user.api_key).to eq(nil)
     end
 
-    it "removes invites" do
-      Fabricate(:invite, user: user)
-      Fabricate(:invite, user: another_user)
+    context "executes job" do
+      before do
+        SiteSetting.queue_jobs = false
+      end
 
-      expect { make_anonymous }.to change { Invite.count }.by(-1)
-      expect(Invite.where(user_id: user.id).count).to eq(0)
-    end
+      it "removes invites" do
+        Fabricate(:invite, user: user)
+        Fabricate(:invite, user: another_user)
 
-    it "removes email tokens" do
-      Fabricate(:email_token, user: user)
-      Fabricate(:email_token, user: another_user)
+        expect { make_anonymous }.to change { Invite.count }.by(-1)
+        expect(Invite.where(user_id: user.id).count).to eq(0)
+      end
 
-      expect { make_anonymous }.to change { EmailToken.count }.by(-1)
-      expect(EmailToken.where(user_id: user.id).count).to eq(0)
-    end
+      it "removes email tokens" do
+        Fabricate(:email_token, user: user)
+        Fabricate(:email_token, user: another_user)
 
-    it "removes email log entries" do
-      Fabricate(:email_log, user: user)
-      Fabricate(:email_log, user: another_user)
+        expect { make_anonymous }.to change { EmailToken.count }.by(-1)
+        expect(EmailToken.where(user_id: user.id).count).to eq(0)
+      end
 
-      expect { make_anonymous }.to change { EmailLog.count }.by(-1)
-      expect(EmailLog.where(user_id: user.id).count).to eq(0)
-    end
+      it "removes email log entries" do
+        Fabricate(:email_log, user: user)
+        Fabricate(:email_log, user: another_user)
 
-    it "removes incoming emails" do
-      Fabricate(:incoming_email, user: user, from_address: user.email)
-      Fabricate(:incoming_email, from_address: user.email, error: "Some error")
-      Fabricate(:incoming_email, user: another_user, from_address: another_user.email)
+        expect { make_anonymous }.to change { EmailLog.count }.by(-1)
+        expect(EmailLog.where(user_id: user.id).count).to eq(0)
+      end
 
-      expect { make_anonymous }.to change { IncomingEmail.count }.by(-2)
-      expect(IncomingEmail.where(user_id: user.id).count).to eq(0)
-      expect(IncomingEmail.where(from_address: original_email).count).to eq(0)
-    end
+      it "removes incoming emails" do
+        Fabricate(:incoming_email, user: user, from_address: user.email)
+        Fabricate(:incoming_email, from_address: user.email, error: "Some error")
+        Fabricate(:incoming_email, user: another_user, from_address: another_user.email)
 
-    it "removes raw email from posts" do
-      post1 = Fabricate(:post, user: user, via_email: true, raw_email: "raw email from user")
-      post2 = Fabricate(:post, user: another_user, via_email: true, raw_email: "raw email from another user")
+        expect { make_anonymous }.to change { IncomingEmail.count }.by(-2)
+        expect(IncomingEmail.where(user_id: user.id).count).to eq(0)
+        expect(IncomingEmail.where(from_address: original_email).count).to eq(0)
+      end
 
-      make_anonymous
+      it "removes raw email from posts" do
+        post1 = Fabricate(:post, user: user, via_email: true, raw_email: "raw email from user")
+        post2 = Fabricate(:post, user: another_user, via_email: true, raw_email: "raw email from another user")
 
-      expect(post1.reload).to have_attributes(via_email: true, raw_email: nil)
-      expect(post2.reload).to have_attributes(via_email: true, raw_email: "raw email from another user")
+        make_anonymous
+
+        expect(post1.reload).to have_attributes(via_email: true, raw_email: nil)
+        expect(post2.reload).to have_attributes(via_email: true, raw_email: "raw email from another user")
+      end
     end
   end
 
@@ -267,6 +273,7 @@ describe UserAnonymizer do
     end
 
     it "exhaustively replaces all user ips" do
+      SiteSetting.queue_jobs = false
       link = IncomingLink.create!(current_user_id: user.id, ip_address: old_ip, post_id: post.id)
 
       screened_email = ScreenedEmail.create!(email: user.email, ip_address: old_ip)
