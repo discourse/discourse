@@ -5,16 +5,15 @@ describe UserActionsController do
   context 'index' do
 
     it 'fails if username is not specified' do
-      expect do
-        get :index, format: :json
-      end.to raise_error(ActionController::ParameterMissing)
+      get "/user_actions.json"
+      expect(response.status).to eq(400)
     end
 
     it 'renders list correctly' do
       UserActionCreator.enable
       post = Fabricate(:post)
 
-      get :index, params: { username: post.user.username }, format: :json
+      get "/user_actions.json", params: { username: post.user.username }
 
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
@@ -27,29 +26,28 @@ describe UserActionsController do
     end
 
     it 'renders help text if provided for self' do
-      logged_in = log_in
+      logged_in = sign_in(Fabricate(:user))
 
-      get :index, params: {
+      get "/user_actions.json", params: {
         filter: UserAction::LIKE,
         username: logged_in.username,
         no_results_help_key: "user_activity.no_bookmarks"
-      }, format: :json
+      }
 
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
 
       expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.self"))
-
     end
 
     it 'renders help text for others' do
       user = Fabricate(:user)
 
-      get :index, params: {
+      get "/user_actions.json", params: {
         filter: UserAction::LIKE,
         username: user.username,
         no_results_help_key: "user_activity.no_bookmarks"
-      }, format: :json
+      }
 
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
@@ -61,23 +59,22 @@ describe UserActionsController do
       context "without access" do
         let(:user) { Fabricate(:user) }
         it "raises an exception" do
-          get :index, params: {
+          get "/user_actions.json", params: {
             username: user.username, filter: UserAction::PENDING
-          }, format: :json
-          expect(response).to_not be_success
-
+          }
+          expect(response).to be_forbidden
         end
       end
 
       context "with access" do
-        let(:user) { log_in }
+        let(:user) { sign_in(Fabricate(:user)) }
 
         it 'finds queued posts' do
           queued_post = PostEnqueuer.new(user, 'default').enqueue(raw: 'this is the raw enqueued content')
 
-          get :index, params: {
+          get "/user_actions.json", params: {
             username: user.username, filter: UserAction::PENDING
-          }, format: :json
+          }
 
           expect(response.status).to eq(200)
           parsed = JSON.parse(response.body)
