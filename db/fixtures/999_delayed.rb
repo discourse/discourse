@@ -179,3 +179,5 @@ Migration::TableDropper.delayed_drop(
     STDERR.puts "Dropping versions. It isn't used anymore."
   }
 )
+
+Discourse.reset_active_record_cache
