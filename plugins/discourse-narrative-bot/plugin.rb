@@ -22,7 +22,7 @@ end
 require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
 
 after_initialize do
-  SeedFu.fixture_paths.unshift Rails.root.join("plugins", "discourse-narrative-bot", "db", "fixtures").to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-narrative-bot", "db", "fixtures").to_s
 
   Mime::Type.register "image/svg+xml", :svg
 

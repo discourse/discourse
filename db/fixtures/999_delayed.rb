@@ -180,4 +180,6 @@ Migration::TableDropper.delayed_drop(
   }
 )
 
+STDERR.puts "Resetting Active Record Cache"
 Discourse.reset_active_record_cache
+ActiveRecord::Base.connection.close
