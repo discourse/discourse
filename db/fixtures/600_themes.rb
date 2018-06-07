@@ -17,12 +17,3 @@ if !Theme.exists?
 
   default_theme.set_default!
 end
-
-Migration::ColumnDropper.drop(
-  table: 'theme_fields',
-  after_migration: 'AddUploadIdToThemeFields',
-  columns: ['target'],
-  on_drop: ->() {
-    STDERR.puts 'Removing superflous theme_fields target column!'
-  }
-)

@@ -25,12 +25,3 @@ if uncat_id == -1 || !Category.exists?(uncat_id)
   Category.exec_sql "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
            VALUES ('uncategorized_category_id', 3, #{category_id}, now(), now())"
 end
-
-Migration::ColumnDropper.drop(
-  table: 'categories',
-  after_migration: 'AddSuppressFromLatestToCategories',
-  columns: ['logo_url', 'background_url', 'suppress_from_homepage'],
-  on_drop: ->() {
-    STDERR.puts 'Removing superflous categories columns!'
-  }
-)
