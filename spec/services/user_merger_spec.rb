@@ -850,6 +850,7 @@ describe UserMerger do
     UserHistory.create(action: UserHistory.actions[:anonymize_user], target_user_id: walter.id, acting_user_id: source_user.id)
 
     merge_users!
+    UserHistory.where(action: UserHistory.actions[:merge_user], target_user_id: target_user.id).delete_all
 
     expect(UserHistory.where(target_user_id: target_user.id).count).to eq(1)
     expect(UserHistory.where(target_user_id: source_user.id).count).to eq(0)
@@ -1027,5 +1028,16 @@ describe UserMerger do
       .once
 
     merge_users!
+  end
+
+  it "correctly logs the merge" do
+    expect { merge_users! }.to change { UserHistory.count }.by(1)
+
+    log_entry = UserHistory.last
+    expect(log_entry.action).to eq(UserHistory.actions[:merge_user])
+    expect(log_entry.acting_user_id).to eq(Discourse::SYSTEM_USER_ID)
+    expect(log_entry.target_user_id).to eq(target_user.id)
+    expect(log_entry.context).to eq(I18n.t("staff_action_logs.user_merged", username: source_user.username))
+    expect(log_entry.email).to eq("alice@work.com")
   end
 end

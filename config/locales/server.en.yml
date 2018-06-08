@@ -3887,3 +3887,4 @@ en:
   staff_action_logs:
     not_found: "not found"
     unknown: "unknown"
+    user_merged: "%{username} was merged into this account"

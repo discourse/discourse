@@ -242,6 +242,16 @@ class StaffActionLogger
     ))
   end
 
+  def log_user_merge(user, source_username, source_email, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:merge_user],
+      target_user_id: user.id,
+      context: I18n.t("staff_action_logs.user_merged", username: source_username),
+      email: source_email
+    ))
+  end
+
   BADGE_FIELDS ||= %i{id name description long_description icon image badge_type_id
     badge_grouping_id query allow_title multiple_grant listable target_posts
     enabled auto_revoke show_posts system}

@@ -80,7 +80,8 @@ class UserHistory < ActiveRecord::Base
       removed_suspend_user: 61,
       removed_unsilence_user: 62,
       removed_unsuspend_user: 63,
-      post_rejected: 64
+      post_rejected: 64,
+      merge_user: 65
     )
   end
 
@@ -139,7 +140,8 @@ class UserHistory < ActiveRecord::Base
       :create_badge,
       :change_badge,
       :delete_badge,
-      :post_rejected
+      :post_rejected,
+      :merge_user
     ]
   end
 
