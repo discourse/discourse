@@ -628,6 +628,11 @@ describe PrettyText do
       html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
       expect { described_class.format_for_email(html, post) }.to_not raise_error
     end
+
+    it "doesn't change mailto" do
+      html = "<p>Contact me at <a href=\"mailto:username@me.com\">this address</a>.</p>"
+      expect(PrettyText.format_for_email(html, post)).to eq(html)
+    end
   end
 
   it 'Is smart about linebreaks and IMG tags' do
