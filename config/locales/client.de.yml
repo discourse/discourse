@@ -3154,6 +3154,7 @@ de:
             disabled_second_factor: "Zwei-Faktor-Authentifizierung deaktiviert"
             topic_published: "Thema veröffentlicht"
             post_approved: "Beitrag genehmigt"
+            post_rejected: "Beitrag abgelehnt"
             create_badge: "Abzeichen erstellen"
             change_badge: "Abzeichen ändern"
             delete_badge: "Abzeichen löschen"

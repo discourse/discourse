@@ -1217,6 +1217,7 @@ es:
     png_to_jpg_quality: "Calidad del archivo JPG convertido  (1 es calidad mínima, 99 es máxima calidad, 100 para deshabilitar conversión)."
     allow_staff_to_upload_any_file_in_pm: "Permitir a los miembros del staff subir cualquier archivo en MP."
     strip_image_metadata: "Eliminar metadatos de imágenes."
+    min_ratio_to_crop: "Ratio utilizado para recortar imágenes altas. Ingrese el resultado de ancho / alto."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
@@ -1326,7 +1327,7 @@ es:
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "Usar el HTML en vez del texto para email entrante."
-    disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
+    disable_emails: "Evite que el Discurso envíe cualquier clase de correos electrónicos. Seleccione 'yes' para desactivar los correos electrónicos para todos los usuarios. Seleccione 'non-staff' para desactivar los correos electrónicos solo para usuarios que no sean del personal."
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
@@ -3474,3 +3475,6 @@ es:
       linked: '%{username} enlazó tu publicación desde "%{topic}" - %{site_title}'
       confirm_title: 'Notificaciones habilitadas - %{site_title}'
       confirm_body: '¡Éxito! Las notificaciones han sido habilitadas.'
+  staff_action_logs:
+    not_found: "no encontrado"
+    unknown: "desconocido"

@@ -88,7 +88,7 @@ zh_CN:
       less_than: "必须小于 %{count}"
       less_than_or_equal_to: "必须小于等于 %{count}"
       not_a_number: 不是数字
-      not_an_integer: 必须是数字
+      not_an_integer: 必须是整数
       odd: 必须是偶数
       record_invalid: '验证失败：%{errors}'
       restrict_dependent_destroy:
@@ -852,7 +852,7 @@ zh_CN:
     exclude_rel_nofollow_domains: "Nofollow 的域名列表不应被加入到链接中。 填写 example.com 也将自动允许 sub.example.com。至少你应该填写本站域名来帮助爬虫获得所有内容。如果你网站的其余部分在另外的域名，也请添加那些域名。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     show_pinned_excerpt_mobile: "移动版显示置顶主题剪辑。"
-    show_pinned_excerpt_desktop: "移动版显示置顶主题剪辑。"
+    show_pinned_excerpt_desktop: "桌面版显示置顶主题剪辑。"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_blacklist: "不会被 Onebox 的域名列表。"
     inline_onebox_domains_whitelist: "若链接不带标题会以微型形式被 Onebox 的域名列表。"
