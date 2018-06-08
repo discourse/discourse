@@ -37,6 +37,8 @@ end
 desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
+    `yarn install --dev`
+
     @good = true
     unless ENV['SKIP_LINT']
       puts "Running linters/prettyfiers"
