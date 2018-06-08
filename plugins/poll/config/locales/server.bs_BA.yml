@@ -7,6 +7,7 @@
 
 bs_BA:
   site_settings:
+    poll_enabled: "Dozvoliti ankete?"
     poll_maximum_options: "Najveći broj dopuštenih izbora u anketi."
     poll_edit_window_mins: "Period od objave posta u minutama u kojem je moguće urediti ankete."
   poll:

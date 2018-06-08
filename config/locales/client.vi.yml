@@ -101,9 +101,9 @@ vi:
       split_topic: "tách chủ đề này lúc %{when}"
       invited_user: "đã mời %{who} lúc %{when}"
       invited_group: "đã mời %{who} lúc %{when}"
-      user_left: "%{who}tự xóa mình khỏi tin nhắn này %{when}"
-      removed_user: "xoá %{who} lúc %{when}"
-      removed_group: "xoá %{who} lúc %{when}"
+      user_left: "%{who}đã tự xóa mình khỏi tin nhắn này %{when}"
+      removed_user: "đã xoá %{who} lúc %{when}"
+      removed_group: "đã xoá %{who} lúc %{when}"
       autoclosed:
         enabled: 'bị đóng lúc %{when}'
         disabled: 'được mở lúc %{when}'
@@ -115,7 +115,7 @@ vi:
         disabled: 'bỏ lưu trữ lúc %{when}'
       pinned:
         enabled: 'được gắn lúc %{when}'
-        disabled: 'bỏ gim lúc %{when}'
+        disabled: 'bỏ ghim lúc %{when}'
       pinned_globally:
         enabled: 'đã gắn toàn trang lúc %{when}'
         disabled: 'đã bỏ gắn lúc %{when}'
@@ -132,23 +132,23 @@ vi:
       default_description: "Mặc định"
     s3:
       regions:
-        ap_northeast_1: "Asia Pacific (Tokyo)"
-        ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_northeast_1: "Châu Á Thái Bình Dương (Tokyo)"
+        ap_northeast_2: "Châu Á Thái Bình Dương (Seoul)"
         ap_south_1: "Châu Á Thái Bình Dương (Mumbai)"
-        ap_southeast_1: "Asia Pacific (Singapore)"
-        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_southeast_1: "Châu Á Thái Bình Dương (Singapore)"
+        ap_southeast_2: "Châu Á Thái Bình Dương (Sydney)"
         cn_north_1: "Trung Quốc (Bắc Kinh)"
-        eu_central_1: "EU (Frankfurt)"
-        eu_west_1: "EU (Ireland)"
-        eu_west_2: "EU (London)"
-        sa_east_1: "South America (Sao Paulo)"
+        eu_central_1: "Châu Âu (Frankfurt)"
+        eu_west_1: "Châu Âu (Ireland)"
+        eu_west_2: "Châu Âu (London)"
+        sa_east_1: "Nam Mỹ (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: 'sửa tiêu đề và chuyên mục của chủ đề'
-    not_implemented: "Tính năng này chưa được hoàn thiện hết, xin lỗi!"
+    not_implemented: "Tính năng này chưa được hoàn thiện, xin lỗi!"
     no_value: "Không"
     yes_value: "Có"
     generic_error: "Rất tiếc, đã có lỗi xảy ra."
@@ -231,6 +231,7 @@ vi:
     pasting: "Đang gõ"
     enable: "Kích hoạt"
     disable: "Vô hiệu hóa"
+    continue: "Tiếp tục"
     undo: "Hoàn tác"
     revert: "Phục hồi"
     failed: "Thất bại"
@@ -305,6 +306,15 @@ vi:
         make_user_group_owner: "Đặt làm người sở hữu"
         remove_user_as_group_owner: "Huỷ quyền sở hữu"
     groups:
+      add_members:
+        title: "Thêm thành viên"
+        usernames: "Tên người dùng"
+      manage:
+        title: 'Quản lý'
+        name: 'Tên'
+        full_name: 'Tên đầy đủ'
+        add_members: "Thêm thành viên"
+        delete_member_confirm: "Xóa %{username}ra khỏi nhóm %{group}?"
       public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:

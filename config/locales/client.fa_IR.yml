@@ -225,6 +225,8 @@ fa_IR:
       our_moderators: "مدیران ما"
       stat:
         all_time: "کل"
+        last_7_days: "7 تای آخر"
+        last_30_days: "30  تای آخر"
       like_count: "پسند‌ها "
       topic_count: "موضوعات"
       post_count: "نوشته‌ها"
@@ -250,10 +252,10 @@ fa_IR:
       other: '{{count}} موضوع تازه یا به‌ روز شده.'
     topic_count_unread:
       one: خواندن {{count}} موضوعات خوانده نشده
-      other: خواندن {{count}} موضوعات خوانده نشده
+      other: خواندن {{count}} موضوع خوانده نشده
     topic_count_new:
       one: مشاهده {{count}} موضوعات جدید
-      other: مشاهده {{count}} موضوعات جدید
+      other: مشاهده {{count}} موضوع جدید
     preview: "پیش‌نمایش"
     cancel: "لغو"
     save: "ذخیره سازی تغییرات"
@@ -366,8 +368,14 @@ fa_IR:
         logs:
           title: "گزارش‌ها"
           action: "اقدام"
+          acting_user: "کاربر فعال"
+          target_user: "کاربر هدف"
+          subject: "موضوع"
           details: "جزئیات"
           from: "از طرف"
+          to: "به"
+      public_admission: "به کاربران اجازه می دهد به اختیار عضو گروه ها شوند (به یک گروه قابل مشاهده برای عموم نیاز دارد)"
+      public_exit: "اجازه دادن به کاربران برای ترک گروه به اختیار"
       empty:
         posts: "در این گروه هیچ نوشته ای توسط کاربران ارسال نشده."
         members: "این گروه هیچ عضوی ندارد"
@@ -376,28 +384,60 @@ fa_IR:
         topics: "در این گروه هیچ موضوعی توسط اعضای آن ایجاد نشده."
         logs: "هیچ گزارشی برای این گروه موجود نیست."
       add: "افزودن"
+      join: "عضو شدن"
+      leave: "ترک کردن"
       message: "پیام"
       allow_membership_requests: "اجازه ارسال درخواست عضویت در گروه به کاربران"
+      membership_request_template: "الگوی سفارشی برای نمایش به کاربران هنگام ارسال درخواست عضویت"
       membership_request:
         submit: "ارسال درخواست"
         title: "درخواست پیوستن به @%{group_name}"
+        reason: "اجازه دهید مالکان گروه بدانند چرا به این گروه تعلق دارید"
       membership: "عضویت"
       name: "نام"
+      group_name: "نام گروه"
+      user_count: "کاربران"
       bio: "درباره گروه"
+      selector_placeholder: "نام کاربری را وارد کنید"
       owner: "مالک"
       index:
         title: "گروه‌ها"
+        all: "همه گروهها"
         empty: "هیچ گروه قابل نمایشی وجود ندارد."
+        filter: "فیلتر با نوع گروه"
+        owner_groups: "گروه هایی که مالکشان هستم"
+        automatic_groups: "گروههای خودکار"
+        automatic: "خودکار"
+        public: "عمومی"
+        private: "خصوصی"
+        public_groups: "گروههای عمومی"
+        automatic_group: گروه خودکار
+        close_group: بستن گروه
+        my_groups: "گروههای من"
+        group_type: "نوع گروه"
+        is_group_user: "عضو"
+        is_group_owner: "مالک"
       title:
         one: گروه ها
         other: گروه ها
       activity: "فعالیت"
+      members:
+        title: "اعضاء"
+        filter_placeholder_admin: "نام کاربری یا ایمیل"
+        filter_placeholder: "نام کاربری"
+        remove_member: "اخراج عضو"
+        remove_member_description: "اخراج <b>%{username}</b> از این گروه"
+        make_owner: "اعطای مالکیت"
+        make_owner_description: "دادن مالکیت این گروه به <b>%{username}</b>"
+        owner: "مالک"
       topics: "موضوعات"
       posts: "نوشته‌ها"
       mentions: "اشاره‌ها"
       messages: "پیام‌ها"
       notification_level: "سطح آگاه‌سازی پیش‌فرض برای پیام‌های گروهی"
       alias_levels:
+        mentionable: "چه کسی می تواند به این گروه @اشاره کند؟"
+        messageable: "چه کسی می تواند به این گروه پیام دهد؟"
         nobody: "هیچ‌کس"
         only_admins: "فقط مدیران ارشد"
         mods_and_admins: "فقط مدیران و مدیران ارشد"
@@ -498,6 +538,7 @@ fa_IR:
       activity_stream: "فعالیت"
       preferences: "تنظیمات"
       expand_profile: "باز کردن"
+      collapse_profile: "جمع کردن"
       bookmarks: "نشانک‌ها"
       bio: "درباره من"
       invited_by: "دعوت شده توسط"
@@ -512,12 +553,14 @@ fa_IR:
         disable: "غیرفعال کردن اعلانات"
         enable: "فعال کردن اعلانات"
         each_browser_note: "نکته: شما باید این تنظیمات را در هر مرورگری که استفاده میکنید تغییر دهید."
+      dismiss: 'نخواستیم'
       dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
       disable_jump_reply: "بعد از پاسخ من به پست من پرش نکن"
       dynamic_favicon: " تعداد موضوعات جدید یا بروز شده را روی آیکون مرورگر نمایش بده"
       theme_default_on_all_devices: "از این قالب، به عنوان قالب پیشفرض در تمام وسایل من استفاده کن."
+      allow_private_messages: "به دیگر کاربران اجازه بده به من پیام شخصی بفرستند"
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       change: "تغییر"
@@ -574,6 +617,7 @@ fa_IR:
       undo_revoke_access: "بازنشانی لغو دسترسی"
       api_approved: "تایید شده:"
       theme: "قالب"
+      home: "صفحه خانگی پیشفرض"
       staff_counters:
         flags_given: "پرچم گذاری‌های مفید"
         flagged_posts: "نوشته های پرچم گذاری شده"
@@ -591,6 +635,7 @@ fa_IR:
         move_to_archive: "بایگانی"
         failed_to_move: "انتقال پیام‌های انتخاب شده با اشکال مواجه شد (شاید اتصال شما در دسترس نیست)"
         select_all: "انتخاب همه"
+        tags: "برچسبها"
       preferences_nav:
         account: "حساب کاربری"
         profile: "پروفایل"
@@ -608,6 +653,10 @@ fa_IR:
         set_password: "تغییر رمز‌عبور"
         choose_new: "یک رمز‌عبور جدید وارد کنید"
         choose: "یک رمز‌عبور وارد کنید"
+      second_factor:
+        title: "احراز هویت دو مرحله ای"
+        disable: "از کار انداختن احراز هویت دو مرحله ای"
+        enable: "برای بهبود امنیت حساب کاربری <a href>احراز هویت دو مرحله ای</a> را فعال کنید"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
