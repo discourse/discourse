@@ -14,14 +14,18 @@
   margin: 20px 0;
 }
 
-.edits {margin-right: 5px;}
+.edits {
+  margin-right: 5px;
+}
 
 #topic-title {
   z-index: z("base");
   padding-top: 14px;
   margin-bottom: 10px;
 
-  #edit-title, .category-chooser, .edit-controls {
+  #edit-title,
+  .category-chooser,
+  .edit-controls {
     width: 500px;
   }
   h1 {
@@ -29,12 +33,16 @@
     line-height: $line-height-medium;
     overflow: hidden;
     width: 100%;
-    a {color: $primary;}
+    a {
+      color: $primary;
+    }
   }
   .topic-statuses {
     margin-top: -2px;
   }
-  .private-message-glyph { display: none; }
+  .private-message-glyph {
+    display: none;
+  }
   .remove-featured-link {
     float: right;
     text-transform: lowercase;
@@ -47,7 +55,9 @@
   float: left;
 }
 
-.private_message #topic-title .private-message-glyph { display: inline; }
+.private_message #topic-title .private-message-glyph {
+  display: inline;
+}
 
 .topic-error {
   padding: 18px;
@@ -169,9 +179,9 @@
     bottom: 0;
     width: 0;
     max-width: 145px;
-    border-right: 1px solid  $tertiary-low;
-    background-color:  $tertiary-low;
-    transition: width .75s;
+    border-right: 1px solid $tertiary-low;
+    background-color: $tertiary-low;
+    transition: width 0.75s;
   }
 }
 
@@ -185,10 +195,9 @@
   z-index: z("dropdown");
 }
 
-@media all
-and (min-width: 400px) {
-
-  #topic-progress, #topic-progress-expanded {
+@media all and (min-width: 400px) {
+  #topic-progress,
+  #topic-progress-expanded {
     right: 0;
     left: 0;
   }
@@ -206,13 +215,10 @@ and (min-width: 400px) {
   }
 }
 
-@media all
-and (max-width : 485px) {
-
+@media all and (max-width: 485px) {
   #topic-progress-wrapper.docked {
     display: none;
   }
-
 
   #topic-footer-main-buttons {
     max-width: 100%;

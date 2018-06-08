@@ -30,13 +30,13 @@
         display: -ms-flexbox;
         display: flex;
         -webkit-box-align: start;
-            -ms-flex-align: start;
-                align-items: flex-start;
+        -ms-flex-align: start;
+        align-items: flex-start;
         -webkit-box-pack: center;
-            -ms-flex-pack: center;
-                justify-content: center;
+        -ms-flex-pack: center;
+        justify-content: center;
         -ms-flex-item-align: start;
-            align-self: flex-start;
+        align-self: flex-start;
         margin-right: 10px;
         margin-top: 2px;
         width: 30px;
@@ -44,7 +44,7 @@
         .d-icon {
           font-size: $font-up-2;
           -ms-flex-item-align: center;
-              align-self: center;
+          align-self: center;
           margin-right: 0;
           opacity: 1;
         }
@@ -54,25 +54,25 @@
         min-width: 0;
         line-height: $line-height-large;
         -webkit-box-flex: 1;
-            -ms-flex: 1;
-                flex: 1;
+        -ms-flex: 1;
+        flex: 1;
         -webkit-box-align: start;
-            -ms-flex-align: start;
-                align-items: flex-start;
+        -ms-flex-align: start;
+        align-items: flex-start;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
         -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
+        flex-wrap: wrap;
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
 
         .name {
           -webkit-box-flex: 1;
-              -ms-flex: 1;
-                  flex: 1;
+          -ms-flex: 1;
+          flex: 1;
           font-weight: bold;
           font-size: $font-0;
           color: $primary;
@@ -85,11 +85,14 @@
 
         .desc {
           -webkit-box-flex: 1;
-              -ms-flex: 1;
-                  flex: 1;
+          -ms-flex: 1;
+          flex: 1;
           font-size: $font-down-1;
           font-weight: normal;
-          color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));;
+          color: dark-light-choose(
+            scale-color($primary, $lightness: 50%),
+            scale-color($secondary, $lightness: 40%)
+          );
           white-space: normal;
         }
       }
@@ -102,20 +105,20 @@
 
     .dropdown-select-box-header {
       -webkit-box-sizing: border-box;
-         -moz-box-sizing: border-box;
-              box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
       border: 0;
 
       -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
       -webkit-box-pack: justify;
-          -ms-flex-pack: justify;
-              justify-content: space-between;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
       -webkit-box-orient: horizontal;
       -webkit-box-direction: normal;
-          -ms-flex-direction: row;
-              flex-direction: row;
+      -ms-flex-direction: row;
+      flex-direction: row;
       display: -webkit-inline-box;
       display: -ms-inline-flexbox;
       display: inline-flex;

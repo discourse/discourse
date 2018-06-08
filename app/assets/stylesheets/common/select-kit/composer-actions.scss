@@ -11,10 +11,11 @@
         .d-icon {
           border: 1px solid $primary-low;
           padding: 4px 5px;
-          margin: 0!important;
+          margin: 0 !important;
         }
 
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background: $primary-low;
         }
       }
