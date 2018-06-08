@@ -360,7 +360,9 @@ module PrettyText
       begin
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
-        link["href"] = "#{site_uri}#{link['href']}" unless uri.host.present?
+        unless uri.host.present? || href.start_with?('mailto')
+          link["href"] = "#{site_uri}#{link['href']}"
+	end
       rescue URI::InvalidURIError, URI::InvalidComponentError
         # leave it
       end
