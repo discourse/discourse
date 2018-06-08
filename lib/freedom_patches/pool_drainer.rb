@@ -1,27 +1,24 @@
+class ActiveRecord::ConnectionAdapters::AbstractAdapter
+  module LastUseExtension
+    attr_reader :last_use, :first_use
 
-if Rails.version >= "4.2.0"
-  class ActiveRecord::ConnectionAdapters::AbstractAdapter
-    module LastUseExtension
-      attr_reader :last_use, :first_use
+    def initialize(connection, logger = nil, pool = nil)
+      super
+      @last_use = false
+      @first_use = Time.now
+    end
 
-      def initialize(connection, logger = nil, pool = nil)
-        super
-        @last_use = false
-        @first_use = Time.now
-      end
-
-      def lease
-        @lock.synchronize do
-          unless in_use?
-            @last_use = Time.now
-            super
-          end
+    def lease
+      @lock.synchronize do
+        unless in_use?
+          @last_use = Time.now
+          super
         end
       end
     end
-
-    prepend LastUseExtension
   end
+
+  prepend LastUseExtension
 end
 
 class ActiveRecord::ConnectionAdapters::ConnectionPool
