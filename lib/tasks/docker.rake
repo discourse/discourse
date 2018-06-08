@@ -37,7 +37,7 @@ end
 desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
-    `yarn install --dev`
+    system("yarn install --dev")
 
     @good = true
     unless ENV['SKIP_LINT']
