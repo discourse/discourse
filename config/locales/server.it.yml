@@ -27,7 +27,7 @@ it:
   topics: "Argomenti"
   posts: "messaggi"
   loading: "Caricamento"
-  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, si consiglia di abilitare JavaScript'
+  powered_by_html: 'Fornito da <a href="https://www.discourse.org">Discourse</a>, si consiglia di abilitare JavaScript'
   log_in: "Connetti"
   purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
@@ -40,7 +40,7 @@ it:
     incoming:
       default_subject: "L'argomento necessita di un titolo"
       show_trimmed_content: "Mostra contenuto tagliato"
-      maximum_staged_user_per_email_reached: "Raggiunto il numero massimo di utenti temporanei creati via email."
+      maximum_staged_user_per_email_reached: "E' stato raggiunto il numero massimo di utenti temporanei creati via email."
       errors:
         empty_email_error: "Succede quando l'email ricevuta era vuota."
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
@@ -49,7 +49,7 @@ it:
         no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione From."
         inactive_user_error: "Succede quando il mittente non è attivo."
         silenced_user_error: "Succede quando il mittente è stato silenziato."
-        bad_destination_address: "Succede quando nessuno degli indirizzi email presente nei campi A/Cc/Bcc corrisponde ad alcun indirizzo email entrante tra quelli configurati."
+        bad_destination_address: "Succede quando nessuno degli indirizzi email presenti nei campi A/Cc/Ccn corrisponde ad alcun indirizzo email entrante tra quelli configurati."
         strangers_not_allowed_error: "Succede quando un utente tenta di creare uno nuovo argomento in una categoria della quale non è membro."
         insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di esperienza richiesto."
         reply_user_not_matching_error: "Succede quando arriva una risposta da un indirizzo email diverso da quello cui la notifica era stata inviata."
@@ -57,14 +57,14 @@ it:
         topic_closed_error: "Succede quando arriva una risposta ma l'argomento relativo è stato chiuso."
         bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
         screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
-        unsubscribe_not_allowed: "Accade quando annullare l'iscrizione tramite email non è consentito per questo utente."
-        email_not_allowed: "Accade quando l'indirizzo email non è in whitelist o è nella blacklist."
+        unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
+        email_not_allowed: "Succede quando l'indirizzo email non è in lista bianca oppure è nella lista nera."
       unrecognized_error: "Errore Non Riconosciuto"
   errors: &errors
     format: '%{attribute} %{message}'
     format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
-      too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
+      too_long_validation: "ha un massimo di%{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
       taken: "è già stato usato"
       accepted: deve essere accettato
@@ -114,7 +114,7 @@ it:
       max_username_length_exists: "C'è almeno un utente con il nome più lungo della lunghezza massima che stai cercando di impostare."
       max_username_length_range: "Non puoi impostare il massimo inferiore al minimo."
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
-      s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti da S3 a meno che non imposti l'opzione 's3_upload_bucket'."
+      s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
   activemodel:
     errors:
       <<: *errors
@@ -125,13 +125,13 @@ it:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
     error: "Si è verificato un errore durante il caricamento del file. Per favore riprova più tardi."
   topic_invite:
-    user_exists: "Spiacenti, questo utente è stato già invitato. Puoi invitare un utente ad un argomento solo una volta ."
+    user_exists: "Spiacenti, l'utente è stato già invitato. Puoi invitare un utente ad uno stesso argomento solo una volta ."
   backup:
-    operation_already_running: "Una operazione è in esecuzione. Non è possibile avviarne una nuova adesso."
+    operation_already_running: "Un'operazione è attualmente in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
     not_enough_space_on_disk: "Non c'è abbastanza spazio su disco per caricare questo backup."
     invalid_filename: "Il nome del file di backup contiene caratteri non validi. I caratteri validi sono a-z 0-9 . - _."
-  not_logged_in: "Devi essere connesso per farlo."
+  not_logged_in: "Devi essere connesso per far ciò."
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
   invalid_access: "Non hai il permesso di vedere la risorsa richiesta."
   invalid_api_credentials: "Non è consentito visualizzare la risorsa richiesta. Il nome utente o la chiave API non sono validi."
@@ -931,6 +931,7 @@ it:
     blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
     whitelist_internal_hosts: "Un elenco di host interni di cui Discourse può eseguire la scansione in modo sicuro per la funzione di onebox e altri scopi"
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
+    blacklisted_crawler_user_agents: 'Parola univoca, indipendente dalle maiuscole, nella stringa user agent che identifica i web crawler cui non si vuole consentire l''accesso al sito. Non si applica se è stata definita una lista bianca.'
     top_menu: "Determina quali oggetti appaiono nella navigazione della pagina iniziale, e in quale ordine. Esempio latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Le voci di menu da nascondere per difetto nel menu di composizione del messaggio, a meno che non vengano premuti i punti di sospensione per espanderle."
@@ -1165,8 +1166,8 @@ it:
     bounce_score_threshold: "Punto di rimbalzo massimo prima di interrompere l'invio di email ad un utente."
     bounce_score_threshold_deactivate: "Punto di rimbalzo massimo prima di disattivare un utente."
     reset_bounce_score_after_days: "Ripristina automaticamente il punteggio di rimbalzo dopo X giorni."
-    attachment_content_type_blacklist: "Elenco delle parole chiave utilizzate per mettere in blacklist gli allegati in base al tipo di contenuto."
-    attachment_filename_blacklist: "Elenco delle parole chiave utilizzate per mettere in blacklist gli allegati in base al nome del file."
+    attachment_content_type_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al tipo di contenuto."
+    attachment_filename_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al nome del file."
     enable_forwarded_emails: "[BETA] Consenti agli utenti di creare un argomento inviando una email."
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
     private_email: "Non includere contenuti da messaggi o argomenti nelle email per una maggiore privacy."
@@ -1208,8 +1209,8 @@ it:
     email_link_color: "Colore dei collegamenti nelle email HTML. Inserire il nome di un colore ('blue') o un valore esadecimale ('#0000FF')."
     detect_custom_avatars: "Controllare o meno che gli utenti abbiano caricato immagini personalizzate sul profilo."
     max_daily_gravatar_crawls: "Numero massimo di volte al giorno in cui Discourse controllerà Gravatar per gli avatar personalizzati"
-    public_user_custom_fields: "Una whitelist di campi personalizzati di un utente che possono essere mostrati pubblicamente."
-    staff_user_custom_fields: "Una whitelist di campi personalizzati di un utente che possono essere mostrati allo staff."
+    public_user_custom_fields: "Una lista bianca di campi personalizzati di un utente che possono essere mostrati pubblicamente."
+    staff_user_custom_fields: "Una lista bianca di campi personalizzati di un utente che possono essere mostrati allo staff."
     enable_user_directory: "Fornire una directory degli utenti per la navigazione"
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
@@ -2683,17 +2684,17 @@ it:
       long_description: |
         Questo distintivo è assegnato quando usi tutti i 50 mi piace che hai a disposizione giornalmente. Ricordando di prenderti un momento per mettere mi piace ai messaggi che ti piacciono e apprezzi, incoraggi i membri della tua comunità a creare discussioni ancora più grandi in futuro.
     higher_love:
-      name: Molto Amato
+      name: Pieno d'Amore
       description: Ha messo 50 mi piace al giorno per 5 volte
       long_description: |
         Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
     crazy_in_love:
-      name: Adorato
+      name: Pazzo d’Amore
       description: Ha messo 50 mi piace al giorno per 20 volte
       long_description: |
         Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 20 giorni. Wow! Sei un modello di regolarità nel cercare di incoraggiare i membri della  tua comunità!
     thank_you:
-      name: Ringraziato
+      name: Grazie
       description: Ha ricevuto 20 mi piace sui messaggi e dato 10 mi piace
       long_description: |
         Questo distintivo è assegnato quando ricevi 20 mi piace sui messaggi e dai 10 o più mi piace in cambio. Quando qualcuno mette mi piace ai tuoi messaggi, troverai il tempo per mettere mi piace a ciò che altri scrivono.

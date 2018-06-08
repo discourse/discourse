@@ -1712,7 +1712,7 @@ pl_PL:
         confirm_pin: "Czy na pewno przypiąć ten temat w tej kategorii? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin: "Odepnij ten temat z początku kategorii {{categoryLink}}."
         unpin_until: "Odepnij ten temat z początku kategorii {{categoryLink}} lub poczekaj do <strong>%{until}</strong>."
-        pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
+        pin_note: "Każdy użytkownik może samodzielnie usunąć przypięcie dla samego siebie."
         pin_validation: "Przypięcie tego tematu wymaga podania daty."
         not_pinned: "Brak przypiętych tematów w {{categoryLink}}."
         already_pinned:
@@ -1724,7 +1724,7 @@ pl_PL:
         confirm_pin_globally: "Czy na pewno chcesz globalnie przypiąć kolejny temat? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin_globally: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list."
         unpin_globally_until: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list lub poczekaj do <strong>%{until}</strong>."
-        global_pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
+        global_pin_note: "Każdy użytkownik może samodzielnie usunąć przypięcie dla samego siebie."
         not_pinned_globally: "Brak przypiętych globalnie tematów."
         already_pinned_globally:
           few: 'Tematy przypięte globalnie: <strong class=''badge badge-notification unread''>{{count}}</strong>.'
@@ -2704,7 +2704,7 @@ pl_PL:
         title: "Webhooks"
         none: "Brak webhooks"
         instruction: "Webhooks pozwala Discourse powiadomić zewnętrzne usługi, kiedy pewne zdarzenie pojawi się na twojej stronie. Gdy webhook jest uruchamiany, żądanie POST wyśle ​​do URL świadczonych."
-        detailed_instruction: "Żądanie WPISU zostanie wysłane na podany adres URL kiedy zostanie spełnione wybrane wydażenie"
+        detailed_instruction: "Zapytanie POST zostanie wysłane na podany adres URL gdy zostanie spełnione wybrane wydarzenie"
         new: "Nowy webhook"
         create: "Stwórz"
         save: "Zapisz"

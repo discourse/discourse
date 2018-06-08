@@ -562,7 +562,7 @@ es:
         disable: "Desactivar notificaciones"
         enable: "Activar notificaciones"
         each_browser_note: "Nota: Tendrás que cambiar esta opción para cada navegador que uses."
-        consent_prompt: "¿Quieres recibir notificaciones en vivo cuando alguien responde a tus mensajes?"
+        consent_prompt: "¿Quieres recibir notificaciones en vivo cuando alguien responda a tus mensajes?"
       dismiss: 'Descartar'
       dismiss_notifications: "Descartar todos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
@@ -3158,6 +3158,7 @@ es:
             disabled_second_factor: "inhabilitar Autenticación Dos Factores"
             topic_published: "tema publicado"
             post_approved: "post aprobado"
+            post_rejected: "mensaje rechazado"
             create_badge: "crear distintivo"
             change_badge: "cambiar distintivo"
             delete_badge: "borrar distintivo"

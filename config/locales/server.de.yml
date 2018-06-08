@@ -1217,6 +1217,7 @@ de:
     png_to_jpg_quality: "Qualität der umgewandelten JPG-Datei (1 ist die niedrigste, 99 die beste Qualität, 100 deaktiviert die Funktion)."
     allow_staff_to_upload_any_file_in_pm: "Erlaube Team-Mitgliedern, in Nachrichten alle Dateien hochzuladen."
     strip_image_metadata: "Bild-Metadaten entfernen."
+    min_ratio_to_crop: "Seitenverhältnis zum Ausschneiden großer Bilder. Angabe als Ergebnis von Breite / Höhe."
     enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe (0-4) für alle neuen Benutzer. ACHTUNG! Diesen Wert anzuheben kann zu erhöhtem Spam-Aufkommen führen!"
@@ -3475,3 +3476,6 @@ de:
       linked: '%{username} hat deinen Beitrag verlinkt in "%{topic}" - %{site_title}'
       confirm_title: 'Benachrichtigungen aktiviert – %{site_title}'
       confirm_body: 'Erfolgreich! Benachrichtigungen wurden aktiviert.'
+  staff_action_logs:
+    not_found: "nicht gefunden"
+    unknown: "unbekannt"

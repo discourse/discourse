@@ -25,19 +25,19 @@ ja:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "a h:mm"
-      timeline_date: "YYYY年 MMM"
-      long_no_year: "MMM Do a h:mm"
-      long_no_year_no_time: "MMM Do"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "YYYY年 MMM Do a h:mm"
-      long_with_year_no_time: "YYYY年 MMM Do"
-      full_with_year_no_time: "YYYY年 MMMM Do"
-      long_date_with_year: "'YY MMM Do LT"
-      long_date_without_year: "MMM Do LT"
-      long_date_with_year_without_time: "'YY MMM Do"
-      long_date_without_year_with_linebreak: "MMM Do <br/>LT"
-      long_date_with_year_with_linebreak: "'YY MMM Do <br/>LT"
+      time: "H:mm"
+      timeline_date: "YYYY年M月"
+      long_no_year: "M月D日 H:mm"
+      long_no_year_no_time: "M月D日"
+      full_no_year_no_time: "M月D日"
+      long_with_year: "YYYY年M月D日 H:mm"
+      long_with_year_no_time: "YYYY年M月D日"
+      full_with_year_no_time: "YYYY年M月D日"
+      long_date_with_year: "'YY/MM/DD LT"
+      long_date_without_year: "M月D日 LT"
+      long_date_with_year_without_time: "'YY/MM/DD"
+      long_date_without_year_with_linebreak: "M月D日 <br/>LT"
+      long_date_with_year_with_linebreak: "'YY/MM/DD <br/>LT"
       wrap_ago: "%{date}前"
       tiny:
         half_a_minute: "1分未満"
@@ -46,7 +46,7 @@ ja:
         x_seconds:
           other: '%{count}秒'
         less_than_x_minutes:
-          other: '%{count}分以内'
+          other: '%{count}分未満'
         x_minutes:
           other: '%{count}分'
         about_x_hours:
@@ -54,15 +54,15 @@ ja:
         x_days:
           other: '%{count}日'
         x_months:
-          other: '%{count}月'
+          other: '%{count}ヶ月'
         about_x_years:
           other: '%{count}年'
         over_x_years:
           other: '%{count}年以上'
         almost_x_years:
           other: 約%{count}年
-        date_month: "MMM Do"
-        date_year: "'YY MMM"
+        date_month: "M月D日"
+        date_year: "'YY年M月"
       medium:
         x_minutes:
           other: '%{count}分'
@@ -70,7 +70,7 @@ ja:
           other: '%{count}時間'
         x_days:
           other: '%{count}日'
-        date_year: "YYYY年MM月D日"
+        date_year: "'YY年M月D日"
       medium_with_ago:
         x_minutes:
           other: '%{count}分前'
@@ -85,8 +85,8 @@ ja:
           other: '%{count}か月後'
         x_years:
           other: '%{count}年後'
-      previous_month: '前の月'
-      next_month: '次の月'
+      previous_month: '前月'
+      next_month: '翌月'
       placeholder: 日付
     share:
       topic: 'このトピックのリンクをシェアする'

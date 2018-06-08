@@ -98,6 +98,7 @@ zh_CN:
       email: '在电子邮件里发送该链接'
     action_codes:
       public_topic: "于%{when}设置为公共主题"
+      private_topic: "于%{when}设置为私信"
       split_topic: "于%{when}分割了该主题"
       invited_user: "于%{when}邀请了%{who}"
       invited_group: "于%{when}邀请了%{who}"
@@ -232,6 +233,7 @@ zh_CN:
     pasting: "粘贴中..."
     enable: "启用"
     disable: "停用"
+    continue: "继续"
     undo: "重置"
     revert: "撤销"
     failed: "失败"
@@ -306,7 +308,12 @@ zh_CN:
         make_user_group_owner: "设为所有者"
         remove_user_as_group_owner: "撤销所有者"
     groups:
+      add_members:
+        title: "添加成员"
+        usernames: "用户名"
       manage:
+        add_members: "添加成员"
+        delete_member_confirm: "要从群组 %{group} 中移除用户 %{username} 吗？"
         profile:
           title: 个人信息
         interaction:
@@ -344,13 +351,16 @@ zh_CN:
         reason: "向小组拥有者说明你为何属于这个小组"
       membership: "成员资格"
       name: "群组ID"
+      group_name: "群组名"
       user_count: "用户"
       bio: "关于群组"
       selector_placeholder: "输入用户名"
       owner: "所有者"
       index:
         title: "群组"
+        all: "所有群组"
         empty: "没有可见的群组。"
+        filter: "根据群组类型筛选"
         public: "公开"
         private: "私密"
         my_groups: "我的群组"
@@ -442,7 +452,7 @@ zh_CN:
       title: IP 地址查询
       hostname: 主机名
       location: 位置
-      location_not_found: (未知)
+      location_not_found: （未知）
       organisation: 组织
       phone: 电话
       other_accounts: "使用此 IP 地址的其他用户："
@@ -515,8 +525,8 @@ zh_CN:
           静音主题和分类不包含在这些邮件中。
         individual: "为每个新帖发送一封邮件通知"
         individual_no_echo: "为每个除了我发表的新帖发送一封邮件通知"
-        many_per_day: "为每个新帖给我发送邮件 (大约每天 {{dailyEmailEstimate}} 封)"
-        few_per_day: "为每个新帖给我发送邮件 (大约每天 2 封 )"
+        many_per_day: "为每个新帖给我发送邮件（大约每天 {{dailyEmailEstimate}} 封）"
+        few_per_day: "为每个新帖给我发送邮件（大约每天 2 封）"
       tag_settings: "标签"
       watched_tags: "监看"
       watched_tags_instructions: "你将自动监看有这些标签的所有主题。所有新帖子和新主题会通知你，新帖数量也会显示在主题旁边。"
@@ -869,7 +879,7 @@ zh_CN:
     time_read: 阅读
     time_read_recently: '最近 %{time_read}'
     time_read_tooltip: '合计阅读时间 %{time_read}'
-    time_read_recently_tooltip: '总阅读时间 %{time_read} (最近60天 %{recent_time_read})'
+    time_read_recently_tooltip: '总阅读时间 %{time_read}（最近60天 %{recent_time_read}）'
     last_reply_lowercase: 最后回复
     replies_lowercase:
       other: 回复
@@ -1109,6 +1119,9 @@ zh_CN:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
       admin_options_title: "本主题可选设置"
+      composer_actions:
+        shared_draft:
+          label: "共享草稿"
     notifications:
       tooltip:
         regular:
@@ -1148,6 +1161,7 @@ zh_CN:
         replied: '{{username}}在“{{topic}}”回复了你 - {{site_title}}'
         posted: '{{username}}在“{{topic}}”中发布了帖子 - {{site_title}}'
         linked: '{{username}}在“{{topic}}”中链接了你的帖子 - {{site_title}}'
+        confirm_title: '通知已启用 - %{site_title}'
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -1297,6 +1311,7 @@ zh_CN:
         other: 本主题中的 {{count}} 帖
       create: '发新主题'
       create_long: '创建新的主题'
+      open_draft: "打开草稿"
       private_message: '开始发私信'
       archive_message:
         help: '移动私信到存档'
@@ -1631,7 +1646,7 @@ zh_CN:
         file_too_large: "文件过大（最大 {{max_size_kb}}KB）。为什么不就大文件上传至云存储服务后再分享链接呢？"
         too_many_uploads: "抱歉，一次只能上传一张图片。"
         too_many_dragged_and_dropped_files: "抱歉，一次只能上传 10 个文件。"
-        upload_not_authorized: "抱歉，你没有上传文件的权限 (验证扩展：{{authorized_extensions}})。"
+        upload_not_authorized: "抱歉，你没有上传文件的权限（验证扩展：{{authorized_extensions}}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，你需要登录后才能下载附件。"
@@ -2003,7 +2018,7 @@ zh_CN:
         lower_title: "近期"
         title: "近期"
         title_with_count:
-          other: 近期 ({{count}})
+          other: 近期（{{count}}）
         help: "最近几天里创建的主题"
       posted:
         title: "我的帖子"
@@ -2093,7 +2108,7 @@ zh_CN:
         edit: '<b>e</b> 编辑帖子'
         delete: '<b>d</b> 删除帖子'
         mark_muted: '<b>m</b>, <b>m</b> 忽略主题'
-        mark_regular: '<b>m</b>, <b>r</b> 常规 (默认) 主题'
+        mark_regular: '<b>m</b>, <b>r</b> 常规（默认）主题'
         mark_tracking: '<b>m</b>, <b>t</b> 追踪主题'
         mark_watching: '<b>m</b>, <b>w</b> 看主题'
         print: '<b>ctrl</b>+<b>p</b> 打印主题'
@@ -2326,6 +2341,8 @@ zh_CN:
           notify_user: "自定义"
           notify_moderators: "自定义"
       groups:
+        new:
+          title: "新建群组"
         primary: "主要群组"
         no_primary: "(无主要群组)"
         title: "群组"
@@ -3042,9 +3059,9 @@ zh_CN:
           days: "天数"
           topics_replied_to: "回复的主题"
           topics_viewed: "已读主题"
-          topics_viewed_all_time: "已阅的主题 (全部)"
+          topics_viewed_all_time: "已阅的主题（全部）"
           posts_read: "已读帖子"
-          posts_read_all_time: "已读的帖子 (全部)"
+          posts_read_all_time: "已读的帖子（全部）"
           flagged_posts: "被标记的帖子"
           flagged_by_users: "标记其的用户"
           likes_given: "送出赞"

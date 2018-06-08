@@ -5,4 +5,126 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-bs_BA: {}
+bs_BA:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Uključi Discourse Narrative bot'
+    disable_discourse_narrative_bot_welcome_post: "Isključi objavu dobrodošlice od strane Discourse Narrative bot"
+    discourse_narrative_bot_ignored_usernames: "Korisnička imena koja Discourse Narrative bot bi trebao ignorisati"
+    discourse_narrative_bot_disable_public_replies: "Isključi javne odgovore od strane Discourse Narrative bot"
+    discourse_narrative_bot_welcome_post_type: "Tip objave dobrodošlice koju bi Discourse Narrative Bot trebao slati"
+    discourse_narrative_bot_welcome_post_delay: "Sačekaj (n) sekundi prije nego Discourse Narrative Bot pošalje objavu dobrodošlice."
+  badges:
+    certified:
+      name: Certificiran
+      description: "Kompletirajte naš novi korisnički tutorial"
+      long_description: |
+        Ovaj bedž je dodijeljen prilikom uspješnog završetka interaktivnog tutorijala za nove korisnike. Preuzeli ste inicijativu da naučite osnovne alate u diskusiji, te ste na osnovu toga i nagrađeni certifikatom.
+    licensed:
+      name: Licenciran
+      description: "Završite naš napredni korisnički tutorial"
+      long_description: |
+        Ovaj bedž je dodjeljen prilikom uspješnog završetka interaktivnog tutorijala za nove korisnike. Postali ste majstor naprednih alata u diskusiji - sada ste potpuno licencirani!
+  discourse_narrative_bot:
+    bio: "Pozdrav, ja nisam stvarna osoba. Ja sam automatski robot koji će vas naučiti kako da koristite ovaj web sajt. Kako bi komunicirali sa mnom, pošaljite mi poruku ili me spomenite pisajući  **`@%{discobot_username}`** bilo gdje."
+    timeout:
+      message: |-
+        Hej @%{username}, samo vas provjeravam jer nisam vas čuo neko vrijeme.
+
+        - Kako bi nastavili dalje, odgovorite mi tako što će te me @spomenuti u bilo koje vrijeme.
+
+        - Ukoliko želite da preskočite ovaj korak, recite `%{skip_trigger}`.
+
+        - Kako bi počeli iz početka, recite `%{reset_trigger}`.
+
+        Ukoliko uopšte ne želite, to je također uredu. Ja sam robot. Nećete time uvrijediti moje osjećanje. :sob:
+    dice:
+      trigger: "bacaj kockicu"
+      invalid: |-
+        Žao mi je, matematički nije moguće okrenuti tu kombinaciju na kockici. :confounded:
+      not_enough_dice: |-
+        Posjedujem samo %{num_of_dice} kockice. [Sramežljiv](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Znam!
+      out_of_range: |-
+        Da li ste znali da [maksimalan broj strana](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematički ispravan ishod jeste 120?
+    quote:
+      trigger: "citat"
+      '1':
+        quote: "U sredini svake poteškoće leži mogućnost"
+        author: "Albert Ajnštajn"
+      '2':
+        quote: "Slobodu nije vrijedno imati ako to ne znači imati slobodu pogreške."
+        author: "Mahatma Gandi"
+      '3':
+        quote: "Ne plači zbog toga što je kraj, smij se zbog toga što je se desilo."
+        author: "Dr Seuss"
+      '4':
+        quote: "Ako želiš urađeno kako treba, uradi to sam."
+        author: "Čarls Giljem Etijen"
+      '5':
+        quote: "Vjeruj da možeš i tad si već pola puta tamo."
+        author: "Teodor Ruzvelt"
+      '6':
+        quote: "Život je kao kutija čokolade. Nikad ne znaš šta ćeš dobiti."
+        author: "Majka Forrest-a Gump-a"
+      '7':
+        quote: "To je jedan mali korak za čovjeka, gigantski skok za čovječanstvo."
+        author: "Nil Armstrong"
+      '8':
+        quote: "Uradi jednu stvar svaki dan koja vas plaši."
+        author: "Elenor Ruzvelt"
+      '9':
+        quote: "Greške su uvijek oprostive, ukoliko imaš hrabrosti priznati ih."
+        author: "Brus Li"
+      '10':
+        quote: "Što god um čovjeka može pojmiti i vjerovati, može ostvariti."
+        author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: 'bogatstvo'
+      answers:
+        '1': "To je sigurno"
+        '2': "To je izričito tako"
+        '3': "Bez sumnje"
+        '4': "Da definitivno"
+        '5': "Možeš se uzdati u to"
+        '6': "Kako vidim, da"
+        '7': "Vrlo vjerojatno"
+        '8': "Izgled dobar"
+        '9': "Da"
+        '10': "Signali ukazuju na da"
+        '11': "Odgovor je nejasan, pokušaj ponovo"
+        '12': "Upitaj ponovo kasnije"
+        '13': "Bolje da vam ne kažem odmah"
+        '14': "Ne mogu predvodjeti sada"
+        '15': "Koncentrirajte se i upitajte ponovo"
+        '16': "Ne računajte na to"
+        '17': "Moj odgovor je ne"
+        '18': "Moji izvori kažu ne"
+        '19': "Izgled ne tako dobar"
+        '20': "Veoma upitno"
+    track_selector:
+      reset_trigger: 'start'
+      skip_trigger: 'preskoči'
+      help_trigger: 'prikaži pomoć'
+      random_mention:
+        reply: |-
+          Pozdrav! Kako bi saznali šta sve mogu raditi, recite  `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Trenutno znam kako uraditi sljedeće stvari:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > Započinje jedno od ovih sljedećih dijaloga: %{tracks}.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _Pružite različit akt dobrote, bez očekivanja nagrade, znajući da će jednoga dana neko isto tako nešto moći uraditi za vas_ &mdash; Princeza Diana
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Možeš na to osloniti
+      do_not_understand:
+        first_response: |-
+          Hej, hvala za odgovor!
+
+          Nažalost, kako sam programiran ograničenim mogućnostima, ne mogu jasno razumjeti na što ste mislili. :frowning:
