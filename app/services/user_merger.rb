@@ -1,7 +1,9 @@
 class UserMerger
-  def initialize(source_user, target_user)
+  def initialize(source_user, target_user, acting_user = nil)
     @source_user = source_user
     @target_user = target_user
+    @acting_user = acting_user
+    @source_primary_email = source_user.email
   end
 
   def merge!
@@ -19,6 +21,7 @@ class UserMerger
 
     delete_source_user
     delete_source_user_references
+    log_merge
   end
 
   protected
@@ -353,7 +356,7 @@ class UserMerger
       email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"
     )
 
-    UserDestroyer.new(Discourse.system_user).destroy(@source_user)
+    UserDestroyer.new(Discourse.system_user).destroy(@source_user, quiet: true)
   end
 
   def delete_source_user_references
@@ -364,6 +367,11 @@ class UserMerger
     UserAuthTokenLog.where(user_id: @source_user.id).delete_all
     UserAvatar.where(user_id: @source_user.id).delete_all
     UserAction.where(acting_user_id: @source_user.id).delete_all
+  end
+
+  def log_merge
+    logger = StaffActionLogger.new(@acting_user || Discourse.system_user)
+    logger.log_user_merge(@target_user, @source_user.username, @source_primary_email)
   end
 
   def update_user_id(table_name, opts = {})
