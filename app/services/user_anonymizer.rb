@@ -47,9 +47,10 @@ class UserAnonymizer
       options.email_direct = false
       options.save
 
-      profile = @user.user_profile
-      profile.destroy if profile
-      @user.create_user_profile
+      if profile = @user.user_profile
+        profile.update(location: nil, website: nil, bio_raw: nil, bio_cooked: nil,
+                       profile_background: nil, card_background: nil)
+      end
 
       @user.user_avatar.try(:destroy)
       @user.twitter_user_info.try(:destroy)
