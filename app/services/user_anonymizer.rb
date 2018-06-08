@@ -20,8 +20,9 @@ class UserAnonymizer
       @prev_email = @user.email
       @prev_username = @user.username
 
-      @user.update_attribute(:uploaded_avatar_id, nil)
-      raise "Failed to change username" unless UsernameChanger.change(@user, make_anon_username)
+      unless UsernameChanger.new(@user, make_anon_username).change(run_update_job: false)
+        raise "Failed to change username"
+      end
 
       @user.reload
       @user.password = SecureRandom.hex
@@ -29,6 +30,7 @@ class UserAnonymizer
       @user.name = SiteSetting.full_name_required ? @user.username : nil
       @user.date_of_birth = nil
       @user.title = nil
+      @user.uploaded_avatar_id = nil
 
       if @opts.has_key?(:anonymize_ip)
         @user.ip_address = @opts[:anonymize_ip]
@@ -62,6 +64,11 @@ class UserAnonymizer
 
       @user_history = log_action
     end
+
+    UsernameChanger.update_username(user_id: @user.id,
+                                    old_username: @prev_username,
+                                    new_username: @user.username,
+                                    avatar_template: @user.avatar_template)
 
     Jobs.enqueue(:anonymize_user,
                  user_id: @user.id,
