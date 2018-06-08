@@ -27,7 +27,6 @@ describe Migration::SafeMigrate do
   end
 
   it "bans all table removal" do
-    skip("waiting on rails 5.2")
     Migration::SafeMigrate.enable!
 
     path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/drop_table"
@@ -45,7 +44,6 @@ describe Migration::SafeMigrate do
   end
 
   it "bans all table renames" do
-    skip("waiting on rails 5.2")
     Migration::SafeMigrate.enable!
 
     path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/rename_table"
@@ -63,7 +61,6 @@ describe Migration::SafeMigrate do
   end
 
   it "bans all column removal" do
-    skip("waiting on rails 5.2")
     Migration::SafeMigrate.enable!
 
     path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/remove_column"
@@ -81,7 +78,6 @@ describe Migration::SafeMigrate do
   end
 
   it "bans all column renames" do
-    skip("waiting on rails 5.2")
     Migration::SafeMigrate.enable!
 
     path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/rename_column"
@@ -99,7 +95,6 @@ describe Migration::SafeMigrate do
   end
 
   it "supports being disabled" do
-    skip("waiting on rails 5.2")
     Migration::SafeMigrate.enable!
     Migration::SafeMigrate.disable!
 
