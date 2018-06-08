@@ -1,6 +1,5 @@
 // Common styles for "user-stream-item" component
 .user-stream {
-
   // DEPRECATED:
   // The ".item" class should be removed because it's too generic.
   // Once ".item" has been removed, ".user-stream-item" can replace
@@ -17,7 +16,12 @@
 
     &.deleted {
       opacity: 0.8;
-      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
+      background-color: dark-light-diff(
+        rgba($danger, 0.7),
+        $secondary,
+        50%,
+        -10%
+      );
     }
 
     &.hidden {
@@ -43,7 +47,8 @@
     font-size: $font-0;
   }
 
-  .expand-item, .collapse-item {
+  .expand-item,
+  .collapse-item {
     float: right;
     margin-right: 0.5em;
     line-height: $line-height-small;
@@ -71,7 +76,10 @@
   }
 
   .edit-reason {
-    background-color: dark-light-choose($highlight-medium, scale-color($highlight, $lightness: -50%));
+    background-color: dark-light-choose(
+      $highlight-medium,
+      scale-color($highlight, $lightness: -50%)
+    );
     padding: 3px 5px 5px 5px;
   }
 
@@ -100,7 +108,8 @@
     }
 
     // common/base/header.scss
-    .fa, .icon {
+    .fa,
+    .icon {
       color: dark-light-choose($primary-medium, $secondary-medium);
       font-size: $font-up-4;
     }
@@ -122,7 +131,7 @@
   }
 }
 
-.user-stream .child-actions, // DEPRECATED: '.user-stream .child-actions' selector
+.user-stream .child-actions, /* DEPRECATED: '.user-stream .child-actions' selector*/
 .user-stream-item-actions {
   margin-top: 8px;
 
@@ -137,4 +146,3 @@
     color: $primary;
   }
 }
-

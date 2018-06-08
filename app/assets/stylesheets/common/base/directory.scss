@@ -23,20 +23,22 @@
     width: 100%;
     margin-bottom: 1em;
 
-    td, th {
+    td,
+    th {
       padding: 0.5em;
       text-align: left;
       border-bottom: 1px solid $primary-low;
       @media screen and (max-width: $small-width) {
-        padding: .5em .25em;
+        padding: 0.5em 0.25em;
       }
 
-      .number, .time-read {
+      .number,
+      .time-read {
         font-size: $font-up-3;
         color: $primary-medium;
         @media screen and (max-width: $small-width) {
-         font-size: $font-up-1;
-        }          
+          font-size: $font-up-1;
+        }
       }
       .time-read {
         white-space: nowrap;
@@ -51,7 +53,8 @@
         color: $love;
         margin-right: 0.5em;
       }
-      .d-icon-chevron-down, .d-icon-chevron-up {
+      .d-icon-chevron-down,
+      .d-icon-chevron-up {
         margin-left: 0.5em;
       }
 
@@ -62,7 +65,11 @@
   }
   .me {
     background-color: dark-light-choose($highlight-low, $highlight-medium);
-    .username a, .name, .title, .number, .time-read {
+    .username a,
+    .name,
+    .title,
+    .number,
+    .time-read {
       color: $primary-medium;
     }
   }

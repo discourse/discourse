@@ -22,7 +22,8 @@ $discourse-tooltip-border: $primary-medium;
     background: $discourse-tooltip-background;
   }
 
-  .tooltip-pointer:before, .tooltip-pointer:after {
+  .tooltip-pointer:before,
+  .tooltip-pointer:after {
     position: absolute;
     pointer-events: none;
     border: solid transparent;
@@ -32,8 +33,7 @@ $discourse-tooltip-border: $primary-medium;
     width: 0;
   }
 
-  .tooltip-pointer:after
-  {
+  .tooltip-pointer:after {
     border-bottom-color: $discourse-tooltip-background;
     border-width: 8px;
     left: 50%;

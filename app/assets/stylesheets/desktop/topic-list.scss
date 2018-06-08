@@ -1,351 +1,358 @@
-  // --------------------------------------------------
-  // Topic lists
-  // --------------------------------------------------
+// --------------------------------------------------
+// Topic lists
+// --------------------------------------------------
 
-  // List controls
-  // --------------------------------------------------
+// List controls
+// --------------------------------------------------
 
-  .list-controls {
-    .nav {
-      float: left;
-      margin-bottom: 15px;
-    }
-
-    .btn {
-      float: right;
-      margin-left: 8px;
-      margin-bottom: 10px;
-      font-size: $font-up-1;
-      font-weight: normal;
-    }
-
-    .search .btn {
-      float: none;
-    }
-
-    a.badge-category {
-      padding: 3px 12px;
-      font-size: $font-up-1;
-    }
-
-  }
-
-  // Base list
-  // --------------------------------------------------
-
-  .topic-list-icons {
-    .d-icon-thumb-tack { color: dark-light-choose($primary-medium, $secondary-medium); }
-    .d-icon-thumb-tack.unpinned { color: dark-light-choose($primary-medium, $secondary-medium); }
-    a.title {color: $primary;}
-    .d-icon-bookmark { color: dark-light-choose($primary-medium, $secondary-medium); }
-  }
-
-  .topic-list {
-    @extend .topic-list-icons;
-
-    margin: 0 0 10px;
-    th,
-    td {
-      padding: 12px 5px;
-      &:first-of-type {
-        padding-left: 10px;
-      }
-      &:last-of-type {
-        padding-right: 10px;
-      }
-    }
-    th {
-      button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium); }
-    }
-
-    button.bulk-select {
-      padding: 0;
-    }
-
-    td.bulk-select {
-      padding: 10px;
-      + .main-link {
-        padding-left: 0;
-      }
-    }
-    
-    .badge-notification {
-      position: relative;
-      top: -2px;
-      &.new-topic {
-        top: -1px;
-        padding-left: 5px;
-      }
-    }
-
-    .posters {
-    // we know there are up to 5 avatars of fixed size
-    // will be overridden by media width queries on narrow displays to 1 avatar's width
-    width: 146px;    
-      > a {
-        float: left;
-        margin-right: 4px;
-        &:last-of-type {
-          margin-right: 0;
-        }
-      }
-    }
-    td.posters {
-      height: 29px; // min-height of td with avatar glow
-    }
-    .posters a:first-child .avatar.latest:not(.single) {
-      box-shadow: 0 0 3px 1px desaturate($tertiary-medium, 35%);
-      border: 2px solid desaturate($tertiary-medium, 40%);
-      position: relative;
-      top: -2px;
-      left: -2px;
-    }
-
-
-    .sortable {
-      cursor: pointer;
-      &:hover {
-        background-color: $primary-low;
-      }
-      @include unselectable;
-    }
-    .likes {
-      width: 65px;
-    }
-    .views {
-      width: 65px;
-    }
-    .posts {
-      width: 65px;
-    }
-
-    .post-actions {
-      clear: both;
-      width: auto;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      text-align: left;
-      font-size: $font-down-1;
-      margin-top: 5px;
-      .fa {
-        margin-right: 2px;
-      }
-      a {
-        color: dark-light-choose($primary-medium, $secondary-medium);
-        margin-right: 3px;
-        line-height: $line-height-large;
-      }
-    }
-    .activity {
-      width: 60px;
-      &:lang(zh_CN) {
-        width: 80px;
-      }
-      span {
-        cursor: pointer;
-      }
-    }
-    .age {
-      width: 60px;
-    }
-    .with-year {
-      white-space: nowrap;
-    }
-  }
-
-  .topic-list.categories {
-    a.title {
-      color: $tertiary;
-    }
-
-    th.posts {
-      position: relative;
-    }
-    th.stats {
-      width: 90px;
-    }
-    td.latest {
-      vertical-align: top;
-      padding: 0 8px 8px;
-    }
-    .last-user-info {
-      font-size: $font-down-1;
-    }
-    .has-description {
-      td.category {
-        padding-top: 15px;
-      }
-    }
-    .category{
-      h3 {
-        display: inline-block;
-        font-size: $font-up-2;
-        i {
-          margin-right: 5px;
-        }
-        a[href] {
-          color: $primary;
-        }
-      }
-      .subcategories {
-        margin-top: 10px;
-      }
-      .category-description {
-        margin-top: 10px;
-      }
-      .clear-badge {
-        color: $primary;
-      }
-    }
-
-    .featured-topic {
-      margin: 10px 0 0;
-      /* topic status glyphs */
-      i {
-        color: dark-light-choose($primary-medium, $secondary-medium) !important;
-        font-size: 0.929em;
-      }
-      a.last-posted-at, a.last-posted-at:visited {
-        color: dark-light-choose($primary-medium, $secondary-medium);
-        font-size: $font-down-1;
-      }
-      .badge {
-        font-size: $font-down-1;
-        top: -1px;
-      }
-    }
-  }
-
-  .topic-list-bottom {
-    margin: 20px 0;
-  }
-
-  // Misc. stuff
-  // --------------------------------------------------
-
-  #list-area .top-lists h2 {
-    cursor: pointer;
-    margin: 5px 0 10px;
-  }
-
-  #list-area {
-    h2 {
-      margin: 20px 0 10px;
-    }
-    .show-more.has-topics {
-      top: 0;
-      .alert {
-        padding: 12px 35px 12px 14px;
-      }
-    }
-  }
-
-  #bulk-select {
-    position: fixed;
-    right: 20px;
-    top: 130px;
-    padding: 5px;
-    background-color: $secondary;
-    z-index: z("dropdown");
-  }
-
-  button.dismiss-read {
-    float: right;
-    margin-bottom: 5px;
-    margin-left: 10px;
-  }
-
-  .tags-admin-menu {
-    .dropdown-menu {
-      right: 0;
-      top: 30px;
-      bottom: auto;
-      left: auto;
-    }
-  }
-
-  .category-heading {
-    clear: both;
-    p {
-      line-height: $line-height-large;
-      font-size: $font-up-3;
-    }
-  }
-
-  .category-navigation {
-    clear: both;
-  }
-
-  .category-logo {
-    max-height: 150px;
+.list-controls {
+  .nav {
     float: left;
     margin-bottom: 15px;
-    margin-right: 15px;
   }
 
-  /* Tablet (portrait) ----------- */
+  .btn {
+    float: right;
+    margin-left: 8px;
+    margin-bottom: 10px;
+    font-size: $font-up-1;
+    font-weight: normal;
+  }
 
-  @media all
-  and (max-width : 850px) {
+  .search .btn {
+    float: none;
+  }
 
-    // slightly smaller font, tighten spacing on nav pills
-    .nav-pills {
-      > li > a {
-        font-size: $font-0;
-        padding: 7px 10px;
-        }
+  a.badge-category {
+    padding: 3px 12px;
+    font-size: $font-up-1;
+  }
+}
+
+// Base list
+// --------------------------------------------------
+
+.topic-list-icons {
+  .d-icon-thumb-tack {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  .d-icon-thumb-tack.unpinned {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  a.title {
+    color: $primary;
+  }
+  .d-icon-bookmark {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
+
+.topic-list {
+  @extend .topic-list-icons;
+
+  margin: 0 0 10px;
+  th,
+  td {
+    padding: 12px 5px;
+    &:first-of-type {
+      padding-left: 10px;
     }
+    &:last-of-type {
+      padding-right: 10px;
+    }
+  }
+  th {
+    button .d-icon {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
+  }
 
-    // new topic just a "+" no text
-    button#create-topic {
-      span {
-        display: none;
-      }
-      i {
+  button.bulk-select {
+    padding: 0;
+  }
+
+  td.bulk-select {
+    padding: 10px;
+    + .main-link {
+      padding-left: 0;
+    }
+  }
+
+  .badge-notification {
+    position: relative;
+    top: -2px;
+    &.new-topic {
+      top: -1px;
+      padding-left: 5px;
+    }
+  }
+
+  .posters {
+    // we know there are up to 5 avatars of fixed size
+    // will be overridden by media width queries on narrow displays to 1 avatar's width
+    width: 146px;
+    > a {
+      float: left;
+      margin-right: 4px;
+      &:last-of-type {
         margin-right: 0;
       }
     }
+  }
+  td.posters {
+    height: 29px; // min-height of td with avatar glow
+  }
+  .posters a:first-child .avatar.latest:not(.single) {
+    box-shadow: 0 0 3px 1px desaturate($tertiary-medium, 35%);
+    border: 2px solid desaturate($tertiary-medium, 40%);
+    position: relative;
+    top: -2px;
+    left: -2px;
+  }
 
-    .topic-list {
+  .sortable {
+    cursor: pointer;
+    &:hover {
+      background-color: $primary-low;
+    }
+    @include unselectable;
+  }
+  .likes {
+    width: 65px;
+  }
+  .views {
+    width: 65px;
+  }
+  .posts {
+    width: 65px;
+  }
 
-      // tighter table header spacing
+  .post-actions {
+    clear: both;
+    width: auto;
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    text-align: left;
+    font-size: $font-down-1;
+    margin-top: 5px;
+    .fa {
+      margin-right: 2px;
+    }
+    a {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      margin-right: 3px;
+      line-height: $line-height-large;
+    }
+  }
+  .activity {
+    width: 60px;
+    &:lang(zh_CN) {
+      width: 80px;
+    }
+    span {
+      cursor: pointer;
+    }
+  }
+  .age {
+    width: 60px;
+  }
+  .with-year {
+    white-space: nowrap;
+  }
+}
+
+.topic-list.categories {
+  a.title {
+    color: $tertiary;
+  }
+
+  th.posts {
+    position: relative;
+  }
+  th.stats {
+    width: 90px;
+  }
+  td.latest {
+    vertical-align: top;
+    padding: 0 8px 8px;
+  }
+  .last-user-info {
+    font-size: $font-down-1;
+  }
+  .has-description {
+    td.category {
+      padding-top: 15px;
+    }
+  }
+  .category {
+    h3 {
+      display: inline-block;
+      font-size: $font-up-2;
+      i {
+        margin-right: 5px;
+      }
+      a[href] {
+        color: $primary;
+      }
+    }
+    .subcategories {
+      margin-top: 10px;
+    }
+    .category-description {
+      margin-top: 10px;
+    }
+    .clear-badge {
+      color: $primary;
+    }
+  }
+
+  .featured-topic {
+    margin: 10px 0 0;
+    /* topic status glyphs */
+    i {
+      color: dark-light-choose($primary-medium, $secondary-medium) !important;
+      font-size: 0.929em;
+    }
+    a.last-posted-at,
+    a.last-posted-at:visited {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      font-size: $font-down-1;
+    }
+    .badge {
+      font-size: $font-down-1;
+      top: -1px;
+    }
+  }
+}
+
+.topic-list-bottom {
+  margin: 20px 0;
+}
+
+// Misc. stuff
+// --------------------------------------------------
+
+#list-area .top-lists h2 {
+  cursor: pointer;
+  margin: 5px 0 10px;
+}
+
+#list-area {
+  h2 {
+    margin: 20px 0 10px;
+  }
+  .show-more.has-topics {
+    top: 0;
+    .alert {
+      padding: 12px 35px 12px 14px;
+    }
+  }
+}
+
+#bulk-select {
+  position: fixed;
+  right: 20px;
+  top: 130px;
+  padding: 5px;
+  background-color: $secondary;
+  z-index: z("dropdown");
+}
+
+button.dismiss-read {
+  float: right;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.tags-admin-menu {
+  .dropdown-menu {
+    right: 0;
+    top: 30px;
+    bottom: auto;
+    left: auto;
+  }
+}
+
+.category-heading {
+  clear: both;
+  p {
+    line-height: $line-height-large;
+    font-size: $font-up-3;
+  }
+}
+
+.category-navigation {
+  clear: both;
+}
+
+.category-logo {
+  max-height: 150px;
+  float: left;
+  margin-bottom: 15px;
+  margin-right: 15px;
+}
+
+/* Tablet (portrait) ----------- */
+
+@media all and (max-width: 850px) {
+  // slightly smaller font, tighten spacing on nav pills
+  .nav-pills {
+    > li > a {
+      font-size: $font-0;
+      padding: 7px 10px;
+    }
+  }
+
+  // new topic just a "+" no text
+  button#create-topic {
+    span {
+      display: none;
+    }
+    i {
+      margin-right: 0;
+    }
+  }
+
+  .topic-list {
+    // tighter table header spacing
     th:first-of-type {
       padding: 12px 5px;
-      }
+    }
     // smaller table cell spacing
-    th, td {
-        padding: 10px;
-        font-size: $font-0;
-      }
-      .category {
-        min-width: 0;
-        padding: 0;
-        }
-      // suppress views column
-      th.views {
+    th,
+    td {
+      padding: 10px;
+      font-size: $font-0;
+    }
+    .category {
+      min-width: 0;
+      padding: 0;
+    }
+    // suppress views column
+    th.views {
+      display: none;
+    }
+    td.views {
+      display: none;
+    }
+    // reduce width for more title space
+    .posts {
+      width: 50px;
+    }
+    .posters {
+      width: 30px;
+      text-align: center;
+    }
+    // show only the first poster
+    td.posters {
+      a:not(.latest) {
         display: none;
       }
-      td.views {
-        display: none;
-      }
-      // reduce width for more title space
-      .posts {
-        width: 50px;
-      }
-      .posters {
-        width: 30px;  
-        text-align: center;      
-      }
-      // show only the first poster
-      td.posters {
-        a:not(.latest) {
-          display: none;
-          }
-        a.latest {
-          width: 100%;
-          img {
-            margin: 0 auto;
-          }
+      a.latest {
+        width: 100%;
+        img {
+          margin: 0 auto;
         }
       }
     }
   }
+}
