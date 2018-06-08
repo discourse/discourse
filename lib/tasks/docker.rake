@@ -38,7 +38,7 @@ desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
     system("yarn install --dev")
-    system("npm install -g prettier")
+    system("sudo npm install -g prettier")
 
     @good = true
     unless ENV['SKIP_LINT']
