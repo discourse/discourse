@@ -1,4 +1,3 @@
-
 .topic-title-outlet.choose-tags {
   margin-left: 25px;
   margin-top: 3px;
@@ -31,8 +30,8 @@
 }
 
 .topic-header-extra .discourse-tag {
-  -webkit-animation: fadein .7s;
-  animation: fadein .7s;
+  -webkit-animation: fadein 0.7s;
+  animation: fadein 0.7s;
 }
 
 .bullet + .topic-header-extra {
@@ -59,7 +58,8 @@
     &.bullet .badge-category {
     }
 
-    &.box, &.bullet {
+    &.box,
+    &.bullet {
     }
 
     &.box + .topic-header-extra,
@@ -91,7 +91,8 @@ $tag-color: $primary-medium;
   margin: 0;
   color: $tag-color;
 
-  &:visited, &:hover {
+  &:visited,
+  &:hover {
     color: $tag-color;
   }
 
@@ -109,13 +110,16 @@ $tag-color: $primary-medium;
     }
   }
 
-  &.simple, &.simple:visited, &.simple:hover {
+  &.simple,
+  &.simple:visited,
+  &.simple:hover {
     margin-right: 0;
     color: $primary-high;
   }
 }
 
-.discourse-tags, .list-tags {
+.discourse-tags,
+.list-tags {
   .discourse-tag.simple:not(:last-child):after {
     content: ", ";
     margin-left: 1px;
@@ -127,7 +131,9 @@ $tag-color: $primary-medium;
     display: inline-block;
     font-size: $font-down-1;
   }
-  .topic-featured-link { margin-left: 8px; }
+  .topic-featured-link {
+    margin-left: 8px;
+  }
 }
 
 .fps-result .add-full-page-tags {
@@ -141,7 +147,7 @@ $tag-color: $primary-medium;
   clear: both;
 
   .discourse-tag.box {
-    position:relative;
+    position: relative;
     top: 2px;
   }
 }
@@ -156,28 +162,29 @@ $tag-color: $primary-medium;
   font-size: $font-down-1;
   margin-top: 0;
   .discourse-tag {
-    margin-right: .2em;
+    margin-right: 0.2em;
   }
   .discourse-tag.box {
-    position:relative;
+    position: relative;
     top: 0;
   }
 }
 
-
 .discourse-tag.bullet {
-  margin-right: .25em;
+  margin-right: 0.25em;
   &:before {
     content: "\f04d";
     font-family: FontAwesome;
     color: $primary-low-mid;
     margin-right: 5px;
     font-size: $font-down-2;
-    position:relative;
+    position: relative;
   }
 }
 
-header .discourse-tag {color: $tag-color }
+header .discourse-tag {
+  color: $tag-color;
+}
 
 .list-tags {
   display: inline-block;
@@ -212,8 +219,8 @@ header .discourse-tag {color: $tag-color }
 
 .autocomplete {
   .d-icon-tag {
-   color: dark-light-choose($primary, $primary-low-mid);
-   padding-right: 5px;
+    color: dark-light-choose($primary, $primary-low-mid);
+    padding-right: 5px;
   }
 
   a {

@@ -42,7 +42,8 @@
           font-size: $font-up-3;
         }
 
-        &.is-focused, &:hover {
+        &.is-focused,
+        &:hover {
           background: none;
           border: none;
           outline: none;
@@ -51,7 +52,7 @@
 
       .period-chooser-row {
         font-weight: bold;
-        padding: 5px;;
+        padding: 5px;
         font-size: $font-up-1;
         align-items: center;
         display: flex;

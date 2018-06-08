@@ -27,8 +27,8 @@ header {
     line-height: $line-height-small;
 
     i {
-        font-size: $font-down-1;
-      }
+      font-size: $font-down-1;
+    }
   }
 
   .d-icon-envelope {
@@ -36,20 +36,19 @@ header {
   }
 }
 
-
 .form-vertical {
   .control-group {
     margin-bottom: 24px;
   }
 }
 
-
 /***********************/
 /* bootstrap carryover */
 /***********************/
 code,
 pre {
-  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
+    "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
 }
 
 // this removes the unwanted top margin on a paragraph under a heading
@@ -60,7 +59,7 @@ h4,
 h5,
 h6 {
   + p {
-    margin-top:0;
+    margin-top: 0;
   }
 }
 
@@ -88,7 +87,8 @@ textarea {
   color: $primary;
 }
 
-input, textarea {
+input,
+textarea {
   width: 210px;
 }
 
@@ -252,7 +252,6 @@ input {
         box-shadow: shadow("focus-danger");
       }
     }
-
   }
 
   &.warning {
@@ -300,7 +299,7 @@ input {
     .input-append {
       .add-on {
         color: $success;
-        background-color:  $success-low;
+        background-color: $success-low;
         border-color: $success;
       }
     }
@@ -367,12 +366,8 @@ input {
   }
 }
 
-
-
 // Media Queries
-@media all
-and (max-width : 570px) {
-
+@media all and (max-width: 570px) {
   body {
     min-width: 0;
   }

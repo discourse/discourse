@@ -8,7 +8,7 @@
     cursor: pointer;
 
     .d-icon-globe {
-      margin-right: .25em;
+      margin-right: 0.25em;
       color: $primary-medium;
 
       &:hover {
@@ -27,7 +27,8 @@
   align-items: center;
   justify-content: flex-start;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     content: none;
   }
 
@@ -111,28 +112,30 @@
         width: 300px;
       }
     }
-   }
+  }
 
-   .format {
-     .format-input {
-       width: 280px;
-     }
-   }
+  .format {
+    .format-input {
+      width: 280px;
+    }
+  }
 
-   .formats {
-     list-style: none;
-     padding: 0;
-     margin: 0;
-     .format {
-       .previewed-format {
-         color: $primary-medium;
-       }
-     }
-   }
+  .formats {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    .format {
+      .previewed-format {
+        color: $primary-medium;
+      }
+    }
+  }
 
-   .control-group.recurrence, .control-group.format, .control-group.timezones {
-     margin-top: 1em;
-   }
+  .control-group.recurrence,
+  .control-group.format,
+  .control-group.timezones {
+    margin-top: 1em;
+  }
 
   .timezones-input {
     width: 99%;

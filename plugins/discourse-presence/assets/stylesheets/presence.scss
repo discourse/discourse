@@ -2,23 +2,23 @@
   background-color: $secondary;
   color: $primary-medium;
   display: flex;
-  
+
   span.presence-text {
     margin-left: 5px;
     margin-right: 2px;
     flex: 0 0 auto;
-    padding-top: 3px;    
+    padding-top: 3px;
   }
 
   .presence-avatars {
     display: flex;
     overflow: hidden;
-    flex-wrap: wrap;    
+    flex-wrap: wrap;
   }
 
   .wave {
     flex: 0 0 auto;
-    
+
     .dot {
       display: inline-block;
       animation: wave 1.8s linear infinite;
@@ -34,7 +34,9 @@
   }
 
   @keyframes wave {
-    0%, 60%, 100% {
+    0%,
+    60%,
+    100% {
       transform: initial;
     }
 
@@ -49,7 +51,7 @@
   top: 18px;
   right: 40px;
   @media screen and (max-width: $small-width) {
-    max-width: 318px;    
+    max-width: 318px;
     .presence-avatars {
       flex-wrap: nowrap;
     }
@@ -68,7 +70,7 @@
       flex-wrap: nowrap;
     }
     .description {
-      display:none;
+      display: none;
     }
   }
 }

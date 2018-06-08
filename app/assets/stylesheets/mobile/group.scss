@@ -22,7 +22,8 @@
   float: left;
 }
 
-.group-activity, .group-manage {
+.group-activity,
+.group-manage {
   position: relative;
 }
 
@@ -34,7 +35,8 @@
   }
 }
 
-.group-activity-outlet, .group-messages-outlet {
+.group-activity-outlet,
+.group-messages-outlet {
   float: none;
 }
 
@@ -45,7 +47,7 @@
 
   .group-flair-inputs {
     .group-flair-right {
-      margin: 0
+      margin: 0;
     }
   }
 }
@@ -99,7 +101,6 @@ table.group-manage-logs {
     margin: 5px 0px;
   }
 }
-
 
 .group-add-members-btn {
   margin-bottom: 10px;
