@@ -22,6 +22,7 @@ RSpec.describe Admin::UsersController do
     context 'when showing emails' do
       it "returns email for all the users" do
         get "/admin/users/list.json", params: { show_emails: "true" }
+        expect(response.status).to eq(200)
         data = ::JSON.parse(response.body)
         data.each do |user|
           expect(user["email"]).to be_present
@@ -29,11 +30,10 @@ RSpec.describe Admin::UsersController do
       end
 
       it "logs only 1 enty" do
-        expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count).to eq(0)
-
-        get "/admin/users/list.json", params: { show_emails: "true" }
-
-        expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count).to eq(1)
+        expect do
+          get "/admin/users/list.json", params: { show_emails: "true" }
+        end.to change { UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count }.by(1)
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -48,7 +48,7 @@ RSpec.describe Admin::UsersController do
 
     context 'a non-existing user' do
       it 'returns 404 error' do
-        get "/admin/users/0.json", params: { id: 0 }
+        get "/admin/users/0.json"
         expect(response.status).to eq(404)
       end
     end
@@ -141,7 +141,6 @@ RSpec.describe Admin::UsersController do
       expect(user.suspended_till).to be_present
 
       log = UserHistory.where(target_user_id: user.id).order('id desc').first
-      expect(log).to be_present
       expect(log.details).to match(/because I said so/)
     end
 
@@ -152,7 +151,6 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
 
         log = UserHistory.where(target_user_id: user.id).order('id desc').first
-        expect(log).to be_present
         expect(log.post_id).to eq(post.id)
       end
 
