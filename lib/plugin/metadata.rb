@@ -52,7 +52,7 @@ class Plugin::Metadata
     "discourse-user-card-badges",
     "discourse-policy",
     "discourse-github-linkback",
-    "discourse-group-tracker",
+
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
