@@ -111,7 +111,7 @@ EOM
 
   def get_username_for_old_username(old_username)
     if @usernames.has_key?(old_username)
-      User.find(@usernames[old_username]).username
+      @usernames[old_username]
     else
       old_username
     end
@@ -166,10 +166,7 @@ EOM
       end
     end
 
-    @usernames = {}
-    UserCustomField.where(name: 'import_username').pluck(:user_id, :value).each do |user_id, import_username|
-      @usernames[import_username] = user_id
-    end
+    @usernames = UserCustomField.joins(:user).where(name: 'import_username').pluck('user_custom_fields.value', 'users.username').to_h
 
   end
 
