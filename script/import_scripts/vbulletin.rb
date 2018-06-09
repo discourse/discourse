@@ -719,10 +719,18 @@ EOM
 
     # [INDENT]...[/INDENT]
     raw.gsub! /\[INDENT\](.*?)\[\/INDENT\]/im, '\1'
-    raw.gsub! /\[TABLE\](.*?)\[\/TABLE\]/im, '\1'
-    raw.gsub! /\[TR\](.*?)\[\/TR\]/im, '\1'
-    raw.gsub! /\[TD\](.*?)\[\/TD\]/im, '\1'
-    raw.gsub! /\[TD="?.*?"?\](.*?)\[\/TD\]/im, '\1'
+
+    # Tables to MD
+    raw.gsub!(/\[TABLE.*?\](.*?)\[\/TABLE\]/im) { |t|
+      rows = $1.gsub!(/\s*\[TR\](.*?)\[\/TR\]\s*/im) { |r|
+        cols = $1.gsub! /\s*\[TD.*?\](.*?)\[\/TD\]\s*/im, '|\1'
+        "#{cols}|\n"
+      } 
+      header,rest = rows.split "\n",2
+      c = header.count "|"
+      sep = "|---" * (c-1)
+      "#{header}\n#{sep}|\n#{rest}\n"
+    }
 
     # [QUOTE]...[/QUOTE]
     raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { |quote|
