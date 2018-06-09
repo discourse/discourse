@@ -32,6 +32,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
   puts "#{DB_USER}:#{DB_PW}@#{DB_HOST} wants #{DB_NAME}"
 
   def initialize
+    @bbcode_to_md = true
+
     super
 
     @usernames = {}
