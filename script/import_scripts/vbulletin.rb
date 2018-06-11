@@ -335,16 +335,17 @@ EOM
         t
       end
 
-      # uncomment below lines to create permalink
-      # topics.each do |thread|
-      #   topic_id = "thread-#{thread["threadid"]}"
-      #   topic = topic_lookup_from_imported_post_id(topic_id)
-      #   if topic.present?
-      #     title_slugified = thread["title"].gsub(" ","-").gsub(".","-") if thread["title"].present?
-      #     url_slug = "threads/#{thread["threadid"]}-#{title_slugified}" if thread["title"].present?
-      #     Permalink.create(url: url_slug, topic_id: topic[:topic_id].to_i) if url_slug.present? && topic[:topic_id].present?
-      #   end
-      # end
+      # Add the following to permalink_normalizations for this to work: 
+      # /forum\/.*?\/(\d*)\-.*/thread/\1
+
+      topics.each do |thread|
+        topic_id = "thread-#{thread["threadid"]}"
+        topic = topic_lookup_from_imported_post_id(topic_id)
+        if topic.present?
+          url_slug = "thread/#{thread["threadid"]}" if thread["title"].present?
+          Permalink.create(url: url_slug, topic_id: topic[:topic_id].to_i) if url_slug.present? && topic[:topic_id].present?
+        end
+      end
 
     end
   end
