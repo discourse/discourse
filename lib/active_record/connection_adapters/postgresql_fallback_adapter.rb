@@ -17,8 +17,10 @@ class PostgreSQLFallbackHandler
     @initialized = false
 
     MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload|
-      RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
-        clear_connections
+      if @initialized
+        RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
+          clear_connections
+        end
       end
     end
   end
@@ -28,14 +30,10 @@ class PostgreSQLFallbackHandler
 
     @thread = Thread.new do
       while true do
-        begin
-          thread = Thread.new { initiate_fallback_to_master }
-          thread.join
-          break if synchronize { @masters_down.hash.empty? }
-          sleep 10
-        ensure
-          thread.kill
-        end
+        thread = Thread.new { initiate_fallback_to_master }
+        thread.join
+        break if synchronize { @masters_down.hash.empty? }
+        sleep 10
       end
     end
 
