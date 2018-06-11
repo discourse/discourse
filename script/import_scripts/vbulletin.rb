@@ -401,9 +401,10 @@ EOM
 
   # find the uploaded file information from the db
   def find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
-                  a.caption caption
+    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename, 
+                  LENGTH(fd.filedata) AS dbsize, filedata, a.caption caption
              FROM #{TABLE_PREFIX}attachment a
+             LEFT JOIN #{TABLE_PREFIX}filedata fd ON fd.filedataid = a.filedataid
             WHERE a.attachmentid = #{attachment_id}"
     results = mysql_query(sql)
 
@@ -413,13 +414,22 @@ EOM
     end
 
     filename = File.join(ATTACHMENT_DIR, row['user_id'].to_s.split('').join('/'), "#{row['file_id']}.attach")
-    unless File.exists?(filename)
-      puts "Attachment file doesn't exist: #{filename}"
-      return
-    end
-
     real_filename = row['filename']
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
+
+    unless File.exists?(filename)
+      if row['dbsize'].to_i == 0
+        puts "Attachment file #{row['filedataid']} doesn't exist"
+        return nil
+      end
+
+      tmpfile = 'attach_' + row['filedataid'].to_s
+      filename = File.join('/tmp/', tmpfile)
+      File.open(filename, 'wb') { |f|
+        f.write(row['filedata'])
+      }
+    end
+
     upload = create_upload(post.user.id, filename, real_filename)
 
     if upload.nil? || !upload.valid?
