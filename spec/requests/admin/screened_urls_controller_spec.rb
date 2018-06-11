@@ -5,18 +5,17 @@ describe Admin::ScreenedUrlsController do
     expect(Admin::ScreenedUrlsController < Admin::AdminController).to eq(true)
   end
 
-  let!(:user) { log_in(:admin) }
-
-  context '.index' do
+  describe '#index' do
     before do
-      get :index, format: :json
+      sign_in(Fabricate(:admin))
     end
 
-    subject { response }
-    it { is_expected.to be_successful }
-
     it 'returns JSON' do
-      expect(::JSON.parse(subject.body)).to be_a(Array)
+      Fabricate(:screened_url)
+      get "/admin/logs/screened_urls.json"
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json.size).to eq(1)
     end
   end
 end
