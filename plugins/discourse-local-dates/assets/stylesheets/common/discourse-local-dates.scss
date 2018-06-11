@@ -60,6 +60,25 @@
     .date-time-configuration {
       display: flex;
       align-items: center;
+      flex-direction: row;
+
+      .range {
+        .from {
+          flex-direction: row;
+          display: flex;
+        }
+
+        .to {
+          flex-direction: row;
+          display: flex;
+        }
+
+        .to-indicator {
+          display: flex;
+          justify-content: center;
+          margin: 0.5em 0;
+        }
+      }
 
       .date {
         .date-input {
@@ -76,8 +95,6 @@
       }
 
       .time {
-        margin-right: 1em;
-
         .time-input {
           margin: 0 0.5em 0 0;
           width: 120px;
@@ -86,12 +103,19 @@
       }
 
       .preview {
+        flex: 1;
         margin-top: 16px;
+        text-align: center;
       }
 
       @include small-width {
         flex-direction: column;
         align-items: flex-start;
+
+        .range .from,
+        .range .to {
+          flex-direction: column;
+        }
 
         .date .date-input .date-picker {
           width: 200px;
