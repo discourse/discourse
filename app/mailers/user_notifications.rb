@@ -445,7 +445,7 @@ class UserNotifications < ActionMailer::Base
           I18n.t('subject_pm')
         end
 
-      participants = "#{I18n.t("user_notifications.pm_participants")} "
+      participants = ""
       participant_list = []
       post.topic.allowed_groups.each do |group|
         participant_list.push "[#{group.name} (#{group.users.count})](#{Discourse.base_url}/groups/#{group.name})"
@@ -528,6 +528,11 @@ class UserNotifications < ActionMailer::Base
         message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "");
       end
 
+      first_footer_classes = "hilight"
+      if (allow_reply_by_email && user.staged) || (user.suspended? || user.staged?)
+        first_footer_classes = ""
+      end
+
       unless translation_override_exists
         html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
           template: 'email/notification',
@@ -536,7 +541,8 @@ class UserNotifications < ActionMailer::Base
                     reached_limit: reached_limit,
                     post: post,
                     in_reply_to_post: in_reply_to_post,
-                    classes: Rtl.new(user).css_class
+                    classes: Rtl.new(user).css_class,
+                    first_footer_classes: first_footer_classes
           }
         )
       end

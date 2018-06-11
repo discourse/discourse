@@ -2625,14 +2625,15 @@ en:
 
     header_instructions: ''
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
-    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond."
+    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond to %{participants}."
     only_reply_by_email: "Reply to this email to respond."
+    only_reply_by_email_pm: "Reply to this email to respond to %{participants}."
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
-    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond."
+    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond to %{participants}."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
-    pm_participants: "Participants:"
+    pm_participants: "Participants: %{participants}"
 
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
