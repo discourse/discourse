@@ -57,6 +57,8 @@ class PostgreSQLFallbackHandler
   end
 
   def initiate_fallback_to_master
+    return unless @initialized
+
     @masters_down.hash.keys.each do |key|
       RailsMultisite::ConnectionManagement.with_connection(key) do
         begin
