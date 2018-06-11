@@ -8,6 +8,19 @@ RSpec.describe Admin::EmojisController do
     sign_in(admin)
   end
 
+  describe '#index' do
+    it "returns a list of custom emojis" do
+      CustomEmoji.create!(name: 'osama-test-emoji', upload: upload)
+      Emoji.clear_cache
+
+      get "/admin/customize/emojis.json"
+      expect(response.status).to eq(200)
+
+      json = ::JSON.parse(response.body)
+      expect(json[0]["name"]).to eq("osama-test-emoji")
+    end
+  end
+
   describe "#create" do
     describe 'when upload is invalid' do
       it 'should publish the right error' do
