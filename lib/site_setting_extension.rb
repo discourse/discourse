@@ -118,7 +118,7 @@ module SiteSettingExtension
     name = name_arg.to_sym
 
     if name == :default_locale
-      raise ArgumentError.new("Other settings depend on default locale, you can not configure it like this")
+      raise Discourse::InvalidParameters.new("Other settings depend on default locale, you can not configure it like this")
     end
 
     shadowed_val = nil
@@ -347,7 +347,7 @@ module SiteSettingExtension
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
-      raise ArgumentError.new("Either no setting named '#{name}' exists or value provided is invalid")
+      raise Discourse::InvalidParameters.new("Either no setting named '#{name}' exists or value provided is invalid")
     end
   end
 
