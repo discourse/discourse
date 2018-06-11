@@ -22,7 +22,7 @@ RSpec.describe Admin::BackupsController do
 
     context "html format" do
       it "preloads important data" do
-        get "/admin/backups.html", xhr: true
+        get "/admin/backups.html"
         expect(response.status).to eq(200)
 
         preloaded = controller.instance_variable_get("@preloaded").map do |key, value|
@@ -46,7 +46,7 @@ RSpec.describe Admin::BackupsController do
             Backup.create_from_filename(name)
           end
 
-          get "/admin/backups.json", xhr: true
+          get "/admin/backups.json"
 
           expect(response.status).to eq(200)
 
@@ -108,7 +108,7 @@ RSpec.describe Admin::BackupsController do
 
         Backup.create_from_filename(backup_filename)
 
-        get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }, xhr: true
+        get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }
 
         expect(response.status).to eq(422)
         expect(response.headers['Content-Disposition']).not_to match(/attachment; filename/)
@@ -155,7 +155,7 @@ RSpec.describe Admin::BackupsController do
 
   describe '#logs' do
     it "preloads important data" do
-      get "/admin/backups/logs.html", xhr: true
+      get "/admin/backups/logs.html"
       expect(response.status).to eq(200)
 
       preloaded = controller.instance_variable_get("@preloaded").map do |key, value|
