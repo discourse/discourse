@@ -8,10 +8,10 @@ class DbHelper
        AND (data_type LIKE 'char%' OR data_type LIKE 'text%')
   ORDER BY table_name, column_name"
 
-  def self.remap(from, to)
+  def self.remap(from, to, anchor_left = false, anchor_right = false)
     connection = ActiveRecord::Base.connection.raw_connection
     remappable_columns = connection.async_exec(REMAP_SQL).to_a
-    args = [from, to, "%#{from}%"]
+    args = [from, to, "#{anchor_left ? '' : "%"}#{from}#{anchor_right ? '' : "%"}"]
 
     remappable_columns.each do |rc|
       table_name = rc["table_name"]
@@ -22,10 +22,10 @@ class DbHelper
     SiteSetting.refresh!
   end
 
-  def self.find(needle)
+  def self.find(needle, anchor_left = false, anchor_right = false)
     connection = ActiveRecord::Base.connection.raw_connection
     text_columns = connection.async_exec(REMAP_SQL).to_a
-    args = ["%#{needle}%"]
+    args = ["#{anchor_left ? '' : "%"}#{needle}#{anchor_right ? '' : "%"}"]
     found = {}
 
     text_columns.each do |rc|
