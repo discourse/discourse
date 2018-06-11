@@ -735,8 +735,10 @@ Discourse::Application.routes.draw do
     # logs.
     get "/service-worker.js" => redirect(relative_url_root + service_worker_asset, status: 302), format: :js
     get service_worker_asset => "static#service_worker_asset", format: :js
+    get "/*service_worker_path" => redirect(relative_url_root + service_worker_asset, status: 302), format: :js, constraints: { service_worker_path: /service-worker-.*/ }
   elsif Rails.env.development?
     get "/service-worker.js" => "static#service_worker_asset", format: :js
+    get "/*service_worker_path" => redirect(relative_url_root + "service-worker.js", status: 302), format: :js, constraints: { service_worker_path: /service-worker-.*/ }
   end
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
