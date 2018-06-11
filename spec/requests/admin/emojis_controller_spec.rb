@@ -18,6 +18,7 @@ RSpec.describe Admin::EmojisController do
 
       json = ::JSON.parse(response.body)
       expect(json[0]["name"]).to eq("osama-test-emoji")
+      expect(json[0]["url"]).to eq(upload.url)
     end
   end
 
