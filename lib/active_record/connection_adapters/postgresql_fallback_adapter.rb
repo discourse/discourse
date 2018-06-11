@@ -72,7 +72,7 @@ class PostgreSQLFallbackHandler
 
           if is_connection_active
             logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
-            clear_connections
+            MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace)
             self.master_up(key)
             disable_readonly_mode
             Sidekiq.unpause!
