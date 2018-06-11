@@ -15,21 +15,23 @@ describe Admin::VersionsController do
   end
 
   context 'while logged in as an admin' do
+    let(:admin) { Fabricate(:admin) }
     before do
-      @user = log_in(:admin)
+      sign_in(admin)
     end
 
     describe 'show' do
-      subject { get :show, format: :json }
-      it { is_expected.to be_successful }
-
       it 'should return the currently available version' do
-        json = JSON.parse(subject.body)
+        get "/admin/version_check.json"
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
         expect(json['latest_version']).to eq('1.2.33')
       end
 
       it "should return the installed version" do
-        json = JSON.parse(subject.body)
+        get "/admin/version_check.json"
+        json = JSON.parse(response.body)
+        expect(response.status).to eq(200)
         expect(json['installed_version']).to eq(Discourse::VERSION::STRING)
       end
     end
