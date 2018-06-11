@@ -6,16 +6,20 @@ describe Admin::PermalinksController do
     expect(Admin::PermalinksController < Admin::AdminController).to eq(true)
   end
 
-  let!(:user) { log_in(:admin) }
+  let(:admin) { Fabricate(:admin) }
 
-  describe 'index' do
+  before do
+    sign_in(admin)
+  end
+
+  describe '#index' do
     it 'filters url' do
       Fabricate(:permalink, url: "/forum/23")
       Fabricate(:permalink, url: "/forum/98")
       Fabricate(:permalink, url: "/discuss/topic/45")
       Fabricate(:permalink, url: "/discuss/topic/76")
 
-      get :index, params: { filter: "topic" }, format: :json
+      get "/admin/permalinks.json", params: { filter: "topic" }
 
       expect(response.status).to eq(200)
       result = JSON.parse(response.body)
@@ -28,7 +32,7 @@ describe Admin::PermalinksController do
       Fabricate(:permalink, external_url: "http://www.discourse.org")
       Fabricate(:permalink, external_url: "http://try.discourse.org")
 
-      get :index, params: { filter: "discourse" }, format: :json
+      get "/admin/permalinks.json", params: { filter: "discourse" }
 
       expect(response.status).to eq(200)
       result = JSON.parse(response.body)
@@ -41,7 +45,7 @@ describe Admin::PermalinksController do
       Fabricate(:permalink, url: "/discuss/topic/45", external_url: "http://discourse.org")
       Fabricate(:permalink, url: "/discuss/topic/76", external_url: "http://try.discourse.org")
 
-      get :index, params: { filter: "discourse" }, format: :json
+      get "/admin/permalinks.json", params: { filter: "discourse" }
 
       expect(response.status).to eq(200)
       result = JSON.parse(response.body)
