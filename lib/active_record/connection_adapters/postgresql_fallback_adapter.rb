@@ -33,7 +33,7 @@ class PostgreSQLFallbackHandler
         thread = Thread.new { initiate_fallback_to_master }
         thread.join
         break if synchronize { @masters_down.hash.empty? }
-        sleep 10
+        sleep 5
       end
     end
 
