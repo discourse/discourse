@@ -64,6 +64,9 @@ describe Admin::WebHooksController do
         end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
 
         expect(response.status).to eq(200)
+        job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
+        expect(job_args["web_hook_id"]).to eq(web_hook.id)
+        expect(job_args["event_type"]).to eq("ping")
       end
     end
   end
