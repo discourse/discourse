@@ -7,14 +7,16 @@ describe Admin::WebHooksController do
   end
 
   context 'while logged in as an admin' do
-    before do
-      @user = log_in(:admin)
-    end
     let(:web_hook) { Fabricate(:web_hook) }
+    let(:admin) { Fabricate(:admin) }
+
+    before do
+      sign_in(admin)
+    end
 
     describe '#create' do
       it 'creates a webhook' do
-        post :create, params: {
+        post "/admin/api/web_hooks.json", params: {
           web_hook: {
             payload_url: 'https://meta.discourse.org/',
             content_type: 1,
@@ -26,16 +28,16 @@ describe Admin::WebHooksController do
             group_ids: [],
             category_ids: []
           }
-        }, format: :json
+        }
 
         expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
-        expect(json["web_hook"]["payload_url"]).to be_present
+        expect(json["web_hook"]["payload_url"]).to eq("https://meta.discourse.org/")
       end
 
       it 'returns error when field is not filled correctly' do
-        post :create, params: {
+        post "/admin/api/web_hooks.json", params: {
           web_hook: {
             content_type: 1,
             secret: "a_secret_for_webhooks",
@@ -46,9 +48,9 @@ describe Admin::WebHooksController do
             group_ids: [],
             category_ids: []
           }
-        }, format: :json
+        }
 
-        expect(response.status).to eq 422
+        expect(response.status).to eq(422)
         response_body = JSON.parse(response.body)
 
         expect(response_body["errors"]).to be_present
@@ -57,12 +59,14 @@ describe Admin::WebHooksController do
 
     describe '#ping' do
       it 'enqueues the ping event' do
-        Jobs.expects(:enqueue)
-          .with(:emit_web_hook_event, web_hook_id: web_hook.id, event_type: 'ping', event_name: 'ping')
-
-        post :ping, params: { id: web_hook.id }, format: :json
+        expect do
+          post "/admin/api/web_hooks/#{web_hook.id}/ping.json"
+        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
 
         expect(response.status).to eq(200)
+        job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
+        expect(job_args["web_hook_id"]).to eq(web_hook.id)
+        expect(job_args["event_type"]).to eq("ping")
       end
     end
   end
