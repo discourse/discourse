@@ -12,16 +12,20 @@ describe Admin::DashboardController do
   end
 
   context 'while logged in as an admin' do
-    let!(:admin) { log_in(:admin) }
+    let(:admin) { Fabricate(:admin) }
 
-    context '.index' do
+    before do
+      sign_in(admin)
+    end
+
+    describe '#index' do
       context 'version checking is enabled' do
         before do
           SiteSetting.version_checks = true
         end
 
         it 'returns discourse version info' do
-          get :index, format: :json
+          get "/admin/dashboard.json"
 
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['version_check']).to be_present
@@ -34,21 +38,22 @@ describe Admin::DashboardController do
         end
 
         it 'does not return discourse version info' do
-          get :index, format: :json
+          get "/admin/dashboard.json"
+          expect(response.status).to eq(200)
           json = JSON.parse(response.body)
           expect(json['version_check']).not_to be_present
         end
       end
     end
 
-    context '.problems' do
+    describe '#problems' do
       context 'when there are no problems' do
         before do
           AdminDashboardData.stubs(:fetch_problems).returns([])
         end
 
         it 'returns an empty array' do
-          get :problems, format: :json
+          get "/admin/dashboard/problems.json"
 
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -62,7 +67,8 @@ describe Admin::DashboardController do
         end
 
         it 'returns an array of strings' do
-          get :problems, format: :json
+          get "/admin/dashboard/problems.json"
+          expect(response.status).to eq(200)
           json = JSON.parse(response.body)
           expect(json['problems'].size).to eq(2)
           expect(json['problems'][0]).to be_a(String)
