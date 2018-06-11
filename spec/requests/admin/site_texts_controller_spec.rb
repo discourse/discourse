@@ -52,10 +52,8 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
-        expect(json).to be_present
 
         site_text = json['site_text']
-        expect(site_text).to be_present
 
         expect(site_text['id']).to eq('js.topic.list')
         expect(site_text['value']).to eq(I18n.t("js.topic.list"))
@@ -154,7 +152,6 @@ RSpec.describe Admin::SiteTextsController do
         json = ::JSON.parse(response.body)
 
         site_text = json['site_text']
-        expect(site_text).to be_present
 
         expect(site_text['id']).to eq('title')
         expect(site_text['value']).to eq('hello')
@@ -166,7 +163,6 @@ RSpec.describe Admin::SiteTextsController do
         json = ::JSON.parse(response.body)
 
         site_text = json['site_text']
-        expect(site_text).to be_present
 
         expect(site_text['id']).to eq('title')
         expect(site_text['value']).to eq(orig_title)
