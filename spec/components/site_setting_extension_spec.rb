@@ -433,7 +433,7 @@ describe SiteSettingExtension do
       settings.refresh!
       expect {
         settings.set("provider", "haxxed")
-      }.to raise_error(ArgumentError)
+      }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
@@ -447,7 +447,7 @@ describe SiteSettingExtension do
     it "raises an error when set for an invalid setting name" do
       expect {
         settings.set_and_log("provider", "haxxed")
-      }.to raise_error(ArgumentError)
+      }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "scrubs secret setting values from logs" do
