@@ -251,6 +251,11 @@ describe UserAnonymizer do
         expect(post1.reload).to have_attributes(via_email: true, raw_email: nil)
         expect(post2.reload).to have_attributes(via_email: true, raw_email: "raw email from another user")
       end
+
+      it "does not delete profile views" do
+        UserProfileView.add(user.id, '127.0.0.1', another_user.id, Time.now, true)
+        expect { make_anonymous }.to_not change { UserProfileView.count }
+      end
     end
   end
 
