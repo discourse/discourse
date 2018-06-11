@@ -13,6 +13,10 @@ RSpec.describe Admin::BackupsController do
     sign_in(admin)
   end
 
+  after do
+    $redis.flushall
+  end
+
   describe "#index" do
     it "raises an error when backups are disabled" do
       SiteSetting.enable_backups = false
