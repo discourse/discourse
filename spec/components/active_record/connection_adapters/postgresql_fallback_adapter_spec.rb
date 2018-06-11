@@ -37,6 +37,7 @@ describe ActiveRecord::ConnectionHandling do
   after do
     postgresql_fallback_handler.setup!
     postgresql_fallback_handler.clear_connections
+    Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
   end
 
   describe "#postgresql_fallback_connection" do
