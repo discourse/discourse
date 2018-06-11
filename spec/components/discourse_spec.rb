@@ -177,6 +177,7 @@ describe Discourse do
       it "returns true when user enabled readonly mode key is present in redis" do
         Discourse.enable_readonly_mode(user_readonly_mode_key)
         expect(Discourse.readonly_mode?).to eq(true)
+        expect(Discourse.readonly_mode?(readonly_mode_key)).to eq(false)
 
         Discourse.disable_readonly_mode(user_readonly_mode_key)
         expect(Discourse.readonly_mode?).to eq(false)
