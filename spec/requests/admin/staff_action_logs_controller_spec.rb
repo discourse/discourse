@@ -5,16 +5,18 @@ describe Admin::StaffActionLogsController do
     expect(Admin::StaffActionLogsController < Admin::AdminController).to eq(true)
   end
 
-  let!(:user) { log_in(:admin) }
+  let(:admin) { Fabricate(:admin) }
 
-  context '.index' do
+  before do
+    sign_in(admin)
+  end
 
+  describe '#index' do
     it 'generates logs' do
-
       topic = Fabricate(:topic)
-      _record = StaffActionLogger.new(Discourse.system_user).log_topic_delete_recover(topic, "delete_topic")
+      StaffActionLogger.new(Discourse.system_user).log_topic_delete_recover(topic, "delete_topic")
 
-      get :index, params: { action_id: UserHistory.actions[:delete_topic] }, format: :json
+      get "/admin/logs/staff_action_logs.json", params: { action_id: UserHistory.actions[:delete_topic] }
 
       json = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -23,11 +25,10 @@ describe Admin::StaffActionLogsController do
       expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
 
       expect(json["user_history_actions"]).to include("id" => UserHistory.actions[:delete_topic], "name" => 'delete_topic')
-
     end
   end
 
-  context '.diff' do
+  describe '#diff' do
     it 'can generate diffs for theme changes' do
       theme = Theme.new(user_id: -1, name: 'bob')
       theme.set_field(target: :mobile, name: :scss, value: 'body {.up}')
@@ -40,7 +41,7 @@ describe Admin::StaffActionLogsController do
       record = StaffActionLogger.new(Discourse.system_user)
         .log_theme_change(original_json, theme)
 
-      get :diff, params: { id: record.id }, format: :json
+      get "/admin/logs/staff_action_logs/#{record.id}/diff.json"
       expect(response.status).to eq(200)
 
       parsed = JSON.parse(response.body)
