@@ -79,9 +79,12 @@ export function ajax() {
     args.success = (data, textStatus, xhr) => {
       handleLogoff(xhr);
 
-      if (xhr.getResponseHeader('Discourse-Readonly')) {
-        Ember.run(() => Discourse.Site.currentProp('isReadOnly', true));
-      }
+      Ember.run(() => {
+        Discourse.Site.currentProp(
+          'isReadOnly',
+          !!xhr.getResponseHeader('Discourse-Readonly')
+        );
+      });
 
       if (args.returnXHR) {
         data = { result: data, xhr: xhr };
