@@ -1,7 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe TopicTimer, type: :model do
-  let(:topic_timer) { Fabricate(:topic_timer) }
+  let(:topic_timer) {
+    # we should not need to do this but somehow
+    # fabricator is failing here
+    TopicTimer.create!(
+      user_id: -1,
+      topic: Fabricate(:topic),
+      execute_at: 1.hour.from_now,
+      status_type: TopicTimer.types[:close]
+    )
+  }
   let(:topic) { Fabricate(:topic) }
   let(:admin) { Fabricate(:admin) }
 
