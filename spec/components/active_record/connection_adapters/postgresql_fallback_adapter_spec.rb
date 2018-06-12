@@ -37,6 +37,8 @@ describe ActiveRecord::ConnectionHandling do
   after do
     postgresql_fallback_handler.setup!
     Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+    ActiveRecord::Base.unstub(:postgresql_connection)
+    ActiveRecord::Base.establish_connection
   end
 
   describe "#postgresql_fallback_connection" do
@@ -53,7 +55,6 @@ describe ActiveRecord::ConnectionHandling do
 
     context 'when master server is down' do
       before do
-
         @replica_connection = mock('replica_connection')
       end
 
