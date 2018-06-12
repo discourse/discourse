@@ -6,4 +6,8 @@ class SingleSignOnRecordSerializer < ApplicationSerializer
              :external_avatar_url,
              :external_profile_background_url,
              :external_card_background_url
+
+  def include_external_email?
+    scope.is_admin?
+  end
 end
