@@ -131,6 +131,8 @@ RSpec.configure do |config|
         x.exception.cause = ex
       end
     end
+
+    unfreeze_time
   end
 
   config.before :each do |x|
