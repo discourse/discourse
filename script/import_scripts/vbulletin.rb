@@ -335,7 +335,7 @@ EOM
         t
       end
 
-      # Add the following to permalink_normalizations for this to work: 
+      # Add the following to permalink_normalizations for this to work:
       # /forum\/.*?\/(\d*)\-.*/thread/\1
 
       topics.each do |thread|
@@ -402,7 +402,7 @@ EOM
 
   # find the uploaded file information from the db
   def find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename, 
+    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
                   LENGTH(fd.filedata) AS dbsize, filedata, a.caption caption
              FROM #{TABLE_PREFIX}attachment a
              LEFT JOIN #{TABLE_PREFIX}filedata fd ON fd.filedataid = a.filedataid
@@ -735,10 +735,10 @@ EOM
       rows = $1.gsub!(/\s*\[TR\](.*?)\[\/TR\]\s*/im) { |r|
         cols = $1.gsub! /\s*\[TD.*?\](.*?)\[\/TD\]\s*/im, '|\1'
         "#{cols}|\n"
-      } 
-      header,rest = rows.split "\n",2
+      }
+      header, rest = rows.split "\n", 2
       c = header.count "|"
-      sep = "|---" * (c-1)
+      sep = "|---" * (c - 1)
       "#{header}\n#{sep}|\n#{rest}\n"
     }
 
