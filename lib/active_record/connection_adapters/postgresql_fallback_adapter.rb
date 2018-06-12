@@ -80,6 +80,7 @@ class PostgreSQLFallbackHandler
               self.master_up(key)
               disable_readonly_mode
               Sidekiq.unpause!
+              clear_connections
             end
           rescue => e
             logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
