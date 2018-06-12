@@ -55,6 +55,10 @@ module JsLocaleHelper
 
       # merge translations (plugin translations overwrite default translations)
       if translations[locale_str] && plugin_translations(locale_str)
+        translations[locale_str]['js'] ||= {}
+        translations[locale_str]['admin_js'] ||= {}
+        translations[locale_str]['wizard_js'] ||= {}
+
         translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if plugin_translations(locale_str)['js']
         translations[locale_str]['admin_js'].deep_merge!(plugin_translations(locale_str)['admin_js']) if plugin_translations(locale_str)['admin_js']
         translations[locale_str]['wizard_js'].deep_merge!(plugin_translations(locale_str)['wizard_js']) if plugin_translations(locale_str)['wizard_js']
