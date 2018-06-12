@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe SingleSignOnRecordSerializer do
-  let(:user) { user = Fabricate(:user) }
+  let(:user) { Fabricate(:user) }
   let :sso do
     SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', external_email: user.email, last_payload: '')
   end
