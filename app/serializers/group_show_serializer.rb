@@ -1,5 +1,5 @@
 class GroupShowSerializer < BasicGroupSerializer
-  attributes :is_group_user, :is_group_owner, :mentionable, :messageable
+  attributes :is_group_user, :is_group_owner, :is_group_owner_display, :mentionable, :messageable
 
   def include_is_group_user?
     authenticated?
@@ -15,6 +15,14 @@ class GroupShowSerializer < BasicGroupSerializer
 
   def is_group_owner
     scope.is_admin? || fetch_group_user&.owner
+  end
+
+  def include_is_group_owner_display?
+    authenticated?
+  end
+
+  def is_group_owner_display
+    !!fetch_group_user&.owner
   end
 
   def include_mentionable?
