@@ -1,14 +1,14 @@
 {{plugin-outlet name="admin-dashboard-top"}}
 
-<div class="section-top">
-  {{#if showVersionChecks}}
-  <div class="version-checks">
+{{#if showVersionChecks}}
+  <div class="section-top">
+    <div class="version-checks">
       {{partial 'admin/templates/version-checks'}}
-      {{partial 'admin/templates/dashboard-problems'}}
+    </div>
   </div>
-  {{/if}}
-  <div class='clearfix'></div>
-</div>
+{{/if}}
+
+{{partial 'admin/templates/dashboard-problems'}}
 
 <div class="community-health section">
   <div class="section-title">
