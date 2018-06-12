@@ -16,8 +16,8 @@ class PostgreSQLFallbackHandler
     @mutex = Mutex.new
     @initialized = false
 
-    MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload|
-      if @initialized
+    MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload, pid|
+      if @initialized && pid != Process.pid
         RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
           clear_connections
         end
@@ -49,7 +49,7 @@ class PostgreSQLFallbackHandler
     synchronize do
       @masters_down[namespace] = true
       Sidekiq.pause! if !Sidekiq.paused?
-      MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace)
+      MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace, pid: Process.pid)
     end
   end
 
