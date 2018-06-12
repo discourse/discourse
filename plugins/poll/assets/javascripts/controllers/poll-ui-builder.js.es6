@@ -118,7 +118,10 @@ export default Ember.Controller.extend({
     if (pollMax) pollHeader += ` max=${pollMax}`;
     if (isNumber) pollHeader += ` step=${step}`;
     if (publicPoll) pollHeader += ` public=true`;
-    if (autoClose) pollHeader += ` close=${moment(date + " " + time, "YYYY-MM-DD HH:mm").toISOString()}`;
+    if (autoClose) {
+      let closeDate = moment(date + " " + time, "YYYY-MM-DD HH:mm").toISOString();
+      if (closeDate) pollHeader += ` close=${closeDate}`;
+    }
 
     pollHeader += ']';
     output += `${pollHeader}\n`;
@@ -186,7 +189,7 @@ export default Ember.Controller.extend({
       pollMax: null,
       pollStep: 1,
       autoClose: false,
-      date: moment().add(1, "day").format("YYYY-DD-MM"),
+      date: moment().add(1, "day").format("YYYY-MM-DD"),
       time: moment().add(1, "hour").format("HH:mm"),
     });
   },
