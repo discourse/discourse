@@ -25,7 +25,7 @@ describe Onebox::Preview do
 
     it "doesn't change dimensions without an option" do
       iframe = described_class.new(preview_url)
-      iframe.expects(:engine_html).returns(iframe_html)
+      allow(iframe).to receive(:engine_html) { iframe_html }
 
       result = iframe.to_s
       expect(result).to include("width=\"1280\"")
@@ -34,7 +34,7 @@ describe Onebox::Preview do
 
     it "doesn't change dimensions if it is smaller than `max_width`" do
       iframe = described_class.new(preview_url, max_width: 2000)
-      iframe.expects(:engine_html).returns(iframe_html)
+      allow(iframe).to receive(:engine_html) { iframe_html }
 
       result = iframe.to_s
       expect(result).to include("width=\"1280\"")
@@ -43,7 +43,7 @@ describe Onebox::Preview do
 
     it "changes dimensions if larger than `max_width`" do
       iframe = described_class.new(preview_url, max_width: 900)
-      iframe.expects(:engine_html).returns(iframe_html)
+      allow(iframe).to receive(:engine_html) { iframe_html }
 
       result = iframe.to_s
       expect(result).to include("width=\"900\"")
@@ -63,7 +63,7 @@ describe Onebox::Preview do
 
     it "prevents XSS" do
       preview = described_class.new(preview_url)
-      preview.expects(:engine_html).returns(img_html)
+      allow(preview).to receive(:engine_html) { img_html }
 
       result = preview.to_s
       expect(result).not_to match(/onerror/)

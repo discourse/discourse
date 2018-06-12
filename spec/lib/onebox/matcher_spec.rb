@@ -15,7 +15,7 @@ describe Onebox::Matcher do
       let(:matcher) { Onebox::Matcher.new(url) }
 
       it "finds an engine" do
-        matcher.stubs(:ordered_engines).returns([TestEngine])
+        allow(matcher).to receive(:ordered_engines) { [TestEngine] }
         expect(matcher.oneboxed).not_to be_nil
       end
     end
@@ -25,7 +25,7 @@ describe Onebox::Matcher do
       let(:matcher) { Onebox::Matcher.new(url) }
 
       it "doesn't find an engine" do
-        matcher.stubs(:ordered_engines).returns([TestEngine])
+        allow(matcher).to receive(:ordered_engines) { [TestEngine] }
         expect(matcher.oneboxed).not_to be_nil
       end
     end
@@ -35,7 +35,7 @@ describe Onebox::Matcher do
       let(:matcher) { Onebox::Matcher.new(url) }
 
       it "finds an engine" do
-        matcher.stubs(:ordered_engines).returns([TestEngine])
+        allow(matcher).to receive(:ordered_engines) { [TestEngine] }
         expect(matcher.oneboxed).not_to be_nil
       end
     end
@@ -45,7 +45,7 @@ describe Onebox::Matcher do
       let(:matcher) { Onebox::Matcher.new(url) }
 
       it "finds an engine" do
-        matcher.stubs(:ordered_engines).returns([TestEngine])
+        allow(matcher).to receive(:ordered_engines) { [TestEngine] }
         expect(matcher.oneboxed).not_to be_nil
       end
     end
@@ -54,7 +54,7 @@ describe Onebox::Matcher do
       %w{http://example.com https://example.com http://example.com:80 //example.com}.each do |url|
         it "finds an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url)
-          matcher.stubs(:ordered_engines).returns([TestEngine])
+          allow(matcher).to receive(:ordered_engines) { [TestEngine] }
           expect(matcher.oneboxed).not_to be_nil
         end
       end
@@ -64,7 +64,7 @@ describe Onebox::Matcher do
       %w{http://example.com:21 ftp://example.com}.each do |url|
         it "doesn't find an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url)
-          matcher.stubs(:ordered_engines).returns([TestEngine])
+          allow(matcher).to receive(:ordered_engines) { [TestEngine] }
           expect(matcher.oneboxed).to be_nil
         end
       end
