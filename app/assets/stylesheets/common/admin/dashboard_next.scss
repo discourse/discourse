@@ -182,6 +182,18 @@
       }
     }
   }
+
+  .dashboard-problems {
+    margin-bottom: 2em;
+
+    .d-icon-exclamation-triangle {
+      color: $danger;
+    }
+
+    .actions {
+      margin: 0;
+    }
+  }
 }
 
 .dashboard-mini-chart {
