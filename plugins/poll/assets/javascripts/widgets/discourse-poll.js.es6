@@ -354,12 +354,14 @@ createWidget('discourse-poll-info', {
 
       if (poll.close) {
         const closeDate = moment.utc(poll.close);
-        const title = closeDate.format("LLL");
-        const timeLeft = moment().to(closeDate.local(), true);
+        if (closeDate.isValid()) {
+          const title = closeDate.format("LLL");
+          const timeLeft = moment().to(closeDate.local(), true);
 
-        result.push(new RawHtml({
-          html: `<span class="info-text" title="${title}">${I18n.t("poll.automatic_close.closes_in", { timeLeft })}</span>`
-        }));
+          result.push(new RawHtml({
+            html: `<span class="info-text" title="${title}">${I18n.t("poll.automatic_close.closes_in", { timeLeft })}</span>`
+          }));
+        }
       }
     }
 
