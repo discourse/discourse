@@ -23,18 +23,6 @@ export default Ember.Controller.extend({
     return this.currentUser.get("admin") && (problemsLength || 0) > 0;
   },
 
-  @computed("foundProblems")
-  thereWereProblems(foundProblems) {
-    if (!this.currentUser.get("admin")) { return false; }
-
-    if (foundProblems) {
-      this.set("hadProblems", true);
-      return true;
-    } else {
-      return this.get("hadProblems") || false;
-    }
-  },
-
   fetchDashboard() {
     if (this.get("isLoading")) return;
 
