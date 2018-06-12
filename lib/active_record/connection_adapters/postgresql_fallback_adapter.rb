@@ -98,8 +98,7 @@ class PostgreSQLFallbackHandler
   end
 
   def clear_connections
-    ActiveRecord::Base.clear_active_connections!
-    ActiveRecord::Base.clear_all_connections!
+    ActiveRecord::Base.connection_pool.disconnect
   end
 
   private
