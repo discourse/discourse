@@ -31,6 +31,7 @@ class PostgreSQLFallbackHandler
     @thread = Thread.new do
       while true do
         thread = Thread.new { initiate_fallback_to_master }
+        thread.abort_on_exception = true
         thread.join
         break if synchronize { @masters_down.hash.empty? }
         sleep 5
@@ -57,33 +58,36 @@ class PostgreSQLFallbackHandler
   end
 
   def initiate_fallback_to_master
-    unless @initialized
-      @initialized = true
-      return
-    end
+    begin
+      unless @initialized
+        @initialized = true
+        return
+      end
 
-    @masters_down.hash.keys.each do |key|
-      RailsMultisite::ConnectionManagement.with_connection(key) do
-        begin
-          logger.warn "#{log_prefix}: Checking master server..."
+      @masters_down.hash.keys.each do |key|
+        RailsMultisite::ConnectionManagement.with_connection(key) do
           begin
-            connection = ActiveRecord::Base.postgresql_connection(config)
-            is_connection_active = connection.active?
-          ensure
-            connection.disconnect! if connection
-          end
+            logger.warn "#{log_prefix}: Checking master server..."
+            begin
+              connection = ActiveRecord::Base.postgresql_connection(config)
+              is_connection_active = connection.active?
+            ensure
+              connection.disconnect! if connection
+            end
 
-          if is_connection_active
-            logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
-            MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace)
-            self.master_up(key)
-            disable_readonly_mode
-            Sidekiq.unpause!
+            if is_connection_active
+              logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
+              self.master_up(key)
+              disable_readonly_mode
+              Sidekiq.unpause!
+            end
+          rescue => e
+            logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
           end
-        rescue => e
-          logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
         end
       end
+    rescue => e
+      logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
     end
   end
 
