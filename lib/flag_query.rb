@@ -129,13 +129,10 @@ module FlagQuery
     # TODO: add serializer so we can skip this
     posts.map!(&:marshal_dump)
 
-    users = User.includes(:user_stat).where(id: user_ids.to_a).to_a
-    User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
-
     [
       posts,
       Topic.with_deleted.where(id: topic_ids.to_a).to_a,
-      users,
+      User.includes(:user_stat).where(id: user_ids.to_a).to_a,
       all_post_actions,
       total_rows
     ]
