@@ -26,9 +26,10 @@ import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
 import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
 import { disableNameSuppression } from 'discourse/widgets/poster-name';
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from 'discourse/controllers/topic';
+import Sharing from 'discourse/lib/sharing';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.22';
+const PLUGIN_API_VERSION = '0.8.23';
 
 class PluginApi {
   constructor(version, container) {
@@ -709,6 +710,21 @@ class PluginApi {
   */
   addGTMPageChangedCallback(fn) {
     addGTMPageChangedCallback(fn);
+  }
+
+  /**
+  *
+  * Registers a function that can add a new sharing source
+  *
+  * Example:
+  *
+  * // read /discourse/lib/sharing.js.es6 for options
+  * addSharingSource(options)
+  *
+  */
+  addSharingSource(options) {
+    Sharing.addSharingId(options.id);
+    Sharing.addSource(options);
   }
 }
 
