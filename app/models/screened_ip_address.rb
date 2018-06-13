@@ -158,9 +158,6 @@ class ScreenedIpAddress < ActiveRecord::Base
                AND ip_address << :ip_address
           ) s
          WHERE ip_address = :ip_address
-           AND sum_match_count IS NOT NULL
-           AND min_created_at IS NOT NULL
-           AND max_last_match_at IS NOT NULL
       SQL
 
       ScreenedIpAddress.exec_sql(sql, ip_address: subnet)
