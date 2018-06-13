@@ -9,7 +9,7 @@ import CleansUp from 'discourse/mixins/cleans-up';
 export default Ember.Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: 'user-card',
   triggeringLinkClass: 'mention',
-  classNameBindings: ['visible:show', 'showBadges', 'user.card_background::no-bg', 'isFixed:fixed'],
+  classNameBindings: ['visible:show', 'showBadges', 'user.card_background::no-bg', 'isFixed:fixed', 'usernameClass'],
   allowBackgrounds: setting('allow_profile_backgrounds'),
   showBadges: setting('enable_badges'),
 
@@ -33,6 +33,9 @@ export default Ember.Component.extend(CardContentsBase, CanCheckEmails, CleansUp
   nameFirst(name) {
     return !this.siteSettings.prioritize_username_in_ux && name && name.trim().length > 0;
   },
+
+  @computed('username')
+  usernameClass : (username) => username ? `user-card-${username}` : '',
 
   @computed('username', 'topicPostCount')
   togglePostsLabel(username, count) {
