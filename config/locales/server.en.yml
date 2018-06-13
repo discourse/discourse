@@ -1394,6 +1394,8 @@ en:
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_images: "The minimum trust level required to include images in a post"
 
+    whitelisted_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
+
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."

@@ -6,11 +6,11 @@ class PostAnalyzer
   def initialize(raw, topic_id)
     @raw = raw
     @topic_id = topic_id
-    @found_oneboxes = false
+    @onebox_urls = []
   end
 
   def found_oneboxes?
-    @found_oneboxes
+    @onebox_urls.present?
   end
 
   def has_oneboxes?
@@ -32,7 +32,7 @@ class PostAnalyzer
     end
 
     result = Oneboxer.apply(cooked) do |url|
-      @found_oneboxes = true
+      @onebox_urls << url
       Oneboxer.invalidate(url) if opts[:invalidate_oneboxes]
       Oneboxer.cached_onebox(url)
     end
@@ -86,18 +86,20 @@ class PostAnalyzer
 
   # Count how many hosts are linked in the post
   def linked_hosts
-    return {} if raw_links.blank?
+    all_links = raw_links + @onebox_urls
+
+    return {} if all_links.blank?
     return @linked_hosts if @linked_hosts.present?
 
     @linked_hosts = {}
 
-    raw_links.each do |u|
+    all_links.each do |u|
       begin
         uri = self.class.parse_uri_rfc2396(u)
         host = uri.host
         @linked_hosts[host] ||= 1 unless host.nil?
-      rescue URI::InvalidURIError
-        # An invalid URI does not count as a raw link.
+      rescue URI::InvalidURIError, URI::InvalidComponentError
+        # An invalid URI does not count as a host
         next
       end
     end

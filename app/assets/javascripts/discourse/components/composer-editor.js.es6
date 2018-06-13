@@ -47,6 +47,11 @@ export default Ember.Component.extend({
     }
   },
 
+  @computed
+  showLink() {
+    return this.currentUser && this.currentUser.get('link_posting_access') !== 'none';
+  },
+
   @computed('composer.requiredCategoryMissing', 'composer.replyLength')
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;
