@@ -136,44 +136,41 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.roll_up(current_user = Discourse.system_user)
-    # 1 - retrieve all subnets that needs roll up
     subnets = [star_subnets, star_star_subnets].flatten
 
-    # 2 - log the call
     StaffActionLogger.new(current_user).log_roll_up(subnets) unless subnets.blank?
 
     subnets.each do |subnet|
-      # 3 - create subnet if not already exists
-      ScreenedIpAddress.new(ip_address: subnet).save unless ScreenedIpAddress.where(ip_address: subnet).exists?
+      ScreenedIpAddress.create(ip_address: subnet) unless ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
 
-      # 4 - update stats
       sql = <<-SQL
         UPDATE screened_ip_addresses
-           SET match_count   = sum_match_count,
-               created_at    = min_created_at,
-               last_match_at = max_last_match_at
+           SET match_count   = sum_match_count
+             , created_at    = min_created_at
+             , last_match_at = max_last_match_at
           FROM (
-            SELECT SUM(match_count)   AS sum_match_count,
-                   MIN(created_at)    AS min_created_at,
-                   MAX(last_match_at) AS max_last_match_at
+            SELECT SUM(match_count)   AS sum_match_count
+                 , MIN(created_at)    AS min_created_at
+                 , MAX(last_match_at) AS max_last_match_at
               FROM screened_ip_addresses
              WHERE action_type = #{ScreenedIpAddress.actions[:block]}
                AND family(ip_address) = 4
                AND ip_address << :ip_address
           ) s
          WHERE ip_address = :ip_address
+           AND sum_match_count IS NOT NULL
+           AND min_created_at IS NOT NULL
+           AND max_last_match_at IS NOT NULL
       SQL
 
       ScreenedIpAddress.exec_sql(sql, ip_address: subnet)
 
-      # 5 - remove old matches
       ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block])
         .where("family(ip_address) = 4")
         .where("ip_address << ?", subnet)
         .delete_all
     end
 
-    # return the subnets
     subnets
   end
 
