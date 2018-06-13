@@ -87,6 +87,45 @@ describe Stylesheet::Manager do
 
       expect(digest1).not_to eq(digest2)
     end
+
+    let(:image) { file_from_fixtures("logo.png") }
+    let(:image2) { file_from_fixtures("logo-dev.png") }
+
+    it 'can correctly account for theme uploads in digest' do
+      theme = Theme.create!(
+        name: 'parent',
+        user_id: -1
+      )
+
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "logo",
+        value: "",
+        upload_id: upload.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+      digest1 = manager.digest
+      field.destroy!
+
+      upload = UploadCreator.new(image2, "logo.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "logo",
+        value: "",
+        upload_id: upload.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+      digest2 = manager.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
   end
 
   describe 'color_scheme_digest' do
