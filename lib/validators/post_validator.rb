@@ -109,10 +109,12 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def can_post_links_validator(post)
-    if (post.link_count == 0 && !post.has_oneboxes?) ||
-      Guardian.new(post.acting_user).can_post_link? ||
-      private_message?(post)
+    if (post.link_count == 0 && !post.has_oneboxes?) || private_message?(post)
+      return newuser_links_validator(post)
+    end
 
+    guardian = Guardian.new(post.acting_user)
+    if post.linked_hosts.keys.all? { |h| guardian.can_post_link?(host: h) }
       return newuser_links_validator(post)
     end
 

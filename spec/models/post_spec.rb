@@ -452,6 +452,13 @@ describe Post do
           post_two_links.user.trust_level = TrustLevel[1]
           expect(post_one_link).not_to be_valid
         end
+
+        it "will skip the check for whitelisted domains" do
+          SiteSetting.whitelisted_link_domains = 'www.bbc.co.uk'
+          SiteSetting.min_trust_to_post_links = 2
+          post_two_links.user.trust_level = TrustLevel[1]
+          expect(post_one_link).to be_valid
+        end
       end
 
     end
