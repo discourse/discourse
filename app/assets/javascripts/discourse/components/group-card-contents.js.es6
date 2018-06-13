@@ -9,7 +9,7 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
   elementId: 'group-card',
   triggeringLinkClass: 'mention-group',
   classNames: ['no-bg'],
-  classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'isFixed:fixed'],
+  classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'isFixed:fixed', 'groupClass'],
   allowBackgrounds: setting('allow_profile_backgrounds'),
   showBadges: setting('enable_badges'),
 
@@ -22,6 +22,9 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
 
   @computed('group.user_count', 'group.members.length')
   moreMembersCount: (memberCount, maxMemberDisplay) => memberCount - maxMemberDisplay,
+
+  @computed('group.name')
+  groupClass: (name) => name ? `group-card-${name}` : '',
 
   @computed('group')
   groupPath(group) {
