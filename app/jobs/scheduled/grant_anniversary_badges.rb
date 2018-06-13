@@ -33,7 +33,8 @@ module Jobs
         HAVING COUNT(p.id) > 0 AND COUNT(ub.id) = 0
       SQL
 
-      user_ids = results.map { |r| r['user_id'].to_i }
+      user_ids = results.column_values(0)
+      results.clear
 
       User.where(id: user_ids).find_each do |user|
         BadgeGranter.grant(badge, user, created_at: end_date)

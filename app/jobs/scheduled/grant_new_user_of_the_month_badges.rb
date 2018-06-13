@@ -82,7 +82,10 @@ module Jobs
         LIMIT #{MAX_AWARDED}
       SQL
 
-      User.exec_sql(sql).map { |r| [r['id'].to_i, r['score'].to_f] }.to_h
+      result = User.exec_sql(sql)
+      rval = result.map { |r| [r['id'].to_i, r['score'].to_f] }.to_h
+      result.clear
+      rval
     end
 
   end
