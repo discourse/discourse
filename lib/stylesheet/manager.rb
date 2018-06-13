@@ -256,7 +256,7 @@ class Stylesheet::Manager
       raise "attempting to look up theme digest for invalid field"
     end
 
-    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest)
+    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest + uploads_digest)
   end
 
   # this protects us from situations where new versions of a plugin removed a file
@@ -272,6 +272,10 @@ class Stylesheet::Manager
 
   def settings_digest
     Digest::SHA1.hexdigest((theme&.included_settings || {}).to_json)
+  end
+
+  def uploads_digest
+    Digest::SHA1.hexdigest(ThemeField.joins(:upload).where(id: theme&.all_theme_variables).pluck(:sha1).join(","))
   end
 
   def color_scheme_digest
