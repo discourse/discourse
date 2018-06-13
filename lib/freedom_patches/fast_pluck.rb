@@ -2,10 +2,6 @@
 # of AR objects
 #
 #
-
-# until we upgrade rails
-return
-
 require_dependency 'sql_builder'
 
 class ActiveRecord::Relation
