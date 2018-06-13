@@ -55,8 +55,8 @@ export default Ember.Component.extend({
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
     const isMobileDevice = this.site.isMobileDevice;
-    const { isIOS, isAndroid, isSafari } = this.capabilities;
-    const showAtEnd = isMobileDevice || isIOS || isAndroid;
+    const { isIOS, isAndroid, isSafari, isOpera } = this.capabilities;
+    const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
     // Don't mess with the original range as it results in weird behaviours
     // where certain browsers will deselect the selection
