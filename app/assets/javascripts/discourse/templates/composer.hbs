@@ -24,11 +24,9 @@
                 {{/unless}}
 
                 {{#if canEdit}}
-                  {{#if showEditReason}}
-                    {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
-                  {{else}}
-                    <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
-                  {{/if}}
+                  {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason key="composer.show_edit_reason" class="display-edit-reason"}}
+                    {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                  {{/link-to-input}}
                 {{/if}}
               </div>
               {{composer-toggles composeState=model.composeState
