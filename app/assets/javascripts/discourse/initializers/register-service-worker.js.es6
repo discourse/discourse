@@ -7,9 +7,10 @@ export default {
 
     const isSupported= isSecured && ('serviceWorker' in navigator);
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isAndroid = navigator.userAgent.indexOf('Android') !== -1;
 
     if (isSupported) {
-      if (Discourse.ServiceWorkerURL && !isSafari) {
+      if (Discourse.ServiceWorkerURL && !isSafari && isAndroid) {
         navigator.serviceWorker
           .register(`${Discourse.BaseUri}/${Discourse.ServiceWorkerURL}`)
           .catch(error => {
