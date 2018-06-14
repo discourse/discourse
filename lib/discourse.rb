@@ -499,9 +499,7 @@ module Discourse
     pools = []
     ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
 
-    i = 0
     pools.each do |pool|
-      i += 1
       # reap recovers connections that were aborted
       # eg a thread died or a dev forgot to check it in
       # flush removes idle connections
