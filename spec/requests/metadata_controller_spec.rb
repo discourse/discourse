@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe MetadataController do
-  describe 'manifest.json' do
+  describe 'manifest.webmanifest' do
     it 'returns the right output' do
       title = 'MyApp'
       SiteSetting.title = title
       SiteSetting.large_icon_url = "http://big.square/png"
 
-      get "/manifest.json"
+      get "/manifest.webmanifest"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/json')
+      expect(response.content_type).to eq('application/manifest+json')
       manifest = JSON.parse(response.body)
 
       expect(manifest["name"]).to eq(title)
@@ -18,7 +18,7 @@ RSpec.describe MetadataController do
 
     it 'can guess mime types' do
       SiteSetting.large_icon_url = "http://big.square/ico.jpg"
-      get "/manifest.json"
+      get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
       expect(manifest["icons"].first["type"]).to eq("image/jpeg")
@@ -26,7 +26,7 @@ RSpec.describe MetadataController do
 
     it 'defaults to png' do
       SiteSetting.large_icon_url = "http://big.square/noidea.bogus"
-      get "/manifest.json"
+      get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
       expect(manifest["icons"].first["type"]).to eq("image/png")

@@ -747,7 +747,8 @@ Discourse::Application.routes.draw do
   get "robots.txt" => "robots_txt#index"
   get "robots-builder.json" => "robots_txt#builder"
   get "offline.html" => "offline#index"
-  get "manifest.json" => "metadata#manifest", as: :manifest
+  get "manifest.webmanifest" => "metadata#manifest", as: :manifest
+  get "manifest.json" => "metadata#manifest"
   get "opensearch" => "metadata#opensearch", format: :xml
 
   scope "/tags" do

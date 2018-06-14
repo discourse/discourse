@@ -3,7 +3,7 @@ class MetadataController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required
 
   def manifest
-    render json: default_manifest.to_json
+    render json: default_manifest.to_json, content_type: 'application/manifest+json'
   end
 
   def opensearch
@@ -23,11 +23,8 @@ class MetadataController < ApplicationController
       name: SiteSetting.title,
       short_name: SiteSetting.title,
       display: 'standalone',
-      orientation: 'natural',
+      orientation: 'any',
       start_url: "#{Discourse.base_uri}/",
-      share_target: {
-        url_template: 'new-topic?title={title}&body={text}%0A%0A{url}'
-      },
       background_color: "##{ColorScheme.hex_for_name('secondary')}",
       theme_color: "##{ColorScheme.hex_for_name('header_background')}",
       icons: [
