@@ -500,6 +500,9 @@ module Discourse
     ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
 
     pools.each do |pool|
+      # reap recovers connections that were aborted
+      # eg a thread died or a dev forgot to check it in
+      pool.reap
       pool.drain(idle.seconds, max_age.seconds)
     end
   end
