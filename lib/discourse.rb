@@ -509,7 +509,7 @@ module Discourse
       # so @connections is set to nil
       if pool.connections
         pool.reap
-        pool.flush(idle.seconds)
+        pool.flush(idle)
       end
     end
   end
