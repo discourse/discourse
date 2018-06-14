@@ -21,8 +21,8 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
 
     # exit the terminal and open it again to activate RVM
 
-    rvm install 2.3.4
-    rvm --default use 2.3.4 # If this error out check https://rvm.io/integration/gnome-terminal
+    rvm install 2.5.1
+    rvm --default use 2.5.1 # If this error out check https://rvm.io/integration/gnome-terminal
     gem install bundler mailcatcher
 
     # Postgresql
