@@ -13,6 +13,7 @@ import { extractLinkMeta } from 'discourse/lib/render-topic-featured-link';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import { userPath } from 'discourse/lib/url';
+import showModal from 'discourse/lib/show-modal';
 
 let customPostMessageCallbacks = {};
 
@@ -469,13 +470,15 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     jumpToPostPrompt() {
-      const postText = prompt(I18n.t('topic.progress.jump_prompt_long'));
-      if (postText === null) { return; }
-
-      const postIndex = parseInt(postText, 10);
-      if (postIndex === 0) { return; }
-
-      this._jumpToIndex(postIndex);
+      const topic = this.get('model');
+      const controller = showModal('jump-to-post');
+      controller.setProperties({
+        topic: topic,
+        postNumber: null,
+        jumpToIndex: (index) => {
+          this.send('jumpToIndex', index);
+        }
+      });
     },
 
     jumpToPost(postNumber) {
