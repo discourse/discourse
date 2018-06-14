@@ -6,6 +6,12 @@ describe SearchController do
       SearchIndexer.enable
     end
 
+    before do
+      # TODO be a bit more strategic here instead of junking
+      # all of redis
+      $redis.flushall
+    end
+
     after do
       $redis.flushall
     end
@@ -175,7 +181,7 @@ describe SearchController do
       sign_in(Fabricate(:user))
 
       _, search_log_id = SearchLog.log(
-        term: 'kitty',
+        term: SecureRandom.hex,
         search_type: :header,
         user_id: -10,
         ip_address: '127.0.0.1'
@@ -195,7 +201,7 @@ describe SearchController do
       user = sign_in(Fabricate(:user))
 
       _, search_log_id = SearchLog.log(
-        term: 'foobar',
+        term: SecureRandom.hex,
         search_type: :header,
         user_id: user.id,
         ip_address: '127.0.0.1'
@@ -217,7 +223,7 @@ describe SearchController do
       ip_address = request.remote_ip
 
       _, search_log_id = SearchLog.log(
-        term: 'kitty',
+        term: SecureRandom.hex,
         search_type: :header,
         ip_address: ip_address
       )
@@ -235,7 +241,7 @@ describe SearchController do
 
     it "doesn't record the click for a different IP" do
       _, search_log_id = SearchLog.log(
-        term: 'kitty',
+        term: SecureRandom.hex,
         search_type: :header,
         ip_address: '192.168.0.19'
       )
@@ -255,7 +261,7 @@ describe SearchController do
       ip_address = request.remote_ip
 
       _, search_log_id = SearchLog.log(
-        term: 'dev',
+        term: SecureRandom.hex,
         search_type: :header,
         ip_address: ip_address
       )
@@ -277,7 +283,7 @@ describe SearchController do
       tag = Fabricate(:tag, name: 'test')
 
       _, search_log_id = SearchLog.log(
-        term: 'test',
+        term: SecureRandom.hex,
         search_type: :header,
         ip_address: ip_address
       )
