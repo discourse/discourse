@@ -25,12 +25,11 @@ class FlaggedUserSerializer < BasicUserSerializer
       fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
     end
 
-    result = {}
-    fields.each do |k|
-      result[k] = object.custom_fields[k] if object.custom_fields[k].present?
+    if fields.present?
+      User.custom_fields_for_ids([object.id], fields)[object.id] || {}
+    else
+      {}
     end
-
-    result
   end
 
 end
