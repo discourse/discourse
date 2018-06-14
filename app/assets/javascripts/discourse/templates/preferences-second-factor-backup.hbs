@@ -1,0 +1,74 @@
+<section class='user-content user-preferences'>
+  <form class="form-horizontal">
+    <div class="control-group">
+      <div class="controls">
+        <h3>{{i18n 'user.second_factor.title'}}</h3>
+      </div>
+    </div>
+
+    {{#if errorMessage}}
+      <div class="control-group">
+        <div class="instructions">
+          <div class='alert alert-error'>{{errorMessage}}</div>
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="control-group">
+      <div class="controls">
+        {{second-factor-input value=secondFactorToken inputId='second-factor-token'}}
+      </div>
+
+      <div class='instructions'>
+        {{i18n 'user.second_factor.disable_description'}}
+      </div>
+    </div>
+
+    {{#if model.second_factor_backup_enabled}}
+      {{!-- <label class='control-label'>{{i18n 'user.second_factor.label'}}</label> --}}
+
+     {{!--  <div class="control-group">
+        <div class="controls">
+          {{d-button action="disableSecondFactorBackup"
+              class="btn btn-primary"
+              disabled=loading
+              label=disableButtonText}}
+
+          {{cancel-link route="preferences.account" args= model.username}}
+        </div>
+      </div> --}}
+
+      <div class="controls">
+        {{d-button action="disableSecondFactorBackup"
+                class="btn btn-primary"
+                disabled=loading
+                label="Disable Second Factor Backup Codes"}}
+
+        {{d-button action="regenerateSecondFactorCodes"
+                class="btn btn-primary"
+                disabled=loading
+                label="Regenerate Second Factor Backup Codes"}}
+        {{cancel-link route="preferences.account" args= model.username}}
+      </div>
+
+    {{else}}
+
+      <div class="control-group">
+        <div class="controls">
+          {{d-button action="createSecondFactorBackup"
+              class="btn btn-primary"
+              disabled=loading
+              label=enableButtonText}}
+
+          {{cancel-link route="preferences.account" args= model.username}}
+        </div>
+      </div>
+
+    {{/if}}
+
+    {{!-- {{{secondFactorCodes}}} --}}
+    {{#each secondFactorCodes as |code|}}
+      <p>{{{code}}}</p>
+    {{/each}}
+  </form>
+</section>

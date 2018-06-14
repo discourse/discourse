@@ -73,7 +73,8 @@ class UserSerializer < BasicUserSerializer
              :primary_group_flair_bg_color,
              :primary_group_flair_color,
              :staged,
-             :second_factor_enabled
+             :second_factor_enabled,
+             :second_factor_backup_enabled
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -149,6 +150,10 @@ class UserSerializer < BasicUserSerializer
 
   def second_factor_enabled
     object.totp_enabled?
+  end
+
+  def second_factor_backup_enabled
+    object.backup_codes_enabled?
   end
 
   def can_change_bio

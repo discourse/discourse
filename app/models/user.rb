@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
-  has_one :user_second_factor, dependent: :destroy
+  has_many :user_second_factors, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy

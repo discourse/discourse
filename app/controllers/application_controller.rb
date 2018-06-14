@@ -363,6 +363,7 @@ class ApplicationController < ActionController::Base
 
   def serialize_data(obj, serializer, opts = nil)
     # If it's an array, apply the serializer as an each_serializer to the elements
+    # binding.pry
     serializer_opts = { scope: guardian }.merge!(opts || {})
     if obj.respond_to?(:to_ary)
       serializer_opts[:each_serializer] = serializer

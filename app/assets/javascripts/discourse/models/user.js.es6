@@ -318,9 +318,23 @@ const User = RestModel.extend({
     });
   },
 
-  toggleSecondFactor(token, enable) {
+  toggleSecondFactor(token, enable, method) {
     return ajax("/u/second_factor.json", {
-      data: { second_factor_token: token, enable },
+      data: { second_factor_token: token, method, enable },
+      type: 'PUT'
+    });
+  },
+
+  loadSecondFactorBackupCodes(token) {
+    return ajax("/u/second_factors_backup.json", {
+      data: { second_factor_token: token },
+      type: 'POST'
+    });
+  },
+
+  regenerateSecondFactorCodes(token) {
+    return ajax("/u/second_factors_backup.json", {
+      data: { second_factor_token: token },
       type: 'PUT'
     });
   },

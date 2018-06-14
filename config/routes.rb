@@ -345,6 +345,9 @@ Discourse::Application.routes.draw do
     post "#{root_path}/second_factors" => "users#create_second_factor"
     put "#{root_path}/second_factor" => "users#update_second_factor"
 
+    post "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
+    put "#{root_path}/second_factors_backup" => "users#update_second_factor_backup"
+
     put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
     post "#{root_path}/email-login" => "users#email_login"
@@ -400,6 +403,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/username" => "users#username", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/second-factor-backup" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
