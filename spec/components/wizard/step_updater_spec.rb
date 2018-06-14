@@ -252,12 +252,13 @@ describe Wizard::StepUpdater do
 
   context "homepage step" do
     it "updates the fields correctly" do
-      updater = wizard.create_updater('homepage', homepage_style: "categories")
+      updater = wizard.create_updater('homepage', homepage_style: "categories_and_top_topics")
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('homepage')).to eq(true)
       expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
+      expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
 
       updater = wizard.create_updater('homepage', homepage_style: "latest")
       updater.update
