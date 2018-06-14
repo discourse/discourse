@@ -63,6 +63,9 @@ export default Ember.Component.extend({
         if ( !$target.is('.widget-button') &&
              !$parents.is('.widget-button') &&
              !$parents.is('.dropdown-menu') &&
+             !$parents.is('#discourse-modal') &&
+             !$target.is('#discourse-modal') &&
+             !$parents.is('.modal-footer') &&
              (
               $target.is('.topic-timeline') ||
              !$parents.is('#topic-progress-wrapper')
