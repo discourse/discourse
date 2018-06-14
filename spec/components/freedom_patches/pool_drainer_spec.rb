@@ -6,7 +6,10 @@ describe 'pool drainer' do
   end
 
   it 'can correctly drain the connection pool' do
-    pool.drain
+
+    pool.reap
+    pool.drain(0)
+
     old = pool.connections.length
     expect(old).to eq(1)
 
@@ -16,7 +19,9 @@ describe 'pool drainer' do
     end.join
 
     expect(pool.connections.length).to eq(old + 1)
-    pool.drain
+
+    freeze_time 1.second.from_now
+    pool.drain(0)
     expect(pool.connections.length).to eq(old)
   end
 
