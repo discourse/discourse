@@ -67,7 +67,6 @@ $line-height-large: 1.4; // Normal or small text
 
 $z-layers: (
   "max": 9999,
-  "fullscreen": 1700,
   "modal": (
     "tooltip": 1600,
     "popover": 1500,
@@ -75,6 +74,7 @@ $z-layers: (
     "content": 1300,
     "overlay": 1200
   ),
+  "fullscreen": 1150,
   "mobile-composer": 1100,
   "header": 1000,
   "tooltip": 600,

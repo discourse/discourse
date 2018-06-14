@@ -4,6 +4,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   model: null,
   postNumber: null,
 
+  onShow: () => {
+    Ember.run.next(() => $('#post-jump').focus());
+  },
+
   actions: {
     jump() {
       const max   = this.get("topic.postStream.filteredPostsCount");
