@@ -435,7 +435,7 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
-    # note: all this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
+    # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
     $redis._client.reconnect
@@ -487,7 +487,7 @@ module Discourse
       while true
         begin
           sleep GlobalSetting.connection_reaper_interval
-          reap_connections(GlobalSetting.connection_reaper_age, GlobalSetting.connection_reaper_max_age)
+          reap_connections(GlobalSetting.connection_reaper_age)
         rescue => e
           Discourse.warn_exception(e, message: "Error reaping connections")
         end
@@ -495,15 +495,22 @@ module Discourse
     end
   end
 
-  def self.reap_connections(idle, max_age)
+  def self.reap_connections(idle)
     pools = []
     ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
 
+    i = 0
     pools.each do |pool|
+      i += 1
       # reap recovers connections that were aborted
       # eg a thread died or a dev forgot to check it in
-      pool.reap
-      pool.drain(idle.seconds, max_age.seconds)
+      # flush removes idle connections
+      # after fork we have "deadpools" so ignore them, they have been discarded
+      # so @connections is set to nil
+      if pool.connections
+        pool.reap
+        pool.flush(idle.seconds)
+      end
     end
   end
 
