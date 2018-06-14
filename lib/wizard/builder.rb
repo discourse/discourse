@@ -175,16 +175,23 @@ class Wizard
 
       @wizard.append_step('homepage') do |step|
 
-        current = SiteSetting.top_menu.starts_with?("categories") ? "categories" : "latest"
+        current = SiteSetting.top_menu.starts_with?("categories") ? SiteSetting.desktop_category_page_style : "latest"
 
         style = step.add_field(id: 'homepage_style', type: 'dropdown', required: true, value: current)
         style.add_choice('latest')
-        style.add_choice('categories')
+        CategoryPageStyle.values.each do |page|
+          style.add_choice(page[:value])
+        end
+
         step.add_field(id: 'homepage_preview', type: 'component')
 
         step.on_update do |updater|
-          top_menu = "latest|new|unread|top|categories"
-          top_menu = "categories|latest|new|unread|top" if updater.fields[:homepage_style] == 'categories'
+          if updater.fields[:homepage_style] == 'latest'
+            top_menu = "latest|new|unread|top|categories"
+          else
+            top_menu = "categories|latest|new|unread|top"
+            updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
+          end
           updater.update_setting(:top_menu, top_menu)
         end
       end

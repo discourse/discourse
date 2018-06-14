@@ -3853,8 +3853,14 @@ en:
             choices:
               latest:
                 label: "Latest Topics"
-              categories:
-                label: "Categories"
+              categories_only:
+                label: "Categories Only"
+              categories_with_featured_topics:
+                label: "Categories with Featured Topics"
+              categories_and_latest_topics:
+                label: "Categories and Latest Topics"
+              categories_and_top_topics:
+                label: "Categories and Top Topics"
 
       emoji:
         title: "Emoji"

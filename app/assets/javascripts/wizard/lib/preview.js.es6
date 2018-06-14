@@ -88,7 +88,7 @@ export function createPreviewComponent(width, height, obj) {
     },
 
     categories() {
-      return [{name: 'consecteteur', color: '#652D90'}, {name: 'ultrices', color: '#3AB54A'}];
+      return [{name: 'consecteteur', color: '#652D90'}, {name: 'ultrices', color: '#3AB54A'}, {name: 'placerat', color: '#25AAE2'}];
     },
 
     scaleImage(image, x, y, w, h) {
