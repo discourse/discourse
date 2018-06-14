@@ -21,15 +21,12 @@ class FlaggedUserSerializer < BasicUserSerializer
   def custom_fields
     fields = User.whitelisted_user_custom_fields(scope)
 
-    if scope.can_edit?(object)
-      fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
+    result = {}
+    fields.each do |k|
+      result[k] = object.custom_fields[k] if object.custom_fields[k].present?
     end
 
-    if fields.present?
-      User.custom_fields_for_ids([object.id], fields)[object.id] || {}
-    else
-      {}
-    end
+    result
   end
 
 end
