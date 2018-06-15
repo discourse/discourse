@@ -2,7 +2,7 @@
   /* intended only for /about /faq, /guidelines, /tos, and /privacy */
   width: 100%;
   max-width: 700px;
-  .about-page & { 
+  .about-page & {
     max-width: unset;
     section:not(.admins):not(.moderators) {
       max-width: 700px;
@@ -13,18 +13,14 @@
     font-size: $font-0;
     margin-top: 20px;
   }
-
   li {
     margin-bottom: 8px;
   }
-
   .nav-pills {
     margin-bottom: 20px;
   }
-
   ul:not(.nav-pills),
   ol:not(.nav-pills) {
     margin-left: 40px;
   }
 }
-
