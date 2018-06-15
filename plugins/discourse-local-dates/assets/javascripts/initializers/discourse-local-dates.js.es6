@@ -16,7 +16,7 @@ function initializeDiscourseLocalDates(api) {
     };
   });
 
-  api.modifyClass('controller:composer', {
+  api.modifyClass("controller:composer", {
     actions: {
       insertDiscourseLocalDate() {
         showModal("discourse-local-dates-create-modal").setProperties({
