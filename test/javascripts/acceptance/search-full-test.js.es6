@@ -7,13 +7,13 @@ acceptance("Search - Full Page", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/tags/filter/search", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/tags/filter/search", () => { //eslint-disable-line
       return response({ results: [{ text: "monkey", count: 1 }] });
     });
 
-    server.get("/u/search/users", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/u/search/users", () => { //eslint-disable-line
       return response({
         users: [
           {
@@ -25,8 +25,8 @@ acceptance("Search - Full Page", {
       });
     });
 
-    server.get("/admin/groups.json", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/admin/groups.json", () => { //eslint-disable-line
       return response([
         {
           id: 2,
@@ -52,8 +52,8 @@ acceptance("Search - Full Page", {
       ]);
     });
 
-    server.get("/badges.json", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/badges.json", () => { //eslint-disable-line
       return response({
         badge_types: [{ id: 3, name: "Bronze", sort_order: 7 }],
         badge_groupings: [

@@ -91,8 +91,8 @@ QUnit.test("User Viewing Group", assert => {
   visit("/groups");
   click(".group-index-request");
 
-  server.post("/groups/Macdonald/request_membership", () => {
-    // eslint-disable-line no-undef
+  // prettier-ignore
+  server.post("/groups/Macdonald/request_membership", () => { // eslint-disable-line no-undef
     return [
       200,
       { "Content-Type": "application/json" },
@@ -142,13 +142,10 @@ QUnit.test("User Viewing Group", assert => {
 QUnit.test(
   "Admin viewing group messages when there are no messages",
   assert => {
-    server.get(
-      "/topics/private-messages-group/eviltrout/discourse.json",
-      () => {
-        // eslint-disable-line no-undef
-        return response({ topic_list: { topics: [] } });
-      }
-    );
+    // prettier-ignore
+    server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
+      return response({ topic_list: { topics: [] } });
+    });
 
     logIn();
     Discourse.reset();
@@ -170,8 +167,8 @@ QUnit.test(
 );
 
 QUnit.test("Admin viewing group messages", assert => {
-  server.get("/topics/private-messages-group/eviltrout/discourse.json", () => {
-    // eslint-disable-line no-undef
+  // prettier-ignore
+  server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
     return response({
       users: [
         {

@@ -7,8 +7,8 @@ acceptance("Group logs", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/groups/snorlax.json", () => {
-      // eslint-disable-line no-undef
+    // prettier-ignore
+    server.get("/groups/snorlax.json", () => { // eslint-disable-line no-undef
       return response({
         group: {
           id: 41,
@@ -37,8 +37,8 @@ acceptance("Group logs", {
     });
 
     // Workaround while awaiting https://github.com/tildeio/route-recognizer/issues/53
-    server.get("/groups/snorlax/logs.json", request => {
-      // eslint-disable-line no-undef
+    // prettier-ignore
+    server.get("/groups/snorlax/logs.json", request => { // eslint-disable-line no-undef
       if (request.queryParams["filters[action]"]) {
         return response({
           logs: [

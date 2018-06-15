@@ -8,8 +8,8 @@ acceptance("Forgot password", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.post("/session/forgot_password", () => {
-      // eslint-disable-line no-undef
+    // prettier-ignore
+    server.post("/session/forgot_password", () => { // eslint-disable-line no-undef
       return response({ user_found: userFound });
     });
   }

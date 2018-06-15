@@ -6,8 +6,8 @@ acceptance("Topic Notifications button", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.post("/t/280/notifications", () => {
-      // eslint-disable-line no-undef
+    // prettier-ignore
+    server.post("/t/280/notifications", () => { // eslint-disable-line no-undef
       return response({});
     });
   }
