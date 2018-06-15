@@ -8,8 +8,8 @@ acceptance("Queued Posts", {
 QUnit.test(
   "For topics: body of post, title, category and tags are all editbale",
   assert => {
-    server.get("/queued_posts", () => {
-      //eslint-disable-line no-undef
+    // prettier-ignore
+    server.get("/queued_posts", () => { //eslint-disable-line no-undef
       return [
         200,
         { "Content-Type": "application/json" },
@@ -95,8 +95,8 @@ QUnit.test(
 );
 
 QUnit.test("For replies: only the body of post is editbale", assert => {
-  server.get("/queued_posts", () => {
-    //eslint-disable-line no-undef
+  // prettier-ignore
+  server.get("/queued_posts", () => { //eslint-disable-line no-undef
     return [
       200,
       { "Content-Type": "application/json" },

@@ -8,18 +8,18 @@ acceptance("Tag Hashtag", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/tags/filter/search", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/tags/filter/search", () => { //eslint-disable-line
       return response({ results: [{ text: "monkey", count: 1 }] });
     });
 
-    server.get("/category_hashtags/check", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/category_hashtags/check", () => { //eslint-disable-line
       return response({ valid: [] });
     });
 
-    server.get("/tags/check", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/tags/check", () => { //eslint-disable-line
       return response({ valid: [{ value: "monkey", url: "/tags/monkey" }] });
     });
   }

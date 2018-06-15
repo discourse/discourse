@@ -6,16 +6,16 @@ acceptance("User Preferences", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.post("/u/second_factors.json", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.post("/u/second_factors.json", () => { //eslint-disable-line
       return response({
         key: "rcyryaqage3jexfj",
         qr: '<div id="test-qr">qr-code</div>'
       });
     });
 
-    server.put("/u/second_factor.json", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.put("/u/second_factor.json", () => { //eslint-disable-line
       return response({ error: "invalid token" });
     });
   }

@@ -8,13 +8,13 @@ acceptance("Password Reset", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/u/confirm-email-token/myvalidtoken.json", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/u/confirm-email-token/myvalidtoken.json", () => { //eslint-disable-line
       return response({ success: "OK" });
     });
 
-    server.put("/u/password-reset/myvalidtoken.json", request => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.put("/u/password-reset/myvalidtoken.json", request => { //eslint-disable-line
       const body = parsePostData(request.requestBody);
       if (body.password === "jonesyAlienSlayer") {
         return response({
@@ -29,13 +29,13 @@ acceptance("Password Reset", {
       }
     });
 
-    server.get("/u/confirm-email-token/requiretwofactor.json", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/u/confirm-email-token/requiretwofactor.json", () => { //eslint-disable-line
       return response({ success: "OK" });
     });
 
-    server.put("/u/password-reset/requiretwofactor.json", request => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.put("/u/password-reset/requiretwofactor.json", request => { //eslint-disable-line
       const body = parsePostData(request.requestBody);
       if (
         body.password === "perf3ctly5ecur3" &&
