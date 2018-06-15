@@ -24,7 +24,7 @@ class MetadataController < ApplicationController
       short_name: SiteSetting.title,
       display: 'standalone',
       orientation: 'any',
-      start_url: "#{Discourse.base_uri}/",
+      start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
       background_color: "##{ColorScheme.hex_for_name('secondary')}",
       theme_color: "##{ColorScheme.hex_for_name('header_background')}",
       icons: [
