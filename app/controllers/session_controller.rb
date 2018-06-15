@@ -246,6 +246,12 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
+      # if user.backup_codes_enabled? && user.authenticate_backup_code(params[:second_factor_token])
+      #   return render json: failed_json.merge(
+      #     error: I18n.t("login.invalid_second_factor_code"),
+      #     reason: "invalid_second_factor"
+      #   )
+
       if user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
         return render json: failed_json.merge(
           error: I18n.t("login.invalid_second_factor_code"),
@@ -258,6 +264,7 @@ class SessionController < ApplicationController
   end
 
   def email_login
+    binding.pry
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
     second_factor_token = params[:second_factor_token]
     token = params[:token]

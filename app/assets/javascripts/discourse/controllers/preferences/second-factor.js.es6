@@ -42,7 +42,7 @@ export default Ember.Controller.extend({
     if (!this.get('secondFactorToken')) return;
     this.set('loading', true);
 
-    this.get('content').toggleSecondFactor(this.get('secondFactorToken'), enable)
+    this.get('content').toggleSecondFactor(this.get('secondFactorToken'), enable, 1)
       .then(response => {
         if (response.error) {
           this.set('errorMessage', response.error);

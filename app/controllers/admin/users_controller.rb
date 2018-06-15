@@ -386,7 +386,7 @@ class Admin::UsersController < Admin::AdminController
 
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
-    user_second_factor = @user.user_second_factor
+    user_second_factor = @user.user_second_factors.totp
     raise Discourse::InvalidParameters unless user_second_factor
 
     user_second_factor.destroy!

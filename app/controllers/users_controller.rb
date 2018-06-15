@@ -956,8 +956,41 @@ class UsersController < ApplicationController
     )
 
     render json: success_json.merge(
-      key: current_user.user_second_factor.data.scan(/.{4}/).join(" "),
+      key: current_user.user_second_factors.totp.data.scan(/.{4}/).join(" "),
       qr: qrcode_svg
+    )
+  end
+
+  def create_second_factor_backup
+    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+    params.require(:second_factor_token)
+
+    unless current_user.authenticate_totp(params[:second_factor_token])
+      return render json: failed_json.merge(
+        error: I18n.t("login.invalid_second_factor_code")
+      )
+    end
+
+    user_second_factor = current_user.create_backup_codes
+
+    render json: success_json.merge(
+      backup_codes: user_second_factor
+    )
+  end
+
+  def update_second_factor_backup
+    params.require(:second_factor_token)
+
+    unless current_user.authenticate_totp(params[:second_factor_token])
+      return render json: failed_json.merge(
+        error: I18n.t("login.invalid_second_factor_code")
+      )
+    end
+
+    user_second_factor = current_user.regenerate_backup_codes
+
+    render json: success_json.merge(
+      backup_codes: user_second_factor
     )
   end
 
@@ -968,7 +1001,12 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
-    user_second_factor = current_user.user_second_factor
+    if params[:method].to_i == UserSecondFactor.methods[:totp]
+      user_second_factor = current_user.user_second_factors.totp
+    elsif params[:method].to_i == UserSecondFactor.methods[:backup_codes]
+      user_second_factor = current_user.user_second_factors.backup_codes
+    end
+
     raise Discourse::InvalidParameters unless user_second_factor
 
     unless current_user.authenticate_totp(params[:second_factor_token])
