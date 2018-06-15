@@ -1,5 +1,5 @@
-import componentTest from 'helpers/component-test';
-import Topic from 'discourse/models/topic';
+import componentTest from "helpers/component-test";
+import Topic from "discourse/models/topic";
 
 const buildTopic = function(archetype) {
   return Topic.create({
@@ -13,9 +13,11 @@ const buildTopic = function(archetype) {
 };
 
 function extractDescs(rows) {
-  return Array.from(rows.find(".desc").map(function() {
-    return this.textContent.trim();
-  }));
+  return Array.from(
+    rows.find(".desc").map(function() {
+      return this.textContent.trim();
+    })
+  );
 }
 
 function getTranslations(type = "") {
@@ -24,10 +26,11 @@ function getTranslations(type = "") {
   });
 }
 
-moduleForComponent('topic-notifications-options', { integration: true });
+moduleForComponent("topic-notifications-options", { integration: true });
 
-componentTest('regular topic notification level descriptions', {
-  template: '{{topic-notifications-options value=topic.details.notification_level topic=topic}}',
+componentTest("regular topic notification level descriptions", {
+  template:
+    "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
   test(assert) {
     selectKit().expand();
@@ -37,16 +40,25 @@ componentTest('regular topic notification level descriptions', {
       const uiTexts = extractDescs(selectKit().rows());
       const descriptions = getTranslations();
 
-      assert.equal(uiTexts.length, descriptions.length, "it has the correct copy");
+      assert.equal(
+        uiTexts.length,
+        descriptions.length,
+        "it has the correct copy"
+      );
       uiTexts.forEach((text, index) => {
-        assert.equal(text.trim(), descriptions[index].trim(), "it has the correct copy");
+        assert.equal(
+          text.trim(),
+          descriptions[index].trim(),
+          "it has the correct copy"
+        );
       });
     });
   }
 });
 
-componentTest('PM topic notification level descriptions', {
-  template: '{{topic-notifications-options value=topic.details.notification_level topic=topic}}',
+componentTest("PM topic notification level descriptions", {
+  template:
+    "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
   test(assert) {
     selectKit().expand();
@@ -56,9 +68,17 @@ componentTest('PM topic notification level descriptions', {
       const uiTexts = extractDescs(selectKit().rows());
       const descriptions = getTranslations("_pm");
 
-      assert.equal(uiTexts.length, descriptions.length, "it has the correct copy");
+      assert.equal(
+        uiTexts.length,
+        descriptions.length,
+        "it has the correct copy"
+      );
       uiTexts.forEach((text, index) => {
-        assert.equal(text.trim(), descriptions[index].trim(), "it has the correct copy");
+        assert.equal(
+          text.trim(),
+          descriptions[index].trim(),
+          "it has the correct copy"
+        );
       });
     });
   }

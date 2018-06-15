@@ -1,5 +1,8 @@
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
-import { default as computed, on } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  on
+} from "ember-addons/ember-computed-decorators";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({
