@@ -12,8 +12,8 @@ acceptance("Login with email", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.post("/u/email-login", () => {
-      // eslint-disable-line no-undef
+    // prettier-ignore
+    server.post("/u/email-login", () => { // eslint-disable-line no-undef
       return response({ success: "OK", user_found: userFound });
     });
   }
@@ -139,8 +139,8 @@ acceptance("Login with email", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.post("/u/email-login", () => {
-      // eslint-disable-line no-undef
+    // prettier-ignore
+    server.post("/u/email-login", () => { // eslint-disable-line no-undef
       return response({ success: "OK" });
     });
   }

@@ -77,8 +77,8 @@ QUnit.test("Updating the topic title and category", assert => {
 });
 
 QUnit.test("Marking a topic as wiki", assert => {
-  server.put("/posts/398/wiki", () => {
-    // eslint-disable-line no-undef
+  // prettier-ignore
+  server.put("/posts/398/wiki", () => { // eslint-disable-line no-undef
     return [200, { "Content-Type": "application/json" }, {}];
   });
 

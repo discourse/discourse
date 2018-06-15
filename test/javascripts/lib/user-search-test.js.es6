@@ -6,8 +6,8 @@ QUnit.module("lib:user-search", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.get("/u/search/users", () => {
-      //eslint-disable-line
+    // prettier-ignore
+    server.get("/u/search/users", () => { //eslint-disable-line
       return response({
         users: [
           {

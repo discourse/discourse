@@ -18,8 +18,8 @@ acceptance("Tags listed by group", {
 });
 
 QUnit.test("list the tags in groups", assert => {
-  server.get("/tags", () => {
-    // eslint-disable-line no-undef
+  // prettier-ignore
+  server.get("/tags", () => { // eslint-disable-line no-undef
     return [
       200,
       { "Content-Type": "application/json" },
