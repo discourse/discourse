@@ -1,13 +1,13 @@
-import { createWidget } from 'discourse/widgets/widget';
-import { h } from 'virtual-dom';
-import { iconNode } from 'discourse-common/lib/icon-library';
-import RawHtml from 'discourse/widgets/raw-html';
-import { ajax } from 'discourse/lib/ajax';
-import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import RawHtml from "discourse/widgets/raw-html";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import evenRound from "discourse/plugins/poll/lib/even-round";
-import { avatarFor } from 'discourse/widgets/post';
+import { avatarFor } from "discourse/widgets/post";
 import round from "discourse/lib/round";
-import { relativeAge } from 'discourse/lib/formatter';
+import { relativeAge } from "discourse/lib/formatter";
 
 function optionHtml(option) {
   return new RawHtml({ html: `<span>${option.html}</span>` });
@@ -17,20 +17,20 @@ function fetchVoters(payload) {
   return ajax("/polls/voters.json", {
     type: "get",
     data: payload
-  }).catch((error) => {
+  }).catch(error => {
     if (error) {
       popupAjaxError(error);
     } else {
-      bootbox.alert(I18n.t('poll.error_while_fetching_voters'));
+      bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
     }
   });
 }
 
-createWidget('discourse-poll-option', {
-  tagName: 'li',
+createWidget("discourse-poll-option", {
+  tagName: "li",
 
   buildAttributes(attrs) {
-    return { 'data-poll-option-id': attrs.option.id };
+    return { "data-poll-option-id": attrs.option.id };
   },
 
   html(attrs) {
@@ -39,11 +39,11 @@ createWidget('discourse-poll-option', {
     const chosen = vote.indexOf(option.id) !== -1;
 
     if (attrs.isMultiple) {
-      result.push(iconNode(chosen ? 'check-square-o' : 'square-o'));
+      result.push(iconNode(chosen ? "check-square-o" : "square-o"));
     } else {
-      result.push(iconNode(chosen ? 'dot-circle-o' : 'circle-o'));
+      result.push(iconNode(chosen ? "dot-circle-o" : "circle-o"));
     }
-    result.push(' ');
+    result.push(" ");
     result.push(optionHtml(option));
 
     return result;
@@ -51,13 +51,13 @@ createWidget('discourse-poll-option', {
 
   click(e) {
     if ($(e.target).closest("a").length === 0) {
-      this.sendWidgetAction('toggleOption', this.attrs.option);
+      this.sendWidgetAction("toggleOption", this.attrs.option);
     }
   }
 });
 
-createWidget('discourse-poll-load-more', {
-  tagName: 'div.poll-voters-toggle-expand',
+createWidget("discourse-poll-load-more", {
+  tagName: "div.poll-voters-toggle-expand",
   buildKey: attrs => `${attrs.id}-load-more`,
 
   defaultState() {
@@ -65,36 +65,43 @@ createWidget('discourse-poll-load-more', {
   },
 
   html(attrs, state) {
-    return state.loading ? h('div.spinner.small') : h('a', iconNode('chevron-down'));
+    return state.loading
+      ? h("div.spinner.small")
+      : h("a", iconNode("chevron-down"));
   },
 
   click() {
     const { state } = this;
-    if (state.loading) { return; }
+    if (state.loading) {
+      return;
+    }
 
     state.loading = true;
-    return this.sendWidgetAction('loadMore').finally(() => state.loading = false);
+    return this.sendWidgetAction("loadMore").finally(
+      () => (state.loading = false)
+    );
   }
-
 });
 
-createWidget('discourse-poll-voters', {
-  tagName: 'ul.poll-voters-list',
+createWidget("discourse-poll-voters", {
+  tagName: "ul.poll-voters-list",
   buildKey: attrs => attrs.id(),
 
   defaultState() {
     return {
-      loaded: 'new',
+      loaded: "new",
       pollVoters: [],
-      offset: 1,
+      offset: 1
     };
   },
 
   fetchVoters() {
     const { attrs, state } = this;
-    if (state.loaded === 'loading') { return; }
+    if (state.loaded === "loading") {
+      return;
+    }
 
-    state.loaded = 'loading';
+    state.loaded = "loading";
 
     return fetchVoters({
       post_id: attrs.postId,
@@ -102,11 +109,12 @@ createWidget('discourse-poll-voters', {
       option_id: attrs.optionId,
       offset: state.offset
     }).then(result => {
-      state.loaded = 'loaded';
+      state.loaded = "loaded";
       state.offset += 1;
 
       const pollResult = result[attrs.pollName];
-      const newVoters = attrs.pollType === 'number' ? pollResult : pollResult[attrs.optionId];
+      const newVoters =
+        attrs.pollType === "number" ? pollResult : pollResult[attrs.optionId];
       state.pollVoters = state.pollVoters.concat(newVoters);
 
       this.scheduleRerender();
@@ -118,46 +126,50 @@ createWidget('discourse-poll-voters', {
   },
 
   html(attrs, state) {
-    if (attrs.pollVoters && state.loaded === 'new') {
+    if (attrs.pollVoters && state.loaded === "new") {
       state.pollVoters = attrs.pollVoters;
     }
 
     const contents = state.pollVoters.map(user => {
-      return h('li', [avatarFor('tiny', {
-        username: user.username,
-        template: user.avatar_template
-      }), ' ']);
+      return h("li", [
+        avatarFor("tiny", {
+          username: user.username,
+          template: user.avatar_template
+        }),
+        " "
+      ]);
     });
 
     if (state.pollVoters.length < attrs.totalVotes) {
-      contents.push(this.attach('discourse-poll-load-more', { id: attrs.id() }));
+      contents.push(
+        this.attach("discourse-poll-load-more", { id: attrs.id() })
+      );
     }
 
-    return h('div.poll-voters', contents);
+    return h("div.poll-voters", contents);
   }
-
 });
 
-createWidget('discourse-poll-standard-results', {
-  tagName: 'ul.results',
+createWidget("discourse-poll-standard-results", {
+  tagName: "ul.results",
   buildKey: attrs => `${attrs.id}-standard-results`,
 
   defaultState() {
     return {
-      loaded: 'new'
+      loaded: "new"
     };
   },
 
   fetchVoters() {
     const { attrs, state } = this;
 
-    if (state.loaded === 'new') {
+    if (state.loaded === "new") {
       fetchVoters({
         post_id: attrs.post.id,
-        poll_name: attrs.poll.get('name')
+        poll_name: attrs.poll.get("name")
       }).then(result => {
-        state.voters = result[attrs.poll.get('name')];
-        state.loaded = 'loaded';
+        state.voters = result[attrs.poll.get("name")];
+        state.loaded = "loaded";
         this.scheduleRerender();
       });
     }
@@ -165,11 +177,11 @@ createWidget('discourse-poll-standard-results', {
 
   html(attrs, state) {
     const { poll } = attrs;
-    const options = poll.get('options');
+    const options = poll.get("options");
 
     if (options) {
-      const voters = poll.get('voters');
-      const isPublic = poll.get('public');
+      const voters = poll.get("voters");
+      const isPublic = poll.get("public");
 
       const ordered = _.clone(options).sort((a, b) => {
         if (a.votes < b.votes) {
@@ -185,11 +197,14 @@ createWidget('discourse-poll-standard-results', {
         }
       });
 
-      const percentages = voters === 0 ?
-        Array(ordered.length).fill(0) :
-        ordered.map(o => 100 * o.votes / voters);
+      const percentages =
+        voters === 0
+          ? Array(ordered.length).fill(0)
+          : ordered.map(o => (100 * o.votes) / voters);
 
-      const rounded = attrs.isMultiple ? percentages.map(Math.floor) : evenRound(percentages);
+      const rounded = attrs.isMultiple
+        ? percentages.map(Math.floor)
+        : evenRound(percentages);
 
       if (isPublic) this.fetchVoters();
 
@@ -198,50 +213,58 @@ createWidget('discourse-poll-standard-results', {
         const per = rounded[idx].toString();
         const chosen = (attrs.vote || []).includes(option.id);
 
-        contents.push(h('div.option',
-                       h('p', [ h('span.percentage', `${per}%`), optionHtml(option) ])
-                     ));
+        contents.push(
+          h(
+            "div.option",
+            h("p", [h("span.percentage", `${per}%`), optionHtml(option)])
+          )
+        );
 
-        contents.push(h('div.bar-back',
-                       h('div.bar', { attributes: { style: `width:${per}%` }})
-                     ));
+        contents.push(
+          h(
+            "div.bar-back",
+            h("div.bar", { attributes: { style: `width:${per}%` } })
+          )
+        );
 
         if (isPublic) {
-          contents.push(this.attach('discourse-poll-voters', {
-            id: () => `poll-voters-${option.id}`,
-            postId: attrs.post.id,
-            optionId: option.id,
-            pollName: poll.get('name'),
-            totalVotes: option.votes,
-            pollVoters: (state.voters && state.voters[option.id]) || []
-          }));
+          contents.push(
+            this.attach("discourse-poll-voters", {
+              id: () => `poll-voters-${option.id}`,
+              postId: attrs.post.id,
+              optionId: option.id,
+              pollName: poll.get("name"),
+              totalVotes: option.votes,
+              pollVoters: (state.voters && state.voters[option.id]) || []
+            })
+          );
         }
 
-        return h('li', { className: `${chosen ? 'chosen' : ''}` }, contents);
+        return h("li", { className: `${chosen ? "chosen" : ""}` }, contents);
       });
     }
   }
 });
 
-createWidget('discourse-poll-number-results', {
+createWidget("discourse-poll-number-results", {
   buildKey: attrs => `${attrs.id}-number-results`,
 
   defaultState() {
     return {
-      loaded: 'new'
+      loaded: "new"
     };
   },
 
   fetchVoters() {
     const { attrs, state } = this;
 
-    if (state.loaded === 'new') {
+    if (state.loaded === "new") {
       fetchVoters({
         post_id: attrs.post.id,
-        poll_name: attrs.poll.get('name')
+        poll_name: attrs.poll.get("name")
       }).then(result => {
-        state.voters = result[attrs.poll.get('name')];
-        state.loaded = 'loaded';
+        state.voters = result[attrs.poll.get("name")];
+        state.loaded = "loaded";
         this.scheduleRerender();
       });
     }
@@ -249,59 +272,69 @@ createWidget('discourse-poll-number-results', {
 
   html(attrs, state) {
     const { poll } = attrs;
-    const isPublic = poll.get('public');
+    const isPublic = poll.get("public");
 
-    const totalScore = poll.get('options').reduce((total, o) => {
+    const totalScore = poll.get("options").reduce((total, o) => {
       return total + parseInt(o.html, 10) * parseInt(o.votes, 10);
     }, 0);
 
     const voters = poll.voters;
     const average = voters === 0 ? 0 : round(totalScore / voters, -2);
     const averageRating = I18n.t("poll.average_rating", { average });
-    const results = [h('div.poll-results-number-rating', new RawHtml({ html: `<span>${averageRating}</span>` }))];
+    const results = [
+      h(
+        "div.poll-results-number-rating",
+        new RawHtml({ html: `<span>${averageRating}</span>` })
+      )
+    ];
 
     if (isPublic) {
       this.fetchVoters();
 
-      results.push(this.attach('discourse-poll-voters', {
-        id: () => `poll-voters-${poll.get('name')}`,
-        totalVotes: poll.get('voters'),
-        pollVoters: state.voters || [],
-        postId: attrs.post.id,
-        pollName: poll.get('name'),
-        pollType: poll.get('type')
-      }));
+      results.push(
+        this.attach("discourse-poll-voters", {
+          id: () => `poll-voters-${poll.get("name")}`,
+          totalVotes: poll.get("voters"),
+          pollVoters: state.voters || [],
+          postId: attrs.post.id,
+          pollName: poll.get("name"),
+          pollType: poll.get("type")
+        })
+      );
     }
 
     return results;
   }
 });
 
-createWidget('discourse-poll-container', {
-  tagName: 'div.poll-container',
+createWidget("discourse-poll-container", {
+  tagName: "div.poll-container",
   html(attrs) {
     const { poll } = attrs;
 
     if (attrs.showResults || attrs.isClosed) {
-      const type = poll.get('type') === 'number' ? 'number' : 'standard';
+      const type = poll.get("type") === "number" ? "number" : "standard";
       return this.attach(`discourse-poll-${type}-results`, attrs);
     }
 
-    const options = poll.get('options');
+    const options = poll.get("options");
     if (options) {
-      return h('ul', options.map(option => {
-        return this.attach('discourse-poll-option', {
-          option,
-          isMultiple: attrs.isMultiple,
-          vote: attrs.vote
-        });
-      }));
+      return h(
+        "ul",
+        options.map(option => {
+          return this.attach("discourse-poll-option", {
+            option,
+            isMultiple: attrs.isMultiple,
+            vote: attrs.vote
+          });
+        })
+      );
     }
   }
 });
 
-createWidget('discourse-poll-info', {
-  tagName: 'div.poll-info',
+createWidget("discourse-poll-info", {
+  tagName: "div.poll-info",
 
   multipleHelpText(min, max, options) {
     if (max > 0) {
@@ -311,9 +344,14 @@ createWidget('discourse-poll-info', {
         }
       } else if (min > 1) {
         if (max < options) {
-          return I18n.t("poll.multiple.help.between_min_and_max_options", { min, max });
+          return I18n.t("poll.multiple.help.between_min_and_max_options", {
+            min,
+            max
+          });
         } else {
-          return I18n.t("poll.multiple.help.at_least_min_options", { count: min });
+          return I18n.t("poll.multiple.help.at_least_min_options", {
+            count: min
+          });
         }
       } else if (max <= options) {
         return I18n.t("poll.multiple.help.up_to_max_options", { count: max });
@@ -323,33 +361,46 @@ createWidget('discourse-poll-info', {
 
   html(attrs) {
     const { poll } = attrs;
-    const count = poll.get('voters');
-    const result = [h('p', [
-                     h('span.info-number', count.toString()),
-                     h('span.info-label', I18n.t('poll.voters', { count }))
-                   ])];
+    const count = poll.get("voters");
+    const result = [
+      h("p", [
+        h("span.info-number", count.toString()),
+        h("span.info-label", I18n.t("poll.voters", { count }))
+      ])
+    ];
 
     if (attrs.isMultiple) {
       if (attrs.showResults || attrs.isClosed) {
-        const totalVotes = poll.get('options').reduce((total, o) => {
+        const totalVotes = poll.get("options").reduce((total, o) => {
           return total + parseInt(o.votes, 10);
         }, 0);
 
-        result.push(h('p', [
-                      h('span.info-number', totalVotes.toString()),
-                      h('span.info-label', I18n.t("poll.total_votes", { count: totalVotes }))
-                    ]));
+        result.push(
+          h("p", [
+            h("span.info-number", totalVotes.toString()),
+            h(
+              "span.info-label",
+              I18n.t("poll.total_votes", { count: totalVotes })
+            )
+          ])
+        );
       } else {
-        const help = this.multipleHelpText(attrs.min, attrs.max, poll.get('options.length'));
+        const help = this.multipleHelpText(
+          attrs.min,
+          attrs.max,
+          poll.get("options.length")
+        );
         if (help) {
-          result.push(new RawHtml({ html: `<span class="info-text">${help}</span>` }));
+          result.push(
+            new RawHtml({ html: `<span class="info-text">${help}</span>` })
+          );
         }
       }
     }
 
     if (!attrs.isClosed) {
-      if (!attrs.showResults && poll.get('public')) {
-        result.push(h('span.info-text', I18n.t('poll.public.title')));
+      if (!attrs.showResults && poll.get("public")) {
+        result.push(h("span.info-text", I18n.t("poll.public.title")));
       }
 
       if (poll.close) {
@@ -358,9 +409,14 @@ createWidget('discourse-poll-info', {
           const title = closeDate.format("LLL");
           const timeLeft = moment().to(closeDate.local(), true);
 
-          result.push(new RawHtml({
-            html: `<span class="info-text" title="${title}">${I18n.t("poll.automatic_close.closes_in", { timeLeft })}</span>`
-          }));
+          result.push(
+            new RawHtml({
+              html: `<span class="info-text" title="${title}">${I18n.t(
+                "poll.automatic_close.closes_in",
+                { timeLeft }
+              )}</span>`
+            })
+          );
         }
       }
     }
@@ -369,46 +425,52 @@ createWidget('discourse-poll-info', {
   }
 });
 
-createWidget('discourse-poll-buttons', {
-  tagName: 'div.poll-buttons',
+createWidget("discourse-poll-buttons", {
+  tagName: "div.poll-buttons",
 
   html(attrs) {
     const results = [];
     const { poll, post } = attrs;
-    const topicArchived = post.get('topic.archived');
+    const topicArchived = post.get("topic.archived");
     const closed = attrs.isClosed;
     const hideResultsDisabled = closed || topicArchived;
 
     if (attrs.isMultiple && !hideResultsDisabled) {
       const castVotesDisabled = !attrs.canCastVotes;
-      results.push(this.attach('button', {
-        className: `btn cast-votes ${castVotesDisabled ? '' : 'btn-primary'}`,
-        label: 'poll.cast-votes.label',
-        title: 'poll.cast-votes.title',
-        disabled: castVotesDisabled,
-        action: 'castVotes'
-      }));
-      results.push(' ');
+      results.push(
+        this.attach("button", {
+          className: `btn cast-votes ${castVotesDisabled ? "" : "btn-primary"}`,
+          label: "poll.cast-votes.label",
+          title: "poll.cast-votes.title",
+          disabled: castVotesDisabled,
+          action: "castVotes"
+        })
+      );
+      results.push(" ");
     }
 
     if (attrs.showResults || hideResultsDisabled) {
-      results.push(this.attach('button', {
-        className: 'btn toggle-results',
-        label: 'poll.hide-results.label',
-        title: 'poll.hide-results.title',
-        icon: 'eye-slash',
-        disabled: hideResultsDisabled,
-        action: 'toggleResults'
-      }));
+      results.push(
+        this.attach("button", {
+          className: "btn toggle-results",
+          label: "poll.hide-results.label",
+          title: "poll.hide-results.title",
+          icon: "eye-slash",
+          disabled: hideResultsDisabled,
+          action: "toggleResults"
+        })
+      );
     } else {
-      results.push(this.attach('button', {
-        className: 'btn toggle-results',
-        label: 'poll.show-results.label',
-        title: 'poll.show-results.title',
-        icon: 'eye',
-        disabled: poll.get('voters') === 0,
-        action: 'toggleResults'
-      }));
+      results.push(
+        this.attach("button", {
+          className: "btn toggle-results",
+          label: "poll.show-results.label",
+          title: "poll.show-results.title",
+          icon: "eye",
+          disabled: poll.get("voters") === 0,
+          action: "toggleResults"
+        })
+      );
     }
 
     if (attrs.isAutomaticallyClosed) {
@@ -416,34 +478,44 @@ createWidget('discourse-poll-buttons', {
       const title = closeDate.format("LLL");
       const age = relativeAge(closeDate.toDate(), { addAgo: true });
 
-      results.push(new RawHtml({
-        html: `<span class="info-text" title="${title}">${I18n.t("poll.automatic_close.age", { age })}</span>`
-      }));
+      results.push(
+        new RawHtml({
+          html: `<span class="info-text" title="${title}">${I18n.t(
+            "poll.automatic_close.age",
+            { age }
+          )}</span>`
+        })
+      );
     }
 
-    if (this.currentUser &&
-        (this.currentUser.get("id") === post.get('user_id') ||
-         this.currentUser.get("staff")) &&
-        !topicArchived) {
-
+    if (
+      this.currentUser &&
+      (this.currentUser.get("id") === post.get("user_id") ||
+        this.currentUser.get("staff")) &&
+      !topicArchived
+    ) {
       if (closed) {
         if (!attrs.isAutomaticallyClosed) {
-          results.push(this.attach('button', {
-            className: 'btn toggle-status',
-            label: 'poll.open.label',
-            title: 'poll.open.title',
-            icon: 'unlock-alt',
-            action: 'toggleStatus'
-          }));
+          results.push(
+            this.attach("button", {
+              className: "btn toggle-status",
+              label: "poll.open.label",
+              title: "poll.open.title",
+              icon: "unlock-alt",
+              action: "toggleStatus"
+            })
+          );
         }
       } else {
-        results.push(this.attach('button', {
-          className: 'btn toggle-status btn-danger',
-          label: 'poll.close.label',
-          title: 'poll.close.title',
-          icon: 'lock',
-          action: 'toggleStatus'
-        }));
+        results.push(
+          this.attach("button", {
+            className: "btn toggle-status btn-danger",
+            label: "poll.close.label",
+            title: "poll.close.title",
+            icon: "lock",
+            action: "toggleStatus"
+          })
+        );
       }
     }
 
@@ -451,23 +523,23 @@ createWidget('discourse-poll-buttons', {
   }
 });
 
-export default createWidget('discourse-poll', {
-  tagName: 'div.poll',
+export default createWidget("discourse-poll", {
+  tagName: "div.poll",
   buildKey: attrs => attrs.id,
 
   buildAttributes(attrs) {
     const { poll } = attrs;
     return {
-      "data-poll-type":   poll.get('type'),
-      "data-poll-name":   poll.get('name'),
-      "data-poll-status": poll.get('status'),
-      "data-poll-public": poll.get('public'),
-      "data-poll-close":  poll.get('close'),
+      "data-poll-type": poll.get("type"),
+      "data-poll-name": poll.get("name"),
+      "data-poll-status": poll.get("status"),
+      "data-poll-public": poll.get("public"),
+      "data-poll-close": poll.get("close")
     };
   },
 
   defaultState(attrs) {
-    const showResults = this.isClosed() || attrs.post.get('topic.archived');
+    const showResults = this.isClosed() || attrs.post.get("topic.archived");
     return { loading: false, showResults };
   },
 
@@ -482,23 +554,27 @@ export default createWidget('discourse-poll', {
       max: this.max()
     });
 
-    return h('div', [
-      this.attach('discourse-poll-container', newAttrs),
-      this.attach('discourse-poll-info', newAttrs),
-      this.attach('discourse-poll-buttons', newAttrs)
+    return h("div", [
+      this.attach("discourse-poll-container", newAttrs),
+      this.attach("discourse-poll-info", newAttrs),
+      this.attach("discourse-poll-buttons", newAttrs)
     ]);
   },
 
   min() {
     let min = parseInt(this.attrs.poll.min, 10);
-    if (isNaN(min) || min < 1) { min = 1; }
+    if (isNaN(min) || min < 1) {
+      min = 1;
+    }
     return min;
   },
 
   max() {
     let max = parseInt(this.attrs.poll.max, 10);
     const numOptions = this.attrs.poll.options.length;
-    if (isNaN(max) || max > numOptions) { max = numOptions; }
+    if (isNaN(max) || max > numOptions) {
+      max = numOptions;
+    }
     return max;
   },
 
@@ -522,7 +598,9 @@ export default createWidget('discourse-poll', {
     const selectedOptionCount = attrs.vote.length;
 
     if (attrs.isMultiple) {
-      return selectedOptionCount >= this.min() && selectedOptionCount <= this.max();
+      return (
+        selectedOptionCount >= this.min() && selectedOptionCount <= this.max()
+      );
     }
 
     return selectedOptionCount > 0;
@@ -532,7 +610,9 @@ export default createWidget('discourse-poll', {
     const { state, attrs } = this;
     const { post, poll } = attrs;
 
-    if (this.isAutomaticallyClosed()) { return; }
+    if (this.isAutomaticallyClosed()) {
+      return;
+    }
 
     bootbox.confirm(
       I18n.t(this.isClosed() ? "poll.open.confirm" : "poll.close.confirm"),
@@ -546,22 +626,25 @@ export default createWidget('discourse-poll', {
           ajax("/polls/toggle_status", {
             type: "PUT",
             data: {
-              post_id: post.get('id'),
-              poll_name: poll.get('name'),
-              status,
+              post_id: post.get("id"),
+              poll_name: poll.get("name"),
+              status
             }
-          }).then(() => {
-            poll.set('status', status);
-            this.scheduleRerender();
-          }).catch((error) => {
-            if (error) {
-              popupAjaxError(error);
-            } else {
-              bootbox.alert(I18n.t("poll.error_while_toggling_status"));
-            }
-          }).finally(() => {
-            state.loading = false;
-          });
+          })
+            .then(() => {
+              poll.set("status", status);
+              this.scheduleRerender();
+            })
+            .catch(error => {
+              if (error) {
+                popupAjaxError(error);
+              } else {
+                bootbox.alert(I18n.t("poll.error_while_toggling_status"));
+              }
+            })
+            .finally(() => {
+              state.loading = false;
+            });
         }
       }
     );
@@ -572,14 +655,18 @@ export default createWidget('discourse-poll', {
   },
 
   showLogin() {
-    this.register.lookup('route:application').send('showLogin');
+    this.register.lookup("route:application").send("showLogin");
   },
 
   toggleOption(option) {
     const { attrs } = this;
 
-    if (this.isClosed()) { return; }
-    if (!this.currentUser) { this.showLogin(); }
+    if (this.isClosed()) {
+      return;
+    }
+    if (!this.currentUser) {
+      this.showLogin();
+    }
 
     const { vote } = attrs;
 
@@ -600,8 +687,12 @@ export default createWidget('discourse-poll', {
   },
 
   castVotes() {
-    if (!this.canCastVotes()) { return; }
-    if (!this.currentUser) { return this.showLogin(); }
+    if (!this.canCastVotes()) {
+      return;
+    }
+    if (!this.currentUser) {
+      return this.showLogin();
+    }
 
     const { attrs, state } = this;
 
@@ -614,16 +705,19 @@ export default createWidget('discourse-poll', {
         poll_name: attrs.poll.name,
         options: attrs.vote
       }
-    }).then(() => {
-      state.showResults = true;
-    }).catch((error) => {
-      if (error) {
-        popupAjaxError(error);
-      } else {
-        bootbox.alert(I18n.t("poll.error_while_casting_votes"));
-      }
-    }).finally(() => {
-      state.loading = false;
-    });
+    })
+      .then(() => {
+        state.showResults = true;
+      })
+      .catch(error => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          bootbox.alert(I18n.t("poll.error_while_casting_votes"));
+        }
+      })
+      .finally(() => {
+        state.loading = false;
+      });
   }
 });

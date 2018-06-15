@@ -1,17 +1,17 @@
-import { withPluginApi } from 'discourse/lib/plugin-api';
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initializeDetails(api) {
   api.decorateCooked($elem => $("details", $elem).details());
 
   api.addToolbarPopupMenuOptionsCallback(() => {
     return {
-      action: 'insertDetails',
-      icon: 'caret-right',
-      label: 'details.title'
+      action: "insertDetails",
+      icon: "caret-right",
+      label: "details.title"
     };
   });
 
-  api.modifyClass('controller:composer', {
+  api.modifyClass("controller:composer", {
     actions: {
       insertDetails() {
         this.get("toolbarEvent").applySurround(
@@ -29,6 +29,6 @@ export default {
   name: "apply-details",
 
   initialize() {
-    withPluginApi('0.8.7', initializeDetails);
+    withPluginApi("0.8.7", initializeDetails);
   }
 };
