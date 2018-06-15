@@ -1,21 +1,21 @@
-import buildStaticRoute from 'discourse/routes/build-static-route';
+import buildStaticRoute from "discourse/routes/build-static-route";
 
-const SignupRoute = buildStaticRoute('signup');
+const SignupRoute = buildStaticRoute("signup");
 
 SignupRoute.reopen({
   beforeModel() {
-    var canSignUp = this.controllerFor("application").get('canSignUp');
+    var canSignUp = this.controllerFor("application").get("canSignUp");
 
     if (!this.siteSettings.login_required) {
-      this.replaceWith('discovery.latest').then(e => {
+      this.replaceWith("discovery.latest").then(e => {
         if (canSignUp) {
-          Ember.run.next(() => e.send('showCreateAccount'));
+          Ember.run.next(() => e.send("showCreateAccount"));
         }
       });
     } else {
-      this.replaceWith('login').then(e => {
+      this.replaceWith("login").then(e => {
         if (canSignUp) {
-          Ember.run.next(() => e.send('showCreateAccount'));
+          Ember.run.next(() => e.send("showCreateAccount"));
         }
       });
     }

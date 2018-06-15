@@ -1,16 +1,22 @@
-import { escape } from 'pretty-text/sanitizer';
-import toMarkdown from 'discourse/lib/to-markdown';
+import { escape } from "pretty-text/sanitizer";
+import toMarkdown from "discourse/lib/to-markdown";
 
-const homepageSelector = 'meta[name=discourse_current_homepage]';
+const homepageSelector = "meta[name=discourse_current_homepage]";
 
 export function translateSize(size) {
   switch (size) {
-    case 'tiny': return 20;
-    case 'small': return 25;
-    case 'medium': return 32;
-    case 'large': return 45;
-    case 'extra_large': return 60;
-    case 'huge': return 120;
+    case "tiny":
+      return 20;
+    case "small":
+      return 25;
+    case "medium":
+      return 32;
+    case "large":
+      return 45;
+    case "extra_large":
+      return 60;
+    case "huge":
+      return 120;
   }
   return size;
 }
@@ -27,16 +33,17 @@ export function escapeExpression(string) {
 let _usernameFormatDelegate = username => username;
 
 export function formatUsername(username) {
-  return _usernameFormatDelegate(username || '');
+  return _usernameFormatDelegate(username || "");
 }
 
 export function replaceFormatter(fn) {
   _usernameFormatDelegate = fn;
 }
 
-
 export function avatarUrl(template, size) {
-  if (!template) { return ""; }
+  if (!template) {
+    return "";
+  }
   const rawSize = getRawSize(translateSize(size));
   return template.replace(/\{size\}/g, rawSize);
 }
@@ -53,16 +60,35 @@ export function avatarImg(options, getURL) {
   const url = avatarUrl(options.avatarTemplate, size);
 
   // We won't render an invalid url
-  if (!url || url.length === 0) { return ""; }
+  if (!url || url.length === 0) {
+    return "";
+  }
 
-  const classes = "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
-  const title = (options.title) ? " title='" + escapeExpression(options.title || "") + "'" : "";
+  const classes =
+    "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
+  const title = options.title
+    ? " title='" + escapeExpression(options.title || "") + "'"
+    : "";
 
-  return "<img alt='' width='" + size + "' height='" + size + "' src='" + getURL(url) + "' class='" + classes + "'" + title + ">";
+  return (
+    "<img alt='' width='" +
+    size +
+    "' height='" +
+    size +
+    "' src='" +
+    getURL(url) +
+    "' class='" +
+    classes +
+    "'" +
+    title +
+    ">"
+  );
 }
 
 export function tinyAvatar(avatarTemplate, options) {
-  return avatarImg(_.merge({avatarTemplate: avatarTemplate, size: 'tiny' }, options));
+  return avatarImg(
+    _.merge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
+  );
 }
 
 export function postUrl(slug, topicId, postNumber) {
@@ -70,7 +96,7 @@ export function postUrl(slug, topicId, postNumber) {
   if (slug) {
     url += slug + "/";
   } else {
-    url += 'topic/';
+    url += "topic/";
   }
   url += topicId;
   if (postNumber > 1) {
@@ -87,16 +113,18 @@ export function emailValid(email) {
 
 export function extractDomainFromUrl(url) {
   if (url.indexOf("://") > -1) {
-    url = url.split('/')[2];
+    url = url.split("/")[2];
   } else {
-    url = url.split('/')[0];
+    url = url.split("/")[0];
   }
-  return url.split(':')[0];
+  return url.split(":")[0];
 }
 
 export function selectedText() {
   const selection = window.getSelection();
-  if (selection.isCollapsed) { return ""; }
+  if (selection.isCollapsed) {
+    return "";
+  }
 
   const $div = $("<div>");
   for (let r = 0; r < selection.rangeCount; r++) {
@@ -105,7 +133,9 @@ export function selectedText() {
 
     // ensure we never quote text in the post menu area
     const $postMenuArea = $ancestor.find(".post-menu-area")[0];
-    if ($postMenuArea) { range.setEndBefore($postMenuArea); }
+    if ($postMenuArea) {
+      range.setEndBefore($postMenuArea);
+    }
 
     $div.append(range.cloneContents());
   }
@@ -113,7 +143,9 @@ export function selectedText() {
   // strip click counters
   $div.find(".clicks").remove();
   // replace emojis
-  $div.find("img.emoji").replaceWith(function() { return this.title; });
+  $div.find("img.emoji").replaceWith(function() {
+    return this.title;
+  });
 
   return toMarkdown($div.html());
 }
@@ -124,11 +156,13 @@ export function caretRowCol(el) {
   var rows = el.value.slice(0, cp).split("\n");
   var rowNum = rows.length;
 
-  var colNum = cp - rows.splice(0, rowNum - 1).reduce(function(sum, row) {
-    return sum + row.length + 1;
-  }, 0);
+  var colNum =
+    cp -
+    rows.splice(0, rowNum - 1).reduce(function(sum, row) {
+      return sum + row.length + 1;
+    }, 0);
 
-  return { rowNum: rowNum, colNum: colNum};
+  return { rowNum: rowNum, colNum: colNum };
 }
 
 // Determine the position of the caret in an element
@@ -145,7 +179,7 @@ export function caretPosition(el) {
     re = el.createTextRange();
     rc = re.duplicate();
     re.moveToBookmark(r.getBookmark());
-    rc.setEndPoint('EndToStart', re);
+    rc.setEndPoint("EndToStart", re);
     return rc.text.length;
   }
   return 0;
@@ -162,17 +196,19 @@ export function setCaretPosition(ctrl, pos) {
   if (ctrl.createTextRange) {
     range = ctrl.createTextRange();
     range.collapse(true);
-    range.moveEnd('character', pos);
-    range.moveStart('character', pos);
+    range.moveEnd("character", pos);
+    range.moveStart("character", pos);
     return range.select();
   }
 }
 
 export function validateUploadedFiles(files, opts) {
-  if (!files || files.length === 0) { return false; }
+  if (!files || files.length === 0) {
+    return false;
+  }
 
   if (files.length > 1) {
-    bootbox.alert(I18n.t('post.errors.too_many_uploads'));
+    bootbox.alert(I18n.t("post.errors.too_many_uploads"));
     return false;
   }
 
@@ -180,7 +216,13 @@ export function validateUploadedFiles(files, opts) {
 
   // CHROME ONLY: if the image was pasted, sets its name to a default one
   if (typeof Blob !== "undefined" && typeof File !== "undefined") {
-    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "image.png"; }
+    if (
+      upload instanceof Blob &&
+      !(upload instanceof File) &&
+      upload.type === "image/png"
+    ) {
+      upload.name = "image.png";
+    }
   }
 
   opts = opts || {};
@@ -196,28 +238,38 @@ export function validateUploadedFile(file, opts) {
 
   const name = file && file.name;
 
-  if (!name) { return false; }
+  if (!name) {
+    return false;
+  }
 
   // check that the uploaded file is authorized
   if (opts.allowStaffToUploadAnyFileInPm && opts.isPrivateMessage) {
-    if (Discourse.User.currentProp('staff')) {
+    if (Discourse.User.currentProp("staff")) {
       return true;
     }
   }
 
   if (opts.imagesOnly) {
     if (!isAnImage(name) && !isAuthorizedImage(name)) {
-      bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedImagesExtensions() }));
+      bootbox.alert(
+        I18n.t("post.errors.upload_not_authorized", {
+          authorized_extensions: authorizedImagesExtensions()
+        })
+      );
       return false;
     }
   } else if (opts.csvOnly) {
-    if (!(/\.csv$/i).test(name)) {
-      bootbox.alert(I18n.t('user.invited.bulk_invite.error'));
+    if (!/\.csv$/i.test(name)) {
+      bootbox.alert(I18n.t("user.invited.bulk_invite.error"));
       return false;
     }
   } else {
     if (!authorizesAllExtensions() && !isAuthorizedFile(name)) {
-      bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() }));
+      bootbox.alert(
+        I18n.t("post.errors.upload_not_authorized", {
+          authorized_extensions: authorizedExtensions()
+        })
+      );
       return false;
     }
   }
@@ -225,7 +277,9 @@ export function validateUploadedFile(file, opts) {
   if (!opts.bypassNewUserRestriction) {
     // ensures that new users can upload a file
     if (!Discourse.User.current().isAllowedToUploadAFile(opts.type)) {
-      bootbox.alert(I18n.t(`post.errors.${opts.type}_upload_not_allowed_for_new_user`));
+      bootbox.alert(
+        I18n.t(`post.errors.${opts.type}_upload_not_allowed_for_new_user`)
+      );
       return false;
     }
   }
@@ -237,10 +291,11 @@ export function validateUploadedFile(file, opts) {
 const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
 
 function extensionsToArray(exts) {
-  return exts.toLowerCase()
-             .replace(/[\s\.]+/g, "")
-             .split("|")
-             .filter(ext => ext.indexOf("*") === -1);
+  return exts
+    .toLowerCase()
+    .replace(/[\s\.]+/g, "")
+    .split("|")
+    .filter(ext => ext.indexOf("*") === -1);
 }
 
 function extensions() {
@@ -248,13 +303,17 @@ function extensions() {
 }
 
 function staffExtensions() {
-  return extensionsToArray(Discourse.SiteSettings.authorized_extensions_for_staff);
+  return extensionsToArray(
+    Discourse.SiteSettings.authorized_extensions_for_staff
+  );
 }
 
 function imagesExtensions() {
-  let exts =  extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
-  if (Discourse.User.currentProp('staff')) {
-    const staffExts = staffExtensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+  let exts = extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+  if (Discourse.User.currentProp("staff")) {
+    const staffExts = staffExtensions().filter(ext =>
+      IMAGES_EXTENSIONS_REGEX.test(ext)
+    );
     exts = _.union(exts, staffExts);
   }
   return exts;
@@ -273,38 +332,47 @@ function staffExtensionsRegex() {
 }
 
 function isAuthorizedFile(fileName) {
-  if (Discourse.User.currentProp('staff') && staffExtensionsRegex().test(fileName)) {
+  if (
+    Discourse.User.currentProp("staff") &&
+    staffExtensionsRegex().test(fileName)
+  ) {
     return true;
   }
   return extensionsRegex().test(fileName);
 }
 
-function isAuthorizedImage(fileName){
+function isAuthorizedImage(fileName) {
   return imagesExtensionsRegex().test(fileName);
 }
 
 export function authorizedExtensions() {
-  const exts = Discourse.User.currentProp('staff') ? [...extensions(), ...staffExtensions()] : extensions();
+  const exts = Discourse.User.currentProp("staff")
+    ? [...extensions(), ...staffExtensions()]
+    : extensions();
   return exts.filter(ext => ext.length > 0).join(", ");
 }
 
 export function authorizedImagesExtensions() {
-  return authorizesAllExtensions() ? "png, jpg, jpeg, gif, bmp, tiff, svg, webp, ico" : imagesExtensions().join(", ");
+  return authorizesAllExtensions()
+    ? "png, jpg, jpeg, gif, bmp, tiff, svg, webp, ico"
+    : imagesExtensions().join(", ");
 }
 
 export function authorizesAllExtensions() {
-  return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0 || (
-         Discourse.SiteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 &&
-         Discourse.User.currentProp('staff'));
+  return (
+    Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0 ||
+    (Discourse.SiteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 &&
+      Discourse.User.currentProp("staff"))
+  );
 }
 
 export function authorizesOneOrMoreExtensions() {
   if (authorizesAllExtensions()) return true;
 
-  return Discourse.SiteSettings.authorized_extensions
-          .split("|")
-          .filter(ext => ext)
-          .length > 0;
+  return (
+    Discourse.SiteSettings.authorized_extensions.split("|").filter(ext => ext)
+      .length > 0
+  );
 }
 
 export function authorizesOneOrMoreImageExtensions() {
@@ -314,46 +382,54 @@ export function authorizesOneOrMoreImageExtensions() {
 }
 
 export function isAnImage(path) {
-  return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
+  return /\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i.test(path);
 }
 
 function uploadTypeFromFileName(fileName) {
-  return isAnImage(fileName) ? 'image' : 'attachment';
+  return isAnImage(fileName) ? "image" : "attachment";
 }
 
 function isGUID(value) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value
+  );
 }
 
 function imageNameFromFileName(fileName) {
-  const split = fileName.split('.');
+  const split = fileName.split(".");
   let name = split[split.length - 2];
 
   if (exports.isAppleDevice() && isGUID(name)) {
-    name = I18n.t('upload_selector.default_image_alt_text');
+    name = I18n.t("upload_selector.default_image_alt_text");
   }
 
   return encodeURIComponent(name);
 }
 
 export function allowsImages() {
-  return authorizesAllExtensions() || IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions());
+  return (
+    authorizesAllExtensions() ||
+    IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions())
+  );
 }
 
 export function allowsAttachments() {
-  return authorizesAllExtensions() || authorizedExtensions().split(", ").length > imagesExtensions().length;
+  return (
+    authorizesAllExtensions() ||
+    authorizedExtensions().split(", ").length > imagesExtensions().length
+  );
 }
 
 export function uploadLocation(url) {
   if (Discourse.CDN) {
     url = Discourse.getURLWithCDN(url);
-    return /^\/\//.test(url) ? 'http:' + url : url;
+    return /^\/\//.test(url) ? "http:" + url : url;
   } else if (Discourse.SiteSettings.enable_s3_uploads) {
-    return 'https:' + url;
+    return "https:" + url;
   } else {
-    var protocol = window.location.protocol + '//',
+    var protocol = window.location.protocol + "//",
       hostname = window.location.hostname,
-      port = window.location.port ? ':' + window.location.port : '';
+      port = window.location.port ? ":" + window.location.port : "";
     return protocol + hostname + port + url;
   }
 }
@@ -361,11 +437,23 @@ export function uploadLocation(url) {
 export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
     const name = imageNameFromFileName(upload.original_filename);
-    return `![${name}|${upload.width}x${upload.height}](${upload.short_url || upload.url})`;
-  } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i).test(upload.original_filename)) {
+    return `![${name}|${upload.width}x${upload.height}](${upload.short_url ||
+      upload.url})`;
+  } else if (
+    !Discourse.SiteSettings.prevent_anons_from_downloading_files &&
+    /\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i.test(upload.original_filename)
+  ) {
     return uploadLocation(upload.url);
   } else {
-    return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')\n';
+    return (
+      '<a class="attachment" href="' +
+      upload.url +
+      '">' +
+      upload.original_filename +
+      "</a> (" +
+      I18n.toHumanSize(upload.filesize) +
+      ")\n"
+    );
   }
 }
 
@@ -380,7 +468,7 @@ export function displayErrorForUpload(data) {
       case 413:
         const type = uploadTypeFromFileName(data.files[0].name);
         const max_size_kb = Discourse.SiteSettings[`max_${type}_size_kb`];
-        bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb }));
+        bootbox.alert(I18n.t("post.errors.file_too_large", { max_size_kb }));
         return;
 
       // the error message is provided by the server
@@ -397,7 +485,7 @@ export function displayErrorForUpload(data) {
     return;
   }
   // otherwise, display a generic error message
-  bootbox.alert(I18n.t('post.errors.upload'));
+  bootbox.alert(I18n.t("post.errors.upload"));
 }
 
 export function defaultHomepage() {
@@ -419,8 +507,13 @@ export function setDefaultHomepage(homepage) {
   }
 }
 
-export function determinePostReplaceSelection({ selection, needle, replacement }) {
-  const diff = (replacement.end - replacement.start) - (needle.end - needle.start);
+export function determinePostReplaceSelection({
+  selection,
+  needle,
+  replacement
+}) {
+  const diff =
+    replacement.end - replacement.start - (needle.end - needle.start);
 
   if (selection.end <= needle.start) {
     // Selection ends (and starts) before needle.
@@ -452,9 +545,11 @@ export function determinePostReplaceSelection({ selection, needle, replacement }
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
+  return (
+    navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
     navigator.userAgent.match(/Safari/g) &&
-    !navigator.userAgent.match(/Trident/g);
+    !navigator.userAgent.match(/Trident/g)
+  );
 }
 
 const toArray = items => {
@@ -468,20 +563,26 @@ const toArray = items => {
 };
 
 export function clipboardData(e, canUpload) {
-  const clipboard = e.clipboardData ||
-                      e.originalEvent.clipboardData ||
-                      e.delegatedEvent.originalEvent.clipboardData;
+  const clipboard =
+    e.clipboardData ||
+    e.originalEvent.clipboardData ||
+    e.delegatedEvent.originalEvent.clipboardData;
 
   const types = toArray(clipboard.types);
   let files = toArray(clipboard.files);
 
-  if (types.includes("Files") && files.length === 0) { // for IE
+  if (types.includes("Files") && files.length === 0) {
+    // for IE
     files = toArray(clipboard.items).filter(i => i.kind === "file");
   }
 
   canUpload = files && canUpload && !types.includes("text/plain");
-  const canUploadImage = canUpload && files.filter(f => f.type.match('^image/'))[0];
-  const canPasteHtml = Discourse.SiteSettings.enable_rich_text_paste && types.includes("text/html") && !canUploadImage;
+  const canUploadImage =
+    canUpload && files.filter(f => f.type.match("^image/"))[0];
+  const canPasteHtml =
+    Discourse.SiteSettings.enable_rich_text_paste &&
+    types.includes("text/html") &&
+    !canUploadImage;
 
   return { clipboard, types, canUpload, canPasteHtml };
 }
@@ -489,19 +590,21 @@ export function clipboardData(e, canUpload) {
 export function fillMissingDates(data, startDate, endDate) {
   const startMoment = moment(startDate, "YYYY-MM-DD");
   const endMoment = moment(endDate, "YYYY-MM-DD");
-  const countDays = endMoment.diff(startMoment, 'days');
+  const countDays = endMoment.diff(startMoment, "days");
   let currentMoment = startMoment;
 
   for (let i = 0; i <= countDays; i++) {
-    let date = (data[i]) ? moment(data[i].x, "YYYY-MM-DD") : null;
+    let date = data[i] ? moment(data[i].x, "YYYY-MM-DD") : null;
     if (i === 0 && (!date || date.isAfter(startMoment))) {
-      data.splice(i, 0, { "x" : startMoment.format("YYYY-MM-DD"), 'y': 0 });
+      data.splice(i, 0, { x: startMoment.format("YYYY-MM-DD"), y: 0 });
     } else {
       if (!date || date.isAfter(moment(currentMoment))) {
-        data.splice(i, 0, { "x" : currentMoment, 'y': 0 });
+        data.splice(i, 0, { x: currentMoment, y: 0 });
       }
     }
-    currentMoment = moment(currentMoment).add(1, "day").format("YYYY-MM-DD");
+    currentMoment = moment(currentMoment)
+      .add(1, "day")
+      .format("YYYY-MM-DD");
   }
   return data;
 }

@@ -19,7 +19,10 @@ export default DropdownSelectBox.extend({
     return adminTools.spammerDetails(user);
   },
 
-  canDeleteSpammer: Ember.computed.and("spammerDetails.canDelete", "post.flaggedForSpam"),
+  canDeleteSpammer: Ember.computed.and(
+    "spammerDetails.canDelete",
+    "post.flaggedForSpam"
+  ),
 
   computeContent() {
     const content = [];
@@ -30,7 +33,7 @@ export default DropdownSelectBox.extend({
       id: "delete-defer",
       action: () => this.send("deletePostDeferFlag"),
       label: I18n.t("admin.flags.delete_post_defer_flag"),
-      description:  I18n.t("admin.flags.delete_post_defer_flag_title"),
+      description: I18n.t("admin.flags.delete_post_defer_flag_title")
     });
 
     content.push({
@@ -38,12 +41,12 @@ export default DropdownSelectBox.extend({
       id: "delete-agree",
       action: () => this.send("deletePostAgreeFlag"),
       label: I18n.t("admin.flags.delete_post_agree_flag"),
-      description:  I18n.t("admin.flags.delete_post_agree_flag_title"),
+      description: I18n.t("admin.flags.delete_post_agree_flag_title")
     });
 
     if (canDeleteSpammer) {
       content.push({
-        title:  I18n.t("admin.flags.delete_post_agree_flag_title"),
+        title: I18n.t("admin.flags.delete_post_agree_flag_title"),
         icon: "exclamation-triangle",
         id: "delete-spammer",
         action: () => this.send("deleteSpammer"),
@@ -55,7 +58,10 @@ export default DropdownSelectBox.extend({
   },
 
   mutateValue(value) {
-    const computedContentItem = this.get("computedContent").findBy("value", value);
+    const computedContentItem = this.get("computedContent").findBy(
+      "value",
+      value
+    );
     get(computedContentItem, "originalContent.action")();
   },
 
@@ -66,13 +72,13 @@ export default DropdownSelectBox.extend({
     },
 
     deletePostDeferFlag() {
-      let flaggedPost = this.get('post');
+      let flaggedPost = this.get("post");
       this.attrs.removeAfter(flaggedPost.deferFlags(true));
     },
 
     deletePostAgreeFlag() {
-      let flaggedPost = this.get('post');
-      this.attrs.removeAfter(flaggedPost.agreeFlags('delete'));
+      let flaggedPost = this.get("post");
+      this.attrs.removeAfter(flaggedPost.agreeFlags("delete"));
     }
   }
 });

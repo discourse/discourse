@@ -1,156 +1,200 @@
-import { createWidget } from 'discourse/widgets/widget';
-import { h } from 'virtual-dom';
-import { avatarImg, avatarFor } from 'discourse/widgets/post';
-import { dateNode, numberNode } from 'discourse/helpers/node';
-import { replaceEmoji } from 'discourse/widgets/emoji';
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
+import { avatarImg, avatarFor } from "discourse/widgets/post";
+import { dateNode, numberNode } from "discourse/helpers/node";
+import { replaceEmoji } from "discourse/widgets/emoji";
 
 const LINKS_SHOWN = 5;
 
 function renderParticipants(userFilters, participants) {
-  if (!participants) { return; }
+  if (!participants) {
+    return;
+  }
 
   userFilters = userFilters || [];
   return participants.map(p => {
-    return this.attach('topic-participant', p, { state: { toggled: userFilters.includes(p.username) } });
+    return this.attach("topic-participant", p, {
+      state: { toggled: userFilters.includes(p.username) }
+    });
   });
 }
 
-createWidget('topic-map-show-links', {
-  tagName: 'div.link-summary',
+createWidget("topic-map-show-links", {
+  tagName: "div.link-summary",
   html() {
-    return h('span', this.attach('button', {
-      title: 'topic_map.links_shown',
-      icon: 'chevron-down',
-      action: 'showLinks',
-      className: 'btn'
-    }));
+    return h(
+      "span",
+      this.attach("button", {
+        title: "topic_map.links_shown",
+        icon: "chevron-down",
+        action: "showLinks",
+        className: "btn"
+      })
+    );
   },
 
   showLinks() {
-    this.sendWidgetAction('showAllLinks');
+    this.sendWidgetAction("showAllLinks");
   }
 });
 
-createWidget('topic-participant', {
+createWidget("topic-participant", {
   buildClasses(attrs) {
-    if (attrs.primary_group_name) { return `group-${attrs.primary_group_name}`; }
+    if (attrs.primary_group_name) {
+      return `group-${attrs.primary_group_name}`;
+    }
   },
 
   html(attrs, state) {
     const linkContents = [
-      avatarImg('medium', {
+      avatarImg("medium", {
         username: attrs.username,
         template: attrs.avatar_template,
         name: attrs.name
-      })];
+      })
+    ];
 
     if (attrs.post_count > 2) {
-      linkContents.push(h('span.post-count', attrs.post_count.toString()));
+      linkContents.push(h("span.post-count", attrs.post_count.toString()));
     }
 
     if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
-      linkContents.push(this.attach('avatar-flair', attrs));
+      linkContents.push(this.attach("avatar-flair", attrs));
     }
 
-    return h('a.poster.trigger-user-card', {
-      className: state.toggled ? 'toggled' : null,
-      attributes: { title: attrs.username, 'data-user-card': attrs.username }
-    }, linkContents);
+    return h(
+      "a.poster.trigger-user-card",
+      {
+        className: state.toggled ? "toggled" : null,
+        attributes: { title: attrs.username, "data-user-card": attrs.username }
+      },
+      linkContents
+    );
   }
 });
 
-createWidget('topic-map-summary', {
-  tagName: 'section.map',
+createWidget("topic-map-summary", {
+  tagName: "section.map",
 
   buildClasses(attrs, state) {
-    if (state.collapsed) { return 'map-collapsed'; }
+    if (state.collapsed) {
+      return "map-collapsed";
+    }
   },
 
   html(attrs, state) {
     const contents = [];
-    contents.push(h('li',
-      [
-        h('h4', I18n.t('created_lowercase')),
-        h('div.topic-map-post.created-at', [
-          avatarFor('tiny', {
+    contents.push(
+      h("li", [
+        h("h4", I18n.t("created_lowercase")),
+        h("div.topic-map-post.created-at", [
+          avatarFor("tiny", {
             username: attrs.createdByUsername,
             template: attrs.createdByAvatarTemplate,
             name: attrs.createdByName
           }),
           dateNode(attrs.topicCreatedAt)
         ])
-      ]
-    ));
-    contents.push(h('li',
-      h('a', { attributes: { href: attrs.lastPostUrl } }, [
-        h('h4', I18n.t('last_reply_lowercase')),
-        h('div.topic-map-post.last-reply', [
-          avatarFor('tiny', {
-            username: attrs.lastPostUsername,
-            template: attrs.lastPostAvatarTemplate,
-            name: attrs.lastPostName
-          }),
-          dateNode(attrs.lastPostAt)
-        ])
       ])
-    ));
-    contents.push(h('li', [
-      numberNode(attrs.topicReplyCount),
-      h('h4', I18n.t('replies_lowercase', { count: attrs.topicReplyCount }))
-    ]));
-    contents.push(h('li.secondary', [
-      numberNode(attrs.topicViews, { className: attrs.topicViewsHeat }),
-      h('h4', I18n.t('views_lowercase', { count: attrs.topicViews }))
-    ]));
-    contents.push(h('li.secondary', [
-      numberNode(attrs.participantCount),
-      h('h4', I18n.t('users_lowercase', { count: attrs.participantCount }))
-    ]));
+    );
+    contents.push(
+      h(
+        "li",
+        h("a", { attributes: { href: attrs.lastPostUrl } }, [
+          h("h4", I18n.t("last_reply_lowercase")),
+          h("div.topic-map-post.last-reply", [
+            avatarFor("tiny", {
+              username: attrs.lastPostUsername,
+              template: attrs.lastPostAvatarTemplate,
+              name: attrs.lastPostName
+            }),
+            dateNode(attrs.lastPostAt)
+          ])
+        ])
+      )
+    );
+    contents.push(
+      h("li", [
+        numberNode(attrs.topicReplyCount),
+        h("h4", I18n.t("replies_lowercase", { count: attrs.topicReplyCount }))
+      ])
+    );
+    contents.push(
+      h("li.secondary", [
+        numberNode(attrs.topicViews, { className: attrs.topicViewsHeat }),
+        h("h4", I18n.t("views_lowercase", { count: attrs.topicViews }))
+      ])
+    );
+    contents.push(
+      h("li.secondary", [
+        numberNode(attrs.participantCount),
+        h("h4", I18n.t("users_lowercase", { count: attrs.participantCount }))
+      ])
+    );
 
     if (attrs.topicLikeCount) {
-      contents.push(h('li.secondary', [
-        numberNode(attrs.topicLikeCount),
-        h('h4', I18n.t('likes_lowercase', { count: attrs.topicLikeCount }))
-      ]));
+      contents.push(
+        h("li.secondary", [
+          numberNode(attrs.topicLikeCount),
+          h("h4", I18n.t("likes_lowercase", { count: attrs.topicLikeCount }))
+        ])
+      );
     }
 
     if (attrs.topicLinkLength > 0) {
-      contents.push(h('li.secondary', [
-        numberNode(attrs.topicLinkLength),
-        h('h4', I18n.t('links_lowercase', { count: attrs.topicLinkLength }))
-      ]));
+      contents.push(
+        h("li.secondary", [
+          numberNode(attrs.topicLinkLength),
+          h("h4", I18n.t("links_lowercase", { count: attrs.topicLinkLength }))
+        ])
+      );
     }
 
-    if (state.collapsed && attrs.topicPostsCount > 2 && attrs.participants.length > 0) {
-      const participants = renderParticipants.call(this, attrs.userFilters, attrs.participants.slice(0, 3));
-      contents.push(h('li.avatars', participants));
+    if (
+      state.collapsed &&
+      attrs.topicPostsCount > 2 &&
+      attrs.participants.length > 0
+    ) {
+      const participants = renderParticipants.call(
+        this,
+        attrs.userFilters,
+        attrs.participants.slice(0, 3)
+      );
+      contents.push(h("li.avatars", participants));
     }
 
-    const nav = h('nav.buttons', this.attach('button', {
-      title: 'topic.toggle_information',
-      icon: state.collapsed ? 'chevron-down' : 'chevron-up',
-      action: 'toggleMap',
-      className: 'btn',
-    }));
+    const nav = h(
+      "nav.buttons",
+      this.attach("button", {
+        title: "topic.toggle_information",
+        icon: state.collapsed ? "chevron-down" : "chevron-up",
+        action: "toggleMap",
+        className: "btn"
+      })
+    );
 
-    return [nav, h('ul.clearfix', contents)];
+    return [nav, h("ul.clearfix", contents)];
   }
 });
 
-createWidget('topic-map-link', {
-  tagName: 'a.topic-link.track-link',
+createWidget("topic-map-link", {
+  tagName: "a.topic-link.track-link",
 
   buildClasses(attrs) {
-    if (attrs.attachment) { return 'attachment'; }
+    if (attrs.attachment) {
+      return "attachment";
+    }
   },
 
   buildAttributes(attrs) {
-    return { href: attrs.url,
-             target: "_blank",
-             'data-user-id': attrs.user_id,
-             'data-ignore-post-id': 'true',
-             title: attrs.url,
-             rel: 'nofollow noopener' };
+    return {
+      href: attrs.url,
+      target: "_blank",
+      "data-user-id": attrs.user_id,
+      "data-ignore-post-id": "true",
+      title: attrs.url,
+      rel: "nofollow noopener"
+    };
   },
 
   html(attrs) {
@@ -165,8 +209,8 @@ createWidget('topic-map-link', {
   }
 });
 
-createWidget('topic-map-expanded', {
-  tagName: 'section.topic-map-expanded',
+createWidget("topic-map-expanded", {
+  tagName: "section.topic-map-expanded",
   buildKey: attrs => `topic-map-expanded-${attrs.id}`,
 
   defaultState() {
@@ -174,46 +218,55 @@ createWidget('topic-map-expanded', {
   },
 
   html(attrs, state) {
-    const avatars = h('section.avatars.clearfix', [
-      h('h3', I18n.t('topic_map.participants_title')),
+    const avatars = h("section.avatars.clearfix", [
+      h("h3", I18n.t("topic_map.participants_title")),
       renderParticipants.call(this, attrs.userFilters, attrs.participants)
     ]);
 
     const result = [avatars];
     if (attrs.topicLinks) {
-      const toShow = state.allLinksShown ? attrs.topicLinks : attrs.topicLinks.slice(0, LINKS_SHOWN);
+      const toShow = state.allLinksShown
+        ? attrs.topicLinks
+        : attrs.topicLinks.slice(0, LINKS_SHOWN);
 
       const links = toShow.map(l => {
-        let host = '';
+        let host = "";
 
         if (l.title && l.title.length) {
           const rootDomain = l.root_domain;
 
           if (rootDomain && rootDomain.length) {
-            host = h('span.domain', rootDomain);
+            host = h("span.domain", rootDomain);
           }
         }
 
-        return h('tr', [
-          h('td',
-            h('span.badge.badge-notification.clicks', {
-                attributes: { title: I18n.t('topic_map.clicks', { count: l.clicks }) }
-              }, l.clicks.toString())
+        return h("tr", [
+          h(
+            "td",
+            h(
+              "span.badge.badge-notification.clicks",
+              {
+                attributes: {
+                  title: I18n.t("topic_map.clicks", { count: l.clicks })
+                }
+              },
+              l.clicks.toString()
+            )
           ),
-          h('td', [this.attach('topic-map-link', l), ' ', host])
+          h("td", [this.attach("topic-map-link", l), " ", host])
         ]);
       });
 
       const showAllLinksContent = [
-        h('h3', I18n.t('topic_map.links_title')),
-        h('table.topic-links', links)
+        h("h3", I18n.t("topic_map.links_title")),
+        h("table.topic-links", links)
       ];
 
       if (!state.allLinksShown && links.length < attrs.topicLinks.length) {
-        showAllLinksContent.push(this.attach('topic-map-show-links'));
+        showAllLinksContent.push(this.attach("topic-map-show-links"));
       }
 
-      const section = h('section.links', showAllLinksContent);
+      const section = h("section.links", showAllLinksContent);
       result.push(section);
     }
     return result;
@@ -224,8 +277,8 @@ createWidget('topic-map-expanded', {
   }
 });
 
-export default createWidget('topic-map', {
-  tagName: 'div.topic-map',
+export default createWidget("topic-map", {
+  tagName: "div.topic-map",
   buildKey: attrs => `topic-map-${attrs.id}`,
 
   defaultState(attrs) {
@@ -233,18 +286,18 @@ export default createWidget('topic-map', {
   },
 
   html(attrs, state) {
-    const contents = [this.attach('topic-map-summary', attrs, { state })];
+    const contents = [this.attach("topic-map-summary", attrs, { state })];
 
     if (!state.collapsed) {
-      contents.push(this.attach('topic-map-expanded', attrs));
+      contents.push(this.attach("topic-map-expanded", attrs));
     }
 
     if (attrs.hasTopicSummary) {
-      contents.push(this.attach('toggle-topic-summary', attrs));
+      contents.push(this.attach("toggle-topic-summary", attrs));
     }
 
     if (attrs.showPMMap) {
-      contents.push(this.attach('private-message-map', attrs));
+      contents.push(this.attach("private-message-map", attrs));
     }
     return contents;
   },

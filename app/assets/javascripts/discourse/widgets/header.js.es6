@@ -1,21 +1,25 @@
-import { createWidget } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse-common/lib/icon-library';
-import { avatarImg } from 'discourse/widgets/post';
-import DiscourseURL from 'discourse/lib/url';
-import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import { createWidget } from "discourse/widgets/widget";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { avatarImg } from "discourse/widgets/post";
+import DiscourseURL from "discourse/lib/url";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applySearchAutocomplete } from "discourse/lib/search";
-import { ajax } from 'discourse/lib/ajax';
-import { addExtraUserClasses } from 'discourse/helpers/user-avatar';
+import { ajax } from "discourse/lib/ajax";
+import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 
-import { h } from 'virtual-dom';
+import { h } from "virtual-dom";
 
 const dropdown = {
   buildClasses(attrs) {
-    if (attrs.active) { return "active"; }
+    if (attrs.active) {
+      return "active";
+    }
   },
 
   click(e) {
-    if (wantsNewWindow(e)) { return; }
+    if (wantsNewWindow(e)) {
+      return;
+    }
     e.preventDefault();
     if (!this.attrs.active) {
       this.sendWidgetAction(this.attrs.action);
@@ -23,189 +27,245 @@ const dropdown = {
   }
 };
 
-createWidget('header-notifications', {
+createWidget("header-notifications", {
   settings: {
-    avatarSize: 'medium'
+    avatarSize: "medium"
   },
 
   html(attrs) {
     const { user } = attrs;
 
     let avatarAttrs = {
-      template: user.get('avatar_template'),
-      username: user.get('username')
+      template: user.get("avatar_template"),
+      username: user.get("username")
     };
 
     if (this.siteSettings.enable_names) {
-      avatarAttrs.name = user.get('name');
+      avatarAttrs.name = user.get("name");
     }
 
     const contents = [
-      avatarImg(this.settings.avatarSize, addExtraUserClasses(user, avatarAttrs))
+      avatarImg(
+        this.settings.avatarSize,
+        addExtraUserClasses(user, avatarAttrs)
+      )
     ];
 
-    const unreadNotifications = user.get('unread_notifications');
+    const unreadNotifications = user.get("unread_notifications");
     if (!!unreadNotifications) {
-      contents.push(this.attach('link', {
-        action: attrs.action,
-        className: 'badge-notification unread-notifications',
-        rawLabel: unreadNotifications,
-        omitSpan: true,
-        title: "notifications.tooltip.regular",
-        titleOptions: {count: unreadNotifications}
-      }));
+      contents.push(
+        this.attach("link", {
+          action: attrs.action,
+          className: "badge-notification unread-notifications",
+          rawLabel: unreadNotifications,
+          omitSpan: true,
+          title: "notifications.tooltip.regular",
+          titleOptions: { count: unreadNotifications }
+        })
+      );
     }
 
-    const unreadPMs = user.get('unread_private_messages');
+    const unreadPMs = user.get("unread_private_messages");
     if (!!unreadPMs) {
-      if (!user.get('read_first_notification')) {
-        contents.push(h('span.ring'));
+      if (!user.get("read_first_notification")) {
+        contents.push(h("span.ring"));
         if (!attrs.active && attrs.ringBackdrop) {
-          contents.push(h('span.ring-backdrop-spotlight'));
-          contents.push(h('span.ring-backdrop',
-            {},
-            h('h1.ring-first-notification', {} ,I18n.t('user.first_notification'))
-          ));
+          contents.push(h("span.ring-backdrop-spotlight"));
+          contents.push(
+            h(
+              "span.ring-backdrop",
+              {},
+              h(
+                "h1.ring-first-notification",
+                {},
+                I18n.t("user.first_notification")
+              )
+            )
+          );
         }
-      };
+      }
 
-      contents.push(this.attach('link', {
-        action: attrs.action,
-        className: 'badge-notification unread-private-messages',
-        rawLabel: unreadPMs,
-        omitSpan: true,
-        title: "notifications.tooltip.message",
-        titleOptions: {count: unreadPMs}
-      }));
+      contents.push(
+        this.attach("link", {
+          action: attrs.action,
+          className: "badge-notification unread-private-messages",
+          rawLabel: unreadPMs,
+          omitSpan: true,
+          title: "notifications.tooltip.message",
+          titleOptions: { count: unreadPMs }
+        })
+      );
     }
 
     return contents;
   }
 });
 
-createWidget('user-dropdown', jQuery.extend({
-  tagName: 'li.header-dropdown-toggle.current-user',
+createWidget(
+  "user-dropdown",
+  jQuery.extend(
+    {
+      tagName: "li.header-dropdown-toggle.current-user",
 
-  buildId() {
-    return 'current-user';
-  },
-
-  html(attrs) {
-    return h('a.icon', { attributes: { href: attrs.user.get('path'), 'data-auto-route': true } },
-             this.attach('header-notifications', attrs));
-  }
-}, dropdown));
-
-createWidget('header-dropdown', jQuery.extend({
-  tagName: 'li.header-dropdown-toggle',
-
-  html(attrs) {
-    const title = I18n.t(attrs.title);
-
-    const body = [iconNode(attrs.icon)];
-    if (attrs.contents) {
-      body.push(attrs.contents.call(this));
-    }
-
-    return h(
-      'a.icon.btn-flat',
-      { attributes: {
-        href: attrs.href,
-          'data-auto-route': true,
-          title,
-          'aria-label': title,
-          id: attrs.iconId
-        }
+      buildId() {
+        return "current-user";
       },
-      body
-    );
-  }
-}, dropdown));
 
-createWidget('header-icons', {
-  tagName: 'ul.icons.d-header-icons.clearfix',
+      html(attrs) {
+        return h(
+          "a.icon",
+          {
+            attributes: {
+              href: attrs.user.get("path"),
+              "data-auto-route": true
+            }
+          },
+          this.attach("header-notifications", attrs)
+        );
+      }
+    },
+    dropdown
+  )
+);
+
+createWidget(
+  "header-dropdown",
+  jQuery.extend(
+    {
+      tagName: "li.header-dropdown-toggle",
+
+      html(attrs) {
+        const title = I18n.t(attrs.title);
+
+        const body = [iconNode(attrs.icon)];
+        if (attrs.contents) {
+          body.push(attrs.contents.call(this));
+        }
+
+        return h(
+          "a.icon.btn-flat",
+          {
+            attributes: {
+              href: attrs.href,
+              "data-auto-route": true,
+              title,
+              "aria-label": title,
+              id: attrs.iconId
+            }
+          },
+          body
+        );
+      }
+    },
+    dropdown
+  )
+);
+
+createWidget("header-icons", {
+  tagName: "ul.icons.d-header-icons.clearfix",
 
   buildAttributes() {
-    return { role: 'navigation' };
+    return { role: "navigation" };
   },
 
   html(attrs) {
-    if (this.siteSettings.login_required && !this.currentUser) { return []; }
+    if (this.siteSettings.login_required && !this.currentUser) {
+      return [];
+    }
 
-    const hamburger = this.attach('header-dropdown', {
-                        title: 'hamburger_menu',
-                        icon: 'bars',
-                        iconId: 'toggle-hamburger-menu',
-                        active: attrs.hamburgerVisible,
-                        action: 'toggleHamburger',
-                        href: '',
-                        contents() {
-                          if (!attrs.flagCount) { return; }
-                          return h('div.badge-notification.flagged-posts', { attributes: {
-                            title: I18n.t('notifications.total_flagged')
-                          } }, attrs.flagCount);
-                        }
-                      });
+    const hamburger = this.attach("header-dropdown", {
+      title: "hamburger_menu",
+      icon: "bars",
+      iconId: "toggle-hamburger-menu",
+      active: attrs.hamburgerVisible,
+      action: "toggleHamburger",
+      href: "",
+      contents() {
+        if (!attrs.flagCount) {
+          return;
+        }
+        return h(
+          "div.badge-notification.flagged-posts",
+          {
+            attributes: {
+              title: I18n.t("notifications.total_flagged")
+            }
+          },
+          attrs.flagCount
+        );
+      }
+    });
 
-    const search = this.attach('header-dropdown', {
-                     title: 'search.title',
-                     icon: 'search',
-                     iconId: 'search-button',
-                     action: 'toggleSearchMenu',
-                     active: attrs.searchVisible,
-                     href: Discourse.getURL('/search')
-                   });
+    const search = this.attach("header-dropdown", {
+      title: "search.title",
+      icon: "search",
+      iconId: "search-button",
+      action: "toggleSearchMenu",
+      active: attrs.searchVisible,
+      href: Discourse.getURL("/search")
+    });
 
     const icons = [search, hamburger];
     if (attrs.user) {
-      icons.push(this.attach('user-dropdown', {
-        active: attrs.userVisible,
-        action: 'toggleUserMenu',
-        ringBackdrop: attrs.ringBackdrop,
-        user: attrs.user
-      }));
+      icons.push(
+        this.attach("user-dropdown", {
+          active: attrs.userVisible,
+          action: "toggleUserMenu",
+          ringBackdrop: attrs.ringBackdrop,
+          user: attrs.user
+        })
+      );
     }
 
     return icons;
-  },
+  }
 });
 
-createWidget('header-buttons', {
-  tagName: 'span.header-buttons',
+createWidget("header-buttons", {
+  tagName: "span.header-buttons",
 
   html(attrs) {
-    if (this.currentUser) { return; }
+    if (this.currentUser) {
+      return;
+    }
 
     const buttons = [];
 
     if (attrs.canSignUp && !attrs.topic) {
-      buttons.push(this.attach('button', { label: "sign_up",
-                                           className: 'btn-primary btn-small sign-up-button',
-                                           action: "showCreateAccount" }));
+      buttons.push(
+        this.attach("button", {
+          label: "sign_up",
+          className: "btn-primary btn-small sign-up-button",
+          action: "showCreateAccount"
+        })
+      );
     }
 
-
-    buttons.push(this.attach('button', { label: 'log_in',
-                                         className: 'btn-primary btn-small login-button',
-                                         action: 'showLogin',
-                                         icon: 'user' }));
+    buttons.push(
+      this.attach("button", {
+        label: "log_in",
+        className: "btn-primary btn-small login-button",
+        action: "showLogin",
+        icon: "user"
+      })
+    );
     return buttons;
   }
 });
 
-const forceContextEnabled = ['category', 'user', 'private_messages'];
+const forceContextEnabled = ["category", "user", "private_messages"];
 
 let additionalPanels = [];
 export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
-export default createWidget('header', {
-  tagName: 'header.d-header.clearfix',
+export default createWidget("header", {
+  tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
 
   defaultState() {
-    let states =  {
+    let states = {
       searchVisible: false,
       hamburgerVisible: false,
       userVisible: false,
@@ -220,18 +280,17 @@ export default createWidget('header', {
   },
 
   html(attrs, state) {
-
     let contents = () => {
       const panels = [
-        this.attach('header-buttons', attrs),
-        this.attach('header-icons', {
+        this.attach("header-buttons", attrs),
+        this.attach("header-icons", {
           hamburgerVisible: state.hamburgerVisible,
           userVisible: state.userVisible,
           searchVisible: state.searchVisible,
           ringBackdrop: state.ringBackdrop,
           flagCount: attrs.flagCount,
-          user: this.currentUser }
-        )
+          user: this.currentUser
+        })
       ];
 
       if (state.searchVisible) {
@@ -248,16 +307,23 @@ export default createWidget('header', {
           }
         }
 
-        panels.push(this.attach('search-menu', { contextEnabled: state.contextEnabled }));
+        panels.push(
+          this.attach("search-menu", { contextEnabled: state.contextEnabled })
+        );
       } else if (state.hamburgerVisible) {
-        panels.push(this.attach('hamburger-menu'));
+        panels.push(this.attach("hamburger-menu"));
       } else if (state.userVisible) {
-        panels.push(this.attach('user-menu'));
+        panels.push(this.attach("user-menu"));
       }
 
-      additionalPanels.map((panel) => {
+      additionalPanels.map(panel => {
         if (this.state[panel.toggle]) {
-          panels.push(this.attach(panel.name, panel.transformAttrs.call(this, attrs, state)));
+          panels.push(
+            this.attach(
+              panel.name,
+              panel.transformAttrs.call(this, attrs, state)
+            )
+          );
         }
       });
 
@@ -265,15 +331,16 @@ export default createWidget('header', {
     };
 
     let contentsAttrs = { contents, minimized: !!attrs.topic };
-    return h('div.wrap',
-      this.attach('header-contents', $.extend({}, attrs, contentsAttrs))
+    return h(
+      "div.wrap",
+      this.attach("header-contents", $.extend({}, attrs, contentsAttrs))
     );
   },
 
   updateHighlight() {
     if (!this.state.searchVisible) {
-      const service = this.register.lookup('search-service:main');
-      service.set('highlightTerm', '');
+      const service = this.register.lookup("search-service:main");
+      service.set("highlightTerm", "");
     }
   },
 
@@ -284,16 +351,14 @@ export default createWidget('header', {
   },
 
   linkClickedEvent(attrs) {
-
     let searchContextEnabled = false;
     if (attrs) {
       searchContextEnabled = attrs.searchContextEnabled;
 
       const { searchLogId, searchResultId, searchResultType } = attrs;
       if (searchLogId && searchResultId && searchResultType) {
-
-        ajax('/search/click', {
-          type: 'POST',
+        ajax("/search/click", {
+          type: "POST",
           data: {
             search_log_id: searchLogId,
             search_result_id: searchResultId,
@@ -312,36 +377,43 @@ export default createWidget('header', {
 
   toggleSearchMenu() {
     if (this.site.mobileView) {
-      const searchService = this.register.lookup('search-service:main');
-      const context = searchService.get('searchContext');
+      const searchService = this.register.lookup("search-service:main");
+      const context = searchService.get("searchContext");
       var params = "";
 
       if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
+        params = `?context=${context.type}&context_id=${
+          context.id
+        }&skip_context=${this.state.skipSearchContext}`;
       }
 
-      return DiscourseURL.routeTo('/search' + params);
+      return DiscourseURL.routeTo("/search" + params);
     }
 
     this.state.searchVisible = !this.state.searchVisible;
     this.updateHighlight();
 
     if (this.state.searchVisible) {
-      Ember.run.schedule('afterRender', () => {
-        const $searchInput = $('#search-term');
+      Ember.run.schedule("afterRender", () => {
+        const $searchInput = $("#search-term");
         $searchInput.focus().select();
 
-        applySearchAutocomplete($searchInput, this.siteSettings, this.appEvents, {
-          appendSelector: '.menu-panel'
-        });
+        applySearchAutocomplete(
+          $searchInput,
+          this.siteSettings,
+          this.appEvents,
+          {
+            appendSelector: ".menu-panel"
+          }
+        );
       });
     }
   },
 
   toggleUserMenu() {
-    if (this.currentUser.get('read_first_notification')) {
+    if (this.currentUser.get("read_first_notification")) {
       this.state.ringBackdrop = false;
-    };
+    }
 
     this.state.userVisible = !this.state.userVisible;
   },
@@ -355,20 +427,25 @@ export default createWidget('header', {
 
     state.contextEnabled = false;
 
-    const currentPath = this.register.lookup('controller:application').get('currentPath');
-    const blacklist = [ /^discovery\.categories/ ];
-    const whitelist = [ /^topic\./ ];
-    const check = function(regex) { return !!currentPath.match(regex); };
+    const currentPath = this.register
+      .lookup("controller:application")
+      .get("currentPath");
+    const blacklist = [/^discovery\.categories/];
+    const whitelist = [/^topic\./];
+    const check = function(regex) {
+      return !!currentPath.match(regex);
+    };
     let showSearch = whitelist.any(check) && !blacklist.any(check);
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
-      const controller = this.register.lookup('controller:topic');
-      const total = controller.get('model.postStream.stream.length') || 0;
-      const chunkSize = controller.get('model.chunk_size') || 0;
+      const controller = this.register.lookup("controller:topic");
+      const total = controller.get("model.postStream.stream.length") || 0;
+      const chunkSize = controller.get("model.chunk_size") || 0;
 
-      showSearch = (total > chunkSize) &&
-        $('.topic-post .cooked, .small-action:not(.time-gap)').length < total;
+      showSearch =
+        total > chunkSize &&
+        $(".topic-post .cooked, .small-action:not(.time-gap)").length < total;
     }
 
     if (state.searchVisible) {
@@ -386,7 +463,9 @@ export default createWidget('header', {
   },
 
   searchMenuContextChanged(value) {
-    this.state.contextType = this.register.lookup('search-service:main').get('contextType');
+    this.state.contextType = this.register
+      .lookup("search-service:main")
+      .get("contextType");
     this.state.contextEnabled = value;
   },
 
@@ -399,19 +478,19 @@ export default createWidget('header', {
   },
 
   headerKeyboardTrigger(msg) {
-    switch(msg.type) {
-      case 'search':
+    switch (msg.type) {
+      case "search":
         this.toggleSearchMenu();
         break;
-      case 'user':
+      case "user":
         this.toggleUserMenu();
         break;
-      case 'hamburger':
+      case "hamburger":
         this.toggleHamburger();
         break;
-      case 'page-search':
+      case "page-search":
         let contextType = this.searchContextType();
-        if (contextType === 'topic') {
+        if (contextType === "topic") {
           this.state.searchContextType = contextType;
         }
         if (!this.togglePageSearch()) {
@@ -423,13 +502,12 @@ export default createWidget('header', {
   },
 
   searchContextType() {
-    const service = this.register.lookup('search-service:main');
+    const service = this.register.lookup("search-service:main");
     if (service) {
-      const ctx = service.get('searchContext');
+      const ctx = service.get("searchContext");
       if (ctx) {
-        return Ember.get(ctx, 'type');
+        return Ember.get(ctx, "type");
       }
     }
   }
-
 });

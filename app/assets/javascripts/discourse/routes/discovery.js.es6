@@ -11,11 +11,15 @@ export default Discourse.Route.extend(OpenComposer, {
   },
 
   beforeModel(transition) {
-    if ((transition.intent.url === "/" || transition.intent.url === "/categories") &&
-        transition.targetName.indexOf("discovery.top") === -1 &&
-        Discourse.User.currentProp("should_be_redirected_to_top")) {
+    if (
+      (transition.intent.url === "/" ||
+        transition.intent.url === "/categories") &&
+      transition.targetName.indexOf("discovery.top") === -1 &&
+      Discourse.User.currentProp("should_be_redirected_to_top")
+    ) {
       Discourse.User.currentProp("should_be_redirected_to_top", false);
-      const period = Discourse.User.currentProp("redirect_to_top.period") || "all";
+      const period =
+        Discourse.User.currentProp("redirect_to_top.period") || "all";
       this.replaceWith(`discovery.top${period.capitalize()}`);
     }
   },
@@ -45,7 +49,7 @@ export default Discourse.Route.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/topics").get('model');
+      const model = this.controllerFor("discovery/topics").get("model");
       if (model.draft) {
         this.openTopicDraft(model);
       } else {
@@ -55,12 +59,11 @@ export default Discourse.Route.extend(OpenComposer, {
 
     dismissReadTopics(dismissTopics) {
       var operationType = dismissTopics ? "topics" : "posts";
-      this.controllerFor("discovery/topics").send('dismissRead', operationType);
+      this.controllerFor("discovery/topics").send("dismissRead", operationType);
     },
 
     dismissRead(operationType) {
-      this.controllerFor("discovery/topics").send('dismissRead', operationType);
+      this.controllerFor("discovery/topics").send("dismissRead", operationType);
     }
   }
-
 });

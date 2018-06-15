@@ -1,5 +1,5 @@
-import { htmlHelper } from 'discourse-common/lib/helpers';
-import { avatarImg } from 'discourse/lib/utilities';
+import { htmlHelper } from "discourse-common/lib/helpers";
+import { avatarImg } from "discourse/lib/utilities";
 
 export default htmlHelper((avatarTemplate, size) => {
   if (Ember.isEmpty(avatarTemplate)) {

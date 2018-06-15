@@ -1,10 +1,10 @@
-import StaticPage from 'discourse/models/static-page';
-import { default as DiscourseURL, jumpToElement } from 'discourse/lib/url';
+import StaticPage from "discourse/models/static-page";
+import { default as DiscourseURL, jumpToElement } from "discourse/lib/url";
 
 const configs = {
-  "faq": "faq_url",
-  "tos": "tos_url",
-  "privacy": "privacy_policy_url"
+  faq: "faq_url",
+  tos: "tos_url",
+  privacy: "privacy_policy_url"
 };
 
 export default function(page) {
@@ -41,4 +41,4 @@ export default function(page) {
       }
     }
   });
-};
+}

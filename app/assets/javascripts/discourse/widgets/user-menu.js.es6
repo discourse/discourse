@@ -1,7 +1,7 @@
-import { createWidget } from 'discourse/widgets/widget';
-import { h } from 'virtual-dom';
-import { formatUsername } from 'discourse/lib/utilities';
-import hbs from 'discourse/widgets/hbs-compiler';
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
+import { formatUsername } from "discourse/lib/utilities";
+import hbs from "discourse/widgets/hbs-compiler";
 
 let extraGlyphs;
 
@@ -10,16 +10,18 @@ export function addUserMenuGlyph(glyph) {
   extraGlyphs.push(glyph);
 }
 
-createWidget('user-menu-links', {
-  tagName: 'div.menu-links-header',
+createWidget("user-menu-links", {
+  tagName: "div.menu-links-header",
 
   html(attrs) {
     const { currentUser, siteSettings } = this;
 
     const isAnon = currentUser.is_anonymous;
-    const allowAnon = siteSettings.allow_anonymous_posting &&
-                      currentUser.trust_level >= siteSettings.anonymous_posting_min_trust_level ||
-                      isAnon;
+    const allowAnon =
+      (siteSettings.allow_anonymous_posting &&
+        currentUser.trust_level >=
+          siteSettings.anonymous_posting_min_trust_level) ||
+      isAnon;
 
     const path = attrs.path;
     const glyphs = [];
@@ -35,61 +37,74 @@ createWidget('user-menu-links', {
       });
     }
 
-    glyphs.push({ label: 'user.bookmarks',
-                      className: 'user-bookmarks-link',
-                      icon: 'bookmark',
-                      href: `${path}/activity/bookmarks` });
+    glyphs.push({
+      label: "user.bookmarks",
+      className: "user-bookmarks-link",
+      icon: "bookmark",
+      href: `${path}/activity/bookmarks`
+    });
 
     if (siteSettings.enable_personal_messages) {
-      glyphs.push({ label: 'user.private_messages',
-                    className: 'user-pms-link',
-                    icon: 'envelope',
-                    href: `${path}/messages` });
+      glyphs.push({
+        label: "user.private_messages",
+        className: "user-pms-link",
+        icon: "envelope",
+        href: `${path}/messages`
+      });
     }
 
     const profileLink = {
-      route: 'user',
+      route: "user",
       model: currentUser,
-      className: 'user-activity-link',
-      icon: 'user',
+      className: "user-activity-link",
+      icon: "user",
       rawLabel: formatUsername(currentUser.username)
     };
 
     if (currentUser.is_anonymous) {
-      profileLink.label = 'user.profile';
+      profileLink.label = "user.profile";
       profileLink.rawLabel = null;
     }
 
     const links = [profileLink];
     if (allowAnon) {
       if (!isAnon) {
-        glyphs.push({ action: 'toggleAnonymous',
-                      label: 'switch_to_anon',
-                      className: 'enable-anonymous',
-                      icon: 'user-secret' });
+        glyphs.push({
+          action: "toggleAnonymous",
+          label: "switch_to_anon",
+          className: "enable-anonymous",
+          icon: "user-secret"
+        });
       } else {
-        glyphs.push({ action: 'toggleAnonymous',
-                      label: 'switch_from_anon',
-                      className: 'disable-anonymous',
-                      icon: 'ban' });
+        glyphs.push({
+          action: "toggleAnonymous",
+          label: "switch_from_anon",
+          className: "disable-anonymous",
+          icon: "ban"
+        });
       }
     }
 
     // preferences always goes last
-    glyphs.push({ label: 'user.preferences',
-                  className: 'user-preferences-link',
-                  icon: 'gear',
-                  href: `${path}/preferences/account` });
+    glyphs.push({
+      label: "user.preferences",
+      className: "user-preferences-link",
+      icon: "gear",
+      href: `${path}/preferences/account`
+    });
 
-    return h('ul.menu-links-row', [
-             links.map(l => h('li', this.attach('link', l))),
-             h('li.glyphs', glyphs.map(l => this.attach('link', $.extend(l, { hideLabel: true })))),
-            ]);
+    return h("ul.menu-links-row", [
+      links.map(l => h("li", this.attach("link", l))),
+      h(
+        "li.glyphs",
+        glyphs.map(l => this.attach("link", $.extend(l, { hideLabel: true })))
+      )
+    ]);
   }
 });
 
-createWidget('user-menu-dismiss-link', {
-  tagName: 'div.dismiss-link',
+createWidget("user-menu-dismiss-link", {
+  tagName: "div.dismiss-link",
 
   template: hbs`
     <ul class='menu-links'>
@@ -105,12 +120,12 @@ createWidget('user-menu-dismiss-link', {
             title="user.dismiss_notifications_tooltip")}}
       </li>
     </ul>
-  `,
+  `
 });
 
-export default createWidget('user-menu', {
-  tagName: 'div.user-menu',
-  buildKey: () => 'user-menu',
+export default createWidget("user-menu", {
+  tagName: "div.user-menu",
+  buildKey: () => "user-menu",
 
   settings: {
     maxWidth: 300,
@@ -125,37 +140,39 @@ export default createWidget('user-menu', {
   },
 
   panelContents() {
-    const path = this.currentUser.get('path');
+    const path = this.currentUser.get("path");
 
     let result = [
-      this.attach('user-menu-links', { path }),
-      this.attach('user-notifications', { path })
+      this.attach("user-menu-links", { path }),
+      this.attach("user-notifications", { path })
     ];
 
     if (this.settings.showLogoutButton || this.state.hasUnread) {
-      result.push(h('hr.bottom-area'));
+      result.push(h("hr.bottom-area"));
     }
 
     if (this.settings.showLogoutButton) {
       result.push(
-        h('div.logout-link', [
-          h('ul.menu-links',
-            h('li',
-              this.attach('link', {
-                action: 'logout',
-                className: 'logout',
-                icon: 'sign-out',
-                href: '',
-                label: 'user.log_out'
+        h("div.logout-link", [
+          h(
+            "ul.menu-links",
+            h(
+              "li",
+              this.attach("link", {
+                action: "logout",
+                className: "logout",
+                icon: "sign-out",
+                href: "",
+                label: "user.log_out"
               })
             )
           )
-        ]),
+        ])
       );
     }
 
     if (this.state.hasUnread) {
-      result.push(this.attach('user-menu-dismiss-link'));
+      result.push(this.attach("user-menu-dismiss-link"));
     }
 
     return result;
@@ -171,13 +188,13 @@ export default createWidget('user-menu', {
   },
 
   html() {
-    return this.attach('menu-panel', {
+    return this.attach("menu-panel", {
       maxWidth: this.settings.maxWidth,
       contents: () => this.panelContents()
     });
   },
 
   clickOutside() {
-    this.sendWidgetAction('toggleUserMenu');
+    this.sendWidgetAction("toggleUserMenu");
   }
 });

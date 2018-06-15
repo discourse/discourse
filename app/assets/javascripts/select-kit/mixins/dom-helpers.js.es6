@@ -14,32 +14,54 @@ export default Ember.Mixin.create({
     this.bodySelector = ".select-kit-body";
     this.wrapperSelector = ".select-kit-wrapper";
     this.scrollableParentSelector = ".modal-body";
-    this.fixedPlaceholderSelector = `.select-kit-fixed-placeholder-${this.elementId}`;
+    this.fixedPlaceholderSelector = `.select-kit-fixed-placeholder-${
+      this.elementId
+    }`;
   },
 
-  $findRowByValue(value) { return this.$(`${this.rowSelector}[data-value='${value}']`); },
+  $findRowByValue(value) {
+    return this.$(`${this.rowSelector}[data-value='${value}']`);
+  },
 
-  $header() { return this.$(this.headerSelector); },
+  $header() {
+    return this.$(this.headerSelector);
+  },
 
-  $body() { return this.$(this.bodySelector); },
+  $body() {
+    return this.$(this.bodySelector);
+  },
 
-  $wrapper() { return this.$(this.wrapperSelector); },
+  $wrapper() {
+    return this.$(this.wrapperSelector);
+  },
 
-  $collection() { return this.$(this.collectionSelector); },
+  $collection() {
+    return this.$(this.collectionSelector);
+  },
 
-  $scrollableParent() { return $(this.scrollableParentSelector); },
+  $scrollableParent() {
+    return $(this.scrollableParentSelector);
+  },
 
-  $fixedPlaceholder() { return $(this.fixedPlaceholderSelector); },
+  $fixedPlaceholder() {
+    return $(this.fixedPlaceholderSelector);
+  },
 
   $rows() {
     return this.$(`${this.rowSelector}:not(.no-content):not(.is-hidden)`);
   },
 
-  $highlightedRow() { return this.$rows().filter(".is-highlighted"); },
+  $highlightedRow() {
+    return this.$rows().filter(".is-highlighted");
+  },
 
-  $selectedRow() { return this.$rows().filter(".is-selected"); },
+  $selectedRow() {
+    return this.$rows().filter(".is-selected");
+  },
 
-  $filterInput() { return this.$(this.filterInputSelector); },
+  $filterInput() {
+    return this.$(this.filterInputSelector);
+  },
 
   @on("didRender")
   _adjustPosition() {
@@ -71,7 +93,11 @@ export default Ember.Mixin.create({
     // next so we are sure it finised expand/collapse
     Ember.run.next(() => {
       Ember.run.schedule("afterRender", () => {
-        if ((this.site && this.site.isMobileDevice) || !context.$filterInput() || !context.$filterInput().is(":visible")) {
+        if (
+          (this.site && this.site.isMobileDevice) ||
+          !context.$filterInput() ||
+          !context.$filterInput().is(":visible")
+        ) {
           context.$header().focus();
         } else {
           context.$filterInput().focus();
@@ -82,7 +108,11 @@ export default Ember.Mixin.create({
 
   expand() {
     if (this.get("isExpanded")) return;
-    this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
+    this.setProperties({
+      isExpanded: true,
+      renderedBodyOnce: true,
+      isFocused: true
+    });
     this.focusFilterOrHeader();
     this.autoHighlight();
     this._boundaryActionHandler("onExpand", this);
@@ -90,7 +120,7 @@ export default Ember.Mixin.create({
 
   collapse() {
     this.set("isExpanded", false);
-    Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
+    Ember.run.schedule("afterRender", () => this._removeFixedPosition());
     this._boundaryActionHandler("onCollapse", this);
   },
 
@@ -114,31 +144,42 @@ export default Ember.Mixin.create({
     let options = { left: "auto", bottom: "auto", top: "auto" };
 
     const discourseHeader = $(".d-header")[0];
-    const discourseHeaderHeight = discourseHeader ? (discourseHeader.getBoundingClientRect().top + this._computedStyle(discourseHeader, "height")) : 0;
+    const discourseHeaderHeight = discourseHeader
+      ? discourseHeader.getBoundingClientRect().top +
+        this._computedStyle(discourseHeader, "height")
+      : 0;
     const bodyHeight = this._computedStyle(this.$body()[0], "height");
     const componentHeight = this._computedStyle(this.get("element"), "height");
     const offsetTop = this.get("element").getBoundingClientRect().top;
     const offsetBottom = this.get("element").getBoundingClientRect().bottom;
     const windowWidth = $(window).width();
 
-    if (this.get("fullWidthOnMobile") && (this.site && this.site.isMobileDevice)) {
+    if (
+      this.get("fullWidthOnMobile") &&
+      (this.site && this.site.isMobileDevice)
+    ) {
       const margin = 10;
       const relativeLeft = this.$().offset().left - $(window).scrollLeft();
       options.left = margin - relativeLeft;
       options.width = windowWidth - margin * 2;
       options.maxWidth = options.minWidth = "unset";
     } else {
-      const parentWidth = this.$scrollableParent().length ? this.$scrollableParent().width() : windowWidth;
+      const parentWidth = this.$scrollableParent().length
+        ? this.$scrollableParent().width()
+        : windowWidth;
       const bodyWidth = this._computedStyle(this.$body()[0], "width");
 
       let marginToEdge;
       if (this.$scrollableParent().length) {
-        marginToEdge = this.$().offset().left - this.$scrollableParent().offset().left;
+        marginToEdge =
+          this.$().offset().left - this.$scrollableParent().offset().left;
       } else {
         marginToEdge = this.get("element").getBoundingClientRect().left;
       }
 
-      const enoughMarginToOppositeEdge = (parentWidth - marginToEdge - bodyWidth + this.get("horizontalOffset")) > 0;
+      const enoughMarginToOppositeEdge =
+        parentWidth - marginToEdge - bodyWidth + this.get("horizontalOffset") >
+        0;
       if (enoughMarginToOppositeEdge) {
         this.setProperties({ isLeftAligned: true, isRightAligned: false });
         options.left = this.get("horizontalOffset");
@@ -150,7 +191,8 @@ export default Ember.Mixin.create({
       }
     }
 
-    const fullHeight = this.get("verticalOffset") + bodyHeight + componentHeight;
+    const fullHeight =
+      this.get("verticalOffset") + bodyHeight + componentHeight;
     const hasBelowSpace = $(window).height() - offsetBottom - fullHeight > 0;
     const hasAboveSpace = offsetTop - fullHeight - discourseHeaderHeight > 0;
     const headerHeight = this._computedStyle(this.$header()[0], "height");
@@ -170,11 +212,12 @@ export default Ember.Mixin.create({
     if (this.$fixedPlaceholder().length) return;
     if (!this.$scrollableParent().length) return;
 
-    const width =  this._computedStyle(this.get("element"), "width");
-    const height =  this._computedStyle(this.get("element"), "height");
+    const width = this._computedStyle(this.get("element"), "width");
+    const height = this._computedStyle(this.get("element"), "height");
 
-    this._previousScrollParentOverflow = this._previousScrollParentOverflow ||
-                                         this.$scrollableParent().css("overflow");
+    this._previousScrollParentOverflow =
+      this._previousScrollParentOverflow ||
+      this.$scrollableParent().css("overflow");
 
     this._previousCSSContext = this._previousCSSContext || {
       width,
@@ -198,7 +241,9 @@ export default Ember.Mixin.create({
       position: "fixed"
     };
 
-    const $placeholderTemplate = $(`<div class='select-kit-fixed-placeholder-${this.elementId}'></div>`);
+    const $placeholderTemplate = $(
+      `<div class='select-kit-fixed-placeholder-${this.elementId}'></div>`
+    );
     $placeholderTemplate.css({
       display: "inline-block",
       width,
@@ -207,8 +252,8 @@ export default Ember.Mixin.create({
     });
 
     this.$()
-        .before($placeholderTemplate)
-        .css(componentStyles);
+      .before($placeholderTemplate)
+      .css(componentStyles);
 
     this.$scrollableParent().css({ overflow: "hidden" });
   },
@@ -220,7 +265,10 @@ export default Ember.Mixin.create({
     if (this.$scrollableParent().length === 0) return;
 
     this.$().css(this._previousCSSContext || {});
-    this.$scrollableParent().css("overflow", this._previousScrollParentOverflow || {});
+    this.$scrollableParent().css(
+      "overflow",
+      this._previousScrollParentOverflow || {}
+    );
   },
 
   _positionWrapper() {

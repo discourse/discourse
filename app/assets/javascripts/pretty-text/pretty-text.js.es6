@@ -1,4 +1,7 @@
-import { cook as cookIt, setup as setupIt } from 'pretty-text/engines/discourse-markdown-it';
+import {
+  cook as cookIt,
+  setup as setupIt
+} from "pretty-text/engines/discourse-markdown-it";
 
 export function registerOption() {
   // TODO next major version deprecate this
@@ -32,16 +35,16 @@ export function buildOptions(state) {
   } = state;
 
   let features = {
-    'bold-italics': true,
-    'auto-link': true,
-    'mentions': true,
-    'bbcode': true,
-    'quote': true,
-    'html': true,
-    'category-hashtag': true,
-    'onebox': true,
-    'linkify': linkify !== false,
-    'newline': !siteSettings.traditional_markdown_linebreaks
+    "bold-italics": true,
+    "auto-link": true,
+    mentions: true,
+    bbcode: true,
+    quote: true,
+    html: true,
+    "category-hashtag": true,
+    onebox: true,
+    linkify: linkify !== false,
+    newline: !siteSettings.traditional_markdown_linebreaks
   };
 
   if (state.features) {
@@ -68,10 +71,15 @@ export function buildOptions(state) {
     lookupInlineOnebox,
     lookupImageUrls,
     censoredWords,
-    allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
-    allowedIframes: siteSettings.allowed_iframes ? siteSettings.allowed_iframes.split('|') : [],
+    allowedHrefSchemes: siteSettings.allowed_href_schemes
+      ? siteSettings.allowed_href_schemes.split("|")
+      : null,
+    allowedIframes: siteSettings.allowed_iframes
+      ? siteSettings.allowed_iframes.split("|")
+      : [],
     markdownIt: true,
-    injectLineNumbersToPreview: siteSettings.enable_advanced_editor_preview_sync,
+    injectLineNumbersToPreview:
+      siteSettings.enable_advanced_editor_preview_sync,
     previewing
   };
 
@@ -85,7 +93,7 @@ export function buildOptions(state) {
 export default class {
   constructor(opts) {
     if (!opts) {
-      opts = buildOptions({ siteSettings: {}});
+      opts = buildOptions({ siteSettings: {} });
     }
     this.opts = opts;
   }
@@ -95,7 +103,9 @@ export default class {
   }
 
   cook(raw) {
-    if (!raw || raw.length === 0) { return ""; }
+    if (!raw || raw.length === 0) {
+      return "";
+    }
 
     let result;
     result = cookIt(raw, this.opts);
@@ -105,4 +115,4 @@ export default class {
   sanitize(html) {
     return this.opts.sanitizer(html).trim();
   }
-};
+}

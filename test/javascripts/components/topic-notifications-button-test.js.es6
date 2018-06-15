@@ -1,5 +1,5 @@
-import componentTest from 'helpers/component-test';
-import Topic from 'discourse/models/topic';
+import componentTest from "helpers/component-test";
+import Topic from "discourse/models/topic";
 
 const buildTopic = function(level) {
   return Topic.create({
@@ -11,10 +11,11 @@ const buildTopic = function(level) {
   });
 };
 
-moduleForComponent('topic-notifications-button', { integration: true });
+moduleForComponent("topic-notifications-button", { integration: true });
 
-componentTest('the header has a localized title', {
-  template: '{{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}',
+componentTest("the header has a localized title", {
+  template:
+    "{{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}",
 
   beforeEach() {
     this.set("topic", buildTopic(1));
@@ -22,13 +23,25 @@ componentTest('the header has a localized title', {
 
   test(assert) {
     andThen(() => {
-      assert.equal(selectKit().header().name(), "Normal", "it has the correct title");
+      assert.equal(
+        selectKit()
+          .header()
+          .name(),
+        "Normal",
+        "it has the correct title"
+      );
     });
 
     this.set("topic", buildTopic(2));
 
     andThen(() => {
-      assert.equal(selectKit().header().name(), "Tracking", "it correctly changes the title");
+      assert.equal(
+        selectKit()
+          .header()
+          .name(),
+        "Tracking",
+        "it correctly changes the title"
+      );
     });
   }
 });

@@ -1,7 +1,6 @@
-import deprecated from 'discourse-common/lib/deprecated';
+import deprecated from "discourse-common/lib/deprecated";
 
 export default class Connector {
-
   constructor(widget, opts) {
     this.widget = widget;
     this.opts = opts;
@@ -13,19 +12,26 @@ export default class Connector {
 
     const { opts, widget } = this;
     Ember.run.next(() => {
-
       const mounted = widget._findView();
 
       if (opts.templateName) {
-        deprecated(`Using a 'templateName' for a connector is deprecated. Use 'component' instead [${opts.templateName}]`);
+        deprecated(
+          `Using a 'templateName' for a connector is deprecated. Use 'component' instead [${
+            opts.templateName
+          }]`
+        );
       }
 
-      const container = Ember.getOwner ? Ember.getOwner(mounted) : mounted.container;
+      const container = Ember.getOwner
+        ? Ember.getOwner(mounted)
+        : mounted.container;
 
       let view;
 
       if (opts.component) {
-        const connector = widget.register.lookupFactory('component:connector-container');
+        const connector = widget.register.lookupFactory(
+          "component:connector-container"
+        );
         view = connector.create({
           layoutName: `components/${opts.component}`,
           model: widget.findAncestorModel()
@@ -34,7 +40,7 @@ export default class Connector {
 
       if (opts.templateName) {
         let context;
-        if (opts.context === 'model') {
+        if (opts.context === "model") {
           const model = widget.findAncestorModel();
           context = model;
         }
@@ -58,7 +64,7 @@ export default class Connector {
     return elem;
   }
 
-  update() { }
+  update() {}
 }
 
-Connector.prototype.type = 'Widget';
+Connector.prototype.type = "Widget";

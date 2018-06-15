@@ -4,6 +4,6 @@ export default RestrictedUserRoute.extend({
   showFooter: true,
 
   redirect() {
-    this.transitionTo('preferences.account');
+    this.transitionTo("preferences.account");
   }
 });

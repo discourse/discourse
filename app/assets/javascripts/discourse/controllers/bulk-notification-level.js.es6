@@ -1,5 +1,5 @@
-import computed from 'ember-addons/ember-computed-decorators';
-import { topicLevels } from 'discourse/lib/notification-levels';
+import computed from "ember-addons/ember-computed-decorators";
+import { topicLevels } from "discourse/lib/notification-levels";
 
 // Support for changing the notification level of various topics
 export default Ember.Controller.extend({
@@ -21,9 +21,9 @@ export default Ember.Controller.extend({
 
   actions: {
     changeNotificationLevel() {
-      this.get('topicBulkActions').performAndRefresh({
-        type: 'change_notification_level',
-        notification_level_id: this.get('notificationLevelId')
+      this.get("topicBulkActions").performAndRefresh({
+        type: "change_notification_level",
+        notification_level_id: this.get("notificationLevelId")
       });
     }
   }

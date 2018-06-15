@@ -1,4 +1,4 @@
-import debounce from 'discourse/lib/debounce';
+import debounce from "discourse/lib/debounce";
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),

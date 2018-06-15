@@ -1,10 +1,9 @@
-import { ajax } from 'discourse/lib/ajax';
-import AdminUser from 'admin/models/admin-user';
+import { ajax } from "discourse/lib/ajax";
+import AdminUser from "admin/models/admin-user";
 
 const IncomingEmail = Discourse.Model.extend({});
 
 IncomingEmail.reopenClass({
-
   create(attrs) {
     attrs = attrs || {};
 
@@ -23,7 +22,6 @@ IncomingEmail.reopenClass({
     return ajax(`/admin/email/incoming_from_bounced/${id}.json`);
   },
 
-
   findAll(filter, offset) {
     filter = filter || {};
     offset = offset || 0;
@@ -31,8 +29,11 @@ IncomingEmail.reopenClass({
     const status = filter.status || "received";
     filter = _.omit(filter, "status");
 
-    return ajax(`/admin/email/${status}.json?offset=${offset}`, { data: filter })
-                    .then(incomings => _.map(incomings, incoming => IncomingEmail.create(incoming)));
+    return ajax(`/admin/email/${status}.json?offset=${offset}`, {
+      data: filter
+    }).then(incomings =>
+      _.map(incomings, incoming => IncomingEmail.create(incoming))
+    );
   },
 
   loadRawEmail(id) {
