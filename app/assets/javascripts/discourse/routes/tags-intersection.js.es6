@@ -1,4 +1,4 @@
-import TagsShowRoute from 'discourse/routes/tags-show';
+import TagsShowRoute from "discourse/routes/tags-show";
 
 export default TagsShowRoute.extend({});
 

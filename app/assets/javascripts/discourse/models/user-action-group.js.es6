@@ -9,5 +9,3 @@ export default Discourse.Model.extend({
     return this.items.push(item);
   }
 });
-
-

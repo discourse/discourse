@@ -1,4 +1,4 @@
-import EmailLog from 'admin/models/email-log';
+import EmailLog from "admin/models/email-log";
 
 QUnit.module("Discourse.EmailLog");
 

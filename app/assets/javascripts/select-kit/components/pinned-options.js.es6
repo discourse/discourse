@@ -1,6 +1,6 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { on } from "ember-addons/ember-computed-decorators";
-import { iconHTML } from 'discourse-common/lib/icon-library';
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["pinned-options"],
@@ -20,7 +20,7 @@ export default DropdownSelectBoxComponent.extend({
     content.label = `${title}${iconHTML("caret-down")}`.htmlSafe();
     content.title = title;
     content.name = state;
-    content.icon = `thumb-tack${state === "unpinned" ? " unpinned" : ''}`;
+    content.icon = `thumb-tack${state === "unpinned" ? " unpinned" : ""}`;
     return content;
   },
 
@@ -32,14 +32,14 @@ export default DropdownSelectBoxComponent.extend({
       {
         id: "pinned",
         name: I18n.t("topic_statuses.pinned" + globally + ".title"),
-        description: I18n.t('topic_statuses.pinned' + globally + '.help'),
+        description: I18n.t("topic_statuses.pinned" + globally + ".help"),
         icon: "thumb-tack"
       },
       {
         id: "unpinned",
         name: I18n.t("topic_statuses.unpinned.title"),
         icon: "thumb-tack unpinned",
-        description: I18n.t('topic_statuses.unpinned.help'),
+        description: I18n.t("topic_statuses.unpinned.help")
       }
     ]);
   },

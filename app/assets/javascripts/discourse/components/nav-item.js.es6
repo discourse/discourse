@@ -1,15 +1,15 @@
 /* You might be looking for navigation-item. */
 
 import computed from "ember-addons/ember-computed-decorators";
-import { getOwner } from 'discourse-common/lib/get-owner';
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Component.extend({
-  tagName: 'li',
-  classNameBindings: ['active'],
+  tagName: "li",
+  classNameBindings: ["active"],
 
   @computed()
   router() {
-    return getOwner(this).lookup('router:main');
+    return getOwner(this).lookup("router:main");
   },
 
   @computed("path")
@@ -19,11 +19,15 @@ export default Ember.Component.extend({
 
   @computed("route", "router.url")
   active(route) {
-    if (!route) { return; }
+    if (!route) {
+      return;
+    }
 
-    const routeParam = this.get('routeParam'),
-          router = this.get('router');
+    const routeParam = this.get("routeParam"),
+      router = this.get("router");
 
-    return routeParam ? router.isActive(route, routeParam) : router.isActive(route);
+    return routeParam
+      ? router.isActive(route, routeParam)
+      : router.isActive(route);
   }
 });

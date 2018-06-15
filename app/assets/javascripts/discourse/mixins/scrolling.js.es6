@@ -1,4 +1,4 @@
-import debounce from 'discourse/lib/debounce';
+import debounce from "discourse/lib/debounce";
 
 /**
   This object provides the DOM methods we need for our Mixin to bind to scrolling
@@ -7,13 +7,13 @@ import debounce from 'discourse/lib/debounce';
 **/
 const ScrollingDOMMethods = {
   bindOnScroll(onScrollMethod, name) {
-    name = name || 'default';
+    name = name || "default";
     $(document).bind(`touchmove.discourse-${name}`, onScrollMethod);
     $(window).bind(`scroll.discourse-${name}`, onScrollMethod);
   },
 
   unbindOnScroll(name) {
-    name = name || 'default';
+    name = name || "default";
     $(window).unbind(`scroll.discourse-${name}`);
     $(document).unbind(`touchmove.discourse-${name}`);
   },
@@ -24,18 +24,20 @@ const ScrollingDOMMethods = {
 };
 
 const Scrolling = Ember.Mixin.create({
-
   // Begin watching for scroll events. By default they will be called at max every 100ms.
   // call with {debounce: N} for a diff time
   bindScrolling(opts) {
     opts = opts || { debounce: 100 };
 
     // So we can not call the scrolled event while transitioning
-    const router = Discourse.__container__.lookup('router:main')._routerMicrolib;
+    const router = Discourse.__container__.lookup("router:main")
+      ._routerMicrolib;
 
     let onScrollMethod = () => {
-      if (router.activeTransition) { return; }
-      return Ember.run.scheduleOnce('afterRender', this, 'scrolled');
+      if (router.activeTransition) {
+        return;
+      }
+      return Ember.run.scheduleOnce("afterRender", this, "scrolled");
     };
 
     if (opts.debounce) {

@@ -24,9 +24,11 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    this.controllerFor('tags.index').setProperties({
+    this.controllerFor("tags.index").setProperties({
       model,
-      sortProperties: this.siteSettings.tags_sort_alphabetically ? ['id'] : ['totalCount:desc', 'id']
+      sortProperties: this.siteSettings.tags_sort_alphabetically
+        ? ["id"]
+        : ["totalCount:desc", "id"]
     });
   },
 
@@ -37,7 +39,7 @@ export default Discourse.Route.extend({
     },
 
     showTagGroups() {
-      this.transitionTo('tagGroups');
+      this.transitionTo("tagGroups");
       return true;
     }
   }

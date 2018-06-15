@@ -1,9 +1,10 @@
-import { get } from 'discourse-common/lib/raw-handlebars';
+import { get } from "discourse-common/lib/raw-handlebars";
 
 export function htmlHelper(fn) {
   return Ember.Helper.helper(function(...args) {
-    args = (args.length > 1) ? args[0].concat({ hash: args[args.length-1] }) : args;
-    return new Handlebars.SafeString(fn.apply(this, args) || '');
+    args =
+      args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
+    return new Handlebars.SafeString(fn.apply(this, args) || "");
   });
 }
 
@@ -45,9 +46,11 @@ function resolveParams(ctx, options) {
 }
 
 export function registerUnbound(name, fn) {
-
   const func = function(property, options) {
-    if (options.types && (options.types[0] === "ID" || options.types[0] === "PathExpression")) {
+    if (
+      options.types &&
+      (options.types[0] === "ID" || options.types[0] === "PathExpression")
+    ) {
       property = get(this, property, options);
     }
 

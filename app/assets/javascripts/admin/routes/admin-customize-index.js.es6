@@ -1,5 +1,5 @@
 export default Ember.Route.extend({
   beforeModel() {
-    this.transitionTo('adminCustomizeThemes');
+    this.transitionTo("adminCustomizeThemes");
   }
 });

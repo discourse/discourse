@@ -16,7 +16,7 @@ export default MultiSelectComponent.extend(Tags, {
   init() {
     this._super();
 
-    this.set("templateForRow", (rowComponent) => {
+    this.set("templateForRow", rowComponent => {
       const tag = rowComponent.get("computedContent");
       return renderTag(get(tag, "value"), {
         count: get(tag, "originalContent.count"),
@@ -42,21 +42,33 @@ export default MultiSelectComponent.extend(Tags, {
   actions: {
     onFilter(filter) {
       this.expand();
-      this.set("searchDebounce", run.debounce(this, this._prepareSearch, filter, 200));
+      this.set(
+        "searchDebounce",
+        run.debounce(this, this._prepareSearch, filter, 200)
+      );
     },
 
     onExpand() {
       if (isEmpty(this.get("collectionComputedContent"))) {
-        this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
+        this.set(
+          "searchDebounce",
+          run.debounce(this, this._prepareSearch, this.get("filter"), 200)
+        );
       }
     },
 
     onDeselect() {
-      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
+      this.set(
+        "searchDebounce",
+        run.debounce(this, this._prepareSearch, this.get("filter"), 200)
+      );
     },
 
     onSelect() {
-      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 50));
+      this.set(
+        "searchDebounce",
+        run.debounce(this, this._prepareSearch, this.get("filter"), 50)
+      );
     }
   },
 
@@ -83,5 +95,5 @@ export default MultiSelectComponent.extend(Tags, {
     }
 
     return results;
-  },
+  }
 });

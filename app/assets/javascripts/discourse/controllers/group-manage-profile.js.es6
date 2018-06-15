@@ -1,3 +1,3 @@
 export default Ember.Controller.extend({
-  saving: null,
+  saving: null
 });

@@ -1,63 +1,66 @@
-import { moduleForWidget, widgetTest } from 'helpers/widget-test';
+import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
-moduleForWidget('hamburger-menu');
+moduleForWidget("hamburger-menu");
 
-widgetTest('prioritize faq', {
+widgetTest("prioritize faq", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    this.siteSettings.faq_url = 'http://example.com/faq';
-    this.currentUser.set('read_faq', false);
+    this.siteSettings.faq_url = "http://example.com/faq";
+    this.currentUser.set("read_faq", false);
   },
 
   test(assert) {
-    assert.ok(this.$('.faq-priority').length);
-    assert.ok(!this.$('.faq-link').length);
+    assert.ok(this.$(".faq-priority").length);
+    assert.ok(!this.$(".faq-link").length);
   }
 });
 
-widgetTest('prioritize faq - user has read', {
+widgetTest("prioritize faq - user has read", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    this.siteSettings.faq_url = 'http://example.com/faq';
-    this.currentUser.set('read_faq', true);
+    this.siteSettings.faq_url = "http://example.com/faq";
+    this.currentUser.set("read_faq", true);
   },
 
   test(assert) {
-    assert.ok(!this.$('.faq-priority').length);
-    assert.ok(this.$('.faq-link').length);
+    assert.ok(!this.$(".faq-priority").length);
+    assert.ok(this.$(".faq-link").length);
   }
 });
 
-widgetTest('staff menu - not staff', {
+widgetTest("staff menu - not staff", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    this.currentUser.set('staff', false);
+    this.currentUser.set("staff", false);
   },
 
   test(assert) {
-    assert.ok(!this.$('.admin-link').length);
+    assert.ok(!this.$(".admin-link").length);
   }
 });
 
-widgetTest('staff menu', {
+widgetTest("staff menu", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    this.currentUser.setProperties({ staff: true, site_flagged_posts_count: 3 });
+    this.currentUser.setProperties({
+      staff: true,
+      site_flagged_posts_count: 3
+    });
   },
 
   test(assert) {
-    assert.ok(this.$('.admin-link').length);
-    assert.ok(this.$('.flagged-posts-link').length);
-    assert.equal(this.$('.flagged-posts').text(), '3');
-    assert.ok(!this.$('.settings-link').length);
+    assert.ok(this.$(".admin-link").length);
+    assert.ok(this.$(".flagged-posts-link").length);
+    assert.equal(this.$(".flagged-posts").text(), "3");
+    assert.ok(!this.$(".settings-link").length);
   }
 });
 
-widgetTest('staff menu - admin', {
+widgetTest("staff menu - admin", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
@@ -65,12 +68,11 @@ widgetTest('staff menu - admin', {
   },
 
   test(assert) {
-    assert.ok(this.$('.settings-link').length);
+    assert.ok(this.$(".settings-link").length);
   }
 });
 
-
-widgetTest('queued posts', {
+widgetTest("queued posts", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
@@ -82,12 +84,12 @@ widgetTest('queued posts', {
   },
 
   test(assert) {
-    assert.ok(this.$('.queued-posts-link').length);
-    assert.equal(this.$('.queued-posts').text(), '5');
+    assert.ok(this.$(".queued-posts-link").length);
+    assert.equal(this.$(".queued-posts").text(), "5");
   }
 });
 
-widgetTest('queued posts - disabled', {
+widgetTest("queued posts - disabled", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
@@ -95,36 +97,35 @@ widgetTest('queued posts - disabled', {
   },
 
   test(assert) {
-    assert.ok(!this.$('.queued-posts-link').length);
+    assert.ok(!this.$(".queued-posts-link").length);
   }
 });
 
-
-widgetTest('logged in links', {
+widgetTest("logged in links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$('.new-topics-link').length);
-    assert.ok(this.$('.unread-topics-link').length);
+    assert.ok(this.$(".new-topics-link").length);
+    assert.ok(this.$(".unread-topics-link").length);
   }
 });
 
-widgetTest('general links', {
+widgetTest("general links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
   anonymous: true,
 
   test(assert) {
     assert.ok(this.$("li[class='']").length === 0);
-    assert.ok(this.$('.latest-topics-link').length);
-    assert.ok(!this.$('.new-topics-link').length);
-    assert.ok(!this.$('.unread-topics-link').length);
-    assert.ok(this.$('.top-topics-link').length);
-    assert.ok(this.$('.badge-link').length);
-    assert.ok(this.$('.category-link').length > 0);
+    assert.ok(this.$(".latest-topics-link").length);
+    assert.ok(!this.$(".new-topics-link").length);
+    assert.ok(!this.$(".unread-topics-link").length);
+    assert.ok(this.$(".top-topics-link").length);
+    assert.ok(this.$(".badge-link").length);
+    assert.ok(this.$(".category-link").length > 0);
   }
 });
 
-widgetTest('badges link - disabled', {
+widgetTest("badges link - disabled", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
@@ -132,27 +133,27 @@ widgetTest('badges link - disabled', {
   },
 
   test(assert) {
-    assert.ok(!this.$('.badge-link').length);
+    assert.ok(!this.$(".badge-link").length);
   }
 });
 
-widgetTest('badges link', {
+widgetTest("badges link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$('.badge-link').length);
+    assert.ok(this.$(".badge-link").length);
   }
 });
 
-widgetTest('user directory link', {
+widgetTest("user directory link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$('.user-directory-link').length);
+    assert.ok(this.$(".user-directory-link").length);
   }
 });
 
-widgetTest('user directory link - disabled', {
+widgetTest("user directory link - disabled", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
@@ -160,15 +161,15 @@ widgetTest('user directory link - disabled', {
   },
 
   test(assert) {
-    assert.ok(!this.$('.user-directory-link').length);
+    assert.ok(!this.$(".user-directory-link").length);
   }
 });
 
-widgetTest('general links', {
+widgetTest("general links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$('.about-link').length);
-    assert.ok(this.$('.keyboard-shortcuts-link').length);
+    assert.ok(this.$(".about-link").length);
+    assert.ok(this.$(".keyboard-shortcuts-link").length);
   }
 });

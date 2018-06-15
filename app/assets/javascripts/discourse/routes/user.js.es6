@@ -1,10 +1,9 @@
-import Draft from 'discourse/models/draft';
+import Draft from "discourse/models/draft";
 
 export default Discourse.Route.extend({
-
   titleToken() {
-    const model = this.modelFor('user');
-    const username = model.get('username');
+    const model = this.modelFor("user");
+    const username = model.get("username");
     if (username) {
       return [I18n.t("user.profile"), username];
     }
@@ -15,7 +14,7 @@ export default Discourse.Route.extend({
       // will reset the indexStream when transitioning to routes that aren't "indexStream"
       // otherwise the "header" will jump
       const isIndexStream = transition.targetName === "user.summary";
-      this.controllerFor('user').set('indexStream', isIndexStream);
+      this.controllerFor("user").set("indexStream", isIndexStream);
       return true;
     },
 
@@ -25,7 +24,7 @@ export default Discourse.Route.extend({
 
     revokeApiKey(key) {
       key.revoke();
-    },
+    }
   },
 
   beforeModel() {
@@ -37,32 +36,38 @@ export default Discourse.Route.extend({
   model(params) {
     // If we're viewing the currently logged in user, return that object instead
     const currentUser = this.currentUser;
-    if (currentUser && (params.username.toLowerCase() === currentUser.get('username_lower'))) {
+    if (
+      currentUser &&
+      params.username.toLowerCase() === currentUser.get("username_lower")
+    ) {
       return currentUser;
     }
 
-    return Discourse.User.create({username: params.username});
+    return Discourse.User.create({ username: params.username });
   },
 
   afterModel() {
-    const user = this.modelFor('user');
+    const user = this.modelFor("user");
     const self = this;
 
-    return user.findDetails().then(function() {
-      return user.findStaffInfo();
-    }).catch(function() {
-      return self.replaceWith('/404');
-    });
+    return user
+      .findDetails()
+      .then(function() {
+        return user.findStaffInfo();
+      })
+      .catch(function() {
+        return self.replaceWith("/404");
+      });
   },
 
   serialize(model) {
     if (!model) return {};
-    return { username: (Em.get(model, 'username') || '').toLowerCase() };
+    return { username: (Em.get(model, "username") || "").toLowerCase() };
   },
 
   setupController(controller, user) {
-    controller.set('model', user);
-    this.searchService.set('searchContext', user.get('searchContext'));
+    controller.set("model", user);
+    this.searchService.set("searchContext", user.get("searchContext"));
 
     const composerController = this.controllerFor("composer");
     controller.set("model", user);
@@ -82,18 +87,21 @@ export default Discourse.Route.extend({
 
   activate() {
     this._super();
-    const user = this.modelFor('user');
-    this.messageBus.subscribe("/u/" + user.get('username_lower'), function(data) {
+    const user = this.modelFor("user");
+    this.messageBus.subscribe("/u/" + user.get("username_lower"), function(
+      data
+    ) {
       user.loadUserAction(data);
     });
   },
 
   deactivate() {
     this._super();
-    this.messageBus.unsubscribe("/u/" + this.modelFor('user').get('username_lower'));
+    this.messageBus.unsubscribe(
+      "/u/" + this.modelFor("user").get("username_lower")
+    );
 
     // Remove the search context
-    this.searchService.set('searchContext', null);
+    this.searchService.set("searchContext", null);
   }
-
 });

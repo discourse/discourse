@@ -21,12 +21,14 @@ export default ComboBoxComponent.extend({
     this._super();
 
     this.get("rowComponentOptions").setProperties({
-      allowUncategorized: this.get("allowUncategorized"),
+      allowUncategorized: this.get("allowUncategorized")
     });
   },
 
   filterComputedContent(computedContent, computedValue, filter) {
-    if (isEmpty(filter)) { return computedContent; }
+    if (isEmpty(filter)) {
+      return computedContent;
+    }
 
     const _matchFunction = (f, text) => {
       return text.toLowerCase().indexOf(f) > -1;
@@ -38,7 +40,10 @@ export default ComboBoxComponent.extend({
       const text = get(c, "name");
       if (category && category.get("parentCategory")) {
         const categoryName = category.get("parentCategory.name");
-        return _matchFunction(lowerFilter, text) || _matchFunction(lowerFilter, categoryName);
+        return (
+          _matchFunction(lowerFilter, text) ||
+          _matchFunction(lowerFilter, categoryName)
+        );
       } else {
         return _matchFunction(lowerFilter, text);
       }
@@ -47,7 +52,10 @@ export default ComboBoxComponent.extend({
 
   @computed("rootNone", "rootNoneLabel")
   none(rootNone, rootNoneLabel) {
-    if (this.siteSettings.allow_uncategorized_topics || this.get("allowUncategorized")) {
+    if (
+      this.siteSettings.allow_uncategorized_topics ||
+      this.get("allowUncategorized")
+    ) {
       if (!isNone(rootNone)) {
         return rootNoneLabel || "category.none";
       } else {
@@ -105,14 +113,15 @@ export default ComboBoxComponent.extend({
   },
 
   computeContent() {
-    const categories = Discourse.SiteSettings.fixed_category_positions_on_create ?
-      Category.list() :
-      Category.listByActivity();
+    const categories = Discourse.SiteSettings.fixed_category_positions_on_create
+      ? Category.list()
+      : Category.listByActivity();
 
     let scopedCategoryId = this.get("scopedCategoryId");
     if (scopedCategoryId) {
       const scopedCat = Category.findById(scopedCategoryId);
-      scopedCategoryId = scopedCat.get("parent_category_id") || scopedCat.get("id");
+      scopedCategoryId =
+        scopedCat.get("parent_category_id") || scopedCat.get("id");
     }
 
     const excludeCategoryId = this.get("excludeCategoryId");
@@ -120,15 +129,23 @@ export default ComboBoxComponent.extend({
     return categories.filter(c => {
       const categoryId = this.valueForContentItem(c);
 
-      if (scopedCategoryId && categoryId !== scopedCategoryId && get(c, "parent_category_id") !== scopedCategoryId) {
+      if (
+        scopedCategoryId &&
+        categoryId !== scopedCategoryId &&
+        get(c, "parent_category_id") !== scopedCategoryId
+      ) {
         return false;
       }
 
-      if (this.get("allowSubCategories") === false && c.get("parentCategory") ) {
+      if (this.get("allowSubCategories") === false && c.get("parentCategory")) {
         return false;
       }
 
-      if ((this.get("allowUncategorized") === false && get(c, "isUncategorizedCategory")) || excludeCategoryId === categoryId) {
+      if (
+        (this.get("allowUncategorized") === false &&
+          get(c, "isUncategorizedCategory")) ||
+        excludeCategoryId === categoryId
+      ) {
         return false;
       }
 

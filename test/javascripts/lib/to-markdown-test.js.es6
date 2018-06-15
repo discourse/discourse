@@ -1,4 +1,4 @@
-import toMarkdown from 'discourse/lib/to-markdown';
+import toMarkdown from "discourse/lib/to-markdown";
 
 QUnit.module("lib:to-markdown");
 
@@ -119,31 +119,34 @@ QUnit.test("converts table tags", assert => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-QUnit.test("replace pipes with spaces if table format not supported", assert => {
-  let html = `<table>
+QUnit.test(
+  "replace pipes with spaces if table format not supported",
+  assert => {
+    let html = `<table>
     <thead> <tr><th>Headi<br><br>ng 1</th><th>Head 2</th></tr> </thead>
       <tbody>
         <tr><td>Lorem</td><td>ipsum</td></tr>
         <tr><td><a href="http://example.com"><img src="http://dolor.com/image.png" /></a></td> <td><i>sit amet</i></td></tr></tbody>
 </table>
   `;
-  let markdown = `Headi\n\nng 1 Head 2\nLorem ipsum\n[![](http://dolor.com/image.png)](http://example.com) *sit amet*`;
-  assert.equal(toMarkdown(html), markdown);
+    let markdown = `Headi\n\nng 1 Head 2\nLorem ipsum\n[![](http://dolor.com/image.png)](http://example.com) *sit amet*`;
+    assert.equal(toMarkdown(html), markdown);
 
-  html = `<table>
+    html = `<table>
     <thead> <tr><th>Heading 1</th></tr> </thead>
       <tbody>
         <tr><td>Lorem</td></tr>
         <tr><td><i>sit amet</i></td></tr></tbody>
 </table>
   `;
-  markdown = `Heading 1\nLorem\n*sit amet*`;
-  assert.equal(toMarkdown(html), markdown);
+    markdown = `Heading 1\nLorem\n*sit amet*`;
+    assert.equal(toMarkdown(html), markdown);
 
-  html = `<table><tr><td>Lorem</td><td><strong>sit amet</strong></td></tr></table>`;
-  markdown = `Lorem **sit amet**`;
-  assert.equal(toMarkdown(html), markdown);
-});
+    html = `<table><tr><td>Lorem</td><td><strong>sit amet</strong></td></tr></table>`;
+    markdown = `Lorem **sit amet**`;
+    assert.equal(toMarkdown(html), markdown);
+  }
+);
 
 QUnit.test("converts img tag", assert => {
   const url = "https://example.com/image.png";
@@ -154,10 +157,16 @@ QUnit.test("converts img tag", assert => {
   assert.equal(toMarkdown(html), `![description|50x100](${url})`);
 
   html = `<a href="http://example.com"><img src="${url}" alt="description" /></a>`;
-  assert.equal(toMarkdown(html), `[![description](${url})](http://example.com)`);
+  assert.equal(
+    toMarkdown(html),
+    `[![description](${url})](http://example.com)`
+  );
 
   html = `<a href="http://example.com">description <img src="${url}" /></a>`;
-  assert.equal(toMarkdown(html), `[description ![](${url})](http://example.com)`);
+  assert.equal(
+    toMarkdown(html),
+    `[description ![](${url})](http://example.com)`
+  );
 
   html = `<img alt="description" />`;
   assert.equal(toMarkdown(html), "");
@@ -167,7 +176,8 @@ QUnit.test("converts img tag", assert => {
 });
 
 QUnit.test("supporting html tags by keeping them", assert => {
-  let html = "Lorem <del>ipsum dolor</del> sit <big>amet, <ins>consectetur</ins></big>";
+  let html =
+    "Lorem <del>ipsum dolor</del> sit <big>amet, <ins>consectetur</ins></big>";
   let output = html;
   assert.equal(toMarkdown(html), output);
 
@@ -216,11 +226,13 @@ QUnit.test("converts blockquote tag", assert => {
   let output = "> Lorem ipsum";
   assert.equal(toMarkdown(html), output);
 
-  html = "<blockquote>Lorem ipsum</blockquote><blockquote><p>dolor sit amet</p></blockquote>";
+  html =
+    "<blockquote>Lorem ipsum</blockquote><blockquote><p>dolor sit amet</p></blockquote>";
   output = "> Lorem ipsum\n\n> dolor sit amet";
   assert.equal(toMarkdown(html), output);
 
-  html = "<blockquote>\nLorem ipsum\n<blockquote><p>dolor <blockquote>sit</blockquote> amet</p></blockquote></blockquote>";
+  html =
+    "<blockquote>\nLorem ipsum\n<blockquote><p>dolor <blockquote>sit</blockquote> amet</p></blockquote></blockquote>";
   output = "> Lorem ipsum\n> > dolor\n> > > sit\n> > amet";
   assert.equal(toMarkdown(html), output);
 });

@@ -1,7 +1,7 @@
-import { searchForTerm, isValidSearchTerm } from 'discourse/lib/search';
-import { createWidget } from 'discourse/widgets/widget';
-import { h } from 'virtual-dom';
-import DiscourseURL from 'discourse/lib/url';
+import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
+import DiscourseURL from "discourse/lib/url";
 
 const searchData = {};
 
@@ -29,11 +29,11 @@ const SearchHelper = {
     }
 
     this._cancelSearch = true;
-    Ember.run.later(() => this._cancelSearch = false, 400);
+    Ember.run.later(() => (this._cancelSearch = false), 400);
   },
 
   perform(widget) {
-    if (this._cancelSearch){
+    if (this._cancelSearch) {
       this._cancelSearch = null;
       return;
     }
@@ -56,58 +56,67 @@ const SearchHelper = {
       widget.scheduleRerender();
     } else {
       searchData.invalidTerm = false;
-      this._activeSearch = searchForTerm(term, { typeFilter, searchContext, fullSearchUrl });
-      this._activeSearch.then(content => {
-        searchData.noResults = content.resultTypes.length === 0;
-
-        if (content.grouped_search_result) {
-          searchData.term = content.grouped_search_result.term;
-        }
-
-        searchData.results = content;
-
-        if (searchContext && searchContext.type === 'topic') {
-          widget.appEvents.trigger('post-stream:refresh', { force: true });
-          searchData.topicId = searchContext.id;
-        } else {
-          searchData.topicId = null;
-        }
-      }).finally(() => {
-        searchData.loading = false;
-        widget.scheduleRerender();
-        this._activeSearch = null;
+      this._activeSearch = searchForTerm(term, {
+        typeFilter,
+        searchContext,
+        fullSearchUrl
       });
+      this._activeSearch
+        .then(content => {
+          searchData.noResults = content.resultTypes.length === 0;
+
+          if (content.grouped_search_result) {
+            searchData.term = content.grouped_search_result.term;
+          }
+
+          searchData.results = content;
+
+          if (searchContext && searchContext.type === "topic") {
+            widget.appEvents.trigger("post-stream:refresh", { force: true });
+            searchData.topicId = searchContext.id;
+          } else {
+            searchData.topicId = null;
+          }
+        })
+        .finally(() => {
+          searchData.loading = false;
+          widget.scheduleRerender();
+          this._activeSearch = null;
+        });
     }
   }
 };
 
-export default createWidget('search-menu', {
-  tagName: 'div.search-menu',
+export default createWidget("search-menu", {
+  tagName: "div.search-menu",
   searchData,
 
   fullSearchUrl(opts) {
     const contextEnabled = searchData.contextEnabled;
 
     const ctx = contextEnabled ? this.searchContext() : null;
-    const type = ctx ? Ember.get(ctx, 'type') : null;
+    const type = ctx ? Ember.get(ctx, "type") : null;
 
-    if (contextEnabled && type === 'topic') {
+    if (contextEnabled && type === "topic") {
       return;
     }
 
-    let url = '/search';
+    let url = "/search";
     const params = [];
 
     if (searchData.term) {
-      let query = '';
+      let query = "";
 
       query += `q=${encodeURIComponent(searchData.term)}`;
 
       if (contextEnabled && ctx) {
-        if (this.currentUser &&
-            ctx.id.toString().toLowerCase() === this.currentUser.get('username_lower') &&
-            type === "private_messages") {
-          query += ' in:private';
+        if (
+          this.currentUser &&
+          ctx.id.toString().toLowerCase() ===
+            this.currentUser.get("username_lower") &&
+          type === "private_messages"
+        ) {
+          query += " in:private";
         } else {
           query += encodeURIComponent(" " + type + ":" + ctx.id);
         }
@@ -116,7 +125,7 @@ export default createWidget('search-menu', {
       if (query) params.push(query);
     }
 
-    if (opts && opts.expanded) params.push('expanded=true');
+    if (opts && opts.expanded) params.push("expanded=true");
 
     if (params.length > 0) {
       url = `${url}?${params.join("&")}`;
@@ -129,28 +138,30 @@ export default createWidget('search-menu', {
     const contextEnabled = searchData.contextEnabled;
 
     let searchInput = [
-      this.attach('search-term', { value: searchData.term, contextEnabled }),
+      this.attach("search-term", { value: searchData.term, contextEnabled })
     ];
     if (searchData.term && searchData.loading) {
-      searchInput.push(h('div.searching', h('div.spinner')));
+      searchInput.push(h("div.searching", h("div.spinner")));
     }
 
     const results = [
-      h('div.search-input', searchInput),
-      this.attach('search-context', {
+      h("div.search-input", searchInput),
+      this.attach("search-context", {
         contextEnabled,
         url: this.fullSearchUrl({ expanded: true })
       })
     ];
 
     if (searchData.term && !searchData.loading) {
-      results.push(this.attach('search-menu-results', {
-        term: searchData.term,
-        noResults: searchData.noResults,
-        results: searchData.results,
-        invalidTerm: searchData.invalidTerm,
-        searchContextEnabled: searchData.contextEnabled,
-      }));
+      results.push(
+        this.attach("search-menu-results", {
+          term: searchData.term,
+          noResults: searchData.noResults,
+          results: searchData.results,
+          invalidTerm: searchData.invalidTerm,
+          searchContextEnabled: searchData.contextEnabled
+        })
+      );
     }
 
     return results;
@@ -158,14 +169,14 @@ export default createWidget('search-menu', {
 
   searchService() {
     if (!this._searchService) {
-      this._searchService = this.register.lookup('search-service:main');
+      this._searchService = this.register.lookup("search-service:main");
     }
     return this._searchService;
   },
 
   searchContext() {
     if (!this._searchContext) {
-      this._searchContext = this.searchService().get('searchContext');
+      this._searchContext = this.searchService().get("searchContext");
     }
     return this._searchContext;
   },
@@ -174,24 +185,25 @@ export default createWidget('search-menu', {
     searchData.contextEnabled = attrs.contextEnabled;
     const searchContext = this.searchContext();
 
-    const shouldTriggerSearch = (
-      (searchData.contextEnabled !== attrs.contextEnabled) ||
+    const shouldTriggerSearch =
+      searchData.contextEnabled !== attrs.contextEnabled ||
       (searchContext &&
-       searchContext.type === 'topic' &&
-       searchData.topicId !== null &&
-       searchData.topicId !== searchContext.id
-      )
-    );
+        searchContext.type === "topic" &&
+        searchData.topicId !== null &&
+        searchData.topicId !== searchContext.id);
 
     if (shouldTriggerSearch && searchData.term) {
       this.triggerSearch();
     }
 
-    return this.attach('menu-panel', { maxWidth: 500, contents: () => this.panelContents() });
+    return this.attach("menu-panel", {
+      maxWidth: 500,
+      contents: () => this.panelContents()
+    });
   },
 
   clickOutside() {
-    this.sendWidgetAction('toggleSearchMenu');
+    this.sendWidgetAction("toggleSearchMenu");
   },
 
   keyDown(e) {
@@ -200,16 +212,18 @@ export default createWidget('search-menu', {
     }
 
     if (e.which === 65 /* a */) {
-      let focused = $('header .results .search-link:focus');
+      let focused = $("header .results .search-link:focus");
       if (focused.length === 1) {
-        if ($('#reply-control.open').length === 1) {
+        if ($("#reply-control.open").length === 1) {
           // add a link and focus composer
 
-          this.appEvents.trigger('composer:insert-text', focused[0].href, {ensureSpace: true});
-          this.appEvents.trigger('header:keyboard-trigger', {type: 'search'});
+          this.appEvents.trigger("composer:insert-text", focused[0].href, {
+            ensureSpace: true
+          });
+          this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
 
           e.preventDefault();
-          $('#reply-control.open textarea').focus();
+          $("#reply-control.open textarea").focus();
           return false;
         }
       }
@@ -218,21 +232,20 @@ export default createWidget('search-menu', {
     const up = e.which === 38;
     const down = e.which === 40;
     if (up || down) {
-
-      let focused = $('header .panel-body *:focus')[0];
+      let focused = $("header .panel-body *:focus")[0];
 
       if (!focused) {
         return;
       }
 
-      let links = $('header .panel-body .results a');
-      let results = $('header .panel-body .results .search-link');
+      let links = $("header .panel-body .results a");
+      let results = $("header .panel-body .results .search-link");
 
       let prevResult;
       let result;
 
-      links.each((idx,item) => {
-        if ($(item).hasClass('search-link')) {
+      links.each((idx, item) => {
+        if ($(item).hasClass("search-link")) {
           prevResult = item;
         }
 
@@ -248,11 +261,11 @@ export default createWidget('search-menu', {
       }
 
       if (index === -1 && down) {
-        $('header .panel-body .search-link:first').focus();
+        $("header .panel-body .search-link:first").focus();
       } else if (index === 0 && up) {
-        $('header .panel-body input:first').focus();
+        $("header .panel-body input:first").focus();
       } else if (index > -1) {
-        index += (down ? 1 : -1);
+        index += down ? 1 : -1;
         if (index >= 0 && index < results.length) {
           $(results[index]).focus();
         }
@@ -265,7 +278,7 @@ export default createWidget('search-menu', {
 
   triggerSearch() {
     searchData.noResults = false;
-    this.searchService().set('highlightTerm', searchData.term);
+    this.searchService().set("highlightTerm", searchData.term);
     searchData.loading = true;
     Ember.run.debounce(SearchHelper, SearchHelper.perform, this, 400);
   },
@@ -278,7 +291,7 @@ export default createWidget('search-menu', {
   searchContextChanged(enabled) {
     // This indicates the checkbox has been clicked, NOT that the context has changed.
     searchData.typeFilter = null;
-    this.sendWidgetAction('searchMenuContextChanged', enabled);
+    this.sendWidgetAction("searchMenuContextChanged", enabled);
     searchData.contextEnabled = enabled;
     this.triggerSearch();
   },
@@ -290,14 +303,16 @@ export default createWidget('search-menu', {
   },
 
   fullSearch() {
-    if (!isValidSearchTerm(searchData.term)) { return; }
+    if (!isValidSearchTerm(searchData.term)) {
+      return;
+    }
 
     searchData.results = [];
     searchData.loading = false;
     SearchHelper.cancel();
     const url = this.fullSearchUrl();
     if (url) {
-      this.sendWidgetEvent('linkClicked');
+      this.sendWidgetEvent("linkClicked");
       DiscourseURL.routeTo(url);
     } else if (searchData.contextEnabled) {
       this.triggerSearch();

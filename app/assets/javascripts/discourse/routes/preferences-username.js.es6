@@ -4,20 +4,23 @@ export default RestrictedUserRoute.extend({
   showFooter: true,
 
   model: function() {
-    return this.modelFor('user');
+    return this.modelFor("user");
   },
 
   renderTemplate: function() {
-    return this.render({ into: 'user' });
+    return this.render({ into: "user" });
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
   deactivate: function() {
     this._super();
-    this.render('preferences', { into: 'user', controller: 'preferences' });
+    this.render("preferences", { into: "user", controller: "preferences" });
   },
 
   setupController: function(controller, user) {
-    controller.setProperties({ model: user, newUsername: user.get('username') });
+    controller.setProperties({
+      model: user,
+      newUsername: user.get("username")
+    });
   }
 });

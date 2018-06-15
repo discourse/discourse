@@ -1,6 +1,6 @@
 export default Ember.Object.extend({
-  localizedName: function(){
-    if(this.forceName){
+  localizedName: function() {
+    if (this.forceName) {
       return this.forceName;
     }
 
@@ -11,27 +11,27 @@ export default Ember.Object.extend({
     return "chevron-" + (this.parent.ascending ? "up" : "down");
   }.property(),
 
-  isSorting: function(){
+  isSorting: function() {
     return this.sortable && this.parent.order === this.order;
   }.property(),
 
-  className: function(){
+  className: function() {
     var name = [];
-    if(this.order){
+    if (this.order) {
       name.push(this.order);
     }
-    if(this.sortable){
+    if (this.sortable) {
       name.push("sortable");
 
-      if(this.get("isSorting")){
+      if (this.get("isSorting")) {
         name.push("sorting");
       }
     }
 
-    if(this.number){
+    if (this.number) {
       name.push("num");
     }
 
-    return name.join(' ');
+    return name.join(" ");
   }.property()
 });

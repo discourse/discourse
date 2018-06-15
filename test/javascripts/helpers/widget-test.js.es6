@@ -1,4 +1,4 @@
-import componentTest from 'helpers/component-test';
+import componentTest from "helpers/component-test";
 
 export function moduleForWidget(name) {
   moduleForComponent(name, `widget:${name}`, { integration: true });

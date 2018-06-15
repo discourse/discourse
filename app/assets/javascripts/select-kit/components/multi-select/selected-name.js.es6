@@ -16,7 +16,9 @@ export default Ember.Component.extend({
   tabindex: -1,
 
   @computed("computedContent")
-  guid(computedContent) { return Ember.guidFor(computedContent); },
+  guid(computedContent) {
+    return Ember.guidFor(computedContent);
+  },
 
   ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
 

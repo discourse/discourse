@@ -1,3 +1,3 @@
-import { buildGroupPage } from 'discourse/routes/group-activity-posts';
+import { buildGroupPage } from "discourse/routes/group-activity-posts";
 
-export default buildGroupPage('mentions');
+export default buildGroupPage("mentions");

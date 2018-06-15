@@ -18,14 +18,19 @@ export default (viewName, path, channel) => {
     },
 
     model() {
-      return this.store.findFiltered("topicList", { filter: "topics/" + path + "/" + this.modelFor("user").get("username_lower") });
+      return this.store.findFiltered("topicList", {
+        filter:
+          "topics/" + path + "/" + this.modelFor("user").get("username_lower")
+      });
     },
 
     setupController() {
       this._super.apply(this, arguments);
 
       if (channel) {
-        this.controllerFor("user-topics-list").subscribe(`/private-messages/${channel}`);
+        this.controllerFor("user-topics-list").subscribe(
+          `/private-messages/${channel}`
+        );
       }
 
       this.controllerFor("user-topics-list").setProperties({
@@ -42,14 +47,14 @@ export default (viewName, path, channel) => {
         showToggleBulkSelect: true
       });
 
-      this.searchService.set('contextType', 'private_messages');
+      this.searchService.set("contextType", "private_messages");
     },
 
     deactivate() {
-      this.controllerFor('user-topics-list').unsubscribe();
+      this.controllerFor("user-topics-list").unsubscribe();
 
       this.searchService.set(
-        'searchContext',
+        "searchContext",
         this.controllerFor("user").get("model.searchContext")
       );
     }
