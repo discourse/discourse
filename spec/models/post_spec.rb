@@ -967,6 +967,14 @@ describe Post do
       expect(post.has_host_spam?).to eq(false)
     end
 
+    it "doesn't punish previously staged users" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      user.unstage
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(false)
+    end
+
     it "ignores private messages" do
       SiteSetting.newuser_spam_host_threshold = 1
       user = Fabricate(:user, trust_level: 0)
