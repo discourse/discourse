@@ -26,5 +26,7 @@ export default CategoryChooserComponent.extend({
     }
   },
 
-  computeValue(category) { if (category) return category.id; }
+  computeValue(category) {
+    if (category) return category.id;
+  }
 });

@@ -1,8 +1,8 @@
-import componentTest from 'helpers/component-test';
-moduleForComponent('categories-admin-dropdown', {integration: true});
+import componentTest from "helpers/component-test";
+moduleForComponent("categories-admin-dropdown", { integration: true });
 
-componentTest('default', {
-  template: '{{categories-admin-dropdown}}',
+componentTest("default", {
+  template: "{{categories-admin-dropdown}}",
 
   test(assert) {
     const subject = selectKit();

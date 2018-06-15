@@ -1,7 +1,7 @@
-import { propertyEqual } from 'discourse/lib/computed';
+import { propertyEqual } from "discourse/lib/computed";
 
 export default Ember.Component.extend({
-  tagName: 'tr',
-  classNameBindings: ['me'],
-  me: propertyEqual('item.user.id', 'currentUser.id')
+  tagName: "tr",
+  classNameBindings: ["me"],
+  me: propertyEqual("item.user.id", "currentUser.id")
 });

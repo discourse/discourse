@@ -2,13 +2,12 @@
 export default {
   keyDown(e) {
     if (e.which === 27) {
-      this.sendAction('cancelled');
+      this.sendAction("cancelled");
       return false;
     } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
       // CTRL+ENTER or CMD+ENTER
-      this.sendAction('save');
+      this.sendAction("save");
       return false;
     }
-  },
+  }
 };
-

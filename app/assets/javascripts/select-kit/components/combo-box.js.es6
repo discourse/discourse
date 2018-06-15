@@ -1,5 +1,8 @@
 import SingleSelectComponent from "select-kit/components/single-select";
-import { on, default as computed } from "ember-addons/ember-computed-decorators";
+import {
+  on,
+  default as computed
+} from "ember-addons/ember-computed-decorators";
 
 export default SingleSelectComponent.extend({
   pluginApiIdentifiers: ["combo-box"],

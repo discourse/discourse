@@ -8,11 +8,11 @@ export function bufferedProperty(property) {
     }.property(property),
 
     rollbackBuffer: function() {
-      this.get('buffered').discardBufferedChanges();
+      this.get("buffered").discardBufferedChanges();
     },
 
     commitBuffer: function() {
-      this.get('buffered').applyBufferedChanges();
+      this.get("buffered").applyBufferedChanges();
     }
   };
 
@@ -22,4 +22,4 @@ export function bufferedProperty(property) {
   return Ember.Mixin.create(mixin);
 }
 
-export default bufferedProperty('content');
+export default bufferedProperty("content");

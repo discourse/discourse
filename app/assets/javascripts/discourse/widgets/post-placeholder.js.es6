@@ -1,8 +1,8 @@
-import { createWidget } from 'discourse/widgets/widget';
-import hbs from 'discourse/widgets/hbs-compiler';
+import { createWidget } from "discourse/widgets/widget";
+import hbs from "discourse/widgets/hbs-compiler";
 
-export default createWidget('post-placeholder', {
-  tagName: 'article.placeholder',
+export default createWidget("post-placeholder", {
+  tagName: "article.placeholder",
   template: hbs`
     <div class='row'>
       <div class='topic-avatar'>

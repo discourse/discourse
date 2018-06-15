@@ -9,7 +9,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   saving: false,
   selectedTopicId: null,
 
-  selectedPostsCount: Ember.computed.alias("topicController.selectedPostsCount"),
+  selectedPostsCount: Ember.computed.alias(
+    "topicController.selectedPostsCount"
+  ),
 
   @computed("saving", "selectedTopicId")
   buttonDisabled(saving, selectedTopicId) {
@@ -31,25 +33,27 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       this.set("saving", true);
 
-      let promise = this.get("topicController.selectedAllPosts") ?
-        mergeTopic(topicId, this.get("selectedTopicId")) :
-        movePosts(topicId, {
-          destination_topic_id: this.get("selectedTopicId"),
-          post_ids: this.get("topicController.selectedPostIds")
-        });
+      let promise = this.get("topicController.selectedAllPosts")
+        ? mergeTopic(topicId, this.get("selectedTopicId"))
+        : movePosts(topicId, {
+            destination_topic_id: this.get("selectedTopicId"),
+            post_ids: this.get("topicController.selectedPostIds")
+          });
 
-      promise.then(result => {
-        this.send("closeModal");
-        this.get("topicController").send("toggleMultiSelect");
-        Ember.run.next(() => DiscourseURL.routeTo(result.url));
-      }).catch(() => {
-        this.flash(I18n.t("topic.merge_topic.error"));
-      }).finally(() => {
-        this.set("saving", false);
-      });
+      promise
+        .then(result => {
+          this.send("closeModal");
+          this.get("topicController").send("toggleMultiSelect");
+          Ember.run.next(() => DiscourseURL.routeTo(result.url));
+        })
+        .catch(() => {
+          this.flash(I18n.t("topic.merge_topic.error"));
+        })
+        .finally(() => {
+          this.set("saving", false);
+        });
 
       return false;
     }
   }
-
 });

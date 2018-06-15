@@ -16,7 +16,7 @@ export default NotificationOptionsComponent.extend({
 
   @on("didInsertElement")
   _bindGlobalLevelChanged() {
-    this.appEvents.on("topic-notifications-button:changed", (msg) => {
+    this.appEvents.on("topic-notifications-button:changed", msg => {
       if (msg.type === "notification") {
         if (this.get("computedValue") !== msg.id) {
           this.get("topic.details").updateNotifications(msg.id);

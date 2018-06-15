@@ -2,9 +2,7 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty, makeArray, run } = Ember;
-import {
-  applyOnSelectPluginApiCallbacks
-} from "select-kit/mixins/plugin-api";
+import { applyOnSelectPluginApiCallbacks } from "select-kit/mixins/plugin-api";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -26,11 +24,16 @@ export default SelectKitComponent.extend({
 
     this.set("computedValues", []);
 
-    if (isNone(this.get("values"))) { this.set("values", []); }
+    if (isNone(this.get("values"))) {
+      this.set("values", []);
+    }
 
-    this.set("headerComponentOptions", Ember.Object.create({
-      selectedNameComponent: this.get("selectedNameComponent")
-    }));
+    this.set(
+      "headerComponentOptions",
+      Ember.Object.create({
+        selectedNameComponent: this.get("selectedNameComponent")
+      })
+    );
   },
 
   @on("didRender")
@@ -76,18 +79,26 @@ export default SelectKitComponent.extend({
   },
 
   @computed
-  shouldDisplayFilter() { return true; },
+  shouldDisplayFilter() {
+    return true;
+  },
 
   _beforeWillComputeValues(values) {
     return values.map(v => this._cast(v === "" ? null : v));
   },
-  willComputeValues(values) { return values; },
-  computeValues(values) { return values; },
+  willComputeValues(values) {
+    return values;
+  },
+  computeValues(values) {
+    return values;
+  },
   _beforeDidComputeValues(values) {
     this.setProperties({ computedValues: values });
     return values;
   },
-  didComputeValues(values) { return values; },
+  didComputeValues(values) {
+    return values;
+  },
 
   mutateAttributes() {
     run.next(() => {
@@ -100,12 +111,16 @@ export default SelectKitComponent.extend({
   mutateValues(computedValues) {
     this.set("values", computedValues);
   },
-  mutateContent() { },
+  mutateContent() {},
 
   filterComputedContent(computedContent, computedValues, filter) {
     const lowerFilter = filter.toLowerCase();
     return computedContent.filter(c => {
-      return get(c, "name").toLowerCase().indexOf(lowerFilter) > -1;
+      return (
+        get(c, "name")
+          .toLowerCase()
+          .indexOf(lowerFilter) > -1
+      );
     });
   },
 
@@ -129,7 +144,11 @@ export default SelectKitComponent.extend({
     });
 
     if (this.get("shouldFilter")) {
-      computedContent = this.filterComputedContent(computedContent, computedValues, filter);
+      computedContent = this.filterComputedContent(
+        computedContent,
+        computedValues,
+        filter
+      );
     }
 
     if (this.get("limitMatches")) {
@@ -147,12 +166,17 @@ export default SelectKitComponent.extend({
 
     if (this.get("noneLabel")) {
       if (!this.get("hasSelection")) {
-        content.title = content.name = content.label = I18n.t(this.get("noneLabel"));
+        content.title = content.name = content.label = I18n.t(
+          this.get("noneLabel")
+        );
       }
     } else {
       if (!this.get("hasReachedMinimum")) {
-        const key = this.get("minimumLabel") || "select_kit.min_content_not_reached";
-        content.title = content.name = content.label = I18n.t(key, { count: this.get("minimum") });
+        const key =
+          this.get("minimumLabel") || "select_kit.min_content_not_reached";
+        content.title = content.name = content.label = I18n.t(key, {
+          count: this.get("minimum")
+        });
       }
     }
 
@@ -161,8 +185,10 @@ export default SelectKitComponent.extend({
 
   @computed("filter")
   templateForCreateRow() {
-    return (rowComponent) => {
-      return I18n.t("select_kit.create", { content: rowComponent.get("computedContent.name")});
+    return rowComponent => {
+      return I18n.t("select_kit.create", {
+        content: rowComponent.get("computedContent.name")
+      });
     };
   },
 
@@ -183,7 +209,9 @@ export default SelectKitComponent.extend({
   },
 
   @computed("selection.[]")
-  hasSelection(selection) { return !isEmpty(selection); },
+  hasSelection(selection) {
+    return !isEmpty(selection);
+  },
 
   didPressTab(event) {
     if (isEmpty(this.get("filter")) && !this.get("highlighted")) {
@@ -213,7 +241,10 @@ export default SelectKitComponent.extend({
       if (isEmpty(this.get("collectionComputedContent"))) {
         if (this.get("createRowComputedContent")) {
           this.highlight(this.get("createRowComputedContent"));
-        } else if (this.get("noneRowComputedContent") && this.get("hasSelection")) {
+        } else if (
+          this.get("noneRowComputedContent") &&
+          this.get("hasSelection")
+        ) {
           this.highlight(this.get("noneRowComputedContent"));
         }
       } else {
@@ -223,14 +254,19 @@ export default SelectKitComponent.extend({
   },
 
   select(computedContentItem) {
-    if (!computedContentItem || computedContentItem.__sk_row_type === "noneRow") {
+    if (
+      !computedContentItem ||
+      computedContentItem.__sk_row_type === "noneRow"
+    ) {
       this.clearSelection();
       return;
     }
 
     if (computedContentItem.__sk_row_type === "createRow") {
-      if (!this.get("computedValues").includes(computedContentItem.value) &&
-          this.validateCreate(computedContentItem.value)) {
+      if (
+        !this.get("computedValues").includes(computedContentItem.value) &&
+        this.validateCreate(computedContentItem.value)
+      ) {
         this.willCreate(computedContentItem);
 
         computedContentItem.__sk_row_type = null;
@@ -278,10 +314,14 @@ export default SelectKitComponent.extend({
   deselect(rowComputedContentItems) {
     this.willDeselect(rowComputedContentItems);
     rowComputedContentItems = makeArray(rowComputedContentItems);
-    const generatedComputedContents = this._filterRemovableComputedContents(makeArray(rowComputedContentItems));
+    const generatedComputedContents = this._filterRemovableComputedContents(
+      makeArray(rowComputedContentItems)
+    );
     this.set("highlighted", null);
     this.set("highlightedSelection", []);
-    this.get("computedValues").removeObjects(rowComputedContentItems.map(r => r.value));
+    this.get("computedValues").removeObjects(
+      rowComputedContentItems.map(r => r.value)
+    );
     this.get("computedContent").removeObjects(generatedComputedContents);
     run.next(() => this.mutateAttributes());
     run.schedule("afterRender", () => {

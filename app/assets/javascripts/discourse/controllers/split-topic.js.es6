@@ -10,7 +10,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   categoryId: null,
 
   topicController: Ember.inject.controller("topic"),
-  selectedPostsCount: Ember.computed.alias("topicController.selectedPostsCount"),
+  selectedPostsCount: Ember.computed.alias(
+    "topicController.selectedPostsCount"
+  ),
 
   @computed("saving", "topicName")
   buttonDisabled(saving, topicName) {
@@ -41,18 +43,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
         category_id: this.get("categoryId")
       };
 
-      movePosts(this.get("model.id"), options).then(result => {
-        this.send("closeModal");
-        this.get("topicController").send("toggleMultiSelect");
-        Ember.run.next(() => DiscourseURL.routeTo(result.url));
-      }).catch(xhr => {
-        this.flash(extractError(xhr, I18n.t("topic.split_topic.error")));
-      }).finally(() => {
-        this.set("saving", false);
-      });
+      movePosts(this.get("model.id"), options)
+        .then(result => {
+          this.send("closeModal");
+          this.get("topicController").send("toggleMultiSelect");
+          Ember.run.next(() => DiscourseURL.routeTo(result.url));
+        })
+        .catch(xhr => {
+          this.flash(extractError(xhr, I18n.t("topic.split_topic.error")));
+        })
+        .finally(() => {
+          this.set("saving", false);
+        });
 
       return false;
     }
   }
-
 });

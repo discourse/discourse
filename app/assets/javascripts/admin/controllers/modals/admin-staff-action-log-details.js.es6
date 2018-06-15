@@ -1,3 +1,3 @@
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Ember.Controller.extend(ModalFunctionality);

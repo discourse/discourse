@@ -17,17 +17,17 @@ function getCurrentHandlerInfos(router) {
 
 function getRoutes(router) {
   return emberArray(getCurrentHandlerInfos(router))
-    .mapBy('handler')
+    .mapBy("handler")
     .reverse();
 }
 
 function getRouteWithAction(router, actionName) {
   let action;
-  let handler = emberArray(getRoutes(router)).find((route) => {
+  let handler = emberArray(getRoutes(router)).find(route => {
     let actions = route.actions || route._actions;
     action = actions[actionName];
 
-    return typeof(action) === 'function';
+    return typeof action === "function";
   });
 
   return { action, handler };
@@ -35,16 +35,19 @@ function getRouteWithAction(router, actionName) {
 
 export default Helper.extend({
   router: computed(function() {
-    return getOwner(this).lookup('router:main');
+    return getOwner(this).lookup("router:main");
   }).readOnly(),
 
   compute([actionName, ...params]) {
-    let router = get(this, 'router');
-    assert('[ember-route-action-helper] Unable to lookup router', router);
+    let router = get(this, "router");
+    assert("[ember-route-action-helper] Unable to lookup router", router);
 
     runInDebug(() => {
       let { handler } = getRouteWithAction(router, actionName);
-      assert(`[ember-route-action-helper] Unable to find action ${actionName}`, handler);
+      assert(
+        `[ember-route-action-helper] Unable to find action ${actionName}`,
+        handler
+      );
     });
 
     let routeAction = function(...invocationArgs) {
@@ -56,4 +59,3 @@ export default Helper.extend({
     return routeAction;
   }
 });
-

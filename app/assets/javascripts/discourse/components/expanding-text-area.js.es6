@@ -1,23 +1,23 @@
-import { on, observes } from 'ember-addons/ember-computed-decorators';
-import autosize from 'discourse/lib/autosize';
+import { on, observes } from "ember-addons/ember-computed-decorators";
+import autosize from "discourse/lib/autosize";
 
 export default Ember.TextArea.extend({
-  @on('didInsertElement')
+  @on("didInsertElement")
   _startWatching() {
-    Ember.run.scheduleOnce('afterRender', () => {
+    Ember.run.scheduleOnce("afterRender", () => {
       this.$().focus();
       autosize(this.element);
     });
   },
 
-  @observes('value')
+  @observes("value")
   _updateAutosize() {
-    const evt = document.createEvent('Event');
-    evt.initEvent('autosize:update', true, false);
+    const evt = document.createEvent("Event");
+    evt.initEvent("autosize:update", true, false);
     this.element.dispatchEvent(evt);
   },
 
-  @on('willDestroyElement')
+  @on("willDestroyElement")
   _disableAutosize() {
     autosize.destroy(this.$());
   }

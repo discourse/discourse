@@ -1,30 +1,46 @@
-import { ajax } from 'discourse/lib/ajax';
-import showModal from 'discourse/lib/show-modal';
-import BackupStatus from 'admin/models/backup-status';
-import Backup from 'admin/models/backup';
-import PreloadStore from 'preload-store';
+import { ajax } from "discourse/lib/ajax";
+import showModal from "discourse/lib/show-modal";
+import BackupStatus from "admin/models/backup-status";
+import Backup from "admin/models/backup";
+import PreloadStore from "preload-store";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
 export default Discourse.Route.extend({
-
   activate() {
-    this.messageBus.subscribe(LOG_CHANNEL, (log) => {
+    this.messageBus.subscribe(LOG_CHANNEL, log => {
       if (log.message === "[STARTED]") {
-        this.controllerFor("adminBackups").set("model.isOperationRunning", true);
-        this.controllerFor("adminBackupsLogs").get('logs').clear();
+        this.controllerFor("adminBackups").set(
+          "model.isOperationRunning",
+          true
+        );
+        this.controllerFor("adminBackupsLogs")
+          .get("logs")
+          .clear();
       } else if (log.message === "[FAILED]") {
-        this.controllerFor("adminBackups").set("model.isOperationRunning", false);
-        bootbox.alert(I18n.t("admin.backups.operations.failed", { operation: log.operation }));
+        this.controllerFor("adminBackups").set(
+          "model.isOperationRunning",
+          false
+        );
+        bootbox.alert(
+          I18n.t("admin.backups.operations.failed", {
+            operation: log.operation
+          })
+        );
       } else if (log.message === "[SUCCESS]") {
         Discourse.User.currentProp("hideReadOnlyAlert", false);
-        this.controllerFor("adminBackups").set("model.isOperationRunning", false);
+        this.controllerFor("adminBackups").set(
+          "model.isOperationRunning",
+          false
+        );
         if (log.operation === "restore") {
           // redirect to homepage when the restore is done (session might be lost)
           window.location.pathname = Discourse.getURL("/");
         }
       } else {
-        this.controllerFor("adminBackupsLogs").get('logs').pushObject(Em.Object.create(log));
+        this.controllerFor("adminBackupsLogs")
+          .get("logs")
+          .pushObject(Em.Object.create(log));
       }
     });
   },
@@ -47,8 +63,8 @@ export default Discourse.Route.extend({
 
   actions: {
     startBackup() {
-      showModal('admin-start-backup', { admin: true });
-      this.controllerFor('modal').set('modalClass', 'start-backup-modal');
+      showModal("admin-start-backup", { admin: true });
+      this.controllerFor("modal").set("modalClass", "start-backup-modal");
     },
 
     backupStarted() {
@@ -66,7 +82,10 @@ export default Discourse.Route.extend({
         function(confirmed) {
           if (confirmed) {
             backup.destroy().then(function() {
-              self.controllerFor("adminBackupsIndex").get('model').removeObject(backup);
+              self
+                .controllerFor("adminBackupsIndex")
+                .get("model")
+                .removeObject(backup);
             });
           }
         }
@@ -83,8 +102,13 @@ export default Discourse.Route.extend({
           if (confirmed) {
             Discourse.User.currentProp("hideReadOnlyAlert", true);
             backup.restore().then(function() {
-              self.controllerFor("adminBackupsLogs").get("logs").clear();
-              self.controllerFor("adminBackups").set("model.isOperationRunning", true);
+              self
+                .controllerFor("adminBackupsLogs")
+                .get("logs")
+                .clear();
+              self
+                .controllerFor("adminBackups")
+                .set("model.isOperationRunning", true);
               self.transitionTo("admin.backups.logs");
             });
           }
@@ -101,7 +125,9 @@ export default Discourse.Route.extend({
         function(confirmed) {
           if (confirmed) {
             Backup.cancel().then(function() {
-              self.controllerFor("adminBackups").set("model.isOperationRunning", false);
+              self
+                .controllerFor("adminBackups")
+                .set("model.isOperationRunning", false);
             });
           }
         }
@@ -114,17 +140,26 @@ export default Discourse.Route.extend({
         I18n.t("no_value"),
         I18n.t("yes_value"),
         function(confirmed) {
-          if (confirmed) { Backup.rollback(); }
+          if (confirmed) {
+            Backup.rollback();
+          }
         }
       );
     },
 
     uploadSuccess(filename) {
-      bootbox.alert(I18n.t("admin.backups.upload.success", { filename: filename }));
+      bootbox.alert(
+        I18n.t("admin.backups.upload.success", { filename: filename })
+      );
     },
 
     uploadError(filename, message) {
-      bootbox.alert(I18n.t("admin.backups.upload.error", { filename: filename, message: message }));
+      bootbox.alert(
+        I18n.t("admin.backups.upload.error", {
+          filename: filename,
+          message: message
+        })
+      );
     }
   }
 });

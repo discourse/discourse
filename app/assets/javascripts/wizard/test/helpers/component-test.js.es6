@@ -1,5 +1,4 @@
-import initializer from 'wizard/initializers/load-helpers';
-
+import initializer from "wizard/initializers/load-helpers";
 
 export function componentTest(name, opts) {
   opts = opts || {};

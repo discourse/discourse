@@ -6,7 +6,10 @@ QUnit.test("Enter a Topic", assert => {
   andThen(() => {
     assert.ok(exists("#topic"), "The topic was rendered");
     assert.ok(exists("#topic .cooked"), "The topic has cooked posts");
-    assert.ok(find('.shared-draft-notice').length === 0, "no shared draft unless there's a dest category id");
+    assert.ok(
+      find(".shared-draft-notice").length === 0,
+      "no shared draft unless there's a dest category id"
+    );
   });
 });
 
@@ -21,7 +24,10 @@ QUnit.test("Enter a 404 topic", assert => {
   visit("/t/not-found/404");
   andThen(() => {
     assert.ok(!exists("#topic"), "The topic was not rendered");
-    assert.ok(find(".not-found").text() === "not found", "it renders the error message");
+    assert.ok(
+      find(".not-found").text() === "not found",
+      "it renders the error message"
+    );
   });
 });
 

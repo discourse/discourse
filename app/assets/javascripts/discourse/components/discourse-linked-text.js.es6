@@ -1,7 +1,7 @@
-import { default as computed } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  tagName: 'span',
+  tagName: "span",
 
   @computed("text")
   translatedText(text) {
@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   },
 
   click(event) {
-    if (event.target.tagName.toUpperCase() === 'A') {
+    if (event.target.tagName.toUpperCase() === "A") {
       this.sendAction("action", this.get("actionParam"));
     }
 

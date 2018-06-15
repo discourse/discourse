@@ -1,6 +1,6 @@
-import UserBadge from 'discourse/models/user-badge';
-import Badge from 'discourse/models/badge';
-import PreloadStore from 'preload-store';
+import UserBadge from "discourse/models/user-badge";
+import Badge from "discourse/models/badge";
+import PreloadStore from "preload-store";
 
 export default Discourse.Route.extend({
   queryParams: {
@@ -16,12 +16,14 @@ export default Discourse.Route.extend({
   },
 
   serialize(model) {
-    return model.getProperties('id', 'slug');
+    return model.getProperties("id", "slug");
   },
 
   model(params) {
     if (PreloadStore.get("badge")) {
-      return PreloadStore.getAndRemove("badge").then(json => Badge.createFromJson(json));
+      return PreloadStore.getAndRemove("badge").then(json =>
+        Badge.createFromJson(json)
+      );
     } else {
       return Badge.findById(params.id);
     }
@@ -30,17 +32,21 @@ export default Discourse.Route.extend({
   afterModel(model, transition) {
     const username = transition.queryParams && transition.queryParams.username;
 
-    const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
+    const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {
+      username
+    }).then(userBadges => {
       this.userBadgesGrant = userBadges;
     });
 
-    const userBadgesAll = UserBadge.findByUsername(username).then(userBadges => {
-      this.userBadgesAll = userBadges;
-    });
+    const userBadgesAll = UserBadge.findByUsername(username).then(
+      userBadges => {
+        this.userBadgesAll = userBadges;
+      }
+    );
 
     const promises = {
       userBadgesGrant,
-      userBadgesAll,
+      userBadgesAll
     };
 
     return Ember.RSVP.hash(promises);
@@ -52,7 +58,6 @@ export default Discourse.Route.extend({
       return model.get("name");
     }
   },
-
 
   setupController(controller, model) {
     controller.set("model", model);

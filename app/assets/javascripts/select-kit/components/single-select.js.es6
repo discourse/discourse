@@ -1,10 +1,11 @@
 import SelectKitComponent from "select-kit/components/select-kit";
-import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import {
+  default as computed,
+  on
+} from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty, isPresent, run, makeArray } = Ember;
 
-import {
-  applyOnSelectPluginApiCallbacks,
-} from "select-kit/mixins/plugin-api";
+import { applyOnSelectPluginApiCallbacks } from "select-kit/mixins/plugin-api";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["single-select"],
@@ -53,33 +54,45 @@ export default SelectKitComponent.extend({
   },
 
   _beforeWillComputeValue(value) {
-    if (!isEmpty(this.get("content")) &&
+    if (
+      !isEmpty(this.get("content")) &&
       isEmpty(value) &&
       isNone(this.get("none")) &&
-      this.get("allowAutoSelectFirst")) {
-        value = this.valueForContentItem(get(this.get("content"), "firstObject"));
+      this.get("allowAutoSelectFirst")
+    ) {
+      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
     }
 
     switch (typeof value) {
-    case "string":
-    case "number":
-      return this._cast(value === "" ? null : value);
-    default:
-      return value;
+      case "string":
+      case "number":
+        return this._cast(value === "" ? null : value);
+      default:
+        return value;
     }
   },
-  willComputeValue(value) { return value; },
-  computeValue(value) { return value; },
+  willComputeValue(value) {
+    return value;
+  },
+  computeValue(value) {
+    return value;
+  },
   _beforeDidComputeValue(value) {
     this.setProperties({ computedValue: value });
     return value;
   },
-  didComputeValue(value) { return value; },
+  didComputeValue(value) {
+    return value;
+  },
 
   filterComputedContent(computedContent, computedValue, filter) {
     const lowerFilter = filter.toLowerCase();
     return computedContent.filter(c => {
-      return get(c, "name").toLowerCase().indexOf(lowerFilter) > -1;
+      return (
+        get(c, "name")
+          .toLowerCase()
+          .indexOf(lowerFilter) > -1
+      );
     });
   },
 
@@ -88,7 +101,8 @@ export default SelectKitComponent.extend({
       title: this.get("title"),
       icons: makeArray(this.getWithDefault("headerIcon", [])),
       value: this.get("selection.value"),
-      name: this.get("selection.name") || this.get("noneRowComputedContent.name")
+      name:
+        this.get("selection.name") || this.get("noneRowComputedContent.name")
     };
 
     if (this.get("noneLabel") && !this.get("hasSelection")) {
@@ -112,9 +126,18 @@ export default SelectKitComponent.extend({
   },
 
   @computed("computedContent.[]", "computedValue", "filter", "shouldFilter")
-  filteredComputedContent(computedContent, computedValue, filter, shouldFilter) {
+  filteredComputedContent(
+    computedContent,
+    computedValue,
+    filter,
+    shouldFilter
+  ) {
     if (shouldFilter) {
-      computedContent = this.filterComputedContent(computedContent, computedValue, filter);
+      computedContent = this.filterComputedContent(
+        computedContent,
+        computedValue,
+        filter
+      );
     }
 
     if (this.get("limitMatches")) {
@@ -131,10 +154,18 @@ export default SelectKitComponent.extend({
 
   @computed("selection")
   hasSelection(selection) {
-    return selection !== this.get("noneRowComputedContent") && !isNone(selection);
+    return (
+      selection !== this.get("noneRowComputedContent") && !isNone(selection)
+    );
   },
 
-  @computed("computedValue", "filter", "collectionComputedContent.[]", "hasReachedMaximum", "hasReachedMinimum")
+  @computed(
+    "computedValue",
+    "filter",
+    "collectionComputedContent.[]",
+    "hasReachedMaximum",
+    "hasReachedMinimum"
+  )
   shouldDisplayCreateRow(computedValue, filter) {
     return this._super() && computedValue !== filter;
   },
@@ -146,17 +177,29 @@ export default SelectKitComponent.extend({
         return;
       }
 
-      if (!isEmpty(this.get("filter")) && !isEmpty(this.get("collectionComputedContent"))) {
+      if (
+        !isEmpty(this.get("filter")) &&
+        !isEmpty(this.get("collectionComputedContent"))
+      ) {
         this.highlight(this.get("collectionComputedContent.firstObject"));
         return;
       }
 
-      if (!this.get("isAsync") && this.get("hasSelection") && isEmpty(this.get("filter"))) {
+      if (
+        !this.get("isAsync") &&
+        this.get("hasSelection") &&
+        isEmpty(this.get("filter"))
+      ) {
         this.highlight(get(makeArray(this.get("selection")), "firstObject"));
         return;
       }
 
-      if (!this.get("isAsync") && !this.get("hasSelection") && isEmpty(this.get("filter")) && !isEmpty(this.get("collectionComputedContent"))) {
+      if (
+        !this.get("isAsync") &&
+        !this.get("hasSelection") &&
+        isEmpty(this.get("filter")) &&
+        !isEmpty(this.get("collectionComputedContent"))
+      ) {
         this.highlight(this.get("collectionComputedContent.firstObject"));
         return;
       }
@@ -169,14 +212,19 @@ export default SelectKitComponent.extend({
   },
 
   select(computedContentItem) {
-    if (!computedContentItem || computedContentItem.__sk_row_type === "noneRow") {
+    if (
+      !computedContentItem ||
+      computedContentItem.__sk_row_type === "noneRow"
+    ) {
       this.clearSelection();
       return;
     }
 
     if (computedContentItem.__sk_row_type === "createRow") {
-      if (this.get("computedValue") !== computedContentItem.value &&
-          this.validateCreate(computedContentItem.value)) {
+      if (
+        this.get("computedValue") !== computedContentItem.value &&
+        this.validateCreate(computedContentItem.value)
+      ) {
         this.willCreate(computedContentItem);
         computedContentItem.__sk_row_type = null;
         this.get("computedContent").pushObject(computedContentItem);
@@ -197,7 +245,10 @@ export default SelectKitComponent.extend({
     if (this.validateSelect(computedContentItem)) {
       this.willSelect(computedContentItem);
       this.clearFilter();
-      this.setProperties({ highlighted: null, computedValue: computedContentItem.value });
+      this.setProperties({
+        highlighted: null,
+        computedValue: computedContentItem.value
+      });
 
       run.next(() => this.mutateAttributes());
 
@@ -220,7 +271,7 @@ export default SelectKitComponent.extend({
   },
 
   deselect(computedContentItem) {
-    makeArray(computedContentItem).forEach((item) => {
+    makeArray(computedContentItem).forEach(item => {
       this.willDeselect(item);
 
       this.clearFilter();

@@ -1,4 +1,4 @@
-import Category from 'discourse/models/category';
+import Category from "discourse/models/category";
 
 export default Discourse.DiscoveryCategoryRoute.extend({
   model(params) {
