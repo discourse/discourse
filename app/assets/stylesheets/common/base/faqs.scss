@@ -2,6 +2,12 @@
   /* intended only for /about /faq, /guidelines, /tos, and /privacy */
   width: 100%;
   max-width: 700px;
+  .about-page & { 
+    max-width: unset;
+    section:not(.admins):not(.moderators) {
+      max-width: 700px;
+    }
+  }
   font-size: $font-up-1;
   .mobile-view & {
     font-size: $font-0;
@@ -21,3 +27,4 @@
     margin-left: 40px;
   }
 }
+
