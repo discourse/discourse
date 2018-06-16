@@ -346,7 +346,7 @@ export default createPreviewComponent(659, 320, {
       ctx.font = `${bodyFontSize}em 'Arial'`;
       for (let j = 3; j <= 5; j++) {
         ctx.fillText(
-          Math.floor(Math.random() * 90) + 10,
+          j === 5 ? "1h" : Math.floor(Math.random() * 90) + 10,
           cols[j] + margin,
           y + rowHeight * 0.7
         );
