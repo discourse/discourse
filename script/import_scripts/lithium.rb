@@ -131,7 +131,8 @@ class ImportScripts::Lithium < ImportScripts::Base
       duplicate_emails = mysql_query("SELECT email FROM users GROUP BY email HAVING COUNT(email) > 1").map { |e| [e["email"], 0] }.to_h
 
       create_users(users, total: user_count, offset: offset) do |user|
-        profile = profiles.select { |p|  p["user_id"] == user["id"] }
+        user_id = user["id"]
+        profile = profiles.select { |p|  p["user_id"] == user_id }
         result = profile.select { |p|  p["param"] == "profile.location" }
         location = result.count > 0 ? result.first["nvalue"] : nil
         username = user["login_canon"]
@@ -144,7 +145,7 @@ class ImportScripts::Lithium < ImportScripts::Base
         end
 
         {
-          id: user["id"],
+          id: user_id,
           name: user["nlogin"],
           username: username,
           email: email,
@@ -156,6 +157,20 @@ class ImportScripts::Lithium < ImportScripts::Base
           created_at: unix_time(user["registration_time"]),
           post_create_action: proc do |u|
             @old_username_to_new_usernames[user["login_canon"]] = u.username
+
+            # import user visits
+            visits = mysql_query <<-SQL
+                SELECT login_time
+                  FROM user_log
+                WHERE user_id = #{user_id}
+            SQL
+
+            if visits.count > 0
+              visits.each do |visit|
+                date = unix_time(visit["login_time"]).to_date
+                u.update_visit_record!(date)
+              end
+            end
 
             # import user avatar
             sso_id = u.custom_fields["sso_id"]
