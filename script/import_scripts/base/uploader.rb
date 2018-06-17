@@ -48,7 +48,8 @@ module ImportScripts
     def embedded_image_html(upload)
       image_width = [upload.width, SiteSetting.max_image_width].compact.min
       image_height = [upload.height, SiteSetting.max_image_height].compact.min
-      %Q[<img src="#{upload.url}" width="#{image_width}" height="#{image_height}"><br/>]
+      upload_name = upload.short_url || upload.url
+      %Q~![#{upload.original_filename}|#{image_width}x#{image_height}](#{upload_name})~
     end
 
     def attachment_html(upload, display_filename)
