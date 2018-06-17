@@ -203,7 +203,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
         end
 
         {
-          id: import_topic_id(row['id']),
+          id: row['id'],
           raw: normalize_raw(row['raw']),
           user_id: user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id,
           topic_id: topic[:topic_id],
