@@ -576,7 +576,7 @@ video {
   }
 }
 
-.open>.dropdown-menu {
+.open > .dropdown-menu {
   display: block;
 }
 
@@ -591,7 +591,12 @@ video {
 
 .deleted {
   .topic-body {
-    background-color: dark-light-diff( rgba($danger, 0.7), $secondary, 50%, -60%);
+    background-color: dark-light-diff(
+      rgba($danger, 0.7),
+      $secondary,
+      50%,
+      -60%
+    );
   }
 }
 
@@ -627,7 +632,7 @@ blockquote {
 /* quotes with attribution */
 
 .quote {
-  &>blockquote {
+  & > blockquote {
     .onebox-result {
       background-color: blend-primary-secondary(5%);
     }
@@ -641,8 +646,8 @@ blockquote {
       background: blend-primary-secondary(5%);
       border-left: 5px solid $primary-low;
     }
-    aside.quote>blockquote,
-    aside.quote>.title {
+    aside.quote > blockquote,
+    aside.quote > .title {
       border-left: 0;
     }
   }
@@ -670,17 +675,19 @@ $topic-avatar-width: 45px;
 }
 
 .gap {
-  width: calc( #{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
+  width: calc(
+    #{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding}
+  );
 }
 
 /* hide the reply border above the time gap notices */
 
-.time-gap+.topic-post .topic-body,
-.time-gap+.topic-post .topic-avatar {
+.time-gap + .topic-post .topic-body,
+.time-gap + .topic-post .topic-avatar {
   border-top: none;
 }
 
-.time-gap+.topic-post .embedded-posts.top {
+.time-gap + .topic-post .embedded-posts.top {
   border-bottom: 1px solid $primary-low;
 }
 
@@ -739,21 +746,21 @@ $topic-avatar-width: 45px;
   line-height: $line-height-medium;
   color: $primary;
   transition: all linear 0.15s;
-  &>div {
+  & > div {
     margin-left: 26px;
   }
 }
 
-.dropdown-menu li>a:hover,
-.dropdown-menu .active>a,
-.dropdown-menu .active>a:hover {
+.dropdown-menu li > a:hover,
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
   color: $primary;
   text-decoration: none;
   background-color: $highlight-medium;
 }
 
-.dropdown-menu .disabled>a,
-.dropdown-menu .disabled>a:hover {
+.dropdown-menu .disabled > a,
+.dropdown-menu .disabled > a:hover {
   text-decoration: none;
   color: $primary;
   background-color: $tertiary-low;
@@ -766,7 +773,7 @@ $topic-avatar-width: 45px;
   font-size: $font-up-2;
 }
 
-.open>.dropdown-menu {
+.open > .dropdown-menu {
   display: block;
   clear: both;
 }
