@@ -822,7 +822,8 @@ SQL
   end
 
   def find_upload(user_id, attachment_id, real_filename)
-    filename = File.join(ATTACHMENT_DIR, "#{attachment_id.to_s.rjust(4, "0")}.dat")
+    filename = attachment_id.to_s.rjust(4, "0")
+    filename = File.join(ATTACHMENT_DIR, "000#{filename[0]}/#{filename}.dat")
 
     unless File.exists?(filename)
       puts "Attachment file doesn't exist: #{filename}"
@@ -976,7 +977,7 @@ SQL
         user = UserCustomField.find_by(name: 'import_id', value: uid).try(:user)
         if user.present?
           username = user.username
-          span = doc.create_element "span"
+          span = l.document.create_element "span"
           span.inner_html = "@#{username}"
           l.replace span
         end
