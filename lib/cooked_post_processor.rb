@@ -269,7 +269,7 @@ class CookedPostProcessor
 
   def convert_to_link!(img)
     src = img["src"]
-    return if src.blank? || is_a_hyperlink?(img)
+    return if src.blank? || is_a_hyperlink?(img) || is_svg?(img)
 
     width, height = img["width"].to_i, img["height"].to_i
     # TODO: store original dimentions in db
@@ -536,6 +536,12 @@ class CookedPostProcessor
 
   def html
     @doc.try(:to_html)
+  end
+
+  private
+
+  def is_svg?(img)
+    File.extname(img["src"]) == '.svg'
   end
 
 end
