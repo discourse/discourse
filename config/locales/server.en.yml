@@ -1012,7 +1012,7 @@ en:
       xaxis: "Day"
       yaxis: "Total"
     mobile_visits:
-      title: "User Visits"
+      title: "User Visits (mobile)"
       xaxis: "Day"
       yaxis: "Number of visits"
     web_crawlers:

@@ -19,7 +19,7 @@ export default Discourse.Route.extend({
     );
   },
 
-  setupController: function(controller, model) {
+  setupController(controller, model) {
     controller.setProperties({
       model: model,
       categoryId: model.get("category_id") || "all",

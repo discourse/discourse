@@ -4,7 +4,6 @@ import Report from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
-  classNames: ["admin-reports"],
   queryParams: ["mode", "start_date", "end_date", "category_id", "group_id"],
   viewMode: "graph",
   viewingTable: Em.computed.equal("viewMode", "table"),

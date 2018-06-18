@@ -79,6 +79,10 @@
         </div>
       {{/conditional-loading-section}}
     </div>
+    {{#link-to "adminReports"}}
+      {{i18n "admin.dashboard.all_reports"}}
+    {{/link-to}}
+
     <div class="user-metrics">
     {{dashboard-inline-table dataSourceNames="users_by_type" lastRefreshedAt=lastRefreshedAt}}
 
