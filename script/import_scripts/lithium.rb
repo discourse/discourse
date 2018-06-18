@@ -104,6 +104,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     user_count = mysql_query("SELECT COUNT(*) count FROM users").first["count"]
     avatar_files = Dir.entries(AVATAR_DIR)
+    duplicate_emails = mysql_query("SELECT email_lower FROM users GROUP BY email_lower HAVING COUNT(email_lower) > 1").map { |e| [e["email_lower"], 0] }.to_h
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
@@ -129,8 +130,6 @@ class ImportScripts::Lithium < ImportScripts::Base
         ORDER BY user_id
       SQL
 
-      duplicate_emails = mysql_query("SELECT email_lower FROM users GROUP BY email_lower HAVING COUNT(email_lower) > 1").map { |e| [e["email_lower"], 0] }.to_h
-
       create_users(users, total: user_count, offset: offset) do |user|
         user_id = user["id"]
         profile = profiles.select { |p|  p["user_id"] == user_id }
@@ -143,7 +142,7 @@ class ImportScripts::Lithium < ImportScripts::Base
         email_lower = email.downcase
         if duplicate_emails.key?(email_lower)
           duplicate_emails[email_lower] += 1
-          email.sub!("@", "+#{duplicate_emails[email_lower]}@")
+          email.sub!("@", "+#{duplicate_emails[email_lower]}@") if duplicate_emails[email_lower] > 1
         end
 
         {
