@@ -11,6 +11,7 @@ import InputValidation from "discourse/models/input-validation";
 import { getOwner } from "discourse-common/lib/get-owner";
 import {
   escapeExpression,
+  uploadIcon,
   authorizesOneOrMoreExtensions
 } from "discourse/lib/utilities";
 import { emojiUnescape } from "discourse/lib/text";
@@ -88,6 +89,7 @@ export default Ember.Controller.extend({
   lastValidatedAt: null,
   isUploading: false,
   allowUpload: false,
+  uploadIcon: "upload",
   topic: null,
   linkLookup: null,
   showPreview: true,
@@ -285,6 +287,8 @@ export default Ember.Controller.extend({
   allowUpload() {
     return authorizesOneOrMoreExtensions();
   },
+
+  @computed() uploadIcon: () => uploadIcon(),
 
   actions: {
     cancelUpload() {
