@@ -600,6 +600,7 @@ en:
     seconds:
       one: "1 second"
       other: "%{count} seconds"
+    short_time: "a few seconds"
 
   datetime:
     distance_in_words:

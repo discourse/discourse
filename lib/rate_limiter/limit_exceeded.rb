@@ -11,7 +11,9 @@ class RateLimiter
 
     def description
       time_left = ""
-      if @available_in < 1.minute.to_i
+      if @available_in <= 3
+        time_left = I18n.t("rate_limiter.short_time")
+      elsif @available_in < 1.minute.to_i
         time_left = I18n.t("rate_limiter.seconds", count: @available_in)
       elsif @available_in < 1.hour.to_i
         time_left = I18n.t("rate_limiter.minutes", count: (@available_in / 1.minute.to_i))
