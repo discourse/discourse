@@ -3897,3 +3897,4 @@ en:
     not_found: "not found"
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"
+    user_delete_self: "Deleted by self from %{url}"
