@@ -1,6 +1,6 @@
 /* hide the reply border above the time gap notices */
 
-.time-gap+.topic-post article {
+.time-gap + .topic-post article {
   border-top: none;
 }
 
@@ -61,7 +61,7 @@ span.badge-posts {
           line-height: $line-height-medium;
         }
       }
-      button.like-count+button.toggle-like {
+      button.like-count + button.toggle-like {
         padding: 8px 9px 8px 4px;
       }
     }
@@ -195,7 +195,7 @@ a.reply-to-tab {
       color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-1;
     }
-    .avatar+a {
+    .avatar + a {
       float: left;
     }
   }
@@ -329,7 +329,7 @@ iframe {
   display: none;
 }
 
-.open>.dropdown-menu {
+.open > .dropdown-menu {
   display: block;
 }
 
@@ -403,7 +403,12 @@ button.select-post {
 
 .deleted {
   .topic-body {
-    background-color: dark-light-diff( rgba($danger, 0.7), $secondary, 50%, -60%);
+    background-color: dark-light-diff(
+      rgba($danger, 0.7),
+      $secondary,
+      50%,
+      -60%
+    );
   }
 }
 
