@@ -95,10 +95,13 @@ export default function() {
       }
     );
 
-    this.route("adminReports", {
-      path: "/reports/:type",
-      resetNamespace: true
-    });
+    this.route(
+      "adminReports",
+      { path: "/reports", resetNamespace: true },
+      function() {
+        this.route("show", { path: ":type" });
+      }
+    );
 
     this.route(
       "adminFlags",

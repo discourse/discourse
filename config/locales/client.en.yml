@@ -2711,6 +2711,9 @@ en:
       title: 'Discourse Admin'
       moderator: 'Moderator'
 
+      reports:
+        title: "List of available reports"
+
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard last updated:"
@@ -2749,6 +2752,7 @@ en:
         community_health: Community health
         whats_new_in_discourse: What’s new in Discourse?
         activity_metrics: Activity Metrics
+        all_reports: "All reports"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."

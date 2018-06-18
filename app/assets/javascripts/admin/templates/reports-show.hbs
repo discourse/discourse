@@ -1,4 +1,12 @@
-<h3>{{model.title}}</h3>
+<h3>
+  {{#link-to "adminReports"}}
+    {{i18n "admin.dashboard.all_reports"}}
+  {{/link-to}}
+
+  |
+
+  {{model.title}}
+</h3>
 
 {{#if model.description}}
   <p>{{model.description}}</p>

@@ -5,6 +5,20 @@
     padding-bottom: 0.5em;
   }
 
+  .reports-list {
+    list-style: none;
+    margin: 0;
+
+    .report {
+      padding-bottom: 0.5em;
+      margin-bottom: 0.5em;
+
+      .report-description {
+        margin: 0;
+      }
+    }
+  }
+
   .report-container {
     display: flex;
 
