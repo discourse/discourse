@@ -74,6 +74,7 @@ Discourse::Application.routes.draw do
       end
     end
 
+    get "reports" => "reports#index"
     get "reports/:type" => "reports#show"
 
     resources :groups, constraints: AdminConstraint.new do
