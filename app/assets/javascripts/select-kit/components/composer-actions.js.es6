@@ -61,12 +61,15 @@ export default DropdownSelectBoxComponent.extend({
       case CREATE_TOPIC:
       case REPLY:
         content.icon = "mail-forward";
+        content.title = I18n.t("composer.composer_actions.reply");
         break;
       case EDIT:
         content.icon = "pencil";
+        content.title = I18n.t("composer.composer_actions.edit");
         break;
       case CREATE_SHARED_DRAFT:
         content.icon = "clipboard";
+        content.title = I18n.t("composer.composer_actions.draft");
         break;
     }
 
