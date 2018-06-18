@@ -6,7 +6,8 @@ import {
 import {
   allowsAttachments,
   authorizesAllExtensions,
-  authorizedExtensions
+  authorizedExtensions,
+  uploadIcon
 } from "discourse/lib/utilities";
 
 function uploadTranslate(key) {
@@ -24,7 +25,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   remote: Ember.computed.equal("selection", "remote"),
   selection: "local",
 
-  @computed() uploadIcon: () => (allowsAttachments() ? "upload" : "picture-o"),
+  @computed() uploadIcon: () => uploadIcon(),
 
   @computed() title: () => uploadTranslate("title"),
 

@@ -816,11 +816,11 @@ export default Ember.Component.extend({
         unshift: true
       });
 
-      if (this.get("allowUpload")) {
+      if (this.get("allowUpload") && this.get("uploadIcon")) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",
-          icon: "upload",
+          icon: this.get("uploadIcon"),
           title: "upload",
           sendAction: "showUploadModal"
         });

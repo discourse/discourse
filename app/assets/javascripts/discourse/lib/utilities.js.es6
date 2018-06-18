@@ -420,6 +420,10 @@ export function allowsAttachments() {
   );
 }
 
+export function uploadIcon() {
+  return allowsAttachments() ? "upload" : "picture-o";
+}
+
 export function uploadLocation(url) {
   if (Discourse.CDN) {
     url = Discourse.getURLWithCDN(url);
