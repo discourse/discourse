@@ -6,19 +6,13 @@
 .topic-list tr.selected td:first-child,
 .topic-list-item.selected td:first-child,
 .latest-topic-list-item.selected,
-.subcategory-list-item.selected,
 .featured-topic.selected,
 .topic-post.selected {
   box-shadow: -3px 0 0 $danger;
 }
 
-.subcategory-list-item,
 .latest .featured-topic {
   padding-left: 4px;
-}
-
-.category-list-item.selected {
-  box-shadow: 3px 0 0 $danger;
 }
 
 .topic-list-item.selected {
