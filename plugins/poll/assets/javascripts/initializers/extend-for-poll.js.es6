@@ -59,6 +59,10 @@ function initializePolls(api) {
       return;
     }
 
+    if (!helper) {
+      return;
+    }
+
     const post = helper.getModel();
     api.preventCloak(post.id);
     const votes = post.get("polls_votes") || {};
