@@ -152,20 +152,32 @@ describe CookedPostProcessor do
       before do
         SiteSetting.max_image_height = 2000
         SiteSetting.create_thumbnails = true
-
-        Upload.expects(:get_from_url).returns(upload)
         FastImage.expects(:size).returns([1750, 2000])
-        OptimizedImage.expects(:resize).returns(true)
-
-        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
       end
 
       it "generates overlay information" do
+        Upload.expects(:get_from_url).returns(upload)
+        OptimizedImage.expects(:resize).returns(true)
+
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+
         cpp.post_process_images
         expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/1/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
 <span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
+      end
+
+      describe 'when image is an svg' do
+        let(:post) do
+          Fabricate(:post, raw: '<img src="/uploads/default/1/1234567890123456.svg">')
+        end
+
+        it 'should not add lightbox' do
+          cpp.post_process_images
+
+          expect(cpp.html).to match_html("<p><img src=\"/uploads/default/1/1234567890123456.svg\" width=\"690\"\ height=\"788\"></p>")
+        end
       end
 
     end
