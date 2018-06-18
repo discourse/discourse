@@ -6,6 +6,10 @@ class Demon::RailsAutospec < Demon::Base
     "rails-autospec"
   end
 
+  def stop_signal
+    "TERM"
+  end
+
   private
 
   def after_fork
