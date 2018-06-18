@@ -1373,6 +1373,9 @@ en:
       admin_options_title: "Optional staff settings for this topic"
 
       composer_actions:
+        reply: Reply
+        draft: Draft
+        edit: Edit
         reply_to_post:
           label: Reply to post %{postNumber} by %{postUsername}
           desc: Reply to a specific post
