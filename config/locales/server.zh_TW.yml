@@ -1060,7 +1060,7 @@ zh_TW:
     delete_user_max_post_age: "不允許刪除首發表文章超過 (x) 天的用戶"
     delete_all_posts_max: "通過刪除所有帖子按鈕可以刪除的最大帖子數量。如果用戶有比這更多的帖子，這些帖子不能一次性刪除並且這個用戶不能被刪除。"
     email_editable: "允許用戶在註冊後改變他們的 EMail"
-    logout_redirect: "登出後重定向至的地址。（如：http://somesite.com/logout）"
+    logout_redirect: "登出後重定向至的地址。（如：http://example.com/logout）"
     allow_uploaded_avatars: "允許用戶上傳自定義個人頭像。"
     allow_animated_avatars: "允許用戶使用動畫個人頭像。警告：更改設置後運行 avatars:refresh 這個 rake 任務。"
     allow_animated_thumbnails: "為 gif 動畫生成動態縮略圖。"

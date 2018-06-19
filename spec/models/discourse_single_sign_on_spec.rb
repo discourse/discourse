@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe DiscourseSingleSignOn do
   before do
-    @sso_url = "http://somesite.com/discourse_sso"
+    @sso_url = "http://example.com/discourse_sso"
     @sso_secret = "shjkfdhsfkjh"
 
     SiteSetting.sso_url = @sso_url

@@ -69,7 +69,7 @@ describe IncomingLink do
     end
 
     it "does nothing if referer is same as host" do
-      add(post_id: 1, host: 'somesite.com', referer: 'http://somesite.com')
+      add(post_id: 1, host: 'example.com', referer: 'http://example.com')
       expect(IncomingLink.count).to eq 0
     end
 

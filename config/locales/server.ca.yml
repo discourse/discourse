@@ -1087,7 +1087,7 @@ ca:
     delete_user_max_post_age: "No permetis que s'esborrin persones usuàries amb una publicació de menys d'(x) dies."
     delete_all_posts_max: "Quantitat màxima de publicacions que es poden esborrar d'un cop amb el botó \"Esborra totes les publicacions\". Si una persona en té una quantitat superior, les publicacions no podran esborrar-se d'un cop i la persona tampoc no podrà ser eliminada."
     email_editable: "Permet que les persones canviïn la seva adreça de correu després del registre."
-    logout_redirect: "Ubicació on redirigir el navegador després de desconnectar (per exemple: http://somesite.com/logout)"
+    logout_redirect: "Ubicació on redirigir el navegador després de desconnectar (per exemple: http://example.com/logout)"
     allow_uploaded_avatars: "Permet que les persones carreguin imatges de perfil personalitzades."
     allow_animated_avatars: "Permet que les persones facin servir gifs animats a les fotos de perfil. ATENCIÓ: executa la tasca rastell avatars:refresh després de canviar aquesta configuració."
     allow_animated_thumbnails: "Genera miniatures amb moviment de gifs animats."

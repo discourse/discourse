@@ -1372,7 +1372,7 @@ de:
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
     username_change_period: "Die maximale Anzahl von Tagen, nach der Konten ihren Benutzernamen ändern können (0 verbietet die Änderung des Benutzernamen)."
     email_editable: "Erlaube Benutzern ihre E-Mail-Adresse nach der Registrierung zu ändern."
-    logout_redirect: "Benutzer nach dem Abmelden auf diese Adresse umleiten (z.B. http://somesite.com/logout)"
+    logout_redirect: "Benutzer nach dem Abmelden auf diese Adresse umleiten (z.B. http://example.com/logout)"
     allow_uploaded_avatars: "Benutzer können eigene Profilbilder hochladen."
     allow_animated_avatars: "Benutzer können animierte Profilbilder (.gif) hochladen und benutzen. ACHTUNG: Rufe den Befehl `avatars:refresh rake` auf nachdem du diese Option verändert hast."
     allow_animated_thumbnails: "Generiert animierte Vorschaubilder aus animierten GIFs."
