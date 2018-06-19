@@ -79,7 +79,7 @@ WHERE tt.id = tt2.id AND
 #{filter2}
 SQL
 
-    Topic.exec_sql(sql)
+    DB.exec(sql)
   end
 
   private

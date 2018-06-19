@@ -97,7 +97,8 @@ SQL
          AND t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id)
     SQL
 
-    all, mine, unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
+    # map is there due to count returning nil
+    all, mine, unread = DB.query_single(sql, user_id: user_id).map(&:to_i)
 
     sql = <<-SQL
       SELECT  g.name, COUNT(*) "count"
@@ -112,8 +113,8 @@ SQL
 
     result = { all: all, mine: mine, unread: unread }
 
-    exec_sql(sql, user_id: user_id).each do |row|
-      (result[:groups] ||= []) << { name: row["name"], count: row["count"].to_i }
+    DB.query(sql, user_id: user_id).each do |row|
+      (result[:groups] ||= []) << { name: row.name, count: row.count.to_i }
     end
 
     result

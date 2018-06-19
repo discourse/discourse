@@ -122,7 +122,7 @@ class TrustLevel3Requirements
         AND uh.action IN (:silence_user, :unsilence_user, :suspend_user, :unsuspend_user)
     SQL
 
-    PenaltyCounts.new(UserHistory.exec_sql(sql, args).first)
+    PenaltyCounts.new(DB.query_hash(sql, args).first)
   end
 
   def min_days_visited

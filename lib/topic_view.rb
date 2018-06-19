@@ -285,14 +285,14 @@ class TopicView
       sql = <<~SQL
         SELECT user_id, count(*) AS count_all
           FROM posts
-         WHERE id IN (:post_ids)
+         WHERE id in (:post_ids)
            AND user_id IS NOT NULL
       GROUP BY user_id
       ORDER BY count_all DESC
          LIMIT #{MAX_PARTICIPANTS}
       SQL
 
-      Hash[Post.exec_sql(sql, post_ids: post_ids).values]
+      Hash[*DB.query_single(sql, post_ids: post_ids)]
     end
   end
 
@@ -306,7 +306,7 @@ class TopicView
             WHERE id IN (:post_ids)
             AND user_id IS NOT NULL
           SQL
-          Post.exec_sql(sql, post_ids: unfiltered_post_ids).getvalue(0, 0).to_i
+          DB.query_single(sql, post_ids: unfiltered_post_ids).first.to_i
         else
           participants.size
         end

@@ -94,8 +94,8 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.star_subnets_query
-    @star_subnets_query ||= <<-SQL
-      SELECT network(inet(host(ip_address) || '/24')) AS ip_range
+    @star_subnets_query ||= <<~SQL
+      SELECT network(inet(host(ip_address) || '/24'))::text AS ip_range
         FROM screened_ip_addresses
        WHERE action_type = #{ScreenedIpAddress.actions[:block]}
          AND family(ip_address) = 4
@@ -106,9 +106,9 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.star_star_subnets_query
-    @star_star_subnets_query ||= <<-SQL
+    @star_star_subnets_query ||= <<~SQL
       WITH weighted_subnets AS (
-        SELECT network(inet(host(ip_address) || '/16')) AS ip_range,
+        SELECT network(inet(host(ip_address) || '/16'))::text AS ip_range,
                CASE masklen(ip_address)
                  WHEN 32 THEN 1
                  WHEN 24 THEN :roll_up_weight
@@ -127,12 +127,12 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   def self.star_subnets
     min_count = SiteSetting.min_ban_entries_for_roll_up
-    ScreenedIpAddress.exec_sql(star_subnets_query, min_count: min_count).values.flatten
+    DB.query_single(star_subnets_query, min_count: min_count)
   end
 
   def self.star_star_subnets
     weight = SiteSetting.min_ban_entries_for_roll_up
-    ScreenedIpAddress.exec_sql(star_star_subnets_query, min_count: 10, roll_up_weight: weight).values.flatten
+    DB.query_single(star_star_subnets_query, min_count: 10, roll_up_weight: weight)
   end
 
   def self.roll_up(current_user = Discourse.system_user)
@@ -143,7 +143,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     subnets.each do |subnet|
       ScreenedIpAddress.create(ip_address: subnet) unless ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
 
-      sql = <<-SQL
+      sql = <<~SQL
         UPDATE screened_ip_addresses
            SET match_count   = sum_match_count
              , created_at    = min_created_at
@@ -160,7 +160,7 @@ class ScreenedIpAddress < ActiveRecord::Base
          WHERE ip_address = :ip_address
       SQL
 
-      ScreenedIpAddress.exec_sql(sql, ip_address: subnet)
+      DB.exec(sql, ip_address: subnet)
 
       ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block])
         .where("family(ip_address) = 4")

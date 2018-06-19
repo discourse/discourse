@@ -61,7 +61,7 @@ class SearchIndexer
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
     # when inserting data like this.
-    rows = Post.exec_sql_row_count(<<~SQL, params)
+    rows = DB.exec(<<~SQL, params)
        UPDATE #{table_name}
        SET
           raw_data = :raw_data,
@@ -72,7 +72,7 @@ class SearchIndexer
     SQL
 
     if rows == 0
-      Post.exec_sql(<<~SQL, params)
+      DB.exec(<<~SQL, params)
         INSERT INTO #{table_name}
         (#{foreign_key}, search_data, locale, raw_data, version)
         VALUES (:id, #{ranked_index}, :locale, :raw_data, :version)
@@ -111,7 +111,7 @@ class SearchIndexer
   def self.queue_post_reindex(topic_id)
     return if @disabled
 
-    ActiveRecord::Base.exec_sql(<<~SQL, topic_id: topic_id)
+    DB.exec(<<~SQL, topic_id: topic_id)
       UPDATE post_search_data
       SET version = 0
       WHERE post_id IN (SELECT id FROM posts WHERE topic_id = :topic_id)

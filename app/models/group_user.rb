@@ -25,7 +25,7 @@ class GroupUser < ActiveRecord::Base
 
   def set_primary_group
     if group.primary_group
-      self.class.exec_sql("
+      DB.exec("
         UPDATE users
         SET primary_group_id = :id
         WHERE id = :user_id",
@@ -35,7 +35,7 @@ class GroupUser < ActiveRecord::Base
   end
 
   def remove_primary_group
-    self.class.exec_sql("
+    DB.exec("
       UPDATE users
       SET primary_group_id = NULL
       WHERE id = :user_id AND primary_group_id = :id",
@@ -45,7 +45,7 @@ class GroupUser < ActiveRecord::Base
 
   def remove_title
     if group.title.present?
-      self.class.exec_sql("
+      DB.exec("
         UPDATE users SET title = NULL
         WHERE title = :title AND id = :id",
         id: user_id, title: group.title
@@ -55,7 +55,7 @@ class GroupUser < ActiveRecord::Base
 
   def update_title
     if group.title.present?
-      self.class.exec_sql("
+      DB.exec("
         UPDATE users SET title = :title
         WHERE (title IS NULL OR title = '') AND id = :id",
         id: user_id, title: group.title

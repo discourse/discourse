@@ -1,6 +1,6 @@
 class DropRaiseReadOnlyFunction < ActiveRecord::Migration[5.1]
   def up
-    ActiveRecord::Base.exec_sql(
+    DB.exec(
       "DROP FUNCTION IF EXISTS raise_read_only() CASCADE;"
     )
   end

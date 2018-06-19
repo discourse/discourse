@@ -53,7 +53,7 @@ describe Jobs::ToggleTopicClosed do
           user: admin
         )
 
-        freeze_time(1.hour.from_now) do
+        freeze_time(61.minutes.from_now) do
           described_class.new.execute(
             topic_timer_id: topic.public_topic_timer.id,
             state: false

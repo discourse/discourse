@@ -53,26 +53,26 @@ class TopicUser < ActiveRecord::Base
     def unwatch_categories!(user, category_ids)
       track_threshold = user.user_option.auto_track_topics_after_msecs
 
-      sql = <<SQL
-      UPDATE topic_users tu
-      SET notification_level = CASE
-        WHEN t.user_id = :user_id THEN :watching
-        WHEN total_msecs_viewed > :track_threshold AND :track_threshold >= 0 THEN :tracking
-        ELSE :regular
-      end
-      FROM topics t
-      WHERE t.id = tu.topic_id AND tu.notification_level <> :muted AND category_id IN (:category_ids) AND tu.user_id = :user_id
-SQL
+      sql = <<~SQL
+        UPDATE topic_users tu
+        SET notification_level = CASE
+          WHEN t.user_id = :user_id THEN :watching
+          WHEN total_msecs_viewed > :track_threshold AND :track_threshold >= 0 THEN :tracking
+          ELSE :regular
+        end
+        FROM topics t
+        WHERE t.id = tu.topic_id AND tu.notification_level <> :muted AND category_id IN (:category_ids) AND tu.user_id = :user_id
+      SQL
 
-     exec_sql(sql,
-                  watching: notification_levels[:watching],
-                  tracking: notification_levels[:tracking],
-                  regular: notification_levels[:regular],
-                  muted: notification_levels[:muted],
-                  category_ids: category_ids,
-                  user_id: user.id,
-                  track_threshold: track_threshold
-     )
+      DB.exec(sql,
+        watching: notification_levels[:watching],
+        tracking: notification_levels[:tracking],
+        regular: notification_levels[:regular],
+        muted: notification_levels[:muted],
+        category_ids: category_ids,
+        user_id: user.id,
+        track_threshold: track_threshold
+      )
     end
 
     # Find the information specific to a user in a forum topic
@@ -296,16 +296,15 @@ SQL
       # 86400000 = 1 day
       rows =
         if user.staff?
-          exec_sql(UPDATE_TOPIC_USER_SQL_STAFF, args).values
+          DB.query(UPDATE_TOPIC_USER_SQL_STAFF, args)
         else
-          exec_sql(UPDATE_TOPIC_USER_SQL, args).values
+          DB.query(UPDATE_TOPIC_USER_SQL, args)
         end
 
       if rows.length == 1
-        before = rows[0][1].to_i
-        after = rows[0][0].to_i
-
-        before_last_read = rows[0][2].to_i
+        before = rows[0].old_level.to_i
+        after = rows[0].notification_level.to_i
+        before_last_read = rows[0].last_read_post_number.to_i
 
         if before_last_read < post_number
           # The user read at least one new post
@@ -333,9 +332,9 @@ SQL
 
         begin
           if user.staff?
-            exec_sql(INSERT_TOPIC_USER_SQL_STAFF, args)
+            DB.exec(INSERT_TOPIC_USER_SQL_STAFF, args)
           else
-            exec_sql(INSERT_TOPIC_USER_SQL, args)
+            DB.exec(INSERT_TOPIC_USER_SQL, args)
           end
         rescue PG::UniqueViolation
           # if record is inserted between two statements this can happen
@@ -431,7 +430,7 @@ SQL
           )
 SQL
 
-    TopicUser.exec_sql(sql, user_id: user_id, count: count)
+    DB.exec(sql, user_id: user_id, count: count)
   end
 
   def self.ensure_consistency!(topic_id = nil)

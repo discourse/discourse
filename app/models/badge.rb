@@ -136,7 +136,7 @@ class Badge < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    exec_sql <<-SQL.squish
+    DB.exec <<~SQL
       DELETE FROM user_badges
             USING user_badges ub
         LEFT JOIN users u ON u.id = ub.user_id
@@ -144,7 +144,7 @@ class Badge < ActiveRecord::Base
               AND user_badges.id = ub.id
     SQL
 
-    exec_sql <<-SQL.squish
+    DB.exec <<~SQL
       WITH X AS (
           SELECT badge_id
                , COUNT(user_id) users

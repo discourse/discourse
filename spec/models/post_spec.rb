@@ -1014,7 +1014,7 @@ describe Post do
       first_baked = post.baked_at
       first_cooked = post.cooked
 
-      Post.exec_sql("UPDATE posts SET cooked = 'frogs' WHERE id = ?", post.id)
+      DB.exec("UPDATE posts SET cooked = 'frogs' WHERE id = ?", [ post.id ])
       post.reload
 
       post.expects(:publish_change_to_clients!).with(:rebaked)

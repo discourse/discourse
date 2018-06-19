@@ -6,10 +6,14 @@ class UserOption < ActiveRecord::Base
   after_save :update_tracked_topics
 
   def self.ensure_consistency!
-    exec_sql("SELECT u.id FROM users u
-              LEFT JOIN user_options o ON o.user_id = u.id
-              WHERE o.user_id IS NULL").values.each do |id, _|
-      UserOption.create(user_id: id.to_i)
+    sql = <<~SQL
+      SELECT u.id FROM users u
+      LEFT JOIN user_options o ON o.user_id = u.id
+      WHERE o.user_id IS NULL
+    SQL
+
+    DB.query_single(sql).each do |id|
+      UserOption.create(user_id: id)
     end
   end
 

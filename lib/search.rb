@@ -790,9 +790,11 @@ class Search
 
   def self.ts_query(term: , ts_config:  nil, joiner: "&", weight_filter: nil)
 
-    data = Post.exec_sql("SELECT TO_TSVECTOR(:config, :term)",
-                         config: 'simple',
-                         term: term).values[0][0]
+    data = DB.query_single(
+      "SELECT TO_TSVECTOR(:config, :term)",
+      config: 'simple',
+      term: term
+    ).first
 
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
     all_terms = data.scan(/'([^']+)'\:\d+/).flatten

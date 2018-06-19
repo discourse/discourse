@@ -76,7 +76,7 @@ module BackupRestore
   end
 
   def self.move_tables_between_schemas(source, destination)
-    User.exec_sql(move_tables_between_schemas_sql(source, destination))
+    DB.exec(move_tables_between_schemas_sql(source, destination))
   end
 
   def self.move_tables_between_schemas_sql(source, destination)
@@ -196,7 +196,7 @@ module BackupRestore
   end
 
   def self.backup_tables_count
-    User.exec_sql("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = 'backup'")[0]['count'].to_i
+    DB.query_single("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = 'backup'").first.to_i
   end
 
 end
