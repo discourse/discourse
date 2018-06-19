@@ -6,15 +6,15 @@ module Jobs
     def execute_onceoff(args)
       return unless SiteSetting.enable_badges
 
-      users = User.query <<~SQL
-        SELECT ub.user_id, MIN(granted_at) AS first_granted_at, COUNT(*)
+      users = DB.query <<~SQL
+        SELECT ub.user_id, MIN(granted_at) AS first_granted_at, COUNT(*) count
         FROM user_badges AS ub
         WHERE ub.badge_id = #{Badge::Anniversary}
         GROUP BY ub.user_id
         HAVING COUNT(ub.id) > 1
       SQL
 
-      users.to_a.each do |u|
+      users.each do |u|
         first = u.first_granted_at
         badges = UserBadge.where(
           "badge_id = ? AND user_id = ? AND granted_at > ?",
