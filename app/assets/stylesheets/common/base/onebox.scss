@@ -1,530 +1,534 @@
 a.loading-onebox {
-  background: {
-    image: image-url("spinner_96.gif");
-    position: 0;
-    size: 20px;
-    height: 25px;
-    repeat: no-repeat;
-  }
-  padding-left: 25px;
+	&:before {
+		content: "";
+		display: inline-flex;
+		float: left;
+		margin: 3px 5px 0 0;
+		position: relative;
+		height: 10px;
+		width: 10px;
+		border: 2px solid $primary-low-mid;
+		border-right-color: transparent;
+		border-radius: 50%;
+		-webkit-animation: rotate-forever 1s infinite linear;
+		animation: rotate-forever 1s infinite linear;
+	}
 }
 
 .onebox-result {
-  @include post-aside;
+	@include post-aside;
 
-  margin-top: 15px;
-  padding: 12px;
-  font-size: $font-0;
-  > .source {
-    margin-bottom: 12px;
-    margin-right: 10px;
-    display: block;
-    color: $primary;
-    position: relative;
-    height: 20px;
-    .info {
-      a {
-        color: black;
-        text-decoration: none;
-        padding-right: 10px;
-      }
-      position: absolute;
-      font-size: $font-0;
-      img.favicon {
-        margin-right: 3px;
-      }
-    }
-  }
+	margin-top: 15px;
+	padding: 12px;
+	font-size: $font-0;
+	> .source {
+		margin-bottom: 12px;
+		margin-right: 10px;
+		display: block;
+		color: $primary;
+		position: relative;
+		height: 20px;
+		.info {
+			a {
+				color: black;
+				text-decoration: none;
+				padding-right: 10px;
+			}
+			position: absolute;
+			font-size: $font-0;
+			img.favicon {
+				margin-right: 3px;
+			}
+		}
+	}
 
-  .onebox-result-body {
-    padding-top: 5px;
-    img {
-      max-height: 80%;
-      max-width: 25%;
-      height: auto;
-      float: left;
-      margin-right: 10px;
-    }
-    h3,
-    h4 {
-      margin: 0;
-    }
-    code {
-      max-height: 400px;
-    }
-    .metrics {
-      clear: both;
-      padding-bottom: 25px;
-      .metric {
-        display: inline-block;
-        padding-left: 33px;
-        float: left;
-      }
-    }
-  }
+	.onebox-result-body {
+		padding-top: 5px;
+		img {
+			max-height: 80%;
+			max-width: 25%;
+			height: auto;
+			float: left;
+			margin-right: 10px;
+		}
+		h3,
+		h4 {
+			margin: 0;
+		}
+		code {
+			max-height: 400px;
+		}
+		.metrics {
+			clear: both;
+			padding-bottom: 25px;
+			.metric {
+				display: inline-block;
+				padding-left: 33px;
+				float: left;
+			}
+		}
+	}
 }
 
 // RottenTomatoes Onebox
 .onebox-result {
-  .onebox-result-body {
-    img.verdict {
-      float: none;
-      margin-right: 7px;
-    }
-    img.popcorn {
-      float: none;
-      margin-left: 20px;
-      margin-right: 5px;
-    }
-  }
+	.onebox-result-body {
+		img.verdict {
+			float: none;
+			margin-right: 7px;
+		}
+		img.popcorn {
+			float: none;
+			margin-left: 20px;
+			margin-right: 5px;
+		}
+	}
 }
 
 @mixin onebox-favicon($class, $image) {
-  &.#{$class} .source {
-    background: image-url("favicons/#{$image}.png") no-repeat;
-    background-size: 16px 16px;
-    padding-left: 20px;
-  }
+	&.#{$class} .source {
+		background: image-url("favicons/#{$image}.png") no-repeat;
+		background-size: 16px 16px;
+		padding-left: 20px;
+	}
 }
 
 aside.onebox {
-  border: 5px solid $primary-low;
-  margin-bottom: 1em;
-  padding: 12px 25px 12px 12px;
-  font-size: $font-0;
+	border: 5px solid $primary-low;
+	margin-bottom: 1em;
+	padding: 12px 25px 12px 12px;
+	font-size: $font-0;
 
-  header {
-    margin-bottom: 8px;
-    a[href] {
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      text-decoration: none;
-    }
-  }
+	header {
+		margin-bottom: 8px;
+		a[href] {
+			color: dark-light-choose($primary-medium, $secondary-medium);
+			text-decoration: none;
+		}
+	}
 
-  @include onebox-favicon("stackexchange", "stackexchange");
-  @include onebox-favicon("twitterstatus", "twitter");
-  @include onebox-favicon("wikipedia", "wikipedia");
-  @include onebox-favicon("githubblob", "github");
-  @include onebox-favicon("githubcommit", "github");
-  @include onebox-favicon("githubpullrequest", "github");
-  @include onebox-favicon("githubissue", "github");
-  @include onebox-favicon("githubgist", "github");
-  @include onebox-favicon("amazon", "amazon");
-  @include onebox-favicon("instagram", "instagram");
-  @include onebox-favicon("googledocs", "google_branding/logo_drive_48px");
+	@include onebox-favicon("stackexchange", "stackexchange");
+	@include onebox-favicon("twitterstatus", "twitter");
+	@include onebox-favicon("wikipedia", "wikipedia");
+	@include onebox-favicon("githubblob", "github");
+	@include onebox-favicon("githubcommit", "github");
+	@include onebox-favicon("githubpullrequest", "github");
+	@include onebox-favicon("githubissue", "github");
+	@include onebox-favicon("githubgist", "github");
+	@include onebox-favicon("amazon", "amazon");
+	@include onebox-favicon("instagram", "instagram");
+	@include onebox-favicon("googledocs", "google_branding/logo_drive_48px");
 
-  .onebox-body {
-    clear: both;
+	.onebox-body {
+		clear: both;
 
-    h3,
-    h4 {
-      font-size: $font-up-1;
-      margin: 0 0 10px 0;
-    }
+		h3,
+		h4 {
+			font-size: $font-up-1;
+			margin: 0 0 10px 0;
+		}
 
-    a[href] {
-      color: dark-light-choose($tertiary, $tertiary);
-      text-decoration: none;
-    }
+		a[href] {
+			color: dark-light-choose($tertiary, $tertiary);
+			text-decoration: none;
+		}
 
-    a[href]:visited {
-      color: dark-light-choose($tertiary, $tertiary);
-    }
+		a[href]:visited {
+			color: dark-light-choose($tertiary, $tertiary);
+		}
 
-    img {
-      max-height: 170px;
-      max-width: 20%;
-      @media all and (max-width: 600px) {
-        max-width: 35%;
-      }
-      height: auto;
-      width: auto;
-      float: left;
-      margin-right: 10px;
-      &.onebox-full-image {
-        max-height: none;
-        max-width: none;
-        width: initial;
-        height: initial;
-      }
-    }
+		img {
+			max-height: 170px;
+			max-width: 20%;
+			@media all and (max-width: 600px) {
+				max-width: 35%;
+			}
+			height: auto;
+			width: auto;
+			float: left;
+			margin-right: 10px;
+			&.onebox-full-image {
+				max-height: none;
+				max-width: none;
+				width: initial;
+				height: initial;
+			}
+		}
 
-    [style*="--aspect-ratio"] > :first-child {
-      width: 100%;
-    }
-    [style*="--aspect-ratio"] > img {
-      height: auto;
-    }
+		[style*="--aspect-ratio"] > :first-child {
+			width: 100%;
+		}
+		[style*="--aspect-ratio"] > img {
+			height: auto;
+		}
 
-    // this allows us to load all onebox images without jiggle
-    // see: http://cssmojo.com/aspect-ratio-using-custom-properties-and-calc/
-    @supports (--custom: property) {
-      .aspect-image {
-        max-height: 170px;
-        --magic-ratio: calc(var(--aspect-ratio) + 0.15);
-        width: calc(128px * var(--magic-ratio));
-        max-width: 20%;
-        float: left;
-        margin-right: 10px;
-        height: auto;
+		// this allows us to load all onebox images without jiggle
+		// see: http://cssmojo.com/aspect-ratio-using-custom-properties-and-calc/
+		@supports (--custom: property) {
+			.aspect-image {
+				max-height: 170px;
+				--magic-ratio: calc(var(--aspect-ratio) + 0.15);
+				width: calc(128px * var(--magic-ratio));
+				max-width: 20%;
+				float: left;
+				margin-right: 10px;
+				height: auto;
 
-        img {
-          width: 100%;
-          height: inherit;
-          max-width: initial;
-          max-height: initial;
-          float: none;
-          margin-right: none;
-        }
-      }
+				img {
+					width: 100%;
+					height: inherit;
+					max-width: initial;
+					max-height: initial;
+					float: none;
+					margin-right: none;
+				}
+			}
 
-      // full size images for instagram, twitter, etc.
-      .aspect-image-full-size {
-        max-height: 500px;
-        width: calc(500px * var(--aspect-ratio));
-        max-width: 100%;
+			// full size images for instagram, twitter, etc.
+			.aspect-image-full-size {
+				max-height: 500px;
+				width: calc(500px * var(--aspect-ratio));
+				max-width: 100%;
 
-        img {
-          width: 100%;
-          height: inherit;
-          max-width: initial;
-          max-height: initial;
-          float: none;
-          padding: 5px 5px 5px 5px;
-        }
-      }
+				img {
+					width: 100%;
+					height: inherit;
+					max-width: initial;
+					max-height: initial;
+					float: none;
+					padding: 5px 5px 5px 5px;
+				}
+			}
 
-      [style*="--aspect-ratio"] {
-        position: relative;
-      }
-      [style*="--aspect-ratio"]::before {
-        content: "";
-        display: block;
-        padding-bottom: calc(100% / (var(--aspect-ratio)));
-      }
-      [style*="--aspect-ratio"] > :first-child {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-      }
-    }
+			[style*="--aspect-ratio"] {
+				position: relative;
+			}
+			[style*="--aspect-ratio"]::before {
+				content: "";
+				display: block;
+				padding-bottom: calc(100% / (var(--aspect-ratio)));
+			}
+			[style*="--aspect-ratio"] > :first-child {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+			}
+		}
 
-    // tighten bottom margin on last para
-    p:last-child {
-      margin-bottom: 4px;
-    }
+		// tighten bottom margin on last para
+		p:last-child {
+			margin-bottom: 4px;
+		}
 
-    // twitter fixes
-    .tweet-images {
-      display: block;
-      clear: both;
+		// twitter fixes
+		.tweet-images {
+			display: block;
+			clear: both;
 
-      img.tweet-image {
-        margin-top: 1em;
-        max-width: 100%;
-        max-height: 100%;
-        float: none;
-      }
-    }
+			img.tweet-image {
+				margin-top: 1em;
+				max-width: 100%;
+				max-height: 100%;
+				float: none;
+			}
+		}
 
-    &.user-onebox {
-      .fa {
-        margin-right: 5px;
-      }
-      .full-name,
-      .location {
-        margin-right: 10px;
-      }
-    }
+		&.user-onebox {
+			.fa {
+				margin-right: 5px;
+			}
+			.full-name,
+			.location {
+				margin-right: 10px;
+			}
+		}
 
-    // instagram fixes
-    .instagram-images {
-      clear: both;
+		// instagram fixes
+		.instagram-images {
+			clear: both;
 
-      .instagram-image {
-        padding: 5px 5px 5px 5px;
-        max-width: 100%;
-        max-height: 100%;
-        float: none;
-      }
-    }
-  }
+			.instagram-image {
+				padding: 5px 5px 5px 5px;
+				max-width: 100%;
+				max-height: 100%;
+				float: none;
+			}
+		}
+	}
 }
 
 @mixin gdocs-logo($type) {
-  &.g-#{$type}-logo {
-    background: image-url("favicons/google_branding/logo_#{$type}_48px.png")
-      no-repeat;
-  }
+	&.g-#{$type}-logo {
+		background: image-url("favicons/google_branding/logo_#{$type}_48px.png") no-repeat;
+	}
 }
 
 .googledocs-onebox-logo {
-  width: 60px;
-  height: 50px;
-  float: left;
-  @include gdocs-logo("docs");
-  @include gdocs-logo("forms");
-  @include gdocs-logo("sheets");
-  @include gdocs-logo("slides");
-  @include gdocs-logo("calendar");
-  @include gdocs-logo("drive");
+	width: 60px;
+	height: 50px;
+	float: left;
+	@include gdocs-logo("docs");
+	@include gdocs-logo("forms");
+	@include gdocs-logo("sheets");
+	@include gdocs-logo("slides");
+	@include gdocs-logo("calendar");
+	@include gdocs-logo("drive");
 }
 
 // Google Calendar Placeholder
 .gdocs-onebox-splash {
-  background-color: blend-primary-secondary(30%);
-  color: $primary;
-  border: 1px inset $primary;
-  .gdocs-onebox-logo {
-    display: inline-block;
-    width: 128px;
-    height: 128px;
-    &.g-calendar-logo {
-      background: image-url("favicons/google_branding/logo_calendar_128px.png")
-        no-repeat;
-    }
-  }
+	background-color: blend-primary-secondary(30%);
+	color: $primary;
+	border: 1px inset $primary;
+	.gdocs-onebox-logo {
+		display: inline-block;
+		width: 128px;
+		height: 128px;
+		&.g-calendar-logo {
+			background: image-url("favicons/google_branding/logo_calendar_128px.png") no-repeat;
+		}
+	}
 }
 
 aside.onebox .onebox-body .onebox-avatar {
-  max-height: none;
-  max-width: none;
-  height: 60px;
-  width: 60px;
+	max-height: none;
+	max-width: none;
+	height: 60px;
+	width: 60px;
 }
 
 blockquote {
-  aside.onebox {
-    @include post-aside;
-  }
+	aside.onebox {
+		@include post-aside;
+	}
 }
 
 // -- Onebox Github Code Blob --
 pre.onebox code ol.lines li:before {
-  position: absolute;
-  display: inline-block;
-  width: 35px;
-  left: -40px;
-  color: #afafaf;
-  text-align: right;
-  padding-right: 5px;
-  font-size: $font-down-1;
-  line-height: $line-height-large;
-  content: counter(li-counter);
-  counter-increment: li-counter;
+	position: absolute;
+	display: inline-block;
+	width: 35px;
+	left: -40px;
+	color: #afafaf;
+	text-align: right;
+	padding-right: 5px;
+	font-size: $font-down-1;
+	line-height: $line-height-large;
+	content: counter(li-counter);
+	counter-increment: li-counter;
 }
 
 pre.onebox code ol {
-  margin-left: 0;
-  line-height: $line-height-large;
+	margin-left: 0;
+	line-height: $line-height-large;
 }
 pre.onebox code {
-  background-color: dark-light-choose(#fff, #000);
+	background-color: dark-light-choose(#fff, #000);
 }
 pre.onebox code li {
-  padding-left: 5px;
+	padding-left: 5px;
 }
 
 pre.onebox code ol.lines {
-  position: relative;
-  margin: 0 0 0 40px;
+	position: relative;
+	margin: 0 0 0 40px;
 }
 
 pre.onebox code ol.lines li {
-  list-style-type: none;
-  padding-left: 5px;
-  margin-left: 0;
-  border-left: 1px solid #cfcfcf;
-  min-height: 1.5em; //show empty li lines
-  white-space: pre;
+	list-style-type: none;
+	padding-left: 5px;
+	margin-left: 0;
+	border-left: 1px solid #cfcfcf;
+	min-height: 1.5em; //show empty li lines
+	white-space: pre;
 }
 
 pre.onebox code li.selected {
-  background-color: dark-light-choose(#f8eec7, #541);
+	background-color: dark-light-choose(#f8eec7, #541);
 }
 
 pre.onebox code {
-  white-space: normal;
+	white-space: normal;
 }
 
 //Onebox - Github - Pull request
 .onebox-body .github-commit-status {
-  background: #f5f5f5;
-  border-radius: 5px;
-  margin: 0 0 5px 100px;
-  padding: 10px;
+	background: #f5f5f5;
+	border-radius: 5px;
+	margin: 0 0 5px 100px;
+	padding: 10px;
 }
 
 .onebox-body .status_tag {
-  display: inline-block;
-  color: #fff;
-  padding: 1px 4px;
-  border-radius: 3px;
-  font-weight: bold;
-  margin-bottom: 5px;
-  text-transform: capitalize;
+	display: inline-block;
+	color: #fff;
+	padding: 1px 4px;
+	border-radius: 3px;
+	font-weight: bold;
+	margin-bottom: 5px;
+	text-transform: capitalize;
 }
 
 .onebox-body .build_status {
-  padding: 2px;
-  font-size: $font-down-1;
+	padding: 2px;
+	font-size: $font-down-1;
 }
 
 .onebox-body .status_tag.open {
-  background-color: #6cc644;
+	background-color: #6cc644;
 }
 .onebox-body .status_tag.merged {
-  background-color: #6e5494;
+	background-color: #6e5494;
 }
 .onebox-body .status_tag.closed {
-  background-color: #bd2c00;
+	background-color: #bd2c00;
 }
 
 .onebox-body .github-content-right {
-  margin-left: 100px;
+	margin-left: 100px;
 }
 
 //Onebox - Twitter - Status
 aside.onebox.twitterstatus .onebox-body {
-  h4 {
-    margin-bottom: 0;
-  }
+	h4 {
+		margin-bottom: 0;
+	}
 }
 
 // thumbnail, oddly, ONLY applies to twitter avatar
 .onebox.twitterstatus {
-  .thumbnail {
-    width: 48px;
-    height: 48px;
-  }
-  p,
-  .tweet {
-    white-space: pre-wrap;
-    padding-top: 3px;
-    margin-left: 70px;
-  }
-  .date {
-    clear: left;
-    padding-top: 10px;
-  }
+	.thumbnail {
+		width: 48px;
+		height: 48px;
+	}
+	p,
+	.tweet {
+		white-space: pre-wrap;
+		padding-top: 3px;
+		margin-left: 70px;
+	}
+	.date {
+		clear: left;
+		padding-top: 10px;
+	}
 }
 
 // Onebox - Imgur - Album
 .onebox.imgur-album {
-  .outer-box {
-    position: absolute;
-    z-index: z("base");
-    overflow: hidden;
-    font-size: $font-down-1;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.6);
-    text-overflow: ellipsis;
-    max-width: 100%;
-    padding: 5px 0;
+	.outer-box {
+		position: absolute;
+		z-index: z("base");
+		overflow: hidden;
+		font-size: $font-down-1;
+		color: #fff;
+		background-color: rgba(0, 0, 0, 0.6);
+		text-overflow: ellipsis;
+		max-width: 100%;
+		padding: 5px 0;
 
-    .inner-box {
-      padding-left: 10px;
-      padding-right: 10px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      word-wrap: normal;
-      white-space: nowrap;
+		.inner-box {
+			padding-left: 10px;
+			padding-right: 10px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-wrap: normal;
+			white-space: nowrap;
 
-      .album-title {
-        width: 100%;
-        font-size: $font-up-1;
-        line-height: $line-height-large;
-        color: #ccc;
-        text-decoration: none;
-      }
-    }
-  }
+			.album-title {
+				width: 100%;
+				font-size: $font-up-1;
+				line-height: $line-height-large;
+				color: #ccc;
+				text-decoration: none;
+			}
+		}
+	}
 }
 
 // resize stackexchange onebox image
 aside.onebox.stackexchange .onebox-body {
-  img:not(.onebox-avatar) {
-    max-height: 60%;
-    max-width: 10%;
-  }
+	img:not(.onebox-avatar) {
+		max-height: 60%;
+		max-width: 10%;
+	}
 
-  .tags {
-    color: gray;
-  }
+	.tags {
+		color: gray;
+	}
 }
 
 .onebox-metadata {
-  color: dark-light-choose($primary-medium, $secondary-medium);
+	color: dark-light-choose($primary-medium, $secondary-medium);
 }
 
 .onebox.xkcd .onebox-body {
-  img {
-    max-width: 100% !important;
-    float: none !important;
-  }
+	img {
+		max-width: 100% !important;
+		float: none !important;
+	}
 }
 
 // pdf onebox
 .onebox.pdf .onebox-body {
-  .pdf-onebox-logo {
-    width: 60px;
-    height: 50px;
-    float: left;
-    background: image-url("favicons/pdf_64px.png") no-repeat;
-    background-size: 48px 48px;
-    display: inline-block;
-  }
-  .filesize {
-    color: gray;
-  }
+	.pdf-onebox-logo {
+		width: 60px;
+		height: 50px;
+		float: left;
+		background: image-url("favicons/pdf_64px.png") no-repeat;
+		background-size: 48px 48px;
+		display: inline-block;
+	}
+	.filesize {
+		color: gray;
+	}
 }
 
 // whitelistedgeneric twitter labels
 .onebox.whitelistedgeneric {
-  .label1,
-  .label2 {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-  .label1 {
-    float: left;
-  }
-  .label2 {
-    float: right;
-  }
+	.label1,
+	.label2 {
+		color: dark-light-choose($primary-medium, $secondary-medium);
+	}
+	.label1 {
+		float: left;
+	}
+	.label2 {
+		float: right;
+	}
 }
 
 .onebox {
-  &.whitelistedgeneric,
-  &.gfycat {
-    .site-icon {
-      width: 16px;
-      height: 16px;
-      margin-right: 3px;
-    }
-  }
+	&.whitelistedgeneric,
+	&.gfycat {
+		.site-icon {
+			width: 16px;
+			height: 16px;
+			margin-right: 3px;
+		}
+	}
 }
 
 .onebox.gfycat p {
-  span.label1 a {
-    white-space: nowrap;
-  }
+	span.label1 a {
+		white-space: nowrap;
+	}
 }
 
 .onebox.instagram {
-  div.instagram-description {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    padding-top: 10px;
-  }
+	div.instagram-description {
+		color: dark-light-choose($primary-medium, $secondary-medium);
+		padding-top: 10px;
+	}
 }
 
 .onebox.githubcommit {
-  pre.message {
-    padding: 0;
-  }
+	pre.message {
+		padding: 0;
+	}
 }
 
 // mobile specific style
 .mobile-view article.onebox-body {
-  border-top: none;
+	border-top: none;
 }
