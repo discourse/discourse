@@ -1081,7 +1081,7 @@ ro:
     delete_user_max_post_age: "Nu permite ștergerea utilizatorilor a căror prima postare e mai veche de (x) de zile."
     delete_all_posts_max: "Numărul maxim de postări ce pot fi șterse deodată folosind butonul șterge toate postările. Dacă un utilizator are mai multe postări decât această valoare, postările sale nu pot fi șterse dintr-o dată și utilizatorul nu poate fi șters."
     email_editable: "Permite utilizatorilor să își schimbe adresa de email după înregistrare."
-    logout_redirect: "URL-ul spre care să fie redirecționat browserul după ieșire (ex: http://somesite.com/logout)"
+    logout_redirect: "URL-ul spre care să fie redirecționat browserul după ieșire (ex: http://example.com/logout)"
     allow_uploaded_avatars: "Permite utilizatorilor să încarce o poză de profil personalizate."
     allow_animated_avatars: "Permite utilizatorilor să folosească gif-uri animate în pozele de profil. ATENȚIE: după schimbarea acestei opțiuni trebuie să lansezi un rake task specific, respectiv - avatars:refresh "
     allow_animated_thumbnails: "Generează thumbnails animate pentru gif-uri animate."

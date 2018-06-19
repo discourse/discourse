@@ -857,15 +857,15 @@ describe PrettyText do
       expect(cooked).to include(element)
     end
 
-    cooked = PrettyText.cook("[`a` #known::tag here](http://somesite.com)")
+    cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)")
 
     html = <<~HTML
-      <p><a href="http://somesite.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
+      <p><a href="http://example.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
 
-    cooked = PrettyText.cook("<a href='http://somesite.com'>`a` #known::tag here</a>")
+    cooked = PrettyText.cook("<a href='http://example.com'>`a` #known::tag here</a>")
 
     expect(cooked).to eq(html.strip)
 

@@ -942,12 +942,12 @@ describe Post do
   end
 
   describe "has_host_spam" do
-    let(:raw) { "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
+    let(:raw) { "hello from my site http://www.example.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
 
     it "correctly detects host spam" do
       post = Fabricate(:post, raw: raw)
 
-      expect(post.total_hosts_usage).to eq("www.somesite.com" => 1)
+      expect(post.total_hosts_usage).to eq("www.example.com" => 1)
       post.acting_user.trust_level = 0
 
       expect(post.has_host_spam?).to eq(false)
@@ -956,7 +956,7 @@ describe Post do
 
       expect(post.has_host_spam?).to eq(true)
 
-      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
+      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | example.com "
       expect(post.has_host_spam?).to eq(false)
     end
 

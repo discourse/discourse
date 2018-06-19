@@ -1097,7 +1097,7 @@ ko:
     delete_user_max_post_age: "(x)일 이전의 첫 글가 있는 유저는 삭제할 수 없음."
     delete_all_posts_max: "전체 글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 글 수. 만약 사용자가 이것보다 많은 글을 가지고 있으면 한번에 삭제 할 수 없다."
     email_editable: "가입 후 이메일 주소 변경 허용"
-    logout_redirect: "로그아웃 후에 리디렉션할 위치 (예: http://somesite.com/logout)"
+    logout_redirect: "로그아웃 후에 리디렉션할 위치 (예: http://example.com/logout)"
     allow_uploaded_avatars: "사용자가 커스텀 프로필 사진을 올릴 수 있도록 허용."
     allow_animated_avatars: "사용자가 프로필 사진으로 애니메이션 GIF 파일을 올릴 수 있도록 허용. 경고: 이 설정을 바꾼 후  avatars:refresh rake task 를 실행."
     allow_animated_thumbnails: "움직이는 gif로 썸네일을 만듭니다."
