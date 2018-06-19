@@ -94,7 +94,7 @@ createWidget("user-menu-links", {
     });
 
     return h("ul.menu-links-row", [
-      links.map(l => h("li", this.attach("link", l))),
+      links.map(l => h("li.user", this.attach("link", l))),
       h(
         "li.glyphs",
         glyphs.map(l => this.attach("link", $.extend(l, { hideLabel: true })))

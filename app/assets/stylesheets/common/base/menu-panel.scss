@@ -341,13 +341,18 @@ div.menu-links-header {
   border-collapse: separate;
   border-spacing: 0 0.5em;
   .menu-links-row {
-    display: table-row;
-    li.glyphs {
-      text-align: right;
-      a {
-        display: inline-flex;
-        min-width: 15px;
-        justify-content: center;
+    display: flex;
+    li {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      &.user {
+        margin-right: auto;
+      }
+      &.glyphs {
+        flex-wrap: wrap;
+        text-align: right;
+        max-width: 65%; //IE11
       }
     }
   }
@@ -357,7 +362,7 @@ div.menu-links-header {
     outline: none;
   }
   a {
-    padding: 0.5em;
+    padding: 0.3em 0.5em;
   }
   a.user-activity-link {
     max-width: 150px;
@@ -366,6 +371,9 @@ div.menu-links-header {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: -0.5em 0;
+    @media screen and (max-width: 350px) {
+      max-width: 125px;
+    }
   }
   li {
     display: table-cell;
