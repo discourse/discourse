@@ -3843,7 +3843,7 @@ en:
             description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px."
           apple_touch_icon_url:
             label: "Large Icon"
-            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 144px by 144px."
+            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 512px by 512px."
 
       homepage:
         description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
