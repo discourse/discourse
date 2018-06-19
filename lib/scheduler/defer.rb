@@ -62,7 +62,6 @@ module Scheduler
 
     # using non_block to match Ruby #deq
     def do_work(non_block = false)
-      return unless @queue.size > 0
       db, job, desc = @queue.deq(non_block)
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
