@@ -296,7 +296,7 @@ class Group < ActiveRecord::Base
         "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
       end
 
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       DELETE FROM group_users
             USING (#{remove_subquery}) X
             WHERE group_id = #{group.id}
@@ -318,7 +318,7 @@ class Group < ActiveRecord::Base
         "SELECT id FROM users WHERE id > 0"
       end
 
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       INSERT INTO group_users (group_id, user_id, created_at, updated_at)
            SELECT #{group.id}, X.id, now(), now()
              FROM group_users
@@ -341,7 +341,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.reset_all_counters!
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       WITH X AS (
           SELECT group_id
                , COUNT(user_id) users
@@ -362,7 +362,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.refresh_has_messages!
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       UPDATE groups g SET has_messages = false
       WHERE NOT EXISTS (SELECT tg.id
                           FROM topic_allowed_groups tg
@@ -534,7 +534,7 @@ class Group < ActiveRecord::Base
       )
       SQL
 
-      Group.exec_sql(sql, group_id: self.id, user_ids: user_ids)
+      DB.exec(sql, group_id: self.id, user_ids: user_ids)
 
       user_attributes = {}
 
@@ -551,7 +551,7 @@ class Group < ActiveRecord::Base
       end
 
       # update group user count
-      Group.exec_sql <<-SQL.squish
+      DB.exec <<~SQL
         UPDATE groups g
         SET user_count =
           (SELECT COUNT(gu.user_id)
@@ -605,9 +605,10 @@ class Group < ActiveRecord::Base
       name_lower = self.name.downcase
 
       if self.will_save_change_to_name? && self.name_was&.downcase != name_lower
-        existing = Group.exec_sql(
+
+        existing = DB.exec(
           User::USERNAME_EXISTS_SQL, username: name_lower
-        ).values.present?
+        ) > 0
 
         if existing
           errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
@@ -649,15 +650,15 @@ class Group < ActiveRecord::Base
     return if new_record? && !self.title.present?
 
     if self.saved_change_to_title?
-      sql = <<-SQL.squish
-          UPDATE users
-             SET title = :title
-           WHERE (title = :title_was OR title = '' OR title IS NULL)
-             AND COALESCE(title,'') <> COALESCE(:title,'')
-             AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
-        SQL
+      sql = <<~SQL
+        UPDATE users
+           SET title = :title
+         WHERE (title = :title_was OR title = '' OR title IS NULL)
+           AND COALESCE(title,'') <> COALESCE(:title,'')
+           AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
+      SQL
 
-      self.class.exec_sql(sql, title: title, title_was: title_before_last_save, id: id)
+      DB.exec(sql, title: title, title_was: title_before_last_save, id: id)
     end
   end
 
@@ -666,18 +667,19 @@ class Group < ActiveRecord::Base
 
     if self.saved_change_to_primary_group?
       sql = <<~SQL
-          UPDATE users
-          /*set*/
-          /*where*/
-        SQL
+        UPDATE users
+        /*set*/
+        /*where*/
+      SQL
 
-      builder = SqlBuilder.new(sql)
-      builder.where("
-            id IN (
-              SELECT user_id
-              FROM group_users
-              WHERE group_id = :id
-            )", id: id)
+      builder = DB.build(sql)
+      builder.where(<<~SQL, id: id)
+        id IN (
+          SELECT user_id
+          FROM group_users
+          WHERE group_id = :id
+        )
+      SQL
 
       if primary_group
         builder.set("primary_group_id = :id")

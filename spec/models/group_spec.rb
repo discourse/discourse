@@ -406,7 +406,7 @@ describe Group do
     user = Fabricate(:user)
     user.change_trust_level!(TrustLevel[2])
 
-    Group.exec_sql("UPDATE groups SET user_count = 0 WHERE id = #{Group::AUTO_GROUPS[:trust_level_2]}")
+    DB.exec("UPDATE groups SET user_count = 0 WHERE id = #{Group::AUTO_GROUPS[:trust_level_2]}")
 
     Group.refresh_automatic_groups!
 

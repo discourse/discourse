@@ -11,11 +11,11 @@ describe Migration::TableDropper do
             table_name = '#{table_name}'
     SQL
 
-    ActiveRecord::Base.exec_sql(sql).to_a.length > 0
+    DB.exec(sql) > 0
   end
 
   def update_first_migration_date(created_at)
-    ActiveRecord::Base.exec_sql(<<~SQL, created_at: created_at)
+    DB.exec(<<~SQL, created_at: created_at)
         UPDATE schema_migration_details
         SET created_at = :created_at
         WHERE id = (SELECT MIN(id)
@@ -24,19 +24,17 @@ describe Migration::TableDropper do
   end
 
   def create_new_table
-    ActiveRecord::Base.exec_sql "CREATE TABLE table_with_new_name (topic_id INTEGER)"
+    DB.exec "CREATE TABLE table_with_new_name (topic_id INTEGER)"
   end
 
   let(:migration_name) do
-    ActiveRecord::Base
-      .exec_sql("SELECT name FROM schema_migration_details ORDER BY id DESC LIMIT 1")
-      .getvalue(0, 0)
+    DB.query_single("SELECT name FROM schema_migration_details ORDER BY id DESC LIMIT 1").first
   end
 
   before do
-    ActiveRecord::Base.exec_sql "CREATE TABLE table_with_old_name (topic_id INTEGER)"
+    DB.exec "CREATE TABLE table_with_old_name (topic_id INTEGER)"
 
-    ActiveRecord::Base.exec_sql(<<~SQL, name: migration_name, created_at: 15.minutes.ago)
+    DB.exec(<<~SQL, name: migration_name, created_at: 15.minutes.ago)
       UPDATE schema_migration_details
       SET created_at = :created_at
       WHERE name = :name

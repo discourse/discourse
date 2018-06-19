@@ -12,7 +12,7 @@ module Migration
     def self.mark_readonly(table_name, column_name)
       create_readonly_function(table_name, column_name)
 
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
         CREATE TRIGGER #{readonly_trigger_name(table_name, column_name)}
         BEFORE INSERT OR UPDATE OF #{column_name}
         ON #{table_name}
@@ -51,13 +51,13 @@ module Migration
 
     def execute_drop!
       @columns.each do |column|
-        ActiveRecord::Base.exec_sql <<~SQL
+        DB.exec <<~SQL
           DROP TRIGGER IF EXISTS #{BaseDropper.readonly_trigger_name(@table, column)} ON #{@table};
           DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(@table, column)} CASCADE;
         SQL
 
         # safe cause it is protected on method entry, can not be passed in params
-        ActiveRecord::Base.exec_sql("ALTER TABLE #{@table} DROP COLUMN IF EXISTS #{column}")
+        DB.exec("ALTER TABLE #{@table} DROP COLUMN IF EXISTS #{column}")
       end
     end
   end

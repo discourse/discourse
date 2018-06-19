@@ -11,7 +11,7 @@ class QuotedPost < ActiveRecord::Base
 
     uniq = {}
 
-    exec_sql("DELETE FROM quoted_posts WHERE post_id = :post_id", post_id: post.id)
+    DB.exec("DELETE FROM quoted_posts WHERE post_id = :post_id", post_id: post.id)
 
     doc.css("aside.quote[data-topic]").each do |a|
       topic_id = a['data-topic'].to_i
@@ -23,7 +23,7 @@ class QuotedPost < ActiveRecord::Base
 
       begin
         # It would be so much nicer if we used post_id in quotes
-        exec_sql(<<~SQL, post_id: post.id, post_number: post_number, topic_id: topic_id)
+        DB.exec(<<~SQL, post_id: post.id, post_number: post_number, topic_id: topic_id)
           INSERT INTO quoted_posts (post_id, quoted_post_id, created_at, updated_at)
             SELECT :post_id, p.id, current_timestamp, current_timestamp
             FROM posts p

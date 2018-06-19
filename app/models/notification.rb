@@ -19,10 +19,10 @@ class Notification < ActiveRecord::Base
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]
 
   def self.ensure_consistency!
-    Notification.exec_sql <<-SQL
+    DB.exec(<<~SQL, Notification.types[:private_message])
       DELETE
         FROM notifications n
-       WHERE notification_type = #{Notification.types[:private_message]}
+       WHERE notification_type = ?
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -152,17 +152,15 @@ class Notification < ActiveRecord::Base
 
     if notifications.present?
 
-      ids = Notification.exec_sql("
+      ids = DB.query_single(<<~SQL, count.to_i)
          SELECT n.id FROM notifications n
          WHERE
            n.notification_type = 6 AND
            n.user_id = #{user.id.to_i} AND
            NOT read
         ORDER BY n.id ASC
-        LIMIT #{count.to_i}
-      ").values.map do |x, _|
-        x.to_i
-      end
+        LIMIT ?
+      SQL
 
       if ids.length > 0
         notifications += user

@@ -1,7 +1,7 @@
 class MakePostNumberDistinct < ActiveRecord::Migration[4.2]
   def up
 
-    Topic.exec_sql('update posts p
+    DB.exec('update posts p
 set post_number = calc
 from
 (

@@ -48,7 +48,7 @@ Migration::ColumnDropper.drop(
   },
   on_drop: ->() {
     STDERR.puts "Removing superflous user stats columns!"
-    ActiveRecord::Base.exec_sql "DROP FUNCTION IF EXISTS first_unread_topic_for(int)"
+    DB.exec "DROP FUNCTION IF EXISTS first_unread_topic_for(int)"
   }
 )
 

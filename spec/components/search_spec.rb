@@ -895,7 +895,7 @@ describe Search do
     str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
     ts_query = Search.ts_query(term: str, ts_config: "simple")
-    Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
+    DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query)
   end
 
   context '#word_to_date' do

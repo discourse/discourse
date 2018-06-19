@@ -194,16 +194,18 @@ class PostAlerter
   }
 
   def group_stats(topic)
+    sql = <<~SQL
+      SELECT COUNT(*) FROM topics t
+      JOIN topic_allowed_groups g ON g.group_id = :group_id AND g.topic_id = t.id
+      LEFT JOIN group_archived_messages a ON a.topic_id = t.id AND a.group_id = g.group_id
+      WHERE a.id IS NULL AND t.deleted_at is NULL AND t.archetype = 'private_message'
+    SQL
+
     topic.allowed_groups.map do |g|
       {
         group_id: g.id,
         group_name: g.name.downcase,
-        inbox_count: Topic.exec_sql(
-        "SELECT COUNT(*) FROM topics t
-         JOIN topic_allowed_groups g ON g.group_id = :group_id AND g.topic_id = t.id
-         LEFT JOIN group_archived_messages a ON a.topic_id = t.id AND a.group_id = g.group_id
-         WHERE a.id IS NULL AND t.deleted_at is NULL AND t.archetype = 'private_message'",
-          group_id: g.id).values[0][0].to_i
+        inbox_count: DB.query_single(sql, group_id: g.id).first.to_i
       }
     end
   end

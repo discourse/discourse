@@ -77,7 +77,7 @@ class Admin::UsersController < Admin::AdminController
         )
     SQL
 
-    UserHistory.exec_sql(
+    DB.exec(
       sql,
       UserHistory.actions.slice(
         :silence_user,

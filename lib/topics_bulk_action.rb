@@ -72,7 +72,7 @@ class TopicsBulkAction
     WHERE t.id = tu.topic_id AND tu.user_id = :user_id AND t.id IN (:topic_ids)
     "
 
-    Topic.exec_sql(sql, user_id: @user.id, topic_ids: @topic_ids)
+    DB.exec(sql, user_id: @user.id, topic_ids: @topic_ids)
     @changed_ids.concat @topic_ids
   end
 

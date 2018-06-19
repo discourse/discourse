@@ -182,10 +182,8 @@ EOM
         next if user_ids_in_group.size == 0
         values = user_ids_in_group.map { |user_id| "(#{group.id}, #{user_id}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)" }.join(",")
 
-        User.exec_sql <<-SQL
-          BEGIN;
-          INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values};
-          COMMIT;
+        DB.exec <<~SQL
+          INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values}
         SQL
 
         Group.reset_counters(group.id, :group_users)
@@ -634,7 +632,7 @@ EOM
       WHERE id IN (SELECT topic_id FROM closed_topic_ids)
     SQL
 
-    Topic.exec_sql(sql, closed_topic_ids)
+    DB.exec(sql, closed_topic_ids)
   end
 
   def post_process_posts

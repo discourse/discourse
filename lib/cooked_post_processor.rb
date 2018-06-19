@@ -73,7 +73,7 @@ class CookedPostProcessor
     PostUpload.transaction do
       PostUpload.where(post_id: @post.id).delete_all
       if upload_ids.size > 0
-        PostUpload.exec_sql("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
+        DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
       end
     end
   end

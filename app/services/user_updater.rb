@@ -143,17 +143,18 @@ class UserUpdater
       MutedUser.where('user_id = ? AND muted_user_id not in (?)', user.id, desired_ids).destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
-      MutedUser.exec_sql("INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
-                          SELECT :user_id, id, :now, :now
-                          FROM users
-                          WHERE
-                            id in (:desired_ids) AND
-                            id NOT IN (
-                              SELECT muted_user_id
-                              FROM muted_users
-                              WHERE user_id = :user_id
-                            )",
-                          now: Time.now, user_id: user.id, desired_ids: desired_ids)
+      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
+        INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
+        SELECT :user_id, id, :now, :now
+        FROM users
+        WHERE
+          id in (:desired_ids) AND
+          id NOT IN (
+            SELECT muted_user_id
+            FROM muted_users
+            WHERE user_id = :user_id
+          )
+      SQL
     end
   end
 

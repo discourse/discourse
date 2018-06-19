@@ -208,7 +208,7 @@ class User < ActiveRecord::Base
   def self.username_available?(username, email = nil)
     lower = username.downcase
     return false if reserved_username?(lower)
-    return true  if User.exec_sql(User::USERNAME_EXISTS_SQL, username: lower).count == 0
+    return true  if DB.exec(User::USERNAME_EXISTS_SQL, username: lower) == 0
 
     # staged users can use the same username since they will take over the account
     email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
@@ -387,7 +387,8 @@ class User < ActiveRecord::Base
            AND NOT read
     SQL
 
-    User.exec_sql(sql, user_id: id, type: notification_type).getvalue(0, 0).to_i
+    # to avoid coalesce we do to_i
+    DB.query_single(sql, user_id: id, type: notification_type)[0].to_i
   end
 
   def unread_private_messages
@@ -408,11 +409,11 @@ class User < ActiveRecord::Base
              AND NOT read
       SQL
 
-      User.exec_sql(sql,
+      DB.query_single(sql,
         user_id: id,
         seen_notification_id: seen_notification_id,
         pm:  Notification.types[:private_message]
-    ).getvalue(0, 0).to_i
+    )[0].to_i
     end
   end
 
@@ -446,7 +447,7 @@ class User < ActiveRecord::Base
     notification = notifications.visible.order('notifications.id desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
-    sql = "
+    sql = (<<~SQL).freeze
        SELECT * FROM (
          SELECT n.id, n.read FROM notifications n
          LEFT JOIN topics t ON n.topic_id = t.id
@@ -469,13 +470,13 @@ class User < ActiveRecord::Base
        ORDER BY n.id DESC
        LIMIT 20
       ) AS y
-    "
+    SQL
 
-    recent = User.exec_sql(sql,
+    recent = DB.query(sql,
       user_id: id,
       type: Notification.types[:private_message]
-    ).values.map! do |id, read|
-      [id.to_i, read]
+    ).map! do |r|
+      [r.id, r.read]
     end
 
     payload = {
@@ -1155,12 +1156,12 @@ class User < ActiveRecord::Base
   end
 
   USERNAME_EXISTS_SQL = <<~SQL
-  (SELECT users.id AS user_id FROM users
+  (SELECT users.id AS id, true as is_user FROM users
   WHERE users.username_lower = :username)
 
   UNION ALL
 
-  (SELECT groups.id AS group_id FROM groups
+  (SELECT groups.id, false as is_user FROM groups
   WHERE lower(groups.name) = :username)
   SQL
 
@@ -1168,11 +1169,14 @@ class User < ActiveRecord::Base
     username_format_validator || begin
       lower = username.downcase
 
-      existing = User.exec_sql(
+      existing = DB.query(
         USERNAME_EXISTS_SQL, username: lower
-      ).to_a.first
+      )
 
-      if will_save_change_to_username? && existing.present? && existing["user_id"] != self.id
+      user_id = existing.select { |u| u.is_user }.first&.id
+      same_user = user_id && user_id == self.id
+
+      if will_save_change_to_username? && existing.present? && !same_user
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end
@@ -1200,7 +1204,7 @@ class User < ActiveRecord::Base
     end
 
     if values.present?
-      exec_sql("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
+      DB.exec("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
     end
   end
 

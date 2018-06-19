@@ -176,6 +176,7 @@ GEM
     mini_portile2 (2.3.0)
     mini_racer (0.1.15)
       libv8 (~> 6.3)
+    mini_sql (0.1.4)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
     minitest (5.11.3)
@@ -240,7 +241,7 @@ GEM
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)
-    pg (0.21.0)
+    pg (1.0.0)
     powerpack (0.1.1)
     progress (3.4.0)
     pry (0.10.4)
@@ -453,6 +454,7 @@ DEPENDENCIES
   message_bus
   mini_mime
   mini_racer
+  mini_sql
   mini_suffix
   minitest
   mocha
@@ -471,7 +473,7 @@ DEPENDENCIES
   omniauth-twitter
   onebox (= 1.8.48)
   openid-redis-store
-  pg (~> 0.21.0)
+  pg
   pry-nav
   pry-rails
   puma

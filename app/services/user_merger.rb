@@ -89,11 +89,13 @@ class UserMerger
             limit_reached = EXCLUDED.limit_reached
     SQL
 
-    GivenDailyLike.exec_sql(sql,
-                            source_user_id: @source_user.id,
-                            target_user_id: @target_user.id,
-                            max_likes_per_day: SiteSetting.max_likes_per_day,
-                            action_type_id: PostActionType.types[:like])
+    DB.exec(
+      sql,
+      source_user_id: @source_user.id,
+      target_user_id: @target_user.id,
+      max_likes_per_day: SiteSetting.max_likes_per_day,
+      action_type_id: PostActionType.types[:like]
+    )
   end
 
   def merge_post_timings
@@ -107,7 +109,7 @@ class UserMerger
             AND t.topic_id = s.topic_id AND t.post_number = s.post_number
     SQL
 
-    PostTiming.exec_sql(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
   end
 
   def merge_user_visits
@@ -123,7 +125,7 @@ class UserMerger
             AND t.visited_at = s.visited_at
     SQL
 
-    UserVisit.exec_sql(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
   end
 
   def update_site_settings
@@ -136,7 +138,7 @@ class UserMerger
 
   def update_user_stats
     # topics_entered
-    UserStat.exec_sql(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, target_user_id: @target_user.id)
       UPDATE user_stats
       SET topics_entered = (
         SELECT COUNT(topic_id)
@@ -147,7 +149,7 @@ class UserMerger
     SQL
 
     # time_read and days_visited
-    UserStat.exec_sql(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, target_user_id: @target_user.id)
       UPDATE user_stats
       SET time_read  = COALESCE(x.time_read, 0),
         days_visited = COALESCE(x.days_visited, 0)
@@ -162,7 +164,7 @@ class UserMerger
     SQL
 
     # posts_read_count
-    UserStat.exec_sql(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, target_user_id: @target_user.id)
       UPDATE user_stats
       SET posts_read_count = (
         SELECT COUNT(1)
@@ -176,7 +178,7 @@ class UserMerger
     SQL
 
     # likes_given, likes_received, new_since, read_faq, first_post_created_at
-    UserStat.exec_sql(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE user_stats AS t
       SET likes_given         = t.likes_given + s.likes_given,
         likes_received        = t.likes_received + s.likes_received,
@@ -189,7 +191,7 @@ class UserMerger
   end
 
   def merge_user_attributes
-    User.exec_sql(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE users AS t
       SET created_at              = LEAST(t.created_at, s.created_at),
         updated_at                = LEAST(t.updated_at, s.updated_at),
@@ -213,7 +215,7 @@ class UserMerger
       WHERE t.id = :target_user_id AND s.id = :source_user_id
     SQL
 
-    UserProfile.exec_sql(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE user_profiles AS t
       SET location           = COALESCE(t.location, s.location),
         website              = COALESCE(t.website, s.website),

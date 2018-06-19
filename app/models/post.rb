@@ -669,17 +669,19 @@ class Post < ActiveRecord::Base
   end
 
   def reply_history(max_replies = 100, guardian = nil)
-    post_ids = Post.exec_sql("WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
-                              SELECT p.id, p.reply_to_post_number FROM posts AS p
-                                WHERE p.id = :post_id
-                              UNION
-                                 SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
-                                   WHERE breadcrumb.reply_to_post_number = p.post_number
-                                     AND p.topic_id = :topic_id
-                            ) SELECT id from breadcrumb ORDER by id", post_id: id, topic_id: topic_id).to_a
-
-    post_ids.map! { |r| r['id'].to_i }
-      .reject! { |post_id| post_id == id }
+    post_ids = DB.query_single(<<~SQL, post_id: id, topic_id: topic_id)
+    WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
+          SELECT p.id, p.reply_to_post_number FROM posts AS p
+            WHERE p.id = :post_id
+          UNION
+             SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
+               WHERE breadcrumb.reply_to_post_number = p.post_number
+                 AND p.topic_id = :topic_id
+        )
+    SELECT id from breadcrumb
+    WHERE id <> :post_id
+    ORDER by id
+    SQL
 
     # [1,2,3][-10,-1] => nil
     post_ids = (post_ids[(0 - max_replies)..-1] || post_ids)
@@ -741,11 +743,11 @@ class Post < ActiveRecord::Base
   def self.rebake_all_quoted_posts(user_id)
     return if user_id.blank?
 
-    Post.exec_sql <<-SQL
+    DB.exec(<<~SQL, user_id)
       WITH user_quoted_posts AS (
         SELECT post_id
           FROM quoted_posts
-         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = #{user_id})
+         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = ?)
       )
       UPDATE posts
          SET baked_version = NULL

@@ -36,7 +36,7 @@ unless Rails.env.test?
         end
 
         # Reset topic count because we don't count the description topic
-        Category.exec_sql "UPDATE categories SET topic_count = 0 WHERE id = #{lounge.id}"
+        DB.exec "UPDATE categories SET topic_count = 0 WHERE id = #{lounge.id}"
       end
     end
   end

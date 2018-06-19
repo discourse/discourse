@@ -19,7 +19,7 @@ class CategoryTagStat < ActiveRecord::Base
       SQL
 
       tag_ids = topic.tags.map(&:id)
-      updated_tag_ids = self.exec_sql(sql, tag_ids: tag_ids, category_id: to_category_id).map { |row| row['tag_id'] }
+      updated_tag_ids = DB.query_single(sql, tag_ids: tag_ids, category_id: to_category_id)
 
       (tag_ids - updated_tag_ids).each do |tag_id|
         CategoryTagStat.create!(tag_id: tag_id, category_id: to_category_id, topic_count: 1)
@@ -41,7 +41,7 @@ class CategoryTagStat < ActiveRecord::Base
 
   # Recalculate all topic counts if they got out of sync
   def self.update_topic_counts
-    CategoryTagStat.exec_sql <<~SQL
+    DB.exec <<~SQL
       UPDATE category_tag_stats stats
       SET topic_count = x.topic_count
       FROM (

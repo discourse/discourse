@@ -340,7 +340,7 @@ SQL
   def self.copy(original_post, target_post)
     cols_to_copy = (column_names - %w{id post_id}).join(', ')
 
-    exec_sql <<~SQL
+    DB.exec <<~SQL
     INSERT INTO post_actions(post_id, #{cols_to_copy})
     SELECT #{target_post.id}, #{cols_to_copy}
     FROM post_actions
@@ -425,26 +425,29 @@ SQL
   # Returns the flag counts for a post, taking into account that some users
   # can weigh flags differently.
   def self.flag_counts_for(post_id)
-    flag_counts = exec_sql("SELECT SUM(CASE
-                                         WHEN pa.disagreed_at IS NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
-                                         WHEN pa.disagreed_at IS NULL AND NOT pa.staff_took_action THEN 1
-                                         ELSE 0
-                                       END) AS new_flags,
-                                   SUM(CASE
-                                         WHEN pa.disagreed_at IS NOT NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
-                                         WHEN pa.disagreed_at IS NOT NULL AND NOT pa.staff_took_action THEN 1
-                                         ELSE 0
-                                       END) AS old_flags
-                            FROM post_actions AS pa
-                              INNER JOIN users AS u ON u.id = pa.user_id
-                            WHERE pa.post_id = :post_id
-                              AND pa.post_action_type_id IN (:post_action_types)
-                              AND pa.deleted_at IS NULL",
-                            post_id: post_id,
-                            post_action_types: PostActionType.auto_action_flag_types.values,
-                            flags_required_to_hide_post: SiteSetting.flags_required_to_hide_post).first
+    params = {
+      post_id: post_id,
+      post_action_types: PostActionType.auto_action_flag_types.values,
+      flags_required_to_hide_post: SiteSetting.flags_required_to_hide_post
+    }
 
-    [flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i]
+    DB.query_single(<<~SQL, params)
+      SELECT COALESCE(SUM(CASE
+                 WHEN pa.disagreed_at IS NOT NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                 WHEN pa.disagreed_at IS NOT NULL AND NOT pa.staff_took_action THEN 1
+                 ELSE 0
+               END),0) AS old_flags,
+            COALESCE(SUM(CASE
+                 WHEN pa.disagreed_at IS NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                 WHEN pa.disagreed_at IS NULL AND NOT pa.staff_took_action THEN 1
+                 ELSE 0
+               END), 0) AS new_flags
+    FROM post_actions AS pa
+      INNER JOIN users AS u ON u.id = pa.user_id
+    WHERE pa.post_id = :post_id
+      AND pa.post_action_type_id in (:post_action_types)
+      AND pa.deleted_at IS NULL
+    SQL
   end
 
   def post_action_type_key
