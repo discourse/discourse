@@ -144,7 +144,7 @@ class Validators::PostValidator < ActiveModel::Validator
   private
 
   def acting_user_is_trusted?(post, level = 1)
-    post.acting_user.present? && (post.acting_user.has_trust_level?(TrustLevel[level]) || post.acting_user.from_staged?)
+    post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[level])
   end
 
   def private_message?(post)
