@@ -4,9 +4,9 @@ Are you having trouble setting up Discourse? Here are some basic things to check
 reaching out to the community for help:
 
 
-1. Are you running Ruby 2.0 or later?
+1. Are you running Ruby 2.4 or later?
 
-   Discourse is designed for Ruby 2.0 or later. We recommend 2.0.0 p353 or later. You can check your version by typing
+   Discourse is designed for Ruby 2.4 or later. We recommend 2.4.4 p296 or later. You can check your version by typing
    `ruby -v` and checking the response.
 
 
@@ -31,12 +31,12 @@ reaching out to the community for help:
 5. Have you migrated your database?
 
    Our schema changes fairly frequently. After checking out the source code, you should
-   run `rake db:migrate`
+   run `bundle exec rake db:migrate && RAILS_ENV=test bundle exec rake db:migrate`
 
 7. Do the tests pass?
 
    If you are having other problems, it's useful to know if the test suite passes. You
-   can run it by first using `rake db:test:prepare` and then `rake spec`. If you
+   can run it by first using `RAILS_ENV=test bundle exec rake db:drop db:create db:migrate` and then `bundle exec rspec`. If you
    experience any failures, that's a bad sign! Our master branch should *always* pass
    every test.
 
