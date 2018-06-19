@@ -14,7 +14,7 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
     SMTP user name?      [SMTP credentials for your domain under domains tab]
     SMTP password?       [SMTP credentials for your domain under domains tab]
 
-#### [Elastic Email][ee] &mdash; 150k emails/month
+#### [Elastic Email][ee] &mdash; 5k emails/month
 
     SMTP server address? smtp.elasticemail.com
     SMTP user name?      [Your registered email address]
