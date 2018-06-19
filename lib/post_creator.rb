@@ -36,6 +36,7 @@ class PostCreator
   #                             wrap `PostCreator` in a transaction, as the sidekiq jobs could
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
+  #   hidden_reason_id        - Reason for hiding the post (optional)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -62,6 +63,7 @@ class PostCreator
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
+    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
     @guardian = opts[:guardian] if opts[:guardian]
 
     @spam = false
@@ -452,6 +454,12 @@ class PostCreator
 
     if fields = @opts[:custom_fields]
       post.custom_fields = fields
+    end
+
+    if @opts[:hidden_reason_id].present?
+      post.hidden = true
+      post.hidden_at = Time.zone.now
+      post.hidden_reason_id = @opts[:hidden_reason_id]
     end
 
     @post = post
