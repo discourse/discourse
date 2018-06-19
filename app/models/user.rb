@@ -1073,6 +1073,10 @@ class User < ActiveRecord::Base
     custom_fields[User::FROM_STAGED]
   end
 
+  def mature_staged?
+    from_staged? && self.created_at && self.created_at < 1.week.ago
+  end
+
   protected
 
   def badge_grant
