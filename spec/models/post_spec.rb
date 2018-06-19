@@ -967,7 +967,7 @@ describe Post do
       expect(post.has_host_spam?).to eq(false)
     end
 
-    it "punishes previously staged users that were created within 1 week" do
+    it "punishes previously staged users that were created within 1 day" do
       SiteSetting.newuser_spam_host_threshold = 1
       SiteSetting.newuser_max_links = 3
       user = Fabricate(:user, staged: true, trust_level: 0)
@@ -977,11 +977,11 @@ describe Post do
       expect(post.has_host_spam?).to eq(true)
     end
 
-    it "doesn't punish previously staged users over 1 week old" do
+    it "doesn't punish previously staged users over 1 day old" do
       SiteSetting.newuser_spam_host_threshold = 1
       SiteSetting.newuser_max_links = 3
       user = Fabricate(:user, staged: true, trust_level: 0)
-      user.created_at = 1.week.ago
+      user.created_at = 1.day.ago
       user.unstage
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)

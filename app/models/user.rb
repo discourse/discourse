@@ -1075,7 +1075,7 @@ class User < ActiveRecord::Base
   end
 
   def mature_staged?
-    from_staged? && self.created_at && self.created_at < 1.week.ago
+    from_staged? && self.created_at && self.created_at < 1.day.ago
   end
 
   protected
