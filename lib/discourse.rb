@@ -294,15 +294,24 @@ module Discourse
   def self.keep_readonly_mode(key)
     # extend the expiry by 1 minute every 30 seconds
     unless Rails.env.test?
+      @dbs ||= Set.new
+      @dbs << RailsMultisite::ConnectionManagement.current_db
       @threads ||= {}
 
-      active_thread = @threads[key]
-
-      unless active_thread&.alive?
+      unless @threads[key]&.alive?
         @threads[key] = Thread.new do
-          while readonly_mode?(key)
-            $redis.expire(key, READONLY_MODE_KEY_TTL)
-            sleep 30.seconds
+          while @dbs.size > 0
+            @dbs.each do |db|
+              RailsMultisite::ConnectionManagement.with_connection(db) do
+                if readonly_mode?(key)
+                  $redis.expire(key, READONLY_MODE_KEY_TTL)
+                else
+                  @dbs.delete(db)
+                end
+              end
+            end
+
+            sleep 30
           end
         end
       end
