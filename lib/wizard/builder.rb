@@ -169,7 +169,25 @@ class Wizard
         step.add_field(id: 'apple_touch_icon_url', type: 'image', value: SiteSetting.apple_touch_icon_url)
 
         step.on_update do |updater|
-          updater.apply_settings(:favicon_url, :apple_touch_icon_url)
+          updater.apply_settings(:favicon_url)
+
+          if updater.fields[:apple_touch_icon_url] != SiteSetting.apple_touch_icon_url
+            upload = Upload.find_by_url(updater.fields[:apple_touch_icon_url])
+            dimensions = 180 # for apple touch icon
+            if upload && upload.width > dimensions && upload.height > dimensions
+              updater.update_setting(:large_icon_url, updater.fields[:apple_touch_icon_url])
+
+              apple_touch_icon_optimized = OptimizedImage.create_for(upload, dimensions, dimensions, filename: upload.original_filename)
+              original_file = File.new(Discourse.store.path_for(apple_touch_icon_optimized)) rescue nil
+              if original_file
+                apple_touch_icon_upload = UploadCreator.new(original_file, upload.original_filename).create_for(@wizard.user.id)
+                updater.update_setting(:apple_touch_icon_url, apple_touch_icon_upload.url)
+              end
+              apple_touch_icon_optimized.destroy! if apple_touch_icon_optimized.present?
+            else
+              updater.apply_settings(:apple_touch_icon_url)
+            end
+          end
         end
       end
 
