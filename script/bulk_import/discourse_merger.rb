@@ -48,6 +48,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @tag_groups = {}
     @uploads = {}
     @post_actions = {}
+    @notifications = {}
+    @badge_groupings = {}
+    @badges = {}
 
     @auto_group_ids = Group::AUTO_GROUPS.values
 
@@ -74,6 +77,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_tags
     copy_uploads if @uploads_path
     copy_everything_else
+    copy_badges
     fix_category_descriptions
 
     # TODO: update @mentions for usernames changed due to conflict
@@ -311,14 +315,48 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       copy_model(k, skip_processing: true)
     end
 
-    [UserHistory, UserWarning, Notification].each do |k|
+    [UserHistory, UserWarning].each do |k|
       copy_model(k)
     end
+
+    copy_model(Notification, mapping: @notifications)
+  end
+
+  def copy_badges
+    copy_model(BadgeGrouping, mapping: @badge_groupings, skip_processing: true)
+
+    puts "merging badges..."
+    columns = Badge.columns.map(&:name)
+    imported_ids = []
+    last_id = Badge.unscoped.maximum(:id)
+
+    sql = "COPY badges (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
+    @raw_connection.copy_data(sql, @encoder) do
+      source_raw_connection.exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(', ')} FROM badges").each do |row|
+
+        if existing = Badge.where(name: row['name']).first
+          @badges[row['id']] = existing.id
+          next
+        end
+
+        old_id = row['id']
+        row['id'] = (last_id += 1)
+        @badges[old_id.to_s] = row['id']
+
+        row['badge_grouping_id'] = @badge_groupings[row['badge_grouping_id']] if row['badge_grouping_id']
+
+        @raw_connection.put_copy_data(row.values)
+      end
+    end
+
+    @sequences[Badge.sequence_name] = last_id + 1
+
+    copy_model(UserBadge, is_a_user_model: true)
   end
 
   def copy_model(klass, skip_if_merged: false, is_a_user_model: false, skip_processing: false, mapping: nil, select_sql: nil)
 
-    puts "merging #{klass.table_name}..."
+    puts "copying #{klass.table_name}..."
 
     columns = klass.columns.map(&:name)
     has_custom_fields = CUSTOM_FIELDS.include?(klass.name.downcase)
@@ -361,6 +399,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         row['tag_group_id'] = tag_group_id_from_imported_id(row['tag_group_id']) if row['tag_group_id']
         row['upload_id'] = upload_id_from_imported_id(row['upload_id']) if row['upload_id']
         row['deleted_by_id'] = user_id_from_imported_id(row['deleted_by_id']) if row['deleted_by_id']
+        row['badge_id'] = badge_id_from_imported_id(row['badge_id']) if row['badge_id']
 
         old_id = row['id']
         if old_id && last_id
@@ -532,6 +571,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     r
   end
 
+  def process_user_badge(user_badge)
+    user_badge['granted_by_id'] = user_id_from_imported_id(user_badge['granted_by_id']) if user_badge['granted_by_id']
+    user_badge['notification_id'] = notification_id_from_imported_id(user_badge['notification_id']) if user_badge['notification_id']
+    user_badge
+  end
+
   def user_id_from_imported_id(id)
     return id if id.to_i < 1
     super(id)
@@ -556,6 +601,14 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def post_action_id_from_imported_id(id)
     @post_actions[id.to_s]
+  end
+
+  def badge_id_from_imported_id(id)
+    @badges[id.to_s]
+  end
+
+  def notification_id_from_imported_id(id)
+    @notifications[id.to_s]
   end
 
   def fix_primary_keys
