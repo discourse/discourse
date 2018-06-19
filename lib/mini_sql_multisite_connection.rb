@@ -24,8 +24,9 @@ class MiniSqlMultisiteConnection < MiniSql::Connection
   end
 
   def self.instance
-    new(nil, param_encoder: ParamEncoder.new, type_map: self.type_map(ActiveRecord::Base.connection.raw_connection))
+    new(nil, param_encoder: ParamEncoder.new)
   end
+
   # we need a tiny adapter here so we always run against the
   # correct multisite connection
   def raw_connection
