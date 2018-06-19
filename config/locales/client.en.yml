@@ -2109,7 +2109,6 @@ en:
           inappropriate: "Undo flag"
           bookmark: "Undo bookmark"
           like: "Undo like"
-          vote: "Undo vote"
         people:
           off_topic: "flagged this as off-topic"
           spam: "flagged this as spam"
@@ -2121,7 +2120,6 @@ en:
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
-          vote: "voted for this"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -2130,7 +2128,6 @@ en:
           notify_user: "You sent a message to this user"
           bookmark: "You bookmarked this post"
           like: "You liked this"
-          vote: "You voted for this post"
         by_you_and_others:
           off_topic:
             one: "You and 1 other flagged this as off-topic"
@@ -2153,9 +2150,6 @@ en:
           like:
             one: "You and 1 other liked this"
             other: "You and {{count}} other people liked this"
-          vote:
-            one: "You and 1 other voted for this post"
-            other: "You and {{count}} other people voted for this post"
         by_others:
           off_topic:
             one: "1 person flagged this as off-topic"
@@ -2178,9 +2172,6 @@ en:
           like:
             one: "1 person liked this"
             other: "{{count}} people liked this"
-          vote:
-            one: "1 person voted for this post"
-            other: "{{count}} people voted for this post"
 
       delete:
         confirm:
