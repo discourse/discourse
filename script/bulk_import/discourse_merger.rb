@@ -59,6 +59,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def start
     run
+  ensure
+    @raw_connection&.close
+    source_raw_connection&.close
   end
 
   def execute
