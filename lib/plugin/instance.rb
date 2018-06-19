@@ -92,6 +92,14 @@ class Plugin::Instance
     end
   end
 
+  def add_report(name, &block)
+    reloadable_patch do |plugin|
+      if plugin.enabled?
+        Report.add_report(name, &block)
+      end
+    end
+  end
+
   def replace_flags
     settings = ::FlagSettings.new
     yield settings
