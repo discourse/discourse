@@ -369,7 +369,7 @@ GEM
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 5)
     slop (3.6.0)
-    sprockets (3.7.1)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
