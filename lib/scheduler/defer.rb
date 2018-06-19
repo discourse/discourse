@@ -74,8 +74,6 @@ module Scheduler
       end
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
-    ensure
-      ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end
 
