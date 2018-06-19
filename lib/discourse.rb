@@ -294,10 +294,16 @@ module Discourse
   def self.keep_readonly_mode(key)
     # extend the expiry by 1 minute every 30 seconds
     unless Rails.env.test?
-      Thread.new do
-        while readonly_mode?(key)
-          $redis.expire(key, READONLY_MODE_KEY_TTL)
-          sleep 30.seconds
+      @threads ||= {}
+
+      active_thread = @threads[key]
+
+      unless active_thread&.alive?
+        @threads[key] = Thread.new do
+          while readonly_mode?(key)
+            $redis.expire(key, READONLY_MODE_KEY_TTL)
+            sleep 30.seconds
+          end
         end
       end
     end
