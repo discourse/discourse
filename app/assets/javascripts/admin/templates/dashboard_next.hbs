@@ -90,27 +90,29 @@
     </div>
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
-        <div class="durability">
-          {{#if currentUser.admin}}
-            <div class="backups">
-              <h3 class="durability-title">
-                <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
-              </h3>
+        {{#if diskSpace}}
+          <div class="durability">
+            {{#if currentUser.admin}}
+              <div class="backups">
+                <h3 class="durability-title">
+                  <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
+                </h3>
+                <p>
+                  {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
+                  <br />
+                  {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                </p>
+              </div>
+            {{/if}}
+
+            <div class="uploads">
+              <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
               <p>
-                {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
-                <br />
-                {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
               </p>
             </div>
-          {{/if}}
-
-          <div class="uploads">
-            <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
-            <p>
-              {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
-            </p>
           </div>
-        </div>
+        {{/if}}
 
         <div class="last-dashboard-update">
           <div>
