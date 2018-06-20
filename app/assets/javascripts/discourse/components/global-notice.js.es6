@@ -72,16 +72,14 @@ export default Ember.Component.extend(
 
       if (notices.length > 0) {
         buffer.push(
-          _
-            .map(notices, n => {
-              var html = `<div class='row'><div class='alert alert-info ${
-                n[1]
-              }'>`;
-              if (n[2]) html += n[2];
-              html += `${n[0]}</div></div>`;
-              return html;
-            })
-            .join("")
+          _.map(notices, n => {
+            var html = `<div class='row'><div class='alert alert-info ${
+              n[1]
+            }'>`;
+            if (n[2]) html += n[2];
+            html += `${n[0]}</div></div>`;
+            return html;
+          }).join("")
         );
       }
     },

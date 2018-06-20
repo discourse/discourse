@@ -103,9 +103,9 @@ export default MultiSelectComponent.extend(Tags, {
     };
 
     if (selectedTags.length || this.get("blacklist").length) {
-      data.selected_tags = _
-        .uniq(selectedTags.concat(this.get("blacklist")))
-        .slice(0, 100);
+      data.selected_tags = _.uniq(
+        selectedTags.concat(this.get("blacklist"))
+      ).slice(0, 100);
     }
 
     if (!this.get("everyTag")) data.filterForInput = true;
