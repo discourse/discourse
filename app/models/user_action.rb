@@ -39,7 +39,6 @@ class UserAction < ActiveRecord::Base
     ASSIGNED,
   ].each_with_index.to_a.flatten]
 
-
   def self.last_action_in_topic(user_id, topic_id)
     UserAction.where(user_id: user_id,
                      target_topic_id: topic_id,
