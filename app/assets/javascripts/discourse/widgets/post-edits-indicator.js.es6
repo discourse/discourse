@@ -41,7 +41,7 @@ export default createWidget("post-edits-indicator", {
 
     if (attrs.wiki) {
       icon = "pencil-square-o";
-      className = `${className || ''} wiki`.trim();
+      className = `${className || ""} wiki`.trim();
 
       if (attrs.version > 1) {
         title = `${I18n.t("post.last_edited_on")} ${date}`;

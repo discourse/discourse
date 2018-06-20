@@ -1,8 +1,2 @@
 app/assets/stylesheets/vendor/
 plugins/**/assets/stylesheets/vendor/
-app/assets/javascripts/admin/routes/admin-backups-logs.js.es6
-app/assets/javascripts/discourse/components/global-notice.js.es6
-app/assets/javascripts/discourse/lib/ajax.js.es6
-app/assets/javascripts/discourse/lib/link-mentions.js.es6
-app/assets/javascripts/discourse/models/topic-tracking-state.js.es6
-app/assets/javascripts/select-kit/components/tag-chooser.js.es6
