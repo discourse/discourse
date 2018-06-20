@@ -178,6 +178,19 @@ describe CookedPostProcessor do
 
           expect(cpp.html).to match_html("<p><img src=\"/uploads/default/1/1234567890123456.svg\" width=\"690\"\ height=\"788\"></p>")
         end
+
+        describe 'when image src is an URL' do
+          let(:post) do
+            Fabricate(:post, raw: '<img src="http://test.discourse/uploads/default/1/1234567890123456.svg?somepamas">')
+          end
+
+          it 'should not add lightbox' do
+            SiteSetting.crawl_images = true
+            cpp.post_process_images
+
+            expect(cpp.html).to match_html("<p><img src=\"http://test.discourse/uploads/default/1/1234567890123456.svg?somepamas\" width=\"690\"\ height=\"788\"></p>")
+          end
+        end
       end
 
     end

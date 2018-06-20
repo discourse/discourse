@@ -541,7 +541,14 @@ class CookedPostProcessor
   private
 
   def is_svg?(img)
-    File.extname(img["src"]) == '.svg'
+    path =
+      begin
+        URI(img["src"]).path
+      rescue URI::InvalidURIError, URI::InvalidComponentError
+        nil
+      end
+
+    File.extname(path) == '.svg' if path
   end
 
 end
