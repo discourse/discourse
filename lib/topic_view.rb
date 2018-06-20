@@ -372,9 +372,18 @@ class TopicView
   # Returns an array of [id, post_number, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
-    @filtered_post_stream ||= @filtered_posts
-      .order(:sort_order)
-      .pluck(:id, :post_number, 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
+    @filtered_post_stream ||= begin
+      posts = @filtered_posts
+        .order(:sort_order)
+
+      columns = [:id, :post_number]
+
+      if is_mega_topic?
+        columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
+      end
+
+      posts.pluck(*columns)
+    end
   end
 
   def filtered_post_ids
@@ -554,4 +563,7 @@ class TopicView
     filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
   end
 
+  def is_mega_topic?
+    !@topic.private_message? && @topic.posts_count >= SiteSetting.auto_close_topics_post_count
+  end
 end

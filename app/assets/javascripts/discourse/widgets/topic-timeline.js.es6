@@ -151,8 +151,14 @@ createWidget("timeline-scrollarea", {
     const current = clamp(Math.floor(total * percentage) + 1, 1, total);
 
     const daysAgo = postStream.closestDaysAgoFor(current);
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo || 0);
+    let date;
+
+    if (daysAgo !== null) {
+      date = new Date();
+      date.setDate(date.getDate() - daysAgo || 0);
+    } else {
+      date = null;
+    }
 
     const result = {
       current,
