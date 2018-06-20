@@ -220,7 +220,6 @@ createWidget("post-meta-data", {
   },
 
   html(attrs) {
-
     let postInfo = [];
 
     if (attrs.isWhisper) {
@@ -289,7 +288,7 @@ createWidget("post-meta-data", {
     if (this.settings.displayPosterName) {
       result.push(this.attach("poster-name", attrs));
     }
-    result.push(h('div.post-infos', postInfo));
+    result.push(h("div.post-infos", postInfo));
 
     return result;
   }
