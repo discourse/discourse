@@ -155,10 +155,8 @@ span.badge-posts {
 
 a.reply-to-tab {
   z-index: z("base") + 1;
-  right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
-  margin: -3px 10px 0 0;
-  float: right;
+  margin-right: 0.5em;
 }
 
 .topic-post .boxed .contents {
@@ -455,15 +453,6 @@ span.highlighted {
   font-size: $font-down-1;
   .names {
     line-height: $line-height-medium;
-    .poster-icon {
-      float: right;
-    }
-  }
-  .post-info {
-    float: right;
-    .edits {
-      margin-right: 5px;
-    }
   }
 }
 
