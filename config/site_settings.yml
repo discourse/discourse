@@ -1363,7 +1363,7 @@ search:
     default: 1000000
     max: 1000000
   search_query_log_max_retention_days:
-    default: 1095 # 3 years
+    default: 365 # 1 year
     max: 1825 # 5 years
 
 uncategorized:
