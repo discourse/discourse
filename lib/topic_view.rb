@@ -296,17 +296,26 @@ class TopicView
     end
   end
 
+  # if a topic has more that N posts no longer attempt to
+  # get accurate participant count, instead grab cached count
+  # from topic
+  MAX_POSTS_COUNT_PARTICIPANTS = 500
+
   def participant_count
     @participant_count ||=
       begin
         if participants.size == MAX_PARTICIPANTS
-          sql = <<~SQL
-            SELECT COUNT(DISTINCT user_id)
-            FROM posts
-            WHERE id IN (:post_ids)
-            AND user_id IS NOT NULL
-          SQL
-          DB.query_single(sql, post_ids: unfiltered_post_ids).first.to_i
+          if unfiltered_post_ids.length > MAX_POSTS_COUNT_PARTICIPANTS
+            @topic.participant_count
+          else
+            sql = <<~SQL
+              SELECT COUNT(DISTINCT user_id)
+              FROM posts
+              WHERE id IN (:post_ids)
+              AND user_id IS NOT NULL
+            SQL
+            DB.query_single(sql, post_ids: unfiltered_post_ids).first.to_i
+          end
         else
           participants.size
         end
