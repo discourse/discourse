@@ -916,6 +916,10 @@ a.attachment:before {
     a {
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
+
+    a.wiki {
+      color: $wiki;
+    }
   }
 }
 
