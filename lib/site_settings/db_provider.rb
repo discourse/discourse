@@ -14,15 +14,14 @@ class SiteSettings::DbProvider
     return [] unless table_exists?
 
     # Not leaking out AR records, cause I want all editing to happen via this API
-    SqlBuilder.new("SELECT name, data_type, value FROM #{@model.table_name}").map_exec(OpenStruct)
+    DB.query("SELECT name, data_type, value FROM #{@model.table_name}")
   end
 
   def find(name)
     return nil unless table_exists?
 
     # Not leaking out AR records, cause I want all editing to happen via this API
-    SqlBuilder.new("SELECT name, data_type, value FROM #{@model.table_name} WHERE name = :name")
-      .map_exec(OpenStruct, name: name)
+    DB.query("SELECT name, data_type, value FROM #{@model.table_name} WHERE name = ?", name)
       .first
   end
 

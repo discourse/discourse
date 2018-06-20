@@ -101,18 +101,19 @@ class PostAction < ActiveRecord::Base
     #
     topic_ids = topics.map(&:id)
     map = {}
-        builder = SqlBuilder.new <<SQL
-        SELECT p.topic_id, p.post_number
-        FROM post_actions pa
-        JOIN posts p ON pa.post_id = p.id
-        WHERE p.deleted_at IS NULL AND pa.deleted_at IS NULL AND
-           pa.post_action_type_id = :post_action_type_id AND
-           pa.user_id = :user_id AND
-           p.topic_id IN (:topic_ids)
-        ORDER BY p.topic_id, p.post_number
-SQL
 
-    builder.map_exec(OpenStruct, user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids).each do |row|
+    builder = DB.build <<~SQL
+      SELECT p.topic_id, p.post_number
+      FROM post_actions pa
+      JOIN posts p ON pa.post_id = p.id
+      WHERE p.deleted_at IS NULL AND pa.deleted_at IS NULL AND
+         pa.post_action_type_id = :post_action_type_id AND
+         pa.user_id = :user_id AND
+         p.topic_id IN (:topic_ids)
+      ORDER BY p.topic_id, p.post_number
+    SQL
+
+    builder.query(user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids).each do |row|
       (map[row.topic_id] ||= []) << row.post_number
     end
 

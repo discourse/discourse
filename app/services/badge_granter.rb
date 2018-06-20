@@ -184,7 +184,7 @@ class BadgeGranter
 
     # hack to allow for params, otherwise sanitizer will trigger sprintf
     count_sql = "SELECT COUNT(*) count FROM (#{sql}) q WHERE :backfill = :backfill"
-    grant_count = SqlBuilder.map_exec(OpenStruct, count_sql, params).first.count.to_i
+    grant_count = DB.query_single(count_sql, params).first.to_i
 
     grants_sql =
      if opts[:target_posts]

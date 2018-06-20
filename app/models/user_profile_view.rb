@@ -25,7 +25,7 @@ class UserProfileView < ActiveRecord::Base
                   /*where*/
                )"
 
-        builder = SqlBuilder.new(sql)
+        builder = DB.build(sql)
 
         if !user_id
           builder.where("viewed_at = :viewed_at AND ip_address = :ip_address AND user_profile_id = :user_profile_id AND user_id IS NULL")
@@ -35,7 +35,7 @@ class UserProfileView < ActiveRecord::Base
 
         result = builder.exec(user_profile_id: user_profile_id, ip_address: ip, viewed_at: at, user_id: user_id)
 
-        if result.cmd_tuples > 0
+        if result > 0
           UserProfile.find(user_profile_id).increment!(:views)
         end
       end

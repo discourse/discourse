@@ -28,7 +28,7 @@ class TopicViewItem < ActiveRecord::Base
                  /*where*/
                )"
 
-        builder = SqlBuilder.new(sql)
+        builder = DB.build(sql)
 
         if !user_id
           builder.where("ip_address = :ip_address AND topic_id = :topic_id AND user_id IS NULL")
@@ -41,7 +41,7 @@ class TopicViewItem < ActiveRecord::Base
 
         Topic.where(id: topic_id).update_all 'views = views + 1'
 
-        if result.cmd_tuples > 0
+        if result > 0
           UserStat.where(user_id: user_id).update_all 'topics_entered = topics_entered + 1' if user_id
         end
 

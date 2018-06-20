@@ -283,7 +283,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   Post.transaction do
     # update sort_order and flip post_number to prevent
     # unique constraint violations when updating post_number
-    builder = SqlBuilder.new(<<~SQL)
+    builder = DB.build(<<~SQL)
       WITH ordered_posts AS (
           SELECT
             id,

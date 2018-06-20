@@ -36,4 +36,13 @@ class MiniSqlMultisiteConnection < MiniSql::Connection
   def build(sql)
     CustomBuilder.new(self, sql)
   end
+
+  def sql_fragment(query, *args)
+    if args.length > 0
+      param_encoder.encode(query, *args)
+    else
+      query
+    end
+  end
+
 end

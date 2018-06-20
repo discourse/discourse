@@ -32,9 +32,9 @@ module FlagQuery
 
     post_ids = post_ids_relation.pluck(:post_id).uniq
 
-    posts = SqlBuilder.new("
+    posts = DB.query(<<~SQL, post_ids: post_ids)
       SELECT p.id,
-             p.cooked,
+             p.cooked as excerpt,
              p.raw,
              p.user_id,
              p.topic_id,
@@ -43,10 +43,13 @@ module FlagQuery
              p.hidden,
              p.deleted_at,
              p.user_deleted,
+             NULL as post_actions,
+             NULL as post_action_ids,
              (SELECT created_at FROM post_revisions WHERE post_id = p.id AND user_id = p.user_id ORDER BY created_at DESC LIMIT 1) AS last_revised_at,
              (SELECT COUNT(*) FROM post_actions WHERE (disagreed_at IS NOT NULL OR agreed_at IS NOT NULL OR deferred_at IS NOT NULL) AND post_id = p.id)::int AS previous_flags_count
         FROM posts p
-       WHERE p.id in (:post_ids)").map_exec(OpenStruct, post_ids: post_ids)
+       WHERE p.id in (:post_ids)
+    SQL
 
     post_lookup = {}
     user_ids = Set.new
@@ -55,8 +58,7 @@ module FlagQuery
     posts.each do |p|
       user_ids << p.user_id
       topic_ids << p.topic_id
-      p.excerpt = Post.excerpt(p.cooked)
-      p.delete_field(:cooked)
+      p.excerpt = Post.excerpt(p.excerpt)
       post_lookup[p.id] = p
     end
 
@@ -127,7 +129,7 @@ module FlagQuery
     # maintain order
     posts = post_ids.map { |id| post_lookup[id] }
     # TODO: add serializer so we can skip this
-    posts.map!(&:marshal_dump)
+    posts.map!(&:to_h)
 
     users = User.includes(:user_stat).where(id: user_ids.to_a).to_a
     User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
