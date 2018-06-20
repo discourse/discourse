@@ -68,9 +68,9 @@ export function linkSeenMentions($elem, siteSettings) {
         .substr(1)
     );
     updateFound($mentions, usernames);
-    return _
-      .uniq(usernames)
-      .filter(u => !checked[u] && u.length >= siteSettings.min_username_length);
+    return _.uniq(usernames).filter(
+      u => !checked[u] && u.length >= siteSettings.min_username_length
+    );
   }
   return [];
 }
