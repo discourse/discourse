@@ -565,13 +565,20 @@ describe TopicView do
 
     describe 'for mega topics' do
       it 'should return the right columns' do
-        SiteSetting.auto_close_topics_post_count = 2
+        begin
+          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
 
-        expect(topic_view.filtered_post_stream).to eq([
-          [post.id, post.post_number],
-          [post2.id, post2.post_number],
-          [post3.id, post3.post_number]
-        ])
+          expect(topic_view.filtered_post_stream).to eq([
+            [post.id, post.post_number],
+            [post2.id, post2.post_number],
+            [post3.id, post3.post_number]
+          ])
+        ensure
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
+        end
       end
     end
   end
