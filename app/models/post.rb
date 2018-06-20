@@ -113,7 +113,8 @@ class Post < ActiveRecord::Base
     @hidden_reasons ||= Enum.new(flag_threshold_reached: 1,
                                  flag_threshold_reached_again: 2,
                                  new_user_spam_threshold_reached: 3,
-                                 flagged_by_tl3_user: 4)
+                                 flagged_by_tl3_user: 4,
+                                 email_spam_header_found: 5)
   end
 
   def self.types

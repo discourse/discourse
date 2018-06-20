@@ -783,6 +783,13 @@ email:
   email_in_min_trust:
     default: 2
     enum: 'TrustLevelSetting'
+  email_in_spam_header:
+    type: enum
+    default: 'none'
+    choices:
+     - none
+     - X-Spam-Flag
+     - X-Spam-Status
   email_prefix: ''
   email_site_title: ''
   disable_emails:

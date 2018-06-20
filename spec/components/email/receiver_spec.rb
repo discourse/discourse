@@ -622,6 +622,51 @@ describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "creates visible topic for ham" do
+      SiteSetting.email_in_spam_header = 'none'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(true)
+
+      post = Post.last
+      expect(post.hidden).to eq(false)
+      expect(post.hidden_at).to eq(nil)
+      expect(post.hidden_reason_id).to eq(nil)
+    end
+
+    it "creates hidden topic for X-Spam-Flag" do
+      SiteSetting.email_in_spam_header = 'X-Spam-Flag'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_flag) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
+    it "creates hidden topic for X-Spam-Status" do
+      SiteSetting.email_in_spam_header = 'X-Spam-Status'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_status) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 

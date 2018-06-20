@@ -111,6 +111,8 @@ module Email
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
+      hidden_reason_id = is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
+
       user = find_user(@from_email)
 
       if user.present?
@@ -149,6 +151,7 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: user.staged?)
@@ -157,7 +160,7 @@ module Email
 
         destinations.each do |destination|
           begin
-            process_destination(destination, user, body, elided)
+            process_destination(destination, user, body, elided, hidden_reason_id)
           rescue => e
             first_exception ||= e
           else
@@ -241,6 +244,17 @@ module Email
       @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
       @mail[:subject].to_s[/^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i] ||
       @mail.header.to_s[/auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i]
+    end
+
+    def is_spam?
+      case SiteSetting.email_in_spam_header
+      when 'X-Spam-Flag'
+        @mail[:x_spam_flag].to_s[/YES/i]
+      when 'X-Spam-Status'
+        @mail[:x_spam_status].to_s[/^Yes, /i]
+      else
+        false
+      end
     end
 
     def select_body
@@ -542,7 +556,7 @@ module Email
       nil
     end
 
-    def process_destination(destination, user, body, elided)
+    def process_destination(destination, user, body, elided, hidden_reason_id)
       return if SiteSetting.enable_forwarded_emails &&
                 has_been_forwarded? &&
                 process_forwarded_email(destination, user)
@@ -550,7 +564,7 @@ module Email
       case destination[:type]
       when :group
         group = destination[:obj]
-        create_group_post(group, user, body, elided)
+        create_group_post(group, user, body, elided, hidden_reason_id)
 
       when :category
         category = destination[:obj]
@@ -561,6 +575,7 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      category: category.id,
                      skip_validations: user.staged?)
@@ -575,13 +590,14 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      post: email_log.post,
                      topic: email_log.post.topic,
                      skip_validations: user.staged?)
       end
     end
 
-    def create_group_post(group, user, body, elided)
+    def create_group_post(group, user, body, elided, hidden_reason_id)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
@@ -599,6 +615,7 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: true)
@@ -606,6 +623,7 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      archetype: Archetype.private_message,
                      target_group_names: [group.name],
