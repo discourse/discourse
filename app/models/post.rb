@@ -567,7 +567,7 @@ class Post < ActiveRecord::Base
   # each post.
   def self.calculate_avg_time(min_topic_age = nil)
     retry_lock_error do
-      builder = SqlBuilder.new("UPDATE posts
+      builder = DB.build("UPDATE posts
                 SET avg_time = (x.gmean / 1000)
                 FROM (SELECT post_timings.topic_id,
                              post_timings.post_number,
@@ -692,7 +692,7 @@ class Post < ActiveRecord::Base
   MAX_REPLY_LEVEL ||= 1000
 
   def reply_ids(guardian = nil, only_replies_to_single_post: true)
-    builder = SqlBuilder.new(<<~SQL, Post)
+    builder = DB.build(<<~SQL)
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
@@ -723,8 +723,8 @@ class Post < ActiveRecord::Base
     # for example it skips a post when it contains 2 quotes (which are replies) from different posts
     builder.where("count = 1") if only_replies_to_single_post
 
-    replies = builder.exec(post_id: id, max_reply_level: MAX_REPLY_LEVEL).to_a
-    replies.map! { |r| { id: r["id"].to_i, level: r["level"].to_i } }
+    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL)
+    replies.each { |r| r.symbolize_keys! }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
 

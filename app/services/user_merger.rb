@@ -386,7 +386,7 @@ class UserMerger
     conditions = Array.wrap(opts[:conditions])
     updates = Array.wrap(opts[:updates])
 
-    builder = SqlBuilder.new(<<~SQL)
+    builder = DB.build(<<~SQL)
       UPDATE #{table_name} AS x
       /*set*/
       WHERE x.#{user_id_column_name} = :source_user_id AND NOT EXISTS(

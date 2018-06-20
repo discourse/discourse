@@ -1241,7 +1241,7 @@ class Topic < ActiveRecord::Base
 
   def self.time_to_first_response(sql, opts = nil)
     opts ||= {}
-    builder = SqlBuilder.new(sql)
+    builder = DB.build(sql)
     builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
     builder.where("t.created_at < :end_date", end_date: opts[:end_date]) if opts[:end_date]
     builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
@@ -1253,7 +1253,7 @@ class Topic < ActiveRecord::Base
     builder.where("p.user_id in (:user_ids)", user_ids: opts[:user_ids]) if opts[:user_ids]
     builder.where("p.post_type = :post_type", post_type: Post.types[:regular])
     builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
-    builder.exec
+    builder.query_hash
   end
 
   def self.time_to_first_response_per_day(start_date, end_date, opts = {})
@@ -1280,13 +1280,13 @@ class Topic < ActiveRecord::Base
   SQL
 
   def self.with_no_response_per_day(start_date, end_date, category_id = nil)
-    builder = SqlBuilder.new(WITH_NO_RESPONSE_SQL)
+    builder = DB.build(WITH_NO_RESPONSE_SQL)
     builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
     builder.where("t.created_at < :end_date", end_date: end_date) if end_date
     builder.where("t.category_id = :category_id", category_id: category_id) if category_id
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
-    builder.exec
+    builder.query_hash
   end
 
   WITH_NO_RESPONSE_TOTAL_SQL ||= <<-SQL
@@ -1302,11 +1302,11 @@ class Topic < ActiveRecord::Base
   SQL
 
   def self.with_no_response_total(opts = {})
-    builder = SqlBuilder.new(WITH_NO_RESPONSE_TOTAL_SQL)
+    builder = DB.build(WITH_NO_RESPONSE_TOTAL_SQL)
     builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
-    builder.exec.first["count"].to_i
+    builder.query_single.first.to_i
   end
 
   def convert_to_public_topic(user)

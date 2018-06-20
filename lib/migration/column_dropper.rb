@@ -32,21 +32,22 @@ module Migration
     end
 
     def droppable?
-      builder = SqlBuilder.new(<<~SQL)
+      builder = DB.build(<<~SQL)
         SELECT 1
         FROM INFORMATION_SCHEMA.COLUMNS
         /*where*/
         LIMIT 1
       SQL
 
-      builder.where("table_schema = 'public'")
+      builder
+        .where("table_schema = 'public'")
         .where("table_name = :table")
         .where("column_name IN (:columns)")
         .where(previous_migration_done)
         .exec(table: @table,
               columns: @columns,
               delay: "#{@delay} seconds",
-              after_migration: @after_migration).to_a.length > 0
+              after_migration: @after_migration) > 0
     end
 
     def execute_drop!

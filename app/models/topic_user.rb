@@ -370,28 +370,28 @@ class TopicUser < ActiveRecord::Base
       return
     end
 
-    builder = SqlBuilder.new <<SQL
-    UPDATE topic_users tu
-    SET #{action_type_name} = x.state
-    FROM (
-      SELECT CASE WHEN EXISTS (
-        SELECT 1
-        FROM post_actions pa
-        JOIN posts p on p.id = pa.post_id
-        JOIN topics t ON t.id = p.topic_id
-        WHERE pa.deleted_at IS NULL AND
-              p.deleted_at IS NULL AND
-              t.deleted_at IS NULL AND
-              pa.post_action_type_id = :action_type_id AND
-              tu2.topic_id = t.id AND
-              tu2.user_id = pa.user_id
-        LIMIT 1
-      ) THEN true ELSE false END state, tu2.topic_id, tu2.user_id
-      FROM topic_users tu2
-      /*where*/
-    ) x
-    WHERE x.topic_id = tu.topic_id AND x.user_id = tu.user_id AND x.state != tu.#{action_type_name}
-SQL
+    builder = DB.build <<~SQL
+      UPDATE topic_users tu
+      SET #{action_type_name} = x.state
+      FROM (
+        SELECT CASE WHEN EXISTS (
+          SELECT 1
+          FROM post_actions pa
+          JOIN posts p on p.id = pa.post_id
+          JOIN topics t ON t.id = p.topic_id
+          WHERE pa.deleted_at IS NULL AND
+                p.deleted_at IS NULL AND
+                t.deleted_at IS NULL AND
+                pa.post_action_type_id = :action_type_id AND
+                tu2.topic_id = t.id AND
+                tu2.user_id = pa.user_id
+          LIMIT 1
+        ) THEN true ELSE false END state, tu2.topic_id, tu2.user_id
+        FROM topic_users tu2
+        /*where*/
+      ) x
+      WHERE x.topic_id = tu.topic_id AND x.user_id = tu.user_id AND x.state != tu.#{action_type_name}
+    SQL
 
     if user_id
       builder.where("tu2.user_id = :user_id", user_id: user_id)
@@ -440,32 +440,31 @@ SQL
     # we up these numbers so they are not in-sync
     # the simple fix is to add a column here, but table is already quite big
     # long term we want to split up topic_users and allow for this better
-    builder = SqlBuilder.new <<SQL
+    builder = DB.build <<~SQL
+      UPDATE topic_users t
+        SET
+          last_read_post_number = LEAST(GREATEST(last_read, last_read_post_number), max_post_number),
+          highest_seen_post_number = LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
+      FROM (
+        SELECT topic_id, user_id, MAX(post_number) last_read
+        FROM post_timings
+        GROUP BY topic_id, user_id
+      ) as X
+      JOIN (
+        SELECT p.topic_id, MAX(p.post_number) max_post_number from posts p
+        GROUP BY p.topic_id
+      ) as Y on Y.topic_id = X.topic_id
+      /*where*/
+    SQL
 
-UPDATE topic_users t
-  SET
-    last_read_post_number = LEAST(GREATEST(last_read, last_read_post_number), max_post_number),
-    highest_seen_post_number = LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
-FROM (
-  SELECT topic_id, user_id, MAX(post_number) last_read
-  FROM post_timings
-  GROUP BY topic_id, user_id
-) as X
-JOIN (
-  SELECT p.topic_id, MAX(p.post_number) max_post_number from posts p
-  GROUP BY p.topic_id
-) as Y on Y.topic_id = X.topic_id
-/*where*/
-SQL
-
-    builder.where <<SQL
-X.topic_id = t.topic_id AND
-X.user_id = t.user_id AND
-(
-  last_read_post_number <> LEAST(GREATEST(last_read, last_read_post_number), max_post_number) OR
-  highest_seen_post_number <> LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
-)
-SQL
+    builder.where <<~SQL
+      X.topic_id = t.topic_id AND
+      X.user_id = t.user_id AND
+      (
+        last_read_post_number <> LEAST(GREATEST(last_read, last_read_post_number), max_post_number) OR
+        highest_seen_post_number <> LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
+      )
+    SQL
 
     if topic_id
       builder.where("t.topic_id = :topic_id", topic_id: topic_id)
