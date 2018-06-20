@@ -103,7 +103,7 @@
     .drop {
       border: 1px solid $primary-low;
       position: absolute;
-      z-index: z("dropdown");
+      z-index: z("dropdown") - 1;
       background-color: $secondary;
       padding: 0 10px 10px 10px;
       width: 150px;
