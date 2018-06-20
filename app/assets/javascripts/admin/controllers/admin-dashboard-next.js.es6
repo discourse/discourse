@@ -15,8 +15,12 @@ export default Ember.Controller.extend({
   exceptionController: Ember.inject.controller("exception"),
   showVersionChecks: setting("version_checks"),
   diskSpace: Ember.computed.alias("model.attributes.disk_space"),
+  lastBackupTakenAt: Ember.computed.alias(
+    "model.attributes.last_backup_taken_at"
+  ),
   logSearchQueriesEnabled: setting("log_search_queries"),
   availablePeriods: ["yearly", "quarterly", "monthly", "weekly"],
+  shouldDisplayDurability: Ember.computed.and("lastBackupTakenAt", "diskSpace"),
 
   @computed("problems.length")
   foundProblems(problemsLength) {
@@ -137,7 +141,7 @@ export default Ember.Controller.extend({
     return moment(updatedAt).format("LLL");
   },
 
-  @computed("model.attributes.last_backup_taken_at")
+  @computed("lastBackupTakenAt")
   backupTimestamp(lastBackupTakenAt) {
     return moment(lastBackupTakenAt).format("LLL");
   },

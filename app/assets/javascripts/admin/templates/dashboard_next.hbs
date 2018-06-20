@@ -90,7 +90,7 @@
     </div>
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
-        {{#if diskSpace}}
+        {{#if shouldDisplayDurability}}
           <div class="durability">
             {{#if currentUser.admin}}
               <div class="backups">
