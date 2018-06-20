@@ -2,8 +2,6 @@
 # of AR objects
 #
 #
-require_dependency 'sql_builder'
-
 class ActiveRecord::Relation
 
   # Note: In discourse, the following code is included in lib/sql_builder.rb
@@ -59,7 +57,7 @@ class ActiveRecord::Relation
       }
 
       klass.connection.select_raw(relation.arel) do |result, _|
-        result.type_map = SqlBuilder.pg_type_map
+        result.type_map = DB.type_map
         result.nfields == 1 ? result.column_values(0) : result.values
       end
     end
