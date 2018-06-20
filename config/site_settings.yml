@@ -1647,11 +1647,11 @@ tags:
     default: 20
     client: true
   min_trust_to_create_tag:
-    default: 3
-    enum: 'TrustLevelSetting'
+    default: '3'
+    enum: 'TrustLevelAndStaffSetting'
   min_trust_level_to_tag_topics:
-    default: 0
-    enum: 'TrustLevelSetting'
+    default: '0'
+    enum: 'TrustLevelAndStaffSetting'
     client: true
   max_tag_search_results:
     client: true
