@@ -270,7 +270,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
-    rails_multisite (2.0.4)
+    rails_multisite (2.0.5)
       activerecord (> 4.2, < 6)
       railties (> 4.2, < 6)
     railties (5.2.0)
