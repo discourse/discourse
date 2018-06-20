@@ -16,6 +16,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   showApproval: setting("must_approve_users"),
   showBadges: setting("enable_badges"),
+  hasLockedTrustLevel: Ember.computed.notEmpty("model.manual_locked_trust_level"),
 
   primaryGroupDirty: propertyNotEqual(
     "originalPrimaryGroupId",
