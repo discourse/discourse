@@ -3,6 +3,7 @@ require_dependency 'system_message'
 
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
+  class FailedToCreatePost < StandardError; end
 
   include RateLimiter::OnCreateRecord
   include Trashable
@@ -281,7 +282,12 @@ class PostAction < ActiveRecord::Base
   def self.act(user, post, post_action_type_id, opts = {})
     limit_action!(user, post, post_action_type_id)
 
-    related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
+    begin
+      related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
+    rescue ActiveRecord::RecordNotSaved => e
+      raise FailedToCreatePost.new(e.message)
+    end
+
     staff_took_action = opts[:take_action] || false
 
     targets_topic =

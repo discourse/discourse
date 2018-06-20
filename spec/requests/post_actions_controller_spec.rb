@@ -87,7 +87,28 @@ RSpec.describe PostActionsController do
         post_action_type_id: PostActionType.types[:bookmark]
       }
 
-      expect(response).to be_forbidden
+      expect(response.status).to eq(403)
+    end
+
+    it 'fails when the user tries to notify user that has disabled PM' do
+      sign_in(Fabricate(:user))
+      user2 = Fabricate(:user)
+
+      post = Fabricate(:post, user: user2)
+      user2.user_option.update!(allow_private_messages: false)
+
+      post "/post_actions.json", params: {
+        id: post.id,
+        post_action_type_id: PostActionType.types[:notify_user],
+        message: 'testing',
+        flag_topic: false
+      }
+
+      expect(response.status).to eq(422)
+
+      expect(JSON.parse(response.body)["errors"].first).to eq(I18n.t(
+        :not_accepting_pms, username: user2.username
+      ))
     end
 
     describe 'as a moderator' do

@@ -26,7 +26,11 @@ class PostActionsController < ApplicationController
     args[:take_action] = true if guardian.is_staff? && params[:take_action] == 'true'
     args[:flag_topic] = true if params[:flag_topic] == 'true'
 
-    post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
+    begin
+      post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
+    rescue PostAction::FailedToCreatePost => e
+      return render_json_error(e.message)
+    end
 
     if post_action.blank? || post_action.errors.present?
       render_json_error(post_action)

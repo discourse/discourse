@@ -3,6 +3,7 @@ import ActionSummary from "discourse/models/action-summary";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import computed from "ember-addons/ember-computed-decorators";
 import optionalService from "discourse/lib/optional-service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   adminTools: optionalService(),
@@ -163,13 +164,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
             id: this.get("model.id")
           });
         })
-        .catch(errors => {
+        .catch(error => {
           this.send("closeModal");
-          if (errors && errors.responseText) {
-            bootbox.alert($.parseJSON(errors.responseText).errors);
-          } else {
-            bootbox.alert(I18n.t("generic_error"));
-          }
+          popupAjaxError(error);
         });
     },
 
