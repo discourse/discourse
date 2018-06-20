@@ -378,7 +378,7 @@ class TopicView
 
       columns = [:id, :post_number]
 
-      if is_mega_topic?
+      if !is_mega_topic?
         columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
       end
 
@@ -563,7 +563,9 @@ class TopicView
     filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
   end
 
+  MEGA_TOPIC_POSTS_COUNT = 10000
+
   def is_mega_topic?
-    !@topic.private_message? && @topic.posts_count >= SiteSetting.auto_close_topics_post_count
+    @topic.posts_count >= MEGA_TOPIC_POSTS_COUNT
   end
 end
