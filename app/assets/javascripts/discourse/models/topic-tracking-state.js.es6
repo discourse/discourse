@@ -330,8 +330,7 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   countNew(category_id) {
-    return _
-      .chain(this.states)
+    return _.chain(this.states)
       .where(isNew)
       .where(
         topic =>
@@ -353,8 +352,7 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   countUnread(category_id) {
-    return _
-      .chain(this.states)
+    return _.chain(this.states)
       .where(isUnread)
       .where(
         topic =>

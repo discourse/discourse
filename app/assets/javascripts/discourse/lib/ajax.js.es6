@@ -142,12 +142,12 @@ export function ajax() {
     !Discourse.Session.currentProp("csrfToken")
   ) {
     promise = new Ember.RSVP.Promise((resolve, reject) => {
-      ajaxObj = $
-        .ajax(Discourse.getURL("/session/csrf"), { cache: false })
-        .done(result => {
-          Discourse.Session.currentProp("csrfToken", result.csrf);
-          performAjax(resolve, reject);
-        });
+      ajaxObj = $.ajax(Discourse.getURL("/session/csrf"), {
+        cache: false
+      }).done(result => {
+        Discourse.Session.currentProp("csrfToken", result.csrf);
+        performAjax(resolve, reject);
+      });
     });
   } else {
     promise = new Ember.RSVP.Promise(performAjax);

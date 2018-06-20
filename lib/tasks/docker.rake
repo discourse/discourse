@@ -40,6 +40,9 @@ task 'docker:test' do
     @good = true
     unless ENV['SKIP_LINT']
       puts "Running linters/prettyfiers"
+      puts "eslint #{`eslint -v`}"
+      puts "prettier #{`prettier -v`}"
+
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
         @good &&= run_or_fail("eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")

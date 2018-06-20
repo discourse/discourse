@@ -10,8 +10,7 @@ export default Ember.Route.extend({
       if (preloadedLogs && preloadedLogs.length) {
         // we need to filter out message like: "[SUCCESS]"
         // and convert POJOs to Ember Objects
-        const newLogs = _
-          .chain(preloadedLogs)
+        const newLogs = _.chain(preloadedLogs)
           .reject(function(log) {
             return log.message.length === 0 || log.message[0] === "[";
           })
