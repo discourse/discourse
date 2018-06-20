@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Onebox
-  VERSION = "1.8.48"
+  VERSION = "1.8.49"
 end

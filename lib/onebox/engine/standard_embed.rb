@@ -127,7 +127,7 @@ module Onebox
             favicon = "#{uri.scheme}:#{favicon}"
           elsif favicon && favicon.match(/^https?:\/\//i).nil?
             uri = URI(url)
-            favicon = if !(favicon =~ /^\//) && uri.path.present?
+            favicon = if !favicon.start_with?("/") && uri.path.present?
               "#{uri.scheme}://#{uri.host.sub(/\/$/, '')}#{uri.path.sub(/\/$/, '')}/#{favicon.sub(/^\//, '')}"
             else
               "#{uri.scheme}://#{uri.host.sub(/\/$/, '')}/#{favicon.sub(/^\//, '')}"
