@@ -1,1 +1,14 @@
-git_blob.mustache
+<h4><a href="{{link}}" target="_blank">{{title}}</a></h4>
+{{^has_lines}}
+<pre><code class='{{lang}}'>{{content}}</code></pre>
+{{/has_lines}}
+
+{{#has_lines}}
+<pre class='onebox'><code class='{{lang}}'><ol class='start lines' start="{{cr_results.from}}" style='counter-reset: li-counter {{cr_results.from_minus_one}} ;'>
+{{#lines}}<li{{#selected}} class="selected"{{/selected}}>{{data}}</li>{{/lines}}
+</ol></code></pre>
+{{/has_lines}}
+
+{{#truncated}}
+  This file has been truncated. <a href="{{link}}" target="_blank">show original</a>
+{{/truncated}}
