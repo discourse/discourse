@@ -304,7 +304,7 @@
     </div>
     <div class="controls">
       {{#if model.canLockTrustLevel}}
-        {{#if model.manual_locked_trust_level}}
+        {{#if hasLockedTrustLevel}}
           {{d-icon "lock" title="admin.user.trust_level_locked_tip"}}
           {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
         {{else}}
