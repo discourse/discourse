@@ -428,6 +428,8 @@ aside.quote {
 }
 
 .post-info {
+  margin-left: 0.5em;
+
   &.via-email,
   &.whisper {
     line-height: $line-height-medium;
