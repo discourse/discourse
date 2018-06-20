@@ -226,4 +226,41 @@ describe Discourse do
     end
   end
 
+  context '#deprecate' do
+
+    class FakeLogger
+      attr_reader :warnings
+      def warn(m)
+        @warnings ||= []
+        @warnings << m
+      end
+    end
+
+    def old_method(m)
+      Discourse.deprecate(m)
+    end
+
+    def old_method_caller(m)
+      old_method(m)
+    end
+
+    before do
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after do
+      Rails.logger = @orig_logger
+    end
+
+    it 'can deprecate usage' do
+      k = SecureRandom.hex
+      expect(old_method_caller(k)).to include("old_method_caller")
+      expect(old_method_caller(k)).to include("discourse_spec")
+      expect(old_method_caller(k)).to include(k)
+
+      expect(@fake_logger.warnings).to eq([old_method_caller(k)])
+    end
+  end
+
 end
