@@ -40,15 +40,15 @@ sl:
       not_an_integer: mora biti celo število
       odd: mora biti liho število
       too_long:
-        few: je predolgo (največ %{count} znakov)
         one: je predolgo (največ 1 znak)
-        other: je predolgo (največ %{count} znakov)
         two: je predolgo (največ 2 znaka)
+        few: je predolgo (največ %{count} znakov)
+        other: je predolgo (največ %{count} znakov)
       too_short:
-        few: je prekratko (minimum je %{count} znakov)
         one: je prekratko (minimum je 1 znak)
-        other: je prekratko (minimum je %{count} znakov)
         two: je prekratko (minimum sta 2 znaka)
+        few: je prekratko (minimum je %{count} znakov)
+        other: je prekratko (minimum je %{count} znakov)
   activemodel:
     errors:
       <<: *errors

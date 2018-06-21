@@ -289,7 +289,7 @@ it:
           Hmm… sembra che tu abbia qualche problema. Mi dispiace. Hai cercato <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> il termine **capi&#8203;bara**?
       end:
         message: |-
-          Grazie per avermi seguito @%{username}! Ho fatto questo per te, penso che te lo sei guadagnato:
+          Grazie per avermi seguito finora @%{username}! Ho fatto questo certificato per te, penso che te lo sia guadagnato:
 
           %{certificate}
 
@@ -397,11 +397,11 @@ it:
           Ottimo lavoro — la tua attenzione per i _dettagli_ è ammirevole!
       end:
         message: |-
-          Hai affrontato tutto questo come un _utente avanzato_ infatti :bow:
+          Hai davvero affrontato tutto ciò da _utente avanzato_ :bow:
 
           %{certificate}
 
-          Questo è tutto quello che posso fare per te.
+          Questo è quanto.
 
           Arrivederci per adesso! Se desideri parlare di nuovo con me mandami un messaggio in qualsiasi momento :sunglasses:
       certificate:
