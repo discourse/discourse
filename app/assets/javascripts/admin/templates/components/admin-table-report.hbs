@@ -13,5 +13,16 @@
         </td>
       </tr>
     {{/each}}
+
+    {{#if model.total}}
+      <tr class="total-for-period">
+        <td class="x-value">
+          {{i18n 'admin.dashboard.reports.total_for_period'}}
+        </td>
+        <td>
+          {{model.total}}
+        </td>
+      </tr>
+    {{/if}}
   </table>
 {{/if}}
