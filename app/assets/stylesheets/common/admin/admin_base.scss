@@ -178,6 +178,12 @@ $mobile-breakpoint: 700px;
       }
     }
 
+    tr.total-for-period {
+      td {
+        font-weight: 700;
+      }
+    }
+
     &.web_crawlers {
       tr {
         th:nth-of-type(1) {
