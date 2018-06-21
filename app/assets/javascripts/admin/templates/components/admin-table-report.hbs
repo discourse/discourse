@@ -14,10 +14,19 @@
       </tr>
     {{/each}}
 
+    <tr class="total-for-period">
+      <td class="x-value">
+        {{i18n 'admin.dashboard.reports.total_for_period'}}
+      </td>
+      <td>
+        {{totalForPeriod}}
+      </td>
+    </tr>
+
     {{#if model.total}}
-      <tr class="total-for-period">
+      <tr class="total">
         <td class="x-value">
-          {{i18n 'admin.dashboard.reports.total_for_period'}}
+          {{i18n 'admin.dashboard.reports.total'}}
         </td>
         <td>
           {{model.total}}

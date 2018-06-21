@@ -178,7 +178,8 @@ $mobile-breakpoint: 700px;
       }
     }
 
-    tr.total-for-period {
+    tr.total-for-period,
+    tr.total {
       td {
         font-weight: 700;
       }
