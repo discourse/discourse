@@ -349,13 +349,22 @@ class Post < ActiveRecord::Base
 
     # percent rank has tons of ties
     where(topic_id: topic_id)
-      .where(["(post_number = 1) or id in (
-          SELECT p1.id
-          FROM posts p1
-          WHERE p1.percent_rank <= ? AND
-             p1.topic_id = #{topic_id}
-          ORDER BY p1.percent_rank
-          LIMIT ?
+      .where([
+        "id = ANY(
+          (
+            SELECT posts.id
+            FROM posts
+            WHERE posts.topic_id = #{topic_id.to_i}
+            AND post_number = 1
+          ) UNION
+          (
+            SELECT p1.id
+            FROM posts p1
+            WHERE p1.percent_rank <= ?
+            AND p1.topic_id = #{topic_id.to_i}
+            ORDER BY p1.percent_rank
+            LIMIT ?
+          )
         )",
         SiteSetting.summary_percent_filter.to_f / 100.0,
         SiteSetting.summary_max_results
