@@ -252,8 +252,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (viewMode === "side_by_side_markdown") {
       return html;
     } else {
-      const whiteLister = new WhiteLister({ features: { editHistory: true } });
+      const tableTags = ["table", "thead", "tbody", "th", "tr", "td"];
+      const whiteListObj = { features: { editHistory: true } };
+
+      tableTags.forEach(tag => whiteListObj.features[tag] = true);
+      const whiteLister = new WhiteLister(whiteListObj);
+
       whiteLister.whiteListFeature("editHistory", { custom: () => true });
+      tableTags.forEach(tag => whiteLister.whiteListFeature(tag, tag));
+
       return sanitize(html, whiteLister);
     }
   },
