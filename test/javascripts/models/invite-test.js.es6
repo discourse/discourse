@@ -1,4 +1,4 @@
-import Invite from 'discourse/models/invite';
+import Invite from "discourse/models/invite";
 
 QUnit.module("model:invite");
 

@@ -4,11 +4,11 @@ describe TopicFeaturedUsers do
   it 'ensures consistency' do
 
     t = Fabricate(:topic)
-    Fabricate(:post, topic_id: t.id, user_id: t.user_id)
-    p2 = Fabricate(:post, topic_id: t.id)
-    p3 = Fabricate(:post, topic_id: t.id, user_id: p2.user_id)
-    p4 = Fabricate(:post, topic_id: t.id)
-    p5 = Fabricate(:post, topic_id: t.id)
+    Fabricate(:post, topic: t, user: t.user)
+    p2 = Fabricate(:post, topic: t)
+    p3 = Fabricate(:post, topic: t, user: p2.user)
+    p4 = Fabricate(:post, topic: t)
+    p5 = Fabricate(:post, topic: t)
 
     t.update_columns(featured_user1_id: 66,
                      featured_user2_id: 70,

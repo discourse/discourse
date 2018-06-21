@@ -1,5 +1,5 @@
 {{#d-modal-body title="topic.progress.jump_prompt_long"}}
-  {{text-field value=postNumber insert-newline="jump"}}
+  {{input id="post-jump" type="number" value=postNumber insert-newline="jump"}}
   <span class='input-hint-text'>
     {{i18n "topic.progress.jump_prompt_of" count=topic.postStream.filteredPostsCount}}
   </span>

@@ -1,12 +1,12 @@
-import getUrl from 'discourse-common/lib/get-url';
+import getUrl from "discourse-common/lib/get-url";
 
 const Router = Ember.Router.extend({
-  rootURL: getUrl('/wizard/'),
-  location: Ember.testing ? 'none': 'history'
+  rootURL: getUrl("/wizard/"),
+  location: Ember.testing ? "none" : "history"
 });
 
 Router.map(function() {
-  this.route('step', { path: '/steps/:step_id' });
+  this.route("step", { path: "/steps/:step_id" });
 });
 
 export default Router;

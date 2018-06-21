@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import AsyncReport from "admin/mixins/async-report";
 import Report from "admin/models/report";
-import { number } from 'discourse/lib/formatter';
+import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
 
@@ -9,9 +9,8 @@ function collapseWeekly(data, average) {
   let aggregate = [];
   let bucket, i;
   let offset = data.length % 7;
-  for(i = offset; i < data.length; i++) {
-
-    if (bucket && (i % 7 === offset)) {
+  for (i = offset; i < data.length; i++) {
+    if (bucket && i % 7 === offset) {
       if (average) {
         bucket.y = parseFloat((bucket.y / 7.0).toFixed(2));
       }
@@ -59,12 +58,13 @@ export default Ember.Component.extend(AsyncReport, {
       this._chart = null;
     }
 
-    return Ember.RSVP.Promise.all(this.get("dataSources").map(dataSource => {
-      return ajax(dataSource, payload)
-        .then(response => {
+    return Ember.RSVP.Promise.all(
+      this.get("dataSources").map(dataSource => {
+        return ajax(dataSource, payload).then(response => {
           this.get("reports").pushObject(this.loadReport(response.report));
         });
-    }));
+      })
+    );
   },
 
   loadReport(report, previousReport) {
@@ -77,7 +77,9 @@ export default Ember.Component.extend(AsyncReport, {
     if (previousReport && previousReport.color.length) {
       report.color = previousReport.color;
     } else {
-      const dataSourceNameIndex = this.get("dataSourceNames").split(",").indexOf(report.type);
+      const dataSourceNameIndex = this.get("dataSourceNames")
+        .split(",")
+        .indexOf(report.type);
       report.color = this.pickColorAtIndex(dataSourceNameIndex);
     }
 
@@ -94,13 +96,17 @@ export default Ember.Component.extend(AsyncReport, {
 
       const reportsForPeriod = this.get("reportsForPeriod");
 
-      const labels = Ember.makeArray(reportsForPeriod.get("firstObject.data")).map(d => d.x);
+      const labels = Ember.makeArray(
+        reportsForPeriod.get("firstObject.data")
+      ).map(d => d.x);
 
       const data = {
         labels,
         datasets: reportsForPeriod.map(report => {
           return {
-            data: Ember.makeArray(report.data).map(d => number(d.y, { ceil: true })),
+            data: Ember.makeArray(report.data).map(d =>
+              Math.round(parseFloat(d.y))
+            ),
             backgroundColor: "rgba(200,220,240,0.3)",
             borderColor: report.color
           };
@@ -116,6 +122,7 @@ export default Ember.Component.extend(AsyncReport, {
         if (this._chart) {
           this._chart.destroy();
         }
+
         this._chart = new window.Chart(context, this._buildChartConfig(data));
       });
     });
@@ -128,7 +135,8 @@ export default Ember.Component.extend(AsyncReport, {
       options: {
         tooltips: {
           callbacks: {
-            title: (context) => moment(context[0].xLabel, "YYYY-MM-DD").format("LL")
+            title: context =>
+              moment(context[0].xLabel, "YYYY-MM-DD").format("LL")
           }
         },
         legend: {
@@ -145,20 +153,24 @@ export default Ember.Component.extend(AsyncReport, {
           }
         },
         scales: {
-          yAxes: [{
-            display: true,
-            ticks: { callback: (label) => number(label, { ceil: true }) }
-          }],
-          xAxes: [{
-            display: true,
-            gridLines: { display: false },
-            type: "time",
-            time: {
-              parser: "YYYY-MM-DD"
+          yAxes: [
+            {
+              display: true,
+              ticks: { callback: label => number(label) }
             }
-          }],
+          ],
+          xAxes: [
+            {
+              display: true,
+              gridLines: { display: false },
+              type: "time",
+              time: {
+                parser: "YYYY-MM-DD"
+              }
+            }
+          ]
         }
-      },
+      }
     };
   }
 });

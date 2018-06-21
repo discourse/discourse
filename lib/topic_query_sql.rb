@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 #
 #  SQL fragments used when querying a list of topics.
 #
@@ -10,12 +11,12 @@ module TopicQuerySQL
     end
 
     def order_by_category_sql(dir)
-      "CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{dir}"
+      -"CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{dir}"
     end
 
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_with_pinned_sql
-      "CASE
+      -"CASE
         WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
           THEN topics.pinned_at + interval '9999 years'
           ELSE topics.bumped_at
@@ -24,7 +25,7 @@ module TopicQuerySQL
 
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_nocategory_with_pinned_sql
-      "CASE
+      -"CASE
         WHEN topics.pinned_globally
          AND (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
           THEN topics.pinned_at + interval '9999 years'
@@ -41,18 +42,18 @@ module TopicQuerySQL
     end
 
     def order_top_for(score)
-      "COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
+      -"COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
     end
 
     def order_top_with_pinned_category_for(score)
       # display pinned topics first
-      "CASE WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}')) THEN 0 ELSE 1 END,
+      -"CASE WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}')) THEN 0 ELSE 1 END,
        top_topics.#{score} DESC,
        topics.bumped_at DESC"
     end
 
     def order_top_with_notification_levels(score)
-      "COALESCE(topic_users.notification_level, 1) DESC, COALESCE(category_users.notification_level, 1) DESC, COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
+      -"COALESCE(topic_users.notification_level, 1) DESC, COALESCE(category_users.notification_level, 1) DESC, COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
     end
 
   end

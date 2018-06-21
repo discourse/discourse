@@ -163,8 +163,10 @@ class StaticController < ApplicationController
         # However, ensure that these may be cached and served for longer on servers.
         immutable_for 1.year
 
-        path = File.expand_path(Rails.root + "public/assets/#{Rails.application.assets_manifest.assets['service-worker.js']}")
-        response.headers["Last-Modified"] = File.ctime(path).httpdate
+        if Rails.application.assets_manifest.assets['service-worker.js']
+          path = File.expand_path(Rails.root + "public/assets/#{Rails.application.assets_manifest.assets['service-worker.js']}")
+          response.headers["Last-Modified"] = File.ctime(path).httpdate
+        end
         render(
           plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
           content_type: 'application/javascript'

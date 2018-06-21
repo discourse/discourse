@@ -94,7 +94,6 @@ def compress_ruby(from, to)
   data = File.read("#{assets_path}/#{from}")
 
   uglified, map = Uglifier.new(comments: :none,
-                               screw_ie8: true,
                                source_map: {
                                  filename: File.basename(from),
                                  output_filename: File.basename(to)

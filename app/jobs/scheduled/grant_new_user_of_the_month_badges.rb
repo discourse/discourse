@@ -55,7 +55,7 @@ module Jobs
                 ELSE 1.0
                 END
               ELSE 0
-              END) / (5 + COUNT(DISTINCT p.id)) AS score
+              END) / (5 + COUNT(DISTINCT p.id))::float AS score
         FROM users AS u
         INNER JOIN user_stats        AS us       ON u.id = us.user_id
         LEFT OUTER JOIN posts        AS p        ON p.user_id = u.id
@@ -82,7 +82,7 @@ module Jobs
         LIMIT #{MAX_AWARDED}
       SQL
 
-      User.exec_sql(sql).map { |r| [r['id'].to_i, r['score'].to_f] }.to_h
+      Hash[*DB.query_single(sql)]
     end
 
   end

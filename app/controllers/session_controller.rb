@@ -63,7 +63,8 @@ class SessionController < ApplicationController
         sso.groups = current_user.groups.pluck(:name).join(",")
 
         if current_user.uploaded_avatar.present?
-          avatar_url = "#{Discourse.store.absolute_base_url}/#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
+          base_url = Discourse.store.external? ? "#{Discourse.store.absolute_base_url}/" : Discourse.base_url
+          avatar_url = "#{base_url}#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
           sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
         end
 

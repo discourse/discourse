@@ -6,10 +6,12 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   afterModel() {
-    return this.modelFor("user").get("stream").filterBy(
-      this.get("userActionType"),
-      this.get("noContentHelpKey") || "user_activity.no_default"
-    );
+    return this.modelFor("user")
+      .get("stream")
+      .filterBy(
+        this.get("userActionType"),
+        this.get("noContentHelpKey") || "user_activity.no_default"
+      );
   },
 
   renderTemplate() {

@@ -31,9 +31,9 @@ class ClicksController < ApplicationController
 
   private
 
-    def track_params
-      params.require(:url)
-      params.permit(:url, :post_id, :topic_id, :redirect)
-    end
+  def track_params
+    params.require(:url)
+    params.permit(:url, :post_id, :topic_id, :redirect)
+  end
 
 end

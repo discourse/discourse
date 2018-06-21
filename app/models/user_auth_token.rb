@@ -131,7 +131,7 @@ class UserAuthToken < ActiveRecord::Base
 
     token = SecureRandom.hex(16)
 
-    result = UserAuthToken.exec_sql("
+    result = DB.exec("
   UPDATE user_auth_tokens
   SET
     auth_token_seen = false,
@@ -150,7 +150,7 @@ class UserAuthToken < ActiveRecord::Base
    safeguard_time: 30.seconds.ago
   )
 
-    if result.cmdtuples > 0
+    if result > 0
       reload
       self.unhashed_auth_token = token
 

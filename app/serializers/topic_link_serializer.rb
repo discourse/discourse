@@ -2,7 +2,7 @@ class TopicLinkSerializer < ApplicationSerializer
 
   attributes :url,
              :title,
-             :fancy_title,
+             # :fancy_title,
              :internal,
              :attachment,
              :reflection,
@@ -11,44 +11,12 @@ class TopicLinkSerializer < ApplicationSerializer
              :domain,
              :root_domain,
 
-  def url
-    object['url']
-  end
-
-  def title
-    object['title']
-  end
-
-  def fancy_title
-    object['fancy_title']
-  end
-
-  def internal
-    object['internal'] == 't'
-  end
-
   def attachment
-    Discourse.store.has_been_uploaded?(object['url'])
-  end
-
-  def reflection
-    object['reflection'] == 't'
-  end
-
-  def clicks
-    object['clicks'].to_i
-  end
-
-  def user_id
-    object['user_id'].to_i
+    Discourse.store.has_been_uploaded?(object.url)
   end
 
   def include_user_id?
-    object['user_id'].present?
-  end
-
-  def domain
-    object['domain']
+    object.user_id.present?
   end
 
   def root_domain

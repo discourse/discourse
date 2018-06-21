@@ -1,9 +1,12 @@
 function escapeRegexp(text) {
-  return text.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/\*/g, "\S*");
+  return text.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&").replace(/\*/g, "S*");
 }
 
-export function censorFn(censoredWords, replacementLetter, watchedWordsRegularExpressions) {
-
+export function censorFn(
+  censoredWords,
+  replacementLetter,
+  watchedWordsRegularExpressions
+) {
   let patterns = [];
 
   replacementLetter = replacementLetter || "&#9632;";
@@ -20,13 +23,18 @@ export function censorFn(censoredWords, replacementLetter, watchedWordsRegularEx
 
     try {
       if (watchedWordsRegularExpressions) {
-        censorRegexp = new RegExp("((?:" + patterns.join("|") + "))(?![^\\(]*\\))", "ig");
+        censorRegexp = new RegExp(
+          "((?:" + patterns.join("|") + "))(?![^\\(]*\\))",
+          "ig"
+        );
       } else {
-        censorRegexp = new RegExp("(\\b(?:" + patterns.join("|") + ")\\b)(?![^\\(]*\\))", "ig");
+        censorRegexp = new RegExp(
+          "(\\b(?:" + patterns.join("|") + ")\\b)(?![^\\(]*\\))",
+          "ig"
+        );
       }
 
       if (censorRegexp) {
-
         return function(text) {
           let original = text;
 
@@ -35,12 +43,22 @@ export function censorFn(censoredWords, replacementLetter, watchedWordsRegularEx
             const fourCharReplacement = new Array(5).join(replacementLetter);
 
             while (m && m[0]) {
-              if (m[0].length > original.length) { return original; } // regex is dangerous
+              if (m[0].length > original.length) {
+                return original;
+              } // regex is dangerous
               if (watchedWordsRegularExpressions) {
                 text = text.replace(censorRegexp, fourCharReplacement);
               } else {
-                const replacement = new Array(m[0].length+1).join(replacementLetter);
-                text = text.replace(new RegExp(`(\\b${escapeRegexp(m[0])}\\b)(?![^\\(]*\\))`, "ig"), replacement);
+                const replacement = new Array(m[0].length + 1).join(
+                  replacementLetter
+                );
+                text = text.replace(
+                  new RegExp(
+                    `(\\b${escapeRegexp(m[0])}\\b)(?![^\\(]*\\))`,
+                    "ig"
+                  ),
+                  replacement
+                );
               }
               m = censorRegexp.exec(text);
             }
@@ -50,14 +68,15 @@ export function censorFn(censoredWords, replacementLetter, watchedWordsRegularEx
             return original;
           }
         };
-
       }
-    } catch(e) {
+    } catch (e) {
       // fall through
     }
   }
 
-  return function(t){ return t;};
+  return function(t) {
+    return t;
+  };
 }
 
 export function censor(text, censoredWords, replacementLetter) {

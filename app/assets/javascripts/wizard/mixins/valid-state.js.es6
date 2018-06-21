@@ -1,4 +1,4 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export const States = {
   UNCHECKED: 0,
@@ -12,26 +12,22 @@ export default {
 
   init() {
     this._super();
-    this.set('_validState', States.UNCHECKED);
+    this.set("_validState", States.UNCHECKED);
   },
 
-  @computed('_validState')
-  valid: state => state === States.VALID,
+  @computed("_validState") valid: state => state === States.VALID,
 
-  @computed('_validState')
-  invalid: state => state === States.INVALID,
+  @computed("_validState") invalid: state => state === States.INVALID,
 
-  @computed('_validState')
-  unchecked: state => state === States.UNCHECKED,
+  @computed("_validState") unchecked: state => state === States.UNCHECKED,
 
   setValid(valid, description) {
-    this.set('_validState', valid ? States.VALID : States.INVALID);
+    this.set("_validState", valid ? States.VALID : States.INVALID);
 
     if (!valid && description && description.length) {
-      this.set('errorDescription', description);
+      this.set("errorDescription", description);
     } else {
-      this.set('errorDescription', null);
+      this.set("errorDescription", null);
     }
   }
-
 };

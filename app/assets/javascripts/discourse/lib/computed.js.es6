@@ -1,4 +1,4 @@
-import addonFmt from 'ember-addons/fmt';
+import addonFmt from "ember-addons/fmt";
 /**
   Returns whether two properties are equal to each other.
 
@@ -102,11 +102,16 @@ export function endWith() {
   const substring = args.pop();
   const computed = Em.computed(function() {
     const self = this;
-    return _.all(args.map(function(a) { return self.get(a); }), function(s) {
-      const position = s.length - substring.length,
+    return _.all(
+      args.map(function(a) {
+        return self.get(a);
+      }),
+      function(s) {
+        const position = s.length - substring.length,
           lastIndex = s.lastIndexOf(substring);
-      return lastIndex !== -1 && lastIndex === position;
-    });
+        return lastIndex !== -1 && lastIndex === position;
+      }
+    );
   });
   return computed.property.apply(computed, args);
 }

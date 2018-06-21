@@ -1,11 +1,11 @@
-import { ajax } from 'discourse/lib/ajax';
-import Setting from 'admin/mixins/setting-object';
+import { ajax } from "discourse/lib/ajax";
+import Setting from "admin/mixins/setting-object";
 
 const SiteSetting = Discourse.Model.extend(Setting, {});
 
 SiteSetting.reopenClass({
   findAll() {
-    return ajax("/admin/site_settings").then(function (settings) {
+    return ajax("/admin/site_settings").then(function(settings) {
       // Group the results by category
       const categories = {};
       settings.site_settings.forEach(function(s) {
@@ -16,7 +16,11 @@ SiteSetting.reopenClass({
       });
 
       return Object.keys(categories).map(function(n) {
-        return {nameKey: n, name: I18n.t('admin.site_settings.categories.' + n), siteSettings: categories[n]};
+        return {
+          nameKey: n,
+          name: I18n.t("admin.site_settings.categories." + n),
+          siteSettings: categories[n]
+        };
       });
     });
   },
@@ -24,7 +28,7 @@ SiteSetting.reopenClass({
   update(key, value) {
     const data = {};
     data[key] = value;
-    return ajax(`/admin/site_settings/${key}`, { type: 'PUT', data });
+    return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
   }
 });
 

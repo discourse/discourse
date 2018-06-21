@@ -1,5 +1,8 @@
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
-import { on } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  on
+} from "ember-addons/ember-computed-decorators";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({
@@ -9,9 +12,14 @@ export default NotificationOptionsComponent.extend({
   i18nPrefix: "topic.notifications",
   allowInitialValueMutation: false,
 
+  @computed("topic.archetype")
+  i18nPostfix(archetype) {
+    return archetype === "private_message" ? "_pm" : "";
+  },
+
   @on("didInsertElement")
   _bindGlobalLevelChanged() {
-    this.appEvents.on("topic-notifications-button:changed", (msg) => {
+    this.appEvents.on("topic-notifications-button:changed", msg => {
       if (msg.type === "notification") {
         if (this.get("computedValue") !== msg.id) {
           this.get("topic.details").updateNotifications(msg.id);

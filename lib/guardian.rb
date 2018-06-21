@@ -222,6 +222,7 @@ class Guardian
   def can_grant_title?(user, title = nil)
     return true if user && is_staff?
     return false if title.nil?
+    return true if title.empty? # A title set to '(none)' in the UI is an empty string
     return false if user != @user
     return true if user.badges.where(name: title, allow_title: true).exists?
     user.groups.where(title: title).exists?

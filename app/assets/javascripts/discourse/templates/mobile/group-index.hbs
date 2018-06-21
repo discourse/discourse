@@ -9,9 +9,11 @@
           showAddMembersModal="showAddMembersModal"
           showBulkAddModal="showBulkAddModal"}}
     {{else}}
-      {{d-button icon="plus"
+      {{d-button
+          icon="plus"
           label="groups.add_members.title"
-          class="group-members-add"}}
+          class="group-members-add"
+          action="showAddMembersModal"}}
     {{/if}}
   {{/if}}
 </div>

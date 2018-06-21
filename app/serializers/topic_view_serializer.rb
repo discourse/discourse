@@ -68,6 +68,7 @@ class TopicViewSerializer < ApplicationSerializer
              :participant_count,
              :destination_category_id,
              :pm_with_non_human_user,
+             :force_summary_mode,
 
   # TODO: Split off into proper object / serializer
   def details
@@ -299,10 +300,14 @@ class TopicViewSerializer < ApplicationSerializer
       object.topic.shared_draft.present?
   end
 
+  def force_summary_mode
+    object.force_summary_mode?
+  end
+
   private
 
-    def private_message?(topic)
-      @private_message ||= topic.private_message?
-    end
+  def private_message?(topic)
+    @private_message ||= topic.private_message?
+  end
 
 end

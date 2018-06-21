@@ -30,7 +30,15 @@ class Autospec::Manager
 
   def run
     Signal.trap("HUP") { stop_runners; exit }
-    Signal.trap("INT") { stop_runners; exit }
+
+    Signal.trap("INT") do
+      begin
+        stop_runners
+      rescue => e
+        puts "FAILED TO STOP RUNNERS #{e}"
+      end
+      exit
+    end
 
     ensure_all_specs_will_run
     start_runners

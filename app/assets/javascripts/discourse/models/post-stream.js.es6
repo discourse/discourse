@@ -1,9 +1,9 @@
-import { ajax } from 'discourse/lib/ajax';
-import DiscourseURL from 'discourse/lib/url';
-import RestModel from 'discourse/models/rest';
-import PostsWithPlaceholders from 'discourse/lib/posts-with-placeholders';
-import { default as computed } from 'ember-addons/ember-computed-decorators';
-import { loadTopicView } from 'discourse/models/topic';
+import { ajax } from "discourse/lib/ajax";
+import DiscourseURL from "discourse/lib/url";
+import RestModel from "discourse/models/rest";
+import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
+import { default as computed } from "ember-addons/ember-computed-decorators";
+import { loadTopicView } from "discourse/models/topic";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -23,7 +23,10 @@ export default RestModel.extend({
   init() {
     this._identityMap = {};
     const posts = [];
-    const postsWithPlaceholders = PostsWithPlaceholders.create({ posts, store: this.store });
+    const postsWithPlaceholders = PostsWithPlaceholders.create({
+      posts,
+      store: this.store
+    });
 
     this.setProperties({
       posts,
@@ -40,53 +43,74 @@ export default RestModel.extend({
     });
   },
 
-  loading: Ember.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
-  notLoading: Ember.computed.not('loading'),
+  loading: Ember.computed.or(
+    "loadingAbove",
+    "loadingBelow",
+    "loadingFilter",
+    "stagingPost"
+  ),
+  notLoading: Ember.computed.not("loading"),
   filteredPostsCount: Ember.computed.alias("stream.length"),
 
-  @computed('posts.[]')
+  @computed("posts.[]")
   hasPosts() {
-    return this.get('posts.length') > 0;
+    return this.get("posts.length") > 0;
   },
 
-  @computed('hasPosts', 'filteredPostsCount')
+  @computed("hasPosts", "filteredPostsCount")
   hasLoadedData(hasPosts, filteredPostsCount) {
     return hasPosts && filteredPostsCount > 0;
   },
 
-  canAppendMore: Ember.computed.and('notLoading', 'hasPosts', 'lastPostNotLoaded'),
-  canPrependMore: Ember.computed.and('notLoading', 'hasPosts', 'firstPostNotLoaded'),
+  canAppendMore: Ember.computed.and(
+    "notLoading",
+    "hasPosts",
+    "lastPostNotLoaded"
+  ),
+  canPrependMore: Ember.computed.and(
+    "notLoading",
+    "hasPosts",
+    "firstPostNotLoaded"
+  ),
 
-  @computed('hasLoadedData', 'firstPostId', 'posts.[]')
+  @computed("hasLoadedData", "firstPostId", "posts.[]")
   firstPostPresent(hasLoadedData, firstPostId) {
-    if (!hasLoadedData) { return false; }
-    return !!this.get('posts').findBy('id', firstPostId);
+    if (!hasLoadedData) {
+      return false;
+    }
+    return !!this.get("posts").findBy("id", firstPostId);
   },
 
-  firstPostNotLoaded: Ember.computed.not('firstPostPresent'),
-  firstPostId: Ember.computed.alias('stream.firstObject'),
-  lastPostId: Ember.computed.alias('stream.lastObject'),
+  firstPostNotLoaded: Ember.computed.not("firstPostPresent"),
+  firstPostId: Ember.computed.alias("stream.firstObject"),
+  lastPostId: Ember.computed.alias("stream.lastObject"),
 
-  @computed('hasLoadedData', 'lastPostId', 'posts.@each.id')
+  @computed("hasLoadedData", "lastPostId", "posts.@each.id")
   loadedAllPosts(hasLoadedData, lastPostId) {
-    if (!hasLoadedData) { return false; }
-    if (lastPostId === -1) { return true; }
+    if (!hasLoadedData) {
+      return false;
+    }
+    if (lastPostId === -1) {
+      return true;
+    }
 
-    return !!this.get('posts').findBy('id', lastPostId);
+    return !!this.get("posts").findBy("id", lastPostId);
   },
 
-  lastPostNotLoaded: Ember.computed.not('loadedAllPosts'),
+  lastPostNotLoaded: Ember.computed.not("loadedAllPosts"),
 
   /**
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @computed('summary', 'userFilters.[]')
+  @computed("summary", "userFilters.[]")
   streamFilters(summary) {
     const result = {};
-    if (summary) { result.filter = "summary"; }
+    if (summary) {
+      result.filter = "summary";
+    }
 
-    const userFilters = this.get('userFilters');
+    const userFilters = this.get("userFilters");
     if (!Ember.isEmpty(userFilters)) {
       result.username_filters = userFilters.join(",");
     }
@@ -94,29 +118,38 @@ export default RestModel.extend({
     return result;
   },
 
-  @computed('streamFilters.[]', 'topic.posts_count', 'posts.length')
+  @computed("streamFilters.[]", "topic.posts_count", "posts.length")
   hasNoFilters() {
-    const streamFilters = this.get('streamFilters');
-    return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.username_filters));
+    const streamFilters = this.get("streamFilters");
+    return !(
+      streamFilters &&
+      (streamFilters.filter === "summary" || streamFilters.username_filters)
+    );
   },
 
   /**
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
   **/
-  @computed('posts.[]', 'stream.[]')
+  @computed("posts.[]", "stream.[]")
   previousWindow() {
     // If we can't find the last post loaded, bail
-    const firstPost = _.first(this.get('posts'));
-    if (!firstPost) { return []; }
+    const firstPost = _.first(this.get("posts"));
+    if (!firstPost) {
+      return [];
+    }
 
     // Find the index of the last post loaded, if not found, bail
-    const stream = this.get('stream');
+    const stream = this.get("stream");
     const firstIndex = this.indexOf(firstPost);
-    if (firstIndex === -1) { return []; }
+    if (firstIndex === -1) {
+      return [];
+    }
 
-    let startIndex = firstIndex - this.get('topic.chunk_size');
-    if (startIndex < 0) { startIndex = 0; }
+    let startIndex = firstIndex - this.get("topic.chunk_size");
+    if (startIndex < 0) {
+      startIndex = 0;
+    }
     return stream.slice(startIndex, firstIndex);
   },
 
@@ -124,49 +157,58 @@ export default RestModel.extend({
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
-  @computed('posts.lastObject', 'stream.[]')
+  @computed("posts.lastObject", "stream.[]")
   nextWindow(lastLoadedPost) {
     // If we can't find the last post loaded, bail
-    if (!lastLoadedPost) { return []; }
+    if (!lastLoadedPost) {
+      return [];
+    }
 
     // Find the index of the last post loaded, if not found, bail
-    const stream = this.get('stream');
+    const stream = this.get("stream");
     const lastIndex = this.indexOf(lastLoadedPost);
-    if (lastIndex === -1) { return []; }
-    if ((lastIndex + 1) >= this.get('highest_post_number')) { return []; }
+    if (lastIndex === -1) {
+      return [];
+    }
+    if (lastIndex + 1 >= this.get("highest_post_number")) {
+      return [];
+    }
 
     // find our window of posts
-    return stream.slice(lastIndex+1, lastIndex + this.get('topic.chunk_size') + 1);
+    return stream.slice(
+      lastIndex + 1,
+      lastIndex + this.get("topic.chunk_size") + 1
+    );
   },
 
   cancelFilter() {
-    this.set('summary', false);
-    this.get('userFilters').clear();
+    this.set("summary", false);
+    this.get("userFilters").clear();
   },
 
   toggleSummary() {
-    this.get('userFilters').clear();
-    this.toggleProperty('summary');
+    this.get("userFilters").clear();
+    this.toggleProperty("summary");
 
     return this.refresh().then(() => {
-      if (this.get('summary')) {
+      if (this.get("summary")) {
         this.jumpToSecondVisible();
       }
     });
   },
 
   jumpToSecondVisible() {
-    const posts = this.get('posts');
+    const posts = this.get("posts");
     if (posts.length > 1) {
-      const secondPostNum = posts[1].get('post_number');
+      const secondPostNum = posts[1].get("post_number");
       DiscourseURL.jumpToPost(secondPostNum);
     }
   },
 
   // Filter the stream to a particular user.
   toggleParticipant(username) {
-    const userFilters = this.get('userFilters');
-    this.set('summary', false);
+    const userFilters = this.get("userFilters");
+    this.set("summary", false);
 
     let jump = false;
     if (userFilters.includes(username)) {
@@ -191,64 +233,73 @@ export default RestModel.extend({
     opts.nearPost = parseInt(opts.nearPost, 10);
 
     if (opts.cancelSummary) {
-      this.set('summary', false);
+      this.set("summary", false);
       delete opts.cancelSummary;
     }
 
-    const topic = this.get('topic');
+    const topic = this.get("topic");
 
     // Do we already have the post in our list of posts? Jump there.
     if (opts.forceLoad) {
-      this.set('loaded', false);
+      this.set("loaded", false);
     } else {
-      const postWeWant = this.get('posts').findBy('post_number', opts.nearPost);
-      if (postWeWant) { return Ember.RSVP.resolve(); }
+      const postWeWant = this.get("posts").findBy("post_number", opts.nearPost);
+      if (postWeWant) {
+        return Ember.RSVP.resolve();
+      }
     }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
-    this.set('loadingFilter', true);
-    this.set('loadingNearPost', opts.nearPost);
+    this.set("loadingFilter", true);
+    this.set("loadingNearPost", opts.nearPost);
 
-    opts = _.merge(opts, this.get('streamFilters'));
+    opts = _.merge(opts, this.get("streamFilters"));
 
     // Request a topicView
-    return loadTopicView(topic, opts).then(json => {
-      this.updateFromJson(json.post_stream);
-      this.setProperties({ loadingFilter: false, timelineLookup: json.timeline_lookup, loaded: true });
-    }).catch(result => {
-      this.errorLoading(result);
-      throw result;
-    }).finally(() => {
-      this.set('loadingNearPost', null);
-    });
+    return loadTopicView(topic, opts)
+      .then(json => {
+        this.updateFromJson(json.post_stream);
+        this.setProperties({
+          loadingFilter: false,
+          timelineLookup: json.timeline_lookup,
+          loaded: true
+        });
+      })
+      .catch(result => {
+        this.errorLoading(result);
+        throw new Error(result);
+      })
+      .finally(() => {
+        this.set("loadingNearPost", null);
+      });
   },
 
-  collapsePosts(from, to){
-    const posts = this.get('posts');
+  collapsePosts(from, to) {
+    const posts = this.get("posts");
     const remove = posts.filter(post => {
-      const postNumber = post.get('post_number');
+      const postNumber = post.get("post_number");
       return postNumber >= from && postNumber <= to;
     });
 
     posts.removeObjects(remove);
 
     // make gap
-    this.set('gaps', this.get('gaps') || {before: {}, after: {}});
-    const before = this.get('gaps.before');
-    const post = posts.find(p => p.get('post_number') > to);
+    this.set("gaps", this.get("gaps") || { before: {}, after: {} });
+    const before = this.get("gaps.before");
+    const post = posts.find(p => p.get("post_number") > to);
 
-    before[post.get('id')] = remove.map(p => p.get('id'));
-    post.set('hasGap', true);
+    before[post.get("id")] = remove.map(p => p.get("id"));
+    post.set("hasGap", true);
 
-    this.get('stream').enumerableContentDidChange();
+    this.get("stream").enumerableContentDidChange();
   },
 
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
-    const postId = post.get('id'),
-          stream = this.get('stream'),
-          idx = stream.indexOf(postId),
-          currentPosts = this.get('posts');
+    const postId = post.get("id"),
+      stream = this.get("stream"),
+      idx = stream.indexOf(postId),
+      currentPosts = this.get("posts");
 
     if (idx !== -1) {
       // Insert the gap at the appropriate place
@@ -265,10 +316,14 @@ export default RestModel.extend({
             }
           });
 
-          delete this.get('gaps.before')[postId];
-          this.get('stream').enumerableContentDidChange();
-          this.get('postsWithPlaceholders').arrayContentDidChange(origIdx, 0, posts.length);
-          post.set('hasGap', false);
+          delete this.get("gaps.before")[postId];
+          this.get("stream").enumerableContentDidChange();
+          this.get("postsWithPlaceholders").arrayContentDidChange(
+            origIdx,
+            0,
+            posts.length
+          );
+          post.set("hasGap", false);
         });
       }
     }
@@ -277,15 +332,15 @@ export default RestModel.extend({
 
   // Fill in a gap of posts after a particular post
   fillGapAfter(post, gap) {
-    const postId = post.get('id'),
-          stream = this.get('stream'),
-          idx = stream.indexOf(postId);
+    const postId = post.get("id"),
+      stream = this.get("stream"),
+      idx = stream.indexOf(postId);
 
     if (idx !== -1) {
       stream.pushObjects(gap);
       return this.appendMore().then(() => {
-        delete this.get('gaps.after')[postId];
-        this.get('stream').enumerableContentDidChange();
+        delete this.get("gaps.after")[postId];
+        this.get("stream").enumerableContentDidChange();
       });
     }
     return Ember.RSVP.resolve();
@@ -294,39 +349,51 @@ export default RestModel.extend({
   // Appends the next window of posts to the stream. Call it when scrolling downwards.
   appendMore() {
     // Make sure we can append more posts
-    if (!this.get('canAppendMore')) { return Ember.RSVP.resolve(); }
+    if (!this.get("canAppendMore")) {
+      return Ember.RSVP.resolve();
+    }
 
-    const postIds = this.get('nextWindow');
-    if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
+    const postIds = this.get("nextWindow");
+    if (Ember.isEmpty(postIds)) {
+      return Ember.RSVP.resolve();
+    }
 
-    this.set('loadingBelow', true);
-    const postsWithPlaceholders = this.get('postsWithPlaceholders');
+    this.set("loadingBelow", true);
+    const postsWithPlaceholders = this.get("postsWithPlaceholders");
     postsWithPlaceholders.appending(postIds);
-    return this.findPostsByIds(postIds).then(posts => {
-      posts.forEach(p => this.appendPost(p));
-      return posts;
-    }).finally(() => {
-      postsWithPlaceholders.finishedAppending(postIds);
-      this.set('loadingBelow', false);
-    });
+    return this.findPostsByIds(postIds)
+      .then(posts => {
+        posts.forEach(p => this.appendPost(p));
+        return posts;
+      })
+      .finally(() => {
+        postsWithPlaceholders.finishedAppending(postIds);
+        this.set("loadingBelow", false);
+      });
   },
 
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
   prependMore() {
     // Make sure we can append more posts
-    if (!this.get('canPrependMore')) { return Ember.RSVP.resolve(); }
+    if (!this.get("canPrependMore")) {
+      return Ember.RSVP.resolve();
+    }
 
-    const postIds = this.get('previousWindow');
-    if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
+    const postIds = this.get("previousWindow");
+    if (Ember.isEmpty(postIds)) {
+      return Ember.RSVP.resolve();
+    }
 
-    this.set('loadingAbove', true);
-    return this.findPostsByIds(postIds.reverse()).then(posts => {
-      posts.forEach(p => this.prependPost(p));
-    }).finally(() => {
-      const postsWithPlaceholders = this.get('postsWithPlaceholders');
-      postsWithPlaceholders.finishedPrepending(postIds);
-      this.set('loadingAbove', false);
-    });
+    this.set("loadingAbove", true);
+    return this.findPostsByIds(postIds.reverse())
+      .then(posts => {
+        posts.forEach(p => this.prependPost(p));
+      })
+      .finally(() => {
+        const postsWithPlaceholders = this.get("postsWithPlaceholders");
+        postsWithPlaceholders.finishedPrepending(postIds);
+        this.set("loadingAbove", false);
+      });
   },
 
   /**
@@ -336,29 +403,31 @@ export default RestModel.extend({
   **/
   stagePost(post, user) {
     // We can't stage two posts simultaneously
-    if (this.get('stagingPost')) { return "alreadyStaging"; }
+    if (this.get("stagingPost")) {
+      return "alreadyStaging";
+    }
 
-    this.set('stagingPost', true);
+    this.set("stagingPost", true);
 
-    const topic = this.get('topic');
+    const topic = this.get("topic");
     topic.setProperties({
-      posts_count: (topic.get('posts_count') || 0) + 1,
+      posts_count: (topic.get("posts_count") || 0) + 1,
       last_posted_at: new Date(),
-      'details.last_poster': user,
-      highest_post_number: (topic.get('highest_post_number') || 0) + 1
+      "details.last_poster": user,
+      highest_post_number: (topic.get("highest_post_number") || 0) + 1
     });
 
     post.setProperties({
-      post_number: topic.get('highest_post_number'),
+      post_number: topic.get("highest_post_number"),
       topic: topic,
       created_at: new Date(),
       id: -1
     });
 
     // If we're at the end of the stream, add the post
-    if (this.get('loadedAllPosts')) {
+    if (this.get("loadedAllPosts")) {
       this.appendPost(post);
-      this.get('stream').addObject(post.get('id'));
+      this.get("stream").addObject(post.get("id"));
       return "staged";
     }
 
@@ -367,16 +436,16 @@ export default RestModel.extend({
 
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
-    if (this.get('topic.id') === post.get('topic_id')) {
-      if (this.get('loadedAllPosts')) {
+    if (this.get("topic.id") === post.get("topic_id")) {
+      if (this.get("loadedAllPosts")) {
         this.appendPost(post);
-        this.get('stream').addObject(post.get('id'));
+        this.get("stream").addObject(post.get("id"));
       }
     }
 
-    this.get('stream').removeObject(-1);
+    this.get("stream").removeObject(-1);
     this._identityMap[-1] = null;
-    this.set('stagingPost', false);
+    this.set("stagingPost", false);
   },
 
   /**
@@ -384,16 +453,18 @@ export default RestModel.extend({
     state we changed.
   **/
   undoPost(post) {
-    this.get('stream').removeObject(-1);
-    this.get('postsWithPlaceholders').removePost(() => this.posts.removeObject(post));
+    this.get("stream").removeObject(-1);
+    this.get("postsWithPlaceholders").removePost(() =>
+      this.posts.removeObject(post)
+    );
     this._identityMap[-1] = null;
 
-    const topic = this.get('topic');
-    this.set('stagingPost', false);
+    const topic = this.get("topic");
+    this.set("stagingPost", false);
 
     topic.setProperties({
-      highest_post_number: (topic.get('highest_post_number') || 0) - 1,
-      posts_count: (topic.get('posts_count') || 0) - 1
+      highest_post_number: (topic.get("highest_post_number") || 0) - 1,
+      posts_count: (topic.get("posts_count") || 0) - 1
     });
 
     // TODO unfudge reply count on parent post
@@ -402,7 +473,7 @@ export default RestModel.extend({
   prependPost(post) {
     const stored = this.storePost(post);
     if (stored) {
-      const posts = this.get('posts');
+      const posts = this.get("posts");
       posts.unshiftObject(stored);
     }
 
@@ -412,32 +483,36 @@ export default RestModel.extend({
   appendPost(post) {
     const stored = this.storePost(post);
     if (stored) {
-      const posts = this.get('posts');
+      const posts = this.get("posts");
 
       if (!posts.includes(stored)) {
-        if (!this.get('loadingBelow')) {
-          this.get('postsWithPlaceholders').appendPost(() => posts.pushObject(stored));
+        if (!this.get("loadingBelow")) {
+          this.get("postsWithPlaceholders").appendPost(() =>
+            posts.pushObject(stored)
+          );
         } else {
           posts.pushObject(stored);
         }
       }
 
-      if (stored.get('id') !== -1) {
-        this.set('lastAppended', stored);
+      if (stored.get("id") !== -1) {
+        this.set("lastAppended", stored);
       }
     }
     return post;
   },
 
   removePosts(posts) {
-    if (Ember.isEmpty(posts)) { return; }
+    if (Ember.isEmpty(posts)) {
+      return;
+    }
 
-    this.get('postsWithPlaceholders').refreshAll(() => {
-      const allPosts = this.get('posts');
-      const postIds = posts.map(p => p.get('id'));
+    this.get("postsWithPlaceholders").refreshAll(() => {
+      const allPosts = this.get("posts");
+      const postIds = posts.map(p => p.get("id"));
       const identityMap = this._identityMap;
 
-      this.get('stream').removeObjects(postIds);
+      this.get("stream").removeObjects(postIds);
       allPosts.removeObjects(posts);
       postIds.forEach(id => delete identityMap[id]);
     });
@@ -458,7 +533,7 @@ export default RestModel.extend({
         p.cooked = existing.cooked;
       }
 
-      return this.storePost(store.createRecord('post', p));
+      return this.storePost(store.createRecord("post", p));
     });
   },
 
@@ -470,22 +545,28 @@ export default RestModel.extend({
   triggerNewPostInStream(postId) {
     const resolved = Ember.RSVP.Promise.resolve();
 
-    if (!postId) { return resolved; }
+    if (!postId) {
+      return resolved;
+    }
 
     // We only trigger if there are no filters active
-    if (!this.get('hasNoFilters')) { return resolved; }
+    if (!this.get("hasNoFilters")) {
+      return resolved;
+    }
 
-    const loadedAllPosts = this.get('loadedAllPosts');
+    const loadedAllPosts = this.get("loadedAllPosts");
 
-    if (this.get('stream').indexOf(postId) === -1) {
-      this.get('stream').addObject(postId);
+    if (this.get("stream").indexOf(postId) === -1) {
+      this.get("stream").addObject(postId);
       if (loadedAllPosts) {
-        this.set('loadingLastPost', true);
-        return this.findPostsByIds([postId]).then(posts => {
-          posts.forEach(p => this.appendPost(p));
-        }).finally(() => {
-          this.set('loadingLastPost', false);
-        });
+        this.set("loadingLastPost", true);
+        return this.findPostsByIds([postId])
+          .then(posts => {
+            posts.forEach(p => this.appendPost(p));
+          })
+          .finally(() => {
+            this.set("loadingLastPost", false);
+          });
       }
     }
 
@@ -502,7 +583,7 @@ export default RestModel.extend({
       const url = "/posts/" + postId;
       const store = this.store;
       return ajax(url).then(p => {
-        const post = store.createRecord('post', p);
+        const post = store.createRecord("post", p);
         const stream = this.get("stream");
         const posts = this.get("posts");
         this.storePost(post);
@@ -511,7 +592,7 @@ export default RestModel.extend({
         let index = 0;
         stream.forEach(pid => {
           if (pid < p.id) {
-            index+= 1;
+            index += 1;
           }
         });
 
@@ -520,14 +601,14 @@ export default RestModel.extend({
         index = 0;
         posts.forEach(_post => {
           if (_post.id < p.id) {
-            index+= 1;
+            index += 1;
           }
         });
 
         if (index < posts.length) {
           posts.insertAt(index, post);
         } else {
-          if (post.post_number < posts[posts.length-1].post_number + 5) {
+          if (post.post_number < posts[posts.length - 1].post_number + 5) {
             this.appendMore();
           }
         }
@@ -535,18 +616,20 @@ export default RestModel.extend({
     }
   },
 
-  triggerDeletedPost(postId){
+  triggerDeletedPost(postId) {
     const existing = this._identityMap[postId];
 
     if (existing && !existing.deleted_at) {
       const url = "/posts/" + postId;
       const store = this.store;
 
-      return ajax(url).then(p => {
-        this.storePost(store.createRecord('post', p));
-      }).catch(() => {
-        this.removePosts([existing]);
-      });
+      return ajax(url)
+        .then(p => {
+          this.storePost(store.createRecord("post", p));
+        })
+        .catch(() => {
+          this.removePosts([existing]);
+        });
     }
     return Ember.RSVP.Promise.resolve();
   },
@@ -555,7 +638,9 @@ export default RestModel.extend({
     opts = opts || {};
 
     const resolved = Ember.RSVP.Promise.resolve();
-    if (!postId) { return resolved; }
+    if (!postId) {
+      return resolved;
+    }
 
     const existing = this._identityMap[postId];
     if (existing && existing.updated_at !== updatedAt) {
@@ -563,10 +648,10 @@ export default RestModel.extend({
       const store = this.store;
       return ajax(url).then(p => {
         if (opts.preserveCooked) {
-          p.cooked = existing.get('cooked');
+          p.cooked = existing.get("cooked");
         }
 
-        this.storePost(store.createRecord('post', p));
+        this.storePost(store.createRecord("post", p));
       });
     }
     return resolved;
@@ -578,16 +663,21 @@ export default RestModel.extend({
     This allows us to set the progress bar with the correct number.
   **/
   closestPostForPostNumber(postNumber) {
-    if (!this.get('hasPosts')) { return; }
+    if (!this.get("hasPosts")) {
+      return;
+    }
 
     let closest = null;
-    this.get('posts').forEach(p => {
+    this.get("posts").forEach(p => {
       if (!closest) {
         closest = p;
         return;
       }
 
-      if (Math.abs(postNumber - p.get('post_number')) < Math.abs(closest.get('post_number') - postNumber)) {
+      if (
+        Math.abs(postNumber - p.get("post_number")) <
+        Math.abs(closest.get("post_number") - postNumber)
+      ) {
         closest = p;
       }
     });
@@ -597,12 +687,12 @@ export default RestModel.extend({
 
   // Get the index of a post in the stream. (Use this for the topic progress bar.)
   progressIndexOfPost(post) {
-    return this.progressIndexOfPostId(post.get('id'));
+    return this.progressIndexOfPostId(post.get("id"));
   },
 
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
   progressIndexOfPostId(postId) {
-    return this.get('stream').indexOf(postId) + 1;
+    return this.get("stream").indexOf(postId) + 1;
   },
 
   /**
@@ -611,15 +701,24 @@ export default RestModel.extend({
     This allows us to set the progress bar with the correct number.
   **/
   closestPostNumberFor(postNumber) {
-    if (!this.get('hasPosts')) { return; }
+    if (!this.get("hasPosts")) {
+      return;
+    }
 
     let closest = null;
-    this.get('posts').forEach(p => {
-      if (closest === postNumber) { return; }
-      if (!closest) { closest = p.get('post_number'); }
+    this.get("posts").forEach(p => {
+      if (closest === postNumber) {
+        return;
+      }
+      if (!closest) {
+        closest = p.get("post_number");
+      }
 
-      if (Math.abs(postNumber - p.get('post_number')) < Math.abs(closest - postNumber)) {
-        closest = p.get('post_number');
+      if (
+        Math.abs(postNumber - p.get("post_number")) <
+        Math.abs(closest - postNumber)
+      ) {
+        closest = p.get("post_number");
       }
     });
 
@@ -627,11 +726,12 @@ export default RestModel.extend({
   },
 
   closestDaysAgoFor(postNumber) {
-    const timelineLookup = this.get('timelineLookup') || [];
+    const timelineLookup = this.get("timelineLookup") || [];
 
-    let low = 0, high = timelineLookup.length - 1;
+    let low = 0,
+      high = timelineLookup.length - 1;
     while (low <= high) {
-      const mid = Math.floor(low + ((high - low) / 2));
+      const mid = Math.floor(low + (high - low) / 2);
       const midValue = timelineLookup[mid][0];
 
       if (midValue > postNumber) {
@@ -644,46 +744,54 @@ export default RestModel.extend({
     }
 
     const val = timelineLookup[high] || timelineLookup[low];
-    if (val) { return val[1]; }
+    if (val) {
+      return val[1];
+    }
   },
 
   // Find a postId for a postNumber, respecting gaps
   findPostIdForPostNumber(postNumber) {
-    const stream = this.get('stream'),
-          beforeLookup = this.get('gaps.before'),
-          streamLength = stream.length;
+    const stream = this.get("stream"),
+      beforeLookup = this.get("gaps.before"),
+      streamLength = stream.length;
 
     let sum = 1;
-    for (let i=0; i<streamLength; i++) {
+    for (let i = 0; i < streamLength; i++) {
       const pid = stream[i];
 
       // See if there are posts before this post
       if (beforeLookup) {
         const before = beforeLookup[pid];
         if (before) {
-          for (let j=0; j<before.length; j++) {
-            if (sum === postNumber) { return pid; }
+          for (let j = 0; j < before.length; j++) {
+            if (sum === postNumber) {
+              return pid;
+            }
             sum++;
           }
         }
       }
 
-      if (sum === postNumber) { return pid; }
+      if (sum === postNumber) {
+        return pid;
+      }
       sum++;
     }
   },
 
   updateFromJson(postStreamData) {
-    const posts = this.get('posts');
+    const posts = this.get("posts");
 
-    const postsWithPlaceholders = this.get('postsWithPlaceholders');
+    const postsWithPlaceholders = this.get("postsWithPlaceholders");
     postsWithPlaceholders.clear(() => posts.clear());
 
-    this.set('gaps', null);
+    this.set("gaps", null);
     if (postStreamData) {
       // Load posts if present
       const store = this.store;
-      postStreamData.posts.forEach(p => this.appendPost(store.createRecord('post', p)));
+      postStreamData.posts.forEach(p =>
+        this.appendPost(store.createRecord("post", p))
+      );
       delete postStreamData.posts;
 
       // Update our attributes
@@ -698,17 +806,22 @@ export default RestModel.extend({
   **/
   storePost(post) {
     // Calling `Ember.get(undefined)` raises an error
-    if (!post) { return; }
+    if (!post) {
+      return;
+    }
 
-    const postId = Ember.get(post, 'id');
+    const postId = Ember.get(post, "id");
     if (postId) {
-      const existing = this._identityMap[post.get('id')];
+      const existing = this._identityMap[post.get("id")];
 
       // Update the `highest_post_number` if this post is higher.
-      const postNumber = post.get('post_number');
-      if (postNumber && postNumber > (this.get('topic.highest_post_number') || 0)) {
-        this.set('topic.highest_post_number', postNumber);
-        this.set('topic.last_posted_at', post.get('created_at'));
+      const postNumber = post.get("post_number");
+      if (
+        postNumber &&
+        postNumber > (this.get("topic.highest_post_number") || 0)
+      ) {
+        this.set("topic.highest_post_number", postNumber);
+        this.set("topic.last_posted_at", post.get("created_at"));
       }
 
       if (existing) {
@@ -717,8 +830,8 @@ export default RestModel.extend({
         return existing;
       }
 
-      post.set('topic', this.get('topic'));
-      this._identityMap[post.get('id')] = post;
+      post.set("topic", this.get("topic"));
+      this._identityMap[post.get("id")] = post;
     }
     return post;
   },
@@ -734,34 +847,35 @@ export default RestModel.extend({
   },
 
   loadIntoIdentityMap(postIds) {
-    if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve([]); }
+    if (Ember.isEmpty(postIds)) {
+      return Ember.RSVP.resolve([]);
+    }
 
-    const url = "/t/" + this.get('topic.id') + "/posts.json";
+    const url = "/t/" + this.get("topic.id") + "/posts.json";
     const data = { post_ids: postIds };
     const store = this.store;
-    return ajax(url, {data}).then(result => {
+    return ajax(url, { data }).then(result => {
       const posts = Ember.get(result, "post_stream.posts");
 
       if (result.suggested_topics) {
-        this.set('topic.suggested_topics', result.suggested_topics);
+        this.set("topic.suggested_topics", result.suggested_topics);
       }
 
       if (posts) {
-        posts.forEach(p => this.storePost(store.createRecord('post', p)));
+        posts.forEach(p => this.storePost(store.createRecord("post", p)));
       }
     });
   },
 
-  backfillExcerpts(streamPosition){
+  backfillExcerpts(streamPosition) {
     this._excerpts = this._excerpts || [];
-    const stream = this.get('stream');
+    const stream = this.get("stream");
 
     this._excerpts.loadNext = streamPosition;
 
     if (this._excerpts.loading) {
-      return this._excerpts.loading.then(()=>{
-        if(!this._excerpts[stream[streamPosition]]) {
-
+      return this._excerpts.loading.then(() => {
+        if (!this._excerpts[stream[streamPosition]]) {
           if (this._excerpts.loadNext === streamPosition) {
             return this.backfillExcerpts(streamPosition);
           }
@@ -769,12 +883,14 @@ export default RestModel.extend({
       });
     }
 
+    let postIds = stream.slice(
+      Math.max(streamPosition - 20, 0),
+      streamPosition + 20
+    );
 
-    let postIds = stream.slice(Math.max(streamPosition-20,0), streamPosition+20);
-
-    for(let i=postIds.length-1;i>=0;i--) {
+    for (let i = postIds.length - 1; i >= 0; i--) {
       if (this._excerpts[postIds[i]]) {
-        postIds.splice(i,1);
+        postIds.splice(i, 1);
       }
     }
 
@@ -782,40 +898,43 @@ export default RestModel.extend({
       post_ids: postIds
     };
 
-    this._excerpts.loading = ajax("/t/" + this.get('topic.id') + "/excerpts.json", {data})
+    this._excerpts.loading = ajax(
+      "/t/" + this.get("topic.id") + "/excerpts.json",
+      { data }
+    )
       .then(excerpts => {
         excerpts.forEach(obj => {
           this._excerpts[obj.post_id] = obj;
         });
       })
-      .finally(()=>{ this._excerpts.loading = null; });
+      .finally(() => {
+        this._excerpts.loading = null;
+      });
 
     return this._excerpts.loading;
   },
 
-  excerpt(streamPosition){
+  excerpt(streamPosition) {
+    const stream = this.get("stream");
 
-    const stream = this.get('stream');
-
-    return new Ember.RSVP.Promise((resolve,reject) => {
-
+    return new Ember.RSVP.Promise((resolve, reject) => {
       let excerpt = this._excerpts && this._excerpts[stream[streamPosition]];
 
-      if(excerpt) {
+      if (excerpt) {
         resolve(excerpt);
         return;
       }
 
       this.backfillExcerpts(streamPosition)
-          .then(()=>{
-            resolve(this._excerpts[stream[streamPosition]]);
-          })
-          .catch(e => reject(e));
+        .then(() => {
+          resolve(this._excerpts[stream[streamPosition]]);
+        })
+        .catch(e => reject(e));
     });
   },
 
   indexOf(post) {
-    return this.get('stream').indexOf(post.get('id'));
+    return this.get("stream").indexOf(post.get("id"));
   },
 
   // Handles an error loading a topic based on a HTTP status code. Updates
@@ -823,29 +942,29 @@ export default RestModel.extend({
   errorLoading(result) {
     const status = result.jqXHR.status;
 
-    const topic = this.get('topic');
-    this.set('loadingFilter', false);
-    topic.set('errorLoading', true);
+    const topic = this.get("topic");
+    this.set("loadingFilter", false);
+    topic.set("errorLoading", true);
 
     // If the result was 404 the post is not found
     // If it was 410 the post is deleted and the user should not see it
     if (status === 404 || status === 410) {
-      topic.set('notFoundHtml', result.jqXHR.responseText);
+      topic.set("notFoundHtml", result.jqXHR.responseText);
       return;
     }
 
     // If the result is 403 it means invalid access
     if (status === 403) {
-      topic.set('noRetry', true);
+      topic.set("noRetry", true);
       if (Discourse.User.current()) {
-        topic.set('message', I18n.t('topic.invalid_access.description'));
+        topic.set("message", I18n.t("topic.invalid_access.description"));
       } else {
-        topic.set('message', I18n.t('topic.invalid_access.login_required'));
+        topic.set("message", I18n.t("topic.invalid_access.login_required"));
       }
       return;
     }
 
     // Otherwise supply a generic error message
-    topic.set('message', I18n.t('topic.server_error.description'));
+    topic.set("message", I18n.t("topic.server_error.description"));
   }
 });

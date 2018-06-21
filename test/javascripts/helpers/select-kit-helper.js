@@ -1,12 +1,12 @@
 function checkSelectKitIsNotExpanded(selector) {
   if (find(selector).hasClass('is-expanded')) {
-    throw 'You expected select-kit to be collapsed but it is expanded.';
+    throw new Error('You expected select-kit to be collapsed but it is expanded.');
   }
 }
 
 function checkSelectKitIsNotCollapsed(selector) {
   if (!find(selector).hasClass('is-expanded')) {
-    throw 'You expected select-kit to be expanded but it is collapsed.';
+    throw new Error('You expected select-kit to be expanded but it is collapsed.');
   }
 }
 

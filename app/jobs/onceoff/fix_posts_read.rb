@@ -15,7 +15,7 @@ UPDATE user_stats
  )
       SQL
 
-      UserStat.exec_sql(sql)
+      DB.exec(sql)
     end
   end
 end

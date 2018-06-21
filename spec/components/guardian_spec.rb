@@ -26,21 +26,59 @@ describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
+  describe "link_posting_access" do
+    it "is none for anonymous users" do
+      expect(Guardian.new.link_posting_access).to eq('none')
+    end
+
+    it "is full for regular users" do
+      expect(Guardian.new(user).link_posting_access).to eq('full')
+    end
+
+    it "is none for a user of a low trust level" do
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).link_posting_access).to eq('none')
+    end
+
+    it "is limited for a user of a low trust level with a whitelist" do
+      SiteSetting.whitelisted_link_domains = 'example.com'
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).link_posting_access).to eq('limited')
+    end
+  end
+
   describe "can_post_link?" do
+    let(:host) { "discourse.org" }
+
     it "returns false for anonymous users" do
-      expect(Guardian.new.can_post_link?).to eq(false)
+      expect(Guardian.new.can_post_link?(host: host)).to eq(false)
     end
 
     it "returns true for a regular user" do
-      expect(Guardian.new(user).can_post_link?).to eq(true)
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
     end
 
     it "supports customization by site setting" do
       user.trust_level = 0
       SiteSetting.min_trust_to_post_links = 0
-      expect(Guardian.new(user).can_post_link?).to eq(true)
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
       SiteSetting.min_trust_to_post_links = 1
-      expect(Guardian.new(user).can_post_link?).to eq(false)
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(false)
+    end
+
+    describe "whitelisted host" do
+      before do
+        SiteSetting.whitelisted_link_domains = host
+      end
+
+      it "allows a new user to post the link to the host" do
+        user.trust_level = 0
+        SiteSetting.min_trust_to_post_links = 1
+        expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
+        expect(Guardian.new(user).can_post_link?(host: 'another-host.com')).to eq(false)
+      end
     end
   end
 
@@ -2242,6 +2280,10 @@ describe Guardian do
 
       it "returns false if title is from a group the user doesn't belong to" do
         expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(false)
+      end
+
+      it "returns true if the title is set to an empty string" do
+        expect(Guardian.new(user).can_grant_title?(user, '')).to eq(true)
       end
     end
   end

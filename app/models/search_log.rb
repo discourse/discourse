@@ -1,7 +1,7 @@
 require_dependency 'enum'
 
 class SearchLog < ActiveRecord::Base
-  validates_presence_of :term, :ip_address
+  validates_presence_of :term
 
   def self.search_types
     @search_types ||= Enum.new(
@@ -41,6 +41,7 @@ class SearchLog < ActiveRecord::Base
     search_type = search_types[search_type]
     return [:error] unless search_type.present? && ip_address.present?
 
+    ip_address = nil if user_id
     key = redis_key(user_id: user_id, ip_address: ip_address)
 
     result = nil
@@ -133,6 +134,7 @@ class SearchLog < ActiveRecord::Base
     if search_id.present?
       SearchLog.where('id < ?', search_id[0]).delete_all
     end
+    SearchLog.where('created_at < TIMESTAMP ?', SiteSetting.search_query_log_max_retention_days.days.ago).delete_all
   end
 end
 
@@ -143,7 +145,7 @@ end
 #  id                 :integer          not null, primary key
 #  term               :string           not null
 #  user_id            :integer
-#  ip_address         :inet             not null
+#  ip_address         :inet
 #  search_result_id   :integer
 #  search_type        :integer          not null
 #  created_at         :datetime         not null

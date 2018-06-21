@@ -13,13 +13,13 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  gem 'actionmailer', '~> 5.1'
-  gem 'actionpack', '~> 5.1'
-  gem 'actionview', '~> 5.1'
-  gem 'activemodel', '~> 5.1'
-  gem 'activerecord', '~> 5.1'
-  gem 'activesupport', '~> 5.1'
-  gem 'railties', '~> 5.1'
+  gem 'actionmailer', '5.2'
+  gem 'actionpack', '5.2'
+  gem 'actionview', '5.2'
+  gem 'activemodel', '5.2'
+  gem 'activerecord', '5.2'
+  gem 'activesupport', '5.2'
+  gem 'railties', '5.2'
   gem 'sprockets-rails'
   gem 'seed-fu'
 end
@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.48'
+gem 'onebox', '1.8.50'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -78,7 +78,8 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 gem 'oj'
-gem 'pg', '~> 0.21.0'
+gem 'pg'
+gem 'mini_sql'
 gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
@@ -184,6 +185,8 @@ if ENV["IMPORT"] == "1"
   gem 'sqlite3', '~> 1.3.13'
   gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
   gem 'reverse_markdown'
+  gem 'tiny_tds'
 end
 
 gem 'webpush', require: false
+gem 'exifr', '1.2.5'

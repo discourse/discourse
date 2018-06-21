@@ -48,12 +48,12 @@ describe Tag do
   describe '#top_tags' do
     it "returns nothing if nothing has been tagged" do
       make_some_tags(tag_a_topic: false)
-      expect(described_class.top_tags.sort).to be_empty
+      expect(Tag.top_tags.sort).to be_empty
     end
 
     it "can return all tags" do
       make_some_tags(tag_a_topic: true)
-      expect(described_class.top_tags.sort).to eq(@tags.map(&:name).sort)
+      expect(Tag.top_tags.sort).to eq(@tags.map(&:name).sort)
     end
 
     context "with categories" do
@@ -69,27 +69,17 @@ describe Tag do
         @topics << Fabricate(:topic, category: @private_category, tags: [@tags[2]])
       end
 
-      it "doesn't return tags that have only been used in private category to anon" do
-        expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name].sort)
-      end
+      it "works correctly" do
+        expect(Tag.top_tags(category: @category1).sort).to eq([@tags[0].name].sort)
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
+        expect(Tag.top_tags(category: @private_category, guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[2].name].sort)
 
-      it "returns tags used in private category to those who can see that category" do
-        expect(described_class.top_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
-      end
+        expect(Tag.top_tags.sort).to eq([@tags[0].name, @tags[1].name].sort)
+        expect(Tag.top_tags(category: @private_category)).to be_empty
 
-      it "returns tags scoped to a given category" do
-        expect(described_class.top_tags(category: @category1).sort).to eq([@tags[0].name].sort)
-        expect(described_class.top_tags(category: @private_category, guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[2].name].sort)
-      end
-
-      it "returns tags from sub-categories too" do
         sub_category = Fabricate(:category, parent_category_id: @category1.id)
         Fabricate(:topic, category: sub_category, tags: [@tags[1]])
-        expect(described_class.top_tags(category: @category1).sort).to eq([@tags[0].name, @tags[1].name].sort)
-      end
-
-      it "returns nothing if category arg is private to you" do
-        expect(described_class.top_tags(category: @private_category)).to be_empty
+        expect(Tag.top_tags(category: @category1).sort).to eq([@tags[0].name, @tags[1].name].sort)
       end
     end
 
@@ -105,15 +95,15 @@ describe Tag do
       end
 
       it "for category with restricted tags, lists those tags" do
-        expect(described_class.top_tags(category: @category1)).to eq([@tags[0].name])
+        expect(Tag.top_tags(category: @category1)).to eq([@tags[0].name])
       end
 
       it "for category without tags, lists allowed tags" do
-        expect(described_class.top_tags(category: @category2).sort).to eq([@tags[1].name, @tags[2].name].sort)
+        expect(Tag.top_tags(category: @category2).sort).to eq([@tags[1].name, @tags[2].name].sort)
       end
 
       it "for no category arg, lists all tags" do
-        expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
+        expect(Tag.top_tags.sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
       end
     end
 
@@ -151,17 +141,17 @@ describe Tag do
     end
 
     it "returns nothing if user is not a staff" do
-      expect(described_class.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
+      expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
     end
 
     it "returns nothing if allow_staff_to_tag_pms setting is disabled" do
       SiteSetting.allow_staff_to_tag_pms = false
-      expect(described_class.pm_tags(guardian: Guardian.new(admin)).sort).to be_empty
+      expect(Tag.pm_tags(guardian: Guardian.new(admin)).sort).to be_empty
     end
 
     it "returns all pm tags if user is a staff and pm tagging is enabled" do
       SiteSetting.allow_staff_to_tag_pms = true
-      tags = described_class.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
+      tags = Tag.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
       expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
     end
@@ -171,7 +161,7 @@ describe Tag do
     it "should exclude private message topics" do
       topic
       Fabricate(:private_message_topic, tags: [tag])
-      described_class.ensure_consistency!
+      Tag.ensure_consistency!
       tag.reload
       expect(tag.topic_count).to eq(1)
     end

@@ -19,8 +19,9 @@ import { minimumOffset } from "discourse/lib/offset-calculator";
 // 2. give up on the scrollbar and implement it ourselves (something that will happen)
 
 const LOCK_DURATION_MS = 1000;
-const SCROLL_EVENTS = "scroll.lock-on touchmove.lock-on mousedown.lock-on wheel.lock-on DOMMouseScroll.lock-on mousewheel.lock-on keyup.lock-on";
-const SCROLL_TYPES  = ["mousedown", "mousewheel", "touchmove", "wheel"];
+const SCROLL_EVENTS =
+  "scroll.lock-on touchmove.lock-on mousedown.lock-on wheel.lock-on DOMMouseScroll.lock-on mousewheel.lock-on keyup.lock-on";
+const SCROLL_TYPES = ["mousedown", "mousewheel", "touchmove", "wheel"];
 
 function within(threshold, x, y) {
   return Math.abs(x - y) < threshold;
@@ -57,7 +58,7 @@ export default class LockOn {
       const top = Math.max(0, this.elementTop());
       const scrollTop = $(window).scrollTop();
 
-      if (typeof(top) === "undefined" || isNaN(top)) {
+      if (typeof top === "undefined" || isNaN(top)) {
         return this.clearLock(interval);
       }
 
@@ -72,10 +73,12 @@ export default class LockOn {
       }
     }, 50);
 
-    $("body, html").off(SCROLL_EVENTS).on(SCROLL_EVENTS, e => {
-      if (e.which > 0 || SCROLL_TYPES.includes(e.type)) {
-        this.clearLock(interval);
-      }
-    });
+    $("body, html")
+      .off(SCROLL_EVENTS)
+      .on(SCROLL_EVENTS, e => {
+        if (e.which > 0 || SCROLL_TYPES.includes(e.type)) {
+          this.clearLock(interval);
+        }
+      });
   }
 }

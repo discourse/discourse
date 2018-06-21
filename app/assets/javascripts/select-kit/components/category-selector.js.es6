@@ -36,15 +36,19 @@ export default MultiSelectComponent.extend({
   },
 
   filterComputedContent(computedContent, computedValues, filter) {
-    const regex = new RegExp(filter.toLowerCase(), 'i');
-    return computedContent.filter(category => Ember.get(category, "name").match(regex));
+    const regex = new RegExp(filter.toLowerCase(), "i");
+    return computedContent.filter(category =>
+      Ember.get(category, "name").match(regex)
+    );
   },
 
   computeContent() {
     const blacklist = Ember.makeArray(this.get("blacklist"));
     return Category.list().filter(category => {
-      return this.get("categories").includes(category) ||
-             !blacklist.includes(category);
+      return (
+        this.get("categories").includes(category) ||
+        !blacklist.includes(category)
+      );
     });
   }
 });

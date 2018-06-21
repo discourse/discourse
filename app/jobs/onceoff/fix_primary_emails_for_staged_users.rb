@@ -24,7 +24,7 @@ module Jobs
         end
       end
 
-      User.exec_sql <<~SQL
+      DB.exec <<~SQL
       INSERT INTO user_emails (
         user_id,
         email,

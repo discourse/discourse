@@ -15,54 +15,61 @@ export default Ember.Controller.extend({
   exceptionController: Ember.inject.controller("exception"),
   showVersionChecks: setting("version_checks"),
   diskSpace: Ember.computed.alias("model.attributes.disk_space"),
+  lastBackupTakenAt: Ember.computed.alias(
+    "model.attributes.last_backup_taken_at"
+  ),
   logSearchQueriesEnabled: setting("log_search_queries"),
   availablePeriods: ["yearly", "quarterly", "monthly", "weekly"],
+  shouldDisplayDurability: Ember.computed.and("lastBackupTakenAt", "diskSpace"),
 
   @computed("problems.length")
   foundProblems(problemsLength) {
     return this.currentUser.get("admin") && (problemsLength || 0) > 0;
   },
 
-  @computed("foundProblems")
-  thereWereProblems(foundProblems) {
-    if (!this.currentUser.get("admin")) { return false; }
-
-    if (foundProblems) {
-      this.set("hadProblems", true);
-      return true;
-    } else {
-      return this.get("hadProblems") || false;
-    }
-  },
-
   fetchDashboard() {
     if (this.get("isLoading")) return;
 
-    if (!this.get("dashboardFetchedAt") || moment().subtract(30, "minutes").toDate() > this.get("dashboardFetchedAt")) {
+    if (
+      !this.get("dashboardFetchedAt") ||
+      moment()
+        .subtract(30, "minutes")
+        .toDate() > this.get("dashboardFetchedAt")
+    ) {
       this.set("isLoading", true);
 
       const versionChecks = this.siteSettings.version_checks;
 
-      AdminDashboardNext.find().then(adminDashboardNextModel => {
+      AdminDashboardNext.find()
+        .then(adminDashboardNextModel => {
+          if (versionChecks) {
+            this.set(
+              "versionCheck",
+              VersionCheck.create(adminDashboardNextModel.version_check)
+            );
+          }
 
-        if (versionChecks) {
-          this.set("versionCheck", VersionCheck.create(adminDashboardNextModel.version_check));
-        }
-
-        this.setProperties({
-          dashboardFetchedAt: new Date(),
-          model: adminDashboardNextModel,
-          reports: adminDashboardNextModel.reports.map(x => Report.create(x))
+          this.setProperties({
+            dashboardFetchedAt: new Date(),
+            model: adminDashboardNextModel,
+            reports: adminDashboardNextModel.reports.map(x => Report.create(x))
+          });
+        })
+        .catch(e => {
+          this.get("exceptionController").set("thrown", e.jqXHR);
+          this.replaceRoute("exception");
+        })
+        .finally(() => {
+          this.set("isLoading", false);
         });
-      }).catch(e => {
-        this.get("exceptionController").set("thrown", e.jqXHR);
-        this.replaceRoute("exception");
-      }).finally(() => {
-        this.set("isLoading", false);
-      });
     }
 
-    if (!this.get("problemsFetchedAt") || moment().subtract(PROBLEMS_CHECK_MINUTES, "minutes").toDate() > this.get("problemsFetchedAt")) {
+    if (
+      !this.get("problemsFetchedAt") ||
+      moment()
+        .subtract(PROBLEMS_CHECK_MINUTES, "minutes")
+        .toDate() > this.get("problemsFetchedAt")
+    ) {
       this.loadProblems();
     }
   },
@@ -70,21 +77,28 @@ export default Ember.Controller.extend({
   loadProblems() {
     this.set("loadingProblems", true);
     this.set("problemsFetchedAt", new Date());
-    AdminDashboardNext.fetchProblems().then(d => {
-      this.set("problems", d.problems);
-    }).finally(() => {
-      this.set("loadingProblems", false);
-    });
+    AdminDashboardNext.fetchProblems()
+      .then(d => {
+        this.set("problems", d.problems);
+      })
+      .finally(() => {
+        this.set("loadingProblems", false);
+      });
   },
 
   @computed("problemsFetchedAt")
   problemsTimestamp(problemsFetchedAt) {
-    return moment(problemsFetchedAt).locale("en").format("LLL");
+    return moment(problemsFetchedAt)
+      .locale("en")
+      .format("LLL");
   },
 
   @computed("period")
   startDate(period) {
-    let fullDay = moment().locale("en").utc().subtract(1, "day");
+    let fullDay = moment()
+      .locale("en")
+      .utc()
+      .subtract(1, "day");
 
     switch (period) {
       case "yearly":
@@ -106,20 +120,28 @@ export default Ember.Controller.extend({
 
   @computed()
   lastWeek() {
-    return moment().locale("en").utc().endOf("day").subtract(1, "week");
+    return moment()
+      .locale("en")
+      .utc()
+      .endOf("day")
+      .subtract(1, "week");
   },
 
   @computed()
   endDate() {
-    return moment().locale("en").utc().subtract(1, "day").endOf("day");
+    return moment()
+      .locale("en")
+      .utc()
+      .subtract(1, "day")
+      .endOf("day");
   },
 
-  @computed("updated_at")
+  @computed("model.attributes.updated_at")
   updatedTimestamp(updatedAt) {
     return moment(updatedAt).format("LLL");
   },
 
-  @computed("last_backup_taken_at")
+  @computed("lastBackupTakenAt")
   backupTimestamp(lastBackupTakenAt) {
     return moment(lastBackupTakenAt).format("LLL");
   },
@@ -130,7 +152,7 @@ export default Ember.Controller.extend({
     },
     refreshProblems() {
       this.loadProblems();
-    },
+    }
   },
 
   _reportsForPeriodURL(period) {

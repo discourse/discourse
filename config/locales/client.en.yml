@@ -758,7 +758,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
+        confirm: "Are you absolutely sure you want to change your username?"
         taken: "Sorry, that username is taken."
         invalid: "That username is invalid. It must only include numbers and letters"
 
@@ -1373,6 +1373,9 @@ en:
       admin_options_title: "Optional staff settings for this topic"
 
       composer_actions:
+        reply: Reply
+        draft: Draft
+        edit: Edit
         reply_to_post:
           label: Reply to post %{postNumber} by %{postUsername}
           desc: Reply to a specific post
@@ -2711,6 +2714,9 @@ en:
       title: 'Discourse Admin'
       moderator: 'Moderator'
 
+      reports:
+        title: "List of available reports"
+
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard last updated:"
@@ -2749,6 +2755,7 @@ en:
         community_health: Community health
         whats_new_in_discourse: What’s new in Discourse?
         activity_metrics: Activity Metrics
+        all_reports: "All reports"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -3406,9 +3413,11 @@ en:
             disabled_second_factor: "disable Two Factor Authentication"
             topic_published: "topic published"
             post_approved: "post approved"
+            post_rejected: "post rejected"
             create_badge: "create badge"
             change_badge: "change badge"
             delete_badge: "delete badge"
+            merge_user: "merge user"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

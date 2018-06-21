@@ -1,5 +1,5 @@
-import { ajax } from 'discourse/lib/ajax';
-import computed from 'ember-addons/ember-computed-decorators';
+import { ajax } from "discourse/lib/ajax";
+import computed from "ember-addons/ember-computed-decorators";
 
 const ScreenedIpAddress = Discourse.Model.extend({
   @computed("action_name")
@@ -15,21 +15,33 @@ const ScreenedIpAddress = Discourse.Model.extend({
   },
 
   save() {
-    return ajax("/admin/logs/screened_ip_addresses" + (this.id ? '/' + this.id : '') + ".json", {
-      type: this.id ? 'PUT' : 'POST',
-      data: {ip_address: this.get('ip_address'), action_name: this.get('action_name')}
-    });
+    return ajax(
+      "/admin/logs/screened_ip_addresses" +
+        (this.id ? "/" + this.id : "") +
+        ".json",
+      {
+        type: this.id ? "PUT" : "POST",
+        data: {
+          ip_address: this.get("ip_address"),
+          action_name: this.get("action_name")
+        }
+      }
+    );
   },
 
   destroy() {
-    return ajax("/admin/logs/screened_ip_addresses/" + this.get('id') + ".json", {type: 'DELETE'});
+    return ajax(
+      "/admin/logs/screened_ip_addresses/" + this.get("id") + ".json",
+      { type: "DELETE" }
+    );
   }
 });
 
 ScreenedIpAddress.reopenClass({
   findAll(filter) {
-    return ajax("/admin/logs/screened_ip_addresses.json", { data: { filter: filter } })
-                    .then(screened_ips => screened_ips.map(b => ScreenedIpAddress.create(b)));
+    return ajax("/admin/logs/screened_ip_addresses.json", {
+      data: { filter: filter }
+    }).then(screened_ips => screened_ips.map(b => ScreenedIpAddress.create(b)));
   },
 
   rollUp() {

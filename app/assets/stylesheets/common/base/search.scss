@@ -11,7 +11,7 @@
 
     .search-query {
       flex: 1;
-      margin: 0 .5em 0 0;
+      margin: 0 0.5em 0 0;
     }
 
     .search-cta {
@@ -22,7 +22,9 @@
 
   .search-advanced {
     width: 70%;
-    @include small-width  { width: 65%; }
+    @include small-width {
+      width: 65%;
+    }
 
     .search-actions,
     .search-notice,
@@ -35,8 +37,8 @@
     .search-info {
       display: flex;
       flex-wrap: wrap;
-      border-bottom: 3px solid $primary-low;      
-      padding-bottom: .5em;
+      border-bottom: 3px solid $primary-low;
+      padding-bottom: 0.5em;
       margin-bottom: 1em;
       flex-direction: row;
       align-items: center;
@@ -50,7 +52,7 @@
 
         // spans can be in different orders depending of locale
         span + span {
-          margin-left: .25em;
+          margin-left: 0.25em;
         }
       }
 
@@ -60,7 +62,7 @@
         align-items: center;
 
         .desc {
-          margin-right: .5em;
+          margin-right: 0.5em;
         }
 
         .combo-box {
@@ -75,11 +77,11 @@
       align-items: center;
 
       .bulk-select {
-        margin-left: .5em;
+        margin-left: 0.5em;
       }
 
       .fps-select a {
-        margin-left: .5em;
+        margin-left: 0.5em;
         font-size: $font-down-1;
 
         &:hover {
@@ -90,7 +92,7 @@
 
     .search-notice {
       .fps-invalid {
-        padding: .5em;
+        padding: 0.5em;
         background-color: $danger-low;
         border: 1px solid $danger-medium;
         color: $danger;
@@ -100,7 +102,9 @@
 
   .search-advanced-sidebar {
     width: 30%;
-    @include small-width  { width: 35%; }
+    @include small-width {
+      width: 35%;
+    }
     margin-left: 1em;
     display: flex;
     flex-direction: column;
@@ -115,13 +119,14 @@
       box-sizing: border-box;
       width: 100%;
       min-width: 100%;
-      input, .item {
+      input,
+      .item {
         padding-left: 4px; // temporarily normalizing input padding for this section
       }
     }
 
     .date-picker-wrapper {
-      margin-top: .5em;
+      margin-top: 0.5em;
     }
 
     .date-picker {
@@ -133,8 +138,10 @@
 
     .search-advanced-title {
       background: $primary-low;
-      padding: .358em 1em;
-      @include small-width  { padding: .358em .5em; }
+      padding: 0.358em 1em;
+      @include small-width {
+        padding: 0.358em 0.5em;
+      }
       font-weight: 700;
       text-align: left;
       font-weight: bold;
@@ -157,11 +164,14 @@
       section.field {
         margin-top: 5px;
       }
-      @include small-width  { 
-        padding: .75em .5em; 
-        .ac-wrap, .choices, .select-kit.multi-select { // overriding inline width from JS
+      @include small-width {
+        padding: 0.75em 0.5em;
+        .ac-wrap,
+        .choices,
+        .select-kit.multi-select {
+          // overriding inline width from JS
           width: 100% !important;
-        } 
+        }
         .select-kit {
           min-width: unset;
         }
@@ -169,7 +179,6 @@
     }
   }
 }
-
 
 .fps-invalid {
   margin-bottom: 1em;
@@ -184,7 +193,10 @@
 
   .like-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
-    .fa { color: $love; font-size: $font-down-1; }
+    .fa {
+      color: $love;
+      font-size: $font-down-1;
+    }
   }
 
   .badge-wrapper span.badge-category {
@@ -192,14 +204,14 @@
   }
 
   .search-category {
-    padding-top:3px;
+    padding-top: 3px;
   }
 
   margin-bottom: 28px;
   max-width: 780px;
   .topic {
-     padding-bottom: 2px;
-     max-width:700px;
+    padding-bottom: 2px;
+    max-width: 700px;
   }
   .avatar {
     margin-right: 14px;
@@ -208,7 +220,8 @@
     color: $tertiary-high;
   }
   .search-link {
-    .topic-statuses, .topic-title {
+    .topic-statuses,
+    .topic-title {
       font-size: $font-up-2;
       line-height: $line-height-large;
     }

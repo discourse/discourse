@@ -60,7 +60,7 @@ module Jobs
         new_username: @new_username
       }
 
-      Notification.exec_sql(<<~SQL, params)
+      DB.exec(<<~SQL, params)
         UPDATE notifications
         SET data = (data :: JSONB ||
                     jsonb_strip_nulls(
@@ -88,7 +88,7 @@ module Jobs
     end
 
     def update_post_custom_fields
-      PostCustomField.exec_sql(<<~SQL, old_username: @old_username, new_username: @new_username)
+      DB.exec(<<~SQL, old_username: @old_username, new_username: @new_username)
         UPDATE post_custom_fields
         SET value = :new_username
         WHERE name = 'action_code_who' AND value = :old_username

@@ -270,7 +270,7 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Notaste que hemos vuelto al comienzo del tema? Alimenta este pobre y hambriento capybara **respondiendo con el emoji `:herb:` ** y serás automáticamente enviado al final del tema.
+          Notaste que hemos vuelto al comienzo del tema? Alimenta este pobre y hambriento capybara **respondiendo con el emoji `:herb:`** y serás automáticamente enviado al final del tema.
         reply: |-
           Yay lo encontraste! :tada:
 

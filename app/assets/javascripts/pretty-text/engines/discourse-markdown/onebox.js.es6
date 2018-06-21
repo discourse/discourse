@@ -1,5 +1,5 @@
-import { lookupCache } from 'pretty-text/oneboxer';
-import { cachedInlineOnebox } from 'pretty-text/inline-oneboxer';
+import { lookupCache } from "pretty-text/oneboxer";
+import { cachedInlineOnebox } from "pretty-text/inline-oneboxer";
 
 const ONEBOX = 1;
 const INLINE = 2;
@@ -15,38 +15,41 @@ function applyOnebox(state, silent) {
     return;
   }
 
-  for(let i=1;i<state.tokens.length;i++) {
+  for (let i = 1; i < state.tokens.length; i++) {
     let token = state.tokens[i];
-    let prev = state.tokens[i-1];
-    let mode = prev.type === "paragraph_open" && prev.level === 0 ? ONEBOX : INLINE;
+    let prev = state.tokens[i - 1];
+    let mode =
+      prev.type === "paragraph_open" && prev.level === 0 ? ONEBOX : INLINE;
 
     if (token.type === "inline") {
-
       let children = token.children;
-      for(let j=0;j<children.length-2;j++){
+      for (let j = 0; j < children.length - 2; j++) {
         let child = children[j];
 
-        if (child.type === "link_open" && child.markup === 'linkify' && child.info === 'auto') {
-
-          if (j > children.length-3) {
+        if (
+          child.type === "link_open" &&
+          child.markup === "linkify" &&
+          child.info === "auto"
+        ) {
+          if (j > children.length - 3) {
             continue;
           }
 
           if (j === 0 && token.leading_space) {
             mode = INLINE;
           } else if (j > 0) {
-            let prevSibling = children[j-1];
-            if (prevSibling.tag !== 'br' || prevSibling.leading_space) {
+            let prevSibling = children[j - 1];
+            if (prevSibling.tag !== "br" || prevSibling.leading_space) {
               mode = INLINE;
             }
           }
 
           // look ahead for soft or hard break
-          let text = children[j+1];
-          let close = children[j+2];
-          let lookahead = children[j+3];
+          let text = children[j + 1];
+          let close = children[j + 2];
+          let lookahead = children[j + 3];
 
-          if (lookahead && lookahead.tag !== 'br') {
+          if (lookahead && lookahead.tag !== "br") {
             mode = INLINE;
           }
 
@@ -75,25 +78,23 @@ function applyOnebox(state, silent) {
 
             if (cached) {
               // replace link with 2 blank text nodes and inline html for onebox
-              child.type = 'html_raw';
+              child.type = "html_raw";
               child.content = cached;
               child.inline = true;
 
-              text.type = 'html_raw';
-              text.content = '';
+              text.type = "html_raw";
+              text.content = "";
               text.inline = true;
 
-              close.type = 'html_raw';
-              close.content = '';
+              close.type = "html_raw";
+              close.content = "";
               close.inline = true;
-
             } else {
               // decorate...
               attrs.push(["class", "onebox"]);
               attrs.push(["target", "_blank"]);
             }
           } else if (mode === INLINE) {
-
             if (!isTopLevel(href)) {
               let onebox = cachedInlineOnebox(href);
               let options = state.md.options.discourse;
@@ -109,16 +110,14 @@ function applyOnebox(state, silent) {
               }
             }
           }
-
         }
       }
     }
   }
 }
 
-
 export function setup(helper) {
   helper.registerPlugin(md => {
-    md.core.ruler.after('linkify', 'onebox', applyOnebox);
+    md.core.ruler.after("linkify", "onebox", applyOnebox);
   });
 }

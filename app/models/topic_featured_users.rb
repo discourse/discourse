@@ -79,13 +79,13 @@ WHERE tt.id = tt2.id AND
 #{filter2}
 SQL
 
-    Topic.exec_sql(sql)
+    DB.exec(sql)
   end
 
   private
 
-    def update_participant_count
-      count = topic.posts.where('NOT hidden AND post_type in (?)', Topic.visible_post_types).count('distinct user_id')
-      topic.update_columns(participant_count: count)
-    end
+  def update_participant_count
+    count = topic.posts.where('NOT hidden AND post_type in (?)', Topic.visible_post_types).count('distinct user_id')
+    topic.update_columns(participant_count: count)
+  end
 end

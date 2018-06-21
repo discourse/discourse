@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fa_IR: {}
+fa_IR:
+  site_settings:
+    details_enabled: "به کار گرفتن جزییات. اگر این گزینه را تغییر دادید باید همه پستها را با \"rake posts:rebake\" بازسازی کنید."

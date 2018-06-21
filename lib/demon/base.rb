@@ -61,11 +61,14 @@ class Demon::Base
     end
   end
 
+  def stop_signal
+    "HUP"
+  end
+
   def stop
     @started = false
     if @pid
-      # TODO configurable stop signal
-      Process.kill("HUP", @pid)
+      Process.kill(stop_signal, @pid)
 
       wait_for_stop = lambda {
         timeout = @stop_timeout
@@ -82,7 +85,7 @@ class Demon::Base
       wait_for_stop.call
 
       if alive?
-        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid}"
+        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}"
         Process.kill("KILL", @pid)
       end
 

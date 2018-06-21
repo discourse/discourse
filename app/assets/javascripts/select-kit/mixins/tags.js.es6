@@ -20,15 +20,17 @@ export default Ember.Mixin.create({
       cache: true,
       dataType: "json",
       data
-    }).then(json => {
-      self.set("asyncContent", callback(self, json));
-      self.autoHighlight();
-    }).catch(error => {
-      popupAjaxError(error);
     })
-    .finally(() => {
-      self.stopLoading();
-    });
+      .then(json => {
+        self.set("asyncContent", callback(self, json));
+        self.autoHighlight();
+      })
+      .catch(error => {
+        popupAjaxError(error);
+      })
+      .finally(() => {
+        self.stopLoading();
+      });
   },
 
   validateCreate(term) {
@@ -37,7 +39,10 @@ export default Ember.Mixin.create({
     }
 
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    term = term.replace(filterRegexp, "").trim().toLowerCase();
+    term = term
+      .replace(filterRegexp, "")
+      .trim()
+      .toLowerCase();
 
     if (!term.length || this.get("termMatchesForbidden")) {
       return false;
@@ -47,13 +52,17 @@ export default Ember.Mixin.create({
       return false;
     }
 
-    const inCollection = this.get("collectionComputedContent").map(c => get(c, "id")).includes(term);
+    const inCollection = this.get("collectionComputedContent")
+      .map(c => get(c, "id"))
+      .includes(term);
 
-    const inSelection = this.get("selection").map(s => get(s, "value").toLowerCase()).includes(term);
+    const inSelection = this.get("selection")
+      .map(s => get(s, "value").toLowerCase())
+      .includes(term);
     if (inCollection || inSelection) {
       return false;
     }
 
     return true;
-  },
+  }
 });

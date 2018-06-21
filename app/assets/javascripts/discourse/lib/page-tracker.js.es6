@@ -4,7 +4,7 @@ const cache = {};
 let transitionCount = 0;
 
 export function setTransient(key, data, count) {
-  cache[key] = {data, target: transitionCount + count};
+  cache[key] = { data, target: transitionCount + count };
 }
 
 export function getTransient(key) {
@@ -12,25 +12,27 @@ export function getTransient(key) {
 }
 
 export function startPageTracking(router, appEvents) {
-  if (_started) { return; }
+  if (_started) {
+    return;
+  }
 
-  router.on('didTransition', function() {
-    this.send('refreshTitle');
-    const url = Discourse.getURL(this.get('url'));
+  router.on("didTransition", function() {
+    this.send("refreshTitle");
+    const url = Discourse.getURL(this.get("url"));
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
     Ember.run.next(() => {
-      let title = Discourse.get('_docTitle');
-      appEvents.trigger('page:changed', {
+      let title = Discourse.get("_docTitle");
+      appEvents.trigger("page:changed", {
         url,
         title,
-        currentRouteName: router.get('currentRouteName')
+        currentRouteName: router.get("currentRouteName")
       });
     });
 
     transitionCount++;
-    _.each(cache, (v,k) => {
+    _.each(cache, (v, k) => {
       if (v && v.target && v.target < transitionCount) {
         delete cache[k];
       }
@@ -47,10 +49,10 @@ export function addGTMPageChangedCallback(callback) {
 
 export function googleTagManagerPageChanged(data) {
   let gtmData = {
-    'event': 'virtualPageView',
-    'page': {
-      'title': data.title,
-      'url': data.url
+    event: "virtualPageView",
+    page: {
+      title: data.title,
+      url: data.url
     }
   };
 

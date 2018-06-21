@@ -2,7 +2,7 @@ import ComboBox from "select-kit/components/combo-box";
 import Tags from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
-import { escapeExpression } from 'discourse/lib/utilities';
+import { escapeExpression } from "discourse/lib/utilities";
 const { get, isEmpty, run, makeArray } = Ember;
 
 export default ComboBox.extend(Tags, {
@@ -27,7 +27,7 @@ export default ComboBox.extend(Tags, {
     this.set("termMatchesForbidden", false);
     this.selectionSelector = ".selected-tag";
 
-    this.set("templateForRow", (rowComponent) => {
+    this.set("templateForRow", rowComponent => {
       const tag = rowComponent.get("computedContent");
       return renderTag(get(tag, "value"), {
         count: get(tag, "originalContent.count"),
@@ -35,7 +35,14 @@ export default ComboBox.extend(Tags, {
       });
     });
 
-    this.set("maximum", parseInt(this.get("limit") || this.get("maximum") || this.get("siteSettings.max_tags_per_topic")));
+    this.set(
+      "maximum",
+      parseInt(
+        this.get("limit") ||
+          this.get("maximum") ||
+          this.get("siteSettings.max_tags_per_topic")
+      )
+    );
   },
 
   @computed("hasReachedMaximum")
@@ -55,15 +62,25 @@ export default ComboBox.extend(Tags, {
   didRender() {
     this._super();
 
-    this.$(".select-kit-body").on("click.mini-tag-chooser", ".selected-tag", (event) => {
-      event.stopImmediatePropagation();
-      this.destroyTags(this.computeContentItem($(event.target).attr("data-value")));
-    });
+    this.$(".select-kit-body").on(
+      "click.mini-tag-chooser",
+      ".selected-tag",
+      event => {
+        event.stopImmediatePropagation();
+        this.destroyTags(
+          this.computeContentItem($(event.target).attr("data-value"))
+        );
+      }
+    );
 
-    this.$(".select-kit-header").on("focus.mini-tag-chooser", ".selected-name", (event) => {
-      event.stopImmediatePropagation();
-      this.focus(event);
-    });
+    this.$(".select-kit-header").on(
+      "focus.mini-tag-chooser",
+      ".selected-name",
+      event => {
+        event.stopImmediatePropagation();
+        this.focus(event);
+      }
+    );
   },
 
   willDestroyElement() {
@@ -110,11 +127,15 @@ export default ComboBox.extend(Tags, {
         tags = tags.filter(t => t.indexOf(filter) >= 0);
       }
 
-      tags.map((tag) => {
+      tags.map(tag => {
         tag = escapeExpression(tag);
-        const isHighlighted = highlightedSelection.map(s => get(s, "value")).includes(tag);
+        const isHighlighted = highlightedSelection
+          .map(s => get(s, "value"))
+          .includes(tag);
         output += `
-          <button aria-label="${tag}" title="${tag}" class="selected-tag ${isHighlighted ? 'is-highlighted' : ''}" data-value="${tag}">
+          <button aria-label="${tag}" title="${tag}" class="selected-tag ${
+          isHighlighted ? "is-highlighted" : ""
+        }" data-value="${tag}">
             ${tag}
           </button>
         `;
@@ -128,8 +149,8 @@ export default ComboBox.extend(Tags, {
     let content = this._super();
 
     const joinedTags = this.get("selection")
-                           .map(s => Ember.get(s, "value"))
-                           .join(", ");
+      .map(s => Ember.get(s, "value"))
+      .join(", ");
 
     if (isEmpty(this.get("selection"))) {
       content.label = I18n.t("tagging.choose_for_topic");
@@ -138,7 +159,8 @@ export default ComboBox.extend(Tags, {
     }
 
     if (!this.get("hasReachedMinimum") && isEmpty(this.get("selection"))) {
-      const key = this.get("minimumLabel") || "select_kit.min_content_not_reached";
+      const key =
+        this.get("minimumLabel") || "select_kit.min_content_not_reached";
       const label = I18n.t(key, { count: this.get("minimum") });
       content.title = content.name = content.label = label;
     }
@@ -157,8 +179,8 @@ export default ComboBox.extend(Tags, {
 
     if (this.get("selection")) {
       data.selected_tags = this.get("selection")
-                               .map(s => Ember.get(s, "value"))
-                               .slice(0, 100);
+        .map(s => Ember.get(s, "value"))
+        .slice(0, 100);
     }
 
     if (!this.get("everyTag")) data.filterForInput = true;
@@ -199,7 +221,10 @@ export default ComboBox.extend(Tags, {
     this.get("tags").removeObjects(tags);
     this.set("tags", this.get("tags").slice(0));
 
-    this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 350));
+    this.set(
+      "searchDebounce",
+      run.debounce(this, this._prepareSearch, this.get("filter"), 350)
+    );
   },
 
   didDeselect(tags) {
@@ -215,7 +240,10 @@ export default ComboBox.extend(Tags, {
 
     onExpand() {
       if (isEmpty(this.get("collectionComputedContent"))) {
-        this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 350));
+        this.set(
+          "searchDebounce",
+          run.debounce(this, this._prepareSearch, this.get("filter"), 350)
+        );
       }
     },
 
@@ -224,7 +252,10 @@ export default ComboBox.extend(Tags, {
       this.startLoading();
 
       filter = isEmpty(filter) ? null : filter;
-      this.set("searchDebounce", run.debounce(this, this._prepareSearch, filter, 350));
+      this.set(
+        "searchDebounce",
+        run.debounce(this, this._prepareSearch, filter, 350)
+      );
     }
-  },
+  }
 });

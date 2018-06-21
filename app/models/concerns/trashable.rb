@@ -45,14 +45,8 @@ module Trashable
 
   private
 
-    def trash_update(deleted_at, deleted_by_id)
-      # see: https://github.com/rails/rails/issues/8436
-      #
-      # Fixed in Rails 4
-      #
-      self.class.unscoped.where(id: self.id).update_all(deleted_at: deleted_at, deleted_by_id: deleted_by_id)
-      raw_write_attribute :deleted_at, deleted_at
-      raw_write_attribute :deleted_by_id, deleted_by_id
-    end
+  def trash_update(deleted_at, deleted_by_id)
+    self.update_columns(deleted_at: deleted_at, deleted_by_id: deleted_by_id)
+  end
 
 end

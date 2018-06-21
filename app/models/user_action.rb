@@ -39,17 +39,6 @@ class UserAction < ActiveRecord::Base
     ASSIGNED,
   ].each_with_index.to_a.flatten]
 
-  # note, this is temporary until we upgrade to rails 4
-  #  in rails 4 types are mapped correctly so you dont end up
-  #  having strings where you would expect bools
-  class UserActionRow < OpenStruct
-    include ActiveModel::SerializerSupport
-
-    def as_json(options = nil)
-      @table.as_json(options)
-    end
-  end
-
   def self.last_action_in_topic(user_id, topic_id)
     UserAction.where(user_id: user_id,
                      target_topic_id: topic_id,
@@ -59,25 +48,24 @@ class UserAction < ActiveRecord::Base
   def self.stats(user_id, guardian)
 
     # Sam: I tried this in AR and it got complex
-    builder = UserAction.sql_builder <<SQL
+    builder = DB.build <<~SQL
 
-    SELECT action_type, COUNT(*) count
-    FROM user_actions a
-    LEFT JOIN topics t ON t.id = a.target_topic_id
-    LEFT JOIN posts p on p.id = a.target_post_id
-    LEFT JOIN posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
-    LEFT JOIN categories c ON c.id = t.category_id
-    /*where*/
-    GROUP BY action_type
-SQL
+      SELECT action_type, COUNT(*) count
+      FROM user_actions a
+      LEFT JOIN topics t ON t.id = a.target_topic_id
+      LEFT JOIN posts p on p.id = a.target_post_id
+      LEFT JOIN posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
+      LEFT JOIN categories c ON c.id = t.category_id
+      /*where*/
+      GROUP BY action_type
+    SQL
 
     builder.where('a.user_id = :user_id', user_id: user_id)
 
     apply_common_filters(builder, user_id, guardian)
 
-    results = builder.exec.to_a
+    results = builder.query
     results.sort! { |a, b| ORDER[a.action_type] <=> ORDER[b.action_type] }
-
     results
   end
 
@@ -97,7 +85,8 @@ SQL
          AND t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id)
     SQL
 
-    all, mine, unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
+    # map is there due to count returning nil
+    all, mine, unread = DB.query_single(sql, user_id: user_id).map(&:to_i)
 
     sql = <<-SQL
       SELECT  g.name, COUNT(*) "count"
@@ -112,8 +101,8 @@ SQL
 
     result = { all: all, mine: mine, unread: unread }
 
-    exec_sql(sql, user_id: user_id).each do |row|
-      (result[:groups] ||= []) << { name: row["name"], count: row["count"].to_i }
+    DB.query(sql, user_id: user_id).each do |row|
+      (result[:groups] ||= []) << { name: row.name, count: row.count.to_i }
     end
 
     result
@@ -138,19 +127,50 @@ SQL
     stream(action_id: action_id, guardian: guardian).first
   end
 
+  NULL_QUEUED_STREAM_COLS = %i{
+    cooked
+    uploaded_avatar_id
+    acting_name
+    acting_username
+    acting_user_id
+    target_name
+    target_username
+    target_user_id
+    post_number
+    post_id
+    deleted
+    hidden
+    post_type
+    action_type
+    action_code
+    action_code_who
+    topic_closed
+    topic_id
+    topic_archived
+  }.map! { |s|  "NULL as #{s}" }.join(", ")
+
   def self.stream_queued(opts = nil)
     opts ||= {}
 
     offset = opts[:offset] || 0
     limit = opts[:limit] || 60
 
-    builder = SqlBuilder.new <<-SQL
+    # this is somewhat ugly, but the serializer wants all these columns
+    # it is more correct to have an object with all the fields needed
+    # cause then we can catch and change if we ever add columns
+    builder = DB.build <<~SQL
       SELECT
         a.id,
-        t.title, a.action_type, a.created_at, t.id topic_id,
-        u.username, u.name, u.id AS user_id,
+        t.title,
+        a.action_type,
+        a.created_at,
+        t.id topic_id,
+        u.username,
+        u.name,
+        u.id AS user_id,
         qp.raw,
-        t.category_id
+        t.category_id,
+        #{NULL_QUEUED_STREAM_COLS}
       FROM user_actions as a
       JOIN queued_posts AS qp ON qp.id = a.queued_post_id
       LEFT OUTER JOIN topics t on t.id = qp.topic_id
@@ -168,7 +188,7 @@ SQL
       .order_by("a.created_at desc")
       .offset(offset.to_i)
       .limit(limit.to_i)
-      .map_exec(UserActionRow)
+      .query
   end
 
   def self.stream(opts = nil)
@@ -196,7 +216,7 @@ SQL
 
     # The weird thing is that target_post_id can be null, so it makes everything
     #  ever so more complex. Should we allow this, not sure.
-    builder = SqlBuilder.new <<-SQL
+    builder = DB.build <<~SQL
       SELECT
         a.id,
         t.title, a.action_type, a.created_at, t.id topic_id,
@@ -248,7 +268,7 @@ SQL
         .limit(limit.to_i)
     end
 
-    builder.map_exec(UserActionRow)
+    builder.query
   end
 
   def self.log_action!(hash)
@@ -320,19 +340,19 @@ SQL
   def self.synchronize_target_topic_ids(post_ids = nil)
 
     # nuke all dupes, using magic
-    builder = SqlBuilder.new <<SQL
-DELETE FROM user_actions USING user_actions ua2
-/*where*/
-SQL
+    builder = DB.build <<~SQL
+      DELETE FROM user_actions USING user_actions ua2
+      /*where*/
+    SQL
 
-    builder.where <<SQL
-  user_actions.action_type = ua2.action_type AND
-  user_actions.user_id = ua2.user_id AND
-  user_actions.acting_user_id = ua2.acting_user_id AND
-  user_actions.target_post_id = ua2.target_post_id AND
-  user_actions.target_post_id > 0 AND
-  user_actions.id > ua2.id
-SQL
+    builder.where <<~SQL
+      user_actions.action_type = ua2.action_type AND
+      user_actions.user_id = ua2.user_id AND
+      user_actions.acting_user_id = ua2.acting_user_id AND
+      user_actions.target_post_id = ua2.target_post_id AND
+      user_actions.target_post_id > 0 AND
+      user_actions.id > ua2.id
+    SQL
 
     if post_ids
       builder.where("user_actions.target_post_id in (:post_ids)", post_ids: post_ids)
@@ -340,9 +360,11 @@ SQL
 
     builder.exec
 
-    builder = SqlBuilder.new("UPDATE user_actions
-                    SET target_topic_id = (select topic_id from posts where posts.id = target_post_id)
-                    /*where*/")
+    builder = DB.build <<~SQL
+      UPDATE user_actions
+      SET target_topic_id = (select topic_id from posts where posts.id = target_post_id)
+      /*where*/
+    SQL
 
     builder.where("target_topic_id <> (select topic_id from posts where posts.id = target_post_id)")
     if post_ids

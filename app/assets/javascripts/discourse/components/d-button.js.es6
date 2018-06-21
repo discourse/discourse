@@ -1,16 +1,21 @@
-import { default as computed } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   // subclasses need this
-  layoutName: 'components/d-button',
+  layoutName: "components/d-button",
 
-  tagName: 'button',
-  classNameBindings: [':btn', 'noText', 'btnType'],
-  attributeBindings: ['disabled', 'translatedTitle:title', 'translatedTitle:aria-label', 'tabindex'],
+  tagName: "button",
+  classNameBindings: [":btn", "noText", "btnType"],
+  attributeBindings: [
+    "disabled",
+    "translatedTitle:title",
+    "translatedTitle:aria-label",
+    "tabindex"
+  ],
 
-  btnIcon: Ember.computed.notEmpty('icon'),
+  btnIcon: Ember.computed.notEmpty("icon"),
 
-  @computed('icon', 'translatedLabel')
+  @computed("icon", "translatedLabel")
   btnType(icon, translatedLabel) {
     if (icon) {
       return translatedLabel ? "btn-icon-text" : "btn-icon";
@@ -19,7 +24,7 @@ export default Ember.Component.extend({
     }
   },
 
-  noText: Ember.computed.empty('translatedLabel'),
+  noText: Ember.computed.empty("translatedLabel"),
 
   @computed("title")
   translatedTitle(title) {

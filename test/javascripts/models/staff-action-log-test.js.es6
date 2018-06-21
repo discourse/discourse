@@ -1,4 +1,4 @@
-import StaffActionLog from 'admin/models/staff-action-log';
+import StaffActionLog from "admin/models/staff-action-log";
 
 QUnit.module("StaffActionLog");
 

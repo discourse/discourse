@@ -1,63 +1,65 @@
-import { createWidget } from 'discourse/widgets/widget';
-import ComponentConnector from 'discourse/widgets/component-connector';
-import { h } from 'virtual-dom';
-import { relativeAge } from 'discourse/lib/formatter';
-import { iconNode } from 'discourse-common/lib/icon-library';
-import RawHtml from 'discourse/widgets/raw-html';
-import renderTags from 'discourse/lib/render-tags';
-import renderTopicFeaturedLink from 'discourse/lib/render-topic-featured-link';
+import { createWidget } from "discourse/widgets/widget";
+import ComponentConnector from "discourse/widgets/component-connector";
+import { h } from "virtual-dom";
+import { relativeAge } from "discourse/lib/formatter";
+import { iconNode } from "discourse-common/lib/icon-library";
+import RawHtml from "discourse/widgets/raw-html";
+import renderTags from "discourse/lib/render-tags";
+import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
 
 function scrollareaHeight() {
-  return ($(window).height() < 425) ? 150 : 300;
+  return $(window).height() < 425 ? 150 : 300;
 }
 
 function scrollareaRemaining() {
   return scrollareaHeight() - SCROLLER_HEIGHT;
 }
 
-function clamp(p, min=0.0, max=1.0) {
+function clamp(p, min = 0.0, max = 1.0) {
   return Math.max(Math.min(p, max), min);
 }
 
 function attachBackButton(widget) {
-  return widget.attach('button', {
-    className: 'btn-primary btn-small back-button',
-    label: 'topic.timeline.back',
-    title: 'topic.timeline.back_description',
-    action: 'goBack'
+  return widget.attach("button", {
+    className: "btn-primary btn-small back-button",
+    label: "topic.timeline.back",
+    title: "topic.timeline.back_description",
+    action: "goBack"
   });
 }
 
-createWidget('timeline-last-read', {
-  tagName: 'div.timeline-last-read',
+createWidget("timeline-last-read", {
+  tagName: "div.timeline-last-read",
 
   buildAttributes(attrs) {
-    const bottom = scrollareaHeight() - (LAST_READ_HEIGHT / 2);
+    const bottom = scrollareaHeight() - LAST_READ_HEIGHT / 2;
     const top = attrs.top > bottom ? bottom : attrs.top;
     return { style: `height: ${LAST_READ_HEIGHT}px; top: ${top}px` };
   },
 
   html(attrs) {
-    const result = [ iconNode('minus', { class: 'progress' }) ];
+    const result = [iconNode("minus", { class: "progress" })];
     if (attrs.showButton) {
       result.push(attachBackButton(this));
     }
 
     return result;
-  },
-
+  }
 });
 
 function timelineDate(date) {
-  const fmt = (date.getFullYear() === new Date().getFullYear()) ?  'long_no_year_no_time' : 'timeline_date';
+  const fmt =
+    date.getFullYear() === new Date().getFullYear()
+      ? "long_no_year_no_time"
+      : "timeline_date";
   return moment(date).format(I18n.t(`dates.${fmt}`));
 }
 
-createWidget('timeline-scroller', {
-  tagName: 'div.timeline-scroller',
+createWidget("timeline-scroller", {
+  tagName: "div.timeline-scroller",
   buildKey: () => `timeline-scroller`,
 
   defaultState() {
@@ -72,17 +74,23 @@ createWidget('timeline-scroller', {
     const { current, total, date } = attrs;
 
     const contents = [
-      h('div.timeline-replies', I18n.t(`topic.timeline.replies_short`, { current, total }))
+      h(
+        "div.timeline-replies",
+        I18n.t(`topic.timeline.replies_short`, { current, total })
+      )
     ];
 
     if (date) {
-      contents.push(h('div.timeline-ago', timelineDate(date)));
+      contents.push(h("div.timeline-ago", timelineDate(date)));
     }
 
     if (attrs.showDockedButton && !state.dragging) {
       contents.push(attachBackButton(this));
     }
-    let result = [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
+    let result = [
+      h("div.timeline-handle"),
+      h("div.timeline-scroller-content", contents)
+    ];
 
     if (attrs.fullScreen) {
       result = [result[1], result[0]];
@@ -93,33 +101,33 @@ createWidget('timeline-scroller', {
 
   drag(e) {
     this.state.dragging = true;
-    this.sendWidgetAction('updatePercentage', e.pageY);
+    this.sendWidgetAction("updatePercentage", e.pageY);
   },
 
   dragEnd(e) {
     this.state.dragging = false;
-    if ($(e.target).is('button')) {
-      this.sendWidgetAction('goBack');
+    if ($(e.target).is("button")) {
+      this.sendWidgetAction("goBack");
     } else {
-      this.sendWidgetAction('commit');
+      this.sendWidgetAction("commit");
     }
   }
 });
 
-createWidget('timeline-padding', {
-  tagName: 'div.timeline-padding',
+createWidget("timeline-padding", {
+  tagName: "div.timeline-padding",
   buildAttributes(attrs) {
     return { style: `height: ${attrs.height}px` };
   },
 
   click(e) {
-    this.sendWidgetAction('updatePercentage', e.pageY);
-    this.sendWidgetAction('commit');
+    this.sendWidgetAction("updatePercentage", e.pageY);
+    this.sendWidgetAction("commit");
   }
 });
 
-createWidget('timeline-scrollarea', {
-  tagName: 'div.timeline-scrollarea',
+createWidget("timeline-scrollarea", {
+  tagName: "div.timeline-scrollarea",
   buildKey: () => `timeline-scrollarea`,
 
   buildAttributes() {
@@ -127,21 +135,30 @@ createWidget('timeline-scrollarea', {
   },
 
   defaultState(attrs) {
-    return { percentage: this._percentFor(attrs.topic, attrs.enteredIndex + 1), scrolledPost: 1 };
+    return {
+      percentage: this._percentFor(attrs.topic, attrs.enteredIndex + 1),
+      scrolledPost: 1
+    };
   },
 
   position() {
     const { attrs } = this;
     const percentage = this.state.percentage;
     const topic = attrs.topic;
-    const postStream = topic.get('postStream');
-    const total = postStream.get('filteredPostsCount');
+    const postStream = topic.get("postStream");
+    const total = postStream.get("filteredPostsCount");
 
     const current = clamp(Math.floor(total * percentage) + 1, 1, total);
 
     const daysAgo = postStream.closestDaysAgoFor(current);
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo || 0);
+    let date;
+
+    if (daysAgo !== null) {
+      date = new Date();
+      date.setDate(date.getDate() - daysAgo || 0);
+    } else {
+      date = null;
+    }
 
     const result = {
       current,
@@ -155,15 +172,14 @@ createWidget('timeline-scrollarea', {
     const lastReadNumber = topic.last_read_post_number;
 
     if (lastReadId && lastReadNumber) {
-      const idx = postStream.get('stream').indexOf(lastReadId) + 1;
+      const idx = postStream.get("stream").indexOf(lastReadId) + 1;
       result.lastRead = idx;
       result.lastReadPercentage = this._percentFor(topic, idx);
     }
 
-
     if (this.state.position !== result.current) {
       this.state.position = result.current;
-      this.sendWidgetAction('updatePosition', result.current);
+      this.sendWidgetAction("updatePosition", result.current);
     }
 
     return result;
@@ -174,10 +190,12 @@ createWidget('timeline-scrollarea', {
 
     state.scrolledPost = position.current;
     const percentage = state.percentage;
-    if (percentage === null) { return; }
+    if (percentage === null) {
+      return;
+    }
 
     const before = scrollareaRemaining() * percentage;
-    const after = (scrollareaHeight() - before) - SCROLLER_HEIGHT;
+    const after = scrollareaHeight() - before - SCROLLER_HEIGHT;
 
     let showButton = false;
     const hasBackPosition =
@@ -187,40 +205,48 @@ createWidget('timeline-scrollarea', {
       (position.lastRead && position.lastRead !== position.total);
 
     if (hasBackPosition) {
-      const lastReadTop = Math.round(position.lastReadPercentage * scrollareaHeight());
-      showButton = ((before + SCROLLER_HEIGHT - 5) < lastReadTop) ||
-                    (before > (lastReadTop + 25));
-
+      const lastReadTop = Math.round(
+        position.lastReadPercentage * scrollareaHeight()
+      );
+      showButton =
+        before + SCROLLER_HEIGHT - 5 < lastReadTop || before > lastReadTop + 25;
 
       // Don't show if at the bottom of the timeline
-      if (lastReadTop > (scrollareaHeight() - (LAST_READ_HEIGHT / 2))) {
+      if (lastReadTop > scrollareaHeight() - LAST_READ_HEIGHT / 2) {
         showButton = false;
       }
     }
 
     const result = [
-      this.attach('timeline-padding', { height: before }),
-      this.attach('timeline-scroller', _.merge(position, {
-        showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
-        fullScreen: attrs.fullScreen
-      })),
-      this.attach('timeline-padding', { height: after })
+      this.attach("timeline-padding", { height: before }),
+      this.attach(
+        "timeline-scroller",
+        _.merge(position, {
+          showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
+          fullScreen: attrs.fullScreen
+        })
+      ),
+      this.attach("timeline-padding", { height: after })
     ];
 
     if (hasBackPosition) {
-      const lastReadTop = Math.round(position.lastReadPercentage * scrollareaHeight());
-      result.push(this.attach('timeline-last-read', {
-        top: lastReadTop,
-        lastRead: position.lastRead,
-        showButton
-      }));
+      const lastReadTop = Math.round(
+        position.lastReadPercentage * scrollareaHeight()
+      );
+      result.push(
+        this.attach("timeline-last-read", {
+          top: lastReadTop,
+          lastRead: position.lastRead,
+          showButton
+        })
+      );
     }
 
     return result;
   },
 
   updatePercentage(y) {
-    const $area = $('.timeline-scrollarea');
+    const $area = $(".timeline-scrollarea");
     const areaTop = $area.offset().top;
 
     const percentage = clamp(parseFloat(y - areaTop) / $area.height());
@@ -232,7 +258,7 @@ createWidget('timeline-scrollarea', {
     const position = this.position();
     this.state.scrolledPost = position.current;
 
-    this.sendWidgetAction('jumpToIndex', position.current);
+    this.sendWidgetAction("jumpToIndex", position.current);
   },
 
   topicCurrentPostScrolled(event) {
@@ -240,31 +266,31 @@ createWidget('timeline-scrollarea', {
   },
 
   _percentFor(topic, postIndex) {
-    const total = topic.get('postStream.filteredPostsCount');
+    const total = topic.get("postStream.filteredPostsCount");
     return clamp(parseFloat(postIndex - 1.0) / total);
   },
 
   goBack() {
-    this.sendWidgetAction('jumpToIndex', this.position().lastRead);
+    this.sendWidgetAction("jumpToIndex", this.position().lastRead);
   }
 });
 
-createWidget('topic-timeline-container', {
-  tagName: 'div.timeline-container',
+createWidget("topic-timeline-container", {
+  tagName: "div.timeline-container",
   buildClasses(attrs) {
     if (attrs.fullScreen) {
       if (attrs.addShowClass) {
-        return 'timeline-fullscreen show';
+        return "timeline-fullscreen show";
       } else {
-        return 'timeline-fullscreen';
+        return "timeline-fullscreen";
       }
     }
     if (attrs.dockAt) {
-      const result = ['timeline-docked'];
+      const result = ["timeline-docked"];
       if (attrs.dockBottom) {
-        result.push('timeline-docked-bottom');
+        result.push("timeline-docked-bottom");
       }
-      return result.join(' ');
+      return result.join(" ");
     }
   },
 
@@ -275,73 +301,79 @@ createWidget('topic-timeline-container', {
   },
 
   html(attrs) {
-    return this.attach('topic-timeline', attrs);
+    return this.attach("topic-timeline", attrs);
   }
 });
 
-createWidget('timeline-controls', {
-  tagName: 'div.timeline-controls',
+createWidget("timeline-controls", {
+  tagName: "div.timeline-controls",
 
   html(attrs) {
     const controls = [];
     const { fullScreen, currentUser, topic } = attrs;
 
-    if (!fullScreen && currentUser && currentUser.get('canManageTopic')) {
-      controls.push(this.attach('topic-admin-menu-button', { topic }));
+    if (!fullScreen && currentUser && currentUser.get("canManageTopic")) {
+      controls.push(this.attach("topic-admin-menu-button", { topic }));
     }
 
     return controls;
   }
 });
 
-createWidget('timeline-footer-controls', {
-  tagName: 'div.timeline-footer-controls',
+createWidget("timeline-footer-controls", {
+  tagName: "div.timeline-footer-controls",
 
   html(attrs) {
     const controls = [];
     const { currentUser, fullScreen, topic, notificationLevel } = attrs;
 
     if (currentUser && !fullScreen) {
-      if (topic.get('details.can_create_post')) {
-        controls.push(this.attach('button', {
-          className: 'create',
-          icon: 'reply',
-          title: 'topic.reply.help',
-          action: 'replyToPost'
-        }));
+      if (topic.get("details.can_create_post")) {
+        controls.push(
+          this.attach("button", {
+            className: "create",
+            icon: "reply",
+            title: "topic.reply.help",
+            action: "replyToPost"
+          })
+        );
       }
     }
 
     if (fullScreen) {
-      controls.push(this.attach('button', {
-        className: 'jump-to-post',
-        title: 'topic.progress.jump_prompt_long',
-        label: 'topic.progress.jump_prompt',
-        action: 'jumpToPostPrompt'
-      }));
+      controls.push(
+        this.attach("button", {
+          className: "jump-to-post",
+          title: "topic.progress.jump_prompt_long",
+          label: "topic.progress.jump_prompt",
+          action: "jumpToPostPrompt"
+        })
+      );
     }
 
     if (currentUser) {
-      controls.push(new ComponentConnector(this,
-        'topic-notifications-options',
-        {
-          value: notificationLevel,
-          topic,
-          showFullTitle: false
-        },
-        ["value"]
-      ));
+      controls.push(
+        new ComponentConnector(
+          this,
+          "topic-notifications-options",
+          {
+            value: notificationLevel,
+            topic,
+            showFullTitle: false
+          },
+          ["value"]
+        )
+      );
     }
 
     return controls;
   }
-
 });
 
-export default createWidget('topic-timeline', {
-  tagName: 'div.topic-timeline',
+export default createWidget("topic-timeline", {
+  tagName: "div.topic-timeline",
 
-  buildKey: () => 'topic-timeline-area',
+  buildKey: () => "topic-timeline-area",
 
   defaultState() {
     return { position: null, excerpt: null };
@@ -354,17 +386,17 @@ export default createWidget('topic-timeline', {
 
     this.state.position = pos;
     this.state.excerpt = "";
-    const stream = this.attrs.topic.get('postStream');
+    const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    setTimeout(()=>{
+    setTimeout(() => {
       if (!this.state.position === pos) {
         return;
       }
 
       // we have an off by one, stream is zero based,
       // pos is 1 based
-      stream.excerpt(pos-1).then(info => {
+      stream.excerpt(pos - 1).then(info => {
         if (info && this.state.position === pos) {
           let excerpt = "";
 
@@ -382,7 +414,7 @@ export default createWidget('topic-timeline', {
   html(attrs) {
     const { topic } = attrs;
     const createdAt = new Date(topic.created_at);
-    const stream = attrs.topic.get('postStream.stream');
+    const stream = attrs.topic.get("postStream.stream");
     const { currentUser } = this;
     const { tagging_enabled, topic_featured_link_enabled } = this.siteSettings;
 
@@ -393,23 +425,36 @@ export default createWidget('topic-timeline', {
     if (attrs.fullScreen) {
       let titleHTML = "";
       if (attrs.mobileView) {
-        titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
+        titleHTML = new RawHtml({
+          html: `<span>${topic.get("fancyTitle")}</span>`
+        });
       }
 
-      let elems = [h('h2', this.attach('link', {
-        contents: () => titleHTML,
-        className: 'fancy-title',
-        action: 'jumpTop'
-      }))];
+      let elems = [
+        h(
+          "h2",
+          this.attach("link", {
+            contents: () => titleHTML,
+            className: "fancy-title",
+            action: "jumpTop"
+          })
+        )
+      ];
 
       // duplicate of the {{topic-category}} component
       let category = [];
 
       if (!topic.get("isPrivateMessage")) {
         if (topic.category.parentCategory) {
-          category.push(this.attach("category-link", { category: topic.category.parentCategory }));
+          category.push(
+            this.attach("category-link", {
+              category: topic.category.parentCategory
+            })
+          );
         }
-        category.push(this.attach("category-link", { category: topic.category }));
+        category.push(
+          this.attach("category-link", { category: topic.category })
+        );
       }
 
       const showTags = tagging_enabled && topic.tags && topic.tags.length > 0;
@@ -417,7 +462,9 @@ export default createWidget('topic-timeline', {
       if (showTags || topic_featured_link_enabled) {
         let extras = [];
         if (showTags) {
-          const tagsHtml = new RawHtml({ html: renderTags(topic, { mode: "list" }) });
+          const tagsHtml = new RawHtml({
+            html: renderTags(topic, { mode: "list" })
+          });
           extras.push(h("div.list-tags", tagsHtml));
         }
         if (topic_featured_link_enabled) {
@@ -431,39 +478,52 @@ export default createWidget('topic-timeline', {
       }
 
       if (this.state.excerpt) {
-        elems.push(new RawHtml({
-          html: `<div class='post-excerpt'>${this.state.excerpt}</div>`
-        }));
+        elems.push(
+          new RawHtml({
+            html: `<div class='post-excerpt'>${this.state.excerpt}</div>`
+          })
+        );
       }
 
-      result.push(h('div.title', elems));
+      result.push(h("div.title", elems));
     }
 
-    result.push(this.attach('timeline-controls', attrs));
+    result.push(this.attach("timeline-controls", attrs));
 
     if (stream.length < 3) {
-      const topicHeight = $('#topic').height();
+      const topicHeight = $("#topic").height();
       const windowHeight = $(window).height();
-      if ((topicHeight / windowHeight) < 2.0) {
+      if (topicHeight / windowHeight < 2.0) {
         return result;
       }
     }
 
-    const bottomAge = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
-    let scroller = [h('div.timeline-date-wrapper', this.attach('link', {
-                              className: 'start-date',
-                              rawLabel: timelineDate(createdAt),
-                              action: 'jumpTop'
-                            })),
-                            this.attach('timeline-scrollarea', attrs),
-                            h('div.timeline-date-wrapper', this.attach('link', {
-                              className: 'now-date',
-                              rawLabel: bottomAge,
-                              action: 'jumpBottom'
-                            }))];
+    const bottomAge = relativeAge(new Date(topic.last_posted_at), {
+      addAgo: true,
+      defaultFormat: timelineDate
+    });
+    let scroller = [
+      h(
+        "div.timeline-date-wrapper",
+        this.attach("link", {
+          className: "start-date",
+          rawLabel: timelineDate(createdAt),
+          action: "jumpTop"
+        })
+      ),
+      this.attach("timeline-scrollarea", attrs),
+      h(
+        "div.timeline-date-wrapper",
+        this.attach("link", {
+          className: "now-date",
+          rawLabel: bottomAge,
+          action: "jumpBottom"
+        })
+      )
+    ];
 
-    result.push(h('div.timeline-scrollarea-wrapper', scroller));
-    result.push(this.attach('timeline-footer-controls', attrs));
+    result.push(h("div.timeline-scrollarea-wrapper", scroller));
+    result.push(this.attach("timeline-footer-controls", attrs));
 
     return result;
   }

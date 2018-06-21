@@ -2,17 +2,12 @@ class ActiveRecord::Base
 
   # Execute SQL manually
   def self.exec_sql(*args)
+
+    Discourse.deprecate("exec_sql should not be used anymore, please use DB.exec or DB.query instead!")
+
     conn = ActiveRecord::Base.connection
     sql = ActiveRecord::Base.send(:sanitize_sql_array, args)
     conn.raw_connection.async_exec(sql)
-  end
-
-  def self.exec_sql_row_count(*args)
-    exec_sql(*args).cmd_tuples
-  end
-
-  def self.sql_fragment(*sql_array)
-    ActiveRecord::Base.send(:sanitize_sql_array, sql_array)
   end
 
   def exec_sql(*args)
@@ -34,12 +29,6 @@ class ActiveRecord::Base
         raise e
       end
     end
-  end
-
-  # Support for psql. If we want to support multiple RDBMs in the future we can
-  # split this.
-  def exec_sql_row_count(*args)
-    exec_sql(*args).cmd_tuples
   end
 
 end

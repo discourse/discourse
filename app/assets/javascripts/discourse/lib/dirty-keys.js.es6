@@ -11,11 +11,11 @@ export default class DirtyKeys {
   }
 
   forceAll() {
-    this.keyDirty('*');
+    this.keyDirty("*");
   }
 
   allDirty() {
-    return !!this._keys['*'];
+    return !!this._keys["*"];
   }
 
   optionsFor(key) {
@@ -23,7 +23,7 @@ export default class DirtyKeys {
   }
 
   renderedKey(key) {
-    if (key === '*') {
+    if (key === "*") {
       this._keys = {};
     } else {
       delete this._keys[key];

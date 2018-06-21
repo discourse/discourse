@@ -26,20 +26,25 @@
     .select-kit-collection {
       font-size: $font-down-1;
       max-height: 40vh;
-      .texts, .icons {
+      .texts,
+      .icons {
         font-size: $font-up-1;
       }
     }
-    &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
+    &.categories-admin-dropdown,
+    &.category-notifications-button,
+    &.tag-notifications-button {
       float: right;
     }
   }
 }
-  
+
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
-  a.title:not(.badge-notification) { color: $primary-medium; }
+  a.title:not(.badge-notification) {
+    color: $primary-medium;
+  }
 }
 
 .topic-list-main-link {
@@ -103,14 +108,14 @@
     line-height: $line-height-large;
     text-align: left;
     vertical-align: middle;
-
   }
   th {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
     font-size: $font-0;
-    button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium);}
-
+    button .d-icon {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
   }
   td {
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -172,17 +177,24 @@
       padding: 15px 5px;
     }
   }
-
 }
 
-.heatmap-high, .heatmap-high a {color: #fe7a15 !important;}
-.heatmap-med, .heatmap-med a {color: #cf7721 !important;}
-.heatmap-low, .heatmap-low a {color: #9b764f !important;}
+.heatmap-high,
+.heatmap-high a {
+  color: #fe7a15 !important;
+}
+.heatmap-med,
+.heatmap-med a {
+  color: #cf7721 !important;
+}
+.heatmap-low,
+.heatmap-low a {
+  color: #9b764f !important;
+}
 
 .topic-list.categories {
-
   .category .badge-notification {
-    background-color:transparent;
+    background-color: transparent;
     color: $primary-medium;
   }
 
@@ -202,16 +214,20 @@
     }
   }
 
-    table.categoryStats {
-      td {
-        padding: 2px;
-        vertical-align: bottom;
-        line-height: $line-height-large;
-        &.value { text-align: right; font-size: $font-up-3; }
-        &.unit  { text-align: left; }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: $line-height-large;
+      &.value {
+        text-align: right;
+        font-size: $font-up-3;
+      }
+      &.unit {
+        text-align: left;
       }
     }
-
+  }
 }
 
 .loading .topic-list {

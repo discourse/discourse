@@ -99,7 +99,6 @@ Atlassian has a free Git client for OS X called [SourceTree](http://www.sourcetr
 ## Postgres 9.3
 
 OS X ships with Postgres 9.1.5, but you're better off going with the latest from Homebrew or [Postgres.app](http://postgresapp.com).
-Note that we currently do not support Postgres 10 [due to an issue with seed-fu](https://meta.discourse.org/t/discourse-appears-to-be-broken-with-postgres-10/71723).
 
 ### Using Postgres.app
 

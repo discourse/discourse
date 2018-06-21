@@ -84,16 +84,16 @@ class NotificationsController < ApplicationController
 
   private
 
-    def set_notification
-      @notification = Notification.find(params[:id])
-    end
+  def set_notification
+    @notification = Notification.find(params[:id])
+  end
 
-    def notification_params
-      params.permit(:notification_type, :user_id, :data, :read, :topic_id, :post_number, :post_action_id)
-    end
+  def notification_params
+    params.permit(:notification_type, :user_id, :data, :read, :topic_id, :post_number, :post_action_id)
+  end
 
-    def render_notification
-      render_json_dump(NotificationSerializer.new(@notification, scope: guardian, root: false))
-    end
+  def render_notification
+    render_json_dump(NotificationSerializer.new(@notification, scope: guardian, root: false))
+  end
 
 end

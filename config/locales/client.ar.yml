@@ -16,12 +16,12 @@ ar:
           format: '%n %u'
           units:
             byte:
+              zero: بايت
+              one: بايت
+              two: بايت
               few: بايت
               many: بايت
-              one: بايت
               other: بايت
-              two: بايت
-              zero: بايت
             gb: غ.بايت
             kb: ك.بايت
             mb: م.بايت
@@ -47,130 +47,130 @@ ar:
       tiny:
         half_a_minute: "< دقيقة"
         less_than_x_seconds:
-          few: < %{count}ث
-          many: < %{count}ث
-          one: < 1 ثانية
-          other: < %{count}ث
-          two: < ثانيتين
-          zero: < 0 ثانية
+          zero: "< 0 ثانية"
+          one: "< 1 ثانية"
+          two: "< ثانيتين"
+          few: "< %{count}ث"
+          many: "< %{count}ث"
+          other: "< %{count}ث"
         x_seconds:
-          few: '%{count}ث'
-          many: '%{count}ث'
-          one: '%{count}ث'
-          other: '%{count}ث'
-          two: '%{count}ث'
-          zero: '%{count}ث'
+          zero: "%{count}ث"
+          one: "%{count}ث"
+          two: "%{count}ث"
+          few: "%{count}ث"
+          many: "%{count}ث"
+          other: "%{count}ث"
         x_minutes:
-          few: '%{count}د'
-          many: '%{count}د'
-          one: '%{count}د'
-          other: '%{count}د'
-          two: '%{count}د'
-          zero: '%{count}د'
+          zero: "%{count}د"
+          one: "%{count}د"
+          two: "%{count}د"
+          few: "%{count}د"
+          many: "%{count}د"
+          other: "%{count}د"
         about_x_hours:
-          few: '%{count}س'
-          many: '%{count}س'
-          one: '%{count}س'
-          other: '%{count}س'
-          two: '%{count}س'
-          zero: '%{count}س'
+          zero: "%{count}س"
+          one: "%{count}س"
+          two: "%{count}س"
+          few: "%{count}س"
+          many: "%{count}س"
+          other: "%{count}س"
         x_days:
-          few: '%{count}ي'
-          many: '%{count}ي'
-          one: '%{count}ي'
-          other: '%{count}ي'
-          two: '%{count}ي'
-          zero: '%{count}ي'
+          zero: "%{count}ي"
+          one: "%{count}ي"
+          two: "%{count}ي"
+          few: "%{count}ي"
+          many: "%{count}ي"
+          other: "%{count}ي"
         about_x_years:
-          few: '%{count}ع'
-          many: '%{count}ع'
-          one: '%{count}ع'
-          other: '%{count}ع'
-          two: '%{count}ع'
-          zero: '%{count}ع'
+          zero: "%{count}ع"
+          one: "%{count}ع"
+          two: "%{count}ع"
+          few: "%{count}ع"
+          many: "%{count}ع"
+          other: "%{count}ع"
         over_x_years:
-          few: '> %{count}ع'
-          many: '> %{count}ع'
-          one: '> %{count}ع'
-          other: '> %{count}ع'
-          two: '> %{count}ع'
-          zero: '> %{count}ع'
+          zero: "> %{count}ع"
+          one: "> %{count}ع"
+          two: "> %{count}ع"
+          few: "> %{count}ع"
+          many: "> %{count}ع"
+          other: "> %{count}ع"
         almost_x_years:
-          few: '%{count}ع'
-          many: '%{count}ع'
-          one: '%{count}ع'
-          other: '%{count}ع'
-          two: '%{count}ع'
-          zero: '%{count}ع'
+          zero: "%{count}ع"
+          one: "%{count}ع"
+          two: "%{count}ع"
+          few: "%{count}ع"
+          many: "%{count}ع"
+          other: "%{count}ع"
         date_month: "[في] D MMM"
         date_year: "[في] MMM YYYY"
       medium:
         x_minutes:
-          few: '%{count} دقائق'
-          many: '%{count} دقيقة'
-          one: دقيقة واحدة
-          other: '%{count} دقيقة'
-          two: دقيقتان
-          zero: أقل من دقيقة
+          zero: "أقل من دقيقة"
+          one: "دقيقة واحدة"
+          two: "دقيقتان"
+          few: "%{count} دقائق"
+          many: "%{count} دقيقة"
+          other: "%{count} دقيقة"
         x_hours:
-          few: '%{count} ساعات'
-          many: '%{count} ساعة'
-          one: ساعة واحدة
-          other: '%{count} ساعة'
-          two: ساعتان
-          zero: أقل من ساعة
+          zero: "أقل من ساعة"
+          one: "ساعة واحدة"
+          two: "ساعتان"
+          few: "%{count} ساعات"
+          many: "%{count} ساعة"
+          other: "%{count} ساعة"
         x_days:
-          few: '%{count} أيام'
-          many: '%{count} يوما'
-          one: يوم واحد
-          other: '%{count} يوم'
-          two: يومان
-          zero: أقل من يوم
+          zero: "أقل من يوم"
+          one: "يوم واحد"
+          two: "يومان"
+          few: "%{count} أيام"
+          many: "%{count} يوما"
+          other: "%{count} يوم"
         date_year: "D MMM، YYYY"
       medium_with_ago:
         x_minutes:
-          few: قبل %{count} دقائق
-          many: قبل %{count} دقيقة
-          one: قبل دقيقة واحدة
-          other: قبل %{count} دقيقة
-          two: قبل دقيقتين
-          zero: قبل أقل من دقيقة
+          zero: "قبل أقل من دقيقة"
+          one: "قبل دقيقة واحدة"
+          two: "قبل دقيقتين"
+          few: "قبل %{count} دقائق"
+          many: "قبل %{count} دقيقة"
+          other: "قبل %{count} دقيقة"
         x_hours:
-          few: قبل %{count} ساعات
-          many: قبل %{count} ساعة
-          one: قبل ساعة واحدة
-          other: قبل %{count} ساعة
-          two: قبل ساعتين
-          zero: قبل أقل من ساعة
+          zero: "قبل أقل من ساعة"
+          one: "قبل ساعة واحدة"
+          two: "قبل ساعتين"
+          few: "قبل %{count} ساعات"
+          many: "قبل %{count} ساعة"
+          other: "قبل %{count} ساعة"
         x_days:
-          few: قبل %{count} أيام
-          many: قبل %{count} يوما
-          one: قبل يوم واحد
-          other: قبل %{count} يوما
-          two: قبل يومين
-          zero: قبل أقل من يوم
+          zero: "قبل أقل من يوم"
+          one: "قبل يوم واحد"
+          two: "قبل يومين"
+          few: "قبل %{count} أيام"
+          many: "قبل %{count} يوما"
+          other: "قبل %{count} يوما"
       later:
         x_days:
-          few: بعد %{count} أيام
-          many: بعد %{count} يوما
-          one: بعد يوم واحد
-          other: بعد %{count} يوم
-          two: بعد يومين
-          zero: بعد أقل من يوم
+          zero: "بعد أقل من يوم"
+          one: "بعد يوم واحد"
+          two: "بعد يومين"
+          few: "بعد %{count} أيام"
+          many: "بعد %{count} يوما"
+          other: "بعد %{count} يوم"
         x_months:
-          few: بعد %{count} أشهر
-          many: بعد %{count} شهرا
-          one: بعد شهر واحد
-          other: بعد %{count} شهر
-          two: بعد شهرين
-          zero: بعد أقل من شهر
+          zero: "بعد أقل من شهر"
+          one: "بعد شهر واحد"
+          two: "بعد شهرين"
+          few: "بعد %{count} أشهر"
+          many: "بعد %{count} شهرا"
+          other: "بعد %{count} شهر"
         x_years:
-          few: بعد %{count}  عام
-          many: بعد %{count}  عام
-          one: بعد عام واحدة
-          other: بعد %{count} عام
-          two: بعد عامين
-          zero: بعد أقل من عام
+          zero: "بعد أقل من عام"
+          one: "بعد عام واحدة"
+          two: "بعد عامين"
+          few: "بعد %{count}  عام"
+          many: "بعد %{count}  عام"
+          other: "بعد %{count} عام"
       previous_month: 'الشهر السابق'
       next_month: 'الشهر التالي'
       placeholder: التاريخ
@@ -251,12 +251,12 @@ ar:
     show_help: "خيارات"
     links: "روابط"
     links_lowercase:
-      few: الروابط
-      many: الروابط
-      one: الروابط
-      other: روابط
-      two: الروابط
-      zero: الروابط
+      zero: "الروابط"
+      one: "الروابط"
+      two: "الروابط"
+      few: "الروابط"
+      many: "الروابط"
+      other: "روابط"
     faq: "الأسئلة الشائعة"
     guidelines: "القواعد العامة"
     privacy_policy: "سياسة الخصوصية "
@@ -280,12 +280,12 @@ ar:
     max_of_count: "أقصى عدد هو {{count}}"
     alternation: "أو"
     character_count:
-      few: '{{count}} محارف'
-      many: '{{count}} محرفا'
-      one: محرف واحد
-      other: '{{count}} حرف'
-      two: محرفان
-      zero: لا محارف
+      zero: "لا محارف"
+      one: "محرف واحد"
+      two: "محرفان"
+      few: "{{count}} محارف"
+      many: "{{count}} محرفا"
+      other: "{{count}} حرف"
     suggested_topics:
       title: "الموضوعات المقترحة"
       pm_title: "رسائل مقترحة "
@@ -354,24 +354,24 @@ ar:
       cancel: "ألغِ"
       view_pending: "اعرض المنشورات المعلّقة"
       has_pending_posts:
-        few: في هذا الموضوع <b>{{count}}</b> مشاركات تحتاج مراجعة
-        many: في هذا الموضوع <b>{{count}}</b> مشاركة تحتاج مراجعة
-        one: في هذا الموضوع <b>مشاركة واحدة</b> تحتاج مراجعة
-        other: في هذا الموضوع <b>{{count}}</b> منشور يحتاج إلي مراجعة
-        two: في هذا الموضوع <b>مشاركتين</b> تحتاج مراجعة
-        zero: ليس في هذا الموضوع <b>أيّة</b> مشاركات تحتاج مراجعة
+        zero: "ليس في هذا الموضوع <b>أيّة</b> مشاركات تحتاج مراجعة"
+        one: "في هذا الموضوع <b>مشاركة واحدة</b> تحتاج مراجعة"
+        two: "في هذا الموضوع <b>مشاركتين</b> تحتاج مراجعة"
+        few: "في هذا الموضوع <b>{{count}}</b> مشاركات تحتاج مراجعة"
+        many: "في هذا الموضوع <b>{{count}}</b> مشاركة تحتاج مراجعة"
+        other: "في هذا الموضوع <b>{{count}}</b> منشور يحتاج إلي مراجعة"
       confirm: "احفظ التعديلات"
       delete_prompt: "أمتأكد من حذف <b>%{username}</b>؟ ستُحذف كل منشوراتة وسيُمنع بريده الإلكتروني وعنوان الـ IP."
       approval:
         title: "المنشور يحتاج موافقة"
         description: "لقد وصلنا منشورك ولكنة يحتاج موافقة المشرف قبل ظهورها. نرجو منك الصبر."
         pending_posts:
-          few: لديك <strong>{{count}}</strong> مشاركات معلّقة.
-          many: لديك <strong>{{count}}</strong> مشاركة معلّقة.
-          one: لديك <strong>مشاركة واحدة</strong> معلّقة.
-          other: لديك <strong>{{count}}</strong> منشور معلّق.
-          two: لديك <strong>مشاركتين</strong> معلّقتين.
-          zero: <strong>لا</strong> مشاركات معلّقة.
+          zero: "<strong>لا</strong> مشاركات معلّقة."
+          one: "لديك <strong>مشاركة واحدة</strong> معلّقة."
+          two: "لديك <strong>مشاركتين</strong> معلّقتين."
+          few: "لديك <strong>{{count}}</strong> مشاركات معلّقة."
+          many: "لديك <strong>{{count}}</strong> مشاركة معلّقة."
+          other: "لديك <strong>{{count}}</strong> منشور معلّق."
         ok: "حسنا"
     user_action:
       user_posted_topic: "نشر <a href='{{userUrl}}'>{{user}}</a> <a href='{{topicUrl}}'>الموضوع</a>"
@@ -405,12 +405,12 @@ ar:
       posts_read: "المقروءة"
       posts_read_long: "المنشورات المقروءة"
       total_rows:
-        few: '%{count} أعضاء'
-        many: '%{count} عضوًا'
-        one: عضو واحد
-        other: '%{count} عضو'
-        two: عضوان
-        zero: لا أعضاء
+        zero: "لا أعضاء"
+        one: "عضو واحد"
+        two: "عضوان"
+        few: "%{count} أعضاء"
+        many: "%{count} عضوًا"
+        other: "%{count} عضو"
     group_histories:
       actions:
         change_group_setting: "تغيير إعدادات المجموعة"
@@ -478,12 +478,12 @@ ar:
         is_group_user: "عضو"
         is_group_owner: "المالك"
       title:
-        few: المجموعات
-        many: المجموعات
-        one: مجموعة
-        other: المجموعات
-        two: مجموعتان
-        zero: مجموعة
+        zero: "مجموعة"
+        one: "مجموعة"
+        two: "مجموعتان"
+        few: "المجموعات"
+        many: "المجموعات"
+        other: "المجموعات"
       activity: "النشاط"
       members:
         title: "الأعضاء"
@@ -560,19 +560,19 @@ ar:
       toggle_ordering: "تبديل التحكم في الترتيب"
       subcategories: "أقسام فرعية"
       topic_sentence:
-        few: '%{count} مواضيع'
-        many: '%{count} موضوعًا'
-        one: موضوع واحد
-        other: '%{count} موضوع'
-        two: موضوعان
-        zero: لا مواضيع
+        zero: "لا مواضيع"
+        one: "موضوع واحد"
+        two: "موضوعان"
+        few: "%{count} مواضيع"
+        many: "%{count} موضوعًا"
+        other: "%{count} موضوع"
       topic_stat_sentence:
-        few: '%{count} مواضيع جديدة في ال%{unit} الماضي.'
-        many: '%{count} موضوعًا جديدًا في ال%{unit} الماضي.'
-        one: موضوع واحد جديد في ال%{unit} الماضي.
-        other: '%{count} موضوع جديد في ال%{unit} الماضي.'
-        two: موضوعان جديدان في ال%{unit} الماضي.
-        zero: لا مواضيع جديدة في ال%{unit} الماضي.
+        zero: "لا مواضيع جديدة في ال%{unit} الماضي."
+        one: "موضوع واحد جديد في ال%{unit} الماضي."
+        two: "موضوعان جديدان في ال%{unit} الماضي."
+        few: "%{count} مواضيع جديدة في ال%{unit} الماضي."
+        many: "%{count} موضوعًا جديدًا في ال%{unit} الماضي."
+        other: "%{count} موضوع جديد في ال%{unit} الماضي."
     ip_lookup:
       title: جدول عناوين الIP
       hostname: اسم المضيف
@@ -730,7 +730,6 @@ ar:
         error: "حدث عطل أثناء تغيير هذه القيمة."
       change_username:
         title: "تغيير اسم المستخدم"
-        confirm: "إن غيّرت اسم المستخدم ستتعطل كل الاقتباسات من منشوراتك و كل الاشارات إلي @اسمك. أواثق تمام الثّقة من ذلك؟"
         taken: "عذرا، اسم المستخدم غير متاح."
         invalid: "اسم المستخدم غير صالح. يمكنه احتواء احرف و ارقام انجليزية فحسب"
       change_email:
@@ -765,12 +764,12 @@ ar:
         authenticated: "تم توثيق بريدك الإلكتروني بواسطة {{provider}}"
         frequency_immediately: "سيتم ارسال رسالة الكترونية فورا في حال أنك لم تقرأ الرسائل السابقة التي كنا نرسلها لك."
         frequency:
-          few: سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة.
-          many: سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة.
-          one: سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة.
-          other: سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة.
-          two: سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة.
-          zero: سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة.
+          zero: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
+          one: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
+          two: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
+          few: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
+          many: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
+          other: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
       name:
         title: "الاسم"
         instructions: "اسمك الكامل (اختياريّ)"
@@ -855,12 +854,12 @@ ar:
         user: "المستخدمين المدعويين"
         sent: "تم الإرسال"
         truncated:
-          few: عرض الدعوات الأولية.
-          many: عرض الدعوات {{count}} الأولى.
-          one: عرض الدعوة الأولى.
-          other: عرض الدعوات  {{count}} الأولى.
-          two: عرض الدعوتان الأولتان.
-          zero: لا يوجد دعوات لعرضها.
+          zero: "لا يوجد دعوات لعرضها."
+          one: "عرض الدعوة الأولى."
+          two: "عرض الدعوتان الأولتان."
+          few: "عرض الدعوات الأولية."
+          many: "عرض الدعوات {{count}} الأولى."
+          other: "عرض الدعوات  {{count}} الأولى."
         redeemed: "دعوات محررة"
         redeemed_tab: "محررة"
         redeemed_tab_with_count: "({{count}}) محررة"
@@ -907,40 +906,40 @@ ar:
         time_read: "وقت القراءة"
         recent_time_read: "وقت القراءة الحديث"
         topic_count:
-          few: عدد المواضيع المنشأة
-          many: عدد المواضيع المنشأة
-          one: عدد المواضيع المنشأة
-          other: عدد المواضيع المنشأة
-          two: عدد المواضيع المنشأة
-          zero: عدد المواضيع المنشأة
+          zero: "عدد المواضيع المنشأة"
+          one: "عدد المواضيع المنشأة"
+          two: "عدد المواضيع المنشأة"
+          few: "عدد المواضيع المنشأة"
+          many: "عدد المواضيع المنشأة"
+          other: "عدد المواضيع المنشأة"
         post_count:
-          few: المنشورات المنشأة
-          many: المنشورات المنشأة
-          one: المنشورات المنشأة
-          other: المنشورات المنشأة
-          two: المنشورات المنشأة
-          zero: المنشورات المنشأة
+          zero: "المنشورات المنشأة"
+          one: "المنشورات المنشأة"
+          two: "المنشورات المنشأة"
+          few: "المنشورات المنشأة"
+          many: "المنشورات المنشأة"
+          other: "المنشورات المنشأة"
         days_visited:
-          few: أيّام الزّيارة
-          many: أيّام الزّيارة
-          one: أيّام الزّيارة
-          other: أيام الزيارة
-          two: أيّام الزّيارة
-          zero: أيّام الزّيارة
+          zero: "أيّام الزّيارة"
+          one: "أيّام الزّيارة"
+          two: "أيّام الزّيارة"
+          few: "أيّام الزّيارة"
+          many: "أيّام الزّيارة"
+          other: "أيام الزيارة"
         posts_read:
-          few: المنشورات المقروءة
-          many: المنشورات المقروءة
-          one: المنشورات المقروءة
-          other: المنشورات المقروءة
-          two: المنشورات المقروءة
-          zero: المنشورات المقروءة
+          zero: "المنشورات المقروءة"
+          one: "المنشورات المقروءة"
+          two: "المنشورات المقروءة"
+          few: "المنشورات المقروءة"
+          many: "المنشورات المقروءة"
+          other: "المنشورات المقروءة"
         bookmark_count:
-          few: العلامات المرجعية
-          many: العلامات المرجعية
-          one: العلامات المرجعية
-          other: العلامات المرجعية
-          two: العلامات المرجعية
-          zero: العلامات المرجعية
+          zero: "العلامات المرجعية"
+          one: "العلامات المرجعية"
+          two: "العلامات المرجعية"
+          few: "العلامات المرجعية"
+          many: "العلامات المرجعية"
+          other: "العلامات المرجعية"
         top_replies: "أفضل الردود"
         no_replies: "لا يوجد ردود بعد."
         more_replies: "ردود أخرى"
@@ -1008,12 +1007,12 @@ ar:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> وصل الحد الاقصي لإعدادت الموقع %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> يتجاوز الحد الاقصي لإعدادت الموقع %{siteSettingRate}."
       rate:
-        few: '%{count} خطا / %{duration}'
-        many: '%{count} خطا /%{duration}'
-        one: خطا واحد / %{duration}
-        other: '%{count} خطا /%{duration}'
-        two: '%{count} خطا / %{duration}'
-        zero: خطا واحد / %{duration}
+        zero: "خطا واحد / %{duration}"
+        one: "خطا واحد / %{duration}"
+        two: "%{count} خطا / %{duration}"
+        few: "%{count} خطا / %{duration}"
+        many: "%{count} خطا /%{duration}"
+        other: "%{count} خطا /%{duration}"
     learn_more: "اطّلع على المزيد..."
     all_time: 'المجموع'
     all_time_desc: 'عدد المواضيع المنشأة'
@@ -1031,12 +1030,12 @@ ar:
     time_read: المقروءة
     last_reply_lowercase: آخر رد
     replies_lowercase:
+      zero: الردود
+      one: الردود
+      two: الردود
       few: الردود
       many: الردود
-      one: الردود
       other: الردود
-      two: الردود
-      zero: الردود
     signup_cta:
       sign_up: "إنشاء حساب"
       hide_session: "ذكرني غدا"
@@ -1204,12 +1203,12 @@ ar:
       similar_topics: "موضوعك يشابه..."
       drafts_offline: "مسودات محفوظة "
       group_mentioned:
-        few: الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>{{count}} أشخاص</a>. أمتأكّد؟
-        many: الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>{{count}} شخصًا</a>. أمتأكّد؟
-        one: الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>شخص واحد</a>. أمتأكّد؟
-        other: بالإشارة إلى {{group}} تعني إشعار<a href='{{group_link}}'>{{count}} شخص</a>– أمتأكد من ذلك؟
-        two: الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>شخصين</a>. أمتأكّد؟
-        zero: الإشارة إلى {{group}} تعني <a href='{{group_link}}'>عدم إخطار أحد</a>. أمتأكّد؟
+        zero: "الإشارة إلى {{group}} تعني <a href='{{group_link}}'>عدم إخطار أحد</a>. أمتأكّد؟"
+        one: "الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>شخص واحد</a>. أمتأكّد؟"
+        two: "الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>شخصين</a>. أمتأكّد؟"
+        few: "الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>{{count}} أشخاص</a>. أمتأكّد؟"
+        many: "الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>{{count}} شخصًا</a>. أمتأكّد؟"
+        other: "بالإشارة إلى {{group}} تعني إشعار<a href='{{group_link}}'>{{count}} شخص</a>– أمتأكد من ذلك؟"
       cannot_see_mention:
         category: "لقد قمت بالإشارة إلي {{username}} لكن لن يتم إشعارهم لأن ليس لديهم صلاحية الوصول لهذا القسم. عليك ان تقوم باضافتهم لمجموعة لديها حق الوصول لهذا القسم."
         private: "لقد قمت بالإشارة إلي {{username}} لكن لن يتم إشعارهم لأن ليس لديهم صلاحية الوصول لهذه الرسالة الخاصة. عليك ان تقوم باضافتهم إلي هذة الرسالة."
@@ -1290,12 +1289,12 @@ ar:
       liked: "<span>{{username}}</span>{{description}} "
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        few: <span>{{username}}, {{username2}} و {{count}} اخرون</span> {{description}}
-        many: <span>{{username}}, {{username2}} و {{count}} اخرون</span> {{description}}
-        one: <span>{{username}}, {{username2}} و وواحد اخر</span> {{description}}
-        other: <span>{{username}}, {{username2}} و {{count}} اخرون</span> {{description}}
-        two: <span>{{username}}, {{username2}} و اثنين اخرون</span> {{description}}
-        zero: <span>{{username}}, {{username2}}</span> {{description}}
+        zero: "<span>{{username}}, {{username2}}</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} و وواحد اخر</span> {{description}}"
+        two: "<span>{{username}}, {{username2}} و اثنين اخرون</span> {{description}}"
+        few: "<span>{{username}}, {{username2}} و {{count}} اخرون</span> {{description}}"
+        many: "<span>{{username}}, {{username2}} و {{count}} اخرون</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} و {{count}} اخرون</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
@@ -1306,12 +1305,12 @@ ar:
       topic_reminder: "<span>{{username}}</span>{{description}} "
       watching_first_post: "<span>موضوع جديد</span> {{description}}"
       group_message_summary:
-        few: '{{count}} رسالة في صندوق رسائل {{group_name}} '
-        many: '{{count}} رسالة في صندوق رسائل {{group_name}} '
-        one: 'رسالة واحدة في صندوق رسائل {{group_name}} '
-        other: '{{count}} رسالة في صندوق رسائل {{group_name}} '
-        two: '{{count}} رسالة في صندوق رسائل {{group_name}} '
-        zero: 'لا يوجد رسائل في صندوق رسائل {{group_name}} '
+        zero: "لا يوجد رسائل في صندوق رسائل {{group_name}} "
+        one: "رسالة واحدة في صندوق رسائل {{group_name}} "
+        two: "{{count}} رسالة في صندوق رسائل {{group_name}} "
+        few: "{{count}} رسالة في صندوق رسائل {{group_name}} "
+        many: "{{count}} رسالة في صندوق رسائل {{group_name}} "
+        other: "{{count}} رسالة في صندوق رسائل {{group_name}} "
       popup:
         mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'
         group_mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'
@@ -1425,12 +1424,12 @@ ar:
         notification_level: "الاشعارات"
         choose_new_category: "اختر القسم الجديد للموضوعات:"
         selected:
-          few: حددت <b>{{count}}</b> مواضيع.
-          many: حددت <b>{{count}}</b> موضوعا.
-          one: حددت موضوع <b>واحد</b>.
-          other: حددت <b>{{count}}</b> موضوع.
-          two: حددت <b>موضوعين</b>.
-          zero: لم تحدد شيئا.
+          zero: "لم تحدد شيئا."
+          one: "حددت موضوع <b>واحد</b>."
+          two: "حددت <b>موضوعين</b>."
+          few: "حددت <b>{{count}}</b> مواضيع."
+          many: "حددت <b>{{count}}</b> موضوعا."
+          other: "حددت <b>{{count}}</b> موضوع."
         change_tags: "غيّر الأوسمة"
         append_tags: "اضف الأوسمة"
         choose_new_tags: "اختر أوسمة جديدة لهذه الموضوعات:"
@@ -1463,12 +1462,12 @@ ar:
         search: "لا يوجد نتائج بحث أخرى."
     topic:
       filter_to:
-        few: '{{count}} منشور في الموضوع'
-        many: '{{count}} منشور في الموضوع'
-        one: منشور واحد في الموضوع
-        other: '{{count}} منشور في الموضوع'
-        two: منشورين في الموضوع
-        zero: لا يوجد منشورات في الموضوع
+        zero: "لا يوجد منشورات في الموضوع"
+        one: "منشور واحد في الموضوع"
+        two: "منشورين في الموضوع"
+        few: "{{count}} منشور في الموضوع"
+        many: "{{count}} منشور في الموضوع"
+        other: "{{count}} منشور في الموضوع"
       create: 'موضوع جديد'
       create_long: 'كتابة موضوع جديد'
       private_message: 'أرسل رسالة خاصة'
@@ -1484,19 +1483,19 @@ ar:
       new: 'موضوع جديد'
       unread: 'غير مقروء'
       new_topics:
+        zero: 'لا مواضيع جديدة'
+        one: 'موضوع واحد جديد'
+        two: 'موضوعان جديدان'
         few: '{{count}} مواضيع جديدة'
         many: '{{count}} موضوعًا جديدًا'
-        one: موضوع واحد جديد
         other: '{{count}} موضوع جديد'
-        two: موضوعان جديدان
-        zero: لا مواضيع جديدة
       unread_topics:
+        zero: 'لا مواضيع غير مقروءة'
+        one: 'موضوع واحد غير مقروء'
+        two: 'موضوعان غير مقروءان'
         few: '{{count}} مواضيع غير مقروءة'
         many: '{{count}} موضوعًا غير مقروء'
-        one: موضوع واحد غير مقروء
         other: '{{count}} موضوع غير مقروء'
-        two: موضوعان غير مقروءان
-        zero: لا مواضيع غير مقروءة
       title: 'الموضوع'
       invalid_access:
         title: "الموضوع خاص"
@@ -1509,33 +1508,33 @@ ar:
         title: "لم يُعثر على الموضوع"
         description: "عذرا، لم نجد هذا الموضوع. ربما أزاله أحد المشرفين؟"
       total_unread_posts:
-        few: لديك {{count}} منشور غير مقروء في هذا الموضوع
-        many: لديك {{count}} منشور غير مقروء في هذا الموضوع
-        one: لديك منشور واحد غير مقروء في هذا الموضوع
-        other: لديك {{count}} منشور غير مقروء في هذا الموضوع
-        two: لديك {{count}} منشور غير مقروء في هذا الموضوع
-        zero: لا يوجد منشورات غير مقروء في هذا الموضوع
+        zero: "لا يوجد منشورات غير مقروء في هذا الموضوع"
+        one: "لديك منشور واحد غير مقروء في هذا الموضوع"
+        two: "لديك {{count}} منشور غير مقروء في هذا الموضوع"
+        few: "لديك {{count}} منشور غير مقروء في هذا الموضوع"
+        many: "لديك {{count}} منشور غير مقروء في هذا الموضوع"
+        other: "لديك {{count}} منشور غير مقروء في هذا الموضوع"
       unread_posts:
-        few: لديك {{count}} مشاركات قديمة غير مقروءة في هذا الموضوع
-        many: لديك {{count}} مشاركة قديمة غير مقروءة في هذا الموضوع
-        one: لديك مشاركة واحدة قديمة غير مقروءة في هذا الموضوع
-        other: لديك {{count}} مشاركة قديمة غير مقروءة في هذا الموضوع
-        two: لديك مشاركتين قديمتين غير مقروءتين في هذا الموضوع
-        zero: لا مشاركات قديمة غير مقروءة في هذا الموضوع
+        zero: "لا مشاركات قديمة غير مقروءة في هذا الموضوع"
+        one: "لديك مشاركة واحدة قديمة غير مقروءة في هذا الموضوع"
+        two: "لديك مشاركتين قديمتين غير مقروءتين في هذا الموضوع"
+        few: "لديك {{count}} مشاركات قديمة غير مقروءة في هذا الموضوع"
+        many: "لديك {{count}} مشاركة قديمة غير مقروءة في هذا الموضوع"
+        other: "لديك {{count}} مشاركة قديمة غير مقروءة في هذا الموضوع"
       new_posts:
-        few: هناك {{count}} منشور جديد في هذا الموضوع منذ اخر مرة قرأته
-        many: هناك {{count}} منشور جديد في هذا الموضوع منذ اخر مرة قرأته
-        one: هناك منشور واحد جديد في هذا الموضوع منذ اخر مرة قرأته
-        other: هناك {{count}} منشور جديد في هذا الموضوع منذ اخر مرة قرأته
-        two: هناك منشورين جديدين في هذا الموضوع منذ اخر مرة قرأته
-        zero: لا يوجد منشورات جديد في هذا الموضوع منذ اخر مرة قرأته
+        zero: "لا يوجد منشورات جديد في هذا الموضوع منذ اخر مرة قرأته"
+        one: "هناك منشور واحد جديد في هذا الموضوع منذ اخر مرة قرأته"
+        two: "هناك منشورين جديدين في هذا الموضوع منذ اخر مرة قرأته"
+        few: "هناك {{count}} منشور جديد في هذا الموضوع منذ اخر مرة قرأته"
+        many: "هناك {{count}} منشور جديد في هذا الموضوع منذ اخر مرة قرأته"
+        other: "هناك {{count}} منشور جديد في هذا الموضوع منذ اخر مرة قرأته"
       likes:
-        few: هناك {{count}} إعجابات في هذا الموضوع
-        many: هناك {{count}} إعجابا في هذا الموضوع
-        one: هناك إعجاب واحد في هذا الموضوع
-        other: هناك {{count}} إعجاب في هذا الموضوع
-        two: هناك إعجابين في هذا الموضوع
-        zero: لا إعجابات في هذا الموضوع
+        zero: "لا إعجابات في هذا الموضوع"
+        one: "هناك إعجاب واحد في هذا الموضوع"
+        two: "هناك إعجابين في هذا الموضوع"
+        few: "هناك {{count}} إعجابات في هذا الموضوع"
+        many: "هناك {{count}} إعجابا في هذا الموضوع"
+        other: "هناك {{count}} إعجاب في هذا الموضوع"
       back_to_list: "عد إلى قائمة الموضوعات"
       options: "خيارات الموضوعات"
       show_links: "اظهر الروابط في هذا الموضوع"
@@ -1592,12 +1591,12 @@ ar:
         auto_reminder: "سوف يتم تذكيرك بهذا الموضوع %{timeLeft}."
       auto_close_title: 'إعدادات الإغلاق الآلي'
       auto_close_immediate:
-        few: اخر منشور بهذا الموضوع نشر بالفعل منذ %{count} ساعة, لذا سيتم غلق الموضوع الأن.
-        many: اخر منشور بهذا الموضوع نشر بالفعل منذ %{count} ساعة, لذا سيتم غلق الموضوع الأن.
-        one: اخر منشور بهذا الموضوع نشر بالفعل منذ ساعة واحدة, لذا سيتم غلق الموضوع الأن.
-        other: اخر منشور بهذا الموضوع نشر بالفعل منذ %{count} ساعة, لذا سيتم غلق الموضوع الأن.
-        two: اخر منشور بهذا الموضوع نشر بالفعل منذ ساعتين, لذا سيتم غلق الموضوع الأن.
-        zero: اخر منشور بهذا الموضوع نشر بالفعل منذ اقل من ساعة, لذا سيتم غلق الموضوع الأن.
+        zero: "اخر منشور بهذا الموضوع نشر بالفعل منذ اقل من ساعة, لذا سيتم غلق الموضوع الأن."
+        one: "اخر منشور بهذا الموضوع نشر بالفعل منذ ساعة واحدة, لذا سيتم غلق الموضوع الأن."
+        two: "اخر منشور بهذا الموضوع نشر بالفعل منذ ساعتين, لذا سيتم غلق الموضوع الأن."
+        few: "اخر منشور بهذا الموضوع نشر بالفعل منذ %{count} ساعة, لذا سيتم غلق الموضوع الأن."
+        many: "اخر منشور بهذا الموضوع نشر بالفعل منذ %{count} ساعة, لذا سيتم غلق الموضوع الأن."
+        other: "اخر منشور بهذا الموضوع نشر بالفعل منذ %{count} ساعة, لذا سيتم غلق الموضوع الأن."
       timeline:
         back: "الرجوع"
         back_description: "عد إلى آخر منشور غير مقروء"
@@ -1704,12 +1703,12 @@ ar:
         pin_validation: "التاريخ مطلوب لتثبيت هذا الموضوع."
         not_pinned: "لا يوجد موضوعات مثبتة في {{categoryLink}}."
         already_pinned:
-          few: 'المواضيع مثبتة حالياً في {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          many: 'المواضيع مثبتة حالياً في {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          one: 'المواضيع مثبتة حالياً في {{categoryLink}}: <strong class=''badge badge-notification unread''>1</strong>'
-          other: 'الموضوعات مثبتة حالياً في {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          two: 'المواضيع مثبتة حالياً في {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          zero: 'المواضيع مثبتة حالياً في {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
+          zero: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          two: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          few: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          many: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          other: "الموضوعات مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "اعرض هذا الموضوع أعلى كل قوائم الموضوعات حتى"
         confirm_pin_globally: "لديك {{count}} موضوع مثبت علي عموم الموقع مما قد يشكل عبئ على الأعضاء الجدد و الزوار. هل أنت واثق أنك تريد تثبيت موضوع أخر على عموم الموقع؟"
         unpin_globally: "أزل هذا الموضوع من أعلى كل قوائم الموضوعات."
@@ -1717,12 +1716,12 @@ ar:
         global_pin_note: "يمكن للاعضاء إذالة تثبيت الموضوع لأنفسهم. "
         not_pinned_globally: "لا يوجد موضوعات مثبتة للعموم."
         already_pinned_globally:
-          few: 'الموضوعات المثبتة علي عموم الموقع حاليا: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          many: 'الموضوعات المثبتة علي عموم الموقع حاليا: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          one: 'الموضوعات المثبتة علي عموم الموقع حاليا: <strong class=''badge badge-notification unread''>1</strong>'
-          other: 'الموضوعات المثبتة علي عموم الموقع حاليا: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          two: 'الموضوعات المثبتة علي عموم الموقع حاليا: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          zero: 'الموضوعات المثبتة علي عموم الموقع حاليا: <strong class=''badge badge-notification unread''>{{count}}</strong>'
+          zero: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>1</strong>"
+          two: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          few: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          many: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          other: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "اجعل هذا الموضوع إعلانا يظهر أعلى كل الصفحات."
         remove_banner: "أزل الإعلان الذي يظهر أعلى كل الصفحات."
         banner_note: "الأعضاء يستطيعون تجاهل الموضوع المثبت كإعلان بإغلاقه. لا تمكن تعيين اكثر من موضوع في نفس الوقت كإعلان."
@@ -1759,12 +1758,12 @@ ar:
       login_reply: 'عليك تسجيل الدخول للرد'
       filters:
         n_posts:
-          few: '{{count}} منشور'
-          many: '{{count}} منشور'
-          one: منشور واحد
-          other: '{{count}} منشور'
-          two: منشوران
-          zero: لا يوجد منشورات
+          zero: "لا يوجد منشورات"
+          one: "منشور واحد"
+          two: "منشوران"
+          few: "{{count}} منشور"
+          many: "{{count}} منشور"
+          other: "{{count}} منشور"
         cancel: "إزالة الترشيح"
       split_topic:
         title: "نقل الى موضوع جديد"
@@ -1772,23 +1771,23 @@ ar:
         topic_name: "اسم الموضوع الجديد"
         error: "حدث عطل أثناء نقل المنشورات إلى موضوع جديد."
         instructions:
-          few: أنت على وشك انشاء موضوع جديد وتعبئته بـ <b>{{count}}</b> منشور اخترتة.
-          many: أنت على وشك انشاء موضوع جديد وتعبئته بـ <b>{{count}}</b> منشور اخترتة.
-          one: أنت على وشك انشاء موضوع جديد وتعبئته بمنشورم اخترتة.
-          other: أنت على وشك انشاء موضوع جديد وتعبئته بـ <b>{{count}}</b> منشور اخترتة.
-          two: أنت على وشك انشاء موضوع جديد وتعبئته منشورين اخترتهما.
-          zero: أنت على وشك انشاء موضوع جديد, ولم تقم باختيار أي منشور لتعبئته.
+          zero: "أنت على وشك انشاء موضوع جديد, ولم تقم باختيار أي منشور لتعبئته."
+          one: "أنت على وشك انشاء موضوع جديد وتعبئته بمنشورم اخترتة."
+          two: "أنت على وشك انشاء موضوع جديد وتعبئته منشورين اخترتهما."
+          few: "أنت على وشك انشاء موضوع جديد وتعبئته بـ <b>{{count}}</b> منشور اخترتة."
+          many: "أنت على وشك انشاء موضوع جديد وتعبئته بـ <b>{{count}}</b> منشور اخترتة."
+          other: "أنت على وشك انشاء موضوع جديد وتعبئته بـ <b>{{count}}</b> منشور اخترتة."
       merge_topic:
         title: "نقل الى موضوع موجود"
         action: "نقل الى موضوع موجود"
         error: "حدث عطل أثناء نقل المنشورات إلى الموضوع ذاك."
         instructions:
-          few: الرجاء اختيار الموضوع الذي تود نقل الـ<b>{{count}}</b> منشور إليه.
-          many: الرجاء اختيار الموضوع الذي تود نقل الـ<b>{{count}}</b> منشور إليه.
-          one: الرجاء اختيار الموضوع الذي تود نقل منشور واحد إليه.
-          other: الرجاء اختيار الموضوع الذي تود نقل الـ<b>{{count}}</b> منشور إليه.
-          two: الرجاء اختيار الموضوع الذي تود نقل منشورين إليه.
-          zero: لم يتم اختيار أي منشورات لنقلها !
+          zero: "لم يتم اختيار أي منشورات لنقلها !"
+          one: "الرجاء اختيار الموضوع الذي تود نقل منشور واحد إليه."
+          two: "الرجاء اختيار الموضوع الذي تود نقل منشورين إليه."
+          few: "الرجاء اختيار الموضوع الذي تود نقل الـ<b>{{count}}</b> منشور إليه."
+          many: "الرجاء اختيار الموضوع الذي تود نقل الـ<b>{{count}}</b> منشور إليه."
+          other: "الرجاء اختيار الموضوع الذي تود نقل الـ<b>{{count}}</b> منشور إليه."
       merge_posts:
         title: "ادمج المنشورات المحدّدة"
         action: "ادمج المنشورات المحددة"
@@ -1800,12 +1799,12 @@ ar:
         label: "الكاتب الجديد للمنشورات"
         placeholder: "اسم مستخدم الكاتب الجديد"
         instructions:
-          few: الرجاء اختيار المالك الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>.
-          many: الرجاء اختيار المالك الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>.
-          one: الرجاء اختيار المالك الجديد لمنشور نُشر بواسطة <b>{{old_user}}</b>.
-          other: الرجاء اختيار الكاتب الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>.
-          two: الرجاء اختيار المالك الجديد لمنشورين نُشروا بواسطة <b>{{old_user}}</b>.
-          zero: لم يتم تحديد أي منشورات!
+          zero: "لم يتم تحديد أي منشورات!"
+          one: "الرجاء اختيار المالك الجديد لمنشور نُشر بواسطة <b>{{old_user}}</b>."
+          two: "الرجاء اختيار المالك الجديد لمنشورين نُشروا بواسطة <b>{{old_user}}</b>."
+          few: "الرجاء اختيار المالك الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>."
+          many: "الرجاء اختيار المالك الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>."
+          other: "الرجاء اختيار الكاتب الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>."
       change_timestamp:
         title: "غير تاريخ النشر..."
         action: "غير تاريخ النشر..."
@@ -1820,12 +1819,12 @@ ar:
         select_all: حدد الكل
         deselect_all: أزل تحديد الكل
         description:
-          few: لقد حدّدت <b>{{count}}</b> منشور.
-          many: لقد حدّدت <b>{{count}}</b> منشور.
+          zero: "لم تحدّد أي منشورات."
           one: لقد حدّدت منشور<b>واحد</b>.
-          other: لقد حدّدت <b>{{count}}</b> منشور.
-          two: لقد حدّدت <b>منشورين</b>.
-          zero: لم تحدّد أي منشورات.
+          two: "لقد حدّدت <b>منشورين</b>."
+          few: "لقد حدّدت <b>{{count}}</b> منشور."
+          many: "لقد حدّدت <b>{{count}}</b> منشور."
+          other: "لقد حدّدت <b>{{count}}</b> منشور."
     post:
       quote_reply: "اقتبس"
       edit_reason: "السبب:"
@@ -1839,50 +1838,50 @@ ar:
       show_full: "عرض كامل المنشور"
       show_hidden: 'اعرض المحتوى المخفيّ.'
       deleted_by_author:
-        few: (سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)
-        many: (سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)
-        one: (سحب الكاتب المنشور، سيحذف آليًّا خلال ساعة واحدة ما لم يُبلّغ عنه)
-        other: (سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)
-        two: (سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)
-        zero: (سحب الكاتب المنشور، سيحذف آليًّا الأن ما لم يُبلّغ عنه)
+        zero: "(سحب الكاتب المنشور، سيحذف آليًّا الأن ما لم يُبلّغ عنه)"
+        one: "(سحب الكاتب المنشور، سيحذف آليًّا خلال ساعة واحدة ما لم يُبلّغ عنه)"
+        two: "(سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)"
+        few: "(سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)"
+        many: "(سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)"
+        other: "(سحب الكاتب المنشور، سيحذف آليًّا خلال %{count} ساعة ما لم يُبلّغ عنه)"
       expand_collapse: "إظهار/إخفاء"
       gap:
-        few: اعرض ال‍ {{count}} رد مخفي
-        many: اعرض ال‍ {{count}} رد مخفي
-        one: اعرض رد واحد مخفي
-        other: اعرض ال‍ {{count}} رد مخفي
-        two: اعرض ال‍ {{count}} رد مخفي
-        zero: لا يوجد ردود مخفية
+        zero: "لا يوجد ردود مخفية"
+        one: "اعرض رد واحد مخفي"
+        two: "اعرض ال‍ {{count}} رد مخفي"
+        few: "اعرض ال‍ {{count}} رد مخفي"
+        many: "اعرض ال‍ {{count}} رد مخفي"
+        other: "اعرض ال‍ {{count}} رد مخفي"
       unread: "المنشور غير مقروء"
       has_replies:
-        few: '{{count}} رد'
-        many: '{{count}} رد'
-        one: رد واحد
-        other: '{{count}} رد'
-        two: '{{count}} رد'
-        zero: لا ردود
+        zero: "لا ردود"
+        one: "رد واحد"
+        two: "{{count}} رد"
+        few: "{{count}} رد"
+        many: "{{count}} رد"
+        other: "{{count}} رد"
       has_likes:
-        few: '{{count}} إعجاب'
-        many: '{{count}} إعجاب'
-        one: إعجاب واحد
-        other: '{{count}} إعجاب'
-        two: '{{count}} إعجاب'
-        zero: لا إعجابات
+        zero: "لا إعجابات"
+        one: "إعجاب واحد"
+        two: "{{count}} إعجاب"
+        few: "{{count}} إعجاب"
+        many: "{{count}} إعجاب"
+        other: "{{count}} إعجاب"
       has_likes_title:
-        few: '{{count}} عضو اعجب بهذا المشروع'
-        many: '{{count}} عضو اعجب بهذا المشروع'
-        one: عضو واحد اعجب بهذا المشروع
-        other: '{{count}} عضو اعجب بهذا المشروع'
-        two: '{{count}} عضو اعجب بهذا المشروع'
-        zero: '{{count}} عضو اعجب بهذا المشروع'
+        zero: "{{count}} عضو اعجب بهذا المشروع"
+        one: "عضو واحد اعجب بهذا المشروع"
+        two: "{{count}} عضو اعجب بهذا المشروع"
+        few: "{{count}} عضو اعجب بهذا المشروع"
+        many: "{{count}} عضو اعجب بهذا المشروع"
+        other: "{{count}} عضو اعجب بهذا المشروع"
       has_likes_title_only_you: "اعجبك هذا المنشور"
       has_likes_title_you:
-        few: انت و {{count}} غيرك اعجبكم هذا المنشور.
-        many: انت و {{count}} غيرك اعجبكم هذا المنشور.
-        one: انت و عضو واحد غيرك اعجبكم هذا المنشور.
-        other: انت و {{count}} غيرك اعجبكم هذا المنشور.
-        two: انت و عضوين غيرك اعجبكم هذا المنشور.
-        zero: لم يعجب احد غيرك بهذا المنشور
+        zero: "لم يعجب احد غيرك بهذا المنشور"
+        one: "انت و عضو واحد غيرك اعجبكم هذا المنشور."
+        two: "انت و عضوين غيرك اعجبكم هذا المنشور."
+        few: "انت و {{count}} غيرك اعجبكم هذا المنشور."
+        many: "انت و {{count}} غيرك اعجبكم هذا المنشور."
+        other: "انت و {{count}} غيرك اعجبكم هذا المنشور."
       errors:
         create: "عذرا، حدثت مشكلة اثناء إنشاء منشورك. من فضلك حاول مجددا."
         edit: "عذرا، حدثت مشكلة اثناء تعديل منشورك. من فضلك حاول مجددا."
@@ -1956,126 +1955,126 @@ ar:
           vote: "لقد صوّت على هذا المنشور"
         by_you_and_others:
           off_topic:
-            few: أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع
-            many: أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع
-            one: أنت وشخص اخر أبلّغتما بأن هذا المنشور خارج الموضوع.
-            other: أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع
-            two: أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع
-            zero: أنت أبلّغت بأن هذا المنشور خارج الموضوع.
+            zero: "أنت أبلّغت بأن هذا المنشور خارج الموضوع."
+            one: "أنت وشخص اخر أبلّغتما بأن هذا المنشور خارج الموضوع."
+            two: "أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع"
+            few: "أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع"
+            many: "أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع"
+            other: "أنت و {{count}} آخرون أبلغتم بأن هذا المنشور خارج الموضوع"
           spam:
-            few: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام.
-            many: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام.
-            one: أنت وشخص آخر أبلّغتما بأن هذا المنشور سبام.
-            other: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام.
-            two: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام.
-            zero: أنت أبلّغت بأن هذا هذا المنشور سبام.
+            zero: "أنت أبلّغت بأن هذا هذا المنشور سبام."
+            one: "أنت وشخص آخر أبلّغتما بأن هذا المنشور سبام."
+            two: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام."
+            few: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام."
+            many: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام."
+            other: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور سبام."
           inappropriate:
-            few: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق.
-            many: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق.
-            one: أنت و شخص آخر أبلّغتما بأن هذا المنشور غير لائق.
-            other: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق.
-            two: أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق.
-            zero: أنت أبلّغت بأن هذا المنشور غير لائق.
+            zero: "أنت أبلّغت بأن هذا المنشور غير لائق."
+            one: "أنت و شخص آخر أبلّغتما بأن هذا المنشور غير لائق."
+            two: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق."
+            few: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق."
+            many: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق."
+            other: "أنت و {{count}} آخرون أبلّغتم بأن هذا المنشور غير لائق."
           notify_moderators:
-            few: أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور.
-            many: أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور.
-            one: أنت و شخص آخر أبلّغتما المشرفين عن هذا المنشور.
-            other: أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور.
-            two: أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور.
-            zero: أنت أبلّغت المشرفين  عن هذا المنشور.
+            zero: "أنت أبلّغت المشرفين  عن هذا المنشور."
+            one: "أنت و شخص آخر أبلّغتما المشرفين عن هذا المنشور."
+            two: "أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور."
+            few: "أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور."
+            many: "أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور."
+            other: "أنت و {{count}} آخرون أبلّغتم المشرفين عن هذا المنشور."
           notify_user:
-            few: أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو.
-            many: أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو.
-            one: أنت و شخص اخر ارسلتما رسالة لهذا العضو.
-            other: أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو.
-            two: أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو.
-            zero: أنت أرسلت رسالة لهذا العضو.
+            zero: "أنت أرسلت رسالة لهذا العضو."
+            one: "أنت و شخص اخر ارسلتما رسالة لهذا العضو."
+            two: "أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو."
+            few: "أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو."
+            many: "أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو."
+            other: "أنت و {{count}} آخرون ارسلتم رسالة لهذا العضو."
           bookmark:
-            few: أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور
-            many: أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور
-            one: أنت و شخص آخر وضعتما علامة مرجعية علي هذا المنشور
-            other: أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور
-            two: أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور
-            zero: أنت وضعت علامة مرجعية علي هذا المنشور
+            zero: "أنت وضعت علامة مرجعية علي هذا المنشور"
+            one: "أنت و شخص آخر وضعتما علامة مرجعية علي هذا المنشور"
+            two: "أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور"
+            few: "أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور"
+            many: "أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور"
+            other: "أنت و {{count}} آخرون وضعتم علامة مرجعية علي هذا المنشور"
           like:
-            few: أنت و {{count}} آخرون اعجبتم بهذا المنشور
-            many: أنت و {{count}} آخرون اعجبتم بهذا المنشور
-            one: أنت و شخص آخر اعجبتما بهذا المنشور
-            other: أنت و {{count}} آخرون اعجبتم بهذا المنشور
-            two: أنت و {{count}} آخرون اعجبتم بهذا المنشور
-            zero: أنت اعجبت بهذا المنشور
+            zero: "أنت اعجبت بهذا المنشور"
+            one: "أنت و شخص آخر اعجبتما بهذا المنشور"
+            two: "أنت و {{count}} آخرون اعجبتم بهذا المنشور"
+            few: "أنت و {{count}} آخرون اعجبتم بهذا المنشور"
+            many: "أنت و {{count}} آخرون اعجبتم بهذا المنشور"
+            other: "أنت و {{count}} آخرون اعجبتم بهذا المنشور"
           vote:
-            few: أنت و {{count}} آخرون صوتم علي هذا المنشور
-            many: أنت و {{count}} آخرون صوتم علي هذا المنشور
-            one: أنت و شخص آخر صوتما علي هذا المنشور
-            other: أنت و {{count}} آخرون صوتم علي هذا المنشور
-            two: أنت و {{count}} آخرون صوتم علي هذا المنشور
-            zero: أنت صوت علي هذا المنشور
+            zero: "أنت صوت علي هذا المنشور"
+            one: "أنت و شخص آخر صوتما علي هذا المنشور"
+            two: "أنت و {{count}} آخرون صوتم علي هذا المنشور"
+            few: "أنت و {{count}} آخرون صوتم علي هذا المنشور"
+            many: "أنت و {{count}} آخرون صوتم علي هذا المنشور"
+            other: "أنت و {{count}} آخرون صوتم علي هذا المنشور"
         by_others:
           off_topic:
-            few: '{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع'
-            many: '{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع'
-            one: عضو واحد أبلغ بأن هذا المنشور خارج الموضوع
-            other: '{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع'
-            two: '{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع'
-            zero: لم يبلغ احد بأن هذا المنشور خارج الموضوع
+            zero: "لم يبلغ احد بأن هذا المنشور خارج الموضوع"
+            one: "عضو واحد أبلغ بأن هذا المنشور خارج الموضوع"
+            two: "{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع"
+            few: "{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع"
+            many: "{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع"
+            other: "{{count}} عضو أبلغ بأن هذا المنشور خارج الموضوع"
           spam:
-            few: '{{count}} عضو أبلّغ بأن هذا المنشور سبام.'
-            many: '{{count}} عضو أبلّغ بأن هذا المنشور سبام.'
-            one: عضو واحد أبلّغ بأن هذا المنشور سبام.
-            other: '{{count}} عضو أبلّغ بأن هذا المنشور سبام.'
-            two: '{{count}} عضو أبلّغ بأن هذا المنشور سبام.'
-            zero: لم يبلّغ احد بأن هذا المنشور سبام.
+            zero: "لم يبلّغ احد بأن هذا المنشور سبام."
+            one: "عضو واحد أبلّغ بأن هذا المنشور سبام."
+            two: "{{count}} عضو أبلّغ بأن هذا المنشور سبام."
+            few: "{{count}} عضو أبلّغ بأن هذا المنشور سبام."
+            many: "{{count}} عضو أبلّغ بأن هذا المنشور سبام."
+            other: "{{count}} عضو أبلّغ بأن هذا المنشور سبام."
           inappropriate:
-            few: '{{count}} عضو أبلّغ بأن هذا المنشور غير لائق.'
-            many: '{{count}} عضو أبلّغ بأن هذا المنشور غير لائق.'
-            one: عضو واحد أبلّغ بأن هذا المنشور غير لائق.
-            other: '{{count}} عضو أبلّغ بأن هذا المنشور غير لائق.'
-            two: '{{count}} عضو أبلّغ بأن هذا المنشور غير لائق.'
-            zero: لم يبلغ احد بأن هذا المنشور غير لائق.
+            zero: "لم يبلغ احد بأن هذا المنشور غير لائق."
+            one: "عضو واحد أبلّغ بأن هذا المنشور غير لائق."
+            two: "{{count}} عضو أبلّغ بأن هذا المنشور غير لائق."
+            few: "{{count}} عضو أبلّغ بأن هذا المنشور غير لائق."
+            many: "{{count}} عضو أبلّغ بأن هذا المنشور غير لائق."
+            other: "{{count}} عضو أبلّغ بأن هذا المنشور غير لائق."
           notify_moderators:
-            few: '{{count}} عضو أبلّغ المشرفين عن هذا المنشور'
-            many: '{{count}} عضو أبلّغ المشرفين عن هذا المنشور'
-            one: عضو واحد أبلّغ المشرفين عن هذا المنشور
-            other: '{{count}} عضو أبلّغ المشرفين عن هذا المنشور'
-            two: '{{count}} عضو أبلّغ المشرفين عن هذا المنشور'
-            zero: لم يبلغ احد المشرفين عن هذا المنشور
+            zero: "لم يبلغ احد المشرفين عن هذا المنشور"
+            one: "عضو واحد أبلّغ المشرفين عن هذا المنشور"
+            two: "{{count}} عضو أبلّغ المشرفين عن هذا المنشور"
+            few: "{{count}} عضو أبلّغ المشرفين عن هذا المنشور"
+            many: "{{count}} عضو أبلّغ المشرفين عن هذا المنشور"
+            other: "{{count}} عضو أبلّغ المشرفين عن هذا المنشور"
           notify_user:
-            few: '{{count}} عضو ارسل رسالة لهذا العضو'
-            many: '{{count}} عضو ارسل رسالة لهذا العضو'
-            one: عضو واحد ارسل رسالة لهذا العضو
-            other: '{{count}} عضو ارسل رسالة لهذا العضو'
-            two: '{{count}} عضو ارسل رسالة لهذا العضو'
-            zero: لم يرسل احد رسالة لهذا العضو
+            zero: "لم يرسل احد رسالة لهذا العضو"
+            one: "عضو واحد ارسل رسالة لهذا العضو"
+            two: "{{count}} عضو ارسل رسالة لهذا العضو"
+            few: "{{count}} عضو ارسل رسالة لهذا العضو"
+            many: "{{count}} عضو ارسل رسالة لهذا العضو"
+            other: "{{count}} عضو ارسل رسالة لهذا العضو"
           bookmark:
-            few: '{{count}} عضو وضع علامة مرجعية علي هذا المنشور'
-            many: '{{count}} عضو وضع علامة مرجعية علي هذا المنشور'
-            one: عضو واحد وضع علامة مرجعية علي هذا المنشور
-            other: '{{count}} عضو وضع علامة مرجعية علي هذا المنشور'
-            two: '{{count}} عضو وضع علامة مرجعية علي هذا المنشور'
-            zero: لم يضع احد علامة مرجعية علي هذا المنشور
+            zero: "لم يضع احد علامة مرجعية علي هذا المنشور"
+            one: "عضو واحد وضع علامة مرجعية علي هذا المنشور"
+            two: "{{count}} عضو وضع علامة مرجعية علي هذا المنشور"
+            few: "{{count}} عضو وضع علامة مرجعية علي هذا المنشور"
+            many: "{{count}} عضو وضع علامة مرجعية علي هذا المنشور"
+            other: "{{count}} عضو وضع علامة مرجعية علي هذا المنشور"
           like:
-            few: '{{count}} عضو اعجب بهذا المنشور'
-            many: '{{count}} عضو اعجب بهذا المنشور'
-            one: عضو واحد اعجب بهذا المنشور
-            other: '{{count}} عضو اعجب بهذا المنشور'
-            two: '{{count}} عضو اعجب بهذا المنشور'
-            zero: لم يعجب احد بهذا المنشور
+            zero: "لم يعجب احد بهذا المنشور"
+            one: "عضو واحد اعجب بهذا المنشور"
+            two: "{{count}} عضو اعجب بهذا المنشور"
+            few: "{{count}} عضو اعجب بهذا المنشور"
+            many: "{{count}} عضو اعجب بهذا المنشور"
+            other: "{{count}} عضو اعجب بهذا المنشور"
           vote:
-            few: '{{count}} عضو صوت علي هذا المنشور'
-            many: '{{count}} عضو صوت علي هذا المنشور'
-            one: عضو واحد صوت علي هذا المنشور
-            other: '{{count}} عضو صوت علي هذا المنشور'
-            two: '{{count}} عضو صوت علي هذا المنشور'
-            zero: لم يصوت احد علي هذا المنشور
+            zero: "لم يصوت احد علي هذا المنشور"
+            one: "عضو واحد صوت علي هذا المنشور"
+            two: "{{count}} عضو صوت علي هذا المنشور"
+            few: "{{count}} عضو صوت علي هذا المنشور"
+            many: "{{count}} عضو صوت علي هذا المنشور"
+            other: "{{count}} عضو صوت علي هذا المنشور"
       merge:
         confirm:
-          few: هل انت متاكد انك تريد دمج الـ {{count}} منشور؟
-          many: هل انت متاكد انك تريد دمج الـ {{count}} منشور؟
-          one: هل انت متاكد انك تريد دمج هذا المنشور؟
-          other: هل انت متاكد انك تريد دمج الـ {{count}} منشور؟
-          two: هل انت متاكد انك تريد دمج هذان المنشوران؟
-          zero: لا يوجد منشورات لدمجها
+          zero: "لا يوجد منشورات لدمجها"
+          one: "هل انت متاكد انك تريد دمج هذا المنشور؟"
+          two: "هل انت متاكد انك تريد دمج هذان المنشوران؟"
+          few: "هل انت متاكد انك تريد دمج الـ {{count}} منشور؟"
+          many: "هل انت متاكد انك تريد دمج الـ {{count}} منشور؟"
+          other: "هل انت متاكد انك تريد دمج الـ {{count}} منشور؟"
       revisions:
         controls:
           first: "أول مراجعة"
@@ -2230,26 +2229,26 @@ ar:
       custom_placeholder_notify_moderators: "يمكنك تزودنا بمعلومات أكثر عن سبب عدم ارتياحك إلي هذا المنشور؟ زودنا ببعض الروابط و الأمثلة قدر الإمكان."
       custom_message:
         at_least:
-          few: أدخل {{count}} احرف على الأقل
-          many: أدخل {{count}} احرف على الأقل
-          one: أدخل حرف واحد على الأقل
-          other: أدخل {{count}} احرف على الأقل
-          two: أدخل {{count}} احرف على الأقل
-          zero: لا تُدخل أيّ محرف
+          zero: "لا تُدخل أيّ محرف"
+          one: "أدخل حرف واحد على الأقل"
+          two: "أدخل {{count}} احرف على الأقل"
+          few: "أدخل {{count}} احرف على الأقل"
+          many: "أدخل {{count}} احرف على الأقل"
+          other: "أدخل {{count}} احرف على الأقل"
         more:
-          few: '{{count}} حرف متبقي علي الحد الادني...'
-          many: '{{count}} حرف متبقي علي الحد الادني...'
-          one: حرف واحد متبقي علي الحد الادني...
-          other: '{{count}} حرف متبقي علي الحد الادني...'
-          two: '{{count}} حرف متبقي علي الحد الادني...'
-          zero: '{{count}} حرف متبقي علي الحد الادني...'
+          zero: "{{count}} حرف متبقي علي الحد الادني..."
+          one: "حرف واحد متبقي علي الحد الادني..."
+          two: "{{count}} حرف متبقي علي الحد الادني..."
+          few: "{{count}} حرف متبقي علي الحد الادني..."
+          many: "{{count}} حرف متبقي علي الحد الادني..."
+          other: "{{count}} حرف متبقي علي الحد الادني..."
         left:
-          few: '{{count}} حرف متبقي علي الحد الاقصي...'
-          many: '{{count}} حرف متبقي علي الحد الاقصي...'
-          one: حرف واحد متبقي علي الحد الاقصي...
-          other: '{{count}} حرف متبقي علي الحد الاقصي...'
-          two: '{{count}} حرف متبقي علي الحد الاقصي...'
-          zero: '{{count}} حرف متبقي علي الحد الاقصي...'
+          zero: "{{count}} حرف متبقي علي الحد الاقصي..."
+          one: "حرف واحد متبقي علي الحد الاقصي..."
+          two: "{{count}} حرف متبقي علي الحد الاقصي..."
+          few: "{{count}} حرف متبقي علي الحد الاقصي..."
+          many: "{{count}} حرف متبقي علي الحد الاقصي..."
+          other: "{{count}} حرف متبقي علي الحد الاقصي..."
     flagging_topic:
       title: "شكرا لمساعدتنا في ابقاء المجمتع متحضر"
       action: "التبليغ عن الموضوع"
@@ -2260,21 +2259,21 @@ ar:
       links_title: "روابط مشهورة"
       links_shown: "أظهر روابط أخرى..."
       clicks:
-        few: '%{count} نقرات'
-        many: '%{count} نقرة'
-        one: نقرة واحدة
-        other: '%{count} نقرة'
-        two: نقرتان
-        zero: لا نقرات
+        zero: "لا نقرات"
+        one: "نقرة واحدة"
+        two: "نقرتان"
+        few: "%{count} نقرات"
+        many: "%{count} نقرة"
+        other: "%{count} نقرة"
     post_links:
       about: "وسّع المزيد من الروابط في هذه المشاركة"
       title:
-        few: '%{count} أخرى'
-        many: '%{count} أخرى'
-        one: واحدة أخرى
-        other: '%{count} أكثر'
-        two: إثنتان أخريتان
-        zero: لا شيء آخر
+        zero: "لا شيء آخر"
+        one: "واحدة أخرى"
+        two: "إثنتان أخريتان"
+        few: "%{count} أخرى"
+        many: "%{count} أخرى"
+        other: "%{count} أكثر"
     topic_statuses:
       warning:
         help: "هذا تحذير رسمي."
@@ -2308,38 +2307,38 @@ ar:
     original_post: "المنشور الاصلي"
     views: "المشاهدات"
     views_lowercase:
-      few: المشاهدات
-      many: المشاهدات
-      one: المشاهدات
-      other: المشاهدات
-      two: المشاهدات
-      zero: المشاهدات
+      zero: "المشاهدات"
+      one: "المشاهدات"
+      two: "المشاهدات"
+      few: "المشاهدات"
+      many: "المشاهدات"
+      other: "المشاهدات"
     replies: "الردود"
     views_long:
-      few: تم مشاهدة هذا الموضوع {{number}} مرة
-      many: تم مشاهدة هذا الموضوع {{number}} مرة
-      one: تم مشاهدة هذا الموضوع مرة واحدة
-      other: تم مشاهدة هذا الموضوع {{number}} مرة
-      two: تم مشاهدة هذا الموضوع {{number}} مرة
-      zero: تم مشاهدة هذا الموضوع {{number}} مرة
+      zero: "تم مشاهدة هذا الموضوع {{number}} مرة"
+      one: "تم مشاهدة هذا الموضوع مرة واحدة"
+      two: "تم مشاهدة هذا الموضوع {{number}} مرة"
+      few: "تم مشاهدة هذا الموضوع {{number}} مرة"
+      many: "تم مشاهدة هذا الموضوع {{number}} مرة"
+      other: "تم مشاهدة هذا الموضوع {{number}} مرة"
     activity: "النشاط"
     likes: "اعجابات"
     likes_lowercase:
-      few: اﻹعجابات
-      many: اﻹعجابات
-      one: اﻹعجابات
-      other: اﻹعجابات
-      two: اﻹعجابات
-      zero: اﻹعجابات
+      zero: "اﻹعجابات"
+      one: "اﻹعجابات"
+      two: "اﻹعجابات"
+      few: "اﻹعجابات"
+      many: "اﻹعجابات"
+      other: "اﻹعجابات"
     likes_long: "هناك {{number}} اعجابات في هذا الموضوع"
     users: "الأعضاء"
     users_lowercase:
-      few: الأعضاء
-      many: الأعضاء
-      one: عضو واحد
-      other: الأعضاء
-      two: عضوين
-      zero: عضو
+      zero: "عضو"
+      one: "عضو واحد"
+      two: "عضوين"
+      few: "الأعضاء"
+      many: "الأعضاء"
+      other: "الأعضاء"
     category_title: "قسم"
     history: "تاريخ"
     changed_by: "الكاتب {{author}}"
@@ -2353,12 +2352,12 @@ ar:
       latest:
         title: "الأخيرة"
         title_with_count:
-          few: الأخيرة ({{count}})
-          many: الأخيرة ({{count}})
-          one: الأخيرة ({{count}})
-          other: الأخيرة ({{count}})
-          two: الأخيرة ({{count}})
-          zero: الأخيرة ({{count}})
+          zero: "الأخيرة ({{count}})"
+          one: "الأخيرة ({{count}})"
+          two: "الأخيرة ({{count}})"
+          few: "الأخيرة ({{count}})"
+          many: "الأخيرة ({{count}})"
+          other: "الأخيرة ({{count}})"
         help: "الموضوعات التي بها منشورات حديثة"
       hot:
         title: "نَشط"
@@ -2376,37 +2375,37 @@ ar:
       unread:
         title: "غير المقروءة"
         title_with_count:
-          few: غير المقروءة ({{count}})
-          many: غير المقروءة ({{count}})
-          one: غير المقروءة ({{count}})
-          other: غير المقروءة ({{count}})
-          two: غير المقروءة ({{count}})
-          zero: غير المقروءة ({{count}})
+          zero: "غير المقروءة ({{count}})"
+          one: "غير المقروءة ({{count}})"
+          two: "غير المقروءة ({{count}})"
+          few: "غير المقروءة ({{count}})"
+          many: "غير المقروءة ({{count}})"
+          other: "غير المقروءة ({{count}})"
         help: "الموضوعات التي تتابعها (أو تراقبها) والتي فيها منشورات غير مقروءة"
         lower_title_with_count:
-          few: '{{count}} غير مقروء '
-          many: '{{count}} غير مقروء'
-          one: 1 غير مقروء
-          other: '{{count}} غير مقروء'
-          two: '{{count}} غير مقروء '
-          zero: '1 غير مقررء '
+          zero: "1 غير مقررء "
+          one: "1 غير مقروء"
+          two: "{{count}} غير مقروء "
+          few: "{{count}} غير مقروء "
+          many: "{{count}} غير مقروء"
+          other: "{{count}} غير مقروء"
       new:
         lower_title_with_count:
-          few: '{{count}} جديد'
-          many: '{{count}} جديد'
-          one: 1 جديد
-          other: '{{count}} جديدة'
-          two: '{{count}} جديد'
-          zero: لا جديد
+          zero: "لا جديد"
+          one: "1 جديد"
+          two: "{{count}} جديد"
+          few: "{{count}} جديد"
+          many: "{{count}} جديد"
+          other: "{{count}} جديدة"
         lower_title: "الجديدة"
         title: "الجديدة"
         title_with_count:
-          few: الجديدة ({{count}})
-          many: الجديدة ({{count}})
-          one: الجديدة ({{count}})
-          other: الجديدة ({{count}})
-          two: الجديدة ({{count}})
-          zero: الجديدة ({{count}})
+          zero: "الجديدة ({{count}})"
+          one: "الجديدة ({{count}})"
+          two: "الجديدة ({{count}})"
+          few: "الجديدة ({{count}})"
+          many: "الجديدة ({{count}})"
+          other: "الجديدة ({{count}})"
         help: "المواضيع المنشأة في الأيّام القليلة الماضية"
       posted:
         title: "منشوراتي"
@@ -2417,12 +2416,12 @@ ar:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          few: '{{categoryName}} ({{count}})'
-          many: '{{categoryName}} ({{count}})'
-          one: '{{categoryName}} ({{count}})'
-          other: '{{categoryName}} ({{count}})'
-          two: '{{categoryName}} ({{count}})'
-          zero: '{{categoryName}} ({{count}})'
+          zero: "{{categoryName}} ({{count}})"
+          one: "{{categoryName}} ({{count}})"
+          two: "{{categoryName}} ({{count}})"
+          few: "{{categoryName}} ({{count}})"
+          many: "{{categoryName}} ({{count}})"
+          other: "{{categoryName}} ({{count}})"
         help: "آخر الموضوعات في قسم {{categoryName}}"
       top:
         title: "الأكثر مُشاهدة"
@@ -2506,38 +2505,38 @@ ar:
         print: '<b>ctrl</b>+<b>p</b> طباعة الموضوع'
     badges:
       earned_n_times:
-        few: مُنحت هذه الشارة %{count} مرة
-        many: مُنحت هذه الشارة %{count} مرة
-        one: مُنحت هذة الشارة مرة واحدة
-        other: مُنحت هذه الشارة %{count} مرة
-        two: مُنحت هذة الشارة مرتان
-        zero: لم تمنح هذه الشارة ابدا
+        zero: "لم تمنح هذه الشارة ابدا"
+        one: "مُنحت هذة الشارة مرة واحدة"
+        two: "مُنحت هذة الشارة مرتان"
+        few: "مُنحت هذه الشارة %{count} مرة"
+        many: "مُنحت هذه الشارة %{count} مرة"
+        other: "مُنحت هذه الشارة %{count} مرة"
       granted_on: "ممنوح منذ %{date}"
       others_count: "عدد من حصل علي نفس الشارة (%{count})"
       title: الشارات
       allow_title: "يمكنك استخدام هذة الشارة كلقب"
       multiple_grant: "يُمكن ان تُمنح هذة الشارة اكثر من مرة"
       badge_count:
-        few: '%{count} شارة'
-        many: '%{count} شارة'
-        one: شارة واحدة
-        other: '%{count} شارة'
-        two: شارتان
-        zero: لا شارات
+        zero: "لا شارات"
+        one: "شارة واحدة"
+        two: "شارتان"
+        few: "%{count} شارة"
+        many: "%{count} شارة"
+        other: "%{count} شارة"
       more_badges:
-        few: +%{count} اكثر
-        many: +%{count} اكثر
-        one: شارة واحدة اكثر
-        other: +%{count} اكثر
-        two: شارتان اكثر
-        zero: بدون شارات
+        zero: "بدون شارات"
+        one: "شارة واحدة اكثر"
+        two: "شارتان اكثر"
+        few: "+%{count} اكثر"
+        many: "+%{count} اكثر"
+        other: "+%{count} اكثر"
       granted:
-        few: '%{count} ممنوح.'
-        many: '%{count} ممنوح.'
-        one: ممنوح واحد
-        other: '%{count} ممنوح.'
-        two: '%{count} ممنوح'
-        zero: لا يوجد ممنوحين
+        zero: "لا يوجد ممنوحين"
+        one: "ممنوح واحد"
+        two: "%{count} ممنوح"
+        few: "%{count} ممنوح."
+        many: "%{count} ممنوح."
+        other: "%{count} ممنوح."
       select_badge_for_title: اختر شارة لتستخدمها كلقب لك.
       badge_grouping:
         getting_started:
@@ -2567,12 +2566,12 @@ ar:
       tags: "الأوسمة"
       delete_tag: "احذف الوسم"
       delete_confirm:
-        few: هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟
-        many: هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟
-        one: هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من موضوع واحد؟
-        other: هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟
-        two: هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟
-        zero: هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟
+        zero: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        one: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من موضوع واحد؟"
+        two: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        few: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        many: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        other: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
       delete_confirm_no_topics: "هل أنت متاكد انك تريد حذف هذا الوسم؟"
       rename_tag: "أعد تسمية الوسم"
       rename_instructions: "اختر اسما جديدا للوسم:"
@@ -2822,12 +2821,12 @@ ar:
         events:
           none: "لا يوجد أحداث مماثلة"
           incoming:
-            few: هناك {{count}} أحداث جديدة.
-            many: هناك {{count}} حدثًا جديدًا.
-            one: هناك حدث واحد جديد.
-            other: هناك {{count}} حدث جديد.
-            two: هناك حدثان جديدان.
-            zero: لا أحداث جديدة.
+            zero: "لا أحداث جديدة."
+            one: "هناك حدث واحد جديد."
+            two: "هناك حدثان جديدان."
+            few: "هناك {{count}} أحداث جديدة."
+            many: "هناك {{count}} حدثًا جديدًا."
+            other: "هناك {{count}} حدث جديد."
           request: "طلب"
           response: "الرد"
           headers: "الرؤوس"
@@ -3255,19 +3254,19 @@ ar:
           suspect: 'المريبون'
         approved: "موافقة؟"
         approved_selected:
-          few: ' وافق المستخدمين ({{count}})'
-          many: ' وافق المستخدمين ({{count}})'
-          one: وافق المستخدم
-          other: ' وافق المستخدمين ({{count}})'
-          two: ' وافق المستخدمين ({{count}})'
-          zero: وافق المستخدم
+          zero: "وافق المستخدم"
+          one: "وافق المستخدم"
+          two: " وافق المستخدمين ({{count}})"
+          few: " وافق المستخدمين ({{count}})"
+          many: " وافق المستخدمين ({{count}})"
+          other: " وافق المستخدمين ({{count}})"
         reject_selected:
-          few: رفض المستخدمين ({{count}})
-          many: رفض المستخدمين ({{count}})
-          one: رفض المستخدم
-          other: رفض المستخدمين ({{count}})
-          two: رفض المستخدمين ({{count}})
-          zero: رفض المستخدمين
+          zero: "رفض المستخدمين"
+          one: "رفض المستخدم"
+          two: "رفض المستخدمين ({{count}})"
+          few: "رفض المستخدمين ({{count}})"
+          many: "رفض المستخدمين ({{count}})"
+          other: "رفض المستخدمين ({{count}})"
         titles:
           active: 'الأعضاء النشطون'
           new: 'الأعضاء الجدد'
@@ -3283,19 +3282,19 @@ ar:
           suspended: 'أعضاء موقوفين'
           suspect: 'الأعضاء المريبون'
         reject_successful:
-          few: رفض بنجاح %{count} عضو.
-          many: رفض بنجاح %{count} عضو.
-          one: رفض بنجاح 1 عضو
-          other: رفض بنجاح %{count} عضو.
-          two: رفض بنجاح %{count} عضو.
-          zero: رفض بنجاح 1 عضو
+          zero: "رفض بنجاح 1 عضو"
+          one: "رفض بنجاح 1 عضو"
+          two: "رفض بنجاح %{count} عضو."
+          few: "رفض بنجاح %{count} عضو."
+          many: "رفض بنجاح %{count} عضو."
+          other: "رفض بنجاح %{count} عضو."
         reject_failures:
-          few: فشل لرفض %{count} عضو.
-          many: فشل لرفض %{count} عضو.
-          one: فشل لرفض 1 عضو.
-          other: فشل لرفض %{count} عضو.
-          two: فشل لرفض %{count} عضو.
-          zero: فشل لرفض 1 عضو.
+          zero: "فشل لرفض 1 عضو."
+          one: "فشل لرفض 1 عضو."
+          two: "فشل لرفض %{count} عضو."
+          few: "فشل لرفض %{count} عضو."
+          many: "فشل لرفض %{count} عضو."
+          other: "فشل لرفض %{count} عضو."
         not_verified: "لم يتم التحقق"
         check_email:
           title: "اكشف عنوان البريد الإلكتروني لهذا العضو"
@@ -3363,38 +3362,26 @@ ar:
         delete_forbidden_because_staff: "لا يمكن حذف المدراء والمشرفين."
         delete_posts_forbidden_because_staff: "لا يمكن حذف جميع المشاركات للمدراء والمشرفين.  "
         delete_forbidden:
-          few: لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} أيام لا يمكن حذفها.)
-          many: لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} يوما لا يمكن حذفها.)
-          one: لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يوم واحد لا يمكن حذفها.)
-          other: لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} يوم لا يمكن حذفها.)
-          two: لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يومين لا يمكن حذفها.)
-          zero: لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الآن لا يمكن حذفها.)
+          zero: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الآن لا يمكن حذفها.)"
+          one: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يوم واحد لا يمكن حذفها.)"
+          two: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يومين لا يمكن حذفها.)"
+          few: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} أيام لا يمكن حذفها.)"
+          many: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} يوما لا يمكن حذفها.)"
+          other: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} يوم لا يمكن حذفها.)"
         cant_delete_all_posts:
-          few: لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من أيام قليلة. (The delete_user_max_post_age setting.)
-          many: لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من أيام %{count}. (The delete_user_max_post_age setting.)
-          one: لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من يوم. (The delete_user_max_post_age setting.)
-          other: لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من %{count} أيام. (The delete_user_max_post_age setting.)
-          two: لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من يومين. (The delete_user_max_post_age setting.)
-          zero: لا تستطيع حذف جميع المشاركات. (The delete_user_max_post_age setting.)
+          zero: "لا تستطيع حذف جميع المشاركات. (The delete_user_max_post_age setting.)"
+          one: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من يوم. (The delete_user_max_post_age setting.)"
+          two: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من يومين. (The delete_user_max_post_age setting.)"
+          few: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من أيام قليلة. (The delete_user_max_post_age setting.)"
+          many: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من أيام %{count}. (The delete_user_max_post_age setting.)"
+          other: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من %{count} أيام. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
-          few: 'لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركات.
-
-            (delete_all_posts_max)'
-          many: 'لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.
-
-            (delete_all_posts_max)'
-          one: 'لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.
-
-            (delete_all_posts_max)'
-          other: 'لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.
-
-            (delete_all_posts_max)'
-          two: 'لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركتين.
-
-            (delete_all_posts_max)'
-          zero: 'لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.
-
-            (delete_all_posts_max)'
+          zero: "لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.\n(delete_all_posts_max)"
+          one: "لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.\n(delete_all_posts_max)"
+          two: "لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركتين.\n(delete_all_posts_max)"
+          few: "لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركات.\n(delete_all_posts_max)"
+          many: "لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.\n(delete_all_posts_max)"
+          other: "لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.\n(delete_all_posts_max)"
         delete_confirm: "أمتأكّد من حذف هذا المستخدم؟ لا عودة في هذا!"
         delete_and_block: "احذفه و<b>امنع</b> بريده وعنوان IP"
         delete_dont_block: "فقط احذفه"
@@ -3593,12 +3580,12 @@ ar:
             text: "هناك عينات ممنوحة ضائعة. حدث هذا عندما أعادت شارة الإستعلام user IDs أو post IDs التي لم تكن موجودة. هذا ربما بسبب نتيجة غير متوقعة في وقت لاحق - رجائا أنقر مرتين للتأكد من إستعلامك-"
           no_grant_count: "لا توجد اوسمه لتمنح "
           grant_count:
-            few: <b>%{count}</b> أوسمة لتمنح .
-            many: <b>%{count}</b> وساما لتمنح .
-            one: وسام واحد ليتم منحه .
-            other: <b>%{count}</b> وساما لتمنح .
-            two: وسامين ليتم منحهما .
-            zero: <b>%{count}</b> وساما لتمنح .
+            zero: "<b>%{count}</b> وساما لتمنح ."
+            one: "وسام واحد ليتم منحه ."
+            two: "وسامين ليتم منحهما ."
+            few: "<b>%{count}</b> أوسمة لتمنح ."
+            many: "<b>%{count}</b> وساما لتمنح ."
+            other: "<b>%{count}</b> وساما لتمنح ."
           sample: "أمثلة:"
           grant:
             with: "<span class=\"username\">%{username}</span>"

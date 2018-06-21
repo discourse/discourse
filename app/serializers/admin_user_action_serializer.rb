@@ -81,12 +81,12 @@ class AdminUserActionSerializer < ApplicationSerializer
 
   private
 
-    # we need this to handle deleted topics which aren't loaded via the .includes(:topic)
-    # because Rails 4 "unscoped" support is bugged (cf. https://github.com/rails/rails/issues/13775)
-    def topic
-      return @topic if @topic
-      @topic = object.topic || Topic.with_deleted.find(object.topic_id)
-      @topic
-    end
+  # we need this to handle deleted topics which aren't loaded via the .includes(:topic)
+  # because Rails 4 "unscoped" support is bugged (cf. https://github.com/rails/rails/issues/13775)
+  def topic
+    return @topic if @topic
+    @topic = object.topic || Topic.with_deleted.find(object.topic_id)
+    @topic
+  end
 
 end

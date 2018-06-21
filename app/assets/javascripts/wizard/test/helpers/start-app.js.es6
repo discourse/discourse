@@ -1,11 +1,11 @@
-import Wizard from 'wizard/wizard';
-import initializer from 'wizard/initializers/load-helpers';
+import Wizard from "wizard/wizard";
+import initializer from "wizard/initializers/load-helpers";
 
 let app;
 let started = false;
 
 export default function() {
-  Ember.run(() => app = Wizard.create({ rootElement: '#ember-testing' }));
+  Ember.run(() => (app = Wizard.create({ rootElement: "#ember-testing" })));
 
   if (!started) {
     initializer.initialize(app);
@@ -16,4 +16,3 @@ export default function() {
   app.injectTestHelpers();
   return app;
 }
-

@@ -1,8 +1,22 @@
 .admin-reports {
   h3 {
     border-bottom: 1px solid $primary-low;
-    margin-bottom: .5em;
-    padding-bottom: .5em;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
+  .reports-list {
+    list-style: none;
+    margin: 0;
+
+    .report {
+      padding-bottom: 0.5em;
+      margin-bottom: 0.5em;
+
+      .report-description {
+        margin: 0;
+      }
+    }
   }
 
   .report-container {
@@ -24,18 +38,20 @@
       flex-direction: column;
       margin-left: 2em;
 
-      .date-picker  {
+      .date-picker {
         margin: 0;
         width: 195px;
       }
 
-      .combo-box, .date-picker-wrapper, .btn {
+      .combo-box,
+      .date-picker-wrapper,
+      .btn {
         width: 100%;
         margin-bottom: 1em;
       }
     }
 
-    @include small-width  {
+    @include small-width {
       flex-direction: column;
       min-width: 100%;
 

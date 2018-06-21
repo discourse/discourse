@@ -100,18 +100,18 @@ ja:
   reading_time: "閲覧時間"
   likes: "いいね！"
   too_many_replies:
-    other: 申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。
+    other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
   embed:
     start_discussion: "会話をする"
     continue: "会話を続ける"
     more_replies:
-      other: '%{count} 以上の返信'
+      other: "%{count} 以上の返信"
     loading: "会話を読み込んでいます…"
     permalink: "パーマリンク"
     imported_from: "これは、オリジナルエントリ%{link}に対するディスカッショントピックです"
     in_reply_to: "▶ %{username}"
     replies:
-      other: '%{count} 通の返信'
+      other: "%{count} 通の返信"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
@@ -157,7 +157,7 @@ ja:
       trust_level_4: "トラストレベル4"
   education:
     until_posts:
-      other: '%{count} 投稿'
+      other: "%{count} 投稿"
     'new-topic': |
       %{site_name} へようこそ！&mdash; **新たなトピックの作成ありがとうございます!**
 
@@ -243,7 +243,7 @@ ja:
       uncategorized: "未分類カテゴリは削除出来ません"
       has_subcategories: "サブカテゴリを持っているため、このカテゴリを削除できません。"
       topic_exists:
-        other: '%{count}個のトピックを持っているため、このカテゴリを削除できません。一番古いトピックは%{topic_link}です。'
+        other: "%{count}個のトピックを持っているため、このカテゴリを削除できません。一番古いトピックは%{topic_link}です。"
       topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
   trust_levels:
     newuser:
@@ -253,60 +253,60 @@ ja:
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
     hours:
-      other: '%{count} 時間'
+      other: "%{count} 時間"
     minutes:
-      other: '%{count} 分'
+      other: "%{count} 分"
     seconds:
-      other: '%{count} 秒'
+      other: "%{count} 秒"
   datetime:
     distance_in_words:
       half_a_minute: "1分前"
       less_than_x_seconds:
-        other: < %{count} 秒
+        other: "< %{count} 秒"
       x_seconds:
-        other: '%{count} 秒'
+        other: "%{count} 秒"
       less_than_x_minutes:
-        other: '%{count}分前'
+        other: "%{count}分前"
       x_minutes:
-        other: '%{count}分'
+        other: "%{count}分"
       about_x_hours:
-        other: '%{count} 時間'
+        other: "%{count} 時間"
       x_days:
-        other: '%{count} 日'
+        other: "%{count} 日"
       about_x_months:
-        other: '%{count}ヶ月'
+        other: "%{count}ヶ月"
       x_months:
-        other: '%{count}ヶ月'
+        other: "%{count}ヶ月"
       about_x_years:
-        other: '%{count} 年'
+        other: "%{count} 年"
       over_x_years:
-        other: '> %{count} 年'
+        other: "> %{count} 年"
       almost_x_years:
-        other: '%{count} 年'
+        other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "たった今"
       less_than_x_seconds:
-        other: 現在
+        other: "現在"
       x_seconds:
-        other: '%{count} 秒前'
+        other: "%{count} 秒前"
       less_than_x_minutes:
-        other: '%{count}分未満'
+        other: "%{count}分未満"
       x_minutes:
-        other: '%{count}分前'
+        other: "%{count}分前"
       about_x_hours:
-        other: '%{count} 時間前'
+        other: "%{count} 時間前"
       x_days:
-        other: '%{count} 日前'
+        other: "%{count} 日前"
       about_x_months:
-        other: 約 %{count}ヶ月前
+        other: "約 %{count}ヶ月前"
       x_months:
-        other: '%{count}ヶ月前'
+        other: "%{count}ヶ月前"
       about_x_years:
-        other: 約 %{count} 年前
+        other: "約 %{count} 年前"
       over_x_years:
-        other: '%{count} 年以上前'
+        other: "%{count} 年以上前"
       almost_x_years:
-        other: だいたい %{count} 年前
+        other: "だいたい %{count} 年前"
   password_reset:
     no_token: "申し訳ありません。パスワード変更のためのリンクは古いようです。ログインボタンを選択し、再度パスワード変更を行ってください"
     update: 'パスワード更新'
@@ -528,7 +528,6 @@ ja:
       xaxis: "日"
       yaxis: "合計"
     mobile_visits:
-      title: "アクセスユーザー"
       xaxis: "日"
       yaxis: "アクセス数"
   dashboard:
@@ -753,7 +752,6 @@ ja:
     min_first_post_typing_time: "最初の投稿に必要なタイピング時間。閾値以下の場合、投稿は自動的に承認キューに追加されます。0を設定すると無効化されます(推奨されません)"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化する"
     reply_by_email_address: "メールアドレスによる回答のテンプレート。例: %{reply_key}@reply.myforum.com"
-    disable_emails: "Discourseからの全ての種類のメール送信を止める"
     strip_images_from_short_emails: "メールのサイズが2800 Bytesを超えないように画像を削除する"
     short_email_length: "ショートメールのバイト数"
     pop3_polling_enabled: "メール回答のために POP3 をポーリングする"
@@ -842,9 +840,9 @@ ja:
     not_seen_in_a_month: "お帰りなさい！　最近見かけませんでしたね。　これらがあなたが離れてから最も人気のトピックです"
   move_posts:
     new_topic_moderator_post:
-      other: '%{count}件の投稿を新しいトピックに分割しました: %{topic_link}'
+      other: "%{count}件の投稿を新しいトピックに分割しました: %{topic_link}"
     existing_topic_moderator_post:
-      other: '%{count} 件のポストを既存のトピックにマージしました: %{topic_link}'
+      other: "%{count} 件のポストを既存のトピックにマージしました: %{topic_link}"
   change_owner:
     post_revision_text: "%{old_user} から %{new_user}にownershipを移動させました"
     deleted_user: "削除されたユーザ"
@@ -854,17 +852,17 @@ ja:
     closed_enabled: "このトピックはクローズされました。返信することはできません。"
     closed_disabled: "このトピックはオープンされました。新たに回答を投稿することができます。"
     autoclosed_enabled_days:
-      other: このトピックは%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。
+      other: "このトピックは%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_hours:
-      other: このトピックは%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。
+      other: "このトピックは%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_minutes:
-      other: このトピックは%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。
+      other: "このトピックは%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_lastpost_days:
-      other: このトピックは最後の返信から%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。
+      other: "このトピックは最後の返信から%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_lastpost_hours:
-      other: このトピックは最後の返信から%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。
+      other: "このトピックは最後の返信から%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_lastpost_minutes:
-      other: このトピックは最後の返信から%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。
+      other: "このトピックは最後の返信から%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
     autoclosed_disabled_lastpost: "このトピックは再オープンされました。新しい回答が投稿できます"
     pinned_enabled: "このトピックはピン留めされました。スタッフによって全てのユーザのピン留めが解除されるか、ユーザ自身がピン留め解除するまで、カテゴリのトップに表示されます"
@@ -908,7 +906,7 @@ ja:
       max_new_accounts_per_registration_ip: "あなたのIPアドレスからの新規登録は行えません(登録可能な数を超えています)。スタッフへお問い合わせください。"
   flags_reminder:
     subject_template:
-      other: '%{count}件の通報が対応待ちです'
+      other: "%{count}件の通報が対応待ちです"
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
   flag_reasons:
@@ -949,7 +947,7 @@ ja:
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
     pending_users_reminder:
       subject_template:
-        other: '%{count} 人のユーザか承認を待っています。'
+        other: "%{count} 人のユーザか承認を待っています。"
       text_body_template: |
         新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
 
@@ -973,7 +971,6 @@ ja:
       description: "メールに興味がありませんか? 下のリンクをクリックすると、即座にメール解除ができます:"
     reply_by_email: "回答するにはこのメールに返信するか、 (%{base_url}%{url}) に[ブラウザでアクセスしてください]。"
     visit_link_to_respond: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
-    visit_link_to_respond_pm: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
     posted_by: "%{post_date} に %{username} が投稿"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"

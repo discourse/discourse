@@ -9,17 +9,19 @@ export default class RawHtml {
     return $html[0];
   }
 
-  decorate() { }
+  decorate() {}
 
   update(prev) {
-    if (prev.html === this.html) { return; }
+    if (prev.html === this.html) {
+      return;
+    }
     return this.init();
   }
 
-  destroy() { }
+  destroy() {}
 }
 
-RawHtml.prototype.type = 'Widget';
+RawHtml.prototype.type = "Widget";
 
 // TODO: Improve how helpers are registered for vdom compliation
 if (typeof Discourse !== "undefined") {

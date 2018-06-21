@@ -10,7 +10,7 @@ module Email
 
     def text
       return @text if @text
-      @text = (@message.text_part ? @message.text_part : @message).body.to_s.force_encoding('UTF-8')
+      @text = (+(@message.text_part ? @message.text_part : @message).body.to_s).force_encoding('UTF-8')
       @text = CGI.unescapeHTML(@text)
     end
 

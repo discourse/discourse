@@ -31,7 +31,7 @@ BadgeGrouping.seed do |g|
 end
 
 # BUGFIX
-Badge.exec_sql <<-SQL.squish
+DB.exec <<-SQL.squish
   UPDATE badges
      SET badge_grouping_id = -1
    WHERE NOT EXISTS (

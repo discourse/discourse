@@ -74,6 +74,7 @@ Discourse::Application.routes.draw do
       end
     end
 
+    get "reports" => "reports#index"
     get "reports/:type" => "reports#show"
 
     resources :groups, constraints: AdminConstraint.new do
@@ -213,11 +214,13 @@ Discourse::Application.routes.draw do
       get 'themes/:id' => 'themes#index'
 
       # They have periods in their URLs often:
-      get 'site_texts'          => 'site_texts#index'
-      get 'site_texts/:id'      => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id.json' => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id'      => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id'   => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts'             => 'site_texts#index'
+      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
+      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
+      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
+      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
 
       get 'email_templates'          => 'email_templates#index'
       get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
@@ -285,7 +288,6 @@ Discourse::Application.routes.draw do
 
     get "memory_stats" => "diagnostics#memory_stats", constraints: AdminConstraint.new
     get "dump_heap" => "diagnostics#dump_heap", constraints: AdminConstraint.new
-    get "dump_statement_cache" => "diagnostics#dump_statement_cache", constraints: AdminConstraint.new
   end # admin namespace
 
   get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"
@@ -745,7 +747,8 @@ Discourse::Application.routes.draw do
   get "robots.txt" => "robots_txt#index"
   get "robots-builder.json" => "robots_txt#builder"
   get "offline.html" => "offline#index"
-  get "manifest.json" => "metadata#manifest", as: :manifest
+  get "manifest.webmanifest" => "metadata#manifest", as: :manifest
+  get "manifest.json" => "metadata#manifest"
   get "opensearch" => "metadata#opensearch", format: :xml
 
   scope "/tags" do
@@ -803,9 +806,9 @@ Discourse::Application.routes.draw do
     get "/qunit" => "qunit#index"
   end
 
-  get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
-
   post "/push_notifications/subscribe" => "push_notification#subscribe"
   post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
+
+  get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 
 end

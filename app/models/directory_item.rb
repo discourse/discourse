@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DirectoryItem < ActiveRecord::Base
   belongs_to :user
   has_one :user_stat, foreign_key: :user_id, primary_key: :user_id
@@ -42,7 +44,7 @@ class DirectoryItem < ActiveRecord::Base
 
     ActiveRecord::Base.transaction do
       # Delete records that belonged to users who have been deleted
-      exec_sql "DELETE FROM directory_items
+      DB.exec "DELETE FROM directory_items
                 USING directory_items di
                 LEFT JOIN users u ON (u.id = user_id AND u.active AND u.silenced_till IS NULL AND u.id > 0)
                 WHERE di.id = directory_items.id AND
@@ -50,7 +52,7 @@ class DirectoryItem < ActiveRecord::Base
                       di.period_type = :period_type", period_type: period_types[period_type]
 
       # Create new records for users who don't have one yet
-      exec_sql "INSERT INTO directory_items(period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
+      DB.exec "INSERT INTO directory_items(period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
                 SELECT
                     :period_type,
                     u.id,
@@ -72,7 +74,7 @@ class DirectoryItem < ActiveRecord::Base
       # TODO
       # WARNING: post_count is a wrong name, it should be reply_count (excluding topic post)
       #
-      exec_sql "WITH x AS (SELECT
+      DB.exec "WITH x AS (SELECT
                     u.id user_id,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :was_liked_type THEN 1 ELSE 0 END) likes_received,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :like_type THEN 1 ELSE 0 END) likes_given,
@@ -121,23 +123,22 @@ class DirectoryItem < ActiveRecord::Base
                   regular_post_type: Post.types[:regular]
 
       if period_type == :all
-        exec_sql <<SQL
-        UPDATE user_stats s
-        SET likes_given         = d.likes_given,
-            likes_received      = d.likes_received,
-            topic_count         = d.topic_count,
-            post_count          = d.post_count
+        DB.exec <<~SQL
+          UPDATE user_stats s
+          SET likes_given         = d.likes_given,
+              likes_received      = d.likes_received,
+              topic_count         = d.topic_count,
+              post_count          = d.post_count
 
-        FROM directory_items d
-        WHERE s.user_id = d.user_id AND
-              d.period_type = 1 AND
-          ( s.likes_given         <> d.likes_given OR
-            s.likes_received      <> d.likes_received OR
-            s.topic_count         <> d.topic_count OR
-            s.post_count          <> d.post_count
-          )
-
-SQL
+          FROM directory_items d
+          WHERE s.user_id = d.user_id AND
+                d.period_type = 1 AND
+            ( s.likes_given         <> d.likes_given OR
+              s.likes_received      <> d.likes_received OR
+              s.topic_count         <> d.topic_count OR
+              s.post_count          <> d.post_count
+            )
+        SQL
       end
     end
   end

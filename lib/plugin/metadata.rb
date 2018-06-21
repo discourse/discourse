@@ -52,7 +52,8 @@ class Plugin::Metadata
     "discourse-user-card-badges",
     "discourse-policy",
     "discourse-github-linkback",
-
+    "discourse-characters-required",
+    "discourse-auto-deactivate"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]

@@ -43,7 +43,6 @@ class BadgeGranter
         end
 
         if SiteSetting.enable_badges?
-
           unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
             I18n.with_locale(@user.effective_locale) do
               notification = @user.notifications.create(
@@ -185,7 +184,7 @@ class BadgeGranter
 
     # hack to allow for params, otherwise sanitizer will trigger sprintf
     count_sql = "SELECT COUNT(*) count FROM (#{sql}) q WHERE :backfill = :backfill"
-    grant_count = SqlBuilder.map_exec(OpenStruct, count_sql, params).first.count.to_i
+    grant_count = DB.query_single(count_sql, params).first.to_i
 
     grants_sql =
      if opts[:target_posts]
@@ -205,17 +204,18 @@ class BadgeGranter
      end
 
     query_plan = nil
-    # HACK: active record is weird, force it to go down the sanitization path that cares not for % stuff
-    query_plan = ActiveRecord::Base.exec_sql("EXPLAIN #{sql} /*:backfill*/", params) if opts[:explain]
+    # HACK: active record sanitization too flexible, force it to go down the sanitization path that cares not for % stuff
+    # note mini_sql uses AR sanitizer at the moment (review if changed)
+    query_plan = DB.query_hash("EXPLAIN #{sql} /*:backfill*/", params) if opts[:explain]
 
-    sample = SqlBuilder.map_exec(OpenStruct, grants_sql, params).map(&:to_h)
+    sample = DB.query(grants_sql, params)
 
     sample.each do |result|
-      raise "Query returned a non-existent user ID:\n#{result[:id]}" unless User.find(result[:id]).present?
-      raise "Query did not return a badge grant time\n(Try using 'current_timestamp granted_at')" unless result[:granted_at]
+      raise "Query returned a non-existent user ID:\n#{result.id}" unless User.exists?(id: result.id)
+      raise "Query did not return a badge grant time\n(Try using 'current_timestamp granted_at')" unless result.granted_at
       if opts[:target_posts]
-        raise "Query did not return a post ID" unless result[:post_id]
-        raise "Query returned a non-existent post ID:\n#{result[:post_id]}" unless Post.find(result[:post_id]).present?
+        raise "Query did not return a post ID" unless result.post_id
+        raise "Query returned a non-existent post ID:\n#{result.post_id}" unless Post.exists?(result.post_id).present?
       end
     end
 
@@ -259,28 +259,31 @@ class BadgeGranter
              WHERE ub.badge_id = :id AND q.user_id IS NULL
            )"
 
-    Badge.exec_sql(sql, id: badge.id,
-                        post_ids: [-1],
-                        user_ids: [-2],
-                        backfill: true,
-                        multiple_grant: true # cheat here, cause we only run on backfill and are deleting
-                  ) if badge.auto_revoke && full_backfill
+    DB.exec(
+      sql,
+      id: badge.id,
+      post_ids: [-1],
+      user_ids: [-2],
+      backfill: true,
+      multiple_grant: true # cheat here, cause we only run on backfill and are deleting
+    ) if badge.auto_revoke && full_backfill
 
-    sql = " WITH w as (
-            INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
-            SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
-            FROM ( #{badge.query} ) q
-            LEFT JOIN user_badges ub ON
-              ub.badge_id = :id AND ub.user_id = q.user_id
-              #{post_clause}
-            /*where*/
-            RETURNING id, user_id, granted_at
-            )
-            select w.*, username, locale, (u.admin OR u.moderator) AS staff FROM w
-            JOIN users u on u.id = w.user_id
-            "
+    sql = <<~SQL
+      WITH w as (
+      INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
+      SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
+      FROM ( #{badge.query} ) q
+      LEFT JOIN user_badges ub ON
+        ub.badge_id = :id AND ub.user_id = q.user_id
+        #{post_clause}
+      /*where*/
+      RETURNING id, user_id, granted_at
+      )
+      select w.*, username, locale, (u.admin OR u.moderator) AS staff FROM w
+      JOIN users u on u.id = w.user_id
+    SQL
 
-    builder = SqlBuilder.new(sql)
+    builder = DB.build(sql)
     builder.where("ub.badge_id IS NULL AND q.user_id <> -1")
 
     if (post_ids || user_ids) && !badge.query.include?(":backfill")
@@ -298,11 +301,12 @@ class BadgeGranter
       return
     end
 
-    builder.map_exec(OpenStruct, id: badge.id,
-                                 multiple_grant: badge.multiple_grant,
-                                 backfill: full_backfill,
-                                 post_ids: post_ids || [-2],
-                                 user_ids: user_ids || [-2]).each do |row|
+    builder.query(
+      id: badge.id,
+      multiple_grant: badge.multiple_grant,
+      backfill: full_backfill,
+      post_ids: post_ids || [-2],
+      user_ids: user_ids || [-2]).each do |row|
 
       # old bronze badges do not matter
       next if badge.badge_type_id == (BadgeType::Bronze) && row.granted_at < (2.days.ago)
@@ -333,10 +337,11 @@ class BadgeGranter
         }.to_json)
       end
 
-      Badge.exec_sql("UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
-                      notification_id: notification.id,
-                      id: row.id
-                    )
+      DB.exec(
+        "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
+        notification_id: notification.id,
+        id: row.id
+      )
     end
 
     badge.reset_grant_count!
@@ -346,21 +351,22 @@ class BadgeGranter
   end
 
   def self.revoke_ungranted_titles!
-    Badge.exec_sql("UPDATE users SET title = ''
-                   WHERE NOT title IS NULL AND
-                         title <> '' AND
-                         EXISTS (
-                            SELECT 1
-                            FROM user_profiles
-                            WHERE user_id = users.id AND badge_granted_title
-                         ) AND
-                         title NOT IN (
-                            SELECT name
-                            FROM badges
-                            WHERE allow_title AND enabled AND
-                              badges.id IN (SELECT badge_id FROM user_badges ub where ub.user_id = users.id)
-                        )
-                   ")
+    DB.exec <<~SQL
+      UPDATE users SET title = ''
+      WHERE NOT title IS NULL AND
+         title <> '' AND
+         EXISTS (
+            SELECT 1
+            FROM user_profiles
+            WHERE user_id = users.id AND badge_granted_title
+         ) AND
+         title NOT IN (
+            SELECT name
+            FROM badges
+            WHERE allow_title AND enabled AND
+              badges.id IN (SELECT badge_id FROM user_badges ub where ub.user_id = users.id)
+        )
+    SQL
   end
 
 end

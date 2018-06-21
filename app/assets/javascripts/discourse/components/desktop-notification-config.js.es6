@@ -1,18 +1,21 @@
-import computed from 'ember-addons/ember-computed-decorators';
-import KeyValueStore from 'discourse/lib/key-value-store';
-import { context, confirmNotification } from 'discourse/lib/desktop-notifications';
+import computed from "ember-addons/ember-computed-decorators";
+import KeyValueStore from "discourse/lib/key-value-store";
+import {
+  context,
+  confirmNotification
+} from "discourse/lib/desktop-notifications";
 import {
   subscribe as subscribePushNotification,
   unsubscribe as unsubscribePushNotification,
   isPushNotificationsSupported,
   keyValueStore as pushNotificationKeyValueStore,
   userSubscriptionKey as pushNotificationUserSubscriptionKey
-} from 'discourse/lib/push-notifications';
+} from "discourse/lib/push-notifications";
 
 const keyValueStore = new KeyValueStore(context);
 
 export default Ember.Component.extend({
-  classNames: ['controls'],
+  classNames: ["controls"],
 
   @computed("isNotSupported")
   notificationsPermission(isNotSupported) {
@@ -22,11 +25,11 @@ export default Ember.Component.extend({
   @computed
   notificationsDisabled: {
     set(value) {
-      keyValueStore.setItem('notifications-disabled', value);
-      return keyValueStore.getItem('notifications-disabled');
+      keyValueStore.setItem("notifications-disabled", value);
+      return keyValueStore.getItem("notifications-disabled");
     },
     get() {
-      return keyValueStore.getItem('notifications-disabled');
+      return keyValueStore.getItem("notifications-disabled");
     }
   },
 
@@ -54,22 +57,31 @@ export default Ember.Component.extend({
   isEnabledPush: {
     set(value) {
       const user = this.currentUser;
-      if(!user) {
+      if (!user) {
         return false;
       }
-      pushNotificationKeyValueStore.setItem(pushNotificationUserSubscriptionKey(user), value);
-      return pushNotificationKeyValueStore.getItem(pushNotificationUserSubscriptionKey(user));
+      pushNotificationKeyValueStore.setItem(
+        pushNotificationUserSubscriptionKey(user),
+        value
+      );
+      return pushNotificationKeyValueStore.getItem(
+        pushNotificationUserSubscriptionKey(user)
+      );
     },
     get() {
       const user = this.currentUser;
-      return user ? pushNotificationKeyValueStore.getItem(pushNotificationUserSubscriptionKey(user)) : false;
+      return user
+        ? pushNotificationKeyValueStore.getItem(
+            pushNotificationUserSubscriptionKey(user)
+          )
+        : false;
     }
   },
 
   isEnabled: Ember.computed.or("isEnabledDesktop", "isEnabledPush"),
 
   isPushNotificationsPreferred() {
-    if(!this.site.mobileView) {
+    if (!this.site.mobileView) {
       return false;
     }
     return isPushNotificationsSupported(this.site.mobileView);
@@ -77,32 +89,31 @@ export default Ember.Component.extend({
 
   actions: {
     recheckPermission() {
-      this.propertyDidChange('notificationsPermission');
+      this.propertyDidChange("notificationsPermission");
     },
 
     turnoff() {
-      if(this.get('isEnabledDesktop')) {
-        this.set('notificationsDisabled', 'disabled');
-        this.propertyDidChange('notificationsPermission');
+      if (this.get("isEnabledDesktop")) {
+        this.set("notificationsDisabled", "disabled");
+        this.propertyDidChange("notificationsPermission");
       }
-      if(this.get('isEnabledPush')) {
+      if (this.get("isEnabledPush")) {
         unsubscribePushNotification(this.currentUser, () => {
-          this.set("isEnabledPush", '');
+          this.set("isEnabledPush", "");
         });
       }
     },
 
     turnon() {
-      if(this.isPushNotificationsPreferred()) {
+      if (this.isPushNotificationsPreferred()) {
         subscribePushNotification(() => {
-          this.set("isEnabledPush", 'subscribed');
+          this.set("isEnabledPush", "subscribed");
         }, this.siteSettings.vapid_public_key_bytes);
-      }
-      else {
-        this.set('notificationsDisabled', '');
-        Notification.requestPermission(() =>  {
+      } else {
+        this.set("notificationsDisabled", "");
+        Notification.requestPermission(() => {
           confirmNotification();
-          this.propertyDidChange('notificationsPermission');
+          this.propertyDidChange("notificationsPermission");
         });
       }
     }

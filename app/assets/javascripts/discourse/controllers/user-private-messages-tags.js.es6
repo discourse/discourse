@@ -1,5 +1,5 @@
 export default Ember.Controller.extend({
-  sortProperties: ['count:desc', 'id'],
+  sortProperties: ["count:desc", "id"],
   tagsForUser: null,
   sortedByCount: true,
   sortedByName: false,
@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
   actions: {
     sortByCount() {
       this.setProperties({
-        sortProperties: ['count:desc', 'id'],
+        sortProperties: ["count:desc", "id"],
         sortedByCount: true,
         sortedByName: false
       });
@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
 
     sortById() {
       this.setProperties({
-        sortProperties: ['id'],
+        sortProperties: ["id"],
         sortedByCount: false,
         sortedByName: true
       });

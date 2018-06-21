@@ -1,6 +1,6 @@
-import { emojiUnescape } from 'discourse/lib/text';
+import { emojiUnescape } from "discourse/lib/text";
 
-export default function (filter) {
+export default function(filter) {
   return Discourse.Route.extend({
     actions: {
       didTransition() {
@@ -15,16 +15,21 @@ export default function (filter) {
     },
 
     afterModel() {
-      return this.modelFor("user").get("postsStream").filterBy(filter);
+      return this.modelFor("user")
+        .get("postsStream")
+        .filterBy(filter);
     },
 
     setupController(controller, model) {
       // initialize "canLoadMore"
       model.set("canLoadMore", model.get("itemsLoaded") === 60);
 
-      model.get('content').forEach((item) => {
-        if (item.get('title')) {
-          item.set('title', emojiUnescape(Handlebars.Utils.escapeExpression(item.title)));
+      model.get("content").forEach(item => {
+        if (item.get("title")) {
+          item.set(
+            "title",
+            emojiUnescape(Handlebars.Utils.escapeExpression(item.title))
+          );
         }
       });
 

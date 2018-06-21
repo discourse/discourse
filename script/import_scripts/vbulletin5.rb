@@ -418,7 +418,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       WHERE id IN (SELECT topic_id FROM closed_topic_ids)
     SQL
 
-    Topic.exec_sql(sql, @closed_topic_ids)
+    DB.exec(sql, @closed_topic_ids)
   end
 
   def post_process_posts

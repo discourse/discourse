@@ -2,7 +2,7 @@
 // context objects of handlebars templates used
 // in themes
 
-import { registerHelper } from 'discourse-common/lib/helpers';
+import { registerHelper } from "discourse-common/lib/helpers";
 
 function inject(context, key, value) {
   if (typeof value === "string") {
@@ -27,10 +27,10 @@ function injectPlainObject(context, key, value) {
   _.assign(context.themeSettings, { [key]: value });
 }
 
-registerHelper('theme-setting-injector', function(arr, hash) {
+registerHelper("theme-setting-injector", function(arr, hash) {
   inject(hash.context, hash.key, hash.value);
 });
 
-Handlebars.registerHelper('theme-setting-injector', function(hash) {
+Handlebars.registerHelper("theme-setting-injector", function(hash) {
   inject(this, hash.hash.key, hash.hash.value);
 });

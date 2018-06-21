@@ -40,11 +40,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :primary_group_name,
              :can_create_topic,
-             :can_post_link,
+             :link_posting_access,
              :external_id
 
-  def can_post_link
-    scope.can_post_link?
+  def link_posting_access
+    scope.link_posting_access
   end
 
   def can_create_topic

@@ -1,4 +1,4 @@
-import { default as computed } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from "ember-addons/ember-computed-decorators";
 import {
   PRIVATE_MESSAGE,
   CREATE_TOPIC,
@@ -7,13 +7,13 @@ import {
   EDIT,
   EDIT_SHARED_DRAFT
 } from "discourse/models/composer";
-import { iconHTML } from 'discourse-common/lib/icon-library';
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 const TITLES = {
-  [PRIVATE_MESSAGE]: 'topic.private_message',
-  [CREATE_TOPIC]: 'topic.create_long',
-  [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft',
-  [EDIT_SHARED_DRAFT]: 'composer.edit_shared_draft'
+  [PRIVATE_MESSAGE]: "topic.private_message",
+  [CREATE_TOPIC]: "topic.create_long",
+  [CREATE_SHARED_DRAFT]: "composer.create_shared_draft",
+  [EDIT_SHARED_DRAFT]: "composer.edit_shared_draft"
 };
 
 export default Ember.Component.extend({
@@ -44,7 +44,7 @@ export default Ember.Component.extend({
             opts.originalUser
           );
         }
-    };
+    }
   },
 
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
@@ -66,12 +66,15 @@ export default Ember.Component.extend({
   },
 
   _formatReplyToTopic(link) {
-    return `<a class="topic-link" href="${link.href}">${link.anchor}</a>`.htmlSafe();
+    return `<a class="topic-link" href="${link.href}">${
+      link.anchor
+    }</a>`.htmlSafe();
   },
 
   _formatReplyToUserPost(avatar, link) {
-    const htmlLink = `<a class="user-link" href="${link.href}">${link.anchor}</a>`;
+    const htmlLink = `<a class="user-link" href="${link.href}">${
+      link.anchor
+    }</a>`;
     return `${avatar}${htmlLink}`.htmlSafe();
-  },
-
+  }
 });

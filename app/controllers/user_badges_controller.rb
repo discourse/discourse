@@ -92,28 +92,28 @@ class UserBadgesController < ApplicationController
 
   private
 
-    # Get the badge from either the badge name or id specified in the params.
-    def fetch_badge_from_params
-      badge = nil
+  # Get the badge from either the badge name or id specified in the params.
+  def fetch_badge_from_params
+    badge = nil
 
-      params.permit(:badge_name)
-      if params[:badge_name].nil?
-        params.require(:badge_id)
-        badge = Badge.find_by(id: params[:badge_id], enabled: true)
-      else
-        badge = Badge.find_by(name: params[:badge_name], enabled: true)
-      end
-      raise Discourse::NotFound if badge.blank?
-
-      badge
+    params.permit(:badge_name)
+    if params[:badge_name].nil?
+      params.require(:badge_id)
+      badge = Badge.find_by(id: params[:badge_id], enabled: true)
+    else
+      badge = Badge.find_by(name: params[:badge_name], enabled: true)
     end
+    raise Discourse::NotFound if badge.blank?
 
-    def can_assign_badge_to_user?(user)
-      master_api_call = current_user.nil? && is_api?
-      master_api_call || guardian.can_grant_badges?(user)
-    end
+    badge
+  end
 
-    def ensure_badges_enabled
-      raise Discourse::NotFound unless SiteSetting.enable_badges?
-    end
+  def can_assign_badge_to_user?(user)
+    master_api_call = current_user.nil? && is_api?
+    master_api_call || guardian.can_grant_badges?(user)
+  end
+
+  def ensure_badges_enabled
+    raise Discourse::NotFound unless SiteSetting.enable_badges?
+  end
 end

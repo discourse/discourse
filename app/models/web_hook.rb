@@ -93,9 +93,9 @@ class WebHook < ActiveRecord::Base
 
   private
 
-    def self.guardian
-      @guardian ||= Guardian.new(Discourse.system_user)
-    end
+  def self.guardian
+    @guardian ||= Guardian.new(Discourse.system_user)
+  end
 end
 
 # == Schema Information

@@ -17,31 +17,28 @@ h1 .topic-statuses .topic-status i {
   max-width: 80px;
   height: auto;
   max-height: 40px;
-  }
+}
 
 .topic-body {
   padding: 0;
-
   &:first-of-type {
     border-top: none;
   }
-
   .reply-to-tab {
     z-index: z("base") + 1;
-    float: right;
-    margin: -2px 25px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
-
   .actions .fade-out {
-     .discourse-no-touch & {
-       opacity: 0.7;
-       transition: opacity 0.7s ease-in-out;
-     }
-     .discourse-touch & {opacity: 1;}
+    .discourse-no-touch & {
+      opacity: 0.7;
+      transition: opacity 0.7s ease-in-out;
+    }
+    .discourse-touch & {
+      opacity: 1;
+    }
   }
-
-  &:hover .actions .fade-out, .selected .actions .fade-out {
+  &:hover .actions .fade-out,
+  .selected .actions .fade-out {
     opacity: 1;
   }
 }
@@ -51,20 +48,15 @@ section.post-menu-area {
 }
 
 nav.post-controls {
-
   padding: 0;
-
   .like-button {
     display: inline-flex;
-
     .like-count {
       color: dark-light-choose($primary-low-mid, $secondary-high);
     }
-
     .widget-button {
       background: none;
     }
-
     &:hover {
       background: $primary-low;
       .like-count {
@@ -77,24 +69,20 @@ nav.post-controls {
         background: none;
       }
     }
-
     &:active {
-      box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
-
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
       .widget-button {
         box-shadow: none;
       }
     }
-
     .like {
       &:focus {
         background: none;
       }
     }
-
     .like-count {
       font-size: $font-up-1;
-      margin-left: 0;      
+      margin-left: 0;
       i.d-icon {
         padding-left: 10px;
         color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -106,38 +94,31 @@ nav.post-controls {
         margin-right: -12px;
       }
     }
-
     .toggle-like {
       padding: 8px 8px;
       margin-left: 2px;
     }
   }
-
   .highlight-action {
     color: dark-light-choose($primary-medium, $secondary-high);
   }
-
-  a, button {
+  a,
+  button {
     color: dark-light-choose($primary-low-mid, $secondary-high);
-
     .d-icon {
-      opacity: 1.0;
+      opacity: 1;
     }
     margin-right: 2px;
     display: inline-block;
   }
-
   a.toggle-likes {
     padding: 8px 0;
     margin-right: -3px;
   }
-
   span.badge-posts {
     margin-right: 5px;
     transition: all linear 0.15s;
-
   }
-
   .actions {
     text-align: right;
     float: right;
@@ -147,31 +128,31 @@ nav.post-controls {
       overflow: hidden;
     }
   }
-
   .show-replies {
     margin-left: -10px;
     font-size: inherit;
-    span.badge-posts {color: dark-light-choose($primary-medium, $secondary-high); }
+    span.badge-posts {
+      color: dark-light-choose($primary-medium, $secondary-high);
+    }
     &:hover {
       background: $primary-low;
-      span.badge-posts {color: $primary;}
+      span.badge-posts {
+        color: $primary;
+      }
     }
     i {
       margin-left: 5px;
       font-size: $font-down-1;
     }
   }
-
   button.create {
     margin-right: 0;
     color: dark-light-choose($primary-high, $secondary-low);
     margin-left: 10px;
   }
-
   .create i {
     margin-right: 5px;
   }
-
   button {
     font-size: $font-up-1;
     padding: 8px 10px;
@@ -179,41 +160,39 @@ nav.post-controls {
     background: transparent;
     border: none;
     margin-left: 3px;
-
-    &.d-hover, &:focus {
+    &.d-hover,
+    &:focus {
       background: $primary-low;
       color: $primary;
     }
-
     &:active {
-      box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
     }
-
     &.hidden {
       display: none;
     }
     &.admin {
       position: relative;
     }
-
-    &.delete.d-hover, &.delete:focus {
+    &.delete.d-hover,
+    &.delete:focus {
       background: $danger;
       color: $secondary;
     }
-
-    &.like.d-hover, &.like:focus {
+    &.like.d-hover,
+    &.like:focus {
       color: $love;
       background: $love-low;
     }
-
-    &.has-like {color: $love;}
+    &.has-like {
+      color: $love;
+    }
     &.has-like[disabled]:hover {
       background: transparent;
     }
     &.has-like[disabled]:active {
       box-shadow: none;
     }
-
     &.bookmark {
       padding: 8px 11px;
       &.bookmarked {
@@ -221,10 +200,13 @@ nav.post-controls {
       }
     }
   }
-
   .post-admin-menu {
+    display: inline-flex;
+    flex-direction: column;
+    box-sizing: border-box;
     background-color: $secondary;
-    width: 205px;
+    width: auto;
+    max-width: 320px;
     padding: 10px;
     border: 1px solid $primary-low;
     position: absolute;
@@ -232,34 +214,32 @@ nav.post-controls {
     bottom: -2px;
     right: 15px;
     z-index: z("dropdown");
-
     h3 {
       margin-top: 0;
       color: $primary;
       font-size: $font-0;
     }
-
     ul {
       list-style: none;
       margin: 10px 0 0 0;
     }
-
     li {
-      width: 176px;
       margin-bottom: 5px;
-
       .d-icon {
         width: 14px;
-        margin-right: 14px;
+        margin-right: 10px;
       }
     }
   }
 }
 
 .embedded-posts {
-  h1, h2, h3 { margin: 10px 0; }
-  border:  1px solid $primary-low;
-
+  h1,
+  h2,
+  h3 {
+    margin: 10px 0;
+  }
+  border: 1px solid $primary-low;
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 70px); // [100% - .topic-avatar width]
@@ -267,33 +247,28 @@ nav.post-controls {
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
     padding: 15px 25px 0 15px;
-  }
-
-  // this is covered by .topic-body .regular on a normal post
+  } // this is covered by .topic-body .regular on a normal post
   // but no such class structure exists for an embedded, expanded post
   .cooked {
     margin-top: 15px;
   }
-
   .topic-avatar {
     padding-left: 25px;
     padding-top: 15px;
   }
-
-  .collapse-down, .collapse-up {
+  .collapse-down,
+  .collapse-up {
     position: absolute;
     color: $primary-medium;
     background: $secondary;
-    border:  1px solid $primary-low;
+    border: 1px solid $primary-low;
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
     &:hover {
       background: $primary-low;
       color: $primary;
     }
-  }
-
-  // bottom means "reply expansion" below a post
+  } // bottom means "reply expansion" below a post
   &.bottom {
     border-top: none;
     margin-bottom: 20px;
@@ -307,14 +282,13 @@ nav.post-controls {
       transform: translate(-50%, -164%);
     }
     .row {
-      padding-bottom: .5em;
-      .topic-avatar, .topic-body {
+      padding-bottom: 0.5em;
+      .topic-avatar,
+      .topic-body {
         border-top: 1px solid $primary-low;
       }
     }
-  }
-
-  // top means "in reply to expansion" above a post
+  } // top means "in reply to expansion" above a post
   &.top {
     border-bottom: none;
     .collapse-down {
@@ -324,7 +298,8 @@ nav.post-controls {
     width: 699px;
     .row {
       border-bottom: none;
-      .topic-avatar, .topic-body {
+      .topic-avatar,
+      .topic-body {
         border-top: 1px solid $primary-low;
       }
     }
@@ -332,11 +307,16 @@ nav.post-controls {
   &.top.topic-body {
     padding: 0;
   }
-
-  .post-date { color: dark-light-choose($primary-medium, $secondary-high); }
-  .d-icon-arrow-up, .d-icon-arrow-down { margin-left: 5px; }
-  .reply:first-of-type .row { border-top: none; }
-
+  .post-date {
+    color: dark-light-choose($primary-medium, $secondary-high);
+  }
+  .d-icon-arrow-up,
+  .d-icon-arrow-down {
+    margin-left: 5px;
+  }
+  .reply:first-of-type .row {
+    border-top: none;
+  }
   .topic-meta-data {
     position: relative;
   }
@@ -349,38 +329,47 @@ nav.post-controls {
       color: dark-light-choose($primary-low-mid, $secondary-high);
     }
   }
-  .arrow {color: dark-light-choose($primary-medium, $secondary-high); }
+  .arrow {
+    color: dark-light-choose($primary-medium, $secondary-high);
+  }
 }
 
 .post-action {
   .relative-date {
     margin-left: 5px;
   }
-  .avatar { margin-right: 2px; }
+  .avatar {
+    margin-right: 2px;
+  }
 }
 
 .topic-map {
   margin: 20px 0;
-
   .map {
-    .secondary {text-align: center;}
+    .secondary {
+      text-align: center;
+    }
     li {
       float: left;
       padding: 7px 10px;
       &:last-of-type {
         border-right: 0;
       }
-      &:nth-child(3) { text-align:center; }
+      &:nth-child(3) {
+        text-align: center;
+      }
     }
-    a, .number {
+    a,
+    .number {
       line-height: $line-height-large;
     }
-    .number, i {
+    .number,
+    i {
       color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-2;
       line-height: $line-height-medium;
     }
-    .avatar  a {
+    .avatar a {
       float: left;
     }
     .topic-map-post {
@@ -393,9 +382,12 @@ nav.post-controls {
     padding: 7px 10px 15px 10px;
     color: $primary;
   }
-
-  .participants { // PMs //
-    .user { float: left; margin: 7px 20px 7px 0; }
+  .participants {
+    // PMs //
+    .user {
+      float: left;
+      margin: 7px 20px 7px 0;
+    }
     .user a {
       color: dark-light-choose($primary-high, $secondary-low);
       font-weight: bold;
@@ -405,7 +397,6 @@ nav.post-controls {
       color: dark-light-choose($primary-medium, $secondary-high);
     }
   }
-
   .buttons {
     float: right;
     .btn {
@@ -419,7 +410,6 @@ nav.post-controls {
         color: $primary;
         background: $primary-low;
       }
-
       &.collapsed {
         padding-bottom: 1px;
       }
@@ -430,7 +420,6 @@ nav.post-controls {
       }
     }
   }
-
   .link-summary .btn {
     color: dark-light-choose($primary-medium, $secondary-high);
     background: blend-primary-secondary(5%);
@@ -455,9 +444,10 @@ nav.post-controls {
   }
   .btn {
     @include topic-footer-button;
-    .d-icon-bookmark.bookmarked { color: $tertiary; }
+    .d-icon-bookmark.bookmarked {
+      color: $tertiary;
+    }
   }
-
   .bookmark.bookmarked .d-icon-bookmark {
     color: $tertiary;
   }
@@ -472,9 +462,7 @@ nav.post-controls {
   padding: 20px 0 15px 0;
   table {
     margin-top: 10px;
-  }
-
-  // this forces category to take less space in suggested topics
+  } // this forces category to take less space in suggested topics
   // as the poster list is not present at all there.
   th.category {
     width: 150px;
@@ -484,14 +472,14 @@ nav.post-controls {
 #suggested-topics .topic-statuses .topic-status {
   padding: 0;
   i {
-    font-size:1em;
+    font-size: 1em;
   }
 }
 
 span.post-count {
   background: $primary;
   color: $secondary;
-  opacity: .8;
+  opacity: 0.8;
 }
 
 button.expand-post {
@@ -511,30 +499,45 @@ video {
 }
 
 @-webkit-keyframes fadein {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadein {
-    from {opacity: 0;}
-    to {opacity: 1;}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .extra-info-wrapper {
   overflow: hidden;
-
-  .badge-wrapper, i, .topic-link {
-    -webkit-animation: fadein .7s;
-    animation: fadein .7s;
+  .badge-wrapper,
+  i,
+  .topic-link {
+    -webkit-animation: fadein 0.7s;
+    animation: fadein 0.7s;
   }
-
   .topic-statuses {
-    i { color: $header_primary; }
-    .d-icon-envelope { color: $danger; }
-    .d-icon-lock {padding-top: .15em;}
-    .unpinned { color: $header_primary; }
+    i {
+      color: $header_primary;
+    }
+    .d-icon-envelope {
+      color: $danger;
+    }
+    .d-icon-lock {
+      padding-top: 0.15em;
+    }
+    .unpinned {
+      color: $header_primary;
+    }
   }
-
   .topic-link {
     color: $header_primary;
     display: block;
@@ -542,13 +545,13 @@ video {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   .topic-header-extra {
     margin: 0 0 0 5px;
   }
 }
 
 /* default docked header CSS for all topics, including those without categories */
+
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
@@ -556,13 +559,13 @@ video {
     line-height: $line-height-large;
     width: 100%;
   }
-
   .topic-statuses {
     margin-top: -2px;
   }
 }
 
 /* override docked header CSS for topics with categories */
+
 .extra-info.two-rows {
   h1 {
     line-height: $line-height-medium;
@@ -571,8 +574,7 @@ video {
   }
 }
 
-
-.open >.dropdown-menu {
+.open > .dropdown-menu {
   display: block;
 }
 
@@ -585,10 +587,14 @@ video {
   position: relative;
 }
 
-
 .deleted {
   .topic-body {
-    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+    background-color: dark-light-diff(
+      rgba($danger, 0.7),
+      $secondary,
+      50%,
+      -60%
+    );
   }
 }
 
@@ -612,8 +618,8 @@ video {
   color: $primary;
 }
 
-
 /* solo quotes */
+
 blockquote {
   /* leave browser defaults for top and bottom here */
   margin-left: 0;
@@ -622,31 +628,33 @@ blockquote {
 }
 
 /* quotes with attribution */
+
 .quote {
-  &>blockquote {
+  & > blockquote {
     .onebox-result {
       background-color: blend-primary-secondary(5%);
     }
   }
-
   aside {
-    .quote, .title, blockquote, .onebox, .onebox-result {
+    .quote,
+    .title,
+    blockquote,
+    .onebox,
+    .onebox-result {
       background: blend-primary-secondary(5%);
       border-left: 5px solid $primary-low;
     }
-
-    aside.quote>blockquote, aside.quote>.title {
+    aside.quote > blockquote,
+    aside.quote > .title {
       border-left: 0;
     }
   }
-
 }
 
 // variables are used to calculate the width of .gap
 $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
-
 .topic-body {
   width: $topic-body-width;
   float: left;
@@ -665,10 +673,13 @@ $topic-avatar-width: 45px;
 }
 
 .gap {
-  width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
+  width: calc(
+    #{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding}
+  );
 }
 
 /* hide the reply border above the time gap notices */
+
 .time-gap + .topic-post .topic-body,
 .time-gap + .topic-post .topic-avatar {
   border-top: none;
@@ -678,7 +689,6 @@ $topic-avatar-width: 45px;
   border-bottom: 1px solid $primary-low;
 }
 
-
 .posts-wrapper {
   position: relative;
   -webkit-font-smoothing: subpixel-antialiased;
@@ -687,6 +697,7 @@ $topic-avatar-width: 45px;
 .dropdown {
   position: relative;
 }
+
 .caret {
   display: inline-block;
   width: 0;
@@ -698,6 +709,7 @@ $topic-avatar-width: 45px;
   content: "";
   margin-left: 5px;
 }
+
 .dropdown-menu {
   position: absolute;
   bottom: 115%;
@@ -723,6 +735,7 @@ $topic-avatar-width: 45px;
     color: $primary;
   }
 }
+
 .dropdown-menu a {
   display: block;
   padding: 9px;
@@ -730,19 +743,18 @@ $topic-avatar-width: 45px;
   font-weight: normal;
   line-height: $line-height-medium;
   color: $primary;
-  transition: all linear .15s;
-
+  transition: all linear 0.15s;
   & > div {
     margin-left: 26px;
   }
 }
+
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
   color: $primary;
   text-decoration: none;
   background-color: $highlight-medium;
-
 }
 
 .dropdown-menu .disabled > a,
@@ -773,20 +785,17 @@ $topic-avatar-width: 45px;
   padding: 5px;
   margin-bottom: 5px;
   right: 10px;
-
   @include large-width {
     right: auto;
     margin-left: 330px;
     left: 50%;
   }
-
   button {
     width: 180px;
     margin: 4px auto;
     display: inline-block;
     text-align: left;
   }
-
   &.hidden {
     display: none;
   }
@@ -814,12 +823,10 @@ $topic-avatar-width: 45px;
     font-weight: normal;
     margin-bottom: 10px;
     background: $tertiary-medium;
-
     &[href] {
       color: $secondary;
     }
-    &:hover
-    {
+    &:hover {
       color: $secondary;
       background: $tertiary-high;
     }
@@ -830,7 +837,7 @@ $topic-avatar-width: 45px;
     &[disabled] {
       text-shadow: 0 1px 0 rgba($primary, 0.2);
       @include linear-gradient($tertiary, darken($tertiary, 20%));
-      @include box-shadow(inset 0 1px 0 rgba(0,0,0, 0.33));
+      @include box-shadow(inset 0 1px 0 rgba(0, 0, 0, 0.33));
     }
   }
 }
@@ -853,14 +860,12 @@ $topic-avatar-width: 45px;
   }
   article.boxed {
     position: relative;
-
     .select-posts {
       position: absolute;
       right: 0;
       z-index: z("base") + 1;
       top: 3em;
       height: 100px;
-
       button {
         margin-left: 8px;
         background-color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -878,7 +883,9 @@ a.attachment:before {
   content: "\f019";
 }
 
-.private_message .gutter, .deleted-topic .gutter,.read_restricted .gutter {
+.private_message .gutter,
+.deleted-topic .gutter,
+.read_restricted .gutter {
   position: relative;
 }
 
@@ -886,29 +893,38 @@ a.attachment:before {
   display: block;
   position: absolute;
   left: 767px;
-  color: rgba($primary-low, .8);
+  color: rgba($primary-low, 0.8);
   font: 6.429em/1 FontAwesome;
   content: "\f014";
   z-index: z("base");
 }
 
 .topic-meta-data {
+  align-items: center;
 
- &:after {
+  .names {
+    display: flex;
+    align-items: center;
+  }
+
+  &:after {
     visibility: hidden;
     display: block;
     font-size: 0;
     content: " ";
     clear: both;
     height: 0;
- }
+  }
 
- .post-info  {
-   display: inline-block;
-   float: right;
-   a {color: dark-light-choose($primary-medium, $secondary-medium); }
- }
+  .post-info {
+    a {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
 
+    a.wiki {
+      color: $wiki;
+    }
+  }
 }
 
 .who-liked {
@@ -928,6 +944,7 @@ span.highlighted {
 
 .read-state {
   color: $tertiary-medium;
+  // We use absolute positioning here because we want it to display in the padding
   position: absolute;
   right: 0;
   top: 2em;
@@ -945,34 +962,25 @@ span.highlighted {
 
 /* Tablet (portrait) ----------- */
 
-
-@media all
-and (max-width : 775px) {
-
+@media all and (max-width: 775px) {
   .gutter {
     display: none;
   }
-
   .topic-avatar {
     width: 45px;
   }
-
   .topic-post .reply-to-tab {
-      right: 15%;
+    right: 15%;
   }
-
   .topic-body {
-      box-sizing: border-box;
-      width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
-
-      padding-left: 2%;
-    }
-
+    box-sizing: border-box;
+    width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
+    padding-left: 2%;
+  }
   .embedded-posts {
     // top means "in reply to expansion" above a post
     &.top {
       width: calc(100% - 56px); // [100% - margin-left]
     }
   }
-
 }

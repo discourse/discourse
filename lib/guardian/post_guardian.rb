@@ -1,9 +1,25 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
-  def can_post_link?
-    authenticated? &&
-      @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+  def unrestricted_link_posting?
+    authenticated? && @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+  end
+
+  def link_posting_access
+    if unrestricted_link_posting?
+      'full'
+    elsif SiteSetting.whitelisted_link_domains.present?
+      'limited'
+    else
+      'none'
+    end
+  end
+
+  def can_post_link?(host: nil)
+    return false if host.blank?
+
+    unrestricted_link_posting? ||
+      SiteSetting.whitelisted_link_domains.split('|').include?(host)
   end
 
   # Can the user act on the post in a particular way.
