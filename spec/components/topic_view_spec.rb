@@ -364,6 +364,26 @@ describe TopicView do
       end
     end
 
+    describe 'when a megalodon topic is closed' do
+      it 'should be forced into summary mode without gaps' do
+        begin
+          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 1)
+          SiteSetting.summary_max_results = 2
+          topic.update!(closed: true)
+
+          topic_view = TopicView.new(topic.id, evil_trout)
+
+          expect(topic_view.contains_gaps?).to eq(false)
+          expect(topic_view.posts).to eq([p5])
+        ensure
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
+        end
+      end
+    end
+
     it "#restricts to correct topic" do
       t2 = Fabricate(:topic)
 
