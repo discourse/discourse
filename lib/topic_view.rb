@@ -482,9 +482,9 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     # Filters
-    if @filter == 'summary'
+    if @filter == 'summary' || force_summary_mode?
       @filtered_posts = @filtered_posts.summary(@topic.id)
-      @contains_gaps = true
+      @contains_gaps = true unless force_summary_mode?
     end
 
     if @best.present?
@@ -571,5 +571,10 @@ class TopicView
 
   def is_mega_topic?
     @topic.posts_count >= MEGA_TOPIC_POSTS_COUNT
+  end
+
+  def force_summary_mode?
+    @force_summary_mode ||=
+      (@topic.closed? && @topic.posts_count >= (MEGA_TOPIC_POSTS_COUNT * 2))
   end
 end
