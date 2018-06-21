@@ -344,23 +344,22 @@ class Post < ActiveRecord::Base
     order('sort_order desc, post_number desc')
   end
 
-  def self.summary(topic_id = nil)
-    # PERF: if you pass in nil it is WAY slower
-    #  pg chokes getting a reasonable plan
-    topic_id = topic_id ? topic_id.to_i : "posts.topic_id"
+  def self.summary(topic_id)
+    topic_id = topic_id.to_i
 
     # percent rank has tons of ties
-    where(["post_number = 1 or id in (
-            SELECT p1.id
-            FROM posts p1
-            WHERE p1.percent_rank <= ? AND
-               p1.topic_id = #{topic_id}
-            ORDER BY p1.percent_rank
-            LIMIT ?
-          )",
-           SiteSetting.summary_percent_filter.to_f / 100.0,
-           SiteSetting.summary_max_results
-    ])
+    where(topic_id: topic_id)
+      .where(["(post_number = 1) or id in (
+          SELECT p1.id
+          FROM posts p1
+          WHERE p1.percent_rank <= ? AND
+             p1.topic_id = #{topic_id}
+          ORDER BY p1.percent_rank
+          LIMIT ?
+        )",
+        SiteSetting.summary_percent_filter.to_f / 100.0,
+        SiteSetting.summary_max_results
+      ])
   end
 
   def update_flagged_posts_count
