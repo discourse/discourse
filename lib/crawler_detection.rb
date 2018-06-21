@@ -22,7 +22,12 @@ module CrawlerDetection
 
     if user_agent.match?(possibly_real)
       known_bots = (@matchers[SiteSetting.crawler_user_agents] ||= to_matcher(SiteSetting.crawler_user_agents))
-      user_agent.match?(known_bots)
+      if user_agent.match?(known_bots)
+        bypass = (@matchers[SiteSetting.crawler_check_bypass_agents] ||= to_matcher(SiteSetting.crawler_check_bypass_agents))
+        !user_agent.match?(bypass)
+      else
+        false
+      end
     else
       true
     end
