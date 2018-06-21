@@ -537,7 +537,7 @@ class User < ActiveRecord::Base
   def new_user_posting_on_first_day?
     !staff? &&
     trust_level < TrustLevel[2] &&
-    (self.first_post_created_at.nil? || self.first_post_created_at >= 24.hours.ago)
+    (trust_level == TrustLevel[0] || self.first_post_created_at.nil? || self.first_post_created_at >= 24.hours.ago)
   end
 
   def new_user?
