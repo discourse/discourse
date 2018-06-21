@@ -68,6 +68,7 @@ fr:
         auto_generated_email_error: "Se produit quand l'entête « precedence » est : list, junk, bulk ou auto-reply, ou lorsque n'importe quel autre entête contient : auto-submitted, auto-replied ou auto-generated."
         no_body_detected_error: "Se produit quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces-jointes."
         no_sender_detected_error: "Se produit lorsque nous n'avons pas trouvé une adresse courriel valide dans l'entête From."
+        from_reply_by_address_error: "Survient quand l'entête 'From' correspond à l'adresse courriel 'Reply by'."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
         silenced_user_error: "Se produit lorsque l'expéditeur a été mis sous silence."
         bad_destination_address: "Se produit quand aucune des adresses de courriel des champs To/Cc/Bcc ne correspondent à une adresse de courriel entrante configurée."
@@ -133,8 +134,8 @@ fr:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
     site_settings:
       invalid_choice:
-        one: Vous avez spécifié le choix invalide %{name}
-        other: Vous avez spécifié les choix invalides %{name}
+        one: 'Vous avez spécifié le choix invalide %{name}'
+        other: 'Vous avez spécifié les choix invalides %{name}'
       min_username_length_exists: "Il n'est pas possible de définir une longeur minimale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
       min_username_length_range: "Il n'est pas possible de définir un minimum plus grand qu'un maximum."
       max_username_length_exists: "Il n'est pas possible de définir une longeur maximale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
@@ -173,8 +174,8 @@ fr:
   reading_time: "Temps de lecture"
   likes: "J'aime"
   too_many_replies:
-    one: Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à 1 réponse par sujet.
-    other: Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponses par sujet.
+    one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à 1 réponse par sujet."
+    other: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponses par sujet."
   embed:
     start_discussion: "Démarrer la discussion"
     continue: "Continuer la discussion"
@@ -184,37 +185,37 @@ fr:
     no_hosts: "Aucun hôte n'a été configuré pour l'intégration."
     configure: "Configurer l'intégration"
     more_replies:
-      one: 1 réponse supplémentaire
-      other: '%{count} réponses supplémentaires'
+      one: "1 réponse supplémentaire"
+      other: "%{count} réponses supplémentaires"
     loading: "Chargement de la discussion…"
     permalink: "Lien permanent"
     imported_from: "Il s'agit d'un sujet en provenance de l'article %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: 1 réponse
-      other: '%{count} réponses'
+      one: "1 réponse"
+      other: "%{count} réponses"
   no_mentions_allowed: "Désolé, vous ne pouvez pas mentionner d'autres utilisateurs."
   too_many_mentions:
-    one: Désolé, vous ne pouvez mentionner qu'un utilisateur dans un message.
-    other: Désolé, vous ne pouvez mentionner que %{count} utilisateurs dans un message.
+    one: "Désolé, vous ne pouvez mentionner qu'un utilisateur dans un message."
+    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs dans un message."
   no_mentions_allowed_newuser: "Désolé, les nouveaux utilisateurs ne peuvent pas mentionner d'autres utilisateurs."
   too_many_mentions_newuser:
-    one: Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un message.
-    other: Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un message.
+    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un message."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un message."
   no_images_allowed_trust: "Désolé, il ne vous est pas possible d'inclure des images dans un message"
   no_images_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image dans les messages."
   too_many_images:
-    one: Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une image dans un message.
-    other: Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images dans un message.
+    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une image dans un message."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images dans un message."
   no_attachments_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
   too_many_attachments:
-    one: Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'un fichier dans leurs messages.
-    other: Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} fichiers dans leurs messages.
+    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'un fichier dans leurs messages."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} fichiers dans leurs messages."
   no_links_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas insérer de liens dans leurs messages."
   links_require_trust: "Désolé, il ne vous est pas possible d'inclure des liens dans vos messages."
   too_many_links:
-    one: Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message.
-    other: Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message.
+    one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message."
   contains_blocked_words: "Votre message contient un mot qui n'est pas permis : %{word}"
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
@@ -263,14 +264,14 @@ fr:
   groups:
     success:
       bulk_add:
-        one: '%{count}utilisateur a été ajouté au groupe.'
-        other: '%{count}utilisateurs ont été ajoutés au groupe.'
+        one: "%{count}utilisateur a été ajouté au groupe."
+        other: "%{count}utilisateurs ont été ajoutés au groupe."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' n'est pas un niveau de confiance valide."
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
       member_already_exist:
-        one: '''%{username}'' est déjà membre de ce groupe.'
-        other: 'Les utilisateurs suivants sont déjà membres de ce groupe: %{username}'
+        one: "'%{username}' est déjà membre de ce groupe."
+        other: "Les utilisateurs suivants sont déjà membres de ce groupe: %{username}"
       invalid_domain: "'%{domain}' n'est pas un domaine valide."
       invalid_incoming_email: "« %{email} » n'est pas une adresse de courriel valide."
       email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
@@ -290,8 +291,8 @@ fr:
       title: "Demande d'adhésion pour @%{group_name}"
   education:
     until_posts:
-      one: 1 message
-      other: '%{count} messages'
+      one: "1 message"
+      other: "%{count} messages"
     'new-topic': |
       Bienvenue sur %{site_name} &mdash; **merci de débuter une nouvelle conversation !**
 
@@ -488,8 +489,8 @@ fr:
       uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
       topic_exists:
-        one: Vous ne pouvez pas supprimer cette catégorie car elle contient 1 sujet. Le plus vieux sujet est %{topic_link}.
-        other: Vous ne pouvez pas supprimer cette catégorie car elle contient %{count} sujets. Le plus vieux sujet est %{topic_link}.
+        one: "Vous ne pouvez pas supprimer cette catégorie car elle contient 1 sujet. Le plus vieux sujet est %{topic_link}."
+        other: "Vous ne pouvez pas supprimer cette catégorie car elle contient %{count} sujets. Le plus vieux sujet est %{topic_link}."
       topic_exists_no_oldest: "Vous ne pouvez pas supprimer cette catégorie car le nombre de sujet est de %{count}."
     uncategorized_description: "Sujets qui n'ont pas besoin d'une catégorie ou qui ne correspondent à aucune catégorie existante."
   trust_levels:
@@ -526,85 +527,86 @@ fr:
       unsubscribe_via_email: "Vous avez atteint le nombre maximum de désinscriptions par courriel. Merci de patienter %{time_left} avant d'essayer à nouveau."
       topic_invitations_per_day: "Vous avez atteint le nombre maximum d'invitations dans un sujet. Merci de patienter %{time_left} avant d'essayer à nouveau."
     hours:
-      one: 1 heure
-      other: '%{count} heures'
+      one: "1 heure"
+      other: "%{count} heures"
     minutes:
-      one: 1 minute
-      other: '%{count} minutes'
+      one: "1 minute"
+      other: "%{count} minutes"
     seconds:
-      one: 1 seconde
-      other: '%{count} secondes'
+      one: "1 seconde"
+      other: "%{count} secondes"
+    short_time: "quelques secondes"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: < 1s
-        other: < %{count}s
+        one: "< 1s"
+        other: "< %{count}s"
       x_seconds:
-        one: 1s
-        other: '%{count}s'
+        one: "1s"
+        other: "%{count}s"
       less_than_x_minutes:
-        one: 1m
-        other: '%{count}m'
+        one: "1m"
+        other: "%{count}m"
       x_minutes:
-        one: 1h
-        other: '%{count}h'
+        one: "1h"
+        other: "%{count}h"
       about_x_hours:
-        one: 1h
-        other: '%{count}h'
+        one: "1h"
+        other: "%{count}h"
       x_days:
-        one: 1j
-        other: '%{count}j'
+        one: "1j"
+        other: "%{count}j"
       about_x_months:
-        one: '1 mois '
-        other: '%{count} mois'
+        one: "1 mois "
+        other: "%{count} mois"
       x_months:
-        one: 1 mois
-        other: '%{count} mois'
+        one: "1 mois"
+        other: "%{count} mois"
       about_x_years:
-        one: 1 an
-        other: '%{count} ans'
+        one: "1 an"
+        other: "%{count} ans"
       over_x_years:
-        one: '> 1 an'
-        other: '> %{count} ans'
+        one: "> 1 an"
+        other: "> %{count} ans"
       almost_x_years:
-        one: 1 an
-        other: '%{count} ans'
+        one: "1 an"
+        other: "%{count} ans"
     distance_in_words_verbose:
       half_a_minute: "à l'instant"
       less_than_x_seconds:
-        one: à l'instant
-        other: à l'instant
+        one: "à l'instant"
+        other: "à l'instant"
       x_seconds:
-        one: il y a une seconde
-        other: il y a %{count} secondes
+        one: "il y a une seconde"
+        other: "il y a %{count} secondes"
       less_than_x_minutes:
-        one: il y a moins d'une minute
-        other: il y a moins de %{count} minutes
+        one: "il y a moins d'une minute"
+        other: "il y a moins de %{count} minutes"
       x_minutes:
-        one: il y a 1 minute
-        other: il y a %{count} minutes
+        one: "il y a 1 minute"
+        other: "il y a %{count} minutes"
       about_x_hours:
-        one: il y a 1 heure
-        other: il y a %{count} heures
+        one: "il y a 1 heure"
+        other: "il y a %{count} heures"
       x_days:
-        one: il y a un jour
-        other: il y a %{count} jours
+        one: "il y a un jour"
+        other: "il y a %{count} jours"
       about_x_months:
-        one: il y a environ un mois
-        other: il y a environ %{count} mois
+        one: "il y a environ un mois"
+        other: "il y a environ %{count} mois"
       x_months:
-        one: il y a un mois
-        other: il y a %{count} mois
+        one: "il y a un mois"
+        other: "il y a %{count} mois"
       about_x_years:
-        one: il y a environ un an
-        other: il y a environ %{count} ans
+        one: "il y a environ un an"
+        other: "il y a environ %{count} ans"
       over_x_years:
-        one: il y a plus d'un an
-        other: il y a plus de %{count} ans
+        one: "il y a plus d'un an"
+        other: "il y a plus de %{count} ans"
       almost_x_years:
-        one: il y a presque un an
-        other: il y a presque %{count} ans
+        one: "il y a presque un an"
+        other: "il y a presque %{count} ans"
   password_reset:
     no_token: "Désolé, le lien pour le changement de mot de passe est trop ancien. Cliquez sur Connexion puis redemandez un mot de passe afin d'obtenir un nouveau lien. "
     choose_new: "Choisir un nouveau mot de passe"
@@ -764,7 +766,10 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de visites"
     signups:
+      title: "Inscriptions"
       xaxis: "Jour"
+      yaxis: "Nombre d'inscriptions"
+      description: "Nouvelles créations de compte pour cette période"
     new_contributors:
       title: "Nouveaux contributeurs"
       xaxis: "Jour"
@@ -773,6 +778,8 @@ fr:
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
+      yaxis: "DAU/MAU"
+      description: "Nombre d'utilisateurs qui se sont connectés dans la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés dans le dernier mois – en % qui représente le taux \"d'adhérence\" de la communauté. Viser > 30%."
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
@@ -826,6 +833,7 @@ fr:
       labels:
         term: Terme
         searches: Recherches
+        click_through: CTR
     emails:
       title: "Courriels envoyés"
       xaxis: "Jour"
@@ -835,6 +843,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     user_to_user_private_messages_with_replies:
+      title: "Utilisateur à utilisateur (avec réponses)"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     system_private_messages:
@@ -925,7 +934,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Total"
     mobile_visits:
-      title: "Visites d'utilisateurs"
+      title: "Visites d'utilisateur (mobile)"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
     web_crawlers:
@@ -949,8 +958,8 @@ fr:
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
     email_polling_errored_recently:
-      one: La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails.
-      other: La vérification des courriels a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails.
+      one: "La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
+      other: "La vérification des courriels a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
     missing_mailgun_api_key: "Le serveur est configuré pour envoyer des courriels via Mailgun mais vous n'avez pas fourni la clef API nécessaire pour vérifier les messages webhook."
     bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='/admin/site_settings'>paramètres du site</a>"
     poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
@@ -1209,6 +1218,7 @@ fr:
     png_to_jpg_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
     allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages directs."
     strip_image_metadata: "Enlever les métadonnées de l'image."
+    min_ratio_to_crop: "Ratio utilisé pour recadrer les images en hauteur. Entrez le résultat de la largeur / hauteur."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1247,6 +1257,7 @@ fr:
     min_trust_to_flag_posts: "Le niveau de confiance minimum requis pour signaler des messages"
     min_trust_to_post_links: "Le niveau de confiance minimum requis pour inclure des liens dans les messages"
     min_trust_to_post_images: "Le niveau de confiance minimum requis pour inclure des images dans les messages"
+    whitelisted_link_domains: "Domaines vers lesquels les utilisateurs peuvent créer des liens même s'ils n'ont pas le niveau de confiance approprié pour poster des liens."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message."
@@ -1318,7 +1329,7 @@ fr:
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "Utilisez HTML plutôt que du texte pour les courriels entrants."
-    disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
+    disable_emails: "Empêcher Discourse d'envoyer tout type de courriels. Sélectionnez 'oui' pour désactiver les courriels pour tous les utilisateurs. Sélectionnez 'non-responsables' pour désactiver les courriels uniquement pour les utilisateurs qui ne sont pas des responsables."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
     short_email_length: "Taille des courriels courts en Octets"
     display_name_on_email_from: "Affiche les noms complets dans le champ From du courriel."
@@ -1363,7 +1374,7 @@ fr:
     delete_all_posts_max: "Le nombre maximum de messages qui peuvent être supprimés en une seule fois avec le bouton Supprimer tous les messages. Si un utilisateur a plus que ce nombre de messages, ses messages ne pourront pas être supprimés en une seule fois et l'utilisateur ne pourra pas être supprimé."
     username_change_period: "Le nombre de jours maximum après l'enregistrement que l'utilisateur peut encore modifier son pseudo (0 pour empêcher la modification de pseudo)."
     email_editable: "Autoriser les utilisateurs à modifier leur adresse de courriel après l'inscription."
-    logout_redirect: "URL vers laquelle rediriger le navigateur après déconnexion (par exemple : http://unsite.com/deconnexion)"
+    logout_redirect: "URL vers laquelle rediriger le navigateur après déconnexion (par exemple : http://example.com/deconnexion)"
     allow_uploaded_avatars: "Autoriser les utilisateurs à télécharger une photo de profil personnalisé."
     allow_animated_avatars: "Autoriser les utilisateurs à télécharger une photo de profil de type gif animé. ATTENTION: lancer la commande rake avatars:refresh après avoir modifié ceci."
     allow_animated_thumbnails: "Créer des aperçus animés pour les gifs animés."
@@ -1548,18 +1559,18 @@ fr:
     not_seen_in_a_month: "Heureux de vous revoir parmi nous ! Nous ne vous avons pas vu depuis un moment. Voici les sujets les plus populaires depuis votre absence."
   merge_posts:
     edit_reason:
-      one: Un message a été fusionné par %{username}
-      other: '%{count} messages ont été fusionnés par %{username}'
+      one: "Un message a été fusionné par %{username}"
+      other: "%{count} messages ont été fusionnés par %{username}"
     errors:
       different_topics: "Des messages appartenant à différents sujets ne peuvent pas être fusionnés."
       different_users: "Des messages appartenant à différents utilisateurs ne peuvent pas être fusionnés."
   move_posts:
     new_topic_moderator_post:
-      one: 'Un message a été déplacé vers un nouveau sujet : %{topic_link}'
-      other: '%{count} messages ont été déplacés vers un nouveau sujet : %{topic_link}'
+      one: "Un message a été déplacé vers un nouveau sujet : %{topic_link}"
+      other: "%{count} messages ont été déplacés vers un nouveau sujet : %{topic_link}"
     existing_topic_moderator_post:
-      one: 'Un message a été intégré dans un sujet existant : %{topic_link}'
-      other: '%{count} messages ont été intégrés dans un sujet existant : %{topic_link}'
+      one: "Un message a été intégré dans un sujet existant : %{topic_link}"
+      other: "%{count} messages ont été intégrés dans un sujet existant : %{topic_link}"
   change_owner:
     post_revision_text: "Auteur du message changé de %{old_user} vers %{new_user}"
     deleted_user: "un utilisateur supprimé"
@@ -1569,47 +1580,47 @@ fr:
     closed_enabled: "Ce sujet est maintenant fermé. Les nouvelles réponses ne sont plus autorisées."
     closed_disabled: "Ce sujet est maintenant ouvert. Les nouvelles réponses sont autorisées."
     autoclosed_message_max_posts:
-      one: Ce message a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse.
-      other: Ce message a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses.
+      one: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse."
+      other: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses."
     autoclosed_topic_max_posts:
-      one: Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse.
-      other: Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses.
+      one: "Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse."
+      other: "Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses."
     autoclosed_enabled_days:
-      one: Cette discussion a été automatiquement fermée après un jour. Aucune réponse n'est permise dorénavant.
-      other: Ce sujet a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant.
+      one: "Cette discussion a été automatiquement fermée après un jour. Aucune réponse n'est permise dorénavant."
+      other: "Ce sujet a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant."
     autoclosed_enabled_hours:
-      one: Cette discussion a été automatiquement fermée après une heure. Aucune réponse n'est permise dorénavant.
-      other: Ce sujet a été automatiquement fermé après %{count} heures. Aucune réponse n'est permise dorénavant.
+      one: "Cette discussion a été automatiquement fermée après une heure. Aucune réponse n'est permise dorénavant."
+      other: "Ce sujet a été automatiquement fermé après %{count} heures. Aucune réponse n'est permise dorénavant."
     autoclosed_enabled_minutes:
-      one: Cette discussion a été automatiquement fermée après une minute. Aucune réponse n'est permise dorénavant.
-      other: Ce sujet a été automatiquement fermé après %{count} minutes. Aucune réponse n'est permise dorénavant.
+      one: "Cette discussion a été automatiquement fermée après une minute. Aucune réponse n'est permise dorénavant."
+      other: "Ce sujet a été automatiquement fermé après %{count} minutes. Aucune réponse n'est permise dorénavant."
     autoclosed_enabled_lastpost_days:
-      one: Cette discussion a été automatiquement fermée après un jour. Aucune réponse n'est permise dorénavant.
-      other: Ce sujet a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant.
+      one: "Cette discussion a été automatiquement fermée après un jour. Aucune réponse n'est permise dorénavant."
+      other: "Ce sujet a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant."
     autoclosed_enabled_lastpost_hours:
-      one: Cette discussion a été automatiquement fermée après 1 heure suivant le dernier commentaire. Aucune réponse n'est permise dorénavant.
-      other: Ce sujet a été automatiquement fermé après %{count} heures suivant le dernier commentaire. Aucune réponse n'est permise dorénavant.
+      one: "Cette discussion a été automatiquement fermée après 1 heure suivant le dernier commentaire. Aucune réponse n'est permise dorénavant."
+      other: "Ce sujet a été automatiquement fermé après %{count} heures suivant le dernier commentaire. Aucune réponse n'est permise dorénavant."
     autoclosed_enabled_lastpost_minutes:
-      one: Cette discussion a été automatiquement fermée une minute après le dernier message. Aucune réponse n'est permise dorénavant.
-      other: Ce sujet a été automatiquement fermé %{count} minutes après le dernier message. Aucune réponse n'est permise dorénavant.
+      one: "Cette discussion a été automatiquement fermée une minute après le dernier message. Aucune réponse n'est permise dorénavant."
+      other: "Ce sujet a été automatiquement fermé %{count} minutes après le dernier message. Aucune réponse n'est permise dorénavant."
     autoclosed_disabled_days:
-      one: Ce sujet a été automatiquement ouvert après 1 jour.
-      other: Ce sujet a été automatiquement ouvert après %{count} jours.
+      one: "Ce sujet a été automatiquement ouvert après 1 jour."
+      other: "Ce sujet a été automatiquement ouvert après %{count} jours."
     autoclosed_disabled_hours:
-      one: Ce sujet a été automatiquement ouvert après 1 heure.
-      other: Ce sujet a été automatiquement ouvert après %{count} heures.
+      one: "Ce sujet a été automatiquement ouvert après 1 heure."
+      other: "Ce sujet a été automatiquement ouvert après %{count} heures."
     autoclosed_disabled_minutes:
-      one: Ce sujet a été automatiquement ouvert après 1 minute.
-      other: Ce sujet a été automatiquement ouvert après %{count} minutes.
+      one: "Ce sujet a été automatiquement ouvert après 1 minute."
+      other: "Ce sujet a été automatiquement ouvert après %{count} minutes."
     autoclosed_disabled_lastpost_days:
-      one: Ce sujet a été automatiquement ouvert 1 jour après la dernière réponse.
-      other: Ce sujet a été automatiquement ouvert %{count} jours après la dernière réponse.
+      one: "Ce sujet a été automatiquement ouvert 1 jour après la dernière réponse."
+      other: "Ce sujet a été automatiquement ouvert %{count} jours après la dernière réponse."
     autoclosed_disabled_lastpost_hours:
-      one: Ce sujet a été automatiquement ouvert 1 heure après la dernière réponse.
-      other: Ce sujet a été automatiquement ouvert %{count} heures après la dernière réponse.
+      one: "Ce sujet a été automatiquement ouvert 1 heure après la dernière réponse."
+      other: "Ce sujet a été automatiquement ouvert %{count} heures après la dernière réponse."
     autoclosed_disabled_lastpost_minutes:
-      one: Ce sujet a été automatiquement ouvert 1 minute après la dernière réponse.
-      other: Ce sujet a été automatiquement ouvert %{count} minutes après la dernière réponse.
+      one: "Ce sujet a été automatiquement ouvert 1 minute après la dernière réponse."
+      other: "Ce sujet a été automatiquement ouvert %{count} minutes après la dernière réponse."
     autoclosed_disabled: "Ce sujet est maintenant ouvert. Les nouvelles réponses sont autorisées."
     autoclosed_disabled_lastpost: "Ce sujet est maintenant ouvert. Vous pouvez y participer."
     pinned_enabled: "Ce sujet est maintenant épinglé. Il apparaîtra en haut de sa catégorie jusqu'à ce qu'il soit désépinglé par un modérateur, ou individuellement par les utilisateurs eux-mêmes."
@@ -1681,11 +1692,11 @@ fr:
       same_ip_address: "Même adresse IP (%{ip_address}) que d'autres utilisateurs"
   flags_reminder:
     flags_were_submitted:
-      one: Des signalements ont été soumis il y a plus de 1 heure. [Veuillez les passer en revue](/admin/flags).
-      other: Des signalements ont été soumis il y a plus de %{count} heures. [Veuillez les passer en revue](/admin/flags).
+      one: "Des signalements ont été soumis il y a plus de 1 heure. [Veuillez les passer en revue](/admin/flags)."
+      other: "Des signalements ont été soumis il y a plus de %{count} heures. [Veuillez les passer en revue](/admin/flags)."
     subject_template:
-      one: un signalement en attente de traitement
-      other: '%{count} signalements en attente de traitement.'
+      one: "un signalement en attente de traitement"
+      other: "%{count} signalements en attente de traitement."
   unsubscribe_mailer:
     title: "Désinscription"
     subject_template: "Confirmez que vous ne souhaitez plus recevoir de courriels de mises à jour de %{site_title}"
@@ -1883,8 +1894,8 @@ fr:
     deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   temporarily_closed_due_to_flags:
-    one: Ce sujet est fermé 1 heure suite à plusieurs signalements de la communauté.
-    other: Ce sujet est fermé %{count} heures suite à plusieurs signalements de la communauté.
+    one: "Ce sujet est fermé 1 heure suite à plusieurs signalements de la communauté."
+    other: "Ce sujet est fermé %{count} heures suite à plusieurs signalements de la communauté."
   system_messages:
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Veuillez visiter le message pour voir son contenu."
@@ -2267,8 +2278,8 @@ fr:
     pending_users_reminder:
       title: "Rappel d'utilisateurs en attente"
       subject_template:
-        one: 1 utilisateur en attente d'approbation
-        other: '%{count} utilisateurs en attente d''approbation'
+        one: "1 utilisateur en attente d'approbation"
+        other: "%{count} utilisateurs en attente d'approbation"
       text_body_template: |
         Il y a de nouvelles inscriptions utilisateurs en attente d'approbation (ou rejet).
 
@@ -2296,8 +2307,8 @@ fr:
     queued_posts_reminder:
       title: "Messages dans la file d'attente"
       subject_template:
-        one: 1 message en attente de modération
-        other: '%{count} messages en attention de modération'
+        one: "1 message en attente de modération"
+        other: "%{count} messages en attention de modération"
       text_body_template: |
         Bonjour,
 
@@ -2315,19 +2326,20 @@ fr:
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
-      one: 'Rappel : nous envoyons un maximum de 1 courriel quotidien. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d''être populaire !'
-      other: 'Rappel : nous envoyons un maximum de %{count} courriels quotidiens. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d''être populaire !'
+      one: "Rappel : nous envoyons un maximum de 1 courriel quotidien. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
+      other: "Rappel : nous envoyons un maximum de %{count} courriels quotidiens. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
     in_reply_to: "En réponse à"
     unsubscribe:
       title: "Se désabonner"
       description: "Ces courriels ne vous intéressent pas ? Aucun problème ! Cliquez ci-dessous pour vous désabonner immédiatement :"
     reply_by_email: "[Voir le sujet](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
-    reply_by_email_pm: "[Voir le message](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
+    reply_by_email_pm: "[Voir le message](%{base_url}%{url}) ou répondre à ce courriel pour répondre à %{participants}."
     only_reply_by_email: "Répondre à ce courriel pour répondre."
+    only_reply_by_email_pm: "Répondre à ce courriel pour répondre à %{participants}."
     visit_link_to_respond: "[Voir le sujet](%{base_url}%{url}) pour répondre."
-    visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre."
+    visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre à %{participants}."
     posted_by: "Redigé par %{username} le %{post_date}"
-    pm_participants: "Participants :"
+    pm_participants: "Participants : %{participants}"
     invited_group_to_private_message_body: |
       %{username} a invité @%{group_name} à un message
 
@@ -2848,6 +2860,144 @@ fr:
       Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
+    body: |
+      (Désolé, il n'existe pas encore de traduction de ce texte)
+      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
+
+      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
+
+      <a name="1"></a>
+
+      ## [1. Your %{company_domain} Account](#1)
+
+      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
+
+      <a name="2"></a>
+
+      ## [2. Responsibility of Contributors](#2)
+
+      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
+
+      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
+      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
+      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
+      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
+      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
+      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
+      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
+      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
+      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
+
+      <a name="3"></a>
+
+      ## [3. User Content License](#3)
+
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
+
+
+      <a name="4"></a>
+
+      ## [4. Payment and Renewal](#4)
+
+      ### General Terms
+
+      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
+
+      ### Automatic Renewal
+
+      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
+
+      <a name="5"></a>
+
+      ## [5. Services](#5)
+
+      ### Hosting, Support Services
+
+      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
+
+      ### HTTPS
+
+      We offer HTTPS as a paid add-on. By signing up and using a custom domain on %{company_domain}, you authorize us to act on the domain name registrant’s behalf (by requesting the necessary certificates, for example) for the sole purpose of providing HTTPS on your site.
+
+      ### Enterprise
+
+      Enterprise Hosting services are provided by %{company_name} under the terms and conditions for each such service, which are determined by a customer-specific contract. By signing up for an Enterprise Hosting account you agree to abide by such terms and conditions.
+
+      <a name="6"></a>
+
+      ## [6. Responsibility of Website Visitors](#6)
+
+      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
+
+      <a name="7"></a>
+
+      ## [7. Content Posted on Other Websites](#7)
+
+      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
+
+      <a name="8"></a>
+
+      ## [8. Copyright Infringement and DMCA Policy](#8)
+
+      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
+
+      <a name="9"></a>
+
+      ## [9. Intellectual Property](#9)
+
+      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
+
+      <a name="10"></a>
+
+      ## [10. Attribution](#10)
+
+      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer.
+
+      <a name="11"></a>
+
+      ## [11. Changes](#11)
+
+      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
+
+      <a name="12"></a>
+
+      ## [12. Termination](#12)
+
+      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
+
+      <a name="13"></a>
+
+      ## [13. Disclaimer of Warranties](#13)
+
+      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that access thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
+
+      <a name="14"></a>
+
+      ## [14. Limitation of Liability](#14)
+
+      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
+
+      <a name="15"></a>
+
+      ## [15. General Representation and Warranty](#15)
+
+      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
+
+      <a name="16"></a>
+
+      ## [16. Indemnification](#16)
+
+      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
+
+      <a name="17"></a>
+
+      ## [17. Miscellaneous](#17)
+
+      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
+
+      This document is CC-BY-SA. It was last updated January 1, 2018.
+
+      Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Politique de confidentialité"
     body: |
@@ -3289,7 +3439,7 @@ fr:
             description: "Icône utilisée pour représenter le site dans les navigateurs Web et qui rend bien à de petites tailles comme 32px par 32px. "
           apple_touch_icon_url:
             label: "Grande icône"
-            description: "Icône utilisée pour représenter le site sur les appareils modernes et que rend bien à des tailles plus grandes. La taille minimale conseillée est de 144px par 144px."
+            description: "Icône utilisée pour représenter le site sur les appareils modernes et que rend bien à des tailles plus grandes. La taille minimale conseillée est de 512px par 512px."
       homepage:
         description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
         title: "Page d'accueil"
@@ -3298,8 +3448,14 @@ fr:
             choices:
               latest:
                 label: "Sujets récents"
-              categories:
-                label: "Catégories"
+              categories_only:
+                label: "Catégories seules"
+              categories_with_featured_topics:
+                label: "Catégories avec sujets à la une"
+              categories_and_latest_topics:
+                label: "Catégories et sujets récents"
+              categories_and_top_topics:
+                label: "Catégories et meilleurs sujets"
       emoji:
         title: "Emoji"
         description: "Quel style d'Emoji préférez-vous pour votre communauté ? Vous pouvez ajouter des Emoji supplémentaires dans Administration, Personnaliser, Emoji."
@@ -3325,3 +3481,8 @@ fr:
       linked: '%{username} a créé un lien vers votre message posté dans « %{topic} » - %{site_title}'
       confirm_title: 'Notifications activées - %{site_title}'
       confirm_body: 'Les notifications ont été activées.'
+  staff_action_logs:
+    not_found: "non trouvé"
+    unknown: "inconnu"
+    user_merged: "%{username} a être fusionné avec ce compte"
+    user_delete_self: "Supprimer par l'utilisateur depuis %{url}"
