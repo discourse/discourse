@@ -278,21 +278,25 @@ class TopicView
 
   def post_counts_by_user
     @post_counts_by_user ||= begin
-      post_ids = unfiltered_post_ids
+      if is_mega_topic?
+        {}
+      else
+        post_ids = unfiltered_post_ids
 
-      return {} if post_ids.blank?
+        return {} if post_ids.blank?
 
-      sql = <<~SQL
-        SELECT user_id, count(*) AS count_all
-          FROM posts
-         WHERE id in (:post_ids)
-           AND user_id IS NOT NULL
-      GROUP BY user_id
-      ORDER BY count_all DESC
-         LIMIT #{MAX_PARTICIPANTS}
-      SQL
+        sql = <<~SQL
+          SELECT user_id, count(*) AS count_all
+            FROM posts
+           WHERE id in (:post_ids)
+             AND user_id IS NOT NULL
+        GROUP BY user_id
+        ORDER BY count_all DESC
+           LIMIT #{MAX_PARTICIPANTS}
+        SQL
 
-      Hash[*DB.query_single(sql, post_ids: post_ids)]
+        Hash[*DB.query_single(sql, post_ids: post_ids)]
+      end
     end
   end
 
