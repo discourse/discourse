@@ -125,12 +125,15 @@ createWidget("topic-map-summary", {
         h("h4", I18n.t("views_lowercase", { count: attrs.topicViews }))
       ])
     );
-    contents.push(
-      h("li.secondary", [
-        numberNode(attrs.participantCount),
-        h("h4", I18n.t("users_lowercase", { count: attrs.participantCount }))
-      ])
-    );
+
+    if (attrs.participantCount > 0) {
+      contents.push(
+        h("li.secondary", [
+          numberNode(attrs.participantCount),
+          h("h4", I18n.t("users_lowercase", { count: attrs.participantCount }))
+        ])
+      );
+    }
 
     if (attrs.topicLikeCount) {
       contents.push(
