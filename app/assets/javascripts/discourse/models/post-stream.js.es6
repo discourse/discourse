@@ -854,12 +854,13 @@ export default RestModel.extend({
     const url = "/t/" + this.get("topic.id") + "/posts.json";
     const data = { post_ids: postIds };
     const store = this.store;
-    return ajax(url, { data }).then(result => {
-      const posts = Ember.get(result, "post_stream.posts");
 
+    return ajax(url, { data }).then(result => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }
+
+      const posts = Ember.get(result, "post_stream.posts");
 
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord("post", p)));

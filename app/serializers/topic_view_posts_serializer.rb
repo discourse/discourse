@@ -8,4 +8,12 @@ class TopicViewPostsSerializer < ApplicationSerializer
     object.topic.id
   end
 
+  def include_stream?
+    false
+  end
+
+  def include_timeline_lookup?
+    false
+  end
+
 end

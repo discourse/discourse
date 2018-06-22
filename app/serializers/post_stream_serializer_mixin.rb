@@ -3,14 +3,18 @@ require_dependency 'post_serializer'
 require_dependency 'timeline_lookup'
 
 module PostStreamSerializerMixin
-
   def self.included(klass)
     klass.attributes :post_stream
     klass.attributes :timeline_lookup
   end
 
+  def include_stream?
+    true
+  end
+
   def post_stream
-    result = { posts: posts, stream: object.filtered_post_ids }
+    result = { posts: posts }
+    result[:stream] = object.filtered_post_ids if include_stream?
     result[:gaps] = GapSerializer.new(object.gaps, root: false) if object.gaps.present?
     result
   end
