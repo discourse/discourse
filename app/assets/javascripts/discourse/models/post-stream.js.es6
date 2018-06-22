@@ -108,6 +108,8 @@ export default RestModel.extend({
     const result = {};
     if (summary) {
       result.filter = "summary";
+    } else {
+      result.filter = "none";
     }
 
     const userFilters = this.get("userFilters");

@@ -391,6 +391,13 @@ describe TopicView do
         expect(topic_view.contains_gaps?).to eq(false)
         expect(topic_view.posts).to eq([p1, p2, p3])
       end
+
+      it 'should not be forced into summary mode if filter is none' do
+        topic_view = TopicView.new(topic.id, evil_trout, filter: 'none')
+
+        expect(topic_view.contains_gaps?).to eq(false)
+        expect(topic_view.posts).to eq([p1, p2, p3])
+      end
     end
 
     it "#restricts to correct topic" do

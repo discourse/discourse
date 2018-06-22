@@ -178,9 +178,11 @@ export default function transformPost(
     const postStream = topic.get("postStream");
     postAtts.userFilters = postStream.userFilters;
 
-    postAtts.topicSummaryEnabled =
-      postStream.summary || topic.force_summary_mode;
+    if (topic.force_summary_mode) {
+      postStream.set('summary', topic.force_summary_mode);
+    }
 
+    postAtts.topicSummaryEnabled = postStream.summary;
     postAtts.topicWordCount = topic.word_count;
     postAtts.hasTopicSummary = topic.has_summary || topic.force_summary_mode;
   }

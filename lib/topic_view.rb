@@ -407,7 +407,9 @@ class TopicView
 
   def force_summary_mode?
     @force_summary_mode ||=
-      (@topic.closed? && @topic.posts_count >= (MEGA_TOPIC_POSTS_COUNT * 2))
+      @filter != 'none' &&
+      @topic.closed? &&
+      @topic.posts_count >= (MEGA_TOPIC_POSTS_COUNT * 2)
   end
 
   protected
@@ -487,7 +489,9 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     # Filters
-    if @filter == 'summary' || ((@post_number.blank? || @post_number.to_i == 1) && force_summary_mode?)
+    if @filter == 'summary' ||
+       ((@post_number.blank? || @post_number.to_i == 1) && force_summary_mode?)
+
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true unless force_summary_mode?
     end
