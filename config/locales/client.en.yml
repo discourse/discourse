@@ -3989,3 +3989,8 @@ en:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regular User"
+      
+      previews:
+        topic_title: "Discussion topic"
+        share_button: "Share"
+        reply_button: "Reply"
