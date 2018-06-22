@@ -179,7 +179,7 @@ export default function transformPost(
     postAtts.userFilters = postStream.userFilters;
 
     if (topic.force_summary_mode) {
-      postStream.set('summary', topic.force_summary_mode);
+      postStream.set("summary", topic.force_summary_mode);
     }
 
     postAtts.topicSummaryEnabled = postStream.summary;
