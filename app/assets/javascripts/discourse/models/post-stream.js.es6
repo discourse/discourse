@@ -108,8 +108,6 @@ export default RestModel.extend({
     const result = {};
     if (summary) {
       result.filter = "summary";
-    } else {
-      result.filter = "none";
     }
 
     const userFilters = this.get("userFilters");
@@ -191,8 +189,13 @@ export default RestModel.extend({
   toggleSummary() {
     this.get("userFilters").clear();
     this.toggleProperty("summary");
+    const opts = {};
 
-    return this.refresh().then(() => {
+    if (!this.get("summary")) {
+      opts.filter = "none";
+    }
+
+    return this.refresh(opts).then(() => {
       if (this.get("summary")) {
         this.jumpToSecondVisible();
       }
