@@ -1183,6 +1183,7 @@ en:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
+    send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
@@ -2195,6 +2196,14 @@ en:
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
+
+    welcome_tl1_user:
+      title: "Welcome TL1 User"
+      subject_template: "Introduce Yourself"
+      text_body_template: |
+        Hey there. We see you’ve been busy reading, which is fantastic, so we’ve promoted you up a [trust level!]
+        
+        We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile], or feel free to [start a new topic].
 
     welcome_invite:
       title: "Welcome Invite"

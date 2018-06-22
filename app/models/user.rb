@@ -313,6 +313,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
   end
 
+  def enqueue_member_welcome_message
+    return unless SiteSetting.send_tl1_welcome_message?
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
+  end
+
   def change_username(new_username, actor = nil)
     UsernameChanger.change(self, new_username, actor)
   end
