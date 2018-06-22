@@ -1,0 +1,11 @@
+<ul class="grid">
+  {{#each field.choices as |choice|}}
+    <li>
+      {{theme-preview colors_id=choice.id wizard=wizard}}
+      {{radio-button radioValue=choice.id
+                     label=choice.id
+                     value=field.value
+                     onChange="changed"}}
+    </li>
+  {{/each}}
+</ul>
