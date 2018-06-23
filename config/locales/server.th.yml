@@ -61,7 +61,7 @@ th:
       staff: "ทีมงาน"
   education:
     until_posts:
-      other: '%{count} โพส'
+      other: "%{count} โพส"
   activerecord:
     errors:
       <<: *errors

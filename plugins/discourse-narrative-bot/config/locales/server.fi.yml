@@ -385,6 +385,20 @@ fi:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Joskus voit haluta **piilottaa yksityiskohtia** vastauksessasi:
+
+          - Kirjoitat elokuvasta tai TV-ohjelmasta jotakin, minkä voi kokea juonipaljastukseksi.
+
+          - Joudut sisällyttämään viestiisi suuria määriä yksityiskohtaista tietoa, joka voisi uuvuttaa lukijaa.
+
+          [details=Napauta niin näet kuinka se toimii!]
+          1. Valitse editorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvake.
+          2. Valitse "Piilota yksityiskohdat".
+          3. Muokkaa yhteenvetotekstiä ja lisää sisältö.
+          [/details]
+
+          Piilottaisitko yksityiskohtia editorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvakkeen avulla seuraavasta vastauksestasi?
         not_found: |-
           Onko ongelmia yksityiskohtatoiminnon kanssa? Kokeilepa laittaa tämä seuraavaan vastaukseesi:
 

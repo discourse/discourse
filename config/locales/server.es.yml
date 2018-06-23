@@ -134,8 +134,8 @@ es:
       load_from_remote: "Hubo un error al cargar ese post."
     site_settings:
       invalid_choice:
-        one: Has especificado la opción inválida %{name}
-        other: Has especificado las opciones inválidas %{name}
+        one: 'Has especificado la opción inválida %{name}'
+        other: 'Has especificado las opciones inválidas %{name}'
       min_username_length_exists: "No se puede establecer una longitud mínima para nombre de usuario mayor que el nombre de usuario más corto ya existente."
       min_username_length_range: "No se puede establecer el mínimo por encima del máximo."
       max_username_length_exists: "No se puede establecer una longitud máxima de nombre de usuario menor que el nombre de usuario más largo ya existente."
@@ -174,8 +174,8 @@ es:
   reading_time: "Tiempo de lectura"
   likes: "Me gusta"
   too_many_replies:
-    one: Lo sentimos, pero los usuarios nuevos están limitados a 1 respuesta en el mismo tema.
-    other: Lo sentimos, pero los usuarios nuevos están limitados a %{count} respuestas en el mismo tema.
+    one: "Lo sentimos, pero los usuarios nuevos están limitados a 1 respuesta en el mismo tema."
+    other: "Lo sentimos, pero los usuarios nuevos están limitados a %{count} respuestas en el mismo tema."
   embed:
     start_discussion: "Empezar discusión"
     continue: "Continuar discusión"
@@ -185,37 +185,37 @@ es:
     no_hosts: "No se han definido hosts para el insertado"
     configure: "Configurar insertado"
     more_replies:
-      one: otra respuesta
-      other: otras %{count}  respuestas
+      one: "otra respuesta"
+      other: "otras %{count}  respuestas"
     loading: "Cargando discusión"
     permalink: "Enlace permanente"
     imported_from: "Este es un tema de discusión derivado de la entrada %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: 1 respuesta
-      other: '%{count} respuestas'
+      one: "1 respuesta"
+      other: "%{count} respuestas"
   no_mentions_allowed: "Lo sentimos, pero no puedes mencionar a otros usuarios."
   too_many_mentions:
-    one: Lo sentimos, solo puedes mencionar a un usuario en un post.
-    other: Lo sentimos, pero solo puedes mencionar a %{count} usuarios en un post.
+    one: "Lo sentimos, solo puedes mencionar a un usuario en un post."
+    other: "Lo sentimos, pero solo puedes mencionar a %{count} usuarios en un post."
   no_mentions_allowed_newuser: "Lo sentimos, pero los usuarios nuevos no pueden mencionar a otros usuarios."
   too_many_mentions_newuser:
-    one: Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post.
-    other: Lo sentimos, pero los usuarios nuevos solo pueden mencionar a %{count} usuarios en un post.
+    one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post."
+    other: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a %{count} usuarios en un post."
   no_images_allowed_trust: "Lo sentimos, no puedes poner imágenes en una publicación"
   no_images_allowed: "Lo sentimos, pero los usuarios nuevos no pueden poner imágenes en los mensajes."
   too_many_images:
-    one: Lo sentimos, pero los usuarios nuevos solo pueden poner una imagen por post.
-    other: Lo sentimos, los nuevos usuarios solo pueden poner %{count} imágenes en un post.
+    one: "Lo sentimos, pero los usuarios nuevos solo pueden poner una imagen por post."
+    other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} imágenes en un post."
   no_attachments_allowed: "Lo sentimos, los usuarios nuevos no pueden adjuntar archivos en posts."
   too_many_attachments:
-    one: Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por post
-    other: Lo sentimos, los usuarios nuevos solo pueden adjuntar %{count} archivos por post.
+    one: "Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por post"
+    other: "Lo sentimos, los usuarios nuevos solo pueden adjuntar %{count} archivos por post."
   no_links_allowed: "Lo sentimos, los nuevos usuarios no pueden poner enlaces en los posts."
   links_require_trust: "Lo sentimos, no puedes incluir enlaces en tus posts."
   too_many_links:
-    one: Lo sentimos, los nuevos usuarios solo pueden poner un link en un post.
-    other: Lo sentimos, los nuevos usuarios solo pueden poner %{count} enlaces en un post.
+    one: "Lo sentimos, los nuevos usuarios solo pueden poner un link en un post."
+    other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} enlaces en un post."
   contains_blocked_words: "Tu post contiene una palabra que no está permitida: %{word}"
   spamming_host: "Lo sentimos, no puedes publicar un enlace a esa web."
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
@@ -264,14 +264,14 @@ es:
   groups:
     success:
       bulk_add:
-        one: '%{count} usuario ha sido agregado al grupo.'
-        other: '%{count} usuarios han sido agregados al grupo.'
+        one: "%{count} usuario ha sido agregado al grupo."
+        other: "%{count} usuarios han sido agregados al grupo."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' no es un nivel de confianza válido."
       can_not_modify_automatic: "No se puede modificar un grupo automático"
       member_already_exist:
-        one: '''%{username}'' ya es miembro de este grupo.'
-        other: 'Los siguientes usuarios ya son miembros de éste grupo: %{username}'
+        one: "'%{username}' ya es miembro de este grupo."
+        other: "Los siguientes usuarios ya son miembros de éste grupo: %{username}"
       invalid_domain: "'%{domain}' no es un dominio válido."
       invalid_incoming_email: "'%{email}' no es una dirección de email válida."
       email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
@@ -291,8 +291,8 @@ es:
       title: "Solicitud de membresía para @%{group_name}"
   education:
     until_posts:
-      one: 1 post
-      other: '%{count} posts'
+      one: "1 post"
+      other: "%{count} posts"
     'new-topic': |
       Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
 
@@ -489,8 +489,8 @@ es:
       uncategorized: "Sin categoría no se puede eliminar"
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."
       topic_exists:
-        one: No se puede eliminar esta categoría porque tiene 1 tema. El más antiguo es %{topic_link}.
-        other: No se puede eliminar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}.
+        one: "No se puede eliminar esta categoría porque tiene 1 tema. El más antiguo es %{topic_link}."
+        other: "No se puede eliminar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}."
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el contador de temas está en %{count}."
     uncategorized_description: "Debates que no necesitan una categoría, o bien no encajan en alguna de las categorías existentes."
   trust_levels:
@@ -527,85 +527,86 @@ es:
       unsubscribe_via_email: "Has alcanzado el número máximo de desuscripciones por email. Por favor espera %{time_left} antes de intentar de nuevo."
       topic_invitations_per_day: "Has alcanzado el número máximo de invitaciones al tema. Por favor espera %{time_left} antes de intentar de nuevo."
     hours:
-      one: 1 hora
-      other: '%{count} horas'
+      one: "1 hora"
+      other: "%{count} horas"
     minutes:
-      one: 1 minuto
-      other: '%{count} minutos'
+      one: "1 minuto"
+      other: "%{count} minutos"
     seconds:
-      one: 1 segundo
-      other: '%{count} segundos'
+      one: "1 segundo"
+      other: "%{count} segundos"
+    short_time: "unos pocos segundos"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: < 1s
-        other: < %{count}s
+        one: "< 1s"
+        other: "< %{count}s"
       x_seconds:
-        one: 1s
-        other: '%{count}s'
+        one: "1s"
+        other: "%{count}s"
       less_than_x_minutes:
-        one: < 1m
-        other: < %{count}m
+        one: "< 1m"
+        other: "< %{count}m"
       x_minutes:
-        one: 1m
-        other: '%{count}m'
+        one: "1m"
+        other: "%{count}m"
       about_x_hours:
-        one: 1h
-        other: '%{count}h'
+        one: "1h"
+        other: "%{count}h"
       x_days:
-        one: 1d
-        other: '%{count}d'
+        one: "1d"
+        other: "%{count}d"
       about_x_months:
-        one: 1mon
-        other: '%{count}mon'
+        one: "1mon"
+        other: "%{count}mon"
       x_months:
-        one: 1mon
-        other: '%{count}mon'
+        one: "1mon"
+        other: "%{count}mon"
       about_x_years:
-        one: 1y
-        other: '%{count}y'
+        one: "1y"
+        other: "%{count}y"
       over_x_years:
-        one: '> 1y'
-        other: '> %{count}y'
+        one: "> 1y"
+        other: "> %{count}y"
       almost_x_years:
-        one: 1y
-        other: '%{count}y'
+        one: "1y"
+        other: "%{count}y"
     distance_in_words_verbose:
       half_a_minute: "ahora mismo"
       less_than_x_seconds:
-        one: ahora mismo
-        other: ahora mismo
+        one: "ahora mismo"
+        other: "ahora mismo"
       x_seconds:
-        one: hace 1 segundo
-        other: hace %{count} segundos
+        one: "hace 1 segundo"
+        other: "hace %{count} segundos"
       less_than_x_minutes:
-        one: hace menos de 1 minuto
-        other: hace menos de %{count} minutos
+        one: "hace menos de 1 minuto"
+        other: "hace menos de %{count} minutos"
       x_minutes:
-        one: hace 1 minuto
-        other: hace %{count} minutos
+        one: "hace 1 minuto"
+        other: "hace %{count} minutos"
       about_x_hours:
-        one: hace 1 hora
-        other: hace %{count} horas
+        one: "hace 1 hora"
+        other: "hace %{count} horas"
       x_days:
-        one: hace 1 día
-        other: hace %{count} días
+        one: "hace 1 día"
+        other: "hace %{count} días"
       about_x_months:
-        one: hace como 1 mes
-        other: hace como %{count} meses
+        one: "hace como 1 mes"
+        other: "hace como %{count} meses"
       x_months:
-        one: hace 1 mes
-        other: hace %{count} meses
+        one: "hace 1 mes"
+        other: "hace %{count} meses"
       about_x_years:
-        one: hace sobre 1 año
-        other: hace sobre %{count} años
+        one: "hace sobre 1 año"
+        other: "hace sobre %{count} años"
       over_x_years:
-        one: hace más de 1 año
-        other: hace más de %{count} años
+        one: "hace más de 1 año"
+        other: "hace más de %{count} años"
       almost_x_years:
-        one: hace casi 1 año
-        other: hace casi %{count} años
+        one: "hace casi 1 año"
+        other: "hace casi %{count} años"
   password_reset:
     no_token: "Lo sentimos, ese enlace para cambiar la contraseña es demasiado antiguo. Haz clic en el botón Iniciar sesión y utiliza el 'olvidé mi contraseña' para obtener un nuevo enlace. "
     choose_new: "Escoge una nueva contraseña"
@@ -933,7 +934,7 @@ es:
       xaxis: "Día"
       yaxis: "Total"
     mobile_visits:
-      title: "Visitas de Usuarios"
+      title: "Visitas de usuarios (móvil)"
       xaxis: "Día"
       yaxis: "Número de visita"
     web_crawlers:
@@ -957,8 +958,8 @@ es:
     failing_emails_warning: 'Hay %{num_failed_jobs} jobs de email que fallaron. Revisa tu app.yml y asegúrate que la configuración del servidor de mail es correcta. <a href="/sidekiq/retries" target="_blank">Mira los jobs fallados en Sidekiq</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
-      one: El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles.
-      other: El email polling ha generado %{count} errores en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles.
+      one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
+      other: "El email polling ha generado %{count} errores en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
     missing_mailgun_api_key: "El servidor está configurado para enviar correos electrónicos a través de Mailgun pero no ha proporcionado una clave API utilizada para verificar los mensajes de webhook."
     bad_favicon_url: "El favicon está dando fallos en su carga. Revisa la opción favicon_url en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     poll_pop3_timeout: "La conexión al servidor POP3 está rebasando el tiempo de espera. Los emails entrantes no han podido ser recogidos. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
@@ -987,6 +988,7 @@ es:
     search_recent_posts_size: "Cuántos posts recientes mantener en el índice"
     log_search_queries: "Log de búsquedas de los usuarios"
     search_query_log_max_size: "Cantidad máxima de consultas a conservar"
+    search_query_log_max_retention_days: "Cantidad máxima de tiempo para mantener consultas de búsqueda, en días."
     allow_uncategorized_topics: "Permitir la creación de temas sin categoría. AVISO: Si ya hay algún tema sin categoría, debes recategorizarlo antes de activar esta opción."
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
     unique_posts_mins: "¿Cuántos minutos deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo?"
@@ -1256,6 +1258,7 @@ es:
     min_trust_to_flag_posts: "El mínimo nivel de confianza requerido para reportar posts"
     min_trust_to_post_links: "El mínimo nivel de confianza requerido para incluir enlaces en posts"
     min_trust_to_post_images: "El nivel mínimo de confianza requerido para incluir imágenes en una publicación"
+    whitelisted_link_domains: "Dominios que los usuarios pueden vincular incluso si no tienen el nivel de confianza apropiado para publicar enlaces"
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
     newuser_max_images: "Cuántas imágenes puede un nuevo usuario añadir a un post."
     newuser_max_attachments: "Cuántos adjuntos puede un nuevo usuario añadir a un post."
@@ -1372,7 +1375,7 @@ es:
     delete_all_posts_max: "El máximo número de posts que pueden ser eliminados a la vez con el botón \"Eliminar todos los posts\". Si un usuario tiene un mayor número de posts que este valor, éstos no podrán ser eliminados de una vez y el usuario no podrá ser eliminado."
     username_change_period: "El número máximo de días después de registrarse entre los cuales una cuenta puede cambiar su nombre de usuario (0 para deshabilitar el cambio de nombre)"
     email_editable: "Permitir a los usuarios cambiar su dirección de email después de registrarse."
-    logout_redirect: "Destino hacia donde redirigir el navegador después de cerrar sesión (ej: http://sitio.com/salida)"
+    logout_redirect: "Ubicación para redirigir el navegador a después del cierre de sesión (por ejemplo: http://example.com/logout)"
     allow_uploaded_avatars: "Permitir a los usuarios subir imágenes de perfil personalizadas."
     allow_animated_avatars: "Permitir a los usuarios utilizar imágenes de perfil animadas en gif. AVISO: ejecuta la tarea rake avatars:refresh después de cambiar esta opción."
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
@@ -1557,18 +1560,18 @@ es:
     not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto en un tiempo. Estos son los temas mas populares desde que no has estado."
   merge_posts:
     edit_reason:
-      one: Un tema fue juntado por %{username}
-      other: '%{count}  mensaje fueron juntados por %{username}'
+      one: "Un tema fue juntado por %{username}"
+      other: "%{count}  mensaje fueron juntados por %{username}"
     errors:
       different_topics: "Mensajes que pertenecen a temas diferentes no pueden ser juntados."
       different_users: "Mensajes que pertenecen a diferentes usuarios no pueden ser juntados."
   move_posts:
     new_topic_moderator_post:
-      one: 'un post fue trasladado a un nuevo tema: %{topic_link}'
-      other: '%{count} posts fueron trasladados a un nuevo tema: %{topic_link}'
+      one: "un post fue trasladado a un nuevo tema: %{topic_link}"
+      other: "%{count} posts fueron trasladados a un nuevo tema: %{topic_link}"
     existing_topic_moderator_post:
-      one: 'Un post fue trasladado al siguiente tema: %{topic_link}'
-      other: '%{count} posts fueron trasladados al siguiente tema: %{topic_link}'
+      one: "Un post fue trasladado al siguiente tema: %{topic_link}"
+      other: "%{count} posts fueron trasladados al siguiente tema: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad de %{old_user} a %{new_user}"
     deleted_user: "un usuario eliminado"
@@ -1578,47 +1581,47 @@ es:
     closed_enabled: "Este tema está ahora cerrado. No se admiten nuevas respuestas."
     closed_disabled: "Este tema ahora está abierto. Se admiten nuevas respuestas."
     autoclosed_message_max_posts:
-      one: Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta.
-      other: Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas.
+      one: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta."
+      other: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas."
     autoclosed_topic_max_posts:
-      one: Este tema fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta.
-      other: Este tema fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas.
+      one: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta."
+      other: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas."
     autoclosed_enabled_days:
-      one: Este tema se cerró automáticamente después de 1 día. No se permiten nuevas respuestas.
-      other: Este tema se cerró automáticamente después de %{count} días. No se permiten nuevas respuestas.
+      one: "Este tema se cerró automáticamente después de 1 día. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente después de %{count} días. No se permiten nuevas respuestas."
     autoclosed_enabled_hours:
-      one: Este tema se cerró automáticamente después de 1 hora. No se permiten nuevas respuestas.
-      other: Este tema se cerró automáticamente después de %{count} horas. No se permiten nuevas respuestas.
+      one: "Este tema se cerró automáticamente después de 1 hora. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente después de %{count} horas. No se permiten nuevas respuestas."
     autoclosed_enabled_minutes:
-      one: Este tema se cerró automáticamente después de 1 minuto. No se permiten nuevas respuestas.
-      other: Este tema se cerró automáticamente después de %{count} minutos. No se permiten nuevas respuestas.
+      one: "Este tema se cerró automáticamente después de 1 minuto. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente después de %{count} minutos. No se permiten nuevas respuestas."
     autoclosed_enabled_lastpost_days:
-      one: Este tema se cerró automáticamente 1 día después del último post. No se permiten nuevas respuestas.
-      other: Este tema se cerró automáticamente %{count} días después del último post. No se permiten nuevas respuestas.
+      one: "Este tema se cerró automáticamente 1 día después del último post. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente %{count} días después del último post. No se permiten nuevas respuestas."
     autoclosed_enabled_lastpost_hours:
-      one: Este tema se cerró automáticamente 1 hora después del último post. No se permiten nuevas respuestas.
-      other: Este tema se cerró automáticamente %{count} horas después del último post. No se permiten nuevas respuestas.
+      one: "Este tema se cerró automáticamente 1 hora después del último post. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente %{count} horas después del último post. No se permiten nuevas respuestas."
     autoclosed_enabled_lastpost_minutes:
-      one: Este tema se cerró automáticamente 1 minuto después del último post. No se permiten nuevas respuestas.
-      other: Este tema se cerró automáticamente %{count} minutos después del último post. No se permiten nuevas respuestas.
+      one: "Este tema se cerró automáticamente 1 minuto después del último post. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente %{count} minutos después del último post. No se permiten nuevas respuestas."
     autoclosed_disabled_days:
-      one: Este tema se abrió automáticamente después de 1 día.
-      other: Este tema se abrió automáticamente después de %{count} días.
+      one: "Este tema se abrió automáticamente después de 1 día."
+      other: "Este tema se abrió automáticamente después de %{count} días."
     autoclosed_disabled_hours:
-      one: Este tema se abrió automáticamente después de 1 hora.
-      other: Este tema se abrió automáticamente después de %{count} horas.
+      one: "Este tema se abrió automáticamente después de 1 hora."
+      other: "Este tema se abrió automáticamente después de %{count} horas."
     autoclosed_disabled_minutes:
-      one: Este tema se abrió automáticamente después de 1 minuto.
-      other: Este tema se abrió automáticamente después de %{count} minutos.
+      one: "Este tema se abrió automáticamente después de 1 minuto."
+      other: "Este tema se abrió automáticamente después de %{count} minutos."
     autoclosed_disabled_lastpost_days:
-      one: Este tema se abrió automáticamente 1 día después de la última respuesta.
-      other: Este tema se abrió automáticamente %{count} días después de la última respuesta.
+      one: "Este tema se abrió automáticamente 1 día después de la última respuesta."
+      other: "Este tema se abrió automáticamente %{count} días después de la última respuesta."
     autoclosed_disabled_lastpost_hours:
-      one: Este tema se abrió automáticamente 1 hora después de la última respuesta.
-      other: Este tema se abrió automáticamente %{count} horas después de la última respuesta.
+      one: "Este tema se abrió automáticamente 1 hora después de la última respuesta."
+      other: "Este tema se abrió automáticamente %{count} horas después de la última respuesta."
     autoclosed_disabled_lastpost_minutes:
-      one: Este tema se abrió automáticamente 1 minuto después de la última respuesta.
-      other: Este tema se abrió automáticamente %{count} minutos después de la última respuesta.
+      one: "Este tema se abrió automáticamente 1 minuto después de la última respuesta."
+      other: "Este tema se abrió automáticamente %{count} minutos después de la última respuesta."
     autoclosed_disabled: "El tema ahora está en abierto, se permiten respuestas."
     autoclosed_disabled_lastpost: "Este tema está ahora abierto. Se permiten nuevas respuestas."
     pinned_enabled: "Este tema ahora está destacado. Aparecerá en primer lugar en la lista de su categoría hasta que se deshaga el destacado de forma general por los moderadores o de forma particular por cada usuario para sí."
@@ -1690,11 +1693,11 @@ es:
       same_ip_address: "Misma dirección de IP (%{ip_address}) como otros usuarios"
   flags_reminder:
     flags_were_submitted:
-      one: Hay un reporte enviados hace 1 hora. [Por favor, revísalo](/admin/flags).
-      other: Hay reportes enviados hace %{count} horas. [Por favor, revísalos](/admin/flags).
+      one: "Hay un reporte enviados hace 1 hora. [Por favor, revísalo](/admin/flags)."
+      other: "Hay reportes enviados hace %{count} horas. [Por favor, revísalos](/admin/flags)."
     subject_template:
-      one: 1 reporte esperando ser atendidos.
-      other: '%{count} reportes esperando ser atendidos.'
+      one: "1 reporte esperando ser atendidos."
+      other: "%{count} reportes esperando ser atendidos."
   unsubscribe_mailer:
     title: "Darse de baja"
     subject_template: "Confirma que no quieres recibir más emails de %{site_title}"
@@ -1891,8 +1894,8 @@ es:
     deferred: "Gracias por hacérnoslo saber. Estamos revisándolo."
     deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   temporarily_closed_due_to_flags:
-    one: Este tema está temporalmente cerrado por 1 hora debido a un gran número de reportes de la comunidad.
-    other: Este tema está temporalmente cerrado por %{count} horas debido a un gran número de reportes de la comunidad.
+    one: "Este tema está temporalmente cerrado por 1 hora debido a un gran número de reportes de la comunidad."
+    other: "Este tema está temporalmente cerrado por %{count} horas debido a un gran número de reportes de la comunidad."
   system_messages:
     private_topic_title: "Tema #%{id}"
     contents_hidden: "Por favor, visita el post para ver su contenido."
@@ -2277,8 +2280,8 @@ es:
     pending_users_reminder:
       title: "Recordatorio de usuarios pendientes de revisión"
       subject_template:
-        one: 1 usuario esperando aprobación
-        other: '%{count} usuarios esperando aprobación'
+        one: "1 usuario esperando aprobación"
+        other: "%{count} usuarios esperando aprobación"
       text_body_template: |
         Hay nuevos registros de usuario esperando ser aprobados (o no) antes de poder acceder al foro.
 
@@ -2306,8 +2309,8 @@ es:
     queued_posts_reminder:
       title: "Recordatorio de post en revisión"
       subject_template:
-        one: 1 post esperando a ser revisado
-        other: '%{count} posts esperando a ser revisados'
+        one: "1 post esperando a ser revisado"
+        other: "%{count} posts esperando a ser revisados"
       text_body_template: |
         Hola,
 
@@ -2325,19 +2328,20 @@ es:
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
-      one: 'ADVERTENCIA: has superado el límite de 1 email diario. Revisa el sitio para ver las otras notificaciones que no te han llegado.'
-      other: 'ADVERTENCIA: has superado el límite de %{count} emails diarios. Las próximas notificaciones de emails serán suprimidas. PD: gracias por ser tan popular!'
+      one: "ADVERTENCIA: has superado el límite de 1 email diario. Revisa el sitio para ver las otras notificaciones que no te han llegado."
+      other: "ADVERTENCIA: has superado el límite de %{count} emails diarios. Las próximas notificaciones de emails serán suprimidas. PD: gracias por ser tan popular!"
     in_reply_to: "En respuesta a"
     unsubscribe:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos emails? ¡No hay problema! Haz clic abajo para darte de baja de forma instantánea:"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este email para publicar."
-    reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este email para comentar."
+    reply_by_email_pm: "[Visitar Mensaje](%{base_url}%{url}) o responde a este email para contestar a %{participants}."
     only_reply_by_email: "Responde a este email para comentar."
+    only_reply_by_email_pm: "Responde a este email para contestar a %{participants}."
     visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
-    visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para responder."
+    visit_link_to_respond_pm: "[Visitar Mensaje](%{base_url}%{url}) para responder a %{participants}."
     posted_by: "Publicado por %{username} el %{post_date}"
-    pm_participants: "Participantes:"
+    pm_participants: "Participantes: %{participants}"
     invited_group_to_private_message_body: |
       %{username} te invitó en @%{group_name} al mensaje
 
@@ -3439,7 +3443,7 @@ es:
             description: "Imagen usada para representar tu página en los navegadores que se vea bien en tamaños pequelos como 32px por 32px."
           apple_touch_icon_url:
             label: "Icono grande"
-            description: "Icono usado para representar tu página en dispositivos modernos y que se ve bien para tamaños grandes. El tamaño recomendado es al menos de 144px por 144px."
+            description: "Imagen de icono utilizada para representar su sitio en dispositivos modernos que se ve bien en tamaños más grandes. El tamaño recomendado es de al menos 512 px por 512 px."
       homepage:
         description: "Recomendamos mostrar los últimos temas en tu página principal, pero siempre puedes mostrar categorías (grupos de temas) en la página principal si prefieres."
         title: "Página de inicio"
@@ -3448,8 +3452,14 @@ es:
             choices:
               latest:
                 label: "Temas recientes"
-              categories:
-                label: "Categorías"
+              categories_only:
+                label: "Sólo Categorías"
+              categories_with_featured_topics:
+                label: "Categorías con Temas Destacados"
+              categories_and_latest_topics:
+                label: "Categorías y Temas Recientes"
+              categories_and_top_topics:
+                label: "Categorías y Temas Top"
       emoji:
         title: "Emoji"
         description: "¿Qué estilo de Emoji prefieres para tu comunidad? Siempre puedes añadir más Emojis personalizados a trvés de Admin, Personalizar, Emoji."
@@ -3478,3 +3488,5 @@ es:
   staff_action_logs:
     not_found: "no encontrado"
     unknown: "desconocido"
+    user_merged: "%{username} se ha unido en esta cuenta"
+    user_delete_self: "Deleted by self from %{url}"

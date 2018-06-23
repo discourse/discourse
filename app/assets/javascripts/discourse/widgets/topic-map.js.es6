@@ -153,6 +153,7 @@ createWidget("topic-map-summary", {
     if (
       state.collapsed &&
       attrs.topicPostsCount > 2 &&
+      attrs.participants &&
       attrs.participants.length > 0
     ) {
       const participants = renderParticipants.call(

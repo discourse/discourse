@@ -301,6 +301,8 @@ module Discourse
       unless @threads[key]&.alive?
         @threads[key] = Thread.new do
           while @dbs.size > 0
+            sleep 30
+
             @dbs.each do |db|
               RailsMultisite::ConnectionManagement.with_connection(db) do
                 if readonly_mode?(key)
@@ -310,8 +312,6 @@ module Discourse
                 end
               end
             end
-
-            sleep 30
           end
         end
       end

@@ -23,11 +23,20 @@ class AdminDashboardNextData
   end
 
   def as_json(_options = nil)
-    @json ||= {
+    @json ||= get_json
+  end
+
+  def get_json
+    json = {
       reports: AdminDashboardNextData.reports(REPORTS),
-      last_backup_taken_at: last_backup_taken_at,
       updated_at: Time.zone.now.as_json
     }
+
+    if SiteSetting.enable_backups
+      json[:last_backup_taken_at] = last_backup_taken_at
+    end
+
+    json
   end
 
   def last_backup_taken_at

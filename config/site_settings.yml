@@ -1063,6 +1063,9 @@ security:
     hidden: true
     default: 'rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor'
     type: list
+  crawler_check_bypass_agents:
+    hidden: true
+    default: 'cubot'
   cors_origins:
     default: ''
     type: list

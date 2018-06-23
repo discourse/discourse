@@ -15,8 +15,6 @@
 }
 
 .names {
-  float: left;
-
   span.first {
     font-weight: bold;
   }
@@ -147,6 +145,20 @@
       padding-left: 4px;
       padding-right: 4px;
     }
+  }
+}
+
+.topic-meta-data {
+  display: flex;
+  align-items: flex-start;
+
+  .names {
+    margin-right: auto;
+  }
+
+  .post-infos {
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -416,6 +428,8 @@ aside.quote {
 }
 
 .post-info {
+  margin-left: 0.5em;
+
   &.via-email,
   &.whisper {
     line-height: $line-height-medium;
@@ -423,7 +437,6 @@ aside.quote {
   &.via-email,
   &.whisper,
   &.post-locked {
-    margin-right: 5px;
     .d-icon {
       font-size: $font-0;
     }
@@ -681,6 +694,16 @@ a.mention-group {
 }
 
 /* below standard tablet portrait ----------- */
+
+.reply-to-tab {
+  display: flex;
+  align-items: center;
+  margin-right: 2em;
+
+  img {
+    margin: 0 0.25em;
+  }
+}
 
 @media all and (max-width: 767px) {
   .reply-to-tab {

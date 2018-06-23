@@ -26,8 +26,6 @@ h1 .topic-statuses .topic-status i {
   }
   .reply-to-tab {
     z-index: z("base") + 1;
-    float: right;
-    margin: -2px 25px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
   .actions .fade-out {
@@ -902,6 +900,13 @@ a.attachment:before {
 }
 
 .topic-meta-data {
+  align-items: center;
+
+  .names {
+    display: flex;
+    align-items: center;
+  }
+
   &:after {
     visibility: hidden;
     display: block;
@@ -910,9 +915,8 @@ a.attachment:before {
     clear: both;
     height: 0;
   }
+
   .post-info {
-    display: inline-block;
-    float: right;
     a {
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
@@ -940,6 +944,7 @@ span.highlighted {
 
 .read-state {
   color: $tertiary-medium;
+  // We use absolute positioning here because we want it to display in the padding
   position: absolute;
   right: 0;
   top: 2em;

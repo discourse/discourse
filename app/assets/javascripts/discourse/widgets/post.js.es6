@@ -220,13 +220,10 @@ createWidget("post-meta-data", {
   },
 
   html(attrs) {
-    let result = [];
-    if (this.settings.displayPosterName) {
-      result.push(this.attach("poster-name", attrs));
-    }
+    let postInfo = [];
 
     if (attrs.isWhisper) {
-      result.push(
+      postInfo.push(
         h(
           "div.post-info.whisper",
           {
@@ -252,29 +249,29 @@ createWidget("post-meta-data", {
       attributes["class"] += " last-wiki-edit";
     }
 
-    result.push(h("div.post-info.post-date", h("a", { attributes }, date)));
-
     if (attrs.via_email) {
-      result.push(this.attach("post-email-indicator", attrs));
+      postInfo.push(this.attach("post-email-indicator", attrs));
     }
 
     if (attrs.locked) {
-      result.push(this.attach("post-locked-indicator", attrs));
+      postInfo.push(this.attach("post-locked-indicator", attrs));
     }
 
     if (attrs.version > 1 || attrs.wiki) {
-      result.push(this.attach("post-edits-indicator", attrs));
+      postInfo.push(this.attach("post-edits-indicator", attrs));
     }
 
     if (attrs.multiSelect) {
-      result.push(this.attach("select-post", attrs));
+      postInfo.push(this.attach("select-post", attrs));
     }
 
     if (showReplyTab(attrs, this.siteSettings)) {
-      result.push(this.attach("reply-to-tab", attrs));
+      postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
-    result.push(
+    postInfo.push(h("div.post-info.post-date", h("a", { attributes }, date)));
+
+    postInfo.push(
       h(
         "div.read-state",
         {
@@ -286,6 +283,12 @@ createWidget("post-meta-data", {
         iconNode("circle")
       )
     );
+
+    let result = [];
+    if (this.settings.displayPosterName) {
+      result.push(this.attach("poster-name", attrs));
+    }
+    result.push(h("div.post-infos", postInfo));
 
     return result;
   }
