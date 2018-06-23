@@ -2199,11 +2199,11 @@ en:
 
     welcome_tl1_user:
       title: "Welcome TL1 User"
-      subject_template: "Introduce Yourself"
+      subject_template: "Thanks for spending time with us"
       text_body_template: |
         Hey there. We see you’ve been busy reading, which is fantastic, so we’ve promoted you up a [trust level!]
         
-        We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile], or feel free to [start a new topic].
+        We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](/my/preferences/profile), or feel free to [start a new topic](/categories).
 
     welcome_invite:
       title: "Welcome Invite"
