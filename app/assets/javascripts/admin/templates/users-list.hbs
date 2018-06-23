@@ -12,14 +12,15 @@
       {{nav-item route='adminUsersList.show' routeParam='suspect' label='admin.users.nav.suspect'}}
       {{nav-item route='adminUsersList.show' routeParam='staged' label='admin.users.nav.staged'}}
       {{nav-item route='groups' label='groups.index.title'}}
-    </ul>
-  </nav>
-  <div class="pull-right">
+      <div class="admin-actions">
     {{#unless siteSettings.enable_sso}}
       {{d-button action="sendInvites" title="admin.invite.button_title" icon="user-plus" label="admin.invite.button_text"}}
     {{/unless}}
     {{d-button action="exportUsers" title="admin.export_csv.button_title.user" icon="download" label="admin.export_csv.button_text"}}
   </div>
+    </ul>
+  </nav>
+
 </div>
 
 <div class="admin-container">
