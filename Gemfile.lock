@@ -176,7 +176,7 @@ GEM
     mini_portile2 (2.3.0)
     mini_racer (0.1.15)
       libv8 (~> 6.3)
-    mini_sql (0.1.9)
+    mini_sql (0.1.10)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
     minitest (5.11.3)
