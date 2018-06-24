@@ -43,10 +43,12 @@ export default ComboBoxComponent.extend({
 
     if (!content.value) {
       if (this.get("noTagsSelected")) {
-        content.label = this.get("noTagsLabel");
+        content.title = this.get("noTagsLabel");
       } else {
-        content.label = this.get("allTagsLabel");
+        content.title = this.get("allTagsLabel");
       }
+    } else {
+      content.title = content.value;
     }
 
     return content;
