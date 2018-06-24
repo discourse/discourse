@@ -2201,7 +2201,7 @@ en:
       title: "Welcome TL1 User"
       subject_template: "Thanks for spending time with us"
       text_body_template: |
-        Hey there. We see you’ve been busy reading, which is fantastic, so we’ve promoted you up a [trust level!]
+        Hey there. We see you’ve been busy reading, which is fantastic, so we’ve promoted you up a [trust level!](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)
         
         We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](/my/preferences/profile), or feel free to [start a new topic](/categories).
 
