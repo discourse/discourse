@@ -66,9 +66,9 @@ export default Ember.Mixin.create({
         this._destroyEvent(event);
       })
       .on("keydown.select-kit", event => {
-        const keyCode = event.keyCode || event.which;
-
         if (document.activeElement !== this.$header()[0]) return event;
+
+        const keyCode = event.keyCode || event.which;
 
         if (keyCode === this.keys.TAB && event.shiftKey) {
           this.unfocus(event);
@@ -104,13 +104,11 @@ export default Ember.Mixin.create({
           this.set("renderedFilterOnce", true);
         }
 
-        if (keyCode >= 65 && keyCode <= 122) {
-          Ember.run.schedule("afterRender", () => {
-            this.$filterInput()
-              .focus()
-              .val(this.$filterInput().val() + String.fromCharCode(keyCode));
-          });
-        }
+        Ember.run.schedule("afterRender", () => {
+          this.$filterInput()
+            .focus()
+            .val(this.$filterInput().val() + String.fromCharCode(keyCode));
+        });
 
         return false;
       });
