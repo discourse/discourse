@@ -173,7 +173,8 @@ module Onebox
     end
 
     def self.title_attr(meta)
-      (meta && !blank?(meta[:title])) ? "title='#{meta[:title]}'" : ""
+      title = meta[:title].gsub("'", "&apos;").gsub('"', "&quot;")
+      (meta && !blank?(title)) ? "title='#{title}'" : ""
     end
 
     def self.normalize_url_for_output(url)
