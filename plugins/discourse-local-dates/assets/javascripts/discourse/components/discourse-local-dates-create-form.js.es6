@@ -82,10 +82,15 @@ export default Ember.Component.extend({
     "timezones"
   )
   _setConfig() {
+    const toTime = this.get("toTime");
+
+    if (toTime && !this.get("toDate")) {
+      this.set("toDate", moment().format(this.dateFormat));
+    }
+
     const date = this.get("date");
     const toDate = this.get("toDate");
     const time = this.get("time");
-    const toTime = this.get("toTime");
     const recurring = this.get("recurring");
     const format = this.get("format");
     const timezones = this.get("timezones");
@@ -125,12 +130,21 @@ export default Ember.Component.extend({
       config.toTime = toDateTime.format(this.timeFormat);
     }
 
-    if (!time && !toTime && ["LLL", "LLLL", "LLLLL"].includes(format)) {
+    if (!time && !toTime && this.get("formats").includes(format)) {
       config.format = "LL";
     }
 
     if (toDate) {
       config.toDateTime = toDateTime;
+    }
+
+    if (
+      time &&
+      toTime &&
+      date === toDate &&
+      this.get("formats").includes(format)
+    ) {
+      config.format = "LT";
     }
 
     this.set("config", config);
