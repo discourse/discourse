@@ -279,26 +279,6 @@ export default RestModel.extend({
       });
   },
 
-  collapsePosts(from, to) {
-    const posts = this.get("posts");
-    const remove = posts.filter(post => {
-      const postNumber = post.get("post_number");
-      return postNumber >= from && postNumber <= to;
-    });
-
-    posts.removeObjects(remove);
-
-    // make gap
-    this.set("gaps", this.get("gaps") || { before: {}, after: {} });
-    const before = this.get("gaps.before");
-    const post = posts.find(p => p.get("post_number") > to);
-
-    before[post.get("id")] = remove.map(p => p.get("id"));
-    post.set("hasGap", true);
-
-    this.get("stream").enumerableContentDidChange();
-  },
-
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
     const postId = post.get("id"),
