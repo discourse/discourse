@@ -781,14 +781,17 @@ en:
       title: 'Spam'
       description: 'This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature.'
       long_form: 'flagged this as spam'
+      short_description: 'This is an advertisement'
     inappropriate:
       title: 'Inappropriate'
       description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
+      short_description: 'A violation of <a href="/guidelines">our community guidelines</a>'
     notify_moderators:
       title: "Something Else"
       description: 'This topic requires general staff attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'flagged this for moderator attention'
+      short_description: 'Requires staff attention for another reason'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
 
