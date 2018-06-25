@@ -899,20 +899,29 @@ files:
   enable_s3_uploads:
     default: false
     client: true
-  s3_use_iam_profile: false
-  s3_access_key_id: ''
+    shadowed_by_global: true
+  s3_use_iam_profile:
+    default: false
+    shadowed_by_global: true
+  s3_access_key_id:
+    default: ''
+    shadowed_by_global: true
   s3_secret_access_key:
     default: ''
     secret: true
+    shadowed_by_global: true
   s3_region:
     default: 'us-east-1'
     enum: 'S3RegionSiteSetting'
+    shadowed_by_global: true
   s3_upload_bucket:
     default: ''
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+    shadowed_by_global: true
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
+    shadowed_by_global: true
   allow_profile_backgrounds:
     client: true
     default: true
