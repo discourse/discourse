@@ -315,6 +315,17 @@ describe NewPostManager do
         manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
         expect(manager.perform.action).to eq(:enqueued)
       end
+
+      it "doesn't blow up with invalid topic_id" do
+        expect do
+          manager = NewPostManager.new(
+            user,
+            raw: 'this is a new topic',
+            topic_id: 97546
+          )
+          expect(manager.perform.action).to eq(:create_post)
+        end.not_to raise_error
+      end
     end
   end
 end

@@ -88,7 +88,9 @@ class NewPostManager
 
   def self.post_needs_approval_in_its_category?(manager)
     if manager.args[:topic_id].present?
-      Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] }).require_reply_approval?
+      cat = Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
+      return false unless cat
+      cat.require_reply_approval?
     elsif manager.args[:category].present?
       Category.find(manager.args[:category]).require_topic_approval?
     else

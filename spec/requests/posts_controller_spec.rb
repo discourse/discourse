@@ -352,6 +352,20 @@ describe PostsController do
       expect(response.status).not_to eq(200)
       expect(post.topic.category_id).not_to eq(category.id)
     end
+
+    it 'can not move to a category that requires topic approval' do
+      post = create_post
+      sign_in(post.user)
+
+      category = Fabricate(:category)
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+
+      put "/posts/#{post.id}.json", params: { post: { category_id: category.id, raw: "this is a test edit to post" } }
+
+      expect(response.status).to eq(403)
+      expect(post.topic.reload.category_id).not_to eq(category.id)
+    end
   end
 
   describe '#bookmark' do
@@ -487,19 +501,6 @@ describe PostsController do
 
         expect(response.status).to eq(403)
       end
-
-    it 'can not move to a category that requires topic approval' do
-      post = create_post
-      sign_in(post.user)
-
-      category = Fabricate(:category)
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
-      category.save!
-
-      put "/posts/#{post.id}.json", params: { post: { category_id: category.id } }
-
-      expect(response.status).to eq(403)
-      expect(post.topic.reload.category_id).not_to eq(category.id)
     end
   end
 
