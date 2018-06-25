@@ -51,6 +51,7 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
+    @_post_number = @post_number.dup
     @post_number = [@post_number.to_i, 1].max
     @page = [@page.to_i, 1].max
 
@@ -490,7 +491,7 @@ class TopicView
 
     # Filters
     if @filter == 'summary' ||
-       ((@post_number.blank? || @post_number.to_i == 1) && force_summary_mode?)
+       ((@_post_number.blank? || @_post_number.to_i == 1) && force_summary_mode?)
 
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true unless force_summary_mode?
