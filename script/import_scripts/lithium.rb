@@ -903,7 +903,7 @@ SQL
   end
 
   def postprocess_post_raw(raw, user_id)
-    matches = raw.match(/<messagetemplate.*<\/messagetemplate>/m)
+    matches = raw.match(/<messagetemplate.*<\/messagetemplate>/m) || []
     matches.each do |match|
       hash = Hash.from_xml(match)
       template = hash["messagetemplate"]["zone"]["item"]
