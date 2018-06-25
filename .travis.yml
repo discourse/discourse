@@ -8,6 +8,7 @@ branches:
 
 env:
   global:
+    - TRAVIS_NODE_VERSION="10"
     - DISCOURSE_HOSTNAME=www.example.com
     - RUBY_GLOBAL_METHOD_CACHE_SIZE=131072
   matrix:
@@ -37,7 +38,7 @@ services:
   - redis-server
 
 sudo: required
-dist: xenial
+dist: trusty
 
 cache:
   apt: true
