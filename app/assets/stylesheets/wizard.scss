@@ -106,6 +106,20 @@ body.wizard {
   }
 }
 
+.wizard-step-colors {
+  ul.grid {
+    margin: 0 auto;
+    text-align: left;
+    list-style-type: none;
+
+    li {
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+    }
+  }
+}
+
 .wizard-column {
   position: relative;
   z-index: 11;
