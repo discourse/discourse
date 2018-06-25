@@ -56,9 +56,9 @@
     Discourse.HighlightJSPath = <%= HighlightJs.path.inspect.html_safe %>;
     <%- if SiteSetting.Upload.enable_s3_uploads %>
       <%- if SiteSetting.Upload.s3_cdn_url.present? %>
-    Discourse.S3CDN = '<%= SiteSetting.Upload.s3_cdn_url %>';
+    Discourse.UploadCDN = '<%= SiteSetting.Upload.s3_cdn_url %>';
       <%- end %>
-    Discourse.S3BaseUrl = '<%= SiteSetting.Upload.absolute_base_url %>';
+    Discourse.UploadBaseUrl = '<%= SiteSetting.Upload.absolute_base_url %>';
     <%- end %>
   })();
 </script>
