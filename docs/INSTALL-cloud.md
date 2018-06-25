@@ -6,7 +6,7 @@
 
 [Sign up for DigitalOcean][do], update billing info, then create your new cloud server.
 
-- The default of **Ubuntu 16.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
+- The default of **Ubuntu 16.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required. If you use any other OS, you cannot complain that these instructions do not work, since you are not following them.
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities.
 
