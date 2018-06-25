@@ -3,7 +3,6 @@
   <% @category_list.categories.each_with_index do |c, index| %>
     <div class='category' itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
       <meta itemprop='position' content='<%= index %>'>
-      <meta itemprop='url' content='<%= "#{Discourse.base_url}#{c.url}" %>'>
       <h2>
         <a href='<%= "#{Discourse.base_url}#{c.url}" %>' itemprop='item'>
           <span itemprop='name'><%= c.name %></span>
