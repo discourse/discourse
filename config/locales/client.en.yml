@@ -738,6 +738,19 @@ en:
         choose_new: "Choose a new password"
         choose: "Choose a password"
 
+      second_factor_backup:
+        title: "Two Factor backup code management"
+        regenerate: "Regenerate"
+        disable: "Disable"
+        enable: "Enable"
+        enable_long: "Enable backup codes"
+        manage: "Manage backup codes"
+        copied_to_clipboard: "Copied to Clipboard"
+        copy_to_clipboard_error: "Error copying data to Clipboard"
+        codes:
+          title: "Backup codes"
+          description: "Each line is a different backup code which can only be used once. It's recommended to save this file in a safe place."
+
       second_factor:
         title: "Two Factor Authentication"
         disable: "Disable two factor authentication"
@@ -1144,6 +1157,10 @@ en:
       password: "Password"
       second_factor_title: "Two Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
+      second_factor_backup: "<a href>Log in using a backup code</a>"
+      second_factor_backup_title: "Two Factor Backup"
+      second_factor_backup_description: "Please enter one of your backup codes:"
+      second_factor: "<a href>Log in using Authenticator app</a>"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"

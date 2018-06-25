@@ -248,7 +248,7 @@ describe UsersController do
       end
 
       context '2 factor authentication required' do
-        let!(:second_factor) { Fabricate(:user_second_factor, user: user) }
+        let!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
         it 'does not change with an invalid token' do
           token = user.email_tokens.create!(email: user.email).token
@@ -257,7 +257,11 @@ describe UsersController do
 
           expect(response.body).to include('{"is_developer":false,"admin":false,"second_factor_required":true}')
 
-          put "/u/password-reset/#{token}", params: { password: 'hg9ow8yHG32O', second_factor_token: '000000' }
+          put "/u/password-reset/#{token}", params: {
+            password: 'hg9ow8yHG32O',
+            second_factor_token: '000000',
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }
 
           expect(response.body).to include(I18n.t("login.invalid_second_factor_code"))
 
@@ -273,7 +277,8 @@ describe UsersController do
 
           put "/u/password-reset/#{token}", params: {
             password: 'hg9ow8yHG32O',
-            second_factor_token: ROTP::TOTP.new(second_factor.data).now
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now,
+            second_factor_method: UserSecondFactor.methods[:totp]
           }
 
           user.reload
@@ -400,7 +405,7 @@ describe UsersController do
       end
 
       describe 'when 2 factor authentication is enabled' do
-        let(:second_factor) { Fabricate(:user_second_factor, user: admin) }
+        let(:second_factor) { Fabricate(:user_second_factor_totp, user: admin) }
         let(:email_token) { Fabricate(:email_token, user: admin) }
 
         it 'does not log in when token required' do
@@ -415,7 +420,10 @@ describe UsersController do
           it 'should display the right error' do
             second_factor
 
-            put "/u/admin-login/#{email_token.token}", params: { second_factor_token: '13213' }
+            put "/u/admin-login/#{email_token.token}", params: {
+              second_factor_token: '13213',
+              second_factor_method: UserSecondFactor.methods[:totp]
+            }
 
             expect(response.status).to eq(200)
             expect(response.body).to include(I18n.t('login.second_factor_description'));
@@ -424,7 +432,10 @@ describe UsersController do
         end
 
         it 'logs in when a valid 2-factor token is given' do
-          put "/u/admin-login/#{email_token.token}", params: { second_factor_token: ROTP::TOTP.new(second_factor.data).now }
+          put "/u/admin-login/#{email_token.token}", params: {
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now,
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }
 
           expect(response).to redirect_to('/')
           expect(session[:current_user_id]).to eq(admin.id)
@@ -2795,7 +2806,7 @@ describe UsersController do
 
         it 'succeeds on correct password' do
           user.create_totp
-          user.user_second_factor.update!(data: "abcdefghijklmnop")
+          user.user_second_factors.totp.update!(data: "abcdefghijklmnop")
 
           post "/users/second_factors.json", params: {
             password: 'myawesomepassword'
@@ -2816,12 +2827,13 @@ describe UsersController do
   end
 
   describe '#update_second_factor' do
-    let(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
+    let(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
     context 'when not logged in' do
       it 'should return the right response' do
         put "/users/second_factor.json", params: {
-          second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+          second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+          second_factor_method: UserSecondFactor.methods[:totp]
         }
 
         expect(response.status).to eq(403)
@@ -2849,6 +2861,7 @@ describe UsersController do
           it 'returns the right response' do
             put "/users/second_factor.json", params: {
               second_factor_token: '000000',
+              second_factor_method: UserSecondFactor.methods[:totp],
               enable: 'true',
             }
 
@@ -2865,20 +2878,135 @@ describe UsersController do
             put "/users/second_factor.json", params: {
               second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
               enable: 'true',
+              second_factor_method: UserSecondFactor.methods[:totp]
             }
 
             expect(response.status).to eq(200)
-            expect(user.reload.user_second_factor.enabled).to be true
+            expect(user.reload.user_second_factors.totp.enabled).to be true
           end
 
           it 'should allow second factor for the user to be disabled' do
             put "/users/second_factor.json", params: {
               second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+              second_factor_method: UserSecondFactor.methods[:totp]
             }
 
             expect(response.status).to eq(200)
-            expect(user.reload.user_second_factor).to eq(nil)
+            expect(user.reload.user_second_factors.totp).to eq(nil)
           end
+        end
+      end
+
+      context "when user is updating backup codes" do
+        context 'when token is missing' do
+          it 'returns the right response' do
+            put "/users/second_factor.json", params: {
+              second_factor_method: UserSecondFactor.methods[:backup_codes],
+            }
+
+            expect(response.status).to eq(400)
+          end
+        end
+
+
+        context 'when token is invalid' do
+          it 'returns the right response' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: '000000',
+              second_factor_method: UserSecondFactor.methods[:backup_codes],
+            }
+
+            expect(response.status).to eq(200)
+
+            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+              "login.invalid_second_factor_code"
+            ))
+          end
+        end
+
+        context 'when token is valid' do
+          it 'should allow second factor backup for the user to be disabled' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+              second_factor_method: UserSecondFactor.methods[:backup_codes]
+            }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.user_second_factors.backup_codes).to be_empty
+          end
+        end
+      end
+    end
+  end
+
+  describe '#create_second_factor_backup' do
+    let(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+
+    context 'when not logged in' do
+      it 'should return the right response' do
+        put "/users/second_factors_backup.json", params: {
+          second_factor_token: 'wrongtoken'
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context 'when logged in' do
+      before do
+        sign_in(user)
+      end
+
+      describe 'create 2fa request' do
+        it 'fails on incorrect password' do
+          put "/users/second_factors_backup.json", params: {
+            second_factor_token: 'wrongtoken'
+          }
+
+          expect(response.status).to eq(200)
+
+          expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+            "login.invalid_second_factor_code")
+          )
+        end
+
+        describe 'when local logins are disabled' do
+          it 'should return the right response' do
+            SiteSetting.enable_local_logins = false
+
+            put "/users/second_factors_backup.json", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+            }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
+        describe 'when SSO is enabled' do
+          it 'should return the right response' do
+            SiteSetting.sso_url = 'http://someurl.com'
+            SiteSetting.enable_sso = true
+
+            put "/users/second_factors_backup.json", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+            }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
+        it 'succeeds on correct password' do
+          user_second_factor
+
+          put "/users/second_factors_backup.json", params: {
+            second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+          }
+
+          expect(response.status).to eq(200)
+
+          response_body = JSON.parse(response.body)
+
+          expect(response_body['backup_codes'].length).to be(10)
         end
       end
     end

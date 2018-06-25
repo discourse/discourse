@@ -252,7 +252,7 @@ export default function() {
       }
 
       if (data.password === "need-second-factor") {
-        if (data.second_factor_token) {
+        if (data.second_factor_token && data.second_factor_token === "123456") {
           return response({ username: "eviltrout" });
         }
 

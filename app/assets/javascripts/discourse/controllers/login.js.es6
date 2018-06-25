@@ -31,6 +31,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
   loginRequired: Em.computed.alias("application.loginRequired"),
+  secondFactorMethod : 1,
 
   resetForm: function() {
     this.setProperties({
@@ -103,7 +104,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         data: {
           login: this.get("loginName"),
           password: this.get("loginPassword"),
-          second_factor_token: this.get("loginSecondFactor")
+          second_factor_token: this.get("loginSecondFactor"),
+          second_factor_method: this.get("secondFactorMethod")
         }
       }).then(
         function(result) {

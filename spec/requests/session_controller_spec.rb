@@ -146,7 +146,7 @@ RSpec.describe SessionController do
       end
 
       context 'user has 2-factor logins' do
-        let!(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
+        let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
         describe 'requires second factor' do
           it 'should return a second factor prompt' do
@@ -168,7 +168,10 @@ RSpec.describe SessionController do
 
         describe 'errors on incorrect 2-factor' do
           it 'does not log in with incorrect two factor' do
-            post "/session/email-login/#{email_token.token}", params: { second_factor_token: "0000" }
+            post "/session/email-login/#{email_token.token}", params: {
+              second_factor_token: "0000",
+              second_factor_method: UserSecondFactor.methods[:totp]
+            }
 
             expect(response.status).to eq(200)
 
@@ -181,7 +184,8 @@ RSpec.describe SessionController do
         describe 'allows successful 2-factor' do
           it 'logs in correctly' do
             post "/session/email-login/#{email_token.token}", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+              second_factor_method: UserSecondFactor.methods[:totp]
             }
 
             expect(response).to redirect_to("/")
@@ -899,7 +903,7 @@ RSpec.describe SessionController do
       end
 
       context 'when user has 2-factor logins' do
-        let!(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
+        let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
         describe 'when second factor token is missing' do
           it 'should return the right response' do
@@ -935,7 +939,8 @@ RSpec.describe SessionController do
             post "/session.json", params: {
               login: user.username,
               password: 'myawesomepassword',
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+              second_factor_method: UserSecondFactor.methods[:totp]
             }
             expect(response.status).to eq(200)
             user.reload
