@@ -61,8 +61,8 @@ module SecondFactorManager
 
     salt = SecureRandom.hex(16)
     codes_json = codes.map do |code|
-      { :salt => salt,
-        :code_hash => hash_backup_code(code, salt)
+      { salt: salt,
+        code_hash: hash_backup_code(code, salt)
       }
     end
 
@@ -78,12 +78,12 @@ module SecondFactorManager
 
   def create_backup_codes(codes)
     codes.each do |code|
-      UserSecondFactor.create!({
+      UserSecondFactor.create!(
         user_id: self.id,
         data: code.to_json,
         enabled: true,
         method: UserSecondFactor.methods[:backup_codes]
-      })
+      )
     end
   end
 
@@ -97,7 +97,7 @@ module SecondFactorManager
         backup_hash = hash_backup_code(backup_code, stored_salt)
         next unless backup_hash == stored_code
 
-        code.update(enabled: false)
+        code.update(enabled: false, last_used: DateTime.now)
         return true
       end
       false

@@ -4,13 +4,14 @@ import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { userPath } from "discourse/lib/url";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default Ember.Controller.extend(PasswordValidation, {
   isDeveloper: Ember.computed.alias("model.is_developer"),
   admin: Ember.computed.alias("model.admin"),
   secondFactorRequired: Ember.computed.alias("model.second_factor_required"),
   backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
-  secondFactorMethod: 1,
+  secondFactorMethod: SECOND_FACTOR_METHODS.totp,
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,

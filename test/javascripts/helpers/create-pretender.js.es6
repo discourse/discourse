@@ -259,6 +259,7 @@ export default function() {
         return response({
           error: "Invalid Second Factor",
           reason: "invalid_second_factor",
+          backup_enabled: true,
           sent_to_email: "eviltrout@example.com",
           current_email: "current@example.com"
         });

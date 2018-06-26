@@ -19,6 +19,8 @@ import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 
+export const SECOND_FACTOR_METHODS = { totp: 1, backup_code: 2 };
+
 const isForever = dt => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({

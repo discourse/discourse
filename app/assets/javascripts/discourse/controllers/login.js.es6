@@ -7,6 +7,7 @@ import { escape } from "pretty-text/sanitizer";
 import { escapeExpression } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -31,7 +32,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
   loginRequired: Em.computed.alias("application.loginRequired"),
-  secondFactorMethod: 1,
+  secondFactorMethod: SECOND_FACTOR_METHODS.totp,
 
   resetForm: function() {
     this.setProperties({

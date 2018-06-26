@@ -2908,7 +2908,6 @@ describe UsersController do
           end
         end
 
-
         context 'when token is invalid' do
           it 'returns the right response' do
             put "/users/second_factor.json", params: {
