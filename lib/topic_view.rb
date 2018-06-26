@@ -5,7 +5,15 @@ require_dependency 'gaps'
 
 class TopicView
 
-  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
+  attr_reader :topic,
+              :posts,
+              :guardian,
+              :filtered_posts,
+              :chunk_size,
+              :print,
+              :message_bus_last_id,
+              :contains_gaps
+
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
 
   def self.slow_chunk_size
@@ -98,13 +106,28 @@ class TopicView
     path
   end
 
-  def contains_gaps?
-    @contains_gaps
-  end
-
   def gaps
     return unless @contains_gaps
-    @gaps ||= Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+
+    @gaps ||= begin
+      sort_order_max_range =
+        if @posts.offset(@limit).exists? && unfiltered_posts.order(:sort_order)
+            .where("sort_order > ?", @posts.last.sort_order)
+            .offset(@limit)
+            .exists?
+
+          @posts.last.sort_order
+        else
+          @topic.highest_post_number
+        end
+
+      unfiltered_ids = unfiltered_posts.order(:sort_order).where("posts.sort_order BETWEEN ? AND ?",
+        @posts.first.sort_order,
+        sort_order_max_range
+      ).pluck(:id)
+
+      Gaps.new(@posts.pluck(:id), unfiltered_ids)
+    end
   end
 
   def last_post
@@ -504,6 +527,7 @@ class TopicView
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
+
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
       @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
       @contains_gaps = true

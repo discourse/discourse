@@ -850,6 +850,10 @@ export default RestModel.extend({
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord("post", p)));
       }
+
+      if (result.post_stream.gaps) {
+        this.set("gaps", _.merge(this.get("gaps"), result.post_stream.gaps));
+      }
     });
   },
 
