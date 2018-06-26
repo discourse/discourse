@@ -1707,34 +1707,6 @@ describe Guardian do
         expect(Guardian.new(admin).can_delete?(post)).to be_falsey
       end
 
-      context 'post is older than post_edit_time_limit' do
-        let(:old_post) { build(:post, topic: topic, user: topic.user, post_number: 2, created_at: 6.minutes.ago) }
-        before do
-          SiteSetting.post_edit_time_limit = 5
-        end
-
-        it 'returns false to the author of the post' do
-          expect(Guardian.new(old_post.user).can_delete?(old_post)).to eq(false)
-        end
-
-        it 'returns true as a moderator' do
-          expect(Guardian.new(moderator).can_delete?(old_post)).to eq(true)
-        end
-
-        it 'returns true as an admin' do
-          expect(Guardian.new(admin).can_delete?(old_post)).to eq(true)
-        end
-
-        it "returns false when it's the OP, even as a moderator" do
-          old_post.post_number = 1
-          expect(Guardian.new(moderator).can_delete?(old_post)).to eq(false)
-        end
-
-        it 'returns false for another regular user trying to delete your post' do
-          expect(Guardian.new(coding_horror).can_delete?(old_post)).to eq(false)
-        end
-      end
-
       context 'the topic is archived' do
         before do
           post.topic.archived = true
