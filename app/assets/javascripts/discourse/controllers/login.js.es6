@@ -31,7 +31,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
   loginRequired: Em.computed.alias("application.loginRequired"),
-  secondFactorMethod : 1,
+  secondFactorMethod: 1,
 
   resetForm: function() {
     this.setProperties({
@@ -112,7 +112,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // Successful login
           if (result && result.error) {
             self.set("loggingIn", false);
-
             if (
               result.reason === "invalid_second_factor" &&
               !self.get("secondFactorRequired")
@@ -120,7 +119,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
               $("#modal-alert").hide();
               self.setProperties({
                 secondFactorRequired: true,
-                showLoginButtons: false
+                showLoginButtons: false,
+                backupEnabled: result.backup_enabled
               });
 
               $("#credentials").hide();

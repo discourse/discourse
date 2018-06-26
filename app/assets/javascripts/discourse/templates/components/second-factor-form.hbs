@@ -2,10 +2,12 @@
   <h3>{{secondFactorTitle}}</h3>
   <p>{{secondFactorDescription}}</p>
   {{yield}}
-  <p>
-    {{discourse-linked-text
-      class="toggle-second-factor-method"
-      action="toggleSecondFactorMethod"
-      text=linkText}}
-  </p>
+  {{#if backupEnabled}}
+    <p>
+      {{discourse-linked-text
+        class="toggle-second-factor-method"
+        action="toggleSecondFactorMethod"
+        text=linkText}}
+    </p>
+  {{/if}}
 </div>

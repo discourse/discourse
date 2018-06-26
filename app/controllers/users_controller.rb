@@ -494,7 +494,8 @@ class UsersController < ApplicationController
             MultiJson.dump(
               is_developer: UsernameCheckerService.is_developer?(@user.email),
               admin: @user.admin?,
-              second_factor_required: !valid_second_factor
+              second_factor_required: !valid_second_factor,
+              backup_enabled: @user.backup_codes_enabled?
             )
           )
         end
@@ -524,7 +525,8 @@ class UsersController < ApplicationController
           render json: {
             is_developer: UsernameCheckerService.is_developer?(@user.email),
             admin: @user.admin?,
-            second_factor_required: !valid_second_factor
+            second_factor_required: !valid_second_factor,
+            backup_enabled: @user.backup_codes_enabled?
           }
         end
       end
