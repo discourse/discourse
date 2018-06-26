@@ -44,10 +44,11 @@ export default Ember.Controller.extend({
           I18n.t("user.second_factor_backup.copy_to_clipboard_error")
         );
       }
-
-      setTimeout(() => {
-        this.setProperties({ successMessage: null, errorMessage: null });
-      }, 2000);
+      // hide copy-to-clipboard success/error message after 2s
+      Ember.run.later(
+        () => this.setProperties({ successMessage: null, errorMessage: null }),
+        2000
+      );
     },
 
     disableSecondFactorBackup() {

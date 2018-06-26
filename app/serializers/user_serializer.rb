@@ -152,6 +152,10 @@ class UserSerializer < BasicUserSerializer
     object.totp_enabled?
   end
 
+  def include_second_factor_backup_enabled?
+    object&.id == scope.user&.id
+  end
+
   def second_factor_backup_enabled
     object.backup_codes_enabled?
   end
