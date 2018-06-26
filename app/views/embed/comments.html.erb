@@ -1,4 +1,4 @@
-<header class='discourse' data-embed-status='loaded'>
+<header class='discourse' data-embed-state='loaded'>
   <% if @topic_view.topic.posts_count < 2 %>
     <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
   <% elsif @topic_view.topic.posts_count > 10 %>
