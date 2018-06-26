@@ -164,9 +164,6 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    # Can't delete after post_edit_time_limit minutes have passed
-    return false if !is_staff? && post.edit_time_limit_expired?
-
     # Can't delete posts in archived topics unless you are staff
     return false if !is_staff? && post.topic.archived?
 
