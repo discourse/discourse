@@ -4,7 +4,9 @@ require_dependency 'file_helper'
 class StaticController < ApplicationController
 
   skip_before_action :check_xhr, :redirect_to_login_if_required
-  skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon]
+  skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -92,6 +94,8 @@ class StaticController < ApplicationController
     redirect_to destination
   end
 
+  FAVICON ||= -"favicon"
+
   # We need to be able to draw our favicon on a canvas
   # and pull it off the canvas into a data uri
   # This can work by ensuring people set all the right CORS
@@ -99,46 +103,76 @@ class StaticController < ApplicationController
   # instead we cache the favicon in redis and serve it out real quick with
   # a huge expiry, we also cache these assets in nginx so it bypassed if needed
   def favicon
+    is_asset_path
 
-    data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60 * 30) do
-      begin
-        file = FileHelper.download(
-          SiteSetting.favicon_url,
-          max_file_size: 50.kilobytes,
-          tmp_file_name: "favicon.png",
-          follow_redirect: true
-        )
-        data = file.read
-        file.unlink
-        data
-      rescue => e
-        AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-        Rails.logger.debug("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
-        ""
+    hijack do
+      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.favicon_url, 60 * 30) do
+        begin
+          file = FileHelper.download(
+            SiteSetting.favicon_url,
+            max_file_size: 50.kilobytes,
+            tmp_file_name: FAVICON,
+            follow_redirect: true
+          )
+          file ||= Tempfile.new([FAVICON, ".png"])
+          data = file.read
+          file.unlink
+          data
+        rescue => e
+          AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
+          Rails.logger.debug("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
+          ""
+        end
       end
-    end
 
-    if data.bytesize == 0
-      @@default_favicon ||= File.read(Rails.root + "public/images/default-favicon.png")
-      response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
-      render plain: @@default_favicon, content_type: "image/png"
-    else
-      immutable_for 1.year
-      response.headers["Expires"] = 1.year.from_now.httpdate
-      response.headers["Content-Length"] = data.bytesize.to_s
-      response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
-      render plain: data, content_type: "image/png"
+      if data.bytesize == 0
+        @@default_favicon ||= File.read(Rails.root + "public/images/default-favicon.png")
+        response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
+        render body: @@default_favicon, content_type: "image/png"
+      else
+        immutable_for 1.year
+        response.headers["Expires"] = 1.year.from_now.httpdate
+        response.headers["Content-Length"] = data.bytesize.to_s
+        response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
+        render body: data, content_type: "image/png"
+      end
     end
   end
 
   def brotli_asset
+    is_asset_path
+
     serve_asset(".br") do
       response.headers["Content-Encoding"] = 'br'
     end
   end
 
   def cdn_asset
+    is_asset_path
+
     serve_asset
+  end
+
+  def service_worker_asset
+    is_asset_path
+
+    respond_to do |format|
+      format.js do
+        # https://github.com/w3c/ServiceWorker/blob/master/explainer.md#updating-a-service-worker
+        # Maximum cache that the service worker will respect is 24 hours.
+        # However, ensure that these may be cached and served for longer on servers.
+        immutable_for 1.year
+
+        if Rails.application.assets_manifest.assets['service-worker.js']
+          path = File.expand_path(Rails.root + "public/assets/#{Rails.application.assets_manifest.assets['service-worker.js']}")
+          response.headers["Last-Modified"] = File.ctime(path).httpdate
+        end
+        render(
+          plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
+          content_type: 'application/javascript'
+        )
+      end
+    end
   end
 
   protected

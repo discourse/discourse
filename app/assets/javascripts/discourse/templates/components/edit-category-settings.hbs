@@ -21,8 +21,8 @@
 
 <section class="field">
   <label>
-    {{input type="checkbox" checked=category.suppress_from_homepage}}
-    {{i18n "category.suppress_from_homepage"}}
+    {{input type="checkbox" checked=category.suppress_from_latest}}
+    {{i18n "category.suppress_from_latest"}}
   </label>
 </section>
 
@@ -47,15 +47,19 @@
 <section class="field default-view-field">
   <label>
     {{i18n "category.default_view"}}
-    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
   </label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
+  </div>
 </section>
 
 <section class="field default-top-period-field">
   <label>
     {{i18n "category.default_top_period"}}
-    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
   </label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
+  </div>
 </section>
 
 <section class="field">
@@ -65,7 +69,7 @@
   <div class="controls">
   {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
   {{#unless isDefaultSortOrder}}
-    {{combo-box valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+    {{combo-box castBoolean=true valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
   {{/unless}}
     </div>
 </section>
@@ -115,6 +119,13 @@
       </label>
     </section>
 
+    <section class='field'>
+        <label>
+          {{input type="checkbox" checked=category.mailinglist_mirror}}
+          {{i18n 'category.mailinglist_mirror'}}
+        </label>
+    </section>
+
   {{plugin-outlet name="category-email-in" args=(hash category=category)}}
 {{/if}}
 
@@ -140,5 +151,14 @@
     <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
   </section>
 {{/unless}}
+
+{{#if siteSettings.tagging_enabled}}
+  <section class='field minimum-required-tags'>
+    <label>
+      {{i18n 'category.minimum_required_tags'}}
+      {{text-field value=category.minimum_required_tags type="number"}}
+    </label>
+  </section>
+{{/if}}
 
 {{plugin-outlet name="category-custom-settings" args=(hash category=category)}}

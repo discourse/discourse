@@ -1,0 +1,11 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+bs_BA:
+  site_settings:
+    presence_enabled: 'Prikazuje korisnike koji trenutačno odgovaraju na trnenutnu temu, ili ispravljaju trenutnu objavu'
+    presence_max_users_shown: 'Maksimalan broj prikazanih korisnika'

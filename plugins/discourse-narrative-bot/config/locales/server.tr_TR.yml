@@ -11,3 +11,88 @@ tr_TR:
   badges:
     certified:
       name: Sertifikalı
+      description: "Yeni kullanıcı eğitimi tamamlandı"
+    licensed:
+      name: Lisanslı
+      description: "Gelişmiş kullanıcı eğitimi tamamlandı"
+  discourse_narrative_bot:
+    dice:
+      trigger: "yuvarla"
+    quote:
+      trigger: "alıntıla"
+      '1':
+        quote: "Her zorluğun ortasında fırsat yatar."
+        author: "Albert Einstein"
+      '2':
+        author: "Mahatma Gandhi"
+      '3':
+        quote: "Ağlama çünkü bitti, gülümse çünkü gerçekleşti."
+        author: "Dr Seuss"
+      '4':
+        quote: "Doğru yapılan bir şey istiyorsanız, kendiniz yapın."
+        author: "Charles-Guillaume Étienne"
+      '5':
+        author: "Theodore Roosevelt"
+      '6':
+        quote: "Hayat bir kutu çikolata gibidir. Ne bulacağını asla bilemezsin."
+        author: "Forrest Gump’ın Annesi"
+      '7':
+        quote: "Bir insan için küçük, insanlık için dev bir adım."
+        author: "Neil Armstrong"
+      '8':
+        quote: "Her gün seni korkutan bir şey yap."
+        author: "Eleanor Roosevelt"
+      '9':
+        quote: "Onları kabul etme cesareti varsa, hatalar daima affedilebilirdir."
+        author: "Bruce Lee"
+      '10':
+        quote: "İnsan zihni ne olursa olsun düşünebilir ve inanabilir, başarabilir."
+        author: "Napoleon Hill"
+    magic_8_ball:
+      trigger: 'kısmet'
+      answers:
+        '1': "Bu kesin"
+        '2': "Kesinlikle öyle"
+        '3': "Şüphesiz"
+        '4': "Evet kesinlikle"
+        '5': "Güvenebilirsin"
+        '6': "Gördüğüm gibi, evet"
+        '7': "Büyük ihtimalle"
+        '8': "İyi görünüm"
+        '9': "Evet"
+        '10': "İşaretler evet'i gösteriyor"
+        '11': "Cevaplar bulanık, tekrar deneyin"
+        '12': "Sonra tekrar sor"
+        '13': "En iyisi şimdi söylememek"
+        '14': "Şimdi tahmin edemiyorum"
+        '15': "Konsantre ol ve tekrar sor"
+        '16': "Güvenmeyin"
+        '17': "Cevabım hayır"
+        '18': "Kaynaklarım hayır diyor"
+        '19': "Görünüm o kadar iyi değil"
+        '20': "Çok şüpheli"
+    track_selector:
+      reset_trigger: 'başla'
+      skip_trigger: 'atla'
+      help_trigger: 'yardımı görüntüle'
+    new_user_narrative:
+      reset_trigger: "yeni kullanıcı"
+      hello:
+        title: ":robot: Selamlar!"
+      quoting:
+        reply: |-
+          Güzel iş, benim en favori alıntımı aldınız! :left_speech_bubble:
+      emoji:
+        reply: |-
+          Bu :sparkles: _emojitastic!_ :sparkles:
+      certificate:
+        alt: 'Başarı Belgesi'
+    advanced_user_narrative:
+      reset_trigger: 'gelişmiş kullanıcı'
+      title: ':arrow_up: Gelişmiş kullanıcı özellikleri'
+      edit:
+        bot_created_post_raw: "@%{discobot_username} bugüne kadar, bildiğim en havalı bot :wink:"
+      recover:
+        deleted_post_raw: 'Neden @%{discobot_username} gönderimi sildin? :anguished:'
+      certificate:
+        alt: 'İleri Kullanıcı İzlemesi Başarı Sertifikası'

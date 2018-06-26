@@ -1,0 +1,181 @@
+{{plugin-outlet name="admin-dashboard-top"}}
+
+{{#if showVersionChecks}}
+  <div class="section-top">
+    <div class="version-checks">
+      {{partial 'admin/templates/version-checks'}}
+    </div>
+  </div>
+{{/if}}
+
+{{partial 'admin/templates/dashboard-problems'}}
+
+<div class="community-health section">
+  <div class="section-title">
+    <h2>{{i18n "admin.dashboard.community_health"}}</h2>
+    {{period-chooser period=period action="changePeriod" content=availablePeriods fullDay=true}}
+  </div>
+
+  <div class="section-body">
+    <div class="charts">
+      {{dashboard-mini-chart
+        dataSourceNames="signups"
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceNames="topics"
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceNames="posts"
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceNames="dau_by_mau"
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceNames="daily_engaged_users"
+        startDate=startDate
+        endDate=endDate}}
+
+      {{dashboard-mini-chart
+        dataSourceNames="new_contributors"
+        startDate=startDate
+        endDate=endDate}}
+    </div>
+  </div>
+</div>
+
+<div class="section-columns">
+  <div class="section-column">
+    <div class="dashboard-table activity-metrics">
+      {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.activity_metrics")}}
+        <div class="table-title">
+          <h3>{{i18n "admin.dashboard.activity_metrics"}}</h3>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>{{i18n 'admin.dashboard.reports.today'}}</th>
+                <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
+                <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
+                <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each reports as |report|}}
+                {{admin-report-counts report=report allTime=false}}
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/conditional-loading-section}}
+    </div>
+    {{#link-to "adminReports"}}
+      {{i18n "admin.dashboard.all_reports"}}
+    {{/link-to}}
+
+    <div class="user-metrics">
+    {{dashboard-inline-table dataSourceNames="users_by_type" lastRefreshedAt=lastRefreshedAt}}
+
+    {{dashboard-inline-table dataSourceNames="users_by_trust_level" lastRefreshedAt=lastRefreshedAt}}
+    </div>
+    {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
+      <div class="misc">
+        {{#if shouldDisplayDurability}}
+          <div class="durability">
+            {{#if currentUser.admin}}
+              <div class="backups">
+                <h3 class="durability-title">
+                  <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
+                </h3>
+                <p>
+                  {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
+                  <br />
+                  {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                </p>
+              </div>
+            {{/if}}
+
+            <div class="uploads">
+              <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
+              <p>
+                {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
+              </p>
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="last-dashboard-update">
+          <div>
+          <h4>{{i18n "admin.dashboard.last_updated"}} </h4>
+          <p>{{updatedTimestamp}}</p>
+             <a rel="noopener" target="_blank" href="https://meta.discourse.org/tags/release-notes" class="btn">
+          {{i18n "admin.dashboard.whats_new_in_discourse"}}
+                  </a>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        {{i18n 'admin.dashboard.find_old'}} {{#link-to 'admin.dashboard'}}{{i18n "admin.dashboard.old_link"}}{{/link-to}}
+      </p>
+    {{/conditional-loading-section}}
+  </div>
+
+  <div class="section-column">
+    <div class="top-referred-topics">
+      {{#dashboard-table
+          dataSourceNames="top_referred_topics"
+          lastRefreshedAt=lastRefreshedAt
+          limit=8
+          as |context|}}
+        {{#each context.report.data as |data|}}
+          <tr>
+            <td class='left'>
+              <a href="{{data.topic_url}}">
+                {{data.topic_title}}
+              </a>
+            </td>
+            <td>
+              {{data.num_clicks}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/dashboard-table}}
+    </div>
+
+    <div class="trending-search">
+      {{#dashboard-table
+        limit=8
+        dataSourceNames="trending_search"
+        isEnabled=logSearchQueriesEnabled
+        disabledLabel="admin.dashboard.reports.trending_search.disabled"
+        startDate=lastWeek
+        endDate=endDate as |context|}}
+        {{#each context.report.data as |data|}}
+          <tr>
+            <td class='left'>
+              {{data.term}}
+            </td>
+            <td>
+              {{number data.unique_searches}}
+            </td>
+            <td>
+              {{data.ctr}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/dashboard-table}}
+      {{{i18n "admin.dashboard.reports.trending_search.more"}}}
+    </div>
+  </div>
+</div>

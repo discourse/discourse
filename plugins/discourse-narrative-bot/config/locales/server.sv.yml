@@ -5,4 +5,104 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sv: {}
+sv:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Aktivera Discourse digitala hjälpreda '
+    disable_discourse_narrative_bot_welcome_post: "Avaktivera introduktionsmeddelandet från Discourse  digitala hjälpreda "
+    discourse_narrative_bot_ignored_usernames: "Användarnamn som Discourse  digitala hjälpreda bör ignorera"
+    discourse_narrative_bot_disable_public_replies: "Inaktivera publika svar från Discourse digitala hjälpreda "
+    discourse_narrative_bot_welcome_post_type: "Vilken typ av välkomstmeddelande Discourse digitala hjälpreda bör skicka"
+    discourse_narrative_bot_welcome_post_delay: "Avvakta (n) sekunder innan Discourse digitala hjälpreda skickar välkomstmeddelande "
+  badges:
+    certified:
+      name: Certifierad
+      description: "Genomfört introduktion för nya användare"
+      long_description: |
+        Detta märke tilldelas efter genomförande av den interaktiva introduktionen för nya användare. Du har genom detta initiativ lärt dig grundläggande verktygen för diskussion och är nu certifierad!
+    licensed:
+      name: Licencierad
+      description: "Genomfört den avancerade användar kursen"
+      long_description: |
+        Detta märke tilldelas efter genomförande av den interaktiva avancerade instruktionen för användare. Du har genom detta initiativ lärt dig grundläggande verktygen för diskussion och är nu certifierad!
+  discourse_narrative_bot:
+    bio: "Hej, Jag är inte en riktig person. Jag är en bot som kan lära dig använda denna site. För att interagera med mig, skicka mig ett meddelande eller nämn **`@%{discobot_username}`** någonstans."
+    timeout:
+      message: |-
+        Hej @%{username}, bara ett meddelande för att kolla hur det går då jag ej hört av dig på ett tag.
+
+        - för att fortsätta, svara mig när som helst..
+
+        - Om du vill hoppa över detta steg, säg `%{skip_trigger}`.
+
+        - För att starta från början, säg `%{reset_trigger}`.
+
+        Om du inte är intresserad så är det inga problem då jag är en Robot.. Jag blir inte kränkt. :sob:
+    dice:
+      trigger: "roll"
+      invalid: |-
+        Förlåt, men det är inte möjligt matematiskt att kombinera tärningarna så. :confounded:
+      not_enough_dice: |-
+        Jag har endast summan . [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Jag vet!
+      out_of_range: |-
+        Visste du att  [max antal sidor](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) för en mattematiskt rättvis tärning är 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "citat"
+      '1':
+        quote: "Inom varje svårighet finns det möjligheter"
+        author: "Albert Einstein"
+      '2':
+        quote: "Frihet är inte värt att ha om det inte betyder frihet att göra fel."
+        author: "Mahatma Gandhi"
+      '3':
+        quote: "Gråt inte för att det är över, le eftersom det hände."
+        author: "Dr Seuss"
+      '4':
+        quote: "Om du vill ha något gjort rätt, gör det själv."
+        author: "Charles-Guillaume Étienne"
+      '5':
+        quote: "Tro att du kan och du är halvvägs där."
+        author: "Theodore Roosevelt"
+      '6':
+        quote: "Livet är som en låda med choklad. Du vet aldrig vad du kommer att få."
+        author: "Forrest Gump’s Mom ( Författaren: Winston Groom )"
+      '7':
+        quote: "Det är ett litet steg för en man, ett jättesprång för mänskligheten."
+        author: "Neil Armstrong"
+      '8':
+        quote: "Gör en sak varje dag som skrämmer dig."
+        author: "Eleanor Roosevelt"
+      '9':
+        author: "Bruce Lee"
+    advanced_user_narrative:
+      poll:
+        reply: |-
+          Bra, omröstning! Hur lyckades jag med att lära dig detta?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        not_found: |-
+          Har du problem med att skapa en widget detaljer? Försök med att inkludera följande i ditt nästa svar:
+
+          ```text
+          [details=Välj mig för detaijer]
+          Här är detaljerna
+          [/details]
+          ```
+        reply: |-
+          Bra jobbat!— din _detaljkännedom_ är avundsvärd!
+      end:
+        message: |-
+          Du blåste verkligen igenom  detta sm en _avancerad användare_ :bow:
+
+          %{certificate}
+
+          Det är allt jag har för dig idag
+
+          Farväl! Om du vill tala med mig igen, skicka mig ett meddelande när somhelst :sunglasses:
+      certificate:
+        alt: 'Diplom för genomförande av avancerad användargenomgång'

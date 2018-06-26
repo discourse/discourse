@@ -1,40 +1,24 @@
-{{d-editor tabindex="4"
-           value=composer.reply
-           placeholder="composer.reply_placeholder"
-           previewUpdated="previewUpdated"
-           markdownOptions=markdownOptions
-           extraButtons="extraButtons"
-           importQuote="importQuote"
-           toggleOptions="toggleOptions"
-           showUploadModal="showUploadModal"
-           togglePreview="togglePreview"
-           validation=validation
-           loading=composer.loading
-           forcePreview=forcePreview
-           composerEvents=true}}
+{{d-editor
+  tabindex="4"
+  value=composer.reply
+  placeholder=replyPlaceholder
+  previewUpdated="previewUpdated"
+  markdownOptions=markdownOptions
+  extraButtons="extraButtons"
+  importQuote="importQuote"
+  showUploadModal="showUploadModal"
+  togglePreview="togglePreview"
+  validation=validation
+  loading=composer.loading
+  forcePreview=forcePreview
+  showLink=showLink
+  composerEvents=true
+  onExpandPopupMenuOptions="onExpandPopupMenuOptions"
+  onPopupMenuAction=onPopupMenuAction
+  popupMenuOptions=popupMenuOptions
+  disabled=disableTextarea
+  outletArgs=(hash composer=composer editorType="composer")}}
 
-<div class="composer-bottom-right">
-  {{#if site.mobileView}}
-    <input type="file" id="mobile-uploader" multiple />
-    <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
-
-    {{#if showPreview}}
-      {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}
-    {{/if}}
-  {{else}}
-    <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
-  {{/if}}
-
-  {{#if isUploading}}
-    <div id="file-uploading">
-      {{loading-spinner size="small"}} {{i18n 'upload_selector.uploading'}}
-      {{uploadProgress}}%
-      {{#if isCancellable}}
-        <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{d-icon "times"}}</a>
-      {{/if}}
-    </div>
-  {{/if}}
-  <div id='draft-status' class="{{if isUploading 'hidden'}}">
-    {{draftStatus}}
-  </div>
-</div>
+{{#if site.mobileView}}
+  <input type="file" id="mobile-uploader" multiple>
+{{/if}}

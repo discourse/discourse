@@ -159,6 +159,11 @@ describe TextCleaner do
       expect(TextCleaner.clean_title(" \t Hello there \n ")).to eq("Hello there")
     end
 
+    it "strips zero width spaces" do
+      expect(TextCleaner.clean_title("Hello​ ​there")).to eq("Hello there")
+      expect(TextCleaner.clean_title("Hello​ ​there").length).to eq(11)
+    end
+
     context "title_prettify site setting is enabled" do
 
       before { SiteSetting.title_prettify = true }

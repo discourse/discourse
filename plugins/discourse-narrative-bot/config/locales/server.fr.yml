@@ -53,7 +53,7 @@ fr:
         quote: "La difficulté est porteuse d'occasions"
         author: "Albert Einstein"
       '2':
-        quote: "Vous devez être le changement que vous voulez voir dans ce monde."
+        quote: "La liberté ne signifie rien s'il n'y a pas la liberté de se tromper."
         author: "Mahatma Gandhi"
       '3':
         quote: "Ne pleurez pas parce que c'est fini, souriez parce que c'est arrivé !"
@@ -235,7 +235,7 @@ fr:
 
           - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji  `:tada:`
 
-          - Appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">~dans l'éditeur, ou sur le clavier de votre mobile.
+          - Appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur, ou sur le clavier de votre mobile.
         reply: |-
           C'est :sparkles: _emojitastic !_ :sparkles:
         not_found: |-
@@ -263,7 +263,7 @@ fr:
 
           > :imp: J'ai écris quelque chose de très méchant ici
 
-          Je devine que vous savez ce que vous avez à faire. **Signalez ce message** comme inapproprié !
+          Je devine que vous savez ce que vous avez à faire. **Signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> comme inapproprié !
         reply: |-
           [Notre équipe](/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
           (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
@@ -273,7 +273,7 @@ fr:
         instructions: |-
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.
 
-          Essayer de chercher le terme "capy​bara" dans ce sujet.
+          Essayer de chercher le terme "capy​&#8203;bara" dans ce sujet.
         hidden_message: |-
           Comment avez-vous pu rater le capy​bara ? :wink:
 
@@ -325,11 +325,11 @@ fr:
           Remarquez que les éditions après 5 minutes seront considérés comme des modifications publiques, et qu'un petit crayon apparaitra dans le coin haut droit avec le nombre de modification.
       delete:
         instructions: |-
-          Si vous souhaitez effacer un message que vous avez écrit, vous pouvez le supprimer.
+          Si vous souhaitez retirer un message que vous avez écrit, vous pouvez le supprimer.
 
           Allons-y et **supprimez** un de vos messages précédents en utilisant la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **suppression**. Attention à ne pas supprimer le premier message !
         not_found: |-
-          Je ne vois toujours aucun message supprimé ! Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">supprimer.
+          Je ne vois toujours aucun message supprimé ! Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> supprimer.
         reply: |-
           Whoa ! :boom:
 
@@ -341,7 +341,7 @@ fr:
 
           Pouvez-vous me faire une faveur et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> le **restaurer** ?
         not_found: |-
-          Des soucis ? Rappelez-vous: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> Afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> restaurer.
+          Je ne vois toujours aucun message supprimé ! Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> supprimer.
         reply: |-
           Pfiou, c'était moins une ! Merci d'avoir réparé ça ! :wink:
 
@@ -363,9 +363,9 @@ fr:
         instructions: |-
           Chaque sujet a un niveau de notification. Il démarre comme 'normal', c'est à dire que vous ne serez notifié que quand quelqu'un vous parle directement.
 
-          Par défaut, le niveau de notification pour un message privé est configuré au plus haut niveau de 'surveillance', c'est à dire que vous serez notifié et chaque nouvelle réponse. Mais vous pouvez changer le niveau de notification pour _n'importe quel_ sujet en 'Surveiller', 'Suivi', ou 'Silencieux'.
+          Par défaut, le niveau de notification pour un message privé est configuré au plus haut niveau de 'surveillance', c'est à dire que vous serez notifié à chaque nouvelle réponse. Mais vous pouvez changer le niveau de notification pour _n'importe quel_ sujet en 'Surveiller', 'Suivi', ou 'Silencieux'.
 
-          Essayons de changer le niveau de notification pour ce sujet. En bas de ce sujet, vous trouverez un bouton qui vous indique que vous **Surveillez** ce sujet. Pouvez-vous changer le niveau de notification pour **Suivi**' ?
+          Essayons de changer le niveau de notification pour ce sujet. En bas de ce sujet, vous trouverez un bouton qui vous indique que vous **Surveillez** ce sujet. Pouvez-vous changer le niveau de notification pour **Suivi**'?
         not_found: |-
           Il semble que vous êtes encore en train de Surveillez :eyes: ce sujet ! Si vous avez des difficultés à le trouver, le bouton du niveau de notification est situé sous le sujet.
         reply: |-

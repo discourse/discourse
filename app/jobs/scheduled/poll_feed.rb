@@ -2,9 +2,10 @@
 # Creates and Updates Topics based on an RSS or ATOM feed.
 #
 require 'digest/sha1'
+require 'excon'
+require_dependency 'final_destination'
 require_dependency 'post_creator'
 require_dependency 'post_revisor'
-require 'open-uri'
 
 module Jobs
   class PollFeed < Jobs::Scheduled
@@ -23,11 +24,24 @@ module Jobs
     end
 
     def poll_feed
+      ensure_rss_loaded
+      # defer loading rss
       feed = Feed.new
       import_topics(feed.topics)
     end
 
     private
+
+    @@rss_loaded = false
+
+    # rss lib is very expensive memory wise, no need to load it till it is needed
+    def ensure_rss_loaded
+      return if @@rss_loaded
+      require 'rss'
+      require_dependency 'feed_item_accessor'
+      require_dependency 'feed_element_installer'
+      @@rss_loaded = true
+    end
 
     def not_polled_recently?
       $redis.set(
@@ -46,17 +60,11 @@ module Jobs
 
     def import_topic(topic)
       if topic.user
-        TopicEmbed.import(topic.user, topic.url, topic.title, CGI.unescapeHTML(topic.content.scrub))
+        TopicEmbed.import(topic.user, topic.url, topic.title, CGI.unescapeHTML(topic.content))
       end
     end
 
     class Feed
-      require 'simple-rss'
-
-      if SiteSetting.embed_username_key_from_feed.present?
-        SimpleRSS.item_tags << SiteSetting.embed_username_key_from_feed.to_sym
-      end
-
       def initialize
         @feed_url = SiteSetting.feed_polling_url
         @feed_url = "http://#{@feed_url}" if @feed_url !~ /^https?\:\/\//
@@ -65,7 +73,7 @@ module Jobs
       def topics
         feed_topics = []
 
-        rss = fetch_rss
+        rss = parsed_feed
         return feed_topics unless rss.present?
 
         rss.items.each do |i|
@@ -78,36 +86,56 @@ module Jobs
 
       private
 
-      def fetch_rss
-        SimpleRSS.parse open(@feed_url, allow_redirections: :all)
-      rescue OpenURI::HTTPError, SimpleRSSError
+      def parsed_feed
+        raw_feed = fetch_rss
+        return nil if raw_feed.blank?
+
+        if SiteSetting.embed_username_key_from_feed.present?
+          FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, raw_feed)
+        end
+
+        RSS::Parser.parse(raw_feed)
+      rescue RSS::NotWellFormedError, RSS::InvalidRSSError
         nil
       end
 
+      def fetch_rss
+        final_destination = FinalDestination.new(@feed_url, verbose: true)
+        feed_final_url = final_destination.resolve
+        return nil unless final_destination.status == :resolved
+
+        Excon.new(feed_final_url.to_s).request(method: :get, expects: 200).body
+      rescue Excon::Error::HTTPStatus
+        nil
+      end
     end
 
     class FeedTopic
       def initialize(article_rss_item)
-        @article_rss_item = article_rss_item
+        @accessor = FeedItemAccessor.new(article_rss_item)
       end
 
       def url
-        link = @article_rss_item.link
+        link = @accessor.link
         if url?(link)
           return link
         else
-          return @article_rss_item.id
+          return @accessor.element_content(:id)
         end
       end
 
       def content
-        @article_rss_item.content_encoded&.force_encoding("UTF-8")&.scrub ||
-          @article_rss_item.content&.force_encoding("UTF-8")&.scrub ||
-          @article_rss_item.description&.force_encoding("UTF-8")&.scrub
+        content = nil
+
+        %i[content_encoded content description].each do |content_element_name|
+          content ||= @accessor.element_content(content_element_name)
+        end
+
+        content&.force_encoding('UTF-8')&.scrub
       end
 
       def title
-        @article_rss_item.title.force_encoding("UTF-8").scrub
+        @accessor.element_content(:title).force_encoding('UTF-8').scrub
       end
 
       def user
@@ -125,11 +153,7 @@ module Jobs
       end
 
       def author_username
-        begin
-          @article_rss_item.send(SiteSetting.embed_username_key_from_feed.to_sym)
-        rescue
-          nil
-        end
+        @accessor.element_content(SiteSetting.embed_username_key_from_feed.sub(':', '_'))
       end
 
       def default_user
@@ -145,9 +169,6 @@ module Jobs
       def find_user(user_name)
         User.where(username_lower: user_name).first
       end
-
     end
-
   end
-
 end

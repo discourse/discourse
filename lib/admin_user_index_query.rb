@@ -63,7 +63,8 @@ class AdminUserIndexQuery
     if params[:stats].present? && params[:stats] == false
       klass.order(order.reject(&:blank?).join(","))
     else
-      klass.includes(:user_stat).order(order.reject(&:blank?).join(","))
+      klass.includes(:user_stat, :user_second_factor)
+        .order(order.reject(&:blank?).join(","))
     end
   end
 
@@ -94,20 +95,26 @@ class AdminUserIndexQuery
     when 'staff'      then @query.where("admin or moderator")
     when 'admins'     then @query.where(admin: true)
     when 'moderators' then @query.where(moderator: true)
-    when 'blocked'    then @query.blocked
+    when 'silenced'   then @query.silenced
     when 'suspended'  then @query.suspended
     when 'pending'    then @query.not_suspended.where(approved: false, active: true)
     when 'suspect'    then suspect_users
+    when 'staged'     then @query.where(staged: true)
     end
   end
 
   def filter_by_search
-    if params[:filter].present?
-      params[:filter].strip!
-      if ip = IPAddr.new(params[:filter]) rescue nil
+    if params[:email].present?
+      return @query.where('user_emails.email = ?', params[:email].downcase)
+    end
+
+    filter = params[:filter]
+    if filter.present?
+      filter.strip!
+      if ip = IPAddr.new(filter) rescue nil
         @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else
-        @query.where('username_lower ILIKE :filter OR user_emails.email ILIKE :filter', filter: "%#{params[:filter]}%")
+        @query.filter_by_username_or_email(filter)
       end
     end
   end

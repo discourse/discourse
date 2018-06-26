@@ -5,7 +5,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return unless SiteSetting.automatic_backups_enabled?
+      return unless SiteSetting.enable_backups? && SiteSetting.automatic_backups_enabled?
 
       if latest_backup = Backup.all[0]
         date = File.ctime(latest_backup.path).getutc.to_date

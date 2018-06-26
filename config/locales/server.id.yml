@@ -17,7 +17,9 @@ id:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januari, Februari, Maret, April, Mei, Juni, Juli, Agustus, September, Oktober, November, Desember]
+    month_names: [~, Januari, Februari, Maret, April, Mei, Juni, Juli, Agustus, September, Oktober, November, Desember]
+    <<: *datetime_formats
+  time:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Topik"
@@ -43,16 +45,16 @@ id:
       present: harus kosong
       confirmation: "tidak cocok dengan %{attribute}"
       empty: tidak boleh kosong
-      equal_to: harus sebanyak %{count}
+      equal_to: "harus sebanyak %{count}"
       even: harus genap
       exclusion: telah dipratentukan oleh sistem
-      greater_than: harus lebih besar dari %{count}
-      greater_than_or_equal_to: harus sama dengan atau lebih besar dari %{count}
+      greater_than: "harus lebih besar dari %{count}"
+      greater_than_or_equal_to: "harus sama dengan atau lebih besar dari %{count}"
       has_already_been_used: "telah digunakan"
       inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
-      less_than: harus kurang dari %{count}
-      less_than_or_equal_to: harus sama dengan atau kurang dari %{count}
+      less_than: "harus kurang dari %{count}"
+      less_than_or_equal_to: "harus sama dengan atau kurang dari %{count}"
       not_a_number: bukan numerik
       not_an_integer: harus integer
       odd: harus ganjil
@@ -79,6 +81,9 @@ id:
       max_username_length_exists: "Anda tidak boleh menentukan jumlah karakter maksimum username dibawah username terpendek. "
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       default_categories_already_selected: "Anda tidak boleh memilih kategori yang digunakan di daftar lainnya."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
@@ -138,7 +143,6 @@ id:
     hot: "Topik Terpanas"
     top: "Topik unggulan"
     posts: "Pos terbaru"
-    private_posts: "pesan pribadi terkini"
     group_posts: "Posting terkini dari %{group_name}"
     group_mentions: "Mention terkini dari %{group_name}"
     user_topics: "Topik terakhir oleh @%{username}"
@@ -146,7 +150,6 @@ id:
   groups:
     errors:
       can_not_modify_automatic: "Anda tidak bisa mengubah grup otomatis."
-      member_already_exist: "'%{username}' telah menjadi anggota grup ini."
       invalid_domain: "'%{domain}' bukan domain yang valid."
       invalid_incoming_email: "'%{email}' bukanlah alamat email yang valid."
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
@@ -175,12 +178,11 @@ id:
       user_profile:
         bio_raw: "Tentang Saya"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Anda hanya dapat melampirkan peringatan pada pesan pribadi."
-              cant_send_pm: "Mohon maaf, Anda tidak dapat mengirimkan pesan pribadi pada pengguna tersebut."
               no_user_selected: "Anda harus memilih pengguna yang valid."
         user:
           attributes:
@@ -195,7 +197,6 @@ id:
           attributes:
             hex:
               invalid: "bukan warna yang valid."
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"
   vip_category_name: "Lounge / Santai"
@@ -222,7 +223,6 @@ id:
     leader:
       title: "pemimpin"
   rate_limiter:
-    too_many_requests: "Kami membatasi jumlah tindakan itu dapat dilakukan dalam satu hari. Mohon tunggu %{time_left} sebelum mencoba lagi."
     hours:
       other: "%{count} jam"
     minutes:
@@ -310,9 +310,7 @@ id:
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
-      title: "Pengguna Baru"
       xaxis: "Hari"
-      yaxis: "Jumlah pengguna baru"
     profile_views:
       xaxis: "Hari"
     topics:
@@ -347,7 +345,6 @@ id:
       xaxis: "Hari"
       yaxis: "Jumlah Surel"
     user_to_user_private_messages:
-      title: "Pengguna-ke-Pengguna"
       xaxis: "Hari"
       yaxis: "Jumlah Pesan"
     system_private_messages:
@@ -387,7 +384,6 @@ id:
       title: "Penjelajah Web"
       xaxis: "Hari"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Hari"
     page_view_logged_in_mobile_reqs:
       xaxis: "Hari"
@@ -417,7 +413,6 @@ id:
       xaxis: "Hari"
       yaxis: "Total"
     mobile_visits:
-      title: "Kunjungan Pengguna"
       xaxis: "Hari"
       yaxis: "Jumlah kunjungan"
   dashboard:
@@ -428,7 +423,6 @@ id:
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     contact_url: "URL kontak untuk situs ini. Digunakan dalam formulir kontak pada /about untuk hal penting."
-    notify_mods_when_user_blocked: "Jika pengguna diblokir secara otomatis, kirimkan pesan kepada semua moderator."
     maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
     errors:
@@ -446,8 +440,6 @@ id:
       blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
       max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
   system_messages:
-    spam_post_blocked:
-      subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:
       subject_template:
         other: "%{count} pengguna sedang menunggu persetujuan"
@@ -470,8 +462,3 @@ id:
     title: "Ketentuan Layanan"
   privacy_topic:
     title: "Kebijakan Privasi"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

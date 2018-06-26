@@ -1,0 +1,71 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ca:
+  js:
+    poll:
+      voters:
+        one: "votant"
+        other: "votants"
+      total_votes:
+        one: "vot total"
+        other: "vots totals"
+      average_rating: "Classificació mitjana: <strong>%{average}</strong>."
+      public:
+        title: "Els vots són públics."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Tria com a mínim <strong>1</strong> opció"
+            other: "Tria com a mínim <strong>%{count}</strong> opcions"
+          up_to_max_options:
+            one: "Tria més d'<strong>1</strong> opció"
+            other: "Tria més de <strong>%{count}</strong> opcions"
+          x_options:
+            one: "Tria <strong>1</strong> opció"
+            other: "Tria <strong>%{count}</strong> opcions"
+          between_min_and_max_options: "Tria entre <strong>%{min}</strong> i <strong>%{max}</strong> opcions"
+      cast-votes:
+        title: "Reparteix els teus vots"
+        label: "Vota ara!"
+      show-results:
+        title: "Mostra els resultats de l'enquesta"
+        label: "Mostra els resultats"
+      hide-results:
+        title: "Torna als teus vots"
+        label: "Amaga resultats"
+      open:
+        title: "Obre l'enquesta"
+        label: "Obre"
+        confirm: "Segur que vols obrir aquesta enquesta?"
+      close:
+        title: "Tanca l'enquesta"
+        label: "Tanca"
+        confirm: "Segur que vols tancar aquesta enquesta?"
+      error_while_toggling_status: "Disculpa, s'ha produït una errada en alternar l'estat de l'enquesta."
+      error_while_casting_votes: "Disculpa, s'ha produït una errada en emetre els teus vots."
+      error_while_fetching_voters: "Disculpa, hi ha hagut una errada en mostrar els votants."
+      ui_builder:
+        title: Crea una enquesta
+        insert: Insereix una enquesta
+        help:
+          options_count: Introdueix almenys 2 opcions
+          invalid_values: El valor mínim ha de ser menor que el valor màxim.
+          min_step_value: L'increment mínim és 1
+        poll_type:
+          label: Tipus
+          regular: Elecció simple
+          multiple: Elecció múltiple
+          number: Classificació de nombre
+        poll_config:
+          max: Màx.
+          min: Mín.
+          step: Pas
+        poll_public:
+          label: Mostra qui ha votat
+        poll_options:
+          label: Introdueix una elecció d'enquesta per línia

@@ -17,7 +17,7 @@ module Jobs
 
     def execute(args)
       # Feature topics in categories
-      CategoryFeaturedTopic.feature_topics
+      CategoryFeaturedTopic.feature_topics(batched: true)
 
       # Update the scores of posts
       args = { min_topic_age: 1.day.ago }

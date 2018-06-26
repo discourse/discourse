@@ -1,0 +1,15 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ur:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          format_description: "صارف کو تاریخ ظاہر کرنے کیلئے استعمال کیے جانے والا فارمیٹ۔ الفاظ (یورپ/پیرس) میں صارف ٹائم زَون کو ظاہر کرنے کیلئے \"\\T\\Z\" استعمال کریں"
+          timezones_title: ظاہر کیے جانے والے ٹائم زَونز
+          timezones_description: پیشگی اور فالبَیک میں تاریخیں ظاہر کرنے کیلئے ٹائم زَونز استعمال کیے جائیں گے۔

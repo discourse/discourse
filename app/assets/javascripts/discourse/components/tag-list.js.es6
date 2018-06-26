@@ -1,21 +1,23 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
-  classNameBindings: [':tag-list', 'categoryClass'],
+  classNameBindings: [":tag-list", "categoryClass"],
 
-  sortedTags: Ember.computed.sort('tags', 'sortProperties'),
+  isPrivateMessage: false,
+  sortedTags: Ember.computed.sort("tags", "sortProperties"),
 
-  title: function() {
-    if (this.get('titleKey')) { return I18n.t(this.get('titleKey')); }
-  }.property('titleKey'),
+  @computed("titleKey")
+  title(titleKey) {
+    return titleKey && I18n.t(titleKey);
+  },
 
-  category: function() {
-    if (this.get('categoryId')) {
-      return Discourse.Category.findById(this.get('categoryId'));
-    }
-  }.property('categoryId'),
+  @computed("categoryId")
+  category(categoryId) {
+    return categoryId && Discourse.Category.findById(categoryId);
+  },
 
-  categoryClass: function() {
-    if (this.get('category')) {
-      return "tag-list-" + this.get('category.fullSlug');
-    }
-  }.property('category')
+  @computed("category.fullSlug")
+  categoryClass(slug) {
+    return slug && `tag-list-${slug}`;
+  }
 });

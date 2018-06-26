@@ -105,12 +105,16 @@ class LetterAvatar
     end
 
     def cleanup_old
-      skip = File.basename(cache_path)
-      parent_path = File.dirname(cache_path)
-      Dir.entries(parent_path).each do |path|
-        unless ['.', '..'].include?(path) || path == skip
-          FileUtils.rm_rf(parent_path + "/" + path)
+      begin
+        skip = File.basename(cache_path)
+        parent_path = File.dirname(cache_path)
+        Dir.entries(parent_path).each do |path|
+          unless ['.', '..'].include?(path) || path == skip
+            FileUtils.rm_rf(parent_path + "/" + path)
+          end
         end
+      rescue Errno::ENOENT
+        # no worries, folder doesn't exists
       end
     end
   end

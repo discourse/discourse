@@ -1,0 +1,14 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.admin-agree-flag-dropdown {
+      .select-kit-body {
+        width: 485px;
+        max-width: 485px;
+      }
+      .select-kit-row[data-value="delete-spammer"] .texts .name,
+      .select-kit-row[data-value="delete-spammer"] .icons .d-icon {
+        color: $danger;
+      }
+    }
+  }
+}

@@ -51,6 +51,13 @@ describe Upload do
     expect(created_upload.extension).to eq("png")
   end
 
+  it "should create an invalid upload when the filename is blank" do
+    SiteSetting.authorized_extensions = "*"
+
+    created_upload = UploadCreator.new(image, nil).create_for(user_id)
+    expect(created_upload.valid?).to eq(false)
+  end
+
   context ".get_from_url" do
     let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
     let(:upload) { Fabricate(:upload, url: url) }
@@ -80,6 +87,8 @@ describe Upload do
 
     it "doesn't blow up with an invalid URI" do
       expect { Upload.get_from_url("http://ip:port/index.html") }.not_to raise_error
+      expect { Upload.get_from_url("mailto:admin%40example.com") }.not_to raise_error
+      expect { Upload.get_from_url("mailto:example") }.not_to raise_error
     end
 
     describe "s3 store" do
@@ -97,12 +106,35 @@ describe Upload do
         SiteSetting.enable_s3_uploads = false
       end
 
+      it "should return the right upload when using base url (not CDN) for s3" do
+        upload
+        url = "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}"
+
+        expect(Upload.get_from_url(url)).to eq(upload)
+      end
+
       it "should return the right upload when using a CDN for s3" do
         upload
         s3_cdn_url = 'https://mycdn.slowly.net'
         SiteSetting.s3_cdn_url = s3_cdn_url
 
         expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
+      end
+
+      it "should return the right upload when using one CDN for both s3 and assets" do
+        begin
+          original_asset_host = Rails.configuration.action_controller.asset_host
+          cdn_url = 'http://my.cdn.com'
+          Rails.configuration.action_controller.asset_host = cdn_url
+          SiteSetting.s3_cdn_url = cdn_url
+          upload
+
+          expect(Upload.get_from_url(
+            URI.join(cdn_url, path).to_s
+          )).to eq(upload)
+        ensure
+          Rails.configuration.action_controller.asset_host = original_asset_host
+        end
       end
     end
   end

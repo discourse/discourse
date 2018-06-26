@@ -85,7 +85,7 @@ class DiscourseDiff
       i += 1
     end
 
-    "<div class=\"span8\">#{left.join}</div><div class=\"span8 offset1\">#{right.join}</div>"
+    "<div class=\"revision-content\">#{left.join}</div><div class=\"revision-content\">#{right.join}</div>"
   end
 
   def side_by_side_markdown
@@ -184,8 +184,13 @@ class DiscourseDiff
         # add it right before the ">"
         html_or_text.insert(index_of_next_chevron, " class=\"diff-#{klass}\"")
       else
-        # we have a class, insert it at the beginning
-        html_or_text.insert(index_of_class + "class=".length + 1, "diff-#{klass} ")
+        # we have a class, insert it at the beginning if not already present
+        classes = html_or_text[/class=(["'])([^\1]*)\1/, 2]
+        if classes.include?("diff-#{klass}")
+          html_or_text
+        else
+          html_or_text.insert(index_of_class + "class=".length + 1, "diff-#{klass} ")
+        end
       end
     else
       "<#{klass}>#{html_or_text}</#{klass}>"

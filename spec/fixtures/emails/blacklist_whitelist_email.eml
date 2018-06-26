@@ -1,5 +1,7 @@
 Return-Path: <foo@mail.com>
 From: Foo <foo@mail.com>
+To: some_group@bar.com, alice@foo.com
+Cc: bob@FOO.com, carol@example.com
 Date: Fri, 15 Jan 2016 00:12:43 +0100
 Message-ID: <51@foo.bar.mail>
 Mime-Version: 1.0

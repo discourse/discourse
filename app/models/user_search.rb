@@ -9,6 +9,7 @@ class UserSearch
     @topic_id = opts[:topic_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
+    @include_staged_users = opts[:include_staged_users] || false
     @limit = opts[:limit] || 20
     @group = opts[:group]
     @guardian = Guardian.new(@searching_user)
@@ -16,7 +17,8 @@ class UserSearch
   end
 
   def scoped_users
-    users = User.where(active: true, staged: false)
+    users = User.where(active: true)
+    users = users.where(staged: false) unless @include_staged_users
 
     if @group
       users = users.where('users.id IN (
@@ -47,12 +49,12 @@ class UserSearch
 
     if @term.present?
       if SiteSetting.enable_names? && @term !~ /[_\.-]/
-        query = Search.ts_query(@term, "simple")
+        query = Search.ts_query(term: @term, ts_config: "simple")
 
         users = users.includes(:user_search_data)
           .references(:user_search_data)
           .where("user_search_data.search_data @@ #{query}")
-          .order(User.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
+          .order(DB.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
 
       else
         users = users.where("username_lower LIKE :term_like", term_like: @term_like)

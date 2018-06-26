@@ -1,0 +1,30 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Sat, 30 Jan 2016 01:10:11 +0100
+Message-ID: <38b@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="--==_mimepart_56abff5d49749_ddf83fca6d033a28548ad";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_56abff5d49749_ddf83fca6d033a28548ad
+Content-Type: text/plain;
+ charset=UTF-8;
+ filename=text.txt
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename=text.txt
+Content-ID: <56abff637aac_ddf83fca6d033a2855099@HAL.lan.mail>
+
+This is a txt file.
+
+----==_mimepart_56abff5d49749_ddf83fca6d033a28548ad
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Please find the same text file attached.
+----==_mimepart_56abff5d49749_ddf83fca6d033a28548ad--

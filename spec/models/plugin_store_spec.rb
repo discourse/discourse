@@ -2,16 +2,21 @@ require "rails_helper"
 require_dependency "plugin_store"
 
 describe PluginStore do
+  let(:store) { PluginStore.new("my_plugin_2") }
+
   def set(k, v)
     PluginStore.set("my_plugin", k, v)
+    store.set(k, v)
   end
 
   def get(k)
-    PluginStore.get("my_plugin", k)
+    value = PluginStore.get("my_plugin", k)
+    value == store.get(k) ? value : "values mismatch"
   end
 
   def remove_row(k)
     PluginStore.remove("my_plugin", k)
+    store.remove(k)
   end
 
   it "sets strings correctly" do

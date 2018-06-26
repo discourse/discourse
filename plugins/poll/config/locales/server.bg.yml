@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+bg:
+  site_settings:
+    poll_maximum_options: "Максимален брой опции позволени в анкетата."
+    poll_edit_window_mins: "Брой минути след създаването на анкета когато тя може да бъде редактирана."
+  poll:
+    multiple_polls_without_name: "Има много анкети без име. Използвай '<code>име</code>'  атрибута за да идентифицирате вашата публикация."
+    multiple_polls_with_same_name: "Има много анкети с това име: <strong>%{name}</strong>. Използвайте '<code>name</code>' за да се отличат вашите анкети."
+    default_poll_must_have_at_least_2_options: "Анкетата трябва да има поне 2 опции."
+    named_poll_must_have_at_least_2_options: "Анкетата <strong>%{name}</strong> трябва да има поне  2 опции."
+    default_poll_must_have_less_options:
+      one: "Анкетата трябва да има по-малко от 1 опция."
+      other: "Анкетата трябва да има по-малко от %{count} опции."
+    named_poll_must_have_less_options:
+      one: "Анкетата: <strong>%{name}</strong> трябва да има по-малко от 1 опция."
+      other: "Анкетата <strong>%{name}</strong> трябва да има по-малко от %{count} опции."
+    default_poll_must_have_different_options: "Анкетата трябва да има различни опции."
+    named_poll_must_have_different_options: "Анкетата  <strong>%{name}</strong> трябва да има различни възможни отговори."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Анкетата с множество възможни избора има невалидни параметри."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Анкетата <strong>%{name}</strong> е с множество възможни отговори и има невалидни параметри."
+    requires_at_least_1_valid_option: "Трябва да изберете най-малко 1 валиден вариант."
+    default_cannot_be_made_public: "Анкета с гласове не може да бъде направена публична."
+    edit_window_expired:
+      op_cannot_edit_options: "Не можете да добавяте или премахвате опции в анкетата след %{minutes} минути. Моля свържете се с модератор, ако искате да редактирате опции в анкетите."
+      staff_cannot_add_or_remove_options: "Не можете да добавяте или премахвате опции в анкетата след %{minutes} минути. Трябва да затворите тази тема и да създадете нова."
+    no_polls_associated_with_this_post: "Няма анкети които са свързани с тази публикация."
+    no_poll_with_this_name: "Няма анкета <strong>%{name}</strong> свързана с тази публикация."
+    post_is_deleted: "Не можете да извършвате действие върху изтрита публикация."
+    topic_must_be_open_to_vote: "Темата трябва да бъде отворена за да гласувате."
+    poll_must_be_open_to_vote: "Анкетата трябва да бъде отворена за да гласувате."
+    topic_must_be_open_to_toggle_status: "Темата трябва да бъде отворена за изменяне на статуса."
+    only_staff_or_op_can_toggle_status: "Само член на персонала или автора на анкетата може да измени нейния статус."
+    email:
+      link_to_poll: "Кликнете, за да видите анкетата."

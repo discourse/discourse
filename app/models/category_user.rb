@@ -64,13 +64,13 @@ class CategoryUser < ActiveRecord::Base
 
   def self.auto_track(opts = {})
 
-    builder = SqlBuilder.new <<SQL
-    UPDATE topic_users tu
-    SET notification_level = :tracking,
-        notifications_reason_id = :auto_track_category
-    FROM topics t, category_users cu
-    /*where*/
-SQL
+    builder = DB.build <<~SQL
+      UPDATE topic_users tu
+      SET notification_level = :tracking,
+          notifications_reason_id = :auto_track_category
+      FROM topics t, category_users cu
+      /*where*/
+    SQL
 
     builder.where("tu.topic_id = t.id AND
                   cu.category_id = t.category_id AND
@@ -90,45 +90,47 @@ SQL
       builder.where("tu.user_id = :user_id", user_id: user_id)
     end
 
-    builder.exec(tracking: notification_levels[:tracking],
-                 regular: notification_levels[:regular],
-                 auto_track_category:  TopicUser.notification_reasons[:auto_track_category])
+    builder.exec(
+      tracking: notification_levels[:tracking],
+      regular: notification_levels[:regular],
+      auto_track_category:  TopicUser.notification_reasons[:auto_track_category]
+    )
   end
 
   def self.auto_watch(opts = {})
 
-    builder = SqlBuilder.new <<SQL
-    UPDATE topic_users tu
-    SET notification_level =
-      CASE WHEN should_track THEN :tracking
-           WHEN should_watch THEN :watching
-           ELSE notification_level
-      END,
-    notifications_reason_id =
-      CASE WHEN should_track THEN null
-           WHEN should_watch THEN :auto_watch_category
-           ELSE notifications_reason_id
-           END
-    FROM (
-      SELECT tu1.topic_id,
-             tu1.user_id,
-             CASE WHEN
-                cu.user_id IS NULL AND tu1.notification_level = :watching AND tu1.notifications_reason_id = :auto_watch_category THEN true
+    builder = DB.build <<~SQL
+      UPDATE topic_users tu
+      SET notification_level =
+        CASE WHEN should_track THEN :tracking
+             WHEN should_watch THEN :watching
+             ELSE notification_level
+        END,
+      notifications_reason_id =
+        CASE WHEN should_track THEN null
+             WHEN should_watch THEN :auto_watch_category
+             ELSE notifications_reason_id
+             END
+      FROM (
+        SELECT tu1.topic_id,
+               tu1.user_id,
+               CASE WHEN
+                  cu.user_id IS NULL AND tu1.notification_level = :watching AND tu1.notifications_reason_id = :auto_watch_category THEN true
+                    ELSE false
+               END should_track,
+               CASE WHEN
+                  cu.user_id IS NOT NULL AND tu1.notification_level in (:regular, :tracking) THEN true
                   ELSE false
-             END should_track,
-             CASE WHEN
-                cu.user_id IS NOT NULL AND tu1.notification_level in (:regular, :tracking) THEN true
-                ELSE false
-             END should_watch
+               END should_watch
 
-      FROM topic_users tu1
-      JOIN topics t ON t.id = tu1.topic_id
-      LEFT JOIN category_users cu ON cu.category_id = t.category_id AND cu.user_id = tu1.user_id AND cu.notification_level = :watching
-      /*where2*/
-    ) as X
+        FROM topic_users tu1
+        JOIN topics t ON t.id = tu1.topic_id
+        LEFT JOIN category_users cu ON cu.category_id = t.category_id AND cu.user_id = tu1.user_id AND cu.notification_level = :watching
+        /*where2*/
+      ) as X
 
-    /*where*/
-SQL
+      /*where*/
+    SQL
 
     builder.where("X.topic_id = tu.topic_id AND X.user_id = tu.user_id")
     builder.where("should_watch OR should_track")
@@ -147,22 +149,24 @@ SQL
       builder.where2("tu1.user_id = :user_id", user_id: user_id)
     end
 
-    builder.exec(watching: notification_levels[:watching],
-                 tracking: notification_levels[:tracking],
-                 regular: notification_levels[:regular],
-                 auto_watch_category:  TopicUser.notification_reasons[:auto_watch_category])
+    builder.exec(
+      watching: notification_levels[:watching],
+      tracking: notification_levels[:tracking],
+      regular: notification_levels[:regular],
+      auto_watch_category:  TopicUser.notification_reasons[:auto_watch_category]
+    )
 
   end
 
   def self.ensure_consistency!
-    exec_sql <<SQL
-    DELETE FROM category_users
-      WHERE user_id IN (
-        SELECT cu.user_id FROM category_users cu
-        LEFT JOIN users u ON u.id = cu.user_id
-        WHERE u.id IS NULL
-      )
-SQL
+    DB.exec <<~SQL
+      DELETE FROM category_users
+        WHERE user_id IN (
+          SELECT cu.user_id FROM category_users cu
+          LEFT JOIN users u ON u.id = cu.user_id
+          WHERE u.id IS NULL
+        )
+    SQL
   end
 
 end

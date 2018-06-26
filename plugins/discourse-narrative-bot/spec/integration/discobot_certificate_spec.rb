@@ -28,22 +28,9 @@ describe "Discobot Certificate" do
         }
 
         params.each do |key, _|
-          expect { get '/discobot/certificate.svg', params: params.except(key) }
-            .to raise_error(Discourse::InvalidParameters)
+          get '/discobot/certificate.svg', params: params.except(key)
+          expect(response.status).to eq(400)
         end
-      end
-    end
-
-    describe 'when date is invalid' do
-      it 'should raise the right error' do
-        expect do
-          get '/discobot/certificate.svg', params: {
-            name: user.name,
-            date: "<script type=\"text/javascript\">alert('This app is probably vulnerable to XSS attacks!');</script>",
-            avatar_url: 'https://somesite.com/someavatar',
-            user_id: user.id
-          }
-        end.to raise_error(ArgumentError, 'invalid date')
       end
     end
   end

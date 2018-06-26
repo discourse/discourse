@@ -34,7 +34,7 @@ module CategoryGuardian
     if category.topic_count != 0
       oldest_topic = category.topics.where.not(id: category.topic_id).order('created_at ASC').limit(1).first
       if oldest_topic
-        return I18n.t('category.cannot_delete.topic_exists', count: category.topic_count, topic_link: "<a href=\"#{oldest_topic.url}\">#{oldest_topic.title}</a>")
+        return I18n.t('category.cannot_delete.topic_exists', count: category.topic_count, topic_link: "<a href=\"#{oldest_topic.url}\">#{CGI.escapeHTML(oldest_topic.title)}</a>")
       else
         # This is a weird case, probably indicating a bug.
         return I18n.t('category.cannot_delete.topic_exists_no_oldest', count: category.topic_count)

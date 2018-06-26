@@ -34,12 +34,17 @@ describe JsLocaleHelper do
   end
 
   context "message format" do
+    def message_format_filename(locale)
+      Rails.root + "lib/javascripts/locale/#{locale}.js"
+    end
 
     def setup_message_format(format)
+      filename = message_format_filename('en')
+      compiled = JsLocaleHelper.compile_message_format(filename, 'en', format)
+
       @ctx = MiniRacer::Context.new
       @ctx.eval('MessageFormat = {locale: {}};')
-      @ctx.load(Rails.root + 'lib/javascripts/locale/en.js')
-      compiled = JsLocaleHelper.compile_message_format('en', format)
+      @ctx.load(filename)
       @ctx.eval("var test = #{compiled}")
     end
 
@@ -110,7 +115,7 @@ describe JsLocaleHelper do
     end
 
     it 'load pluralizations rules before precompile' do
-      message = JsLocaleHelper.compile_message_format('ru', 'format')
+      message = JsLocaleHelper.compile_message_format(message_format_filename('ru'), 'ru', 'format')
       expect(message).not_to match 'Plural Function not found'
     end
   end

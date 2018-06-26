@@ -101,11 +101,12 @@ a:hover {
    ========================================================================== */
 
 /**
- * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
+ * Address styling not present in IE 8/9/10/11 & Edge
  */
 
-abbr[title] {
-  border-bottom: 1px dotted;
+ abbr[title], acronym[title] {
+  text-decoration: underline;
+  text-decoration-style: dotted; 
 }
 
 /**
@@ -131,7 +132,7 @@ dfn {
  */
 
 h1 {
-  font-size: 1.6em;
+  font-size: 1.7511em;
   margin: 0.67em 0;
 }
 

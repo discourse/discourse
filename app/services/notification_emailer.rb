@@ -72,6 +72,14 @@ class NotificationEmailer
     end
 
     def enqueue_private(type, delay = private_delay)
+
+      if notification.user.user_option.nil?
+        # this can happen if we roll back user creation really early
+        # or delete user
+        # bypass this pm
+        return
+      end
+
       return unless notification.user.user_option.email_private_messages?
       perform_enqueue(type, delay)
     end
@@ -91,7 +99,7 @@ class NotificationEmailer
     end
 
     def private_delay
-      SiteSetting.private_email_time_window_seconds
+      SiteSetting.personal_email_time_window_seconds
     end
 
     def post_type

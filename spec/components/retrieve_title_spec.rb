@@ -54,7 +54,18 @@ describe RetrieveTitle do
       )
       expect(title).to eq("Video Title")
     end
+  end
 
+  context "crawl" do
+    it "can properly extract a title from a url" do
+      stub_request(:get, "https://brelksdjflaskfj.com/amazing")
+        .to_return(status: 200, body: "<html><title>very amazing</title>")
+
+      # we still resolve the IP address for every host
+      IPSocket.stubs(:getaddress).returns('100.2.3.4')
+
+      expect(RetrieveTitle.crawl("https://brelksdjflaskfj.com/amazing")).to eq("very amazing")
+    end
   end
 
 end

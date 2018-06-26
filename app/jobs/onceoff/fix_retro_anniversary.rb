@@ -6,26 +6,26 @@ module Jobs
     def execute_onceoff(args)
       return unless SiteSetting.enable_badges
 
-      users = User.exec_sql <<~SQL
-        SELECT ub.user_id, MIN(granted_at) AS first_granted_at, COUNT(*)
+      users = DB.query <<~SQL
+        SELECT ub.user_id, MIN(granted_at) AS first_granted_at, COUNT(*) count
         FROM user_badges AS ub
         WHERE ub.badge_id = #{Badge::Anniversary}
         GROUP BY ub.user_id
         HAVING COUNT(ub.id) > 1
       SQL
 
-      users.to_a.each do |u|
-        first = Time.zone.parse(u['first_granted_at'])
+      users.each do |u|
+        first = u.first_granted_at
         badges = UserBadge.where(
           "badge_id = ? AND user_id = ? AND granted_at > ?",
           Badge::Anniversary,
-          u['user_id'],
+          u.user_id,
           first
         ).order('granted_at')
 
         badges.each_with_index do |b, idx|
           award_date = (first + (idx + 1).years)
-          UserBadge.where(id: b['id']).update_all(["granted_at = ?", award_date])
+          UserBadge.where(id: b.id).update_all(["granted_at = ?", award_date])
         end
       end
 

@@ -9,5 +9,5 @@ cs:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Zapnout všem novým uživatelům návod pro nové uživatele"
-        welcome_message: "Poslat všem novým uživatelům uvítací zprávu s návodem jak začit"
+        new_user_track: "Zapnout návod pro všechny nové uživatele"
+        welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít"

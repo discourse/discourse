@@ -81,6 +81,28 @@ describe CategoryList do
       end
     end
 
+    context "notification level" do
+      it "returns 'regular' as default notification level" do
+        category = category_list.categories.find { |c| c.id == topic_category.id }
+        expect(category.notification_level).to eq(NotificationLevels.all[:regular])
+      end
+
+      it "returns the users notication level" do
+        CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:watching], topic_category.id)
+        category_list = CategoryList.new(Guardian.new(user))
+        category = category_list.categories.find { |c| c.id == topic_category.id }
+
+        expect(category.notification_level).to eq(NotificationLevels.all[:watching])
+      end
+
+      it "returns no notication level for anonymous users" do
+        category_list = CategoryList.new(Guardian.new(nil))
+        category = category_list.categories.find { |c| c.id == topic_category.id }
+
+        expect(category.notification_level).to be_nil
+      end
+    end
+
   end
 
   describe 'category order' do

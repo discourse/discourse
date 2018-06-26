@@ -1,139 +1,235 @@
-import componentTest from 'helpers/component-test';
+import componentTest from "helpers/component-test";
 
-moduleForComponent('category-chooser', {integration: true});
+moduleForComponent("category-chooser", {
+  integration: true,
+  beforeEach: function() {
+    this.set("subject", selectKit());
+  }
+});
 
-componentTest('with value', {
-  template: '{{category-chooser value=2}}',
+componentTest("with value", {
+  template: "{{category-chooser value=2}}",
 
   test(assert) {
-    expandSelectBox('.category-chooser');
-
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "feature");
+      assert.equal(
+        this.get("subject")
+          .header()
+          .value(),
+        2
+      );
+      assert.equal(
+        this.get("subject")
+          .header()
+          .title(),
+        "feature"
+      );
     });
   }
 });
 
-componentTest('with excludeCategoryId', {
-  template: '{{category-chooser excludeCategoryId=2}}',
+componentTest("with excludeCategoryId", {
+  template: "{{category-chooser excludeCategoryId=2}}",
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    this.get("subject").expand();
+
+    andThen(() =>
+      assert.notOk(
+        this.get("subject")
+          .rowByValue(2)
+          .exists()
+      )
+    );
+  }
+});
+
+componentTest("with scopedCategoryId", {
+  template: "{{category-chooser scopedCategoryId=2}}",
+
+  test(assert) {
+    this.get("subject").expand();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').rowByValue(2).el.length, 0);
+      assert.equal(
+        this.get("subject")
+          .rowByIndex(0)
+          .title(),
+        "Discussion about features or potential features of Discourse: how they work, why they work, etc."
+      );
+      assert.equal(
+        this.get("subject")
+          .rowByIndex(0)
+          .value(),
+        2
+      );
+      assert.equal(
+        this.get("subject")
+          .rowByIndex(1)
+          .title(),
+        "My idea here is to have mini specs for features we would like built but have no bandwidth to build"
+      );
+      assert.equal(
+        this.get("subject")
+          .rowByIndex(1)
+          .value(),
+        26
+      );
+      assert.equal(this.get("subject").rows().length, 2);
     });
   }
 });
 
-componentTest('with scopedCategoryId', {
-  template: '{{category-chooser scopedCategoryId=2}}',
-
-  test(assert) {
-    expandSelectBox('.category-chooser');
-
-    andThen(() => {
-      assert.equal(selectBox('.category-chooser').rowByIndex(0).name(), "feature");
-      assert.equal(selectBox('.category-chooser').rowByIndex(1).name(), "spec");
-      assert.equal(selectBox('.category-chooser').el.find(".select-box-kit-row").length, 2);
-    });
-  }
-});
-
-componentTest('with allowUncategorized=null', {
-  template: '{{category-chooser allowUncategorized=null}}',
+componentTest("with allowUncategorized=null", {
+  template: "{{category-chooser allowUncategorized=null}}",
 
   beforeEach() {
     this.siteSettings.allow_uncategorized_topics = false;
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
-
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(
+        this.get("subject")
+          .header()
+          .value(),
+        null
+      );
+      assert.equal(
+        this.get("subject")
+          .header()
+          .title(),
+        "category"
+      );
     });
   }
 });
 
-componentTest('with allowUncategorized=null rootNone=true', {
-  template: '{{category-chooser allowUncategorized=null rootNone=true}}',
+componentTest("with allowUncategorized=null rootNone=true", {
+  template: "{{category-chooser allowUncategorized=null rootNone=true}}",
 
   beforeEach() {
     this.siteSettings.allow_uncategorized_topics = false;
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
-
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(
+        this.get("subject")
+          .header()
+          .value(),
+        null
+      );
+      assert.equal(
+        this.get("subject")
+          .header()
+          .title(),
+        "category"
+      );
     });
   }
 });
 
-componentTest('with disallowed uncategorized, rootNone and rootNoneLabel', {
-  template: '{{category-chooser allowUncategorized=null rootNone=true rootNoneLabel="test.root"}}',
+componentTest("with disallowed uncategorized, rootNone and rootNoneLabel", {
+  template:
+    '{{category-chooser allowUncategorized=null rootNone=true rootNoneLabel="test.root"}}',
 
   beforeEach() {
-    I18n.translations[I18n.locale].js.test = {root: 'root none label'};
+    I18n.translations[I18n.locale].js.test = { root: "root none label" };
     this.siteSettings.allow_uncategorized_topics = false;
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
-
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(
+        this.get("subject")
+          .header()
+          .value(),
+        null
+      );
+      assert.equal(
+        this.get("subject")
+          .header()
+          .title(),
+        "category"
+      );
     });
   }
 });
 
-componentTest('with allowed uncategorized', {
-  template: '{{category-chooser allowUncategorized=true}}',
+componentTest("with allowed uncategorized", {
+  template: "{{category-chooser allowUncategorized=true}}",
 
   beforeEach() {
     this.siteSettings.allow_uncategorized_topics = true;
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
-
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "uncategorized");
+      assert.equal(
+        this.get("subject")
+          .header()
+          .value(),
+        null
+      );
+      assert.equal(
+        this.get("subject")
+          .header()
+          .title(),
+        "uncategorized"
+      );
     });
   }
 });
 
-componentTest('with allowed uncategorized and rootNone', {
-  template: '{{category-chooser allowUncategorized=true rootNone=true}}',
+componentTest("with allowed uncategorized and rootNone", {
+  template: "{{category-chooser allowUncategorized=true rootNone=true}}",
 
   beforeEach() {
     this.siteSettings.allow_uncategorized_topics = true;
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
-
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "(no category)");
+      assert.equal(
+        this.get("subject")
+          .header()
+          .value(),
+        null
+      );
+      assert.equal(
+        this.get("subject")
+          .header()
+          .title(),
+        "(no category)"
+      );
     });
   }
 });
 
-componentTest('with allowed uncategorized rootNone and rootNoneLabel', {
-  template: '{{category-chooser allowUncategorized=true rootNone=true rootNoneLabel="test.root"}}',
+componentTest("with allowed uncategorized rootNone and rootNoneLabel", {
+  template:
+    '{{category-chooser allowUncategorized=true rootNone=true rootNoneLabel="test.root"}}',
 
   beforeEach() {
-    I18n.translations[I18n.locale].js.test = {root: 'root none label'};
+    I18n.translations[I18n.locale].js.test = { root: "root none label" };
     this.siteSettings.allow_uncategorized_topics = true;
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
-
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "root none label");
+      assert.equal(
+        this.get("subject")
+          .header()
+          .value(),
+        null
+      );
+      assert.equal(
+        this.get("subject")
+          .header()
+          .title(),
+        "root none label"
+      );
     });
   }
 });

@@ -37,7 +37,7 @@ class Permalink < ActiveRecord::Base
       end
 
       if regex.length > 1
-        [Regexp.new(regex[1..-1]), sub[1..-1] || ""] rescue nil
+        [Regexp.new(regex[1..-1]), sub[1..-1] || ""]
       end
 
     end

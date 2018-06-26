@@ -1,17 +1,70 @@
-// styles that apply to the reply pane that slides up to compose replies
+#reply-control {
+  .reply-area {
+    margin: 0 auto;
+    padding: 5px 15px;
+    box-sizing: border-box;
+    height: calc(100% - 11px);
+    width: 100%;
+    .submit-panel {
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
 
-// hack, this needs to be done cleaner
-#private-message-users {
-  width: 400px;
-  float: left;
+  #private-message-users {
+    width: 404px;
+  }
+
+  .select-kit.is-expanded {
+    z-index: z("composer", "dropdown");
+  }
 }
 
-.add-warning {
-  width: 300px;
-  display: inline-block;
-  position: relative;
-  top: -30px;
-  margin-left: 20px;
+.category-input {
+  margin-left: 10px;
+}
+
+.edit-title {
+  .d-editor-preview-wrapper {
+    margin-top: -43px;
+  }
+  &:not(.private-message) {
+    .d-editor-preview-wrapper {
+      @media screen and (max-width: 955px) {
+        margin-top: -77px;
+      }
+    }
+  }
+
+  .with-tags {
+    .d-editor-preview-wrapper {
+      margin-top: -77px;
+      @media screen and (max-width: 900px) {
+        margin-top: -105px;
+      }
+    }
+  }
+}
+
+.closed {
+  .grippie {
+    display: none;
+  }
+}
+
+.open {
+  .grippie {
+    cursor: row-resize;
+    padding: 4px 0;
+    background: $tertiary;
+    &:before {
+      content: "";
+      display: block;
+      width: 27px;
+      margin: auto;
+      border-top: 3px double $secondary;
+    }
+  }
 }
 
 .composer-popup-container {
@@ -22,21 +75,19 @@
 
 .composer-popup {
   position: absolute;
-  width: calc(50% - 55px);
+  width: calc(50% - 45px);
   max-width: 724px;
-  top: 16px;
-  bottom: 16px;
-  left: 50%;
-  // The composer goes off-center at 1550px
-  @media (min-width: 1550px) {
-    left: calc(50% - 15px);
-  }
+  top: 20px;
+  bottom: 10px;
+  left: 51%;
   overflow-y: auto;
-  z-index: 110;
+  z-index: z("composer", "popover");
   padding: 10px 10px 35px 10px;
-
-  box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
+  box-shadow: shadow("card");
   background: $highlight-medium;
+  .hide-preview & {
+    z-index: z("composer", "dropdown") + 1;
+  }
 
   &.urgent {
     background: $danger-low;
@@ -59,19 +110,18 @@
     right: 10px;
     bottom: 10px;
     color: $primary;
-    padding: 6px 4px 2px 4px;
-    font-size: 1.071em;
+    opacity: 0.5;
+    font-size: $font-up-1;
     &:before {
-      content: 'esc';
-      font-size: 0.85em;
+      content: "esc";
+      font-size: $font-down-1;
       margin-right: 0.5em;
     }
   }
 
   a.close:hover {
-    opacity: 1.0;
+    opacity: 1;
   }
-
 
   ul.topics {
     list-style: none;
@@ -82,6 +132,12 @@
       font-weight: normal;
       margin-top: 8px;
     }
+  }
+}
+
+.composer-controls {
+  .d-chevron-down {
+    vertical-align: text-top;
   }
 }
 
@@ -96,7 +152,7 @@
   background-color: $tertiary-low;
 
   a[href] {
-    color: $primary-medium;
+    color: $primary;
   }
 
   .posts-count {
@@ -109,12 +165,17 @@
     padding: 0;
   }
   .search-link {
-    .fa, .blurb {
+    .fa,
+    .blurb {
       color: dark-light-choose($primary-high, $secondary-medium);
+    }
+    span.topic {
+      display: flex;
+      flex-wrap: wrap;
     }
   }
   .badge-wrapper {
-    padding-left: 5px;
+    margin-left: 5px;
   }
 }
 
@@ -123,354 +184,17 @@
   width: calc(50% - 65px);
 }
 
-// only disabled when the device is touch-only
-.touch.mobile-device #reply-control.open .grippie {
-  display: none;
-}
-
-#reply-control {
-  .toggle-preview, #draft-status, #file-uploading {
-    position: absolute;
-    bottom: -31px;
-    margin-top: 0;
-  }
-  .toggle-preview {
-    right: 5px;
-  }
-  #draft-status, #file-uploading {
-    right: 51%;
-  }
-  #file-uploading {
-    font-size: 0.857em;
-  }
-  transition: height 0.4s ease;
-  width: 100%;
-  z-index: 999;
-  height: 0;
-  background-color: $primary-low;
-  bottom: 0;
-  font-size: 1em;
-  position: fixed;
-  .toggler {
-    right: 1px;
-    position: absolute;
-    i { font-size: 1.1em; }
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    padding: 0 10px 5px 10px;
-  }
-  a.cancel {
-    padding-left: 7px;
-  }
-  .control-row {
-    margin: 0 5px 0 5px;
-  }
-  .saving-text {
-    display: none;
-  }
-  .draft-text {
-    display: none;
-  }
-  .grippie {
-    display: none;
-  }
-  // The various states
-  &.open {
-    height: 300px;
-    .grippie {
-      display: block;
-    }
-  }
-  &.closed {
-    height: 0 !important;
-  }
-  &.draft {
-    height: 40px !important;
-    cursor: pointer;
-    border-top: 1px solid $primary-low;
-    .draft-text {
-      display: block;
-
-      i {
-        color: dark-light-choose($primary-medium, $secondary-medium);
-      }
-    }
-  }
-  &.saving {
-    height: 40px !important;
-    border-top: 1px solid $primary-low;
-    .saving-text {
-      display: block;
-    }
-  }
-  .reply-area {
-    max-width: 1500px;
-    margin-left: auto;
-    margin-right: auto;
-    float: none;
-    .ac-wrap {
-      padding-left: 10px;
-    }
-  }
-
-  // When the post is new (new topic) the sizings are different
-  &.edit-title {
-
-    &.open {
-      height: 400px;
-    }
-    .contents {
-      input#reply-title {
-        padding: 7px 10px;
-        margin-bottom: 0;
-        color: $primary;
-        width: 400px;
-      }
-      .wmd-controls {
-        transition: top 0.3s ease;
-        top: 100px;
-      }
-    }
-  }
-  .contents {
-    padding-left: 10px;
-    padding-top: 5px;
-    min-width: 1280px;
-    .form-element {
-      position: relative;
-      display: inline-block;
-
-      .category-input .category-chooser {
-        width: 430px;
-        @include medium-width { width: 285px; }
-        @include small-width { width: 220px; }
-
-        .select-box-kit-header {
-          padding: 7px 10px;
-        }
-      }
-    }
-    .edit-reason-input {
-      display: inline-block;
-      position: absolute;
-      margin-left: 10px;
-      top: 18px;
-      #edit-reason {
-        margin: -7px 0 0;
-        padding: 5px;
-        float: left;
-        width: 300px;
-      }
-    }
-    #reply-title {
-      color: $primary;
-      margin-right: 5px;
-      float: left;
-      &:disabled {
-        background-color: $primary-low;
-      }
-    }
-    #topic-featured-link {
-      padding: 7px 10px;
-      margin: 6px 10px 3px 0;
-      width: 400px;
-    }
-    .d-editor-input:disabled {
-      background-color: $primary-low;
-    }
-    .d-editor-input, .d-editor-preview {
-      color: $primary;
-    }
-
-    .d-editor-preview {
-      border: 1px dashed $primary-low;
-      overflow: auto;
-      visibility: visible;
-      cursor: default;
-      video {
-        max-width: 100%;
-        max-height: 500px;
-        height: auto;
-      }
-      audio {
-        max-width: 100%;
-      }
-      &.hidden {
-        width: 0;
-        visibility: hidden;
-      }
-    }
-    .d-editor-input {
-      bottom: 35px;
-    }
-
-    .submit-panel {
-      width: 28%;
-      position: absolute;
-      display: block;
-      bottom: 8px;
-    }
-    .future-date-input .examples {
-      margin-top: 0;
-      padding-bottom: 8px;
-    }
-  }
-  .title-input, .category-input, .show-admin-options {
-    display: inline;
-    float: left;
-  }
-  .show-admin-options {
-    vertical-align: top;
-    margin-top: 8px;
-    background: $primary-low;
-  &:hover {
-    color: $secondary;
-    background: $primary;
-  }
-  }
-  .title-input .popup-tip {
-    width: 300px;
-    margin-top: 8px;
-    left: 150px;
-  }
-  .category-input .popup-tip {
-    width: 240px;
-    left: 432px;
-    top: -19px;
-  }
-}
-
-.reply-to {
-  margin-bottom: 10px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: $tertiary;
-
-  @media (min-width: 1101px) {
-    max-width: 80%;
-  }
-  @media (max-width: 1100px) {
-    max-width: 500px;
-  }
-  @media (max-width: 600px) {
-    max-width: 300px;
-  }
-
-  i {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-}
-
-#reply-control {
-  .wmd-controls.hide-preview {
-    .d-editor-input {
-      width: 100%;
-    }
-    .d-editor-button-bar {
-      width: 100%;
-    }
-    .d-editor-preview-wrapper {
-      display: none;
-    }
-    .d-editor-textarea-wrapper {
-      width: 100%;
-    }
-  }
-
-  .wmd-controls {
-    left: 30px;
-    right: 30px;
-    position: absolute;
-    bottom: 48px;
-    top: 50px;
-
-
-    .d-editor-input, .d-editor-preview {
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      min-height: auto;
-      padding: 7px;
-      margin: 0;
-      background-color: $secondary;
-      word-wrap: break-word;
-    }
-    .d-editor-input, .d-editor-preview-header {
-      position: absolute;
-      left: 0;
-      top: 0;
-      border: 0px;
-      border-top: 30px solid transparent;
-      @include border-radius-all(0);
-    }
-    .d-editor-preview-header {
-      font-size: 0.929em;
-      line-height: 18px;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      overflow: scroll;
-      .marker, .caret {
-        display: inline-block;
-        vertical-align: top;
-      }
-    }
-    .d-editor, .d-editor-container, .d-editor-textarea-wrapper, .d-editor-preview-wrapper {
-      position: relative;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      height: 100%;
-      min-height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    .d-editor-textarea-wrapper {
-      width: 50%;
-      padding-right: 5px;
-      float: left;
-      .popup-tip {
-        margin-top: 3px;
-        right: 4px;
-      }
-    }
-    .d-editor-preview-wrapper {
-      width: 50%;
-      padding-left: 5px;
-      float: right;
-    }
-  }
-  .d-editor-button-bar {
-    top: 0;
-    position: absolute;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    background-color: $secondary;
-    z-index: 100;
-    overflow: hidden;
-    width: 50%;
-
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    button {
-      color: dark-light-choose($primary-high, $secondary-high);
+.composer-bottom-right {
+  a {
+    color: $primary-high;
+    &:hover {
+      color: $tertiary;
     }
   }
 }
 
-#reply-control.topic-featured-link-only.open {
-  height: 200px;
-}
-
-.control-row.reply-area {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-@media all and (min-width: 1550px) {
-  #reply-control {
-    .wmd-controls {
-      width: 1450px;
-      left: auto;
-      right: auto;
-    }
-  }
+#draft-status,
+#file-uploading {
+  flex-grow: 1;
+  text-align: right;
 }

@@ -8,10 +8,18 @@ require_dependency 'admin_confirmation'
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
-  skip_before_action :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
-  before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
-                                          :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
+  requires_login only: [
+    :username, :update, :user_preferences_redirect, :upload_user_image,
+    :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
+    :preferences, :create_second_factor, :update_second_factor
+  ]
+
+  skip_before_action :check_xhr, only: [
+    :show, :badges, :password_reset, :update, :account_created,
+    :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login
+  ]
 
   before_action :respond_to_suspicious_request, only: [:create]
 
@@ -29,6 +37,7 @@ class UsersController < ApplicationController
                                                             :update_activation_email,
                                                             :password_reset,
                                                             :confirm_email_token,
+                                                            :email_login,
                                                             :admin_login,
                                                             :confirm_admin]
 
@@ -39,8 +48,7 @@ class UsersController < ApplicationController
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
-      { include_inactive: current_user.try(:staff?) },
-      [{ user_profile: :card_image_badge }]
+      include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts)
     )
 
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
@@ -67,6 +75,7 @@ class UsersController < ApplicationController
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
         store_preloaded("user_#{@user.username}", MultiJson.dump(user_serializer))
+        render :show
       end
 
       format.json do
@@ -75,21 +84,9 @@ class UsersController < ApplicationController
     end
   end
 
-  def card_badge
-  end
-
-  def update_card_badge
-    user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
-
-    user_badge = UserBadge.find_by(id: params[:user_badge_id].to_i)
-    if user_badge && user_badge.user == user && user_badge.badge.image.present?
-      user.user_profile.update_column(:card_image_badge_id, user_badge.badge.id)
-    else
-      user.user_profile.update_column(:card_image_badge_id, nil)
-    end
-
-    render body: nil
+  def badges
+    raise Discourse::NotFound unless SiteSetting.enable_badges?
+    show
   end
 
   def user_preferences_redirect
@@ -101,13 +98,19 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
     attributes = user_params.merge!(custom_fields: params[:custom_fields])
 
+    # We can't update the username via this route. Use the username route
+    attributes.delete(:username)
+
     if params[:user_fields].present?
       attributes[:custom_fields] = {} unless params[:custom_fields].present?
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
       fields.each do |f|
-        val = params[:user_fields][f.id.to_s]
+        field_id = f.id.to_s
+        next unless params[:user_fields].has_key?(field_id)
+
+        val = params[:user_fields][field_id]
         val = nil if val === "false"
         val = val[0...UserField.max_length] if val
 
@@ -169,7 +172,7 @@ class UsersController < ApplicationController
 
     user_badge = UserBadge.find_by(id: params[:user_badge_id])
     if user_badge && user_badge.user == user && user_badge.badge.allow_title?
-      user.title = user_badge.badge.name
+      user.title = user_badge.badge.display_name
       user.user_profile.badge_granted_title = true
       user.save!
       user.user_profile.save!
@@ -197,14 +200,14 @@ class UsersController < ApplicationController
   end
 
   def summary
-    user = fetch_user_from_params
+    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     summary = UserSummary.new(user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian)
     render_json_dump(serializer)
   end
 
   def invited
-    inviter = fetch_user_from_params
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
 
@@ -220,7 +223,7 @@ class UsersController < ApplicationController
   end
 
   def invited_count
-    inviter = fetch_user_from_params
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
     pending_count = Invite.find_pending_invites_count(inviter)
     redeemed_count = Invite.find_redeemed_invites_count(inviter)
@@ -239,7 +242,12 @@ class UsersController < ApplicationController
         Group.mentionable(current_user)
           .where(name: usernames)
           .pluck(:name, :user_count)
-          .map { |name, user_count| { name: name, user_count: user_count } }
+          .map do |name, user_count|
+          {
+            name: name,
+            user_count: user_count
+          }
+        end
       end
 
     usernames -= groups
@@ -258,7 +266,13 @@ class UsersController < ApplicationController
       .where(username_lower: usernames)
       .pluck(:username_lower)
 
-    render json: { valid: result, valid_groups: groups, mentionable_groups: mentionable_groups, cannot_see: cannot_see }
+    render json: {
+      valid: result,
+      valid_groups: groups,
+      mentionable_groups: mentionable_groups,
+      cannot_see: cannot_see,
+      max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
+    }
   end
 
   def render_available_true
@@ -312,12 +326,9 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      user_params.each { |k, v| user.send("#{k}=", v) }
-      user.staged = false
-    else
-      user = User.new(user_params)
-    end
+    new_user_params = user_params
+    user = User.unstage(new_user_params)
+    user = User.new(new_user_params) if user.nil?
 
     # Handle API approval
     if user.approved
@@ -346,7 +357,7 @@ class UsersController < ApplicationController
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
-      return render body: nil, status: 500
+      return render body: nil, status: :forbidden
     end
 
     authentication.start
@@ -441,12 +452,24 @@ class UsersController < ApplicationController
       end
     end
 
+    totp_enabled = @user&.totp_enabled?
+
+    if !totp_enabled || @user.authenticate_totp(params[:second_factor_token])
+      secure_session["second-factor-#{token}"] = "true"
+    end
+
+    valid_second_factor = secure_session["second-factor-#{token}"] == "true"
+
     if !@user
       @error = I18n.t('password_reset.no_token')
     elsif request.put?
       @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
 
-      if @invalid_password
+      if !valid_second_factor
+        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+        @user.errors.add(:user_second_factor, :invalid)
+        @error = I18n.t('login.invalid_second_factor_code')
+      elsif @invalid_password
         @user.errors.add(:password, :invalid)
       else
         @user.password = params[:password]
@@ -455,6 +478,7 @@ class UsersController < ApplicationController
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
+          secure_session["second-factor-#{token}"] = nil
           logon_after_password_reset
         end
       end
@@ -465,8 +489,16 @@ class UsersController < ApplicationController
         if @error
           render layout: 'no_ember'
         else
-          store_preloaded("password_reset", MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email)))
+          store_preloaded(
+            "password_reset",
+            MultiJson.dump(
+              is_developer: UsernameCheckerService.is_developer?(@user.email),
+              admin: @user.admin?,
+              second_factor_required: !valid_second_factor
+            )
+          )
         end
+
         return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
 
@@ -476,8 +508,9 @@ class UsersController < ApplicationController
             render json: {
               success: false,
               message: @error,
-              errors: @user&.errors.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user.email)
+              errors: @user&.errors&.to_hash,
+              is_developer: UsernameCheckerService.is_developer?(@user&.email),
+              admin: @user&.admin?
             }
           else
             render json: {
@@ -488,7 +521,11 @@ class UsersController < ApplicationController
             }
           end
         else
-          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email) }
+          render json: {
+            is_developer: UsernameCheckerService.is_developer?(@user.email),
+            admin: @user.admin?,
+            second_factor_required: !valid_second_factor
+          }
         end
       end
     end
@@ -515,35 +552,61 @@ class UsersController < ApplicationController
   end
 
   def admin_login
-    if current_user
-      return redirect_to path("/")
-    end
+    return redirect_to(path("/")) if current_user
 
-    if request.put?
+    if request.put? && params[:email].present?
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      user = User.with_email(params[:email]).where(admin: true).human_users.first
-      if user
+      if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.unknown_email_address")
       end
-    elsif params[:token].present?
-      # token recieved, try to login
-      if EmailToken.valid_token_format?(params[:token])
-        @user = EmailToken.confirm(params[:token])
-        if @user && @user.admin?
-          # Log in user
-          log_on_user(@user)
-          return redirect_to path("/")
-        else
-          @message = I18n.t("admin_login.error")
+    elsif (token = params[:token]).present?
+      valid_token = EmailToken.valid_token_format?(token)
+
+      if valid_token
+        if params[:second_factor_token].present?
+          RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+        end
+
+        email_token_user = EmailToken.confirmable(token)&.user
+        totp_enabled = email_token_user&.totp_enabled?
+        second_factor_token = params[:second_factor_token]
+        confirm_email = false
+
+        confirm_email =
+          if totp_enabled
+            @second_factor_required = true
+            @message = I18n.t("login.second_factor_title")
+
+            if second_factor_token.present?
+              if email_token_user.authenticate_totp(second_factor_token)
+                true
+              else
+                @error = I18n.t("login.invalid_second_factor_code")
+                false
+              end
+            end
+          else
+            true
+          end
+
+        if confirm_email
+          @user = EmailToken.confirm(token)
+
+          if @user && @user.admin?
+            log_on_user(@user)
+            return redirect_to path("/")
+          else
+            @message = I18n.t("admin_login.errors.unknown_email_address")
+          end
         end
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.invalid_token")
       end
     end
 
@@ -551,6 +614,40 @@ class UsersController < ApplicationController
   rescue RateLimiter::LimitExceeded
     @message = I18n.t("rate_limiter.slow_down")
     render layout: false
+  end
+
+  def email_login
+    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
+    return redirect_to path("/") if current_user
+
+    expires_now
+    params.require(:login)
+
+    RateLimiter.new(nil, "email-login-hour-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "email-login-min-#{request.remote_ip}", 3, 1.minute).performed!
+    user = User.human_users.find_by_username_or_email(params[:login])
+    user_presence = user.present? && !user.staged
+
+    if user
+      RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!
+      RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
+
+      if user_presence
+        email_token = user.email_tokens.create!(email: user.email)
+
+        Jobs.enqueue(:critical_user_email,
+          type: :email_login,
+          user_id: user.id,
+          email_token: email_token.token
+        )
+      end
+    end
+
+    json = success_json
+    json[:user_found] = user_presence unless SiteSetting.hide_email_address_taken
+    render json: json
+  rescue RateLimiter::LimitExceeded
+    render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def toggle_anon
@@ -566,20 +663,23 @@ class UsersController < ApplicationController
   end
 
   def account_created
-    return redirect_to("/") if current_user.present?
+    if current_user.present?
+      if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+        return redirect_to(session_sso_provider_url + "?" + payload)
+      else
+        return redirect_to("/")
+      end
+    end
 
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
-    @account_created = {
-      message: @message,
-      show_controls: false
-    }
+    @account_created = { message: @message, show_controls: false }
 
     if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
       if user = User.where(id: session_user_id.to_i).first
         @account_created[:username] = user.username
         @account_created[:email] = user.email
-        @account_created[:show_controls] = true
+        @account_created[:show_controls] = !user.from_staged?
       end
     end
 
@@ -599,8 +699,8 @@ class UsersController < ApplicationController
 
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
-    if @user = EmailToken.confirm(params[:token])
 
+    if @user = EmailToken.confirm(params[:token])
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -611,14 +711,16 @@ class UsersController < ApplicationController
         elsif destination_url = cookies[:destination_url]
           cookies[:destination_url] = nil
           return redirect_to(destination_url)
+        elsif SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+          return redirect_to(session_sso_provider_url + "?" + payload)
         end
       else
         @needs_approval = true
       end
-
     else
       flash.now[:error] = I18n.t('activation.already_done')
     end
+
     render layout: 'no_ember'
   end
 
@@ -633,22 +735,21 @@ class UsersController < ApplicationController
       @user = User.where(id: user_key.to_i).first
     end
 
-    raise Discourse::InvalidAccess.new unless @user.present?
-    raise Discourse::InvalidAccess.new if @user.active?
-    raise Discourse::InvalidAccess.new if current_user.present?
+    if @user.blank? || @user.active? || current_user.present? || @user.from_staged?
+      raise Discourse::InvalidAccess.new
+    end
 
     User.transaction do
       primary_email = @user.primary_email
-
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        @user.email_tokens.create(email: @user.email)
+        @user.email_tokens.create!(email: @user.email)
         enqueue_activation_email
         render json: success_json
       else
-        render_json_error(@user)
+        render_json_error(primary_email)
       end
     end
   end
@@ -684,7 +785,7 @@ class UsersController < ApplicationController
   end
 
   def enqueue_activation_email
-    @email_token ||= @user.email_tokens.create(email: @user.email)
+    @email_token ||= @user.email_tokens.create!(email: @user.email)
     Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token, to_address: @user.email)
   end
 
@@ -710,23 +811,24 @@ class UsersController < ApplicationController
 
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
-    if params[:include_groups] == "true"
-      to_render[:groups] = Group.search_group(term).map do |m|
-        { name: m.name, full_name: m.full_name }
-      end
-    end
-
-    if current_user
-      groups =
+    groups =
+      if current_user
         if params[:include_mentionable_groups] == 'true'
           Group.mentionable(current_user)
         elsif params[:include_messageable_groups] == 'true'
           Group.messageable(current_user)
         end
+      end
 
-      if groups
-        to_render[:groups] = groups.where("name ILIKE :term_like", term_like: "#{term}%")
-          .map { |m| { name: m.name, full_name: m.full_name } }
+    include_groups = params[:include_groups] == "true"
+
+    if include_groups || groups
+      groups = Group.search_groups(term, groups: groups)
+      groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
+      groups = groups.order('groups.name asc')
+
+      to_render[:groups] = groups.map do |m|
+        { name: m.name, full_name: m.full_name }
       end
     end
 
@@ -835,101 +937,161 @@ class UsersController < ApplicationController
     render layout: 'no_ember'
   end
 
+  def create_second_factor
+    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+    RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
+    RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
+
+    unless current_user.confirm_password?(params[:password])
+      return render json: failed_json.merge(
+        error: I18n.t("login.incorrect_password")
+      )
+    end
+
+    qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri).as_svg(
+      offset: 0,
+      color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 4
+    )
+
+    render json: success_json.merge(
+      key: current_user.user_second_factor.data.scan(/.{4}/).join(" "),
+      qr: qrcode_svg
+    )
+  end
+
+  def update_second_factor
+    params.require(:second_factor_token)
+
+    [request.remote_ip, current_user.id].each do |key|
+      RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
+    end
+
+    user_second_factor = current_user.user_second_factor
+    raise Discourse::InvalidParameters unless user_second_factor
+
+    unless current_user.authenticate_totp(params[:second_factor_token])
+      return render json: failed_json.merge(
+        error: I18n.t("login.invalid_second_factor_code")
+      )
+    end
+
+    if params[:enable] == "true"
+      user_second_factor.update!(enabled: true)
+    else
+      user_second_factor.destroy!
+
+      Jobs.enqueue(
+        :critical_user_email,
+        type: :account_second_factor_disabled,
+        user_id: current_user.id
+      )
+    end
+
+    render json: success_json
+  end
+
   private
 
-    def honeypot_value
-      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+  def honeypot_value
+    Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+  end
+
+  def challenge_value
+    challenge = $redis.get('SECRET_CHALLENGE')
+    unless challenge && challenge.length == 16 * 2
+      challenge = SecureRandom.hex(16)
+      $redis.set('SECRET_CHALLENGE', challenge)
     end
 
-    def challenge_value
-      challenge = $redis.get('SECRET_CHALLENGE')
-      unless challenge && challenge.length == 16 * 2
-        challenge = SecureRandom.hex(16)
-        $redis.set('SECRET_CHALLENGE', challenge)
-      end
+    challenge
+  end
 
-      challenge
+  def respond_to_suspicious_request
+    if suspicious?(params)
+      render json: {
+        success: true,
+        active: false,
+        message: I18n.t("login.activate_email", email: params[:email])
+      }
+    end
+  end
+
+  def suspicious?(params)
+    return false if current_user && is_api? && current_user.admin?
+    honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
+  end
+
+  def honeypot_or_challenge_fails?(params)
+    return false if is_api?
+    params[:password_confirmation] != honeypot_value ||
+    params[:challenge] != challenge_value.try(:reverse)
+  end
+
+  def user_params
+    permitted = [
+      :name,
+      :email,
+      :password,
+      :username,
+      :title,
+      :date_of_birth,
+      :muted_usernames,
+      :theme_key,
+      :locale,
+      :bio_raw,
+      :location,
+      :website,
+      :dismissed_banner_key,
+      :profile_background,
+      :card_background
+    ]
+
+    permitted.concat UserUpdater::OPTION_ATTR
+    permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
+    permitted.concat UserUpdater::TAG_NAMES.keys
+
+    result = params
+      .permit(permitted)
+      .reverse_merge(
+        ip_address: request.remote_ip,
+        registration_ip_address: request.remote_ip,
+        locale: user_locale
+      )
+
+    if !UsernameCheckerService.is_developer?(result['email']) &&
+        is_api? &&
+        current_user.present? &&
+        current_user.admin?
+
+      result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    def respond_to_suspicious_request
-      if suspicious?(params)
-        render json: {
-          success: true,
-          active: false,
-          message: I18n.t("login.activate_email", email: params[:email])
-        }
-      end
+    modify_user_params(result)
+  end
+
+  # Plugins can use this to modify user parameters
+  def modify_user_params(attrs)
+    attrs
+  end
+
+  def user_locale
+    I18n.locale
+  end
+
+  def fail_with(key)
+    render json: { success: false, message: I18n.t(key) }
+  end
+
+  def track_visit_to_user_profile
+    user_profile_id = @user.user_profile.id
+    ip = request.remote_ip
+    user_id = (current_user.id if current_user)
+
+    Scheduler::Defer.later 'Track profile view visit' do
+      UserProfileView.add(user_profile_id, ip, user_id)
     end
-
-    def suspicious?(params)
-      return false if current_user && is_api? && current_user.admin?
-      honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
-    end
-
-    def honeypot_or_challenge_fails?(params)
-      return false if is_api?
-      params[:password_confirmation] != honeypot_value ||
-      params[:challenge] != challenge_value.try(:reverse)
-    end
-
-    def user_params
-      permitted = [
-        :name,
-        :email,
-        :password,
-        :username,
-        :title,
-        :date_of_birth,
-        :muted_usernames,
-        :theme_key,
-        :locale,
-        :bio_raw,
-        :location,
-        :website,
-        :dismissed_banner_key,
-        :profile_background,
-        :card_background
-      ]
-
-      permitted.concat UserUpdater::OPTION_ATTR
-      permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
-      permitted.concat UserUpdater::TAG_NAMES.keys.map { |k| { k => [] } }
-
-      result = params
-        .permit(permitted)
-        .reverse_merge(
-          ip_address: request.remote_ip,
-          registration_ip_address: request.remote_ip,
-          locale: user_locale
-        )
-
-      if !UsernameCheckerService.is_developer?(result['email']) &&
-          is_api? &&
-          current_user.present? &&
-          current_user.admin?
-
-        result.merge!(params.permit(:active, :staged, :approved))
-      end
-
-      result
-    end
-
-    def user_locale
-      I18n.locale
-    end
-
-    def fail_with(key)
-      render json: { success: false, message: I18n.t(key) }
-    end
-
-    def track_visit_to_user_profile
-      user_profile_id = @user.user_profile.id
-      ip = request.remote_ip
-      user_id = (current_user.id if current_user)
-
-      Scheduler::Defer.later 'Track profile view visit' do
-        UserProfileView.add(user_profile_id, ip, user_id)
-      end
-    end
+  end
 
 end

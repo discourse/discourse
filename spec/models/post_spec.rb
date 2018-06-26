@@ -169,6 +169,9 @@ describe Post do
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
     let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
     let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
+    let(:post_image_within_quote) { post_with_body('[quote]<img src="coolimage.png">[/quote]', newuser) }
+    let(:post_image_within_code) { post_with_body('<code><img src="coolimage.png"></code>', newuser) }
+    let(:post_image_within_pre) { post_with_body('<pre><img src="coolimage.png"></pre>', newuser) }
     let(:post_with_thumbnail) { post_with_body('<img src="/assets/emoji/smiley.png" class="thumbnail">', newuser) }
     let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
 
@@ -186,6 +189,40 @@ describe Post do
 
     it "doesn't count avatars as images" do
       expect(post_with_avatars.image_count).to eq(0)
+    end
+
+    it "allows images by default" do
+      expect(post_one_image).to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_one_image).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images` in a quote" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_image_within_quote).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images` in code" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_image_within_code).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images` in pre" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_image_within_pre).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 4
+      expect(post_one_image).to be_valid
     end
 
     it "doesn't count favicons as images" do
@@ -352,9 +389,11 @@ describe Post do
 
   end
 
-  describe "maximum links" do
+  describe "maximums" do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_one_link) { post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser) }
+    let(:post_onebox) { post_with_body("http://www.google.com", newuser) }
+    let(:post_code_link) { post_with_body("<code>http://www.google.com</code>", newuser) }
     let(:post_two_links) { post_with_body("<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", newuser) }
     let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
 
@@ -371,7 +410,6 @@ describe Post do
     end
 
     it "finds links from HTML" do
-
       expect(post_two_links.link_count).to eq(2)
     end
 
@@ -391,9 +429,36 @@ describe Post do
         end
       end
 
-      it "allows multiple images for basic accounts" do
+      it "allows multiple links for basic accounts" do
         post_two_links.user.trust_level = TrustLevel[1]
         expect(post_two_links).to be_valid
+      end
+
+      context "min_trust_to_post_links" do
+        it "considers oneboxes links" do
+          SiteSetting.min_trust_to_post_links = 3
+          post_onebox.user.trust_level = TrustLevel[2]
+          expect(post_onebox).not_to be_valid
+        end
+
+        it "considers links within code" do
+          SiteSetting.min_trust_to_post_links = 3
+          post_onebox.user.trust_level = TrustLevel[2]
+          expect(post_code_link).not_to be_valid
+        end
+
+        it "doesn't allow allow links if `min_trust_to_post_links` is not met" do
+          SiteSetting.min_trust_to_post_links = 2
+          post_two_links.user.trust_level = TrustLevel[1]
+          expect(post_one_link).not_to be_valid
+        end
+
+        it "will skip the check for whitelisted domains" do
+          SiteSetting.whitelisted_link_domains = 'www.bbc.co.uk'
+          SiteSetting.min_trust_to_post_links = 2
+          post_two_links.user.trust_level = TrustLevel[1]
+          expect(post_one_link).to be_valid
+        end
       end
 
     end
@@ -615,7 +680,7 @@ describe Post do
       context 'second poster posts again quickly' do
 
         it 'is a ninja edit, because the second poster posted again quickly' do
-          SiteSetting.expects(:editing_grace_period).returns(1.minute.to_i)
+          SiteSetting.editing_grace_period = 1.minute.to_i
           post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
 
@@ -740,12 +805,13 @@ describe Post do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+    let!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
     it "returns the OP and posts above the threshold in summary mode" do
       SiteSetting.summary_percent_filter = 66
-      expect(Post.summary.order(:post_number)).to eq([p1, p2])
+      expect(Post.summary(topic.id).order(:post_number)).to eq([p1, p2])
+      expect(Post.summary(p4.topic.id)).to eq([p4])
     end
-
   end
 
   context 'sort_order' do
@@ -775,6 +841,44 @@ describe Post do
       expect(p2.reply_history).to eq([p1])
     end
 
+  end
+
+  context "reply_ids" do
+
+    let!(:topic) { Fabricate(:topic) }
+    let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
+    let!(:p2) { Fabricate(:post, topic: topic, post_number: 2, reply_to_post_number: 1) }
+    let!(:p3) { Fabricate(:post, topic: topic, post_number: 3) }
+    let!(:p4) { Fabricate(:post, topic: topic, post_number: 4, reply_to_post_number: 2) }
+    let!(:p5) { Fabricate(:post, topic: topic, post_number: 5, reply_to_post_number: 4) }
+    let!(:p6) { Fabricate(:post, topic: topic, post_number: 6) }
+
+    before {
+      PostReply.create!(post: p1, reply: p2)
+      PostReply.create!(post: p2, reply: p4)
+      PostReply.create!(post: p2, reply: p6) # simulates p6 quoting p2
+      PostReply.create!(post: p3, reply: p5) # simulates p5 quoting p3
+      PostReply.create!(post: p4, reply: p5)
+      PostReply.create!(post: p6, reply: p6) # https://meta.discourse.org/t/topic-quoting-itself-displays-reply-indicator/76085
+    }
+
+    it "returns the reply ids and their level" do
+      expect(p1.reply_ids).to eq([{ id: p2.id, level: 1 }, { id: p4.id, level: 2 }, { id: p6.id, level: 2 }])
+      expect(p2.reply_ids).to eq([{ id: p4.id, level: 1 }, { id: p6.id, level: 1 }])
+      expect(p3.reply_ids).to be_empty # has no replies
+      expect(p4.reply_ids).to be_empty # p5 replies to 2 posts (p4 and p3)
+      expect(p5.reply_ids).to be_empty # has no replies
+      expect(p6.reply_ids).to be_empty # quotes itself
+    end
+
+    it "does not skip any replies" do
+      expect(p1.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p2.id, level: 1 }, { id: p4.id, level: 2 }, { id: p5.id, level: 3 }, { id: p6.id, level: 2 }])
+      expect(p2.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p4.id, level: 1 }, { id: p5.id, level: 2 }, { id: p6.id, level: 1 }])
+      expect(p3.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p5.id, level: 1 }])
+      expect(p4.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p5.id, level: 1 }])
+      expect(p5.reply_ids(only_replies_to_single_post: false)).to be_empty # has no replies
+      expect(p6.reply_ids(only_replies_to_single_post: false)).to be_empty # quotes itself
+    end
   end
 
   describe 'urls' do
@@ -839,12 +943,12 @@ describe Post do
   end
 
   describe "has_host_spam" do
-    let(:raw) { "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
+    let(:raw) { "hello from my site http://www.example.net http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
 
     it "correctly detects host spam" do
       post = Fabricate(:post, raw: raw)
 
-      expect(post.total_hosts_usage).to eq("www.somesite.com" => 1)
+      expect(post.total_hosts_usage).to eq("www.example.net" => 1)
       post.acting_user.trust_level = 0
 
       expect(post.has_host_spam?).to eq(false)
@@ -853,13 +957,33 @@ describe Post do
 
       expect(post.has_host_spam?).to eq(true)
 
-      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
+      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | example.net "
       expect(post.has_host_spam?).to eq(false)
     end
 
     it "doesn't punish staged users" do
       SiteSetting.newuser_spam_host_threshold = 1
       user = Fabricate(:user, staged: true, trust_level: 0)
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(false)
+    end
+
+    it "punishes previously staged users that were created within 1 day" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.newuser_max_links = 3
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      user.created_at = 1.hour.ago
+      user.unstage
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(true)
+    end
+
+    it "doesn't punish previously staged users over 1 day old" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.newuser_max_links = 3
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      user.created_at = 1.day.ago
+      user.unstage
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
     end
@@ -891,7 +1015,7 @@ describe Post do
       first_baked = post.baked_at
       first_cooked = post.cooked
 
-      Post.exec_sql("UPDATE posts SET cooked = 'frogs' WHERE id = ?", post.id)
+      DB.exec("UPDATE posts SET cooked = 'frogs' WHERE id = ?", [ post.id ])
       post.reload
 
       post.expects(:publish_change_to_clients!).with(:rebaked)
@@ -997,6 +1121,13 @@ describe Post do
 
     expect(second_post.hidden).to eq(false)
     expect(hidden_topic.visible).to eq(false)
+  end
+
+  it "automatically orders post revisions by number ascending" do
+    post = Fabricate(:post)
+    post.revisions.create!(user_id: 1, post_id: post.id, number: 2)
+    post.revisions.create!(user_id: 1, post_id: post.id, number: 1)
+    expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
 end

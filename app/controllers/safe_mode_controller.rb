@@ -1,5 +1,7 @@
 class SafeModeController < ApplicationController
   layout 'no_ember'
+  before_action :ensure_safe_mode_enabled
+
   skip_before_action :preload_json, :check_xhr
 
   def index
@@ -14,7 +16,15 @@ class SafeModeController < ApplicationController
     if safe_mode.length > 0
       redirect_to path("/?safe_mode=#{safe_mode.join("%2C")}")
     else
+      flash[:must_select] = true
       redirect_to safe_mode_path
     end
   end
+
+  protected
+
+  def ensure_safe_mode_enabled
+    raise Discourse::NotFound unless guardian.can_enable_safe_mode?
+  end
+
 end

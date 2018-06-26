@@ -2,20 +2,20 @@
 // *** These styles are all going to be flipped by the r2 gem ***
 // Adding the !important declaration to a rule prevents it from being flipped.
 
-// Keep the topic admin menu on the page
-.rtl .popup-menu {
-  right: 0 !important;
+.rtl #topic-progress-wrapper .topic-admin-popup-menu.right-side,
+.rtl #topic-progress-wrapper.docked .topic-admin-popup-menu.right-side {
+  right: 80px;
 }
 
 // This is used to flip the .d-icon-caret-right
-@mixin rotate( $degrees ) {
+@mixin rotate($degrees) {
   -webkit-transform: rotate(#{$degrees}deg);
   -moz-transform: rotate(#{$degrees}deg);
   -ms-transform: rotate(#{$degrees}deg);
   -o-transform: rotate(#{$degrees}deg);
   transform: rotate(#{$degrees}deg);
 
-  filter:  "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=#{cos($degrees)}, M12=-#{sin($degrees)}, M21=#{sin($degrees)}, M22=#{cos($degrees)})";
+  filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=#{cos($degrees)}, M12=-#{sin($degrees)}, M21=#{sin($degrees)}, M22=#{cos($degrees)})";
   -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=#{cos($degrees)}, M12=-#{sin($degrees)}, M21=#{sin($degrees)}, M22=#{cos($degrees)})";
   zoom: 1;
 }
@@ -32,8 +32,8 @@
   border-right-color: $secondary !important;
 }
 .rtl code {
-    direction: ltr !important;
-    text-align: left !important;
+  direction: ltr !important;
+  text-align: left !important;
 }
 .rtl .pull-left {
   float: right !important;
@@ -43,12 +43,12 @@
 }
 
 .rtl .admin-customize .current-style .toggle-mobile {
-position: static !important;
-float: left !important;
+  position: static !important;
+  float: left !important;
 }
 .rtl .admin-customize .current-style .toggle-maximize {
-position: static !important;
-float: left !important;
+  position: static !important;
+  float: left !important;
 }
 .rtl .dashboard-left {
   float: right !important;

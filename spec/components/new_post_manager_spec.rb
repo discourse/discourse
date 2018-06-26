@@ -115,6 +115,18 @@ describe NewPostManager do
       end
     end
 
+    context 'with staged moderation setting enabled' do
+      before do
+        SiteSetting.approve_unless_staged = true
+        topic.user.staged = true
+      end
+      it "will return an enqueue result" do
+        result = NewPostManager.default_handler(manager)
+        expect(NewPostManager.queue_enabled?).to eq(true)
+        expect(result.action).to eq(:enqueued)
+      end
+    end
+
     context 'with a high trust level setting for new topics but post responds to existing topic' do
       before do
         SiteSetting.approve_new_topics_unless_trust_level = 4

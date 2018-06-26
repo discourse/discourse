@@ -27,15 +27,15 @@
 
     > a {
       border: none;
-      padding: 5px 12px;
+      padding: 6px 12px;
       color: $primary;
-      font-size: 1.143em;
-      line-height: 20px;
-      transition: background .15s;
+      font-size: $font-up-1;
+      line-height: $line-height-medium;
+      transition: background 0.15s;
 
       .d-icon {
         margin-right: 5px;
-        opacity: .65;
+        opacity: 0.65;
       }
 
       &:hover {
@@ -81,8 +81,8 @@
   a {
     margin: 0;
     padding: 13px;
-    font-size: 1.143em;
-    line-height: 20px;
+    font-size: $font-up-1;
+    line-height: $line-height-small;
     cursor: pointer;
     color: $primary;
 
@@ -102,15 +102,14 @@
   }
 
   .count {
-    font-size: 0.857em;
-    line-height: 16px;
+    font-size: $font-down-1;
   }
 
   .glyph {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     width: 1.25em;
     text-align: center;
-    margin-right: .5em;
-    line-height: 20px;
+    margin-right: 0.5em;
+    line-height: $line-height-large;
   }
 }

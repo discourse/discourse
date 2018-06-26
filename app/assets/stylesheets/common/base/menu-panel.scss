@@ -1,6 +1,7 @@
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
+  box-shadow: shadow("header");
 
   .panel-body {
     position: absolute;
@@ -19,9 +20,9 @@
 
 .menu-panel {
   border: 1px solid $primary-low;
-  box-shadow: 0 2px 2px rgba(0,0,0, .25);
+  box-shadow: shadow("menu-panel");
   background-color: $secondary;
-  z-index: 1100;
+  z-index: z("header");
   padding: 0.5em;
   width: 300px;
 
@@ -44,7 +45,6 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
-
 }
 
 .menu-links.columned {
@@ -55,34 +55,56 @@
 }
 
 .menu-panel {
-  ul.menu-links li, ul li.heading {
+  ul.menu-links li,
+  ul li.heading {
     a {
       padding: 0.25em 0.5em;
       display: block;
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: $highlight-medium;
+        outline: none;
       }
     }
 
     .new {
-      font-size: 0.8em;
+      font-size: $font-down-1;
       margin-left: 0.5em;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
-
   }
 
   li.category-link {
     float: left;
     background-color: transparent;
-    width: 45%;
-    margin: 5px 5px 0 8px;
-    .box {margin-top: 0;}
+    display: inline-flex;
+    padding: 0.25em 0.5em;
+    width: 50%;
+    box-sizing: border-box;
     .badge-notification {
       color: dark-light-choose($primary-medium, $secondary-medium);
       background-color: transparent;
       display: inline;
       padding: 0;
+      font-size: $font-down-1;
+      line-height: $line-height-large;
+    }
+    .badge-wrapper {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &.bar,
+      &.bullet {
+        color: $primary;
+      }
+      &.box {
+        color: $secondary;
+        + a.badge.badge-notification {
+          padding-top: 2px;
+        }
+        span {
+          z-index: z("base") * -1;
+        }
+      }
     }
   }
 
@@ -90,7 +112,10 @@
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 11px;
+    font-size: $font-down-1;
+  }
+  .box + b.topics-count {
+    padding-top: 2px;
   }
 
   span.badge-category {
@@ -98,10 +123,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
 }
 
 .search-menu {
+  .search-input {
+    position: relative;
+  }
 
   .search-context .show-help {
     float: right;
@@ -114,29 +141,30 @@
     }
   }
 
-  input[type='text'] {
+  input[type="text"] {
     margin: 0.5em 3px;
     box-sizing: border-box;
     width: calc(100% - 6px);
     height: 32px;
-    padding: 5px;
   }
 
   .search-context {
     padding: 0 5px;
-    label { margin-bottom: 0; }
+    label {
+      margin-bottom: 0;
+    }
   }
 
   .searching {
     position: absolute;
-    top: 0.25em;
-    right: 1.5em;
+    top: 1.15em;
+    right: 1em;
 
     .spinner {
       width: 10px;
       height: 10px;
       border-width: 2px;
-      margin: 20px 0 0 0;
+      margin: 0;
     }
   }
   // I am ghetto using this to display "Show More".. be warned
@@ -147,12 +175,14 @@
 
   .filter {
     padding: 0;
-    &:hover {background: transparent;}
+    &:hover {
+      background: transparent;
+    }
   }
 
   .search-link {
     .badge-category-parent {
-      line-height: 0.8em;
+      line-height: $line-height-small;
     }
     .topic-title {
       margin-right: 6px;
@@ -170,8 +200,8 @@
   }
 
   li:not(.category):not(.heading) {
-    font-size: 0.929em;
-    line-height: 16px;
+    font-size: $font-0;
+    line-height: $line-height-medium;
 
     .fa {
       font-size: inherit;
@@ -182,7 +212,7 @@
         display: block;
         padding: 5px;
       }
-      transition: all linear .15s;
+      transition: all linear 0.15s;
 
       .user-results {
         color: dark-light-choose($primary-high, $secondary-low);
@@ -193,29 +223,31 @@
       background-color: $highlight-medium;
     }
 
-    button {margin-left: 5px;}
+    button {
+      margin-left: 5px;
+    }
   }
 }
 
 .user-menu {
-
   .notifications {
+    width: 100%;
+    display: table;
+
     h3 {
       padding: 0 0.4em;
       font-weight: bold;
       margin: 0.5em 0;
     }
 
-    .fa { color: dark-light-choose($primary-medium, $secondary-medium); }
-    .icon { color: dark-light-choose($primary-high, $secondary-low); }
+    .fa {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
+    .icon {
+      color: dark-light-choose($primary-high, $secondary-low);
+    }
     li {
       background-color: $tertiary-low;
-      padding: 0.25em 0.5em;
-      i {
-        float: left;
-        margin-right: 5px;
-        padding-top: 2px;
-      }
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
@@ -223,12 +255,31 @@
         display: none;
       }
 
-      span { color: $primary; }
-      &:hover { background-color: $highlight-medium; }
-      a { padding: 0; }
+      span {
+        color: $primary;
+      }
+
+      &:hover,
+      &:focus {
+        background-color: $highlight-medium;
+        outline: none;
+      }
+
+      a {
+        padding: 0;
+      }
+
       p {
         margin: 0;
         overflow: hidden;
+      }
+    }
+    li:not(.show-all) {
+      padding: 0.25em 0.5em;
+      i {
+        float: left;
+        margin-right: 5px;
+        padding-top: 2px;
       }
     }
     .is-warning {
@@ -254,8 +305,26 @@
       border-width: 2px;
       margin: 0 auto;
     }
+    .show-all .btn {
+      width: 100%;
+      padding: 2px 0;
+      color: dark-light-choose($primary-medium, $secondary-high);
+      background: blend-primary-secondary(5%);
+      &:hover {
+        color: $primary;
+        background: dark-light-diff($primary, $secondary, 90%, -80%);
+      }
+    }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
+  }
+
+  .logout-link,
+  .dismiss-link {
+    display: inline-block;
+  }
+  .dismiss-link {
+    float: right;
   }
 }
 
@@ -272,13 +341,28 @@ div.menu-links-header {
   border-collapse: separate;
   border-spacing: 0 0.5em;
   .menu-links-row {
-    display: table-row;
+    display: flex;
+    li {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      &.user {
+        margin-right: auto;
+      }
+      &.glyphs {
+        flex-wrap: wrap;
+        text-align: right;
+        max-width: 65%; //IE11
+      }
+    }
   }
-  a:hover {
+  a:hover,
+  a:focus {
     background-color: $highlight-medium;
+    outline: none;
   }
   a {
-    padding: 0.5em;
+    padding: 0.3em 0.5em;
   }
   a.user-activity-link {
     max-width: 150px;
@@ -287,6 +371,9 @@ div.menu-links-header {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: -0.5em 0;
+    @media screen and (max-width: 350px) {
+      max-width: 125px;
+    }
   }
   li {
     display: table-cell;
@@ -300,13 +387,11 @@ div.menu-links-header {
   li:last-child {
     text-align: right;
   }
-  .fa, a {
+  .fa,
+  a {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
-  a {
-    font-size: 1.1em;
-  }
   .d-icon-user {
     margin-right: 0.2em;
   }

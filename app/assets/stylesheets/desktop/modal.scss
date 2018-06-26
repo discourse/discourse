@@ -1,43 +1,30 @@
 // base styles for every modal popup used in Discourse
 
 .modal-middle-container {
-  display:table-cell;
+  display: table-cell;
   vertical-align: middle;
 }
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
-  position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 1050;
-  overflow: auto;
   width: 610px;
-  height: auto;
   margin: -250px 0 0 -305px;
-  background-color: $secondary;
-  border: 1px solid $primary-low;
-
-  box-shadow: 0 3px 7px rgba(0,0,0, .8);
-  background-clip: padding-box;
-
+  .cancel {
+    margin-left: 1em;
+  }
 }
 
 .modal.in {
-    -webkit-animation: fade .25s;
-    animation: fade .25s;
+  -webkit-animation: fade 0.25s;
+  animation: fade 0.25s;
 }
 
 .modal-body {
-  overflow-y: auto;
-  max-height: 400px;
   padding: 15px;
 }
 
-.modal-footer .btn + .btn {
-  margin-left: 5px;
-  margin-bottom: 0;
-}
 .modal-footer .btn.right {
   float: right;
 }
@@ -46,21 +33,14 @@
   margin-left: -1px;
 }
 
-.modal-close {
-  display: inline-block;
-  float: right;
-  margin: 7px;
-}
-
 .modal-header {
   h3 {
-    display: inline-block;;
-    font-size: 1.429em;
-    padding: 10px 15px 7px;
+    font-size: $font-up-3;
   }
 }
+
 .close {
-  font-size: 1.429em;
+  font-size: $font-up-3;
   text-decoration: none;
   color: dark-light-choose($primary-high, $secondary-low);
   cursor: pointer;
@@ -76,29 +56,7 @@
 
   .category-combobox {
     width: 430px;
-
-    .select2-drop {
-      left: -9000px;
-      width: 428px;
-    }
-    .select2-search input {
-      width: 378px;
-    }
   }
-}
-
-.flag-modal {
-  max-height: 450px;
-}
-
-.custom-message-length {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
-  font-size: 85%;
-}
-
-.flag-message {
-  width: 95%;
-  margin: 0;
 }
 
 .edit-category-modal {
@@ -107,22 +65,6 @@
     height: 420px;
     max-height: 420px;
     padding-bottom: 0;
-  }
-  .secure-category-options {
-    margin: 10px 0 0 16px;
-    .badge-list {
-      margin: 10px 0;
-      li {
-        margin: 0 4px 8px 0;
-        a {
-          color: dark-light-choose($primary-medium, $secondary-medium);
-          cursor: pointer;
-        }
-        a:hover {
-          color: dark-light-choose($primary-medium, $secondary-medium);
-        }
-      }
-    }
   }
 
   .disable_info_wrap {
@@ -162,18 +104,6 @@
       max-width: 23%;
     }
   }
-
-}
-.tabbed-modal {
-  .modal-body {
-    position: relative;
-    height: 350px;
-  }
-}
-
-.modal-tab {
-  position: absolute;
-  width: 95%;
 }
 
 .split-modal {
@@ -187,7 +117,7 @@
       margin-top: 0;
     }
 
-    input[type=radio] {
+    input[type="radio"] {
       margin-right: 10px;
     }
 
@@ -199,7 +129,8 @@
 
     form {
       margin-top: 20px;
-      #split-topic-name, #choose-topic-title {
+      #split-topic-name,
+      #choose-topic-title {
         width: 520px;
       }
     }
@@ -218,26 +149,4 @@
   width: 400px;
   max-height: 150px;
   margin-bottom: 10px;
-}
-
-.delete-flag-modal, .agree-flag-modal {
-  .modal-inner-container {
-    width: 400px;
-  }
-}
-
-.change-timestamp {
-  min-height: 300px;
-
-  .date-picker {
-    width: 10em;
-  }
-
-  input[type=time] {
-    width: 6em;
-  }
-
-  form {
-    margin: 0;
-  }
 }

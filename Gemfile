@@ -2,8 +2,7 @@ source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
 
-# does not install in linux ATM, so hack this for now
-gem 'bootsnap', require: false
+gem 'bootsnap', require: false, platform: :mri
 
 def rails_master?
   ENV["RAILS_MASTER"] == '1'
@@ -14,20 +13,20 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  gem 'actionmailer', '~> 5.1'
-  gem 'actionpack', '~> 5.1'
-  gem 'actionview', '~> 5.1'
-  gem 'activemodel', '~> 5.1'
-  gem 'activerecord', '~> 5.1'
-  gem 'activesupport', '~> 5.1'
-  gem 'railties', '~> 5.1'
+  gem 'actionmailer', '5.2'
+  gem 'actionpack', '5.2'
+  gem 'actionview', '5.2'
+  gem 'activemodel', '5.2'
+  gem 'activerecord', '5.2'
+  gem 'activesupport', '5.2'
+  gem 'railties', '5.2'
   gem 'sprockets-rails'
-  gem 'seed-fu', '~> 2.3.5'
+  gem 'seed-fu'
 end
 
-gem 'mail'
-gem 'mime-types', require: 'mime/types/columnar'
+gem 'mail', '2.7.1.rc1', require: false
 gem 'mini_mime'
+gem 'mini_suffix'
 
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
@@ -35,40 +34,37 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.19'
+gem 'onebox', '1.8.51'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source'
+gem 'ember-source', '2.13.3'
 gem 'ember-handlebars-template', '0.7.5'
 gem 'barber'
 
 gem 'message_bus'
 
-gem 'rails_multisite', '~> 1.1.0.rc4'
+gem 'rails_multisite'
 
-gem 'fast_xs'
+gem 'fast_xs', platform: :mri
 
-gem 'fast_xor'
+# may move to xorcist post: https://github.com/fny/xorcist/issues/4
+gem 'fast_xor', platform: :mri
 
-# Forked until https://github.com/sdsykes/fastimage/pull/93 is merged
-gem 'discourse_fastimage', require: 'fastimage'
+gem 'fastimage'
 
 gem 'aws-sdk-s3', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.8'
+gem 'email_reply_trimmer', '~> 0.1'
 
 # Forked until https://github.com/toy/image_optim/pull/149 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-
-# this may end up deprecating nokogiri
-gem 'oga', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'
@@ -83,6 +79,7 @@ gem 'omniauth-oauth2', require: false
 gem 'omniauth-google-oauth2'
 gem 'oj'
 gem 'pg'
+gem 'mini_sql'
 gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
@@ -119,8 +116,7 @@ group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
-  gem 'fabrication', '2.9.8', require: false
-  gem 'discourse-qunit-rails', require: 'qunit-rails'
+  gem 'fabrication', require: false
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
@@ -144,7 +140,7 @@ end
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank'
+gem 'fast_blank', platform: :mri
 
 # this provides a very efficient lru cache
 gem 'lru_redux'
@@ -158,14 +154,13 @@ gem 'htmlentities', require: false
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
-gem 'unicorn', require: false
+gem 'unicorn', require: false, platform: :mri
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
-gem 'simple-rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri
@@ -173,14 +168,25 @@ gem 'memory_profiler', require: false, platform: :mri
 gem 'cppjieba_rb', require: false
 
 gem 'lograge', require: false
+gem 'logstash-event', require: false
 gem 'logstash-logger', require: false
 gem 'logster'
 
 gem 'sassc', require: false
+
+gem 'rotp'
+gem 'rqrcode'
+
+gem 'sshkey', require: false
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
   gem 'sqlite3', '~> 1.3.13'
   gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
+  gem 'reverse_markdown'
+  gem 'tiny_tds'
 end
+
+gem 'webpush', require: false
+gem 'exifr', '1.2.5'

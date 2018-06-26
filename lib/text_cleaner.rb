@@ -17,7 +17,8 @@ class TextCleaner
       remove_all_periods_from_the_end: SiteSetting.title_prettify,
       remove_extraneous_space: SiteSetting.title_prettify && SiteSetting.default_locale == "en",
       fixes_interior_spaces: true,
-      strip_whitespaces: true
+      strip_whitespaces: true,
+      strip_zero_width_spaces: true
     }
   end
 
@@ -47,6 +48,8 @@ class TextCleaner
     text = normalize_whitespaces(text)
     # Strip whitespaces
     text.strip! if opts[:strip_whitespaces]
+    # Strip zero width spaces
+    text.gsub!(/\u200b/, '') if opts[:strip_zero_width_spaces]
 
     text
   end

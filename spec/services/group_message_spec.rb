@@ -11,7 +11,7 @@ describe GroupMessage do
     Discourse.stubs(:system_user).returns(admin)
   end
 
-  subject(:send_group_message) { GroupMessage.create(moderators_group, :user_automatically_blocked, user: user) }
+  subject(:send_group_message) { GroupMessage.create(moderators_group, :user_automatically_silenced, user: user) }
 
   describe 'not sent recently' do
     before { GroupMessage.any_instance.stubs(:sent_recently?).returns(false) }
@@ -42,7 +42,7 @@ describe GroupMessage do
 
   describe 'sent recently' do
     before  { GroupMessage.any_instance.stubs(:sent_recently?).returns(true) }
-    subject { GroupMessage.create(moderators_group, :user_automatically_blocked, user: user) }
+    subject { GroupMessage.create(moderators_group, :user_automatically_silenced, user: user) }
 
     it { is_expected.to eq(false) }
 
@@ -61,8 +61,8 @@ describe GroupMessage do
       end
     end
 
-    context 'user_automatically_blocked' do
-      subject { GroupMessage.new(moderators_group, :user_automatically_blocked, user: user).message_params }
+    context 'user_automatically_silenced' do
+      subject { GroupMessage.new(moderators_group, :user_automatically_silenced, user: user).message_params }
       include_examples 'common message params for group messages'
     end
 
@@ -74,7 +74,7 @@ describe GroupMessage do
 
   describe 'methods that use redis' do
     let(:user)              { Fabricate.build(:user, id: 123123) }
-    subject(:group_message) { GroupMessage.new(moderators_group, :user_automatically_blocked, user: user) }
+    subject(:group_message) { GroupMessage.new(moderators_group, :user_automatically_silenced, user: user) }
     before do
       PostCreator.stubs(:create).returns(stub_everything)
       group_message.stubs(:sent_recently_key).returns('the_key')
@@ -92,7 +92,7 @@ describe GroupMessage do
       end
 
       it 'always returns false if limit_once_per is false' do
-        gm = GroupMessage.new(moderators_group, :user_automatically_blocked, user: user, limit_once_per: false)
+        gm = GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: false)
         gm.stubs(:sent_recently_key).returns('the_key')
         $redis.stubs(:get).with(gm.sent_recently_key).returns('1')
         expect(gm.sent_recently?).to be_falsey
@@ -107,12 +107,12 @@ describe GroupMessage do
 
       it 'can use a given expiry time' do
         $redis.expects(:setex).with(anything, 30 * 60, anything).returns('OK')
-        GroupMessage.new(moderators_group, :user_automatically_blocked, user: user, limit_once_per: 30.minutes).remember_message_sent
+        GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: 30.minutes).remember_message_sent
       end
 
       it 'can be disabled' do
         $redis.expects(:setex).never
-        GroupMessage.new(moderators_group, :user_automatically_blocked, user: user, limit_once_per: false).remember_message_sent
+        GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: false).remember_message_sent
       end
     end
   end

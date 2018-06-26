@@ -6,38 +6,53 @@
     </div>
   {{/if}}
 
+  {{#if showSharedDraftControls}}
+    {{shared-draft-controls topic=model}}
+  {{/if}}
+
   {{plugin-outlet name="topic-above-post-stream" args=(hash model=model)}}
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
       {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic" model=model}}
         {{#if editingTopic}}
+          <div class="edit-topic-title">
           {{#if model.isPrivateMessage}}
             <span class="private-message-glyph">{{d-icon "envelope"}}</span>
           {{/if}}
+            {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+            {{#if showCategoryChooser}}
+              {{category-chooser class="small" value=buffered.category_id}}
+            {{/if}}
 
-          {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
-          {{#if showCategoryChooser}}
-            <br>
-            {{category-chooser class="small" value=buffered.category_id}}
-          {{/if}}
+            {{#if canEditTags}}
+              {{mini-tag-chooser filterable=true tags=buffered.tags categoryId=buffered.category_id}}
+            {{/if}}
 
-          {{#if canEditTags}}
-            <br>
-            {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
-          {{/if}}
+            {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+            <div class="edit-controls">
+              {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
+              {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
 
-          {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+              {{#if canRemoveTopicFeaturedLink}}
+                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
+                  {{d-icon "times-circle"}}
+                  {{featuredLinkDomain}}
+                </a>
+              {{/if}}
+            </div>
+          </div>
 
-          <br>
-          {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
-          {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
         {{else}}
           <h1>
             {{#unless model.is_warning}}
-              <a href={{pmPath}}>
+              {{#if siteSettings.enable_personal_messages}}
+                <a href={{pmPath}}>
+                  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+                </a>
+              {{else}}
                 <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-              </a>
+              {{/if}}
             {{/unless}}
 
             {{#if model.details.loaded}}
@@ -52,12 +67,11 @@
             {{/if}}
           </h1>
 
-          {{#unless model.isPrivateMessage}}
-            {{topic-category topic=model class="topic-category"}}
-          {{/unless}}
+          {{topic-category topic=model class="topic-category"}}
         {{/if}}
       {{/topic-title}}
     {{/if}}
+
 
     <div class="container posts">
       <div class='selected-posts {{unless multiSelect 'hidden'}}'>
@@ -85,6 +99,7 @@
 
           {{topic-timeline
             topic=model
+            notificationLevel=model.details.notification_level
             prevEvent=info.prevEvent
             fullscreen=info.topicProgressExpanded
             enteredIndex=enteredIndex
@@ -162,6 +177,9 @@
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
+                grantBadge=(action "grantBadge")
+                lockPost=(action "lockPost")
+                unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
@@ -173,8 +191,9 @@
                 currentPostChanged=(action "currentPostChanged")
                 currentPostScrolled=(action "currentPostScrolled")
                 bottomVisibleChanged=(action "bottomVisibleChanged")
-                selectPost=(action "toggledSelectedPost")
-                selectReplies=(action "toggledSelectedPostReplies")
+                togglePostSelection=(action "togglePostSelection")
+                selectReplies=(action "selectReplies")
+                selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
                 fillGapAfter=(action "fillGapAfter")}}
             {{/unless}}
@@ -218,6 +237,8 @@
                 {{signup-cta}}
               {{else}}
                 {{#if currentUser}}
+                  {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+
                   {{topic-footer-buttons
                     topic=model
                     toggleMultiSelect=(action "toggleMultiSelect")
@@ -235,6 +256,7 @@
                     showFlagTopic=(action "topicRouteAction" "showFlagTopic")
                     showInvite=(action "topicRouteAction" "showInvite")
                     toggleArchiveMessage=(action "toggleArchiveMessage")
+                    editFirstPost=(action "editFirstPost")
                     replyToPost=(action "replyToPost")
                     }}
                 {{else}}

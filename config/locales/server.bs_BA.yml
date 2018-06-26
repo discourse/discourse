@@ -17,23 +17,50 @@ bs_BA:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
+    month_names: [~, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
-  topics: "Topics"
-  posts: "posts"
-  loading: "Loading"
-  log_in: "Log In"
+  topics: "Teme"
+  posts: "objave"
+  loading: "Učitava"
+  powered_by_html: 'Pokretano sa <a href="https://www.discourse.org">Discourse</a>, za najbolje sučelje uključiti JavaScript'
+  log_in: "Uloguj se"
+  submit: "Potvrdi"
   purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
-  disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
+  disable_remote_images_download_reason: "Remote images skidanje je obustavljeno zbog nedostatka disk prostora na vašem uređaju."
   anonymous: "Anoniman"
+  remove_posts_deleted_by_author: "Izbrisan od strane autora"
+  redirect_warning: "Nismo bili u stanju da verifikujemo da je link koji ste označili zapravo bio objavljen na forumu. Ukoliko u svakom slučaju želite da nastavite dalje, označite link ispod."
+  themes:
+    bad_color_scheme: "Ne mogu ažuriratiizgled temu, šema boja nije ispravna."
+    other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
+    error_importing: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
+    settings_errors:
+      invalid_yaml: "Korišteni YAML fajl nije validan."
+      data_type_not_a_number: "Postavka tipa `%{name}` nije podržana. Podržani tipovi su `integer`, `bool`, `list` i `enum`"
+      name_too_long: "Postoji postavka sa predugim imenom. Maksimalna dužina je 255"
+      default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost"
+      default_not_match_type: "Postavka `%{name}` default uobičajena vrijednosti se ne podudara sa tipom postavke."
+      default_out_range: "Postavka `%{name}` default uobičajena vrijednost nije u specificiranim granicama (range)."
+      enum_value_not_valid: "Označena vrijednost nije jedna od enum izbora"
+      number_value_not_valid: "Nova vrijednost nije unutar dozvoljenih granica (range)."
+      number_value_not_valid_min_max: "Mora biti izmeđi %{min} i %{max}."
+      number_value_not_valid_min: "Mora biti veće ili jednako %{min}."
+      number_value_not_valid_max: "Mora biti manje ili jednako %{max}."
+      string_value_not_valid: "Nova vrijednost za dužinu nije u okviru dozvoljenih granica (range)."
+      string_value_not_valid_min_max: "Mora biti između %{min} i %{max} karakter dugo."
+      string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
+      string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
   emails:
     incoming:
+      default_subject: "Ova tema treba naslov"
       show_trimmed_content: "Prikaži skraćeni sadržaj"
+      no_subject: "(nema naslova)"
+      no_body: "(nema teksta)"
   errors: &errors
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
@@ -41,6 +68,9 @@ bs_BA:
       taken: "has already been taken"
     embed:
       load_from_remote: "There was an error loading that post."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -85,7 +115,7 @@ bs_BA:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
   education:
-    new-topic: |
+    'new-topic': |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
       - Does the title accurately describe your topic? Does it sound interesting?
@@ -95,7 +125,7 @@ bs_BA:
       - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
       - Does your reply improve the conversation in some way?
@@ -112,11 +142,11 @@ bs_BA:
       user_profile:
         bio_raw: "O Meni"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "You can only attach warnings to private messages."
               too_many_users: "You can only send warnings to one user at a time."
         user:
           attributes:
@@ -128,7 +158,6 @@ bs_BA:
           attributes:
             hex:
               invalid: "is not a valid color"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_name: "Lounge"
@@ -140,25 +169,25 @@ bs_BA:
     title: "Welcome to the Lounge"
     body: |2
 
-      Congratulations! :confetti_ball:
+        Congratulations! :confetti_ball:
 
-      If you can see this topic, you were recently promoted to **regular** (trust level 3).
+        If you can see this topic, you were recently promoted to **regular** (trust level 3).
 
-      You can now &hellip;
+        You can now &hellip;
 
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-      * Hide spam with a single flag
+        * Edit the title of any topic
+        * Change the category of any topic
+        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+        * Access a private Lounge category only visible to users at trust level 3 and higher
+        * Hide spam with a single flag
 
-      Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+        Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
 
-      Thanks for being an important part of this community!
+        Thanks for being an important part of this community!
 
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+        (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "About the %{category} category"
     errors:
@@ -176,7 +205,6 @@ bs_BA:
       title: "korisnik"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
-    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
     hours:
       one: "1 sat"
       few: "Par sati"
@@ -252,7 +280,6 @@ bs_BA:
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your private messages</a>.</p>'
     user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
   archetypes:
     regular:
@@ -267,9 +294,7 @@ bs_BA:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
       xaxis: "Day"
-      yaxis: "Number of new users"
     profile_views:
       xaxis: "Dan"
     topics:
@@ -305,7 +330,6 @@ bs_BA:
       xaxis: "Day"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
-      title: "User-to-User"
       xaxis: "Day"
       yaxis: "Number of private messages"
     system_private_messages:
@@ -357,14 +381,11 @@ bs_BA:
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
-    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
-    min_private_message_post_length: "Minimum allowed post length in characters for private messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
-    min_private_message_title_length: "Minimum allowed title length for a private message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -397,7 +418,6 @@ bs_BA:
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
-    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
@@ -428,21 +448,17 @@ bs_BA:
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
-    enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
@@ -465,14 +481,12 @@ bs_BA:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_private_messages_per_day: "Maximum number of private messages users can create per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
-    s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
@@ -534,7 +548,6 @@ bs_BA:
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    disable_emails: "Prevent Discourse from sending any kind of emails"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -551,7 +564,6 @@ bs_BA:
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
-    username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
@@ -628,22 +640,16 @@ bs_BA:
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
-    close_window: "Authentication is complete. Close this window to continue."
   user:
     no_accounts_associated: "No accounts associated"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
-      characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
-  invite_mailer:
-    subject_template: "%{invitee_name} vas poziva da pogledate '%{topic_title}' na sajtu %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} vas poziva da se pridružite %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
   flag_reasons:
@@ -675,12 +681,8 @@ bs_BA:
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
     bulk_invite_failed:
       subject_template: "Bulk user invite processed with errors"
-    csv_export_succeeded:
-      subject_template: "Data Export completed successfully"
     csv_export_failed:
       subject_template: "Export failed"
-    spam_post_blocked:
-      subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
@@ -749,6 +751,3 @@ bs_BA:
     title: "Terms of Service"
   privacy_topic:
     title: "Privacy Policy"
-  activemodel:
-    errors:
-      <<: *errors

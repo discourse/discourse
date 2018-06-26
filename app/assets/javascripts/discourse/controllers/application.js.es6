@@ -1,4 +1,4 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   showTop: true,
@@ -6,9 +6,11 @@ export default Ember.Controller.extend({
 
   @computed
   canSignUp() {
-    return !Discourse.SiteSettings.invite_only &&
-           Discourse.SiteSettings.allow_new_registrations &&
-           !Discourse.SiteSettings.enable_sso;
+    return (
+      !Discourse.SiteSettings.invite_only &&
+      Discourse.SiteSettings.allow_new_registrations &&
+      !Discourse.SiteSettings.enable_sso
+    );
   },
 
   @computed

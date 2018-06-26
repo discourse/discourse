@@ -73,7 +73,7 @@ To make (or remove) a pin or a banner, use the admin wrench at the top right or 
 
 ### New User Sandbox and the Trust System
 
-If your discussion area is be open to the public, new visitors will arrive that are initially strangers to the community. Discourse has a [trust system](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) where users can, over time, earn the trust of the community and gain abilities to assist in governing their community.
+If your discussion area is be open to the public, new visitors will arrive that are initially strangers to the community. Discourse has a [trust system](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) where users can, over time, earn the trust of the community and gain abilities to assist in governing their community.
 
 Discourse is designed to offer safe defaults for public communities, even with no active moderation.
 
@@ -83,12 +83,12 @@ All new users start out in a sandbox with restrictions for everyone's safety. **
 
 - post more than 2 hyperlinks
 - post any images or file attachments
-- send private messages
+- send personal messages
 - flag posts or topics
 - have actual links in the "about me" field of their profile
 - @name mention more than 2 users in a post
 
-Every action a user can take is rate limited for safety, and especially so for new users. But don't worry, new users can [transition to trust level 1](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) in about 10 minutes of reading.
+Every action a user can take is rate limited for safety, and especially so for new users. But don't worry, new users can [transition to trust level 1](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) in about 10 minutes of reading.
 
 These defaults are safe, but note that while in "bootstrap mode" after you set up your site, all new users will be granted trust level 1 until you reach 50 users.
 

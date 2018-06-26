@@ -1,0 +1,19 @@
+{{input
+  tabindex=-1
+  class="filter-input"
+  placeholder=computedPlaceholder
+  key-up=onFilterComputedContent
+  autocomplete="off"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck=false
+  value=filter
+}}
+
+{{#if isLoading}}
+  {{loading-spinner size="small"}}
+{{else}}
+  {{#if icon}}
+    {{d-icon icon class="filter-icon"}}
+  {{/if}}
+{{/if}}

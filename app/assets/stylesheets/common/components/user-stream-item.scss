@@ -1,6 +1,5 @@
 // Common styles for "user-stream-item" component
 .user-stream {
-
   // DEPRECATED:
   // The ".item" class should be removed because it's too generic.
   // Once ".item" has been removed, ".user-stream-item" can replace
@@ -17,7 +16,12 @@
 
     &.deleted {
       opacity: 0.8;
-      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
+      background-color: dark-light-diff(
+        rgba($danger, 0.7),
+        $secondary,
+        50%,
+        -10%
+      );
     }
 
     &.hidden {
@@ -36,16 +40,18 @@
     display: block;
     float: right;
     color: lighten($primary, 40%);
-    font-size: 11px;
+    font-size: $font-down-2;
   }
 
   .delete-info i {
-    font-size: 1em;
+    font-size: $font-0;
   }
 
-  .expand-item {
+  .expand-item,
+  .collapse-item {
     float: right;
     margin-right: 0.5em;
+    line-height: $line-height-small;
     color: lighten($primary, 40%);
   }
 
@@ -62,7 +68,7 @@
   }
 
   .name {
-    font-size: 1em;
+    font-size: $font-0;
     max-width: 400px;
     white-space: nowrap;
     overflow: hidden;
@@ -70,7 +76,10 @@
   }
 
   .edit-reason {
-    background-color: dark-light-choose($highlight-medium, scale-color($highlight, $lightness: -50%));
+    background-color: dark-light-choose(
+      $highlight-medium,
+      scale-color($highlight, $lightness: -50%)
+    );
     padding: 3px 5px 5px 5px;
   }
 
@@ -86,7 +95,6 @@
 
     p {
       display: inline-block;
-      margin-left: 10px;
       span {
         color: $primary;
       }
@@ -99,35 +107,30 @@
     }
 
     // common/base/header.scss
-    .fa, .icon {
+    .fa,
+    .icon {
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 1.714em;
+      font-size: $font-up-4;
     }
   }
 
   .excerpt {
     margin: 5px 0;
-    font-size: 0.929em;
+    font-size: $font-0;
     word-wrap: break-word;
     color: $primary;
+
+    details.disabled {
+      color: $primary-medium;
+    }
   }
 
   .group-member-info {
-    .name {
-      display: inline-block;
-      margin-top: 5px;
-      color: dark-light-choose($primary-medium,$secondary-medium);
-    }
-
-    .title {
-      display: inline-block;
-      margin-top: 5px;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
+    display: flex;
   }
 }
 
-.user-stream .child-actions, // DEPRECATED: '.user-stream .child-actions' selector
+.user-stream .child-actions, /* DEPRECATED: '.user-stream .child-actions' selector*/
 .user-stream-item-actions {
   margin-top: 8px;
 
@@ -142,4 +145,3 @@
     color: $primary;
   }
 }
-

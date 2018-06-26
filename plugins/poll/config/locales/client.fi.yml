@@ -55,6 +55,7 @@ fi:
         help:
           options_count: Valitse vähintään 2 vaihtoehtoa
           invalid_values: Vähimmäisarvon täytyy olla enimmäisarvoa pienempi.
+          min_step_value: Askelvälin on oltava vähintään 1
         poll_type:
           label: Tyyppi
           regular: Valitaan yksi

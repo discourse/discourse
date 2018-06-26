@@ -22,13 +22,13 @@ module Jobs
           target_usernames = Group[:moderators].users.map do |user|
             next if user.id < 0
 
-            count = user.notifications.joins(:topic)
+            unseen_count = user.notifications.joins(:topic)
               .where("notifications.id > ?", user.seen_notification_id)
               .where("notifications.read = false")
               .where("topics.subtype = ?", TopicSubtype.pending_users_reminder)
               .count
 
-            count == 0 ? user.username : nil
+            unseen_count == 0 ? user.username : nil
           end.compact
 
           unless target_usernames.empty?

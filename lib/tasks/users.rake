@@ -4,27 +4,21 @@ task "users:change_post_ownership", [:old_username, :new_username, :archetype] =
   new_username = args[:new_username]
   archetype = args[:archetype]
   archetype = archetype.downcase if archetype
+
   if !old_username || !new_username
-    puts "ERROR: Expecting rake posts:change_post_ownership[old_username,new_username,archetype]"
+    puts "ERROR: Expecting rake users:change_post_ownership[old_username,new_username,archetype]"
     exit 1
   end
-  old_user = User.find_by(username_lower: old_username.downcase)
-  if !old_user
-    puts "ERROR: User with username #{old_username} does not exist"
-    exit 1
-  end
-  new_user = User.find_by(username_lower: new_username.downcase)
-  if !new_user
-    puts "ERROR: User with username #{new_username} does not exist"
-    exit 1
-  end
+
+  old_user = find_user(old_username)
+  new_user = find_user(new_username)
 
   if archetype == "private"
     posts = Post.private_posts.where(user_id: old_user.id)
   elsif archetype == "public" || !archetype
     posts = Post.public_posts.where(user_id: old_user.id)
   else
-    puts "ERROR: Expecting rake posts:change_post_ownership[old_username,new_username,archetype] where archetype is public or private"
+    puts "ERROR: Expecting rake users:change_post_ownership[old_username,new_username,archetype] where archetype is public or private"
     exit 1
   end
 
@@ -36,4 +30,61 @@ task "users:change_post_ownership", [:old_username, :new_username, :archetype] =
     i += 1
   end
   puts "", "#{i} posts ownership changed!", ""
+end
+
+task "users:merge", [:source_username, :target_username] => [:environment] do |_, args|
+  source_username = args[:source_username]
+  target_username = args[:target_username]
+
+  if !source_username || !target_username
+    puts "ERROR: Expecting rake users:merge[source_username,target_username]"
+    exit 1
+  end
+
+  source_user = find_user(source_username)
+  target_user = find_user(target_username)
+
+  UserMerger.new(source_user, target_user).merge!
+  puts "", "Users merged!", ""
+end
+
+task "users:rename", [:old_username, :new_username] => [:environment] do |_, args|
+  old_username = args[:old_username]
+  new_username = args[:new_username]
+
+  if !old_username || !new_username
+    puts "ERROR: Expecting rake users:rename[old_username,new_username]"
+    exit 1
+  end
+
+  changer = UsernameChanger.new(find_user(old_username), new_username)
+  changer.change(asynchronous: false)
+  puts "", "User renamed!", ""
+end
+
+desc "Updates username in quotes and mentions. Use this if the user was renamed before proper renaming existed."
+task "users:update_posts", [:old_username, :current_username] => [:environment] do |_, args|
+  old_username = args[:old_username]
+  current_username = args[:current_username]
+
+  if !old_username || !current_username
+    puts "ERROR: Expecting rake users:update_posts[old_username,current_username]"
+    exit 1
+  end
+
+  user = find_user(current_username)
+  UsernameChanger.update_username(user.id, old_username, user.username, user.avatar_template)
+
+  puts "", "Username updated!", ""
+end
+
+def find_user(username)
+  user = User.find_by_username(username)
+
+  if !user
+    puts "ERROR: User with username #{username} does not exist"
+    exit 1
+  end
+
+  user
 end

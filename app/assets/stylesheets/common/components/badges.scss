@@ -16,109 +16,74 @@
 // --------------------------------------------------
 
 .badge-wrapper {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   font-weight: bold;
   white-space: nowrap;
-  display: inline-block;
   position: relative;
+  display: inline-flex;
+  align-items: baseline;
 
-  &.bar { //bar category style
-    line-height: 1.25;
-    margin-right: 5px;
-    display: inline-flex;
-
-    span.badge-category {
-      color: $primary;
-      padding: 3px;
-      vertical-align: text-top;
-      margin-top: -2px; //vertical alignment fix
-      display: inline-block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      .extra-info-wrapper & {
-        color: $header-primary;
-      }
-    }
-
-    .badge-category-parent-bg, .badge-category-bg {
-      display: inline-block;
-      padding: 1px;
-
-      &:before {
-        content: "\a0";
-      }
-    }
-  }
-
-  &.none { // no category style
-    color: $primary;
-    margin-right: 5px;
-  }
-
-  &.bullet { //bullet category style
+  .badge-category {
     display: inline-flex;
     align-items: baseline;
-    margin-right: 5px;
-    font-size: 12px;
-    line-height: 15px;
+    .category-name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .d-icon {
+      margin-right: 3px;
+    }
+  }
 
+  // ----- Bullet
+
+  &.bullet {
+    margin-right: 12px;
     span.badge-category {
       color: $primary;
-      display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
-
-      #search-dropdown & {
-        margin-top: -2px;
-      }
-
       .extra-info-wrapper & {
         color: $header-primary;
       }
     }
-
-   .badge-category-parent-bg, .badge-category-bg {
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
-    display: inline-block;
-    line-height: 1;
-
-    &:before {
-      content: "\a0";
+    .badge-category-parent-bg,
+    .badge-category-bg {
+      width: 9px;
+      height: 9px;
+      margin-right: 5px;
+      display: inline-block;
     }
-  }
-
-  span {
-      &.badge-category-parent-bg { //subcategory style
+    .badge-category-parent-bg {
+      // Subcategories
+      width: 5px;
+      margin-right: 0;
+      + .badge-category-bg {
         width: 5px;
-        margin-right: 0;
-        & + .badge-category-bg {
-          width: 5px;
-        }
       }
     }
   }
 
+  // ----- Box
 
-  &.box {  //box category style (apply custom widths to the wrapper, not the children)
-    line-height: 1.5;
-    margin-top: 5px;
+  &.box {
     margin-right: 5px;
-
+    padding: 2px 4px 2px 4px;
+    display: inline-flex;
     span {
-      display: block;
       overflow: hidden;
       text-overflow: ellipsis;
-
-      &.badge-category-bg, &.badge-category-parent-bg {
+      &.badge-category-bg,
+      &.badge-category-parent-bg {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
       }
 
-      &.badge-category-parent-bg { //subcategory style
+      &.badge-category-parent-bg {
+        // Subcategories
         width: calc(100% - 5px);
         & + .badge-category-bg {
           left: 5px;
@@ -131,128 +96,73 @@
 
       &.badge-category {
         position: relative;
-        padding: 0 5px;
-        margin-top: 2px;
+      }
+    }
+    + .topic-header-extra {
+      padding: 2px 4px 2px 4px;
+    }
+  }
+
+  // ----- Bar
+
+  &.bar {
+    margin-right: 5px;
+
+    span.badge-category {
+      color: $primary;
+      padding: 1px 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      .extra-info-wrapper & {
+        color: $header-primary;
+      }
+    }
+
+    .badge-category-parent-bg,
+    .badge-category-bg {
+      // Subcategories
+      display: inline-block;
+      padding: 0 1px;
+
+      &:before {
+        content: "\a0";
       }
     }
   }
-}
 
-.extra-info-wrapper .title-wrapper .badge-wrapper.bar {
-  margin-top: 6px;
-}
+  // ----- No category style
 
-.autocomplete, td.category {
-  .badge-wrapper {
-    max-width: 230px;
+  &.none {
+    color: $primary;
+    margin-right: 5px;
   }
 }
 
 // Category badge dropdown
 // --------------------------------------------------
 
-
 .list-controls {
   .category-breadcrumb {
-    a.badge-category, .dropdown-header {
+    a.badge-category {
       display: inline-block;
-      padding: 5px 8px;
-      line-height: 20px;
-
-      &.category-dropdown-button {
-        margin-left: -4px;
-        padding: 5px;
-        width: 13px;
-
-        .d-icon-caret-right {
-          margin-left: 2px;
-        }
-      }
-    }
-
-    li.bar>.dropdown-header:not(.home):first-child {
-      border-left: 5px solid;
-      font-size: 1em;
-    }
-
-    li.bar>.dropdown-header {
-      background: $primary-low;
-      color: $primary;
-    }
-
-    li.bullet>.dropdown-header {
-      background: $primary-low;
-      color: $primary;
-
-      .badge-category-bg {
-        width: 10px;
-        height: 10px;
-        display: inline-block;
-        margin: 0 2px;
-      }
+      padding: 6px 8px;
+      line-height: $line-height-medium;
     }
   }
-
-  .category-dropdown-menu {
-    .dropdown-header {
-      &.home {
-        margin-left: 4px;
-        padding-left: 0;
-      }
-    }
-    .cat {
-        line-height: 1;
-      }
-    .badge-wrapper {
-      box-sizing: border-box;
-
-      &.bar {
-        padding: 5px 0;
-        width: 100%;
-        .badge-category {
-          max-width: 100px;
-        }
-      }
-      &.none {
-        padding: 5px;
-      }
-      &.bullet {
-        padding: 5px;
-        width: 100%;
-        .badge-category {
-          max-width: 100px;
-        }
-      }
-      &.box {
-        margin-top: 0;
-        width: 100%;
-        line-height: 1;
-        vertical-align: text-top;
-        span.badge-category {
-          max-width: 100px;
-          padding: 5px;
-        }
-      }
-
-    }
-
-  }
-
 }
-
-
-
 
 // Notification badge
 // --------------------------------------------------
 
 .badge-notification {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
+  padding: 3px 5px;
+  min-width: 8px;
   vertical-align: middle;
   color: $secondary;
-  font-size: 11px;
-  line-height: 1;
+  font-size: $font-down-2;
+  line-height: $line-height-small;
   text-align: center;
   background-color: dark-light-choose($primary-low-mid, $secondary-low);
   &[href] {
@@ -265,7 +175,8 @@
 
   // New posts
 
-  &.new-posts, &.unread-posts {
+  &.new-posts,
+  &.unread-posts {
     background-color: dark-light-choose($tertiary-medium, $tertiary);
     color: dark-light-choose($secondary, $secondary);
     font-weight: dark-light-choose(normal, bold);
@@ -275,7 +186,7 @@
     background-color: transparent;
     color: $tertiary-high;
     font-weight: normal;
-    font-size: 0.929em;
+    font-size: $font-down-1;
   }
 
   &.new-topic::before {
@@ -291,7 +202,6 @@
     top: -1px;
     color: $primary-medium;
     position: relative;
-    margin-left: 2px;
     border: none;
   }
 }
@@ -301,8 +211,8 @@
 
 .badge-posts {
   font-weight: normal;
-  font-size: 1em;
-  line-height: 1;
+  font-size: $font-0;
+  line-height: $line-height-small;
   &[href] {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
@@ -313,11 +223,9 @@
 
 .badge-group {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
+  padding: 2px 5px;
   color: $primary;
-  text-shadow: 0 1px 0 rgba($primary, 0.1);
   background-color: $primary-low;
   border-color: $primary-low;
-  font-size: 0.857em;
-  box-shadow: inset 0 1px 0 rgba(0,0,0, 0.22);
+  font-size: $font-down-1;
 }

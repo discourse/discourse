@@ -8,14 +8,14 @@
 .list-controls {
   .nav {
     float: left;
-    margin-bottom: 18px;
+    margin-bottom: 15px;
   }
 
   .btn {
     float: right;
     margin-left: 8px;
     margin-bottom: 10px;
-    font-size: 1.143em;
+    font-size: $font-up-1;
     font-weight: normal;
   }
 
@@ -23,21 +23,28 @@
     float: none;
   }
 
-  a.badge-category, .dropdown-header {
+  a.badge-category {
     padding: 3px 12px;
-    font-size: 1.143em;
+    font-size: $font-up-1;
   }
-
 }
 
 // Base list
 // --------------------------------------------------
 
 .topic-list-icons {
-  .d-icon-thumb-tack { color: dark-light-choose($primary-medium, $secondary-medium); }
-  .d-icon-thumb-tack.unpinned { color: dark-light-choose($primary-medium, $secondary-medium); }
-  a.title {color: $primary;}
-  .d-icon-bookmark { color: dark-light-choose($primary-medium, $secondary-medium); }
+  .d-icon-thumb-tack {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  .d-icon-thumb-tack.unpinned {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  a.title {
+    color: $primary;
+  }
+  .d-icon-bookmark {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
 }
 
 .topic-list {
@@ -55,28 +62,19 @@
     }
   }
   th {
-    button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium); }
-  }
-
-  > tbody > tr {
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
+    button .d-icon {
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
+
   button.bulk-select {
     padding: 0;
-    font-size: 1.05em;
-    margin-right: 0.3em;
   }
 
-  .star {
-    width: 20px;
-    padding-right: 0;
-    .d-icon-star {
-      position: relative;
-    }
+  td.bulk-select {
+    padding: 10px;
     + .main-link {
-      padding-left: 5px;
+      padding-left: 0;
     }
   }
 
@@ -92,10 +90,7 @@
   .posters {
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
-    width: 145px;
-    min-width: 145px;
-  }
-  .posters {
+    width: 146px;
     > a {
       float: left;
       margin-right: 4px;
@@ -104,20 +99,21 @@
       }
     }
   }
-
-  .posters a:first-child .avatar.latest:not(.single) {
-     box-shadow: 0 0 3px 1px desaturate($tertiary-medium, 35%);
-     border: 2px solid desaturate($tertiary-medium, 40%);
-     position: relative;
-     top: -2px;
-     left: -2px;
+  td.posters {
+    height: 29px; // min-height of td with avatar glow
   }
-
+  .posters a:first-child .avatar.latest:not(.single) {
+    box-shadow: 0 0 3px 1px desaturate($tertiary-medium, 35%);
+    border: 2px solid desaturate($tertiary-medium, 40%);
+    position: relative;
+    top: -2px;
+    left: -2px;
+  }
 
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: $primary-low; 
+      background-color: $primary-low;
     }
     @include unselectable;
   }
@@ -136,16 +132,15 @@
     width: auto;
     color: dark-light-choose($primary-medium, $secondary-medium);
     text-align: left;
-    font-size: 12px;
+    font-size: $font-down-1;
     margin-top: 5px;
     .fa {
       margin-right: 2px;
     }
     a {
-      font-size: 11px;
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 3px;
-      line-height: 20px;
+      line-height: $line-height-large;
     }
   }
   .activity {
@@ -165,15 +160,9 @@
   }
 }
 
-.topic-list tbody tr.has-excerpt .star {
-  vertical-align: top;
-  margin-top: 3px;
-}
-
 .topic-list.categories {
   a.title {
     color: $tertiary;
-    font-size: 0.929em;
   }
 
   th.posts {
@@ -187,17 +176,17 @@
     padding: 0 8px 8px;
   }
   .last-user-info {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
   .has-description {
     td.category {
       padding-top: 15px;
     }
   }
-  .category{
+  .category {
     h3 {
       display: inline-block;
-      font-size: 1.286em;
+      font-size: $font-up-2;
       i {
         margin-right: 5px;
       }
@@ -223,12 +212,13 @@
       color: dark-light-choose($primary-medium, $secondary-medium) !important;
       font-size: 0.929em;
     }
-    a.last-posted-at, a.last-posted-at:visited {
+    a.last-posted-at,
+    a.last-posted-at:visited {
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.88em;
+      font-size: $font-down-1;
     }
     .badge {
-      font-size: 0.714em;
+      font-size: $font-down-1;
       top: -1px;
     }
   }
@@ -258,18 +248,13 @@
   }
 }
 
-.category-dropdown-menu {
-  max-height: 350px;
-  min-width: 131px;
-}
-
 #bulk-select {
   position: fixed;
   right: 20px;
   top: 130px;
   padding: 5px;
   background-color: $secondary;
-  z-index: 99999;
+  z-index: z("dropdown");
 }
 
 button.dismiss-read {
@@ -290,8 +275,8 @@ button.dismiss-read {
 .category-heading {
   clear: both;
   p {
-    line-height: 1.5em;
-    font-size: 1.5em;
+    line-height: $line-height-large;
+    font-size: $font-up-3;
   }
 }
 
@@ -308,15 +293,13 @@ button.dismiss-read {
 
 /* Tablet (portrait) ----------- */
 
-@media all
-and (max-width : 850px) {
-
+@media all and (max-width: 850px) {
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
-      font-size: 1em;
-      padding: 5px 10px;
-      }
+      font-size: $font-0;
+      padding: 7px 10px;
+    }
   }
 
   // new topic just a "+" no text
@@ -330,23 +313,20 @@ and (max-width : 850px) {
   }
 
   .topic-list {
-
     // tighter table header spacing
-   th:first-of-type {
-     padding: 12px 5px;
-     }
-   // smaller table cell font and cell spacing
-   th, td {
-      padding: 12px 2px;
-      font-size: 0.929em;
-     }
-    .main-link {
-      font-size: 1.071em;
-      }
+    th:first-of-type {
+      padding: 12px 5px;
+    }
+    // smaller table cell spacing
+    th,
+    td {
+      padding: 10px;
+      font-size: $font-0;
+    }
     .category {
       min-width: 0;
       padding: 0;
-      }
+    }
     // suppress views column
     th.views {
       display: none;
@@ -354,16 +334,25 @@ and (max-width : 850px) {
     td.views {
       display: none;
     }
-    // show only the first poster
+    // reduce width for more title space
+    .posts {
+      width: 50px;
+    }
     .posters {
-       min-width: 0;
-       width: 50px;
-       a:not(.latest) {
-         display: none;
-         }
-       a.latest {
-         padding: 0 8px;
-         }
+      width: 30px;
+      text-align: center;
+    }
+    // show only the first poster
+    td.posters {
+      a:not(.latest) {
+        display: none;
+      }
+      a.latest {
+        width: 100%;
+        img {
+          margin: 0 auto;
+        }
+      }
     }
   }
 }

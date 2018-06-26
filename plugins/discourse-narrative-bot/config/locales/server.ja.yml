@@ -11,6 +11,7 @@ ja:
     disable_discourse_narrative_bot_welcome_post: "ディスコースナレーター、ボットからのようこそ投稿を無効にしてください。"
     discourse_narrative_bot_ignored_usernames: "ディスコースナレーター、ボットのユーザー名は気にするべきではありません。"
     discourse_narrative_bot_disable_public_replies: "ディスコースナレーター、ボットからの返信を無効にして下さい。"
+    discourse_narrative_bot_welcome_post_type: "ディスコースナレーター、ボットが送るようこそ投稿のタイプ"
     discourse_narrative_bot_welcome_post_delay: "ディスコースのナレーター、ボットのようこそ投稿を送信する前に(n)秒待ってください。"
   badges:
     certified:
@@ -36,12 +37,22 @@ ja:
         やり直したい場合、%{reset_trigger}とおっしゃってください。
 
         仮にこれらをしたくなくても、それもOKです。私はプログラムですから傷つきません。:くすん:
+    dice:
+      trigger: "サイコロを振る"
+      invalid: |-
+        ごめんなさい、この組み合わせのサイコロを振ることは数学的に困難です。:confounded:
+      results: |-
+        > :game_die: %{results}
     quote:
+      trigger: "引用"
       '1':
+        quote: "困難の中に、機会がある。"
         author: "アルベルト・アインシュタイン"
       '2':
+        quote: "失敗する自由がないならば、それは自由ではない。"
         author: "マハトマガンジー"
       '3':
-        quote: "終わったからと悲しまず、出会えたのだから微笑んでください。"
+        quote: "終わってしまったことを嘆くのではなく、それを経験したことを喜ぼう。"
+        author: "ドクター・スース"
       '4':
         quote: "あなたが誰かに正しい行いを求めるのであれば、自分自身で行ってください。"

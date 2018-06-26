@@ -1,6 +1,6 @@
 class DraftController < ApplicationController
-  before_action :ensure_logged_in
-  # TODO really do we need to skip this?
+  requires_login
+
   skip_before_action :check_xhr, :preload_json
 
   def show

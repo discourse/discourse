@@ -2,7 +2,9 @@ require_dependency 'notification_serializer'
 
 class NotificationsController < ApplicationController
 
-  before_action :ensure_logged_in
+  requires_login
+  before_action :ensure_admin, only: [:create, :update, :destroy]
+  before_action :set_notification, only: [:update, :destroy]
 
   def index
     user =
@@ -57,11 +59,41 @@ class NotificationsController < ApplicationController
     else
       Notification.where(user_id: current_user.id).includes(:topic).where(read: false).update_all(read: true)
       current_user.saw_notification_id(Notification.recent_report(current_user, 1).max.try(:id))
-      current_user.reload
-      current_user.publish_notifications_state
     end
 
+    current_user.reload
+    current_user.publish_notifications_state
+
     render json: success_json
+  end
+
+  def create
+    @notification = Notification.create!(notification_params)
+    render_notification
+  end
+
+  def update
+    @notification.update!(notification_params)
+    render_notification
+  end
+
+  def destroy
+    @notification.destroy!
+    render json: success_json
+  end
+
+  private
+
+  def set_notification
+    @notification = Notification.find(params[:id])
+  end
+
+  def notification_params
+    params.permit(:notification_type, :user_id, :data, :read, :topic_id, :post_number, :post_action_id)
+  end
+
+  def render_notification
+    render_json_dump(NotificationSerializer.new(@notification, scope: guardian, root: false))
   end
 
 end

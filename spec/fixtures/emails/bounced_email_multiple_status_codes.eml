@@ -1,0 +1,45 @@
+Delivered-To: someguy@discourse.org
+Date: Thu,  7 Apr 2016 19:04:30 +0900 (JST)
+From: MAILER-DAEMON@b-s-c.co.jp (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: someguy@discourse.org
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+    boundary="18F5D18A0075.1460023470/some@daemon.com"
+
+This is a MIME-encapsulated message.
+
+--18F5D18A0075.1460023470/some@daemon.com
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+Your email bounced
+
+--18F5D18A0075.1460023470/some@daemon.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Final-Recipient: rfc822; linux-admin@b-s-c.co.jp
+Original-Recipient: rfc822;linux-admin@b-s-c.co.jp
+Action: failed
+Status: 5.1.1
+Diagnostic-Code: X-Postfix; unknown user: "linux-admin"
+
+Final-Recipient: rfc822; foo@b-s-c.co.jp
+Original-Recipient: rfc822;linux-admin@b-s-c.co.jp
+Action: failed
+Status: 5.1.1
+Diagnostic-Code: X-Postfix; unknown user: "foo"
+
+--18F5D18A0075.1460023470/some@daemon.com
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+
+Return-Path: <someguy@discourse.org>
+Date: Thu, 07 Apr 2016 03:04:28 -0700 (PDT)
+From: someguy@discourse.org
+X-Discourse-Auto-Generated: marked
+
+This is the body
+
+--18F5D18A0075.1460023470/some@daemon.com--

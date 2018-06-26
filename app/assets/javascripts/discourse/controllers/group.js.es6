@@ -1,44 +1,80 @@
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from "ember-addons/ember-computed-decorators";
 
-var Tab = Em.Object.extend({
-  @computed('name')
-  location(name) {
-    return 'group.' + name;
-  },
-
-  @computed('name', 'i18nKey')
-  message(name, i18nKey) {
-    return I18n.t(`groups.${i18nKey || name}`);
+const Tab = Ember.Object.extend({
+  init() {
+    this._super();
+    let name = this.get("name");
+    this.set("route", this.get("route") || `group.` + name);
+    this.set("message", I18n.t(`groups.${this.get("i18nKey") || name}`));
   }
 });
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
   counts: null,
-  showing: 'members',
+  showing: "members",
+  destroying: null,
 
-  tabs: [
-    Tab.create({ name: 'members', 'location': 'group.index', icon: 'users' }),
-    Tab.create({ name: 'activity' }),
-    Tab.create({
-      name: 'edit', i18nKey: 'edit.title', icon: 'pencil', requiresGroupAdmin: true
-    }),
-    Tab.create({
-      name: 'logs', i18nKey: 'logs.title', icon: 'list-alt', requiresGroupAdmin: true
-    })
-  ],
+  @computed("showMessages", "model.user_count", "canManageGroup")
+  tabs(showMessages, userCount, canManageGroup) {
+    const membersTab = Tab.create({
+      name: "members",
+      route: "group.index",
+      icon: "users",
+      i18nKey: "members.title"
+    });
 
-  @computed('model.is_group_owner', 'model.automatic')
+    membersTab.set("count", userCount);
+
+    const defaultTabs = [membersTab, Tab.create({ name: "activity" })];
+
+    if (showMessages) {
+      defaultTabs.push(
+        Tab.create({
+          name: "messages",
+          i18nKey: "messages"
+        })
+      );
+    }
+
+    if (canManageGroup) {
+      defaultTabs.push(
+        Tab.create({
+          name: "manage",
+          i18nKey: "manage.title",
+          icon: "wrench"
+        })
+      );
+    }
+
+    return defaultTabs;
+  },
+
+  @computed("model.is_group_user")
+  showMessages(isGroupUser) {
+    if (!this.siteSettings.enable_personal_messages) {
+      return false;
+    }
+
+    return isGroupUser || (this.currentUser && this.currentUser.admin);
+  },
+
+  @computed("model.is_group_owner", "model.automatic")
   canEditGroup(isGroupOwner, automatic) {
     return !automatic && isGroupOwner;
   },
 
-  @computed('model.displayName', 'model.full_name')
+  @computed("model.displayName", "model.full_name")
   groupName(displayName, fullName) {
     return (fullName || displayName).capitalize();
   },
 
-  @computed('model.name', 'model.flair_url', 'model.flair_bg_color', 'model.flair_color')
+  @computed(
+    "model.name",
+    "model.flair_url",
+    "model.flair_bg_color",
+    "model.flair_color"
+  )
   avatarFlairAttributes(groupName, flairURL, flairBgColor, flairColor) {
     return {
       primary_group_flair_url: flairURL,
@@ -53,29 +89,45 @@ export default Ember.Controller.extend({
     return this.currentUser && messageable;
   },
 
-  @observes('model.user_count')
-  _setMembersTabCount() {
-    this.get('tabs')[0].set('count', this.get('model.user_count'));
-  },
-
-  @computed('model.is_group_owner', 'model.automatic')
-  getTabs() {
-    return this.get('tabs').filter(t => {
-      let canSee = true;
-
-      if (this.currentUser && t.requiresGroupAdmin) {
-        canSee = this.currentUser.canManageGroup(this.get('model'));
-      } else if (t.requiresGroupAdmin) {
-        canSee = false;
-      }
-
-      return canSee;
-    });
+  @computed("model", "model.automatic")
+  canManageGroup(model, automatic) {
+    return (
+      this.currentUser &&
+      (this.currentUser.canManageGroup(model) ||
+        (this.currentUser.admin && automatic))
+    );
   },
 
   actions: {
     messageGroup() {
-      this.send('createNewMessageViaParams', this.get('model.name'));
+      this.send("createNewMessageViaParams", this.get("model.name"));
+    },
+
+    destroy() {
+      const group = this.get("model");
+      this.set("destroying", true);
+
+      bootbox.confirm(
+        I18n.t("admin.groups.delete_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        confirmed => {
+          if (confirmed) {
+            group
+              .destroy()
+              .then(() => {
+                this.transitionToRoute("groups.index");
+              })
+              .catch(error => {
+                Ember.Logger.error(error);
+                bootbox.alert(I18n.t("admin.groups.delete_failed"));
+              })
+              .finally(() => this.set("destroying", false));
+          } else {
+            this.set("destroying", false);
+          }
+        }
+      );
     }
   }
 });

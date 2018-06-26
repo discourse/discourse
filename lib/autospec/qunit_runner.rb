@@ -24,10 +24,10 @@ module Autospec
 
     require "socket"
 
-    class PhantomJsNotInstalled < StandardError; end
+    class ChromeNotInstalled < StandardError; end
 
     def initialize
-      ensure_phantomjs_is_installed
+      ensure_chrome_is_installed
     end
 
     def start
@@ -66,7 +66,7 @@ module Autospec
         end
       end
 
-      cmd = "phantomjs #{Rails.root}/lib/autospec/run-qunit.js \"#{qunit_url}\""
+      cmd = "node #{Rails.root}/vendor/assets/javascripts/run-qunit.js \"#{qunit_url}\" 3000000 ./tmp/qunit_result"
 
       @pid = Process.spawn(cmd)
       _, status = Process.wait2(@pid)
@@ -96,7 +96,6 @@ module Autospec
     end
 
     def stop
-      # kill phantomjs first
       abort
       stop_rails_server
       @running = false
@@ -104,8 +103,12 @@ module Autospec
 
     private
 
-    def ensure_phantomjs_is_installed
-      raise PhantomJsNotInstalled.new unless system("command -v phantomjs >/dev/null;")
+    def ensure_chrome_is_installed
+      raise ChromeNotInstalled.new unless system("command -v google-chrome >/dev/null;")
+
+      if Gem::Version.new(`$(command -v google-chrome) --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+        raise "Chrome 59 or higher is required"
+      end
     end
 
     def port_available?(port)

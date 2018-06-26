@@ -32,7 +32,7 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    user = User.find_by_email(email)
+    user = Invite.find_user_by_email(email)
 
     if user && user.id != self.user_id
       @email_already_exists = true
@@ -102,7 +102,7 @@ class Invite < ActiveRecord::Base
     custom_message = opts[:custom_message]
     lower_email = Email.downcase(email)
 
-    if user = User.find_by_email(lower_email)
+    if user = find_user_by_email(lower_email)
       extend_permissions(topic, user, invited_by) if topic
       raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
     end
@@ -139,7 +139,7 @@ class Invite < ActiveRecord::Base
       end
     else
       if topic && topic.category && Guardian.new(invited_by).can_invite_to?(topic)
-        group_ids = topic.category.groups.pluck(:id) - invite.invited_groups.pluck(:group_id)
+        group_ids = topic.category.groups.where(automatic: false).pluck(:id) - invite.invited_groups.pluck(:group_id)
         group_ids.each { |group_id| invite.invited_groups.create!(group_id: group_id) }
       end
     end
@@ -148,6 +148,10 @@ class Invite < ActiveRecord::Base
 
     invite.reload
     invite
+  end
+
+  def self.find_user_by_email(email)
+    User.with_email(email).where(staged: false).first
   end
 
   def self.get_group_ids(group_names)
@@ -162,13 +166,14 @@ class Invite < ActiveRecord::Base
     group_ids
   end
 
+  INVITE_ORDER = <<~SQL
+  SQL
+
   def self.find_all_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
       .where('invites.email IS NOT NULL')
       .includes(user: :user_stat)
-      .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
-                 'user_stats.time_read DESC',
-                 'invites.redeemed_at DESC')
+      .order("CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END, user_stats.time_read DESC, invites.redeemed_at DESC")
       .limit(limit)
       .offset(offset)
       .references('user_stats')
@@ -183,11 +188,11 @@ class Invite < ActiveRecord::Base
   end
 
   def self.find_pending_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').reorder(nil).count
   end
 
   def self.find_redeemed_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').reorder(nil).count
   end
 
   def self.filter_by(email_or_username)

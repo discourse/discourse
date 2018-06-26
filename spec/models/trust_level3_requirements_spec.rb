@@ -4,6 +4,7 @@ describe TrustLevel3Requirements do
 
   let(:user) { Fabricate.build(:user) }
   subject(:tl3_requirements) { described_class.new(user) }
+  let(:moderator) { Fabricate(:moderator) }
 
   before do
     described_class.clear_cache
@@ -14,6 +15,44 @@ describe TrustLevel3Requirements do
   end
 
   describe "requirements" do
+
+    describe "penalty_counts" do
+
+      it "returns if the user has ever been silenced" do
+        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+        UserSilencer.new(user, moderator).silence
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+        UserSilencer.new(user, moderator).unsilence
+        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+      end
+
+      it "returns if the user has ever been suspended" do
+        user.save!
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+
+        UserHistory.create!(
+          target_user_id: user.id,
+          action: UserHistory.actions[:suspend_user]
+        )
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+
+        UserHistory.create!(
+          target_user_id: user.id,
+          action: UserHistory.actions[:unsuspend_user]
+        )
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+      end
+    end
+
     it "time_period uses site setting" do
       SiteSetting.tl3_time_period = 80
       expect(tl3_requirements.time_period).to eq(80)
@@ -357,7 +396,24 @@ describe TrustLevel3Requirements do
     end
 
     it "are not met if suspended" do
-      user.stubs(:suspended?).returns(true)
+      user.suspended_till = 3.weeks.from_now
+      expect(tl3_requirements.requirements_met?).to eq(false)
+    end
+
+    it "are not met if silenced" do
+      user.silenced_till = 3.weeks.from_now
+      expect(tl3_requirements.requirements_met?).to eq(false)
+    end
+
+    it "are not met if previously silenced" do
+      user.save
+      UserHistory.create(target_user_id: user.id, action: UserHistory.actions[:silence_user])
+      expect(tl3_requirements.requirements_met?).to eq(false)
+    end
+
+    it "are not met if previously suspended" do
+      user.save
+      UserHistory.create(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
       expect(tl3_requirements.requirements_met?).to eq(false)
     end
 
@@ -372,7 +428,12 @@ describe TrustLevel3Requirements do
     end
 
     it "are lost if suspended" do
-      user.stubs(:suspended?).returns(true)
+      user.suspended_till = 4.weeks.from_now
+      expect(tl3_requirements.requirements_lost?).to eq(true)
+    end
+
+    it "are lost if silenced" do
+      user.silenced_till = 4.weeks.from_now
       expect(tl3_requirements.requirements_lost?).to eq(true)
     end
   end

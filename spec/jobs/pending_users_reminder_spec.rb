@@ -38,6 +38,13 @@ describe Jobs::PendingUsersReminder do
         PostCreator.expects(:create).never
         Jobs::PendingUsersReminder.new.execute({})
       end
+
+      it "sets the correct pending user count in the notification" do
+        SiteSetting.pending_users_reminder_delay = 8
+        Fabricate(:user, created_at: 9.hours.ago)
+        PostCreator.expects(:create).with(Discourse.system_user, has_entries(title: '1 user waiting for approval'))
+        Jobs::PendingUsersReminder.new.execute({})
+      end
     end
   end
 

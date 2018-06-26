@@ -10,8 +10,8 @@
         {{#user-link user=post.user}}
           {{post.user.username}}
         {{/user-link}}
-        {{#if post.user.blocked}}
-          {{d-icon "ban" title="user.blocked_tooltip"}}
+        {{#if post.user.silenced}}
+          {{d-icon "ban" title="user.silenced_tooltip"}}
         {{/if}}
       </span>
     </div>
@@ -52,7 +52,7 @@
         {{/each}}
       </div>
     {{else if editTags}}
-      {{tag-chooser tags=buffered.tags categoryId=buffered.category_id width='100%'}}
+      {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
     {{/if}}
 
     <div class='queue-controls'>

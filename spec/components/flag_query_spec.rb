@@ -5,6 +5,41 @@ describe FlagQuery do
 
   let(:codinghorror) { Fabricate(:coding_horror) }
 
+  describe "flagged_topics" do
+    it "respects `min_flags_staff_visibility`" do
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+
+      post = create_post
+
+      PostAction.act(moderator, post, PostActionType.types[:spam])
+
+      SiteSetting.min_flags_staff_visibility = 1
+
+      result = FlagQuery.flagged_topics
+      expect(result[:flagged_topics]).to be_present
+      ft = result[:flagged_topics].first
+      expect(ft.topic).to eq(post.topic)
+      expect(ft.flag_counts).to eq(PostActionType.types[:spam] => 1)
+
+      SiteSetting.min_flags_staff_visibility = 2
+
+      result = FlagQuery.flagged_topics
+      expect(result[:flagged_topics]).to be_blank
+
+      PostAction.act(admin, post, PostActionType.types[:inappropriate])
+      result = FlagQuery.flagged_topics
+      expect(result[:flagged_topics]).to be_present
+      ft = result[:flagged_topics].first
+      expect(ft.topic).to eq(post.topic)
+      expect(ft.flag_counts).to eq(
+        PostActionType.types[:spam] => 1,
+        PostActionType.types[:inappropriate] => 1
+      )
+    end
+
+  end
+
   describe "flagged_posts_report" do
     it "does not return flags on system posts" do
       admin = Fabricate(:admin)
@@ -59,6 +94,12 @@ describe FlagQuery do
       posts = FlagQuery.flagged_posts_report(admin, topic_id: -1)
       expect(posts[0]).to be_blank
 
+      # Try by user
+      posts = FlagQuery.flagged_posts_report(admin, user_id: post.user_id)
+      expect(posts).to be_present
+      posts = FlagQuery.flagged_posts_report(admin, user_id: -1000)
+      expect(posts[0]).to be_blank
+
       # chuck post in category a mod can not see and make sure its missing
       category = Fabricate(:category)
       category.set_permissions(admins: :full)
@@ -69,7 +110,27 @@ describe FlagQuery do
       posts, users = FlagQuery.flagged_posts_report(moderator)
 
       expect(posts.count).to eq(1)
+    end
 
+    it "respects `min_flags_staff_visibility`" do
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+
+      post = create_post
+
+      PostAction.act(moderator, post, PostActionType.types[:spam])
+
+      SiteSetting.min_flags_staff_visibility = 2
+      posts, topics, users = FlagQuery.flagged_posts_report(admin)
+      expect(posts).to be_blank
+      expect(topics).to be_blank
+      expect(users).to be_blank
+
+      PostAction.act(admin, post, PostActionType.types[:inappropriate])
+      posts, topics, users = FlagQuery.flagged_posts_report(admin)
+      expect(posts).to be_present
+      expect(topics).to be_present
+      expect(users).to be_present
     end
 
   end

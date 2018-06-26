@@ -6,56 +6,120 @@
 // --------------------------------------------------
 
 .list-controls {
+  margin: 10px -3px 5px -3px;
   .category-breadcrumb.hidden {
     display: none;
   }
-  margin: 5px 0;
-  .nav {
-    float: left;
-    margin-right: 15px;
-    li {
-      margin-top: 5px;
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    #create-topic {
+      box-sizing: border-box;
+      display: flex;
+      align-self: stretch;
+      margin: 0 3px 10px 3px;
+      order: 10; // always last for consistent placement
     }
   }
-  .btn {
-    float: right;
-    margin-left: 8px;
-    margin-top: 5px;
+
+  .dropdown-select-box-header {
+    display: flex;
+    height: 100%;
   }
-  .nav-pills {
-    position: relative;
-  }
-  .nav-pills .drop {
-    border: 1px solid $primary-low;
-    position: absolute;
-    z-index: 1000;
-    background-color: $secondary;
-    padding: 0 10px 10px 10px;
-    width: 150px;
-    top: 100%;
-    margin: 0;
-    li {
-      list-style-type: none;
-      margin-left: 0;
-      margin-top: 5px;
-      padding-top: 10px;
-      a {
-        width: 100%;
-        display: inline-block;
+
+  .navigation-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 5px 0;
+
+    button {
+      margin: 0 3px;
+
+      &.select-kit-header {
+        display: flex;
+        height: 100%;
+        flex: 1 1 auto;
       }
     }
-
   }
-  .nav-pills > li {
-    background: $primary-low;
-    .d-icon-caret-down {
-      margin-left: 8px;
+
+  .select-kit {
+    display: flex;
+    align-self: stretch;
+    margin-bottom: 10px;
+  }
+
+  .btn:not(.select-kit-header) {
+    margin-bottom: 10px;
+  }
+
+  .categories-admin-dropdown,
+  .tag-notifications-button {
+    order: 2; // after main nav
+  }
+
+  .category-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    .edit-category {
+      i {
+        margin: 0;
+      }
+      @media screen and (max-width: 374px) {
+        // Hide edit label on very tiny screens
+        .d-button-label {
+          display: none;
+        }
+      }
     }
   }
 
-  .select-box-kit {
-    &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
-      margin-top: 5px;
+  .nav-pills {
+    display: flex;
+    flex: 1 1 auto;
+    margin: 0 3px 5px 3px;
+    position: relative;
+    .navigation-toggle {
+      flex: 0 1 auto;
+      margin-bottom: 5px;
+    }
+    > li {
+      margin-right: 0;
+      background: $primary-low;
+      font-size: $font-down-1;
+    }
+    > li > a {
+      line-height: $line-height-large;
+      display: flex;
+      align-items: center;
+      .d-icon {
+        margin-left: 5px;
+      }
+    }
+    .drop {
+      border: 1px solid $primary-low;
+      position: absolute;
+      z-index: z("dropdown") - 1;
+      background-color: $secondary;
+      padding: 0 10px 10px 10px;
+      width: 150px;
+      top: 100%;
+      margin: 0;
+      left: 0; // iOS6 alignment
+      li {
+        list-style-type: none;
+        margin-left: 0;
+        margin-top: 5px;
+        padding-top: 10px;
+        a {
+          width: 100%;
+          display: inline-block;
+        }
+      }
     }
   }
 }
@@ -68,15 +132,8 @@
 // --------------------------------------------------
 
 .topic-list {
-
   .right {
     margin-left: 55px;
-  }
-
-  > tbody > tr {
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-    }
   }
 
   th,
@@ -86,14 +143,20 @@
     max-width: 300px;
   }
 
-  a.title {color: $primary;}
+  a.title {
+    color: $primary;
+  }
 
-  .badge-notification, .category-topic-link td.num .badge-notification {
+  .badge-notification,
+  .category-topic-link td.num .badge-notification {
     position: relative;
+    display: inline;
     top: -1px;
-    font-size: 1.071em;
+    font-size: $font-down-1;
     padding: 4px 6px 3px 6px;
-    i {color: $secondary;}
+    i {
+      color: $secondary;
+    }
 
     &.new-topic::before {
       margin-right: 0;
@@ -105,24 +168,27 @@
   }
 
   .category-topic-link td.num .badge-notification {
-    &.new-posts, &.unread-posts {
+    &.new-posts,
+    &.unread-posts {
       color: dark-light-choose($secondary, $secondary);
     }
   }
 
   .topic-item-stats {
-    margin-top: 8px;
-    .category, .num, .last-poster {
+    .category,
+    .num,
+    .last-poster {
       float: left;
     }
     .category a {
       max-width: 160px;
     }
-    .num .fa, a, a:visited {
+    .num .fa,
+    a,
+    a:visited {
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
-
 
   .age {
     white-space: nowrap;
@@ -146,17 +212,15 @@
     vertical-align: top;
   }
 
+  th {
+    padding: 10px 0 0;
+  }
+
   td:first-of-type {
     padding-left: 10px;
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid $primary-low;
-      &:first-of-type {
-        border-top: 3px solid $primary-low;
-      }
-    }
     .category {
       border-left: 6px solid;
     }
@@ -164,9 +228,14 @@
 }
 
 .category-list-item.category {
+  tr:first-of-type {
+    border: none;
+  }
   // Allow percentage widths on table cells to include their padding
   box-sizing: border-box;
-  *, *:before, *:after {
+  *,
+  *:before,
+  *:after {
     box-sizing: inherit;
   }
 
@@ -181,8 +250,10 @@
 }
 
 tr.category-topic-link {
-  border-top: darken($secondary, 3%) 1px solid;
-  border-bottom: darken($secondary, 3%) 1px solid;
+  border-bottom: 1px solid $primary-low;
+  &:last-of-type {
+    border-bottom: none;
+  }
 }
 
 .topic-list.categories {
@@ -196,39 +267,51 @@ tr.category-topic-link {
     margin-top: 1px;
   }
   .featured-users {
-    @include mobile-portrait  {
+    @include mobile-portrait {
       margin-bottom: 10px;
       padding-top: 8px;
       clear: left;
     }
-    @include not-mobile-portrait  {
+    @include not-mobile-portrait {
       float: right;
     }
   }
   .latest {
-    @include mobile-portrait { width: 150px; }
-    @include mobile-landscape { width: 270px; }
-    @include tablet-landscape { width: 450px; }
+    @include mobile-portrait {
+      width: 150px;
+    }
+    @include mobile-landscape {
+      width: 270px;
+    }
+    @include tablet-landscape {
+      width: 450px;
+    }
     .featured-topic {
       margin: 8px 0;
-      a.last-posted-at, a.last-posted-at:visited {
+      a.last-posted-at,
+      a.last-posted-at:visited {
         color: dark-light-choose($primary-medium, $secondary-medium);
       }
     }
   }
   .stats {
-    @include not-tablet-landscape { display: none; }
-    @include tablet-landscape { min-width: 80px; }
+    @include not-tablet-landscape {
+      display: none;
+    }
+    @include tablet-landscape {
+      min-width: 80px;
+    }
   }
 }
 
 .category-list-item {
-
+  padding: 5px 0 2px;
   border-left: 6px solid;
+  border-top: 1px solid;
 
   h3 {
     display: inline-block;
-    font-size: 1.286em;
+    font-size: $font-up-2;
     margin: 0 0 0 10px;
     i {
       margin-right: 5px;
@@ -238,12 +321,18 @@ tr.category-topic-link {
     }
   }
 
-  .category-topic-link .main-link, .subcategories-list td, .category-description td {
+  .category-name {
+    max-width: 80vw;
+  }
+
+  .category-topic-link .main-link,
+  .subcategories-list td,
+  .category-description td {
     padding-left: 10px;
   }
 
   .category-topic-link .main-link .age {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 
   .category-description td {
@@ -266,34 +355,29 @@ tr.category-topic-link {
 
   th .badge-category {
     margin: 0;
-    font-size: 110%;
   }
 
   .category-topic-link {
     .num {
       white-space: nowrap;
-      .number {
-        font-size: 1.071em;
-      }
     }
     .topic-excerpt {
       width: 110%;
     }
   }
 
-
   .posters {
     float: left;
   }
   > footer {
-    border-top: 0;
+    border-top: 1px solid $primary-low;
     padding: 7px 10px;
     figure {
       float: left;
       margin: 3px 7px 0 0;
       color: dark-light-choose($primary, $secondary-low);
       font-weight: bold;
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
     figcaption {
       display: inline;
@@ -316,15 +400,8 @@ tr.category-topic-link {
   margin: 20px 0 0 0;
 }
 
-
 // Misc. stuff
 // --------------------------------------------------
-.list-controls {
-  .category-dropdown-button {
-    padding: 4px 10px 4px 8px;
-  }
-}
-
 .btn-group .dropdown-toggle:active,
 .btn-group.open .dropdown-toggle {
   outline: 0;
@@ -352,7 +429,7 @@ tr.category-topic-link {
   position: relative;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: z("dropdown");
   display: none;
   float: left;
   width: 280px;
@@ -361,17 +438,20 @@ tr.category-topic-link {
   background-color: $secondary;
   border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: shadow("dropdown");
   background-clip: padding-box;
   margin: 1px 0 20px;
-  .title {font-weight: bold; display: block;}
+  .title {
+    font-weight: bold;
+    display: block;
+  }
 }
 .dropdown-menu a {
   display: block;
   padding: 3px 15px;
   clear: both;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
   color: $primary;
 }
 .dropdown-menu li > a:hover,
@@ -387,38 +467,52 @@ tr.category-topic-link {
 }
 .fade {
   opacity: 0;
-  transition: opacity linear .15s;
+  transition: opacity linear 0.15s;
 }
 .fade.in {
   opacity: 1;
 }
 
 ol.category-breadcrumb {
-  margin: 5px 10px 0 0;
-}
-
-.category-dropdown-menu {
-  height: 200px;
-
-  a.badge-category {
-    line-height: 26px !important;
-    margin-bottom: 0 !important;
+  margin: 0 0 5px 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 100%;
+  li.select-kit {
+    flex: 1 1 33%;
+    margin: 0 3px 5px 3px;
+    .select-kit-header .selected-name {
+      max-width: 80vw;
+      .badge-wrapper {
+        max-width: 100%;
+      }
+    }
   }
 }
 
 .top-lists {
-  h2 { margin-left: 10px; }
-  .topic-list { padding-bottom: 10px; }
-  .btn-default.pull-right { margin-right: 10px; }
+  h2 {
+    margin-left: 10px;
+  }
+  .topic-list {
+    padding-bottom: 10px;
+  }
+  .btn-default.pull-right {
+    margin-right: 10px;
+  }
 }
 
 .tags-admin-menu {
   display: none;
 }
 
+.staff.tags-page #create-topic {
+  clear: right;
+}
+
 .topic-list-bottom h3 {
-  clear:both;
-  padding-top:10px;
+  clear: both;
+  padding-top: 10px;
 }
 
 .category-logo {
@@ -444,7 +538,7 @@ td .main-link {
 }
 .topic-list {
   .posts-map {
-    font-size: 1.15em;
+    font-size: $font-up-1;
   }
   // so the topic excerpt is full width
   // as the containing div is 80%

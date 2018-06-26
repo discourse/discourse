@@ -1,0 +1,17 @@
+<div class="list-controls">
+  <div class="container">
+    <h2>{{i18n "tagging.tags"}}</h2>
+  </div>
+</div>
+
+<div class='tag-sort-options'>
+  {{i18n "tagging.sort_by"}}
+  <span class="tag-sort-count {{if sortedByCount 'active'}}"><a {{action "sortByCount"}}>{{i18n "tagging.sort_by_count"}}</a></span>
+  <span class="tag-sort-name {{if sortedByName 'active'}}"><a {{action "sortById"}}>{{i18n "tagging.sort_by_name"}}</a></span>
+</div>
+
+<hr/>
+
+{{#if model}}
+  {{tag-list tags=model sortProperties=sortProperties titleKey="tagging.all_tags" isPrivateMessage=true tagsForUser=tagsForUser}}
+{{/if}}

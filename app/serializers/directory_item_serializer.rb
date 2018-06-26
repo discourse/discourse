@@ -11,7 +11,7 @@ class DirectoryItemSerializer < ApplicationSerializer
   end
 
   def time_read
-    AgeWords.age_words(object.user_stat.time_read)
+    object.user_stat.time_read
   end
 
   def include_time_read?

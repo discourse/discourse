@@ -1,7 +1,5 @@
 class Admin::EmbeddableHostsController < Admin::AdminController
 
-  before_action :ensure_logged_in, :ensure_staff
-
   def create
     save_host(EmbeddableHost.new)
   end
@@ -19,18 +17,18 @@ class Admin::EmbeddableHostsController < Admin::AdminController
 
   protected
 
-    def save_host(host)
-      host.host = params[:embeddable_host][:host]
-      host.path_whitelist = params[:embeddable_host][:path_whitelist]
-      host.class_name =  params[:embeddable_host][:class_name]
-      host.category_id = params[:embeddable_host][:category_id]
-      host.category_id = SiteSetting.uncategorized_category_id if host.category_id.blank?
+  def save_host(host)
+    host.host = params[:embeddable_host][:host]
+    host.path_whitelist = params[:embeddable_host][:path_whitelist]
+    host.class_name =  params[:embeddable_host][:class_name]
+    host.category_id = params[:embeddable_host][:category_id]
+    host.category_id = SiteSetting.uncategorized_category_id if host.category_id.blank?
 
-      if host.save
-        render_serialized(host, EmbeddableHostSerializer, root: 'embeddable_host', rest_serializer: true)
-      else
-        render_json_error(host)
-      end
+    if host.save
+      render_serialized(host, EmbeddableHostSerializer, root: 'embeddable_host', rest_serializer: true)
+    else
+      render_json_error(host)
     end
+  end
 
 end

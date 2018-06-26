@@ -191,6 +191,10 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<pre><code class="lang-javascript">var foo = 'bar';</code></pre>})).to eq("```javascript\nvar foo = 'bar';\n```")
   end
 
+  it "supports <pre> inside <blockquote>" do
+    expect(html_to_markdown("<blockquote><pre><code>var foo = 'bar';</code></pre></blockquote>")).to eq("> ```\n> var foo = 'bar';\n> ```")
+  end
+
   it "works" do
     expect(html_to_markdown("<ul><li><p>A list item with a blockquote:</p><blockquote><p>This is a <strong>blockquote</strong><br>inside a list item.</p></blockquote></li></ul>")).to eq("- A list item with a blockquote:\n\n  > This is a **blockquote**\n  > inside a list item.")
   end

@@ -34,7 +34,7 @@ class SiteController < ApplicationController
       title: SiteSetting.title,
       description: SiteSetting.site_description
     }
-    results[:mobile_logo_url] = SiteSetting.mobile_logo_url if SiteSetting.mobile_logo_url.present?
+    results[:mobile_logo_url] = SiteSetting.mobile_logo_url.presence
 
     DiscourseHub.stats_fetched_at = Time.zone.now if request.user_agent == "Discourse Hub"
 

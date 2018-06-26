@@ -1,0 +1,54 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.toolbar-popup-menu-options {
+      .select-kit-body {
+        box-shadow: none;
+        padding: 10px 10px 5px 10px;
+        width: 230px;
+      }
+
+      .select-kit-row {
+        border-radius: 4px;
+        margin-bottom: 5px;
+        padding: 6px 3px;
+        background: $primary-low;
+        transition: all 0.25s;
+
+        .name,
+        .d-icon {
+          font-size: $font-0;
+          font-weight: normal;
+          color: $primary;
+        }
+
+        .d-icon {
+          opacity: 0.7;
+        }
+
+        &.is-highlighted {
+          background: $primary-medium;
+
+          .name,
+          .d-icon {
+            color: $secondary;
+          }
+        }
+
+        &:hover {
+          background: $primary-medium;
+          color: $secondary;
+        }
+
+        &.is-selected {
+          color: $primary;
+          background: $primary-low;
+        }
+
+        &.is-selected.is-highlighted {
+          background: $primary-medium;
+          color: $primary;
+        }
+      }
+    }
+  }
+}

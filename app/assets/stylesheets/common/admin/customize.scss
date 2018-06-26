@@ -4,6 +4,10 @@
     margin-bottom: 10px;
     input {
       margin-bottom: 0;
+      font-size: $font-down-2;
+    }
+    .btn-small {
+      font-size: $font-down-2;
     }
   }
 
@@ -15,7 +19,8 @@
   }
 
   .edit-main-nav {
-    .nav-pills:after, .nav-pills:before {
+    .nav-pills:after,
+    .nav-pills:before {
       display: inline;
       content: "";
     }
@@ -32,7 +37,7 @@
   .admin-footer {
     margin-top: 20px;
   }
-  .select2-chosen, .color-schemes li {
+  .color-schemes li {
     .fa {
       margin-right: 6px;
       color: dark-light-choose($primary-medium, $secondary-medium);
@@ -51,13 +56,28 @@
     }
   }
 
+  .theme.settings {
+    .theme-setting {
+      padding-bottom: 0;
+      padding-top: 18px;
+      min-height: 35px;
+    }
+    .setting-label {
+      width: 25%;
+      h3 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+
   .current-style.maximized {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 100000;
+    z-index: z("fullscreen");
     background-color: white;
     width: 100%;
     padding: 0;
@@ -74,7 +94,8 @@
   .nav.nav-pills.fields {
     margin-left: 10px;
   }
-  .content-list, .current-style {
+  .content-list,
+  .current-style {
     float: left;
   }
   .content-list ul {
@@ -88,21 +109,27 @@
     }
 
     .nav.target {
+      margin-top: 15px;
+
       li {
         position: relative;
+
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
       }
-      margin-top: 15px;
+
       .fa {
-        margin-left: 3px;
+        margin-left: 8px;
       }
-      li.mobile a {
-        padding-right: 25px;
-      }
+
       .d-icon-mobile {
-        position: absolute;
-        right: 10px;
-        top: 3px;
-        font-size: 1.5em;
+        position: relative;
+        top: -3px;
+        font-size: $font-up-3;
+        max-height: 20px;
       }
     }
 
@@ -162,18 +189,33 @@
   }
   .color-scheme {
     .controls {
-      span, button, a {
+      span,
+      button,
+      a {
         margin-right: 10px;
       }
     }
   }
   .colors {
-    thead th       { border: none; }
-    td.hex         { width: 160px; }
-    td.actions     { width: 200px; }
-    .hex-input     { width: 80px; margin-bottom: 0; }
-    .hex           { text-align: center; }
-    .description   { color: dark-light-choose($primary-medium, $secondary-medium); }
+    thead th {
+      border: none;
+    }
+    td.hex {
+      width: 160px;
+    }
+    td.actions {
+      width: 200px;
+    }
+    .hex-input {
+      width: 80px;
+      margin-bottom: 0;
+    }
+    .hex {
+      text-align: center;
+    }
+    .description {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
 
     .invalid .hex input {
       background-color: white;
@@ -184,7 +226,7 @@
 
   .status-message {
     display: block;
-    font-size: 0.8em;
+    font-size: $font-down-1;
     margin-top: 8px;
   }
 
@@ -208,5 +250,28 @@
 .add-upload-modal {
   label {
     margin-top: 20px;
+  }
+}
+
+#custom_emoji {
+  width: 27%;
+}
+
+.modal-body .inputs .check-private {
+  margin-top: 10px;
+  label {
+    padding-left: 0;
+  }
+  label input {
+    width: auto;
+    margin: 3px 0;
+  }
+
+  .public-key {
+    margin-top: 10px;
+    textarea {
+      cursor: auto;
+      height: 150px;
+    }
   }
 }

@@ -2,7 +2,8 @@
   margin-bottom: 10px;
   width: 100%;
 
-  td, th {
+  td,
+  th {
     @extend .list-cell;
   }
 
@@ -35,10 +36,10 @@
     text-align: right;
 
     .value {
-      font-size: 1.2em;
+      font-size: $font-up-1;
     }
     .unit {
-      font-size: .8em;
+      font-size: $font-down-1;
     }
     .badge-notification {
       display: block;
@@ -48,15 +49,10 @@
     }
   }
 
-  .category-description,
-  .subcategories {
-    margin-top: 10px;
-  }
-
   .subcategories {
     .badge-notification.new-posts {
       padding: 0;
-      margin: 0 5px 0 0;
+      margin: 0 10px 0 0;
     }
   }
 
@@ -69,7 +65,7 @@
 
     a.last-posted-at,
     a.last-posted-at:visited {
-      font-size: 0.86em;
+      font-size: $font-down-1;
       color: dark-light-choose($primary-medium, $secondary-high);
     }
 
@@ -88,17 +84,11 @@
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid $primary-low;
-      &:first-of-type {
-        border-top: 3px solid $primary-low;
-      }
-    }
-
     .category {
       border-left: 6px solid;
       h3 {
-        font-size: 1.2em;
+        font-size: $font-up-2;
+        line-height: $line-height-medium;
         a[href] {
           color: $primary;
         }
@@ -114,24 +104,34 @@
   }
 }
 
-.categories-and-latest {
+.categories-and-latest,
+.categories-and-top {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
 
   div.column {
     flex: 1;
+    flex-direction: row;
+    min-width: 300px;
   }
 
   div.column.categories {
-    margin-right: 2em;
+    @media all and (max-width: 600px) {
+      margin-right: 0;
+    }
+    @media all and (min-width: 600px) {
+      margin-right: 1em;
+    }
+    @media all and (min-width: 700px) {
+      margin-right: 2em;
+    }
   }
 
   .discourse-tag {
-    font-size: 0.75em;
+    font-size: $font-down-2;
   }
 
   .topic-featured-link {
     padding-left: 8px;
   }
 }
-

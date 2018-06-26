@@ -38,7 +38,18 @@ class CurrentUserSerializer < BasicUserSerializer
              :previous_visit_at,
              :seen_notification_id,
              :primary_group_id,
-             :primary_group_name
+             :primary_group_name,
+             :can_create_topic,
+             :link_posting_access,
+             :external_id
+
+  def link_posting_access
+    scope.link_posting_access
+  end
+
+  def can_create_topic
+    scope.can_create_topic?(nil)
+  end
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -135,7 +146,7 @@ class CurrentUserSerializer < BasicUserSerializer
     end
 
     if fields.present?
-      User.custom_fields_for_ids([object.id], fields)[object.id]
+      User.custom_fields_for_ids([object.id], fields)[object.id] || {}
     else
       {}
     end
@@ -187,4 +198,11 @@ class CurrentUserSerializer < BasicUserSerializer
     object.primary_group&.name.present?
   end
 
+  def external_id
+    object&.single_sign_on_record&.external_id
+  end
+
+  def include_external_id?
+    SiteSetting.enable_sso
+  end
 end

@@ -3,18 +3,41 @@ require 'email/sender'
 
 describe Email::Sender do
 
-  it "doesn't deliver mail when mails are disabled" do
-    SiteSetting.disable_emails = true
-    Mail::Message.any_instance.expects(:deliver_now).never
-    message = Mail::Message.new(to: "hello@world.com" , body: "hello")
-    expect(Email::Sender.new(message, :hello).send).to eq(nil)
-  end
+  context "disable_emails is enabled" do
+    let(:user) { Fabricate(:user) }
+    let(:moderator) { Fabricate(:moderator) }
 
-  it "delivers mail when mails are disabled but the email_type is admin_login" do
-    SiteSetting.disable_emails = true
-    Mail::Message.any_instance.expects(:deliver_now).once
-    message = Mail::Message.new(to: "hello@world.com" , body: "hello")
-    Email::Sender.new(message, :admin_login).send
+    context "disable_emails is enabled for everyone" do
+      before { SiteSetting.disable_emails = "yes" }
+
+      it "doesn't deliver mail when mails are disabled" do
+        Mail::Message.any_instance.expects(:deliver_now).never
+        message = Mail::Message.new(to: moderator.email , body: "hello")
+        expect(Email::Sender.new(message, :hello).send).to eq(nil)
+      end
+
+      it "delivers mail when mails are disabled but the email_type is admin_login" do
+        Mail::Message.any_instance.expects(:deliver_now).once
+        message = Mail::Message.new(to: moderator.email , body: "hello")
+        Email::Sender.new(message, :admin_login).send
+      end
+    end
+
+    context "disable_emails is enabled for non-staff users" do
+      before { SiteSetting.disable_emails = "non-staff" }
+
+      it "doesn't deliver mail to normal user" do
+        Mail::Message.any_instance.expects(:deliver_now).never
+        message = Mail::Message.new(to: user.email, body: "hello")
+        expect(Email::Sender.new(message, :hello).send).to eq(nil)
+      end
+
+      it "delivers mail to staff user" do
+        Mail::Message.any_instance.expects(:deliver_now).once
+        message = Mail::Message.new(to: moderator.email, body: "hello")
+        Email::Sender.new(message, :hello).send
+      end
+    end
   end
 
   it "doesn't deliver mail when the message is of type NullMail" do
@@ -211,9 +234,9 @@ describe Email::Sender do
         email_sender.send
 
         references = [
+          "<topic/#{topic.id}@test.localhost>",
           "<topic/#{topic.id}/#{post_3.id}@test.localhost>",
           "<topic/#{topic.id}/#{post_2.id}@test.localhost>",
-          "<topic/#{topic.id}@test.localhost>",
         ]
 
         expect(message.header['References'].to_s).to eq(references.join(" "))
@@ -231,9 +254,9 @@ describe Email::Sender do
         expect(message.header['Message-Id'].to_s).to eq("<#{post_4_incoming_email.message_id}>")
 
         references = [
+          "<#{topic_incoming_email.message_id}>",
           "<topic/#{topic.id}/#{post_3.id}@test.localhost>",
           "<#{post_2_incoming_email.message_id}>",
-          "<#{topic_incoming_email.message_id}>",
         ]
 
         expect(message.header['References'].to_s).to eq(references.join(" "))

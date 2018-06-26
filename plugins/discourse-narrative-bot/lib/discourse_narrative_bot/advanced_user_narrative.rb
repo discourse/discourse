@@ -80,6 +80,7 @@ module DiscourseNarrativeBot
       },
 
       tutorial_poll: {
+        prerequisite: Proc.new { SiteSetting.poll_enabled },
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
         reply: {
@@ -175,7 +176,7 @@ module DiscourseNarrativeBot
       }
 
       if @post &&
-         @post.archetype == Archetype.private_message &&
+         @post.topic.private_message? &&
          @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
 
         opts = opts.merge(topic_id: @post.topic_id)

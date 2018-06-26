@@ -1,5 +1,23 @@
 # API to wrap up plugin store rows
 class PluginStore
+  attr_reader :plugin_name
+
+  def initialize(plugin_name)
+    @plugin_name = plugin_name
+  end
+
+  def get(key)
+    self.class.get(plugin_name, key)
+  end
+
+  def set(key, value)
+    self.class.set(plugin_name, key, value)
+  end
+
+  def remove(key)
+    self.class.remove(plugin_name, key)
+  end
+
   def self.get(plugin_name, key)
     if row = PluginStoreRow.find_by(plugin_name: plugin_name, key: key)
       cast_value(row.type_name, row.value)

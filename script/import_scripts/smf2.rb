@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + '/base.rb')
 
@@ -152,6 +153,9 @@ class ImportScripts::Smf2 < ImportScripts::Base
       parent_id = category_id_from_imported_category_id(board[:id_parent]) if board[:id_parent] > 0
       groups = (board[:member_groups] || "").split(/,/).map(&:to_i)
       restricted = !groups.include?(GUEST_GROUP) && !groups.include?(MEMBER_GROUP)
+      if Category.find_by_name(board[:name])
+        board[:name] += board[:id_board].to_s
+      end
       {
         id: board[:id_board],
         name: board[:name],

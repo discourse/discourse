@@ -8,9 +8,12 @@ describe RateLimiter do
 
   context 'disabled' do
     before do
-      RateLimiter.stubs(:disabled?).returns(true)
       rate_limiter.performed!
       rate_limiter.performed!
+    end
+
+    it "should be disabled" do
+      expect(RateLimiter.disabled?).to eq(true)
     end
 
     it "returns true for can_perform?" do
@@ -25,8 +28,49 @@ describe RateLimiter do
 
   context 'enabled' do
     before do
-      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.enable
       rate_limiter.clear!
+    end
+
+    after do
+      RateLimiter.disable
+    end
+
+    context 'global rate limiter' do
+
+      it 'can operate in global mode' do
+        limiter = RateLimiter.new(nil, "test", 2, 30, global: true)
+        limiter.clear!
+
+        thrown = false
+
+        limiter.performed!
+        limiter.performed!
+        begin
+          limiter.performed!
+        rescue RateLimiter::LimitExceeded => e
+          expect(Integer === e.available_in).to eq(true)
+          expect(e.available_in).to be > 28
+          expect(e.available_in).to be < 32
+          thrown = true
+        end
+        expect(thrown).to be(true)
+      end
+
+    end
+
+    context 'handles readonly' do
+      before do
+        $redis.without_namespace.slaveof '10.0.0.1', '99999'
+      end
+
+      after do
+        $redis.without_namespace.slaveof 'no', 'one'
+      end
+
+      it 'does not explode' do
+        expect { rate_limiter.performed! }.not_to raise_error
+      end
     end
 
     context 'never done' do
@@ -46,6 +90,17 @@ describe RateLimiter do
         expect(rate_limiter.remaining).to eq(1)
         rate_limiter.performed!
         expect(rate_limiter.remaining).to eq(0)
+      end
+    end
+
+    context 'max is less than or equal to zero' do
+
+      it 'should raise the right error' do
+        [-1, 0, nil].each do |max|
+          expect do
+            RateLimiter.new(user, "a", max, 60).performed!
+          end.to raise_error(RateLimiter::LimitExceeded)
+        end
       end
     end
 

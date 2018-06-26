@@ -3,9 +3,9 @@ require_dependency 'wizard/builder'
 require_dependency 'wizard/step_updater'
 
 class StepsController < ApplicationController
+  requires_login
 
   before_action :ensure_wizard_enabled
-  before_action :ensure_logged_in
   before_action :ensure_admin
 
   def update

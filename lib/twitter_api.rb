@@ -16,20 +16,17 @@ class TwitterApi
       result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
 
       if tweet['extended_entities'] && media = tweet['extended_entities']['media']
-        result << "<div class='tweet-images'>"
         media.each do |m|
           if m['type'] == 'photo'
             if large = m['sizes']['large']
-              result << "<img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'>"
+              result << "<div class='tweet-images'><img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'></div>"
             end
           elsif m['type'] == 'video'
             if large = m['sizes']['large']
-              result << "<iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0'></iframe>"
+              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0'></iframe></div>"
             end
           end
         end
-        result << "</div>"
-
       end
 
       result
@@ -57,27 +54,27 @@ class TwitterApi
 
     def link_handles_in(text)
       text.scan(/(?:^|\s)@(\w+)/).flatten.uniq.each do |handle|
-        text.gsub!("@#{handle}", [
-          "<a href='https://twitter.com/#{handle}' target='_blank'>",
+        text.gsub!(/(?:^|\s)@#{handle}/, [
+          " <a href='https://twitter.com/#{handle}' target='_blank'>",
             "@#{handle}",
           "</a>"
         ].join)
       end
 
-      text
+      text.strip
     end
 
     def link_hashtags_in(text)
       text.scan(/(?:^|\s)#(\w+)/).flatten.uniq.each do |hashtag|
-        text.gsub!("##{hashtag}", [
-          "<a href='https://twitter.com/search?q=%23#{hashtag}' ",
+        text.gsub!(/(?:^|\s)##{hashtag}/, [
+          " <a href='https://twitter.com/search?q=%23#{hashtag}' ",
           "target='_blank'>",
             "##{hashtag}",
           "</a>"
         ].join)
       end
 
-      text
+      text.strip
     end
 
     def user_timeline_uri_for(screen_name)

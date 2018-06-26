@@ -5,15 +5,15 @@ module CommonHelper
     end
   end
 
-  def render_google_analytics_code
-    if Rails.env.production? && SiteSetting.ga_tracking_code.present?
-      render partial: "common/google_analytics"
+  def render_google_tag_manager_head_code
+    if Rails.env.production? && SiteSetting.gtm_container_id.present?
+      render partial: "common/google_tag_manager_head"
     end
   end
 
-  def render_google_tag_manager_code
+  def render_google_tag_manager_body_code
     if Rails.env.production? && SiteSetting.gtm_container_id.present?
-      render partial: "common/google_tag_manager"
+      render partial: "common/google_tag_manager_body"
     end
   end
 end

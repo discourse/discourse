@@ -8,6 +8,10 @@ module Scheduler
       @thread = nil
     end
 
+    def length
+      @queue.length
+    end
+
     def pause
       stop!
       @paused = true
@@ -17,14 +21,14 @@ module Scheduler
       @paused = false
     end
 
-    # for test
+    # for test and sidekiq
     def async=(val)
       @async = val
     end
 
     def later(desc = nil, db = RailsMultisite::ConnectionManagement.current_db, &blk)
       if @async
-        start_thread unless (@thread && @thread.alive?) || @paused
+        start_thread unless @thread&.alive? || @paused
         @queue << [db, blk, desc]
       else
         blk.call
@@ -32,13 +36,13 @@ module Scheduler
     end
 
     def stop!
-      @thread.kill if @thread && @thread.alive?
+      @thread.kill if @thread&.alive?
       @thread = nil
     end
 
     # test only
     def stopped?
-      !(@thread && @thread.alive?)
+      !@thread&.alive?
     end
 
     def do_all_work
@@ -51,12 +55,8 @@ module Scheduler
 
     def start_thread
       @mutex.synchronize do
-        return if @thread && @thread.alive?
-        @thread = Thread.new {
-          while true
-            do_work
-          end
-        }
+        return if @thread&.alive?
+        @thread = Thread.new { do_work while true }
       end
     end
 
@@ -80,16 +80,6 @@ module Scheduler
   end
 
   class Defer
-
-    module Unicorn
-      def process_client(client)
-        Defer.pause
-        super(client)
-        Defer.do_all_work
-        Defer.resume
-      end
-    end
-
     extend Deferrable
     initialize
   end

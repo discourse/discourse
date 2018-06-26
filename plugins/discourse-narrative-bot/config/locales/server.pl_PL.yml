@@ -53,7 +53,6 @@ pl_PL:
         quote: "Każda przeszkoda to nowa szansa"
         author: "Albert Einstein"
       '2':
-        quote: "Musisz być zmianą, którą chcesz zobaczyć na świecie."
         author: "Mahatma Gandhi"
       '3':
         quote: "Nie płacz, ponieważ się to skończyło - uśmiechnij się, bo miało to miejsce."
@@ -161,8 +160,6 @@ pl_PL:
           - https://en.wikipedia.org/wiki/Inherently_funny_word
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
-        reply: |-
-          Świetnie! To będzie działało dla większości linków. Pamiętaj, to musi znaleźć się w linii _samodzielnie_, z niczym przed czy za.
         not_found: |-
           Przepraszam, nie mogłem znaleźć linku w twojej odpowiedzi!
           :cry:
@@ -171,14 +168,6 @@ pl_PL:
 
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
-        instructions: |-
-          Tutaj jest zdjęcie jednorożca.
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
-
-          Jeśli Ci się podoba (a komu mogłoby się nie podobać!) nie krępuj się i naciśnij przycisk :heart: poniżej tego komentarza, aby dać mi znać.
-
-          Czy możesz **odpowiedzieć zdjęciem?** Każde zdjęcie się nada! Przeciągnij i puść, naciśnij przycisk wysyłania lub po prostu skopiuj i wklej.
         reply: |-
           Ładne zdjęcie - nacisnąłem przycisk lajka :heart:, żeby Ci podziękować :heart_eyes:
         like_not_found: |-
@@ -222,31 +211,11 @@ pl_PL:
 
           Wybór jakiegokolwiek tekstu z mojej wiadomości spowoduję pojawienie się przycisku <kbd>**Zacytuj**</kbd>.  Naciśnięcie **Odpowiedz** z wybranym tekstem również zadziała! Czy możesz spróbować ponownie?
       bookmark:
-        instructions: |-
-          Jeśli chcesz się dowiedzieć więcej, wybierz <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> poniżej i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**dodaj do zakładek tą wiadomość prywatną**. Jeśli tak zrobisz, możesz otrzymać :gift: w przyszłości!
         reply: |-
           Wspaniale! Teraz możesz w łatwy sposób, w każdym momencie przejść do konwersacji prywatnej, po prawej od [zakładki dodawania do zakładek w twoim profilu]%{profile_page_url}/activity/bookmarks). Wystarczy, że klikniesz na swoj zdjęcie profilowe po prawej u góry&#8599;
-        not_found: |-
-          O nie, nie widzę żadnych zakładek w tym temacie. Czy znalazłeś zakładkę pod każdym postem? Użyj pokaż więcej <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, aby odkryć dodatkowe procesy.
       emoji:
-        instructions: |-
-          Możliwe, że zauważyłeś, że używam małych zdjęć w moich odpowiedziach :blue_car::dash: nazywane one są [emoji] (https://en.wikipedia.org/wiki/Emoji). Czy możesz **dodaj emoji** w twojej odpowiedzi? Wszystkie z nich się sprawdzą.
-
-          - Napisz `:) ;) :D :P :O`
-
-          - Napisz dwukropek <kbd>:</kbd> następnie dokończ nazwę emoji ':tada:'
-
-          - Naciśnij przycisk emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> w edytorze, lub na klawiaturze mobilnej
         reply: |-
           To jest :sparkles: _emojitastis!_ :sparkles:
-        not_found: |-
-          Oops, nie widzę żadnej emoji" original-title="<span class="glossary-highlight" title="emoji (naciśnij aby skopiować)" data-copy-glossary="emoji">emoji (naciśnij, aby skopiować)"> Emoji w twojej odpowiedzi? O nie! :sob:
-
-          Spróbuj wpisać dwukropek <kbd>:</kbd>, aby pojawiło się emoji " original-title="<span class="glossary-highlight" title="emoji (naciśnij, aby skopiować)" data-copy-glossary="emoji">emoji (naciśnij, aby skopiować)">selektor emoji, następnie wpisz kilka pierwszych liter, jak na przykład `:bird:`
-
-          Lub, naciśnij emoji"  original-title="<span class="glossary-highlight" title="emoji (naciśnij, aby skopiować)" data-copy-glossary="emoji">emoji (naciśnij, aby skopiować)">przycisk emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> w edytorze.
-
-          (Jeśli używasz urządzenia mobilnego, również możesz skorzystać z emoji" original-title="<span class="glossary-highlight" title="emoji (naciśnij, aby skopiować)" data-copy-glossary="emoji">emoji (naciśnij, aby skopiować)">Emoji bezpośrednio z klawiatury.)
       mention:
         instructions: |-
           Czasami chciałbyś zwrócić na siebie czyjąś uwagę, nawet jeśli nie odpowiadasz bezpośrednie. Napisz "@" następnie wpisz nazwę użytkownika, aby wspomnieć o kimś.
@@ -260,27 +229,9 @@ pl_PL:
           (Tak, moja nazwa użytkownika pisana jest _disco_, tak jak w popularna w latach 90 muzyka. Naprawdę [kocham życie nocne!]
           (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Chcielibyśmy, aby dyskusja przebiegała pokojowo i potrzebujemy twojej pomocy, aby [utrzymać ją na poziomie]%{guidelines_url}. Jeśli zauważysz problem,  prosimy o zaznaczenie w celu poinformowania autora lub [naszego pomocnego personelu]%{about_url}.
-
-          > :imp: Napisałem coś niemiłego tutaj.
-
-          Wydaje mi się, że wiesz co robić. Śmiało **oflaguj ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> jako nieodpowiedni!
         reply: |-
           [Nasz personel](/grupy/personel) zostanie prywatnie poinformowany o twoim oflagowaniu. W przypadku gdy wystarczająca liczba członków społeczności oflaguje ten post, zostanie on automatycznie ukryty ze względów ostrożności. (Jako, że tak naprawdę nie napisałem niczego nieodpowiedniego :angel:, po prostu usunąłem oznaczenie posta.)
-        not_found: |-
-          O nie, mój nieodpowiedni post nie został jeszcze oflagowany. :worried: Czy możesz oznaczyć post jako nieodpowiedni używając **oflagowanie**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nie zapomnij użyć przycisku pokaż więcej<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , aby pokazać większą liczbę możliwych akcji.
       search:
-        instructions: |-
-          _psst_ ... Ukryłem niespodziankę w tym temacie. Jeśli jesteś gotów podjąć wyzwanie, **wybierz ikonę wyszukiwania** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> w prawym górnym rogu &#8599; , aby go znaleźć.
-
-          Spróbuj wyszukać zwrot  "capy&#8203;bara"  w tym temacie
-        hidden_message: |-
-          Jak mogłeś zapomnieć o kapibarze?:wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Czy zauważyłeś, że jesteś znów na początku? Nakarm biedną, głodną kapibarę poprzez **odpowiedź z emotikoną `:herb:` **, a zostaniesz automatycznie przeniesiony do końca.
         reply: |-
           Yay, udało Ci się to odnaleźć :tada:
 
@@ -289,8 +240,6 @@ pl_PL:
           Aby przejść gdziekolwiek w dłuższej dyskusji, spróbuj użyć kontrolek linii czasu tematu po prawej stronie (na dole w przypadku telefonów komórkowych).
 
           - Jeśli posiadasz klawiaturę  :keyboard:, naciśnij <kbd>?</kbd> , aby wyświetlić nasze wygodne skróty klawiszowe.
-        not_found: |-
-          Hmm... wygląda na to, że masz problem. Przepraszam za to. Czy szukałeś <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> zwrotu **capy&#8203;bara**?
       end:
         message: |-
           Dziękuję, że ze mną jesteś @%{username}! Zrobiłem to specjalnie dla ciebie, myślę, że na to zasłużyłeś:
@@ -317,21 +266,11 @@ pl_PL:
           Wszyscy popełniają błędy. Ale nie martw się, możesz w każdej chwili edytować posty, aby je naprawić!
 
           Czy możesz zacząć poprzez **edytowanie** postu, który właśnie stworzyłem w tym celu?
-        not_found: |-
-          Wygląda na to, że nie dokonałeś jeszcze zmian w tym [post](%{url}), który stworzyłem dla Ciebie. Czy możesz spróbować ponownie?
-
-          Użyj ikony <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> aby wyświetlić edytor.
         reply: |-
           Dobra robota!
 
           Pamiętaj, że zmiany dokonane po 5 minutach od publikacji postu będą wyświetlane publicznie, pojawi się również ikona małego ołówka w prawym górnym rogu z licznikiem korekt.
       delete:
-        instructions: |-
-          Jeśli będziesz chciał wycofać dodany post, zawsze możesz go usunąć.
-
-          Śmiało **usuń** którykolwiek z twoich postów powyżej poprzez naciśnięcie <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">**usuń**. Nie usuwaj pierwszych postów!
-        not_found: |-
-          Nie widzę jeszcze żadnych usuniętych postów? Pamiętaj, że <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pokaż więcej odkryje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> usuń.
         reply: |-
           Whoa! :boom:
 
@@ -340,12 +279,6 @@ pl_PL:
         deleted_post_raw: 'Dlaczego @%{discobot_username} usunął mój post?
 
           :anguished:'
-        instructions: |-
-          O nie! Wygląda na to, że przez przypadek usunąłem nowy post, który właśnie dla ciebie stworzyłem.
-
-          Czy mógłbym prosić cię o przysługę i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **przywrócenie** go?
-        not_found: |-
-          Masz problem? Pamiętaj, że <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pokaż więcej odkryje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">przywrócone.
         reply: |-
           Phew, było blisko! Dzięki za pomoc!  :wink:
 
@@ -364,12 +297,6 @@ pl_PL:
         reply: |-
           Wspaniale! Pamiętaj, że działa to zarówno dla kategorii _i_ tagów, jeśli taka możliwość jest dostępna.
       change_topic_notification_level:
-        instructions: |-
-          Każdy temat ma swój poziom notyfikacji. Pierwszym poziomem jest "normalny', co oznacza, że będziesz informowany jedynie w przypadku, gdy ktoś zwróci się bezpośrednio do ciebie.
-
-          Domyślnie, poziom notyfikacji dla wiadomości prywatnych jest ustawiony na najwyższym poziomie, oznacza to, że będziesz informowany o każdej nowej odpowiedzi. Możesz zmienić poziom notyfikacji dla _każdego_ tematu na "obserwuj", "śledź" lub "wycisz".
-
-          Spróbujmy zmienić poziom notyfikacji dla tego tematu. Na dole każdego tematu znajdziesz przycisk, który pokaże, że **obserwujesz** ten temat. Czy możesz zmienić poziom notyfikacji na **śledź**?
         not_found: |-
           Wygląda na to, że ciągle obserwujesz :eyes: ten temat! Jeśli masz problem w znalezieniu, przycisk poziomu notyfikacji znajduję się na dole tego tematu.
         reply: |-
@@ -377,19 +304,6 @@ pl_PL:
 
           Pamiętaj, że gdy odpowiadasz w danym temacie lub czytasz go więcej niż kilka minut, poziom notyfikacji automatycznie zmieni się na 'śledzenie'. Możesz to zmienić w [twoich ustawieniach użytkownika](/moje/ustawienia).
       poll:
-        instructions: |-
-          Czy wiesz, że możesz dodać ankietę do każdego posta? Spróbuj użyć koła zębatego <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> w edytorze, aby **stworzyć ankietę**.
-        not_found: |-
-          Whoops! Nie ma żadnej ankiety w twojej odpowiedzi.
-
-          Użyj ikony koła zębatego <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> w edytorze, lub skopiuj i wklej tą ankietę w następnej odpowiedzi:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hej, niezła ankieta! Jak mi idzie nauczanie?
 
@@ -398,20 +312,6 @@ pl_PL:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Czasami możesz chcieć **ukryć szczegóły* w twoich odpowiedziach:
-
-          - Kiedy dyskutujesz na temat wątków fabuły w filmie lub serialu będzie to uznawane jako spoiler.
-
-          - Kiedy twój post wymaga wielu dodatkowych szczegółów może to być przytłaczające przy czytaniu wszystkiego na raz.
-
-          [szczegóły=Wybierz, aby zobaczyć jak to działa!]
-          1. Wybierz koło zębate <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> w edytorze..
-          2. Wybierz "Ukryj szczegóły".
-          3. Edytuj podsumowanie szczegółów i dodaj twoją treść,
-          [/szczegóły]
-
-          Czy możesz użyć koła zębatego <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> w edytorze, aby dodać sekcję szczegółów do następnej odpowiedzi?
         not_found: |-
           Czy masz problem przy tworzeniu widgetu szczegółów? Spróbuj dołączyć następujący tekst w twojej odpowiedzi.
 

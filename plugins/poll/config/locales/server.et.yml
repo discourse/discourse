@@ -7,7 +7,6 @@
 
 et:
   site_settings:
-    poll_enabled: "Lubada kasutajatel küsitlusi koostada?"
     poll_maximum_options: "Maksimaalne valikute arv, mis on küsitluses lubatud."
     poll_edit_window_mins: "Minutite arv peale loomist, mille jooksul saab küsitlust veel muuta."
   poll:
@@ -27,9 +26,7 @@ et:
     named_poll_with_multiple_choices_has_invalid_parameters: "Mitme valikuga küsitlusel nimega <strong>%{name}</strong> on vigaseid parameetreid."
     requires_at_least_1_valid_option: "Pead tegema vähemalt 1 korrektse valiku."
     default_cannot_be_made_public: "Küsitlust millel on vastused, ei saa muuta avalikuks."
-    named_cannot_be_made_public: "Küsitlus nimega <strong>%{name}</strong> sisaldab hääli ja seda ei saa teha avalikuks."
     edit_window_expired:
-      cannot_change_polls: "Peale %{minutes} minutit ei saa küsitlusi lisada, eemaldada ja ringi nimetada."
       op_cannot_edit_options: "Pärast %{minutes} minutit ei saa küsitluse valikuid lisada ega eemaldada. Palun võta administraatoriga ühendust, kui on vaja küsitluse valikuid muuta."
       staff_cannot_add_or_remove_options: "Pärast %{minutes} minutit ei saa küsitluse valikuid lisada ega eemaldada. Peaksid teema sulgema ning uue tegema."
     no_polls_associated_with_this_post: "Postitusega pole seotud ühtegi küsitlust."

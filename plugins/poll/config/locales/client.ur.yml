@@ -54,6 +54,8 @@ ur:
         insert: پول شامل کریے
         help:
           options_count: کم از کم 2 آپشنس اینٹر کریں
+          invalid_values: کم از کم قدر زیادہ سے زیادہ قدر سے چھوٹا ہونا ضروری ہے۔
+          min_step_value: کم از کم اضافہ یا کمی کی قدر 1 ہے
         poll_type:
           label: قِسم
           regular: اکیلا انتخاب

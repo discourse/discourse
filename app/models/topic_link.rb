@@ -38,7 +38,7 @@ class TopicLink < ActiveRecord::Base
   def self.topic_map(guardian, topic_id)
 
     # Sam: complicated reports are really hard in AR
-    builder = SqlBuilder.new <<-SQL
+    builder = DB.build <<-SQL
   SELECT ftl.url,
          COALESCE(ft.title, ftl.title) AS title,
          ftl.link_topic_id,
@@ -64,16 +64,16 @@ SQL
 
     builder.secure_category(guardian.secure_category_ids)
 
-    builder.exec.to_a
+    builder.query
 
   end
 
   def self.counts_for(guardian, topic, posts)
     return {} if posts.blank?
 
-    # Sam: I don't know how to write this cleanly in AR,
-    #   in particular the securing logic is tricky and would fallback to SQL anyway
-    builder = SqlBuilder.new("SELECT
+    # Sam: this is not tidy in AR and also happens to be a critical path
+    # for topic view
+    builder = DB.build("SELECT
                       l.post_id,
                       l.url,
                       l.clicks,
@@ -91,10 +91,11 @@ SQL
     builder.where("COALESCE(t.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
 
     # not certain if pluck is right, cause it may interfere with caching
-    builder.where('l.post_id IN (:post_ids)', post_ids: posts.map(&:id))
+    builder.where('l.post_id in (:post_ids)', post_ids: posts.map(&:id))
     builder.secure_category(guardian.secure_category_ids)
 
-    builder.map_exec(OpenStruct).each_with_object({}) do |l, result|
+    result = {}
+    builder.query.each do |l|
       result[l.post_id] ||= []
       result[l.post_id] << { url: l.url,
                              clicks: l.clicks,
@@ -102,11 +103,11 @@ SQL
                              internal: l.internal,
                              reflection: l.reflection }
     end
+    result
   end
 
-  # Extract any urls in body
   def self.extract_from(post)
-    return unless post.present? && !post.whisper?
+    return if post.blank? || post.whisper?
 
     added_urls = []
     TopicLink.transaction do
@@ -116,7 +117,14 @@ SQL
 
       PrettyText
         .extract_links(post.cooked)
-        .map { |u| [u, URI.parse(u.url)] rescue nil }
+        .map do |u|
+          uri = begin
+            URI.parse(u.url)
+          rescue URI::Error
+          end
+
+          [u, uri]
+        end
         .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
         .uniq { |_, p| p }
         .each do |link, parsed|

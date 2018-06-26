@@ -118,7 +118,8 @@ describe BadgeGranter do
   describe 'grant' do
 
     it 'allows overriding of granted_at does not notify old bronze' do
-      badge = Fabricate(:badge, badge_type_id: BadgeType::Bronze)
+      badge = Badge.create!(name: 'a badge', badge_type_id: BadgeType::Bronze)
+
       time = 1.year.ago
 
       user_badge = BadgeGranter.grant(badge, user, created_at: time)

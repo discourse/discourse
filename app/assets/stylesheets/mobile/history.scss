@@ -2,19 +2,30 @@
   button {
     float: none;
   }
+  .modal-body {
+    height: 62vh;
+  }
+  .modal-inner-container {
+    min-height: 400px;
+  }
+  #revisions {
+    max-width: 90vw;
+  }
   #display-modes {
     display: none;
   }
   #revision-numbers {
-    line-height: 2em;
-  }
-  #revision-details {
-    background-color: $primary-low; 
-    padding: 5px;
-    margin-top: 10px;
+    line-height: $line-height-large;
   }
   img {
     max-width: 95%;
     height: auto;
+  }
+  .revision-content {
+    table {
+      table-layout: fixed;
+      width: 100%;
+      word-wrap: break-word;
+    }
   }
 }

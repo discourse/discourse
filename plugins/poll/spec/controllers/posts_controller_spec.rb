@@ -16,7 +16,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
@@ -29,10 +29,25 @@ describe PostsController do
         topic_id: post_1.topic.id, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
+    end
+
+    it "schedules auto-close job" do
+      name = "auto_close"
+      close_date = 1.month.from_now
+
+      post :create, params: {
+        title: title, raw: "[poll name=#{name} close=#{close_date.iso8601}]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["polls"][name]["close"]).to be
+
+      expect(Jobs.scheduled_for(:close_poll, post_id: Post.last.id, poll_name: name)).to be
     end
 
     it "should have different options" do
@@ -84,7 +99,7 @@ describe PostsController do
         title: title, raw: "[poll name=<script>alert('xss')</script>]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["cooked"]).to include("&lt;script&gt;")
@@ -96,7 +111,7 @@ describe PostsController do
         title: title, raw: "[Polls are awesome](/foobar)\n[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]).to be
@@ -107,7 +122,7 @@ describe PostsController do
         title: title, raw: "[poll name=1]\n- A\n[poll name=2]\n- B\n- C\n[/poll]\n- D\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["1"]).to_not be
@@ -133,7 +148,7 @@ describe PostsController do
             id: post_id, post: { raw: "[poll]\n- A\n- B\n- C\n[/poll]" }
           }, format: :json
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           json = ::JSON.parse(response.body)
           expect(json["post"]["polls"]["poll"]["options"][2]["html"]).to eq("C")
         end
@@ -145,7 +160,7 @@ describe PostsController do
             id: post_id, post: { raw: "[poll]\n- A\n- B\n- C\n[/poll]" }
           }, format: :json
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           json = ::JSON.parse(response.body)
           expect(json["post"]["polls_votes"]).to_not be
         end
@@ -181,7 +196,7 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
           end
@@ -193,14 +208,14 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
           end
 
           it "support changes on the post" do
             put :update, params: { id: post_id, post: { raw: updated } }, format: :json
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["cooked"]).to match("before")
           end
@@ -233,7 +248,7 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
             expect(json["post"]["polls"]["poll"]["voters"]).to eq(1)
@@ -252,7 +267,7 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
 
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
@@ -263,7 +278,7 @@ describe PostsController do
 
           it "support changes on the post" do
             put :update, params: { id: post_id, post: { raw: updated } }, format: :json
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["cooked"]).to match("before")
           end
@@ -307,7 +322,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]\n[poll name=foo]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
@@ -336,4 +351,96 @@ describe PostsController do
 
   end
 
+  describe "disabled polls" do
+    before do
+      SiteSetting.poll_enabled = false
+    end
+
+    it "doesn’t cook the poll" do
+      log_in_user(Fabricate(:user, admin: true, trust_level: 4))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to eq("<p>[poll]</p>\n<ul>\n<li>A</li>\n<li>B<br>\n[/poll]</li>\n</ul>")
+    end
+  end
+
+  describe "regular user with insufficient trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "invalidates the post" do
+      log_in_user(Fabricate(:user, trust_level: 1))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.insufficient_rights_to_create"))
+    end
+  end
+
+  describe "regular user with equal trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "validates the post" do
+      log_in_user(Fabricate(:user, trust_level: 2))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["poll"]).to be
+    end
+  end
+
+  describe "regular user with superior trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "validates the post" do
+      log_in_user(Fabricate(:user, trust_level: 3))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["poll"]).to be
+    end
+  end
+
+  describe "staff with insufficient trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "validates the post" do
+      log_in_user(Fabricate(:user, moderator: true, trust_level: 1))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["poll"]).to be
+    end
+  end
 end

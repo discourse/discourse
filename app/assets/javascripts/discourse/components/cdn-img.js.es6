@@ -1,9 +1,9 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  tagName: '',
+  tagName: "",
 
-  @computed('src')
+  @computed("src")
   cdnSrc(src) {
     return Discourse.getURLWithCDN(src);
   }

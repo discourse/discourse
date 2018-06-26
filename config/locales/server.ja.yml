@@ -17,12 +17,12 @@ ja:
       date_only: "%B%-d、%Y"
       long: "%B%-d、%Y、%I:%M%P"
   date:
-    month_names: [null, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "午前"
     pm: "午後"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -50,16 +50,17 @@ ja:
       present: は入力しないでください
       confirmation: "と%{attribute}の入力が一致しません"
       empty: 本文が入力されていません
-      equal_to: は%{count}にしてください
+      equal_to: "は%{count}にしてください"
       even: は偶数にしてください
       exclusion: はすでに使われています
-      greater_than: は%{count}より大きい値にしてください
-      greater_than_or_equal_to: は%{count}以上の値にしてください
+      greater_than: "は%{count}より大きい値にしてください"
+      greater_than_or_equal_to: "は%{count}以上の値にしてください"
       has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
       invalid: は正しくありません
-      less_than: は%{count}より小さい値にしてください
-      less_than_or_equal_to: は%{count}以下の値にしてください
+      is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
+      less_than: "は%{count}より小さい値にしてください"
+      less_than_or_equal_to: "は%{count}以下の値にしてください"
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
@@ -82,6 +83,9 @@ ja:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       min_username_length_range: "最小値を最大値より上にすることはできません。"
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
@@ -115,6 +119,7 @@ ja:
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
   just_posted_that: "は最近の投稿と内容がほぼ一緒です"
   invalid_characters: "は不正な文字を含んでいます"
+  is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
@@ -131,7 +136,6 @@ ja:
     latest: "最新のトピック"
     hot: "ホットトピック"
     posts: "最近の投稿"
-    private_posts: "最新のプライベートメッセージ"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
     user_posts: "@%{username}からの最新投稿"
@@ -141,8 +145,6 @@ ja:
   queue:
     delete_reason: "投稿の承認機能を用いて削除されました"
   groups:
-    errors:
-      member_already_exist: "'%{username}'はすでにこのグループのメンバーです。"
     default_names:
       everyone: "みなさん"
       admins: "管理者"
@@ -156,7 +158,7 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
-    new-topic: |
+    'new-topic': |
       %{site_name} へようこそ！&mdash; **新たなトピックの作成ありがとうございます!**
 
       - タイトルはトピックの内容を正しく説明していますか？他の人にとって興味深いタイトルになっていますか？
@@ -164,7 +166,7 @@ ja:
       - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
 
       - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このメッセージは最初の %{education_posts_text} まで表示されます。
-    new-reply: |
+    'new-reply': |
       %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
       - あなたの回答は議論に何らかの形で貢献していますか?
       - 会話は礼儀正しく、マナーを守りましょう。
@@ -179,13 +181,12 @@ ja:
       user_profile:
         bio_raw: "自己紹介"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "プライベートメッセージでのみ警告を送ることができます"
               too_many_users: "一度に1ユーザーにしか警告を送る事はできません"
-              cant_send_pm: "申し訳ありません。このユーザーにはプライベートメッセージを送る事ができません"
               no_user_selected: "有効なユーザーを選択してください"
         user:
           attributes:
@@ -200,7 +201,6 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
   vip_category_name: "ラウンジ"
@@ -215,24 +215,24 @@ ja:
     title: "ラウンジへようこそ"
     body: |2
 
-      素晴らしい! :confetti_ball:
+        素晴らしい! :confetti_ball:
 
-      このトピックが見えるという事は、**レギュラー**へ昇格したようですね！(トラストレベル3)。
+        このトピックが見えるという事は、**レギュラー**へ昇格したようですね！(トラストレベル3)。
 
-      これであなたは.... &hellip;
+        これであなたは.... &hellip;
 
-      * トピックのタイトルを好きに編集する事ができます。
-      * トピックのカテゴリを好きに変更する事ができます。
-      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-      * トラストレベルが3以上が利用出来るプライベートラウンジへのアクセス
-      * 一度の報告でスパムを非表示にできます
+        * トピックのタイトルを好きに編集する事ができます。
+        * トピックのカテゴリを好きに変更する事ができます。
+        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+        * トラストレベルが3以上が利用出来るプライベートラウンジへのアクセス
+        * 一度の報告でスパムを非表示にできます
 
-      [現在レギュラーに所属している人の一覧](/badges/3/regular)からリストを確認する事ができます。
+        [現在レギュラーに所属している人の一覧](/badges/3/regular)からリストを確認する事ができます。
 
-      コミュニティを支えていただき、ありがとうございます！
-      (トラストレベルに関する詳しい説明は [こちら][trust]をご覧ください。 レギュラーの条件を満たし続けることで維持する事ができます。)
+        コミュニティを支えていただき、ありがとうございます！
+        (トラストレベルに関する詳しい説明は [こちら][trust]をご覧ください。 レギュラーの条件を満たし続けることで維持する事ができます。)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category}カテゴリについて"
     errors:
@@ -252,9 +252,6 @@ ja:
       title: "ベーシックユーザー"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
-    too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
-    by_type:
-      public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
       other: "%{count} 時間"
     minutes:
@@ -383,7 +380,6 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>投稿が他のユーザーから通報されました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
     user_must_edit: '<p>この投稿は他のユーザーから通報されたため、非表示にされています。</p>'
   archetypes:
     regular:
@@ -396,6 +392,7 @@ ja:
   unsubscribe:
     title: "配信停止"
     unwatch_category: "%{category}内の全トピックのウォッチを解除"
+    all: "%{sitename}からのメールを私に送信しないでください。"
   user_api_key:
     title: "アプリケーションアクセスの認証"
     description: "\"%{application_name}\" があなたのアカウントへのアクセスを要求しています: "
@@ -405,9 +402,7 @@ ja:
       xaxis: "日"
       yaxis: "アクセス数"
     signups:
-      title: "新規ユーザー"
       xaxis: "日"
-      yaxis: "新規ユーザー数"
     profile_views:
       xaxis: "日"
       yaxis: "ユーザープロフィールの閲覧数"
@@ -444,7 +439,6 @@ ja:
       xaxis: "日"
       yaxis: "メールの数"
     user_to_user_private_messages:
-      title: "ユーザーからユーザーへ"
       xaxis: "日"
       yaxis: "メッセージ数"
     system_private_messages:
@@ -491,7 +485,6 @@ ja:
       xaxis: "日"
       yaxis: "ウェブクローラからの閲覧数"
     page_view_total_reqs:
-      title: "全体"
       xaxis: "日"
       yaxis: "合計閲覧数"
     page_view_logged_in_mobile_reqs:
@@ -535,7 +528,6 @@ ja:
       xaxis: "日"
       yaxis: "合計"
     mobile_visits:
-      title: "アクセスユーザー"
       xaxis: "日"
       yaxis: "アクセス数"
   dashboard:
@@ -553,15 +545,12 @@ ja:
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
-    default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
     allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
-    min_private_message_post_length: "メッセージに投稿可能な最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
-    min_private_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
     allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
@@ -586,7 +575,6 @@ ja:
     post_onebox_maxlength: "Discourse OneBox投稿の最大文字数"
     logo_url: "サイトの左上に表示されるロゴ画像です。横幅の大きい長方形にする必要があります。空欄の場合、サイトタイトルが表示されます"
     logo_small_url: "サイトの左上に表示される小さいロゴ画像です。正方形である必要があります。下にスクロールすると表示されます。空欄の場合、ホームアイコンが表示されます"
-    mobile_logo_url: "モバイルサイトの左上に固定で表示されるロゴ画像です。正方形である必要があります。空欄の場合 `logo_url` が利用されます 例: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
@@ -606,7 +594,6 @@ ja:
     tl2_additional_likes_per_day_multiplier: "この数字を掛けると TL2 (メンバー) の1日あたりの「いいね！」の上限を増やします"
     tl3_additional_likes_per_day_multiplier: "この数字を掛けると TL3 (レギュラー) の1日あたりの「いいね！」の上限を増やします"
     tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の1日あたりの「いいね！」の上限を増やします"
-    notify_mods_when_user_blocked: "ユーザが自動的にブロックされた際に、すべてのモデレータにメッセージを送信する。"
     flag_sockpuppets: "トピックを作成したユーザーと同じIPアドレスで、新規ユーザーがトピックに回答した場合、両者を潜在的なスパムとしてフラグを立てるか"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "投稿に対するアクション (「いいね!」、通報等) 取り消しを許可する時間 (秒)"
@@ -639,7 +626,6 @@ ja:
     version_checks: "Discourse Hubからのアップデートを確認し、管理ページにバージョンやアップデートメッセージを表示する"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
     invite_expiry_days: "招待キーの有効期間 (日)"
-    invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
@@ -651,15 +637,12 @@ ja:
     sso_overrides_name: "ログインする度に、SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きし、ローカルでの変更を防ぐ"
     sso_overrides_avatar: "SSOペイロードから取得した外部サイトのプロフィール画像でローカルのプロフィール画像を上書きする。有効にする場合、プロフィール画像のアップデートを無効にする事を強く薦めます"
     sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
-    enable_local_logins: "ローカルのユーザ名、パスワードでのログインを有効にする (注意: 招待を使用するには有効にする必要があります)"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
     enable_google_oauth2_logins: "グーグル Oauth2 認証を有効にします。これはグーグルが現在サポートしている認証方式です。key と secret が必要です。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"
     enable_twitter_logins: "Twitter 認証を有効にする (twitter_consumer_key と twitter_consumer_secret の設定が必要)"
-    twitter_consumer_key: "Twitter 認証用の consumer key。http://dev.twitter.com で入手可能"
-    twitter_consumer_secret: "Twitter 認証用の consumer secret。http://dev.twitter.com で入手可能"
     enable_facebook_logins: "Facebook 認証を有効にする (facebook_app_id と facebook_app_secret の設定が必要)"
     facebook_app_id: "Facebook 認証用の app id。https://developers.facebook.com/apps で入手可能"
     facebook_app_secret: "Facebook 認証用の app secret。https://developers.facebook.com/apps で入手可能"
@@ -668,7 +651,6 @@ ja:
     github_client_secret: "Github 認証用の client secret。https://github.com/settings/applications で入手可能"
     allow_restore: "すべてのサイトデータを置き換える復元を許可します\n。バックアップからの復元を行うとき以外はfalseのままにしてください。"
     maximum_backups: "ディスクに保存するバックアップの最大数。古いバックアップは自動的に削除されます"
-    backup_frequency: "サイトのバックアップを作成する頻度（日）"
     enable_s3_backups: "完了時にS3にバックアップをアップロードします。重要: 有効なS3 credentialsがファイル設定に必要です"
     s3_backup_bucket: "バックアップを保持するバケット。　警告: 必ずプライベートバケットになっていることを確認してください"
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"
@@ -683,7 +665,6 @@ ja:
     max_bookmarks_per_day: "ユーザが一日にブックマークできる最大数"
     max_edits_per_day: "ユーザが一日に編集できる最大数"
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
-    max_private_messages_per_day: "ユーザが一日に作成できるメッセージの最大数"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
     max_topic_invitations_per_day: "ユーザが一日にトピックに招待できる最大数"
     suggested_topics: "トピック下部に表示されるおすすめトピックの数"
@@ -692,7 +673,6 @@ ja:
     clean_orphan_uploads_grace_period_hours: "どこからもリンクされていないアップロードファイルを削除するまでの猶予期間 (単位：時間)。"
     purge_deleted_uploads_grace_period_days: "削除されたアップロードファイルが完全削除されるまでの猶予期間 (単位：日)。"
     enable_s3_uploads: "Amazon S3にアップロードします。重要: 有効なS3 credentials(access key id & secret access key)が必要です"
-    s3_use_iam_profile: 'キーの取得にAWS EC2 IAM roleを使用する 注意: 有効にすると、s3 access key id" と "s3 secret access key"の設定を上書きします'
     s3_upload_bucket: "ファイルをアップロードする Amazon S3のバケット名。　警告: 小文字である必要があり、ピリオドとアンダースコアを含むことはできません"
     s3_access_key_id: "画像をアップロードするAmazonS3のaccess key id"
     s3_secret_access_key: "画像をアップロードする Amazon S3 の secret access key"
@@ -770,12 +750,8 @@ ja:
     num_flags_to_close_topic: "トピックの介入のため、自動的にトピックを停止するために必要なフラグの数"
     auto_respond_to_flag_actions: "フラグを解除時の自動返信を有効にする"
     min_first_post_typing_time: "最初の投稿に必要なタイピング時間。閾値以下の場合、投稿は自動的に承認キューに追加されます。0を設定すると無効化されます(推奨されません)"
-    auto_block_fast_typers_on_first_post: "min_first_post_typing_timeを満たしていないユーザーを自動的にブロック"
-    auto_block_fast_typers_max_trust_level: "自動的にブロックされるfast typerに対する最大のトラストレベル"
-    auto_block_first_post_regex: "この正規表現に一致すると、ユーザーの最初の投稿をブロックし、承認キューに送られる。最初の投稿にのみ適用されます"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化する"
     reply_by_email_address: "メールアドレスによる回答のテンプレート。例: %{reply_key}@reply.myforum.com"
-    disable_emails: "Discourseからの全ての種類のメール送信を止める"
     strip_images_from_short_emails: "メールのサイズが2800 Bytesを超えないように画像を削除する"
     short_email_length: "ショートメールのバイト数"
     pop3_polling_enabled: "メール回答のために POP3 をポーリングする"
@@ -793,7 +769,6 @@ ja:
     relative_date_duration: "ポスト投稿後、ポスト投稿日が相対表示 (例: 7d)から絶対表示(例: Feb 20)に変わるまでの日数"
     delete_user_max_post_age: "最初のポストが(x)日よりも古いユーザは削除しない"
     delete_all_posts_max: "すべてのポストを削除ボタンで一度に削除可能な最大ポスト数。ユーザがここで指定した以上のポストを投稿していた場合は、一度に全ポストを削除することができません。またユーザも削除されません。"
-    username_change_period: "ユーザ名の変更が可能になるまでの登録日からの日数 (0を指定でユーザ名の変更自体を無効化)。"
     email_editable: "登録後、ユーザによるメールアドレスの変更を許可する。"
     allow_uploaded_avatars: "プロフィール画像のアップロードを許可"
     allow_animated_avatars: "プロフィール画像としてアニメgifをアップロードするのを許可。警告: この設定を変更した場合 avatars:refresh rakeタスクを実行すること"
@@ -854,6 +829,8 @@ ja:
       category: 'カテゴリ'
       topic: '結果'
       user: 'ユーザ'
+  sso:
+    timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度トップページからログインしてください。"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
@@ -914,13 +891,11 @@ ja:
     email_too_long: "メールアドレスが長過ぎます。アドレス部は254文字以内に、ドメイン部は253文字以内にする必要があります"
     reserved_username: "そのユーザー名は許可されていません"
     missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
-    close_window: "ログインは完了しました。このウィンドウを閉じて続けてください"
   user:
     no_accounts_associated: "関連づけられたアカウントはありませんでした"
     username:
       short: "少なくとも%{min}文字は必要です"
       long: "%{max}文字以下である必要があります"
-      characters: "英数字/アンダースコア/ハイフン/ドットのみ使用できます"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
     email:
@@ -932,10 +907,6 @@ ja:
   flags_reminder:
     subject_template:
       other: "%{count}件の通報が対応待ちです"
-  invite_mailer:
-    subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
   flag_reasons:
@@ -968,16 +939,12 @@ ja:
       text_body_template: "ユーザの一括招待が処理され、%{sent}通の招待メールを送信しました"
     bulk_invite_failed:
       subject_template: "ユーザの一括招待中にエラーが発生しました"
-    csv_export_succeeded:
-      subject_template: "データのダウンロード準備が完了しました"
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
     email_reject_parsing:
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
-    spam_post_blocked:
-      subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
     pending_users_reminder:
       subject_template:
         other: "%{count} 人のユーザか承認を待っています。"
@@ -1004,7 +971,6 @@ ja:
       description: "メールに興味がありませんか? 下のリンクをクリックすると、即座にメール解除ができます:"
     reply_by_email: "回答するにはこのメールに返信するか、 (%{base_url}%{url}) に[ブラウザでアクセスしてください]。"
     visit_link_to_respond: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
-    visit_link_to_respond_pm: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
     posted_by: "%{post_date} に %{username} が投稿"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
@@ -1163,9 +1129,6 @@ ja:
         このバッジは投稿に対して初めていいね!された時に授与されます。おめでとうございます、投稿した内容についてあなたのコミュニティメンバーは興味深く、クールで有能です!
     autobiographer:
       name: あなたはだれ？
-      description: <a href="/my/preferences">プロフィール</a>をすべて書く
-      long_description: |
-        このバッジは<a href="/my/preferences">ご自身のユーザープロフィール</a>を記入またはプロフィール写真を選択すると授与されます。コミュニティに対してあなたがどういう人物であるか、また改善について興味がある物をもう少し詳しくお知らせ頂き、更に結びつきのあるコミュニティへ。連携しましょう!
     anniversary:
       long_description: |
         このバッジは一年間メンバーで有り続け、少なくともその年に一回は投稿したときに授与されます。サイトに出入りして下さったり、我々のコミュニティに貢献して下さり有難うございます。我々はあなたを必要としています。
@@ -1199,8 +1162,6 @@ ja:
     first_flag:
       name: はじめの通報
       description: 通報した投稿
-    read_guidelines:
-      description: <a href="/guidelines">ガイドライン</a>を読む
     popular_link:
       name: 人気のリンク
     hot_link:
@@ -1211,12 +1172,8 @@ ja:
       name: はじめての絵文字
   admin_login:
     success: "メールを送信しました"
-    error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
-  activemodel:
-    errors:
-      <<: *errors

@@ -1,0 +1,13 @@
+.select-kit {
+  &.multi-select {
+    &.list-setting {
+      .select-kit-row.create {
+        .square {
+          width: 12px;
+          height: 12px;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}

@@ -50,16 +50,25 @@
                disabled=inviteDisabled}}
   {{/if}}
 
-  {{#if topic.isPrivateMessage}}
-    {{d-button class="standard"
+  {{#if canArchive}}
+    {{d-button class="standard archive-topic"
                title=archiveTitle
                label=archiveLabel
                icon=archiveIcon
                action=toggleArchiveMessage}}
   {{/if}}
 
+  {{#if showEditOnFooter}}
+    {{d-button class="edit-message"
+               title="topic.edit_message.help"
+               label="topic.edit_message.title"
+               icon="pencil"
+               action=editFirstPost}}
+  {{/if}}
+
   {{plugin-outlet name="topic-footer-main-buttons-before-create"
                   args=(hash topic=topic)
+                  tagName=""
                   connectorTagName="span"}}
 
   {{#if topic.details.can_create_post}}
@@ -72,13 +81,17 @@
 
   {{plugin-outlet name="after-topic-footer-main-buttons"
                   args=(hash topic=topic)
+                  tagName=""
                   connectorTagName="span"}}
 
-  {{pinned-button topic=topic}}
+  {{pinned-button pinned=topic.pinned topic=topic}}
 </div>
 
-{{topic-notifications-button topic=topic}}
+{{#if showNotificationsButton}}
+  {{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}
+{{/if}}
 
 {{plugin-outlet name="after-topic-footer-buttons"
                 args=(hash topic=topic)
+                tagName=""
                 connectorTagName="span"}}

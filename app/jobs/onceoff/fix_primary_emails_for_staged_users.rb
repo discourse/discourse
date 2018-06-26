@@ -20,11 +20,11 @@ module Jobs
           user.posts.each do |post|
             post.set_owner(original_user, acting_user)
           end
-          destroyer.destroy(user)
+          destroyer.destroy(user, context: I18n.t("user.destroy_reasons.fixed_primary_email"))
         end
       end
 
-      User.exec_sql <<~SQL
+      DB.exec <<~SQL
       INSERT INTO user_emails (
         user_id,
         email,

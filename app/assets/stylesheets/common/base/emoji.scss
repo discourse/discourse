@@ -5,14 +5,12 @@ img.emoji {
 }
 
 .emoji-picker {
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
   background-clip: padding-box;
-  z-index: 10000;
+  z-index: z("modal", "content");
   position: fixed;
   display: none;
   flex-direction: row;
   height: 300px;
-  border-radius: 3px;
   color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
   background-color: $secondary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
@@ -40,7 +38,8 @@ img.emoji {
   }
 }
 
-.emoji-picker .category-icon.current, .emoji-picker .category-icon:hover {
+.emoji-picker .category-icon.current,
+.emoji-picker .category-icon:hover {
   -webkit-filter: grayscale(0%);
   filter: grayscale(0%);
 }
@@ -54,26 +53,27 @@ img.emoji {
 .emoji-picker .list {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  padding: 0px;
+  padding: 0;
   flex: 1;
   flex-direction: column;
 }
 
 .emoji-picker .section-header {
   padding: 8px;
-  margin-bottom: 4px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  margin-top: 2px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
   justify-content: space-between;
   display: flex;
   align-items: center;
+  font-weight: bold;
 }
 
 .emoji-picker .section-header .title {
   color: $primary;
 }
 
-.emoji-picker .section-header .clear-recent .fa{
+.emoji-picker .section-header .clear-recent .fa {
   margin: 0;
   padding: 0;
   color: dark-light-choose($header_primary-medium, $header_primary);
@@ -100,7 +100,6 @@ img.emoji {
 
 .emoji-picker .info {
   text-overflow: ellipsis;
-  max-width: 232px;
   padding-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -125,12 +124,24 @@ img.emoji {
   justify-content: center;
   cursor: pointer;
 }
-.emoji-picker .diversity-picker .diversity-scale.default { background: #ffcc4d; }
-.emoji-picker .diversity-picker .diversity-scale.light { background: #f7dece; }
-.emoji-picker .diversity-picker .diversity-scale.medium-light { background: #f3d2a2; }
-.emoji-picker .diversity-picker .diversity-scale.medium { background: #d5ab88; }
-.emoji-picker .diversity-picker .diversity-scale.medium-dark { background: #af7e57; }
-.emoji-picker .diversity-picker .diversity-scale.dark { background: #7c533e; }
+.emoji-picker .diversity-picker .diversity-scale.default {
+  background: #ffcc4d;
+}
+.emoji-picker .diversity-picker .diversity-scale.light {
+  background: #f7dece;
+}
+.emoji-picker .diversity-picker .diversity-scale.medium-light {
+  background: #f3d2a2;
+}
+.emoji-picker .diversity-picker .diversity-scale.medium {
+  background: #d5ab88;
+}
+.emoji-picker .diversity-picker .diversity-scale.medium-dark {
+  background: #af7e57;
+}
+.emoji-picker .diversity-picker .diversity-scale.dark {
+  background: #7c533e;
+}
 
 .emoji-picker .diversity-picker .diversity-scale.selected i {
   display: block;
@@ -142,8 +153,8 @@ img.emoji {
 
 .emoji-picker .diversity-picker .d-icon {
   color: #fff;
-  font-size: 12px;
-  text-shadow: 0.5px 1.5px 0 rgba(0,0,0,0.3);
+  font-size: $font-0;
+  text-shadow: 0.5px 1.5px 0 rgba(0, 0, 0, 0.3);
 }
 
 .emoji-picker button.emoji {
@@ -155,8 +166,6 @@ img.emoji {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 20px;
-  margin: 0;
-  padding: 0;
   border: 0;
   vertical-align: top;
   width: 20px;
@@ -165,25 +174,26 @@ img.emoji {
   margin: 2px;
 }
 
-.emoji-picker .section-group button.emoji:hover, .emoji-picker .results button.emoji:hover {
+.emoji-picker .section-group button.emoji:hover,
+.emoji-picker .results button.emoji:hover {
   display: inline-block;
   vertical-align: top;
-  border-radius: 50%;
+  border-radius: 2px;
   background-color: lighten($tertiary, 40%);
 }
 
 .wmd-emoji-button:before {
-  content:  "\f118";
+  content: "\f118";
 }
 
 .emoji-picker-modal.fadeIn {
-  z-index: 9999;
+  z-index: z("modal", "overlay");
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  opacity: .8;
+  opacity: 0.8;
   background-color: black;
 }
 
@@ -194,11 +204,15 @@ img.emoji {
   display: flex;
   position: relative;
   align-items: center;
+
+  input[type="text"] {
+    width: auto !important;
+  }
 }
 
 .emoji-picker .filter .d-icon-search {
   color: dark-light-choose($header_primary-medium, $header_primary);
-  font-size: 16px;
+  font-size: $font-up-1;
   margin-left: 5px;
   margin-right: 5px;
 }

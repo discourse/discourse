@@ -85,7 +85,8 @@ class EmailUpdater
           confirm_result = :authorizing_new
         when EmailChangeRequest.states[:authorizing_new]
           change_req.update_column(:change_state, EmailChangeRequest.states[:complete])
-          user.primary_email.update_column(:email, token.email)
+          user.primary_email.update!(email: token.email)
+          user.set_automatic_groups
           confirm_result = :complete
         end
       else
@@ -103,19 +104,19 @@ class EmailUpdater
 
   protected
 
-    def notify_old(old_email, new_email)
-      Jobs.enqueue :critical_user_email,
-                   to_address: old_email,
-                   type: :notify_old_email,
-                   user_id: @user.id
-    end
+  def notify_old(old_email, new_email)
+    Jobs.enqueue :critical_user_email,
+                 to_address: old_email,
+                 type: :notify_old_email,
+                 user_id: @user.id
+  end
 
-    def send_email(type, email_token)
-      Jobs.enqueue :critical_user_email,
-                   to_address: email_token.email,
-                   type: type,
-                   user_id: @user.id,
-                   email_token: email_token.token
-    end
+  def send_email(type, email_token)
+    Jobs.enqueue :critical_user_email,
+                 to_address: email_token.email,
+                 type: type,
+                 user_id: @user.id,
+                 email_token: email_token.token
+  end
 
 end

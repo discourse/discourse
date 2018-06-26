@@ -1,4 +1,5 @@
-.latest-topic-list {
+.latest-topic-list,
+.top-topic-list {
   @extend .topic-list-icons;
 
   .table-heading {
@@ -6,7 +7,8 @@
     color: dark-light-choose($primary-medium, $secondary-high);
   }
 
-  .no-topics, .more-topics {
+  .no-topics,
+  .more-topics {
     margin-top: 1em;
   }
 }
@@ -23,10 +25,19 @@
   }
   .main-link {
     @extend .topic-list-main-link;
-    flex: 15;
+    flex: 0 1 auto;
+    max-width: 65%;
+    font-size: $font-0;
+    .badge-wrapper {
+      max-width: 100%;
+      .badge-category-bg {
+        flex-shrink: 0;
+      }
+    }
 
     .top-row {
       margin-bottom: 0.1em;
+      font-size: $font-up-1;
     }
   }
   .topic-stats {

@@ -23,43 +23,54 @@
     width: 100%;
     margin-bottom: 1em;
 
-    td, th {
+    td,
+    th {
       padding: 0.5em;
       text-align: left;
-      border-bottom: 1px solid $primary-low; 
-
-      .number, .time-read {
-        font-size: 1.4em;
-        color: $primary-medium; 
+      border-bottom: 1px solid $primary-low;
+      @media screen and (max-width: $small-width) {
+        padding: 0.5em 0.25em;
       }
-    }
 
-    tr.me {
-      td {
-        background-color: dark-light-choose($highlight-low, $highlight-medium);
-
-        .username a, .name, .title, .number, .time-read {
-          color: dark-light-choose(scale-color($highlight, $lightness: -50%), $highlight-medium);
+      .number,
+      .time-read {
+        font-size: $font-up-3;
+        color: $primary-medium;
+        @media screen and (max-width: $small-width) {
+          font-size: $font-up-1;
         }
+      }
+      .time-read {
+        white-space: nowrap;
       }
     }
 
     th.sortable {
       cursor: pointer;
       white-space: nowrap;
-
       width: 13%;
       .d-icon-heart {
         color: $love;
         margin-right: 0.5em;
       }
-      .d-icon-chevron-down, .d-icon-chevron-up {
+      .d-icon-chevron-down,
+      .d-icon-chevron-up {
         margin-left: 0.5em;
       }
 
       &:hover {
-        background-color: $primary-low; 
+        background-color: $primary-low;
       }
+    }
+  }
+  .me {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    .username a,
+    .name,
+    .title,
+    .number,
+    .time-read {
+      color: $primary-medium;
     }
   }
 }

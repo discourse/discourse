@@ -1,10 +1,11 @@
 {{#if shouldDisplay}}
   <div class="presence-users">
-    {{#each users as |user|}}
-      {{avatar user avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}}
-    {{/each}}
-
-    <span class="presence_text">
+    <div class="presence-avatars">
+      {{#each users as |user|}}
+        {{avatar user avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}}
+      {{/each}}
+    </div>
+    <span class="presence-text">
       <span class="description">
         {{#if isReply ~}}
           {{i18n 'presence.replying'}}

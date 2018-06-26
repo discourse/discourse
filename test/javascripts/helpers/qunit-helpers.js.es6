@@ -1,18 +1,30 @@
-/* global QUnit, fixtures */
+/* global QUnit, resetSite */
 
-import sessionFixtures from 'fixtures/session-fixtures';
-import siteFixtures from 'fixtures/site-fixtures';
-import HeaderComponent from 'discourse/components/site-header';
-import { forceMobile, resetMobile } from 'discourse/lib/mobile';
-import { resetPluginApi } from 'discourse/lib/plugin-api';
-import { clearCache as clearOutletCache, resetExtraClasses } from 'discourse/lib/plugin-connectors';
-import { clearHTMLCache } from 'discourse/helpers/custom-html';
-import { flushMap } from 'discourse/models/store';
-import { clearRewrites } from 'discourse/lib/url';
-
+import sessionFixtures from "fixtures/session-fixtures";
+import HeaderComponent from "discourse/components/site-header";
+import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { resetPluginApi } from "discourse/lib/plugin-api";
+import {
+  clearCache as clearOutletCache,
+  resetExtraClasses
+} from "discourse/lib/plugin-connectors";
+import { clearHTMLCache } from "discourse/helpers/custom-html";
+import { flushMap } from "discourse/models/store";
+import { clearRewrites } from "discourse/lib/url";
+import { initSearchData } from "discourse/widgets/search-menu";
+import { resetDecorators } from "discourse/widgets/widget";
+import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 
 export function currentUser() {
-  return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
+  return Discourse.User.create(
+    sessionFixtures["/session/current.json"].current_user
+  );
+}
+
+export function replaceCurrentUser(properties) {
+  const user = Discourse.User.current();
+  user.setProperties(properties);
+  Discourse.User.resetCurrent(user);
 }
 
 export function logIn() {
@@ -23,20 +35,25 @@ const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
 
 function AcceptanceModal(option, _relatedTarget) {
-  return this.each(function () {
-    var $this   = $(this);
-    var data    = $this.data('bs.modal');
-    var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option === 'object' && option);
+  return this.each(function() {
+    var $this = $(this);
+    var data = $this.data("bs.modal");
+    var options = $.extend(
+      {},
+      Modal.DEFAULTS,
+      $this.data(),
+      typeof option === "object" && option
+    );
 
-    if (!data) $this.data('bs.modal', (data = new Modal(this, options)));
-    data.$body = $('#ember-testing');
+    if (!data) $this.data("bs.modal", (data = new Modal(this, options)));
+    data.$body = $("#ember-testing");
 
-    if (typeof option === 'string') data[option](_relatedTarget);
+    if (typeof option === "string") data[option](_relatedTarget);
     else if (options.show) data.show(_relatedTarget);
   });
 }
 
-window.bootbox.$body = $('#ember-testing');
+window.bootbox.$body = $("#ember-testing");
 $.fn.modal = AcceptanceModal;
 
 let _pretenderCallbacks = [];
@@ -57,10 +74,9 @@ export function acceptance(name, options) {
       resetMobile();
 
       // For now don't do scrolling stuff in Test Mode
-      HeaderComponent.reopen({examineDockHeader: function() { }});
+      HeaderComponent.reopen({ examineDockHeader: function() {} });
 
       resetExtraClasses();
-      const siteJson = siteFixtures['site.json'].site;
       if (options.beforeEach) {
         options.beforeEach.call(this);
       }
@@ -74,11 +90,15 @@ export function acceptance(name, options) {
       }
 
       if (options.settings) {
-        Discourse.SiteSettings = jQuery.extend(true, Discourse.SiteSettings, options.settings);
+        Discourse.SiteSettings = jQuery.extend(
+          true,
+          Discourse.SiteSettings,
+          options.settings
+        );
       }
 
       if (options.site) {
-        Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, siteJson, options.site)));
+        resetSite(Discourse.SiteSettings, options.site);
       }
 
       clearOutletCache();
@@ -92,22 +112,27 @@ export function acceptance(name, options) {
         options.afterEach.call(this);
       }
       flushMap();
+      localStorage.clear();
       Discourse.User.resetCurrent();
-      Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, fixtures['site.json'].site)));
-
+      resetSite(Discourse.SiteSettings);
       resetExtraClasses();
       clearOutletCache();
       clearHTMLCache();
       resetPluginApi();
       clearRewrites();
+      initSearchData();
+      resetDecorators();
+      resetCustomPostMessageCallbacks();
       Discourse.reset();
     }
   });
 }
 
 export function controllerFor(controller, model) {
-  controller = Discourse.__container__.lookup('controller:' + controller);
-  if (model) { controller.set('model', model ); }
+  controller = Discourse.__container__.lookup("controller:" + controller);
+  if (model) {
+    controller.set("model", model);
+  }
   return controller;
 }
 

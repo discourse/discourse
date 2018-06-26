@@ -97,6 +97,8 @@ module Email
       style('.lightbox-wrapper .meta', 'display: none')
       correct_first_body_margin
       correct_footer_style
+      style('div.undecorated-link-footer a', "font-weight: normal;")
+      correct_footer_style_hilight_first
       reset_tables
       onebox_styles
       plugin_styles
@@ -113,6 +115,7 @@ module Email
 
       # Oneboxes
       style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px;")
+      style('aside.onebox header img.site-icon', "width: 16px; height: 16px; margin-right: 3px;")
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
       style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
@@ -240,20 +243,26 @@ module Email
     end
 
     def correct_footer_style
-      footernum = 0
       @fragment.css('.footer').each do |element|
         element['style'] = "color:#666;"
+        element.css('a').each do |inner|
+          inner['style'] = "color:#666;"
+        end
+      end
+    end
+
+    def correct_footer_style_hilight_first
+      footernum = 0
+      @fragment.css('.footer.hilight').each do |element|
         linknum = 0
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
           if footernum == (0) && linknum == (0)
-            inner['style'] = "background-color: #006699; color:#ffffff; border-top: 4px solid #006699; border-right: 6px solid #006699; border-bottom: 4px solid #006699; border-left: 6px solid #006699; display: inline-block;"
-          else
-            inner['style'] = "color:#666;"
+            inner['style'] = "background-color: #006699; color:#ffffff; border-top: 4px solid #006699; border-right: 6px solid #006699; border-bottom: 4px solid #006699; border-left: 6px solid #006699; display: inline-block; font-weight: bold;"
           end
-          linknum += 1
+          return
         end
-        footernum += 1
+        return
       end
     end
 

@@ -1,5 +1,5 @@
 class CategoryHashtagsController < ApplicationController
-  before_action :ensure_logged_in
+  requires_login
 
   def check
     category_slugs = params[:category_slugs]

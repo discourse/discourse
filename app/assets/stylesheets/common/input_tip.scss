@@ -5,24 +5,25 @@
   position: absolute;
   display: block;
   padding: 5px 10px;
-  z-index: 101;
+  z-index: z("tooltip");
   &.bad {
     background: $danger-medium;
     color: white;
-    box-shadow: 1px 1px 5px rgba(0,0,0, .7);
+    box-shadow: shadow("dropdown");
   }
-  &.hide, &.good {
+  &.hide,
+  &.good {
     display: none;
   }
   .close {
     float: right;
     color: $primary;
     opacity: 0.5;
-    font-size: 1.071em;
+    font-size: $font-0;
     margin: 0 0 0 4px;
     cursor: pointer;
   }
   .close:hover {
-    opacity: 1.0;
+    opacity: 1;
   }
 }

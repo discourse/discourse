@@ -9,11 +9,22 @@ class OptimizedImage < ActiveRecord::Base
   # BUMP UP if optimized image algorithm changes
   VERSION = 1
 
+  def self.lock(upload_id, width, height)
+    @hostname ||= `hostname`.strip rescue "unknown"
+    # note, the extra lock here ensures we only optimize one image per machine
+    # this can very easily lead to runaway CPU so slowing it down is beneficial
+    DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
+      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
+        yield
+      end
+    end
+  end
+
   def self.create_for(upload, width, height, opts = {})
     return unless width > 0 && height > 0
     return if upload.try(:sha1).blank?
 
-    DistributedMutex.synchronize("optimized_image_#{upload.id}_#{width}_#{height}") do
+    lock(upload.id, width, height) do
       # do we already have that thumbnail?
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
@@ -75,7 +86,7 @@ class OptimizedImage < ActiveRecord::Base
 
       # make sure we remove the cached copy from external stores
       if Discourse.store.external?
-        external_copy.try(:close!) rescue nil
+        external_copy&.close
       end
 
       thumbnail
@@ -282,15 +293,15 @@ class OptimizedImage < ActiveRecord::Base
           DbHelper.remap(previous_url, optimized_image.url)
           # remove the old file (when local)
           unless external
-            FileUtils.rm(path, force: true) rescue nil
+            FileUtils.rm(path, force: true)
           end
         rescue => e
           problems << { optimized_image: optimized_image, ex: e }
           # just ditch the optimized image if there was any errors
           optimized_image.destroy
         ensure
-          file.try(:unlink) rescue nil
-          file.try(:close) rescue nil
+          file&.unlink
+          file&.close
         end
       end
     end

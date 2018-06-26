@@ -10,8 +10,8 @@ describe Plugin::Instance do
   context "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      expect(plugins.count).to eq(1)
-      plugin = plugins[0]
+      expect(plugins.count).to eq(2)
+      plugin = plugins[1]
 
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
@@ -93,6 +93,36 @@ describe Plugin::Instance do
       expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(0)
       expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
     end
+
+    it "remaps vendored_core_pretty_text asset" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_asset("moment.js", :vendored_core_pretty_text)
+
+      plugin.send :register_assets!
+
+      expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq("lib/javascripts/moment.js")
+    end
+  end
+
+  context "register service worker" do
+    it "populates the DiscoursePluginRegistry" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_service_worker("test.js")
+      plugin.register_service_worker("test2.js")
+
+      plugin.send :register_service_workers!
+
+      expect(DiscoursePluginRegistry.service_workers.count).to eq(2)
+    end
+  end
+
+  context "#add_report" do
+    it "adds a report" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.add_report("readers") {}
+
+      expect(Report.respond_to?(:report_readers)).to eq(true)
+    end
   end
 
   context "activate!" do
@@ -149,6 +179,14 @@ describe Plugin::Instance do
   end
 
   context "serialized_current_user_fields" do
+    before do
+      DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
+    end
+
+    after do
+      DiscoursePluginRegistry.serialized_current_user_fields.delete "has_car"
+    end
+
     it "correctly serializes custom user fields" do
       DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
       user = Fabricate(:user)
@@ -157,6 +195,18 @@ describe Plugin::Instance do
 
       payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
       expect(payload["current_user"]["custom_fields"]["has_car"]).to eq("true")
+
+      payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["user"]["custom_fields"]["has_car"]).to eq("true")
+
+      UserCustomField.destroy_all
+      user.reload
+
+      payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["current_user"]["custom_fields"]).to eq({})
+
+      payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["user"]["custom_fields"]).to eq({})
     end
   end
 
@@ -236,4 +286,123 @@ describe Plugin::Instance do
       expect(called).to eq(1)
     end
   end
+
+  context "locales" do
+    let(:plugin_path) { "#{Rails.root}/spec/fixtures/plugins/custom_locales" }
+    let!(:plugin) { Plugin::Instance.new(nil, "#{plugin_path}/plugin.rb") }
+    let(:plural) do
+      {
+        keys: [:one, :few, :other],
+        rule: lambda do |n|
+          return :one if n == 1
+          return :few if n < 10
+          :other
+        end
+      }
+    end
+
+    def register_locale(locale, opts)
+      plugin.register_locale(locale, opts)
+      plugin.activate!
+
+      DiscoursePluginRegistry.locales[locale]
+    end
+
+    it "enables the registered locales only on activate" do
+      plugin.register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+      plugin.register_locale("es_MX", name: "Spanish (Mexico)", nativeName: "Español (México)", fallbackLocale: "es")
+      expect(DiscoursePluginRegistry.locales.count).to eq(0)
+
+      plugin.activate!
+      expect(DiscoursePluginRegistry.locales.count).to eq(2)
+    end
+
+    it "allows finding the locale by string and symbol" do
+      register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+
+      expect(DiscoursePluginRegistry.locales).to have_key(:foo)
+      expect(DiscoursePluginRegistry.locales).to have_key('foo')
+    end
+
+    it "correctly registers a new locale" do
+      locale = register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+
+      expect(DiscoursePluginRegistry.locales.count).to eq(1)
+      expect(DiscoursePluginRegistry.locales).to have_key(:foo)
+
+      expect(locale[:fallbackLocale]).to be_nil
+      expect(locale[:message_format]).to eq(["foo", "#{plugin_path}/lib/javascripts/locale/message_format/foo.js"])
+      expect(locale[:moment_js]).to eq(["foo", "#{plugin_path}/lib/javascripts/locale/moment_js/foo.js"])
+      expect(locale[:plural]).to eq(plural.with_indifferent_access)
+
+      expect(Rails.configuration.assets.precompile).to include("locales/foo.js")
+    end
+
+    it "correctly registers a new locale using a fallback locale" do
+      locale = register_locale("es_MX", name: "Spanish (Mexico)", nativeName: "Español (México)", fallbackLocale: "es")
+
+      expect(DiscoursePluginRegistry.locales.count).to eq(1)
+      expect(DiscoursePluginRegistry.locales).to have_key(:es_MX)
+
+      expect(locale[:fallbackLocale]).to eq("es")
+      expect(locale[:message_format]).to eq(["es", "#{Rails.root}/lib/javascripts/locale/es.js"])
+      expect(locale[:moment_js]).to eq(["es", "#{Rails.root}/lib/javascripts/moment_locale/es.js"])
+      expect(locale[:plural]).to be_nil
+
+      expect(Rails.configuration.assets.precompile).to include("locales/es_MX.js")
+    end
+
+    it "correctly registers a new locale when some files exist in core" do
+      locale = register_locale("tlh", name: "Klingon", nativeName: "tlhIngan Hol", plural: plural)
+
+      expect(DiscoursePluginRegistry.locales.count).to eq(1)
+      expect(DiscoursePluginRegistry.locales).to have_key(:tlh)
+
+      expect(locale[:fallbackLocale]).to be_nil
+      expect(locale[:message_format]).to eq(["tlh", "#{plugin_path}/lib/javascripts/locale/message_format/tlh.js"])
+      expect(locale[:moment_js]).to eq(["tlh", "#{Rails.root}/lib/javascripts/moment_locale/tlh.js"])
+      expect(locale[:plural]).to eq(plural.with_indifferent_access)
+
+      expect(Rails.configuration.assets.precompile).to include("locales/tlh.js")
+    end
+
+    it "does not register a new locale when the fallback locale does not exist" do
+      register_locale("bar", name: "Bar", nativeName: "Bar", fallbackLocale: "foo")
+      expect(DiscoursePluginRegistry.locales.count).to eq(0)
+    end
+
+    [
+      "config/locales/client.foo.yml",
+      "config/locales/server.foo.yml",
+      "lib/javascripts/locale/message_format/foo.js",
+      "lib/javascripts/locale/moment_js/foo.js",
+      "assets/locales/foo.js.erb"
+    ].each do |path|
+      it "does not register a new locale when #{path} is missing" do
+        path = "#{plugin_path}/#{path}"
+        File.stubs('exist?').returns(false)
+        File.stubs('exist?').with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
+        File.stubs('exist?').with(path).returns(false)
+
+        register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+        expect(DiscoursePluginRegistry.locales.count).to eq(0)
+      end
+    end
+  end
+
+  describe '#enabled_site_setting_filter' do
+    describe 'when filter is blank' do
+      it 'should return the right value' do
+        expect(Plugin::Instance.new.enabled_site_setting_filter).to eq(nil)
+      end
+    end
+
+    it 'should set the right value' do
+      instance = Plugin::Instance.new
+      instance.enabled_site_setting_filter('test')
+
+      expect(instance.enabled_site_setting_filter).to eq('test')
+    end
+  end
+
 end

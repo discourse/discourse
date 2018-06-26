@@ -20,15 +20,17 @@
   </div>
 
   <div class="flagged-post-contents">
+    <div class='flagged-post-user-details'>
+      <a class='username' href={{user.path}} data-user-card={{flaggedPost.user.username}}>{{format-username flaggedPost.user.username}}</a>
+      {{plugin-outlet
+        name="flagged-post-controls"
+        tagName=""
+        args=(hash flaggedPost=flaggedPost actableFilter=actableFilter topic=topic)}}
+    </div>
+
     <div class='flagged-post-excerpt'>
       {{#unless hideTitle}}
-        <h3>
-          {{#if flaggedPost.topic.isPrivateMessage}}
-            <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-          {{/if}}
-          {{topic-status topic=flaggedPost.topic}}
-          <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
-        </h3>
+        {{flagged-post-title flaggedPost=flaggedPost}}
       {{/unless}}
       {{#if flaggedPost.postAuthorFlagged}}
         {{#if expanded}}
@@ -64,56 +66,13 @@
       </div>
     {{/each}}
 
-    <div class='flag-user-lists'>
-      <div class='flagged-by'>
-        <div class='user-list-title'>
-          {{i18n "admin.flags.flagged_by"}}
-        </div>
-        <div class='flag-users'>
-          {{#each flaggedPost.post_actions as |postAction|}}
-            {{#flag-user user=postAction.user date=postAction.created_at}}
-              <div class='flagger-flag-type'>
-                {{post-action-title postAction.post_action_type_id postAction.name_key}}
-              </div>
-            {{/flag-user}}
-          {{/each}}
-        </div>
-      </div>
+    {{flag-user-lists flaggedPost=flaggedPost showResolvedBy=showResolvedBy}}
 
-      {{#if showResolvedBy}}
-        <div class='flagged-post-resolved-by'>
-          <div class='user-list-title'>
-            {{i18n "admin.flags.resolved_by"}}
-          </div>
-          <div class='flag-users'>
-            {{#each flaggedPost.post_actions as |postAction|}}
-              {{#flag-user user=postAction.disposed_by date=postAction.disposed_at}}
-                {{disposition-icon postAction.disposition}}
-                {{#if postAction.staff_took_action}}
-                  {{d-icon "gavel" title="admin.flags.took_action"}}
-                {{/if}}
-              {{/flag-user}}
-            {{/each}}
-          </div>
-        </div>
-      {{/if}}
-    </div>
-
-    {{#if suspended}}
-      <div class='suspended-message'>
-        The user was suspended for this post.
-      </div>
-    {{/if}}
-
-    {{#if canAct}}
-      <div class='flagged-post-controls'>
-        {{d-button
-          title="admin.flags.agree_title"
-          class="agree-flag"
-          label="admin.flags.agree"
-          icon="thumbs-o-up"
-          action="showAgreeFlagModal"
-          ellipsis=true}}
+    <div class='flagged-post-controls'>
+      {{#if canAct}}
+        {{admin-agree-flag-dropdown
+          post=flaggedPost
+          removeAfter=(action "removeAfter") }}
 
         {{#if flaggedPost.postHidden}}
           {{d-button
@@ -133,31 +92,24 @@
 
         {{d-button
           class="defer-flag"
-          title="admin.flags.defer_flag_title"
+          title="admin.flags.ignore_flag_title"
           action="defer"
           icon="external-link"
-          label="admin.flags.defer_flag"}}
+          label="admin.flags.ignore_flag"}}
 
-        {{d-button
-          class="btn-danger delete-flag"
-          title="admin.flags.delete_title"
-          action="showDeleteFlagModal"
-          icon="trash-o"
-          label="admin.flags.delete"}}
+        {{admin-delete-flag-dropdown
+          post=flaggedPost
+          removeAfter=(action "removeAfter")}}
+      {{/if}}
 
-        {{#unless suspended}}
-          {{d-button
-            class="btn-danger suspend-user"
-            icon="ban"
-            label="admin.flags.suspend_user"
-            title="admin.flags.suspend_user_title"
-            action=(action "showSuspendModal")}}
-        {{/unless}}
-      </div>
-    {{/if}}
+      {{d-button
+        icon="list"
+        label="admin.flags.moderation_history"
+        action=(action "showModerationHistory")}}
+    </div>
     {{plugin-outlet
       name="flagged-post-below-controls"
       tagName=""
-      args=(hash flaggedPost=flaggedPost canAct=canAct)}}
+      args=(hash flaggedPost=flaggedPost canAct=canAct actableFilter=actableFilter)}}
   </div>
 </div>

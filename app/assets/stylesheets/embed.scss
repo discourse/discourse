@@ -19,10 +19,13 @@ article.post {
     border-left: 5px solid darken($primary-low, 10%);
     background-color: $primary-low;
     padding: 10px 10px 0 12px;
-    .avatar { margin-right: 7px; }
+    .avatar {
+      margin-right: 7px;
+    }
   }
 
-  ol, ul {
+  ol,
+  ul {
     clear: none;
   }
 
@@ -35,14 +38,14 @@ article.post {
       margin: 0 0 10px 0;
     }
     p:last-of-type {
-      margin-bottom:0;
+      margin-bottom: 0;
     }
   }
 
   .post-date {
     float: right;
     color: #aaa;
-    font-size: 0.857em;
+    font-size: $font-down-1;
     margin: 10px 4px 0 0;
   }
 
@@ -56,7 +59,6 @@ article.post {
     }
   }
 
-
   .cooked {
     padding: 10px 0;
     margin-left: 65px;
@@ -67,7 +69,7 @@ article.post {
       white-space: pre-wrap;
     }
     img {
-      max-width:100%;
+      max-width: 100%;
     }
     p {
       margin: 0 0 1em 0;
@@ -76,11 +78,11 @@ article.post {
 }
 
 .username {
-  font-size: 0.929em;
+  font-size: $font-down-1;
   margin: 0 0 10px 0;
 
   a {
-    color: #5c5c5c
+    color: #5c5c5c;
   }
   a.staff {
     background-color: #ffffc2;
@@ -102,7 +104,7 @@ img.emoji {
 }
 
 .in-reply-to {
-  font-size: 0.929em;
+  font-size: $font-down-1;
   text-align: center;
   margin: 10px 20px 6px 0;
   display: inline-block;
@@ -111,7 +113,7 @@ img.emoji {
 }
 
 .replies {
-  font-size: 1.071em;
+  font-size: $font-0;
   color: #999;
 }
 
@@ -119,12 +121,11 @@ img.emoji {
   clear: both;
 }
 
-
 header.discourse {
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 8px;
-  font-size: 1.286em;
+  font-size: $font-up-2;
   border-bottom: 3px solid #ddd;
 
   display: flex;
@@ -134,7 +135,7 @@ header.discourse {
 
   h3 {
     margin: 0 auto 0 0;
-    font-size: 1.0em;
+    font-size: $font-0;
   }
 }
 
@@ -143,7 +144,7 @@ header.discourse {
 }
 
 footer {
-  font-size: 1.286em;
+  font-size: $font-up-2;
   margin-top: 0.5em;
   .button {
     color: white;

@@ -4,13 +4,16 @@
 
   &:hover .meta {
     opacity: 1;
-    transition: opacity .5s;
+    transition: opacity 0.5s;
   }
 }
 
 .lightbox-wrapper {
   display: inline-block;
-  &, * { outline: 0; }
+  &,
+  * {
+    outline: 0;
+  }
 }
 
 .meta {
@@ -20,7 +23,7 @@
   color: dark-light-choose($secondary, $primary);
   background: dark-light-choose($primary, lighten($secondary, 10%));
   opacity: 0;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
 
   span {
     float: left;
@@ -43,7 +46,7 @@
     margin: 6px;
     padding-right: 20px;
     color: blend-primary-secondary(50%);
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .expand {

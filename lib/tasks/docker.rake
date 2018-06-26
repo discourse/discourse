@@ -12,6 +12,7 @@
 # => SINGLE_PLUGIN             set to plugin name to only run plugin-specific rspec tests (you'll probably want to SKIP_CORE as well)
 # => BISECT                    set to 1 to run rspec --bisect (applies to core rspec tests only)
 # => RSPEC_SEED                set to seed to use for rspec tests (applies to core rspec tests only)
+# => PAUSE_ON_TERMINATE        set to 1 to pause prior to terminating redis and pg
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -38,14 +39,30 @@ task 'docker:test' do
   begin
     @good = true
     unless ENV['SKIP_LINT']
-      puts "Running linters"
+      puts "Running linters/prettyfiers"
+      puts "eslint #{`eslint -v`}"
+      puts "prettier #{`prettier -v`}"
+
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
         @good &&= run_or_fail("eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
+
+        puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
+        @good &&= run_or_fail("prettier --list-different 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss' 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6'")
       else
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
+
+        unless ENV["SKIP_CORE"]
+          puts "Listing prettier offenses in core:"
+          @good &&= run_or_fail('prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"')
+        end
+
+        unless ENV["SKIP_PLUGINS"]
+          puts "Listing prettier offenses in plugins:"
+          @good &&= run_or_fail('prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
+        end
       end
     end
 
@@ -56,7 +73,7 @@ task 'docker:test' do
       puts "Starting background redis"
       @redis_pid = Process.spawn('redis-server --dir tmp/test_data/redis')
 
-      @postgres_bin = "/usr/lib/postgresql/9.5/bin/"
+      @postgres_bin = "/usr/lib/postgresql/10/bin/"
       `#{@postgres_bin}initdb -D tmp/test_data/pg`
 
       # speed up db, never do this in production mmmmk
@@ -69,11 +86,13 @@ task 'docker:test' do
 
       ENV["RAILS_ENV"] = "test"
 
-      @good &&= run_or_fail("bundle exec rake db:create db:migrate")
+      @good &&= run_or_fail("bundle exec rake db:create")
 
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
+
+      @good &&= run_or_fail("bundle exec rake db:migrate")
 
       unless ENV["JS_ONLY"]
 
@@ -117,6 +136,11 @@ task 'docker:test' do
 
   ensure
     puts "Terminating"
+
+    if ENV['PAUSE_ON_TERMINATE']
+      puts "Pausing prior to termination"
+      sleep
+    end
 
     Process.kill("TERM", @redis_pid) if @redis_pid
     Process.kill("TERM", @pg_pid) if @pg_pid

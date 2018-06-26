@@ -11,6 +11,9 @@ require "fileutils"
 @mem_stats = false
 @unicorn = false
 @dump_heap = false
+@concurrency = 1
+@skip_asset_bundle = false
+@unicorn_workers = 3
 
 opts = OptionParser.new do |o|
   o.banner = "Usage: ruby bench.rb [options]"
@@ -35,8 +38,17 @@ opts = OptionParser.new do |o|
   o.on("-m", "--memory_stats") do
     @mem_stats = true
   end
-  o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to thin") do
+  o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to puma") do
     @unicorn = true
+  end
+  o.on("-c", "--concurrency [NUM]", "Run benchmark with this number of concurrent requests (default: 1)") do |i|
+    @concurrency = i.to_i
+  end
+  o.on("-w", "--unicorn_workers [NUM]", "Run benchmark with this number of unicorn workers (default: 3)") do |i|
+    @unicorn_workers = i.to_i
+  end
+  o.on("-s", "--skip-bundle-assets", "Skip bundling assets") do
+    @skip_asset_bundle = true
   end
 end
 opts.parse!
@@ -106,19 +118,41 @@ end
 
 ENV["RAILS_ENV"] = "profile"
 
-discourse_env_vars = %w(DISCOURSE_DUMP_HEAP RUBY_GC_HEAP_INIT_SLOTS RUBY_GC_HEAP_FREE_SLOTS RUBY_GC_HEAP_GROWTH_FACTOR RUBY_GC_HEAP_GROWTH_MAX_SLOTS RUBY_GC_MALLOC_LIMIT RUBY_GC_OLDMALLOC_LIMIT RUBY_GC_MALLOC_LIMIT_MAX RUBY_GC_OLDMALLOC_LIMIT_MAX RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR)
+discourse_env_vars = %w(
+  DISCOURSE_DUMP_HEAP
+  RUBY_GC_HEAP_INIT_SLOTS
+  RUBY_GC_HEAP_FREE_SLOTS
+  RUBY_GC_HEAP_GROWTH_FACTOR
+  RUBY_GC_HEAP_GROWTH_MAX_SLOTS
+  RUBY_GC_MALLOC_LIMIT
+  RUBY_GC_OLDMALLOC_LIMIT
+  RUBY_GC_MALLOC_LIMIT_MAX
+  RUBY_GC_OLDMALLOC_LIMIT_MAX
+  RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR
+  RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR
+  RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR
+  RUBY_GLOBAL_METHOD_CACHE_SIZE
+  LD_PRELOAD
+)
 
 if @include_env
   puts "Running with tuned environment"
-  discourse_env_vars - %w(RUBY_GC_MALLOC_LIMIT).each do |v|
+  discourse_env_vars.each do |v|
     ENV.delete v
   end
+
+  ENV['RUBY_GLOBAL_METHOD_CACHE_SIZE'] = '131072'
+  ENV['RUBY_GC_HEAP_GROWTH_MAX_SLOTS'] = '40000'
+  ENV['RUBY_GC_HEAP_INIT_SLOTS'] = '400000'
+  ENV['RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR'] = '1.5'
+
 else
   # clean env
   puts "Running with the following custom environment"
-  discourse_env_vars.each do |w|
-    puts "#{w}: #{ENV[w]}"
-  end
+end
+
+discourse_env_vars.each do |w|
+  puts "#{w}: #{ENV[w]}" if ENV[w].to_s.length > 0
 end
 
 def port_available?(port)
@@ -153,8 +187,9 @@ api_key = `bundle exec rake api_key:get`.split("\n")[-1]
 def bench(path, name)
   puts "Running apache bench warmup"
   add = ""
-  add = "-c 3 " if @unicorn
+  add = "-c #{@concurrency} " if @concurrency > 1
   `ab #{add} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
+
   puts "Benchmarking #{name} @ #{path}"
   `ab #{add} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
@@ -168,16 +203,19 @@ end
 
 begin
   # critical cause cache may be incompatible
-  puts "precompiling assets"
-  run("bundle exec rake assets:precompile")
+  unless @skip_asset_bundle
+    puts "precompiling assets"
+    run("bundle exec rake assets:precompile")
+  end
 
   pid =
     if @unicorn
       ENV['UNICORN_PORT'] = @port.to_s
+      ENV['UNICORN_WORKERS'] = @unicorn_workers.to_s
       FileUtils.mkdir_p(File.join('tmp', 'pids'))
       spawn("bundle exec unicorn -c config/unicorn.conf.rb")
     else
-      spawn("bundle exec thin start -p #{@port}")
+      spawn("bundle exec puma -p #{@port} -e production")
     end
 
   while port_available? @port
@@ -222,6 +260,17 @@ begin
   end
 
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
+
+  if @unicorn
+    puts "Unicorn: (workers: #{@unicorn_workers})"
+  else
+    # TODO we want to also bench puma clusters
+    puts "Puma: (single threaded)"
+  end
+  puts "Include env: #{@include_env}"
+  puts "Iterations: #{@iterations}, Best of: #{@best_of}"
+  puts "Concurrency: #{@concurrency}"
+  puts
 
   # Prevent using external facts because it breaks when running in the
   # discourse/discourse_bench docker container.

@@ -221,8 +221,6 @@ fi:
 
           <kbd>**Lainaa**</kbd>-painike ilmestyy, kun maalaat viestini tekstiä. **Vastaa**-painike käy yhtä hyvin, jos sinulla on tekstiä maalattuna. Kokeilisitko uudelleen?
       bookmark:
-        instructions: |-
-          Jos haluat oppia lisää, valitse <iimg src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**.  Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
         reply: |-
           Erinomaista! Löydät yksityiskeskustelumme nyt helposti koska vain [profiilisi kirjanmerkkivälilehdeltä](%{profile_page_url}/activity/bookmarks). Klikkaat vain profiilikuvaasi oikeassa yläkulmasssa &#8599;
         not_found: |-
@@ -359,12 +357,6 @@ fi:
         reply: |-
           Erinomaista! Muista, että tämä toimii alueiden lisäksi myös tunnisteille, jos ne ovat käytössä täällä.
       change_topic_notification_level:
-        instructions: |-
-          Sinulla on jokaiselle ketjulle ilmoitustaso. Aluksi se on 'tavallinen', jolloin saat tavalliseen tapaan ilmoituksen vain, jos joku puhuu nimenomaan sinulle.
-
-          Oletuksena yksityisviestiketjujen ilmoitustaso on kaikkein korkein eli 'tarkkaillaan', jolloin saat ilmoituksen joka ikisestä viestistä. Voit kuitenkin valita _mille tahansa_ ketjulle ilmoitustason 'tarkkaillaan', 'seurataan' tai 'vaimennettu'.
-
-          Kokeillaanpa vaihtaa tämän ketjun ilmoitustasoa. Ketjun alla on painike, joka näyttää sinun tarkkailevan tätä ketjua. Vaihdapa ilmoitustasoksi **seurataan**.
         not_found: |-
           Näytät yhä tarkkailevan :eyes: tätä ketjua! Jollet meinaa löytää sitä, ilmoitustasopainike sijaitsee ketjun alla.
         reply: |-
@@ -394,16 +386,16 @@ fi:
           [/poll]
       details:
         instructions: |-
-          Joskus voit haluta **piilottaa yksityiskohtia** vastauksissasi:
+          Joskus voit haluta **piilottaa yksityiskohtia** vastauksessasi:
 
           - Kirjoitat elokuvasta tai TV-ohjelmasta jotakin, minkä voi kokea juonipaljastukseksi.
 
-          - Viestissäsi on suuria määriä yksityiskohtaista tietoa, joka ei ole kaikille olennaista ja joka voisi uuvuttaa tai häiritä lukijaa.
+          - Joudut sisällyttämään viestiisi suuria määriä yksityiskohtaista tietoa, joka voisi uuvuttaa lukijaa.
 
           [details=Napauta niin näet kuinka se toimii!]
           1. Valitse editorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvake.
           2. Valitse "Piilota yksityiskohdat".
-          3. Muokkaa Yhteenveto-tekstiä, jonka taakse tiedot piilotetaan, ja lisää sisältö.
+          3. Muokkaa yhteenvetotekstiä ja lisää sisältö.
           [/details]
 
           Piilottaisitko yksityiskohtia editorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvakkeen avulla seuraavasta vastauksestasi?

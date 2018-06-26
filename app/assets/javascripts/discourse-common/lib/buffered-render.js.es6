@@ -3,26 +3,27 @@
 
 const Mixin = {
   _customRender() {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
     const buffer = [];
     this.buildBuffer(buffer);
-    this.element.innerHTML = buffer.join('');
+    this.element.innerHTML = buffer.join("");
   },
 
   rerenderBuffer() {
-    Ember.run.scheduleOnce('render', this, this._customRender);
+    Ember.run.scheduleOnce("render", this, this._customRender);
   }
 };
 
 export function bufferedRender(obj) {
-
   if (!obj.buildBuffer) {
-    Ember.warn('Missing `buildBuffer` method');
+    Ember.warn("Missing `buildBuffer` method");
     return obj;
   }
 
-  const caller = { };
+  const caller = {};
 
   caller.didRender = function() {
     this._super();

@@ -3,16 +3,14 @@
   padding-top: 2em;
 
   .face {
-    font-size: 60px;
-    height: 60px;
+    font-size: 4.286em;
   }
   .reason {
-    font-size: 1.714em;
-    height: 24px;
+    font-size: $font-up-4;
   }
   .url {
     font-style: italic;
-    font-size: 11px;
+    font-size: $font-down-1;
   }
   .desc {
     margin-top: 16px;

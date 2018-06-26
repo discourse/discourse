@@ -1,0 +1,27 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fi:
+  js:
+    discourse_local_dates:
+      title: Lisää päiväys
+      create:
+        modal_title: Lisää päiväys
+        modal_subtitle: "Näytämme päivämäärän ja ajan lukijalle paikallisen aikavyöhykkeen ajassa."
+        form:
+          insert: Lisää
+          advanced_mode: Lisäasetukset
+          simple_mode: Piilota lisäasetukset
+          format_description: "Missä formaatissa aika näytetään käyttäjälle. Näytä käyttäjän aikavyöhyke sanallisesti (esim. Europe/Paris) lisäämällä \"\\T\\Z\"."
+          timezones_title: Näytettävät aikavyöhykkeet
+          recurring_title: Toistuvuus
+          recurring_description: "Määrittele tapahtuman toistuvuus. Voit myös manuaalisesti muokata toistuvuusparametriä, jonka lomake viestiin luo. Käytä näitä avainsanoja: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Ei toistuvuutta
+          invalid_date: Päiväys ei kelpaa. Tarkista päivämäärä ja aika.
+          date_title: Päivämäärä
+          time_title: Aika
+          format_title: Päiväysformaatti

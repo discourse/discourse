@@ -36,7 +36,7 @@ es:
         title: "Mostrar los resultados de la encuesta"
         label: "Mostrar resultados"
       hide-results:
-        title: "Volver a los votos"
+        title: "Volver a tus votos"
         label: "Ocultar resultados"
       open:
         title: "Abrir encuesta"
@@ -46,6 +46,9 @@ es:
         title: "Cerrar la encuesta"
         label: "Cerrar"
         confirm: "¿Seguro que quieres cerrar esta encuesta?"
+      automatic_close:
+        closes_in: "cierra en <strong>%{timeLeft}</strong>"
+        age: "cerrado <strong>%{age}</strong>"
       error_while_toggling_status: "Lo sentimos, hubo un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, hubo un error al registrar tus votos."
       error_while_fetching_voters: "Lo sentimos, hubo un error al mostrar los votantes."
@@ -54,7 +57,8 @@ es:
         insert: Insertar Encuesta
         help:
           options_count: Introducir al menos 2 opciones
-          invalid_values: El valor mínimo debe ser menor que el valor máximo.
+          invalid_values: Valor mínimo debe ser más pequeño que el valor máximo.
+          min_step_value: El valor mínimo es 1
         poll_type:
           label: Tipo
           regular: Una opción
@@ -68,3 +72,5 @@ es:
           label: Mostrar quién votó
         poll_options:
           label: Introducir una opción de la encuesta por línea
+        automatic_close:
+          label: Cerrar encuesta automáticamente

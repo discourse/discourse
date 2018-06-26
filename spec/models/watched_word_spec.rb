@@ -11,8 +11,8 @@ describe WatchedWord do
     expect(described_class.count).to eq(1)
   end
 
-  it "downcases words" do
-    expect(described_class.create(word: "ShooT").word).to eq('shoot')
+  it "doesn't downcase words" do
+    expect(described_class.create(word: "ShooT").word).to eq('ShooT')
   end
 
   it "strips leading and trailing spaces" do

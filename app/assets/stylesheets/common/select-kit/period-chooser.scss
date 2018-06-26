@@ -1,0 +1,78 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.period-chooser {
+      display: inline-flex;
+      position: relative;
+
+      .select-kit-collection {
+        padding: 5px;
+      }
+
+      .period-chooser-header {
+        background: none;
+        border: none;
+        justify-content: flex-start;
+        width: auto;
+        height: auto;
+        padding: 0;
+
+        h2.selected-name {
+          overflow: auto;
+          color: $secondary;
+          display: inline-block;
+          box-sizing: border-box;
+
+          .date-section {
+            color: $primary;
+            margin-right: 5px;
+          }
+
+          .top-date-string {
+            font-size: $font-down-1;
+            color: dark-light-choose($primary-medium, $secondary-high);
+            font-weight: normal;
+            text-transform: uppercase;
+          }
+        }
+
+        .d-icon {
+          color: $primary;
+          opacity: 1;
+          margin: 5px 0 10px 5px;
+          font-size: $font-up-3;
+        }
+
+        &.is-focused,
+        &:hover {
+          background: none;
+          border: none;
+          outline: none;
+        }
+      }
+
+      .period-chooser-row {
+        font-weight: bold;
+        padding: 5px;
+        font-size: $font-up-1;
+        align-items: center;
+        display: flex;
+
+        .period-title {
+          flex: 1;
+        }
+
+        .date-section {
+          color: $primary;
+        }
+
+        .top-date-string {
+          font-weight: normal;
+          font-size: $font-down-1;
+          color: dark-light-choose($primary-medium, $secondary-high);
+          text-transform: uppercase;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}

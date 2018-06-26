@@ -1,6 +1,27 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
+  def unrestricted_link_posting?
+    authenticated? && @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+  end
+
+  def link_posting_access
+    if unrestricted_link_posting?
+      'full'
+    elsif SiteSetting.whitelisted_link_domains.present?
+      'limited'
+    else
+      'none'
+    end
+  end
+
+  def can_post_link?(host: nil)
+    return false if host.blank?
+
+    unrestricted_link_posting? ||
+      SiteSetting.whitelisted_link_domains.split('|').include?(host)
+  end
+
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
@@ -10,40 +31,45 @@ module PostGuardian
     return false if (action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true')
 
     taken = opts[:taken_actions].try(:keys).to_a
-    is_flag = PostActionType.flag_types_without_custom[action_key]
+    is_flag = PostActionType.notify_flag_types[action_key]
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
-    already_did_flagging      = taken.any? && (taken & PostActionType.flag_types_without_custom.values).any?
+    already_did_flagging      = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 
     result = if authenticated? && post && !@user.anonymous?
+      # post made by staff, but we don't allow staff flags
+      return false if is_flag &&
+        (!SiteSetting.allow_flagging_staff?) &&
+        post.user.staff?
 
-      return false if [:notify_user, :notify_moderators].include?(action_key) &&
-        !SiteSetting.enable_private_messages?
+      if [:notify_user, :notify_moderators].include?(action_key) &&
+         (!SiteSetting.enable_personal_messages? ||
+         !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages))
+
+        return false
+      end
 
       # we allow flagging for trust level 1 and higher
       # always allowed for private messages
-      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[1]) || post.topic.private_message?)) ||
+      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) || post.topic.private_message?)) ||
 
       # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&
 
       # nothing except flagging on archived topics
-      not(post.topic.try(:archived?)) &&
+      not(post.topic&.archived?) &&
 
       # nothing except flagging on deleted posts
       not(post.trashed?) &&
 
       # don't like your own stuff
-      not(action_key == :like && is_my_own?(post)) &&
-
-      # new users can't notify_user or notify_moderators because they are not allowed to send private messages
-      not((action_key == :notify_user || action_key == :notify_moderators) &&
-        !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
-
-      # no voting more than once on single vote topics
-      not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
+      not(action_key == :like && is_my_own?(post))
     end
 
     !!result
+  end
+
+  def can_lock_post?(post)
+    can_see_post?(post) && is_staff?
   end
 
   def can_defer_flags?(post)
@@ -62,11 +88,6 @@ module PostGuardian
 
     return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
 
-    if type_symbol == :vote
-      # We can see votes if the topic allows for public voting
-      return false if topic.has_meta_data_boolean?(:private_poll)
-    end
-
     true
   end
 
@@ -80,7 +101,10 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-    (!SpamRule::AutoBlock.block?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
+
+    return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
+
+    (!SpamRule::AutoSilence.silence?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
       Category.post_create_allowed(self).where(id: parent.category.id).count == 1
@@ -95,9 +119,16 @@ module PostGuardian
 
     return true if is_admin?
 
-    if is_staff? || @user.has_trust_level?(TrustLevel[4])
-      return can_create_post?(post.topic)
-    end
+    # Must be staff to edit a locked post
+    return false if post.locked? && !is_staff?
+
+    return can_create_post?(post.topic) if (
+      is_staff? ||
+      (
+        SiteSetting.trusted_users_can_edit_others? &&
+        @user.has_trust_level?(TrustLevel[4])
+      )
+    )
 
     if post.topic.archived? || post.user_deleted || post.deleted_at
       return false
@@ -132,9 +163,6 @@ module PostGuardian
 
     # Can't delete the first post
     return false if post.is_first_post?
-
-    # Can't delete after post_edit_time_limit minutes have passed
-    return false if !is_staff? && post.edit_time_limit_expired?
 
     # Can't delete posts in archived topics unless you are staff
     return false if !is_staff? && post.topic.archived?
@@ -182,10 +210,6 @@ module PostGuardian
     authenticated? &&
     (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
     can_see_post?(post)
-  end
-
-  def can_vote?(post, opts = {})
-    post_can_act?(post, :vote, opts: opts)
   end
 
   def can_change_post_owner?

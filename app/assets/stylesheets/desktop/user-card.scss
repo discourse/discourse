@@ -4,36 +4,42 @@
 $user_card_primary: $primary;
 $user_card_background: $secondary;
 
-#user-card {
+#user-card,
+#group-card {
   position: absolute;
   width: 500px;
   left: -9999px;
   top: -9999px;
-  z-index: 990;
-  box-shadow: 1px 2px 6px rgba(0,0,0, .25);
+  z-index: z("usercard");
+  box-shadow: shadow("card");
   margin-top: -2px;
   color: $user_card_primary;
   background: $user_card_background center center;
   background-size: cover;
   min-height: 175px;
-  -webkit-transition: opacity .2s, -webkit-transform .2s;
-          transition: opacity .2s, transform .2s;
+  -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
 
   opacity: 0;
-  @include transform(scale(.9));
+  @include transform(scale(0.9));
 
   &.show {
     opacity: 1;
     @include transform(scale(1));
   }
 
+  &.fixed {
+    position: fixed;
+    z-index: z("composer", "content") + 1;
+  }
+
   .card-content {
     padding: 12px 12px 0 12px;
-    background: rgba($user_card_background, .85);
+    background: rgba($user_card_background, 0.85);
     margin-top: 80px;
 
     &:after {
-      content: '';
+      content: "";
       display: block;
       clear: both;
     }
@@ -41,6 +47,11 @@ $user_card_background: $secondary;
     a.card-huge-avatar {
       outline: none;
     }
+  }
+
+  .bio {
+    max-height: 150px;
+    overflow: auto;
   }
 
   &.no-bg {
@@ -60,8 +71,8 @@ $user_card_background: $secondary;
 
   h1 {
     min-width: 120px;
-    font-size: 1.786em;
-    line-height: 1.25;
+    font-size: $font-up-4;
+    line-height: $line-height-medium;
     display: block;
     max-width: 250px;
     white-space: nowrap;
@@ -71,14 +82,15 @@ $user_card_background: $secondary;
       color: $user_card_primary;
     }
     i {
-      font-size: .8em;
+      font-size: $font-down-1;
       color: $user_card_primary;
     }
   }
 
   h2 {
-    font-size: 1.071em;
-    line-height: 1.25;
+    font-size: $font-up-1;
+    line-height: $line-height-large;
+    margin: 0;
     font-weight: normal;
     display: block;
     max-width: 250px;
@@ -91,7 +103,7 @@ $user_card_background: $secondary;
   }
 
   h3 {
-    font-size: 0.929em;
+    font-size: $font-0;
     font-weight: normal;
     margin-top: 0;
     color: scale-color($user_card_primary, $lightness: 20%);
@@ -103,7 +115,7 @@ $user_card_background: $secondary;
   }
 
   .groups {
-    font-size: 0.929em;
+    font-size: $font-down-1;
     font-weight: normal;
     margin-top: 0;
     color: $user_card_background;
@@ -116,17 +128,22 @@ $user_card_background: $secondary;
   .metadata {
     width: 100%;
     clear: both;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     h3 {
       display: inline;
       margin-right: 5px;
-      .desc, a {
+      .desc,
+      a {
         color: scale-color($user_card_primary, $lightness: 35%);
       }
     }
-    div {display: inline; color: scale-color($user_card_background, $lightness: 50%);
-    .group-link {color: scale-color($user_card_background, $lightness: 50%);}
+    div {
+      display: inline;
+      color: scale-color($user_card_background, $lightness: 50%);
+      .group-link {
+        color: scale-color($user_card_background, $lightness: 50%);
+      }
     }
   }
 
@@ -135,12 +152,8 @@ $user_card_background: $secondary;
     padding-top: 10px;
   }
 
-  &.has-card-badge-image .bio {
-    width: 75%;
-  }
-
   .bio {
-    padding: 10px 0 0 0;
+    margin-top: 80px;
     clear: left;
 
     a {
@@ -162,21 +175,73 @@ $user_card_background: $secondary;
   }
 
   .location-and-website {
-    clear: left;
-    margin-top: 5px;
-    .location {margin-right: 10px;}
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding-top: 5px;
+    .location,
     .website-name {
-      a {
-        text-decoration: underline;
-        color: $user_card_primary;
+      display: flex;
+      max-width: 90%;
+      overflow: hidden;
+      align-items: baseline;
+      i {
+        margin-right: 0.25em;
+      }
+    }
+    .website-name a,
+    .location span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: $user_card_primary;
+    }
+    .location {
+      margin-right: 0.5em;
+    }
+    .website-name a {
+      text-decoration: underline;
+    }
+  }
+
+  .user-card-avatar,
+  .group-card-avatar {
+    float: left;
+    margin-right: 10px;
+    margin-top: -53px;
+  }
+
+  .group-card-avatar {
+    $size: 120px;
+    width: $size;
+    height: $size;
+    .avatar-flair {
+      width: $size;
+      height: $size;
+      display: flex;
+      align-items: center;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: $size;
+      color: $primary;
+      i {
+        margin: auto;
+        font-size: $size / 1.5 !important;
+      }
+      &.rounded {
+        border-radius: 50%;
       }
     }
   }
 
-  .user-card-avatar {
-    float: left;
-    margin-right: 10px;
-    margin-top: -53px;
+  .members {
+    padding: 0 0 10px 0;
+    a {
+      color: lighten($primary, 40%);
+      &:hover {
+        color: $primary;
+      }
+    }
   }
 
   p {
@@ -193,7 +258,10 @@ $user_card_background: $secondary;
     float: right;
     margin: 0;
 
-    button { width: 100%; min-width: 150px; }
+    button {
+      width: 100%;
+      min-width: 150px;
+    }
   }
 
   .new-user a {
@@ -221,13 +289,13 @@ $user_card_background: $secondary;
 
       .user-badge {
         background: scale-color($user_card_background, $lightness: -5%);
-        border: 1px solid $primary-low; 
+        border: 1px solid $primary-low;
         color: $user_card_primary;
       }
 
       h3 {
         color: $user_card_background;
-        font-size: 1em;
+        font-size: $font-0;
         margin-bottom: -8px;
       }
     }
@@ -245,14 +313,7 @@ $user_card_background: $secondary;
     padding-top: 15px;
   }
 
-  .card-badge {
-    img {
-      max-width: 120px;
-    }
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
-    font-size: 2.143em;
-    i {color: $user_card_primary;}
+  .metadata .email .btn {
+    padding: 2px 12px;
   }
 }

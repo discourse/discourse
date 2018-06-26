@@ -31,6 +31,8 @@ describe Scheduler::Defer do
       x = 2
     end
 
+    expect(@defer.length).to eq(1)
+
     @defer.do_all_work
 
     expect(x).to eq(2)

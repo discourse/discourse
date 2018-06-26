@@ -1,32 +1,26 @@
 .body-page {
-
-  // Consistent vertical spacing
-  blockquote,
-  h1,
-  h2,
-  h3,
-  hr,
-  p,
-  pre,
-  ul,
-  ol,
-  table {
-    margin: 0 0 20px;
-    font-size: 1.143em;
-    line-height: 22px;
+  /* intended only for /about /faq, /guidelines, /tos, and /privacy */
+  width: 100%;
+  max-width: 700px;
+  .about-page & {
+    max-width: unset;
+    section:not(.admins):not(.moderators) {
+      max-width: 700px;
+    }
   }
-
+  font-size: $font-up-1;
+  .mobile-view & {
+    font-size: $font-0;
+    margin-top: 20px;
+  }
   li {
-     margin-bottom: 8px;
+    margin-bottom: 8px;
   }
-
+  .nav-pills {
+    margin-bottom: 20px;
+  }
   ul:not(.nav-pills),
   ol:not(.nav-pills) {
     margin-left: 40px;
   }
-
-  /* intended only for /faq, /guidelines, /tos, and /privacy */
-  width: 700px;
-  padding-left:20px;
-
 }

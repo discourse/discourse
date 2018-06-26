@@ -4,23 +4,44 @@ require_dependency 'jobs/scheduled/clean_up_uploads'
 
 describe Jobs::CleanUpUploads do
 
-  def fabricate_upload
-    Fabricate(:upload, created_at: 2.hours.ago)
+  def fabricate_upload(attributes = {})
+    Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))
   end
 
+  let(:upload) { fabricate_upload }
+
   before do
-    Upload.destroy_all
     SiteSetting.clean_up_uploads = true
     SiteSetting.clean_orphan_uploads_grace_period_hours = 1
     @upload = fabricate_upload
   end
 
   it "deletes orphan uploads" do
-    expect(Upload.count).to be(1)
+    expect do
+      Jobs::CleanUpUploads.new.execute(nil)
+    end.to change { Upload.count }.by(-1)
 
-    Jobs::CleanUpUploads.new.execute(nil)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+  end
 
-    expect(Upload.count).to be(0)
+  describe 'when clean_up_uploads is disabled' do
+    before do
+      SiteSetting.clean_up_uploads = false
+    end
+
+    it 'should still delete invalid upload records' do
+      upload2 = fabricate_upload(
+        url: "",
+        retain_hours: nil
+      )
+
+      expect do
+        Jobs::CleanUpUploads.new.execute(nil)
+      end.to change { Upload.count }.by(-1)
+
+      expect(Upload.exists?(id: @upload.id)).to eq(true)
+      expect(Upload.exists?(id: upload2.id)).to eq(false)
+    end
   end
 
   it "does not clean up uploads in site settings" do
@@ -29,8 +50,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: logo_upload.id)).to eq(logo_upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: logo_upload.id)).to eq(true)
   end
 
   it "does not clean up uploads in site settings when they use the CDN" do
@@ -41,8 +62,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: logo_small_upload.id)).to eq(logo_small_upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: logo_small_upload.id)).to eq(true)
   end
 
   it "does not delete profile background uploads" do
@@ -51,8 +72,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: profile_background_upload.id)).to eq(profile_background_upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: profile_background_upload.id)).to eq(true)
   end
 
   it "does not delete card background uploads" do
@@ -61,8 +82,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: card_background_upload.id)).to eq(card_background_upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: card_background_upload.id)).to eq(true)
   end
 
   it "does not delete category logo uploads" do
@@ -71,8 +92,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: category_logo_upload.id)).to eq(category_logo_upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: category_logo_upload.id)).to eq(true)
   end
 
   it "does not delete category background url uploads" do
@@ -81,8 +102,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: category_logo_upload.id)).to eq(category_logo_upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: category_logo_upload.id)).to eq(true)
   end
 
   it "does not delete post uploads" do
@@ -91,8 +112,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
   it "does not delete user uploaded avatar" do
@@ -101,8 +122,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
   it "does not delete user gravatar" do
@@ -111,8 +132,8 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
   it "does not delete user custom upload" do
@@ -121,35 +142,40 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
   it "does not delete uploads in a queued post" do
     upload = fabricate_upload
+    upload2 = fabricate_upload
 
     QueuedPost.create(
       queue: "uploads",
       state: QueuedPost.states[:new],
       user_id: Fabricate(:user).id,
-      raw: upload.sha1,
+      raw: "#{upload.sha1}\n#{upload2.short_url}",
       post_options: {}
     )
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
+    expect(Upload.exists?(id: upload2.id)).to eq(true)
   end
 
   it "does not delete uploads in a draft" do
     upload = fabricate_upload
-    Draft.set(Fabricate(:user), "test", 0, upload.sha1)
+    upload2 = fabricate_upload
+
+    Draft.set(Fabricate(:user), "test", 0, "#{upload.sha1}\n#{upload2.short_url}")
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
+    expect(Upload.exists?(id: upload2.id)).to eq(true)
   end
 
   it "does not delete custom emojis" do
@@ -158,8 +184,17 @@ describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
 
-    expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: upload.id)).to eq(true)
   end
 
+  it "does not delete user exported csv uploads" do
+    csv_file = fabricate_upload
+    UserExport.create(file_name: "export.csv", user_id: Fabricate(:user).id, upload_id: csv_file.id)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: @upload.id)).to eq(false)
+    expect(Upload.exists?(id: csv_file.id)).to eq(true)
+  end
 end

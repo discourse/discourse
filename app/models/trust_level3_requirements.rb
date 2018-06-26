@@ -2,6 +2,19 @@
 # the Leader (3) trust level.
 class TrustLevel3Requirements
 
+  class PenaltyCounts
+    attr_reader :silenced, :suspended
+
+    def initialize(row)
+      @silenced = row['silence_count'] || 0
+      @suspended = row['suspend_count'] || 0
+    end
+
+    def total
+      @silenced + @suspended
+    end
+  end
+
   include ActiveModel::Serialization
 
   LOW_WATER_MARK = 0.9
@@ -26,36 +39,42 @@ class TrustLevel3Requirements
 
   def requirements_met?
     return false if trust_level_locked
-    !@user.suspended? &&
-    days_visited >= min_days_visited &&
-    num_topics_replied_to >= min_topics_replied_to &&
-    topics_viewed >= min_topics_viewed &&
-    posts_read >= min_posts_read &&
-    num_flagged_posts <= max_flagged_posts &&
-    num_flagged_by_users <= max_flagged_by_users &&
-    topics_viewed_all_time >= min_topics_viewed_all_time &&
-    posts_read_all_time >= min_posts_read_all_time &&
-    num_likes_given >= min_likes_given &&
-    num_likes_received >= min_likes_received &&
-    num_likes_received_users >= min_likes_received_users &&
-    num_likes_received_days >= min_likes_received_days
+
+    (!@user.suspended?) &&
+      (!@user.silenced?) &&
+      penalty_counts.total == 0 &&
+      days_visited >= min_days_visited &&
+      num_topics_replied_to >= min_topics_replied_to &&
+      topics_viewed >= min_topics_viewed &&
+      posts_read >= min_posts_read &&
+      num_flagged_posts <= max_flagged_posts &&
+      num_flagged_by_users <= max_flagged_by_users &&
+      topics_viewed_all_time >= min_topics_viewed_all_time &&
+      posts_read_all_time >= min_posts_read_all_time &&
+      num_likes_given >= min_likes_given &&
+      num_likes_received >= min_likes_received &&
+      num_likes_received_users >= min_likes_received_users &&
+      num_likes_received_days >= min_likes_received_days
   end
 
   def requirements_lost?
     return false if trust_level_locked
+
     @user.suspended? ||
-    days_visited < min_days_visited * LOW_WATER_MARK ||
-    num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
-    topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
-    posts_read < min_posts_read * LOW_WATER_MARK ||
-    num_flagged_posts > max_flagged_posts ||
-    num_flagged_by_users > max_flagged_by_users ||
-    topics_viewed_all_time < min_topics_viewed_all_time ||
-    posts_read_all_time < min_posts_read_all_time ||
-    num_likes_given < min_likes_given * LOW_WATER_MARK ||
-    num_likes_received < min_likes_received * LOW_WATER_MARK ||
-    num_likes_received_users < min_likes_received_users * LOW_WATER_MARK ||
-    num_likes_received_days < min_likes_received_days * LOW_WATER_MARK
+      @user.silenced? ||
+      penalty_counts.total > 0 ||
+      days_visited < min_days_visited * LOW_WATER_MARK ||
+      num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
+      topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
+      posts_read < min_posts_read * LOW_WATER_MARK ||
+      num_flagged_posts > max_flagged_posts ||
+      num_flagged_by_users > max_flagged_by_users ||
+      topics_viewed_all_time < min_topics_viewed_all_time ||
+      posts_read_all_time < min_posts_read_all_time ||
+      num_likes_given < min_likes_given * LOW_WATER_MARK ||
+      num_likes_received < min_likes_received * LOW_WATER_MARK ||
+      num_likes_received_users < min_likes_received_users * LOW_WATER_MARK ||
+      num_likes_received_days < min_likes_received_days * LOW_WATER_MARK
   end
 
   def time_period
@@ -63,7 +82,7 @@ class TrustLevel3Requirements
   end
 
   def trust_level_locked
-    @user.trust_level_locked
+    !@user.manual_locked_trust_level.nil?
   end
 
   def on_grace_period
@@ -72,6 +91,38 @@ class TrustLevel3Requirements
 
   def days_visited
     @user.user_visits.where("visited_at > ? and posts_read > 0", time_period.days.ago).count
+  end
+
+  def penalty_counts
+    args = {
+      user_id: @user.id,
+      silence_user: UserHistory.actions[:silence_user],
+      unsilence_user: UserHistory.actions[:unsilence_user],
+      suspend_user: UserHistory.actions[:suspend_user],
+      unsuspend_user: UserHistory.actions[:unsuspend_user]
+    }
+
+    sql = <<~SQL
+      SELECT SUM(
+          CASE
+            WHEN action = :silence_user THEN 1
+            WHEN action = :unsilence_user THEN -1
+            ELSE 0
+          END
+        ) AS silence_count,
+        SUM(
+          CASE
+            WHEN action = :suspend_user THEN 1
+            WHEN action = :unsuspend_user THEN -1
+            ELSE 0
+          END
+        ) AS suspend_count
+      FROM user_histories AS uh
+      WHERE uh.target_user_id = :user_id
+        AND uh.action IN (:silence_user, :unsilence_user, :suspend_user, :unsuspend_user)
+    SQL
+
+    PenaltyCounts.new(DB.query_hash(sql, args).first)
   end
 
   def min_days_visited

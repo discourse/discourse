@@ -20,10 +20,11 @@ class UploadCreator
   #  - for_theme (boolean)
   #  - for_private_message (boolean)
   #  - pasted (boolean)
+  #  - for_export (boolean)
   def initialize(file, filename, opts = {})
-    @upload = Upload.new
     @file = file
-    @filename = filename
+    @filename = filename || ''
+    @upload = Upload.new(original_filename: filename, filesize: 0)
     @opts = opts
   end
 
@@ -84,6 +85,7 @@ class UploadCreator
       @upload.for_private_message = true if @opts[:for_private_message]
       @upload.for_group_message   = true if @opts[:for_group_message]
       @upload.for_theme           = true if @opts[:for_theme]
+      @upload.for_export          = true if @opts[:for_export]
 
       return @upload unless @upload.save
 
@@ -105,7 +107,7 @@ class UploadCreator
       @upload
     end
   ensure
-    @file.close! rescue nil
+    @file&.close
   end
 
   def extract_image_info!
@@ -134,15 +136,13 @@ class UploadCreator
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
     OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
-    Discourse::Utils.execute_command(
-      'convert', @file.path,
-      '-auto-orient',
-      '-background', 'white',
-      '-interlace', 'none',
-      '-flatten',
-      '-quality', SiteSetting.png_to_jpg_quality.to_s,
-      jpeg_tempfile.path
-    )
+
+    begin
+      execute_convert(@file, jpeg_tempfile)
+    rescue
+      # retry with debugging enabled
+      execute_convert(@file, jpeg_tempfile, true)
+    end
 
     # keep the JPEG if it's at least 15% smaller
     if File.size(jpeg_tempfile.path) < filesize * 0.85
@@ -151,8 +151,21 @@ class UploadCreator
       @opts[:content_type] = "image/jpeg"
       extract_image_info!
     else
-      jpeg_tempfile.close! rescue nil
+      jpeg_tempfile&.close
     end
+  end
+
+  def execute_convert(input_file, output_file, debug = false)
+    command = ['convert', input_file.path,
+               '-auto-orient',
+               '-background', 'white',
+               '-interlace', 'none',
+               '-flatten',
+               '-quality', SiteSetting.png_to_jpg_quality.to_s]
+    command << '-debug' << 'all' if debug
+    command << output_file.path
+
+    Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
   end
 
   def should_downsize?

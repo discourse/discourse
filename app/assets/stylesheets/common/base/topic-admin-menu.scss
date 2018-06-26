@@ -4,16 +4,17 @@
   position: fixed;
   top: 120px;
   right: 10px;
-  z-index: 999;
+  z-index: z("dropdown");
   height: 35px;
 }
 
 .popup-menu {
   background-color: $secondary;
-  width: 205px;
+  width: 215px;
   padding: 10px;
-  border: 1px solid $primary-low; 
-  z-index: 999;
+  border: 1px solid $primary-low;
+  z-index: z("dropdown");
+  box-shadow: shadow("card");
 
   ul {
     list-style: none;
@@ -25,7 +26,7 @@
   }
 
   button {
-    width: 200px;
+    width: 100%;
     margin-bottom: 5px;
     i {
       width: 14px;
@@ -34,7 +35,6 @@
 }
 
 .modal-body.feature-topic {
-  overflow: visible;
   padding: 5px;
   max-height: 500px;
   input.date-picker {
@@ -62,6 +62,16 @@
     .with-validation {
       position: relative;
     }
+  }
+}
+
+.desktop-view .feature-topic-modal {
+  .feature-topic {
+    overflow: visible;
+  }
+
+  .modal-inner-container {
+    min-width: 700px;
   }
 }
 

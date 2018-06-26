@@ -1,0 +1,33 @@
+{{#conditional-loading-section isLoading=isLoading}}
+  {{#each reportsForPeriod as |report|}}
+    <div class="status">
+      <h4 class="title">
+        <a href="{{report.reportUrl}}">
+          {{report.title}}
+        </a>
+
+        <span class="info" data-tooltip="{{report.description}}">
+          {{d-icon "question-circle"}}
+        </span>
+      </h4>
+
+      <div class="trend {{report.trend}}">
+        <span class="trend-value" title="{{report.trendTitle}}">
+          {{#if report.average}}
+            {{number report.currentAverage}}{{#if report.percent}}%{{/if}}
+          {{else}}
+            {{number report.currentTotal noTitle="true"}}{{#if report.percent}}%{{/if}}
+          {{/if}}
+        </span>
+
+        {{#if report.trendIcon}}
+          {{d-icon report.trendIcon class="trend-icon"}}
+        {{/if}}
+      </div>
+    </div>
+  {{/each}}
+
+  <div class="chart-canvas-container">
+    <canvas class="chart-canvas"></canvas>
+  </div>
+{{/conditional-loading-section}}

@@ -61,7 +61,11 @@ describe Scheduler::Manager do
   before do
     expect(ActiveRecord::Base.connection_pool.connections.length).to eq(1)
     @thread_count = Thread.list.count
-    @thread_ids = Thread.list.map { |t| t.object_id }
+
+    @backtraces = {}
+    Thread.list.each do |t|
+      @backtraces[t.object_id] = t.backtrace
+    end
   end
 
   after do
@@ -81,11 +85,17 @@ describe Scheduler::Manager do
     on_thread_mismatch = lambda do
       current = Thread.list.map { |t| t.object_id }
 
-      extra = current - @thread_ids
-      missing = @thread_ids - current
+      old_threads = @backtraces.keys
+      extra = current - old_threads
+
+      missing = old_threads - current
 
       if missing.length > 0
         STDERR.puts "\nMissing Threads #{missing.length} thread/s"
+        missing.each do |id|
+          STDERR.puts @backtraces[id]
+          STDERR.puts
+        end
       end
 
       if extra.length > 0
@@ -116,6 +126,9 @@ describe Scheduler::Manager do
 
   describe 'per host jobs' do
     it "correctly schedules on multiple hosts" do
+
+      freeze_time
+
       Testing::PerHostJob.runs = 0
 
       hosts = ['a', 'b', 'c']
@@ -126,7 +139,7 @@ describe Scheduler::Manager do
         manager.ensure_schedule!(Testing::PerHostJob)
 
         info = manager.schedule_info(Testing::PerHostJob)
-        info.next_run = Time.now.to_i - 1
+        info.next_run = Time.now.to_i - 10
         info.write!
 
         manager
@@ -137,6 +150,7 @@ describe Scheduler::Manager do
         manager.stop!
 
       end
+
       expect(Testing::PerHostJob.runs).to eq(3)
     end
   end

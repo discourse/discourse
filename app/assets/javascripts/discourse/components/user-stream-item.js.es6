@@ -1,4 +1,4 @@
-import { propertyEqual } from 'discourse/lib/computed';
+import { propertyEqual } from "discourse/lib/computed";
 import { actionDescription } from "discourse/widgets/post-small-action";
 
 export default Ember.Component.extend({
@@ -10,6 +10,13 @@ export default Ember.Component.extend({
     "moderatorAction"
   ],
 
-  moderatorAction: propertyEqual("item.post_type", "site.post_types.moderator_action"),
-  actionDescription: actionDescription("item.action_code", "item.created_at", "item.username"),
+  moderatorAction: propertyEqual(
+    "item.post_type",
+    "site.post_types.moderator_action"
+  ),
+  actionDescription: actionDescription(
+    "item.action_code",
+    "item.created_at",
+    "item.action_code_who"
+  )
 });

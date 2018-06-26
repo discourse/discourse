@@ -1,13 +1,13 @@
-import { mapRoutes } from 'discourse/mapping-router';
+import { mapRoutes } from "discourse/mapping-router";
 
 moduleFor("controller:poll-ui-builder", "controller:poll-ui-builder", {
   setup() {
-    this.registry.register('router:main', mapRoutes());
-    this.subject().set('toolbarEvent', {
+    this.registry.register("router:main", mapRoutes());
+    this.subject().set("toolbarEvent", {
       getText: () => ""
     });
   },
-  needs: ['controller:modal']
+  needs: ["controller:modal"]
 });
 
 test("isMultiple", function(assert) {
@@ -91,46 +91,73 @@ test("pollMinOptions", function(assert) {
     pollOptionsCount: 1
   });
 
-  assert.deepEqual(controller.get("pollMinOptions"), [{ name: 1, value: 1 }], "it should return the right options");
+  assert.deepEqual(
+    controller.get("pollMinOptions"),
+    [{ name: 1, value: 1 }],
+    "it should return the right options"
+  );
 
   controller.set("pollOptionsCount", 2);
 
-  assert.deepEqual(controller.get("pollMinOptions"), [
-    { name: 1, value: 1 }, { name: 2, value: 2 }
-  ], "it should return the right options");
+  assert.deepEqual(
+    controller.get("pollMinOptions"),
+    [{ name: 1, value: 1 }, { name: 2, value: 2 }],
+    "it should return the right options"
+  );
 
   controller.set("isNumber", true);
   controller.siteSettings.poll_maximum_options = 2;
 
-  assert.deepEqual(controller.get("pollMinOptions"), [
-    { name: 1, value: 1 }, { name: 2, value: 2 }
-  ], "it should return the right options");
+  assert.deepEqual(
+    controller.get("pollMinOptions"),
+    [{ name: 1, value: 1 }, { name: 2, value: 2 }],
+    "it should return the right options"
+  );
 });
 
 test("pollMaxOptions", function(assert) {
   const controller = this.subject();
   controller.siteSettings = Discourse.SiteSettings;
 
-  controller.setProperties({ isMultiple: true, pollOptionsCount: 1, pollMin: 1 });
+  controller.setProperties({
+    isMultiple: true,
+    pollOptionsCount: 1,
+    pollMin: 1
+  });
 
-  assert.deepEqual(controller.get("pollMaxOptions"), [], "it should return the right options");
+  assert.deepEqual(
+    controller.get("pollMaxOptions"),
+    [],
+    "it should return the right options"
+  );
 
   controller.set("pollOptionsCount", 2);
 
-  assert.deepEqual(controller.get("pollMaxOptions"), [
-    { name: 2, value: 2 }
-  ], "it should return the right options");
+  assert.deepEqual(
+    controller.get("pollMaxOptions"),
+    [{ name: 2, value: 2 }],
+    "it should return the right options"
+  );
 
   controller.siteSettings.poll_maximum_options = 3;
-  controller.setProperties({ isMultiple: false, isNumber: true, pollStep: 2, pollMin: 1 });
+  controller.setProperties({
+    isMultiple: false,
+    isNumber: true,
+    pollStep: 2,
+    pollMin: 1
+  });
 
-  assert.deepEqual(controller.get("pollMaxOptions"), [
-    { name: 2, value: 2 },
-    { name: 3, value: 3 },
-    { name: 4, value: 4 },
-    { name: 5, value: 5 },
-    { name: 6, value: 6 }
-  ], "it should return the right options");
+  assert.deepEqual(
+    controller.get("pollMaxOptions"),
+    [
+      { name: 2, value: 2 },
+      { name: 3, value: 3 },
+      { name: 4, value: 4 },
+      { name: 5, value: 5 },
+      { name: 6, value: 6 }
+    ],
+    "it should return the right options"
+  );
 });
 
 test("pollStepOptions", function(assert) {
@@ -140,15 +167,19 @@ test("pollStepOptions", function(assert) {
 
   controller.set("isNumber", false);
 
-  assert.equal(controller.get("pollStepOptions"), null, "is should return null");
+  assert.equal(
+    controller.get("pollStepOptions"),
+    null,
+    "is should return null"
+  );
 
   controller.setProperties({ isNumber: true });
 
-  assert.deepEqual(controller.get("pollStepOptions"), [
-    { name: 1, value: 1 },
-    { name: 2, value: 2 },
-    { name: 3, value: 3 }
-  ], "it should return the right options");
+  assert.deepEqual(
+    controller.get("pollStepOptions"),
+    [{ name: 1, value: 1 }, { name: 2, value: 2 }, { name: 3, value: 3 }],
+    "it should return the right options"
+  );
 });
 
 test("disableInsert", function(assert) {
@@ -187,15 +218,35 @@ test("number pollOutput", function(assert) {
     pollMin: 1
   });
 
-  assert.equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=1]\n[/poll]", "it should return the right output");
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=number min=1 max=20 step=1]\n[/poll]",
+    "it should return the right output"
+  );
 
   controller.set("pollStep", 2);
 
-  assert.equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=2]\n[/poll]", "it should return the right output");
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=number min=1 max=20 step=2]\n[/poll]",
+    "it should return the right output"
+  );
 
   controller.set("publicPoll", true);
 
-  assert.equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=2 public=true]\n[/poll]", "it should return the right output");
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=number min=1 max=20 step=2 public=true]\n[/poll]",
+    "it should return the right output"
+  );
+
+  controller.set("pollStep", 0);
+
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=number min=1 max=20 step=1 public=true]\n[/poll]",
+    "it should return the right output"
+  );
 });
 
 test("regular pollOutput", function(assert) {
@@ -209,13 +260,20 @@ test("regular pollOutput", function(assert) {
     pollType: controller.get("regularPollType")
   });
 
-  assert.equal(controller.get("pollOutput"), "[poll type=regular]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=regular]\n* 1\n* 2\n[/poll]",
+    "it should return the right output"
+  );
 
   controller.set("publicPoll", "true");
 
-  assert.equal(controller.get("pollOutput"), "[poll type=regular public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=regular public=true]\n* 1\n* 2\n[/poll]",
+    "it should return the right output"
+  );
 });
-
 
 test("multiple pollOutput", function(assert) {
   const controller = this.subject();
@@ -229,9 +287,17 @@ test("multiple pollOutput", function(assert) {
     pollOptions: "\n\n1\n\n2"
   });
 
-  assert.equal(controller.get("pollOutput"), "[poll type=multiple min=1 max=2]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=multiple min=1 max=2]\n* 1\n* 2\n[/poll]",
+    "it should return the right output"
+  );
 
   controller.set("publicPoll", "true");
 
-  assert.equal(controller.get("pollOutput"), "[poll type=multiple min=1 max=2 public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  assert.equal(
+    controller.get("pollOutput"),
+    "[poll type=multiple min=1 max=2 public=true]\n* 1\n* 2\n[/poll]",
+    "it should return the right output"
+  );
 });

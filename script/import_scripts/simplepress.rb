@@ -22,7 +22,8 @@ class ImportScripts::SimplePress < ImportScripts::Base
   def execute
     import_users
     import_categories
-    import_topics_and_posts
+    import_topics
+    import_posts
   end
 
   def import_users
@@ -93,12 +94,10 @@ class ImportScripts::SimplePress < ImportScripts::Base
     end
   end
 
-  def import_topics_and_posts
-    puts "", "creating topics and posts"
+  def import_topics
+    puts "", "creating topics"
 
-    total_count = mysql_query("SELECT count(*) count from #{TABLE_PREFIX}posts").first["count"]
-
-    topic_first_post_id = {}
+    total_count = mysql_query("SELECT COUNT(*) count FROM #{TABLE_PREFIX}posts WHERE post_index = 1").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query("
@@ -106,14 +105,16 @@ class ImportScripts::SimplePress < ImportScripts::Base
                p.topic_id topic_id,
                t.forum_id category_id,
                t.topic_name title,
-               p.post_index post_index,
+               t.topic_opened views,
+               t.topic_pinned pinned,
                p.user_id user_id,
                p.post_content raw,
                p.post_date post_time
           FROM #{TABLE_PREFIX}posts p,
                #{TABLE_PREFIX}topics t
          WHERE p.topic_id = t.topic_id
-      ORDER BY p.post_date
+           AND p.post_index = 1
+      ORDER BY p.post_id
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
       ")
@@ -123,29 +124,68 @@ class ImportScripts::SimplePress < ImportScripts::Base
       next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
-        skip = false
-        mapped = {}
+        created_at = Time.zone.at(m['post_time'])
+        {
+          id: m['id'],
+          user_id: user_id_from_imported_user_id(m['user_id']) || -1,
+          raw: process_simplepress_post(m['raw'], m['id']),
+          created_at: created_at,
+          category: category_id_from_imported_category_id(m['category_id']),
+          title: CGI.unescapeHTML(m['title']),
+          views: m['views'],
+          pinned_at: m['pinned'] == 1 ? created_at : nil,
+        }
+      end
+    end
+  end
 
-        mapped[:id] = m['id']
-        mapped[:user_id] = user_id_from_imported_user_id(m['user_id']) || -1
-        mapped[:raw] = process_simplepress_post(m['raw'], m['id'])
-        mapped[:created_at] = Time.zone.at(m['post_time'])
+  def import_posts
+    puts "", "creating posts"
 
-        if m['post_index'] == 1
-          mapped[:category] = category_id_from_imported_category_id(m['category_id'])
-          mapped[:title] = CGI.unescapeHTML(m['title'])
-          topic_first_post_id[m['topic_id']] = m['id']
+    topic_first_post_id = {}
+
+    mysql_query("
+      SELECT t.topic_id, p.post_id
+        FROM #{TABLE_PREFIX}topics t
+        JOIN #{TABLE_PREFIX}posts p ON p.topic_id = t.topic_id
+       WHERE p.post_index = 1
+    ").each { |r| topic_first_post_id[r["topic_id"]] = r["post_id"] }
+
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}posts WHERE post_index <> 1").first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      results = mysql_query("
+        SELECT p.post_id id,
+               p.topic_id topic_id,
+               p.user_id user_id,
+               p.post_content raw,
+               p.post_date post_time
+          FROM #{TABLE_PREFIX}posts p,
+               #{TABLE_PREFIX}topics t
+         WHERE p.topic_id = t.topic_id
+           AND p.post_index <> 1
+      ORDER BY p.post_id
+         LIMIT #{BATCH_SIZE}
+        OFFSET #{offset};
+      ")
+
+      break if results.size < 1
+
+      next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
+
+      create_posts(results, total: total_count, offset: offset) do |m|
+        if parent = topic_lookup_from_imported_post_id(topic_first_post_id[m['topic_id']])
+          {
+            id: m['id'],
+            user_id: user_id_from_imported_user_id(m['user_id']) || -1,
+            topic_id: parent[:topic_id],
+            raw: process_simplepress_post(m['raw'], m['id']),
+            created_at: Time.zone.at(m['post_time']),
+          }
         else
-          parent = topic_lookup_from_imported_post_id(topic_first_post_id[m['topic_id']])
-          if parent
-            mapped[:topic_id] = parent[:topic_id]
-          else
-            puts "Parent post #{first_post_id} doesn't exist. Skipping #{m["id"]}: #{m["title"][0..40]}"
-            skip = true
-          end
+          puts "Parent post #{m['topic_id']} doesn't exist. Skipping #{m["id"]}"
+          nil
         end
-
-        skip ? nil : mapped
       end
     end
   end

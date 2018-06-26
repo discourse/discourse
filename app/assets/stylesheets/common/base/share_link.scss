@@ -3,8 +3,8 @@
 #share-link {
   position: absolute;
   left: 20px;
-  z-index: 1200;
-  box-shadow: 0 1px 5px rgba(0,0,0, .4);
+  z-index: z("dropdown");
+  box-shadow: shadow("card");
   background-color: $secondary;
   padding: 6px 10px 10px 10px;
   width: 300px;
@@ -12,7 +12,7 @@
   &.visible {
     display: block;
   }
-  input[type=text] {
+  input[type="text"] {
     width: 96%;
   }
   .share-for-touch .overflow-ellipsis {
@@ -22,7 +22,7 @@
     margin: 14px 0;
   }
   h3 {
-    font-size: 0.929em;
+    font-size: $font-0;
   }
   .copy-text {
     display: inline-block;
@@ -31,7 +31,7 @@
     color: $success;
     opacity: 1;
     transition: opacity 0.25s;
-    font-size: 13px;
+    font-size: $font-0;
     &:not(.success) {
       opacity: 0;
     }
@@ -40,12 +40,13 @@
     margin-left: 2px;
     margin-right: 8px;
     float: left;
-    font-size: 1.571em;
+    font-size: $font-up-4;
   }
   .reply-as-new-topic {
     float: left;
-    line-height: 22px;
+    line-height: $line-height-large;
     margin-left: 8px;
+    margin-top: 0.5em;
     .fa {
       margin-right: 5px;
     }
@@ -53,7 +54,7 @@
   .link {
     margin-right: 2px;
     float: right;
-    font-size: 1.429em;
+    font-size: $font-up-3;
     a {
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
@@ -70,8 +71,8 @@
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
-  input[type=text] {
-    font-size: 1.143em;
+  input[type="text"] {
+    font-size: $font-up-1;
     margin-bottom: 10px;
   }
 }
@@ -80,6 +81,6 @@
   display: none;
 }
 
-.discourse-touch #share-link input[type=text] {
+.discourse-touch #share-link input[type="text"] {
   display: none;
 }

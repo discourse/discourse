@@ -50,6 +50,7 @@ class ListController < ApplicationController
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
     TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
+    :group_topics
   ].flatten
 
   # Create our filters
@@ -63,12 +64,33 @@ class ListController < ApplicationController
         if filter == :latest
           list_opts[:no_definitions] = true
         end
-        if filter.to_s == current_homepage
+        if [:latest, :categories].include?(filter)
           list_opts[:exclude_category_ids] = get_excluded_category_ids(list_opts[:category])
         end
       end
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
+
+      if guardian.can_create_shared_draft? && @category.present?
+        if @category.id == SiteSetting.shared_drafts_category.to_i
+          # On shared drafts, show the destination category
+          list.topics.each do |t|
+            t.includes_destination_category = true
+          end
+        else
+          # When viewing a non-shared draft category, find topics whose
+          # destination are this category
+          shared_drafts = TopicQuery.new(
+            user,
+            category: SiteSetting.shared_drafts_category,
+            destination_category_id: list_opts[:category]
+          ).list_latest
+
+          if shared_drafts.present? && shared_drafts.topics.present?
+            list.shared_drafts = shared_drafts.topics
+          end
+        end
+      end
 
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -124,8 +146,20 @@ class ListController < ApplicationController
 
   def topics_by
     list_opts = build_topic_list_options
-    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
+    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) }, [:user_stat, :user_option])
     list = generate_list_for("topics_by", target_user, list_opts)
+    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
+    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    respond_with_list(list)
+  end
+
+  def group_topics
+    group = Group.find_by(name: params[:group_name])
+    raise Discourse::NotFound unless group
+    guardian.ensure_can_see_group!(group)
+
+    list_opts = build_topic_list_options
+    list = generate_list_for("group_topics", group, list_opts)
     list.more_topics_url = url_for(construct_url_with(:next, list_opts))
     list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
     respond_with_list(list)
@@ -151,6 +185,7 @@ class ListController < ApplicationController
     private_messages_archive
     private_messages_group
     private_messages_group_archive
+    private_messages_tag
   }.each do |action|
     generate_message_route(action)
   end
@@ -293,10 +328,11 @@ class ListController < ApplicationController
   def page_params(opts = nil)
     opts ||= {}
     route_params = { format: 'json' }
-    route_params[:category]        = @category.slug_for_url                 if @category
-    route_params[:parent_category] = @category.parent_category.slug_for_url if @category && @category.parent_category
-    route_params[:order]           = opts[:order]                           if opts[:order].present?
-    route_params[:ascending]       = opts[:ascending]                       if opts[:ascending].present?
+    route_params[:category]        = @category.slug_for_url                  if @category
+    route_params[:parent_category] = @category.parent_category.slug_for_url  if @category && @category.parent_category
+    route_params[:order]           = opts[:order]                            if opts[:order].present?
+    route_params[:ascending]       = opts[:ascending]                        if opts[:ascending].present?
+    route_params[:username]        = UrlHelper.escape_uri(params[:username]) if params[:username].present?
     route_params
   end
 
@@ -332,6 +368,7 @@ class ListController < ApplicationController
   def build_topic_list_options
     options = {}
     params[:page] = params[:page].to_i rescue 1
+    params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
       options[key] = params[key]
@@ -368,7 +405,7 @@ class ListController < ApplicationController
   end
 
   def get_excluded_category_ids(current_category = nil)
-    exclude_category_ids = Category.where(suppress_from_homepage: true)
+    exclude_category_ids = Category.where(suppress_from_latest: true)
     exclude_category_ids = exclude_category_ids.where.not(id: current_category) if current_category
     exclude_category_ids.pluck(:id)
   end

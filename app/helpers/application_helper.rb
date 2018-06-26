@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
 require_dependency 'guardian'
@@ -62,17 +63,24 @@ module ApplicationHelper
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
-        path.gsub!(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+        path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
       else
         path = "#{GlobalSetting.s3_cdn_url}#{path}"
       end
 
       if is_brotli_req?
-        path.gsub!(/\.([^.]+)$/, '.br.\1')
+        path = path.gsub(/\.([^.]+)$/, '.br.\1')
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
-      path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
+      path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
+    end
+
+    if Rails.env == "development"
+      if !path.include?("?")
+        # cache breaker for mobile iOS
+        path = path + "?#{Time.now.to_f}"
+      end
     end
 
 "<link rel='preload' href='#{path}' as='script'/>
@@ -216,10 +224,9 @@ module ApplicationHelper
 
     [:url, :title, :description].each do |property|
       if opts[property].present?
-        escape = (property != :image)
         content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
-        result << tag(:meta, { property: "og:#{property}", content: content }, nil, escape)
-        result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, escape)
+        result << tag(:meta, { property: "og:#{property}", content: content }, nil, true)
+        result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
     end
 
@@ -322,7 +329,7 @@ module ApplicationHelper
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
-    result = ""
+    result = +""
     erbs.each { |erb| result << render(file: erb) }
     result.html_safe
   end
@@ -347,9 +354,23 @@ module ApplicationHelper
     end
   end
 
+  def current_homepage
+    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+  end
+
   def build_plugin_html(name)
     return "" unless allow_plugins?
     DiscoursePluginRegistry.build_html(name, controller) || ""
+  end
+
+  # If there is plugin HTML return that, otherwise yield to the template
+  def replace_plugin_html(name)
+    if (html = build_plugin_html(name)).present?
+      html
+    else
+      yield
+      nil
+    end
   end
 
   def theme_lookup(name)

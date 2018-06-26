@@ -1,19 +1,19 @@
-import componentTest from 'helpers/component-test';
-moduleForComponent('categories-admin-dropdown', {integration: true});
+import componentTest from "helpers/component-test";
+moduleForComponent("categories-admin-dropdown", { integration: true });
 
-componentTest('default', {
-  template: '{{categories-admin-dropdown}}',
+componentTest("default", {
+  template: "{{categories-admin-dropdown}}",
 
   test(assert) {
-    const $selectBox = selectBox('.categories-admin-dropdown');
+    const subject = selectKit();
 
-    assert.equal($selectBox.el.find(".d-icon-bars").length, 1);
-    assert.equal($selectBox.el.find(".d-icon-caret-down").length, 1);
+    assert.equal(subject.el().find(".d-icon-bars").length, 1);
+    assert.equal(subject.el().find(".d-icon-caret-down").length, 1);
 
-    expandSelectBox('.categories-admin-dropdown');
+    subject.expand();
 
     andThen(() => {
-      assert.equal($selectBox.rowByValue("create").name(), "New Category");
+      assert.equal(subject.rowByValue("create").name(), "New Category");
     });
   }
 });

@@ -47,11 +47,11 @@ class Admin::UserFieldsController < Admin::AdminController
 
   protected
 
-    def update_options(field)
-      options = params[:user_field][:options]
-      if options.present?
-        UserFieldOption.where(user_field_id: field.id).delete_all
-        field.user_field_options_attributes = options.map { |o| { value: o } }.uniq
-      end
+  def update_options(field)
+    options = params[:user_field][:options]
+    if options.present?
+      UserFieldOption.where(user_field_id: field.id).delete_all
+      field.user_field_options_attributes = options.map { |o| { value: o } }.uniq
     end
+  end
 end

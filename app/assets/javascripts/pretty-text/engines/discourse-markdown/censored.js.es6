@@ -1,8 +1,8 @@
-import { censorFn } from 'pretty-text/censored-words';
+import { censorFn } from "pretty-text/censored-words";
 
 function recurse(tokens, apply) {
   let i;
-  for(i=0;i<tokens.length;i++) {
+  for (i = 0; i < tokens.length; i++) {
     apply(tokens[i]);
     if (tokens[i].children) {
       recurse(tokens[i].children, apply);
@@ -24,17 +24,21 @@ function censorTree(state, censor) {
 
 export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
-    opts.censoredPattern = siteSettings.censored_pattern;
+    opts.watchedWordsRegularExpressions =
+      siteSettings.watched_words_regular_expressions;
   });
 
   helper.registerPlugin(md => {
     const words = md.options.discourse.censoredWords;
-    const patterns = md.options.discourse.censoredPattern;
 
-    if ((words && words.length > 0) || (patterns && patterns.length > 0)) {
+    if (words && words.length > 0) {
       const replacement = String.fromCharCode(9632);
-      const censor = censorFn(words, patterns, replacement);
-      md.core.ruler.push('censored', state => censorTree(state, censor));
+      const censor = censorFn(
+        words,
+        replacement,
+        md.options.discourse.watchedWordsRegularExpressions
+      );
+      md.core.ruler.push("censored", state => censorTree(state, censor));
     }
   });
 }

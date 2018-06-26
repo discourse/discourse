@@ -20,7 +20,7 @@ class ComposerMessagesFinder
 
   # Determines whether to show the user education text
   def check_education_message
-    return if @topic && @topic.archetype == Archetype.private_message
+    return if @topic&.private_message?
 
     if creating_topic?
       count = @user.created_topic_count
@@ -187,26 +187,26 @@ class ComposerMessagesFinder
       templateName: 'education',
       wait_for_typing: false,
       extraClass: 'education-message',
-      body: PrettyText.cook(I18n.t('education.reviving_old_topic', days: (Time.zone.now - @topic.last_posted_at).round / 1.day))
+      body: PrettyText.cook(I18n.t('education.reviving_old_topic', time_ago: FreedomPatches::Rails4.time_ago_in_words(@topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose')))
     }
   end
 
   private
 
-    def educate_reply?(type)
-      replying? &&
-      @details[:topic_id] &&
-      (@topic.present? && !@topic.private_message?) &&
-      (@user.post_count >= SiteSetting.educate_until_posts) &&
-      !UserHistory.exists_for_user?(@user, type, topic_id: @details[:topic_id])
-    end
+  def educate_reply?(type)
+    replying? &&
+    @details[:topic_id] &&
+    (@topic.present? && !@topic.private_message?) &&
+    (@user.post_count >= SiteSetting.educate_until_posts) &&
+    !UserHistory.exists_for_user?(@user, type, topic_id: @details[:topic_id])
+  end
 
-    def creating_topic?
-      @details[:composer_action] == "createTopic"
-    end
+  def creating_topic?
+    @details[:composer_action] == "createTopic"
+  end
 
-    def replying?
-      @details[:composer_action] == "reply"
-    end
+  def replying?
+    @details[:composer_action] == "reply"
+  end
 
 end

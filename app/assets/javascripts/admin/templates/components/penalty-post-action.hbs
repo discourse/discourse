@@ -1,0 +1,16 @@
+<div class='penalty-post-controls'>
+  <label>
+    <div class='penalty-post-label'>
+      {{{i18n 'admin.user.penalty_post_actions'}}}
+    </div>
+  </label>
+  {{combo-box value=postAction content=penaltyActions onSelect=(action "penaltyChanged")}}
+</div>
+
+{{#if editing}}
+  <div class='penalty-post-edit'>
+    {{textarea
+      value=postEdit
+      class="post-editor"}}
+  </div>
+{{/if}}

@@ -1,20 +1,44 @@
+// We should try to reuse the user page HTML for groups when possible
+// To style group content differently, use the existing classes with a .group parent class.
+// For example: .group .user-navigation
+
 .group-details-container {
-  background: rgba(230, 230, 230, 0.3);
+  background: $primary-very-low;
   padding: 20px;
   margin-bottom: 15px;
+  position: relative;
+}
+
+.group-outlet {
+  position: relative;
+}
+
+.group-members-actions {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
+  input + .group-members-manage {
+    margin-left: auto;
+  }
+
+  .group-username-filter {
+    margin: 0 0 5px 0;
+    vertical-align: middle;
+  }
 }
 
 .group-info {
   width: 100%;
 
   .group-info-name {
-    font-size: 1.4em;
+    font-size: $font-up-3;
     font-weight: bold;
     color: $primary;
   }
 
   .group-info-full-name {
-    font-size: 1.2em;
+    font-size: $font-up-2;
     color: dark-light-choose($primary-high, $secondary-low);
   }
 
@@ -39,7 +63,7 @@
   }
 }
 
-.group-logs-filter {
+.group-manage-logs-filter {
   margin-right: 10px;
 
   &:hover {
@@ -47,23 +71,19 @@
   }
 }
 
-table.group-logs {
+table.group-manage-logs {
   width: 100%;
-
-  th, tr {
-    border-bottom: 1px solid $primary-low;
-  }
 
   th {
     text-align: left;
-    padding: 5px 0px;
+    padding: 5px 0;
   }
 
   td {
-    padding: 10px 0px;
+    padding: 10px 0;
   }
 
-  .group-logs-expand-details {
+  .group-manage-logs-expand-details {
     cursor: pointer;
 
     i {
@@ -76,13 +96,13 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  tr {
-    border-bottom: 1px solid $primary-low;
+  th:first-child {
+    width: 30%;
+    text-align: left;
   }
 
-  th:first-child {
-    width: 60%;
-    text-align: left;
+  th:last-child {
+    width: 5%;
   }
 
   th.group-members-actions {
@@ -90,9 +110,8 @@ table.group-members {
   }
 
   th {
-    border-bottom: 3px solid $primary-low;
     text-align: center;
-    padding: 5px 0px 5px 5px;
+    padding: 5px 0 5px 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
   }
@@ -119,7 +138,7 @@ table.group-members {
 
     td {
       text-align: center;
-      color: blend-primary-secondary(50%);
+      color: $primary-medium;
       padding: 0.8em 0;
     }
   }
@@ -129,23 +148,9 @@ table.group-members {
   color: $primary;
 }
 
-.form-horizontal {
+.form-vertical {
   .group-flair-inputs {
     display: inline-block;
-
-    input[type="text"] {
-      width: 80% !important;
-      margin-bottom: 10px;
-    }
-
-    .group-flair-left {
-      float: left;
-    }
-
-    .group-flair-right {
-      float: left;
-      margin-left: 30px;
-    }
   }
 
   .avatar-flair-preview {
@@ -158,10 +163,19 @@ table.group-members {
   }
 }
 
-.group-edit {
-  .form-horizontal {
+.group-form-save {
+  margin-right: 20px;
+}
+
+.group-add-members {
+  .group-add-members-make-owner {
     label {
-      font-weight: bold;
+      display: inline;
+      vertical-align: middle;
+    }
+
+    input[type="checkbox"] {
+      vertical-align: middle;
     }
   }
 }

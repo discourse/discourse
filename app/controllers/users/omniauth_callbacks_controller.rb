@@ -16,7 +16,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   skip_before_action :redirect_to_login_if_required
 
-  layout false
+  layout 'no_ember'
 
   def self.types
     @types ||= Enum.new(:facebook, :instagram, :twitter, :google, :yahoo, :github, :persona, :cas)
@@ -41,20 +41,27 @@ class Users::OmniauthCallbacksController < ApplicationController
     @auth_result = authenticator.after_authenticate(auth)
 
     origin = request.env['omniauth.origin']
+
     if cookies[:destination_url].present?
       origin = cookies[:destination_url]
       cookies.delete(:destination_url)
     end
 
     if origin.present?
-      parsed = URI.parse(origin) rescue nil
+      parsed = begin
+        URI.parse(origin)
+      rescue URI::InvalidURIError
+      end
+
       if parsed
         @origin = "#{parsed.path}?#{parsed.query}"
       end
     end
 
-    unless @origin.present?
+    if @origin.blank?
       @origin = Discourse.base_uri("/")
+    else
+      @auth_result.destination_url = origin
     end
 
     if @auth_result.failed?
@@ -80,7 +87,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def failure
     flash[:error] = I18n.t("login.omniauth_error")
-    render layout: 'no_ember'
+    render 'failure'
   end
 
   def self.find_authenticator(name)
@@ -111,12 +118,26 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
+    if user.totp_enabled?
+      @auth_result.omniauth_disallow_totp = true
+      @auth_result.email = user.email
+      return
+    end
+
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
-      user.update!(staged: false)
+      user.unstage
+      user.save
+
       # ensure there is an active email token
-      user.email_tokens.create(email: user.email) unless EmailToken.where(email: user.email, confirmed: true).present? || user.email_tokens.active.where(email: user.email).exists?
+      unless EmailToken.where(email: user.email, confirmed: true).exists? ||
+        user.email_tokens.active.where(email: user.email).exists?
+
+        user.email_tokens.create!(email: user.email)
+      end
+
       user.activate
+      user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)

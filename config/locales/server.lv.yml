@@ -10,6 +10,8 @@ lv:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY hh:mm"
+  date:
+    month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
   title: "Discourse"
   topics: "Tēmas"
   posts: "raksti"

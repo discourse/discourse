@@ -1,11 +1,5 @@
-{{plugin-outlet name="admin-dashboard-top"}}
-
 {{#conditional-loading-spinner condition=loading}}
   <div class="dashboard-left">
-    {{#if showVersionChecks}}
-      {{partial 'admin/templates/version-checks'}}
-    {{/if}}
-
     <div class="dashboard-stats trust-levels">
       <table class="table table-condensed table-hover">
         <thead>
@@ -37,8 +31,8 @@
         <tr>
           <td class="title">{{d-icon "shield"}} {{i18n 'admin.dashboard.moderators'}}</td>
           <td class="value">{{#link-to 'adminUsersList.show' 'moderators'}}{{moderators}}{{/link-to}}</td>
-          <td class="title">{{d-icon "ban"}} {{i18n 'admin.dashboard.blocked'}}</td>
-          <td class="value">{{#link-to 'adminUsersList.show' 'blocked'}}{{blocked}}{{/link-to}}</td>
+          <td class="title">{{d-icon "ban"}} {{i18n 'admin.dashboard.silenced'}}</td>
+          <td class="value">{{#link-to 'adminUsersList.show' 'silenced'}}{{silenced}}{{/link-to}}</td>
         </tr>
       </table>
     </div>
@@ -174,42 +168,6 @@
   </div>
 
   <div class="dashboard-right">
-    {{#if foundProblems}}
-      <div class="dashboard-stats detected-problems">
-        <div class="look-here">{{d-icon "exclamation-triangle"}}</div>
-        <div class="problem-messages">
-          {{#conditional-loading-spinner condition=loadingProblems}}
-            <p>
-              {{i18n 'admin.dashboard.problems_found'}}
-              <ul class="{{if loadingProblems 'invisible'}}">
-                {{#each problems as |problem|}}
-                  <li>{{{problem}}}</li>
-                {{/each}}
-              </ul>
-            </p>
-            <p class="actions">
-              <small>{{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}</small>
-              {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
-            </p>
-          {{/conditional-loading-spinner}}
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    {{else}}
-      {{#if thereWereProblems}}
-        <div class="dashboard-stats detected-problems">
-          <div class="look-here">&nbsp;</div>
-          <div class="problem-messages">
-            <p>
-              {{i18n 'admin.dashboard.no_problems'}}
-              {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
-            </p>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-      {{/if}}
-    {{/if}}
-
     <div class="dashboard-stats">
       <table class="table table-condensed table-hover">
         <thead>
@@ -224,7 +182,7 @@
               <td class="title">
                 <div class="referred-topic-title">
                   <div class="overflow-ellipsis">
-                    <a href="/t/{{unbound data.topic_slug}}/{{unbound data.topic_id}}">{{data.topic_title}}</a>
+                    <a href="{{unbound data.topic_url}}">{{data.topic_title}}</a>
                   </div>
                 </div>
               </td>

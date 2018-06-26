@@ -2,35 +2,17 @@
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL_NAME = "poll";
-const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status", "public"];
-
-function getHelpText(count, min, max) {
-
-  // default values
-  if (isNaN(min) || min < 1) { min = 1; }
-  if (isNaN(max) || max > count) { max = count; }
-
-  // add some help text
-  let help;
-
-  if (max > 0) {
-    if (min === max) {
-      if (min > 1) {
-        help = I18n.t("poll.multiple.help.x_options", { count: min });
-      }
-    } else if (min > 1) {
-      if (max < count) {
-        help = I18n.t("poll.multiple.help.between_min_and_max_options", { min: min, max: max });
-      } else {
-        help = I18n.t("poll.multiple.help.at_least_min_options", { count: min });
-      }
-    } else if (max <= count) {
-      help = I18n.t("poll.multiple.help.up_to_max_options", { count: max });
-    }
-  }
-
-  return help;
-}
+const WHITELISTED_ATTRIBUTES = [
+  "type",
+  "name",
+  "min",
+  "max",
+  "step",
+  "order",
+  "status",
+  "public",
+  "close"
+];
 
 function replaceToken(tokens, target, list) {
   let pos = tokens.indexOf(target);
@@ -40,45 +22,48 @@ function replaceToken(tokens, target, list) {
   list[0].map = target.map;
 
   // resequence levels
-  for(;pos<tokens.length;pos++) {
+  for (; pos < tokens.length; pos++) {
     let nesting = tokens[pos].nesting;
-    if (nesting < 0) { level--; }
+    if (nesting < 0) {
+      level--;
+    }
     tokens[pos].level = level;
-    if (nesting > 0) { level++; }
+    if (nesting > 0) {
+      level++;
+    }
   }
 }
 
 // analyzes the block to that we have poll options
 function getListItems(tokens, startToken) {
-
-  let i = tokens.length-1;
+  let i = tokens.length - 1;
   let listItems = [];
   let buffer = [];
 
-  for(;tokens[i]!==startToken;i--) {
+  for (; tokens[i] !== startToken; i--) {
     if (i === 0) {
       return;
     }
 
     let token = tokens[i];
     if (token.level === 0) {
-      if (token.tag !== 'ol' && token.tag !== 'ul') {
+      if (token.tag !== "ol" && token.tag !== "ul") {
         return;
       }
     }
 
     if (token.level === 1 && token.nesting === 1) {
-      if (token.tag === 'li') {
-        listItems.push([token, buffer.reverse().join(' ')]);
+      if (token.tag === "li") {
+        listItems.push([token, buffer.reverse().join(" ")]);
       } else {
         return;
       }
     }
 
-    if (token.level === 1 && token.nesting === 1 && token.tag === 'li') {
+    if (token.level === 1 && token.nesting === 1 && token.tag === "li") {
       buffer = [];
     } else {
-      if (token.type === 'text' || token.type === 'inline') {
+      if (token.type === "text" || token.type === "inline") {
         buffer.push(token.content);
       }
     }
@@ -88,22 +73,21 @@ function getListItems(tokens, startToken) {
 }
 
 function invalidPoll(state, tag) {
-  let token = state.push('text', '', 0);
-  token.content = '[/' + tag + ']';
+  let token = state.push("text", "", 0);
+  token.content = "[/" + tag + "]";
 }
 
 const rule = {
-  tag: 'poll',
+  tag: "poll",
 
-  before: function(state, tagInfo, raw){
-    let token = state.push('text', '', 0);
+  before: function(state, tagInfo, raw) {
+    let token = state.push("text", "", 0);
     token.content = raw;
     token.bbcode_attrs = tagInfo.attrs;
-    token.bbcode_type = 'poll_open';
+    token.bbcode_type = "poll_open";
   },
 
   after: function(state, openToken, raw) {
-
     let items = getListItems(state.tokens, openToken);
     if (!items) {
       return invalidPoll(state, raw);
@@ -114,7 +98,7 @@ const rule = {
     // default poll attributes
     const attributes = [["class", "poll"]];
 
-    if (!attrs['status']) {
+    if (!attrs["status"]) {
       attributes.push([DATA_PREFIX + "status", "open"]);
     }
 
@@ -133,50 +117,61 @@ const rule = {
     let max = parseInt(attrs["max"], 10);
     let step = parseInt(attrs["step"], 10);
 
+    // infinite loop if step < 1
+    if (step < 1) {
+      step = 1;
+    }
+
     let header = [];
 
-    let token = new state.Token('poll_open', 'div', 1);
+    let token = new state.Token("poll_open", "div", 1);
     token.block = true;
     token.attrs = attributes;
     header.push(token);
 
-    token = new state.Token('poll_open', 'div', 1);
+    token = new state.Token("poll_open", "div", 1);
     token.block = true;
     header.push(token);
 
-    token = new state.Token('poll_open', 'div', 1);
-    token.attrs = [['class', 'poll-container']];
+    token = new state.Token("poll_open", "div", 1);
+    token.attrs = [["class", "poll-container"]];
 
     header.push(token);
 
     // generate the options when the type is "number"
     if (attrs["type"] === "number") {
       // default values
-      if (isNaN(min)) { min = 1; }
-      if (isNaN(max)) { max = state.md.options.discourse.pollMaximumOptions; }
-      if (isNaN(step)) { step = 1; }
+      if (isNaN(min)) {
+        min = 1;
+      }
+      if (isNaN(max)) {
+        max = state.md.options.discourse.pollMaximumOptions;
+      }
+      if (isNaN(step)) {
+        step = 1;
+      }
 
       if (items.length > 0) {
         return invalidPoll(state, raw);
       }
 
       // dynamically generate options
-      token = new state.Token('bullet_list_open', 'ul', 1);
+      token = new state.Token("bullet_list_open", "ul", 1);
       header.push(token);
 
       for (let o = min; o <= max; o += step) {
-        token = new state.Token('list_item_open', 'li', 1);
-        items.push([token,  String(o)]);
+        token = new state.Token("list_item_open", "li", 1);
+        items.push([token, String(o)]);
         header.push(token);
 
-        token = new state.Token('text', '', 0);
+        token = new state.Token("text", "", 0);
         token.content = String(o);
         header.push(token);
 
-        token = new state.Token('list_item_close', 'li', -1);
+        token = new state.Token("list_item_close", "li", -1);
         header.push(token);
       }
-      token = new state.Token('bullet_item_close', '', -1);
+      token = new state.Token("bullet_item_close", "", -1);
       header.push(token);
     }
 
@@ -187,123 +182,71 @@ const rule = {
 
       token.attrs = token.attrs || [];
       let md5Hash = md5(JSON.stringify([text]));
-      token.attrs.push([DATA_PREFIX + 'option-id', md5Hash]);
+      token.attrs.push([DATA_PREFIX + "option-id", md5Hash]);
     }
 
     replaceToken(state.tokens, openToken, header);
 
     // we got to correct the level on the state
     // we just resequenced
-    state.level = state.tokens[state.tokens.length-1].level;
+    state.level = state.tokens[state.tokens.length - 1].level;
 
-    state.push('poll_close', 'div', -1);
+    state.push("poll_close", "div", -1);
 
-    token = state.push('poll_open', 'div', 1);
-    token.attrs = [['class', 'poll-info']];
+    token = state.push("poll_open", "div", 1);
+    token.attrs = [["class", "poll-info"]];
 
-    state.push('paragraph_open', 'p', 1);
+    state.push("paragraph_open", "p", 1);
 
-    token = state.push('span_open', 'span', 1);
+    token = state.push("span_open", "span", 1);
     token.block = false;
-    token.attrs = [['class', 'info-number']];
-    token = state.push('text', '', 0);
-    token.content = '0';
-    state.push('span_close', 'span', -1);
+    token.attrs = [["class", "info-number"]];
+    token = state.push("text", "", 0);
+    token.content = "0";
+    state.push("span_close", "span", -1);
 
-    token = state.push('span_open', 'span', 1);
+    token = state.push("span_open", "span", 1);
     token.block = false;
-    token.attrs = [['class', 'info-text']];
-    token = state.push('text', '', 0);
+    token.attrs = [["class", "info-label"]];
+    token = state.push("text", "", 0);
     token.content = I18n.t("poll.voters", { count: 0 });
-    state.push('span_close', 'span', -1);
+    state.push("span_close", "span", -1);
 
-    state.push('paragraph_close', 'p', -1);
+    state.push("paragraph_close", "p", -1);
 
-    // multiple help text
-    if (attributes[DATA_PREFIX + "type"] === "multiple") {
-      let help = getHelpText(items.length, min, max);
-      if (help) {
-        state.push('paragraph_open', 'p', 1);
-        token = state.push('html_inline', '', 0);
-        token.content = help;
-        state.push('paragraph_close', 'p', -1);
-      }
-    }
-
-    if (attributes[DATA_PREFIX + 'public'] === 'true') {
-      state.push('paragraph_open', 'p', 1);
-      token = state.push('text', '', 0);
-      token.content = I18n.t('poll.public.title');
-      state.push('paragraph_close', 'p', -1);
-    }
-
-    state.push('poll_close', 'div', -1);
-    state.push('poll_close', 'div', -1);
-
-    token = state.push('poll_open', 'div', 1);
-    token.attrs = [['class', 'poll-buttons']];
-
-    if (attributes[DATA_PREFIX + 'type'] === 'multiple') {
-      token = state.push('link_open', 'a', 1);
-      token.block = false;
-      token.attrs = [
-        ['class', 'button cast-votes'],
-        ['title', I18n.t('poll.cast-votes.title')]
-      ];
-
-      token = state.push('text', '', 0);
-      token.content = I18n.t('poll.cast-votes.label');
-
-      state.push('link_close', 'a', -1);
-    }
-
-    token = state.push('link_open', 'a', 1);
-    token.block = false;
-    token.attrs = [
-      ['class', 'button toggle-results'],
-      ['title', I18n.t('poll.show-results.title')]
-    ];
-
-    token = state.push('text', '', 0);
-    token.content = I18n.t("poll.show-results.label");
-
-    state.push('link_close', 'a', -1);
-
-    state.push('poll_close', 'div', -1);
-    state.push('poll_close', 'div', -1);
+    state.push("poll_close", "div", -1);
+    state.push("poll_close", "div", -1);
+    state.push("poll_close", "div", -1);
   }
 };
 
 function newApiInit(helper) {
   helper.registerOptions((opts, siteSettings) => {
-    const currentUser = (opts.getCurrentUser && opts.getCurrentUser(opts.userId)) || opts.currentUser;
-    const staff = currentUser && currentUser.staff;
-
-    opts.features.poll = !!siteSettings.poll_enabled || staff;
+    opts.features.poll = !!siteSettings.poll_enabled;
     opts.pollMaximumOptions = siteSettings.poll_maximum_options;
   });
 
   helper.registerPlugin(md => {
-    md.block.bbcode.ruler.push('poll', rule);
+    md.block.bbcode.ruler.push("poll", rule);
   });
 }
 
 export function setup(helper) {
   helper.whiteList([
-    'div.poll',
-    'div.poll-info',
-    'div.poll-container',
-    'div.poll-buttons',
-    'div[data-*]',
-    'span.info-number',
-    'span.info-text',
-    'a.button.cast-votes',
-    'a.button.toggle-results',
-    'li[data-*]'
+    "div.poll",
+    "div.poll-info",
+    "div.poll-container",
+    "div.poll-buttons",
+    "div[data-*]",
+    "span.info-number",
+    "span.info-text",
+    "span.info-label",
+    "a.button.cast-votes",
+    "a.button.toggle-results",
+    "li[data-*]"
   ]);
 
   newApiInit(helper);
-
 }
 
 /*!
@@ -318,7 +261,10 @@ export function setup(helper) {
  * http://www.opensource.org/licenses/bsd-license
  */
 function md5cycle(x, k) {
-  var a = x[0], b = x[1], c = x[2], d = x[3];
+  var a = x[0],
+    b = x[1],
+    c = x[2],
+    d = x[3];
 
   a = ff(a, b, c, d, k[0], 7, -680876936);
   d = ff(d, a, b, c, k[1], 12, -389564586);
@@ -400,11 +346,11 @@ function cmn(q, a, b, x, s, t) {
 }
 
 function ff(a, b, c, d, x, s, t) {
-  return cmn((b & c) | ((~b) & d), a, b, x, s, t);
+  return cmn((b & c) | (~b & d), a, b, x, s, t);
 }
 
 function gg(a, b, c, d, x, s, t) {
-  return cmn((b & d) | (c & (~d)), a, b, x, s, t);
+  return cmn((b & d) | (c & ~d), a, b, x, s, t);
 }
 
 function hh(a, b, c, d, x, s, t) {
@@ -412,7 +358,7 @@ function hh(a, b, c, d, x, s, t) {
 }
 
 function ii(a, b, c, d, x, s, t) {
-  return cmn(c ^ (b | (~d)), a, b, x, s, t);
+  return cmn(c ^ (b | ~d), a, b, x, s, t);
 }
 
 function md51(s) {
@@ -420,15 +366,17 @@ function md51(s) {
   if (/[\x80-\xFF]/.test(s)) {
     s = unescape(encodeURI(s));
   }
-  var n = s.length, state = [1732584193, -271733879, -1732584194, 271733878], i;
+  var n = s.length,
+    state = [1732584193, -271733879, -1732584194, 271733878],
+    i;
   for (i = 64; i <= s.length; i += 64) {
     md5cycle(state, md5blk(s.substring(i - 64, i)));
   }
   s = s.substring(i - 64);
   var tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   for (i = 0; i < s.length; i++)
-  tail[i >> 2] |= s.charCodeAt(i) << ((i % 4) << 3);
-  tail[i >> 2] |= 0x80 << ((i % 4) << 3);
+    tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
+  tail[i >> 2] |= 0x80 << (i % 4 << 3);
   if (i > 55) {
     md5cycle(state, tail);
     for (i = 0; i < 16; i++) tail[i] = 0;
@@ -438,35 +386,37 @@ function md51(s) {
   return state;
 }
 
-function md5blk(s) { /* I figured global was faster.   */
-  var md5blks = [], i; /* Andy King said do it this way. */
+function md5blk(s) {
+  /* I figured global was faster.   */
+  var md5blks = [],
+    i; /* Andy King said do it this way. */
   for (i = 0; i < 64; i += 4) {
-    md5blks[i >> 2] = s.charCodeAt(i) +
-                      (s.charCodeAt(i + 1) << 8) +
-                      (s.charCodeAt(i + 2) << 16) +
-                      (s.charCodeAt(i + 3) << 24);
+    md5blks[i >> 2] =
+      s.charCodeAt(i) +
+      (s.charCodeAt(i + 1) << 8) +
+      (s.charCodeAt(i + 2) << 16) +
+      (s.charCodeAt(i + 3) << 24);
   }
   return md5blks;
 }
 
-var hex_chr = '0123456789abcdef'.split('');
+var hex_chr = "0123456789abcdef".split("");
 
 function rhex(n) {
-  var s = '', j = 0;
+  var s = "",
+    j = 0;
   for (; j < 4; j++)
-  s += hex_chr[(n >> (j * 8 + 4)) & 0x0F] +
-       hex_chr[(n >> (j * 8)) & 0x0F];
+    s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
   return s;
 }
 
 function hex(x) {
-  for (var i = 0; i < x.length; i++)
-  x[i] = rhex(x[i]);
-  return x.join('');
+  for (var i = 0; i < x.length; i++) x[i] = rhex(x[i]);
+  return x.join("");
 }
 
 function add32(a, b) {
-  return (a + b) & 0xFFFFFFFF;
+  return (a + b) & 0xffffffff;
 }
 
 function md5(s) {

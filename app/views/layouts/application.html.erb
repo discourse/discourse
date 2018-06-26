@@ -5,6 +5,7 @@
     <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <meta name="discourse_theme_key" content="<%= theme_key %>">
+    <meta name="discourse_current_homepage" content="<%= current_homepage %>">
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
@@ -35,7 +36,7 @@
     <%- end %>
 
     <%- if staff? %>
-      <script src="<%= Discourse.base_uri %>/extra-locales/admin"></script>
+      <script src="<%= ExtraLocalesController.url('admin') %>"></script>
       <%= preload_script "admin" %>
     <%- end %>
 
@@ -43,8 +44,9 @@
       <%= raw theme_lookup("head_tag") %>
     <%- end %>
 
+    <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
-    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.json">
+    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.webmanifest">
 
     <%- if SiteSetting.native_app_install_banner? %>
         <meta name="apple-itunes-app" content="app-id=1173672076">
@@ -55,14 +57,11 @@
 
     <%= yield :head %>
 
-    <%= raw build_plugin_html 'server:before-head-close' %>
+    <%= build_plugin_html 'server:before-head-close' %>
   </head>
 
   <body class="<%= body_classes %>">
-    <%= render_google_tag_manager_code %>
-
-    <div class='debug-eyeline'></div>
-
+    <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
       <div id="main-outlet" class="wrap">
@@ -87,7 +86,7 @@
 
     <%- unless customization_disabled? || loading_admin? %>
       <%= theme_lookup("header") %>
-      <%= raw build_plugin_html 'server:header' %>
+      <%= build_plugin_html 'server:header' %>
     <%- end %>
 
     <section id='main'>
@@ -120,11 +119,9 @@
 
     <%= render :partial => "common/discourse_javascript" %>
 
-    <%= render_google_analytics_code %>
-
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>
     <%- end %>
-    <%= raw build_plugin_html 'server:before-body-close' %>
+    <%= build_plugin_html 'server:before-body-close' %>
   </body>
 </html>

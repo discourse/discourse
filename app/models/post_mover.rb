@@ -47,7 +47,7 @@ class PostMover
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
-    set_last_post_user_id(destination_topic)
+    update_last_post_stats
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -92,9 +92,16 @@ class PostMover
       raw: post.raw,
       topic_id: destination_topic.id,
       acting_user: user,
+      cook_method: post.cook_method,
+      via_email: post.via_email,
+      raw_email: post.raw_email,
       skip_validations: true,
+      created_at: post.created_at,
       guardian: Guardian.new(user)
     )
+
+    move_incoming_emails(post, new_post)
+    move_email_logs(post, new_post)
 
     PostAction.copy(post, new_post)
     new_post.update_column(:reply_count, @reply_count[1] || 0)
@@ -121,12 +128,30 @@ class PostMover
       update[:reply_to_user_id] = nil
     end
 
-    post.update(update)
+    post.attributes = update
+    post.save(validate: false)
+
+    move_incoming_emails(post, post)
+    move_email_logs(post, post)
 
     DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
+  end
+
+  def move_incoming_emails(old_post, new_post)
+    return if old_post.incoming_email.nil?
+
+    email = old_post.incoming_email
+    email.update_columns(topic_id: new_post.topic_id, post_id: new_post.id)
+    new_post.incoming_email = email
+  end
+
+  def move_email_logs(old_post, new_post)
+    EmailLog
+      .where(post_id: old_post.id)
+      .update_all(topic_id: new_post.topic_id, post_id: new_post.id)
   end
 
   def update_statistics
@@ -157,9 +182,13 @@ class PostMover
     move_type_str = PostMover.move_types[@move_type].to_s
 
     message = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t("move_posts.#{move_type_str}_moderator_post",
-             count: post_ids.count,
-             topic_link: "[#{destination_topic.title}](#{destination_topic.relative_url})")
+      I18n.t(
+        "move_posts.#{move_type_str}_moderator_post",
+        count: posts.length,
+        topic_link: posts.first.is_first_post? ?
+          "[#{destination_topic.title}](#{destination_topic.relative_url})" :
+          "[#{destination_topic.title}](#{posts.first.url})"
+      )
     end
 
     original_topic.add_moderator_post(
@@ -172,15 +201,24 @@ class PostMover
 
   def posts
     @posts ||= begin
-      Post.where(topic: @original_topic, id: post_ids).order(:created_at).tap do |posts|
+      Post.where(topic: @original_topic, id: post_ids)
+        .where.not(post_type: Post.types[:small_action])
+        .order(:created_at).tap do |posts|
+
         raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
       end
     end
   end
 
-  def set_last_post_user_id(topic)
-    user_id = topic.posts.last.user_id rescue nil
-    return if user_id.nil?
-    topic.update_attribute :last_post_user_id, user_id
+  def update_last_post_stats
+    post = destination_topic.posts.where.not(post_type: Post.types[:whisper]).last
+    if post && post_ids.include?(post.id)
+      attrs = {}
+      attrs[:last_posted_at] = post.created_at
+      attrs[:last_post_user_id] = post.user_id
+      attrs[:bumped_at] = post.created_at unless post.no_bump
+      attrs[:updated_at] = Time.now
+      destination_topic.update_columns(attrs)
+    end
   end
 end

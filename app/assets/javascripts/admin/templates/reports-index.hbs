@@ -1,0 +1,17 @@
+<h3>{{i18n "admin.reports.title"}}</h3>
+
+<ul class="reports-list">
+  {{#each model as |report|}}
+    <li class="report">
+      {{#link-to 'adminReports.show' report.type}}
+        <h4 class="report-title">{{report.title}}</h4>
+      {{/link-to}}
+
+      {{#if report.description}}
+        <p class="report-description">
+          {{report.description}}
+        </p>
+      {{/if}}
+    </li>
+  {{/each}}
+</ul>

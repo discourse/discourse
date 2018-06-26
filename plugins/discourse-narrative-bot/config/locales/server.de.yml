@@ -53,7 +53,7 @@ de:
         quote: "In der Mitte von Schwierigkeiten liegen die Möglichkeiten."
         author: "Albert Einstein"
       '2':
-        quote: "Sei du selbst die Veränderung, die du dir wünschst für diese Welt."
+        quote: "Freiheit ist es nicht wert zu haben, wenn sie nicht einhergeht mit der Freiheit sich irren zu dürfen."
         author: "Mahatma Gandhi"
       '3':
         quote: "Weine nicht, weil es vorbei ist. Lächle, weil es passiert ist."
@@ -154,7 +154,7 @@ de:
           - Wir glauben an [zivilisiertes Community-Verhalten](/guidelines) zu allen Zeiten.
       onebox:
         instructions: |-
-          Als nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile**, und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
+          Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile**, und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
 
           Um einen Link zu kopieren, tippe und halte auf mobilen Geräten, oder klicke rechts mit deiner Maus:
 
@@ -175,7 +175,7 @@ de:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Wenn du es magst (und wer würde das nicht), gehe voran und drücke die „Gefällt mir“-Schaltfläche :hear: unter diesem Beitrag, um mich dies wissen zu lassen.
+          Wenn du es magst (und wer würde das nicht), gehe voran und drücke die „Gefällt mir“-Schaltfläche :heart: unter diesem Beitrag, um mich dies wissen zu lassen.
 
           Kannst du **mit einem Bild antworten?** Welches Bild spielt keine Rolle! Ziehe das Bild einfach ins Fenster, drücke die Hochladen-Schaltfläche, oder kopiere und füge es ein.
         reply: |-
@@ -222,7 +222,7 @@ de:
           Das Auswählen von beliebigem Text in meinem Beitrag lässt die <kbd>**Zitat**</kbd>-Schaltfläche erscheinen. Und das Drücken von **Antworten** mit einem beliebigen ausgewählten Text wird auch funktionieren! Kannst du es nochmal versuchen?
       bookmark:
         instructions: |-
-          Wenn du gerne mehr lernen würdest, wähle <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> unten und <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen auf diese Nachricht setzen**.  Wenn du das macht, gibt es vielleicht ein :gift: in deiner Zukunft!
+          Wenn du gerne mehr darüber erfahren möchtest, wähle unten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">   aus und klicke auf <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen für diese Nachricht**.  Wenn du das machst, wird es demnächst vielleicht ein :gift: geben!
         reply: |-
           Hervorragend! Jetzt kannst du jederzeit über [den Lesezeichen-Reiter in deinem Profil](%{profile_page_url}/activity/bookmarks) zu unserer Unterhaltung zurückkehren. Gehe dazu einfach auf dein Profilbild oben rechts &#8599;.
         not_found: |-

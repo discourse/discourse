@@ -1,6 +1,6 @@
 <div class="staff-action-logs-controls">
   {{#if filtersExists}}
-  <div>
+  <div class='staff-action-logs-filters'>
     <a {{action "clearAllFilters"}} class="clear-filters filter">
       <span class="label">{{i18n 'admin.logs.staff_actions.clear_filters'}}</span>
     </a>
@@ -39,7 +39,7 @@
 </div>
 <div class="clearfix"></div>
 
-<div class='table staff-actions'>
+{{#staff-actions}}
   <div class="heading-container">
     <div class="col heading first staff_user">{{i18n 'admin.logs.staff_actions.staff_user'}}</div>
     <div class="col heading action">{{i18n 'admin.logs.action'}}</div>
@@ -86,4 +86,4 @@
       {{i18n 'search.no_results'}}
     {{/each}}
   {{/conditional-loading-spinner}}
-</div>
+{{/staff-actions}}

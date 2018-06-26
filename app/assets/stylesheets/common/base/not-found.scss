@@ -1,0 +1,50 @@
+// Page not found styles
+
+h1.page-not-found {
+  font-size: $font-up-5;
+  line-height: $line-height-medium;
+}
+
+.page-not-found {
+  margin: 0 0 40px 0;
+  &-search {
+    margin-top: 20px;
+  }
+}
+
+.page-not-found-topics {
+  display: flex;
+  @media screen and (max-width: 600px) {
+    flex-wrap: wrap;
+  }
+}
+
+.popular-topics,
+.recent-topics {
+  box-sizing: border-box;
+  width: 50%;
+  max-width: 400px;
+  margin-bottom: 40px;
+  padding-right: 20px;
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
+  h2 {
+    margin-bottom: 10px;
+  }
+}
+
+.not-found-topic {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 15px;
+  @media screen and (max-width: 600px) {
+    &:nth-of-type(n + 6) {
+      display: none;
+    }
+  }
+  a:not(.badge-wrapper) {
+    flex-basis: 100%;
+  }
+}

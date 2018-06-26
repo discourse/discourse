@@ -1,5 +1,5 @@
 <div class="show-current-style">
-  <h2>
+  <h1>
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
       {{d-button action="finishedEditingName" class="btn-primary btn-small submit-edit" icon="check"}}
@@ -7,7 +7,7 @@
     {{else}}
       {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
     {{/if}}
-  </h2>
+  </h1>
 
   {{#if model.remote_theme}}
   <p>
@@ -50,16 +50,16 @@
 
   <h3>{{i18n "admin.customize.theme.css_html"}}</h3>
   {{#if hasEditedFields}}
-  <p>{{i18n "admin.customize.theme.custom_sections"}}</p>
-  <ul>
-  {{#each editedDescriptions as |desc|}}
-  <li>{{desc}}</li>
-  {{/each}}
-  </ul>
+    <p>{{i18n "admin.customize.theme.custom_sections"}}</p>
+    <ul>
+      {{#each editedDescriptions as |desc|}}
+        <li>{{desc}}</li>
+      {{/each}}
+    </ul>
   {{else}}
-  <p>
-  {{i18n "admin.customize.theme.edit_css_html_help"}}
-  </p>
+    <p>
+      {{i18n "admin.customize.theme.edit_css_html_help"}}
+    </p>
   {{/if}}
   <p>
     {{#if model.remote_theme}}
@@ -71,17 +71,17 @@
     {{/if}}
     {{#d-button action="editTheme" class="btn edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
     {{#if model.remote_theme}}
-    <span class='status-message'>
-      {{#if updatingRemote}}
-      {{i18n 'admin.customize.theme.updating'}}
-      {{else}}
-        {{#if model.remote_theme.commits_behind}}
-          {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
+      <span class='status-message'>
+        {{#if updatingRemote}}
+          {{i18n 'admin.customize.theme.updating'}}
         {{else}}
-          {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
+          {{#if model.remote_theme.commits_behind}}
+            {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
+          {{else}}
+            {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
+          {{/if}}
         {{/if}}
-      {{/if}}
-    </span>
+      </span>
     {{/if}}
   </p>
 
@@ -104,6 +104,15 @@
   <p>
     {{#d-button action="addUploadModal" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
   </p>
+
+  {{#if hasSettings}}
+  <h3>{{i18n "admin.customize.theme.theme_settings"}}</h3>
+  {{#d-section class="form-horizontal theme settings"}}
+    {{#each settings as |setting|}}
+      {{theme-setting setting=setting model=model class="theme-setting"}}
+    {{/each}}
+  {{/d-section}}
+  {{/if}}
 
   {{#if availableChildThemes}}
     <h3>{{i18n "admin.customize.theme.theme_components"}}</h3>

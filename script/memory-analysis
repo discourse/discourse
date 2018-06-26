@@ -1,0 +1,168 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'pathname'
+require 'tmpdir'
+require 'json'
+require 'set'
+
+def usage
+  STDERR.puts "Usage: memory-analysis [PID|DUMPFILE]"
+  exit 1
+end
+
+if ARGV.length != 1
+  usage
+end
+
+dumpfile = ARGV[0]
+
+if !File.exist?(dumpfile)
+  pid = dumpfile.to_i
+  usage if pid == 0
+
+  time = Time.now.utc
+  utc = time.strftime("%Y-%m-%d-%H-%M-%S")
+  dumpfile = "#{Pathname.new(Dir.tmpdir).realpath}/#{pid}_#{utc}.dump"
+
+  puts "Dumping heap for pid #{pid} to #{dumpfile}"
+  puts
+
+  `rbtrace -p #{pid} -e 'Thread.new{GC.start;require "objspace";io=File.open("#{dumpfile}", "w"); ObjectSpace.dump_all(output: io); io.close}'`
+
+  old_size = 0
+
+  found = false
+  20.times do
+    sleep 0.2
+    found = File.exist?(dumpfile)
+    break if found
+  end
+
+  if !found
+    STDERR.puts "Unable to find dumpfile #{dumpfile}, is rbtrace running properly, did you pick the right pid?"
+    usage
+  end
+
+  while true
+    sleep 0.5
+    size = File.size(dumpfile)
+    if size == old_size && size > 0
+      break
+    end
+    old_size = size
+  end
+end
+
+puts "Processing heap dump"
+
+class Stats
+
+  def initialize
+    @classes = {}
+    @class_stats = {}
+    @type_stats = {}
+    @threads = Set.new
+    @thread_owners = {}
+  end
+
+  def print
+    puts "Stats by Type"
+    puts "-" * 20
+    puts
+
+    @type_stats.sort_by { |_, (_, size)| -size }.each do |k, (count, size)|
+      puts "#{k} Count: #{count} Size: #{size}"
+    end
+    puts
+
+    puts "Stats by Class"
+    puts "-" * 20
+    @class_stats.sort_by { |_, (_, size)| -size }.each do |k, (count, size)|
+      puts "#{@classes[k] || k} Count: #{count} Size: #{size}"
+    end
+
+    puts "Thread Stats"
+    puts "-" * 20
+    @thread_owners.sort_by { |_ , count| -count }.each do |name, count|
+      puts "#{count} refs from #{name}"
+    end
+  end
+
+  def thread_class
+    @thread_class ||=
+      begin
+        @classes.find do |addr, n|
+          n == "Thread"
+        end.first
+      end
+  end
+
+  def detect_threads(line)
+    parsed = JSON.parse(line)
+
+    if parsed["class"] == thread_class
+      @threads << parsed["address"]
+    end
+  end
+
+  def detect_thread_owners(line)
+    parsed = JSON.parse(line)
+
+    if refs = parsed["references"]
+      i = 0
+      while i < refs.length
+        if @threads.include?(refs[i])
+          klass = @classes[parsed["class"]] || "#{parsed["type"]} #{parsed["address"]}"
+          @thread_owners[klass] ||= 0
+          @thread_owners[klass] += 1
+        end
+        i += 1
+      end
+    end
+  end
+
+  def injest(line)
+    parsed = JSON.parse(line)
+    if parsed["type"] == "CLASS"
+      @classes[parsed["address"]] = parsed["name"]
+    end
+
+    type_stat = @type_stats[parsed["type"]] ||= [0, 0]
+
+    if klass = parsed["class"]
+      class_stat = @class_stats[parsed["class"]] ||= [0, 0]
+      class_stat[0] += 1
+      class_stat[1] += parsed["memsize"] || 0
+    end
+
+    type_stat[0] += 1
+    type_stat[1] += parsed["memsize"] || 0
+  end
+end
+
+def process_dumpfile(dumpfile)
+  stats = Stats.new
+
+  File.open(dumpfile).each_line do |line|
+    stats.injest(line)
+  end
+
+  puts "pass 1 done"
+
+  File.open(dumpfile).each_line do |line|
+    stats.detect_threads(line)
+  end
+
+  puts "pass 2 done"
+
+  File.open(dumpfile).each_line do |line|
+    stats.detect_thread_owners(line)
+  end
+
+  stats
+end
+
+stats = process_dumpfile(dumpfile)
+
+stats.print

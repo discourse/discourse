@@ -14,7 +14,6 @@
 //= require bootstrap-dropdown.js
 //= require bootstrap-modal.js
 //= require bootstrap-transition.js
-//= require select2.js
 //= require div_resizer
 //= require caret_position
 //= require favcount.js
@@ -37,3 +36,4 @@
 //= require virtual-dom
 //= require virtual-dom-amd
 //= require highlight.js
+//= require htmlparser.js

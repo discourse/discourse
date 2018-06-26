@@ -39,6 +39,13 @@ module I18n
         if @loaded_locales.empty?
           # load all rb files
           I18n.backend.load_translations(I18n.load_path.grep(/\.rb$/))
+
+          # load plural rules from plugins
+          DiscoursePluginRegistry.locales.each do |locale, options|
+            if options[:plural]
+              I18n.backend.store_translations(locale, i18n: { plural: options[:plural] })
+            end
+          end
         end
 
         # load it

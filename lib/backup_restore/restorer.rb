@@ -8,6 +8,22 @@ module BackupRestore
   class Restorer
     attr_reader :success
 
+    def self.pg_produces_portable_dump?(version)
+      version = Gem::Version.new(version)
+
+      %w{
+        10.3
+        9.6.8
+        9.5.12
+        9.4.17
+        9.3.22
+      }.each do |unportable_version|
+        return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", version)
+      end
+
+      true
+    end
+
     def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
@@ -39,23 +55,41 @@ module BackupRestore
       validate_metadata
 
       extract_dump
-      restore_dump
 
-      ### READ-ONLY / START ###
-      enable_readonly_mode
+      if !can_restore_into_different_schema?
+        log "Cannot restore into different schema, restoring in-place"
+        enable_readonly_mode
 
-      pause_sidekiq
-      wait_for_sidekiq
+        pause_sidekiq
+        wait_for_sidekiq
 
-      switch_schema!
+        BackupRestore.move_tables_between_schemas("public", "backup")
+        @db_was_changed = true
+        restore_dump
+        migrate_database
+        reconnect_database
 
-      migrate_database
-      reconnect_database
-      reload_site_settings
-      clear_emoji_cache
+        reload_site_settings
+        clear_emoji_cache
 
-      disable_readonly_mode
-      ### READ-ONLY / END ###
+        disable_readonly_mode
+      else
+        log "Restoring into 'backup' schema"
+        restore_dump
+        enable_readonly_mode
+
+        pause_sidekiq
+        wait_for_sidekiq
+
+        switch_schema!
+
+        migrate_database
+        reconnect_database
+        reload_site_settings
+        clear_emoji_cache
+
+        disable_readonly_mode
+      end
 
       extract_uploads
     rescue SystemExit
@@ -178,10 +212,9 @@ module BackupRestore
     end
 
     def extract_metadata
-      log "Extracting metadata file..."
-
       @metadata =
         if system('tar', '--list', '--file', @tar_filename, BackupRestore::METADATA_FILE)
+          log "Extracting metadata file..."
           FileUtils.cd(@tmp_directory) do
             Discourse::Utils.execute_command(
               'tar', '--extract', '--file', @tar_filename, BackupRestore::METADATA_FILE,
@@ -193,6 +226,7 @@ module BackupRestore
           raise "Failed to load metadata file." if !data
           data
         else
+          log "No metadata file to extract."
           if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
             { "version" => Regexp.last_match[1].to_i }
           else
@@ -236,6 +270,20 @@ module BackupRestore
           failure_message: "Failed to extract dump file."
         )
       end
+    end
+
+    def get_dumped_by_version
+      output = Discourse::Utils.execute_command(
+        File.extname(@dump_filename) == '.gz' ? 'zgrep' : 'grep',
+        '-m1', @dump_filename, '-e', "-- Dumped by pg_dump version",
+        failure_message: "Failed to check version of pg_dump used to generate the dump file"
+      )
+
+      output.match(/version (\d+(\.\d+)+)/)[1]
+    end
+
+    def can_restore_into_different_schema?
+      self.class.pg_produces_portable_dump?(get_dumped_by_version)
     end
 
     def restore_dump_command
@@ -282,7 +330,7 @@ module BackupRestore
     def psql_command
       db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
+      password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
       host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
       port_argument     = "--port=#{db_conf.port}"         if db_conf.port.present?
       username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
@@ -331,14 +379,14 @@ module BackupRestore
 
       @db_was_changed = true
 
-      User.exec_sql(sql)
+      DB.exec(sql)
     end
 
     def migrate_database
       log "Migrating the database..."
       Discourse::Application.load_tasks
       ENV["VERSION"] = @current_version.to_s
-      User.exec_sql("SET search_path = public, pg_catalog;")
+      DB.exec("SET search_path = public, pg_catalog;")
       Rake::Task["db:migrate"].invoke
     end
 
@@ -453,8 +501,8 @@ module BackupRestore
 
     def log(message)
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-      puts(message) rescue nil
-      publish_log(message, timestamp) rescue nil
+      puts(message)
+      publish_log(message, timestamp)
       save_log(message, timestamp)
     end
 

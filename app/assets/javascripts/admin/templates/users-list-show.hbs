@@ -53,17 +53,20 @@
                 {{avatar user imageSize="small"}}
               </a>
             </td>
-            <td>
+            <td class="username">
               {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}
+              {{#if user.staged}}
+                {{d-icon "envelope-o" title="user.staged" }}
+              {{/if}}
             </td>
             <td class='email'>
               {{unbound user.email}}
             </td>
             <td>
-              {{{unbound user.last_emailed_age}}}
+              {{{format-duration user.last_emailed_age}}}
             </td>
             <td>
-              {{{unbound user.last_seen_age}}}
+              {{{format-duration user.last_seen_age}}}
             </td>
             <td>
               {{number user.topics_entered}}
@@ -72,11 +75,11 @@
               {{number user.posts_read_count}}
             </td>
             <td>
-              {{{unbound user.time_read}}}
+              {{{format-duration user.time_read}}}
             </td>
 
             <td>
-              {{{unbound user.created_at_age}}}
+              {{{format-duration user.created_at_age}}}
             </td>
 
             {{#if showApproval}}
@@ -94,6 +97,10 @@
               {{/if}}
               {{#if user.moderator}}
                 {{d-icon "shield" title="admin.moderator" }}
+              {{/if}}
+
+              {{#if user.second_factor_enabled}}
+                {{d-icon "lock" title="admin.user.second_factor_enabled" }}
               {{/if}}
             </td>
           </tr>

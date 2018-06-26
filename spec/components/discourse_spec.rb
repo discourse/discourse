@@ -15,6 +15,18 @@ describe Discourse do
 
   end
 
+  context 'running_in_rack' do
+    after do
+      ENV.delete("DISCOURSE_RUNNING_IN_RACK")
+    end
+
+    it 'should not be running in rack' do
+      expect(Discourse.running_in_rack?).to eq(false)
+      ENV["DISCOURSE_RUNNING_IN_RACK"] = "1"
+      expect(Discourse.running_in_rack?).to eq(true)
+    end
+  end
+
   context 'base_url' do
     context 'when https is off' do
       before do
@@ -165,6 +177,7 @@ describe Discourse do
       it "returns true when user enabled readonly mode key is present in redis" do
         Discourse.enable_readonly_mode(user_readonly_mode_key)
         expect(Discourse.readonly_mode?).to eq(true)
+        expect(Discourse.readonly_mode?(readonly_mode_key)).to eq(false)
 
         Discourse.disable_readonly_mode(user_readonly_mode_key)
         expect(Discourse.readonly_mode?).to eq(false)
@@ -210,6 +223,43 @@ describe Discourse do
       Discourse.handle_job_exception(exception, { message: "Doing a test", post_id: 31 }, nil)
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys.sort).to eq([:current_db, :current_hostname, :message, :post_id].sort)
+    end
+  end
+
+  context '#deprecate' do
+
+    class FakeLogger
+      attr_reader :warnings
+      def warn(m)
+        @warnings ||= []
+        @warnings << m
+      end
+    end
+
+    def old_method(m)
+      Discourse.deprecate(m)
+    end
+
+    def old_method_caller(m)
+      old_method(m)
+    end
+
+    before do
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after do
+      Rails.logger = @orig_logger
+    end
+
+    it 'can deprecate usage' do
+      k = SecureRandom.hex
+      expect(old_method_caller(k)).to include("old_method_caller")
+      expect(old_method_caller(k)).to include("discourse_spec")
+      expect(old_method_caller(k)).to include(k)
+
+      expect(@fake_logger.warnings).to eq([old_method_caller(k)])
     end
   end
 

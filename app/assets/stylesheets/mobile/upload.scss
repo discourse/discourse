@@ -1,13 +1,34 @@
 .upload-selector {
-  input[type="text"]{
-    width: 520px;
+  input[type="text"] {
+    width: calc(100% - 20px);
   }
   input[type="file"] {
-    font-size: 1em;
-    line-height: 18px;
+    font-size: $font-0;
+    line-height: $line-height-medium;
   }
   .description {
     color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  .radios {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    &:first-of-type {
+      margin-bottom: 1em;
+    }
+    input,
+    label {
+      min-height: 20px;
+      line-height: $line-height-medium;
+      margin: 0;
+    }
+    .radio {
+      padding-left: 5px;
+    }
+    .inputs {
+      margin-top: 10px;
+      width: 100%;
+    }
   }
 }
 

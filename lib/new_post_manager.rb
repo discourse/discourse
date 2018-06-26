@@ -44,14 +44,14 @@ class NewPostManager
 
     is_first_post?(manager) &&
     args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time &&
-    SiteSetting.auto_block_fast_typers_on_first_post &&
-    manager.user.trust_level <= SiteSetting.auto_block_fast_typers_max_trust_level
+    SiteSetting.auto_silence_fast_typers_on_first_post &&
+    manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
   end
 
-  def self.matches_auto_block_regex?(manager)
+  def self.matches_auto_silence_regex?(manager)
     args = manager.args
 
-    pattern = SiteSetting.auto_block_first_post_regex
+    pattern = SiteSetting.auto_silence_first_post_regex
 
     return false unless pattern.present?
     return false unless is_first_post?(manager)
@@ -59,7 +59,7 @@ class NewPostManager
     begin
       regex = Regexp.new(pattern, Regexp::IGNORECASE)
     rescue => e
-      Rails.logger.warn "Invalid regex in auto_block_first_post_regex #{e}"
+      Rails.logger.warn "Invalid regex in auto_silence_first_post_regex #{e}"
       return false
     end
 
@@ -68,7 +68,7 @@ class NewPostManager
   end
 
   def self.exempt_user?(user)
-    user.staff? || user.staged
+    user.staff?
   end
 
   def self.post_needs_approval?(manager)
@@ -80,8 +80,9 @@ class NewPostManager
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
     (manager.args[:title].present? && user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i) ||
     is_fast_typer?(manager) ||
-    matches_auto_block_regex?(manager) ||
-    WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
+    matches_auto_silence_regex?(manager) ||
+    WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval? ||
+    (SiteSetting.approve_unless_staged && user.staged)
   end
 
   def self.default_handler(manager)
@@ -110,9 +111,9 @@ class NewPostManager
       result = manager.enqueue('default')
 
       if is_fast_typer?(manager)
-        UserBlocker.block(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
-      elsif matches_auto_block_regex?(manager)
-        UserBlocker.block(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_block_regex"))
+        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
+      elsif matches_auto_silence_regex?(manager)
+        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_silence_regex"))
       end
 
       result
@@ -123,6 +124,7 @@ class NewPostManager
     SiteSetting.approve_post_count > 0 ||
     SiteSetting.approve_unless_trust_level.to_i > 0 ||
     SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
+    SiteSetting.approve_unless_staged ||
     WordWatcher.words_for_action_exists?(:require_approval) ||
     handlers.size > 1
   end
@@ -133,9 +135,9 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
+    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
       result = NewPostResult.new(:created_post, false)
-      result.errors[:base] << I18n.t('contains_blocked_words')
+      result.errors[:base] << I18n.t('contains_blocked_words', word: matches[0])
       return result
     end
 

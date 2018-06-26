@@ -16,17 +16,6 @@ RSpec.describe Jobs::PublishTopicToCategory do
     topic
   end
 
-  before do
-    SiteSetting.queue_jobs = true
-  end
-
-  describe 'when topic_timer_id is invalid' do
-    it 'should raise the right error' do
-      expect { described_class.new.execute(topic_timer_id: -1) }
-        .to raise_error(Discourse::InvalidParameters)
-    end
-  end
-
   describe 'when topic has been deleted' do
     it 'should not publish the topic to the new category' do
       freeze_time 1.hour.ago

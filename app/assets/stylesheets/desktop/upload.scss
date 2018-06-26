@@ -4,19 +4,26 @@
     padding-left: 10px;
   }
   .radios {
-    height: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: flex-start;
+    label {
+      flex: 1 0 auto;
+      margin-right: 1em;
+      margin-top: 1px;
+    }
     .inputs {
-      float: right;
-      width: 75%;
+      width: 100%;
       input {
         width: 90%;
         margin: 0 0 5px 0;
       }
       input[type="file"] {
-        font-size: 1em;
-        line-height: 18px;
+        font-size: $font-0;
+        line-height: $line-height-medium;
       }
-      .description, .hint {
+      .description,
+      .hint {
         color: dark-light-choose($primary-medium, $secondary-medium);
         display: block;
       }
@@ -26,8 +33,9 @@
       }
     }
   }
-  .radios:last-child {
-    height: 20px;
+  .radios:last-child:not(:nth-child(2)) {
+    // last child for composer modal, but not theme import modal
+    min-height: 20px;
   }
 }
 
@@ -38,6 +46,6 @@
 .image-upload-controls {
   padding: 10px;
   label.btn {
-    padding: 6px 10px;
+    padding: 5px 10px;
   }
 }

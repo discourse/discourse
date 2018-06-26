@@ -3,9 +3,9 @@
 
   @module $.fn.autocomplete
 **/
-import { iconHTML } from 'discourse-common/lib/icon-library';
+import { iconHTML } from "discourse-common/lib/icon-library";
 export const CANCELLED_STATUS = "__CANCELLED";
-import { setCaretPosition, caretPosition } from 'discourse/lib/utilities';
+import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
 
 const allowedLettersRegex = /[\s\t\[\{\(\/]/;
 
@@ -32,9 +32,8 @@ const keys = {
   deleteKey: 46,
   zero: 48,
   a: 65,
-  z: 90,
+  z: 90
 };
-
 
 let inputTimeout;
 
@@ -43,18 +42,18 @@ export default function(options) {
 
   if (this.length === 0) return;
 
-  if (options === 'destroy' || options.updateData) {
+  if (options === "destroy" || options.updateData) {
     Ember.run.cancel(inputTimeout);
 
-    $(this).off('keyup.autocomplete')
-           .off('keydown.autocomplete')
-           .off('paste.autocomplete')
-           .off('click.autocomplete');
+    $(this)
+      .off("keyup.autocomplete")
+      .off("keydown.autocomplete")
+      .off("paste.autocomplete")
+      .off("click.autocomplete");
 
-    $(window).off('click.autocomplete');
+    $(window).off("click.autocomplete");
 
-    if (options === 'destroy')
-      return;
+    if (options === "destroy") return;
   }
 
   if (options && options.cancel && this.data("closeAutocomplete")) {
@@ -64,9 +63,11 @@ export default function(options) {
 
   if (this.length !== 1) {
     if (window.console) {
-      window.console.log("WARNING: passed multiple elements to $.autocomplete, skipping.");
+      window.console.log(
+        "WARNING: passed multiple elements to $.autocomplete, skipping."
+      );
       if (window.Error) {
-        window.console.log((new window.Error()).stack);
+        window.console.log(new window.Error().stack);
       }
     }
     return this;
@@ -98,17 +99,27 @@ export default function(options) {
 
   function addInputSelectedItem(item) {
     var transformed,
-        transformedItem = item;
+      transformedItem = item;
 
-    if (options.transformComplete) { transformedItem = options.transformComplete(transformedItem); }
+    if (options.transformComplete) {
+      transformedItem = options.transformComplete(transformedItem);
+    }
     // dump what we have in single mode, just in case
-    if (options.single) { inputSelectedItems = []; }
-    transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
+    if (options.single) {
+      inputSelectedItems = [];
+    }
+    transformed = _.isArray(transformedItem)
+      ? transformedItem
+      : [transformedItem || item];
 
     const divs = transformed.map(itm => {
-      let d = $(`<div class='item'><span>${itm}<a class='remove' href>${iconHTML('times')}</a></span></div>`);
+      let d = $(
+        `<div class='item'><span>${itm}<a class='remove' href>${iconHTML(
+          "times"
+        )}</a></span></div>`
+      );
       const $parent = me.parent();
-      const prev = $parent.find('.item:last');
+      const prev = $parent.find(".item:last");
 
       if (prev.length === 0) {
         me.parent().prepend(d);
@@ -120,27 +131,37 @@ export default function(options) {
       return d[0];
     });
 
-    if (options.onChangeItems) { options.onChangeItems(inputSelectedItems); }
+    if (options.onChangeItems) {
+      options.onChangeItems(inputSelectedItems);
+    }
 
-    $(divs).find('a').click(function() {
-      closeAutocomplete();
-      inputSelectedItems.splice($.inArray(transformedItem, inputSelectedItems), 1);
-      $(this).parent().parent().remove();
-      if (options.single) {
-        me.show();
-      }
-      if (options.onChangeItems) {
-        options.onChangeItems(inputSelectedItems);
-      }
-      return false;
-    });
-  };
+    $(divs)
+      .find("a")
+      .click(function() {
+        closeAutocomplete();
+        inputSelectedItems.splice(
+          $.inArray(transformedItem, inputSelectedItems),
+          1
+        );
+        $(this)
+          .parent()
+          .parent()
+          .remove();
+        if (options.single) {
+          me.show();
+        }
+        if (options.onChangeItems) {
+          options.onChangeItems(inputSelectedItems);
+        }
+        return false;
+      });
+  }
 
   var completeTerm = function(term) {
     if (term) {
       if (isInput) {
         me.val("");
-        if(options.single){
+        if (options.single) {
           me.hide();
         }
         addInputSelectedItem(term);
@@ -151,7 +172,12 @@ export default function(options) {
 
         if (term) {
           var text = me.val();
-          text = text.substring(0, completeStart) + (options.key || "") + term + ' ' + text.substring(completeEnd + 1, text.length);
+          text =
+            text.substring(0, completeStart) +
+            (options.key || "") +
+            term +
+            " " +
+            text.substring(completeEnd + 1, text.length);
           me.val(text);
           setCaretPosition(me[0], completeStart + 1 + term.length);
 
@@ -169,14 +195,16 @@ export default function(options) {
 
     if (options.updateData) {
       wrap = this.parent();
-      wrap.find('.item').remove();
+      wrap.find(".item").remove();
       me.show();
     } else {
-      wrap = this.wrap("<div class='ac-wrap clearfix" + (disabled ? " disabled" : "") + "'/>").parent();
+      wrap = this.wrap(
+        "<div class='ac-wrap clearfix" + (disabled ? " disabled" : "") + "'/>"
+      ).parent();
       wrap.width(width);
     }
 
-    if(options.single && !options.width) {
+    if (options.single && !options.width) {
       this.css("width", "100%");
     } else if (options.width) {
       this.css("width", options.width);
@@ -184,24 +212,27 @@ export default function(options) {
       this.width(150);
     }
 
-    this.attr('name', (options.updateData) ? this.attr('name') : this.attr('name') + "-renamed");
+    this.attr(
+      "name",
+      options.updateData ? this.attr("name") : this.attr("name") + "-renamed"
+    );
 
     var vals = this.val().split(",");
-    _.each(vals,function(x) {
+    _.each(vals, function(x) {
       if (x !== "") {
         if (options.reverseTransform) {
           x = options.reverseTransform(x);
         }
-        if(options.single){
+        if (options.single) {
           me.hide();
         }
         addInputSelectedItem(x);
       }
     });
 
-    if(options.items) {
-      _.each(options.items, function(item){
-        if(options.single){
+    if (options.items) {
+      _.each(options.items, function(item) {
+        if (options.single) {
           me.hide();
         }
         addInputSelectedItem(item);
@@ -217,10 +248,10 @@ export default function(options) {
   }
 
   function markSelected() {
-    const links = div.find('li a');
-    links.removeClass('selected');
-    return $(links[selectedOption]).addClass('selected');
-  };
+    const links = div.find("li a");
+    links.removeClass("selected");
+    return $(links[selectedOption]).addClass("selected");
+  }
 
   function renderAutocomplete() {
     if (div) {
@@ -230,11 +261,11 @@ export default function(options) {
 
     div = $(options.template({ options: autocompleteOptions }));
 
-    var ul = div.find('ul');
+    var ul = div.find("ul");
     selectedOption = 0;
     markSelected();
-    ul.find('li').click(function() {
-      selectedOption = ul.find('li').index(this);
+    ul.find("li").click(function() {
+      selectedOption = ul.find("li").index(this);
       completeTerm(autocompleteOptions[selectedOption]);
       return false;
     });
@@ -271,26 +302,33 @@ export default function(options) {
     if (!isInput && !options.treatAsTextarea) {
       vOffset = div.height();
 
-      if ((window.innerHeight - me.outerHeight() - $("header.d-header").innerHeight()) < vOffset) {
+      if (
+        window.innerHeight -
+          me.outerHeight() -
+          $("header.d-header").innerHeight() <
+        vOffset
+      ) {
         vOffset = -23;
       }
 
-      if (Discourse.Site.currentProp('mobileView')) {
-        div.css('width', 'auto');
-
-        if ((me.height() / 2) >= pos.top) { vOffset = -23; }
-        if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
+      if (Discourse.Site.currentProp("mobileView")) {
+        if (me.height() / 2 >= pos.top) {
+          vOffset = -23;
+        }
+        if (me.width() / 2 <= pos.left) {
+          hOffset = -div.width();
+        }
       }
     }
 
     var mePos = me.position();
-    var borderTop = parseInt(me.css('border-top-width'), 10) || 0;
+    var borderTop = parseInt(me.css("border-top-width"), 10) || 0;
     div.css({
-      position: 'absolute',
-      top: (mePos.top + pos.top - vOffset + borderTop) + 'px',
-      left: (mePos.left + pos.left + hOffset) + 'px'
+      position: "absolute",
+      top: mePos.top + pos.top - vOffset + borderTop + "px",
+      left: mePos.left + pos.left + hOffset + "px"
     });
-  };
+  }
 
   const SKIP = "skip";
 
@@ -306,13 +344,12 @@ export default function(options) {
     } else {
       return opts.dataSource(term);
     }
-  };
+  }
 
   function updateAutoComplete(r) {
-
     if (completeStart === null || r === SKIP) return;
 
-    if (r && r.then && typeof(r.then) === "function") {
+    if (r && r.then && typeof r.then === "function") {
       if (div) {
         div.hide().remove();
       }
@@ -332,7 +369,7 @@ export default function(options) {
     } else {
       renderAutocomplete();
     }
-  };
+  }
 
   // chain to allow multiples
   const oldClose = me.data("closeAutocomplete");
@@ -343,24 +380,24 @@ export default function(options) {
     closeAutocomplete();
   });
 
-  $(window).on('click.autocomplete', () => closeAutocomplete());
-  $(this).on('click.autocomplete', () => closeAutocomplete());
+  $(window).on("click.autocomplete", () => closeAutocomplete());
+  $(this).on("click.autocomplete", () => closeAutocomplete());
 
-  $(this).on('paste.autocomplete', function() {
-    _.delay(function(){
+  $(this).on("paste.autocomplete", function() {
+    _.delay(function() {
       me.trigger("keydown");
     }, 50);
   });
 
   function checkTriggerRule(opts) {
     return options.triggerRule ? options.triggerRule(me[0], opts) : true;
-  };
+  }
 
-  $(this).on('keyup.autocomplete', function(e) {
+  $(this).on("keyup.autocomplete", function(e) {
     if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
 
     let cp = caretPosition(me[0]);
-    const key = me[0].value[cp-1];
+    const key = me[0].value[cp - 1];
 
     if (options.key) {
       if (options.onKeyUp && key !== options.key) {
@@ -376,9 +413,12 @@ export default function(options) {
 
     if (completeStart === null && cp > 0) {
       if (key === options.key) {
-        var prevChar = me.val().charAt(cp-2);
-        if (checkTriggerRule() && (!prevChar || allowedLettersRegex.test(prevChar))) {
-          completeStart = completeEnd = cp-1;
+        var prevChar = me.val().charAt(cp - 2);
+        if (
+          checkTriggerRule() &&
+          (!prevChar || allowedLettersRegex.test(prevChar))
+        ) {
+          completeStart = completeEnd = cp - 1;
           updateAutoComplete(dataSource("", options));
         }
       }
@@ -388,31 +428,30 @@ export default function(options) {
     }
   });
 
-  $(this).on('keydown.autocomplete', function(e) {
+  $(this).on("keydown.autocomplete", function(e) {
     var c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
     let cp;
 
-    if (e.ctrlKey || e.altKey || e.metaKey){
+    if (e.ctrlKey || e.altKey || e.metaKey) {
       return true;
     }
 
-    if (options.allowAny){
+    if (options.allowAny) {
       // saves us wiring up a change event as well
 
       Ember.run.cancel(inputTimeout);
-      inputTimeout = Ember.run.later(function(){
-        if(inputSelectedItems.length === 0) {
+      inputTimeout = Ember.run.later(function() {
+        if (inputSelectedItems.length === 0) {
           inputSelectedItems.push("");
         }
 
-        if(_.isString(inputSelectedItems[0]) && me.val().length > 0) {
+        if (_.isString(inputSelectedItems[0]) && me.val().length > 0) {
           inputSelectedItems.pop();
           inputSelectedItems.push(me.val());
           if (options.onChangeItems) {
             options.onChangeItems(inputSelectedItems);
           }
         }
-
       }, 50);
     }
 
@@ -420,7 +459,7 @@ export default function(options) {
       completeStart = 0;
     }
     if (e.which === keys.shift) return;
-    if ((completeStart === null) && e.which === keys.backSpace && options.key) {
+    if (completeStart === null && e.which === keys.backSpace && options.key) {
       c = caretPosition(me[0]);
       c -= 1;
       initial = c;
@@ -431,7 +470,10 @@ export default function(options) {
         stopFound = prev === options.key;
         if (stopFound) {
           prev = me[0].value[c - 1];
-          if (checkTriggerRule({ backSpace: true }) && (!prev || allowedLettersRegex.test(prev))) {
+          if (
+            checkTriggerRule({ backSpace: true }) &&
+            (!prev || allowedLettersRegex.test(prev))
+          ) {
             completeStart = c;
             cp = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);
@@ -456,7 +498,7 @@ export default function(options) {
       cp = caretPosition(me[0]);
 
       // allow people to right arrow out of completion
-      if (e.which === keys.rightArrow && me[0].value[cp] === ' ') {
+      if (e.which === keys.rightArrow && me[0].value[cp] === " ") {
         closeAutocomplete();
         return true;
       }
@@ -472,7 +514,10 @@ export default function(options) {
         case keys.enter:
         case keys.tab:
           if (!autocompleteOptions) return true;
-          if (selectedOption >= 0 && (userToComplete = autocompleteOptions[selectedOption])) {
+          if (
+            selectedOption >= 0 &&
+            (userToComplete = autocompleteOptions[selectedOption])
+          ) {
             completeTerm(userToComplete);
           } else {
             // We're cancelling it, really.
@@ -505,7 +550,7 @@ export default function(options) {
           if (cp < 0) {
             closeAutocomplete();
             if (isInput) {
-              i = wrap.find('a:last');
+              i = wrap.find("a:last");
               if (i) {
                 i.click();
               }
@@ -515,7 +560,7 @@ export default function(options) {
 
           term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
 
-          if ((completeStart === cp) && (term === options.key)) {
+          if (completeStart === cp && term === options.key) {
             closeAutocomplete();
           }
 

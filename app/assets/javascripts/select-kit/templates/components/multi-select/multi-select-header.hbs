@@ -1,0 +1,11 @@
+<div class="choices">
+  {{#each computedContent.selection as |selection|}}
+    {{component selectedNameComponent
+      onClickSelectionItem=onClickSelectionItem
+      highlightedSelection=highlightedSelection
+      computedContent=selection}}
+  {{/each}}
+  <span class="filter choice" tabindex="-1">
+    {{yield}}
+  </span>
+</div>

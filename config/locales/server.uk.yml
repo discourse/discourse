@@ -10,6 +10,8 @@ uk:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  date:
+    month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
   title: "Discourse"
   topics: "Теми"
   posts: "дописи"
@@ -19,7 +21,6 @@ uk:
     incoming:
       errors:
         inactive_user_error: "Таке трапляється, якщо відправник не активний"
-        blocked_user_error: "Таке трапляється, якщо відправника було заблоковано"
   errors: &errors
     messages:
       accepted: має бути прийнятий
@@ -30,12 +31,16 @@ uk:
       too_long:
         one: надто довге (максимум 1 символ)
         few: надто довге (максимум %{count} символів)
+        many: надто довге (максимум %{count} символів)
         other: надто довге (максимум %{count} символів)
       other_than: "має бути іншим ніж %{count}"
     template:
       body: 'Проблеми на цих полях:'
     embed:
       load_from_remote: "Під час завантаження допису виникла проблема."
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -50,6 +55,7 @@ uk:
     more_replies:
       one: "1 більше відповідей"
       few: "%{count} більше відповідей"
+      many: "%{count} більше відповідей"
       other: "%{count} більше відповідей"
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
@@ -57,21 +63,25 @@ uk:
     replies:
       one: "1 відповідь"
       few: "%{count} відповідей"
+      many: "%{count} відповідей"
       other: "%{count} відповідей"
   no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
   too_many_images:
     one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."
     few: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
+    many: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
     other: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
   no_attachments_allowed: "Даруйте, нові користувачі не можуть вставляти прикріплення в дописи."
   too_many_attachments:
     one: "Даруйте, нові користувачі можуть вставляти тільки одне прикріплення в допис."
     few: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
+    many: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
     other: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
   no_links_allowed: "Даруйте, нові користувачі не можуть вставляти посилання в дописи."
   too_many_links:
     one: "Даруйте, нові користувачі можуть вставляти тільки одне посилання в допис."
     few: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
+    many: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
     other: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
   spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
   topic_not_found: "Щось пішло не так. Можливо цей допис було закрито або видалено, під час того як ви його переглядали?"
@@ -91,7 +101,6 @@ uk:
     latest: "Останні теми"
     hot: "Гарячі теми"
     posts: "Останні дописи"
-    private_posts: "Останні приватні повідомлення"
     group_posts: "Останні дописи від %{group_name}"
     user_posts: "Останні дописи @%{username}"
     user_topics: "Останні теми @%{username}"
@@ -118,6 +127,7 @@ uk:
       user_profile:
         bio_raw: "Про мене"
     errors:
+      <<: *errors
       models:
         user:
           attributes:
@@ -127,7 +137,6 @@ uk:
           attributes:
             payload_url:
               invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
@@ -145,18 +154,20 @@ uk:
     member:
       title: "учасник"
   rate_limiter:
-    too_many_requests: "У нас є обмеження щодо того, скільки разів за добу можна виконати цю дію. Будь ласка, зачекайте %{time_left} перед тим, як спробувати ще раз."
     hours:
       one: "1 година"
       few: "%{count} години"
+      many: "%{count} годин"
       other: "%{count} годин"
     minutes:
       one: "1 хвилина"
       few: "%{count} хвилини"
+      many: "%{count} хвилин"
       other: "%{count} хвилин"
     seconds:
       one: "1 секунда"
       few: "%{count} секунди"
+      many: "%{count} секунд"
       other: "%{count} секунд"
   datetime:
     distance_in_words:
@@ -166,6 +177,7 @@ uk:
       x_seconds:
         one: "1 секунда тому"
         few: "%{count} секунд тому"
+        many: "%{count} секунд тому"
         other: "%{count} секунд тому"
   password_reset:
     update: 'Оновити пароль'
@@ -227,7 +239,6 @@ uk:
       yaxis: "Кількість відвідин"
     signups:
       xaxis: "День"
-      yaxis: "Кількість нових користувачів"
     topics:
       title: "Теми"
       xaxis: "День"
@@ -261,7 +272,6 @@ uk:
       xaxis: "День"
       yaxis: "Кількість листів"
     user_to_user_private_messages:
-      title: "Користувач користувачу"
       xaxis: "День"
     system_private_messages:
       title: "Системні"
@@ -301,7 +311,6 @@ uk:
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
   site_settings:
-    default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
@@ -311,7 +320,6 @@ uk:
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    notify_mods_when_user_blocked: "Якщо користувача автоматично заблоковано, надіслати повідомлення всім модераторам."
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
@@ -320,8 +328,6 @@ uk:
     min_password_length: "Мінімальна довжина пароля."
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret для входу через Twitter, зареєстрований на http://dev.twitter.com"
     enable_facebook_logins: "Увімкнути вхід через Facebook; потребує facebook_app_id та facebook_app_secret"
     facebook_app_id: "App id для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
     facebook_app_secret: "App secret для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
@@ -344,7 +350,6 @@ uk:
     reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
     email_in_min_trust: "Мінімальний рівень довіри, який потрібен користувачу для дозволу створювати нові теми через email. "
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
-    username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
     allow_profile_backgrounds: "Дозволити користувачам завантажувати фони профілю."
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
@@ -391,7 +396,6 @@ uk:
   user:
     username:
       short: "має бути найменше %{min} символів"
-      characters: "must only include numbers, letters and underscores"
       unique: "має бути унікальним"
       blank: "має бути наявним"
     email:
@@ -458,6 +462,3 @@ uk:
   edit_this_page: "Редагувати цю сторінку"
   guidelines_topic:
     title: "ЧаПи/Інструкції"
-  activemodel:
-    errors:
-      <<: *errors

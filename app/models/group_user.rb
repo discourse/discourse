@@ -8,7 +8,7 @@ class GroupUser < ActiveRecord::Base
   after_destroy :remove_title
 
   after_save :set_primary_group
-  after_destroy :remove_primary_group
+  after_destroy :remove_primary_group, :recalculate_trust_level
 
   before_create :set_notification_level
   after_save :grant_trust_level
@@ -25,7 +25,7 @@ class GroupUser < ActiveRecord::Base
 
   def set_primary_group
     if group.primary_group
-      self.class.exec_sql("
+      DB.exec("
         UPDATE users
         SET primary_group_id = :id
         WHERE id = :user_id",
@@ -35,7 +35,7 @@ class GroupUser < ActiveRecord::Base
   end
 
   def remove_primary_group
-    self.class.exec_sql("
+    DB.exec("
       UPDATE users
       SET primary_group_id = NULL
       WHERE id = :user_id AND primary_group_id = :id",
@@ -45,7 +45,7 @@ class GroupUser < ActiveRecord::Base
 
   def remove_title
     if group.title.present?
-      self.class.exec_sql("
+      DB.exec("
         UPDATE users SET title = NULL
         WHERE title = :title AND id = :id",
         id: user_id, title: group.title
@@ -55,7 +55,7 @@ class GroupUser < ActiveRecord::Base
 
   def update_title
     if group.title.present?
-      self.class.exec_sql("
+      DB.exec("
         UPDATE users SET title = :title
         WHERE (title IS NULL OR title = '') AND id = :id",
         id: user_id, title: group.title
@@ -65,8 +65,27 @@ class GroupUser < ActiveRecord::Base
 
   def grant_trust_level
     return if group.grant_trust_level.nil?
+
+    if (user.group_locked_trust_level || 0) < group.grant_trust_level
+      user.update!(group_locked_trust_level: group.grant_trust_level)
+    end
+
     TrustLevelGranter.grant(group.grant_trust_level, user)
   end
+
+  def recalculate_trust_level
+    return if group.grant_trust_level.nil?
+
+    # Find the highest level of the user's remaining groups
+    highest_level = GroupUser
+      .where(user_id: user.id)
+      .includes(:group)
+      .maximum("groups.grant_trust_level")
+
+    user.update!(group_locked_trust_level: highest_level)
+    Promotion.recalculate(user)
+  end
+
 end
 
 # == Schema Information

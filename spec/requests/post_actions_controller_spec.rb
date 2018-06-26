@@ -1,7 +1,116 @@
 require 'rails_helper'
 
 RSpec.describe PostActionsController do
+  describe '#destroy' do
+    let(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+
+    it 'requires you to be logged in' do
+      delete "/post_actions/#{post.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'logged in' do
+      let(:user) { Fabricate(:user) }
+
+      before do
+        sign_in(user)
+      end
+
+      it 'raises an error when the post_action_type_id is missing' do
+        delete "/post_actions/#{post.id}.json"
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 404 when the post action type doesn't exist for that user" do
+        delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:bookmark] }
+        expect(response.status).to eq(404)
+      end
+
+      context 'with a post_action record ' do
+        let!(:post_action) do
+          PostAction.create!(
+            user_id: user.id,
+            post_id: post.id,
+            post_action_type_id: PostActionType.types[:bookmark]
+          )
+        end
+
+        it 'returns success' do
+          delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:bookmark] }
+          expect(response.status).to eq(200)
+        end
+
+        it 'deletes the action' do
+          delete "/post_actions/#{post.id}.json", params: {
+            post_action_type_id: PostActionType.types[:bookmark]
+          }
+
+          expect(response.status).to eq(200)
+          expect(PostAction.exists?(
+            user_id: user.id,
+            post_id: post.id,
+            post_action_type_id: PostActionType.types[:bookmark],
+            deleted_at: nil
+          )).to eq(false)
+        end
+
+        it "isn't deleted when the user doesn't have permission" do
+          pa = PostAction.create!(
+            post: post,
+            user: user,
+            post_action_type_id: PostActionType.types[:like],
+            created_at: 1.day.ago
+          )
+
+          delete "/post_actions/#{post.id}.json", params: {
+            post_action_type_id: PostActionType.types[:like]
+          }
+
+          expect(response).to be_forbidden
+        end
+      end
+    end
+  end
+
   describe '#create' do
+    it 'requires you to be logged in' do
+      post '/post_actions.json'
+      expect(response.status).to eq(403)
+    end
+
+    it 'fails when the user does not have permission to see the post' do
+      sign_in(Fabricate(:user))
+      pm = Fabricate(:private_message_post, user: Fabricate(:coding_horror))
+
+      post "/post_actions.json", params: {
+        id: pm.id,
+        post_action_type_id: PostActionType.types[:bookmark]
+      }
+
+      expect(response.status).to eq(403)
+    end
+
+    it 'fails when the user tries to notify user that has disabled PM' do
+      sign_in(Fabricate(:user))
+      user2 = Fabricate(:user)
+
+      post = Fabricate(:post, user: user2)
+      user2.user_option.update!(allow_private_messages: false)
+
+      post "/post_actions.json", params: {
+        id: post.id,
+        post_action_type_id: PostActionType.types[:notify_user],
+        message: 'testing',
+        flag_topic: false
+      }
+
+      expect(response.status).to eq(422)
+
+      expect(JSON.parse(response.body)["errors"].first).to eq(I18n.t(
+        :not_accepting_pms, username: user2.username
+      ))
+    end
+
     describe 'as a moderator' do
       let(:user) { Fabricate(:moderator) }
       let(:post_1) { Fabricate(:post, user: Fabricate(:coding_horror)) }
@@ -11,11 +120,10 @@ RSpec.describe PostActionsController do
       end
 
       it 'raises an error when the id is missing' do
-        expect do
-          post "/post_actions.json", params: {
-            post_action_type_id: PostActionType.types[:like]
-          }
-        end.to raise_error(ActionController::ParameterMissing)
+        post "/post_actions.json", params: {
+          post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(400)
       end
 
       it 'fails when the id is invalid' do
@@ -27,9 +135,8 @@ RSpec.describe PostActionsController do
       end
 
       it 'raises an error when the post_action_type_id index is missing' do
-        expect do
-          post "/post_actions.json", params: { id: post_1.id }
-        end.to raise_error(ActionController::ParameterMissing)
+        post "/post_actions.json", params: { id: post_1.id }
+        expect(response.status).to eq(400)
       end
 
       it "fails when the user doesn't have permission to see the post" do
@@ -51,12 +158,13 @@ RSpec.describe PostActionsController do
 
         post_action = PostAction.last
 
+        expect(response.status).to eq(200)
         expect(post_action.post_id).to eq(post_1.id)
         expect(post_action.post_action_type_id).to eq(PostActionType.types[:like])
       end
 
       it "passes a list of taken actions through" do
-        PostAction.create(
+        PostAction.create!(
           post_id: post_1.id,
           user_id: user.id,
           post_action_type_id: PostActionType.types[:inappropriate]
@@ -66,7 +174,7 @@ RSpec.describe PostActionsController do
           id: post_1.id, post_action_type_id: PostActionType.types[:off_topic]
         }
 
-        expect(response).to_not be_success
+        expect(response).to be_forbidden
       end
 
       it 'passes the message through' do
@@ -78,6 +186,7 @@ RSpec.describe PostActionsController do
           message: message
         }
 
+        expect(response.status).to eq(200)
         expect(PostAction.last.post_id).to eq(post_1.id)
         expect(Post.last.raw).to include(message)
       end
@@ -92,6 +201,7 @@ RSpec.describe PostActionsController do
           is_warning: true
         }
 
+        expect(response.status).to eq(200)
         expect(PostAction.last.post_id).to eq(post_1.id)
 
         post = Post.last
@@ -120,7 +230,7 @@ RSpec.describe PostActionsController do
           take_action: 'true'
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         post_action = PostAction.last
 
@@ -136,12 +246,79 @@ RSpec.describe PostActionsController do
           post_action_type_id: PostActionType.types[:like]
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         post_action = PostAction.last
 
         expect(post_action.post_id).to eq(post_1.id)
         expect(post_action.staff_took_action).to eq(false)
+      end
+    end
+  end
+
+  describe '#defer_flags' do
+    let!(:flag) do
+      PostAction.create!(
+        post_id: flagged_post.id,
+        user_id: Fabricate(:user).id,
+        post_action_type_id: PostActionType.types[:spam]
+      )
+    end
+    let(:flagged_post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+
+    context "not logged in" do
+      it "should not allow them to clear flags" do
+        post "/post_actions/defer_flags.json", params: { id: flagged_post.id }
+        expect(response.status).to eq(403)
+        flag.reload
+        expect(flag.deferred_at).to be_nil
+      end
+    end
+
+    context 'logged in' do
+      let!(:user) { sign_in(Fabricate(:moderator)) }
+
+      it "raises an error without a post_action_type_id" do
+        post "/post_actions/defer_flags.json", params: { id: flagged_post.id }
+        expect(response.status).to eq(400)
+        flag.reload
+        expect(flag.deferred_at).to be_nil
+      end
+
+      it "raises an error when the user doesn't have access" do
+        sign_in(Fabricate(:user))
+
+        post "/post_actions/defer_flags.json", params: {
+          id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+        }
+
+        expect(response).to be_forbidden
+        flag.reload
+        expect(flag.deferred_at).to be_nil
+      end
+
+      context "success" do
+        it "delegates to defer_flags" do
+          post "/post_actions/defer_flags.json", params: {
+            id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+          }
+
+          expect(response.status).to eq(200)
+          flag.reload
+          expect(flag.deferred_at).to be_present
+        end
+
+        it "works with a deleted post" do
+          flagged_post.trash!(user)
+
+          post "/post_actions/defer_flags.json", params: {
+            id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+          }
+
+          expect(response.status).to eq(200)
+          flag.reload
+          expect(flag.deferred_at).to be_present
+        end
       end
     end
   end

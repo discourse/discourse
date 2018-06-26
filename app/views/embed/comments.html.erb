@@ -25,9 +25,9 @@
             <span class='title'><%= post.user.title %></span>
           <%- end %>
         </h3>
-        <%= get_html(post.cooked) %>
+        <%= get_html(post) %>
 
-        <%- if post.reply_count > 0 %>
+        <%- if post.reply_count > 0 && post.replies.exists? %>
           <%- if post.reply_count == 1 %>
             <%= link_to I18n.t('embed.replies', count: post.reply_count), post.full_url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies button' %>
           <% else %>

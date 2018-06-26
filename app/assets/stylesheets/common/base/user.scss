@@ -1,4 +1,5 @@
 // Common styles for "/user" section
+// These styles are also used for "/groups" — test those pages if making significant changes
 .user-right {
   .list-actions {
     margin-bottom: 10px;
@@ -6,6 +7,14 @@
     .btn {
       margin-right: 10px;
     }
+  }
+
+  .paginated-topics-list {
+    position: relative;
+  }
+
+  .show-mores {
+    width: 100%;
   }
 }
 
@@ -17,43 +26,60 @@
   .about {
     overflow: hidden;
     width: 100%;
+    margin-bottom: 15px;
 
     .secondary {
-      font-size: 0.929em;
+      background: $secondary;
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
 
       .btn {
-        padding: 3px 12px;
+        padding: 4px 12px;
       }
 
       dl {
         margin: 0;
+        padding: 5px 10px;
+        div {
+          display: inline-flex;
+          align-items: baseline;
+          margin-right: 15px;
+          margin: 4px 0;
+        }
+      }
+
+      dt,
+      dd {
+        display: inline-flex;
+        align-items: center;
       }
 
       dd {
         padding: 0;
+        margin: 0 15px 0 0;
         overflow: hidden;
         text-overflow: ellipsis;
         color: $primary;
 
         &.groups {
           span:after {
-            content: ','
+            content: ",";
           }
           span:last-of-type:after {
-            content:''
+            content: "";
           }
         }
       }
 
       dt {
         color: $secondary-medium;
-        margin: 0;
+        margin-right: 5px;
         display: inline-block;
       }
     }
 
     .details {
-      background: rgba($secondary, .85);
+      background: rgba($secondary, 0.8);
 
       blockquote {
         background-color: $secondary-low;
@@ -61,13 +87,15 @@
       }
 
       h1 {
-        font-size: 2.143em;
+        font-size: $font-up-5;
         font-weight: normal;
-        i {font-size: .8em;}
+        i {
+          font-size: 0.8em;
+        }
       }
 
       h2 {
-        font-size: 1.214em;
+        font-size: $font-up-2;
         font-weight: normal;
         margin-top: 10px;
         max-width: 100%;
@@ -78,7 +106,7 @@
 
       h3 {
         font-weight: normal;
-        font-size: 1em;
+        font-size: $font-0;
         margin: 5px 0;
 
         .d-icon:not(:first-of-type) {
@@ -121,6 +149,16 @@
           }
         }
       }
+
+      .user-profile-avatar {
+        position: relative;
+        float: left;
+        height: 100%;
+        .avatar-flair {
+          bottom: 8px;
+          right: 16px;
+        }
+      }
     }
 
     .controls {
@@ -145,7 +183,7 @@
 
       .details {
         margin-top: 0;
-        background: rgba($secondary, .85);
+        background: rgba($secondary, 0.8);
 
         .bio {
           display: none;
@@ -164,11 +202,11 @@
           }
 
           h1 {
-            font-size: 1.429em;
+            font-size: $font-up-3;
           }
 
           h2 {
-            font-size: 1.071em;
+            font-size: $font-up-1;
             margin-top: 4px;
           }
 
@@ -177,28 +215,36 @@
           }
         }
       }
+
+      .user-profile-avatar {
+        .avatar-flair {
+          bottom: 8px;
+          right: 2px;
+        }
+      }
     }
   }
 
   .staff-counters {
-    text-align: left;
     background: $primary;
-
-    > div {
+    color: $secondary;
+    display: flex;
+    padding: 10px;
+    > div,
+    > div a {
+      display: flex;
+      align-items: baseline;
+      flex: 0 1 auto;
       margin: 0 10px 0 0;
-      display: inline-block;
-      padding: 5px 0;
-      &:first-of-type {
-        padding-left: 10px;
-      }
       span {
-        padding: 1px 5px;
+        padding: 1px 6px;
         border-radius: 10px;
+        margin-right: 5px;
       }
     }
 
     a {
-      color: dark-light-choose($primary-medium, $secondary-high);
+      color: $secondary;
     }
 
     .active {
@@ -213,7 +259,7 @@
     width: 30px;
     text-align: center;
     vertical-align: middle;
-    line-height: 30px;
+    line-height: $line-height-large;
   }
 
   .helpful-flags {
@@ -221,15 +267,15 @@
   }
 
   .flagged-posts {
-    background-color: #E49735;
+    background-color: #e49735;
   }
 
   .warnings-received {
-    background-color: #EC441B;
+    background-color: #ec441b;
   }
 
   .deleted-posts {
-    background-color: #EC441B;
+    background-color: #ec441b;
   }
 
   .suspensions {
@@ -253,11 +299,11 @@
       }
 
       .instructions {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+        color: dark-light-choose($primary-medium, $secondary-medium);
         margin-top: 5px;
         margin-bottom: 10px;
-        font-size: 80%;
-        line-height: 1.4em;
+        font-size: $font-down-1;
+        line-height: $line-height-large;
       }
     }
   }
@@ -268,7 +314,7 @@
     text-align: top;
     color: $danger;
     font-weight: bold;
-    font-size: 1.3em;
+    font-size: $font-up-2;
   }
 }
 
@@ -307,7 +353,7 @@
 
   h2 {
     a {
-      font-size: 1em;
+      font-size: $font-0;
       color: scale-color($tertiary, $lightness: -10%);
       cursor: pointer;
     }
@@ -320,6 +366,13 @@
 }
 
 .avatar-selector {
+  padding-bottom: 0 !important;
+  label.radio {
+    padding-left: 10px;
+  }
+  .avatar-choice {
+    min-height: 40px;
+  }
   label {
     display: inline-block;
     margin-right: 10px;
@@ -332,6 +385,9 @@
   .avatar {
     margin: 5px 10px 5px 0;
   }
+  p.error {
+    color: $danger;
+  }
 }
 
 .new-private-message {
@@ -339,12 +395,7 @@
 }
 
 .user-nav {
-  margin: 5px 0px;
-  padding-top: 10px;
-
-  li a {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
+  margin: 5px 0;
 }
 
 .top-section {
@@ -358,11 +409,16 @@
 .top-section,
 .top-sub-section {
   margin-bottom: 20px;
+  &.badges-section {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .stats-title {
   text-transform: uppercase;
   margin-bottom: 10px;
+  width: 100%;
 }
 
 .stats-section {
@@ -375,7 +431,8 @@
     padding: 10px 14px;
     margin: 0 5px 10px 0;
 
-    &.linked-stat { // This makes the entire "box" (the li) clickable instead of a narrow area.
+    &.linked-stat {
+      // This makes the entire "box" (the li) clickable instead of a narrow area.
       padding: 0;
       a {
         padding: 10px 14px;
@@ -393,7 +450,7 @@
 
   .value {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: $font-up-2;
   }
 
   .label {
@@ -424,7 +481,7 @@
     color: dark-light-choose($primary-medium, $secondary-high);
   }
 
-  @media all and (max-width : 600px) {
+  @media all and (max-width: 600px) {
     float: none;
     width: 100%;
   }
@@ -440,7 +497,7 @@
 
 .links-section {
   .domain {
-    font-size: 0.714em;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
 }
@@ -470,8 +527,8 @@
   .instructions {
     color: dark-light-choose($primary-medium, $secondary-medium);
     margin-bottom: 10px;
-    font-size: 80%;
-    line-height: 1.4em;
+    font-size: $font-down-1;
+    line-height: $line-height-large;
 
     a[href] {
       color: $tertiary;
@@ -489,18 +546,14 @@
     width: 520px;
   }
 
+  .warning-wrap {
+    height: 30px;
+    margin-bottom: 10px;
+  }
+
   .category-notifications .category-controls,
   .tag-notifications .tag-controls {
     margin-top: 24px;
-  }
-
-  .tags .select2-container-multi {
-    border: 1px solid $primary-low;
-    width: 540px;
-    border-radius: 0;
-    .select2-choices {
-      border: none;
-    }
   }
 }
 
@@ -528,7 +581,7 @@
     }
 
     // Can remove this once other languages have removed html from i18n values
-    div  {
+    div {
       .fa {
         display: none;
       }
@@ -539,3 +592,15 @@
   }
 }
 
+.qr-code-container {
+  display: flex;
+  .qr-code {
+    padding: 5px 5px 0 5px;
+    background-color: white;
+  }
+}
+
+.primary-textual .staged,
+#user-card .staged {
+  font-style: italic;
+}

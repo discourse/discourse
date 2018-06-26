@@ -16,69 +16,137 @@ describe Auth::DefaultCurrentUserProvider do
     TestProvider.new(env)
   end
 
-  it "raises errors for incorrect api_key" do
-    expect {
-      provider("/?api_key=INCORRECT").current_user
-    }.to raise_error(Discourse::InvalidAccess, /API username or key is invalid/)
+  it "can be used to pretend that a user doesn't exist" do
+    provider = TestProvider.new({})
+    expect(provider.current_user).to eq(nil)
   end
 
-  it "finds a user for a correct per-user api key" do
-    user = Fabricate(:user)
-    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
-    expect(provider("/?api_key=hello").current_user.id).to eq(user.id)
+  context "server api" do
 
-    user.update_columns(active: false)
+    it "raises errors for incorrect api_key" do
+      expect {
+        provider("/?api_key=INCORRECT").current_user
+      }.to raise_error(Discourse::InvalidAccess, /API username or key is invalid/)
+    end
 
-    expect {
-      provider("/?api_key=hello").current_user
-    }.to raise_error(Discourse::InvalidAccess)
+    it "finds a user for a correct per-user api key" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
+      expect(provider("/?api_key=hello").current_user.id).to eq(user.id)
 
-    user.update_columns(active: true, suspended_till: 1.day.from_now)
+      user.update_columns(active: false)
 
-    expect {
-      provider("/?api_key=hello").current_user
-    }.to raise_error(Discourse::InvalidAccess)
-  end
+      expect {
+        provider("/?api_key=hello").current_user
+      }.to raise_error(Discourse::InvalidAccess)
 
-  it "raises for a user pretending" do
-    user = Fabricate(:user)
-    user2 = Fabricate(:user)
-    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
+      user.update_columns(active: true, suspended_till: 1.day.from_now)
 
-    expect {
-      provider("/?api_key=hello&api_username=#{user2.username.downcase}").current_user
-    }.to raise_error(Discourse::InvalidAccess)
-  end
+      expect {
+        provider("/?api_key=hello").current_user
+      }.to raise_error(Discourse::InvalidAccess)
+    end
 
-  it "raises for a user with a mismatching ip" do
-    user = Fabricate(:user)
-    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['10.0.0.0/24'])
+    it "raises for a user pretending" do
+      user = Fabricate(:user)
+      user2 = Fabricate(:user)
+      ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
 
-    expect {
-      provider("/?api_key=hello&api_username=#{user.username.downcase}", "REMOTE_ADDR" => "10.1.0.1").current_user
-    }.to raise_error(Discourse::InvalidAccess)
+      expect {
+        provider("/?api_key=hello&api_username=#{user2.username.downcase}").current_user
+      }.to raise_error(Discourse::InvalidAccess)
+    end
 
-  end
+    it "raises for a user with a mismatching ip" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['10.0.0.0/24'])
 
-  it "allows a user with a matching ip" do
-    user = Fabricate(:user)
-    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
+      expect {
+        provider("/?api_key=hello&api_username=#{user.username.downcase}", "REMOTE_ADDR" => "10.1.0.1").current_user
+      }.to raise_error(Discourse::InvalidAccess)
 
-    found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
-                          "REMOTE_ADDR" => "100.0.0.22").current_user
+    end
 
-    expect(found_user.id).to eq(user.id)
+    it "allows a user with a matching ip" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
 
-    found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
-                          "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22").current_user
-    expect(found_user.id).to eq(user.id)
+      found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
+                            "REMOTE_ADDR" => "100.0.0.22").current_user
 
-  end
+      expect(found_user.id).to eq(user.id)
 
-  it "finds a user for a correct system api key" do
-    user = Fabricate(:user)
-    ApiKey.create!(key: "hello", created_by_id: -1)
-    expect(provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
+      found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
+                            "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22").current_user
+      expect(found_user.id).to eq(user.id)
+
+    end
+
+    it "finds a user for a correct system api key" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", created_by_id: -1)
+      expect(provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
+    end
+
+    it "finds a user for a correct system api key with external id" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", created_by_id: -1)
+      SingleSignOnRecord.create(user_id: user.id, external_id: "abc", last_payload: '')
+      expect(provider("/?api_key=hello&api_user_external_id=abc").current_user.id).to eq(user.id)
+    end
+
+    it "finds a user for a correct system api key with id" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", created_by_id: -1)
+      expect(provider("/?api_key=hello&api_user_id=#{user.id}").current_user.id).to eq(user.id)
+    end
+
+    context "rate limiting" do
+      before do
+        RateLimiter.enable
+      end
+
+      after do
+        RateLimiter.disable
+      end
+
+      it "rate limits api requests per api key" do
+        global_setting :max_admin_api_reqs_per_key_per_minute, 3
+
+        freeze_time
+
+        user = Fabricate(:user)
+        key = SecureRandom.hex
+        api_key = ApiKey.create!(key: key, created_by_id: -1)
+
+        provider("/?api_key=#{key}&api_username=#{user.username.downcase}").current_user
+        provider("/?api_key=#{key}&api_username=system").current_user
+        provider("/?api_key=#{key}&api_username=#{user.username.downcase}").current_user
+
+        expect do
+          provider("/?api_key=#{key}&api_username=system").current_user
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        freeze_time 59.seconds.from_now
+
+        expect do
+          provider("/?api_key=#{key}&api_username=system").current_user
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        freeze_time 2.seconds.from_now
+
+        # 1 minute elapsed
+        provider("/?api_key=#{key}&api_username=system").current_user
+
+        # should not rake limit a random key
+        api_key.destroy
+        key = SecureRandom.hex
+        ApiKey.create!(key: key, created_by_id: -1)
+        provider("/?api_key=#{key}&api_username=#{user.username.downcase}").current_user
+
+      end
+    end
+
   end
 
   it "should not update last seen for ajax calls without Discourse-Visible header" do
@@ -99,26 +167,6 @@ describe Auth::DefaultCurrentUserProvider do
   it "should update last seen for non ajax" do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
-  end
-
-  it "correctly supports legacy tokens" do
-    user = Fabricate(:user)
-    token = SecureRandom.hex(16)
-    user_token = UserAuthToken.create!(user_id: user.id, auth_token: token,
-                                       prev_auth_token: token, legacy: true,
-                                       rotated_at: Time.zone.now
-                                      )
-
-    prov = provider("/", "HTTP_COOKIE" => "_t=#{user_token.auth_token}")
-    expect(prov.current_user.id).to eq(user.id)
-
-    # sets a new token up cause it got a global token
-    cookies = {}
-    prov.refresh_session(user, {}, cookies)
-    user.reload
-
-    expect(user.user_auth_tokens.count).to eq(2)
-    expect(cookies["_t"][:value]).not_to eq(token)
   end
 
   it "correctly rotates tokens" do
@@ -172,38 +220,47 @@ describe Auth::DefaultCurrentUserProvider do
 
   end
 
-  it "can only try 10 bad cookies a minute" do
-    user = Fabricate(:user)
-    token = UserAuthToken.generate!(user_id: user.id)
+  context "rate limiting" do
 
-    provider('/').log_on_user(user, {}, {})
-
-    RateLimiter.stubs(:disabled?).returns(false)
-
-    RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
-    RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
-
-    ip = "10.0.0.1"
-    env = { "HTTP_COOKIE" => "_t=#{SecureRandom.hex}", "REMOTE_ADDR" => ip }
-
-    10.times do
-      provider('/', env).current_user
+    before do
+      RateLimiter.enable
     end
 
-    expect {
-      provider('/', env).current_user
-    }.to raise_error(Discourse::InvalidAccess)
+    after do
+      RateLimiter.disable
+    end
 
-    expect {
-      env["HTTP_COOKIE"] = "_t=#{token.unhashed_auth_token}"
-      provider("/", env).current_user
-    }.to raise_error(Discourse::InvalidAccess)
+    it "can only try 10 bad cookies a minute" do
+      user = Fabricate(:user)
+      token = UserAuthToken.generate!(user_id: user.id)
 
-    env["REMOTE_ADDR"] = "10.0.0.2"
+      provider('/').log_on_user(user, {}, {})
 
-    expect {
-      provider('/', env).current_user
-    }.not_to raise_error
+      RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
+      RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
+
+      ip = "10.0.0.1"
+      env = { "HTTP_COOKIE" => "_t=#{SecureRandom.hex}", "REMOTE_ADDR" => ip }
+
+      10.times do
+        provider('/', env).current_user
+      end
+
+      expect {
+        provider('/', env).current_user
+      }.to raise_error(Discourse::InvalidAccess)
+
+      expect {
+        env["HTTP_COOKIE"] = "_t=#{token.unhashed_auth_token}"
+        provider("/", env).current_user
+      }.to raise_error(Discourse::InvalidAccess)
+
+      env["REMOTE_ADDR"] = "10.0.0.2"
+
+      expect {
+        provider('/', env).current_user
+      }.not_to raise_error
+    end
   end
 
   it "correctly removes invalid cookies" do
@@ -256,6 +313,13 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token}").current_user).to eq(nil)
   end
 
+  it "always unstage users" do
+    staged_user = Fabricate(:user, staged: true)
+    provider("/").log_on_user(staged_user, {}, {})
+    staged_user.reload
+    expect(staged_user.staged).to eq(false)
+  end
+
   context "user api" do
     let :user do
       Fabricate(:user)
@@ -295,44 +359,53 @@ describe Auth::DefaultCurrentUserProvider do
 
     end
 
-    it "rate limits api usage" do
+    context "rate limiting" do
 
-      RateLimiter.stubs(:disabled?).returns(false)
-      limiter1 = RateLimiter.new(nil, "user_api_day_#{api_key.key}", 10, 60)
-      limiter2 = RateLimiter.new(nil, "user_api_min_#{api_key.key}", 10, 60)
-      limiter1.clear!
-      limiter2.clear!
-
-      SiteSetting.max_user_api_reqs_per_day = 3
-      SiteSetting.max_user_api_reqs_per_minute = 4
-
-      params = {
-        "REQUEST_METHOD" => "GET",
-        "HTTP_USER_API_KEY" => api_key.key,
-      }
-
-      3.times do
-        provider("/", params).current_user
+      before do
+        RateLimiter.enable
       end
 
-      expect {
-        provider("/", params).current_user
-      }.to raise_error(RateLimiter::LimitExceeded)
-
-      SiteSetting.max_user_api_reqs_per_day = 4
-      SiteSetting.max_user_api_reqs_per_minute = 3
-
-      limiter1.clear!
-      limiter2.clear!
-
-      3.times do
-        provider("/", params).current_user
+      after do
+        RateLimiter.disable
       end
 
-      expect {
-        provider("/", params).current_user
-      }.to raise_error(RateLimiter::LimitExceeded)
+      it "rate limits api usage" do
+        limiter1 = RateLimiter.new(nil, "user_api_day_#{api_key.key}", 10, 60)
+        limiter2 = RateLimiter.new(nil, "user_api_min_#{api_key.key}", 10, 60)
+        limiter1.clear!
+        limiter2.clear!
 
+        global_setting :max_user_api_reqs_per_day, 3
+        global_setting :max_user_api_reqs_per_minute, 4
+
+        params = {
+          "REQUEST_METHOD" => "GET",
+          "HTTP_USER_API_KEY" => api_key.key,
+        }
+
+        3.times do
+          provider("/", params).current_user
+        end
+
+        expect {
+          provider("/", params).current_user
+        }.to raise_error(RateLimiter::LimitExceeded)
+
+        global_setting :max_user_api_reqs_per_day, 4
+        global_setting :max_user_api_reqs_per_minute, 3
+
+        limiter1.clear!
+        limiter2.clear!
+
+        3.times do
+          provider("/", params).current_user
+        end
+
+        expect {
+          provider("/", params).current_user
+        }.to raise_error(RateLimiter::LimitExceeded)
+
+      end
     end
   end
 end

@@ -1,12 +1,15 @@
-import {default as computed, observes} from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  init(){
+  init() {
     this._super();
     this.set("checkedInternal", this.get("checked"));
   },
 
-  classNames: ['inline-edit'],
+  classNames: ["inline-edit"],
 
   @observes("checked")
   checkedChanged() {
@@ -20,15 +23,15 @@ export default Ember.Component.extend({
 
   @computed("checked", "checkedInternal")
   changed(checked, checkedInternal) {
-    return (!!checked) !== (!!checkedInternal);
+    return !!checked !== !!checkedInternal;
   },
 
   actions: {
-    cancelled(){
+    cancelled() {
       this.set("checkedInternal", this.get("checked"));
     },
 
-    finished(){
+    finished() {
       this.set("checked", this.get("checkedInternal"));
       this.sendAction();
     }

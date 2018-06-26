@@ -1,0 +1,37 @@
+{{#if model.sortedData}}
+  <table class="table report {{model.type}}">
+    <tr>
+      <th>{{model.xaxis}}</th>
+      <th>{{model.yaxis}}</th>
+    </tr>
+
+    {{#each model.sortedData as |row|}}
+      <tr>
+        <td class="x-value">{{row.x}}</td>
+        <td>
+          {{row.y}}
+        </td>
+      </tr>
+    {{/each}}
+
+    <tr class="total-for-period">
+      <td class="x-value">
+        {{i18n 'admin.dashboard.reports.total_for_period'}}
+      </td>
+      <td>
+        {{totalForPeriod}}
+      </td>
+    </tr>
+
+    {{#if model.total}}
+      <tr class="total">
+        <td class="x-value">
+          {{i18n 'admin.dashboard.reports.total'}}
+        </td>
+        <td>
+          {{model.total}}
+        </td>
+      </tr>
+    {{/if}}
+  </table>
+{{/if}}

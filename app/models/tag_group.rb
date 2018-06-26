@@ -5,8 +5,14 @@ class TagGroup < ActiveRecord::Base
   has_many :tags, through: :tag_group_memberships
   has_many :category_tag_groups, dependent: :destroy
   has_many :categories, through: :category_tag_groups
+  has_many :tag_group_permissions, dependent: :destroy
 
   belongs_to :parent_tag, class_name: 'Tag'
+
+  before_create :init_permissions
+  before_save :apply_permissions
+
+  attr_accessor :permissions
 
   def tag_names=(tag_names_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
@@ -19,6 +25,58 @@ class TagGroup < ActiveRecord::Base
       if tag_name = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)).first
         self.parent_tag = Tag.find_by_name(tag_name) || Tag.create(name: tag_name)
       end
+    end
+  end
+
+  def permissions=(permissions)
+    @permissions = TagGroup.resolve_permissions(permissions)
+  end
+
+  def self.resolve_permissions(permissions)
+    everyone_group_id = Group::AUTO_GROUPS[:everyone]
+    full = TagGroupPermission.permission_types[:full]
+
+    mapped = permissions.map do |group, permission|
+      group_id = Group.group_id_from_param(group)
+      permission = TagGroupPermission.permission_types[permission] unless permission.is_a?(Integer)
+      [group_id, permission]
+    end
+  end
+
+  def init_permissions
+    unless tag_group_permissions.present? || @permissions
+      tag_group_permissions.build(
+        group_id: Group::AUTO_GROUPS[:everyone],
+        permission_type: TagGroupPermission.permission_types[:full]
+      )
+    end
+  end
+
+  def apply_permissions
+    if @permissions
+      tag_group_permissions.destroy_all
+      @permissions.each do |group_id, permission_type|
+        tag_group_permissions.build(group_id: group_id, permission_type: permission_type)
+      end
+      @permissions = nil
+    end
+  end
+
+  def self.visible(guardian)
+    if guardian.is_staff?
+      TagGroup
+    else
+      filter_sql = <<~SQL
+        (
+          id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
+        ) OR (
+          id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+          AND
+          id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
+        )
+      SQL
+
+      TagGroup.where(filter_sql, guardian.allowed_category_ids, Group::AUTO_GROUPS[:everyone])
     end
   end
 end

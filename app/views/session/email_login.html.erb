@@ -1,0 +1,30 @@
+<%if @error%>
+  <div class='alert alert-error'>
+    <%= @error %>
+  </div>
+<%end%>
+
+<%if @second_factor_required%>
+  <div style="display: flex;">
+    <div style="margin: auto;">
+      <%= form_tag(method: "post") do%>
+        <h2><%=t "login.second_factor_title" %></h2>
+        <%= label_tag(:second_factor_token, t("login.second_factor_description")) %>
+        <div><%= render 'common/second_factor_text_field' %></div>
+        <%= submit_tag(t("submit"), class: "btn btn-large btn-primary") %>
+      <%end%>
+    </div>
+  </div>
+<%end%>
+
+<% content_for :title do %><%=t "email_login.title" %><% end %>
+
+<%- content_for(:no_ember_head) do %>
+  <meta name="referrer" content="no-referrer">
+  <%= preload_script "ember_jquery" %>
+  <%= render_google_universal_analytics_code %>
+<%- end %>
+
+<%- content_for(:head) do %>
+  <meta name="referrer" content="no-referrer">
+<%- end %>

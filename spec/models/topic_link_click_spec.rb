@@ -73,6 +73,22 @@ describe TopicLinkClick do
 
       end
 
+      context 'while logged in' do
+        let(:other_user) { Fabricate(:user) }
+        before do
+          @url = TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1', user_id: other_user.id)
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click without an IP' do
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@click.user_id).to eq(other_user.id)
+          expect(@click.ip_address).to eq(nil)
+        end
+
+      end
+
       context "relative urls" do
         let(:host) { URI.parse(Discourse.base_url).host }
 
@@ -189,6 +205,32 @@ describe TopicLinkClick do
           expect(@click).to be_present
           expect(@click.topic_link).to eq(@topic_link)
           expect(@url).to eq('http://twitter.com?_ga=1.16846778.221554446.1071987018')
+        end
+      end
+
+      context 'with a query param and google analytics' do
+        before do
+          @topic = Fabricate(:topic)
+          @post = Fabricate(:post,
+              topic: @topic,
+              user: @topic.user,
+              raw: "Here's a link to twitter: http://twitter.com?ref=forum"
+            )
+          TopicLink.extract_from(@post)
+          @topic_link = @topic.topic_links.first
+        end
+
+        it 'creates a click' do
+          url = TopicLinkClick.create_from(
+            url: 'http://twitter.com?ref=forum&_ga=1.16846778.221554446.1071987018',
+            topic_id: @topic.id,
+            post_id: @post.id,
+            ip: '127.0.0.3'
+          )
+          click = TopicLinkClick.last
+          expect(click).to be_present
+          expect(click.topic_link).to eq(@topic_link)
+          expect(url).to eq('http://twitter.com?ref=forum&_ga=1.16846778.221554446.1071987018')
         end
       end
 

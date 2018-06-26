@@ -17,19 +17,6 @@ header {
   height: 100%;
 }
 
-.grippie {
-  cursor: row-resize;
-  padding: 4px 0px;
-
-  &:before {
-    content: '';
-    display: block;
-    width: 27px;
-    margin: auto;
-    border-top: 3px double dark-light-choose($primary-low-mid, $secondary-medium);
-  }
-}
-
 .topic-statuses {
   float: left;
   padding: 0;
@@ -37,10 +24,11 @@ header {
   .topic-status {
     padding: 0 2px 0 0;
     margin: 0;
+    line-height: $line-height-small;
 
     i {
-        font-size: 1.071em;
-      }
+      font-size: $font-down-1;
+    }
   }
 
   .d-icon-envelope {
@@ -48,50 +36,19 @@ header {
   }
 }
 
-
 .form-vertical {
   .control-group {
     margin-bottom: 24px;
   }
 }
 
-
 /***********************/
 /* bootstrap carryover */
 /***********************/
 code,
 pre {
-  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-}
-
-/* page not found styles */
-h1.page-not-found {
-  line-height: 30px;
-}
-
-.page-not-found {
-  margin: 20px 0 40px 0;
-
-  &-search {
-    margin-top: 20px;
-  }
-
-  &-topics .span8 {
-    line-height: 1.5em;
-    margin-right: 20px;
-  }
-}
-
-.popular-topics-title,
-.recent-topics-title {
-  margin-bottom: 10px;
-}
-
-.not-found-topic {
-  > a {
-    margin-right: 10px;
-    line-height: 2;
-  }
+  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
+    "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
 }
 
 // this removes the unwanted top margin on a paragraph under a heading
@@ -102,7 +59,7 @@ h4,
 h5,
 h6 {
   + p {
-    margin-top:0px;
+    margin-top: 0;
   }
 }
 
@@ -115,44 +72,9 @@ input,
 button,
 select,
 textarea {
-  font-size: 0.929em;
+  font-size: $font-0;
   font-weight: normal;
-  line-height: 18px;
-}
-
-input,
-button,
-select,
-textarea {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-input,
-select,
-textarea {
-  color: $primary;
-
-  &[class*="span"] {
-    float: none;
-    margin-left: 0;
-  }
-
-  &[disabled],
-  &[readonly] {
-    cursor: not-allowed;
-    background-color: $primary-low;
-    border-color: $primary-low;
-  }
-
-  &:focus:required:invalid {
-    color: $danger;
-    border-color: $danger;
-  }
-
-  &:focus:required:invalid:focus {
-    border-color: $danger;
-    box-shadow: 0 0 6px $danger;
-  }
+  line-height: $line-height-medium;
 }
 
 select,
@@ -160,72 +82,23 @@ textarea {
   display: inline-block;
   padding: 4px;
   margin-bottom: 9px;
-  font-size: 0.929em;
-  line-height: 18px;
+  font-size: $font-0;
+  line-height: $line-height-large;
   color: $primary;
 }
 
-input {
-  width: 210px;
-
-  &[type="text"],
-  &[type="password"],
-  &[type="datetime"],
-  &[type="datetime-local"],
-  &[type="date"],
-  &[type="month"],
-  &[type="time"],
-  &[type="week"],
-  &[type="number"],
-  &[type="email"],
-  &[type="url"],
-  &[type="search"],
-  &[type="tel"],
-  &[type="color"] {
-    display: inline-block;
-    height: 18px;
-    padding: 4px;
-    margin-bottom: 9px;
-    font-size: 0.929em;
-    line-height: 18px;
-    color: $primary;
-    background-color: $secondary;
-    border: 1px solid $primary-low;
-    border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-
-    &:focus {
-      border-color: $tertiary;
-      outline: 0;
-      box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
-    }
-  }
-}
-
+input,
 textarea {
   width: 210px;
-  height: auto;
-  background-color:$secondary;
-  border: 1px solid $primary-low;
-  border-radius: 3px;
-  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-
-  &:focus {
-    border-color: $tertiary;
-    outline: 0;
-    box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
-  }
 }
 
 select,
 input[type="file"] {
-  line-height: 28px;
+  line-height: $line-height-large;
 }
 
 select {
   width: 220px;
-  border: 1px solid $primary-low;
-
   &[multiple],
   &[size] {
     height: auto;
@@ -265,10 +138,9 @@ input {
       position: relative;
       margin-bottom: 0;
       vertical-align: middle;
-      border-radius: 0 3px 3px 0;
 
       &:focus {
-        z-index: 2;
+        z-index: z("base") + 1;
       }
     }
 
@@ -279,7 +151,7 @@ input {
       min-width: 16px;
       padding: 4px 5px;
       font-weight: normal;
-      line-height: 18px;
+      line-height: $line-height-medium;
       text-align: center;
       vertical-align: middle;
       background-color: $secondary;
@@ -353,6 +225,11 @@ input {
   margin-bottom: 10px;
 }
 
+.control-instructions {
+  color: dark-light-choose($primary-medium, $secondary-medium);
+  font-size: 0.875rem;
+}
+
 .control-group {
   margin-bottom: 9px;
 
@@ -372,10 +249,9 @@ input {
 
       &:focus {
         border-color: scale-color($danger, $lightness: -30%);
-        box-shadow: 0 0 6px $danger;
+        box-shadow: shadow("focus-danger");
       }
     }
-
   }
 
   &.warning {
@@ -415,7 +291,7 @@ input {
 
       &:focus {
         border-color: $success;
-        box-shadow: 0 0 6px $success;
+        box-shadow: shadow("focus");
       }
     }
 
@@ -423,7 +299,7 @@ input {
     .input-append {
       .add-on {
         color: $success;
-        background-color:  $success-low;
+        background-color: $success-low;
         border-color: $success;
       }
     }
@@ -455,6 +331,7 @@ input {
   }
 
   .control-label {
+    margin: 6.5px;
     float: left;
     width: 140px;
     text-align: right;
@@ -479,46 +356,6 @@ input {
   @include clearfix;
 }
 
-.span {
-  &4 {
-    width: 196px;
-    margin-right: 12px;
-    float: left;
-  }
-
-  &6 {
-    width: 27.027%;
-    float: left;
-  }
-
-  &8 {
-    width: 404px;
-    float: left;
-  }
-
-  &10 {
-    width: 508px;
-    float: left;
-  }
-
-  &13 {
-    width: 59.8198%;
-    float: left;
-  }
-
-  &15 {
-    /* intentionally no width set here, do not add one */
-    margin-left: 12px;
-    float: left;
-  }
-
-  &24 {
-    width: 1236px;
-    float: left;
-    color: amarillo;
-  }
-}
-
 .offset {
   &2 {
     margin-left: 116px;
@@ -529,30 +366,8 @@ input {
   }
 }
 
-// Special elements
-#main {
-  a.star {
-    color: $secondary-medium;
-
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f005";
-    }
-
-    @include hover {
-      opacity: 0.6;
-    }
-
-    &:active {
-      opacity: 1;
-    }
-  }
-}
-
 // Media Queries
-@media all
-and (max-width : 570px) {
-
+@media all and (max-width: 570px) {
   body {
     min-width: 0;
   }

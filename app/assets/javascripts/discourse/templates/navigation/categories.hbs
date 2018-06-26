@@ -1,10 +1,10 @@
 {{#d-section bodyClass="navigation-categories" class="navigation-container"}}
-  {{bread-crumbs categories=categories}}
-
-  {{navigation-bar navItems=navItems filterMode=filterMode}}
-
-  {{#if canCreateCategory}}
-    {{categories-admin-dropdown}}
-  {{/if}}
-  {{create-topic-button canCreateTopic=canCreateTopic action=(route-action "createTopic")}}
+  {{d-navigation
+    filterMode="categories"
+    showCategoryAdmin=showCategoryAdmin
+    createCategory=(route-action "createCategory")
+    reorderCategories=(route-action "reorderCategories")
+    canCreateTopic=canCreateTopic
+    hasDraft=draft
+    createTopic=(route-action "createTopic")}}
 {{/d-section}}

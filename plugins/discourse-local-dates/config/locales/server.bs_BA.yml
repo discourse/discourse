@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+bs_BA:
+  site_settings:
+    discourse_local_dates_enabled: "Dozvoliti discourse-local-dates mogućnost. To će dodati podršku za lokalne vremenske zone da prepoznaju datume u objavama koristeći [date] element."
+    discourse_local_dates_default_formats: "Često korišteni formati za datum i vrijeme, pogledati: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Uobičajena lista vremenskih zona, mora biti validna <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

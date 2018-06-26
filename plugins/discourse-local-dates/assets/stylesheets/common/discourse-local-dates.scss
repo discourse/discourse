@@ -1,0 +1,167 @@
+.discourse-local-date {
+  display: inline-block;
+  vertical-align: top;
+
+  &.cooked {
+    color: $primary;
+    font-weight: bold;
+    cursor: pointer;
+
+    .d-icon-globe {
+      margin-right: 0.25em;
+      color: $primary-medium;
+
+      &:hover {
+        color: $primary-high;
+      }
+    }
+
+    &:hover .d-icon-globe {
+      color: $primary-high;
+    }
+  }
+}
+
+.discourse-local-dates-create-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  &:before,
+  &:after {
+    content: none;
+  }
+
+  .cancel-action {
+    margin: 0 5px 5px 0;
+  }
+
+  .btn + .cancel-action {
+    margin-left: 1em;
+  }
+
+  .advanced-mode-btn {
+    margin-left: auto;
+  }
+}
+
+.discourse-local-dates-create-modal {
+  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+
+  .form {
+    flex: 1;
+
+    label {
+      font-weight: 700;
+    }
+
+    .date-time-configuration {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+
+      .range {
+        .from {
+          flex-direction: row;
+          display: flex;
+        }
+
+        .to {
+          flex-direction: row;
+          display: flex;
+        }
+
+        .to-indicator {
+          display: flex;
+          justify-content: center;
+          margin: 0.5em 0;
+        }
+      }
+
+      .date {
+        .date-input {
+          margin-right: 1em;
+
+          .date-picker {
+            padding-top: 5px;
+            bottom: 5px;
+            margin: 0;
+            width: 120px;
+            text-align: left;
+          }
+        }
+      }
+
+      .time {
+        .time-input {
+          margin: 0 0.5em 0 0;
+          width: 120px;
+          padding: 3.5px 10px;
+        }
+      }
+
+      .preview {
+        flex: 1;
+        margin-top: 16px;
+        text-align: center;
+      }
+
+      @include small-width {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .range .from,
+        .range .to {
+          flex-direction: column;
+        }
+
+        .date .date-input .date-picker {
+          width: 200px;
+        }
+
+        .time .time-input {
+          width: 200px;
+        }
+      }
+    }
+
+    .validation-error {
+      color: $danger;
+    }
+
+    .recurrence {
+      .recurrence-input {
+        width: 300px;
+      }
+    }
+  }
+
+  .format {
+    .format-input {
+      width: 280px;
+    }
+  }
+
+  .formats {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    .format {
+      .previewed-format {
+        color: $primary-medium;
+      }
+    }
+  }
+
+  .control-group.recurrence,
+  .control-group.format,
+  .control-group.timezones {
+    margin-top: 1em;
+  }
+
+  .timezones-input {
+    width: 99%;
+  }
+}

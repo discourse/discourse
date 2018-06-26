@@ -1,11 +1,13 @@
 .flagged-post.hidden-post {
-  .flagged-post-excerpt, .flagged-post-avatar {
+  .flagged-post-excerpt,
+  .flagged-post-avatar {
     opacity: 0.5;
   }
 }
 
 .flagged-post.deleted {
-  .flagged-post-excerpt, .flagged-post-avatar {
+  .flagged-post-excerpt,
+  .flagged-post-avatar {
     background-color: $danger-low;
   }
 }
@@ -42,6 +44,17 @@
       width: 100%;
       word-wrap: break-word;
 
+      .flagged-post-user-details {
+        display: flex;
+        justify-content: space-between;
+
+        .username {
+          font-weight: bold;
+          color: $primary;
+        }
+        margin-bottom: 0.5em;
+      }
+
       .d-icon {
         display: inline-block;
       }
@@ -54,6 +67,10 @@
       }
       margin-right: 1em;
     }
+  }
+
+  .flagged-post-reply-count {
+    font-weight: normal;
   }
 
   .flag-user-lists {
@@ -143,6 +160,8 @@
   .flagged-post-controls {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
 
     button {
       margin-right: 0.5em;
@@ -157,7 +176,7 @@
 
   .type-count {
     color: $primary-medium;
-    font-size: 0.9em;
+    font-size: $font-down-1;
   }
 }
 
@@ -180,13 +199,6 @@
   margin-bottom: 2em;
 }
 
-.delete-flag-modal, .agree-flag-modal {
-  button {
-    margin: 10px 0 10px 10px;
-    padding: 10px 15px;
-  }
-}
-
 .mobile-view {
   .flagged-posts {
     .flagged-post {
@@ -194,5 +206,11 @@
         display: block;
       }
     }
+  }
+}
+
+.show-details {
+  .d-icon {
+    padding-right: 0.25em;
   }
 }

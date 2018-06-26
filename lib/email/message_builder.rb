@@ -30,13 +30,15 @@ module Email
       }.merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions', @template_args)
+        @template_args[:header_instructions] ||= I18n.t('user_notifications.header_instructions', @template_args)
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
+          @template_args[:respond_instructions] = I18n.t('user_notifications.pm_participants', @template_args) if @opts[:private_reply]
         else
           if @opts[:only_reply_by_email]
             string = "user_notifications.only_reply_by_email"
+            string << "_pm" if @opts[:private_reply]
           else
             string = allow_reply_by_email? ? "user_notifications.reply_by_email" : "user_notifications.visit_link_to_respond"
             string << "_pm" if @opts[:private_reply]
@@ -62,7 +64,7 @@ module Email
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:email_prefix])
         subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', @template_args) : '')
-        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', @template_args) : '')
+        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? @template_args[:subject_pm] : '')
         subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
         subject.gsub!("%{topic_title}", @template_args[:topic_title]) if @template_args[:topic_title] # must be last for safety
       else

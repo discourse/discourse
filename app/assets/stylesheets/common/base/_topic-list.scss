@@ -1,6 +1,10 @@
+.topic-list.shared-drafts {
+  margin-bottom: 1.5em;
+}
+
 .show-more {
   width: 100%;
-  z-index: 1;
+  z-index: z("base");
   &.has-topics {
     position: absolute;
     top: 7px;
@@ -8,19 +12,29 @@
 }
 
 .list-controls {
-  #navigation-bar {
-    .has-icon span:before {
-      margin-right: 4px;
-      font: 1.071em/0.9 "FontAwesome";
-    }
+  clear: both;
+  .combo-box .combo-box-header {
+    background: $primary-low;
+    color: $primary;
+    border: 1px solid transparent;
+    padding: 5px 6px 5px 10px;
+    font-size: $font-0;
+    transition: none;
   }
-
-  .select-box-kit {
+  .select-kit {
     align-self: center;
-
-    &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
+    .select-kit-collection {
+      font-size: $font-down-1;
+      max-height: 40vh;
+      .texts,
+      .icons {
+        font-size: $font-up-1;
+      }
+    }
+    &.categories-admin-dropdown,
+    &.category-notifications-button,
+    &.tag-notifications-button {
       float: right;
-      margin-left: 8px;
     }
   }
 }
@@ -28,11 +42,13 @@
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
-  a.title:not(.badge-notification) { color: $primary-medium; }
+  a.title:not(.badge-notification) {
+    color: $primary-medium;
+  }
 }
 
 .topic-list-main-link {
-  font-size: 1.143em;
+  font-size: $font-up-1;
   a.title {
     padding: 15px 0;
     word-break: break-word;
@@ -59,7 +75,6 @@
       vertical-align: top;
       margin-top: 2px;
     }
-    border-bottom: 1px solid $primary-low;
 
     &.last-visit {
       border-bottom: none;
@@ -76,39 +91,35 @@
     td {
       border-bottom: 1px solid $danger-low;
       line-height: 0.1em;
-      padding: 0px;
+      padding: 0;
       text-align: center;
     }
 
     td span {
       background-color: $secondary;
       color: $danger-low;
-      padding: 0px 8px;
-      font-size: 0.929em;
+      padding: 0 8px;
+      font-size: $font-down-1;
     }
-  }
-
-  > tbody > tr:first-of-type {
-    border-top: 3px solid $primary-low;
   }
 
   th,
   td {
-    line-height: 1.25;
+    line-height: $line-height-large;
     text-align: left;
     vertical-align: middle;
-
   }
   th {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 1em;
-    button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium);}
-
+    font-size: $font-0;
+    button .d-icon {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
   }
   td {
     color: dark-light-choose($primary-medium, $secondary-medium);
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .main-link {
@@ -119,12 +130,18 @@
     padding-left: 5px;
   }
 
+  span.badge-category {
+    .category-name {
+      max-width: 150px;
+    }
+  }
+
   .topic-excerpt {
-    font-size: 0.929em;
-    margin-top: 8px;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    font-size: $font-down-1;
+    margin-top: 5px;
+    color: dark-light-choose($primary-high, $secondary-high);
     word-wrap: break-word;
-    line-height: 1.4;
+    line-height: $line-height-large;
     padding-right: 20px;
   }
   .topic-statuses:empty {
@@ -160,13 +177,24 @@
       padding: 15px 5px;
     }
   }
+}
 
+.heatmap-high,
+.heatmap-high a {
+  color: #fe7a15 !important;
+}
+.heatmap-med,
+.heatmap-med a {
+  color: #cf7721 !important;
+}
+.heatmap-low,
+.heatmap-low a {
+  color: #9b764f !important;
 }
 
 .topic-list.categories {
-
   .category .badge-notification {
-    background-color:transparent;
+    background-color: transparent;
     color: $primary-medium;
   }
 
@@ -182,20 +210,24 @@
   }
   td.stats {
     .unit {
-      font-size: 11px;
+      font-size: $font-down-1;
     }
   }
 
-    table.categoryStats {
-      td {
-        padding: 2px;
-        vertical-align: bottom;
-        line-height: 24px;
-        &.value { text-align: right; font-size: 1.429em; }
-        &.unit  { text-align: left; }
+  table.categoryStats {
+    td {
+      padding: 2px;
+      vertical-align: bottom;
+      line-height: $line-height-large;
+      &.value {
+        text-align: right;
+        font-size: $font-up-3;
+      }
+      &.unit {
+        text-align: left;
       }
     }
-
+  }
 }
 
 .loading .topic-list {
@@ -204,15 +236,6 @@
   tr {
     background-color: transparent;
   }
-}
-
-.list-controls {
-  .category-dropdown-menu .home {
-    color: $primary;
-    margin-left: 8px;
-  }
-
-  clear: both;
 }
 
 #list-area {
@@ -225,7 +248,7 @@
     padding: 0;
     border: 0;
     color: $danger-medium;
-    font-size: 0.929em;
+    font-size: $font-0;
     cursor: default;
   }
 }
@@ -233,7 +256,7 @@
 .topic-list {
   .alert {
     margin-bottom: 0;
-    font-size: 1em;
+    font-size: $font-0;
   }
   .spinner {
     margin-top: 40px;
@@ -248,7 +271,7 @@ ol.category-breadcrumb {
   display: block;
   float: left;
   list-style: none;
-  margin: 0 10px 0 0;
+  margin: 0 10px 10px 0;
   padding: 0;
 
   li {
@@ -258,29 +281,6 @@ ol.category-breadcrumb {
 
   .bread-crumbs-right-outlet {
     float: left;
-  }
-}
-
-.list-controls .category-dropdown-menu {
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: absolute;
-  border: 1px solid $primary-low;
-  background-color: $secondary;
-  z-index: 100;
-
-  a.badge-category, a.badge-category-parent {
-    line-height: 19px;
-    overflow:hidden;
-    margin-bottom: 0;
-  }
-  a.badge-category, .dropdown-header {
-    font-size: 0.929em;
-    font-weight: bold;
-    float: none;
-    text-transform: none;
-    max-width:200px;
-    text-overflow:ellipsis;
   }
 }
 
@@ -294,70 +294,6 @@ ol.category-breadcrumb {
 
 .topic-statuses .fa {
   padding-right: 3px;
-}
-
-.period-chooser {
-  display: inline-block;
-  @include unselectable;
-
-  h2 {
-    float: left;
-    margin: 5px 0 10px;
-    .top-date-string {
-      font-size: 0.7em;
-    }
-  }
-
-  .top-date-string {
-    color: dark-light-choose($primary-medium, $secondary-high);
-    font-weight: normal;
-    text-transform: uppercase;
-  }
-
-  button {
-    outline: 0;
-    background: transparent;
-    border: 0;
-    font-size: 1.429em;
-    padding: 5px 10px 0 10px;
-  }
-
-  #period-popup {
-
-    @include unselectable;
-
-    font-size: 1.2em;
-    border: 1px solid $primary-low;
-    padding: 5px;
-    background: $secondary;
-    position: absolute;
-    z-index: 999;
-    box-shadow: 0 2px 2px rgba(0,0,0, .4);
-
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-
-      li {
-        margin: 0;
-        padding: 0;
-        font-weight: bold;
-        a, a:visited {
-          display: block;
-          padding: 5px;
-          color: $primary;
-        }
-        .top-date-string {
-          font-weight: normal;
-          font-size: 0.8em;
-        }
-        &:hover {
-          background-color: $highlight-medium;
-        }
-      }
-    }
-  }
 }
 
 .top-title-buttons {
@@ -379,5 +315,18 @@ div.education {
 
 .table-heading {
   @extend .list-cell;
-  border-bottom: 2px solid $primary-low;
+  border-bottom: 3px solid $primary-low;
+}
+
+// This is not what we want:
+//
+//     This is an overly-long topic title that would break just right
+//     *
+//
+// Instead, we want the line to break like this:
+//
+//     This is an overly-long topic title that would break just
+//     right *
+.topic-post-badges {
+  white-space: nowrap;
 }

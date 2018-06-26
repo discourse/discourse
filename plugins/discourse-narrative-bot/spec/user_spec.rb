@@ -5,6 +5,7 @@ describe User do
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
 
   before do
+    SiteSetting.queue_jobs = false
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 
@@ -29,6 +30,21 @@ describe User do
 
         it 'should not initiate the bot' do
           expect { user }.to_not change { Post.count }
+        end
+      end
+
+      context 'with title emoji disabled' do
+        before do
+          SiteSetting.disable_discourse_narrative_bot_welcome_post = false
+          SiteSetting.max_emojis_in_title = 0
+        end
+
+        it 'initiates the bot' do
+          expect { user }.to change { Topic.count }.by(1)
+
+          expect(Topic.last.title).to eq(I18n.t(
+            'discourse_narrative_bot.new_user_narrative.hello.title'
+          ).gsub(/:robot:/, '').strip)
         end
       end
 
@@ -63,7 +79,6 @@ describe User do
         describe 'when welcome message is configured to be delayed' do
           before do
             SiteSetting.discourse_narrative_bot_welcome_post_delay = 100
-            SiteSetting.queue_jobs = true
           end
 
           it 'should delay the welcome post until user logs in' do

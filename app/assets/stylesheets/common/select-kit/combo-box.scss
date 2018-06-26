@@ -1,0 +1,123 @@
+.select-kit {
+  &.combo-box {
+    min-width: auto;
+    .select-kit-body {
+      width: 100%;
+      min-width: 150px;
+      border-radius: 0;
+      box-shadow: shadow("dropdown");
+    }
+
+    .select-kit-row {
+      margin: 0;
+      min-height: 1px;
+      padding: 6px 10px;
+      &.no-content {
+        font-weight: normal;
+      }
+    }
+
+    .select-kit-filter {
+      line-height: $line-height-medium;
+      padding: $input-padding;
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+
+      .filter-input,
+      .filter-input:focus,
+      .filter-input:active {
+        width: auto;
+        max-width: 90%; // Firefox quirk
+      }
+
+      .filter-icon {
+        padding-left: 5px;
+      }
+    }
+
+    .select-kit-header {
+      background: $secondary;
+      border: 1px solid $primary-medium;
+      padding: $input-padding;
+      font-weight: 500;
+      font-size: $font-0;
+      line-height: $line-height-large;
+      min-height: 2em; // when no content is available
+
+      &.is-focused {
+        border: 1px solid $tertiary;
+        box-shadow: shadow("focus");
+      }
+    }
+
+    .select-kit-collection {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      min-width: 100px;
+      max-height: 200px;
+      max-width: 32em;
+
+      .collection-header {
+        a {
+          white-space: nowrap;
+          color: $primary;
+          line-height: $line-height-medium;
+          font-weight: bold;
+          display: block;
+          padding: 6px 10px;
+          color: $tertiary;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    &.is-disabled {
+      .select-kit-header {
+        background: #e9e9e9;
+        border-color: #ddd;
+      }
+    }
+
+    &.is-highlighted {
+      .select-kit-header {
+        border: 1px solid $tertiary;
+        box-shadow: shadow("focus");
+      }
+    }
+
+    &.is-expanded {
+      .select-kit-wrapper {
+        display: block;
+        border: 1px solid $tertiary;
+        box-shadow: shadow("focus");
+      }
+    }
+
+    &.is-expanded.is-above {
+      .select-kit-header {
+        border-radius: 0 0 3px 3px;
+      }
+
+      .select-kit-body {
+        border-radius: 3px 3px 0 0;
+      }
+    }
+
+    &.tag-drop,
+    &.group-dropdown {
+      min-width: auto;
+      .select-kit-row {
+        font-weight: bold;
+      }
+    }
+
+    &.is-expanded .select-kit-wrapper,
+    .select-kit-wrapper {
+      display: none;
+    }
+  }
+}

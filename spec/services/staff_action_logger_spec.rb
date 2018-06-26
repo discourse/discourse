@@ -72,21 +72,39 @@ describe StaffActionLogger do
     end
   end
 
-  describe 'log_topic_deletion' do
-    let(:deleted_topic) { Fabricate(:topic) }
+  describe 'log_topic_delete_recover' do
+    let(:topic) { Fabricate(:topic) }
 
-    subject(:log_topic_deletion) { described_class.new(admin).log_topic_deletion(deleted_topic) }
+    context "when deleting topic" do
+      subject(:log_topic_delete_recover) { described_class.new(admin).log_topic_delete_recover(topic) }
 
-    it 'raises an error when topic is nil' do
-      expect { logger.log_topic_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+      it 'raises an error when topic is nil' do
+        expect { logger.log_topic_delete_recover(nil) }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'raises an error when topic is not a Topic' do
+        expect { logger.log_topic_delete_recover(1) }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'creates a new UserHistory record' do
+        expect { log_topic_delete_recover }.to change { UserHistory.count }.by(1)
+      end
     end
 
-    it 'raises an error when topic is not a Topic' do
-      expect { logger.log_topic_deletion(1) }.to raise_error(Discourse::InvalidParameters)
-    end
+    context "when recovering topic" do
+      subject(:log_topic_delete_recover) { described_class.new(admin).log_topic_delete_recover(topic, "recover_topic") }
 
-    it 'creates a new UserHistory record' do
-      expect { log_topic_deletion }.to change { UserHistory.count }.by(1)
+      it 'raises an error when topic is nil' do
+        expect { logger.log_topic_delete_recover(nil, "recover_topic") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'raises an error when topic is not a Topic' do
+        expect { logger.log_topic_delete_recover(1, "recover_topic") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'creates a new UserHistory record' do
+        expect { log_topic_delete_recover }.to change { UserHistory.count }.by(1)
+      end
     end
   end
 
@@ -385,12 +403,12 @@ describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      user.trust_level_locked = true
+      user.manual_locked_trust_level = 3
       expect { logger.log_lock_trust_level(user) }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:lock_trust_level])
 
-      user.trust_level_locked = false
+      user.manual_locked_trust_level = nil
       expect { logger.log_lock_trust_level(user) }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:unlock_trust_level])
@@ -432,6 +450,63 @@ describe StaffActionLogger do
       expect(user_history.action).to eq(UserHistory.actions[:change_readonly_mode])
       expect(user_history.new_value).to eq('f')
       expect(user_history.previous_value).to eq('t')
+    end
+  end
+
+  describe 'log_check_personal_message' do
+    let(:personal_message) { Fabricate(:private_message_topic) }
+
+    subject(:log_check_personal_message) { described_class.new(admin).log_check_personal_message(personal_message) }
+
+    it 'raises an error when topic is nil' do
+      expect { logger.log_check_personal_message(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when topic is not a Topic' do
+      expect { logger.log_check_personal_message(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_check_personal_message }.to change { UserHistory.count }.by(1)
+    end
+  end
+
+  describe 'log_post_approved' do
+    let(:approved_post) { Fabricate(:post) }
+
+    subject(:log_post_approved) { described_class.new(admin).log_post_approved(approved_post) }
+
+    it 'raises an error when post is nil' do
+      expect { logger.log_post_approved(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when post is not a Post' do
+      expect { logger.log_post_approved(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_post_approved }.to change { UserHistory.count }.by(1)
+    end
+  end
+
+  describe 'log_post_rejected' do
+    let(:rejected_post) { Fabricate(:queued_post) }
+
+    subject(:log_post_rejected) { described_class.new(admin).log_post_rejected(rejected_post) }
+
+    it 'raises an error when post is nil' do
+      expect { logger.log_post_rejected(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when post is not a QueuedPosts' do
+      expect { logger.log_post_rejected(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_post_rejected }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:post_rejected])
+      expect(user_history.details).to include(rejected_post.raw)
     end
   end
 end

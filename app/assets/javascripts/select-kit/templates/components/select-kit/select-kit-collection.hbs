@@ -1,0 +1,54 @@
+{{#if collectionHeaderComputedContent}}
+  <div class="collection-header">
+    {{{collectionHeaderComputedContent}}}
+  </div>
+{{/if}}
+
+{{#if hasSelection}}
+  {{#if noneRowComputedContent}}
+    {{component noneRowComponent
+      computedContent=noneRowComputedContent
+      templateForRow=templateForNoneRow
+      highlighted=highlighted
+      onMouseoverRow=onMouseoverRow
+      computedValue=computedValue
+      options=rowComponentOptions
+      onClickRow=onClickRow
+    }}
+  {{/if}}
+{{/if}}
+
+{{#if createRowComputedContent}}
+  {{component createRowComponent
+    computedContent=createRowComputedContent
+    highlighted=highlighted
+    computedValue=computedValue
+    templateForRow=templateForCreateRow
+    onMouseoverRow=onMouseoverRow
+    onClickRow=onClickRow
+    options=rowComponentOptions
+  }}
+{{/if}}
+
+{{#if noContentRow}}
+  <li class="select-kit-row no-content">
+    {{noContentRow}}
+  </li>
+{{else}}
+  {{#if validationMessage}}
+    <div class="validation-message">
+      {{validationMessage}}
+    </div>
+  {{/if}}
+  {{#each collectionComputedContent as |computedContent|}}
+    {{component rowComponent
+      computedContent=computedContent
+      highlighted=highlighted
+      computedValue=computedValue
+      templateForRow=templateForRow
+      onClickRow=onClickRow
+      onMouseoverRow=onMouseoverRow
+      options=rowComponentOptions
+    }}
+  {{/each}}
+{{/if}}

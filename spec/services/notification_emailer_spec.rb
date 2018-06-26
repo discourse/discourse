@@ -144,7 +144,7 @@ describe NotificationEmailer do
 
   context 'user_private_message' do
     let(:type) { :user_private_message }
-    let(:delay) { SiteSetting.private_email_time_window_seconds }
+    let(:delay) { SiteSetting.personal_email_time_window_seconds }
     let!(:notification) { create_notification(:private_message) }
 
     include_examples "enqueue_private"
@@ -159,7 +159,7 @@ describe NotificationEmailer do
 
   context 'user_invited_to_private_message' do
     let(:type) { :user_invited_to_private_message }
-    let(:delay) { SiteSetting.private_email_time_window_seconds }
+    let(:delay) { SiteSetting.personal_email_time_window_seconds }
     let!(:notification) { create_notification(:invited_to_private_message) }
 
     include_examples "enqueue_public"
@@ -167,7 +167,7 @@ describe NotificationEmailer do
 
   context 'user_invited_to_topic' do
     let(:type) { :user_invited_to_topic }
-    let(:delay) { SiteSetting.private_email_time_window_seconds }
+    let(:delay) { SiteSetting.personal_email_time_window_seconds }
     let!(:notification) { create_notification(:invited_to_topic) }
 
     include_examples "enqueue_public"

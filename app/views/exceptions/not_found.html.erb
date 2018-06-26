@@ -1,35 +1,35 @@
-<% local_domain = "#{request.protocol}#{request.host_with_port}" %>
-
 <h1 class="page-not-found"><%= t 'page_not_found.title' %></h1>
+
+<%= build_plugin_html 'server:not-found-before-topics' %>
 
 <% unless SiteSetting.login_required? && current_user.nil? %>
   <div class="row page-not-found-topics">
-    <div class="span8 popular-topics">
+    <div class="popular-topics">
       <h2 class="popular-topics-title"><%= t 'page_not_found.popular_topics' %></h2>
       <% @top_viewed.each do |t| %>
         <div class='not-found-topic'>
           <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
         </div>
       <% end %>
-      <br/>
       <a href="<%= path "/top" %>" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
     </div>
-    <div class="span8 recent-topics">
+    <div class="recent-topics">
       <h2 class="recent-topics-title"><%= t 'page_not_found.recent_topics' %></h2>
       <% @recent.each do |t| %>
         <div class='not-found-topic'>
           <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
         </div>
       <% end %>
-      <br/>
       <a href="<%= path "/latest" %>" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
     </div>
   </div>
 <% end %>
 
 <%- unless @hide_google %>
+  <% local_domain = "#{request.protocol}#{request.host_with_port}" %>
+
   <div class="row">
-    <div class="span10 page-not-found-search">
+    <div class="page-not-found-search">
       <h2><%= t 'page_not_found.search_title' %></h2>
       <p>
         <form action='//google.com/search' id='google-search'>

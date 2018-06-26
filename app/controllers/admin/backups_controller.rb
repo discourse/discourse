@@ -1,8 +1,8 @@
 require "backup_restore/backup_restore"
-require "email_backup_token"
 
 class Admin::BackupsController < Admin::AdminController
 
+  before_action :ensure_backups_enabled
   skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
 
   def index
@@ -47,9 +47,11 @@ class Admin::BackupsController < Admin::AdminController
 
   def email
     if backup = Backup[params.fetch(:id)]
-      token = EmailBackupToken.set(current_user.id)
-      download_url = "#{url_for(controller: 'backups', action: 'show')}?token=#{token}"
-      Jobs.enqueue(:download_backup_email, to_address: current_user.email, backup_file_path: download_url)
+      Jobs.enqueue(:download_backup_email,
+        user_id: current_user.id,
+        backup_file_path: url_for(controller: 'backups', action: 'show')
+      )
+
       render body: nil
     else
       render body: nil, status: 404
@@ -68,7 +70,7 @@ class Admin::BackupsController < Admin::AdminController
       send_file backup.path
     else
       if @error
-        render layout: 'no_ember', status: 422
+        render template: 'admin/backups/show.html.erb', layout: 'no_ember', status: 422
       else
         render body: nil, status: 404
       end
@@ -97,7 +99,7 @@ class Admin::BackupsController < Admin::AdminController
       client_id: params.fetch(:client_id),
       publish_to_message_bus: true,
     }
-    SiteSetting.set_and_log(:disable_emails, true, current_user)
+    SiteSetting.set_and_log(:disable_emails, 'yes', current_user)
     BackupRestore.restore!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
     render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
@@ -175,6 +177,10 @@ class Admin::BackupsController < Admin::AdminController
 
   def has_enough_space_on_disk?(size)
     `df -Pk #{Rails.root}/public/backups | awk 'NR==2 {print $4 * 1024;}'`.to_i > size
+  end
+
+  def ensure_backups_enabled
+    raise Discourse::InvalidAccess.new unless SiteSetting.enable_backups?
   end
 
 end

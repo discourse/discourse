@@ -1,21 +1,24 @@
-import { default as PrettyText, buildOptions } from 'pretty-text/pretty-text';
-import { performEmojiUnescape, buildEmojiUrl } from 'pretty-text/emoji';
-import WhiteLister from 'pretty-text/white-lister';
-import { sanitize as textSanitize } from 'pretty-text/sanitizer';
-import loadScript from 'discourse/lib/load-script';
-import { formatUsername } from 'discourse/lib/utilities';
+import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
+import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
+import WhiteLister from "pretty-text/white-lister";
+import { sanitize as textSanitize } from "pretty-text/sanitizer";
+import loadScript from "discourse/lib/load-script";
+import { formatUsername } from "discourse/lib/utilities";
 
 function getOpts(opts) {
-  const siteSettings = Discourse.__container__.lookup('site-settings:main'),
-        site = Discourse.__container__.lookup('site:main');
+  const siteSettings = Discourse.__container__.lookup("site-settings:main"),
+    site = Discourse.__container__.lookup("site:main");
 
-  opts = _.merge({
-    getURL: Discourse.getURLWithCDN,
-    currentUser: Discourse.__container__.lookup('current-user:main'),
-    censoredWords: site.censored_words,
-    siteSettings,
-    formatUsername
-  }, opts);
+  opts = _.merge(
+    {
+      getURL: Discourse.getURLWithCDN,
+      currentUser: Discourse.__container__.lookup("current-user:main"),
+      censoredWords: site.censored_words,
+      siteSettings,
+      formatUsername
+    },
+    opts
+  );
 
   return buildOptions(opts);
 }
@@ -30,21 +33,22 @@ export function cook(text, options) {
 export function cookAsync(text, options) {
   if (Discourse.MarkdownItURL) {
     return loadScript(Discourse.MarkdownItURL)
-      .then(()=>cook(text, options))
+      .then(() => cook(text, options))
       .catch(e => Ember.Logger.error(e));
   } else {
     return Ember.RSVP.Promise.resolve(cook(text));
   }
 }
 
-
 export function sanitize(text, options) {
   return textSanitize(text, new WhiteLister(options));
 }
 
 function emojiOptions() {
-  const siteSettings = Discourse.__container__.lookup('site-settings:main');
-  if (!siteSettings.enable_emoji) { return; }
+  const siteSettings = Discourse.__container__.lookup("site-settings:main");
+  if (!siteSettings.enable_emoji) {
+    return;
+  }
 
   return { getURL: Discourse.getURLWithCDN, emojiSet: siteSettings.emoji_set };
 }

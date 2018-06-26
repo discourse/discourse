@@ -17,26 +17,31 @@ th:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, มกราคม, กุมภาพันธ์, มีนาคม, เมษายน, พฤษภาคม, มิถุนายน, กรกฎาคม, สิงหาคม, กันยายน, ตุลาคม, พฤศจิกายน, ธันวาคม]
+    month_names: [~, มกราคม, กุมภาพันธ์, มีนาคม, เมษายน, พฤษภาคม, มิถุนายน, กรกฎาคม, สิงหาคม, กันยายน, ตุลาคม, พฤศจิกายน, ธันวาคม]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "ดิสคอส"
   topics: "หัวข้อ"
   posts: "โพสต์"
   loading: "กำลังโหลด"
+  powered_by_html: 'บอร์ดนี้ใช้<a href="https://www.discourse.org">Discourse</a> จะแสดงได้สมบูรณ์เมื่อเปิดการใช้งาน JavaScript'
   log_in: "เข้าสู่ระบบ"
+  disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"
   anonymous: "ไม่ระบุชื่อ"
+  remove_posts_deleted_by_author: "ถูกลบโดยผู้โพส"
   emails:
     incoming:
       errors:
         inactive_user_error: "เกิดขึ้นเมื่อผู้ส่งยังไม่มีการใช้งาน"
-        blocked_user_error: "เกิดขึ้นเมื่อผู้ใช้งานโดนบล็อค"
   errors: &errors
     messages:
       invalid: ไม่ถูกต้อง
+  activemodel:
+    errors:
+      <<: *errors
   embed:
     start_discussion: "เริ่มการสนทนา"
     continue: "ดำเนินการสนทนาต่อ"
@@ -57,6 +62,9 @@ th:
   education:
     until_posts:
       other: "%{count} โพส"
+  activerecord:
+    errors:
+      <<: *errors
   category:
     topic_prefix: "เกี่ยวกับหมวด %{category}"
   archetypes:
@@ -96,13 +104,7 @@ th:
     user_posted_pm_staged:
       text_body_template: |2
 
-        %{message}
+          %{message}
   page_not_found:
     see_more: "อื่น"
     search_google: "กูเกิ้ล"
-  activemodel:
-    errors:
-      <<: *errors
-  activerecord:
-    errors:
-      <<: *errors

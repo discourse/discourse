@@ -53,7 +53,6 @@ fa_IR:
         quote: "در میان هر سختی، فرصتی نهفته است."
         author: "آلبرت انیشتین"
       '2':
-        quote: "شما باید همان تغییری باشید که می خواهید در دنیا احساس کنید."
         author: "ماهاتما گاندی"
       '3':
         quote: "گریه نکن که آخر خط است، بخند که اتفاق افتاد."
@@ -162,7 +161,7 @@ fa_IR:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          عالی! این کار برای اکثر پیوندها <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> صدق میکنه. به یاد داشته باش که لینک بایستی در یک خط به تنهایی و بدون پس و پیش قرار بگیرد.
+          عالی! این کار برای اکثر پیوندها <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> صدق میکنه. به یاد داشته باش که لینک بایستی در یک خط به تنهایی و _بدون پس و پیش_ قرار بگیرد.
         not_found: |-
           متاسفم، نمیتوانم پیوند را در پاسخ شما پیدا کنم! :cry:
 
@@ -173,7 +172,7 @@ fa_IR:
         instructions: |-
           این عکسی از اسب تک شاخ است:
 
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
 
           اگر پسندیدی (کیه که نپسنده!) برای اینکه من بدونم لطفا دکمه‌ی پسند :heart: زیر این نوشته را فشار بده.
 
@@ -223,11 +222,11 @@ fa_IR:
           هر متنی را که در نوشته‌ی من انتخاب کنی، کلید <kbd>**نقل‌قول**</kbd>را برایت نشان می‌دهد. همچنین انتخاب کلید **پاسخ** بعد از انتخاب متن هم همان کار را می‌کند. می‌توانی یکبار دیگر امتحان کنی؟
       bookmark:
         instructions: |-
-          اگر می‌خواهی بیشتر یاد بگیری، در زیر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> و <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**نشانه‌گذاری این پیام خصوصی** را انتخاب کن. اگر این کار را بکنی، ممکن است هدیه‌ای :gift: در آینده‌ برای شما باشد.
+          اگر می‌خواهی بیشتر یاد بگیری، در زیر <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> و <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **نشانه‌گذاری این پیام خصوصی** را انتخاب کن. اگر این کار را بکنی، ممکن است هدیه‌ای :gift: در آینده‌ برای شما باشد.
         reply: |-
           عالی! الان تو میتوانی راه برگشت به این پیغام خصوصی را هر زمان که دوست داشتی از [برگه‌ی نشانک‌ها در پروفایل کاربری](%{profile_page_url}/activity/bookmarks)  پیدا کنی. فقط کافی است که روی عکس پروفایل خود در بالا سمت چپ انتخاب کنی &#8598;
         not_found: |-
-          اوه، هیچ نشانکی در این موضوع نمیبینم. آیا آیکون نشانک را زیر هر نوشته پیدا کردی؟ در صورت لز.م از آیکون "بیشتر نشان بده" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> برای آشکار کردن دیگر قابلیت ها استفاده کن.
+          اوه، هیچ نشانکی در این موضوع نمیبینم. آیا آیکون نشانک را زیر هر نوشته پیدا کردی؟ در صورت لزوم از آیکون "بیشتر نشان بده" <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> برای آشکار کردن دیگر قابلیت ها استفاده کن.
       emoji:
         instructions: |-
           شاید دیده باشی که من از عکس‌های کوچکی مثل :blue_car::dash: در پاسخ‌هایم استفاده می‌کنم. اینها [شکلک](https://en.wikipedia.org/wiki/Emoji) نام دارند. آیا می‌توانی که یک شکلک را به پاسخت اضافه کنی؟ هر یک از موارد زیر این کار را میتواند انجام بدهد:
@@ -236,7 +235,7 @@ fa_IR:
 
           - علامت دونقطه <kbd>:</kbd> را بنویس و سپس اسم شکلک را کامل کن `:tada:`
 
-          - کلیک شکلک <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> را در ویرایشگر، یا در صفحه‌کلید موبایلت فشار بده
+          - کلیک شکلک <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> را در ویرایشگر، یا در صفحه‌کلید موبایلت فشار بده
         reply: |-
           :sparkles: خیلی شکلک شگفت انگیزی بود :sparkles:
         not_found: |-
@@ -244,7 +243,7 @@ fa_IR:
 
           سعی کن علامت دونقطه <kbd>:</kbd> رو تایپ کنی تا صفحه‌ی انتخاب شکلک رو باز کنی، سپس اولین حروف چیزی که میخوای را تایپ کن. مانند `:bird:`
 
-          یا کلید شکلک <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> را در ویرایشگر انتخاب کن.
+          یا کلید شکلک <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> را در ویرایشگر انتخاب کن.
 
           (اگر با موبایلت می‌نویسی، میتوانی شکلک را مستقیما از طریق صفحه کلید خود موبایل انتخاب بکنی.)
       mention:
@@ -266,16 +265,16 @@ fa_IR:
         reply: |-
           [کارکنان ما](/groups/staff) به طور خصوصی از پرچم گذاری شما آگاه می‌شوند. اگر اعضای تالار به تعداد کافی یک نوشته را پرچم گذاری کنند، آن نوشته به عنوان پیشگیری خود به خود پنهان می‌شود. (به خاطر اینکه من در حقیقت چیز زشتی ننوشتم :angel: خودم پرچم گذاری شما را فعلا پاک کردم.)
         not_found: |-
-          اوه نه، نوشته‌ی زشت من هنوز پرچم گذاری نشده. :worried: آیا میتوانی با استفاده از آیکون **پرچم** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> این نوشته را به عنوان نامناسب گزارش کنی؟ فراموش نکن که برای آشکارسازی قابلیت‌های بیشتر می‌توانی کلید "بیشتر نشان بده" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> را برای هر نوشته انتخاب کنی.
+          اوه نه، نوشته‌ی زشت من هنوز پرچم گذاری نشده. :worried: آیا میتوانی با استفاده از آیکون **پرچم** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> این نوشته را به عنوان نامناسب گزارش کنی؟ فراموش نکن که برای آشکارسازی قابلیت‌های بیشتر می‌توانی کلید "بیشتر نشان بده" <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> را برای هر نوشته انتخاب کنی.
       search:
         instructions: |-
-          من در این مبحث یک سوپرایز برای شما دارم. اگر برای یک چالش آماده ای،  **آیکون  جستجو** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> را درگوشه ی بالا سمت چپ &#8598;  انتخاب کن که جستجو اش بکنی.
+          من در این مبحث یک سوپرایز برای شما دارم. اگر برای یک چالش آماده ای،  **آیکون  جستجو** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> را درگوشه ی بالا سمت چپ &#8598;  انتخاب کن که جستجو اش بکنی.
 
           سعی کن که عبارت "سنجاب" را در این مبحث جستجو کنی
         hidden_message: |-
           چطور تونستی این سنجاب رو نادیده بگیری؟ :wink:
 
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/images/capybara-eating.gif"/>
 
           آیا متوجه شدی که الان تو در ابتدای مبحث هستی؟ به این سنجاب گرسنه‌ی بیچاره، با **پاسخ دادن توسط شکلک `:herb:`** (در پاسخ بنویس `:herb:`) غذا بده تا علاوه بر آن به صورت اتوماتیک به آخر مبحث برگردی.
         reply: |-
@@ -287,7 +286,7 @@ fa_IR:
 
           - اگر یه صفحه کلید فیزیکی داری، <kbd>؟</kbd> رو فشار بده تا میانبرهای بدردبخوری که داریم را مشاهده کنی.
         not_found: |-
-          :thinking: ظاهرا مشکلی برای شما بوجود آمده. متاسفیم. آیا دقیقا عبارت **سنجاب** را جستجو<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> کردی؟
+          :thinking: ظاهرا مشکلی برای شما بوجود آمده. متاسفیم. آیا دقیقا عبارت **سنجاب** را جستجو<img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> کردی؟
       certificate:
         alt: 'گواهی موفقیت'
     advanced_user_narrative:
@@ -296,9 +295,6 @@ fa_IR:
       title: ':arrow_up: ویژگی‌های کاربر حرفه‌ای'
       edit:
         bot_created_post_raw: "@%{discobot_username} تاکنون باحال ترین رباتی بوده که من شناختم :wink:"
-      delete:
-        not_found: |-
-          هنوز هیچ نوشته‌ی حذف شده ای را مشاهده نمیکنم. به یاد داشته باش که آیکون "بیشتر نشان بده"<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> آیکون حذف <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> را به شما نشان می‌دهد.
       category_hashtag:
         reply: |-
           عالی! به یاد داشته باش که این مورد برای دسته_و_برچسب، اگر برچسب ها فعال باشند، کار می‌کند.
@@ -306,8 +302,6 @@ fa_IR:
         not_found: |-
           به نظر میرسد که هنوز در حال مشاهده‌ی :eyes: این مبحث هستی! اگر هنوز در پیدا کردن آن مشکل داری، دکمه‌ی سطح آگاه‌سازی در زیر همسن مبحث قرار گرفته است.
       poll:
-        instructions: |-
-          آیا میدانستی که می‌توانی در هر نوشته‌ای نظرسنجی قرار بدهی؟ سعی کن با استفاده از دکمه‌ی چرخ‌دنده <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> در ویرایشگر، **یک نظرسنجی بسازی**.
         reply: |-
           هی، عجب نظرسنجی جالبی! آیا از آموزش‌های من خوشت آمد؟
 

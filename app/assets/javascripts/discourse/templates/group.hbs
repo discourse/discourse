@@ -1,3 +1,5 @@
+{{plugin-outlet name="before-group-container" args=(hash group=model)}}
+
 <div class="container group {{model.name}}">
   <div class='group-details-container'>
     <div class='group-info'>
@@ -21,41 +23,46 @@
     </div>
 
     {{#if model.bio_cooked}}
-      <hr/>
+      <hr>
 
       <div class='group-bio'>
         <p>{{{model.bio_cooked}}}</p>
       </div>
     {{/if}}
-  </div>
 
-  <div class="list-controls">
-    <div class="container">
-      {{#mobile-nav class='group-nav' desktopClass="nav nav-pills" currentPath=application.currentPath}}
-        {{#each getTabs as |tab|}}
-          <li>
-            {{#link-to tab.location model title=tab.message class=tab.name}}
-              {{#if tab.icon}}{{d-icon tab.icon}}{{/if}}
-              {{tab.message}}
-              {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
-            {{/link-to}}
-          </li>
-        {{/each}}
-      {{/mobile-nav}}
+    <div class="group-details-button">
+      {{group-membership-button
+          class="inline"
+          model=model
+          showLogin='showLogin'}}
 
       {{#if displayGroupMessageButton}}
         {{d-button
             action="messageGroup"
-            class="btn-primary group-message-button"
+            class="btn-primary group-message-button inline"
             icon="envelope"
             label="groups.message"}}
       {{/if}}
 
-      {{group-membership-button model=model showLogin='showLogin'}}
+      {{#if currentUser.admin}}
+        {{d-button action="destroy"
+            disabled=destroying
+            icon="trash"
+            class='btn-danger'
+            label="admin.groups.delete"}}
+      {{/if}}
     </div>
   </div>
 
-  <div class='group-outlet'>
-    {{outlet}}
+  <div class="list-controls">
+    <div class="container">
+      {{group-navigation group=model currentPath=application.currentPath tabs=tabs}}
+    </div>
   </div>
+
+    <div class='user-table'>
+      <div class='wrapper'>
+        {{outlet}}
+      </div>
+    </div>
 </div>

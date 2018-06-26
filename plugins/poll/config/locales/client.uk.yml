@@ -11,6 +11,7 @@ uk:
       total_votes:
         one: "голос"
         few: "голосів"
+        many: "голоси"
         other: "голоси"
       average_rating: "Середній рейтинг: <strong>%{average}</strong>."
       multiple:
@@ -18,6 +19,7 @@ uk:
           at_least_min_options:
             one: "Виберіть хоча б <strong>1</strong> варіант"
             few: "Виберіть хоча б <strong>%{count}</strong> варіантів"
+            many: "Виберіть хоча б <strong>%{count}</strong> варіанти"
             other: "Виберіть хоча б <strong>%{count}</strong> варіанти"
       cast-votes:
         label: "Проголосувати!"

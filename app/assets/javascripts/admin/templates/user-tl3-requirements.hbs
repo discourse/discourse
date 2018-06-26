@@ -1,10 +1,10 @@
 <div class='admin-controls'>
-  <div class='span15'>
+  <nav>
     <ul class="nav nav-pills">
       <li>{{#link-to 'adminUser' model}}{{d-icon "caret-left"}} &nbsp;{{model.username}}{{/link-to}}</li>
       <li>{{#link-to 'adminUsersList.show' 'member'}}{{i18n 'admin.user.trust_level_2_users'}}{{/link-to}}</li>
     </ul>
-  </div>
+  </nav>
 </div>
 
 <div class="admin-container tl3-requirements">
@@ -95,6 +95,18 @@
         <td>{{check-icon model.tl3Requirements.met.likes_received_users}}</td>
         <td>{{model.tl3Requirements.num_likes_received_users}}</td>
         <td>{{model.tl3Requirements.min_likes_received_users}}</td>
+      </tr>
+      <tr>
+        <th>{{i18n 'admin.user.tl3_requirements.silenced'}}</th>
+        <td>{{check-icon model.tl3Requirements.met.silenced}}</td>
+        <td>{{model.tl3Requirements.penalty_counts.silenced}}</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <th>{{i18n 'admin.user.tl3_requirements.suspended'}}</th>
+        <td>{{check-icon model.tl3Requirements.met.suspended}}</td>
+        <td>{{model.tl3Requirements.penalty_counts.suspended}}</td>
+        <td>0</td>
       </tr>
     </tbody>
   </table>

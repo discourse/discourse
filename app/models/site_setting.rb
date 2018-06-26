@@ -30,7 +30,7 @@ class SiteSetting < ActiveRecord::Base
   client_settings << :available_locales
 
   def self.available_locales
-    LocaleSiteSetting.values.map { |e| e[:value] }.join('|')
+    LocaleSiteSetting.values.to_json
   end
 
   def self.topic_title_length
@@ -38,7 +38,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.private_message_title_length
-    min_private_message_title_length..max_topic_title_length
+    min_personal_message_title_length..max_topic_title_length
   end
 
   def self.post_length
@@ -50,7 +50,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.private_message_post_length
-    min_private_message_post_length..max_post_length
+    min_personal_message_post_length..max_post_length
   end
 
   def self.top_menu_items
@@ -133,7 +133,7 @@ class SiteSetting < ActiveRecord::Base
     end
 
     def self.absolute_base_url
-      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket
+      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       if SiteSetting.Upload.s3_region == "us-east-1"
@@ -148,6 +148,11 @@ class SiteSetting < ActiveRecord::Base
 
   def self.Upload
     SiteSetting::Upload
+  end
+
+  def self.shared_drafts_enabled?
+    c = SiteSetting.shared_drafts_category
+    c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
   end
 
 end

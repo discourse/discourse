@@ -12,7 +12,7 @@ class UsernameCheckerService
   end
 
   def check_username_availability(username, email)
-    if User.username_available?(username)
+    if User.username_available?(username, email)
       { available: true, is_developer: is_developer?(email) }
     else
       { available: false, suggestion: UserNameSuggester.suggest(username) }

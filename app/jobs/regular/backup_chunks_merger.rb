@@ -1,7 +1,7 @@
 module Jobs
 
   class BackupChunksMerger < Jobs::Base
-    sidekiq_options retry: false
+    sidekiq_options queue: 'critical', retry: false
 
     def execute(args)
       filename   = args[:filename]
@@ -19,6 +19,10 @@ module Jobs
 
       # merge all chunks
       HandleChunkUpload.merge_chunks(chunks, upload_path: backup_path, tmp_upload_path: tmp_backup_path, model: Backup, identifier: identifier, filename: filename, tmp_directory: tmp_directory)
+
+      # push an updated list to the clients
+      data = ActiveModel::ArraySerializer.new(Backup.all, each_serializer: BackupSerializer).as_json
+      MessageBus.publish("/admin/backups", data, user_ids: User.staff.pluck(:id))
     end
 
   end

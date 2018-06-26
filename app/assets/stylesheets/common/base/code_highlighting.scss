@@ -41,7 +41,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-name,
 .coffeescript .hljs-params,
 .scss .hljs-meta {
-  color: #900;
+  color: dark-light-choose(#d14, #f99);
   font-weight: bold;
 }
 
@@ -56,7 +56,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .haskell .hljs-type,
 .vhdl .hljs-literal,
 .tex .hljs-command {
-  color: dark-light-choose(#458, #9AE);
+  color: dark-light-choose(#458, #9ae);
   font-weight: bold;
 }
 
@@ -110,14 +110,15 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   color: #aaa;
 }
 
-
 /*
 --------------------------------------------------------------------------------
 |                       SHOULD NOT BE REMOVED                                  |
 --------------------------------------------------------------------------------
 */
 
-p > code, li > code, pre > code {
+p > code,
+li > code,
+pre > code {
   color: dark-light-choose(#333, #f8f8f8);
   background: dark-light-choose(#f8f8f8, #333);
 }

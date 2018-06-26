@@ -1,0 +1,60 @@
+$discourse-tooltip-background: $secondary;
+$discourse-tooltip-border: $primary-medium;
+
+#discourse-tooltip {
+  background-color: $discourse-tooltip-background;
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid $discourse-tooltip-border;
+  max-width: 400px;
+  margin-top: 25px;
+  overflow-wrap: break-word;
+  display: none;
+  font-size: $font-0;
+  font-weight: 500;
+
+  &.retina {
+    border: 0.5px solid $discourse-tooltip-border;
+  }
+
+  .tooltip-pointer {
+    position: relative;
+    background: $discourse-tooltip-background;
+  }
+
+  .tooltip-pointer:before,
+  .tooltip-pointer:after {
+    position: absolute;
+    pointer-events: none;
+    border: solid transparent;
+    bottom: 100%;
+    content: "";
+    height: 0;
+    width: 0;
+  }
+
+  .tooltip-pointer:after {
+    border-bottom-color: $discourse-tooltip-background;
+    border-width: 8px;
+    left: 50%;
+    margin-left: -8px;
+    margin-bottom: -0.5px;
+  }
+
+  .tooltip-pointer:before {
+    border-bottom-color: $discourse-tooltip-border;
+    border-width: 9px;
+    left: 50%;
+    margin-left: -9px;
+    margin-bottom: -0.5px;
+  }
+
+  .tooltip-content {
+    padding: 1em;
+    max-width: 250px;
+    font-size: $font-down-1;
+    color: $primary;
+    box-shadow: shadow("dropdown");
+    line-height: 1.4em;
+  }
+}

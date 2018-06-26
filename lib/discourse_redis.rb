@@ -27,7 +27,7 @@ class DiscourseRedis
             thread = Thread.new { initiate_fallback_to_master }
             thread.join
             break if synchronize { @master }
-            sleep 10
+            sleep 5
           ensure
             thread.kill
           end
@@ -229,7 +229,7 @@ class DiscourseRedis
   end
 
   def reconnect
-    @redis.client.reconnect
+    @redis._client.reconnect
   end
 
   def namespace_key(key)

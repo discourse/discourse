@@ -1,14 +1,23 @@
 .modal-open {
   .dropdown-menu {
-     z-index: 2050;
+    z-index: z("modal", "dropdown");
   }
   .popover {
-    z-index: 2060;
+    z-index: z("modal", "popover");
   }
   .tooltip {
-    z-index: 2070;
+    z-index: z("modal", "tooltip");
   }
+}
 
+.bootbox.modal {
+  position: fixed;
+  z-index: z("modal", "content");
+  overflow: auto;
+  height: auto;
+  background-color: $secondary;
+  box-shadow: shadow("card");
+  background-clip: padding-box;
 }
 
 .input-hint-text {
@@ -17,7 +26,25 @@
 }
 
 .modal-header {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
+
+  .title {
+    h3 {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .modal-close {
+    order: 2;
+    margin-left: auto;
+  }
 }
 
 .modal-backdrop {
@@ -26,7 +53,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
+  z-index: z("modal", "overlay");
   background-color: #111;
   &.fade {
     opacity: 0;
@@ -35,57 +62,66 @@
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
-  -webkit-animation: fade .3s;
-          animation: fade .3s;
-  opacity: .9;
+  animation: fade 0.3s;
+  opacity: 0.9;
   filter: alpha(opacity=90);
 }
 
 // fade in
 @keyframes fade {
-  from { opacity: 0 }
-    to { opacity: .9 }
-}
-
-@-webkit-keyframes fade {
-  from { opacity: 0 }
-    to { opacity: .9 }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
 }
 
 // slide in
 @keyframes slidein {
-  from { transform: translateY(-20%); }
-    to { transform: translateY(0); }
-}
-
-@-webkit-keyframes slidein {
-  from { -webkit-transform: translateY(-20%); }
-    to { -webkit-transform: translateY(0); }
+  from {
+    transform: translateY(-20%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .modal-outer-container {
-  display:table;
-  width:100%;
-  height:100%;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 .modal-inner-container {
-  max-width: 710px;
+  display: table;
+  width: 100%;
+  min-width: 320px;
+  max-width: 700px;
   margin: 0 auto;
   background-color: $secondary;
   background-clip: padding-box;
+  box-shadow: shadow("modal");
 
-  .select-box-kit {
+  @media screen and (min-width: 475px) {
+    min-width: 475px;
+    width: auto;
+  }
+
+  .select-kit {
     width: 220px;
+
+    &.tag-chooser {
+      width: 100%;
+    }
   }
 }
 
 .create-account.in .modal-inner-container,
 .login-modal.in .modal-inner-container {
-  -webkit-animation: slidein .3s;
-          animation: slidein .3s;
+  animation: slidein 0.3s;
 }
-
 
 .inline-modal {
   .modal-inner-container {
@@ -98,15 +134,24 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 1050;
+  z-index: z("modal", "content");
   overflow: auto;
+  &:not(.history-modal) {
+    .modal-body {
+      max-height: none !important;
+    }
+  }
 }
+
 .modal-form {
   margin-bottom: 0;
 }
 .modal-footer {
-  padding: 14px 15px 15px;
+  padding: 14px 15px 10px;
   border-top: 1px solid $primary-low;
+  .btn {
+    margin: 0 5px 5px 0;
+  }
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -123,6 +168,11 @@
       height: 10em;
     }
   }
+  @media screen and (min-width: 524px) {
+    .modal-inner-container {
+      min-width: 525px;
+    }
+  }
 }
 
 .modal {
@@ -130,10 +180,9 @@
     padding: 10px 30px 10px 15px;
     background-color: $secondary;
     li > a {
-      font-size: 1em;
+      font-size: $font-0;
     }
     border-bottom: 1px solid $primary-low;
-
   }
 
   &.hidden {
@@ -141,6 +190,10 @@
   }
 
   .modal-body {
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 400px;
     &.full-height-modal {
       max-height: calc(100vh - 150px);
     }
@@ -153,7 +206,7 @@
     }
     p {
       color: darken($primary, 40%);
-      font-size: 0.929em;
+      font-size: $font-0;
     }
     .archetype-option {
       margin-bottom: 20px;
@@ -169,7 +222,7 @@
         position: relative;
       }
       .jsfu-shade {
-        z-index: 1;
+        z-index: z("base");
         position: absolute;
         top: 0;
         left: 0;
@@ -177,12 +230,12 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         .text {
-          color: rgb(255,255,255);
+          color: rgb(255, 255, 255);
           position: absolute;
           top: 40%;
-          font-size: 36px;
+          font-size: $font-up-6;
           text-align: center;
-          line-height: 38px;
+          line-height: $line-height-medium;
           margin-left: auto;
           margin-right: auto;
           left: 0;
@@ -197,7 +250,7 @@
       .jsfu-separator {
         vertical-align: middle;
         display: table-cell;
-        font-size: 36px;
+        font-size: 2.571em;
         padding-left: 10px;
         padding-right: 10px;
       }
@@ -225,7 +278,12 @@
 
   // password reset modal
   .modal-body.forgot-password-modal p {
-    font-size: 14px;
+    font-size: $font-0;
+  }
+
+  pre code {
+    white-space: pre-wrap;
+    max-width: 700px;
   }
 }
 
@@ -239,15 +297,15 @@
     }
     .btn {
       text-align: left;
-      font-size: 1.286em;
-      line-height: 20px;
-      width: 310px;
+      font-size: $font-up-2;
+      line-height: $line-height-medium;
+      width: auto;
       margin-bottom: 10px;
       display: block;
       margin-left: 0 !important; // override needed
       font-weight: bold;
       .topic-title {
-        font-size: 0.929em;
+        font-size: $font-0;
         font-weight: normal;
       }
       &.btn-reply-here {
@@ -259,7 +317,7 @@
   }
 }
 .d-modal-cancel {
-  margin-left: 5px;
+  margin-left: 1em;
   color: $primary-medium;
 }
 
@@ -268,8 +326,8 @@
     .btn {
       font-weight: normal;
       text-align: left;
-      font-size: 1em;
-      line-height: 20px;
+      font-size: $font-0;
+      line-height: $line-height-large;
       margin-bottom: 10px;
       display: inline-block;
       margin-left: 0;
@@ -277,18 +335,21 @@
   }
 }
 
-.invite-modal {
+#invite-modal {
   overflow: visible;
-  .ember-text-field {
-    width: 550px;
+
+  label {
+    margin-top: 7px;
+    max-width: 450px;
   }
+
   .optional {
     color: #9e9ea6;
   }
 }
 
-.permission-list{
-  list-style:none;
+.permission-list {
+  list-style: none;
   margin: 0 0 30px;
   padding: 0;
   .name {
@@ -308,8 +369,10 @@
 }
 
 .edit-category-modal {
-  .future-date-input, .num-featured-topics-fields, .position-fields {
-    input[type=text] {
+  .future-date-input,
+  .num-featured-topics-fields,
+  .position-fields {
+    input[type="text"] {
       width: 50px;
     }
   }
@@ -331,8 +394,8 @@
 
     .cannot_delete_reason {
       position: absolute;
-      background: dark-light-choose($primary, $secondary);
-      color: dark-light-choose($secondary, $secondary);
+      background: $primary;
+      color: $secondary;
       text-align: center;
       border-radius: 2px;
       padding: 12px 8px;
@@ -343,20 +406,26 @@
         border: solid transparent;
         content: " ";
         position: absolute;
-        border-top-color: dark-light-choose($primary, $secondary);
+        border-top-color: $primary;
         border-width: 8px;
       }
     }
   }
-}
 
+  section.minimum-required-tags {
+    input[type="number"] {
+      width: 50px;
+    }
+  }
+}
 
 .incoming-email-modal {
   .btn {
     transition: none;
     background-color: transparent;
     margin-right: 5px;
-    &:hover, &.active {
+    &:hover,
+    &.active {
       color: $primary;
     }
     &.active {
@@ -371,7 +440,10 @@
   }
   .incoming-email-content {
     height: 300px;
-    textarea, .incoming-email-html-part {
+    max-width: 700px;
+    width: 90vw; // forcing textarea wider
+    textarea,
+    .incoming-email-html-part {
       height: 95%;
       border: none;
       border-top: 1px solid $primary-low;
@@ -380,7 +452,7 @@
     textarea {
       font-family: monospace;
       resize: none;
-      border-radius: 0px;
+      border-radius: 0;
       box-shadow: none;
     }
     .incoming-email-html-part {
@@ -395,4 +467,76 @@
   button {
     margin-right: 0.5em;
   }
+}
+
+.change-timestamp,
+.poll-ui-builder {
+  .date-picker {
+    width: 9em;
+  }
+
+  #date-container {
+    .pika-single {
+      position: relative !important; // overriding another important
+      display: inline-block;
+      margin-top: 5px;
+    }
+  }
+
+  input[type="time"] {
+    width: 6em;
+    text-align: center;
+  }
+
+  form {
+    margin: 0;
+  }
+}
+
+.flag-modal {
+  max-height: 450px;
+  .flag-action-type-details {
+    line-height: $line-height-large;
+  }
+}
+
+.flag-message {
+  width: 95% !important;
+  margin: 0;
+}
+
+.custom-message-length {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+  font-size: $font-down-1;
+}
+
+.edit-category-modal {
+  .secure-category-options {
+    margin: 10px 0 0 16px;
+    .badge-list {
+      margin: 10px 0;
+      li {
+        margin: 0 4px 8px 0;
+        a {
+          color: dark-light-choose($primary-medium, $secondary-medium);
+          cursor: pointer;
+        }
+        a:hover {
+          color: dark-light-choose($primary-medium, $secondary-medium);
+        }
+      }
+    }
+  }
+}
+
+.tabbed-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+}
+
+.modal-tab {
+  position: absolute;
+  width: 95%;
 }

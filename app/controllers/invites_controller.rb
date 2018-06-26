@@ -2,11 +2,15 @@ require_dependency 'rate_limiter'
 
 class InvitesController < ApplicationController
 
+  requires_login only: [
+    :destroy, :create, :create_invite_link, :rescind_all_invites,
+    :resend_invite, :resend_all_invites, :upload_csv
+  ]
+
   skip_before_action :check_xhr, except: [:perform_accept_invitation]
   skip_before_action :preload_json, except: [:show]
   skip_before_action :redirect_to_login_if_required
 
-  before_action :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
   before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
   before_action :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
 
@@ -15,7 +19,7 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
 
-    if invite.present?
+    if invite.present? && !invite.redeemed?
       store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: invite.email,
@@ -24,7 +28,7 @@ class InvitesController < ApplicationController
 
       render layout: 'application'
     else
-      flash.now[:error] = I18n.t('invite.not_found')
+      flash.now[:error] = I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
       render layout: 'no_ember'
     end
   end
@@ -207,14 +211,14 @@ class InvitesController < ApplicationController
 
   private
 
-    def post_process_invite(user)
-      user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
-      if user.has_password?
-        email_token = user.email_tokens.create(email: user.email)
-        Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
-      elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
-        Jobs.enqueue(:invite_password_instructions_email, username: user.username)
-      end
+  def post_process_invite(user)
+    user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+    if user.has_password?
+      email_token = user.email_tokens.create(email: user.email)
+      Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
+    elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+      Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
+  end
 
 end

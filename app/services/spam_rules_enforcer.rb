@@ -12,7 +12,7 @@ class SpamRulesEnforcer
   end
 
   def enforce!
-    SpamRule::AutoBlock.new(@user).perform if @user
+    SpamRule::AutoSilence.new(@user).perform if @user
     SpamRule::FlagSockpuppets.new(@post).perform if @post
     true
   end

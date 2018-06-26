@@ -10,7 +10,8 @@ class QuotedPost < ActiveRecord::Base
     doc = Nokogiri::HTML.fragment(post.cooked)
 
     uniq = {}
-    ids = []
+
+    DB.exec("DELETE FROM quoted_posts WHERE post_id = :post_id", post_id: post.id)
 
     doc.css("aside.quote[data-topic]").each do |a|
       topic_id = a['data-topic'].to_i
@@ -22,26 +23,18 @@ class QuotedPost < ActiveRecord::Base
 
       begin
         # It would be so much nicer if we used post_id in quotes
-        results = exec_sql "INSERT INTO quoted_posts(post_id, quoted_post_id, created_at, updated_at)
-                 SELECT :post_id, p.id, current_timestamp, current_timestamp
-                 FROM posts p
-                 LEFT JOIN quoted_posts q on q.post_id = :post_id AND q.quoted_post_id = p.id
-                 WHERE post_number = :post_number AND
-                       topic_id = :topic_id AND
-                       q.id IS NULL
-                 RETURNING quoted_post_id
-        ", post_id: post.id, post_number: post_number, topic_id: topic_id
-
-        results = results.to_a
-        ids << results[0]["quoted_post_id"].to_i if results.length > 0
+        DB.exec(<<~SQL, post_id: post.id, post_number: post_number, topic_id: topic_id)
+          INSERT INTO quoted_posts (post_id, quoted_post_id, created_at, updated_at)
+            SELECT :post_id, p.id, current_timestamp, current_timestamp
+            FROM posts p
+              LEFT JOIN quoted_posts q on q.post_id = :post_id AND q.quoted_post_id = p.id
+            WHERE post_number = :post_number AND
+                  topic_id = :topic_id AND
+                  q.id IS NULL
+        SQL
       rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
         # it's fine
       end
-    end
-
-    if ids.length > 0
-      exec_sql "DELETE FROM quoted_posts WHERE post_id = :post_id AND quoted_post_id NOT IN (:ids)",
-          post_id: post.id, ids: ids
     end
 
     # simplest place to add this code
@@ -49,7 +42,7 @@ class QuotedPost < ActiveRecord::Base
 
     if post.reply_to_post_number
       reply_post_id = Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number).pluck(:id).first
-      reply_quoted = !!(reply_post_id && ids.include?(reply_post_id))
+      reply_quoted = reply_post_id.present? && QuotedPost.where(post_id: post.id, quoted_post_id: reply_post_id).count > 0
     end
 
     if reply_quoted != post.reply_quoted

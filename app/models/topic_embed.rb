@@ -1,4 +1,5 @@
 require_dependency 'nokogiri'
+require_dependency 'url_helper'
 
 class TopicEmbed < ActiveRecord::Base
   include Trashable
@@ -26,16 +27,6 @@ class TopicEmbed < ActiveRecord::Base
     "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
   end
 
-  DOUBLE_ESCAPED_EXPR = /%25([0-9a-f]{2})/i
-
-  # Prevents double URL encode
-  # https://stackoverflow.com/a/37599235
-  def self.escape_uri(uri, pattern = URI::UNSAFE)
-    encoded = URI.encode(uri, pattern)
-    encoded.gsub!(DOUBLE_ESCAPED_EXPR, '%\1')
-    encoded
-  end
-
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents)
     return unless url =~ /^https?\:\/\//
@@ -57,11 +48,17 @@ class TopicEmbed < ActiveRecord::Base
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
 
+        cook_method = if SiteSetting.embed_support_markdown
+          Post.cook_methods[:regular]
+        else
+          Post.cook_methods[:raw_html]
+        end
+
         creator = PostCreator.new(user,
                                   title: title,
                                   raw: absolutize_urls(url, contents),
                                   skip_validations: true,
-                                  cook_method: Post.cook_methods[:raw_html],
+                                  cook_method: cook_method,
                                   category: eh.try(:category_id))
         post = creator.create
         if post.present?
@@ -76,7 +73,13 @@ class TopicEmbed < ActiveRecord::Base
       post = embed.post
       # Update the topic if it changed
       if post && post.topic && content_sha1 != embed.content_sha1
-        post.revise(user, { raw: absolutize_urls(url, contents) }, skip_validations: true, bypass_rate_limiter: true)
+        post_revision_args = {
+          raw: absolutize_urls(url, contents),
+          user_id: user.id,
+          title: title,
+        }
+
+        post.revise(user, post_revision_args, skip_validations: true, bypass_rate_limiter: true)
         embed.update_column(:content_sha1, content_sha1)
       end
     end
@@ -87,7 +90,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.find_remote(url)
     require 'ruby-readability'
 
-    url = escape_uri(url)
+    url = UrlHelper.escape_uri(url)
     original_uri = URI.parse(url)
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
@@ -130,7 +133,7 @@ class TopicEmbed < ActiveRecord::Base
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(escape_uri(src))
+          uri = URI.parse(UrlHelper.escape_uri(src))
           unless uri.host
             uri.scheme = original_uri.scheme
             uri.host = original_uri.host
@@ -170,7 +173,7 @@ class TopicEmbed < ActiveRecord::Base
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
-    uri = URI(escape_uri(url))
+    uri = URI(UrlHelper.escape_uri(url))
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
@@ -191,8 +194,8 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_id_for_embed(embed_url)
-    embed_url = normalize_url(embed_url)
-    TopicEmbed.where("lower(embed_url) = ?", embed_url).pluck(:topic_id).first
+    embed_url = normalize_url(embed_url).sub(/^https?\:\/\//, '')
+    TopicEmbed.where("embed_url ~* '^https?://#{Regexp.escape(embed_url)}$'").pluck(:topic_id).first
   end
 
   def self.first_paragraph_from(html)

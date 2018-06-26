@@ -4,8 +4,8 @@ describe HasCustomFields do
 
   context "custom_fields" do
     before do
-      Topic.exec_sql("create temporary table custom_fields_test_items(id SERIAL primary key)")
-      Topic.exec_sql("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
+      DB.exec("create temporary table custom_fields_test_items(id SERIAL primary key)")
+      DB.exec("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
 
       class CustomFieldsTestItem < ActiveRecord::Base
         include HasCustomFields
@@ -17,8 +17,8 @@ describe HasCustomFields do
     end
 
     after do
-      Topic.exec_sql("drop table custom_fields_test_items")
-      Topic.exec_sql("drop table custom_fields_test_item_custom_fields")
+      DB.exec("drop table custom_fields_test_items")
+      DB.exec("drop table custom_fields_test_item_custom_fields")
 
       # import is making my life hard, we need to nuke this out of orbit
       des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
@@ -75,7 +75,7 @@ describe HasCustomFields do
       # should be casted right after saving
       expect(test_item.custom_fields["a"]).to eq("0")
 
-      CustomFieldsTestItem.exec_sql("UPDATE custom_fields_test_item_custom_fields SET value='1' WHERE custom_fields_test_item_id=? AND name='a'", test_item.id)
+      DB.exec("UPDATE custom_fields_test_item_custom_fields SET value='1' WHERE custom_fields_test_item_id=? AND name='a'", test_item.id)
 
       # still the same, did not load
       expect(test_item.custom_fields["a"]).to eq("0")
@@ -98,6 +98,15 @@ describe HasCustomFields do
     end
 
     it "handles arrays properly" do
+
+      CustomFieldsTestItem.register_custom_field_type "array", [:integer]
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "array" => ["1"] }
+      test_item.save
+
+      db_item = CustomFieldsTestItem.find(test_item.id)
+      expect(db_item.custom_fields).to eq("array" => [1])
+
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = { "a" => ["b", "c", "d"] }
       test_item.save
@@ -192,6 +201,54 @@ describe HasCustomFields do
       expect(fields[item1.id]['a']).to match_array(['b', 'c', 'd'])
       expect(fields[item1.id]['not_whitelisted']).to be_blank
       expect(fields[item2.id]['e']).to eq('hallo')
+    end
+
+    it "handles interleaving saving properly" do
+      field_type = 'deep-nest-test'
+      CustomFieldsTestItem.register_custom_field_type(field_type, :json)
+      test_item = CustomFieldsTestItem.create!
+
+      test_item.custom_fields[field_type] ||= {}
+      test_item.custom_fields[field_type]['b'] ||= {}
+      test_item.custom_fields[field_type]['b']['c'] = 'd'
+      test_item.save_custom_fields(true)
+
+      db_item = CustomFieldsTestItem.find(test_item.id)
+      db_item.custom_fields[field_type]['b']['e'] = 'f'
+      test_item.custom_fields[field_type]['b']['e'] = 'f'
+      expected = { field_type => { 'b' => { 'c' => 'd', 'e' => 'f' } } }
+
+      db_item.save_custom_fields(true)
+      expect(db_item.reload.custom_fields).to eq(expected)
+
+      test_item.save_custom_fields(true)
+      expect(test_item.reload.custom_fields).to eq(expected)
+    end
+
+    describe "upsert_custom_fields" do
+      it 'upserts records' do
+        test_item = CustomFieldsTestItem.create
+        test_item.upsert_custom_fields('hello' => 'world', 'abc' => 'def')
+
+        # In memory
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # In memory
+        test_item.upsert_custom_fields('abc' => 'ghi')
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+      end
     end
   end
 end

@@ -101,7 +101,7 @@ gl:
           other: "%{count} anos despois"
       previous_month: 'Mes anterior'
       next_month: 'Mes seguinte'
-      placeholder: Escolla unha data
+      placeholder: data
     share:
       topic: 'compartir unha ligazón a este tema'
       post: 'publicación %{postNumber}'
@@ -112,7 +112,6 @@ gl:
       email: 'enviar esta ligazón nun correo electrónico'
     action_codes:
       public_topic: "fixo esta publicación pública no %{when}"
-      private_topic: "fixo esta publicación privada no %{when}"
       split_topic: "este tema dividiuse o %{when}"
       invited_user: "convidou a %{who} %{when}"
       invited_group: "invitou %{who} o %{when}"
@@ -138,14 +137,19 @@ gl:
         disabled: 'retirado da lista o %{when}'
     topic_admin_menu: "accións do administrador de temas"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
+    themes:
+      default_description: "Predeterminado"
     s3:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"
         ap_northeast_2: "Asia Pacífico (Seúl)"
+        ap_south_1: "Asia Pacífico (Mumbai)"
         ap_southeast_1: "Asia Pacífico (Singapur)"
         ap_southeast_2: "Asia Pacífico (Sidney)"
+        cn_north_1: "China (Beijing)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irlanda)"
+        eu_west_2: "EU (Londres)"
         sa_east_1: "América do Sur (São Paulo)"
         us_east_1: "EE.UU. Leste (N. Virxinia)"
         us_gov_west_1: "AWS GovCloud (EE.UU)"
@@ -155,6 +159,7 @@ gl:
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda."
     no_value: "Non"
     yes_value: "Si"
+    submit: "Enviar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
     sign_up: "Crear unha conta"
@@ -205,11 +210,10 @@ gl:
       our_moderators: "Os moderadores"
       stat:
         all_time: "Todos"
-        last_7_days: "Últimos 7 días"
-        last_30_days: "Últimos 30 días"
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
+      user_count: "Usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contacta connosco"
       contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacta connosco en %{contact_info}."
@@ -226,16 +230,6 @@ gl:
       last_read: "esta é a última publicación lida por ti; preme para engadila aos marcadores"
       remove: "Eliminar marcador"
       confirm_clear: "Confirmas o borrado de todos os marcadores deste tema?"
-    topic_count_latest:
-      one: "{{count}} tema novo ou actualizado."
-      other: "{{count}} temas novos ou actualizados."
-    topic_count_unread:
-      one: "{{count}} tópico sen ler."
-      other: "{{count}} temas sen ler."
-    topic_count_new:
-      one: "{{count}} tópico novo"
-      other: "{{count}} temas novos"
-    click_to_show: "Preme para amosar."
     preview: "previsualizar"
     cancel: "cancelar"
     save: "Gardar cambios"
@@ -245,6 +239,7 @@ gl:
     uploading: "Actualizando..."
     uploading_filename: "Actualizando {{filename}}..."
     uploaded: "Actualizado!"
+    pasting: "A pegar..."
     enable: "Activar"
     disable: "Desactivar"
     undo: "Desfacer"
@@ -314,9 +309,8 @@ gl:
         other: "%{count} usuarios"
     groups:
       add: "Engadir"
-      selector_placeholder: "Engadir membros"
       owner: "propietario"
-      members: "Membros"
+      activity: "Actividade"
       topics: "Temas"
       posts: "Publicacións"
       mentions: "Mencións"
@@ -327,9 +321,6 @@ gl:
         mods_and_admins: "Só moderadores e administradores"
         members_mods_and_admins: "Só membros do grupo, moderadores e administradores"
         everyone: "Todos"
-      trust_levels:
-        title: "Nivel de confianza automático concedido aos membros cando son engadidos:"
-        none: "Ningún"
       notifications:
         watching:
           title: "Ver"
@@ -344,21 +335,20 @@ gl:
           title: "Silenciado"
           description: "Non recibirás notificacións de nada relacionado con novos temas neste grupo."
     user_action_groups:
-      '1': "Gústames dados"
-      '2': "Gústames recibidos"
-      '3': "Marcadores"
-      '4': "Temas"
-      '5': "Respostas"
-      '6': "Respostas"
-      '7': "Mencións"
-      '9': "CItas"
-      '11': "Edicións"
-      '12': "Enviar elementos"
-      '13': "Caixa de entrada"
-      '14': "Pendente"
+      "1": "Gústames dados"
+      "2": "Gústames recibidos"
+      "3": "Marcadores"
+      "4": "Temas"
+      "5": "Respostas"
+      "6": "Respostas"
+      "7": "Mencións"
+      "9": "CItas"
+      "11": "Edicións"
+      "12": "Enviar elementos"
+      "13": "Caixa de entrada"
+      "14": "Pendente"
     categories:
       all: "todas as categorías"
-      all_subcategories: "todo"
       no_subcategory: "ningunha"
       category: "Categoría"
       category_list: "Amosar a lista de categorías"
@@ -414,7 +404,6 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificacións en escritorio"
         not_supported: "Este navegador non admite notificacións. Desculpe."
         perm_default: "Acender notificacións"
         perm_denied_btn: "Permiso denegado"
@@ -432,7 +421,6 @@ gl:
       admin: "{{user}} é administrador"
       moderator_tooltip: "Este usuario é  un moderador"
       admin_tooltip: "Este usuario é un administrador"
-      blocked_tooltip: "Este usuario está bloqueado"
       suspended_notice: "Este usuario está suspendido até o {{date}}."
       suspended_reason: "Razón:"
       github_profile: "Github"
@@ -443,7 +431,6 @@ gl:
       delete_account: "Eliminar a miña conta"
       delete_account_confirm: "Confirmas que queres eliminar definitivamente a túa conta? Esta acción non se pode desfacer!"
       deleted_yourself: "A túa conta acaba de ser eliminada completamente."
-      delete_yourself_not_allowed: "Non podes eliminar a túa conta neste intre. Contacta cun administrador para que este a elimine por ti. "
       unread_message_count: "Mensaxes"
       admin_delete: "Eliminar"
       users: "Usuarios"
@@ -538,8 +525,6 @@ gl:
       created: "Inscrito"
       log_out: "Saír da sesión"
       location: "Localización"
-      card_badge:
-        title: "Insignia na ficha do usuario"
       website: "Sitio web"
       email_settings: "Correo electrónico"
       like_notification_frequency:
@@ -590,7 +575,6 @@ gl:
         title: "Convites"
         user: "Usuario convidado"
         sent: "Enviado"
-        none: "Non hai convites pendentes de ver."
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros {{count}} convites."
@@ -691,7 +675,6 @@ gl:
     first_post: Publicación inicial
     mute: Silenciar
     unmute: Non silenciar
-    last_post: Última publicación
     last_reply_lowercase: última resposta
     replies_lowercase:
       one: resposta
@@ -847,7 +830,6 @@ gl:
       ulist_title: "Lista con símbolos"
       list_item: "Elemento da lista"
       help: "Axuda para edición con Markdown"
-      toggler: "agochar ou amosar o panel de composición"
       modal_ok: "De acordo"
       modal_cancel: "Cancelar"
       cant_send_pm: "Sentímolo pero non podes enviar unha mensaxe a %{username}."
@@ -857,28 +839,12 @@ gl:
       none: "Non é posíbel cargar as notificacións neste intre"
       more: "ver notificacións anteriores"
       total_flagged: "total de publicacións denunciadas"
-      alt:
-        mentioned: "Mencionado por"
-        quoted: "Citado por"
-        replied: "Respondido"
-        posted: "Publicado por"
-        edited: "A túa publicación ediotuna"
-        liked: "Gustoulles a túa publicación"
-        private_message: "Mensaxe privada de"
-        invited_to_private_message: "Convidado a unha mensaxe privada de"
-        invited_to_topic: "Convidado a un tema de"
-        invitee_accepted: "Convite aceptado por"
-        moved_post: "A túa publicación foi movida por"
-        linked: "Ligazón á túa publicación"
-        granted_badge: "Insignias concedidas"
-        group_message_summary: "Mensaxes na caixa do grupo"
       popup:
         mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citoute en "{{topic}}" - {{site_title}}'
         replied: '{{username}} respondeute en "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicou en "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} enviouche unha mensaxe privada en "{{topic}}" - {{site_title}}'
         linked: '{{username}} ligou a túa publicación desde "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Engadir unha imaxe"
@@ -961,9 +927,6 @@ gl:
         bookmarks: "Non hai máis temas marcados."
         search: "Non hai máis resultados da busca."
     topic:
-      unsubscribe:
-        stop_notifications: "Agora recibirás menos notificacións sobre <strong>{{title}}</strong>"
-        change_notification_state: "O estado actual das túas notificacións é"
       create: 'Novo tema'
       create_long: 'Crear un novo tema'
       private_message: 'Iniciar unha mensaxe'
@@ -1014,7 +977,7 @@ gl:
       read_more_MF: "Hai { UNREAD, plural, =0 {} one { <a href='/unread'>1 sen ler</a> } other { <a href='/unread'># sen ler</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e} false { } other{}} <a href='/new'>1 novo</a> topic} other { {BOTH, select, true{e} false { } other{}} <a href='/new'># novos</a> topics} } restantes, ou {CATEGORY, select, true {explora outros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Explorar todas as categorías
       view_latest_topics: ver últimos temas
-      suggest_create_topic: Porque non crear un tema?
+      suggest_create_topic: "Porque non crear un tema?"
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
@@ -1030,16 +993,16 @@ gl:
         current: publicación actual
       notifications:
         reasons:
-          '3_6': 'Recibirás notificacións porque estás vendo esta categoría.'
-          '3_5': 'Recibirás notificacións porque comezaches a ver este tema automaticamente.'
-          '3_2': 'Recibirás notificacións porque estás vendo este tema.'
-          '3_1': 'Recibirás notificacións por ser o creador deste tema.'
-          '3': 'Recibirás notificacións porque estás vendo este tema.'
-          '1_2': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
-          '1': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
-          '0_7': 'Estás ignorando todas as notificacións desta categoría.'
-          '0_2': 'Estás ignorando todas as notificacións deste tema.'
-          '0': 'Estás ignorando todas as notificacións deste tema.'
+          "3_6": 'Recibirás notificacións porque estás vendo esta categoría.'
+          "3_5": 'Recibirás notificacións porque comezaches a ver este tema automaticamente.'
+          "3_2": 'Recibirás notificacións porque estás vendo este tema.'
+          "3_1": 'Recibirás notificacións por ser o creador deste tema.'
+          "3": 'Recibirás notificacións porque estás vendo este tema.'
+          "1_2": 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
+          "1": 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
+          "0_7": 'Estás ignorando todas as notificacións desta categoría.'
+          "0_2": 'Estás ignorando todas as notificacións deste tema.'
+          "0": 'Estás ignorando todas as notificacións deste tema.'
         watching_pm:
           title: "Ver"
           description: "Recibirás notificacións de cada resposta a esta mensaxe e aparecerá o número de novas respostas."
@@ -1174,7 +1137,6 @@ gl:
         instructions:
           one: "Selecciona o novo propietario da publicación de <b>{{old_user}}</b>."
           other: "Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>."
-        instructions_warn: "Decátate que ningunha notificación sobre esta publicación se transferirá retroactivamente ao novo usuario.<br>Aviso: actualmente, non se transfire ao novo usuario ningún dato relacionado cunha publicación. Usa isto con tino."
       change_timestamp:
         action: "cambiar a marca data/hora"
         invalid_timestamp: "A marca data/hora non pode ser no futuro."
@@ -1183,18 +1145,14 @@ gl:
       multi_select:
         select: 'seleccionar'
         selected: 'seleccionados ({{count}})'
-        select_replies: 'seleccionar +respostas'
         delete: eliminar seleccionados
-        cancel: 'cancelar selección '
+        cancel: "cancelar selección "
         select_all: seleccionar todo
         deselect_all: deseleccionar todo
         description:
           one: Seleccionaches <b>unha</b> publicación.
-          other: Seleccionaches <b>{{count}}</b> publicacións.
+          other: "Seleccionaches <b>{{count}}</b> publicacións."
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Razón:"
       post_number: "publicación {{number}}"
       last_edited_on: "última edición da publicación"
@@ -1252,12 +1210,6 @@ gl:
         undelete: "recuperar publicación"
         share: "compartir ligazón á publicación"
         more: "Máis"
-        delete_replies:
-          confirm:
-            one: "Tamén desexas eliminar a resposta directa desta publicación?"
-            other: "Tamén desexas eliminar as {{count}} respostas directas desta publicación?"
-          yes_value: "Si, eliminar tamén as respostas"
-          no_value: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
@@ -1268,9 +1220,6 @@ gl:
         change_owner: "Cambiar propietario"
       actions:
         flag: 'Denunciar'
-        defer_flags:
-          one: "Pospor denuncia"
-          other: "Pospor denuncias"
         undo:
           off_topic: "Desfacer denuncia"
           spam: "Desfacer denuncia"
@@ -1346,10 +1295,6 @@ gl:
           vote:
             one: "Unha persoa votou por esta publicación"
             other: "{{count}} persoas votaron por esta publicación"
-      delete:
-        confirm:
-          one: "Confirmas a eliminación desta publicación?"
-          other: "Confirmas a eliminación de todas estas publicacións?"
       revisions:
         controls:
           first: "Primeira revisión"
@@ -1409,7 +1354,6 @@ gl:
       email_in_allow_strangers: "Aceptar correos-e de usuarios anónimos sen contas"
       email_in_disabled: "A publicación de novos temas vía correo-e está desactivada nos axustes do sitio. Para activala,"
       email_in_disabled_click: 'activar o axuste «email in».'
-      suppress_from_homepage: "Retirar esta categoría da páxina de inicio."
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Engadir permisos"
@@ -1616,7 +1560,6 @@ gl:
         no_problems: "Non se atoparon problemas."
         moderators: 'Moderadores:'
         admins: 'Administradores:'
-        blocked: 'Bloqueados:'
         suspended: 'Suspendidos:'
         private_messages_short: "Mensaxes"
         private_messages_title: "Mensaxes"
@@ -1630,8 +1573,6 @@ gl:
         reports:
           today: "Hoxe"
           yesterday: "Onte"
-          last_7_days: "Últimos 7 días"
-          last_30_days: "Últimos 30 días"
           all_time: "Todos"
           7_days_ago: "Hai 7 días"
           30_days_ago: "Hai 30 días"
@@ -1646,24 +1587,11 @@ gl:
         by: "por"
       flags:
         title: "Denuncias"
-        old: "Antigo"
-        active: "Activo"
         agree: "Aceptar"
         agree_title: "Confirmar esta denuncia como válida"
-        agree_flag_modal_title: "Aceptar e..."
-        agree_flag_hide_post: "Aceptar (ocultar publicación + enviar msx. privada)"
-        agree_flag_hide_post_title: "Ocultar esta publicación e enviar automaticamente unha mensaxe ao usuario para que a edite axiña"
-        agree_flag_restore_post: "Aceptar (restabelecer publicación)"
-        agree_flag_restore_post_title: "Restabelecer esta publicación"
-        agree_flag: "Aceptar denuncia"
-        agree_flag_title: "Aceptar a denuncia e manter a publicación sen cambios"
-        defer_flag: "Pospor"
-        defer_flag_title: "Eliminar esta denuncia; non precisa medidas neste momento."
         delete: "Eliminar"
         delete_title: "Eliminar a publicación á que se refire esta denuncia."
-        delete_post_defer_flag: "Eliminar publicación e pospor a denuncia"
         delete_post_defer_flag_title: "Eliminar publicación. Se é a inicial, eliminar tamén o tema"
-        delete_post_agree_flag: "Eliminar a publicación e aceptar a denuncia"
         delete_post_agree_flag_title: "Eliminar publicación. Se é a inicial, eliminar tamén o tema."
         delete_flag_modal_title: "Eliminar e..."
         delete_spammer: "Eliminar spammer"
@@ -1678,42 +1606,22 @@ gl:
         dispositions:
           agreed: "aceptar"
           disagreed: "non aceptar"
-          deferred: "posposta"
         flagged_by: "Denunciado por"
         resolved_by: "Arranxado por"
         took_action: "Tomadas medidas"
         system: "Sistema"
         error: "Algo foi mal"
         reply_message: "Responder"
-        no_results: "Non hai denuncias"
         topic_flagged: "Este <strong>tema</strong> foi denunciado."
         visit_topic: "Visite o tema para actuar"
         was_edited: "A publicación editouse despois da primeira denuncia"
         previous_flags_count: "Esta publicación xa se denunciou {{count}} veces."
-        summary:
-          action_type_3:
-            one: "sen relación"
-            other: "sen relación x{{count}}"
-          action_type_4:
-            one: "inapropiado"
-            other: "inapropiados x{{count}}"
-          action_type_6:
-            one: "personalizar"
-            other: "personalizar x{{count}}"
-          action_type_7:
-            one: "personalizar"
-            other: "personalizar x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
       groups:
         primary: "Grupo primario"
         no_primary: "(non hai un grupo primario)"
         title: "Grupos"
         edit: "Editar grupos"
         refresh: "Actualizar"
-        new: "Novo"
-        selector_placeholder: "escribe o nome do usuario"
         about: "Edita aquí a túa pertenza a un grupo e nomes"
         group_members: "Membros do grupo"
         delete: "Eliminar"
@@ -1721,21 +1629,10 @@ gl:
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
         add: "Engadir"
-        add_members: "Engadir membros"
         custom: "Personalizar"
-        bulk_complete: "Engadíronse os usuarios ao grupo."
-        bulk: "Engadir ao grupo en bloque"
-        bulk_paste: "Pegar unha lista de nomes de usuario ou correos-e, un por liña:"
-        bulk_select: "(seleccionar un grupo)"
         automatic: "Automático"
-        automatic_membership_email_domains: "Os usuarios que se rexistraron cun dominio de correo electrónico que coincida exactamente con algún da lista engadiranse automaticamente a este grupo:"
-        automatic_membership_retroactive: "Aplicar a regra do mesmo dominio de correo electrónico para engadir os usuarios rexistrados."
-        default_title: "Título predeterminado para os usuarios deste grupo"
-        primary_group: "Estabelecer automaticamente como grupo primario"
         group_owners: Propietarios
         add_owners: Engadir propietarios
-        incoming_email: "Personalizar enderezos de correo-e entrantes"
-        incoming_email_placeholder: "introducir enderezos de correo-e"
       api:
         generate_master: "Xerar unha chave maestra da API"
         none: "Non hai chaves activas da API agora mesmo."
@@ -1777,7 +1674,6 @@ gl:
           label: "Enviar"
           title: "Subir unha copia de seguranza a esta instancia"
           uploading: "Enviando..."
-          success: "«{{filename}}» subiuse correctamente."
           error: "Produciuse un erro durante o envío de «{{filename}}»: {{message}}"
         operations:
           is_running: "Estase executando unha operación..."
@@ -1790,7 +1686,6 @@ gl:
             label: "Copia de seguranza"
             title: "Crear unha copia de seguranza"
             confirm: "Confirmas a execución dunha nova copia de seguranza?"
-            without_uploads: "Si (non incluír ficheiros)"
           download:
             label: "Descargar"
           destroy:
@@ -1989,8 +1884,6 @@ gl:
             change_category_settings: "cambiar axustes da categoría"
             delete_category: "eliminar categoría"
             create_category: "crear categoría"
-            block_user: "bloquear usuario"
-            unblock_user: "desbloquear usuario"
             grant_admin: "conceder administración"
             revoke_admin: "revogar administración"
             grant_moderation: "conceder moderación"
@@ -2046,7 +1939,6 @@ gl:
           pending: "Pendente"
           staff: 'Equipo'
           suspended: 'Suspendido'
-          blocked: 'Bloqueado'
           suspect: 'Sospeitoso'
         approved: "Aprobado?"
         approved_selected:
@@ -2067,7 +1959,6 @@ gl:
           staff: "Equipo"
           admins: 'Usuarios administradores'
           moderators: 'Moderadores'
-          blocked: 'Usuarios bloqueados'
           suspended: 'Usuarios suspendidos'
           suspect: 'Usuarios sospeitosos'
         reject_successful:
@@ -2084,17 +1975,13 @@ gl:
         suspend_failed: "Algo fallou rexeitando este usuario {{error}}"
         unsuspend_failed: "Algo foi mal levantando a suspensión deste usuario {{error}}"
         suspend_duration: "Canto tempo estará suspendido o usuario?"
-        suspend_duration_units: "(días)"
         suspend_reason_label: "Cal é o motivo da suspensión? Este texto <b>será visíbel para todo o mundo</b> na páxina do perfil deste usuario e amosaráselle ao usuario cando tente iniciar sesión. Procura ser breve."
         suspend_reason: "Razón"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todas as publicacións"
-        suspend: "Suspender"
-        unsuspend: "Non suspender"
-        suspended: "Suspendido?"
         moderator: "Moderador?"
         admin: "Administrador?"
-        blocked: "Bloqueado?"
+        suspended: "Suspendido?"
         staged: "Transitorio?"
         show_admin_profile: "Administración"
         refresh_browsers: "Forzar a actualización do navegador"
@@ -2108,8 +1995,8 @@ gl:
         grant_admin: 'Facer administrador'
         revoke_moderation: 'Revogar moderación'
         grant_moderation: 'Conceder moderación'
-        unblock: 'Desbloquear'
-        block: 'Bloquear'
+        unsuspend: 'Non suspender'
+        suspend: 'Suspender'
         reputation: Reputación
         permissions: Permisos
         activity: Actividade
@@ -2156,13 +2043,8 @@ gl:
         activate_failed: "Produciuse un problema activando o usuario."
         deactivate_account: "Desactivar a conta"
         deactivate_failed: "Produciuse un problema desactivando o usuario."
-        unblock_failed: 'Produciuse un problema desbloqueando o usuario.'
-        block_failed: 'Produciuse un problema bloqueando o usuario.'
-        block_confirm: 'Confirmas o bloqueo deste usuario? Non poderá crear máis temas nin publicacións.'
-        block_accept: 'Si, bloquealo'
         deactivate_explanation: "Un usuario desactivado debe revalidar o seu correo-e."
         suspended_explanation: "Un usuario suspendido non pode iniciar sesión."
-        block_explanation: "Un usuario bloquedo non pode publicar nin iniciar temas."
         trust_level_change_failed: "Produciuse un problema cambiando o nivel de confianza do usuario."
         suspend_modal_title: "Suspender usuario"
         trust_level_2_users: "Usuarios con nivel 2 de confianza"
@@ -2243,10 +2125,7 @@ gl:
         recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás túas necesidades:"
         show_overriden: 'Amosar só os cambios'
       site_settings:
-        show_overriden: 'Amosar só os cambios'
         title: 'Axustes'
-        reset: 'restabelecer'
-        none: 'ningunha'
         no_results: "Non se atoparon resultados."
         clear_filter: "Borrar"
         add_url: "engadir URL"
@@ -2290,11 +2169,11 @@ gl:
         reason_help: (Ligazón a unha publicación ou tema)
         save: Gardar
         delete: Eliminar
-        delete_confirm: Confirmas a eliminación desta insignia?
+        delete_confirm: "Confirmas a eliminación desta insignia?"
         revoke: Revogar
         reason: Razón
         expand: Expandir &hellip;
-        revoke_confirm: Confirmas a revogación desta insignia?
+        revoke_confirm: "Confirmas a revogación desta insignia?"
         edit_badges: Editar insignias
         grant_badge: Conceder insignia
         granted_badges: Insignias concedidas
@@ -2308,7 +2187,6 @@ gl:
         enabled: Activar insignia
         icon: Icona
         image: Imaxe
-        icon_help: "Usar a clase Font Awesome ou unha URL a unha imaxe"
         query: Consulta sobre insignia (SQL)
         target_posts: Consulta dirixida a mensaxes
         auto_revoke: Executar a consulta de revogación diariamente
@@ -2335,10 +2213,10 @@ gl:
             other: "<b>%{count}</b> insignias para asignar."
           sample: "Mostra:"
           grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> para publicación en %{link}
-            with_post_time: <span class="username">%{username}</span> para publicación en %{link} o <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
+            with: "<span class=\"username\">%{username}</span>"
+            with_post: "<span class=\"username\">%{username}</span> para publicación en %{link}"
+            with_post_time: "<span class=\"username\">%{username}</span> para publicación en %{link} o <span class=\"time\">%{time}</span>"
+            with_time: "<span class=\"username\">%{username}</span> o <span class=\"time\">%{time}</span>"
       emoji:
         title: "Emoji"
         help: "Engade novo emoji que estará dispoñíbel para todos. (Suxestión: arrastra e solta múltiples ficheiros dunha vez)"
@@ -2379,7 +2257,7 @@ gl:
         category_id: "ID da categoría"
         category_title: "Categoría"
         external_url: "URL externa"
-        delete_confirm: Confirmas a eliminación desta ligazón permanente?
+        delete_confirm: "Confirmas a eliminación desta ligazón permanente?"
         form:
           label: "Novo:"
           add: "Engadir"

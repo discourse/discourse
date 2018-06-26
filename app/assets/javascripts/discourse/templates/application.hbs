@@ -14,6 +14,7 @@
     {{#if showTop}}
       {{custom-html name="top"}}
     {{/if}}
+    {{notification-consent-banner}}
     {{global-notice}}
     {{create-topics-notice}}
   </div>
@@ -23,7 +24,7 @@
 
 {{plugin-outlet name="above-footer" args=(hash showFooter=showFooter)}}
 {{#if showFooter}}
-  {{custom-html name="footer"}}
+  {{custom-html name="footer" triggerAppEvent="true"}}
 {{/if}}
 {{plugin-outlet name="below-footer" args=(hash showFooter=showFooter)}}
 

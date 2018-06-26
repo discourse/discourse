@@ -17,12 +17,12 @@ da:
       date_only: "%-d. %B, %Y"
       long: "%-d. %B %Y, %H:%M"
   date:
-    month_names: [null, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
+    month_names: [~, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
@@ -47,7 +47,6 @@ da:
         auto_generated_email_error: "Dette sker når headeren 'precedence' er angivet til: list, junk, bulk eller auto_reply, eller når enhver anden header indeholder: auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Dette sker når vi ikke kunne trække noget indhold ud og der heller ikke var nogen vedhæftninger."
         inactive_user_error: "Dette sker når afsenderen ikke er aktiv."
-        blocked_user_error: "Dette sker når afsenderen er blevet blokeret."
         bad_destination_address: "Dette sker når ingen af email adresserne i To/Cc/Bcc felterne matcher en opsat indgående email adresse."
         strangers_not_allowed_error: "Dette sker når en bruger prøver at oprette et nyt emne i en kategori som de ikke er medlem af."
         insufficient_trust_level_error: "Dette sker når en bruger prøvede at oprette et nyt emne i en kategori som de ikke har den krævne \"trust level\" til."
@@ -67,19 +66,18 @@ da:
       present: skal være tomt
       confirmation: "matcher ikke %{attribute}"
       empty: kan ikke være tom
-      equal_to: skal være %{count}
+      equal_to: "skal være %{count}"
       even: skal være et lige tal
       exclusion: er reserveret
-      greater_than: skal være større end %{count}
-      greater_than_or_equal_to: skal være større eller lig med %{count}
+      greater_than: "skal være større end %{count}"
+      greater_than_or_equal_to: "skal være større eller lig med %{count}"
       has_already_been_used: "er allerede blevet brugt"
       inclusion: er ikke inkluderet i listen
       invalid: er ikke gyldig
       is_invalid: "virker upræcis, er det en hel sætning?"
       contains_censored_words: "indeholder følgende censurerede ord: %{censurerede ord}"
-      matches_censored_pattern: "indeholder følgende ord som matcher sitets censurerede regexp'er: %{censored_words}"
-      less_than: skal være mindre end %{count}
-      less_than_or_equal_to: skal være mindre end eller lig med %{count}
+      less_than: "skal være mindre end %{count}"
+      less_than_or_equal_to: "skal være mindre end eller lig med %{count}"
       not_a_number: er ikke et nummer
       not_an_integer: skal være et heltal
       odd: skal være et ulige tal
@@ -111,6 +109,9 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
     not_found: "Dit invitation-token er ugyldigt. Kontakt veligst sitets administrator."
     user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='/u/%{username}/summary'>har allerede en profil!</a>"
@@ -175,6 +176,7 @@ da:
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
   not_accepting_pms: "Beklager, %{username} tager ikke imod beskeder i øjeblikket."
+  max_pm_recepients: "Du kan desværre kun sende til %{recipients_limit} modtagere."
   just_posted_that: "ligner et andet indlæg, som du har skrevet for nyligt, for meget"
   invalid_characters: "indeholder ugyldige tegn"
   is_invalid: "lader til at være uklart - er det en komplet sætning?"
@@ -201,7 +203,7 @@ da:
     top_weekly: "Top-emner per uge"
     top_daily: "Top-emner per dag"
     posts: "Seneste indlæg"
-    private_posts: "Seneste private beskeder"
+    private_posts: "Seneste personlige beskeder"
     group_posts: "Seneste indlæg fra %{group_name}"
     group_mentions: "Seneste nævnelser fra %{group_name}"
     user_posts: "Seneste indlæg af @%{username}"
@@ -213,11 +215,8 @@ da:
   queue:
     delete_reason: "Slettet via køen til moderation af indlæg."
   groups:
-    success:
-      bulk_add: "%{users_added} brugere er blevet tilføjet til gruppen."
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
-      member_already_exist: "'%{username}' er allerede medlem af denne gruppe."
       invalid_domain: "'%{domain}' er ikke et gyldigt domæne."
       invalid_incoming_email: "'%{email}' er ikke en gyldig email adresse."
       email_already_used_in_group: "'%{email}' er allerede brugt af en bruger i gruppen '%{group_name}'."
@@ -236,7 +235,7 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
-    new-topic: |
+    'new-topic': |
       Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
 
       -  Lyder title interessant hvis du læser den højt? Er det et godt resumé?
@@ -244,7 +243,7 @@ da:
       -  Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
 
       For mere info, [se vores retningslinjer](/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
 
       Husk venligst mens du skriver dit svar:
@@ -293,12 +292,6 @@ da:
       Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar inden for samme emne.
 
       I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
-    reviving_old_topic: |
-      ### Genopliv dette emne?
-
-      Det seneste svar på dette emne er nu over **%{days}** gammelt. Dit svar vil trække dette emne til toppen af listen og vil påminde alle der tidligere have været med i samtalen.
-
-      Er du sikker på du vil vække dette emne til live igen?
   activerecord:
     attributes:
       category:
@@ -311,14 +304,14 @@ da:
       user_profile:
         bio_raw: "Om mig"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
               too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
-              cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
               no_user_selected: "Du skal vælge en gyldig bruger."
+              reply_by_email_disabled: "Svar via email er slået fra"
             featured_link:
               invalid: "er ugyldig. URL'en skal indeholde http:// eller https://. "
               invalid_category: "kan ikke redigeres i denne kategori."
@@ -347,7 +340,6 @@ da:
           attributes:
             name:
               taken: er allerede i brug af en anden emoji
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig”-feltet på din profil er pt. tomt, <a href='/u/%{username_lower}/preferences/about-me'>ønsker du at udfylde det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
@@ -361,40 +353,40 @@ da:
     title: "Velkommen til Discourse"
     body: |2
 
-      Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
+        Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
 
-      **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
+        **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
 
-      - Hvem er det rettet mod?
-      - Hvad kan de finde her?
-      - Hvorfor bør de komme her?
-      - Hvor finde de mere information (links, ressourcer, osv.)?
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        - Hvem er det rettet mod?
+        - Hvad kan de finde her?
+        - Hvorfor bør de komme her?
+        - Hvor finde de mere information (links, ressourcer, osv.)?
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
+        Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
   lounge_welcome:
     title: "Velkommen i loungen"
     body: |2
 
-      Tillykke! :confetti_ball:
+        Tillykke! :confetti_ball:
 
-      Hvis du kan se dette er du nu vlevet opgraderet som **regular** (trust level 3) bruger.
+        Hvis du kan se dette er du nu vlevet opgraderet som **regular** (trust level 3) bruger.
 
-      Nu kan du &hellip;
+        Nu kan du &hellip;
 
-      * Rediger enhver emne titel
-      * Ændre alle kategorier og emner
-      * Følge alle links ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) ier fjernet)
-      * Få adgang til en privat lounge kategori kun synlig for brugere med Trust LEvel 3, eller højere
-      * Gemme spam - med et enkelt flag
+        * Rediger enhver emne titel
+        * Ændre alle kategorier og emner
+        * Følge alle links ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) ier fjernet)
+        * Få adgang til en privat lounge kategori kun synlig for brugere med Trust LEvel 3, eller højere
+        * Gemme spam - med et enkelt flag
 
-      Her er  [current list of fellow regulars](/badges/3/regular). Sving forbi og hils på!
+        Her er  [current list of fellow regulars](/badges/3/regular). Sving forbi og hils på!
 
-      Tak fordi du er en vigtig del af dette fællesskab!
+        Tak fordi du er en vigtig del af dette fællesskab!
 
-      (Formere information om Trust Levels [see this topic][trust]. Bemærk venligst at kun brugere der vedbliver at leve op til Trust Level betingelserne, vil have fortsat adgang)
+        (Formere information om Trust Levels [see this topic][trust]. Bemærk venligst at kun brugere der vedbliver at leve op til Trust Level betingelserne, vil have fortsat adgang)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Kategoridefinition for %{category}"
     replace_paragraph: "(Beskriv din nye kategori her. Beskriv ramme og formål med kategori således at det er tydeligt for andre. Forsøg at holde beskrivelsen på max 200 tegn. **Kategorien vil ikke fremgå på kategori listen, før du har redigeret beskrivelsen, eller oprettet emner)."
@@ -427,23 +419,6 @@ da:
       title: "Veteran"
     change_failed_explanation: "Du har forsøgt at degradere %{user_name} til '%{new_trust_level}'. Imidlertid er deres niveau af tillid allerede '%{current_trust_level}'. %{user_name} vil forblive'%{current_trust_level}' - hvis du ønsker at degradere brugeren, skal du først låse brugerens tillids niveau / Trust Level"
   rate_limiter:
-    slow_down: "Du har udført denne handling for mange gange, prøv igen senere"
-    too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
-    by_type:
-      first_day_replies_per_day: "Du har nået det maksimalt antal tilladte svar, en ny bruger kan lave på deres første dag. Vent venligst %{time_left} før du fortsætter med at besvare tanker og indlæg."
-      first_day_topics_per_day: "Du har nået det maksimalt antal af tilladte emner, en ny bruger kan lave på første dag.\nVent venligst %{time_left} før du prøver igen."
-      create_topic: "Du opretter emner for hurtigt. Vent venligst %{time_left} før du prøver igen."
-      create_post: "Du svarer for hurtigt. Vent venligst %{time_left} før du prøver igen."
-      delete_post: "Du sletter emner for hurtigt. Vent venligst %{time_left}før du prøver igen."
-      public_group_membership: "Du tilslutter/forlader grupper for ofte. Vent venligst %{time_left} før du forsøger igen."
-      topics_per_day: "Du har nået det maksimalt antal tilladte nye emner i dag. Venligst vent %{time_left} før du prøver igen."
-      pms_per_day: "Du har nu nået det maksimalt antal tilladte beskeder. Vent venligst %{time_left} før du prøver igen."
-      create_like: "Du har nået grænsen for antal tilladte 'likes' for i dag. Vent venligst %{time_left} før du prøver igen."
-      create_bookmark: "Du har nået det maksimalt antal tilladte bogmærker i dag. Vent venligst %{time_left} før du prøver igen. "
-      edit_post: "Du har nået det maksimale antal redigeringer for i dag. Vent venligst  %{time_left} før du forsøger igen."
-      live_post_counts: "Du efterspørger udgivede emner for hurtigt. Vent venligst %{time_left} før du prøver igen."
-      unsubscribe_via_email: "Du har nået det maksimalt antal tilladte afmeldinger via email i dag.  Vent venligst%{time_left} før du prøver igen."
-      topic_invitations_per_day: "Du har nået det maksimalt antal tilladte emne invitationer i dag. Vent venligst %{time_left} før du prøver igen."
     hours:
       one: "1 time"
       other: "%{count} timer"
@@ -573,7 +548,6 @@ da:
       long_form: 'markerede dette som stødende'
     notify_user:
       title: 'Send @{{username}} en besked'
-      description: 'Jeg ønsker at tale med denne person direkte om vedkommendes indlæg'
       long_form: 'sendt besked til brugeren'
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -618,7 +592,6 @@ da:
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Dit indlæg er blevet markeret af fællesskabet. <a href="/my/messages">Se dine beskeder</a>.</p>'
     user_must_edit: '<p>Dette indlæg er blevet markert af fællesskabet, og er midlertidigt skjult.</p>'
   archetypes:
     regular:
@@ -663,9 +636,7 @@ da:
       xaxis: "Dag"
       yaxis: "Antal besøg"
     signups:
-      title: "Nye brugere"
       xaxis: "Dag"
-      yaxis: "Antal nye brugere"
     profile_views:
       title: "Bruger Profil Visninger"
       xaxis: "Dag"
@@ -703,7 +674,6 @@ da:
       xaxis: "Dag"
       yaxis: "Antal e-mails"
     user_to_user_private_messages:
-      title: "Bruger-til-bruger"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
     system_private_messages:
@@ -750,7 +720,6 @@ da:
       xaxis: "Dag"
       yaxis: "Web Crawler Sidevisninger"
     page_view_total_reqs:
-      title: "Total"
       xaxis: "Dag"
       yaxis: "Totalt antal Sidevisninger"
     page_view_logged_in_mobile_reqs:
@@ -794,7 +763,6 @@ da:
       xaxis: "Dag"
       yaxis: "Total"
     mobile_visits:
-      title: "Brugerbesøg"
       xaxis: "Dag"
       yaxis: "Antal besøg"
   dashboard:
@@ -815,26 +783,21 @@ da:
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer."
       other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='/logs' target='_blank'>the logs</a> for detaljer."
-    missing_mailgun_api_key: "Serveren er konfigureret til at sende emails via Mailgun, men der er ikke indtastet en API nøgle som bruges til at verificere webhook beskederne."
     bad_favicon_url: "Favicon kan ikke loades. Tjek dine favicon_url indstilling i  <a href='/admin/site_settings'>Site Settings</a>"
     poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
     poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='/admin/site_settings/category/email'>POP3 settings</a>."
   site_settings:
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Regex-mønster som automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
-    default_locale: "Standardsproget for denne Discourse-instans (ISO 639-1 kode)."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
     min_first_post_length: "Minimum tilladte antal tegn (i emne felt) i første indlæg"
-    min_private_message_post_length: "Minimumlængde tilladt for indlæg i tegn"
     max_post_length: "Maksimal længde af indlæg i tegn"
     topic_featured_link_enabled: "Tillad opslag af et link med emner."
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
     min_topic_title_length: "Minimumslængde af emnetitel i tegn."
     max_topic_title_length: "Maksimumslængde af emnetitel i tegn."
-    min_private_message_title_length: "Minimumslængde af emnetitel i tegn."
     min_search_term_length: "Antal tegn i søgefeltet skal have et minimum"
     search_tokenize_chinese_japanese_korean: "Tving søg til at \"tokenize\" Chinese/Japanese/Korean selv på sites som ikke er CJK"
     search_prefer_recent_posts: "Såfremt søgning på forum er langsomt, kan denne option indeksere og vise nyeste indlæg først"
@@ -869,7 +832,6 @@ da:
     digest_logo_url: "Det alternative logo billede der anvendes øverst på jeres sides email opsummering, burde være en bred rektangel. Skal ikke være et SVG billede. Hvis denne efterlades blank, vil 'logo_url' blive anvendt."
     logo_small_url: "Det lille logo øverst til venstre på siden burde være firkantet når der bladres ned. Såfremt denne efterlades blank. vil home 'glyph' blive vist."
     favicon_url: "Favoritikonet for jeres side, se http://en.wikipedia.org/wiki/Favicon, bør være en png, for at det fungere korrekt over CDN."
-    mobile_logo_url: "Jeres site logo, øverst til venstre på siden, skulle være firkantet. Såfremt det efterlades blankt, vil `logo_url` blive anvendt. F.eks: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
@@ -879,7 +841,6 @@ da:
     summary_likes_required: "Minimum antal likes på et emne før 'opsummer dette emne' er aktiveret"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     summary_max_results: "Max antal indlæg indeholdt i 'Opsummer dette Emne'"
-    enable_private_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
     long_polling_interval: "Mængde tid før serveren bør vente før den svarer klienter når der ikke er ny data at sende (kun for brugere der er logget ind)"
@@ -893,19 +854,12 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af likes pr dag for tl2 (member) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl4 (leader) ved at gange med dette tal"
-    num_spam_flags_to_block_new_user: "Hvis indlæg fra en ny bruger får så mange spam flag fra forskellige brugere num_users_to_block_new_user gem da deres indlæg og forhindre at vedkommende kan udgive flere indlæg. 0 for at slå fra."
-    num_users_to_block_new_user: "Hvis en ny bruger får num_spam_flags_to_block_new_user spam flag fra dette antal forskellige brugere, gem da alle indlæg og forhindr yderligere posteringer 0 for at slå fra."
-    num_tl3_flags_to_block_new_user: "Hvis en ny brugers indlæg får dette antal flag fra num_tl3_users_to_block_new_user fra Trust Level 3 brugere, gem da alle deres indlæg og bloker yderligere posteringer. 0 for at slå fra."
-    num_tl3_users_to_block_new_user: "Hvis en brugers indlæg får num_tl3_flags_to_block_new_user flag fra mange forskellige \"trust level 3\" brugere, så gem alle deres indlæg og fjern muligheden for nye indlæg. Skriv 0 for at deaktivere."
-    notify_mods_when_user_blocked: "Send en besked til alle moderatorer hvis en bruger blokeres automatisk"
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP adresse som den der startede emnet, så rapporter begge at deres indlæg potentielt er spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg (like, flag, etc)."
     must_approve_users: "Personale skal godkende alle nye bruger konti inden de kan tilgå sitet. ADVARSEL: aktivering af dette for et live site vil medføre en ophævning af adgang for eksisterende ikke-personale brugere."
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
-    ga_tracking_code: "OBSOLETE: Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "OBSOLETE: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
@@ -926,7 +880,6 @@ da:
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
-    invite_passthrough_hours: "Hvor længe kan en bruger benytte en tidligere benyttet invitation til at logge ind, i timer."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
     min_password_length: "Mindste adgangskodelængde."
     min_admin_password_length: "Minimumslængde for Admin adgangskoder."
@@ -935,8 +888,6 @@ da:
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_twitter_logins: "Aktivér Twitter-login, kræver twitter_consumer_key og twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key til Twitter-login, oprettes på http://dev.twitter.com."
-    twitter_consumer_secret: "Consumer secret til Twitter-login, oprettes på http://dev.twitter.com."
     enable_instagram_logins: "Aktivér Instagram-login, kræver instagram_consumer_key og instagram_consumer_secret"
     enable_facebook_logins: "Aktivér Facebook-login, kræver facebook_app_id og facebook_app_secret"
     facebook_app_id: "App id til Facebook-login, oprettes på https://developers.facebook.com/apps"
@@ -978,11 +929,8 @@ da:
     num_flaggers_to_close_topic: "Minimum antal flagmarkeringer fra unikke brugere, der skal til for automatisk at pause et emne til ingriben"
     num_flags_to_close_topic: "Minimum antal aktive flagmarkeringer, der skal til for automatisk at pause et emne til indgriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en flagmarkering fjernes."
-    auto_block_fast_typers_on_first_post: "Blokér automatisk brugere som ikke opfylder min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Maksimal trust level for at blokere \"fast typers\""
     reply_by_email_enabled: "Aktivér muligheden for at svare til emner via email."
     reply_by_email_address: "Skabelon for e-mail-adressen i formularen, for eksempel: %{reply_key}@reply.myforum.com."
-    disable_emails: "Stop Discourse i at sende nogen form for emails"
     strip_images_from_short_emails: "Undlad at inkludere billeder fra emails som fylder mindre end 2800 Bytes"
     short_email_length: "Kort email i Bytes"
     display_name_on_email_from: "Vis fulde navne på emails fra felter"
@@ -990,7 +938,6 @@ da:
     ignore_by_title: "Ignorér indgående emails baseret på deres titel."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
-    username_change_period: "Antal dage efter oprettelsen hvor brugere kan ændre deres brugernavn (0 for ikke at tillade skift af brugernavn)."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     digest_topics: "Maximalt antal af populære emner vist i mails med sammendrag."
     digest_posts: "Maximalt antal af populære indlæg vist i mails med sammendrag."
@@ -1011,7 +958,6 @@ da:
     emoji_set: "Hvordan kunne du tænke dig din emoji?"
     default_email_digest_frequency: "Hvor ofte brugere som standard modtager mails med sammendrag."
     default_include_tl0_in_digests: "Inkluder som standard indlæg fra nye brugre i mails med sammendrag. Brugere kan ændre dette i deres indstillinger."
-    default_email_private_messages: "Send som standard en email når nogen sender brugeren en besked."
     default_email_direct: "Send som standard en email når nogen citerer/svarer/nævner/inviterer brugeren."
     default_email_mailing_list_mode: "Send som standard en email for hvert nyt indlæg."
     default_email_always: "Send som standard en email-notifikation selv hvis brugeren er aktiv."
@@ -1104,7 +1050,6 @@ da:
     email_too_long: "Den mailadresse, du har opgivet, er for lang. Navnet i mailadressen må ikke overstige 254 tegn, og domænenavnet må ikke overstige 253 tegn."
     reserved_username: "Dette brugernavn er ikke tilladt."
     missing_user_field: "Du har ikke udfyldt alle felterne"
-    close_window: "Godkendelsen er færdig. Luk dette vindue for at fortsætte."
     already_logged_in: "Hovsa, det ser ud til, at du forsøger at acceptere en invitation til en anden bruger. Hvis du ikke er %{current_user}, så log venligst ud og prøv igen."
   user:
     no_accounts_associated: "Ingen konti tilknyttet"
@@ -1114,7 +1059,6 @@ da:
     username:
       short: "skal være på mindst %{{min}} tegn."
       long: "skal være kortere end %{max} tegn"
-      characters: "må kun indeholde bogstaver og tal"
       unique: "skal være unik"
       blank: "skal udfyldes"
       must_begin_with_alphanumeric_or_underscore: "skal begynde med et bogstav, et nummer eller en underscore"
@@ -1143,14 +1087,6 @@ da:
 
       Hvis du ønsker at fortsætte med at modtage mailopdateringer, kan du bare ignorere denne mail.
 
-  invite_mailer:
-    subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-  custom_invite_mailer:
-    subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} inviterede dig til at oprette dig på %{site_domain_name}"
-  custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} inviterede dig til at oprette dig på %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Opret password til din %{site_name}-konto"
     text_body_template: |
@@ -1216,12 +1152,6 @@ da:
 
         Den konto, der er knyttet til denne mailadresse, er ikke aktiveret. Aktiver din konto, før du sendere flere mails ind.
 
-    email_reject_blocked_user:
-      text_body_template: |+
-        Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
-
-        Den konto, der er knyttet til denne mailadresse, er blokeret.
-
     email_reject_empty:
       text_body_template: |+
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
@@ -1258,68 +1188,9 @@ da:
     too_many_spam_flags:
       title: "For Mange Flagmarkeringer for Spam"
       subject_template: "Nyoprettet konto sat på hold"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at dine indlæg midlertidigt er blevet skjult, fordi de er blevet flagmarkeret af andre brugere.
-
-        For en sikkerheds skyld er din nyoprettede konto blevet spærret, så du ikke kan oprette nye svar eller emner, indtil en administrator kan gennemgå din konto. Vi beklager ulejligheden.
-
-        Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
     too_many_tl3_flags:
       title: "For Mange TL3 Flagmarkeringer"
       subject_template: "Nyoprettet konto sat på hold"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at din konto er blevet sat i venteposition på grund af et stort antal flagmarkeringer fra andre brugere.
-
-        For en sikkerheds skyld er din nyoprettede konto blevet spærret, så du ikke kan oprette nye svar eller emner, indtil en administrator kan gennemgå din konto. Vi beklager ulejligheden.
-
-        Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
-    blocked_by_staff:
-      title: "Blokeret af hjælperteamet"
-      subject_template: "Konto midlertidigt sat på hold"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at din konto midlertidigt er blevet sat på hold af sikkerhedsmæssige årsager.
-
-        Du kan fortsat kigge dig omkring på sitet, men du kan ikke oprette indlæg eller emner, intil en [administrator](%{base_url}/about) har gennemgået dine seneste indlæg. Vi beklager ulejligheden.
-
-        Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
-    user_automatically_blocked:
-      title: "Bruger automatisk spærret"
-      subject_template: "Den nye bruger %{username} er blokeret pga. flagmakeringer"
-      text_body_template: |
-        Dette er en automatisk besked.
-
-        Den nye bruger [%{username}](%{user_url}) er automatisk blevet spærret, fordi adskillige brugere har flagmarkeret %{username}s indlæg.
-
-        [Gennemgå venligst flagmarkeringerne](%{base_url}/admin/flags). Hvis %{username} uretmæssigt er blevet forhindret i oprette indlæg, kan du klikke på ophæv spærring på [admin-siden for denne bruger](%{user_url}).
-
-        Grænseværdien kan ændres via indstillingen `block_new_user`.
-    spam_post_blocked:
-      title: "Spam-indlæg blokeret"
-      subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
-      text_body_template: |
-        Dette er en automatisk besked.
-
-        Den nye bruger [%{username}](%{user_url}) har forsøgt at oprette flere indlæg med links til %{domains}, men indlæggene blev blokeret for at forhindre spam. Brugeren kan stadig oprette nye indlæg, som ikke linker til %{domains}.
-
-        [Tjek denne bruger](%{user_url}).
-
-        Indstillingen kan ændres via `newuser_spam_host_threshold` og `white_listed_spam_host_domains`.
-    unblocked:
-      title: "Spærring ophævet"
-      subject_template: "Konto ikke længere sat på hold"
-      text_body_template: |+
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at din konto ikke længere er på hold, efter at den er blevet gennemgået af administrator.
-
-        Du kan nu oprette nye indlæg og emner igen. Tak for din tålmodighed.
-
     pending_users_reminder:
       title: "Påmindelse om afventende brugere"
       subject_template:
@@ -1352,10 +1223,8 @@ da:
       title: "Frameld"
       description: "Ønsker du ikke at modtage disse e-mails? Intet problem! Klik herunder for at framelde med det samme:"
     reply_by_email: "[Besøg emnet](%{base_url}%{url}) eller svar på denne email for at svare."
-    reply_by_email_pm: "[Gå til besked](%{base_url}%{url}) eller svar på denne email for at svare."
     only_reply_by_email: "Besvar denne mail for at svare."
     visit_link_to_respond: "[Gå til emne](%{base_url}%{url}) for at svare."
-    visit_link_to_respond_pm: "[Gå til besked](%{base_url}%{url}) for at svare."
     posted_by: "Oprettet af %{username} den %{post_date}"
     user_invited_to_private_message_pm:
       title: "Bruger inviteret til PB"
@@ -1484,7 +1353,7 @@ da:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"
@@ -1604,7 +1473,7 @@ da:
       name: Selvbiograf
     anniversary:
       name: Jubilæum
-      description: Aktivt medlem i et år, som har skrevet mindst et indlæg
+      description: "Aktivt medlem i et år, som har skrevet mindst et indlæg"
     nice_post:
       name: Fint svar
       description: Modtog 10 likes på et svar
@@ -1651,7 +1520,6 @@ da:
       description: Citerede et indlæg
     read_guidelines:
       name: Læst retningslinierne
-      description: Har læst <a href="/guidelines">retningslinierne for forummet</a>
     reader:
       name: Læser
       description: Har læst hvert eneste svar i et emne med mere end 100 svar
@@ -1691,14 +1559,13 @@ da:
       name: Empatisk
       description: Har 500 likede indlæg og givet 1000 likes
     first_onebox:
-      long_description: Dette badge bliver tildelt første gang du poster et link i en linie for sig selv. Det vil automatisk ekspandere til en boks med et kort sammendrag af siden, en titel og (når muligt) et billede.
+      long_description: "Dette badge bliver tildelt første gang du poster et link i en linie for sig selv. Det vil automatisk ekspandere til en boks med et kort sammendrag af siden, en titel og (når muligt) et billede."
     first_reply_by_email:
       name: Første svar via email
       long_description: |
         Dette emblem gives første gang du svarer til et indlæg via email  :e-mail:.
   admin_login:
     success: "Email sendt"
-    error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
   performance_report:
@@ -1785,7 +1652,6 @@ da:
             description: "Ikonbillede som bruges til at fremvise dit site i webbrowsere, og som ser godt ud i små størrelser såsom 32px gange 32px."
           apple_touch_icon_url:
             label: "Stort ikon"
-            description: "Ikonbillede som bruges til at fremvise dit site i moderne webbrowsere, og som ser godt ud i større størrelser. Den anbefalet størrelse er mindst 144px gange 144px."
       homepage:
         description: "Vi anbefaler at seneste emner vises på din hjemmeside, men du kan også vise kategorier (grupper af emner) på hjemmesiden, hvis du foretrækker dette."
         title: "Hjemmeside"
@@ -1794,8 +1660,6 @@ da:
             choices:
               latest:
                 label: "Seneste emner"
-              categories:
-                label: "Kategorier"
       emoji:
         title: "Emoji"
         description: "Hvilken Emoji-stil foretrækker du for dit fællesskab? Du kan tilføje flere brugerdefinerede Emoji'er senere via Admin, Tilpas, Emoji."
@@ -1803,6 +1667,3 @@ da:
         title: "Inviter hjælpere"
       finished:
         title: "Discourse er gjort klar til dig!"
-  activemodel:
-    errors:
-      <<: *errors

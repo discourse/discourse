@@ -9,19 +9,32 @@ class UserAvatarsController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if user
-      user.create_user_avatar(user_id: user.id) unless user.user_avatar
-      user.user_avatar.update_gravatar!
+      hijack do
+        user.create_user_avatar(user_id: user.id) unless user.user_avatar
+        user.user_avatar.update_gravatar!
 
-      render json: {
-        gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-        gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
-      }
+        gravatar = if user.user_avatar.gravatar_upload_id
+          {
+            gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+            gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
+          }
+        else
+          {
+            gravatar_upload_id: nil,
+            gravatar_avatar_template: nil
+          }
+        end
+
+        render json: gravatar
+      end
     else
       raise Discourse::NotFound
     end
   end
 
   def show_proxy_letter
+    is_asset_path
+
     if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
       raise Discourse::NotFound
     end
@@ -31,20 +44,22 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
-    no_cookies
+    hijack do
+      identity = LetterAvatar::Identity.new
+      identity.letter = params[:letter].to_s[0].upcase
+      identity.color = params[:color].scan(/../).map(&:hex)
+      image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
 
-    identity = LetterAvatar::Identity.new
-    identity.letter = params[:letter].to_s[0].upcase
-    identity.color = params[:color].scan(/../).map(&:hex)
-    image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
-
-    response.headers["Last-Modified"] = File.ctime(image).httpdate
-    response.headers["Content-Length"] = File.size(image).to_s
-    immutable_for(1.year)
-    send_file image, disposition: nil
+      response.headers["Last-Modified"] = File.ctime(image).httpdate
+      response.headers["Content-Length"] = File.size(image).to_s
+      immutable_for(1.year)
+      send_file image, disposition: nil
+    end
   end
 
   def show_letter
+    is_asset_path
+
     params.require(:username)
     params.require(:version)
     params.require(:size)
@@ -53,20 +68,24 @@ class UserAvatarsController < ApplicationController
 
     return render_blank if params[:version] != LetterAvatar.version
 
-    image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
+    hijack do
+      image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
-    response.headers["Last-Modified"] = File.ctime(image).httpdate
-    response.headers["Content-Length"] = File.size(image).to_s
-    immutable_for(1.year)
-    send_file image, disposition: nil
+      response.headers["Last-Modified"] = File.ctime(image).httpdate
+      response.headers["Content-Length"] = File.size(image).to_s
+      immutable_for(1.year)
+      send_file image, disposition: nil
+    end
   end
 
   def show
-    no_cookies
+    is_asset_path
 
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      show_in_site(params[:hostname])
+      hijack do
+        show_in_site(params[:hostname])
+      end
     end
   end
 
@@ -83,7 +102,7 @@ class UserAvatarsController < ApplicationController
     return render_blank if version != OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_blank unless upload_id > 0 && user_avatar = user.user_avatar
+    return render_blank unless upload_id > 0
 
     size = params[:size].to_i
     return render_blank if size < 8 || size > 1000
@@ -94,7 +113,7 @@ class UserAvatarsController < ApplicationController
       return redirect_to cdn_path(avatar_url)
     end
 
-    upload = Upload.find_by(id: upload_id) if user_avatar.contains_upload?(upload_id)
+    upload = Upload.find_by(id: upload_id) if user&.user_avatar&.contains_upload?(upload_id)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload

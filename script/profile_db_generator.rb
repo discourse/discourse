@@ -45,7 +45,7 @@ def create_admin(seq)
   User.new.tap { |admin|
     admin.email = "admin@localhost#{seq}.fake"
     admin.username = "admin#{seq}"
-    admin.password = "password"
+    admin.password = "password12345abc"
     admin.save!
     admin.grant_admin!
     admin.change_trust_level!(TrustLevel[4])

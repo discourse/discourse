@@ -58,21 +58,21 @@ class GroupActionLogger
 
   private
 
-    def excluded_attributes
-      [
-        :bio_cooked,
-        :updated_at,
-        :created_at,
-        :user_count
-      ]
-    end
+  def excluded_attributes
+    [
+      :bio_cooked,
+      :updated_at,
+      :created_at,
+      :user_count
+    ]
+  end
 
-    def default_params
-      { group: @group, acting_user: @acting_user }
-    end
+  def default_params
+    { group: @group, acting_user: @acting_user }
+  end
 
-    def can_edit?
-      raise Discourse::InvalidParameters.new unless Guardian.new(@acting_user).can_log_group_changes?(@group)
-    end
+  def can_edit?
+    raise Discourse::InvalidParameters.new unless Guardian.new(@acting_user).can_log_group_changes?(@group)
+  end
 
 end

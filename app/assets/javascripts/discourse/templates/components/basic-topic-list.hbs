@@ -1,4 +1,12 @@
 {{#conditional-loading-spinner condition=loading}}
+  {{#if hasIncoming}}
+  <div class="show-mores">
+    <div class='alert alert-info clickable' {{action "showInserted"}}>
+      {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
+    </div>
+  </div>
+  {{/if}}
+
   {{#if topics}}
     {{topic-list showParticipants=showParticipants
                  showPosters=showPosters
@@ -8,7 +16,8 @@
                  bulkSelectEnabled=bulkSelectEnabled
                  canBulkSelect=canBulkSelect
                  selected=selected
-                 skipHeader=skipHeader}}
+                 skipHeader=skipHeader
+                 tagsForUser=tagsForUser}}
   {{else}}
     {{#unless loadingMore}}
     <div class='alert alert-info'>

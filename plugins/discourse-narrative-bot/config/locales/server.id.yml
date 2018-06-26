@@ -53,7 +53,6 @@ id:
         quote: "Setiap kesulitan ada kemudahan"
         author: "Albert Einstein"
       '2':
-        quote: "Kamu harus jadi agen perubahan agar dunia mengenalimu."
         author: "Mahatma Gandhi"
       '3':
         quote: "Jangan menangis karena sudah selesai, tersenyumlah karena itu telah terjadi."
@@ -161,8 +160,6 @@ id:
           - https://en.wikipedia.org/wiki/Inherently_funny_word
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
-        reply: |-
-          Keren! Ini akan berhasil untuk 1 tautan. Ingat, itu harus berada di garis depan dengan sendirinya, tanpa hal lain di depan, atau di belakang.
       images:
         reply: |-
           Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:
@@ -289,10 +286,6 @@ id:
         reply: |-
           Hebat! Cara ini bisa digunakan pada categories _and_ tags, jika pelabelan diaktifkan.
       change_topic_notification_level:
-        instructions: |-
-          Setiap topik memiliki tingkat pemberitahuan. Pengaturan awalnya adalah tingkat tertinggi, yakni 'watching', artinya surel pemberitahuan langsung dikirim setiap ada balasan baru. Tapi Anda bisa mengatur tingkat pemberitahuan untuk _topik_ apa_saja untuk 'watch', 'tracking' atau 'muted'.
-
-          Mari coba ubah tingkat pemberitahuan untuk topik ini. Di topik paling bawah, Anda akan menemukan sebuah tombol yang menyatakan kalau anda **menyimak** atau watching topik ini. Bisakah anda mengubahnya menjadi **tracking** atau mengikuti?
         not_found: |-
           Sepertinya Anda masih menyimak :eyes: topik ini! Jika kesulitan mencari tombolnya, tombol tingkat pengaturan ada di bawah topik.
         reply: |-

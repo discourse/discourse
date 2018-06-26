@@ -1,0 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fa_IR:
+  site_settings:
+    presence_enabled: 'کاربرانی که در حال حاضر به موضوع فعلی پاسخ می دهند و یا در حال یرایش پست فعلی هستند، نمایش داده شوند؟'

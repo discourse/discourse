@@ -3,16 +3,16 @@ body.crawler {
     width: 100%;
     position: absolute;
     top: 0;
-    z-index: 1001;
+    z-index: z("max");
     background-color: #fff;
     padding: 10px;
-    box-shadow: 0 2px 4px -1px rgba(0,0,0,0.25);
+    box-shadow: shadow("header");
   }
-  div.topic-list div[itemprop='itemListElement'] {
-    padding: 10px 0px;
+  div.topic-list div[itemprop="itemListElement"] {
+    padding: 10px 0;
     border-bottom: 1px solid #e9e9e9;
     .page-links a {
-      padding: 0px 4px;
+      padding: 0 4px;
     }
   }
   div#main-outlet {
@@ -23,7 +23,7 @@ body.crawler {
     }
   }
   footer nav {
-    margin: 50px 0px;
+    margin: 50px 0;
     a {
       padding: 15px;
     }

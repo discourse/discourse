@@ -69,19 +69,36 @@ class PostDestroyer
     topic.update_statistics
     recover_user_actions
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
-    DiscourseEvent.trigger(:topic_recovered, topic, @user) if @post.is_first_post?
+    if @post.is_first_post?
+      DiscourseEvent.trigger(:topic_recovered, topic, @user)
+      StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
+    end
   end
 
   def staff_recovered
     @post.recover!
 
     if author = @post.user
-      author.user_stat.post_count += 1
+      if @post.is_first_post?
+        author.user_stat.topic_count += 1
+      else
+        author.user_stat.post_count += 1
+      end
       author.user_stat.save!
     end
 
+    if @post.is_first_post? && @post.topic && !@post.topic.private_message?
+      # Update stats of all people who replied
+      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
+      counts.each do |user_id, count|
+        if user_stat = UserStat.where(user_id: user_id).first
+          user_stat.update_attributes(post_count: user_stat.post_count + count)
+        end
+      end
+    end
+
     @post.publish_change_to_clients! :recovered
-    TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.post_number == 1
+    TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.is_first_post?
   end
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
@@ -101,7 +118,7 @@ class PostDestroyer
       remove_associated_replies
       remove_associated_notifications
       if @post.topic && @post.is_first_post?
-        StaffActionLogger.new(@user).log_topic_deletion(@post.topic, @opts.slice(:context)) if @user.id != @post.user_id
+        StaffActionLogger.new(@user).log_topic_delete_recover(@post.topic, "delete_topic", @opts.slice(:context)) if @user.id != @post.user_id
         @post.topic.trash!(@user)
       elsif @user.id != @post.user_id
         StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
@@ -150,7 +167,7 @@ class PostDestroyer
   def make_previous_post_the_last_one
     last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
     if last_post.present?
-      @post.topic.update_attributes(
+      @post.topic.update!(
         last_posted_at: last_post.created_at,
         last_post_user_id: last_post.user_id,
         highest_post_number: last_post.post_number
@@ -231,10 +248,12 @@ class PostDestroyer
       author.user_stat.first_post_created_at = author.posts.order('created_at ASC').first.try(:created_at)
     end
 
-    author.user_stat.post_count -= 1
+    if @post.post_type == Post.types[:regular] && !@post.is_first_post? && !@topic.nil?
+      author.user_stat.post_count -= 1
+    end
     author.user_stat.topic_count -= 1 if @post.is_first_post?
 
-    # We don't count replies to your own topics
+    # We don't count replies to your own topics in topic_reply_count
     if @topic && author.id != @topic.user_id
       author.user_stat.update_topic_reply_count
     end
@@ -244,6 +263,16 @@ class PostDestroyer
     if @post.created_at == author.last_posted_at
       author.last_posted_at = author.posts.order('created_at DESC').first.try(:created_at)
       author.save!
+    end
+
+    if @post.is_first_post? && @post.topic && !@post.topic.private_message?
+      # Update stats of all people who replied
+      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
+      counts.each do |user_id, count|
+        if user_stat = UserStat.where(user_id: user_id).first
+          user_stat.update_attributes(post_count: user_stat.post_count - count)
+        end
+      end
     end
   end
 

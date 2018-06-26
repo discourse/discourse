@@ -1,0 +1,22 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sl:
+  js:
+    poll:
+      voters:
+        one: "glasovalec"
+        two: "glasovalca"
+        few: "glasovalci"
+        other: "glasovalci"
+      public:
+        title: "Glasovi so javni."
+      cast-votes:
+        label: "Glasuj!"
+      show-results:
+        title: "Prikaži rezultate ankete"
+        label: "Prikaži rezultate"

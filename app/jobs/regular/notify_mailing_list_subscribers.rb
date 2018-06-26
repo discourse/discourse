@@ -15,7 +15,7 @@ module Jobs
       return if !post || post.trashed? || post.user_deleted? || !post.topic
 
       users =
-          User.activated.not_blocked.not_suspended.real
+          User.activated.not_silenced.not_suspended.real
             .joins(:user_option)
             .where('user_options.mailing_list_mode AND user_options.mailing_list_mode_frequency > 0')
             .where('NOT EXISTS (
@@ -33,6 +33,10 @@ module Jobs
                      FROM category_users cu
                      WHERE cu.category_id = ? AND cu.user_id = users.id AND cu.notification_level = ?
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
+
+      if SiteSetting.must_approve_users
+        users = users.where(approved: true)
+      end
 
       DiscourseEvent.trigger(:notify_mailing_list_subscribers, users, post)
       users.find_each do |user|

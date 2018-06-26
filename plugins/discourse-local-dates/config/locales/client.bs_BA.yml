@@ -1,0 +1,26 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+bs_BA:
+  js:
+    discourse_local_dates:
+      title: Unesite datum
+      create:
+        modal_title: Unesite datum
+        modal_subtitle: "Automatski ćemo pretvoriti datum i vrijeme na korisnikovu lokalnu vremensku zonu."
+        form:
+          insert: Unesi
+          advanced_mode: Napredni način
+          simple_mode: Jednostavan način
+          format_description: "Format koji je korišten kako bi prikazali vrijeme korisniku. Koristite \"\\T\\Z\" kako bi korisniku prikazali vremensku zonu riječima (Europe/Paris)"
+          timezones_title: Vremenske zone za prikazati
+          timezones_description: Vremenske zone će biti korištene kako bi prikazale datume u pregledu i u nazad.
+          recurring_title: Vraćanje
+          invalid_date: Neispravan datum, osigurajte da su datum i vrijeme tačni
+          date_title: Datum
+          time_title: Vrijeme
+          format_title: Format datuma

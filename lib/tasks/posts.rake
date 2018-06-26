@@ -87,9 +87,12 @@ def rebake_posts(opts = {})
   total = Post.count
   rebaked = 0
 
-  Post.find_each do |post|
-    rebake_post(post, opts)
-    print_status(rebaked += 1, total)
+  # TODO: make this resumable because carrying around 20 million ids in memory is not a great idea long term
+  Post.order(id: :desc).pluck(:id).in_groups_of(1000, false).each do |batched_post_ids|
+    Post.order(created_at: :desc).where(id: batched_post_ids).each do |post|
+      rebake_post(post, opts)
+      print_status(rebaked += 1, total)
+    end
   end
 
   SiteSetting.disable_edit_notifications = disable_edit_notifications
@@ -138,9 +141,13 @@ def remap_posts(find, type, replace = "")
       end
 
     if new_raw != p.raw
-      p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
-      putc "."
-      i += 1
+      begin
+        p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
+        putc "."
+        i += 1
+      rescue
+        puts "\nFailed to remap post (topic_id: #{p.topic_id}, post_id: #{p.id})\n"
+      end
     end
   end
 
@@ -250,17 +257,117 @@ task 'posts:refresh_emails', [:topic_id] => [:environment] do |_, args|
   total = posts.count
 
   posts.find_each do |post|
-    receiver = Email::Receiver.new(post.raw_email)
+    begin
+      receiver = Email::Receiver.new(post.raw_email)
 
-    body, elided = receiver.select_body
-    body = receiver.add_attachments(body || '', post.user_id)
-    body << Email::Receiver.elided_html(elided) if elided.present?
+      body, elided = receiver.select_body
+      body = receiver.add_attachments(body || '', post.user_id)
+      body << Email::Receiver.elided_html(elided) if elided.present?
 
-    post.revise(Discourse.system_user, { raw: body }, skip_revision: true, skip_validations: true)
+      post.revise(Discourse.system_user, { raw: body, cook_method: Post.cook_methods[:regular] },
+                  skip_revision: true, skip_validations: true, bypass_bump: true)
+    rescue
+      puts "Failed to refresh post (topic_id: #{post.topic_id}, post_id: #{post.id})"
+    end
+
     updated += 1
 
     print_status(updated, total)
   end
 
   puts "", "Done. #{updated} posts updated.", ""
+end
+
+desc 'Reorders all posts based on their creation_date'
+task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
+  Post.transaction do
+    # update sort_order and flip post_number to prevent
+    # unique constraint violations when updating post_number
+    builder = DB.build(<<~SQL)
+      WITH ordered_posts AS (
+          SELECT
+            id,
+            ROW_NUMBER()
+            OVER (
+              PARTITION BY topic_id
+              ORDER BY created_at, post_number ) AS new_post_number
+          FROM posts
+          /*where*/
+      )
+      UPDATE posts AS p
+      SET sort_order = o.new_post_number,
+        post_number  = p.post_number * -1
+      FROM ordered_posts AS o
+      WHERE p.id = o.id AND
+            p.post_number <> o.new_post_number
+    SQL
+    builder.where("topic_id = :topic_id") if args[:topic_id]
+    builder.exec(topic_id: args[:topic_id])
+
+    DB.exec(<<~SQL)
+      UPDATE notifications AS x
+      SET post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.post_number = ABS(p.post_number) AND
+            p.post_number < 0
+    SQL
+
+    DB.exec(<<~SQL)
+      UPDATE post_timings AS x
+      SET post_number = x.post_number * -1
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+
+      UPDATE post_timings AS t
+      SET post_number = p.sort_order
+      FROM posts AS p
+      WHERE t.topic_id = p.topic_id AND
+            t.post_number = p.post_number AND
+            p.post_number < 0;
+    SQL
+
+    DB.exec(<<~SQL)
+      UPDATE posts AS x
+      SET reply_to_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.reply_to_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+    SQL
+
+    DB.exec(<<~SQL)
+      UPDATE topic_users AS x
+        SET last_read_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.last_read_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+
+      UPDATE topic_users AS x
+        SET highest_seen_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.highest_seen_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+
+      UPDATE topic_users AS x
+        SET last_emailed_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.last_emailed_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+    SQL
+
+    # finally update the post_number
+    DB.exec(<<~SQL)
+      UPDATE posts
+      SET post_number = sort_order
+      WHERE post_number < 0
+    SQL
+  end
+
+  puts "", "Done.", ""
 end

@@ -1,39 +1,38 @@
 import computed from "ember-addons/ember-computed-decorators";
-import Archetype from 'discourse/models/archetype';
-import PostActionType from 'discourse/models/post-action-type';
-import Singleton from 'discourse/mixins/singleton';
-import RestModel from 'discourse/models/rest';
-import PreloadStore from 'preload-store';
+import Archetype from "discourse/models/archetype";
+import PostActionType from "discourse/models/post-action-type";
+import Singleton from "discourse/mixins/singleton";
+import RestModel from "discourse/models/rest";
+import PreloadStore from "preload-store";
 
 const Site = RestModel.extend({
-
-  isReadOnly: Em.computed.alias('is_readonly'),
+  isReadOnly: Em.computed.alias("is_readonly"),
 
   @computed("notification_types")
   notificationLookup(notificationTypes) {
     const result = [];
-    _.each(notificationTypes, (v, k) => result[v] = k);
+    _.each(notificationTypes, (v, k) => (result[v] = k));
     return result;
   },
 
   @computed("post_action_types.[]")
   flagTypes() {
-    const postActionTypes = this.get('post_action_types');
+    const postActionTypes = this.get("post_action_types");
     if (!postActionTypes) return [];
-    return postActionTypes.filterBy('is_flag', true);
+    return postActionTypes.filterBy("is_flag", true);
   },
 
-  topicCountDesc: ['topic_count:desc'],
-  categoriesByCount: Ember.computed.sort('categories', 'topicCountDesc'),
+  topicCountDesc: ["topic_count:desc"],
+  categoriesByCount: Ember.computed.sort("categories", "topicCountDesc"),
 
   // Sort subcategories under parents
   @computed("categoriesByCount", "categories.[]")
   sortedCategories(cats) {
     const result = [],
-          remaining = {};
+      remaining = {};
 
     cats.forEach(c => {
-      const parentCategoryId = parseInt(c.get('parent_category_id'), 10);
+      const parentCategoryId = parseInt(c.get("parent_category_id"), 10);
       if (!parentCategoryId) {
         result.pushObject(c);
       } else {
@@ -43,8 +42,8 @@ const Site = RestModel.extend({
     });
 
     Object.keys(remaining).forEach(parentCategoryId => {
-      const category = result.findBy('id', parseInt(parentCategoryId, 10)),
-            index = result.indexOf(category);
+      const category = result.findBy("id", parseInt(parentCategoryId, 10)),
+        index = result.indexOf(category);
 
       if (index !== -1) {
         result.replace(index + 1, 0, remaining[parentCategoryId]);
@@ -52,6 +51,19 @@ const Site = RestModel.extend({
     });
 
     return result;
+  },
+
+  @computed
+  baseUri() {
+    return Discourse.baseUri;
+  },
+
+  // Returns it in the correct order, by setting
+  @computed
+  categoriesList() {
+    return this.siteSettings.fixed_category_positions
+      ? this.get("categories")
+      : this.get("sortedCategories");
   },
 
   postActionTypeById(id) {
@@ -63,39 +75,40 @@ const Site = RestModel.extend({
   },
 
   removeCategory(id) {
-    const categories = this.get('categories');
-    const existingCategory = categories.findBy('id', id);
+    const categories = this.get("categories");
+    const existingCategory = categories.findBy("id", id);
     if (existingCategory) {
       categories.removeObject(existingCategory);
-      delete this.get('categoriesById').categoryId;
+      delete this.get("categoriesById").categoryId;
     }
   },
 
   updateCategory(newCategory) {
-    const categories = this.get('categories');
-    const categoryId = Em.get(newCategory, 'id');
-    const existingCategory = categories.findBy('id', categoryId);
+    const categories = this.get("categories");
+    const categoryId = Em.get(newCategory, "id");
+    const existingCategory = categories.findBy("id", categoryId);
 
     // Don't update null permissions
-    if (newCategory.permission === null) { delete newCategory.permission; }
+    if (newCategory.permission === null) {
+      delete newCategory.permission;
+    }
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
     } else {
       // TODO insert in right order?
-      newCategory = this.store.createRecord('category', newCategory);
+      newCategory = this.store.createRecord("category", newCategory);
       categories.pushObject(newCategory);
-      this.get('categoriesById')[categoryId] = newCategory;
+      this.get("categoriesById")[categoryId] = newCategory;
     }
   }
 });
 
 Site.reopenClass(Singleton, {
-
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    const store = Discourse.__container__.lookup('service:store');
-    return store.createRecord('site', PreloadStore.get('site'));
+    const store = Discourse.__container__.lookup("service:store");
+    return store.createRecord("site", PreloadStore.get("site"));
   },
 
   create() {
@@ -104,18 +117,26 @@ Site.reopenClass(Singleton, {
 
     if (result.categories) {
       result.categoriesById = {};
-      result.categories = _.map(result.categories, c => result.categoriesById[c.id] = store.createRecord('category', c));
+      result.categories = _.map(
+        result.categories,
+        c => (result.categoriesById[c.id] = store.createRecord("category", c))
+      );
 
       // Associate the categories with their parents
       result.categories.forEach(c => {
-        if (c.get('parent_category_id')) {
-          c.set('parentCategory', result.categoriesById[c.get('parent_category_id')]);
+        if (c.get("parent_category_id")) {
+          c.set(
+            "parentCategory",
+            result.categoriesById[c.get("parent_category_id")]
+          );
         }
       });
     }
 
     if (result.trust_levels) {
-      result.trustLevels = result.trust_levels.map(tl => Discourse.TrustLevel.create(tl));
+      result.trustLevels = result.trust_levels.map(tl =>
+        Discourse.TrustLevel.create(tl)
+      );
       delete result.trust_levels;
     }
 
@@ -145,7 +166,9 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.user_fields) {
-      result.user_fields = result.user_fields.map(uf => Ember.Object.create(uf));
+      result.user_fields = result.user_fields.map(uf =>
+        Ember.Object.create(uf)
+      );
     }
 
     return result;

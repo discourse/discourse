@@ -1,5 +1,6 @@
 require 'cache'
 require 'open3'
+require_dependency 'route_format'
 require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
@@ -63,12 +64,12 @@ module Discourse
 
   # When they don't have permission to do something
   class InvalidAccess < StandardError
-    attr_reader :obj, :custom_message
+    attr_reader :obj, :custom_message, :opts
     def initialize(msg = nil, obj = nil, opts = nil)
       super(msg)
 
-      opts ||= {}
-      @custom_message = opts[:custom_message] if opts[:custom_message]
+      @opts = opts || {}
+      @custom_message = opts[:custom_message] if @opts[:custom_message]
       @obj = obj
     end
   end
@@ -127,7 +128,11 @@ module Discourse
     if Rails.env.development?
       plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
       hash_file = "#{Rails.root}/tmp/plugin-hash"
-      old_hash = File.read(hash_file) rescue nil
+
+      old_hash = begin
+        File.read(hash_file)
+      rescue Errno::ENOENT
+      end
 
       if old_hash && old_hash != plugin_hash
         puts "WARNING: It looks like your discourse plugins have recently changed."
@@ -157,6 +162,14 @@ module Discourse
 
   def self.plugins
     @plugins ||= []
+  end
+
+  def self.hidden_plugins
+    @hidden_plugins ||= []
+  end
+
+  def self.visible_plugins
+    self.plugins - self.hidden_plugins
   end
 
   def self.plugin_themes
@@ -235,15 +248,17 @@ module Discourse
   end
 
   def self.route_for(uri)
+    unless uri.is_a?(URI)
+      uri = begin
+        URI(uri)
+      rescue URI::InvalidURIError
+      end
+    end
 
-    uri = URI(uri) rescue nil unless (uri.is_a?(URI))
     return unless uri
 
     path = uri.path || ""
-    if (uri.host == Discourse.current_hostname &&
-      path.start_with?(Discourse.base_uri)) ||
-      !uri.host
-
+    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
       path.slice!(Discourse.base_uri)
       return Rails.application.routes.recognize_path(path)
     end
@@ -279,10 +294,25 @@ module Discourse
   def self.keep_readonly_mode(key)
     # extend the expiry by 1 minute every 30 seconds
     unless Rails.env.test?
-      Thread.new do
-        while readonly_mode?
-          $redis.expire(key, READONLY_MODE_KEY_TTL)
-          sleep 30.seconds
+      @dbs ||= Set.new
+      @dbs << RailsMultisite::ConnectionManagement.current_db
+      @threads ||= {}
+
+      unless @threads[key]&.alive?
+        @threads[key] = Thread.new do
+          while @dbs.size > 0
+            sleep 30
+
+            @dbs.each do |db|
+              RailsMultisite::ConnectionManagement.with_connection(db) do
+                if readonly_mode?(key)
+                  $redis.expire(key, READONLY_MODE_KEY_TTL)
+                else
+                  @dbs.delete(db)
+                end
+              end
+            end
+          end
         end
       end
     end
@@ -294,8 +324,8 @@ module Discourse
     true
   end
 
-  def self.readonly_mode?
-    recently_readonly? || $redis.mget(*READONLY_KEYS).compact.present?
+  def self.readonly_mode?(keys = READONLY_KEYS)
+    recently_readonly? || $redis.mget(*keys).compact.present?
   end
 
   def self.last_read_only
@@ -420,12 +450,10 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
-    # note: all this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
-    current_db = RailsMultisite::ConnectionManagement.current_db
-    RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
+    # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
-    $redis.client.reconnect
+    $redis._client.reconnect
     Rails.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
@@ -442,6 +470,29 @@ module Discourse
     nil
   end
 
+  # report a warning maintaining backtrack for logster
+  def self.warn_exception(e, message: "", env: nil)
+    if Rails.logger.respond_to? :add_with_opts
+
+      env ||= {}
+      env[:current_db] ||= RailsMultisite::ConnectionManagement.current_db
+
+      # logster
+      Rails.logger.add_with_opts(
+        ::Logger::Severity::WARN,
+        "#{message} : #{e}",
+        "discourse-exception",
+        backtrace: e.backtrace.join("\n"),
+        env: env
+      )
+    else
+      # no logster ... fallback
+      Rails.logger.warn("#{message} #{e}")
+    end
+  rescue
+    STDERR.puts "Failed to report exception #{e} #{message}"
+  end
+
   def self.start_connection_reaper
     return if GlobalSetting.connection_reaper_age < 1 ||
               GlobalSetting.connection_reaper_interval < 1
@@ -451,21 +502,46 @@ module Discourse
       while true
         begin
           sleep GlobalSetting.connection_reaper_interval
-          reap_connections(GlobalSetting.connection_reaper_age, GlobalSetting.connection_reaper_max_age)
+          reap_connections(GlobalSetting.connection_reaper_age)
         rescue => e
-          Discourse.handle_exception(e, message: "Error reaping connections")
+          Discourse.warn_exception(e, message: "Error reaping connections")
         end
       end
     end
   end
 
-  def self.reap_connections(idle, max_age)
+  def self.reap_connections(idle)
     pools = []
     ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
 
     pools.each do |pool|
-      pool.drain(idle.seconds, max_age.seconds)
+      # reap recovers connections that were aborted
+      # eg a thread died or a dev forgot to check it in
+      # flush removes idle connections
+      # after fork we have "deadpools" so ignore them, they have been discarded
+      # so @connections is set to nil
+      if pool.connections
+        pool.reap
+        pool.flush(idle)
+      end
     end
+  end
+
+  def self.deprecate(warning)
+    location = caller_locations[1]
+    warning = "Deprecation Notice: #{warning}\nAt: #{location.label} #{location.path}:#{location.lineno}"
+    if Rails.env == "development"
+      STDERR.puts(warning)
+    end
+
+    digest = Digest::MD5.hexdigest(warning)
+    redis_key = "deprecate-notice-#{digest}"
+
+    if !$redis.without_namespace.get(redis_key)
+      Rails.logger.warn(warning)
+      $redis.without_namespace.setex(redis_key, 3600, "x")
+    end
+    warning
   end
 
   SIDEKIQ_NAMESPACE ||= 'sidekiq'.freeze
@@ -485,7 +561,7 @@ module Discourse
   def self.reset_active_record_cache_if_needed(e)
     last_cache_reset = Discourse.last_ar_cache_reset
     if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
-      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+      Rails.logger.warn "Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate."
       Discourse.last_ar_cache_reset = Time.zone.now
       Discourse.reset_active_record_cache
     end
@@ -497,6 +573,10 @@ module Discourse
       table.classify.constantize.reset_column_information rescue nil
     end
     nil
+  end
+
+  def self.running_in_rack?
+    ENV["DISCOURSE_RUNNING_IN_RACK"] == "1"
   end
 
 end

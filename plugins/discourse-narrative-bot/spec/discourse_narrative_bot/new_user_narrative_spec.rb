@@ -7,8 +7,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:user) { Fabricate(:user) }
 
   let(:topic) do
-    Fabricate(:private_message_topic, first_post: first_post,
-                                      topic_allowed_users: [
+    Fabricate(:private_message_topic,
+      first_post: first_post,
+      topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
         Fabricate.build(:topic_allowed_user, user: user),
       ]
@@ -24,6 +25,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
+    SiteSetting.queue_jobs = false
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 
@@ -209,6 +211,22 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
+        end
+
+        describe 'when rate_limit_new_user_create_post site setting is disabled' do
+          before do
+            SiteSetting.rate_limit_new_user_create_post = 0
+          end
+
+          it 'should create the right reply' do
+            narrative.input(:reply, user, post: post)
+            new_post = Post.last
+
+            expect(new_post.raw).to eq(I18n.t(
+              'discourse_narrative_bot.new_user_narrative.bookmark.not_found',
+              base_uri: ''
+            ))
+          end
         end
 
         describe 'when reply contains the skip trigger' do
@@ -909,7 +927,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
           end.to change { Post.count }.by(2)
 
-          new_post = Post.offset(1).last
+          new_post = topic.ordered_posts.last(2).first
 
           expect(new_post.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.search.reply',
@@ -918,12 +936,15 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(first_post.reload.raw).to eq('Hello world')
 
-          expect(narrative.get_data(user)).to include("state" => "end",
-                                                      "topic_id" => new_post.topic_id,
-                                                      "track" => described_class.to_s)
+          expect(narrative.get_data(user)).to include(
+            "state" => "end",
+            "topic_id" => new_post.topic_id,
+            "track" => described_class.to_s
+          )
 
-          expect(user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?)
-            .to eq(true)
+          expect(user.badges.where(
+            name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
+          ).to eq(true)
         end
       end
     end

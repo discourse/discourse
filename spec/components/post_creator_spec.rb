@@ -254,10 +254,18 @@ describe PostCreator do
         end
       end
 
+      it "updates topic stats" do
+        first_post = creator.create
+        topic = first_post.topic.reload
+
+        expect(topic.last_posted_at).to be_within(1.seconds).of(first_post.created_at)
+        expect(topic.last_post_user_id).to eq(first_post.user_id)
+        expect(topic.word_count).to eq(4)
+      end
+
       it 'creates a post with featured link' do
         SiteSetting.topic_featured_link_enabled = true
         SiteSetting.min_first_post_length = 100
-        SiteSetting.queue_jobs = true
 
         post = creator_with_featured_link.create
         expect(post.topic.featured_link).to eq('http://www.discourse.org')
@@ -281,10 +289,6 @@ describe PostCreator do
       end
 
       describe "topic's auto close" do
-        before do
-          SiteSetting.queue_jobs = true
-        end
-
         it "doesn't update topic's auto close when it's not based on last post" do
           freeze_time
 
@@ -297,23 +301,64 @@ describe PostCreator do
           expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
         end
 
-        it "updates topic's auto close date when it's based on last post" do
-          freeze_time
-          topic = Fabricate(:topic_timer,
-            based_on_last_post: true,
-            execute_at: Time.zone.now - 12.hours,
-            created_at: Time.zone.now - 24.hours
-          ).topic
+        describe "topic's auto close based on last post" do
+          let(:topic_timer) do
+            Fabricate(:topic_timer,
+              based_on_last_post: true,
+              execute_at: Time.zone.now - 12.hours,
+              created_at: Time.zone.now - 24.hours
+            )
+          end
 
-          Fabricate(:post, topic: topic)
+          let(:topic) { topic_timer.topic }
 
-          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          let(:post) do
+            Fabricate(:post, topic: topic)
+          end
 
-          topic_status_update = TopicTimer.last
-          expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
-          expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
+          it "updates topic's auto close date" do
+            freeze_time
+            post
+
+            PostCreator.new(
+              topic.user,
+              topic_id: topic.id,
+              raw: "this is a second post"
+            ).create
+
+            topic_timer.reload
+
+            expect(topic_timer.execute_at).to eq(Time.zone.now + 12.hours)
+            expect(topic_timer.created_at).to eq(Time.zone.now)
+          end
+
+          describe "when auto_close_topics_post_count has been reached" do
+            before do
+              SiteSetting.auto_close_topics_post_count = 2
+            end
+
+            it "closes the topic and deletes the topic timer" do
+              freeze_time
+              post
+
+              PostCreator.new(
+                topic.user,
+                topic_id: topic.id,
+                raw: "this is a second post"
+              ).create
+
+              topic.reload
+
+              expect(topic.posts.last.raw).to eq(I18n.t(
+                'topic_statuses.autoclosed_topic_max_posts',
+                count: SiteSetting.auto_close_topics_post_count
+              ))
+
+              expect(topic.closed).to eq(true)
+              expect(topic_timer.reload.deleted_at).to eq(Time.zone.now)
+            end
+          end
         end
-
       end
 
       context "tags" do
@@ -385,28 +430,34 @@ describe PostCreator do
     let!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
-
       first = PostCreator.new(user,
-                                topic_id: topic.id,
-                                raw: 'this is the first post').create
+        topic_id: topic.id,
+        raw: 'this is the first post').create
+
+      user_stat = user.user_stat
 
       whisper = PostCreator.new(user,
-                                topic_id: topic.id,
-                                reply_to_post_number: 1,
-                                post_type: Post.types[:whisper],
-                                raw: 'this is a whispered reply').create
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        post_type: Post.types[:whisper],
+        raw: 'this is a whispered reply').create
+
+      # don't count whispers in user stats
+      expect(user_stat.reload.post_count).to eq(0)
 
       expect(whisper).to be_present
       expect(whisper.post_type).to eq(Post.types[:whisper])
 
       whisper_reply = PostCreator.new(user,
-                                      topic_id: topic.id,
-                                      reply_to_post_number: whisper.post_number,
-                                      post_type: Post.types[:regular],
-                                      raw: 'replying to a whisper this time').create
+        topic_id: topic.id,
+        reply_to_post_number: whisper.post_number,
+        post_type: Post.types[:regular],
+        raw: 'replying to a whisper this time').create
 
       expect(whisper_reply).to be_present
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
+
+      expect(user_stat.reload.post_count).to eq(0)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -422,11 +473,16 @@ describe PostCreator do
       expect(topic.reply_count).to eq(0)
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
+      expect(topic.last_posted_at).to be_within(1.seconds).of(first.created_at)
+      expect(topic.last_post_user_id).to eq(first.user_id)
+      expect(topic.word_count).to eq(5)
 
-      topic.update_columns(highest_staff_post_number: 0,
-                           highest_post_number: 0,
-                           posts_count: 0,
-                           last_posted_at: 1.year.ago)
+      topic.update_columns(
+        highest_staff_post_number: 0,
+        highest_post_number: 0,
+        posts_count: 0,
+        last_posted_at: 1.year.ago
+      )
 
       Topic.reset_highest(topic.id)
 
@@ -528,7 +584,7 @@ describe PostCreator do
 
   # more integration testing ... maximise our testing
   context 'existing topic' do
-    let(:topic) { Fabricate(:topic, user: user) }
+    let(:topic) { Fabricate(:topic, user: user, title: 'topic title with 25 chars') }
     let(:creator) { PostCreator.new(user, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4) }
 
     it 'ensures the user can create the post' do
@@ -546,9 +602,38 @@ describe PostCreator do
         expect(Topic.count).to eq(1)
         expect(post.reply_to_post_number).to eq(4)
       end
-
     end
 
+    context "topic stats" do
+      before do
+        PostCreator.new(
+          Fabricate(:coding_horror),
+          raw: 'first post in topic',
+          topic_id: topic.id,
+          created_at: Time.zone.now - 24.hours
+        ).create
+      end
+
+      it "updates topic stats" do
+        post = creator.create
+        topic.reload
+
+        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_post_user_id).to eq(post.user_id)
+        expect(topic.word_count).to eq(6)
+      end
+
+      it "updates topic stats even when topic fails validation" do
+        topic.update_columns(title: 'below 15 chars')
+
+        post = creator.create
+        topic.reload
+
+        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_post_user_id).to eq(post.user_id)
+        expect(topic.word_count).to eq(6)
+      end
+    end
   end
 
   context 'closed topic' do
@@ -693,9 +778,17 @@ describe PostCreator do
       post1 = create_post(archetype: Archetype.private_message,
                           target_usernames: [admin.username])
 
-      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+      expect do
+        create_post(user: post1.user, topic_id: post1.topic_id)
+      end.to change { Post.count }.by(2)
 
       post1.topic.reload
+
+      expect(post1.topic.posts.last.raw).to eq(I18n.t(
+        'topic_statuses.autoclosed_message_max_posts',
+        count: SiteSetting.auto_close_messages_post_count
+      ))
+
       expect(post1.topic.closed).to eq(true)
     end
 
@@ -703,11 +796,18 @@ describe PostCreator do
       SiteSetting.auto_close_topics_post_count = 2
 
       post1 = create_post
-      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+
+      expect do
+        create_post(user: post1.user, topic_id: post1.topic_id)
+      end.to change { Post.count }.by(2)
 
       post1.topic.reload
 
-      expect(post1.topic.posts_count).to eq(3)
+      expect(post1.topic.posts.last.raw).to eq(I18n.t(
+        'topic_statuses.autoclosed_topic_max_posts',
+        count: SiteSetting.auto_close_topics_post_count
+      ))
+
       expect(post1.topic.closed).to eq(true)
     end
   end
@@ -716,7 +816,7 @@ describe PostCreator do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:moderator) }
     let(:group) do
-      g = Fabricate.build(:group)
+      g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
       g.add(target_user2)
       g.save
@@ -724,13 +824,17 @@ describe PostCreator do
     end
     let(:unrelated) { Fabricate(:user) }
     let(:post) do
-      PostCreator.create(user, title: 'hi there welcome to my topic',
-                               raw: "this is my awesome message @#{unrelated.username_lower}",
-                               archetype: Archetype.private_message,
-                               target_group_names: group.name)
+      PostCreator.create!(user,
+        title: 'hi there welcome to my topic',
+        raw: "this is my awesome message @#{unrelated.username_lower}",
+        archetype: Archetype.private_message,
+        target_group_names: group.name
+      )
     end
 
     it 'can post to a group correctly' do
+      SiteSetting.queue_jobs = false
+
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.topic_allowed_users.count).to eq(1)
       expect(post.topic.topic_allowed_groups.count).to eq(1)

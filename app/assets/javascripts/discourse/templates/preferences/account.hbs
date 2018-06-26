@@ -3,13 +3,15 @@
   <div class="controls">
     <span class='static'>{{model.username}}</span>
     {{#if model.can_edit_username}}
-      {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}
+      {{#link-to "preferences.username" class="btn btn-small btn-icon pad-left no-text"}}
       {{d-icon "pencil"}} {{/link-to}}
     {{/if}}
   </div>
-  <div class='instructions'>
-    {{{i18n 'user.username.short_instructions' username=model.username}}}
-  </div>
+  {{#if siteSettings.enable_mentions}}
+    <div class='instructions'>
+      {{{i18n 'user.username.short_instructions' username=model.username}}}
+    </div>
+  {{/if}}
 </div>
 
 {{#if canEditName}}
@@ -35,7 +37,7 @@
       <div class="controls">
         <span class='static'>{{model.email}}</span>
         {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+          {{#link-to "preferences.email" class="btn btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -61,7 +63,22 @@
         {{i18n 'user.change_password.action'}}
       {{/if}}
     </a>
+
     {{passwordProgress}}
+  </div>
+
+  <div class="controls pref-second-factor">
+    {{#if model.second_factor_enabled}}
+      {{i18n 'user.second_factor.disable'}}
+    {{else}}
+      {{discourse-linked-text action="showTwoFactorModal" text="user.second_factor.enable"}}
+    {{/if}}
+
+    {{#if isCurrentUser}}
+      {{#link-to "preferences.second-factor" class="btn btn-small btn-icon pad-left no-text"}}
+        {{d-icon "pencil"}}
+      {{/link-to}}
+    {{/if}}
   </div>
 </div>
 {{/if}}
@@ -81,23 +98,27 @@
   <div class="control-group pref-title">
     <label class="control-label">{{i18n 'user.title.title'}}</label>
     <div class="controls">
-      <span class="static">{{model.title}}</span>
-      {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+      {{combo-box
+        value=newTitleInput
+        content=model.availableTitles
+        none="user.title.none"}}
     </div>
   </div>
 {{/if}}
 
-{{plugin-outlet name="user-preferences-account" args=(hash model=model)}}
+{{plugin-outlet name="user-preferences-account" args=(hash model=model save=(action "save"))}}
 
 <br/>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
-<div class="control-group save-button">
-  <div class="controls">
-    {{partial 'user/preferences/save-button'}}
+{{#if canSaveUser}}
+  <div class="control-group save-button">
+    <div class="controls">
+      {{partial 'user/preferences/save-button'}}
+    </div>
   </div>
-</div>
+{{/if}}
 
 
 {{#if model.canDeleteAccount}}

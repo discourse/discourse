@@ -1,6 +1,6 @@
 class Admin::AdminController < ApplicationController
 
-  before_action :ensure_logged_in
+  requires_login
   before_action :ensure_staff
 
   def index

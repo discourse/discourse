@@ -1,0 +1,31 @@
+{
+  "groups":[
+    {"id":41,"name":"custom_group","created_at":"2017-10-26T15:33:46.328Z","mentionable_level":0,"messageable_level":0,"visibility_level":0,"automatic_membership_email_domains":"","automatic_membership_retroactive":false,"primary_group":false,"title":null,"grant_trust_level":null,"incoming_email":null,"user_ids":[1]},
+    {"id":42,"name":"custom_group_import","created_at":"2017-10-26T15:33:46.328Z","mentionable_level":0,"messageable_level":0,"visibility_level":0,"automatic_membership_email_domains":"","automatic_membership_retroactive":false,"primary_group":false,"title":null,"grant_trust_level":null,"incoming_email":null,"user_ids":[2]}
+  ],
+  "categories":[
+    {"id":8,"name":"Custom Category","color":"AB9364","created_at":"2017-10-26T15:32:44.083Z","user_id":1,"slug":"custom-category","description":null,"text_color":"FFFFFF","auto_close_hours":null,"parent_category_id":3,"auto_close_based_on_last_post":false,"topic_template":"","suppress_from_latest":false,"all_topics_wiki":false,"permissions_params":{"custom_group":1,"everyone":2}},
+    {"id":10,"name":"Site Feedback Import","color":"808281","created_at":"2017-10-26T17:12:39.995Z","user_id":-1,"slug":"site-feedback-import","description":"Discussion about this site, its organization, how it works, and how we can improve it.","text_color":"FFFFFF","auto_close_hours":null,"parent_category_id":null,"auto_close_based_on_last_post":false,"topic_template":null,"suppress_from_latest":false,"all_topics_wiki":false,"permissions_params":{}},
+    {"id":11,"name":"Uncategorized Import","color":"AB9364","created_at":"2017-10-26T17:12:32.359Z","user_id":-1,"slug":"uncategorized-import","description":"","text_color":"FFFFFF","auto_close_hours":null,"parent_category_id":null,"auto_close_based_on_last_post":false,"topic_template":null,"suppress_from_latest":false,"all_topics_wiki":false,"permissions_params":{}},
+    {"id":12,"name":"Lounge Import","color":"EEEEEE","created_at":"2017-10-26T17:12:39.490Z","user_id":-1,"slug":"lounge-import","description":"A category exclusive to members with trust level 3 and higher.","text_color":"652D90","auto_close_hours":null,"parent_category_id":null,"auto_close_based_on_last_post":false,"topic_template":null,"suppress_from_latest":false,"all_topics_wiki":false,"permissions_params":{"trust_level_3":1}},
+    {"id":13,"name":"Staff Import","color":"283890","created_at":"2017-10-26T17:12:42.806Z","user_id":2,"slug":"staff-import","description":"Private category for staff discussions. Topics are only visible to admins and moderators.","text_color":"FFFFFF","auto_close_hours":null,"parent_category_id":null,"auto_close_based_on_last_post":false,"topic_template":null,"suppress_from_latest":false,"all_topics_wiki":false,"permissions_params":{"custom_group_import":1,"staff":1}},
+    {"id":15,"name":"Custom Category Import","color":"AB9364","created_at":"2017-10-26T15:32:44.083Z","user_id":2,"slug":"custom-category-import","description":null,"text_color":"FFFFFF","auto_close_hours":null,"parent_category_id":10,"auto_close_based_on_last_post":false,"topic_template":"","suppress_from_latest":false,"all_topics_wiki":false,"permissions_params":{"custom_group_import":1,"everyone":2}}
+  ],
+  "users":[
+    {"id":1,"email":"email@example.com","username":"example","name":"Example","created_at":"2017-10-07T15:01:24.597Z","trust_level":4,"active":true,"last_emailed_at":null},
+    {"id":2,"email":"foo@bar.com","username":"foo","name":"Foo Bar","created_at":"2017-10-07T15:01:24.597Z","trust_level":4,"active":true,"last_emailed_at":null}
+  ],
+  "topics":[
+    {"id":7,"title":"Assets for the site design","created_at":"2017-10-26T17:15:04.590Z","views":0,"category_id":8,"closed":false,"archived":false,"archetype":"regular",
+      "posts":[
+        {"id":10,"user_id":-1,"post_number":1,"raw":"This topic, visible only to staff, is for storing images and files used in the site design.","created_at":"2017-10-26T17:15:04.720Z","reply_to_post_number":null,"hidden":false,"hidden_reason_id":null,"wiki":false}
+      ]
+    },
+    {"id":6,"title":"Privacy Policy","created_at":"2017-10-26T17:15:04.009Z","views":0,"category_id":15,"closed":false,"archived":false,"archetype":"regular",
+      "posts":[
+        {"id":8,"user_id":-1,"post_number":1,"raw":"[Third party links](#third-party)\n\nOccasionally, at our discretion, we may include or offer third party products or services on our site.","created_at":"2017-10-26T17:15:03.535Z","reply_to_post_number":null,"hidden":false,"hidden_reason_id":null,"wiki":false},
+        {"id":7,"user_id":-1,"post_number":2,"raw":"Edit the first post in this topic to change the contents of the FAQ/Guidelines page.","created_at":"2017-10-26T17:15:03.822Z","reply_to_post_number":null,"hidden":false,"hidden_reason_id":null,"wiki":false}
+      ]
+    }
+  ]
+}

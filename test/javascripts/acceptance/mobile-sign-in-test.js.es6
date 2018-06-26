@@ -6,6 +6,6 @@ QUnit.test("sign in", assert => {
   visit("/");
   click("header .login-button");
   andThen(() => {
-    assert.ok(exists('#login-form'), "it shows the login modal");
+    assert.ok(exists("#login-form"), "it shows the login modal");
   });
 });

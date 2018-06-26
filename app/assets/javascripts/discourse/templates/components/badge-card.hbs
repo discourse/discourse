@@ -5,13 +5,15 @@
   <span class='check-display status-checked'>{{d-icon "check"}}</span>
 {{/if}}
 <div class='badge-contents'>
-  <div class='badge-icon {{badge.badgeTypeClassName}}'>
-    {{icon-or-image badge.icon}}
-  </div>
-  <div class='badge-info'>
-    <div class='badge-info-item'>
-      <h3><a href={{url}}>{{badge.name}}</a></h3>
-      <div class='badge-summary'>{{{summary}}}</div>
+  <a href={{url}} class="badge-link">
+    <div class='badge-icon {{badge.badgeTypeClassName}}'>
+      {{icon-or-image badge}}
     </div>
-  </div>
+    <div class='badge-info'>
+      <div class='badge-info-item'>
+        <h3>{{badge.name}}</h3>
+        <div class='badge-summary'>{{{summary}}}</div>
+      </div>
+    </div>
+  </a>
 </div>

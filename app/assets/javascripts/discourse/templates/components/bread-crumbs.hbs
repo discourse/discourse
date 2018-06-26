@@ -1,7 +1,14 @@
-{{category-drop category=firstCategory categories=parentCategories}}
+{{category-drop
+  category=firstCategory
+  categories=parentCategories}}
 
 {{#if childCategories}}
-  {{category-drop category=secondCategory parentCategory=firstCategory categories=childCategories subCategory="true" noSubcategories=noSubcategories}}
+  {{category-drop
+    category=secondCategory
+    parentCategory=firstCategory
+    categories=childCategories
+    subCategory=true
+    noSubcategories=noSubcategories}}
 {{/if}}
 
 {{#if siteSettings.tagging_enabled}}

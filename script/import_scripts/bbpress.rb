@@ -1,26 +1,20 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-# Before running this script, paste these lines into your shell,
-# then use arrow keys to edit the values
-=begin
-export BBPRESS_HOST="localhost"
-export BBPRESS_USER="root"
-export BBPRESS_DB="bbpress"
-export BBPRESS_PW=""
-=end
-
 class ImportScripts::Bbpress < ImportScripts::Base
 
-  BB_PRESS_HOST ||= ENV['BBPRESS_HOST'] || "localhost"
-  BB_PRESS_DB ||= ENV['BBPRESS_DB'] || "bbpress"
-  BATCH_SIZE  ||= 1000
-  BB_PRESS_PW ||= ENV['BBPRESS_PW'] || ""
-  BB_PRESS_USER ||= ENV['BBPRESS_USER'] || "root"
-  BB_PRESS_PREFIX ||= ENV['BBPRESS_PREFIX'] || "wp_"
+  BB_PRESS_HOST            ||= ENV['BBPRESS_HOST'] || "localhost"
+  BB_PRESS_DB              ||= ENV['BBPRESS_DB'] || "bbpress"
+  BATCH_SIZE               ||= 1000
+  BB_PRESS_PW              ||= ENV['BBPRESS_PW'] || ""
+  BB_PRESS_USER            ||= ENV['BBPRESS_USER'] || "root"
+  BB_PRESS_PREFIX          ||= ENV['BBPRESS_PREFIX'] || "wp_"
+  BB_PRESS_ATTACHMENTS_DIR ||= ENV['BBPRESS_ATTACHMENTS_DIR'] || "/path/to/attachments"
 
   def initialize
     super
+
+    @he = HTMLEntities.new
 
     @client = Mysql2::Client.new(
       host: BB_PRESS_HOST,
@@ -36,21 +30,33 @@ class ImportScripts::Bbpress < ImportScripts::Base
     import_categories
     import_topics_and_posts
     import_private_messages
+    import_attachments
+    create_permalinks
   end
 
   def import_users
     puts "", "importing users..."
 
     last_user_id = -1
-    total_users = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}users WHERE user_email LIKE '%@%'").first["count"]
+    total_users = bbpress_query(<<-SQL
+      SELECT COUNT(DISTINCT(u.id)) AS cnt
+      FROM #{BB_PRESS_PREFIX}users u
+      LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id
+      WHERE p.post_type IN ('forum', 'reply', 'topic')
+        AND user_email LIKE '%@%'
+    SQL
+    ).first["cnt"]
 
     batches(BATCH_SIZE) do |offset|
       users = bbpress_query(<<-SQL
-        SELECT id, user_nicename, display_name, user_email, user_registered, user_url
-          FROM #{BB_PRESS_PREFIX}users
+        SELECT u.id, user_nicename, display_name, user_email, user_registered, user_url, user_pass
+          FROM #{BB_PRESS_PREFIX}users u
+          LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id
          WHERE user_email LIKE '%@%'
-           AND id > #{last_user_id}
-      ORDER BY id
+           AND p.post_type IN ('forum', 'reply', 'topic')
+           AND u.id > #{last_user_id}
+      GROUP BY u.id
+      ORDER BY u.id
          LIMIT #{BATCH_SIZE}
       SQL
       ).to_a
@@ -86,6 +92,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         {
           id: u["id"].to_i,
           username: u["user_nicename"],
+          password: u["user_pass"],
           email: u["user_email"].downcase,
           name: u["display_name"].presence || u['user_nicename'],
           created_at: u["user_registered"],
@@ -232,18 +239,22 @@ class ImportScripts::Bbpress < ImportScripts::Base
       create_posts(posts, total: total_posts, offset: offset) do |p|
         skip = false
 
+        user_id = user_id_from_imported_user_id(p["post_author"]) ||
+                  find_user_by_import_id(p["post_author"]).try(:id) ||
+                  user_id_from_imported_user_id(anon_names[p['id']]) ||
+                  find_user_by_import_id(anon_names[p['id']]).try(:id) ||
+                  -1
+
         post = {
           id: p["id"],
-          user_id: user_id_from_imported_user_id(p["post_author"]) || find_user_by_import_id(p["post_author"]).try(:id) ||
-              user_id_from_imported_user_id(anon_names[p['id']]) || find_user_by_import_id(anon_names[p['id']]).try(:id) || -1,
+          user_id: user_id,
           raw: p["post_content"],
           created_at: p["post_date"],
           like_count: posts_likes[p["id"]],
         }
 
         if post[:raw].present?
-          post[:raw].gsub!("<pre><code>", "```\n")
-          post[:raw].gsub!("</code></pre>", "\n```")
+          post[:raw].gsub!(/\<pre\>\<code(=[a-z]*)?\>(.*?)\<\/code\>\<\/pre\>/im) { "```\n#{@he.decode($2)}\n```" }
         end
 
         if p["post_type"] == "topic"
@@ -260,6 +271,142 @@ class ImportScripts::Bbpress < ImportScripts::Base
         end
 
         skip ? nil : post
+      end
+    end
+  end
+
+  def import_attachments
+    import_attachments_from_postmeta
+    import_attachments_from_bb_attachments
+  end
+
+  def import_attachments_from_postmeta
+    puts "", "Importing attachments from 'postmeta'..."
+
+    count = 0
+    last_attachment_id = -1
+
+    total_attachments = bbpress_query(<<-SQL
+      SELECT COUNT(*) count
+        FROM #{BB_PRESS_PREFIX}postmeta pm
+        JOIN #{BB_PRESS_PREFIX}posts p ON p.id = pm.post_id
+       WHERE pm.meta_key = '_wp_attached_file'
+         AND p.post_parent > 0
+    SQL
+    ).first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      attachments = bbpress_query(<<-SQL
+        SELECT pm.meta_id id, pm.meta_value, p.post_parent post_id
+          FROM #{BB_PRESS_PREFIX}postmeta pm
+          JOIN #{BB_PRESS_PREFIX}posts p ON p.id = pm.post_id
+         WHERE pm.meta_key = '_wp_attached_file'
+           AND p.post_parent > 0
+           AND pm.meta_id > #{last_attachment_id}
+      ORDER BY pm.meta_id
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+
+      break if attachments.empty?
+      last_attachment_id = attachments[-1]["id"].to_i
+
+      attachments.each do |a|
+        print_status(count += 1, total_attachments, get_start_time("attachments_from_postmeta"))
+        path = File.join(BB_PRESS_ATTACHMENTS_DIR, a["meta_value"])
+        if File.exists?(path)
+          if post = Post.find_by(id: post_id_from_imported_post_id(a["post_id"]))
+            filename = File.basename(a["meta_value"])
+            upload = create_upload(post.user.id, path, filename)
+            if upload&.persisted?
+              html = html_for_upload(upload, filename)
+              if !post.raw[html]
+                post.raw << "\n\n" << html
+                post.save!
+                PostUpload.create!(post: post, upload: upload) unless PostUpload.where(post: post, upload: upload).exists?
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def import_attachments_from_bb_attachments
+    puts "", "Importing attachments from 'bb_attachments'..."
+
+    count = 0
+    last_attachment_id = -1
+
+    total_attachments = bbpress_query(<<-SQL
+      SELECT COUNT(*) count
+        FROM #{BB_PRESS_PREFIX}bb_attachments
+       WHERE post_id IN (SELECT id FROM #{BB_PRESS_PREFIX}posts WHERE post_status <> 'spam' AND post_type IN ('topic', 'reply'))
+    SQL
+    ).first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      attachments = bbpress_query(<<-SQL
+        SELECT id, filename, post_id
+          FROM #{BB_PRESS_PREFIX}bb_attachments
+         WHERE post_id IN (SELECT id FROM #{BB_PRESS_PREFIX}posts WHERE post_status <> 'spam' AND post_type IN ('topic', 'reply'))
+           AND id > #{last_attachment_id}
+      ORDER BY id
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+
+      break if attachments.empty?
+      last_attachment_id = attachments[-1]["id"].to_i
+
+      attachments.each do |a|
+        print_status(count += 1, total_attachments, get_start_time("attachments_from_bb_attachments"))
+        if path = find_attachment(a["filename"], a["id"])
+          if post = Post.find_by(id: post_id_from_imported_post_id(a["post_id"]))
+            upload = create_upload(post.user.id, path, a["filename"])
+            if upload&.persisted?
+              html = html_for_upload(upload, a["filename"])
+              if !post.raw[html]
+                post.raw << "\n\n" << html
+                post.save!
+                PostUpload.create!(post: post, upload: upload) unless PostUpload.where(post: post, upload: upload).exists?
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def find_attachment(filename, id)
+    @attachments ||= Dir[File.join(BB_PRESS_ATTACHMENTS_DIR, "vf-attachs", "**", "*.*")]
+    @attachments.find { |p| p.end_with?("/#{id}.#{filename}") }
+  end
+
+  def create_permalinks
+    puts "", "creating permalinks..."
+
+    last_topic_id = -1
+
+    batches(BATCH_SIZE) do |offset|
+      topics = bbpress_query(<<-SQL
+        SELECT id,
+               guid
+          FROM #{BB_PRESS_PREFIX}posts
+         WHERE post_status <> 'spam'
+           AND post_type IN ('topic')
+           AND id > #{last_topic_id}
+      ORDER BY id
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+
+      break if topics.empty?
+      last_topic_id = topics[-1]["id"].to_i
+
+      topics.each do |t|
+        topic = topic_lookup_from_imported_post_id(t['id'])
+        Permalink.create(url: URI.parse(t['guid']).path.chomp('/'), topic_id: topic[:topic_id]) rescue nil
       end
     end
   end

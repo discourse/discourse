@@ -5,7 +5,6 @@
 // Media queries
 // --------------------------------------------------
 
-
 @mixin small-width {
   @media all and (max-width: 850px) {
     @content;
@@ -24,11 +23,31 @@
   }
 }
 
-@mixin mobile-portrait      { @media all and (max-width : 320px) { @content; } }
-@mixin not-mobile-portrait  { @media all and (min-width : 321px) { @content; } }
-@mixin mobile-landscape     { @media all and (min-width : 321px) and (max-width : 959px) { @content; } }
-@mixin not-tablet-landscape { @media all and (max-width : 959px) { @content; } }
-@mixin tablet-landscape     { @media all and (min-width : 960px) { @content; } }
+@mixin mobile-portrait {
+  @media all and (max-width: 320px) {
+    @content;
+  }
+}
+@mixin not-mobile-portrait {
+  @media all and (min-width: 321px) {
+    @content;
+  }
+}
+@mixin mobile-landscape {
+  @media all and (min-width: 321px) and (max-width: 959px) {
+    @content;
+  }
+}
+@mixin not-tablet-landscape {
+  @media all and (max-width: 959px) {
+    @content;
+  }
+}
+@mixin tablet-landscape {
+  @media all and (min-width: 960px) {
+    @content;
+  }
+}
 
 // CSS3 properties
 // --------------------------------------------------
@@ -36,14 +55,14 @@
 // Clearfix
 
 @mixin clearfix() {
-    &:before,
-    &:after {
-        content: "";
-        display: table;
-    }
-    &:after {
-        clear: both;
-    }
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
 }
 
 // Border radius
@@ -90,14 +109,13 @@
 
 @mixin user-select($mode) {
   -webkit-user-select: $mode;
-     -moz-user-select: $mode;
-      -ms-user-select: $mode;
+  -moz-user-select: $mode;
+  -ms-user-select: $mode;
 }
 
 @mixin unselectable {
   @include user-select(none);
 }
-
 
 // Stuff we repeat
 @mixin post-aside {
@@ -107,6 +125,13 @@
 
 // We still need -webkit for latest iPhone and Safari
 @mixin transform($transforms) {
-	-webkit-transform: $transforms;
-            transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+@mixin appearance-none() {
+  // resets default browser styles
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }

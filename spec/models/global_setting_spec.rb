@@ -50,6 +50,20 @@ describe GlobalSetting do
     end
   end
 
+  describe '.add_default' do
+    after do
+      class <<GlobalSetting; remove_method :foo_bar_foo; end
+    end
+
+    it "can correctly add defaults" do
+      GlobalSetting.add_default "foo_bar_foo", 1
+      expect(GlobalSetting.foo_bar_foo).to eq(1)
+
+      GlobalSetting.add_default "cdn_url", "a"
+      expect(GlobalSetting.foo_bar_foo).not_to eq("a")
+    end
+  end
+
   describe '.redis_config' do
     describe 'when slave config is not present' do
       it "should not set any connector" do

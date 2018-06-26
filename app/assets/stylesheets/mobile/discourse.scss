@@ -4,12 +4,16 @@
 // throughout the Discourse application
 
 // Base Elements
+html {
+  font-size: 15px; // Increasing overall font-size on mobile by 1px
+}
+
 body {
   background-color: $secondary;
 }
 
 textarea {
-  background-color:$secondary;
+  background-color: $secondary;
 }
 
 blockquote {
@@ -20,26 +24,8 @@ blockquote {
     margin: 0 0 10px 0;
 
     &:last-of-type {
-      margin-bottom:0;
+      margin-bottom: 0;
     }
-  }
-
-}
-
-h1.page-not-found {
-  line-height: 24px;
-  margin: 5px 0 -5px 0;
-}
-
-h2 {
-  &.popular-topics-title {
-    margin-bottom: 6px;
-    font-size: 1.2em;
-  }
-
-  &.recent-topics-title {
-    margin-bottom: 6px;
-    font-size: 1.2em;
   }
 }
 
@@ -91,8 +77,8 @@ h2 {
   &.activity-nav,
   &.preferences-nav {
     position: absolute;
-    right: 0px;
-    top: -55px;
+    right: 0;
+    top: -57px;
   }
 
   a {
@@ -101,6 +87,7 @@ h2 {
     .fa {
       margin-right: 8px;
       color: dark-light-choose($primary-medium, $secondary-medium);
+      line-height: $line-height-medium;
     }
   }
 
@@ -114,7 +101,7 @@ h2 {
 
   .d-icon-caret-down {
     position: absolute;
-    right: 0px;
+    right: 0;
   }
 
   .drop {
@@ -123,7 +110,7 @@ h2 {
       left: 0;
       display: block;
       position: absolute;
-      z-index: 10000000;
+      z-index: z("dropdown");
       background-color: $secondary;
       width: 100%;
       list-style: none;
@@ -146,17 +133,6 @@ h2 {
   }
 }
 
-/* page not found styles */
-.page-not-found {
-  &-topics a.badge-wrapper {
-    margin-left: 8px;
-  }
-
-  &-search h2 {
-    font-size: 1.2em;
-  }
-}
-
 .form-vertical {
   .control-group {
     margin-bottom: 12px;
@@ -176,6 +152,6 @@ h2 {
 
 // somehow the image logo assumption inherits margins from earlier in the CSS
 // stack we must remove margins for text site titles
-h2#site-text-logo {
+h1#site-text-logo {
   margin: 0 0 0 10px;
 }

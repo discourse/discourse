@@ -1,13 +1,14 @@
 .poll-ui-builder-form {
-  margin: 0px;
-
-  .input-group {
-    padding: 10px;
-  }
+  margin: 0;
 
   label {
     font-weight: bold;
     display: inline;
+  }
+
+  .tip {
+    display: block;
+    min-height: 20px;
   }
 
   .input-group-label {
@@ -15,11 +16,33 @@
     width: 45px;
   }
 
-  .combobox {
-    margin-right: 5px;
+  .poll-number {
+    margin: 8px 0;
+
+    .tip {
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 70px;
+    }
+
+    input + .tip {
+      margin-top: 4px;
+    }
   }
 
-  .poll-options-min, .poll-options-max, .poll-options-step {
-    width: 70px !important;
+  .poll-textarea textarea {
+    width: 100%;
+    height: 90px;
+    box-sizing: border-box;
+  }
+
+  .poll-select + .poll-textarea {
+    margin-top: 12px;
+  }
+
+  .poll-checkbox {
+    margin-top: 4px;
   }
 }

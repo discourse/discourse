@@ -10,16 +10,18 @@
   margin: 0;
   padding: 6px 12px;
   font-weight: 500;
-  font-size: 1em;
-  line-height: 18px;
+  font-size: $font-0;
+  line-height: $line-height-medium;
   text-align: center;
   cursor: pointer;
-  transition: all .25s;
+  transition: all 0.25s;
 
-  &:active, &.btn-active {
+  &:active,
+  &.btn-active {
     text-shadow: none;
   }
-  &[disabled], &.disabled {
+  &[disabled],
+  &.disabled {
     cursor: default;
     opacity: 0.4;
   }
@@ -29,7 +31,6 @@
   &.no-text {
     .fa {
       margin-right: 0;
-      line-height: 10px;
     }
   }
 }
@@ -45,23 +46,28 @@
   border: none;
   color: $primary;
   font-weight: normal;
-  background: $primary-low; 
+  background: $primary-low;
 
   &[href] {
     color: $primary;
   }
-  &:hover, &.btn-hover {
-    background: $primary-medium; 
+  &:hover,
+  &.btn-hover {
+    background: $primary-medium;
     color: $secondary;
   }
-  &[disabled], &.disabled {
-    background: $primary-low; 
-    &:hover { color: dark-light-choose($primary-low-mid, $secondary-high); }
+  &[disabled],
+  &.disabled {
+    background: $primary-low;
+    &:hover {
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+    }
     cursor: not-allowed;
   }
 
   .d-icon {
     opacity: 0.7;
+    line-height: $line-height-medium; // Match button text line-height
   }
   &.btn-primary .d-icon {
     opacity: 1;
@@ -74,21 +80,24 @@
 .btn-primary {
   border: none;
   font-weight: normal;
-  color: dark-light-choose(#fff, $primary-medium);
+  color: $secondary;
   background: $tertiary;
 
   &[href] {
     color: $secondary;
   }
-  &:hover, &.btn-hover {
+  &:hover,
+  &.btn-hover {
     color: #fff;
     background: dark-light-choose($tertiary, $tertiary);
   }
-  &:active, &.btn-active {
+  &:active,
+  &.btn-active {
     @include linear-gradient($tertiary, $tertiary);
     color: $secondary;
   }
-  &[disabled], &.disabled {
+  &[disabled],
+  &.disabled {
     background: $tertiary;
   }
 }
@@ -103,13 +112,16 @@
   &[href] {
     color: $secondary;
   }
-  &:hover, &.btn-hover {
+  &:hover,
+  &.btn-hover {
     background: scale-color($danger, $lightness: -20%);
   }
-  &:active, &.btn-active {
+  &:active,
+  &.btn-active {
     @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
   }
-  &[disabled], &.disabled {
+  &[disabled],
+  &.disabled {
     background: $danger;
   }
 }
@@ -118,18 +130,20 @@
 // --------------------------------------------------
 
 .btn-social {
-  color: $secondary;
-  text-shadow: 0 1px 0 rgba($primary, 0.2);
-  box-shadow: inset 0 1px 0 rgba(0,0,0, 0.1);
+  color: #fff;
+  &:hover {
+    color: #fff;
+  }
   &[href] {
     color: $secondary;
   }
   &:before {
     margin-right: 9px;
     font-family: FontAwesome;
-    font-size: 17px;
+    font-size: $font-0;
   }
-  &.google, &.google_oauth2 {
+  &.google,
+  &.google_oauth2 {
     background: $google;
     &:before {
       content: $fa-var-google;
@@ -177,22 +191,22 @@
 
 .btn-small {
   padding: 3px 6px;
-  font-size: 0.857em;
-  line-height: 16px;
+  font-size: $font-down-1;
 }
 
 // Large
 
 .btn-large {
   padding: 9px 18px;
-  font-size: 1.143em;
-  line-height: 20px;
+  font-size: $font-up-1;
+  line-height: $line-height-small;
 }
 
 .btn-flat {
   background: transparent;
   border: 0;
   outline: 0;
+  line-height: $line-height-small;
   .d-icon {
     opacity: 0.7;
   }

@@ -1,9 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe TopicTimer, type: :model do
-  let(:topic_timer) { Fabricate(:topic_timer) }
+  let(:topic_timer) {
+    # we should not need to do this but somehow
+    # fabricator is failing here
+    TopicTimer.create!(
+      user_id: -1,
+      topic: Fabricate(:topic),
+      execute_at: 1.hour.from_now,
+      status_type: TopicTimer.types[:close]
+    )
+  }
   let(:topic) { Fabricate(:topic) }
   let(:admin) { Fabricate(:admin) }
+
+  before do
+    freeze_time Time.new(2018)
+  end
 
   context "validations" do
     describe '#status_type' do
@@ -176,6 +189,10 @@ RSpec.describe TopicTimer, type: :model do
         )
       end
 
+      before do
+        SiteSetting.queue_jobs = false
+      end
+
       it 'should close the topic' do
         topic_timer
         expect(topic.reload.closed).to eq(true)
@@ -199,6 +216,10 @@ RSpec.describe TopicTimer, type: :model do
           status_type: described_class.types[:close],
           topic: topic
         )
+      end
+
+      before do
+        SiteSetting.queue_jobs = false
       end
 
       it 'should open the topic' do
@@ -239,10 +260,6 @@ RSpec.describe TopicTimer, type: :model do
   end
 
   describe '.ensure_consistency!' do
-    before do
-      SiteSetting.queue_jobs = true
-    end
-
     it 'should enqueue jobs that have been missed' do
       close_topic_timer = Fabricate(:topic_timer,
         execute_at: Time.zone.now - 1.hour,

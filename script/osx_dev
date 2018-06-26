@@ -74,8 +74,8 @@ echo "Creating PostgreSQL databases..."
 psql -d postgres -c "ALTER USER vagrant WITH PASSWORD 'password';"
 psql -d postgres -c "create database discourse_development owner vagrant encoding 'UTF8' TEMPLATE template0;"
 psql -d postgres -c "create database discourse_test        owner vagrant encoding 'UTF8' TEMPLATE template0;"
-psql -d discourse_development -c "CREATE EXTENSION hstore;"
-psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
+psql -d discourse_development -c "CREATE EXTENSION IF NOT EXISTS hstore;"
+psql -d discourse_development -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
 
 ## Start Redis (Redis was installed by Homebrew using `brew bundle`) ##
 echo "Loading Redis..."

@@ -9,7 +9,7 @@
 }
 
 .user-main {
-
+  margin-top: 10px;
   table.group-members {
     width: 100%;
     p {
@@ -45,11 +45,7 @@
     margin-top: 10px;
 
     .btn.right {
-      float: right
-    }
-
-    h2 {
-      margin-bottom: 10px;
+      float: right;
     }
 
     table {
@@ -74,31 +70,43 @@
     margin-bottom: 10px;
     color: $secondary;
 
-    .secondary {
-      background: $primary-low;
-
-      dl {
-        padding: 10px 15px;
+    &.no-background {
+      .profile-image {
+        display: none;
       }
+    }
 
-      dd {
-        margin: 0 15px 0 5px;
+    .secondary {
+      dl {
+        padding: 5px 0;
       }
     }
 
     .details {
-      padding: 15px 0 4px 0;
+      padding: 15px 5px 5px 5px;
 
       h1 {
-        margin: 10px 0 0 0;
+        margin: 0;
+        line-height: $line-height-small;
+      }
+
+      h2 {
+        line-height: $line-height-medium;
       }
 
       .primary {
+        display: flex;
+        flex-wrap: wrap;
         color: $primary;
 
+        .avatar {
+          margin: 0 5px 10px 5px;
+        }
+
         .primary-textual {
-          float: left;
-          padding-left: 15px;
+          flex: 1 1 40%;
+          padding-left: 5px;
+          word-break: break-word;
           a[href] {
             color: $primary;
           }
@@ -109,31 +117,63 @@
           max-width: 700px;
         }
       }
+
+      .user-profile-avatar .avatar-flair {
+        right: 2px;
+      }
     }
 
     .controls {
-      float: left;
-      padding-left: 15px;
+      order: 3;
+      flex: 1 1 25%;
+      margin-left: auto;
 
       ul {
         margin: 0;
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+      }
+
+      li {
+        display: flex;
+        flex: 1 1 auto;
+        margin: 0 5px;
+      }
+
+      span {
+        flex: 0 1 100%;
+        margin: 0 5px;
+      }
+
+      .user-profile-controls-outlet {
+        margin: 0;
+        li {
+          margin: 0;
+        }
       }
 
       a {
-        width: 120px;
+        flex: 1 1 auto;
+        min-width: 120px;
       }
     }
 
     &.collapsed-info {
       .details {
-        padding: 12px 15px 2px 15px;
+        .primary {
+          .primary-textual {
+            margin: 0 10px 5px 0;
+          }
+          .avatar {
+            margin: 0 5px 10px 5px;
+          }
+        }
+      }
+      .user-profile-avatar .avatar-flair {
+        bottom: 12px;
       }
     }
-  }
-
-  .staff-counters {
-    padding: 7px 0;
-    display: inline;
   }
 
   .user-field {
@@ -162,9 +202,21 @@
   margin-top: 20px;
 }
 
+.stats-section {
+  li {
+    margin: 0 15px 10px 0;
+    padding: 0;
+    &.linked-stat {
+      a {
+        padding: 0;
+      }
+    }
+  }
+}
+
 // mobile fixups for badges
 .badge-card.medium {
-  width: 300px;
+  width: 100%;
 }
 
 .user-badges {
@@ -180,15 +232,6 @@
 }
 
 .user-preferences {
-  .control-group {
-    padding: 8px 36px 8px 8px;
-  }
-
-  .static {
-    margin-top: 5px;
-    margin-left: 5px;
-  }
-
   .instructions {
     margin-top: 5px;
   }
@@ -200,7 +243,6 @@
   .controls-dropdown {
     margin-top: 10px;
     margin-bottom: 15px;
-    padding-left: 5px;
 
     select {
       width: 280px;
@@ -222,10 +264,14 @@
   }
 
   .checkbox-label {
+    display: flex;
     overflow: auto;
-    display: block;
     width: 100%;
-    padding: 5px 8px;
+    padding: 5px 0;
+    input {
+      margin-right: 5px;
+      flex: 0 0 auto;
+    }
   }
 
   .desktop-notifications button {

@@ -5,6 +5,10 @@ describe NewPostManager do
   let(:admin) { Fabricate(:admin) }
 
   describe 'when new post containing a poll is queued for approval' do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 0
+    end
+
     it 'should render the poll upon approval' do
       params = {
         raw: "[poll]\n* 1\n* 2\n* 3\n[/poll]",

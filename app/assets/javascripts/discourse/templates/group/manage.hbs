@@ -1,0 +1,15 @@
+<section class='user-navigation'>
+  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=application.currentPath}}
+    {{#each tabs as |tab|}}
+      <li>
+        {{#link-to tab.route model.name}}
+          {{i18n tab.title}}
+        {{/link-to}}
+      </li>
+    {{/each}}
+  {{/mobile-nav}}
+</section>
+
+<section class='user-right'>
+  {{outlet}}
+</section>

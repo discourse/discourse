@@ -38,7 +38,7 @@ zh_CN:
 
         如果你不想的话也没问题。我是个机器人。你不会伤害到我。 :sob:
     dice:
-      trigger: "投"
+      trigger: "骰子"
       invalid: |-
         我很抱歉，数学上证明了不可能投出这种色子组合。 :confounded:
       not_enough_dice: |-
@@ -53,7 +53,7 @@ zh_CN:
         quote: "每一个困难中存在着机会"
         author: "阿尔伯特·爱因斯坦"
       '2':
-        quote: "成为你想在世界看到的改变。"
+        quote: "如果自由不包括犯错的自由，那么这个自由就不值得拥有。"
         author: "默罕默德·甘地"
       '3':
         quote: "不必为结束而哭泣，而要为曾经拥有而微笑。"
@@ -101,7 +101,7 @@ zh_CN:
         '15': "专心然后再问一次"
         '16': "不要指望它"
         '17': "我的回答是不"
-        '18': "我的情报告诉我说不"
+        '18': "我的代码让我不谈钱"
         '19': "看起来不是很好"
         '20': "很可疑"
       result: |-
@@ -109,15 +109,15 @@ zh_CN:
     track_selector:
       reset_trigger: '开始'
       skip_trigger: '跳过'
-      help_trigger: '显示帮助'
+      help_trigger: '帮助'
       random_mention:
         reply: |-
-          你好！想看看我能做什么，说`@%{discobot_username} %{help_trigger}`。
+          你好！想看看我能做什么吗？说`@%{discobot_username} %{help_trigger}`。
         tracks: |-
           我现在知道怎么做这些：
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > 开始以下的交互模式：%{tracks}。
+          > 试试这些交互模式：%{tracks}。
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3，6
@@ -145,13 +145,13 @@ zh_CN:
       hello:
         title: ":robot: 你好!"
         message: |-
-          感谢加入%{title}，  欢迎！
+          感谢加入%{title}， 欢迎！
 
-          - 我只是个机器人， 但是如果你需要接触人， [我们友善的管理人员](/about) 也可以帮助你。
+          - 我只是个机器人， 但是如果你需要真人帮助，请找找[我们友善的管理人员](/about)帮忙。
 
-          - 出于安全考虑，我们暂时限制新用户的功能。当我们了解你的时候，你会获得新的能力 (和 [徽章](/badges))。
+          - 出于安全考虑，我们暂时限制了新用户能使用的功能。当我们更了解你的时候，你就可以使用更多功能（和 [徽章](/badges)）了。
 
-          - 我们始终相信[文明 社区 行为](/guidelines)。
+          - 我们始终相信[文明社区行为准则](/guidelines)。
       onebox:
         instructions: |-
           接下来，你能分享下列链接给我么？回复**单独一行的链接**，然后它会自动展开显示一个有用的摘要。
@@ -162,7 +162,7 @@ zh_CN:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          酷！这将会对大多数<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">链接起作用。请记住，它必须是单独的一行链接，在它之前和之后都没有内容。
+          酷！这对许多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">链接都管用。请记住，它必须占**单独的一行**，前后都没东西。
         not_found: |-
           抱歉，我没在你的回复中找到链接！ :cry:
 
@@ -221,21 +221,19 @@ zh_CN:
 
           选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后选中文字的同时按下**回复**按钮也可以！你可以再试一次吗？
       bookmark:
-        instructions: |-
-          如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做， 未来你可能会有 :gift: ！
         reply: |-
           太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像  &#8599;
         not_found: |-
           啊哦，我没有在这个主题中看到任何收藏。你在每个帖子下找到了收藏按钮吗？如果需要的话，使用显示更多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
       emoji:
         instructions: |-
-          你可能看到我在回复中用了些小图片 :blue_car::dash: 他们叫[emoji](https://zh.wikipedia.org/wiki/Emoji)。你能在你的回复中**添加Emoji**吗？以下任意方式都可以：
+          你可能已经看到我在回复中用了很多小图片 :blue_car::dash: 这些叫做[绘文字（Emoji）](https://zh.wikipedia.org/wiki/%E7%B9%AA%E6%96%87%E5%AD%97)。你能在回复中**使用一个 Emoji **吗？这些都可以用：
 
           - 输入 `:) ;) :D :P :O`
 
-          - 输入半角冒号 <kbd>:</kbd> 跟上 emoji 的名字 `:tada:`
+          - 输入冒号 <kbd>:</kbd> 然后输入完整的 Emoji 名字 `:tada:`
 
-          - 在编辑器中或者你移动端的键盘上按下 emoji 按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">
+          - 点击编辑器中的 Emoji 按钮<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">，或者使用移动设备的键盘
         reply: |-
           这是 :sparkles: **Emoji 精神!** :sparkles:
         not_found: |-
@@ -267,14 +265,14 @@ zh_CN:
         reply: |-
           [我们的管理人员](/groups/staff)将会私下里通知关于你标记的后续。如果许多社区成员标记了帖子，出于谨慎，帖子将自动被隐藏。（我没有真的写很糟糕的帖子 :angel:，我先把这个标记删除了）
         not_found: |-
-          啊不，我糟糕的帖子还没被标记。 :worried: 你能**标记**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">其为不合适的吗？不要忘记用显示更多按钮<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">来显示每个帖子的更多操作。
+          啊不，我糟糕的帖子还没被标记。 :worried: 你能**标记**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">其为不合适的吗？不要忘记用显示更多按钮来显示每个帖子的更多操作。
       search:
         instructions: |-
-          呼…我已经在这个主题中隐藏了一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 来找到它。
+          呼…我已经在这个主题中隐藏了一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">来找到它。
 
           试试在这个主题中搜索关键词“capy&#8203;bara”
         hidden_message: |-
-          你怎么错过这个 capybara 哒 :wink:
+          你怎么错过这个 capybara 哒？ :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
@@ -357,12 +355,6 @@ zh_CN:
         reply: |-
           漂亮！记住这对分类和标签（如果站点启用了它的话）都有用。
       change_topic_notification_level:
-        instructions: |-
-          每个主题都有通知等级。默认为“普通”，只有别人直接回复你的时候才会提醒你。
-
-          默认情况下，私信中的通知等级被设为最高级“监看”，即你将收到每个新回复的提醒。但是你可以覆盖任意一个主题的通知等级至“监看”、“追踪”或“静音”。
-
-          让我们试试改变这个主题的通知等级。在主题最下方，你可以看到一个**监看**的按钮。你可以把通知等级改到**追踪**吗？
         not_found: |-
           看起来你仍在监看 :eyes: 这个主题！没找到按钮？通知等级就在主题页面的最下方。
         reply: |-
@@ -391,20 +383,6 @@ zh_CN:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          有时你可能想在回复中**隐藏详情**：
-
-          - 当你讨论电影或者电视节目中可能剧透的情节时。
-
-          - 当你帖子中有大量一次性读完可能太困难的可选细节时。
-
-          [details=点这里看它如何工作！]
-          1. 点击编辑器中的<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">齿轮图标。
-          2. 选择“隐藏详情”。
-          3. 编辑详情概要并添加内容。
-          [/details]
-
-          你可以用编辑器中的<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">齿轮图标在下次回复中添加一节详情吗？
         not_found: |-
           添加详情控件时碰到麻烦了？试试在下个回复中包含下列文字：
 

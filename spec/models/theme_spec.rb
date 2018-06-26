@@ -123,7 +123,7 @@ HTML
 
   context "plugin api" do
     def transpile(html)
-      f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: -1, name: "after_header", value: html)
+      f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
       f.value_baked
     end
 
@@ -155,6 +155,26 @@ HTML
   end
 
   context 'theme vars' do
+
+    it 'works in parent theme' do
+
+      theme = Theme.new(name: 'theme', user_id: -1)
+      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; }')
+      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
+      theme.set_field(target: :common, name: :not_red, value: 'red', type: :theme_var)
+      theme.save
+
+      parent_theme = Theme.new(name: 'parent theme', user_id: -1)
+      parent_theme.set_field(target: :common, name: :scss, value: 'body {background-color: $not_red; }')
+      parent_theme.set_field(target: :common, name: :not_red, value: 'blue', type: :theme_var)
+      parent_theme.save
+      parent_theme.add_child_theme!(theme)
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: parent_theme.id)
+      expect(scss).to include("color:red")
+      expect(scss).to include("background-color:blue")
+    end
+
     it 'can generate scss based off theme vars' do
       theme = Theme.new(name: 'theme', user_id: -1)
       theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')
@@ -191,6 +211,54 @@ HTML
       scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include(upload.url)
     end
+  end
+
+  context "theme settings" do
+    it "allows values to be used in scss" do
+      theme = Theme.new(name: "awesome theme", user_id: -1)
+      theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
+      theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
+      theme.save!
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include("background-color:red")
+      expect(scss).to include("font-size:25px")
+
+      setting = theme.settings.find { |s| s.name == :font_size }
+      setting.value = '30px'
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include("font-size:30px")
+    end
+
+    it "allows values to be used in JS" do
+      theme = Theme.new(name: "awesome theme", user_id: -1)
+      theme.set_field(target: :settings, name: :yaml, value: "name: bob")
+      theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
+      theme.save!
+
+      transpiled = <<~HTML
+      <script>Discourse._registerPluginCode('1.0', function (api) {
+        var settings = { "name": "bob" };
+        alert(settings.name);var a = function a() {};
+      });</script>
+      HTML
+
+      expect(Theme.lookup_field(theme.key, :desktop, :after_header)).to eq(transpiled.strip)
+
+      setting = theme.settings.find { |s| s.name == :name }
+      setting.value = 'bill'
+
+      transpiled = <<~HTML
+      <script>Discourse._registerPluginCode('1.0', function (api) {
+        var settings = { "name": "bill" };
+        alert(settings.name);var a = function a() {};
+      });</script>
+      HTML
+      expect(Theme.lookup_field(theme.key, :desktop, :after_header)).to eq(transpiled.strip)
+
+    end
+
   end
 
   it 'correctly caches theme keys' do
@@ -244,6 +312,43 @@ HTML
     json = Site.json_for(guardian)
     user_themes = JSON.parse(json)["user_themes"]
     expect(user_themes).to eq([])
+  end
+
+  def cached_settings(key)
+    Theme.settings_for_client(key) # returns json
+  end
+
+  it 'handles settings cache correctly' do
+    Theme.destroy_all
+    expect(cached_settings(nil)).to eq("{}")
+
+    theme = Theme.create!(name: "awesome theme", user_id: -1)
+    theme.save!
+    expect(cached_settings(theme.key)).to eq("{}")
+
+    theme.set_field(target: :settings, name: "yaml", value: "boolean_setting: true")
+    theme.save!
+    expect(cached_settings(theme.key)).to match(/\"boolean_setting\":true/)
+
+    theme.settings.first.value = "false"
+    expect(cached_settings(theme.key)).to match(/\"boolean_setting\":false/)
+
+    child = Theme.create!(name: "child theme", user_id: -1)
+    child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")
+
+    child.save!
+    theme.add_child_theme!(child)
+
+    json = cached_settings(theme.key)
+    expect(json).to match(/\"boolean_setting\":false/)
+    expect(json).to match(/\"integer_setting\":54/)
+
+    expect(cached_settings(child.key)).to eq("{\"integer_setting\":54}")
+
+    child.destroy!
+    json = cached_settings(theme.key)
+    expect(json).not_to match(/\"integer_setting\":54/)
+    expect(json).to match(/\"boolean_setting\":false/)
   end
 
 end

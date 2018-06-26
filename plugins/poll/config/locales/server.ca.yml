@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ca:
+  site_settings:
+    poll_maximum_options: "Nombre màxim d'opcions permeses en una enquesta."
+    poll_edit_window_mins: "Nombre de minuts després del posteig durant els quals poden editar-se les enquestes."
+  poll:
+    multiple_polls_without_name: "Hi ha múltiples enquestes sense nom. Empra l'atribut '<code>nom</code>' per identificar inequívocament les teves enquestes."
+    multiple_polls_with_same_name: "Hi ha múltiples enquestes amb el mateix nom: <strong>%{name}</strong>. Empra l'atribut '<code>nom</code>' per identificar inequívocament les teves enquestes."
+    default_poll_must_have_at_least_2_options: "L'enquesta ha de tenir 2 opcions com a mínim."
+    named_poll_must_have_at_least_2_options: "La votació anomenada <strong>%{name}</strong> ha de tenir com a mínim 2 opcions."
+    default_poll_must_have_less_options:
+      one: "L'enquesta ha de tenir menys d'1 opció."
+      other: "L'enquesta ha de tenir menys de %{count} opcions."
+    named_poll_must_have_less_options:
+      one: "L'enquesta <strong>%{name}</strong> ha de tenir menys d'1 opció."
+      other: "L'enquesta <strong>%{name}</strong> ha de tenir menys de %{count} opcions."
+    default_poll_must_have_different_options: "La votació ha de tenir diferents opcions."
+    named_poll_must_have_different_options: "La votació anomenada <strong>%{name}</strong> ha de tenir diferents opcions."
+    default_poll_with_multiple_choices_has_invalid_parameters: "La votació multi-resposta té paràmetres incorrectes."
+    named_poll_with_multiple_choices_has_invalid_parameters: "La votació anomenada <strong>%{name}</strong> multi-resposta té paràmetres invàlids."
+    requires_at_least_1_valid_option: "Has de seleccionar com a mínim 1 opció vàlida."
+    default_cannot_be_made_public: "Enquestes amb vots no poden fer-se públiques."
+    edit_window_expired:
+      op_cannot_edit_options: "No pots afegir o eliminar opcions d'enquestes passats %{minutes} minuts. Per favor, contacta un moderador si necessites editar una opció de l'enquesta."
+      staff_cannot_add_or_remove_options: "No pots afegir o elimiminar opcions d'enquesta passats %{minutes} minuts. Hauries de tancar el tema i crear-ne un de nou."
+    no_polls_associated_with_this_post: "No hi ha votacions associades a aquesta entrada."
+    no_poll_with_this_name: "No hi ha cap votació anomenada <strong>%{name}</strong> i associada a aquesta entrada."
+    post_is_deleted: "No pots actuar sobre una entrada esborrada."
+    topic_must_be_open_to_vote: "El tema ha d'estar obert per a poder votar."
+    poll_must_be_open_to_vote: "La votació ha d'estar oberta per a poder votar."
+    topic_must_be_open_to_toggle_status: "El tema ha d'estar obert per a canviar-ne l'estatus."
+    only_staff_or_op_can_toggle_status: "Només un membre del staff o el seu autor inicial poden canviar l'estatus d'una votació."
+    email:
+      link_to_poll: "Clica per veure l'enquesta"

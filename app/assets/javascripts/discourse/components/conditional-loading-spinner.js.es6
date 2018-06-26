@@ -1,10 +1,14 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  classNameBindings: [':loading-container', 'containerClass', 'condition:visible'],
+  classNameBindings: [
+    ":loading-container",
+    "containerClass",
+    "condition:visible"
+  ],
 
-  @computed('size')
+  @computed("size")
   containerClass(size) {
-    return size === 'small' ? 'inline-spinner' : undefined;
+    return size === "small" ? "inline-spinner" : undefined;
   }
 });

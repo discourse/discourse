@@ -1,21 +1,30 @@
 @keyframes button-jump-up {
-  0% { bottom: 0;}
-  50% { bottom: 45px;}
-  65% { bottom: 40px;}
-  77% { bottom: 43px;}
-  100% { bottom: 40px;}
+  0% {
+    bottom: 0;
+  }
+  50% {
+    bottom: 45px;
+  }
+  65% {
+    bottom: 40px;
+  }
+  77% {
+    bottom: 43px;
+  }
+  100% {
+    bottom: 40px;
+  }
 }
 
 .progress-back-container {
   position: fixed;
   bottom: 40px;
-  z-index: 950;
-  margin-right: 0px;
+  z-index: z("dropdown");
+  margin-right: 0;
   animation-duration: 0.5s;
   animation-name: button-jump-up;
   width: 145px;
   text-align: center;
-
   .btn {
     margin: 0;
   }
@@ -26,53 +35,112 @@
     position: relative;
     right: 38px;
     top: 35px;
-
     .widget-button {
       height: 35px;
       border-right: 1px solid dark-light-diff($primary, $secondary, 80%, -70%);
     }
   }
-
   .topic-admin-popup-menu.right-side {
     position: relative;
-    right: 35px;
+    right: 50px;
   }
 }
 
 #topic-progress-wrapper.docked {
   .topic-admin-popup-menu.right-side {
-    right: 40px;
+    right: 50px;
+    bottom: -150px; // Prevents menu from being too high when a topic is very short
   }
 }
 
+.title-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+  align-items: flex-end;
+  .btn-small {
+    margin: 0 6px 0 0;
+  }
+  a.topic-featured-link {
+    display: inline-block;
+  }
+}
+
+h1 {
+  margin: 0 0 4px 0;
+}
+
+a.badge-category {
+  margin-top: 5px;
+}
 
 #topic-title {
   .title-wrapper {
-    float: left;
+    display: flex;
+    flex-wrap: wrap;
     width: 90%;
-
     .btn-small {
       margin: 0 6px 0 0;
     }
-
-    .badge-wrapper {
-      margin-right: 12px;
-    }
-
     a.topic-featured-link {
       display: inline-block;
     }
   }
-
   h1 {
     margin: 0 0 4px 0;
+    width: 90%;
   }
-
   a.badge-category {
     margin-top: 5px;
   }
+  a.edit-topic i {
+    font-size: 0.8em;
+  }
+  .edit-topic-title {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    max-width: 758px;
+    #edit-title {
+      flex: 1 1 auto;
+    }
+    .private-message-glyph {
+      margin: 5px 5px 0 0;
+    }
+    .category-chooser,
+    .mini-tag-chooser {
+      flex: 1 1 49%;
+      margin: 0 0 9px 0;
+      @media all and (max-width: 500px) {
+        flex: 1 1 100%;
+      }
+    }
+    .mini-tag-chooser {
+      margin-left: 2%;
+      @media all and (max-width: 500px) {
+        margin-left: 0;
+      }
+    }
+  }
+}
 
-  a.edit-topic i { font-size: 0.8em; }
+.private-message-glyph {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+  margin-right: 5px;
+}
+
+.archetype-private_message #topic-title .edit-topic-title .tag-chooser {
+  margin-left: 19px;
+}
+
+.private_message {
+  #topic-title {
+    .edit-topic-title {
+      #edit-title {
+        width: calc(100% - 50px);
+      }
+    }
+  }
 }
 
 .topic-title-outlet {
@@ -82,11 +150,7 @@
 .extra-info-wrapper {
   .badge-wrapper {
     float: left;
-    &.bullet {
-      margin-top: 5px;
-    }
   }
-
 }
 
 .has-pending-posts {
@@ -109,7 +173,7 @@
 #suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
-  line-height: 1.2;
+  line-height: $line-height-medium;
 }
 
 #suggested-topics h3 .badge-wrapper.bullet,
@@ -124,44 +188,37 @@
   max-width: 150px;
 }
 
-.topic-unsubscribe {
-  .notifications-button {
-    display: inline-block;
-    float: none;
-    line-height: 2em;
-    .dropdown-toggle {
-      float: none;
-    }
-    .dropdown-menu {
-      bottom: initial;
-    }
-  }
+#suggested-topics .suggested-topics-title {
+  display: flex;
+  align-items: center;
 }
 
 .post-links-container {
   @include unselectable;
   clear: both;
-
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 1px solid $primary-low; 
+    border-top: 1px solid $primary-low;
+    li:last-of-type {
+      margin-bottom: 1em;
+    }
   }
-
   .expand-links {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
-
   .track-link {
-    padding-left: 0;
-    display: inline-block;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    span:not(.badge) {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
-
   ul {
     margin: 0;
     list-style: none;
-
     li {
       margin-bottom: 0.5em;
       a[href] {
@@ -169,20 +226,19 @@
       }
       .clicks {
         margin-left: 0.5em;
+        flex: 0 0 auto;
       }
       i {
-        float: left;
-        font-size: 0.857em;
-        margin: 0.3em 0.5em 0 0;
+        font-size: $font-down-2;
+        margin: 0 0.5em 0 0;
       }
     }
   }
-
   a.reply-new {
     i {
       background: $secondary;
       border-radius: 20px;
-      transition: all linear .15s;
+      transition: all linear 0.15s;
     }
     &:hover {
       color: $tertiary;
@@ -196,9 +252,8 @@
 a.topic-featured-link {
   display: inline-block;
   text-transform: lowercase;
-  color: #858585;
+  color: dark-light-choose($primary-medium, $secondary-medium);
   font-size: 0.875rem;
-
   &::before {
     position: relative;
     top: 0.1em;

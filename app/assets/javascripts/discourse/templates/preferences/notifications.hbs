@@ -1,7 +1,7 @@
 <div class="control-group notifications">
   <div class="controls controls-dropdown">
     <label>{{i18n 'user.new_topic_duration.label'}}</label>
-    {{combo-box valueAttribute="value" content=considerNewTopicOptions value=model.user_option.new_topic_duration_minutes}}
+    {{combo-box class="duration" valueAttribute="value" content=considerNewTopicOptions value=model.user_option.new_topic_duration_minutes}}
   </div>
 
   <div class="controls controls-dropdown">
@@ -24,17 +24,20 @@
   <label class="control-label">{{i18n 'user.desktop_notifications.label'}}</label>
   {{desktop-notification-config}}
   <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
+  {{plugin-outlet name="user-preferences-desktop-notifications" args=(hash model=model save=(action "save"))}}
 </div>
 
-<div class="control-group private-messages">
-  <label class="control-label">{{i18n 'user.private_messages'}}</label>
+{{#if siteSettings.enable_personal_messages}}
+  <div class="control-group private-messages">
+    <label class="control-label">{{i18n 'user.private_messages'}}</label>
 
-  <div class="controls">
-    {{preference-checkbox
-        labelKey="user.allow_private_messages"
-        checked=model.user_option.allow_private_messages}}
+    <div class="controls">
+      {{preference-checkbox
+          labelKey="user.allow_private_messages"
+          checked=model.user_option.allow_private_messages}}
+    </div>
   </div>
-</div>
+{{/if}}
 
 <div class="control-group muting">
   <label class="control-label">{{i18n 'user.users'}}</label>
@@ -45,7 +48,7 @@
   <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
 </div>
 
-{{plugin-outlet name="user-preferences-notifications"}}
+{{plugin-outlet name="user-preferences-notifications" args=(hash model=model save=(action "save"))}}
 
 <br/>
 

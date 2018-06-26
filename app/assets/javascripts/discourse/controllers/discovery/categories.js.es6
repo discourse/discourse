@@ -1,11 +1,11 @@
-import computed from 'ember-addons/ember-computed-decorators';
-import DiscoveryController from 'discourse/controllers/discovery';
+import computed from "ember-addons/ember-computed-decorators";
+import DiscoveryController from "discourse/controllers/discovery";
 
 const subcategoryStyleComponentNames = {
-  'rows': 'categories_only',
-  'rows_with_featured_topics': 'categories_with_featured_topics',
-  'boxes': 'categories_boxes',
-  'boxes_with_featured_topics': 'categories_boxes_with_topics'
+  rows: "categories_only",
+  rows_with_featured_topics: "categories_with_featured_topics",
+  boxes: "categories_boxes",
+  boxes_with_featured_topics: "categories_boxes_with_topics"
 };
 
 export default DiscoveryController.extend({
@@ -16,26 +16,35 @@ export default DiscoveryController.extend({
 
   @computed
   canEdit() {
-    return Discourse.User.currentProp('staff');
+    return Discourse.User.currentProp("staff");
   },
 
   @computed("model.categories.[].featuredTopics.length")
   latestTopicOnly() {
-    return this.get("model.categories").find(c => c.get("featuredTopics.length") > 1) === undefined;
+    return (
+      this.get("model.categories").find(
+        c => c.get("featuredTopics.length") > 1
+      ) === undefined
+    );
   },
 
   @computed("model.parentCategory")
   categoryPageStyle(parentCategory) {
-    let style = this.site.mobileView ? 'categories_with_featured_topics' : this.siteSettings.desktop_category_page_style;
+    let style = this.site.mobileView
+      ? "categories_with_featured_topics"
+      : this.siteSettings.desktop_category_page_style;
 
     if (parentCategory) {
-      style = subcategoryStyleComponentNames[parentCategory.get('subcategory_list_style')] || style;
+      style =
+        subcategoryStyleComponentNames[
+          parentCategory.get("subcategory_list_style")
+        ] || style;
     }
 
-    const componentName = (parentCategory && style === "categories_and_latest_topics") ?
-                          "categories_only" :
-                          style;
+    const componentName =
+      parentCategory && style === "categories_and_latest_topics"
+        ? "categories_only"
+        : style;
     return Ember.String.dasherize(componentName);
   }
-
 });

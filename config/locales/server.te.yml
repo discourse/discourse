@@ -10,6 +10,8 @@ te:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  date:
+    month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
   title: "డిస్కోర్స్"
   topics: "విషయాలు"
   posts: "టపాలు"
@@ -27,15 +29,15 @@ te:
       present: తప్పనిసరిగా ఖాళీగా ఉండాలి
       confirmation: "%{attribute} కు జత అవ్వలేదు "
       empty: ఖాళీ ఉండకూడదు
-      equal_to: తప్పనిసరిగా %{count} కు సమానంగా ఉండాలి
+      equal_to: "తప్పనిసరిగా %{count} కు సమానంగా ఉండాలి"
       even: జతగా ఉండాలి
       exclusion: రక్షితము
-      greater_than: ' %{count} కన్నా ఎక్కువ ఉండాలి'
-      greater_than_or_equal_to: '%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి'
+      greater_than: " %{count} కన్నా ఎక్కువ ఉండాలి"
+      greater_than_or_equal_to: "%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి"
       inclusion: జాబితాలో జతపర్చబడలేదు
       invalid: చెల్లనిది
-      less_than: '%{count} కన్నా తక్కువ ఉండాలి'
-      less_than_or_equal_to: '%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి'
+      less_than: "%{count} కన్నా తక్కువ ఉండాలి"
+      less_than_or_equal_to: "%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి"
       not_a_number: సంఖ్య కాదు
       not_an_integer: తప్పనిసరిగా పూర్ణ సంఖ్య అయి ఉండాలి
       odd: తప్పనిసరి బేసి సంఖ్య కావాలి
@@ -60,6 +62,9 @@ te:
         other: '%{count} దోషాల వల్ల  %{model} భద్రపరుచుట వీలవలేదు'
     embed:
       load_from_remote: "ఈ టపా లోడింగులో దోషం"
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "ఒక పరిక్రియ ప్రస్తుతం జరుగుతోంది. కొత్త పని ఇప్పుడు మొదలుపెట్టవీలవదు."
     backup_file_should_be_tar_gz: "బ్యాకప్ దస్త్రం తప్పనిసరి .tar.gz కట్ట అయి ఉండాలి."
@@ -118,7 +123,7 @@ te:
     until_posts:
       one: "ఒక టపా"
       other: "%{count} టపాలు"
-    new-reply: |
+    'new-reply': |
       స్వాగతం %{site_name} &mdash; **పాల్గొన్నందుకు ధన్యవాదాలు!**
 
       - మీ సమాధానం సంభాషణను కొంత మెరుగు పరిచిందా ?
@@ -138,13 +143,12 @@ te:
       user_profile:
         bio_raw: "నా గురించి"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "ప్రైవేటు సందేశాలకు మీరు కేవలం హెచ్చరికలు మాత్రమే జోడించగలరు"
               too_many_users: "మీరు హెచ్చరికలు ఒక పర్యాయం కేవలం ఒక సభ్యునికి మాత్రమే పంపగలరు."
-              cant_send_pm: "క్షమించాలి. ఆ సభ్యునికి మీరు ప్రైవేటు సందేశం పంపలేరు."
               no_user_selected: "మీరు ఒక సభ్యుడిని ఎంచుకోవాలి."
         user:
           attributes:
@@ -158,7 +162,6 @@ te:
           attributes:
             hex:
               invalid: "ఇది చెల్లని రంగు"
-      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} ఇంకా వారి ప్రొఫైల్ లో ఎబౌట్ మీ స్థానంలో ఏమీ చేర్చలేదు</div>"
   vip_category_name: "అడ్డా"
@@ -187,7 +190,6 @@ te:
     basic:
       title: "ప్రాథమిక సభ్యుడు"
   rate_limiter:
-    too_many_requests: "ఈ చర్యకు రోజువారీపరిమితి ఉంది. దయచేసి %{time_left} సమయం తర్వాత ప్రయత్నించండి"
     hours:
       one: "ఒక గంట"
       other: "%{count} గంటలు"
@@ -345,9 +347,7 @@ te:
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
     signups:
-      title: "కొత్త వినియోగదారులు"
       xaxis: "రోజు"
-      yaxis: "కొత్త సభ్యుల సంఖ్య"
     topics:
       title: "విషయాలు"
       xaxis: "రోజు"
@@ -381,7 +381,6 @@ te:
       xaxis: "రోజు"
       yaxis: "ఈమెయిల్ల సంఖ్య"
     user_to_user_private_messages:
-      title: "సభ్యుని నుండి సభ్యునికి"
       xaxis: "రోజు"
     system_private_messages:
       title: "వ్వవస్థ"
@@ -420,7 +419,6 @@ te:
       title: "జాల క్రాలర్లు"
       xaxis: "రోజు"
     page_view_total_reqs:
-      title: "మొత్తం"
       xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"
@@ -453,7 +451,6 @@ te:
   site_settings:
     censored_words: "వీటితో పదాలు స్వయంచాలకంగా భర్తీ చేయబడతాయి &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "30 రోజుల కంటే ఎక్కువ దాగివున్న టపాలు స్వయంసిధ్ధంగా తొలగింపబడతాయి."
-    default_locale: "ఈ సంభాషణ సమయంలో అప్రమేయ భాష (ISO 639-1 Code)"
     allow_user_locale: "వినియోగదారులు వారి సొంత భాష ఇంటర్ఫేస్ ప్రాధాన్యతను ఎంచుకోవడానికి అనుమతించు"
     min_post_length: "టపా అనుమతించే అక్షరాల కనిష్ఠ పొడవు"
     max_post_length: "టపా అనుమతించే అక్షరాల గరిష్ఠ పొడవు"
@@ -520,13 +517,11 @@ te:
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
     missing_user_field: "మీరు అన్ని సభ్య క్షేత్రాలూ నింపలేదు"
-    close_window: "ద్రువీకరణ ముగిసింది. ఈ విండోను మూసి కొనసాగండి"
   user:
     no_accounts_associated: "ఎటువంటి ఖాతాలు భాగమవలేదు"
     username:
       short: "కనీసం %[min] అక్షరాలు ఉండాలి"
       long: "గరిష్టం %{max} అక్షరాలు ఉండాలి"
-      characters: "కేవలం సంఖ్యలు, అక్షరాలు మరియు అండర్ స్కోరు మాత్రమే ఉండాలి. "
       unique: "ఏకైకంగా ఉండాలి"
       blank: "తప్పనిసరిగా ఉండాలి"
     email:
@@ -577,6 +572,3 @@ te:
     title: "సేవా నిబంధనలు"
   privacy_topic:
     title: "ప్రైవసీ పోలసీ"
-  activemodel:
-    errors:
-      <<: *errors

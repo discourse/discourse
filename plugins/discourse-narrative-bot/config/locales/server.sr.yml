@@ -1,0 +1,23 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sr:
+  discourse_narrative_bot:
+    new_user_narrative:
+      hello:
+        title: ":robot: Pozdrav!"
+        message: |-
+          Hvala što učestvuješ i želimo ti dobrodošlicu na %{title}!
+
+          - Ja sam samo robot, ali naša [ekipa](/about) je tu da ti pomogne ako ti zatreba da kontaktiraš osobu.
+
+          - Zarad sigurnosti , ograničeno je šta novi korisnici mogu da rade. Sticaćeš nova prava (i [bedževe](/badges)) kako se vremenom budemo upoznavali.
+
+          - Verujemo u  [civilizovanu javnu raspravu](/guidelines).
+      bookmark:
+        instructions: |-
+          Ako želiš da saznaš više, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ispod i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **markiraj ovu privatnu poruku**.  Ako to uradiš, možda dobiješ jedan :gift: uskoro!

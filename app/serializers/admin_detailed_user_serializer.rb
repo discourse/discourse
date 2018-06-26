@@ -16,21 +16,33 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_all_posts,
              :can_be_deleted,
              :can_be_anonymized,
-             :suspend_reason,
+             :full_suspend_reason,
              :suspended_till,
+             :silence_reason,
              :primary_group_id,
              :badge_count,
              :warnings_received_count,
              :user_fields,
              :bounce_score,
              :reset_bounce_score_after,
-             :can_view_action_logs
+             :can_view_action_logs,
+             :second_factor_enabled,
+             :can_disable_second_factor
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
+  has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
+
+  def second_factor_enabled
+    object.totp_enabled?
+  end
+
+  def can_disable_second_factor
+    object&.id != scope.user.id
+  end
 
   def can_revoke_admin
     scope.can_revoke_admin?(object)
@@ -70,6 +82,14 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def suspended_by
     object.suspend_record.try(:acting_user)
+  end
+
+  def silence_reason
+    object.silence_reason
+  end
+
+  def silenced_by
+    object.silenced_record.try(:acting_user)
   end
 
   def include_tl3_requirements?

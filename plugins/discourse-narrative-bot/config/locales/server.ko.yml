@@ -53,7 +53,7 @@ ko:
         quote: "\"모든 역경속에는 기회가 있다\""
         author: "앨버트 아인슈타인"
       '2':
-        quote: "\"세상을 변화시키고 싶다면, 당신부터 변화된 삶을 살아라.”"
+        quote: "자유가 실수를 저지를 수 있는 자유를 내포하지 않는다면 가질 만한 가치가 없다."
         author: "마하트마 간디"
       '3':
         quote: "\"끝났다고 울지말고, 그 시간을 떠올리며 웃으렴.\""
@@ -221,8 +221,6 @@ ko:
 
           내 포스트에서 아무 글이나 선택해도 <kbd>**인용하기**</kbd> 버튼이 뜰거야. 글을 선택하고 **답글쓰기** 를 눌러도 돼! 다시 한 번 해 볼래?
       bookmark:
-        instructions: |-
-          더 알고 싶다면 아래에 있는 이걸 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 선택한 다음 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인메시지 북마크**를 하렴.  미래의 너에게 보내는 좋은 선물:gift:이 되겠지!
         reply: |-
           대단해! 이제는 [프로필의 북마크 탭](%{profile_page_url}/activity/bookmarks)만 눌러도 우리의 개인적인 대화를 손쉽게 뒤돌아 볼 수 있어. 우측 상단에 있는 프로필 사진만 선택하면 돼. &#8599;
         not_found: |-

@@ -1,4 +1,21 @@
-.category-boxes, .category-boxes-with-topics {
+.category-list {
+  table-layout: fixed;
+  .category-text-title {
+    display: flex;
+    align-items: baseline;
+  }
+  .category-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: text-top;
+    line-height: $line-height-medium;
+  }
+}
+
+.category-boxes,
+.category-boxes-with-topics {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -10,6 +27,7 @@
     display: flex;
     flex-direction: row;
     align-content: flex-start;
+    cursor: pointer;
 
     box-sizing: border-box;
 
@@ -75,7 +93,7 @@
   .description {
     padding: 0 1em 1em 1em;
     text-align: center;
-    font-size: 1.05em;
+    font-size: $font-0;
     color: dark-light-choose($primary-medium, $secondary-high);
     .overflow {
       max-height: 6em;
@@ -85,12 +103,14 @@
   }
 
   h3 {
-    font-size: 1.2em;
+    font-size: $font-up-2;
     margin-bottom: 0.5em;
     margin-top: 0.25em;
-    line-height: 1.1em;
+    line-height: $line-height-medium;
     text-align: center;
     color: $primary;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -102,8 +122,10 @@
   }
 
   h3 {
-    font-size: 1.2em;
+    font-size: $font-up-2;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .category-box-heading {
@@ -132,12 +154,17 @@
       }
     }
     li:before {
-      content: '\f0f6';
-      font-family: 'FontAwesome';
+      content: "\f0f6";
+      font-family: "FontAwesome";
       float: left;
       margin-left: -1.5em;
     }
-    li.topic-pinned:before { content: '\f08d'; }
-    li.topic-closed:before, li.topic-archived:before { content: '\f023'; }
+    li.topic-pinned:before {
+      content: "\f08d";
+    }
+    li.topic-closed:before,
+    li.topic-archived:before {
+      content: "\f023";
+    }
   }
 }

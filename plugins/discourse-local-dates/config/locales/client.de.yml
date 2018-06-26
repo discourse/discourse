@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+de:
+  js:
+    discourse_local_dates:
+      title: Datum einfügen
+      create:
+        modal_title: Datum einfügen
+        modal_subtitle: "Datum und Uhrzeit werden automatisch an die lokale Zeitzone des Betrachters angepasst."
+        form:
+          insert: Einfügen
+          advanced_mode: Erweiterter Modus
+          simple_mode: Einfacher Modus
+          format_description: "Format für die Benutzeranzeige von Datumswerten. Verwende \"\\T\\Z\", um die Benutzerzeitzone in Worten darzustellen (Europe/Paris)"
+          timezones_title: Anzuzeigende Zeitzonen
+          timezones_description: Zeitzonen werden für die Anzeige von Datumswerten in der Zukunft und in der Vergangenheit verwendet.
+          recurring_title: Wiederholung
+          recurring_description: "Definiere die Wiederholung eines Ereignisses. Du kannst die Wiederholungsoptionen auch manuell bearbeiten, die vom Formular generiert wurden, und einen der folgenden Schlüssel verwenden: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Keine Wiederholung
+          invalid_date: Ungültige Datumsangabe, stelle sicher, dass Datum und Zeit korrekt sind.
+          date_title: Datum
+          time_title: Uhrzeit
+          format_title: Datumsformat

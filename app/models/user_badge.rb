@@ -26,9 +26,9 @@ class UserBadge < ActiveRecord::Base
 
   private
 
-    def single_grant_badge?
-      self.badge.single_grant?
-    end
+  def single_grant_badge?
+    self.badge.single_grant?
+  end
 end
 
 # == Schema Information

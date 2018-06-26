@@ -1,48 +1,18 @@
-.directory {
-  .period-chooser button {
-    margin: 0;
-  }
-  .period-chooser {
-    li {
-      text-align: left;
-    }
-  }
-}
-
-.user-controls {
-  padding: 1em;
-}
-
-.total-rows {
-  padding: 0.25em 0.5em;
-}
-
 .directory .user {
   border-top: 1px solid $primary-low;
   padding: 1em;
 
-
-  &.me {
-    background-color: dark-light-choose($highlight-low, $highlight-medium);
-
-    .username a, .name, .title, .number, .time-read, .user-stat .label {
-      color: scale-color($highlight, $lightness: -50%);
-    }
-  }
   .user-stat {
     margin-left: 55px;
-    font-size: 13px;
-
     .value {
       font-weight: bold;
     }
     .label {
       margin-left: 0.2em;
-      color: blend-primary-secondary(50%);
+      color: $primary-medium;
     }
     .d-icon-heart {
       color: $love;
     }
   }
-  margin-bottom: 1em;
 }

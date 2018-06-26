@@ -10,9 +10,9 @@ describe CookedPostProcessor do
     let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
-      cpp.expects(:keep_reverse_index_up_to_date).in_sequence(post_process)
-      cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
+      cpp.expects(:post_process_images).in_sequence(post_process)
+      cpp.expects(:keep_reverse_index_up_to_date).in_sequence(post_process)
       cpp.expects(:optimize_urls).in_sequence(post_process)
       cpp.expects(:pull_hotlinked_images).in_sequence(post_process)
       cpp.post_process
@@ -152,18 +152,95 @@ describe CookedPostProcessor do
       before do
         SiteSetting.max_image_height = 2000
         SiteSetting.create_thumbnails = true
+        FastImage.expects(:size).returns([1750, 2000])
+      end
+
+      it "generates overlay information" do
+        Upload.expects(:get_from_url).returns(upload)
+        OptimizedImage.expects(:resize).returns(true)
+
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+
+        cpp.post_process_images
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/1/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+</div></a></div></p>"
+        expect(cpp).to be_dirty
+      end
+
+      describe 'when image is an svg' do
+        let(:post) do
+          Fabricate(:post, raw: '<img src="/uploads/default/1/1234567890123456.svg">')
+        end
+
+        it 'should not add lightbox' do
+          cpp.post_process_images
+
+          expect(cpp.html).to match_html("<p><img src=\"/uploads/default/1/1234567890123456.svg\" width=\"690\"\ height=\"788\"></p>")
+        end
+
+        describe 'when image src is an URL' do
+          let(:post) do
+            Fabricate(:post, raw: '<img src="http://test.discourse/uploads/default/1/1234567890123456.svg?somepamas">')
+          end
+
+          it 'should not add lightbox' do
+            SiteSetting.crawl_images = true
+            cpp.post_process_images
+
+            expect(cpp.html).to match_html("<p><img src=\"http://test.discourse/uploads/default/1/1234567890123456.svg?somepamas\" width=\"690\"\ height=\"788\"></p>")
+          end
+        end
+      end
+
+    end
+
+    context "with tall images" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { Fabricate(:post_with_large_image) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      before do
+        SiteSetting.create_thumbnails = true
 
         Upload.expects(:get_from_url).returns(upload)
-        FastImage.expects(:size).returns([1750, 2000])
-        OptimizedImage.expects(:resize).returns(true)
+        FastImage.expects(:size).returns([860, 2000])
+        OptimizedImage.expects(:resize).never
+        OptimizedImage.expects(:crop).returns(true)
 
         FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
       end
 
-      it "generates overlay information" do
+      it "crops the image" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
-<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+        expect(cpp.html).to match /width="690" height="500">/
+        expect(cpp).to be_dirty
+      end
+
+    end
+
+    context "with iPhone X screenshots" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { Fabricate(:post_with_large_image) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      before do
+        SiteSetting.create_thumbnails = true
+
+        Upload.expects(:get_from_url).returns(upload)
+        FastImage.expects(:size).returns([1125, 2436])
+        OptimizedImage.expects(:resize).returns(true)
+        OptimizedImage.expects(:crop).never
+
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+      end
+
+      it "crops the image" do
+        cpp.post_process_images
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/1/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
+<span class=\"filename\">logo.png</span><span class=\"informations\">1125x2436 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
       end
@@ -193,7 +270,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" href=\"/subfolder/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/1/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
 <span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
@@ -202,7 +279,7 @@ describe CookedPostProcessor do
       it "should escape the filename" do
         upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" href=\"/subfolder/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/1/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
 <span class=\"filename\">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
       end
@@ -228,7 +305,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"WAT\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/1/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"WAT\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
        <span class=\"filename\">WAT</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
        </div></a></div></p>"
         expect(cpp).to be_dirty
@@ -427,17 +504,67 @@ describe CookedPostProcessor do
 
     before do
       Oneboxer.expects(:onebox)
-        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", post_id: 123, invalidate_oneboxes: true)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
         .returns("<div>GANGNAM STYLE</div>")
       cpp.post_process_oneboxes
     end
 
-    it "is dirty" do
+    it "inserts the onebox without wrapping p" do
       expect(cpp).to be_dirty
+      expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
+    end
+  end
+
+  context ".post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    before do
+      SiteSetting.add_rel_nofollow_to_user_content = false
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+      cpp.post_process_oneboxes
     end
 
-    it "inserts the onebox without wrapping p" do
-      expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
+    it "removes nofollow noopener from links" do
+      expect(cpp).to be_dirty
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+    end
+  end
+
+  context ".post_process_oneboxes with square image" do
+
+    it "generates a onebox-avatar class" do
+      SiteSetting.crawl_images = true
+
+      url = 'https://square-image.com/onebox'
+
+      body = <<~HTML
+      <html>
+      <head>
+      <meta property='og:title' content="Page awesome">
+      <meta property='og:image' content="https://image.com/avatar.png">
+      <meta property='og:description' content="Page awesome desc">
+      </head>
+      </html>
+      HTML
+
+      stub_request(:head, url)
+      stub_request(:get , url).to_return(body: body)
+      FinalDestination.stubs(:lookup_ip).returns('1.2.3.4')
+
+      # not an ideal stub but shipping the whole image to fast image can add
+      # a lot of cost to this test
+      FastImage.stubs(:size).returns([200, 200])
+
+      post = Fabricate.build(:post, raw: url)
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.doc.to_s).not_to include('aspect-image')
+      expect(cpp.doc.to_s).to include('onebox-avatar')
     end
 
   end
@@ -689,6 +816,40 @@ describe CookedPostProcessor do
       it "awards a badge for replying via email" do
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstReplyByEmail).exists?).to eq(true)
+      end
+    end
+
+  end
+
+  context "quote processing" do
+    let(:cpp) { CookedPostProcessor.new(cp) }
+    let(:pp) { Fabricate(:post, raw: "This post is ripe for quoting!") }
+
+    context "with an unmodified quote" do
+      let(:cp) do
+        Fabricate(
+          :post,
+          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nripe for quoting\n[/quote]\ntest"
+        )
+      end
+
+      it "should not be marked as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-modified')).to be_blank
+      end
+    end
+
+    context "with a modified quote" do
+      let(:cp) do
+        Fabricate(
+          :post,
+          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nmodified\n[/quote]\ntest"
+        )
+      end
+
+      it "should be marked as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-modified')).to be_present
       end
     end
 

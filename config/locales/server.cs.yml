@@ -7,9 +7,9 @@
 
 cs:
   dates:
-    short_date_no_year: "D. MMMM"
-    short_date: "D. MMMM, YYYY"
-    long_date: "D. MMMM YYYY H:mm"
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "D. MMMM, YYYY h:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%-d. %-m. %Y"
@@ -17,31 +17,44 @@ cs:
       date_only: "%-d %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, ledna, února, března, dubna, května, června, července, srpna, září, října, listopadu, prosince]
+    month_names: [~, ledna, února, března, dubna, května, června, července, srpna, září, října, listopadu, prosince]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "am"
     pm: "pm"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Témata"
   posts: "příspěvky"
   loading: "Nahrávám"
+  powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
+  submit: "Odeslat"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
+  themes:
+    bad_color_scheme: "Nelze aktualizovat skin (theme), neplatné barevné schéma"
+    other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
   emails:
     incoming:
-      default_subject: "Toto téma vyžaduje název"
+      default_subject: "Toto téma potřebuje nadpis"
       show_trimmed_content: "Ukázat upravený obsah"
       maximum_staged_user_per_email_reached: "Dosáhli jste maximálního počtu uživatelů na jeden e-mail."
+      no_subject: "(bez předmětu)"
+      no_body: "(bez textu)"
       errors:
         empty_email_error: "Toto se stává, když e-mail, který obdržíme, je prázdný."
         no_message_id_error: "Toto se stává, když e-mail nemá žádnou hlavičku s \"ID zprávy\"."
+        inactive_user_error: "Toto se stává, když odesílatel není aktivní."
+        silenced_user_error: "Toto se stává, když odesílatel byl umlčen."
+        topic_not_found_error: "Toto se stává, když přijde odpověď k smazanému tématu."
+        topic_closed_error: "Toto se stává, když přijde odpověď k uzavřenému tématu."
+      unrecognized_error: "Neznámá chyba"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
       too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
       invalid_boolean: "Nevalidní boolean."
@@ -51,34 +64,39 @@ cs:
       present: musí zůstat prázdné
       confirmation: "neodpovídá %{attribute}"
       empty: nemůže být prázdný
-      equal_to: musí být roven %{count}
+      equal_to: "musí být roven %{count}"
       even: musí být sudý
       exclusion: je rezervováno
-      greater_than: musí být větší než %{count}
-      greater_than_or_equal_to: musí být větší nebo rovno %{count}
+      greater_than: "musí být větší než %{count}"
+      greater_than_or_equal_to: "musí být větší nebo rovno %{count}"
       has_already_been_used: "již byl použit"
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
-      less_than: musí být menší než %{count}
-      less_than_or_equal_to: musí být menší nebo roven %{count}
+      is_invalid: "zdá se to být nejasné, je to kompletní věta?"
+      contains_censored_words: "obsahuje tato cenzurovaná slova: %{censored_words}"
+      less_than: "musí být menší než %{count}"
+      less_than_or_equal_to: "musí být menší nebo roven %{count}"
       not_a_number: není číslo
       not_an_integer: musí být celé číslo
       odd: musí být lichý
       record_invalid: 'Ověření selhalo: %{errors}'
       restrict_dependent_destroy:
         one: "Nelze odstranit záznam, protože závisející %{record} existuje"
-        many: "Nemůžu smazat záznam protože na něm závisí %{record}."
+        many: "Nelze smazat záznam protože na něm závisí %{record}."
       too_long:
         one: je příliš dlouhý ( maximálně %{count} znak)
         few: je to příliš dlouhé (maximálně %{count} znaků)
+        many: je to příliš dlouhé (maximálně %{count} znaků)
         other: je to příliš dlouhé (maximálně %{count} znaků)
       too_short:
         one: je to příliš krátké (minimum je %{count} znak)
         few: je to příliš krátké (minimum je %{count} znaků)
+        many: je to příliš krátké (minimum je %{count} znaků)
         other: je to příliš krátké (minimum je %{count} znaků)
       wrong_length:
         one: špatná délka (má být %{count} znak)
         few: špatná délka (má být %{count} znaků)
+        many: špatná délka (má být %{count} znaků)
         other: špatná délka (má být %{count} znaků)
       other_than: "musí být jiný než %{count}"
     template:
@@ -86,29 +104,45 @@ cs:
       header:
         one: 1 chyba zamezila uložení modelu %{model}
         few: '%{count} chyb zamezilo uložení modelu %{model}'
+        many: '%{count} chyb zamezilo uložení modelu %{model}'
         other: '%{count} chyb zamezilo uložení modelu %{model}'
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
     site_settings:
-      min_username_length_exists: "Nemůžeš nastavit minimální délku uživatelského jména delší než je nejkratší uživatelské jméno."
-      min_username_length_range: "Nemůžeš nastavit minimum nad maximum."
-      max_username_length_exists: "Nemůžeš nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
-      max_username_length_range: "Nemůžeš nastavit maximum pod minimum."
-      default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
+      min_username_length_exists: "Nemůžete nastavit minimální délku uživatelského jména delší než je nejkratší uživatelské jméno."
+      min_username_length_range: "Nemůžete nastavit minimum nad maximum."
+      max_username_length_exists: "Nemůžete nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
+      max_username_length_range: "Nemůžete nastavit maximum pod minimum."
+      default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
+      s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   invite:
+    not_found: "Odkaz pozvánky je neplatný. Kontaktujte prosím administrátora stránky."
     user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='/u/%{username}/summary'>je veden u tohoto účtu!</a>"
+  bulk_invite:
+    file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
+    error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
+  topic_invite:
+    user_exists: "Omlouváme se, uživatel byl již pozván. K tématu můžete pozvat uživatele jen jednou."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
     not_enough_space_on_disk: "Na disku není dostatek místa pro nahrání této zálohy."
+    invalid_filename: "Název zálohy obsahuje neplatné znaky. Platnými znaky jsou a-z 0-9 . - _."
+  invalid_params: "Do požadavku jste zadali neplatné parametry: %{message}"
   not_logged_in: "Na tuto akci musíte být přihlášení."
   not_found: "Žádaná URL adresa nebo zdroj nelze najít."
+  invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
+  invalid_api_credentials: "Nemáte oprávnění na zobrazení požadovaného zdroje. Uživatelské jméno nebo klíč k API je nevalidní."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
   reading_time: "Čas čtení"
   likes: "Líbí se"
   too_many_replies:
     one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na 1 odpověď v tématu."
     few: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědi v tématu."
+    many: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu."
     other: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu."
   embed:
     start_discussion: "Začít diskuzi"
@@ -116,6 +150,7 @@ cs:
     more_replies:
       one: "1 další odpověď"
       few: "%{count} další odpověďi"
+      many: "%{count} dalších odpověďí"
       other: "%{count} dalších odpověďí"
     loading: "Načítám diskuzi..."
     permalink: "Permalink"
@@ -124,17 +159,47 @@ cs:
     replies:
       one: "1 reakce"
       few: "%{count} reakce"
+      many: "%{count} reakcí"
       other: "%{count} reakcí"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
+  too_many_mentions:
+    one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
+    few: "Bohužel, můžete zmínit jen %{count} uživatele v jednom příspěvku."
+    many: "Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku."
+    other: "Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku."
   no_mentions_allowed_newuser: "Bohužel, noví uživatelé nemohou zmiňovat ostatní uživatele."
+  too_many_mentions_newuser:
+    one: "Bohužel, noví uživatelé mohou zmínit jen jednoho uživatele v příspěvku."
+    few: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatele v příspěvku."
+    many: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
+    other: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
   no_images_allowed: "Bohužel, noví uživatelé nemohou vkládat obrázky do příspěvků."
+  too_many_images:
+    one: "Bohužel, noví uživatelé mohou do příspěvku vložit jen jeden obrázek."
+    few: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázky."
+    many: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázků."
+    other: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázků."
   no_attachments_allowed: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
+  too_many_attachments:
+    one: "Bohužel, noví uživatelé mohou do příspěvku vložit jen jednu přílohu."
+    few: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} přílohy."
+    many: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} příloh."
+    other: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} příloh."
   no_links_allowed: "Bohužel, noví uživatelé nemohou vkládat odkazy do příspěvků."
+  links_require_trust: "Bohužel, nemůžete vkládat odkazy do příspěvků."
+  too_many_links:
+    one: "Bohužel, noví uživatelé mohou do příspěvku vložit maximálně jeden odkaz."
+    few: "Bohužel, noví uživatelé mohou do příspěvku vložit maximálně %{count} odkazy."
+    many: "Bohužel, noví uživatelé mohou do příspěvku vložit maximálně %{count} odkazů."
+    other: "Bohužel, noví uživatelé mohou do příspěvku vložit maximálně %{count} odkazů."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
+  topic_not_found: "Něco se pokazilo. Téma mohlo být uzavřeno nebo smazáno během vašeho prohlížení."
   not_accepting_pms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
+  max_pm_recepients: "Bohužel, můžete poslat zprávu maximálně %{recipients_limit} příjemcům."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   invalid_characters: "obsahuje neplatné znaky"
+  is_invalid: "zdá se to být nejasné, je to kompletní věta?"
   next_page: "další strana →"
   prev_page: "← předchozí strana"
   page_num: "Strana %{num}"
@@ -150,32 +215,65 @@ cs:
   rss_description:
     latest: "Poslední témata"
     hot: "Populární témata"
-    posts: "Poslední příspěveky"
+    top: "Nejlepší témata"
+    top_all: "Nejlepší témata za celou dobu"
+    top_yearly: "Roční nejlepší témata"
+    top_quarterly: "Nejlepší témata za kvartál"
+    top_monthly: "Měsíční nejlepší témata"
+    top_weekly: "Týdenní nejlepší témata"
+    top_daily: "Denní nejlepší témata"
+    posts: "Poslední příspěvky"
+    private_posts: "Poslední osobní zprávy"
     group_posts: "Poslední příspěvky z @{group_name}"
+    group_mentions: "Poslední zmínky z @{group_name}"
     user_posts: "Poslední příspěvky od @{username}"
+    user_topics: "Poslední témata od @{username}"
+    tag: "Oštítkovaná témata"
+    badge: "%{display_name} odznak na %{site_title}"
   too_late_to_edit: "Tento příspěvek byl vytvořen velmi dávno. Už ho není možné smazat ani upravovat."
+  revert_version_same: "Aktuální verze je stejná jako verze, na kterou se pokoušíte vrátit."
   excerpt_image: "obrázek"
+  queue:
+    delete_reason: "Smazáno moderátorem"
+    not_found: "Příspěvek nebyl nalezen nebo již byl aktualizován."
   groups:
     errors:
       can_not_modify_automatic: "Nelze měnit automatické skupiny"
-      member_already_exist: "'%{username}' je už členem této skupiny."
+      invalid_domain: "'%{domain}' není platná doména."
+      invalid_incoming_email: "'%{email}' není platná emailová adresa."
+      email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
+      email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
+      cant_allow_membership_requests: "Nemůžete povolit žádosti o členství pro skupinu bez žádných vlastníků."
     default_names:
       everyone: "kdokoliv"
-      admins: "admins"
-      moderators: "moderators"
-      staff: "staff"
+      admins: "administrátoři"
+      moderators: "moderátoři"
+      staff: "redaktoři"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    request_membership_pm:
+      title: "Žádost o členství pro @%{group_name}"
   education:
     until_posts:
       one: "příspěvek"
       few: "%{count} příspěvky"
+      many: "%{count} příspěvků"
       other: "%{count} příspěvků"
-    new-reply: |
-      Vítejte na %{site_name} &mdash; **díky za přispívání!**
+    'new-topic': |
+      Vítejte na %{site_name} &mdash; **díky za nové téma!**
+
+      - Zní název zajímavě, když si jej přečtete nahlas? Je to dobré shrnutí daného tématu?
+
+      - Koho by to mohlo zajímat? Proč na tom záleží? Jaké typy odpovědí očekáváte?
+
+      - Používejte ve svém tématu klíčová slova, aby jej ostatní mohli *najít*. Zařaďte své téma do vhodné kategorie.
+
+      Více se dozvíte v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
+    'new-reply': |
+      Vítejte na %{site_name} &mdash; **díky za přispěvek!**
 
       - Přispívá nějak vaše odpověď k diskuzi?
 
@@ -184,6 +282,15 @@ cs:
       - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
 
       Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
+    avatar: |+
+      ### Nechcete si nastavit svůj profilový obrázek?
+
+      Přidali jste několik témat a příspěvků, ale Váš profilový obrázek není tak jedinečný jako Vy - je to len písmeno.
+
+      Zvažovali jste **[navštívit svůj uživatelský profil]()** a nahrát v něm obrázek, který vás vystihuje?
+
+      Je jednodušší sledovat diskusi a nalézt v konverzaci zajímavé lidi, když má každý jedinečný profilový obrázek!
+
   activerecord:
     attributes:
       category:
@@ -195,14 +302,20 @@ cs:
       user_profile:
         bio_raw: "O mně"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Varování můžete přidat pouze k soukromým zprávám."
+              warning_requires_pm: "Varování můžete přidat pouze k osobním zprávám."
               too_many_users: "Varování můžete najednou poslat pouze jednomu uživateli."
-              cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat soukromou zprávu."
+              cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat osobní zprávu."
               no_user_selected: "Musíte vybrat platného uživatele."
+              reply_by_email_disabled: "Odpověď přes email byla vypnuta."
+              target_user_not_found: "Jeden z uživatelů, kterým posíláte tuto zprávu, nebyl nalezen."
+            featured_link:
+              invalid: "je neplatná. URL adresa by měla obsahovat http:// nebo https://."
+              invalid_category: "nelze upravit v této kategorii."
         user:
           attributes:
             password:
@@ -213,6 +326,10 @@ cs:
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Opětovné přiřazení primárního emailu jinému uživateli není povoleno."
         color_scheme_color:
           attributes:
             hex:
@@ -220,31 +337,91 @@ cs:
         post_reply:
           base:
             different_topic: "Příspěvek a odpověď musí patřit ke stejnému tématu."
-      <<: *errors
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL adresa je neplatná. Měla by obsahovat http:// nebo https:// a nesmí v ní být mezery."
+        custom_emoji:
+          attributes:
+            name:
+              taken: již je použito u jiného emoji
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "musí být v budoucnosti."
+        watched_word:
+          attributes:
+            word:
+              too_many: "Příliš mnoho slov pro tuto akci"
   user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
+    no_info_me: "<div class='missing-profile'>Pole 'o mně' na vašem profilu je v tuto chvíli prázdné, <a href='/u/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} o sobě zatím nevyplnil žádné informace</div>"
   vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
   meta_category_name: "Poznámky k webu"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
-  staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
+  staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
+  assets_topic_title: "Soubory pro vzhled webu"
+  assets_topic_body: "Toto téma je viditelné pouze pro redaktory a slouží pro uchovávání obrázků a souborů použitých v designu tohoto webu. Nemažte ho!\n\n\nJak postupovat:\n\n1. Odpovězte na toto téma.\n2. Nahrajte sem všechny obrázky které chcete používat pro loga, favicony a podobně. (Použijte ikonku „nahrát“ v panelu nad editorem, nebo obrázky rovnou přetáhněte a vložte)\n3. Pošlete tuto odpověď.\n4. Klikněte pravým tlačítkem na obrázky ve vašem novém příspěvku a zkopírujte si adresy, nebo klikněte na úpravu příspěvku a adresy vykopírujte odtud.\n5. Vložte tyto adresy do [základního nastavení](/admin/site_settings/category/required).\n\nPokud potřebujete nahrát jiné soubory, změňte nastavení `authorized_extensions` v [nastavení souborů](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Vítejte v Discourse"
+    body: |2
+
+        První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!
+
+        **Upravte tento text** do stručného popisu Vaší komunity:
+
+        - Pro koho tu je?
+        - Co zde lze nalézt?
+        - Proč by sem měli lidé chodit?
+        - Kde se lze dozvědět víc (odkazy, zdroje, atd.)?
+
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+        Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
   lounge_welcome:
-    title: "Vítejte v Redakci"
+    title: "Vítejte ve VIP"
+    body: |2
+
+        Gratulujeme! :confetti_ball:
+
+        Pokud vidíte toto téma, byli jste nedávno povýšeni na **pravidelného** uživatele (důvěryhodnost 3).
+
+        Teď můžete &hellip;
+
+        * Upravovat nadpis jakéhokoliv tématu
+        * Měnit kategorii jakéhokoliv tématu
+        * Budou se sledovat všecky Vaše odkazy ([automatické nofollow](http://en.wikipedia.org/wiki/Nofollow) je odstraněno)
+        * Máte přístup do privátní kategorie VIP přístupné jen členům  s důvěryhodností 3 a vyšší
+        * Skrýt spam pomocí vlajky
+
+        Zde je [aktuální seznam pravidelných uživatelů](/badges/3/regular). Určitě je pozdravte.
+
+        Děkujeme, že jste důležitou součástí této komunity!
+
+        (Více informací naleznete na stránce o [důvěryhodnosti][trust]. Prosím nezapomeňte, že jen členové, kteří stále splňují požadavky zůstanou pravidelnými uživateli.)
+
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
-    topic_prefix: "Definice kategorie pro %{category}"
+    topic_prefix: "O kategorii %{category}"
+    replace_paragraph: "(Nahraďte tento první odstavec stručným popisem nové kategorie. Tento návod se objeví v seznamu kategorií, takže se zkuste vejít do 200 znaků. **Kategorie se neobjeví v seznamu kategorií pokud neupravíte tento popis nebo v ní nevytvoříte témata.**)"
+    post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
     errors:
       uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
       self_parent: "Nadřazená kategorie nemůže zároveň být podkategorie"
-      depth: "Pokategorie se nedají vnořovat"
+      depth: "Podkategorie se nedají vnořovat"
+      invalid_email_in: "'%{email}' není platná emailová adresa."
+      email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
+      email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
+      description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
     cannot_delete:
       uncategorized: "„Bez kategorie“ nejde smazat"
       has_subcategories: "Tato kategorie nejde smazat protože obsahuje podkategorie."
       topic_exists:
         one: "Tato kategorie nejde smazat protože obsahuje 1 téma: %{topic_link}."
         few: "Tato kategorie nejde smazat protože obsahuje %{count} témata. Nejstarší téma je %{topic_link}."
+        many: "Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}."
         other: "Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}."
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
     uncategorized_description: "Témata bez kategorií, případně která nepasují do stávajících kategorií."
@@ -255,21 +432,29 @@ cs:
       title: "základní uživatel"
     member:
       title: "člen"
+    regular:
+      title: "pravidelný uživatel"
+    leader:
+      title: "vůdce"
+    change_failed_explanation: "Pokusili jste se snížit důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Nicméně jeho aktuální důvěryhodnost už je '%{current_trust_level}'. Uživatel %{user_name} zůstane na úrovni '%{current_trust_level}'. Pokud chcete snížit důvěryhodnost uživatele, zamkněte nejdříve důvěryhodnost."
+  post:
+    image_placeholder:
+      broken: "Tento obrázek je rozbitý"
   rate_limiter:
-    too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
-    by_type:
-      pms_per_day: "Odeslal jsi maximum povolených zpráv za den. Další můžeš odeslat za {time_left}."
     hours:
       one: "1 hodina"
       few: "%{count} hodiny"
+      many: "%{count} hodin"
       other: "%{count} hodin"
     minutes:
       one: "1 minuta"
       few: "%{count} minuty"
+      many: "%{count} minut"
       other: "%{count} minut"
     seconds:
       one: "1 sekunda"
       few: "%{count} sekundy"
+      many: "%{count} sekund"
       other: "%{count} sekund"
   datetime:
     distance_in_words:
@@ -277,94 +462,117 @@ cs:
       less_than_x_seconds:
         one: "< 1s"
         few: "< %{count}s"
+        many: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
         one: "1s"
         few: "%{count}s"
+        many: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
         one: "< 1m"
         few: "< %{count}m"
+        many: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
         one: "1m"
         few: "%{count}m"
+        many: "%{count}m"
         other: "%{count}m"
       about_x_hours:
         one: "1h"
         few: "%{count}h"
+        many: "%{count}h"
         other: "%{count}h"
       x_days:
         one: "1d"
         few: "%{count}d"
+        many: "%{count}d"
         other: "%{count}d"
       about_x_months:
         one: "1měs"
         few: "%{count}měs"
+        many: "%{count}měs"
         other: "%{count}měs"
       x_months:
         one: "1měs"
         few: "%{count}měs"
+        many: "%{count}měs"
         other: "%{count}měs"
       about_x_years:
         one: "1r"
         few: "%{count}r"
+        many: "%{count}let"
         other: "%{count}let"
       over_x_years:
         one: "> 1r"
         few: "> %{count}r"
+        many: "> %{count}let"
         other: "> %{count}let"
       almost_x_years:
         one: "1r"
         few: "%{count}r"
+        many: "%{count}let"
         other: "%{count}let"
     distance_in_words_verbose:
       half_a_minute: "právě teď"
       less_than_x_seconds:
         one: "právě teď"
         few: "právě teď"
+        many: "právě teď"
         other: "právě teď"
       x_seconds:
         one: "před 1 sekundou"
         few: "před %{count} sekundami"
+        many: "před %{count} sekundami"
         other: "před %{count} sekundami"
       less_than_x_minutes:
         one: "před méně než 1 minutou"
         few: "před méně než %{count} minutami"
+        many: "před méně než %{count} minutami"
         other: "před méně než %{count} minutami"
       x_minutes:
         one: "před 1 minutou"
         few: "před %{count} minutami"
+        many: "před %{count} minutami"
         other: "před %{count} minutami"
       about_x_hours:
         one: "před 1 hodinou"
         few: "před %{count} hodinami"
+        many: "před %{count} hodinami"
         other: "před %{count} hodinami"
       x_days:
         one: "před 1 dnem"
         few: "před %{count} dny"
+        many: "před %{count} dny"
         other: "před %{count} dny"
       about_x_months:
         one: "asi před 1 měsícem"
         few: "asi před %{count} měsíci"
+        many: "asi před %{count} měsíci"
         other: "asi před %{count} měsíci"
       x_months:
         one: "před 1 měsícem"
         few: "před %{count} měsíci"
+        many: "před %{count} měsíci"
         other: "před %{count} měsíci"
       about_x_years:
         one: "asi před 1 rokem"
         few: "asi před %{count} roky"
+        many: "asi před %{count} roky"
         other: "asi před %{count} roky"
       over_x_years:
         one: "před více než 1 rokem"
         few: "před více než %{count} roky"
+        many: "před více než %{count} roky"
         other: "před více než %{count} roky"
       almost_x_years:
         one: "téměř před 1 rokem"
         few: "téměř před %{count} roky"
+        many: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
+    choose_new: "Vyberte si nové heslo"
     choose: "Vybrat heslo"
     update: 'změnit heslo'
     save: 'Nastavit heslo'
@@ -376,6 +584,7 @@ cs:
     please_continue: "Pokračovat na %{site_name}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
   activation:
+    action: "Klikni sem pro aktivaci svého účtu"
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
     please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
     continue_button: "Pokračovat na %{site_name}"
@@ -385,6 +594,7 @@ cs:
     off_topic:
       title: 'Off-Topic'
       description: 'Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam.'
+      short_description: 'Není relevantní k diskuzi'
       long_form: 'označil příspěvek jako off-topic'
     spam:
       title: 'Spam'
@@ -395,6 +605,7 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
+      title: 'Poslat @{{username}} zprávu'
       long_form: 'obeslaný uživatel'
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
@@ -404,18 +615,26 @@ cs:
     bookmark:
       title: 'Záložka'
       description: 'Přidat záložku k tomuto příspěvku'
+      short_description: 'Přidat záložku k tomuto příspěvku'
       long_form: 'přidal záložku k tomuto příspěvku'
     like:
       title: 'To se mi líbí'
       description: 'Tento příspěvek se mi líbí'
+      short_description: 'Tento příspěvek se mi líbí'
       long_form: 'se líbí'
     vote:
       title: 'Hlasovat'
       description: 'Hlasujte pro tento příspěvek'
+      short_description: 'Hlasujte pro tento příspěvek'
       long_form: 'hlasoval pro tento příspěvek'
   user_activity:
     no_bookmarks:
+      self: "Nemáte žádné příspěvky v záložkách. Přidání do záložek vám umožní téma v budoucnu snadněji nalézt."
       others: "Žádné záložky."
+    no_likes_given:
+      self: "Zatím se ti nelíbil žádný příspěvek."
+    no_replies:
+      others: "Žádné odpovědi."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -443,6 +662,7 @@ cs:
     title: "Odhlášení"
     stop_watching_topic: "Přestat sledovat toto téma, %{link}"
     disable_digest_emails: "Zrušit zasílání souhrnných emailů"
+    log_out: "Odhlásit se"
   user_api_key:
     scopes:
       session_info: "Číst user session info"
@@ -454,9 +674,7 @@ cs:
       xaxis: "Den"
       yaxis: "Počet návštěv"
     signups:
-      title: "Noví uživatelé"
       xaxis: "Den"
-      yaxis: "Počet nových uživatelů"
     profile_views:
       title: "Zobrazení uživatelských profilů"
       xaxis: "Den"
@@ -494,7 +712,6 @@ cs:
       xaxis: "Den"
       yaxis: "Počet emailů"
     user_to_user_private_messages:
-      title: "Uživatelské soukromé zprávy"
       xaxis: "Den"
       yaxis: "Počet zpráv"
     system_private_messages:
@@ -537,7 +754,6 @@ cs:
     page_view_crawler_reqs:
       xaxis: "Den"
     page_view_total_reqs:
-      title: "Celkem"
       xaxis: "Den"
       yaxis: "Celkové pageviews"
     page_view_logged_in_mobile_reqs:
@@ -589,7 +805,6 @@ cs:
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
   site_settings:
-    default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
@@ -598,7 +813,6 @@ cs:
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
-    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     ga_universal_tracking_code: "Kód Google Universal Analytics (analytics.js); například UA–12345678-9; více na http://google.com/analytics"
     ga_universal_domain_name: "Doménové jméno Google Universal Analytics (analytics.js); například mojeforum.cz; více na http://google.com/analytics"
     allow_moderators_to_create_categories: "Povolit moderátorům vytváření nových kategorií."
@@ -613,8 +827,6 @@ cs:
     google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
     enable_twitter_logins: "Povolit přihlašování přes Twitter, vyžaduje správně nastavené 'twitter_consumer_key' a 'twitter_consumer_secret'"
-    twitter_consumer_key: "'Consumer key' pro přihlašování přes Twitter, registrace na http://dev.twitter.com"
-    twitter_consumer_secret: "'Consumer secret' pro přihlašování přes Twitter, registrace na http://dev.twitter.com"
     enable_facebook_logins: "Povolit přihlašování přes Facebook, vyžaduje správně nastavené 'facebook_app_id' a 'facebook_app_secret'"
     facebook_app_id: "'App id' pro přihlašování přes Facebook, registrace na https://developers.facebook.com/apps"
     facebook_app_secret: "'App secret' pro přihlašování přes Facebook, registrace na https://developers.facebook.com/apps"
@@ -637,7 +849,6 @@ cs:
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com"
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
-    username_change_period: "Počet dní od registrace za kolik si uživatel může změnit svoje uživatelské jméno (0 pokud chcete změnu uživatelského jména úplně zakázat)."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
     digest_topics: "Maximální počet populárních témat zařazených do email přehledu."
     digest_posts: "Maximální počet populárních příspěvků zařazených do email přehledu."
@@ -653,13 +864,19 @@ cs:
     types:
       category: 'Kategorie'
       user: 'Uživatelé'
-  original_poster: "Původní zasilatel"
+  original_poster: "Autor tématu"
   most_posts: "Více příspěvků"
-  most_recent_poster: "Poslední zasilatel"
-  frequent_poster: "Častý zasilatel"
+  most_recent_poster: "Poslední přispěvatel"
+  frequent_poster: "Častý přispěvatel"
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Příspěvek byl oddělen do nového tématu: %{topic_link}"
+      few: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
+      many: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
+      other: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
@@ -682,7 +899,6 @@ cs:
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
   user:
     username:
-      characters: "musí obsahovat pouze písmena a číslice"
       unique: "musí být unikátní"
       blank: "nesmí být prázdný"
     email:
@@ -700,24 +916,33 @@ cs:
     restore_failed:
       title: "Obnova Neúspěšná"
       subject_template: "Obnova neúspěšná"
-    csv_export_succeeded:
-      subject_template: "Exportování dat dokončeno"
     csv_export_failed:
       subject_template: "Exportování dat selhalo"
     pending_users_reminder:
       subject_template:
         one: "1 user waiting for approval"
         few: "%{count} users waiting for approval"
+        many: "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
+  unsubscribe_link: |
+    Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Obdrželi jste tento email, protože máte zapnutý režim elektronická pošta.
+
+    Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     unsubscribe:
       title: "Odhlásit z odběru emailů"
       description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
+    reply_by_email: "K odpovědi [navštivte téma](%{base_url}%{url}) nebo odepište na tento email."
+    visit_link_to_respond: "K odpovědi [navštivte téma](%{base_url}%{url})."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
     digest:
       why: "Krátký souhrn z webu %{site_link} od poslední návštěvy v %{last_seen_at}"
@@ -756,7 +981,7 @@ cs:
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
     topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
+    post_deleted: "příspěvek byl odstraněn autorem"
     user_suspended: "user was suspended"
     already_read: "user has already read this post"
     message_blank: "message is blank"
@@ -776,10 +1001,11 @@ cs:
   privacy_topic:
     title: "Ochrana soukromí"
   badges:
+    editor:
+      long_description: |
+        Tento odznak je udělen, když poprvé upravíte jeden z Vašich příspěvků. I když nebudete moci upravovat Vaše příspěvky po určitém čase, úprava je vždy dobrý nápad - můžete své příspěvky vylepšit, opravit malé chyby nebo přidat cokoliv, co jste v původním příspěvku zapomněli. Upravujte, abyste Vaše příspěvky udělali ještě lepšími!
     welcome:
       name: Vítejte
-    autobiographer:
-      description: Vyplněné informace v <a href="/my/preferences">profilu</a>
     first_like:
       name: První "to se mi líbí"
     first_share:
@@ -790,7 +1016,6 @@ cs:
       name: Obdivovaný
   admin_login:
     success: "E-mail odeslán"
-    error: "Chyba!"
     submit_button: "Odeslat e-mail"
   wizard:
     step:
@@ -829,14 +1054,9 @@ cs:
             choices:
               latest:
                 label: "Nejnovější témata"
-              categories:
-                label: "Kategorie"
       emoji:
         title: "Smajlíky :)"
       invites:
         title: "Pozvi redakci"
       finished:
         title: "Váš Discourse je připraven!"
-  activemodel:
-    errors:
-      <<: *errors

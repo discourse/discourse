@@ -1,0 +1,244 @@
+.mobile-view .select-kit.is-expanded {
+  z-index: z("dropdown");
+}
+
+.select-kit {
+  border: none;
+  min-width: 220px;
+  box-sizing: border-box;
+  display: inline-block;
+  flex-direction: column;
+  position: relative;
+  vertical-align: middle;
+  user-select: none;
+
+  &.is-hidden {
+    display: none;
+  }
+
+  &.is-disabled {
+    pointer-events: none;
+  }
+
+  &.is-expanded {
+    z-index: z("dropdown");
+
+    .select-kit-body {
+      display: flex;
+      flex-direction: column;
+      left: 0;
+      position: absolute;
+      top: 0;
+    }
+
+    .select-kit-collection {
+      border-radius: inherit;
+    }
+  }
+
+  &.is-above {
+    .select-kit-body {
+      bottom: 0;
+      top: auto;
+    }
+
+    .select-kit-filter {
+      border-top: 0;
+    }
+
+    .select-kit-wrapper {
+      bottom: 0;
+      top: auto;
+    }
+  }
+
+  .d-icon {
+    opacity: 0.7;
+  }
+
+  .select-kit-header {
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+
+    .selected-name {
+      text-align: left;
+      flex: 1 1 auto;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      color: inherit;
+    }
+
+    .btn-clear {
+      padding: 0 10px;
+      border: 0;
+      background: none;
+    }
+
+    .icon {
+      margin-right: 5px;
+    }
+
+    .caret-icon {
+      margin-left: 5px;
+      pointer-events: none;
+    }
+
+    .d-button-label {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+      line-height: $line-height-medium;
+
+      .d-icon {
+        margin-left: 5px;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .select-kit-body {
+    display: none;
+    background: $secondary;
+    box-sizing: border-box;
+  }
+
+  .select-kit-row {
+    cursor: pointer;
+    line-height: $line-height-medium;
+    outline: none;
+    display: flex;
+    flex: 1 0 auto;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
+
+    &.no-content {
+      white-space: nowrap;
+    }
+
+    .name {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 10;
+    }
+
+    .d-icon {
+      margin-right: 5px;
+    }
+
+    &.is-highlighted {
+      background: $tertiary-low;
+    }
+
+    &.is-selected {
+      background: $highlight-medium;
+    }
+
+    &.is-selected.is-highlighted {
+      background: $tertiary-low;
+    }
+
+    .discourse-tag,
+    .discourse-tag-count {
+      color: $primary;
+    }
+  }
+
+  .select-kit-collection {
+    background: $secondary;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: inherit;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+
+    .validation-message {
+      white-space: nowrap;
+      color: $danger;
+      flex: 1 0 auto;
+      margin: 5px;
+      padding: 0 2px;
+    }
+
+    .select-kit-collection {
+      padding: 0;
+      margin: 0;
+
+      &:hover .select-kit-row.is-highlighted:hover {
+        background: $tertiary-low;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      cursor: pointer;
+      border-radius: 5px;
+      background: dark-light-choose($primary-medium, $secondary-medium);
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 0;
+    }
+  }
+
+  .select-kit-filter {
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+
+    .filter-input,
+    .filter-input:focus,
+    .filter-input:active {
+      background: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+      outline: none;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      width: 100%;
+    }
+
+    &.is-hidden {
+      width: 1px;
+      height: 1px;
+      border: 0;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      position: fixed;
+      outline: 0;
+      left: 0;
+      top: 0;
+    }
+  }
+
+  .select-kit-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: none;
+    display: none;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+}

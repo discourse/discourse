@@ -1,37 +1,49 @@
-import { default as WhiteLister } from 'pretty-text/white-lister';
-import { sanitize } from 'pretty-text/sanitizer';
-import guid from 'pretty-text/guid';
+import { default as WhiteLister } from "pretty-text/white-lister";
+import { sanitize } from "pretty-text/sanitizer";
+import guid from "pretty-text/guid";
 
-function deprecate(feature, name){
+function deprecate(feature, name) {
   return function() {
     if (window.console && window.console.log) {
-      window.console.log(feature + ': ' + name + ' is deprecated, please use the new markdown it APIs');
+      window.console.log(
+        feature +
+          ": " +
+          name +
+          " is deprecated, please use the new markdown it APIs"
+      );
     }
   };
 }
 
-function createHelper(featureName, opts, optionCallbacks, pluginCallbacks, getOptions, whiteListed) {
+function createHelper(
+  featureName,
+  opts,
+  optionCallbacks,
+  pluginCallbacks,
+  getOptions,
+  whiteListed
+) {
   let helper = {};
   helper.markdownIt = true;
   helper.whiteList = info => whiteListed.push([featureName, info]);
-  helper.registerInline = deprecate(featureName,'registerInline');
-  helper.replaceBlock = deprecate(featureName,'replaceBlock');
-  helper.addPreProcessor = deprecate(featureName,'addPreProcessor');
-  helper.inlineReplace = deprecate(featureName,'inlineReplace');
-  helper.postProcessTag = deprecate(featureName,'postProcessTag');
-  helper.inlineRegexp = deprecate(featureName,'inlineRegexp');
-  helper.inlineBetween = deprecate(featureName,'inlineBetween');
-  helper.postProcessText = deprecate(featureName,'postProcessText');
-  helper.onParseNode = deprecate(featureName,'onParseNode');
-  helper.registerBlock = deprecate(featureName,'registerBlock');
+  helper.registerInline = deprecate(featureName, "registerInline");
+  helper.replaceBlock = deprecate(featureName, "replaceBlock");
+  helper.addPreProcessor = deprecate(featureName, "addPreProcessor");
+  helper.inlineReplace = deprecate(featureName, "inlineReplace");
+  helper.postProcessTag = deprecate(featureName, "postProcessTag");
+  helper.inlineRegexp = deprecate(featureName, "inlineRegexp");
+  helper.inlineBetween = deprecate(featureName, "inlineBetween");
+  helper.postProcessText = deprecate(featureName, "postProcessText");
+  helper.onParseNode = deprecate(featureName, "onParseNode");
+  helper.registerBlock = deprecate(featureName, "registerBlock");
   // hack to allow moving of getOptions
   helper.getOptions = () => getOptions.f();
 
-  helper.registerOptions = (callback) => {
+  helper.registerOptions = callback => {
     optionCallbacks.push([featureName, callback]);
   };
 
-  helper.registerPlugin = (callback) => {
+  helper.registerPlugin = callback => {
     pluginCallbacks.push([featureName, callback]);
   };
 
@@ -50,21 +62,25 @@ class Ruler {
 
   getRuleForTag(tag) {
     this.ensureCache();
-    return this.cache[tag];
+    if (this.cache.hasOwnProperty(tag)) {
+      return this.cache[tag];
+    }
   }
 
   ensureCache() {
-    if (this.cache) { return; }
+    if (this.cache) {
+      return;
+    }
 
     this.cache = {};
-    for(let i=this.rules.length-1;i>=0;i--) {
+    for (let i = this.rules.length - 1; i >= 0; i--) {
       let info = this.rules[i];
       this.cache[info.rule.tag] = info;
     }
   }
 
   push(name, rule) {
-    this.rules.push({name, rule});
+    this.rules.push({ name, rule });
     this.cache = null;
   }
 }
@@ -79,7 +95,9 @@ function setupInlineBBCode(md) {
 }
 
 function setupTextPostProcessRuler(md) {
-  const TextPostProcessRuler = requirejs('pretty-text/engines/discourse-markdown/text-post-process').TextPostProcessRuler;
+  const TextPostProcessRuler = requirejs(
+    "pretty-text/engines/discourse-markdown/text-post-process"
+  ).TextPostProcessRuler;
   md.core.textPostProcess = { ruler: new TextPostProcessRuler() };
 }
 
@@ -90,14 +108,14 @@ function renderHoisted(tokens, idx, options) {
     options.discourse.hoisted[id] = tokens[idx].content;
     return id;
   } else {
-    return '';
+    return "";
   }
 }
 
 function setupUrlDecoding(md) {
   // this fixed a subtle issue where %20 is decoded as space in
   // automatic urls
-  md.utils.lib.mdurl.decode.defaultChars = ';/?:@&=+$,# ';
+  md.utils.lib.mdurl.decode.defaultChars = ";/?:@&=+$,# ";
 }
 
 function setupHoister(md) {
@@ -110,14 +128,14 @@ function renderImage(tokens, idx, options, env, slf) {
 
   let alt = slf.renderInlineAsText(token.children, options, env);
 
-  let split = alt.split('|');
+  let split = alt.split("|");
   if (split.length > 1) {
     let match;
-    let info = split.splice(split.length-1)[0];
+    let info = split.splice(split.length - 1)[0];
 
-    if (match = info.match(IMG_SIZE_REGEX)) {
+    if ((match = info.match(IMG_SIZE_REGEX))) {
       if (match[1] && match[2]) {
-        alt = split.join('|');
+        alt = split.join("|");
 
         let width = match[1];
         let height = match[2];
@@ -128,19 +146,18 @@ function renderImage(tokens, idx, options, env, slf) {
           height = parseInt(height * percent);
         }
 
-        if (token.attrIndex('width') === -1) {
-          token.attrs.push(['width', width]);
+        if (token.attrIndex("width") === -1) {
+          token.attrs.push(["width", width]);
         }
 
-        if (token.attrIndex('height') === -1) {
-          token.attrs.push(['height', height]);
+        if (token.attrIndex("height") === -1) {
+          token.attrs.push(["height", height]);
         }
       }
-
     }
   }
 
-  token.attrs[token.attrIndex('alt')][1] = alt;
+  token.attrs[token.attrIndex("alt")][1] = alt;
   return slf.renderToken(tokens, idx, options);
 }
 
@@ -156,7 +173,8 @@ export function setup(opts, siteSettings, state) {
   }
 
   // we got to require this late cause bundle is not loaded in pretty-text
-  Helpers = Helpers || requirejs('pretty-text/engines/discourse-markdown/helpers');
+  Helpers =
+    Helpers || requirejs("pretty-text/engines/discourse-markdown/helpers");
 
   opts.markdownIt = true;
 
@@ -176,15 +194,23 @@ export function setup(opts, siteSettings, state) {
     if (check.test(entry)) {
       const module = requirejs(entry);
       if (module && module.setup) {
-
-        const featureName = entry.split('/').reverse()[0];
+        const featureName = entry.split("/").reverse()[0];
         features.push(featureName);
-        module.setup(createHelper(featureName, opts, optionCallbacks, pluginCallbacks, getOptions, whiteListed));
+        module.setup(
+          createHelper(
+            featureName,
+            opts,
+            optionCallbacks,
+            pluginCallbacks,
+            getOptions,
+            whiteListed
+          )
+        );
       }
     }
   });
 
-  optionCallbacks.forEach(([,callback])=>{
+  optionCallbacks.forEach(([, callback]) => {
     callback(opts, siteSettings, state);
   });
 
@@ -213,9 +239,13 @@ export function setup(opts, siteSettings, state) {
     html: true,
     breaks: opts.discourse.features.newline,
     xhtmlOut: false,
-    linkify: opts.discourse.features.linkify,
+    linkify: siteSettings.enable_markdown_linkify,
     typographer: siteSettings.enable_markdown_typographer
   });
+
+  opts.engine.linkify.tlds(
+    (siteSettings.markdown_linkify_tlds || "").split("|")
+  );
 
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
@@ -224,7 +254,7 @@ export function setup(opts, siteSettings, state) {
   setupInlineBBCode(opts.engine);
   setupTextPostProcessRuler(opts.engine);
 
-  pluginCallbacks.forEach(([feature, callback])=>{
+  pluginCallbacks.forEach(([feature, callback]) => {
     if (opts.discourse.features[feature]) {
       opts.engine.use(callback);
     }
@@ -241,9 +271,10 @@ export function setup(opts, siteSettings, state) {
       whiteLister.whiteListFeature(feature, info);
     });
 
-    opts.sanitizer = opts.discourse.sanitizer = (!!opts.discourse.sanitize) ? a=>sanitize(a, whiteLister) : a=>a;
+    opts.sanitizer = opts.discourse.sanitizer = !!opts.discourse.sanitize
+      ? a => sanitize(a, whiteLister)
+      : a => a;
   }
-
 }
 
 export function cook(raw, opts) {
@@ -275,5 +306,4 @@ export function cook(raw, opts) {
 
   delete opts.discourse.hoisted;
   return cooked;
-
 }

@@ -5,7 +5,6 @@ task 'plugin:install_all_official' do
   skip = Set.new([
     'customer-flair',
     'discourse-nginx-performance-report',
-    'hosted-site',
     'lazyYT',
     'poll',
   ])

@@ -24,11 +24,6 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
-    # not sure where this should go
-    if !@guardian.is_staff? && staff_only = DiscourseTagging.staff_only_tags(@opts[:tags])
-      topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_only.join(" "))
-    end
-
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
 
@@ -48,11 +43,17 @@ class TopicCreator
     save_topic(topic)
     create_warning(topic)
     watch_topic(topic)
+    create_shared_draft(topic)
 
     topic
   end
 
   private
+
+  def create_shared_draft(topic)
+    return unless @opts[:shared_draft] && @opts[:category].present?
+    SharedDraft.create(topic_id: topic.id, category_id: @opts[:category])
+  end
 
   def create_warning(topic)
     return unless @opts[:is_warning]
@@ -138,6 +139,10 @@ class TopicCreator
     # PM can't have a category
     @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
 
+    if @opts[:shared_draft]
+      return Category.find(SiteSetting.shared_drafts_category)
+    end
+
     # Temporary fix to allow older clients to create topics.
     # When all clients are updated the category variable should
     # be set directly to the contents of the if statement.
@@ -149,7 +154,19 @@ class TopicCreator
   end
 
   def setup_tags(topic)
-    DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+    if @opts[:tags].blank?
+      unless @guardian.is_staff? || !guardian.can_tag?(topic)
+        # Validate minimum required tags for a category
+        category = find_category
+        if category.present? && category.minimum_required_tags > 0
+          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          rollback_from_errors!(topic)
+        end
+      end
+    else
+      valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+      rollback_from_errors!(topic) unless valid_tags
+    end
   end
 
   def setup_auto_close_time(topic)
