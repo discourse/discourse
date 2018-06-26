@@ -344,23 +344,67 @@ describe TopicView do
 
       # Update them to the sort order we're checking for
       [p1, p2, p3, p4, p5, p6, p7].each_with_index do |p, idx|
-        p.sort_order = idx + 1
-        p.save
+        p.update!(sort_order: idx + 1)
       end
-      p6.user_id = nil # user got nuked
-      p6.save!
+
+      p6.update!(user_id: nil) # user got nuked
     end
 
-    describe "contains_gaps?" do
-      it "works" do
-        # does not contain contains_gaps with default filtering
-        expect(topic_view.contains_gaps?).to eq(false)
-        # contains contains_gaps when filtered by username" do
-        expect(TopicView.new(topic.id, evil_trout, username_filters: ['eviltrout']).contains_gaps?).to eq(true)
-        # contains contains_gaps when filtered by summary
-        expect(TopicView.new(topic.id, evil_trout, filter: 'summary').contains_gaps?).to eq(true)
-        # contains contains_gaps when filtered by best
-        expect(TopicView.new(topic.id, evil_trout, best: 5).contains_gaps?).to eq(true)
+    describe "#gaps" do
+      describe 'no filter' do
+        it 'should not contain gaps' do
+          expect(topic_view.contains_gaps).to eq(false)
+          expect(topic_view.gaps).to eq(nil)
+        end
+
+        describe 'as an admin' do
+          it 'should contain gaps' do
+            p2.update!(deleted_at: Time.zone.now)
+            topic_view = TopicView.new(topic.id, Fabricate(:admin))
+
+            expect(topic_view.contains_gaps).to eq(true)
+            expect(topic_view.posts).to eq([p1, p3, p5])
+
+            expect(topic_view.gaps.before).to eq(
+              p5.id => [p4.id],
+              p3.id => [p2.id]
+            )
+
+            expect(topic_view.gaps.after).to eq(p5.id => [p6.id, p7.id])
+          end
+        end
+      end
+
+      describe 'filtered by username' do
+        it 'should contain gaps' do
+          topic_view = TopicView.new(topic.id, evil_trout,
+            username_filters: ['eviltrout']
+          )
+
+          expect(topic_view.contains_gaps).to eq(true)
+          expect(topic_view.gaps.before).to eq(p5.id => [p3.id])
+          expect(topic_view.gaps.after).to eq({})
+        end
+      end
+
+      describe 'filtered by summary' do
+        it 'should contain gaps' do
+          topic_view = TopicView.new(topic.id, evil_trout, filter: 'summary')
+
+          expect(topic_view.contains_gaps).to eq(true)
+          expect(topic_view.gaps.before).to eq({})
+          expect(topic_view.gaps.after).to eq({})
+        end
+      end
+
+      describe 'filtered by best' do
+        it 'should contain gaps' do
+          topic_view = TopicView.new(topic.id, evil_trout, best: 5)
+
+          expect(topic_view.contains_gaps).to eq(true)
+          expect(topic_view.gaps.before).to eq({})
+          expect(topic_view.gaps.after).to eq({})
+        end
       end
     end
 
@@ -403,21 +447,21 @@ describe TopicView do
         near_view = topic_view_near(p1)
         expect(near_view.desired_post).to eq(p1)
         expect(near_view.posts).to eq([p1, p2, p3])
-        expect(near_view.contains_gaps?).to eq(false)
+        expect(near_view.contains_gaps).to eq(false)
       end
 
       it "snaps to the upper boundary" do
         near_view = topic_view_near(p5)
         expect(near_view.desired_post).to eq(p5)
         expect(near_view.posts).to eq([p2, p3, p5])
-        expect(near_view.contains_gaps?).to eq(false)
+        expect(near_view.contains_gaps).to eq(false)
       end
 
       it "returns the posts in the middle" do
         near_view = topic_view_near(p2)
         expect(near_view.desired_post).to eq(p2)
         expect(near_view.posts).to eq([p1, p2, p3])
-        expect(near_view.contains_gaps?).to eq(false)
+        expect(near_view.contains_gaps).to eq(false)
       end
 
       it "gaps deleted posts to an admin" do
@@ -434,7 +478,7 @@ describe TopicView do
         near_view = topic_view_near(p3, true)
         expect(near_view.desired_post).to eq(p3)
         expect(near_view.posts).to eq([p2, p3, p4])
-        expect(near_view.contains_gaps?).to eq(false)
+        expect(near_view.contains_gaps).to eq(false)
       end
 
       it "gaps deleted posts by nuked users to an admin" do
@@ -452,7 +496,7 @@ describe TopicView do
         near_view = topic_view_near(p5, true)
         expect(near_view.desired_post).to eq(p5)
         expect(near_view.posts).to eq([p4, p5, p6])
-        expect(near_view.contains_gaps?).to eq(false)
+        expect(near_view.contains_gaps).to eq(false)
       end
 
       context "when 'posts per page' exceeds the number of posts" do
@@ -461,7 +505,7 @@ describe TopicView do
         it 'returns all the posts' do
           near_view = topic_view_near(p5)
           expect(near_view.posts).to eq([p1, p2, p3, p5])
-          expect(near_view.contains_gaps?).to eq(false)
+          expect(near_view.contains_gaps).to eq(false)
         end
 
         it 'gaps deleted posts to admins' do
@@ -476,7 +520,7 @@ describe TopicView do
           evil_trout.admin = true
           near_view = topic_view_near(p5, true)
           expect(near_view.posts).to eq([p1, p2, p3, p4, p5, p6, p7])
-          expect(near_view.contains_gaps?).to eq(false)
+          expect(near_view.contains_gaps).to eq(false)
         end
       end
     end
