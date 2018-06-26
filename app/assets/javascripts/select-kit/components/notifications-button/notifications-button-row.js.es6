@@ -9,10 +9,10 @@ export default DropdownSelectBoxRoxComponent.extend({
   i18nPrefix: Ember.computed.alias("options.i18nPrefix"),
   i18nPostfix: Ember.computed.alias("options.i18nPostfix"),
 
-  @computed("computedContent.value", "i18nPrefix")
-  title(value, prefix) {
+  @computed("computedContent.value", "i18nPrefix", "i18nPostfix")
+  title(value, prefix, postfix) {
     const key = buttonDetails(value).key;
-    return I18n.t(`${prefix}.${key}.title`);
+    return I18n.t(`${prefix}.${key}${postfix}.title`);
   },
 
   @computed("computedContent.name", "computedContent.originalContent.icon")
