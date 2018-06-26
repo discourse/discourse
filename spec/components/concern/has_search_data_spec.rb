@@ -35,7 +35,7 @@ describe HasSearchData do
       item
     end
 
-    it 'sets its primary key into asscoiated model' do
+    it 'sets its primary key into associated model' do
       expect(ModelItemSearchData.primary_key).to eq 'model_item_id'
     end
 
