@@ -47,6 +47,8 @@ cache:
     - vendor/bundle
 
 before_install:
+  - nvm install node
+  - node --version
   - gem install bundler
   - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
