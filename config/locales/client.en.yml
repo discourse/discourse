@@ -2213,7 +2213,7 @@ en:
       can: 'can&hellip; '
       none: '(no category)'
       all: 'All categories'
-      choose: 'Select a category&hellip;'
+      choose: 'category&hellip;'
       edit: 'edit'
       edit_long: "Edit"
       view: 'View Topics in Category'
