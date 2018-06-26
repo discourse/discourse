@@ -100,6 +100,23 @@ describe QueuedPostsController do
           expect(queued_topic.post_options['category']).to eq(changes[:category_id])
           expect(queued_topic.post_options['tags']).to eq(changes[:tags])
         end
+
+        it 'removes tags if not present' do
+          queued_topic.post_options[:tags] = ['another-tag']
+          queued_topic.save!
+
+          put "/queued_posts/#{queued_topic.id}.json", params: {
+            queued_post: changes.except(:tags)
+          }
+
+          expect(response.status).to eq(200)
+          queued_topic.reload
+
+          expect(queued_topic.raw).to eq(changes[:raw])
+          expect(queued_topic.post_options['title']).to eq(changes[:title])
+          expect(queued_topic.post_options['category']).to eq(changes[:category_id])
+          expect(queued_topic.post_options['tags']).to be_nil
+        end
       end
 
       context 'when it is a reply' do
