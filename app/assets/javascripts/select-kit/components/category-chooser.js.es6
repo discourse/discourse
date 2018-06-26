@@ -31,9 +31,8 @@ export default ComboBoxComponent.extend({
     }
 
     const _matchFunction = (f, text) => {
-      return text.toLowerCase().indexOf(f) > -1;
+      return this._normalize(text).indexOf(f) > -1;
     };
-    const lowerFilter = filter.toLowerCase();
 
     return computedContent.filter(c => {
       const category = Category.findById(get(c, "value"));
@@ -41,11 +40,10 @@ export default ComboBoxComponent.extend({
       if (category && category.get("parentCategory")) {
         const categoryName = category.get("parentCategory.name");
         return (
-          _matchFunction(lowerFilter, text) ||
-          _matchFunction(lowerFilter, categoryName)
+          _matchFunction(filter, text) || _matchFunction(filter, categoryName)
         );
       } else {
-        return _matchFunction(lowerFilter, text);
+        return _matchFunction(filter, text);
       }
     });
   },
