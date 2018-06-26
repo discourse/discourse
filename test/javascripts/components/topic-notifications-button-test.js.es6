@@ -12,7 +12,8 @@ const buildTopic = function(level, archetype = "regular") {
   });
 };
 
-const originalTranslation = I18n.translations.en.js.topic.notifications.tracking_pm.title;
+const originalTranslation =
+  I18n.translations.en.js.topic.notifications.tracking_pm.title;
 
 moduleForComponent("topic-notifications-button", {
   integration: true,
