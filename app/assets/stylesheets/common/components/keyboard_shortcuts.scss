@@ -1,9 +1,18 @@
-.topic-list-item td:first-child, .topic-post {
+.topic-list-item td:first-child,
+.topic-post {
   border-left: 1px solid transparent;
 }
 
-.topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
+.topic-list tr.selected td:first-child,
+.topic-list-item.selected td:first-child,
+.latest-topic-list-item.selected,
+.featured-topic.selected,
+.topic-post.selected {
   box-shadow: -3px 0 0 $danger;
+}
+
+.latest .featured-topic {
+  padding-left: 4px;
 }
 
 .topic-list-item.selected {
@@ -19,7 +28,7 @@
     width: 100%;
     div {
       float: left;
-      width:32%;
+      width: 32%;
     }
   }
   ul {
@@ -27,7 +36,7 @@
     margin-left: 0;
 
     li {
-      margin: 5px 0
+      margin: 5px 0;
     }
 
     b {

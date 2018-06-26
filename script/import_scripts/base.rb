@@ -74,7 +74,7 @@ class ImportScripts::Base
       min_personal_message_post_length: 1,
       min_personal_message_title_length: 1,
       allow_duplicate_topic_titles: true,
-      disable_emails: true,
+      disable_emails: 'yes',
       max_attachment_size_kb: 102400,
       max_image_size_kb: 102400,
       authorized_extensions: '*'
@@ -631,7 +631,7 @@ class ImportScripts::Base
   def update_topic_status
     puts "", "Updating topic status"
 
-    Topic.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE topics AS t
       SET closed = TRUE
       WHERE EXISTS(
@@ -641,7 +641,7 @@ class ImportScripts::Base
       )
     SQL
 
-    Topic.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE topics AS t
       SET archived = TRUE
       WHERE EXISTS(
@@ -651,7 +651,7 @@ class ImportScripts::Base
       )
     SQL
 
-    TopicCustomField.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       DELETE FROM topic_custom_fields
       WHERE name IN ('import_closed', 'import_archived')
     SQL
@@ -659,7 +659,7 @@ class ImportScripts::Base
 
   def update_bumped_at
     puts "", "Updating bumped_at on topics"
-    Post.exec_sql("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type = #{Post.types[:regular]}), bumped_at)")
+    DB.exec("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type = #{Post.types[:regular]}), bumped_at)")
   end
 
   def update_last_posted_at
@@ -679,7 +679,7 @@ class ImportScripts::Base
         AND users.last_posted_at <> lpa.last_posted_at
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
   end
 
   def update_user_stats
@@ -712,7 +712,7 @@ class ImportScripts::Base
         AND user_stats.first_post_created_at <> sub.first_post_created_at
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
 
     puts "", "Updating user post_count..."
 
@@ -730,7 +730,7 @@ class ImportScripts::Base
         AND user_stats.post_count <> sub.post_count
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
 
     puts "", "Updating user topic_count..."
 
@@ -748,15 +748,15 @@ class ImportScripts::Base
         AND user_stats.topic_count <> sub.topic_count
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
   end
 
   # scripts that are able to import last_seen_at from the source data should override this method
   def update_last_seen_at
     puts "", "Updating last seen at on users"
 
-    User.exec_sql("UPDATE users SET last_seen_at = created_at WHERE last_seen_at IS NULL")
-    User.exec_sql("UPDATE users SET last_seen_at = last_posted_at WHERE last_posted_at IS NOT NULL")
+    DB.exec("UPDATE users SET last_seen_at = created_at WHERE last_seen_at IS NULL")
+    DB.exec("UPDATE users SET last_seen_at = last_posted_at WHERE last_posted_at IS NOT NULL")
   end
 
   def update_feature_topic_users

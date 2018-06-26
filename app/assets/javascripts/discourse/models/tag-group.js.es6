@@ -25,11 +25,14 @@ export default RestModel.extend({
 
     set(value) {
       if (value === "private") {
-        this.set("permissions", { "staff": PermissionType.FULL });
+        this.set("permissions", { staff: PermissionType.FULL });
       } else if (value === "visible") {
-        this.set("permissions", { "staff": PermissionType.FULL, "everyone": PermissionType.READONLY });
+        this.set("permissions", {
+          staff: PermissionType.FULL,
+          everyone: PermissionType.READONLY
+        });
       } else {
-        this.set("permissions", { "everyone": PermissionType.FULL });
+        this.set("permissions", { everyone: PermissionType.FULL });
       }
     }
   },
@@ -40,23 +43,30 @@ export default RestModel.extend({
 
     const isNew = this.get("id") === "new";
     const url = isNew ? "/tag_groups" : `/tag_groups/${this.get("id")}`;
-    const data = this.getProperties("name", "tag_names", "parent_tag_name", "one_per_topic", "permissions");
+    const data = this.getProperties(
+      "name",
+      "tag_names",
+      "parent_tag_name",
+      "one_per_topic",
+      "permissions"
+    );
 
     return ajax(url, {
       data,
       type: isNew ? "POST" : "PUT"
-    }).then(result => {
-      if (result.tag_group && result.tag_group.id) {
-        this.set("id", result.tag_group.id);
-      }
-    }).finally(() => {
-      this.set("savingStatus", I18n.t("saved"));
-      this.set("saving", false);
-    });
+    })
+      .then(result => {
+        if (result.tag_group && result.tag_group.id) {
+          this.set("id", result.tag_group.id);
+        }
+      })
+      .finally(() => {
+        this.set("savingStatus", I18n.t("saved"));
+        this.set("saving", false);
+      });
   },
 
   destroy() {
     return ajax(`/tag_groups/${this.get("id")}`, { type: "DELETE" });
   }
 });
-

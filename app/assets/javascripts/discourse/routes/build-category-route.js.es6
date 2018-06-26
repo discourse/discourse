@@ -1,9 +1,12 @@
-import { filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
-import { queryParams } from 'discourse/controllers/discovery-sortable';
-import TopicList from 'discourse/models/topic-list';
-import PermissionType from 'discourse/models/permission-type';
-import CategoryList from 'discourse/models/category-list';
-import Category from 'discourse/models/category';
+import {
+  filterQueryParams,
+  findTopicList
+} from "discourse/routes/build-topic-route";
+import { queryParams } from "discourse/controllers/discovery-sortable";
+import TopicList from "discourse/models/topic-list";
+import PermissionType from "discourse/models/permission-type";
+import CategoryList from "discourse/models/category-list";
+import Category from "discourse/models/category";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -11,51 +14,75 @@ export default (filterArg, params) => {
     queryParams,
 
     model(modelParams) {
-      const category = Category.findBySlug(modelParams.slug, modelParams.parentSlug);
+      const category = Category.findBySlug(
+        modelParams.slug,
+        modelParams.parentSlug
+      );
       if (!category) {
-        return Category.reloadBySlug(modelParams.slug, modelParams.parentSlug).then((atts) => {
+        return Category.reloadBySlug(
+          modelParams.slug,
+          modelParams.parentSlug
+        ).then(atts => {
           if (modelParams.parentSlug) {
-            atts.category.parentCategory = Category.findBySlug(modelParams.parentSlug);
+            atts.category.parentCategory = Category.findBySlug(
+              modelParams.parentSlug
+            );
           }
-          const record = this.store.createRecord('category', atts.category);
+          const record = this.store.createRecord("category", atts.category);
           record.setupGroupsAndPermissions();
           this.site.updateCategory(record);
-          return { category: Category.findBySlug(modelParams.slug, modelParams.parentSlug) };
+          return {
+            category: Category.findBySlug(
+              modelParams.slug,
+              modelParams.parentSlug
+            )
+          };
         });
-      };
+      }
       return { category };
     },
 
     afterModel(model, transition) {
       if (!model) {
-        this.replaceWith('/404');
+        this.replaceWith("/404");
         return;
       }
 
       this._setupNavigation(model.category);
-      return Em.RSVP.all([this._createSubcategoryList(model.category),
-                          this._retrieveTopicList(model.category, transition)]);
+      return Em.RSVP.all([
+        this._createSubcategoryList(model.category),
+        this._retrieveTopicList(model.category, transition)
+      ]);
     },
 
     filter(category) {
-      return filterArg === 'default' ? (category.get('default_view') || 'latest') : filterArg;
+      return filterArg === "default"
+        ? category.get("default_view") || "latest"
+        : filterArg;
     },
 
     _setupNavigation(category) {
       const noSubcategories = params && !!params.no_subcategories,
-            filterMode = `c/${Discourse.Category.slugFor(category)}${noSubcategories ? "/none" : ""}/l/${this.filter(category)}`;
+        filterMode = `c/${Discourse.Category.slugFor(category)}${
+          noSubcategories ? "/none" : ""
+        }/l/${this.filter(category)}`;
 
-      this.controllerFor('navigation/category').setProperties({
+      this.controllerFor("navigation/category").setProperties({
         category,
         filterMode: filterMode,
-        noSubcategories: params && params.no_subcategories,
+        noSubcategories: params && params.no_subcategories
       });
     },
 
     _createSubcategoryList(category) {
       this._categoryList = null;
-      if (Em.isNone(category.get('parentCategory')) && category.get('show_subcategory_list')) {
-        return CategoryList.listForParent(this.store, category).then(list => this._categoryList = list);
+      if (
+        Em.isNone(category.get("parentCategory")) &&
+        category.get("show_subcategory_list")
+      ) {
+        return CategoryList.listForParent(this.store, category).then(
+          list => (this._categoryList = list)
+        );
       }
 
       // If we're not loading a subcategory list just resolve
@@ -63,32 +90,46 @@ export default (filterArg, params) => {
     },
 
     _retrieveTopicList(category, transition) {
-      const listFilter = `c/${Discourse.Category.slugFor(category)}/l/${this.filter(category)}`,
-            findOpts = filterQueryParams(transition.queryParams, params),
-             extras = { cached: this.isPoppedState(transition) };
+      const listFilter = `c/${Discourse.Category.slugFor(
+          category
+        )}/l/${this.filter(category)}`,
+        findOpts = filterQueryParams(transition.queryParams, params),
+        extras = { cached: this.isPoppedState(transition) };
 
-      return findTopicList(this.store, this.topicTrackingState, listFilter, findOpts, extras).then(list => {
+      return findTopicList(
+        this.store,
+        this.topicTrackingState,
+        listFilter,
+        findOpts,
+        extras
+      ).then(list => {
         TopicList.hideUniformCategory(list, category);
-        this.set('topics', list);
+        this.set("topics", list);
         return list;
       });
     },
 
     titleToken() {
       const category = this.currentModel.category,
-            filterText = I18n.t('filters.' + this.filter(category).replace('/', '.') + '.title');
+        filterText = I18n.t(
+          "filters." + this.filter(category).replace("/", ".") + ".title"
+        );
 
-      return I18n.t('filters.with_category', { filter: filterText, category: category.get('name') });
+      return I18n.t("filters.with_category", {
+        filter: filterText,
+        category: category.get("name")
+      });
     },
 
     setupController(controller, model) {
-      const topics = this.get('topics'),
-            category = model.category,
-            canCreateTopic = topics.get('can_create_topic'),
-            canCreateTopicOnCategory = category.get('permission') === PermissionType.FULL,
-            filter = this.filter(category);
+      const topics = this.get("topics"),
+        category = model.category,
+        canCreateTopic = topics.get("can_create_topic"),
+        canCreateTopicOnCategory =
+          category.get("permission") === PermissionType.FULL,
+        filter = this.filter(category);
 
-      this.controllerFor('navigation/category').setProperties({
+      this.controllerFor("navigation/category").setProperties({
         canCreateTopicOnCategory: canCreateTopicOnCategory,
         cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
         canCreateTopic: canCreateTopic
@@ -97,7 +138,9 @@ export default (filterArg, params) => {
       var topicOpts = {
         model: topics,
         category,
-        period: topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
+        period:
+          topics.get("for_period") ||
+          (filter.indexOf("/") > 0 ? filter.split("/")[1] : ""),
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
         expandAllPinned: true,
@@ -105,7 +148,7 @@ export default (filterArg, params) => {
         canCreateTopicOnCategory: canCreateTopicOnCategory
       };
 
-      const p = category.get('params');
+      const p = category.get("params");
       if (p && Object.keys(p).length) {
         if (p.order !== undefined) {
           topicOpts.order = p.order;
@@ -115,18 +158,24 @@ export default (filterArg, params) => {
         }
       }
 
-      this.controllerFor('discovery/topics').setProperties(topicOpts);
-      this.searchService.set('searchContext', category.get('searchContext'));
-      this.set('topics', null);
+      this.controllerFor("discovery/topics").setProperties(topicOpts);
+      this.searchService.set("searchContext", category.get("searchContext"));
+      this.set("topics", null);
     },
 
     renderTemplate() {
-      this.render('navigation/category', { outlet: 'navigation-bar' });
+      this.render("navigation/category", { outlet: "navigation-bar" });
 
       if (this._categoryList) {
-        this.render('discovery/categories', { outlet: 'header-list-container', model: this._categoryList });
+        this.render("discovery/categories", {
+          outlet: "header-list-container",
+          model: this._categoryList
+        });
       }
-      this.render('discovery/topics', { controller: 'discovery/topics', outlet: 'list-container' });
+      this.render("discovery/topics", {
+        controller: "discovery/topics",
+        outlet: "list-container"
+      });
     },
 
     resetController(controller, isExiting) {
@@ -137,7 +186,7 @@ export default (filterArg, params) => {
 
     deactivate() {
       this._super();
-      this.searchService.set('searchContext', null);
+      this.searchService.set("searchContext", null);
     },
 
     actions: {

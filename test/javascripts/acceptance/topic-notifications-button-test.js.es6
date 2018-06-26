@@ -3,21 +3,20 @@ acceptance("Topic Notifications button", {
   loggedIn: true,
   beforeEach() {
     const response = object => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        object
-      ];
+      return [200, { "Content-Type": "application/json" }, object];
     };
 
-    server.post('/t/280/notifications', () => { // eslint-disable-line no-undef
+    // prettier-ignore
+    server.post("/t/280/notifications", () => { // eslint-disable-line no-undef
       return response({});
     });
   }
 });
 
 QUnit.test("Updating topic notification level", assert => {
-  const notificationOptions = selectKit("#topic-footer-buttons .topic-notifications-options");
+  const notificationOptions = selectKit(
+    "#topic-footer-buttons .topic-notifications-options"
+  );
 
   visit("/t/internationalization-localization/280");
 

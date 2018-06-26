@@ -11,7 +11,7 @@ class UserVisit < ActiveRecord::Base
   end
 
   def self.count_by_active_users(start_date, end_date)
-    sql = <<SQL
+    sql = <<~SQL
       WITH dau AS (
         SELECT date_trunc('day', user_visits.visited_at)::DATE AS date,
                count(distinct user_visits.user_id) AS dau
@@ -27,9 +27,9 @@ class UserVisit < ActiveRecord::Base
           WHERE user_visits.visited_at::DATE BETWEEN dau.date - 29 AND dau.date
         ) AS mau
       FROM dau
-SQL
+    SQL
 
-    UserVisit.exec_sql(sql, start_date: start_date, end_date: end_date).to_a
+    DB.query_hash(sql, start_date: start_date, end_date: end_date)
   end
 
   # A count of visits in a date range by day
@@ -42,16 +42,16 @@ SQL
   end
 
   def self.ensure_consistency!
-    exec_sql <<SQL
-    UPDATE user_stats u set days_visited =
-    (
-      SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
-    )
-    WHERE days_visited <>
-    (
-      SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
-    )
-SQL
+    DB.exec <<~SQL
+      UPDATE user_stats u set days_visited =
+      (
+        SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
+      )
+      WHERE days_visited <>
+      (
+        SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
+      )
+    SQL
   end
 end
 

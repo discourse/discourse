@@ -26,20 +26,7 @@ describe SiteSettings::DefaultsProvider do
     new_settings(provider_local)
   end
 
-  describe 'inserts default_locale into refresh' do
-    it 'when initialize' do
-      expect(settings.refresh_settings.include?(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY)).to be_truthy
-    end
-  end
-
   describe '.db_all' do
-    it 'collects values from db except default locale' do
-      settings.provider.save(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY,
-                             'en',
-                             SiteSetting.types[:string])
-      expect(settings.defaults.db_all).to eq([])
-    end
-
     it 'can collect values from db' do
       settings.provider.save('try_a', 1, SiteSetting.types[:integer])
       settings.provider.save('try_b', 2, SiteSetting.types[:integer])
@@ -55,11 +42,9 @@ describe SiteSettings::DefaultsProvider do
     end
 
     describe '.all' do
-      it 'returns all values according to the current locale' do
+      it 'returns all values according to locale' do
         expect(settings.defaults.all).to eq(test_override: 'default', test_default: 'test')
-        settings.defaults.site_locale = 'zh_CN'
-        settings.defaults.refresh_site_locale!
-        expect(settings.defaults.all).to eq(test_override: 'cn', test_default: 'test')
+        expect(settings.defaults.all('zh_CN')).to eq(test_override: 'cn', test_default: 'test')
       end
     end
 
@@ -72,11 +57,6 @@ describe SiteSettings::DefaultsProvider do
         expect(settings.defaults.get('test_override')).to eq 'default'
       end
 
-      it 'returns the default value according to current locale' do
-        expect(settings.defaults.get(:test_override)).to eq 'default'
-        settings.defaults.site_locale = 'zh_CN'
-        expect(settings.defaults.get(:test_override)).to eq 'cn'
-      end
     end
 
     describe '.set_regardless_of_locale' do
@@ -85,8 +65,7 @@ describe SiteSettings::DefaultsProvider do
       it 'sets the default value to a site setting regardless the locale' do
         settings.defaults.set_regardless_of_locale(:test_override, val)
         expect(settings.defaults.get(:test_override)).to eq val
-        settings.defaults.site_locale = 'zh_CN'
-        expect(settings.defaults.get(:test_override)).to eq val
+        expect(settings.defaults.get(:test_override, 'zh_CN')).to eq val
       end
 
       it 'handles the string' do
@@ -111,143 +90,13 @@ describe SiteSettings::DefaultsProvider do
         }.to raise_error(Discourse::InvalidParameters)
       end
     end
-
-    describe '.each' do
-      it 'yields the pair of site settings' do
-        expect { |b| settings.defaults.each(&b) }.to yield_successive_args([:test_override, 'default'], [:test_default, 'test'])
-        settings.defaults.site_locale = 'zh_CN'
-        expect { |b| settings.defaults.each(&b) }.to yield_successive_args([:test_override, 'cn'], [:test_default, 'test'])
-      end
-    end
-  end
-
-  describe '.site_locale' do
-    it 'returns the current site locale' do
-      expect(settings.defaults.site_locale).to eq 'en'
-    end
-
-    context 'when locale is set in the db' do
-      let(:db_val) { 'zr' }
-      let(:global_val) { 'gr' }
-
-      before do
-        settings.provider.save(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY,
-                               db_val,
-                               SiteSetting.types[:string])
-        settings.defaults.refresh_site_locale!
-      end
-
-      it 'should load from database' do
-        expect(settings.defaults.site_locale).to eq db_val
-      end
-
-      it 'prioritizes GlobalSetting than value from db' do
-        GlobalSetting.stubs(:default_locale).returns(global_val)
-        settings.defaults.refresh_site_locale!
-        expect(settings.defaults.site_locale).to eq global_val
-      end
-
-      it 'ignores blank GlobalSetting' do
-        GlobalSetting.stubs(:default_locale).returns('')
-        settings.defaults.refresh_site_locale!
-        expect(settings.defaults.site_locale).to eq db_val
-      end
-    end
-
-  end
-
-  describe '.site_locale=' do
-    it 'should store site locale in a distributed cache' do
-      expect(settings.defaults.class.class_variable_get(:@@site_locales))
-        .to be_a(DistributedCache)
-    end
-
-    it 'changes and store the current site locale' do
-      settings.defaults.site_locale = 'zh_CN'
-
-      expect(settings.defaults.site_locale).to eq('zh_CN')
-    end
-
-    it 'changes and store the current site locale' do
-      expect { settings.defaults.site_locale = 'random' }.to raise_error(Discourse::InvalidParameters)
-      expect(settings.defaults.site_locale).to eq 'en'
-    end
-
-    it "don't change when it's shadowed" do
-      GlobalSetting.stubs(:default_locale).returns('shadowed')
-      settings.defaults.site_locale = 'zh_CN'
-      expect(settings.defaults.site_locale).to eq 'shadowed'
-    end
-
-    it 'refresh_site_locale! when called' do
-      settings.defaults.expects(:refresh_site_locale!)
-      settings.defaults.site_locale = 'zh_CN'
-    end
-
-    it 'refreshes the client when changed' do
-      Discourse.expects(:request_refresh!).once
-      settings.defaults.site_locale = 'zh_CN'
-    end
-
-    it "doesn't refresh the client when changed" do
-      Discourse.expects(:request_refresh!).never
-      settings.defaults.site_locale = 'en'
-    end
-  end
-
-  describe '.locale_setting_hash' do
-    it 'returns the hash for client display' do
-      result = settings.defaults.locale_setting_hash
-
-      expect(result[:setting]).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY)
-      expect(result[:default]).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
-      expect(result[:type]).to eq(SiteSetting.types[SiteSetting.types[:enum]])
-      expect(result[:preview]).to be_nil
-      expect(result[:value]).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
-      expect(result[:category]).to eq(SiteSettings::DefaultsProvider::DEFAULT_CATEGORY)
-      expect(result[:valid_values]).to eq(LocaleSiteSetting.values)
-      expect(result[:translate_names]).to eq(LocaleSiteSetting.translate_names?)
-      expect(result[:description]).not_to be_nil
-    end
   end
 
   describe '.load_setting' do
-    it 'adds a setting to the cache' do
-      settings.defaults.load_setting('new_a', 1)
+    it 'adds a setting to the cache correctly' do
+      settings.defaults.load_setting('new_a', 1, zh_CN: 7)
       expect(settings.defaults[:new_a]).to eq 1
-    end
-
-    it 'takes care of locale default' do
-      settings.defaults.load_setting(:new_b, 1, locale_default: { zh_CN: 2, zh_TW: 2 })
-      expect(settings.defaults[:new_b]).to eq 1
-    end
-  end
-
-  describe '.refresh_site_locale!' do
-    it 'loads the change to locale' do
-      expect(settings.defaults.site_locale).to eq 'en'
-      settings.provider.save(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY,
-                             'zh_CN',
-                             SiteSetting.types[:string])
-      settings.defaults.refresh_site_locale!
-      expect(settings.defaults.site_locale).to eq 'zh_CN'
-    end
-
-    it 'loads from GlobalSettings' do
-      expect(settings.defaults.site_locale).to eq 'en'
-      GlobalSetting.stubs(:default_locale).returns('fr')
-      settings.defaults.refresh_site_locale!
-      expect(settings.defaults.site_locale).to eq 'fr'
-    end
-
-    it 'prioritized GlobalSettings than db' do
-      expect(settings.defaults.site_locale).to eq 'en'
-      settings.provider.save(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY,
-                             'zh_CN',
-                             SiteSetting.types[:string])
-      GlobalSetting.stubs(:default_locale).returns('fr')
-      settings.defaults.refresh_site_locale!
-      expect(settings.defaults.site_locale).to eq 'fr'
+      expect(settings.defaults.get(:new_a, 'zh_CN')).to eq 7
     end
   end
 
@@ -266,7 +115,7 @@ describe SiteSettings::DefaultsProvider do
     end
 
     it 'default_locale always exists' do
-      expect(settings.defaults.has_setting?(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY)).to be_truthy
+      expect(settings.defaults.has_setting?(:default_locale)).to be_truthy
     end
 
     it 'returns false when the key is not exist' do

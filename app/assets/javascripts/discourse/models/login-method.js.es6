@@ -1,21 +1,28 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 const LoginMethod = Ember.Object.extend({
   @computed
   title() {
-
-    const titleSetting = this.get('titleSetting');
+    const titleSetting = this.get("titleSetting");
     if (!Ember.isEmpty(titleSetting)) {
       const result = this.siteSettings[titleSetting];
-      if (!Ember.isEmpty(result)) { return result; }
+      if (!Ember.isEmpty(result)) {
+        return result;
+      }
     }
 
-    return this.get("titleOverride") || I18n.t("login." + this.get("name") + ".title");
+    return (
+      this.get("titleOverride") ||
+      I18n.t("login." + this.get("name") + ".title")
+    );
   },
 
   @computed
   message() {
-    return this.get("messageOverride") || I18n.t("login." + this.get("name") + ".message");
+    return (
+      this.get("messageOverride") ||
+      I18n.t("login." + this.get("name") + ".message")
+    );
   }
 });
 
@@ -32,7 +39,9 @@ export const LOGIN_METHODS = [
 ];
 
 export function findAll(siteSettings, capabilities, isMobileDevice) {
-  if (methods) { return methods; }
+  if (methods) {
+    return methods;
+  }
 
   methods = [];
 
@@ -43,7 +52,7 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
         params.frameWidth = 850;
         params.frameHeight = 500;
       } else if (name === "facebook") {
-        params.frameWidth= 580;
+        params.frameWidth = 580;
         params.frameHeight = 400;
         params.displayPopup = true;
       }
@@ -53,9 +62,9 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
     }
   });
 
-  if (preRegister){
+  if (preRegister) {
     preRegister.forEach(method => {
-      const enabledSetting = method.get('enabledSetting');
+      const enabledSetting = method.get("enabledSetting");
       if (enabledSetting) {
         if (siteSettings[enabledSetting]) {
           methods.pushObject(method);
@@ -69,7 +78,7 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
 
   // On Mobile, Android or iOS always go with full screen
   if (isMobileDevice || capabilities.isIOS || capabilities.isAndroid) {
-    methods.forEach(m=>m.set("fullScreenLogin", true));
+    methods.forEach(m => m.set("fullScreenLogin", true));
   }
 
   return methods;

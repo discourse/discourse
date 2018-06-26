@@ -5,11 +5,11 @@ QUnit.test("Visit Discovery Pages", assert => {
   visit("/");
   andThen(() => {
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.ok(exists('.topic-list .topic-list-item'), "has topics");
+    assert.ok(exists(".topic-list .topic-list-item"), "has topics");
   });
 
   visit("/categories");
   andThen(() => {
-    assert.ok(exists('.category'), "has a list of categories");
+    assert.ok(exists(".category"), "has a list of categories");
   });
 });

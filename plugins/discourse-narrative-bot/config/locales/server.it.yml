@@ -151,10 +151,10 @@ it:
 
           - Per ragioni di sicurezza, abbiamo temporaneamente limitato ciò che i nuovi utenti possono fare. Potrai guadagnare nuove abilità (e [distintivi](/badges)) appena ti conosceremo meglio.
 
-          - Noi crediamo da sempre in una [comunità dal comportamento civile](/guidelines).
+          - Noi crediamo in una [comunità dal comportamento civile](/guidelines) in ogni momento.
       onebox:
         instructions: |-
-          Adesso, puoi condividere uno di questi collegamenti con me? Rispondi con **un collegamento su una riga a sè stante**, e verrà automaticamente espanso per includere un bel sommario.
+          Adesso, puoi condividere uno di questi collegamenti con me? Rispondi con **un collegamento su una riga a sé stante**, e verrà automaticamente espanso per includere un bel sommario.
 
           Per copiare un collegamento, toccalo e tienilo premuto su mobile, o fai click col tasto destro del mouse:
 
@@ -181,13 +181,13 @@ it:
         reply: |-
           Bell'immagine – Ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
         like_not_found: |-
-          Hai dimenticato di mettere mi piace :heart: al mio [messaggio?](%{url}) :crying_cat_face:
+          Hai dimenticato di mettere Mi piace :heart: al mio [messaggio?](%{url}) :crying_cat_face:
         not_found: |-
-          Sembra che tu non abbia caricato un'immagine così ne ho scelta una io che sono _sicuro_ ti piacerà.
+          Sembra che tu non abbia caricato un'immagine, così ne ho scelta una io che sono _sicuro_ ti piacerà.
 
           `%{image_url}`
 
-          Prova a caricare questa nel prossimo messaggio, o incolla il collegamento su una riga da solo!
+          Prova a caricare questa nel prossimo messaggio, o incolla il collegamento su una riga isolata!
       formatting:
         instructions: |-
           Puoi scrivere alcune parole in **grassetto** o _italico_ nella tua risposta?
@@ -198,7 +198,7 @@ it:
         reply: |-
           Ottimo lavoro! Anche HTML e BBCode funzionano per la formattazione – per saperne di più [prova questo tutorial](http://commonmark.org/help) :nerd:
         not_found: |-
-          Aww, non ho trovato nessuna formattazione nella tua risposta. :pencil2:
+          Acc! Non ho trovato nessuna formattazione nella tua risposta. :pencil2:
 
           Puoi provare di nuovo? Usa i pulsanti <kbd><b>G</b></kbd> grassetto o <kbd><i>I</i></kbd> italico nell'editor se sei rimasto bloccato.
       quoting:
@@ -224,7 +224,7 @@ it:
         reply: |-
           Eccellente! Ora potrai tornare facilmente a questa conversazione privata in ogni momento, proprio dalla [scheda segnalibri sul tuo profilo](%{profile_page_url}/activity/bookmarks). Basta selezionare l'immagine del tuo profilo in alto a destra &#8599;
         not_found: |-
-          Oh oh, non vedo nessun segnalibro in questo argomento. Hai trovato il pulsante segnalibro sotto ogni messaggio?  Usa il pulsante mostra altro <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare altri pulsanti se è necessario.
+          Oh oh, non vedo nessun segnalibro in questo argomento. Hai trovato il pulsante "segnalibro" presente sotto i messaggi?  Usa il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare altri pulsanti, se necessario.
       emoji:
         instructions: |-
           Puoi avermi visto usare delle piccole immagini nelle mie risposte :blue_car::dash: che sono chiamate [emoji](https://it.wikipedia.org/wiki/Emoji). Puoi **aggiungere una emoji** alla tua risposta? Uno qualsiasi di questi metodi funzionerà:
@@ -237,7 +237,7 @@ it:
         reply: |-
           Questo è :sparkles: _emojitastico!_ :sparkles:
         not_found: |-
-          Oops, non vedo nessuna emoji nella tua risposta! Oh no! :sob:
+          Oh oh, non vedo nessuna emoji nella tua risposta! Oh no! :sob:
 
           Prova a digitare due punti <kbd>:</kbd> per far apparire il selettore delle emoji, poi digita qualche lettere della emoji che vuoi, ad esempio `:bird:`
 
@@ -246,18 +246,18 @@ it:
           (Se sei su un dispositvo mobile, puoi anche inviare emoji direttamente dalla tastiera.)
       mention:
         instructions: |-
-          Qualche volta potresti volere l'attenzione di una persona, anche se non stai rispondendo direttamente a lei. Digita `@` poi completa il suo username per menzionarla.
+          A volte potresti voler richiedere l'attenzione di una persona, anche se non stai rispondendo direttamente ad essa. Digita `@` poi completa il suo username per menzionarla.
 
           Puoi menzionare **`@%{discobot_username}`** nella tua risposta?
         reply: |-
-          _Qualcuno ha fatto il mio nome!?_ :raised_hand: Credo che sia stato tu! :wave:  Bene, eccomi qui! Grazie per avermi menzionato.  :ok_hand:
+          _Qualcuno mi ha nominato!?_ :raised_hand: Credo che sia stato tu! :wave:  Bene, eccomi qui! Grazie per avermi menzionato.  :ok_hand:
         not_found: |-
           Non vedo il mio nome da nessuna parte qui :frowning: Puoi provare a menzionarmi di nuovo come `@%{discobot_username}`?
 
           (E sì, il mio username inizia con _disco_, come nella mania dance degli anni 70. Io [amo la vita notturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Ci piacciono le discussioni amichevoli e abbiamo bisogno del tuo aiuto per [mantenere le cose civili](%{guidelines_url}). Se vedi un problema, per favore segnalalo privatamente all'autore, o fallo sapere al [nostro staff](%{about_url}).
+          Ci piacciono le discussioni amichevoli e abbiamo bisogno del tuo aiuto per [mantenere le cose civili](%{guidelines_url}). Se noti un problema, per favore segnalalo, affinché l'autore, o il [nostro staff](%{about_url}) lo vengano a sapere.
 
           >  :imp: Ho scritto qualcosa di brutto qui
 
@@ -265,7 +265,7 @@ it:
         reply: |-
           [Il nostro staff](/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-
-          Oh no, il mio brutto messaggio non è ancora stato segnalato. :worried: Puoi segnalarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante mostra altro <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
+          Oh no, il mio brutto messaggio non è ancora stato segnalato. :worried: Puoi segnalarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
         instructions: |-
           _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.
@@ -289,7 +289,7 @@ it:
           Hmm… sembra che tu abbia qualche problema. Mi dispiace. Hai cercato <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> il termine **capi&#8203;bara**?
       end:
         message: |-
-          Grazie per avermi seguito @%{username}! Ho fatto questo per te, penso che te lo sei guadagnato:
+          Grazie per avermi seguito finora @%{username}! Ho fatto questo certificato per te, penso che te lo sia guadagnato:
 
           %{certificate}
 
@@ -322,23 +322,23 @@ it:
           Nota che le modifiche fatte dopo 5 minuti verranno mostrate come revisioni pubbliche, e una piccola icona a forma di matita apparirà in alto a destra sul messaggio con il conteggio delle modifiche fatte.
       delete:
         instructions: |-
-          Se vuoi cancellare un tuo messaggio, puoi eliminarlo.
+          Se vuoi annullare un tuo messaggio, puoi eliminarlo.
 
-          Va avanti ed **elimina** uno dei tuoi messaggi precedenti usando il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **elimina**. Non cancellare il primo messaggio però!
+          Va' avanti ed **elimina** uno dei tuoi messaggi precedenti usando il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **elimina**. Non cancellare il primo messaggio però!
         not_found: |-
-          Non vedo ancora nessun messaggio cancellato! Ricorda che il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostra altro rivelerà il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> elimina.
+          Non vedo ancora nessun messaggio cancellato! Ricorda che il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "mostra altro" rivelerà il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> elimina.
         reply: |-
           Whoa! :boom:
 
-          Per preservare la continuità delle discussioni, le cancellazioni non sono immediate, così i messaggi saranno rimossi dopo un certo periodo di tempo.
+          Per preservare la continuità delle discussioni, le cancellazioni non sono immediate, dunque i messaggi saranno rimossi dopo un certo periodo di tempo.
       recover:
-        deleted_post_raw: 'Perchè @%{discobot_username} ha cancellato il mio messaggio? :anguished:'
+        deleted_post_raw: 'Perché @%{discobot_username} ha cancellato il mio messaggio? :anguished:'
         instructions: |-
           Oh no! Sembra che io abbia accidentalmente cancellato un nuovo messaggio che avevo appena creato al tuo posto.
 
           Puoi farmi un favore e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **ripristinarlo**?
         not_found: |-
-          Stai avendo problemi? Ricorda che il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostra altro rivelerà il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> ripristina.
+          Stai avendo problemi? Ricorda che il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "mostra altro" rivelerà il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> ripristina.
         reply: |-
           Pfff, questa è fatta! Grazie per averlo sistemato :wink:
 
@@ -355,12 +355,12 @@ it:
           Posso creare un collegamento ad una categoria digitando #
           ```
         reply: |-
-          Eccellente! Ricorda che questo funziona per le categorie _e_ le etichette, se le etichette sono abilitate.
+          Eccellente! Ricorda che ciò funziona sia per le categorie _sia_ per le etichette, se queste etichette sono abilitate.
       change_topic_notification_level:
         not_found: |-
-          Sembra che stia ancora in osservazione :eyes: di questo argomento! Se hai problemi a trovarlo, il pulsante relativo al livello della notifica è situato in fondo a questo argomento.
+          Sembra che tu stia ancora osservando :eyes: questo argomento! Se hai problemi a trovarlo, il pulsante relativo al livello della notifica è situato in fondo all'argomento.
         reply: |-
-          Lavoro impressionante! Spero che non silenzi questo argomento dato che a volte posso essere un po' loquace :grin:.
+          Lavoro impressionante! Spero tu non abbia silenziato questo argomento dato che a volte posso essere un po' loquace :grin:.
 
           Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica a 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](/my/preferences).
       poll:
@@ -378,7 +378,7 @@ it:
           [/poll]
           ```
         reply: |-
-          Hey, bel sondaggio! Sono un buon insegnante?
+          Ei, bel sondaggio! Sono un buon insegnante?
 
           [poll]
           * :+1:
@@ -397,11 +397,11 @@ it:
           Ottimo lavoro — la tua attenzione per i _dettagli_ è ammirevole!
       end:
         message: |-
-          Hai affrontato tutto questo come un _utente avanzato_ infatti :bow:
+          Hai davvero affrontato tutto ciò da _utente avanzato_ :bow:
 
           %{certificate}
 
-          Questo è tutto quello che posso fare per te.
+          Questo è quanto.
 
           Arrivederci per adesso! Se desideri parlare di nuovo con me mandami un messaggio in qualsiasi momento :sunglasses:
       certificate:

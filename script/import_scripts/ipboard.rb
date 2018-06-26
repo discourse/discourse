@@ -70,7 +70,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   # Site settings #
   #################
   # don't send any emails
-  SiteSetting.disable_emails = true
+  SiteSetting.disable_emails = "non-staff"
   # don't send digests (so you can enable email without users noticing)
   SiteSetting.disable_digest_emails = true
   # keep site and users private

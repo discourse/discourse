@@ -24,7 +24,7 @@ class ImportScripts::Modx < ImportScripts::Base
   def initialize
     super
 
-    SiteSetting.disable_emails = true
+    SiteSetting.disable_emails = "non-staff"
 
     @old_username_to_new_usernames = {}
 
@@ -236,7 +236,7 @@ FROM #{TABLE_PREFIX}discuss_users
   def not_mark_topics_as_solved
     puts "", "Marking topics as solved..."
 
-    PostAction.exec_sql <<-SQL
+    DB.exec <<~SQL
       INSERT INTO topic_custom_fields (name, value, topic_id, created_at, updated_at)
       SELECT 'accepted_answer_post_id', pcf.post_id, p.topic_id, p.created_at, p.created_at
         FROM post_custom_fields pcf
@@ -469,7 +469,7 @@ FROM #{TABLE_PREFIX}discuss_users
       WHERE id IN (SELECT topic_id FROM closed_topic_ids)
     SQL
 
-    Topic.exec_sql(sql, closed_topic_ids)
+    DB.exec(sql, closed_topic_ids)
   end
 
   def not_post_process_posts

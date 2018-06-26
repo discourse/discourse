@@ -30,7 +30,9 @@ export default {
 
         // If the finder returns a promise, we support that too
         if (result && result.then) {
-          result.then(toResolve => resolve(toResolve)).catch(toReject => reject(toReject));
+          result
+            .then(toResolve => resolve(toResolve))
+            .catch(toReject => reject(toReject));
         } else {
           resolve(result);
         }

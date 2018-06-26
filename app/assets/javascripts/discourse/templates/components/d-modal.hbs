@@ -2,9 +2,11 @@
   <div class="modal-middle-container">
     <div class="modal-inner-container">
       <div class="modal-header">
-        <div class='modal-close'>
-          <a class="close" {{action closeModal}}>{{d-icon "times"}}</a>
-        </div>
+        {{#if dismissable}}
+          <div class='modal-close'>
+            <a class="close" {{action closeModal}}>{{d-icon "times"}}</a>
+          </div>
+        {{/if}}
 
         <div class="title">
           <h3>{{title}}</h3>

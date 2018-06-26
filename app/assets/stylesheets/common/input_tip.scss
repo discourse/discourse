@@ -11,7 +11,8 @@
     color: white;
     box-shadow: shadow("dropdown");
   }
-  &.hide, &.good {
+  &.hide,
+  &.good {
     display: none;
   }
   .close {
@@ -23,6 +24,6 @@
     cursor: pointer;
   }
   .close:hover {
-    opacity: 1.0;
+    opacity: 1;
   }
 }

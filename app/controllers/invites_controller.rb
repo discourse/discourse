@@ -211,14 +211,14 @@ class InvitesController < ApplicationController
 
   private
 
-    def post_process_invite(user)
-      user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
-      if user.has_password?
-        email_token = user.email_tokens.create(email: user.email)
-        Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
-      elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
-        Jobs.enqueue(:invite_password_instructions_email, username: user.username)
-      end
+  def post_process_invite(user)
+    user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+    if user.has_password?
+      email_token = user.email_tokens.create(email: user.email)
+      Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
+    elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+      Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
+  end
 
 end

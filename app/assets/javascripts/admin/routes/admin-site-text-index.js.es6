@@ -5,10 +5,13 @@ export default Ember.Route.extend({
   },
 
   model(params) {
-    return this.store.find('site-text', Ember.getProperties(params, 'q', 'overridden'));
+    return this.store.find(
+      "site-text",
+      Ember.getProperties(params, "q", "overridden")
+    );
   },
 
   setupController(controller, model) {
-    controller.set('siteTexts', model);
+    controller.set("siteTexts", model);
   }
 });

@@ -96,7 +96,7 @@ task 'db:stats' => 'environment' do
   SQL
 
   puts
-  print_table(Post.exec_sql(sql).to_a)
+  print_table(DB.query_hash(sql))
 end
 
 desc 'Rebuild indexes'
@@ -108,16 +108,14 @@ task 'db:rebuild_indexes' => 'environment' do
   Discourse.enable_readonly_mode
 
   backup_schema = Jobs::Importer::BACKUP_SCHEMA
-  table_names = User.exec_sql("select table_name from information_schema.tables where table_schema = 'public'").map do |row|
-    row['table_name']
-  end
+  table_names = DB.query_single("select table_name from information_schema.tables where table_schema = 'public'")
 
   begin
     # Move all tables to the backup schema:
-    User.exec_sql("DROP SCHEMA IF EXISTS #{backup_schema} CASCADE")
-    User.exec_sql("CREATE SCHEMA #{backup_schema}")
+    DB.exec("DROP SCHEMA IF EXISTS #{backup_schema} CASCADE")
+    DB.exec("CREATE SCHEMA #{backup_schema}")
     table_names.each do |table_name|
-      User.exec_sql("ALTER TABLE public.#{table_name} SET SCHEMA #{backup_schema}")
+      DB.exec("ALTER TABLE public.#{table_name} SET SCHEMA #{backup_schema}")
     end
 
     # Create a new empty db
@@ -126,25 +124,25 @@ task 'db:rebuild_indexes' => 'environment' do
     # Fetch index definitions from the new db
     index_definitions = {}
     table_names.each do |table_name|
-      index_definitions[table_name] = User.exec_sql("SELECT indexdef FROM pg_indexes WHERE tablename = '#{table_name}' and schemaname = 'public';").map { |x| x['indexdef'] }
+      index_definitions[table_name] = DB.query_single("SELECT indexdef FROM pg_indexes WHERE tablename = '#{table_name}' and schemaname = 'public';")
     end
 
     # Drop the new tables
     table_names.each do |table_name|
-      User.exec_sql("DROP TABLE public.#{table_name}")
+      DB.exec("DROP TABLE public.#{table_name}")
     end
 
     # Move the old tables back to the public schema
     table_names.each do |table_name|
-      User.exec_sql("ALTER TABLE #{backup_schema}.#{table_name} SET SCHEMA public")
+      DB.exec("ALTER TABLE #{backup_schema}.#{table_name} SET SCHEMA public")
     end
 
     # Drop their indexes
-    index_names = User.exec_sql("SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')").map { |x| x['indexname'] }
+    index_names = DB.query_single("SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')")
     index_names.each do |index_name|
       begin
         puts index_name
-        User.exec_sql("DROP INDEX public.#{index_name}")
+        DB.exec("DROP INDEX public.#{index_name}")
       rescue ActiveRecord::StatementInvalid
         # It's this:
         # PG::Error: ERROR:  cannot drop index category_users_pkey because constraint category_users_pkey on table category_users requires it
@@ -156,7 +154,7 @@ task 'db:rebuild_indexes' => 'environment' do
     table_names.each do |table_name|
       index_definitions[table_name].each do |index_def|
         begin
-          User.exec_sql(index_def)
+          DB.exec(index_def)
         rescue ActiveRecord::StatementInvalid
           # Trying to recreate a primary key
         end

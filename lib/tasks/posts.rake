@@ -283,7 +283,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   Post.transaction do
     # update sort_order and flip post_number to prevent
     # unique constraint violations when updating post_number
-    builder = SqlBuilder.new(<<~SQL)
+    builder = DB.build(<<~SQL)
       WITH ordered_posts AS (
           SELECT
             id,
@@ -304,7 +304,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
     builder.where("topic_id = :topic_id") if args[:topic_id]
     builder.exec(topic_id: args[:topic_id])
 
-    Notification.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE notifications AS x
       SET post_number = p.sort_order
       FROM posts AS p
@@ -313,7 +313,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
             p.post_number < 0
     SQL
 
-    PostTiming.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE post_timings AS x
       SET post_number = x.post_number * -1
       FROM posts AS p
@@ -329,7 +329,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
             p.post_number < 0;
     SQL
 
-    Post.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE posts AS x
       SET reply_to_post_number = p.sort_order
       FROM posts AS p
@@ -338,7 +338,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
             p.post_number < 0;
     SQL
 
-    TopicUser.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE topic_users AS x
         SET last_read_post_number = p.sort_order
       FROM posts AS p
@@ -362,7 +362,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
     SQL
 
     # finally update the post_number
-    Post.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE posts
       SET post_number = sort_order
       WHERE post_number < 0

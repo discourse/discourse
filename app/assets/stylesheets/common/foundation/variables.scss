@@ -17,7 +17,7 @@ $input-padding: 4px 10px;
 $google: #5b76f7 !default;
 $instagram: #125688 !default;
 $facebook: #3b5998 !default;
-$cas: #70BA61 !default;
+$cas: #70ba61 !default;
 $twitter: #00bced !default;
 $yahoo: #810293 !default;
 $github: #6d6d6d !default;
@@ -43,12 +43,12 @@ $font-up-3: 1.5157em;
 $font-up-2: 1.3195em;
 $font-up-1: 1.1487em; // 2^(1/5)
 $font-0: 1em;
-$font-down-1: .8706em; // 2^(-1/5)
-$font-down-2: .7579em; // Smallest size we use based on the 1em base
-$font-down-3: .6599em;
-$font-down-4: .5745em;
-$font-down-5: .5em;
-$font-down-6: .4355em;
+$font-down-1: 0.8706em; // 2^(-1/5)
+$font-down-2: 0.7579em; // Smallest size we use based on the 1em base
+$font-down-3: 0.6599em;
+$font-down-4: 0.5745em;
+$font-down-5: 0.5em;
+$font-down-6: 0.4355em;
 
 // Common line-heights
 $line-height-small: 1;
@@ -66,29 +66,29 @@ $line-height-large: 1.4; // Normal or small text
 // --------------------------------------------------
 
 $z-layers: (
-  "max":              9999,
-  "fullscreen":       1700,
+  "max": 9999,
   "modal": (
-    "tooltip":        1600,
-    "popover":        1500,
-    "dropdown":       1400,
-    "content":        1300,
-    "overlay":        1200,
+    "tooltip": 1600,
+    "popover": 1500,
+    "dropdown": 1400,
+    "content": 1300,
+    "overlay": 1200
   ),
-  "mobile-composer":  1100,
-  "header":           1000,
-  "tooltip":          600,
+  "fullscreen": 1150,
+  "mobile-composer": 1100,
+  "header": 1000,
+  "tooltip": 600,
   "composer": (
-      "dropdown":     700,
-      "tooltip":      600,      
-      "popover":      500,
-      "content":      400,
+    "dropdown": 700,
+    "tooltip": 600,
+    "popover": 500,
+    "content": 400
   ),
-  "dropdown":         300,
-  "usercard":         200,
-  "timeline":         100,
-  "base":             1
-  );
+  "dropdown": 300,
+  "usercard": 200,
+  "timeline": 100,
+  "base": 1
+);
 
 @function map-has-nested-keys($map, $keys...) {
   @each $key in $keys {
@@ -114,19 +114,21 @@ $z-layers: (
   @return map-deep-get($z-layers, $layers...);
 }
 
-
 // Box-shadow
 // --------------------------------------------------
 
 $box-shadow: (
-  "modal":        0 8px 60px rgba(0, 0, 0, 0.6),
-  "composer":     0 -1px 40px rgba(0, 0, 0, 0.12),
-  "menu-panel":   0 6px 14px rgba(0, 0, 0, 0.15),
-  "card":         0 4px 14px rgba(0, 0, 0, 0.15),
-  "dropdown":     0 2px 3px 0 rgba(0, 0, 0, 0.2),
-  "header":       0 2px 4px -1px rgba(0, 0, 0, 0.25),
-  "kbd":         (0 2px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px dark-light-choose(#fff, #000) inset),
-  "focus":        0 0 6px 0 $tertiary,
+  "modal": 0 8px 60px rgba(0, 0, 0, 0.6),
+  "composer": 0 -1px 40px rgba(0, 0, 0, 0.12),
+  "menu-panel": 0 6px 14px rgba(0, 0, 0, 0.15),
+  "card": 0 4px 14px rgba(0, 0, 0, 0.15),
+  "dropdown": 0 2px 3px 0 rgba(0, 0, 0, 0.2),
+  "header": 0 2px 4px -1px rgba(0, 0, 0, 0.25),
+  "kbd": (
+    0 2px 0 rgba(0, 0, 0, 0.2),
+    0 0 0 1px dark-light-choose(#fff, #000) inset
+  ),
+  "focus": 0 0 6px 0 $tertiary,
   "focus-danger": 0 0 6px 0 $danger
 );
 
@@ -139,7 +141,9 @@ $box-shadow: (
 
 // w3c definition of color brightness https://www.w3.org/TR/AERT#color-contrast
 @function dc-color-brightness($color) {
-  @return ((red($color) * .299) + (green($color) * .587) + (blue($color) * .114));
+  @return (
+    (red($color) * 0.299) + (green($color) * 0.587) + (blue($color) * 0.114)
+  );
 }
 
 // Uses an approximation of sRGB blending, GAMMA=2 instead of GAMMA=2.2
@@ -166,8 +170,15 @@ $box-shadow: (
   @return srgb-scale($primary, $secondary, $percent);
 }
 
-@function dark-light-diff($adjusted-color, $comparison-color, $lightness, $darkness) {
-  @if dc-color-brightness($adjusted-color) < dc-color-brightness($comparison-color) {
+@function dark-light-diff(
+  $adjusted-color,
+  $comparison-color,
+  $lightness,
+  $darkness
+) {
+  @if dc-color-brightness($adjusted-color) <
+    dc-color-brightness($comparison-color)
+  {
     @return scale-color($adjusted-color, $lightness: $lightness);
   } @else {
     @return scale-color($adjusted-color, $lightness: $darkness);
@@ -223,3 +234,6 @@ $success-medium: dark-light-diff($success, $secondary, 50%, -40%);
 
 //love
 $love-low: dark-light-diff($love, $secondary, 85%, -60%);
+
+//wiki
+$wiki: green;

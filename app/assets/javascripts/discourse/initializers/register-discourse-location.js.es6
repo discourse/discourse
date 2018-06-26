@@ -2,5 +2,5 @@
 
 export default {
   name: "register-discourse-location",
-  initialize() { }
+  initialize() {}
 };

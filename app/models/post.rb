@@ -326,7 +326,7 @@ class Post < ActiveRecord::Base
 
   # Prevent new users from posting the same hosts too many times.
   def has_host_spam?
-    return false if acting_user.present? && (acting_user.staged? || acting_user.has_trust_level?(TrustLevel[1]))
+    return false if acting_user.present? && (acting_user.staged? || acting_user.mature_staged? || acting_user.has_trust_level?(TrustLevel[1]))
     return false if topic&.private_message?
 
     total_hosts_usage.values.any? { |count| count >= SiteSetting.newuser_spam_host_threshold }
@@ -344,23 +344,31 @@ class Post < ActiveRecord::Base
     order('sort_order desc, post_number desc')
   end
 
-  def self.summary(topic_id = nil)
-    # PERF: if you pass in nil it is WAY slower
-    #  pg chokes getting a reasonable plan
-    topic_id = topic_id ? topic_id.to_i : "posts.topic_id"
+  def self.summary(topic_id)
+    topic_id = topic_id.to_i
 
     # percent rank has tons of ties
-    where(["post_number = 1 or id in (
+    where(topic_id: topic_id)
+      .where([
+        "id = ANY(
+          (
+            SELECT posts.id
+            FROM posts
+            WHERE posts.topic_id = #{topic_id.to_i}
+            AND posts.post_number = 1
+          ) UNION
+          (
             SELECT p1.id
             FROM posts p1
-            WHERE p1.percent_rank <= ? AND
-               p1.topic_id = #{topic_id}
+            WHERE p1.percent_rank <= ?
+            AND p1.topic_id = #{topic_id.to_i}
             ORDER BY p1.percent_rank
             LIMIT ?
-          )",
-           SiteSetting.summary_percent_filter.to_f / 100.0,
-           SiteSetting.summary_max_results
-    ])
+          )
+        )",
+        SiteSetting.summary_percent_filter.to_f / 100.0,
+        SiteSetting.summary_max_results
+      ])
   end
 
   def update_flagged_posts_count
@@ -407,7 +415,7 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, 220, strip_links: true)
+    Post.excerpt(cooked, 220, strip_links: true, strip_images: true)
   end
 
   def is_first_post?
@@ -567,7 +575,7 @@ class Post < ActiveRecord::Base
   # each post.
   def self.calculate_avg_time(min_topic_age = nil)
     retry_lock_error do
-      builder = SqlBuilder.new("UPDATE posts
+      builder = DB.build("UPDATE posts
                 SET avg_time = (x.gmean / 1000)
                 FROM (SELECT post_timings.topic_id,
                              post_timings.post_number,
@@ -654,25 +662,34 @@ class Post < ActiveRecord::Base
     result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
       .where(post_type: Post.types[:regular])
     result = result.where('topics.category_id = ?', category_id) if category_id
-    result.group('date(posts.created_at)').order('date(posts.created_at)').count
+    result
+      .group('date(posts.created_at)')
+      .order('date(posts.created_at)')
+      .count
   end
 
   def self.private_messages_count_per_day(start_date, end_date, topic_subtype)
-    private_posts.with_topic_subtype(topic_subtype).where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date).group('date(posts.created_at)').order('date(posts.created_at)').count
+    private_posts.with_topic_subtype(topic_subtype)
+      .where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+      .group('date(posts.created_at)')
+      .order('date(posts.created_at)')
+      .count
   end
 
   def reply_history(max_replies = 100, guardian = nil)
-    post_ids = Post.exec_sql("WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
-                              SELECT p.id, p.reply_to_post_number FROM posts AS p
-                                WHERE p.id = :post_id
-                              UNION
-                                 SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
-                                   WHERE breadcrumb.reply_to_post_number = p.post_number
-                                     AND p.topic_id = :topic_id
-                            ) SELECT id from breadcrumb ORDER by id", post_id: id, topic_id: topic_id).to_a
-
-    post_ids.map! { |r| r['id'].to_i }
-      .reject! { |post_id| post_id == id }
+    post_ids = DB.query_single(<<~SQL, post_id: id, topic_id: topic_id)
+    WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
+          SELECT p.id, p.reply_to_post_number FROM posts AS p
+            WHERE p.id = :post_id
+          UNION
+             SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
+               WHERE breadcrumb.reply_to_post_number = p.post_number
+                 AND p.topic_id = :topic_id
+        )
+    SELECT id from breadcrumb
+    WHERE id <> :post_id
+    ORDER by id
+    SQL
 
     # [1,2,3][-10,-1] => nil
     post_ids = (post_ids[(0 - max_replies)..-1] || post_ids)
@@ -683,7 +700,7 @@ class Post < ActiveRecord::Base
   MAX_REPLY_LEVEL ||= 1000
 
   def reply_ids(guardian = nil, only_replies_to_single_post: true)
-    builder = SqlBuilder.new(<<~SQL, Post)
+    builder = DB.build(<<~SQL)
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
@@ -714,8 +731,8 @@ class Post < ActiveRecord::Base
     # for example it skips a post when it contains 2 quotes (which are replies) from different posts
     builder.where("count = 1") if only_replies_to_single_post
 
-    replies = builder.exec(post_id: id, max_reply_level: MAX_REPLY_LEVEL).to_a
-    replies.map! { |r| { id: r["id"].to_i, level: r["level"].to_i } }
+    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL)
+    replies.each { |r| r.symbolize_keys! }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
 
@@ -734,11 +751,11 @@ class Post < ActiveRecord::Base
   def self.rebake_all_quoted_posts(user_id)
     return if user_id.blank?
 
-    Post.exec_sql <<-SQL
+    DB.exec(<<~SQL, user_id)
       WITH user_quoted_posts AS (
         SELECT post_id
           FROM quoted_posts
-         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = #{user_id})
+         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = ?)
       )
       UPDATE posts
          SET baked_version = NULL

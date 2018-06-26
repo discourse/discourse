@@ -67,7 +67,7 @@ class TopicViewSerializer < ApplicationSerializer
              :message_bus_last_id,
              :participant_count,
              :destination_category_id,
-             :pm_with_non_human_user,
+             :pm_with_non_human_user
 
   # TODO: Split off into proper object / serializer
   def details
@@ -301,8 +301,8 @@ class TopicViewSerializer < ApplicationSerializer
 
   private
 
-    def private_message?(topic)
-      @private_message ||= topic.private_message?
-    end
+  def private_message?(topic)
+    @private_message ||= topic.private_message?
+  end
 
 end

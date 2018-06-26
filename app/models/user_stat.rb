@@ -23,34 +23,36 @@ class UserStat < ActiveRecord::Base
     #  we also ensure we only touch the table if data changes
 
     # Update denormalized topics_entered
-    exec_sql "UPDATE user_stats SET topics_entered = X.c
-             FROM
-            (SELECT v.user_id, COUNT(topic_id) AS c
-             FROM topic_views AS v
-             WHERE v.user_id IN (
-                SELECT u1.id FROM users u1 where u1.last_seen_at > :seen_at
-             )
-             GROUP BY v.user_id) AS X
-            WHERE
-                    X.user_id = user_stats.user_id AND
-                    X.c <> topics_entered
-    ", seen_at: last_seen
+    DB.exec(<<~SQL, seen_at: last_seen)
+      UPDATE user_stats SET topics_entered = X.c
+       FROM
+      (SELECT v.user_id, COUNT(topic_id) AS c
+       FROM topic_views AS v
+       WHERE v.user_id IN (
+          SELECT u1.id FROM users u1 where u1.last_seen_at > :seen_at
+       )
+       GROUP BY v.user_id) AS X
+      WHERE
+        X.user_id = user_stats.user_id AND
+        X.c <> topics_entered
+    SQL
 
     # Update denormalzied posts_read_count
-    exec_sql "UPDATE user_stats SET posts_read_count = X.c
-              FROM
-              (SELECT pt.user_id,
-                      COUNT(*) AS c
-               FROM users AS u
-               JOIN post_timings AS pt ON pt.user_id = u.id
-               JOIN topics t ON t.id = pt.topic_id
-               WHERE u.last_seen_at > :seen_at AND
-                     t.archetype = 'regular' AND
-                     t.deleted_at IS NULL
-               GROUP BY pt.user_id) AS X
-               WHERE X.user_id = user_stats.user_id AND
-                     X.c <> posts_read_count
-    ", seen_at: last_seen
+    DB.exec(<<~SQL, seen_at: last_seen)
+      UPDATE user_stats SET posts_read_count = X.c
+      FROM
+      (SELECT pt.user_id,
+              COUNT(*) AS c
+       FROM users AS u
+       JOIN post_timings AS pt ON pt.user_id = u.id
+       JOIN topics t ON t.id = pt.topic_id
+       WHERE u.last_seen_at > :seen_at AND
+             t.archetype = 'regular' AND
+             t.deleted_at IS NULL
+       GROUP BY pt.user_id) AS X
+       WHERE X.user_id = user_stats.user_id AND
+             X.c <> posts_read_count
+    SQL
   end
 
   # topic_reply_count is a count of posts in other users' topics

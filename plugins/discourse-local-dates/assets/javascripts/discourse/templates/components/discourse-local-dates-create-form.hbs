@@ -6,21 +6,47 @@
 
   <div class="form">
     <div class="date-time-configuration">
-      <div class="control-group date">
-        <label class="control-label">
-          {{i18n "discourse_local_dates.create.form.date_title"}}
-        </label>
-        <div class="controls">
-          {{date-picker-future class="date-input" value=date defaultDate="DD-MM-YYYY"}}
-        </div>
-      </div>
+      <div class="range">
+        <div class="from">
+          <div class="control-group date">
+            <label class="control-label">
+              {{i18n "discourse_local_dates.create.form.date_title"}}
+            </label>
+            <div class="controls">
+              {{date-picker class="date-input" value=date defaultDate="DD-MM-YYYY"}}
+            </div>
+          </div>
 
-      <div class="control-group time">
-        <label class="control-label">
-          {{i18n "discourse_local_dates.create.form.time_title"}}
-        </label>
-        <div class="controls">
-          {{input type="time" value=time class="time-input"}}
+          <div class="control-group time">
+            <label class="control-label">
+              {{i18n "discourse_local_dates.create.form.time_title"}}
+            </label>
+            <div class="controls">
+              {{input type="time" value=time class="time-input"}}
+            </div>
+          </div>
+        </div>
+
+        <span class="to-indicator"><span>to</span></span>
+
+        <div class="to">
+          <div class="control-group date">
+            <label class="control-label">
+              {{i18n "discourse_local_dates.create.form.date_title"}}
+            </label>
+            <div class="controls">
+              {{date-picker class="date-input" value=toDate defaultDate="DD-MM-YYYY"}}
+            </div>
+          </div>
+
+          <div class="control-group time">
+            <label class="control-label">
+              {{i18n "discourse_local_dates.create.form.time_title"}}
+            </label>
+            <div class="controls">
+              {{input type="time" value=toTime class="time-input"}}
+            </div>
+          </div>
         </div>
       </div>
 

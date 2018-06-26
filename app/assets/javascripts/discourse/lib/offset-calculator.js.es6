@@ -28,7 +28,8 @@ export default function offsetCalculator() {
 
   if (visibleBottomHeight > 0) {
     const bottomHeight = documentHeight - topicBottomOffsetTop;
-    const offset = (windowHeight - bottomHeight) * visibleBottomHeight / bottomHeight;
+    const offset =
+      ((windowHeight - bottomHeight) * visibleBottomHeight) / bottomHeight;
     return Math.max(min, offset);
   }
 

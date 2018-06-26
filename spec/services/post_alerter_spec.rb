@@ -36,13 +36,14 @@ describe PostAlerter do
   context "private message" do
     it "notifies for pms correctly" do
       pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user_id: pm.user_id)
+      op = Fabricate(:post, user: pm.user)
       pm.allowed_users << pm.user
       PostAlerter.post_created(op)
-      reply = Fabricate(:post, user_id: pm.user_id, topic_id: pm.id, reply_to_post_number: 1)
+
+      reply = Fabricate(:post, user: pm.user, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply)
 
-      reply2 = Fabricate(:post, topic_id: pm.id, reply_to_post_number: 1)
+      reply2 = Fabricate(:post, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply2)
 
       # we get a green notification for a reply
@@ -52,7 +53,7 @@ describe PostAlerter do
 
       Notification.destroy_all
 
-      reply3 = Fabricate(:post, topic_id: pm.id)
+      reply3 = Fabricate(:post, topic: pm)
       PostAlerter.post_created(reply3)
 
       # no notification cause we are tracking
@@ -60,7 +61,7 @@ describe PostAlerter do
 
       Notification.destroy_all
 
-      reply4 = Fabricate(:post, topic_id: pm.id, reply_to_post_number: 1)
+      reply4 = Fabricate(:post, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply4)
 
       # yes notification cause we were replied to
@@ -70,7 +71,7 @@ describe PostAlerter do
 
     it "triggers :before_create_notifications_for_users" do
       pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user_id: pm.user_id, topic: pm)
+      op = Fabricate(:post, user: pm.user, topic: pm)
       user1 = Fabricate(:user)
       user2 = Fabricate(:user)
       group = Fabricate(:group, users: [user2])

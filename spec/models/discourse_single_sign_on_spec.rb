@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe DiscourseSingleSignOn do
   before do
-    @sso_url = "http://somesite.com/discourse_sso"
+    @sso_url = "http://example.com/discourse_sso"
     @sso_secret = "shjkfdhsfkjh"
 
     SiteSetting.sso_url = @sso_url
@@ -30,6 +30,7 @@ describe DiscourseSingleSignOn do
     sso.title = "user title"
     sso.custom_fields["a"] = "Aa"
     sso.custom_fields["b.b"] = "B.b"
+    sso.website = "https://www.discourse.org/"
     sso
   end
 
@@ -49,6 +50,7 @@ describe DiscourseSingleSignOn do
     expect(parsed.title).to eq sso.title
     expect(parsed.custom_fields["a"]).to eq "Aa"
     expect(parsed.custom_fields["b.b"]).to eq "B.b"
+    expect(parsed.website).to eq sso.website
   end
 
   it "can do round trip parsing correctly" do

@@ -4,11 +4,11 @@ describe DestroyTask do
 
   describe 'destroy topics' do
     let!(:c) { Fabricate(:category) }
-    let!(:t) { Fabricate(:topic, category_id: c.id) }
-    let!(:p) { Fabricate(:post, topic_id: t.id) }
+    let!(:t) { Fabricate(:topic, category: c) }
+    let!(:p) { Fabricate(:post, topic: t) }
     let!(:c2) { Fabricate(:category) }
-    let!(:t2) { Fabricate(:topic, category_id: c2.id) }
-    let!(:p2) { Fabricate(:post, topic_id: t2.id) }
+    let!(:t2) { Fabricate(:topic, category: c2) }
+    let!(:p2) { Fabricate(:post, topic: t2) }
 
     it 'destroys all topics in a category' do
       before_count = Topic.where(category_id: c.id).count

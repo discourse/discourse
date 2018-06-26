@@ -1,10 +1,9 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.TextField.extend({
+  classNameBindings: ["invalid"],
 
-  classNameBindings: ['invalid'],
-
-  @computed('number')
+  @computed("number")
   value: {
     get(number) {
       return parseInt(number);
@@ -12,11 +11,11 @@ export default Ember.TextField.extend({
     set(value) {
       const num = parseInt(value);
       if (isNaN(num)) {
-        this.set('invalid', true);
+        this.set("invalid", true);
         return value;
       } else {
-        this.set('invalid', false);
-        this.set('number', num);
+        this.set("invalid", false);
+        this.set("number", num);
         return num.toString();
       }
     }

@@ -41,7 +41,11 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     const params = this._params;
-    controller.setProperties({ model, period: params.period, nameInput: params.name });
+    controller.setProperties({
+      model,
+      period: params.period,
+      nameInput: params.name
+    });
   },
 
   actions: {

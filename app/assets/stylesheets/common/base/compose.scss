@@ -11,13 +11,14 @@
   max-width: 1475px;
   width: 100%;
   &.hide-preview {
-    max-width:740px;
+    max-width: 740px;
   }
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
-  z-index: z("composer","content");
-  transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
+  z-index: z("composer", "content");
+  transition: height 250ms ease, background 250ms ease, transform 250ms ease,
+    max-width 250ms ease;
   background-color: $secondary;
   box-shadow: shadow("composer");
 
@@ -78,7 +79,8 @@
     .draft-text {
       display: block;
     }
-    .grippie, .saving-text {
+    .grippie,
+    .saving-text {
       display: none;
     }
   }
@@ -116,7 +118,9 @@
         text-overflow: ellipsis;
       }
 
-      .topic-link, .user-link, .post-link {
+      .topic-link,
+      .user-link,
+      .post-link {
         margin-right: 5px;
       }
 
@@ -151,6 +155,10 @@
   .whisper,
   .display-edit-reason {
     font-style: italic;
+  }
+
+  .display-edit-reason {
+    display: inline;
   }
 
   #edit-reason {
@@ -230,7 +238,7 @@
     flex: 1 1 25%;
     margin: 0 0 5px 0;
     background: $secondary;
-    z-index: z("composer","dropdown");
+    z-index: z("composer", "dropdown");
     @media all and (max-width: 900px) {
       margin: 0;
       flex: 1 1 100%;
@@ -238,9 +246,9 @@
   }
 
   .popup-tip {
-    z-index: z("composer","dropdown");
+    z-index: z("composer", "dropdown");
   }
-    
+
   .wmd-controls {
     position: relative;
     display: flex;
@@ -305,7 +313,8 @@
     }
   }
 
-  #draft-status, #file-uploading {
+  #draft-status,
+  #file-uploading {
     color: $primary-high;
   }
 }
@@ -315,7 +324,7 @@
 }
 
 .autocomplete {
-  z-index: z("composer","dropdown") + 1;
+  z-index: z("composer", "dropdown") + 1;
   position: absolute;
   width: 240px;
   background-color: $secondary;
@@ -361,14 +370,15 @@
 
 div.ac-wrap.disabled {
   input {
-    display:none;
+    display: none;
   }
   .item a {
-    display:none;
+    display: none;
   }
 }
 
-div.ac-wrap div.item a.remove, .remove-link {
+div.ac-wrap div.item a.remove,
+.remove-link {
   margin-left: 4px;
   font-size: $font-down-1;
   line-height: $line-height-small;

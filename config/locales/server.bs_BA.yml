@@ -24,16 +24,43 @@ bs_BA:
     am: "am"
     pm: "pm"
   title: "Discourse"
-  topics: "Topics"
-  posts: "posts"
-  loading: "Loading"
-  log_in: "Log In"
+  topics: "Teme"
+  posts: "objave"
+  loading: "Učitava"
+  powered_by_html: 'Pokretano sa <a href="https://www.discourse.org">Discourse</a>, za najbolje sučelje uključiti JavaScript'
+  log_in: "Uloguj se"
+  submit: "Potvrdi"
   purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
-  disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
+  disable_remote_images_download_reason: "Remote images skidanje je obustavljeno zbog nedostatka disk prostora na vašem uređaju."
   anonymous: "Anoniman"
+  remove_posts_deleted_by_author: "Izbrisan od strane autora"
+  redirect_warning: "Nismo bili u stanju da verifikujemo da je link koji ste označili zapravo bio objavljen na forumu. Ukoliko u svakom slučaju želite da nastavite dalje, označite link ispod."
+  themes:
+    bad_color_scheme: "Ne mogu ažuriratiizgled temu, šema boja nije ispravna."
+    other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
+    error_importing: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
+    settings_errors:
+      invalid_yaml: "Korišteni YAML fajl nije validan."
+      data_type_not_a_number: "Postavka tipa `%{name}` nije podržana. Podržani tipovi su `integer`, `bool`, `list` i `enum`"
+      name_too_long: "Postoji postavka sa predugim imenom. Maksimalna dužina je 255"
+      default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost"
+      default_not_match_type: "Postavka `%{name}` default uobičajena vrijednosti se ne podudara sa tipom postavke."
+      default_out_range: "Postavka `%{name}` default uobičajena vrijednost nije u specificiranim granicama (range)."
+      enum_value_not_valid: "Označena vrijednost nije jedna od enum izbora"
+      number_value_not_valid: "Nova vrijednost nije unutar dozvoljenih granica (range)."
+      number_value_not_valid_min_max: "Mora biti izmeđi %{min} i %{max}."
+      number_value_not_valid_min: "Mora biti veće ili jednako %{min}."
+      number_value_not_valid_max: "Mora biti manje ili jednako %{max}."
+      string_value_not_valid: "Nova vrijednost za dužinu nije u okviru dozvoljenih granica (range)."
+      string_value_not_valid_min_max: "Mora biti između %{min} i %{max} karakter dugo."
+      string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
+      string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
   emails:
     incoming:
+      default_subject: "Ova tema treba naslov"
       show_trimmed_content: "Prikaži skraćeni sadržaj"
+      no_subject: "(nema naslova)"
+      no_body: "(nema teksta)"
   errors: &errors
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
@@ -179,18 +206,18 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      few: Par sati
-      one: 1 sat
-      other: '%{count} sati'
+      one: "1 sat"
+      few: "Par sati"
+      other: "%{count} sati"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
       about_x_hours:
-        few: Pred par sati
-        one: Pred 1 sat
-        other: Pred %{count} sata
+        one: "Pred 1 sat"
+        few: "Pred par sati"
+        other: "Pred %{count} sata"
   password_reset:
     update: 'Obnovi Šifru'
     save: 'Namjesti Šifru'
@@ -521,7 +548,6 @@ bs_BA:
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    disable_emails: "Prevent Discourse from sending any kind of emails"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
     pop3_polling_enabled: "Poll via POP3 for email replies."

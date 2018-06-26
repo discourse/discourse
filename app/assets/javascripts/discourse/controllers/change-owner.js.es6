@@ -8,8 +8,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
   saving: false,
   new_user: null,
 
-  selectedPostsCount: Ember.computed.alias("topicController.selectedPostsCount"),
-  selectedPostsUsername: Ember.computed.alias("topicController.selectedPostsUsername"),
+  selectedPostsCount: Ember.computed.alias(
+    "topicController.selectedPostsCount"
+  ),
+  selectedPostsUsername: Ember.computed.alias(
+    "topicController.selectedPostsUsername"
+  ),
 
   @computed("saving", "new_user")
   buttonDisabled(saving, newUser) {
@@ -34,20 +38,28 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       const options = {
         post_ids: this.get("topicController.selectedPostIds"),
-        username: this.get("new_user"),
+        username: this.get("new_user")
       };
 
-      Discourse.Topic.changeOwners(this.get("topicController.model.id"), options).then(() => {
-        this.send("closeModal");
-        this.get("topicController").send("deselectAll");
-        if (this.get("topicController.multiSelect")) {
-          this.get("topicController").send("toggleMultiSelect");
+      Discourse.Topic.changeOwners(
+        this.get("topicController.model.id"),
+        options
+      ).then(
+        () => {
+          this.send("closeModal");
+          this.get("topicController").send("deselectAll");
+          if (this.get("topicController.multiSelect")) {
+            this.get("topicController").send("toggleMultiSelect");
+          }
+          Ember.run.next(() =>
+            DiscourseURL.routeTo(this.get("topicController.model.url"))
+          );
+        },
+        () => {
+          this.flash(I18n.t("topic.change_owner.error"), "alert-error");
+          this.set("saving", false);
         }
-        Ember.run.next(() => DiscourseURL.routeTo(this.get("topicController.model.url")));
-      }, () => {
-        this.flash(I18n.t("topic.change_owner.error"), "alert-error");
-        this.set("saving", false);
-      });
+      );
 
       return false;
     }

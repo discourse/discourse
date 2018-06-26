@@ -1,5 +1,5 @@
 export default Discourse.Route.extend({
   model() {
-    return this.store.findAll('flagged-post', { filter: 'active' });
+    return this.store.findAll("flagged-post", { filter: "active" });
   }
 });

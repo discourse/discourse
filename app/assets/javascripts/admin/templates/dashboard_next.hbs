@@ -1,14 +1,14 @@
 {{plugin-outlet name="admin-dashboard-top"}}
 
-<div class="section-top">
-  {{#if showVersionChecks}}
-  <div class="version-checks">
+{{#if showVersionChecks}}
+  <div class="section-top">
+    <div class="version-checks">
       {{partial 'admin/templates/version-checks'}}
-      {{partial 'admin/templates/dashboard-problems'}}
+    </div>
   </div>
-  {{/if}}
-  <div class='clearfix'></div>
-</div>
+{{/if}}
+
+{{partial 'admin/templates/dashboard-problems'}}
 
 <div class="community-health section">
   <div class="section-title">
@@ -79,6 +79,10 @@
         </div>
       {{/conditional-loading-section}}
     </div>
+    {{#link-to "adminReports"}}
+      {{i18n "admin.dashboard.all_reports"}}
+    {{/link-to}}
+
     <div class="user-metrics">
     {{dashboard-inline-table dataSourceNames="users_by_type" lastRefreshedAt=lastRefreshedAt}}
 
@@ -86,27 +90,29 @@
     </div>
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
-        <div class="durability">
-          {{#if currentUser.admin}}
-            <div class="backups">
-              <h3 class="durability-title">
-                <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
-              </h3>
+        {{#if shouldDisplayDurability}}
+          <div class="durability">
+            {{#if currentUser.admin}}
+              <div class="backups">
+                <h3 class="durability-title">
+                  <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
+                </h3>
+                <p>
+                  {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
+                  <br />
+                  {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                </p>
+              </div>
+            {{/if}}
+
+            <div class="uploads">
+              <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
               <p>
-                {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
-                <br />
-                {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
               </p>
             </div>
-          {{/if}}
-
-          <div class="uploads">
-            <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
-            <p>
-              {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
-            </p>
           </div>
-        </div>
+        {{/if}}
 
         <div class="last-dashboard-update">
           <div>

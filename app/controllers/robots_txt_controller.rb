@@ -14,6 +14,7 @@ class RobotsTxtController < ApplicationController
     /assets/browser-update*.js
     /users/
     /u/
+    /my/
     /badges/
     /search
     /search/

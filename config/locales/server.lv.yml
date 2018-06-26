@@ -25,15 +25,15 @@ lv:
     start_discussion: "Sākt Diskusiju"
     continue: "Turpināt Diskusiju"
     more_replies:
-      one: vel 1 atbilde
-      other: vel %{count} atbildes
-      zero: vel %{count} atbildes
+      zero: "vel %{count} atbildes"
+      one: "vel 1 atbilde"
+      other: "vel %{count} atbildes"
     loading: "Diskusijas Ielādēšana..."
     in_reply_to: "▶ %{username}"
     replies:
-      one: 1 atbilde
-      other: '%{count} atbildes'
-      zero: '%{count} atbildes'
+      zero: "%{count} atbildes"
+      one: "1 atbilde"
+      other: "%{count} atbildes"
   next_page: "nākošo lapu →"
   prev_page: "← iepriekšējo lapu"
   page_num: "Lapa %{num}"
@@ -56,9 +56,9 @@ lv:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      one: 1 raksts
-      other: '%{count} raksti'
-      zero: '%{count} raksti'
+      zero: "%{count} raksti"
+      one: "1 raksts"
+      other: "%{count} raksti"
   activerecord:
     attributes:
       user_profile:

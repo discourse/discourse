@@ -47,16 +47,16 @@ module ImportScripts::PhpBB3
 
     def get_avatar_path(avatar_type, filename)
       case avatar_type
-      when Constants::AVATAR_TYPE_UPLOADED then
+      when Constants::AVATAR_TYPE_UPLOADED, Constants::AVATAR_TYPE_STRING_UPLOADED then
         filename.gsub!(/_[0-9]+\./, '.') # we need 1337.jpg, not 1337_2983745.jpg
           get_uploaded_path(filename)
-      when Constants::AVATAR_TYPE_GALLERY then
+      when Constants::AVATAR_TYPE_GALLERY, Constants::AVATAR_TYPE_STRING_GALLERY then
         get_gallery_path(filename)
-      when Constants::AVATAR_TYPE_REMOTE then
+      when Constants::AVATAR_TYPE_REMOTE, Constants::AVATAR_TYPE_STRING_REMOTE then
         download_avatar(filename)
-        else
-        Rails.logger.error("Invalid avatar type #{avatar_type}. Skipping...")
-          nil
+      else
+        puts "Invalid avatar type #{avatar_type}. Skipping..."
+        nil
       end
     end
 
@@ -97,13 +97,13 @@ module ImportScripts::PhpBB3
 
     def is_allowed_avatar_type?(avatar_type)
       case avatar_type
-      when Constants::AVATAR_TYPE_UPLOADED then
+      when Constants::AVATAR_TYPE_UPLOADED, Constants::AVATAR_TYPE_STRING_UPLOADED then
         @settings.import_uploaded_avatars
-      when Constants::AVATAR_TYPE_REMOTE then
+      when Constants::AVATAR_TYPE_REMOTE, Constants::AVATAR_TYPE_STRING_REMOTE then
         @settings.import_remote_avatars
-      when Constants::AVATAR_TYPE_GALLERY then
+      when Constants::AVATAR_TYPE_GALLERY, Constants::AVATAR_TYPE_STRING_GALLERY then
         @settings.import_gallery_avatars
-        else
+      else
         false
       end
     end

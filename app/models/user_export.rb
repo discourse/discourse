@@ -1,12 +1,13 @@
 class UserExport < ActiveRecord::Base
+  belongs_to :user
 
   def self.remove_old_exports
-    UserExport.where('created_at < ?', 2.days.ago).find_each do |expired_export|
-      file_name = "#{expired_export.file_name}-#{expired_export.id}.csv.gz"
+    UserExport.where('created_at < ?', 2.days.ago).find_each do |user_export|
+      file_name = "#{user_export.file_name}-#{user_export.id}.csv.gz"
       file_path = "#{UserExport.base_directory}/#{file_name}"
 
       File.delete(file_path) if File.exist?(file_path)
-      expired_export.destroy
+      user_export.destroy!
     end
   end
 

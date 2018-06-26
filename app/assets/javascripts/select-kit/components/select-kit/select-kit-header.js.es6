@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     "ariaHasPopup:aria-haspopup",
     "sanitizedTitle:title",
     "value:data-value",
-    "name:data-name",
+    "name:data-name"
   ],
 
   isNone: Ember.computed.none("computedContent.value"),
@@ -43,7 +43,9 @@ export default Ember.Component.extend({
 
   @computed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {
-    return makeArray(icon).concat(icons).filter(i => !isEmpty(i));
+    return makeArray(icon)
+      .concat(icons)
+      .filter(i => !isEmpty(i));
   },
 
   click() {

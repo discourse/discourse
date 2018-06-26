@@ -566,7 +566,7 @@ class PostRevisor
   end
 
   def update_topic_word_counts
-    Topic.exec_sql("UPDATE topics
+    DB.exec("UPDATE topics
                     SET word_count = (
                       SELECT SUM(COALESCE(posts.word_count, 0))
                       FROM posts

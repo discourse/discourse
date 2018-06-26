@@ -676,7 +676,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   printf "%-25s | %-25s | %-25s | %-25s\n", 'username', 'total size of uploads', 'number of uploads', 'number of optimized images'
   puts "-" * 110
 
-  User.exec_sql(sql).values.each do |username, num_of_uploads, total_size_of_uploads, num_of_optimized_images|
+  DB.query_single(sql).each do |username, num_of_uploads, total_size_of_uploads, num_of_optimized_images|
     printf "%-25s | %-25s | %-25s | %-25s\n", username, helper.number_to_human_size(total_size_of_uploads), num_of_uploads, num_of_optimized_images
   end
 

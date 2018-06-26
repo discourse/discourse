@@ -77,6 +77,7 @@ describe Jobs do
 
     it 'deletes the matching job' do
       Sidekiq::Testing.disable! do
+        scheduled_jobs.clear
         expect(scheduled_jobs.size).to eq(0)
 
         Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 123)

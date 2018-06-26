@@ -17,8 +17,8 @@ describe TopicQuery do
       category.set_permissions(group => :full)
       category.save
 
-      topic = Fabricate(:topic, category: category)
-      topic = Fabricate(:topic, visible: false)
+      Fabricate(:topic, category: category)
+      Fabricate(:topic, visible: false)
 
       expect(TopicQuery.new(nil).list_latest.topics.count).to eq(0)
       expect(TopicQuery.new(user).list_latest.topics.count).to eq(0)
@@ -98,7 +98,7 @@ describe TopicQuery do
   context 'bookmarks' do
     it "filters and returns bookmarks correctly" do
       post = Fabricate(:post)
-      reply = Fabricate(:post, topic_id: post.topic_id)
+      reply = Fabricate(:post, topic: post.topic)
 
       post2 = Fabricate(:post)
 

@@ -19,9 +19,9 @@ class UnsubscribeKey < ActiveRecord::Base
 
   private
 
-    def generate_random_key
-      self.key = SecureRandom.hex(32)
-    end
+  def generate_random_key
+    self.key = SecureRandom.hex(32)
+  end
 end
 
 # == Schema Information

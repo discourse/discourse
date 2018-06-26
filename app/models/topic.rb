@@ -278,7 +278,7 @@ class Topic < ActiveRecord::Base
 
   def ensure_topic_has_a_category
     if category_id.nil? && (archetype.nil? || self.regular?)
-      self.category_id = SiteSetting.uncategorized_category_id
+      self.category_id = category&.id || SiteSetting.uncategorized_category_id
     end
   end
 
@@ -352,7 +352,7 @@ class Topic < ActiveRecord::Base
       if !new_record? && !Discourse.readonly_mode?
         # make sure data is set in table, this also allows us to change algorithm
         # by simply nulling this column
-        exec_sql("UPDATE topics SET fancy_title = :fancy_title where id = :id", id: self.id, fancy_title: fancy_title)
+        DB.exec("UPDATE topics SET fancy_title = :fancy_title where id = :id", id: self.id, fancy_title: fancy_title)
       end
     end
 
@@ -522,130 +522,140 @@ class Topic < ActiveRecord::Base
 
   # Atomically creates the next post number
   def self.next_post_number(topic_id, reply = false, whisper = false)
-    highest = exec_sql("SELECT coalesce(max(post_number),0) AS max FROM posts WHERE topic_id = ?", topic_id).first['max'].to_i
+    highest = DB.query_single("SELECT coalesce(max(post_number),0) AS max FROM posts WHERE topic_id = ?", topic_id).first.to_i
 
     if whisper
 
-      result = exec_sql("UPDATE topics
-                          SET highest_staff_post_number = ? + 1
-                          WHERE id = ?
-                          RETURNING highest_staff_post_number", highest, topic_id)
+      result = DB.query_single(<<~SQL, highest, topic_id)
+        UPDATE topics
+        SET highest_staff_post_number = ? + 1
+        WHERE id = ?
+        RETURNING highest_staff_post_number
+      SQL
 
-      result.first['highest_staff_post_number'].to_i
+      result.first.to_i
 
     else
 
       reply_sql = reply ? ", reply_count = reply_count + 1" : ""
 
-      result = exec_sql("UPDATE topics
-                          SET highest_staff_post_number = :highest + 1,
-                              highest_post_number = :highest + 1#{reply_sql},
-                              posts_count = posts_count + 1
-                          WHERE id = :topic_id
-                          RETURNING highest_post_number", highest: highest, topic_id: topic_id)
+      result = DB.query_single(<<~SQL, highest: highest, topic_id: topic_id)
+        UPDATE topics
+        SET highest_staff_post_number = :highest + 1,
+            highest_post_number = :highest + 1#{reply_sql},
+            posts_count = posts_count + 1
+        WHERE id = :topic_id
+        RETURNING highest_post_number
+      SQL
 
-      result.first['highest_post_number'].to_i
+      result.first.to_i
     end
   end
 
   def self.reset_all_highest!
-    exec_sql <<SQL
-WITH
-X as (
-  SELECT topic_id,
-         COALESCE(MAX(post_number), 0) highest_post_number
-  FROM posts
-  WHERE deleted_at IS NULL
-  GROUP BY topic_id
-),
-Y as (
-  SELECT topic_id,
-         coalesce(MAX(post_number), 0) highest_post_number,
-         count(*) posts_count,
-         max(created_at) last_posted_at
-  FROM posts
-  WHERE deleted_at IS NULL AND post_type <> 4
-  GROUP BY topic_id
-)
-UPDATE topics
-SET
-  highest_staff_post_number = X.highest_post_number,
-  highest_post_number = Y.highest_post_number,
-  last_posted_at = Y.last_posted_at,
-  posts_count = Y.posts_count
-FROM X, Y
-WHERE
-  X.topic_id = topics.id AND
-  Y.topic_id = topics.id AND (
-    topics.highest_staff_post_number <> X.highest_post_number OR
-    topics.highest_post_number <> Y.highest_post_number OR
-    topics.last_posted_at <> Y.last_posted_at OR
-    topics.posts_count <> Y.posts_count
-  )
-SQL
+    DB.exec <<~SQL
+      WITH
+      X as (
+        SELECT topic_id,
+               COALESCE(MAX(post_number), 0) highest_post_number
+        FROM posts
+        WHERE deleted_at IS NULL
+        GROUP BY topic_id
+      ),
+      Y as (
+        SELECT topic_id,
+               coalesce(MAX(post_number), 0) highest_post_number,
+               count(*) posts_count,
+               max(created_at) last_posted_at
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 4
+        GROUP BY topic_id
+      )
+      UPDATE topics
+      SET
+        highest_staff_post_number = X.highest_post_number,
+        highest_post_number = Y.highest_post_number,
+        last_posted_at = Y.last_posted_at,
+        posts_count = Y.posts_count
+      FROM X, Y
+      WHERE
+        X.topic_id = topics.id AND
+        Y.topic_id = topics.id AND (
+          topics.highest_staff_post_number <> X.highest_post_number OR
+          topics.highest_post_number <> Y.highest_post_number OR
+          topics.last_posted_at <> Y.last_posted_at OR
+          topics.posts_count <> Y.posts_count
+        )
+    SQL
   end
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
-    result = exec_sql "UPDATE topics
-                        SET
-                        highest_staff_post_number = (
-                            SELECT COALESCE(MAX(post_number), 0) FROM posts
-                            WHERE topic_id = :topic_id AND
-                                  deleted_at IS NULL
-                          ),
-                        highest_post_number = (
-                            SELECT COALESCE(MAX(post_number), 0) FROM posts
-                            WHERE topic_id = :topic_id AND
-                                  deleted_at IS NULL AND
-                                  post_type <> 4
-                          ),
-                          posts_count = (
-                            SELECT count(*) FROM posts
-                            WHERE deleted_at IS NULL AND
-                                  topic_id = :topic_id AND
-                                  post_type <> 4
-                          ),
+    result = DB.query_single(<<~SQL, topic_id: topic_id)
+      UPDATE topics
+      SET
+      highest_staff_post_number = (
+          SELECT COALESCE(MAX(post_number), 0) FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL
+        ),
+      highest_post_number = (
+          SELECT COALESCE(MAX(post_number), 0) FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
+                post_type <> 4
+        ),
+        posts_count = (
+          SELECT count(*) FROM posts
+          WHERE deleted_at IS NULL AND
+                topic_id = :topic_id AND
+                post_type <> 4
+        ),
 
-                          last_posted_at = (
-                            SELECT MAX(created_at) FROM posts
-                            WHERE topic_id = :topic_id AND
-                                  deleted_at IS NULL AND
-                                  post_type <> 4
-                          )
-                        WHERE id = :topic_id
-                        RETURNING highest_post_number", topic_id: topic_id
+        last_posted_at = (
+          SELECT MAX(created_at) FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
+                post_type <> 4
+        )
+      WHERE id = :topic_id
+      RETURNING highest_post_number
+    SQL
 
-    highest_post_number = result.first['highest_post_number'].to_i
+    highest_post_number = result.first.to_i
 
     # Update the forum topic user records
-    exec_sql "UPDATE topic_users
-              SET last_read_post_number = CASE
-                                          WHEN last_read_post_number > :highest THEN :highest
-                                          ELSE last_read_post_number
-                                          END,
-                  highest_seen_post_number = CASE
-                                    WHEN highest_seen_post_number > :highest THEN :highest
-                                    ELSE highest_seen_post_number
-                                    END
-              WHERE topic_id = :topic_id",
-              highest: highest_post_number,
-              topic_id: topic_id
+    DB.exec(<<~SQL, highest: highest_post_number, topic_id: topic_id)
+      UPDATE topic_users
+      SET last_read_post_number = CASE
+                                  WHEN last_read_post_number > :highest THEN :highest
+                                  ELSE last_read_post_number
+                                  END,
+          highest_seen_post_number = CASE
+                            WHEN highest_seen_post_number > :highest THEN :highest
+                            ELSE highest_seen_post_number
+                            END
+      WHERE topic_id = :topic_id
+    SQL
   end
 
   # This calculates the geometric mean of the posts and stores it with the topic
   def self.calculate_avg_time(min_topic_age = nil)
-    builder = SqlBuilder.new("UPDATE topics
-              SET avg_time = x.gmean
-              FROM (SELECT topic_id,
-                           round(exp(avg(ln(avg_time)))) AS gmean
-                    FROM posts
-                    WHERE avg_time > 0 AND avg_time IS NOT NULL
-                    GROUP BY topic_id) AS x
-              /*where*/")
+    builder = DB.build <<~SQL
+      UPDATE topics
+      SET avg_time = x.gmean
+      FROM (SELECT topic_id,
+                   round(exp(avg(ln(avg_time)))) AS gmean
+            FROM posts
+            WHERE avg_time > 0 AND avg_time IS NOT NULL
+            GROUP BY topic_id) AS x
+      /*where*/
+    SQL
 
-    builder.where("x.topic_id = topics.id AND
-                  (topics.avg_time <> x.gmean OR topics.avg_time IS NULL)")
+    builder.where <<~SQL
+      x.topic_id = topics.id AND
+      (topics.avg_time <> x.gmean OR topics.avg_time IS NULL)
+    SQL
 
     if min_topic_age
       builder.where("topics.bumped_at > :bumped_at", bumped_at: min_topic_age)
@@ -655,7 +665,7 @@ SQL
   end
 
   def changed_to_category(new_category)
-    return true if new_category.blank? || Category.find_by(topic_id: id).present?
+    return true if new_category.blank? || Category.exists?(topic_id: id)
     return false if new_category.id == SiteSetting.uncategorized_category_id && !SiteSetting.allow_uncategorized_topics
 
     Topic.transaction do
@@ -1179,30 +1189,30 @@ SQL
     # OR if you have it archived as a user explicitly
 
     sql = <<~SQL
-    SELECT 1
-    WHERE
-      (
-      SELECT count(*) FROM topic_allowed_groups tg
-      JOIN group_archived_messages gm
-            ON gm.topic_id = tg.topic_id AND
-               gm.group_id = tg.group_id
-        WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
-          AND tg.topic_id = :topic_id
-      ) =
-      (
-        SELECT case when count(*) = 0 then -1 else count(*) end FROM topic_allowed_groups tg
-        WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
-          AND tg.topic_id = :topic_id
-      )
+      SELECT 1
+      WHERE
+        (
+        SELECT count(*) FROM topic_allowed_groups tg
+        JOIN group_archived_messages gm
+              ON gm.topic_id = tg.topic_id AND
+                 gm.group_id = tg.group_id
+          WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
+            AND tg.topic_id = :topic_id
+        ) =
+        (
+          SELECT case when count(*) = 0 then -1 else count(*) end FROM topic_allowed_groups tg
+          WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
+            AND tg.topic_id = :topic_id
+        )
 
-      UNION ALL
+        UNION ALL
 
-      SELECT 1 FROM topic_allowed_users tu
-      JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
-      WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
-SQL
+        SELECT 1 FROM topic_allowed_users tu
+        JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
+        WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
+    SQL
 
-    User.exec_sql(sql, user_id: user.id, topic_id: id).to_a.length > 0
+    DB.exec(sql, user_id: user.id, topic_id: id) > 0
   end
 
   TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL
@@ -1231,7 +1241,7 @@ SQL
 
   def self.time_to_first_response(sql, opts = nil)
     opts ||= {}
-    builder = SqlBuilder.new(sql)
+    builder = DB.build(sql)
     builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
     builder.where("t.created_at < :end_date", end_date: opts[:end_date]) if opts[:end_date]
     builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
@@ -1243,7 +1253,7 @@ SQL
     builder.where("p.user_id in (:user_ids)", user_ids: opts[:user_ids]) if opts[:user_ids]
     builder.where("p.post_type = :post_type", post_type: Post.types[:regular])
     builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
-    builder.exec
+    builder.query_hash
   end
 
   def self.time_to_first_response_per_day(start_date, end_date, opts = {})
@@ -1270,13 +1280,13 @@ SQL
   SQL
 
   def self.with_no_response_per_day(start_date, end_date, category_id = nil)
-    builder = SqlBuilder.new(WITH_NO_RESPONSE_SQL)
+    builder = DB.build(WITH_NO_RESPONSE_SQL)
     builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
     builder.where("t.created_at < :end_date", end_date: end_date) if end_date
     builder.where("t.category_id = :category_id", category_id: category_id) if category_id
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
-    builder.exec
+    builder.query_hash
   end
 
   WITH_NO_RESPONSE_TOTAL_SQL ||= <<-SQL
@@ -1292,11 +1302,11 @@ SQL
   SQL
 
   def self.with_no_response_total(opts = {})
-    builder = SqlBuilder.new(WITH_NO_RESPONSE_TOTAL_SQL)
+    builder = DB.build(WITH_NO_RESPONSE_TOTAL_SQL)
     builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
-    builder.exec.first["count"].to_i
+    builder.query_single.first.to_i
   end
 
   def convert_to_public_topic(user)
@@ -1325,8 +1335,8 @@ SQL
     ) = 1
     SQL
 
-    result = Topic.exec_sql(sql, private_message: Archetype.private_message, topic_id: self.id)
-    result.ntuples != 0
+    result = DB.exec(sql, private_message: Archetype.private_message, topic_id: self.id)
+    result != 0
   end
 
   def featured_link_root_domain
@@ -1334,7 +1344,12 @@ SQL
   end
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
-    private_messages.with_subtype(topic_subtype).where('topics.created_at >= ? AND topics.created_at <= ?', start_date, end_date).group('date(topics.created_at)').order('date(topics.created_at)').count
+    private_messages
+      .with_subtype(topic_subtype)
+      .where('topics.created_at >= ? AND topics.created_at <= ?', start_date, end_date)
+      .group('date(topics.created_at)')
+      .order('date(topics.created_at)')
+      .count
   end
 
   def is_category_topic?

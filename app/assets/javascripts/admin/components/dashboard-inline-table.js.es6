@@ -9,11 +9,12 @@ export default Ember.Component.extend(AsyncReport, {
 
     let payload = this.buildPayload(["total", "prev30Days"]);
 
-    return Ember.RSVP.Promise.all(this.get("dataSources").map(dataSource => {
-      return ajax(dataSource, payload)
-        .then(response => {
+    return Ember.RSVP.Promise.all(
+      this.get("dataSources").map(dataSource => {
+        return ajax(dataSource, payload).then(response => {
           this.get("reports").pushObject(this.loadReport(response.report));
         });
-    }));
+      })
+    );
   }
 });

@@ -12,13 +12,13 @@ module Positionable
     position = [[position_arg, 0].max, self.class.count - 1].min
 
     if self.position.nil? || position > (self.position)
-      self.exec_sql "
+      DB.exec "
       UPDATE #{self.class.table_name}
       SET position = position - 1
       WHERE position > :current_position and position <= :new_position",
       current_position: self.position, new_position: position
     elsif position < self.position
-      self.exec_sql "
+      DB.exec "
       UPDATE #{self.class.table_name}
       SET position = position + 1
       WHERE position >= :new_position and position < :current_position",
@@ -28,7 +28,7 @@ module Positionable
       return
     end
 
-    self.exec_sql "
+    DB.exec "
     UPDATE #{self.class.table_name}
     SET position = :position
     WHERE id = :id", id: id, position: position

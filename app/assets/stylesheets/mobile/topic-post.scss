@@ -1,4 +1,5 @@
 /* hide the reply border above the time gap notices */
+
 .time-gap + .topic-post article {
   border-top: none;
 }
@@ -29,22 +30,19 @@ span.badge-posts {
 .topic-post {
   nav.post-controls {
     color: dark-light-choose($primary-low-mid, $secondary-high);
-
     .actions {
       display: flex;
     }
-
     .like-button {
       display: flex;
       flex: 0 1 auto;
       button {
         &.like {
-          flex: 1 1 auto;          
+          flex: 1 1 auto;
         }
         &.like-count {
           padding: 8px 4px 8px 8px;
           line-height: 1.2;
-
           &.regular-likes {
             margin-right: 0;
           }
@@ -65,11 +63,10 @@ span.badge-posts {
       }
       button.like-count + button.toggle-like {
         padding: 8px 9px 8px 4px;
-      }  
+      }
     }
-
     .d-icon {
-      opacity: 1.0;
+      opacity: 1;
     }
     button {
       border: none;
@@ -85,7 +82,7 @@ span.badge-posts {
         position: relative;
       }
       &.expand-post {
-        margin:10px 0 10px 0;
+        margin: 10px 0 10px 0;
       }
       &.reply {
         color: $primary-high;
@@ -98,43 +95,43 @@ span.badge-posts {
         color: $tertiary;
       }
     }
-
   }
 }
 
 .post-admin-menu {
+  display: inline-flex;
+  flex-direction: column;
+  box-sizing: border-box;
   background-color: $secondary;
-  width: 205px;
+  width: auto;
+  max-width: 320px;
   padding: 10px;
   border: 1px solid $primary-low;
   position: absolute;
   text-align: left;
-  bottom: 0;
+  bottom: -50px;
   left: 135px;
+  @media screen and (max-width: 374px) {
+    left: 50px;
+  }
   z-index: z("dropdown");
-
   h3 {
     margin-top: 0;
     color: $primary;
     font-size: $font-0;
   }
-
   ul {
     list-style: none;
     margin: 10px 0 0 0;
   }
-
   li {
-    width: 176px;
     margin-bottom: 5px;
-
     .d-icon {
       width: 14px;
-      margin-right: 14px;
+      margin-right: 10px;
     }
   }
 }
-
 
 .embedded-posts {
   .topic-meta-data h5 a {
@@ -158,10 +155,8 @@ span.badge-posts {
 
 a.reply-to-tab {
   z-index: z("base") + 1;
-  right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
-  margin: -3px 10px 0 0;
-  float: right;
+  margin-right: 0.5em;
 }
 
 .topic-post .boxed .contents {
@@ -170,22 +165,18 @@ a.reply-to-tab {
 
 .topic-map {
   margin: 10px 0;
-
   h4 {
     line-height: $line-height-medium;
   }
-
   .user {
     float: left;
     margin-right: 10px;
   }
-
   .map-collapsed {
     .secondary {
       display: none;
     }
   }
-
   .map {
     li {
       float: left;
@@ -197,11 +188,11 @@ a.reply-to-tab {
     .number {
       line-height: $line-height-medium;
     }
-    .number, i {
+    .number,
+    i {
       color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-1;
     }
-
     .avatar + a {
       float: left;
     }
@@ -209,23 +200,25 @@ a.reply-to-tab {
   li.avatars {
     display: none;
   }
-
-  .links, .information, .avatars {
+  .links,
+  .information,
+  .avatars {
     padding: 10px;
     color: $primary;
     overflow: auto;
   }
-
   .information {
     p {
       margin: 0 0 10px 0;
     }
   }
-
-  .participants { // PMs //
-    .user {float: left; margin: 0 10px 10px 0;}
+  .participants {
+    // PMs //
+    .user {
+      float: left;
+      margin: 0 10px 10px 0;
+    }
   }
-
   .buttons {
     .btn {
       border: 0;
@@ -240,7 +233,6 @@ a.reply-to-tab {
       }
     }
   }
-
   .link-summary .btn {
     color: dark-light-choose($primary-medium, $secondary-high);
     background: blend-primary-secondary(5%);
@@ -251,8 +243,9 @@ a.reply-to-tab {
 #topic-footer-buttons {
   @include clearfix;
   padding: 20px 0 0 0;
-  .d-icon-bookmark.bookmarked { color: $tertiary; }
-
+  .d-icon-bookmark.bookmarked {
+    color: $tertiary;
+  }
   .combobox {
     float: left;
     margin-right: 1em;
@@ -261,9 +254,9 @@ a.reply-to-tab {
   }
 }
 
-
 #topic-footer-buttons p {
-  clear: both; /* this is to force the drop-down notification state description para below the button */
+  clear: both;
+  /* this is to force the drop-down notification state description para below the button */
   margin: 0;
   color: dark-light-choose($primary-medium, $secondary-medium);
 }
@@ -276,22 +269,26 @@ a.reply-to-tab {
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
-    th.views, td.views, td.activity, th.activity, th.likes, td.likes {
+  th.views,
+  td.views,
+  td.activity,
+  th.activity,
+  th.likes,
+  td.likes {
     display: none;
-    }
-
-   a.badge-category, a.badge-category-parent {
+  }
+  a.badge-category,
+  a.badge-category-parent {
     font-size: $font-down-1;
     vertical-align: top;
-    }
+  }
 }
 
 span.post-count {
   background: $primary;
   color: $secondary;
-  opacity: .8;
+  opacity: 0.8;
 }
-
 
 #topic-footer-buttons {
   .btn {
@@ -308,7 +305,7 @@ span.post-count {
 
 // mobile has no fixed width on topic-body so overflow: hidden causes problems
 .topic-body {
-  overflow:inherit;
+  overflow: inherit;
 }
 
 // instead, for mobile we set overflow hidden on the cooked part of post body
@@ -330,11 +327,11 @@ iframe {
   display: none;
 }
 
-.open>.dropdown-menu {
+.open > .dropdown-menu {
   display: block;
 }
 
-.dropdown-menu li  {
+.dropdown-menu li {
   margin: 5px 0;
   .fa {
     float: left;
@@ -381,7 +378,9 @@ iframe {
 }
 
 // hide the full set of selection buttons on mobile
-.select-posts button { display: none; }
+.select-posts button {
+  display: none;
+}
 
 // unhide the simple "select just this post" button
 button.select-post {
@@ -394,18 +393,20 @@ button.select-post {
   padding: 5px;
 }
 
-
 .post-select {
   float: right;
   margin-right: 20px;
   margin-top: -20px;
 }
 
-
-
 .deleted {
   .topic-body {
-    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+    background-color: dark-light-diff(
+      rgba($danger, 0.7),
+      $secondary,
+      50%,
+      -60%
+    );
   }
 }
 
@@ -413,10 +414,12 @@ button.select-post {
   font-size: $font-up-5;
 }
 
-span.btn-text {display: none;}
+span.btn-text {
+  display: none;
+}
 
 blockquote {
-  clear:both;
+  clear: both;
   /* leave browser defaults for top and bottom here */
   margin-left: 0;
   margin-right: 0;
@@ -426,9 +429,13 @@ blockquote {
   padding: 0.25em 0;
 }
 
-.gutter { display: none; }
+.gutter {
+  display: none;
+}
 
-.posts-wrapper {  position: relative; }
+.posts-wrapper {
+  position: relative;
+}
 
 span.highlighted {
   background-color: dark-light-choose($highlight-low, $highlight);
@@ -437,7 +444,8 @@ span.highlighted {
 .topic-avatar {
   float: left;
   margin-right: 10px;
-  z-index: z("base") + 1; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
+  z-index: z("base") + 1;
+  /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
 .topic-meta-data {
@@ -445,14 +453,6 @@ span.highlighted {
   font-size: $font-down-1;
   .names {
     line-height: $line-height-medium;
-
-    .poster-icon {
-      float: right;
-    }
-  }
-  .post-info {
-    float: right;
-    .edits { margin-right: 5px; }
   }
 }
 

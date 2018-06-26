@@ -48,7 +48,7 @@ module Migration
                   "Discourse: #{column_name} in #{table_name} is readonly" :
                   "Discourse: #{table_name} is read only"
 
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
         CREATE OR REPLACE FUNCTION #{readonly_function_name(table_name, column_name)} RETURNS trigger AS $rcr$
           BEGIN
             RAISE EXCEPTION '#{message}';

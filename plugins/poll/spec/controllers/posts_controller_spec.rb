@@ -16,7 +16,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
@@ -29,7 +29,7 @@ describe PostsController do
         topic_id: post_1.topic.id, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
@@ -43,7 +43,7 @@ describe PostsController do
         title: title, raw: "[poll name=#{name} close=#{close_date.iso8601}]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["polls"][name]["close"]).to be
 
@@ -99,7 +99,7 @@ describe PostsController do
         title: title, raw: "[poll name=<script>alert('xss')</script>]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["cooked"]).to include("&lt;script&gt;")
@@ -111,7 +111,7 @@ describe PostsController do
         title: title, raw: "[Polls are awesome](/foobar)\n[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]).to be
@@ -122,7 +122,7 @@ describe PostsController do
         title: title, raw: "[poll name=1]\n- A\n[poll name=2]\n- B\n- C\n[/poll]\n- D\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["1"]).to_not be
@@ -148,7 +148,7 @@ describe PostsController do
             id: post_id, post: { raw: "[poll]\n- A\n- B\n- C\n[/poll]" }
           }, format: :json
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           json = ::JSON.parse(response.body)
           expect(json["post"]["polls"]["poll"]["options"][2]["html"]).to eq("C")
         end
@@ -160,7 +160,7 @@ describe PostsController do
             id: post_id, post: { raw: "[poll]\n- A\n- B\n- C\n[/poll]" }
           }, format: :json
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           json = ::JSON.parse(response.body)
           expect(json["post"]["polls_votes"]).to_not be
         end
@@ -196,7 +196,7 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
           end
@@ -208,14 +208,14 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
           end
 
           it "support changes on the post" do
             put :update, params: { id: post_id, post: { raw: updated } }, format: :json
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["cooked"]).to match("before")
           end
@@ -248,7 +248,7 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
             expect(json["post"]["polls"]["poll"]["voters"]).to eq(1)
@@ -267,7 +267,7 @@ describe PostsController do
               id: post_id, post: { raw: new_option }
             }, format: :json
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
 
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
@@ -278,7 +278,7 @@ describe PostsController do
 
           it "support changes on the post" do
             put :update, params: { id: post_id, post: { raw: updated } }, format: :json
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             json = ::JSON.parse(response.body)
             expect(json["post"]["cooked"]).to match("before")
           end
@@ -322,7 +322,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]\n[poll name=foo]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
@@ -363,7 +363,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to eq("<p>[poll]</p>\n<ul>\n<li>A</li>\n<li>B<br>\n[/poll]</li>\n</ul>")
     end
@@ -399,7 +399,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
@@ -418,7 +418,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be
@@ -437,7 +437,7 @@ describe PostsController do
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
       expect(json["polls"]["poll"]).to be

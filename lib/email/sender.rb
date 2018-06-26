@@ -22,13 +22,18 @@ module Email
     end
 
     def send
-      return if SiteSetting.disable_emails && @email_type.to_s != "admin_login"
+      return if SiteSetting.disable_emails == "yes" && @email_type.to_s != "admin_login"
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)
 
       return skip(I18n.t('email_log.message_blank'))    if @message.blank?
       return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
+
+      if SiteSetting.disable_emails == "non-staff"
+        user = User.find_by_email(to_address)
+        return unless user && user.staff?
+      end
 
       if @message.text_part
         return skip(I18n.t('email_log.text_part_body_blank')) if @message.text_part.body.to_s.blank?

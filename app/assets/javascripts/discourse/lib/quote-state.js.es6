@@ -9,7 +9,7 @@ export default class QuoteState {
   }
 
   clear() {
-    this.buffer = '';
+    this.buffer = "";
     this.postId = null;
   }
 }

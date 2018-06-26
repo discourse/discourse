@@ -48,18 +48,18 @@ class FinishInstallationController < ApplicationController
 
   protected
 
-    def redirect_confirm(email)
-      session[:registered_email] = email
-      redirect_to(finish_installation_confirm_email_path)
-    end
+  def redirect_confirm(email)
+    session[:registered_email] = email
+    redirect_to(finish_installation_confirm_email_path)
+  end
 
-    def find_allowed_emails
-      return [] unless GlobalSetting.respond_to?(:developer_emails) && GlobalSetting.developer_emails.present?
-      GlobalSetting.developer_emails.split(",").map(&:strip)
-    end
+  def find_allowed_emails
+    return [] unless GlobalSetting.respond_to?(:developer_emails) && GlobalSetting.developer_emails.present?
+    GlobalSetting.developer_emails.split(",").map(&:strip)
+  end
 
-    def ensure_no_admins
-      preload_anonymous_data
-      raise Discourse::InvalidAccess.new unless SiteSetting.has_login_hint?
-    end
+  def ensure_no_admins
+    preload_anonymous_data
+    raise Discourse::InvalidAccess.new unless SiteSetting.has_login_hint?
+  end
 end

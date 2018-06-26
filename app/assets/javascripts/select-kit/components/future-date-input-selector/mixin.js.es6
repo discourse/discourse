@@ -1,9 +1,9 @@
-import { CLOSE_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
-import { timeframeDetails } from 'select-kit/components/future-date-input-selector';
+import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
+import { timeframeDetails } from "select-kit/components/future-date-input-selector";
 
 export default Ember.Mixin.create({
   _computeIconsForValue(value) {
-    let {icon} = this._updateAt(value);
+    let { icon } = this._updateAt(value);
 
     if (icon) {
       return icon.split(",");
@@ -17,7 +17,7 @@ export default Ember.Mixin.create({
       return null;
     }
 
-    let {time} = this._updateAt(value);
+    let { time } = this._updateAt(value);
     if (time) {
       let details = timeframeDetails(value);
       if (!details.displayWhen) {
@@ -35,11 +35,14 @@ export default Ember.Mixin.create({
 
     if (details) {
       return {
-        time: details.when(moment(), this.get('statusType') !== CLOSE_STATUS_TYPE ? 8 : 18),
+        time: details.when(
+          moment(),
+          this.get("statusType") !== CLOSE_STATUS_TYPE ? 8 : 18
+        ),
         icon: details.icon
       };
     }
 
     return { time: moment() };
-  },
+  }
 });

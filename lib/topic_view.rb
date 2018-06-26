@@ -51,6 +51,7 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
+    @_post_number = @post_number.dup
     @post_number = [@post_number.to_i, 1].max
     @page = [@page.to_i, 1].max
 
@@ -103,7 +104,7 @@ class TopicView
 
   def gaps
     return unless @contains_gaps
-    Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+    @gaps ||= Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
   end
 
   def last_post
@@ -278,35 +279,48 @@ class TopicView
 
   def post_counts_by_user
     @post_counts_by_user ||= begin
-      post_ids = unfiltered_post_ids
+      if is_mega_topic?
+        {}
+      else
+        post_ids = unfiltered_post_ids
 
-      return {} if post_ids.blank?
+        return {} if post_ids.blank?
 
-      sql = <<~SQL
-        SELECT user_id, count(*) AS count_all
-          FROM posts
-         WHERE id IN (:post_ids)
-           AND user_id IS NOT NULL
-      GROUP BY user_id
-      ORDER BY count_all DESC
-         LIMIT #{MAX_PARTICIPANTS}
-      SQL
+        sql = <<~SQL
+          SELECT user_id, count(*) AS count_all
+            FROM posts
+           WHERE id in (:post_ids)
+             AND user_id IS NOT NULL
+        GROUP BY user_id
+        ORDER BY count_all DESC
+           LIMIT #{MAX_PARTICIPANTS}
+        SQL
 
-      Hash[Post.exec_sql(sql, post_ids: post_ids).values]
+        Hash[*DB.query_single(sql, post_ids: post_ids)]
+      end
     end
   end
+
+  # if a topic has more that N posts no longer attempt to
+  # get accurate participant count, instead grab cached count
+  # from topic
+  MAX_POSTS_COUNT_PARTICIPANTS = 500
 
   def participant_count
     @participant_count ||=
       begin
         if participants.size == MAX_PARTICIPANTS
-          sql = <<~SQL
-            SELECT COUNT(DISTINCT user_id)
-            FROM posts
-            WHERE id IN (:post_ids)
-            AND user_id IS NOT NULL
-          SQL
-          Post.exec_sql(sql, post_ids: unfiltered_post_ids).getvalue(0, 0).to_i
+          if unfiltered_post_ids.length > MAX_POSTS_COUNT_PARTICIPANTS
+            @topic.participant_count
+          else
+            sql = <<~SQL
+              SELECT COUNT(DISTINCT user_id)
+              FROM posts
+              WHERE id IN (:post_ids)
+              AND user_id IS NOT NULL
+            SQL
+            DB.query_single(sql, post_ids: unfiltered_post_ids).first.to_i
+          end
         else
           participants.size
         end
@@ -363,9 +377,18 @@ class TopicView
   # Returns an array of [id, post_number, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
-    @filtered_post_stream ||= @filtered_posts
-      .order(:sort_order)
-      .pluck(:id, :post_number, 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
+    @filtered_post_stream ||= begin
+      posts = @filtered_posts
+        .order(:sort_order)
+
+      columns = [:id, :post_number]
+
+      if !is_mega_topic?
+        columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
+      end
+
+      posts.pluck(*columns)
+    end
   end
 
   def filtered_post_ids
@@ -545,4 +568,9 @@ class TopicView
     filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
   end
 
+  MEGA_TOPIC_POSTS_COUNT = 10000
+
+  def is_mega_topic?
+    @topic.posts_count >= MEGA_TOPIC_POSTS_COUNT
+  end
 end

@@ -13,10 +13,10 @@ class CommentMigration < ActiveRecord::Migration[4.2]
         comment = column[1]
 
         if column_name == :_table
-          ActiveRecord::Base.exec_sql "COMMENT ON TABLE #{table_name} IS ?", comment
+          DB.exec "COMMENT ON TABLE #{table_name} IS ?", comment
           puts "  COMMENT ON TABLE #{table_name}"
         else
-          ActiveRecord::Base.exec_sql "COMMENT ON COLUMN #{table_name}.#{column_name} IS ?", comment
+          DB.exec "COMMENT ON COLUMN #{table_name}.#{column_name} IS ?", comment
           puts "  COMMENT ON COLUMN #{table_name}.#{column_name}"
         end
       end
@@ -35,10 +35,10 @@ class CommentMigration < ActiveRecord::Migration[4.2]
         comment = column[1]
 
         if column_name == :_table
-          ActiveRecord::Base.exec_sql "COMMENT ON TABLE #{table_name} IS ?", comment
+          DB.exec "COMMENT ON TABLE #{table_name} IS ?", comment
           puts "  COMMENT ON TABLE #{table_name}"
         else
-          ActiveRecord::Base.exec_sql "COMMENT ON COLUMN #{table_name}.#{column_name} IS ?", comment
+          DB.exec "COMMENT ON COLUMN #{table_name}.#{column_name} IS ?", comment
           puts "  COMMENT ON COLUMN #{table_name}.#{column_name}"
         end
       end

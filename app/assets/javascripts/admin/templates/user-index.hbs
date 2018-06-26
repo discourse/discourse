@@ -304,7 +304,7 @@
     </div>
     <div class="controls">
       {{#if model.canLockTrustLevel}}
-        {{#if model.manual_locked_trust_level}}
+        {{#if hasLockedTrustLevel}}
           {{d-icon "lock" title="admin.user.trust_level_locked_tip"}}
           {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
         {{else}}
@@ -541,10 +541,12 @@
       <div class='field'>{{i18n 'admin.user.sso.external_name'}}</div>
       <div class='value'>{{sso.external_name}}</div>
     </div>
-    <div class='display-row'>
-      <div class='field'>{{i18n 'admin.user.sso.external_email'}}</div>
-      <div class='value'>{{sso.external_email}}</div>
-    </div>
+    {{#if sso.external_email}}
+      <div class='display-row'>
+        <div class='field'>{{i18n 'admin.user.sso.external_email'}}</div>
+        <div class='value'>{{sso.external_email}}</div>
+      </div>
+    {{/if}}
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_avatar_url'}}</div>
       <div class='value'>{{sso.external_avatar_url}}</div>

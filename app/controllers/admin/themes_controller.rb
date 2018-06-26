@@ -223,59 +223,59 @@ class Admin::ThemesController < Admin::AdminController
 
   private
 
-    def update_default_theme
-      if theme_params.key?(:default)
-        is_default = theme_params[:default].to_s == "true"
-        if @theme.key == SiteSetting.default_theme_key && !is_default
-          Theme.clear_default!
-        elsif is_default
-          @theme.set_default!
-        end
+  def update_default_theme
+    if theme_params.key?(:default)
+      is_default = theme_params[:default].to_s == "true"
+      if @theme.key == SiteSetting.default_theme_key && !is_default
+        Theme.clear_default!
+      elsif is_default
+        @theme.set_default!
       end
     end
+  end
 
-    def theme_params
-      @theme_params ||=
-        begin
-          # deep munge is a train wreck, work around it for now
-          params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
+  def theme_params
+    @theme_params ||=
+      begin
+        # deep munge is a train wreck, work around it for now
+        params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
 
-          params.require(:theme).permit(
-            :name,
-            :color_scheme_id,
-            :default,
-            :user_selectable,
-            settings: {},
-            theme_fields: [:name, :target, :value, :upload_id, :type_id],
-            child_theme_ids: []
-          )
-        end
-    end
-
-    def set_fields
-      return unless fields = theme_params[:theme_fields]
-
-      fields.each do |field|
-        @theme.set_field(
-          target: field[:target],
-          name: field[:name],
-          value: field[:value],
-          type_id: field[:type_id],
-          upload_id: field[:upload_id]
+        params.require(:theme).permit(
+          :name,
+          :color_scheme_id,
+          :default,
+          :user_selectable,
+          settings: {},
+          theme_fields: [:name, :target, :value, :upload_id, :type_id],
+          child_theme_ids: []
         )
       end
-    end
+  end
 
-    def update_settings
-      return unless target_settings = theme_params[:settings]
+  def set_fields
+    return unless fields = theme_params[:theme_fields]
 
-      target_settings.each_pair do |setting_name, new_value|
-        @theme.update_setting(setting_name.to_sym, new_value)
-      end
+    fields.each do |field|
+      @theme.set_field(
+        target: field[:target],
+        name: field[:name],
+        value: field[:value],
+        type_id: field[:type_id],
+        upload_id: field[:upload_id]
+      )
     end
+  end
 
-    def log_theme_change(old_record, new_record)
-      StaffActionLogger.new(current_user).log_theme_change(old_record, new_record)
+  def update_settings
+    return unless target_settings = theme_params[:settings]
+
+    target_settings.each_pair do |setting_name, new_value|
+      @theme.update_setting(setting_name.to_sym, new_value)
     end
+  end
+
+  def log_theme_change(old_record, new_record)
+    StaffActionLogger.new(current_user).log_theme_change(old_record, new_record)
+  end
 
 end

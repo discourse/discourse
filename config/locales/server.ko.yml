@@ -129,7 +129,7 @@ ko:
   reading_time: "읽은 시간"
   likes: "좋아요"
   too_many_replies:
-    other: 죄송합니다. 신규 가입자는 글 하나에 %{count}개까지만 댓글을 달 수 있습니다.
+    other: "죄송합니다. 신규 가입자는 글 하나에 %{count}개까지만 댓글을 달 수 있습니다."
   embed:
     start_discussion: "토론 시작"
     continue: "토론 계속하기"
@@ -139,28 +139,28 @@ ko:
     no_hosts: "임베딩을 위한 호스트가 설정되지 않았습니다."
     configure: "삽입 설정"
     more_replies:
-      other: 추가 %{count} 개 댓글
+      other: "추가 %{count} 개 댓글"
     loading: "토론 불러오는 중..."
     permalink: "Permalink"
     imported_from: "%{link}에 있는 원글과 유사한 토론 글입니다."
     in_reply_to: "▶ %{username}"
     replies:
-      other: 답글 %{count}개
+      other: "답글 %{count}개"
   no_mentions_allowed: "죄송합니다, 다른 사용자를 언급할 수 없습니다."
   too_many_mentions:
-    other: 죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다.
+    other: "죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다."
   no_mentions_allowed_newuser: "죄송합니다. 새로운 사용자는 다른 사용자를 언급할 수 없습니다."
   too_many_mentions_newuser:
-    other: 죄송합니다. 신규 회원은 %{count}명의 사용자만 언급할 수 있습니다.
+    other: "죄송합니다. 신규 회원은 %{count}명의 사용자만 언급할 수 있습니다."
   no_images_allowed: "죄송합니다. 신규 회원은 글에 이미지를 넣을 수 없습니다."
   too_many_images:
-    other: 죄송합니다. 신규회원은 글 하나에 %{count}개의 이미지만 넣을 수 있습니다.
+    other: "죄송합니다. 신규회원은 글 하나에 %{count}개의 이미지만 넣을 수 있습니다."
   no_attachments_allowed: "죄송합니다. 신규회원은 글에 파일을 첨부할 수 없습니다."
   too_many_attachments:
-    other: 죄송합니다. 신규회원은 글 하나에 %{count}개의 파일만 첨부할 수 있습니다.
+    other: "죄송합니다. 신규회원은 글 하나에 %{count}개의 파일만 첨부할 수 있습니다."
   no_links_allowed: "죄송합니다. 신규회원은 글에 링크를 넣을 수 없습니다."
   too_many_links:
-    other: 죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다.
+    other: "죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에  토픽이 닫혔거나 지워진 건 아닐까요?"
@@ -225,7 +225,7 @@ ko:
       title: "@%{group_name}그룹에 가입 신청"
   education:
     until_posts:
-      other: 글 %{count}개
+      other: "글 %{count}개"
     'new-topic': |
       %{site_name}에 오신 것을 환영합니다 &mdash; **새로운 대화를 시작해서 감사합니다.**
 
@@ -386,7 +386,7 @@ ko:
       uncategorized: "Uncategorized는 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
       topic_exists:
-        other: '%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다. 가장 오래된 글타래는 %{topic_link}입니다.'
+        other: "%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다. 가장 오래된 글타래는 %{topic_link}입니다."
       topic_exists_no_oldest: "%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다."
     uncategorized_description: "카테고리가 필요없는 토픽이거나, 토픽에 부합하는 카테고리가 없습니다."
   trust_levels:
@@ -403,60 +403,60 @@ ko:
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      other: '%{count}시간'
+      other: "%{count}시간"
     minutes:
-      other: '%{count}분'
+      other: "%{count}분"
     seconds:
-      other: '%{count}초'
+      other: "%{count}초"
   datetime:
     distance_in_words:
       half_a_minute: "<1분"
       less_than_x_seconds:
-        other: < %{count}초
+        other: "< %{count}초"
       x_seconds:
-        other: '%{count}초'
+        other: "%{count}초"
       less_than_x_minutes:
-        other: < %{count}분
+        other: "< %{count}분"
       x_minutes:
-        other: '%{count}분'
+        other: "%{count}분"
       about_x_hours:
-        other: '%{count}시간'
+        other: "%{count}시간"
       x_days:
-        other: '%{count}일'
+        other: "%{count}일"
       about_x_months:
-        other: '%{count}달'
+        other: "%{count}달"
       x_months:
-        other: '%{count}달'
+        other: "%{count}달"
       about_x_years:
-        other: '%{count}년'
+        other: "%{count}년"
       over_x_years:
-        other: '%{count}년 보다 전'
+        other: "%{count}년 보다 전"
       almost_x_years:
-        other: 약 %{count}년
+        other: "약 %{count}년"
     distance_in_words_verbose:
       half_a_minute: "방금 전"
       less_than_x_seconds:
-        other: 방금 전
+        other: "방금 전"
       x_seconds:
-        other: '%{count}초 전'
+        other: "%{count}초 전"
       less_than_x_minutes:
-        other: '%{count}분 보다 이전'
+        other: "%{count}분 보다 이전"
       x_minutes:
-        other: '%{count}분 전'
+        other: "%{count}분 전"
       about_x_hours:
-        other: '%{count}시간 전'
+        other: "%{count}시간 전"
       x_days:
-        other: '%{count}일 전'
+        other: "%{count}일 전"
       about_x_months:
-        other: 약 %{count}달 전
+        other: "약 %{count}달 전"
       x_months:
-        other: ${count}달 전
+        other: "${count}달 전"
       about_x_years:
-        other: 약 %{count}년 전
+        other: "약 %{count}년 전"
       over_x_years:
-        other: '%{count}년 보다 이전'
+        other: "%{count}년 보다 이전"
       almost_x_years:
-        other: 약 %{count}년 전
+        other: "약 %{count}년 전"
   password_reset:
     no_token: "죄송하지만, 해당 비밀번호 변경 링크는 너무 오래됐습니다. 로그인 버튼을 눌러서 '비밀번호를 잊어버렸어요'를 사용하여 새로운 링크를 받으세요."
     choose_new: "새로운 비밀번호를 입력하세요"
@@ -735,7 +735,6 @@ ko:
       xaxis: "일"
       yaxis: "총"
     mobile_visits:
-      title: "사용자 방문횟수"
       xaxis: "일"
       yaxis: "방문 횟수"
   dashboard:
@@ -755,7 +754,7 @@ ko:
     failing_emails_warning: '실패한 이메일 작업이 %{num_failed_jobs} 개 있습니다. app.yml 을 열어서 메일 서버 설정이 정확한지 확인해보세요. <a href="/sidekiq/retries" target="_blank">Sidekiq에서 실패한 작업 보기</a>.'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
     email_polling_errored_recently:
-      other: 이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='/logs' target='_blank'>로그</a>에서 확인하세요.
+      other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='/logs' target='_blank'>로그</a>에서 확인하세요."
     bad_favicon_url: "파비콘 불러오기가 실패했습니다. <a href='/admin/site_settings'>사이트 설정</a>에서 favicon_url 설정을 확인해보세요."
     poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
     poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
@@ -1055,7 +1054,6 @@ ko:
     reply_by_email_enabled: "이메일을 통해 주제에 답글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
     alternative_reply_by_email_addresses: "수신된 이메일에 대한 답장메일의 대체 템플릿 목록. 예: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    disable_emails: "Discourse가 어떤 메일로 보내지 못하도록 합니다."
     strip_images_from_short_emails: "2800바이트, 즉 2.73 KB 이내 사이즈를 가지도록 이미지를 빼주세요."
     short_email_length: "짦은 이메일 바이트 길이"
     display_name_on_email_from: "이메일 보낸사람 필드에 전체 이름을 표시"
@@ -1097,7 +1095,6 @@ ko:
     delete_user_max_post_age: "(x)일 이전의 첫 글가 있는 유저는 삭제할 수 없음."
     delete_all_posts_max: "전체 글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 글 수. 만약 사용자가 이것보다 많은 글을 가지고 있으면 한번에 삭제 할 수 없다."
     email_editable: "가입 후 이메일 주소 변경 허용"
-    logout_redirect: "로그아웃 후에 리디렉션할 위치 (예: http://somesite.com/logout)"
     allow_uploaded_avatars: "사용자가 커스텀 프로필 사진을 올릴 수 있도록 허용."
     allow_animated_avatars: "사용자가 프로필 사진으로 애니메이션 GIF 파일을 올릴 수 있도록 허용. 경고: 이 설정을 바꾼 후  avatars:refresh rake task 를 실행."
     allow_animated_thumbnails: "움직이는 gif로 썸네일을 만듭니다."
@@ -1203,17 +1200,17 @@ ko:
     closed_enabled: "이 글타래는 이제 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     closed_disabled: "이 글타래는 이제 열렸습니다. 새로운 답글을 다실 수 있습니다."
     autoclosed_enabled_days:
-      other: 이 글타래는 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
+      other: "이 글타래는 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_enabled_hours:
-      other: 이 글타래는 %{count}시간 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
+      other: "이 글타래는 %{count}시간 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_enabled_minutes:
-      other: 이 글타래는 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
+      other: "이 글타래는 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_days:
-      other: 이 글타래는 마지막 답글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
+      other: "이 글타래는 마지막 답글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_hours:
-      other: 마지막 댓글로부터 %{count} 시간이 지나 글타래가 자동으로 닫혔습니다. 새로운 댓글을 다실 수 없습니다.
+      other: "마지막 댓글로부터 %{count} 시간이 지나 글타래가 자동으로 닫혔습니다. 새로운 댓글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_minutes:
-      other: 이 글타래는 마지막 답글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다.
+      other: "이 글타래는 마지막 답글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_disabled: "이 글타래는 이제 열렸습니다. 새로운 답글을 허용합니다."
     autoclosed_disabled_lastpost: "이 글타래는 이제 열렸습니다. 새로운 답글을 허용합니다."
     pinned_enabled: "이 글타래는 고정되었습니다. 고정이 해제되기 전까지 카테고리의 상단에 나타납니다."
@@ -1267,7 +1264,7 @@ ko:
       domain_not_allowed: "유효하지 않은 웹사이트입니다. 허용되는 도메인 목록: %{domains}"
   flags_reminder:
     subject_template:
-      other: '%{count}개의 신고가 접수 대기 중'
+      other: "%{count}개의 신고가 접수 대기 중"
   unsubscribe_mailer:
     title: "메일링 구독해지"
   invite_password_instructions:
@@ -1315,7 +1312,7 @@ ko:
       subject_template: "대기중인 신규 계정"
     pending_users_reminder:
       subject_template:
-        other: '%{count}명의 새로운 사용자가 가입 승인 대기중 입니다.'
+        other: "%{count}명의 새로운 사용자가 가입 승인 대기중 입니다."
       text_body_template: |
         가입 승인 대기중(또는 거절된)인 새로운 사용자가 있습니다.
 
@@ -1790,7 +1787,6 @@ ko:
             description: "가로 세로 32px 와 같은 작은 사이즈의 아이콘을 쓸 때 예쁘게 보이는 웹 브라우저에서 사이트를 대표할 아이콘 이미지"
           apple_touch_icon_url:
             label: "큰 아이콘"
-            description: "더 큰 사이즈의 아이콘을 쓸 때 예쁘게 보이는 모던 기기에서 사이트를 대표할 아이콘 이미지. 사이즈는 최소 가로 세로 144px 권장."
       homepage:
         description: "저희는 최근 토픽을 홈페이지에 노출하는 것을 추천합니다. 하지만, 원하신다면 홈페이지에 카테고리(토픽의 그룹)를 보이게 할 수도 있습니다."
         title: "홈페이지"
@@ -1799,8 +1795,6 @@ ko:
             choices:
               latest:
                 label: "최신 토픽"
-              categories:
-                label: "카테고리"
       emoji:
         title: "Emoji"
         description: "당신의 커뮤니티에는 어떤 스타일의 Emoji를 쓰고 싶으세요? 관리자, 커스터마이징, Emoji 메뉴에서 사용자정의 Emoji를 더 추가할 수도 있습니다."

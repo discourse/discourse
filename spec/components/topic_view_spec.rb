@@ -549,4 +549,37 @@ describe TopicView do
       end
     end
   end
+
+  describe '#filtered_post_stream' do
+    let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
+    let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
+
+    it 'should return the right columns' do
+      expect(topic_view.filtered_post_stream).to eq([
+        [post.id, post.post_number, 0],
+        [post2.id, post2.post_number, 0],
+        [post3.id, post3.post_number, 0]
+      ])
+    end
+
+    describe 'for mega topics' do
+      it 'should return the right columns' do
+        begin
+          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
+
+          expect(topic_view.filtered_post_stream).to eq([
+            [post.id, post.post_number],
+            [post2.id, post2.post_number],
+            [post3.id, post3.post_number]
+          ])
+        ensure
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
+        end
+      end
+    end
+  end
 end

@@ -1,4 +1,4 @@
-import deprecated from 'discourse-common/lib/deprecated';
+import deprecated from "discourse-common/lib/deprecated";
 
 export function getOwner(obj) {
   if (Ember.getOwner) {
@@ -23,9 +23,11 @@ export function getRegister(obj) {
     },
 
     deprecateContainer(target) {
-      Object.defineProperty(target, 'container', {
+      Object.defineProperty(target, "container", {
         get() {
-          deprecated("Use `this.register` or `getOwner` instead of `this.container`");
+          deprecated(
+            "Use `this.register` or `getOwner` instead of `this.container`"
+          );
           return register;
         }
       });

@@ -1,6 +1,9 @@
 class SqlBuilder
 
   def initialize(template, klass = nil)
+
+    Discourse.deprecate("SqlBuilder is deprecated and will be removed, please use DB.build instead!")
+
     @args = {}
     @sql = template
     @sections = {}
@@ -75,12 +78,8 @@ class SqlBuilder
 
   class RailsDateTimeDecoder < PG::SimpleDecoder
     def decode(string, tuple = nil, field = nil)
-      if Rails.version >= "4.2.0"
-        @caster ||= ActiveRecord::Type::DateTime.new
-        @caster.cast(string)
-      else
-        ActiveRecord::ConnectionAdapters::Column.string_to_time string
-      end
+      @caster ||= ActiveRecord::Type::DateTime.new
+      @caster.cast(string)
     end
   end
 
@@ -117,10 +116,4 @@ class SqlBuilder
     end
   end
 
-end
-
-class ActiveRecord::Base
-  def self.sql_builder(template)
-    SqlBuilder.new(template, self)
-  end
 end

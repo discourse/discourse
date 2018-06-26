@@ -3,6 +3,15 @@ module Jobs
     every 1.hour
 
     def execute(args)
+      grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
+
+      # always remove invalid upload records
+      Upload
+        .where("retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours")
+        .where("created_at < ?", grace_period.hour.ago)
+        .where(url: "")
+        .destroy_all
+
       return unless SiteSetting.clean_up_uploads?
 
       base_url = Discourse.store.internal? ? Discourse.store.relative_base_url : Discourse.store.absolute_base_url
@@ -28,8 +37,6 @@ module Jobs
           nil
         end
       end.compact.uniq
-
-      grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
 
       result = Upload.where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)

@@ -46,9 +46,9 @@ class StaffActionLogger
 
     topic = deleted_post.topic || Topic.with_deleted.find_by(id: deleted_post.topic_id)
 
-    username = deleted_post.user.try(:username) || "unknown"
-    name = deleted_post.user.try(:name) || "unknown"
-    topic_title = topic.try(:title) || "not found"
+    username = deleted_post.user.try(:username) || I18n.t('staff_action_logs.unknown')
+    name = deleted_post.user.try(:name) || I18n.t('staff_action_logs.unknown')
+    topic_title = topic.try(:title) || I18n.t('staff_action_logs.not_found')
 
     details = [
       "id: #{deleted_post.id}",
@@ -239,6 +239,16 @@ class StaffActionLogger
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:unsuspend_user],
       target_user_id: user.id
+    ))
+  end
+
+  def log_user_merge(user, source_username, source_email, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:merge_user],
+      target_user_id: user.id,
+      context: I18n.t("staff_action_logs.user_merged", username: source_username),
+      email: source_email
     ))
   end
 
@@ -526,15 +536,37 @@ class StaffActionLogger
     ))
   end
 
+  def log_post_rejected(rejected_post, opts = {})
+    raise Discourse::InvalidParameters.new(:rejected_post) unless rejected_post && rejected_post.is_a?(QueuedPost)
+
+    topic = rejected_post.topic || Topic.with_deleted.find_by(id: rejected_post.topic_id)
+    topic_title = topic&.title || I18n.t('staff_action_logs.not_found')
+    username = rejected_post.user&.username || I18n.t('staff_action_logs.unknown')
+    name = rejected_post.user&.name || I18n.t('staff_action_logs.unknown')
+
+    details = [
+      "created_at: #{rejected_post.created_at}",
+      "rejected_at: #{rejected_post.rejected_at}",
+      "user: #{username} (#{name})",
+      "topic: #{topic_title}",
+      "raw: #{rejected_post.raw}",
+    ]
+
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:post_rejected],
+      details: details.join("\n")
+    ))
+  end
+
   private
 
-    def params(opts = nil)
-      opts ||= {}
-      { acting_user_id: @admin.id, context: opts[:context] }
-    end
+  def params(opts = nil)
+    opts ||= {}
+    { acting_user_id: @admin.id, context: opts[:context] }
+  end
 
-    def validate_category(category)
-      raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
-    end
+  def validate_category(category)
+    raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
+  end
 
 end

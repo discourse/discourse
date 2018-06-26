@@ -1,3 +1,3 @@
-import buildGroupMessagesRoute from 'discourse/routes/build-group-messages-route';
+import buildGroupMessagesRoute from "discourse/routes/build-group-messages-route";
 
-export default buildGroupMessagesRoute('archive');
+export default buildGroupMessagesRoute("archive");
