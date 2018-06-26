@@ -27,6 +27,16 @@ export default Ember.Mixin.create({
     return !isNaN(parseFloat(input)) && isFinite(input);
   },
 
+  _normalize(input) {
+    input = input.toLowerCase();
+
+    if (typeof input.normalize === "function") {
+      input = input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    return input;
+  },
+
   _cast(value) {
     if (value === this.noneValue) return value;
     return this._castInteger(this._castBoolean(value));
