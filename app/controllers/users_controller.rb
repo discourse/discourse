@@ -1012,15 +1012,15 @@ class UsersController < ApplicationController
       # when disabling totp, backup is disabled too
       if second_factor_method == UserSecondFactor.methods[:totp]
         current_user.user_second_factors.destroy_all
-      elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
-        user_second_factor.destroy_all
-      end
 
-      Jobs.enqueue(
-        :critical_user_email,
-        type: :account_second_factor_disabled,
-        user_id: current_user.id
-      )
+        Jobs.enqueue(
+          :critical_user_email,
+          type: :account_second_factor_disabled,
+          user_id: current_user.id
+        )
+      elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+        current_user.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
+      end
     end
 
     render json: success_json

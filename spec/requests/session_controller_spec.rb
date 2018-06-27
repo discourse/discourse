@@ -147,6 +147,7 @@ RSpec.describe SessionController do
 
       context 'user has 2-factor logins' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+        let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
         describe 'requires second factor' do
           it 'should return a second factor prompt' do
@@ -167,28 +168,55 @@ RSpec.describe SessionController do
         end
 
         describe 'errors on incorrect 2-factor' do
-          it 'does not log in with incorrect two factor' do
-            post "/session/email-login/#{email_token.token}", params: {
-              second_factor_token: "0000",
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
+          context 'when using totp method' do
+            it 'does not log in with incorrect two factor' do
+              post "/session/email-login/#{email_token.token}", params: {
+                second_factor_token: "0000",
+                second_factor_method: UserSecondFactor.methods[:totp]
+              }
 
-            expect(response.status).to eq(200)
+              expect(response.status).to eq(200)
 
-            expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
-              "login.invalid_second_factor_code"
-            ))
+              expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+                "login.invalid_second_factor_code"
+              ))
+            end
+          end
+          context 'when using backup code method' do
+            it 'does not log in with incorrect backup code' do
+              post "/session/email-login/#{email_token.token}", params: {
+                second_factor_token: "0000",
+                second_factor_method: UserSecondFactor.methods[:backup_codes]
+              }
+
+              expect(response.status).to eq(200)
+              expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+                "login.invalid_second_factor_code"
+              ))
+            end
           end
         end
 
         describe 'allows successful 2-factor' do
-          it 'logs in correctly' do
-            post "/session/email-login/#{email_token.token}", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
+          context 'when using totp method' do
+            it 'logs in correctly' do
+              post "/session/email-login/#{email_token.token}", params: {
+                second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+                second_factor_method: UserSecondFactor.methods[:totp]
+              }
 
-            expect(response).to redirect_to("/")
+              expect(response).to redirect_to("/")
+            end
+          end
+          context 'when using backup code method' do
+            it 'logs in correctly' do
+              post "/session/email-login/#{email_token.token}", params: {
+                second_factor_token: "iAmValidBackupCode",
+                second_factor_method: UserSecondFactor.methods[:backup_codes]
+              }
+
+              expect(response).to redirect_to("/")
+            end
           end
         end
       end
@@ -904,6 +932,7 @@ RSpec.describe SessionController do
 
       context 'when user has 2-factor logins' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+        let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
         describe 'when second factor token is missing' do
           it 'should return the right response' do
@@ -920,36 +949,74 @@ RSpec.describe SessionController do
         end
 
         describe 'when second factor token is invalid' do
-          it 'should return the right response' do
-            post "/session.json", params: {
-              login: user.username,
-              password: 'myawesomepassword',
-              second_factor_token: '00000000'
-            }
+          context 'when using totp method' do
+            it 'should return the right response' do
+              post "/session.json", params: {
+                login: user.username,
+                password: 'myawesomepassword',
+                second_factor_token: '00000000',
+                second_factor_method: UserSecondFactor.methods[:totp]
+              }
 
-            expect(response.status).to eq(200)
-            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
-              'login.invalid_second_factor_code'
-            ))
+              expect(response.status).to eq(200)
+              expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+                'login.invalid_second_factor_code'
+              ))
+            end
+          end
+          context 'when using backup code method' do
+            it 'should return the right response' do
+              post "/session.json", params: {
+                login: user.username,
+                password: 'myawesomepassword',
+                second_factor_token: '00000000',
+                second_factor_method: UserSecondFactor.methods[:backup_codes]
+              }
+
+              expect(response.status).to eq(200)
+              expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+                'login.invalid_second_factor_code'
+              ))
+            end
           end
         end
 
         describe 'when second factor token is valid' do
-          it 'should log the user in' do
-            post "/session.json", params: {
-              login: user.username,
-              password: 'myawesomepassword',
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
-            expect(response.status).to eq(200)
-            user.reload
+          context 'when using totp method' do
+            it 'should log the user in' do
+              post "/session.json", params: {
+                login: user.username,
+                password: 'myawesomepassword',
+                second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+                second_factor_method: UserSecondFactor.methods[:totp]
+              }
+              expect(response.status).to eq(200)
+              user.reload
 
-            expect(session[:current_user_id]).to eq(user.id)
-            expect(user.user_auth_tokens.count).to eq(1)
+              expect(session[:current_user_id]).to eq(user.id)
+              expect(user.user_auth_tokens.count).to eq(1)
 
-            expect(UserAuthToken.hash_token(cookies[:_t]))
-              .to eq(user.user_auth_tokens.first.auth_token)
+              expect(UserAuthToken.hash_token(cookies[:_t]))
+                .to eq(user.user_auth_tokens.first.auth_token)
+            end
+          end
+          context 'when using backup code method' do
+            it 'should log the user in' do
+              post "/session.json", params: {
+                login: user.username,
+                password: 'myawesomepassword',
+                second_factor_token: 'iAmValidBackupCode',
+                second_factor_method: UserSecondFactor.methods[:backup_codes]
+              }
+              expect(response.status).to eq(200)
+              user.reload
+
+              expect(session[:current_user_id]).to eq(user.id)
+              expect(user.user_auth_tokens.count).to eq(1)
+
+              expect(UserAuthToken.hash_token(cookies[:_t]))
+                .to eq(user.user_auth_tokens.first.auth_token)
+            end
           end
         end
       end

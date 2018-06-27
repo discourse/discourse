@@ -69,7 +69,7 @@ module SecondFactorManager
     if self.user_second_factors.backup_codes.empty?
       create_backup_codes(codes_json)
     else
-      self.user_second_factors.backup_codes.destroy_all
+      self.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
       create_backup_codes(codes_json)
     end
 

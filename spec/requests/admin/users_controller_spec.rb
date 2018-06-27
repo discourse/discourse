@@ -808,11 +808,13 @@ RSpec.describe Admin::UsersController do
 
   describe '#disable_second_factor' do
     let(:second_factor) { user.create_totp }
+    let(:second_factor_backup) { user.generate_backup_codes }
 
     describe 'as an admin' do
       before do
         sign_in(admin)
         second_factor
+        second_factor_backup
         expect(user.reload.user_second_factors.totp).to eq(second_factor)
       end
 
@@ -838,7 +840,7 @@ RSpec.describe Admin::UsersController do
 
       describe 'when user does not have second factor enabled' do
         it 'should raise the right error' do
-          user.user_second_factors.totp.destroy!
+          user.user_second_factors.destroy_all
 
           put "/admin/users/#{user.id}/disable_second_factor.json"
 
