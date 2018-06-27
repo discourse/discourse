@@ -94,7 +94,7 @@ gem 'tilt', require: false
 
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'highline', require: false
+gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 
 # Gems used only for assets and not required in production environments by default.
