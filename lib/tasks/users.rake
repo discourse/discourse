@@ -32,6 +32,7 @@ task "users:change_post_ownership", [:old_username, :new_username, :archetype] =
   puts "", "#{i} posts ownership changed!", ""
 end
 
+desc "Merge the source user into the target user"
 task "users:merge", [:source_username, :target_username] => [:environment] do |_, args|
   source_username = args[:source_username]
   target_username = args[:target_username]
@@ -48,6 +49,7 @@ task "users:merge", [:source_username, :target_username] => [:environment] do |_
   puts "", "Users merged!", ""
 end
 
+desc "Rename a user"
 task "users:rename", [:old_username, :new_username] => [:environment] do |_, args|
   old_username = args[:old_username]
   new_username = args[:new_username]
@@ -62,7 +64,7 @@ task "users:rename", [:old_username, :new_username] => [:environment] do |_, arg
   puts "", "User renamed!", ""
 end
 
-desc "Updates username in quotes and mentions. Use this if the user was renamed before proper renaming existed."
+desc "Update username in quotes and mentions. Use this if the user was renamed before proper renaming existed."
 task "users:update_posts", [:old_username, :current_username] => [:environment] do |_, args|
   old_username = args[:old_username]
   current_username = args[:current_username]
