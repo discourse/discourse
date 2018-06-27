@@ -59,8 +59,8 @@ module SecondFactorManager
       codes << SecureRandom.hex(8)
     end
 
-    salt = SecureRandom.hex(16)
     codes_json = codes.map do |code|
+      salt = SecureRandom.hex(16)
       { salt: salt,
         code_hash: hash_backup_code(code, salt)
       }

@@ -54,8 +54,8 @@
       {{/if}}
     {{/conditional-loading-section}}
 
-    {{cancel-link
-      route="preferences.account"
-      args=model.username}}
+    {{#link-to "preferences.account" model.username}}
+      {{i18n "go_back"}}
+    {{/link-to}}
   </form>
 </section>

@@ -299,6 +299,7 @@ en:
 
     preview: "preview"
     cancel: "cancel"
+    go_back: "go back"
 
     save: "Save Changes"
     saving: "Saving..."
