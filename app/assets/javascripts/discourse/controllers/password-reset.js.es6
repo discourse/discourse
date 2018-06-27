@@ -11,7 +11,7 @@ export default Ember.Controller.extend(PasswordValidation, {
   admin: Ember.computed.alias("model.admin"),
   secondFactorRequired: Ember.computed.alias("model.second_factor_required"),
   backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
-  secondFactorMethod: SECOND_FACTOR_METHODS.totp,
+  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,

@@ -32,7 +32,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
   loginRequired: Em.computed.alias("application.loginRequired"),
-  secondFactorMethod: SECOND_FACTOR_METHODS.totp,
+  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
   resetForm: function() {
     this.setProperties({

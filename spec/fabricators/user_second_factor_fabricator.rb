@@ -7,7 +7,8 @@ end
 
 Fabricator(:user_second_factor_backup, from: :user_second_factor) do
   user
-  # data "['65108096d23a70918e51332496b37425fe2be87fce29b97a19474f318e226314', 'c8177f837c3917d17eb015f4059101dfac399a3e0cc33ea5c56600bae58e2e0d', 'f954ddffa6830e3cd4fbdb66b6615ff150c8812f7e293ba5cb216f7852d5c254']"
+  # backup code: iAmValidBackupCode
+  data '{"salt":"e84ab3842f173967ca85ca6f5639b7ab","code_hash":"6abfe07527e2f7db45980cf67b9b4bfc7fbeea2685b07dcc3bf49f21349707f3"}'
   enabled true
   method UserSecondFactor.methods[:backup_codes]
 end
