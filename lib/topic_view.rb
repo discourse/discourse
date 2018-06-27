@@ -310,7 +310,7 @@ class TopicView
     @participant_count ||=
       begin
         if participants.size == MAX_PARTICIPANTS
-          if unfiltered_post_ids.length > MAX_POSTS_COUNT_PARTICIPANTS
+          if @topic.posts_count > MAX_POSTS_COUNT_PARTICIPANTS
             @topic.participant_count
           else
             sql = <<~SQL
