@@ -150,7 +150,8 @@ class S3Helper
   end
 
   def self.s3_options(obj)
-    opts = { region: obj.s3_region }
+    opts = { region: obj.s3_region,
+             endpoint: SiteSetting.s3_endpoint }
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id

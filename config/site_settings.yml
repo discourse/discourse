@@ -924,6 +924,9 @@ files:
   s3_upload_bucket:
     default: ''
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+  s3_endpoint:
+    default: 'https://s3.amazonaws.com'
+    regex: '^https?:\/\/.+[^\/]$'
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
