@@ -1,10 +1,15 @@
+import { escapeExpression } from "discourse/lib/utilities";
+
 export function showTooltip() {
   const fadeSpeed = 300;
   const tooltipID = "#discourse-tooltip";
   const $this = $(this);
   const $parent = $this.offsetParent();
-  const content = $this.attr("data-tooltip");
-  const retina = window.devicePixelRatio && window.devicePixelRatio > 1 ? "class='retina'" : "";
+  const content = escapeExpression($this.attr("data-tooltip"));
+  const retina =
+    window.devicePixelRatio && window.devicePixelRatio > 1
+      ? "class='retina'"
+      : "";
 
   let pos = $this.offset();
   const delta = $parent.offset();
