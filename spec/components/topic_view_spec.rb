@@ -583,12 +583,12 @@ describe TopicView do
     end
   end
 
-  describe '#last_read_post_id' do
+  describe '#filtered_post_id' do
     it 'should return the right id' do
       post = Fabricate(:post, topic: topic)
 
-      expect(topic_view.last_read_post_id(nil)).to eq(nil)
-      expect(topic_view.last_read_post_id(post.post_number)).to eq(post.id)
+      expect(topic_view.filtered_post_id(nil)).to eq(nil)
+      expect(topic_view.filtered_post_id(post.post_number)).to eq(post.id)
     end
   end
 end
