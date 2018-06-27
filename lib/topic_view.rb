@@ -412,7 +412,7 @@ class TopicView
       end
   end
 
-  def last_read_post_id(post_number)
+  def filtered_post_id(post_number)
     @filtered_posts.where(post_number: post_number).pluck(:id).first
   end
 
@@ -566,16 +566,16 @@ class TopicView
 
   def closest_post_to(post_number)
     # happy path
-    closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
+    closest_post_id = filtered_post_id(post_number)
 
-    if closest_post.empty?
+    if closest_post_id.blank?
       # less happy path, missing post
-      closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
+      closest_post_id = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id).first
     end
 
-    return nil if closest_post.empty?
+    return nil if closest_post_id.blank?
 
-    filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
+    filtered_post_ids.index(closest_post_id) || filtered_post_ids[0]
   end
 
   MEGA_TOPIC_POSTS_COUNT = 10000

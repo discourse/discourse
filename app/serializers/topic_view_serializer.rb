@@ -187,7 +187,7 @@ class TopicViewSerializer < ApplicationSerializer
 
   def last_read_post_id
     return nil unless last_read_post_number
-    object.last_read_post_id(last_read_post_number)
+    object.filtered_post_id(last_read_post_number)
   end
   alias_method :include_last_read_post_id?, :has_topic_user?
 
