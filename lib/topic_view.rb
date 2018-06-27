@@ -374,14 +374,14 @@ class TopicView
     @filtered_posts.by_newest.with_user.first(25)
   end
 
-  # Returns an array of [id, post_number, days_ago] tuples.
+  # Returns an array of [id, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
     @filtered_post_stream ||= begin
       posts = @filtered_posts
         .order(:sort_order)
 
-      columns = [:id, :post_number]
+      columns = [:id]
 
       if !is_mega_topic?
         columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
@@ -392,7 +392,13 @@ class TopicView
   end
 
   def filtered_post_ids
-    @filtered_post_ids ||= filtered_post_stream.map { |tuple| tuple[0] }
+    @filtered_post_ids ||= filtered_post_stream.map do |tuple|
+      if is_mega_topic?
+        tuple
+      else
+        tuple[0]
+      end
+    end
   end
 
   def unfiltered_post_ids
@@ -404,6 +410,10 @@ class TopicView
           filtered_post_ids
         end
       end
+  end
+
+  def last_read_post_id(post_number)
+    @filtered_posts.where(post_number: post_number).pluck(:id).first
   end
 
   protected
@@ -571,6 +581,6 @@ class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
 
   def is_mega_topic?
-    @topic.posts_count >= MEGA_TOPIC_POSTS_COUNT
+    @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
   end
 end

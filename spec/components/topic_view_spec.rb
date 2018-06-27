@@ -557,9 +557,9 @@ describe TopicView do
 
     it 'should return the right columns' do
       expect(topic_view.filtered_post_stream).to eq([
-        [post.id, post.post_number, 0],
-        [post2.id, post2.post_number, 0],
-        [post3.id, post3.post_number, 0]
+        [post.id, 0],
+        [post2.id, 0],
+        [post3.id, 0]
       ])
     end
 
@@ -571,15 +571,24 @@ describe TopicView do
           TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
 
           expect(topic_view.filtered_post_stream).to eq([
-            [post.id, post.post_number],
-            [post2.id, post2.post_number],
-            [post3.id, post3.post_number]
+            post.id,
+            post2.id,
+            post3.id
           ])
         ensure
           TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
           TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
         end
       end
+    end
+  end
+
+  describe '#last_read_post_id' do
+    it 'should return the right id' do
+      post = Fabricate(:post, topic: topic)
+
+      expect(topic_view.last_read_post_id(nil)).to eq(nil)
+      expect(topic_view.last_read_post_id(post.post_number)).to eq(post.id)
     end
   end
 end
