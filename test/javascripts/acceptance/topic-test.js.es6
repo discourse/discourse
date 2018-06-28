@@ -264,3 +264,26 @@ QUnit.test("selecting posts", async assert => {
     "it should hide the multi select menu"
   );
 });
+
+QUnit.test("select below", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-multi-select .btn");
+  await click("#post_3 .select-below");
+
+  assert.ok(
+    find(".selected-posts")
+      .html()
+      .includes(I18n.t("topic.multi_select.description", { count: 18 })),
+    "it should select the right number of posts"
+  );
+
+  await click("#post_2 .select-below");
+
+  assert.ok(
+    find(".selected-posts")
+      .html()
+      .includes(I18n.t("topic.multi_select.description", { count: 19 })),
+    "it should select the right number of posts"
+  );
+});

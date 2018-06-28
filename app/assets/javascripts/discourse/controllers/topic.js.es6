@@ -152,6 +152,35 @@ export default Ember.Controller.extend(BufferedContent, {
     this.appEvents.trigger("post-stream:refresh", { force: true });
   },
 
+  _updateSelectedPostIds(postIds) {
+    this.get("selectedPostIds").pushObjects(postIds);
+    this.set("selectedPostIds", [...new Set(this.get("selectedPostIds"))]);
+    this._forceRefreshPostStream();
+  },
+
+  _loadPostIds(post) {
+    if (this.get("loadingPostIds")) return;
+
+    const postStream = this.get("model.postStream");
+    const url = `/t/${this.get("model.id")}/post_ids.json`;
+
+    this.set("loadingPostIds", true);
+
+    return ajax(url, {
+      data: _.merge(
+        { post_number: post.get("post_number") },
+        postStream.get("streamFilters")
+      )
+    })
+      .then(result => {
+        result.post_ids.pushObject(post.get("id"));
+        this._updateSelectedPostIds(result.post_ids);
+      })
+      .finally(() => {
+        this.set("loadingPostIds", false);
+      });
+  },
+
   actions: {
     showPostFlags(post) {
       return this.send("showFlags", post);
@@ -627,10 +656,13 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     selectBelow(post) {
-      const stream = [...this.get("model.postStream.stream")];
-      const below = stream.slice(stream.indexOf(post.id));
-      this.get("selectedPostIds").pushObjects(below);
-      this._forceRefreshPostStream();
+      if (this.get("model.postStream.isMegaTopic")) {
+        this._loadPostIds(post);
+      } else {
+        const stream = [...this.get("model.postStream.stream")];
+        const below = stream.slice(stream.indexOf(post.id));
+        this._updateSelectedPostIds(below);
+      }
     },
 
     deleteSelected() {

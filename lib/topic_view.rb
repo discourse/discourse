@@ -71,7 +71,7 @@ class TopicView
 
     filter_posts(options)
 
-    if @posts
+    if @posts && !@skip_custom_fields
       if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
@@ -534,7 +534,7 @@ class TopicView
           .order(sort_order: :desc)
       end
 
-    posts = posts.limit(@limit)
+    posts = posts.limit(@limit) if !@skip_limit
     filter_posts_by_ids(posts.pluck(:id))
 
     @posts = @posts.unscope(:order).order(sort_order: :desc) if !asc

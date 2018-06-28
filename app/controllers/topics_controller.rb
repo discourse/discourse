@@ -175,22 +175,34 @@ class TopicsController < ApplicationController
     render_json_dump(wordpress_serializer)
   end
 
+  def post_ids
+    params.require(:topic_id)
+    params.permit(:post_number, :username_filters, :filter)
+
+    options = {
+      filter_post_number: params[:post_number],
+      filter: params[:filter],
+      skip_limit: true,
+      asc: true,
+      skip_custom_fields: true
+    }
+
+    fetch_topic_view(options)
+    render_json_dump(post_ids: @topic_view.posts.pluck(:id))
+  end
+
   def posts
     params.require(:topic_id)
     params.permit(:post_ids, :post_number, :username_filters, :filter)
 
-    default_options = {
+    options = {
       filter_post_number: params[:post_number],
       post_ids: params[:post_ids],
       asc: ActiveRecord::Type::Boolean.new.deserialize(params[:asc]),
       filter: params[:filter]
     }
 
-    if (username_filters = params[:username_filters]).present?
-      default_options[:username_filters] = username_filters.split(',')
-    end
-
-    @topic_view = TopicView.new(params[:topic_id], current_user, default_options)
+    fetch_topic_view(options)
 
     render_json_dump(TopicViewPostsSerializer.new(@topic_view,
       scope: guardian,
@@ -712,6 +724,17 @@ class TopicsController < ApplicationController
       :topic_time,
       timings: {}
     )
+  end
+
+  def fetch_topic_view(options)
+    check_username_filters { |usernames| options[:username_filters] = usernames }
+    @topic_view = TopicView.new(params[:topic_id], current_user, options)
+  end
+
+  def check_username_filters
+    if (username_filters = params[:username_filters]).present?
+      yield(username_filters.split(',')) if block_given?
+    end
   end
 
   def toggle_mute

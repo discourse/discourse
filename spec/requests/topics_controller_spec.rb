@@ -1451,6 +1451,70 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#post_ids' do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+
+    before do
+      TopicView.stubs(:chunk_size).returns(1)
+    end
+
+    it 'returns the right post ids' do
+      post2 = Fabricate(:post, topic: topic)
+      post3 = Fabricate(:post, topic: topic)
+
+      get "/t/#{topic.id}/post_ids.json", params: {
+        post_number: post.post_number
+      }
+
+      expect(response.status).to eq(200)
+
+      body = JSON.parse(response.body)
+
+      expect(body["post_ids"]).to eq([post2.id, post3.id])
+    end
+
+    describe 'filtering by post number with filters' do
+      describe 'username filters' do
+        let(:user) { Fabricate(:user) }
+        let(:post) { Fabricate(:post, user: user) }
+        let!(:post2) { Fabricate(:post, topic: topic, user: user) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}/post_ids.json", params: {
+            post_number: post.post_number,
+            username_filters: post2.user.username
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_ids"]).to eq([post2.id])
+        end
+      end
+
+      describe 'summary filter' do
+        let!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}/post_ids.json", params: {
+            post_number: post.post_number,
+            filter: 'summary'
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_ids"]).to eq([post2.id])
+        end
+      end
+    end
+  end
+
   describe '#posts' do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
