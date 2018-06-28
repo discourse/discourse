@@ -63,7 +63,7 @@ class AdminUserIndexQuery
     if params[:stats].present? && params[:stats] == false
       klass.order(order.reject(&:blank?).join(","))
     else
-      klass.includes(:user_stat, :user_second_factor)
+      klass.includes(:user_stat, :user_second_factors)
         .order(order.reject(&:blank?).join(","))
     end
   end

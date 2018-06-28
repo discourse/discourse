@@ -28,12 +28,12 @@
             </tr>
           </table>
         </div>
-        {{#second-factor-form}}
-          {{second-factor-input value=loginSecondFactor inputId='login-second-factor'}}
+        {{#second-factor-form secondFactorMethod=secondFactorMethod loginSecondFactor=loginSecondFactor backupEnabled=backupEnabled}}
+          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod}}
         {{/second-factor-form}}
       </form>
     {{/if}}
- 
+
     {{#if showLoginButtons}}
       {{login-buttons
         canLoginLocalWithEmail=canLoginLocalWithEmail

@@ -988,7 +988,7 @@ describe UserMerger do
   it "deletes auth tokens" do
     Fabricate(:api_key, user: source_user)
     Fabricate(:readonly_user_api_key, user: source_user)
-    Fabricate(:user_second_factor, user: source_user)
+    Fabricate(:user_second_factor_totp, user: source_user)
 
     SiteSetting.verbose_auth_token_logging = true
     UserAuthToken.generate!(user_id: source_user.id, user_agent: "Firefox", client_ip: "127.0.0.1")

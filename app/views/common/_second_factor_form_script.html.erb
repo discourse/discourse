@@ -1,0 +1,18 @@
+<%= javascript_tag do  %>
+  var useTotp = "<%= t("login.second_factor_toggle.totp") %>";
+  var useBackup = "<%= t("login.second_factor_toggle.backup_code") %>";
+  var backupForm = document.getElementById("backup-second-factor-form");
+  var primaryForm = document.getElementById("primary-second-factor-form");
+  document.getElementById("toggle-form").onclick = function(event) {
+    event.preventDefault();
+    if (backupForm.style.display === "none") {
+      backupForm.style.display = "block";
+      primaryForm.style.display = "none";
+      document.getElementById("toggle-form").innerHTML = useTotp;
+    } else {
+      backupForm.style.display = "none";
+      primaryForm.style.display = "block";
+      document.getElementById("toggle-form").innerHTML = useBackup;
+    }
+  }
+<% end %>

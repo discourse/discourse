@@ -555,6 +555,68 @@
   .tag-notifications .tag-controls {
     margin-top: 24px;
   }
+
+  &.second-factor-backup-preferences {
+    padding-left: 0;
+
+    .second-factor-token-input {
+      margin-right: 10px;
+    }
+
+    .second-factor-form {
+      display: flex;
+      align-items: center;
+    }
+
+    .form-horizontal .instructions {
+      margin-left: 0;
+    }
+
+    .backup-codes {
+      margin: 2em 0;
+
+      .wrapper {
+        display: inline-block;
+        position: relative;
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid $primary-low;
+      }
+
+      .backup-codes-area {
+        resize: none;
+        padding: 0;
+        height: auto;
+        text-align: center;
+        width: 250px;
+        background: white;
+        border: 0;
+        cursor: auto;
+        overflow: hidden;
+        outline: none;
+        font-family: monospace;
+
+        &:focus {
+          box-shadow: none;
+          border-color: #e9e9e9;
+        }
+      }
+
+      .backup-codes-copy-btn,
+      .backup-codes-download-btn {
+        right: 5px;
+        position: absolute;
+      }
+
+      .backup-codes-copy-btn {
+        top: 5px;
+      }
+
+      .backup-codes-download-btn {
+        top: 40px;
+      }
+    }
+  }
 }
 
 .paginated-topics-list {

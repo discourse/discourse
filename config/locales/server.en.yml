@@ -1892,7 +1892,12 @@ en:
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
     second_factor_title: "Two Factor Authentication"
     second_factor_description: "Please enter the required authentication code from your app:"
-    invalid_second_factor_code: "Invalid authentication code"
+    second_factor_backup_description: "Please enter one of your backup codes:"
+    second_factor_backup_title: "Two Factor Backup"
+    invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
+    second_factor_toggle:
+      totp: "Log in using Authenticator app"
+      backup_code: "Log in using a backup code"
 
   user:
     no_accounts_associated: "No accounts associated"

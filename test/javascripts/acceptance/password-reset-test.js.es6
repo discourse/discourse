@@ -51,7 +51,7 @@ acceptance("Password Reset", {
         return response({
           success: false,
           message: "invalid token",
-          errors: { user_second_factor: ["invalid token"] }
+          errors: { user_second_factors: ["invalid token"] }
         });
       }
     });
@@ -114,7 +114,7 @@ QUnit.test("Password Reset Page With Second Factor", assert => {
     assert.ok(exists("#second-factor"), "shows the second factor prompt");
   });
 
-  fillIn("#second-factor", "0000");
+  fillIn("input#second-factor", "0000");
   click(".password-reset form button");
 
   andThen(() => {
@@ -128,7 +128,7 @@ QUnit.test("Password Reset Page With Second Factor", assert => {
     );
   });
 
-  fillIn("#second-factor", "123123");
+  fillIn("input#second-factor", "123123");
   click(".password-reset form button");
 
   andThen(() => {

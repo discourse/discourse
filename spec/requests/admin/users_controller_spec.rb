@@ -808,12 +808,14 @@ RSpec.describe Admin::UsersController do
 
   describe '#disable_second_factor' do
     let(:second_factor) { user.create_totp }
+    let(:second_factor_backup) { user.generate_backup_codes }
 
     describe 'as an admin' do
       before do
         sign_in(admin)
         second_factor
-        expect(user.reload.user_second_factor).to eq(second_factor)
+        second_factor_backup
+        expect(user.reload.user_second_factors.totp).to eq(second_factor)
       end
 
       it 'should able to disable the second factor for another user' do
@@ -822,7 +824,7 @@ RSpec.describe Admin::UsersController do
         end.to change { Jobs::CriticalUserEmail.jobs.length }.by(1)
 
         expect(response.status).to eq(200)
-        expect(user.reload.user_second_factor).to eq(nil)
+        expect(user.reload.user_second_factors).to be_empty
 
         job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
 
@@ -838,7 +840,7 @@ RSpec.describe Admin::UsersController do
 
       describe 'when user does not have second factor enabled' do
         it 'should raise the right error' do
-          user.user_second_factor.destroy!
+          user.user_second_factors.destroy_all
 
           put "/admin/users/#{user.id}/disable_second_factor.json"
 
