@@ -252,13 +252,14 @@ export default function() {
       }
 
       if (data.password === "need-second-factor") {
-        if (data.second_factor_token) {
+        if (data.second_factor_token && data.second_factor_token === "123456") {
           return response({ username: "eviltrout" });
         }
 
         return response({
           error: "Invalid Second Factor",
           reason: "invalid_second_factor",
+          backup_enabled: true,
           sent_to_email: "eviltrout@example.com",
           current_email: "current@example.com"
         });

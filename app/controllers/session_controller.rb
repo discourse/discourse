@@ -246,10 +246,11 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
-      if user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+      if user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
         return render json: failed_json.merge(
           error: I18n.t("login.invalid_second_factor_code"),
-          reason: "invalid_second_factor"
+          reason: "invalid_second_factor",
+          backup_enabled: user.backup_codes_enabled?
         )
       end
 
@@ -260,17 +261,18 @@ class SessionController < ApplicationController
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
     second_factor_token = params[:second_factor_token]
+    second_factor_method = params[:second_factor_method].to_i
     token = params[:token]
     valid_token = !!EmailToken.valid_token_format?(token)
     user = EmailToken.confirmable(token)&.user
 
     if valid_token && user&.totp_enabled?
-      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-
       if !second_factor_token.present?
         @second_factor_required = true
+        @backup_codes_enabled = true if user&.backup_codes_enabled?
         return render layout: 'no_ember'
-      elsif !user.authenticate_totp(second_factor_token)
+      elsif !user.authenticate_second_factor(second_factor_token, second_factor_method)
+        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
         @error = I18n.t('login.invalid_second_factor_code')
         return render layout: 'no_ember'
       end
