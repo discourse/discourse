@@ -340,7 +340,7 @@ export default createWidget("post-menu", {
     const orderedButtons = this.menuItems();
 
     // If the post is a wiki, make Edit more prominent
-    if (attrs.wiki) {
+    if (attrs.wiki && attrs.canEdit) {
       replaceButton(orderedButtons, "edit", "reply-small");
       replaceButton(orderedButtons, "reply", "wiki-edit");
     }
