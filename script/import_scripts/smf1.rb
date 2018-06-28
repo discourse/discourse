@@ -459,8 +459,8 @@ class ImportScripts::Smf1 < ImportScripts::Base
     SQL
     ).each do |f|
       print_status(count += 1, total, get_start_time("feedbacks"))
-      next unless user_id_from = user_id_from_imported_user_id(f["id_member"])
-      next unless user_id_to = user_id_from_imported_user_id(f["feedbackmember_id"])
+      next unless user_id_from = user_id_from_imported_user_id(f["feedbackmember_id"])
+      next unless user_id_to = user_id_from_imported_user_id(f["id_member"])
       next unless user = User.find_by(id: user_id_to)
 
       feedbacks = user.custom_fields[FEEDBACKS] || []
