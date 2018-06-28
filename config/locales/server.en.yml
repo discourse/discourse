@@ -1312,6 +1312,9 @@ en:
     max_logins_per_ip_per_hour: "Maximum number of logins allowed per IP address per hour"
     max_logins_per_ip_per_minute: "Maximum number of logins allowed per IP address per minute"
 
+    max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute."
+    max_post_deletions_per_day: "Maximum number of posts a user can delete per day."
+
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
 
@@ -2211,7 +2214,7 @@ en:
       subject_template: "Thanks for spending time with us"
       text_body_template: |
         Hey there. We see you’ve been busy reading, which is fantastic, so we’ve promoted you up a [trust level!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
-        
+
         We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](/my/preferences/profile), or feel free to [start a new topic](/categories).
 
     welcome_invite:

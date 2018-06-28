@@ -1187,6 +1187,12 @@ rate_limits:
   max_logins_per_ip_per_minute:
     min: 1
     default: 6
+  max_post_deletions_per_minute:
+    min: 1
+    default: 3
+  max_post_deletions_per_day:
+    min: 1
+    default: 50
 
 developer:
   force_hostname:
