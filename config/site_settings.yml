@@ -511,6 +511,7 @@ posting:
   body_min_entropy:
     default: 7
     locale_default:
+      ja: 3
       zh_CN: 3
       zh_TW: 3
   min_topic_title_length:
@@ -528,12 +529,17 @@ posting:
   title_min_entropy:
     default: 10
     locale_default:
+      ja: 3
       zh_CN: 3
       zh_TW: 3
-  allow_uppercase_posts: false
+  allow_uppercase_posts:
+    default: false
+    locale_default:
+      ja: false
   title_prettify:
     default: true
     locale_default:
+      ja: false
       zh_CN: false
       zh_TW: false
   title_fancy_entities: true
