@@ -1,61 +1,74 @@
-<section class="user-content user-preferences second-factor-backup-preferences">
+<section class="user-preferences second-factor-backup-preferences">
   <form class="form-horizontal">
-    <h2>{{i18n "user.second_factor_backup.title"}}</h2>
 
-    {{#if successMessage}}
-      <div class="alert alert-success">
-        {{successMessage}}
+    <div class="control-group">
+      <div class="controls">
+        <h3>{{i18n "user.second_factor_backup.title"}}</h3>
       </div>
-    {{/if}}
+      <div class="controls">
+        {{#if successMessage}}
+          <div class="alert alert-success">
+            {{successMessage}}
+          </div>
+        {{/if}}
 
-    {{#if errorMessage}}
-      <div class="alert alert-error">
-        {{errorMessage}}
-      </div>
-    {{/if}}
-
-    <div class="second-factor-form">
-      {{second-factor-input
-        value=secondFactorToken
-        maxlength=6
-        inputId="second-factor-token"}}
-
-      <div class="actions">
-          {{d-button
-            action="generateSecondFactorCodes"
-            class="btn btn-primary"
-            disabled=isDisabledGenerateBackupCodeBtn
-            label=generateBackupCodeBtnLabel}}
-        {{#if backupEnabled}}
-          {{d-button
-            action="disableSecondFactorBackup"
-            class="btn btn-danger"
-            disabled=isDisabledDisableBackupCodeBtn
-            label="user.second_factor_backup.disable"}}
+        {{#if errorMessage}}
+          <div class="alert alert-error">
+            {{errorMessage}}
+          </div>
         {{/if}}
       </div>
     </div>
 
-    <div class="instructions">
-      {{i18n "user.second_factor.disable_description"}}
+    <label class='control-label'>{{i18n 'user.second_factor.label'}}</label>
+    <div class="control-group">
+      <div class="controls">
+        {{second-factor-input
+          value=secondFactorToken
+          maxlength=6
+          inputId="second-factor-token"}}
+
+        <div class='instructions'>
+          {{i18n "user.second_factor.disable_description"}}
+        </div>
+      </div>
     </div>
 
-    {{#conditional-loading-section isLoading=loading}}
-      {{#if backupCodes}}
-        <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
+    <div class="control-group">
+      <div class="controls">
+        <div class="actions">
+            {{d-button
+              action="generateSecondFactorCodes"
+              class="btn btn-primary"
+              disabled=isDisabledGenerateBackupCodeBtn
+              label=generateBackupCodeBtnLabel}}
+          {{#if backupEnabled}}
+            {{d-button
+              action="disableSecondFactorBackup"
+              class="btn btn-danger"
+              disabled=isDisabledDisableBackupCodeBtn
+              label="user.second_factor_backup.disable"}}
+          {{/if}}
+        </div>
 
-        <p>
-          {{i18n "user.second_factor_backup.codes.description"}}
-        </p>
+        {{#conditional-loading-section isLoading=loading}}
+          {{#if backupCodes}}
+            <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
 
-        {{backup-codes
-          copyBackupCode=(action "copyBackupCode")
-          backupCodes=backupCodes}}
-      {{/if}}
-    {{/conditional-loading-section}}
+            <p>
+              {{i18n "user.second_factor_backup.codes.description"}}
+            </p>
 
-    {{#link-to "preferences.account" model.username}}
-      {{i18n "go_back"}}
-    {{/link-to}}
+            {{backup-codes
+              copyBackupCode=(action "copyBackupCode")
+              backupCodes=backupCodes}}
+
+            {{#link-to "preferences.account" model.username}}
+              {{i18n "go_back"}}
+            {{/link-to}}
+          {{/if}}
+        {{/conditional-loading-section}}
+      </div>
+    </div>
   </form>
 </section>

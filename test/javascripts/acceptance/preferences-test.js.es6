@@ -125,7 +125,7 @@ QUnit.test("second factor", assert => {
   });
 
   fillIn("#password", "secrets");
-  click(".user-content .btn-primary");
+  click(".user-preferences .btn-primary");
 
   andThen(() => {
     assert.ok(exists("#test-qr"), "shows qr code");
@@ -156,7 +156,7 @@ QUnit.test("second factor backup", assert => {
   });
 
   fillIn("#second-factor-token", "111111");
-  click(".second-factor-form .btn-primary");
+  click(".user-preferences .btn-primary");
 
   andThen(() => {
     assert.ok(exists(".backup-codes-area"), "shows backup codes");
