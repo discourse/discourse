@@ -143,7 +143,8 @@ createWidget("notification-item", {
     const id = this.attrs.id;
     setTransientHeader("Discourse-Clear-Notifications", id);
     if (document && document.cookie) {
-      document.cookie = `cn=${id}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+      let path = Discourse.BaseUri || "/";
+      document.cookie = `cn=${id}; path=${path}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
     }
     if (wantsNewWindow(e)) {
       return;
