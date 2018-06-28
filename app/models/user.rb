@@ -449,7 +449,7 @@ class User < ActiveRecord::Base
 
   def publish_notifications_state
     # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order('notifications.id desc').first
+    notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
     sql = (<<~SQL).freeze
