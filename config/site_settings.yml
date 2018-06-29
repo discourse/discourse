@@ -930,6 +930,8 @@ files:
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
+  s3_force_path_style:
+    default: false
   allow_profile_backgrounds:
     client: true
     default: true
