@@ -1,8 +1,3 @@
-import {
-  on,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
-
 export default Ember.Mixin.create({
 
   //velocity is pixels per ms
@@ -24,7 +19,7 @@ export default Ember.Mixin.create({
   },
 
   _calculateNewPanState(oldState, e) {
-    if(e.type == "pointerup" || e.type == "pointercancel") {
+    if(e.type === "pointerup" || e.type === "pointercancel") {
       return oldState;
     }
     const newTimestamp = new Date().getTime();
@@ -79,10 +74,10 @@ export default Ember.Mixin.create({
     if(previousState.start && "panStart" in this) {
       this.panStart(newState);
     }
-    else if((e.type == "pointerup" || e.type == "pointercancel") && "panEnd" in this) {
+    else if((e.type === "pointerup" || e.type === "pointercancel") && "panEnd" in this) {
       this.panEnd(newState);
     }
-    else if(e.type == "pointermove" && "panMove" in this) {
+    else if(e.type === "pointermove" && "panMove" in this) {
       this.panMove(newState);
     }
   },
