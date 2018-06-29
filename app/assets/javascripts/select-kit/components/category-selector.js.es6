@@ -36,9 +36,9 @@ export default MultiSelectComponent.extend({
   },
 
   filterComputedContent(computedContent, computedValues, filter) {
-    const regex = new RegExp(filter.toLowerCase(), "i");
+    const regex = new RegExp(filter, "i");
     return computedContent.filter(category =>
-      Ember.get(category, "name").match(regex)
+      this._normalize(Ember.get(category, "name")).match(regex)
     );
   },
 

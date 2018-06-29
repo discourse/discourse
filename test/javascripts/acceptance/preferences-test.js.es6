@@ -18,6 +18,11 @@ acceptance("User Preferences", {
     server.put("/u/second_factor.json", () => { //eslint-disable-line
       return response({ error: "invalid token" });
     });
+
+    // prettier-ignore
+    server.put("/u/second_factors_backup.json", () => { //eslint-disable-line
+      return response({ backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"] });
+    });
   }
 });
 
@@ -137,6 +142,24 @@ QUnit.test("second factor", assert => {
         .indexOf("invalid token") > -1,
       "shows server validation error message"
     );
+  });
+});
+
+QUnit.test("second factor backup", assert => {
+  visit("/u/eviltrout/preferences/second-factor-backup");
+
+  andThen(() => {
+    assert.ok(
+      exists("#second-factor-token"),
+      "it has a authentication token input"
+    );
+  });
+
+  fillIn("#second-factor-token", "111111");
+  click(".second-factor-form .btn-primary");
+
+  andThen(() => {
+    assert.ok(exists(".backup-codes-area"), "shows backup codes");
   });
 });
 

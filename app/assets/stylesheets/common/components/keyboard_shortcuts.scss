@@ -5,8 +5,14 @@
 
 .topic-list tr.selected td:first-child,
 .topic-list-item.selected td:first-child,
+.latest-topic-list-item.selected,
+.featured-topic.selected,
 .topic-post.selected {
   box-shadow: -3px 0 0 $danger;
+}
+
+.latest .featured-topic {
+  padding-left: 4px;
 }
 
 .topic-list-item.selected {

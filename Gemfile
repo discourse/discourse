@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.50'
+gem 'onebox', '1.8.51'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -94,7 +94,7 @@ gem 'tilt', require: false
 
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'highline', require: false
+gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 
 # Gems used only for assets and not required in production environments by default.

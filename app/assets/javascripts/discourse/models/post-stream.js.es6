@@ -189,8 +189,13 @@ export default RestModel.extend({
   toggleSummary() {
     this.get("userFilters").clear();
     this.toggleProperty("summary");
+    const opts = {};
 
-    return this.refresh().then(() => {
+    if (!this.get("summary")) {
+      opts.filter = "none";
+    }
+
+    return this.refresh(opts).then(() => {
       if (this.get("summary")) {
         this.jumpToSecondVisible();
       }
@@ -272,26 +277,6 @@ export default RestModel.extend({
       .finally(() => {
         this.set("loadingNearPost", null);
       });
-  },
-
-  collapsePosts(from, to) {
-    const posts = this.get("posts");
-    const remove = posts.filter(post => {
-      const postNumber = post.get("post_number");
-      return postNumber >= from && postNumber <= to;
-    });
-
-    posts.removeObjects(remove);
-
-    // make gap
-    this.set("gaps", this.get("gaps") || { before: {}, after: {} });
-    const before = this.get("gaps.before");
-    const post = posts.find(p => p.get("post_number") > to);
-
-    before[post.get("id")] = remove.map(p => p.get("id"));
-    post.set("hasGap", true);
-
-    this.get("stream").enumerableContentDidChange();
   },
 
   // Fill in a gap of posts before a particular post
@@ -854,12 +839,13 @@ export default RestModel.extend({
     const url = "/t/" + this.get("topic.id") + "/posts.json";
     const data = { post_ids: postIds };
     const store = this.store;
-    return ajax(url, { data }).then(result => {
-      const posts = Ember.get(result, "post_stream.posts");
 
+    return ajax(url, { data }).then(result => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }
+
+      const posts = Ember.get(result, "post_stream.posts");
 
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord("post", p)));

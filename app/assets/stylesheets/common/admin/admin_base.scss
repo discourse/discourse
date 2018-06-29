@@ -285,6 +285,14 @@ $mobile-breakpoint: 700px;
         width: 20%;
       }
     }
+
+    tr.total-for-period,
+    tr.total {
+      td {
+        font-weight: 700;
+      }
+    }
+
     &.web_crawlers {
       tr {
         th:nth-of-type(1) {
@@ -318,6 +326,12 @@ $mobile-breakpoint: 700px;
 
 .full-reason {
   white-space: pre-wrap;
+}
+
+.admin-users .users-list {
+  .username .fa {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
 }
 
 .ip-lookup {

@@ -116,8 +116,10 @@ module Discourse
     }
 
     # Precompile all available locales
-    Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
-      config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
+    unless GlobalSetting.try(:omit_base_locales)
+      Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
+        config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
+      end
     end
 
     # out of the box sprockets 3 grabs loose files that are hanging in assets,

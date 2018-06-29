@@ -364,35 +364,6 @@ describe TopicView do
       end
     end
 
-    describe 'when a megalodon topic is closed' do
-      before do
-        @original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
-        TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-        TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 1)
-        topic.update!(closed: true)
-        SiteSetting.summary_max_results = 2
-      end
-
-      after do
-        TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-        TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", @original_const)
-      end
-
-      it 'should be forced into summary mode without gaps' do
-        topic_view = TopicView.new(topic.id, evil_trout, post_number: 1)
-
-        expect(topic_view.contains_gaps?).to eq(false)
-        expect(topic_view.posts).to eq([p5])
-      end
-
-      it 'should not be forced into summary mode if post_number is not blank' do
-        topic_view = TopicView.new(topic.id, evil_trout, post_number: 2)
-
-        expect(topic_view.contains_gaps?).to eq(false)
-        expect(topic_view.posts).to eq([p1, p2, p3])
-      end
-    end
-
     it "#restricts to correct topic" do
       t2 = Fabricate(:topic)
 
@@ -586,9 +557,9 @@ describe TopicView do
 
     it 'should return the right columns' do
       expect(topic_view.filtered_post_stream).to eq([
-        [post.id, post.post_number, 0],
-        [post2.id, post2.post_number, 0],
-        [post3.id, post3.post_number, 0]
+        [post.id, 0],
+        [post2.id, 0],
+        [post3.id, 0]
       ])
     end
 
@@ -600,15 +571,24 @@ describe TopicView do
           TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
 
           expect(topic_view.filtered_post_stream).to eq([
-            [post.id, post.post_number],
-            [post2.id, post2.post_number],
-            [post3.id, post3.post_number]
+            post.id,
+            post2.id,
+            post3.id
           ])
         ensure
           TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
           TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
         end
       end
+    end
+  end
+
+  describe '#filtered_post_id' do
+    it 'should return the right id' do
+      post = Fabricate(:post, topic: topic)
+
+      expect(topic_view.filtered_post_id(nil)).to eq(nil)
+      expect(topic_view.filtered_post_id(post.post_number)).to eq(post.id)
     end
   end
 end

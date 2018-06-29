@@ -69,7 +69,11 @@ class GroupsController < ApplicationController
     end
 
     if type = params[:type]&.to_sym
-      groups = TYPE_FILTERS[type].call(groups, current_user)
+      callback = TYPE_FILTERS[type]
+      if !callback
+        raise Discourse::InvalidParameters.new(:type)
+      end
+      groups = callback.call(groups, current_user)
     end
 
     if current_user
@@ -191,6 +195,15 @@ class GroupsController < ApplicationController
 
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
+
+    if limit < 0
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
+    if offset < 0
+      raise Discourse::InvalidParameters.new(:offset)
+    end
+
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = ""
 

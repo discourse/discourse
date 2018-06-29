@@ -24,6 +24,7 @@
     {{/if}}
   </div>
   {{/unless}}
+  {{plugin-outlet name="user-preferences-emails-pref-email-settings" args=(hash model=model save=(action "save"))}}
 </div>
 
 {{#unless siteSettings.disable_digest_emails}}

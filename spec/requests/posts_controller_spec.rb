@@ -124,18 +124,6 @@ describe PostsController do
       let(:user) { Fabricate(:user) }
       let(:moderator) { Fabricate(:moderator) }
 
-      it 'does not allow to destroy when edit time limit expired' do
-        SiteSetting.post_edit_time_limit = 5
-
-        post = Fabricate(:post, topic: topic, created_at: 10.minutes.ago, user: user, post_number: 3)
-        sign_in(user)
-
-        delete "/posts/#{post.id}.json"
-
-        expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
-      end
-
       it "raises an error when the user doesn't have permission to see the post" do
         pm = Fabricate(:private_message_topic)
         post = Fabricate(:post, topic: pm, post_number: 3)

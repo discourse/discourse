@@ -320,6 +320,17 @@ describe GroupsController do
   end
 
   describe "#members" do
+
+    it "returns correct error code with invalid params" do
+      sign_in(Fabricate(:user))
+
+      get "/groups/#{group.name}/members.json?limit=-1"
+      expect(response.status).to eq(400)
+
+      get "/groups/#{group.name}/members.json?offset=-1"
+      expect(response.status).to eq(400)
+    end
+
     it "ensures the group can be seen" do
       sign_in(Fabricate(:user))
       group.update!(visibility_level: Group.visibility_levels[:owners])

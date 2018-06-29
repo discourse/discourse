@@ -257,7 +257,9 @@ class ApplicationController < ActionController::Base
         Notification.read(current_user, notification_ids)
         current_user.reload
         current_user.publish_notifications_state
-        cookies.delete('cn')
+        cookie_args = {}
+        cookie_args[:path] = Discourse.base_uri if Discourse.base_uri.present?
+        cookies.delete('cn', cookie_args)
       end
     end
   end

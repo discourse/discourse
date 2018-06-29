@@ -903,6 +903,13 @@ SQL
   end
 
   def postprocess_post_raw(raw, user_id)
+    matches = raw.match(/<messagetemplate.*<\/messagetemplate>/m) || []
+    matches.each do |match|
+      hash = Hash.from_xml(match)
+      template = hash["messagetemplate"]["zone"]["item"]
+      content = (template[0] || template)["content"] || ""
+      raw.sub!(match, content)
+    end
 
     doc = Nokogiri::HTML.fragment(raw)
 

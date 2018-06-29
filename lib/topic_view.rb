@@ -51,6 +51,7 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
+    @_post_number = @post_number.dup
     @post_number = [@post_number.to_i, 1].max
     @page = [@page.to_i, 1].max
 
@@ -309,7 +310,7 @@ class TopicView
     @participant_count ||=
       begin
         if participants.size == MAX_PARTICIPANTS
-          if unfiltered_post_ids.length > MAX_POSTS_COUNT_PARTICIPANTS
+          if @topic.posts_count > MAX_POSTS_COUNT_PARTICIPANTS
             @topic.participant_count
           else
             sql = <<~SQL
@@ -373,14 +374,14 @@ class TopicView
     @filtered_posts.by_newest.with_user.first(25)
   end
 
-  # Returns an array of [id, post_number, days_ago] tuples.
+  # Returns an array of [id, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
     @filtered_post_stream ||= begin
       posts = @filtered_posts
         .order(:sort_order)
 
-      columns = [:id, :post_number]
+      columns = [:id]
 
       if !is_mega_topic?
         columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
@@ -391,7 +392,13 @@ class TopicView
   end
 
   def filtered_post_ids
-    @filtered_post_ids ||= filtered_post_stream.map { |tuple| tuple[0] }
+    @filtered_post_ids ||= filtered_post_stream.map do |tuple|
+      if is_mega_topic?
+        tuple
+      else
+        tuple[0]
+      end
+    end
   end
 
   def unfiltered_post_ids
@@ -405,9 +412,8 @@ class TopicView
       end
   end
 
-  def force_summary_mode?
-    @force_summary_mode ||=
-      (@topic.closed? && @topic.posts_count >= (MEGA_TOPIC_POSTS_COUNT * 2))
+  def filtered_post_id(post_number)
+    @filtered_posts.where(post_number: post_number).pluck(:id).first
   end
 
   protected
@@ -487,9 +493,9 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     # Filters
-    if @filter == 'summary' || ((@post_number.blank? || @post_number.to_i == 1) && force_summary_mode?)
+    if @filter == 'summary'
       @filtered_posts = @filtered_posts.summary(@topic.id)
-      @contains_gaps = true unless force_summary_mode?
+      @contains_gaps = true
     end
 
     if @best.present?
@@ -500,7 +506,12 @@ class TopicView
     # Username filters
     if @username_filters.present?
       usernames = @username_filters.map { |u| u.downcase }
-      @filtered_posts = @filtered_posts.where('post_number = 1 OR posts.user_id IN (SELECT u.id FROM users u WHERE username_lower IN (?))', usernames)
+
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.user_id IN (SELECT u.id FROM users u WHERE u.username_lower IN (?))
+      ', usernames)
+
       @contains_gaps = true
     end
 
@@ -508,8 +519,12 @@ class TopicView
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
+
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
-      @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
+      @filtered_posts = @filtered_posts.where(
+        "posts.deleted_at IS NULL OR posts.post_number = 1"
+      )
+
       @contains_gaps = true
     end
 
@@ -560,21 +575,21 @@ class TopicView
 
   def closest_post_to(post_number)
     # happy path
-    closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
+    closest_post_id = filtered_post_id(post_number)
 
-    if closest_post.empty?
+    if closest_post_id.blank?
       # less happy path, missing post
-      closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
+      closest_post_id = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id).first
     end
 
-    return nil if closest_post.empty?
+    return nil if closest_post_id.blank?
 
-    filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
+    filtered_post_ids.index(closest_post_id) || filtered_post_ids[0]
   end
 
   MEGA_TOPIC_POSTS_COUNT = 10000
 
   def is_mega_topic?
-    @topic.posts_count >= MEGA_TOPIC_POSTS_COUNT
+    @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
   end
 end

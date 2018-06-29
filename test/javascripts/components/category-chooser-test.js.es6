@@ -99,7 +99,7 @@ componentTest("with allowUncategorized=null", {
         this.get("subject")
           .header()
           .title(),
-        "Select a category"
+        "category"
       );
     });
   }
@@ -124,7 +124,7 @@ componentTest("with allowUncategorized=null rootNone=true", {
         this.get("subject")
           .header()
           .title(),
-        "Select a category"
+        "category"
       );
     });
   }
@@ -151,7 +151,7 @@ componentTest("with disallowed uncategorized, rootNone and rootNoneLabel", {
         this.get("subject")
           .header()
           .title(),
-        "Select a category"
+        "category"
       );
     });
   }

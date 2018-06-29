@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
-  has_one :user_second_factor, dependent: :destroy
+  has_many :user_second_factors, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -313,6 +313,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
   end
 
+  def enqueue_member_welcome_message
+    return unless SiteSetting.send_tl1_welcome_message?
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
+  end
+
   def change_username(new_username, actor = nil)
     UsernameChanger.change(self, new_username, actor)
   end
@@ -444,7 +449,7 @@ class User < ActiveRecord::Base
 
   def publish_notifications_state
     # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order('notifications.id desc').first
+    notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
     sql = (<<~SQL).freeze
@@ -537,7 +542,7 @@ class User < ActiveRecord::Base
   def new_user_posting_on_first_day?
     !staff? &&
     trust_level < TrustLevel[2] &&
-    (self.first_post_created_at.nil? || self.first_post_created_at >= 24.hours.ago)
+    (trust_level == TrustLevel[0] || self.first_post_created_at.nil? || self.first_post_created_at >= 24.hours.ago)
   end
 
   def new_user?

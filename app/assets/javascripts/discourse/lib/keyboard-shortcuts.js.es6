@@ -40,7 +40,16 @@ const bindings = {
   "m r": { handler: "setTrackingToRegular" }, // mark topic as regular
   "m t": { handler: "setTrackingToTracking" }, // mark topic as tracking
   "m w": { handler: "setTrackingToWatching" }, // mark topic as watching
-  "o,enter": { click: ".topic-list tr.selected a.title", anonymous: true }, // open selected topic
+  "o,enter": {
+    click: [
+      ".topic-list tr.selected a.title",
+      ".latest-topic-list .latest-topic-list-item.selected div.main-link a.title",
+      ".top-topic-list .latest-topic-list-item.selected div.main-link a.title",
+      ".latest .featured-topic.selected a.title"
+    ].join(", "),
+    anonymous: true
+  }, // open selected topic on latest or categories page
+  tab: { handler: "switchFocusCategoriesPage", anonymous: true },
   p: { handler: "showCurrentUser" },
   q: { handler: "quoteReply" },
   r: { postAction: "replyToPost" },
@@ -431,14 +440,32 @@ export default {
     );
   },
 
+  categoriesTopicsList() {
+    const setting = this.container.lookup("site-settings:main")
+      .desktop_category_page_style;
+    switch (setting) {
+      case "categories_with_featured_topics":
+        return $(".latest .featured-topic");
+      case "categories_and_latest_topics":
+        return $(".latest-topic-list .latest-topic-list-item");
+      case "categories_and_top_topics":
+        return $(".top-topic-list .latest-topic-list-item");
+      default:
+        return $();
+    }
+  },
+
   _findArticles() {
     const $topicList = $(".topic-list");
     const $postsWrapper = $(".posts-wrapper");
+    const $categoriesTopicsList = this.categoriesTopicsList();
 
     if ($postsWrapper.length > 0) {
       return $(".posts-wrapper .topic-post, .topic-list tbody tr");
     } else if ($topicList.length > 0) {
       return $topicList.find(".topic-list-item");
+    } else if ($categoriesTopicsList.length > 0) {
+      return $categoriesTopicsList;
     }
   },
 

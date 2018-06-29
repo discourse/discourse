@@ -79,8 +79,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_everything_else
     copy_badges
     fix_category_descriptions
-
-    # TODO: update @mentions for usernames changed due to conflict
   end
 
   def source_raw_connection
@@ -293,7 +291,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       next unless File.exists?(absolute_filename)
 
       upload = create_upload(user_id, absolute_filename, File.basename(absolute_filename))
-      if upload.persisted?
+      if upload&.persisted?
         @uploads[row['id']] = upload.id
         if @source_cdn
           DbHelper.remap(UrlHelper.absolute(row['url'], @source_cdn), upload.url)
@@ -301,12 +299,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         DbHelper.remap(UrlHelper.absolute(row['url'], @source_base_url), upload.url)
         DbHelper.remap(row['url'], upload.url)
       else
-        puts "Error: Upload did not persist for #{absolute_filename}! #{upload.errors.full_messages}"
+        puts "Error: Upload did not persist for #{absolute_filename}! #{upload&.errors&.full_messages}"
       end
     end
     puts ''
 
-    copy_model(PostUpload, skip_processing: true)
+    copy_model(PostUpload)
     copy_model(UserAvatar)
   end
 
@@ -351,7 +349,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     @sequences[Badge.sequence_name] = last_id + 1
 
-    copy_model(UserBadge, is_a_user_model: true)
+    copy_model(UserBadge, is_a_user_model: true, skip_if_merged: true)
   end
 
   def copy_model(klass, skip_if_merged: false, is_a_user_model: false, skip_processing: false, mapping: nil, select_sql: nil)
@@ -517,6 +515,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def process_user_avatar(user_avatar)
     user_avatar['custom_upload_id'] = upload_id_from_imported_id(user_avatar['custom_upload_id']) if user_avatar['custom_upload_id']
     user_avatar['gravatar_upload_id'] = upload_id_from_imported_id(user_avatar['gravatar_upload_id']) if user_avatar['gravatar_upload_id']
+    return nil unless user_avatar['custom_upload_id'].present? && user_avatar['gravatar_upload_id'].present?
     user_avatar
   end
 
@@ -529,6 +528,18 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def process_user_warning(user_warning)
     user_warning['created_by_id'] = user_id_from_imported_id(user_warning['created_by_id']) if user_warning['created_by_id']
     user_warning
+  end
+
+  def process_post_upload(post_upload)
+    return nil unless post_upload['upload_id'].present?
+
+    # can't figure out why there are duplicates of these during merge.
+    # here's a hack to prevent it:
+    @imported_post_uploads ||= {}
+    return nil if @imported_post_uploads[post_upload['post_id']] == post_upload['upload_id']
+    @imported_post_uploads[post_upload['post_id']] = post_upload['upload_id']
+
+    post_upload
   end
 
   def process_notification(notification)
@@ -614,6 +625,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def fix_primary_keys
     @sequences.each do |sequence_name, val|
       sql = "SELECT setval('#{sequence_name}', #{val})"
+      puts sql
       @raw_connection.exec(sql)
     end
   end
