@@ -506,7 +506,12 @@ class TopicView
     # Username filters
     if @username_filters.present?
       usernames = @username_filters.map { |u| u.downcase }
-      @filtered_posts = @filtered_posts.where('post_number = 1 OR posts.user_id IN (SELECT u.id FROM users u WHERE username_lower IN (?))', usernames)
+
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.user_id IN (SELECT u.id FROM users u WHERE u.username_lower IN (?))
+      ', usernames)
+
       @contains_gaps = true
     end
 
@@ -514,8 +519,12 @@ class TopicView
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
+
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
-      @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
+      @filtered_posts = @filtered_posts.where(
+        "posts.deleted_at IS NULL OR posts.post_number = 1"
+      )
+
       @contains_gaps = true
     end
 
