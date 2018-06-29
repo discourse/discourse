@@ -482,4 +482,147 @@ class Report
       }
     end
   end
+
+  def self.report_staff_notes(report)
+    report.data = []
+    values = PluginStoreRow.where(plugin_name: 'staff_notes').pluck(:value)
+    values.each do |v|
+      note_data = {}
+      json = JSON.parse(v)[0]
+      if json['created_at'] >= report.start_date && json['created_at'] <= report.end_date
+        note_data[:created_at] = json['created_at']
+        note_data[:user_id] = json['user_id']
+        note_data[:username] = User.find(json['user_id']).username
+        note_data[:moderator_id] = json['created_by']
+        note_data[:moderator_username] = User.find(json['created_by']).username
+        note_data[:note] = json['raw']
+
+        report.data << note_data
+      end
+    end
+  end
+
+  def self.report_moderator_activity(report)
+    report.data = []
+    mod_data = {}
+    mod_ids = []
+
+    User.real.where(moderator: true).select(:id, :username).as_json.each do |mod|
+      mod_data[mod['id']] = {user_id: mod['id'], username: mod['username']}
+      mod_ids << mod['id']
+    end
+
+    return if mod_ids.empty?
+
+    time_read_query = <<~SQL
+    SELECT SUM(uv.time_read) AS time_read,
+    uv.user_id
+    FROM user_visits uv
+    WHERE uv.user_id = ANY(ARRAY#{mod_ids})
+    GROUP BY uv.user_id
+    SQL
+
+    flag_count_query = <<~SQL
+    SELECT pa.agreed_by_id AS user_id,
+    COUNT(*) AS flag_count
+    FROM post_actions pa
+    WHERE pa.agreed_by_id = ANY(ARRAY#{mod_ids})
+    AND pa.post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
+    GROUP BY pa.agreed_by_id
+    SQL
+
+    topic_count_query = <<~SQL
+    SELECT t.user_id AS user_id,
+    COUNT(*) AS topic_count
+    FROM topics t
+    WHERE t.user_id = ANY(ARRAY#{mod_ids})
+    GROUP BY t.user_id
+    SQL
+
+    post_count_query = <<~SQL
+    SELECT p.user_id AS user_id,
+    COUNT(*) AS post_count
+    FROM posts p
+    WHERE p.user_id = ANY(ARRAY#{mod_ids})
+    GROUP BY p.user_id
+    SQL
+
+    DB.query(time_read_query).each do |row|
+      mod_data[row.user_id][:time_read] = row.time_read
+    end
+
+    DB.query(flag_count_query).each do |row|
+      mod_data[row.user_id][:flag_count] = row.flag_count
+    end
+
+    DB.query(topic_count_query).each do |row|
+      mod_data[row.user_id][:topic_count] = row.topic_count
+    end
+
+    DB.query(post_count_query).each do |row|
+      mod_data[row.user_id][:post_count] = row.post_count
+    end
+
+    mod_data.each do |k, v|
+      report.data << v
+    end
+  end
+
+  def self.report_recent_flags(report)
+    report.data = []
+    flag_types = PostActionType.flag_types_without_custom
+
+    flag_actions = PostAction.joins("INNER JOIN posts ON posts.id = post_actions.post_id")
+                     .where(post_action_type_id: flag_types.values)
+                     .where("post_actions.created_at >= ? AND post_actions.created_at <= ?", report.start_date, report.end_date)
+                     .select('post_actions.post_action_type_id,
+                              posts.id,posts.topic_id,
+                              posts.user_id AS poster_id,
+                              post_actions.created_at,
+                              post_actions.agreed_at,
+                              post_actions.disagreed_at,
+                              post_actions.deferred_at,
+                              post_actions.user_id,
+                              post_actions.agreed_by_id,
+                              post_actions.disagreed_by_id,
+                              post_actions.deferred_by_id')
+
+    flag_actions.each do |action|
+      flag = {}
+      flag[:action_type] = flag_types.key(action.post_action_type_id).to_s
+      flag[:post_id] = action.id
+      flag[:topic_id] = action.topic_id
+      if action.agreed_at
+        flag[:response_time] = action.agreed_at - action.created_at
+      elsif action.disagreed_at
+        flag[:response_time] = action.disagreed_at - action.created_at
+      elsif action.deferred_at
+        flag[:response_time] = action.deferred_at - action.created_at
+      else
+        flag[:response_time] = nil
+      end
+      flag[:poster_id] = action.poster_id
+      flag[:poster_username] = User.find(action.poster_id).username
+      flag[:flagger_id] = action.user_id
+      flag[:flagger_username] = User.find(action.user_id).username
+      if action.agreed_by_id
+        flag[:staff_id] = action.agreed_by_id
+        flag[:staff_username] = User.find(action.agreed_by_id).username
+        flag[:resolution] = "Agreed"
+      elsif action.disagreed_by_id
+        flag[:staff_id] = action.disagreed_by_id
+        flag[:staff_username] = User.find(action.disagreed_by_id).username
+        flag[:resolution] = "Disagreed"
+      elsif action.deferred_by_id
+        flag[:staff_id] = action.deferred_by_id
+        flag[:staff_username] = User.find(action.deferred_by_id).username
+        flag[:resolution] = "Deferred"
+      else
+        flag[:staff_id] = nil
+        flag[:staff_username] = nil
+        flag[:resolution] = "No Action"
+      end
+      report.data << flag
+    end
+  end
 end
