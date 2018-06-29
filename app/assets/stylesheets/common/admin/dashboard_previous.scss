@@ -1,0 +1,270 @@
+// Styles for admin/dashboard-old
+
+.dashboard-left {
+  float: left;
+  width: 60%;
+}
+
+.dashboard-right {
+  float: right;
+  width: 40%;
+  .dashboard-stats {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.version-checks {
+  display: flex;
+  flex-wrap: wrap;
+  .section-title {
+    flex: 1 1 100%;
+    border-bottom: 1px solid $primary-low;
+    margin-bottom: 0.5em;
+  }
+}
+
+.version-check {
+  display: flex;
+  flex: 1 1 50%;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-self: flex-start;
+  justify-content: space-between;
+  padding: 10px 0 10px 0;
+  .upgrade-header {
+    flex: 1 1 100%;
+    @media screen and (max-width: 650px) {
+      margin: 0;
+    }
+    tr {
+      border: none;
+    }
+    th {
+      background: transparent;
+      text-align: left;
+      padding: 0;
+    }
+  }
+  h2 {
+    flex: 1 1 100%;
+  }
+  .version-number {
+    font-size: $font-up-2;
+    line-height: $line-height-medium;
+    box-sizing: border-box;
+    font-weight: bold;
+    margin: 0 0 1em 0;
+    padding-right: 20px;
+    flex: 1 1 27%;
+    h3 {
+      flex: 1 0 auto;
+      white-space: nowrap;
+    }
+    h4 {
+      font-size: $font-down-2;
+      margin-bottom: 0;
+    }
+  }
+  .version-status {
+    display: flex;
+    align-items: center;
+    margin: 0 0 1em 0;
+    flex: 1 1 24%;
+    box-sizing: border-box;
+    padding-right: 20px;
+    min-width: 250px;
+    @include small-width {
+      max-width: unset;
+    }
+    .face {
+      margin: 0 0.75em 0 0;
+      font-size: $font-up-3;
+    }
+  }
+  &.critical .version-notes .normal-note {
+    display: none;
+  }
+  &.normal .version-notes .critical-note {
+    display: none;
+  }
+  .fa {
+    font-size: $font-up-4;
+  }
+  .up-to-date {
+    color: $success;
+  }
+  .updates-available {
+    color: $danger;
+  }
+  .critical-updates-available {
+    color: $danger;
+  }
+}
+
+.update-nag {
+  .d-icon {
+    font-size: $font-up-3;
+  }
+}
+
+.dashboard-stats {
+  box-sizing: border-box;
+  margin-bottom: 30px;
+  flex: 1 1 50%;
+  box-sizing: border-box;
+  &.version-check {
+    margin: 0;
+  }
+  &.detected-problems {
+    border-left: 1px solid $primary-low;
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+  }
+  h4 {
+    font-weight: normal;
+    margin-bottom: 8px;
+  }
+  @media screen and (max-width: 650px) {
+    flex: 1 1 100%;
+  }
+  table {
+    width: 100%;
+    .title {
+      .d-icon {
+        color: $primary;
+      }
+      .d-icon-heart {
+        color: $love;
+      }
+    }
+    th {
+      font-weight: normal;
+      text-align: center;
+      background: $primary-low;
+    }
+    th.title {
+      text-align: left;
+    }
+    thead {
+      tr:hover > td {
+        background-color: $secondary;
+      }
+    }
+    td.value {
+      font-weight: bold;
+      text-align: center;
+      i {
+        display: none;
+      }
+      &.high-trending-up,
+      &.trending-up {
+        i.up {
+          color: $success;
+          display: inline;
+        }
+      }
+      &.high-trending-down,
+      &.trending-down {
+        i.down {
+          color: $danger;
+          display: inline;
+        }
+      }
+      &.no-change {
+        i.down {
+          display: inline;
+          visibility: hidden;
+        }
+      }
+    }
+    tr.reverse-colors {
+      td.value.high-trending-down i.down,
+      td.value.trending-down i.down {
+        color: $success;
+      }
+      td.value.high-trending-up i.up,
+      td.value.trending-up i.up {
+        color: $danger;
+      }
+    }
+  }
+  &.detected-problems {
+    display: flex;
+    margin-bottom: 30px;
+    .look-here {
+      margin: 10px 20px;
+      .fa {
+        font-size: $font-up-5;
+        color: $danger;
+      }
+    }
+    @media screen and (max-width: 650px) {
+      border-left: none;
+      border-top: 1px solid $primary-low;
+      padding: 20px 0 0 0;
+      .look-here {
+        margin-left: 0;
+      }
+    }
+    h3 {
+      display: flex;
+    }
+    .problem-messages {
+      display: flex;
+      a {
+        text-decoration: underline;
+      }
+      .btn {
+        background: $primary-low;
+      }
+      ul {
+        margin-left: 0;
+        padding-left: 90px;
+        @media screen and (max-width: 650px) {
+          padding-left: 20px;
+        }
+        li {
+          margin-bottom: 10px;
+        }
+      }
+      p.actions {
+        padding-left: 75px;
+        @media screen and (max-width: 650px) {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+  &.totals {
+    table {
+      width: auto;
+    }
+    margin-top: 12px;
+    padding-left: 5px;
+    .value {
+      text-align: left;
+      font-weight: bold;
+      padding-left: 8px;
+      padding-right: 30px;
+    }
+  }
+  &.trust-levels {
+    margin-bottom: 0;
+    table {
+      margin-bottom: 0;
+    }
+    td.value {
+      width: 45px;
+    }
+  }
+  .referred-topic-title {
+    width: 355px;
+    @include medium-width {
+      width: 305px;
+    }
+    @include small-width {
+      width: 265px;
+    }
+  }
+}

@@ -20,8 +20,8 @@
     display: flex;
 
     .flagged-post-avatar {
-      margin-right: 1em;
       position: relative;
+      margin-right: 10px;
 
       img.avatar {
         min-width: 45px;
@@ -41,7 +41,7 @@
     }
 
     .flagged-post-contents {
-      width: 100%;
+      width: calc(100% - 55px);
       word-wrap: break-word;
 
       .flagged-post-user-details {
@@ -65,7 +65,6 @@
       p:last-child {
         margin-bottom: 0;
       }
-      margin-right: 1em;
     }
   }
 
@@ -115,7 +114,7 @@
   }
 
   .flag-conversation {
-    padding: 1em;
+    padding: 1em 0;
 
     .reply-conversation {
       margin-left: 32px;
@@ -191,16 +190,26 @@
       white-space: nowrap;
     }
   }
+  @media screen and (max-width: 768px) {
+    td.topic-title {
+      width: auto;
+      max-width: 600px;
+      a {
+        width: auto;
+        white-space: unset;
+      }
+    }
+  }
 }
 
 .flagged-topic-details {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2em;
 }
 
 .mobile-view {
   .flagged-posts {
+    overflow: hidden;
     .flagged-post {
       .flag-user-lists {
         display: block;
@@ -212,5 +221,44 @@
 .show-details {
   .d-icon {
     padding-right: 0.25em;
+  }
+}
+
+.admin-contents table.grid {
+  @media screen and (max-width: 767px) {
+    tr.flagged-topic {
+      grid-template-columns: minmax(max-content, 0.25fr) 1fr 1fr;
+      td.topic-title {
+        grid-column-start: 2;
+        grid-column-end: -2;
+        min-width: 0;
+        align-self: start;
+      }
+      td.last-flagged {
+        grid-row: 1;
+        grid-column-end: -1;
+        text-align: right;
+        align-self: start;
+      }
+      td.flag-details {
+        grid-row: 2;
+        grid-column-end: -1;
+        text-align: right;
+      }
+      td.flagged-topic-users {
+        grid-row: 1;
+        grid-column-start: 1;
+        max-width: 60px;
+        align-self: start;
+        a {
+          display: inline-block;
+          margin: 0 0.25em 0.25em 0;
+        }
+      }
+      td.flag-counts {
+        grid-row: 2;
+        grid-column-start: 2;
+      }
+    }
   }
 }

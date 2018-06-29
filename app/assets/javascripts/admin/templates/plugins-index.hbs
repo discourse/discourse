@@ -1,17 +1,10 @@
 {{#if model.length}}
 
-  {{#if currentUser.admin}}
-    {{d-button label="admin.plugins.change_settings"
-               icon="gear"
-               class='settings-button pull-right'
-               action="showSettings"}}
-  {{/if}}
 
   <h3>{{i18n "admin.plugins.installed"}}</h3>
 
-  <br/>
 
-  <table class="admin-plugins">
+  <table class="admin-plugins grid">
     <thead>
       <tr>
         <th></th>
@@ -32,15 +25,17 @@
             {{/if}}
           </td>
 
-          <td>
+          <td class="plugin-name">
             {{#if plugin.url}}
               <a href={{plugin.url}} target="_blank">{{plugin.name}}</a>
             {{else}}
               {{plugin.name}}
             {{/if}}
           </td>
-          <td>{{plugin.version}}</td>
+          <td class="version">              <div class="label">{{i18n "admin.plugins.version"}}</div>
+{{plugin.version}}</td>
           <td class="col-enabled">
+            <div class="label">{{i18n "admin.plugins.enabled"}}</div>
             {{#if plugin.enabled_setting}}
               {{#if plugin.enabled}}
                 {{i18n "admin.plugins.is_enabled"}}
@@ -51,7 +46,7 @@
               {{i18n "admin.plugins.is_enabled"}}
             {{/if}}
           </td>
-          <td>
+          <td class="settings">
             {{#if currentUser.admin}}
               {{#if plugin.enabled_setting}}
                 {{d-button action="showSettings" actionParam=plugin icon="gear" label="admin.plugins.change_settings_short"}}

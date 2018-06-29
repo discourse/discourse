@@ -1,4 +1,49 @@
 // Customise area
+
+// email templates
+
+.content-editor {
+  min-height: 500px;
+  float: left;
+  width: 54.054%;
+  margin-left: 1.8018%;
+  p.description {
+    color: $primary;
+  }
+  .controls {
+    margin-top: 10px;
+  }
+  textarea.plain {
+    width: 98%;
+    height: 200px;
+  }
+  .d-editor-input {
+    width: 98%;
+    height: 200px;
+  }
+  .ace-wrapper {
+    position: relative;
+    height: 600px;
+    width: 100%;
+  }
+  .ace_editor {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.email-template {
+  input {
+    width: 100%;
+  }
+  label {
+    font-weight: bold;
+  }
+}
+
 .admin-customize {
   h1 {
     margin-bottom: 10px;
@@ -272,6 +317,110 @@
     textarea {
       cursor: auto;
       height: 150px;
+    }
+  }
+}
+
+// Permalinks
+.permalinks {
+  .url,
+  .topic,
+  .category,
+  .external_url,
+  .post {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .url {
+    width: 200px;
+  }
+  .topic,
+  .post,
+  .external_url {
+    width: 180px;
+  }
+  .category {
+    width: 140px;
+  }
+  .action {
+    text-align: center;
+    width: 8%;
+  }
+}
+
+.permalink-title {
+  margin-bottom: 10px;
+}
+
+// embedding
+.embeddable-hosts {
+  table {
+    margin-bottom: 1em;
+  }
+  margin-bottom: 2em;
+}
+
+.embedding-secondary {
+  h3 {
+    margin: 1em 0;
+  }
+  margin-bottom: 2em;
+  .embed-setting {
+    input[type="text"] {
+      width: 50%;
+    }
+    margin: 0.75em 0;
+  }
+  p.description {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    margin-bottom: 1em;
+    max-width: 700px;
+  }
+}
+
+.embedding td input {
+  margin-bottom: 0;
+}
+
+.user-fields {
+  h2 {
+    margin-bottom: 10px;
+  }
+  .user-field {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid $primary-low;
+    .form-display {
+      width: 25%;
+      display: inline-block;
+      float: left;
+    }
+    .form-element,
+    .form-element-desc {
+      float: left;
+      min-height: 30px;
+      padding: 0.25em 0;
+      &.input-area {
+        width: 75%;
+        input[type="text"] {
+          width: 50%;
+        }
+      }
+      &.label-area {
+        width: 25%;
+        label {
+          margin: 0.5em 1em 0 0;
+          text-align: right;
+          font-weight: bold;
+        }
+      }
+    }
+    .controls {
+      float: right;
+      text-align: right;
+    }
+    .clearfix {
+      clear: both;
     }
   }
 }

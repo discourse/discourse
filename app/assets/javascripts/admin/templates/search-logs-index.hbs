@@ -1,31 +1,31 @@
-<p>
+<div class="admin-title">
   {{period-chooser period=period}}
   {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
-</p>
-<br>
+</div>
 
 {{#conditional-loading-spinner condition=loading}}
   {{#if model.length}}
 
-    <div class='table search-logs-list'>
-      <div class="heading-container">
-        <div class="col heading term">{{i18n 'admin.logs.search_logs.term'}}</div>
-        <div class="col heading">{{i18n 'admin.logs.search_logs.searches'}}</div>
-        <div class="col heading">{{i18n 'admin.logs.search_logs.click_through'}}</div>
-        <div class="col heading" title="{{i18n 'admin.logs.search_logs.unique_title'}}">{{i18n 'admin.logs.search_logs.unique'}}</div>
-      </div>
-
+    <table class='search-logs-list'>
+      <thead>
+        <th class="col heading term">{{i18n 'admin.logs.search_logs.term'}}</th>
+        <th class="col heading">{{i18n 'admin.logs.search_logs.searches'}}</th>
+        <th class="col heading">{{i18n 'admin.logs.search_logs.click_through'}}</th>
+        <th class="col heading" title="{{i18n 'admin.logs.search_logs.unique_title'}}">{{i18n 'admin.logs.search_logs.unique'}}</th>
+      </thead>
+      <tbody>
       {{#each model as |item|}}
-        <div class="admin-list-item">
-          <div class="col term">
+        <tr class="admin-list-item">
+          <td class="col term">
             {{#link-to 'adminSearchLogs.term' item.term}}{{item.term}}{{/link-to}}
-          </div>
-          <div class="col">{{item.searches}}</div>
-          <div class="col">{{item.click_through}}</div>
-          <div class="col">{{item.unique}}</div>
-        </div>
+          </td>
+          <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.searches'}}</div>{{item.searches}}</td>
+          <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.click_through'}}</div>{{item.click_through}}</td>
+          <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.unique'}}</div>{{item.unique}}</td>
+        </tr>
       {{/each}}
-    </div>
+      </tbody>
+    </table>
 
   {{else}}
     {{i18n 'search.no_results'}}
