@@ -1096,13 +1096,13 @@ export default Ember.Controller.extend(BufferedContent, {
           }
           case "deleted": {
             postStream
-              .triggerDeletedPost(data.id, data.post_number)
+              .triggerDeletedPost(data.id)
               .then(() => refresh({ id: data.id }));
             break;
           }
           case "recovered": {
             postStream
-              .triggerRecoveredPost(data.id, data.post_number)
+              .triggerRecoveredPost(data.id)
               .then(() => refresh({ id: data.id }));
             break;
           }
