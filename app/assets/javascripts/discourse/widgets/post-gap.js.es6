@@ -9,6 +9,9 @@ export default createWidget("post-gap", {
   },
 
   html(attrs, state) {
+    const gapLength = attrs.gap.length;
+    if (gapLength <= 0) return;
+
     return state.loading
       ? I18n.t("loading")
       : I18n.t("post.gap", { count: attrs.gap.length });

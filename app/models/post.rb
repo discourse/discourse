@@ -355,7 +355,7 @@ class Post < ActiveRecord::Base
             SELECT posts.id
             FROM posts
             WHERE posts.topic_id = #{topic_id.to_i}
-            AND posts.post_number = 1
+            AND posts.sort_order = 1
           ) UNION
           (
             SELECT p1.id

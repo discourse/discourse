@@ -24,6 +24,7 @@ const DAY = 1000 * 60 * 60 * 24;
 const _dontCloak = {};
 let _cloaked = {};
 let _heights = {};
+const insertedGaps = new Set([]);
 
 export function preventCloak(postId) {
   _dontCloak[postId] = true;
@@ -107,6 +108,8 @@ export default createWidget("post-stream", {
       // Post gap - before
       const beforeGap = before[post.id];
       if (beforeGap) {
+        beforeGap.forEach(postId => insertedGaps.add(postId));
+
         result.push(
           this.attach(
             "post-gap",
@@ -140,8 +143,17 @@ export default createWidget("post-stream", {
       }
 
       // Post gap - after
-      const afterGap = after[post.id];
+      let afterGap = after[post.id];
+
       if (afterGap) {
+        const toDelete = [];
+
+        afterGap.forEach(postId => {
+          if (insertedGaps.has(postId)) toDelete.push(postId);
+        });
+
+        afterGap = _.difference(afterGap, toDelete);
+
         result.push(
           this.attach(
             "post-gap",
