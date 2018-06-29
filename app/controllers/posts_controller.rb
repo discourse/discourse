@@ -266,7 +266,10 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
+    unless current_user.staff?
+      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
+      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
+    end
 
     guardian.ensure_can_delete!(post)
 
@@ -284,7 +287,10 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
-    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
+    unless current_user.staff?
+      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
+      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
+    end
     guardian.ensure_can_recover_post!(post)
     destroyer = PostDestroyer.new(current_user, post)
     destroyer.recover

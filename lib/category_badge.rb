@@ -79,7 +79,7 @@ module CategoryBadge
 
     # category name
     class_names = 'badge-category clear-badge'
-    description = category.description_text ? "title='#{category.description_text.html_safe}'" : ''
+    description = category.description_text ? "title='#{category.description_text}'" : ''
     category_url = opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url
 
     extra_span_classes =
@@ -102,7 +102,10 @@ module CategoryBadge
     result << "<span style='#{extra_span_classes}' data-drop-close='true' class='#{class_names}'
                  #{description}>"
 
-    result << category.name.html_safe << '</span>'
-    "<a class='badge-wrapper #{extra_classes}' href='#{category_url}'" + (opts[:inline_style] ? inline_badge_wrapper_style : '') + ">#{result}</a>"
+    result << ERB::Util.html_escape(category.name) << '</span>'
+
+    result = "<a class='badge-wrapper #{extra_classes}' href='#{category_url}'" + (opts[:inline_style] ? inline_badge_wrapper_style : '') + ">#{result}</a>"
+
+    result.html_safe
   end
 end

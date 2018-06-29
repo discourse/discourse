@@ -31,6 +31,11 @@ class ImportScripts::Base
     @site_settings_during_import = {}
     @old_site_settings = {}
     @start_times = { import: Time.now }
+<<<<<<< HEAD
+=======
+    @skip_updates = false
+    @next_category_color_index = {}
+>>>>>>> f4d77037d071b14242769bf8179666979f06eb96
   end
 
   def preload_i18n
@@ -446,7 +451,11 @@ class ImportScripts::Base
       position: opts[:position],
       parent_category_id: opts[:parent_category_id],
 <<<<<<< HEAD
+<<<<<<< HEAD
       color: opts[:color] || category_color,
+=======
+      color: opts[:color] || category_color(opts[:parent_category_id]),
+>>>>>>> f4d77037d071b14242769bf8179666979f06eb96
       text_color: opts[:text_color] || "FFF",
 =======
       color: opts[:color] || "AB9364",
@@ -471,11 +480,11 @@ class ImportScripts::Base
     new_category
   end
 
-  def category_color
+  def category_color(parent_category_id)
     @category_colors ||= SiteSetting.category_colors.split('|')
 
-    index = @next_category_color_index.presence || 0
-    @next_category_color_index = index + 1 >= @category_colors.count ? 0 : index + 1
+    index = @next_category_color_index[parent_category_id].presence || 0
+    @next_category_color_index[parent_category_id] = index + 1 >= @category_colors.count ? 0 : index + 1
 
     @category_colors[index]
   end

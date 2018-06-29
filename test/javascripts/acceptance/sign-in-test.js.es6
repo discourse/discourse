@@ -180,3 +180,39 @@ QUnit.test("create account", assert => {
     );
   });
 });
+
+QUnit.test("second factor backup - valid token", assert => {
+  visit("/");
+  click("header .login-button");
+  fillIn("#login-account-name", "eviltrout");
+  fillIn("#login-account-password", "need-second-factor");
+  click(".modal-footer .btn-primary");
+  click(".login-modal .toggle-second-factor-method");
+  fillIn("#login-second-factor", "123456");
+  click(".modal-footer .btn-primary");
+
+  andThen(() => {
+    assert.ok(
+      exists(".modal-footer .btn-primary:disabled"),
+      "it closes the modal when the code is valid"
+    );
+  });
+});
+
+QUnit.test("second factor backup - invalid token", assert => {
+  visit("/");
+  click("header .login-button");
+  fillIn("#login-account-name", "eviltrout");
+  fillIn("#login-account-password", "need-second-factor");
+  click(".modal-footer .btn-primary");
+  click(".login-modal .toggle-second-factor-method");
+  fillIn("#login-second-factor", "something");
+  click(".modal-footer .btn-primary");
+
+  andThen(() => {
+    assert.ok(
+      exists("#modal-alert:visible"),
+      "it shows an error when the code is invalid"
+    );
+  });
+});

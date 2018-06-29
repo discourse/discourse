@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
-  has_one :user_second_factor, dependent: :destroy
+  has_many :user_second_factors, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -449,7 +449,7 @@ class User < ActiveRecord::Base
 
   def publish_notifications_state
     # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order('notifications.id desc').first
+    notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
     sql = (<<~SQL).freeze
@@ -1222,7 +1222,9 @@ class User < ActiveRecord::Base
       .where(active: false)
       .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
       .where("NOT admin AND NOT moderator")
-      .where("NOT EXISTS (SELECT 1 FROM topic_allowed_users WHERE user_id = users.id LIMIT 1)")
+      .where("NOT EXISTS
+              (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id)
+            ")
       .limit(200)
       .find_each do |user|
       begin

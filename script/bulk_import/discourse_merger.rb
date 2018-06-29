@@ -218,7 +218,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_topics
-    copy_model(Topic, skip_processing: true, mapping: @topics)
+    copy_model(Topic, mapping: @topics)
     [TopicAllowedGroup, TopicAllowedUser, TopicEmbed, TopicSearchData,
       TopicTimer, TopicUser, TopicViewItem
     ].each do |k|
@@ -432,6 +432,11 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         }
       end
     end
+  end
+
+  def process_topic(topic)
+    return nil if topic['category_id'].nil?
+    topic
   end
 
   def process_post(post)

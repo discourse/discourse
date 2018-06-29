@@ -19,6 +19,8 @@ import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 
+export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2 };
+
 const isForever = dt => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({
@@ -352,9 +354,20 @@ const User = RestModel.extend({
     });
   },
 
-  toggleSecondFactor(token, enable) {
+  toggleSecondFactor(token, enable, method) {
     return ajax("/u/second_factor.json", {
-      data: { second_factor_token: token, enable },
+      data: {
+        second_factor_token: token,
+        second_factor_method: method,
+        enable
+      },
+      type: "PUT"
+    });
+  },
+
+  generateSecondFactorCodes(token) {
+    return ajax("/u/second_factors_backup.json", {
+      data: { second_factor_token: token },
       type: "PUT"
     });
   },

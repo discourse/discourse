@@ -1281,6 +1281,7 @@ RSpec.describe TopicsController do
 
     describe 'clear_notifications' do
       it 'correctly clears notifications if specified via cookie' do
+        Discourse.stubs(:base_uri).returns("/eviltrout")
         notification = Fabricate(:notification)
         sign_in(notification.user)
 
@@ -1290,6 +1291,7 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(response.cookies['cn']).to eq(nil)
+        expect(response.headers['Set-Cookie']).to match(/^cn=;.*path=\/eviltrout/)
 
         notification.reload
         expect(notification.read).to eq(true)
