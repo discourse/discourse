@@ -69,7 +69,11 @@ class GroupsController < ApplicationController
     end
 
     if type = params[:type]&.to_sym
-      groups = TYPE_FILTERS[type].call(groups, current_user)
+      callback = TYPE_FILTERS[type]
+      if !callback
+        raise Discourse::InvalidParameters.new(:type)
+      end
+      groups = callback.call(groups, current_user)
     end
 
     if current_user
