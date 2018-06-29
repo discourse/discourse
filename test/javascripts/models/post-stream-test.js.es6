@@ -681,6 +681,40 @@ QUnit.test("loadedAllPosts when the id changes", assert => {
   );
 });
 
+QUnit.test("triggerRecoveredPost", async assert => {
+  const postStream = buildStream(4567);
+  const store = postStream.store;
+
+  [1, 2, 3, 5].forEach(id => {
+    postStream.appendPost(
+      store.createRecord("post", { id: id, post_number: id })
+    );
+  });
+
+  const response = object => {
+    return [200, { "Content-Type": "application/json" }, object];
+  };
+
+  // prettier-ignore
+  server.get("/posts/4", () => { // eslint-disable-line no-undef
+    return response({ id: 4, post_number: 4 });
+  });
+
+  assert.equal(
+    postStream.get("postsWithPlaceholders.length"),
+    4,
+    "it should return the right length"
+  );
+
+  await postStream.triggerRecoveredPost(4);
+
+  assert.equal(
+    postStream.get("postsWithPlaceholders.length"),
+    5,
+    "it should return the right length"
+  );
+});
+
 QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
   const postStream = buildStream(4964);
   const store = postStream.store;

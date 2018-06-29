@@ -565,8 +565,9 @@ export default RestModel.extend({
       return this.triggerChangedPost(postId, new Date());
     } else {
       // need to insert into stream
-      const url = "/posts/" + postId;
+      const url = `/posts/${postId}`;
       const store = this.store;
+
       return ajax(url).then(p => {
         const post = store.createRecord("post", p);
         const stream = this.get("stream");
@@ -591,7 +592,9 @@ export default RestModel.extend({
         });
 
         if (index < posts.length) {
-          posts.insertAt(index, post);
+          this.get("postsWithPlaceholders").refreshAll(() => {
+            posts.insertAt(index, post);
+          });
         } else {
           if (post.post_number < posts[posts.length - 1].post_number + 5) {
             this.appendMore();
