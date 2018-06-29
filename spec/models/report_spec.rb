@@ -435,4 +435,63 @@ describe Report do
       expect(r.data[0][:y]).to eq(1)
     end
   end
+
+  describe 'moderator activity' do
+    let(:report) { Report.find( 'moderator_activity') }
+    context "no moderators" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with moderators" do
+      before do
+        bob = Fabricate(:user, moderator: true, username: 'bob', id: 1)
+        bob.user_visits.create(visited_at: 2.days.ago, posts_read: 6, time_read: 200)
+        bob.user_visits.create(visited_at: 1.day.ago, posts_read: 3, time_read: 100)
+        Fabricate(:topic, user: bob)
+
+        sally = Fabricate(:user, moderator: true, username: 'sally', id: 2)
+        sally.user_visits.create(visited_at: 2.days.ago, posts_read: 5, time_read: 1000)
+        sally.user_visits.create(visited_at: 1.day.ago, posts_read: 10, time_read: 2000)
+        topic = Fabricate(:topic)
+        2.times { Fabricate(:post, user: sally, topic: topic) }
+        flag_post = Fabricate(:post)
+        PostAction.act(sally, flag_post, PostActionType.types[:off_topic], {take_action: true})
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+      end
+
+      it "returns data for two moderators" do
+        expect(report.data.count).to eq(2)
+      end
+
+      it "returns the correct usernames" do
+        expect(report.data[0][:username]).to eq('bob')
+        expect(report.data[1][:username]).to eq('sally')
+      end
+
+      it "returns the correct read times" do
+        expect(report.data[0][:time_read]).to eq(300)
+        expect(report.data[1][:time_read]).to eq(3000)
+      end
+
+      it "returns the correct agreed flag count" do
+        expect(report.data[0][:flag_count]).to be_blank
+        expect(report.data[1][:flag_count]).to eq(1)
+      end
+
+      it "returns the correct topic count" do
+        expect(report.data[0][:topic_count]).to eq(1)
+        expect(report.data[1][:topic_count]).to be_blank
+      end
+
+      it "returns the correct post count" do
+        expect(report.data[0][:post_count]).to be_blank
+        expect(report.data[1][:post_count]).to eq(2)
+      end
+    end
+  end
 end
