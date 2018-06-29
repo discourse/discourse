@@ -191,6 +191,15 @@ class GroupsController < ApplicationController
 
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
+
+    if limit < 0
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
+    if offset < 0
+      raise Discourse::InvalidParameters.new(:offset)
+    end
+
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = ""
 
