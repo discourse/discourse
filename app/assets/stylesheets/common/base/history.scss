@@ -57,12 +57,13 @@
     filter: alpha(opacity=75);
   }
   .diff-ins {
-    color: dark-light-choose($primary, $secondary);
+    color: $primary;
     background: $success-low;
   }
   ins {
-    color: $success;
+    color: $primary;
     background: $success-low;
+    text-decoration: none;
   }
   del,
   .diff-del {
@@ -88,11 +89,14 @@
     filter: alpha(opacity=50);
   }
   .diff-del {
+    color: $primary;
     background: $danger-low;
+    text-decoration: none;
   }
   del {
-    color: $danger;
+    color: $primary;
     background: $danger-low;
+    text-decoration: none;
   }
   span.date {
     font-weight: bold;
