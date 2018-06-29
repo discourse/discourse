@@ -112,20 +112,20 @@ export default Ember.Component.extend(PanEvents, {
   },
 
   _panOpenClose(offset, velocity, direction) {
-
     const $timelineContainer = $(".timeline-container");
     const maxOffset = parseInt($timelineContainer.css("height"));
-    direction === "close" ? offset += velocity : offset -= velocity;
+    direction === "close" ? (offset += velocity) : (offset -= velocity);
 
     $timelineContainer.css("bottom", -offset);
-    if(offset > maxOffset) {
+    if (offset > maxOffset) {
       this._collapseFullscreen();
-    }
-    else if(offset <= 0) {
+    } else if (offset <= 0) {
       $timelineContainer.css("bottom", "");
-    }
-    else {
-      Ember.run.later(() => this._panOpenClose(offset, velocity, direction), 20);
+    } else {
+      Ember.run.later(
+        () => this._panOpenClose(offset, velocity, direction),
+        20
+      );
     }
   },
 
@@ -138,27 +138,25 @@ export default Ember.Component.extend(PanEvents, {
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
     if ($centeredElement.parents(".timeline-scrollarea-wrapper").length) {
       this.set("isPanning", false);
-    }
-    else {
+    } else {
       this.set("isPanning", true);
     }
   },
 
   panEnd(e) {
-    if(!this.get("isPanning")) {
+    if (!this.get("isPanning")) {
       return;
     }
     this.set("isPanning", false);
-    if(this._shouldPanClose(e)) {
+    if (this._shouldPanClose(e)) {
       this._panOpenClose(e.deltaY, 40, "close");
-    }
-    else {
+    } else {
       this._panOpenClose(e.deltaY, 40, "open");
     }
   },
 
   panMove(e) {
-    if(!this.get("isPanning")) {
+    if (!this.get("isPanning")) {
       return;
     }
     $(".timeline-container").css("bottom", Math.min(0, -e.deltaY));
