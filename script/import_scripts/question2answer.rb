@@ -101,7 +101,6 @@ EOM
       break if users.empty?
 
       last_user_id = users[-1]["id"]
-      before = users.size
       users.reject! { |u| @lookup.user_already_imported?(u["id"].to_i) }
 
       create_users(users, total: user_count, offset: offset) do |user|
@@ -233,8 +232,8 @@ EOM
     end
 
     remaining = max_length
-    if word_lengths.inject(0) {|sum, (k,v)| sum + v } > remaining
-      word_lengths = Hash[word_lengths.sort {|x,y| y[1] <=> x[1]}]
+    if word_lengths.inject(0) { |sum, (_, v)| sum + v } > remaining
+      word_lengths = Hash[word_lengths.sort { |x, y| y[1] <=> x[1] }]
       word_lengths.each do |idx, word_length|
         if remaining > 0
           remaining -= word_length
@@ -277,7 +276,7 @@ EOM
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         begin
-	        raw = preprocess_post_raw(post["content"])
+          raw = preprocess_post_raw(post["content"])
         rescue => e
           puts e.message
         end
@@ -305,16 +304,16 @@ EOM
         SELECT postid, userid
         FROM #{TABLE_PREFIX}uservotes u
         WHERE u.vote=1
-    SQL
-    ).to_a
+                        SQL
+                       ).to_a
     likes.each do |like|
       post = Post.find_by(id: post_id_from_imported_post_id("thread-#{like['postid']}"))
       user = User.find_by(id: user_id_from_imported_user_id(like["userid"]))
       begin
         PostAction.act(user, post, 2) if user && post
-	    rescue => e
-        debugger
-	    end
+      rescue => e
+        puts "error acting on post #{e}"
+      end
     end
   end
 
@@ -402,22 +401,22 @@ EOM
     end
 
     # [FONT=blah] and [COLOR=blah]
-    raw.gsub! /\[FONT=.*?\](.*?)\[\/FONT\]/im, '\1'
-    raw.gsub! /\[COLOR=.*?\](.*?)\[\/COLOR\]/im, '\1'
-    raw.gsub! /\[COLOR=#.*?\](.*?)\[\/COLOR\]/im, '\1'
+    raw.gsub!(/\[FONT=.*?\](.*?)\[\/FONT\]/im, '\1')
+    raw.gsub!(/\[COLOR=.*?\](.*?)\[\/COLOR\]/im, '\1')
+    raw.gsub!(/\[COLOR=#.*?\](.*?)\[\/COLOR\]/im, '\1')
 
-    raw.gsub! /\[SIZE=.*?\](.*?)\[\/SIZE\]/im, '\1'
-    raw.gsub! /\[h=.*?\](.*?)\[\/h\]/im, '\1'
+    raw.gsub!(/\[SIZE=.*?\](.*?)\[\/SIZE\]/im, '\1')
+    raw.gsub!(/\[h=.*?\](.*?)\[\/h\]/im, '\1')
 
     # [CENTER]...[/CENTER]
-    raw.gsub! /\[CENTER\](.*?)\[\/CENTER\]/im, '\1'
+    raw.gsub!(/\[CENTER\](.*?)\[\/CENTER\]/im, '\1')
 
     # [INDENT]...[/INDENT]
-    raw.gsub! /\[INDENT\](.*?)\[\/INDENT\]/im, '\1'
-    raw.gsub! /\[TABLE\](.*?)\[\/TABLE\]/im, '\1'
-    raw.gsub! /\[TR\](.*?)\[\/TR\]/im, '\1'
-    raw.gsub! /\[TD\](.*?)\[\/TD\]/im, '\1'
-    raw.gsub! /\[TD="?.*?"?\](.*?)\[\/TD\]/im, '\1'
+    raw.gsub!(/\[INDENT\](.*?)\[\/INDENT\]/im, '\1')
+    raw.gsub!(/\[TABLE\](.*?)\[\/TABLE\]/im, '\1')
+    raw.gsub!(/\[TR\](.*?)\[\/TR\]/im, '\1')
+    raw.gsub!(/\[TD\](.*?)\[\/TD\]/im, '\1')
+    raw.gsub!(/\[TD="?.*?"?\](.*?)\[\/TD\]/im, '\1')
 
     # [QUOTE]...[/QUOTE]
     raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { |quote|
