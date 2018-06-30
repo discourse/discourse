@@ -331,21 +331,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .url {
-    width: 200px;
-  }
-  .topic,
-  .post,
-  .external_url {
-    width: 180px;
-  }
-  .category {
-    width: 140px;
-  }
-  .action {
-    text-align: center;
-    width: 8%;
-  }
 }
 
 .permalink-title {
@@ -354,10 +339,67 @@
 
 // embedding
 .embeddable-hosts {
-  table {
-    margin-bottom: 1em;
-  }
   margin-bottom: 2em;
+  table.grid {
+    margin-bottom: 1em;
+    tr td {
+      word-wrap: break-word;
+      max-width: 25vw;
+      align-self: start;
+    }
+    td.controls {
+      min-width: 6em;
+    }
+    .select-kit.combo-box.category-chooser {
+      width: calc(100% - 10px);
+    }
+  }
+  @media screen and (max-width: 880px) {
+    table.grid {
+      thead {
+        display: none;
+      }
+      div.label {
+        display: block;
+        font-size: $font-down-1;
+        color: $primary-medium;
+      }
+      td.controls,
+      td.editing-controls {
+        align-self: end;
+      }
+      tr {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  }
+
+  @media screen and (max-width: 580px) {
+    table.grid {
+      tr td.editing-input {
+        grid-column-start: 1;
+        grid-column-end: 4;
+        max-width: 100%;
+        input {
+          width: calc(100% - 20px);
+        }
+      }
+      td.editing-controls {
+        margin-top: 1em;
+        max-width: 100%;
+      }
+    }
+  }
+
+  @media screen and (max-width: 350px) {
+    table.grid tr {
+      grid-template-columns: repeat(2, 1fr);
+      td.controls {
+        text-align: left;
+      }
+    }
+  }
 }
 
 .embedding-secondary {

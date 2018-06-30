@@ -227,7 +227,7 @@
 .admin-contents table.grid {
   @media screen and (max-width: 767px) {
     tr.flagged-topic {
-      grid-template-columns: minmax(max-content, 0.25fr) 1fr 1fr;
+      grid-template-columns: 0.25fr 1fr 1fr;
       td.topic-title {
         grid-column-start: 2;
         grid-column-end: -2;
@@ -258,6 +258,38 @@
       td.flag-counts {
         grid-row: 2;
         grid-column-start: 2;
+      }
+    }
+  }
+  //IE11 Support
+  @media screen and (max-width: 767px) {
+    tr.flagged-topic {
+      display: -ms-grid;
+      -ms-grid-columns: 0.25fr 1fr 1fr;
+      -ms-grid-rows: auto auto;
+      td {
+        display: -ms-grid;
+        &.flagged-topic-users {
+          -ms-grid-row: 1;
+          -ms-grid-column: 1;
+          -ms-grid-column-span: 1;
+        }
+        &.topic-title {
+          -ms-grid-row: 1;
+          -ms-grid-column: 2;
+        }
+        &.last-flagged {
+          -ms-grid-row: 1;
+          -ms-grid-column: 3;
+        }
+        &.flag-counts {
+          -ms-grid-row: 2;
+          -ms-grid-column: 2;
+        }
+        &.flag-details {
+          -ms-grid-row: 2;
+          -ms-grid-column: 3;
+        }
       }
     }
   }

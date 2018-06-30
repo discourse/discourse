@@ -41,6 +41,32 @@ table.web-hooks.grid {
       grid-row: 2;
     }
   }
+  //IE11 Support
+  @media screen and (max-width: 767px) {
+    tr {
+      display: -ms-grid;
+      -ms-grid-columns: 0.5fr 1fr 1fr 0.5fr;
+      td {
+        display: -ms-grid;
+        &.delivery-status {
+          -ms-grid-row: 1;
+          -ms-grid-column: 1;
+        }
+        &.payload-url {
+          -ms-grid-row: 1;
+          -ms-grid-column: 2;
+        }
+        &.description {
+          -ms-grid-row: 1;
+          -ms-grid-column: 3;
+        }
+        &.controls {
+          -ms-grid-row: 1;
+          -ms-grid-column: 4;
+        }
+      }
+    }
+  }
 }
 
 // Api keys
@@ -60,6 +86,7 @@ table.api-keys {
       grid-row: 1;
       grid-column-start: 1;
       grid-column-end: -1;
+      max-width: 100%;
     }
     td.key-user {
       grid-row: 2;
@@ -70,6 +97,40 @@ table.api-keys {
       grid-column-end: -1;
       grid-column-start: 2;
       text-align: right;
+    }
+  }
+  //IE11 Support
+  @media screen and (max-width: 767px) {
+    tr {
+      display: -ms-grid;
+      -ms-grid-columns: 0.25fr 1fr 1fr;
+      -ms-grid-rows: auto auto;
+      td {
+        display: -ms-grid;
+
+        &.key {
+          -ms-grid-row: 1;
+          -ms-grid-column: 1;
+          -ms-grid-column-span: 3;
+        }
+        &.key-user {
+          -ms-grid-row: 2;
+          -ms-grid-column: 1;
+        }
+        &.key-controls {
+          -ms-grid-row: 2;
+          -ms-grid-column: 2;
+          -ms-grid-column-span: 2;
+          display: -ms-grid;
+          -ms-grid-columns: 125px 125px;
+          button:first-of-type {
+            -ms-grid-column: 1;
+          }
+          button:last-of-type {
+            -ms-grid-column: 2;
+          }
+        }
+      }
     }
   }
 }

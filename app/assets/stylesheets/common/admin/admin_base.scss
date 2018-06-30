@@ -9,25 +9,32 @@ $mobile-breakpoint: 700px;
 // Common admin styles
 
 .admin-main-nav {
+  display: inline-flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  height: 100%;
   .mobile-view & {
-    display: inline-flex;
-    position: relative;
-    width: calc(100% + 10px);
-    height: auto;
-    overflow: hidden;
-    padding: 0;
-    height: 100%;
-    margin-left: -10px;
-    padding-left: 10px;
     margin-top: 10px;
   }
+  @media screen and (max-width: 768px) {
+    width: calc(100% + 10px);
+    margin-left: -10px;
+    padding: 0 0 0 10px;
+  }
+
   .nav.nav-pills {
-    width: calc(100% - 10px);
     display: inline-flex;
-    padding: 0 10px 10px 10px;
-    margin: 0 0 0 -10px;
-    white-space: nowrap;
-    overflow-x: scroll;
+    width: calc(100% - 10px);
+    flex: 1 0 auto;
+    @media screen and (max-width: 768px) {
+      white-space: nowrap;
+      overflow-x: scroll;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 0 0 -10px;
+      padding: 0 10px 10px 10px;
+    }
     &:before {
       display: none;
     }
@@ -40,34 +47,37 @@ $mobile-breakpoint: 700px;
       }
     }
   }
-  &:before {
-    content: "";
-    width: 10px;
-    margin-left: -10px;
-    height: calc(100% - 5px);
-    background: linear-gradient(
-      to right,
-      rgba($secondary, 1) 0%,
-      rgba($secondary, 0) 100%
-    );
-    position: absolute;
-  }
-  &:after {
-    content: "";
-    right: 0px;
-    width: 30px;
-    height: calc(100% - 5px);
-    background: linear-gradient(
-      to right,
-      rgba($secondary, 0) 0%,
-      rgba($secondary, 1) 100%
-    );
-    position: absolute;
+  @media screen and (max-width: 768px) {
+    // Fade-out for horizontal scroll nav
+    &:before {
+      content: "";
+      position: absolute;
+      width: 10px;
+      margin-left: -10px;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba($secondary, 1) 0%,
+        rgba($secondary, 0) 100%
+      );
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      right: 0px;
+      width: 30px;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba($secondary, 0) 0%,
+        rgba($secondary, 1) 100%
+      );
+    }
   }
 }
 
 .nav-stacked {
-  .mobile-view & {
+  @media screen and (max-width: 700px) {
     margin: 0 10px 0 -10px;
   }
 }
@@ -130,6 +140,7 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-contents table.grid {
+  // Table switches to grid for narrow screens
   @media screen and (max-width: 767px) {
     thead {
       display: none;
@@ -153,7 +164,7 @@ $mobile-breakpoint: 700px;
     }
 
     tr.flagged-topic {
-      grid-template-columns: minmax(max-content, 0.25fr) 1fr 1fr;
+      grid-template-columns: 0.25fr 1fr 1fr;
       td.topic-title {
         grid-column-start: 2;
         grid-column-end: -2;
@@ -430,68 +441,70 @@ $mobile-breakpoint: 700px;
 
 .admin-controls {
   display: flex;
-  flex-wrap: wrap;
-  .mobile-view & {
-    margin: 0 -10px;
-  }
-  .btn {
-    background-color: $primary-low;
-    color: $primary;
-  }
+
   .admin-actions {
-    margin-left: 12px;
+    margin-left: auto;
   }
   nav {
     background-color: $primary-low;
     width: 100%;
   }
-  .mobile-view & {
-    nav {
-      display: inline-flex;
-
-      position: relative;
-      width: 100%;
-      height: auto;
-      overflow: hidden;
-      padding: 0;
-      height: 100%;
+  nav {
+    display: inline-flex;
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding: 0;
+    height: 100%;
+    @media screen and (max-width: 768px) {
+      width: calc(100% + 10px);
+      padding-left: 10px;
       margin-left: -10px;
       margin-right: -10px;
+    }
 
-      padding-left: 10px;
-      &:before {
-        content: "";
-        width: 10px;
-        height: calc(100% - 5px);
-        background: linear-gradient(
-          to right,
-          rgba($primary-low, 1) 0%,
-          rgba($primary-low, 0) 100%
-        );
-        position: absolute;
-      }
+    &:before {
+      // Fade out sides of horizontal nav
+      content: "";
+      position: absolute;
+      width: 10px;
+      left: 0;
+      height: calc(100% - 5px);
+      background: linear-gradient(
+        to right,
+        rgba($primary-low, 1) 0%,
+        rgba($primary-low, 0) 100%
+      );
+    }
 
-      &:after {
-        content: "";
-        right: 0px;
-        width: 30px;
-        height: calc(100% - 5px);
-        background: linear-gradient(
-          to right,
-          rgba($primary-low, 0) 0%,
-          rgba($primary-low, 1) 100%
-        );
-        position: absolute;
-      }
+    &:after {
+      content: "";
+      position: absolute;
+      right: 0px;
+      width: 30px;
+      height: calc(100% - 5px);
+      background: linear-gradient(
+        to right,
+        rgba($primary-low, 0) 0%,
+        rgba($primary-low, 1) 100%
+      );
     }
   }
+
   .nav.nav-pills {
-    width: calc(100% - 20px);
+    width: calc(100% - 10px);
     display: inline-flex;
     padding: 10px;
     margin: 0;
     white-space: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
+    @media screen and (max-width: 768px) {
+      margin-left: -10px;
+      overflow-x: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+
     &:before {
       display: none;
     }
@@ -517,8 +530,21 @@ $mobile-breakpoint: 700px;
     width: 100%;
     padding: 10px;
     display: flex;
+    align-items: center;
     input {
       margin: 0;
+    }
+    &.search {
+      width: auto;
+      white-space: nowrap;
+      label {
+        flex: 1 1 250px;
+        display: flex;
+        align-items: center;
+        input {
+          margin-right: 0.5em;
+        }
+      }
     }
   }
   .controls .menu-toggle {
@@ -635,6 +661,9 @@ $mobile-breakpoint: 700px;
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
     z-index: z("base") - 1;
+    width: 250px;
+  }
+  @media (max-width: 500px) {
     width: 50%;
   }
 }
@@ -645,6 +674,7 @@ $mobile-breakpoint: 700px;
     z-index: z("base");
     width: 100%;
   }
+
   background-color: $secondary; // Todo: set this properly - it needs to be >= the menu height
   min-height: 875px;
   margin-left: 0;
@@ -658,6 +688,10 @@ $mobile-breakpoint: 700px;
 
 .admin-detail.mobile-open {
   @media (max-width: $mobile-breakpoint) {
+    transition: transform 0.3s ease;
+    @include transform(translateX(250px));
+  }
+  @media (max-width: 500px) {
     transition: transform 0.3s ease;
     @include transform(translateX(50%));
   }
@@ -836,7 +870,6 @@ table#user-badges {
   }
 }
 
-// Mobile specific styles
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
   input[type="text"] {
@@ -857,13 +890,6 @@ table#user-badges {
 .inline-edit label {
   display: inline-block;
   margin-right: 20px;
-}
-
-.admin-reports,
-.dashboard-next {
-  &.admin-contents {
-    margin: 0;
-  }
 }
 
 // Styles for subtabs in admin
