@@ -446,12 +446,12 @@ describe Report do
 
     context "with moderators" do
       before do
-        bob = Fabricate(:user, moderator: true, username: 'bob', id: 1)
+        bob = Fabricate(:user, moderator: true, username: 'bob')
         bob.user_visits.create(visited_at: 2.days.ago, posts_read: 6, time_read: 200)
         bob.user_visits.create(visited_at: 1.day.ago, posts_read: 3, time_read: 100)
         Fabricate(:topic, user: bob)
 
-        sally = Fabricate(:user, moderator: true, username: 'sally', id: 2)
+        sally = Fabricate(:user, moderator: true, username: 'sally')
         sally.user_visits.create(visited_at: 2.days.ago, posts_read: 5, time_read: 1000)
         sally.user_visits.create(visited_at: 1.day.ago, posts_read: 10, time_read: 2000)
         topic = Fabricate(:topic)
@@ -491,6 +491,60 @@ describe Report do
       it "returns the correct post count" do
         expect(report.data[0][:post_count]).to be_blank
         expect(report.data[1][:post_count]).to eq(2)
+      end
+    end
+  end
+
+  describe 'recent flags' do
+    let(:report) { Report.find('recent_flags') }
+    context "no recent flags" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with recent flags" do
+      before do
+        freeze_time(Date.today)
+        spam_user = Fabricate(:user, username: 'spammer')
+        spam_post = Fabricate(:post, user: spam_user)
+        flagging_user = Fabricate(:user, username: 'flagger')
+        sally = Fabricate(:user, moderator: true, username: 'sally')
+        action = PostAction.new(user_id: flagging_user.id,
+                                post_action_type_id: PostActionType.types[:spam],
+                                post_id: spam_post.id,
+                                agreed_by_id: sally.id,
+                                created_at: 1.day.ago,
+                                agreed_at: Time.now)
+        action.save
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+      end
+
+      it "returns data for one moderator" do
+        expect(report.data.count).to eq(1)
+      end
+
+      it "returns the correct username for the user who creates the flag" do
+        expect(report.data[0][:flagger_username]).to eq('flagger')
+      end
+
+      it "returns the correct username for the user who created the post" do
+        expect(report.data[0][:poster_username]).to eq('spammer')
+      end
+
+      it "returns the correct username for the moderator who acted on the flag" do
+        expect(report.data[0][:staff_username]).to eq('sally')
+      end
+
+      it "returns the correct action_type" do
+        expect(report.data[0][:action_type]).to eq('spam')
+      end
+
+      it "returns the correct response time" do
+        expect(report.data[0][:response_time].to_i).to eq(86400)
       end
     end
   end
