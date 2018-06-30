@@ -1,9 +1,11 @@
 import { observes } from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";
+import PanEvents from "discourse/mixins/pan-events";
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(PanEvents, {
   composerOpen: null,
   info: null,
+  isPanning: false,
 
   init() {
     this._super();
@@ -91,7 +93,7 @@ export default Ember.Component.extend({
   _collapseFullscreen() {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
-      setTimeout(() => {
+      Ember.run.later(() => {
         this.set("info.topicProgressExpanded", false);
         this._checkSize();
       }, 500);
@@ -107,6 +109,57 @@ export default Ember.Component.extend({
         jumpToIndex: this.attrs.jumpToIndex
       });
     }
+  },
+
+  _panOpenClose(offset, velocity, direction) {
+    const $timelineContainer = $(".timeline-container");
+    const maxOffset = parseInt($timelineContainer.css("height"));
+    direction === "close" ? (offset += velocity) : (offset -= velocity);
+
+    $timelineContainer.css("bottom", -offset);
+    if (offset > maxOffset) {
+      this._collapseFullscreen();
+    } else if (offset <= 0) {
+      $timelineContainer.css("bottom", "");
+    } else {
+      Ember.run.later(
+        () => this._panOpenClose(offset, velocity, direction),
+        20
+      );
+    }
+  },
+
+  _shouldPanClose(e) {
+    return (e.deltaY > 200 && e.velocityY > -0.15) || e.velocityY > 0.15;
+  },
+
+  panStart(e) {
+    const center = e.center;
+    const $centeredElement = $(document.elementFromPoint(center.x, center.y));
+    if ($centeredElement.parents(".timeline-scrollarea-wrapper").length) {
+      this.set("isPanning", false);
+    } else {
+      this.set("isPanning", true);
+    }
+  },
+
+  panEnd(e) {
+    if (!this.get("isPanning")) {
+      return;
+    }
+    this.set("isPanning", false);
+    if (this._shouldPanClose(e)) {
+      this._panOpenClose(e.deltaY, 40, "close");
+    } else {
+      this._panOpenClose(e.deltaY, 40, "open");
+    }
+  },
+
+  panMove(e) {
+    if (!this.get("isPanning")) {
+      return;
+    }
+    $(".timeline-container").css("bottom", Math.min(0, -e.deltaY));
   },
 
   didInsertElement() {

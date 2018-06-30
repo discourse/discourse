@@ -27,7 +27,7 @@
 
   <% if params[:page].to_i == 0 && @subcategories.present? %>
     <% @subcategories.each do |subcategory| %>
-      <a href='<%= subcategory.url %>' itemprop='item'>
+      <a href='<%= subcategory.url %>'>
         <span itemprop='name'><%= subcategory.name %></span>
       </a>
       <% if subcategory.description.present? %>
@@ -43,6 +43,7 @@
   <% @list.topics.each_with_index do |t,i| %>
     <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
       <meta itemprop='position' content='<%= i %>'>
+      <meta itemprop='url' content='<%= t.url %>'>
       <a href='<%= t.url %>' itemprop='item'>
         <span itemprop='name'><%= t.title %></span>
       </a>
