@@ -29,6 +29,11 @@ div.poll {
     padding: 0.5em 0.7em 0.7em 0.5em;
   }
 
+  img {
+    max-width: 100% !important; /* needed to override internal styles */
+    height: auto;
+  }
+
   .button {
     display: inline-block;
     padding: 6px 12px;
