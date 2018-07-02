@@ -2,7 +2,7 @@
   <button class="btn btn-social {{b.name}}" {{action "externalLogin" b}}>{{b.title}}</button>
 {{/each}}
 
-{{#if canLoginLocalWithEmail}}
+{{#if showLoginWithEmailLink}}
   {{d-button
     action="emailLogin"
     label="email_login.button_label"
