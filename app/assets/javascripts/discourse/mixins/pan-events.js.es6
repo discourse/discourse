@@ -27,6 +27,17 @@ export default Ember.Mixin.create({
     }
   },
 
+  _calculateDirection(oldState, deltaX, deltaY) {
+    if (oldState.start || !oldState.direction) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        return deltaX > 0 ? "right" : "left";
+      } else {
+        return deltaY > 0 ? "down" : "up";
+      }
+    }
+    return oldState.direction;
+  },
+
   _calculateNewPanState(oldState, e) {
     if (e.type === "pointerup" || e.type === "pointercancel") {
       return oldState;
@@ -34,8 +45,8 @@ export default Ember.Mixin.create({
     const newTimestamp = new Date().getTime();
     const timeDiffSeconds = newTimestamp - oldState.timestamp;
     //calculate delta x, y, distance from START location
-    const deltaX = Math.round(e.clientX) - oldState.startLocation.x;
-    const deltaY = Math.round(e.clientY) - oldState.startLocation.y;
+    const deltaX = e.clientX - oldState.startLocation.x;
+    const deltaY = e.clientY - oldState.startLocation.y;
     const distance = Math.round(
       Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))
     );
@@ -60,14 +71,15 @@ export default Ember.Mixin.create({
       deltaY,
       distance,
       start: false,
-      timestamp: newTimestamp
+      timestamp: newTimestamp,
+      direction: this._calculateDirection(oldState, deltaX, deltaY)
     };
   },
 
   _panStart(e) {
     const newState = {
       center: { x: Math.round(e.clientX), y: Math.round(e.clientY) },
-      startLocation: { x: Math.round(e.clientX), y: Math.round(e.clientY) },
+      startLocation: { x: e.clientX, y: e.clientY },
       velocity: 0,
       velocityX: 0,
       velocityY: 0,
@@ -75,12 +87,17 @@ export default Ember.Mixin.create({
       deltaY: 0,
       distance: 0,
       start: true,
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      direction: null
     };
     this.set("_panState", newState);
   },
 
   _panMove(e) {
+    if (!this.get("_panState")) {
+      _panStart(e);
+      return;
+    }
     const previousState = this.get("_panState");
     const newState = this._calculateNewPanState(previousState, e);
     this.set("_panState", newState);
