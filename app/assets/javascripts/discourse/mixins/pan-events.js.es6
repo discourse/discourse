@@ -95,7 +95,7 @@ export default Ember.Mixin.create({
 
   _panMove(e) {
     if (!this.get("_panState")) {
-      _panStart(e);
+      this._panStart(e);
       return;
     }
     const previousState = this.get("_panState");
