@@ -141,6 +141,7 @@ export default Ember.Component.extend({
     if (
       time &&
       toTime &&
+      date === moment().format(this.dateFormat) &&
       date === toDate &&
       this.get("formats").includes(format)
     ) {
