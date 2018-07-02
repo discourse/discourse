@@ -75,20 +75,17 @@ describe Promotion do
       end
       it "sends promotion message by default" do
         SiteSetting.send_tl1_welcome_message = true
-        Jobs.expects(:enqueue).with(
-          :send_system_message,
-          user_id: user.id, message_type: "welcome_tl1_user"
-        ).once
         @result = promotion.review
+        expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
+        job = Jobs::SendSystemMessage.jobs[0]
+        expect(job["args"][0]["user_id"]).to eq(user.id)
+        expect(job["args"][0]["message_type"]).to eq("welcome_tl1_user")
       end
 
       it "can be turned off" do
         SiteSetting.send_tl1_welcome_message = false
-        Jobs.expects(:enqueue).with(
-          :send_system_message,
-          user_id: user.id, message_type: "welcome_tl1_user"
-        ).never
         @result = promotion.review
+        expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
       end
     end
 
