@@ -5,7 +5,15 @@ require_dependency 'gaps'
 
 class TopicView
 
-  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
+  attr_reader :topic,
+              :posts,
+              :guardian,
+              :filtered_posts,
+              :chunk_size,
+              :print,
+              :message_bus_last_id,
+              :contains_gaps
+
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
 
   def self.slow_chunk_size
@@ -51,7 +59,6 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    @_post_number = @post_number.dup
     @post_number = [@post_number.to_i, 1].max
     @page = [@page.to_i, 1].max
 
@@ -98,13 +105,75 @@ class TopicView
     path
   end
 
-  def contains_gaps?
-    @contains_gaps
-  end
-
   def gaps
     return unless @contains_gaps
-    @gaps ||= Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+
+    @gaps ||= begin
+      sort_orders = @posts.pluck(:sort_order)
+      first_sort_order = sort_orders.min
+      last_sort_order = sort_orders.max
+      left_limit = ">="
+      right_limit = "<="
+
+      # Look up the sort_order of the previous window
+      new_first_sort_order = @filtered_posts
+        .order(sort_order: :desc)
+        .where("sort_order < ?", first_sort_order)
+        .limit(1)
+        .pluck(:sort_order)
+        .first || first_sort_order
+
+      if new_first_sort_order != first_sort_order
+        left_limit = ">"
+      end
+
+      first_sort_order = new_first_sort_order
+
+      sort_order_range =
+        if (
+            !is_summary? &&
+            unfiltered_posts
+              .order(:sort_order)
+              .where("sort_order > ?", last_sort_order)
+              .offset(@limit - 1)
+              .exists?
+           ) ||
+           (is_summary? && @posts.offset(@limit).exists?)
+
+          # Look up the sort_order of the next window
+          new_last_sort_order = @filtered_posts
+            .order(:sort_order)
+            .where("sort_order > ?", last_sort_order)
+            .limit(1)
+            .pluck(:sort_order)
+            .first || last_sort_order
+
+          if new_last_sort_order != last_sort_order
+            right_limit = "<"
+          end
+
+          [first_sort_order, new_last_sort_order]
+        else
+          [
+            first_sort_order,
+            Post.select(:sort_order)
+              .with_deleted
+              .where(topic_id: @topic.id)
+              .order(:sort_order)
+              .last
+              .sort_order
+          ]
+        end
+
+      unfiltered_ids = unfiltered_posts.order(:sort_order)
+        .where("posts.sort_order #{left_limit} ? AND posts.sort_order #{right_limit} ?",
+          sort_order_range[0],
+          sort_order_range[1]
+        )
+        .pluck(:id)
+
+      Gaps.new(@posts.sort_by(&:sort_order).pluck(:id), unfiltered_ids)
+    end
   end
 
   def last_post
@@ -436,6 +505,10 @@ class TopicView
 
   private
 
+  def is_summary?
+    @filter == 'summary'
+  end
+
   def filter_post_types(posts)
     visible_types = Topic.visible_post_types(@user)
 
@@ -493,14 +566,13 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     # Filters
-    if @filter == 'summary'
+    if is_summary?
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
     end
 
     if @best.present?
       @filtered_posts = @filtered_posts.where('posts.post_type = ?', Post.types[:regular])
-      @contains_gaps = true
     end
 
     # Username filters
@@ -527,7 +599,6 @@ class TopicView
 
       @contains_gaps = true
     end
-
   end
 
   def check_and_raise_exceptions
