@@ -22,5 +22,6 @@ RSpec.describe TopicViewPostsSerializer do
     expect(posts.first["id"]).to eq(post.id)
     expect(body["post_stream"]["stream"]).to eq(nil)
     expect(body["post_stream"]["timeline_lookup"]).to eq(nil)
+    expect(body["post_stream"]["gaps"]).to eq(nil)
   end
 end

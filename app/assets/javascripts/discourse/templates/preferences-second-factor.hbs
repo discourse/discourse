@@ -1,5 +1,6 @@
-<section class='user-content user-preferences'>
+<section class='user-preferences'>
   <form class="form-horizontal">
+
     <div class="control-group">
       <div class="controls">
         <h3>{{i18n 'user.second_factor.title'}}</h3>
@@ -8,7 +9,7 @@
 
     {{#if errorMessage}}
       <div class="control-group">
-        <div class="instructions">
+        <div class="controls">
           <div class='alert alert-error'>{{errorMessage}}</div>
         </div>
       </div>
@@ -22,7 +23,7 @@
           {{second-factor-input value=secondFactorToken inputId='second-factor-token'}}
         </div>
 
-        <div class='instructions'>
+        <div class='instructions controls'>
           {{i18n 'user.second_factor.disable_description'}}
         </div>
       </div>
@@ -97,7 +98,7 @@
                 autofocus="autofocus"}}
           </div>
 
-          <div class='instructions'>
+          <div class='instructions controls'>
             {{i18n 'user.second_factor.confirm_password_description'}}
           </div>
         </div>
