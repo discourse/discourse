@@ -255,7 +255,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       const tableTags = ["table", "thead", "tbody", "th", "tr", "td"];
       const whiteListObj = { features: { editHistory: true } };
 
-      tableTags.forEach(tag => whiteListObj.features[tag] = true);
+      tableTags.forEach(tag => (whiteListObj.features[tag] = true));
       const whiteLister = new WhiteLister(whiteListObj);
 
       whiteLister.whiteListFeature("editHistory", { custom: () => true });
