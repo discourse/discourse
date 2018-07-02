@@ -4,19 +4,27 @@ export default Ember.Mixin.create({
   _panState: null,
 
   didInsertElement() {
-    this.$()
-      .on("pointerdown", e => this._panStart(e))
-      .on("pointermove", e => this._panMove(e))
-      .on("pointerup", e => this._panMove(e))
-      .on("pointercancel", e => this._panMove(e));
+    this._super();
+
+    if (this.site.mobileView) {
+      this.$()
+        .on("pointerdown", e => this._panStart(e))
+        .on("pointermove", e => this._panMove(e))
+        .on("pointerup", e => this._panMove(e))
+        .on("pointercancel", e => this._panMove(e));
+    }
   },
 
   willDestroyElement() {
-    this.$()
-      .off("pointerdown")
-      .off("pointerup")
-      .off("pointermove")
-      .off("pointercancel");
+    this._super();
+
+    if (this.site.mobileView) {
+      this.$()
+        .off("pointerdown")
+        .off("pointerup")
+        .off("pointermove")
+        .off("pointercancel");
+    }
   },
 
   _calculateNewPanState(oldState, e) {
