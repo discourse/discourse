@@ -1,16 +1,18 @@
 <div class='embeddable-hosts'>
   {{#if embedding.embeddable_hosts}}
-    <table class='embedding'>
-      <tr>
+    <table class='embedding grid'>
+      <thead>
         <th style='width: 25%'>{{i18n "admin.embedding.host"}}</th>
         <th style='width: 15%'>{{i18n "admin.embedding.class_name"}}</th>
         <th style='width: 25%'>{{i18n "admin.embedding.path_whitelist"}}</th>
         <th style='width: 25%'>{{i18n "admin.embedding.category"}}</th>
         <th style='width: 10%'>&nbsp;</th>
-      </tr>
+      </thead>
+      <tbody>
       {{#each embedding.embeddable_hosts as |host|}}
         {{embeddable-host host=host deleteHost="deleteHost"}}
       {{/each}}
+      </tbody>
     </table>
   {{else}}
     <p>{{i18n "admin.embedding.get_started"}}</p>

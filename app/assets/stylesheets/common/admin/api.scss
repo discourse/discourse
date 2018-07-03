@@ -1,0 +1,256 @@
+// Styles for admin/api
+
+table.web-hooks.grid {
+  td.delivery-status {
+    div {
+      display: flex;
+      align-items: center;
+    }
+    .d-icon {
+      margin-right: 0.25em;
+    }
+  }
+  td.payload-url {
+    word-wrap: break-word;
+    max-width: 55vw;
+  }
+  td.controls {
+    display: flex;
+    button {
+      margin-left: 0.25em;
+    }
+  }
+  @media screen and (min-width: 550px) {
+    tbody {
+      tr {
+        grid-template-columns: 0.5fr repeat(2, 1fr) 0.5fr;
+      }
+
+      td.controls {
+        text-align: right;
+      }
+    }
+  }
+  @media screen and (max-width: 550px) {
+    tbody {
+      tr {
+        grid-template-columns: 0.5fr 1fr;
+      }
+    }
+    td.controls {
+      grid-row: 2;
+    }
+  }
+  //IE11 Support
+  @media screen and (max-width: 767px) {
+    tr {
+      display: -ms-grid;
+      -ms-grid-columns: 0.5fr 1fr 1fr 0.5fr;
+      td {
+        display: -ms-grid;
+        &.delivery-status {
+          -ms-grid-row: 1;
+          -ms-grid-column: 1;
+        }
+        &.payload-url {
+          -ms-grid-row: 1;
+          -ms-grid-column: 2;
+        }
+        &.description {
+          -ms-grid-row: 1;
+          -ms-grid-column: 3;
+        }
+        &.controls {
+          -ms-grid-row: 1;
+          -ms-grid-column: 4;
+        }
+      }
+    }
+  }
+}
+
+// Api keys
+
+table.api-keys {
+  margin-bottom: 0.25em;
+  td.key {
+    font-size: $font-down-1;
+  }
+  @media screen and (max-width: 768px) {
+    tr {
+      grid-template-columns: 0.25fr 1fr 1fr;
+    }
+    td.key {
+      font-size: $font-0;
+      word-wrap: break-word;
+      grid-row: 1;
+      grid-column-start: 1;
+      grid-column-end: -1;
+      max-width: 100%;
+    }
+    td.key-user {
+      grid-row: 2;
+      grid-column-start: 1;
+    }
+    td.key-controls {
+      grid-row: 2;
+      grid-column-end: -1;
+      grid-column-start: 2;
+      text-align: right;
+    }
+  }
+  //IE11 Support
+  @media screen and (max-width: 767px) {
+    tr {
+      display: -ms-grid;
+      -ms-grid-columns: 0.25fr 1fr 1fr;
+      -ms-grid-rows: auto auto;
+      td {
+        display: -ms-grid;
+
+        &.key {
+          -ms-grid-row: 1;
+          -ms-grid-column: 1;
+          -ms-grid-column-span: 3;
+        }
+        &.key-user {
+          -ms-grid-row: 2;
+          -ms-grid-column: 1;
+        }
+        &.key-controls {
+          -ms-grid-row: 2;
+          -ms-grid-column: 2;
+          -ms-grid-column-span: 2;
+          display: -ms-grid;
+          -ms-grid-columns: 125px 125px;
+          button:first-of-type {
+            -ms-grid-column: 1;
+          }
+          button:last-of-type {
+            -ms-grid-column: 2;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Webhook
+.web-hook-container {
+  .tip.good:empty {
+    display: none;
+  }
+  input {
+    max-width: calc(100% - 10px;);
+  }
+  .select-kit,
+  .select-kit.multi-select {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .event-selector {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.5em 0;
+
+    .hook-event {
+      margin-bottom: 0.5em;
+      @media screen and (max-width: 550px) {
+        width: 100%;
+      }
+    }
+  }
+
+  > p {
+    padding-bottom: 10px;
+    border-bottom: darken($secondary, 10%) 1px solid;
+  }
+  .filters {
+    margin: 5px 0;
+    padding-bottom: 5px;
+    border-bottom: darken($secondary, 5%) 1px solid;
+    .filter {
+      margin-bottom: 1em;
+    }
+    label .d-icon {
+      margin-right: 0.25em;
+    }
+  }
+  .instructions {
+    margin-top: 5px;
+  }
+  .subscription-choice {
+    margin-bottom: 10px;
+  }
+}
+
+.web-hook-direction {
+  button {
+    margin-right: 10px;
+  }
+}
+
+.web-hook-events {
+  li {
+    padding: 2px 0;
+  }
+  .col {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: top;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .col.first {
+    width: 90px;
+  }
+  .col.event-id {
+    width: 300px;
+  }
+  .col.timestamp {
+    width: 150px;
+  }
+  .col.completion {
+    width: 220px;
+  }
+  .col.actions {
+    width: 305px;
+    padding-top: 0;
+    a {
+      text-decoration: underline;
+    }
+  }
+  .col.heading.actions {
+    padding: 4px 0;
+  }
+  .details {
+    display: block;
+    margin-top: 10px;
+  }
+  label {
+    font-size: $font-0;
+  }
+  &.content-list {
+    width: 100%;
+  }
+}
+
+.web-hook-events-listing {
+  margin-top: 15px;
+  .alert {
+    margin: 15px 0 0 0;
+  }
+}
+
+.hook-event {
+  display: inline-block;
+  width: 40%;
+  margin-left: 20px;
+  label {
+    display: inline-block;
+  }
+  p {
+    margin: 0 0 5px 25px;
+  }
+}

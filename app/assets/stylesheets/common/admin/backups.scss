@@ -1,0 +1,113 @@
+// Styles for /admin/backups
+
+$rollback: #3d9970;
+$rollback-dark: darken($rollback, 10%) !default;
+$rollback-darker: darken($rollback, 20%) !default;
+.btn-rollback {
+  color: $secondary;
+  background: $rollback;
+  &:hover {
+    background: $rollback-dark;
+  }
+  &:active {
+    @include linear-gradient($rollback-darker, $rollback-dark);
+  }
+  &[disabled] {
+    background: $rollback;
+  }
+}
+
+.backups {
+  .admin-controls {
+    .backup-operations {
+      margin-left: auto;
+      button {
+        display: flex;
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.admin-backups {
+  table {
+    @media screen and (min-width: 550px) {
+      td.backup-filename {
+        grid-column-start: 1;
+        grid-column-end: 6;
+      }
+      td.backup-size {
+        grid-column-end: -1;
+        text-align: right;
+      }
+      td.backup-controls {
+        margin-top: 0.25em;
+        grid-row: 2;
+        grid-column-start: 1;
+        grid-column-end: 5;
+        text-align: right;
+        .btn {
+          margin-top: 0.25em;
+        }
+      }
+    }
+    @media screen and (max-width: 550px) {
+      td.backup-filename {
+        grid-column-start: 1;
+        grid-column-end: 3;
+      }
+      td.backup-size {
+        text-align: right;
+      }
+      td.backup-controls {
+        grid-column-start: 1;
+        grid-column-end: 4;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      td.backup-controls {
+        text-align: left;
+      }
+    }
+  }
+}
+
+.admin-backups-logs {
+  max-height: 500px;
+  overflow: auto;
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 65vh;
+  }
+}
+
+button.ru {
+  position: relative;
+  min-width: 110px;
+}
+
+.ru-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(0, 175, 0, 0.3);
+}
+
+.is-uploading:hover .ru-progress {
+  background: rgba(200, 0, 0, 0.3);
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.start-backup-modal {
+  .btn {
+    margin: 10px 0 10px 5px;
+  }
+  .btn:first-of-type {
+    margin-left: 10px;
+  }
+}
