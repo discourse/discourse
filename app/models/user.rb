@@ -1069,6 +1069,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def emails
+    self.user_emails.order("user_emails.primary DESC NULLS LAST").pluck(:email)
+  end
+
+  def secondary_emails
+    self.user_emails.secondary.pluck(:email)
+  end
+
   def recent_time_read
     self.created_at && self.created_at < 60.days.ago ?
       self.user_visits.where('visited_at >= ?', 60.days.ago).sum(:time_read) :

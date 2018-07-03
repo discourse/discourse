@@ -15,6 +15,8 @@ class UserEmail < ActiveRecord::Base
   validate :user_id_not_changed, if: :primary
   validate :unique_email
 
+  scope :secondary, -> { where(primary: false) }
+
   private
 
   def strip_downcase_email
