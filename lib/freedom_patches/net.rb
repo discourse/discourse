@@ -45,5 +45,5 @@ if Gem::Version.new(RUBY_VERSION) == Gem::Version.new("2.5.1")
   end
 elsif Gem::Version.new(RUBY_VERSION) > Gem::Version.new("2.5.1")
   # See https://github.com/ruby/ruby/commit/7830a950efa6d312e7c662beabaa0f8d7b4e0a23
-  raise 'This monkey patch is no longer required.'
+  STDERR.puts 'This monkey patch is no longer required.'
 end
