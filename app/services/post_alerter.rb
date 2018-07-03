@@ -393,7 +393,7 @@ class PostAlerter
       skip_send_email: skip_send_email
     )
 
-    if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
+    if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended? && !opts[:skip_push]
       post_url = original_post.url
       if post_url
         payload = {
