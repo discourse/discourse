@@ -55,10 +55,6 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
         return style.htmlSafe();
       }
     }
-
-    if (categoryStyle === "box") {
-      return `background-color: ${categoryBackgroundColor}; color: ${categoryTextColor}`.htmlSafe();
-    }
   },
 
   didRender() {
