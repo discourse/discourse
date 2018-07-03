@@ -1,0 +1,45 @@
+// Styles for /admin/plugins
+
+.admin-contents.admin-plugins {
+  .controls {
+    .settings-button {
+      margin-left: auto;
+    }
+  }
+  .grid {
+    @media screen and (min-width: 550px) {
+      tr {
+        grid-template-columns: 0.25fr repeat(4, 1fr);
+      }
+    }
+    @media screen and (max-width: 550px) {
+      tr {
+        grid-template-columns: 0.25fr repeat(3, 1fr);
+      }
+      td.plugin-name {
+        grid-column-start: 2;
+        grid-column-end: -1;
+      }
+      td.settings {
+        grid-row: 2;
+        grid-column-start: 4;
+        text-align: right;
+        button {
+          display: flex;
+        }
+      }
+      td.version {
+        grid-row: 2;
+        grid-column-start: 3;
+      }
+      td.col-enabled {
+        grid-row: 2;
+        grid-column-start: 2;
+      }
+    }
+  }
+}
+
+.admin-plugins-official-badge {
+  color: $success;
+}
