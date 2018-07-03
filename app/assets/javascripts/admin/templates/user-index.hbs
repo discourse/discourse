@@ -60,7 +60,7 @@
 
   {{#if canCheckEmails}}
     <div class='display-row email'>
-      <div class='field'>{{i18n 'user.email.title'}}</div>
+      <div class='field'>{{i18n 'user.email.primary'}}</div>
       <div class='value'>
         {{#unless model.active}}
           <div class='controls'>{{i18n 'admin.users.not_verified'}}</div>
@@ -69,6 +69,30 @@
           <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
         {{else}}
           {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
+        {{/if}}
+      </div>
+    </div>
+
+    <div class='display-row secondary-emails'>
+      <div class='field'>{{i18n 'user.email.secondary'}}</div>
+
+      <div class='value'>
+        {{#if model.email}}
+          {{#if model.secondary_emails}}
+            <ul>
+              {{#each model.secondary_emails as |email| }}
+                <li><a href="mailto:{{unbound email}}">{{email}}</a></li>
+              {{/each}}
+            </ul>
+          {{else}}
+            {{i18n 'user.email.no_secondary'}}
+          {{/if}}
+        {{else}}
+          {{d-button action="checkEmail"
+              actionParam=model
+              icon="envelope-o"
+              label="admin.users.check_email.text"
+              title="admin.users.check_email.title"}}
         {{/if}}
       </div>
     </div>

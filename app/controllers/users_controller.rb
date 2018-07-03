@@ -146,8 +146,11 @@ class UsersController < ApplicationController
 
     StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
 
+    email, *secondary_emails = user.emails
+
     render json: {
-      email: user.email,
+      email: email,
+      secondary_emails: secondary_emails,
       associated_accounts: user.associated_accounts
     }
   rescue Discourse::InvalidAccess
