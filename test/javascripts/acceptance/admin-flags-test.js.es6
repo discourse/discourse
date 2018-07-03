@@ -129,7 +129,7 @@ QUnit.test("topics with flags", assert => {
   andThen(() => {
     assert.equal(find(".flagged-topics .flagged-topic").length, 1);
     assert.equal(find(".flagged-topic .flagged-topic-user").length, 2);
-    assert.equal(find(".flagged-topic .flag-counts").length, 3);
+    assert.equal(find(".flagged-topic div.flag-counts").length, 3);
   });
 
   click(".flagged-topic .show-details");
