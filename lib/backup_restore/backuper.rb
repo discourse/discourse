@@ -30,7 +30,7 @@ module BackupRestore
       enable_readonly_mode
 
       pause_sidekiq
-      wait_for_sidekiq
+      wait_for_sidekiqz
 
       dump_public_schema
 
@@ -281,7 +281,7 @@ module BackupRestore
 
     def remove_tar_leftovers
       log "Removing '.tar' leftovers..."
-      system('rm', '-f', "#{@archive_directory}/*.tar")
+      Dir["#{@archive_directory}/*.tar"].each { |filename| File.delete(filename) }
     end
 
     def remove_tmp_directory
