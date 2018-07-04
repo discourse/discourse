@@ -747,6 +747,7 @@ en:
         manage: "Manage backup codes"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
+        remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
         codes:
           title: "Backup codes"
           description: "Each line is a different backup code which can only be used once. It's recommended to save this file in a safe place."
