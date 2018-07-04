@@ -21,6 +21,13 @@ module Middleware
         @request = Rack::Request.new(@env)
       end
 
+      def blocked_crawler?
+        @request.get? &&
+        !@request.xhr? &&
+        !@request.path.ends_with?('robots.txt') &&
+        CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
+      end
+
       def is_mobile=(val)
         @is_mobile = val ? :true : :false
       end
@@ -187,6 +194,11 @@ module Middleware
     def call(env)
       helper = Helper.new(env)
       force_anon = false
+
+      if helper.blocked_crawler?
+        env["discourse.request_tracker.skip"] = true
+        return [403, {}, "Crawler is not allowed!"]
+      end
 
       if helper.should_force_anonymous?
         force_anon = env["DISCOURSE_FORCE_ANON"] = true
