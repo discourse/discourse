@@ -364,7 +364,7 @@ describe PostDestroyer do
     let(:author) { Fabricate(:user) }
     let(:private_message) { Fabricate(:private_message_topic, user: author) }
     let!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
-    let!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2)}
+    let!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2) }
 
     it "doesn't update post_count for a reply" do
       expect {
