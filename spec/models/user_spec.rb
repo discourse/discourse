@@ -1758,4 +1758,18 @@ describe User do
       filter_by(:filter_by_username_or_email)
     end
   end
+
+  describe "#secondary_emails" do
+    let!(:user) { Fabricate(:user_single_email) }
+
+    it "is empty when user has one email" do
+      expect(user.secondary_emails).to be_empty
+    end
+
+    it "only contains secondary emails" do
+      secondary_email = Fabricate(:secondary_email, user: user)
+      expect(user.secondary_emails).to contain_exactly(secondary_email.email)
+    end
+  end
+
 end
