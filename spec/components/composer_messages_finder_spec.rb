@@ -157,6 +157,7 @@ describe ComposerMessagesFinder do
 
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: user)
+      Fabricate(:post, topic: topic, user: user, post_type: Post.types[:small_action])
 
       SiteSetting.sequential_replies_threshold = 2
     end
