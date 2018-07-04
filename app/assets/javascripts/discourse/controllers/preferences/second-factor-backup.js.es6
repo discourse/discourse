@@ -7,7 +7,9 @@ export default Ember.Controller.extend({
   errorMessage: null,
   successMessage: null,
   backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
-  remainingCodes: Ember.computed.alias("model.second_factor_remaining_backup_codes"),
+  remainingCodes: Ember.computed.alias(
+    "model.second_factor_remaining_backup_codes"
+  ),
   backupCodes: null,
 
   @computed("secondFactorToken")
