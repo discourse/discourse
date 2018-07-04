@@ -1,9 +1,11 @@
 <section class="user-preferences second-factor-backup-preferences">
   <form class="form-horizontal">
-
     <div class="control-group">
       <div class="controls">
         <h3>{{i18n "user.second_factor_backup.title"}}</h3>
+        {{#if backupEnabled}}
+          <p>{{{i18n "user.second_factor_backup.remaining_codes" count=remainingCodes}}}</p>
+        {{/if}}
       </div>
       <div class="controls">
         {{#if successMessage}}
