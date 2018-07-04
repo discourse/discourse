@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :block_crawlers
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -463,6 +464,19 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def block_crawlers
+    if (
+        request.get? &&
+        !request.xhr? &&
+        !request.path.ends_with?('robots.txt') &&
+        CrawlerDetection.is_blocked_crawler?(request.env['HTTP_USER_AGENT'])
+    )
+
+      request.env["discourse.request_tracker.skip"] = true
+      raise Discourse::InvalidAccess, 'Crawler not allowed'
+    end
+  end
 
   def check_readonly_mode
     @readonly_mode = Discourse.readonly_mode?
