@@ -30,7 +30,7 @@ module BackupRestore
       enable_readonly_mode
 
       pause_sidekiq
-      wait_for_sidekiqz
+      wait_for_sidekiq
 
       dump_public_schema
 
