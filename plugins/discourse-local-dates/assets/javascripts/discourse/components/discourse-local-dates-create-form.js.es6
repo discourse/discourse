@@ -164,7 +164,7 @@ export default Ember.Component.extend({
     text += `]`;
 
     if (config.toDate) {
-      text += ` ➡ `;
+      text += ` → `;
       text += `[date=${config.toDate} `;
 
       if (config.toTime) {
