@@ -74,7 +74,8 @@ class UserSerializer < BasicUserSerializer
              :primary_group_flair_color,
              :staged,
              :second_factor_enabled,
-             :second_factor_backup_enabled
+             :second_factor_backup_enabled,
+             :second_factor_remaining_backup_codes
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -158,6 +159,14 @@ class UserSerializer < BasicUserSerializer
 
   def second_factor_backup_enabled
     object.backup_codes_enabled?
+  end
+
+  def include_second_factor_remaining_backup_codes?
+    (object&.id == scope.user&.id) && object.backup_codes_enabled?
+  end
+
+  def second_factor_remaining_backup_codes
+    object.remaining_backup_codes
   end
 
   def can_change_bio

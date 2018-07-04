@@ -45,6 +45,10 @@ module SecondFactorManager
       SiteSetting.enable_local_logins
   end
 
+  def remaining_backup_codes
+    self&.user_second_factors&.backup_codes&.count
+  end
+
   def authenticate_second_factor(token, second_factor_method)
     if second_factor_method == UserSecondFactor.methods[:totp]
       authenticate_totp(token)
