@@ -1,12 +1,12 @@
 
 <div class='web-hooks-listing'>
-{{#if model}}
   <p>{{i18n 'admin.web_hooks.instruction'}}</p>
   <div class='new-webhook'>
-  {{#link-to 'adminWebHooks.show' 'new' tagName='button' classNames='btn'}}
-    {{d-icon 'plus'}} {{i18n 'admin.web_hooks.new'}}
-  {{/link-to}}
-</div>
+    {{#link-to 'adminWebHooks.show' 'new' tagName='button' classNames='btn'}}
+      {{d-icon 'plus'}} {{i18n 'admin.web_hooks.new'}}
+    {{/link-to}}
+  </div>
+{{#if model}}
   {{#load-more selector=".web-hooks tr" action="loadMore"}}
     <table class='web-hooks grid'>
       <thead>
