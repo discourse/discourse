@@ -128,10 +128,10 @@ module FileStore
     def cache_file(file, filename)
       path = get_cache_path_for(filename)
       dir = File.dirname(path)
-      FileUtils.mkdir_p(dir) unless Dir[dir].present?
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
       # keep latest 500 files
-      `ls -tr #{CACHE_DIR} | head -n -#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
+      `ls -tr #{CACHE_DIR} | head -n -#{CACHE_MAXIMUM_SIZE} | awk '$0="#{CACHE_DIR}"$0' | xargs rm -f`
     end
 
     private
