@@ -441,6 +441,8 @@ $mobile-breakpoint: 700px;
 
 .admin-controls {
   display: flex;
+  background-color: $primary-low;
+  align-items: center;
 
   .admin-actions {
     margin-left: auto;
@@ -452,7 +454,7 @@ $mobile-breakpoint: 700px;
   nav {
     display: inline-flex;
     position: relative;
-    width: 100%;
+    flex: 1;
     height: auto;
     overflow: hidden;
     padding: 0;
@@ -609,6 +611,9 @@ $mobile-breakpoint: 700px;
     display: inline-block;
     vertical-align: middle;
     padding: 0;
+  }
+  .pull-right {
+    padding-right: 10px;
   }
 }
 
