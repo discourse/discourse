@@ -508,6 +508,7 @@ class Report
     COUNT(*) AS flag_count
     FROM post_actions pa
     WHERE pa.agreed_by_id = ANY(ARRAY#{mod_ids})
+    OR pa.disagreed_by_id = ANY(ARRAY#{mod_ids})
     AND pa.post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
     GROUP BY pa.agreed_by_id
     SQL
