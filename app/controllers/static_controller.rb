@@ -161,7 +161,7 @@ class StaticController < ApplicationController
         # https://github.com/w3c/ServiceWorker/blob/master/explainer.md#updating-a-service-worker
         # Maximum cache that the service worker will respect is 24 hours.
         # However, ensure that these may be cached and served for longer on servers.
-        immutable_for 1.year
+        immutable_for 24.hours
 
         if Rails.application.assets_manifest.assets['service-worker.js']
           path = File.expand_path(Rails.root + "public/assets/#{Rails.application.assets_manifest.assets['service-worker.js']}")
