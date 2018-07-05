@@ -177,10 +177,10 @@ end
 #  mailing_list_mode_frequency      :integer          default(1), not null
 #  include_tl0_in_digests           :boolean          default(FALSE)
 #  notification_level_when_replying :integer
-#  theme_key                        :string
 #  theme_key_seq                    :integer          default(0), not null
 #  allow_private_messages           :boolean          default(TRUE), not null
 #  homepage_id                      :integer
+#  theme_ids                        :integer          default([]), not null, is an Array
 #
 # Indexes
 #

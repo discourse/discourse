@@ -17,11 +17,6 @@ class Theme < ActiveRecord::Base
   has_many :color_schemes
   belongs_to :remote_theme
 
-  before_create do
-    self.key ||= SecureRandom.uuid
-    true
-  end
-
   def notify_color_change(color)
     changed_colors << color
   end
@@ -53,7 +48,7 @@ class Theme < ActiveRecord::Base
   after_destroy do
     remove_from_cache!
     clear_cached_settings!
-    if SiteSetting.default_theme_key == self.key
+    if SiteSetting.default_theme_id == self.id
       Theme.clear_default!
     end
 
@@ -75,21 +70,21 @@ class Theme < ActiveRecord::Base
     theme.notify_theme_change
   end, on: :update
 
-  def self.theme_keys
-    if keys = @cache["theme_keys"]
-      return keys
+  def self.theme_ids
+    if ids = @cache["theme_ids"]
+      return ids
     end
-    @cache["theme_keys"] = Set.new(Theme.pluck(:key))
+    @cache["theme_ids"] = Set.new(Theme.pluck(:id))
   end
 
-  def self.user_theme_keys
-    if keys = @cache["user_theme_keys"]
-      return keys
+  def self.user_theme_ids
+    if ids = @cache["user_theme_ids"]
+      return ids
     end
-    @cache["user_theme_keys"] = Set.new(
+    @cache["user_theme_ids"] = Set.new(
       Theme
-      .where('user_selectable OR key = ?', SiteSetting.default_theme_key)
-      .pluck(:key)
+      .where('user_selectable OR id = ?', SiteSetting.default_theme_id)
+      .pluck(:id)
     )
   end
 
@@ -99,28 +94,28 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_default!
-    SiteSetting.default_theme_key = ""
+    SiteSetting.default_theme_id = -1
     expire_site_cache!
   end
 
   def set_default!
-    SiteSetting.default_theme_key = key
+    SiteSetting.default_theme_id = id
     Theme.expire_site_cache!
   end
 
   def default?
-    SiteSetting.default_theme_key == key
+    SiteSetting.default_theme_id == id
   end
 
-  def self.lookup_field(key, target, field)
-    return if key.blank?
+  def self.lookup_field(theme_id, target, field)
+    return if theme_id.blank?
 
-    cache_key = "#{key}:#{target}:#{field}:#{ThemeField::COMPILER_VERSION}"
+    cache_key = "#{theme_id}:#{target}:#{field}:#{ThemeField::COMPILER_VERSION}"
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
 
     target = target.to_sym
-    theme = find_by(key: key)
+    theme = find_by(id: theme_id)
 
     val = theme.resolve_baked_field(target, field) if theme
 
@@ -162,12 +157,12 @@ class Theme < ActiveRecord::Base
 
   def refresh_message_for_targets(targets, theme)
     targets.map do |target|
-      href = Stylesheet::Manager.stylesheet_href(target.to_sym, theme.key)
+      href = Stylesheet::Manager.stylesheet_href(target.to_sym, theme.id)
       if href
         {
           target: target,
           new_href: href,
-          theme_key: theme.key
+          theme_id: theme.id
         }
       end
     end
@@ -319,7 +314,7 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Rails.cache.fetch("settings_for_theme_#{self.key}", expires_in: 30.minutes) do
+    Rails.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
       hash = {}
       self.settings.each do |setting|
         hash[setting.name] = setting.value
@@ -329,7 +324,7 @@ class Theme < ActiveRecord::Base
   end
 
   def clear_cached_settings!
-    Rails.cache.delete("settings_for_theme_#{self.key}")
+    Rails.cache.delete("settings_for_theme_#{self.id}")
   end
 
   def included_settings
@@ -343,8 +338,8 @@ class Theme < ActiveRecord::Base
     hash
   end
 
-  def self.settings_for_client(key)
-    theme = Theme.find_by(key: key)
+  def self.settings_for_client(theme_id)
+    theme = Theme.find_by(id: theme_id)
     return {}.to_json unless theme
 
     theme.included_settings.to_json
@@ -365,7 +360,6 @@ end
 #  id               :integer          not null, primary key
 #  name             :string           not null
 #  user_id          :integer          not null
-#  key              :string           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  compiler_version :integer          default(0), not null
@@ -376,6 +370,5 @@ end
 #
 # Indexes
 #
-#  index_themes_on_key              (key)
 #  index_themes_on_remote_theme_id  (remote_theme_id) UNIQUE
 #

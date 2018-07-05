@@ -109,7 +109,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.lookup_hex_for_name(name)
-    enabled_color_scheme = Theme.where(key: SiteSetting.default_theme_key).first&.color_scheme
+    enabled_color_scheme = Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
     (enabled_color_scheme || base).colors.find { |c| c.name == name }.try(:hex) || "nil"
   end
 

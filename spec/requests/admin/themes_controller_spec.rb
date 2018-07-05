@@ -144,25 +144,25 @@ describe Admin::ThemesController do
     let(:theme) { Theme.create(name: 'my name', user_id: -1) }
 
     it 'can change default theme' do
-      SiteSetting.default_theme_key = nil
+      SiteSetting.default_theme_id = -1
 
       put "/admin/themes/#{theme.id}.json", params: {
         id: theme.id, theme: { default: true }
       }
 
       expect(response.status).to eq(200)
-      expect(SiteSetting.default_theme_key).to eq(theme.key)
+      expect(SiteSetting.default_theme_id).to eq(theme.id)
     end
 
     it 'can unset default theme' do
-      SiteSetting.default_theme_key = theme.key
+      SiteSetting.default_theme_id = theme.id
 
       put "/admin/themes/#{theme.id}.json", params: {
         theme: { default: false }
       }
 
       expect(response.status).to eq(200)
-      expect(SiteSetting.default_theme_key).to be_blank
+      expect(SiteSetting.default_theme_id).to eq(-1)
     end
 
     it 'updates a theme' do

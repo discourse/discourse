@@ -22,11 +22,6 @@ describe Theme do
     Theme.create!(customization_params)
   end
 
-  it 'should set default key when creating a new customization' do
-    s = Theme.create!(name: 'my name', user_id: user.id)
-    expect(s.key).not_to eq(nil)
-  end
-
   it 'can properly clean up color schemes' do
     theme = Theme.create!(name: 'bob', user_id: -1)
     scheme = ColorScheme.create!(theme_id: theme.id, name: 'test')
@@ -51,13 +46,13 @@ describe Theme do
 
     child.save!
 
-    expect(Theme.lookup_field(child.key, :desktop, "header")).to eq("World\nDesktop")
-    expect(Theme.lookup_field(child.key, "mobile", :header)).to eq("World\nMobile")
+    expect(Theme.lookup_field(child.id, :desktop, "header")).to eq("World\nDesktop")
+    expect(Theme.lookup_field(child.id, "mobile", :header)).to eq("World\nMobile")
 
     child.set_field(target: :common, name: "header", value: "Worldie")
     child.save!
 
-    expect(Theme.lookup_field(child.key, :mobile, :header)).to eq("Worldie\nMobile")
+    expect(Theme.lookup_field(child.id, :mobile, :header)).to eq("Worldie\nMobile")
 
     parent = Theme.new(name: '1', user_id: user.id)
 
@@ -68,7 +63,7 @@ describe Theme do
 
     parent.add_child_theme!(child)
 
-    expect(Theme.lookup_field(parent.key, :mobile, "header")).to eq("Common Parent\nMobile Parent\nWorldie\nMobile")
+    expect(Theme.lookup_field(parent.id, :mobile, "header")).to eq("Common Parent\nMobile Parent\nWorldie\nMobile")
 
   end
 
@@ -88,7 +83,7 @@ describe Theme do
     theme.set_field(target: :common, name: "head_tag", value: "<b>I am bold")
     theme.save!
 
-    expect(Theme.lookup_field(theme.key, :desktop, "head_tag")).to eq("<b>I am bold</b>")
+    expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
   end
 
   it 'should precompile fragments in body and head tags' do
@@ -104,7 +99,7 @@ HTML
     theme.set_field(target: :common, name: "header", value: with_template)
     theme.save!
 
-    baked = Theme.lookup_field(theme.key, :mobile, "header")
+    baked = Theme.lookup_field(theme.id, :mobile, "header")
 
     expect(baked).to match(/HTMLBars/)
     expect(baked).to match(/raw-handlebars/)
@@ -118,7 +113,7 @@ HTML
 
     ThemeField.update_all(value_baked: nil)
 
-    expect(Theme.lookup_field(theme.key, :desktop, :body_tag)).to match(/<b>test<\/b>/)
+    expect(Theme.lookup_field(theme.id, :desktop, :body_tag)).to match(/<b>test<\/b>/)
   end
 
   context "plugin api" do
@@ -244,7 +239,7 @@ HTML
       });</script>
       HTML
 
-      expect(Theme.lookup_field(theme.key, :desktop, :after_header)).to eq(transpiled.strip)
+      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
@@ -255,35 +250,35 @@ HTML
         alert(settings.name);var a = function a() {};
       });</script>
       HTML
-      expect(Theme.lookup_field(theme.key, :desktop, :after_header)).to eq(transpiled.strip)
+      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
 
     end
 
   end
 
-  it 'correctly caches theme keys' do
+  it 'correctly caches theme ids' do
     Theme.destroy_all
 
     theme = Theme.create!(name: "bob", user_id: -1)
 
-    expect(Theme.theme_keys).to eq(Set.new([theme.key]))
-    expect(Theme.user_theme_keys).to eq(Set.new([]))
+    expect(Theme.theme_ids).to eq(Set.new([theme.id]))
+    expect(Theme.user_theme_ids).to eq(Set.new([]))
 
     theme.user_selectable = true
     theme.save
 
-    expect(Theme.user_theme_keys).to eq(Set.new([theme.key]))
+    expect(Theme.user_theme_ids).to eq(Set.new([theme.id]))
 
     theme.user_selectable = false
     theme.save
 
     theme.set_default!
-    expect(Theme.user_theme_keys).to eq(Set.new([theme.key]))
+    expect(Theme.user_theme_ids).to eq(Set.new([theme.id]))
 
     theme.destroy
 
-    expect(Theme.theme_keys).to eq(Set.new([]))
-    expect(Theme.user_theme_keys).to eq(Set.new([]))
+    expect(Theme.theme_ids).to eq(Set.new([]))
+    expect(Theme.user_theme_ids).to eq(Set.new([]))
   end
 
   it 'correctly caches user_themes template' do
@@ -314,8 +309,8 @@ HTML
     expect(user_themes).to eq([])
   end
 
-  def cached_settings(key)
-    Theme.settings_for_client(key) # returns json
+  def cached_settings(id)
+    Theme.settings_for_client(id) # returns json
   end
 
   it 'handles settings cache correctly' do
@@ -324,14 +319,14 @@ HTML
 
     theme = Theme.create!(name: "awesome theme", user_id: -1)
     theme.save!
-    expect(cached_settings(theme.key)).to eq("{}")
+    expect(cached_settings(theme.id)).to eq("{}")
 
     theme.set_field(target: :settings, name: "yaml", value: "boolean_setting: true")
     theme.save!
-    expect(cached_settings(theme.key)).to match(/\"boolean_setting\":true/)
+    expect(cached_settings(theme.id)).to match(/\"boolean_setting\":true/)
 
     theme.settings.first.value = "false"
-    expect(cached_settings(theme.key)).to match(/\"boolean_setting\":false/)
+    expect(cached_settings(theme.id)).to match(/\"boolean_setting\":false/)
 
     child = Theme.create!(name: "child theme", user_id: -1)
     child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")
@@ -339,14 +334,14 @@ HTML
     child.save!
     theme.add_child_theme!(child)
 
-    json = cached_settings(theme.key)
+    json = cached_settings(theme.id)
     expect(json).to match(/\"boolean_setting\":false/)
     expect(json).to match(/\"integer_setting\":54/)
 
-    expect(cached_settings(child.key)).to eq("{\"integer_setting\":54}")
+    expect(cached_settings(child.id)).to eq("{\"integer_setting\":54}")
 
     child.destroy!
-    json = cached_settings(theme.key)
+    json = cached_settings(theme.id)
     expect(json).not_to match(/\"integer_setting\":54/)
     expect(json).to match(/\"boolean_setting\":false/)
   end

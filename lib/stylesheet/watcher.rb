@@ -3,12 +3,12 @@ require 'listen'
 module Stylesheet
   class Watcher
 
-    def self.theme_key=(v)
-      @theme_key = v
+    def self.theme_id=(v)
+      @theme_id = v
     end
 
-    def self.theme_key
-      @theme_key || SiteSetting.default_theme_key
+    def self.theme_id
+      @theme_id || SiteSetting.default_theme_id
     end
 
     def self.watch(paths = nil)
@@ -79,7 +79,7 @@ module Stylesheet
         {
           target: name,
           new_href: Stylesheet::Manager.stylesheet_href(name.to_sym),
-          theme_key: Stylesheet::Watcher.theme_key
+          theme_id: Stylesheet::Watcher.theme_id
         }
       end
       MessageBus.publish '/file-change', message

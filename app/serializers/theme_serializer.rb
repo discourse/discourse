@@ -33,10 +33,10 @@ class ThemeFieldSerializer < ApplicationSerializer
 end
 
 class ChildThemeSerializer < ApplicationSerializer
-  attributes :id, :name, :key, :created_at, :updated_at, :default
+  attributes :id, :name, :created_at, :updated_at, :default
 
   def include_default?
-    object.key == SiteSetting.default_theme_key
+    object.id == SiteSetting.default_theme_id
   end
 
   def default
