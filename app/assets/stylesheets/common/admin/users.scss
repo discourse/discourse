@@ -192,3 +192,28 @@
     }
   }
 }
+
+// mobile styles
+.mobile-view .admin-users.admin-user {
+  h1 {
+    margin: 15px 0 5px 0;
+  }
+  .user-controls {
+    text-align: inherit;
+  }
+  .controls {
+    width: unset;
+    margin-top: 0.5em;
+  }
+  .display-row {
+    flex-direction: column;
+    align-items: flex-start;
+    .field,
+    .value {
+      width: unset;
+    }
+    .select-kit {
+      width: 300px;
+    }
+  }
+}
