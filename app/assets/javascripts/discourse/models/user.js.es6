@@ -372,6 +372,16 @@ const User = RestModel.extend({
     });
   },
 
+  revokeAssociatedAccount(providerName) {
+    return ajax(
+      userPath(`${this.get("username")}/preferences/revoke-account`),
+      {
+        data: { provider_name: providerName },
+        type: "POST"
+      }
+    );
+  },
+
   loadUserAction(id) {
     const stream = this.get("stream");
     return ajax(`/user_actions/${id}.json`, { cache: "false" }).then(result => {

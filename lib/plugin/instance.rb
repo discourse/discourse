@@ -451,6 +451,7 @@ JS
     register_assets! unless assets.blank?
     register_locales!
     register_service_workers!
+    register_auth_providers!
 
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
@@ -564,6 +565,12 @@ JS
   def register_service_workers!
     service_workers.each do |asset, opts|
       DiscoursePluginRegistry.register_service_worker(asset, opts)
+    end
+  end
+
+  def register_auth_providers!
+    auth_providers.each do |auth_provider|
+      DiscoursePluginRegistry.register_auth_provider(auth_provider)
     end
   end
 

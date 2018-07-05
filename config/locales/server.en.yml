@@ -197,6 +197,7 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  authenticator_not_found: "Authentication method does not exist, or has been disabled."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
@@ -700,6 +701,9 @@ en:
     authorizing_old:
       title: "Thanks for confirming your current email address"
       description: "We're now emailing your new address for confirmation."
+
+  associated_accounts:
+    revoke_failed: "Failed to revoke your account with %{provider_name}."
 
   activation:
     action: "Click here to activate your account"
@@ -1950,7 +1954,6 @@ en:
       backup_code: "Log in using a backup code"
 
   user:
-    no_accounts_associated: "No accounts associated"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     activated_by_staff: "Activated by staff"

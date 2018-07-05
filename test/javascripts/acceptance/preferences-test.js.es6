@@ -23,6 +23,13 @@ acceptance("User Preferences", {
     server.put("/u/second_factors_backup.json", () => { //eslint-disable-line
       return response({ backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"] });
     });
+
+    // prettier-ignore
+    server.post("/u/eviltrout/preferences/revoke-account", () => { //eslint-disable-line
+      return response({
+        success: true
+      });
+    });
   }
 });
 
@@ -114,6 +121,30 @@ QUnit.test("email", assert => {
       I18n.t("user.email.invalid"),
       "it should display invalid email tip"
     );
+  });
+});
+
+QUnit.test("connected accounts", assert => {
+  visit("/u/eviltrout/preferences/account");
+  andThen(() => {
+    assert.ok(
+      exists(".pref-associated-accounts"),
+      "it has the connected accounts section"
+    );
+    assert.ok(
+      find(".pref-associated-accounts table tr:first td:first")
+        .html()
+        .indexOf("Facebook") > -1,
+      "it lists facebook"
+    );
+  });
+
+  click(".pref-associated-accounts table tr:first td:last button");
+
+  andThen(() => {
+    find(".pref-associated-accounts table tr:first td:last button")
+      .html()
+      .indexOf("Connect") > -1;
   });
 });
 

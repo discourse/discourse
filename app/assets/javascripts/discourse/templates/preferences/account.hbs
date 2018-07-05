@@ -99,6 +99,46 @@
 </div>
 {{/if}}
 
+{{#if canUpdateAssociatedAccounts}}
+  <div class="control-group pref-associated-accounts">
+    <label class="control-label">{{i18n 'user.associated_accounts.title'}}</label>
+    {{#if associatedAccountsLoaded}}
+      <table>
+      {{#each authProviders as |authProvider|}}
+        <tr>
+          {{!-- <td>{{d-icon 'facebook-square'}}</td> --}}
+          <td>{{authProvider.method.prettyName}}</td>
+          
+          {{#if authProvider.account}}
+            <td>{{authProvider.account.description}}</td>
+            <td> 
+              {{#if authProvider.account.can_revoke}}
+                {{#conditional-loading-spinner condition=revoking size='small'}}
+                  {{d-button action="revokeAccount" actionParam=authProvider.account title="user.associated_accounts.revoke" icon="times-circle" }}
+                {{/conditional-loading-spinner}}
+              {{/if}}
+            </td>
+          {{else}}
+            <td colspan=2>
+              {{#if authProvider.method.canConnect}}
+                {{d-button action="connectAccount" actionParam=authProvider.method label="user.associated_accounts.connect" icon="plug" disabled=disableConnectButtons}}
+              {{else}}
+                {{i18n 'user.associated_accounts.not_connected'}}
+              {{/if}}
+              </td>
+          {{/if}}
+         
+        </tr>
+      {{/each}}
+      </table>
+    {{else}}
+      <div class="controls">
+        {{d-button action="checkEmail" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
+
 {{#unless siteSettings.sso_overrides_avatar}}
   <div class="control-group pref-avatar">
     <label class="control-label">{{i18n 'user.avatar.title'}}</label>

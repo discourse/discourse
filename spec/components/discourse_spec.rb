@@ -59,6 +59,53 @@ describe Discourse do
     end
   end
 
+  context 'authenticators' do
+    it 'returns inbuilt authenticators' do
+      expect(Discourse.authenticators).to match_array(Users::OmniauthCallbacksController::BUILTIN_AUTH)
+    end
+
+    context 'with authentication plugin installed' do
+      let(:plugin_auth_provider) do
+        authenticator_class = Class.new(Auth::Authenticator) do
+          def name
+            'pluginauth'
+          end
+
+          def enabled
+            true
+          end
+        end
+
+        provider = Plugin::AuthProvider.new
+        provider.authenticator = authenticator_class.new
+        provider
+      end
+
+      before do
+        DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it 'returns inbuilt and plugin authenticators' do
+        expect(Discourse.authenticators).to match_array(
+          Users::OmniauthCallbacksController::BUILTIN_AUTH + [plugin_auth_provider.authenticator])
+      end
+
+    end
+  end
+
+  context 'enabled_authenticators' do
+    it 'only returns enabled authenticators' do
+      expect(Discourse.enabled_authenticators.length).to be(0)
+      SiteSetting.enable_twitter_logins = true
+      expect(Discourse.enabled_authenticators.length).to be(1)
+      expect(Discourse.enabled_authenticators.first).to be_instance_of(Auth::TwitterAuthenticator)
+    end
+  end
+
   context '#site_contact_user' do
 
     let!(:admin) { Fabricate(:admin) }

@@ -6,7 +6,50 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     "facebook"
   end
 
-  def after_authenticate(auth_token)
+  def enabled?
+    SiteSetting.enable_facebook_logins
+  end
+
+  def description_for_user(user)
+    info = FacebookUserInfo.find_by(user_id: user.id)
+    return nil if info.nil?
+    info.email || info.username || ""
+  end
+
+  def can_revoke?
+    true
+  end
+
+  def revoke(user, skip_remote: false)
+    info = FacebookUserInfo.find_by(user_id: user.id)
+    raise Discourse::NotFound if info.nil?
+
+    if skip_remote
+      info.destroy!
+      return true
+    end
+
+    uri = URI.parse("https://graph.facebook.com/#{info.facebook_user_id}/permissions?access_token=#{SiteSetting.facebook_app_id}|#{SiteSetting.facebook_app_secret}")
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Delete.new(uri.request_uri)
+
+    response = http.request(request)
+
+    if response.kind_of? Net::HTTPSuccess
+      info.destroy!
+      return true
+    else
+      return false
+    end
+  end
+
+  def can_connect_existing_user?
+    true
+  end
+
+  def after_authenticate(auth_token, existing_account: nil)
     result = Auth::Result.new
 
     session_info = parse_auth_token(auth_token)
@@ -20,7 +63,15 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
     user_info = FacebookUserInfo.find_by(facebook_user_id: facebook_hash[:facebook_user_id])
 
-    result.user = user_info.try(:user)
+    if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
+      user_info.destroy! if user_info
+      result.user = existing_account
+      user_info = FacebookUserInfo.create({ user_id: result.user.id }.merge(facebook_hash))
+    else
+      result.user = user_info.try(:user)
+    end
+
+    
     if !result.user && !email.blank? && result.user = User.find_by_email(email)
       FacebookUserInfo.create({ user_id: result.user.id }.merge(facebook_hash))
     end
