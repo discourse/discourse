@@ -31,6 +31,9 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
+  # TODO remove 01-01-2019
+  self.ignored_columns = ["percent_rank"]
+
   attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
@@ -1433,7 +1436,6 @@ end
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
-#  percent_rank              :float            default(1.0), not null
 #  subtype                   :string
 #  slug                      :string
 #  deleted_by_id             :integer
