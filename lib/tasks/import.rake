@@ -226,6 +226,9 @@ end
 def update_user_stats
   log "Updating user stats..."
 
+  # TODO: topic_count is counting all topics you replied in as if you started the topic.
+  # TODO: post_count is counting first posts.
+  # TODO: topic_reply_count is never used, and is counting PMs here.
   DB.exec <<-SQL
     WITH X AS (
       SELECT p.user_id
