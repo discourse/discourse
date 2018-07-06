@@ -209,7 +209,11 @@ QUnit.test("canDeleteSelected", function(assert) {
     ],
     stream: [1, 2, 3]
   };
-
+  const currentUser = Discourse.User.create({ admin: false });
+  this.registry.register("current-user:main", currentUser, {
+    instantiate: false
+  });
+  this.registry.injection("controller", "currentUser", "current-user:main");
   const model = Topic.create({ postStream });
   const controller = this.subject({ model });
   const selectedPostIds = controller.get("selectedPostIds");
@@ -235,9 +239,16 @@ QUnit.test("canDeleteSelected", function(assert) {
 
   selectedPostIds.pushObject(1);
 
+  assert.not(
+    controller.get("canDeleteSelected"),
+    "false when all posts are selected and user is staff"
+  );
+
+  currentUser.set("admin", true);
+
   assert.ok(
     controller.get("canDeleteSelected"),
-    "true when all posts are selected"
+    "true when all posts are selected and user is staff"
   );
 });
 
