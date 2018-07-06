@@ -41,7 +41,7 @@ module FileStore
       # if this fails, it will throw an exception
       path = @s3_helper.upload(file, path, options)
       # return the upload url
-      "//#{URI.parse(absolute_base_url).hostname}/#{path}"
+      "#{absolute_base_url}/#{path}"
     end
 
     def remove_file(url, path)
@@ -65,10 +65,6 @@ module FileStore
       @s3_helper.s3_bucket_name
     end
 
-    def s3_bucket_folder_path
-      @s3_helper.s3_bucket_folder_path
-    end
-
     def absolute_base_url
       @absolute_base_url ||= SiteSetting.Upload.absolute_base_url
     end
@@ -89,7 +85,8 @@ module FileStore
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
-      url.sub("#{schema}#{absolute_base_url}", SiteSetting.Upload.s3_cdn_url)
+      folder = @s3_helper.s3_bucket_folder_path.nil? ? "" : "#{@s3_helper.s3_bucket_folder_path}/"
+      url.sub("#{schema}#{absolute_base_url}/#{folder}", "#{SiteSetting.Upload.s3_cdn_url}/")
     end
 
     def cache_avatar(avatar, user_id)
