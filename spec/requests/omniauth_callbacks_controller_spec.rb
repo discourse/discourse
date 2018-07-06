@@ -43,15 +43,15 @@ RSpec.describe Users::OmniauthCallbacksController do
         provider
       end
 
-      before do        
-        Discourse.stubs(:auth_providers).returns [ provider ]
+      before do
+        Discourse.stubs(:auth_providers).returns [provider]
       end
 
       it "finds an authenticator when enabled" do
         SiteSetting.stubs(:ubuntu_login_enabled).returns(true)
 
         expect(Users::OmniauthCallbacksController.find_authenticator("ubuntu"))
-          .not_to eq(nil)
+          .to be(provider.authenticator)
       end
 
       it "fails if an authenticator is disabled" do
@@ -66,7 +66,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
 
         expect(Users::OmniauthCallbacksController.find_authenticator("ubuntu"))
-          .not_to eq(nil)
+          .to be(provider.authenticator)
       end
     end
   end
