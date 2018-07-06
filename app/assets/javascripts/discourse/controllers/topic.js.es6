@@ -966,15 +966,21 @@ export default Ember.Controller.extend(BufferedContent, {
   canDeselectAll: Ember.computed.alias("selectedAllPosts"),
 
   @computed(
+    "currentUser.staff",
     "selectedPostsCount",
     "selectedAllPosts",
     "selectedPosts",
     "selectedPosts.[]"
   )
-  canDeleteSelected(selectedPostsCount, selectedAllPosts, selectedPosts) {
+  canDeleteSelected(
+    isStaff,
+    selectedPostsCount,
+    selectedAllPosts,
+    selectedPosts
+  ) {
     return (
       selectedPostsCount > 0 &&
-      (selectedAllPosts || selectedPosts.every(p => p.can_delete))
+      ((selectedAllPosts && isStaff) || selectedPosts.every(p => p.can_delete))
     );
   },
 
