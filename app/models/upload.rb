@@ -84,11 +84,9 @@ class Upload < ActiveRecord::Base
 
     # when using s3, we need to replace with the absolute base url
     if SiteSetting.Upload.s3_cdn_url.present?
-      path = Discourse.store.s3_bucket.split("/", 2)[1]
-
       url = url.sub(
         SiteSetting.Upload.s3_cdn_url,
-        "#{Discourse.store.absolute_base_url}#{path ? '/' + path : ''}"
+        SiteSetting.Upload.s3_base_url
       )
     end
 
