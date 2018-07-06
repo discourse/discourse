@@ -737,7 +737,7 @@ describe PrettyText do
 
     def test_s3_with_subfolder_cdn
       raw = <<~RAW
-        <img src='https:#{Discourse.store.absolute_base_url}/subfolder/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+        <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
       RAW
 
       html = <<~HTML
