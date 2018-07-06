@@ -607,4 +607,56 @@ class Report
       report.data << flag
     end
   end
+
+  def self.report_post_edits(report)
+    report.data = []
+
+    revisions = PostRevision.joins("INNER JOIN posts ON posts.id = post_revisions.post_id")
+                  .where("post_revisions.user_id > 0")
+                  .where("post_revisions.created_at >= :start_date AND post_revisions.created_at <= :end_date",
+                         start_date: report.start_date, end_date: report.end_date)
+                  .select('post_revisions.user_id AS editor_id,
+                           posts.user_id AS author_id,
+                           post_revisions.number AS revision_version,
+                           posts.version AS post_version,
+                           posts.id AS post_id,
+                           posts.topic_id,
+                           posts.post_number,
+                           posts.edit_reason,
+                           post_revisions.created_at')
+                  .order('post_revisions.created_at DESC')
+
+    revisions.each do |r|
+      revision = {}
+      revision[:editor_id] = r.editor_id
+      revision[:editor_username] = User.find(r.editor_id).username
+      revision[:author_id] = r.author_id
+      revision[:author_username] = User.find(r.author_id).username
+      revision[:url] = "#{Discourse.base_url}/t/-/#{r.topic_id}/#{r.post_number}"
+      revision[:edit_reason] = r.revision_version == r.post_version ? r.edit_reason : nil
+      revision[:created_at] = r.created_at
+      revision[:post_id] = r.post_id
+
+      report.data << revision
+    end
+  end
+
+  def self.report_staff_notes(report)
+    report.data = []
+    values = PluginStoreRow.where(plugin_name: 'staff_notes').pluck(:value)
+    values.each do |v|
+      note_data = {}
+      json = JSON.parse(v)[0]
+      if json['created_at'] >= report.start_date && json['created_at'] <= report.end_date
+        note_data[:created_at] = json['created_at']
+        note_data[:user_id] = json['user_id']
+        note_data[:username] = User.find(json['user_id']).username
+        note_data[:moderator_id] = json['created_by']
+        note_data[:moderator_username] = User.find(json['created_by']).username
+        note_data[:note] = json['raw']
+
+        report.data << note_data
+      end
+    end
+  end
 end
