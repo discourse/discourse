@@ -89,10 +89,6 @@ class GlobalSetting
     @s3_bucket_name ||= s3_bucket.downcase.split("/")[0]
   end
 
-  def self.s3_bucket_folder_path
-    @s3_bucket_folder_path ||= s3_bucket.downcase.split("/")[1]
-  end
-
   # for testing
   def self.reset_s3_cache!
     @use_s3 = nil
