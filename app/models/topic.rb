@@ -915,7 +915,7 @@ class Topic < ActiveRecord::Base
     if opts[:destination_topic_id]
       post_mover.to_topic opts[:destination_topic_id]
     elsif opts[:title]
-      post_mover.to_new_topic(opts[:title], opts[:category_id])
+      post_mover.to_new_topic(opts[:title], opts[:category_id], opts[:tags])
     end
   end
 
