@@ -338,13 +338,6 @@ class Theme < ActiveRecord::Base
     hash
   end
 
-  def self.settings_for_client(theme_id)
-    theme = Theme.find_by(id: theme_id)
-    return {}.to_json unless theme
-
-    theme.included_settings.to_json
-  end
-
   def update_setting(setting_name, new_value)
     target_setting = settings.find { |setting| setting.name == setting_name }
     raise Discourse::NotFound unless target_setting

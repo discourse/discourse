@@ -310,7 +310,7 @@ HTML
   end
 
   def cached_settings(id)
-    Theme.settings_for_client(id) # returns json
+    Theme.find_by(id: id).included_settings.to_json
   end
 
   it 'handles settings cache correctly' do
