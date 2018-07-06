@@ -428,7 +428,7 @@ export function uploadLocation(url) {
   if (Discourse.CDN) {
     url = Discourse.getURLWithCDN(url);
     return /^\/\//.test(url) ? "http:" + url : url;
-  } else if (Discourse.UploadBaseUrl) {
+  } else if (Discourse.S3BaseUrl) {
     return "https:" + url;
   } else {
     var protocol = window.location.protocol + "//",
