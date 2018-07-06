@@ -70,9 +70,9 @@ module Middleware
 
       def theme_id
         ids, _ = @request.cookies['theme_ids']&.split('|')
-        id = ids&.split(",")&.map(&:to_i)&.first
-        if id && Guardian.new.allow_theme?(id)
-          id
+        ids = ids&.split(",")&.map(&:to_i)
+        if ids && Guardian.new.allow_themes?(ids)
+          ids.first
         else
           nil
         end

@@ -217,4 +217,26 @@ Migration::TableDropper.delayed_drop(
   }
 )
 
+Migration::ColumnDropper.drop(
+  table: 'user_options',
+  after_migration: 'DropKeyColumnFromThemes',
+  columns: %w[
+    theme_key
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing theme_key column from user_options table!'
+  }
+)
+
+Migration::ColumnDropper.drop(
+  table: 'themes',
+  after_migration: 'DropKeyColumnFromThemes',
+  columns: %w[
+    key
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing key column from themes table!'
+  }
+)
+
 Discourse.reset_active_record_cache

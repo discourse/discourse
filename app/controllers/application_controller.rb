@@ -345,12 +345,12 @@ class ApplicationController < ActionController::Base
 
     theme_id ||= user_option&.theme_ids&.first
 
-    if theme_id && !guardian.allow_theme?(theme_id)
+    if theme_id && !guardian.allow_themes?(theme_id)
       theme_id = nil
     end
 
     theme_id ||= SiteSetting.default_theme_id
-    theme_id = nil if theme_id.blank?
+    theme_id = nil if theme_id.blank? || theme_id == -1
 
     @theme_id = request.env[:resolved_theme_id] = theme_id
   end
