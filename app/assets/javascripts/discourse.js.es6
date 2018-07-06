@@ -33,8 +33,8 @@ const Discourse = Ember.Application.extend({
     // only relative urls
     if (Discourse.CDN && /^\/[^\/]/.test(url)) {
       url = Discourse.CDN + url;
-    } else if (Discourse.UploadCDN) {
-      url = url.replace(Discourse.UploadBaseUrl, Discourse.UploadCDN);
+    } else if (Discourse.S3CDN) {
+      url = url.replace(Discourse.S3BaseUrl, Discourse.S3CDN);
     }
     return url;
   },
