@@ -554,57 +554,55 @@ class Report
     report.data = []
     flag_types = PostActionType.flag_types_without_custom
 
-    flag_actions = PostAction.joins("INNER JOIN posts ON posts.id = post_actions.post_id")
-                     .where(post_action_type_id: flag_types.values)
-                     .where("post_actions.created_at >= ? AND post_actions.created_at <= ?", report.start_date, report.end_date)
-                     .select('post_actions.post_action_type_id,
-                              posts.id,posts.topic_id,
-                              posts.user_id AS poster_id,
-                              post_actions.created_at,
-                              post_actions.agreed_at,
-                              post_actions.disagreed_at,
-                              post_actions.deferred_at,
-                              post_actions.user_id,
-                              post_actions.agreed_by_id,
-                              post_actions.disagreed_by_id,
-                              post_actions.deferred_by_id')
+    sql = <<~SQL
+    SELECT pa.post_action_type_id,
+    p.id AS post_id,
+    p.topic_id,
+    p.user_id AS poster_id,
+    pa.post_action_type_id,
+    pa.created_at,
+    pa.agreed_at,
+    pa.disagreed_at,
+    pa.deferred_at,
+    pa.agreed_by_id,
+    pa.disagreed_by_id,
+    pa.deferred_by_id,
+    pa.user_id AS flagger_id,
+    (select u.username FROM users u WHERE u.id = pa.user_id) AS flagger_username,
+    COALESCE(pa.disagreed_at, pa.agreed_at, pa.deferred_at, NULL) AS responded_at,
+    COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id, NULL) AS staff_id,
+    (SELECT u.username FROM users u WHERE u.id = COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id, null)) AS staff_username,
+    (SELECT u.username FROM users u WHERE u.id = p.user_id) as poster_username
+    FROM post_actions pa
+    JOIN posts p
+    ON p.id = pa.post_id
+    WHERE pa.post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
+    AND pa.created_at >= '#{report.start_date}'
+    AND pa.created_at <= '#{report.end_date}'
+    ORDER BY pa.created_at
+    LIMIT 50
+    SQL
 
-    flag_actions.each do |action|
-      flag = {}
-      flag[:action_type] = flag_types.key(action.post_action_type_id).to_s
-      flag[:post_id] = action.id
-      flag[:topic_id] = action.topic_id
-      if action.agreed_at
-        flag[:response_time] = action.agreed_at - action.created_at
-      elsif action.disagreed_at
-        flag[:response_time] = action.disagreed_at - action.created_at
-      elsif action.deferred_at
-        flag[:response_time] = action.deferred_at - action.created_at
+    DB.query(sql).each do |row|
+      data = {}
+      data[:action_type] = flag_types.key(row.post_action_type_id).to_s
+      data[:staff_username] = row.staff_username
+      data[:staff_id] = row.staff_id
+      data[:poster_username] = row.poster_username
+      data[:poster_id] = row.poster_id
+      data[:flagger_id] = row.flagger_id
+      data[:flagger_username] = row.flagger_username
+      if row.agreed_by_id
+        data[:resolution] = "Agreed"
+      elsif row.disagreed_by_id
+        data[:resolution] = "Disagreed"
+      elsif row.deferred_by_id
+        data[:resolution] = "Deferred"
       else
-        flag[:response_time] = nil
+        data[:resolution] = "No Action"
       end
-      flag[:poster_id] = action.poster_id
-      flag[:poster_username] = User.find(action.poster_id).username
-      flag[:flagger_id] = action.user_id
-      flag[:flagger_username] = User.find(action.user_id).username
-      if action.agreed_by_id
-        flag[:staff_id] = action.agreed_by_id
-        flag[:staff_username] = User.find(action.agreed_by_id).username
-        flag[:resolution] = "Agreed"
-      elsif action.disagreed_by_id
-        flag[:staff_id] = action.disagreed_by_id
-        flag[:staff_username] = User.find(action.disagreed_by_id).username
-        flag[:resolution] = "Disagreed"
-      elsif action.deferred_by_id
-        flag[:staff_id] = action.deferred_by_id
-        flag[:staff_username] = User.find(action.deferred_by_id).username
-        flag[:resolution] = "Deferred"
-      else
-        flag[:staff_id] = nil
-        flag[:staff_username] = nil
-        flag[:resolution] = "No Action"
-      end
-      report.data << flag
+      data[:response_time] = row.responded_at ? row.responded_at - row.created_at : nil
+      report.data << data
     end
   end
 
