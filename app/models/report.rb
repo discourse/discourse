@@ -486,12 +486,12 @@ class Report
   def self.report_moderator_activity(report)
     report.data = []
     mod_data = {}
-    mod_ids = []
 
-    User.real.where(moderator: true).select(:id, :username).as_json.each do |mod|
-      mod_data[mod['id']] = {user_id: mod['id'], username: mod['username']}
-      mod_ids << mod['id']
+    User.real.where(moderator: true).pluck(:id, :username).each do |u|
+      mod_data[u[0]] = {user_id: u[0], username: u[1]}
     end
+
+    mod_ids = mod_data.keys
 
     return if mod_ids.empty?
 
