@@ -635,7 +635,7 @@ describe PostAlerter do
 
   describe "push_notification" do
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:') }
-    let(:mention_post_skip_push) { create_post_with_alerts({user: user, raw: 'Hello @eviltrout :heart'}, {skip_push: true}) }
+    let(:mention_post_skip_push) { create_post_with_alerts({ user: user, raw: 'Hello @eviltrout :heart' }, skip_push: true) }
     let(:topic) { mention_post.topic }
 
     before do
