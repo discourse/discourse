@@ -315,10 +315,8 @@ HTML
 
   it 'handles settings cache correctly' do
     Theme.destroy_all
-    expect(cached_settings(nil)).to eq("{}")
 
     theme = Theme.create!(name: "awesome theme", user_id: -1)
-    theme.save!
     expect(cached_settings(theme.id)).to eq("{}")
 
     theme.set_field(target: :settings, name: "yaml", value: "boolean_setting: true")
