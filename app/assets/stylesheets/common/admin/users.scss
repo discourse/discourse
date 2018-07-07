@@ -195,16 +195,6 @@
 
 // mobile styles
 .mobile-view .admin-users.admin-user {
-  h1 {
-    margin: 15px 0 5px 0;
-  }
-  .user-controls {
-    text-align: inherit;
-  }
-  .controls {
-    width: unset;
-    margin-top: 0.5em;
-  }
   .display-row {
     flex-direction: column;
     align-items: flex-start;
@@ -214,6 +204,40 @@
     }
     .select-kit {
       width: 300px;
+    }
+  }
+
+  .long-value {
+    word-wrap: break-word;
+    max-width: 100%;
+    margin: 0;
+    button {
+      margin: 5px 0;
+      display: block;
+    }
+  }
+
+  h1 {
+    margin: 15px 0 5px 0;
+  }
+
+  .user-controls {
+    text-align: inherit;
+  }
+
+  .controls {
+    width: unset;
+    margin-top: 5px;
+  }
+
+  .associations button {
+    margin: 5px 5px 0 0;
+  }
+
+  .ip-lookup {
+    display: block;
+    .location-box {
+      left: 0;
     }
   }
 }
