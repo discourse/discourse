@@ -556,8 +556,6 @@ class Report
 
     sql = <<~SQL
     SELECT pa.post_action_type_id,
-    p.id AS post_id,
-    p.topic_id,
     p.user_id AS poster_id,
     pa.post_action_type_id,
     pa.created_at,
