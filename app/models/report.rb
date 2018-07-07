@@ -607,27 +607,35 @@ class Report
   def self.report_post_edits(report)
     report.data = []
 
-    revisions = PostRevision.joins("INNER JOIN posts ON posts.id = post_revisions.post_id")
-                  .where("post_revisions.user_id > 0")
-                  .where("post_revisions.created_at >= :start_date AND post_revisions.created_at <= :end_date",
-                         start_date: report.start_date, end_date: report.end_date)
-                  .select('post_revisions.user_id AS editor_id,
-                           posts.user_id AS author_id,
-                           post_revisions.number AS revision_version,
-                           posts.version AS post_version,
-                           posts.id AS post_id,
-                           posts.topic_id,
-                           posts.post_number,
-                           posts.edit_reason,
-                           post_revisions.created_at')
-                  .order('post_revisions.created_at DESC')
+    sql = <<~SQL
+    SELECT
+    pr.user_id AS editor_id,
+    p.user_id AS author_id,
+    pr.number AS revision_version,
+    p.version AS post_version,
+    pr.post_id,
+    p.topic_id,
+    p.post_number,
+    p.edit_reason,
+    u.username AS editor_username,
+    pr.created_at,
+    (SELECT u.username FROM users u WHERE u.id = p.user_id) AS author_username
+    FROM post_revisions pr
+    JOIN posts p
+    ON p.id = pr.post_id
+    JOIN users u
+    ON u.id = pr.user_id
+    WHERE pr.created_at >= '#{report.start_date}'
+    AND pr.created_at <= '#{report.end_date}'
+    ORDER BY pr.created_at DESC
+    SQL
 
-    revisions.each do |r|
+    DB.query(sql).each do |r|
       revision = {}
       revision[:editor_id] = r.editor_id
-      revision[:editor_username] = User.find(r.editor_id).username
+      revision[:editor_username] = r.editor_username
       revision[:author_id] = r.author_id
-      revision[:author_username] = User.find(r.author_id).username
+      revision[:author_username] = r.author_username
       revision[:url] = "#{Discourse.base_url}/t/-/#{r.topic_id}/#{r.post_number}"
       revision[:edit_reason] = r.revision_version == r.post_version ? r.edit_reason : nil
       revision[:created_at] = r.created_at
