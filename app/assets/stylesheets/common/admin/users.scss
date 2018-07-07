@@ -205,16 +205,16 @@
     .select-kit {
       width: 300px;
     }
-    .long-value button {
-      margin: 5px 0;
-      display: block;
-    }
   }
 
   .long-value {
     word-wrap: break-word;
     max-width: 100%;
     margin: 0;
+    button {
+      margin: 5px 0;
+      display: block;
+    }
   }
 
   h1 {
