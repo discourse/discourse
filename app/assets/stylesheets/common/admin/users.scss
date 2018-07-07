@@ -211,6 +211,12 @@
     }
   }
 
+  .long-value {
+    word-wrap: break-word;
+    max-width: 100%;
+    margin: 0;
+  }
+
   h1 {
     margin: 15px 0 5px 0;
   }
