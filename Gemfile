@@ -92,7 +92,6 @@ gem 'sidekiq'
 # for sidekiq web
 gem 'tilt', require: false
 
-gem 'execjs', require: false
 gem 'mini_racer'
 gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
