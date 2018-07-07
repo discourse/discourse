@@ -45,6 +45,7 @@ RSpec.describe TopicsController do
   describe '#move_posts' do
     before do
       SiteSetting.min_topic_title_length = 2
+      SiteSetting.tagging_enabled = true
     end
 
     it 'needs you to be logged in' do
@@ -101,10 +102,12 @@ RSpec.describe TopicsController do
             post "/t/#{topic.id}/move-posts.json", params: {
               title: 'Logan is a good movie',
               post_ids: [p2.id],
-              category_id: 123
+              category_id: 123,
+              tags: ["tag1", "tag2"]
             }
           end.to change { Topic.count }.by(1)
 
+          expect(Tag.count).to eq(2)
           expect(response.status).to eq(200)
 
           result = ::JSON.parse(response.body)

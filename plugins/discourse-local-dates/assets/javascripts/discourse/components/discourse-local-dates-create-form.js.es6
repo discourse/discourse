@@ -100,14 +100,14 @@ export default Ember.Component.extend({
     if (time) {
       dateTime = moment(`${date} ${time}`, this.dateTimeFormat).utc();
     } else {
-      dateTime = moment(date, this.dateFormat).utc();
+      dateTime = moment(date, this.dateFormat).startOf("day");
     }
 
     let toDateTime;
     if (toTime) {
       toDateTime = moment(`${toDate} ${toTime}`, this.dateTimeFormat).utc();
     } else {
-      toDateTime = moment(toDate, this.dateFormat).utc();
+      toDateTime = moment(toDate, this.dateFormat).endOf("day");
     }
 
     let config = {
@@ -141,6 +141,7 @@ export default Ember.Component.extend({
     if (
       time &&
       toTime &&
+      date === moment().format(this.dateFormat) &&
       date === toDate &&
       this.get("formats").includes(format)
     ) {
@@ -163,7 +164,7 @@ export default Ember.Component.extend({
     text += `]`;
 
     if (config.toDate) {
-      text += ` ➡ `;
+      text += ` → `;
       text += `[date=${config.toDate} `;
 
       if (config.toTime) {

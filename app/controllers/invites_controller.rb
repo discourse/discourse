@@ -165,20 +165,18 @@ class InvitesController < ApplicationController
     name = params[:name] || File.basename(file.original_filename, ".*")
     extension = File.extname(file.original_filename)
 
-    Scheduler::Defer.later("Upload CSV") do
-      begin
-        data = if extension.downcase == ".csv"
-          path = Invite.create_csv(file, name)
-          Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
-          { url: path }
-        else
-          failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
-        end
-      rescue
-        failed_json.merge(errors: [I18n.t("bulk_invite.error")])
+    begin
+      data = if extension.downcase == ".csv"
+        path = Invite.create_csv(file, name)
+        Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
+        { url: path }
+      else
+        failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
       end
-      MessageBus.publish("/uploads/csv", data.as_json, user_ids: [current_user.id])
+    rescue
+      failed_json.merge(errors: [I18n.t("bulk_invite.error")])
     end
+    MessageBus.publish("/uploads/csv", data.as_json, user_ids: [current_user.id])
 
     render json: success_json
   end

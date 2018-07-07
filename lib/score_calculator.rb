@@ -20,7 +20,6 @@ class ScoreCalculator
     update_posts_score(opts)
     update_posts_rank(opts)
     update_topics_rank(opts)
-    update_topics_percent_rank(opts)
   end
 
   private
@@ -114,23 +113,6 @@ SQL
         ))
       )
     SQL
-
-    filter_topics(builder, opts)
-
-    builder.exec
-  end
-
-  def update_topics_percent_rank(opts)
-
-    builder = DB.build <<~SQL
-      UPDATE topics SET percent_rank = x.percent_rank
-      FROM (SELECT id, percent_rank()
-            OVER (ORDER BY SCORE DESC) as percent_rank
-            FROM topics) AS x
-            /*where*/
-    SQL
-
-    builder.where("x.id = topics.id AND (topics.percent_rank <> x.percent_rank OR topics.percent_rank IS NULL)")
 
     filter_topics(builder, opts)
 

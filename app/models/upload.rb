@@ -81,8 +81,14 @@ class Upload < ActiveRecord::Base
     url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present? && Discourse.asset_host != SiteSetting.Upload.s3_cdn_url
     # when using s3 without CDN
     url = url.sub(/^https?\:/, "") if url.include?(Discourse.store.absolute_base_url) && Discourse.store.external?
+
     # when using s3, we need to replace with the absolute base url
-    url = url.sub(SiteSetting.Upload.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.Upload.s3_cdn_url.present?
+    if SiteSetting.Upload.s3_cdn_url.present?
+      url = url.sub(
+        SiteSetting.Upload.s3_cdn_url,
+        SiteSetting.Upload.s3_base_url
+      )
+    end
 
     # always try to get the path
     uri = begin

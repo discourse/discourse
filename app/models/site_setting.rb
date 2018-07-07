@@ -132,6 +132,11 @@ class SiteSetting < ActiveRecord::Base
       SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
     end
 
+    def self.s3_base_url
+      path = self.s3_upload_bucket.split("/", 2)[1]
+      "#{self.absolute_base_url}#{path ? '/' + path : ''}"
+    end
+
     def self.absolute_base_url
       bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
 

@@ -152,4 +152,91 @@ describe Middleware::AnonymousCache::Helper do
     end
   end
 
+  context "crawler blocking" do
+    let :non_crawler do
+      {
+        "HTTP_USER_AGENT" =>
+        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+      }
+    end
+
+    def get(path, options)
+      middleware = Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] })
+      @env = env({
+        "REQUEST_URI" => path,
+        "PATH_INFO" => path,
+        "REQUEST_PATH" => path
+      }.merge(options[:headers]))
+      @status = middleware.call(@env).first
+    end
+
+    it "applies whitelisted_crawler_user_agents correctly" do
+      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+
+      get '/srv/status', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+
+      get '/srv/status', headers: {
+        'HTTP_USER_AGENT' => 'Anotherbot/2.1 (+http://www.notgoogle.com/bot.html)'
+      }
+
+      expect(@status).to eq(403)
+
+      get '/srv/status', headers: non_crawler
+      expect(@status).to eq(200)
+    end
+
+    it "applies blacklisted_crawler_user_agents correctly" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/srv/status', headers: non_crawler
+      expect(@status).to eq(200)
+
+      get '/srv/status', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(403)
+
+      get '/srv/status', headers: {
+        'HTTP_USER_AGENT' => 'Twitterbot/2.1 (+http://www.notgoogle.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+    end
+
+    it "should never block robots.txt" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/robots.txt', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+    end
+
+    it "blocked crawlers shouldn't log page views" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/srv/status', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@env["discourse.request_tracker.skip"]).to eq(true)
+    end
+
+    it "blocks json requests" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/srv/status.json', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(403)
+    end
+  end
+
 end

@@ -38,8 +38,12 @@ export function textReplace(state, callback, skipAllLinks) {
         if (token.type === "link_open" || token.type === "link_close") {
           linkLevel -= token.nesting;
         } else if (token.type === "html_inline") {
-          if (token.content.substr(0, 2).toLowerCase() === "<a") {
-            linkLevel++;
+          const openLink = token.content.substr(0, 2).toLowerCase();
+
+          if (openLink === "<a") {
+            if (token.content.match(/^<a(\s.*)?>/i)) {
+              linkLevel++;
+            }
           } else if (token.content.substr(0, 4).toLowerCase() === "</a>") {
             linkLevel--;
           }

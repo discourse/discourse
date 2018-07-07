@@ -19,19 +19,21 @@ class PostMover
     end
   end
 
-  def to_new_topic(title, category_id = nil)
+  def to_new_topic(title, category_id = nil, tags = nil)
     @move_type = PostMover.move_types[:new_topic]
 
     post = Post.find_by(id: post_ids.first)
     raise Discourse::InvalidParameters unless post
 
     Topic.transaction do
-      move_posts_to Topic.create!(
+      new_topic = Topic.create!(
         user: post.user,
         title: title,
         category_id: category_id,
         created_at: post.created_at
       )
+      DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
+      move_posts_to new_topic
     end
   end
 

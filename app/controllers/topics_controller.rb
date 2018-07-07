@@ -550,6 +550,7 @@ class TopicsController < ApplicationController
     post_ids = params.require(:post_ids)
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
+    params.permit(:tags)
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -792,6 +793,7 @@ class TopicsController < ApplicationController
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
     args[:category_id] = params[:category_id].to_i if params[:category_id].present?
+    args[:tags] = params[:tags] if params[:tags].present?
 
     topic.move_posts(current_user, post_ids_including_replies, args)
   end

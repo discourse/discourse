@@ -11,6 +11,19 @@ export default {
 
     if (isSupported) {
       if (Discourse.ServiceWorkerURL && !isSafari) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          for (let registration of registrations) {
+            if (
+              registration.active &&
+              !registration.active.scriptURL.includes(
+                Discourse.ServiceWorkerURL
+              )
+            ) {
+              registration.unregister();
+            }
+          }
+        });
+
         navigator.serviceWorker
           .register(`${Discourse.BaseUri}/${Discourse.ServiceWorkerURL}`)
           .catch(error => {

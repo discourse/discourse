@@ -138,7 +138,7 @@ export default Ember.Component.extend(PanEvents, {
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
     if ($centeredElement.parents(".timeline-scrollarea-wrapper").length) {
       this.set("isPanning", false);
-    } else {
+    } else if (e.direction === "up" || e.direction === "down") {
       this.set("isPanning", true);
     }
   },

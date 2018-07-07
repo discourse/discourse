@@ -360,6 +360,32 @@ describe PostDestroyer do
 
   end
 
+  context 'private message' do
+    let(:author) { Fabricate(:user) }
+    let(:private_message) { Fabricate(:private_message_topic, user: author) }
+    let!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
+    let!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2) }
+
+    it "doesn't update post_count for a reply" do
+      expect {
+        PostDestroyer.new(admin, second_post).destroy
+        author.reload
+      }.to_not change { author.post_count }
+
+      expect {
+        PostDestroyer.new(admin, second_post).recover
+      }.to_not change { author.post_count }
+    end
+
+    it "doesn't update topic_count for first post" do
+      expect {
+        PostDestroyer.new(admin, first_post).destroy
+        author.reload
+      }.to_not change { author.topic_count }
+      expect(author.post_count).to eq(0) # also unchanged
+    end
+  end
+
   context 'deleting the second post in a topic' do
 
     let(:user) { Fabricate(:user) }

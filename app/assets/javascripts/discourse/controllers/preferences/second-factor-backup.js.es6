@@ -7,6 +7,9 @@ export default Ember.Controller.extend({
   errorMessage: null,
   successMessage: null,
   backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
+  remainingCodes: Ember.computed.alias(
+    "model.second_factor_remaining_backup_codes"
+  ),
   backupCodes: null,
 
   @computed("secondFactorToken")
@@ -74,7 +77,6 @@ export default Ember.Controller.extend({
 
     generateSecondFactorCodes() {
       if (!this.get("secondFactorToken")) return;
-      const model = this.get("model");
       this.set("loading", true);
       this.get("content")
         .generateSecondFactorCodes(this.get("secondFactorToken"))
@@ -86,9 +88,10 @@ export default Ember.Controller.extend({
 
           this.setProperties({
             errorMessage: null,
-            backupCodes: response.backup_codes
+            backupCodes: response.backup_codes,
+            backupEnabled: true,
+            remainingCodes: response.backup_codes.length
           });
-          model.set("second_factor_backup_enabled", true);
         })
         .catch(popupAjaxError)
         .finally(() => {

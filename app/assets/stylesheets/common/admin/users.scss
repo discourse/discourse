@@ -1,0 +1,243 @@
+//Styles for /admin/users
+
+.display-row.associations .value {
+  width: 750px;
+  @media (max-width: $mobile-breakpoint) {
+    width: 75%;
+    float: right;
+    text-align: left;
+    margin-left: 0;
+  }
+}
+
+.display-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 5px;
+  &:nth-of-type(1) {
+    border-top: 0;
+  }
+  &.highlight-danger {
+    background-color: $danger-low;
+  }
+  border-top: 1px solid $primary-low;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+  }
+  &:after {
+    clear: both;
+  }
+  .field {
+    font-weight: bold;
+    width: 17.65765%;
+    float: left;
+    margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      margin-left: 0;
+      line-height: $line-height-large;
+      margin-top: 5px;
+    }
+  }
+  .value {
+    width: 250px;
+    float: left;
+    margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
+    }
+    .select-kit {
+      width: inherit;
+    }
+  }
+  .long-value {
+    width: 800px;
+    float: left;
+    margin-left: 12px;
+    font-size: $font-down-1;
+    button {
+      margin-left: 10px;
+    }
+  }
+  .controls {
+    width: 480px;
+    float: left;
+    margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
+    }
+    .btn {
+      margin: 2px 5px 2px 0;
+    }
+  }
+}
+
+.admin-users .users-list {
+  .username .fa {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
+
+.admin-users-list {
+  td.username {
+    white-space: nowrap;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media screen and (max-width: 970px) and (min-width: 768px) {
+    td.username {
+      max-width: 23vw; // Prevents horizontal scroll down to 768px
+    }
+    td.email {
+      max-width: 28vw; // Prevents horizontal scroll down to 768px
+      overflow-wrap: break-word;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    tr {
+      td.username {
+        grid-column-start: 1;
+        grid-column-end: -2;
+        font-weight: bold;
+      }
+      td.user-status {
+        text-align: right;
+        grid-row: 1;
+        grid-column-end: -1;
+        .d-icon {
+          margin-left: 0.25em;
+        }
+      }
+      td.email {
+        grid-column-start: 1;
+        grid-column-end: -1;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        overflow: hidden;
+        min-width: 0;
+        margin: 0.5em 0 0 0;
+
+        &:empty {
+          display: none;
+        }
+      }
+    }
+  }
+  //IE11 Support
+  @media screen and (max-width: 767px) {
+    tr.user {
+      display: -ms-grid;
+      -ms-grid-columns: 1fr 1fr 1fr;
+      -ms-grid-rows: 2em 1fr 3em 3em;
+      td {
+        display: -ms-grid;
+        -ms-grid-columns: 1fr;
+        -ms-grid-rows: 1fr 1fr;
+        .label {
+          -ms-grid-row: 1;
+          -ms-grid-column: 1;
+        }
+        div:not(.label) {
+          -ms-grid-row: 2;
+          -ms-grid-column: 1;
+          align-self: center;
+        }
+        &.username {
+          -ms-grid-row: 1;
+          -ms-grid-column: 1;
+          -ms-grid-column-span: 2;
+        }
+        &.user-status {
+          -ms-grid-row: 1;
+          -ms-grid-column: 3;
+        }
+        &.email {
+          -ms-grid-row: 2;
+          -ms-grid-column: 1;
+          -ms-grid-column-span: 3;
+        }
+        &.last-emailed {
+          -ms-grid-row: 3;
+          -ms-grid-column: 1;
+        }
+        &.last-seen {
+          -ms-grid-row: 3;
+          -ms-grid-column: 2;
+        }
+        &.topics-entered {
+          -ms-grid-row: 3;
+          -ms-grid-column: 3;
+        }
+        &.posts-read {
+          -ms-grid-row: 4;
+          -ms-grid-column: 1;
+        }
+        &.time-read {
+          -ms-grid-row: 4;
+          -ms-grid-column: 2;
+        }
+        &.created {
+          -ms-grid-row: 4;
+          -ms-grid-column: 3;
+        }
+      }
+    }
+  }
+}
+
+// mobile styles
+.mobile-view .admin-users.admin-user {
+  .display-row {
+    flex-direction: column;
+    align-items: flex-start;
+    .field,
+    .value {
+      width: unset;
+    }
+    .select-kit {
+      width: 300px;
+    }
+  }
+
+  .long-value {
+    word-wrap: break-word;
+    max-width: 100%;
+    margin: 0;
+    button {
+      margin: 5px 0;
+      display: block;
+    }
+  }
+
+  h1 {
+    margin: 15px 0 5px 0;
+  }
+
+  .user-controls {
+    text-align: inherit;
+  }
+
+  .controls {
+    width: unset;
+    margin-top: 5px;
+  }
+
+  .associations button {
+    margin: 5px 5px 0 0;
+  }
+
+  .ip-lookup {
+    display: block;
+    .location-box {
+      left: 0;
+    }
+  }
+}

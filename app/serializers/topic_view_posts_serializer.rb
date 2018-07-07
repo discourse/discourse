@@ -12,6 +12,10 @@ class TopicViewPostsSerializer < ApplicationSerializer
     false
   end
 
+  def include_gaps?
+    false
+  end
+
   def include_timeline_lookup?
     false
   end
