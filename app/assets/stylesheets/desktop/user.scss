@@ -247,6 +247,10 @@
     }
   }
 
+  .public-user-fields {
+    overflow: hidden;
+  }
+
   .viewing-self & .about.collapsed-info {
     .secondary,
     .staff-counters {
