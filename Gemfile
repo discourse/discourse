@@ -60,7 +60,7 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer', '~> 0.1'
 
-# Forked until https://github.com/toy/image_optim/pull/149 is merged
+# Forked until https://github.com/toy/image_optim/pull/162 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'

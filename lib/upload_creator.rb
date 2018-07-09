@@ -253,7 +253,7 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(@file.path)
     FileHelper.optimize_image!(@file.path)
     extract_image_info!
-  rescue ImageOptim::Worker::TimeoutExceeded
+  rescue ImageOptim::TimeoutExceeded
     Rails.logger.warn("ImageOptim timed out while optimizing #{@filename}")
   end
 
