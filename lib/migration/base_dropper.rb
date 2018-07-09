@@ -1,8 +1,9 @@
 module Migration
   class BaseDropper
-    def initialize(after_migration, delay, on_drop)
+    def initialize(after_migration, delay, on_drop, after_drop)
       @after_migration = after_migration
       @on_drop = on_drop
+      @after_drop = after_drop
 
       # in production we need some extra delay to allow for slow migrations
       @delay = delay || (Rails.env.production? ? 3600 : 0)
@@ -12,6 +13,7 @@ module Migration
       if droppable?
         @on_drop&.call
         execute_drop!
+        @after_drop&.call
 
         Discourse.reset_active_record_cache
       end

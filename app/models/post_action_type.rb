@@ -70,8 +70,7 @@ class PostActionType < ActiveRecord::Base
       unless @types
         @types = Enum.new(
           bookmark: 1,
-          like: 2,
-          vote: 5
+          like: 2
         )
         @types.merge!(flag_settings.flag_types)
       end

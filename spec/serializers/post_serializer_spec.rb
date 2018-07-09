@@ -29,10 +29,10 @@ describe PostSerializer do
     end
 
     it "displays the correct info" do
-      expect(visible_actions_for(actor).sort).to eq([:like, :notify_user, :spam, :vote])
-      expect(visible_actions_for(post.user).sort).to eq([:like, :vote])
-      expect(visible_actions_for(nil).sort).to eq([:like, :vote])
-      expect(visible_actions_for(admin).sort).to eq([:like, :notify_user, :spam, :vote])
+      expect(visible_actions_for(actor).sort).to eq([:like, :notify_user, :spam])
+      expect(visible_actions_for(post.user).sort).to eq([:like])
+      expect(visible_actions_for(nil).sort).to eq([:like])
+      expect(visible_actions_for(admin).sort).to eq([:like, :notify_user, :spam])
     end
 
     it "can't flag your own post to notify yourself" do

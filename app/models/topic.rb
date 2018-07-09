@@ -13,6 +13,9 @@ require_dependency 'topic_posters_summary'
 require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
+  # TODO: Remove this after 19th Dec 2018
+  self.ignored_columns = %w{vote_count}
+
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
@@ -42,10 +45,6 @@ class Topic < ActiveRecord::Base
         Topic.update_all(slug: nil)
       end
     end
-  end
-
-  def self.max_sort_order
-    @max_sort_order ||= (2**31) - 1
   end
 
   def self.max_fancy_title_length
@@ -1429,7 +1428,6 @@ end
 #  archived                  :boolean          default(FALSE), not null
 #  bumped_at                 :datetime         not null
 #  has_summary               :boolean          default(FALSE), not null
-#  vote_count                :integer          default(0), not null
 #  archetype                 :string           default("regular"), not null
 #  featured_user4_id         :integer
 #  notify_moderators_count   :integer          default(0), not null

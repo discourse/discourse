@@ -758,11 +758,6 @@ en:
       description: 'Like this post'
       short_description: 'Like this post'
       long_form: 'liked this'
-    vote:
-      title: 'Vote'
-      description: 'Vote for this post'
-      short_description: 'Vote for this post'
-      long_form: 'voted for this post'
 
   user_activity:
     no_default:
