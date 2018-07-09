@@ -429,7 +429,6 @@ DEPENDENCIES
   ember-rails (= 0.18.5)
   ember-source (= 2.13.3)
   excon
-  execjs
   fabrication
   fakeweb (~> 1.3.0)
   fast_blank
