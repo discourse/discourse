@@ -203,10 +203,19 @@ class AdminDashboardData
   end
 
   def s3_config_check
-    bad_keys = (SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?) && !SiteSetting.s3_use_iam_profile
+    s3_access_key_id_blank = (SiteSetting.s3_access_key_id || GlobalSetting.s3_access_key_id).blank?
+    s3_secret_access_key_blank = (SiteSetting.s3_secret_access_key || GlobalSetting.s3_secret_access_key).blank?
+    s3_use_iam_profile = SiteSetting.s3_use_iam_profile || GlobalSetting.s3_use_iam_profile
 
-    return I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads && (bad_keys || SiteSetting.s3_upload_bucket.blank?)
-    return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.enable_s3_backups && (bad_keys || SiteSetting.s3_backup_bucket.blank?)
+    bad_keys = (s3_access_key_id_blank || s3_secret_access_key_blank) && !s3_use_iam_profile
+
+    enable_s3_uploads = SiteSetting.enable_s3_uploads || GlobalSetting.enable_s3_uploads
+    s3_upload_bucket_blank = (SiteSetting.s3_upload_bucket || GlobalSetting.s3_bucket).blank?
+    return I18n.t('dashboard.s3_config_warning') if enable_s3_uploads && (bad_keys || s3_upload_bucket_blank)
+
+    enable_s3_backups = SiteSetting.enable_s3_backups || GlobalSetting.enable_s3_backups
+    s3_backup_bucket_blank = (SiteSetting.s3_backup_bucket || GlobalSetting.s3_backup_bucket).blank?
+    return I18n.t('dashboard.s3_backup_config_warning') if enable_s3_backups && (bad_keys || s3_backup_bucket_blank)
     nil
   end
 
