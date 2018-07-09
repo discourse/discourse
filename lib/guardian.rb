@@ -361,7 +361,7 @@ class Guardian
   def allow_themes?(theme_ids)
     theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
     allowed_ids = is_staff? ? Theme.theme_ids : Theme.user_theme_ids
-    (theme_ids - allowed_ids).empty?
+    (theme_ids - allowed_ids.to_a).empty?
   end
 
   private
