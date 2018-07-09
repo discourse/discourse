@@ -7,17 +7,10 @@ export default {
       location.hostname === "localhost";
 
     const isSupported = isSecured && "serviceWorker" in navigator;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
     if (isSupported) {
-      const isSafari = /^((?!chrome|android).)*safari/i.test(
-        navigator.userAgent
-      );
-
-      const disableServiceWorker = window.location.search.includes(
-        "disable_service_worker"
-      );
-
-      if (Discourse.ServiceWorkerURL && !isSafari && !disableServiceWorker) {
+      if (Discourse.ServiceWorkerURL && !isSafari) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
           for (let registration of registrations) {
             if (
