@@ -453,6 +453,30 @@ span.highlighted {
   font-size: $font-down-1;
   .names {
     line-height: $line-height-medium;
+    display: flex;
+    flex-wrap: wrap;
+    .full-name {
+      font-weight: bold;
+      order: 1;
+    }
+    .staff-notes-icon {
+      order: 2;
+      margin-left: 4px;
+    }
+    .poster-icon {
+      order: 2;
+    }
+    .username {
+      order: 3;
+      flex-basis: 100%;
+    }
+    .user-title {
+      order: 4;
+      flex-basis: 100%;
+    }
+    span {
+      margin-right: 4px;
+    }
   }
 }
 
