@@ -407,7 +407,6 @@ describe Guardian do
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:bookmark])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:spam])).to be_falsey
-      expect(guardian.can_see_post_actors?(topic, PostActionType.types[:vote])).to be_truthy
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
 
       expect(Guardian.new(moderator).can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_truthy
@@ -1035,18 +1034,6 @@ describe Guardian do
 
       it "is allowed as a regular user" do
         expect(guardian.post_can_act?(post, :vote)).to be_truthy
-      end
-
-      it "doesn't allow voting if the user has an action from voting already" do
-        expect(guardian.post_can_act?(post, :vote, opts: {
-          taken_actions: { PostActionType.types[:vote] => 1 }
-        })).to be_falsey
-      end
-
-      it "allows voting if the user has performed a different action" do
-        expect(guardian.post_can_act?(post, :vote, opts: {
-          taken_actions: { PostActionType.types[:like] => 1 }
-        })).to be_truthy
       end
 
       it "isn't allowed on archived topics" do

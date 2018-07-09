@@ -40,6 +40,7 @@ RSpec.describe Migration::ColumnDropper do
 
     it "can correctly drop columns after correct delay" do
       dropped_proc_called = false
+      after_dropped_proc_called = false
       update_first_migration_date(2.years.ago)
 
       Migration::ColumnDropper.drop(
@@ -47,35 +48,42 @@ RSpec.describe Migration::ColumnDropper do
         after_migration: migration_name,
         columns: ['junk'],
         delay: 20.minutes,
-        on_drop: ->() { dropped_proc_called = true }
+        on_drop: ->() { dropped_proc_called = true },
+        after_drop: ->() { after_dropped_proc_called = true }
       )
 
       expect(has_column?('topics', 'junk')).to eq(true)
       expect(dropped_proc_called).to eq(false)
+      expect(dropped_proc_called).to eq(false)
 
       Migration::ColumnDropper.drop(
         table: 'topics',
         after_migration: migration_name,
         columns: ['junk'],
         delay: 10.minutes,
-        on_drop: ->() { dropped_proc_called = true }
+        on_drop: ->() { dropped_proc_called = true },
+        after_drop: ->() { after_dropped_proc_called = true }
       )
 
       expect(has_column?('topics', 'junk')).to eq(false)
       expect(dropped_proc_called).to eq(true)
+      expect(after_dropped_proc_called).to eq(true)
 
       dropped_proc_called = false
+      after_dropped_proc_called = false
 
       Migration::ColumnDropper.drop(
         table: 'topics',
         after_migration: migration_name,
         columns: ['junk'],
         delay: 10.minutes,
-        on_drop: ->() { dropped_proc_called = true }
+        on_drop: ->() { dropped_proc_called = true },
+        after_drop: ->() { after_dropped_proc_called = true }
       )
 
       # it should call "on_drop" only when there are columns to drop
       expect(dropped_proc_called).to eq(false)
+      expect(after_dropped_proc_called).to eq(false)
     end
 
     it "drops the columns immediately if the first migration was less than 10 minutes ago" do

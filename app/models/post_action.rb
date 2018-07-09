@@ -470,9 +470,6 @@ class PostAction < ActiveRecord::Base
 
     # We probably want to refactor this method to something cleaner.
     case post_action_type_key
-    when :vote
-      # Voting also changes the sort_order
-      Post.where(id: post_id).update_all ["vote_count = :count, sort_order = :max - :count", count: count, max: Topic.max_sort_order]
     when :like
       # 'like_score' is weighted higher for staff accounts
       score = PostAction.joins(:user)
