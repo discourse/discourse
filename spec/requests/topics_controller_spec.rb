@@ -107,13 +107,13 @@ RSpec.describe TopicsController do
             }
           end.to change { Topic.count }.by(1)
 
-          expect(Tag.count).to eq(2)
           expect(response.status).to eq(200)
 
           result = ::JSON.parse(response.body)
 
           expect(result['success']).to eq(true)
           expect(result['url']).to eq(Topic.last.relative_url)
+          expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
         end
 
         describe 'when topic has been deleted' do
