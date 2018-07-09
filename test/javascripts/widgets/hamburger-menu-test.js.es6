@@ -125,6 +125,45 @@ widgetTest("general links", {
   }
 });
 
+widgetTest("category links", {
+  template: '{{mount-widget widget="hamburger-menu"}}',
+  anonymous: true,
+
+  beforeEach() {
+    const cat = this.site.get("categoriesList")[0];
+
+    const parent = Discourse.Category.create({
+      id: 1,
+      topic_count: 5,
+      name: "parent",
+      url: "https://test.com/parent",
+      show_subcategory_list: true,
+      topicTrackingState: cat.get("topicTrackingState")
+    });
+    const child = Discourse.Category.create({
+      id: 2,
+      parent_category_id: 1,
+      parentCategory: parent,
+      topic_count: 4,
+      name: "child",
+      url: "https://test.com/child",
+      topicTrackingState: cat.get("topicTrackingState")
+    });
+
+    parent.subcategories = [child];
+
+    const list = [parent, child];
+    this.site.set("categoriesList", list);
+  },
+
+  test(assert) {
+    // if show_subcategory_list is enabled we suppress the categories from hamburger
+    // this means that people can be confused about counts
+    assert.equal(this.$(".category-link").length, 1);
+    assert.equal(this.$(".category-link .topics-count").text(), "9");
+  }
+});
+
 widgetTest("badges link - disabled", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
