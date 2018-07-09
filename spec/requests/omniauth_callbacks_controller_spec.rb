@@ -33,6 +33,42 @@ RSpec.describe Users::OmniauthCallbacksController do
       expect(Users::OmniauthCallbacksController.find_authenticator("twitter"))
         .not_to eq(nil)
     end
+
+    context "with a plugin-contributed auth provider" do
+
+      let :provider do
+        provider = Plugin::AuthProvider.new
+        provider.authenticator = Auth::OpenIdAuthenticator.new('ubuntu', 'https://login.ubuntu.com', trusted: true)
+        provider.enabled_setting = "ubuntu_login_enabled"
+        provider
+      end
+
+      before do
+        Discourse.stubs(:auth_providers).returns [provider]
+      end
+
+      it "finds an authenticator when enabled" do
+        SiteSetting.stubs(:ubuntu_login_enabled).returns(true)
+
+        expect(Users::OmniauthCallbacksController.find_authenticator("ubuntu"))
+          .to be(provider.authenticator)
+      end
+
+      it "fails if an authenticator is disabled" do
+        SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
+
+        expect { Users::OmniauthCallbacksController.find_authenticator("ubuntu") }
+          .to raise_error(Discourse::InvalidAccess)
+      end
+
+      it "succeeds if an authenticator does not have a site setting" do
+        provider.enabled_setting = nil
+        SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
+
+        expect(Users::OmniauthCallbacksController.find_authenticator("ubuntu"))
+          .to be(provider.authenticator)
+      end
+    end
   end
 
   context 'Google Oauth2' do
