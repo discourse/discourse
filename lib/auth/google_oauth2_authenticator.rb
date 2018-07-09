@@ -60,8 +60,9 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
       options[:prompt] = google_oauth2_prompt.gsub("|", " ")
     end
 
+    # Multiple hosted domains can be specified. Delimit with spaces or commas.
     google_oauth2_hd = SiteSetting.google_oauth2_hd
-    options[:hd] = google_oauth2_hd if google_oauth2_hd.present?
+    options[:hd] = google_oauth2_hd.split(/ ,/) if google_oauth2_hd.present?
 
     # jwt encoding is causing auth to fail in quite a few conditions
     # skipping
