@@ -716,8 +716,9 @@ export default RestModel.extend({
   closestDaysAgoFor(postNumber) {
     const timelineLookup = this.get("timelineLookup") || [];
 
-    let low = 0,
-      high = timelineLookup.length - 1;
+    let low = 0;
+    let high = timelineLookup.length - 1;
+
     while (low <= high) {
       const mid = Math.floor(low + (high - low) / 2);
       const midValue = timelineLookup[mid][0];
@@ -732,9 +733,7 @@ export default RestModel.extend({
     }
 
     const val = timelineLookup[high] || timelineLookup[low];
-    if (val) {
-      return val[1];
-    }
+    if (val) return val[1];
   },
 
   // Find a postId for a postNumber, respecting gaps

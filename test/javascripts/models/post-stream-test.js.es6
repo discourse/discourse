@@ -151,6 +151,9 @@ QUnit.test("closestDaysAgoFor", assert => {
   assert.equal(postStream.closestDaysAgoFor(-1), 10);
   assert.equal(postStream.closestDaysAgoFor(0), 10);
   assert.equal(postStream.closestDaysAgoFor(10), 1);
+
+  postStream.set("timelineLookup", []);
+  assert.equal(postStream.closestDaysAgoFor(1), undefined);
 });
 
 QUnit.test("closestDaysAgoFor - empty", assert => {
