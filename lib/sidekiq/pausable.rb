@@ -7,6 +7,7 @@ class SidekiqPauser
 
   def pause!
     redis.setex paused_key, 60, "paused"
+
     @mutex.synchronize do
       @extend_lease_thread ||= extend_lease_thread
       sleep 0.001 while !paused?
@@ -35,7 +36,7 @@ class SidekiqPauser
       while true do
         break unless @mutex.synchronize { @extend_lease_thread }
         redis.expire paused_key, 60
-        sleep 30
+        sleep(Rails.env.test? ? 0.01 : 30)
       end
     end
   end
