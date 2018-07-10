@@ -104,7 +104,14 @@ class TopicView
 
   def gaps
     return unless @contains_gaps
-    @gaps ||= Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+
+    @gaps ||= begin
+      if is_mega_topic?
+        nil
+      else
+        Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+      end
+    end
   end
 
   def last_post
