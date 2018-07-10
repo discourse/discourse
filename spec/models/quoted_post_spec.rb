@@ -33,6 +33,28 @@ describe QuotedPost do
     expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(post1.id, post2.id, post5.id)
   end
 
+  it "doesn't count quotes from the same post" do
+    SiteSetting.queue_jobs = false
+
+    topic = Fabricate(:topic)
+    post = create_post(topic: topic, post_number: 1, raw: "foo bar")
+
+    post.cooked = <<-HTML
+      <aside class="quote" data-post="#{post.post_number}" data-topic="#{post.topic_id}">
+        <div class="title">
+          <div class="quote-controls"></div>
+          <img width="20" height="20" src="/user_avatar/meta.discourse.org/techapj/20/3281.png" class="avatar">techAPJ:
+        </div>
+        <blockquote><p>When the user will v</p></blockquote>
+      </aside>
+    HTML
+    post.save!
+
+    QuotedPost.extract_from(post)
+    expect(QuotedPost.where(post_id: post.id).count).to eq(0)
+    expect(QuotedPost.where(quoted_post_id: post.id).count).to eq(0)
+  end
+
   it 'correctly handles deltas' do
     post1 = Fabricate(:post)
     post2 = Fabricate(:post)

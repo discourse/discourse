@@ -744,6 +744,12 @@ describe Post do
         expect(reply.quoted_post_numbers).to be_blank
       end
 
+      it "doesn't find the quote in the same post" do
+        reply = Fabricate.build(:post, post_args.merge(post_number: 646))
+        reply.raw = "[quote=\"EvilTrout, post:#{reply.post_number}, topic:#{post.topic_id}\"]hello[/quote]"
+        reply.extract_quoted_post_numbers
+        expect(reply.quoted_post_numbers).to be_blank
+      end
     end
 
     describe 'a new reply' do
