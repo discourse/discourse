@@ -95,13 +95,26 @@
   .bulk-buttons {
     display: flex;
     flex-wrap: wrap;
+    margin-right: -1%;
 
     .btn {
-      flex: 1 1 0;
+      flex: 1 0 30%;
       margin-bottom: 1em;
-      margin-right: 1em;
+      margin-right: 1%;
       white-space: nowrap;
-      max-width: 23%;
+      overflow: hidden;
+      max-width: 33%;
+
+      @media screen and (max-width: 767px) {
+        flex: 1 0 48%;
+        max-width: 48%;
+      }
+
+      @media screen and (max-width: 550px) {
+        flex: 1 1 auto;
+        min-width: 49%;
+        max-width: unset;
+      }
     }
   }
 }
