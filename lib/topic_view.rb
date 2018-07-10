@@ -234,8 +234,38 @@ class TopicView
 
   # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
-    min_idx, max_idx = get_minmax_ids(post_number)
-    filter_posts_in_range(min_idx, max_idx)
+    posts_before = (@limit.to_f / 4).floor
+    posts_before = 1 if posts_before.zero?
+
+    sort_order_sql = <<~SQL
+    (
+      SELECT posts.sort_order
+      FROM posts
+      WHERE posts.post_number = #{post_number.to_i}
+      AND posts.topic_id = #{@topic.id.to_i}
+      LIMIT 1
+    )
+    SQL
+
+    before_post_ids = @filtered_posts.order(sort_order: :desc)
+      .where("posts.sort_order < #{sort_order_sql}",)
+      .limit(posts_before)
+      .pluck(:id)
+
+    post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
+      .where("posts.sort_order >= #{sort_order_sql}")
+      .limit(@limit - before_post_ids.length)
+      .pluck(:id)
+
+    if post_ids.length < @limit
+      post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
+        .where("posts.sort_order < #{sort_order_sql}")
+        .offset(before_post_ids.length)
+        .limit(@limit - post_ids.length)
+        .pluck(:id)
+    end
+
+    filter_posts_by_ids(post_ids)
   end
 
   def filter_posts_paged(page)
@@ -245,9 +275,12 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    max = (min + @limit) - 1
-
-    filter_posts_in_range(min, max)
+    @posts = filter_posts_by_ids(
+      @filtered_posts.order(:sort_order)
+        .offset(min)
+        .limit(@limit)
+        .pluck(:id)
+    )
   end
 
   def filter_best(max, opts = {})
@@ -456,19 +489,6 @@ class TopicView
     @posts
   end
 
-  def filter_posts_in_range(min, max)
-    post_count = (filtered_post_ids.length - 1)
-
-    max = [max, post_count].min
-
-    return @posts = Post.none if min > max
-
-    min = [[min, max].min, 0].max
-
-    @posts = filter_posts_by_ids(filtered_post_ids[min..max])
-    @posts
-  end
-
   def find_topic(topic_or_topic_id)
     if topic_or_topic_id.is_a?(Topic)
       topic_or_topic_id
@@ -545,46 +565,6 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
-  end
-
-  def get_minmax_ids(post_number)
-    # Find the closest number we have
-    closest_index = closest_post_to(post_number)
-    return nil if closest_index.nil?
-
-    # Make sure to get at least one post before, even with rounding
-    posts_before = (@limit.to_f / 4).floor
-    posts_before = 1 if posts_before.zero?
-
-    min_idx = closest_index - posts_before
-    min_idx = 0 if min_idx < 0
-    max_idx = min_idx + (@limit - 1)
-
-    # Get a full page even if at the end
-    ensure_full_page(min_idx, max_idx)
-  end
-
-  def ensure_full_page(min, max)
-    upper_limit = (filtered_post_ids.length - 1)
-    if max >= upper_limit
-      return (upper_limit - @limit) + 1, upper_limit
-    else
-      return min, max
-    end
-  end
-
-  def closest_post_to(post_number)
-    # happy path
-    closest_post_id = filtered_post_id(post_number)
-
-    if closest_post_id.blank?
-      # less happy path, missing post
-      closest_post_id = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id).first
-    end
-
-    return nil if closest_post_id.blank?
-
-    filtered_post_ids.index(closest_post_id) || filtered_post_ids[0]
   end
 
   MEGA_TOPIC_POSTS_COUNT = 10000
