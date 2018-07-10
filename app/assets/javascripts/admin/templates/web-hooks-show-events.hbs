@@ -21,7 +21,7 @@
         <div class='clearfix'></div>
       </div>
       {{#if hasIncoming}}
-        <div class='alert alert-info clickable' {{action "showInserted"}}>
+        <div class='alert alert-info clickable' tabindex="0" {{action "showInserted"}}>
           {{count-i18n key="admin.web_hooks.events.incoming" count=incomingCount}}
         </div>
       {{/if}}
