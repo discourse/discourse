@@ -224,7 +224,7 @@ class Wizard
 
         EmojiSetSiteSetting.values.each do |set|
           imgs = emoji.map do |e|
-            "<img src='/images/emoji/#{set[:value]}/#{e}.png'>"
+            "<img src='#{Discourse.base_uri}/images/emoji/#{set[:value]}/#{e}.png'>"
           end
 
           sets.add_choice(set[:value],             label: I18n.t("js.#{set[:name]}"),
