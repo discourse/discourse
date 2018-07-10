@@ -913,6 +913,7 @@ class Topic < ActiveRecord::Base
 
     if opts[:destination_topic_id]
       post_mover.to_topic opts[:destination_topic_id]
+      DiscourseEvent.trigger(:topic_merged,  post_mover.original_topic, post_mover.destination_topic)
     elsif opts[:title]
       post_mover.to_new_topic(opts[:title], opts[:category_id], opts[:tags])
     end
