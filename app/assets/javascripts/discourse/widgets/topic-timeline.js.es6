@@ -153,7 +153,13 @@ createWidget("timeline-scrollarea", {
     const daysAgo = postStream.closestDaysAgoFor(current);
     let date;
 
-    if (daysAgo !== null) {
+    if (daysAgo === undefined) {
+      const post = postStream
+        .get("posts")
+        .findBy("id", postStream.get("stream")[current]);
+
+      if (post) date = new Date(post.get("created_at"));
+    } else if (daysAgo !== null) {
       date = new Date();
       date.setDate(date.getDate() - daysAgo || 0);
     } else {
