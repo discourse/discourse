@@ -10,14 +10,14 @@ end
 def setup_message_bus_env(env)
   return if env["__mb"]
 
+  extra_headers = {
+    "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
+    "Access-Control-Allow-Methods" => "GET, POST",
+    "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
+  }
+
   host = RailsMultisite::ConnectionManagement.host(env)
   RailsMultisite::ConnectionManagement.with_hostname(host) do
-    extra_headers = {
-      "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
-      "Access-Control-Allow-Methods" => "GET, POST",
-      "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
-    }
-
     user = nil
     begin
       user = CurrentUser.lookup_from_env(env)
