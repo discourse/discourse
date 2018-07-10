@@ -203,9 +203,26 @@ RSpec.describe TopicsController do
         end
 
         it "triggers an event on merge" do
-          DiscourseEvent.on(:topic_merged) do |original_topic, destination_topic|
-            expect(original_topic).to eq(topic)
-            expect(destination_topic).to eq(dest_topic)
+          begin
+            called = false
+
+            assert = -> (original_topic, destination_topic) do
+              called = true
+              expect(original_topic).to eq(topic)
+              expect(destination_topic).to eq(dest_topic)
+            end
+
+            DiscourseEvent.on(:topic_merged, &assert)
+
+            post "/t/#{topic.id}/move-posts.json", params: {
+              post_ids: [p2.id],
+              destination_topic_id: dest_topic.id
+            }
+
+            expect(called).to eq(true)
+            expect(response.status).to eq(200)
+          ensure
+            DiscourseEvent.off(:topic_merged, &assert)
           end
         end
       end
