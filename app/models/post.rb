@@ -630,7 +630,9 @@ class Post < ActiveRecord::Base
     raw.scan(/\[quote=\"([^"]+)"\]/).each do |quote|
       args = parse_quote_into_arguments(quote)
       # If the topic attribute is present, ensure it's the same topic
-      temp_collector << args[:post] unless (args[:topic].present? && topic_id != args[:topic])
+      if !(args[:topic].present? && topic_id != args[:topic]) && args[:post] != post_number
+        temp_collector << args[:post]
+      end
     end
 
     temp_collector.uniq!
