@@ -201,11 +201,11 @@ RSpec.describe TopicsController do
           expect(result['success']).to eq(true)
           expect(result['url']).to be_present
         end
-        
+
         it "triggers an event on merge" do
           DiscourseEvent.on(:topic_merged) do |original_topic, destination_topic|
-            expect(original_topic.id).to eq(topic.id)
-            expect(destination_topic.id).to eq(dest_topic.id)
+            expect(original_topic).to eq(topic)
+            expect(destination_topic).to eq(dest_topic)
           end
         end
       end

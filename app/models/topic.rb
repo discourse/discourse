@@ -912,8 +912,14 @@ class Topic < ActiveRecord::Base
     post_mover = PostMover.new(self, moved_by, post_ids)
 
     if opts[:destination_topic_id]
-      post_mover.to_topic opts[:destination_topic_id]
-      DiscourseEvent.trigger(:topic_merged,  post_mover.original_topic, post_mover.destination_topic)
+      topic = post_mover.to_topic(opts[:destination_topic_id])
+
+      DiscourseEvent.trigger(:topic_merged,
+        post_mover.original_topic,
+        post_mover.destination_topic
+      )
+
+      topic
     elsif opts[:title]
       post_mover.to_new_topic(opts[:title], opts[:category_id], opts[:tags])
     end
