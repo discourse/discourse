@@ -213,7 +213,9 @@ describe UserNotifications do
   describe '.user_replied' do
     let(:response_by_user) { Fabricate(:user, name: "John Doe") }
     let(:category) { Fabricate(:category, name: 'India') }
-    let(:topic) { Fabricate(:topic, category: category) }
+    let(:tag1) { Fabricate(:tag, name: 'Taggo') }
+    let(:tag2) { Fabricate(:tag, name: 'Taggie') }
+    let(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2]) }
     let(:post) { Fabricate(:post, topic: topic, raw: 'This is My super duper cool topic') }
     let(:response) { Fabricate(:post, reply_to_post_number: 1, topic: post.topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
@@ -222,6 +224,7 @@ describe UserNotifications do
     it 'generates a correct email' do
 
       # Fabricator is not fabricating this ...
+      SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
       mail = UserNotifications.user_replied(response.user,
@@ -234,6 +237,10 @@ describe UserNotifications do
 
       # subject should include category name
       expect(mail.subject).to match(/India/)
+
+      # subject should include tag names
+      expect(mail.subject).to match(/Taggo/)
+      expect(mail.subject).to match(/Taggie/)
 
       mail_html = mail.html_part.to_s
 
