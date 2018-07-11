@@ -496,37 +496,37 @@ class Report
     return if mod_ids.empty?
 
     time_read_query = <<~SQL
-    SELECT SUM(uv.time_read) AS time_read,
-    uv.user_id
-    FROM user_visits uv
-    WHERE uv.user_id = ANY(ARRAY#{mod_ids})
-    GROUP BY uv.user_id
+    SELECT SUM(time_read) AS time_read,
+    user_id
+    FROM user_visits
+    WHERE user_id = ANY(ARRAY#{mod_ids})
+    GROUP BY user_id
     SQL
 
     flag_count_query = <<~SQL
-    SELECT pa.agreed_by_id AS user_id,
+    SELECT agreed_by_id AS user_id,
     COUNT(*) AS flag_count
-    FROM post_actions pa
-    WHERE pa.agreed_by_id = ANY(ARRAY#{mod_ids})
-    OR pa.disagreed_by_id = ANY(ARRAY#{mod_ids})
-    AND pa.post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
-    GROUP BY pa.agreed_by_id
+    FROM post_actions
+    WHERE agreed_by_id = ANY(ARRAY#{mod_ids})
+    OR disagreed_by_id = ANY(ARRAY#{mod_ids})
+    AND post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
+    GROUP BY agreed_by_id
     SQL
 
     topic_count_query = <<~SQL
-    SELECT t.user_id AS user_id,
+    SELECT user_id,
     COUNT(*) AS topic_count
-    FROM topics t
-    WHERE t.user_id = ANY(ARRAY#{mod_ids})
-    GROUP BY t.user_id
+    FROM topics
+    WHERE user_id = ANY(ARRAY#{mod_ids})
+    GROUP BY user_id
     SQL
 
     post_count_query = <<~SQL
-    SELECT p.user_id AS user_id,
+    SELECT user_id,
     COUNT(*) AS post_count
-    FROM posts p
-    WHERE p.user_id = ANY(ARRAY#{mod_ids})
-    GROUP BY p.user_id
+    FROM posts
+    WHERE user_id = ANY(ARRAY#{mod_ids})
+    GROUP BY user_id
     SQL
 
     DB.query(time_read_query).each do |row|
