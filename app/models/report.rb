@@ -545,9 +545,7 @@ class Report
       mod_data[row.user_id][:post_count] = row.post_count
     end
 
-    mod_data.each do |k, v|
-      report.data << v
-    end
+    report.data = mod_data.values
   end
 
   def self.report_recent_flags(report)
