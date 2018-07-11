@@ -437,7 +437,7 @@ class UserNotifications < ActionMailer::Base
 
       # subcategory case
       if !category.parent_category_id.nil?
-        show_category_in_subject = "#{Category.find_by(id: category.parent_category_id).name}/#{show_category_in_subject}"
+        show_category_in_subject = "#{Category.where(id: category.parent_category_id).pluck(:name).first}/#{show_category_in_subject}"
       end
     else
       show_category_in_subject = nil
@@ -445,8 +445,13 @@ class UserNotifications < ActionMailer::Base
 
     # tag names
     if opts[:show_tags_in_subject] && post.topic_id
-      tags = Topic.find_by(id: post.topic_id)&.tags.first(3)
-      show_tags_in_subject = tags.any? ? tags.map { |t| "[#{t.name}]" }.join(" ") : nil
+
+      tags = Tag.joins(:topic_tags)
+        .where("topic_tags.topic_id = ?", post.topic_id)
+        .limit(3)
+        .pluck(:name)
+
+      show_tags_in_subject = tags.any? ? tags.join(" ") : nil
     end
 
     if post.topic.private_message?
@@ -463,16 +468,19 @@ class UserNotifications < ActionMailer::Base
 
       participants = ""
       participant_list = []
-      post.topic.allowed_groups.each do |group|
-        participant_list.push "[#{group.name} (#{group.users.count})](#{Discourse.base_url}/groups/#{group.name})"
+
+      post.topic.allowed_groups.each do |g|
+        participant_list.push "[#{g.name} (#{g.users.count})](#{Discourse.base_url}/groups/#{g.name})"
       end
-      post.topic.allowed_users.each do |user|
+
+      post.topic.allowed_users.each do |u|
         if SiteSetting.prioritize_username_in_ux?
-          participant_list.push "[#{user.username}](#{Discourse.base_url}/u/#{user.username_lower})"
+          participant_list.push "[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})"
         else
-          participant_list.push "[#{user.name.blank? ? user.username : user.name}](#{Discourse.base_url}/u/#{user.username_lower})"
+          participant_list.push "[#{u.name.blank? ? u.username : u.name}](#{Discourse.base_url}/u/#{u.username_lower})"
         end
       end
+
       participants += participant_list.join(", ")
     end
 
