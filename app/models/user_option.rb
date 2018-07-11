@@ -1,4 +1,7 @@
 class UserOption < ActiveRecord::Base
+  # TODO: remove in 2019
+  self.ignored_columns = ["theme_key"]
+
   self.primary_key = :user_id
   belongs_to :user
   before_create :set_defaults
