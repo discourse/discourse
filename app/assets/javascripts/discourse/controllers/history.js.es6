@@ -3,7 +3,6 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import computed from "ember-addons/ember-computed-decorators";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
 import { on, observes } from "ember-addons/ember-computed-decorators";
-import { default as WhiteLister } from "pretty-text/white-lister";
 import { sanitizeAsync } from "discourse/lib/text";
 
 function customTagArray(fieldName) {
@@ -256,7 +255,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       const opts = {
         features: { editHistory: true },
         whiteListed: {
-          editHistory: { custom: () => true }
+          editHistory: { custom: (tag, attr) => attr === "class" }
         }
       };
 

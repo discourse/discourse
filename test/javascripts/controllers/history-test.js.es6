@@ -28,10 +28,31 @@ QUnit.test("displayEdit", function(assert) {
     "it should only display the edit button on the latest revision"
   );
 
-  const html = `<table>
+  const html = `<div class="revision-content">
+  <p><img src="/uploads/default/original/1X/6b963ffc13cb0c053bbb90c92e99d4fe71b286ef.jpg" alt="" class="diff-del"><img/src=x onerror=alert(document.domain)>" width="276" height="183"></p>
+</div>
+<table background="javascript:alert(\"HACKEDXSS\")">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Column</th>
+      <th style="text-align:left">Test</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td background="javascript:alert('HACKEDXSS')">Osama</td>
+      <td style="text-align:right">Testing</td>
+    </tr>
+  </tbody>
+</table>`;
+
+  const expectedOutput = `<div class="revision-content">
+  <p><img src="/uploads/default/original/1X/6b963ffc13cb0c053bbb90c92e99d4fe71b286ef.jpg" alt class="diff-del">" width="276" height="183"&gt;</p>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Column</th>
       <th style="text-align:left">Test</th>
     </tr>
   </thead>
@@ -52,9 +73,8 @@ QUnit.test("displayEdit", function(assert) {
     }
   });
 
-  assert.equal(
-    HistoryController.get("bodyDiff"),
-    html,
-    "it doesn't sanitize table html"
-  );
+  HistoryController.bodyDiffChanged().then(() => {
+    const output = HistoryController.get("bodyDiff");
+    assert.equal(output, expectedOutput, "it keeps safe HTML");
+  });
 });
