@@ -484,6 +484,54 @@ QUnit.test("loadIntoIdentityMap with post ids", assert => {
   });
 });
 
+QUnit.test("appendMore for megatopic", assert => {
+  const postStream = buildStream(1234);
+  const store = createStore();
+  const post = store.createRecord("post", { id: 1, post_number: 1 });
+
+  postStream.setProperties({
+    isMegaTopic: true,
+    posts: [post]
+  });
+
+  return postStream.appendMore().then(() => {
+    assert.present(
+      postStream.findLoadedPost(2),
+      "it adds the returned post to the store"
+    );
+
+    assert.equal(
+      postStream.get("posts").length,
+      6,
+      "it adds the right posts into the stream"
+    );
+  });
+});
+
+QUnit.test("prependMore for megatopic", assert => {
+  const postStream = buildStream(1234);
+  const store = createStore();
+  const post = store.createRecord("post", { id: 6, post_number: 6 });
+
+  postStream.setProperties({
+    isMegaTopic: true,
+    posts: [post]
+  });
+
+  return postStream.prependMore().then(() => {
+    assert.present(
+      postStream.findLoadedPost(5),
+      "it adds the returned post to the store"
+    );
+
+    assert.equal(
+      postStream.get("posts").length,
+      6,
+      "it adds the right posts into the stream"
+    );
+  });
+});
+
 QUnit.test("staging and undoing a new post", assert => {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
@@ -800,4 +848,54 @@ QUnit.test("postsWithPlaceholders", assert => {
     assert.equal(testProxy.get("length"), 8);
     assert.equal(testProxy.objectAt(3), p4);
   });
+});
+
+QUnit.test("filteredPostsCount", assert => {
+  const postStream = buildStream(4567, [1, 3, 4]);
+
+  assert.equal(postStream.get("filteredPostsCount"), 3);
+
+  // Megatopic
+  postStream.set("isMegaTopic", true);
+  postStream.set("topic.highest_post_number", 4);
+
+  assert.equal(postStream.get("filteredPostsCount"), 4);
+});
+
+QUnit.test("firstPostId", assert => {
+  const postStream = buildStream(4567, [1, 3, 4]);
+
+  assert.equal(postStream.get("firstPostId"), 1);
+
+  postStream.setProperties({
+    isMegaTopic: true,
+    firstId: 2
+  });
+
+  assert.equal(postStream.get("firstPostId"), 2);
+});
+
+QUnit.test("lastPostId", assert => {
+  const postStream = buildStream(4567, [1, 3, 4]);
+
+  assert.equal(postStream.get("lastPostId"), 4);
+
+  postStream.setProperties({
+    isMegaTopic: true,
+    lastId: 2
+  });
+
+  assert.equal(postStream.get("lastPostId"), 2);
+});
+
+QUnit.test("progressIndexOfPostId", assert => {
+  const postStream = buildStream(4567, [1, 3, 4]);
+  const store = createStore();
+  const post = store.createRecord("post", { id: 1, post_number: 5 });
+
+  assert.equal(postStream.progressIndexOfPostId(post), 1);
+
+  postStream.set("isMegaTopic", true);
+
+  assert.equal(postStream.progressIndexOfPostId(post), 5);
 });

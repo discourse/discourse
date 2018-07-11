@@ -1441,12 +1441,61 @@ RSpec.describe TopicsController do
   end
 
   describe '#posts' do
-    let(:topic) { Fabricate(:post).topic }
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
 
-    it 'returns first posts of the topic' do
+    it 'returns first post of the topic' do
       get "/t/#{topic.id}/posts.json"
+
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/json')
+
+      body = JSON.parse(response.body)
+
+      expect(body["post_stream"]["posts"].first["id"]).to eq(post.id)
+    end
+
+    describe 'filtering by post number with filters' do
+      describe 'username filters' do
+        let!(:post2) { Fabricate(:post, topic: topic, user: Fabricate(:user)) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          TopicView.stubs(:chunk_size).returns(2)
+
+          get "/t/#{topic.id}/posts.json", params: {
+            post_number: post.post_number,
+            username_filters: post2.user.username,
+            asc: true
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_stream"]["posts"].first["id"]).to eq(post2.id)
+        end
+      end
+
+      describe 'summary filter' do
+        let!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          TopicView.stubs(:chunk_size).returns(2)
+
+          get "/t/#{topic.id}/posts.json", params: {
+            post_number: post.post_number,
+            filter: 'summary',
+            asc: true
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_stream"]["posts"].first["id"]).to eq(post2.id)
+        end
+      end
     end
   end
 

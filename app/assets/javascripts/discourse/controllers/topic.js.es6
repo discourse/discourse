@@ -618,7 +618,8 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     selectBelow(post) {
-      const stream = [...this.get("model.postStream.stream")];
+      const postStream = this.get("model.postStream");
+      const stream = [...postStream.get("stream")];
       const below = stream.slice(stream.indexOf(post.id));
       this.get("selectedPostIds").pushObjects(below);
       this.appEvents.trigger("post-stream:refresh", { force: true });
@@ -884,9 +885,32 @@ export default Ember.Controller.extend(BufferedContent, {
   },
 
   _jumpToIndex(index) {
-    const stream = this.get("model.postStream.stream");
-    index = Math.max(1, Math.min(stream.length, index));
-    this._jumpToPostId(stream[index - 1]);
+    const postStream = this.get("model.postStream");
+
+    if (postStream.get("isMegaTopic")) {
+      this._jumpToPostNumber(index);
+    } else {
+      const stream = postStream.get("stream");
+      const streamIndex = Math.max(1, Math.min(stream.length, index));
+      this._jumpToPostId(stream[streamIndex - 1]);
+    }
+  },
+
+  _jumpToPostNumber(postNumber) {
+    const postStream = this.get("model.postStream");
+    const post = postStream.get("posts").findBy("post_number", postNumber);
+
+    if (post) {
+      DiscourseURL.routeTo(
+        this.get("model").urlForPostNumber(post.get("post_number"))
+      );
+    } else {
+      postStream.loadPostByPostNumber(postNumber).then(p => {
+        DiscourseURL.routeTo(
+          this.get("model").urlForPostNumber(p.get("post_number"))
+        );
+      });
+    }
   },
 
   _jumpToPostId(postId) {

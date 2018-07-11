@@ -4,6 +4,7 @@ require_dependency 'filter_best_posts'
 require_dependency 'gaps'
 
 class TopicView
+  MEGA_TOPIC_POSTS_COUNT = 25
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
@@ -51,7 +52,6 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    @_post_number = @post_number.dup
     @post_number = [@post_number.to_i, 1].max
     @page = [@page.to_i, 1].max
 
@@ -209,6 +209,11 @@ class TopicView
   def filter_posts(opts = {})
     return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
     return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
+
+    if opts[:filter_post_number].present?
+      return filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    end
+
     return filter_best(opts[:best], opts) if opts[:best].present?
 
     filter_posts_paged(@page)
@@ -244,29 +249,19 @@ class TopicView
     posts_before = (@limit.to_f / 4).floor
     posts_before = 1 if posts_before.zero?
 
-    sort_order_sql = <<~SQL
-    (
-      SELECT posts.sort_order
-      FROM posts
-      WHERE posts.post_number = #{post_number.to_i}
-      AND posts.topic_id = #{@topic.id.to_i}
-      LIMIT 1
-    )
-    SQL
-
     before_post_ids = @filtered_posts.order(sort_order: :desc)
-      .where("posts.sort_order < #{sort_order_sql}",)
+      .where("posts.sort_order < #{sort_order_sql(post_number)}",)
       .limit(posts_before)
       .pluck(:id)
 
     post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
-      .where("posts.sort_order >= #{sort_order_sql}")
+      .where("posts.sort_order >= #{sort_order_sql(post_number)}")
       .limit(@limit - before_post_ids.length)
       .pluck(:id)
 
     if post_ids.length < @limit
       post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
-        .where("posts.sort_order < #{sort_order_sql}")
+        .where("posts.sort_order < #{sort_order_sql(post_number)}")
         .offset(before_post_ids.length)
         .limit(@limit - post_ids.length)
         .pluck(:id)
@@ -456,6 +451,18 @@ class TopicView
     @filtered_posts.where(post_number: post_number).pluck(:id).first
   end
 
+  def is_mega_topic?
+    @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
+  end
+
+  def first_post_id
+    @filtered_posts.order(sort_order: :asc).limit(1).pluck(:id).first
+  end
+
+  def last_post_id
+    @filtered_posts.order(sort_order: :desc).limit(1).pluck(:id).first
+  end
+
   protected
 
   def read_posts_set
@@ -476,6 +483,18 @@ class TopicView
 
   private
 
+  def sort_order_sql(post_number)
+    <<~SQL
+    (
+      SELECT posts.sort_order
+      FROM posts
+      WHERE posts.post_number = #{post_number.to_i}
+      AND posts.topic_id = #{@topic.id.to_i}
+      LIMIT 1
+    )
+    SQL
+  end
+
   def filter_post_types(posts)
     visible_types = Topic.visible_post_types(@user)
 
@@ -484,6 +503,24 @@ class TopicView
     else
       posts.where(post_type: visible_types)
     end
+  end
+
+  def filter_posts_by_post_number(post_number, asc)
+    posts =
+      if asc
+        @filtered_posts
+          .where("sort_order > #{sort_order_sql(post_number)}")
+          .order(sort_order: :asc)
+      else
+        @filtered_posts
+          .where("sort_order < #{sort_order_sql(post_number)}")
+          .order(sort_order: :desc)
+      end
+
+    posts = posts.limit(@limit)
+    filter_posts_by_ids(posts.pluck(:id))
+
+    @posts = @posts.unscope(:order).order(sort_order: :desc) if !asc
   end
 
   def filter_posts_by_ids(post_ids)
@@ -572,11 +609,5 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
-  end
-
-  MEGA_TOPIC_POSTS_COUNT = 10000
-
-  def is_mega_topic?
-    @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
   end
 end

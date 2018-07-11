@@ -495,8 +495,9 @@ export default createWidget("topic-timeline", {
     }
 
     result.push(this.attach("timeline-controls", attrs));
+    const streamLength = stream.length;
 
-    if (stream.length < 3) {
+    if (streamLength !== 0 && streamLength < 3) {
       const topicHeight = $("#topic").height();
       const windowHeight = $(window).height();
       if (topicHeight / windowHeight < 2.0) {
