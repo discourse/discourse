@@ -177,10 +177,26 @@ class TopicsController < ApplicationController
 
   def posts
     params.require(:topic_id)
-    params.permit(:post_ids)
+    params.permit(:post_ids, :post_number, :username_filters, :filter)
 
-    @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
-    render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
+    default_options = {
+      filter_post_number: params[:post_number],
+      post_ids: params[:post_ids],
+      asc: ActiveRecord::Type::Boolean.new.deserialize(params[:asc]),
+      filter: params[:filter]
+    }
+
+    if (username_filters = params[:username_filters]).present?
+      default_options[:username_filters] = username_filters.split(',')
+    end
+
+    @topic_view = TopicView.new(params[:topic_id], current_user, default_options)
+
+    render_json_dump(TopicViewPostsSerializer.new(@topic_view,
+      scope: guardian,
+      root: false,
+      include_raw: !!params[:include_raw]
+    ))
   end
 
   def excerpts

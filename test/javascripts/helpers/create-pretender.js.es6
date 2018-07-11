@@ -347,10 +347,28 @@ export default function() {
 
     this.get("/t/:topic_id/posts.json", request => {
       const postIds = request.queryParams.post_ids;
-      const posts = postIds.map(p => ({
-        id: parseInt(p),
-        post_number: parseInt(p)
-      }));
+      const postNumber = parseInt(request.queryParams.post_number);
+      let posts;
+
+      if (postIds) {
+        posts = postIds.map(p => ({
+          id: parseInt(p),
+          post_number: parseInt(p)
+        }));
+      } else if (postNumber && request.queryParams.asc === "true") {
+        posts = _.range(postNumber + 1, postNumber + 6).map(p => ({
+          id: parseInt(p),
+          post_number: parseInt(p)
+        }));
+      } else if (postNumber && request.queryParams.asc === "false") {
+        posts = _.range(postNumber - 5, postNumber)
+          .reverse()
+          .map(p => ({
+            id: parseInt(p),
+            post_number: parseInt(p)
+          }));
+      }
+
       return response(200, { post_stream: { posts } });
     });
 
