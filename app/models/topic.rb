@@ -13,8 +13,8 @@ require_dependency 'topic_posters_summary'
 require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
-  # TODO: Remove this after 19th Dec 2018
-  self.ignored_columns = %w{vote_count}
+  # TODO remove 01-01-2019
+  self.ignored_columns = ["percent_rank", "vote_count"]
 
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
@@ -33,9 +33,6 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :regular!, :notify_regular!
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
-
-  # TODO remove 01-01-2019
-  self.ignored_columns = ["percent_rank"]
 
   attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
