@@ -39,12 +39,7 @@ const controllerOpts = {
     },
 
     // Show newly inserted topics
-    showInserted(event) {
-      if (event && event.type === 'keydown') {
-        if (event.key !== 'Enter' && event.key !== ' ') {
-          return;
-        }
-      }
+    showInserted() {
       const tracker = this.topicTrackingState;
 
       // Move inserted into topics
