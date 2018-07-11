@@ -618,7 +618,7 @@ class Post < ActiveRecord::Base
 
   def advance_draft_sequence
     return if topic.blank? # could be deleted
-    DraftSequence.next!(last_editor_id, topic.draft_key)
+    DraftSequence.next!(last_editor_id, topic.draft_key) if last_editor_id
   end
 
   # TODO: move to post-analyzer?
