@@ -223,6 +223,7 @@ class UserNotifications < ActionMailer::Base
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
+    opts[:show_tags_in_subject] = true
     notification_email(user, opts)
   end
 
@@ -230,6 +231,7 @@ class UserNotifications < ActionMailer::Base
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
+    opts[:show_tags_in_subject] = true
     notification_email(user, opts)
   end
 
@@ -237,6 +239,7 @@ class UserNotifications < ActionMailer::Base
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
+    opts[:show_tags_in_subject] = true
     notification_email(user, opts)
   end
 
@@ -244,6 +247,7 @@ class UserNotifications < ActionMailer::Base
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
+    opts[:show_tags_in_subject] = true
     notification_email(user, opts)
   end
 
@@ -251,6 +255,7 @@ class UserNotifications < ActionMailer::Base
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
+    opts[:show_tags_in_subject] = true
     notification_email(user, opts)
   end
 
@@ -259,6 +264,7 @@ class UserNotifications < ActionMailer::Base
     opts[:use_site_subject] = true
     opts[:add_re_to_subject] = true
     opts[:show_category_in_subject] = true
+    opts[:show_tags_in_subject] = true
     notification_email(user, opts)
   end
 
@@ -267,6 +273,7 @@ class UserNotifications < ActionMailer::Base
     opts[:use_site_subject] = true
     opts[:add_re_to_subject] = true
     opts[:show_category_in_subject] = false
+    opts[:show_tags_in_subject] = false
     opts[:show_group_in_subject] = true if SiteSetting.group_in_subject
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
@@ -285,6 +292,7 @@ class UserNotifications < ActionMailer::Base
     opts[:allow_reply_by_email] = false
     opts[:use_invite_template] = true
     opts[:show_category_in_subject] = true
+    opts[:show_tags_in_subject] = true
     notification_email(user, opts)
   end
 
@@ -299,6 +307,7 @@ class UserNotifications < ActionMailer::Base
       use_site_subject: true,
       add_re_to_subject: true,
       show_category_in_subject: true,
+      show_tags_in_subject: true,
       notification_type: "posted",
       notification_data_hash: {
         original_username: post.user.username,
@@ -382,6 +391,7 @@ class UserNotifications < ActionMailer::Base
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],
       show_category_in_subject: opts[:show_category_in_subject],
+      show_tags_in_subject: opts[:show_tags_in_subject],
       show_group_in_subject: opts[:show_group_in_subject],
       notification_type: notification_type,
       use_invite_template: opts[:use_invite_template],
@@ -431,6 +441,12 @@ class UserNotifications < ActionMailer::Base
       end
     else
       show_category_in_subject = nil
+    end
+
+    # tag names
+    if opts[:show_tags_in_subject] && post.topic_id
+      tags = Topic.find_by(id: post.topic_id)&.tags.first(3)
+      show_tags_in_subject = tags.any? ? tags.map { |t| "[#{t.name}]" }.join(" ") : nil
     end
 
     if post.topic.private_message?
@@ -566,6 +582,7 @@ class UserNotifications < ActionMailer::Base
       use_site_subject: use_site_subject,
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
+      show_tags_in_subject: show_tags_in_subject,
       private_reply: post.topic.private_message?,
       subject_pm: subject_pm,
       participants: participants,
