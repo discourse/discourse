@@ -42,7 +42,7 @@ describe ActiveRecord::ConnectionHandling do
     ActiveRecord::Base.unstub(:postgresql_connection)
     ActiveRecord::Base.establish_connection
 
-    (Thread.list - @threads).each(&:join)
+    (Thread.list - @threads).each { |thread| thread.join(5) }
   end
 
   describe "#postgresql_fallback_connection" do
