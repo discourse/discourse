@@ -225,7 +225,7 @@
     &:active {
       box-shadow: none;
     }
-    @media all and (max-width: 320px) {
+    @include mobile-portrait {
       width: 100%;
     }
   }

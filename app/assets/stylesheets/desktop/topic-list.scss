@@ -160,70 +160,6 @@
   }
 }
 
-.topic-list.categories {
-  a.title {
-    color: $tertiary;
-  }
-
-  th.posts {
-    position: relative;
-  }
-  th.stats {
-    width: 90px;
-  }
-  td.latest {
-    vertical-align: top;
-    padding: 0 8px 8px;
-  }
-  .last-user-info {
-    font-size: $font-down-1;
-  }
-  .has-description {
-    td.category {
-      padding-top: 15px;
-    }
-  }
-  .category {
-    h3 {
-      display: inline-block;
-      font-size: $font-up-2;
-      i {
-        margin-right: 5px;
-      }
-      a[href] {
-        color: $primary;
-      }
-    }
-    .subcategories {
-      margin-top: 10px;
-    }
-    .category-description {
-      margin-top: 10px;
-    }
-    .clear-badge {
-      color: $primary;
-    }
-  }
-
-  .featured-topic {
-    margin: 10px 0 0;
-    /* topic status glyphs */
-    i {
-      color: dark-light-choose($primary-medium, $secondary-medium) !important;
-      font-size: 0.929em;
-    }
-    a.last-posted-at,
-    a.last-posted-at:visited {
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: $font-down-1;
-    }
-    .badge {
-      font-size: $font-down-1;
-      top: -1px;
-    }
-  }
-}
-
 .topic-list-bottom {
   margin: 20px 0;
 }
@@ -293,7 +229,7 @@ button.dismiss-read {
 
 /* Tablet (portrait) ----------- */
 
-@media all and (max-width: 850px) {
+@include small-width {
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
