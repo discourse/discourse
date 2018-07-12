@@ -5,27 +5,18 @@
 // Media queries
 // --------------------------------------------------
 
-@mixin small-width {
-  @media all and (max-width: 850px) {
-    @content;
-  }
-}
+$breakpoints: (
+  mobile-small: 320px,
+  mobile: 550px,
+  tablet: 768px,
+  medium: 850px,
+  large: 1000px,
+  extra-large: 1140px
+);
 
-@mixin medium-width {
-  @media all and (min-width: 1000px) and (max-width: 1139px) {
-    @content;
-  }
-}
-
-@mixin large-width {
-  @media all and (min-width: 1140px) {
-    @content;
-  }
-}
-
-@mixin mobile-portrait {
-  @media all and (max-width: 320px) {
-    @content;
+@mixin breakpoint($bp, $rule: max-width, $type: screen) {
+  @media #{$type} and (#{$rule}: map-get($breakpoints, $bp)) {
+      @content;
   }
 }
 
@@ -45,20 +36,6 @@
   }
 }
 
-// Border radius
-
-@mixin border-radius-all($radius) {
-  border-radius: $radius;
-}
-
-// Box shadow
-
-@mixin box-shadow($shadow) {
-  box-shadow: $shadow;
-}
-
-// Linear gradient
-
 //noinspection CssOptimizeSimilarProperties
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
@@ -74,12 +51,6 @@
       @content;
     }
   }
-}
-
-@mixin visible {
-  opacity: 1;
-  visibility: visible;
-  transition-delay: 0s;
 }
 
 //

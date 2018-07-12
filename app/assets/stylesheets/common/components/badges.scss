@@ -9,7 +9,7 @@
   display: inline-block;
   font-weight: normal;
   white-space: nowrap;
-  @include border-radius-all(10px);
+  border-radius: 10px;
 }
 
 // Category badges

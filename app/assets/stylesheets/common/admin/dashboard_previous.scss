@@ -74,7 +74,7 @@
     box-sizing: border-box;
     padding-right: 20px;
     min-width: 250px;
-    @include small-width {
+    @include breakpoint(medium) {
       max-width: unset;
     }
     .face {
@@ -260,10 +260,10 @@
   }
   .referred-topic-title {
     width: 355px;
-    @include medium-width {
+    @media all and (min-width: 1000px) and (max-width: 1139px) {
       width: 305px;
     }
-    @include small-width {
+    @include breakpoint(medium) {
       width: 265px;
     }
   }

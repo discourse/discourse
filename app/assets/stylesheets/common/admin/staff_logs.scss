@@ -118,7 +118,7 @@
     }
   }
 
-  @media screen and (max-width: 550px) {
+  @include breakpoint(mobile) {
     table.staff-logs tr {
       grid-template-columns: 1fr 1fr 0.5fr;
       td.staff-users {
@@ -418,7 +418,7 @@ table.search-logs-list {
       }
     }
   }
-  @media screen and (max-width: 550px) {
+  @include breakpoint(mobile) {
     tr {
       td.term {
         grid-column-start: 1;

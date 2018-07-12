@@ -22,7 +22,7 @@
 
   .search-advanced {
     width: 70%;
-    @include small-width {
+    @include breakpoint(medium) {
       width: 65%;
     }
 
@@ -102,7 +102,7 @@
 
   .search-advanced-sidebar {
     width: 30%;
-    @include small-width {
+    @include breakpoint(medium) {
       width: 35%;
     }
     margin-left: 1em;
@@ -139,7 +139,7 @@
     .search-advanced-title {
       background: $primary-low;
       padding: 0.358em 1em;
-      @include small-width {
+      @include breakpoint(medium) {
         padding: 0.358em 0.5em;
       }
       font-weight: 700;
@@ -164,7 +164,7 @@
       section.field {
         margin-top: 5px;
       }
-      @include small-width {
+      @include breakpoint(medium) {
         padding: 0.75em 0.5em;
         .ac-wrap,
         .choices,

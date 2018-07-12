@@ -285,7 +285,7 @@
     }
 
     &[type="text"] {
-      @include small-width {
+      @include breakpoint(medium) {
         width: 450px;
       }
     }

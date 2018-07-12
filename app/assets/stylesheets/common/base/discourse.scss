@@ -290,7 +290,7 @@ select {
 }
 
 .message {
-  @include border-radius-all(8px);
+  border-radius: 8px;
   background-color: $secondary;
   padding: 14px;
 

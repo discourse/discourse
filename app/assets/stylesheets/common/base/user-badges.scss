@@ -153,7 +153,7 @@
       display: flex;
       flex: 1 1 auto;
       padding: 0 10%;
-      @media screen and (max-width: 550px) {
+      @include breakpoint(mobile) {
         padding: 0 5%;
       }
     }
@@ -212,11 +212,11 @@
     &:nth-of-type(3n) {
       margin-right: 0;
     }
-    @include small-width {
+    @include breakpoint(medium) {
       flex: 0 0 49%;
       margin-right: 0;
     }
-    @media screen and (max-width: 550px) {
+    @include breakpoint(mobile) {
       flex: 0 0 100%;
     }
     &:hover {
@@ -225,7 +225,7 @@
     &:active {
       box-shadow: none;
     }
-    @include mobile-portrait {
+    @include breakpoint(mobile-small) {
       width: 100%;
     }
   }
@@ -274,7 +274,7 @@
   margin-bottom: 1.5em;
   display: flex;
   flex-wrap: wrap;
-  @include small-width {
+  @include breakpoint(medium) {
     justify-content: space-between;
   }
 

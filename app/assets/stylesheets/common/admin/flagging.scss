@@ -190,7 +190,7 @@
       white-space: nowrap;
     }
   }
-  @media screen and (max-width: 768px) {
+  @include breakpoint(tablet) {
     td.topic-title {
       width: auto;
       max-width: 600px;

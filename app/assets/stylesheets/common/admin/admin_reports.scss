@@ -51,7 +51,7 @@
       }
     }
 
-    @include small-width {
+    @include breakpoint(medium) {
       flex-direction: column;
       min-width: 100%;
 

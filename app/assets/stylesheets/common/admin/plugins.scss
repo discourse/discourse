@@ -12,7 +12,7 @@
         grid-template-columns: 0.25fr repeat(4, 1fr);
       }
     }
-    @media screen and (max-width: 550px) {
+    @include breakpoint(mobile) {
       tr {
         grid-template-columns: 0.25fr repeat(3, 1fr);
       }

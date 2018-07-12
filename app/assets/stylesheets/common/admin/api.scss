@@ -31,7 +31,7 @@ table.web-hooks.grid {
       }
     }
   }
-  @media screen and (max-width: 550px) {
+  @include breakpoint(mobile) {
     tbody {
       tr {
         grid-template-columns: 0.5fr 1fr;
@@ -76,7 +76,7 @@ table.api-keys {
   td.key {
     font-size: $font-down-1;
   }
-  @media screen and (max-width: 768px) {
+  @include breakpoint(tablet) {
     tr {
       grid-template-columns: 0.25fr 1fr 1fr;
     }
@@ -156,7 +156,7 @@ table.api-keys {
 
     .hook-event {
       margin-bottom: 0.5em;
-      @media screen and (max-width: 550px) {
+      @include breakpoint(mobile) {
         width: 100%;
       }
     }
