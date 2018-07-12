@@ -1,23 +1,28 @@
 import { ajax } from "discourse/lib/ajax";
-const keySelector = "meta[name=discourse_theme_key]";
+const keySelector = "meta[name=discourse_theme_id]";
 
-export function currentThemeKey() {
-  let themeKey = null;
+export function currentThemeId() {
+  let themeId = null;
   let elem = _.first($(keySelector));
   if (elem) {
-    themeKey = elem.content;
-    if (_.isEmpty(themeKey)) {
-      themeKey = null;
+    themeId = elem.content;
+    if (_.isEmpty(themeId)) {
+      themeId = null;
+    } else {
+      themeId = parseInt(themeId);
     }
   }
-  return themeKey;
+  return themeId;
 }
 
-export function setLocalTheme(key, themeSeq) {
-  if (key) {
-    $.cookie("theme_key", `${key},${themeSeq}`, { path: "/", expires: 9999 });
+export function setLocalTheme(ids, themeSeq) {
+  if (ids && ids.length > 0) {
+    $.cookie("theme_ids", `${ids.join(",")}|${themeSeq}`, {
+      path: "/",
+      expires: 9999
+    });
   } else {
-    $.cookie("theme_key", null, { path: "/", expires: 1 });
+    $.cookie("theme_ids", null, { path: "/", expires: 1 });
   }
 }
 
@@ -60,14 +65,14 @@ export function refreshCSS(node, hash, newHref, options) {
   $orig.data("copy", reloaded);
 }
 
-export function previewTheme(key) {
-  if (currentThemeKey() !== key) {
+export function previewTheme(id) {
+  if (currentThemeId() !== id) {
     Discourse.set("assetVersion", "forceRefresh");
 
-    ajax(`/themes/assets/${key ? key : "default"}`).then(results => {
+    ajax(`/themes/assets/${id ? id : "default"}`).then(results => {
       let elem = _.first($(keySelector));
       if (elem) {
-        elem.content = key;
+        elem.content = id;
       }
 
       results.themes.forEach(theme => {
@@ -95,7 +100,7 @@ export function listThemes(site) {
   }
 
   themes.forEach(t => {
-    results.push({ name: t.name, id: t.theme_key });
+    results.push({ name: t.name, id: t.theme_id });
   });
 
   return results.length === 0 ? null : results;

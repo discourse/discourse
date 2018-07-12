@@ -1444,14 +1444,14 @@ describe UsersController do
 
           put "/u/#{user.username}.json", params: {
             muted_usernames: "",
-            theme_key: theme.key,
+            theme_ids: [theme.id],
             email_direct: false
           }
 
           user.reload
 
           expect(user.muted_users.pluck(:username).sort).to be_empty
-          expect(user.user_option.theme_key).to eq(theme.key)
+          expect(user.user_option.theme_ids).to eq([theme.id])
           expect(user.user_option.email_direct).to eq(false)
         end
 

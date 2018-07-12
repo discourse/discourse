@@ -95,7 +95,7 @@ describe UserUpdater do
                            notification_level_when_replying: 3,
                            email_in_reply_to: false,
                            date_of_birth: date_of_birth,
-                           theme_key: theme.key,
+                           theme_ids: [theme.id],
                            allow_private_messages: false)
 
       expect(val).to be_truthy
@@ -110,7 +110,7 @@ describe UserUpdater do
       expect(user.user_option.auto_track_topics_after_msecs).to eq 101
       expect(user.user_option.notification_level_when_replying).to eq 3
       expect(user.user_option.email_in_reply_to).to eq false
-      expect(user.user_option.theme_key).to eq theme.key
+      expect(user.user_option.theme_ids.first).to eq theme.id
       expect(user.user_option.theme_key_seq).to eq(seq + 1)
       expect(user.user_option.allow_private_messages).to eq(false)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)

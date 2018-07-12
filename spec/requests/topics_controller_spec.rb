@@ -1216,36 +1216,36 @@ RSpec.describe TopicsController do
       end
 
       it "selects the theme the user has selected" do
-        user.user_option.update_columns(theme_key: theme.key)
+        user.user_option.update_columns(theme_ids: [theme.id])
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).to eq(theme.key)
+        expect(controller.theme_id).to eq(theme.id)
 
         theme.update_attribute(:user_selectable, false)
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).not_to eq(theme.key)
+        expect(controller.theme_id).not_to eq(theme.id)
       end
 
       it "can be overridden with a cookie" do
-        user.user_option.update_columns(theme_key: theme.key)
+        user.user_option.update_columns(theme_ids: [theme.id])
 
-        cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq}"
+        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq}"
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).to eq(theme2.key)
+        expect(controller.theme_id).to eq(theme2.id)
       end
 
       it "cookie can fail back to user if out of sync" do
-        user.user_option.update_columns(theme_key: theme.key)
-        cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq - 1}"
+        user.user_option.update_columns(theme_ids: [theme.id])
+        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq - 1}"
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).to eq(theme.key)
+        expect(controller.theme_id).to eq(theme.id)
       end
     end
 
