@@ -618,8 +618,7 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     selectBelow(post) {
-      const postStream = this.get("model.postStream");
-      const stream = [...postStream.get("stream")];
+      const stream = [...this.get("model.postStream.stream")];
       const below = stream.slice(stream.indexOf(post.id));
       this.get("selectedPostIds").pushObjects(below);
       this.appEvents.trigger("post-stream:refresh", { force: true });
