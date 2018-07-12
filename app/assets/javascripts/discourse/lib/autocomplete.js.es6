@@ -323,10 +323,15 @@ export default function(options) {
 
     var mePos = me.position();
     var borderTop = parseInt(me.css("border-top-width"), 10) || 0;
+
+    let left = mePos.left + pos.left + hOffset;
+    if (left < 0) {
+      left = 0;
+    }
     div.css({
       position: "absolute",
       top: mePos.top + pos.top - vOffset + borderTop + "px",
-      left: mePos.left + pos.left + hOffset + "px"
+      left: left + "px"
     });
   }
 
