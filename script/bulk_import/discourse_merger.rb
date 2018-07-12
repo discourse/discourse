@@ -435,7 +435,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def process_topic(topic)
-    return nil if topic['category_id'].nil?
+    return nil if topic['category_id'].nil? && topic['archetype'] != Archetype.private_message
     topic
   end
 
