@@ -135,6 +135,17 @@ GROUP BY p.user_id
   puts 'Done!', ''
 end
 
+desc "Disable 2 Factor for user."
+task "users:disable_2factor", [:username] => [:environment] do |_, args|
+  username = args[:username]
+
+  user = find_user(username)
+  id = user.id
+  UserSecondFactor.where(user_id: id).destroy_all
+
+  puts "", "2 Factor disabled for #{username}", ""
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 
