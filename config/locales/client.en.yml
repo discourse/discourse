@@ -3949,6 +3949,7 @@ en:
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
+      upload_error: "Sorry, there was an error uploading that file. Please try again."
       quit: "Maybe Later"
 
       staff_count:
