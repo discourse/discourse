@@ -210,6 +210,10 @@ export function setup(opts, siteSettings, state) {
     }
   });
 
+  Object.entries(state.whiteListed || {}).forEach(entry => {
+    whiteListed.push(entry);
+  });
+
   optionCallbacks.forEach(([, callback]) => {
     callback(opts, siteSettings, state);
   });
