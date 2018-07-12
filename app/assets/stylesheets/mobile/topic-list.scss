@@ -256,54 +256,6 @@ tr.category-topic-link {
   }
 }
 
-.topic-list.categories {
-  td.latest {
-    vertical-align: top;
-    padding: 5px;
-  }
-
-  .badge-category {
-    display: inline-block;
-    margin-top: 1px;
-  }
-  .featured-users {
-    @include mobile-portrait {
-      margin-bottom: 10px;
-      padding-top: 8px;
-      clear: left;
-    }
-    @include not-mobile-portrait {
-      float: right;
-    }
-  }
-  .latest {
-    @include mobile-portrait {
-      width: 150px;
-    }
-    @include mobile-landscape {
-      width: 270px;
-    }
-    @include tablet-landscape {
-      width: 450px;
-    }
-    .featured-topic {
-      margin: 8px 0;
-      a.last-posted-at,
-      a.last-posted-at:visited {
-        color: dark-light-choose($primary-medium, $secondary-medium);
-      }
-    }
-  }
-  .stats {
-    @include not-tablet-landscape {
-      display: none;
-    }
-    @include tablet-landscape {
-      min-width: 80px;
-    }
-  }
-}
-
 .category-list-item {
   padding: 5px 0 2px;
   border-left: 6px solid;

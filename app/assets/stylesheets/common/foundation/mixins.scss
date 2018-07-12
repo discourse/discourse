@@ -28,26 +28,6 @@
     @content;
   }
 }
-@mixin not-mobile-portrait {
-  @media all and (min-width: 321px) {
-    @content;
-  }
-}
-@mixin mobile-landscape {
-  @media all and (min-width: 321px) and (max-width: 959px) {
-    @content;
-  }
-}
-@mixin not-tablet-landscape {
-  @media all and (max-width: 959px) {
-    @content;
-  }
-}
-@mixin tablet-landscape {
-  @media all and (min-width: 960px) {
-    @content;
-  }
-}
 
 // CSS3 properties
 // --------------------------------------------------

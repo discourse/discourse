@@ -7,7 +7,7 @@
   z-index: z("timeline");
   margin-left: 757px;
 
-  @media all and (min-width: 1140px) {
+  @include large-width {
     margin-left: 820px;
   }
   @media all and (min-width: 1250px) {

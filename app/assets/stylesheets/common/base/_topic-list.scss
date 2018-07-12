@@ -192,44 +192,6 @@
   color: #9b764f !important;
 }
 
-.topic-list.categories {
-  .category .badge-notification {
-    background-color: transparent;
-    color: $primary-medium;
-  }
-
-  .subcategories .badge {
-    display: none;
-  }
-
-  td.category {
-    vertical-align: top;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border-left: 6px solid;
-  }
-  td.stats {
-    .unit {
-      font-size: $font-down-1;
-    }
-  }
-
-  table.categoryStats {
-    td {
-      padding: 2px;
-      vertical-align: bottom;
-      line-height: $line-height-large;
-      &.value {
-        text-align: right;
-        font-size: $font-up-3;
-      }
-      &.unit {
-        text-align: left;
-      }
-    }
-  }
-}
-
 .loading .topic-list {
   border: 0;
   box-shadow: none;
