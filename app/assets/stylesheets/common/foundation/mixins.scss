@@ -16,7 +16,7 @@ $breakpoints: (
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen) {
   @media #{$type} and (#{$rule}: map-get($breakpoints, $bp)) {
-      @content;
+    @content;
   }
 }
 
