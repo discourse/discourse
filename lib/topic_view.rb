@@ -4,7 +4,7 @@ require_dependency 'filter_best_posts'
 require_dependency 'gaps'
 
 class TopicView
-  MEGA_TOPIC_POSTS_COUNT = 25
+  MEGA_TOPIC_POSTS_COUNT = 10000
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
