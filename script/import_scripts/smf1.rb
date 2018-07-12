@@ -168,9 +168,17 @@ class ImportScripts::Smf1 < ImportScripts::Base
             end
 
             # avatar
-            avatar_url = if u["avatar"].present?
-              u["avatar"]
-            elsif u["attachmentType"] == 0 && u["id_attach"].present?
+            avatar_url = nil
+
+            if u["avatar"].present?
+              if u["avatar"].start_with?("http")
+                avatar_url = u["avatar"]
+              elsif u["avatar"].start_with?("avatar_")
+                avatar_url = "#{FORUM_URL}/avatar-members/#{u["avatar"]}"
+              end
+            end
+
+            avatar_url ||= if u["attachmentType"] == 0 && u["id_attach"].present?
               "#{FORUM_URL}/index.php?action=dlattach;attach=#{u["id_attach"]};type=avatar"
             elsif u["attachmentType"] == 1 && u["filename"].present?
               "#{FORUM_URL}/avatar-members/#{u["filename"]}"
