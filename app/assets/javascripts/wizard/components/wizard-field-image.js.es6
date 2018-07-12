@@ -40,7 +40,7 @@ export default Ember.Component.extend({
     });
 
     $upload.on("fileuploadfail", (e, response) => {
-      let message = I18n.t("wizard.upload_error")
+      let message = I18n.t("wizard.upload_error");
       if (response.jqXHR.responseJSON && response.jqXHR.responseJSON.errors) {
         message = response.jqXHR.responseJSON.errors.join("\n");
       }
