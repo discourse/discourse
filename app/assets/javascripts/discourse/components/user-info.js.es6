@@ -7,6 +7,7 @@ function normalize(name) {
 
 export default Ember.Component.extend({
   classNameBindings: [":user-info", "size"],
+  attributeBindings: ["data-username"],
   size: "small",
 
   @computed("user.username")
@@ -14,8 +15,10 @@ export default Ember.Component.extend({
     return userPath(username);
   },
 
+  "data-username": Em.computed.alias("user.username"),
+
   // TODO: In later ember releases `hasBlock` works without this
-  hasBlock: Ember.computed.alias("template"),
+  hasBlock: Em.computed.alias("template"),
 
   @computed("user.name", "user.username")
   name(name, username) {
