@@ -548,7 +548,7 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all in %{categoryName}"
+      all_subcategories: "all"
       no_subcategory: "none"
       category: "Category"
       category_list: "Display category list"
