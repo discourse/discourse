@@ -229,7 +229,7 @@ button.dismiss-read {
 
 /* Tablet (portrait) ----------- */
 
-@include small-width {
+@include breakpoint(medium) {
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {

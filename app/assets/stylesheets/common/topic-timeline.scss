@@ -7,7 +7,7 @@
   z-index: z("timeline");
   margin-left: 757px;
 
-  @include large-width {
+  @include breakpoint(extra-large, min-width) {
     margin-left: 820px;
   }
   @media all and (min-width: 1250px) {
@@ -228,7 +228,7 @@
     }
 
     .timeline-handle {
-      @include border-radius-all(0.8em);
+      border-radius: 0.8em;
       width: 0.35em;
       background-color: dark-light-choose($tertiary-low, $tertiary-high);
       height: 100%;

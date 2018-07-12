@@ -51,7 +51,7 @@ $rollback-darker: darken($rollback, 20%) !default;
         }
       }
     }
-    @media screen and (max-width: 550px) {
+    @include breakpoint(mobile) {
       td.backup-filename {
         grid-column-start: 1;
         grid-column-end: 3;
@@ -64,7 +64,7 @@ $rollback-darker: darken($rollback, 20%) !default;
         grid-column-end: 4;
       }
     }
-    @media screen and (max-width: 768px) {
+    @include breakpoint(tablet) {
       td.backup-controls {
         text-align: left;
       }

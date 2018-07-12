@@ -18,7 +18,7 @@ $mobile-breakpoint: 700px;
   .mobile-view & {
     margin-top: 10px;
   }
-  @media screen and (max-width: 768px) {
+  @include breakpoint(tablet) {
     width: calc(100% + 10px);
     margin-left: -10px;
     padding: 0 0 0 10px;
@@ -28,7 +28,7 @@ $mobile-breakpoint: 700px;
     display: inline-flex;
     width: calc(100% - 10px);
     flex: 1 0 auto;
-    @media screen and (max-width: 768px) {
+    @include breakpoint(tablet) {
       white-space: nowrap;
       overflow-x: scroll;
       -webkit-overflow-scrolling: touch;
@@ -47,7 +47,7 @@ $mobile-breakpoint: 700px;
       }
     }
   }
-  @media screen and (max-width: 768px) {
+  @include breakpoint(tablet) {
     // Fade-out for horizontal scroll nav
     &:before {
       content: "";
@@ -414,7 +414,7 @@ $mobile-breakpoint: 700px;
     clear: both;
     padding: 4px;
   }
-  @media screen and (max-width: 768px) {
+  @include breakpoint(tablet) {
     .select-kit.period-chooser
       .period-chooser-header
       h2.selected-name
@@ -459,7 +459,7 @@ $mobile-breakpoint: 700px;
     overflow: hidden;
     padding: 0;
     height: 100%;
-    @media screen and (max-width: 768px) {
+    @include breakpoint(tablet) {
       width: calc(100% + 10px);
       padding-left: 10px;
       margin-left: -10px;
@@ -501,7 +501,7 @@ $mobile-breakpoint: 700px;
     margin: 0;
     white-space: nowrap;
     overflow-x: auto;
-    @media screen and (max-width: 768px) {
+    @include breakpoint(tablet) {
       margin-left: -10px;
       overflow-x: scroll;
       -webkit-overflow-scrolling: touch;

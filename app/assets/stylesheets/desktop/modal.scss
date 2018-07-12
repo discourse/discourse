@@ -104,7 +104,7 @@
         max-width: 48%;
       }
 
-      @media screen and (max-width: 550px) {
+      @include breakpoint(mobile) {
         flex: 1 1 auto;
         min-width: 49%;
         max-width: unset;
