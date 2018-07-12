@@ -44,6 +44,8 @@ QUnit.test("create categories", assert => {
   assert.present(parent, "it loaded the parent category");
   assert.blank(parent.get("parentCategory"), "it has no parent category");
 
+  assert.equal(parent.get("subcategories").length, 1);
+
   const subcategory = categories.findBy("id", 3456);
   assert.present(subcategory, "it loaded the subcategory");
   assert.equal(
