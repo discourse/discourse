@@ -2,9 +2,8 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import computed from "ember-addons/ember-computed-decorators";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
-import { on } from "ember-addons/ember-computed-decorators";
-import { default as WhiteLister } from "pretty-text/white-lister";
-import { sanitize } from "pretty-text/sanitizer";
+import { on, observes } from "ember-addons/ember-computed-decorators";
+import { sanitizeAsync } from "discourse/lib/text";
 
 function customTagArray(fieldName) {
   return function() {
@@ -246,15 +245,23 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get("model.title_changes." + viewMode);
   },
 
-  @computed("viewMode", "model.body_changes")
-  bodyDiff(viewMode) {
+  @observes("viewMode", "model.body_changes")
+  bodyDiffChanged() {
+    const viewMode = this.get("viewMode");
     const html = this.get(`model.body_changes.${viewMode}`);
     if (viewMode === "side_by_side_markdown") {
-      return html;
+      this.set("bodyDiff", html);
     } else {
-      const whiteLister = new WhiteLister({ features: { editHistory: true } });
-      whiteLister.whiteListFeature("editHistory", { custom: () => true });
-      return sanitize(html, whiteLister);
+      const opts = {
+        features: { editHistory: true },
+        whiteListed: {
+          editHistory: { custom: (tag, attr) => attr === "class" }
+        }
+      };
+
+      return sanitizeAsync(html, opts).then(result =>
+        this.set("bodyDiff", result)
+      );
     }
   },
 
