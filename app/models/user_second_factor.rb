@@ -1,16 +1,19 @@
 class UserSecondFactor < ActiveRecord::Base
   belongs_to :user
-  scope :backup_codes, -> { where(method: 2, enabled: true) }
+
+  scope :totp, -> do
+    where(method: UserSecondFactor.methods[:totp])
+  end
+
+  scope :backup_codes, -> do
+    where(method: UserSecondFactor.methods[:backup_codes], enabled: true)
+  end
 
   def self.methods
     @methods ||= Enum.new(
       totp: 1,
       backup_codes: 2,
     )
-  end
-
-  def self.totp
-    where(method: 1).first
   end
 
 end

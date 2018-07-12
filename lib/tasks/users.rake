@@ -135,6 +135,14 @@ GROUP BY p.user_id
   puts 'Done!', ''
 end
 
+desc "Disable 2FA for user with the given username"
+task "users:disable_2fa", [:username] => [:environment] do |_, args|
+  username = args[:username]
+  user = find_user(username)
+  UserSecondFactor.totp.where(user_id: user.id).each(&:destroy!)
+  puts "2FA disabled for #{username}"
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 
