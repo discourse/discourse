@@ -1,5 +1,16 @@
 import { ajax } from "discourse/lib/ajax";
+import deprecated from "discourse-common/lib/deprecated";
+
 const keySelector = "meta[name=discourse_theme_id]";
+
+export function currentThemeKey() {
+  if (console && console.warn && console.trace) {
+    // TODO: Remove this code Jan 2019
+    deprecated(
+      "'currentThemeKey' is is deprecated use 'currentThemeId' instead. A theme component may require updating."
+    );
+  }
+}
 
 export function currentThemeId() {
   let themeId = null;
