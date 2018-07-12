@@ -271,7 +271,7 @@ const User = RestModel.extend({
       "notification_level_when_replying",
       "like_notification_frequency",
       "include_tl0_in_digests",
-      "theme_key",
+      "theme_ids",
       "allow_private_messages",
       "homepage_id"
     ];

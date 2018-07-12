@@ -221,8 +221,8 @@ COMPILED
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
 
     # TODO message for mobile vs desktop
-    MessageBus.publish "/header-change/#{theme.key}", self.value if theme && self.name == "header"
-    MessageBus.publish "/footer-change/#{theme.key}", self.value if theme && self.name == "footer"
+    MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
+    MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
   end
 end
 

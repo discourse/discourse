@@ -7,18 +7,18 @@ describe Site do
     json = Site.json_for(guardian)
     parsed = JSON.parse(json)
 
-    expected = Theme.where('key = :default OR user_selectable',
-                    default: SiteSetting.default_theme_key)
+    expected = Theme.where('id = :default OR user_selectable',
+                    default: SiteSetting.default_theme_id)
       .order(:name)
-      .pluck(:key, :name)
-      .map { |k, n| { "theme_key" => k, "name" => n, "default" => k == SiteSetting.default_theme_key } }
+      .pluck(:id, :name)
+      .map { |id, n| { "theme_id" => id, "name" => n, "default" => id == SiteSetting.default_theme_id } }
 
     expect(parsed["user_themes"]).to eq(expected)
   end
 
   it "includes user themes and expires them as needed" do
     default_theme = Theme.create!(user_id: -1, name: 'default')
-    SiteSetting.default_theme_key = default_theme.key
+    SiteSetting.default_theme_id = default_theme.id
     user_theme = Theme.create!(user_id: -1, name: 'user theme', user_selectable: true)
 
     anon_guardian = Guardian.new

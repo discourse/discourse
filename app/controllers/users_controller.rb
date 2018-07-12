@@ -1072,7 +1072,7 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
-      :theme_key,
+      :theme_ids,
       :locale,
       :bio_raw,
       :location,
@@ -1087,7 +1087,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
 
     result = params
-      .permit(permitted)
+      .permit(permitted, theme_ids: [])
       .reverse_merge(
         ip_address: request.remote_ip,
         registration_ip_address: request.remote_ip,

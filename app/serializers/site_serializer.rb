@@ -39,11 +39,11 @@ class SiteSerializer < ApplicationSerializer
 
   def user_themes
     cache_fragment("user_themes") do
-      Theme.where('key = :default OR user_selectable',
-                    default: SiteSetting.default_theme_key)
+      Theme.where('id = :default OR user_selectable',
+                    default: SiteSetting.default_theme_id)
         .order(:name)
-        .pluck(:key, :name)
-        .map { |k, n| { theme_key: k, name: n, default: k == SiteSetting.default_theme_key } }
+        .pluck(:id, :name)
+        .map { |id, n| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id } }
         .as_json
     end
   end

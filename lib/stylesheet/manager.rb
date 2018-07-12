@@ -19,29 +19,29 @@ class Stylesheet::Manager
     cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }
   end
 
-  def self.stylesheet_href(target = :desktop, theme_key = :missing)
-    href = stylesheet_link_tag(target, 'all', theme_key)
+  def self.stylesheet_href(target = :desktop, theme_id = :missing)
+    href = stylesheet_link_tag(target, 'all', theme_id)
     if href
       href.split(/["']/)[1]
     end
   end
 
-  def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_key = :missing)
+  def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_id = :missing)
 
     target = target.to_sym
 
-    if theme_key == :missing
-      theme_key = SiteSetting.default_theme_key
+    if theme_id == :missing
+      theme_id = SiteSetting.default_theme_id
     end
 
     current_hostname = Discourse.current_hostname
-    cache_key = "#{target}_#{theme_key}_#{current_hostname}"
+    cache_key = "#{target}_#{theme_id}_#{current_hostname}"
     tag = cache[cache_key]
 
     return tag.dup.html_safe if tag
 
     @lock.synchronize do
-      builder = self.new(target, theme_key)
+      builder = self.new(target, theme_id)
       if builder.is_theme? && !builder.theme
         tag = ""
       else
@@ -55,15 +55,15 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    themes = Theme.where('user_selectable OR key = ?', SiteSetting.default_theme_key).pluck(:key, :name)
+    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name)
     themes << nil
-    themes.each do |key, name|
+    themes.each do |id, name|
       [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
-        theme_key = key || SiteSetting.default_theme_key
-        cache_key = "#{target}_#{theme_key}"
+        theme_id = id || SiteSetting.default_theme_id
+        cache_key = "#{target}_#{theme_id}"
 
         STDERR.puts "precompile target: #{target} #{name}"
-        builder = self.new(target, theme_key)
+        builder = self.new(target, theme_id)
         builder.compile(force: true)
         cache[cache_key] = nil
       end
@@ -100,9 +100,9 @@ class Stylesheet::Manager
     end.compact.max.to_i
   end
 
-  def initialize(target = :desktop, theme_key)
+  def initialize(target = :desktop, theme_id)
     @target = target
-    @theme_key = theme_key
+    @theme_id = theme_id
   end
 
   def compile(opts = {})
@@ -240,7 +240,7 @@ class Stylesheet::Manager
   end
 
   def theme
-    @theme ||= (Theme.find_by(key: @theme_key) || :nil)
+    @theme ||= (Theme.find_by(id: @theme_id) || :nil)
     @theme == :nil ? nil : @theme
   end
 
