@@ -142,7 +142,7 @@ task "users:disable_2fa", [:username] => [:environment] do |_, args|
   user = find_user(username)
   id = user.id
   UserSecondFactor.where(user_id: id).each(&:destroy!)
-  
+
   puts "", "2 Factor disabled for #{username}", ""
 end
 
