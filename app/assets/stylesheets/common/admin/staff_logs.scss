@@ -315,6 +315,44 @@ table.screened-ip-addresses {
   }
 }
 
+// Screened URLs
+
+@include breakpoint(tablet) {
+  .screened-urls {
+    td.domain {
+      grid-column-start: 1;
+      grid-column-end: 3;
+      word-wrap: break-word;
+    }
+  }
+}
+
+// Screened emails
+.screened-emails {
+  td.ip_address {
+    word-wrap: break-word;
+    @include breakpoint(tablet, min-width) {
+      max-width: 20vw;
+    }
+  }
+
+  @include breakpoint(tablet) {
+    td.email {
+      grid-column-start: 1;
+      grid-column-end: 3;
+      word-wrap: break-word;
+    }
+    td.ip_address {
+      grid-row: 2;
+      grid-column-start: 1;
+      grid-column-end: -1;
+    }
+    td.action {
+      margin-top: 0.25em;
+    }
+  }
+}
+
 // Watched words
 
 .watched-word-box {
