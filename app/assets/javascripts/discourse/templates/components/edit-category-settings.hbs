@@ -161,4 +161,18 @@
   </section>
 {{/if}}
 
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.custom_fields.require_topic_approval}}
+    {{i18n 'category.require_topic_approval'}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.custom_fields.require_reply_approval}}
+    {{i18n 'category.require_reply_approval'}}
+  </label>
+</section>
+
 {{plugin-outlet name="category-custom-settings" args=(hash category=category)}}

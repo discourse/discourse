@@ -663,4 +663,25 @@ describe Category do
 
   end
 
+  describe 'require topic/post approval' do
+    let(:category) { Fabricate(:category) }
+
+    describe '#require_topic_approval?' do
+      before do
+        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+        category.save
+      end
+
+      it { expect(category.reload.require_topic_approval?).to eq(true) }
+    end
+
+    describe '#require_reply_approval?' do
+      before do
+        category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
+        category.save
+      end
+
+      it { expect(category.reload.require_reply_approval?).to eq(true) }
+    end
+  end
 end

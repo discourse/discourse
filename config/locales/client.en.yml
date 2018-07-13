@@ -2280,6 +2280,8 @@ en:
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
+      require_topic_approval: "Require moderator approval of all new topics"
+      require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
       position: "position"
       default_position: "Default Position"

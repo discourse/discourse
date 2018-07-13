@@ -7,6 +7,12 @@ class Category < ActiveRecord::Base
   include CategoryHashtag
   include AnonCacheInvalidator
 
+  REQUIRE_TOPIC_APPROVAL = 'require_topic_approval'
+  REQUIRE_REPLY_APPROVAL = 'require_reply_approval'
+
+  register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
+  register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
+
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
               -> { select "id, title, slug" },
@@ -349,6 +355,14 @@ class Category < ActiveRecord::Base
     end
 
     [read_restricted, mapped]
+  end
+
+  def require_topic_approval?
+    custom_fields[REQUIRE_TOPIC_APPROVAL]
+  end
+
+  def require_reply_approval?
+    custom_fields[REQUIRE_REPLY_APPROVAL]
   end
 
   def allowed_tags=(tag_names_arg)
