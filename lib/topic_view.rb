@@ -248,20 +248,21 @@ class TopicView
   def filter_posts_near(post_number)
     posts_before = (@limit.to_f / 4).floor
     posts_before = 1 if posts_before.zero?
+    sort_order = get_sort_order(post_number)
 
     before_post_ids = @filtered_posts.order(sort_order: :desc)
-      .where("posts.sort_order < #{sort_order_sql(post_number)}",)
+      .where("posts.sort_order < ?", sort_order)
       .limit(posts_before)
       .pluck(:id)
 
     post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
-      .where("posts.sort_order >= #{sort_order_sql(post_number)}")
+      .where("posts.sort_order >= ?", sort_order)
       .limit(@limit - before_post_ids.length)
       .pluck(:id)
 
     if post_ids.length < @limit
       post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
-        .where("posts.sort_order < #{sort_order_sql(post_number)}")
+        .where("posts.sort_order < ?", sort_order)
         .offset(before_post_ids.length)
         .limit(@limit - post_ids.length)
         .pluck(:id)
@@ -483,16 +484,30 @@ class TopicView
 
   private
 
-  def sort_order_sql(post_number)
-    <<~SQL
-    (
+  def get_sort_order(post_number)
+    sql = <<~SQL
+    SELECT posts.sort_order
+    FROM posts
+    WHERE posts.post_number = #{post_number.to_i}
+    AND posts.topic_id = #{@topic.id.to_i}
+    LIMIT 1
+    SQL
+
+    sort_order = DB.query_single(sql).first
+
+    if !sort_order
+      sql = <<~SQL
       SELECT posts.sort_order
       FROM posts
-      WHERE posts.post_number = #{post_number.to_i}
-      AND posts.topic_id = #{@topic.id.to_i}
+      WHERE posts.topic_id = #{@topic.id.to_i}
+      ORDER BY @(post_number - #{post_number.to_i})
       LIMIT 1
-    )
-    SQL
+      SQL
+
+      sort_order = DB.query_single(sql).first
+    end
+
+    sort_order
   end
 
   def filter_post_types(posts)
@@ -506,14 +521,16 @@ class TopicView
   end
 
   def filter_posts_by_post_number(post_number, asc)
+    sort_order = get_sort_order(post_number)
+
     posts =
       if asc
         @filtered_posts
-          .where("sort_order > #{sort_order_sql(post_number)}")
+          .where("sort_order > ?", sort_order)
           .order(sort_order: :asc)
       else
         @filtered_posts
-          .where("sort_order < #{sort_order_sql(post_number)}")
+          .where("sort_order < ?", sort_order)
           .order(sort_order: :desc)
       end
 
