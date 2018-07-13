@@ -265,9 +265,10 @@ describe PostDestroyer do
     end
 
     it "when topic is destroyed, it updates user_stats correctly" do
-      post
+      SiteSetting.min_topic_title_length = 5
+      post.topic.update_column(:title, "xyz")
+
       user1 = post.user
-      user1.reload
       user2 = Fabricate(:user)
       reply = create_post(topic_id: post.topic_id, user: user2)
       reply2 = create_post(topic_id: post.topic_id, user: user1)
@@ -275,6 +276,7 @@ describe PostDestroyer do
       expect(user1.user_stat.post_count).to eq(1)
       expect(user2.user_stat.topic_count).to eq(0)
       expect(user2.user_stat.post_count).to eq(1)
+
       PostDestroyer.new(Fabricate(:admin), post).destroy
       user1.reload
       user2.reload
@@ -390,12 +392,13 @@ describe PostDestroyer do
 
     let(:user) { Fabricate(:user) }
     let!(:post) { create_post(user: user) }
-    let(:topic) { post.topic.reload }
+    let(:topic) { post.topic }
     let(:second_user) { Fabricate(:coding_horror) }
     let!(:second_post) { create_post(topic: topic, user: second_user) }
 
     before do
       PostDestroyer.new(moderator, second_post).destroy
+      topic.reload
     end
 
     it 'resets the last_poster_id back to the OP' do
@@ -404,6 +407,10 @@ describe PostDestroyer do
 
     it 'resets the last_posted_at back to the OP' do
       expect(topic.last_posted_at.to_i).to eq(post.created_at.to_i)
+    end
+
+    it 'resets the highest_post_number' do
+      expect(topic.highest_post_number).to eq(post.post_number)
     end
 
     context 'topic_user' do
@@ -421,9 +428,7 @@ describe PostDestroyer do
       it "sets the second user's last_read_post_number back to 1" do
         expect(topic_user.highest_seen_post_number).to eq(1)
       end
-
     end
-
   end
 
   context "deleting a post belonging to a deleted topic" do

@@ -168,12 +168,12 @@ class PostDestroyer
 
   def make_previous_post_the_last_one
     last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
-    if last_post.present?
-      @post.topic.update!(
-        last_posted_at: last_post.created_at,
-        last_post_user_id: last_post.user_id,
-        highest_post_number: last_post.post_number
-      )
+    if last_post.present? && @post.topic.present?
+      topic = @post.topic
+      topic.last_posted_at = last_post.created_at
+      topic.last_post_user_id = last_post.user_id
+      topic.highest_post_number = last_post.post_number
+      topic.save!(validate: false)
     end
   end
 
