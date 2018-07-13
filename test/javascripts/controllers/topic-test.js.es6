@@ -123,6 +123,16 @@ QUnit.test("selectedAllPosts", function(assert) {
     controller.get("selectedAllPosts"),
     "all posts (including filtered posts) are selected"
   );
+
+  model.setProperties({
+    "postStream.isMegaTopic": true,
+    posts_count: 1
+  });
+
+  assert.ok(
+    controller.get("selectedAllPosts"),
+    "it uses the topic's post count for megatopics"
+  );
 });
 
 QUnit.test("selectedPostsUsername", function(assert) {
