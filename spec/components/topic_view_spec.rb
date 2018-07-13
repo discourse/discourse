@@ -458,6 +458,18 @@ describe TopicView do
         expect(near_view.contains_gaps?).to eq(false)
       end
 
+      describe 'when post_number is too large' do
+        it "snaps to the lower boundary" do
+          near_view = TopicView.new(topic.id, evil_trout,
+            post_number: 99999999,
+          )
+
+          expect(near_view.desired_post).to eq(p2)
+          expect(near_view.posts).to eq([p2, p3, p5])
+          expect(near_view.contains_gaps?).to eq(false)
+        end
+      end
+
       it "gaps deleted posts to an admin" do
         evil_trout.admin = true
         near_view = topic_view_near(p3)
