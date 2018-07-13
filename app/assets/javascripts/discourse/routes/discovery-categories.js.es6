@@ -124,7 +124,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
         group_permissions: [{ group_name: everyoneName, permission_type: 1 }],
         available_groups: groups.map(g => g.name),
         allow_badges: true,
-        topic_featured_link_allowed: true
+        topic_featured_link_allowed: true,
+        custom_fields: {}
       });
 
       showModal("edit-category", { model });

@@ -34,6 +34,12 @@ module TopicGuardian
     (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
   end
 
+  def can_move_topic_to_category?(category)
+    category = Category === category ? category : Category.find(category || SiteSetting.uncategorized_category_id)
+
+    is_staff? || (can_create_topic_on_category?(category) && !category.require_topic_approval?)
+  end
+
   def can_create_post_on_topic?(topic)
     # No users can create posts on deleted topics
     return false if topic.blank?

@@ -296,6 +296,26 @@ describe CategoriesController do
           expect(response.status).to eq(200)
           expect(UserHistory.count).to eq(5) # 2 + 3 (bootstrap mode)
         end
+
+        it 'updates per-category approval settings correctly' do
+          category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+          category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = false
+          category.save!
+
+          put "/categories/#{category.id}.json", params: {
+            name: category.name,
+            color: category.color,
+            text_color: category.text_color,
+            custom_fields: {
+              require_reply_approval: true,
+              require_topic_approval: true,
+            }
+          }
+
+          category.reload
+          expect(category.require_topic_approval?).to eq(true)
+          expect(category.require_reply_approval?).to eq(true)
+        end
       end
     end
   end

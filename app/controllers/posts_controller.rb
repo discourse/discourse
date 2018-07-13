@@ -204,7 +204,7 @@ class PostsController < ApplicationController
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
         category = Category.find_by(id: changes[:category_id])
         if category || (changes[:category_id].to_i == 0)
-          guardian.ensure_can_create_topic_on_category!(category)
+          guardian.ensure_can_move_topic_to_category!(category)
         else
           return render_json_error(I18n.t('category.errors.not_found'))
         end
