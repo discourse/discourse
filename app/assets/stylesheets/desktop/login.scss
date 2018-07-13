@@ -136,12 +136,6 @@
     .two-col {
       margin-top: 30px;
     }
-    .col-image {
-      width: 200px;
-      img {
-        width: 200px;
-      }
-    }
     .col-form {
       margin-left: 200px;
       .inline-invite-img {
@@ -191,12 +185,14 @@
   .col-form {
     padding-left: 20px;
   }
+  .col-image {
+    width: 175px;
+    img {
+      width: 100%;
+    }
+  }
   h2 {
     margin-bottom: 12px;
-  }
-  .col-image img {
-    width: 200px;
-    height: 200px;
   }
 }
 
