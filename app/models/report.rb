@@ -500,6 +500,8 @@ class Report
     user_id
     FROM user_visits
     WHERE user_id = ANY(ARRAY#{mod_ids})
+    AND visited_at >= '#{report.start_date}'
+    AND visited_at <= '#{report.end_date}'
     GROUP BY user_id
     SQL
 
@@ -507,9 +509,10 @@ class Report
     SELECT agreed_by_id AS user_id,
     COUNT(*) AS flag_count
     FROM post_actions
-    WHERE agreed_by_id = ANY(ARRAY#{mod_ids})
-    OR disagreed_by_id = ANY(ARRAY#{mod_ids})
+    WHERE (agreed_by_id = ANY(ARRAY#{mod_ids}) OR disagreed_by_id = ANY(ARRAY#{mod_ids}))
     AND post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
+    AND created_at >= '#{report.start_date}'
+    AND created_at <= '#{report.end_date}'
     GROUP BY agreed_by_id
     SQL
 
@@ -518,6 +521,8 @@ class Report
     COUNT(*) AS topic_count
     FROM topics
     WHERE user_id = ANY(ARRAY#{mod_ids})
+    AND created_at >= '#{report.start_date}'
+    AND created_at <= '#{report.end_date}'
     GROUP BY user_id
     SQL
 
@@ -526,6 +531,8 @@ class Report
     COUNT(*) AS post_count
     FROM posts
     WHERE user_id = ANY(ARRAY#{mod_ids})
+    AND created_at >= '#{report.start_date}'
+    AND created_at <= '#{report.end_date}'
     GROUP BY user_id
     SQL
 
