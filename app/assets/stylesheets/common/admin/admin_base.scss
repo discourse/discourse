@@ -237,23 +237,37 @@ $mobile-breakpoint: 700px;
     h3 {
       font-weight: normal;
       font-size: $font-0;
+      @include breakpoint(mobile) {
+        word-wrap: break-word;
+      }
     }
     button.edit {
       float: right;
     }
     .site-text-value {
       margin: 0.5em 5em 0.5em 0;
-      max-height: 100px;
+      @include breakpoint(medium, min-width) {
+        max-height: 100px;
+      }
+      @include breakpoint(mobile) {
+        word-wrap: break-word;
+      }
       color: $primary-medium;
     }
   }
   .edit-site-text {
     textarea {
-      width: 80%;
+      width: 100%;
+      max-width: 800px;
     }
     .save-messages,
     .title {
       margin-bottom: 1em;
+    }
+    @include breakpoint(mobile) {
+      .title {
+        word-wrap: break-word;
+      }
     }
     .go-back {
       margin-top: 1em;
@@ -533,8 +547,14 @@ $mobile-breakpoint: 700px;
     padding: 10px;
     display: flex;
     align-items: center;
+    @include breakpoint(mobile) {
+      margin: 0 -10px;
+    }
     input {
       margin: 0;
+      @include breakpoint(tablet) {
+        max-width: 150px;
+      }
     }
     &.search {
       width: auto;
