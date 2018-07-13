@@ -727,14 +727,11 @@ class TopicsController < ApplicationController
   end
 
   def fetch_topic_view(options)
-    check_username_filters { |usernames| options[:username_filters] = usernames }
-    @topic_view = TopicView.new(params[:topic_id], current_user, options)
-  end
-
-  def check_username_filters
     if (username_filters = params[:username_filters]).present?
-      yield(username_filters.split(',')) if block_given?
+      options[:username_filters] = username_filters.split(',')
     end
+
+    @topic_view = TopicView.new(params[:topic_id], current_user, options)
   end
 
   def toggle_mute
