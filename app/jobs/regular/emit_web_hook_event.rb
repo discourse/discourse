@@ -25,7 +25,7 @@ module Jobs
           !web_hook.category_ids.include?(args[:category_id]))
 
         raise Discourse::InvalidParameters.new(:payload) unless args[:payload].present?
-        args[:payload] = JSON.parse(args[:payload])
+        args[:payload] = JSON.parse(args[:payload]) unless args[:retry_count].present?
       end
 
       web_hook_request(args, web_hook)
@@ -111,7 +111,7 @@ module Jobs
           event_type: args[:event_type]
         }, user_ids: User.human_users.staff.pluck(:id))
 
-        unless response.status == 200
+        if SiteSetting.retry_web_hook_events? && response.status != 200
           args[:retry_count] ||= 0
           return if args[:retry_count] > 4
 
