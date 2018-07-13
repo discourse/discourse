@@ -99,10 +99,12 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     Discourse.auth_providers.each do |provider|
+      next if provider.name != name
+
       unless provider.enabled_setting.nil? || SiteSetting.send(provider.enabled_setting)
         raise Discourse::InvalidAccess.new(I18n.t("provider_not_enabled"))
       end
-      return provider.authenticator if provider.name == name
+      return provider.authenticator
     end
 
     raise Discourse::InvalidAccess.new(I18n.t("provider_not_found"))
