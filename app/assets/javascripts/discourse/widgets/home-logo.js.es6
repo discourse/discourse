@@ -31,7 +31,12 @@ export default createWidget("home-logo", {
       if (logoSmallUrl.length) {
         return h("img#site-logo.logo-small", {
           key: "logo-small",
-          attributes: { src: Discourse.getURL(logoSmallUrl), width: 33, height: 33, alt: title }
+          attributes: {
+            src: Discourse.getURL(logoSmallUrl),
+            width: 33,
+            height: 33,
+            alt: title
+          }
         });
       } else {
         return iconNode("home");
