@@ -252,6 +252,11 @@ QUnit.test("selecting posts", async assert => {
     "it should show the multi select menu"
   );
 
+  assert.ok(
+    exists(".select-all"),
+    "it should allow users to select all the posts"
+  );
+
   await click(".toggle-admin-menu");
 
   assert.ok(

@@ -989,12 +989,30 @@ export default Ember.Controller.extend(BufferedContent, {
       : undefined;
   },
 
-  @computed("selectedPostsCount", "model.postStream.stream.length")
-  selectedAllPosts(selectedPostsCount, postsCount) {
-    return selectedPostsCount >= postsCount;
+  @computed(
+    "selectedPostsCount",
+    "model.postStream.isMegaTopic",
+    "model.postStream.stream.length",
+    "model.posts_count"
+  )
+  selectedAllPosts(
+    selectedPostsCount,
+    isMegaTopic,
+    postsCount,
+    topicPostsCount
+  ) {
+    if (isMegaTopic) {
+      return selectedPostsCount >= topicPostsCount;
+    } else {
+      return selectedPostsCount >= postsCount;
+    }
   },
 
-  canSelectAll: Ember.computed.not("selectedAllPosts"),
+  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
+  canSelectAll(selectedAllPosts, isMegaTopic) {
+    return isMegaTopic ? false : !selectedAllPosts;
+  },
+
   canDeselectAll: Ember.computed.alias("selectedAllPosts"),
 
   @computed(

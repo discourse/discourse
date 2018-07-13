@@ -1,7 +1,7 @@
 <p>{{count-i18n key="topic.multi_select.description" count=selectedPostsCount}}</p>
 
 {{#if canSelectAll}}
-  <p><a href {{action "selectAll"}}>{{i18n 'topic.multi_select.select_all'}}</a></p>
+  <p><a class="select-all" href {{action "selectAll"}}>{{i18n 'topic.multi_select.select_all'}}</a></p>
 {{/if}}
 
 {{#if canDeselectAll}}
