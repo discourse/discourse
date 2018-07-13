@@ -43,6 +43,16 @@ describe Jobs::EmitWebHookEvent do
       expect(args["retry_count"]).to eq(1)
     end
 
+    it 'does not retry for more than 4 times' do
+      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
+      subject.execute(
+        web_hook_id: post_hook.id,
+        event_type: described_class::PING_EVENT,
+        retry_count: 5
+      )
+      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
+    end
+
     it 'does not retry if site setting is disabled' do
       SiteSetting.retry_web_hook_events = false
 
