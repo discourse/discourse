@@ -24,31 +24,38 @@ describe Jobs::EmitWebHookEvent do
     end.to raise_error(Discourse::InvalidParameters)
   end
 
-  context 'retry when the web hook is failed' do
+  context 'when the web hook is failed' do
     before do
       SiteSetting.retry_web_hook_events = true
       stub_request(:post, "https://meta.discourse.org/webhook_listener")
         .to_return(body: 'Invalid Access', status: 403)
     end
 
-    it 'raises an error' do
-      expect do
-        subject.execute(
-          web_hook_id: post_hook.id,
-          event_type: described_class::PING_EVENT
-        )
-      end.to raise_error(RuntimeError, /WebHook request is failed/)
+    it 'retry if site setting is enabled' do
+      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
+      subject.execute(
+        web_hook_id: post_hook.id,
+        event_type: described_class::PING_EVENT
+      )
+      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(1)
+      job = Jobs::EmitWebHookEvent.jobs.first
+      args = job["args"].first
+      expect(args["retry_count"]).to eq(1)
+
+      job.execute(args])
+      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(1)
+      expect(Jobs::EmitWebHookEvent.jobs.first["args"].first["retry_count"]).to eq(2)
     end
 
-    it 'does not raise an error if disabled' do
+    it 'does not retry if site setting is disabled' do
       SiteSetting.retry_web_hook_events = false
 
-      expect do
-        subject.execute(
-          web_hook_id: post_hook.id,
-          event_type: described_class::PING_EVENT
-        )
-      end.not_to raise_error
+      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
+      subject.execute(
+        web_hook_id: post_hook.id,
+        event_type: described_class::PING_EVENT
+      )
+      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
     end
   end
 

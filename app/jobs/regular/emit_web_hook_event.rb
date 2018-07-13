@@ -2,8 +2,6 @@ require 'excon'
 
 module Jobs
   class EmitWebHookEvent < Jobs::Base
-    sidekiq_options retry: 5
-
     PING_EVENT = 'ping'.freeze
 
     def execute(args)
@@ -30,9 +28,7 @@ module Jobs
         args[:payload] = JSON.parse(args[:payload])
       end
 
-      unless web_hook_request(args, web_hook)
-        raise "WebHook request is failed" if SiteSetting.retry_web_hook_events
-      end
+      web_hook_request(args, web_hook)
     end
 
     private
@@ -115,10 +111,16 @@ module Jobs
           event_type: args[:event_type]
         }, user_ids: User.human_users.staff.pluck(:id))
 
-        return response.status == 200
+        unless response.status == 200
+          args[:retry_count] ||= 0
+          return if args[:retry_count] > 4
+
+          delays = [0, 1, 5, 15, 60]
+          args[:retry_count] += 1
+          Jobs.enqueue_in(delays[args[:retry_count]].minutes, :emit_web_hook_event, args)
+        end
       rescue
-        web_hook_event.destroy! unless SiteSetting.retry_web_hook_events
-        return false
+        web_hook_event.destroy!
       end
     end
   end
