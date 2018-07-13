@@ -1223,7 +1223,7 @@ class User < ActiveRecord::Base
       .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
       .where("NOT admin AND NOT moderator")
       .where("NOT EXISTS
-              (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id)
+              (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id LIMIT 1)
             ")
       .limit(200)
       .find_each do |user|
