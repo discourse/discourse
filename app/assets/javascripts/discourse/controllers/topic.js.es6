@@ -148,6 +148,10 @@ export default Ember.Controller.extend(BufferedContent, {
     );
   },
 
+  _forceRefreshPostStream() {
+    this.appEvents.trigger("post-stream:refresh", { force: true });
+  },
+
   actions: {
     showPostFlags(post) {
       return this.send("showFlags", post);
@@ -587,19 +591,24 @@ export default Ember.Controller.extend(BufferedContent, {
       this._jumpToPostId(postId);
     },
 
+    hideMultiSelect() {
+      this.set("multiSelect", false);
+      this._forceRefreshPostStream();
+    },
+
     toggleMultiSelect() {
       this.toggleProperty("multiSelect");
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      this._forceRefreshPostStream();
     },
 
     selectAll() {
       this.set("selectedPostIds", [...this.get("model.postStream.stream")]);
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      this._forceRefreshPostStream();
     },
 
     deselectAll() {
       this.set("selectedPostIds", []);
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      this._forceRefreshPostStream();
     },
 
     togglePostSelection(post) {
@@ -613,7 +622,7 @@ export default Ember.Controller.extend(BufferedContent, {
       ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
         const replyIds = replies.map(r => r.id);
         this.get("selectedPostIds").pushObjects([post.id, ...replyIds]);
-        this.appEvents.trigger("post-stream:refresh", { force: true });
+        this._forceRefreshPostStream();
       });
     },
 
@@ -621,7 +630,7 @@ export default Ember.Controller.extend(BufferedContent, {
       const stream = [...this.get("model.postStream.stream")];
       const below = stream.slice(stream.indexOf(post.id));
       this.get("selectedPostIds").pushObjects(below);
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      this._forceRefreshPostStream();
     },
 
     deleteSelected() {

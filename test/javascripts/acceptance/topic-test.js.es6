@@ -241,3 +241,21 @@ QUnit.test("remove featured link", assert => {
   //   assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
   // });
 });
+
+QUnit.test("selecting posts", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-multi-select .btn");
+
+  assert.ok(
+    exists(".selected-posts:not(.hidden)"),
+    "it should show the multi select menu"
+  );
+
+  await click(".toggle-admin-menu");
+
+  assert.ok(
+    exists(".selected-posts.hidden"),
+    "it should hide the multi select menu"
+  );
+});
