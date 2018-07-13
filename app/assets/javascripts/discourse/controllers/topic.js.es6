@@ -588,16 +588,20 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     jumpToPost(postNumber) {
-      const postStream = this.get("model.postStream");
-      let postId = postStream.findPostIdForPostNumber(postNumber);
+      if (this.get("model.postStream.isMegaTopic")) {
+        this._jumpToPostNumber(postNumber);
+      } else {
+        const postStream = this.get("model.postStream");
+        let postId = postStream.findPostIdForPostNumber(postNumber);
 
-      // If we couldn't find the post, find the closest post to it
-      if (!postId) {
-        const closest = postStream.closestPostNumberFor(postNumber);
-        postId = postStream.findPostIdForPostNumber(closest);
+        // If we couldn't find the post, find the closest post to it
+        if (!postId) {
+          const closest = postStream.closestPostNumberFor(postNumber);
+          postId = postStream.findPostIdForPostNumber(closest);
+        }
+
+        this._jumpToPostId(postId);
       }
-
-      this._jumpToPostId(postId);
     },
 
     jumpTop() {
