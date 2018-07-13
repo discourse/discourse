@@ -285,7 +285,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     source_raw_connection.exec("SELECT * FROM uploads").each do |row|
       user_id = row['user_id'].to_i
       user_id = user_id_from_imported_id(user_id) if user_id > 0
-      absolute_filename = File.join(@uploads_path, row['url'].gsub(/^\/uploads\/[^\/]+\//, ''))
+      rel_filename = row['url'].gsub(/^\/uploads\/[^\/]+\//, '')
+      rel_filename = rel_filename.gsub(/^\/\/[^\/]+\.amazonaws\.com\//, '')
+      absolute_filename = File.join(@uploads_path, rel_filename)
       print '.'
 
       next unless File.exists?(absolute_filename)
