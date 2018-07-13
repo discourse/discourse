@@ -97,6 +97,9 @@ table.api-keys {
       grid-column-end: -1;
       grid-column-start: 2;
       text-align: right;
+      .btn {
+        margin-bottom: 0.25em;
+      }
     }
   }
   //IE11 Support

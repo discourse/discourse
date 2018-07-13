@@ -1,7 +1,5 @@
 // Styles for /admin/logs
 
-.screened-emails,
-.screened-urls,
 .web-hook-events {
   border-bottom: dotted 1px dark-light-choose($primary-low-mid, $secondary);
   .heading-container {
@@ -222,34 +220,10 @@
   display: block;
 }
 
-.screened-emails,
-.screened-urls {
-  .email,
-  .url,
-  .domain {
-    width: 300px;
-  }
-  .action,
-  .match_count,
-  .last_match_at,
-  .created_at {
-    text-align: center;
-    width: 9.9099%;
-  }
-}
-
 .screened-ip-address-form {
   margin-left: 6px;
   .combobox {
     width: 130px;
-  }
-}
-
-.screened-emails,
-.screened-urls {
-  .ip_address {
-    width: 9.9099%;
-    text-align: center;
   }
 }
 
