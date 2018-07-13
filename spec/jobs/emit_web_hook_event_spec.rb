@@ -42,7 +42,7 @@ describe Jobs::EmitWebHookEvent do
       args = job["args"].first
       expect(args["retry_count"]).to eq(1)
 
-      job.execute(args])
+      job.execute(args)
       expect(Jobs::EmitWebHookEvent.jobs.size).to eq(1)
       expect(Jobs::EmitWebHookEvent.jobs.first["args"].first["retry_count"]).to eq(2)
     end
