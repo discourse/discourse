@@ -649,23 +649,4 @@ class Report
       report.data << revision
     end
   end
-
-  def self.report_staff_notes(report)
-    report.data = []
-    values = PluginStoreRow.where(plugin_name: 'staff_notes').pluck(:value)
-    values.each do |v|
-      note_data = {}
-      json = JSON.parse(v)[0]
-      if json['created_at'] >= report.start_date && json['created_at'] <= report.end_date
-        note_data[:created_at] = json['created_at']
-        note_data[:user_id] = json['user_id']
-        note_data[:username] = User.find(json['user_id']).username
-        note_data[:moderator_id] = json['created_by']
-        note_data[:moderator_username] = User.find(json['created_by']).username
-        note_data[:note] = json['raw']
-
-        report.data << note_data
-      end
-    end
-  end
 end
