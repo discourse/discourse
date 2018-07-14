@@ -100,6 +100,9 @@ export default Ember.Mixin.create({
     }
     const previousState = this.get("_panState");
     const newState = this._calculateNewPanState(previousState, e);
+    if (previousState.start && newState.distance < 5) {
+      return;
+    }
     this.set("_panState", newState);
     if (previousState.start && "panStart" in this) {
       this.panStart(newState);
