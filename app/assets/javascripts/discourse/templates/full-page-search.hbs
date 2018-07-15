@@ -59,6 +59,8 @@
       </div>
     {{/if}}
 
+   {{plugin-outlet name="search-insertion" args=(hash search=searchTerm)}}
+
     <div class="search-results">
       {{#load-more selector=".fps-result" action="loadMore"}}
         {{#each model.posts as |result|}}
