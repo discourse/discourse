@@ -1,6 +1,7 @@
 import MountWidget from "discourse/components/mount-widget";
 import { observes } from "ember-addons/ember-computed-decorators";
 import Docking from "discourse/mixins/docking";
+import PanEvents from "discourse/mixins/pan-events";
 
 const _flagProperties = [];
 function addFlagProperty(prop) {
@@ -9,10 +10,14 @@ function addFlagProperty(prop) {
 
 const PANEL_BODY_MARGIN = 30;
 
-const SiteHeaderComponent = MountWidget.extend(Docking, {
+const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
   docAt: null,
   dockedHeader: null,
+  animate: false,
+  isPanning: false,
+  panMenuOrigin: "right",
+  panMenuOffset: 0,
   _topic: null,
 
   @observes(
@@ -21,6 +26,132 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   )
   notificationsChanged() {
     this.queueRerender();
+  },
+
+  _panOpenClose(offset, velocity, direction) {
+    const $window = $(window);
+    const windowWidth = parseInt($window.width());
+    const $menuPanels = $(".menu-panel");
+    direction === "close" ? (offset += velocity) : (offset -= velocity);
+    const menuOrigin = this.get("panMenuOrigin");
+    $menuPanels.each((idx, panel) => {
+      const $panel = $(panel);
+      const $headerCloak = $(".header-cloak");
+      $panel.css(menuOrigin, -offset);
+      $headerCloak.css("opacity", Math.min(0.5, (300 - offset) / 600));
+      if (offset > windowWidth) {
+        $panel.css(menuOrigin, -windowWidth);
+        this.set("animate", true);
+        this.eventDispatched("dom:clean", "header");
+        this.set("panMenuOffset", 0);
+      } else if (offset <= 0) {
+        $panel.css("right", "");
+        $panel.css("left", "");
+        this.set("panMenuOffset", 0);
+      } else {
+        Ember.run.later(
+          () => this._panOpenClose(offset, velocity, direction),
+          20
+        );
+      }
+    });
+  },
+
+  _shouldPanClose(e) {
+    const panMenuOrigin = this.get("panMenuOrigin");
+    const panMenuOffset = this.get("panMenuOffset");
+    if (panMenuOrigin === "right" && panMenuOffset === 0) {
+      return (e.deltaX > 200 && e.velocityX > -0.15) || e.velocityX > 0.15;
+    } else if (panMenuOrigin === "left" && panMenuOffset === 0) {
+      return (e.deltaX < -200 && e.velocityX < 0.15) || e.velocityX < -0.15;
+    } else if (panMenuOrigin === "right" && panMenuOffset !== 0) {
+      return (e.deltaX > 200 && e.velocityX > -0.15) || e.velocityX > 0.15;
+    } else if (panMenuOrigin === "left" && panMenuOffset !== 0) {
+      return (e.deltaX < -200 && e.velocityX < 0.15) || e.velocityX < -0.15;
+    }
+  },
+
+  panStart(e) {
+    const center = e.center;
+    const $centeredElement = $(document.elementFromPoint(center.x, center.y));
+    const $window = $(window);
+    const windowWidth = parseInt($window.width());
+    if (
+      ($centeredElement.hasClass("panel-body") ||
+        $centeredElement.hasClass("header-cloak") ||
+        $centeredElement.parents(".panel-body").length) &&
+      (e.direction === "left" || e.direction === "right")
+    ) {
+      this.set("isPanning", true);
+    } else if (
+      center.x < 30 &&
+      !this.$(".menu-panel").length &&
+      e.direction === "right"
+    ) {
+      this.setProperties({
+        animate: false,
+        panMenuOrigin: "left",
+        panMenuOffset: -300,
+        isPanning: true
+      });
+      this.eventDispatched("toggleHamburger", "header");
+    } else if (
+      windowWidth - center.x < 30 &&
+      !this.$(".menu-panel").length &&
+      e.direction === "left"
+    ) {
+      this.setProperties({
+        animate: false,
+        panMenuOrigin: "right",
+        panMenuOffset: -300,
+        isPanning: true
+      });
+      this.eventDispatched("toggleUserMenu", "header");
+    } else {
+      this.set("isPanning", false);
+    }
+  },
+
+  panEnd(e) {
+    if (!this.get("isPanning")) {
+      return;
+    }
+    this.set("isPanning", false);
+    const $menuPanels = $(".menu-panel");
+    $menuPanels.each((idx, panel) => {
+      const $panel = $(panel);
+      let offset = $panel.css("right");
+      if (this.get("panMenuOrigin") === "left") {
+        offset = $panel.css("left");
+      }
+      offset = Math.abs(parseInt(offset));
+      if (this._shouldPanClose(e)) {
+        this._panOpenClose(offset, 40, "close");
+      } else {
+        this._panOpenClose(offset, 40, "open");
+      }
+    });
+  },
+
+  panMove(e) {
+    if (!this.get("isPanning")) {
+      return;
+    }
+    const $menuPanels = $(".menu-panel");
+    const panMenuOffset = this.get("panMenuOffset");
+    $menuPanels.each((idx, panel) => {
+      const $panel = $(panel);
+      const $headerCloak = $(".header-cloak");
+      if (this.get("panMenuOrigin") === "right") {
+        const pxClosed = Math.min(0, -e.deltaX + panMenuOffset);
+        $panel.css("right", pxClosed);
+        $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
+      } else {
+        const pxClosed = Math.min(0, e.deltaX + panMenuOffset);
+        $panel.css("left", pxClosed);
+        $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
+      }
+    });
   },
 
   dockCheck(info) {
@@ -74,6 +205,14 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         this.eventDispatched("dom:clean", "header");
       }
     });
+
+    if (this.site.mobileView) {
+      $("body")
+        .on("pointerdown", e => this._panStart(e))
+        .on("pointermove", e => this._panMove(e))
+        .on("pointerup", e => this._panMove(e))
+        .on("pointercancel", e => this._panMove(e));
+    }
   },
 
   willDestroyElement() {
@@ -84,6 +223,14 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
     this.appEvents.off("header:show-topic");
     this.appEvents.off("header:hide-topic");
     this.appEvents.off("dom:clean");
+
+    if (this.site.mobileView) {
+      $("body")
+        .off("pointerdown")
+        .off("pointerup")
+        .off("pointermove")
+        .off("pointercancel");
+    }
   },
 
   buildArgs() {
@@ -100,6 +247,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   afterRender() {
     const $menuPanels = $(".menu-panel");
     if ($menuPanels.length === 0) {
+      this.set("animate", true);
       return;
     }
 
@@ -109,18 +257,37 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
     const headerWidth = $("#main-outlet .container").width() || 1100;
     const remaining = parseInt((windowWidth - headerWidth) / 2);
     const viewMode = remaining < 50 ? "slide-in" : "drop-down";
+    const animate = this.get("animate");
 
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
+      const $headerCloak = $(".header-cloak");
+      let panMenuOffset = this.get("panMenuOffset");
       let width = parseInt($panel.attr("data-max-width") || 300);
       if (windowWidth - width < 50) {
         width = windowWidth - 50;
+      }
+      if (panMenuOffset) {
+        this.set("panMenuOffset", -width);
       }
 
       $panel
         .removeClass("drop-down")
         .removeClass("slide-in")
         .addClass(viewMode);
+      if (animate || panMenuOffset !== 0) {
+        $headerCloak.css("opacity", 0);
+        if (
+          this.site.mobileView &&
+          $panel.parent(".hamburger-panel").length > 0
+        ) {
+          this.set("panMenuOrigin", "left");
+          $panel.css("left", -windowWidth);
+        } else {
+          this.set("panMenuOrigin", "right");
+          $panel.css("right", -windowWidth);
+        }
+      }
 
       const $panelBody = $(".panel-body", $panel);
       // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
@@ -150,7 +317,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
 
         if (
           contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN >
-          fullHeight
+            fullHeight ||
+          this.site.mobileView
         ) {
           contentHeight =
             fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
@@ -160,15 +328,15 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         }
         $("body").addClass("drop-down-mode");
       } else {
-        const menuTop = headerHeight();
+        if (this.site.mobileView) {
+          $headerCloak.show();
+        }
+
+        const menuTop = this.site.mobileView ? 0 : headerHeight();
 
         let height;
         const winHeight = $(window).height() - 16;
-        if (menuTop + contentHeight < winHeight) {
-          height = contentHeight + "px";
-        } else {
-          height = winHeight - menuTop;
-        }
+        height = winHeight - menuTop;
 
         if ($panelBody.prop("style").height !== "100%") {
           $panelBody.height("100%");
@@ -180,6 +348,18 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
       }
 
       $panel.width(width);
+      if (animate) {
+        $panel.addClass("animate");
+        $headerCloak.addClass("animate");
+        Ember.run.later(() => {
+          $panel.removeClass("animate");
+          $headerCloak.removeClass("animate");
+        }, 200);
+      }
+      $panel.css("right", "");
+      $panel.css("left", "");
+      $headerCloak.css("opacity", 0.5);
+      this.set("animate", false);
     });
   }
 });

@@ -323,7 +323,24 @@ export default createWidget("hamburger-menu", {
     });
   },
 
-  clickOutside() {
-    this.sendWidgetAction("toggleHamburger");
+  clickOutside(e) {
+    const $centeredElement = $(document.elementFromPoint(e.clientX, e.clientY));
+    if (
+      $centeredElement.parents(".panel").length &&
+      !$centeredElement.hasClass("header-cloak")
+    ) {
+      this.sendWidgetAction("toggleHamburger");
+    } else {
+      const $window = $(window);
+      const windowWidth = parseInt($window.width());
+      const $panel = $(".menu-panel");
+      $panel.addClass("animate");
+      const panelOffsetDirection = this.site.mobileView ? "left" : "right";
+      $panel.css(panelOffsetDirection, -windowWidth);
+      const $headerCloak = $(".header-cloak");
+      $headerCloak.addClass("animate");
+      $headerCloak.css("opacity", 0);
+      Ember.run.later(() => this.sendWidgetAction("toggleHamburger"), 200);
+    }
   }
 });

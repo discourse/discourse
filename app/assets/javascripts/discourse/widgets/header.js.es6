@@ -253,6 +253,15 @@ createWidget("header-buttons", {
   }
 });
 
+createWidget("header-cloak", {
+  tagName: "div.header-cloak",
+  html() {
+    return "";
+  },
+  click() {},
+  scheduleRerender() {}
+});
+
 const forceContextEnabled = ["category", "user", "private_messages"];
 
 let additionalPanels = [];
@@ -314,6 +323,9 @@ export default createWidget("header", {
         panels.push(this.attach("hamburger-menu"));
       } else if (state.userVisible) {
         panels.push(this.attach("user-menu"));
+      }
+      if (this.site.mobileView) {
+        panels.push(this.attach("header-cloak"));
       }
 
       additionalPanels.map(panel => {

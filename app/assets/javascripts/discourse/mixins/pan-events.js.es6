@@ -7,11 +7,24 @@ export default Ember.Mixin.create({
     this._super();
 
     if (this.site.mobileView) {
-      this.$()
-        .on("pointerdown", e => this._panStart(e))
-        .on("pointermove", e => this._panMove(e))
-        .on("pointerup", e => this._panMove(e))
-        .on("pointercancel", e => this._panMove(e));
+      if ("onpointerdown" in document.documentElement) {
+        this.$()
+          .on("pointerdown", e => this._panStart(e))
+          .on("pointermove", e => this._panMove(e))
+          .on("pointerup", e => this._panMove(e))
+          .on("pointercancel", e => this._panMove(e));
+      } else if ("ontouchstart" in document.documentElement) {
+        this.$()
+          .on("touchstart", e => this._panStart(e.touches[0]))
+          .on("touchmove", e => {
+            const touchEvent = e.touches[0];
+            touchEvent.type = "pointermove";
+            e.preventDefault();
+            this._panMove(touchEvent);
+          })
+          .on("touchend", () => this._panMove({ type: "pointerup" }))
+          .on("touchcancel", () => this._panMove({ type: "pointercancel" }));
+      }
     }
   },
 
@@ -23,7 +36,11 @@ export default Ember.Mixin.create({
         .off("pointerdown")
         .off("pointerup")
         .off("pointermove")
-        .off("pointercancel");
+        .off("pointercancel")
+        .off("touchstart")
+        .off("touchmove")
+        .off("touchend")
+        .off("touchcancel");
     }
   },
 
@@ -44,6 +61,9 @@ export default Ember.Mixin.create({
     }
     const newTimestamp = new Date().getTime();
     const timeDiffSeconds = newTimestamp - oldState.timestamp;
+    if (timeDiffSeconds === 0) {
+      return oldState;
+    }
     //calculate delta x, y, distance from START location
     const deltaX = e.clientX - oldState.startLocation.x;
     const deltaY = e.clientY - oldState.startLocation.y;
