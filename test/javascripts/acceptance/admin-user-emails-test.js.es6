@@ -23,7 +23,9 @@ const assertNoSecondary = assert => {
   );
 
   assert.equal(
-    find(".display-row.secondary-emails .value").text().trim(),
+    find(".display-row.secondary-emails .value")
+      .text()
+      .trim(),
     I18n.t("user.email.no_secondary"),
     "it should not display secondary emails"
   );
@@ -44,6 +46,7 @@ const assertMultipleSecondary = assert => {
 };
 
 QUnit.test("viewing self without secondary emails", async assert => {
+  // prettier-ignore
   server.get("/admin/users/1.json", () => { // eslint-disable-line no-undef
     return responseWithSecondary([]);
   });
@@ -54,6 +57,7 @@ QUnit.test("viewing self without secondary emails", async assert => {
 });
 
 QUnit.test("viewing self with multiple secondary emails", async assert => {
+  // prettier-ignore
   server.get("/admin/users/1.json", () => { // eslint-disable-line no-undef
     return responseWithSecondary([
       "eviltrout1@example.com",
@@ -80,6 +84,7 @@ QUnit.test("viewing another user with no secondary email", async assert => {
 });
 
 QUnit.test("viewing another account with secondary emails", async assert => {
+  // prettier-ignore
   server.get("/u/regular/emails.json", () => { // eslint-disable-line no-undef
     return [
       200,
