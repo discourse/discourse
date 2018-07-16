@@ -1,10 +1,6 @@
 class UserSecondFactor < ActiveRecord::Base
   belongs_to :user
 
-  scope :totp, -> do
-    where(method: UserSecondFactor.methods[:totp])
-  end
-
   scope :backup_codes, -> do
     where(method: UserSecondFactor.methods[:backup_codes], enabled: true)
   end
@@ -14,6 +10,10 @@ class UserSecondFactor < ActiveRecord::Base
       totp: 1,
       backup_codes: 2,
     )
+  end
+
+  def self.totp
+    where(method: self.methods[:totp]).first
   end
 
 end
