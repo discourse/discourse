@@ -59,7 +59,7 @@
       </div>
     {{/if}}
 
-   {{plugin-outlet name="search-insertion" args=(hash search=searchTerm)}}
+   {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
 
     <div class="search-results">
       {{#load-more selector=".fps-result" action="loadMore"}}
