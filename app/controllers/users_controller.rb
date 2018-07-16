@@ -870,6 +870,8 @@ class UsersController < ApplicationController
         return render_json_error I18n.t("avatar.missing")
       end
 
+      user.create_user_avatar unless user.user_avatar
+
       if type == "gravatar"
         user.user_avatar.gravatar_upload_id = upload_id
       else
