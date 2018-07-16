@@ -30,6 +30,7 @@ const RestModel = Ember.Object.extend({
 
         self.setProperties(payload);
         self.afterUpdate(res);
+        res.target = self;
         return res;
       })
       .finally(() => this.set("isSaving", false));
