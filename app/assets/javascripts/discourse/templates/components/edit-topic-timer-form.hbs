@@ -7,6 +7,7 @@
     {{#if showTimeOnly}}
       {{future-date-input
           input=topicTimer.updateTime
+          label="topic.topic_status_update.when"
           statusType=selection
           includeWeekend=true
           basedOnLastPost=topicTimer.based_on_last_post}}
@@ -20,6 +21,7 @@
 
       {{future-date-input
           input=topicTimer.updateTime
+          label="topic.topic_status_update.when"
           statusType=selection
           includeWeekend=true
           categoryId=topicTimer.category_id
@@ -27,6 +29,7 @@
     {{else if autoClose}}
       {{future-date-input
           input=topicTimer.updateTime
+          label="topic.topic_status_update.when"
           statusType=selection
           includeWeekend=true
           basedOnLastPost=topicTimer.based_on_last_post
