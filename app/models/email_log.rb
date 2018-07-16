@@ -67,6 +67,10 @@ class EmailLog < ActiveRecord::Base
       .try(:to_address)
   end
 
+  def bounce_key
+    super&.delete('-')
+  end
+
 end
 
 # == Schema Information
