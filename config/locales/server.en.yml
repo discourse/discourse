@@ -553,7 +553,7 @@ en:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
