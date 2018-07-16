@@ -385,6 +385,19 @@ class Category < ActiveRecord::Base
     auto_bump_limiter.clear!
   end
 
+  def self.auto_bump_topic!
+    bumped = false
+    auto_bumps = CategoryCustomField.where(name: Category::NUM_AUTO_BUMP_DAILY).pluck(:category_id)
+
+    if (auto_bumps.length > 0)
+      auto_bumps.shuffle.each do |category_id|
+        bumped = Category.find_by(id: category_id)&.auto_bump_topic!
+        break if bumped
+      end
+    end
+    bumped
+  end
+
   # will automatically bump a single topic
   # if number of automatically bumped topics is smaller than threshold
   def auto_bump_topic!

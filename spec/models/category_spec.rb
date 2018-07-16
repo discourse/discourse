@@ -686,10 +686,6 @@ describe Category do
   end
 
   describe 'auto bump' do
-    before do
-      RateLimiter.enable
-    end
-
     after do
       RateLimiter.disable
     end
@@ -702,6 +698,9 @@ describe Category do
       _post1 = create_post(category: category)
       _post2 = create_post(category: category)
       _post3 = create_post(category: category)
+
+      # no limits on post creation or category creation please
+      RateLimiter.enable
 
       time = 1.month.from_now
       freeze_time time
@@ -721,6 +720,12 @@ describe Category do
       expect(category.auto_bump_topic!).to eq(false)
       expect(Topic.where(bumped_at: time).count).to eq(2)
 
+      time = 1.month.from_now
+      freeze_time time
+
+      category.auto_bump_limiter.clear!
+      expect(Category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
     end
   end
 
