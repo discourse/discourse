@@ -34,6 +34,7 @@ class UserSerializer < BasicUserSerializer
 
   attributes :name,
              :email,
+             :secondary_emails,
              :last_posted_at,
              :last_seen_at,
              :bio_raw,
@@ -144,6 +145,8 @@ class UserSerializer < BasicUserSerializer
     (object.id && object.id == scope.user.try(:id)) ||
       (scope.is_staff? && object.staged?)
   end
+
+  alias_method :include_secondary_emails?, :include_email?
 
   def include_second_factor_enabled?
     (object&.id == scope.user&.id) || scope.is_staff?

@@ -29,6 +29,10 @@
   &:after {
     clear: both;
   }
+  &.secondary-emails ul {
+    margin: 0;
+    list-style: none;
+  }
   .field {
     font-weight: bold;
     width: 17.65765%;

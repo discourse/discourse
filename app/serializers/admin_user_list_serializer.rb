@@ -1,6 +1,7 @@
 class AdminUserListSerializer < BasicUserSerializer
 
   attributes :email,
+             :secondary_emails,
              :active,
              :admin,
              :moderator,
@@ -40,6 +41,8 @@ class AdminUserListSerializer < BasicUserSerializer
     (scope.is_staff? && object.id == scope.user.id) || scope.can_see_emails? ||
       (scope.is_staff? && object.staged?)
   end
+
+  alias_method :include_secondary_emails?, :include_email?
 
   alias_method :include_associated_accounts?, :include_email?
 

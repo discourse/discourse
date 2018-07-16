@@ -1900,14 +1900,16 @@ describe UsersController do
         expect(response).to be_forbidden
       end
 
-      it "returns both email and associated_accounts when you're allowed to see them" do
+      it "returns emails and associated_accounts when you're allowed to see them" do
+        user = Fabricate(:user)
         sign_in_admin
 
-        get "/u/#{Fabricate(:user).username}/emails.json"
+        get "/u/#{user.username}/emails.json"
 
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json["email"]).to be_present
+        expect(json["email"]).to eq(user.email)
+        expect(json["secondary_emails"]).to match_array(user.secondary_emails)
         expect(json["associated_accounts"]).to be_present
       end
 
@@ -1919,7 +1921,8 @@ describe UsersController do
 
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json["email"]).to be_present
+        expect(json["email"]).to eq(inactive_user.email)
+        expect(json["secondary_emails"]).to match_array(inactive_user.secondary_emails)
         expect(json["associated_accounts"]).to be_present
       end
     end

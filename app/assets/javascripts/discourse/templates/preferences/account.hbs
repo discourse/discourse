@@ -49,6 +49,8 @@
       </div>
     {{/if}}
   </div>
+
+  {{plugin-outlet name="user-preferences-account-email" args=(hash model=model)}}
 {{/if}}
 
 {{#if canChangePassword}}
