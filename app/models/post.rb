@@ -873,10 +873,12 @@ end
 #
 # Indexes
 #
-#  idx_posts_created_at_topic_id            (created_at,topic_id)
-#  idx_posts_deleted_posts                  (topic_id,post_number)
-#  idx_posts_user_id_deleted_at             (user_id)
-#  index_posts_on_reply_to_post_number      (reply_to_post_number)
-#  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
-#  index_posts_on_user_id_and_created_at    (user_id,created_at)
+#  idx_posts_created_at_topic_id             (created_at,topic_id) WHERE (deleted_at IS NULL)
+#  idx_posts_deleted_posts                   (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
+#  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
+#  index_posts_on_reply_to_post_number       (reply_to_post_number)
+#  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
+#  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_sort_order    (topic_id,sort_order)
+#  index_posts_on_user_id_and_created_at     (user_id,created_at)
 #
