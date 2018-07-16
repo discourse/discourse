@@ -31,3 +31,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# Indexes
+#
+#  index_user_second_factors_on_user_id  (user_id)
+#
