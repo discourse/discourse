@@ -11,7 +11,7 @@
 
 .featured-topic.selected,
 .topic-post.selected {
-  box-shadow: inset 3px 0 0 $danger; // needs to be inset for Edge
+  box-shadow: -3px 0 0 $danger;
 }
 
 .latest .featured-topic {
