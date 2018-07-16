@@ -546,6 +546,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     return nil if @imported_post_uploads[post_upload['post_id']] == post_upload['upload_id']
     @imported_post_uploads[post_upload['post_id']] = post_upload['upload_id']
 
+    # ...and there are still duplicates. So try this:
+    return nil if PostUpload.where(post_id: post_upload['post_id'], upload_id: post_upload['upload_id']).exists?
+
     post_upload
   end
 
