@@ -2275,7 +2275,7 @@ en:
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
-      all_topics_wiki: "Make new topics wikis by default."
+      all_topics_wiki: "Make new topics wikis by default"
       subcategory_list_style: "Subcategory List Style:"
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"
@@ -2286,12 +2286,14 @@ en:
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
-      position: "position"
+      position: "Position:"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
       minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
+      num_auto_bump_daily: 'Number of open topics to automatically bump daily:'
+      navigate_to_first_post_after_read: 'Navigate to first post after topics are read'
       notifications:
         watching:
           title: "Watching"

@@ -684,4 +684,44 @@ describe Category do
       it { expect(category.reload.require_reply_approval?).to eq(true) }
     end
   end
+
+  describe 'auto bump' do
+    before do
+      RateLimiter.enable
+    end
+
+    after do
+      RateLimiter.disable
+    end
+
+    it 'should correctly automatically bump topics' do
+      freeze_time 1.second.ago
+      category = Fabricate(:category)
+      category.clear_auto_bump_cache!
+
+      _post1 = create_post(category: category)
+      _post2 = create_post(category: category)
+      _post3 = create_post(category: category)
+
+      time = 1.month.from_now
+      freeze_time time
+
+      expect(category.auto_bump_topic!).to eq(false)
+      expect(Topic.where(bumped_at: time).count).to eq(0)
+
+      category.num_auto_bump_daily = 2
+      category.save!
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(2)
+
+      expect(category.auto_bump_topic!).to eq(false)
+      expect(Topic.where(bumped_at: time).count).to eq(2)
+
+    end
+  end
+
 end

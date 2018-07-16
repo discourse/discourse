@@ -49,6 +49,14 @@ module Jobs
         SiteSetting.min_new_topics_time = last_new_topic.created_at.to_i
       end
 
+      auto_bumps = CategoryCustomField.where(name: Category::NUM_AUTO_BUMP_DAILY).pluck(:id)
+
+      if (auto_bumps.length > 0)
+        auto_bumps.shuffle.each do |category_id|
+          break if Category.find_by(id: category_id)&.auto_bump_topic!
+        end
+      end
+
       nil
     end
 
