@@ -530,6 +530,14 @@ aside.onebox.stackexchange .onebox-body {
   }
 }
 
+.onebox.twitterstatus {
+  .like,
+  .retweet {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    padding-left: 10px;
+  }
+}
+
 // mobile specific style
 .mobile-view article.onebox-body {
   border-top: none;
