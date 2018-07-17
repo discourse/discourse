@@ -533,10 +533,13 @@ export default Ember.Controller.extend({
     // if we are replying to a topic AND not on the topic pop the window up
     if (!force && composer.get("replyingToTopic")) {
       const currentTopic = this.get("topicModel");
-      if (
-        !currentTopic ||
-        currentTopic.get("id") !== composer.get("topic.id")
-      ) {
+
+      if (!currentTopic) {
+        this.save(true);
+        return;
+      }
+
+      if (currentTopic.get("id") !== composer.get("topic.id")) {
         const message = I18n.t("composer.posting_not_on_topic");
 
         let buttons = [
@@ -547,21 +550,19 @@ export default Ember.Controller.extend({
           }
         ];
 
-        if (currentTopic) {
-          buttons.push({
-            label:
-              I18n.t("composer.reply_here") +
-              "<br/><div class='topic-title overflow-ellipsis'>" +
-              currentTopic.get("fancyTitle") +
-              "</div>",
-            class: "btn btn-reply-here",
-            callback: () => {
-              composer.set("topic", currentTopic);
-              composer.set("post", null);
-              this.save(true);
-            }
-          });
-        }
+        buttons.push({
+          label:
+            I18n.t("composer.reply_here") +
+            "<br/><div class='topic-title overflow-ellipsis'>" +
+            currentTopic.get("fancyTitle") +
+            "</div>",
+          class: "btn btn-reply-here",
+          callback: () => {
+            composer.set("topic", currentTopic);
+            composer.set("post", null);
+            this.save(true);
+          }
+        });
 
         buttons.push({
           label:
