@@ -101,7 +101,11 @@ describe DiscoursePluginRegistry do
 
   context '.register_auth_provider' do
     let(:registry) { DiscoursePluginRegistry }
-    let(:auth_provider) { Auth::Authenticator.new }
+    let(:auth_provider) do 
+      provider = Plugin::AuthProvider.new
+      provider.authenticator = Auth::Authenticator.new
+      provider
+    end
 
     before do
       registry.register_auth_provider(auth_provider)
@@ -114,6 +118,7 @@ describe DiscoursePluginRegistry do
     it 'is returned by DiscoursePluginRegistry.auth_providers' do
       expect(registry.auth_providers.include?(auth_provider)).to eq(true)
     end
+
   end
 
   context '.register_service_worker' do

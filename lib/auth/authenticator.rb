@@ -7,9 +7,7 @@ class Auth::Authenticator
   end
 
   def enabled?
-    # Log if this has not been overridden. Eventually should raise an exception, but this will break existing plugins
-    Rails.logger.warn("Auth::Authenticator subclasses should define an enabled? function. Defaulting to true.")
-    true
+    raise NotImplementedError
   end
 
   # run once the user has completed authentication on the third party system. Should return an instance of Auth::Result. 

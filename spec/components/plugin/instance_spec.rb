@@ -125,7 +125,37 @@ describe Plugin::Instance do
     end
   end
 
+  it 'patches the enabled? function for auth_providers if not defined' do
+    SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
+    
+    plugin = Plugin::Instance.new
+
+    # No enabled_site_setting
+    authenticator = Auth::Authenticator.new
+    plugin.auth_provider(authenticator: authenticator)
+    expect(authenticator.enabled?).to eq(true)
+
+    # With enabled site setting
+    authenticator = Auth::Authenticator.new
+    plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
+    expect(authenticator.enabled?).to eq(false)
+
+    # Defines own method
+    SiteSetting.stubs(:ubuntu_login_enabled).returns(true)
+    authenticator = Class.new(Auth::Authenticator) do
+      def enabled?
+        false
+      end
+    end.new
+    plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
+    expect(authenticator.enabled?).to eq(false)
+  end
+
   context "activate!" do
+    before do
+      SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
+    end
+
     it "can activate plugins correctly" do
       plugin = Plugin::Instance.new
       plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
