@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Jobs::CleanUpEmailLogs do
 
   before do
-    Fabricate(:email_log, created_at: 2.years.ago, reply_key: "something")
+    Fabricate(:email_log, created_at: 2.years.ago, reply_key: SecureRandom.hex)
     Fabricate(:email_log, created_at: 2.years.ago)
     Fabricate(:email_log, created_at: 2.weeks.ago)
     Fabricate(:email_log, created_at: 2.days.ago)
