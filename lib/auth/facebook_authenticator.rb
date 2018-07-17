@@ -71,7 +71,6 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
       result.user = user_info.try(:user)
     end
 
-    
     if !result.user && !email.blank? && result.user = User.find_by_email(email)
       FacebookUserInfo.create({ user_id: result.user.id }.merge(facebook_hash))
     end

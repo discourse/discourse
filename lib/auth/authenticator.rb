@@ -10,7 +10,7 @@ class Auth::Authenticator
     raise NotImplementedError
   end
 
-  # run once the user has completed authentication on the third party system. Should return an instance of Auth::Result. 
+  # run once the user has completed authentication on the third party system. Should return an instance of Auth::Result.
   # If the user has requested to connect an existing account then `existing_account` will be set
   def after_authenticate(auth_options, existing_account: nil)
     raise NotImplementedError

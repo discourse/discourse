@@ -127,7 +127,7 @@ describe Plugin::Instance do
 
   it 'patches the enabled? function for auth_providers if not defined' do
     SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
-    
+
     plugin = Plugin::Instance.new
 
     # No enabled_site_setting

@@ -72,19 +72,6 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect { Users::OmniauthCallbacksController.find_authenticator("ubuntu") }
           .to raise_error(Discourse::InvalidAccess)
       end
-
-      it "succeeds if an authenticator does not have a site setting" do
-        provider.enabled_setting = nil
-        provider.authenticator = Class.new(Auth::Authenticator) do
-          def name
-            'ubuntu'
-          end
-        end.new
-        SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
-
-        expect(Users::OmniauthCallbacksController.find_authenticator("ubuntu"))
-          .to be(provider.authenticator)
-      end
     end
   end
 

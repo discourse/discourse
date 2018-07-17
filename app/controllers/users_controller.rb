@@ -1081,7 +1081,7 @@ class UsersController < ApplicationController
     # revoke permissions even if the admin has temporarily disabled that type of login
     authenticator = Discourse.authenticators.find { |authenticator| authenticator.name == provider_name }
     raise Discourse::NotFound if authenticator.nil?
-    
+
     skip_remote = params.permit(:skip_remote)
 
     # We're likely going to contact the remote auth provider, so hijack request
