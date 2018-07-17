@@ -88,7 +88,7 @@ end
 #  topic_id       :integer
 #  skipped        :boolean          default(FALSE)
 #  skipped_reason :string
-#  bounce_key     :string
+#  bounce_key     :uuid
 #  bounced        :boolean          default(FALSE), not null
 #  message_id     :string
 #
