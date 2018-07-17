@@ -12,7 +12,7 @@ module CrawlerDetection
   end
 
   def self.crawler?(user_agent)
-    return true if user_agent.nil?
+    return false if !user_agent.present?
 
     # this is done to avoid regenerating regexes
     @non_crawler_matchers ||= {}
