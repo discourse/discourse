@@ -111,12 +111,8 @@
     <div class='display-row associations'>
       <div class='field'>{{i18n 'user.associated_accounts.title'}}</div>
       <div class='value'>
-        {{#if model.associated_accounts}}
-          {{#each model.associated_accounts as |account|}}
-            {{account.name}} ({{account.info}}), 
-          {{else}}
-            No user accounts associated
-          {{/each}}
+        {{#if associatedAccountsLoaded}}
+          {{associatedAccounts}}
         {{else}}
           {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
         {{/if}}

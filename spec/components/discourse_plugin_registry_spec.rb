@@ -107,6 +107,10 @@ describe DiscoursePluginRegistry do
       registry.register_auth_provider(auth_provider)
     end
 
+    after do
+      registry.reset!
+    end
+
     it 'is returned by DiscoursePluginRegistry.auth_providers' do
       expect(registry.auth_providers.include?(auth_provider)).to eq(true)
     end

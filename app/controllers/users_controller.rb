@@ -1073,8 +1073,8 @@ class UsersController < ApplicationController
   end
 
   def revoke_account
-    @user = fetch_user_from_params
-    guardian.ensure_can_edit!(@user)
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
     provider_name = params.require(:provider_name)
 
     # Using Discourse.authenticators rather than Discourse.enabled_authenticators so users can
@@ -1085,9 +1085,8 @@ class UsersController < ApplicationController
     skip_remote = params.permit(:skip_remote)
 
     # We're likely going to contact the remote auth provider, so hijack request
-    hijack do 
-      result = authenticator.revoke(@user, skip_remote: skip_remote)
-
+    hijack do
+      result = authenticator.revoke(user, skip_remote: skip_remote)
       if result
         return render json: success_json
       else
