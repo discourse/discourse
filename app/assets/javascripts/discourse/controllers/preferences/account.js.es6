@@ -81,8 +81,12 @@ export default Ember.Controller.extend(
       return userId !== this.get("currentUser.id");
     },
 
+    @computed()
     canUpdateAssociatedAccounts() {
-      return true; //TODO: Add conditions
+      return (
+        findAll(this.siteSettings, this.capabilities, this.site.isMobileDevice)
+          .length > 0
+      );
     },
 
     actions: {
