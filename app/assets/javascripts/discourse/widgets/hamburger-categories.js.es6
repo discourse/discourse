@@ -31,15 +31,12 @@ createWidget("hamburger-category", {
     }
 
     if (!this.currentUser) {
-      let count = c.get("topic_count");
+      let count;
 
       if (c.get("show_subcategory_list")) {
-        const subcats = c.get("subcategories");
-        if (subcats) {
-          subcats.forEach(s => {
-            count += s.get("topic_count");
-          });
-        }
+        count = c.get("totalTopicCount");
+      } else {
+        count = c.get("topic_count");
       }
 
       results.push(h("b.topics-count", number(count)));
