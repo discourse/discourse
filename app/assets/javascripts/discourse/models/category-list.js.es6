@@ -38,7 +38,11 @@ CategoryList.reopenClass({
       }
 
       if (c.topics) {
-        c.topics = c.topics.map(t => Discourse.Topic.create(t));
+        c.topics = c.topics.map(t => {
+          const topic = Discourse.Topic.create(t);
+          topic.set("category", c);
+          return topic;
+        });
       }
 
       switch (statPeriod) {
