@@ -77,6 +77,17 @@ const Category = RestModel.extend({
     return topicCount > (this.get("num_featured_topics") || 2);
   },
 
+  @computed("topic_count", "subcategories")
+  totalTopicCount(topicCount, subcats) {
+    let count = topicCount;
+    if (subcats) {
+      subcats.forEach(s => {
+        count += s.get("topic_count");
+      });
+    }
+    return count;
+  },
+
   save() {
     const id = this.get("id");
     const url = id ? `/categories/${id}` : "/categories";
