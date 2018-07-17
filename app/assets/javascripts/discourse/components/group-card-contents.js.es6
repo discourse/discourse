@@ -54,10 +54,6 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
       .finally(() => this.set("loading", null));
   },
 
-  didInsertElement() {
-    this._super();
-  },
-
   _close() {
     this._super();
     this.setProperties({
