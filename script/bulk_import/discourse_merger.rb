@@ -278,6 +278,67 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     )
   end
 
+  # This method of copying uploads directly copies the files and then upload records.
+  # It's fast, but something is wrong because all the images are white squares.
+  # Also, some remapping needs to be done once this is finished.
+  def copy_uploads_experimental
+    puts ''
+    print "copying uploads..."
+
+    FileUtils.cp_r(
+      File.join(@uploads_path, '.'),
+      File.join(Rails.root, 'public', 'uploads', 'default')
+    )
+
+    columns = Upload.columns.map(&:name)
+    last_id = Upload.unscoped.maximum(:id) || 1
+    sql = "COPY uploads (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
+
+    @raw_connection.copy_data(sql, @encoder) do
+      source_raw_connection.exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(', ')} FROM uploads").each do |row|
+
+        next if Upload.where(sha1: row['sha1']).exists? # built-in images
+
+        rel_filename = row['url'].gsub(/^\/uploads\/[^\/]+\//, '')
+        rel_filename = rel_filename.gsub(/^\/\/[^\/]+\.amazonaws\.com\//, '')
+        absolute_filename = File.join(@uploads_path, rel_filename)
+        print '.'
+
+        next unless File.exists?(absolute_filename)
+
+        old_id = row['id']
+        if old_id && last_id
+          row['id'] = (last_id += 1)
+          @uploads[old_id.to_s] = row['id']
+        end
+
+        old_user_id = row['user_id'].to_i
+        if old_user_id >= 1
+          row['user_id'] = user_id_from_imported_id(old_user_id)
+          next if row['user_id'].nil? # associated record for a deleted user
+        end
+
+        old_url = row['url']
+        row['url'] = "/uploads/default/#{rel_filename}"
+
+        # Too slow to do remapping three times for each upload!!!
+
+        # if @source_cdn
+        #   DbHelper.remap(UrlHelper.absolute(old_url, @source_cdn), row['url'])
+        # end
+        # DbHelper.remap(UrlHelper.absolute(old_url, @source_base_url), row['url'])
+        # DbHelper.remap(old_url, row['url'])
+
+        @raw_connection.put_copy_data(row.values)
+      end
+    end
+    puts ''
+
+    copy_model(PostUpload)
+    copy_model(UserAvatar)
+  end
+
+  # The super slow method of copying uploads:
   def copy_uploads
     puts ''
     print "copying uploads..."
