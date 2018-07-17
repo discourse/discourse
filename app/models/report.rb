@@ -482,4 +482,171 @@ class Report
       }
     end
   end
+
+  def self.report_moderator_activity(report)
+    report.data = []
+    mod_data = {}
+
+    User.real.where(moderator: true).pluck(:id, :username).each do |u|
+      mod_data[u[0]] = {user_id: u[0], username: u[1]}
+    end
+
+    mod_ids = mod_data.keys
+
+    return if mod_ids.empty?
+
+    time_read_query = <<~SQL
+    SELECT SUM(time_read) AS time_read,
+    user_id
+    FROM user_visits
+    WHERE user_id = ANY(ARRAY#{mod_ids})
+    AND visited_at >= '#{report.start_date}'
+    AND visited_at <= '#{report.end_date}'
+    GROUP BY user_id
+    SQL
+
+    flag_count_query = <<~SQL
+    SELECT agreed_by_id AS user_id,
+    COUNT(*) AS flag_count
+    FROM post_actions
+    WHERE (agreed_by_id = ANY(ARRAY#{mod_ids}) OR disagreed_by_id = ANY(ARRAY#{mod_ids}))
+    AND post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
+    AND created_at >= '#{report.start_date}'
+    AND created_at <= '#{report.end_date}'
+    GROUP BY agreed_by_id
+    SQL
+
+    topic_count_query = <<~SQL
+    SELECT user_id,
+    COUNT(*) AS topic_count
+    FROM topics
+    WHERE user_id = ANY(ARRAY#{mod_ids})
+    AND created_at >= '#{report.start_date}'
+    AND created_at <= '#{report.end_date}'
+    GROUP BY user_id
+    SQL
+
+    post_count_query = <<~SQL
+    SELECT user_id,
+    COUNT(*) AS post_count
+    FROM posts
+    WHERE user_id = ANY(ARRAY#{mod_ids})
+    AND created_at >= '#{report.start_date}'
+    AND created_at <= '#{report.end_date}'
+    GROUP BY user_id
+    SQL
+
+    DB.query(time_read_query).each do |row|
+      mod_data[row.user_id][:time_read] = row.time_read
+    end
+
+    DB.query(flag_count_query).each do |row|
+      mod_data[row.user_id][:flag_count] = row.flag_count
+    end
+
+    DB.query(topic_count_query).each do |row|
+      mod_data[row.user_id][:topic_count] = row.topic_count
+    end
+
+    DB.query(post_count_query).each do |row|
+      mod_data[row.user_id][:post_count] = row.post_count
+    end
+
+    report.data = mod_data.values
+  end
+
+  def self.report_recent_flags(report)
+    report.data = []
+    flag_types = PostActionType.flag_types_without_custom
+
+    sql = <<~SQL
+    SELECT pa.post_action_type_id,
+    p.user_id AS poster_id,
+    pa.post_action_type_id,
+    pa.created_at,
+    pa.agreed_at,
+    pa.disagreed_at,
+    pa.deferred_at,
+    pa.agreed_by_id,
+    pa.disagreed_by_id,
+    pa.deferred_by_id,
+    pa.user_id AS flagger_id,
+    (select u.username FROM users u WHERE u.id = pa.user_id) AS flagger_username,
+    COALESCE(pa.disagreed_at, pa.agreed_at, pa.deferred_at, NULL) AS responded_at,
+    COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id, NULL) AS staff_id,
+    (SELECT u.username FROM users u WHERE u.id = COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id, null)) AS staff_username,
+    (SELECT u.username FROM users u WHERE u.id = p.user_id) as poster_username
+    FROM post_actions pa
+    JOIN posts p
+    ON p.id = pa.post_id
+    WHERE pa.post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
+    AND pa.created_at >= '#{report.start_date}'
+    AND pa.created_at <= '#{report.end_date}'
+    ORDER BY pa.created_at
+    LIMIT 50
+    SQL
+
+    DB.query(sql).each do |row|
+      data = {}
+      data[:action_type] = flag_types.key(row.post_action_type_id).to_s
+      data[:staff_username] = row.staff_username
+      data[:staff_id] = row.staff_id
+      data[:poster_username] = row.poster_username
+      data[:poster_id] = row.poster_id
+      data[:flagger_id] = row.flagger_id
+      data[:flagger_username] = row.flagger_username
+      if row.agreed_by_id
+        data[:resolution] = "Agreed"
+      elsif row.disagreed_by_id
+        data[:resolution] = "Disagreed"
+      elsif row.deferred_by_id
+        data[:resolution] = "Deferred"
+      else
+        data[:resolution] = "No Action"
+      end
+      data[:response_time] = row.responded_at ? row.responded_at - row.created_at : nil
+      report.data << data
+    end
+  end
+
+  def self.report_post_edits(report)
+    report.data = []
+
+    sql = <<~SQL
+    SELECT
+    pr.user_id AS editor_id,
+    p.user_id AS author_id,
+    pr.number AS revision_version,
+    p.version AS post_version,
+    pr.post_id,
+    p.topic_id,
+    p.post_number,
+    p.edit_reason,
+    u.username AS editor_username,
+    pr.created_at,
+    (SELECT u.username FROM users u WHERE u.id = p.user_id) AS author_username
+    FROM post_revisions pr
+    JOIN posts p
+    ON p.id = pr.post_id
+    JOIN users u
+    ON u.id = pr.user_id
+    WHERE pr.created_at >= '#{report.start_date}'
+    AND pr.created_at <= '#{report.end_date}'
+    ORDER BY pr.created_at DESC
+    SQL
+
+    DB.query(sql).each do |r|
+      revision = {}
+      revision[:editor_id] = r.editor_id
+      revision[:editor_username] = r.editor_username
+      revision[:author_id] = r.author_id
+      revision[:author_username] = r.author_username
+      revision[:url] = "#{Discourse.base_url}/t/-/#{r.topic_id}/#{r.post_number}"
+      revision[:edit_reason] = r.revision_version == r.post_version ? r.edit_reason : nil
+      revision[:created_at] = r.created_at
+      revision[:post_id] = r.post_id
+
+      report.data << revision
+    end
+  end
 end
