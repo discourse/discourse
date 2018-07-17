@@ -965,8 +965,6 @@ en:
         ok: "Your password looks good."
         instructions: "at least %{count} characters"
 
-      
-
       summary:
         title: "Summary"
         stats: "Stats"
