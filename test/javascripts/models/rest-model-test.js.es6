@@ -21,13 +21,17 @@ QUnit.test("update", assert => {
   const store = createStore();
   return store.find("widget", 123).then(function(widget) {
     assert.equal(widget.get("name"), "Trout Lure");
+    assert.ok(!widget.get("isSaving"), "it is not saving");
 
-    assert.ok(!widget.get("isSaving"));
     const promise = widget.update({ name: "new name" });
-    assert.ok(widget.get("isSaving"));
-    promise.then(function() {
-      assert.ok(!widget.get("isSaving"));
+    assert.ok(widget.get("isSaving"), "it is saving");
+
+    promise.then(function(result) {
+      assert.ok(!widget.get("isSaving"), "it is no longer saving");
       assert.equal(widget.get("name"), "new name");
+
+      assert.ok(result.target, "it has a reference to the record");
+      assert.equal(result.target.name, widget.get("name"));
     });
   });
 });
@@ -55,17 +59,20 @@ QUnit.test("save new", assert => {
 
   assert.ok(widget.get("isNew"), "it is a new record");
   assert.ok(!widget.get("isCreated"), "it is not created");
-  assert.ok(!widget.get("isSaving"));
+  assert.ok(!widget.get("isSaving"), "it is not saving");
 
   const promise = widget.save({ name: "Evil Widget" });
-  assert.ok(widget.get("isSaving"));
+  assert.ok(widget.get("isSaving"), "it is not saving");
 
-  return promise.then(function() {
-    assert.ok(!widget.get("isSaving"));
+  return promise.then(function(result) {
+    assert.ok(!widget.get("isSaving"), "it is no longer saving");
     assert.ok(widget.get("id"), "it has an id");
     assert.ok(widget.get("name"), "Evil Widget");
     assert.ok(widget.get("isCreated"), "it is created");
     assert.ok(!widget.get("isNew"), "it is no longer new");
+
+    assert.ok(result.target, "it has a reference to the record");
+    assert.equal(result.target.name, widget.get("name"));
   });
 });
 
