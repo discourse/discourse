@@ -147,10 +147,10 @@ describe CrawlerDetection do
       expect(CrawlerDetection.is_blocked_crawler?('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')).to eq(false)
     end
 
-    it 'is true if user agent is missing and whitelist is defined' do
+    it 'is false if user agent is missing and whitelist is defined' do
       SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
-      expect(CrawlerDetection.is_blocked_crawler?('')).to eq(true)
-      expect(CrawlerDetection.is_blocked_crawler?(nil)).to eq(true)
+      expect(CrawlerDetection.is_blocked_crawler?('')).to eq(false)
+      expect(CrawlerDetection.is_blocked_crawler?(nil)).to eq(false)
     end
 
     it 'is false if user agent is missing and blacklist is defined' do
