@@ -71,6 +71,10 @@ class EmailLog < ActiveRecord::Base
     super&.delete('-')
   end
 
+  def reply_key
+    super&.delete('-')
+  end
+
 end
 
 # == Schema Information
@@ -83,7 +87,7 @@ end
 #  user_id        :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  reply_key      :string(32)
+#  reply_key      :uuid
 #  post_id        :integer
 #  topic_id       :integer
 #  skipped        :boolean          default(FALSE)
