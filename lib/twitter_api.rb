@@ -34,7 +34,7 @@ class TwitterApi
     end
 
     def prettify_number(count)
-      number_to_human(count, :format => '%n%u', :precision => 2, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+      number_to_human(count, format: '%n%u', precision: 2, units: { thousand: 'K', million: 'M', billion: 'B' })
     end
 
     def user_timeline(screen_name)
