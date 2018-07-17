@@ -9,4 +9,10 @@
 
 <div class='date'>
   <a href="{{link}}" target="_blank">{{timestamp}}</a>
+  {{#likes}}
+    <span class="like"><i class="fa fa-heart"></i> {{likes}}</span>
+  {{/likes}}
+  {{#retweets}}
+    <span class="retweet"><i class="fa fa-retweet"></i> {{retweets}}</span>
+  {{/retweets}}
 </div>

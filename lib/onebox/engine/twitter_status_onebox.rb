@@ -90,12 +90,32 @@ module Onebox
         end
       end
 
+      def likes
+        if twitter_api_credentials_present?
+          count = access(:favorite_count).to_i
+          return count > 0 ? client.prettify_number(count) : nil
+        else
+          raw.at_css(".request-favorited-popup").attr('data-compact-localized-count') rescue nil
+        end
+      end
+
+      def retweets
+        if twitter_api_credentials_present?
+          count = access(:retweet_count).to_i
+          return count > 0 ? client.prettify_number(count) : nil
+        else
+          raw.at_css(".request-retweeted-popup").attr('data-compact-localized-count') rescue nil
+        end
+      end
+
       def data
         { link: link,
           tweet: tweet,
           timestamp: timestamp,
           title: title,
-          avatar: avatar }
+          avatar: avatar,
+          likes: likes,
+          retweets: retweets }
       end
     end
   end
