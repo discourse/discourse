@@ -58,9 +58,12 @@ RSpec.describe TopicsController do
 
     describe 'moving to a new topic' do
       let(:user) { Fabricate(:user) }
+      let(:user2) { Fabricate(:user) }
       let(:moderator) { Fabricate(:moderator) }
       let(:p1) { Fabricate(:post, user: user, post_number: 1) }
       let(:p2) { Fabricate(:post, user: user, post_number: 2, topic: p1.topic) }
+      let(:p3) { Fabricate(:post, user: user2, post_number: 3, topic: p1.topic) }
+      let(:p4) { Fabricate(:post, user: user2, post_number: 4, topic: p1.topic) }
       let!(:topic) { p1.topic }
 
       it "raises an error without post_ids" do
@@ -114,6 +117,30 @@ RSpec.describe TopicsController do
           expect(result['success']).to eq(true)
           expect(result['url']).to eq(Topic.last.relative_url)
           expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
+        end
+
+        it "forces resulting topic owner to watch the new topic" do
+          expect do
+            post "/t/#{topic.id}/move-posts.json", params: {
+              title: 'Logan is a good movie',
+              post_ids: [p3.id, p4.id],
+            }
+          end.to change { Topic.count }.by(1)
+
+          expect(response.status).to eq(200)
+
+          result = ::JSON.parse(response.body)
+
+          expect(result['success']).to eq(true)
+          new_topic = p3.reload.topic
+          expect(result['url']).to eq(new_topic.relative_url)
+
+          expect(TopicUser.exists?(
+            user_id: user2.id,
+            topic_id: new_topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+            notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+          )).to eq(true)
         end
 
         describe 'when topic has been deleted' do
