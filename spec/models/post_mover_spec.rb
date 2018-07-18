@@ -356,6 +356,9 @@ describe PostMover do
         end
 
         it "moves email log entries" do
+
+          skip "@tgxworld to fix"
+
           old_topic = old_post.topic
           Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
           Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
