@@ -316,7 +316,7 @@ describe Email::Sender do
       it 'should create the right log' do
         email_sender.send
         expect(email_log.post_id).to eq(post.id)
-        expect(email_log.topic_id).to eq(topic.id)
+        expect(email_log.topic.id).to eq(topic.id)
       end
     end
 
