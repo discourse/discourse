@@ -1,7 +1,10 @@
 require_dependency 'distributed_mutex'
 
 class EmailLog < ActiveRecord::Base
-  self.ignored_columns = %w{topic_id}
+  self.ignored_columns = %w{
+    topic_id
+    reply_key
+  }
 
   CRITICAL_EMAIL_TYPES ||= Set.new %w{
     account_created
@@ -71,10 +74,6 @@ class EmailLog < ActiveRecord::Base
   end
 
   def bounce_key
-    super&.delete('-')
-  end
-
-  def reply_key
     super&.delete('-')
   end
 

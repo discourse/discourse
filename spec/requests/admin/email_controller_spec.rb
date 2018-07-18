@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Admin::EmailController do
   let(:admin) { Fabricate(:admin) }
+  let(:email_log) { Fabricate(:email_log) }
 
   before do
     sign_in(admin)
@@ -32,9 +33,30 @@ describe Admin::EmailController do
   end
 
   describe '#sent' do
-    it "succeeds" do
+    let(:post) { Fabricate(:post) }
+    let(:email_log) { Fabricate(:email_log, post: post) }
+
+    let(:post_reply_key) do
+      Fabricate(:post_reply_key, post: post, user: email_log.user)
+    end
+
+    it "should return the right response" do
+      email_log
       get "/admin/email/sent.json"
+
       expect(response.status).to eq(200)
+      log = JSON.parse(response.body).first
+      expect(log["id"]).to eq(email_log.id)
+      expect(log["reply_key"]).to eq(nil)
+
+      post_reply_key
+
+      get "/admin/email/sent.json"
+
+      expect(response.status).to eq(200)
+      log = JSON.parse(response.body).first
+      expect(log["id"]).to eq(email_log.id)
+      expect(log["reply_key"]).to eq(post_reply_key.reply_key)
     end
   end
 
