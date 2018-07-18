@@ -61,6 +61,8 @@ SQL
     # note that ILIKE means "case insensitive LIKE"
     builder.where("NOT(ftl.url ILIKE '%.png' OR ftl.url ILIKE '%.jpg' OR ftl.url ILIKE '%.gif')")
     builder.where("COALESCE(ft.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
+    # do not show links with 0 click
+    builder.where("clicks > 0")
 
     builder.secure_category(guardian.secure_category_ids)
 
