@@ -1004,7 +1004,9 @@ en:
         most_liked_users: "Most Liked"
         most_replied_to_users: "Most Replied To"
         no_likes: "No likes yet."
-
+        top_categories: "Top Categories"
+        topics: "Topics"
+        replies: "Replies"
 
       associated_accounts: "Logins"
       ip_address:

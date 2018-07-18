@@ -502,6 +502,23 @@
   }
 }
 
+.top-categories-section {
+  table {
+    max-width: 95%;
+    tr {
+      border: none;
+    }
+    td,
+    th {
+      padding: 0.5em;
+      &.topic-count,
+      &.reply-count {
+        text-align: center;
+      }
+    }
+  }
+}
+
 .summary-user-list {
   li {
     height: 40px;

@@ -46,5 +46,9 @@ QUnit.test("Viewing Summary", assert => {
     assert.ok(exists(".liked-by-section .user-info"), "liked by");
     assert.ok(exists(".liked-section .user-info"), "liked");
     assert.ok(exists(".badges-section .badge-card"), "badges");
+    assert.ok(
+      exists(".top-categories-section .category-link"),
+      "top categories"
+    );
   });
 });

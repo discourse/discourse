@@ -88,7 +88,20 @@ export default function() {
           most_replied_to_users: [{ id: 333 }],
           most_liked_by_users: [{ id: 333 }],
           most_liked_users: [{ id: 333 }],
-          badges: [{ badge_id: 444 }]
+          badges: [{ badge_id: 444 }],
+          top_categories: [
+            {
+              id: 1,
+              name: "bug",
+              color: "e9dd00",
+              text_color: "000000",
+              slug: "bug",
+              read_restricted: false,
+              parent_category_id: null,
+              topic_count: 1,
+              post_count: 1
+            }
+          ]
         },
         badges: [{ id: 444, count: 1 }],
         topics: [{ id: 1234, title: "cool title", url: "/t/1234/cool-title" }]
