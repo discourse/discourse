@@ -29,7 +29,8 @@ class SiteSettings::TypeSupervisor
       regex: 13,
       email: 14,
       username: 15,
-      category: 16
+      category: 16,
+      uploaded_image_list: 17,
     )
   end
 

@@ -24,7 +24,8 @@ module Jobs
         SiteSetting.logo_small_url,
         SiteSetting.favicon_url,
         SiteSetting.apple_touch_icon_url,
-      ].map do |url|
+        *SiteSetting.selectable_avatars.split("\n"),
+      ].flatten.map do |url|
         if url.present?
           url = url.dup
 

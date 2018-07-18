@@ -1,7 +1,6 @@
 import computed from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-
 import { allowsImages } from "discourse/lib/utilities";
 
 export default Ember.Controller.extend(ModalFunctionality, {

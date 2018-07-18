@@ -163,11 +163,41 @@ QUnit.test("second factor backup", assert => {
   });
 });
 
+QUnit.test("default avatar selector", assert => {
+  visit("/u/eviltrout/preferences");
+
+  click(".pref-avatar .btn");
+  andThen(() => {
+    assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
+  });
+});
+
+acceptance("Avatar selector when selectable avatars is enabled", {
+  loggedIn: true,
+  settings: { selectable_avatars_enabled: true },
+  beforeEach() {
+    // prettier-ignore
+    server.get("/site/selectable-avatars.json", () => { //eslint-disable-line
+      return [200, { "Content-Type": "application/json" }, [
+        "https://www.discourse.org",
+        "https://meta.discourse.org",
+      ]];
+    });
+  }
+});
+
+QUnit.test("selectable avatars", assert => {
+  visit("/u/eviltrout/preferences");
+
+  click(".pref-avatar .btn");
+  andThen(() => {
+    assert.ok(exists(".selectable-avatars", "opens the avatar selection modal"));
+  });
+});
+
 acceptance("User Preferences when badges are disabled", {
   loggedIn: true,
-  settings: {
-    enable_badges: false
-  }
+  settings: { enable_badges: false }
 });
 
 QUnit.test("visit my preferences", assert => {

@@ -3797,6 +3797,14 @@ en:
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
+        uploaded_image_list:
+          label: "Edit list"
+          empty: "There are no pictures yet. Please upload one."
+          upload:
+            label: "Upload"
+            title: "Upload image(s)"
+        selectable_avatars:
+          title: "List of avatars users can choose from"
         categories:
           all_results: 'All'
           required: 'Required'

@@ -54,6 +54,7 @@ Discourse::Application.routes.draw do
 
   get "site/basic-info" => 'site#basic_info'
   get "site/statistics" => 'site#statistics'
+  get "site/selectable-avatars" => "site#selectable_avatars"
 
   get "srv/status" => "forums#status"
 
@@ -405,6 +406,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/second-factor-backup" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/preferences/avatar/select" => "users#select_avatar", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }

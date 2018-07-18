@@ -73,6 +73,12 @@ describe SiteSettings::TypeSupervisor do
       it "'username' should be at 15th position" do
         expect(SiteSettings::TypeSupervisor.types[:username]).to eq(15)
       end
+      it "'category' should be at 16th position" do
+        expect(SiteSettings::TypeSupervisor.types[:category]).to eq(16)
+      end
+      it "'uploaded_image_list' should be at 17th position" do
+        expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
+      end
     end
   end
 
