@@ -68,6 +68,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def execute
+    @first_new_user_id = @last_user_id + 1
+
     copy_users
     copy_user_stuff
     copy_groups
@@ -78,6 +80,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_uploads if @uploads_path
     copy_everything_else
     copy_badges
+
     fix_category_descriptions
   end
 
@@ -369,6 +372,14 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     copy_model(PostUpload)
     copy_model(UserAvatar)
+
+    # Users have a column "uploaded_avatar_id" which needs to be mapped now.
+    User.where("id >= ?", @first_new_user_id).find_each do |u|
+      if u.uploaded_avatar_id
+        u.uploaded_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
+        u.save! unless u.uploaded_avatar_id.nil?
+      end
+    end
   end
 
   def copy_everything_else
@@ -583,7 +594,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def process_user_avatar(user_avatar)
     user_avatar['custom_upload_id'] = upload_id_from_imported_id(user_avatar['custom_upload_id']) if user_avatar['custom_upload_id']
     user_avatar['gravatar_upload_id'] = upload_id_from_imported_id(user_avatar['gravatar_upload_id']) if user_avatar['gravatar_upload_id']
-    return nil unless user_avatar['custom_upload_id'].present? && user_avatar['gravatar_upload_id'].present?
+    return nil unless user_avatar['custom_upload_id'].present? || user_avatar['gravatar_upload_id'].present?
     user_avatar
   end
 
