@@ -191,7 +191,9 @@ QUnit.test("selectable avatars", assert => {
 
   click(".pref-avatar .btn");
   andThen(() => {
-    assert.ok(exists(".selectable-avatars", "opens the avatar selection modal"));
+    assert.ok(
+      exists(".selectable-avatars", "opens the avatar selection modal")
+    );
   });
 });
 

@@ -38,8 +38,9 @@ export default RestrictedUserRoute.extend({
       controller.setProperties(props);
 
       if (this.siteSettings.selectable_avatars_enabled) {
-        ajax("/site/selectable-avatars.json")
-          .then(avatars => controller.set("selectableAvatars", avatars));
+        ajax("/site/selectable-avatars.json").then(avatars =>
+          controller.set("selectableAvatars", avatars)
+        );
       }
     },
 

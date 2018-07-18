@@ -520,9 +520,11 @@ const User = RestModel.extend({
   },
 
   isAllowedToUploadAFile(type) {
-    return this.get("staff") ||
+    return (
+      this.get("staff") ||
       this.get("trust_level") > 0 ||
-      Discourse.SiteSettings[`newuser_max_${type}s`] > 0;
+      Discourse.SiteSettings[`newuser_max_${type}s`] > 0
+    );
   },
 
   createInvite(email, group_names, custom_message) {
