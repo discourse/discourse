@@ -192,8 +192,8 @@ basic:
   enable_mobile_theme:
     client: true
     default: true
-  default_theme_key:
-    default: ''
+  default_theme_id:
+    default: -1
     hidden: true
   relative_date_duration:
     client: true
@@ -790,6 +790,13 @@ email:
   email_in_min_trust:
     default: 2
     enum: 'TrustLevelSetting'
+  email_in_spam_header:
+    type: enum
+    default: 'none'
+    choices:
+     - none
+     - X-Spam-Flag
+     - X-Spam-Status
   email_prefix: ''
   email_site_title: ''
   disable_emails:
@@ -917,9 +924,14 @@ files:
   s3_upload_bucket:
     default: ''
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+  s3_endpoint:
+    default: 'https://s3.amazonaws.com'
+    regex: '^https?:\/\/.+[^\/]$'
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
+  s3_force_path_style:
+    default: false
   allow_profile_backgrounds:
     client: true
     default: true
@@ -947,6 +959,12 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
+  selectable_avatars_enabled:
+    default: false
+    client: true
+  selectable_avatars:
+    default: ''
+    type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
   png_to_jpg_quality:
     default: 95
@@ -1096,7 +1114,7 @@ security:
     default: ''
   blacklisted_crawler_user_agents:
     type: list
-    default: ''
+    default: 'mauibot'
   slow_down_crawler_user_agents:
     type: list
     default: 'bingbot'
@@ -1659,11 +1677,11 @@ tags:
     default: 20
     client: true
   min_trust_to_create_tag:
-    default: 3
-    enum: 'TrustLevelSetting'
+    default: '3'
+    enum: 'TrustLevelAndStaffSetting'
   min_trust_level_to_tag_topics:
-    default: 0
-    enum: 'TrustLevelSetting'
+    default: '0'
+    enum: 'TrustLevelAndStaffSetting'
     client: true
   max_tag_search_results:
     client: true

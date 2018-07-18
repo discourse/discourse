@@ -35,6 +35,7 @@ export default ComboBoxComponent.extend({
     this.get("rowComponentOptions").setProperties({
       hideParentCategory: this.get("subCategory"),
       allowUncategorized: true,
+      countSubcategories: this.get("countSubcategories"),
       displayCategoryDescription: !(
         this.currentUser &&
         (this.currentUser.get("staff") || this.currentUser.trust_level > 0)

@@ -134,7 +134,7 @@ class OptimizedImage < ActiveRecord::Base
       -background transparent
       -#{thumbnail_or_resize} #{dimensions}^
       -extent #{dimensions}
-      -interpolate bicubic
+      -interpolate catrom
       -unsharp 2x0.5+0.7+0
       -interlace none
       -quality 98
@@ -231,16 +231,11 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.convert_with(instructions, to)
-    begin
-      Discourse::Utils.execute_command(*instructions)
-    rescue
-      return false
-    end
-
+    Discourse::Utils.execute_command(*instructions)
     FileHelper.optimize_image!(to)
     true
-  rescue
-    Rails.logger.error("Could not optimize image: #{to}")
+  rescue => e
+    Rails.logger.error("Could not optimize image #{to}: #{e.message}")
     false
   end
 

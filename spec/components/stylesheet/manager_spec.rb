@@ -9,7 +9,7 @@ describe Stylesheet::Manager do
     expect(link).to eq("")
 
     theme = Theme.create(name: "embedded", user_id: -1)
-    SiteSetting.default_theme_key = theme.key
+    SiteSetting.default_theme_id = theme.id
 
     link = Stylesheet::Manager.stylesheet_link_tag(:embedded_theme)
     expect(link).not_to eq("")
@@ -41,9 +41,9 @@ describe Stylesheet::Manager do
 
     theme.add_child_theme!(child_theme)
 
-    old_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.key)
+    old_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
 
-    manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+    manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
     manager.compile(force: true)
 
     css = File.read(manager.stylesheet_fullpath)
@@ -57,7 +57,7 @@ describe Stylesheet::Manager do
     child_theme.set_field(target: :desktop, name: :scss, value: ".nothing{color: green;}")
     child_theme.save!
 
-    new_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.key)
+    new_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
 
     expect(new_link).not_to eq(old_link)
 
@@ -77,12 +77,12 @@ describe Stylesheet::Manager do
         user_id: -1
       )
 
-      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest1 = manager.digest
 
       DiscoursePluginRegistry.stylesheets.add "fake_file"
 
-      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest2 = manager.digest
 
       expect(digest1).not_to eq(digest2)
@@ -107,7 +107,7 @@ describe Stylesheet::Manager do
         type_id: ThemeField.types[:theme_upload_var]
       )
 
-      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest1 = manager.digest
       field.destroy!
 
@@ -121,7 +121,7 @@ describe Stylesheet::Manager do
         type_id: ThemeField.types[:theme_upload_var]
       )
 
-      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest2 = manager.digest
 
       expect(digest1).not_to eq(digest2)
@@ -137,7 +137,7 @@ describe Stylesheet::Manager do
       category1 = Fabricate(:category, uploaded_background_id: 123, updated_at: 1.week.ago)
       category2 = Fabricate(:category, uploaded_background_id: 456, updated_at: 2.days.ago)
 
-      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
 
       digest1 = manager.color_scheme_digest
 

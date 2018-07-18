@@ -152,6 +152,7 @@ en:
       user_left: "%{who} removed themselves from this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
+      autobumped: "automatically bumped topic"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -196,6 +197,7 @@ en:
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "EU (London)"
+        eu_west_3: "EU (Paris)"
         sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
@@ -547,7 +549,7 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all in %{categoryName}"
+      all_subcategories: "all"
       no_subcategory: "none"
       category: "Category"
       category_list: "Display category list"
@@ -747,6 +749,7 @@ en:
         manage: "Manage backup codes"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
+        remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
         codes:
           title: "Backup codes"
           description: "Each line is a different backup code which can only be used once. It's recommended to save this file in a safe place."
@@ -806,6 +809,9 @@ en:
 
       email:
         title: "Email"
+        primary: "Primary Email"
+        secondary: "Secondary Emails"
+        no_secondary: "No secondary emails"
         instructions: "never shown to the public"
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
@@ -2108,7 +2114,6 @@ en:
           inappropriate: "Undo flag"
           bookmark: "Undo bookmark"
           like: "Undo like"
-          vote: "Undo vote"
         people:
           off_topic: "flagged this as off-topic"
           spam: "flagged this as spam"
@@ -2120,7 +2125,6 @@ en:
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
-          vote: "voted for this"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -2129,7 +2133,6 @@ en:
           notify_user: "You sent a message to this user"
           bookmark: "You bookmarked this post"
           like: "You liked this"
-          vote: "You voted for this post"
         by_you_and_others:
           off_topic:
             one: "You and 1 other flagged this as off-topic"
@@ -2152,9 +2155,6 @@ en:
           like:
             one: "You and 1 other liked this"
             other: "You and {{count}} other people liked this"
-          vote:
-            one: "You and 1 other voted for this post"
-            other: "You and {{count}} other people voted for this post"
         by_others:
           off_topic:
             one: "1 person flagged this as off-topic"
@@ -2177,9 +2177,6 @@ en:
           like:
             one: "1 person liked this"
             other: "{{count}} people liked this"
-          vote:
-            one: "1 person voted for this post"
-            other: "{{count}} people voted for this post"
 
       delete:
         confirm:
@@ -2279,7 +2276,7 @@ en:
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
-      all_topics_wiki: "Make new topics wikis by default."
+      all_topics_wiki: "Make new topics wikis by default"
       subcategory_list_style: "Subcategory List Style:"
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"
@@ -2287,13 +2284,17 @@ en:
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
+      require_topic_approval: "Require moderator approval of all new topics"
+      require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
-      position: "position"
+      position: "Position:"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
       minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
+      num_auto_bump_daily: 'Number of open topics to automatically bump daily:'
+      navigate_to_first_post_after_read: 'Navigate to first post after topics are read'
       notifications:
         watching:
           title: "Watching"
@@ -3796,6 +3797,14 @@ en:
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
+        uploaded_image_list:
+          label: "Edit list"
+          empty: "There are no pictures yet. Please upload one."
+          upload:
+            label: "Upload"
+            title: "Upload image(s)"
+        selectable_avatars:
+          title: "List of avatars users can choose from"
         categories:
           all_results: 'All'
           required: 'Required'
@@ -3956,6 +3965,7 @@ en:
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
+      upload_error: "Sorry, there was an error uploading that file. Please try again."
       quit: "Maybe Later"
 
       staff_count:

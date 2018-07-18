@@ -155,7 +155,7 @@ describe Wizard::StepUpdater do
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
-        theme = Theme.find_by(key: SiteSetting.default_theme_key)
+        theme = Theme.find_by(id: SiteSetting.default_theme_id)
         expect(theme.color_scheme.base_scheme_id).to eq('dark')
       end
     end
@@ -203,7 +203,7 @@ describe Wizard::StepUpdater do
         expect(color_scheme).to be_present
         expect(color_scheme.colors).to be_present
 
-        theme = Theme.find_by(key: SiteSetting.default_theme_key)
+        theme = Theme.find_by(id: SiteSetting.default_theme_id)
         expect(theme.color_scheme_id).to eq(color_scheme.id)
 
         expect(Theme.where(user_selectable: true).count).to eq(2)

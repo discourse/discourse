@@ -116,14 +116,30 @@ Site.reopenClass(Singleton, {
     const store = result.store;
 
     if (result.categories) {
+      let subcatMap = {};
+
       result.categoriesById = {};
-      result.categories = _.map(
-        result.categories,
-        c => (result.categoriesById[c.id] = store.createRecord("category", c))
-      );
+      result.categories = _.map(result.categories, c => {
+        if (c.parent_category_id) {
+          subcatMap[c.parent_category_id] =
+            subcatMap[c.parent_category_id] || [];
+          subcatMap[c.parent_category_id].push(c.id);
+        }
+        return (result.categoriesById[c.id] = store.createRecord(
+          "category",
+          c
+        ));
+      });
 
       // Associate the categories with their parents
       result.categories.forEach(c => {
+        let subcategoryIds = subcatMap[c.get("id")];
+        if (subcategoryIds) {
+          c.set(
+            "subcategories",
+            subcategoryIds.map(id => result.categoriesById[id])
+          );
+        }
         if (c.get("parent_category_id")) {
           c.set(
             "parentCategory",

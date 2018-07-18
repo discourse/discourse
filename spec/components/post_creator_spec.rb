@@ -38,6 +38,15 @@ describe PostCreator do
       expect(post.wiki).to eq(true)
     end
 
+    it "can be created with a hidden reason" do
+      hri = Post.hidden_reasons[:flag_threshold_reached]
+      post = PostCreator.create(user, basic_topic_params.merge(hidden_reason_id: hri))
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).to be_present
+      expect(post.hidden_reason_id).to eq(hri)
+      expect(post.topic.visible).to eq(false)
+    end
+
     it "ensures the user can create the topic" do
       Guardian.any_instance.expects(:can_create?).with(Topic, nil).returns(false)
       expect { creator.create }.to raise_error(Discourse::InvalidAccess)
@@ -70,6 +79,14 @@ describe PostCreator do
 
     context "success" do
       before { creator }
+
+      it "is not hidden" do
+        p = creator.create
+        expect(p.hidden).to eq(false)
+        expect(p.hidden_at).not_to be_present
+        expect(p.hidden_reason_id).to eq(nil)
+        expect(p.topic.visible).to eq(true)
+      end
 
       it "doesn't return true for spam" do
         creator.create

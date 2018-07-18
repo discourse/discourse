@@ -369,12 +369,8 @@
 }
 
 .edit-category-modal {
-  .future-date-input,
-  .num-featured-topics-fields,
-  .position-fields {
-    input[type="text"] {
-      width: 50px;
-    }
+  input[type="number"] {
+    width: 50px;
   }
 
   .subcategory-list-style-field {

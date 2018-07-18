@@ -2,6 +2,7 @@
 class TwitterApi
 
   class << self
+    include ActionView::Helpers::NumberHelper
 
     def prettify_tweet(tweet)
       text = tweet["full_text"].dup
@@ -30,6 +31,10 @@ class TwitterApi
       end
 
       result
+    end
+
+    def prettify_number(count)
+      number_to_human(count, format: '%n%u', precision: 2, units: { thousand: 'K', million: 'M', billion: 'B' })
     end
 
     def user_timeline(screen_name)

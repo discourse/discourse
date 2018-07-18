@@ -141,7 +141,9 @@
             <div class="composer-bottom-right">
               {{#if site.mobileView}}
                 {{#if allowUpload}}
-                  <a class="btn btn-default no-text mobile-file-upload {{if isUploading 'hidden'}}">{{d-icon "upload"}}</a>
+                  <a class="btn btn-default no-text mobile-file-upload {{if isUploading 'hidden'}}">
+                    {{d-icon uploadIcon}}
+                  </a>
                 {{/if}}
 
                 {{#if showPreview}}

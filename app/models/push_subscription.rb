@@ -6,7 +6,7 @@ end
 #
 # Table name: push_subscriptions
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  user_id    :integer          not null
 #  data       :string           not null
 #  created_at :datetime         not null

@@ -25,6 +25,16 @@ class SiteController < ApplicationController
     render json: custom_emoji
   end
 
+  def selectable_avatars
+    avatars = if SiteSetting.selectable_avatars_enabled?
+      (SiteSetting.selectable_avatars.presence || "").split("\n")
+    else
+      []
+    end
+
+    render json: avatars, root: false
+  end
+
   def basic_info
     results = {
       logo_url: UrlHelper.absolute(SiteSetting.logo_url),

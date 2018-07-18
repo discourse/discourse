@@ -1,3 +1,10 @@
+.admin-reports,
+.dashboard-next {
+  &.admin-contents {
+    margin: 10px 0 0 0;
+  }
+}
+
 .dashboard-next {
   .section-top {
     margin-bottom: 1em;
@@ -7,7 +14,7 @@
     display: flex;
     justify-content: space-between;
 
-    @include small-width {
+    @include breakpoint(medium) {
       flex-direction: column;
     }
 
@@ -23,7 +30,7 @@
         margin-right: 1em;
       }
 
-      @include small-width {
+      @include breakpoint(medium) {
         min-width: 100%;
 
         &:last-child {
@@ -36,7 +43,7 @@
       }
     }
 
-    @include small-width {
+    @include breakpoint(medium) {
       .section-column:last-child,
       .section-column:first-child {
         margin: 0;
@@ -80,7 +87,7 @@
       margin-bottom: 1em;
     }
 
-    @include small-width {
+    @include breakpoint(medium) {
       .chart {
         max-width: 100%;
       }
@@ -260,7 +267,7 @@
     min-width: 0;
   }
 
-  @include small-width {
+  @include breakpoint(medium) {
     max-width: 100%;
   }
 

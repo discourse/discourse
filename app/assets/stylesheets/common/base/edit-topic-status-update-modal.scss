@@ -55,3 +55,31 @@
     }
   }
 }
+
+// mobile styles
+.mobile-view .edit-topic-timer-modal {
+  .control-group {
+    display: flex;
+    align-items: center;
+
+    > .d-icon {
+      margin-right: 5px;
+    }
+  }
+
+  .select-kit.combo-box {
+    flex: 1;
+  }
+
+  .future-date-input-selector-header .btn-clear {
+    display: none;
+  }
+
+  .modal-body {
+    overflow: visible !important; /* inline styles from JS */
+  }
+
+  .pika-single {
+    position: absolute !important; /* inline styles from JS */
+  }
+}

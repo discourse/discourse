@@ -265,9 +265,10 @@ describe PostDestroyer do
     end
 
     it "when topic is destroyed, it updates user_stats correctly" do
-      post
+      SiteSetting.min_topic_title_length = 5
+      post.topic.update_column(:title, "xyz")
+
       user1 = post.user
-      user1.reload
       user2 = Fabricate(:user)
       reply = create_post(topic_id: post.topic_id, user: user2)
       reply2 = create_post(topic_id: post.topic_id, user: user1)
@@ -275,6 +276,7 @@ describe PostDestroyer do
       expect(user1.user_stat.post_count).to eq(1)
       expect(user2.user_stat.topic_count).to eq(0)
       expect(user2.user_stat.post_count).to eq(1)
+
       PostDestroyer.new(Fabricate(:admin), post).destroy
       user1.reload
       user2.reload
@@ -360,16 +362,43 @@ describe PostDestroyer do
 
   end
 
+  context 'private message' do
+    let(:author) { Fabricate(:user) }
+    let(:private_message) { Fabricate(:private_message_topic, user: author) }
+    let!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
+    let!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2) }
+
+    it "doesn't update post_count for a reply" do
+      expect {
+        PostDestroyer.new(admin, second_post).destroy
+        author.reload
+      }.to_not change { author.post_count }
+
+      expect {
+        PostDestroyer.new(admin, second_post).recover
+      }.to_not change { author.post_count }
+    end
+
+    it "doesn't update topic_count for first post" do
+      expect {
+        PostDestroyer.new(admin, first_post).destroy
+        author.reload
+      }.to_not change { author.topic_count }
+      expect(author.post_count).to eq(0) # also unchanged
+    end
+  end
+
   context 'deleting the second post in a topic' do
 
     let(:user) { Fabricate(:user) }
     let!(:post) { create_post(user: user) }
-    let(:topic) { post.topic.reload }
+    let(:topic) { post.topic }
     let(:second_user) { Fabricate(:coding_horror) }
     let!(:second_post) { create_post(topic: topic, user: second_user) }
 
     before do
       PostDestroyer.new(moderator, second_post).destroy
+      topic.reload
     end
 
     it 'resets the last_poster_id back to the OP' do
@@ -378,6 +407,10 @@ describe PostDestroyer do
 
     it 'resets the last_posted_at back to the OP' do
       expect(topic.last_posted_at.to_i).to eq(post.created_at.to_i)
+    end
+
+    it 'resets the highest_post_number' do
+      expect(topic.highest_post_number).to eq(post.post_number)
     end
 
     context 'topic_user' do
@@ -395,9 +428,7 @@ describe PostDestroyer do
       it "sets the second user's last_read_post_number back to 1" do
         expect(topic_user.highest_seen_post_number).to eq(1)
       end
-
     end
-
   end
 
   context "deleting a post belonging to a deleted topic" do

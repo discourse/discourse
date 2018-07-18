@@ -1,15 +1,15 @@
 class ThemesController < ::ApplicationController
   def assets
-    theme_key = params[:key].to_s
+    theme_id = params[:id].to_i
 
-    if theme_key == "default"
-      theme_key = nil
+    if params[:id] == "default"
+      theme_id = nil
     else
-      raise Discourse::NotFound unless Theme.where(key: theme_key).exists?
+      raise Discourse::NotFound unless Theme.where(id: theme_id).exists?
     end
 
     object = [:mobile, :desktop, :desktop_theme, :mobile_theme].map do |target|
-      link = Stylesheet::Manager.stylesheet_link_tag(target, 'all', params[:key])
+      link = Stylesheet::Manager.stylesheet_link_tag(target, 'all', params[:id])
       if link
         href = link.split(/["']/)[1]
         if Rails.env.development?

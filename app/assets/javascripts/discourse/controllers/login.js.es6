@@ -70,17 +70,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get("loggingIn") || this.get("authenticate");
   }.property("loggingIn", "authenticate"),
 
-  @computed("canLoginLocalWithEmail", "loginName", "processingEmailLink")
-  showLoginWithEmailLink(
-    canLoginLocalWithEmail,
-    loginName,
-    processingEmailLink
-  ) {
-    return (
-      canLoginLocalWithEmail &&
-      !Ember.isEmpty(loginName) &&
-      !processingEmailLink
-    );
+  @computed("canLoginLocalWithEmail", "processingEmailLink")
+  showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
+    return canLoginLocalWithEmail && !processingEmailLink;
   },
 
   actions: {

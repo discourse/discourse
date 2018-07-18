@@ -117,7 +117,7 @@ class Wizard
       end
 
       @wizard.append_step('colors') do |step|
-        default_theme = Theme.find_by(key: SiteSetting.default_theme_key)
+        default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
         scheme_id = default_theme&.color_scheme&.base_scheme_id || 'default'
 
         themes = step.add_field(id: 'base_scheme_id', type: 'dropdown', required: true, value: scheme_id)
@@ -224,7 +224,7 @@ class Wizard
 
         EmojiSetSiteSetting.values.each do |set|
           imgs = emoji.map do |e|
-            "<img src='/images/emoji/#{set[:value]}/#{e}.png'>"
+            "<img src='#{Discourse.base_uri}/images/emoji/#{set[:value]}/#{e}.png'>"
           end
 
           sets.add_choice(set[:value],             label: I18n.t("js.#{set[:name]}"),

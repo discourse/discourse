@@ -54,6 +54,7 @@ Discourse::Application.routes.draw do
 
   get "site/basic-info" => 'site#basic_info'
   get "site/statistics" => 'site#statistics'
+  get "site/selectable-avatars" => "site#selectable_avatars"
 
   get "srv/status" => "forums#status"
 
@@ -405,6 +406,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/second-factor-backup" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/preferences/avatar/select" => "users#select_avatar", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
@@ -680,6 +682,7 @@ Discourse::Application.routes.draw do
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: { topic_id: /\d+/, post_number: /\d+/ }
   get "t/:slug/:topic_id/last" => "topics#show", post_number: 99999999, constraints: { topic_id: /\d+/ }
   get "t/:topic_id/posts" => "topics#posts", constraints: { topic_id: /\d+/ }, format: :json
+  get "t/:topic_id/post_ids" => "topics#post_ids", constraints: { topic_id: /\d+/ }, format: :json
   get "t/:topic_id/excerpts" => "topics#excerpts", constraints: { topic_id: /\d+/ }, format: :json
   post "t/:topic_id/timings" => "topics#timings", constraints: { topic_id: /\d+/ }
   post "t/:topic_id/invite" => "topics#invite", constraints: { topic_id: /\d+/ }
@@ -803,7 +806,7 @@ Discourse::Application.routes.draw do
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
-  get "/themes/assets/:key" => "themes#assets"
+  get "/themes/assets/:id" => "themes#assets"
 
   if Rails.env == "test" || Rails.env == "development"
     get "/qunit" => "qunit#index"

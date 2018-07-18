@@ -110,7 +110,7 @@ end
 
 def gzip(path)
   STDERR.puts "gzip -f -c -9 #{path} > #{path}.gz"
-  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`
+  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`.strip
   raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
@@ -137,7 +137,7 @@ def brotli(path)
     STDERR.puts brotli_command(path)
     STDERR.puts `#{brotli_command(path)}`
     raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
-    STDERR.puts `chmod +r #{path}.br`
+    STDERR.puts `chmod +r #{path}.br`.strip
     raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
   end
 end
@@ -179,9 +179,10 @@ task 'assets:precompile' => 'assets:precompile:before' do
           if File.exists?(_path)
             STDERR.puts "Skipping: #{file} already compressed"
           else
-            STDERR.puts "Compressing: #{file}"
-
             proc.call do
+              start = Time.now
+              STDERR.puts "#{start} Compressing: #{file}"
+
               # We can specify some files to never minify
               unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
                 FileUtils.mv(path, _path)
@@ -192,6 +193,9 @@ task 'assets:precompile' => 'assets:precompile:before' do
               info["mtime"] = File.mtime(path).iso8601
               gzip(path)
               brotli(path)
+
+              STDERR.puts "Done compressing #{file} : #{(Time.now - start).round(2)} secs"
+              STDERR.puts
             end
           end
       end

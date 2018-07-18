@@ -53,7 +53,8 @@ class Plugin::Metadata
     "discourse-policy",
     "discourse-github-linkback",
     "discourse-characters-required",
-    "discourse-auto-deactivate"
+    "discourse-auto-deactivate",
+    "discourse-invite-tokens"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]

@@ -175,12 +175,40 @@ class TopicsController < ApplicationController
     render_json_dump(wordpress_serializer)
   end
 
+  def post_ids
+    params.require(:topic_id)
+    params.permit(:post_number, :username_filters, :filter)
+
+    options = {
+      filter_post_number: params[:post_number],
+      filter: params[:filter],
+      skip_limit: true,
+      asc: true,
+      skip_custom_fields: true
+    }
+
+    fetch_topic_view(options)
+    render_json_dump(post_ids: @topic_view.posts.pluck(:id))
+  end
+
   def posts
     params.require(:topic_id)
-    params.permit(:post_ids)
+    params.permit(:post_ids, :post_number, :username_filters, :filter)
 
-    @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
-    render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
+    options = {
+      filter_post_number: params[:post_number],
+      post_ids: params[:post_ids],
+      asc: ActiveRecord::Type::Boolean.new.deserialize(params[:asc]),
+      filter: params[:filter]
+    }
+
+    fetch_topic_view(options)
+
+    render_json_dump(TopicViewPostsSerializer.new(@topic_view,
+      scope: guardian,
+      root: false,
+      include_raw: !!params[:include_raw]
+    ))
   end
 
   def excerpts
@@ -243,7 +271,7 @@ class TopicsController < ApplicationController
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
       category = Category.find_by(id: params[:category_id])
       if category || (params[:category_id].to_i == 0)
-        guardian.ensure_can_create_topic_on_category!(category)
+        guardian.ensure_can_move_topic_to_category!(category)
       else
         return render_json_error(I18n.t('category.errors.not_found'))
       end
@@ -550,6 +578,7 @@ class TopicsController < ApplicationController
     post_ids = params.require(:post_ids)
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
+    params.permit(:tags)
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -697,6 +726,14 @@ class TopicsController < ApplicationController
     )
   end
 
+  def fetch_topic_view(options)
+    if (username_filters = params[:username_filters]).present?
+      options[:username_filters] = username_filters.split(',')
+    end
+
+    @topic_view = TopicView.new(params[:topic_id], current_user, options)
+  end
+
   def toggle_mute
     @topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(@topic)
@@ -792,6 +829,7 @@ class TopicsController < ApplicationController
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
     args[:category_id] = params[:category_id].to_i if params[:category_id].present?
+    args[:tags] = params[:tags] if params[:tags].present?
 
     topic.move_posts(current_user, post_ids_including_replies, args)
   end

@@ -88,6 +88,7 @@ createWidget("topic-admin-menu-button", {
       position.left += $button.width() - 203;
     }
     this.state.position = position;
+    this.sendWidgetAction("hideMultiSelect");
   }
 });
 

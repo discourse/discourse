@@ -407,7 +407,6 @@ describe Guardian do
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:bookmark])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:spam])).to be_falsey
-      expect(guardian.can_see_post_actors?(topic, PostActionType.types[:vote])).to be_truthy
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
 
       expect(Guardian.new(moderator).can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_truthy
@@ -1035,18 +1034,6 @@ describe Guardian do
 
       it "is allowed as a regular user" do
         expect(guardian.post_can_act?(post, :vote)).to be_truthy
-      end
-
-      it "doesn't allow voting if the user has an action from voting already" do
-        expect(guardian.post_can_act?(post, :vote, opts: {
-          taken_actions: { PostActionType.types[:vote] => 1 }
-        })).to be_falsey
-      end
-
-      it "allows voting if the user has performed a different action" do
-        expect(guardian.post_can_act?(post, :vote, opts: {
-          taken_actions: { PostActionType.types[:like] => 1 }
-        })).to be_truthy
       end
 
       it "isn't allowed on archived topics" do
@@ -2624,37 +2611,72 @@ describe Guardian do
     context "tagging is enabled" do
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_to_create_tag = 3
         SiteSetting.min_trust_level_to_tag_topics = 1
       end
 
-      describe "can_create_tag" do
-        it "returns false if trust level is too low" do
-          expect(Guardian.new(trust_level_2).can_create_tag?).to be_falsey
+      context 'min_trust_to_create_tag is 3' do
+        before do
+          SiteSetting.min_trust_to_create_tag = 3
         end
 
-        it "returns true if trust level is high enough" do
-          expect(Guardian.new(trust_level_3).can_create_tag?).to be_truthy
+        describe "can_create_tag" do
+          it "returns false if trust level is too low" do
+            expect(Guardian.new(trust_level_2).can_create_tag?).to be_falsey
+          end
+
+          it "returns true if trust level is high enough" do
+            expect(Guardian.new(trust_level_3).can_create_tag?).to be_truthy
+          end
+
+          it "returns true for staff" do
+            expect(Guardian.new(admin).can_create_tag?).to be_truthy
+            expect(Guardian.new(moderator).can_create_tag?).to be_truthy
+          end
         end
 
-        it "returns true for staff" do
+        describe "can_tag_topics" do
+          it "returns false if trust level is too low" do
+            expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_tag_topics?).to be_falsey
+          end
+
+          it "returns true if trust level is high enough" do
+            expect(Guardian.new(Fabricate(:user, trust_level: 1)).can_tag_topics?).to be_truthy
+          end
+
+          it "returns true for staff" do
+            expect(Guardian.new(admin).can_tag_topics?).to be_truthy
+            expect(Guardian.new(moderator).can_tag_topics?).to be_truthy
+          end
+        end
+      end
+
+      context 'min_trust_to_create_tag is "staff"' do
+        before do
+          SiteSetting.min_trust_to_create_tag = 'staff'
+        end
+
+        it "returns false if not staff" do
+          expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
+        end
+
+        it "returns true if staff" do
           expect(Guardian.new(admin).can_create_tag?).to be_truthy
           expect(Guardian.new(moderator).can_create_tag?).to be_truthy
         end
       end
 
-      describe "can_tag_topics" do
-        it "returns false if trust level is too low" do
-          expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_tag_topics?).to be_falsey
+      context 'min_trust_to_create_tag is "admin"' do
+        before do
+          SiteSetting.min_trust_to_create_tag = 'admin'
         end
 
-        it "returns true if trust level is high enough" do
-          expect(Guardian.new(Fabricate(:user, trust_level: 1)).can_tag_topics?).to be_truthy
+        it "returns false if not admin" do
+          expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
+          expect(Guardian.new(moderator).can_create_tag?).to eq(false)
         end
 
-        it "returns true for staff" do
-          expect(Guardian.new(admin).can_tag_topics?).to be_truthy
-          expect(Guardian.new(moderator).can_tag_topics?).to be_truthy
+        it "returns true if admin" do
+          expect(Guardian.new(admin).can_create_tag?).to be_truthy
         end
       end
     end

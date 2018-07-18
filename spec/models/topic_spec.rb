@@ -1144,7 +1144,6 @@ describe Topic do
     it 'is a regular topic by default' do
       expect(topic.archetype).to eq(Archetype.default)
       expect(topic.has_summary).to eq(false)
-      expect(topic.percent_rank).to eq(1.0)
       expect(topic).to be_visible
       expect(topic.pinned_at).to be_blank
       expect(topic).not_to be_closed

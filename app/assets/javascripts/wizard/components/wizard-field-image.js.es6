@@ -38,5 +38,21 @@ export default Ember.Component.extend({
       this.set("field.value", response.result.url);
       this.set("uploading", false);
     });
+
+    $upload.on("fileuploadfail", (e, response) => {
+      let message = I18n.t("wizard.upload_error");
+      if (response.jqXHR.responseJSON && response.jqXHR.responseJSON.errors) {
+        message = response.jqXHR.responseJSON.errors.join("\n");
+      }
+
+      window.swal({
+        customClass: "wizard-warning",
+        title: "",
+        text: message,
+        type: "warning",
+        confirmButtonColor: "#6699ff"
+      });
+      this.set("uploading", false);
+    });
   }
 });

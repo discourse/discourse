@@ -28,7 +28,9 @@ export default Ember.Component.extend({
     );
     this.set(
       "formats",
-      (this.siteSettings.discourse_local_dates_default_formats || "").split("|")
+      (this.siteSettings.discourse_local_dates_default_formats || "")
+        .split("|")
+        .filter(f => f)
     );
   },
 
@@ -94,20 +96,28 @@ export default Ember.Component.extend({
     const recurring = this.get("recurring");
     const format = this.get("format");
     const timezones = this.get("timezones");
+    const timeInferred = time ? false : true;
+    const toTimeInferred = toTime ? false : true;
 
     let dateTime;
-
-    if (time) {
-      dateTime = moment(`${date} ${time}`, this.dateTimeFormat).utc();
+    if (!timeInferred) {
+      dateTime = moment
+        .tz(`${date} ${time}`, this.get("currentUserTimezone"))
+        .utc();
     } else {
-      dateTime = moment(date, this.dateFormat).utc();
+      dateTime = moment.tz(date, this.get("currentUserTimezone")).utc();
     }
 
     let toDateTime;
-    if (toTime) {
-      toDateTime = moment(`${toDate} ${toTime}`, this.dateTimeFormat).utc();
+    if (!toTimeInferred) {
+      toDateTime = moment
+        .tz(`${toDate} ${toTime}`, this.get("currentUserTimezone"))
+        .utc();
     } else {
-      toDateTime = moment(toDate, this.dateFormat).utc();
+      toDateTime = moment
+        .tz(toDate, this.get("currentUserTimezone"))
+        .endOf("day")
+        .utc();
     }
 
     let config = {
@@ -118,19 +128,18 @@ export default Ember.Component.extend({
       timezones
     };
 
-    if (time) {
-      config.time = dateTime.format(this.timeFormat);
-    }
+    config.time = dateTime.format(this.timeFormat);
+    config.toTime = toDateTime.format(this.timeFormat);
 
     if (toDate) {
       config.toDate = toDateTime.format(this.dateFormat);
     }
 
-    if (toTime) {
-      config.toTime = toDateTime.format(this.timeFormat);
-    }
-
-    if (!time && !toTime && this.get("formats").includes(format)) {
+    if (
+      timeInferred &&
+      toTimeInferred &&
+      this.get("formats").includes(format)
+    ) {
       config.format = "LL";
     }
 
@@ -139,8 +148,9 @@ export default Ember.Component.extend({
     }
 
     if (
-      time &&
-      toTime &&
+      !timeInferred &&
+      !toTimeInferred &&
+      date === moment().format(this.dateFormat) &&
       date === toDate &&
       this.get("formats").includes(format)
     ) {
@@ -163,7 +173,7 @@ export default Ember.Component.extend({
     text += `]`;
 
     if (config.toDate) {
-      text += ` ➡ `;
+      text += ` → `;
       text += `[date=${config.toDate} `;
 
       if (config.toTime) {

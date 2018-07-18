@@ -77,6 +77,17 @@ const Category = RestModel.extend({
     return topicCount > (this.get("num_featured_topics") || 2);
   },
 
+  @computed("topic_count", "subcategories")
+  totalTopicCount(topicCount, subcats) {
+    let count = topicCount;
+    if (subcats) {
+      subcats.forEach(s => {
+        count += s.get("topic_count");
+      });
+    }
+    return count;
+  },
+
   save() {
     const id = this.get("id");
     const url = id ? `/categories/${id}` : "/categories";
@@ -115,7 +126,10 @@ const Category = RestModel.extend({
         default_view: this.get("default_view"),
         subcategory_list_style: this.get("subcategory_list_style"),
         default_top_period: this.get("default_top_period"),
-        minimum_required_tags: this.get("minimum_required_tags")
+        minimum_required_tags: this.get("minimum_required_tags"),
+        navigate_to_first_post_after_read: this.get(
+          "navigate_to_first_post_after_read"
+        )
       },
       type: id ? "PUT" : "POST"
     });

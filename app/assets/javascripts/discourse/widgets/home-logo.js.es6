@@ -31,7 +31,12 @@ export default createWidget("home-logo", {
       if (logoSmallUrl.length) {
         return h("img#site-logo.logo-small", {
           key: "logo-small",
-          attributes: { src: logoSmallUrl, width: 33, height: 33, alt: title }
+          attributes: {
+            src: Discourse.getURL(logoSmallUrl),
+            width: 33,
+            height: 33,
+            alt: title
+          }
         });
       } else {
         return iconNode("home");
@@ -39,12 +44,12 @@ export default createWidget("home-logo", {
     } else if (showMobileLogo) {
       return h("img#site-logo.logo-big", {
         key: "logo-mobile",
-        attributes: { src: mobileLogoUrl, alt: title }
+        attributes: { src: Discourse.getURL(mobileLogoUrl), alt: title }
       });
     } else if (logoUrl.length) {
       return h("img#site-logo.logo-big", {
         key: "logo-big",
-        attributes: { src: logoUrl, alt: title }
+        attributes: { src: Discourse.getURL(logoUrl), alt: title }
       });
     } else {
       return h("h1#site-text-logo.text-logo", { key: "logo-text" }, title);

@@ -113,6 +113,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
              , memberIP2
              , is_activated
              , additionalGroups
+             , avatar
              , id_attach
              , attachmentType
              , filename
@@ -167,7 +168,17 @@ class ImportScripts::Smf1 < ImportScripts::Base
             end
 
             # avatar
-            avatar_url = if u["attachmentType"] == 0 && u["id_attach"].present?
+            avatar_url = nil
+
+            if u["avatar"].present?
+              if u["avatar"].start_with?("http")
+                avatar_url = u["avatar"]
+              elsif u["avatar"].start_with?("avatar_")
+                avatar_url = "#{FORUM_URL}/avatar-members/#{u["avatar"]}"
+              end
+            end
+
+            avatar_url ||= if u["attachmentType"] == 0 && u["id_attach"].present?
               "#{FORUM_URL}/index.php?action=dlattach;attach=#{u["id_attach"]};type=avatar"
             elsif u["attachmentType"] == 1 && u["filename"].present?
               "#{FORUM_URL}/avatar-members/#{u["filename"]}"
@@ -402,7 +413,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
         if upload = create_upload(post.user_id, path, u["filename"])
           html = html_for_upload(upload, u["filename"])
-          unless post.raw[html]
+          unless post.raw[html] || PostUpload.where(upload: upload, post: post).exists?
             post.raw += "\n\n#{html}\n\n"
             post.save
             PostUpload.create(upload: upload, post: post)

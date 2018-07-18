@@ -169,6 +169,21 @@ describe Email::Receiver do
       expect { process(:from_reply_by_email_address) }.to raise_error(Email::Receiver::FromReplyByAddressError)
     end
 
+    it "accepts reply from secondary email address" do
+      Fabricate(:secondary_email, email: "someone_else@bar.com", user: user)
+
+      expect { process(:reply_user_not_matching) }
+        .to change { topic.posts.count }
+
+      post = Post.last
+
+      expect(post.raw).to eq(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      )
+
+      expect(post.user).to eq(user)
+    end
+
     it "raises a TopicNotFoundError when the topic was deleted" do
       topic.update_columns(deleted_at: 1.day.ago)
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
@@ -490,6 +505,27 @@ describe Email::Receiver do
       expect(topic.topic_users.count).to eq(3)
     end
 
+    it "invites users with a secondary email in the chain" do
+      user1 = Fabricate(:user,
+        trust_level: SiteSetting.email_in_min_trust,
+        user_emails: [
+          Fabricate.build(:secondary_email, email: "discourse@bar.com"),
+          Fabricate.build(:secondary_email, email: "someone@else.com"),
+        ]
+      )
+
+      user2 = Fabricate(:user,
+        trust_level: SiteSetting.email_in_min_trust,
+        user_emails: [
+          Fabricate.build(:secondary_email, email: "team@bar.com"),
+          Fabricate.build(:secondary_email, email: "wat@bar.com"),
+        ]
+      )
+
+      expect { process(:cc) }.to change(Topic, :count)
+      expect(Topic.last.allowed_users).to contain_exactly(user1, user2)
+    end
+
     it "cap the number of staged users created per email" do
       SiteSetting.maximum_staged_users_per_email = 1
       expect { process(:cc) }.to change(Topic, :count)
@@ -622,6 +658,51 @@ describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "creates visible topic for ham" do
+      SiteSetting.email_in_spam_header = 'none'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(true)
+
+      post = Post.last
+      expect(post.hidden).to eq(false)
+      expect(post.hidden_at).to eq(nil)
+      expect(post.hidden_reason_id).to eq(nil)
+    end
+
+    it "creates hidden topic for X-Spam-Flag" do
+      SiteSetting.email_in_spam_header = 'X-Spam-Flag'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_flag) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
+    it "creates hidden topic for X-Spam-Status" do
+      SiteSetting.email_in_spam_header = 'X-Spam-Status'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_status) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
@@ -650,6 +731,24 @@ describe Email::Receiver do
     it "ignores by case-insensitive title" do
       SiteSetting.ignore_by_title = "foo"
       expect { process(:ignored) }.to_not change(Topic, :count)
+    end
+
+    it "associates email from a secondary address with user" do
+      user = Fabricate(:user,
+        trust_level: SiteSetting.email_in_min_trust,
+        user_emails: [
+          Fabricate.build(:secondary_email, email: "existing@bar.com")
+        ]
+      )
+
+      expect { process(:existing_user) }.to change(Topic, :count).by(1)
+
+      topic = Topic.last
+
+      expect(topic.posts.last.raw)
+        .to eq("Hey, this is a topic from an existing user ;)")
+
+      expect(topic.user).to eq(user)
     end
   end
 

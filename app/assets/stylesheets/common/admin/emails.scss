@@ -1,0 +1,93 @@
+// Styles for admin/emails
+
+.email-preview {
+  .ac-wrap {
+    .item {
+      margin: 0.2em 0 0 0.4em;
+    }
+  }
+}
+
+// Emails
+.email-list {
+  .filters input {
+    width: 100%;
+  }
+  .time {
+    width: 50px;
+  }
+  .reply-key {
+    display: block;
+    font-size: $font-down-1;
+    color: dark-light-choose($primary-medium, $secondary-high);
+  }
+  .username div {
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .addresses p {
+    margin: 2px 0;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.incoming-emails {
+  .control-group {
+    margin: 8px 0;
+  }
+  .controls {
+    margin-left: 110px;
+  }
+  p {
+    margin: 5px 10px;
+  }
+  .error-description {
+    color: #919191;
+    font-size: $font-down-1;
+  }
+  hr {
+    margin: 0;
+  }
+  label {
+    font-weight: bold;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin: 0 10px;
+  }
+  ul {
+    list-style: none;
+    margin: 0 10px;
+  }
+  textarea {
+    width: 95%;
+    height: 150px;
+    font-family: monospace;
+    box-shadow: none;
+  }
+}
+
+.admin-list-item {
+  width: 100%;
+  border-top: 1px solid #e9e9e9;
+  padding: 0.25em 0;
+}
+
+.email-preview-digest {
+  .controls {
+    margin-left: 20px;
+    label {
+      display: inline;
+    }
+  }
+  .preview-output iframe {
+    width: 100%;
+    height: 600px;
+    border-width: 1px;
+  }
+}

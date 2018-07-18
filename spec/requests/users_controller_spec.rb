@@ -1444,14 +1444,14 @@ describe UsersController do
 
           put "/u/#{user.username}.json", params: {
             muted_usernames: "",
-            theme_key: theme.key,
+            theme_ids: [theme.id],
             email_direct: false
           }
 
           user.reload
 
           expect(user.muted_users.pluck(:username).sort).to be_empty
-          expect(user.user_option.theme_key).to eq(theme.key)
+          expect(user.user_option.theme_ids).to eq([theme.id])
           expect(user.user_option.email_direct).to eq(false)
         end
 
@@ -1785,6 +1785,61 @@ describe UsersController do
     end
   end
 
+  describe '#select_avatar' do
+    it 'raises an error when not logged in' do
+      put "/u/asdf/preferences/avatar/select.json", params: { url: "https://meta.discourse.org" }
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+
+      let!(:user) { sign_in(Fabricate(:user)) }
+      let(:avatar1) { Fabricate(:upload) }
+      let(:avatar2) { Fabricate(:upload) }
+      let(:url) { "https://www.discourse.org" }
+
+      it 'raises an error when url is blank' do
+        put "/u/#{user.username}/preferences/avatar/select.json", params: { url: "" }
+        expect(response.status).to eq(422)
+      end
+
+      it 'raises an error when selectable avatars is disabled' do
+        put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
+        expect(response.status).to eq(422)
+      end
+
+      context 'selectable avatars is enabled' do
+
+        before { SiteSetting.selectable_avatars_enabled = true }
+
+        it 'raises an error when selectable avatars is empty' do
+          put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
+          expect(response.status).to eq(422)
+        end
+
+        context 'selectable avatars is properly setup' do
+
+          before do
+            SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          end
+
+          it 'raises an error when url is not in selectable avatars list' do
+            put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
+            expect(response.status).to eq(422)
+          end
+
+          it 'can successfully select an avatar' do
+            put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
+            expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
+          end
+        end
+      end
+    end
+  end
+
   describe '#destroy_user_image' do
 
     it 'raises an error when not logged in' do
@@ -1900,14 +1955,16 @@ describe UsersController do
         expect(response).to be_forbidden
       end
 
-      it "returns both email and associated_accounts when you're allowed to see them" do
+      it "returns emails and associated_accounts when you're allowed to see them" do
+        user = Fabricate(:user)
         sign_in_admin
 
-        get "/u/#{Fabricate(:user).username}/emails.json"
+        get "/u/#{user.username}/emails.json"
 
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json["email"]).to be_present
+        expect(json["email"]).to eq(user.email)
+        expect(json["secondary_emails"]).to eq(user.secondary_emails)
         expect(json["associated_accounts"]).to be_present
       end
 
@@ -1919,7 +1976,8 @@ describe UsersController do
 
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json["email"]).to be_present
+        expect(json["email"]).to eq(inactive_user.email)
+        expect(json["secondary_emails"]).to eq(inactive_user.secondary_emails)
         expect(json["associated_accounts"]).to be_present
       end
     end

@@ -1,5 +1,4 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
-import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import PasswordValidation from "discourse/mixins/password-validation";
@@ -30,7 +29,7 @@ export default Ember.Controller.extend(PasswordValidation, {
     return Discourse.getURL(redirectTo || "/");
   },
 
-  lockImageUrl: getUrl("/images/lock.svg"),
+  lockImageUrl: Discourse.getURL("/images/lock.svg"),
 
   actions: {
     submit() {

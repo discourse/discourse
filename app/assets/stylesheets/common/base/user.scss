@@ -563,11 +563,6 @@
       margin-right: 10px;
     }
 
-    .second-factor-form {
-      display: flex;
-      align-items: center;
-    }
-
     .form-horizontal .instructions {
       margin-left: 0;
     }
@@ -665,4 +660,21 @@
 .primary-textual .staged,
 #user-card .staged {
   font-style: italic;
+}
+
+.selectable-avatars {
+  max-height: 350px;
+  margin-bottom: 1em;
+  text-align: justify;
+  .selectable-avatar {
+    margin: 5px;
+    display: inline-block;
+    .avatar {
+      width: 60px;
+      height: 60px;
+      &:hover {
+        box-shadow: 0 0 10px $primary;
+      }
+    }
+  }
 }

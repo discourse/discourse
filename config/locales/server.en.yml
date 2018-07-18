@@ -198,6 +198,8 @@ en:
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
+  provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
+  provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
   reading_time: "Reading time"
@@ -551,7 +553,7 @@ en:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
@@ -756,11 +758,6 @@ en:
       description: 'Like this post'
       short_description: 'Like this post'
       long_form: 'liked this'
-    vote:
-      title: 'Vote'
-      description: 'Vote for this post'
-      short_description: 'Vote for this post'
-      long_form: 'voted for this post'
 
   user_activity:
     no_default:
@@ -1280,6 +1277,8 @@ en:
     backup_frequency: "The number of days between backups."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Use default if using AWS S3"
+    s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -1339,6 +1338,9 @@ en:
 
     external_system_avatars_enabled: "Use external system avatars service."
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
+
+    selectable_avatars_enabled: "Force users to choose an avatar from the list."
+    selectable_avatars: "List of avatars users can choose from."
 
     default_opengraph_image_url: "URL of the default opengraph image."
     twitter_summary_large_image_url: "URL of the default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
@@ -1541,6 +1543,7 @@ en:
     log_mail_processing_failures: "Log all email processing failures to http://yoursitename.com/logs"
     email_in: "Allow users to post new topics via email (requires manual or pop3 polling). Configure the addresses in the \"Settings\" tab of each category."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
+    email_in_spam_header: "The email header to detect spam."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
 
@@ -3486,72 +3489,72 @@ en:
       name: Editor
       description: First post edit
       long_description: |
-        This badge is granted the first time you edit one of your posts. While you won't be able to edit your posts forever, editing is always a good idea — you can improve your posts, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
+        This badge is granted the first time you edit one of your posts. While you won’t be able to edit your posts forever, editing is encouraged — you can improve the formatting, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
     basic_user:
       name: Basic
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> all essential community functions
       long_description: |
-        This badge is granted when you reach trust level 1. Thanks for sticking around a little while and reading a few topics to learn what our community is about. Your new user restrictions have been lifted; you've been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post multiple images and links.
+        This badge is granted when you reach trust level 1. Thanks for sticking around and reading a few topics to learn what our community is about. New user restrictions have been lifted; you’ve been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post multiple images and links.
     member:
       name: Member
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> invitations, group messaging, more likes
       long_description: |
-        This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to truly join our community. You can now send invitations from your user page or individual topics, create group personal messages, and have a few more likes per day.
+        This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to truly join our community. You can now send invitations from your user page or individual topics, create group personal messages, and have more likes per day.
     regular:
       name: Regular
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> recategorize, rename, followed links, wiki, more likes
       long_description: |
-        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You're now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you'll also get lots more likes per day.
+        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you’ll also get lots more likes per day.
     leader:
       name: Leader
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> global edit, pin, close, archive, split and merge, more likes
       long_description: |
-        This badge is granted when you reach trust level 4. You're a leader in this community as selected by staff, and you set a positive example for the rest of the community in your actions and words here. You have the ability to edit all posts, take common topic moderator actions such as pin, close, unlist, archive, split, and merge, and you have tons of likes per day.
+        This badge is granted when you reach trust level 4. You’re a leader in this community as selected by staff, and you set a positive example for the rest of the community in your actions and words here. You have the ability to edit all posts, take common topic moderator actions such as pin, close, unlist, archive, split, and merge.
     welcome:
       name: Welcome
       description: Received a like
       long_description: |
-        This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
+        This badge is granted when you receive your first like on a post. Congratulations, you’ve posted something that your fellow community members found interesting, cool, or useful!
     autobiographer:
       name: Autobiographer
       description: Filled out <a href="%{base_uri}/my/preferences/profile">profile</a> information
       long_description: |
-        This badge is granted for filling out <a href="%{base_uri}/my/preferences/profile">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you're interested in makes for a better, more connected community. Join us!
+        This badge is granted for filling out <a href="%{base_uri}/my/preferences/profile">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you’re interested in makes for a better, more connected community. Join us!
     anniversary:
       name: Anniversary
       description: Active member for a year, posted at least once
       long_description: |
-        This badge is granted when you've been a member for a year with at least one post in that year. Thank you for sticking around and contributing to our community. We couldn't do it without you.
+        This badge is granted when you’ve been a member for a year with at least one post in that year. Thank you for sticking around and contributing to our community. We couldn’t do it without you.
     nice_post:
       name: Nice Reply
       description: Received 10 likes on a reply
       long_description: |
-        This badge is granted when your reply gets 10 likes. Your reply really made an impression on the community and helped move the conversation forward!
+        This badge is granted when your reply gets 10 likes. Your reply made an impression on the community and helped move the conversation forward.
     good_post:
       name: Good Reply
       description: Received 25 likes on a reply
       long_description: |
-        This badge is granted when your reply gets 25 likes. Your reply was exceptional and made the conversation a whole lot better for everyone!
+        This badge is granted when your reply gets 25 likes. Your reply was exceptional and made the conversation much more interesting.
     great_post:
       name: Great Reply
       description: Received 50 likes on a reply
       long_description: |
-        This badge is granted when your reply gets 50 likes. Wow! Your reply was inspiring, fascinating, hilarious, or insightful and the community loved it.
+        This badge is granted when your reply gets 50 likes. Wow! Your reply was inspiring, fascinating, hilarious, or insightful and the community loved it!
     nice_topic:
       name: Nice Topic
       description: Received 10 likes on a topic
       long_description: |
-        This badge is granted when your topic gets 10 likes. Hey, you started an interesting conversation that the community enjoyed!
+        This badge is granted when your topic gets 10 likes. You started an interesting conversation that the community enjoyed.
     good_topic:
       name: Good Topic
       description: Received 25 likes on a topic
       long_description: |
-        This badge is granted when your topic gets 25 likes. You launched a vibrant conversation that the community rallied around and loved!
+        This badge is granted when your topic gets 25 likes. You launched a vibrant conversation that the community rallied around.
     great_topic:
       name: Great Topic
       description: Received 50 likes on a topic
       long_description: |
-        This badge is granted when your topic gets 50 likes. You kicked off a fascinating conversation and the community enjoyed the dynamic discussion that resulted!
+        This badge is granted when your topic gets 50 likes. You kicked off a fascinating conversation and the community loved the lively discussion that resulted!
     nice_share:
       name: Nice Share
       description: Shared a post with 25 unique visitors
@@ -3561,12 +3564,12 @@ en:
       name: Good Share
       description: Shared a post with 300 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You've shown off a great discussion to a bunch of new people and helped this community grow.
+        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
     great_share:
       name: Great Share
       description: Shared a post with 1000 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You've promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
+        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
     first_like:
       name: First Like
       description: Liked a post
@@ -3576,7 +3579,7 @@ en:
       name: First Flag
       description: Flagged a post
       long_description: |
-        This badge is granted the first time you flag a post. Flagging is how we all help keep this a clean, well lit place for everyone. If you notice any posts that require moderator attention for any reason please don't hesitate to flag. You can also flag to send <b>personal messages</b> to fellow users if you see an issue with their post. If you see a problem, :flag_black: flag it!
+        This badge is granted the first time you flag a post. Flagging is how we all help keep this a nice place for everyone. If you notice any posts that require moderator attention for any reason please don’t hesitate to flag. If you see a problem, :flag_black: flag it!
     promoter:
       name: Promoter
       description: Invited a user
@@ -3586,12 +3589,12 @@ en:
       name: Campaigner
       description: Invited 3 basic users
       long_description: |
-        This badge is granted when you've invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversations.
+        This badge is granted when you’ve invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversations.
     champion:
       name: Champion
       description: Invited 5 members
       long_description: |
-        This badge is granted when you've invited 5 people who subsequently spent enough time on the site to become full members. Wow! Thanks for expanding the diversity of our community with new members!
+        This badge is granted when you’ve invited 5 people who subsequently spent enough time on the site to become full members. Wow! Thanks for expanding the diversity of our community with new members!
     first_share:
       name: First Share
       description: Shared a post
@@ -3606,12 +3609,12 @@ en:
       name: First Quote
       description: Quoted a post
       long_description: |
-        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions connected together and on topic. The easiest way to quote is to highlight a section of a post, and then press any reply button. Quote generously!
+        This badge is granted the first time you quote a post in your reply. Quoting relevant parts of earlier posts in your reply helps keep discussions connected together and on topic. The easiest way to quote is to highlight a section of a post, and then press any reply button. Quote generously!
     read_guidelines:
       name: Read Guidelines
       description: Read the <a href="%{base_uri}/guidelines">community guidelines</a>
       long_description: |
-        This badge is granted for <a href="%{base_uri}/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there's another human being, one very much like yourself, on the other side of that screen. Be nice!
+        This badge is granted for <a href="%{base_uri}/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there’s another human being, one very much like yourself, on the other side of that screen. Be nice!
     reader:
       name: Reader
       description: Read every reply in a topic with more than 100 replies
@@ -3661,22 +3664,22 @@ en:
       name: Crazy in Love
       description: Used 50 likes in a day 20 times
       long_description: |
-        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You're a model of regularly encouraging your fellow community members!
+        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
     thank_you:
       name: Thank You
       description: Has 20 liked posts and gave 10 likes
       long_description: |
-            This badge is granted when you have 20 liked posts and give 10 or more likes in return. When someone likes your posts, you find the time to like what others are posting, too.
+        This badge is granted when you have 20 liked posts and give 10 or more likes in return. When someone likes your posts, you find the time to like what others are posting, too.
     gives_back:
       name: Gives Back
       description: Has 100 liked posts and gave 100 likes
       long_description: |
-            This badge is granted when you have 100 liked posts and give 100 or more likes in return. Thanks for paying it forward!
+        This badge is granted when you have 100 liked posts and give 100 or more likes in return. Thanks for paying it forward!
     empathetic:
       name: Empathetic
       description: Has 500 liked posts and gave 1000 likes
       long_description: |
-            This badge is granted when you have 500 liked posts and give 1000 or more likes in return. Wow! You're a model of generosity and mutual appreciation :two_hearts:.
+        This badge is granted when you have 500 liked posts and give 1000 or more likes in return. Wow! You’re a model of generosity and mutual appreciation :two_hearts:.
     first_emoji:
       name: First Emoji
       description: Used an Emoji in a Post
@@ -3685,11 +3688,13 @@ en:
     first_mention:
       name: First Mention
       description: Mentioned a user in a post
-      long_description: This badge is granted the first time you mention someone's @username in your post. Each mention generates a notification to that person, so they know about your post. Just begin typing @ (at symbol) to mention any user or, if allowed, group – it's a convenient way to bring something to their attention.
+      long_description: |
+        This badge is granted the first time you mention someone’s @username in your post. Each mention generates a notification to that person, so they know about your post. Just begin typing @ (at symbol) to mention any user or, if allowed, group – it’s a convenient way to bring something to their attention.
     first_onebox:
       name: First Onebox
       description: Posted a link that was oneboxed
-      long_description: This badge is granted the first time you post a link on a line by itself, which was then automatically expanded into a onebox with a brief summary of the link, a title, and (when available) a picture.
+      long_description: |
+        This badge is granted the first time you post a link on a line by itself, which automatically expanded into a onebox with a summary, title, and (when available) picture.
     first_reply_by_email:
       name: First Reply By Email
       description: Replied to a post via email
@@ -3703,15 +3708,18 @@ en:
     enthusiast:
       name: Enthusiast
       description:  Visited 10 days
-      long_description: This badge is granted for visiting 10 consecutive days. Thanks for sticking with us for over a week!
+      long_description: |
+        This badge is granted for visiting 10 consecutive days. Thanks for sticking with us for over a week!
     aficionado:
       name: Aficionado
       description: Visited 100 days
-      long_description: This badge is granted for visiting 100 consecutive days. That's more than three months!
+      long_description: |
+        This badge is granted for visiting 100 consecutive days. That’s more than three months!
     devotee:
       name: Devotee
       description: Visited 365 days
-      long_description: This badge is granted for visiting 365 consecutive days. Wow, an entire year!
+      long_description: |
+        This badge is granted for visiting 365 consecutive days. Wow, an entire year!
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
@@ -3862,7 +3870,7 @@ en:
         fields:
           favicon_url:
             label: "Small Icon"
-            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px."
+            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px. Recommended image extensions are PNG or JPG."
           apple_touch_icon_url:
             label: "Large Icon"
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 512px by 512px."

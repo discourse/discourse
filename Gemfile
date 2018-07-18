@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.51'
+gem 'onebox', '1.8.55'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -60,7 +60,7 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer', '~> 0.1'
 
-# Forked until https://github.com/toy/image_optim/pull/149 is merged
+# Forked until https://github.com/toy/image_optim/pull/162 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
@@ -189,4 +189,3 @@ if ENV["IMPORT"] == "1"
 end
 
 gem 'webpush', require: false
-gem 'exifr', '1.2.5'

@@ -77,11 +77,9 @@ module Email
       # always set a default Message ID from the host
       @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
 
-      if topic_id.present?
-        email_log.topic_id = topic_id
-
-        post = Post.find_by(id: post_id)
-        topic = Topic.find_by(id: topic_id)
+      if topic_id.present? && post_id.present?
+        post = Post.find_by(id: post_id, topic_id: topic_id)
+        topic = post.topic
         first_post = topic.ordered_posts.first
 
         topic_message_id = first_post.incoming_email&.message_id.present? ?

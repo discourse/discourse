@@ -241,3 +241,49 @@ QUnit.test("remove featured link", assert => {
   //   assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
   // });
 });
+
+QUnit.test("selecting posts", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-multi-select .btn");
+
+  assert.ok(
+    exists(".selected-posts:not(.hidden)"),
+    "it should show the multi select menu"
+  );
+
+  assert.ok(
+    exists(".select-all"),
+    "it should allow users to select all the posts"
+  );
+
+  await click(".toggle-admin-menu");
+
+  assert.ok(
+    exists(".selected-posts.hidden"),
+    "it should hide the multi select menu"
+  );
+});
+
+QUnit.test("select below", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-multi-select .btn");
+  await click("#post_3 .select-below");
+
+  assert.ok(
+    find(".selected-posts")
+      .html()
+      .includes(I18n.t("topic.multi_select.description", { count: 18 })),
+    "it should select the right number of posts"
+  );
+
+  await click("#post_2 .select-below");
+
+  assert.ok(
+    find(".selected-posts")
+      .html()
+      .includes(I18n.t("topic.multi_select.description", { count: 19 })),
+    "it should select the right number of posts"
+  );
+});

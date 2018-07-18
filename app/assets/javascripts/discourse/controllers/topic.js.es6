@@ -148,6 +148,39 @@ export default Ember.Controller.extend(BufferedContent, {
     );
   },
 
+  _forceRefreshPostStream() {
+    this.appEvents.trigger("post-stream:refresh", { force: true });
+  },
+
+  _updateSelectedPostIds(postIds) {
+    this.get("selectedPostIds").pushObjects(postIds);
+    this.set("selectedPostIds", [...new Set(this.get("selectedPostIds"))]);
+    this._forceRefreshPostStream();
+  },
+
+  _loadPostIds(post) {
+    if (this.get("loadingPostIds")) return;
+
+    const postStream = this.get("model.postStream");
+    const url = `/t/${this.get("model.id")}/post_ids.json`;
+
+    this.set("loadingPostIds", true);
+
+    return ajax(url, {
+      data: _.merge(
+        { post_number: post.get("post_number") },
+        postStream.get("streamFilters")
+      )
+    })
+      .then(result => {
+        result.post_ids.pushObject(post.get("id"));
+        this._updateSelectedPostIds(result.post_ids);
+      })
+      .finally(() => {
+        this.set("loadingPostIds", false);
+      });
+  },
+
   actions: {
     showPostFlags(post) {
       return this.send("showFlags", post);
@@ -555,16 +588,20 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     jumpToPost(postNumber) {
-      const postStream = this.get("model.postStream");
-      let postId = postStream.findPostIdForPostNumber(postNumber);
+      if (this.get("model.postStream.isMegaTopic")) {
+        this._jumpToPostNumber(postNumber);
+      } else {
+        const postStream = this.get("model.postStream");
+        let postId = postStream.findPostIdForPostNumber(postNumber);
 
-      // If we couldn't find the post, find the closest post to it
-      if (!postId) {
-        const closest = postStream.closestPostNumberFor(postNumber);
-        postId = postStream.findPostIdForPostNumber(closest);
+        // If we couldn't find the post, find the closest post to it
+        if (!postId) {
+          const closest = postStream.closestPostNumberFor(postNumber);
+          postId = postStream.findPostIdForPostNumber(closest);
+        }
+
+        this._jumpToPostId(postId);
       }
-
-      this._jumpToPostId(postId);
     },
 
     jumpTop() {
@@ -587,19 +624,24 @@ export default Ember.Controller.extend(BufferedContent, {
       this._jumpToPostId(postId);
     },
 
+    hideMultiSelect() {
+      this.set("multiSelect", false);
+      this._forceRefreshPostStream();
+    },
+
     toggleMultiSelect() {
       this.toggleProperty("multiSelect");
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      this._forceRefreshPostStream();
     },
 
     selectAll() {
       this.set("selectedPostIds", [...this.get("model.postStream.stream")]);
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      this._forceRefreshPostStream();
     },
 
     deselectAll() {
       this.set("selectedPostIds", []);
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      this._forceRefreshPostStream();
     },
 
     togglePostSelection(post) {
@@ -613,15 +655,18 @@ export default Ember.Controller.extend(BufferedContent, {
       ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
         const replyIds = replies.map(r => r.id);
         this.get("selectedPostIds").pushObjects([post.id, ...replyIds]);
-        this.appEvents.trigger("post-stream:refresh", { force: true });
+        this._forceRefreshPostStream();
       });
     },
 
     selectBelow(post) {
-      const stream = [...this.get("model.postStream.stream")];
-      const below = stream.slice(stream.indexOf(post.id));
-      this.get("selectedPostIds").pushObjects(below);
-      this.appEvents.trigger("post-stream:refresh", { force: true });
+      if (this.get("model.postStream.isMegaTopic")) {
+        this._loadPostIds(post);
+      } else {
+        const stream = [...this.get("model.postStream.stream")];
+        const below = stream.slice(stream.indexOf(post.id));
+        this._updateSelectedPostIds(below);
+      }
     },
 
     deleteSelected() {
@@ -884,9 +929,32 @@ export default Ember.Controller.extend(BufferedContent, {
   },
 
   _jumpToIndex(index) {
-    const stream = this.get("model.postStream.stream");
-    index = Math.max(1, Math.min(stream.length, index));
-    this._jumpToPostId(stream[index - 1]);
+    const postStream = this.get("model.postStream");
+
+    if (postStream.get("isMegaTopic")) {
+      this._jumpToPostNumber(index);
+    } else {
+      const stream = postStream.get("stream");
+      const streamIndex = Math.max(1, Math.min(stream.length, index));
+      this._jumpToPostId(stream[streamIndex - 1]);
+    }
+  },
+
+  _jumpToPostNumber(postNumber) {
+    const postStream = this.get("model.postStream");
+    const post = postStream.get("posts").findBy("post_number", postNumber);
+
+    if (post) {
+      DiscourseURL.routeTo(
+        this.get("model").urlForPostNumber(post.get("post_number"))
+      );
+    } else {
+      postStream.loadPostByPostNumber(postNumber).then(p => {
+        DiscourseURL.routeTo(
+          this.get("model").urlForPostNumber(p.get("post_number"))
+        );
+      });
+    }
   },
 
   _jumpToPostId(postId) {
@@ -957,24 +1025,48 @@ export default Ember.Controller.extend(BufferedContent, {
       : undefined;
   },
 
-  @computed("selectedPostsCount", "model.postStream.stream.length")
-  selectedAllPosts(selectedPostsCount, postsCount) {
-    return selectedPostsCount >= postsCount;
+  @computed(
+    "selectedPostsCount",
+    "model.postStream.isMegaTopic",
+    "model.postStream.stream.length",
+    "model.posts_count"
+  )
+  selectedAllPosts(
+    selectedPostsCount,
+    isMegaTopic,
+    postsCount,
+    topicPostsCount
+  ) {
+    if (isMegaTopic) {
+      return selectedPostsCount >= topicPostsCount;
+    } else {
+      return selectedPostsCount >= postsCount;
+    }
   },
 
-  canSelectAll: Ember.computed.not("selectedAllPosts"),
+  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
+  canSelectAll(selectedAllPosts, isMegaTopic) {
+    return isMegaTopic ? false : !selectedAllPosts;
+  },
+
   canDeselectAll: Ember.computed.alias("selectedAllPosts"),
 
   @computed(
+    "currentUser.staff",
     "selectedPostsCount",
     "selectedAllPosts",
     "selectedPosts",
     "selectedPosts.[]"
   )
-  canDeleteSelected(selectedPostsCount, selectedAllPosts, selectedPosts) {
+  canDeleteSelected(
+    isStaff,
+    selectedPostsCount,
+    selectedAllPosts,
+    selectedPosts
+  ) {
     return (
       selectedPostsCount > 0 &&
-      (selectedAllPosts || selectedPosts.every(p => p.can_delete))
+      ((selectedAllPosts && isStaff) || selectedPosts.every(p => p.can_delete))
     );
   },
 

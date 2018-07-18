@@ -271,7 +271,7 @@ const User = RestModel.extend({
       "notification_level_when_replying",
       "like_notification_frequency",
       "include_tl0_in_digests",
-      "theme_key",
+      "theme_ids",
       "allow_private_messages",
       "homepage_id"
     ];
@@ -508,18 +508,22 @@ const User = RestModel.extend({
         data: { upload_id, type }
       }
     ).then(() =>
-      this.setProperties({
-        avatar_template,
-        uploaded_avatar_id: upload_id
-      })
+      this.setProperties({ avatar_template, uploaded_avatar_id: upload_id })
     );
+  },
+
+  selectAvatar(avatarUrl) {
+    return ajax(
+      userPath(`${this.get("username_lower")}/preferences/avatar/select`),
+      { type: "PUT", data: { url: avatarUrl } }
+    ).then(result => this.setProperties(result));
   },
 
   isAllowedToUploadAFile(type) {
     return (
       this.get("staff") ||
       this.get("trust_level") > 0 ||
-      Discourse.SiteSettings["newuser_max_" + type + "s"] > 0
+      Discourse.SiteSettings[`newuser_max_${type}s`] > 0
     );
   },
 
@@ -604,6 +608,7 @@ const User = RestModel.extend({
       if (result) {
         this.setProperties({
           email: result.email,
+          secondary_emails: result.secondary_emails,
           associated_accounts: result.associated_accounts
         });
       }

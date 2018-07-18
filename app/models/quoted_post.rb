@@ -19,6 +19,8 @@ class QuotedPost < ActiveRecord::Base
 
       next if topic_id == 0 || post_number == 0
       next if uniq[[topic_id, post_number]]
+      next if post.topic_id == topic_id && post.post_number == post_number
+
       uniq[[topic_id, post_number]] = true
 
       begin

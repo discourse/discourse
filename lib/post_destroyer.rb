@@ -78,21 +78,23 @@ class PostDestroyer
   def staff_recovered
     @post.recover!
 
-    if author = @post.user
-      if @post.is_first_post?
-        author.user_stat.topic_count += 1
-      else
-        author.user_stat.post_count += 1
+    if @post.topic && !@post.topic.private_message?
+      if author = @post.user
+        if @post.is_first_post?
+          author.user_stat.topic_count += 1
+        else
+          author.user_stat.post_count += 1
+        end
+        author.user_stat.save!
       end
-      author.user_stat.save!
-    end
 
-    if @post.is_first_post? && @post.topic && !@post.topic.private_message?
-      # Update stats of all people who replied
-      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
-      counts.each do |user_id, count|
-        if user_stat = UserStat.where(user_id: user_id).first
-          user_stat.update_attributes(post_count: user_stat.post_count + count)
+      if @post.is_first_post?
+        # Update stats of all people who replied
+        counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
+        counts.each do |user_id, count|
+          if user_stat = UserStat.where(user_id: user_id).first
+            user_stat.update_attributes(post_count: user_stat.post_count + count)
+          end
         end
       end
     end
@@ -166,12 +168,12 @@ class PostDestroyer
 
   def make_previous_post_the_last_one
     last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
-    if last_post.present?
-      @post.topic.update!(
-        last_posted_at: last_post.created_at,
-        last_post_user_id: last_post.user_id,
-        highest_post_number: last_post.post_number
-      )
+    if last_post.present? && @post.topic.present?
+      topic = @post.topic
+      topic.last_posted_at = last_post.created_at
+      topic.last_post_user_id = last_post.user_id
+      topic.highest_post_number = last_post.post_number
+      topic.save!(validate: false)
     end
   end
 
@@ -248,10 +250,12 @@ class PostDestroyer
       author.user_stat.first_post_created_at = author.posts.order('created_at ASC').first.try(:created_at)
     end
 
-    if @post.post_type == Post.types[:regular] && !@post.is_first_post? && !@topic.nil?
-      author.user_stat.post_count -= 1
+    if @post.topic && !@post.topic.private_message?
+      if @post.post_type == Post.types[:regular] && !@post.is_first_post? && !@topic.nil?
+        author.user_stat.post_count -= 1
+      end
+      author.user_stat.topic_count -= 1 if @post.is_first_post?
     end
-    author.user_stat.topic_count -= 1 if @post.is_first_post?
 
     # We don't count replies to your own topics in topic_reply_count
     if @topic && author.id != @topic.user_id

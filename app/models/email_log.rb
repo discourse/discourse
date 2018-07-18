@@ -1,6 +1,8 @@
 require_dependency 'distributed_mutex'
 
 class EmailLog < ActiveRecord::Base
+  self.ignored_columns = %w{topic_id}
+
   CRITICAL_EMAIL_TYPES ||= Set.new %w{
     account_created
     admin_login
@@ -14,7 +16,7 @@ class EmailLog < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :post
-  belongs_to :topic
+  has_one :topic, through: :post
 
   validates :email_type, :to_address, presence: true
 
@@ -63,8 +65,17 @@ class EmailLog < ActiveRecord::Base
   def self.last_sent_email_address
     self.where(email_type: "signup")
       .order(created_at: :desc)
+      .limit(1)
+      .pluck(:to_address)
       .first
-      .try(:to_address)
+  end
+
+  def bounce_key
+    super&.delete('-')
+  end
+
+  def reply_key
+    super&.delete('-')
   end
 
 end
@@ -79,23 +90,23 @@ end
 #  user_id        :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  reply_key      :string(32)
+#  reply_key      :uuid
 #  post_id        :integer
 #  topic_id       :integer
 #  skipped        :boolean          default(FALSE)
 #  skipped_reason :string
-#  bounce_key     :string
+#  bounce_key     :uuid
 #  bounced        :boolean          default(FALSE), not null
 #  message_id     :string
 #
 # Indexes
 #
-#  idx_email_logs_user_created_filtered        (user_id,created_at)
+#  idx_email_logs_user_created_filtered        (user_id,created_at) WHERE (skipped = false)
 #  index_email_logs_on_created_at              (created_at)
 #  index_email_logs_on_message_id              (message_id)
 #  index_email_logs_on_post_id                 (post_id)
 #  index_email_logs_on_reply_key               (reply_key)
 #  index_email_logs_on_skipped_and_created_at  (skipped,created_at)
 #  index_email_logs_on_topic_id                (topic_id)
-#  index_email_logs_on_user_id_and_created_at  (user_id,created_at)
+#  index_email_logs_on_user_id_and_created_at  (user_id,created_at DESC)
 #
