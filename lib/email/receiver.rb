@@ -634,7 +634,7 @@ module Email
     def forwarded_reply_key?(email_log, user)
       incoming_emails = IncomingEmail
         .joins(:post)
-        .where('posts.topic_id = ?', email_log.topic_id)
+        .where('posts.topic_id = ?', email_log.topic.id)
         .addressed_to(email_log.reply_key)
         .addressed_to_user(user)
         .pluck(:to_addresses, :cc_addresses)

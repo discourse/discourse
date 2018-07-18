@@ -1,6 +1,8 @@
 require_dependency 'distributed_mutex'
 
 class EmailLog < ActiveRecord::Base
+  self.ignored_columns = %w{topic_id}
+
   CRITICAL_EMAIL_TYPES ||= Set.new %w{
     account_created
     admin_login
@@ -14,7 +16,7 @@ class EmailLog < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :post
-  belongs_to :topic
+  has_one :topic, through: :post
 
   validates :email_type, :to_address, presence: true
 
