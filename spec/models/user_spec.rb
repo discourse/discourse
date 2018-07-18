@@ -1771,4 +1771,18 @@ describe User do
     end
   end
 
+  describe "set_random_avatar" do
+    it "sets a random avatar when selectable avatars is enabled" do
+      avatar1 = Fabricate(:upload)
+      avatar2 = Fabricate(:upload)
+      SiteSetting.selectable_avatars_enabled = true
+      SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+
+      user = Fabricate(:user)
+      expect(user.uploaded_avatar_id).not_to be(nil)
+      expect([avatar1.id, avatar2.id]).to include(user.uploaded_avatar_id)
+      expect(user.user_avatar.custom_upload_id).to eq(user.uploaded_avatar_id)
+    end
+  end
+
 end

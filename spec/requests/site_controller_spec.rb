@@ -56,4 +56,30 @@ describe SiteController do
       expect(response).to redirect_to '/'
     end
   end
+
+  describe '.selectable_avatars' do
+    before do
+      SiteSetting.selectable_avatars = "https://www.discourse.org\nhttps://meta.discourse.org"
+    end
+
+    it 'returns empty array when selectable avatars is disabled' do
+      SiteSetting.selectable_avatars_enabled = false
+
+      get "/site/selectable-avatars.json"
+      json = JSON.parse(response.body)
+
+      expect(response.status).to eq(200)
+      expect(json).to eq([])
+    end
+
+    it 'returns an array when selectable avatars is enabled' do
+      SiteSetting.selectable_avatars_enabled = true
+
+      get "/site/selectable-avatars.json"
+      json = JSON.parse(response.body)
+
+      expect(response.status).to eq(200)
+      expect(json).to contain_exactly("https://www.discourse.org", "https://meta.discourse.org")
+    end
+  end
 end

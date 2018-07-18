@@ -9,7 +9,8 @@ const CUSTOM_TYPES = [
   "host_list",
   "category_list",
   "value_list",
-  "category"
+  "category",
+  "uploaded_image_list",
 ];
 
 export default Ember.Mixin.create({

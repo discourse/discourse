@@ -508,19 +508,21 @@ const User = RestModel.extend({
         data: { upload_id, type }
       }
     ).then(() =>
-      this.setProperties({
-        avatar_template,
-        uploaded_avatar_id: upload_id
-      })
+      this.setProperties({ avatar_template, uploaded_avatar_id: upload_id })
     );
   },
 
+  selectAvatar(avatarUrl) {
+    return ajax(
+      userPath(`${this.get("username_lower")}/preferences/avatar/select`),
+      { type: "PUT", data: { url: avatarUrl } }
+    ).then(result => this.setProperties(result));
+  },
+
   isAllowedToUploadAFile(type) {
-    return (
-      this.get("staff") ||
+    return this.get("staff") ||
       this.get("trust_level") > 0 ||
-      Discourse.SiteSettings["newuser_max_" + type + "s"] > 0
-    );
+      Discourse.SiteSettings[`newuser_max_${type}s`] > 0;
   },
 
   createInvite(email, group_names, custom_message) {

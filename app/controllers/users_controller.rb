@@ -11,8 +11,9 @@ class UsersController < ApplicationController
 
   requires_login only: [
     :username, :update, :user_preferences_redirect, :upload_user_image,
-    :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
-    :preferences, :create_second_factor, :update_second_factor, :create_second_factor_backup
+    :pick_avatar, :destroy_user_image, :destroy, :check_emails,
+    :topic_tracking_state, :preferences, :create_second_factor,
+    :update_second_factor, :create_second_factor_backup, :select_avatar
   ]
 
   skip_before_action :check_xhr, only: [
@@ -883,6 +884,46 @@ class UsersController < ApplicationController
     user.user_avatar.save!
 
     render json: success_json
+  end
+
+  def select_avatar
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    url = params[:url]
+
+    if url.blank?
+      return render json: failed_json, status: 422
+    end
+
+    unless SiteSetting.selectable_avatars_enabled
+      return render json: failed_json, status: 422
+    end
+
+    if SiteSetting.selectable_avatars.blank?
+      return render json: failed_json, status: 422
+    end
+
+    unless SiteSetting.selectable_avatars[url]
+      return render json: failed_json, status: 422
+    end
+
+    unless upload = Upload.find_by(url: url)
+      return render json: failed_json, status: 422
+    end
+
+    user.uploaded_avatar_id = upload.id
+    user.save!
+
+    avatar = user.user_avatar || user.create_user_avatar
+    avatar.custom_upload_id = upload.id
+    avatar.save!
+
+    render json: {
+      avatar_template: user.avatar_template,
+      custom_avatar_template: user.avatar_template,
+      uploaded_avatar_id: upload.id,
+    }
   end
 
   def destroy_user_image

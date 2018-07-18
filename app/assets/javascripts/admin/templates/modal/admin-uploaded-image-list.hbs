@@ -1,0 +1,15 @@
+{{#d-modal-body class="uploaded-image-list"}}
+  <div class="selectable-avatars">
+    {{#each images as |image|}}
+      <div class="selectable-avatar" {{action "remove" image}}>
+        {{bound-avatar-template image "huge"}}
+      </div>
+    {{else}}
+      <p>{{i18n "admin.site_settings.uploaded_image_list.empty"}}</p>
+    {{/each}}
+  </div>
+{{/d-modal-body}}
+<div class="modal-footer">
+  {{d-button action=(action "close") label="close"}}
+  {{images-uploader uploading=uploading done="uploadDone" class="pull-right"}}
+</div>

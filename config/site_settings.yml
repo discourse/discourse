@@ -959,6 +959,12 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
+  selectable_avatars_enabled:
+    default: false
+    client: true
+  selectable_avatars:
+    default: ''
+    type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
   png_to_jpg_quality:
     default: 95

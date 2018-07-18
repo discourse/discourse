@@ -104,6 +104,7 @@ class User < ActiveRecord::Base
   after_create :create_user_stat
   after_create :create_user_option
   after_create :create_user_profile
+  after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
 
@@ -612,8 +613,7 @@ class User < ActiveRecord::Base
   end
 
   def self.gravatar_template(email)
-    email_hash = self.email_hash(email)
-    "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
+    "//www.gravatar.com/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
   end
 
   # Don't pass this up to the client - it's meant for server side use
@@ -628,19 +628,19 @@ class User < ActiveRecord::Base
     UrlHelper.schemaless UrlHelper.absolute avatar_template
   end
 
+  def self.username_hash(username)
+    username.each_char.reduce(0) do |result, char|
+      [((result << 5) - result) + char.ord].pack('L').unpack('l').first
+    end.abs
+  end
+
   def self.default_template(username)
     if SiteSetting.default_avatars.present?
-      split_avatars = SiteSetting.default_avatars.split("\n")
-      if split_avatars.present?
-        hash = username.each_char.reduce(0) do |result, char|
-          [((result << 5) - result) + char.ord].pack('L').unpack('l').first
-        end
-
-        split_avatars[hash.abs % split_avatars.size]
-      end
-    else
-      system_avatar_template(username)
+      urls = SiteSetting.default_avatars.split("\n")
+      return urls[username_hash(username) % urls.size] if urls.present?
     end
+
+    system_avatar_template(username)
   end
 
   def self.avatar_template(username, uploaded_avatar_id)
@@ -1016,6 +1016,18 @@ class User < ActiveRecord::Base
 
   def create_user_profile
     UserProfile.create(user_id: id)
+  end
+
+  def set_random_avatar
+    if SiteSetting.selectable_avatars_enabled? && SiteSetting.selectable_avatars.present?
+      urls = SiteSetting.selectable_avatars.split("\n")
+      if urls.present?
+        if upload = Upload.find_by(url: urls.sample)
+          update_column(:uploaded_avatar_id, upload.id)
+          UserAvatar.create(user_id: id, custom_upload_id: upload.id)
+        end
+      end
+    end
   end
 
   def anonymous?
