@@ -124,8 +124,8 @@ et:
   reading_time: "Lugemise aeg"
   likes: "Meeldimisi"
   too_many_replies:
-    one: Vabandame, kuid ajutiselt on uutel kasutajatel lubatud 1 vastus teema kohta.
-    other: Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastust teema kohta.
+    one: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud 1 vastus teema kohta."
+    other: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastust teema kohta."
   embed:
     start_discussion: "Alusta vestlust"
     continue: "Jätka arutelu"
@@ -135,35 +135,35 @@ et:
     no_hosts: "Sängitamiseks pole ühtegi hosti seadistatud."
     configure: "Sängitamise seadistamine"
     more_replies:
-      one: veel 1 vastus
-      other: veel %{count} vastust
+      one: "veel 1 vastus"
+      other: "veel %{count} vastust"
     loading: "Laen arutelu..."
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: 1 vastus
-      other: '%{count} vastust'
+      one: "1 vastus"
+      other: "%{count} vastust"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
-    one: Vabandust, sa tohid postituses vaid üht kasutajat mainida.
-    other: Vabandust, Sa tohid postituses vaid %{count} kasutajat mainida.
+    one: "Vabandust, sa tohid postituses vaid üht kasutajat mainida."
+    other: "Vabandust, Sa tohid postituses vaid %{count} kasutajat mainida."
   no_mentions_allowed_newuser: "Vabanda, uued kasutajad ei tohi teisi kasutajaid mainida."
   too_many_mentions_newuser:
-    one: Vabandust, uued kasutajad tohivad postituses vaid ühte kasutajat mainida.
-    other: Vabanda, uued kasutajad tohivad postituses vaid %{count} kasutajat mainida.
+    one: "Vabandust, uued kasutajad tohivad postituses vaid ühte kasutajat mainida."
+    other: "Vabanda, uued kasutajad tohivad postituses vaid %{count} kasutajat mainida."
   no_images_allowed: "Vabanda, uued kasutajad ei saa postitustesse pilte panna."
   too_many_images:
-    one: Vabandust, uued kasutajad tohivad postitusse panna vaid ühe pildi.
-    other: Vabandust, uued kasutajad tohivad postitusse panna vaid %{count} pilti.
+    one: "Vabandust, uued kasutajad tohivad postitusse panna vaid ühe pildi."
+    other: "Vabandust, uued kasutajad tohivad postitusse panna vaid %{count} pilti."
   no_attachments_allowed: "Vabanda, uued kasutajad ei tohi postitusse manuseid lisada."
   too_many_attachments:
-    one: Vabandust, uued kasutajad tohivad postitusele ainult ühe manuse lisada.
-    other: Vabandust, uued kasutajad tohivad postitusele ainult %{count} manust lisada.
+    one: "Vabandust, uued kasutajad tohivad postitusele ainult ühe manuse lisada."
+    other: "Vabandust, uued kasutajad tohivad postitusele ainult %{count} manust lisada."
   no_links_allowed: "Vabandust, uued kasutajad ei tohi postituses viiteid kasutada."
   too_many_links:
-    one: Vabandust, uued kasutajad tohivad postituses vaid ühte viidet kasutada.
-    other: Vabandust, uued kasutajad tohivad postituses vaid %{count} viidet kasutada.
+    one: "Vabandust, uued kasutajad tohivad postituses vaid ühte viidet kasutada."
+    other: "Vabandust, uued kasutajad tohivad postituses vaid %{count} viidet kasutada."
   spamming_host: "Vabandust, sa ei tohi sellele domeenile viidata."
   user_is_suspended: "Peatatud kasutajatel pole lubatud postitada."
   topic_not_found: "Midagi on valesti. Kas on võimalik, et antud teema suleti või kustutati samal ajal, kui te seda vaatasite?"
@@ -217,8 +217,8 @@ et:
       trust_level_4: "usaldustase_4"
   education:
     until_posts:
-      one: 1 postitus
-      other: '%{count} postitust'
+      one: "1 postitus"
+      other: "%{count} postitust"
     'new-topic': |
       Teretulemast saidile %{site_name} &mdash; **tänud uue vestluse alustamise eest!**
 
@@ -342,8 +342,8 @@ et:
       uncategorized: "Ei saa kustutada Liigitamata liiki"
       has_subcategories: "Seda foorumit ei saa kustutada, kuna tal on alamfoorumid."
       topic_exists:
-        one: Seda foorumit ei saa kustutada, kuna tal on 1 teema. Vanim teema on %{topic_link}.
-        other: Seda foorumit ei saa kustutada, kuna tal on %{count} teemat. Vanim teema on %{topic_link}.
+        one: "Seda foorumit ei saa kustutada, kuna tal on 1 teema. Vanim teema on %{topic_link}."
+        other: "Seda foorumit ei saa kustutada, kuna tal on %{count} teemat. Vanim teema on %{topic_link}."
       topic_exists_no_oldest: "Seda foorumit ei saa kustutada, kuna teemade arv on %{count}."
     uncategorized_description: "Teemad, mis ei vaja või mida ei saa liigitada ühegi olemasoleva foorumi alla."
   trust_levels:
@@ -360,85 +360,85 @@ et:
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
     hours:
-      one: 1 tund
-      other: '%{count} tundi'
+      one: "1 tund"
+      other: "%{count} tundi"
     minutes:
-      one: 1 minut
-      other: '%{count} minutit'
+      one: "1 minut"
+      other: "%{count} minutit"
     seconds:
-      one: 1 sekund
-      other: '%{count} sekundit'
+      one: "1 sekund"
+      other: "%{count} sekundit"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: < 1s
-        other: < %{count}s
+        one: "< 1s"
+        other: "< %{count}s"
       x_seconds:
-        one: 1s
-        other: '%{count}s'
+        one: "1s"
+        other: "%{count}s"
       less_than_x_minutes:
-        one: < 1m
-        other: < %{count}m
+        one: "< 1m"
+        other: "< %{count}m"
       x_minutes:
-        one: 1m
-        other: '%{count}m'
+        one: "1m"
+        other: "%{count}m"
       about_x_hours:
-        one: 1h
-        other: '%{count}h'
+        one: "1h"
+        other: "%{count}h"
       x_days:
-        one: 1p
-        other: '%{count}p'
+        one: "1p"
+        other: "%{count}p"
       about_x_months:
-        one: 1kuu
-        other: '%{count}kuud'
+        one: "1kuu"
+        other: "%{count}kuud"
       x_months:
-        one: 1kuu
-        other: '%{count}kuud'
+        one: "1kuu"
+        other: "%{count}kuud"
       about_x_years:
-        one: 1a
-        other: '%{count}a'
+        one: "1a"
+        other: "%{count}a"
       over_x_years:
-        one: '> 1a'
-        other: '> %{count}a'
+        one: "> 1a"
+        other: "> %{count}a"
       almost_x_years:
-        one: 1a
-        other: '%{count}a'
+        one: "1a"
+        other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "just praegu"
       less_than_x_seconds:
-        one: hetk tagasi
-        other: hetk tagasi
+        one: "hetk tagasi"
+        other: "hetk tagasi"
       x_seconds:
-        one: 1 sekund tagasi
-        other: '%{count} sekundit tagasi'
+        one: "1 sekund tagasi"
+        other: "%{count} sekundit tagasi"
       less_than_x_minutes:
-        one: vähem kui 1 minut tagasi
-        other: vähem kui %{count} minutit tagasi
+        one: "vähem kui 1 minut tagasi"
+        other: "vähem kui %{count} minutit tagasi"
       x_minutes:
-        one: 1 minut tagasi
-        other: '%{count} minutit tagasi'
+        one: "1 minut tagasi"
+        other: "%{count} minutit tagasi"
       about_x_hours:
-        one: 1 tund tagasi
-        other: '%{count} tundi tagasi'
+        one: "1 tund tagasi"
+        other: "%{count} tundi tagasi"
       x_days:
-        one: 1 päev tagasi
-        other: '%{count} päeva tagasi'
+        one: "1 päev tagasi"
+        other: "%{count} päeva tagasi"
       about_x_months:
-        one: umbes 1 kuu tagasi
-        other: umbes%{count} kuud tagasi
+        one: "umbes 1 kuu tagasi"
+        other: "umbes%{count} kuud tagasi"
       x_months:
-        one: 1 kuu tagasi
-        other: '%{count} kuud tagasi'
+        one: "1 kuu tagasi"
+        other: "%{count} kuud tagasi"
       about_x_years:
-        one: umbes 1 aasta tagasi
-        other: umbes %{count} aastat tagasi
+        one: "umbes 1 aasta tagasi"
+        other: "umbes %{count} aastat tagasi"
       over_x_years:
-        one: üle 1 aasta tagasi
-        other: üle %{count} aasta tagasi
+        one: "üle 1 aasta tagasi"
+        other: "üle %{count} aasta tagasi"
       almost_x_years:
-        one: peaaegu 1 aasta tagasi
-        other: peaaegu %{count} aastat tagasi
+        one: "peaaegu 1 aasta tagasi"
+        other: "peaaegu %{count} aastat tagasi"
   password_reset:
     no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
     choose_new: "Vali uus parool"
@@ -546,9 +546,7 @@ et:
       xaxis: "Päev"
       yaxis: "Külastajate arv"
     signups:
-      title: "Uued kasutajad"
       xaxis: "Päev"
-      yaxis: "Uute kasutajate arv"
     profile_views:
       title: "Kasutaja profiili vaatamisi"
       xaxis: "Päev"
@@ -990,7 +988,6 @@ et:
             label: "Väike ikoon"
           apple_touch_icon_url:
             label: "Suur ikoon"
-            description: "Soovitame kasutada ikooni, et kuvada oma saiti uuematel seadmetel, mille pilt on suurem. Soovitatud ikooni suurus on vähemalt 144px x 144px"
       homepage:
         title: "Avaleht"
         fields:
@@ -998,8 +995,6 @@ et:
             choices:
               latest:
                 label: "Viimased teemad"
-              categories:
-                label: "Foorumid"
       emoji:
         title: "Emotikon"
       invites:

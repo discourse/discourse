@@ -130,15 +130,15 @@ class PostAlerter
     return if user_ids.blank?
     user_ids.uniq!
 
+    warn_if_not_sidekiq
+
     # Don't notify the OP
     user_ids -= [post.user_id]
     users = User.where(id: user_ids)
 
-    Scheduler::Defer.later("Notify First Post Watchers") do
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |user|
-        create_notification(user, Notification.types[:watching_first_post], post)
-      end
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |user|
+      create_notification(user, Notification.types[:watching_first_post], post)
     end
   end
 
@@ -174,14 +174,19 @@ class PostAlerter
     unread_posts(user, topic).count
   end
 
-  def destroy_notifications(user, type, topic)
+  def destroy_notifications(user, types, topic)
     return if user.blank?
     return unless Guardian.new(user).can_see?(topic)
 
-    user.notifications.where(notification_type: type,
-                             topic_id: topic.id).destroy_all
-    # HACK so notification counts sync up correctly
-    user.reload
+    User.transaction do
+      user.notifications.where(
+        notification_type: types,
+        topic_id: topic.id
+      ).destroy_all
+
+      # Reload so notification counts sync up correctly
+      user.reload
+    end
   end
 
   NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned].map { |t|
@@ -189,16 +194,18 @@ class PostAlerter
   }
 
   def group_stats(topic)
+    sql = <<~SQL
+      SELECT COUNT(*) FROM topics t
+      JOIN topic_allowed_groups g ON g.group_id = :group_id AND g.topic_id = t.id
+      LEFT JOIN group_archived_messages a ON a.topic_id = t.id AND a.group_id = g.group_id
+      WHERE a.id IS NULL AND t.deleted_at is NULL AND t.archetype = 'private_message'
+    SQL
+
     topic.allowed_groups.map do |g|
       {
         group_id: g.id,
         group_name: g.name.downcase,
-        inbox_count: Topic.exec_sql(
-        "SELECT COUNT(*) FROM topics t
-         JOIN topic_allowed_groups g ON g.group_id = :group_id AND g.topic_id = t.id
-         LEFT JOIN group_archived_messages a ON a.topic_id = t.id AND a.group_id = g.group_id
-         WHERE a.id IS NULL AND t.deleted_at is NULL AND t.archetype = 'private_message'",
-          group_id: g.id).values[0][0].to_i
+        inbox_count: DB.query_single(sql, group_id: g.id).first.to_i
       }
     end
   end
@@ -326,9 +333,7 @@ class PostAlerter
     collapsed = false
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      COLLAPSED_NOTIFICATION_TYPES.each do |t|
-        destroy_notifications(user, t, post.topic)
-      end
+      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, post.topic)
       collapsed = true
     end
 
@@ -379,7 +384,7 @@ class PostAlerter
     end
 
     # Create the notification
-    created = user.notifications.create(
+    created = user.notifications.create!(
       notification_type: type,
       topic_id: post.topic_id,
       post_number: post.post_number,
@@ -406,6 +411,7 @@ class PostAlerter
         DiscourseEvent.trigger(:post_notification_alert, user, payload)
       end
     end
+
     created.id ? created : nil
   end
 
@@ -415,10 +421,16 @@ class PostAlerter
   end
 
   def push_notification(user, payload)
+    if user.push_subscriptions.exists?
+      Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
+    end
+
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
       clients = user.user_api_keys
-        .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes)) AND push_url IS NOT NULL AND position(push_url in ?) > 0 AND revoked_at IS NULL",
-                  SiteSetting.allowed_user_api_push_urls)
+        .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes))")
+        .where("push_url IS NOT NULL")
+        .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
+        .where("revoked_at IS NULL")
         .pluck(:client_id, :push_url)
 
       if clients.length > 0
@@ -482,11 +494,11 @@ class PostAlerter
     users = [users] unless users.is_a?(Array)
     users = users.reject { |u| u.staged? } if post.topic&.private_message?
 
-    Scheduler::Defer.later("Notify Users") do
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |u|
-        create_notification(u, Notification.types[type], post, opts)
-      end
+    warn_if_not_sidekiq
+
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |u|
+      create_notification(u, Notification.types[type], post, opts)
     end
 
     users
@@ -495,34 +507,36 @@ class PostAlerter
   def notify_pm_users(post, reply_to_user, notified)
     return unless post.topic
 
-    Scheduler::Defer.later("Notify PM Users") do
-      # users that aren't part of any mentioned groups
-      users = directly_targeted_users(post).reject { |u| notified.include?(u) }
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |user|
-        notification_level = TopicUser.get(post.topic, user)&.notification_level
-        if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
-          create_notification(user, Notification.types[:private_message], post)
-        end
-      end
+    warn_if_not_sidekiq
 
-      # users that are part of all mentionned groups
-      users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
-      DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-      users.each do |user|
-        case TopicUser.get(post.topic, user)&.notification_level
-        when TopicUser.notification_levels[:watching]
-          # only create a notification when watching the group
-          create_notification(user, Notification.types[:private_message], post)
-        when TopicUser.notification_levels[:tracking]
-          notify_group_summary(user, post)
-        end
+    # users that aren't part of any mentioned groups
+    users = directly_targeted_users(post).reject { |u| notified.include?(u) }
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |user|
+      notification_level = TopicUser.get(post.topic, user)&.notification_level
+      if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
+        create_notification(user, Notification.types[:private_message], post)
+      end
+    end
+
+    # users that are part of all mentionned groups
+    users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |user|
+      case TopicUser.get(post.topic, user)&.notification_level
+      when TopicUser.notification_levels[:watching]
+        # only create a notification when watching the group
+        create_notification(user, Notification.types[:private_message], post)
+      when TopicUser.notification_levels[:tracking]
+        notify_group_summary(user, post)
       end
     end
   end
 
   def notify_post_users(post, notified)
     return unless post.topic
+
+    warn_if_not_sidekiq
 
     condition = <<~SQL
       id IN (
@@ -571,13 +585,15 @@ class PostAlerter
     exclude_user_ids = notified.map(&:id)
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
-    Scheduler::Defer.later("Notify Post Users") do
-      DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
-      notify.pluck(:id).each do |user_id|
-        user = User.find_by(id: user_id)
-        create_notification(user, Notification.types[:posted], post)
-      end
+    DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
+    notify.pluck(:id).each do |user_id|
+      user = User.find_by(id: user_id)
+      create_notification(user, Notification.types[:posted], post)
     end
+  end
+
+  def warn_if_not_sidekiq
+    Rails.logger.warn("PostAlerter.#{caller_locations(1, 1)[0].label} was called outside of sidekiq") unless Sidekiq.server?
   end
 
 end

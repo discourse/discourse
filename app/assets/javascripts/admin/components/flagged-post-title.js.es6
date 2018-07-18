@@ -1,3 +1,3 @@
 export default Ember.Component.extend({
-  tagName: 'h3'
+  tagName: "h3"
 });

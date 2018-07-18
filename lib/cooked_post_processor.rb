@@ -73,7 +73,7 @@ class CookedPostProcessor
     PostUpload.transaction do
       PostUpload.where(post_id: @post.id).delete_all
       if upload_ids.size > 0
-        PostUpload.exec_sql("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
+        DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
       end
     end
   end
@@ -257,7 +257,7 @@ class CookedPostProcessor
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
 
     @size_cache[url] = FastImage.size(absolute_url)
-  rescue Zlib::BufError, URI::InvalidURIError, URI::InvalidComponentError
+  rescue Zlib::BufError, URI::InvalidURIError, URI::InvalidComponentError, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.
   end
 
@@ -267,13 +267,9 @@ class CookedPostProcessor
   rescue URI::InvalidURIError
   end
 
-  # only crop when the image is taller than 18:9
-  # we only use 90% of that to allow for a small margin
-  MIN_RATIO_TO_CROP ||= (9.0 / 18.0) * 0.9
-
   def convert_to_link!(img)
     src = img["src"]
-    return if src.blank? || is_a_hyperlink?(img)
+    return if src.blank? || is_a_hyperlink?(img) || is_svg?(img)
 
     width, height = img["width"].to_i, img["height"].to_i
     # TODO: store original dimentions in db
@@ -288,7 +284,10 @@ class CookedPostProcessor
     return if original_width <= width && original_height <= height
     return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
 
-    if crop = (original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP)
+    crop   = SiteSetting.min_ratio_to_crop > 0
+    crop &&= original_width.to_f / original_height.to_f < SiteSetting.min_ratio_to_crop
+
+    if crop
       width, height = ImageSizer.crop(original_width, original_height)
       img["width"] = width
       img["height"] = height
@@ -537,6 +536,19 @@ class CookedPostProcessor
 
   def html
     @doc.try(:to_html)
+  end
+
+  private
+
+  def is_svg?(img)
+    path =
+      begin
+        URI(img["src"]).path
+      rescue URI::InvalidURIError, URI::InvalidComponentError
+        nil
+      end
+
+    File.extname(path) == '.svg' if path
   end
 
 end

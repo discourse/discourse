@@ -30,11 +30,11 @@
     -webkit-appearance: none;
   }
   &.alert-success {
-    background-color:  $success-medium;
+    background-color: $success-medium;
     color: $primary;
   }
   &.alert-error {
-    background-color:  rgba($danger-low, .5);
+    background-color: rgba($danger-low, 0.5);
     color: $primary;
   }
   &.alert-info {

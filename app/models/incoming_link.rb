@@ -89,10 +89,10 @@ class IncomingLink < ActiveRecord::Base
 
   # Internal: Update appropriate link counts.
   def update_link_counts
-    exec_sql("UPDATE topics
+    DB.exec("UPDATE topics
               SET incoming_link_count = incoming_link_count + 1
               WHERE id = (SELECT topic_id FROM posts where id = ?)", post_id)
-    exec_sql("UPDATE posts
+    DB.exec("UPDATE posts
               SET incoming_link_count = incoming_link_count + 1
               WHERE id = ?", post_id)
   end

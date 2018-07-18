@@ -174,9 +174,9 @@ module Jobs
 
     private
 
-      def remove_scheme(src)
-        src.sub(/^https?:/i, "")
-      end
+    def remove_scheme(src)
+      src.sub(/^https?:/i, "")
+    end
   end
 
 end

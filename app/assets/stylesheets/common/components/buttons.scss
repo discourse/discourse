@@ -14,12 +14,14 @@
   line-height: $line-height-medium;
   text-align: center;
   cursor: pointer;
-  transition: all .25s;
+  transition: all 0.25s;
 
-  &:active, &.btn-active {
+  &:active,
+  &.btn-active {
     text-shadow: none;
   }
-  &[disabled], &.disabled {
+  &[disabled],
+  &.disabled {
     cursor: default;
     opacity: 0.4;
   }
@@ -44,24 +46,28 @@
   border: none;
   color: $primary;
   font-weight: normal;
-  background: $primary-low; 
+  background: $primary-low;
 
   &[href] {
     color: $primary;
   }
-  &:hover, &.btn-hover {
-    background: $primary-medium; 
+  &:hover,
+  &.btn-hover {
+    background: $primary-medium;
     color: $secondary;
   }
-  &[disabled], &.disabled {
-    background: $primary-low; 
-    &:hover { color: dark-light-choose($primary-low-mid, $secondary-high); }
+  &[disabled],
+  &.disabled {
+    background: $primary-low;
+    &:hover {
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+    }
     cursor: not-allowed;
   }
 
   .d-icon {
     opacity: 0.7;
-    line-height: $line-height-medium; // Match button text line-height 
+    line-height: $line-height-medium; // Match button text line-height
   }
   &.btn-primary .d-icon {
     opacity: 1;
@@ -80,15 +86,18 @@
   &[href] {
     color: $secondary;
   }
-  &:hover, &.btn-hover {
+  &:hover,
+  &.btn-hover {
     color: #fff;
     background: dark-light-choose($tertiary, $tertiary);
   }
-  &:active, &.btn-active {
+  &:active,
+  &.btn-active {
     @include linear-gradient($tertiary, $tertiary);
     color: $secondary;
   }
-  &[disabled], &.disabled {
+  &[disabled],
+  &.disabled {
     background: $tertiary;
   }
 }
@@ -103,13 +112,16 @@
   &[href] {
     color: $secondary;
   }
-  &:hover, &.btn-hover {
+  &:hover,
+  &.btn-hover {
     background: scale-color($danger, $lightness: -20%);
   }
-  &:active, &.btn-active {
+  &:active,
+  &.btn-active {
     @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
   }
-  &[disabled], &.disabled {
+  &[disabled],
+  &.disabled {
     background: $danger;
   }
 }
@@ -130,7 +142,8 @@
     font-family: FontAwesome;
     font-size: $font-0;
   }
-  &.google, &.google_oauth2 {
+  &.google,
+  &.google_oauth2 {
     background: $google;
     &:before {
       content: $fa-var-google;

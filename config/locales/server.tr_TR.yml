@@ -112,42 +112,42 @@ tr_TR:
   reading_time: "Okuma Zamanı"
   likes: "Beğeniler"
   too_many_replies:
-    one: 'Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. '
-    other: 'Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. '
+    one: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
+    other: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
   embed:
     start_discussion: "Tartışma Başlat"
     continue: "Tartışmaya Devam Et"
     referer: "Yönlendiren:"
     more_replies:
-      one: '%{count} cevap daha'
-      other: '%{count} cevap daha'
+      one: "%{count} cevap daha"
+      other: "%{count} cevap daha"
     loading: "Tartışma Yükleniyor..."
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu ilave bir tartışmadır, asıl konu adresi %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: '%{count} cevap'
-      other: '%{count} cevap'
+      one: "%{count} cevap"
+      other: "%{count} cevap"
   no_mentions_allowed: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
   too_many_mentions:
-    one: Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz.
-    other: Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz.
+    one: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
+    other: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
   no_mentions_allowed_newuser: "Üzgünüz, yeni kullanıcılar diğer kullanıcılardan bahsedemezler."
   too_many_mentions_newuser:
-    one: Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler.
-    other: Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler.
+    one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
+    other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
   no_images_allowed: "Üzgünüz, yeni kullanıcılar gönderilere resim koyamazlar."
   too_many_images:
-    one: 'Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. '
-    other: 'Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. '
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
+    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
   no_attachments_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bir şey ekleyemezler."
   too_many_attachments:
-    one: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler.
-    other: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler.
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
+    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
   no_links_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bağlantı ekleyemezler."
   too_many_links:
-    one: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler.
-    other: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler.
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
+    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
@@ -205,8 +205,8 @@ tr_TR:
       trust_level_4: "güven_seviyesi_4"
   education:
     until_posts:
-      one: '%{count} gönderi'
-      other: '%{count} gönderi'
+      one: "%{count} gönderi"
+      other: "%{count} gönderi"
     'new-topic': |
       %{site_name} topluluğuna hoş geldiniz &mdash; **yeni bir sohbet başlattığınız için teşekkür ederiz! **
 
@@ -304,8 +304,8 @@ tr_TR:
       uncategorized: "Kategorisiz silinemez"
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
       topic_exists:
-        one: 'Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}.'
-        other: 'Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}.'
+        one: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}."
+        other: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}."
       topic_exists_no_oldest: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor."
     uncategorized_description: "Kategoriye ihtiyacı olmayan, ya da diğer kategorilere uymayan konular."
   trust_levels:
@@ -322,85 +322,85 @@ tr_TR:
     change_failed_explanation: " %{user_name} adlı kullanıcıyı '%{new_trust_level}' seviyesine düşürmeye çalıştınız. Ancak, halihazırda kullanıcının güven seviyesi zaten '%{current_trust_level}'. %{user_name} '%{current_trust_level}' seviyesinde kalacak - eğer seviyesini düşürmek istiyorsanız öncelikle güven seviyesini kilitlemelisiniz"
   rate_limiter:
     hours:
-      one: '%{count} saat'
-      other: '%{count} saat'
+      one: "%{count} saat"
+      other: "%{count} saat"
     minutes:
-      one: '%{count} dakika'
-      other: '%{count} dakika'
+      one: "%{count} dakika"
+      other: "%{count} dakika"
     seconds:
-      one: '%{count} saniye'
-      other: '%{count} saniye'
+      one: "%{count} saniye"
+      other: "%{count} saniye"
   datetime:
     distance_in_words:
       half_a_minute: "< 1dk"
       less_than_x_seconds:
-        one: < %{count}sn
-        other: < %{count}sn
+        one: "< %{count}sn"
+        other: "< %{count}sn"
       x_seconds:
-        one: '%{count}sn'
-        other: '%{count}sn'
+        one: "%{count}sn"
+        other: "%{count}sn"
       less_than_x_minutes:
-        one: < %{count}dk
-        other: < %{count}dk
+        one: "< %{count}dk"
+        other: "< %{count}dk"
       x_minutes:
-        one: '%{count}dk'
-        other: '%{count}dk'
+        one: "%{count}dk"
+        other: "%{count}dk"
       about_x_hours:
-        one: '%{count}sa'
-        other: '%{count}sa'
+        one: "%{count}sa"
+        other: "%{count}sa"
       x_days:
-        one: '%{count}gün'
-        other: '%{count}gün'
+        one: "%{count}gün"
+        other: "%{count}gün"
       about_x_months:
-        one: '%{count}ay'
-        other: '%{count}ay'
+        one: "%{count}ay"
+        other: "%{count}ay"
       x_months:
-        one: '%{count}ay'
-        other: '%{count}ay'
+        one: "%{count}ay"
+        other: "%{count}ay"
       about_x_years:
-        one: '%{count}yıl'
-        other: '%{count}yıl'
+        one: "%{count}yıl"
+        other: "%{count}yıl"
       over_x_years:
-        one: '> %{count}yıl'
-        other: '> %{count}yıl'
+        one: "> %{count}yıl"
+        other: "> %{count}yıl"
       almost_x_years:
-        one: '%{count}yıl'
-        other: '%{count}yıl'
+        one: "%{count}yıl"
+        other: "%{count}yıl"
     distance_in_words_verbose:
       half_a_minute: "hemen şimdi"
       less_than_x_seconds:
-        one: hemen şimdi
-        other: hemen şimdi
+        one: "hemen şimdi"
+        other: "hemen şimdi"
       x_seconds:
-        one: '%{count} saniye önce'
-        other: '%{count} saniye önce'
+        one: "%{count} saniye önce"
+        other: "%{count} saniye önce"
       less_than_x_minutes:
-        one: son %{count} dakika içerisinde
-        other: son %{count} dakika içerisinde
+        one: "son %{count} dakika içerisinde"
+        other: "son %{count} dakika içerisinde"
       x_minutes:
-        one: '%{count} dakika önce'
-        other: '%{count} dakika önce'
+        one: "%{count} dakika önce"
+        other: "%{count} dakika önce"
       about_x_hours:
-        one: '%{count} saat önce'
-        other: '%{count} saat önce'
+        one: "%{count} saat önce"
+        other: "%{count} saat önce"
       x_days:
-        one: '%{count} gün önce'
-        other: '%{count} gün önce'
+        one: "%{count} gün önce"
+        other: "%{count} gün önce"
       about_x_months:
-        one: yaklaşık %{count} ay önce
-        other: yaklaşık %{count} ay önce
+        one: "yaklaşık %{count} ay önce"
+        other: "yaklaşık %{count} ay önce"
       x_months:
-        one: '%{count} ay önce'
-        other: '%{count} ay önce'
+        one: "%{count} ay önce"
+        other: "%{count} ay önce"
       about_x_years:
-        one: yaklaşık %{count} yıl önce
-        other: yaklaşık %{count} yıl önce
+        one: "yaklaşık %{count} yıl önce"
+        other: "yaklaşık %{count} yıl önce"
       over_x_years:
-        one: '%{count} yıldan daha fazla önce'
-        other: '%{count} yıldan daha fazla önce'
+        one: "%{count} yıldan daha fazla önce"
+        other: "%{count} yıldan daha fazla önce"
       almost_x_years:
-        one: neredeyse %{count} yıl önce
-        other: neredeyse %{count} yıl önce
+        one: "neredeyse %{count} yıl önce"
+        other: "neredeyse %{count} yıl önce"
   password_reset:
     no_token: "Üzgünüz, bu parola değiştirme bağlantısı çok eski. Yeni bir bağlantı almak için lütfen 'Giriş Yap' tuşuna basın ve 'Parolamı unuttum'u seçin."
     update: 'Parolayı Güncelle'
@@ -512,9 +512,7 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
     signups:
-      title: "Yeni Kullanıcılar"
       xaxis: "Gün"
-      yaxis: "Yeni kullanıcı sayısı"
     profile_views:
       title: "Kullanıcı Profil Görüntülemeleri"
       xaxis: "Gün"
@@ -640,7 +638,6 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Toplam"
     mobile_visits:
-      title: "Kullanıcı Ziyaretleri"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
   dashboard:
@@ -913,7 +910,6 @@ tr_TR:
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
     reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    disable_emails: "Discourse'un herhangi bir e-posta göndermesine izin verme"
     strip_images_from_short_emails: "2800 Byte boyutundan küçük e-postalardan resimleri çıkar"
     short_email_length: "Kısa e-postanın uzunluğu, Byte olarak"
     unsubscribe_via_email: "Kullanıcıların konu veya içerik alanında 'unsubscribe' olan bir e-posta göndererek e-postalara abonelikten çıkmasına izin ver"
@@ -936,7 +932,6 @@ tr_TR:
     delete_user_max_post_age: "İlk gönderisi (x) günden eski olan kullanıcıların silinmesine izin verme."
     delete_all_posts_max: "Tüm Gönderileri Sil düğmesine basıldığında tek seferde silinebilecek en fazla gönderi sayısı. Eğer bir kullanıcının gönderi sayısı bu sayıdan fazlaysa, gönderilerin hepsi tek seferde silinemez ve bu kullanıcı silinemez."
     email_editable: "Kullanıcıların kayıt olduktan sonra e-posta adreslerini değiştirmesine izin ver."
-    logout_redirect: "Çıkış yaptıktan sonra tarayıcının yönlendirileceği adres (ör: http://bitanesite.com/cikis)"
     allow_uploaded_avatars: "Kullanıcıların özel profil resimleri yüklemelerine izin ver."
     allow_animated_avatars: "Kullanıcıların hareketli gif profil resimleri kullanmalarına izin ver. UYARI: Bu ayarı değiştirdikten sonra avatars:refresh rake görevini çalıştırın."
     allow_animated_thumbnails: "Animasyonlu giflerin, animasyonlu küçük resmini oluşturur."
@@ -1049,18 +1044,18 @@ tr_TR:
     not_seen_in_a_month: "Hoş geldiniz! Bir süredir yoktunuz. Bunlar sizin yokluğunuzda en gözde olan konular."
   merge_posts:
     edit_reason:
-      one: '%{count} gönderi %{username} tarafından birleştirildi'
-      other: '%{count} gönderi %{username} tarafından birleştirildi'
+      one: "%{count} gönderi %{username} tarafından birleştirildi"
+      other: "%{count} gönderi %{username} tarafından birleştirildi"
     errors:
       different_topics: "Farklı konulara ait gönderiler birleştirilemez."
       different_users: "Farklı kullanıcılara ait gönderiler birleştirilemez."
   move_posts:
     new_topic_moderator_post:
-      one: '%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}'
-      other: '%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}'
+      one: "%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}"
+      other: "%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}"
     existing_topic_moderator_post:
-      one: '%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}'
-      other: '%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}'
+      one: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
+      other: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
   change_owner:
     post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
     deleted_user: "silinmiş kullanıcı"
@@ -1070,29 +1065,29 @@ tr_TR:
     closed_enabled: "Konu şimdi kapatıldı. Artık yeni cevap yazılmasına izin yok. "
     closed_disabled: "Konu şimdi açıldı. Yeni cevaplara izin var."
     autoclosed_message_max_posts:
-      one: Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
-      other: Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
+      one: "Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
+      other: "Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
     autoclosed_topic_max_posts:
-      one: Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
-      other: Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
+      one: "Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
+      other: "Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
     autoclosed_enabled_days:
-      one: Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_hours:
-      one: '%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
-      other: '%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
+      one: "%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_minutes:
-      one: '%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
-      other: '%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
+      one: "%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_days:
-      one: Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_hours:
-      one: Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_minutes:
-      one: Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_disabled: "Konu şimdi açıldı. Yeni cevaplara izin var."
     autoclosed_disabled_lastpost: "Konu şimdi açıldı. Yeni cevaplara izin var."
     pinned_enabled: "Bu konu başa tutturuldu. Görevli tarafından herkes için ya da kullanıcı tarafından kendisi için baştan kaldırılmadığı sürede bulunduğu kategorinin en üstünde yer alacak."
@@ -1140,8 +1135,8 @@ tr_TR:
       max_new_accounts_per_registration_ip: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor. (Belirlenen sınır aşıldı.) Bir görevli ile iletişime geçin."
   flags_reminder:
     subject_template:
-      one: İlgilenilmesi gereken %{count} bildirim var
-      other: İlgilenilmesi gereken %{count} bildirim var
+      one: "İlgilenilmesi gereken %{count} bildirim var"
+      other: "İlgilenilmesi gereken %{count} bildirim var"
   unsubscribe_mailer:
     subject_template: "%{site_title} üzerinden daha fazla e-posta güncellemesi almak istemediğinizi onaylayın"
   invite_password_instructions:
@@ -1229,8 +1224,8 @@ tr_TR:
       subject_template: "Yeni hesap askıda"
     pending_users_reminder:
       subject_template:
-        one: '%{count} kullanıcı onay bekliyor'
-        other: '%{count} kullanıcı onay bekliyor'
+        one: "%{count} kullanıcı onay bekliyor"
+        other: "%{count} kullanıcı onay bekliyor"
       text_body_template: |
         Bu foruma giriş yapabilmek için onayınızı (ya da reddinizi) bekleyen yeni kullanıcı kayıtları var.
 
@@ -1261,10 +1256,8 @@ tr_TR:
       title: "Aboneliği İptal Et"
       description: "Bu e-postalarla ilgilenmiyor musunuz? Sorun değil! Aşağıya tıklayarak aboneliğinizi hemen iptal edebilirsiniz:"
     reply_by_email: "Yanıtlamak için [konuyu ziyaret edin](%{base_url}%{url}) ya da bu e-postaya cevap verin."
-    reply_by_email_pm: "Yanıtlamak için [iletiyi ziyaret edin](%{base_url}%{url}) ya da bu e-postaya cevap verin."
     only_reply_by_email: "Cevap vermek için bu e-postayı cevaplayın."
     visit_link_to_respond: "Cevaplamak için [konuyu ziyaret edin](%{base_url}%{url})."
-    visit_link_to_respond_pm: "Cevaplamak için [iletiyi ziyaret edin](%{base_url}%{url})."
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     user_invited_to_private_message_pm:
       text_body_template: |
@@ -1770,8 +1763,6 @@ tr_TR:
             choices:
               latest:
                 label: "Son Konular"
-              categories:
-                label: "Kategoriler"
       emoji:
         title: "Emoji"
       invites:

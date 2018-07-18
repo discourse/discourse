@@ -54,6 +54,46 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
+  # DELETE action to delete penalty history for a user
+  def penalty_history
+
+    # We don't delete any history, we merely remove the action type
+    # with a removed type. It can still be viewed in the logs but
+    # will not affect TL3 promotions.
+    sql = <<~SQL
+      UPDATE user_histories
+      SET action = CASE
+        WHEN action = :silence_user THEN :removed_silence_user
+        WHEN action = :unsilence_user THEN :removed_unsilence_user
+        WHEN action = :suspend_user THEN :removed_suspend_user
+        WHEN action = :unsuspend_user THEN :removed_unsuspend_user
+      END
+      WHERE target_user_id = :user_id
+        AND action IN (
+          :silence_user,
+          :suspend_user,
+          :unsilence_user,
+          :unsuspend_user
+        )
+    SQL
+
+    DB.exec(
+      sql,
+      UserHistory.actions.slice(
+        :silence_user,
+        :suspend_user,
+        :unsilence_user,
+        :unsuspend_user,
+        :removed_silence_user,
+        :removed_unsilence_user,
+        :removed_suspend_user,
+        :removed_unsuspend_user
+      ).merge(user_id: params[:user_id].to_i)
+    )
+
+    render json: success_json
+  end
+
   def suspend
     guardian.ensure_can_suspend!(@user)
     @user.suspended_till = params[:suspend_until]
@@ -346,10 +386,10 @@ class Admin::UsersController < Admin::AdminController
 
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
-    user_second_factor = @user.user_second_factor
-    raise Discourse::InvalidParameters unless user_second_factor
+    user_second_factor = @user.user_second_factors
+    raise Discourse::InvalidParameters unless !user_second_factor.empty?
 
-    user_second_factor.destroy!
+    user_second_factor.destroy_all
     StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
 
     Jobs.enqueue(
@@ -382,7 +422,7 @@ class Admin::UsersController < Admin::AdminController
         render json: {
           deleted: false,
           message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
-        }
+        }, status: 403
       end
     end
   end
@@ -504,34 +544,34 @@ class Admin::UsersController < Admin::AdminController
 
   private
 
-    def perform_post_action
-      return unless params[:post_id].present? &&
-        params[:post_action].present?
+  def perform_post_action
+    return unless params[:post_id].present? &&
+      params[:post_action].present?
 
-      if post = Post.where(id: params[:post_id]).first
-        case params[:post_action]
-        when 'delete'
-          PostDestroyer.new(current_user, post).destroy
-        when 'edit'
-          revisor = PostRevisor.new(post)
+    if post = Post.where(id: params[:post_id]).first
+      case params[:post_action]
+      when 'delete'
+        PostDestroyer.new(current_user, post).destroy
+      when 'edit'
+        revisor = PostRevisor.new(post)
 
-          # Take what the moderator edited in as gospel
-          revisor.revise!(
-            current_user,
-            { raw:  params[:post_edit] },
-            skip_validations: true,
-            skip_revision: true
-          )
-        end
+        # Take what the moderator edited in as gospel
+        revisor.revise!(
+          current_user,
+          { raw:  params[:post_edit] },
+          skip_validations: true,
+          skip_revision: true
+        )
       end
     end
+  end
 
-    def fetch_user
-      @user = User.find_by(id: params[:user_id])
-    end
+  def fetch_user
+    @user = User.find_by(id: params[:user_id])
+  end
 
-    def refresh_browser(user)
-      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
-    end
+  def refresh_browser(user)
+    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+  end
 
 end

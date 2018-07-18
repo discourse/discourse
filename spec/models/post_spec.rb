@@ -452,6 +452,13 @@ describe Post do
           post_two_links.user.trust_level = TrustLevel[1]
           expect(post_one_link).not_to be_valid
         end
+
+        it "will skip the check for whitelisted domains" do
+          SiteSetting.whitelisted_link_domains = 'www.bbc.co.uk'
+          SiteSetting.min_trust_to_post_links = 2
+          post_two_links.user.trust_level = TrustLevel[1]
+          expect(post_one_link).to be_valid
+        end
       end
 
     end
@@ -798,12 +805,13 @@ describe Post do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+    let!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
     it "returns the OP and posts above the threshold in summary mode" do
       SiteSetting.summary_percent_filter = 66
-      expect(Post.summary.order(:post_number)).to eq([p1, p2])
+      expect(Post.summary(topic.id).order(:post_number)).to eq([p1, p2])
+      expect(Post.summary(p4.topic.id)).to eq([p4])
     end
-
   end
 
   context 'sort_order' do
@@ -935,12 +943,12 @@ describe Post do
   end
 
   describe "has_host_spam" do
-    let(:raw) { "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
+    let(:raw) { "hello from my site http://www.example.net http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
 
     it "correctly detects host spam" do
       post = Fabricate(:post, raw: raw)
 
-      expect(post.total_hosts_usage).to eq("www.somesite.com" => 1)
+      expect(post.total_hosts_usage).to eq("www.example.net" => 1)
       post.acting_user.trust_level = 0
 
       expect(post.has_host_spam?).to eq(false)
@@ -949,13 +957,33 @@ describe Post do
 
       expect(post.has_host_spam?).to eq(true)
 
-      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
+      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | example.net "
       expect(post.has_host_spam?).to eq(false)
     end
 
     it "doesn't punish staged users" do
       SiteSetting.newuser_spam_host_threshold = 1
       user = Fabricate(:user, staged: true, trust_level: 0)
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(false)
+    end
+
+    it "punishes previously staged users that were created within 1 day" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.newuser_max_links = 3
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      user.created_at = 1.hour.ago
+      user.unstage
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(true)
+    end
+
+    it "doesn't punish previously staged users over 1 day old" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.newuser_max_links = 3
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      user.created_at = 1.day.ago
+      user.unstage
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
     end
@@ -987,7 +1015,7 @@ describe Post do
       first_baked = post.baked_at
       first_cooked = post.cooked
 
-      Post.exec_sql("UPDATE posts SET cooked = 'frogs' WHERE id = ?", post.id)
+      DB.exec("UPDATE posts SET cooked = 'frogs' WHERE id = ?", [ post.id ])
       post.reload
 
       post.expects(:publish_change_to_clients!).with(:rebaked)
@@ -1093,6 +1121,13 @@ describe Post do
 
     expect(second_post.hidden).to eq(false)
     expect(hidden_topic.visible).to eq(false)
+  end
+
+  it "automatically orders post revisions by number ascending" do
+    post = Fabricate(:post)
+    post.revisions.create!(user_id: 1, post_id: post.id, number: 2)
+    post.revisions.create!(user_id: 1, post_id: post.id, number: 1)
+    expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
 end

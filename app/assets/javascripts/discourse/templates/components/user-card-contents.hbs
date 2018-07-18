@@ -84,7 +84,7 @@
       args=(hash user=user close=(action "close"))
       tagName=""}}
 
-    {{#if isSuspended}}
+    {{#if user.suspend_reason}}
       <div class='suspended'>
         {{d-icon "ban"}}
         <b>{{i18n 'user.suspended_notice' date=user.suspendedTillDate}}</b><br>

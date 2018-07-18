@@ -1,16 +1,19 @@
-import { popupAjaxError } from 'discourse/lib/ajax-error';
-import Group from 'discourse/models/group';
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
-import debounce from 'discourse/lib/debounce';
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import Group from "discourse/models/group";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
+import debounce from "discourse/lib/debounce";
 
 export default Ember.Controller.extend({
-  queryParams: ['order', 'desc', 'filter'],
-  order: '',
+  queryParams: ["order", "desc", "filter"],
+  order: "",
   desc: null,
   loading: false,
   limit: null,
   offset: null,
-  isOwner: Ember.computed.alias('model.is_group_owner'),
+  isOwner: Ember.computed.alias("model.is_group_owner"),
   showActions: false,
   filter: null,
   filterInput: null,
@@ -21,31 +24,33 @@ export default Ember.Controller.extend({
     this.set("filter", this.get("filterInput"));
   }, 500),
 
-  @observes('order', 'desc', 'filter')
+  @observes("order", "desc", "filter")
   refreshMembers() {
-    this.set('loading', true);
-    const model = this.get('model');
+    this.set("loading", true);
+    const model = this.get("model");
 
     if (model) {
-      model.findMembers(this.get('memberParams'))
-        .finally(() => {
-          this.set('application.showFooter', model.members.length >= model.user_count);
-          this.set('loading', false);
-        });
+      model.findMembers(this.get("memberParams")).finally(() => {
+        this.set(
+          "application.showFooter",
+          model.members.length >= model.user_count
+        );
+        this.set("loading", false);
+      });
     }
   },
 
-  @computed('order', 'desc', 'filter')
+  @computed("order", "desc", "filter")
   memberParams(order, desc, filter) {
     return { order, desc, filter };
   },
 
-  @computed('model.members')
+  @computed("model.members")
   hasMembers(members) {
     return members && members.length > 0;
   },
 
-  @computed('model')
+  @computed("model")
   canManageGroup(model) {
     return this.currentUser && this.currentUser.canManageGroup(model);
   },
@@ -65,26 +70,31 @@ export default Ember.Controller.extend({
     },
 
     removeMember(user) {
-      this.get('model').removeMember(user, this.get('memberParams'));
+      this.get("model").removeMember(user, this.get("memberParams"));
     },
 
     makeOwner(username) {
-      this.get('model').addOwners(username);
+      this.get("model").addOwners(username);
     },
 
     removeOwner(user) {
-      this.get('model').removeOwner(user);
+      this.get("model").removeOwner(user);
     },
 
     addMembers() {
-      const usernames = this.get('usernames');
+      const usernames = this.get("usernames");
       if (usernames && usernames.length > 0) {
-        this.get('model').addMembers(usernames).then(() => this.set('usernames', [])).catch(popupAjaxError);
+        this.get("model")
+          .addMembers(usernames)
+          .then(() => this.set("usernames", []))
+          .catch(popupAjaxError);
       }
     },
 
     loadMore() {
-      if (this.get("loading")) { return; }
+      if (this.get("loading")) {
+        return;
+      }
       if (this.get("model.members.length") >= this.get("model.user_count")) {
         this.set("application.showFooter", true);
         return;
@@ -96,14 +106,19 @@ export default Ember.Controller.extend({
         this.get("model.name"),
         this.get("model.members.length"),
         this.get("limit"),
-        { order: this.get('order'), desc: this.get('desc') }
+        { order: this.get("order"), desc: this.get("desc") }
       ).then(result => {
-        this.get("model.members").addObjects(result.members.map(member => Discourse.User.create(member)));
+        this.get("model.members").addObjects(
+          result.members.map(member => Discourse.User.create(member))
+        );
         this.setProperties({
           loading: false,
           user_count: result.meta.total,
           limit: result.meta.limit,
-          offset: Math.min(result.meta.offset + result.meta.limit, result.meta.total)
+          offset: Math.min(
+            result.meta.offset + result.meta.limit,
+            result.meta.total
+          )
         });
       });
     }

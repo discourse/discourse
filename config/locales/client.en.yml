@@ -464,7 +464,6 @@ en:
         all: "All Groups"
         empty: "There are no visible groups."
         filter: "Filter by group type"
-        all_groups: "All Groups"
         owner_groups: "Groups I am an owner of"
         close_groups: "Closed Groups"
         automatic_groups: "Automatic Groups"
@@ -659,6 +658,7 @@ en:
         individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
+        warning: "Mailing list mode enabled. Email notification settings are overridden."
       tag_settings: "Tags"
       watched_tags: "Watched"
       watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
@@ -738,10 +738,23 @@ en:
         choose_new: "Choose a new password"
         choose: "Choose a password"
 
+      second_factor_backup:
+        title: "Two Factor backup code management"
+        regenerate: "Regenerate"
+        disable: "Disable"
+        enable: "Enable"
+        enable_long: "Enable backup codes"
+        manage: "Manage backup codes"
+        copied_to_clipboard: "Copied to Clipboard"
+        copy_to_clipboard_error: "Error copying data to Clipboard"
+        codes:
+          title: "Backup codes"
+          description: "Each line is a different backup code which can only be used once. It's recommended to save this file in a safe place."
+
       second_factor:
         title: "Two Factor Authentication"
         disable: "Disable two factor authentication"
-        enable: "for enhanced account security"
+        enable: "Enable <a href>two factor authentication</a> for enhanced account security"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
         enable_description: |
@@ -758,7 +771,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
+        confirm: "Are you absolutely sure you want to change your username?"
         taken: "Sorry, that username is taken."
         invalid: "That username is invalid. It must only include numbers and letters"
 
@@ -1144,6 +1157,10 @@ en:
       password: "Password"
       second_factor_title: "Two Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
+      second_factor_backup: "<a href>Log in using a backup code</a>"
+      second_factor_backup_title: "Two Factor Backup"
+      second_factor_backup_description: "Please enter one of your backup codes:"
+      second_factor: "<a href>Log in using Authenticator app</a>"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -1373,6 +1390,9 @@ en:
       admin_options_title: "Optional staff settings for this topic"
 
       composer_actions:
+        reply: Reply
+        draft: Draft
+        edit: Edit
         reply_to_post:
           label: Reply to post %{postNumber} by %{postUsername}
           desc: Reply to a specific post
@@ -1507,6 +1527,7 @@ en:
           label: Tagged
         filters:
           label: Only return topics/posts...
+          title: Matching in title only
           likes: I liked
           posted: I posted in
           watching: I'm watching
@@ -2209,7 +2230,7 @@ en:
       can: 'can&hellip; '
       none: '(no category)'
       all: 'All categories'
-      choose: 'Select a category&hellip;'
+      choose: 'category&hellip;'
       edit: 'edit'
       edit_long: "Edit"
       view: 'View Topics in Category'
@@ -2710,6 +2731,9 @@ en:
       title: 'Discourse Admin'
       moderator: 'Moderator'
 
+      reports:
+        title: "List of available reports"
+
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard last updated:"
@@ -2748,6 +2772,7 @@ en:
         community_health: Community health
         whats_new_in_discourse: What’s new in Discourse?
         activity_metrics: Activity Metrics
+        all_reports: "All reports"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -2766,6 +2791,8 @@ en:
           end_date: "End Date"
           groups: "All groups"
           disabled: "This report is disabled"
+          total_for_period: "Total for period"
+          total: "Total"
           trending_search:
             more: '<a href="/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
@@ -3061,7 +3088,7 @@ en:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include files)"
+            without_uploads: "Yes (do not include uploads)"
           download:
             label: "Download"
             title: "Send email with download link"
@@ -3363,6 +3390,8 @@ en:
             change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
+            removed_suspend_user: "suspend user (removed)"
+            removed_unsuspend_user: "unsuspend user (removed)"
             grant_badge: "grant badge"
             revoke_badge: "revoke badge"
             check_email: "check email"
@@ -3377,6 +3406,8 @@ en:
             create_category: "create category"
             silence_user: "silence user"
             unsilence_user: "unsilence user"
+            removed_silence_user: "silence user (removed)"
+            removed_unsilence_user: "unsilence user (removed)"
             grant_admin: "grant admin"
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
@@ -3401,9 +3432,11 @@ en:
             disabled_second_factor: "disable Two Factor Authentication"
             topic_published: "topic published"
             post_approved: "post approved"
+            post_rejected: "post rejected"
             create_badge: "create badge"
             change_badge: "change badge"
             delete_badge: "delete badge"
+            merge_user: "merge user"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3561,6 +3594,10 @@ en:
         penalty_post_delete: "Delete the post"
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
+        penalty_count: "Penalty Count"
+        clear_penalty_history:
+          title: "Clear Penalty History"
+          description: "users with penalties cannot reach TL3"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
@@ -3823,7 +3860,8 @@ en:
         enabled: Enable badge
         icon: Icon
         image: Image
-        icon_help: "Use either a Font Awesome class or URL to an image"
+        icon_help: "Use a Font Awesome class"
+        image_help: "Enter the URL of the image (overrides icon field if both are set)"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily

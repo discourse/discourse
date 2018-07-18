@@ -264,6 +264,8 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
         puts "#{result.cmd_tuples} rows affected!"
       rescue => ex
         puts "Error: #{ex}"
+        puts "The remap has only been partially applied due to the error above. Please re-run the script again."
+        exit(1)
       end
     end
   end

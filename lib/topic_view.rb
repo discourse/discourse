@@ -37,19 +37,21 @@ class TopicView
     wpcf.flatten.uniq
   end
 
-  def initialize(topic_id, user = nil, options = {})
-    @message_bus_last_id = MessageBus.last_id("/topic/#{topic_id}")
+  def initialize(topic_or_topic_id, user = nil, options = {})
+    @topic = find_topic(topic_or_topic_id)
     @user = user
     @guardian = Guardian.new(@user)
-    @topic = find_topic(topic_id)
-    @print = options[:print].present?
 
     check_and_raise_exceptions
+
+    @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
+    @print = options[:print].present?
 
     options.each do |key, value|
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
+    @_post_number = @post_number.dup
     @post_number = [@post_number.to_i, 1].max
     @page = [@page.to_i, 1].max
 
@@ -102,7 +104,7 @@ class TopicView
 
   def gaps
     return unless @contains_gaps
-    Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+    @gaps ||= Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
   end
 
   def last_post
@@ -277,35 +279,48 @@ class TopicView
 
   def post_counts_by_user
     @post_counts_by_user ||= begin
-      post_ids = unfiltered_post_ids
+      if is_mega_topic?
+        {}
+      else
+        post_ids = unfiltered_post_ids
 
-      return {} if post_ids.blank?
+        return {} if post_ids.blank?
 
-      sql = <<~SQL
-        SELECT user_id, count(*) AS count_all
-          FROM posts
-         WHERE id IN (:post_ids)
-           AND user_id IS NOT NULL
-      GROUP BY user_id
-      ORDER BY count_all DESC
-         LIMIT #{MAX_PARTICIPANTS}
-      SQL
+        sql = <<~SQL
+          SELECT user_id, count(*) AS count_all
+            FROM posts
+           WHERE id in (:post_ids)
+             AND user_id IS NOT NULL
+        GROUP BY user_id
+        ORDER BY count_all DESC
+           LIMIT #{MAX_PARTICIPANTS}
+        SQL
 
-      Hash[Post.exec_sql(sql, post_ids: post_ids).values]
+        Hash[*DB.query_single(sql, post_ids: post_ids)]
+      end
     end
   end
+
+  # if a topic has more that N posts no longer attempt to
+  # get accurate participant count, instead grab cached count
+  # from topic
+  MAX_POSTS_COUNT_PARTICIPANTS = 500
 
   def participant_count
     @participant_count ||=
       begin
         if participants.size == MAX_PARTICIPANTS
-          sql = <<~SQL
-            SELECT COUNT(DISTINCT user_id)
-            FROM posts
-            WHERE id IN (:post_ids)
-            AND user_id IS NOT NULL
-          SQL
-          Post.exec_sql(sql, post_ids: unfiltered_post_ids).getvalue(0, 0).to_i
+          if @topic.posts_count > MAX_POSTS_COUNT_PARTICIPANTS
+            @topic.participant_count
+          else
+            sql = <<~SQL
+              SELECT COUNT(DISTINCT user_id)
+              FROM posts
+              WHERE id IN (:post_ids)
+              AND user_id IS NOT NULL
+            SQL
+            DB.query_single(sql, post_ids: unfiltered_post_ids).first.to_i
+          end
         else
           participants.size
         end
@@ -359,16 +374,31 @@ class TopicView
     @filtered_posts.by_newest.with_user.first(25)
   end
 
-  # Returns an array of [id, post_number, days_ago] tuples.
+  # Returns an array of [id, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
-    @filtered_post_stream ||= @filtered_posts
-      .order(:sort_order)
-      .pluck(:id, :post_number, 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
+    @filtered_post_stream ||= begin
+      posts = @filtered_posts
+        .order(:sort_order)
+
+      columns = [:id]
+
+      if !is_mega_topic?
+        columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
+      end
+
+      posts.pluck(*columns)
+    end
   end
 
   def filtered_post_ids
-    @filtered_post_ids ||= filtered_post_stream.map { |tuple| tuple[0] }
+    @filtered_post_ids ||= filtered_post_stream.map do |tuple|
+      if is_mega_topic?
+        tuple
+      else
+        tuple[0]
+      end
+    end
   end
 
   def unfiltered_post_ids
@@ -380,6 +410,10 @@ class TopicView
           filtered_post_ids
         end
       end
+  end
+
+  def filtered_post_id(post_number)
+    @filtered_posts.where(post_number: post_number).pluck(:id).first
   end
 
   protected
@@ -435,10 +469,14 @@ class TopicView
     @posts
   end
 
-  def find_topic(topic_id)
-    # with_deleted covered in #check_and_raise_exceptions
-    finder = Topic.with_deleted.where(id: topic_id).includes(:category)
-    finder.first
+  def find_topic(topic_or_topic_id)
+    if topic_or_topic_id.is_a?(Topic)
+      topic_or_topic_id
+    else
+      # with_deleted covered in #check_and_raise_exceptions
+      finder = Topic.with_deleted.where(id: topic_or_topic_id).includes(:category)
+      finder.first
+    end
   end
 
   def unfiltered_posts
@@ -468,7 +506,12 @@ class TopicView
     # Username filters
     if @username_filters.present?
       usernames = @username_filters.map { |u| u.downcase }
-      @filtered_posts = @filtered_posts.where('post_number = 1 OR posts.user_id IN (SELECT u.id FROM users u WHERE username_lower IN (?))', usernames)
+
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.user_id IN (SELECT u.id FROM users u WHERE u.username_lower IN (?))
+      ', usernames)
+
       @contains_gaps = true
     end
 
@@ -476,8 +519,12 @@ class TopicView
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
+
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
-      @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
+      @filtered_posts = @filtered_posts.where(
+        "posts.deleted_at IS NULL OR posts.post_number = 1"
+      )
+
       @contains_gaps = true
     end
 
@@ -528,16 +575,21 @@ class TopicView
 
   def closest_post_to(post_number)
     # happy path
-    closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
+    closest_post_id = filtered_post_id(post_number)
 
-    if closest_post.empty?
+    if closest_post_id.blank?
       # less happy path, missing post
-      closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
+      closest_post_id = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id).first
     end
 
-    return nil if closest_post.empty?
+    return nil if closest_post_id.blank?
 
-    filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
+    filtered_post_ids.index(closest_post_id) || filtered_post_ids[0]
   end
 
+  MEGA_TOPIC_POSTS_COUNT = 10000
+
+  def is_mega_topic?
+    @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
+  end
 end

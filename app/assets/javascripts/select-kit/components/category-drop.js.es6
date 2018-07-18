@@ -20,6 +20,7 @@ export default ComboBoxComponent.extend({
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
+  subCategory: false,
 
   init() {
     this._super();
@@ -46,17 +47,35 @@ export default ComboBoxComponent.extend({
     return content && content.length >= 15;
   },
 
-  @computed("allCategoriesUrl", "allCategoriesLabel", "noCategoriesUrl", "noCategoriesLabel")
-  collectionHeader(allCategoriesUrl, allCategoriesLabel, noCategoriesUrl, noCategoriesLabel) {
+  @computed(
+    "allCategoriesUrl",
+    "allCategoriesLabel",
+    "noCategoriesUrl",
+    "noCategoriesLabel"
+  )
+  collectionHeader(
+    allCategoriesUrl,
+    allCategoriesLabel,
+    noCategoriesUrl,
+    noCategoriesLabel
+  ) {
     let shortcuts = "";
 
-    shortcuts += `
-      <a href="${allCategoriesUrl}" class="category-filter">
-        ${allCategoriesLabel}
-      </a>
-    `;
+    if (
+      this.get("hasSelection") ||
+      (this.get("noSubcategories") && this.get("subCategory"))
+    ) {
+      shortcuts += `
+        <a href="${allCategoriesUrl}" class="category-filter">
+          ${allCategoriesLabel}
+        </a>
+      `;
+    }
 
-    if (this.get("subCategory")) {
+    if (
+      this.get("subCategory") &&
+      (this.get("hasSelection") || !this.get("noSubcategories"))
+    ) {
       shortcuts += `
         <a href="${noCategoriesUrl}" class="category-filter">
           ${noCategoriesLabel}
@@ -72,6 +91,7 @@ export default ComboBoxComponent.extend({
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);
+      content.title = category.title;
       content.label = categoryBadgeHTML(category, {
         link: false,
         allowUncategorized: true,
@@ -79,9 +99,15 @@ export default ComboBoxComponent.extend({
       }).htmlSafe();
     } else {
       if (this.get("noSubcategories")) {
-        content.label = `<span class="category-name">${this.get("noCategoriesLabel")}</span>`;
+        content.label = `<span class="category-name">${this.get(
+          "noCategoriesLabel"
+        )}</span>`;
+        content.title = this.get("noCategoriesLabel");
       } else {
-        content.label = `<span class="category-name">${this.get("allCategoriesLabel")}</span>`;
+        content.label = `<span class="category-name">${this.get(
+          "allCategoriesLabel"
+        )}</span>`;
+        content.title = this.get("allCategoriesLabel");
       }
     }
 
@@ -98,7 +124,7 @@ export default ComboBoxComponent.extend({
 
   @computed("parentCategory.url", "subCategory")
   allCategoriesUrl(parentCategoryUrl, subCategory) {
-    return subCategory ? ( parentCategoryUrl || "/" ) : "/";
+    return subCategory ? parentCategoryUrl || "/" : "/";
   },
 
   @computed("parentCategory.url")
@@ -109,7 +135,8 @@ export default ComboBoxComponent.extend({
   actions: {
     onSelect(categoryId) {
       const category = Category.findById(parseInt(categoryId, 10));
-      const categoryURL = Discourse.getURL("/c/") + Discourse.Category.slugFor(category);
+      const categoryURL =
+        Discourse.getURL("/c/") + Discourse.Category.slugFor(category);
       DiscourseURL.routeTo(categoryURL);
     }
   }

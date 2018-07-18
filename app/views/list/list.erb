@@ -26,19 +26,14 @@
   <br/>
 
   <% if params[:page].to_i == 0 && @subcategories.present? %>
-    <div itemscope itemtype='http://schema.org/ItemList'>
-      <% @subcategories.each do |subcategory| %>
-        <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-          <meta itemprop='url' content='<%= subcategory.url %>'>
-          <a href='<%= subcategory.url %>' itemprop='item'>
-            <span itemprop='name'><%= subcategory.name %></span>
-          </a>
-          <% if subcategory.description.present? %>
-            <span itemprop='description'><%= subcategory.description %></span>
-          <% end %>
-        </div>
+    <% @subcategories.each do |subcategory| %>
+      <a href='<%= subcategory.url %>'>
+        <span itemprop='name'><%= subcategory.name %></span>
+      </a>
+      <% if subcategory.description.present? %>
+        <span itemprop='description'><%= subcategory.description %></span>
       <% end %>
-    </div>
+    <% end %>
     <br/>
   <% end %>
 <% end %>
@@ -47,8 +42,9 @@
   <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
   <% @list.topics.each_with_index do |t,i| %>
     <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+      <meta itemprop='position' content='<%= i %>'>
       <meta itemprop='url' content='<%= t.url %>'>
-      <a href='<%= t.relative_url %>' itemprop='item'>
+      <a href='<%= t.url %>' itemprop='item'>
         <span itemprop='name'><%= t.title %></span>
       </a>
       <span class="page-links"><%= page_links(t) %></span>

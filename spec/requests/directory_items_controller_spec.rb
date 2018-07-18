@@ -14,7 +14,7 @@ describe DirectoryItemsController do
 
   it "requires a proper `period` param" do
     get '/directory_items.json', params: { period: 'eviltrout' }
-    expect(response).not_to be_success
+    expect(response).not_to be_successful
   end
 
   context "without data" do
@@ -24,7 +24,7 @@ describe DirectoryItemsController do
 
       it "succeeds" do
         get '/directory_items.json', params: { period: 'all' }
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
     end
 
@@ -37,7 +37,7 @@ describe DirectoryItemsController do
 
     it "succeeds with a valid value" do
       get '/directory_items.json', params: { period: 'all' }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
 
       expect(json).to be_present
@@ -53,12 +53,12 @@ describe DirectoryItemsController do
       SiteSetting.enable_user_directory = false
 
       get '/directory_items.json', params: { period: 'all' }
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
 
     it "finds user by name" do
       get '/directory_items.json', params: { period: 'all', name: 'eviltrout' }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json).to be_present
@@ -69,7 +69,7 @@ describe DirectoryItemsController do
 
     it "finds staged user by name" do
       get '/directory_items.json', params: { period: 'all', name: 'stage_user' }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json).to be_present
@@ -80,7 +80,7 @@ describe DirectoryItemsController do
 
     it "excludes users by username" do
       get '/directory_items.json', params: { period: 'all', exclude_usernames: "stage_user,eviltrout" }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json).to be_present
@@ -92,7 +92,7 @@ describe DirectoryItemsController do
 
     it "filters users by group" do
       get '/directory_items.json', params: { period: 'all', group: group.name }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json).to be_present

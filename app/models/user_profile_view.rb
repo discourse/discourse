@@ -1,5 +1,5 @@
 class UserProfileView < ActiveRecord::Base
-  validates_presence_of :user_profile_id, :ip_address, :viewed_at
+  validates_presence_of :user_profile_id, :viewed_at
 
   belongs_to :user_profile
 
@@ -9,6 +9,7 @@ class UserProfileView < ActiveRecord::Base
     if user_id
       return if user_id < 1
       redis_key << ":user-#{user_id}"
+      ip = nil
     else
       redis_key << ":ip-#{ip}"
     end
@@ -24,7 +25,7 @@ class UserProfileView < ActiveRecord::Base
                   /*where*/
                )"
 
-        builder = SqlBuilder.new(sql)
+        builder = DB.build(sql)
 
         if !user_id
           builder.where("viewed_at = :viewed_at AND ip_address = :ip_address AND user_profile_id = :user_profile_id AND user_id IS NULL")
@@ -34,7 +35,7 @@ class UserProfileView < ActiveRecord::Base
 
         result = builder.exec(user_profile_id: user_profile_id, ip_address: ip, viewed_at: at, user_id: user_id)
 
-        if result.cmd_tuples > 0
+        if result > 0
           UserProfile.find(user_profile_id).increment!(:views)
         end
       end
@@ -59,13 +60,12 @@ end
 #  id              :integer          not null, primary key
 #  user_profile_id :integer          not null
 #  viewed_at       :datetime         not null
-#  ip_address      :inet             not null
+#  ip_address      :inet
 #  user_id         :integer
 #
 # Indexes
 #
 #  index_user_profile_views_on_user_id          (user_id)
 #  index_user_profile_views_on_user_profile_id  (user_profile_id)
-#  unique_profile_view_ip                       (viewed_at,ip_address,user_profile_id) UNIQUE
-#  unique_profile_view_user                     (viewed_at,user_id,user_profile_id) UNIQUE
+#  unique_profile_view_user_or_ip               (viewed_at,user_id,ip_address,user_profile_id) UNIQUE
 #

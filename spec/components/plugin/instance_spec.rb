@@ -116,6 +116,15 @@ describe Plugin::Instance do
     end
   end
 
+  context "#add_report" do
+    it "adds a report" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.add_report("readers") {}
+
+      expect(Report.respond_to?(:report_readers)).to eq(true)
+    end
+  end
+
   context "activate!" do
     it "can activate plugins correctly" do
       plugin = Plugin::Instance.new

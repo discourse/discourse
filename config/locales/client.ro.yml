@@ -16,8 +16,8 @@ ro:
           format: '%n %u'
           units:
             byte:
-              few: Bytes
               one: Byte
+              few: Bytes
               other: Bytes
             gb: GB
             kb: KB
@@ -44,87 +44,87 @@ ro:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          few: < %{count}s
-          one: < 1s
-          other: < %{count} s
+          one: "< 1s"
+          few: "< %{count}s"
+          other: "< %{count} s"
         x_seconds:
-          few: '%{count} s'
-          one: 1s
-          other: '%{count} s'
+          one: "1s"
+          few: "%{count} s"
+          other: "%{count} s"
         less_than_x_minutes:
-          few: < 1m
-          one: < 1m
-          other: < %{count}m
+          one: "< 1m"
+          few: "< 1m"
+          other: "< %{count}m"
         x_minutes:
-          few: '%{count} m'
-          one: 1m
-          other: '%{count} m'
+          one: "1m"
+          few: "%{count} m"
+          other: "%{count} m"
         about_x_hours:
-          few: '%{count} h'
-          one: 1h
-          other: '%{count} h'
+          one: "1h"
+          few: "%{count} h"
+          other: "%{count} h"
         x_days:
-          few: '%{count} z'
-          one: 1z
-          other: '%{count} z'
+          one: "1z"
+          few: "%{count} z"
+          other: "%{count} z"
         x_months:
-          few: 1mon
-          one: 1mon
-          other: '%{count}mon'
+          one: "1mon"
+          few: "1mon"
+          other: "%{count}mon"
         about_x_years:
-          few: '%{count} a'
-          one: 1a
-          other: '%{count} a'
+          one: "1a"
+          few: "%{count} a"
+          other: "%{count} a"
         over_x_years:
-          few: '> %{count} a'
-          one: '> 1a'
-          other: '> %{count} a'
+          one: "> 1a"
+          few: "> %{count} a"
+          other: "> %{count} a"
         almost_x_years:
-          few: '%{count} a'
-          one: 1a
-          other: '%{count} de a'
+          one: "1a"
+          few: "%{count} a"
+          other: "%{count} de a"
         date_month: "DD MMMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          few: '%{count} min'
-          one: 1 min
-          other: '%{count} de min'
+          one: "1 min"
+          few: "%{count} min"
+          other: "%{count} de min"
         x_hours:
-          few: '%{count} ore'
-          one: 1 oră
-          other: '%{count} de ore'
+          one: "1 oră"
+          few: "%{count} ore"
+          other: "%{count} de ore"
         x_days:
-          few: '%{count} zile'
-          one: 1 zi
-          other: '%{count} de zile'
+          one: "1 zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
         date_year: "D MM YYYY"
       medium_with_ago:
         x_minutes:
-          few: acum %{count} min
-          one: acum un min
-          other: acum %{count} de min
+          one: "acum un min"
+          few: "acum %{count} min"
+          other: "acum %{count} de min"
         x_hours:
-          few: acum %{count} ore
-          one: acum o oră
-          other: acum %{count} de ore
+          one: "acum o oră"
+          few: "acum %{count} ore"
+          other: "acum %{count} de ore"
         x_days:
-          few: acum %{count} zile
-          one: acum o zi
-          other: acum %{count} de zile
+          one: "acum o zi"
+          few: "acum %{count} zile"
+          other: "acum %{count} de zile"
       later:
         x_days:
-          few: După %{count} zile
-          one: După o zi
-          other: După %{count} de zile
+          one: "După o zi"
+          few: "După %{count} zile"
+          other: "După %{count} de zile"
         x_months:
-          few: '%{count} luni mai târziu'
-          one: O lună mai târziu
-          other: '%{count} de luni mai târziu'
+          one: "O lună mai târziu"
+          few: "%{count} luni mai târziu"
+          other: "%{count} de luni mai târziu"
         x_years:
-          few: După %{count} ani
-          one: După un an
-          other: După %{count} de ani
+          one: "După un an"
+          few: "După %{count} ani"
+          other: "După %{count} de ani"
       previous_month: 'Luna anterioară'
       next_month: 'Luna următoare'
       placeholder: dată
@@ -205,9 +205,9 @@ ro:
     show_help: "Opțiuni"
     links: "Adrese web"
     links_lowercase:
-      few: link-uri
-      one: link
-      other: de link-uri
+      one: "link"
+      few: "link-uri"
+      other: "de link-uri"
     faq: "Întrebări frecvente"
     guidelines: "Indicații"
     privacy_policy: "Politică de confidențialitate"
@@ -231,9 +231,9 @@ ro:
     max_of_count: "max din {{count}}"
     alternation: "sau"
     character_count:
-      few: '{{count}} caractere'
-      one: Un caracter
-      other: '{{count}} de caractere'
+      one: "Un caracter"
+      few: "{{count}} caractere"
+      other: "{{count}} de caractere"
     suggested_topics:
       title: "Subiecte sugerate"
       pm_title: "Mesaje sugerate"
@@ -266,9 +266,9 @@ ro:
       remove: "Șterge semn de carte"
       confirm_clear: "Ești sigur că dorești să ștergi toate semnele de carte din acest subiect?"
     topic_count_latest:
-      few: '{{count}} subiecte noi sau actualizate.'
-      one: Un subiect nou sau actualizat.
-      other: '{{count}} de subiecte noi sau actualizate.'
+      one: "Un subiect nou sau actualizat."
+      few: "{{count}} subiecte noi sau actualizate."
+      other: "{{count}} de subiecte noi sau actualizate."
     preview: "Previzualizează"
     cancel: "Anulează"
     save: "Salvează schimbările"
@@ -306,18 +306,18 @@ ro:
       cancel: "Anulează"
       view_pending: "Vezi postările în aşteptare"
       has_pending_posts:
-        few: Acest subiect are <b>{{count}}</b> postări în așteptare.
-        one: Acest subiect are <b>o</b> postare în așteptare
-        other: Acest subiect are <b>{{count}}</b> de postări în așteptare.
+        one: "Acest subiect are <b>o</b> postare în așteptare"
+        few: "Acest subiect are <b>{{count}}</b> postări în așteptare."
+        other: "Acest subiect are <b>{{count}}</b> de postări în așteptare."
       confirm: "Salvează schimbările"
       delete_prompt: "Ești sigur că vrei să ștergi utilizatorul <b>%{username}</b>? Vor fi șterse toate postările lui iar email-ul și IP-ul vor fi blocate."
       approval:
         title: "Necesită aprobare"
         description: "Am primit noua postare dar trebuie să fie aprobată de un moderator înainte că ea să apară pe site. Te rugăm să ai răbdare."
         pending_posts:
-          few: Aveţi <strong>{{count}}</strong> postări în aşteptare.
-          one: Aveţi <strong>1</strong> postare în aşteptare.
-          other: Aveţi <strong>{{count}}</strong> (de) postări în așteptare.
+          one: "Aveţi <strong>1</strong> postare în aşteptare."
+          few: "Aveţi <strong>{{count}}</strong> postări în aşteptare."
+          other: "Aveţi <strong>{{count}}</strong> (de) postări în așteptare."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> a postat <a href='{{topicUrl}}'>discuția</a>"
@@ -351,9 +351,9 @@ ro:
       posts_read: "Citite"
       posts_read_long: "Postări citite"
       total_rows:
-        few: '%{count} utilizatori'
-        one: 1 utilizator
-        other: '%{count} de utilizatori'
+        one: "1 utilizator"
+        few: "%{count} utilizatori"
+        other: "%{count} de utilizatori"
     group_histories:
       actions:
         change_group_setting: "Schimbă setarea grupului"
@@ -420,7 +420,6 @@ ro:
         all: "Toate grupurile"
         empty: "Nu există nici un grup vizibil."
         filter: "Filtrează după tipul grupului"
-        all_groups: "Toate grupurile"
         owner_groups: "Grupuri pe care le dețin"
         close_groups: "Grupuri închise"
         automatic_groups: "Grupuri automate"
@@ -436,9 +435,9 @@ ro:
         is_group_user: "Membru"
         is_group_owner: "Deținător"
       title:
-        few: Grupuri
-        one: Grup
-        other: Grupuri
+        one: "Grup"
+        few: "Grupuri"
+        other: "Grupuri"
       activity: "Activitate"
       members:
         title: "Membrii"
@@ -522,13 +521,13 @@ ro:
       toggle_ordering: "Comută criteriu de aranjare"
       subcategories: "Subcategorii"
       topic_sentence:
-        few: '%{count} subiecte'
-        one: Un subiect
-        other: '%{count} de subiecte'
+        one: "Un subiect"
+        few: "%{count} subiecte"
+        other: "%{count} de subiecte"
       topic_stat_sentence:
-        few: '%{count} subiecte noi în %{unit}.'
-        one: '%{count} subiect nou în %{unit}.'
-        other: '%{count} de subiecte noi în %{unit}.'
+        one: "%{count} subiect nou în %{unit}."
+        few: "%{count} subiecte noi în %{unit}."
+        other: "%{count} de subiecte noi în %{unit}."
     ip_lookup:
       title: Căutare adresă IP
       hostname: Nume gazdă
@@ -686,7 +685,6 @@ ro:
         error: "A apărut o eroare la schimbarea acestei valori."
       change_username:
         title: "Schimbă numele utilizatorului"
-        confirm: "Dacă îți schimbi numele de utilizator, toate citările anterioare ale posturilor tale și toate mențiunile @numelui se vor pierde. Ești absolut sigur că vrei asta?"
         taken: "Acest nume de utilizator este deja folosit."
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       change_email:
@@ -722,9 +720,9 @@ ro:
         authenticated: "Emailul a fost autentificat de către {{provider}}."
         frequency_immediately: "Vom trimite imediat un email dacă nu ai citit deja despre ce este vorba. "
         frequency:
-          few: Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} minute.
-          one: Vom trimite un email doar dacă nu te-am văzut în ultimul minut.
-          other: Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} de minute.
+          one: "Vom trimite un email doar dacă nu te-am văzut în ultimul minut."
+          few: "Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} minute."
+          other: "Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} de minute."
       name:
         title: "Nume"
         instructions: "Numele tău complet (opțional)"
@@ -810,9 +808,9 @@ ro:
         sent: "Trimis(e)"
         none: "Nu există invitații."
         truncated:
-          few: Se afișează primele {{count}} invitații.
-          one: Se afișează prima invitație.
-          other: Se afișează primele {{count}} de invitații.
+          one: "Se afișează prima invitație."
+          few: "Se afișează primele {{count}} invitații."
+          other: "Se afișează primele {{count}} de invitații."
         redeemed: "Invitații acceptate"
         redeemed_tab: "Acceptate"
         redeemed_tab_with_count: "({{count}}) Acceptate"
@@ -858,37 +856,37 @@ ro:
         stats: "Statistici"
         time_read: "Timp petrecut pe site"
         topic_count:
-          few: subiecte create
-          one: un subiect creat
-          other: de subiecte create
+          one: "un subiect creat"
+          few: "subiecte create"
+          other: "de subiecte create"
         post_count:
-          few: postări create
-          one: o postare creată
-          other: de postări create
+          one: "o postare creată"
+          few: "postări create"
+          other: "de postări create"
         likes_given:
-          few: oferite
-          one: oferit
-          other: oferite
+          one: "oferit"
+          few: "oferite"
+          other: "oferite"
         likes_received:
-          few: primite
-          one: primit
-          other: primite
+          one: "primit"
+          few: "primite"
+          other: "primite"
         days_visited:
-          few: vizite
-          one: vizită
-          other: de vizite
+          one: "vizită"
+          few: "vizite"
+          other: "de vizite"
         topics_entered:
-          few: subiecte vizualizate
-          one: subiect vizualizat
-          other: subiecte vizualizate
+          one: "subiect vizualizat"
+          few: "subiecte vizualizate"
+          other: "subiecte vizualizate"
         posts_read:
-          few: postări citite
-          one: postare citită
-          other: de postări citite
+          one: "postare citită"
+          few: "postări citite"
+          other: "de postări citite"
         bookmark_count:
-          few: semne de carte
-          one: semn de carte
-          other: de semne de carte
+          one: "semn de carte"
+          few: "semne de carte"
+          other: "de semne de carte"
         top_replies: "Top răspunsuri"
         no_replies: "Nici un răspuns încă."
         more_replies: "Mai multe răspunsuri"
@@ -956,9 +954,9 @@ ro:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a atins limita admisă de %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a depășit  limita admisă de %{siteSettingRate}."
       rate:
-        few: '%{count} erori/%{duration}'
-        one: o eroare/%{duration}
-        other: '%{count} de erori/%{duration}'
+        one: "o eroare/%{duration}"
+        few: "%{count} erori/%{duration}"
+        other: "%{count} de erori/%{duration}"
     learn_more: "află mai multe..."
     all_time: 'total'
     all_time_desc: 'total subiecte create'
@@ -979,8 +977,8 @@ ro:
     time_read_recently_tooltip: '%{time_read} total citit (%{recent_time_read} în ultimele 60 de zile)'
     last_reply_lowercase: Ultimul răspuns
     replies_lowercase:
-      few: răspunsuri
       one: răspuns
+      few: răspunsuri
       other: de răspunsuri
     signup_cta:
       sign_up: "Înregistrare"
@@ -1143,9 +1141,9 @@ ro:
       drafts_offline: "schiță offline"
       group_mentioned_limit: "1Atenție!1 Ai menționat 2{{group}}2, dar acest grup are mai mulți membri decât limita de {{max}} utilizatori configurată de către administrator. Nimeni nu va fi notificat."
       group_mentioned:
-        few: Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}}  persoane</a> – ești sigur?
-        one: Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>o persoană</a> – ești sigur?
-        other: Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}} de persoane</a> – ești sigur?
+        one: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>o persoană</a> – ești sigur?"
+        few: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}}  persoane</a> – ești sigur?"
+        other: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}} de persoane</a> – ești sigur?"
       cannot_see_mention:
         category: "Ai menționat utilizatorii: {{username}}. Însă ei nu vor notificați pentru că nu au acces la această categorie. Va trebui să îi adaugi la într-un grup care are acces la aceasta categorie."
         private: "Ai menționat utilizatorii:  {{username}}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
@@ -1221,9 +1219,9 @@ ro:
     notifications:
       tooltip:
         message:
-          few: '{{count}} mesaje necitite'
-          one: 1 mesaj necitit
-          other: '{{count}} mesaje necitite'
+          one: "1 mesaj necitit"
+          few: "{{count}} mesaje necitite"
+          other: "{{count}} mesaje necitite"
       title: "notificări la menționările @numelui tău, răspunsuri la postările sau subiectele tale, mesaje, etc."
       none: "Nu pot încărca notificările în acest moment."
       empty: "Nu au fost găsite notificări."
@@ -1238,9 +1236,9 @@ ro:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        few: <span>{{username}}, {{username2}} și încă o persoană</span> {{description}}
-        one: <span>{{username}}, {{username2}} și încă o persoană</span> {{description}}
-        other: <span>{{username}}, {{username2}} și alți {{count}}</span> {{description}}
+        one: "<span>{{username}}, {{username2}} și încă o persoană</span> {{description}}"
+        few: "<span>{{username}}, {{username2}} și încă o persoană</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} și alți {{count}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
@@ -1363,9 +1361,9 @@ ro:
         notification_level: "Notificări"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
         selected:
-          few: Ai selectat <b>{{count}}</b> subiecte.
-          one: Ai selectat <b>un</b> subiect.
-          other: Ai selectat <b>{{count}}</b> de subiecte.
+          one: "Ai selectat <b>un</b> subiect."
+          few: "Ai selectat <b>{{count}}</b> subiecte."
+          other: "Ai selectat <b>{{count}}</b> de subiecte."
         change_tags: "Înlocuiește etichete"
         append_tags: "Adaugă etichete"
         choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
@@ -1398,9 +1396,9 @@ ro:
         search: "Nu mai sunt rezultate."
     topic:
       filter_to:
-        few: '{{count}} postări în subiect'
-        one: O postare în subiect
-        other: '{{count}} de postări în subiect'
+        one: "O postare în subiect"
+        few: "{{count}} postări în subiect"
+        other: "{{count}} de postări în subiect"
       create: 'Subiect nou'
       create_long: 'Creează un subiect nou'
       private_message: 'Scrie un mesaj.'
@@ -1414,12 +1412,12 @@ ro:
       new: 'subiect nou'
       unread: 'necitit'
       new_topics:
+        one: 'Un subiect nou'
         few: '{{count}} subiecte noi'
-        one: Un subiect nou
         other: '{{count}} de subiecte noi'
       unread_topics:
+        one: 'Un subiect necitit'
         few: '{{count}} subiecte necitite'
-        one: Un subiect necitit
         other: '{{count}} de subiecte necitite'
       title: 'Subiect'
       invalid_access:
@@ -1433,21 +1431,21 @@ ro:
         title: "Subiectul nu a fost găsit"
         description: "Ne pare rău, Nu am putut găsi subiectul. Poate a fost șters de un moderator?"
       total_unread_posts:
-        few: ai {{count}} mesaje necitite în această discuţie.
-        one: ai un mesaj necitit în această discuţie.
-        other: ai {{count}} de mesaje necitite în această discuţie.
+        one: "ai un mesaj necitit în această discuţie."
+        few: "ai {{count}} mesaje necitite în această discuţie."
+        other: "ai {{count}} de mesaje necitite în această discuţie."
       unread_posts:
-        few: ai {{count}} mesaje vechi necitite în această discuţie.
-        one: ai un mesaj vechi necitit în această discuţie.
-        other: ai {{count}} de mesaje vechi necitite în această discuţie.
+        one: "ai un mesaj vechi necitit în această discuţie."
+        few: "ai {{count}} mesaje vechi necitite în această discuţie."
+        other: "ai {{count}} de mesaje vechi necitite în această discuţie."
       new_posts:
-        few: sunt {{count}} mesaje noi în această discuţie de la ultima citire
-        one: este un mesaj nou în această discuţie de la ultima citire
-        other: sunt {{count}} de mesaje noi în această discuţie de la ultima citire
+        one: "este un mesaj nou în această discuţie de la ultima citire"
+        few: "sunt {{count}} mesaje noi în această discuţie de la ultima citire"
+        other: "sunt {{count}} de mesaje noi în această discuţie de la ultima citire"
       likes:
-        few: sunt {{count}} aprecieri pentru această discuţie
-        one: există o apreciere pentru această discuţie
-        other: sunt {{count}} de aprecieri pentru această discuţie
+        one: "există o apreciere pentru această discuţie"
+        few: "sunt {{count}} aprecieri pentru această discuţie"
+        other: "sunt {{count}} de aprecieri pentru această discuţie"
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată link-urile din acest subiect"
@@ -1507,9 +1505,9 @@ ro:
         auto_close_based_on_last_post: "Acest subiect va fi automat închis după %{duration} de la ultimul răspuns."
       auto_close_title: 'Setări de închidere automată'
       auto_close_immediate:
-        few: Ultima postare din subiect este deja veche de %{count} ore, așa că subiectul va fi închis imediat.
-        one: Ultima postare din subiect este deja veche de o oră, așa că subiectul va fi închis imediat.
-        other: Ultima postare din subiect este deja veche de %{count} de ore, așa că subiectul va fi închis imediat.
+        one: "Ultima postare din subiect este deja veche de o oră, așa că subiectul va fi închis imediat."
+        few: "Ultima postare din subiect este deja veche de %{count} ore, așa că subiectul va fi închis imediat."
+        other: "Ultima postare din subiect este deja veche de %{count} de ore, așa că subiectul va fi închis imediat."
       timeline:
         back: "Înapoi"
         back_description: "Întoarce-te la ultima ta postare necitită"
@@ -1614,9 +1612,9 @@ ro:
         pin_validation: "Este necesară o dată pentru a putea fixa acest subiect."
         not_pinned: "Nu sunt subiecte fixate în {{categoryLink}}."
         already_pinned:
-          few: 'Număr de subiecte momentan fixate în {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          one: 'Număr de subiecte momentan fixate în {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          other: 'Număr de subiecte momentan fixate în {{categoryLink}}: <strong class=''badge badge-notification unread''>{{count}}</strong>'
+          one: "Număr de subiecte momentan fixate în {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          few: "Număr de subiecte momentan fixate în {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          other: "Număr de subiecte momentan fixate în {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Pune acest subiect în vârful listei tuturor subiectelor până"
         confirm_pin_globally: "Sunt {{count}} subiecte fixate la nivel global. Prea multe subiecte fixate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Ești sigur că vrei să fixezi un nou subiect la nivel global?"
         unpin_globally: "Elimină acest subiect din partea de sus a tuturor listelor de discuţii."
@@ -1624,9 +1622,9 @@ ro:
         global_pin_note: "Utilizatorii pot anula un subiect fixat doar de ei pentru ei înșiși."
         not_pinned_globally: "Nu există subiecte fixate global."
         already_pinned_globally:
-          few: 'Număr de subiecte fixate la nivel global: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          one: 'Număr de subiecte fixate la nivel global: <strong class=''badge badge-notification unread''>{{count}}</strong>'
-          other: 'Număr de subiecte fixate la nivel global: <strong class=''badge badge-notification unread''>{{count}}</strong>'
+          one: "Număr de subiecte fixate la nivel global: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          few: "Număr de subiecte fixate la nivel global: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          other: "Număr de subiecte fixate la nivel global: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Transformă acest subiect într-un banner care apare în partea de sus a tuturor paginilor."
         remove_banner: "Elimină mesajul banner care apare în partea de sus a fiecărei pagini."
         banner_note: "Utilizatorii pot îndepărta baner-ul închizându-l. Doar un singur mesaj poate fi folosit ca baner într-un moment dat."
@@ -1662,9 +1660,9 @@ ro:
       login_reply: 'Autentifică-te pentru a răspunde.'
       filters:
         n_posts:
-          few: '{{count}} postări'
-          one: O postare
-          other: '{{count}} de postări'
+          one: "O postare"
+          few: "{{count}} postări"
+          other: "{{count}} de postări"
         cancel: "Șterge filtre"
       split_topic:
         title: "Mutare în subiect nou."
@@ -1672,17 +1670,17 @@ ro:
         topic_name: "Numele subiectului nou"
         error: "A apărut o eroare la mutarea postărilor în subiectul nou."
         instructions:
-          few: Vei crea o nouă discuţie care va fi populată cu cele <b>{{count}}</b> postări selectate.
-          one: Vei crea o nouă discuţie care va fi populată cu postarea selectată.
-          other: Vei crea o nouă discuţie care va fi populată cu cele <b>{{count}}</b> de postări selectate.
+          one: "Vei crea o nouă discuţie care va fi populată cu postarea selectată."
+          few: "Vei crea o nouă discuţie care va fi populată cu cele <b>{{count}}</b> postări selectate."
+          other: "Vei crea o nouă discuţie care va fi populată cu cele <b>{{count}}</b> de postări selectate."
       merge_topic:
         title: "Mută în subiect deja existent"
         action: "mută în subiect deja existent"
         error: "A apărut o eroare la mutarea postărilor în acel subiect."
         instructions:
-          few: Te rugăm să alegi subiectul unde dorești să muți aceste <b>{{count}}</b>  mesaje.
-          one: Te rugăm să alegi subiectul unde dorești să muți acest mesaj.
-          other: Te rugăm să alegi subiectul unde dorești să muți aceste <b>{{count}}</b> de mesaje.
+          one: "Te rugăm să alegi subiectul unde dorești să muți acest mesaj."
+          few: "Te rugăm să alegi subiectul unde dorești să muți aceste <b>{{count}}</b>  mesaje."
+          other: "Te rugăm să alegi subiectul unde dorești să muți aceste <b>{{count}}</b> de mesaje."
       merge_posts:
         title: "Comasează postările selectate"
         action: "comasează postările selectate"
@@ -1694,9 +1692,9 @@ ro:
         label: "Noul autor al postărilor"
         placeholder: "numele de utilizator al autorului"
         instructions:
-          few: Alege noul autor pentru cele {{count}} mesaje postate de <b>{{old_user}}</b>.
-          one: Alege noul autor pentru mesajul postat de <b>{{old_user}}</b>.
-          other: Alege noul autor pentru cele {{count}} de mesaje postate de <b>{{old_user}}</b>.
+          one: "Alege noul autor pentru mesajul postat de <b>{{old_user}}</b>."
+          few: "Alege noul autor pentru cele {{count}} mesaje postate de <b>{{old_user}}</b>."
+          other: "Alege noul autor pentru cele {{count}} de mesaje postate de <b>{{old_user}}</b>."
       change_timestamp:
         action: "schimbă data publicării"
         invalid_timestamp: "Marcajul de timp nu poate fi în viitor."
@@ -1719,9 +1717,9 @@ ro:
         select_all: selectează tot
         deselect_all: deselectează  tot
         description:
-          few: Ai selectat <b>{{count}}</b> mesaje.
           one: Ai selectat <b>un</b> mesaj.
-          other: Ai selectat <b>{{count}}</b> de mesaje.
+          few: "Ai selectat <b>{{count}}</b> mesaje."
+          other: "Ai selectat <b>{{count}}</b> de mesaje."
     post:
       quote_reply: "Citează"
       edit_reason: "Motivul edit[rii: "
@@ -1734,33 +1732,33 @@ ro:
       show_full: "Arată postarea în întregime"
       show_hidden: 'Arată conținut ascuns.'
       deleted_by_author:
-        few: (postări retrase de autor, vor fi şterse automat în %{count} ore, cu excepţia cazului în care mesajele sunt marcate)
-        one: (post retras de autor, va fi şters automat într-o oră, cu excepţia cazului în care mesajul este marcat)
-        other: (postări retrase de autor, vor fi şterse automat în %{count} de ore, cu excepţia cazului în care mesajele sunt marcate)
+        one: "(post retras de autor, va fi şters automat într-o oră, cu excepţia cazului în care mesajul este marcat)"
+        few: "(postări retrase de autor, vor fi şterse automat în %{count} ore, cu excepţia cazului în care mesajele sunt marcate)"
+        other: "(postări retrase de autor, vor fi şterse automat în %{count} de ore, cu excepţia cazului în care mesajele sunt marcate)"
       collapse: "restrânge"
       expand_collapse: "extinde/restrânge"
       gap:
-        few: vezi {{count}} răspunsuri ascunse
-        one: vezi un răspuns ascuns
-        other: vezi {{count}} de răspunsuri ascunse
+        one: "vezi un răspuns ascuns"
+        few: "vezi {{count}} răspunsuri ascunse"
+        other: "vezi {{count}} de răspunsuri ascunse"
       unread: "postarea nu a fost citită"
       has_replies:
-        few: '{{count}} răspunsuri'
-        one: Un răspuns
-        other: '{{count}} de răspunsuri'
+        one: "Un răspuns"
+        few: "{{count}} răspunsuri"
+        other: "{{count}} de răspunsuri"
       has_likes:
-        few: '{{count}} aprecieri'
-        one: O apreciere
-        other: '{{count}} de aprecieri'
+        one: "O apreciere"
+        few: "{{count}} aprecieri"
+        other: "{{count}} de aprecieri"
       has_likes_title:
-        few: '{{count}} persoane au apreciat această postare.'
-        one: O persoană a apreciat această postare.
-        other: '{{count}} de persoane au apreciat această postare.'
+        one: "O persoană a apreciat această postare."
+        few: "{{count}} persoane au apreciat această postare."
+        other: "{{count}} de persoane au apreciat această postare."
       has_likes_title_only_you: "Ai apreciat această postare."
       has_likes_title_you:
-        few: Ai apreciat această postare împreună cu alți {{count}} utilizatori.
-        one: Ai apreciat această postare împreună cu un alt utilizator.
-        other: Ai apreciat această postare împreună cu alți {{count}} de utilizatori.
+        one: "Ai apreciat această postare împreună cu un alt utilizator."
+        few: "Ai apreciat această postare împreună cu alți {{count}} utilizatori."
+        other: "Ai apreciat această postare împreună cu alți {{count}} de utilizatori."
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
@@ -1797,13 +1795,13 @@ ro:
         delete_replies:
           confirm: "Dorești să ștergi și răspunsurile la această postare?"
           direct_replies:
-            few: Da, și {{count}} răspunsuri directe
-            one: Da, și {{count}} răspuns direct
-            other: Da, și {{count}} răspunsuri directe
+            one: "Da, și {{count}} răspuns direct"
+            few: "Da, și {{count}} răspunsuri directe"
+            other: "Da, și {{count}} răspunsuri directe"
           all_replies:
-            few: Da, și toate {{count}} răspunsurile
-            one: Da, și 1 răspuns
-            other: Da, și toate {{count}} răspunsurile
+            one: "Da, și 1 răspuns"
+            few: "Da, și toate {{count}} răspunsurile"
+            other: "Da, și toate {{count}} răspunsurile"
           just_the_post: "Nu, doare această postare"
         admin: "acțiuni administrative pentru postare"
         wiki: "Fă postarea Wiki"
@@ -1834,9 +1832,9 @@ ro:
           bookmark: "a pus semn de carte la asta"
           like: "a apreciat asta"
           like_capped:
-            few: și {{count}} alții au apreciat asta
-            one: și {{count}} altul au apreciat asta
-            other: și {{count}} alții au apreciat asta
+            one: "și {{count}} altul au apreciat asta"
+            few: "și {{count}} alții au apreciat asta"
+            other: "și {{count}} alții au apreciat asta"
           vote: "a votat la asta"
         by_you:
           off_topic: "Ai marcat asta cu mesaj de avertizare, ca fiind în afara subiectului"
@@ -1849,80 +1847,80 @@ ro:
           vote: "Ai votat aceasta postare"
         by_you_and_others:
           off_topic:
-            few: Tu şi alte {{count}} persoane aţi marcat acest mesaj ca fiind în afara subiectului.
-            one: Tu şi încă o persoană aţi marcat acest mesaj ca fiind în afară subiectului
-            other: Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca fiind în afara subiectului.
+            one: "Tu şi încă o persoană aţi marcat acest mesaj ca fiind în afară subiectului"
+            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj ca fiind în afara subiectului."
+            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca fiind în afara subiectului."
           spam:
-            few: 'Tu şi alte {{count}} persoane aţi marcat acest mesaj ca spam. '
-            one: 'Tu şi încă o persoană aţi marcat acest mesaj ca spam. '
-            other: 'Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca spam. '
+            one: "Tu şi încă o persoană aţi marcat acest mesaj ca spam. "
+            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj ca spam. "
+            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca spam. "
           inappropriate:
-            few: 'Tu şi alte {{count}} persoane aţi marcat acest mesaj ca inadecvat. '
-            one: 'Tu şi încă o persoană aţi marcat acest mesaj ca inadecvat. '
-            other: 'Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca inadecvat. '
+            one: "Tu şi încă o persoană aţi marcat acest mesaj ca inadecvat. "
+            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj ca inadecvat. "
+            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca inadecvat. "
           notify_moderators:
-            few: Tu şi alte {{count}} persoane aţi marcat acest mesaj pentru moderare.
-            one: Tu şi încă o persoană aţi marcat acest mesaj pentru moderare.
-            other: Tu şi alte {{count}} de persoane aţi marcat acest mesaj pentru moderare.
+            one: "Tu şi încă o persoană aţi marcat acest mesaj pentru moderare."
+            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj pentru moderare."
+            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj pentru moderare."
           notify_user:
-            few: Tu şi alte {{count}}  persoane aţi trimis un mesaj către acest utilizator.
-            one: Tu şi încă o persoană aţi trimis un mesaj către acest utilizator.
-            other: Tu şi alte {{count}} de persoane aţi trimis un mesaj către acest utilizator.
+            one: "Tu şi încă o persoană aţi trimis un mesaj către acest utilizator."
+            few: "Tu şi alte {{count}}  persoane aţi trimis un mesaj către acest utilizator."
+            other: "Tu şi alte {{count}} de persoane aţi trimis un mesaj către acest utilizator."
           bookmark:
-            few: Tu şi alte {{count}} persoane aţi pus un semn de carte pentru această postare.
-            one: Tu şi încă o persoană aţi pus un semn de carte pentru această postare.
-            other: Tu şi alte {{count}} de persoane aţi pus un semn de carte pentru această postare.
+            one: "Tu şi încă o persoană aţi pus un semn de carte pentru această postare."
+            few: "Tu şi alte {{count}} persoane aţi pus un semn de carte pentru această postare."
+            other: "Tu şi alte {{count}} de persoane aţi pus un semn de carte pentru această postare."
           like:
-            few: Tu şi alte {{count}} persoane aţi apreciat asta.
-            one: Tu şi încă o persoană aţi apreciat aceasta.
-            other: Tu şi alte {{count}} de persoane aţi apreciat asta.
+            one: "Tu şi încă o persoană aţi apreciat aceasta."
+            few: "Tu şi alte {{count}} persoane aţi apreciat asta."
+            other: "Tu şi alte {{count}} de persoane aţi apreciat asta."
           vote:
-            few: Tu şi alte {{count}} persoane aţi votat la această postare.
-            one: Tu şi încă o persoană aţi votat la această postare.
-            other: Tu şi alte {{count}} de persoane aţi votat la această postare.
+            one: "Tu şi încă o persoană aţi votat la această postare."
+            few: "Tu şi alte {{count}} persoane aţi votat la această postare."
+            other: "Tu şi alte {{count}} de persoane aţi votat la această postare."
         by_others:
           off_topic:
-            few: '{{count}} persoane au marcat acesta ca fiind în afară discuţiei'
-            one: O persoană a marcat acesta ca fiind în afară discuţiei
-            other: '{{count}} de persoane au marcat acesta ca fiind în afară discuţiei'
+            one: "O persoană a marcat acesta ca fiind în afară discuţiei"
+            few: "{{count}} persoane au marcat acesta ca fiind în afară discuţiei"
+            other: "{{count}} de persoane au marcat acesta ca fiind în afară discuţiei"
           spam:
-            few: '{{count}} persoane au marcat acesta ca spam'
-            one: O persoană a marcat acesta ca spam
-            other: '{{count}} de persoane au marcat acesta ca spam'
+            one: "O persoană a marcat acesta ca spam"
+            few: "{{count}} persoane au marcat acesta ca spam"
+            other: "{{count}} de persoane au marcat acesta ca spam"
           inappropriate:
-            few: '{{count}} persoane au marcat acesta ca inadecvat'
-            one: o persoană a marcat acesta ca inadecvat
-            other: '{{count}} de persoane au marcat acesta ca inadecvat'
+            one: "o persoană a marcat acesta ca inadecvat"
+            few: "{{count}} persoane au marcat acesta ca inadecvat"
+            other: "{{count}} de persoane au marcat acesta ca inadecvat"
           notify_moderators:
-            few: '{{count}} persoane au marcat acest mesaj pentru moderare'
-            one: O persoană a marcat acest mesaj pentru moderare
-            other: '{{count}} de persoane au marcat acest mesaj pentru moderare'
+            one: "O persoană a marcat acest mesaj pentru moderare"
+            few: "{{count}} persoane au marcat acest mesaj pentru moderare"
+            other: "{{count}} de persoane au marcat acest mesaj pentru moderare"
           notify_user:
-            few: '{{count}} persoane au trimis un mesaj către acest utilizator'
-            one: o persoană a trimis un mesaj către acest utilizator
-            other: '{{count}} de persoane au trimis un mesaj către acest utilizator'
+            one: "o persoană a trimis un mesaj către acest utilizator"
+            few: "{{count}} persoane au trimis un mesaj către acest utilizator"
+            other: "{{count}} de persoane au trimis un mesaj către acest utilizator"
           bookmark:
-            few: '{{count}} persoane au pus un semn de carte la acest mesaj'
-            one: O persoană a pus un semn de carte la acest mesaj
-            other: '{{count}} de persoane au pus un semn de carte la acest mesaj'
+            one: "O persoană a pus un semn de carte la acest mesaj"
+            few: "{{count}} persoane au pus un semn de carte la acest mesaj"
+            other: "{{count}} de persoane au pus un semn de carte la acest mesaj"
           like:
-            few: '{{count}} persoane au apreciat aceasta'
-            one: o persoană a apreciat aceasta
-            other: '{{count}} de persoane au apreciat aceasta'
+            one: "o persoană a apreciat aceasta"
+            few: "{{count}} persoane au apreciat aceasta"
+            other: "{{count}} de persoane au apreciat aceasta"
           vote:
-            few: '{{count}} persoane au votat pentru acest mesaj'
-            one: O persoană a votat pentru acest mesaj
-            other: '{{count}} de persoane au votat pentru acest mesaj'
+            one: "O persoană a votat pentru acest mesaj"
+            few: "{{count}} persoane au votat pentru acest mesaj"
+            other: "{{count}} de persoane au votat pentru acest mesaj"
       delete:
         confirm:
-          few: Ești sigur că vrei să ștergi acele {{count}} postări?
-          one: Ești sigur că vrei să ștergi aca postare?
-          other: Ești sigur că vrei să ștergi acele {{count}} postări?
+          one: "Ești sigur că vrei să ștergi aca postare?"
+          few: "Ești sigur că vrei să ștergi acele {{count}} postări?"
+          other: "Ești sigur că vrei să ștergi acele {{count}} postări?"
       merge:
         confirm:
-          few: Ești sigur că vrei să comasezi acele {{count}} postări?
-          one: Ești sigur că vrei să comasezi acele postări?
-          other: Ești sigur că vrei să comasezi acele {{count}} postări?
+          one: "Ești sigur că vrei să comasezi acele postări?"
+          few: "Ești sigur că vrei să comasezi acele {{count}} postări?"
+          other: "Ești sigur că vrei să comasezi acele {{count}} postări?"
       revisions:
         controls:
           first: "Prima revizie"
@@ -2065,17 +2063,17 @@ ro:
       custom_placeholder_notify_moderators: "Spune-ne exact ceea ce te preocupă, și dă-ne și link-uri relevante de câte ori e posibil."
       custom_message:
         at_least:
-          few: introdu cel puțin {{count}} caractere
-          one: introdu cel puțin un caracter
-          other: introdu cel puțin {{count}} de caractere
+          one: "introdu cel puțin un caracter"
+          few: "introdu cel puțin {{count}} caractere"
+          other: "introdu cel puțin {{count}} de caractere"
         more:
-          few: încă {{count}} ...
-          one: încă {{count}} ...
-          other: încă {{count}} ...
+          one: "încă {{count}} ..."
+          few: "încă {{count}} ..."
+          other: "încă {{count}} ..."
         left:
-          few: au mai rămas {{count}} ...
-          one: a mai rămas {{count}} ...
-          other: au mai rămas {{count}} ...
+          one: "a mai rămas {{count}} ..."
+          few: "au mai rămas {{count}} ..."
+          other: "au mai rămas {{count}} ..."
     flagging_topic:
       title: "Îți mulțumim că ne ajuți să păstrăm o comunitate civilizată!"
       action: "Marchează subiectul cu marcaj de avertizare"
@@ -2086,15 +2084,15 @@ ro:
       links_title: "Legături populare"
       links_shown: "arată mai multe link-uri..."
       clicks:
-        few: '%{count} click-uri'
-        one: 1 click
-        other: '%{count} de click-uri'
+        one: "1 click"
+        few: "%{count} click-uri"
+        other: "%{count} de click-uri"
     post_links:
       about: "afișează mai multe link-uri din această postare"
       title:
-        few: mai sunt %{count}
-        one: mai e %{count}
-        other: mai sunt %{count}
+        one: "mai e %{count}"
+        few: "mai sunt %{count}"
+        other: "mai sunt %{count}"
     topic_statuses:
       warning:
         help: "Aceasta este o avertizare oficială."
@@ -2128,22 +2126,22 @@ ro:
     original_post: "Postare inițială"
     views: "Vizualizări"
     views_lowercase:
-      few: vizualizări
-      one: vizualizare
-      other: de vizualizări
+      one: "vizualizare"
+      few: "vizualizări"
+      other: "de vizualizări"
     replies: "Răspunsuri"
     activity: "Activitate"
     likes: "Aprecieri"
     likes_lowercase:
-      few: aprecieri
-      one: apreciere
-      other: aprecieri
+      one: "apreciere"
+      few: "aprecieri"
+      other: "aprecieri"
     likes_long: "sunt {{number}} (de) aprecieri în acest subiect"
     users: "Utilizatori"
     users_lowercase:
-      few: utilizatori
-      one: utilizator
-      other: de utilizatori
+      one: "utilizator"
+      few: "utilizatori"
+      other: "de utilizatori"
     category_title: "Categorie"
     history: "Istoric"
     changed_by: "de {{author}}"
@@ -2156,9 +2154,9 @@ ro:
       latest:
         title: "Cele mai recente"
         title_with_count:
-          few: Cele mai recente ({{count}})
-          one: Cel mai recent (1)
-          other: Cele mai recente ({{count}})
+          one: "Cel mai recent (1)"
+          few: "Cele mai recente ({{count}})"
+          other: "Cele mai recente ({{count}})"
         help: "subiecte cu postări recente"
       hot:
         title: "Interesant"
@@ -2176,25 +2174,25 @@ ro:
       unread:
         title: "Necitite"
         title_with_count:
-          few: Necitite ({{count}})
-          one: Necitit (1)
-          other: Necitite ({{count}})
+          one: "Necitit (1)"
+          few: "Necitite ({{count}})"
+          other: "Necitite ({{count}})"
         help: "subiecte pe care le urmărești activ sau cele pe care le urmărești și care includ postări necitite"
         lower_title_with_count:
-          few: '{{count}} necitite'
-          one: '{{count}} necitit'
-          other: '{{count}} necitite'
+          one: "{{count}} necitit"
+          few: "{{count}} necitite"
+          other: "{{count}} necitite"
       new:
         lower_title_with_count:
-          few: '{{count}} noi'
-          one: '{{count}} nou'
-          other: '{{count}} noi'
+          one: "{{count}} nou"
+          few: "{{count}} noi"
+          other: "{{count}} noi"
         lower_title: "nou"
         title: "Noi"
         title_with_count:
-          few: Noi ({{count}})
-          one: Nou (1)
-          other: Noi ({{count}})
+          one: "Nou (1)"
+          few: "Noi ({{count}})"
+          other: "Noi ({{count}})"
         help: "subiecte create în ultimele zile"
       posted:
         title: "Postările mele"
@@ -2205,9 +2203,9 @@ ro:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          few: '{{categoryName}} ({{count}})'
-          one: '{{categoryName}} (1)'
-          other: '{{categoryName}} ({{count}})'
+          one: "{{categoryName}} (1)"
+          few: "{{categoryName}} ({{count}})"
+          other: "{{categoryName}} ({{count}})"
         help: "subiecte recente din categoria {{categoryName}}"
       top:
         title: "Top"
@@ -2291,25 +2289,25 @@ ro:
         print: '<b>ctrl</b>+<b>p</b> Tipărire subiect'
     badges:
       earned_n_times:
-        few: A primit acest ecuson de %{count} ori
-        one: A primit acest ecuson o dată
-        other: A primit acest ecuson de %{count} de ori
-      granted_on: "Acordat acum %{date}"
+        one: "A primit acest ecuson o dată"
+        few: "A primit acest ecuson de %{count} ori"
+        other: "A primit acest ecuson de %{count} de ori"
+      granted_on: "Acordat %{date}"
       others_count: "Alții cu acest ecuson (%{count})"
       title: Ecusoane
       multiple_grant: "Poți primi asta de mai multe ori"
       badge_count:
-        few: '%{count} ecusoane'
-        one: '%{count} ecuson'
-        other: '%{count} de ecusoane'
+        one: "%{count} ecuson"
+        few: "%{count} ecusoane"
+        other: "%{count} de ecusoane"
       more_badges:
-        few: ' Alte %{count}'
-        one: Încă una
-        other: ' Alte %{count}'
+        one: "Încă una"
+        few: " Alte %{count}"
+        other: " Alte %{count}"
       granted:
-        few: '%{count} acordate'
-        one: '%{count} acordat'
-        other: '%{count} acordate'
+        one: "%{count} acordat"
+        few: "%{count} acordate"
+        other: "%{count} acordate"
       select_badge_for_title: Selectați un ecuson pentru a-l folosi ca titlu
       none: "(nimic)"
       badge_grouping:
@@ -2342,9 +2340,9 @@ ro:
       choose_for_topic: "etichete opționale"
       delete_tag: "Șterge etichetă"
       delete_confirm:
-        few: Ești sigur că vrei să ștergi această etichetă și să o scoți din {{count}} subiecte care o folosesc?
-        one: Ești sigur că vrei să ștergi această etichetă și să o scoți dintr-un subiect care o folosește?
-        other: Ești sigur că vrei să ștergi această etichetă și să o scoți din {{count}} subiecte care o folosesc?
+        one: "Ești sigur că vrei să ștergi această etichetă și să o scoți dintr-un subiect care o folosește?"
+        few: "Ești sigur că vrei să ștergi această etichetă și să o scoți din {{count}} subiecte care o folosesc?"
+        other: "Ești sigur că vrei să ștergi această etichetă și să o scoți din {{count}} subiecte care o folosesc?"
       delete_confirm_no_topics: "Ești sigur că vrei să ștergi această etichetă?"
       rename_tag: "Redenumire etichetă"
       rename_instructions: "Alege un nume nou pentru etichetă:"
@@ -2601,13 +2599,13 @@ ro:
           none: "Nu există evenimente înrudite."
           redeliver: "Livrează din nou"
           incoming:
-            few: Există {{count}}  noi evenimente.
-            one: 'Există un nou eveniment '
-            other: Există {{count}} de noi evenimente.
+            one: "Există un nou eveniment "
+            few: "Există {{count}}  noi evenimente."
+            other: "Există {{count}} de noi evenimente."
           completed_in:
-            few: Terminat în {{count}} secunde.
-            one: Terminat într-o secundă.
-            other: Terminat în {{count}} de secunde.
+            one: "Terminat într-o secundă."
+            few: "Terminat în {{count}} secunde."
+            other: "Terminat în {{count}} de secunde."
           request: "Cerere"
           response: "Răspuns"
           redeliver_confirm: "Ești sigur ca vrei să livrezi din nou aceeași încărcătură?"
@@ -2670,7 +2668,6 @@ ro:
             label: "Backup"
             title: "Creează un backup"
             confirm: "Ești sigur că vei să începi o nouă operațiune de backup?"
-            without_uploads: "Da (nu include fişierele)"
           download:
             label: "Descărcare"
             title: "Trimite email cu link de descărcare"
@@ -3036,13 +3033,13 @@ ro:
           suspect: 'Suspecți'
         approved: "Aprobați?"
         approved_selected:
-          few: aprobă utilizatorii ({{count}})
-          one: aprobă utilizatorul
-          other: aprobă utilizatorii ({{count}})
+          one: "aprobă utilizatorul"
+          few: "aprobă utilizatorii ({{count}})"
+          other: "aprobă utilizatorii ({{count}})"
         reject_selected:
-          few: refuză utilizatorii ({{count}})
-          one: refuză utilizatorul
-          other: refuză utilizatorii ({{count}})
+          one: "refuză utilizatorul"
+          few: "refuză utilizatorii ({{count}})"
+          other: "refuză utilizatorii ({{count}})"
         titles:
           active: 'Utilizatori activi'
           new: 'Utilizatori noi'
@@ -3058,13 +3055,13 @@ ro:
           suspended: 'Utilizatori suspendați'
           suspect: 'Utilizatori suspecţi'
         reject_successful:
-          few: '%{count} utilizatori au fost respinși cu succes.'
-          one: 1 utilizator a fost respins cu succes.
-          other: '%{count} de utilizatori au fost respinși cu succes.'
+          one: "1 utilizator a fost respins cu succes."
+          few: "%{count} utilizatori au fost respinși cu succes."
+          other: "%{count} de utilizatori au fost respinși cu succes."
         reject_failures:
-          few: ' %{count} utilizatori nu au putut fi respinși.'
-          one: Un utilizator nu a putut fi respins.
-          other: '%{count} de utilizatori nu au putut fi respinși.'
+          one: "Un utilizator nu a putut fi respins."
+          few: " %{count} utilizatori nu au putut fi respinși."
+          other: "%{count} de utilizatori nu au putut fi respinși."
         not_verified: "Neverificat"
         check_email:
           title: "Arată adresa de email a acestui utilizator"
@@ -3133,17 +3130,17 @@ ro:
         delete_forbidden_because_staff: "Adminii și moderatorii nu pot fi sterși."
         delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
         delete_forbidden:
-          few: Utilizatorii nu pot fi șterși dacă au postări. Şterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi șterse)
-          one: Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de 1 zi nu pot fi șterse)
-          other: Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} de zile nu pot fi șterse)
+          one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de 1 zi nu pot fi șterse)"
+          few: "Utilizatorii nu pot fi șterși dacă au postări. Şterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi șterse)"
+          other: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} de zile nu pot fi șterse)"
         cant_delete_all_posts:
-          few: Nu pot fi şterse toate postările. Unele postări sunt mai vechi de %{count} zile. (Setarea delete_user_max_post_age)
-          one: Nu pot fi şterse toate postările. Unele postări sunt mai vechi de 1 zi. (Setarea delete_user_max_post_age)
-          other: Nu pot fi șterse toate postările. Unele postări sunt mai vechi de %{count} de zile. (Setarea delete_user_max_post_age)
+          one: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de 1 zi. (Setarea delete_user_max_post_age)"
+          few: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de %{count} zile. (Setarea delete_user_max_post_age)"
+          other: "Nu pot fi șterse toate postările. Unele postări sunt mai vechi de %{count} de zile. (Setarea delete_user_max_post_age)"
         cant_delete_all_too_many_posts:
-          few: Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)
-          one: Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de 1 postare. (Setarea delete_all_posts_max)
-          other: Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} de postări. (Setarea delete_all_posts_max)
+          one: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de 1 postare. (Setarea delete_all_posts_max)"
+          few: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
+          other: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} de postări. (Setarea delete_all_posts_max)"
         delete_confirm: "Ești SIGUR că vrei ștergerea acestui utilizator? Acțiunea este ireversibilă!"
         delete_and_block: "<b>Da</b>, și <b>blochează</b> viitoarele autentificări cu acest email și această adresă IP"
         delete_dont_block: "<b>Da</b>, șterge doar utilizatorul"
@@ -3178,9 +3175,9 @@ ro:
         tl3_requirements:
           title: "Cerințe pentru nivelul 3 de încredere"
           table_title:
-            few: 'În ultimele %{count} zile:'
-            one: 'În ultima zi:'
-            other: 'În ultimele %{count} de zile:'
+            one: "În ultima zi:"
+            few: "În ultimele %{count} zile:"
+            other: "În ultimele %{count} de zile:"
           value_heading: "Valoare"
           requirement_heading: "Cerință"
           visits: "Vizite"
@@ -3323,7 +3320,6 @@ ro:
         enabled: Activează ecuson
         icon: Pictogramă
         image: Imagine
-        icon_help: "Folosiţi o clasă de fonturi Font Awesome sau un URL pentru imagine"
         query: Interogare ecusoane (SQL)
         target_posts: Interogarea mesajelor utilizatorilor-ţintă
         auto_revoke: Pornește verificarea de revocare în fiecare zi
@@ -3347,9 +3343,9 @@ ro:
             text: "Unele șabloane lipsesc. Asta se întâmplă atunci când o interogare de ecusoane returnează user IDs sau post IDs care nu există. Asta ar putea da naștere la rezultate neașteptate mai târziu - te rugăm să verifici din nou interogarea."
           no_grant_count: "Nu există ecusoane pentru atribuire."
           grant_count:
-            few: <b>%{count}</b> ecusoane pentru atribuire.
-            one: Un ecuson pentru atribuire.
-            other: <b>%{count}</b> de ecusoane pentru atribuire.
+            one: "Un ecuson pentru atribuire."
+            few: "<b>%{count}</b> ecusoane pentru atribuire."
+            other: "<b>%{count}</b> de ecusoane pentru atribuire."
           sample: "Exemplu:"
           grant:
             with: "<span class=\"username\">%{username}</span>"
@@ -3415,9 +3411,9 @@ ro:
       uploading: "Se încarcă..."
       quit: "Poate mai târziu"
       staff_count:
-        few: Comunitatea ta are %{count} membri cu tot cu tine.
-        one: Comunitatea ta are 1 membru (tu).
-        other: Comunitatea ta are %{count} membri cu tot cu tine.
+        one: "Comunitatea ta are 1 membru (tu)."
+        few: "Comunitatea ta are %{count} membri cu tot cu tine."
+        other: "Comunitatea ta are %{count} membri cu tot cu tine."
       invites:
         add_user: "adaugă"
         none_added: "Nu ați invitat nici un membru al echipei. Ești sigur că vrei să continui?"

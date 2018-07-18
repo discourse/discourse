@@ -1,7 +1,9 @@
 Fabricator(:topic) do
   user
   title { sequence(:title) { |i| "This is a test topic #{i}" } }
-  category_id { SiteSetting.uncategorized_category_id }
+  category_id do |attrs|
+    attrs[:category] ? attrs[:category].id : SiteSetting.uncategorized_category_id
+  end
 end
 
 Fabricator(:deleted_topic, from: :topic) do

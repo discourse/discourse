@@ -120,6 +120,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def user_found(user)
     if user.totp_enabled?
       @auth_result.omniauth_disallow_totp = true
+      @auth_result.email = user.email
       return
     end
 

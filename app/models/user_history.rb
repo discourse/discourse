@@ -76,6 +76,12 @@ class UserHistory < ActiveRecord::Base
       create_badge: 57,
       change_badge: 58,
       delete_badge: 59,
+      removed_silence_user: 60,
+      removed_suspend_user: 61,
+      removed_unsilence_user: 62,
+      removed_unsuspend_user: 63,
+      post_rejected: 64,
+      merge_user: 65
     )
   end
 
@@ -90,6 +96,8 @@ class UserHistory < ActiveRecord::Base
       :change_site_text,
       :suspend_user,
       :unsuspend_user,
+      :removed_suspend_user,
+      :removed_unsuspend_user,
       :grant_badge,
       :revoke_badge,
       :check_email,
@@ -106,6 +114,8 @@ class UserHistory < ActiveRecord::Base
       :create_category,
       :silence_user,
       :unsilence_user,
+      :removed_silence_user,
+      :removed_unsilence_user,
       :grant_admin,
       :revoke_admin,
       :grant_moderation,
@@ -130,6 +140,8 @@ class UserHistory < ActiveRecord::Base
       :create_badge,
       :change_badge,
       :delete_badge,
+      :post_rejected,
+      :merge_user
     ]
   end
 

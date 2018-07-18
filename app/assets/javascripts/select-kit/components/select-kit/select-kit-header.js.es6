@@ -9,16 +9,16 @@ export default Ember.Component.extend({
     "tabindex",
     "ariaLabel:aria-label",
     "ariaHasPopup:aria-haspopup",
-    "title",
+    "sanitizedTitle:title",
     "value:data-value",
-    "name:data-name",
+    "name:data-name"
   ],
 
   isNone: Ember.computed.none("computedContent.value"),
 
   ariaHasPopup: true,
 
-  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
+  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "sanitizedTitle"),
 
   @computed("computedContent.title", "name")
   title(computedContentTitle, name) {
@@ -26,6 +26,13 @@ export default Ember.Component.extend({
     if (name) return name;
 
     return null;
+  },
+
+  // this might need a more advanced solution
+  // but atm it's the only case we have to handle
+  @computed("title")
+  sanitizedTitle(title) {
+    return String(title).replace("&hellip;", "");
   },
 
   label: Ember.computed.or("computedContent.label", "title", "name"),
@@ -36,7 +43,9 @@ export default Ember.Component.extend({
 
   @computed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {
-    return makeArray(icon).concat(icons).filter(i => !isEmpty(i));
+    return makeArray(icon)
+      .concat(icons)
+      .filter(i => !isEmpty(i));
   },
 
   click() {

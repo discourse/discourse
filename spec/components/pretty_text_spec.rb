@@ -628,6 +628,11 @@ describe PrettyText do
       html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
       expect { described_class.format_for_email(html, post) }.to_not raise_error
     end
+
+    it "doesn't change mailto" do
+      html = "<p>Contact me at <a href=\"mailto:username@me.com\">this address</a>.</p>"
+      expect(PrettyText.format_for_email(html, post)).to eq(html)
+    end
   end
 
   it 'Is smart about linebreaks and IMG tags' do
@@ -724,6 +729,29 @@ describe PrettyText do
       SiteSetting.enable_s3_uploads = true
 
       test_s3_cdn
+    end
+
+    def test_s3_with_subfolder_cdn
+      raw = <<~RAW
+        <img src='https:#{Discourse.store.absolute_base_url}/subfolder/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+      RAW
+
+      html = <<~HTML
+        <p><img src="https://awesome.cdn/subfolder/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
+      HTML
+
+      expect(PrettyText.cook(raw)).to eq(html.strip)
+    end
+
+    it 'can substitute s3 with subfolder cdn when added via global setting' do
+
+      global_setting :s3_access_key_id, 'XXX'
+      global_setting :s3_secret_access_key, 'XXX'
+      global_setting :s3_bucket, 'XXX/subfolder'
+      global_setting :s3_region, 'XXX'
+      global_setting :s3_cdn_url, 'https://awesome.cdn/subfolder'
+
+      test_s3_with_subfolder_cdn
     end
   end
 
@@ -829,15 +857,15 @@ describe PrettyText do
       expect(cooked).to include(element)
     end
 
-    cooked = PrettyText.cook("[`a` #known::tag here](http://somesite.com)")
+    cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)")
 
     html = <<~HTML
-      <p><a href="http://somesite.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
+      <p><a href="http://example.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
 
-    cooked = PrettyText.cook("<a href='http://somesite.com'>`a` #known::tag here</a>")
+    cooked = PrettyText.cook("<a href='http://example.com'>`a` #known::tag here</a>")
 
     expect(cooked).to eq(html.strip)
 

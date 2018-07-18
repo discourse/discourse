@@ -81,23 +81,23 @@ ro:
         one: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
         many: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
       too_long:
-        few: este prea lung (maximum %{count} caractere)
         one: este prea lung (maximum un caracter)
+        few: este prea lung (maximum %{count} caractere)
         other: este prea lung (maximum %{count} de caractere)
       too_short:
-        few: este prea scurt (minimum %{count} caractere)
         one: este prea scurt (minimum un caracter)
+        few: este prea scurt (minimum %{count} caractere)
         other: este prea scurt (minimum %{count} de caractere)
       wrong_length:
-        few: are lungimea greşită (trebuie sa fie %{count} caractere)
         one: are lungimea greşită (trebuie sa fie un caracter)
+        few: are lungimea greşită (trebuie sa fie %{count} caractere)
         other: are lungimea greşită (trebuie sa fie %{count} de caractere)
       other_than: "trebuie sa fie diferit de %{count}"
     template:
       body: 'Au apărut probleme cu următoarele câmpuri:'
       header:
-        few: '%{count} erori au împiedicat acest %{model} să fie salvat'
         one: O eroare a împiedicat acest %{model} să fie salvat
+        few: '%{count} erori au împiedicat acest %{model} să fie salvat'
         other: '%{count} de erori au împiedicat acest %{model} să fie salvat'
     embed:
       load_from_remote: "A apărut o eroare la încărcarea postării."
@@ -128,9 +128,9 @@ ro:
   reading_time: "Durata citirii"
   likes: "Aprecieri"
   too_many_replies:
-    few: Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție.
-    one: Ne pare rău, dar utilizatorii noi sunt limitați la 1 răspuns pe discuție.
-    other: Ne pare rău, dar utilizatori noi sunt limitați la %{count} de răspunsuri pe discuție.
+    one: "Ne pare rău, dar utilizatorii noi sunt limitați la 1 răspuns pe discuție."
+    few: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție."
+    other: "Ne pare rău, dar utilizatori noi sunt limitați la %{count} de răspunsuri pe discuție."
   embed:
     start_discussion: "Pornește discuție"
     continue: "Continuă discuție"
@@ -140,42 +140,42 @@ ro:
     no_hosts: "Nu s-a setat nicio gazdă pentru încorporare."
     configure: "Configurează încorporarea"
     more_replies:
-      few: Încă %{count} răspunsuri
-      one: Încă un răspuns
-      other: Încă %{count} de răspunsuri
+      one: "Încă un răspuns"
+      few: "Încă %{count} răspunsuri"
+      other: "Încă %{count} de răspunsuri"
     loading: "Încarcă discuția..."
     permalink: "Link permanent"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      few: '%{count} răspunsuri'
-      one: Un răspuns
-      other: '%{count} de răspunsuri'
+      one: "Un răspuns"
+      few: "%{count} răspunsuri"
+      other: "%{count} de răspunsuri"
   no_mentions_allowed: "Ne pare rău, nu poți menționa alți utilizatori."
   too_many_mentions:
-    few: Ne pare rău, poți menționa doar %{count} utilizatori într-o postare.
-    one: Ne pare rău, poți menționa doar un utilizator într-o postare.
-    other: Ne pare rău, poți menționa doar %{count} de utilizatori într-o postare.
+    one: "Ne pare rău, poți menționa doar un utilizator într-o postare."
+    few: "Ne pare rău, poți menționa doar %{count} utilizatori într-o postare."
+    other: "Ne pare rău, poți menționa doar %{count} de utilizatori într-o postare."
   no_mentions_allowed_newuser: "Ne pare rău, noii utilizatori nu pot menționa alți utilizatori."
   too_many_mentions_newuser:
-    few: Ne pare rău, noii utilizatori pot menționa doar %{count} utilizatori într-o postare.
-    one: Ne pare rău, noii utilizatori pot menționa doar un utilizator într-o postare.
-    other: Ne pare rău, noii utilizatori pot menționa doar %{count} de utilizatori într-o postare.
+    one: "Ne pare rău, noii utilizatori pot menționa doar un utilizator într-o postare."
+    few: "Ne pare rău, noii utilizatori pot menționa doar %{count} utilizatori într-o postare."
+    other: "Ne pare rău, noii utilizatori pot menționa doar %{count} de utilizatori într-o postare."
   no_images_allowed: "Ne pare rău, nu poți pune imagini în postări."
   too_many_images:
-    few: Ne pare rău, noii utilizatori pot pune numai %{count} imagini într-o postare.
-    one: Ne pare rău, noii utilizatori pot pune numai o imagine într-o postare.
-    other: Ne pare rău, noii utilizatori pot pune numai %{count} de imagini într-o postare.
+    one: "Ne pare rău, noii utilizatori pot pune numai o imagine într-o postare."
+    few: "Ne pare rău, noii utilizatori pot pune numai %{count} imagini într-o postare."
+    other: "Ne pare rău, noii utilizatori pot pune numai %{count} de imagini într-o postare."
   no_attachments_allowed: "Ne pare rău, noii utilizatori nu pot pune atașamente la postări."
   too_many_attachments:
-    few: Ne pare rău, noii utilizatori pot pune doar %{count} atașamente la o postare.
-    one: Ne pare rău, noii utilizatori pot pune doar un atașament la o postare.
-    other: Ne pare rău, noii utilizatori pot pune doar %{count} de atașamente la o postare.
+    one: "Ne pare rău, noii utilizatori pot pune doar un atașament la o postare."
+    few: "Ne pare rău, noii utilizatori pot pune doar %{count} atașamente la o postare."
+    other: "Ne pare rău, noii utilizatori pot pune doar %{count} de atașamente la o postare."
   no_links_allowed: "Ne pare rău, noii utilizatori nu pot pune link-uri în postări."
   too_many_links:
-    few: Ne pare rău, noii utilizatori pot pune doar %{count} link-uri într-o postare.
-    one: Ne pare rău, noii utilizatori pot pune doar un link într-o postare.
-    other: Ne pare rău, noii utilizatori pot pune doar %{count} de link-uri într-o postare.
+    one: "Ne pare rău, noii utilizatori pot pune doar un link într-o postare."
+    few: "Ne pare rău, noii utilizatori pot pune doar %{count} link-uri într-o postare."
+    other: "Ne pare rău, noii utilizatori pot pune doar %{count} de link-uri într-o postare."
   spamming_host: "Nu poți adăuga un link pentru acest domeniu."
   user_is_suspended: "Utilizatorii suspendați nu au dreptul de a posta."
   topic_not_found: "Ceva n-a mers bine. Poate că acest subiect a fost închis sau șters în timp ce te uitai la el?"
@@ -229,9 +229,9 @@ ro:
       trust_level_4: "nivel_de_încredere_4"
   education:
     until_posts:
-      few: '%{count} postări'
-      one: o postare
-      other: '%{count} de postări'
+      one: "o postare"
+      few: "%{count} postări"
+      other: "%{count} de postări"
     'new-topic': |
       Bun venit pe %{site_name} &mdash; **îți mulțumim că ai început o nouă conversație!**
 
@@ -350,9 +350,9 @@ ro:
       uncategorized: "Nu se poate șterge Necategorizat"
       has_subcategories: "Nu putem șterge categoria aceasta pentru că are sub-categorii."
       topic_exists:
-        few: Nu poți șterge categoria aceasta pentru că are %{count} subiecte. Cel mai vechi subiect este %{topic_link}.
-        one: Nu poți șterge categoria aceasta pentru că are un subiect. Cel mai vechi subiect este %{topic_link}.
-        other: Nu poți șterge categoria aceasta pentru că are %{count} de subiecte. Cel mai vechi subiect este %{topic_link}.
+        one: "Nu poți șterge categoria aceasta pentru că are un subiect. Cel mai vechi subiect este %{topic_link}."
+        few: "Nu poți șterge categoria aceasta pentru că are %{count} subiecte. Cel mai vechi subiect este %{topic_link}."
+        other: "Nu poți șterge categoria aceasta pentru că are %{count} de subiecte. Cel mai vechi subiect este %{topic_link}."
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
@@ -369,110 +369,110 @@ ro:
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
     hours:
-      few: '%{count} ore'
-      one: o oră
-      other: '%{count} de ore'
+      one: "o oră"
+      few: "%{count} ore"
+      other: "%{count} de ore"
     minutes:
-      few: '%{count} minute'
-      one: un minut
-      other: '%{count} de minute'
+      one: "un minut"
+      few: "%{count} minute"
+      other: "%{count} de minute"
     seconds:
-      few: '%{count} secunde'
-      one: o secundă
-      other: '%{count} de secunde'
+      one: "o secundă"
+      few: "%{count} secunde"
+      other: "%{count} de secunde"
   datetime:
     distance_in_words:
       half_a_minute: "de < 1m"
       less_than_x_seconds:
-        few: de < %{count}s
-        one: de < 1s
-        other: de < %{count}s
+        one: "de < 1s"
+        few: "de < %{count}s"
+        other: "de < %{count}s"
       x_seconds:
-        few: de %{count}s
-        one: de 1s
-        other: de %{count}s
+        one: "de 1s"
+        few: "de %{count}s"
+        other: "de %{count}s"
       less_than_x_minutes:
-        few: ' < %{count}m'
-        one: de < 1m
-        other: de < %{count}m
+        one: "de < 1m"
+        few: " < %{count}m"
+        other: "de < %{count}m"
       x_minutes:
-        few: ' de %{count}m'
-        one: de 1m
-        other: de %{count}m
+        one: "de 1m"
+        few: " de %{count}m"
+        other: "de %{count}m"
       about_x_hours:
-        few: ' %{count}h'
-        one: de 1h
-        other: de %{count}h
+        one: "de 1h"
+        few: " %{count}h"
+        other: "de %{count}h"
       x_days:
-        few: ' %{count}z'
-        one: de 1z
-        other: de %{count}z
+        one: "de 1z"
+        few: " %{count}z"
+        other: "de %{count}z"
       about_x_months:
-        few: ' de %{count} luni'
-        one: de o lună
-        other: de %{count} de luni
+        one: "de o lună"
+        few: " de %{count} luni"
+        other: "de %{count} de luni"
       x_months:
-        few: de %{count} luni
-        one: de o lună
-        other: de %{count} de luni
+        one: "de o lună"
+        few: "de %{count} luni"
+        other: "de %{count} de luni"
       about_x_years:
-        few: de %{count} ani
-        one: de %{count}an
-        other: de %{count} de ani
+        one: "de %{count}an"
+        few: "de %{count} ani"
+        other: "de %{count} de ani"
       over_x_years:
-        few: de > %{count}ani
-        one: de > 1an
-        other: de > %{count} de ani
+        one: "de > 1an"
+        few: "de > %{count}ani"
+        other: "de > %{count} de ani"
       almost_x_years:
-        few: de %{count} ani
-        one: de un an
-        other: de %{count} de ani
+        one: "de un an"
+        few: "de %{count} ani"
+        other: "de %{count} de ani"
     distance_in_words_verbose:
       half_a_minute: "chiar acum"
       less_than_x_seconds:
-        few: chiar acum
-        one: chiar acum
-        other: chiar acum
+        one: "chiar acum"
+        few: "chiar acum"
+        other: "chiar acum"
       x_seconds:
-        few: cu %{count} secunde în urmă
-        one: cu o secundă în urmă
-        other: cu %{count} de secunde în urmă
+        one: "cu o secundă în urmă"
+        few: "cu %{count} secunde în urmă"
+        other: "cu %{count} de secunde în urmă"
       less_than_x_minutes:
-        few: cu mai puțin de %{count} minute în urmă
-        one: cu mai puțin de 1 minut în urmă
-        other: mai puțin de %{count} de minute în urmă
+        one: "cu mai puțin de 1 minut în urmă"
+        few: "cu mai puțin de %{count} minute în urmă"
+        other: "mai puțin de %{count} de minute în urmă"
       x_minutes:
-        few: acum %{count} minute
-        one: acum un minut
-        other: acum %{count} de minute
+        one: "acum un minut"
+        few: "acum %{count} minute"
+        other: "acum %{count} de minute"
       about_x_hours:
-        few: acum %{count} ore
-        one: acum o ora
-        other: acum %{count} de ore
+        one: "acum o ora"
+        few: "acum %{count} ore"
+        other: "acum %{count} de ore"
       x_days:
-        few: acum %{count} zile
-        one: acum o zi
-        other: acum %{count} de zile
+        one: "acum o zi"
+        few: "acum %{count} zile"
+        other: "acum %{count} de zile"
       about_x_months:
-        few: cu aproape %{count} luni în urmă
-        one: cu aproape o lună în urmă
-        other: cu aproape %{count} de luni în urmă
+        one: "cu aproape o lună în urmă"
+        few: "cu aproape %{count} luni în urmă"
+        other: "cu aproape %{count} de luni în urmă"
       x_months:
-        few: acum %{count} luni
-        one: acum o lună
-        other: acum %{count} de luni
+        one: "acum o lună"
+        few: "acum %{count} luni"
+        other: "acum %{count} de luni"
       about_x_years:
-        few: cu aproape %{count} ani în urmă
-        one: cu aproape un an în urmă
-        other: cu aproape %{count} de ani în urmă
+        one: "cu aproape un an în urmă"
+        few: "cu aproape %{count} ani în urmă"
+        other: "cu aproape %{count} de ani în urmă"
       over_x_years:
-        few: cu peste %{count} ani în urmă
-        one: cu peste un an în urmă
-        other: cu peste %{count} de ani în urmă
+        one: "cu peste un an în urmă"
+        few: "cu peste %{count} ani în urmă"
+        other: "cu peste %{count} de ani în urmă"
       almost_x_years:
-        few: cu aproape %{count} ani în urmă
-        one: cu aproape un an în urmă
-        other: cu aproape %{count} de ani în urmă
+        one: "cu aproape un an în urmă"
+        few: "cu aproape %{count} ani în urmă"
+        other: "cu aproape %{count} de ani în urmă"
   password_reset:
     no_token: "Ne pare rău, dar link-ul de schimbare a parolei este prea vechi. Selectează butonul Înregistrare și folosește 'Mi-am uitat parola' pentru a obține un nou link."
     choose_new: "Alege o parolă nouă"
@@ -610,9 +610,7 @@ ro:
       xaxis: "Zi"
       yaxis: "Număr de vizite"
     signups:
-      title: "Utilizatori noi"
       xaxis: "Zi"
-      yaxis: "Număr de noi utilizatori"
     profile_views:
       title: "Vizualizări profil utilizator"
       xaxis: "Zi"
@@ -739,7 +737,6 @@ ro:
       xaxis: "Zi"
       yaxis: "Total"
     mobile_visits:
-      title: "Vizite utilizator"
       xaxis: "Zi"
       yaxis: "Număr de vizite"
   dashboard:
@@ -757,9 +754,9 @@ ro:
     failing_emails_warning: 'Există %{num_failed_jobs} (de) sarcini email care au eșuat. Verifică app.yml și asigură-te că setările serverului de mail sunt corecte. <a href="/sidekiq/retries" target="_blank">Vizualizează sarcini eșuate în Sidekiq</a>.'
     subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
     email_polling_errored_recently:
-      few: Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii.
-      one: Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii.
-      other: Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii.
+      one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+      few: "Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+      other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
     bad_favicon_url: "Eroare la încărcarea Favicon. Verifică setarea favicon_url în <a href='/admin/site_settings'>Setările site-ului</a>."
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='/admin/site_settings/category/email'>setările POP3</a>."
@@ -1042,7 +1039,6 @@ ro:
     reply_by_email_enabled: "Activează răspunsurile către subiecte prin email."
     reply_by_email_address: "șablon pentru răspuns prin email de intrare, de exemplu: %{reply_key}@reply.example.com sau răspunsuri+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Listă de șabloane alternative pentru adresele de email primite cu răspunsuri prin email. Exemplu: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    disable_emails: "Oprește Discourse să trimite absolut orice fel de emailuri"
     strip_images_from_short_emails: "Scoate imaginile din emailurile care au mai puțin de 2800 de Bytes"
     short_email_length: "Lungime de email scurt în Bytes"
     display_name_on_email_from: "Afișează numele complete în câmpul From din email"
@@ -1083,7 +1079,6 @@ ro:
     delete_user_max_post_age: "Nu permite ștergerea utilizatorilor a căror prima postare e mai veche de (x) de zile."
     delete_all_posts_max: "Numărul maxim de postări ce pot fi șterse deodată folosind butonul șterge toate postările. Dacă un utilizator are mai multe postări decât această valoare, postările sale nu pot fi șterse dintr-o dată și utilizatorul nu poate fi șters."
     email_editable: "Permite utilizatorilor să își schimbe adresa de email după înregistrare."
-    logout_redirect: "URL-ul spre care să fie redirecționat browserul după ieșire (ex: http://somesite.com/logout)"
     allow_uploaded_avatars: "Permite utilizatorilor să încarce o poză de profil personalizate."
     allow_animated_avatars: "Permite utilizatorilor să folosească gif-uri animate în pozele de profil. ATENȚIE: după schimbarea acestei opțiuni trebuie să lansezi un rake task specific, respectiv - avatars:refresh "
     allow_animated_thumbnails: "Generează thumbnails animate pentru gif-uri animate."
@@ -1232,21 +1227,21 @@ ro:
     not_seen_in_a_month: "Bun venit! Nu te-am mai văzut de ceva vreme. Aici sunt cele mai populare subiecte ce au apărut în timpul absenței tale."
   merge_posts:
     edit_reason:
-      few: '%{count} postări au fost comasate de către  %{username}'
-      one: o postare a fost comasată de către %{username}
-      other: '%{count} de postări au fost comasate de către  %{username}'
+      one: "o postare a fost comasată de către %{username}"
+      few: "%{count} postări au fost comasate de către  %{username}"
+      other: "%{count} de postări au fost comasate de către  %{username}"
     errors:
       different_topics: "Postările care aparțin unor subiecte diferite nu pot fi comasate."
       different_users: "Postările care aparțin unor utilizatori diferiți nu pot fi comasate."
   move_posts:
     new_topic_moderator_post:
-      few: '%{count}  postări au fost mutate într-un nou subiect: %{topic_link}'
-      one: 'o postare a fost mutată într-un nou subiect: %{topic_link}'
-      other: '%{count} de postări au fost mutate într-un nou subiect: %{topic_link}'
+      one: "o postare a fost mutată într-un nou subiect: %{topic_link}"
+      few: "%{count}  postări au fost mutate într-un nou subiect: %{topic_link}"
+      other: "%{count} de postări au fost mutate într-un nou subiect: %{topic_link}"
     existing_topic_moderator_post:
-      few: '%{count} postări au fost comasate într-un subiect existent: %{topic_link}'
-      one: 'o postare a fost comasată într-un subiect existent: %{topic_link}'
-      other: '%{count} de postări au fost comasate într-un subiect existent: %{topic_link}'
+      one: "o postare a fost comasată într-un subiect existent: %{topic_link}"
+      few: "%{count} postări au fost comasate într-un subiect existent: %{topic_link}"
+      other: "%{count} de postări au fost comasate într-un subiect existent: %{topic_link}"
   change_owner:
     post_revision_text: "Autor schimbat din %{old_user} în %{new_user}"
     deleted_user: "un utilizator șters"
@@ -1256,37 +1251,37 @@ ro:
     closed_enabled: "Acest subiect este acum închis. Nu mai sunt permise răspunsuri noi."
     closed_disabled: "Acest subiect este acum deschis. Sunt permise răspunsuri noi."
     autoclosed_message_max_posts:
-      few: Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count}  răspunsuri.
-      one: Acest mesaj va fi închis automat după ce atinge limita de maximă de un răspuns.
-      other: Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count} de răspunsuri.
+      one: "Acest mesaj va fi închis automat după ce atinge limita de maximă de un răspuns."
+      few: "Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count}  răspunsuri."
+      other: "Acest mesaj va fi închis automat după ce atinge limita de maximă de %{count} de răspunsuri."
     autoclosed_topic_max_posts:
-      few: Acest subiect a fost închis automat după ce a atins limita maximă de %{count}  răspunsuri.
-      one: Acest subiect a fost închis automat după ce a atins limita maximă de un răspuns.
-      other: Acest subiect a fost închis automat după ce a atins limita maximă de %{count} de răspunsuri.
+      one: "Acest subiect a fost închis automat după ce a atins limita maximă de un răspuns."
+      few: "Acest subiect a fost închis automat după ce a atins limita maximă de %{count}  răspunsuri."
+      other: "Acest subiect a fost închis automat după ce a atins limita maximă de %{count} de răspunsuri."
     autoclosed_enabled_days:
-      few: Acest subiect a fost închis automat după %{count}  zile. Nu mai sunt permise răspunsuri noi.
-      one: Acest subiect a fost închis automat după o zi. Nu mai sunt permise răspunsuri noi.
-      other: Acest subiect a fost închis automat după %{count} de zile. Nu mai sunt permise răspunsuri noi.
+      one: "Acest subiect a fost închis automat după o zi. Nu mai sunt permise răspunsuri noi."
+      few: "Acest subiect a fost închis automat după %{count}  zile. Nu mai sunt permise răspunsuri noi."
+      other: "Acest subiect a fost închis automat după %{count} de zile. Nu mai sunt permise răspunsuri noi."
     autoclosed_enabled_hours:
-      few: Acest subiect a fost închis automat după %{count}  ore. Nu mai sunt permise răspunsuri noi.
-      one: Acest subiect a fost închis automat după o oră. Nu mai sunt permise răspunsuri noi.
-      other: Acest subiect a fost închis automat după %{count} de ore. Nu mai sunt permise răspunsuri noi.
+      one: "Acest subiect a fost închis automat după o oră. Nu mai sunt permise răspunsuri noi."
+      few: "Acest subiect a fost închis automat după %{count}  ore. Nu mai sunt permise răspunsuri noi."
+      other: "Acest subiect a fost închis automat după %{count} de ore. Nu mai sunt permise răspunsuri noi."
     autoclosed_enabled_minutes:
-      few: Acest subiect a fost închis automat după %{count}  minute. Nu mai sunt permise răspunsuri noi.
-      one: Acest subiect a fost închis automat după un minut. Nu mai sunt permise răspunsuri noi.
-      other: Acest subiect a fost închis automat după %{count} de minute. Nu mai sunt permise răspunsuri noi.
+      one: "Acest subiect a fost închis automat după un minut. Nu mai sunt permise răspunsuri noi."
+      few: "Acest subiect a fost închis automat după %{count}  minute. Nu mai sunt permise răspunsuri noi."
+      other: "Acest subiect a fost închis automat după %{count} de minute. Nu mai sunt permise răspunsuri noi."
     autoclosed_enabled_lastpost_days:
-      few: Acest subiect a fost închis automat după %{count}  zile de la primul răspuns. Nu mai sunt permise răspunsuri noi.
-      one: Acest subiect a fost închis automat după o zi de la primul răspuns. Nu mai sunt permise răspunsuri noi.
-      other: Acest subiect a fost închis automat după %{count} de zile de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      one: "Acest subiect a fost închis automat după o zi de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      few: "Acest subiect a fost închis automat după %{count}  zile de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      other: "Acest subiect a fost închis automat după %{count} de zile de la primul răspuns. Nu mai sunt permise răspunsuri noi."
     autoclosed_enabled_lastpost_hours:
-      few: Acest subiect a fost închis automat după %{count}  ore de la primul răspuns. Nu mai sunt permise răspunsuri noi.
-      one: Acest subiect a fost închis automat după o oră de la primul răspuns. Nu mai sunt permise răspunsuri noi.
-      other: Acest subiect a fost închis automat după %{count} de ore de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      one: "Acest subiect a fost închis automat după o oră de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      few: "Acest subiect a fost închis automat după %{count}  ore de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      other: "Acest subiect a fost închis automat după %{count} de ore de la primul răspuns. Nu mai sunt permise răspunsuri noi."
     autoclosed_enabled_lastpost_minutes:
-      few: Acest subiect a fost închis automat după %{count}  minute de la primul răspuns. Nu mai sunt permise răspunsuri noi.
-      one: Acest subiect a fost închis automat după un minut de la primul răspuns. Nu mai sunt permise răspunsuri noi.
-      other: Acest subiect a fost închis automat după %{count} de minute de la primul răspuns. Nu mai sunt permise răspunsuri noi.
+      one: "Acest subiect a fost închis automat după un minut de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      few: "Acest subiect a fost închis automat după %{count}  minute de la primul răspuns. Nu mai sunt permise răspunsuri noi."
+      other: "Acest subiect a fost închis automat după %{count} de minute de la primul răspuns. Nu mai sunt permise răspunsuri noi."
     autoclosed_disabled: "Acest subiect este acum deschis. Sunt permise răspunsuri noi."
     autoclosed_disabled_lastpost: "Acest subiect este acum deschis. Sunt permise răspunsuri noi."
     pinned_enabled: "Acest subiect este fixat. Va apărea în vârful listei de categorii până când echipa îl va dezactiva opțiunea de fixare pentru toată lumea odată,  sau până când utilizatorii vor dezactiva opțiunea, individual, pentru ei înșiși."
@@ -1338,9 +1333,9 @@ ro:
       max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
   flags_reminder:
     subject_template:
-      few: '%{count}  marcaje de avertizare așteptând să fie gestionate'
-      one: un marcaj de avertizare așteptând să fie gestionat
-      other: '%{count} de marcaje de avertizare așteptând să fie gestionate'
+      one: "un marcaj de avertizare așteptând să fie gestionat"
+      few: "%{count}  marcaje de avertizare așteptând să fie gestionate"
+      other: "%{count} de marcaje de avertizare așteptând să fie gestionate"
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:
@@ -1508,9 +1503,9 @@ ro:
         Acum puteți crea discuții și răspunsuri noi.
     pending_users_reminder:
       subject_template:
-        few: '%{count}  utilizatori în așteptarea aprobării'
-        one: un utilizator în așteptarea aprobării
-        other: '%{count} de utilizatori în așteptarea aprobării'
+        one: "un utilizator în așteptarea aprobării"
+        few: "%{count}  utilizatori în așteptarea aprobării"
+        other: "%{count} de utilizatori în așteptarea aprobării"
       text_body_template: |
         Exista înscrieri de noi utilizatori ce așteaptă să fie aprobate (sau respinse) înainte de a putea accesa forumul.
 
@@ -1541,10 +1536,8 @@ ro:
       title: "Dezabonare"
       description: "Nu ești interesat în a primi aceste email-uri? Nicio problemă! Fă click dedesubt pentru a te dezabona imediat:"
     reply_by_email: "[Vizitează subiect](%{base_url}%{url}) sau dă reply la acest email pentru a răspunde."
-    reply_by_email_pm: "[Vizitează mesaj](%{base_url}%{url}) sau dă reply la acest email pentru a răspunde."
     only_reply_by_email: "Dă reply la acest email pentru a răspunde."
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
-    visit_link_to_respond_pm: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
     posted_by: "Postat de %{username} pe data %{post_date}"
     user_invited_to_private_message_pm:
       text_body_template: |
@@ -2141,7 +2134,6 @@ ro:
             description: "Imagine iconiță folosită la reprezentarea site-ului tău în web browsere și care arată bine la mărimi mici, ca de ex 32px pe 32px."
           apple_touch_icon_url:
             label: "Iconiță mare"
-            description: "Iconiță utilizata pentru a-ți reprezenta site-ul pe dispozitive moderne și care arată bine la dimensiuni mai mari. Dimensiunea recomandată este de 144px pe 144px."
       homepage:
         title: "Pagina principală"
         fields:
@@ -2149,8 +2141,6 @@ ro:
             choices:
               latest:
                 label: "Subiecte recente"
-              categories:
-                label: "Categorii"
       emoji:
         title: "Emoji"
       invites:

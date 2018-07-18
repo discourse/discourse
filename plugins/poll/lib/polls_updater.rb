@@ -114,10 +114,10 @@ module DiscoursePoll
     private
 
     def self.private_to_public_poll?(post, previous_polls, current_polls, poll_name)
-      _previous_poll = previous_polls[poll_name]
-      current_poll = current_polls[poll_name]
+      previous_poll = previous_polls[poll_name]
+      current_poll  = current_polls[poll_name]
 
-      if previous_polls["public"].nil? && current_poll["public"] == "true"
+      if previous_poll["public"].nil? && current_poll["public"] == "true"
         error = poll_name == DiscoursePoll::DEFAULT_POLL_NAME ?
           I18n.t("poll.default_cannot_be_made_public") :
           I18n.t("poll.named_cannot_be_made_public", name: poll_name)

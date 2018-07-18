@@ -114,19 +114,19 @@ describe UserProfile do
 
   describe 'bio excerpt emojis' do
     let(:user) { Fabricate(:user) }
+    let(:upload) { Fabricate(:upload) }
 
     before do
-      CustomEmoji.create!(name: 'test', upload_id: 1)
+      CustomEmoji.create!(name: 'test', upload: upload)
       Emoji.clear_cache
 
-      user.user_profile.bio_raw = "hello :test: :woman_scientist:t5: 🤔"
-      user.user_profile.save
-      user.user_profile.reload
+      user.user_profile.update!(
+        bio_raw: "hello :test: :woman_scientist:t5: 🤔"
+      )
     end
 
     it 'supports emoji images' do
-
-      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"/uploads/default/original/1X/#{Upload.find(1).sha1}.png?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=5\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\"> <img src=\"/images/emoji/twitter/thinking.png?v=5\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\">")
+      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"#{upload.url}?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=5\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\"> <img src=\"/images/emoji/twitter/thinking.png?v=5\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\">")
     end
   end
 

@@ -26,21 +26,59 @@ describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
+  describe "link_posting_access" do
+    it "is none for anonymous users" do
+      expect(Guardian.new.link_posting_access).to eq('none')
+    end
+
+    it "is full for regular users" do
+      expect(Guardian.new(user).link_posting_access).to eq('full')
+    end
+
+    it "is none for a user of a low trust level" do
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).link_posting_access).to eq('none')
+    end
+
+    it "is limited for a user of a low trust level with a whitelist" do
+      SiteSetting.whitelisted_link_domains = 'example.com'
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).link_posting_access).to eq('limited')
+    end
+  end
+
   describe "can_post_link?" do
+    let(:host) { "discourse.org" }
+
     it "returns false for anonymous users" do
-      expect(Guardian.new.can_post_link?).to eq(false)
+      expect(Guardian.new.can_post_link?(host: host)).to eq(false)
     end
 
     it "returns true for a regular user" do
-      expect(Guardian.new(user).can_post_link?).to eq(true)
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
     end
 
     it "supports customization by site setting" do
       user.trust_level = 0
       SiteSetting.min_trust_to_post_links = 0
-      expect(Guardian.new(user).can_post_link?).to eq(true)
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
       SiteSetting.min_trust_to_post_links = 1
-      expect(Guardian.new(user).can_post_link?).to eq(false)
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(false)
+    end
+
+    describe "whitelisted host" do
+      before do
+        SiteSetting.whitelisted_link_domains = host
+      end
+
+      it "allows a new user to post the link to the host" do
+        user.trust_level = 0
+        SiteSetting.min_trust_to_post_links = 1
+        expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
+        expect(Guardian.new(user).can_post_link?(host: 'another-host.com')).to eq(false)
+      end
     end
   end
 
@@ -1669,34 +1707,6 @@ describe Guardian do
         expect(Guardian.new(admin).can_delete?(post)).to be_falsey
       end
 
-      context 'post is older than post_edit_time_limit' do
-        let(:old_post) { build(:post, topic: topic, user: topic.user, post_number: 2, created_at: 6.minutes.ago) }
-        before do
-          SiteSetting.post_edit_time_limit = 5
-        end
-
-        it 'returns false to the author of the post' do
-          expect(Guardian.new(old_post.user).can_delete?(old_post)).to eq(false)
-        end
-
-        it 'returns true as a moderator' do
-          expect(Guardian.new(moderator).can_delete?(old_post)).to eq(true)
-        end
-
-        it 'returns true as an admin' do
-          expect(Guardian.new(admin).can_delete?(old_post)).to eq(true)
-        end
-
-        it "returns false when it's the OP, even as a moderator" do
-          old_post.post_number = 1
-          expect(Guardian.new(moderator).can_delete?(old_post)).to eq(false)
-        end
-
-        it 'returns false for another regular user trying to delete your post' do
-          expect(Guardian.new(coding_horror).can_delete?(old_post)).to eq(false)
-        end
-      end
-
       context 'the topic is archived' do
         before do
           post.topic.archived = true
@@ -2242,6 +2252,10 @@ describe Guardian do
 
       it "returns false if title is from a group the user doesn't belong to" do
         expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(false)
+      end
+
+      it "returns true if the title is set to an empty string" do
+        expect(Guardian.new(user).can_grant_title?(user, '')).to eq(true)
       end
     end
   end

@@ -1,10 +1,10 @@
 export default Ember.Component.extend({
-  tagName: '',
+  tagName: "",
   expandDetails: false,
 
   actions: {
     toggleDetails() {
-      this.toggleProperty('expandDetails');
+      this.toggleProperty("expandDetails");
     },
 
     filter(params) {

@@ -85,7 +85,8 @@ module FileStore
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
-      url.sub("#{schema}#{absolute_base_url}", SiteSetting.Upload.s3_cdn_url)
+      folder = @s3_helper.s3_bucket_folder_path.nil? ? "" : "#{@s3_helper.s3_bucket_folder_path}/"
+      url.sub("#{schema}#{absolute_base_url}/#{folder}", "#{SiteSetting.Upload.s3_cdn_url}/")
     end
 
     def cache_avatar(avatar, user_id)

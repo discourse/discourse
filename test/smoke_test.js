@@ -16,32 +16,40 @@ const path = require('path');
   const browser = await puppeteer.launch({
     // when debugging localy setting headless to "false" can be very helpful
     headless: true,
-    args: ["--disable-local-storage"]
+    args: ["--disable-local-storage", "--no-sandbox"]
   });
   const page = await browser.newPage();
 
-  page.setViewport = {
+  await page.setViewport({
     width: 1366,
     height: 768
+  });
+
+  const takeFailureScreenshot = function() {
+    const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH || 'tmp/smoke-test-screenshots'}/smoke-test-${Date.now()}.png`;
+    console.log(`Screenshot of failure taken at ${screenshotPath}`);
+    return page.screenshot({ path: screenshotPath, fullPage: true });
   };
 
   const exec = (description, fn, assertion) => {
     const start = +new Date();
 
-    return fn.call().then(output => {
+    return fn.call().then(async output => {
       if (assertion) {
         if (assertion.call(this, output)) {
           console.log(`PASSED: ${description} - ${(+new Date()) - start}ms`);
         } else {
           console.log(`FAILED: ${description} - ${(+new Date()) - start}ms`);
+          await takeFailureScreenshot();
           console.log("SMOKE TEST FAILED");
           process.exit(1);
         }
       } else {
         console.log(`PASSED: ${description} - ${(+new Date()) - start}ms`);
       }
-    }).catch(error => {
+    }).catch(async error => {
       console.log(`ERROR (${description}): ${error.message} - ${(+new Date()) - start}ms`);
+      await takeFailureScreenshot();
       console.log("SMOKE TEST FAILED");
       process.exit(1);
     });
@@ -51,11 +59,11 @@ const path = require('path');
     return exec(description, fn, assertion);
   };
 
-  page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
+  page.on('console', msg => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on('response', resp => {
-    if (resp.status !== 200) {
-      console.log("FAILED HTTP REQUEST TO " + resp.url + " Status is: " + resp.status);
+    if (resp.status() !== 200) {
+      console.log("FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status());
     }
     return resp;
   });
@@ -210,20 +218,10 @@ const path = require('path');
       return page.type("#reply-control .d-editor-input", post);
     });
 
-    await assert("waiting for the preview", () => {
-      let promise = page.waitForSelector(".d-editor-preview p",
+    await exec("waiting for the preview", () => {
+      return page.waitForXPath("//div[contains(@class, 'd-editor-preview') and contains(.//p, 'I can even write a reply')]",
         { visible: true }
       );
-
-      promise = promise.then(() => {
-        return page.evaluate(() => {
-          return document.querySelector(".d-editor-preview").innerText;
-        });
-      });
-
-      return promise;
-    }, output => {
-      return output.match("I can even write a reply");
     });
 
     await exec("submit the topic", () => {

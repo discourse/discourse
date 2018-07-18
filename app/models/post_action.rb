@@ -3,6 +3,7 @@ require_dependency 'system_message'
 
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
+  class FailedToCreatePost < StandardError; end
 
   include RateLimiter::OnCreateRecord
   include Trashable
@@ -101,18 +102,19 @@ class PostAction < ActiveRecord::Base
     #
     topic_ids = topics.map(&:id)
     map = {}
-        builder = SqlBuilder.new <<SQL
-        SELECT p.topic_id, p.post_number
-        FROM post_actions pa
-        JOIN posts p ON pa.post_id = p.id
-        WHERE p.deleted_at IS NULL AND pa.deleted_at IS NULL AND
-           pa.post_action_type_id = :post_action_type_id AND
-           pa.user_id = :user_id AND
-           p.topic_id IN (:topic_ids)
-        ORDER BY p.topic_id, p.post_number
-SQL
 
-    builder.map_exec(OpenStruct, user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids).each do |row|
+    builder = DB.build <<~SQL
+      SELECT p.topic_id, p.post_number
+      FROM post_actions pa
+      JOIN posts p ON pa.post_id = p.id
+      WHERE p.deleted_at IS NULL AND pa.deleted_at IS NULL AND
+         pa.post_action_type_id = :post_action_type_id AND
+         pa.user_id = :user_id AND
+         p.topic_id IN (:topic_ids)
+      ORDER BY p.topic_id, p.post_number
+    SQL
+
+    builder.query(user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids).each do |row|
       (map[row.topic_id] ||= []) << row.post_number
     end
 
@@ -245,7 +247,7 @@ SQL
     title = I18n.t("post_action_types.#{post_action_type}.email_title", title: post.topic.title, locale: SiteSetting.default_locale)
     body = I18n.t("post_action_types.#{post_action_type}.email_body", message: opts[:message], link: "#{Discourse.base_url}#{post.url}", locale: SiteSetting.default_locale)
     warning = opts[:is_warning] if opts[:is_warning].present?
-    title = title.truncate(255, separator: /\s/)
+    title = title.truncate(SiteSetting.max_topic_title_length, separator: /\s/)
 
     opts = {
       archetype: Archetype.private_message,
@@ -280,7 +282,12 @@ SQL
   def self.act(user, post, post_action_type_id, opts = {})
     limit_action!(user, post, post_action_type_id)
 
-    related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
+    begin
+      related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
+    rescue ActiveRecord::RecordNotSaved => e
+      raise FailedToCreatePost.new(e.message)
+    end
+
     staff_took_action = opts[:take_action] || false
 
     targets_topic =
@@ -340,7 +347,7 @@ SQL
   def self.copy(original_post, target_post)
     cols_to_copy = (column_names - %w{id post_id}).join(', ')
 
-    exec_sql <<~SQL
+    DB.exec <<~SQL
     INSERT INTO post_actions(post_id, #{cols_to_copy})
     SELECT #{target_post.id}, #{cols_to_copy}
     FROM post_actions
@@ -425,26 +432,29 @@ SQL
   # Returns the flag counts for a post, taking into account that some users
   # can weigh flags differently.
   def self.flag_counts_for(post_id)
-    flag_counts = exec_sql("SELECT SUM(CASE
-                                         WHEN pa.disagreed_at IS NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
-                                         WHEN pa.disagreed_at IS NULL AND NOT pa.staff_took_action THEN 1
-                                         ELSE 0
-                                       END) AS new_flags,
-                                   SUM(CASE
-                                         WHEN pa.disagreed_at IS NOT NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
-                                         WHEN pa.disagreed_at IS NOT NULL AND NOT pa.staff_took_action THEN 1
-                                         ELSE 0
-                                       END) AS old_flags
-                            FROM post_actions AS pa
-                              INNER JOIN users AS u ON u.id = pa.user_id
-                            WHERE pa.post_id = :post_id
-                              AND pa.post_action_type_id IN (:post_action_types)
-                              AND pa.deleted_at IS NULL",
-                            post_id: post_id,
-                            post_action_types: PostActionType.auto_action_flag_types.values,
-                            flags_required_to_hide_post: SiteSetting.flags_required_to_hide_post).first
+    params = {
+      post_id: post_id,
+      post_action_types: PostActionType.auto_action_flag_types.values,
+      flags_required_to_hide_post: SiteSetting.flags_required_to_hide_post
+    }
 
-    [flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i]
+    DB.query_single(<<~SQL, params)
+      SELECT COALESCE(SUM(CASE
+                 WHEN pa.disagreed_at IS NOT NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                 WHEN pa.disagreed_at IS NOT NULL AND NOT pa.staff_took_action THEN 1
+                 ELSE 0
+               END),0) AS old_flags,
+            COALESCE(SUM(CASE
+                 WHEN pa.disagreed_at IS NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                 WHEN pa.disagreed_at IS NULL AND NOT pa.staff_took_action THEN 1
+                 ELSE 0
+               END), 0) AS new_flags
+    FROM post_actions AS pa
+      INNER JOIN users AS u ON u.id = pa.user_id
+    WHERE pa.post_id = :post_id
+      AND pa.post_action_type_id in (:post_action_types)
+      AND pa.deleted_at IS NULL
+    SQL
   end
 
   def post_action_type_key

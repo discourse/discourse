@@ -8,7 +8,10 @@ QUnit.test("footer edit button", assert => {
   visit("/t/pm-for-testing/12");
 
   andThen(() => {
-    assert.ok(!exists('.edit-message'), 'does not show edit first post button on footer by default');
+    assert.ok(
+      !exists(".edit-message"),
+      "does not show edit first post button on footer by default"
+    );
   });
 });
 
@@ -21,6 +24,9 @@ QUnit.test("show footer edit button", assert => {
   visit("/t/pm-for-testing/12");
 
   andThen(() => {
-    assert.ok(exists('.edit-message'), 'shows edit first post button on footer when PM tagging is enabled');
+    assert.ok(
+      exists(".edit-message"),
+      "shows edit first post button on footer when PM tagging is enabled"
+    );
   });
 });

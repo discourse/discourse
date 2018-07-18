@@ -237,6 +237,15 @@ describe Wizard::StepUpdater do
       expect(SiteSetting.favicon_url).to eq('/uploads/favicon.png')
       expect(SiteSetting.apple_touch_icon_url).to eq('/uploads/apple.png')
     end
+
+    it "updates large_icon_url if the uploaded icon size is greater than 180x180" do
+      upload = Fabricate(:upload, width: 512, height: 512)
+      updater = wizard.create_updater('icons', apple_touch_icon_url: upload.url)
+      updater.update
+
+      expect(updater).to be_success
+      expect(SiteSetting.large_icon_url).to eq(upload.url)
+    end
   end
 
   context "emoji step" do
@@ -252,12 +261,13 @@ describe Wizard::StepUpdater do
 
   context "homepage step" do
     it "updates the fields correctly" do
-      updater = wizard.create_updater('homepage', homepage_style: "categories")
+      updater = wizard.create_updater('homepage', homepage_style: "categories_and_top_topics")
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('homepage')).to eq(true)
       expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
+      expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
 
       updater = wizard.create_updater('homepage', homepage_style: "latest")
       updater.update

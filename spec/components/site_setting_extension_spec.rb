@@ -4,6 +4,24 @@ require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
 
+  # We disable message bus here to avoid a large amount
+  # of uneeded messaging, tests are careful to call refresh
+  # when they need to.
+  #
+  # DistributedCache used by locale handler can under certain
+  # cases take a tiny bit to stabalize.
+  #
+  # TODO: refactor SiteSettingExtension not to rely on statics in
+  # DefaultsProvider
+  #
+  before do
+    MessageBus.off
+  end
+
+  after do
+    MessageBus.on
+  end
+
   describe '#types' do
     context "verify enum sequence" do
       before do
@@ -25,8 +43,11 @@ describe SiteSettingExtension do
   end
 
   def new_settings(provider)
+    # we want to avoid leaking a big pile of MessageBus subscriptions here (1 per class)
+    # so we set listen_for_changes to false
     Class.new do
       extend SiteSettingExtension
+      self.listen_for_changes = false
       self.provider = provider
     end
   end
@@ -37,6 +58,30 @@ describe SiteSettingExtension do
 
   let :settings2 do
     new_settings(provider_local)
+  end
+
+  it "Does not leak state cause changes are not linked" do
+    t1 = Thread.new do
+      5.times do
+        settings = new_settings(SiteSettings::LocalProcessProvider.new)
+        settings.setting(:title, 'test')
+        settings.title = 'title1'
+        expect(settings.title).to eq 'title1'
+
+      end
+    end
+
+    t2 = Thread.new do
+      5.times do
+        settings = new_settings(SiteSettings::LocalProcessProvider.new)
+        settings.setting(:title, 'test')
+        settings.title = 'title2'
+        expect(settings.title).to eq 'title2'
+      end
+    end
+
+    t1.join
+    t2.join
   end
 
   describe "refresh!" do
@@ -388,13 +433,13 @@ describe SiteSettingExtension do
       settings.refresh!
       expect {
         settings.set("provider", "haxxed")
-      }.to raise_error(ArgumentError)
+      }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
   describe ".set_and_log" do
     before do
-      settings.setting(:s3_secret_access_key, "old_secret_key")
+      settings.setting(:s3_secret_access_key, "old_secret_key", secret: true)
       settings.setting(:title, "Discourse v1")
       settings.refresh!
     end
@@ -402,7 +447,7 @@ describe SiteSettingExtension do
     it "raises an error when set for an invalid setting name" do
       expect {
         settings.set_and_log("provider", "haxxed")
-      }.to raise_error(ArgumentError)
+      }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "scrubs secret setting values from logs" do
@@ -460,6 +505,15 @@ describe SiteSettingExtension do
   end
 
   describe "shadowed_by_global" do
+
+    context "default_locale" do
+      it "supports adding a default locale via a global" do
+        global_setting :default_locale, 'zh_CN'
+        settings.default_locale = 'en'
+        expect(settings.default_locale).to eq('zh_CN')
+      end
+    end
+
     context "without global setting" do
       before do
         settings.setting(:trout_api_key, 'evil', shadowed_by_global: true)
@@ -544,6 +598,27 @@ describe SiteSettingExtension do
       it "should add the key to the shadowed_settings collection" do
         expect(settings.shadowed_settings.include?(:trout_api_key)).to eq(true)
       end
+    end
+  end
+
+  describe "secret" do
+    before do
+      settings.setting(:superman_identity, 'Clark Kent', secret: true)
+      settings.refresh!
+    end
+
+    it "is in the `secret_settings` collection" do
+      expect(settings.secret_settings.include?(:superman_identity)).to eq(true)
+    end
+
+    it "can be retrieved" do
+      expect(settings.superman_identity).to eq("Clark Kent")
+    end
+
+    it "is present in all_settings by default" do
+      secret_setting = settings.all_settings.find { |s| s[:setting] == :superman_identity }
+      expect(secret_setting).to be_present
+      expect(secret_setting[:secret]).to eq(true)
     end
   end
 

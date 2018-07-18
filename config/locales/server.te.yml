@@ -74,21 +74,21 @@ te:
   invalid_access: "అభ్యర్థించిన వనరు వీక్షించడానికి మీకు అనుమతి లేదు."
   read_only_mode_enabled: "సైటు కేవలం చదివే రీతిలో ఉంది. చర్చలు ఇప్పుడు అచేతనం."
   too_many_replies:
-    one: క్షమించాలి. కొత్త సభ్యులు తాత్కాలికంగా ఒక విషయానికి  ఒక జవాబుకు మాత్రమే పరిమితం చేయబడ్డారు
-    other: క్షమించాలి. కొత్త సభ్యులు, తాత్కాలికంగా ఒక విషయానికి %{count} జవాబులకు మాత్రమే పరిమితం చెయ్యబడ్డారు.
+    one: "క్షమించాలి. కొత్త సభ్యులు తాత్కాలికంగా ఒక విషయానికి  ఒక జవాబుకు మాత్రమే పరిమితం చేయబడ్డారు"
+    other: "క్షమించాలి. కొత్త సభ్యులు, తాత్కాలికంగా ఒక విషయానికి %{count} జవాబులకు మాత్రమే పరిమితం చెయ్యబడ్డారు."
   embed:
     start_discussion: "చర్చ మొదలుపెట్టు"
     continue: "చర్చ కొనసాగించు"
     more_replies:
-      one: మరో జవాబు ఉంది
-      other: ఇంకా %{count} జవాబులు ఉన్నాయి
+      one: "మరో జవాబు ఉంది"
+      other: "ఇంకా %{count} జవాబులు ఉన్నాయి"
     loading: "చర్చ లోడవుతోంది"
     permalink: "శాస్వత లంకె"
     imported_from: "%{link} వద్ద మూల పద్దుకు జోడు చర్చా విషయం ఉంది."
     in_reply_to: "▶ %{username}"
     replies:
-      one: ఒక జవాబు
-      other: '%{count} జవాబులు'
+      one: "ఒక జవాబు"
+      other: "%{count} జవాబులు"
   spamming_host: "క్షమించాలి. ఆ అతిధికి మీరు లంకె టపా చెయ్యలేరు."
   user_is_suspended: "సస్పెండైన సభ్యులు టపా రాయుట వీలవదు"
   topic_not_found: "ఏదో తప్పు జరిగింది. బహుశా ఈ అంశం ముగిసింది లేదా మీరు చూస్తూ ఉండగా తొలగించబడింది?"
@@ -121,8 +121,8 @@ te:
       trust_level_4: "నమ్మకం_స్థాయి_4"
   education:
     until_posts:
-      one: ఒక టపా
-      other: '%{count} టపాలు'
+      one: "ఒక టపా"
+      other: "%{count} టపాలు"
     'new-reply': |
       స్వాగతం %{site_name} &mdash; **పాల్గొన్నందుకు ధన్యవాదాలు!**
 
@@ -181,8 +181,8 @@ te:
       uncategorized: "అవర్గీకృతాన్ని తొలగించలేరు"
       has_subcategories: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనికి ఉప వర్గాలు ఉన్నాయి."
       topic_exists:
-        one: ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో ఒక విషయం ఉంది. పురాతన విషయం %{topic_link}.
-        other: ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %[count] విషయాలు ఉన్నాయి. పురాతన విషయం %{topic_link}.
+        one: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో ఒక విషయం ఉంది. పురాతన విషయం %{topic_link}."
+        other: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %[count] విషయాలు ఉన్నాయి. పురాతన విషయం %{topic_link}."
       topic_exists_no_oldest: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %{count} విషయాలు ఉన్నాయి."
   trust_levels:
     newuser:
@@ -191,85 +191,85 @@ te:
       title: "ప్రాథమిక సభ్యుడు"
   rate_limiter:
     hours:
-      one: ఒక గంట
-      other: '%{count} గంటలు'
+      one: "ఒక గంట"
+      other: "%{count} గంటలు"
     minutes:
-      one: ఒక నిమిషం
-      other: '%{count} నిమిషాలు'
+      one: "ఒక నిమిషం"
+      other: "%{count} నిమిషాలు"
     seconds:
-      one: ఒక సెకను
-      other: '%{count} సెకన్లు'
+      one: "ఒక సెకను"
+      other: "%{count} సెకన్లు"
   datetime:
     distance_in_words:
       half_a_minute: "< 1ని"
       less_than_x_seconds:
-        one: < 1సె
-        other: <%{count}సె
+        one: "< 1సె"
+        other: "<%{count}సె"
       x_seconds:
-        one: 1సె
-        other: '%{count}సె'
+        one: "1సె"
+        other: "%{count}సె"
       less_than_x_minutes:
-        one: < 1ని
-        other: < %{count}ని
+        one: "< 1ని"
+        other: "< %{count}ని"
       x_minutes:
-        one: 1ని
-        other: '%{count}ని'
+        one: "1ని"
+        other: "%{count}ని"
       about_x_hours:
-        one: 1గం
-        other: '%{count}గం'
+        one: "1గం"
+        other: "%{count}గం"
       x_days:
-        one: 1రో
-        other: '%{count}రో'
+        one: "1రో"
+        other: "%{count}రో"
       about_x_months:
-        one: 1నెల
-        other: '%{count}నెల'
+        one: "1నెల"
+        other: "%{count}నెల"
       x_months:
-        one: 1నెల
-        other: '%{count}నెల'
+        one: "1నెల"
+        other: "%{count}నెల"
       about_x_years:
-        one: 1సం
-        other: '%{count}సం'
+        one: "1సం"
+        other: "%{count}సం"
       over_x_years:
-        one: '> 1సం'
-        other: '> %{count}సం'
+        one: "> 1సం"
+        other: "> %{count}సం"
       almost_x_years:
-        one: 1సం
-        other: '%{count}సం'
+        one: "1సం"
+        other: "%{count}సం"
     distance_in_words_verbose:
       half_a_minute: "ఇప్పుడే"
       less_than_x_seconds:
-        one: ఇప్పుడే
-        other: ఇప్పుడే
+        one: "ఇప్పుడే"
+        other: "ఇప్పుడే"
       x_seconds:
-        one: 1 సెకన్ వెనుక
-        other: '%{count} సెకన్ల వెనుక'
+        one: "1 సెకన్ వెనుక"
+        other: "%{count} సెకన్ల వెనుక"
       less_than_x_minutes:
-        one: ఒక్క నిమిషం ముందు
-        other: '%{count} నిమిషాల ముందు'
+        one: "ఒక్క నిమిషం ముందు"
+        other: "%{count} నిమిషాల ముందు"
       x_minutes:
-        one: ఒక్క నిమిషం ముందు
-        other: '%{count} నిమిషాలు ముందు'
+        one: "ఒక్క నిమిషం ముందు"
+        other: "%{count} నిమిషాలు ముందు"
       about_x_hours:
-        one: 1 గంట ముందు
-        other: '%{count} గంటల ముందు'
+        one: "1 గంట ముందు"
+        other: "%{count} గంటల ముందు"
       x_days:
-        one: 1 రోజు ముందు
-        other: '%{count} రోజుల ముందు'
+        one: "1 రోజు ముందు"
+        other: "%{count} రోజుల ముందు"
       about_x_months:
-        one: రమారమీ ఒక మాసం ముందు
-        other: రమారమీ %{count} నెలల ముందు
+        one: "రమారమీ ఒక మాసం ముందు"
+        other: "రమారమీ %{count} నెలల ముందు"
       x_months:
-        one: ఒక మాసం ముందు
-        other: '%{count} నెలల వెనుక'
+        one: "ఒక మాసం ముందు"
+        other: "%{count} నెలల వెనుక"
       about_x_years:
-        one: రమారమీ ఒక సంవత్సరం ముందు
-        other: రమారమీ %{count} సంవత్సరాల క్రితం
+        one: "రమారమీ ఒక సంవత్సరం ముందు"
+        other: "రమారమీ %{count} సంవత్సరాల క్రితం"
       over_x_years:
-        one: ఒక సంవత్సరం పైబడి
-        other: '%{count} సవంత్సరాలకు పైబడి'
+        one: "ఒక సంవత్సరం పైబడి"
+        other: "%{count} సవంత్సరాలకు పైబడి"
       almost_x_years:
-        one: అటో ఇటో ఒక సంవత్సరం వెనుక
-        other: అటోఇటో %{count} సంవత్సరాల ముందు
+        one: "అటో ఇటో ఒక సంవత్సరం వెనుక"
+        other: "అటోఇటో %{count} సంవత్సరాల ముందు"
   password_reset:
     update: 'సంకేతపదం ఉన్నతీకరించండి'
     save: 'సంకేతపదం అమర్చండి'
@@ -347,9 +347,7 @@ te:
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
     signups:
-      title: "కొత్త వినియోగదారులు"
       xaxis: "రోజు"
-      yaxis: "కొత్త సభ్యుల సంఖ్య"
     topics:
       title: "విషయాలు"
       xaxis: "రోజు"

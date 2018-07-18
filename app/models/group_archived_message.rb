@@ -29,11 +29,11 @@ class GroupArchivedMessage < ActiveRecord::Base
 
   private
 
-    def self.publish_topic_tracking_state(topic)
-      TopicTrackingState.publish_private_message(
-        topic, group_archive: true
-      )
-    end
+  def self.publish_topic_tracking_state(topic)
+    TopicTrackingState.publish_private_message(
+      topic, group_archive: true
+    )
+  end
 end
 
 # == Schema Information

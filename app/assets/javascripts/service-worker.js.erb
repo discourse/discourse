@@ -37,6 +37,8 @@ self.addEventListener('install', function(event) {
       return caches.open(CURRENT_CACHES.offline).then(function(cache) {
         return cache.put(OFFLINE_URL, response);
       });
+    }).then(function(cache) {
+      self.skipWaiting();
     })
   );
 });
@@ -60,11 +62,17 @@ self.addEventListener('activate', function(event) {
           }
         })
       );
+    }).then(function() {
+      self.clients.claim()
     })
   );
 });
 
 self.addEventListener('fetch', function(event) {
+  // Bypass service workers if this is a url with a token param
+  if(/\?.*token/i.test(event.request.url)) {
+    return;
+  }
   // We only want to call event.respondWith() if this is a navigation request
   // for an HTML page.
   // request.mode of 'navigate' is unfortunately not supported in Chrome
@@ -83,7 +91,7 @@ self.addEventListener('fetch', function(event) {
         if (!navigator.onLine) {
           return caches.match(OFFLINE_URL);
         } else {
-          throw error;
+          throw new Error(error);
         }
       })
     );

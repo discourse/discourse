@@ -1,50 +1,190 @@
-// style that apply to the login popup
+// shared styles used
+// on both the login and
+// create account modals
+.login-modal,
+.create-account {
+  #login-buttons:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-basis: 40%;
+    align-items: center;
+    min-height: 175px;
+    border-left: 1px solid $primary-low;
+    padding: 15px;
+    order: 2;
 
-#login-buttons {
-  button {
-    margin: 0 5px 5px 0;
-    min-width: 180px;
-    &:lang(zh_CN) {
-      min-width: 200px;
+    button {
+      margin: 0.35em;
+      width: 160px;
+      &:lang(zh_CN) {
+        min-width: 200px;
+      }
     }
   }
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
 
-// Create account
+  #login-form {
+    flex: 1 0 auto;
+    padding: 0 15px;
+  }
 
-.create-account {
-  form {
+  tr:not(.instructions) {
+    td {
+      display: flex;
+      padding: 5px 0 0 0;
+    }
+  }
+
+  tr.input label {
     margin-bottom: 0;
   }
-  table {
-    width: 100%;
-  }
-  tr.input {
-    td {
-      padding-top: 10px;
+}
+
+// styles used on
+// login modal only
+.d-modal.login-modal {
+  .modal-body,
+  #credentials {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+
+    tr {
+      display: flex;
+      flex-direction: column;
     }
-    input, label {
+  }
+  #second-factor {
+    display: none;
+  }
+}
+
+// styles used on the
+// create account
+// modal only
+.d-modal.create-account {
+  .modal-body {
+    display: flex;
+    padding: 15px 0;
+  }
+
+  .create-account-form tr {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .login-form {
+    display: flex;
+    flex: 1 1 50%;
+    align-items: center;
+    padding: 0 15px;
+    form,
+    table {
+      width: 100%;
+    }
+
+    tr {
+      display: flex;
+      flex-direction: column;
+      margin-top: 0.15em;
+      &.password-confirmation {
+        display: none;
+      }
+    }
+  }
+
+  tr.input {
+    input,
+    label {
       margin-bottom: 0;
+      width: 100%;
     }
     .tip {
       max-width: 340px;
     }
   }
 
+  .user-field {
+    display: flex;
+    flex-direction: column;
+
+    &.confirm {
+      margin-top: 5px;
+    }
+
+    > label {
+      width: auto;
+      font-weight: bold;
+    }
+
+    .select-kit {
+      width: 242px; // match text-input width
+    }
+
+    .controls {
+      margin-left: 0;
+
+      .instructions {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .invites-show {
+    padding-top: 20px;
+
+    .two-col {
+      margin-top: 30px;
+    }
+    .col-image {
+      width: 200px;
+      img {
+        width: 200px;
+      }
+    }
+    .col-form {
+      margin-left: 200px;
+      .inline-invite-img {
+        display: none;
+      }
+    }
+    form {
+      .controls,
+      .input {
+        margin-left: 20px;
+      }
+      input,
+      label {
+        margin-bottom: 0;
+      }
+      .user-field .control-label:not(.checkbox-label) {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .password-reset,
+  .invites-show {
+    .col-form {
+      padding-left: 20px;
+    }
+    h2 {
+      margin-bottom: 12px;
+    }
+    .col-image img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  .password-reset {
+    .col-form {
+      padding-top: 40px;
+    }
+  }
+
   .tos-agree {
     margin-bottom: 12px;
-  }
-
-  .disclaimer {
-    margin-top: 15px;
-  }
-
-  .instructions {
-    label {
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
   }
 
   .user-fields {
@@ -53,52 +193,15 @@
   }
 }
 
-.password-reset, .invites-show {
-  .col-form {
-    padding-left: 20px;
-  }
-  h2 {
-    margin-bottom: 12px;
-  }
-  .col-image img {
-    width: 200px;
-    height: 200px;
-  }
-}
-
-.password-reset {
-  .col-form {
-    padding-top: 40px;
-  }
-}
-
-.invites-show {
-  padding-top: 20px;
-
-  .two-col {
-    margin-top: 30px;
-  }
-  .col-image {
-    width: 200px;
-    img {
-      width: 200px;
-    }
-  }
-  .col-form {
-    margin-left: 200px;
-    .inline-invite-img {
+.login-form {
+  .tip {
+    &:not(:empty) + td {
       display: none;
     }
-  }
-  form {
-    .controls, .input {
-      margin-left: 20px;
-    }
-    input, label {
-      margin-bottom: 0;
-    }
-    .user-field .control-label:not(.checkbox-label) {
-      margin-left: 20px;
+    &:not(:empty),
+    &:empty + td {
+      min-height: 1.75em;
+      width: 240px;
     }
   }
 }

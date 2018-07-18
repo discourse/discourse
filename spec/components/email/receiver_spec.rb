@@ -165,6 +165,10 @@ describe Email::Receiver do
       expect { process(:reply_user_not_matching) }.to raise_error(Email::Receiver::ReplyUserNotMatchingError)
     end
 
+    it "raises a FromReplyByAddressError when the email is from the reply by email address" do
+      expect { process(:from_reply_by_email_address) }.to raise_error(Email::Receiver::FromReplyByAddressError)
+    end
+
     it "raises a TopicNotFoundError when the topic was deleted" do
       topic.update_columns(deleted_at: 1.day.ago)
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
@@ -385,7 +389,6 @@ describe Email::Receiver do
 
     it "supports attached images in TEXT part" do
       SiteSetting.incoming_email_prefer_html = false
-      SiteSetting.queue_jobs = true
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<img/)
@@ -395,7 +398,6 @@ describe Email::Receiver do
     end
 
     it "supports attached images in HTML part" do
-      SiteSetting.queue_jobs = true
       SiteSetting.incoming_email_prefer_html = true
 
       expect { process(:inline_image) }.to change { topic.posts.count }
@@ -679,24 +681,24 @@ describe Email::Receiver do
       SiteSetting.alternative_reply_by_email_addresses = nil
     end
 
-    it "is empty by default" do
-      expect(Email::Receiver.reply_by_email_address_regex).to eq(//)
+    it "it maches nothing if there is not reply_by_email_address" do
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(/$a/)
     end
 
     it "uses 'reply_by_email_address' site setting" do
       SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com"
-      expect(Email::Receiver.reply_by_email_address_regex).to eq(/foo\+(\h{32})@bar\.com/)
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(/foo\+?(\h{32})?@bar\.com/)
     end
 
     it "uses 'alternative_reply_by_email_addresses' site setting" do
       SiteSetting.alternative_reply_by_email_addresses = "alt.foo+%{reply_key}@bar.com"
-      expect(Email::Receiver.reply_by_email_address_regex).to eq(/alt\.foo\+(\h{32})@bar\.com/)
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(/alt\.foo\+?(\h{32})?@bar\.com/)
     end
 
     it "combines both 'reply_by_email' settings" do
       SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com"
       SiteSetting.alternative_reply_by_email_addresses = "alt.foo+%{reply_key}@bar.com"
-      expect(Email::Receiver.reply_by_email_address_regex).to eq(/foo\+(\h{32})@bar\.com|alt\.foo\+(\h{32})@bar\.com/)
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(/foo\+?(\h{32})?@bar\.com|alt\.foo\+?(\h{32})?@bar\.com/)
     end
 
   end

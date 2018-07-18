@@ -63,20 +63,20 @@ class InlineOneboxer
 
   private
 
-    def self.onebox_for(url, title, opts)
-      onebox = {
-        url: url,
-        title: title && Emoji.gsub_emoji_to_unicode(title)
-      }
-      unless opts[:skip_cache]
-        Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)
-      end
-
-      onebox
+  def self.onebox_for(url, title, opts)
+    onebox = {
+      url: url,
+      title: title && Emoji.gsub_emoji_to_unicode(title)
+    }
+    unless opts[:skip_cache]
+      Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)
     end
 
-    def self.cache_key(url)
-      "inline_onebox:#{url}"
-    end
+    onebox
+  end
+
+  def self.cache_key(url)
+    "inline_onebox:#{url}"
+  end
 
 end

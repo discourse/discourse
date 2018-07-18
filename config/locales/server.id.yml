@@ -95,32 +95,32 @@ id:
   reading_time: "Waktu bacaan"
   likes: "Suka"
   too_many_replies:
-    other: Maaft, bagi pengguna baru sementara ini hanya dibatasi hingga %{count} jawaban dalam topik yang sama.
+    other: "Maaft, bagi pengguna baru sementara ini hanya dibatasi hingga %{count} jawaban dalam topik yang sama."
   embed:
     start_discussion: "Mulai Diskusi"
     continue: "Lanjutkan Diskusi"
     more_replies:
-      other: '%{count} jawaban lainnya'
+      other: "%{count} jawaban lainnya"
     loading: "Sedang memuat diskusi..."
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      other: '%{count} balasan'
+      other: "%{count} balasan"
   no_mentions_allowed: "Maaf, Anda tidak dapat menyebut pengguna lain."
   too_many_mentions:
-    other: Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting.
+    other: "Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
-    other: Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting.
+    other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
   no_images_allowed: "Maaf, pengguna baru tidak diperbolehkan untuk memasang gambar/foto dalam posting."
   too_many_images:
-    other: Maaf, pengguna baru hanya diperbolehkan untuk memasang %{count} gambar/foto dalam satu posting.
+    other: "Maaf, pengguna baru hanya diperbolehkan untuk memasang %{count} gambar/foto dalam satu posting."
   no_attachments_allowed: "Maaf, pengguna baru tidak diijinkan untuk mengunggah file/attachment dalam posting."
   too_many_attachments:
-    other: Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting.
+    other: "Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting."
   no_links_allowed: "Maaf, pengguna baru tidak diijinkan untuk menulis tautan dalam posting."
   too_many_links:
-    other: Maaf, pengguna baru hanya diijinkan untuk menulis %{count} tautan dalam satu posting.
+    other: "Maaf, pengguna baru hanya diijinkan untuk menulis %{count} tautan dalam satu posting."
   spamming_host: "Maaf, Anda tidak dapat mencantumkan tautan ke host tersebut."
   user_is_suspended: "Pengguna yang dalam masa suspensi tidak diperbolehkan untuk membuat posting."
   topic_not_found: "Ada yang salah. Mungkin topik ini ditutup atau dihapus ketika Anda sedang menjelajahinya?"
@@ -166,7 +166,7 @@ id:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      other: '%{count} post'
+      other: "%{count} post"
   activerecord:
     attributes:
       category:
@@ -224,36 +224,36 @@ id:
       title: "pemimpin"
   rate_limiter:
     hours:
-      other: '%{count} jam'
+      other: "%{count} jam"
     minutes:
-      other: '%{count} menit'
+      other: "%{count} menit"
     seconds:
-      other: '%{count} detik'
+      other: "%{count} detik"
   datetime:
     distance_in_words_verbose:
       half_a_minute: "baru saja"
       less_than_x_seconds:
-        other: baru saja
+        other: "baru saja"
       x_seconds:
-        other: '%{count} detik yang lalu'
+        other: "%{count} detik yang lalu"
       less_than_x_minutes:
-        other: kurang dari %{count} menit yang lalu
+        other: "kurang dari %{count} menit yang lalu"
       x_minutes:
-        other: '%{count} menit yang lalu'
+        other: "%{count} menit yang lalu"
       about_x_hours:
-        other: '%{count} jam yang lalu'
+        other: "%{count} jam yang lalu"
       x_days:
-        other: '%{count} hari yang lalu'
+        other: "%{count} hari yang lalu"
       about_x_months:
-        other: sekitar %{count} bulan yang lalu
+        other: "sekitar %{count} bulan yang lalu"
       x_months:
-        other: '%{count} bulan yang lalu'
+        other: "%{count} bulan yang lalu"
       about_x_years:
-        other: sekitar %{count} tahun yang lalu
+        other: "sekitar %{count} tahun yang lalu"
       over_x_years:
-        other: lebih dari %{count} tahun yang lalu
+        other: "lebih dari %{count} tahun yang lalu"
       almost_x_years:
-        other: hampir %{count} tahun yang lalu
+        other: "hampir %{count} tahun yang lalu"
   password_reset:
     update: 'Perbaharui Kata Sandi'
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
@@ -310,9 +310,7 @@ id:
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
-      title: "Pengguna Baru"
       xaxis: "Hari"
-      yaxis: "Jumlah pengguna baru"
     profile_views:
       xaxis: "Hari"
     topics:
@@ -415,7 +413,6 @@ id:
       xaxis: "Hari"
       yaxis: "Total"
     mobile_visits:
-      title: "Kunjungan Pengguna"
       xaxis: "Hari"
       yaxis: "Jumlah kunjungan"
   dashboard:
@@ -445,7 +442,7 @@ id:
   system_messages:
     pending_users_reminder:
       subject_template:
-        other: '%{count} pengguna sedang menunggu persetujuan'
+        other: "%{count} pengguna sedang menunggu persetujuan"
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"

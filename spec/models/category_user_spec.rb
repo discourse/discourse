@@ -68,6 +68,7 @@ describe CategoryUser do
 
   context 'integration' do
     before do
+      SiteSetting.queue_jobs = false
       NotificationEmailer.enable
     end
 

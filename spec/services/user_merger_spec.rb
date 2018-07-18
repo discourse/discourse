@@ -850,6 +850,7 @@ describe UserMerger do
     UserHistory.create(action: UserHistory.actions[:anonymize_user], target_user_id: walter.id, acting_user_id: source_user.id)
 
     merge_users!
+    UserHistory.where(action: UserHistory.actions[:merge_user], target_user_id: target_user.id).delete_all
 
     expect(UserHistory.where(target_user_id: target_user.id).count).to eq(1)
     expect(UserHistory.where(target_user_id: source_user.id).count).to eq(0)
@@ -877,6 +878,8 @@ describe UserMerger do
   end
 
   it "merges user visits" do
+    freeze_time DateTime.parse('2010-01-01 12:00')
+
     UserVisit.create!(user_id: source_user.id, visited_at: 2.days.ago, posts_read: 22, mobile: false, time_read: 400)
     UserVisit.create!(user_id: source_user.id, visited_at: Date.yesterday, posts_read: 8, mobile: false, time_read: 100)
     UserVisit.create!(user_id: target_user.id, visited_at: Date.yesterday, posts_read: 12, mobile: true, time_read: 270)
@@ -951,6 +954,15 @@ describe UserMerger do
     expect(User.find_by_username(source_user.username)).to be_nil
   end
 
+  it "deletes the source user even when it is a member of a group that grants a trust level" do
+    group = Fabricate(:group, grant_trust_level: 3)
+    group.bulk_add([source_user.id, target_user.id])
+
+    merge_users!
+
+    expect(User.find_by_username(source_user.username)).to be_nil
+  end
+
   it "deletes external auth infos of source user" do
     FacebookUserInfo.create(user_id: source_user.id, facebook_user_id: "example")
     GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")
@@ -976,7 +988,7 @@ describe UserMerger do
   it "deletes auth tokens" do
     Fabricate(:api_key, user: source_user)
     Fabricate(:readonly_user_api_key, user: source_user)
-    Fabricate(:user_second_factor, user: source_user)
+    Fabricate(:user_second_factor_totp, user: source_user)
 
     SiteSetting.verbose_auth_token_logging = true
     UserAuthToken.generate!(user_id: source_user.id, user_agent: "Firefox", client_ip: "127.0.0.1")
@@ -1016,5 +1028,16 @@ describe UserMerger do
       .once
 
     merge_users!
+  end
+
+  it "correctly logs the merge" do
+    expect { merge_users! }.to change { UserHistory.count }.by(1)
+
+    log_entry = UserHistory.last
+    expect(log_entry.action).to eq(UserHistory.actions[:merge_user])
+    expect(log_entry.acting_user_id).to eq(Discourse::SYSTEM_USER_ID)
+    expect(log_entry.target_user_id).to eq(target_user.id)
+    expect(log_entry.context).to eq(I18n.t("staff_action_logs.user_merged", username: source_user.username))
+    expect(log_entry.email).to eq("alice@work.com")
   end
 end

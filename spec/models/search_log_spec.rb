@@ -101,7 +101,7 @@ RSpec.describe SearchLog, type: :model do
         log = SearchLog.find(log_id)
         expect(log.term).to eq('hello')
         expect(log.search_type).to eq(SearchLog.search_types[:full_page])
-        expect(log.ip_address).to eq('192.168.0.1')
+        expect(log.ip_address).to eq(nil)
         expect(log.user_id).to eq(user.id)
 
         action, updated_log_id = SearchLog.log(
@@ -183,11 +183,12 @@ RSpec.describe SearchLog, type: :model do
   end
 
   context "trending" do
+    let(:user) { Fabricate(:user) }
     before do
       SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
       SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
       SearchLog.log(term: 'java', search_type: :header, ip_address: '127.0.0.1')
-      SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+      SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: user.id)
       SearchLog.log(term: 'swift', search_type: :header, ip_address: '127.0.0.1')
       SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
     end
@@ -207,6 +208,7 @@ RSpec.describe SearchLog, type: :model do
       expect(top_trending.click_through).to eq(0)
 
       SearchLog.where(term: 'ruby', ip_address: '127.0.0.1').update_all(search_result_id: 12)
+      SearchLog.where(term: 'ruby', user_id: user.id).update_all(search_result_id: 12)
       SearchLog.where(term: 'ruby', ip_address: '127.0.0.2').update_all(search_result_id: 24)
       top_trending = SearchLog.trending.first
       expect(top_trending.click_through).to eq(3)

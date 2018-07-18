@@ -1,17 +1,24 @@
+import { escapeExpression } from "discourse/lib/utilities";
+
 export function showTooltip() {
   const fadeSpeed = 300;
   const tooltipID = "#discourse-tooltip";
   const $this = $(this);
   const $parent = $this.offsetParent();
-  const content = $this.attr("data-tooltip");
-  const retina = window.devicePixelRatio && window.devicePixelRatio > 1 ? "class='retina'" : "";
+  const content = escapeExpression($this.attr("data-tooltip"));
+  const retina =
+    window.devicePixelRatio && window.devicePixelRatio > 1
+      ? "class='retina'"
+      : "";
 
   let pos = $this.offset();
   const delta = $parent.offset();
   pos.top -= delta.top;
   pos.left -= delta.left;
 
-  $(tooltipID).fadeOut(fadeSpeed).remove();
+  $(tooltipID)
+    .fadeOut(fadeSpeed)
+    .remove();
 
   $(this).after(`
     <div id="discourse-tooltip" ${retina}>
@@ -20,7 +27,7 @@ export function showTooltip() {
     </div>
   `);
 
-  $(window).on("click.discourse", (event) => {
+  $(window).on("click.discourse", event => {
     if ($(event.target).closest(tooltipID).length === 0) {
       $(tooltipID).remove();
       $(window).off("click.discourse");
@@ -29,12 +36,12 @@ export function showTooltip() {
   });
 
   const $tooltip = $(tooltipID);
-  $tooltip.css({top: 0, left: 0});
+  $tooltip.css({ top: 0, left: 0 });
 
-  let left = (pos.left - ($tooltip.width() / 2) + $this.width()/2);
+  let left = pos.left - $tooltip.width() / 2 + $this.width() / 2;
   if (left < 0) {
     $tooltip.find(".tooltip-pointer").css({
-      "margin-left": left*2 + "px"
+      "margin-left": left * 2 + "px"
     });
     left = 0;
   }
@@ -62,12 +69,12 @@ export function showTooltip() {
 
 export function registerTooltip(jqueryContext) {
   if (jqueryContext.length) {
-    jqueryContext.on('click', showTooltip);
+    jqueryContext.on("click", showTooltip);
   }
 }
 
 export function unregisterTooltip(jqueryContext) {
   if (jqueryContext.length) {
-    jqueryContext.off('click');
+    jqueryContext.off("click");
   }
 }

@@ -1,3 +1,3 @@
 export default Ember.Component.extend({
-  classNames: 'activation-controls'
+  classNames: "activation-controls"
 });

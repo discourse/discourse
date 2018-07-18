@@ -837,6 +837,9 @@ describe Search do
 
       results = Search.new('#777').execute
       expect(results.posts.length).to eq(0)
+
+      results = Search.new('xxx #:').execute
+      expect(results.posts.length).to eq(0)
     end
 
     context 'tags' do
@@ -892,7 +895,7 @@ describe Search do
     str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
     ts_query = Search.ts_query(term: str, ts_config: "simple")
-    Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
+    DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query)
   end
 
   context '#word_to_date' do
@@ -961,7 +964,7 @@ describe Search do
   context 'in:title' do
     it 'allows for search in title' do
       topic = Fabricate(:topic, title: 'I am testing a title search')
-      _post = Fabricate(:post, topic_id: topic.id, raw: 'this is the first post')
+      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
 
       results = Search.execute('title in:title')
       expect(results.posts.length).to eq(1)

@@ -28,7 +28,7 @@ RSpec.describe Admin::SearchLogsController do
       sign_in(admin)
       get '/admin/logs/search_logs.json'
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json[0]['term']).to eq('ruby')
@@ -51,7 +51,7 @@ RSpec.describe Admin::SearchLogsController do
       sign_in(admin)
         get '/admin/logs/search_logs/term/ruby.json'
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json['term']['type']).to eq('search_log_term')

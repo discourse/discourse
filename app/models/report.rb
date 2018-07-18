@@ -287,7 +287,7 @@ class Report
     report.higher_is_better = false
     report.data = []
     Topic.time_to_first_response_per_day(report.start_date, report.end_date, category_id: report.category_id).each do |r|
-      report.data << { x: Date.parse(r["date"]), y: r["hours"].to_f.round(2) }
+      report.data << { x: r["date"], y: r["hours"].to_f.round(2) }
     end
     report.total = Topic.time_to_first_response_total(category_id: report.category_id)
     report.prev30Days = Topic.time_to_first_response_total(start_date: report.start_date - 30.days, end_date: report.start_date, category_id: report.category_id)
@@ -296,7 +296,7 @@ class Report
   def self.report_topics_with_no_response(report)
     report.data = []
     Topic.with_no_response_per_day(report.start_date, report.end_date, report.category_id).each do |r|
-      report.data << { x: Date.parse(r["date"]), y: r["count"].to_i }
+      report.data << { x: r["date"], y: r["count"].to_i }
     end
     report.total = Topic.with_no_response_total(category_id: report.category_id)
     report.prev30Days = Topic.with_no_response_total(start_date: report.start_date - 30.days, end_date: report.start_date, category_id: report.category_id)
@@ -341,13 +341,18 @@ class Report
 
   def self.report_users_by_trust_level(report)
     report.data = []
+
     User.real.group('trust_level').count.sort.each do |level, count|
-      report.data << { key: TrustLevel.levels[level.to_i], x: level.to_i, y: count }
+      key = TrustLevel.levels[level.to_i]
+      url = Proc.new { |k| "/admin/users/list/#{k}" }
+      report.data << { url: url.call(key), key: key, x: level.to_i, y: count }
     end
   end
 
   # Post action counts:
   def self.report_flags(report)
+    report.higher_is_better = false
+
     basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date, report.category_id
     countable = PostAction.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
     countable = countable.joins(post: :topic).where("topics.category_id = ?", report.category_id) if report.category_id
@@ -416,19 +421,20 @@ class Report
   def self.report_users_by_type(report)
     report.data = []
 
-    label = Proc.new { |key| I18n.t("reports.users_by_type.xaxis_labels.#{key}") }
+    label = Proc.new { |x| I18n.t("reports.users_by_type.xaxis_labels.#{x}") }
+    url = Proc.new { |key| "/admin/users/list/#{key}" }
 
     admins = User.real.admins.count
-    report.data << { key: "admins", x: label.call("admin"), y: admins } if admins > 0
+    report.data << { url: url.call("admins"), icon: "shield", key: "admins", x: label.call("admin"), y: admins } if admins > 0
 
     moderators = User.real.moderators.count
-    report.data << { key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
+    report.data << { url: url.call("moderators"), icon: "shield", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
-    report.data << { key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
+    report.data << { url: url.call("suspended"), icon: "ban", key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
 
     silenced = User.real.silenced.count
-    report.data << { key: "silenced", x: label.call("silenced"), y: silenced } if silenced > 0
+    report.data << { url: url.call("silenced"), icon: "ban", key: "silenced", x: label.call("silenced"), y: silenced } if silenced > 0
   end
 
   def self.report_top_referred_topics(report)

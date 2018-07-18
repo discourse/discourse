@@ -205,7 +205,7 @@ class PostCreator
     create
 
     if !self.errors.full_messages.empty?
-      raise ActiveRecord::RecordNotSaved.new("Failed to create post: #{self.errors.full_messages}")
+      raise ActiveRecord::RecordNotSaved.new(self.errors.full_messages.to_sentence)
     end
 
     @post
@@ -411,7 +411,7 @@ class PostCreator
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      attrs[:updated_at] = 'now()'
+      attrs[:updated_at] = Time.now
       @topic.update_columns(attrs)
     end
   end

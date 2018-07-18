@@ -15,39 +15,45 @@
 }
 
 .names {
- float: left;
+  span.first {
+    font-weight: bold;
+  }
 
- span.first {
-   font-weight: bold;
- }
-
- span {
-   font-size: $font-0;
-   margin-right: 8px;
-   display: inline-block;
-   max-width: 280px;
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   a {
-     color: dark-light-choose($primary-high, $secondary-low);
-   }
- }
- .fa {
-   font-size: $font-down-1;
-   margin-left: 3px;
-   color: dark-light-choose($primary-medium, $secondary-medium);
- }
- .new_user a, .user-title, .user-title a {
+  span {
+    font-size: $font-0;
+    margin-right: 8px;
+    display: inline-block;
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    a {
+      color: dark-light-choose($primary-high, $secondary-low);
+    }
+  }
+  .fa {
+    font-size: $font-down-1;
+    margin-left: 3px;
     color: dark-light-choose($primary-medium, $secondary-medium);
- }
+  }
+  .new_user a,
+  .user-title,
+  .user-title a {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
 }
 
 // global styles for the cooked HTML content in posts (and preview)
-.cooked, .d-editor-preview {
+.cooked,
+.d-editor-preview {
   word-wrap: break-word;
   line-height: $line-height-large;
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin: 30px 0 10px;
     line-height: $line-height-medium;
   }
@@ -76,19 +82,44 @@
     font-size: $font-down-2;
   }
 
-  a { word-wrap: break-word; }
-  ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
-  del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
+  a {
+    word-wrap: break-word;
+  }
+  ins {
+    background-color: dark-light-choose(
+      $success-low,
+      scale-color($success, $lightness: -60%)
+    );
+  }
+  del {
+    background-color: dark-light-choose(
+      $danger-low,
+      scale-color($danger, $lightness: -60%)
+    );
+  }
   // Prevents users from breaking posts with tag nesting
-  big { font-size: 1.5rem; }
-  small { font-size: 0.75rem; }
-  small small { font-size: .75em; }
-  big big { font-size: 1em; }
-  sub sub sub {bottom: 0;}
-  sup sup sup {top: 0;}
+  big {
+    font-size: 1.5rem;
+  }
+  small {
+    font-size: 0.75rem;
+  }
+  small small {
+    font-size: 0.75em;
+  }
+  big big {
+    font-size: 1em;
+  }
+  sub sub sub {
+    bottom: 0;
+  }
+  sup sup sup {
+    top: 0;
+  }
 }
 
-.cooked, .d-editor-preview {
+.cooked,
+.d-editor-preview {
   video {
     max-width: 100%;
   }
@@ -117,12 +148,28 @@
   }
 }
 
+.topic-meta-data {
+  display: flex;
+  align-items: flex-start;
+
+  .names {
+    margin-right: auto;
+  }
+
+  .post-infos {
+    display: flex;
+    align-items: baseline;
+  }
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
 
-  .badge-wrapper { margin-left: 5px; }
+  .badge-wrapper {
+    margin-left: 5px;
+  }
 
   .title {
     @include post-aside;
@@ -131,8 +178,12 @@ aside.quote {
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
     // blockquote is underneath this and has top margin
-    .avatar { margin-right: 7px; }
-    img { margin-top: -4px; }
+    .avatar {
+      margin-right: 7px;
+    }
+    img {
+      margin-top: -4px;
+    }
     @include unselectable;
   }
 
@@ -142,7 +193,8 @@ aside.quote {
   }
 }
 
-.quote-controls, .quote-controls .d-icon {
+.quote-controls,
+.quote-controls .d-icon {
   color: dark-light-choose($primary-low-mid, $secondary-high);
 }
 
@@ -153,13 +205,14 @@ aside.quote {
 }
 
 .post-action {
-  .undo-action, .act-action{
+  .undo-action,
+  .act-action {
     margin-left: 5px;
   }
 }
 
 .post-hidden {
-  opacity: 0.5;       // opacity sets a new z-index context,
+  opacity: 0.5; // opacity sets a new z-index context,
   position: relative; // so the positioning is required,
   z-index: z("base"); // otherwise post controls are stacked too low
 }
@@ -195,7 +248,8 @@ aside.quote {
   }
 }
 
-.topic-avatar, .user-card-avatar {
+.topic-avatar,
+.user-card-avatar {
   position: relative;
 }
 
@@ -259,7 +313,7 @@ aside.quote {
 
   td {
     vertical-align: top;
-    padding:1px;
+    padding: 1px;
   }
 
   .topic-links {
@@ -270,10 +324,13 @@ aside.quote {
       margin: 1px 5px 2px 0;
     }
   }
-
 }
 
-.topic-avatar, .avatar-flair-preview, .user-card-avatar, .topic-map .poster, .user-profile-avatar {
+.topic-avatar,
+.avatar-flair-preview,
+.user-card-avatar,
+.topic-map .poster,
+.user-profile-avatar {
   .avatar-flair {
     display: flex;
     align-items: center;
@@ -285,7 +342,9 @@ aside.quote {
     right: -6px;
   }
 }
-.topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair, .collapsed-info .user-profile-avatar .avatar-flair {
+.topic-avatar .avatar-flair,
+.avatar-flair-preview .avatar-flair,
+.collapsed-info .user-profile-avatar .avatar-flair {
   background-size: 20px 20px;
   width: 20px;
   height: 20px;
@@ -298,7 +357,8 @@ aside.quote {
     right: -8px;
   }
 }
-.user-card-avatar .avatar-flair, .user-profile-avatar .avatar-flair {
+.user-card-avatar .avatar-flair,
+.user-profile-avatar .avatar-flair {
   background-size: 40px 40px;
   width: 40px;
   height: 40px;
@@ -368,12 +428,19 @@ aside.quote {
 }
 
 .post-info {
+  flex: 0 0 auto;
+  margin-right: 0.5em;
 
-  &.via-email, &.whisper {
+  &.post-date {
+    margin-right: 0;
+  }
+  &.via-email,
+  &.whisper {
     line-height: $line-height-medium;
   }
-  &.via-email, &.whisper, &.post-locked {
-    margin-right: 5px;
+  &.via-email,
+  &.whisper,
+  &.post-locked {
     .d-icon {
       font-size: $font-0;
     }
@@ -381,7 +448,7 @@ aside.quote {
 
   .wiki,
   .last-wiki-edit {
-    color: green !important;
+    color: $wiki;
   }
 
   &.via-email {
@@ -403,8 +470,7 @@ pre {
   }
 }
 
-kbd
-{
+kbd {
   background-color: $secondary;
   border: 1px solid $primary-low;
   border-radius: 3px;
@@ -417,14 +483,16 @@ kbd
   display: inline-block;
   font-size: $font-down-1;
   line-height: $line-height-large;
-  margin: 0 .1em;
-  padding: .1em .6em;
+  margin: 0 0.1em;
+  padding: 0.1em 0.6em;
 
   // don't allow more than 3 nested elements to prevent FF from crashing
   // cf. http://what.thedailywtf.com/t/nested-elements/7927
   // 3 levels are needed to prevent highlighted words being hidden
   // cf. https://meta.discourse.org/t/word-disappears-when-searched-and-in-details-summary-kbd-b/25741
-  * * * { display: none; }
+  * * * {
+    display: none;
+  }
 }
 
 // we assume blockquotes have their own margins, so all blockquotes
@@ -453,8 +521,8 @@ blockquote > *:last-child {
   }
 }
 
-
-.cooked table, .d-editor-preview table {
+.cooked table,
+.d-editor-preview table {
   thead {
     border-bottom: 2px solid lighten($primary, 80%);
     th {
@@ -463,7 +531,8 @@ blockquote > *:last-child {
     }
   }
 
-  td,th {
+  td,
+  th {
     padding: 3px 3px 3px 10px;
   }
 }
@@ -475,7 +544,7 @@ blockquote > *:last-child {
   border-top: 1px solid $primary-low;
   .topic-avatar {
     align-self: flex-start;
-    padding: .7em 0;
+    padding: 0.7em 0;
     border-top: none;
     margin-right: 11px;
     i {
@@ -487,11 +556,16 @@ blockquote > *:last-child {
   }
 
   .small-action.deleted {
-    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+    background-color: dark-light-diff(
+      rgba($danger, 0.7),
+      $secondary,
+      50%,
+      -60%
+    );
   }
 
   .small-action-desc.timegap {
-      color: $primary-medium;
+    color: $primary-medium;
   }
 
   .small-action-desc {
@@ -527,7 +601,6 @@ blockquote > *:last-child {
       margin: 0;
       line-height: $line-height-medium;
       flex: 1 1;
-
     }
   }
 
@@ -536,8 +609,8 @@ blockquote > *:last-child {
     border: 0;
     order: 9;
     &:last-of-type {
-       margin-left: auto;
-       order: 8;
+      margin-left: auto;
+      order: 8;
     }
   }
 }
@@ -554,7 +627,8 @@ blockquote > *:last-child {
   }
 }
 
-a.mention, a.mention-group {
+a.mention,
+a.mention-group {
   padding: 2px 4px;
   color: dark-light-choose($primary-high, $secondary-low);
   background: $primary-low;
@@ -577,12 +651,13 @@ a.mention, a.mention-group {
 
 .large-image-placeholder {
   > a {
-
     &.link {
       margin-right: 10px;
     }
 
-    > * { overflow: hidden; }
+    > * {
+      overflow: hidden;
+    }
 
     > i.fa {
       color: dark-light-choose($primary-medium, $secondary-medium);
@@ -614,7 +689,8 @@ a.mention, a.mention-group {
   }
 }
 
-.broken-image, .large-image {
+.broken-image,
+.large-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
   font-size: $font-up-5;
@@ -623,13 +699,26 @@ a.mention, a.mention-group {
 
 /* below standard tablet portrait ----------- */
 
-@media all
-and (max-width : 767px) {
+.reply-to-tab {
+  display: flex;
+  align-items: center;
+  margin-right: 2em;
+
+  img {
+    margin: 0 0.25em;
+  }
+}
+
+@media all and (max-width: 767px) {
   .reply-to-tab {
-    span {display: none;}
+    span {
+      display: none;
+    }
   }
   .names {
-    span {display: block;}
+    span {
+      display: block;
+    }
   }
   .user-title {
     float: left;

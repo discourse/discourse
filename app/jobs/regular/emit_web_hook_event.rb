@@ -8,7 +8,6 @@ module Jobs
       %i{
         web_hook_id
         event_type
-        payload
       }.each do |key|
         raise Discourse::InvalidParameters.new(key) unless args[key].present?
       end
@@ -25,6 +24,7 @@ module Jobs
         return if web_hook.category_ids.present? && (!args[:category_id].present? ||
           !web_hook.category_ids.include?(args[:category_id]))
 
+        raise Discourse::InvalidParameters.new(:payload) unless args[:payload].present?
         args[:payload] = JSON.parse(args[:payload])
       end
 

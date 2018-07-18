@@ -1,10 +1,10 @@
-import Group from 'discourse/models/group';
+import Group from "discourse/models/group";
 
 export default Discourse.Route.extend({
   showFooter: true,
 
   titleToken() {
-    return I18n.t('admin.groups.new.title');
+    return I18n.t("admin.groups.new.title");
   },
 
   model() {
@@ -19,5 +19,5 @@ export default Discourse.Route.extend({
     if (!(this.currentUser && this.currentUser.admin)) {
       this.transitionTo("groups");
     }
-  },
+  }
 });

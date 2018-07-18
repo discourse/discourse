@@ -2,7 +2,8 @@
   margin-bottom: 10px;
   width: 100%;
 
-  td, th {
+  td,
+  th {
     @extend .list-cell;
   }
 
@@ -83,7 +84,6 @@
   }
 
   tbody {
-
     .category {
       border-left: 6px solid;
       h3 {
@@ -104,7 +104,8 @@
   }
 }
 
-.categories-and-latest, .categories-and-top {
+.categories-and-latest,
+.categories-and-top {
   display: flex;
   flex-flow: row wrap;
 
@@ -115,13 +116,13 @@
   }
 
   div.column.categories {
-    @media all and (max-width : 600px) {
+    @media all and (max-width: 600px) {
       margin-right: 0;
     }
-    @media all and (min-width : 600px) {
+    @media all and (min-width: 600px) {
       margin-right: 1em;
     }
-    @media all and (min-width : 700px) {
+    @media all and (min-width: 700px) {
       margin-right: 2em;
     }
   }
@@ -134,4 +135,3 @@
     padding-left: 8px;
   }
 }
-

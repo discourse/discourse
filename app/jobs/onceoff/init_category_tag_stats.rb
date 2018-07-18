@@ -1,9 +1,9 @@
 module Jobs
   class InitCategoryTagStats < Jobs::Onceoff
     def execute_onceoff(args)
-      CategoryTagStat.exec_sql "DELETE FROM category_tag_stats"
+      DB.exec "DELETE FROM category_tag_stats"
 
-      CategoryTagStat.exec_sql <<~SQL
+      DB.exec <<~SQL
     INSERT INTO category_tag_stats (category_id, tag_id, topic_count)
          SELECT topics.category_id, tags.id, COUNT(topics.id)
            FROM tags

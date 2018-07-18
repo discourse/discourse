@@ -1,6 +1,8 @@
 // base styles for every modal popup used in Discourse
 
-.modal-open #main {overflow:hidden;}
+.modal-open #main {
+  overflow: hidden;
+}
 
 .modal-middle-container {
   margin-top: 10%;
@@ -15,7 +17,7 @@
 }
 
 .modal.fade {
-  transition: opacity .3s linear, top .3s ease-out;
+  transition: opacity 0.3s linear, top 0.3s ease-out;
   top: -25%;
 }
 .modal.fade.in {
@@ -28,11 +30,11 @@
 // we need a little extra room on mobile for the
 // stuff inside the footer to fit
 .modal-footer {
-  padding: 15px 7px 10px 7px;
+  padding: 10px;
 }
 
 .modal-header {
-  padding: 10px;  
+  padding: 10px;
   h3 {
     font-size: $font-up-2;
   }
@@ -49,7 +51,7 @@
     margin-top: 0;
   }
 
-  input[type=radio] {
+  input[type="radio"] {
     margin-right: 10px;
   }
 
@@ -61,7 +63,7 @@
 
   form {
     margin-top: 20px;
-    input[type=text] {
+    input[type="text"] {
       box-sizing: border-box;
       width: 100%;
     }

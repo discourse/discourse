@@ -92,6 +92,14 @@ class Plugin::Instance
     end
   end
 
+  def add_report(name, &block)
+    reloadable_patch do |plugin|
+      if plugin.enabled?
+        Report.add_report(name, &block)
+      end
+    end
+  end
+
   def replace_flags
     settings = ::FlagSettings.new
     yield settings
@@ -583,7 +591,13 @@ JS
         DiscoursePluginRegistry.register_locale(locale, opts)
         Rails.configuration.assets.precompile << "locales/#{locale}.js"
       else
-        Rails.logger.error "Invalid locale! #{opts.inspect}"
+        msg = "Invalid locale! #{opts.inspect}"
+        # The logger isn't always present during boot / parsing locales from plugins
+        if Rails.logger.present?
+          Rails.logger.error(msg)
+        else
+          puts msg
+        end
       end
     end
   end

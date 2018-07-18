@@ -86,6 +86,11 @@ describe QueuedPost do
       # It removes the pending action
       expect(UserAction.where(queued_post_id: qp.id).count).to eq(0)
 
+      # Logs staff action for rejected post
+      post_rejected_logs = UserHistory.where(action: UserHistory.actions[:post_rejected])
+      expect(post_rejected_logs.count).to eq(1)
+      expect(post_rejected_logs.first.details).to include(qp.raw)
+
       # We can't reject twice
       expect(-> { qp.reject!(admin) }).to raise_error(QueuedPost::InvalidStateTransition)
     end

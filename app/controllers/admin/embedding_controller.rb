@@ -27,7 +27,7 @@ class Admin::EmbeddingController < Admin::AdminController
 
   protected
 
-    def fetch_embedding
-      @embedding = Embedding.find
-    end
+  def fetch_embedding
+    @embedding = Embedding.find
+  end
 end

@@ -71,10 +71,15 @@ describe UserDestroyer do
     end
 
     context 'user deletes self' do
-      let(:destroy_opts) { { delete_posts: true } }
+      let(:destroy_opts) { { delete_posts: true, context: "/u/username/preferences/account" } }
       subject(:destroy) { UserDestroyer.new(@user).destroy(@user, destroy_opts) }
 
       include_examples "successfully destroy a user"
+
+      it 'should log proper context' do
+        destroy
+        expect(UserHistory.where(action: UserHistory.actions[:delete_user]).last.context).to eq(I18n.t("staff_action_logs.user_delete_self", url: "/u/username/preferences/account"))
+      end
     end
 
     context "with a queued post" do

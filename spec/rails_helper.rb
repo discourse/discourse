@@ -131,6 +131,8 @@ RSpec.configure do |config|
         x.exception.cause = ex
       end
     end
+
+    unfreeze_time
   end
 
   config.before :each do |x|
@@ -153,7 +155,6 @@ RSpec.configure do |config|
     SiteSetting.provider.all.each do |setting|
       SiteSetting.remove_override!(setting.name)
     end
-    SiteSetting.defaults.site_locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false

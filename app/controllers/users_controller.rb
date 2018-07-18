@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   requires_login only: [
     :username, :update, :user_preferences_redirect, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
-    :preferences, :create_second_factor, :update_second_factor
+    :preferences, :create_second_factor, :update_second_factor, :create_second_factor_backup
   ]
 
   skip_before_action :check_xhr, only: [
@@ -357,7 +357,7 @@ class UsersController < ApplicationController
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
-      return render body: nil, status: 500
+      return render body: nil, status: :forbidden
     end
 
     authentication.start
@@ -454,7 +454,7 @@ class UsersController < ApplicationController
 
     totp_enabled = @user&.totp_enabled?
 
-    if !totp_enabled || @user.authenticate_totp(params[:second_factor_token])
+    if !totp_enabled || @user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
       secure_session["second-factor-#{token}"] = "true"
     end
 
@@ -467,7 +467,7 @@ class UsersController < ApplicationController
 
       if !valid_second_factor
         RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        @user.errors.add(:user_second_factor, :invalid)
+        @user.errors.add(:user_second_factors, :invalid)
         @error = I18n.t('login.invalid_second_factor_code')
       elsif @invalid_password
         @user.errors.add(:password, :invalid)
@@ -494,7 +494,8 @@ class UsersController < ApplicationController
             MultiJson.dump(
               is_developer: UsernameCheckerService.is_developer?(@user.email),
               admin: @user.admin?,
-              second_factor_required: !valid_second_factor
+              second_factor_required: !valid_second_factor,
+              backup_enabled: @user.backup_codes_enabled?
             )
           )
         end
@@ -524,7 +525,8 @@ class UsersController < ApplicationController
           render json: {
             is_developer: UsernameCheckerService.is_developer?(@user.email),
             admin: @user.admin?,
-            second_factor_required: !valid_second_factor
+            second_factor_required: !valid_second_factor,
+            backup_enabled: @user.backup_codes_enabled?
           }
         end
       end
@@ -575,16 +577,19 @@ class UsersController < ApplicationController
 
         email_token_user = EmailToken.confirmable(token)&.user
         totp_enabled = email_token_user&.totp_enabled?
+        backup_enabled = email_token_user&.backup_codes_enabled?
         second_factor_token = params[:second_factor_token]
+        second_factor_method = params[:second_factor_method].to_i
         confirm_email = false
 
         confirm_email =
           if totp_enabled
             @second_factor_required = true
+            @backup_codes_enabled = true
             @message = I18n.t("login.second_factor_title")
 
             if second_factor_token.present?
-              if email_token_user.authenticate_totp(second_factor_token)
+              if email_token_user.authenticate_second_factor(second_factor_token, second_factor_method)
                 true
               else
                 @error = I18n.t("login.invalid_second_factor_code")
@@ -749,7 +754,7 @@ class UsersController < ApplicationController
         enqueue_activation_email
         render json: success_json
       else
-        render_json_error(@user)
+        render_json_error(primary_email)
       end
     end
   end
@@ -956,19 +961,43 @@ class UsersController < ApplicationController
     )
 
     render json: success_json.merge(
-      key: current_user.user_second_factor.data.scan(/.{4}/).join(" "),
+      key: current_user.user_second_factors.totp.data.scan(/.{4}/).join(" "),
       qr: qrcode_svg
+    )
+  end
+
+  def create_second_factor_backup
+    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+
+    unless current_user.authenticate_totp(params[:second_factor_token])
+      return render json: failed_json.merge(
+        error: I18n.t("login.invalid_second_factor_code")
+      )
+    end
+
+    backup_codes = current_user.generate_backup_codes
+
+    render json: success_json.merge(
+      backup_codes: backup_codes
     )
   end
 
   def update_second_factor
     params.require(:second_factor_token)
+    params.require(:second_factor_method)
+
+    second_factor_method = params[:second_factor_method].to_i
 
     [request.remote_ip, current_user.id].each do |key|
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
-    user_second_factor = current_user.user_second_factor
+    if second_factor_method == UserSecondFactor.methods[:totp]
+      user_second_factor = current_user.user_second_factors.totp
+    elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+      user_second_factor = current_user.user_second_factors.backup_codes
+    end
+
     raise Discourse::InvalidParameters unless user_second_factor
 
     unless current_user.authenticate_totp(params[:second_factor_token])
@@ -980,13 +1009,18 @@ class UsersController < ApplicationController
     if params[:enable] == "true"
       user_second_factor.update!(enabled: true)
     else
-      user_second_factor.destroy!
+      # when disabling totp, backup is disabled too
+      if second_factor_method == UserSecondFactor.methods[:totp]
+        current_user.user_second_factors.destroy_all
 
-      Jobs.enqueue(
-        :critical_user_email,
-        type: :account_second_factor_disabled,
-        user_id: current_user.id
-      )
+        Jobs.enqueue(
+          :critical_user_email,
+          type: :account_second_factor_disabled,
+          user_id: current_user.id
+        )
+      elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+        current_user.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
+      end
     end
 
     render json: success_json
@@ -994,104 +1028,104 @@ class UsersController < ApplicationController
 
   private
 
-    def honeypot_value
-      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+  def honeypot_value
+    Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0, 15]
+  end
+
+  def challenge_value
+    challenge = $redis.get('SECRET_CHALLENGE')
+    unless challenge && challenge.length == 16 * 2
+      challenge = SecureRandom.hex(16)
+      $redis.set('SECRET_CHALLENGE', challenge)
     end
 
-    def challenge_value
-      challenge = $redis.get('SECRET_CHALLENGE')
-      unless challenge && challenge.length == 16 * 2
-        challenge = SecureRandom.hex(16)
-        $redis.set('SECRET_CHALLENGE', challenge)
-      end
+    challenge
+  end
 
-      challenge
+  def respond_to_suspicious_request
+    if suspicious?(params)
+      render json: {
+        success: true,
+        active: false,
+        message: I18n.t("login.activate_email", email: params[:email])
+      }
+    end
+  end
+
+  def suspicious?(params)
+    return false if current_user && is_api? && current_user.admin?
+    honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
+  end
+
+  def honeypot_or_challenge_fails?(params)
+    return false if is_api?
+    params[:password_confirmation] != honeypot_value ||
+    params[:challenge] != challenge_value.try(:reverse)
+  end
+
+  def user_params
+    permitted = [
+      :name,
+      :email,
+      :password,
+      :username,
+      :title,
+      :date_of_birth,
+      :muted_usernames,
+      :theme_key,
+      :locale,
+      :bio_raw,
+      :location,
+      :website,
+      :dismissed_banner_key,
+      :profile_background,
+      :card_background
+    ]
+
+    permitted.concat UserUpdater::OPTION_ATTR
+    permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
+    permitted.concat UserUpdater::TAG_NAMES.keys
+
+    result = params
+      .permit(permitted)
+      .reverse_merge(
+        ip_address: request.remote_ip,
+        registration_ip_address: request.remote_ip,
+        locale: user_locale
+      )
+
+    if !UsernameCheckerService.is_developer?(result['email']) &&
+        is_api? &&
+        current_user.present? &&
+        current_user.admin?
+
+      result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    def respond_to_suspicious_request
-      if suspicious?(params)
-        render json: {
-          success: true,
-          active: false,
-          message: I18n.t("login.activate_email", email: params[:email])
-        }
-      end
+    modify_user_params(result)
+  end
+
+  # Plugins can use this to modify user parameters
+  def modify_user_params(attrs)
+    attrs
+  end
+
+  def user_locale
+    I18n.locale
+  end
+
+  def fail_with(key)
+    render json: { success: false, message: I18n.t(key) }
+  end
+
+  def track_visit_to_user_profile
+    user_profile_id = @user.user_profile.id
+    ip = request.remote_ip
+    user_id = (current_user.id if current_user)
+
+    Scheduler::Defer.later 'Track profile view visit' do
+      UserProfileView.add(user_profile_id, ip, user_id)
     end
-
-    def suspicious?(params)
-      return false if current_user && is_api? && current_user.admin?
-      honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
-    end
-
-    def honeypot_or_challenge_fails?(params)
-      return false if is_api?
-      params[:password_confirmation] != honeypot_value ||
-      params[:challenge] != challenge_value.try(:reverse)
-    end
-
-    def user_params
-      permitted = [
-        :name,
-        :email,
-        :password,
-        :username,
-        :title,
-        :date_of_birth,
-        :muted_usernames,
-        :theme_key,
-        :locale,
-        :bio_raw,
-        :location,
-        :website,
-        :dismissed_banner_key,
-        :profile_background,
-        :card_background
-      ]
-
-      permitted.concat UserUpdater::OPTION_ATTR
-      permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
-      permitted.concat UserUpdater::TAG_NAMES.keys
-
-      result = params
-        .permit(permitted)
-        .reverse_merge(
-          ip_address: request.remote_ip,
-          registration_ip_address: request.remote_ip,
-          locale: user_locale
-        )
-
-      if !UsernameCheckerService.is_developer?(result['email']) &&
-          is_api? &&
-          current_user.present? &&
-          current_user.admin?
-
-        result.merge!(params.permit(:active, :staged, :approved))
-      end
-
-      modify_user_params(result)
-    end
-
-    # Plugins can use this to modify user parameters
-    def modify_user_params(attrs)
-      attrs
-    end
-
-    def user_locale
-      I18n.locale
-    end
-
-    def fail_with(key)
-      render json: { success: false, message: I18n.t(key) }
-    end
-
-    def track_visit_to_user_profile
-      user_profile_id = @user.user_profile.id
-      ip = request.remote_ip
-      user_id = (current_user.id if current_user)
-
-      Scheduler::Defer.later 'Track profile view visit' do
-        UserProfileView.add(user_profile_id, ip, user_id)
-      end
-    end
+  end
 
 end

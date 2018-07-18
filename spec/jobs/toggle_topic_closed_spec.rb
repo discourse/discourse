@@ -7,14 +7,10 @@ describe Jobs::ToggleTopicClosed do
     Fabricate(:topic_timer, user: admin).topic
   end
 
-  before do
-    SiteSetting.queue_jobs = true
-  end
-
   it 'should be able to close a topic' do
     topic
 
-    freeze_time(1.hour.from_now) do
+    freeze_time(61.minutes.from_now) do
       described_class.new.execute(
         topic_timer_id: topic.public_topic_timer.id,
         state: true
@@ -23,7 +19,7 @@ describe Jobs::ToggleTopicClosed do
       expect(topic.reload.closed).to eq(true)
 
       expect(Post.last.raw).to eq(I18n.t(
-        'topic_statuses.autoclosed_enabled_minutes', count: 60
+        'topic_statuses.autoclosed_enabled_minutes', count: 61
       ))
     end
   end
@@ -32,7 +28,7 @@ describe Jobs::ToggleTopicClosed do
     it 'should be work' do
       topic.update!(closed: true)
 
-      freeze_time(1.hour.from_now) do
+      freeze_time(61.minutes.from_now) do
         described_class.new.execute(
           topic_timer_id: topic.public_topic_timer.id,
           state: false
@@ -41,7 +37,7 @@ describe Jobs::ToggleTopicClosed do
         expect(topic.reload.closed).to eq(false)
 
         expect(Post.last.raw).to eq(I18n.t(
-          'topic_statuses.autoclosed_disabled_minutes', count: 60
+          'topic_statuses.autoclosed_disabled_minutes', count: 61
         ))
       end
     end
@@ -57,7 +53,7 @@ describe Jobs::ToggleTopicClosed do
           user: admin
         )
 
-        freeze_time(1.hour.from_now) do
+        freeze_time(61.minutes.from_now) do
           described_class.new.execute(
             topic_timer_id: topic.public_topic_timer.id,
             state: false

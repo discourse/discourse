@@ -12,7 +12,7 @@ class EmojiSetSiteSetting < EnumSiteSetting
       after = "/images/emoji/#{site_setting.value}/"
 
       Scheduler::Defer.later("Fix Emoji Links") do
-        Post.exec_sql("UPDATE posts SET cooked = REPLACE(cooked, :before, :after) WHERE cooked LIKE :like",
+        DB.exec("UPDATE posts SET cooked = REPLACE(cooked, :before, :after) WHERE cooked LIKE :like",
           before: before,
           after: after,
           like: "%#{before}%"

@@ -74,6 +74,7 @@ Discourse::Application.routes.draw do
       end
     end
 
+    get "reports" => "reports#index"
     get "reports/:type" => "reports#show"
 
     resources :groups, constraints: AdminConstraint.new do
@@ -103,6 +104,7 @@ Discourse::Application.routes.draw do
         put "approve-bulk" => "users#approve_bulk"
         delete "reject-bulk" => "users#reject_bulk"
       end
+      delete "penalty_history", constraints: AdminConstraint.new
       put "suspend"
       put "delete_all_posts"
       put "unsuspend"
@@ -212,11 +214,13 @@ Discourse::Application.routes.draw do
       get 'themes/:id' => 'themes#index'
 
       # They have periods in their URLs often:
-      get 'site_texts'          => 'site_texts#index'
-      get 'site_texts/:id'      => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id.json' => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id'      => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id'   => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts'             => 'site_texts#index'
+      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
+      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
+      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
+      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
 
       get 'email_templates'          => 'email_templates#index'
       get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
@@ -284,7 +288,6 @@ Discourse::Application.routes.draw do
 
     get "memory_stats" => "diagnostics#memory_stats", constraints: AdminConstraint.new
     get "dump_heap" => "diagnostics#dump_heap", constraints: AdminConstraint.new
-    get "dump_statement_cache" => "diagnostics#dump_statement_cache", constraints: AdminConstraint.new
   end # admin namespace
 
   get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"
@@ -342,6 +345,8 @@ Discourse::Application.routes.draw do
     post "#{root_path}/second_factors" => "users#create_second_factor"
     put "#{root_path}/second_factor" => "users#update_second_factor"
 
+    put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
+
     put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
     post "#{root_path}/email-login" => "users#email_login"
@@ -397,6 +402,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/username" => "users#username", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/second-factor-backup" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
@@ -744,7 +750,8 @@ Discourse::Application.routes.draw do
   get "robots.txt" => "robots_txt#index"
   get "robots-builder.json" => "robots_txt#builder"
   get "offline.html" => "offline#index"
-  get "manifest.json" => "metadata#manifest", as: :manifest
+  get "manifest.webmanifest" => "metadata#manifest", as: :manifest
+  get "manifest.json" => "metadata#manifest"
   get "opensearch" => "metadata#opensearch", format: :xml
 
   scope "/tags" do
@@ -802,9 +809,9 @@ Discourse::Application.routes.draw do
     get "/qunit" => "qunit#index"
   end
 
-  get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
-
   post "/push_notifications/subscribe" => "push_notification#subscribe"
   post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
+
+  get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 
 end

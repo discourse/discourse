@@ -12,7 +12,7 @@ module Migration
     def self.mark_readonly(table_name, column_name)
       create_readonly_function(table_name, column_name)
 
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
         CREATE TRIGGER #{readonly_trigger_name(table_name, column_name)}
         BEFORE INSERT OR UPDATE OF #{column_name}
         ON #{table_name}
@@ -32,32 +32,33 @@ module Migration
     end
 
     def droppable?
-      builder = SqlBuilder.new(<<~SQL)
+      builder = DB.build(<<~SQL)
         SELECT 1
         FROM INFORMATION_SCHEMA.COLUMNS
         /*where*/
         LIMIT 1
       SQL
 
-      builder.where("table_schema = 'public'")
+      builder
+        .where("table_schema = 'public'")
         .where("table_name = :table")
         .where("column_name IN (:columns)")
         .where(previous_migration_done)
         .exec(table: @table,
               columns: @columns,
               delay: "#{@delay} seconds",
-              after_migration: @after_migration).to_a.length > 0
+              after_migration: @after_migration) > 0
     end
 
     def execute_drop!
       @columns.each do |column|
-        ActiveRecord::Base.exec_sql <<~SQL
+        DB.exec <<~SQL
           DROP TRIGGER IF EXISTS #{BaseDropper.readonly_trigger_name(@table, column)} ON #{@table};
           DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(@table, column)} CASCADE;
         SQL
 
         # safe cause it is protected on method entry, can not be passed in params
-        ActiveRecord::Base.exec_sql("ALTER TABLE #{@table} DROP COLUMN IF EXISTS #{column}")
+        DB.exec("ALTER TABLE #{@table} DROP COLUMN IF EXISTS #{column}")
       end
     end
   end

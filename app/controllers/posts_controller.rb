@@ -185,7 +185,7 @@ class PostsController < ApplicationController
 
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if too_late_to(:edit, post)
+    if !guardian.send("can_edit?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
       return render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
     end
 
@@ -266,11 +266,9 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
-
-    if too_late_to(:delete_post, post)
-      render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
-      return
+    unless current_user.staff?
+      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
+      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
     guardian.ensure_can_delete!(post)
@@ -289,7 +287,10 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
-    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
+    unless current_user.staff?
+      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
+      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
+    end
     guardian.ensure_can_recover_post!(post)
     destroyer = PostDestroyer.new(current_user, post)
     destroyer.recover
@@ -689,10 +690,6 @@ class PostsController < ApplicationController
       .sort { |x, y| x[0] <=> y[0] }.join do |x, y|
         "#{x}:#{y}"
       end)
-  end
-
-  def too_late_to(action, post)
-    !guardian.send("can_#{action}?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
   end
 
   def display_post(post)

@@ -27,7 +27,7 @@ class ImportScripts::Mbox < ImportScripts::Base
   BATCH_SIZE = 1000
 
   # Site settings
-  SiteSetting.disable_emails = true
+  SiteSetting.disable_emails = "non-staff"
 
   # Comment out if each file contains a single message
   # Use formail to split yourself: http://linuxcommand.org/man_pages/formail1.html

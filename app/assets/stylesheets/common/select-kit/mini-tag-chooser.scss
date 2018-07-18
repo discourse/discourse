@@ -36,7 +36,8 @@
         border-top: 0;
       }
 
-      &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
+      &.is-expanded .select-kit-wrapper,
+      .select-kit-wrapper {
         display: none;
       }
 
@@ -58,6 +59,7 @@
         .collection-header {
           max-height: 125px;
           overflow-y: auto;
+          flex: 1 0 auto;
 
           .selected-tags {
             display: flex;
@@ -73,13 +75,13 @@
             border: 0;
 
             &.is-highlighted {
-              box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
+              box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
             }
 
             &:after {
-              content: '\f00d';
+              content: "\f00d";
               color: $primary-low-mid;
-              font-family: 'FontAwesome';
+              font-family: "FontAwesome";
             }
 
             &:hover {

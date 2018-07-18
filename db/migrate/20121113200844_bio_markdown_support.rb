@@ -2,12 +2,6 @@ class BioMarkdownSupport < ActiveRecord::Migration[4.2]
   def up
     rename_column :users, :bio, :bio_raw
     add_column :users, :bio_cooked, :text, null: true
-
-    User.where("bio_raw is NOT NULL").each do |u|
-      u.send(:cook)
-      u.save
-    end
-
   end
 
   def down

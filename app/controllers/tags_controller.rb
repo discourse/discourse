@@ -207,130 +207,130 @@ class TagsController < ::ApplicationController
 
   private
 
-    def ensure_tags_enabled
-      raise Discourse::NotFound unless SiteSetting.tagging_enabled?
-    end
+  def ensure_tags_enabled
+    raise Discourse::NotFound unless SiteSetting.tagging_enabled?
+  end
 
-    def self.tag_counts_json(tags)
-      tags.map { |t| { id: t.name, text: t.name, count: t.topic_count, pm_count: t.pm_topic_count } }
-    end
+  def self.tag_counts_json(tags)
+    tags.map { |t| { id: t.name, text: t.name, count: t.topic_count, pm_count: t.pm_topic_count } }
+  end
 
-    def set_category_from_params
-      slug_or_id = params[:category]
-      return true if slug_or_id.nil?
+  def set_category_from_params
+    slug_or_id = params[:category]
+    return true if slug_or_id.nil?
 
-      if slug_or_id == 'none' && params[:parent_category]
-        @filter_on_category = Category.query_category(params[:parent_category], nil)
-        params[:no_subcategories] = 'true'
-      else
-        parent_slug_or_id = params[:parent_category]
+    if slug_or_id == 'none' && params[:parent_category]
+      @filter_on_category = Category.query_category(params[:parent_category], nil)
+      params[:no_subcategories] = 'true'
+    else
+      parent_slug_or_id = params[:parent_category]
 
-        parent_category_id = nil
-        if parent_slug_or_id.present?
-          parent_category_id = Category.query_parent_category(parent_slug_or_id)
-          category_redirect_or_not_found && (return) if parent_category_id.blank?
-        end
-
-        @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
+      parent_category_id = nil
+      if parent_slug_or_id.present?
+        parent_category_id = Category.query_parent_category(parent_slug_or_id)
+        category_redirect_or_not_found && (return) if parent_category_id.blank?
       end
 
-      category_redirect_or_not_found && (return) if !@filter_on_category
-
-      guardian.ensure_can_see!(@filter_on_category)
+      @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
     end
 
-    # TODO: this is duplication of ListController
-    def page_params(opts = nil)
-      opts ||= {}
-      route_params = { format: 'json' }
-      route_params[:category]        = @filter_on_category.slug_for_url                 if @filter_on_category
-      route_params[:parent_category] = @filter_on_category.parent_category.slug_for_url if @filter_on_category && @filter_on_category.parent_category
-      route_params[:order]           = opts[:order]      if opts[:order].present?
-      route_params[:ascending]       = opts[:ascending]  if opts[:ascending].present?
-      route_params
-    end
+    category_redirect_or_not_found && (return) if !@filter_on_category
 
-    def next_page_params(opts = nil)
-      page_params(opts).merge(page: params[:page].to_i + 1)
-    end
+    guardian.ensure_can_see!(@filter_on_category)
+  end
 
-    def prev_page_params(opts = nil)
-      pg = params[:page].to_i
-      if pg > 1
-        page_params(opts).merge(page: pg - 1)
-      else
-        page_params(opts).merge(page: nil)
+  # TODO: this is duplication of ListController
+  def page_params(opts = nil)
+    opts ||= {}
+    route_params = { format: 'json' }
+    route_params[:category]        = @filter_on_category.slug_for_url                 if @filter_on_category
+    route_params[:parent_category] = @filter_on_category.parent_category.slug_for_url if @filter_on_category && @filter_on_category.parent_category
+    route_params[:order]           = opts[:order]      if opts[:order].present?
+    route_params[:ascending]       = opts[:ascending]  if opts[:ascending].present?
+    route_params
+  end
+
+  def next_page_params(opts = nil)
+    page_params(opts).merge(page: params[:page].to_i + 1)
+  end
+
+  def prev_page_params(opts = nil)
+    pg = params[:page].to_i
+    if pg > 1
+      page_params(opts).merge(page: pg - 1)
+    else
+      page_params(opts).merge(page: nil)
+    end
+  end
+
+  def url_method(opts = {})
+    if opts[:parent_category] && opts[:category]
+      "tag_parent_category_category_#{action_name}_path"
+    elsif opts[:category]
+      "tag_category_#{action_name}_path"
+    else
+      "tag_#{action_name}_path"
+    end
+  end
+
+  def construct_url_with(action, opts)
+    method = url_method(opts)
+
+    begin
+      url = if action == :prev
+        public_send(method, opts.merge(prev_page_params(opts)))
+      else # :next
+        public_send(method, opts.merge(next_page_params(opts)))
       end
+    rescue ActionController::UrlGenerationError
+      raise Discourse::NotFound
+    end
+    url.sub('.json?', '?')
+  end
+
+  def build_topic_list_options
+    options = {
+      page: params[:page],
+      topic_ids: param_to_integer_list(:topic_ids),
+      exclude_category_ids: params[:exclude_category_ids],
+      category: @filter_on_category ? @filter_on_category.id : params[:category],
+      order: params[:order],
+      ascending: params[:ascending],
+      min_posts: params[:min_posts],
+      max_posts: params[:max_posts],
+      status: params[:status],
+      filter: params[:filter],
+      state: params[:state],
+      search: params[:search],
+      q: params[:q]
+    }
+    options[:no_subcategories] = true if params[:no_subcategories] == 'true'
+    options[:slow_platform] = true if slow_platform?
+
+    if params[:tag_id] == 'none'
+      options[:no_tags] = true
+    else
+      options[:tags] = tag_params
+      options[:match_all_tags] = true
     end
 
-    def url_method(opts = {})
-      if opts[:parent_category] && opts[:category]
-        "tag_parent_category_category_#{action_name}_path"
-      elsif opts[:category]
-        "tag_category_#{action_name}_path"
-      else
-        "tag_#{action_name}_path"
-      end
+    options
+  end
+
+  def category_redirect_or_not_found
+    # automatic redirects for renamed categories
+    url = params[:parent_category] ? "c/#{params[:parent_category]}/#{params[:category]}" : "c/#{params[:category]}"
+    permalink = Permalink.find_by_url(url)
+
+    if permalink.present? && permalink.category_id
+      redirect_to "#{Discourse::base_uri}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
+    else
+      # redirect to 404
+      raise Discourse::NotFound
     end
+  end
 
-    def construct_url_with(action, opts)
-      method = url_method(opts)
-
-      begin
-        url = if action == :prev
-          public_send(method, opts.merge(prev_page_params(opts)))
-        else # :next
-          public_send(method, opts.merge(next_page_params(opts)))
-        end
-      rescue ActionController::UrlGenerationError
-        raise Discourse::NotFound
-      end
-      url.sub('.json?', '?')
-    end
-
-    def build_topic_list_options
-      options = {
-        page: params[:page],
-        topic_ids: param_to_integer_list(:topic_ids),
-        exclude_category_ids: params[:exclude_category_ids],
-        category: @filter_on_category ? @filter_on_category.id : params[:category],
-        order: params[:order],
-        ascending: params[:ascending],
-        min_posts: params[:min_posts],
-        max_posts: params[:max_posts],
-        status: params[:status],
-        filter: params[:filter],
-        state: params[:state],
-        search: params[:search],
-        q: params[:q]
-      }
-      options[:no_subcategories] = true if params[:no_subcategories] == 'true'
-      options[:slow_platform] = true if slow_platform?
-
-      if params[:tag_id] == 'none'
-        options[:no_tags] = true
-      else
-        options[:tags] = tag_params
-        options[:match_all_tags] = true
-      end
-
-      options
-    end
-
-    def category_redirect_or_not_found
-      # automatic redirects for renamed categories
-      url = params[:parent_category] ? "c/#{params[:parent_category]}/#{params[:category]}" : "c/#{params[:category]}"
-      permalink = Permalink.find_by_url(url)
-
-      if permalink.present? && permalink.category_id
-        redirect_to "#{Discourse::base_uri}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
-      else
-        # redirect to 404
-        raise Discourse::NotFound
-      end
-    end
-
-    def tag_params
-      [@tag_id].concat(Array(@additional_tags))
-    end
+  def tag_params
+    [@tag_id].concat(Array(@additional_tags))
+  end
 end

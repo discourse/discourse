@@ -1,0 +1,60 @@
+<h3>
+  {{#link-to "adminReports"}}
+    {{i18n "admin.dashboard.all_reports"}}
+  {{/link-to}}
+
+  |
+
+  {{model.title}}
+</h3>
+
+{{#if model.description}}
+  <p>{{model.description}}</p>
+{{/if}}
+
+<div class="report-container">
+  <div class="visualization">
+    {{#conditional-loading-spinner condition=refreshing}}
+      <div class='view-options'>
+        {{#if viewingTable}}
+          {{i18n 'admin.dashboard.reports.view_table'}}
+        {{else}}
+          <a href {{action "viewAsTable"}}>{{i18n 'admin.dashboard.reports.view_table'}}</a>
+        {{/if}}
+        |
+        {{#if viewingGraph}}
+          {{i18n 'admin.dashboard.reports.view_graph'}}
+        {{else}}
+          <a href {{action "viewAsGraph"}}>{{i18n 'admin.dashboard.reports.view_graph'}}</a>
+        {{/if}}
+      </div>
+
+      {{#if viewingGraph}}
+        {{admin-graph model=model}}
+      {{else}}
+        {{admin-table-report model=model}}
+      {{/if}}
+
+      {{#if model.relatedReport}}
+        {{admin-table-report model=model.relatedReport}}
+      {{/if}}
+    {{/conditional-loading-spinner}}
+  </div>
+
+  <div class="filters">
+    <span>
+      {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate defaultDate=startDate}}
+    </span>
+    <span>
+      {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate defaultDate=endDate}}
+    </span>
+    {{#if showCategoryOptions}}
+      {{combo-box filterable=true valueAttribute="value" content=categoryOptions value=categoryId}}
+    {{/if}}
+    {{#if showGroupOptions}}
+      {{combo-box filterable=true valueAttribute="value" content=groupOptions value=groupId}}
+    {{/if}}
+    {{d-button action="refreshReport" class="btn-primary" label="admin.dashboard.reports.refresh_report" icon="refresh"}}
+    {{d-button action="exportCsv" label="admin.export_csv.button_text" icon="download"}}
+  </div>
+</div>

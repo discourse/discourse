@@ -1,5 +1,5 @@
-import { ajax } from 'discourse/lib/ajax';
-import { fillMissingDates } from 'discourse/lib/utilities';
+import { ajax } from "discourse/lib/ajax";
+import { fillMissingDates } from "discourse/lib/utilities";
 import { translateResults } from "discourse/lib/search";
 
 export default Discourse.Route.extend({
@@ -19,8 +19,11 @@ export default Discourse.Route.extend({
     }).then(json => {
       // Add zero values for missing dates
       if (json.term.data.length > 0) {
-        const startDate = (json.term.period === "all") ? moment(json.term.data[0].x).format('YYYY-MM-DD') : moment(json.term.start_date).format('YYYY-MM-DD');
-        const endDate = moment(json.term.end_date).format('YYYY-MM-DD');
+        const startDate =
+          json.term.period === "all"
+            ? moment(json.term.data[0].x).format("YYYY-MM-DD")
+            : moment(json.term.start_date).format("YYYY-MM-DD");
+        const endDate = moment(json.term.end_date).format("YYYY-MM-DD");
         json.term.data = fillMissingDates(json.term.data, startDate, endDate);
       }
       if (json.term.search_result) {

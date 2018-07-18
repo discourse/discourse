@@ -19,10 +19,10 @@ class Notification < ActiveRecord::Base
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]
 
   def self.ensure_consistency!
-    Notification.exec_sql <<-SQL
+    DB.exec(<<~SQL, Notification.types[:private_message])
       DELETE
         FROM notifications n
-       WHERE notification_type = #{Notification.types[:private_message]}
+       WHERE notification_type = ?
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -58,27 +58,24 @@ class Notification < ActiveRecord::Base
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
-    count = Notification
-      .where(user_id: user.id,
-             topic_id: topic_id,
-             post_number: post_numbers,
-             read: false)
-      .update_all("read = 't'")
-
-    if count > 0
-      user.publish_notifications_state
-    end
-
-    count
+    Notification
+      .where(
+        user_id: user.id,
+        topic_id: topic_id,
+        post_number: post_numbers,
+        read: false
+      )
+      .update_all(read: true)
   end
 
   def self.read(user, notification_ids)
-    count = Notification.where(user_id: user.id)
-      .where(id: notification_ids)
-      .where(read: false)
+    Notification
+      .where(
+        id: notification_ids,
+        user_id: user.id,
+        read: false
+      )
       .update_all(read: true)
-
-    user.publish_notifications_state if count > 0
   end
 
   def self.interesting_after(min_date)
@@ -155,17 +152,15 @@ class Notification < ActiveRecord::Base
 
     if notifications.present?
 
-      ids = Notification.exec_sql("
+      ids = DB.query_single(<<~SQL, count.to_i)
          SELECT n.id FROM notifications n
          WHERE
            n.notification_type = 6 AND
            n.user_id = #{user.id.to_i} AND
            NOT read
         ORDER BY n.id ASC
-        LIMIT #{count.to_i}
-      ").values.map do |x, _|
-        x.to_i
-      end
+        LIMIT ?
+      SQL
 
       if ids.length > 0
         notifications += user
@@ -202,7 +197,11 @@ class Notification < ActiveRecord::Base
   protected
 
   def refresh_notification_count
-    user.publish_notifications_state
+    begin
+      user.reload.publish_notifications_state
+    rescue ActiveRecord::RecordNotFound
+      # happens when we delete a user
+    end
   end
 
   def send_email

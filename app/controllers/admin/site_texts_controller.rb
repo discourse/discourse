@@ -75,19 +75,19 @@ class Admin::SiteTextsController < Admin::AdminController
 
   protected
 
-    def record_for(k, value = nil)
-      if k.ends_with?("_MF")
-        ovr = TranslationOverride.where(translation_key: k, locale: I18n.locale).pluck(:value)
-        value = ovr[0] if ovr.present?
-      end
-
-      value ||= I18n.t(k)
-      { id: k, value: value }
+  def record_for(k, value = nil)
+    if k.ends_with?("_MF")
+      ovr = TranslationOverride.where(translation_key: k, locale: I18n.locale).pluck(:value)
+      value = ovr[0] if ovr.present?
     end
 
-    def find_site_text
-      raise Discourse::NotFound unless I18n.exists?(params[:id]) && !self.class.restricted_keys.include?(params[:id])
-      record_for(params[:id])
-    end
+    value ||= I18n.t(k)
+    { id: k, value: value }
+  end
+
+  def find_site_text
+    raise Discourse::NotFound unless I18n.exists?(params[:id]) && !self.class.restricted_keys.include?(params[:id])
+    record_for(params[:id])
+  end
 
 end

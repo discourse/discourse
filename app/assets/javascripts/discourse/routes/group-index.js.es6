@@ -1,8 +1,8 @@
-import showModal from 'discourse/lib/show-modal';
+import showModal from "discourse/lib/show-modal";
 
 export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('groups.members.title');
+    return I18n.t("groups.members.title");
   },
 
   model(params) {
@@ -23,11 +23,11 @@ export default Discourse.Route.extend({
 
   actions: {
     showAddMembersModal() {
-      showModal('group-add-members', { model: this.modelFor('group') });
+      showModal("group-add-members", { model: this.modelFor("group") });
     },
 
     showBulkAddModal() {
-      showModal('group-bulk-add', { model: this.modelFor('group') });
+      showModal("group-bulk-add", { model: this.modelFor("group") });
     },
 
     didTransition() {

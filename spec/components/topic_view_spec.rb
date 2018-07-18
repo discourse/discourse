@@ -13,6 +13,11 @@ describe TopicView do
     expect { TopicView.new(1231232, evil_trout) }.to raise_error(Discourse::NotFound)
   end
 
+  it "accepts a topic or a topic id" do
+    expect(TopicView.new(topic, evil_trout).topic).to eq(topic)
+    expect(TopicView.new(topic.id, evil_trout).topic).to eq(topic)
+  end
+
   # see also spec/controllers/topics_controller_spec.rb TopicsController::show::permission errors
   it "raises an error if the user can't see the topic" do
     Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
@@ -542,6 +547,48 @@ describe TopicView do
           it { should_not include(tag2.name) }
         end
       end
+    end
+  end
+
+  describe '#filtered_post_stream' do
+    let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
+    let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
+
+    it 'should return the right columns' do
+      expect(topic_view.filtered_post_stream).to eq([
+        [post.id, 0],
+        [post2.id, 0],
+        [post3.id, 0]
+      ])
+    end
+
+    describe 'for mega topics' do
+      it 'should return the right columns' do
+        begin
+          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
+
+          expect(topic_view.filtered_post_stream).to eq([
+            post.id,
+            post2.id,
+            post3.id
+          ])
+        ensure
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
+        end
+      end
+    end
+  end
+
+  describe '#filtered_post_id' do
+    it 'should return the right id' do
+      post = Fabricate(:post, topic: topic)
+
+      expect(topic_view.filtered_post_id(nil)).to eq(nil)
+      expect(topic_view.filtered_post_id(post.post_number)).to eq(post.id)
     end
   end
 end

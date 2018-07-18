@@ -554,6 +554,11 @@ describe User do
       user = Fabricate(:user, email: "bar@foo.com")
       expect(User.username_available?(user.username, user.primary_email.email)).to eq(false)
     end
+
+    it 'returns false when a username equals an existing group name' do
+      Fabricate(:group, name: 'foo')
+      expect(User.username_available?('Foo')).to eq(false)
+    end
   end
 
   describe '.reserved_username?' do
@@ -985,6 +990,12 @@ describe User do
       u.user_stat.first_post_created_at = 25.hours.ago
       expect(u.new_user_posting_on_first_day?).to eq(false)
     end
+
+    it "considers trust level 0 users as new users unconditionally" do
+      u = Fabricate(:user, created_at: 28.hours.ago, trust_level: TrustLevel[0])
+      u.user_stat.first_post_created_at = 25.hours.ago
+      expect(u.new_user_posting_on_first_day?).to eq(true)
+    end
   end
 
   describe 'api keys' do
@@ -1061,6 +1072,7 @@ describe User do
 
       context "with a reply" do
         before do
+          SiteSetting.queue_jobs = false
           PostCreator.new(Fabricate(:user),
                             raw: 'whatever this is a raw post',
                             topic_id: topic.id,
@@ -1232,7 +1244,6 @@ describe User do
   describe "refresh_avatar" do
     it "enqueues the update_gravatar job when automatically downloading gravatars" do
       SiteSetting.automatically_download_gravatars = true
-      SiteSetting.queue_jobs = true
 
       user = Fabricate(:user)
 
@@ -1246,26 +1257,34 @@ describe User do
     let!(:user) { Fabricate(:user) }
     let!(:unactivated) { Fabricate(:user, active: false) }
     let!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
-    let!(:unactivated_old_with_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+    let!(:unactivated_old_with_system_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+    let!(:unactivated_old_with_human_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
 
     before do
       PostCreator.new(Discourse.system_user,
         title: "Welcome to our Discourse",
         raw: "This is a welcome message",
         archetype: Archetype.private_message,
-        target_usernames: [unactivated_old_with_pm.username],
+        target_usernames: [unactivated_old_with_system_pm.username],
+      ).create
+
+      PostCreator.new(user,
+        title: "Welcome to our Discourse",
+        raw: "This is a welcome message",
+        archetype: Archetype.private_message,
+        target_usernames: [unactivated_old_with_human_pm.username],
       ).create
     end
 
     it 'should only remove old, unactivated users' do
       User.purge_unactivated
-      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_pm])
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_human_pm])
     end
 
     it "does nothing if purge_unactivated_users_grace_period_days is 0" do
       SiteSetting.purge_unactivated_users_grace_period_days = 0
       User.purge_unactivated
-      expect(User.real.all).to match_array([user, unactivated, unactivated_old, unactivated_old_with_pm])
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old, unactivated_old_with_system_pm, unactivated_old_with_human_pm])
     end
   end
 

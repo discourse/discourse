@@ -1,5 +1,7 @@
 {{#if setting.textarea}}
   {{textarea value=value classNames="input-setting-textarea"}}
+{{else if isSecret}}
+  {{input type="password" value=value classNames="input-setting-string"}}
 {{else}}
   {{text-field value=value classNames="input-setting-string"}}
 {{/if}}

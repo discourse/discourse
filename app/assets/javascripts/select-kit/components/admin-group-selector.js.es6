@@ -9,8 +9,9 @@ export default MultiSelectComponent.extend({
   allowAny: false,
 
   computeValues() {
-    return makeArray(this.get("selected"))
-      .map(s => this.valueForContentItem(s));
+    return makeArray(this.get("selected")).map(s =>
+      this.valueForContentItem(s)
+    );
   },
 
   computeContent() {
@@ -25,20 +26,25 @@ export default MultiSelectComponent.extend({
 
   mutateValues(values) {
     if (values.length > this.get("selected").length) {
-      const newValues = values
-        .filter(v => !this.get("selected")
-        .map(s => this.valueForContentItem(s))
-        .includes(v));
+      const newValues = values.filter(
+        v =>
+          !this.get("selected")
+            .map(s => this.valueForContentItem(s))
+            .includes(v)
+      );
 
       newValues.forEach(value => {
-        const actionContext = this.get("available")
-          .findBy(this.get("valueAttribute"), parseInt(value, 10));
+        const actionContext = this.get("available").findBy(
+          this.get("valueAttribute"),
+          parseInt(value, 10)
+        );
 
         this.triggerAction({ action: "groupAdded", actionContext });
       });
     } else if (values.length < this.get("selected").length) {
-      const selected = this.get("selected")
-        .filter(s => !values.includes(this.valueForContentItem(s)));
+      const selected = this.get("selected").filter(
+        s => !values.includes(this.valueForContentItem(s))
+      );
 
       selected.forEach(s => {
         this.triggerAction({

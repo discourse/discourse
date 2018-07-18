@@ -34,9 +34,11 @@ module Email
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
+          @template_args[:respond_instructions] = I18n.t('user_notifications.pm_participants', @template_args) if @opts[:private_reply]
         else
           if @opts[:only_reply_by_email]
             string = "user_notifications.only_reply_by_email"
+            string << "_pm" if @opts[:private_reply]
           else
             string = allow_reply_by_email? ? "user_notifications.reply_by_email" : "user_notifications.visit_link_to_respond"
             string << "_pm" if @opts[:private_reply]
@@ -96,13 +98,6 @@ module Email
         html_override.gsub!("%{respond_instructions}", "")
       end
 
-      if @template_args[:participants].present?
-        participants = PrettyText.cook(@template_args[:participants], sanitize: false).html_safe
-        html_override.gsub!("%{participants}", participants)
-      else
-        html_override.gsub!("%{participants}", "")
-      end
-
       styled = Email::Styles.new(html_override, @opts)
       styled.format_basic
       if style = @opts[:style]
@@ -118,12 +113,6 @@ module Email
     def body
       body = @opts[:body]
       body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup if @opts[:template]
-
-      if @template_args[:participants].present?
-        body << "\n"
-        body << @template_args[:participants]
-        body << "\n"
-      end
 
       if @template_args[:unsubscribe_instructions].present?
         body << "\n"

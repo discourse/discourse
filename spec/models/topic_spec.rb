@@ -1214,6 +1214,8 @@ describe Topic do
 
         describe 'user that is watching the new category' do
           it 'should generate the notification for the topic' do
+            SiteSetting.queue_jobs = false
+
             topic.posts << Fabricate(:post)
 
             CategoryUser.set_notification_level_for_category(
@@ -1269,7 +1271,6 @@ describe Topic do
 
           describe 'when topic is already closed' do
             before do
-              SiteSetting.queue_jobs = true
               topic.update_status('closed', true, Discourse.system_user)
             end
 
@@ -1519,6 +1520,8 @@ describe Topic do
       let(:topic) { Fabricate(:topic, category: category) }
 
       it "should be able to override category's default auto close" do
+        SiteSetting.queue_jobs = false
+
         expect(topic.topic_timers.first.duration).to eq(4)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)
@@ -1609,8 +1612,7 @@ describe Topic do
 
       it "doesn't return topics from TL0 users" do
         new_user = Fabricate(:user, trust_level: 0)
-        Fabricate(:topic, user_id: new_user.id)
-
+        Fabricate(:topic, user: new_user)
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
@@ -1623,7 +1625,7 @@ describe Topic do
 
       it "returns topics from TL0 users if enabled in preferences" do
         new_user = Fabricate(:user, trust_level: 0)
-        topic = Fabricate(:topic, user_id: new_user.id)
+        topic = Fabricate(:topic, user: new_user)
 
         u = Fabricate(:user)
         u.user_option.include_tl0_in_digests = true
@@ -1653,7 +1655,7 @@ describe Topic do
         user = Fabricate(:user)
         muted_tag = Fabricate(:tag)
         TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
-        topic1 = Fabricate(:topic, tags: [muted_tag])
+        _topic1 = Fabricate(:topic, tags: [muted_tag])
         topic2 = Fabricate(:topic, tags: [Fabricate(:tag), Fabricate(:tag)])
         topic3 = Fabricate(:topic)
 
@@ -1690,7 +1692,7 @@ describe Topic do
 
       it "excludes topics that are within the grace period" do
         topic1 = Fabricate(:topic, created_at: 6.minutes.ago)
-        topic2 = Fabricate(:topic, created_at: 4.minutes.ago)
+        _topic2 = Fabricate(:topic, created_at: 4.minutes.ago)
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic1])
       end
     end
@@ -2177,9 +2179,9 @@ describe Topic do
     end
 
     it "returns 0 with a topic with 1 reply" do
-      topic   = Fabricate(:topic, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      _post1 = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      _post2 = Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
       expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
       expect(Topic.with_no_response_total).to eq(0)
     end

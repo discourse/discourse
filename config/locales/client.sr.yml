@@ -16,8 +16,8 @@ sr:
           format: '%n %u'
           units:
             byte:
-              few: Bajta
               one: Bajt
+              few: Bajta
               other: Bajta
             gb: GB
             kb: KB
@@ -44,87 +44,87 @@ sr:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          few: < %{count} s
-          one: < %{count} s
-          other: < %{count} s
+          one: "< %{count} s"
+          few: "< %{count} s"
+          other: "< %{count} s"
         x_seconds:
-          few: '%{count} sek.'
-          one: '%{count} sek.'
-          other: '%{count} sek.'
+          one: "%{count} sek."
+          few: "%{count} sek."
+          other: "%{count} sek."
         less_than_x_minutes:
-          few: < %{count}m
-          one: < %{count}m
-          other: < %{count}m
+          one: "< %{count}m"
+          few: "< %{count}m"
+          other: "< %{count}m"
         x_minutes:
-          few: '%{count} min'
-          one: '%{count} min'
-          other: '%{count} min'
+          one: "%{count} min"
+          few: "%{count} min"
+          other: "%{count} min"
         about_x_hours:
-          few: '%{count} sata'
-          one: '%{count} sat'
-          other: '%{count} sati'
+          one: "%{count} sat"
+          few: "%{count} sata"
+          other: "%{count} sati"
         x_days:
-          few: '%{count} dana'
-          one: '%{count} dan'
-          other: '%{count} dana'
+          one: "%{count} dan"
+          few: "%{count} dana"
+          other: "%{count} dana"
         x_months:
-          few: '%{count}mes'
-          one: '%{count} mes'
-          other: '%{count}mes'
+          one: "%{count} mes"
+          few: "%{count}mes"
+          other: "%{count}mes"
         about_x_years:
-          few: '%{count} godine'
-          one: '%{count} godina'
-          other: '%{count} godina'
+          one: "%{count} godina"
+          few: "%{count} godine"
+          other: "%{count} godina"
         over_x_years:
-          few: '> %{count} godine'
-          one: '> %{count} godina'
-          other: '> %{count} godina'
+          one: "> %{count} godina"
+          few: "> %{count} godine"
+          other: "> %{count} godina"
         almost_x_years:
-          few: '%{count} godine'
-          one: '%{count} godina'
-          other: '%{count} godina'
+          one: "%{count} godina"
+          few: "%{count} godine"
+          other: "%{count} godina"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          few: '%{count} min'
-          one: '%{count} min'
-          other: '%{count} min'
+          one: "%{count} min"
+          few: "%{count} min"
+          other: "%{count} min"
         x_hours:
-          few: '%{count} sata'
-          one: '%{count} sat'
-          other: '%{count} sati'
+          one: "%{count} sat"
+          few: "%{count} sata"
+          other: "%{count} sati"
         x_days:
-          few: '%{count} dana'
-          one: '%{count} dan'
-          other: '%{count} dana'
+          one: "%{count} dan"
+          few: "%{count} dana"
+          other: "%{count} dana"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
-          few: pre %{count} minuta
-          one: pre %{count} minut
-          other: pre %{count} minuta
+          one: "pre %{count} minut"
+          few: "pre %{count} minuta"
+          other: "pre %{count} minuta"
         x_hours:
-          few: pre %{count} sata
-          one: pre %{count} sat
-          other: pre %{count} sati
+          one: "pre %{count} sat"
+          few: "pre %{count} sata"
+          other: "pre %{count} sati"
         x_days:
-          few: pre %{count} dana
-          one: pre %{count} dan
-          other: pre %{count} dana
+          one: "pre %{count} dan"
+          few: "pre %{count} dana"
+          other: "pre %{count} dana"
       later:
         x_days:
-          few: '%{count} dana kasnije'
-          one: '%{count} dan kasnije'
-          other: '%{count} dana kasnije'
+          one: "%{count} dan kasnije"
+          few: "%{count} dana kasnije"
+          other: "%{count} dana kasnije"
         x_months:
-          few: '%{count} meseca kasnije'
-          one: '%{count} mesec kasnije'
-          other: '%{count} meseci kasnije'
+          one: "%{count} mesec kasnije"
+          few: "%{count} meseca kasnije"
+          other: "%{count} meseci kasnije"
         x_years:
-          few: '%{count} godine kasnije'
-          one: '%{count} godina kasnije'
-          other: '%{count} godina kasnije'
+          one: "%{count} godina kasnije"
+          few: "%{count} godine kasnije"
+          other: "%{count} godina kasnije"
       previous_month: 'Prethodni mesec'
       next_month: 'Sledeći mesec'
       placeholder: datum
@@ -203,9 +203,9 @@ sr:
     show_help: "opcije"
     links: "Linkovi"
     links_lowercase:
-      few: linkovi
-      one: link
-      other: linkovi
+      one: "link"
+      few: "linkovi"
+      other: "linkovi"
     faq: "FAQ (često postavljana pitanja)"
     guidelines: "Smernice"
     privacy_policy: "Politika Privatnosti"
@@ -229,9 +229,9 @@ sr:
     max_of_count: "maksimalno od {{count}}"
     alternation: "ili"
     character_count:
-      few: '{{count}} karaktera'
-      one: '{{count}} karakter'
-      other: '{{count}} karaktera'
+      one: "{{count}} karakter"
+      few: "{{count}} karaktera"
+      other: "{{count}} karaktera"
     suggested_topics:
       title: "Predložene Teme"
       pm_title: "Predložene poruke"
@@ -299,9 +299,9 @@ sr:
       cancel: "Otkaži"
       view_pending: "vidi poruke na čekanju"
       has_pending_posts:
-        few: Ova tema ima <b>{{count}}</b> poruke koje čekaju na odobrenje
-        one: Ova tema ima <b>{{count}}</b> poruku koje čekaju na odobrenje
-        other: Ova tema ima <b>{{count}}</b> poruka koje čekaju na odobrenje
+        one: "Ova tema ima <b>{{count}}</b> poruku koje čekaju na odobrenje"
+        few: "Ova tema ima <b>{{count}}</b> poruke koje čekaju na odobrenje"
+        other: "Ova tema ima <b>{{count}}</b> poruka koje čekaju na odobrenje"
       confirm: "Sačuvaj izmene"
       delete_prompt: "Da li si siguran da želiš obrisati <b>%{username}</b>? Ovim ćeš obrisati sve njegove postove i blokirati njegov email i IP adresu."
       approval:
@@ -340,9 +340,9 @@ sr:
       posts_read: "Pročitano"
       posts_read_long: "Postova pročitano"
       total_rows:
-        few: '%{count} korisnika'
-        one: '{count} korisnik'
-        other: '%{count} korisnika'
+        one: "{count} korisnik"
+        few: "%{count} korisnika"
+        other: "%{count} korisnika"
     groups:
       owner: "vlasnik"
       index:
@@ -386,9 +386,9 @@ sr:
       toggle_ordering: "odredi kontrolu smera"
       subcategories: "Podkategorije"
       topic_stat_sentence:
-        few: '%{count} novih tema u poslednjih %{unit}.'
-        one: '%{count} nova tema u poslednjih %{unit}.'
-        other: '%{count} novih tema u poslednjih %{unit}.'
+        one: "%{count} nova tema u poslednjih %{unit}."
+        few: "%{count} novih tema u poslednjih %{unit}."
+        other: "%{count} novih tema u poslednjih %{unit}."
     ip_lookup:
       title: Pretraga po IP adresi
       hostname: Ime računara
@@ -591,37 +591,37 @@ sr:
         time_read: "vreme čitanja"
         recent_time_read: "vreme nedavnih čitanja"
         topic_count:
-          few: kreirane teme
-          one: kreirana tema
-          other: kreiranih tema
+          one: "kreirana tema"
+          few: "kreirane teme"
+          other: "kreiranih tema"
         post_count:
-          few: kreirana posta
-          one: kreiran post
-          other: kreiranih postova
+          one: "kreiran post"
+          few: "kreirana posta"
+          other: "kreiranih postova"
         likes_given:
-          few: dato
-          one: dato
-          other: dato
+          one: "dato"
+          few: "dato"
+          other: "dato"
         likes_received:
-          few: primljeno
-          one: primljeno
-          other: primljeno
+          one: "primljeno"
+          few: "primljeno"
+          other: "primljeno"
         days_visited:
-          few: dana posećivao
-          one: dan posećivao
-          other: dana posećivao
+          one: "dan posećivao"
+          few: "dana posećivao"
+          other: "dana posećivao"
         topics_entered:
-          few: tema pregledao
-          one: temu pregledao
-          other: tema pregledao
+          one: "temu pregledao"
+          few: "tema pregledao"
+          other: "tema pregledao"
         posts_read:
-          few: postova pročitao
-          one: postova pročitao
-          other: postova pročitao
+          one: "postova pročitao"
+          few: "postova pročitao"
+          other: "postova pročitao"
         bookmark_count:
-          few: označene
-          one: označena
-          other: označenih
+          one: "označena"
+          few: "označene"
+          other: "označenih"
         top_replies: "Top odgovori"
         no_replies: "Bez odgovora, još uvek."
         more_replies: "Još odgovora"
@@ -884,9 +884,9 @@ sr:
         archive_topics: "Arhiviraj teme"
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
         selected:
-          few: Odabrali ste <b>{{count}}</b> tema.
-          one: Odabrali ste <b>{{count}}</b> temu.
-          other: Odabrali ste <b>{{count}}</b> tema.
+          one: "Odabrali ste <b>{{count}}</b> temu."
+          few: "Odabrali ste <b>{{count}}</b> tema."
+          other: "Odabrali ste <b>{{count}}</b> tema."
       none:
         unread: "Nemate nepročitanih tema."
         new: "Nemate novih tema."
@@ -916,12 +916,12 @@ sr:
       new: 'nova tema'
       unread: 'nepročitano'
       new_topics:
+        one: '1 nova tema'
         few: '{{count}} nove teme'
-        one: 1 nova tema
         other: '{{count}} nove teme'
       unread_topics:
-        few: '{{count}} nepročitane tema'
         one: '{{count}} nepročitana tema'
+        few: '{{count}} nepročitane tema'
         other: '{{count}} nepročitanih teme'
       title: 'Tema'
       invalid_access:
@@ -935,21 +935,21 @@ sr:
         title: "Tema nije pronađena"
         description: "Žao nam je, nismo mogli pronaći temu. Možda ju je moderator uklonio?"
       total_unread_posts:
-        few: Imate {{count}} nepročitanih poruka u ovoj temi
-        one: Imate {{count}} nepročitanu poruku u ovoj temi
-        other: Imate {{count}} nepročitanih poruka u ovoj temi
+        one: "Imate {{count}} nepročitanu poruku u ovoj temi"
+        few: "Imate {{count}} nepročitanih poruka u ovoj temi"
+        other: "Imate {{count}} nepročitanih poruka u ovoj temi"
       unread_posts:
-        few: Imate {{count}} starih nepročitanih poruka u ovoj temi
-        one: Imate {{count}} staru nepročitanu poruku u ovoj temi
-        other: Imate {{count}} starih nepročitanih poruka u ovoj temi
+        one: "Imate {{count}} staru nepročitanu poruku u ovoj temi"
+        few: "Imate {{count}} starih nepročitanih poruka u ovoj temi"
+        other: "Imate {{count}} starih nepročitanih poruka u ovoj temi"
       new_posts:
-        few: Ima {{count}} novih poruka u temi od kad ste je zadnji put pročitali
-        one: Ima {{count}} novih poruka u temi od kad ste je zadnji put pročitali
-        other: Ima {{count}} novih poruka u temi od kad ste je zadnji put pročitali
+        one: "Ima {{count}} novih poruka u temi od kad ste je zadnji put pročitali"
+        few: "Ima {{count}} novih poruka u temi od kad ste je zadnji put pročitali"
+        other: "Ima {{count}} novih poruka u temi od kad ste je zadnji put pročitali"
       likes:
-        few: Ima {{count}} sviđanja u temi
-        one: Ima {{count}} sviđanja u temi
-        other: Ima {{count}} sviđanja u temi
+        one: "Ima {{count}} sviđanja u temi"
+        few: "Ima {{count}} sviđanja u temi"
+        other: "Ima {{count}} sviđanja u temi"
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
@@ -1044,9 +1044,9 @@ sr:
       login_reply: 'Prijavi se da bi odgovorio'
       filters:
         n_posts:
-          few: '{{count}} poruka'
-          one: 1 poruka
-          other: '{{count}} poruka'
+          one: "1 poruka"
+          few: "{{count}} poruka"
+          other: "{{count}} poruka"
         cancel: "Uklonite filter"
       split_topic:
         title: "Prebaci u Novu Temu"
@@ -1054,17 +1054,17 @@ sr:
         topic_name: "Ime Nove Teme"
         error: "Dogodila se greška pri prebacivanju poruka u novu temu."
         instructions:
-          few: Otvorićete novu temu popunjenu s <b>{{count}}</b> poruka koje ste izabrali.
-          one: Otvorićete novu temu popunjenu s <b>{{count}}</b> poruka koje ste izabrali.
-          other: Otvorićete novu temu popunjenu s <b>{{count}}</b> poruka koje ste izabrali.
+          one: "Otvorićete novu temu popunjenu s <b>{{count}}</b> poruka koje ste izabrali."
+          few: "Otvorićete novu temu popunjenu s <b>{{count}}</b> poruka koje ste izabrali."
+          other: "Otvorićete novu temu popunjenu s <b>{{count}}</b> poruka koje ste izabrali."
       merge_topic:
         title: "Prebaci u Postojeću Temu"
         action: "prebaci u postojeću temu"
         error: "Dogodili se greška prilikom prebacivanju poruka u tu temu."
         instructions:
-          few: Molimo odaberite temu u koju želite prebaciti <b>{{count}}</b> poruka.
-          one: Molimo odaberite temu u koju želite prebaciti <b>{{count}}</b> poruka.
-          other: Molimo odaberite temu u koju želite prebaciti <b>{{count}}</b> poruka.
+          one: "Molimo odaberite temu u koju želite prebaciti <b>{{count}}</b> poruka."
+          few: "Molimo odaberite temu u koju želite prebaciti <b>{{count}}</b> poruka."
+          other: "Molimo odaberite temu u koju želite prebaciti <b>{{count}}</b> poruka."
       change_owner:
         title: "promena vlasnika poruke"
         action: "promena vlasništva"
@@ -1072,9 +1072,9 @@ sr:
         label: "Novi vlasnik poruke"
         placeholder: "korisničko ime novog vlasnika"
         instructions:
-          few: Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>.
-          one: Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>.
-          other: Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>.
+          one: "Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>."
+          few: "Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>."
+          other: "Molimo vas odaberete novog vlasnika {{count}} poruka od <b>{{old_user}}</b>."
       multi_select:
         select: 'odaberi'
         selected: 'odabrano ({{count}})'
@@ -1083,9 +1083,9 @@ sr:
         select_all: odaberi sve
         deselect_all: odustani od odabira
         description:
-          few: Odabrali ste <b>{{count}}</b> poruka.
           one: Odabrali ste <b>{{count}}</b> poruka.
-          other: Odabrali ste <b>{{count}}</b> poruka.
+          few: "Odabrali ste <b>{{count}}</b> poruka."
+          other: "Odabrali ste <b>{{count}}</b> poruka."
     post:
       edit_reason: "Razlog:"
       post_number: "poruka {{number}}"
@@ -1096,9 +1096,9 @@ sr:
       show_full: "Prikaži Celu Poruku"
       show_hidden: 'Vidi skriven sadržaj.'
       deleted_by_author:
-        few: (autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)
-        one: (autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)
-        other: (autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)
+        one: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
+        few: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
+        other: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
       expand_collapse: "proširi/sruši"
       unread: "Poruka je nepročitana"
       errors:
@@ -1154,62 +1154,62 @@ sr:
           vote: "Glasali ste za ovu poruku"
         by_you_and_others:
           off_topic:
-            few: Ti i {{count}} drugih korisnika označili ste ovo kao van teme
-            one: Ti i {{count}} drugi korisnik označili ste ovo kao van teme
-            other: Ti i {{count}} drugih korisnika označili ste ovo kao van teme
+            one: "Ti i {{count}} drugi korisnik označili ste ovo kao van teme"
+            few: "Ti i {{count}} drugih korisnika označili ste ovo kao van teme"
+            other: "Ti i {{count}} drugih korisnika označili ste ovo kao van teme"
           spam:
-            few: Ti i {{count}} drugih korisnika označili ste ovo kao nepoželjno.
-            one: Ti i {{count}} drugi korisnik označili ste ovo kao nepoželjno.
-            other: Ti i {{count}} drugih korisnika označili ste ovo kao nepoželjno.
+            one: "Ti i {{count}} drugi korisnik označili ste ovo kao nepoželjno."
+            few: "Ti i {{count}} drugih korisnika označili ste ovo kao nepoželjno."
+            other: "Ti i {{count}} drugih korisnika označili ste ovo kao nepoželjno."
           inappropriate:
-            few: Ti i {{count}} drugih korisnika označili ste ovo kao neprikladno
-            one: Ti i {{count}} drugi korisnik označili ste ovo kao neprikladno
-            other: Ti i {{count}} drugih korisnika označili ste ovo kao neprikladno
+            one: "Ti i {{count}} drugi korisnik označili ste ovo kao neprikladno"
+            few: "Ti i {{count}} drugih korisnika označili ste ovo kao neprikladno"
+            other: "Ti i {{count}} drugih korisnika označili ste ovo kao neprikladno"
           notify_moderators:
-            few: Ti i {{count}} druga korisnika označili ste ovo za moderatore.
-            one: Ti i {{count}} drugi korisnik označili ste ovo za moderatore.
-            other: Ti i {{count}} druga korisnika označili ste ovo za moderatore.
+            one: "Ti i {{count}} drugi korisnik označili ste ovo za moderatore."
+            few: "Ti i {{count}} druga korisnika označili ste ovo za moderatore."
+            other: "Ti i {{count}} druga korisnika označili ste ovo za moderatore."
           bookmark:
-            few: Ti i {{count}} drugih korisnika ste markirali ovu objavu
-            one: Ti i {{count}} drugi korisnik ste markirali ovu objavu
-            other: Ti i {{count}} drugih korisnika ste markirali ovu objavu
+            one: "Ti i {{count}} drugi korisnik ste markirali ovu objavu"
+            few: "Ti i {{count}} drugih korisnika ste markirali ovu objavu"
+            other: "Ti i {{count}} drugih korisnika ste markirali ovu objavu"
           like:
-            few: Tebi i {{count}} drugih korisnika se ovo sviđa.
-            one: Tebi i {{count}} drugom korisniku se ovo sviđa.
-            other: Tebi i {{count}} drugih korisnika se ovo sviđa.
+            one: "Tebi i {{count}} drugom korisniku se ovo sviđa."
+            few: "Tebi i {{count}} drugih korisnika se ovo sviđa."
+            other: "Tebi i {{count}} drugih korisnika se ovo sviđa."
           vote:
-            few: Ti i {{count}} drugih korisnika ste glasali za ovu poruku
-            one: Ti i {{count}} drugi korisnik ste glasali za ovu poruku
-            other: Ti i {{count}} drugih korisnika ste glasali za ovu poruku
+            one: "Ti i {{count}} drugi korisnik ste glasali za ovu poruku"
+            few: "Ti i {{count}} drugih korisnika ste glasali za ovu poruku"
+            other: "Ti i {{count}} drugih korisnika ste glasali za ovu poruku"
         by_others:
           off_topic:
-            few: '{{count}} korisnika označilo je ovo kao van teme'
-            one: '{{count}} korisnika označilo je ovo kao van teme'
-            other: '{{count}} korisnika označilo je ovo kao van teme'
+            one: "{{count}} korisnika označilo je ovo kao van teme"
+            few: "{{count}} korisnika označilo je ovo kao van teme"
+            other: "{{count}} korisnika označilo je ovo kao van teme"
           spam:
-            few: '{{count}} korisnika označilo je ovo kao nepoželjno'
-            one: '{{count}} korisnik označilo je ovo kao nepoželjno'
-            other: '{{count}} korisnika označilo je ovo kao nepoželjno'
+            one: "{{count}} korisnik označilo je ovo kao nepoželjno"
+            few: "{{count}} korisnika označilo je ovo kao nepoželjno"
+            other: "{{count}} korisnika označilo je ovo kao nepoželjno"
           inappropriate:
-            few: '{count}} korisnika označilo je ovo kao neprikladno'
-            one: '{count}} korisnik označilo je ovo kao neprikladno'
-            other: '{{count}} korisnika označilo je ovo kao neprikladno'
+            one: "{count}} korisnik označilo je ovo kao neprikladno"
+            few: "{count}} korisnika označilo je ovo kao neprikladno"
+            other: "{{count}} korisnika označilo je ovo kao neprikladno"
           notify_moderators:
-            few: '{{count}} korisnika označilo je ovo za moderatora'
-            one: '{{count}} korisnik označilo je ovo za moderatora'
-            other: '{{count}} korisnika označilo je ovo za moderatora'
+            one: "{{count}} korisnik označilo je ovo za moderatora"
+            few: "{{count}} korisnika označilo je ovo za moderatora"
+            other: "{{count}} korisnika označilo je ovo za moderatora"
           bookmark:
-            few: '{{count}} korisnika je markiralo ovu objavu'
-            one: '{{count}} korisnik je markiralo ovu objavu'
-            other: '{{count}} korisnika je markiralo ovu objavu'
+            one: "{{count}} korisnik je markiralo ovu objavu"
+            few: "{{count}} korisnika je markiralo ovu objavu"
+            other: "{{count}} korisnika je markiralo ovu objavu"
           like:
-            few: '{{count}} korisnika se ovo sviđa'
-            one: '{{count}} korisnik se ovo sviđa'
-            other: '{{count}} korisnika se ovo sviđa'
+            one: "{{count}} korisnik se ovo sviđa"
+            few: "{{count}} korisnika se ovo sviđa"
+            other: "{{count}} korisnika se ovo sviđa"
           vote:
-            few: '{{count}} korisnika je glasalo za ovu poruku'
-            one: '{{count}} korisnik je glasalo za ovu poruku'
-            other: '{{count}} korisnika je glasalo za ovu poruku'
+            one: "{{count}} korisnik je glasalo za ovu poruku"
+            few: "{{count}} korisnika je glasalo za ovu poruku"
+            other: "{{count}} korisnika je glasalo za ovu poruku"
       revisions:
         controls:
           first: "Prva revizija"
@@ -1305,9 +1305,9 @@ sr:
     topic_map:
       title: "Sažetak teme"
       clicks:
-        few: '%{count} klikova'
-        one: '%{count} klik'
-        other: '%{count} klikova'
+        one: "%{count} klik"
+        few: "%{count} klikova"
+        other: "%{count} klikova"
     topic_statuses:
       warning:
         help: "Ovo je službeno upozorenje."
@@ -1348,9 +1348,9 @@ sr:
       latest:
         title: "Poslednje"
         title_with_count:
-          few: Poslednje ({{count}})
-          one: Poslednje ({{count}})
-          other: Poslednje ({{count}})
+          one: "Poslednje ({{count}})"
+          few: "Poslednje ({{count}})"
+          other: "Poslednje ({{count}})"
         help: "teme sa nedavnim porukama"
       hot:
         title: "Vruće"
@@ -1365,25 +1365,25 @@ sr:
       unread:
         title: "Nepročitano"
         title_with_count:
-          few: Nepročitane ({{count}})
-          one: Nepročitane ({{count}})
-          other: Nepročitane ({{count}})
+          one: "Nepročitane ({{count}})"
+          few: "Nepročitane ({{count}})"
+          other: "Nepročitane ({{count}})"
         help: "teme koje trenutno posmatrate ili pratite s nepročitanim porukama"
         lower_title_with_count:
-          few: '{{count}} nepročitanih'
-          one: 1 nepročitana
-          other: '{{count}} nepročitanih'
+          one: "1 nepročitana"
+          few: "{{count}} nepročitanih"
+          other: "{{count}} nepročitanih"
       new:
         lower_title_with_count:
-          few: '{{count}} novih'
-          one: 1 nova
-          other: '{{count}} novih'
+          one: "1 nova"
+          few: "{{count}} novih"
+          other: "{{count}} novih"
         lower_title: "novo"
         title: "Novo"
         title_with_count:
-          few: Nove ({{count}})
-          one: Nove (1)
-          other: Nove ({{count}})
+          one: "Nove (1)"
+          few: "Nove ({{count}})"
+          other: "Nove ({{count}})"
         help: "teme otvorene u zadnjih par dana"
       posted:
         title: "Moje poruke"
@@ -1541,7 +1541,6 @@ sr:
           backup:
             title: "Napravi sigurnosnu kopiju"
             confirm: "Želite li pokrenuti novu sigurnosnu kopiju?"
-            without_uploads: "Da (ne uključuj datoteke)"
           destroy:
             title: "Ukloni kopiju"
             confirm: "Jeste li sigurni da želite uništiti ovu sigurnosnu kopiju?"
@@ -1739,13 +1738,13 @@ sr:
           suspect: 'Sumnjivi'
         approved: "Potvrđenji?"
         approved_selected:
-          few: Potvrdi korisnike ({{count}})
-          one: Potvrdi korisnika
-          other: Potvrdi korisnike ({{count}})
+          one: "Potvrdi korisnika"
+          few: "Potvrdi korisnike ({{count}})"
+          other: "Potvrdi korisnike ({{count}})"
         reject_selected:
-          few: odbij korisnike ({{count}})
-          one: odbij korisnika
-          other: odbij korisnike ({{count}})
+          one: "odbij korisnika"
+          few: "odbij korisnike ({{count}})"
+          other: "odbij korisnike ({{count}})"
         titles:
           active: 'Aktivni Korisnici'
           new: 'Novi Korisnici'
@@ -1758,13 +1757,13 @@ sr:
           suspended: 'Suspendovani Korisnici'
           suspect: 'Sumnjivi korisnici'
         reject_successful:
-          few: Uspešno odbio %{count} koriniska.
-          one: Uspešno odbio %{count} koriniska.
-          other: Uspešno odbio %{count} koriniska.
+          one: "Uspešno odbio %{count} koriniska."
+          few: "Uspešno odbio %{count} koriniska."
+          other: "Uspešno odbio %{count} koriniska."
         reject_failures:
-          few: Neuspešno odbio %{count} korisnika.
-          one: Neuspešno odbio %{count} korisnika.
-          other: Neuspešno odbio %{count} korisnika.
+          one: "Neuspešno odbio %{count} korisnika."
+          few: "Neuspešno odbio %{count} korisnika."
+          other: "Neuspešno odbio %{count} korisnika."
         not_verified: "Nije verifikovano"
         check_email:
           title: "Otkrij korisnikovu email adresu"
@@ -1815,17 +1814,17 @@ sr:
         delete: "Obriši Korisnika"
         delete_forbidden_because_staff: "Admini i moderatori ne mogu biti obrisani."
         delete_forbidden:
-          few: Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)
-          one: Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)
-          other: Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)
+          one: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"
+          few: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"
+          other: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"
         cant_delete_all_posts:
-          few: Ne možete obrisati sve poruke. Neke su starije od %{count} dana. ( delete_user_max_post_age podešavanja.)
-          one: Ne možete obrisati sve poruke. Neke su starije od %{count} dana. ( delete_user_max_post_age podešavanja.)
-          other: Ne možete obrisati sve poruke. Neke su starije od %{count} dana. ( delete_user_max_post_age podešavanja.)
+          one: "Ne možete obrisati sve poruke. Neke su starije od %{count} dana. ( delete_user_max_post_age podešavanja.)"
+          few: "Ne možete obrisati sve poruke. Neke su starije od %{count} dana. ( delete_user_max_post_age podešavanja.)"
+          other: "Ne možete obrisati sve poruke. Neke su starije od %{count} dana. ( delete_user_max_post_age podešavanja.)"
         cant_delete_all_too_many_posts:
-          few: Ne možete obrisati sve objave jer korisnik ima više od  %{count} poruka. (delete_all_posts_max)
-          one: Ne možete obrisati sve objave jer korisnik ima više od  %{count} poruka. (delete_all_posts_max)
-          other: Ne možete obrisati sve objave jer korisnik ima više od  %{count} poruka. (delete_all_posts_max)
+          one: "Ne možete obrisati sve objave jer korisnik ima više od  %{count} poruka. (delete_all_posts_max)"
+          few: "Ne možete obrisati sve objave jer korisnik ima više od  %{count} poruka. (delete_all_posts_max)"
+          other: "Ne možete obrisati sve objave jer korisnik ima više od  %{count} poruka. (delete_all_posts_max)"
         delete_confirm: "Jeste li SIGURNI da želite obrisati ovog korisnika? Ovo je trajno!"
         delete_and_block: "Obriši i <b>block</b> ovaj email i IP adresu"
         delete_dont_block: "Samo obriši"
@@ -1965,7 +1964,6 @@ sr:
         enabled: Omogući značku
         icon: Ikona
         image: Slika
-        icon_help: "Koristite ili Font Awesome klase ili URL za neku sliku"
         query: Upitnik Značke (SQL)
         target_posts: Upitnik cilja poruke
         auto_revoke: Svakodnevno pokreni upitnik o povlačenju
@@ -2009,9 +2007,9 @@ sr:
       uploading: "Uploading..."
       quit: "Možda kasnije"
       staff_count:
-        few: Vaša zajednica ima  %{count} članova tima, uključujući i vas.
-        one: 'Tvoja zajednica ima 1 člana tima (tebe). '
-        other: Vaša zajednica ima %{count} članova tima, uključujući i vas.
+        one: "Tvoja zajednica ima 1 člana tima (tebe). "
+        few: "Vaša zajednica ima  %{count} članova tima, uključujući i vas."
+        other: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
       invites:
         add_user: "dodaj"
         none_added: "Nikoga još niste pozvali za člana tima. Jesi li siguran da želiš da nastaviš dalje?"

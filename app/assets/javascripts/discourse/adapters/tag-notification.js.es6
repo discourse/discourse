@@ -1,4 +1,4 @@
-import RESTAdapter from 'discourse/adapters/rest';
+import RESTAdapter from "discourse/adapters/rest";
 
 export default RESTAdapter.extend({
   pathFor(store, type, id) {

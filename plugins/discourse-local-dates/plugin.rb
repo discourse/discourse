@@ -5,7 +5,7 @@
 hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset "javascripts/discourse-local-dates.js"
-register_asset "stylesheets/discourse-local-dates.scss"
+register_asset "stylesheets/common/discourse-local-dates.scss"
 register_asset "moment.js", :vendored_core_pretty_text
 register_asset "moment-timezone.js", :vendored_core_pretty_text
 
@@ -15,7 +15,7 @@ after_initialize do
   on(:reduce_cooked) do |fragment|
     container = fragment.css(".discourse-local-date").first
 
-    if container
+    if container && container.attributes["data-email-preview"]
       preview = container.attributes["data-email-preview"].value
       container.content = preview
     end

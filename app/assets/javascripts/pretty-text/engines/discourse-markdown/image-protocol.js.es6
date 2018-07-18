@@ -1,8 +1,8 @@
 // add image to array if src has an upload
 function addImage(images, token) {
   if (token.attrs) {
-    for(let i=0; i<token.attrs.length; i++) {
-      if (token.attrs[i][1].indexOf('upload://') === 0) {
+    for (let i = 0; i < token.attrs.length; i++) {
+      if (token.attrs[i][1].indexOf("upload://") === 0) {
         images.push([token, i]);
         break;
       }
@@ -11,13 +11,12 @@ function addImage(images, token) {
 }
 
 function rule(state) {
-
   let images = [];
 
   for (let i = 0; i < state.tokens.length; i++) {
     let blockToken = state.tokens[i];
 
-    if (blockToken.tag === 'img') {
+    if (blockToken.tag === "img") {
       addImage(images, blockToken);
     }
 
@@ -27,7 +26,7 @@ function rule(state) {
 
     for (let j = 0; j < blockToken.children.length; j++) {
       let token = blockToken.children[j];
-      if (token.tag === 'img') {
+      if (token.tag === "img") {
         addImage(images, token);
       }
     }
@@ -44,17 +43,18 @@ function rule(state) {
       if (mapped) {
         token.attrs[srcIndex][1] = mapped;
       } else {
-        token.attrs[srcIndex][1] = state.md.options.discourse.getURL('/images/transparent.png');
-        token.attrs.push(['data-orig-src', origSrc]);
+        token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
+          "/images/transparent.png"
+        );
+        token.attrs.push(["data-orig-src", origSrc]);
       }
     });
   }
-
 }
 
 export function setup(helper) {
-  helper.whiteList(['img[data-orig-src]']);
+  helper.whiteList(["img[data-orig-src]"]);
   helper.registerPlugin(md => {
-    md.core.ruler.push('image-protocol', rule);
+    md.core.ruler.push("image-protocol", rule);
   });
 }

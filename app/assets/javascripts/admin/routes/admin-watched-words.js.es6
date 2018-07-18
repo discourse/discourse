@@ -1,4 +1,4 @@
-import WatchedWord from 'admin/models/watched-word';
+import WatchedWord from "admin/models/watched-word";
 
 export default Discourse.Route.extend({
   queryParams: {
@@ -10,13 +10,16 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    controller.set('model', model);
+    controller.set("model", model);
     if (model && model.length) {
-      controller.set('regularExpressions', model[0].get('regularExpressions'));
+      controller.set("regularExpressions", model[0].get("regularExpressions"));
     }
   },
 
   afterModel(watchedWordsList) {
-    this.controllerFor('adminWatchedWords').set('allWatchedWords', watchedWordsList);
+    this.controllerFor("adminWatchedWords").set(
+      "allWatchedWords",
+      watchedWordsList
+    );
   }
 });

@@ -1,7 +1,7 @@
 class AddStarredAtToForumThreadUser < ActiveRecord::Migration[4.2]
   def up
     add_column :forum_thread_users, :starred_at, :datetime
-    User.exec_sql 'update forum_thread_users f set starred_at = COALESCE(created_at, ?)
+    DB.exec 'update forum_thread_users f set starred_at = COALESCE(created_at, ?)
     from
       (
         select f1.forum_thread_id, f1.user_id, t.created_at from forum_thread_users f1

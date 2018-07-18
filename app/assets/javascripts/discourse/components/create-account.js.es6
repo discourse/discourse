@@ -1,15 +1,15 @@
 export default Ember.Component.extend({
-  classNames: ['create-account'],
+  classNames: ["create-account"],
 
   didInsertElement() {
     this._super();
 
-    if ($.cookie('email')) {
-      this.set('email', $.cookie('email'));
+    if ($.cookie("email")) {
+      this.set("email", $.cookie("email"));
     }
 
-    this.$().on('keydown.discourse-create-account', e => {
-      if (!this.get('disabled') && e.keyCode === 13) {
+    this.$().on("keydown.discourse-create-account", e => {
+      if (!this.get("disabled") && e.keyCode === 13) {
         e.preventDefault();
         e.stopPropagation();
         this.sendAction();
@@ -20,6 +20,6 @@ export default Ember.Component.extend({
 
   willDestroyElement() {
     this._super();
-    this.$().off('keydown.discourse-create-account');
+    this.$().off("keydown.discourse-create-account");
   }
 });

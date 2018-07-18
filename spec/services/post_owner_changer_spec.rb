@@ -5,19 +5,19 @@ describe PostOwnerChanger do
     let!(:editor) { Fabricate(:admin) }
     let(:topic) { Fabricate(:topic) }
     let(:user_a) { Fabricate(:user) }
-    let(:p1) { Fabricate(:post, topic_id: topic.id, post_number: 1) }
-    let(:p2) { Fabricate(:post, topic_id: topic.id, post_number: 2) }
+    let(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
+    let(:p2) { Fabricate(:post, topic: topic, post_number: 2) }
     let(:p3) { Fabricate(:post) }
 
     it "raises an error with a parameter missing" do
       expect {
-        described_class.new(post_ids: [p1.id], topic_id: topic.id, new_owner: nil, acting_user: editor)
+        PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: nil, acting_user: editor)
       }.to raise_error(ArgumentError)
     end
 
     it "calls PostRevisor" do
       PostRevisor.any_instance.expects(:revise!)
-      described_class.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
     end
 
     it "changes the user" do
@@ -39,7 +39,7 @@ describe PostOwnerChanger do
     end
 
     it "changes multiple posts" do
-      described_class.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
       p1.reload; p2.reload
       expect(p1.user).not_to eq(nil)
       expect(p1.user).to eq(user_a)
@@ -47,7 +47,7 @@ describe PostOwnerChanger do
     end
 
     it "ignores posts in other topics" do
-      described_class.new(post_ids: [p1.id, p3.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(post_ids: [p1.id, p3.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
       p1.reload; p3.reload
       expect(p1.user).to eq(user_a)
 
@@ -56,7 +56,7 @@ describe PostOwnerChanger do
     end
 
     it "skips creating new post revision if skip_revision is true" do
-      described_class.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor, skip_revision: true).change_owner!
+      PostOwnerChanger.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor, skip_revision: true).change_owner!
       p1.reload; p2.reload
       expect(p1.revisions.size).to eq(0)
       expect(p2.revisions.size).to eq(0)
@@ -76,7 +76,7 @@ describe PostOwnerChanger do
     end
 
     it "changes the owner when the post is deleted" do
-      p4 = Fabricate(:post, topic_id: topic.id, reply_to_post_number: p2.post_number)
+      p4 = Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number)
       PostDestroyer.new(editor, p4).destroy
 
       PostOwnerChanger.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
@@ -84,16 +84,16 @@ describe PostOwnerChanger do
     end
 
     context "sets topic notification level for the new owner" do
-      let(:p4) { Fabricate(:post, post_number: 2, topic_id: topic.id) }
+      let(:p4) { Fabricate(:post, post_number: 2, topic: topic) }
 
       it "'watching' if the first post gets a new owner" do
-        described_class.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
         tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
         expect(tu.notification_level).to eq(3)
       end
 
       it "'tracking' if other than the first post gets a new owner" do
-        described_class.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        PostOwnerChanger.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
         tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
         expect(tu.notification_level).to eq(2)
       end
@@ -129,7 +129,7 @@ describe PostOwnerChanger do
       end
 
       subject(:change_owners) do
-        described_class.new(
+        PostOwnerChanger.new(
           post_ids: [p1.id, p2.id],
           topic_id: topic.id,
           new_owner: user_a,
@@ -180,7 +180,7 @@ describe PostOwnerChanger do
         user_stat = editor.user_stat
 
         expect {
-          described_class.new(
+          PostOwnerChanger.new(
             post_ids: [whisper.id],
             topic_id: topic.id,
             new_owner: Fabricate(:admin),

@@ -27,18 +27,20 @@
   #revision-details {
     padding: 5px;
     margin-top: 10px;
-    border-bottom: 3px solid $primary-low;     
+    border-bottom: 3px solid $primary-low;
   }
 
   #revisions .row:first-of-type {
     margin-top: 10px;
   }
-  ins, .diff-ins {
-    code, img {
+  ins,
+  .diff-ins {
+    code,
+    img {
       border: 2px solid $success;
     }
     img {
-      opacity: .75;
+      opacity: 0.75;
       filter: alpha(opacity=75);
     }
     a {
@@ -46,27 +48,31 @@
       text-decoration: none;
     }
   }
-  img.diff-ins, code.diff-ins {
+  img.diff-ins,
+  code.diff-ins {
     border: 2px solid $success;
   }
   img.diff-ins {
-    opacity: .75;
+    opacity: 0.75;
     filter: alpha(opacity=75);
   }
   .diff-ins {
-    color: dark-light-choose($primary, $secondary);
+    color: $primary;
     background: $success-low;
   }
   ins {
-    color: $success;
+    color: $primary;
     background: $success-low;
+    text-decoration: none;
   }
-  del, .diff-del {
-    code, img {
+  del,
+  .diff-del {
+    code,
+    img {
       border: 2px solid $danger;
     }
     img {
-      opacity: .5;
+      opacity: 0.5;
       filter: alpha(opacity=50);
     }
     a {
@@ -74,19 +80,23 @@
       text-decoration: none;
     }
   }
-  img.diff-del, code.diff-del {
+  img.diff-del,
+  code.diff-del {
     border: 2px solid $danger;
   }
   img.diff-del {
-    opacity: .5;
+    opacity: 0.5;
     filter: alpha(opacity=50);
   }
   .diff-del {
+    color: $primary;
     background: $danger-low;
+    text-decoration: none;
   }
   del {
-    color: $danger;
+    color: $primary;
     background: $danger-low;
+    text-decoration: none;
   }
   span.date {
     font-weight: bold;
@@ -99,16 +109,18 @@
     color: #f00;
   }
   .hidden-revision-either {
-    opacity: .5;
+    opacity: 0.5;
   }
   .hidden-revision-previous .row {
-    div:nth-of-type(1), td:nth-of-type(1) {
-      opacity: .5;
+    div:nth-of-type(1),
+    td:nth-of-type(1) {
+      opacity: 0.5;
     }
   }
   .hidden-revision-current .row {
-    div:nth-of-type(2), td:nth-of-type(2) {
-      opacity: .5;
+    div:nth-of-type(2),
+    td:nth-of-type(2) {
+      opacity: 0.5;
     }
   }
 }

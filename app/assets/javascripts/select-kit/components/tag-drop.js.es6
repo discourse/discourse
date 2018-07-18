@@ -43,10 +43,12 @@ export default ComboBoxComponent.extend({
 
     if (!content.value) {
       if (this.get("noTagsSelected")) {
-        content.label = this.get("noTagsLabel");
+        content.title = this.get("noTagsLabel");
       } else {
-        content.label = this.get("allTagsLabel");
+        content.title = this.get("allTagsLabel");
       }
+    } else {
+      content.title = content.value;
     }
 
     return content;
@@ -77,14 +79,25 @@ export default ComboBoxComponent.extend({
 
   @computed("allTagsUrl", "allTagsLabel", "noTagsUrl", "noTagsLabel")
   collectionHeader(allTagsUrl, allTagsLabel, noTagsUrl, noTagsLabel) {
-    return `
-      <a href="${allTagsUrl}" class="tag-filter">
-        ${allTagsLabel}
-      </a>
-      <a href="${noTagsUrl}" class="tag-filter">
-        ${noTagsLabel}
-      </a>
-    `;
+    let content = "";
+
+    if (this.get("tagId") !== "none") {
+      content += `
+        <a href="${noTagsUrl}" class="tag-filter">
+          ${noTagsLabel}
+        </a>
+      `;
+    }
+
+    if (this.get("hasSelection") || this.get("tagId") === "none") {
+      content += `
+        <a href="${allTagsUrl}" class="tag-filter">
+          ${allTagsLabel}
+        </a>
+      `;
+    }
+
+    return content;
   },
 
   @computed("tag")

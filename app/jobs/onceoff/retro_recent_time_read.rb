@@ -15,7 +15,7 @@ module Jobs
         AND EXISTS (SELECT 1 FROM user_visits visits WHERE visits.user_id = uv1.user_id AND visits.posts_read > 0 LIMIT 1)
       SQL
 
-      UserVisit.exec_sql(sql)
+      DB.exec(sql)
     end
   end
 end

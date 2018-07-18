@@ -29,16 +29,39 @@ nb_NO:
   loading: "Laster"
   powered_by_html: 'Drives av <a href="https://www.discourse.org">Discourse</a>, og ser best ut med JavaScript aktivert'
   log_in: "Logg inn"
+  submit: "Send"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet av forfatter"
+  redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
   themes:
     bad_color_scheme: "Kan ikke oppdatere drakt, ugyldig fargepalett"
+    other_error: "Noe gikk galt under oppdateringen av drakten"
+    error_importing: "En feil oppstod under kloning av git repository, tilgang ble nektet eller repository ikke funnet."
+    settings_errors:
+      invalid_yaml: "YAML koden er ikke gyldig."
+      data_type_not_a_number: "Innstilling `%{name}` typen er ikke støttet. Støttede typer er `integer`, `bool`, `list` og `enum`"
+      name_too_long: "En eller flere innstillinger har for langt navn. Maksimal lengde er 255 tegn"
+      default_value_missing: "Innstilling `%{name}` har ingen standardverdi"
+      default_not_match_type: "Innstilling `%{name}` har en type standardverdi som ikke stemmer med den definerte typen for innstillingen."
+      default_out_range: "Innstilling `%{name}` sin standardverdi er utenfor de tillatte grenseverdiene."
+      enum_value_not_valid: "Den valgte verdien er ikke en av de oppførte valgmulighetene."
+      number_value_not_valid: "Ny verdi er utenfor de tillatte grenseverdiene."
+      number_value_not_valid_min_max: "Den må være mellom %{min} og %{max}."
+      number_value_not_valid_min: "Den må være større enn eller lik %{min}."
+      number_value_not_valid_max: "Den må være mindre enn eller lik %{max}."
+      string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
+      string_value_not_valid_min_max: "Den må være mellom %{min} og %{max} tegn lang."
+      string_value_not_valid_min: "Den må være minst %{min} tegn lang."
+      string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
   emails:
     incoming:
       default_subject: "Tråden trenger en tittel"
       show_trimmed_content: "Vis beskåret innhold"
+      maximum_staged_user_per_email_reached: "Grensen er nådd for antall arrangerte brukere per e-post."
+      no_subject: "(mangler emne)"
+      no_body: "(mangler tekst)"
       errors:
         empty_email_error: "Skjer når den rå e-posten vi mottok var blank."
         no_message_id_error: "Skjer når en e-post ikke har noen «Message-ID»-hode."
@@ -46,15 +69,21 @@ nb_NO:
         no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
         no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-hodet."
         inactive_user_error: "Skjer når senderen ikke er aktiv."
+        silenced_user_error: "Skjer når senderen er dempet."
         bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
         strangers_not_allowed_error: "Skjer når en bruker har forsøkt å opprette en ny tråd i en kategori som vedkommende ikke er medlem av."
         insufficient_trust_level_error: "Skjer når en bruker har forsøkt å opprette en ny tråd i en kategori som vedkommende ikke har påkrevet tillitsnivå for."
         reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
         topic_not_found_error: "Skjer når et svar blir mottatt, men den tilhørende tråden er slettet."
         topic_closed_error: "Skjer når et svar blir mottatt, men den tilhørende tråden er stengt."
+        bounced_email_error: "E-posten er en returnert e-postrapport."
+        screened_email_error: "Skjer når avsenderens e-postadresse allerede var filtrert."
+        unsubscribe_not_allowed: "Skjer når avmelding via e-post ikke er tillatt for denne brukeren."
+        email_not_allowed: "Skjer når e-postadressen ikke er på hvitlisten eller er svartelistet."
       unrecognized_error: "Ukjent feil"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
       too_long_validation: "er begrenset til %{max} tegn; du brukte %{length}."
       invalid_boolean: "Ugyldig boolsk verdi."
@@ -80,6 +109,8 @@ nb_NO:
       not_an_integer: må være ett heltall
       odd: må være oddetall
       record_invalid: 'Validering feilet: %{errors}'
+      max_emojis: "kan ikke ha over %{max_emojis_count} emoji"
+      ip_address_already_screened: "er allerede inkludert i en eksisterende regel"
       restrict_dependent_destroy:
         one: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
         many: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
@@ -101,24 +132,39 @@ nb_NO:
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
+      invalid_choice:
+        one: 'Du spesifiserte det ugyldige valget %{name}'
+        other: 'Du spesifiserte de ugyldige valgene %{name}'
       min_username_length_exists: "Du kan ikke sette minimumslengden på brukernavn over det korteste brukernavnet."
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
       max_username_length_exists: "Du kan ikke sette maksimallengden for brukernavn under det lengste brukernavnet."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
+      s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
+    conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
   invite:
     not_found: "Ditt invitasjonssymbol er ugyldig. Kontakt sidens administrator."
+    not_found_template: |
+      <p>Invitasjonen din til <a href="%{base_url}">%{site_name}</a> er allerede brukt.</p>
+
+      <p>Hvis du husker passordet ditt kan du <a href="%{base_url}/login">Logge Inn</a>.</p>
+
+      <p>Hvis ikke kan du <a href="%{base_url}/password-reset">Nullstille Passordet</a>.</p>
+    user_exists: "Det er ikke nødvendig å invitere <b>%{email}</b>, de <a href='/u/%{username}/summary'>har allerede en konto!</a>"
   bulk_invite:
     file_should_be_csv: "Filen som lastes opp burde være i csv format."
     error: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
+  topic_invite:
+    user_exists: "Beklager, den brukeren er allerede invitert. Du kan ikke invitere samme bruker til et emne flere ganger."
   backup:
     operation_already_running: "En prosess kjører allerede. Kan ikke starte en ny jobb akkurat nå."
     backup_file_should_be_tar_gz: "Backup-filen må være en .tar.gz -arkiveringsfil."
     not_enough_space_on_disk: "Det er ikke nok diskplass til å laste opp denne backupen."
     invalid_filename: "Det sikkerhetskopierte filnavnet inneholder ugyldige tegn. Gyldige tegn er a-z 0-9 . - _."
+  invalid_params: "Du brukte feil parametre i forespørselen: %{message}"
   not_logged_in: "Du må være innlogget for å gjøre det."
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
   invalid_access: "Du har ingen tilgang til denne resurssen."
@@ -127,8 +173,8 @@ nb_NO:
   reading_time: "Lesetid"
   likes: "Likes"
   too_many_replies:
-    one: Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme tråden.
-    other: Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i samme tråd.
+    one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme tråden."
+    other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i samme tråd."
   embed:
     start_discussion: "Start diskusjon"
     continue: "Fortsett diskusjon"
@@ -138,34 +184,46 @@ nb_NO:
     no_hosts: "Vertsnavn for innbygging."
     configure: "Sett opp innbygging"
     more_replies:
-      one: 1 svar til
-      other: '%{count} svar til'
+      one: "1 svar til"
+      other: "%{count} svar til"
     loading: "Laster inn diskusjon…"
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: 1 svar
-      other: '%{count} svar'
+      one: "1 svar"
+      other: "%{count} svar"
   no_mentions_allowed: "Beklager, du kan ikke nevne andre brukere."
   too_many_mentions:
-    one: 'Beklager, du kan bare nevne en bruker i et innlegg. '
-    other: 'Beklager, du kan bare nevne %{count} brukere i et innlegg. '
+    one: "Beklager, du kan bare nevne en bruker i et innlegg. "
+    other: "Beklager, du kan bare nevne %{count} brukere i et innlegg. "
   no_mentions_allowed_newuser: "Beklager, nye brukere kan ikke nevne andre brukere."
+  too_many_mentions_newuser:
+    one: "Beklager, nye brukere kan bare nevne én annen bruker i et innlegg."
+    other: "Beklager, nye brukere kan bare nevne %{count} brukere i et innlegg."
+  no_images_allowed_trust: "Beklager, du kan ikke legge til bilder i et innlegg."
   no_images_allowed: "Beklager, nye brukere kan ikke legge til bilder i et innlegg."
   too_many_images:
-    one: Beklager, nye brukere kan bare legge til ett bilde i et innlegg.
-    other: Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg.
+    one: "Beklager, nye brukere kan bare legge til ett bilde i et innlegg."
+    other: "Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg."
   no_attachments_allowed: "Beklager, nye brukere kan ikke laste opp vedlegg til et innlegg."
   too_many_attachments:
-    one: Beklager, nye brukere kan bare laste opp ett vedlegg til et innlegg.
-    other: Beklager, nye brukere kan bare laste opp %{count} vedlegg til et innlegg.
+    one: "Beklager, nye brukere kan bare laste opp ett vedlegg til et innlegg."
+    other: "Beklager, nye brukere kan bare laste opp %{count} vedlegg til et innlegg."
   no_links_allowed: "Beklager, nye brukere kan ikke publisere innlegg med lenker."
+  links_require_trust: "Beklager, du kan ikke legge til lenker i et innlegg."
+  too_many_links:
+    one: "Beklager, nye brukere kan bare legge til én lenke i et innlegg."
+    other: "Beklager, nye brukere kan bare legge til %{count} lenker i et innlegg."
+  contains_blocked_words: "Innlegget ditt inneholder et ord som ikke er tillatt: %{word}"
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utestengte brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje tråden ble lukket eller slettet mens du leste den?"
+  not_accepting_pms: "Beklager, %{username} ønsker ikke å motta personlige meldinger."
+  max_pm_recepients: "Beklager, du kan bare sende en melding til maksimalt %{recipients_limit} mottakere."
   just_posted_that: "er for likt det du nylig publiserte."
   invalid_characters: "inneholder ugyldige tegn"
+  is_invalid: "virker uklart, er det en komplett setning?"
   next_page: "neste side →"
   prev_page: "← forrige side"
   page_num: "Side %{num}"
@@ -195,17 +253,29 @@ nb_NO:
     user_posts: "Siste innlegg av @%{username}"
     user_topics: "Siste tråder av @%{username}"
     tag: "Tråder med stikkord"
+    badge: "%{display_name} merke på %{site_title}"
   too_late_to_edit: "Det er for lenge siden det innlegget ble skrevet. Det kan ikke lenger redigeres eller slettes."
+  revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
   excerpt_image: "bilde"
   queue:
     delete_reason: "Slettet via køen for innleggmoderering"
+    not_found: "Innlegget ble ikke funnet eller er allerede oppdatert."
   groups:
+    success:
+      bulk_add:
+        one: "%{count} bruker ble lagt til i gruppen."
+        other: "%{count} brukere ble lagt til i gruppen."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' er ikke et gyldig tillitsnivå."
       can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"
+      member_already_exist:
+        one: "'%{username}' er allerede medlem av denne gruppen."
+        other: "Følgende brukere er allerede medlemmer av denne gruppen: %{username}"
       invalid_domain: "'%{domain}' er ikke et gyldig domene."
       invalid_incoming_email: "'%{email}' er ikke en gyldig e-postadresse."
       email_already_used_in_group: "'%{email}' er allerede i bruk av gruppa '%{group_name}'."
       email_already_used_in_category: "'%{email}' er allerede i bruk av kategorien '%{category_name}'."
+      cant_allow_membership_requests: "Du kan ikke tillate forespørsler om medlemskap for en gruppe som ikke har noen eiere."
     default_names:
       everyone: "alle"
       admins: "administratorer"
@@ -216,10 +286,12 @@ nb_NO:
       trust_level_2: "tillitsnivå_2"
       trust_level_3: "tillitsnivå_3"
       trust_level_4: "tillitsnivå_4"
+    request_membership_pm:
+      title: "Ønske om medlemskap i gruppen @%{group_name}"
   education:
     until_posts:
-      one: 1 innlegg
-      other: '%{count} innlegg'
+      one: "1 innlegg"
+      other: "%{count} innlegg"
     'new-topic': |
       Velkommen til %{site_name}. **Takk for at du starter en ny samtale!**
 
@@ -240,6 +312,48 @@ nb_NO:
       - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
 
       For mer informasjon [se retningslinjene våre](/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
+    avatar: |
+      ### Hva med et bilde på kontoen din?
+
+      Du har skrevet et par emner og svar, men profilbildet ditt er ikke like unikt som du er - akkurat nå er det bare en bokstav.
+
+      Har du vurdert å **[besøke brukerprofilen din](%{profile_path})** for å laste opp et bilde som kan representere deg?
+
+      Det er lettere å følge diskusjoner og å finne interessante personer i en samtale om alle har et unikt profilbilde!
+    sequential_replies: |
+      ### Vurder å svare på flere innlegg samtidig
+
+      I stedet for å legge inn flere svar på rad i et emne, anbefaler vi at du skriver et innlegg som kombinerer flere sitater fra tidligere innlegg eller @navn referanser.
+
+      Du kan redigere det forrige svaret ditt om du ønsker å legge til et sitat ved å merke teksten som skal siteres og velge <b>Sitat</b> knappen som spretter opp.
+
+      Det er lettere for alle å lese emner som har færre og mer dyptgående innlegg enn et stort antall små, individuelle svar.
+    dominating_topic: |
+      ### La andre delta i diskusjonen
+
+      Dette emnet er helt klart viktig for deg &ndash; du har skrevet mer enn %{percent}% av svarene her.
+
+      Er du sikker på at du gir andre folk nok tid til å dele sine synspunkter også?
+    get_a_room: |
+      ### Vurder å svare flere personer
+
+      Du har allerede svart %{count}ganger til @%{reply_username} i dette ene emnet.
+
+      Har du vurdert å skrive svar til *andre* folk i diskusjonen også? En bra diskusjon involverer mange stemmer og perspektiv.
+
+      Hvis du vil fortsette en lang samtale med denne ene personen kan det være bedre å [sende dem en personlig melding](/u/%{reply_username}).
+    too_many_replies: |
+      ### Du har nådd grensen for svar i dette emnet
+
+      Vi beklager, men nye brukere er midlertidig begrenset til å skrive %{newuser_max_replies_per_topic} svar per emne.
+
+      I stedet for å legge til et nytt svar, vurder om du kan redigere et tidligere svar, eller besøk et annet emne i mellomtiden.
+    reviving_old_topic: |
+      ### Gjennopplive dette emnet?
+
+      Det siste svaret i dette emnet ble skrevet **%{time_ago}**. Svaret ditt vil flytte emnet tilbake på toppen av listene og varsle alle tidligere deltagere av samtalen.
+
+      Er du sikker på at du ønsker å fortsette denne gamle samtalen?
   activerecord:
     attributes:
       category:
@@ -257,8 +371,12 @@ nb_NO:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Du kan bare legge ved advarsel til personlige meldinger."
               too_many_users: "Du kan bare sende advarsel til en bruker om gangen."
+              cant_send_pm: "Beklager, du kan ikke sende en personlig melding til den brukeren."
               no_user_selected: "Du må velge en gyldig bruker. "
+              reply_by_email_disabled: "Svar via e-post er nå deaktivert."
+              target_user_not_found: "En av brukerne du prøver å sende denne meldingen til ble ikke funnet."
             featured_link:
               invalid: "er ugyldig. Nettadressen bør inneholde http:// eller https://"
               invalid_category: "kan ikke redigeres i denne kategorien."
@@ -272,6 +390,10 @@ nb_NO:
               unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
             ip_address:
               signup_not_allowed: "Registrering er ikke tillatt fra denne kontoen."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Å flytte en primær e-postadresse over til en annen bruker er ikke tillatt."
         color_scheme_color:
           attributes:
             hex:
@@ -291,7 +413,16 @@ nb_NO:
           attributes:
             execute_at:
               in_the_past: "må være i fremtiden."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: 'De følgende interpolasjonsnøklene er ugyldige: "%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "For mange ord for den handlingen"
   user_profile:
+    no_info_me: "<div class='missing-profile'>feltet \"Om Meg\" i profilen din er foreløpig blankt, <a href='/u/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet i profilen sin ennå</div>"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere på tillitsnivå 3 og høyere."
@@ -299,8 +430,24 @@ nb_NO:
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Tråder er kun synlige for administratorer og moderatorer."
+  assets_topic_title: "Ressurser til nettstedets design"
+  assets_topic_body: "Dette emnet, kun synlig for staben, brukes for å lagre bilder og filer som benyttes av nettstedets design. Ikke slett emnet!\n\n\nHer er hvordan du bruker det:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du ønsker å bruke som logoer, ikoner og så videre her. (Bruk knappen merket \"last opp\" i redigeringsverktøyet eller trekk og slipp bilder.)\n3. Publiser svaret ditt.\n4. Høyreklikk på bildene for å kopiere stien til bildet, eller klikk på redigeringsknappen for å vise stien der. Kopier lenken til utklippstavlen.\n5. Lim lenkene til bildene inn der du ønsker å bruke dem i [grunnleggende oppsett](admin/site_settings/category/required).\n\n\nHvis du trenger å laste opp en annen type fil, kan du legge den til i listen `godkjente_filendelser` i instillingene for [Filer](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Velkommen til Discourse"
+    body: |2
+
+      Det første avsnittet av dette festede emnet vil være synlig som en velkomstmelding til alle nye besøkende på hjemmesiden. Det er viktig!
+
+      **Rediger dette** til en kort beskrivelse av samfunnet ditt:
+
+      - Hvem er det ment for?
+      - Hva kan de finner her?
+      - Hvorfor skal de besøke stedet?
+      - Hvor kan de lese mer (lenker, ressurser, etc)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
   lounge_welcome:
     title: "Velkommen til salongen"
     body: |2
@@ -329,15 +476,20 @@ nb_NO:
     replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde lengden under 200 bokstaver. **Inntil du endrer denne beskrivelsen eller oppretter tråder, vil denne kategorien ikke vises på kategorier-siden.**)"
     post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å formulere retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- Hvordan skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal tråder i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
     errors:
+      not_found: "Kategorien finnes ikke!"
       uncategorized_parent: "Ukategorisert kan ikke ha en foreldrekategori"
       self_parent: "En underkategori kan ikke være underlagt seg selv"
       depth: "En underkategori kan ikke underlegges en annen underkategori"
+      invalid_email_in: "'%{email}' er ikke en gyldig e-postadresse."
+      email_already_used_in_group: "'%{email}' er allerede i bruk av gruppen '%{group_name}'."
+      email_already_used_in_category: "'%{email}' er allerede i bruk av kategorien '%{category_name}'."
+      description_incomplete: "Innlegget som beskriver en kategori må ha minst ett avsnitt."
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategorisert"
       has_subcategories: "Kan ikke slette denne kategorien fordi den har underkategorier."
       topic_exists:
-        one: Kan ikke slette denne kategorien fordi den har 1 tråd. Eldste tråd er %{topic_link}.
-        other: Kan ikke slette denne kategorien fordi den har %{count} tråder. Eldste tråd er %{topic_link}.
+        one: "Kan ikke slette denne kategorien fordi den har 1 tråd. Eldste tråd er %{topic_link}."
+        other: "Kan ikke slette denne kategorien fordi den har %{count} tråder. Eldste tråd er %{topic_link}."
       topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall tråder er %{count}."
     uncategorized_description: "Tråder som ikke trenger en kategori eller som ikke passer i noen av de eksisterende kategoriene."
   trust_levels:
@@ -351,87 +503,108 @@ nb_NO:
       title: "aktivt medlem"
     leader:
       title: "leder"
+    change_failed_explanation: "Du forsøkte å nedgradere %{user_name} til '%{new_trust_level}'. Men tillitsnivået til brukeren er allerede '%{current_trust_level}'. %{user_name} vil bli værende ved '%{current_trust_level}' - hvis du ønsker å nedgradere brukeren må du låse fast tillitsnivået først"
+  post:
+    image_placeholder:
+      broken: "Dette bildet fungerer ikke"
   rate_limiter:
+    slow_down: "Du har utført denne handlingen for mange ganger, vennligst prøv igjen senere."
+    too_many_requests: "Du har utført denne handlingen for mange ganger. Vennligst vent %{time_left} før du prøver igjen."
+    by_type:
+      first_day_replies_per_day: "Du har nådd grensen for hvor mange innlegg en ny bruker kan skrive den første dagen. Vennligst vent %{time_left} før du prøver igjen."
+      first_day_topics_per_day: "Du har nådd grensen for hvor mange emner en ny bruker kan lage den første dagen. Vennligst vent %{time_left} før du prøver igjen."
+      create_topic: "Du lager emner i for høyt tempo! Vennligst vent %{time_left} før du prøver igjen."
+      create_post: "Du svarer for raskt. Vennligst vent %{time_left} før du prøver igjen."
+      delete_post: "Du sletter innlegg for fort. Vennligst vent %{time_left} før du prøver på nytt."
+      public_group_membership: "Du melder deg inn/ut av grupper for ofte. Vennligst vent %{time_left} før du prøver igjen."
+      topics_per_day: "Du har nådd grensen for publisering av nye emner. Vennligst vent %{time_left} før du prøver igjen."
+      pms_per_day: "Du har nådd grensen for antall meldinger. Vennligst vent %{time_left} før du prøver igjen."
+      create_like: "Du har nådd grensen for antall likte innlegg. Vennligst vent %{time_left} før du prøver igjen."
+      create_bookmark: "Du har nådd grensen for antall bokmerker. Vennligst vent %{time_left} før du prøver igjen."
+      edit_post: "Du har nådd grensen for antall redigeringer. Vennligst vent %{time_left} før du prøver igjen."
+      live_post_counts: "Du ber om oppdateringer av antall innlegg for ofte. Vennligst vent %{time_left} før du prøver igjen."
+      unsubscribe_via_email: "Du har nådd grensen for antall avmeldinger via e-post. Vennligst vent %{time_left} før du prøver igjen."
+      topic_invitations_per_day: "Du har nådd grensen for invitasjoner til emner. Vennligst vent %{time_left} før du prøver igjen."
     hours:
-      one: 1 time
-      other: '%{count} timer'
+      one: "1 time"
+      other: "%{count} timer"
     minutes:
-      one: 1 minutt
-      other: '%{count} minutter'
+      one: "1 minutt"
+      other: "%{count} minutter"
     seconds:
-      one: 1 sekund
-      other: '%{count} sekunder'
+      one: "1 sekund"
+      other: "%{count} sekunder"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: < 1s
-        other: < %{count}s
+        one: "< 1s"
+        other: "< %{count}s"
       x_seconds:
-        one: 1s
-        other: '%{count}s'
+        one: "1s"
+        other: "%{count}s"
       less_than_x_minutes:
-        one: < 1m
-        other: < %{count}m
+        one: "< 1m"
+        other: "< %{count}m"
       x_minutes:
-        one: 1m
-        other: '%{count}m'
+        one: "1m"
+        other: "%{count}m"
       about_x_hours:
-        one: 1h
-        other: '%{count}h'
+        one: "1h"
+        other: "%{count}h"
       x_days:
-        one: 1d
-        other: '%{count}d'
+        one: "1d"
+        other: "%{count}d"
       about_x_months:
-        one: 1mnd
-        other: '%{count}mnd'
+        one: "1mnd"
+        other: "%{count}mnd"
       x_months:
-        one: 1mnd
-        other: '%{count}mnd'
+        one: "1mnd"
+        other: "%{count}mnd"
       about_x_years:
-        one: 1å
-        other: '%{count}å'
+        one: "1å"
+        other: "%{count}å"
       over_x_years:
-        one: '> 1år'
-        other: '> %{count}y'
+        one: "> 1år"
+        other: "> %{count}y"
       almost_x_years:
-        one: 1år
-        other: '%{count}år'
+        one: "1år"
+        other: "%{count}år"
     distance_in_words_verbose:
       half_a_minute: "Nå nettopp"
       less_than_x_seconds:
-        one: nå nettopp
-        other: nå nettopp
+        one: "nå nettopp"
+        other: "nå nettopp"
       x_seconds:
-        one: 1 sekund siden
-        other: '%{count} sekunder siden'
+        one: "1 sekund siden"
+        other: "%{count} sekunder siden"
       less_than_x_minutes:
-        one: mindre enn 1 minutt siden
-        other: mindre enn %{count} minutter siden
+        one: "mindre enn 1 minutt siden"
+        other: "mindre enn %{count} minutter siden"
       x_minutes:
-        one: 1 minutt siden
-        other: '%{count} minutter siden'
+        one: "1 minutt siden"
+        other: "%{count} minutter siden"
       about_x_hours:
-        one: 1 time siden
-        other: '%{count} timer siden'
+        one: "1 time siden"
+        other: "%{count} timer siden"
       x_days:
-        one: 1 dag siden
-        other: '%{count} dager siden'
+        one: "1 dag siden"
+        other: "%{count} dager siden"
       about_x_months:
-        one: ca 1 måned siden
-        other: ca %{count} måneder siden
+        one: "ca 1 måned siden"
+        other: "ca %{count} måneder siden"
       x_months:
-        one: 1 måned siden
-        other: '%{count} måneder siden'
+        one: "1 måned siden"
+        other: "%{count} måneder siden"
       about_x_years:
-        one: omtrent 1 år siden
-        other: omtrent %{count} år siden
+        one: "omtrent 1 år siden"
+        other: "omtrent %{count} år siden"
       over_x_years:
-        one: over et år siden
-        other: over  %{count} år siden
+        one: "over et år siden"
+        other: "over  %{count} år siden"
       almost_x_years:
-        one: nesten 1 år siden
-        other: nesten %{count} år siden
+        one: "nesten 1 år siden"
+        other: "nesten %{count} år siden"
   password_reset:
     no_token: "Beklager, den lenken for å endre passord er for gammel. Velg logg inn-knappen bruk 'Jeg glemte passordet mitt' for å motta en ny lenke."
     choose_new: "Velg et nytt passord"
@@ -441,10 +614,15 @@ nb_NO:
     title: 'Tilbakestill passord'
     success: "Du har endret passordet og er nå logget inn."
     success_unapproved: "Du har endret ditt passord."
+  email_login:
+    invalid_token: "Beklager, denne lenken for innlogging via e-post er for gammel. Bruk 'Logg Inn' knappen og deretter 'Jeg har glemt passordet' for å motta en oppdatert lenke."
+    title: "E-post innlogging"
   change_email:
     confirmed: "E-postaddressen din er blitt oppdatert."
     please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
+    error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
+    already_done: "Beklager, denne godkjenningslenken er ikke lenger gyldig. Kanskje e-postadressen din allerede er byttet?"
     authorizing_old:
       title: "Takk for at du bekreftet din nåværende e-postadresse"
       description: "Vi sender deg en e-post til din nye adresse for bekreftelse."
@@ -455,50 +633,74 @@ nb_NO:
     continue_button: "Fortsett til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
+    missing_session: "Vi klarer ikke å se om kontoen din ble laget, vennligst sjekk om cookies/kapsler er aktivert i nettleseren."
+    activated: "Beklager, denne kontoen er allerede aktivert."
     admin_confirm:
       title: "Bekreft admin-konto"
+      description: "Er du sikker på at du ønsker at <b>%{target_username}</b> skal være en administrator?"
       grant: "Tildel admin-tilgang"
+      complete: "<b>%{target_username}</b> er nå en administrator."
       back_to: "Gå tilbake til %{title}"
   post_action_types:
     off_topic:
       title: 'Urelatert'
       description: 'Dette innlegget er ikke relevant for den aktuelle diskusjonen som fastsatt av tittelen og det første innlegget og burde sannsynligvis flyttes til et annet sted. '
+      short_description: 'Ikke relevant til diskusjonen'
       long_form: 'markerte dette som urelevant'
     spam:
       title: 'Spam'
+      description: 'Dette innlegget er reklame, eller vandalisme. Det er ikke nyttig eller relevant for dette emnet.'
+      short_description: 'Dette er reklame eller vandalisme'
       long_form: 'markerte dette som spam'
       email_title: '"%{title}" ble rapportert som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Upassende'
       description: 'Dette innlegget har innhold som for en fornuftig person vil kunne være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til denne gemenskapen</a>.'
+      short_description: 'Et brudd på <a href="/guidelines">retningslinjene for samfunnet</a>'
       long_form: 'markerte dette som upassende'
     notify_user:
       title: 'Send en melding til @{{username}}'
+      description: 'Jeg ønsker å snakke med denne personen direkte og personlig om innlegget.'
+      short_description: 'Jeg ønsker å snakke med denne personen direkte og personlig om innlegget.'
       long_form: 'sendt melding til bruker'
       email_title: 'Ditt innlegg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noe annet"
+      description: 'Dette innlegget krever oppmerksomhet fra staben av en annen grunn enn listen over.'
+      short_description: 'Krever oppmerksomhet fra staben av en annen grunn'
+      long_form: 'flagget dette for oppfølging av staben'
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bokmerke'
       description: 'Bokmerk dette innlegget'
+      short_description: 'Lag bokmerke for dette innlegget'
       long_form: 'bokmerket dette innlegget'
     like:
       title: 'Lik'
       description: 'Liker dette innlegget'
+      short_description: 'Lik dette innlegget'
       long_form: 'likte dette'
     vote:
       title: 'Stem'
       description: 'Stem på dette innlegget'
+      short_description: 'Stem på dette innlegget'
       long_form: 'stemte for dette innlegget'
   user_activity:
+    no_default:
+      self: "Du har ingen aktivitet enda."
+      others: "Ingen aktivitet."
     no_bookmarks:
+      self: "Du har ingen bokmerker, hvis du lager bokmerker for innlegg er det lettere å finne dem igjen senere."
       others: "Ingen bokmerker."
     no_likes_given:
       self: "Du har ikke likt noen innlegg."
       others: "Ingen likte innlegg. "
+    no_replies:
+      self: "Du har ikke svart på noen innlegg."
+      others: "Ingen svar."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -510,10 +712,12 @@ nb_NO:
       long_form: 'markerte dette som upassende'
     notify_moderators:
       title: "Noe annet"
+      description: 'Emnet krever oppfølging av staben basert på <a href="/guidelines">retningslinjene</a>, <a href="%{tos_url}">brukeravtale</a>, eller en annen grunn ikke i listen over.'
       long_form: 'Markert for mederering'
       email_title: 'Tråden "%{title}" krever oppmerksomhet fra en moderator'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>Innlegget ditt ble flagget av samfunnet. Vennligst <a href="%{path}">sjekk meldingene dine</a>.</p>'
     user_must_edit: '<p>Dette innlegget ble rapportert av gemenskapen og er midlertidig skjult.</p>'
   archetypes:
     regular:
@@ -523,6 +727,11 @@ nb_NO:
       message:
         make: "Denne tråden er nå et banner. Det vil vises øverst på hver side til brukeren lukker det."
         remove: "Denne tråden er ikke lenger et banner. Det vil ikke lenger vises øverst på hver side."
+  unsubscribed:
+    title: "Avmeldt!"
+    description: "<b>%{email}</b> er avmeldt. For å endre på oppsettet for e-post kan du <a href='%{url}'>besøke brukerinnstilingene</a>."
+    topic_description: "For å melde deg på %{link} igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
+    private_topic_description: "For å melde deg på igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
   unsubscribe:
     title: "Avmeld"
     stop_watching_topic: "Slutt å følge denne tråden, %{link}"
@@ -531,12 +740,22 @@ nb_NO:
     mailing_list_mode: "Slå av e-postlistemodus"
     disable_digest_emails: "Slutt å sende meg oppsummerings-eposter"
     all: "Ikke send meg noen e-poster fra %{sitename}"
+    different_user_description: "Du er allerede logget inn som en annen bruker enn den vi sendte e-posten til. Vennligst logg ut eller bytt til anonym modus før du prøver igjen."
+    not_found_description: "Beklager, vi klarte ikke finne denne avmeldingen. Det kan tenkes lenken i e-posten har gått ut på dato?"
     log_out: "Logg ut"
   user_api_key:
+    title: "Autoriser tilgang fra applikasjon"
+    authorize: "Autoriser"
     read: "les"
     read_write: "les/skriv"
+    description: "\"%{application_name}\" ber om følgende tilgang til kontoen din:"
+    no_trust_level: "Beklager, du har ikke det nødvendige tillitsnivået for tilgang til API for brukere"
+    generic_error: "Beklager, vi kan ikke utstede API nøkler for brukere, denne funksjonen kan være deaktivert av administratoren"
     scopes:
       message_bus: "Sanntidsoppdateringer"
+      notifications: "Les og rydd varsler"
+      push: "Push varslinger til eksterne tjenester "
+      session_info: "Les informasjon om brukersesjon"
       read: "Les alt"
       write: "Skriv alt"
   reports:
@@ -545,9 +764,22 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Antall besøk"
     signups:
-      title: "nye brukere"
       xaxis: "Dag"
-      yaxis: "Antall nye brukere"
+    new_contributors:
+      title: "Nye Bidragsytere"
+      xaxis: "Dag"
+      yaxis: "Antall nye bidragsytere"
+      description: "Antall brukere som skrev sitt første innlegg i denne perioden"
+    dau_by_mau:
+      title: "DAB/MAB"
+      xaxis: "Dag"
+      yaxis: "DAB/MAB"
+      description: "Antall medlemmer som logget inn siste døgn delt på antall brukere som logget inn siste måned – returnerer en % som indikerer samfunnets evne til å engasjere brukere. Sikt mot >30%."
+    daily_engaged_users:
+      title: "Daglige Engasjerte Brukere"
+      xaxis: "Dag"
+      yaxis: "Engasjerte Brukere"
+      description: "Antall brukere som har likt eller skrevet innlegg siste døgn"
     profile_views:
       title: "Visninger av brukerprofil"
       xaxis: "Dag"
@@ -556,10 +788,12 @@ nb_NO:
       title: "Tråder"
       xaxis: "Dag"
       yaxis: "Antall nye tråder"
+      description: "Nye emner opprettet i denne perioden"
     posts:
       title: "Innlegg"
       xaxis: "Dag"
       yaxis: "Antall nye innlegg"
+      description: "Nye innlegg opprettet i denne perioden"
     likes:
       title: "Likes"
       xaxis: "Dag"
@@ -580,11 +814,31 @@ nb_NO:
       title: "Brukere per tillitsnivå"
       xaxis: "Tillitsnivå"
       yaxis: "Antall brukere"
+    users_by_type:
+      title: "Brukere per Type"
+      xaxis: "Type"
+      yaxis: "Antall Brukere"
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Utestengt
+        silenced: Dempet
+    trending_search:
+      title: Søketrender
+      labels:
+        term: Uttrykk
+        searches: Søk
+        click_through: Klikkrate
     emails:
       title: "Emailer sendt"
       xaxis: "Dag"
       yaxis: "Antall emailer"
     user_to_user_private_messages:
+      title: "Bruker-til-Bruker (ekskludert svar)"
+      xaxis: "Dag"
+      yaxis: "Antall meldinger"
+    user_to_user_private_messages_with_replies:
+      title: "Bruker-til-Bruker (med svar)"
       xaxis: "Dag"
       yaxis: "Antall meldinger"
     system_private_messages:
@@ -629,7 +883,9 @@ nb_NO:
     page_view_crawler_reqs:
       title: "Web crawlere"
       xaxis: "Dag"
+      yaxis: "Sidevisninger fra Søkeroboter"
     page_view_total_reqs:
+      title: "Sidevisninger"
       xaxis: "Dag"
       yaxis: "Totalt antall sidevisninger"
     page_view_logged_in_mobile_reqs:
@@ -637,7 +893,9 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Sidevisninger på mobil av innloggede"
     page_view_anon_mobile_reqs:
+      title: "Anonyme Sidevisninger"
       xaxis: "Dag"
+      yaxis: "Mobile Anonyme Sidevisninger"
     http_background_reqs:
       title: "Bakgrunn"
       xaxis: "Dag"
@@ -671,42 +929,114 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Totalt"
     mobile_visits:
-      title: "Brukerbesøk"
       xaxis: "Dag"
       yaxis: "Antall besøk"
+    web_crawlers:
+      title: "Forespørsler fra Søkeroboter"
+      xaxis: "Brukeragent"
+      yaxis: "Sidevisninger"
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
+    gc_warning: 'Serveren din bruker standardinstillingene for garbage collection i Ruby, dette gir ikke den beste ytelsen. Les dette emnet om hvordan man optimaliserer ytelse: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
+    sidekiq_warning: 'Sidekiq kjører ikke. Mange oppgaver, som å sende e-post, kjøres i bakgrunnen av sidekiq. Vennligst verifiser at minst én sidekiq-prosess kjører. <a href="https://github.com/mperham/sidekiq" target="_blank">Lær mer om Sidekiq her</a>.'
+    queue_size_warning: 'Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere.'
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
+    google_oauth2_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Google OAuth2 (enable_google_oauth2_logins), men verdiene for klientid og klienthemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Les denne guiden for å lære mer</a>.'
+    facebook_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Facebook (enable_facebook_logins), men verdiene for app-id og app-hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Les denne guiden for å lære mer</a>.'
+    twitter_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Twitter (enable_twitter_logins), men verdiene for nøkkel og hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Les denne guiden for å lære mer</a>.'
+    github_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med GitHub (enable_github_logins), men verdiene for klientid og hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Les denne guiden for å lære mer</a>.'
+    s3_config_warning: 'Denne serveren er konfigurert for å tillate opplasting av filer til s3, men minst en av de følgende verdiene er ikke satt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Les "How to set up image uploads to S3?" for å lære mer</a>.'
+    s3_backup_config_warning: 'Denne serveren er konfigurert for å sende backup til s3, men minst en av de følgende verdiene er ikke satt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Les "How to set up image uploads to S3?" for å lære mer</a>.'
+    image_magick_warning: 'Denne serveren er konfigurert for å lage miniatyrer for store bilder, men ImageMagick er ikke installert. Installer ImageMagick via operativsystemets pakkehåndtering eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">last ned den siste versjonen</a>.'
+    failing_emails_warning: 'Det er %{num_failed_jobs} e-postjobber som har feilet. Sjekk instillingene i app.yml og verifiser at serverinstillingene for e-post er riktige. <a href="/sidekiq/retries" target="_blank">Se de feilede jobbene i Sidekiq</a>.'
+    subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
+    email_polling_errored_recently:
+      one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='/logs' target='_blank'>loggene</a> for mer detaljer."
+      other: "Henting av e-post har generert %{count} feil de siste 24 timene. Se i <a href='/logs' target='_blank'>loggene</a> for mer detaljer."
+    missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
+    bad_favicon_url: "Favicon filen blir ikke lastet inn. Sjekk instillingen for favicon_url i <a href='/admin/site_settings'>Instillingene for nettstedet</a>."
+    poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
+    poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='/admin/site_settings/category/email'>POP3 instillingene</a>. "
+    force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
+    default_locale: "Standardspråket for denne instansen av Discourse"
     allow_user_locale: "Tillat brukere å velge eget språk"
+    set_locale_from_accept_language_header: "sett språket i grensesnittet for anonyme brukere basert på hva nettleseren deres rapporterer. (EKSPERIMENTELL, fungerer ikke med anonym cache) "
+    support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
+    min_personal_message_post_length: "Minste lengde i antall tegn for en melding"
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
+    topic_featured_link_enabled: "Tillat publisering av lenker som emner."
+    show_topic_featured_link_in_digest: "Vis den fremhevede lenken fra et emne i e-postsammendrag."
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
+    min_personal_message_title_length: "Minste lengde i antall tegn for en meldingstittel"
+    max_emojis_in_title: "Maksimalt antall emojier i en emnetittel"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
+    search_tokenize_chinese_japanese_korean: "Tving søk til å tokenisere Kinesisk/Japansk/Koreansk selv på nettsteder uten KJK"
+    search_prefer_recent_posts: "Hvis søking er tregt på et stort forum, vil dette valget forsøke å søke i en index av de nyeste innleggene først"
+    search_recent_posts_size: "Hvor mange innlegg som beholdes i indeksen"
+    log_search_queries: "Logg søkeord som benyttes av brukerne"
+    search_query_log_max_size: "Maksimalt antall søkeord som beholdes"
+    allow_uncategorized_topics: "Tillat opprettelse av ukategoriserte emner. ADVARSEL: Hvis det finnes ukategoriserte emner, må du sette en kategori på dem før du skrur denne instillingen av."
     allow_duplicate_topic_titles: "Tillat flere tråder med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"
     educate_until_posts: "Når brukeren begynner å skrive sine første (n) innlegg, vis pop-up med opplæringspanelet for nye brukere i redigeringspanelet."
     title: "Navnet på denne siden, slik du vil ha det i title-taggen."
     site_description: "Beskriv siden med en setning, vil brukes i beskrivelses-merkelappen."
+    contact_email: "E-postadresser for nøkkelpersonen ansvarlig for dette nettstedet. Brukes for kritiske varsler, i tillegg til på /about kontaktskjema for saker som haster."
     contact_url: "Kontakt-URL for siden. Brukes på /om siden."
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
+    download_remote_images_max_days_old: "Ikke last ned eksterne bilder for innlegg som er eldre enn dette antall dager."
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
     editing_grace_period: "(n) sekunder etter publisering vil redigering ikke opprette en ny versjon i redigeringsloggen."
+    editing_grace_period_max_diff: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 0 og 1)"
+    editing_grace_period_max_diff_high_trust: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 2 og opp)"
+    staff_edit_locks_post: "Innlegg vil bli sperret for redigering av brukere hvis de har vært redigert av staben "
     post_edit_time_limit: "Forfatteren kan redigere eller slette innleggene sine (n) minutter etter opprettelse. Sett til 0 for uendelig."
     edit_history_visible_to_public: "La alle se tidligere versjoner av et redigert innlegg. Hvis det er slått av, kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
     max_image_width: "Maksimal thumbnail bredde for bilder i et innlegg"
     max_image_height: "Maksimal thumbnail høyde for bilder i et innlegg"
+    fixed_category_positions: "Hvis denne er valgt kan du manuelt bestemme rekkefølgen i listen over kategorier. Ellers vil kategoriene sorteres automatisk basert på aktivitet."
+    fixed_category_positions_on_create: "Hvis denne er valgt vil den fastsatte rekkefølgen på kategorier også gjelde for dialogboksen når man lager nye emner (krever fixed_category_positions)."
+    add_rel_nofollow_to_user_content: "Legg til rel nofollow på alle lenker som publiseres av brukere, bortsett fra interne lenker (inkludert foreldredomener). Hvis du endrer denne, må du rebake alle innlegg med: \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "En liste over domener hvor nofollow ikke skal legges til i lenker. example.com vil automatisk også tillate sub.example.com. Som et minimum bør du legge til dette nettstedets domene slik at søkeroboter klarer å finne alt innholdet. Hvis andre deler av nettstedet ditt ligger under forskjellige domener bør de også legges til."
     post_excerpt_maxlength: "Maksimal lengde på utdrag eller oppsummering av innlegg."
+    show_pinned_excerpt_mobile: "Vis utdrag fra festede emner i mobil visning."
+    show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
+    post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
+    onebox_domains_blacklist: "En liste over domener som aldri vil bli forsøkt oneboxet."
+    inline_onebox_domains_whitelist: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
+    enable_inline_onebox_on_all_domains: "Ignorer inline_onebox_domain_whitelist innstillingen og tillat inline onebox på alle domener."
+    max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
+    logo_url: "Bildet som skal brukes som logo øverst til venstre på nettstedet, må være en bred rektangel. Hvis instillingen er blank brukes kun tittelteksten."
+    digest_logo_url: "Alternativt bilde for logoen som brukes i toppen av nettstedets oppsummeringer på e-post. Må være et bredt rektangulært bilde. Bør ikke være i SVG format. Hvis instillingen er blank, brukes `logo_url` i stedet."
+    logo_small_url: "Den lille logoen øverst til venstre på nettstedet, bør være et kvadratisk bilde. Dette bildet brukes når man blar nedover på sidene. Hvis den er blank brukes et symbol for 'Hjem' i stedet."
+    favicon_url: "Bildet som skal være favicon for nettstedet, se http://en.wikipedia.org/wiki/Favicon, for å fungere via et CDN må filen være i png-format"
+    mobile_logo_url: "URL for tilpasset logo som skal brukes på den mobile versjonen av nettstedet. Hvis blank, brukes `logo_url` i stedet, for eksempel: http://example.com/uploads/default/logo.png "
+    large_icon_url: "Bildet som skal brukes som logo/splash på Android. Anbefalt størrelse er 512x512 piksler."
     apple_touch_icon_url: "Ikon brukt på Apple touch enheter. Anbefalt størrelse er 144px x 144px."
+    notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
+    email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
+    email_subject: "Tilpasset formatering av emnefeltet i standard e-poster. Se også https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 "
+    force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
+    same_site_cookies: "Bruk Same-Site cookies/kapsler, de eliminerer alle former for Cross Site Request Forgery på nettlesere som støtter dem (Lax eller Strict). Avarsel: Strict vil kun fungere på nettsteder som tvinger innlogging og bruker SSO."
+    summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
+    summary_posts_required: "Minste antall innlegg før 'Sammendrag for Emnet' aktiveres"
+    summary_likes_required: "Minste antall 'likes' i et emne før 'Sammendrag for Emnet' aktiveres"
     summary_max_results: "Maksimalt antall innlegg som returneres av 'Oppsummer denne tråden'"
+    num_spam_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam av minst num_users_to_silence_new_user forskjellige brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
+    num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
+    num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
+    num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
+    notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
     allow_moderators_to_create_categories: "Tillat moderatorer å opprette nye kategorier"
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall tråder som vises i standard oppsummering av mest populære tråder."
@@ -730,6 +1060,8 @@ nb_NO:
     faq_url: "Hvis du har O-S-S på et annet nettsted du gjerne vil bruke, skriv inn nettadressen her."
     tos_url: "Dersom du har et bruksvilkår-dokument et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
     privacy_policy_url: "Dersom du har en personvernerklæring et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
+    auto_silence_fast_typers_on_first_post: "Demp brukere automatisk hvis de skriver innlegg raskere enn min_first_post_typing_time"
+    auto_silence_fast_typers_max_trust_level: "Maksimalt tillitsnivå for automatisk demping av raske innlegg"
     delete_user_max_post_age: "Ikke tillatt å slette brukere hvor deres første innlegg er mer enn (x) dager gamle."
     email_editable: "Tillat brukere å endre e-postadressen sin etter registrering."
     digest_topics: "Maksimalt antall populære tråder som skal vises i oppsummerings-e-posten."
@@ -786,23 +1118,23 @@ nb_NO:
     closed_enabled: "Denne tråden er nå lukket. Nye svar er ikke lenger tillatt."
     closed_disabled: "Denne tråden er nå åpen. Nye svar er tillatt."
     autoclosed_enabled_days:
-      one: 'Denne tråden ble automatisk lukket etter 1 dag. Nye svar er ikke lenger tillatt. '
-      other: 'Denne tråden ble automatisk lukket etter %{count} dager. Nye svar er ikke lenger tillatt. '
+      one: "Denne tråden ble automatisk lukket etter 1 dag. Nye svar er ikke lenger tillatt. "
+      other: "Denne tråden ble automatisk lukket etter %{count} dager. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_hours:
-      one: 'Denne tråden ble automatisk lukket etter 1 time. Nye svar er ikke lenger tillatt. '
-      other: 'Denne tråden ble automatisk lukket etter %{count} timer. Nye svar er ikke lenger tillatt. '
+      one: "Denne tråden ble automatisk lukket etter 1 time. Nye svar er ikke lenger tillatt. "
+      other: "Denne tråden ble automatisk lukket etter %{count} timer. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_minutes:
-      one: 'Denne tråden ble automatisk lukket etter 1 minutt. Nye svar er ikke lenger tillatt. '
-      other: 'Denne tråden ble automatisk lukket etter %{count} minutter. Nye svar er ikke lenger tillatt. '
+      one: "Denne tråden ble automatisk lukket etter 1 minutt. Nye svar er ikke lenger tillatt. "
+      other: "Denne tråden ble automatisk lukket etter %{count} minutter. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_days:
-      one: 'Denne tråden ble automatisk lukket 1 dag etter siste innlegg. Nye svar er ikke lenger tillatt. '
-      other: 'Denne tråden ble automatisk lukket %{count} dager etter siste svar. Nye svar er ikke lenger tillatt. '
+      one: "Denne tråden ble automatisk lukket 1 dag etter siste innlegg. Nye svar er ikke lenger tillatt. "
+      other: "Denne tråden ble automatisk lukket %{count} dager etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_hours:
-      one: 'Denne tråden ble automatisk lukket 1 time etter siste innlegg. Nye svar er ikke lenger tillatt. '
-      other: 'Denne tråden ble automatisk lukket %{count} timer etter siste svar. Nye svar er ikke lenger tillatt. '
+      one: "Denne tråden ble automatisk lukket 1 time etter siste innlegg. Nye svar er ikke lenger tillatt. "
+      other: "Denne tråden ble automatisk lukket %{count} timer etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_minutes:
-      one: 'Denne tråden ble automatisk lukket 1 minutt etter siste innlegg. Nye svar er ikke lenger tillatt. '
-      other: 'Denne tråden ble automatisk lukket %{count} minutter etter siste svar. Nye svar er ikke lenger tillatt. '
+      one: "Denne tråden ble automatisk lukket 1 minutt etter siste innlegg. Nye svar er ikke lenger tillatt. "
+      other: "Denne tråden ble automatisk lukket %{count} minutter etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_disabled: "Denne tråden er nå åpen. Tråden kan svares på. "
     autoclosed_disabled_lastpost: "Denne tråden er åpne. Nye svar er tillatt."
     pinned_enabled: "Denne tråden er nå festet. Den vil vises øverst i kategorien sin inntil festet fjernes for alle av en administrator eller for individuelle brukere av dem selv."
@@ -1137,7 +1469,6 @@ nb_NO:
             description: "Et ikon som representerer nettstedet ditt i nettlesere. Bør se bra ut i så liten størrelse som 32 ganger 32 piksler."
           apple_touch_icon_url:
             label: "Stort ikon"
-            description: "Et ikon som representerer nettstedet ditt på moderne enheter og ser bra ut i større størrelser. Anbefalt størrelse er minst 144 ganger 144 piksler."
       homepage:
         title: "Hjemmeside"
         fields:
@@ -1145,7 +1476,5 @@ nb_NO:
             choices:
               latest:
                 label: "Siste tråder"
-              categories:
-                label: "Kategorier"
       emoji:
         title: "Emoji"

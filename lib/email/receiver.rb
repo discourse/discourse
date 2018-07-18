@@ -21,6 +21,7 @@ module Email
     class BouncedEmailError            < ProcessingError; end
     class NoBodyDetectedError          < ProcessingError; end
     class NoSenderDetectedError        < ProcessingError; end
+    class FromReplyByAddressError      < ProcessingError; end
     class InactiveUserError            < ProcessingError; end
     class SilencedUserError            < ProcessingError; end
     class BadDestinationAddress        < ProcessingError; end
@@ -107,6 +108,7 @@ module Email
     def process_internal
       raise BouncedEmailError  if is_bounce?
       raise NoSenderDetectedError if @from_email.blank?
+      raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
       user = find_user(@from_email)
@@ -201,6 +203,10 @@ module Email
       end
 
       true
+    end
+
+    def is_from_reply_by_email_address?
+      Email::Receiver.reply_by_email_address_regex.match(@from_email)
     end
 
     def verp
@@ -723,9 +729,13 @@ module Email
       reply_addresses.flatten!
       reply_addresses.select!(&:present?)
       reply_addresses.map! { |a| Regexp.escape(a) }
-      reply_addresses.map! { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})") }
-
-      /#{reply_addresses.join("|")}/
+      reply_addresses.map! { |a| a.gsub("\+", "\+?") }
+      reply_addresses.map! { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})?") }
+      if reply_addresses.empty?
+        /$a/ # a regex that can never match
+      else
+        /#{reply_addresses.join("|")}/
+      end
     end
 
     def group_incoming_emails_regex

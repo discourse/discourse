@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
-  has_one :user_second_factor, dependent: :destroy
+  has_many :user_second_factors, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -208,7 +208,8 @@ class User < ActiveRecord::Base
   def self.username_available?(username, email = nil)
     lower = username.downcase
     return false if reserved_username?(lower)
-    return true  if !User.exists?(username_lower: lower)
+    return true  if DB.exec(User::USERNAME_EXISTS_SQL, username: lower) == 0
+
     # staged users can use the same username since they will take over the account
     email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
   end
@@ -312,6 +313,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
   end
 
+  def enqueue_member_welcome_message
+    return unless SiteSetting.send_tl1_welcome_message?
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
+  end
+
   def change_username(new_username, actor = nil)
     UsernameChanger.change(self, new_username, actor)
   end
@@ -376,16 +382,18 @@ class User < ActiveRecord::Base
 
   def unread_notifications_of_type(notification_type)
     # perf critical, much more efficient than AR
-    sql = "
-       SELECT COUNT(*) FROM notifications n
-       LEFT JOIN topics t ON n.topic_id = t.id
-       WHERE
-        t.deleted_at IS NULL AND
-        n.notification_type = :type AND
-        n.user_id = :user_id AND
-        NOT read"
+    sql = <<~SQL
+        SELECT COUNT(*)
+          FROM notifications n
+     LEFT JOIN topics t ON t.id = n.topic_id
+         WHERE t.deleted_at IS NULL
+           AND n.notification_type = :type
+           AND n.user_id = :user_id
+           AND NOT read
+    SQL
 
-    User.exec_sql(sql, user_id: id, type: notification_type).getvalue(0, 0).to_i
+    # to avoid coalesce we do to_i
+    DB.query_single(sql, user_id: id, type: notification_type)[0].to_i
   end
 
   def unread_private_messages
@@ -393,24 +401,25 @@ class User < ActiveRecord::Base
   end
 
   def unread_notifications
-    @unread_notifications ||=
-      begin
-        # perf critical, much more efficient than AR
-        sql = "
-           SELECT COUNT(*) FROM notifications n
-           LEFT JOIN topics t ON n.topic_id = t.id
-           WHERE
-            t.deleted_at IS NULL AND
-            n.notification_type <> :pm AND
-            n.user_id = :user_id AND
-            NOT read AND
-            n.id > :seen_notification_id"
+    @unread_notifications ||= begin
+      # perf critical, much more efficient than AR
+      sql = <<~SQL
+          SELECT COUNT(*)
+            FROM notifications n
+       LEFT JOIN topics t ON t.id = n.topic_id
+           WHERE t.deleted_at IS NULL
+             AND n.notification_type <> :pm
+             AND n.user_id = :user_id
+             AND n.id > :seen_notification_id
+             AND NOT read
+      SQL
 
-        User.exec_sql(sql, user_id: id,
-                           seen_notification_id: seen_notification_id,
-                           pm:  Notification.types[:private_message])
-          .getvalue(0, 0).to_i
-      end
+      DB.query_single(sql,
+        user_id: id,
+        seen_notification_id: seen_notification_id,
+        pm:  Notification.types[:private_message]
+    )[0].to_i
+    end
   end
 
   def total_unread_notifications
@@ -439,12 +448,11 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
-    # publish last notification json with the message so we
-    # can apply an update
-    notification = notifications.visible.order('notifications.id desc').first
+    # publish last notification json with the message so we can apply an update
+    notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
-    sql = "
+    sql = (<<~SQL).freeze
        SELECT * FROM (
          SELECT n.id, n.read FROM notifications n
          LEFT JOIN topics t ON n.topic_id = t.id
@@ -467,26 +475,26 @@ class User < ActiveRecord::Base
        ORDER BY n.id DESC
        LIMIT 20
       ) AS y
-    "
+    SQL
 
-    recent = User.exec_sql(sql,
+    recent = DB.query(sql,
       user_id: id,
       type: Notification.types[:private_message]
-    ).values.map! do |id, read|
-      [id.to_i, read]
+    ).map! do |r|
+      [r.id, r.read]
     end
 
-    MessageBus.publish("/notification/#{id}",
-                       { unread_notifications: unread_notifications,
-                         unread_private_messages: unread_private_messages,
-                         total_unread_notifications: total_unread_notifications,
-                         read_first_notification: read_first_notification?,
-                         last_notification: json,
-                         recent: recent,
-                         seen_notification_id: seen_notification_id
-                       },
-                       user_ids: [id] # only publish the notification to this user
-    )
+    payload = {
+      unread_notifications: unread_notifications,
+      unread_private_messages: unread_private_messages,
+      total_unread_notifications: total_unread_notifications,
+      read_first_notification: read_first_notification?,
+      last_notification: json,
+      recent: recent,
+      seen_notification_id: seen_notification_id,
+    }
+
+    MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
   # A selection of people to autocomplete on @mention
@@ -534,7 +542,7 @@ class User < ActiveRecord::Base
   def new_user_posting_on_first_day?
     !staff? &&
     trust_level < TrustLevel[2] &&
-    (self.first_post_created_at.nil? || self.first_post_created_at >= 24.hours.ago)
+    (trust_level == TrustLevel[0] || self.first_post_created_at.nil? || self.first_post_created_at >= 24.hours.ago)
   end
 
   def new_user?
@@ -842,7 +850,7 @@ class User < ActiveRecord::Base
     if start_date && end_date
       result = result.group("date(users.created_at)")
       result = result.where("users.created_at >= ? AND users.created_at <= ?", start_date, end_date)
-      result = result.order('date(users.created_at)')
+      result = result.order("date(users.created_at)")
     end
 
     if group_id
@@ -1071,6 +1079,10 @@ class User < ActiveRecord::Base
     custom_fields[User::FROM_STAGED]
   end
 
+  def mature_staged?
+    from_staged? && self.created_at && self.created_at < 1.day.ago
+  end
+
   protected
 
   def badge_grant
@@ -1149,12 +1161,12 @@ class User < ActiveRecord::Base
   end
 
   USERNAME_EXISTS_SQL = <<~SQL
-  (SELECT users.id AS user_id FROM users
+  (SELECT users.id AS id, true as is_user FROM users
   WHERE users.username_lower = :username)
 
   UNION ALL
 
-  (SELECT groups.id AS group_id FROM groups
+  (SELECT groups.id, false as is_user FROM groups
   WHERE lower(groups.name) = :username)
   SQL
 
@@ -1162,11 +1174,14 @@ class User < ActiveRecord::Base
     username_format_validator || begin
       lower = username.downcase
 
-      existing = User.exec_sql(
+      existing = DB.query(
         USERNAME_EXISTS_SQL, username: lower
-      ).to_a.first
+      )
 
-      if will_save_change_to_username? && existing.present? && existing["user_id"] != self.id
+      user_id = existing.select { |u| u.is_user }.first&.id
+      same_user = user_id && user_id == self.id
+
+      if will_save_change_to_username? && existing.present? && !same_user
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end
@@ -1194,7 +1209,7 @@ class User < ActiveRecord::Base
     end
 
     if values.present?
-      exec_sql("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
+      DB.exec("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
     end
   end
 
@@ -1207,7 +1222,9 @@ class User < ActiveRecord::Base
       .where(active: false)
       .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
       .where("NOT admin AND NOT moderator")
-      .where("NOT EXISTS (SELECT 1 FROM topic_allowed_users WHERE user_id = users.id LIMIT 1)")
+      .where("NOT EXISTS
+              (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id)
+            ")
       .limit(200)
       .find_each do |user|
       begin

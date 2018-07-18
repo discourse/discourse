@@ -1,14 +1,14 @@
 {{plugin-outlet name="admin-dashboard-top"}}
 
-<div class="section-top">
-  {{#if showVersionChecks}}
-  <div class="version-checks">
+{{#if showVersionChecks}}
+  <div class="section-top">
+    <div class="version-checks">
       {{partial 'admin/templates/version-checks'}}
-      {{partial 'admin/templates/dashboard-problems'}}
+    </div>
   </div>
-  {{/if}}
-  <div class='clearfix'></div>
-</div>
+{{/if}}
+
+{{partial 'admin/templates/dashboard-problems'}}
 
 <div class="community-health section">
   <div class="section-title">
@@ -79,43 +79,40 @@
         </div>
       {{/conditional-loading-section}}
     </div>
+    {{#link-to "adminReports"}}
+      {{i18n "admin.dashboard.all_reports"}}
+    {{/link-to}}
 
-    {{#dashboard-inline-table dataSourceNames="users_by_type,users_by_trust_level" lastRefreshedAt=lastRefreshedAt as |context|}}
-      <tr>
-        {{#each context.report.data as |data|}}
-          <td>
-            <a href="/admin/users/list/{{data.key}}">
-              {{number data.y}}
-            </a>
-          </td>
-        {{/each}}
-      </tr>
-    {{/dashboard-inline-table}}
+    <div class="user-metrics">
+    {{dashboard-inline-table dataSourceNames="users_by_type" lastRefreshedAt=lastRefreshedAt}}
 
+    {{dashboard-inline-table dataSourceNames="users_by_trust_level" lastRefreshedAt=lastRefreshedAt}}
+    </div>
     {{#conditional-loading-section isLoading=isLoading title=(i18n "admin.dashboard.backups")}}
       <div class="misc">
-        <div class="durability">
-          {{#if currentUser.admin}}
-            <div class="backups">
-              <h3 class="durability-title">
-                <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
-              </h3>
+        {{#if shouldDisplayDurability}}
+          <div class="durability">
+            {{#if currentUser.admin}}
+              <div class="backups">
+                <h3 class="durability-title">
+                  <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
+                </h3>
+                <p>
+                  {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
+                  <br />
+                  {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                </p>
+              </div>
+            {{/if}}
+
+            <div class="uploads">
+              <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
               <p>
-                {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
-                <br />
-                {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
               </p>
             </div>
-          {{/if}}
-
-          <div class="uploads">
-            <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
-            <p>
-              {{diskSpace.uploads_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.uploads_free}})
-            </p>
           </div>
-        </div>
-
+        {{/if}}
 
         <div class="last-dashboard-update">
           <div>
@@ -128,58 +125,57 @@
         </div>
       </div>
 
-        <p>
-          {{i18n 'admin.dashboard.find_old'}} {{#link-to 'admin.dashboard'}}{{i18n "admin.dashboard.old_link"}}{{/link-to}}
-        </p>
-
+      <p>
+        {{i18n 'admin.dashboard.find_old'}} {{#link-to 'admin.dashboard'}}{{i18n "admin.dashboard.old_link"}}{{/link-to}}
+      </p>
     {{/conditional-loading-section}}
   </div>
 
   <div class="section-column">
     <div class="top-referred-topics">
-    {{#dashboard-inline-table
-        dataSourceNames="top_referred_topics"
-        lastRefreshedAt=lastRefreshedAt
-        limit=8
-        as |context|}}
-      {{#each context.report.data as |data|}}
-        <tr>
-        <td class='left'>
-          <a href="{{data.topic_url}}">
-            {{data.topic_title}}
-          </a>
-        </td>
-        <td>
-          {{data.num_clicks}}
-        </td>
-        </tr>
-      {{/each}}
-    {{/dashboard-inline-table}}
+      {{#dashboard-table
+          dataSourceNames="top_referred_topics"
+          lastRefreshedAt=lastRefreshedAt
+          limit=8
+          as |context|}}
+        {{#each context.report.data as |data|}}
+          <tr>
+            <td class='left'>
+              <a href="{{data.topic_url}}">
+                {{data.topic_title}}
+              </a>
+            </td>
+            <td>
+              {{data.num_clicks}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/dashboard-table}}
     </div>
 
     <div class="trending-search">
-    {{#dashboard-inline-table
-      limit=8
-      dataSourceNames="trending_search"
-      isEnabled=logSearchQueriesEnabled
-      disabledLabel="admin.dashboard.reports.trending_search.disabled"
-      startDate=lastWeek
-      endDate=endDate as |context|}}
-      {{#each context.report.data as |data|}}
-        <tr>
-        <td class='left'>
-          {{data.term}}
-        </td>
-        <td>
-          {{number data.unique_searches}}
-        </td>
-        <td>
-          {{data.ctr}}
-        </td>
-        </tr>
-      {{/each}}
-    {{/dashboard-inline-table}}
+      {{#dashboard-table
+        limit=8
+        dataSourceNames="trending_search"
+        isEnabled=logSearchQueriesEnabled
+        disabledLabel="admin.dashboard.reports.trending_search.disabled"
+        startDate=lastWeek
+        endDate=endDate as |context|}}
+        {{#each context.report.data as |data|}}
+          <tr>
+            <td class='left'>
+              {{data.term}}
+            </td>
+            <td>
+              {{number data.unique_searches}}
+            </td>
+            <td>
+              {{data.ctr}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/dashboard-table}}
       {{{i18n "admin.dashboard.reports.trending_search.more"}}}
-  </div>
+    </div>
   </div>
 </div>

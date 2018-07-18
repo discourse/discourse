@@ -55,6 +55,10 @@ module JsLocaleHelper
 
       # merge translations (plugin translations overwrite default translations)
       if translations[locale_str] && plugin_translations(locale_str)
+        translations[locale_str]['js'] ||= {}
+        translations[locale_str]['admin_js'] ||= {}
+        translations[locale_str]['wizard_js'] ||= {}
+
         translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if plugin_translations(locale_str)['js']
         translations[locale_str]['admin_js'].deep_merge!(plugin_translations(locale_str)['admin_js']) if plugin_translations(locale_str)['admin_js']
         translations[locale_str]['wizard_js'].deep_merge!(plugin_translations(locale_str)['wizard_js']) if plugin_translations(locale_str)['wizard_js']
@@ -229,10 +233,10 @@ module JsLocaleHelper
   def self.with_context
     @mutex.synchronize do
       yield @ctx ||= begin
-               ctx = MiniRacer::Context.new
-               ctx.load("#{Rails.root}/lib/javascripts/messageformat.js")
-               ctx
-             end
+        ctx = MiniRacer::Context.new(timeout: 15000)
+        ctx.load("#{Rails.root}/lib/javascripts/messageformat.js")
+        ctx
+      end
     end
   end
 

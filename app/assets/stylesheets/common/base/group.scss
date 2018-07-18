@@ -1,6 +1,6 @@
 // We should try to reuse the user page HTML for groups when possible
 // To style group content differently, use the existing classes with a .group parent class.
-// For example: .group .user-navigation 
+// For example: .group .user-navigation
 
 .group-details-container {
   background: $primary-very-low;
@@ -26,7 +26,6 @@
     margin: 0 0 5px 0;
     vertical-align: middle;
   }
-
 }
 
 .group-info {
@@ -175,7 +174,7 @@ table.group-members {
       vertical-align: middle;
     }
 
-    input[type='checkbox'] {
+    input[type="checkbox"] {
       vertical-align: middle;
     }
   }

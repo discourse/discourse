@@ -36,13 +36,14 @@ describe PostAlerter do
   context "private message" do
     it "notifies for pms correctly" do
       pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user_id: pm.user_id)
+      op = Fabricate(:post, user: pm.user)
       pm.allowed_users << pm.user
       PostAlerter.post_created(op)
-      reply = Fabricate(:post, user_id: pm.user_id, topic_id: pm.id, reply_to_post_number: 1)
+
+      reply = Fabricate(:post, user: pm.user, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply)
 
-      reply2 = Fabricate(:post, topic_id: pm.id, reply_to_post_number: 1)
+      reply2 = Fabricate(:post, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply2)
 
       # we get a green notification for a reply
@@ -52,7 +53,7 @@ describe PostAlerter do
 
       Notification.destroy_all
 
-      reply3 = Fabricate(:post, topic_id: pm.id)
+      reply3 = Fabricate(:post, topic: pm)
       PostAlerter.post_created(reply3)
 
       # no notification cause we are tracking
@@ -60,7 +61,7 @@ describe PostAlerter do
 
       Notification.destroy_all
 
-      reply4 = Fabricate(:post, topic_id: pm.id, reply_to_post_number: 1)
+      reply4 = Fabricate(:post, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply4)
 
       # yes notification cause we were replied to
@@ -70,7 +71,7 @@ describe PostAlerter do
 
     it "triggers :before_create_notifications_for_users" do
       pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user_id: pm.user_id, topic: pm)
+      op = Fabricate(:post, user: pm.user, topic: pm)
       user1 = Fabricate(:user)
       user2 = Fabricate(:user)
       group = Fabricate(:group, users: [user2])
@@ -267,8 +268,15 @@ describe PostAlerter do
     end
 
     it 'notifies a user by username' do
+      topic = Fabricate(:topic)
+
       expect {
-        create_post_with_alerts(raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+        2.times do
+          create_post_with_alerts(
+            raw: '[quote="EvilTrout, post:1"]whatup[/quote]',
+            topic: topic
+          )
+        end
       }.to change(evil_trout.notifications, :count).by(1)
     end
 
@@ -299,6 +307,10 @@ describe PostAlerter do
     let(:post1) { create_post }
     let(:user) { post1.user }
     let(:linking_post) { create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}") }
+
+    before do
+      SiteSetting.queue_jobs = false
+    end
 
     it "will notify correctly on linking" do
       linking_post
@@ -371,6 +383,10 @@ describe PostAlerter do
 
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout') }
     let(:topic) { mention_post.topic }
+
+    before do
+      SiteSetting.queue_jobs = false
+    end
 
     it 'notifies a user' do
       expect {
@@ -622,7 +638,6 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
 
     it "pushes nothing to suspended users" do
-      SiteSetting.queue_jobs = true
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       evil_trout.update_columns(suspended_till: 1.year.from_now)
@@ -640,6 +655,7 @@ describe PostAlerter do
     end
 
     it "correctly pushes notifications if configured correctly" do
+      SiteSetting.queue_jobs = false
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       2.times do |i|

@@ -18,19 +18,39 @@ export default ComboBoxComponent.extend({
     const details = topic.get("details");
 
     if (details.get("can_invite_to")) {
-      content.push({ id: "invite", icon: "users", name: I18n.t("topic.invite_reply.title") });
+      content.push({
+        id: "invite",
+        icon: "users",
+        name: I18n.t("topic.invite_reply.title")
+      });
     }
 
     if (topic.get("bookmarked")) {
-      content.push({ id: "bookmark", icon: "bookmark", name: I18n.t("bookmarked.clear_bookmarks") });
+      content.push({
+        id: "bookmark",
+        icon: "bookmark",
+        name: I18n.t("bookmarked.clear_bookmarks")
+      });
     } else {
-      content.push({ id: "bookmark", icon: "bookmark", name: I18n.t("bookmarked.title") });
+      content.push({
+        id: "bookmark",
+        icon: "bookmark",
+        name: I18n.t("bookmarked.title")
+      });
     }
 
-    content.push({ id: "share", icon: "link", name: I18n.t("topic.share.title") });
+    content.push({
+      id: "share",
+      icon: "link",
+      name: I18n.t("topic.share.title")
+    });
 
     if (details.get("can_flag_topic")) {
-      content.push({ id: "flag", icon: "flag", name: I18n.t("topic.flag_topic.title") });
+      content.push({
+        id: "flag",
+        icon: "flag",
+        name: I18n.t("topic.flag_topic.title")
+      });
     }
 
     return content;
@@ -47,16 +67,20 @@ export default ComboBoxComponent.extend({
 
     const refresh = () => this.deselect(this.get("selection"));
 
-    switch(value) {
+    switch (value) {
       case "invite":
         this.attrs.showInvite();
         refresh();
         break;
       case "bookmark":
-        topic.toggleBookmark().then(() => refresh() );
+        topic.toggleBookmark().then(() => refresh());
         break;
       case "share":
-        this.appEvents.trigger("share:url", topic.get("shareUrl"), $("#topic-footer-buttons"));
+        this.appEvents.trigger(
+          "share:url",
+          topic.get("shareUrl"),
+          $("#topic-footer-buttons")
+        );
         refresh();
         break;
       case "flag":

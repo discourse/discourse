@@ -13,13 +13,13 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  gem 'actionmailer', '~> 5.1'
-  gem 'actionpack', '~> 5.1'
-  gem 'actionview', '~> 5.1'
-  gem 'activemodel', '~> 5.1'
-  gem 'activerecord', '~> 5.1'
-  gem 'activesupport', '~> 5.1'
-  gem 'railties', '~> 5.1'
+  gem 'actionmailer', '5.2'
+  gem 'actionpack', '5.2'
+  gem 'actionview', '5.2'
+  gem 'activemodel', '5.2'
+  gem 'activerecord', '5.2'
+  gem 'activesupport', '5.2'
+  gem 'railties', '5.2'
   gem 'sprockets-rails'
   gem 'seed-fu'
 end
@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.47'
+gem 'onebox', '1.8.51'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -78,7 +78,8 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 gem 'oj'
-gem 'pg', '~> 0.21.0'
+gem 'pg'
+gem 'mini_sql'
 gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
@@ -93,7 +94,7 @@ gem 'tilt', require: false
 
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'highline', require: false
+gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 
 # Gems used only for assets and not required in production environments by default.
@@ -115,7 +116,7 @@ group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
-  gem 'fabrication', '2.9.8', require: false
+  gem 'fabrication', require: false
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
@@ -184,6 +185,8 @@ if ENV["IMPORT"] == "1"
   gem 'sqlite3', '~> 1.3.13'
   gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
   gem 'reverse_markdown'
+  gem 'tiny_tds'
 end
 
 gem 'webpush', require: false
+gem 'exifr', '1.2.5'

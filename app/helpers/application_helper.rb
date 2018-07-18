@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
 require_dependency 'guardian'
@@ -62,17 +63,17 @@ module ApplicationHelper
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
-        path.gsub!(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+        path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
       else
         path = "#{GlobalSetting.s3_cdn_url}#{path}"
       end
 
       if is_brotli_req?
-        path.gsub!(/\.([^.]+)$/, '.br.\1')
+        path = path.gsub(/\.([^.]+)$/, '.br.\1')
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
-      path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
+      path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
     if Rails.env == "development"
@@ -262,7 +263,7 @@ module ApplicationHelper
   end
 
   def application_logo_url
-    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
+    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url).presence || SiteSetting.logo_url
   end
 
   def login_path
@@ -328,7 +329,7 @@ module ApplicationHelper
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
-    result = ""
+    result = +""
     erbs.each { |erb| result << render(file: erb) }
     result.html_safe
   end

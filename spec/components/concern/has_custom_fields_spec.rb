@@ -4,8 +4,8 @@ describe HasCustomFields do
 
   context "custom_fields" do
     before do
-      Topic.exec_sql("create temporary table custom_fields_test_items(id SERIAL primary key)")
-      Topic.exec_sql("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
+      DB.exec("create temporary table custom_fields_test_items(id SERIAL primary key)")
+      DB.exec("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
 
       class CustomFieldsTestItem < ActiveRecord::Base
         include HasCustomFields
@@ -17,8 +17,8 @@ describe HasCustomFields do
     end
 
     after do
-      Topic.exec_sql("drop table custom_fields_test_items")
-      Topic.exec_sql("drop table custom_fields_test_item_custom_fields")
+      DB.exec("drop table custom_fields_test_items")
+      DB.exec("drop table custom_fields_test_item_custom_fields")
 
       # import is making my life hard, we need to nuke this out of orbit
       des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
@@ -75,7 +75,7 @@ describe HasCustomFields do
       # should be casted right after saving
       expect(test_item.custom_fields["a"]).to eq("0")
 
-      CustomFieldsTestItem.exec_sql("UPDATE custom_fields_test_item_custom_fields SET value='1' WHERE custom_fields_test_item_id=? AND name='a'", test_item.id)
+      DB.exec("UPDATE custom_fields_test_item_custom_fields SET value='1' WHERE custom_fields_test_item_id=? AND name='a'", test_item.id)
 
       # still the same, did not load
       expect(test_item.custom_fields["a"]).to eq("0")
@@ -98,6 +98,15 @@ describe HasCustomFields do
     end
 
     it "handles arrays properly" do
+
+      CustomFieldsTestItem.register_custom_field_type "array", [:integer]
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "array" => ["1"] }
+      test_item.save
+
+      db_item = CustomFieldsTestItem.find(test_item.id)
+      expect(db_item.custom_fields).to eq("array" => [1])
+
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = { "a" => ["b", "c", "d"] }
       test_item.save

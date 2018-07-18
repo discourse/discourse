@@ -294,10 +294,25 @@ module Discourse
   def self.keep_readonly_mode(key)
     # extend the expiry by 1 minute every 30 seconds
     unless Rails.env.test?
-      Thread.new do
-        while readonly_mode?
-          $redis.expire(key, READONLY_MODE_KEY_TTL)
-          sleep 30.seconds
+      @dbs ||= Set.new
+      @dbs << RailsMultisite::ConnectionManagement.current_db
+      @threads ||= {}
+
+      unless @threads[key]&.alive?
+        @threads[key] = Thread.new do
+          while @dbs.size > 0
+            sleep 30
+
+            @dbs.each do |db|
+              RailsMultisite::ConnectionManagement.with_connection(db) do
+                if readonly_mode?(key)
+                  $redis.expire(key, READONLY_MODE_KEY_TTL)
+                else
+                  @dbs.delete(db)
+                end
+              end
+            end
+          end
         end
       end
     end
@@ -309,8 +324,8 @@ module Discourse
     true
   end
 
-  def self.readonly_mode?
-    recently_readonly? || $redis.mget(*READONLY_KEYS).compact.present?
+  def self.readonly_mode?(keys = READONLY_KEYS)
+    recently_readonly? || $redis.mget(*keys).compact.present?
   end
 
   def self.last_read_only
@@ -435,9 +450,7 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
-    # note: all this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
-    current_db = RailsMultisite::ConnectionManagement.current_db
-    RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
+    # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
     $redis._client.reconnect
@@ -489,7 +502,7 @@ module Discourse
       while true
         begin
           sleep GlobalSetting.connection_reaper_interval
-          reap_connections(GlobalSetting.connection_reaper_age, GlobalSetting.connection_reaper_max_age)
+          reap_connections(GlobalSetting.connection_reaper_age)
         rescue => e
           Discourse.warn_exception(e, message: "Error reaping connections")
         end
@@ -497,13 +510,38 @@ module Discourse
     end
   end
 
-  def self.reap_connections(idle, max_age)
+  def self.reap_connections(idle)
     pools = []
     ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
 
     pools.each do |pool|
-      pool.drain(idle.seconds, max_age.seconds)
+      # reap recovers connections that were aborted
+      # eg a thread died or a dev forgot to check it in
+      # flush removes idle connections
+      # after fork we have "deadpools" so ignore them, they have been discarded
+      # so @connections is set to nil
+      if pool.connections
+        pool.reap
+        pool.flush(idle)
+      end
     end
+  end
+
+  def self.deprecate(warning)
+    location = caller_locations[1]
+    warning = "Deprecation Notice: #{warning}\nAt: #{location.label} #{location.path}:#{location.lineno}"
+    if Rails.env == "development"
+      STDERR.puts(warning)
+    end
+
+    digest = Digest::MD5.hexdigest(warning)
+    redis_key = "deprecate-notice-#{digest}"
+
+    if !$redis.without_namespace.get(redis_key)
+      Rails.logger.warn(warning)
+      $redis.without_namespace.setex(redis_key, 3600, "x")
+    end
+    warning
   end
 
   SIDEKIQ_NAMESPACE ||= 'sidekiq'.freeze

@@ -68,15 +68,15 @@ class BasicGroupSerializer < ApplicationSerializer
 
   private
 
-    def staff?
-      @staff ||= scope.is_staff?
-    end
+  def staff?
+    @staff ||= scope.is_staff?
+  end
 
-    def user_group_ids
-      @options[:user_group_ids]
-    end
+  def user_group_ids
+    @options[:user_group_ids]
+  end
 
-    def owner_group_ids
-      @options[:owner_group_ids]
-    end
+  def owner_group_ids
+    @options[:owner_group_ids]
+  end
 end

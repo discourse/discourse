@@ -1,5 +1,5 @@
-import { ajax } from 'discourse/lib/ajax';
-import RestModel from 'discourse/models/rest';
+import { ajax } from "discourse/lib/ajax";
+import RestModel from "discourse/models/rest";
 
 const TopicTimer = RestModel.extend({});
 
@@ -15,7 +15,7 @@ TopicTimer.reopenClass({
 
     return ajax({
       url: `/t/${topicId}/timer`,
-      type: 'POST',
+      type: "POST",
       data
     });
   }

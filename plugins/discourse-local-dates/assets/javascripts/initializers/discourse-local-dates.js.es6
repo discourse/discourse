@@ -1,9 +1,11 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
+import { registerTooltip } from "discourse/lib/tooltip";
 
 function initializeDiscourseLocalDates(api) {
   api.decorateCooked($elem => {
     $(".discourse-local-date", $elem).applyLocalDates();
+    registerTooltip($(".discourse-local-date", $elem));
   });
 
   api.addToolbarPopupMenuOptionsCallback(() => {
@@ -14,7 +16,7 @@ function initializeDiscourseLocalDates(api) {
     };
   });
 
-  api.modifyClass('controller:composer', {
+  api.modifyClass("controller:composer", {
     actions: {
       insertDiscourseLocalDate() {
         showModal("discourse-local-dates-create-modal").setProperties({

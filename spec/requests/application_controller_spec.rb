@@ -14,4 +14,22 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to('/login?authComplete=true')
     end
   end
+
+  describe 'build_not_found_page' do
+    describe 'topic not found' do
+      it 'should return 404 and show Google search' do
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to include(I18n.t('page_not_found.search_google'))
+      end
+
+      it 'should not include Google search if login_required is enabled' do
+        SiteSetting.login_required = true
+        sign_in(Fabricate(:user))
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to_not include('google.com/search')
+      end
+    end
+  end
 end

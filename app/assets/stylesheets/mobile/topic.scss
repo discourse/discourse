@@ -1,4 +1,6 @@
-.post-info a {color: #aaa;}
+.post-info a {
+  color: #aaa;
+}
 
 .topic-meta-data-inside {
   float: right;
@@ -6,12 +8,9 @@
   margin-right: 5px;
 }
 
-
-.post-info  {
+.post-info {
   display: inline-block;
 }
-
-.edits {margin-right: 5px;}
 
 #topic-title {
   //margin-bottom: 20px;
@@ -26,15 +25,20 @@
     }
   }
   .title-category-wrapper {
-    margin-top:5px;
+    margin-top: 5px;
   }
-  .private-message-glyph { display: none; }
+  .private-message-glyph {
+    display: none;
+  }
 }
 
-.private_message #topic-title .private-message-glyph { display: inline; }
+.private_message #topic-title .private-message-glyph {
+  display: inline;
+}
 
 /* both blocks that appear under the standard post control buttons */
-.notification-options, .pinned-options {
+.notification-options,
+.pinned-options {
   float: left;
   margin-top: 0;
   padding-top: 1px;
@@ -138,9 +142,9 @@
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  $tertiary-low;
-    background-color:  $tertiary-low;
-    transition: width .75s;
+    border-right: 1px solid $tertiary-low;
+    background-color: $tertiary-low;
+    transition: width 0.75s;
   }
 }
 
@@ -164,9 +168,16 @@
   position: absolute;
 }
 
-.topic-post:last-of-type {padding-bottom: 40px;}
+.topic-post:last-of-type {
+  padding-bottom: 40px;
+}
 
-sup sup, sub sup, sup sub, sub sub { top: 0; }
+sup sup,
+sub sup,
+sup sub,
+sub sub {
+  top: 0;
+}
 
 // inline editing of title on mobile
 #topic-title .title-wrapper {
@@ -192,9 +203,13 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline {
-  .start-date, .now-date {
+  .start-date,
+  .now-date {
     font-size: $font-up-1;
     padding: 5px;
+  }
+  .topic-category {
+    margin-bottom: 0.5rem;
   }
 }
 

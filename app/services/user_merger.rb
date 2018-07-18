@@ -1,7 +1,9 @@
 class UserMerger
-  def initialize(source_user, target_user)
+  def initialize(source_user, target_user, acting_user = nil)
     @source_user = source_user
     @target_user = target_user
+    @acting_user = acting_user
+    @source_primary_email = source_user.email
   end
 
   def merge!
@@ -19,15 +21,17 @@ class UserMerger
 
     delete_source_user
     delete_source_user_references
+    log_merge
   end
 
   protected
 
   def update_username
-    Jobs::UpdateUsername.new.execute(user_id: @source_user.id,
-                                     old_username: @source_user.username,
-                                     new_username: @target_user.username,
-                                     avatar_template: @target_user.avatar_template)
+    UsernameChanger.update_username(user_id: @source_user.id,
+                                    old_username: @source_user.username,
+                                    new_username: @target_user.username,
+                                    avatar_template: @target_user.avatar_template,
+                                    asynchronous: false)
   end
 
   def move_posts
@@ -85,11 +89,13 @@ class UserMerger
             limit_reached = EXCLUDED.limit_reached
     SQL
 
-    GivenDailyLike.exec_sql(sql,
-                            source_user_id: @source_user.id,
-                            target_user_id: @target_user.id,
-                            max_likes_per_day: SiteSetting.max_likes_per_day,
-                            action_type_id: PostActionType.types[:like])
+    DB.exec(
+      sql,
+      source_user_id: @source_user.id,
+      target_user_id: @target_user.id,
+      max_likes_per_day: SiteSetting.max_likes_per_day,
+      action_type_id: PostActionType.types[:like]
+    )
   end
 
   def merge_post_timings
@@ -103,7 +109,7 @@ class UserMerger
             AND t.topic_id = s.topic_id AND t.post_number = s.post_number
     SQL
 
-    PostTiming.exec_sql(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
   end
 
   def merge_user_visits
@@ -119,7 +125,7 @@ class UserMerger
             AND t.visited_at = s.visited_at
     SQL
 
-    UserVisit.exec_sql(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
   end
 
   def update_site_settings
@@ -132,7 +138,7 @@ class UserMerger
 
   def update_user_stats
     # topics_entered
-    UserStat.exec_sql(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, target_user_id: @target_user.id)
       UPDATE user_stats
       SET topics_entered = (
         SELECT COUNT(topic_id)
@@ -143,7 +149,7 @@ class UserMerger
     SQL
 
     # time_read and days_visited
-    UserStat.exec_sql(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, target_user_id: @target_user.id)
       UPDATE user_stats
       SET time_read  = COALESCE(x.time_read, 0),
         days_visited = COALESCE(x.days_visited, 0)
@@ -158,7 +164,7 @@ class UserMerger
     SQL
 
     # posts_read_count
-    UserStat.exec_sql(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, target_user_id: @target_user.id)
       UPDATE user_stats
       SET posts_read_count = (
         SELECT COUNT(1)
@@ -172,7 +178,7 @@ class UserMerger
     SQL
 
     # likes_given, likes_received, new_since, read_faq, first_post_created_at
-    UserStat.exec_sql(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE user_stats AS t
       SET likes_given         = t.likes_given + s.likes_given,
         likes_received        = t.likes_received + s.likes_received,
@@ -185,7 +191,7 @@ class UserMerger
   end
 
   def merge_user_attributes
-    User.exec_sql(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE users AS t
       SET created_at              = LEAST(t.created_at, s.created_at),
         updated_at                = LEAST(t.updated_at, s.updated_at),
@@ -209,7 +215,7 @@ class UserMerger
       WHERE t.id = :target_user_id AND s.id = :source_user_id
     SQL
 
-    UserProfile.exec_sql(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE user_profiles AS t
       SET location           = COALESCE(t.location, s.location),
         website              = COALESCE(t.website, s.website),
@@ -347,8 +353,12 @@ class UserMerger
 
   def delete_source_user
     @source_user.reload
-    @source_user.update_attribute(:admin, false)
-    UserDestroyer.new(Discourse.system_user).destroy(@source_user)
+    @source_user.update_attributes(
+      admin: false,
+      email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"
+    )
+
+    UserDestroyer.new(Discourse.system_user).destroy(@source_user, quiet: true)
   end
 
   def delete_source_user_references
@@ -361,6 +371,11 @@ class UserMerger
     UserAction.where(acting_user_id: @source_user.id).delete_all
   end
 
+  def log_merge
+    logger = StaffActionLogger.new(@acting_user || Discourse.system_user)
+    logger.log_user_merge(@target_user, @source_user.username, @source_primary_email)
+  end
+
   def update_user_id(table_name, opts = {})
     builder = update_user_id_sql_builder(table_name, opts)
     builder.exec(source_user_id: @source_user.id, target_user_id: @target_user.id)
@@ -371,7 +386,7 @@ class UserMerger
     conditions = Array.wrap(opts[:conditions])
     updates = Array.wrap(opts[:updates])
 
-    builder = SqlBuilder.new(<<~SQL)
+    builder = DB.build(<<~SQL)
       UPDATE #{table_name} AS x
       /*set*/
       WHERE x.#{user_id_column_name} = :source_user_id AND NOT EXISTS(

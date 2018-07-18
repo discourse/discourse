@@ -24,6 +24,16 @@ describe Jobs::EmitWebHookEvent do
     end.to raise_error(Discourse::InvalidParameters)
   end
 
+  it 'does not raise an error for a ping event without payload' do
+    stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      .to_return(body: 'OK', status: 200)
+
+    subject.execute(
+      web_hook_id: post_hook.id,
+      event_type: described_class::PING_EVENT
+    )
+  end
+
   it "doesn't emit when the hook is inactive" do
     subject.execute(
       web_hook_id: inactive_hook.id,
@@ -99,7 +109,7 @@ describe Jobs::EmitWebHookEvent do
         web_hook_id: post_hook.id,
         event_type: described_class::PING_EVENT,
         event_name: described_class::PING_EVENT,
-        payload: { test: "some payload" }.to_json
+        payload: { test: "this payload shouldn't appear" }.to_json
       )
 
       event = WebHookEvent.last

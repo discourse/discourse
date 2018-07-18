@@ -3,11 +3,11 @@ const { get, isNone, guidFor } = Ember;
 export default Ember.Mixin.create({
   valueForContentItem(content) {
     switch (typeof content) {
-    case "string":
-    case "number":
-      return content;
-    default:
-      return get(content, this.get("valueAttribute"));
+      case "string":
+      case "number":
+        return content;
+      default:
+        return get(content, this.get("valueAttribute"));
     }
   },
 
@@ -27,8 +27,39 @@ export default Ember.Mixin.create({
     return !isNaN(parseFloat(input)) && isFinite(input);
   },
 
+  _normalize(input) {
+    input = input.toLowerCase();
+
+    if (typeof input.normalize === "function") {
+      input = input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    return input;
+  },
+
+  _cast(value) {
+    if (value === this.noneValue) return value;
+    return this._castInteger(this._castBoolean(value));
+  },
+
+  _castBoolean(value) {
+    if (
+      this.get("castBoolean") &&
+      Ember.isPresent(value) &&
+      typeof value === "string"
+    ) {
+      return value === "true";
+    }
+
+    return value;
+  },
+
   _castInteger(value) {
-    if (this.get("castInteger") && Ember.isPresent(value) && this._isNumeric(value)) {
+    if (
+      this.get("castInteger") &&
+      Ember.isPresent(value) &&
+      this._isNumeric(value)
+    ) {
       return parseInt(value, 10);
     }
 
