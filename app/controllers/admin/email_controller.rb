@@ -18,8 +18,42 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def sent
-    email_logs = filter_logs(EmailLog, params)
-    render_serialized(email_logs, EmailLogSerializer)
+    email_logs = EmailLog.sent
+      .joins("
+        LEFT JOIN post_reply_keys
+        ON post_reply_keys.post_id = email_logs.post_id
+        AND post_reply_keys.user_id = email_logs.user_id
+      ")
+
+    email_logs = filter_logs(email_logs, params)
+
+    if params[:reply_key].present?
+      email_logs = email_logs.where(
+        "post_reply_keys.reply_key ILIKE ?", "%#{params[:reply_key]}%"
+      )
+    end
+
+    email_logs = email_logs.to_a
+
+    tuples = email_logs.map do |email_log|
+      [email_log.post_id, email_log.user_id]
+    end
+
+    reply_keys = {}
+
+    if tuples.present?
+      PostReplyKey
+        .where(
+          "(post_id,user_id) IN (#{(['(?)'] * tuples.size).join(', ')})",
+          *tuples
+        )
+        .pluck(:post_id, :user_id, "reply_key::text")
+        .each do |post_id, user_id, reply_key|
+          reply_keys[[post_id, user_id]] = reply_key
+        end
+    end
+
+    render_serialized(email_logs, EmailLogSerializer, reply_keys: reply_keys)
   end
 
   def skipped
@@ -149,7 +183,6 @@ class Admin::EmailController < Admin::AdminController
     logs = logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
     logs = logs.where("#{table_name}.to_address ILIKE ?", "%#{params[:address]}%") if params[:address].present?
     logs = logs.where("#{table_name}.email_type ILIKE ?", "%#{params[:type]}%") if params[:type].present?
-    logs = logs.where("#{table_name}.reply_key ILIKE ?", "%#{params[:reply_key]}%") if params[:reply_key].present?
     logs
   end
 

@@ -17,6 +17,8 @@ module Email
   class MessageBuilder
     attr_reader :template_args
 
+    ALLOW_REPLY_BY_EMAIL_HEADER = 'X-Discourse-Allow-Reply-By-Email'.freeze
+
     def initialize(to, opts = nil)
       @to = to
       @opts = opts || {}
@@ -147,7 +149,7 @@ module Email
       result['X-Auto-Response-Suppress'] = 'All'
 
       if allow_reply_by_email?
-        result['X-Discourse-Reply-Key'] = reply_key
+        result[ALLOW_REPLY_BY_EMAIL_HEADER] = true
         result['Reply-To'] = reply_by_email_address
       else
         result['Reply-To'] = from_value
@@ -171,10 +173,6 @@ module Email
 
     protected
 
-    def reply_key
-      @reply_key ||= SecureRandom.hex(16)
-    end
-
     def allow_reply_by_email?
       SiteSetting.reply_by_email_enabled? &&
       reply_by_email_address.present? &&
@@ -196,7 +194,6 @@ module Email
       return nil unless SiteSetting.reply_by_email_address.present?
 
       @reply_by_email_address = SiteSetting.reply_by_email_address.dup
-      @reply_by_email_address.gsub!("%{reply_key}", reply_key)
 
       @reply_by_email_address =
         if private_reply?

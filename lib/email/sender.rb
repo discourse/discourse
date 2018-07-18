@@ -31,8 +31,7 @@ module Email
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
 
       if SiteSetting.disable_emails == "non-staff"
-        user = User.find_by_email(to_address)
-        return unless user && user.staff?
+        return unless User.find_by_email(to_address)&.staff?
       end
 
       if @message.text_part
@@ -68,15 +67,20 @@ module Email
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<img src="(\/uploads\/default\/[^"]+)"([^>]*)>/, '![](' + url_prefix + '\1)')
 
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
+      user_id = @user&.id
 
       # Set up the email log
-      email_log = EmailLog.new(email_type: @email_type, to_address: to_address, user_id: @user.try(:id))
+      email_log = EmailLog.new(
+        email_type: @email_type,
+        to_address: to_address,
+        user_id: user_id
+      )
 
       host = Email::Sender.host_for(Discourse.base_url)
 
       post_id   = header_value('X-Discourse-Post-Id')
       topic_id  = header_value('X-Discourse-Topic-Id')
-      reply_key = header_value('X-Discourse-Reply-Key')
+      reply_key = set_reply_key(post_id, user_id)
 
       # always set a default Message ID from the host
       @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
@@ -160,12 +164,14 @@ module Email
       end
 
       email_log.post_id = post_id if post_id.present?
-      email_log.reply_key = reply_key if reply_key.present?
 
       # Remove headers we don't need anymore
       @message.header['X-Discourse-Topic-Id']  = nil if topic_id.present?
       @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
-      @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
+
+      if reply_key.present?
+        @message.header[Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER] = nil
+      end
 
       # pass the original message_id when using mailjet/mandrill/sparkpost
       case ActionMailer::Base.smtp_settings[:address]
@@ -249,6 +255,20 @@ module Email
       @message.header[name] = ""
       @message.header[name] = nil
       @message.header[name] = data.to_json
+    end
+
+    def set_reply_key(post_id, user_id)
+      return unless user_id &&
+        post_id &&
+        header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
+
+      reply_key = PostReplyKey.find_or_create_by!(
+        post_id: post_id,
+        user_id: user_id
+      ).reply_key
+
+      @message.header['Reply-To'] =
+        header_value('Reply-To').gsub!("%{reply_key}", reply_key)
     end
 
   end

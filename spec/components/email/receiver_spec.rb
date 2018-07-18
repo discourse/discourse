@@ -63,12 +63,12 @@ describe Email::Receiver do
 
   it "doesn't raise an InactiveUserError when the sender is staged" do
     user = Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+    post = Fabricate(:post)
 
-    email_log = Fabricate(:email_log,
-      to_address: 'reply+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bar.com',
-      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    post_reply_key = Fabricate(:post_reply_key,
       user: user,
-      post: Fabricate(:post)
+      post: post,
+      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     )
 
     expect { process(:staged_sender) }.not_to raise_error
@@ -153,7 +153,14 @@ describe Email::Receiver do
     let(:user) { Fabricate(:user, email: "discourse@bar.com") }
     let(:topic) { create_topic(category: category, user: user) }
     let(:post) { create_post(topic: topic, user: user) }
-    let!(:email_log) { Fabricate(:email_log, reply_key: reply_key, user: user, topic: topic, post: post) }
+
+    let!(:post_reply_key) do
+      Fabricate(:post_reply_key,
+        reply_key: reply_key,
+        user: user,
+        post: post
+      )
+    end
 
     it "uses MD5 of 'mail_string' there is no message_id" do
       mail_string = email(:missing_message_id)
@@ -814,12 +821,15 @@ describe Email::Receiver do
 
     context "with a valid reply" do
       it "returns the destination when the key is valid" do
-        Fabricate(:email_log, reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8')
+        post_reply_key = Fabricate(:post_reply_key,
+          reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8'
+        )
 
         dest = Email::Receiver.check_address('foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com')
+
         expect(dest).to be_present
         expect(dest[:type]).to eq(:reply)
-        expect(dest[:obj]).to be_present
+        expect(dest[:obj]).to eq(post_reply_key)
       end
     end
   end
@@ -925,7 +935,10 @@ describe Email::Receiver do
       let(:user) { Fabricate(:user, email: "discourse@bar.com") }
       let(:topic) { create_topic(category: category, user: user) }
       let(:post) { create_post(topic: topic, user: user) }
-      let!(:email_log) { Fabricate(:email_log, reply_key: reply_key, user: user, topic: topic, post: post) }
+
+      let!(:post_reply_key) do
+        Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
+      end
 
       context "when the email address isn't matching the one we sent the notification to" do
         include_examples "no staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError
