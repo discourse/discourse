@@ -52,7 +52,8 @@ const icons = {
   removed_user: "minus-circle",
   removed_group: "minus-circle",
   public_topic: "comment",
-  private_topic: "envelope"
+  private_topic: "envelope",
+  autobumped: "hand-o-right"
 };
 
 export function addPostSmallActionIcon(key, icon) {
