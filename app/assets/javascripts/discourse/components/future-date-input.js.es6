@@ -70,10 +70,7 @@ export default Ember.Component.extend({
   },
 
   didReceiveAttrs() {
-    this.set(
-      "displayLabel",
-      I18n.t(this.get("label") || "topic.topic_status_update.when")
-    );
+    if (this.get("label")) this.set("displayLabel", I18n.t(this.get("label")));
   },
 
   @computed(
