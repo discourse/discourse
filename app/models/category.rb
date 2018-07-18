@@ -378,16 +378,20 @@ class Category < ActiveRecord::Base
   end
 
   def auto_bump_limiter
-    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", num_auto_bump_daily.to_i, 86400)
+    return nil if num_auto_bump_daily.to_i == 0
+    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86400 / num_auto_bump_daily.to_i)
   end
 
   def clear_auto_bump_cache!
-    auto_bump_limiter.clear!
+    auto_bump_limiter&.clear!
   end
 
   def self.auto_bump_topic!
     bumped = false
-    auto_bumps = CategoryCustomField.where(name: Category::NUM_AUTO_BUMP_DAILY).pluck(:category_id)
+    auto_bumps = CategoryCustomField
+      .where(name: Category::NUM_AUTO_BUMP_DAILY)
+      .where('value::int > 0')
+      .pluck(:category_id)
 
     if (auto_bumps.length > 0)
       auto_bumps.shuffle.each do |category_id|
@@ -406,7 +410,7 @@ class Category < ActiveRecord::Base
     limiter = auto_bump_limiter
     return false if !limiter.can_perform?
 
-    id = Topic
+    topic = Topic
       .visible
       .listable_topics
       .where(category_id: self.id)
@@ -415,10 +419,10 @@ class Category < ActiveRecord::Base
       .where('pinned_at IS NULL AND NOT closed AND NOT archived')
       .order('bumped_at ASC')
       .limit(1)
-      .pluck(:id).first
+      .first
 
-    if id
-      Topic.where(id: id).update_all(bumped_at: Time.zone.now)
+    if topic
+      topic.add_small_action(Discourse.system_user, "autobumped", nil, bump: true)
       limiter.performed!
       true
     else

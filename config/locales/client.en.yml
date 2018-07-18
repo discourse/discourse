@@ -152,6 +152,7 @@ en:
       user_left: "%{who} removed themselves from this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
+      autobumped: "automatically bumped topic"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
