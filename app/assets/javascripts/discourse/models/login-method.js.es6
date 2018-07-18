@@ -12,14 +12,13 @@ const LoginMethod = Ember.Object.extend({
     }
 
     return (
-      this.get("titleOverride") ||
-      I18n.t("login." + this.get("name") + ".title")
+      this.get("titleOverride") || I18n.t(`login.${this.get("name")}.title`)
     );
   },
 
   @computed
   prettyName() {
-    return I18n.t("login." + this.get("name") + ".name");
+    return I18n.t(`login.${this.get("name")}.name`);
   },
 
   @computed

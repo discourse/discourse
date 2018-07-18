@@ -40,9 +40,9 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     if response.kind_of? Net::HTTPSuccess
       info.destroy!
       return true
-    else
-      return false
     end
+
+    false
   end
 
   def can_connect_existing_user?

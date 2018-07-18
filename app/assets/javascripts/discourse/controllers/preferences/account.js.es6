@@ -57,7 +57,7 @@ export default Ember.Controller.extend(
 
     @computed("model.associated_accounts")
     associatedAccountsLoaded(associatedAccounts) {
-      return associatedAccounts !== undefined;
+      return typeof associatedAccounts !== "undefined";
     },
 
     @computed("model.associated_accounts.[]")
@@ -70,7 +70,7 @@ export default Ember.Controller.extend(
 
       return allMethods.map(method => {
         return {
-          method: method,
+          method,
           account: accounts.find(account => account.name === method.name) // Will be undefined if no account
         };
       });
@@ -183,9 +183,11 @@ export default Ember.Controller.extend(
             } else {
               bootbox.alert(result.message);
             }
-            this.set("revoking", false);
           })
-          .catch(popupAjaxError);
+          .catch(popupAjaxError)
+          .finally(() => {
+            this.set("revoking", false);
+          });
       },
 
       connectAccount(method) {

@@ -42,7 +42,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed("model.associated_accounts")
   associatedAccountsLoaded(associatedAccounts) {
-    return associatedAccounts !== undefined;
+    return typeof associatedAccounts !== "undefined";
   },
 
   @computed("model.associated_accounts")
