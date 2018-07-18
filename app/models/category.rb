@@ -405,7 +405,7 @@ class Category < ActiveRecord::Base
   # will automatically bump a single topic
   # if number of automatically bumped topics is smaller than threshold
   def auto_bump_topic!
-    return false if num_auto_bump_daily.blank?
+    return false if num_auto_bump_daily.to_i == 0
 
     limiter = auto_bump_limiter
     return false if !limiter.can_perform?
