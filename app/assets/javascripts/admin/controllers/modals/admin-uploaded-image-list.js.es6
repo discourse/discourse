@@ -1,8 +1,7 @@
 import { on, observes } from "ember-addons/ember-computed-decorators";
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Ember.Controller.extend(ModalFunctionality, {
-
   @on("init")
   @observes("model.value")
   _setup() {
