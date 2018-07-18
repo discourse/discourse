@@ -565,6 +565,15 @@ export default RestModel.extend({
     });
   },
 
+  loadNearestPostToDate(date) {
+    const url = `/posts/by_date/${this.get("topic.id")}/${date}`;
+    const store = this.store;
+
+    return ajax(url).then(post => {
+      return this.storePost(store.createRecord("post", post));
+    });
+  },
+
   loadPost(postId) {
     const url = "/posts/" + postId;
     const store = this.store;

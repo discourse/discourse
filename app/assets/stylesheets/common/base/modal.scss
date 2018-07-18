@@ -525,6 +525,40 @@
   }
 }
 
+.jump-to-post-modal {
+  .modal-body {
+    #post-jump,
+    .date-picker {
+      margin: 0;
+      width: 100px;
+    }
+
+    .pika-single {
+      position: relative !important;
+    }
+
+    .jump-to-post-control .index {
+      color: $primary-medium;
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      margin: 1em auto;
+
+      .left,
+      .right {
+        flex: 1;
+      }
+
+      .text {
+        margin: 0 0.5em;
+        color: $primary-medium;
+      }
+    }
+  }
+}
+
 .tabbed-modal {
   .modal-body {
     position: relative;
