@@ -234,8 +234,8 @@ class OptimizedImage < ActiveRecord::Base
     Discourse::Utils.execute_command(*instructions)
     FileHelper.optimize_image!(to)
     true
-  rescue
-    Rails.logger.error("Could not optimize image: #{to}")
+  rescue => e
+    Rails.logger.error("Could not optimize image #{to}: #{e.message}")
     false
   end
 
