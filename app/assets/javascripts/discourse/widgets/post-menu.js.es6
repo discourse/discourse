@@ -1,6 +1,7 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { avatarAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
+import showModal from "discourse/lib/show-modal";
 
 const LIKE_ACTION = 2;
 
@@ -281,6 +282,14 @@ registerButton("delete", attrs => {
       icon: "trash-o",
       className: "delete"
     };
+  } else if (!attrs.canDelete && attrs.firstPost && attrs.yours) {
+    return {
+      id: "delete_topic",
+      action: "showDeleteTopicModal",
+      title: "post.controls.delete_topic_disallowed",
+      icon: "trash-o",
+      className: "delete"
+    };
   }
 });
 
@@ -465,6 +474,10 @@ export default createWidget("post-menu", {
 
   closeAdminMenu() {
     this.state.adminVisible = false;
+  },
+
+  showDeleteTopicModal() {
+    showModal("delete-topic-disallowed");
   },
 
   showMoreActions() {

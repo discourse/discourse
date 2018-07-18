@@ -298,6 +298,30 @@ widgetTest(`delete topic button - can't delete`, {
   }
 });
 
+widgetTest(
+  `delete topic button - can't delete when topic author without permission`,
+  {
+    template:
+      '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+    beforeEach() {
+      this.set("args", {
+        canDeleteTopic: false,
+        yours: true,
+        firstPost: true
+      });
+    },
+
+    test(assert) {
+      assert.equal(this.$("button.delete").length, 1, `button is displayed`);
+      assert.equal(
+        this.$("button.delete").attr("title"),
+        I18n.t("post.controls.delete_topic_disallowed"),
+        `shows the right button title for users without permissions`
+      );
+    }
+  }
+);
+
 widgetTest("recover topic button", {
   template:
     '{{mount-widget widget="post" args=args recoverPost="recoverPost"}}',
