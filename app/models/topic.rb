@@ -698,10 +698,16 @@ class Topic < ActiveRecord::Base
     true
   end
 
-  def add_small_action(user, action_code, who = nil)
+  def add_small_action(user, action_code, who = nil, opts = {})
     custom_fields = {}
     custom_fields["action_code_who"] = who if who.present?
-    add_moderator_post(user, nil, post_type: Post.types[:small_action], action_code: action_code, custom_fields: custom_fields)
+    opts = opts.merge(
+      post_type: Post.types[:small_action],
+      action_code: action_code,
+      custom_fields: custom_fields
+    )
+
+    add_moderator_post(user, nil, opts)
   end
 
   def add_moderator_post(user, text, opts = nil)

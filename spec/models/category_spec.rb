@@ -695,8 +695,11 @@ describe Category do
       category = Fabricate(:category)
       category.clear_auto_bump_cache!
 
-      _post1 = create_post(category: category)
+      freeze_time 1.second.from_now
+      post1 = create_post(category: category)
+      freeze_time 1.second.from_now
       _post2 = create_post(category: category)
+      freeze_time 1.second.from_now
       _post3 = create_post(category: category)
 
       # no limits on post creation or category creation please
@@ -713,12 +716,17 @@ describe Category do
 
       expect(category.auto_bump_topic!).to eq(true)
       expect(Topic.where(bumped_at: time).count).to eq(1)
+      # our extra bump message
+      expect(post1.topic.reload.posts_count).to eq(2)
+
+      time = time + 13.hours
+      freeze_time time
 
       expect(category.auto_bump_topic!).to eq(true)
-      expect(Topic.where(bumped_at: time).count).to eq(2)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
 
       expect(category.auto_bump_topic!).to eq(false)
-      expect(Topic.where(bumped_at: time).count).to eq(2)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
 
       time = 1.month.from_now
       freeze_time time
