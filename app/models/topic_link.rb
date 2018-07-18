@@ -22,11 +22,13 @@ class TopicLink < ActiveRecord::Base
 
   validates_length_of :url, maximum: 500
 
-  validates_uniqueness_of :url, scope: [:topic_id, :post_id]
+  validates_uniqueness_of :url, case_sensitive: false, scope: [:topic_id, :post_id]
 
   has_many :topic_link_clicks, dependent: :destroy
 
   validate :link_to_self
+
+  before_save :downcase_url
 
   after_commit :crawl_link_title
 
@@ -170,7 +172,7 @@ SQL
 
           added_urls << url
 
-          unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
+          unless TopicLink.where(topic_id: post.topic_id, post_id: post.id).where("lower(url) = ?", url.downcase).exists?
             file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? || File.extname(parsed.path).empty?
             begin
               TopicLink.create!(post_id: post.id,
@@ -275,6 +277,10 @@ SQL
     end
 
     lookup
+  end
+
+  def downcase_url
+    self.url = url.downcase
   end
 end
 
