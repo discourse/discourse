@@ -356,22 +356,35 @@ describe PostMover do
         end
 
         it "moves email log entries" do
-
-          skip "@tgxworld to fix"
-
           old_topic = old_post.topic
-          Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
-          Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
-          Fabricate(:email_log, user: old_post.user, post: old_post, email_type: :mailing_list)
 
-          expect(EmailLog.where(topic_id: old_topic.id, post_id: old_post.id).count).to eq(2)
-          expect(EmailLog.where(topic_id: nil, post_id: old_post.id).count).to eq(1)
+          2.times do
+            Fabricate(:email_log,
+              user: old_post.user,
+              post: old_post,
+              email_type: :mailing_list
+            )
+          end
 
-          new_topic = old_topic.move_posts(user, [old_post.id], title: "new testing topic name")
+          some_post = Fabricate(:post)
+
+          Fabricate(:email_log,
+            user: some_post.user,
+            post: some_post,
+            email_type: :mailing_list
+          )
+
+          expect(EmailLog.where(post_id: old_post.id).count).to eq(2)
+
+          new_topic = old_topic.move_posts(
+            user,
+            [old_post.id],
+            title: "new testing topic name"
+          )
+
           new_post = new_topic.first_post
 
-          expect(EmailLog.where(topic_id: old_topic.id, post_id: old_post.id).count).to eq(0)
-          expect(EmailLog.where(topic_id: new_topic.id, post_id: new_post.id).count).to eq(3)
+          expect(EmailLog.where(post_id: new_post.id).count).to eq(2)
         end
 
         it "preserves post attributes" do

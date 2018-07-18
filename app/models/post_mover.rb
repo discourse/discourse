@@ -153,7 +153,7 @@ class PostMover
   def move_email_logs(old_post, new_post)
     EmailLog
       .where(post_id: old_post.id)
-      .update_all(topic_id: new_post.topic_id, post_id: new_post.id)
+      .update_all(post_id: new_post.id)
   end
 
   def update_statistics
