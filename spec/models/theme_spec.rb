@@ -233,10 +233,12 @@ HTML
       theme.save!
 
       transpiled = <<~HTML
-      <script>Discourse._registerPluginCode('1.0', function (api) {
-        var settings = { "name": "bob" };
-        alert(settings.name);var a = function a() {};
-      });</script>
+      <script>if ('Discourse' in window) {
+        Discourse._registerPluginCode('1.0', function (api) {
+          var settings = { "name": "bob" };
+          alert(settings.name);var a = function a() {};
+        });
+      }</script>
       HTML
 
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
@@ -245,10 +247,12 @@ HTML
       setting.value = 'bill'
 
       transpiled = <<~HTML
-      <script>Discourse._registerPluginCode('1.0', function (api) {
-        var settings = { "name": "bill" };
-        alert(settings.name);var a = function a() {};
-      });</script>
+      <script>if ('Discourse' in window) {
+        Discourse._registerPluginCode('1.0', function (api) {
+          var settings = { "name": "bill" };
+          alert(settings.name);var a = function a() {};
+        });
+      }</script>
       HTML
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
 
