@@ -410,7 +410,18 @@ class Category < ActiveRecord::Base
     limiter = auto_bump_limiter
     return false if !limiter.can_perform?
 
-    topic = Topic
+    filters = []
+    DiscourseEvent.trigger(:filter_auto_bump_topics, self, filters)
+
+    relation = Topic
+
+    if filters.length > 0
+      filters.each do |filter|
+        relation = filter.call(relation)
+      end
+    end
+
+    topic = relation
       .visible
       .listable_topics
       .where(category_id: self.id)
