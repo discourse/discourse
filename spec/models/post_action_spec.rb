@@ -672,6 +672,20 @@ describe PostAction do
       expect(user_notifications.last.topic).to eq(topic)
     end
 
+    it "should not add a moderator post when post is flagged via private message" do
+      SiteSetting.queue_jobs = false
+      post = Fabricate(:post)
+      user = Fabricate(:user)
+      action = PostAction.act(user, post, PostActionType.types[:notify_user], message: "WAT")
+      topic = action.reload.related_post.topic
+      expect(user.notifications.count).to eq(0)
+
+      SiteSetting.auto_respond_to_flag_actions = true
+      PostAction.agree_flags!(post, admin)
+
+      user_notifications = user.notifications
+      expect(user_notifications.count).to eq(0)
+    end
   end
 
   describe "rate limiting" do
