@@ -253,6 +253,9 @@ export default function(options) {
     return $(links[selectedOption]).addClass("selected");
   }
 
+  // a sane spot below cursor
+  const BELOW = -32;
+
   function renderAutocomplete() {
     if (div) {
       div.hide().remove();
@@ -278,7 +281,7 @@ export default function(options) {
         left: 0,
         top: 0
       };
-      vOffset = -32;
+      vOffset = BELOW;
       hOffset = 0;
     } else {
       pos = me.caretPosition({
@@ -289,6 +292,7 @@ export default function(options) {
       hOffset = 27;
       if (options.treatAsTextarea) vOffset = -32;
     }
+
     div.css({
       left: "-1000px"
     });
@@ -302,18 +306,18 @@ export default function(options) {
     if (!isInput && !options.treatAsTextarea) {
       vOffset = div.height();
 
-      if (
+      const spaceOutside =
         window.innerHeight -
-          me.outerHeight() -
-          $("header.d-header").innerHeight() <
-        vOffset
-      ) {
-        vOffset = -23;
+        me.outerHeight() -
+        $("header.d-header").innerHeight();
+
+      if (spaceOutside < vOffset && vOffset > pos.top) {
+        vOffset = BELOW;
       }
 
       if (Discourse.Site.currentProp("mobileView")) {
         if (me.height() / 2 >= pos.top) {
-          vOffset = -23;
+          vOffset = BELOW;
         }
         if (me.width() / 2 <= pos.left) {
           hOffset = -div.width();
@@ -322,12 +326,19 @@ export default function(options) {
     }
 
     var mePos = me.position();
+
     var borderTop = parseInt(me.css("border-top-width"), 10) || 0;
 
     let left = mePos.left + pos.left + hOffset;
     if (left < 0) {
       left = 0;
     }
+
+    const offsetTop = me.offset().top;
+    if (mePos.top + pos.top + borderTop - vOffset + offsetTop < 30) {
+      vOffset = BELOW;
+    }
+
     div.css({
       position: "absolute",
       top: mePos.top + pos.top - vOffset + borderTop + "px",
