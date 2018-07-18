@@ -69,6 +69,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def execute
     @first_new_user_id = @last_user_id + 1
+    @first_new_topic_id = @last_topic_id + 1
 
     copy_users
     copy_user_stuff
@@ -82,6 +83,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_badges
 
     fix_category_descriptions
+    fix_topic_links
   end
 
   def source_raw_connection
@@ -483,9 +485,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def process_topic_link(topic_link)
+    old_topic_id = topic_link['link_topic_id']
     topic_link['link_topic_id'] = topic_id_from_imported_id(topic_link['link_topic_id']) if topic_link['link_topic_id']
     topic_link['link_post_id'] = post_id_from_imported_id(topic_link['link_post_id']) if topic_link['link_post_id']
-    return nil if topic_link['link_topic_id'].nil? || topic_link['link_post_id'].nil?
+    return nil if topic_link['link_topic_id'].nil?
+
+    r = Regexp.new("^#{@source_base_url}/t/([^\/]+)/#{old_topic_id}(.*)")
+    if m = r.match(topic_link['url'])
+      topic_link['url'] = "#{@source_base_url}/t/#{m[1]}/#{topic_link['link_topic_id']}#{m[2]}"
+    end
+
     topic_link
   end
 
@@ -661,6 +670,50 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       puts sql
       @raw_connection.exec(sql)
     end
+  end
+
+  def fix_topic_links
+    puts "updating topic links in posts..."
+
+    update_count = 0
+    total = @topics.size
+    current = 0
+
+    @topics.each do |old_topic_id, new_topic_id|
+      current += 1
+      puts "#{current} completed. #{update_count} rows updated." if current % 200 == 0
+
+      if topic = Topic.find_by_id(new_topic_id)
+        replace_arg = [
+          "#{@source_base_url}/t/#{topic.slug}/#{old_topic_id}",
+          "#{@source_base_url}/t/#{topic.slug}/#{new_topic_id}"
+        ]
+
+        r = @raw_connection.async_exec(
+          "UPDATE posts
+          SET raw = replace(raw, $1, $2)
+          WHERE NOT raw IS NULL
+            AND topic_id >= #{@first_new_topic_id}
+            AND raw <> replace(raw, $1, $2)",
+          replace_arg
+        )
+
+        update_count += r.cmd_tuples
+
+        r = @raw_connection.async_exec(
+          "UPDATE posts
+          SET cooked = replace(cooked, $1, $2)
+          WHERE NOT cooked IS NULL
+            AND topic_id >= #{@first_new_topic_id}
+            AND cooked <> replace(cooked, $1, $2)",
+          replace_arg
+        )
+
+        update_count += r.cmd_tuples
+      end
+    end
+
+    puts "updated #{update_count} rows"
   end
 
 end
