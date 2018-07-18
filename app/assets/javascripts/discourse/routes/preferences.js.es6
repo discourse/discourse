@@ -52,9 +52,8 @@ export default RestrictedUserRoute.extend({
       user
         .selectAvatar(url)
         .then(() => {
-          bootbox.alert(
-            I18n.t("user.change_avatar.cache_notice"),
-            () => window.location.reload()
+          bootbox.alert(I18n.t("user.change_avatar.cache_notice"), () =>
+            window.location.reload()
           );
         })
         .catch(popupAjaxError);
@@ -72,9 +71,8 @@ export default RestrictedUserRoute.extend({
       user
         .pickAvatar(selectedUploadId, type, selectedAvatarTemplate)
         .then(() => {
-          bootbox.alert(
-            I18n.t("user.change_avatar.cache_notice"),
-            () => window.location.reload()
+          bootbox.alert(I18n.t("user.change_avatar.cache_notice"), () =>
+            window.location.reload()
           );
         })
         .catch(popupAjaxError);
