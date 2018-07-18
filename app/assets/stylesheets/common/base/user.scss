@@ -687,6 +687,7 @@
     margin: 5px;
     display: inline-block;
     .avatar {
+      cursor: pointer;
       width: 60px;
       height: 60px;
       &:hover {
