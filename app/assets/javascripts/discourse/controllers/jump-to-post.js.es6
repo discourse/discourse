@@ -19,9 +19,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.get("filteredPostsCount"),
           this.get("postNumber")
         );
-      }
-
-      if (this.get("postDate")) {
+      } else if (this.get("postDate")) {
         this._jumpToDate(this.get("postDate"));
       }
     }
