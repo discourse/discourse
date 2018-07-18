@@ -1,6 +1,6 @@
 ##
 # Allows running arbitrary code after the current transaction has been committed.
-# Works even with nexted transactions. Useful for scheduling sidekiq jobs.
+# Works even with nested transactions. Useful for scheduling sidekiq jobs.
 # Slightly simplified version of https://dev.to/evilmartians/rails-aftercommit-everywhere--4j9g
 # Usage:
 #    Topic.transaction do
