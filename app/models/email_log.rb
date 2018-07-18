@@ -65,8 +65,9 @@ class EmailLog < ActiveRecord::Base
   def self.last_sent_email_address
     self.where(email_type: "signup")
       .order(created_at: :desc)
+      .limit(1)
+      .pluck(:to_address)
       .first
-      .try(:to_address)
   end
 
   def bounce_key
