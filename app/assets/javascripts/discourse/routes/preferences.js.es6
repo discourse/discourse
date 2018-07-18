@@ -46,13 +46,18 @@ export default RestrictedUserRoute.extend({
 
     selectAvatar(url) {
       const user = this.modelFor("user");
-      const controller = this.controllerFor("avatar-selector");
+
+      this.controllerFor("avatar-selector").send("closeModal");
 
       user
         .selectAvatar(url)
-        .then(() => bootbox.alert(I18n.t("user.change_avatar.cache_notice")))
-        .catch(popupAjaxError)
-        .finally(() => controller.send("closeModal"));
+        .then(() => {
+          bootbox.alert(
+            I18n.t("user.change_avatar.cache_notice"),
+            () => window.location.reload()
+          );
+        })
+        .catch(popupAjaxError);
     },
 
     saveAvatarSelection() {
@@ -62,20 +67,17 @@ export default RestrictedUserRoute.extend({
       const selectedAvatarTemplate = controller.get("selectedAvatarTemplate");
       const type = controller.get("selected");
 
+      controller.send("closeModal");
+
       user
         .pickAvatar(selectedUploadId, type, selectedAvatarTemplate)
         .then(() => {
-          user.setProperties(
-            controller.getProperties(
-              "system_avatar_template",
-              "gravatar_avatar_template",
-              "custom_avatar_template"
-            )
+          bootbox.alert(
+            I18n.t("user.change_avatar.cache_notice"),
+            () => window.location.reload()
           );
-          bootbox.alert(I18n.t("user.change_avatar.cache_notice"));
         })
-        .catch(popupAjaxError)
-        .finally(() => controller.send("closeModal"));
+        .catch(popupAjaxError);
     }
   }
 });
