@@ -1,0 +1,40 @@
+{{#conditional-loading-spinner condition=isLoading}}
+  <div class="sections">
+    {{plugin-outlet name="admin-dashboard-moderation-top"}}
+
+    <div class="moderators-activity section">
+      <div class="section-title">
+        <h2>{{i18n "admin.dashboard.moderators_activity"}}</h2>
+        {{period-chooser
+          period=period
+          action="changePeriod"
+          content=availablePeriods
+          fullDay=true}}
+      </div>
+
+      <div class="section-body">
+        {{admin-report
+          startDate=startDate
+          endDate=endDate
+          showHeader=false
+          dataSourceName="moderators_activity"}}
+      </div>
+    </div>
+
+    <div class="main-section">
+      {{admin-report
+        report=flagsStatusReport
+        startDate=lastWeek
+        reportOptions=flagsStatusOptions
+        endDate=endDate}}
+
+      {{admin-report
+        report=postEditsReport
+        startDate=lastWeek
+        endDate=endDate}}
+
+      {{plugin-outlet name="admin-dashboard-moderation-bottom"}}
+    </div>
+  </div>
+
+{{/conditional-loading-spinner}}

@@ -1,0 +1,101 @@
+.admin-report-table {
+  @media screen and (max-width: 650px) {
+    table {
+      tbody tr td {
+        font-size: $font-down-1;
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5em;
+
+    button {
+      margin-left: 0.5em;
+
+      &.current {
+        color: $tertiary;
+      }
+    }
+  }
+
+  &.two-columns {
+    .report-table tbody tr td:first-child,
+    .report-table thead tr th:first-child {
+      text-align: left;
+    }
+
+    .report-table {
+      table-layout: auto;
+    }
+  }
+
+  table {
+    table-layout: fixed;
+    border: 1px solid $primary-low;
+    margin-top: 0;
+    margin-bottom: 10px;
+
+    tbody {
+      border: none;
+
+      tr {
+        td {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        td {
+          text-align: center;
+          padding: 8px;
+        }
+      }
+    }
+
+    thead {
+      border: 1px solid $primary-low;
+
+      .admin-report-table-header {
+        .sort-button {
+          outline: none;
+          background: none;
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        &.is-current-sort {
+          .d-icon {
+            color: $tertiary;
+          }
+
+          .sort-button:hover {
+            color: $primary-medium;
+            background: $primary-low;
+          }
+        }
+
+        &:not(.is-current-sort) .sort-button {
+          background: none;
+
+          &:hover {
+            color: $primary-medium;
+            background: $primary-low;
+          }
+        }
+      }
+
+      tr {
+        th {
+          text-align: center;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
