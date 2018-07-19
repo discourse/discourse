@@ -561,8 +561,8 @@ class ImportScripts::Smf1 < ImportScripts::Base
   end
 
   IGNORED_BBCODE ||= %w{
-    black blue center color email flash font glow green img iurl left list move
-    red right shadown size table time white
+    black blue center color email flash font glow green iurl left list move red
+    right shadown size table time white
   }
 
   def pre_process_raw(raw)
@@ -571,7 +571,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw = @htmlentities.decode(raw)
 
     # [acronym]
-    raw.gsub!(/\[acronym=([^\]]+)\](.*?)\[\/acronym\]/im, %{<abbr title="#{$1}">#{$2}</abbr>})
+    raw.gsub!(/\[acronym=([^\]]+)\](.*?)\[\/acronym\]/im) { %{<abbr title="#{$1}">#{$2}</abbr>} }
 
     # [br]
     raw.gsub!(/\[br\]/i, "\n")
@@ -580,9 +580,9 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw.gsub!(/\[hr\]/i, "<hr/>")
 
     # [sub]
-    raw.gsub!(/\[sub\](.*?)\[\/sub\]/im, "<sub>#{$1}</sub>")
+    raw.gsub!(/\[sub\](.*?)\[\/sub\]/im) { "<sub>#{$1}</sub>" }
     # [sup]
-    raw.gsub!(/\[sup\](.*?)\[\/sup\]/im, "<sup>#{$1}</sup>")
+    raw.gsub!(/\[sup\](.*?)\[\/sup\]/im) { "<sup>#{$1}</sup>" }
 
     # [html]
     raw.gsub!(/\[html\]/i, "\n```html\n")
@@ -606,13 +606,16 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw.gsub!(/\[\/ftp\]/i, "[/url]")
 
     # [me]
-    raw.gsub!(/\[me=([^\]]*)\](.*?)\[\/me\]/im, "_\\* #{$1} #{$2}_")
+    raw.gsub!(/\[me=([^\]]*)\](.*?)\[\/me\]/im) { "_\\* #{$1} #{$2}_" }
 
     # [li]
-    raw.gsub!(/\[li\](.*?)\[\/li\]/im, "- #{$1}")
+    raw.gsub!(/\[li\](.*?)\[\/li\]/im) { "- #{$1}" }
+
+    # puts [img] on their own line
+    raw.gsub!(/\[img\](.*?)\[\/img\]/im) { "\n#{$1}\n" }
 
     # puts [youtube] on their own line
-    raw.gsub!(/\[youtube\](.*?)\[\/youtube\]/im, "\n#{$1}\n")
+    raw.gsub!(/\[youtube\](.*?)\[\/youtube\]/im) { "\n#{$1}\n" }
 
     IGNORED_BBCODE.each { |code| raw.gsub!(/\[#{code}[^\]]*\](.*?)\[\/#{code}\]/im, '\1') }
 
