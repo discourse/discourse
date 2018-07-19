@@ -94,6 +94,10 @@ export default Ember.Component.extend(PanEvents, {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
       Ember.run.later(() => {
+        if (!this.element || this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
         this.set("info.topicProgressExpanded", false);
         this._checkSize();
       }, 500);
@@ -102,11 +106,13 @@ export default Ember.Component.extend(PanEvents, {
 
   keyboardTrigger(e) {
     if (e.type === "jump") {
-      const controller = showModal("jump-to-post");
+      const controller = showModal("jump-to-post", {
+        modalClass: "jump-to-post-modal"
+      });
       controller.setProperties({
         topic: this.get("topic"),
-        postNumber: 1,
-        jumpToIndex: this.attrs.jumpToIndex
+        jumpToIndex: this.attrs.jumpToIndex,
+        jumpToDate: this.attrs.jumpToDate
       });
     }
   },
