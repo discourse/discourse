@@ -89,6 +89,10 @@
     .section-title {
       h2 {
         margin: 0 0.5em 0 0;
+
+        a {
+          color: $primary;
+        }
       }
 
       display: flex;
@@ -514,10 +518,10 @@
   }
 
   .admin-report.flags-status {
-    grid-column: span 6;
+    grid-column: span 12;
   }
 
   .admin-report.post-edits {
-    grid-column: span 6;
+    grid-column: span 12;
   }
 }
