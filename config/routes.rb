@@ -457,6 +457,7 @@ Discourse::Application.routes.draw do
   get "posts" => "posts#latest", id: "latest_posts"
   get "private-posts" => "posts#latest", id: "private_posts"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
+  get "posts/by-date/:topic_id/:date" => "posts#by_date"
   get "posts/:id/reply-history" => "posts#reply_history"
   get "posts/:id/reply-ids"     => "posts#reply_ids"
   get "posts/:id/reply-ids/all" => "posts#all_reply_ids"

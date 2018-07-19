@@ -12,6 +12,7 @@ class PostsController < ApplicationController
     :show,
     :replies,
     :by_number,
+    :by_date,
     :short_link,
     :reply_history,
     :replyIids,
@@ -246,6 +247,11 @@ class PostsController < ApplicationController
 
   def by_number
     post = find_post_from_params_by_number
+    display_post(post)
+  end
+
+  def by_date
+    post = find_post_from_params_by_date
     display_post(post)
   end
 
@@ -705,6 +711,16 @@ class PostsController < ApplicationController
   def find_post_from_params_by_number
     by_number_finder = Post.where(topic_id: params[:topic_id], post_number: params[:post_number])
     find_post_using(by_number_finder)
+  end
+
+  def find_post_from_params_by_date
+    by_date_finder = TopicView.new(params[:topic_id], current_user)
+      .filtered_posts
+      .where("created_at >= ?", Time.zone.parse(params[:date]))
+      .order("created_at ASC")
+      .limit(1)
+
+    find_post_using(by_date_finder)
   end
 
   def find_post_using(finder)

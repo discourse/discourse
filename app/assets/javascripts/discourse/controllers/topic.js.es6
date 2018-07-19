@@ -575,15 +575,20 @@ export default Ember.Controller.extend(BufferedContent, {
       this._jumpToIndex(index);
     },
 
+    jumpToDate(date) {
+      this._jumpToDate(date);
+    },
+
     jumpToPostPrompt() {
       const topic = this.get("model");
-      const controller = showModal("jump-to-post");
+      const controller = showModal("jump-to-post", {
+        modalClass: "jump-to-post-modal"
+      });
       controller.setProperties({
-        topic: topic,
+        topic,
         postNumber: null,
-        jumpToIndex: index => {
-          this.send("jumpToIndex", index);
-        }
+        jumpToIndex: index => this.send("jumpToIndex", index),
+        jumpToDate: date => this.send("jumpToDate", date)
       });
     },
 
@@ -938,6 +943,21 @@ export default Ember.Controller.extend(BufferedContent, {
       const streamIndex = Math.max(1, Math.min(stream.length, index));
       this._jumpToPostId(stream[streamIndex - 1]);
     }
+  },
+
+  _jumpToDate(date) {
+    const postStream = this.get("model.postStream");
+
+    postStream
+      .loadNearestPostToDate(date)
+      .then(post => {
+        DiscourseURL.routeTo(
+          this.get("model").urlForPostNumber(post.get("post_number"))
+        );
+      })
+      .catch(() => {
+        this._jumpToIndex(postStream.get("topic.highest_post_number"));
+      });
   },
 
   _jumpToPostNumber(postNumber) {
