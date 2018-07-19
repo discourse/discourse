@@ -797,7 +797,6 @@ en:
         upload_title: "Upload your picture"
         upload_picture: "Upload Picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
-        cache_notice: "You've successfully changed your profile picture but it might take some time to appear due to browser caching."
 
       change_profile_background:
         title: "Profile Background"
