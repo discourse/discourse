@@ -160,6 +160,52 @@ export default Ember.Component.extend({
     return `admin-report-${currentMode}`;
   },
 
+  @computed("startDate")
+  normalizedStartDate(startDate) {
+    return startDate && typeof startDate.isValid === "function"
+      ? startDate.format("YYYYMMDD")
+      : startDate;
+  },
+
+  @computed("endDate")
+  normalizedEndDate(endDate) {
+    return endDate && typeof endDate.isValid === "function"
+      ? endDate.format("YYYYMMDD")
+      : endDate;
+  },
+
+  @computed(
+    "dataSourceName",
+    "categoryId",
+    "groupId",
+    "normalizedStartDate",
+    "normalizedEndDate"
+  )
+  reportKey(dataSourceName, categoryId, groupId, startDate, endDate) {
+    if (!dataSourceName || !startDate || !endDate) return null;
+
+    let reportKey = `reports:${dataSourceName}`;
+
+    if (categoryId && categoryId !== "all") {
+      reportKey += `:${categoryId}`;
+    } else {
+      reportKey += `:`;
+    }
+
+    reportKey += `:${startDate.replace(/-/g, "")}`;
+    reportKey += `:${endDate.replace(/-/g, "")}`;
+
+    if (groupId && groupId !== "all") {
+      reportKey += `:${groupId}`;
+    } else {
+      reportKey += `:`;
+    }
+
+    reportKey += `:`;
+
+    return reportKey;
+  },
+
   actions: {
     exportCsv() {
       exportEntity("report", {
@@ -202,39 +248,10 @@ export default Ember.Component.extend({
       }
     };
 
-    let startDate = this.get("startDate");
-    let endDate = this.get("endDate");
-
-    startDate =
-      startDate && typeof startDate.isValid === "function"
-        ? startDate.format("YYYYMMDD")
-        : startDate;
-    endDate =
-      startDate && typeof endDate.isValid === "function"
-        ? endDate.format("YYYYMMDD")
-        : endDate;
-
-    if (!startDate || !endDate) {
+    if (!this.get("startDate") || !this.get("endDate")) {
       report = sort(filteredReports)[0];
     } else {
-      let reportKey = `reports:${this.get("dataSourceName")}`;
-
-      if (this.get("categoryId") && this.get("categoryId") !== "all") {
-        reportKey += `:${this.get("categoryId")}`;
-      } else {
-        reportKey += `:`;
-      }
-
-      reportKey += `:${startDate.replace(/-/g, "")}`;
-      reportKey += `:${endDate.replace(/-/g, "")}`;
-
-      if (this.get("groupId") && this.get("groupId") !== "all") {
-        reportKey += `:${this.get("groupId")}`;
-      } else {
-        reportKey += `:`;
-      }
-
-      reportKey += `:`;
+      let reportKey = this.get("reportKey");
 
       report = sort(
         filteredReports.filter(r => r.report_key.includes(reportKey))
