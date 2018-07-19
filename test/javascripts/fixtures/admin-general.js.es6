@@ -1,5 +1,5 @@
 export default {
-  "/admin/general.json": {
+  "/admin/dashboard/general.json": {
     reports: [],
     last_backup_taken_at: "2018-04-13T12:51:19.926Z",
     updated_at: "2018-04-25T08:06:11.292Z",
