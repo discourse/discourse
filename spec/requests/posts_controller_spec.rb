@@ -94,7 +94,7 @@ describe PostsController do
 
   describe '#by_date' do
     include_examples 'finding and showing post' do
-      let(:url) { "/posts/by_date/#{post.topic_id}/#{post.created_at.strftime("%Y-%m-%d")}.json" }
+      let(:url) { "/posts/by-date/#{post.topic_id}/#{post.created_at.strftime("%Y-%m-%d")}.json" }
     end
 
     it 'returns the expected post' do
@@ -102,7 +102,7 @@ describe PostsController do
       second_post = Fabricate(:post, topic: first_post.topic, created_at: 4.days.ago)
       third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
 
-      get "/posts/by_date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
+      get "/posts/by-date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
       json = JSON.parse(response.body)
 
       expect(response.status).to eq(200)
@@ -110,7 +110,7 @@ describe PostsController do
     end
 
     it 'returns no post if date is > at last created post' do
-      get "/posts/by_date/#{post.topic_id}/2245-11-11.json"
+      get "/posts/by-date/#{post.topic_id}/2245-11-11.json"
       json = JSON.parse(response.body)
       expect(response.status).to eq(404)
     end

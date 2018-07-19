@@ -714,8 +714,8 @@ class PostsController < ApplicationController
   end
 
   def find_post_from_params_by_date
-    by_date_finder = Post
-      .where(topic_id: params[:topic_id])
+    by_date_finder = TopicView.new(params[:topic_id], current_user)
+      .filtered_posts
       .where("created_at >= ?", Time.zone.parse(params[:date]))
       .order("created_at ASC")
       .limit(1)
