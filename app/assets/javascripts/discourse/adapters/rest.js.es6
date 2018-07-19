@@ -42,7 +42,9 @@ export default Ember.Object.extend({
   },
 
   appendQueryParams(path, findArgs, extension) {
-    if (findArgs) {
+    // In the condition, checking for `findArgs` only is not sufficient because
+    // it might be `0`.
+    if (findArgs !== undefined) {
       if (typeof findArgs === "object") {
         const queryString = Object.keys(findArgs)
           .reject(k => !findArgs[k])

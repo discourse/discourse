@@ -10,13 +10,11 @@ function flushMap() {
   _identityMap = {};
 }
 
-function storeMap(type, id, obj) {
-  if (!id) {
-    return;
+function storeMap(type, id, record) {
+  if (id !== undefined) {
+    _identityMap[type] = _identityMap[type] || {};
+    _identityMap[type][id] = record;
   }
-
-  _identityMap[type] = _identityMap[type] || {};
-  _identityMap[type][id] = obj;
 }
 
 function fromMap(type, id) {
@@ -197,7 +195,21 @@ export default Ember.Object.extend({
 
   createRecord(type, attrs) {
     attrs = attrs || {};
-    return !!attrs.id ? this._hydrate(type, attrs) : this._build(type, attrs);
+
+    // Creating a record with an ID might conflict with existing records. Before building a new
+    // record, check for existing records.
+    if (attrs.id !== undefined) {
+      // ID should look like an integer: 123, 0, "123", "0"
+      if (!/^\d+$/.test(attrs.id)) {
+        throw new TypeError(
+          "The record ID has to be a non-negative integer (e.g. 123, '123', 1, '1')"
+        );
+      }
+
+      return this._hydrate(type, attrs);
+    }
+
+    return this._build(type, attrs);
   },
 
   destroyRecord(type, record) {
@@ -240,20 +252,20 @@ export default Ember.Object.extend({
     return ResultSet.create(createArgs);
   },
 
-  _build(type, obj) {
-    obj.store = this;
-    obj.__type = type;
-    obj.__state = obj.id ? "created" : "new";
+  _build(type, attrs) {
+    attrs.store = this;
+    attrs.__type = type;
+    attrs.__state = attrs.id !== undefined ? "created" : "new";
 
     // TODO: Have injections be automatic
-    obj.topicTrackingState = this.register.lookup("topic-tracking-state:main");
-    obj.keyValueStore = this.register.lookup("key-value-store:main");
-    obj.siteSettings = this.register.lookup("site-settings:main");
+    attrs.topicTrackingState = this.register.lookup("topic-tracking-state:main");
+    attrs.keyValueStore = this.register.lookup("key-value-store:main");
+    attrs.siteSettings = this.register.lookup("site-settings:main");
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
-    const model = klass.create(obj);
+    const model = klass.create(attrs);
 
-    storeMap(type, obj.id, model);
+    storeMap(type, attrs.id, model);
     return model;
   },
 
@@ -299,55 +311,51 @@ export default Ember.Object.extend({
     }
   },
 
-  _hydrateEmbedded(type, obj, root) {
+  _hydrateEmbedded(type, attrs, root) {
     const self = this;
-    Object.keys(obj).forEach(function(k) {
+    Object.keys(attrs).forEach(function(k) {
       const m = /(.+)\_id(s?)$/.exec(k);
       if (m) {
         const subType = m[1];
 
         if (m[2]) {
-          const hydrated = obj[k].map(function(id) {
+          const hydrated = attrs[k].map(function(id) {
             return self._lookupSubType(subType, type, id, root);
           });
-          obj[self.pluralize(subType)] = hydrated || [];
-          delete obj[k];
+          attrs[self.pluralize(subType)] = hydrated || [];
+          delete attrs[k];
         } else {
-          const hydrated = self._lookupSubType(subType, type, obj[k], root);
+          const hydrated = self._lookupSubType(subType, type, attrs[k], root);
           if (hydrated) {
-            obj[subType] = hydrated;
-            delete obj[k];
+            attrs[subType] = hydrated;
+            delete attrs[k];
           }
         }
       }
     });
   },
 
-  _hydrate(type, obj, root) {
-    if (!obj) {
+  _hydrate(type, attrs, root) {
+    if (!attrs) {
       throw new Error("Can't hydrate " + type + " of `null`");
     }
 
-    const id = obj.id;
-    if (!id) {
-      throw new Error("Can't hydrate " + type + " without an `id`");
-    }
-
-    root = root || obj;
+    root = root || attrs;
 
     // Experimental: If serialized with a certain option we'll wire up embedded objects
     // automatically.
     if (root.__rest_serializer === "1") {
-      this._hydrateEmbedded(type, obj, root);
+      this._hydrateEmbedded(type, attrs, root);
     }
 
-    const existing = fromMap(type, id);
-    if (existing === obj) {
+    const existing = fromMap(type, attrs.id);
+    if (existing === attrs) {
       return existing;
     }
 
     if (existing) {
-      delete obj.id;
+      const id = attrs.id;
+      delete attrs.id;
       let klass = this.register.lookupFactory("model:" + type);
 
       if (klass && klass.class) {
@@ -358,12 +366,12 @@ export default Ember.Object.extend({
         klass = RestModel;
       }
 
-      existing.setProperties(klass.munge(obj));
-      obj.id = id;
+      existing.setProperties(klass.munge(attrs));
+      attrs.id = id;
       return existing;
     }
 
-    return this._build(type, obj);
+    return this._build(type, attrs);
   }
 });
 
