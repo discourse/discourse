@@ -28,23 +28,6 @@ QUnit.test("Root URL - Viewing Self", async assert => {
   assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
 });
 
-<<<<<<< HEAD
-QUnit.test("Viewing Summary", assert => {
-  visit("/u/eviltrout/summary");
-  andThen(() => {
-    assert.ok(exists(".replies-section li a"), "replies");
-    assert.ok(exists(".topics-section li a"), "topics");
-    assert.ok(exists(".links-section li a"), "links");
-    assert.ok(exists(".replied-section .user-info"), "liked by");
-    assert.ok(exists(".liked-by-section .user-info"), "liked by");
-    assert.ok(exists(".liked-section .user-info"), "liked");
-    assert.ok(exists(".badges-section .badge-card"), "badges");
-    assert.ok(
-      exists(".top-categories-section .category-link"),
-      "top categories"
-    );
-  });
-=======
 QUnit.test("Viewing Summary", async assert => {
   await visit("/u/eviltrout/summary");
   assert.ok(exists(".replies-section li a"), "replies");
@@ -54,5 +37,5 @@ QUnit.test("Viewing Summary", async assert => {
   assert.ok(exists(".liked-by-section .user-info"), "liked by");
   assert.ok(exists(".liked-section .user-info"), "liked");
   assert.ok(exists(".badges-section .badge-card"), "badges");
->>>>>>> DEV: migrate acceptance tests to async await - plugin, reports, user, topic
+  assert.ok(exists(".top-categories-section .category-link"), "top categories");
 });
