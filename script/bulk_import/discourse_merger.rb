@@ -322,6 +322,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         @raw_connection.put_copy_data(row.values)
       end
     end
+
+    @sequences[Upload.sequence_name] = last_id + 1
+
     puts ''
 
     copy_model(PostUpload)
@@ -681,7 +684,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     @topics.each do |old_topic_id, new_topic_id|
       current += 1
-      puts "#{current} completed. #{update_count} rows updated." if current % 200 == 0
+      percent = (current * 100) / total
+      puts "#{current} (#{percent}\%) completed. #{update_count} rows updated." if current % 200 == 0
 
       if topic = Topic.find_by_id(new_topic_id)
         replace_arg = [
