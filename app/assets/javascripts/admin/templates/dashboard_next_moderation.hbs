@@ -4,7 +4,11 @@
 
     <div class="moderators-activity section">
       <div class="section-title">
-        <h2>{{i18n "admin.dashboard.moderators_activity"}}</h2>
+        <h2>
+          <a href="/admin/reports/moderators_activity">
+            {{i18n "admin.dashboard.moderators_activity"}}
+          </a>
+        </h2>
         {{period-chooser
           period=period
           action="changePeriod"
