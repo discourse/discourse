@@ -48,7 +48,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         params = event.payload[:params].except(*exceptions)
 
         if (file = params[:file]) && file.respond_to?(:headers)
-          param[:file] = file.headers
+          params[:file] = file.headers
         end
 
         if (files = params[:files])
