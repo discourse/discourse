@@ -1,6 +1,6 @@
 class IncomingLinksReport
 
-  attr_accessor :type, :data, :y_titles, :start_date, :limit
+  attr_accessor :type, :data, :y_titles, :start_date, :end_date, :limit
 
   def initialize(type)
     @type = type
@@ -15,7 +15,8 @@ class IncomingLinksReport
       xaxis: I18n.t("reports.#{self.type}.xaxis"),
       ytitles: self.y_titles,
       data: self.data,
-      start_date: start_date
+      start_date: start_date,
+      end_date: end_date
     }
   end
 
@@ -27,6 +28,7 @@ class IncomingLinksReport
     report = IncomingLinksReport.new(type)
 
     report.start_date = _opts[:start_date] || 30.days.ago
+    report.end_date = _opts[:end_date] || Time.now.end_of_day
     report.limit = _opts[:limit].to_i if _opts[:limit]
 
     send(report_method, report)
@@ -38,8 +40,8 @@ class IncomingLinksReport
     report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
 
-    num_clicks = link_count_per_user(start_date: report.start_date)
-    num_topics = topic_count_per_user(start_date: report.start_date)
+    num_clicks = link_count_per_user(start_date: report.start_date, end_date: report.end_date)
+    num_topics = topic_count_per_user(start_date: report.start_date, end_date: report.end_date)
     user_id_lookup = User.where(username: num_clicks.keys).select(:id, :username).inject({}) { |sum, v| sum[v.username] = v.id; sum; }
     report.data = []
     num_clicks.each_key do |username|
@@ -48,19 +50,19 @@ class IncomingLinksReport
     report.data = report.data.sort_by { |x| x[:num_clicks] }.reverse[0, 10]
   end
 
-  def self.per_user(start_date:)
+  def self.per_user(start_date:, end_date:)
     @per_user_query ||= public_incoming_links
-      .where('incoming_links.created_at > ? AND incoming_links.user_id IS NOT NULL', start_date)
+      .where('incoming_links.created_at > ? AND incoming_links.created_at < ? AND incoming_links.user_id IS NOT NULL', start_date, end_date)
       .joins(:user)
       .group('users.username')
   end
 
-  def self.link_count_per_user(start_date:)
-    per_user(start_date: start_date).count
+  def self.link_count_per_user(start_date:, end_date:)
+    per_user(start_date: start_date, end_date: end_date).count
   end
 
-  def self.topic_count_per_user(start_date:)
-    per_user(start_date: start_date).joins(:post).count("DISTINCT posts.topic_id")
+  def self.topic_count_per_user(start_date:, end_date:)
+    per_user(start_date: start_date, end_date: end_date).joins(:post).count("DISTINCT posts.topic_id")
   end
 
   # Return top 10 domains that brought traffic to the site within the last 30 days
@@ -69,7 +71,7 @@ class IncomingLinksReport
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
     report.y_titles[:num_users] = I18n.t("reports.#{report.type}.num_users")
 
-    num_clicks = link_count_per_domain(start_date: report.start_date)
+    num_clicks = link_count_per_domain(start_date: report.start_date, end_date: report.end_date)
     num_topics = topic_count_per_domain(num_clicks.keys)
     report.data = []
     num_clicks.each_key do |domain|
@@ -78,9 +80,9 @@ class IncomingLinksReport
     report.data = report.data.sort_by { |x| x[:num_clicks] }.reverse[0, 10]
   end
 
-  def self.link_count_per_domain(limit: 10, start_date:)
+  def self.link_count_per_domain(limit: 10, start_date:, end_date:)
     public_incoming_links
-      .where('incoming_links.created_at > ?', start_date)
+      .where('incoming_links.created_at > ? AND incoming_links.created_at < ?', start_date, end_date)
       .joins(incoming_referer: :incoming_domain)
       .group('incoming_domains.name')
       .order('count_all DESC')
@@ -102,7 +104,7 @@ class IncomingLinksReport
 
   def self.report_top_referred_topics(report)
     report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.num_clicks")
-    num_clicks = link_count_per_topic(start_date: report.start_date)
+    num_clicks = link_count_per_topic(start_date: report.start_date, end_date: report.end_date)
     num_clicks = num_clicks.to_a.sort_by { |x| x[1] }.last(report.limit || 10).reverse
     report.data = []
     topics = Topic.select('id, slug, title').where('id in (?)', num_clicks.map { |z| z[0] })
@@ -115,9 +117,9 @@ class IncomingLinksReport
     report.data
   end
 
-  def self.link_count_per_topic(start_date:)
+  def self.link_count_per_topic(start_date:, end_date:)
     public_incoming_links
-      .where('incoming_links.created_at > ? AND topic_id IS NOT NULL', start_date)
+      .where('incoming_links.created_at > ? AND incoming_links.created_at < ? AND topic_id IS NOT NULL', start_date, end_date)
       .group('topic_id')
       .count
   end

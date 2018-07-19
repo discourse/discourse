@@ -2775,9 +2775,14 @@ en:
         page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
         community_health: Community health
+        moderators_activity: Moderators activity
         whats_new_in_discourse: What’s new in Discourse?
         activity_metrics: Activity Metrics
         all_reports: "All reports"
+        general_tab: "General"
+        moderation_tab: "Moderation"
+        disabled: Disabled
+        timeout_error: Sorry, query is taking too long, please pick a shorter interval
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -2796,8 +2801,8 @@ en:
           end_date: "End Date"
           groups: "All groups"
           disabled: "This report is disabled"
-          total_for_period: "Total for period"
-          total: "Total"
+          totals_for_sample: "Totals for sample"
+          total: "All time total"
           trending_search:
             more: '<a href="/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'

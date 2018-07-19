@@ -1,0 +1,60 @@
+<table class="report-table">
+  <thead>
+    <tr>
+      {{#if model.computedLabels}}
+        {{#each model.computedLabels as |label index|}}
+          {{admin-report-table-header
+            showSortingUI=showSortingUI
+            currentSortDirection=sortDirection
+            currentSortLabel=sortLabel
+            label=label
+            sortByLabel=(action "sortByLabel" label)}}
+        {{/each}}
+      {{else}}
+        {{#each model.data as |data|}}
+          <th>{{data.x}}</th>
+        {{/each}}
+      {{/if}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each paginatedData as |data|}}
+      {{admin-report-table-row data=data labels=model.computedLabels}}
+    {{/each}}
+  </tbody>
+</table>
+
+{{#if showTotalForSample}}
+  <small>{{i18n 'admin.dashboard.reports.totals_for_sample'}}</small>
+  <table class="totals-sample-table">
+    <tbody>
+      <tr>
+        {{#each totalsForSample as |total|}}
+          <td>{{total.formatedValue}}</td>
+        {{/each}}
+      </tr>
+    </tbody>
+  </table>
+{{/if}}
+
+{{#if showTotal}}
+  <small>{{i18n 'admin.dashboard.reports.total'}}</small>
+  <table class="totals-table">
+    <tbody>
+      <tr>
+        <td>-</td>
+        <td>{{number model.total}}</td>
+      </tr>
+    </tbody>
+  </table>
+{{/if}}
+
+<div class="pagination">
+  {{#each pages as |pageState|}}
+    {{d-button
+      translatedLabel=pageState.page
+      action="changePage"
+      actionParam=pageState.index
+      class=pageState.class}}
+  {{/each}}
+</div>

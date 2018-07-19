@@ -1,29 +1,41 @@
 import { ajax } from "discourse/lib/ajax";
 
-const ATTRIBUTES = ["disk_space", "updated_at", "last_backup_taken_at"];
+const GENERAL_ATTRIBUTES = ["disk_space", "updated_at", "last_backup_taken_at"];
 
 const AdminDashboardNext = Discourse.Model.extend({});
 
 AdminDashboardNext.reopenClass({
-  /**
-    Fetch all dashboard data. This can be an expensive request when the cached data
-    has expired and the server must collect the data again.
-
-    @method find
-    @return {jqXHR} a jQuery Promise object
-  **/
-  find() {
-    return ajax("/admin/dashboard-next.json").then(function(json) {
-      var model = AdminDashboardNext.create();
-
-      model.set("reports", json.reports);
+  fetch() {
+    return ajax("/admin/dashboard-next.json").then(json => {
+      const model = AdminDashboardNext.create();
       model.set("version_check", json.version_check);
+      return model;
+    });
+  },
+
+  fetchModeration() {
+    return ajax("/admin/dashboard/moderation.json").then(json => {
+      const model = AdminDashboardNext.create();
+      model.setProperties({
+        reports: json.reports,
+        loaded: true
+      });
+      return model;
+    });
+  },
+
+  fetchGeneral() {
+    return ajax("/admin/dashboard/general.json").then(json => {
+      const model = AdminDashboardNext.create();
 
       const attributes = {};
-      ATTRIBUTES.forEach(a => (attributes[a] = json[a]));
-      model.set("attributes", attributes);
+      GENERAL_ATTRIBUTES.forEach(a => (attributes[a] = json[a]));
 
-      model.set("loaded", true);
+      model.setProperties({
+        reports: json.reports,
+        attributes,
+        loaded: true
+      });
 
       return model;
     });

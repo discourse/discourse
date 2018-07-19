@@ -447,7 +447,7 @@ export default Ember.Component.extend(
       if (get(this.actions, actionName)) {
         run.next(() => this.send(actionName, ...params));
       } else if (this.get(actionName)) {
-        run.next(() => this.get(actionName)());
+        run.next(() => this.get(actionName)(...params));
       }
     },
 

@@ -10,6 +10,40 @@
     margin-bottom: 1em;
   }
 
+  .navigation {
+    display: flex;
+    margin: 0 0 1em 0;
+
+    .navigation-item {
+      display: inline;
+      background: $secondary;
+      padding: 0.5em 1em;
+    }
+
+    .navigation-link {
+      font-weight: 700;
+    }
+  }
+
+  @mixin active-navigation-item {
+    border-radius: 3px 3px 0 0;
+    border: 1px solid $primary-low;
+    border-bottom: 10px solid $secondary;
+  }
+
+  &.moderation .navigation-item.moderation {
+    @include active-navigation-item;
+  }
+
+  &.general .navigation-item.general {
+    @include active-navigation-item;
+  }
+
+  .sections {
+    display: flex;
+    flex-direction: column;
+  }
+
   .section-columns {
     display: flex;
     justify-content: space-between;
@@ -177,7 +211,7 @@
     }
   }
 
-  .community-health {
+  .section {
     .period-chooser .period-chooser-header {
       .selected-name,
       .d-icon {
@@ -203,105 +237,7 @@
   }
 }
 
-.dashboard-mini-chart {
-  .status {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5em;
-    padding: 0 0.45em 0 0;
-
-    .title {
-      font-size: $font-up-1;
-      font-weight: 700;
-      margin: 0;
-
-      a {
-        color: $primary;
-      }
-
-      .info {
-        cursor: pointer;
-        margin-left: 0.25em;
-        color: $primary-low-mid;
-
-        &:hover {
-          color: $primary-medium;
-        }
-      }
-    }
-
-    .trend {
-      align-items: center;
-
-      &.trending-down,
-      &.high-trending-down {
-        color: $danger;
-      }
-
-      &.trending-up,
-      &.high-trending-up {
-        color: $success;
-      }
-
-      &.no-change {
-        color: $primary-medium;
-      }
-
-      .trend-value {
-        font-size: $font-up-1;
-      }
-
-      .trend-icon {
-        font-size: $font-up-1;
-        font-weight: 700;
-      }
-    }
-  }
-
-  .conditional-loading-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
-    width: 100%;
-    min-width: 0;
-  }
-
-  @include breakpoint(medium) {
-    max-width: 100%;
-  }
-
-  &.is-loading {
-    height: 200px;
-  }
-
-  .loading-container.visible {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-  }
-
-  .tooltip {
-    cursor: pointer;
-  }
-
-  .chart-title {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-
-    h3 {
-      margin: 1em 0;
-      a,
-      a:visited {
-        color: $primary;
-      }
-    }
-  }
-}
-
-.dashboard-table {
+.admin-report-table {
   margin-bottom: 1em;
 
   &.is-disabled {
@@ -320,92 +256,14 @@
   &.is-loading {
     height: 150px;
   }
-
-  .table-title {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-
-    h3 {
-      margin: 1em 0 0 0;
-    }
-  }
-
-  table {
-    table-layout: fixed;
-    border: 1px solid $primary-low;
-
-    thead {
-      border: 1px solid $primary-low;
-      tr {
-        th {
-          text-align: center;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-        }
-      }
-    }
-
-    tbody {
-      border-top: none;
-      tr {
-        td:first-child {
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: normal;
-        }
-
-        td {
-          text-align: center;
-          padding: 8px;
-        }
-
-        td.left {
-          text-align: left;
-        }
-
-        td.title {
-          text-align: left;
-        }
-
-        td.value {
-          text-align: right;
-          padding: 8px 21px 8px 8px; // accounting for negative right caret margin
-          &:nth-of-type(2) {
-            padding: 8px 12px 8px;
-          }
-          i {
-            margin-right: -12px; // align on caret
-            @media screen and (max-width: 650px) {
-              margin-right: -9px;
-            }
-          }
-
-          &.high-trending-up,
-          &.trending-up {
-            i {
-              color: $success;
-            }
-          }
-          &.high-trending-down,
-          &.trending-down {
-            i {
-              color: $danger;
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 .user-metrics {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-left: -5%;
-  margin: 2em 0 0.75em -5%; // Negative margin allows for a margin when in 2-columns,
+  flex-direction: column;
+
   .dashboard-inline-table {
     //  and "hides" margin when the item spans 100% width
     flex: 1 0 auto;
@@ -468,23 +326,7 @@
   }
 }
 
-.dashboard-inline-table {
-  margin-left: 5%;
-  margin-bottom: 1.25em;
-
-  .table-title {
-    border-bottom: 1px solid $primary-low;
-    margin-bottom: 1em;
-  }
-
-  .table-container {
-    display: flex;
-    flex-wrap: wrap;
-    flex: 1 1 auto;
-  }
-}
-
-.dashboard-table.activity-metrics {
+.admin-report.activity-metrics {
   table {
     @media screen and (min-width: 400px) {
       table-layout: auto;
@@ -503,6 +345,60 @@
       }
       td.title {
         padding: 8px 0 8px 4px;
+      }
+    }
+
+    tr {
+      td {
+        text-overflow: unset;
+        overflow: auto;
+        white-space: normal;
+      }
+
+      td:first-child {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: normal;
+      }
+    }
+
+    td {
+      text-align: center;
+      padding: 8px;
+    }
+
+    td.left {
+      text-align: left;
+    }
+
+    td.title {
+      text-align: left;
+    }
+
+    td.value {
+      text-align: right;
+      padding: 8px 21px 8px 8px; // accounting for negative right caret margin
+      &:nth-of-type(2) {
+        padding: 8px 12px 8px;
+      }
+      i {
+        margin-right: -12px; // align on caret
+        @media screen and (max-width: 650px) {
+          margin-right: -9px;
+        }
+      }
+
+      &.high-trending-up,
+      &.trending-up {
+        i {
+          color: $success;
+        }
+      }
+      &.high-trending-down,
+      &.trending-down {
+        i {
+          color: $danger;
+        }
       }
     }
   }
@@ -545,5 +441,83 @@
         margin-left: 5px;
       }
     }
+  }
+}
+
+.community-health.section {
+  margin-bottom: 1em;
+}
+
+.admin-report.activity-metrics {
+  table {
+    table-layout: auto;
+  }
+}
+
+.admin-report.users-by-type {
+  margin-top: 1em;
+}
+
+.admin-report.users-by-type,
+.admin-report.users-by-trust-level {
+  margin-bottom: 1em;
+  flex: 1;
+  .report-header {
+    border-bottom: 1px solid $primary-medium;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #e9e9e9;
+  }
+}
+
+.admin-report.moderators-activity {
+  tbody tr td.username,
+  thead tr th.username {
+    text-align: left;
+  }
+}
+
+.admin-report.trending-search {
+  tbody tr td.term,
+  thead tr th.term {
+    text-align: left;
+  }
+}
+
+.admin-report.top-traffic-sources {
+  tbody tr td.domain,
+  thead tr th.domain {
+    text-align: left;
+  }
+}
+
+.dashboard-next.moderation {
+  .admin-dashboard-moderation-top {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 1em;
+  }
+
+  .main-section {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 1em;
+
+    > * {
+      grid-column: span 12;
+    }
+
+    .admin-dashboard-moderation-bottom-outlet {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-column-gap: 1em;
+    }
+  }
+
+  .admin-report.flags-status {
+    grid-column: span 6;
+  }
+
+  .admin-report.post-edits {
+    grid-column: span 6;
   }
 }

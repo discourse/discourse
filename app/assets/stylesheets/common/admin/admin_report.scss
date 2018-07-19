@@ -1,0 +1,127 @@
+.admin-report {
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+
+    .report-title {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      .title {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: $font-up-1;
+        .separator {
+          font-weight: normal;
+        }
+
+        .report-link {
+          color: $primary;
+        }
+
+        .separator + .report-link {
+          font-weight: normal;
+        }
+      }
+
+      .info {
+        cursor: pointer;
+        margin-left: 0.25em;
+        color: $primary-low-mid;
+
+        &:hover {
+          color: $primary-medium;
+        }
+      }
+    }
+
+    .trend {
+      align-items: center;
+
+      &.trending-down,
+      &.high-trending-down {
+        color: $danger;
+      }
+
+      &.trending-up,
+      &.high-trending-up {
+        color: $success;
+      }
+
+      &.no-change {
+        color: $primary-medium;
+      }
+
+      .trend-value {
+        font-size: $font-up-1;
+      }
+
+      .trend-icon {
+        font-size: $font-up-1;
+        font-weight: 700;
+      }
+    }
+
+    .mode-switch {
+      list-style: none;
+      display: flex;
+      margin: 0;
+
+      .mode {
+        display: inline;
+
+        .mode-button.current {
+          color: $tertiary;
+        }
+      }
+    }
+  }
+
+  .report-body {
+    display: flex;
+    justify-content: space-between;
+
+    .admin-report-table,
+    .admin-report-chart {
+      width: 100%;
+    }
+
+    .report-filters {
+      margin-left: 1em;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+
+      .filtering-control {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1em;
+      }
+      .filtering-label {
+      }
+      .filtering-input {
+        width: 100%;
+
+        .date-picker-wrapper,
+        .combo-box,
+        .export-btn {
+          width: 100%;
+
+          .date-picker {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    .report-filters:only-child {
+      margin-left: auto;
+    }
+  }
+}
