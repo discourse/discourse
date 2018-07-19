@@ -7,28 +7,24 @@ acceptance("CategoryChooser", {
   }
 });
 
-QUnit.test("does not display uncategorized if not allowed", assert => {
+QUnit.test("does not display uncategorized if not allowed", async assert => {
   const categoryChooser = selectKit(".category-chooser");
 
-  visit("/");
-  click("#create-topic");
+  await visit("/");
+  await click("#create-topic");
 
-  categoryChooser.expand();
+  categoryChooser.expandAwait();
 
-  andThen(() => {
-    assert.ok(categoryChooser.rowByIndex(0).name() !== "uncategorized");
-  });
+  assert.ok(categoryChooser.rowByIndex(0).name() !== "uncategorized");
 });
 
-QUnit.test("prefill category when category_id is set", assert => {
-  visit("/new-topic?category_id=1");
+QUnit.test("prefill category when category_id is set", async assert => {
+  await visit("/new-topic?category_id=1");
 
-  andThen(() => {
-    assert.equal(
-      selectKit(".category-chooser")
-        .header()
-        .value(),
-      1
-    );
-  });
+  assert.equal(
+    selectKit(".category-chooser")
+      .header()
+      .value(),
+    1
+  );
 });

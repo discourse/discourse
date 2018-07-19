@@ -25,57 +25,47 @@ acceptance("Create Account - User Fields", {
   }
 });
 
-QUnit.test("create account with user fields", assert => {
-  visit("/");
-  click("header .sign-up-button");
+QUnit.test("create account with user fields", async assert => {
+  await visit("/");
+  await click("header .sign-up-button");
 
-  andThen(() => {
-    assert.ok(exists(".create-account"), "it shows the create account modal");
-    assert.ok(exists(".user-field"), "it has at least one user field");
-    assert.ok(
-      exists(".modal-footer .btn-primary:disabled"),
-      "create account is disabled at first"
-    );
-  });
+  assert.ok(exists(".create-account"), "it shows the create account modal");
+  assert.ok(exists(".user-field"), "it has at least one user field");
+  assert.ok(
+    exists(".modal-footer .btn-primary:disabled"),
+    "create account is disabled at first"
+  );
 
-  fillIn("#new-account-name", "Dr. Good Tuna");
-  fillIn("#new-account-password", "cool password bro");
-  fillIn("#new-account-email", "good.tuna@test.com");
-  fillIn("#new-account-username", "goodtuna");
+  await fillIn("#new-account-name", "Dr. Good Tuna");
+  await fillIn("#new-account-password", "cool password bro");
+  await fillIn("#new-account-email", "good.tuna@test.com");
+  await fillIn("#new-account-username", "goodtuna");
 
-  andThen(() => {
-    assert.ok(
-      exists("#username-validation.good"),
-      "the username validation is good"
-    );
-    assert.ok(
-      exists(".modal-footer .btn-primary:disabled"),
-      "create account is still disabled due to lack of user fields"
-    );
-  });
+  assert.ok(
+    exists("#username-validation.good"),
+    "the username validation is good"
+  );
+  assert.ok(
+    exists(".modal-footer .btn-primary:disabled"),
+    "create account is still disabled due to lack of user fields"
+  );
 
-  fillIn(".user-field input[type=text]:first", "Barky");
+  await fillIn(".user-field input[type=text]:first", "Barky");
 
-  andThen(() => {
-    assert.ok(
-      exists(".modal-footer .btn-primary:disabled"),
-      "create account is disabled because field is not checked"
-    );
-  });
+  assert.ok(
+    exists(".modal-footer .btn-primary:disabled"),
+    "create account is disabled because field is not checked"
+  );
 
-  click(".user-field input[type=checkbox]");
-  andThen(() => {
-    assert.not(
-      exists(".modal-footer .btn-primary:disabled"),
-      "create account is enabled because field is not checked"
-    );
-  });
+  await click(".user-field input[type=checkbox]");
+  assert.not(
+    exists(".modal-footer .btn-primary:disabled"),
+    "create account is enabled because field is not checked"
+  );
 
-  click(".user-field input[type=checkbox]");
-  andThen(() => {
-    assert.ok(
-      exists(".modal-footer .btn-primary:disabled"),
-      "unclicking the checkbox disables the submit"
-    );
-  });
+  await click(".user-field input[type=checkbox]");
+  assert.ok(
+    exists(".modal-footer .btn-primary:disabled"),
+    "unclicking the checkbox disables the submit"
+  );
 });
