@@ -1,10 +1,8 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Unknown");
 
-QUnit.test("Unknown URL", assert => {
+QUnit.test("Unknown URL", async assert => {
   assert.expect(1);
-  visit("/url-that-doesn't-exist");
-  andThen(() => {
-    assert.ok(exists(".page-not-found"), "The not found content is present");
-  });
+  await visit("/url-that-doesn't-exist");
+  assert.ok(exists(".page-not-found"), "The not found content is present");
 });
