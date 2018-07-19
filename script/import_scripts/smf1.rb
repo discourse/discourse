@@ -640,6 +640,9 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw.gsub!(/Sent from .+? using \[url=.*?\].+?\[\/url\]/i, "")
     raw.gsub!(/Sent from .+? using .+?\z/i, "")
 
+    # clean URLs
+    raw.gsub!(/\[url=(.+?)\]\1\[\/url\]/i, '\1')
+
     raw
   end
 
