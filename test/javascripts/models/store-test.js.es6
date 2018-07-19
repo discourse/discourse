@@ -2,7 +2,7 @@ QUnit.module("service:store");
 
 import createStore from "helpers/create-store";
 
-QUnit.test("createRecord", assert => {
+QUnit.test("createRecord with integer ID", assert => {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 111, name: "hello" });
 
@@ -11,7 +11,7 @@ QUnit.test("createRecord", assert => {
   assert.equal(widget.get("id"), 111, "record ID is correct");
 });
 
-QUnit.test("createRecord with ID 0", assert => {
+QUnit.test("createRecord with integer ID 0", assert => {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 0, name: "" });
 
@@ -20,12 +20,22 @@ QUnit.test("createRecord with ID 0", assert => {
   assert.equal(widget.get("id"), 0, "record ID is correct");
 });
 
+QUnit.test("createRecord with string ID", assert => {
+  const store = createStore();
+  const widget = store.createRecord("widget", { id: "222", name: "Binti" });
+
+  assert.ok(!widget.get("isNew"), "record is not new");
+  assert.equal(widget.get("name"), "Binti", "record name is correct");
+  assert.equal(widget.get("id"), "222", "record ID is correct");
+});
+
 QUnit.test("createRecord without an ID", assert => {
   const store = createStore();
   const widget = store.createRecord("widget", { name: "hello" });
 
   assert.ok(widget.get("isNew"), "record is new");
-  assert.ok(widget.get("id") === undefined, "record has no `id` property");
+  assert.equal(widget.get("name"), "hello", "record name is correct");
+  assert.equal(widget.get("id"), undefined, "record has no `id` property");
 });
 
 QUnit.test("createRecord doesn’t modify the input `id` field", assert => {
@@ -44,7 +54,7 @@ QUnit.test("createRecord without attributes", assert => {
   const store = createStore();
   const widget = store.createRecord("widget");
 
-  assert.ok(widget.get("id") === undefined, "record has no `id` property");
+  assert.equal(widget.get("id"), undefined, "record has no `id` property");
   assert.ok(widget.get("isNew"), "record is new");
   assert.ok(!widget.get("isCreated"), "record is not created");
 });

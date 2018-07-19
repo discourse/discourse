@@ -198,10 +198,11 @@ export default Ember.Object.extend({
 
     // Creating a record with an ID might conflict with existing records. Before building a new
     // record, check for existing records.
-    if (attrs.hasOwnProperty("id")) {
-      if (typeof attrs.id !== "number") {
+    if (attrs.id !== undefined) {
+      // ID should look like an integer: 123, 0, "123", "0"
+      if (!/^\d+$/.test(attrs.id)) {
         throw new TypeError(
-          `The id property has type ${typeof attrs.id} (must be number).`
+          "The record ID has to be a non-negative integer (e.g. 123, '123', 1, '1')"
         );
       }
 
