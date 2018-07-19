@@ -58,8 +58,10 @@
 }
 
 // This is for the support_mixed_text_direction setting
-.cooked ul[dir="ltr"], .d-editor-preview ul[dir="ltr"],
-.cooked ul[dir="rtl"], .d-editor-preview ul[dir="rtl"] {
+.cooked ul[dir="ltr"],
+.d-editor-preview ul[dir="ltr"],
+.cooked ul[dir="rtl"],
+.d-editor-preview ul[dir="rtl"] {
   padding-right: 40px;
   padding-left: 40px;
 }
