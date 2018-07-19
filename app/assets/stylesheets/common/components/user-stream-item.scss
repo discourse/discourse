@@ -16,12 +16,7 @@
 
     &.deleted {
       opacity: 0.8;
-      background-color: dark-light-diff(
-        rgba($danger, 0.7),
-        $secondary,
-        50%,
-        -10%
-      );
+      background-color: dark-light-diff(rgba($danger, 0.7), $secondary, 50%, -10%);
     }
 
     &.hidden {
@@ -76,14 +71,12 @@
   }
 
   .edit-reason {
-    background-color: dark-light-choose(
-      $highlight-medium,
-      scale-color($highlight, $lightness: -50%)
-    );
+    background-color: dark-light-choose($highlight-medium, scale-color($highlight, $lightness: -50%));
     padding: 3px 5px 5px 5px;
   }
 
-  .remove-bookmark {
+  .remove-bookmark,
+  .remove-draft {
     float: right;
     margin-top: -4px;
   }
@@ -95,6 +88,7 @@
 
     p {
       display: inline-block;
+
       span {
         color: $primary;
       }
@@ -130,7 +124,7 @@
   }
 }
 
-.user-stream .child-actions, /* DEPRECATED: '.user-stream .child-actions' selector*/
+.user-stream .child-actions,
 .user-stream-item-actions {
   margin-top: 8px;
 

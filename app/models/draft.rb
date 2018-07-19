@@ -43,6 +43,42 @@ class Draft < ActiveRecord::Base
     end
   end
 
+  def self.stream(opts = nil)
+    opts ||= {}
+
+    user_id = opts[:user_id]
+    offset = opts[:offset] || 0
+    limit = opts[:limit] || 30
+
+    # Joining with topics table based on draft_key is imperfect
+    builder = DB.build <<~SQL
+      SELECT
+        d.*, t.title, t.id topic_id,
+        t.category_id, t.closed topic_closed, t.archived topic_archived,
+        pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id
+      FROM drafts d
+      LEFT JOIN topics t ON
+        CASE
+            WHEN d.draft_key = '#{NEW_TOPIC}' THEN 0
+            WHEN d.draft_key = '#{NEW_PRIVATE_MESSAGE}' THEN 0
+            ELSE CAST(replace(d.draft_key, '#{EXISTING_TOPIC}', '') AS INT)
+        END = t.id
+      LEFT JOIN categories c on c.id = t.category_id
+      JOIN users pu on pu.id = COALESCE(t.user_id, d.user_id)
+      /*where*/
+      /*order_by*/
+      /*offset*/
+      /*limit*/
+    SQL
+
+    builder
+      .where('d.user_id = :user_id', user_id: user_id.to_i)
+      .order_by('d.updated_at desc')
+      .offset(offset.to_i)
+      .limit(limit.to_i)
+      .query
+  end
+
   def self.cleanup!
     DB.exec("DELETE FROM drafts where sequence < (
                SELECT max(s.sequence) from draft_sequences s

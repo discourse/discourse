@@ -2,6 +2,7 @@ import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
 import { selectedText } from "discourse/lib/utilities";
 import Post from "discourse/models/post";
+import Draft from "discourse/models/draft";
 
 export default Ember.Component.extend(LoadMore, {
   loading: false,
@@ -54,6 +55,19 @@ export default Ember.Component.extend(LoadMore, {
       const stream = this.get("stream");
       Post.updateBookmark(userAction.get("post_id"), false).then(() => {
         stream.remove(userAction);
+      });
+    },
+
+    resumeDraft(draft) {
+      console.log(draft);
+      // const stream = this.get("stream");
+      // TODO: load composer with draft in current screen
+    },
+
+    removeDraft(draft) {
+      const stream = this.get("stream");
+      Draft.clear(draft.draft_key, draft.sequence).then(() => {
+        stream.remove(draft);
       });
     },
 

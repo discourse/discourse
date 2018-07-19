@@ -286,6 +286,10 @@ en:
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
 
+    drafts:
+      resume: "Resume Draft"
+      remove: "Remove Draft"
+
     topic_count_latest:
       one: "See {{count}} new or updated topic"
       other: "See {{count}} new or updated topics"
@@ -545,6 +549,7 @@ en:
       "12": "Sent Items"
       "13": "Inbox"
       "14": "Pending"
+      "15": "Drafts"
 
     categories:
       all: "all categories"

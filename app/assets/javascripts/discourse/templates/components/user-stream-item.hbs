@@ -37,8 +37,19 @@
 
 {{#each item.children as |child|}}
   <div class='user-stream-item-actions child-actions'>{{!-- DEPRECATED: 'child-actions' class --}}
-    {{d-icon child.icon class="icon"}}
+    {{#if child.icon}}
+      {{d-icon child.icon class="icon"}}
+    {{/if}}
     {{#each child.items as |grandChild|}}
+      {{#if grandChild.removableDraft}}
+        <button class="btn btn-default resume-draft" {{action resumeDraft grandChild}}>
+          {{d-icon 'pencil'}} {{i18n "drafts.resume"}}
+        </button>
+
+        <button class="btn btn-default remove-draft" {{action removeDraft grandChild}}>
+          {{d-icon 'times'}} {{i18n "drafts.remove"}}
+        </button>
+      {{/if}}
       {{#if grandChild.removableBookmark}}
         <button class="btn btn-default remove-bookmark" {{action removeBookmark grandChild}}>
           {{d-icon 'times'}} {{i18n "bookmarks.remove"}}

@@ -17,7 +17,8 @@ const UserActionTypes = {
   edits: 11,
   messages_sent: 12,
   messages_received: 13,
-  pending: 14
+  pending: 14,
+  drafts: 15
 };
 const InvertedActionTypes = {};
 
@@ -134,6 +135,7 @@ const UserAction = RestModel.extend({
   isPM: Em.computed.or("messageSentType", "messageReceivedType"),
   postReplyType: Em.computed.or("postType", "replyType"),
   removableBookmark: Em.computed.and("bookmarkType", "sameUser"),
+  removableDraft: Em.computed.equal("action_type", UserActionTypes.drafts),
 
   addChild(action) {
     let groups = this.get("childGroups");
@@ -142,7 +144,8 @@ const UserAction = RestModel.extend({
         likes: UserActionGroup.create({ icon: "heart" }),
         stars: UserActionGroup.create({ icon: "star" }),
         edits: UserActionGroup.create({ icon: "pencil" }),
-        bookmarks: UserActionGroup.create({ icon: "bookmark" })
+        bookmarks: UserActionGroup.create({ icon: "bookmark" }),
+        drafts: UserActionGroup.create({})
       };
     }
     this.set("childGroups", groups);
@@ -156,6 +159,8 @@ const UserAction = RestModel.extend({
           return "edits";
         case UserActionTypes.bookmarks:
           return "bookmarks";
+        case UserActionTypes.drafts:
+          return "drafts";
       }
     })();
     const current = groups[bucket];
@@ -168,10 +173,11 @@ const UserAction = RestModel.extend({
     const g = this.get("childGroups");
     let rval = [];
     if (g) {
-      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
+      rval = [g.likes, g.stars, g.edits, g.bookmarks, g.drafts].filter(function(i) {
         return i.get("items") && i.get("items").length > 0;
       });
     }
+
     return rval;
   }.property(
     "childGroups",
@@ -182,7 +188,9 @@ const UserAction = RestModel.extend({
     "childGroups.edits.items",
     "childGroups.edits.items.[]",
     "childGroups.bookmarks.items",
-    "childGroups.bookmarks.items.[]"
+    "childGroups.bookmarks.items.[]",
+    "childGroups.drafts.items",
+    "childGroups.drafts.items.[]"
   ),
 
   switchToActing() {
@@ -235,7 +243,8 @@ UserAction.reopenClass({
     UserActionTypes.likes_given,
     UserActionTypes.likes_received,
     UserActionTypes.edits,
-    UserActionTypes.bookmarks
+    UserActionTypes.bookmarks,
+    UserActionTypes.drafts
   ],
 
   TO_SHOW: [
