@@ -624,6 +624,7 @@ class Report
       { properties: [:flag_count], title: I18n.t("reports.moderators_activity.labels.flag_count") },
       { type: :seconds, properties: [:time_read], title: I18n.t("reports.moderators_activity.labels.time_read") },
       { properties: [:topic_count], title: I18n.t("reports.moderators_activity.labels.topic_count") },
+      { properties: [:pm_count], title: I18n.t("reports.moderators_activity.labels.pm_count") },
       { properties: [:post_count], title: I18n.t("reports.moderators_activity.labels.post_count") }
     ]
 
@@ -696,8 +697,9 @@ class Report
     FROM topics t
     JOIN users u
     ON u.id = t.user_id
-    AND u.moderator = 'true'
+    WHERE u.moderator = 'true'
     AND u.id > 0
+    AND t.archetype = 'regular'
     AND t.created_at >= '#{report.start_date}'
     AND t.created_at <= '#{report.end_date}'
     GROUP BY t.user_id
@@ -709,11 +711,30 @@ class Report
     FROM posts p
     JOIN users u
     ON u.id = p.user_id
+    JOIN topics t
+    ON t.id = p.topic_id
     WHERE u.moderator = 'true'
     AND u.id > 0
+    AND t.archetype = 'regular'
     AND p.created_at >= '#{report.start_date}'
     AND p.created_at <= '#{report.end_date}'
-    GROUP BY user_id
+    GROUP BY p.user_id
+    SQL
+
+    pm_count_query = <<~SQL
+    SELECT p.user_id,
+    COUNT(*) AS pm_count
+    FROM posts p
+    JOIN users u
+    ON u.id = p.user_id
+    JOIN topics t
+    ON t.id = p.topic_id
+    WHERE u.moderator = 'true'
+    AND u.id > 0
+    AND t.archetype = 'private_message'
+    AND p.created_at >= '#{report.start_date}'
+    AND p.created_at <= '#{report.end_date}'
+    GROUP BY p.user_id
     SQL
 
     DB.query(time_read_query).each do |row|
@@ -730,6 +751,10 @@ class Report
 
     DB.query(post_count_query).each do |row|
       mod_data[row.user_id][:post_count] = row.post_count
+    end
+
+    DB.query(pm_count_query).each do |row|
+      mod_data[row.user_id][:pm_count] = row.pm_count
     end
 
     report.data = mod_data.values
