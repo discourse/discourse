@@ -612,7 +612,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw.gsub!(/\[li\](.*?)\[\/li\]/im) { "- #{$1}" }
 
     # puts [img] on their own line
-    raw.gsub!(/\[img\](.*?)\[\/img\]/im) { "\n#{$1}\n" }
+    raw.gsub!(/\[img[^\]]*\](.*?)\[\/img\]/im) { "\n#{$1}\n" }
 
     # puts [youtube] on their own line
     raw.gsub!(/\[youtube\](.*?)\[\/youtube\]/im) { "\n#{$1}\n" }
