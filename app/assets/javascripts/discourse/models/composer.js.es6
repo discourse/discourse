@@ -762,15 +762,10 @@ const Composer = RestModel.extend({
       .then(() => {
         // rest model only sets props after it is saved
         post.set("cooked", props.cooked);
-        return post
-          .save(props)
-          .then(result => {
-            this.clearState();
-            return result;
-          })
-          .catch(error => {
-            throw new Error(error);
-          });
+        return post.save(props).then(result => {
+          this.clearState();
+          return result;
+        });
       })
       .catch(rollback);
   },
