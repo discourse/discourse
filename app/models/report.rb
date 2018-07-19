@@ -46,7 +46,7 @@ class Report
     end
   end
 
-  def self.wrap_slow_query(timeout = 20000, &block)
+  def self.wrap_slow_query(timeout = 20000)
     begin
       ActiveRecord::Base.connection.transaction do
         # Set a statement timeout so we can't tie up the server
@@ -632,73 +632,104 @@ class Report
     report.data = []
     mod_data = {}
 
-    User.real.where(moderator: true).pluck(:id, :username).find_each do |u|
-      mod_data[u[0]] = {
-        user_id: u[0],
-        username: u[1],
-        user_url: "/admin/users/#{u[0]}/#{u[1]}"
+    User.real.where(moderator: true).find_each do |u|
+      mod_data[u.id] = {
+        user_id: u.id,
+        username: u.username,
+        user_url: "/admin/users/#{u.id}/#{u.username}"
       }
     end
 
-    mod_ids = mod_data.keys
-
-    return if mod_ids.empty?
-
     time_read_query = <<~SQL
-    SELECT SUM(time_read) AS time_read,
-    user_id
-    FROM user_visits
-    WHERE user_id = ANY(ARRAY#{mod_ids})
-    AND visited_at >= '#{report.start_date}'
-    AND visited_at <= '#{report.end_date}'
-    GROUP BY user_id
+    SELECT SUM(uv.time_read) AS time_read,
+    uv.user_id
+    FROM user_visits uv
+    JOIN users u
+    ON u.id = uv.user_id
+    WHERE u.moderator = 'true'
+    AND u.id > 0
+    AND uv.visited_at >= '#{report.start_date}'
+    AND uv.visited_at <= '#{report.end_date}'
+    GROUP BY uv.user_id
     SQL
 
     flag_count_query = <<~SQL
-    SELECT agreed_by_id AS user_id,
-    COUNT(*) AS flag_count
+    WITH period_actions AS (
+    SELECT agreed_by_id,
+    disagreed_by_id
     FROM post_actions
-    WHERE (agreed_by_id = ANY(ARRAY#{mod_ids}) OR disagreed_by_id = ANY(ARRAY#{mod_ids}))
-    AND post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
+    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
     AND created_at >= '#{report.start_date}'
     AND created_at <= '#{report.end_date}'
+    ),
+    agreed_flags AS (
+    SELECT pa.agreed_by_id AS user_id,
+    COUNT(*) AS flag_count
+    FROM period_actions pa
+    JOIN users u
+    ON u.id = pa.agreed_by_id
+    WHERE u.moderator = 'true'
+    AND u.id > 0
     GROUP BY agreed_by_id
+    ),
+    disagreed_flags AS (
+    SELECT pa.disagreed_by_id AS user_id,
+    COUNT(*) AS flag_count
+    FROM period_actions pa
+    JOIN users u
+    ON u.id = pa.disagreed_by_id
+    WHERE u.moderator = 'true'
+    AND u.id > 0
+    GROUP BY disagreed_by_id
+    )
+    SELECT
+    COALESCE(af.user_id, df.user_id) AS user_id,
+    COALESCE(af.flag_count, 0) + COALESCE(df.flag_count, 0) AS flag_count
+    FROM agreed_flags af
+    FULL OUTER JOIN disagreed_flags df
+    ON df.user_id = af.user_id
     SQL
 
     topic_count_query = <<~SQL
-    SELECT user_id,
+    SELECT t.user_id,
     COUNT(*) AS topic_count
-    FROM topics
-    WHERE user_id = ANY(ARRAY#{mod_ids})
-    AND created_at >= '#{report.start_date}'
-    AND created_at <= '#{report.end_date}'
-    GROUP BY user_id
+    FROM topics t
+    JOIN users u
+    ON u.id = t.user_id
+    AND u.moderator = 'true'
+    AND u.id > 0
+    AND t.created_at >= '#{report.start_date}'
+    AND t.created_at <= '#{report.end_date}'
+    GROUP BY t.user_id
     SQL
 
     post_count_query = <<~SQL
-    SELECT user_id,
+    SELECT p.user_id,
     COUNT(*) AS post_count
-    FROM posts
-    WHERE user_id = ANY(ARRAY#{mod_ids})
-    AND created_at >= '#{report.start_date}'
-    AND created_at <= '#{report.end_date}'
+    FROM posts p
+    JOIN users u
+    ON u.id = p.user_id
+    WHERE u.moderator = 'true'
+    AND u.id > 0
+    AND p.created_at >= '#{report.start_date}'
+    AND p.created_at <= '#{report.end_date}'
     GROUP BY user_id
     SQL
 
     DB.query(time_read_query).each do |row|
-      mod_data[row.user_id][:time_read] = row.time_read if row.user_id
+      mod_data[row.user_id][:time_read] = row.time_read
     end
 
     DB.query(flag_count_query).each do |row|
-      mod_data[row.user_id][:flag_count] = row.flag_count if row.user_id
+      mod_data[row.user_id][:flag_count] = row.flag_count
     end
 
     DB.query(topic_count_query).each do |row|
-      mod_data[row.user_id][:topic_count] = row.topic_count if row.user_id
+      mod_data[row.user_id][:topic_count] = row.topic_count
     end
 
     DB.query(post_count_query).each do |row|
-      mod_data[row.user_id][:post_count] = row.post_count if row.user_id
+      mod_data[row.user_id][:post_count] = row.post_count
     end
 
     report.data = mod_data.values
@@ -720,8 +751,57 @@ class Report
     flag_types = PostActionType.flag_types_without_custom
 
     sql = <<~SQL
-    SELECT pa.post_action_type_id,
+    WITH period_actions AS (
+    SELECT id,
+    post_action_type_id,
+    created_at,
+    agreed_at,
+    disagreed_at,
+    deferred_at,
+    agreed_by_id,
+    disagreed_by_id,
+    deferred_by_id,
+    post_id,
+    user_id,
+    COALESCE(disagreed_at, agreed_at, deferred_at) AS responded_at
+    FROM post_actions
+    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
+    AND created_at >= '#{report.start_date}'
+    AND created_at <= '#{report.end_date}'
+    ),
+    poster_data AS (
+    SELECT pa.id,
     p.user_id AS poster_id,
+    u.username AS poster_username
+    FROM period_actions pa
+    JOIN posts p
+    ON p.id = pa.post_id
+    JOIN users u
+    ON u.id = p.user_id
+    ),
+    flagger_data AS (
+    SELECT pa.id,
+    u.id AS flagger_id,
+    u.username AS flagger_username
+    FROM period_actions pa
+    JOIN users u
+    ON u.id = pa.user_id
+    ),
+    staff_data AS (
+    SELECT pa.id,
+    u.id AS staff_id,
+    u.username AS staff_username
+    FROM period_actions pa
+    JOIN users u
+    ON u.id = COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id)
+    )
+    SELECT
+    sd.staff_username,
+    sd.staff_id,
+    pd.poster_username,
+    pd.poster_id,
+    fd.flagger_username,
+    fd.flagger_id,
     pa.post_action_type_id,
     pa.created_at,
     pa.agreed_at,
@@ -730,20 +810,14 @@ class Report
     pa.agreed_by_id,
     pa.disagreed_by_id,
     pa.deferred_by_id,
-    pa.user_id AS flagger_id,
-    (select u.username FROM users u WHERE u.id = pa.user_id) AS flagger_username,
-    COALESCE(pa.disagreed_at, pa.agreed_at, pa.deferred_at, NULL) AS responded_at,
-    COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id, NULL) AS staff_id,
-    (SELECT u.username FROM users u WHERE u.id = COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id, null)) AS staff_username,
-    (SELECT u.username FROM users u WHERE u.id = p.user_id) as poster_username
-    FROM post_actions pa
-    JOIN posts p
-    ON p.id = pa.post_id
-    WHERE pa.post_action_type_id = ANY(ARRAY#{PostActionType.flag_types_without_custom.values})
-    AND pa.created_at >= '#{report.start_date}'
-    AND pa.created_at <= '#{report.end_date}'
-    ORDER BY pa.created_at DESC
-    LIMIT 20
+    COALESCE(pa.disagreed_at, pa.agreed_at, pa.deferred_at) AS responded_at
+    FROM period_actions pa
+    FULL OUTER JOIN staff_data sd
+    ON sd.id = pa.id
+    FULL OUTER JOIN flagger_data fd
+    ON fd.id = pa.id
+    FULL OUTER JOIN poster_data pd
+    ON pd.id = pa.id
     SQL
 
     DB.query(sql).each do |row|
@@ -787,27 +861,36 @@ class Report
     report.data = []
 
     sql = <<~SQL
-    SELECT
-    pr.user_id AS editor_id,
-    p.user_id AS author_id,
+    WITH period_revisions AS (
+    SELECT pr.user_id AS editor_id,
     pr.number AS revision_version,
+    pr.created_at,
+    pr.post_id,
+    u.username AS editor_username
+    FROM post_revisions pr
+    JOIN users u
+    ON u.id = pr.user_id
+    WHERE pr.created_at >= '#{report.start_date}'
+    AND pr.created_at <= '#{report.end_date}'
+    ORDER BY pr.created_at DESC
+    LIMIT 20
+    )
+    SELECT pr.editor_id,
+    pr.editor_username,
+    p.user_id AS author_id,
+    u.username AS author_username,
+    pr.revision_version,
     p.version AS post_version,
     pr.post_id,
     p.topic_id,
     p.post_number,
     p.edit_reason,
-    u.username AS editor_username,
-    pr.created_at,
-    (SELECT u.username FROM users u WHERE u.id = p.user_id) AS author_username
-    FROM post_revisions pr
+    pr.created_at
+    FROM period_revisions pr
     JOIN posts p
-      ON p.id = pr.post_id
+    ON p.id = pr.post_id
     JOIN users u
-      ON u.id = pr.user_id
-      WHERE pr.created_at >= '#{report.start_date}'
-      AND pr.created_at <= '#{report.end_date}'
-    ORDER BY pr.created_at DESC
-    LIMIT 20
+    ON u.id = p.user_id
     SQL
 
     DB.query(sql).each do |r|

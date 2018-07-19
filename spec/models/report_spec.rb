@@ -346,7 +346,7 @@ describe Report do
       it "returns a report with data" do
         expect(report.data[0][:term]).to eq("ruby")
         expect(report.data[0][:unique_searches]).to eq(2)
-        expect(report.data[0][:ctr]).to eq('33.4%')
+        expect(report.data[0][:ctr]).to eq(33.4)
 
         expect(report.data[1][:term]).to eq("php")
         expect(report.data[1][:unique_searches]).to eq(1)
@@ -492,6 +492,7 @@ describe Report do
 
       it "returns a report with data" do
         expect(report.data).to be_present
+        expect(report.data.count).to be(1)
 
         row = report.data[0]
         expect(row[:editor_id]).to eq(editor.id)
@@ -601,16 +602,6 @@ describe Report do
         expect(previous_report.data[1][:post_count]).to be_blank
         expect(previous_report.data[1][:time_read]).to be_blank
       end
-    end
-  end
-
-  describe ".wrap_slow_query" do
-    it "returns a timeout error if query exceeds threshold" do
-      error = Report.wrap_slow_query(1) do
-        Fabricate(:user)
-      end
-
-      expect(error).to eq(:timeout)
     end
   end
 end
