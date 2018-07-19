@@ -1,6 +1,12 @@
 class AdminDashboardNextGeneralData < AdminDashboardNextData
   def reports
     @reports ||= %w{
+      signups
+      topics
+      posts
+      dau_by_mau
+      daily_engaged_users
+      new_contributors
       page_view_total_reqs
       visits
       time_to_first_response
