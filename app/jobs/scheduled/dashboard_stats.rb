@@ -1,4 +1,7 @@
 require_dependency 'admin_dashboard_data'
+require_dependency 'admin_dashboard_next_index_data'
+require_dependency 'admin_dashboard_next_general_data'
+require_dependency 'admin_dashboard_next_moderation_data'
 require_dependency 'group'
 require_dependency 'group_message'
 
@@ -15,7 +18,9 @@ module Jobs
       end
 
       # TODO: decide if we want to keep caching this every 30 minutes
-      AdminDashboardNextData.refresh_stats
+      AdminDashboardNextIndexData.refresh_stats
+      AdminDashboardNextGeneralData.refresh_stats
+      AdminDashboardNextModerationData.refresh_stats
       AdminDashboardData.refresh_stats
     end
   end

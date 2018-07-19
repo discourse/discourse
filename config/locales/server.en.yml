@@ -840,6 +840,38 @@ en:
       write: "Write all"
 
   reports:
+    default:
+      labels:
+        count: Count
+        day: Day
+    post_edits:
+      title: "Post edits"
+      labels:
+        post: Post
+        editor: Editor
+        author: Author
+        edit_reason: Reason
+    moderators_activity:
+      title: "Moderators activity"
+      labels:
+        moderator: Moderator
+        flag_count: Flags reviewed
+        time_read: Time reading
+        topic_count: Topics
+        post_count: Posts
+    flags_status:
+      title: "Flags status"
+      values:
+        agreed: Agreed
+        disagreed: Disagreed
+        deferred: Deferred
+        no_action: No action
+      labels:
+        flag: Type
+        assigned: Assigned
+        poster: Poster
+        flagger: Flagger
+        time_to_resolution: Resolution time
     visits:
       title: "User Visits"
       xaxis: "Day"
@@ -898,10 +930,14 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+      labels:
+        level: Level
     users_by_type:
       title: "Users per Type"
       xaxis: "Type"
       yaxis: "Number of Users"
+      labels:
+        type: Type
       xaxis_labels:
         admin: Admin
         moderator: Moderator
@@ -952,10 +988,15 @@ en:
       num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
+      labels:
+        domain: Domain
+        num_clicks: Clicks
+        num_topics: Topics
     top_referred_topics:
       title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Topic"
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
@@ -1018,8 +1059,9 @@ en:
       yaxis: "Number of visits"
     web_crawlers:
       title: "Web Crawler Requests"
-      xaxis: "User Agent"
-      yaxis: "Pageviews"
+      labels:
+        user_agent: "User Agent"
+        page_views: "Pageviews"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."

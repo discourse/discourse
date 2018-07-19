@@ -591,6 +591,10 @@ export function clipboardData(e, canUpload) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+export function isNumeric(input) {
+  return !isNaN(parseFloat(input)) && isFinite(input);
+}
+
 export function fillMissingDates(data, startDate, endDate) {
   const startMoment = moment(startDate, "YYYY-MM-DD");
   const endMoment = moment(endDate, "YYYY-MM-DD");
