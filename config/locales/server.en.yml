@@ -857,8 +857,9 @@ en:
         moderator: Moderator
         flag_count: Flags reviewed
         time_read: Time reading
-        topic_count: Topics
-        post_count: Posts
+        topic_count: Topics created
+        post_count: Posts created
+        pm_count: PMs created
     flags_status:
       title: "Flags status"
       values:
