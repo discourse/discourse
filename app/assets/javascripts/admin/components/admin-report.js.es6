@@ -257,14 +257,7 @@ export default Ember.Component.extend({
         filteredReports.filter(r => r.report_key.includes(reportKey))
       )[0];
 
-      if (!report) {
-        console.log(
-          "failed to find a report to render",
-          `expected key: ${reportKey}`,
-          `existing keys: ${filteredReports.map(f => f.report_key)}`
-        );
-        return;
-      }
+      if (!report) return;
     }
 
     this._renderReport(
