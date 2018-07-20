@@ -61,11 +61,10 @@ const Report = Discourse.Model.extend({
               formatedValue: number(value)
             });
 
-          if (type !== "string" && type !== "text") {
+          if (type === "date") {
             const date = moment(value, "YYYY-MM-DD");
-            if (type === "date" || date.isValid()) {
+            if (date.isValid()) {
               return _.assign(base, {
-                type: "date",
                 formatedValue: date.format("LL")
               });
             }
