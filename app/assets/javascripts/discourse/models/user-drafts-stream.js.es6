@@ -2,8 +2,12 @@ import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
-import UserAction from "discourse/models/user-action";
 import { emojiUnescape } from "discourse/lib/text";
+
+import {
+  NEW_TOPIC_KEY,
+  NEW_PRIVATE_MESSAGE_KEY
+} from "discourse/models/composer";
 
 export default RestModel.extend({
   loaded: false,
@@ -60,24 +64,25 @@ export default RestModel.extend({
 
     return ajax(findUrl, { cache: "false" })
       .then(function(result) {
-        self.set("noContentHelp", "result.no_results_help_drafts"); // TODO: i18n
+        if (result && result.no_results_help) {
+          self.set("noContentHelp", result.no_results_help);
+        }
         if (result && result.drafts) {
           const copy = Em.A();
           result.drafts.forEach(function(draft) {
             let draftData = JSON.parse(draft.data);
-            if (draftData.action === 'createTopic') {
+            draft.excerpt = draftData.reply;
+            draft.post_number = draftData.postId || null;
+            if (draft.draft_key === NEW_PRIVATE_MESSAGE_KEY || draft.draft_key === NEW_TOPIC_KEY) {
               draft.title = draftData.title;
             }
-
-            draft.excerpt = draftData.reply;
             draft.title = emojiUnescape(
               Handlebars.Utils.escapeExpression(draft.title)
             );
-            draft.action_type = UserAction.TYPES.drafts;
             copy.pushObject(UserDraft.create(draft));
           });
 
-          self.get("content").pushObjects(UserAction.collapseStream(copy));
+          self.get("content").pushObjects(copy);
           self.setProperties({
             loaded: true,
             itemsLoaded: self.get("itemsLoaded") + result.drafts.length,

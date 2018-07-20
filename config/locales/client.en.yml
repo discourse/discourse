@@ -289,6 +289,10 @@ en:
     drafts:
       resume: "Resume Draft"
       remove: "Remove Draft"
+      new_topic: "New topic draft"
+      new_private_message: "New private message draft"
+      topic_reply: "Draft reply"
+      post_reply: "Draft reply to #{{postNumber}}"
 
     topic_count_latest:
       one: "See {{count}} new or updated topic"

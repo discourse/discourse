@@ -3,7 +3,12 @@ import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
-import UserAction from "discourse/models/user-action";
+import UserActionGroup from "discourse/models/user-action-group";
+
+import {
+  NEW_TOPIC_KEY,
+  NEW_PRIVATE_MESSAGE_KEY
+} from "discourse/models/composer";
 
 const UserDraft = RestModel.extend({
   @on("init")
@@ -12,6 +17,11 @@ const UserDraft = RestModel.extend({
     if (categoryId) {
       this.set("category", Discourse.Category.findById(categoryId));
     }
+  },
+
+  @computed("draft_username")
+  editableDraft(draft_username) {
+    return draft_username === Discourse.User.currentProp("username");
   },
 
   @computed("username")
@@ -24,8 +34,11 @@ const UserDraft = RestModel.extend({
     return userPath(usernameLower);
   },
 
-  @computed()
-  postUrl() {
+  @computed("topic_id")
+  postUrl(topic_id) {
+    if (!topic_id)
+      return;
+
     return postUrl(
       this.get("slug"),
       this.get("topic_id"),
@@ -33,16 +46,17 @@ const UserDraft = RestModel.extend({
     );
   },
 
-  actingDisplayName: Ember.computed.or("name", "username"),
-  removableDraft: Em.computed.equal("action_type", UserAction.TYPES.drafts),
-
-  switchToActing() {
-    this.setProperties({
-      username: this.get("username"),
-      name: this.get("actingDisplayName")
-    });
+  @computed("draft_key", "post_number")
+  draftType(draftKey, postNumber) {
+    switch(draftKey) {
+      case NEW_TOPIC_KEY:
+        return I18n.t("drafts.new_topic");
+      case NEW_PRIVATE_MESSAGE_KEY:
+        return I18n.t("drafts.new_private_message");
+      default:
+        return postNumber ? I18n.t("drafts.post_reply", { postNumber }) : I18n.t("drafts.topic_reply");
+    }
   }
-
 });
 
 export default UserDraft;

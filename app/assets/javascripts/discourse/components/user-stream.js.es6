@@ -58,10 +58,14 @@ export default Ember.Component.extend(LoadMore, {
       });
     },
 
-    resumeDraft(draft) {
-      console.log(draft);
-      // const stream = this.get("stream");
-      // TODO: load composer with draft in current screen
+    resumeDraft(item) {
+      this.container.lookup("controller:composer").open({
+        draft: item.data,
+        draftKey: item.draft_key,
+        // TODO: is this needed
+        // ignoreIfChanged: true,
+        draftSequence: item.sequence
+      });
     },
 
     removeDraft(draft) {

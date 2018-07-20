@@ -15,12 +15,21 @@ class DraftsController < ApplicationController
              offset: params[:offset].to_i,
              limit: per_chunk }
 
+    guardian.ensure_can_see_notifications!(user)
+
     stream = Draft.stream(opts)
     stream = stream.to_a
     if stream.length == 0
+      help_key = "user_activity.no_drafts"
+      if user.id == guardian.user.try(:id)
+        help_key += ".self"
+      else
+        help_key += ".others"
+      end
+
       render json: {
         drafts: [],
-        no_results_help: I18n.t('help_key_drafts_empty')
+        no_results_help: I18n.t(help_key)
       }
     else
       render_serialized(stream, DraftSerializer, root: 'drafts')

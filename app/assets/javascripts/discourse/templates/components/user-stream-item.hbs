@@ -1,6 +1,9 @@
 <div class='clearfix info'>
   <a href={{item.userUrl}} data-user-card={{item.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
   <span class='time'>{{format-date item.created_at}}</span>
+  {{#if item.draftType}}
+    <span class='draft-type'>{{item.draftType}}</span>
+  {{/if}}
   {{expand-post item=item}}
   <div class='stream-topic-details'>
     <div class='stream-topic-title'>
@@ -37,19 +40,8 @@
 
 {{#each item.children as |child|}}
   <div class='user-stream-item-actions child-actions'>{{!-- DEPRECATED: 'child-actions' class --}}
-    {{#if child.icon}}
-      {{d-icon child.icon class="icon"}}
-    {{/if}}
+    {{d-icon child.icon class="icon"}}
     {{#each child.items as |grandChild|}}
-      {{#if grandChild.removableDraft}}
-        <button class="btn btn-default resume-draft" {{action resumeDraft grandChild}}>
-          {{d-icon 'pencil'}} {{i18n "drafts.resume"}}
-        </button>
-
-        <button class="btn btn-default remove-draft" {{action removeDraft grandChild}}>
-          {{d-icon 'times'}} {{i18n "drafts.remove"}}
-        </button>
-      {{/if}}
       {{#if grandChild.removableBookmark}}
         <button class="btn btn-default remove-bookmark" {{action removeBookmark grandChild}}>
           {{d-icon 'times'}} {{i18n "bookmarks.remove"}}
@@ -61,3 +53,15 @@
     {{/each}}
   </div>
 {{/each}}
+
+{{#if item.editableDraft}}
+  <div class='user-stream-item-draft-actions'>
+    <button class="btn btn-default resume-draft" {{action resumeDraft item}}>
+      {{d-icon 'pencil'}} {{i18n "drafts.resume"}}
+    </button>
+
+    <button class="btn btn-default remove-draft" {{action removeDraft item}}>
+      {{d-icon 'times'}} {{i18n "drafts.remove"}}
+    </button>
+  </div>
+{{/if}}

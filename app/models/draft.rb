@@ -50,12 +50,13 @@ class Draft < ActiveRecord::Base
     offset = opts[:offset] || 0
     limit = opts[:limit] || 30
 
-    # Joining with topics table based on draft_key is imperfect
+    # JOIN of topics table based on manipulating draft_key seems imperfect
     builder = DB.build <<~SQL
       SELECT
         d.*, t.title, t.id topic_id,
         t.category_id, t.closed topic_closed, t.archived topic_archived,
-        pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id
+        pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id,
+        du.username draft_username
       FROM drafts d
       LEFT JOIN topics t ON
         CASE
@@ -65,6 +66,7 @@ class Draft < ActiveRecord::Base
         END = t.id
       LEFT JOIN categories c on c.id = t.category_id
       JOIN users pu on pu.id = COALESCE(t.user_id, d.user_id)
+      JOIN users du on du.id = #{user_id}
       /*where*/
       /*order_by*/
       /*offset*/

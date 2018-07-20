@@ -772,6 +772,9 @@ en:
     no_replies:
       self: "You have not replied to any posts."
       others: "No replies."
+    no_drafts:
+      self: "You have no drafts."
+      others: "No drafts."
 
   topic_flag_types:
     spam:
