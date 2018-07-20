@@ -115,6 +115,7 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_commit :trigger_user_created_event, on: :create
+  after_commit :trigger_user_destroyed_event, on: :destroy
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -1265,9 +1266,14 @@ class User < ActiveRecord::Base
     end
   end
 
-  def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self)
-    true
+  %i{
+    user_created
+    user_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
   end
 
   def set_skip_validate_email
