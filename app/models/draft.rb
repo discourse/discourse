@@ -56,7 +56,7 @@ class Draft < ActiveRecord::Base
         d.*, t.title, t.id topic_id,
         t.category_id, t.closed topic_closed, t.archived topic_archived,
         pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id,
-        du.username draft_username
+        du.username draft_username, NULL as raw, NULL as cooked, NULL as post_number
       FROM drafts d
       LEFT JOIN topics t ON
         CASE
@@ -64,7 +64,6 @@ class Draft < ActiveRecord::Base
             WHEN d.draft_key = '#{NEW_PRIVATE_MESSAGE}' THEN 0
             ELSE CAST(replace(d.draft_key, '#{EXISTING_TOPIC}', '') AS INT)
         END = t.id
-      LEFT JOIN categories c on c.id = t.category_id
       JOIN users pu on pu.id = COALESCE(t.user_id, d.user_id)
       JOIN users du on du.id = #{user_id}
       /*where*/

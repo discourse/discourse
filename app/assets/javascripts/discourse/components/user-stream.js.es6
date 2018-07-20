@@ -1,7 +1,8 @@
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
-import { selectedText } from "discourse/lib/utilities";
+import { postUrl, selectedText } from "discourse/lib/utilities";
 import Post from "discourse/models/post";
+import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 
 export default Ember.Component.extend(LoadMore, {
@@ -58,14 +59,19 @@ export default Ember.Component.extend(LoadMore, {
       });
     },
 
-    resumeDraft(item) {
-      this.container.lookup("controller:composer").open({
-        draft: item.data,
-        draftKey: item.draft_key,
-        // TODO: is this needed
-        // ignoreIfChanged: true,
-        draftSequence: item.sequence
-      });
+    resumeDraft(draftKey, postUrl) {
+      if (postUrl) {
+        DiscourseURL.routeTo(postUrl);
+      } else {
+        const composer = this.container.lookup("controller:composer");
+        Draft.get(draftKey).then((d) => {
+          composer.open({
+            draft: d.draft,
+            draftKey: draftKey,
+            draftSequence: d.draft_sequence
+          });
+        });
+      }
     },
 
     removeDraft(draft) {

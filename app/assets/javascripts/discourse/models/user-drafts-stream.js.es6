@@ -71,7 +71,6 @@ export default RestModel.extend({
           const copy = Em.A();
           result.drafts.forEach(function(draft) {
             let draftData = JSON.parse(draft.data);
-            draft.excerpt = draftData.reply;
             draft.post_number = draftData.postId || null;
             if (draft.draft_key === NEW_PRIVATE_MESSAGE_KEY || draft.draft_key === NEW_TOPIC_KEY) {
               draft.title = draftData.title;
@@ -81,7 +80,6 @@ export default RestModel.extend({
             );
             copy.pushObject(UserDraft.create(draft));
           });
-
           self.get("content").pushObjects(copy);
           self.setProperties({
             loaded: true,

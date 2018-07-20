@@ -18,7 +18,17 @@ class DraftsController < ApplicationController
     guardian.ensure_can_see_notifications!(user)
 
     stream = Draft.stream(opts)
+
+    stream.each do |d|
+      parsedData = JSON.parse(d.data)
+      d.raw = parsedData['reply']
+      if parsedData['categoryId'].present? && !d.category_id.present?
+        d.category_id = parsedData['categoryId']
+      end
+    end
+
     stream = stream.to_a
+
     if stream.length == 0
       help_key = "user_activity.no_drafts"
       if user.id == guardian.user.try(:id)
