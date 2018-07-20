@@ -494,6 +494,38 @@
   }
 }
 
+.admin-report.post-edits {
+  .admin-report-table {
+    table-layout: auto;
+
+    tbody tr td,
+    thead tr th {
+      text-align: left;
+    }
+
+    thead tr th.edit_reason,
+    tbody tr td.edit_reason {
+      width: 60%;
+    }
+  }
+}
+
+.admin-report.flags-status {
+  .admin-report-table {
+    table-layout: auto;
+
+    tbody tr td,
+    thead tr th {
+      text-align: left;
+    }
+
+    tbody tr td.response_time,
+    thead tr th.response_time {
+      text-align: center;
+    }
+  }
+}
+
 .dashboard-next.moderation {
   .admin-dashboard-moderation-top {
     display: grid;
