@@ -52,10 +52,9 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     const curIdx = cats.indexOf(cat);
     const desiredIdx = curIdx + dir;
     if (desiredIdx >= 0 && desiredIdx < cats.get("length")) {
-      const curPos = cat.get("position");
-      cat.set("position", curPos + dir);
       const otherCat = cats.objectAt(desiredIdx);
-      otherCat.set("position", curPos - dir);
+      otherCat.set("position", curIdx);
+      cat.set("position", desiredIdx);
       this.send("commit");
     }
   },
