@@ -118,7 +118,7 @@ module Jobs
           @orig_args[:retry_count] = (@orig_args[:retry_count] || 0) + 1
           return if @orig_args[:retry_count] > MAX_RETRY_COUNT
 
-          delay = 5 ** (@orig_args[:retry_count] - 1)
+          delay = 5**(@orig_args[:retry_count] - 1)
           Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, @orig_args)
         end
       rescue
