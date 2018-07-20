@@ -32,36 +32,37 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'retry if site setting is enabled' do
-      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
-      subject.execute(
-        web_hook_id: post_hook.id,
-        event_type: described_class::PING_EVENT
-      )
-      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(1)
+      expect {
+        subject.execute(
+          web_hook_id: post_hook.id,
+          event_type: described_class::PING_EVENT
+        )
+      }.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+
       job = Jobs::EmitWebHookEvent.jobs.first
       args = job["args"].first
       expect(args["retry_count"]).to eq(1)
     end
 
-    it 'does not retry for more than 4 times' do
-      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
-      subject.execute(
-        web_hook_id: post_hook.id,
-        event_type: described_class::PING_EVENT,
-        retry_count: 5
-      )
-      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
+    it 'does not retry for more than maximum allowed times' do
+      expect {
+        subject.execute(
+          web_hook_id: post_hook.id,
+          event_type: described_class::PING_EVENT,
+          retry_count: described_class::MAX_RETRY_COUNT
+        )
+      }.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
     end
 
     it 'does not retry if site setting is disabled' do
       SiteSetting.retry_web_hook_events = false
 
-      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
-      subject.execute(
-        web_hook_id: post_hook.id,
-        event_type: described_class::PING_EVENT
-      )
-      expect(Jobs::EmitWebHookEvent.jobs.size).to eq(0)
+      expect {
+        subject.execute(
+          web_hook_id: post_hook.id,
+          event_type: described_class::PING_EVENT
+        )
+      }.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
     end
   end
 

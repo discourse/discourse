@@ -3,6 +3,7 @@ require 'excon'
 module Jobs
   class EmitWebHookEvent < Jobs::Base
     PING_EVENT = 'ping'.freeze
+    MAX_RETRY_COUNT = 4.freeze
 
     def execute(args)
       %i{
@@ -11,6 +12,8 @@ module Jobs
       }.each do |key|
         raise Discourse::InvalidParameters.new(key) unless args[key].present?
       end
+
+      @orig_args = args.dup
 
       web_hook = WebHook.find_by(id: args[:web_hook_id])
       raise Discourse::InvalidParameters.new(:web_hook_id) if web_hook.blank?
@@ -25,7 +28,7 @@ module Jobs
           !web_hook.category_ids.include?(args[:category_id]))
 
         raise Discourse::InvalidParameters.new(:payload) unless args[:payload].present?
-        args[:payload] = JSON.parse(args[:payload]) unless args[:retry_count].present?
+        args[:payload] = JSON.parse(args[:payload])
       end
 
       web_hook_request(args, web_hook)
@@ -112,12 +115,11 @@ module Jobs
         }, user_ids: User.human_users.staff.pluck(:id))
 
         if SiteSetting.retry_web_hook_events? && response.status != 200
-          args[:retry_count] ||= 0
-          return if args[:retry_count] > 4
+          @orig_args[:retry_count] = (@orig_args[:retry_count] || 0) + 1
+          return if @orig_args[:retry_count] > MAX_RETRY_COUNT
 
-          delays = [0, 1, 5, 15, 60]
-          args[:retry_count] += 1
-          Jobs.enqueue_in(delays[args[:retry_count]].minutes, :emit_web_hook_event, args)
+          delay = 5 ** (@orig_args[:retry_count] - 1)
+          Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, @orig_args)
         end
       rescue
         web_hook_event.destroy!
