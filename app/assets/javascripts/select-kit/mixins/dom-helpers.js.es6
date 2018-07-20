@@ -82,8 +82,10 @@ export default Ember.Mixin.create({
   },
 
   focus() {
-    Ember.run.schedule("afterRender", () => {
-      this.$header().focus();
+    Ember.run.next(() => {
+      Ember.run.schedule("afterRender", () => {
+        this.$filterInput().focus();
+      });
     });
   },
 
@@ -93,11 +95,7 @@ export default Ember.Mixin.create({
     // next so we are sure it finised expand/collapse
     Ember.run.next(() => {
       Ember.run.schedule("afterRender", () => {
-        if (
-          (this.site && this.site.isMobileDevice) ||
-          !context.$filterInput() ||
-          !context.$filterInput().is(":visible")
-        ) {
+        if (!context.$filterInput() || !context.$filterInput().is(":visible")) {
           context.$header().focus();
         } else {
           context.$filterInput().focus();
