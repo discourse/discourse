@@ -264,6 +264,19 @@ describe PostMover do
           moderator_post = topic.posts.last
           expect(moderator_post.raw).to include("2 posts were split")
         end
+
+        it "forces resulting topic owner to watch the new topic" do
+          new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id)
+
+          expect(new_topic.posts_count).to eq(2)
+
+          expect(TopicUser.exists?(
+            user_id: another_user,
+            topic_id: new_topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+            notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+          )).to eq(true)
+        end
       end
 
       context "to an existing topic" do

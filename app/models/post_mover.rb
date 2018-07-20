@@ -34,7 +34,7 @@ class PostMover
       )
       DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
       move_posts_to new_topic
-      force_user_to_watch_new_topic
+      watch_new_topic
       new_topic
     end
   end
@@ -226,7 +226,7 @@ class PostMover
     end
   end
 
-  def force_user_to_watch_new_topic
+  def watch_new_topic
     TopicUser.change(
       destination_topic.user,
       destination_topic.id,
