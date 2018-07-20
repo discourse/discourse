@@ -16,11 +16,11 @@ export default Ember.Mixin.create({
   },
 
   willDestroyElement() {
-    this._super(...arguments);
+    this._super();
 
     $(document).off("mousedown.select-kit");
 
-    if (this.$header().length) {
+    if (this.$header()) {
       this.$header()
         .off("blur.select-kit")
         .off("focus.select-kit")
@@ -28,7 +28,7 @@ export default Ember.Mixin.create({
         .off("keydown.select-kit");
     }
 
-    if (this.$filterInput().length) {
+    if (this.$filterInput()) {
       this.$filterInput()
         .off("change.select-kit")
         .off("keydown.select-kit")
@@ -37,7 +37,7 @@ export default Ember.Mixin.create({
   },
 
   didInsertElement() {
-    this._super(...arguments);
+    this._super();
 
     $(document).on("mousedown.select-kit", event => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
