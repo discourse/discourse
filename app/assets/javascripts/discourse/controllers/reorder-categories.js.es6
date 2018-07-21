@@ -11,7 +11,7 @@ import Ember from "ember";
 export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
   @on("init")
   _fixOrder() {
-    this.send("fixIndices");
+    this.fixIndices();
   },
 
   @computed("site.categories")
@@ -26,17 +26,6 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     "categoriesSorting"
   ),
 
-  showFixIndices: function() {
-    const cats = this.get("categoriesOrdered");
-    const len = cats.get("length");
-    for (let i = 0; i < len; i++) {
-      if (cats.objectAt(i).get("position") !== i) {
-        return true;
-      }
-    }
-    return false;
-  }.property("categoriesOrdered.@each.position"),
-
   showApplyAll: function() {
     let anyChanged = false;
     this.get("categoriesBuffered").forEach(bc => {
@@ -45,7 +34,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     return anyChanged;
   }.property("categoriesBuffered.@each.hasBufferedChanges"),
 
-  saveDisabled: Ember.computed.or("showApplyAll", "showFixIndices"),
+  saveDisabled: Ember.computed.alias("showApplyAll"),
 
   moveDir(cat, dir) {
     const cats = this.get("categoriesOrdered");
@@ -59,21 +48,48 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     }
   },
 
+  /**
+    1. Make sure all categories have unique position numbers.
+    2. Place sub-categories after their parent categories while maintaining the
+        same relative order.
+
+        e.g.
+          parent/c1         parent
+          parent      =>    parent/c1
+          other             parent/c2
+          parent/c2         other
+  **/
+  fixIndices() {
+    const categories = this.get("categoriesOrdered");
+    const subcategories = {};
+
+    categories.forEach(category => {
+      const parentCategoryId = category.get("parent_category_id");
+
+      if (parentCategoryId) {
+        subcategories[parentCategoryId] = subcategories[parentCategoryId] || [];
+        subcategories[parentCategoryId].push(category);
+      }
+    });
+
+    for (let i = 0, position = 0; i < categories.get("length"); ++i) {
+      const category = categories.objectAt(i);
+
+      if (!category.get("parent_category_id")) {
+        category.set("position", position++);
+        (subcategories[category.get("id")] || []).forEach(subcategory => subcategory.set("position", position++));
+      }
+    }
+
+    this.send("commit");
+  },
+
   actions: {
     moveUp(cat) {
       this.moveDir(cat, -1);
     },
     moveDown(cat) {
       this.moveDir(cat, 1);
-    },
-
-    fixIndices() {
-      const cats = this.get("categoriesOrdered");
-      const len = cats.get("length");
-      for (let i = 0; i < len; i++) {
-        cats.objectAt(i).set("position", i);
-      }
-      this.send("commit");
     },
 
     commit() {
@@ -86,6 +102,8 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     },
 
     saveOrder() {
+      this.fixIndices();
+
       const data = {};
       this.get("categoriesBuffered").forEach(cat => {
         data[cat.get("id")] = cat.get("position");

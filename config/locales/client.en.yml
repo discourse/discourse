@@ -556,8 +556,6 @@ en:
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
-        fix_order: "Fix Positions"
-        fix_order_tooltip: "Not all categories have a unique position number, which may cause unexpected results."
         save: "Save Order"
         apply_all: "Apply"
         position: "Position"
