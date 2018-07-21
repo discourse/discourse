@@ -16,7 +16,6 @@
         <div class="charts">
           {{admin-report
             dataSourceName="signups"
-            report=signupsReport
             showTrend=true
             forcedModes="chart"
             startDate=startDate
@@ -24,7 +23,6 @@
 
           {{admin-report
             dataSourceName="topics"
-            report=topicsReport
             showTrend=true
             forcedModes="chart"
             startDate=startDate
@@ -32,7 +30,6 @@
 
           {{admin-report
             dataSourceName="posts"
-            report=postsReport
             showTrend=true
             forcedModes="chart"
             startDate=startDate
@@ -40,7 +37,6 @@
 
           {{admin-report
             dataSourceName="dau_by_mau"
-            report=dauByMauReport
             showTrend=true
             forcedModes="chart"
             startDate=startDate
@@ -48,7 +44,6 @@
 
           {{admin-report
             dataSourceName="daily_engaged_users"
-            report=dailyEngagedUsersReport
             showTrend=true
             forcedModes="chart"
             startDate=startDate
@@ -56,7 +51,6 @@
 
           {{admin-report
             dataSourceName="new_contributors"
-            report=newContributorsReport
             showTrend=true
             forcedModes="chart"
             startDate=startDate
@@ -171,13 +165,11 @@
     </div>
 
     <div class="section-column">
-      {{admin-report
-        report=topReferredTopicsReport
-        reportOptions=topReferredTopicsTopions}}
+      {{admin-report dataSourceName="top_referred_topics" reportOptions=topReferredTopicsTopions}}
 
       {{admin-report
+        dataSourceName="trending_search"
         reportOptions=trendingSearchOptions
-        report=trendingSearchReport
         isEnabled=logSearchQueriesEnabled
         disabledLabel="admin.dashboard.reports.trending_search.disabled"
         startDate=startDate
