@@ -895,7 +895,8 @@ class Report
     FROM post_revisions pr
     JOIN users u
     ON u.id = pr.user_id
-    WHERE pr.created_at >= '#{report.start_date}'
+    WHERE u.id > 0
+    AND pr.created_at >= '#{report.start_date}'
     AND pr.created_at <= '#{report.end_date}'
     ORDER BY pr.created_at DESC
     LIMIT 20
