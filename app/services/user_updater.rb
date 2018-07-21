@@ -24,6 +24,7 @@ class UserUpdater
     :external_links_in_new_tab,
     :enable_quoting,
     :dynamic_favicon,
+    :first_day_of_week,
     :disable_jump_reply,
     :automatically_unpin_topics,
     :digest_after_minutes,

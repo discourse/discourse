@@ -184,6 +184,7 @@ end
 #  allow_private_messages           :boolean          default(TRUE), not null
 #  homepage_id                      :integer
 #  theme_ids                        :integer          default([]), not null, is an Array
+#  first_day_of_week                :integer          default(1), not null
 #
 # Indexes
 #

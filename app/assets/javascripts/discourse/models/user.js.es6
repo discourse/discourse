@@ -262,6 +262,7 @@ const User = RestModel.extend({
       "email_private_messages",
       "email_previous_replies",
       "dynamic_favicon",
+      "first_day_of_week",
       "enable_quoting",
       "disable_jump_reply",
       "automatically_unpin_topics",
@@ -329,7 +330,8 @@ const User = RestModel.extend({
           this.get("user_option"),
           "enable_quoting",
           "external_links_in_new_tab",
-          "dynamic_favicon"
+          "dynamic_favicon",
+          "first_day_of_week"
         );
         Discourse.User.current().setProperties(userProps);
         this.setProperties(updatedState);
