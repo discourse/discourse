@@ -13,13 +13,6 @@ const ACTIVITY_METRICS_REPORTS = [
   "user_to_user_private_messages_with_replies"
 ];
 
-function dynamicReport(reportType) {
-  return function() {
-    if (this.get("period") !== "monthly") return null;
-    return this.get("reports").find(x => x.type === reportType);
-  }.property("reports.[]", "period");
-}
-
 function staticReport(reportType) {
   return function() {
     return this.get("reports").find(x => x.type === reportType);
@@ -47,15 +40,6 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     return { table: { total: false, limit: 8 } };
   },
 
-  signupsReport: dynamicReport("signups"),
-  topicsReport: dynamicReport("topics"),
-  postsReport: dynamicReport("posts"),
-  dauByMauReport: dynamicReport("dau_by_mau"),
-  dailyEngagedUsersReport: dynamicReport("daily_engaged_users"),
-  newContributorsReport: dynamicReport("new_contributors"),
-
-  topReferredTopicsReport: staticReport("top_referred_topics"),
-  trendingSearchReport: staticReport("trending_search"),
   usersByTypeReport: staticReport("users_by_type"),
   usersByTrustLevelReport: staticReport("users_by_trust_level"),
 
