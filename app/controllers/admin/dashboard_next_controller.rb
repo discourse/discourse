@@ -11,10 +11,6 @@ class Admin::DashboardNextController < Admin::AdminController
     render json: data
   end
 
-  def moderation
-    render json: AdminDashboardNextModerationData.fetch_cached_stats
-  end
-
   def general
     data = AdminDashboardNextGeneralData.fetch_cached_stats
 

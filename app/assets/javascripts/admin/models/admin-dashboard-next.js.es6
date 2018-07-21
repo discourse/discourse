@@ -13,17 +13,6 @@ AdminDashboardNext.reopenClass({
     });
   },
 
-  fetchModeration() {
-    return ajax("/admin/dashboard/moderation.json").then(json => {
-      const model = AdminDashboardNext.create();
-      model.setProperties({
-        reports: json.reports,
-        loaded: true
-      });
-      return model;
-    });
-  },
-
   fetchGeneral() {
     return ajax("/admin/dashboard/general.json").then(json => {
       const model = AdminDashboardNext.create();
