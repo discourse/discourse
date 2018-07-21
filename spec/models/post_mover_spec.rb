@@ -188,7 +188,7 @@ describe PostMover do
           expect(new_topic.like_count).to eq(1)
 
           expect(new_topic.category).to eq(category)
-          expect(new_topic.tags.pluck(:name)).to eq(["tag1", "tag2"])
+          expect(new_topic.tags.pluck(:name)).to contain_exactly("tag1", "tag2")
           expect(topic.featured_user1_id).to be_blank
           expect(new_topic.posts.by_post_number).to match_array([p2, p4])
 
