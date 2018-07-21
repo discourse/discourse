@@ -131,10 +131,10 @@
                   {{category-link category allowUncategorized="true" hideParent=false}}
                 </td>
                 <td class='topic-count'>
-                  {{user-summary-category-search user=user category=category count=category.topic_count}}
+                  {{category.topic_count}}
                 </td>
                 <td class='reply-count'>
-                  {{user-summary-category-search user=user category=category count=category.post_count}}
+                  {{category.post_count}}
                 </td>
               </tr>
             {{/each}}
