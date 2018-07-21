@@ -165,7 +165,11 @@
     </div>
 
     <div class="section-column">
-      {{admin-report dataSourceName="top_referred_topics" reportOptions=topReferredTopicsTopions}}
+      {{admin-report
+        dataSourceName="top_referred_topics"
+        reportOptions=topReferredTopicsTopions
+        startDate=startDate
+        endDate=endDate}}
 
       {{admin-report
         dataSourceName="trending_search"
