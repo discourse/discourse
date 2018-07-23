@@ -954,7 +954,7 @@ class User < ActiveRecord::Base
 
     Discourse.authenticators.each do |authenticator|
       account_description = authenticator.description_for_user(self)
-      if account_description
+      unless account_description.empty?
         result << {
           name: authenticator.name,
           description: account_description,

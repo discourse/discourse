@@ -493,8 +493,6 @@ JS
     begin
       provider.authenticator.enabled?
     rescue NotImplementedError
-      # TODO: Remove once plugins are all updated to define enabled? on authenticators
-      # (this change was made July 2018)
       provider.authenticator.define_singleton_method(:enabled?) do
         Rails.logger.warn("Auth::Authenticator subclasses should define an `enabled?` function. Patching for now.")
         return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting

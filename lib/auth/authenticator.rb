@@ -30,11 +30,12 @@ class Auth::Authenticator
     raise NotImplementedError
   end
 
-  # optionally return a string describing the connected account
+  # return a string describing the connected account
   #  for a given user (typically email address). Used to list
-  #  connected accounts under the user's preferences.
+  #  connected accounts under the user's preferences. Empty string
+  #  indicates not connected
   def description_for_user(user)
-    # not required
+    ""
   end
 
   # can authorisation for this provider be revoked?

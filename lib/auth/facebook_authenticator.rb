@@ -12,8 +12,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
   def description_for_user(user)
     info = FacebookUserInfo.find_by(user_id: user.id)
-    return nil if info.nil?
-    info.email || info.username || ""
+    info&.email || info&.username || ""
   end
 
   def can_revoke?
@@ -29,20 +28,18 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
       return true
     end
 
-    uri = URI.parse("https://graph.facebook.com/#{info.facebook_user_id}/permissions?access_token=#{SiteSetting.facebook_app_id}|#{SiteSetting.facebook_app_secret}")
+    response = Excon.delete(revoke_url(info.facebook_user_id))
 
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    request = Net::HTTP::Delete.new(uri.request_uri)
-
-    response = http.request(request)
-
-    if response.kind_of? Net::HTTPSuccess
+    if response.status == 200
       info.destroy!
       return true
     end
 
     false
+  end
+
+  def revoke_url(fb_user_id)
+    "https://graph.facebook.com/#{fb_user_id}/permissions?access_token=#{SiteSetting.facebook_app_id}|#{SiteSetting.facebook_app_secret}"
   end
 
   def can_connect_existing_user?
@@ -68,11 +65,11 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
       result.user = existing_account
       user_info = FacebookUserInfo.create({ user_id: result.user.id }.merge(facebook_hash))
     else
-      result.user = user_info.try(:user)
+      result.user = user_info&.user
     end
 
     if !result.user && !email.blank? && result.user = User.find_by_email(email)
-      FacebookUserInfo.create({ user_id: result.user.id }.merge(facebook_hash))
+      FacebookUserInfo.create!({ user_id: result.user.id }.merge(facebook_hash))
     end
 
     user_info.update_columns(facebook_hash) if user_info

@@ -1,50 +1,42 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("User Preferences", {
   loggedIn: true,
-  beforeEach() {
-    const response = object => {
-      return [200, { "Content-Type": "application/json" }, object];
-    };
-
-    // prettier-ignore
-    server.post("/u/second_factors.json", () => { //eslint-disable-line
-      return response({
+  pretend(server, helper) {
+    server.post("/u/second_factors.json", () => {
+      return helper.response({
         key: "rcyryaqage3jexfj",
         qr: '<div id="test-qr">qr-code</div>'
       });
     });
 
-    // prettier-ignore
-    server.put("/u/second_factor.json", () => { //eslint-disable-line
-      return response({ error: "invalid token" });
+    server.put("/u/second_factor.json", () => {
+      return helper.response({ error: "invalid token" });
     });
 
-    // prettier-ignore
-    server.put("/u/second_factors_backup.json", () => { //eslint-disable-line
-      return response({ backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"] });
+    server.put("/u/second_factors_backup.json", () => {
+      return helper.response({
+        backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"]
+      });
     });
 
-    // prettier-ignore
-    server.post("/u/eviltrout/preferences/revoke-account", () => { //eslint-disable-line
-      return response({
+    server.post("/u/eviltrout/preferences/revoke-account", () => {
+      return helper.response({
         success: true
       });
     });
   }
 });
 
-QUnit.test("update some fields", assert => {
-  visit("/u/eviltrout/preferences");
+QUnit.test("update some fields", async assert => {
+  await visit("/u/eviltrout/preferences");
 
-  andThen(() => {
-    assert.ok($("body.user-preferences-page").length, "has the body class");
-    assert.equal(
-      currentURL(),
-      "/u/eviltrout/preferences/account",
-      "defaults to account tab"
-    );
-    assert.ok(exists(".user-preferences"), "it shows the preferences");
-  });
+  assert.ok($("body.user-preferences-page").length, "has the body class");
+  assert.equal(
+    currentURL(),
+    "/u/eviltrout/preferences/account",
+    "defaults to account tab"
+  );
+  assert.ok(exists(".user-preferences"), "it shows the preferences");
 
   const savePreferences = () => {
     click(".save-user");
@@ -55,25 +47,25 @@ QUnit.test("update some fields", assert => {
   };
 
   fillIn(".pref-name input[type=text]", "Jon Snow");
-  savePreferences();
+  await savePreferences();
 
   click(".preferences-nav .nav-profile a");
   fillIn("#edit-location", "Westeros");
-  savePreferences();
+  await savePreferences();
 
   click(".preferences-nav .nav-emails a");
   click(".pref-activity-summary input[type=checkbox]");
-  savePreferences();
+  await savePreferences();
 
   click(".preferences-nav .nav-notifications a");
   selectKit(".control-group.notifications .combo-box.duration")
     .expand()
     .selectRowByValue(1440);
-  savePreferences();
+  await savePreferences();
 
   click(".preferences-nav .nav-categories a");
   fillIn(".category-controls .category-selector", "faq");
-  savePreferences();
+  await savePreferences();
 
   assert.ok(
     !exists(".preferences-nav .nav-tags a"),
@@ -91,107 +83,87 @@ QUnit.test("update some fields", assert => {
   );
 });
 
-QUnit.test("username", assert => {
-  visit("/u/eviltrout/preferences/username");
-  andThen(() => {
-    assert.ok(exists("#change_username"), "it has the input element");
-  });
+QUnit.test("username", async assert => {
+  await visit("/u/eviltrout/preferences/username");
+  assert.ok(exists("#change_username"), "it has the input element");
 });
 
-QUnit.test("about me", assert => {
-  visit("/u/eviltrout/preferences/about-me");
-  andThen(() => {
-    assert.ok(exists(".raw-bio"), "it has the input element");
-  });
+QUnit.test("about me", async assert => {
+  await visit("/u/eviltrout/preferences/about-me");
+  assert.ok(exists(".raw-bio"), "it has the input element");
 });
 
-QUnit.test("email", assert => {
-  visit("/u/eviltrout/preferences/email");
-  andThen(() => {
-    assert.ok(exists("#change-email"), "it has the input element");
-  });
+QUnit.test("email", async assert => {
+  await visit("/u/eviltrout/preferences/email");
 
-  fillIn("#change-email", "invalidemail");
+  assert.ok(exists("#change-email"), "it has the input element");
 
-  andThen(() => {
-    assert.equal(
-      find(".tip.bad")
-        .text()
-        .trim(),
-      I18n.t("user.email.invalid"),
-      "it should display invalid email tip"
-    );
-  });
+  await fillIn("#change-email", "invalidemail");
+
+  assert.equal(
+    find(".tip.bad")
+      .text()
+      .trim(),
+    I18n.t("user.email.invalid"),
+    "it should display invalid email tip"
+  );
 });
 
-QUnit.test("connected accounts", assert => {
-  visit("/u/eviltrout/preferences/account");
-  andThen(() => {
-    assert.ok(
-      exists(".pref-associated-accounts"),
-      "it has the connected accounts section"
-    );
-    assert.ok(
-      find(".pref-associated-accounts table tr:first td:first")
-        .html()
-        .indexOf("Facebook") > -1,
-      "it lists facebook"
-    );
-  });
+QUnit.test("connected accounts", async assert => {
+  await visit("/u/eviltrout/preferences/account");
 
-  click(".pref-associated-accounts table tr:first td:last button");
-
-  andThen(() => {
-    find(".pref-associated-accounts table tr:first td:last button")
+  assert.ok(
+    exists(".pref-associated-accounts"),
+    "it has the connected accounts section"
+  );
+  assert.ok(
+    find(".pref-associated-accounts table tr:first td:first")
       .html()
-      .indexOf("Connect") > -1;
-  });
+      .indexOf("Facebook") > -1,
+    "it lists facebook"
+  );
+
+  await click(".pref-associated-accounts table tr:first td:last button");
+
+  find(".pref-associated-accounts table tr:first td:last button")
+    .html()
+    .indexOf("Connect") > -1;
 });
 
-QUnit.test("second factor", assert => {
-  visit("/u/eviltrout/preferences/second-factor");
+QUnit.test("second factor", async assert => {
+  await visit("/u/eviltrout/preferences/second-factor");
 
-  andThen(() => {
-    assert.ok(exists("#password"), "it has a password input");
-  });
+  assert.ok(exists("#password"), "it has a password input");
 
-  fillIn("#password", "secrets");
-  click(".user-preferences .btn-primary");
+  await fillIn("#password", "secrets");
+  await click(".user-preferences .btn-primary");
 
-  andThen(() => {
-    assert.ok(exists("#test-qr"), "shows qr code");
-    assert.notOk(exists("#password"), "it hides the password input");
-  });
+  assert.ok(exists("#test-qr"), "shows qr code");
+  assert.notOk(exists("#password"), "it hides the password input");
 
-  fillIn("#second-factor-token", "111111");
-  click(".btn-primary");
+  await fillIn("#second-factor-token", "111111");
+  await click(".btn-primary");
 
-  andThen(() => {
-    assert.ok(
-      find(".alert-error")
-        .html()
-        .indexOf("invalid token") > -1,
-      "shows server validation error message"
-    );
-  });
+  assert.ok(
+    find(".alert-error")
+      .html()
+      .indexOf("invalid token") > -1,
+    "shows server validation error message"
+  );
 });
 
-QUnit.test("second factor backup", assert => {
-  visit("/u/eviltrout/preferences/second-factor-backup");
+QUnit.test("second factor backup", async assert => {
+  await visit("/u/eviltrout/preferences/second-factor-backup");
 
-  andThen(() => {
-    assert.ok(
-      exists("#second-factor-token"),
-      "it has a authentication token input"
-    );
-  });
+  assert.ok(
+    exists("#second-factor-token"),
+    "it has a authentication token input"
+  );
 
-  fillIn("#second-factor-token", "111111");
-  click(".user-preferences .btn-primary");
+  await fillIn("#second-factor-token", "111111");
+  await click(".user-preferences .btn-primary");
 
-  andThen(() => {
-    assert.ok(exists(".backup-codes-area"), "shows backup codes");
-  });
+  assert.ok(exists(".backup-codes-area"), "shows backup codes");
 });
 
 QUnit.test("default avatar selector", assert => {
@@ -206,9 +178,8 @@ QUnit.test("default avatar selector", assert => {
 acceptance("Avatar selector when selectable avatars is enabled", {
   loggedIn: true,
   settings: { selectable_avatars_enabled: true },
-  beforeEach() {
-    // prettier-ignore
-    server.get("/site/selectable-avatars.json", () => { //eslint-disable-line
+  pretend(server) {
+    server.get("/site/selectable-avatars.json", () => {
       return [200, { "Content-Type": "application/json" }, [
         "https://www.discourse.org",
         "https://meta.discourse.org",
@@ -217,15 +188,15 @@ acceptance("Avatar selector when selectable avatars is enabled", {
   }
 });
 
-QUnit.test("selectable avatars", assert => {
-  visit("/u/eviltrout/preferences");
+QUnit.test("selectable avatars", async assert => {
+  await visit("/u/eviltrout/preferences");
 
-  click(".pref-avatar .btn");
-  andThen(() => {
-    assert.ok(
-      exists(".selectable-avatars", "opens the avatar selection modal")
-    );
-  });
+  await click(".pref-avatar .btn");
+
+  assert.ok(
+    exists(".selectable-avatars", "opens the avatar selection modal")
+  );
+
 });
 
 acceptance("User Preferences when badges are disabled", {

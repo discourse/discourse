@@ -12,8 +12,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
 
   def description_for_user(user)
     info = GithubUserInfo.find_by(user_id: user.id)
-    return nil if info.nil?
-    info.screen_name || ""
+    info&.screen_name || ""
   end
 
   class GithubEmailChecker

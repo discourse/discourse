@@ -42,6 +42,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           def name
             'ubuntu'
           end
+
           def enabled?
             SiteSetting.ubuntu_login_enabled
           end

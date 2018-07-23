@@ -10,8 +10,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
 
   def description_for_user(user)
     info = GoogleUserInfo.find_by(user_id: user.id)
-    return nil if info.nil?
-    info.email || info.name || ""
+    info&.email || info&.name || ""
   end
 
   def after_authenticate(auth_hash)

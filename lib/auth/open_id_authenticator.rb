@@ -15,8 +15,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
   def description_for_user(user)
     info = UserOpenId.find_by(user_id: user.id)
-    return nil if info.nil?
-    info.email || ""
+    info&.email || ""
   end
 
   def after_authenticate(auth_token)

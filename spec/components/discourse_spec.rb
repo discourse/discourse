@@ -100,7 +100,8 @@ describe Discourse do
   context 'enabled_authenticators' do
     it 'only returns enabled authenticators' do
       expect(Discourse.enabled_authenticators.length).to be(0)
-      SiteSetting.enable_twitter_logins = true
+      expect { SiteSetting.enable_twitter_logins = true }
+        .to change { Discourse.enabled_authenticators.length }.by(1)
       expect(Discourse.enabled_authenticators.length).to be(1)
       expect(Discourse.enabled_authenticators.first).to be_instance_of(Auth::TwitterAuthenticator)
     end
