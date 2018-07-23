@@ -64,7 +64,7 @@ class ListController < ApplicationController
         if filter == :latest
           list_opts[:no_definitions] = true
         end
-        if [:latest, :categories].include?(filter)
+        if [:latest, :categories].include?(filter) && list_opts[:exclude_category_ids].blank?
           list_opts[:exclude_category_ids] = get_excluded_category_ids(list_opts[:category])
         end
       end
@@ -264,7 +264,7 @@ class ListController < ApplicationController
       top_options.merge!(options) if options
       top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
 
-      if "top".freeze == current_homepage
+      if "top".freeze == current_homepage && top_options[:exclude_category_ids].blank?
         top_options[:exclude_category_ids] = get_excluded_category_ids(top_options[:category])
       end
 
