@@ -68,11 +68,15 @@ export default Ember.Controller.extend(
         this.site.isMobileDevice
       );
 
-      return allMethods.map(method => {
+      const result = allMethods.map(method => {
         return {
           method,
           account: accounts.find(account => account.name === method.name) // Will be undefined if no account
         };
+      });
+
+      return result.filter(value => {
+        return value.account || value.method.get("canConnect");
       });
     },
 
