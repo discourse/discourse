@@ -1072,6 +1072,32 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def revoke_account
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    provider_name = params.require(:provider_name)
+
+    # Using Discourse.authenticators rather than Discourse.enabled_authenticators so users can
+    # revoke permissions even if the admin has temporarily disabled that type of login
+    authenticator = Discourse.authenticators.find { |authenticator| authenticator.name == provider_name }
+    raise Discourse::NotFound if authenticator.nil?
+
+    skip_remote = params.permit(:skip_remote)
+
+    # We're likely going to contact the remote auth provider, so hijack request
+    hijack do
+      result = authenticator.revoke(user, skip_remote: skip_remote)
+      if result
+        return render json: success_json
+      else
+        return render json: {
+          success: false,
+          message: I18n.t("associated_accounts.revoke_failed", provider_name: provider_name)
+        }
+      end
+    end
+  end
+
   private
 
   def honeypot_value

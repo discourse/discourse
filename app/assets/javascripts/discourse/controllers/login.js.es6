@@ -193,50 +193,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     externalLogin: function(loginMethod) {
-      const name = loginMethod.get("name");
-      const customLogin = loginMethod.get("customLogin");
-
-      if (customLogin) {
-        customLogin();
-      } else {
-        let authUrl =
-          loginMethod.get("customUrl") || Discourse.getURL("/auth/" + name);
-        if (loginMethod.get("fullScreenLogin")) {
-          document.cookie = "fsl=true";
-          window.location = authUrl;
-        } else {
-          this.set("authenticate", name);
-          const left = this.get("lastX") - 400;
-          const top = this.get("lastY") - 200;
-
-          const height = loginMethod.get("frameHeight") || 400;
-          const width = loginMethod.get("frameWidth") || 800;
-
-          if (loginMethod.get("displayPopup")) {
-            authUrl = authUrl + "?display=popup";
-          }
-
-          const w = window.open(
-            authUrl,
-            "_blank",
-            "menubar=no,status=no,height=" +
-              height +
-              ",width=" +
-              width +
-              ",left=" +
-              left +
-              ",top=" +
-              top
-          );
-          const self = this;
-          const timer = setInterval(function() {
-            if (!w || w.closed) {
-              clearInterval(timer);
-              self.set("authenticate", null);
-            }
-          }, 1000);
-        }
-      }
+      loginMethod.doLogin();
     },
 
     createAccount: function() {

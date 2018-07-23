@@ -9,7 +9,7 @@ load 'auth/open_id_authenticator.rb'
 describe Auth::OpenIdAuthenticator do
 
   it "can lookup pre-existing user if trusted" do
-    auth = Auth::OpenIdAuthenticator.new("test", "id", trusted: true)
+    auth = Auth::OpenIdAuthenticator.new("test", "id", "enable_yahoo_logins", trusted: true)
 
     user = Fabricate(:user)
     response = OpenStruct.new(identity_url: 'abc')
@@ -18,7 +18,7 @@ describe Auth::OpenIdAuthenticator do
   end
 
   it "raises an exception when email is missing" do
-    auth = Auth::OpenIdAuthenticator.new("test", "id", trusted: true)
+    auth = Auth::OpenIdAuthenticator.new("test", "id", "enable_yahoo_logins", trusted: true)
     response = OpenStruct.new(identity_url: 'abc')
     expect { auth.after_authenticate(info: {}, extra: { response: response }) }.to raise_error(Discourse::InvalidParameters)
   end

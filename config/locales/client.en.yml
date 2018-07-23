@@ -820,6 +820,12 @@ en:
           one: "We'll only email you if we haven't seen you in the last minute."
           other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
 
+      associated_accounts:
+        title: "Associated Accounts"
+        connect: "Connect"
+        revoke: "Revoke"
+        not_connected: "(not connected)"
+
       name:
         title: "Name"
         instructions: "your full name (optional)"
@@ -1007,7 +1013,6 @@ en:
         topics: "Topics"
         replies: "Replies"
 
-      associated_accounts: "Logins"
       ip_address:
         title: "Last IP Address"
       registration_ip_address:
@@ -1198,25 +1203,28 @@ en:
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
-      google:
-        title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       google_oauth2:
+        name: "Google"
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
+        name: "Twitter"
         title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       instagram:
+        name: "Instagram"
         title: "with Instagram"
         message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
+        name: "Facebook"
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       yahoo:
+        name: "Yahoo"
         title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
+        name: "GitHub"
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
     invites:

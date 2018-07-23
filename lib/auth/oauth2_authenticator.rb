@@ -52,4 +52,8 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
     )
   end
 
+  def description_for_user(user)
+    info = Oauth2UserInfo.find_by(user_id: user.id, provider: @name)
+    info&.email || info&.name || info&.uid || ""
+  end
 end
