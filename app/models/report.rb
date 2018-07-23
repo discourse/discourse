@@ -461,12 +461,12 @@ class Report
     add_counts report, countable, 'post_actions.created_at'
   end
 
-  # Private messages counts:
-
   def self.private_messages_report(report, topic_subtype)
     report.icon = 'envelope'
-    basic_report_about report, Topic, :private_message_topics_count_per_day, report.start_date, report.end_date, topic_subtype
-    add_counts report, Topic.private_messages.with_subtype(topic_subtype), 'topics.created_at'
+    subject = Topic.where('topics.user_id > 0')
+    basic_report_about report, subject, :private_message_topics_count_per_day, report.start_date, report.end_date, topic_subtype
+    subject = Topic.private_messages.where('topics.user_id > 0').with_subtype(topic_subtype)
+    add_counts report, subject, 'topics.created_at'
   end
 
   def self.report_user_to_user_private_messages(report)
@@ -477,8 +477,10 @@ class Report
   def self.report_user_to_user_private_messages_with_replies(report)
     report.icon = 'envelope'
     topic_subtype = TopicSubtype.user_to_user
-    basic_report_about report, Post, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
-    add_counts report, Post.private_posts.with_topic_subtype(topic_subtype), 'posts.created_at'
+    subject = Post.where('posts.user_id > 0')
+    basic_report_about report, subject, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
+    subject = Post.private_posts.where('posts.user_id > 0').with_topic_subtype(topic_subtype)
+    add_counts report, subject, 'posts.created_at'
   end
 
   def self.report_system_private_messages(report)
