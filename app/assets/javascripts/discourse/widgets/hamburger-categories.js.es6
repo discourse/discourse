@@ -54,11 +54,14 @@ export default createWidget("hamburger-categories", {
     const result = [
       h(
         "li.heading",
-        h(
-          "a.d-link.categories-link",
-          { attributes: { href } },
-          I18n.t("filters.categories.title")
-        )
+        [
+          h("strong", I18n.t("categories.top")),
+          h(
+            "a.d-link.categories-link",
+            { attributes: { href } },
+            I18n.t("categories.show_all")
+          )
+        ]
       )
     ];
 

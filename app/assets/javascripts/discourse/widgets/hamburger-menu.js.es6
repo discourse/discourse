@@ -3,6 +3,7 @@ import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import Category from 'discourse/models/category';
 
 const flatten = array => [].concat.apply([], array);
 
@@ -176,18 +177,23 @@ export default createWidget("hamburger-menu", {
   },
 
   listCategories() {
-    const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
-    const isStaff = Discourse.User.currentProp("staff");
+    const maxCategoriesToDisplay = 6;
+    const currentUser = Discourse.User.current();
+    let categories = [];
 
-    const categories = this.site.get("categoriesList").reject(c => {
-      if (c.get("parentCategory.show_subcategory_list")) {
-        return true;
-      }
-      if (hideUncategorized && c.get("isUncategorizedCategory") && !isStaff) {
-        return true;
-      }
-      return false;
-    });
+    if (currentUser) {
+      let categoryIds = currentUser.get("watched_category_ids");
+      categoryIds = categoryIds.concat(currentUser.get("tracked_category_ids"));
+      categoryIds = categoryIds.concat(currentUser.get("watched_first_post_category_ids"));
+      categoryIds = categoryIds.concat(currentUser.get("top_category_ids"));
+      categoryIds = categoryIds.concat(this.site.get("categoriesList").map(c => c.id));
+
+      categories = categoryIds.uniq().slice(0, maxCategoriesToDisplay).map(id => {
+        return Category.findById(id);
+      });
+    } else {
+      categories = this.site.get("categoriesList").slice(0, maxCategoriesToDisplay);
+    }
 
     return this.attach("hamburger-categories", { categories });
   },

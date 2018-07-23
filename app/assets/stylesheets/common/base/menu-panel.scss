@@ -108,6 +108,20 @@
     }
   }
 
+  ul.category-links {
+    li.heading {
+      padding: 0.25em 0.5em 0.5em 0.5em;
+      display: block;
+      .categories-link {
+        float: right;
+        padding: 0;
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);

@@ -41,7 +41,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_name,
              :can_create_topic,
              :link_posting_access,
-             :external_id
+             :external_id,
+             :tracked_category_ids,
+             :watched_category_ids,
+             :watched_first_post_category_ids,
+             :top_category_ids
 
   def link_posting_access
     scope.link_posting_access
@@ -153,9 +157,23 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def muted_category_ids
-    @muted_category_ids ||= CategoryUser.where(user_id: object.id,
-                                               notification_level: TopicUser.notification_levels[:muted])
-      .pluck(:category_id)
+    CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def tracked_category_ids
+    CategoryUser.lookup(object, :tracking).pluck(:category_id)
+  end
+
+  def watched_category_ids
+    CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
+
+  def watched_first_post_category_ids
+    CategoryUser.lookup(object, :watching_first_post).pluck(:category_id)
+  end
+
+  def top_category_ids
+    UserSummary.new(object, Guardian.new).top_categories.pluck(:id)
   end
 
   def dismissed_banner_key
