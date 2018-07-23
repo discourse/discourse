@@ -60,10 +60,13 @@ export default Ember.Component.extend(LoadMore, {
     },
 
     resumeDraft(draftKey, postUrl) {
+      const composer = this.container.lookup("controller:composer");
+      if (composer.get("model.viewOpen")) {
+        composer.close();
+      }
       if (postUrl) {
         DiscourseURL.routeTo(postUrl);
       } else {
-        const composer = this.container.lookup("controller:composer");
         Draft.get(draftKey).then((d) => {
           composer.open({
             draft: d.draft,
