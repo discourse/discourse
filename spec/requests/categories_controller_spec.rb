@@ -17,6 +17,15 @@ describe CategoriesController do
       get "/categories"
       expect(response.body).not_to include('AMAZING AMAZING')
     end
+
+    it 'web crawler view has correct urls for subfolder install' do
+      GlobalSetting.stubs(:relative_url_root).returns('/forum')
+      Discourse.stubs(:base_uri).returns("/forum")
+      get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
+      html = Nokogiri::HTML(response.body)
+      expect(html.css('body.crawler')).to be_present
+      expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
+    end
   end
 
   context 'extensibility event' do
