@@ -3,6 +3,7 @@ require 'excon'
 module Jobs
   class EmitWebHookEvent < Jobs::Base
     PING_EVENT = 'ping'.freeze
+    MAX_RETRY_COUNT = 4.freeze
 
     def execute(args)
       %i{
@@ -11,6 +12,8 @@ module Jobs
       }.each do |key|
         raise Discourse::InvalidParameters.new(key) unless args[key].present?
       end
+
+      @orig_args = args.dup
 
       web_hook = WebHook.find_by(id: args[:web_hook_id])
       raise Discourse::InvalidParameters.new(:web_hook_id) if web_hook.blank?
@@ -110,6 +113,14 @@ module Jobs
           web_hook_event_id: web_hook_event.id,
           event_type: args[:event_type]
         }, user_ids: User.human_users.staff.pluck(:id))
+
+        if SiteSetting.retry_web_hook_events? && response.status != 200
+          @orig_args[:retry_count] = (@orig_args[:retry_count] || 0) + 1
+          return if @orig_args[:retry_count] > MAX_RETRY_COUNT
+
+          delay = 5**(@orig_args[:retry_count] - 1)
+          Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, @orig_args)
+        end
       rescue
         web_hook_event.destroy!
       end
