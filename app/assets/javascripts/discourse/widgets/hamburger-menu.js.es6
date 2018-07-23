@@ -178,21 +178,21 @@ export default createWidget("hamburger-menu", {
 
   listCategories() {
     const maxCategoriesToDisplay = 6;
-    const currentUser = Discourse.User.current();
+    const categoriesList = this.site.get("categoriesList");
     let categories = [];
 
-    if (currentUser) {
-      let categoryIds = currentUser.get("watched_category_ids");
-      categoryIds = categoryIds.concat(currentUser.get("tracked_category_ids"));
-      categoryIds = categoryIds.concat(currentUser.get("watched_first_post_category_ids"));
-      categoryIds = categoryIds.concat(currentUser.get("top_category_ids"));
-      categoryIds = categoryIds.concat(this.site.get("categoriesList").map(c => c.id));
+    if (this.currentUser) {
+      let categoryIds = this.currentUser.get("watched_category_ids");
+      categoryIds = categoryIds.concat(this.currentUser.get("tracked_category_ids"));
+      categoryIds = categoryIds.concat(this.currentUser.get("watched_first_post_category_ids"));
+      categoryIds = categoryIds.concat(this.currentUser.get("top_category_ids"));
+      categoryIds = categoryIds.concat(categoriesList.map(c => c.id));
 
       categories = categoryIds.uniq().slice(0, maxCategoriesToDisplay).map(id => {
-        return Category.findById(id);
+        return categoriesList.find(c => c.id === id);
       });
     } else {
-      categories = this.site.get("categoriesList").slice(0, maxCategoriesToDisplay);
+      categories = categoriesList.slice(0, maxCategoriesToDisplay);
     }
 
     return this.attach("hamburger-categories", { categories });

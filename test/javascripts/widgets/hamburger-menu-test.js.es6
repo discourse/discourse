@@ -125,42 +125,92 @@ widgetTest("general links", {
   }
 });
 
-widgetTest("category links", {
+widgetTest("top categories - anonymous", {
   template: '{{mount-widget widget="hamburger-menu"}}',
   anonymous: true,
 
-  beforeEach() {
-    const cat = this.site.get("categoriesList")[0];
+  test(assert) {
+    const count = this.site.get("categoriesList").length;
+    const maximum = count <= 6 ? count : 6;
+    assert.equal(this.$(".category-link").length, maximum);
+  }
+});
 
-    const parent = Discourse.Category.create({
+widgetTest("top categories", {
+  template: '{{mount-widget widget="hamburger-menu"}}',
+
+  beforeEach() {
+    const topicTrackingState = this.site.get("categoriesList")[0].get("topicTrackingState");
+
+    const parent1 = Discourse.Category.create({
       id: 1,
       topic_count: 5,
       name: "parent",
       url: "https://test.com/parent",
       show_subcategory_list: true,
-      topicTrackingState: cat.get("topicTrackingState")
+      topicTrackingState: topicTrackingState
     });
-    const child = Discourse.Category.create({
+    const child1 = Discourse.Category.create({
       id: 2,
       parent_category_id: 1,
       parentCategory: parent,
       topic_count: 4,
       name: "child",
       url: "https://test.com/child",
-      topicTrackingState: cat.get("topicTrackingState")
+      topicTrackingState: topicTrackingState
+    });
+    const parent2 = Discourse.Category.create({
+      id: 3,
+      topic_count: 7,
+      name: "parent 2",
+      url: "https://test.com/parent2",
+      show_subcategory_list: false,
+      topicTrackingState: topicTrackingState
+    });
+    const child2 = Discourse.Category.create({
+      id: 4,
+      parent_category_id: 3,
+      parentCategory: parent,
+      topic_count: 8,
+      name: "child 2",
+      url: "https://test.com/child2",
+      topicTrackingState: topicTrackingState
+    });
+    const parent3 = Discourse.Category.create({
+      id: 5,
+      topic_count: 2,
+      name: "parent 3",
+      url: "https://test.com/parent3",
+      show_subcategory_list: true,
+      topicTrackingState: topicTrackingState
+    });
+    const parent4 = Discourse.Category.create({
+      id: 6,
+      topic_count: 2,
+      name: "parent 4",
+      url: "https://test.com/parent4",
+      show_subcategory_list: true,
+      topicTrackingState: topicTrackingState
+    });
+    const parent5 = Discourse.Category.create({
+      id: 7,
+      topic_count: 9,
+      name: "parent 5",
+      url: "https://test.com/parent5",
+      show_subcategory_list: false,
+      topicTrackingState: topicTrackingState
     });
 
-    parent.subcategories = [child];
-
-    const list = [parent, child];
+    parent1.subcategories = [child1];
+    parent2.subcategories = [child2];
+    const list = [parent1, child1, parent2, child2, parent3, parent4, parent5];
     this.site.set("categoriesList", list);
+    this.currentUser.setProperties({ watched_category_ids: [6], tracked_category_ids: [7], watched_first_post_category_ids: [4], top_category_ids: [5, 2] });
   },
 
   test(assert) {
-    // if show_subcategory_list is enabled we suppress the categories from hamburger
-    // this means that people can be confused about counts
-    assert.equal(this.$(".category-link").length, 1);
-    assert.equal(this.$(".category-link .topics-count").text(), "9");
+    assert.equal(this.$(".category-link").length, 6);
+    assert.equal(this.$(".category-link .category-name").text(), "parent 4parent 5child 2parent 3childparent");
   }
 });
 
