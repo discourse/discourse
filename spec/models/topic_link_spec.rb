@@ -29,6 +29,7 @@ describe TopicLink do
     before do
       post = Fabricate(:post, raw: "
 http://a.com/
+http://A.com/
 http://b.com/b
 http://#{'a' * 200}.com/invalid
 http://b.com/#{'a' * 500}
