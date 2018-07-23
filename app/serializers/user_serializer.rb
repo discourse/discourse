@@ -75,7 +75,8 @@ class UserSerializer < BasicUserSerializer
              :staged,
              :second_factor_enabled,
              :second_factor_backup_enabled,
-             :second_factor_remaining_backup_codes
+             :second_factor_remaining_backup_codes,
+             :associated_accounts
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -143,6 +144,10 @@ class UserSerializer < BasicUserSerializer
   def include_email?
     (object.id && object.id == scope.user.try(:id)) ||
       (scope.is_staff? && object.staged?)
+  end
+
+  def include_associated_accounts?
+    (object.id && object.id == scope.user.try(:id))
   end
 
   def include_second_factor_enabled?

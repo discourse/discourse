@@ -451,6 +451,7 @@ JS
     register_assets! unless assets.blank?
     register_locales!
     register_service_workers!
+    register_auth_providers!
 
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
@@ -488,6 +489,20 @@ JS
     Plugin::AuthProvider.auth_attributes.each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
+
+    after_initialize do
+      begin
+        provider.authenticator.enabled?
+      rescue NotImplementedError
+        provider.authenticator.define_singleton_method(:enabled?) do
+          Rails.logger.warn("Auth::Authenticator subclasses should define an `enabled?` function. Patching for now.")
+          return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
+          Rails.logger.warn("Plugin::AuthProvider has not defined an enabled_setting. Defaulting to true.")
+          true
+        end
+      end
+    end
+
     auth_providers << provider
   end
 
@@ -564,6 +579,12 @@ JS
   def register_service_workers!
     service_workers.each do |asset, opts|
       DiscoursePluginRegistry.register_service_worker(asset, opts)
+    end
+  end
+
+  def register_auth_providers!
+    auth_providers.each do |auth_provider|
+      DiscoursePluginRegistry.register_auth_provider(auth_provider)
     end
   end
 

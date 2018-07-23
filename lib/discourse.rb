@@ -199,24 +199,15 @@ module Discourse
   end
 
   def self.authenticators
-    # TODO: perhaps we don't need auth providers and authenticators maybe one object is enough
-
     # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
     #  for the cases of multisite
     # In future we may change it so we don't include them all for cases where we are not a multisite, but we would
     #  require a restart after site settings change
-    Users::OmniauthCallbacksController::BUILTIN_AUTH + auth_providers.map(&:authenticator)
+    Users::OmniauthCallbacksController::BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.map(&:authenticator)
   end
 
-  def self.auth_providers
-    providers = []
-    plugins.each do |p|
-      next unless p.auth_providers
-      p.auth_providers.each do |prov|
-        providers << prov
-      end
-    end
-    providers
+  def self.enabled_authenticators
+    authenticators.select { |authenticator|  authenticator.enabled?  }
   end
 
   def self.cache

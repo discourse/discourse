@@ -38,13 +38,26 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       let :provider do
         provider = Plugin::AuthProvider.new
-        provider.authenticator = Auth::OpenIdAuthenticator.new('ubuntu', 'https://login.ubuntu.com', trusted: true)
+        provider.authenticator = Class.new(Auth::Authenticator) do
+          def name
+            'ubuntu'
+          end
+
+          def enabled?
+            SiteSetting.ubuntu_login_enabled
+          end
+        end.new
+
         provider.enabled_setting = "ubuntu_login_enabled"
         provider
       end
 
       before do
-        Discourse.stubs(:auth_providers).returns [provider]
+        DiscoursePluginRegistry.register_auth_provider(provider)
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
       end
 
       it "finds an authenticator when enabled" do
@@ -59,14 +72,6 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect { Users::OmniauthCallbacksController.find_authenticator("ubuntu") }
           .to raise_error(Discourse::InvalidAccess)
-      end
-
-      it "succeeds if an authenticator does not have a site setting" do
-        provider.enabled_setting = nil
-        SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
-
-        expect(Users::OmniauthCallbacksController.find_authenticator("ubuntu"))
-          .to be(provider.authenticator)
       end
     end
   end

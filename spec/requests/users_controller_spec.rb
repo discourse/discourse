@@ -1965,7 +1965,7 @@ describe UsersController do
         json = JSON.parse(response.body)
         expect(json["email"]).to eq(user.email)
         expect(json["secondary_emails"]).to eq(user.secondary_emails)
-        expect(json["associated_accounts"]).to be_present
+        expect(json["associated_accounts"]).to eq([])
       end
 
       it "works on inactive users" do
@@ -1978,7 +1978,7 @@ describe UsersController do
         json = JSON.parse(response.body)
         expect(json["email"]).to eq(inactive_user.email)
         expect(json["secondary_emails"]).to eq(inactive_user.secondary_emails)
-        expect(json["associated_accounts"]).to be_present
+        expect(json["associated_accounts"]).to eq([])
       end
     end
   end
@@ -3067,5 +3067,47 @@ describe UsersController do
         end
       end
     end
+  end
+
+  describe '#revoke_account' do
+    let(:other_user) { Fabricate(:user) }
+    it 'errors for unauthorised users' do
+      post "/u/#{user.username}/preferences/revoke-account.json", params: {
+        provider_name: 'facebook'
+      }
+      expect(response.status).to eq(403)
+
+      sign_in(other_user)
+
+      post "/u/#{user.username}/preferences/revoke-account.json", params: {
+        provider_name: 'facebook'
+      }
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      before do
+        sign_in(user)
+      end
+
+      it 'returns an error when there is no matching account' do
+        post "/u/#{user.username}/preferences/revoke-account.json", params: {
+          provider_name: 'facebook'
+        }
+        expect(response.status).to eq(404)
+      end
+
+      it 'works' do
+        FacebookUserInfo.create!(user_id: user.id, facebook_user_id: 12345, email: 'someuser@somedomain.tld')
+        stub = stub_request(:delete, 'https://graph.facebook.com/12345/permissions?access_token=123%7Cabcde').to_return(body: "true")
+
+        post "/u/#{user.username}/preferences/revoke-account.json", params: {
+          provider_name: 'facebook'
+        }
+        expect(response.status).to eq(200)
+      end
+
+    end
+
   end
 end
