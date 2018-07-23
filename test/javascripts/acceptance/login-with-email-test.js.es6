@@ -19,84 +19,70 @@ acceptance("Login with email", {
   }
 });
 
-QUnit.test("with email button", assert => {
-  visit("/");
-  click("header .login-button");
+QUnit.test("with email button", async assert => {
+  await visit("/");
+  await click("header .login-button");
 
-  andThen(() => {
-    assert.ok(
-      exists(".btn-social.facebook"),
-      "it displays the facebook login button"
-    );
+  assert.ok(
+    exists(".btn-social.facebook"),
+    "it displays the facebook login button"
+  );
 
-    assert.ok(
-      exists(".login-with-email-button"),
-      "it displays the login with email button"
-    );
-  });
+  assert.ok(
+    exists(".login-with-email-button"),
+    "it displays the login with email button"
+  );
 
-  fillIn("#login-account-name", "someuser");
-  click(".login-with-email-button");
+  await fillIn("#login-account-name", "someuser");
+  await click(".login-with-email-button");
 
-  andThen(() => {
-    assert.equal(
-      find(".alert-error").html(),
-      I18n.t("email_login.complete_username_not_found", {
-        username: "someuser"
-      }),
-      "it should display an error for an invalid username"
-    );
-  });
+  assert.equal(
+    find(".alert-error").html(),
+    I18n.t("email_login.complete_username_not_found", {
+      username: "someuser"
+    }),
+    "it should display an error for an invalid username"
+  );
 
-  fillIn("#login-account-name", "someuser@gmail.com");
-  click(".login-with-email-button");
+  await fillIn("#login-account-name", "someuser@gmail.com");
+  await click(".login-with-email-button");
 
-  andThen(() => {
-    assert.equal(
-      find(".alert-error").html(),
-      I18n.t("email_login.complete_email_not_found", {
-        email: "someuser@gmail.com"
-      }),
-      "it should display an error for an invalid email"
-    );
-  });
+  assert.equal(
+    find(".alert-error").html(),
+    I18n.t("email_login.complete_email_not_found", {
+      email: "someuser@gmail.com"
+    }),
+    "it should display an error for an invalid email"
+  );
 
-  fillIn("#login-account-name", "someuser");
+  await fillIn("#login-account-name", "someuser");
 
-  andThen(() => {
-    userFound = true;
-  });
+  userFound = true;
 
-  click(".login-with-email-button");
+  await click(".login-with-email-button");
 
-  andThen(() => {
-    assert.equal(
-      find(".alert-success")
-        .html()
-        .trim(),
-      I18n.t("email_login.complete_username_found", { username: "someuser" }),
-      "it should display a success message for a valid username"
-    );
-  });
+  assert.equal(
+    find(".alert-success")
+      .html()
+      .trim(),
+    I18n.t("email_login.complete_username_found", { username: "someuser" }),
+    "it should display a success message for a valid username"
+  );
 
-  visit("/");
-  click("header .login-button");
-  fillIn("#login-account-name", "someuser@gmail.com");
-  click(".login-with-email-button");
+  await visit("/");
+  await click("header .login-button");
+  await fillIn("#login-account-name", "someuser@gmail.com");
+  await click(".login-with-email-button");
 
-  andThen(() => {
-    assert.equal(
-      find(".alert-success")
-        .html()
-        .trim(),
-      I18n.t("email_login.complete_email_found", {
-        email: "someuser@gmail.com"
-      }),
-      "it should display a success message for a valid email"
-    );
-  });
+  assert.equal(
+    find(".alert-success")
+      .html()
+      .trim(),
+    I18n.t("email_login.complete_email_found", {
+      email: "someuser@gmail.com"
+    }),
+    "it should display a success message for a valid email"
+  );
 
-  andThen(() => {
-    userFound = false;
-  });
+  userFound = false;
 });

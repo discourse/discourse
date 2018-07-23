@@ -25,28 +25,24 @@ acceptance("Tag Hashtag", {
   }
 });
 
-QUnit.test("tag is cooked properly", assert => {
-  visit("/t/internationalization-localization/280");
-  click("#topic-footer-buttons .btn.create");
+QUnit.test("tag is cooked properly", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click("#topic-footer-buttons .btn.create");
 
-  fillIn(".d-editor-input", "this is a tag hashtag #monkey::tag");
-  andThen(() => {
-    // TODO: Test that the autocomplete shows
-    assert.equal(
-      find(".d-editor-preview:visible")
-        .html()
-        .trim(),
-      '<p>this is a tag hashtag <a href="/tags/monkey" class="hashtag">#<span>monkey</span></a></p>'
-    );
-  });
+  await fillIn(".d-editor-input", "this is a tag hashtag #monkey::tag");
+  // TODO: Test that the autocomplete shows
+  assert.equal(
+    find(".d-editor-preview:visible")
+      .html()
+      .trim(),
+    '<p>this is a tag hashtag <a href="/tags/monkey" class="hashtag">#<span>monkey</span></a></p>'
+  );
 
-  click("#reply-control .btn.create");
-  andThen(() => {
-    assert.equal(
-      find(".topic-post:last .cooked")
-        .html()
-        .trim(),
-      '<p>this is a tag hashtag <a href="/tags/monkey" class="hashtag">#<span>monkey</span></a></p>'
-    );
-  });
+  await click("#reply-control .btn.create");
+  assert.equal(
+    find(".topic-post:last .cooked")
+      .html()
+      .trim(),
+    '<p>this is a tag hashtag <a href="/tags/monkey" class="hashtag">#<span>monkey</span></a></p>'
+  );
 });

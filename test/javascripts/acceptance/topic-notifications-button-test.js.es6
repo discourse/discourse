@@ -13,27 +13,24 @@ acceptance("Topic Notifications button", {
   }
 });
 
-QUnit.test("Updating topic notification level", assert => {
+QUnit.test("Updating topic notification level", async assert => {
   const notificationOptions = selectKit(
     "#topic-footer-buttons .topic-notifications-options"
   );
 
-  visit("/t/internationalization-localization/280");
+  await visit("/t/internationalization-localization/280");
 
-  andThen(() => {
-    assert.ok(
-      notificationOptions.exists(),
-      "it should display the notification options button in the topic's footer"
-    );
-  });
+  assert.ok(
+    notificationOptions.exists(),
+    "it should display the notification options button in the topic's footer"
+  );
 
-  notificationOptions.expand().selectRowByValue("3");
+  await notificationOptions.expandAwait();
+  await notificationOptions.selectRowByValueAwait("3");
 
-  andThen(() => {
-    assert.equal(
-      notificationOptions.selectedRow().name(),
-      "Watching",
-      "it should display the right notification level"
-    );
-  });
+  assert.equal(
+    notificationOptions.selectedRow().name(),
+    "Watching",
+    "it should display the right notification level"
+  );
 });
