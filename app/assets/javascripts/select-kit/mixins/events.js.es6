@@ -122,9 +122,7 @@ export default Ember.Mixin.create({
         event.stopPropagation();
       })
       .on("focusout.select-kit", event => {
-        if (!Ember.$.contains(this.element, event.relatedTarget)) {
-          this.close(event);
-        }
+        this.onFilterInputFocusout(event);
       })
       .on("keydown.select-kit", event => {
         const keyCode = event.keyCode || event.which;
@@ -369,6 +367,12 @@ export default Ember.Mixin.create({
   },
   enterFromFilter(event) {
     this.didPressEnter(event);
+  },
+
+  onFilterInputFocusout(event) {
+    if (!Ember.$.contains(this.element, event.relatedTarget)) {
+      this.close(event);
+    }
   },
 
   _moveHighlight(direction, $rows) {
