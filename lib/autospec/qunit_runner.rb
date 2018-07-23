@@ -27,7 +27,7 @@ module Autospec
     class ChromeNotInstalled < StandardError; end
 
     def initialize
-      # ensure_chrome_is_installed
+      ensure_chrome_is_installed
     end
 
     def start
