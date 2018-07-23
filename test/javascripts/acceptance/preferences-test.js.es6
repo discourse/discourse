@@ -180,10 +180,11 @@ acceptance("Avatar selector when selectable avatars is enabled", {
   settings: { selectable_avatars_enabled: true },
   pretend(server) {
     server.get("/site/selectable-avatars.json", () => {
-      return [200, { "Content-Type": "application/json" }, [
-        "https://www.discourse.org",
-        "https://meta.discourse.org",
-      ]];
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        ["https://www.discourse.org", "https://meta.discourse.org"]
+      ];
     });
   }
 });
@@ -193,10 +194,7 @@ QUnit.test("selectable avatars", async assert => {
 
   await click(".pref-avatar .btn");
 
-  assert.ok(
-    exists(".selectable-avatars", "opens the avatar selection modal")
-  );
-
+  assert.ok(exists(".selectable-avatars", "opens the avatar selection modal"));
 });
 
 acceptance("User Preferences when badges are disabled", {
