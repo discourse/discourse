@@ -99,16 +99,16 @@
 </div>
 {{/if}}
 
-<div class="control-group pref-avatar">
-  <label class="control-label">{{i18n 'user.avatar.title'}}</label>
-  <div class="controls">
-    {{! we want the "huge" version even though we're downsizing it to "large" in CSS }}
-    {{bound-avatar model "huge"}}
-    {{#unless siteSettings.sso_overrides_avatar}}
+{{#unless siteSettings.sso_overrides_avatar}}
+  <div class="control-group pref-avatar">
+    <label class="control-label">{{i18n 'user.avatar.title'}}</label>
+    <div class="controls">
+      {{! we want the "huge" version even though we're downsizing it in CSS }}
+      {{bound-avatar model "huge"}}
       {{d-button action="showAvatarSelector" class="pad-left" icon="pencil"}}
-    {{/unless}}
+    </div>
   </div>
-</div>
+{{/unless}}
 
 {{#if canSelectTitle}}
   <div class="control-group pref-title">
