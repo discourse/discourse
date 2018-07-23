@@ -733,7 +733,7 @@ a.mention-group {
     .select-posts {
       position: absolute;
       right: 5em;
-      z-index: z("base") + 1;
+      z-index: z("dropdown");
       top: 0.5em;
       height: 100px;
       button {
