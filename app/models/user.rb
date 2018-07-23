@@ -1266,14 +1266,14 @@ class User < ActiveRecord::Base
     end
   end
 
-  %i{
-    user_created
-    user_destroyed
-  }.each do |event|
-    define_method("trigger_#{event}_event") do
-      DiscourseEvent.trigger(event, self)
-      true
-    end
+  def trigger_user_created_event
+    DiscourseEvent.trigger(:user_created, self)
+    true
+  end
+
+  def trigger_user_destroyed_event
+    DiscourseEvent.trigger(:user_destroyed, self)
+    true
   end
 
   def set_skip_validate_email
