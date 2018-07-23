@@ -63,7 +63,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
       user_info.destroy! if user_info
       result.user = existing_account
-      user_info = FacebookUserInfo.create({ user_id: result.user.id }.merge(facebook_hash))
+      user_info = FacebookUserInfo.create!({ user_id: result.user.id }.merge(facebook_hash))
     else
       result.user = user_info&.user
     end
@@ -89,7 +89,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
   def after_create_account(user, auth)
     extra_data = auth[:extra_data]
-    FacebookUserInfo.create({ user_id: user.id }.merge(extra_data))
+    FacebookUserInfo.create!({ user_id: user.id }.merge(extra_data))
 
     retrieve_avatar(user, extra_data)
     retrieve_profile(user, extra_data)
