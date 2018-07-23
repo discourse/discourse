@@ -3,7 +3,6 @@ import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
-import Category from 'discourse/models/category';
 
 const flatten = array => [].concat.apply([], array);
 
