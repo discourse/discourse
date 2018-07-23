@@ -699,6 +699,7 @@ en:
       api_approved: "Approved:"
       theme: "Theme"
       home: "Default Home Page"
+      first_day_of_week: "First day of week"
       staged: "Staged"
 
       staff_counters:

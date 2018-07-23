@@ -30,6 +30,13 @@
   </div>
 </div>
 
+<div class="control-group first-day-of-week">
+  <label class="control-label">{{i18n 'user.first_day_of_week'}}</label>
+  <div class="controls">
+    {{combo-box content=daysOfWeek valueAttribute="value" value=model.user_option.first_day_of_week}}
+  </div>
+</div>
+
 <div class="control-group other">
   <label class="control-label">{{i18n 'user.other_settings'}}</label>
 

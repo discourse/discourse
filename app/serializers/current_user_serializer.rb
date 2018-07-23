@@ -17,6 +17,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :enable_quoting,
              :external_links_in_new_tab,
              :dynamic_favicon,
+             :first_day_of_week,
              :trust_level,
              :can_send_private_email_messages,
              :can_edit,
@@ -81,6 +82,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def dynamic_favicon
     object.user_option.dynamic_favicon
+  end
+
+  def first_day_of_week
+    object.user_option.first_day_of_week
   end
 
   def automatically_unpin_topics

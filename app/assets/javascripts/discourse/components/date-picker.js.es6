@@ -21,7 +21,7 @@ export default Ember.Component.extend({
           container: container || this.$()[0],
           bound: container === undefined,
           format: "YYYY-MM-DD",
-          firstDay: 1,
+          firstDay: Discourse.User.currentProp("first_day_of_week"),
           i18n: {
             previousMonth: I18n.t("dates.previous_month"),
             nextMonth: I18n.t("dates.next_month"),

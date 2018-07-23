@@ -8,6 +8,7 @@ class UserOptionSerializer < ApplicationSerializer
              :email_direct,
              :external_links_in_new_tab,
              :dynamic_favicon,
+             :first_day_of_week,
              :enable_quoting,
              :disable_jump_reply,
              :digest_after_minutes,
