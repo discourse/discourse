@@ -144,6 +144,23 @@
     }
   }
 
+  .with-tags {
+    .category-input {
+      flex-basis: auto;
+      flex: 1;
+      margin: 0;
+      width: 45%;
+      margin-bottom: 5px;
+    }
+
+    .mini-tag-chooser {
+      width: 50%;
+      flex: 1;
+      margin-left: 5px;
+      margin-bottom: 5px;
+    }
+  }
+
   .title-input,
   .category-input,
   .users-input,
