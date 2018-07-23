@@ -490,16 +490,19 @@ JS
       provider.send "#{sym}=", opts.delete(sym)
     end
 
-    begin
-      provider.authenticator.enabled?
-    rescue NotImplementedError
-      provider.authenticator.define_singleton_method(:enabled?) do
-        Rails.logger.warn("Auth::Authenticator subclasses should define an `enabled?` function. Patching for now.")
-        return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
-        Rails.logger.warn("Plugin::AuthProvider has not defined an enabled_setting. Defaulting to true.")
-        true
+    after_initialize do
+      begin
+        provider.authenticator.enabled?
+      rescue NotImplementedError
+        provider.authenticator.define_singleton_method(:enabled?) do
+          Rails.logger.warn("Auth::Authenticator subclasses should define an `enabled?` function. Patching for now.")
+          return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
+          Rails.logger.warn("Plugin::AuthProvider has not defined an enabled_setting. Defaulting to true.")
+          true
+        end
       end
     end
+
     auth_providers << provider
   end
 

@@ -18,7 +18,17 @@ const LoginMethod = Ember.Object.extend({
 
   @computed
   prettyName() {
-    return I18n.t(`login.${this.get("name")}.name`);
+    const prettyNameSetting = this.get("prettyNameSetting");
+    if (!Ember.isEmpty(prettyNameSetting)) {
+      const result = this.siteSettings[prettyNameSetting];
+      if (!Ember.isEmpty(result)) {
+        return result;
+      }
+    }
+
+    return (
+      this.get("prettyNameOverride") || I18n.t(`login.${this.get("name")}.name`)
+    );
   },
 
   @computed

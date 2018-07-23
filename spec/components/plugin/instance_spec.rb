@@ -133,11 +133,13 @@ describe Plugin::Instance do
     # No enabled_site_setting
     authenticator = Auth::Authenticator.new
     plugin.auth_provider(authenticator: authenticator)
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(true)
 
     # With enabled site setting
     authenticator = Auth::Authenticator.new
     plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(false)
 
     # Defines own method
@@ -148,6 +150,7 @@ describe Plugin::Instance do
       end
     end.new
     plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(false)
   end
 
