@@ -9,8 +9,10 @@ export default RestrictedUserRoute.extend({
   },
 
   actions: {
-    showAvatarSelector() {
-      const props = this.modelFor("user").getProperties(
+    showAvatarSelector(user) {
+      user = user || this.modelFor("user");
+
+      const props = user.getProperties(
         "id",
         "email",
         "username",
@@ -34,6 +36,8 @@ export default RestrictedUserRoute.extend({
           props.selected = "uploaded";
       }
 
+      props.user = user;
+
       const controller = showModal("avatar-selector");
       controller.setProperties(props);
 
@@ -45,18 +49,17 @@ export default RestrictedUserRoute.extend({
     },
 
     selectAvatar(url) {
-      const user = this.modelFor("user");
+      const controller = this.controllerFor("avatar-selector");
+      controller.send("closeModal");
 
-      this.controllerFor("avatar-selector").send("closeModal");
-
-      user
+      controller
+        .get("user")
         .selectAvatar(url)
         .then(() => window.location.reload())
         .catch(popupAjaxError);
     },
 
     saveAvatarSelection() {
-      const user = this.modelFor("user");
       const controller = this.controllerFor("avatar-selector");
       const selectedUploadId = controller.get("selectedUploadId");
       const selectedAvatarTemplate = controller.get("selectedAvatarTemplate");
@@ -64,7 +67,8 @@ export default RestrictedUserRoute.extend({
 
       controller.send("closeModal");
 
-      user
+      controller
+        .get("user")
         .pickAvatar(selectedUploadId, type, selectedAvatarTemplate)
         .then(() => window.location.reload())
         .catch(popupAjaxError);
