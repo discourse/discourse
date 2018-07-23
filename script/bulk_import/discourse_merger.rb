@@ -51,6 +51,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @notifications = {}
     @badge_groupings = {}
     @badges = {}
+    @email_tokens = {}
 
     @auto_group_ids = Group::AUTO_GROUPS.values
 
@@ -82,6 +83,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_everything_else
     copy_badges
 
+    fix_user_columns
     fix_category_descriptions
     fix_topic_links
   end
@@ -119,6 +121,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
           row['id'] = (@last_user_id += 1)
           @users[old_user_id.to_s] = row['id']
+
           @raw_connection.put_copy_data row.values
         end
         imported_ids << old_user_id
@@ -133,15 +136,23 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_user_stuff
+    copy_model(
+      EmailToken,
+      skip_if_merged: true,
+      is_a_user_model: true,
+      skip_processing: true,
+      mapping: @email_tokens
+    )
+
     [
-      UserEmail, EmailToken, UserStat, UserOption, UserProfile, EmailChangeRequest,
+      UserEmail, UserStat, UserOption, UserProfile,
       UserVisit, UserSearchData, GivenDailyLike, UserSecondFactor, UserOpenId
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
 
     [FacebookUserInfo, GithubUserInfo, GoogleUserInfo, InstagramUserInfo, Oauth2UserInfo,
-      SingleSignOnRecord, TwitterUserInfo
+      SingleSignOnRecord, TwitterUserInfo, EmailChangeRequest
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true)
     end
@@ -155,15 +166,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     )
 
     copy_model(GroupUser, skip_if_merged: true)
-    copy_model(GroupArchivedMessage)
-    copy_model(GroupMention, skip_processing: true)
-
-    [CategoryGroup, GroupHistory].each do |k|
-      col_list = k.columns.map { |c| "\"#{c.name}\"" }.join(', ')
-      copy_model(k,
-        select_sql: "SELECT #{col_list} FROM #{k.table_name} WHERE group_id NOT IN (#{@auto_group_ids.join(', ')})"
-      )
-    end
   end
 
   def copy_categories
@@ -340,15 +342,22 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_everything_else
-    [PostTiming, UserArchivedMessage, UnsubscribeKey].each do |k|
+    [PostTiming, UserArchivedMessage, UnsubscribeKey, GroupMention].each do |k|
       copy_model(k, skip_processing: true)
     end
 
-    [UserHistory, UserWarning].each do |k|
+    [UserHistory, UserWarning, GroupArchivedMessage].each do |k|
       copy_model(k)
     end
 
     copy_model(Notification, mapping: @notifications)
+
+    [CategoryGroup, GroupHistory].each do |k|
+      col_list = k.columns.map { |c| "\"#{c.name}\"" }.join(', ')
+      copy_model(k,
+        select_sql: "SELECT #{col_list} FROM #{k.table_name} WHERE group_id NOT IN (#{@auto_group_ids.join(', ')})"
+      )
+    end
   end
 
   def copy_badges
@@ -467,11 +476,18 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def process_topic(topic)
     return nil if topic['category_id'].nil? && topic['archetype'] != Archetype.private_message
+    topic['last_post_user_id'] = user_id_from_imported_id(topic['last_post_user_id']) || -1
+    topic['featured_user1_id'] = user_id_from_imported_id(topic['featured_user1_id']) || -1
+    topic['featured_user2_id'] = user_id_from_imported_id(topic['featured_user2_id']) || -1
+    topic['featured_user3_id'] = user_id_from_imported_id(topic['featured_user3_id']) || -1
+    topic['featured_user4_id'] = user_id_from_imported_id(topic['featured_user4_id']) || -1
     topic
   end
 
   def process_post(post)
-    post[:last_editor_id] = user_id_from_imported_id(post[:user_id])
+    post['last_editor_id'] = user_id_from_imported_id(post['last_editor_id']) || -1
+    post['reply_to_user_id'] = user_id_from_imported_id(post['reply_to_user_id']) || -1
+    post['locked_by_id'] = user_id_from_imported_id(post['locked_by_id']) || -1
     @topic_id_by_post_id[post[:id]] = post[:topic_id]
     post
   end
@@ -633,6 +649,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     user_badge
   end
 
+  def process_email_change_request(ecr)
+    ecr['old_email_token_id'] = email_token_id_from_imported_id(ecr['old_email_token_id']) if ecr['old_email_token_id']
+    ecr['new_email_token_id'] = email_token_id_from_imported_id(ecr['new_email_token_id']) if ecr['new_email_token_id']
+    ecr
+  end
+
   def user_id_from_imported_id(id)
     return id if id.to_i < 1
     super(id)
@@ -667,10 +689,40 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @notifications[id.to_s]
   end
 
+  def email_token_id_from_imported_id(id)
+    @email_tokens[id.to_s]
+  end
+
   def fix_primary_keys
     @sequences.each do |sequence_name, val|
       sql = "SELECT setval('#{sequence_name}', #{val})"
       puts sql
+      @raw_connection.exec(sql)
+    end
+  end
+
+  def fix_user_columns
+    puts "updating foreign keys in the users table..."
+
+    User.where('id >= ?', @first_new_user_id).find_each do |u|
+      arr = []
+      sql = "UPDATE users SET"
+
+      if new_approved_by_id = user_id_from_imported_id(u.approved_by_id)
+        arr << " approved_by_id = #{new_approved_by_id}"
+      end
+      if new_primary_group_id = group_id_from_imported_id(u.primary_group_id)
+        arr << " primary_group_id = #{new_primary_group_id}"
+      end
+      if new_notification_id = notification_id_from_imported_id(u.seen_notification_id)
+        arr << " seen_notification_id = #{new_notification_id}"
+      end
+
+      next if arr.empty?
+
+      sql << arr.join(', ')
+      sql << " WHERE id = #{u.id}"
+
       @raw_connection.exec(sql)
     end
   end
