@@ -4,7 +4,7 @@ import showModal from "discourse/lib/show-modal";
 import { setting } from "discourse/lib/computed";
 import { findAll } from "discourse/models/login-method";
 import { escape } from "pretty-text/sanitizer";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -180,6 +180,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // Failed to login
           if (e.jqXHR && e.jqXHR.status === 429) {
             self.flash(I18n.t("login.rate_limit"), "error");
+          } else if (!areCookiesEnabled()) {
+            self.flash(I18n.t("login.cookies_error"), "error");
           } else {
             self.flash(I18n.t("login.error"), "error");
           }

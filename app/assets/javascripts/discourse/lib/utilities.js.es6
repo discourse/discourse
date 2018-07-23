@@ -617,5 +617,17 @@ export function fillMissingDates(data, startDate, endDate) {
   return data;
 }
 
+export function areCookiesEnabled() {
+  // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
+  try {
+    document.cookie = 'cookietest=1';
+    var ret = document.cookie.indexOf('cookietest=') !== -1;
+    document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
+    return ret;
+  } catch (e) {
+    return false;
+  }
+};
+
 // This prevents a mini racer crash
 export default {};
