@@ -32,7 +32,7 @@ module TransactionHelper
 
   def self.after_commit(&blk)
     ActiveRecord::Base.connection.add_transaction_record(
-        AfterCommitWrapper.new(&blk)
+      AfterCommitWrapper.new(&blk)
     )
   end
 end
