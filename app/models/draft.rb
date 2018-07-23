@@ -53,16 +53,16 @@ class Draft < ActiveRecord::Base
     # JOIN of topics table based on manipulating draft_key seems imperfect
     builder = DB.build <<~SQL
       SELECT
-        d.*, t.title, t.id topic_id,
+        d.*, t.title, t.id topic_id, t.archetype,
         t.category_id, t.closed topic_closed, t.archived topic_archived,
         pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id,
         du.username draft_username, NULL as raw, NULL as cooked, NULL as post_number
       FROM drafts d
       LEFT JOIN topics t ON
         CASE
-            WHEN d.draft_key = '#{NEW_TOPIC}' THEN 0
-            WHEN d.draft_key = '#{NEW_PRIVATE_MESSAGE}' THEN 0
-            ELSE CAST(replace(d.draft_key, '#{EXISTING_TOPIC}', '') AS INT)
+            WHEN d.draft_key LIKE '%' || '#{EXISTING_TOPIC}' || '%'
+              THEN CAST(replace(d.draft_key, '#{EXISTING_TOPIC}', '') AS INT)
+            ELSE 0
         END = t.id
       JOIN users pu on pu.id = COALESCE(t.user_id, d.user_id)
       JOIN users du on du.id = #{user_id}

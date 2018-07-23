@@ -17,6 +17,7 @@ class DraftSerializer < ApplicationSerializer
              :slug,
              :category_id,
              :closed,
+             :archetype,
              :archived
 
   def avatar_template
