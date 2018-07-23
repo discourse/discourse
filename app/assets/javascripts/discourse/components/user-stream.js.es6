@@ -1,6 +1,6 @@
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
-import { postUrl, selectedText } from "discourse/lib/utilities";
+import { selectedText } from "discourse/lib/utilities";
 import Post from "discourse/models/post";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
