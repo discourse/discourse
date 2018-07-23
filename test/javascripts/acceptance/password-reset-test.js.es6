@@ -58,88 +58,70 @@ acceptance("Password Reset", {
   }
 });
 
-QUnit.test("Password Reset Page", assert => {
+QUnit.test("Password Reset Page", async assert => {
   PreloadStore.store("password_reset", { is_developer: false });
 
-  visit("/u/password-reset/myvalidtoken");
-  andThen(() => {
-    assert.ok(exists(".password-reset input"), "shows the input");
-  });
+  await visit("/u/password-reset/myvalidtoken");
+  assert.ok(exists(".password-reset input"), "shows the input");
 
-  fillIn(".password-reset input", "perf3ctly5ecur3");
-  andThen(() => {
-    assert.ok(exists(".password-reset .tip.good"), "input looks good");
-  });
+  await fillIn(".password-reset input", "perf3ctly5ecur3");
+  assert.ok(exists(".password-reset .tip.good"), "input looks good");
 
-  fillIn(".password-reset input", "123");
-  andThen(() => {
-    assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
-    assert.ok(
-      find(".password-reset .tip.bad")
-        .html()
-        .indexOf(I18n.t("user.password.too_short")) > -1,
-      "password too short"
-    );
-  });
+  await fillIn(".password-reset input", "123");
+  assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
+  assert.ok(
+    find(".password-reset .tip.bad")
+      .html()
+      .indexOf(I18n.t("user.password.too_short")) > -1,
+    "password too short"
+  );
 
-  fillIn(".password-reset input", "jonesyAlienSlayer");
-  click(".password-reset form button");
-  andThen(() => {
-    assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
-    assert.ok(
-      find(".password-reset .tip.bad")
-        .html()
-        .indexOf("is the name of your cat") > -1,
-      "server validation error message shows"
-    );
-  });
+  await fillIn(".password-reset input", "jonesyAlienSlayer");
+  await click(".password-reset form button");
+  assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
+  assert.ok(
+    find(".password-reset .tip.bad")
+      .html()
+      .indexOf("is the name of your cat") > -1,
+    "server validation error message shows"
+  );
 
-  fillIn(".password-reset input", "perf3ctly5ecur3");
-  click(".password-reset form button");
-  andThen(() => {
-    assert.ok(!exists(".password-reset form"), "form is gone");
-  });
+  await fillIn(".password-reset input", "perf3ctly5ecur3");
+  await click(".password-reset form button");
+  assert.ok(!exists(".password-reset form"), "form is gone");
 });
 
-QUnit.test("Password Reset Page With Second Factor", assert => {
+QUnit.test("Password Reset Page With Second Factor", async assert => {
   PreloadStore.store("password_reset", {
     is_developer: false,
     second_factor_required: true
   });
 
-  visit("/u/password-reset/requiretwofactor");
+  await visit("/u/password-reset/requiretwofactor");
 
-  andThen(() => {
-    assert.notOk(exists("#new-account-password"), "does not show the input");
-    assert.ok(exists("#second-factor"), "shows the second factor prompt");
-  });
+  assert.notOk(exists("#new-account-password"), "does not show the input");
+  assert.ok(exists("#second-factor"), "shows the second factor prompt");
 
-  fillIn("input#second-factor", "0000");
-  click(".password-reset form button");
+  await fillIn("input#second-factor", "0000");
+  await click(".password-reset form button");
 
-  andThen(() => {
-    assert.ok(exists(".alert-error"), "shows 2 factor error");
+  assert.ok(exists(".alert-error"), "shows 2 factor error");
 
-    assert.ok(
-      find(".alert-error")
-        .html()
-        .indexOf("invalid token") > -1,
-      "shows server validation error message"
-    );
-  });
+  assert.ok(
+    find(".alert-error")
+      .html()
+      .indexOf("invalid token") > -1,
+    "shows server validation error message"
+  );
 
-  fillIn("input#second-factor", "123123");
-  click(".password-reset form button");
+  await fillIn("input#second-factor", "123123");
+  await click(".password-reset form button");
 
-  andThen(() => {
-    assert.notOk(exists(".alert-error"), "hides error");
-    assert.ok(exists("#new-account-password"), "shows the input");
-  });
+  assert.notOk(exists(".alert-error"), "hides error");
+  assert.ok(exists("#new-account-password"), "shows the input");
 
-  fillIn(".password-reset input", "perf3ctly5ecur3");
-  click(".password-reset form button");
+  await fillIn(".password-reset input", "perf3ctly5ecur3");
+  await click(".password-reset form button");
 
-  andThen(() => {
-    assert.ok(!exists(".password-reset form"), "form is gone");
-  });
+  assert.ok(!exists(".password-reset form"), "form is gone");
 });

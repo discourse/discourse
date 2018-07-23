@@ -16,20 +16,16 @@ acceptance("Login with email - no social logins", {
   }
 });
 
-QUnit.test("with login with email enabled", assert => {
-  visit("/");
-  click("header .login-button");
+QUnit.test("with login with email enabled", async assert => {
+  await visit("/");
+  await click("header .login-button");
 
-  andThen(() => {
-    assert.ok(exists(".login-with-email-button"));
-  });
+  assert.ok(exists(".login-with-email-button"));
 });
 
-QUnit.test("with login with email disabled", assert => {
-  visit("/");
-  click("header .login-button");
+QUnit.test("with login with email disabled", async assert => {
+  await visit("/");
+  await click("header .login-button");
 
-  andThen(() => {
-    assert.notOk(find(".login-buttons").is(":visible"));
-  });
+  assert.notOk(find(".login-buttons").is(":visible"));
 });
