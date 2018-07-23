@@ -41,6 +41,7 @@ end
   user_logged_in
   user_approved
   user_updated
+  user_destroyed
 ).each do |event|
   DiscourseEvent.on(event) do |user|
     WebHook.enqueue_object_hooks(:user, user, event)
