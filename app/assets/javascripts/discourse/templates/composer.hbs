@@ -57,7 +57,7 @@
 
                 {{#if model.showCategoryChooser}}
                   <div class="category-input">
-                    {{category-chooser value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
+                    {{category-chooser fullWidthOnMobile=true value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
                     {{popup-input-tip validation=categoryValidation}}
                   </div>
                 {{/if}}
@@ -65,8 +65,6 @@
                   {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags}}
                   {{popup-input-tip validation=tagValidation}}
                 {{/if}}
-
-
               </div>
             {{/if}}
 

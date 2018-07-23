@@ -177,7 +177,6 @@ export default Ember.Controller.extend({
   @computed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
     return (
-      !this.site.mobileView &&
       this.site.get("can_tag_topics") &&
       canEditTitle &&
       !creatingPrivateMessage &&
