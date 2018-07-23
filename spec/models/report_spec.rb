@@ -176,7 +176,7 @@ describe Report do
     end
   end
 
-  describe 'private messages' do
+  describe 'user to user private messages with replies' do
     let(:report) { Report.find('user_to_user_private_messages_with_replies') }
 
     it 'topic report).to not include private messages' do
@@ -232,6 +232,32 @@ describe Report do
           expect(report.data[1][:y]).to eq 2
           expect(report.total).to eq 3
         end
+      end
+    end
+
+    context 'private message from system user' do
+      before do
+        Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
+      end
+
+      it 'does not include system users' do
+        expect(report.data).to be_blank
+        expect(report.total).to eq 0
+      end
+    end
+  end
+
+  describe 'user to user private messages' do
+    let(:report) { Report.find('user_to_user_private_messages') }
+
+    context 'private message from system user' do
+      before do
+        Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
+      end
+
+      it 'does not include system users' do
+        expect(report.data).to be_blank
+        expect(report.total).to eq 0
       end
     end
   end
