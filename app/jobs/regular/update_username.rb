@@ -24,33 +24,31 @@ module Jobs
     end
 
     def update_posts
-      Post.with_deleted.where(post_conditions("posts.id"), post_condition_args).find_each do |post|
-        begin
-          post.raw = update_raw(post.raw)
-          post.cooked = update_cooked(post.cooked)
+      updated_post_ids = Set.new
 
-          # update without running validations and hooks
-          post.update_columns(raw: post.raw, cooked: post.cooked)
+      Post.with_deleted
+        .joins(mentioned("posts.id"))
+        .where("a.user_id = :user_id", user_id: @user_id)
+        .find_each do |post|
 
-          SearchIndexer.index(post, force: true) if post.topic
-        rescue => e
-          Discourse.warn_exception(e, message: "Failed to update post with id #{post.id}")
-        end
+        update_post(post)
+        updated_post_ids << post.id
       end
+
+      Post.with_deleted
+        .joins(quoted("posts.id"))
+        .where("p.user_id = :user_id", user_id: @user_id)
+        .find_each { |post| update_post(post) unless updated_post_ids.include?(post.id) }
     end
 
     def update_revisions
-      PostRevision.where(post_conditions("post_revisions.post_id"), post_condition_args).find_each do |revision|
-        begin
-          if revision.modifications.key?("raw") || revision.modifications.key?("cooked")
-            revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
-            revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
-            revision.save!
-          end
-        rescue => e
-          Discourse.warn_exception(e, message: "Failed to update post revision with id #{revision.id}")
-        end
-      end
+      PostRevision.joins(mentioned("post_revisions.post_id"))
+        .where("a.user_id = :user_id", user_id: @user_id)
+        .find_each { |revision| update_revision(revision) }
+
+      PostRevision.joins(quoted("post_revisions.post_id"))
+        .where("p.user_id = :user_id", user_id: @user_id)
+        .find_each { |revision| update_revision(revision) }
     end
 
     def update_notifications
@@ -95,28 +93,41 @@ module Jobs
       SQL
     end
 
-  protected
+    protected
 
-    def post_conditions(post_id_column)
+    def update_post(post)
+      post.raw = update_raw(post.raw)
+      post.cooked = update_cooked(post.cooked)
+
+      post.update_columns(raw: post.raw, cooked: post.cooked)
+
+      SearchIndexer.index(post, force: true) if post.topic
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to update post with id #{post.id}")
+    end
+
+    def update_revision(revision)
+      if revision.modifications.key?("raw") || revision.modifications.key?("cooked")
+        revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
+        revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
+        revision.save!
+      end
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to update post revision with id #{revision.id}")
+    end
+
+    def mentioned(post_id_column)
       <<~SQL
-        EXISTS(
-            SELECT 1
-            FROM user_actions AS a
-            WHERE a.target_post_id = #{post_id_column} AND
-                  a.action_type = :mentioned AND
-                  a.user_id = :user_id
-        ) OR EXISTS(
-            SELECT 1
-            FROM quoted_posts AS q
-              JOIN posts AS p ON (q.quoted_post_id = p.id)
-            WHERE q.post_id = #{post_id_column} AND
-              p.user_id = :user_id
-        )
+        JOIN user_actions AS a ON (a.target_post_id = #{post_id_column} AND
+                                   a.action_type = #{UserAction::MENTION})
       SQL
     end
 
-    def post_condition_args
-      { mentioned: UserAction::MENTION, user_id: @user_id }
+    def quoted(post_id_column)
+      <<~SQL
+        JOIN quoted_posts AS q ON (q.post_id = #{post_id_column})
+        JOIN posts AS p ON (q.quoted_post_id = p.id)
+      SQL
     end
 
     def update_raw(raw)
