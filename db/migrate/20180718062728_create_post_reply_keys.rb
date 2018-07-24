@@ -39,7 +39,7 @@ class CreatePostReplyKeys < ActiveRecord::Migration[5.2]
         updated_at,
         created_at
       FROM email_logs
-      WHERE reply_key IS NOT NULL
+      WHERE reply_key IS NOT NULL AND post_id IS NOT NULL AND user_id IS NOT NULL
     SQL
 
     execute(sql)
