@@ -686,7 +686,7 @@ class Topic < ActiveRecord::Base
 
         if post = self.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
-          TransactionHelper.after_commit do
+          DB.after_commit do
             Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
           end
         end
