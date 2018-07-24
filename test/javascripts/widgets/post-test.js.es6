@@ -23,14 +23,12 @@ widgetTest("wiki", {
     this.set("args", { wiki: true, version: 2, canViewEditHistory: true });
     this.on("showHistory", () => (this.historyShown = true));
   },
-  test(assert) {
-    click(".post-info .wiki");
-    andThen(() => {
-      assert.ok(
-        this.historyShown,
-        "clicking the wiki icon displays the post history"
-      );
-    });
+  async test(assert) {
+    await click(".post-info .wiki");
+    assert.ok(
+      this.historyShown,
+      "clicking the wiki icon displays the post history"
+    );
   }
 });
 
@@ -40,11 +38,9 @@ widgetTest("wiki without revision", {
     this.set("args", { wiki: true, version: 1, canViewEditHistory: true });
     this.on("editPost", () => (this.editPostCalled = true));
   },
-  test(assert) {
-    click(".post-info .wiki");
-    andThen(() => {
-      assert.ok(this.editPostCalled, "clicking wiki icon edits the post");
-    });
+  async test(assert) {
+    await click(".post-info .wiki");
+    assert.ok(this.editPostCalled, "clicking wiki icon edits the post");
   }
 });
 
@@ -55,14 +51,9 @@ widgetTest("via-email", {
     this.set("args", { via_email: true, canViewRawEmail: true });
     this.on("showRawEmail", () => (this.rawEmailShown = true));
   },
-  test(assert) {
-    click(".post-info.via-email");
-    andThen(() => {
-      assert.ok(
-        this.rawEmailShown,
-        "clicking the enveloppe shows the raw email"
-      );
-    });
+  async test(assert) {
+    await click(".post-info.via-email");
+    assert.ok(this.rawEmailShown, "clicking the enveloppe shows the raw email");
   }
 });
 
@@ -73,14 +64,12 @@ widgetTest("via-email without permission", {
     this.set("args", { via_email: true, canViewRawEmail: false });
     this.on("showRawEmail", () => (this.rawEmailShown = true));
   },
-  test(assert) {
-    click(".post-info.via-email");
-    andThen(() => {
-      assert.ok(
-        !this.rawEmailShown,
-        `clicking the enveloppe doesn't show the raw email`
-      );
-    });
+  async test(assert) {
+    await click(".post-info.via-email");
+    assert.ok(
+      !this.rawEmailShown,
+      `clicking the enveloppe doesn't show the raw email`
+    );
   }
 });
 
@@ -91,11 +80,9 @@ widgetTest("history", {
     this.set("args", { version: 3, canViewEditHistory: true });
     this.on("showHistory", () => (this.historyShown = true));
   },
-  test(assert) {
-    click(".post-info.edits");
-    andThen(() => {
-      assert.ok(this.historyShown, "clicking the pencil shows the history");
-    });
+  async test(assert) {
+    await click(".post-info.edits");
+    assert.ok(this.historyShown, "clicking the pencil shows the history");
   }
 });
 
@@ -106,14 +93,12 @@ widgetTest("history without view permission", {
     this.set("args", { version: 3, canViewEditHistory: false });
     this.on("showHistory", () => (this.historyShown = true));
   },
-  test(assert) {
-    click(".post-info.edits");
-    andThen(() => {
-      assert.ok(
-        !this.historyShown,
-        `clicking the pencil doesn't show the history`
-      );
-    });
+  async test(assert) {
+    await click(".post-info.edits");
+    assert.ok(
+      !this.historyShown,
+      `clicking the pencil doesn't show the history`
+    );
   }
 });
 
@@ -142,23 +127,19 @@ widgetTest("like count button", {
     this.set("post", post);
     this.set("args", { likeCount: 1 });
   },
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$("button.like-count").length === 1);
     assert.ok(this.$(".who-liked").length === 0);
 
     // toggle it on
-    click("button.like-count");
-    andThen(() => {
-      assert.ok(this.$(".who-liked").length === 1);
-      assert.ok(this.$(".who-liked a.trigger-user-card").length === 1);
-    });
+    await click("button.like-count");
+    assert.ok(this.$(".who-liked").length === 1);
+    assert.ok(this.$(".who-liked a.trigger-user-card").length === 1);
 
     // toggle it off
-    click("button.like-count");
-    andThen(() => {
-      assert.ok(this.$(".who-liked").length === 0);
-      assert.ok(this.$(".who-liked a.trigger-user-card").length === 0);
-    });
+    await click("button.like-count");
+    assert.ok(this.$(".who-liked").length === 0);
+    assert.ok(this.$(".who-liked a.trigger-user-card").length === 0);
   }
 });
 
@@ -196,23 +177,19 @@ widgetTest("liking", {
       args.likeCount = args.liked ? 1 : 0;
     });
   },
-  test(assert) {
+  async test(assert) {
     assert.ok(!!this.$(".actions button.like").length);
     assert.ok(this.$(".actions button.like-count").length === 0);
 
-    click(".actions button.like");
-    andThen(() => {
-      assert.ok(!this.$(".actions button.like").length);
-      assert.ok(!!this.$(".actions button.has-like").length);
-      assert.ok(this.$(".actions button.like-count").length === 1);
-    });
+    await click(".actions button.like");
+    assert.ok(!this.$(".actions button.like").length);
+    assert.ok(!!this.$(".actions button.has-like").length);
+    assert.ok(this.$(".actions button.like-count").length === 1);
 
-    click(".actions button.has-like");
-    andThen(() => {
-      assert.ok(!!this.$(".actions button.like").length);
-      assert.ok(!this.$(".actions button.has-like").length);
-      assert.ok(this.$(".actions button.like-count").length === 0);
-    });
+    await click(".actions button.has-like");
+    assert.ok(!!this.$(".actions button.like").length);
+    assert.ok(!this.$(".actions button.has-like").length);
+    assert.ok(this.$(".actions button.like-count").length === 0);
   }
 });
 
@@ -225,14 +202,12 @@ widgetTest("anon liking", {
     this.set("args", args);
     this.on("showLogin", () => (this.loginShown = true));
   },
-  test(assert) {
+  async test(assert) {
     assert.ok(!!this.$(".actions button.like").length);
     assert.ok(this.$(".actions button.like-count").length === 0);
 
-    click(".actions button.like");
-    andThen(() => {
-      assert.ok(this.loginShown);
-    });
+    await click(".actions button.like");
+    assert.ok(this.loginShown);
   }
 });
 
@@ -242,11 +217,9 @@ widgetTest("edit button", {
     this.set("args", { canEdit: true });
     this.on("editPost", () => (this.editPostCalled = true));
   },
-  test(assert) {
-    click("button.edit");
-    andThen(() => {
-      assert.ok(this.editPostCalled, "it triggered the edit action");
-    });
+  async test(assert) {
+    await click("button.edit");
+    assert.ok(this.editPostCalled, "it triggered the edit action");
   }
 });
 
@@ -266,11 +239,9 @@ widgetTest("recover button", {
     this.set("args", { canDelete: true });
     this.on("deletePost", () => (this.deletePostCalled = true));
   },
-  test(assert) {
-    click("button.delete");
-    andThen(() => {
-      assert.ok(this.deletePostCalled, "it triggered the delete action");
-    });
+  async test(assert) {
+    await click("button.delete");
+    assert.ok(this.deletePostCalled, "it triggered the delete action");
   }
 });
 
@@ -280,11 +251,9 @@ widgetTest("delete topic button", {
     this.set("args", { canDeleteTopic: true });
     this.on("deletePost", () => (this.deletePostCalled = true));
   },
-  test(assert) {
-    click("button.delete");
-    andThen(() => {
-      assert.ok(this.deletePostCalled, "it triggered the delete action");
-    });
+  async test(assert) {
+    await click("button.delete");
+    assert.ok(this.deletePostCalled, "it triggered the delete action");
   }
 });
 
@@ -329,9 +298,9 @@ widgetTest("recover topic button", {
     this.set("args", { canRecoverTopic: true });
     this.on("recoverPost", () => (this.recovered = true));
   },
-  test(assert) {
-    click("button.recover");
-    andThen(() => assert.ok(this.recovered));
+  async test(assert) {
+    await click("button.recover");
+    assert.ok(this.recovered);
   }
 });
 
@@ -351,11 +320,9 @@ widgetTest("delete post button", {
     this.set("args", { canDelete: true });
     this.on("deletePost", () => (this.deletePostCalled = true));
   },
-  test(assert) {
-    click("button.delete");
-    andThen(() => {
-      assert.ok(this.deletePostCalled, "it triggered the delete action");
-    });
+  async test(assert) {
+    await click("button.delete");
+    assert.ok(this.deletePostCalled, "it triggered the delete action");
   }
 });
 
@@ -376,9 +343,9 @@ widgetTest("recover post button", {
     this.set("args", { canRecover: true });
     this.on("recoverPost", () => (this.recovered = true));
   },
-  test(assert) {
-    click("button.recover");
-    andThen(() => assert.ok(this.recovered));
+  async test(assert) {
+    await click("button.recover");
+    assert.ok(this.recovered);
   }
 });
 
@@ -398,13 +365,11 @@ widgetTest(`flagging`, {
     this.set("args", { canFlag: true });
     this.on("showFlags", () => (this.flagsShown = true));
   },
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$("button.create-flag").length === 1);
 
-    click("button.create-flag");
-    andThen(() => {
-      assert.ok(this.flagsShown, "it triggered the action");
-    });
+    await click("button.create-flag");
+    assert.ok(this.flagsShown, "it triggered the action");
   }
 });
 
@@ -482,13 +447,11 @@ widgetTest("reply directly above", {
     });
     this.siteSettings.suppress_reply_directly_above = false;
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".avoid-tab").length, 1, "has the avoid tab class");
-    click("a.reply-to-tab");
-    andThen(() => {
-      assert.equal(this.$("section.embedded-posts.top .cooked").length, 1);
-      assert.equal(this.$("section.embedded-posts .d-icon-arrow-up").length, 1);
-    });
+    await click("a.reply-to-tab");
+    assert.equal(this.$("section.embedded-posts.top .cooked").length, 1);
+    assert.equal(this.$("section.embedded-posts .d-icon-arrow-up").length, 1);
   }
 });
 
@@ -499,11 +462,9 @@ widgetTest("cooked content hidden", {
     this.set("args", { cooked_hidden: true });
     this.on("expandHidden", () => (this.unhidden = true));
   },
-  test(assert) {
-    click(".topic-body .expand-hidden");
-    andThen(() => {
-      assert.ok(this.unhidden, "triggers the action");
-    });
+  async test(assert) {
+    await click(".topic-body .expand-hidden");
+    assert.ok(this.unhidden, "triggers the action");
   }
 });
 
@@ -513,11 +474,9 @@ widgetTest("expand first post", {
     this.set("args", { expandablePost: true });
     this.set("post", store.createRecord("post", { id: 1234 }));
   },
-  test(assert) {
-    click(".topic-body .expand-post");
-    andThen(() => {
-      assert.equal(this.$(".expand-post").length, 0, "button is gone");
-    });
+  async test(assert) {
+    await click(".topic-body .expand-post");
+    assert.equal(this.$(".expand-post").length, 0, "button is gone");
   }
 });
 
@@ -541,14 +500,12 @@ widgetTest("bookmark", {
     this.set("args", args);
     this.on("toggleBookmark", () => (args.bookmarked = true));
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".post-menu-area .bookmark").length, 1);
     assert.equal(this.$("button.bookmarked").length, 0);
 
-    click("button.bookmark");
-    andThen(() => {
-      assert.equal(this.$("button.bookmarked").length, 1);
-    });
+    await click("button.bookmark");
+    assert.equal(this.$("button.bookmarked").length, 1);
   }
 });
 
@@ -567,20 +524,16 @@ widgetTest("show admin menu", {
   beforeEach() {
     this.set("args", { canManage: true });
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".post-admin-menu").length, 0);
-    click(".post-menu-area .show-post-admin-menu");
-    andThen(() => {
-      assert.equal(this.$(".post-admin-menu").length, 1, "it shows the popup");
-    });
-    click(".post-menu-area");
-    andThen(() => {
-      assert.equal(
-        this.$(".post-admin-menu").length,
-        0,
-        "clicking outside clears the popup"
-      );
-    });
+    await click(".post-menu-area .show-post-admin-menu");
+    assert.equal(this.$(".post-admin-menu").length, 1, "it shows the popup");
+    await click(".post-menu-area");
+    assert.equal(
+      this.$(".post-admin-menu").length,
+      0,
+      "clicking outside clears the popup"
+    );
   }
 });
 
@@ -591,13 +544,11 @@ widgetTest("toggle moderator post", {
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
-  test(assert) {
-    click(".post-menu-area .show-post-admin-menu");
-    click(".post-admin-menu .toggle-post-type");
-    andThen(() => {
-      assert.ok(this.toggled);
-      assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
-    });
+  async test(assert) {
+    await click(".post-menu-area .show-post-admin-menu");
+    await click(".post-admin-menu .toggle-post-type");
+    assert.ok(this.toggled);
+    assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
   }
 });
 widgetTest("toggle moderator post", {
@@ -607,13 +558,11 @@ widgetTest("toggle moderator post", {
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
-  test(assert) {
-    click(".post-menu-area .show-post-admin-menu");
-    click(".post-admin-menu .toggle-post-type");
-    andThen(() => {
-      assert.ok(this.toggled);
-      assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
-    });
+  async test(assert) {
+    await click(".post-menu-area .show-post-admin-menu");
+    await click(".post-admin-menu .toggle-post-type");
+    assert.ok(this.toggled);
+    assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
   }
 });
 
@@ -623,13 +572,11 @@ widgetTest("rebake post", {
     this.set("args", { canManage: true });
     this.on("rebakePost", () => (this.baked = true));
   },
-  test(assert) {
-    click(".post-menu-area .show-post-admin-menu");
-    click(".post-admin-menu .rebuild-html");
-    andThen(() => {
-      assert.ok(this.baked);
-      assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
-    });
+  async test(assert) {
+    await click(".post-menu-area .show-post-admin-menu");
+    await click(".post-admin-menu .rebuild-html");
+    assert.ok(this.baked);
+    assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
   }
 });
 
@@ -639,13 +586,11 @@ widgetTest("unhide post", {
     this.set("args", { canManage: true, hidden: true });
     this.on("unhidePost", () => (this.unhidden = true));
   },
-  test(assert) {
-    click(".post-menu-area .show-post-admin-menu");
-    click(".post-admin-menu .unhide-post");
-    andThen(() => {
-      assert.ok(this.unhidden);
-      assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
-    });
+  async test(assert) {
+    await click(".post-menu-area .show-post-admin-menu");
+    await click(".post-admin-menu .unhide-post");
+    assert.ok(this.unhidden);
+    assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
   }
 });
 
@@ -657,13 +602,11 @@ widgetTest("change owner", {
     this.set("args", { canManage: true });
     this.on("changePostOwner", () => (this.owned = true));
   },
-  test(assert) {
-    click(".post-menu-area .show-post-admin-menu");
-    click(".post-admin-menu .change-owner");
-    andThen(() => {
-      assert.ok(this.owned);
-      assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
-    });
+  async test(assert) {
+    await click(".post-menu-area .show-post-admin-menu");
+    await click(".post-admin-menu .change-owner");
+    assert.ok(this.owned);
+    assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
   }
 });
 
@@ -674,11 +617,9 @@ widgetTest("reply", {
     this.set("args", { canCreatePost: true });
     this.on("replyToPost", () => (this.replied = true));
   },
-  test(assert) {
-    click(".post-controls .create");
-    andThen(() => {
-      assert.ok(this.replied);
-    });
+  async test(assert) {
+    await click(".post-controls .create");
+    assert.ok(this.replied);
   }
 });
 
@@ -730,15 +671,10 @@ widgetTest("replies - one below, not suppressed", {
     this.siteSettings.suppress_reply_directly_below = false;
     this.set("args", { id: 6654, replyCount: 1, replyDirectlyBelow: true });
   },
-  test(assert) {
-    click("button.show-replies");
-    andThen(() => {
-      assert.equal(this.$("section.embedded-posts.bottom .cooked").length, 1);
-      assert.equal(
-        this.$("section.embedded-posts .d-icon-arrow-down").length,
-        1
-      );
-    });
+  async test(assert) {
+    await click("button.show-replies");
+    assert.equal(this.$("section.embedded-posts.bottom .cooked").length, 1);
+    assert.equal(this.$("section.embedded-posts .d-icon-arrow-down").length, 1);
   }
 });
 
@@ -761,21 +697,19 @@ widgetTest("topic map - few posts", {
       participants: [{ username: "eviltrout" }, { username: "codinghorror" }]
     });
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(
       this.$("li.avatars a.poster").length,
       0,
       "shows no participants when collapsed"
     );
 
-    click("nav.buttons button");
-    andThen(() => {
-      assert.equal(
-        this.$(".topic-map-expanded a.poster").length,
-        2,
-        "shows all when expanded"
-      );
-    });
+    await click("nav.buttons button");
+    assert.equal(
+      this.$(".topic-map-expanded a.poster").length,
+      2,
+      "shows all when expanded"
+    );
   }
 });
 
@@ -794,23 +728,21 @@ widgetTest("topic map - participants", {
       userFilters: ["sam", "codinghorror"]
     });
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(
       this.$("li.avatars a.poster").length,
       3,
       "limits to three participants"
     );
 
-    click("nav.buttons button");
-    andThen(() => {
-      assert.equal(this.$("li.avatars a.poster").length, 0);
-      assert.equal(
-        this.$(".topic-map-expanded a.poster").length,
-        4,
-        "shows all when expanded"
-      );
-      assert.equal(this.$("a.poster.toggled").length, 2, "two are toggled");
-    });
+    await click("nav.buttons button");
+    assert.equal(this.$("li.avatars a.poster").length, 0);
+    assert.equal(
+      this.$(".topic-map-expanded a.poster").length,
+      4,
+      "shows all when expanded"
+    );
+    assert.equal(this.$("a.poster.toggled").length, 2, "two are toggled");
   }
 });
 
@@ -829,31 +761,27 @@ widgetTest("topic map - links", {
       ]
     });
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".topic-map").length, 1);
     assert.equal(this.$(".map.map-collapsed").length, 1);
     assert.equal(this.$(".topic-map-expanded").length, 0);
 
-    click("nav.buttons button");
-    andThen(() => {
-      assert.equal(this.$(".map.map-collapsed").length, 0);
-      assert.equal(this.$(".topic-map .d-icon-chevron-up").length, 1);
-      assert.equal(this.$(".topic-map-expanded").length, 1);
-      assert.equal(
-        this.$(".topic-map-expanded .topic-link").length,
-        5,
-        "it limits the links displayed"
-      );
-    });
+    await click("nav.buttons button");
+    assert.equal(this.$(".map.map-collapsed").length, 0);
+    assert.equal(this.$(".topic-map .d-icon-chevron-up").length, 1);
+    assert.equal(this.$(".topic-map-expanded").length, 1);
+    assert.equal(
+      this.$(".topic-map-expanded .topic-link").length,
+      5,
+      "it limits the links displayed"
+    );
 
-    click(".link-summary button");
-    andThen(() => {
-      assert.equal(
-        this.$(".topic-map-expanded .topic-link").length,
-        6,
-        "all links now shown"
-      );
-    });
+    await click(".link-summary button");
+    assert.equal(
+      this.$(".topic-map-expanded .topic-link").length,
+      6,
+      "all links now shown"
+    );
   }
 });
 
@@ -874,11 +802,11 @@ widgetTest("topic map - has summary", {
     this.set("args", { showTopicMap: true, hasTopicSummary: true });
     this.on("toggleSummary", () => (this.summaryToggled = true));
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".toggle-summary").length, 1);
 
-    click(".toggle-summary button");
-    andThen(() => assert.ok(this.summaryToggled));
+    await click(".toggle-summary button");
+    assert.ok(this.summaryToggled);
   }
 });
 
