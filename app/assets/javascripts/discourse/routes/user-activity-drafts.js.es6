@@ -21,6 +21,10 @@ export default Discourse.Route.extend({
     didTransition() {
       this.controllerFor("user-activity")._showFooter();
       return true;
+    },
+
+    refreshDrafts() {
+      this.refresh();
     }
   }
 });
