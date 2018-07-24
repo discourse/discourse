@@ -184,7 +184,10 @@ export default createWidget("hamburger-menu", {
       let categoryIds = this.currentUser.get("top_category_ids") || [];
 
       if (categoryIds.length < maxCategoriesToDisplay) {
-        categoryIds = categoryIds.concat(categoriesList.map(c => c.id)).uniq().slice(0, maxCategoriesToDisplay);
+        categoryIds = categoryIds
+          .concat(categoriesList.map(c => c.id))
+          .uniq()
+          .slice(0, maxCategoriesToDisplay);
       }
 
       categories = categoryIds.map(id => {

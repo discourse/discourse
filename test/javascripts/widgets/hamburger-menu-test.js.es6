@@ -133,7 +133,8 @@ widgetTest("top categories - anonymous", {
 
   test(assert) {
     const count = this.site.get("categoriesList").length;
-    const maximum = count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
+    const maximum =
+      count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
     assert.equal(this.$(".category-link").length, maximum);
   }
 });
@@ -142,7 +143,9 @@ widgetTest("top categories", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    const topicTrackingState = this.site.get("categoriesList")[0].get("topicTrackingState");
+    const topicTrackingState = this.site
+      .get("categoriesList")[0]
+      .get("topicTrackingState");
 
     const parent1 = Discourse.Category.create({
       id: 1,
@@ -212,7 +215,10 @@ widgetTest("top categories", {
 
   test(assert) {
     assert.equal(this.$(".category-link").length, maxCategoriesToDisplay);
-    assert.equal(this.$(".category-link .category-name").text(), "parent 4parent 5child 2parent 3childparent");
+    assert.equal(
+      this.$(".category-link .category-name").text(),
+      "parent 4parent 5child 2parent 3childparent"
+    );
   }
 });
 
