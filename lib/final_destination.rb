@@ -309,7 +309,7 @@ class FinalDestination
 
   def self.lookup_ip(host)
     if Rails.env.test?
-      "0.0.0.0"
+      "1.1.1.1"
     else
       IPSocket::getaddress(host)
     end
