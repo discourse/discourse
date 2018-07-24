@@ -39,7 +39,7 @@
       <div class='profile-image'></div>
       <div class='details'>
         <div class='primary'>
-          <div class='user-profile-avatar'>
+          <div class='user-profile-avatar' {{action "showAvatarSelector"}} title="{{i18n 'user.change_avatar.label'}}">
             {{bound-avatar model "huge"}}
             {{#if model.primary_group_name}}
               {{avatar-flair
