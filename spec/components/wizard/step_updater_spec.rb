@@ -151,12 +151,12 @@ describe Wizard::StepUpdater do
       let!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
       it "updates the scheme" do
-        updater = wizard.create_updater('colors', base_scheme_id: 'dark')
+        updater = wizard.create_updater('colors', theme_previews: 'Dark')
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
         theme = Theme.find_by(id: SiteSetting.default_theme_id)
-        expect(theme.color_scheme.base_scheme_id).to eq('dark')
+        expect(theme.color_scheme.base_scheme_id).to eq('Dark')
       end
     end
 
@@ -167,14 +167,14 @@ describe Wizard::StepUpdater do
 
       context 'dark theme' do
         it "creates the theme" do
-          updater = wizard.create_updater('colors', base_scheme_id: 'dark', allow_dark_light_selection: true)
+          updater = wizard.create_updater('colors', theme_previews: 'Dark', allow_dark_light_selection: true)
 
           expect { updater.update }.to change { Theme.count }.by(1)
 
           theme = Theme.last
 
           expect(theme.user_id).to eq(wizard.user.id)
-          expect(theme.color_scheme.base_scheme_id).to eq('dark')
+          expect(theme.color_scheme.base_scheme_id).to eq('Dark')
         end
       end
 
@@ -187,14 +187,14 @@ describe Wizard::StepUpdater do
           theme = Theme.last
 
           expect(theme.user_id).to eq(wizard.user.id)
-          expect(theme.color_scheme).to eq(nil)
+          expect(theme.color_scheme).to eq(ColorScheme.find_by(name: 'Light'))
         end
       end
     end
 
     context "without an existing scheme" do
       it "creates the scheme" do
-        updater = wizard.create_updater('colors', base_scheme_id: 'dark', allow_dark_light_selection: true)
+        updater = wizard.create_updater('colors', theme_previews: 'Dark', allow_dark_light_selection: true)
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
