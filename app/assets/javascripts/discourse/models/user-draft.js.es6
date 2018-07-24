@@ -9,7 +9,7 @@ import {
   NEW_PRIVATE_MESSAGE_KEY
 } from "discourse/models/composer";
 
-const UserDraft = RestModel.extend({
+export default RestModel.extend({
   @on("init")
   _attachCategory() {
     const categoryId = this.get("category_id");
@@ -58,5 +58,3 @@ const UserDraft = RestModel.extend({
     }
   }
 });
-
-export default UserDraft;

@@ -8,14 +8,14 @@ class DraftsController < ApplicationController
     params.permit(:offset)
     per_chunk = 30
 
-    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    user = fetch_user_from_params
 
     opts = { user_id: user.id,
              user: user,
              offset: params[:offset].to_i,
              limit: per_chunk }
 
-    guardian.ensure_can_see_notifications!(user)
+    guardian.ensure_can_see_drafts!(user)
 
     stream = Draft.stream(opts)
 

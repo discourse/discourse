@@ -3,6 +3,7 @@ import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
 import { emojiUnescape } from "discourse/lib/text";
+import computed from "ember-addons/ember-computed-decorators";
 
 import {
   NEW_TOPIC_KEY,
@@ -12,13 +13,14 @@ import {
 export default RestModel.extend({
   loaded: false,
 
-  _initialize: function() {
+  init() {
+    this._super();
     this.setProperties({
       itemsLoaded: 0,
       content: [],
       lastLoadedUrl: null
     });
-  }.on("init"),
+  },
 
   baseUrl: url(
     "itemsLoaded",
@@ -35,20 +37,19 @@ export default RestModel.extend({
     return this.findItems();
   },
 
-  noContent: function() {
-    return this.get("loaded") && this.get("content").length === 0;
-  }.property("loaded", "content.@each"),
+  @computed("content.length", "loaded")
+  noContent(contentLength, loaded) {
+    return loaded && contentLength === 0;
+  },
 
   remove(draft) {
-    let content = this.get("content").filter(function(item) {
-      return item.sequence !== draft.sequence;
-    });
-
+    let content = this.get("content").filter(
+      item => item.sequence !== draft.sequence
+    );
     this.setProperties({ content, itemsLoaded: content.length });
   },
 
   findItems() {
-    const self = this;
     let findUrl = this.get("baseUrl");
 
     const lastLoadedUrl = this.get("lastLoadedUrl");
@@ -63,13 +64,13 @@ export default RestModel.extend({
     this.set("loading", true);
 
     return ajax(findUrl, { cache: "false" })
-      .then(function(result) {
+      .then(result => {
         if (result && result.no_results_help) {
-          self.set("noContentHelp", result.no_results_help);
+          this.set("noContentHelp", result.no_results_help);
         }
         if (result && result.drafts) {
           const copy = Em.A();
-          result.drafts.forEach(function(draft) {
+          result.drafts.forEach(draft => {
             let draftData = JSON.parse(draft.data);
             draft.post_number = draftData.postId || null;
             if (
@@ -83,16 +84,16 @@ export default RestModel.extend({
             );
             copy.pushObject(UserDraft.create(draft));
           });
-          self.get("content").pushObjects(copy);
-          self.setProperties({
+          this.get("content").pushObjects(copy);
+          this.setProperties({
             loaded: true,
-            itemsLoaded: self.get("itemsLoaded") + result.drafts.length
+            itemsLoaded: this.get("itemsLoaded") + result.drafts.length
           });
         }
       })
-      .finally(function() {
-        self.set("loading", false);
-        self.set("lastLoadedUrl", findUrl);
+      .finally(() => {
+        this.set("loading", false);
+        this.set("lastLoadedUrl", findUrl);
       });
   }
 });

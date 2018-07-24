@@ -59,18 +59,18 @@ export default Ember.Component.extend(LoadMore, {
       });
     },
 
-    resumeDraft(draftKey, postUrl) {
+    resumeDraft(item) {
       const composer = this.container.lookup("controller:composer");
       if (composer.get("model.viewOpen")) {
         composer.close();
       }
-      if (postUrl) {
-        DiscourseURL.routeTo(postUrl);
+      if (item.get("postUrl")) {
+        DiscourseURL.routeTo(item.get("postUrl"));
       } else {
-        Draft.get(draftKey).then(d => {
+        Draft.get(item.draft_key).then(d => {
           composer.open({
             draft: d.draft,
-            draftKey: draftKey,
+            draftKey: item.draft_key,
             draftSequence: d.draft_sequence
           });
         });
