@@ -3352,7 +3352,6 @@ en:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
-            skipped_reason_placeholder: "reason"
 
       moderation_history:
         performed_by: "Performed By"

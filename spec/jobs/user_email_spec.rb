@@ -79,38 +79,46 @@ describe Jobs::UserEmail do
   end
 
   context "email_log" do
+    let(:post) { Fabricate(:post) }
 
     before do
       SiteSetting.editing_grace_period = 0
-      Fabricate(:post)
+      post
     end
 
     it "creates an email log when the mail is sent (via Email::Sender)" do
       last_emailed_at = user.last_emailed_at
 
-      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+      expect do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id,)
+      end.to change { EmailLog.count }.by(1)
 
       email_log = EmailLog.last
-      expect(email_log.skipped).to eq(false)
-      expect(email_log.user_id).to eq(user.id)
 
+      expect(email_log.user).to eq(user)
+      expect(email_log.post).to eq(nil)
       # last_emailed_at should have changed
       expect(email_log.user.last_emailed_at).to_not eq(last_emailed_at)
     end
 
-    it "creates an email log when the mail is skipped" do
+    it "creates a skipped email log when the mail is skipped" do
       last_emailed_at = user.last_emailed_at
       user.update_columns(suspended_till: 1.year.from_now)
 
-      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+      expect do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+      end.to change { SkippedEmailLog.count }.by(1)
 
-      email_log = EmailLog.last
-      expect(email_log.skipped).to eq(true)
-      expect(email_log.skipped_reason).to be_present
-      expect(email_log.user_id).to eq(user.id)
+      expect(SkippedEmailLog.exists?(
+        email_type: "digest",
+        user: user,
+        post: nil,
+        to_address: user.email,
+        reason_type: SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm]
+      )).to eq(true)
 
       # last_emailed_at doesn't change
-      expect(email_log.user.last_emailed_at).to eq(last_emailed_at)
+      expect(user.last_emailed_at).to eq(last_emailed_at)
     end
 
   end
@@ -205,8 +213,15 @@ describe Jobs::UserEmail do
           notification_data_hash: notification.data_hash
         )
 
-        expect(message).to eq nil
-        expect(err.skipped_reason).to match(/notification.*already/)
+        expect(message).to eq(nil)
+
+        expect(SkippedEmailLog.exists?(
+          email_type: "user_mentioned",
+          user: user,
+          post: post,
+          to_address: user.email,
+          reason_type: SkippedEmailLog.reason_types[:user_email_notification_already_read]
+        )).to eq(true)
       end
 
       it "does send the email if the notification has been seen but the user is set for email_always" do
@@ -230,20 +245,59 @@ describe Jobs::UserEmail do
         end
 
         it "does not send notification if limit is reached" do
-          Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
-          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+          expect do
+            Jobs::UserEmail.new.execute(
+              type: :user_mentioned,
+              user_id: user.id,
+              notification_id: notification.id,
+              post_id: post.id
+            )
+          end.to change { SkippedEmailLog.count }.by(1)
+
+          expect(SkippedEmailLog.exists?(
+            email_type: "user_mentioned",
+            user: user,
+            post: post,
+            to_address: user.email,
+            reason_type: SkippedEmailLog.reason_types[:exceeded_emails_limit]
+          )).to eq(true)
         end
 
         it "sends critical email" do
-          Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, notification_id: notification.id, post_id: post.id)
-          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(0)
+          expect do
+            Jobs::UserEmail.new.execute(
+              type: :forgot_password,
+              user_id: user.id,
+              notification_id: notification.id,
+            )
+          end.to change { EmailLog.count }.by(1)
+
+          expect(EmailLog.exists?(
+            email_type: "forgot_password",
+            user: user,
+          )).to eq(true)
         end
       end
 
       it "does not send notification if bounce threshold is reached" do
         user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold)
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
-        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+
+        expect do
+          Jobs::UserEmail.new.execute(
+            type: :user_mentioned,
+            user_id: user.id,
+            notification_id: notification.id,
+            post_id: post.id
+          )
+        end.to change { SkippedEmailLog.count }.by(1)
+
+        expect(SkippedEmailLog.exists?(
+          email_type: "user_mentioned",
+          user: user,
+          post: post,
+          to_address: user.email,
+          reason_type: SkippedEmailLog.reason_types[:exceeded_bounces_limit]
+        )).to eq(true)
       end
 
       it "doesn't send the mail if the user is using individual mailing list mode" do
