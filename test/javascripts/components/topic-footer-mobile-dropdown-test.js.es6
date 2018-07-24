@@ -21,46 +21,42 @@ componentTest("default", {
     this.set("topic", buildTopic());
   },
 
-  test(assert) {
-    this.get("subject").expand();
+  async test(assert) {
+    await this.get("subject").expandAwait();
 
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "Topic Controls"
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        null
-      );
-      assert.equal(
-        this.get("subject")
-          .rowByIndex(0)
-          .name(),
-        "Bookmark"
-      );
-      assert.equal(
-        this.get("subject")
-          .rowByIndex(1)
-          .name(),
-        "Share"
-      );
-      assert.notOk(
-        this.get("subject")
-          .selectedRow()
-          .exists(),
-        "it doesn’t preselect first row"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "Topic Controls"
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      null
+    );
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(0)
+        .name(),
+      "Bookmark"
+    );
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(1)
+        .name(),
+      "Share"
+    );
+    assert.notOk(
+      this.get("subject")
+        .selectedRow()
+        .exists(),
+      "it doesn’t preselect first row"
+    );
 
-    this.get("subject").selectRowByValue("share");
+    await this.get("subject").selectRowByValueAwait("share");
 
-    andThen(() => {
-      assert.equal(this.get("value"), null, "it resets the value");
-    });
+    assert.equal(this.get("value"), null, "it resets the value");
   }
 });

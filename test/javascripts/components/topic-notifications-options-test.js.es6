@@ -32,26 +32,24 @@ componentTest("regular topic notification level descriptions", {
   template:
     "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
-  test(assert) {
-    selectKit().expand();
-    this.set("topic", buildTopic("regular"));
+  async test(assert) {
+    await selectKit().expandAwait();
+    await this.set("topic", buildTopic("regular"));
 
-    andThen(() => {
-      const uiTexts = extractDescs(selectKit().rows());
-      const descriptions = getTranslations();
+    const uiTexts = extractDescs(selectKit().rows());
+    const descriptions = getTranslations();
 
+    assert.equal(
+      uiTexts.length,
+      descriptions.length,
+      "it has the correct copy"
+    );
+    uiTexts.forEach((text, index) => {
       assert.equal(
-        uiTexts.length,
-        descriptions.length,
+        text.trim(),
+        descriptions[index].trim(),
         "it has the correct copy"
       );
-      uiTexts.forEach((text, index) => {
-        assert.equal(
-          text.trim(),
-          descriptions[index].trim(),
-          "it has the correct copy"
-        );
-      });
     });
   }
 });
@@ -60,26 +58,24 @@ componentTest("PM topic notification level descriptions", {
   template:
     "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
-  test(assert) {
-    selectKit().expand();
-    this.set("topic", buildTopic("private_message"));
+  async test(assert) {
+    await selectKit().expandAwait();
+    await this.set("topic", buildTopic("private_message"));
 
-    andThen(() => {
-      const uiTexts = extractDescs(selectKit().rows());
-      const descriptions = getTranslations("_pm");
+    const uiTexts = extractDescs(selectKit().rows());
+    const descriptions = getTranslations("_pm");
 
+    assert.equal(
+      uiTexts.length,
+      descriptions.length,
+      "it has the correct copy"
+    );
+    uiTexts.forEach((text, index) => {
       assert.equal(
-        uiTexts.length,
-        descriptions.length,
+        text.trim(),
+        descriptions[index].trim(),
         "it has the correct copy"
       );
-      uiTexts.forEach((text, index) => {
-        assert.equal(
-          text.trim(),
-          descriptions[index].trim(),
-          "it has the correct copy"
-        );
-      });
     });
   }
 });

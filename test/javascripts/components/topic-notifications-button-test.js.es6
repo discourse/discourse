@@ -31,28 +31,24 @@ componentTest("the header has a localized title", {
     this.set("topic", buildTopic(1));
   },
 
-  test(assert) {
-    andThen(() => {
-      assert.equal(
-        selectKit()
-          .header()
-          .name(),
-        "Normal",
-        "it has the correct title"
-      );
-    });
+  async test(assert) {
+    assert.equal(
+      selectKit()
+        .header()
+        .name(),
+      "Normal",
+      "it has the correct title"
+    );
 
-    this.set("topic", buildTopic(2));
+    await this.set("topic", buildTopic(2));
 
-    andThen(() => {
-      assert.equal(
-        selectKit()
-          .header()
-          .name(),
-        "Tracking",
-        "it correctly changes the title"
-      );
-    });
+    assert.equal(
+      selectKit()
+        .header()
+        .name(),
+      "Tracking",
+      "it correctly changes the title"
+    );
   }
 });
 
@@ -66,14 +62,12 @@ componentTest("the header has a localized title", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        selectKit()
-          .header()
-          .name(),
-        `${originalTranslation} PM`,
-        "it has the correct title for PMs"
-      );
-    });
+    assert.equal(
+      selectKit()
+        .header()
+        .name(),
+      `${originalTranslation} PM`,
+      "it has the correct title for PMs"
+    );
   }
 });
