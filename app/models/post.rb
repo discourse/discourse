@@ -19,8 +19,8 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  cattr_accessor :permitted_create_params
-  self.permitted_create_params = Set.new
+  cattr_accessor :plugin_permitted_create_params
+  self.plugin_permitted_create_params = {}
 
   # increase this number to force a system wide post rebake
   # Version 1, was the initial version
