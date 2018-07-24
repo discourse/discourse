@@ -1,7 +1,3 @@
-require 'rubygems'
-require 'bundler'
-Bundler.require(:test)
-
 require 'json'
 require 'shellwords'
 
