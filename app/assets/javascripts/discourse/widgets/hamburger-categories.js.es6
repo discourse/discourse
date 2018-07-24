@@ -51,17 +51,14 @@ export default createWidget("hamburger-categories", {
 
   html(attrs) {
     const href = Discourse.getURL("/categories");
-    const result = [
+    let result = [
       h(
         "li.heading",
-        [
-          h("strong", I18n.t("categories.top")),
-          h(
-            "a.d-link.categories-link",
-            { attributes: { href } },
-            I18n.t("categories.show_all")
-          )
-        ]
+        h(
+          "a.d-link.categories-link",
+          { attributes: { href } },
+          I18n.t("filters.categories.title")
+        )
       )
     ];
 
@@ -69,8 +66,19 @@ export default createWidget("hamburger-categories", {
     if (categories.length === 0) {
       return;
     }
-    return result.concat(
+    result = result.concat(
       categories.map(c => this.attach("hamburger-category", c))
+    );
+
+    return result.concat(
+      h(
+        "li.footer",
+        h(
+          "a.d-link.more-link",
+          { attributes: { href } },
+          I18n.t("categories.more")
+        )
+      )
     );
   }
 });

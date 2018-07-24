@@ -109,16 +109,11 @@
   }
 
   ul.category-links {
-    li.heading {
-      padding: 0.25em 0.5em 0.5em 0.5em;
+    li.footer {
+      clear: both;
       display: block;
-      .categories-link {
-        float: right;
-        padding: 0;
-        &:hover {
-          background-color: transparent;
-        }
-      }
+      text-align: right;
+      padding-right: 12px;
     }
   }
 
