@@ -734,6 +734,11 @@ describe Category do
       category.auto_bump_limiter.clear!
       expect(Category.auto_bump_topic!).to eq(true)
       expect(Topic.where(bumped_at: time).count).to eq(1)
+
+      category.num_auto_bump_daily = ""
+      category.save!
+
+      expect(Category.auto_bump_topic!).to eq(false)
     end
   end
 
