@@ -7,7 +7,7 @@ describe MiniSqlMultisiteConnection do
       outputString = "1"
 
       # Main transaction
-      ActiveRecord::Base.transaction do  
+      ActiveRecord::Base.transaction do
         outputString += "2"
 
           # Nested transaction
