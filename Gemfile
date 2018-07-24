@@ -108,6 +108,7 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
+  gem 'danger'
 end
 
 group :test, :development do
