@@ -566,9 +566,11 @@ describe PostDestroyer do
     let!(:bookmark) { PostAction.act(moderator, second_post, PostActionType.types[:bookmark]) }
     let!(:flag) { PostAction.act(moderator, second_post, PostActionType.types[:off_topic]) }
 
-    it "should delete public post actions and agree with flags" do
+    before do
       SiteSetting.queue_jobs = false
+    end
 
+    it "should delete public post actions and agree with flags" do
       second_post.expects(:update_flagged_posts_count)
 
       PostDestroyer.new(moderator, second_post).destroy
@@ -586,6 +588,23 @@ describe PostDestroyer do
       notification = second_post.user.notifications.where(notification_type: Notification.types[:private_message]).last
       expect(notification).to be_present
       expect(notification.topic.title).to eq(I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template'))
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
+      second_post.expects(:update_flagged_posts_count)
+      PostDestroyer.new(Discourse.system_user, second_post).destroy
+      expect(
+        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
+      ).to eq(false)
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if it was deleted by author" do
+      SiteSetting.delete_removed_posts_after = 0
+      second_post.expects(:update_flagged_posts_count)
+      PostDestroyer.new(second_post.user, second_post).destroy
+      expect(
+        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
+      ).to eq(false)
     end
   end
 
