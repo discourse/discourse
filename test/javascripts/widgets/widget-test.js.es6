@@ -136,14 +136,12 @@ widgetTest("widget state", {
     });
   },
 
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$("button.test").length, "it renders the button");
     assert.equal(this.$("button.test").text(), "0 clicks");
 
-    click(this.$("button"));
-    andThen(() => {
-      assert.equal(this.$("button.test").text(), "1 clicks");
-    });
+    await click(this.$("button"));
+    assert.equal(this.$("button.test").text(), "1 clicks");
   }
 });
 
@@ -173,7 +171,7 @@ widgetTest("widget update with promise", {
     });
   },
 
-  test(assert) {
+  async test(assert) {
     assert.equal(
       this.$("button.test")
         .text()
@@ -181,15 +179,13 @@ widgetTest("widget update with promise", {
       "No name"
     );
 
-    click(this.$("button"));
-    andThen(() => {
-      assert.equal(
-        this.$("button.test")
-          .text()
-          .trim(),
-        "Robin"
-      );
-    });
+    await click(this.$("button"));
+    assert.equal(
+      this.$("button.test")
+        .text()
+        .trim(),
+      "Robin"
+    );
   }
 });
 
