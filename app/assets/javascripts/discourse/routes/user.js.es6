@@ -2,8 +2,7 @@ import Draft from "discourse/models/draft";
 
 export default Discourse.Route.extend({
   titleToken() {
-    const model = this.modelFor("user");
-    const username = model.get("username");
+    const username = this.modelFor("user").get("username");
     if (username) {
       return [I18n.t("user.profile"), username];
     }
