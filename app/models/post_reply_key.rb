@@ -16,3 +16,20 @@ class PostReplyKey < ActiveRecord::Base
     SecureRandom.hex(16)
   end
 end
+
+# == Schema Information
+#
+# Table name: post_reply_keys
+#
+#  id         :bigint(8)        not null, primary key
+#  user_id    :integer          not null
+#  post_id    :integer          not null
+#  reply_key  :uuid             not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_post_reply_keys_on_reply_key            (reply_key) UNIQUE
+#  index_post_reply_keys_on_user_id_and_post_id  (user_id,post_id) UNIQUE
+#

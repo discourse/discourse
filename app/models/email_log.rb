@@ -89,7 +89,6 @@ end
 #  user_id        :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  reply_key      :uuid
 #  post_id        :integer
 #  skipped        :boolean          default(FALSE)
 #  skipped_reason :string
@@ -105,6 +104,5 @@ end
 #  index_email_logs_on_post_id                             (post_id)
 #  index_email_logs_on_reply_key                           (reply_key)
 #  index_email_logs_on_skipped_and_bounced_and_created_at  (skipped,bounced,created_at)
-#  index_email_logs_on_topic_id                            (topic_id)
 #  index_email_logs_on_user_id                             (user_id)
 #
