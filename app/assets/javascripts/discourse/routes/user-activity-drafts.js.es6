@@ -1,5 +1,3 @@
-import Draft from "discourse/models/draft";
-
 export default Discourse.Route.extend({
   model() {
     return this.modelFor("user").get("userDraftsStream");

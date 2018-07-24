@@ -3,7 +3,6 @@ import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
-import UserActionGroup from "discourse/models/user-action-group";
 
 import {
   NEW_TOPIC_KEY,
