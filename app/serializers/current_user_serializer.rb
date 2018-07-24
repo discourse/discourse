@@ -162,8 +162,8 @@ class CurrentUserSerializer < BasicUserSerializer
   def top_category_ids
     top_categories = UserSummary.new(object, scope).top_categories
     user_categories = CategoryUser.where(user_id: object.id)
-                      .where.not(notification_level: CategoryUser.notification_levels[:muted])
-                      .select(:category_id, :notification_level)
+      .where.not(notification_level: CategoryUser.notification_levels[:muted])
+      .select(:category_id, :notification_level)
 
     user_categories.sort_by do |c|
       case c[:notification_level]
