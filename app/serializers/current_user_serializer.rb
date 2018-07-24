@@ -156,16 +156,15 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def muted_category_ids
-    @muted_category_ids ||= CategoryUser.lookup(object, :muted).pluck(:category_id)
+    CategoryUser.lookup(object, :muted).pluck(:category_id)
   end
 
   def top_category_ids
-    top_categories = UserSummary.new(object, scope).top_categories
-    user_categories = CategoryUser.where(user_id: object.id)
+    categories = CategoryUser.where(user_id: object.id)
       .where.not(notification_level: CategoryUser.notification_levels[:muted])
       .select(:category_id, :notification_level)
 
-    user_categories.sort_by do |c|
+    categories.sort_by do |c|
       case c[:notification_level]
       when CategoryUser.notification_levels[:watching]
         1
@@ -176,8 +175,7 @@ class CurrentUserSerializer < BasicUserSerializer
       end
     end
 
-    ids = user_categories.pluck(:category_id) + top_categories.pluck(:id) - muted_category_ids
-    ids.uniq.slice(0, MAX_TOP_CATEGORIES_COUNT)
+    categories.pluck(:category_id).slice(0, MAX_TOP_CATEGORIES_COUNT)
   end
 
   def dismissed_banner_key
