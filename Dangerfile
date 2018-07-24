@@ -7,7 +7,6 @@ end
 
 to_lint = git.modified_files + git.added_files
 files_to_lint = Shellwords.join(to_lint)
-
 rubocop_output = `bundle exec rubocop -f json --parallel #{files_to_lint}`
 if !rubocop_output.empty?
   offenses = JSON.parse(rubocop_output)['files']
@@ -23,16 +22,16 @@ if !rubocop_output.empty?
 
   if !offenses.empty?
     fail(%{
-      This PR has multiple rubocop offenses:\n
-      #{offenses.map { |o| format_offense(o) }.join('\n') }
+This PR has multiple rubocop offenses. We recommend configuring prettier linting in your editor:\n
+#{offenses.map { |o| format_offense(o) }.join('\n') }
     })
   end
 end
 
-prettier_offenses = `prettier --list-different #{files_to_lint}`.split('\n')
+prettier_offenses = `prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"`.split('\n')
 if !prettier_offenses.empty?
   fail(%{
-    This PR has multiple prettier offenses (we recommend configuring prettier linting in your editor):\n
-    #{prettier_offenses.join("\n")}
+This PR has multiple prettier offenses (prettier.io). We recommend configuring prettier linting in your editor:\n
+#{prettier_offenses.join("\n")}
   })
 end
