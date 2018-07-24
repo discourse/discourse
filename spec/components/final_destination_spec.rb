@@ -337,6 +337,11 @@ describe FinalDestination do
       expect(fd("https://104.25.153.10").is_dest_valid?).to eq(true)
     end
 
+    it "returns false for short ip" do
+      expect(FinalDestination.new('https://0/logo.png').is_dest_valid?).to eq(false)
+      expect(FinalDestination.new('https://1/logo.png').is_dest_valid?).to eq(false)
+    end
+
     it "returns false for private ipv4" do
       expect(fd("https://127.0.0.1").is_dest_valid?).to eq(false)
       expect(fd("https://192.168.1.3").is_dest_valid?).to eq(false)
