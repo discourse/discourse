@@ -18,17 +18,17 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def sent
-    email_logs = filter_email_logs(EmailLog.sent, params)
+    email_logs = filter_logs(EmailLog, params)
     render_serialized(email_logs, EmailLogSerializer)
   end
 
   def skipped
-    email_logs = filter_email_logs(EmailLog.skipped, params)
-    render_serialized(email_logs, EmailLogSerializer)
+    skipped_email_logs = filter_logs(SkippedEmailLog, params)
+    render_serialized(skipped_email_logs, SkippedEmailLogSerializer)
   end
 
   def bounced
-    email_logs = filter_email_logs(EmailLog.bounced, params)
+    email_logs = filter_logs(EmailLog.bounced, params)
     render_serialized(email_logs, EmailLogSerializer)
   end
 
@@ -137,20 +137,20 @@ class Admin::EmailController < Admin::AdminController
 
   private
 
-  def filter_email_logs(email_logs, params)
-    email_logs = email_logs.includes(:user, post: :topic)
+  def filter_logs(logs, params)
+    table_name = logs.table_name
+
+    logs = logs.includes(:user, post: :topic)
       .references(:user)
       .order(created_at: :desc)
       .offset(params[:offset] || 0)
       .limit(50)
 
-    email_logs = email_logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
-    email_logs = email_logs.where("email_logs.to_address ILIKE ?", "%#{params[:address]}%") if params[:address].present?
-    email_logs = email_logs.where("email_logs.email_type ILIKE ?", "%#{params[:type]}%") if params[:type].present?
-    email_logs = email_logs.where("email_logs.reply_key ILIKE ?", "%#{params[:reply_key]}%") if params[:reply_key].present?
-    email_logs = email_logs.where("email_logs.skipped_reason ILIKE ?", "%#{params[:skipped_reason]}%") if params[:skipped_reason].present?
-
-    email_logs
+    logs = logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
+    logs = logs.where("#{table_name}.to_address ILIKE ?", "%#{params[:address]}%") if params[:address].present?
+    logs = logs.where("#{table_name}.email_type ILIKE ?", "%#{params[:type]}%") if params[:type].present?
+    logs = logs.where("#{table_name}.reply_key ILIKE ?", "%#{params[:reply_key]}%") if params[:reply_key].present?
+    logs
   end
 
   def filter_incoming_emails(incoming_emails, params)

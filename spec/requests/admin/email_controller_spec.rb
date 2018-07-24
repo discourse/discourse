@@ -39,9 +39,34 @@ describe Admin::EmailController do
   end
 
   describe '#skipped' do
+    let(:user) { Fabricate(:user) }
+    let!(:log1) { Fabricate(:skipped_email_log, user: user) }
+    let!(:log2) { Fabricate(:skipped_email_log) }
+
     it "succeeds" do
       get "/admin/email/skipped.json"
+
       expect(response.status).to eq(200)
+
+      logs = JSON.parse(response.body)
+
+      expect(logs.first["id"]).to eq(log2.id)
+      expect(logs.last["id"]).to eq(log1.id)
+    end
+
+    describe 'when filtered by username' do
+      it 'should return the right response' do
+        get "/admin/email/skipped.json", params: {
+          user: user.username
+        }
+
+        expect(response.status).to eq(200)
+
+        logs = JSON.parse(response.body)
+
+        expect(logs.count).to eq(1)
+        expect(logs.first["id"]).to eq(log1.id)
+      end
     end
   end
 
@@ -54,6 +79,7 @@ describe Admin::EmailController do
     context 'with an email address' do
       it 'enqueues a test email job' do
         post "/admin/email/test.json", params: { email_address: 'eviltrout@test.domain' }
+
         expect(response.status).to eq(200)
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include('eviltrout@test.domain')
       end

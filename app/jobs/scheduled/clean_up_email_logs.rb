@@ -11,6 +11,8 @@ module Jobs
       EmailLog.where(reply_key: nil)
         .where("created_at < ?", threshold)
         .delete_all
+
+      SkippedEmailLog.where("created_at < ?", threshold).delete_all
     end
 
   end

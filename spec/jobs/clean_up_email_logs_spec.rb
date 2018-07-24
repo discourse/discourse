@@ -7,17 +7,22 @@ describe Jobs::CleanUpEmailLogs do
     Fabricate(:email_log, created_at: 2.years.ago)
     Fabricate(:email_log, created_at: 2.weeks.ago)
     Fabricate(:email_log, created_at: 2.days.ago)
+
+    Fabricate(:skipped_email_log, created_at: 2.years.ago)
+    Fabricate(:skipped_email_log)
   end
 
   it "removes old email logs without a reply_key" do
     Jobs::CleanUpEmailLogs.new.execute({})
     expect(EmailLog.count).to eq(3)
+    expect(SkippedEmailLog.count).to eq(1)
   end
 
   it "does not remove old email logs when delete_email_logs_after_days is 0" do
     SiteSetting.delete_email_logs_after_days = 0
     Jobs::CleanUpEmailLogs.new.execute({})
     expect(EmailLog.count).to eq(4)
+    expect(SkippedEmailLog.count).to eq(2)
   end
 
 end
