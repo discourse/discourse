@@ -239,4 +239,15 @@ Migration::ColumnDropper.drop(
   }
 )
 
+Migration::ColumnDropper.drop(
+  table: 'email_logs',
+  after_migration: 'DropTopicIdOnEmailLogs',
+  columns: %w{
+    topic_id
+  },
+  on_drop: ->() {
+    STDERR.puts "Removing superflous email_logs columns!"
+  }
+)
+
 Discourse.reset_active_record_cache
