@@ -48,3 +48,33 @@ QUnit.test("Viewing Summary", assert => {
     assert.ok(exists(".badges-section .badge-card"), "badges");
   });
 });
+
+QUnit.test("Viewing Drafts", assert => {
+  var draftsCount = 0;
+  visit("/u/eviltrout/activity/drafts");
+  andThen(() => {
+    assert.ok(exists(".user-stream"), "has drafts stream");
+    assert.ok(
+      $(".user-stream .user-stream-item-draft-actions").length,
+      "has draft action buttons"
+    );
+    draftsCount = $(".user-stream .user-stream-item").length;
+  });
+
+  click(".user-stream .user-stream-item:first-child button.resume-draft");
+  andThen(() => {
+    assert.ok(
+      exists(".d-editor-input"),
+      "composer is visible after resuming a draft"
+    );
+  });
+
+  click(".user-stream .user-stream-item:first-child button.remove-draft");
+  andThen(() => {
+    assert.equal(
+      $(".user-stream .user-stream-item").length,
+      draftsCount - 1,
+      "drafts stream length updated after removing a draft"
+    );
+  });
+});

@@ -214,6 +214,8 @@ export default function() {
 
     this.get("/draft.json", () => response({}));
 
+    this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
+
     this.put("/queued_posts/:queued_post_id", function(request) {
       return response({ queued_post: { id: request.params.queued_post_id } });
     });
