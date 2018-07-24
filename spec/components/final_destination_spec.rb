@@ -338,8 +338,17 @@ describe FinalDestination do
     end
 
     it "returns false for short ip" do
-      expect(FinalDestination.new('https://0/logo.png').is_dest_valid?).to eq(false)
-      expect(FinalDestination.new('https://1/logo.png').is_dest_valid?).to eq(false)
+      lookup = lambda do |host|
+        # How IPs are looked up for single digits
+        if host == "0"
+          "0.0.0.0"
+        elsif host == "1"
+          "0.0.0.1"
+        end
+      end
+
+      expect(FinalDestination.new('https://0/logo.png', lookup_ip: lookup).is_dest_valid?).to eq(false)
+      expect(FinalDestination.new('https://1/logo.png', lookup_ip: lookup).is_dest_valid?).to eq(false)
     end
 
     it "returns false for private ipv4" do
