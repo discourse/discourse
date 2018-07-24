@@ -28,7 +28,7 @@ This PR has multiple rubocop offenses. We recommend configuring prettier linting
   end
 end
 
-prettier_offenses = `prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"`.split('\n')
+prettier_offenses = `prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"`.split('\n')
 if !prettier_offenses.empty?
   fail(%{
 This PR has multiple prettier offenses (prettier.io). We recommend configuring prettier linting in your editor:\n
