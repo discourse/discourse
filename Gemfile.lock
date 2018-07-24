@@ -144,7 +144,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jwt (1.5.6)
     kgio (2.11.1)
-    libv8 (6.3.292.48.1)
+    libv8 (6.7.288.46.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -171,8 +171,8 @@ GEM
     method_source (0.8.2)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    mini_racer (0.1.15)
-      libv8 (~> 6.3)
+    mini_racer (0.2.0)
+      libv8 (>= 6.3)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
     minitest (5.10.3)
@@ -505,4 +505,4 @@ DEPENDENCIES
   webpush
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
