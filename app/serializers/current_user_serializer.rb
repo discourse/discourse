@@ -2,6 +2,8 @@ require_dependency 'new_post_manager'
 
 class CurrentUserSerializer < BasicUserSerializer
 
+  MAX_TOP_CATEGORIES_COUNT = 6.freeze
+
   attributes :name,
              :unread_notifications,
              :unread_private_messages,
@@ -42,9 +44,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_create_topic,
              :link_posting_access,
              :external_id,
-             :tracked_category_ids,
-             :watched_category_ids,
-             :watched_first_post_category_ids,
              :top_category_ids
 
   def link_posting_access
@@ -157,23 +156,28 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def muted_category_ids
-    CategoryUser.lookup(object, :muted).pluck(:category_id)
-  end
-
-  def tracked_category_ids
-    CategoryUser.lookup(object, :tracking).pluck(:category_id)
-  end
-
-  def watched_category_ids
-    CategoryUser.lookup(object, :watching).pluck(:category_id)
-  end
-
-  def watched_first_post_category_ids
-    CategoryUser.lookup(object, :watching_first_post).pluck(:category_id)
+    @muted_category_ids ||= CategoryUser.lookup(object, :muted).pluck(:category_id)
   end
 
   def top_category_ids
-    UserSummary.new(object, Guardian.new).top_categories.pluck(:id)
+    top_categories = UserSummary.new(object, scope).top_categories
+    user_categories = CategoryUser.where(user_id: object.id)
+                      .where.not(notification_level: CategoryUser.notification_levels[:muted])
+                      .select(:category_id, :notification_level)
+
+    user_categories.sort_by do |c|
+      case c[:notification_level]
+      when CategoryUser.notification_levels[:watching]
+        1
+      when CategoryUser.notification_levels[:tracking]
+        2
+      when CategoryUser.notification_levels[:watching_first_post]
+        3
+      end
+    end
+
+    ids = user_categories.pluck(:category_id) + top_categories.pluck(:id) - muted_category_ids
+    ids.uniq.slice(0, MAX_TOP_CATEGORIES_COUNT)
   end
 
   def dismissed_banner_key

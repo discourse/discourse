@@ -181,13 +181,13 @@ export default createWidget("hamburger-menu", {
     let categories = [];
 
     if (this.currentUser) {
-      let categoryIds = this.currentUser.get("watched_category_ids") || [];
-      categoryIds = categoryIds.concat(this.currentUser.get("tracked_category_ids") || []);
-      categoryIds = categoryIds.concat(this.currentUser.get("watched_first_post_category_ids") || []);
-      categoryIds = categoryIds.concat(this.currentUser.get("top_category_ids") || []);
-      categoryIds = categoryIds.concat(categoriesList.map(c => c.id));
+      let categoryIds = this.currentUser.get("top_category_ids") || [];
 
-      categories = categoryIds.uniq().slice(0, maxCategoriesToDisplay).map(id => {
+      if (categoryIds.length < maxCategoriesToDisplay) {
+        categoryIds = categoryIds.concat(categoriesList.map(c => c.id)).uniq().slice(0, maxCategoriesToDisplay);
+      }
+
+      categories = categoryIds.map(id => {
         return categoriesList.find(c => c.id === id);
       });
     } else {

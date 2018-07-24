@@ -2,6 +2,8 @@ import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
 moduleForWidget("hamburger-menu");
 
+const maxCategoriesToDisplay = 6;
+
 widgetTest("prioritize faq", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
@@ -131,7 +133,7 @@ widgetTest("top categories - anonymous", {
 
   test(assert) {
     const count = this.site.get("categoriesList").length;
-    const maximum = count <= 6 ? count : 6;
+    const maximum = count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
     assert.equal(this.$(".category-link").length, maximum);
   }
 });
@@ -205,11 +207,11 @@ widgetTest("top categories", {
     parent2.subcategories = [child2];
     const list = [parent1, child1, parent2, child2, parent3, parent4, parent5];
     this.site.set("categoriesList", list);
-    this.currentUser.setProperties({ watched_category_ids: [6], tracked_category_ids: [7], watched_first_post_category_ids: [4], top_category_ids: [5, 2] });
+    this.currentUser.set("top_category_ids", [6, 7, 4, 5, 2]);
   },
 
   test(assert) {
-    assert.equal(this.$(".category-link").length, 6);
+    assert.equal(this.$(".category-link").length, maxCategoriesToDisplay);
     assert.equal(this.$(".category-link .category-name").text(), "parent 4parent 5child 2parent 3childparent");
   }
 });
