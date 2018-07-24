@@ -21,9 +21,11 @@ QUnit.test("fixIndices set unique position number", function(assert) {
 
   reorderCategoriesController.fixIndices();
 
-  reorderCategoriesController.get("categoriesOrdered").forEach((category, index) => {
-    assert.equal(category.get("position"), index);
-  });
+  reorderCategoriesController
+    .get("categoriesOrdered")
+    .forEach((category, index) => {
+      assert.equal(category.get("position"), index);
+    });
 });
 
 QUnit.test(
@@ -31,10 +33,28 @@ QUnit.test(
   function(assert) {
     const store = createStore();
 
-    const parent = store.createRecord("category", { id: 1, position: 1, slug: "parent" });
-    const child1 = store.createRecord("category", { id: 2, position: 3, slug: "child1", parent_category_id: 1 });
-    const child2 = store.createRecord("category", { id: 3, position: 0, slug: "child2", parent_category_id: 1 });
-    const other = store.createRecord("category", { id: 4, position: 2, slug: "other" });
+    const parent = store.createRecord("category", {
+      id: 1,
+      position: 1,
+      slug: "parent"
+    });
+    const child1 = store.createRecord("category", {
+      id: 2,
+      position: 3,
+      slug: "child1",
+      parent_category_id: 1
+    });
+    const child2 = store.createRecord("category", {
+      id: 3,
+      position: 0,
+      slug: "child2",
+      parent_category_id: 1
+    });
+    const other = store.createRecord("category", {
+      id: 4,
+      position: 2,
+      slug: "other"
+    });
 
     const categories = [child2, parent, other, child1];
     const expectedOrderSlugs = ["parent", "child2", "child1", "other"];
@@ -44,7 +64,9 @@ QUnit.test(
 
     reorderCategoriesController.fixIndices();
 
-    assert.deepEqual(reorderCategoriesController.get("categoriesOrdered").mapBy("slug"), expectedOrderSlugs);
+    assert.deepEqual(
+      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      expectedOrderSlugs
+    );
   }
 );
-

@@ -77,7 +77,9 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
 
       if (!category.get("parent_category_id")) {
         category.set("position", position++);
-        (subcategories[category.get("id")] || []).forEach(subcategory => subcategory.set("position", position++));
+        (subcategories[category.get("id")] || []).forEach(subcategory =>
+          subcategory.set("position", position++)
+        );
       }
     }
 
