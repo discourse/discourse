@@ -275,6 +275,12 @@ describe SiteSettings::TypeSupervisor do
         expect(settings.type_supervisor.to_rb_value(:type_custom, 2)).to eq 2
         expect(settings.type_supervisor.to_rb_value(:type_custom, '2|3')).to eq '2|3'
       end
+
+      it 'should not modify the types of settings' do
+        types = SiteSettings::TypeSupervisor.types
+        settings.type_supervisor.to_rb_value(:default_locale, 'fr', types[:enum])
+        expect(settings.type_supervisor.to_db_value(:default_locale, 'en')).to eq(['en', types[:string]])
+      end
     end
   end
 

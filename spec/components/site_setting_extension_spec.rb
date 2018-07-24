@@ -124,6 +124,15 @@ describe SiteSettingExtension do
       expect(settings2.hello).to eq(99)
     end
 
+    it "does not override types in the type supervisor" do
+      settings.setting(:foo, "bar")
+      settings.provider.save(:foo, "bar", SiteSetting.types[:enum])
+      settings.refresh!
+      expect(settings.foo).to eq("bar")
+
+      settings.foo = "baz"
+      expect(settings.foo).to eq("baz")
+    end
   end
 
   describe "multisite" do
