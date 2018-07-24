@@ -67,7 +67,7 @@ export default Ember.Component.extend(LoadMore, {
       if (postUrl) {
         DiscourseURL.routeTo(postUrl);
       } else {
-        Draft.get(draftKey).then((d) => {
+        Draft.get(draftKey).then(d => {
           composer.open({
             draft: d.draft,
             draftKey: draftKey,

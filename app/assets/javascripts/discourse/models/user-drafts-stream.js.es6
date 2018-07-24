@@ -72,7 +72,10 @@ export default RestModel.extend({
           result.drafts.forEach(function(draft) {
             let draftData = JSON.parse(draft.data);
             draft.post_number = draftData.postId || null;
-            if (draft.draft_key === NEW_PRIVATE_MESSAGE_KEY || draft.draft_key === NEW_TOPIC_KEY) {
+            if (
+              draft.draft_key === NEW_PRIVATE_MESSAGE_KEY ||
+              draft.draft_key === NEW_TOPIC_KEY
+            ) {
               draft.title = draftData.title;
             }
             draft.title = emojiUnescape(
@@ -83,7 +86,7 @@ export default RestModel.extend({
           self.get("content").pushObjects(copy);
           self.setProperties({
             loaded: true,
-            itemsLoaded: self.get("itemsLoaded") + result.drafts.length,
+            itemsLoaded: self.get("itemsLoaded") + result.drafts.length
           });
         }
       })
