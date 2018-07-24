@@ -100,7 +100,8 @@ class SiteSettings::TypeSupervisor
 
   def to_rb_value(name, value, override_type = nil)
     name = name.to_sym
-    type = @types[name] = (override_type || @types[name] || get_data_type(name, value))
+    @types[name] = (@types[name] || get_data_type(name, value))
+    type = (override_type || @types[name])
 
     case type
     when self.class.types[:float]
