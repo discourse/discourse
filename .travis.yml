@@ -72,7 +72,7 @@ script:
   - |
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
-        bundle exec rubocop --parallel && \
+        bundle exec danger && \
         eslint --ext .es6 app/assets/javascripts && \
         eslint --ext .es6 test/javascripts && \
         eslint --ext .es6 plugins/**/assets/javascripts && \
