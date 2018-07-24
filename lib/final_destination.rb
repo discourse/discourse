@@ -293,6 +293,7 @@ class FinalDestination
 
   def self.standard_private_ranges
     @private_ranges ||= [
+      IPAddr.new('0.0.0.0/8'),
       IPAddr.new('127.0.0.1'),
       IPAddr.new('172.16.0.0/12'),
       IPAddr.new('192.168.0.0/16'),
