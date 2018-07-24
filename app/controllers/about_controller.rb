@@ -22,9 +22,9 @@ class AboutController < ApplicationController
 
   def live_post_counts
     RateLimiter.new(current_user, "live_post_counts", 1, 10.minutes).performed! unless current_user.staff?
-    category_topic_ids = Category.pluck(:topic_id).compact!
+    category_topic_ids=Category.pluck(:topic_id).compact!
     public_topics = Topic.listable_topics.visible.secured(Guardian.new(nil)).where.not(id: category_topic_ids)
-    stats = { public_topic_count: public_topics.count }
+    stats={public_topic_count: public_topics.count }
     stats[:public_post_count] = public_topics.sum(:posts_count) - stats[:public_topic_count]
     render json: stats
   end
