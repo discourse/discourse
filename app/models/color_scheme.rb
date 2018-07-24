@@ -5,7 +5,7 @@ require_dependency 'distributed_cache'
 class ColorScheme < ActiveRecord::Base
 
   CUSTOM_SCHEMES = {
-    dark: {
+    'Dark': {
       "primary" =>           'dddddd',
       "secondary" =>         '222222',
       "tertiary" =>          '0f82af',
@@ -16,6 +16,84 @@ class ColorScheme < ActiveRecord::Base
       "danger" =>            'e45735',
       "success" =>           '1ca551',
       "love" =>              'fa6c8d'
+    },
+    # By @itsbhanusharma
+    'Neutral': {
+      "primary" =>           '000000',
+      "secondary" =>         'ffffff',
+      "tertiary" =>          '51839b',
+      "quaternary" =>        'b85e48',
+      "header_background" => '333333',
+      "header_primary" =>    'f3f3f3',
+      "highlight" =>         'ecec70',
+      "danger" =>            'b85e48',
+      "success" =>           '518751',
+      "love" =>              'fa6c8d'
+    },
+    # By @Flower_Child
+    'Grey Amber': {
+      "primary" =>           'd9d9d9',
+      "secondary" =>         '3d4147',
+      "tertiary" =>          'fdd459',
+      "quaternary" =>        'fdd459',
+      "header_background" => '36393e',
+      "header_primary" =>    'd9d9d9',
+      "highlight" =>         'fdd459',
+      "danger" =>            'e45735',
+      "success" =>           'fdd459',
+      "love" =>              'fdd459'
+    },
+    # By @awesomerobot
+    'Shades of Blue': {
+      "primary" =>           '203243',
+      "secondary" =>         'eef4f7',
+      "tertiary" =>          '416376',
+      "quaternary" =>        '5e99b9',
+      "header_background" => '86bddb',
+      "header_primary" =>    'ffffff',
+      "highlight" =>         '86bddb',
+      "danger" =>            'bf3c3c',
+      "success" =>           '70db82',
+      "love" =>              'fc94cb'
+    },
+    # By @mikechristopher
+    'Latte': {
+      "primary" =>           'f2e507',
+      "secondary" =>         '262322',
+      "tertiary" =>          'f7f2ed',
+      "quaternary" =>        'd7c9aa',
+      "header_background" => 'd7c9aa',
+      "header_primary" =>    '262322',
+      "highlight" =>         'd7c9aa',
+      "danger" =>            'db9584',
+      "success" =>           '78be78',
+      "love" =>              '8f6201'
+    },
+    # By @Flower_Child
+    'Summer': {
+      "primary" =>           '874342',
+      "secondary" =>         'fffff4',
+      "tertiary" =>          'fe9896',
+      "quaternary" =>        'fcc9d0',
+      "header_background" => '96ccbf',
+      "header_primary" =>    'fff1e7',
+      "highlight" =>         'f3c07f',
+      "danger" =>            'cfebdc',
+      "success" =>           'fcb4b5',
+      "love" =>              'f3c07f'
+    },
+    # By @Flower_Child
+    'Dark Rose': {
+      "primary" =>           'ca9cb2',
+      "secondary" =>         '3a2a37',
+      "tertiary" =>          'fdd459',
+      "quaternary" =>        '7e566a',
+      "header_background" => 'a97189',
+      "header_primary" =>    'd9b2bb',
+      "highlight" =>         '6c3e63',
+      "danger" =>            '6c3e63',
+      "success" =>           'd9b2bb',
+      "love" =>              'd9b2bb'
     }
   }
 
@@ -26,7 +104,7 @@ class ColorScheme < ActiveRecord::Base
     end
 
     list = [
-      { id: 'default', colors: base_with_hash }
+      { id: 'Light', colors: base_with_hash }
     ]
 
     CUSTOM_SCHEMES.each do |k, v|
@@ -71,7 +149,7 @@ class ColorScheme < ActiveRecord::Base
 
   def self.base_color_schemes
     base_color_scheme_colors.map do |hash|
-      scheme = new(name: I18n.t("color_schemes.#{hash[:id]}"), base_scheme_id: hash[:id])
+      scheme = new(name: I18n.t("color_schemes.#{hash[:id].downcase.gsub(' ', '_')}"), base_scheme_id: hash[:id])
       scheme.colors = hash[:colors].map { |k, v| { name: k.to_s, hex: v.sub("#", "") } }
       scheme.is_base = true
       scheme
@@ -140,7 +218,7 @@ class ColorScheme < ActiveRecord::Base
 
   def base_colors
     colors = nil
-    if base_scheme_id && base_scheme_id != "default"
+    if base_scheme_id && base_scheme_id != "Light"
       colors = CUSTOM_SCHEMES[base_scheme_id.to_sym]
     end
     colors || ColorScheme.base_colors
@@ -148,7 +226,7 @@ class ColorScheme < ActiveRecord::Base
 
   def resolved_colors
     resolved = ColorScheme.base_colors.dup
-    if base_scheme_id && base_scheme_id != "default"
+    if base_scheme_id && base_scheme_id != "Light"
       if scheme = CUSTOM_SCHEMES[base_scheme_id.to_sym]
         scheme.each do |name, value|
           resolved[name] = value

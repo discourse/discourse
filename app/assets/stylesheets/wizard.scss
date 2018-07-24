@@ -40,7 +40,9 @@ body.wizard {
 }
 
 .wizard-warning {
-  font-family: sans-serif, p {
+  font-family: sans-serif;
+
+  p {
     margin-top: 0;
   }
 
@@ -69,6 +71,11 @@ body.wizard {
 
 .staff-count {
   font-weight: bold;
+}
+
+.wizard-step-form {
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .wizard-step-emoji {
@@ -103,6 +110,29 @@ body.wizard {
 .wizard-step-homepage {
   .field-homepage-style {
     width: 280px;
+  }
+}
+
+.wizard-step-colors {
+  .grid {
+    margin: 0 auto;
+    list-style-type: none;
+    text-align: center;
+
+    li {
+      display: inline-block;
+      vertical-align: top;
+      margin: 15px;
+      .radio-area {
+        text-align: left;
+        font-size: 14px;
+        font-weight: bold;
+        & > * {
+          position: relative;
+          right: 7px;
+        }
+      }
+    }
   }
 }
 
@@ -482,6 +512,9 @@ body.wizard {
   }
   .wizard-column {
     margin: auto !important;
+  }
+  .wizard-step-form {
+    max-height: auto;
   }
   .wizard-step-contents {
     min-height: auto !important;
