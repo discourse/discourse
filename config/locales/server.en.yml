@@ -2241,6 +2241,20 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    flags_agreed_and_post_deleted:
+      title: "Post deleted by a moderator"
+      subject_template: "Post deleted by a moderator due to flags"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was deleted.
+
+        <%{base_url}%{url}>
+
+        A moderator reviewed flags submitted by the community and agreed with them.
+
+        Please review our [community guidelines](%{base_url}/guidelines) to avoid this happening again in the future.
+
     usage_tips:
       text_body_template: |
         For a few quick tips on getting started as a new user, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

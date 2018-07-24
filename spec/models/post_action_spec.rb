@@ -233,6 +233,19 @@ describe PostAction do
     end
   end
 
+  describe "undo/redo repeatedly" do
+    it "doesn't create a second action for the same user/type" do
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      expect(PostAction.where(post: post).with_deleted.count).to eq(1)
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+
+      # Check that we don't lose consistency into negatives
+      expect(post.reload.like_count).to eq(0)
+    end
+  end
+
   describe 'when a user likes something' do
 
     it 'should generate notifications correctly' do
@@ -307,22 +320,7 @@ describe PostAction do
         expect(actual_count).to eq(1), "Expected likes_given to be 1 when removing '#{type_name}', but got #{actual_count}"
       end
     end
-  end
 
-  describe "undo/redo repeatedly" do
-    it "doesn't create a second action for the same user/type" do
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
-      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
-      expect(PostAction.where(post: post).with_deleted.count).to eq(1)
-      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-
-      # Check that we don't lose consistency into negatives
-      expect(post.reload.like_count).to eq(0)
-    end
-  end
-
-  describe 'when a user likes something' do
     it 'should increase the like counts when a user votes' do
       expect {
         PostAction.act(codinghorror, post, PostActionType.types[:like])

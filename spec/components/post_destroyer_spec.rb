@@ -567,6 +567,8 @@ describe PostDestroyer do
     let!(:flag) { PostAction.act(moderator, second_post, PostActionType.types[:off_topic]) }
 
     it "should delete public post actions and agree with flags" do
+      SiteSetting.queue_jobs = false
+
       second_post.expects(:update_flagged_posts_count)
 
       PostDestroyer.new(moderator, second_post).destroy
@@ -580,6 +582,10 @@ describe PostDestroyer do
       second_post.reload
       expect(second_post.bookmark_count).to eq(0)
       expect(second_post.off_topic_count).to eq(1)
+
+      notification = second_post.user.notifications.where(notification_type: Notification.types[:private_message]).last
+      expect(notification).to be_present
+      expect(notification.topic.title).to eq(I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template'))
     end
   end
 

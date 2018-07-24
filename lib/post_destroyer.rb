@@ -196,6 +196,15 @@ class PostDestroyer
   end
 
   def agree_with_flags
+    if @post.is_flagged?
+      Jobs.enqueue(
+        :send_system_message,
+        user_id: @post.user.id,
+        message_type: :flags_agreed_and_post_deleted,
+        message_options: { url: @post.url }
+      )
+    end
+
     PostAction.agree_flags!(@post, @user, delete_post: true)
   end
 
