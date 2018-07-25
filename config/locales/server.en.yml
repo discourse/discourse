@@ -2243,18 +2243,18 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     flags_agreed_and_post_deleted:
-      title: "Post deleted by a moderator"
-      subject_template: "Post deleted by a moderator due to flags"
+      title: "Flagged post removed by staff"
+      subject_template: "Flagged post removed by staff"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was deleted.
+        This is an automated message from %{site_name} to let you know that your post was removed.
 
         <%{base_url}%{url}>
 
-        A moderator reviewed flags submitted by the community and agreed with them.
+        This post was flagged by the community and a staff member opted to remove it.
 
-        Please review our [community guidelines](%{base_url}/guidelines) to avoid this happening again in the future.
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
 
     usage_tips:
       text_body_template: |
