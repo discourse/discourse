@@ -76,3 +76,11 @@ Fabricator(:flag_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:flag_hook]]
   end
 end
+
+Fabricator(:approval_web_hook, from: :web_hook) do
+  transient approval_hook: WebHookEventType.find_by(name: 'approval')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:approval_hook]]
+  end
+end

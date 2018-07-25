@@ -3027,6 +3027,9 @@ en:
         flag_event:
           name: "Flag Event"
           details: "When a flag is created, agreed, disagreed or ignored."
+        approval_event:
+          name: "Approval Event"
+          details: "When a new post is queued, approved or rejected."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
