@@ -107,10 +107,10 @@
       {{#each authProviders as |authProvider|}}
         <tr>
           <td>{{authProvider.method.prettyName}}</td>
-          
+
           {{#if authProvider.account}}
             <td>{{authProvider.account.description}}</td>
-            <td> 
+            <td>
               {{#if authProvider.account.can_revoke}}
                 {{#conditional-loading-spinner condition=revoking size='small'}}
                   {{d-button action="revokeAccount" actionParam=authProvider.account title="user.associated_accounts.revoke" icon="times-circle" }}
@@ -126,7 +126,7 @@
               {{/if}}
               </td>
           {{/if}}
-         
+
         </tr>
       {{/each}}
       </table>
@@ -144,7 +144,7 @@
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar model "huge"}}
-      {{d-button action="showAvatarSelector" class="pad-left" icon="pencil"}}
+      {{d-button action="showAvatarSelector" actionParam=model class="pad-left" icon="pencil"}}
     </div>
   </div>
 {{/unless}}

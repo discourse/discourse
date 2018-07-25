@@ -39,17 +39,7 @@
       <div class='profile-image'></div>
       <div class='details'>
         <div class='primary'>
-          <div class='user-profile-avatar' {{action "showAvatarSelector"}} title="{{i18n 'user.change_avatar.label'}}">
-            {{bound-avatar model "huge"}}
-            {{#if model.primary_group_name}}
-              {{avatar-flair
-                flairURL=model.primary_group_flair_url
-                flairBgColor=model.primary_group_flair_bg_color
-                flairColor=model.primary_group_flair_color
-                groupName=model.primary_group_name}}
-            {{/if}}
-            {{plugin-outlet name="user-profile-avatar-flair" args=(hash model=model) tagName='div'}}
-          </div>
+          {{user-profile-avatar user=model}}
           <section class='controls'>
             <ul>
               {{#if model.can_send_private_message_to_user}}
