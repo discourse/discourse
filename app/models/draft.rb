@@ -55,7 +55,7 @@ class Draft < ActiveRecord::Base
       SELECT
         d.*, t.title, t.id topic_id, t.archetype,
         t.category_id, t.closed topic_closed, t.archived topic_archived,
-        pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id,
+        pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id, pu.username_lower,
         du.username draft_username, NULL as raw, NULL as cooked, NULL as post_number
       FROM drafts d
       LEFT JOIN topics t ON

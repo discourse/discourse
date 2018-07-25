@@ -4,6 +4,7 @@ import { selectedText } from "discourse/lib/utilities";
 import Post from "discourse/models/post";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Component.extend(LoadMore, {
   loading: false,
@@ -67,21 +68,31 @@ export default Ember.Component.extend(LoadMore, {
       if (item.get("postUrl")) {
         DiscourseURL.routeTo(item.get("postUrl"));
       } else {
-        Draft.get(item.draft_key).then(d => {
-          composer.open({
-            draft: d.draft,
-            draftKey: item.draft_key,
-            draftSequence: d.draft_sequence
+        Draft.get(item.draft_key)
+          .then(d => {
+            if (d.draft) {
+              composer.open({
+                draft: d.draft,
+                draftKey: item.draft_key,
+                draftSequence: d.draft_sequence
+              });
+            }
+          })
+          .catch(error => {
+            popupAjaxError(error);
           });
-        });
       }
     },
 
     removeDraft(draft) {
       const stream = this.get("stream");
-      Draft.clear(draft.draft_key, draft.sequence).then(() => {
-        stream.load(this.site);
-      });
+      Draft.clear(draft.draft_key, draft.sequence)
+        .then(() => {
+          stream.load(this.site);
+        })
+        .catch(error => {
+          popupAjaxError(error);
+        });
     },
 
     loadMore() {

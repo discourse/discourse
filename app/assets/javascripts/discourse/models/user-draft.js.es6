@@ -15,12 +15,7 @@ export default RestModel.extend({
     return draftUsername === User.currentProp("username");
   },
 
-  @computed("username")
-  usernameLower(username) {
-    return username.toLowerCase();
-  },
-
-  @computed("usernameLower")
+  @computed("username_lower")
   userUrl(usernameLower) {
     return userPath(usernameLower);
   },

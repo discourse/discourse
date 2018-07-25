@@ -11,6 +11,7 @@ class DraftSerializer < ApplicationSerializer
              :data,
              :topic_id,
              :username,
+             :username_lower,
              :name,
              :user_id,
              :title,
