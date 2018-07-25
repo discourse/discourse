@@ -35,6 +35,8 @@ RSpec.describe CurrentUserSerializer do
 
   context "#top_category_ids" do
     let(:user) { Fabricate(:user) }
+    let(:category1) { Fabricate(:category) }
+    let(:category2) { Fabricate(:category) }
     let :serializer do
       CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
     end
@@ -47,10 +49,14 @@ RSpec.describe CurrentUserSerializer do
     it "should include correct id in top_category_ids array" do
       category = Category.first
       CategoryUser.create!(user_id: user.id,
-                           category_id: category.id,
+                           category_id: category1.id,
+                           notification_level: CategoryUser.notification_levels[:tracking])
+
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category2.id,
                            notification_level: CategoryUser.notification_levels[:watching])
       payload = serializer.as_json
-      expect(payload[:top_category_ids]).to eq([category.id])
+      expect(payload[:top_category_ids]).to eq([category2.id, category1.id])
     end
   end
 end

@@ -160,22 +160,16 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def top_category_ids
-    categories = CategoryUser.where(user_id: object.id)
+    CategoryUser.where(user_id: object.id)
       .where.not(notification_level: CategoryUser.notification_levels[:muted])
-      .select(:category_id, :notification_level)
-
-    categories.sort_by do |c|
-      case c[:notification_level]
-      when CategoryUser.notification_levels[:watching]
-        1
-      when CategoryUser.notification_levels[:tracking]
-        2
-      when CategoryUser.notification_levels[:watching_first_post]
-        3
-      end
-    end
-
-    categories.pluck(:category_id).slice(0, MAX_TOP_CATEGORIES_COUNT)
+      .order("
+        CASE
+          WHEN notification_level = 3 THEN 1
+          WHEN notification_level = 2 THEN 2
+          WHEN notification_level = 4 THEN 3
+        END")
+      .pluck(:category_id)
+      .slice(0, MAX_TOP_CATEGORIES_COUNT)
   end
 
   def dismissed_banner_key

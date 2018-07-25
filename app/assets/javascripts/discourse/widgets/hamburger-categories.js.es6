@@ -70,15 +70,19 @@ export default createWidget("hamburger-categories", {
       categories.map(c => this.attach("hamburger-category", c))
     );
 
-    return result.concat(
-      h(
-        "li.footer",
+    if (attrs.showMore) {
+      result = result.concat(
         h(
-          "a.d-link.more-link",
-          { attributes: { href } },
-          I18n.t("categories.more")
+          "li.footer",
+          h(
+            "a.d-link.more-link",
+            { attributes: { href } },
+            I18n.t("categories.more")
+          )
         )
-      )
-    );
+      );
+    }
+
+    return result;
   }
 });
