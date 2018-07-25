@@ -52,6 +52,8 @@ export default Ember.Component.extend({
   showAllReportsLink: false,
   startDate: null,
   endDate: null,
+  categoryId: null,
+  groupId: null,
   showTrend: false,
   showHeader: true,
   showTitle: true,
@@ -75,7 +77,7 @@ export default Ember.Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    const state = this.get("filteringState");
+    const state = this.get("filteringState") || {};
     this.setProperties({
       category: Category.findById(state.categoryId),
       groupId: state.groupId,
@@ -276,7 +278,7 @@ export default Ember.Component.extend({
 
   _renderReport(report, forcedModes, currentMode) {
     const modes = forcedModes ? forcedModes.split(",") : report.modes;
-    currentMode = currentMode || modes[0];
+    currentMode = currentMode || (modes ? modes[0] : null);
 
     this.setProperties({
       model: report,
