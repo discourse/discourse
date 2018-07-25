@@ -84,7 +84,8 @@ export default RestModel.extend({
               Handlebars.Utils.escapeExpression(draft.title)
             );
             if (draft.category_id) {
-              draft.category = this.site.categories.findBy("id", draft.category_id) || null;
+              draft.category =
+                this.site.categories.findBy("id", draft.category_id) || null;
             }
 
             copy.pushObject(UserDraft.create(draft));

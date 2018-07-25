@@ -876,7 +876,7 @@ export default Ember.Controller.extend({
       }
 
       Draft.clear(key, this.get("model.draftSequence")).then(() => {
-        this.appEvents.trigger('draft:destroyed', key);
+        this.appEvents.trigger("draft:destroyed", key);
       });
     }
   },

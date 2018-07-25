@@ -1,5 +1,4 @@
 import RestModel from "discourse/models/rest";
-import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
