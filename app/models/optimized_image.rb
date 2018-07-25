@@ -123,7 +123,7 @@ class OptimizedImage < ActiveRecord::Base
   def self.prepend_decoder!(path)
     extension = File.extname(path)[1..-1]
     raise Discourse::InvalidAccess unless extension[IM_DECODERS]
-    "#{extension}:#{path}"
+    path = "#{extension}:#{path}"
   end
 
   def self.thumbnail_or_resize
