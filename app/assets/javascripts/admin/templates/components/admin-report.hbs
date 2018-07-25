@@ -67,8 +67,14 @@
 
     <div class="report-body">
       {{#unless showTimeoutError}}
-      {{#if currentMode}}
-        {{component modeComponent model=model options=options}}
+      {{#if hasData}}
+        {{#if currentMode}}
+          {{component modeComponent model=model options=options}}
+        {{/if}}
+      {{else}}
+        <div class="alert alert-info no-data-alert">
+          {{i18n 'admin.dashboard.reports.no_data'}}
+        </div>
       {{/if}}
       {{/unless}}
 

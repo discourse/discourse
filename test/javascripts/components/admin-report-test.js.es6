@@ -115,3 +115,11 @@ componentTest("timeout", {
     assert.ok(exists(".alert-error"), "it displays a timeout error");
   }
 });
+
+componentTest("no data", {
+  template: "{{admin-report dataSourceName='posts'}}",
+
+  test(assert) {
+    assert.ok(exists(".no-data-alert"), "it displays a no data alert");
+  }
+});
