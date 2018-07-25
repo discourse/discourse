@@ -30,7 +30,7 @@ describe OptimizedImage do
       }.not_to raise_error
     end
 
-    it "raises nothing on paths" do
+    it "raises InvalidAccess error on paths" do
       expect {
         OptimizedImage.ensure_safe_paths!("/a.png", "/b.png", "c.png")
       }.to raise_error(Discourse::InvalidAccess)
