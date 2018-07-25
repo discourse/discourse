@@ -105,7 +105,11 @@ describe Backup do
         s3_bucket.expects(:object).with(b1.filename).returns(s3_object)
         s3_object.expects(:delete)
 
-        b1.after_remove_hook
+        expect {
+          b1.after_remove_hook
+        }.to change {
+          Jobs::UpdateDiskSpace.jobs.size
+        }.by(0)
       end
 
       context "when s3_backup_bucket includes folders path" do
@@ -125,10 +129,23 @@ describe Backup do
       end
     end
 
-    it "calls remove_from_s3 if the SiteSetting is false" do
-      SiteSetting.enable_s3_backups = false
-      b1.expects(:remove_from_s3).never
-      b1.after_remove_hook
+    context "when SiteSetting is false" do
+      before do
+        SiteSetting.enable_s3_backups = false
+      end
+
+      it "doesn’t call remove_from_s3" do
+        b1.expects(:remove_from_s3).never
+        b1.after_remove_hook
+      end
+
+      it "refreshes disk space if not backuping on s3" do
+        expect {
+          b1.after_remove_hook
+        }.to change {
+          Jobs::UpdateDiskSpace.jobs.size
+        }.by(1)
+      end
     end
   end
 
