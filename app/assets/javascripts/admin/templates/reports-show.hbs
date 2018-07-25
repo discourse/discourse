@@ -3,14 +3,9 @@
     {{admin-report
       showAllReportsLink=true
       dataSourceName=model.type
-      categoryId=category_id
-      groupId=group_id
+      filteringState=filteringState
       reportOptions=reportOptions
-      startDate=start_date
-      endDate=end_date
       showFilteringUI=true
-      onSelectCategory=(action "onSelectCategory")
-      onSelectStartDate=(action "onSelectStartDate")
-      onSelectEndDate=(action "onSelectEndDate")}}
+      onRefresh=(action "onParamsChange")}}
   </div>
 </div>
