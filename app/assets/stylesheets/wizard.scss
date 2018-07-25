@@ -116,9 +116,10 @@ body.wizard {
 .wizard-step-colors {
   margin-bottom: 20px;
   .grid {
+    box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 0;
     margin: 0 auto;
     list-style-type: none;
@@ -127,9 +128,12 @@ body.wizard {
     li {
       display: inline-block;
       vertical-align: top;
-      margin: 0 0 20px 0;
+      margin: 0 5px 25px 5px;
       label:checked + div {
         display: none;
+      }
+      .is-selected {
+        box-shadow: 0 0 0 5px $tertiary;
       }
       div {
         display: flex;
