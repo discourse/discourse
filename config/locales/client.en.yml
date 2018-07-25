@@ -785,7 +785,6 @@ en:
 
       change_avatar:
         title: "Change your profile picture"
-        label: "Change your profile picture"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
         gravatar_failed: "Could not fetch the Gravatar. Is there one associated to that email address?"
@@ -3996,7 +3995,7 @@ en:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regular User"
-      
+
       previews:
         topic_title: "Discussion topic"
         share_button: "Share"

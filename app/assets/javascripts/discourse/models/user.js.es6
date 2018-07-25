@@ -510,15 +510,10 @@ const User = RestModel.extend({
     );
   },
 
-  pickAvatar(upload_id, type, avatar_template) {
+  pickAvatar(upload_id, type) {
     return ajax(
       userPath(`${this.get("username_lower")}/preferences/avatar/pick`),
-      {
-        type: "PUT",
-        data: { upload_id, type }
-      }
-    ).then(() =>
-      this.setProperties({ avatar_template, uploaded_avatar_id: upload_id })
+      { type: "PUT", data: { upload_id, type } }
     );
   },
 
@@ -526,7 +521,7 @@ const User = RestModel.extend({
     return ajax(
       userPath(`${this.get("username_lower")}/preferences/avatar/select`),
       { type: "PUT", data: { url: avatarUrl } }
-    ).then(result => this.setProperties(result));
+    );
   },
 
   isAllowedToUploadAFile(type) {
