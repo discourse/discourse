@@ -608,8 +608,8 @@ class PostsController < ApplicationController
       :visible
     ]
 
-    if Post.permitted_create_params.present?
-      permitted.concat(Post.permitted_create_params.to_a)
+    Post.plugin_permitted_create_params.each do |key, plugin|
+      permitted << key if plugin.enabled?
     end
 
     # param munging for WordPress
