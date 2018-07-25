@@ -47,7 +47,7 @@ module Onebox
           escaped_url = ::Onebox::Helpers.normalize_url_for_output(og[:url])
 
           <<-HTML
-            <a href='#{escaped_url}' target='_blank'>
+            <a href='#{escaped_url}' target='_blank' class='onebox'>
               <img src='#{og[:image]}' #{Helpers.title_attr(og)} alt='CloudApp' width='480'>
             </a>
           HTML

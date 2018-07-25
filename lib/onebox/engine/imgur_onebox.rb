@@ -58,7 +58,7 @@ module Onebox
           escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
 
           <<-HTML
-            <a href='#{escaped_url}' target='_blank'>
+            <a href='#{escaped_url}' target='_blank' class="onebox">
               <img src='#{escaped_src}' #{Helpers.title_attr(og)} alt='Imgur' height='#{og[:image_height]}' width='#{og[:image_width]}'>
             </a>
           HTML
