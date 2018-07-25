@@ -14,7 +14,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def description_for_user(user)
-    info = UserOpenId.find_by(user_id: user.id)
+    info = UserOpenId.where("url LIKE ?", "#{@identifier}%").find_by(user_id: user.id)
     info&.email || ""
   end
 
