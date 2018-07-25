@@ -108,9 +108,12 @@
 
         .date-picker-wrapper,
         .combo-box,
-        .export-btn {
+        .export-csv-btn,
+        .refresh-report-btn {
           width: 100%;
+        }
 
+        .date-picker-wrapper {
           .date-picker {
             width: 100%;
             box-sizing: border-box;
