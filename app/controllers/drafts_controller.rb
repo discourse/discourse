@@ -6,44 +6,42 @@ class DraftsController < ApplicationController
   def index
     params.require(:username)
     params.permit(:offset)
-    per_chunk = 30
+    params.permit(:limit)
 
     user = fetch_user_from_params
 
-    opts = { user_id: user.id,
-             user: user,
-             offset: params[:offset].to_i,
-             limit: per_chunk }
+    opts = {
+      user: user,
+      offset: params[:offset],
+      limit: params[:limit]
+    }
 
     guardian.ensure_can_see_drafts!(user)
-
     stream = Draft.stream(opts)
-
     stream.each do |d|
-      parsedData = JSON.parse(d.data)
-      d.raw = parsedData['reply']
-      if parsedData['categoryId'].present? && !d.category_id.present?
-        d.category_id = parsedData['categoryId']
+      parsed_data = JSON.parse(d.data) rescue nil
+      if parsed_data
+        if parsed_data['reply']
+          d.raw = parsed_data['reply']
+        end
+        if parsed_data['categoryId'].present? && !d.category_id.present?
+          d.category_id = parsed_data['categoryId']
+        end
       end
     end
 
-    stream = stream.to_a
-
-    if stream.length == 0
-      help_key = "user_activity.no_drafts"
-      if user.id == guardian.user.try(:id)
-        help_key += ".self"
-      else
-        help_key += ".others"
-      end
-
-      render json: {
-        drafts: [],
-        no_results_help: I18n.t(help_key)
-      }
+    help_key = "user_activity.no_drafts"
+    if user == current_user
+      help_key += ".self"
     else
-      render_serialized(stream, DraftSerializer, root: 'drafts')
+      help_key += ".others"
     end
+
+    render json: {
+      drafts: serialize_data(stream, DraftSerializer),
+      no_results_help: I18n.t(help_key)
+    }
+
   end
 
 end

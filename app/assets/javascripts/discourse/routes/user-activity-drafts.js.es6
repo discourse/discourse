@@ -1,12 +1,7 @@
 export default Discourse.Route.extend({
   model() {
-    return this.modelFor("user").get("userDraftsStream");
-  },
-
-  afterModel() {
-    return this.modelFor("user")
-      .get("userDraftsStream")
-      .load();
+    let userDraftsStream = this.modelFor("user").get("userDraftsStream");
+    return userDraftsStream.load(this.site).then(() => userDraftsStream);
   },
 
   renderTemplate() {
@@ -15,6 +10,7 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     controller.set("model", model);
+    this.appEvents.on("draft:destroyed", this, this.refresh);
   },
 
   actions: {
@@ -22,9 +18,5 @@ export default Discourse.Route.extend({
       this.controllerFor("user-activity")._showFooter();
       return true;
     },
-
-    refreshDrafts() {
-      this.refresh();
-    }
   }
 });

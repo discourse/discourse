@@ -3,6 +3,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
+import User from "discourse/models/user";
 
 import {
   NEW_TOPIC_KEY,
@@ -10,17 +11,9 @@ import {
 } from "discourse/models/composer";
 
 export default RestModel.extend({
-  @on("init")
-  _attachCategory() {
-    const categoryId = this.get("category_id");
-    if (categoryId) {
-      this.set("category", Discourse.Category.findById(categoryId));
-    }
-  },
-
   @computed("draft_username")
-  editableDraft(draft_username) {
-    return draft_username === Discourse.User.currentProp("username");
+  editableDraft(draftUsername) {
+    return draftUsername === User.currentProp("username");
   },
 
   @computed("username")
@@ -34,8 +27,8 @@ export default RestModel.extend({
   },
 
   @computed("topic_id")
-  postUrl(topic_id) {
-    if (!topic_id) return;
+  postUrl(topicId) {
+    if (!topicId) return;
 
     return postUrl(
       this.get("slug"),

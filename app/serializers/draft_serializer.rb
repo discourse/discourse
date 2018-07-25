@@ -36,10 +36,6 @@ class DraftSerializer < ApplicationSerializer
     object.topic_closed
   end
 
-  def include_slug?
-    object.title.present?
-  end
-
   def archived
     object.topic_archived
   end

@@ -876,11 +876,7 @@ export default Ember.Controller.extend({
       }
 
       Draft.clear(key, this.get("model.draftSequence")).then(() => {
-        if (
-          this.get("application.currentRouteName") === "userActivity.drafts"
-        ) {
-          this.send("refreshDrafts");
-        }
+        this.appEvents.trigger('draft:destroyed', key);
       });
     }
   },

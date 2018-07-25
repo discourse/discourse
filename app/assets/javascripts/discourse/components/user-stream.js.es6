@@ -80,7 +80,7 @@ export default Ember.Component.extend(LoadMore, {
     removeDraft(draft) {
       const stream = this.get("stream");
       Draft.clear(draft.draft_key, draft.sequence).then(() => {
-        stream.remove(draft);
+        stream.load(this.site);
       });
     },
 

@@ -20,4 +20,21 @@ describe DraftController do
     expect(response.status).to eq(200)
     expect(Draft.get(user, 'xxx', 0)).to eq(nil)
   end
+
+end
+
+describe DraftsController do
+  it 'requires you to be logged in' do
+    get "/drafts.json"
+    expect(response.status).to eq(403)
+  end
+
+  it 'loads draft stream after saving a draft' do
+    user = sign_in(Fabricate(:user))
+    Draft.set(user, 'xxx', 0, 'hey')
+    get "/drafts.json", params: { username: user.username }
+    expect(response.status).to eq(200)
+    parsed = JSON.parse(response.body)
+    expect(parsed["drafts"].length).to eq(1)
+  end
 end

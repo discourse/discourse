@@ -46,9 +46,9 @@ class Draft < ActiveRecord::Base
   def self.stream(opts = nil)
     opts ||= {}
 
-    user_id = opts[:user_id]
-    offset = opts[:offset] || 0
-    limit = opts[:limit] || 30
+    user_id = opts[:user].id
+    offset = (opts[:offset] || 0).to_i
+    limit = (opts[:limit] || 30).to_i
 
     # JOIN of topics table based on manipulating draft_key seems imperfect
     builder = DB.build <<~SQL
@@ -75,8 +75,8 @@ class Draft < ActiveRecord::Base
     builder
       .where('d.user_id = :user_id', user_id: user_id.to_i)
       .order_by('d.updated_at desc')
-      .offset(offset.to_i)
-      .limit(limit.to_i)
+      .offset(offset)
+      .limit(limit)
       .query
   end
 

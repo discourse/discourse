@@ -28,11 +28,12 @@ export default RestModel.extend({
     "/drafts.json?offset=%@&username=%@"
   ),
 
-  load() {
+  load(site) {
     this.setProperties({
       itemsLoaded: 0,
       content: [],
-      lastLoadedUrl: null
+      lastLoadedUrl: null,
+      site: site
     });
     return this.findItems();
   },
@@ -82,6 +83,10 @@ export default RestModel.extend({
             draft.title = emojiUnescape(
               Handlebars.Utils.escapeExpression(draft.title)
             );
+            if (draft.category_id) {
+              draft.category = this.site.categories.findBy("id", draft.category_id) || null;
+            }
+
             copy.pushObject(UserDraft.create(draft));
           });
           this.get("content").pushObjects(copy);

@@ -4,15 +4,15 @@ import { NEW_TOPIC_KEY } from "discourse/models/composer";
 QUnit.module("model:user-drafts");
 
 QUnit.test("stream", assert => {
-  var user = Discourse.User.create({ id: 1, username: "eviltrout" });
-  var stream = user.get("userDraftsStream");
+  const user = Discourse.User.create({ id: 1, username: "eviltrout" });
+  const stream = user.get("userDraftsStream");
   assert.present(stream, "a user has a drafts stream by default");
   assert.equal(stream.get("itemsLoaded"), 0, "no items are loaded by default");
   assert.blank(stream.get("content"), "no content by default");
 });
 
 QUnit.test("draft", assert => {
-  var drafts = [
+  const drafts = [
     UserDraft.create({
       draft_key: "topic_1",
       post_number: "10"

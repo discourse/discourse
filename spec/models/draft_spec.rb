@@ -69,7 +69,7 @@ describe Draft do
     let(:public_topic) { public_post.topic }
 
     let(:stream) do
-      Draft.stream(user_id: @user.id)
+      Draft.stream(user: @user)
     end
 
     it "should include the correct number of drafts in the stream" do
