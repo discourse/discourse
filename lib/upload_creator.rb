@@ -140,8 +140,8 @@ class UploadCreator
 
     OptimizedImage.ensure_safe_paths!(from, to)
 
-    OptimizedImage.prepend_decoder!(from)
-    OptimizedImage.prepend_decoder!(to)
+    from = OptimizedImage.prepend_decoder!(from)
+    to = OptimizedImage.prepend_decoder!(to)
 
     begin
       execute_convert(from, to)
@@ -220,7 +220,7 @@ class UploadCreator
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
-    OptimizedImage.prepend_decoder!(path)
+    path = OptimizedImage.prepend_decoder!(path)
 
     Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
 
