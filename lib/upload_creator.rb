@@ -135,13 +135,19 @@ class UploadCreator
   def convert_to_jpeg!
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
-    OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
+    from = @file.path
+    to = jpeg_tempfile.path
+
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    OptimizedImage.prepend_decoder!(from)
+    OptimizedImage.prepend_decoder!(to)
 
     begin
-      execute_convert(@file, jpeg_tempfile)
+      execute_convert(from, to)
     rescue
       # retry with debugging enabled
-      execute_convert(@file, jpeg_tempfile, true)
+      execute_convert(from, to, true)
     end
 
     # keep the JPEG if it's at least 15% smaller
@@ -155,15 +161,18 @@ class UploadCreator
     end
   end
 
-  def execute_convert(input_file, output_file, debug = false)
-    command = ['convert', input_file.path,
-               '-auto-orient',
-               '-background', 'white',
-               '-interlace', 'none',
-               '-flatten',
-               '-quality', SiteSetting.png_to_jpg_quality.to_s]
-    command << '-debug' << 'all' if debug
-    command << output_file.path
+  def execute_convert(from, to, debug = false)
+    command = [
+      "convert",
+      from,
+      "-auto-orient",
+      "-background white",
+      "-interlace none",
+      "-flatten",
+      "-quality #{SiteSetting.png_to_jpg_quality}"
+    ]
+    command << "-debug all" if debug
+    command << to
 
     Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
   end
@@ -208,8 +217,13 @@ class UploadCreator
   end
 
   def fix_orientation!
-    OptimizedImage.ensure_safe_paths!(@file.path)
-    Discourse::Utils.execute_command('convert', @file.path, '-auto-orient', @file.path)
+    path = @file.path
+
+    OptimizedImage.ensure_safe_paths!(path)
+    OptimizedImage.prepend_decoder!(path)
+
+    Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
+
     extract_image_info!
   end
 
