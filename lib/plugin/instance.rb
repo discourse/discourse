@@ -92,18 +92,19 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def replace_flags
     settings = ::FlagSettings.new
     yield settings
 
     reloadable_patch do |plugin|
-      ::PostActionType.replace_flag_settings(settings) if plugin.enabled?
+      ::PostActionType.replace_flag_settings(settings)
     end
   end
 
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
-      ::User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
+      ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
     end
   end
 
@@ -114,9 +115,10 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_body_class(class_name)
     reloadable_patch do |plugin|
-      ::ApplicationHelper.extra_body_classes << class_name if plugin.enabled?
+      ::ApplicationHelper.extra_body_classes << class_name
     end
   end
 
@@ -172,27 +174,34 @@ class Plugin::Instance
     end
   end
 
+  # Add a post_custom_fields_whitelister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_whitelister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_whitelister(&block) if plugin.enabled?
+      ::TopicView.add_post_custom_fields_whitelister do |user|
+        return [] unless plugin.enabled?
+        block.call(user)
+      end
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_preloaded_group_custom_field(field)
     reloadable_patch do |plugin|
-      ::Group.preloaded_custom_field_names << field if plugin.enabled?
+      ::Group.preloaded_custom_field_names << field
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_preloaded_topic_list_custom_field(field)
     reloadable_patch do |plugin|
-      ::TopicList.preloaded_custom_fields << field if plugin.enabled?
+      ::TopicList.preloaded_custom_fields << field
     end
   end
 
+  # Add a permitted_create_param to Post, respecting if the plugin is enabled
   def add_permitted_post_create_param(name)
     reloadable_patch do |plugin|
-      ::Post.permitted_create_params << name if plugin.enabled?
+      ::Post.plugin_permitted_create_params[name] = plugin
     end
   end
 
@@ -278,27 +287,31 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_category_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      Category.register_custom_field_type(name, type) if plugin.enabled?
+      Category.register_custom_field_type(name, type)
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_topic_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      ::Topic.register_custom_field_type(name, type) if plugin.enabled?
+      ::Topic.register_custom_field_type(name, type)
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_post_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      ::Post.register_custom_field_type(name, type) if plugin.enabled?
+      ::Post.register_custom_field_type(name, type)
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_group_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      ::Group.register_custom_field_type(name, type) if plugin.enabled?
+      ::Group.register_custom_field_type(name, type)
     end
   end
 
