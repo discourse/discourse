@@ -118,12 +118,23 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
+  IM_DECODERS ||= /\A(jpe?g|png|tiff?|bmp|ico)\z/i
+
+  def self.prepend_decoder!(path)
+    extension = File.extname(path)[1..-1]
+    raise Discourse::InvalidAccess unless extension[IM_DECODERS]
+    "#{extension}:#{path}"
+  end
+
   def self.thumbnail_or_resize
     SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
   end
 
   def self.resize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
+
+    prepend_decoder!(from)
+    prepend_decoder!(to)
 
     # NOTE: ORDER is important!
     %W{
@@ -159,6 +170,9 @@ class OptimizedImage < ActiveRecord::Base
   def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
+    prepend_decoder!(from)
+    prepend_decoder!(to)
+
     %W{
       convert
       #{from}[0]
@@ -190,6 +204,9 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
+
+    prepend_decoder!(from)
+    prepend_decoder!(to)
 
     %W{
       convert
