@@ -55,7 +55,7 @@ task "emails:import" => :environment do
   end
 end
 
-desc "Check if we can connect to the SMTP server"
+desc "Check if SMTP connection is successful and send test message"
 task 'emails:test', [:email] => [:environment] do |_, args|
   email = args[:email]
   message = "OK"
