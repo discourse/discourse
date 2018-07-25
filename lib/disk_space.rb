@@ -2,6 +2,9 @@ class DiskSpace
 
   extend ActionView::Helpers::NumberHelper
 
+  DISK_SPACE_STATS_CACHE_KEY = 'disk_space_stats'.freeze
+  DISK_SPACE_STATS_UPDATED_CACHE_KEY = 'disk_space_stats_updated'.freeze
+
   def self.uploads_used_bytes
     # used(uploads_path)
     # temporary (on our internal setup its just too slow to iterate)
@@ -37,24 +40,35 @@ class DiskSpace
     }
   end
 
+  def self.reset_cached_stats
+    $redis.del(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
+    $redis.del(DISK_SPACE_STATS_CACHE_KEY)
+    compute_disk_space
+  end
+
   def self.cached_stats
-    stats = $redis.get('disk_space_stats')
-    updated_at = $redis.get('disk_space_stats_updated')
+    stats = $redis.get(DISK_SPACE_STATS_CACHE_KEY)
+    updated_at = $redis.get(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
 
     unless updated_at && (Time.now.to_i - updated_at.to_i) < 30.minutes
-      Scheduler::Defer.later "updated stats" do
-        $redis.set('disk_space_stats_updated', Time.now.to_i)
-        $redis.set('disk_space_stats', self.stats.to_json)
-      end
+      compute_disk_space
     end
 
     if stats
       JSON.parse(stats)
     end
-
   end
 
   protected
+
+  def self.compute_disk_space
+    Scheduler::Defer.later 'updated stats' do
+      $redis.set(DISK_SPACE_STATS_CACHE_KEY, self.stats.to_json)
+      $redis.set(DISK_SPACE_STATS_UPDATED_CACHE_KEY, Time.now.to_i)
+    end
+
+    nil
+  end
 
   def self.free(path)
     `df -Pk #{path} | awk 'NR==2 {print $4;}'`.to_i * 1024
