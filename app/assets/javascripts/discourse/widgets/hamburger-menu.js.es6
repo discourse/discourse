@@ -185,9 +185,7 @@ export default createWidget("hamburger-menu", {
 
     if (this.currentUser) {
       let categoryIds = this.currentUser.get("top_category_ids") || [];
-      categoryIds = categoryIds
-        .concat(categoriesList.map(c => c.id))
-        .uniq();
+      categoryIds = categoryIds.concat(categoriesList.map(c => c.id)).uniq();
 
       showMore = categoryIds.length > maxCategoriesToDisplay;
       categoryIds = categoryIds.slice(0, maxCategoriesToDisplay);
@@ -196,7 +194,7 @@ export default createWidget("hamburger-menu", {
         return categoriesList.find(c => c.id === id);
       });
     } else {
-      showMore = categoriesList.length > maxCategoriesToDisplay
+      showMore = categoriesList.length > maxCategoriesToDisplay;
       categories = categoriesList.slice(0, maxCategoriesToDisplay);
     }
 
