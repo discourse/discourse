@@ -434,6 +434,10 @@ export default Ember.Component.extend({
           const full = `:${term}`;
           term = term.toLowerCase();
 
+          if (term.length < self.siteSettings.emoji_autocomplete_min_chars) {
+            return resolve([]);
+          }
+
           if (term === "") {
             return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
           }

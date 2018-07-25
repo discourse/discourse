@@ -676,6 +676,11 @@ posting:
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
     default: true
+  emoji_autocomplete_min_chars:
+    client: true
+    default: 0
+    locale_default:
+      fr: 1
   approve_post_count:
     default: 0
   approve_unless_trust_level:
