@@ -114,7 +114,12 @@ body.wizard {
 }
 
 .wizard-step-colors {
+  margin-bottom: 20px;
   .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0;
     margin: 0 auto;
     list-style-type: none;
     text-align: center;
@@ -122,14 +127,26 @@ body.wizard {
     li {
       display: inline-block;
       vertical-align: top;
-      margin: 15px;
+      margin: 0 0 20px 0;
+      label:checked + div {
+        display: none;
+      }
+      div {
+        display: flex;
+        flex: 1 1 auto;
+      }
       .radio-area {
-        text-align: left;
-        font-size: 14px;
-        font-weight: bold;
+        display: none;
         & > * {
           position: relative;
           right: 7px;
+        }
+      }
+      canvas {
+        transition: box-shadow 0.25s;
+        &:hover {
+          box-shadow: shadow("card");
+          cursor: pointer;
         }
       }
     }

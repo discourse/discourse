@@ -7,7 +7,7 @@ import {
   LOREM
 } from "wizard/lib/preview";
 
-export default createPreviewComponent(225, 120, {
+export default createPreviewComponent(320, 165, {
   logo: null,
   avatar: null,
 
