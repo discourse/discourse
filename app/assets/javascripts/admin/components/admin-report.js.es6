@@ -111,6 +111,8 @@ export default Ember.Component.extend({
 
   showTimeoutError: Ember.computed.alias("model.timeout"),
 
+  hasData: Ember.computed.notEmpty("model.data"),
+
   @computed("dataSourceName", "model.type")
   dasherizedDataSourceName(dataSourceName, type) {
     return (dataSourceName || type || "undefined").replace(/_/g, "-");

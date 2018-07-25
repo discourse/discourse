@@ -2811,6 +2811,7 @@ en:
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
           total: "All time total"
+          no_data: "No data to display."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
