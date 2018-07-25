@@ -43,7 +43,7 @@ class DiskSpace
   def self.reset_cached_stats
     $redis.del(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
     $redis.del(DISK_SPACE_STATS_CACHE_KEY)
-    compute_disk_space
+    Jobs.enqueue(:update_disk_space)
   end
 
   def self.cached_stats
@@ -51,7 +51,7 @@ class DiskSpace
     updated_at = $redis.get(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
 
     unless updated_at && (Time.now.to_i - updated_at.to_i) < 30.minutes
-      compute_disk_space
+      Jobs.enqueue(:update_disk_space)
     end
 
     if stats
@@ -60,15 +60,6 @@ class DiskSpace
   end
 
   protected
-
-  def self.compute_disk_space
-    Scheduler::Defer.later 'updated stats' do
-      $redis.set(DISK_SPACE_STATS_CACHE_KEY, self.stats.to_json)
-      $redis.set(DISK_SPACE_STATS_UPDATED_CACHE_KEY, Time.now.to_i)
-    end
-
-    nil
-  end
 
   def self.free(path)
     `df -Pk #{path} | awk 'NR==2 {print $4;}'`.to_i * 1024
