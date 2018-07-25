@@ -166,12 +166,12 @@ class UploadCreator
       "convert",
       from,
       "-auto-orient",
-      "-background white",
-      "-interlace none",
+      "-background", "white",
+      "-interlace", "none",
       "-flatten",
-      "-quality #{SiteSetting.png_to_jpg_quality}"
+      "-quality", SiteSetting.png_to_jpg_quality.to_s
     ]
-    command << "-debug all" if debug
+    command << "-debug" << "all" if debug
     command << to
 
     Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
