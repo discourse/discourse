@@ -135,7 +135,7 @@ widgetTest("top categories - anonymous", {
     const count = this.site.get("categoriesList").length;
     const maximum =
       count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
-    assert.equal(this.$(".category-link").length, maximum);
+    assert.equal(find(".category-link").length, maximum);
   }
 });
 
@@ -214,9 +214,9 @@ widgetTest("top categories", {
   },
 
   test(assert) {
-    assert.equal(this.$(".category-link").length, maxCategoriesToDisplay);
+    assert.equal(find(".category-link").length, maxCategoriesToDisplay);
     assert.equal(
-      this.$(".category-link .category-name").text(),
+      find(".category-link .category-name").text(),
       "parent 4parent 5child 2parent 3childparent"
     );
   }
