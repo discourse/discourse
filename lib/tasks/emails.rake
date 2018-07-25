@@ -55,13 +55,6 @@ task "emails:import" => :environment do
   end
 end
 
-desc 'Send email test message'
-task 'emails:test_old', [:email] => [:environment] do |_, args|
-  email = args[:email]
-
-  Email::Sender.new(TestMailer.send_test(email), :test_message).send
-end
-
 desc "Check if we can connect to the SMTP server"
 task 'emails:test', [:email] => [:environment] do |_, args|
   email = args[:email]
