@@ -19,8 +19,9 @@ export default Ember.Component.extend(
     buildBuffer(buffer) {
       if (!this.get("executeAt")) return;
 
-      const topicClosed = this.get("topicClosed");
-      if (topicClosed !== undefined && (topicClosed ? "close" : "open") === this.get("statusType")) return;
+      const topicStatus = this.get("topicClosed") ? "close" : "open";
+      const topicStatusKnown = this.get("topicClosed") !== undefined;
+      if (topicStatusKnown && topicStatus === this.get("statusType")) return;
 
       let statusUpdateAt = moment(this.get("executeAt"));
 
