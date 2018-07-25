@@ -2,8 +2,6 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   queryParams: ["start_date", "end_date", "category_id", "group_id"],
-  categoryId: null,
-  groupId: null,
 
   @computed("model.type")
   reportOptions(type) {
@@ -16,21 +14,24 @@ export default Ember.Controller.extend({
     return options;
   },
 
+  @computed("category_id", "group_id", "start_date", "end_date")
+  filteringState(categoryId, groupId, startDate, endDate) {
+    return {
+      categoryId,
+      groupId,
+      startDate,
+      endDate
+    };
+  },
+
   actions: {
-    onSelectStartDate(startDate) {
-      this.set("start_date", startDate);
-    },
-
-    onSelectCategory(categoryId) {
-      this.set("category_id", categoryId);
-    },
-
-    onSelectGroup(groupId) {
-      this.set("group_id", groupId);
-    },
-
-    onSelectEndDate(endDate) {
-      this.set("end_date", endDate);
+    onParamsChange(params) {
+      this.setProperties({
+        start_date: params.startDate,
+        category_id: params.categoryId,
+        group_id: params.groupId,
+        end_date: params.endDate
+      });
     }
   }
 });

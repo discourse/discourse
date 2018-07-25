@@ -1,3 +1,4 @@
+import Category from "discourse/models/category";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { ajax } from "discourse/lib/ajax";
@@ -59,11 +60,10 @@ export default Ember.Component.extend({
   showDatesOptions: Ember.computed.alias("model.dates_filtering"),
   showGroupOptions: Ember.computed.alias("model.group_filtering"),
   showExport: Ember.computed.not("model.onlyTable"),
-  hasFilteringActions: Ember.computed.or(
+  showRefresh: Ember.computed.or(
     "showCategoryOptions",
     "showDatesOptions",
-    "showGroupOptions",
-    "showExport"
+    "showGroupOptions"
   ),
 
   init() {
@@ -74,6 +74,14 @@ export default Ember.Component.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
+
+    const state = this.get("filteringState");
+    this.setProperties({
+      category: Category.findById(state.categoryId),
+      groupId: state.groupId,
+      startDate: state.startDate,
+      endDate: state.endDate
+    });
 
     if (this.get("report")) {
       this._renderReport(
@@ -131,16 +139,6 @@ export default Ember.Component.extend({
         icon: mode === "table" ? "table" : "signal"
       };
     });
-  },
-
-  @computed()
-  categoryOptions() {
-    const arr = [{ name: I18n.t("category.all"), value: "all" }];
-    return arr.concat(
-      Discourse.Site.currentProp("sortedCategories").map(i => {
-        return { name: i.get("name"), value: i.get("id") };
-      })
-    );
   },
 
   @computed()
@@ -207,6 +205,15 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    refreshReport() {
+      this.attrs.onRefresh({
+        categoryId: this.get("category.id"),
+        groupId: this.get("groupId"),
+        startDate: this.get("startDate"),
+        endDate: this.get("endDate")
+      });
+    },
+
     exportCsv() {
       exportEntity("report", {
         name: this.get("model.type"),

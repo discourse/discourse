@@ -73,7 +73,6 @@
       {{/unless}}
 
       {{#if showFilteringUI}}
-      {{#if hasFilteringActions}}
         <div class="report-filters">
           {{#if showDatesOptions}}
             <div class="filtering-control">
@@ -84,8 +83,7 @@
               <div class="filtering-input">
                 {{date-picker-past
                   value=startDate
-                  defaultDate=startDate
-                  onSelect=onSelectStartDate}}
+                  defaultDate=startDate}}
               </div>
             </div>
 
@@ -97,8 +95,7 @@
               <div class="filtering-input">
                 {{date-picker-past
                   value=endDate
-                  defaultDate=endDate
-                  onSelect=onSelectEndDate}}
+                  defaultDate=endDate}}
               </div>
             </div>
           {{/if}}
@@ -106,13 +103,10 @@
           {{#if showCategoryOptions}}
             <div class="filtering-control">
               <div class="filtering-input">
-                {{combo-box
-                  onSelect=onSelectCategory
+                {{search-advanced-category-chooser
                   filterable=true
-                  valueAttribute="value"
-                  content=categoryOptions
-                  castInteger=true
-                  value=categoryId}}
+                  value=category
+                  castInteger=true}}
               </div>
             </div>
           {{/if}}
@@ -121,7 +115,6 @@
             <div class="filtering-control">
               <div class="filtering-input">
                 {{combo-box
-                  onSelect=onSelectGroup
                   castInteger=true
                   filterable=true
                   valueAttribute="value"
@@ -134,12 +127,27 @@
           {{#if showExport}}
             <div class="filtering-control">
               <div class="filtering-input">
-                {{d-button class="export-btn" action="exportCsv" label="admin.export_csv.button_text" icon="download"}}
+                {{d-button
+                  class="export-csv-btn"
+                  action="exportCsv"
+                  label="admin.export_csv.button_text"
+                  icon="download"}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if showRefresh}}
+            <div class="filtering-control">
+              <div class="filtering-input">
+                {{d-button
+                  class="refresh-report-btn btn-primary"
+                  action="refreshReport"
+                  label="admin.dashboard.reports.refresh_report"
+                  icon="refresh"}}
               </div>
             </div>
           {{/if}}
         </div>
-      {{/if}}
       {{/if}}
     </div>
 
