@@ -58,7 +58,7 @@ class ColorScheme < ActiveRecord::Base
     },
     # By @mikechristopher
     'Latte': {
-      "primary" =>           'f2e507',
+      "primary" =>           'f2e5d7',
       "secondary" =>         '262322',
       "tertiary" =>          'f7f2ed',
       "quaternary" =>        'd7c9aa',
