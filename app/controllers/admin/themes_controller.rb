@@ -97,7 +97,7 @@ class Admin::ThemesController < Admin::AdminController
   def index
     @theme = Theme.order(:name).includes(:theme_fields, :remote_theme)
     @color_schemes = ColorScheme.all.to_a
-    light = ColorScheme.new(name: I18n.t("color_schemes.default"))
+    light = ColorScheme.new(name: I18n.t("color_schemes.light"))
     @color_schemes.unshift(light)
 
     payload = {
