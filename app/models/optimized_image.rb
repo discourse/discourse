@@ -123,7 +123,7 @@ class OptimizedImage < ActiveRecord::Base
   def self.prepend_decoder!(path)
     extension = File.extname(path)[1..-1]
     raise Discourse::InvalidAccess unless extension[IM_DECODERS]
-    path = "#{extension}:#{path}"
+    "#{extension}:#{path}"
   end
 
   def self.thumbnail_or_resize
@@ -133,8 +133,8 @@ class OptimizedImage < ActiveRecord::Base
   def self.resize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    prepend_decoder!(from)
-    prepend_decoder!(to)
+    from = prepend_decoder!(from)
+    to = prepend_decoder!(to)
 
     # NOTE: ORDER is important!
     %W{
@@ -170,8 +170,8 @@ class OptimizedImage < ActiveRecord::Base
   def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    prepend_decoder!(from)
-    prepend_decoder!(to)
+    from = prepend_decoder!(from)
+    to = prepend_decoder!(to)
 
     %W{
       convert
@@ -205,8 +205,8 @@ class OptimizedImage < ActiveRecord::Base
   def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    prepend_decoder!(from)
-    prepend_decoder!(to)
+    from = prepend_decoder!(from)
+    to = prepend_decoder!(to)
 
     %W{
       convert
