@@ -290,6 +290,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         user.reload
         expect(user.email).to eq(old_email)
 
+        delete "/session/#{user.username}" # log out
+
         response = login(new_identity)
         expect(response['authenticated']).to eq(nil)
         expect(response['email']).to eq(new_email)
