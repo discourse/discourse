@@ -3,6 +3,7 @@
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
 //= require ./ember-addons/fmt
+//= require ./polyfills
 //= require_tree ./discourse-common
 //= require_tree ./select-kit
 //= require ./discourse
