@@ -874,6 +874,9 @@ export default Ember.Component.extend({
         return;
       }
 
+      this.set("linkUrl", "");
+      this.set("linkText", "");
+
       this._lastSel = this._getSelected();
 
       if (this._lastSel) {
@@ -947,9 +950,6 @@ export default Ember.Component.extend({
           this._selectText(sel.start + 1, origLink.length);
         }
       }
-
-      this.set("linkUrl", "");
-      this.set("linkText", "");
     },
 
     emoji() {
