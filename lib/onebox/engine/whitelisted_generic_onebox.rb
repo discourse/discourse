@@ -308,7 +308,7 @@ module Onebox
           width  = data[:image_width]  || data[:thumbnail_width]  || data[:width]
           height = data[:image_height] || data[:thumbnail_height] || data[:height]
 
-          "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}'>"
+          "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}' class='onebox'>"
         end
 
         def video_html

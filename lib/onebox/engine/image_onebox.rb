@@ -18,7 +18,7 @@ module Onebox
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(@url)
 
         <<-HTML
-          <a href="#{escaped_url}" target="_blank">
+          <a href="#{escaped_url}" target="_blank" class="onebox">
             <img src="#{escaped_url}">
           </a>
         HTML
