@@ -13,7 +13,7 @@ QUnit.test("does not display uncategorized if not allowed", async assert => {
   await visit("/");
   await click("#create-topic");
 
-  categoryChooser.expandAwait();
+  await categoryChooser.expandAwait();
 
   assert.ok(categoryChooser.rowByIndex(0).name() !== "uncategorized");
 });
