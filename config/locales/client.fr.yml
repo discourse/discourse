@@ -488,15 +488,12 @@ fr:
       "14": "En attente"
     categories:
       all: "toutes les catégories"
-      all_subcategories: "tout dans %{categoryName}"
       no_subcategory: "aucune"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
       reorder:
         title: "Réordonner les catégories"
         title_long: "Réorganiser la liste des catégories"
-        fix_order: "Corriger les positions"
-        fix_order_tooltip: "Toutes les catégories n'ont pas une position unique. Cela peut provoquer des résultats non souhaités."
         save: "Enregistrer l'ordre"
         apply_all: "Appliquer"
         position: "Position"
@@ -708,7 +705,6 @@ fr:
         upload_title: "Envoyer votre avatar"
         upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
-        cache_notice: "Votre photo de profil a bien été modifié, mais il se peut qu'il mette un certain temps à apparaître à cause des caches de navigateur."
       change_profile_background:
         title: "Arrière-plan du profil"
         instructions: "L'arrière-plan du profil sera centré avec une largeur par défaut de 850 pixels."
@@ -896,7 +892,6 @@ fr:
         most_liked_users: "A le plus aimé"
         most_replied_to_users: "A le plus répondu à"
         no_likes: "Pas encore de J'aime."
-      associated_accounts: "Identifiants"
       ip_address:
         title: "Dernières adresses IP"
       registration_ip_address:
@@ -1064,9 +1059,6 @@ fr:
       preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
       forgot: "J'ai oublié les détails de mon compte"
       not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par mail lorsque vous pourrez vous connecter."
-      google:
-        title: "via Google"
-        message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       google_oauth2:
         title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
@@ -1899,7 +1891,6 @@ fr:
           inappropriate: "Annuler le signalement"
           bookmark: "Retirer le signet"
           like: "Annuler le J'aime"
-          vote: "Retirer le vote"
         people:
           off_topic: "signalé comme hors-sujet"
           spam: "signalé comme spam"
@@ -1911,7 +1902,6 @@ fr:
           like_capped:
             one: "et {{count}} autre a aimé ça"
             other: "et {{count}} autres ont aimé ça"
-          vote: "a voté pour ceci"
         by_you:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
           spam: "Vous l'avez signalé comme étant du spam"
@@ -1920,7 +1910,6 @@ fr:
           notify_user: "Vous avez envoyé un message à cet utilisateur"
           bookmark: "Vous avez mis un signet à ce message"
           like: "Vous l'avez aimé"
-          vote: "Vous avez voté pour ce message"
         by_you_and_others:
           off_topic:
             one: "Vous et 1 autre personne l'avez signalé comme étant hors-sujet"
@@ -1943,9 +1932,6 @@ fr:
           like:
             one: "Vous et 1 autre personne l'ont aimé"
             other: "Vous et {{count}} autres personnes l'ont aimé"
-          vote:
-            one: "Vous et 1 autre personne ont voté pour"
-            other: "Vous et {{count}} autres personnes ont voté pour"
         by_others:
           off_topic:
             one: "1 personne l'a signalé comme étant hors-sujet"
@@ -1968,9 +1954,6 @@ fr:
           like:
             one: "1 personne a aimé ceci"
             other: "{{count}} personnes ont aimé ceci"
-          vote:
-            one: "1 personne a voté pour ce message"
-            other: "{{count}} personnes ont voté pour ce message"
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
@@ -2016,7 +1999,6 @@ fr:
       can: 'peut&hellip; '
       none: '(aucune catégorie)'
       all: 'Toutes les catégories'
-      choose: 'Sélectionner une catégorie&hellip;'
       edit: 'modifier'
       edit_long: "Modifier"
       view: 'Voir les sujets dans la catégorie'
@@ -2065,7 +2047,6 @@ fr:
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
       subcategory_num_featured_topics: "Nombre de sujets à la une sur la page de la catégorie parente :"
-      all_topics_wiki: "Faire des nouveaux sujets des Wikis par défaut"
       subcategory_list_style: "Style des listes de sous-catégories :"
       sort_order: "Trier la liste de sujets par :"
       default_view: "Liste de sujets par défaut :"
@@ -2074,7 +2055,6 @@ fr:
       edit_permissions: "Modifier les permissions"
       add_permission: "Ajouter la permission"
       this_year: "cette année"
-      position: "position"
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste,"
       position_disabled_click: 'activer le paramètre "fixed category positions"'
@@ -3069,7 +3049,6 @@ fr:
             address_placeholder: "nom@exemple.com"
             type_placeholder: "résumé, inscription…"
             reply_key_placeholder: "clé de réponse"
-            skipped_reason_placeholder: "raison"
       moderation_history:
         performed_by: "Réalisé par"
         no_results: "Il n'y a pas d'historique de modération disponible."

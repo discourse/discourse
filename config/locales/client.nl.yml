@@ -432,8 +432,6 @@ nl:
       reorder:
         title: "Categorieën herschikken "
         title_long: "De categorielijst opnieuw ordenen"
-        fix_order: "Posities corrigeren"
-        fix_order_tooltip: "Niet alle categorieën hebben een uniek positienummer. Dit kan tot onverwachte resultaten leiden."
         save: "Volgorde opslaan"
         apply_all: "Toepassen"
         position: "Positie"
@@ -622,7 +620,6 @@ nl:
         upload_title: "Uw afbeelding uploaden"
         upload_picture: "Afbeelding uploaden"
         image_is_not_a_square: "Waarschuwing: we hebben uw afbeelding bijgesneden; breedte en hoogte waren niet gelijk."
-        cache_notice: "U hebt uw profielafbeelding met succes gewijzigd, maar door bufferwerking van uw browser kan het even duren voordat deze overal zichtbaar is."
       change_profile_background:
         title: "Profielachtergrond"
         instructions: "Profielachtergronden worden gecentreerd en hebben een standaardbreedte van 850px."
@@ -805,7 +802,6 @@ nl:
         most_liked_users: "Meest geliket"
         most_replied_to_users: "Meest geantwoord op"
         no_likes: "Nog geen likes."
-      associated_accounts: "Aanmeldingen"
       ip_address:
         title: "Laatste IP-adres"
       registration_ip_address:
@@ -954,9 +950,6 @@ nl:
       preferences: "U dient aangemeld te zijn om uw gebruikersvoorkeuren te wijzigen."
       forgot: "Ik kan me de details van mijn gebruikersaccount niet herinneren."
       not_approved: "Uw account is nog niet goedgekeurd. U ontvangt een melding via e-mail zodra u zich kunt aanmelden."
-      google:
-        title: "met Google"
-        message: "Authenticeren met Google (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
       google_oauth2:
         title: "met Google"
         message: "Authenticeren met Google (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
@@ -1665,7 +1658,6 @@ nl:
           inappropriate: "Markering verwijderen"
           bookmark: "Bladwijzer verwijderen"
           like: "Like ongedaan maken"
-          vote: "Stem ongedaan maken"
         people:
           off_topic: "heeft dit als off-topic gemarkeerd"
           spam: "heeft dit als spam gemarkeerd"
@@ -1674,7 +1666,6 @@ nl:
           notify_user: "heeft een bericht gestuurd"
           bookmark: "heeft dit aan bladwijzers toegevoegd"
           like: "heeft dit geliket"
-          vote: "heeft hiervoor gestemd"
         by_you:
           off_topic: "U hebt dit als off-topic gemarkeerd"
           spam: "U hebt dit als spam gemarkeerd"
@@ -1683,7 +1674,6 @@ nl:
           notify_user: "U hebt een bericht naar deze gebruiker gestuurd"
           bookmark: "U hebt een bladwijzer voor dit bericht gemaakt"
           like: "U hebt dit geliket"
-          vote: "U hebt op dit bericht gestemd"
         by_you_and_others:
           off_topic:
             one: "U en 1 andere persoon hebben dit als off-topic gemarkeerd"
@@ -1706,9 +1696,6 @@ nl:
           like:
             one: "U en 1 andere persoon hebben dit geliket"
             other: "U en {{count}} andere personen hebben dit geliket"
-          vote:
-            one: "U en 1 andere persoon hebben op dit bericht gestemd"
-            other: "U en {{count}} andere personen hebben op dit bericht gestemd"
         by_others:
           off_topic:
             one: "1 persoon heeft dit als off-topic gemarkeerd"
@@ -1731,9 +1718,6 @@ nl:
           like:
             one: "1 persoon heeft dit geliket"
             other: "{{count}} personen hebben dit geliket"
-          vote:
-            one: "1 persoon heeft op dit bericht gestemd"
-            other: "{{count}} personen hebben op dit bericht gestemd"
       merge:
         confirm:
           one: "Weet je zeker dat je die berichten wilt samenvoegen?"
@@ -1775,7 +1759,6 @@ nl:
       can: 'kan...'
       none: '(geen categorie)'
       all: 'Alle categorieën'
-      choose: 'Selecteer een categorie&hellip;'
       edit: 'bewerken'
       edit_long: "Bewerken"
       view: 'Topics in categorie weergeven'
@@ -1822,7 +1805,6 @@ nl:
       show_subcategory_list: "Subcategorielijsten boven topics tonen in deze categorie"
       num_featured_topics: "Aantal getoonde topics op de categoriepagina:"
       subcategory_num_featured_topics: "Aantal aanbevolen topics op pagina van bovenliggende categorie:"
-      all_topics_wiki: "Standaard wiki's van nieuwe topics maken"
       subcategory_list_style: "Stijl van subcategorielijst:"
       sort_order: "Topiclijst sorteren op:"
       default_view: "Standaard topiclijst:"
@@ -1831,7 +1813,6 @@ nl:
       edit_permissions: "Toestemmingen wijzigen"
       add_permission: "Toestemming toevoegen"
       this_year: "dit jaar"
-      position: "positie"
       default_position: "Standaardpositie"
       position_disabled: "Categorieën worden op volgorde van activiteit weergegeven. Om de volgorde van categorieën in lijsten aan te passen, "
       position_disabled_click: 'schakelt u de instelling ''vaste categorieposities'' in.'
@@ -2694,7 +2675,6 @@ nl:
             address_placeholder: "naam@example.com"
             type_placeholder: "samenvatting, registratie"
             reply_key_placeholder: "antwoordtoets"
-            skipped_reason_placeholder: "reden"
       logs:
         title: "Logboeken"
         action: "Actie"

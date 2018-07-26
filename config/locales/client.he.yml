@@ -443,8 +443,6 @@ he:
       reorder:
         title: "שנה סדר קטגוריות"
         title_long: "ארגן מחדש את רשימת הקטגוריות"
-        fix_order: "סדר מיקומים"
-        fix_order_tooltip: "לא לכל הקטגוריות יש מספר סידורי יחודי, זה עלול לגרום לבעיות."
         save: "שמור סדר"
         apply_all: "החל"
         position: "מיקום"
@@ -630,7 +628,6 @@ he:
         upload_title: "העלו את התמונה שלכם"
         upload_picture: "העלאת תמונה"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
-        cache_notice: "שינית את תמונת הפרופיל שלך בהצלחה אבל יכול לקחת קצת זמן    עד שהתמונה תופיע."
       change_profile_background:
         title: "שינוי רקע פרופיל"
         instructions: "רקעי הפרופיל ימורכזו ויוצגו ברוחב ברירת מחדל של 850px."
@@ -821,7 +818,6 @@ he:
         most_liked_users: "נאהב ביותר"
         most_replied_to_users: "הכי הרבה נענו"
         no_likes: "עדיין אין לייקים."
-      associated_accounts: "התחברויות"
       ip_address:
         title: "כתובת IP אחרונה"
       registration_ip_address:
@@ -972,9 +968,6 @@ he:
       preferences: "אתם צריכים להיות מחוברים כדי לשנות את העדפות המשתמש שלכם."
       forgot: "אין לי את פרטי החשבון שלי"
       not_approved: "החשבון שלכם עדיין לא אושר. אתם תיודעו במייל כשתוכלו להתחבר."
-      google:
-        title: "עם גוגל"
-        message: "התחברות עם גוגל (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       google_oauth2:
         title: "בעזרת Google"
         message: "התחברות מאובטחת באמצעות גוגל (בדקו שחוסם החלונות הקופצים שלכם אינו מופעל)"
@@ -1687,7 +1680,6 @@ he:
           inappropriate: "ביטול דיגול"
           bookmark: "בטל העדפה"
           like: "בטל לייק"
-          vote: "בטל הצבעה"
         people:
           off_topic: "דוגל כאוף-טופיק"
           spam: "דוגל כספאם"
@@ -1696,7 +1688,6 @@ he:
           notify_user: "נשלחה הודעה"
           bookmark: "סומן"
           like: "אהבו את זה"
-          vote: "הצביעו לזה"
         by_you:
           off_topic: "דיגלתם פרסום זה כאוף-טופיק"
           spam: "דיגלתם את זה כספאם"
@@ -1705,7 +1696,6 @@ he:
           notify_user: "שלחתם הודעה למשתמש זה"
           bookmark: "סימנתם פוסט זה עם סימנייה"
           like: "נתת לזה לייק"
-          vote: "הצבעתם לפוסט זה"
         by_you_and_others:
           off_topic:
             one: "אתם ועוד אחד דיגלתם את זה כאוף-טופיק"
@@ -1742,11 +1732,6 @@ he:
             two: "אתה ועוד {{count}} אנשים אחרים נתתם לייק לזה"
             many: "אתה ועוד {{count}} אנשים אחרים נתתם לייק לזה"
             other: "אתה ועוד {{count}} אנשים אחרים נתתם לייק לזה"
-          vote:
-            one: "אתה ועוד אחד הצבעתם לפוסט זה"
-            two: "אתה ועוד {{count}} אנשים אחרים הצבעתם לפוסט זה"
-            many: "אתה ועוד {{count}} אנשים אחרים הצבעתם לפוסט זה"
-            other: "אתה ועוד {{count}} אנשים אחרים הצבעתם לפוסט זה"
         by_others:
           off_topic:
             one: "אדם אחד דיגל את זה כאוף-טופיק"
@@ -1783,11 +1768,6 @@ he:
             two: "{{count}} אנשים נתנו לזה לייק"
             many: "{{count}} אנשים נתנו לזה לייק"
             other: "{{count}} אנשים נתנו לזה לייק"
-          vote:
-            one: "אדם אחד הצביע לפוסט זה"
-            two: "{{count}} אנשים הצביעו לפוסט זה"
-            many: "{{count}} אנשים הצביעו לפוסט זה"
-            other: "{{count}} אנשים הצביעו לפוסט זה"
       merge:
         confirm:
           one: "האם אתם בטוחים שאתם מעוניינים למזג פוסטים אלו?"
@@ -1831,7 +1811,6 @@ he:
       can: 'יכול&hellip; '
       none: '(ללא קטגוריה)'
       all: 'כל הקטגוריות'
-      choose: 'בחר קטגוריה&hellip;'
       edit: 'ערוך'
       edit_long: "עריכה"
       view: 'הצגת נושאים בקטגוריה'
@@ -1877,7 +1856,6 @@ he:
       show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
       num_featured_topics: "מספר הנושאים המוצגים בדף הקטגוריות:"
       subcategory_num_featured_topics: "מספר הנושאים המומלצים בדף קטגוריית ההורה:"
-      all_topics_wiki: "כברירת מחדל נושאים חדשים יהיו וויקי."
       subcategory_list_style: "סגנון רשימות קטגוריות משנה:"
       sort_order: "סידור ברירת מחדל לנושאים:"
       default_view: "תצוגת ברירת מחדל לנושאים:"
@@ -1886,7 +1864,6 @@ he:
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
       this_year: "השנה"
-      position: "מיקום"
       default_position: "מיקום ברירת מחדל"
       position_disabled: "קטגוריות יוצגו על פס סדר הפעילות. כדי לשלוט בסדר הקטגורייות ברשימה,"
       position_disabled_click: 'אפשרו את ההגדרה "סדר קטגוריות קבוע".'
@@ -2776,7 +2753,6 @@ he:
             address_placeholder: "name@example.com"
             type_placeholder: "תמצית, הרשמה..."
             reply_key_placeholder: "מפתח תגובה"
-            skipped_reason_placeholder: "סיבה"
       logs:
         title: "לוגים"
         action: "פעולה"

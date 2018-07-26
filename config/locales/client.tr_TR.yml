@@ -192,7 +192,7 @@ tr_TR:
     terms_of_service: "Kullanım Koşulları"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünüm"
-    you: "Siz"
+    you: "Sen"
     or: "ya da"
     now: "hemen şimdi"
     read_more: 'devamını oku'
@@ -221,6 +221,8 @@ tr_TR:
       our_moderators: "Moderatörlerimiz"
       stat:
         all_time: "Tüm Zamanlar"
+        last_7_days: "Son 7"
+        last_30_days: "Son 30"
       like_count: "Beğeni"
       topic_count: "Konular"
       post_count: "Gönderiler"
@@ -401,6 +403,8 @@ tr_TR:
         closed: "Kapanmış"
         public: "Herkese Açık"
         private: "Özel"
+        public_groups: "Açık Gruplar"
+        automatic_group: Otomatik Grup
       title:
         one: "Gruplar"
         other: "Gruplar"
@@ -465,8 +469,6 @@ tr_TR:
       reorder:
         title: "Kategorileri Yeniden Sırala"
         title_long: "Kategori listesini yeniden yapılandır"
-        fix_order: "Konumları Onar"
-        fix_order_tooltip: "Bütün kategoriler eşsiz bir konum numarasına sabit değil, bu beklenmedik sonuçlara neden olabilir."
         save: "Sıralamayı Kaydet"
         apply_all: "Uygula"
         position: "Konum"
@@ -524,6 +526,7 @@ tr_TR:
       notifications: "Bildirimler"
       statistics: "Sayıtımlar"
       desktop_notifications:
+        label: "Canlı Bildirimler"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
         perm_default: "Bildirimleri Etkinleştirin"
         perm_denied_btn: "Erişim İzni Reddedildi"
@@ -666,7 +669,6 @@ tr_TR:
         upload_title: "Resminizi yükleyin"
         upload_picture: "Resim Yükle"
         image_is_not_a_square: "Uyarı: resminizi kırptık; genişlik ve yükseklik eşit değildi."
-        cache_notice: "Profil resminizi başarıyla değiştirdiniz fakat tarayıcı önbelleklemesi nedeniyle görünür olması biraz zaman alabilir."
       change_profile_background:
         title: "Profil Arkaplanı"
         instructions: "Profil arkaplanları ortalanacak ve genişlikleri 850px olacak. "
@@ -853,7 +855,6 @@ tr_TR:
         most_liked_users: "En Çok Beğenme"
         most_replied_to_users: "En Çok Cevaplanan"
         no_likes: "Henüz bir beğeni bulunmuyor."
-      associated_accounts: "Girişler"
       ip_address:
         title: "Son IP Adresi"
       registration_ip_address:
@@ -1014,9 +1015,6 @@ tr_TR:
       preferences: "Tercihlerinizi değiştirebilmek için giriş yapmanız gerekiyor."
       forgot: "Hesap bilgilerimi hatırlamıyorum"
       not_approved: "Hesabınız henüz onaylanmış değil. Onaylandığında mail ile bilgilendirileceksiniz."
-      google:
-        title: "Google ile"
-        message: "Google ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
       google_oauth2:
         title: "Google ile"
         message: "Google ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
@@ -1769,7 +1767,6 @@ tr_TR:
           inappropriate: "Bildirimi geri al"
           bookmark: "İmlemeyi geri al"
           like: "Beğenini geri al"
-          vote: "Oyunu geri al"
         people:
           off_topic: "konu dışı olarak bildirildi"
           spam: "istenmeyen olarak bildirildi"
@@ -1778,7 +1775,6 @@ tr_TR:
           notify_user: "ileti gönderdi"
           bookmark: "bunu imledi"
           like: "beğendi"
-          vote: "oyladı"
         by_you:
           off_topic: "Bunu konu dışı olarak bildirdiniz"
           spam: "Bunu istenmeyen olarak bildirdiniz"
@@ -1787,7 +1783,6 @@ tr_TR:
           notify_user: "Bu kullanıcıya ileti yolladınız"
           bookmark: "Bu gönderiyi imlediniz"
           like: "Bunu beğendiniz"
-          vote: "Bu gönderiyi oyladınız"
         by_you_and_others:
           off_topic:
             one: "Siz ve {{count}} diğer kişi bunu konu dışı olarak bildirdi"
@@ -1810,9 +1805,6 @@ tr_TR:
           like:
             one: "Siz ve {{count}} başka kişi bunu beğendi"
             other: "Siz ve {{count}} başka kişi bunu beğendi"
-          vote:
-            one: "Siz ve {{count}} kişi bu gönderiyi oyladı"
-            other: "Siz ve {{count}} kişi bu gönderiyi oyladı"
         by_others:
           off_topic:
             one: "{{count}} kişi bunu konu dışı olarak bildirdi"
@@ -1835,9 +1827,6 @@ tr_TR:
           like:
             one: "{{count}} kişi bunu beğendi"
             other: "{{count}} kişi bunu beğendi"
-          vote:
-            one: "{{count}} kişi bu gönderiyi oyladı"
-            other: "{{count}} kişi bu gönderiyi oyladı"
       revisions:
         controls:
           first: "İlk revizyon"
@@ -1868,7 +1857,6 @@ tr_TR:
       can: 'yapabilir&hellip;'
       none: '(kategori yok)'
       all: 'Tüm kategoriler'
-      choose: 'Kategori seç&hellip;'
       edit: 'düzenle'
       edit_long: "Düzenle"
       view: 'Bu Kategorideki Konuları Görüntüle'
@@ -1912,12 +1900,10 @@ tr_TR:
       email_in_allow_strangers: "Hesabı olmayan, anonim kullanıcılardan e-posta kabul et"
       email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
       email_in_disabled_click: '"e-postala" ayarını etkinleştir'
-      all_topics_wiki: "Yeni konuyu varsayılan olarak wiki yap"
       allow_badges_label: "Bu kategoride rozet verilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
       add_permission: "İzin Ekle"
       this_year: "bu yıl"
-      position: "konum"
       default_position: "Öntanımlı Konum"
       position_disabled: "Kategoriler etkinlik sıralarına göre görünecekler. Listelerdeki kategorilerin sıralamalarını kontrol edebilmek için,"
       position_disabled_click: '"sabitlenmiş kategori konumları" ayarını etkinleştirin.'
@@ -2730,7 +2716,6 @@ tr_TR:
             address_placeholder: "isim@örnek.com"
             type_placeholder: "özet, kayıt olma..."
             reply_key_placeholder: "cevapla tuşu"
-            skipped_reason_placeholder: "neden"
       logs:
         title: "Kayıtlar"
         action: "Eylem"

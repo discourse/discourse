@@ -637,7 +637,6 @@ sr:
         most_liked_users: "Najviše sviđanja"
         most_replied_to_users: "Najviše odgovora ka"
         no_likes: "Bez sviđanja, još uvek"
-      associated_accounts: "Logovanja"
       ip_address:
         title: "Posljednja IP adresa"
       registration_ip_address:
@@ -744,9 +743,6 @@ sr:
       admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
       resend_activation_email: "Pritisnite ovde da ponovno pošaljemo aktivacijski e-mail."
       sent_activation_email_again: "Poslali smo vam drugi aktivacijski e-mail na: <b>{{currentEmail}}</b>. Možda zatreba par minuta da stigne; svakako proverite nepoželjnu poštu."
-      google:
-        title: "pomoću Google-a"
-        message: "Autentifikacija pomoću Google-a (isključite pop-up blokere)"
       google_oauth2:
         title: "pomoću Google-a"
         message: "Autentifikacija pomoću Googlea (isključite pop-up blokere)"
@@ -1143,7 +1139,6 @@ sr:
           inappropriate: "Poništi oznaku zastavom"
           bookmark: "Poništi Marker"
           like: "Poništi Lajk"
-          vote: "Poništi Glas"
         by_you:
           off_topic: "Označili ste ovo kao van teme"
           spam: "Označili ste ovo kao nepoželjno."
@@ -1151,7 +1146,6 @@ sr:
           notify_moderators: "Označili ste ovo za moderatore"
           bookmark: "Markirali ste ovu poruku"
           like: "Sviđa vam se ovo"
-          vote: "Glasali ste za ovu poruku"
         by_you_and_others:
           off_topic:
             one: "Ti i {{count}} drugi korisnik označili ste ovo kao van teme"
@@ -1177,10 +1171,6 @@ sr:
             one: "Tebi i {{count}} drugom korisniku se ovo sviđa."
             few: "Tebi i {{count}} drugih korisnika se ovo sviđa."
             other: "Tebi i {{count}} drugih korisnika se ovo sviđa."
-          vote:
-            one: "Ti i {{count}} drugi korisnik ste glasali za ovu poruku"
-            few: "Ti i {{count}} drugih korisnika ste glasali za ovu poruku"
-            other: "Ti i {{count}} drugih korisnika ste glasali za ovu poruku"
         by_others:
           off_topic:
             one: "{{count}} korisnika označilo je ovo kao van teme"
@@ -1206,10 +1196,6 @@ sr:
             one: "{{count}} korisnik se ovo sviđa"
             few: "{{count}} korisnika se ovo sviđa"
             other: "{{count}} korisnika se ovo sviđa"
-          vote:
-            one: "{{count}} korisnik je glasalo za ovu poruku"
-            few: "{{count}} korisnika je glasalo za ovu poruku"
-            other: "{{count}} korisnika je glasalo za ovu poruku"
       revisions:
         controls:
           first: "Prva revizija"
@@ -1228,7 +1214,6 @@ sr:
     category:
       can: 'može&hellip'
       none: '(nema kategorije)'
-      choose: 'Odaberi kategoriju&hellip;'
       edit: 'izmeni'
       edit_long: "Izmeni"
       view: 'Prikaži Teme u Kategoriji'
@@ -1267,7 +1252,6 @@ sr:
       edit_permissions: "Izmeni dozvole"
       add_permission: "Dodaj dozvole"
       this_year: "ove godine"
-      position: "pozicija"
       default_position: "Zadana pozicija"
       position_disabled: "Kategorije će u nizu biti prikazivane po nivou aktivnosti. Za kontrolu redosleda kategorija u listi,"
       position_disabled_click: 'omogućite postavku "fiksiranje pozicija kategorija" u podešavanjima.'
@@ -1642,7 +1626,6 @@ sr:
             address_placeholder: "name@example.com"
             type_placeholder: "sažetak, prijava..."
             reply_key_placeholder: "ključ odgovora"
-            skipped_reason_placeholder: "razlog"
       logs:
         title: "Logovi"
         action: "Akcije"

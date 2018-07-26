@@ -534,15 +534,12 @@ pl_PL:
       "14": "Oczekujące"
     categories:
       all: "wszystkie kategorie"
-      all_subcategories: "wszystkie w %{categoryName}"
       no_subcategory: "żadne"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
       reorder:
         title: "Zmień kolejność kategorii"
         title_long: "Zmień kolejność listy kategorii"
-        fix_order: "Popraw pozycje"
-        fix_order_tooltip: "Nie wszystkie kategorie posiadają unikalny numer porządkowy, co może wygenerować nieoczekiwane wyniki."
         save: "Zapisz kolejność"
         apply_all: "Zastosuj"
         position: "Pozycja"
@@ -750,7 +747,6 @@ pl_PL:
         upload_title: "Wyślij swoją grafikę"
         upload_picture: "Wyślij grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
-        cache_notice: "Twój awatar został pomyślnie zmieniony, ale z uwagi na cache przeglądarki nowa wersja może pojawić się dopiero za jakiś czas."
       change_profile_background:
         title: "Tło profilu"
         instructions: "Tła w profilach są wycentrowane i posiadają domyślną szerokość 850px."
@@ -957,7 +953,6 @@ pl_PL:
         most_liked_users: "Najbardziej lajkowane"
         most_replied_to_users: "Najwięcej odpowiedzi do"
         no_likes: "Brak lajków."
-      associated_accounts: "Powiązane konta"
       ip_address:
         title: "Ostatni adres IP"
       registration_ip_address:
@@ -1115,9 +1110,6 @@ pl_PL:
       preferences: "Musisz się zalogować, aby zmieniać swoje ustawienia."
       forgot: "Nie pamiętam konta"
       not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
-      google:
-        title: "przez Google"
-        message: "Uwierzytelnianie przy pomocy konta Google (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       google_oauth2:
         title: "przez Google"
         message: "Uwierzytelniam przy pomocy Google (upewnij się wyskakujące okienka nie są blokowane)"
@@ -1933,7 +1925,6 @@ pl_PL:
           inappropriate: "Cofnij flagę"
           bookmark: "Cofnij zakładkę"
           like: "Cofnij"
-          vote: "Cofnij głos"
         people:
           off_topic: "Oflagowano jako nie-na-temat"
           spam: "oznacz jako spam"
@@ -1942,7 +1933,6 @@ pl_PL:
           notify_user: "Wysłano wiadomość"
           bookmark: "dodaj do zakładek"
           like: "lajkuje to"
-          vote: "zagłosowało"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
@@ -1951,7 +1941,6 @@ pl_PL:
           notify_user: "Wysłano wiadomość do tego użytkownika"
           bookmark: "Dodano zakładkę w tym wpisie"
           like: "Lajkujesz ten wpis"
-          vote: "Zagłosowano na ten wpis"
         by_you_and_others:
           off_topic:
             one: "Ty i 1 inna osoba oznaczyliście to jako nie-na-temat."
@@ -1988,11 +1977,6 @@ pl_PL:
             few: "Ty i {{count}} inne osoby lajkują to."
             many: "Ty i {{count}} innych osób lajkuje to."
             other: "Ty i {{count}} innych osób lajkuje to."
-          vote:
-            one: "Ty i 1 inna osoba zagłosowaliście za tym wpisem"
-            few: "Ty i {{count}} inne osoby zagłosowaliście za tym wpisem"
-            many: "Ty i {{count}} innych osób zagłosowaliście za tym wpisem"
-            other: "Ty i {{count}} innych osób zagłosowaliście za tym wpisem"
         by_others:
           off_topic:
             one: "1 osoba oflagowała to jako nie-na-temat"
@@ -2029,11 +2013,6 @@ pl_PL:
             few: "{{count}} osoby lajkują to"
             many: "{{count}} osób lajkuje to"
             other: "{{count}} osób lajkuje to"
-          vote:
-            one: "1 osoba zagłosowała za tym wpisem"
-            few: "{{count}} osoby zagłosowały za tym wpisem"
-            many: "{{count}} osób zagłosowało za tym wpisem"
-            other: "{{count}} osób zagłosowało za tym wpisem"
       merge:
         confirm:
           one: "Czy na pewno chcesz połączyć te posty?"
@@ -2077,7 +2056,6 @@ pl_PL:
       can: 'może&hellip; '
       none: '(brak kategorii)'
       all: 'Wszystkie kategorie'
-      choose: 'Wybierz kategorię&hellip;'
       edit: 'edytuj'
       edit_long: "Edytuj"
       view: 'Pokaż Tematy w Kategorii'
@@ -2124,7 +2102,6 @@ pl_PL:
       show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
       num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       subcategory_num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
-      all_topics_wiki: "Stwórz nowe tematy domyślnie jako wiki"
       subcategory_list_style: "Styl listy podkategorii:"
       sort_order: "Sortuj listę wątków po:"
       default_view: "Domyślna lista wątków:"
@@ -2133,7 +2110,6 @@ pl_PL:
       edit_permissions: "Edytuj uprawnienia"
       add_permission: "Dodaj uprawnienie"
       this_year: "ten rok"
-      position: "pozycja"
       default_position: "Domyślna pozycja"
       position_disabled: "Kolejność kategorii będzie uzależniona od aktywności. Aby kontrolować ich kolejność,"
       position_disabled_click: 'włącz statyczną kolejność kategorii'
@@ -3048,7 +3024,6 @@ pl_PL:
             address_placeholder: "nazwa@example.com"
             type_placeholder: "streszczenie, rejestracja…"
             reply_key_placeholder: "klucz odpowiedzi"
-            skipped_reason_placeholder: "powód"
       moderation_history:
         performed_by: "Wykonane przez"
         no_results: "Brak dostępnej historii moderacji."

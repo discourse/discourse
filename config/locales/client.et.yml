@@ -406,8 +406,6 @@ et:
       reorder:
         title: "Reasta foorumid ümber"
         title_long: "Reasta foorumid ümber"
-        fix_order: "Fikseeri asukohad"
-        fix_order_tooltip: "Osadel foorumitel puudub unikaalne asukoha number, mis võib anda ettearvamatuid tulemusi."
         save: "Salvesta järjestus"
         apply_all: "Rakenda"
         position: "Paiguta"
@@ -594,7 +592,6 @@ et:
         upload_title: "Lae üles oma pilt"
         upload_picture: "Lae pilt üles"
         image_is_not_a_square: "Hoiatus: lõikasime pilti, kuna laius ja kõrgus ei olnud võrdsed."
-        cache_notice: "Oled edukalt muutnud oma profiilipildi kuid võib juhtuda, et näed seda alles mõne aja pärast."
       change_profile_background:
         title: "Profiili taustpilt"
         instructions: "Profiili taustad tsentreeritakse ja on vaikimisi 850 pikslit laiad."
@@ -778,7 +775,6 @@ et:
         most_liked_users: "Enim meeldinud"
         most_replied_to_users: "Enim vastatud teemasse"
         no_likes: "Meeldimisi veel pole."
-      associated_accounts: "Sisselogimisi"
       ip_address:
         title: "Viimane IP-aadress"
       registration_ip_address:
@@ -923,9 +919,6 @@ et:
       preferences: "Oma kasutajaeelistuste muutmiseks pead olema sisse logitud."
       forgot: "Ma ei mäleta oma konto üksikasju"
       not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
-      google:
-        title: "Google abil"
-        message: "Autentimine Google abil (veendu, et hüpikaknad oleks lubatud)"
       google_oauth2:
         title: "Google abil"
         message: "Autentimine Google abil (veendu, et hüpikaknad oleks lubatud)"
@@ -1621,7 +1614,6 @@ et:
           inappropriate: "Tühista tähise andmine"
           bookmark: "Tühista järjehoidja lisamine"
           like: "Tühista meeldimise andmine"
-          vote: "Tühista hääle andmine"
         people:
           off_topic: "tähistasin selle kui teemavälise"
           spam: "tähistasin selle kui spämmi"
@@ -1630,7 +1622,6 @@ et:
           notify_user: "saatsin sõnumi"
           bookmark: "lisasin sellele järjehoidja"
           like: "meeldis see"
-          vote: "hääletasin selle poolt"
         by_you:
           off_topic: "Tähistasid selle kui teemavälise"
           spam: "Tähistasid selle kui spämmi"
@@ -1639,7 +1630,6 @@ et:
           notify_user: "Saatsid sellele kasutajale sõnumi"
           bookmark: "Lisasid sellele postitusele järjehoidja"
           like: "Märkisid selle kui meeldiva"
-          vote: "Hääletasid selle postituse poolt"
         by_you_and_others:
           off_topic:
             one: "Sina ja 1 teine kasutaja tähistasite selle kui teemavälise"
@@ -1662,9 +1652,6 @@ et:
           like:
             one: "Sina ja 1 teine kasutaja märkisite selle kui meeldiva"
             other: "Sina ja {{count}} teist kasutajat märkisite selle kui meeldiva"
-          vote:
-            one: "Sina ja 1 teine kasutaja hääletasite selle postituse poolt"
-            other: "Sina ja {{count}} teist kasutajat hääletasite selle postituse poolt"
         by_others:
           off_topic:
             one: "1 kasutaja tähistas selle kui teemavälise"
@@ -1687,9 +1674,6 @@ et:
           like:
             one: "ühele see meeldis"
             other: "{{count}}-le see meeldis"
-          vote:
-            one: "1 kasutaja hääletas selle postituse poolt"
-            other: "{{count}} kasutajat hääletasid selle postituse poolt"
       revisions:
         controls:
           first: "Esimene redaktsioon"
@@ -1722,7 +1706,6 @@ et:
       can: 'saab&hellip; '
       none: '(foorum puudub)'
       all: 'Kõik foorumid'
-      choose: 'Vali foorum&hellip;'
       edit: 'muuda'
       edit_long: "Muuda"
       view: 'Vaata teemasid foorumis'
@@ -1765,12 +1748,10 @@ et:
       email_in_disabled: "Uute teemade avamine meili teel on saidi sätetes välja lülitatud. Avamiseks"
       email_in_disabled_click: 'aktiveeri säte "sissetulev meil".'
       show_subcategory_list: "Näita selles foorumis alamfoorumite nimekirja teemadest üleval pool."
-      all_topics_wiki: "Tee uued teemad vaikimisi wikideks."
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
       add_permission: "Lisa kasutusõigus"
       this_year: "sel aastal"
-      position: "positsioon"
       default_position: "Vaikepositsioon"
       position_disabled: "Foorumid kuvatakse aktiivsuse järjekorras. Foorumite järjestuse seadistamiseks loeteludes,"
       position_disabled_click: 'aktiveeri säte "foorumite positsioonid fikseeritud".'
@@ -2585,7 +2566,6 @@ et:
             address_placeholder: "nimi@domeen.ee"
             type_placeholder: "ülevaade, registreerimine..."
             reply_key_placeholder: "vastuse võti"
-            skipped_reason_placeholder: "põhjus"
       moderation_history:
         actions:
           delete_user: "Kasutaja on kustutatud"

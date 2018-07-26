@@ -517,15 +517,12 @@ bs_BA:
       "14": "Na čekanju."
     categories:
       all: "Sve kategorije"
-      all_subcategories: "sve u %{categoryName}"
       no_subcategory: "nijedna"
       category: "Kategorija"
       category_list: "Prikaži listu kategorija"
       reorder:
         title: "Preuredi kategorije"
         title_long: "Reorganizuj listu kategorija"
-        fix_order: "Fixirane Pozicije"
-        fix_order_tooltip: "Nemaju sve kategorije poziciju, što može da dovede do nepredvidljivih rezultata."
         save: "Sačuvaj pozicije"
         apply_all: "Snimi"
         position: "Pozicija"
@@ -737,7 +734,6 @@ bs_BA:
         upload_title: "Učitajte vašu sliku sa uređaja"
         upload_picture: "Učitavanje slike"
         image_is_not_a_square: "Upozorenje: morali smo izrezat vašu sliku; nije bila kvadratnog oblika."
-        cache_notice: "Uspješno ste promjenili sliku profila, možda potraje njeno prikazivanje zbog keš-a web preglednika"
       change_profile_background:
         title: "Pozadina profila"
         instructions: "Pozadinske slike profila će biti centrirane i imati širinu od 850px."
@@ -935,7 +931,6 @@ bs_BA:
         most_liked_users: "Podijeljen lajk"
         most_replied_to_users: "Najviše odgovoreno ka"
         no_likes: "Još uvijek nema lajkova."
-      associated_accounts: "Ulogovanje"
       ip_address:
         title: "Zadnja IP Adresa"
       registration_ip_address:
@@ -1105,9 +1100,6 @@ bs_BA:
       preferences: "Morate biti ulogovani kako bi mjenjali vaše postavke"
       forgot: "Ne sjećam se svojih detalja korisničkog imena"
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada  dobijete mogućnost da se ulogirate."
-      google:
-        title: "koristeći Google"
-        message: "Prijava preko Google-a (osigurajte da pop up blokeri budu isključeni)"
       google_oauth2:
         title: "koristeći Google"
         message: "Prijava preko Google-a (osigurajte da pop up blokeri budu isključeni)"
@@ -1970,7 +1962,6 @@ bs_BA:
           inappropriate: "Otkaži prijavu"
           bookmark: "Otkaži bookmark"
           like: "Otkaži lajk"
-          vote: "Otkaži glas"
         people:
           off_topic: "prijava iskakanja iz okvira teme (off-topic)"
           spam: "prijava spama"
@@ -1987,7 +1978,6 @@ bs_BA:
           notify_user: "You sent a private message to this user"
           bookmark: "You bookmarked this post"
           like: "Lajkovao si ovo"
-          vote: "Glasao si za ovaj post"
         by_you_and_others:
           off_topic:
             one: "Vi i još 1 osoba ste prijavili ovo kao iskakanje iz okvira teme"
@@ -2040,7 +2030,6 @@ bs_BA:
     category:
       can: 'can&hellip; '
       none: '(no category)'
-      choose: 'category&hellip;'
       edit: 'edit'
       edit_long: "Edit"
       view: 'View Topics in Category'
@@ -2077,7 +2066,6 @@ bs_BA:
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
-      position: "position"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
@@ -2484,7 +2472,6 @@ bs_BA:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
-            skipped_reason_placeholder: "reason"
       logs:
         title: "Logs"
         action: "Action"

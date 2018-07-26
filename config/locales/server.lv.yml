@@ -103,8 +103,6 @@ lv:
       num_topics: "Tēmas"
     top_traffic_sources:
       xaxis: "Domēns"
-    top_referred_topics:
-      xaxis: "Tēmas"
   site_settings:
     errors:
       invalid_email: "Nepareiza e-pasta adrese."

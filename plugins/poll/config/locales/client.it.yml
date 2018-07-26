@@ -46,6 +46,9 @@ it:
         title: "Chiudi il sondaggio"
         label: "Chiudi"
         confirm: "Sicuro di voler chiudere questo sondaggio?"
+      automatic_close:
+        closes_in: "termina in <strong>%{timeLeft}</strong>"
+        age: "terminato <strong>%{age}</strong>"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
@@ -55,6 +58,7 @@ it:
         help:
           options_count: Inserisci almeno 2 opzioni
           invalid_values: Il valore minimo deve essere minore del valore massimo.
+          min_step_value: Il valore minimo di un passo è 1
         poll_type:
           label: Tipo
           regular: Scelta Singola
@@ -68,3 +72,5 @@ it:
           label: Mostra i votanti
         poll_options:
           label: Inserisci un'opzione di sondaggio per riga
+        automatic_close:
+          label: Chiudi sondaggio automaticamente
