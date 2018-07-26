@@ -178,8 +178,7 @@ class Plugin::Instance
   def topic_view_post_custom_fields_whitelister(&block)
     reloadable_patch do |plugin|
       ::TopicView.add_post_custom_fields_whitelister do |user|
-        return [] unless plugin.enabled?
-        block.call(user)
+        plugin.enabled? ? block.call(user) : []
       end
     end
   end
