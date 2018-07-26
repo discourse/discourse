@@ -54,7 +54,7 @@ const LoginMethod = Ember.Object.extend({
       if (!Ember.isEmpty(fullScreenLoginSetting)) {
         fullScreenLogin = this.siteSettings[fullScreenLoginSetting];
       } else {
-        fullScreenLogin = this.get("fullScreenLogin")
+        fullScreenLogin = this.get("fullScreenLogin");
       }
 
       if (fullScreenLogin) {
