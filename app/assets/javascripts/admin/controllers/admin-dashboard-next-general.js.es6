@@ -28,7 +28,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   lastBackupTakenAt: Ember.computed.alias(
     "model.attributes.last_backup_taken_at"
   ),
-  shouldDisplayDurability: Ember.computed.and("lastBackupTakenAt", "diskSpace"),
+  shouldDisplayDurability: Ember.computed.and("diskSpace"),
 
   @computed
   topReferredTopicsTopions() {

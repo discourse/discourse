@@ -132,8 +132,11 @@
                   </h3>
                   <p>
                     {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
-                    <br />
-                    {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+
+                    {{#if lastBackupTakenAt}}
+                      <br />
+                      {{{i18n "admin.dashboard.lastest_backup" date=backupTimestamp}}}
+                    {{/if}}
                   </p>
                 </div>
               {{/if}}
