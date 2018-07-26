@@ -196,7 +196,7 @@ class PostDestroyer
   end
 
   def agree_with_flags
-    if @post.is_flagged? && @user.id > 0 && @user.staff?
+    if @post.has_active_flag? && @user.id > 0 && @user.staff?
       Jobs.enqueue(
         :send_system_message,
         user_id: @post.user.id,
