@@ -606,6 +606,16 @@ describe PostDestroyer do
         Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
       ).to eq(false)
     end
+
+    it "should not send the flags_agreed_and_post_deleted message if flags were deferred" do
+      second_post.expects(:update_flagged_posts_count)
+      PostAction.defer_flags!(second_post, moderator)
+      second_post.reload
+      PostDestroyer.new(moderator, second_post).destroy
+      expect(
+        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
+      ).to eq(false)
+    end
   end
 
   describe "user actions" do
