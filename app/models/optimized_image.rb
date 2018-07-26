@@ -244,15 +244,15 @@ class OptimizedImage < ActiveRecord::Base
       method_name += "_animated"
     end
     instructions = self.send(method_name.to_sym, from, to, dimensions, opts)
-    convert_with(instructions, to)
+    convert_with(instructions, to, opts)
   end
 
-  def self.convert_with(instructions, to)
+  def self.convert_with(instructions, to, opts = {})
     Discourse::Utils.execute_command(*instructions)
     FileHelper.optimize_image!(to)
     true
   rescue => e
-    if Rails.env.test?
+    if opts[:raise_on_error]
       raise e
     else
       Rails.logger.error("Could not optimize image #{to}: #{e.message}")
