@@ -47,6 +47,7 @@ cache:
     - vendor/bundle
 
 before_install:
+  - echo $SECRET_ENV
   - nvm install node
   - node --version
   - gem install bundler
