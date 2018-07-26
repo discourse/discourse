@@ -31,7 +31,7 @@
     border-bottom: 10px solid $secondary;
   }
 
-  &.moderation .navigation-item.moderation {
+  &.dashboard-next-moderation .navigation-item.moderation {
     @include active-navigation-item;
   }
 
