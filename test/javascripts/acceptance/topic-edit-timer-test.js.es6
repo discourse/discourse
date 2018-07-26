@@ -1,6 +1,12 @@
 import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 acceptance("Topic - Edit timer", { loggedIn: true });
 
+const response = object => [
+  200,
+  { "Content-Type": "application/json" },
+  object
+];
+
 QUnit.test("default", assert => {
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
@@ -253,3 +259,52 @@ QUnit.test("auto delete", assert => {
     assert.ok(regex.test(html));
   });
 });
+
+QUnit.test(
+  "Manually closing before the timer will clear the status text",
+  async assert => {
+    // prettier-ignore
+    server.post("/t/280/timer", () => // eslint-disable-line no-undef
+      response({
+        success: "OK",
+        execute_at: new Date(
+          new Date().getTime() + 1 * 60 * 60 * 1000
+        ).toISOString(),
+        duration: 1,
+        based_on_last_post: false,
+        closed: false,
+        category_id: null
+      })
+    );
+
+    // prettier-ignore
+    server.put("/t/internationalization-localization/280/status", () => // eslint-disable-line no-undef
+      response({
+        success: "OK",
+        topic_status_update: null
+      })
+    );
+
+    const futureDateInputSelector = selectKit(".future-date-input-selector");
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-status-update button");
+    await futureDateInputSelector.expand().selectRowByValue("next_week");
+    await click(".modal-footer button.btn-primary");
+
+    const regex = /will automatically close in/g;
+    const topicStatusInfo = find(".topic-status-info")
+      .html()
+      .trim();
+    assert.ok(regex.test(topicStatusInfo));
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-close button");
+
+    const newTopicStatusInfo = find(".topic-status-info")
+      .html()
+      .trim();
+    assert.notOk(regex.test(newTopicStatusInfo));
+  }
+);
