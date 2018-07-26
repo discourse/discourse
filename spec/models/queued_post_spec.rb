@@ -171,7 +171,7 @@ describe QueuedPost do
     it 'triggers a extensibility event' do
       event = DiscourseEvent.track_events { subject.save! }.first
 
-      expect(event[:event_name]).to eq(:queued_post)
+      expect(event[:event_name]).to eq(:queued_post_created)
       expect(event[:params].first).to eq(subject)
     end
   end
