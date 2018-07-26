@@ -52,7 +52,7 @@ export default Ember.Component.extend({
   showAllReportsLink: false,
   startDate: null,
   endDate: null,
-  categoryId: null,
+  category: null,
   groupId: null,
   showTrend: false,
   showHeader: true,
@@ -128,6 +128,8 @@ export default Ember.Component.extend({
   showModes(displayedModesLength) {
     return displayedModesLength > 1;
   },
+
+  categoryId: Ember.computed.alias("category.id"),
 
   @computed("currentMode", "model.modes", "forcedModes")
   displayedModes(currentMode, reportModes, forcedModes) {
@@ -211,7 +213,7 @@ export default Ember.Component.extend({
   actions: {
     refreshReport() {
       this.attrs.onRefresh({
-        categoryId: this.get("category.id"),
+        categoryId: this.get("categoryId"),
         groupId: this.get("groupId"),
         startDate: this.get("startDate"),
         endDate: this.get("endDate")
