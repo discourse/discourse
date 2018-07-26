@@ -5,7 +5,7 @@ end
 prettier_offenses = `prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"`.split('\n')
 if !prettier_offenses.empty?
   fail(%{
-This PR has multiple prettier offenses. We recommend configuring prettier linting in your editor: https://meta.discourse.org/t/prettier-code-formatting-tool/93212\n
-#{prettier_offenses.join("\n")}
+This PR has multiple prettier offenses. <a href='https://meta.discourse.org/t/prettier-code-formatting-tool/93212'>Using prettier</a>\n
+#{prettier_offenses.map {|o| github.html_link(o) }.join("\n")}
   })
 end
