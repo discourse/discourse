@@ -418,12 +418,12 @@ describe WebHook do
       expect(payload["id"]).to eq(post_action.id)
     end
 
-    it 'should enqueue the right hooks for post approval events' do
-      Fabricate(:approval_web_hook)
+    it 'should enqueue the right hooks for queued post events' do
+      Fabricate(:queued_post_web_hook)
       queued_post = Fabricate(:queued_post)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-      expect(job_args["event_name"]).to eq("queued_post")
+      expect(job_args["event_name"]).to eq("queued_post_created")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(queued_post.id)
 

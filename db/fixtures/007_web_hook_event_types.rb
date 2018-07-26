@@ -34,6 +34,6 @@ WebHookEventType.seed do |b|
 end
 
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::APPROVAL
-  b.name = "approval"
+  b.id = WebHookEventType::QUEUED_POST
+  b.name = "queued_post"
 end

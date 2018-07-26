@@ -18,7 +18,7 @@ class QueuedPost < ActiveRecord::Base
   end
 
   def trigger_queued_post_event
-    DiscourseEvent.trigger(:queued_post, self)
+    DiscourseEvent.trigger(:queued_post_created, self)
     true
   end
 
