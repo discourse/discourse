@@ -1,6 +1,37 @@
 require 'rails_helper'
 
 describe Report do
+  shared_examples 'no data' do
+    context "with no data" do
+      it 'returns an empty report' do
+        expect(report.data).to be_blank
+      end
+    end
+  end
+
+  shared_examples 'category filtering' do
+    it 'returns the filtered data' do
+      expect(report.total).to eq 1
+    end
+  end
+
+  shared_examples 'with data x/y' do
+    it "returns today's data" do
+      expect(report.data.select { |v| v[:x].today? }).to be_present
+    end
+
+    it 'returns correct data for period' do
+      expect(report.data[0][:y]).to eq 3
+    end
+
+    it 'returns total' do
+      expect(report.total).to eq 4
+    end
+
+    it 'returns previous 30 day’s data' do
+      expect(report.prev30Days).to be_present
+    end
+  end
 
   describe "counting" do
     describe "requests" do
@@ -60,11 +91,7 @@ describe Report do
   describe 'visits report' do
     let(:report) { Report.find('visits') }
 
-    context "no visits" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with visits" do
       let(:user) { Fabricate(:user) }
@@ -265,11 +292,7 @@ describe Report do
   describe 'users by trust level report' do
     let(:report) { Report.find('users_by_trust_level') }
 
-    context "no users" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with users at different trust levels" do
       before do
@@ -290,11 +313,7 @@ describe Report do
   describe 'new contributors report' do
     let(:report) { Report.find('new_contributors') }
 
-    context "no contributors" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with contributors" do
       before do
@@ -320,11 +339,7 @@ describe Report do
   describe 'users by types level report' do
     let(:report) { Report.find('users_by_type') }
 
-    context "no users" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with users at different trust levels" do
       before do
@@ -349,11 +364,7 @@ describe Report do
   describe 'trending search report' do
     let(:report) { Report.find('trending_search') }
 
-    context "no searches" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with different searches" do
       before do
@@ -383,11 +394,7 @@ describe Report do
   describe 'DAU/MAU report' do
     let(:report) { Report.find('dau_by_mau') }
 
-    context "no activity" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with different users/visits" do
       before do
@@ -420,11 +427,7 @@ describe Report do
   describe 'Daily engaged users' do
     let(:report) { Report.find('daily_engaged_users') }
 
-    context "no activity" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with different activities" do
       before do
@@ -465,11 +468,7 @@ describe Report do
   describe 'flags_status' do
     let(:report) { Report.find('flags_status') }
 
-    context "no flags" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with flags" do
       let(:flagger) { Fabricate(:user) }
@@ -502,11 +501,7 @@ describe Report do
   describe 'post_edits' do
     let(:report) { Report.find('post_edits') }
 
-    context "no edits" do
-      it "returns an empty report" do
-        expect(report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with edits" do
       let(:editor) { Fabricate(:user) }
@@ -535,14 +530,10 @@ describe Report do
   end
 
   describe 'moderator activity' do
-    let(:current_report) { Report.find('moderators_activity', start_date: 1.months.ago.beginning_of_day, end_date: Date.today) }
+    let(:report) { Report.find('moderators_activity', start_date: 1.months.ago.beginning_of_day, end_date: Date.today) }
     let(:previous_report) { Report.find('moderators_activity', start_date: 2.months.ago.beginning_of_day, end_date: 1.month.ago.end_of_day) }
 
-    context "no moderators" do
-      it "returns an empty report" do
-        expect(current_report.data).to be_blank
-      end
-    end
+    include_examples 'no data'
 
     context "with moderators" do
       before do
@@ -585,36 +576,36 @@ describe Report do
       end
 
       it "returns a report with data" do
-        expect(current_report.data).to be_present
+        expect(report.data).to be_present
       end
 
       it "returns data for two moderators" do
-        expect(current_report.data.count).to eq(2)
+        expect(report.data.count).to eq(2)
       end
 
       it "returns the correct usernames" do
-        expect(current_report.data[0][:username]).to eq('bob')
-        expect(current_report.data[1][:username]).to eq('sally')
+        expect(report.data[0][:username]).to eq('bob')
+        expect(report.data[1][:username]).to eq('sally')
       end
 
       it "returns the correct read times" do
-        expect(current_report.data[0][:time_read]).to eq(300)
-        expect(current_report.data[1][:time_read]).to eq(3000)
+        expect(report.data[0][:time_read]).to eq(300)
+        expect(report.data[1][:time_read]).to eq(3000)
       end
 
       it "returns the correct agreed flag count" do
-        expect(current_report.data[0][:flag_count]).to be_blank
-        expect(current_report.data[1][:flag_count]).to eq(1)
+        expect(report.data[0][:flag_count]).to be_blank
+        expect(report.data[1][:flag_count]).to eq(1)
       end
 
       it "returns the correct topic count" do
-        expect(current_report.data[0][:topic_count]).to eq(1)
-        expect(current_report.data[1][:topic_count]).to be_blank
+        expect(report.data[0][:topic_count]).to eq(1)
+        expect(report.data[1][:topic_count]).to be_blank
       end
 
       it "returns the correct post count" do
-        expect(current_report.data[0][:post_count]).to be_blank
-        expect(current_report.data[1][:post_count]).to eq(2)
+        expect(report.data[0][:post_count]).to be_blank
+        expect(report.data[1][:post_count]).to eq(2)
       end
 
       it "returns the correct data for the time period" do
@@ -627,6 +618,59 @@ describe Report do
         expect(previous_report.data[1][:topic_count]).to be_blank
         expect(previous_report.data[1][:post_count]).to be_blank
         expect(previous_report.data[1][:time_read]).to be_blank
+      end
+    end
+  end
+
+  describe 'flags' do
+    let(:report) { Report.find('flags') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        user = Fabricate(:user)
+        post0 = Fabricate(:post)
+        post1 = Fabricate(:post, topic: Fabricate(:topic, category_id: 2))
+        post2 = Fabricate(:post)
+        post3 = Fabricate(:post)
+        PostAction.act(user, post0, PostActionType.types[:off_topic])
+        PostAction.act(user, post1, PostActionType.types[:off_topic])
+        PostAction.act(user, post2, PostActionType.types[:off_topic])
+        PostAction.act(user, post3, PostActionType.types[:off_topic]).tap do |pa|
+          pa.created_at = 45.days.ago
+        end.save
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('flags', category_id: 2) }
+
+        include_examples 'category filtering'
+      end
+    end
+  end
+
+  describe 'topics' do
+    let(:report) { Report.find('topics') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        Fabricate(:topic)
+        Fabricate(:topic, category_id: 2)
+        Fabricate(:topic)
+        Fabricate(:topic, created_at: 45.days.ago)
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('topics', category_id: 2) }
+
+        include_examples 'category filtering'
       end
     end
   end
