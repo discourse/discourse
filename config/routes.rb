@@ -236,9 +236,11 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
-    get "dashboard-next" => "dashboard_next#index"
-    get "dashboard-old" => "dashboard#index"
+    get "dashboard" => "dashboard_next#index"
     get "dashboard/general" => "dashboard_next#general"
+    get "dashboard/moderation" => "dashboard_next#moderation"
+
+    get "dashboard-old" => "dashboard#index"
 
     resources :dashboard, only: [:index] do
       collection do

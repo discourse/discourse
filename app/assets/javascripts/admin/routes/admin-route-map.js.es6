@@ -3,8 +3,11 @@ export default function() {
     this.route("dashboard", { path: "/dashboard-old" });
 
     this.route("dashboardNext", { path: "/" }, function() {
-      this.route("general", { path: "/dashboard/general" });
-      this.route("moderation", { path: "/dashboard/moderation" });
+      this.route("general", { path: "/" });
+      this.route("admin.dashboardNextModeration", {
+        path: "/dashboard/moderation",
+        resetNamespace: true
+      });
     });
 
     this.route(
