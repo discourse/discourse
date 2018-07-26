@@ -56,7 +56,8 @@ describe OptimizedImage do
                 "#{Rails.root}/spec/fixtures/images/svg.png",
                 tmp_path,
                 5,
-                5
+                5,
+                raise_on_error: true
               )
             end.to raise_error(RuntimeError, /improper image header/)
           ensure
