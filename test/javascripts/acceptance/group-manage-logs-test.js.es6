@@ -2,14 +2,9 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Group logs", {
   loggedIn: true,
-  beforeEach() {
-    const response = object => {
-      return [200, { "Content-Type": "application/json" }, object];
-    };
-
-    // prettier-ignore
-    server.get("/groups/snorlax.json", () => { // eslint-disable-line no-undef
-      return response({
+  pretend(server, helper) {
+    server.get("/groups/snorlax.json", () => {
+      return helper.response({
         group: {
           id: 41,
           automatic: false,
@@ -37,10 +32,9 @@ acceptance("Group logs", {
     });
 
     // Workaround while awaiting https://github.com/tildeio/route-recognizer/issues/53
-    // prettier-ignore
-    server.get("/groups/snorlax/logs.json", request => { // eslint-disable-line no-undef
+    server.get("/groups/snorlax/logs.json", request => {
       if (request.queryParams["filters[action]"]) {
-        return response({
+        return helper.response({
           logs: [
             {
               action: "change_group_setting",
@@ -59,7 +53,7 @@ acceptance("Group logs", {
           all_loaded: true
         });
       } else {
-        return response({
+        return helper.response({
           logs: [
             {
               action: "change_group_setting",
@@ -99,21 +93,16 @@ acceptance("Group logs", {
   }
 });
 
-QUnit.test("Browsing group logs", assert => {
-  visit("/groups/snorlax/manage/logs");
+QUnit.test("Browsing group logs", async assert => {
+  await visit("/groups/snorlax/manage/logs");
+  assert.ok(
+    find("tr.group-manage-logs-row").length === 2,
+    "it should display the right number of logs"
+  );
 
-  andThen(() => {
-    assert.ok(
-      find("tr.group-manage-logs-row").length === 2,
-      "it should display the right number of logs"
-    );
-    click(find(".group-manage-logs-row button")[0]);
-  });
-
-  andThen(() => {
-    assert.ok(
-      find("tr.group-manage-logs-row").length === 1,
-      "it should display the right number of logs"
-    );
-  });
+  await click(find(".group-manage-logs-row button")[0]);
+  assert.ok(
+    find("tr.group-manage-logs-row").length === 1,
+    "it should display the right number of logs"
+  );
 });

@@ -166,13 +166,11 @@ QUnit.test("second factor backup", async assert => {
   assert.ok(exists(".backup-codes-area"), "shows backup codes");
 });
 
-QUnit.test("default avatar selector", assert => {
-  visit("/u/eviltrout/preferences");
+QUnit.test("default avatar selector", async assert => {
+  await visit("/u/eviltrout/preferences");
 
-  click(".pref-avatar .btn");
-  andThen(() => {
-    assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
-  });
+  await click(".pref-avatar .btn");
+  assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
 });
 
 acceptance("Avatar selector when selectable avatars is enabled", {
@@ -202,15 +200,13 @@ acceptance("User Preferences when badges are disabled", {
   settings: { enable_badges: false }
 });
 
-QUnit.test("visit my preferences", assert => {
-  visit("/u/eviltrout/preferences");
-  andThen(() => {
-    assert.ok($("body.user-preferences-page").length, "has the body class");
-    assert.equal(
-      currentURL(),
-      "/u/eviltrout/preferences/account",
-      "defaults to account tab"
-    );
-    assert.ok(exists(".user-preferences"), "it shows the preferences");
-  });
+QUnit.test("visit my preferences", async assert => {
+  await visit("/u/eviltrout/preferences");
+  assert.ok($("body.user-preferences-page").length, "has the body class");
+  assert.equal(
+    currentURL(),
+    "/u/eviltrout/preferences/account",
+    "defaults to account tab"
+  );
+  assert.ok(exists(".user-preferences"), "it shows the preferences");
 });
