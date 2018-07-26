@@ -6,6 +6,6 @@ prettier_offenses = `prettier --list-different "app/assets/stylesheets/**/*.scss
 if !prettier_offenses.empty?
   fail(%{
 This PR has multiple prettier offenses. <a href='https://meta.discourse.org/t/prettier-code-formatting-tool/93212'>Using prettier</a>\n
-#{prettier_offenses.map {|o| github.html_link(o) }.join("\n")}
+#{prettier_offenses.map { |o| github.html_link(o) }.join("\n")}
   })
 end
