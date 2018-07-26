@@ -419,7 +419,7 @@ QUnit.test("Disable body until category is selected", async assert => {
 
   await fillIn(".d-editor-input", "Now I can type stuff");
   await categoryChooser.expandAwait();
-  await categoryChooser.selectRowByValue("__none__");
+  await categoryChooser.selectRowByValueAwait("__none__");
 
   assert.ok(
     find(".d-editor-textarea-wrapper.disabled").length === 0,

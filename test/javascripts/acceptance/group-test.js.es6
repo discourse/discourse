@@ -3,6 +3,13 @@ import { acceptance, logIn } from "helpers/qunit-helpers";
 acceptance("Group", {
   settings: {
     enable_group_directory: true
+  },
+  pretend(server, helper) {
+    server.post("/groups/Macdonald/request_membership", () => {
+      return helper.response({
+        relative_url: "/t/internationalization-localization/280"
+      });
+    });
   }
 });
 
@@ -72,76 +79,59 @@ QUnit.test("Anonymous Viewing Group", async assert => {
   );
 });
 
-QUnit.test("Anonymous Viewing Automatic Group", assert => {
-  visit("/groups/moderators");
+QUnit.test("Anonymous Viewing Automatic Group", async assert => {
+  await visit("/groups/moderators");
 
-  andThen(() => {
-    assert.equal(
-      count(".nav-pills li a[title='Manage']"),
-      0,
-      "it deos not show group messages navigation link"
-    );
-  });
+  assert.equal(
+    count(".nav-pills li a[title='Manage']"),
+    0,
+    "it deos not show group messages navigation link"
+  );
 });
 
-QUnit.test("User Viewing Group", assert => {
+QUnit.test("User Viewing Group", async assert => {
   logIn();
   Discourse.reset();
 
-  visit("/groups");
-  click(".group-index-request");
+  await visit("/groups");
+  await click(".group-index-request");
 
-  // prettier-ignore
-  server.post("/groups/Macdonald/request_membership", () => { // eslint-disable-line no-undef
-    return [
-      200,
-      { "Content-Type": "application/json" },
-      { relative_url: "/t/internationalization-localization/280" }
-    ];
-  });
+  assert.equal(
+    find(".modal-header")
+      .text()
+      .trim(),
+    I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
+  );
 
-  andThen(() => {
-    assert.equal(
-      find(".modal-header")
-        .text()
-        .trim(),
-      I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
-    );
+  assert.equal(
+    find(".request-group-membership-form textarea").val(),
+    "Please add me"
+  );
 
-    assert.equal(
-      find(".request-group-membership-form textarea").val(),
-      "Please add me"
-    );
-  });
+  await click(".modal-footer .btn-primary");
 
-  click(".modal-footer .btn-primary");
+  assert.equal(
+    find(".fancy-title")
+      .text()
+      .trim(),
+    "Internationalization / localization"
+  );
 
-  andThen(() => {
-    assert.equal(
-      find(".fancy-title")
-        .text()
-        .trim(),
-      "Internationalization / localization"
-    );
-  });
+  await visit("/groups/discourse");
 
-  visit("/groups/discourse");
+  await click(".group-message-button");
 
-  click(".group-message-button");
-
-  andThen(() => {
-    assert.ok(count("#reply-control") === 1, "it opens the composer");
-    assert.equal(
-      find(".ac-wrap .item").text(),
-      "discourse",
-      "it prefills the group name"
-    );
-  });
+  assert.ok(count("#reply-control") === 1, "it opens the composer");
+  assert.equal(
+    find(".ac-wrap .item").text(),
+    "discourse",
+    "it prefills the group name"
+  );
 });
 
 QUnit.test(
   "Admin viewing group messages when there are no messages",
-  assert => {
+  async assert => {
     // prettier-ignore
     server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
       return response({ topic_list: { topics: [] } });
@@ -150,23 +140,21 @@ QUnit.test(
     logIn();
     Discourse.reset();
 
-    visit("/groups/discourse");
+    await visit("/groups/discourse");
 
-    click(".nav-pills li a[title='Messages']");
+    await click(".nav-pills li a[title='Messages']");
 
-    andThen(() => {
-      assert.equal(
-        find(".alert")
-          .text()
-          .trim(),
-        I18n.t("choose_topic.none_found"),
-        "it should display the right alert"
-      );
-    });
+    assert.equal(
+      find(".alert")
+        .text()
+        .trim(),
+      I18n.t("choose_topic.none_found"),
+      "it should display the right alert"
+    );
   }
 );
 
-QUnit.test("Admin viewing group messages", assert => {
+QUnit.test("Admin viewing group messages", async assert => {
   // prettier-ignore
   server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
     return response({
@@ -252,41 +240,37 @@ QUnit.test("Admin viewing group messages", assert => {
   logIn();
   Discourse.reset();
 
-  visit("/groups/discourse");
-  click(".nav-pills li a[title='Messages']");
+  await visit("/groups/discourse");
+  await click(".nav-pills li a[title='Messages']");
 
-  andThen(() => {
-    assert.equal(
-      find(".topic-list-item .link-top-line")
-        .text()
-        .trim(),
-      "This is a private message 1",
-      "it should display the list of group topics"
-    );
-  });
+  assert.equal(
+    find(".topic-list-item .link-top-line")
+      .text()
+      .trim(),
+    "This is a private message 1",
+    "it should display the list of group topics"
+  );
 });
 
-QUnit.test("Admin Viewing Group", assert => {
+QUnit.test("Admin Viewing Group", async assert => {
   logIn();
   Discourse.reset();
 
-  visit("/groups/discourse");
+  await visit("/groups/discourse");
 
-  andThen(() => {
-    assert.ok(
-      find(".nav-pills li a[title='Manage']").length === 1,
-      "it should show manage group tab if user is admin"
-    );
+  assert.ok(
+    find(".nav-pills li a[title='Manage']").length === 1,
+    "it should show manage group tab if user is admin"
+  );
 
-    assert.equal(
-      count(".group-message-button"),
-      1,
-      "it displays show group message button"
-    );
-    assert.equal(
-      find(".group-info-name").text(),
-      "Awesome Team",
-      "it should display the group name"
-    );
-  });
+  assert.equal(
+    count(".group-message-button"),
+    1,
+    "it displays show group message button"
+  );
+  assert.equal(
+    find(".group-info-name").text(),
+    "Awesome Team",
+    "it should display the group name"
+  );
 });
