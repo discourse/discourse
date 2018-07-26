@@ -2,6 +2,15 @@
   .no-data-alert {
     width: 100%;
     align-self: flex-start;
+    text-align: center;
+    padding: 1em;
+
+    .d-icon-pie-chart {
+      color: $primary-low-mid;
+      margin-bottom: 0.5em;
+      font-size: $font-up-5;
+      display: block;
+    }
   }
 
   .conditional-loading-section {
