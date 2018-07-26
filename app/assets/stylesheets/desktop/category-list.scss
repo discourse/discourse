@@ -58,6 +58,9 @@
 
   .featured-topic {
     margin: 10px 0 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 
     &:first-of-type {
       margin-top: 13px;
@@ -73,13 +76,9 @@
       color: dark-light-choose($primary-medium, $secondary-high);
     }
 
-    .topic-post-badges {
-      position: relative;
-      top: -2px;
-    }
-
-    .badge-notification.new-posts {
-      margin: 0 2px;
+    .topic-post-badges .badge.new-posts,
+    .title {
+      margin-right: 5px;
     }
   }
 

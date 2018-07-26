@@ -363,18 +363,7 @@ iframe {
 }
 
 .selected-posts {
-  width: 97%;
   padding: 0.1em 0.7em;
-  background-color: srgb-scale($tertiary, $secondary, 15%);
-  .btn {
-    margin-bottom: 10px;
-    color: $secondary;
-    background: $tertiary;
-    clear: both;
-  }
-  p {
-    clear: both;
-  }
 }
 
 // hide the full set of selection buttons on mobile
@@ -385,18 +374,6 @@ iframe {
 // unhide the simple "select just this post" button
 button.select-post {
   display: inline-block;
-  position: absolute;
-  z-index: z("base") + 1;
-  left: 200px;
-  background-color: srgb-scale($tertiary, $secondary, 60%);
-  color: $secondary;
-  padding: 5px;
-}
-
-.post-select {
-  float: right;
-  margin-right: 20px;
-  margin-top: -20px;
 }
 
 .deleted {
@@ -453,6 +430,30 @@ span.highlighted {
   font-size: $font-down-1;
   .names {
     line-height: $line-height-medium;
+    display: flex;
+    flex-wrap: wrap;
+    .full-name {
+      font-weight: bold;
+      order: 1;
+    }
+    .staff-notes-icon {
+      order: 2;
+      margin-left: 4px;
+    }
+    .poster-icon {
+      order: 2;
+    }
+    .username {
+      order: 3;
+      flex-basis: 100%;
+    }
+    .user-title {
+      order: 4;
+      flex-basis: 100%;
+    }
+    span {
+      margin-right: 4px;
+    }
   }
 }
 

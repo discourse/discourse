@@ -8,13 +8,6 @@
             <tr>
               <td><label for='login-account-name'>{{i18n 'login.username'}}</label></td>
               <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}</td>
-              <td>
-                {{#if showLoginWithEmailLink}}
-                  <a class="login-with-email-link" {{action "emailLogin"}}>
-                    {{i18n 'email_login.link_label'}}
-                  </a>
-                {{/if}}
-              </td>
             </tr>
             <tr>
               <td><label for='login-account-password'>{{i18n 'login.password'}}</label></td>
@@ -28,15 +21,14 @@
             </tr>
           </table>
         </div>
-        {{#second-factor-form}}
-          {{second-factor-input value=loginSecondFactor inputId='login-second-factor'}}
+        {{#second-factor-form secondFactorMethod=secondFactorMethod loginSecondFactor=loginSecondFactor backupEnabled=backupEnabled}}
+          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod}}
         {{/second-factor-form}}
       </form>
     {{/if}}
- 
     {{#if showLoginButtons}}
       {{login-buttons
-        canLoginLocalWithEmail=canLoginLocalWithEmail
+        showLoginWithEmailLink=showLoginWithEmailLink
         processingEmailLink=processingEmailLink
         emailLogin='emailLogin'
         externalLogin='externalLogin'}}

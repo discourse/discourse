@@ -32,6 +32,7 @@ class ImportScripts::Base
     @old_site_settings = {}
     @start_times = { import: Time.now }
     @skip_updates = false
+    @next_category_color_index = {}
   end
 
   def preload_i18n
@@ -83,6 +84,12 @@ class ImportScripts::Base
   end
 
   def change_site_settings
+    if SiteSetting.bootstrap_mode_enabled
+      SiteSetting.default_trust_level = TrustLevel[0] if SiteSetting.default_trust_level == TrustLevel[1]
+      SiteSetting.default_email_digest_frequency = 10080 if SiteSetting.default_email_digest_frequency == 1440
+      SiteSetting.bootstrap_mode_enabled = false
+    end
+
     @site_settings_during_import = get_site_settings_for_import
 
     @site_settings_during_import.each do |key, value|
@@ -445,7 +452,7 @@ class ImportScripts::Base
       user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
       parent_category_id: opts[:parent_category_id],
-      color: opts[:color] || category_color,
+      color: opts[:color] || category_color(opts[:parent_category_id]),
       text_color: opts[:text_color] || "FFF",
       read_restricted: opts[:read_restricted] || false,
     )
@@ -466,11 +473,11 @@ class ImportScripts::Base
     new_category
   end
 
-  def category_color
+  def category_color(parent_category_id)
     @category_colors ||= SiteSetting.category_colors.split('|')
 
-    index = @next_category_color_index.presence || 0
-    @next_category_color_index = index + 1 >= @category_colors.count ? 0 : index + 1
+    index = @next_category_color_index[parent_category_id].presence || 0
+    @next_category_color_index[parent_category_id] = index + 1 >= @category_colors.count ? 0 : index + 1
 
     @category_colors[index]
   end

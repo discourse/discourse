@@ -241,6 +241,17 @@ testCase("link modal (cancel)", function(assert) {
   });
 });
 
+testCase("link modal (cancel clears inputs)", async function(assert) {
+  await click("button.link");
+  await fillIn(".insert-link input.link-url", "https://meta.discourse.org/");
+  await fillIn(".insert-link input.link-text", "Discourse Meta");
+  await click(".insert-link button.btn-danger");
+
+  await click("button.link");
+  assert.equal(this.$(".insert-link input.link-url")[0].value, "");
+  assert.equal(this.$(".insert-link input.link-text")[0].value, "");
+});
+
 testCase("link modal (simple link)", function(assert, textarea) {
   click("button.link");
 

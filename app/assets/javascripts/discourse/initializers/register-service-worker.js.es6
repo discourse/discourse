@@ -7,10 +7,24 @@ export default {
       location.hostname === "localhost";
 
     const isSupported = isSecured && "serviceWorker" in navigator;
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
     if (isSupported) {
-      if (Discourse.ServiceWorkerURL && !isSafari) {
+      const isApple = !!navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i);
+
+      if (Discourse.ServiceWorkerURL && !isApple) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          for (let registration of registrations) {
+            if (
+              registration.active &&
+              !registration.active.scriptURL.includes(
+                Discourse.ServiceWorkerURL
+              )
+            ) {
+              registration.unregister();
+            }
+          }
+        });
+
         navigator.serviceWorker
           .register(`${Discourse.BaseUri}/${Discourse.ServiceWorkerURL}`)
           .catch(error => {

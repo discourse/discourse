@@ -101,4 +101,18 @@ describe EmailLog do
     end
   end
 
+  describe "#bounce_key" do
+    it "should format the bounce_key correctly" do
+      hex = SecureRandom.hex
+      email_log = Fabricate(:email_log, user: user, bounce_key: hex)
+
+      raw_key = EmailLog.where(id: email_log.id)
+        .pluck("bounce_key::text")
+        .first
+
+      expect(raw_key).to_not eq(hex)
+      expect(raw_key.delete('-')).to eq(hex)
+      expect(EmailLog.find(email_log.id).bounce_key).to eq(hex)
+    end
+  end
 end

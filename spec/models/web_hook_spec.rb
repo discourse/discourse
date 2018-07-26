@@ -291,6 +291,13 @@ describe WebHook do
       expect(job_args["event_name"]).to eq("user_logged_in")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
+
+      UserDestroyer.new(Discourse.system_user).destroy(user)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("user_destroyed")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
     end
 
     it 'should enqueue the right hooks for category events' do

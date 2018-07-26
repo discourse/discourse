@@ -11,8 +11,9 @@ class UsersController < ApplicationController
 
   requires_login only: [
     :username, :update, :user_preferences_redirect, :upload_user_image,
-    :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
-    :preferences, :create_second_factor, :update_second_factor
+    :pick_avatar, :destroy_user_image, :destroy, :check_emails,
+    :topic_tracking_state, :preferences, :create_second_factor,
+    :update_second_factor, :create_second_factor_backup, :select_avatar
   ]
 
   skip_before_action :check_xhr, only: [
@@ -146,8 +147,11 @@ class UsersController < ApplicationController
 
     StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
 
+    email, *secondary_emails = user.emails
+
     render json: {
-      email: user.email,
+      email: email,
+      secondary_emails: secondary_emails,
       associated_accounts: user.associated_accounts
     }
   rescue Discourse::InvalidAccess
@@ -454,7 +458,7 @@ class UsersController < ApplicationController
 
     totp_enabled = @user&.totp_enabled?
 
-    if !totp_enabled || @user.authenticate_totp(params[:second_factor_token])
+    if !totp_enabled || @user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
       secure_session["second-factor-#{token}"] = "true"
     end
 
@@ -467,7 +471,7 @@ class UsersController < ApplicationController
 
       if !valid_second_factor
         RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        @user.errors.add(:user_second_factor, :invalid)
+        @user.errors.add(:user_second_factors, :invalid)
         @error = I18n.t('login.invalid_second_factor_code')
       elsif @invalid_password
         @user.errors.add(:password, :invalid)
@@ -494,7 +498,8 @@ class UsersController < ApplicationController
             MultiJson.dump(
               is_developer: UsernameCheckerService.is_developer?(@user.email),
               admin: @user.admin?,
-              second_factor_required: !valid_second_factor
+              second_factor_required: !valid_second_factor,
+              backup_enabled: @user.backup_codes_enabled?
             )
           )
         end
@@ -524,7 +529,8 @@ class UsersController < ApplicationController
           render json: {
             is_developer: UsernameCheckerService.is_developer?(@user.email),
             admin: @user.admin?,
-            second_factor_required: !valid_second_factor
+            second_factor_required: !valid_second_factor,
+            backup_enabled: @user.backup_codes_enabled?
           }
         end
       end
@@ -575,16 +581,19 @@ class UsersController < ApplicationController
 
         email_token_user = EmailToken.confirmable(token)&.user
         totp_enabled = email_token_user&.totp_enabled?
+        backup_enabled = email_token_user&.backup_codes_enabled?
         second_factor_token = params[:second_factor_token]
+        second_factor_method = params[:second_factor_method].to_i
         confirm_email = false
 
         confirm_email =
           if totp_enabled
             @second_factor_required = true
+            @backup_codes_enabled = true
             @message = I18n.t("login.second_factor_title")
 
             if second_factor_token.present?
-              if email_token_user.authenticate_totp(second_factor_token)
+              if email_token_user.authenticate_second_factor(second_factor_token, second_factor_method)
                 true
               else
                 @error = I18n.t("login.invalid_second_factor_code")
@@ -862,6 +871,8 @@ class UsersController < ApplicationController
         return render_json_error I18n.t("avatar.missing")
       end
 
+      user.create_user_avatar unless user.user_avatar
+
       if type == "gravatar"
         user.user_avatar.gravatar_upload_id = upload_id
       else
@@ -873,6 +884,46 @@ class UsersController < ApplicationController
     user.user_avatar.save!
 
     render json: success_json
+  end
+
+  def select_avatar
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    url = params[:url]
+
+    if url.blank?
+      return render json: failed_json, status: 422
+    end
+
+    unless SiteSetting.selectable_avatars_enabled
+      return render json: failed_json, status: 422
+    end
+
+    if SiteSetting.selectable_avatars.blank?
+      return render json: failed_json, status: 422
+    end
+
+    unless SiteSetting.selectable_avatars[url]
+      return render json: failed_json, status: 422
+    end
+
+    unless upload = Upload.find_by(url: url)
+      return render json: failed_json, status: 422
+    end
+
+    user.uploaded_avatar_id = upload.id
+    user.save!
+
+    avatar = user.user_avatar || user.create_user_avatar
+    avatar.custom_upload_id = upload.id
+    avatar.save!
+
+    render json: {
+      avatar_template: user.avatar_template,
+      custom_avatar_template: user.avatar_template,
+      uploaded_avatar_id: upload.id,
+    }
   end
 
   def destroy_user_image
@@ -956,19 +1007,43 @@ class UsersController < ApplicationController
     )
 
     render json: success_json.merge(
-      key: current_user.user_second_factor.data.scan(/.{4}/).join(" "),
+      key: current_user.user_second_factors.totp.data.scan(/.{4}/).join(" "),
       qr: qrcode_svg
+    )
+  end
+
+  def create_second_factor_backup
+    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+
+    unless current_user.authenticate_totp(params[:second_factor_token])
+      return render json: failed_json.merge(
+        error: I18n.t("login.invalid_second_factor_code")
+      )
+    end
+
+    backup_codes = current_user.generate_backup_codes
+
+    render json: success_json.merge(
+      backup_codes: backup_codes
     )
   end
 
   def update_second_factor
     params.require(:second_factor_token)
+    params.require(:second_factor_method)
+
+    second_factor_method = params[:second_factor_method].to_i
 
     [request.remote_ip, current_user.id].each do |key|
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
-    user_second_factor = current_user.user_second_factor
+    if second_factor_method == UserSecondFactor.methods[:totp]
+      user_second_factor = current_user.user_second_factors.totp
+    elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+      user_second_factor = current_user.user_second_factors.backup_codes
+    end
+
     raise Discourse::InvalidParameters unless user_second_factor
 
     unless current_user.authenticate_totp(params[:second_factor_token])
@@ -980,16 +1055,47 @@ class UsersController < ApplicationController
     if params[:enable] == "true"
       user_second_factor.update!(enabled: true)
     else
-      user_second_factor.destroy!
+      # when disabling totp, backup is disabled too
+      if second_factor_method == UserSecondFactor.methods[:totp]
+        current_user.user_second_factors.destroy_all
 
-      Jobs.enqueue(
-        :critical_user_email,
-        type: :account_second_factor_disabled,
-        user_id: current_user.id
-      )
+        Jobs.enqueue(
+          :critical_user_email,
+          type: :account_second_factor_disabled,
+          user_id: current_user.id
+        )
+      elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+        current_user.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
+      end
     end
 
     render json: success_json
+  end
+
+  def revoke_account
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    provider_name = params.require(:provider_name)
+
+    # Using Discourse.authenticators rather than Discourse.enabled_authenticators so users can
+    # revoke permissions even if the admin has temporarily disabled that type of login
+    authenticator = Discourse.authenticators.find { |authenticator| authenticator.name == provider_name }
+    raise Discourse::NotFound if authenticator.nil?
+
+    skip_remote = params.permit(:skip_remote)
+
+    # We're likely going to contact the remote auth provider, so hijack request
+    hijack do
+      result = authenticator.revoke(user, skip_remote: skip_remote)
+      if result
+        return render json: success_json
+      else
+        return render json: {
+          success: false,
+          message: I18n.t("associated_accounts.revoke_failed", provider_name: provider_name)
+        }
+      end
+    end
   end
 
   private
@@ -1038,7 +1144,7 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
-      :theme_key,
+      :theme_ids,
       :locale,
       :bio_raw,
       :location,
@@ -1053,7 +1159,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
 
     result = params
-      .permit(permitted)
+      .permit(permitted, theme_ids: [])
       .reverse_merge(
         ip_address: request.remote_ip,
         registration_ip_address: request.remote_ip,

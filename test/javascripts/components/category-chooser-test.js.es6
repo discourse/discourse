@@ -11,35 +11,31 @@ componentTest("with value", {
   template: "{{category-chooser value=2}}",
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        2
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "feature"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      2
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "feature"
+    );
   }
 });
 
 componentTest("with excludeCategoryId", {
   template: "{{category-chooser excludeCategoryId=2}}",
 
-  test(assert) {
-    this.get("subject").expand();
+  async test(assert) {
+    await this.get("subject").expandAwait();
 
-    andThen(() =>
-      assert.notOk(
-        this.get("subject")
-          .rowByValue(2)
-          .exists()
-      )
+    assert.notOk(
+      this.get("subject")
+        .rowByValue(2)
+        .exists()
     );
   }
 });
@@ -47,36 +43,34 @@ componentTest("with excludeCategoryId", {
 componentTest("with scopedCategoryId", {
   template: "{{category-chooser scopedCategoryId=2}}",
 
-  test(assert) {
-    this.get("subject").expand();
+  async test(assert) {
+    await this.get("subject").expandAwait();
 
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .rowByIndex(0)
-          .title(),
-        "Discussion about features or potential features of Discourse: how they work, why they work, etc."
-      );
-      assert.equal(
-        this.get("subject")
-          .rowByIndex(0)
-          .value(),
-        2
-      );
-      assert.equal(
-        this.get("subject")
-          .rowByIndex(1)
-          .title(),
-        "My idea here is to have mini specs for features we would like built but have no bandwidth to build"
-      );
-      assert.equal(
-        this.get("subject")
-          .rowByIndex(1)
-          .value(),
-        26
-      );
-      assert.equal(this.get("subject").rows().length, 2);
-    });
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(0)
+        .title(),
+      "Discussion about features or potential features of Discourse: how they work, why they work, etc."
+    );
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(0)
+        .value(),
+      2
+    );
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(1)
+        .title(),
+      "My idea here is to have mini specs for features we would like built but have no bandwidth to build"
+    );
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(1)
+        .value(),
+      26
+    );
+    assert.equal(this.get("subject").rows().length, 2);
   }
 });
 
@@ -88,20 +82,18 @@ componentTest("with allowUncategorized=null", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        null
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "Select a category"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      null
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "category"
+    );
   }
 });
 
@@ -113,20 +105,18 @@ componentTest("with allowUncategorized=null rootNone=true", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        null
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "Select a category"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      null
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "category"
+    );
   }
 });
 
@@ -140,20 +130,18 @@ componentTest("with disallowed uncategorized, rootNone and rootNoneLabel", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        null
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "Select a category"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      null
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "category"
+    );
   }
 });
 
@@ -165,20 +153,18 @@ componentTest("with allowed uncategorized", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        null
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "uncategorized"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      null
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "uncategorized"
+    );
   }
 });
 
@@ -190,20 +176,18 @@ componentTest("with allowed uncategorized and rootNone", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        null
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "(no category)"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      null
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "(no category)"
+    );
   }
 });
 
@@ -217,19 +201,17 @@ componentTest("with allowed uncategorized rootNone and rootNoneLabel", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        null
-      );
-      assert.equal(
-        this.get("subject")
-          .header()
-          .title(),
-        "root none label"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      null
+    );
+    assert.equal(
+      this.get("subject")
+        .header()
+        .title(),
+      "root none label"
+    );
   }
 });

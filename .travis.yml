@@ -8,6 +8,7 @@ branches:
 
 env:
   global:
+    - TRAVIS_NODE_VERSION="10"
     - DISCOURSE_HOSTNAME=www.example.com
     - RUBY_GLOBAL_METHOD_CACHE_SIZE=131072
   matrix:
@@ -46,6 +47,8 @@ cache:
     - vendor/bundle
 
 before_install:
+  - nvm install node
+  - node --version
   - gem install bundler
   - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
@@ -61,7 +64,7 @@ before_install:
 install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu > /dev/null; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3 > /dev/null; fi"
-  - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint > /dev/null; fi"
+  - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint prettier > /dev/null; fi"
   - bash -c "if [ '$QUNIT_RUN' == '1' ]; then yarn install --dev > /dev/null; fi"
   - bash -c "if [ '$RUN_LINT' != '1' ]; then bundle exec rake db:create db:migrate > /dev/null; fi"
 
@@ -70,6 +73,7 @@ script:
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
+        bundle exec danger && \
         eslint --ext .es6 app/assets/javascripts && \
         eslint --ext .es6 test/javascripts && \
         eslint --ext .es6 plugins/**/assets/javascripts && \

@@ -92,6 +92,11 @@ class DiscourseSingleSignOn < SingleSignOn
       user.user_profile.save!
     end
 
+    if website
+      user.user_profile.website = website
+      user.user_profile.save!
+    end
+
     unless admin.nil? && moderator.nil?
       Group.refresh_automatic_groups!(:admins, :moderators, :staff)
     end

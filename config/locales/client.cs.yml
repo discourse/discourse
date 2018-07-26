@@ -534,15 +534,12 @@ cs:
       "14": "Čeká na schválení"
     categories:
       all: "všechny kategorie"
-      all_subcategories: "všechny v %{categoryName}"
       no_subcategory: "žádné"
       category: "Kategorie"
       category_list: "Zobrazit seznam kategorií"
       reorder:
         title: "Přeřadit kategorie"
         title_long: "Přeorganizovat seznam kategorií"
-        fix_order: "Zafixovat umístění"
-        fix_order_tooltip: "Ne všechny kategorie mají jedinečné číslo umístěni, což může způsobovat nečekané následky."
         save: "Uložit pořadí"
         apply_all: "Použít"
         position: "Umístění"
@@ -744,7 +741,6 @@ cs:
         upload_title: "Nahrát obrázek"
         upload_picture: "Nahrát obrázek"
         image_is_not_a_square: "Varování: Ořízli jsme váš obrázek; šířka a délka nebyla stejná."
-        cache_notice: "Úspěšně jste změnili váš profilový obrázek, ale chvíli může trvat, než se zobrazí kvůli ukládání v mezipaměti prohlížeče. "
       change_profile_background:
         title: "Pozadí profilu"
         instructions: "Pozadí profilu je zarovnáno doprostřed a má výchozí šířku 850px."
@@ -952,7 +948,6 @@ cs:
         most_liked_users: "Nejvíce \"to se mi líbí\""
         most_replied_to_users: "Nejvíce odpovědí"
         no_likes: "Zatím žádné \"to se mi líbí\""
-      associated_accounts: "Přihlášení"
       ip_address:
         title: "Poslední IP adresa"
       registration_ip_address:
@@ -1117,9 +1112,6 @@ cs:
       preferences: "Pro to, aby jsi mohl měnit své uživatelské nastavení, se musíš přihlásit."
       forgot: "Nevybavuju si podrobnosti svého účtu"
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
-      google:
-        title: "přes Google"
-        message: "Autentizuji přes Google (ujistěte se, že nemáte zablokovaná popup okna)"
       google_oauth2:
         title: "přes Google"
         message: "Přihlašování přes Google (ujistěte se že nemáte zaplé blokování pop up oken)"
@@ -1991,7 +1983,6 @@ cs:
           inappropriate: "Zrušit nahlášení"
           bookmark: "Odebrat ze záložek"
           like: "Už se mi to nelíbí"
-          vote: "Zrušit hlas"
         people:
           off_topic: "označil příspěvek jako off-topic"
           spam: "označil příspěvek jako spam"
@@ -2005,7 +1996,6 @@ cs:
             few: "a {{count}} dalším se to líbí"
             many: "a {{count}} dalším se to líbí"
             other: "a {{count}} dalším se to líbí"
-          vote: "hlasoval pro tento příspěvek"
         by_you:
           off_topic: "Označili jste tento příspěvek jako off-topic"
           spam: "Označili jste tento příspěvek jako spam"
@@ -2014,7 +2004,6 @@ cs:
           notify_user: "Tomuto uživateli jste zaslali zprávu"
           bookmark: "Přidali jste si tento příspěvek do záložek"
           like: "Toto se vám líbí"
-          vote: "Hlasovali jste pro tento příspěvek"
         by_you_and_others:
           off_topic:
             one: "Vy a 1 další člověk jste označili tento příspěvek jako off-topic"
@@ -2051,11 +2040,6 @@ cs:
             few: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
             many: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
             other: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
-          vote:
-            one: "Vy a 1 další člověk jste hlasovali pro tento příspěvek"
-            few: "Vy a {{count}} další lidé jste hlasovali pro tento příspěvek"
-            many: "Vy a {{count}} dalších lidí jste hlasovali pro tento příspěvek"
-            other: "Vy a {{count}} dalších lidí jste hlasovali pro tento příspěvek"
         by_others:
           off_topic:
             one: "1 člověk označil tento příspěvek jako off-topic"
@@ -2092,11 +2076,6 @@ cs:
             few: "{{count}} lidem se tento příspěvek líbí"
             many: "{{count}} lidem se tento příspěvek líbí"
             other: "{{count}} lidem se tento příspěvek líbí"
-          vote:
-            one: "1 člověk hlasoval pro tento příspěvek"
-            few: "{{count}} lidé hlasovali pro tento příspěvek"
-            many: "{{count}} lidí hlasovalo pro tento příspěvek"
-            other: "{{count}} lidí hlasovalo pro tento příspěvek"
       delete:
         confirm:
           one: "Jsi si jistý, že chceš smazat tento příspěvek?"
@@ -2146,7 +2125,6 @@ cs:
       can: 'smí&hellip; '
       none: '(bez kategorie)'
       all: 'Všechny kategorie'
-      choose: 'Vyberte kategorii&hellip;'
       edit: 'upravit'
       edit_long: "Upravit"
       view: 'Zobrazit témata v kategorii'
@@ -2195,7 +2173,6 @@ cs:
       show_subcategory_list: "Ukázat seznam podkategorií nad tématy v této kategorii."
       num_featured_topics: "Počet témat, která se zobrazují na stránce kategorie "
       subcategory_num_featured_topics: "Počet zobrazených témat na stránce nadřazené kategorie:"
-      all_topics_wiki: "Vytvořit nové wiki témat ve výchozím nastavení."
       subcategory_list_style: "Styl seznamu podkategorií: "
       sort_order: "Seznam témat seřazený podle: "
       default_view: "Výchozí seznam témat: "
@@ -2204,7 +2181,6 @@ cs:
       edit_permissions: "Upravit oprávnění"
       add_permission: "Přidat oprávnění"
       this_year: "letos"
-      position: "umístění"
       default_position: "Výchozí umístění"
       position_disabled: "Kategorie jsou zobrazovány podle pořadí aktivity. Pro kontrolu pořadí kategorií v seznamech,"
       position_disabled_click: 'povolte nastavení "neměnné pozice kategorií" (fixed category positions).'
@@ -3197,7 +3173,6 @@ cs:
             address_placeholder: "jmeno@priklad.cz"
             type_placeholder: "souhrn, registrace..."
             reply_key_placeholder: "klíč pro odpověď"
-            skipped_reason_placeholder: "důvod"
       moderation_history:
         performed_by: "Provedeno uživatelem"
         no_results: "Není k dispozici žádná historie akcí moderátorů."

@@ -10,6 +10,9 @@ require 'archetype'
 require 'digest/sha1'
 
 class Post < ActiveRecord::Base
+  # TODO: Remove this after 19th Dec 2018
+  self.ignored_columns = %w{vote_count}
+
   include RateLimiter::OnCreateRecord
   include Trashable
   include Searchable
@@ -113,7 +116,8 @@ class Post < ActiveRecord::Base
     @hidden_reasons ||= Enum.new(flag_threshold_reached: 1,
                                  flag_threshold_reached_again: 2,
                                  new_user_spam_threshold_reached: 3,
-                                 flagged_by_tl3_user: 4)
+                                 flagged_by_tl3_user: 4,
+                                 email_spam_header_found: 5)
   end
 
   def self.types
@@ -614,7 +618,7 @@ class Post < ActiveRecord::Base
 
   def advance_draft_sequence
     return if topic.blank? # could be deleted
-    DraftSequence.next!(last_editor_id, topic.draft_key)
+    DraftSequence.next!(last_editor_id, topic.draft_key) if last_editor_id
   end
 
   # TODO: move to post-analyzer?
@@ -626,7 +630,9 @@ class Post < ActiveRecord::Base
     raw.scan(/\[quote=\"([^"]+)"\]/).each do |quote|
       args = parse_quote_into_arguments(quote)
       # If the topic attribute is present, ensure it's the same topic
-      temp_collector << args[:post] unless (args[:topic].present? && topic_id != args[:topic])
+      if !(args[:topic].present? && topic_id != args[:topic]) && args[:post] != post_number
+        temp_collector << args[:post]
+      end
     end
 
     temp_collector.uniq!
@@ -833,7 +839,6 @@ end
 #  score                   :float
 #  reads                   :integer          default(0), not null
 #  post_type               :integer          default(1), not null
-#  vote_count              :integer          default(0), not null
 #  sort_order              :integer
 #  last_editor_id          :integer
 #  hidden                  :boolean          default(FALSE), not null
@@ -868,10 +873,12 @@ end
 #
 # Indexes
 #
-#  idx_posts_created_at_topic_id            (created_at,topic_id)
-#  idx_posts_deleted_posts                  (topic_id,post_number)
-#  idx_posts_user_id_deleted_at             (user_id)
-#  index_posts_on_reply_to_post_number      (reply_to_post_number)
-#  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
-#  index_posts_on_user_id_and_created_at    (user_id,created_at)
+#  idx_posts_created_at_topic_id             (created_at,topic_id) WHERE (deleted_at IS NULL)
+#  idx_posts_deleted_posts                   (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
+#  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
+#  index_posts_on_reply_to_post_number       (reply_to_post_number)
+#  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
+#  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_sort_order    (topic_id,sort_order)
+#  index_posts_on_user_id_and_created_at     (user_id,created_at)
 #

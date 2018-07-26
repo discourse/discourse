@@ -13,6 +13,9 @@ require_dependency 'topic_posters_summary'
 require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
+  # TODO remove 01-01-2019
+  self.ignored_columns = ["percent_rank", "vote_count"]
+
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
@@ -39,10 +42,6 @@ class Topic < ActiveRecord::Base
         Topic.update_all(slug: nil)
       end
     end
-  end
-
-  def self.max_sort_order
-    @max_sort_order ||= (2**31) - 1
   end
 
   def self.max_fancy_title_length
@@ -687,7 +686,9 @@ class Topic < ActiveRecord::Base
 
         if post = self.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
-          Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
+          DB.after_commit do
+            Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
+          end
         end
       end
 
@@ -699,10 +700,16 @@ class Topic < ActiveRecord::Base
     true
   end
 
-  def add_small_action(user, action_code, who = nil)
+  def add_small_action(user, action_code, who = nil, opts = {})
     custom_fields = {}
     custom_fields["action_code_who"] = who if who.present?
-    add_moderator_post(user, nil, post_type: Post.types[:small_action], action_code: action_code, custom_fields: custom_fields)
+    opts = opts.merge(
+      post_type: Post.types[:small_action],
+      action_code: action_code,
+      custom_fields: custom_fields
+    )
+
+    add_moderator_post(user, nil, opts)
   end
 
   def add_moderator_post(user, text, opts = nil)
@@ -910,9 +917,16 @@ class Topic < ActiveRecord::Base
     post_mover = PostMover.new(self, moved_by, post_ids)
 
     if opts[:destination_topic_id]
-      post_mover.to_topic opts[:destination_topic_id]
+      topic = post_mover.to_topic(opts[:destination_topic_id])
+
+      DiscourseEvent.trigger(:topic_merged,
+        post_mover.original_topic,
+        post_mover.destination_topic
+      )
+
+      topic
     elsif opts[:title]
-      post_mover.to_new_topic(opts[:title], opts[:category_id])
+      post_mover.to_new_topic(opts[:title], opts[:category_id], opts[:tags])
     end
   end
 
@@ -1426,14 +1440,12 @@ end
 #  archived                  :boolean          default(FALSE), not null
 #  bumped_at                 :datetime         not null
 #  has_summary               :boolean          default(FALSE), not null
-#  vote_count                :integer          default(0), not null
 #  archetype                 :string           default("regular"), not null
 #  featured_user4_id         :integer
 #  notify_moderators_count   :integer          default(0), not null
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
-#  percent_rank              :float            default(1.0), not null
 #  subtype                   :string
 #  slug                      :string
 #  deleted_by_id             :integer
@@ -1449,12 +1461,12 @@ end
 # Indexes
 #
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
-#  idx_topics_user_id_deleted_at           (user_id)
-#  idxtopicslug                            (slug)
+#  idx_topics_user_id_deleted_at           (user_id) WHERE (deleted_at IS NULL)
+#  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
 #  index_topics_on_bumped_at               (bumped_at)
-#  index_topics_on_created_at_and_visible  (created_at,visible)
+#  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_lower_title             (lower((title)::text))
-#  index_topics_on_pinned_at               (pinned_at)
-#  index_topics_on_pinned_globally         (pinned_globally)
+#  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
+#  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
 #

@@ -70,9 +70,13 @@ export default SelectKitRowComponent.extend({
     return category.get("parent_category_id");
   },
 
-  @computed("category.topic_count")
-  topicCount(topicCount) {
-    return `&times; ${topicCount}`.htmlSafe();
+  @computed(
+    "category.totalTopicCount",
+    "category.topic_count",
+    "options.countSubcategories"
+  )
+  topicCount(totalCount, topicCount, countSubcats) {
+    return `&times; ${countSubcats ? totalCount : topicCount}`.htmlSafe();
   },
 
   @computed("displayCategoryDescription", "category.description")

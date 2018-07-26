@@ -241,13 +241,13 @@ class UploadCreator
     when "profile_background"
       max_width = 850 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: @filename, allow_animation: allow_animation)
     when "card_background"
       max_width = 590 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: @filename, allow_animation: allow_animation)
     when "custom_emoji"
-      OptimizedImage.downsize(@file.path, @file.path, "100x100\\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: @filename, allow_animation: allow_animation)
     end
 
     extract_image_info!
@@ -267,7 +267,7 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(@file.path)
     FileHelper.optimize_image!(@file.path)
     extract_image_info!
-  rescue ImageOptim::Worker::TimeoutExceeded
+  rescue ImageOptim::TimeoutExceeded
     Rails.logger.warn("ImageOptim timed out while optimizing #{@filename}")
   end
 

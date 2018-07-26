@@ -4,6 +4,7 @@ require_dependency 'filter_best_posts'
 require_dependency 'gaps'
 
 class TopicView
+  MEGA_TOPIC_POSTS_COUNT = 10000
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
@@ -70,7 +71,7 @@ class TopicView
 
     filter_posts(options)
 
-    if @posts
+    if @posts && !@skip_custom_fields
       if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
@@ -103,7 +104,14 @@ class TopicView
 
   def gaps
     return unless @contains_gaps
-    @gaps ||= Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+
+    @gaps ||= begin
+      if is_mega_topic?
+        nil
+      else
+        Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+      end
+    end
   end
 
   def last_post
@@ -201,6 +209,11 @@ class TopicView
   def filter_posts(opts = {})
     return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
     return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
+
+    if opts[:filter_post_number].present?
+      return filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    end
+
     return filter_best(opts[:best], opts) if opts[:best].present?
 
     filter_posts_paged(@page)
@@ -233,8 +246,29 @@ class TopicView
 
   # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
-    min_idx, max_idx = get_minmax_ids(post_number)
-    filter_posts_in_range(min_idx, max_idx)
+    posts_before = (@limit.to_f / 4).floor
+    posts_before = 1 if posts_before.zero?
+    sort_order = get_sort_order(post_number)
+
+    before_post_ids = @filtered_posts.order(sort_order: :desc)
+      .where("posts.sort_order < ?", sort_order)
+      .limit(posts_before)
+      .pluck(:id)
+
+    post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
+      .where("posts.sort_order >= ?", sort_order)
+      .limit(@limit - before_post_ids.length)
+      .pluck(:id)
+
+    if post_ids.length < @limit
+      post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
+        .where("posts.sort_order < ?", sort_order)
+        .offset(before_post_ids.length)
+        .limit(@limit - post_ids.length)
+        .pluck(:id)
+    end
+
+    filter_posts_by_ids(post_ids)
   end
 
   def filter_posts_paged(page)
@@ -244,9 +278,12 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    max = (min + @limit) - 1
-
-    filter_posts_in_range(min, max)
+    @posts = filter_posts_by_ids(
+      @filtered_posts.order(:sort_order)
+        .offset(min)
+        .limit(@limit)
+        .pluck(:id)
+    )
   end
 
   def filter_best(max, opts = {})
@@ -309,7 +346,7 @@ class TopicView
     @participant_count ||=
       begin
         if participants.size == MAX_PARTICIPANTS
-          if unfiltered_post_ids.length > MAX_POSTS_COUNT_PARTICIPANTS
+          if @topic.posts_count > MAX_POSTS_COUNT_PARTICIPANTS
             @topic.participant_count
           else
             sql = <<~SQL
@@ -373,14 +410,14 @@ class TopicView
     @filtered_posts.by_newest.with_user.first(25)
   end
 
-  # Returns an array of [id, post_number, days_ago] tuples.
+  # Returns an array of [id, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
     @filtered_post_stream ||= begin
       posts = @filtered_posts
         .order(:sort_order)
 
-      columns = [:id, :post_number]
+      columns = [:id]
 
       if !is_mega_topic?
         columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
@@ -391,7 +428,13 @@ class TopicView
   end
 
   def filtered_post_ids
-    @filtered_post_ids ||= filtered_post_stream.map { |tuple| tuple[0] }
+    @filtered_post_ids ||= filtered_post_stream.map do |tuple|
+      if is_mega_topic?
+        tuple
+      else
+        tuple[0]
+      end
+    end
   end
 
   def unfiltered_post_ids
@@ -405,9 +448,20 @@ class TopicView
       end
   end
 
-  def force_summary_mode?
-    @force_summary_mode ||=
-      (@topic.closed? && @topic.posts_count >= (MEGA_TOPIC_POSTS_COUNT * 2))
+  def filtered_post_id(post_number)
+    @filtered_posts.where(post_number: post_number).pluck(:id).first
+  end
+
+  def is_mega_topic?
+    @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
+  end
+
+  def first_post_id
+    @filtered_posts.order(sort_order: :asc).limit(1).pluck(:id).first
+  end
+
+  def last_post_id
+    @filtered_posts.order(sort_order: :desc).limit(1).pluck(:id).first
   end
 
   protected
@@ -430,6 +484,32 @@ class TopicView
 
   private
 
+  def get_sort_order(post_number)
+    sql = <<~SQL
+    SELECT posts.sort_order
+    FROM posts
+    WHERE posts.post_number = #{post_number.to_i}
+    AND posts.topic_id = #{@topic.id.to_i}
+    LIMIT 1
+    SQL
+
+    sort_order = DB.query_single(sql).first
+
+    if !sort_order
+      sql = <<~SQL
+      SELECT posts.sort_order
+      FROM posts
+      WHERE posts.topic_id = #{@topic.id.to_i}
+      ORDER BY @(post_number - #{post_number.to_i})
+      LIMIT 1
+      SQL
+
+      sort_order = DB.query_single(sql).first
+    end
+
+    sort_order
+  end
+
   def filter_post_types(posts)
     visible_types = Topic.visible_post_types(@user)
 
@@ -440,6 +520,26 @@ class TopicView
     end
   end
 
+  def filter_posts_by_post_number(post_number, asc)
+    sort_order = get_sort_order(post_number)
+
+    posts =
+      if asc
+        @filtered_posts
+          .where("sort_order > ?", sort_order)
+          .order(sort_order: :asc)
+      else
+        @filtered_posts
+          .where("sort_order < ?", sort_order)
+          .order(sort_order: :desc)
+      end
+
+    posts = posts.limit(@limit) if !@skip_limit
+    filter_posts_by_ids(posts.pluck(:id))
+
+    @posts = @posts.unscope(:order).order(sort_order: :desc) if !asc
+  end
+
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
@@ -447,19 +547,6 @@ class TopicView
       .order('sort_order')
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
-    @posts
-  end
-
-  def filter_posts_in_range(min, max)
-    post_count = (filtered_post_ids.length - 1)
-
-    max = [max, post_count].min
-
-    return @posts = Post.none if min > max
-
-    min = [[min, max].min, 0].max
-
-    @posts = filter_posts_by_ids(filtered_post_ids[min..max])
     @posts
   end
 
@@ -487,9 +574,9 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     # Filters
-    if @filter == 'summary' || ((@post_number.blank? || @post_number.to_i == 1) && force_summary_mode?)
+    if @filter == 'summary'
       @filtered_posts = @filtered_posts.summary(@topic.id)
-      @contains_gaps = true unless force_summary_mode?
+      @contains_gaps = true
     end
 
     if @best.present?
@@ -500,7 +587,12 @@ class TopicView
     # Username filters
     if @username_filters.present?
       usernames = @username_filters.map { |u| u.downcase }
-      @filtered_posts = @filtered_posts.where('post_number = 1 OR posts.user_id IN (SELECT u.id FROM users u WHERE username_lower IN (?))', usernames)
+
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.user_id IN (SELECT u.id FROM users u WHERE u.username_lower IN (?))
+      ', usernames)
+
       @contains_gaps = true
     end
 
@@ -508,8 +600,12 @@ class TopicView
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
+
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
-      @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
+      @filtered_posts = @filtered_posts.where(
+        "posts.deleted_at IS NULL OR posts.post_number = 1"
+      )
+
       @contains_gaps = true
     end
 
@@ -530,51 +626,5 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
-  end
-
-  def get_minmax_ids(post_number)
-    # Find the closest number we have
-    closest_index = closest_post_to(post_number)
-    return nil if closest_index.nil?
-
-    # Make sure to get at least one post before, even with rounding
-    posts_before = (@limit.to_f / 4).floor
-    posts_before = 1 if posts_before.zero?
-
-    min_idx = closest_index - posts_before
-    min_idx = 0 if min_idx < 0
-    max_idx = min_idx + (@limit - 1)
-
-    # Get a full page even if at the end
-    ensure_full_page(min_idx, max_idx)
-  end
-
-  def ensure_full_page(min, max)
-    upper_limit = (filtered_post_ids.length - 1)
-    if max >= upper_limit
-      return (upper_limit - @limit) + 1, upper_limit
-    else
-      return min, max
-    end
-  end
-
-  def closest_post_to(post_number)
-    # happy path
-    closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
-
-    if closest_post.empty?
-      # less happy path, missing post
-      closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
-    end
-
-    return nil if closest_post.empty?
-
-    filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
-  end
-
-  MEGA_TOPIC_POSTS_COUNT = 10000
-
-  def is_mega_topic?
-    @topic.posts_count >= MEGA_TOPIC_POSTS_COUNT
   end
 end

@@ -11,9 +11,11 @@ class UserEmail < ActiveRecord::Base
   validates :email, email: true, format: { with: EmailValidator.email_regex },
                     if: :validate_email?
 
-  validates :primary, uniqueness: { scope: [:user_id] }, if: :user_id
+  validates :primary, uniqueness: { scope: [:user_id] }, if: [:user_id, :primary]
   validate :user_id_not_changed, if: :primary
   validate :unique_email
+
+  scope :secondary, -> { where(primary: false) }
 
   private
 
@@ -59,5 +61,5 @@ end
 #
 #  index_user_emails_on_email                (lower((email)::text)) UNIQUE
 #  index_user_emails_on_user_id              (user_id)
-#  index_user_emails_on_user_id_and_primary  (user_id,primary) UNIQUE
+#  index_user_emails_on_user_id_and_primary  (user_id,primary) UNIQUE WHERE "primary"
 #

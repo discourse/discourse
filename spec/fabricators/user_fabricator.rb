@@ -12,7 +12,7 @@ Fabricator(:user_single_email, class_name: :user) do
 end
 
 Fabricator(:user, from: :user_single_email) do
-  after_create { |user| Fabricate(:alternate_email, user: user)  }
+  after_create { |user| Fabricate(:secondary_email, user: user) }
 end
 
 Fabricator(:coding_horror, from: :user) do

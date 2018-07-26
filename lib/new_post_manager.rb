@@ -82,7 +82,20 @@ class NewPostManager
     is_fast_typer?(manager) ||
     matches_auto_silence_regex?(manager) ||
     WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval? ||
-    (SiteSetting.approve_unless_staged && user.staged)
+    (SiteSetting.approve_unless_staged && user.staged) ||
+    post_needs_approval_in_its_category?(manager)
+  end
+
+  def self.post_needs_approval_in_its_category?(manager)
+    if manager.args[:topic_id].present?
+      cat = Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
+      return false unless cat
+      cat.require_reply_approval?
+    elsif manager.args[:category].present?
+      Category.find(manager.args[:category]).require_topic_approval?
+    else
+      false
+    end
   end
 
   def self.default_handler(manager)

@@ -133,6 +133,8 @@ RSpec.configure do |config|
     end
 
     unfreeze_time
+
+    raise if ActiveRecord::Base.connection_pool.stat[:busy] > 1
   end
 
   config.before :each do |x|

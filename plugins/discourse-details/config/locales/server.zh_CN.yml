@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_CN: {}
+zh_CN:
+  site_settings:
+    details_enabled: "启用细节功能。如果你改变了这个选项，必须通过此命令重新调制全部帖子：\"rake posts:rebake\"。"

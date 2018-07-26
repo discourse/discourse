@@ -12,6 +12,7 @@ class PostsController < ApplicationController
     :show,
     :replies,
     :by_number,
+    :by_date,
     :short_link,
     :reply_history,
     :replyIids,
@@ -185,7 +186,7 @@ class PostsController < ApplicationController
 
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if too_late_to(:edit, post)
+    if !guardian.send("can_edit?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
       return render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
     end
 
@@ -204,7 +205,7 @@ class PostsController < ApplicationController
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
         category = Category.find_by(id: changes[:category_id])
         if category || (changes[:category_id].to_i == 0)
-          guardian.ensure_can_create_topic_on_category!(category)
+          guardian.ensure_can_move_topic_to_category!(category)
         else
           return render_json_error(I18n.t('category.errors.not_found'))
         end
@@ -249,6 +250,11 @@ class PostsController < ApplicationController
     display_post(post)
   end
 
+  def by_date
+    post = find_post_from_params_by_date
+    display_post(post)
+  end
+
   def reply_history
     post = find_post_from_params
     render_serialized(post.reply_history(params[:max_replies].to_i, guardian), PostSerializer)
@@ -266,11 +272,9 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
-
-    if too_late_to(:delete_post, post)
-      render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
-      return
+    unless current_user.staff?
+      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
+      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
     guardian.ensure_can_delete!(post)
@@ -289,7 +293,10 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
-    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
+    unless current_user.staff?
+      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
+      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
+    end
     guardian.ensure_can_recover_post!(post)
     destroyer = PostDestroyer.new(current_user, post)
     destroyer.recover
@@ -691,10 +698,6 @@ class PostsController < ApplicationController
       end)
   end
 
-  def too_late_to(action, post)
-    !guardian.send("can_#{action}?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
-  end
-
   def display_post(post)
     post.revert_to(params[:version].to_i) if params[:version].present?
     render_post_json(post)
@@ -708,6 +711,16 @@ class PostsController < ApplicationController
   def find_post_from_params_by_number
     by_number_finder = Post.where(topic_id: params[:topic_id], post_number: params[:post_number])
     find_post_using(by_number_finder)
+  end
+
+  def find_post_from_params_by_date
+    by_date_finder = TopicView.new(params[:topic_id], current_user)
+      .filtered_posts
+      .where("created_at >= ?", Time.zone.parse(params[:date]))
+      .order("created_at ASC")
+      .limit(1)
+
+    find_post_using(by_date_finder)
   end
 
   def find_post_using(finder)

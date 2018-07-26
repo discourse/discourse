@@ -1,0 +1,39 @@
+.admin-report.post-edits {
+  .admin-report-table {
+    .report-table {
+      thead tr th.edit_reason,
+      tbody tr td.edit_reason {
+        width: auto;
+      }
+    }
+  }
+}
+
+.admin-report.top-referred-topics {
+  .admin-report-table {
+    .report-table {
+      table-layout: fixed;
+
+      thead tr th.topic_title,
+      tbody tr td.topic_title {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 80%;
+      }
+    }
+  }
+}
+
+.admin-report.trending-search {
+  .admin-report-table {
+    .report-table {
+      table-layout: fixed;
+
+      thead tr th.term,
+      tbody tr td.term {
+        width: 50%;
+      }
+    }
+  }
+}

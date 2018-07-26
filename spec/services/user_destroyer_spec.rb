@@ -55,6 +55,13 @@ describe UserDestroyer do
           UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge(quiet: true))
         }.to_not change { UserHistory.where(action: UserHistory.actions[:delete_user]).count }
       end
+
+      it 'triggers a extensibility event' do
+        event = DiscourseEvent.track_events { destroy }.last
+
+        expect(event[:event_name]).to eq(:user_destroyed)
+        expect(event[:params].first).to eq(@user)
+      end
     end
 
     shared_examples "email block list" do

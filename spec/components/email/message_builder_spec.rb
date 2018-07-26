@@ -9,6 +9,7 @@ describe Email::MessageBuilder do
   let(:builder) { Email::MessageBuilder.new(to_address, subject: subject, body: body) }
   let(:build_args) { builder.build_args }
   let(:header_args) { builder.header_args }
+  let(:allow_reply_header) { described_class::ALLOW_REPLY_BY_EMAIL_HEADER }
 
   it "has the correct to address" do
     expect(build_args[:to]).to eq(to_address)
@@ -44,7 +45,6 @@ describe Email::MessageBuilder do
 
     context "with allow_reply_by_email" do
       let(:reply_by_email_builder) { Email::MessageBuilder.new(to_address, allow_reply_by_email: true) }
-      let(:reply_key) { reply_by_email_builder.header_args['X-Discourse-Reply-Key'] }
 
       context "With the SiteSetting enabled" do
         before do
@@ -52,18 +52,22 @@ describe Email::MessageBuilder do
           SiteSetting.stubs(:reply_by_email_address).returns("r+%{reply_key}@reply.myforum.com")
         end
 
-        it "has a X-Discourse-Reply-Key" do
-          expect(reply_key).to be_present
-          expect(reply_key.size).to eq(32)
-        end
-
         it "returns a Reply-To header with the reply key" do
-          expect(reply_by_email_builder.header_args['Reply-To']).to eq("\"#{SiteSetting.title}\" <r+#{reply_key}@reply.myforum.com>")
+          expect(reply_by_email_builder.header_args['Reply-To'])
+            .to eq("\"#{SiteSetting.title}\" <r+%{reply_key}@reply.myforum.com>")
+
+          expect(reply_by_email_builder.header_args[allow_reply_header])
+            .to eq(true)
         end
 
         it "cleans up the site title" do
           SiteSetting.stubs(:title).returns(">>>Obnoxious Title: Deal, \"With\" It<<<")
-          expect(reply_by_email_builder.header_args['Reply-To']).to eq("\"Obnoxious Title Deal With It\" <r+#{reply_key}@reply.myforum.com>")
+
+          expect(reply_by_email_builder.header_args['Reply-To'])
+            .to eq("\"Obnoxious Title Deal With It\" <r+%{reply_key}@reply.myforum.com>")
+
+          expect(reply_by_email_builder.header_args[allow_reply_header])
+            .to eq(true)
         end
       end
 
@@ -72,33 +76,39 @@ describe Email::MessageBuilder do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
         end
 
-        it "has no X-Discourse-Reply-Key" do
-          expect(reply_key).to be_blank
-        end
-
         it "returns a Reply-To header that's the same as From" do
-          expect(header_args['Reply-To']).to eq(build_args[:from])
+          expect(reply_by_email_builder.header_args['Reply-To'])
+            .to eq(reply_by_email_builder.build_args[:from])
+
+          expect(reply_by_email_builder.header_args[allow_reply_header])
+            .to eq(nil)
         end
       end
     end
 
     context "with allow_reply_by_email" do
-      let(:reply_by_email_builder) { Email::MessageBuilder.new(to_address, allow_reply_by_email: true, private_reply: true, from_alias: "Username") }
-      let(:reply_key) { reply_by_email_builder.header_args['X-Discourse-Reply-Key'] }
+      let(:reply_by_email_builder) do
+        Email::MessageBuilder.new(to_address,
+          allow_reply_by_email: true,
+          private_reply: true,
+          from_alias: "Username"
+        )
+      end
 
       context "With the SiteSetting enabled" do
         before do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(true)
-          SiteSetting.stubs(:reply_by_email_address).returns("r+%{reply_key}@reply.myforum.com")
-        end
 
-        it "has a X-Discourse-Reply-Key" do
-          expect(reply_key).to be_present
-          expect(reply_key.size).to eq(32)
+          SiteSetting.stubs(:reply_by_email_address)
+            .returns("r+%{reply_key}@reply.myforum.com")
         end
 
         it "returns a Reply-To header with the reply key" do
-          expect(reply_by_email_builder.header_args['Reply-To']).to eq("\"Username\" <r+#{reply_key}@reply.myforum.com>")
+          expect(reply_by_email_builder.header_args['Reply-To'])
+            .to eq("\"Username\" <r+%{reply_key}@reply.myforum.com>")
+
+          expect(reply_by_email_builder.header_args[allow_reply_header])
+            .to eq(true)
         end
       end
 
@@ -107,12 +117,12 @@ describe Email::MessageBuilder do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
         end
 
-        it "has no X-Discourse-Reply-Key" do
-          expect(reply_key).to be_blank
-        end
-
         it "returns a Reply-To header that's the same as From" do
-          expect(header_args['Reply-To']).to eq(build_args[:from])
+          expect(reply_by_email_builder.header_args['Reply-To'])
+            .to eq(reply_by_email_builder.build_args[:from])
+
+          expect(reply_by_email_builder.header_args[allow_reply_header])
+            .to eq(nil)
         end
       end
     end

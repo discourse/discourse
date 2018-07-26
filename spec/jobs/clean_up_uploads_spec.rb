@@ -46,12 +46,27 @@ describe Jobs::CleanUpUploads do
 
   it "does not clean up uploads in site settings" do
     logo_upload = fabricate_upload
+    logo_small_upload = fabricate_upload
+    favicon_upload = fabricate_upload
+    apple_touch_icon_upload = fabricate_upload
+    avatar1_upload = fabricate_upload
+    avatar2_upload = fabricate_upload
+
     SiteSetting.logo_url = logo_upload.url
+    SiteSetting.logo_small_url = logo_small_upload.url
+    SiteSetting.favicon_url = favicon_upload.url
+    SiteSetting.apple_touch_icon_url = apple_touch_icon_upload.url
+    SiteSetting.selectable_avatars = [avatar1_upload.url, avatar2_upload.url].join("\n")
 
     Jobs::CleanUpUploads.new.execute(nil)
 
     expect(Upload.exists?(id: @upload.id)).to eq(false)
     expect(Upload.exists?(id: logo_upload.id)).to eq(true)
+    expect(Upload.exists?(id: logo_small_upload.id)).to eq(true)
+    expect(Upload.exists?(id: favicon_upload.id)).to eq(true)
+    expect(Upload.exists?(id: apple_touch_icon_upload.id)).to eq(true)
+    expect(Upload.exists?(id: avatar1_upload.id)).to eq(true)
+    expect(Upload.exists?(id: avatar2_upload.id)).to eq(true)
   end
 
   it "does not clean up uploads in site settings when they use the CDN" do

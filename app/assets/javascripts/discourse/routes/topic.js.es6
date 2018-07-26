@@ -248,6 +248,8 @@ const TopicRoute = Discourse.Route.extend({
     this.screenTrack.stop();
 
     this.appEvents.trigger("header:hide-topic");
+
+    this.controllerFor("topic").set("model", null);
   },
 
   setupController(controller, model) {

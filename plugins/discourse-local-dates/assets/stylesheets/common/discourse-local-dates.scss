@@ -108,7 +108,7 @@
         text-align: center;
       }
 
-      @include small-width {
+      @include breakpoint(medium) {
         flex-direction: column;
         align-items: flex-start;
 

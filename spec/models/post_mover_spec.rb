@@ -19,7 +19,7 @@ describe PostMover do
   end
 
   context 'move_posts' do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, admin: true) }
     let(:another_user) { Fabricate(:evil_trout) }
     let(:category) { Fabricate(:category, user: user) }
     let!(:topic) { Fabricate(:topic, user: user) }
@@ -39,6 +39,7 @@ describe PostMover do
     let(:p6) { Fabricate(:post, topic: topic) }
 
     before do
+      SiteSetting.tagging_enabled = true
       SiteSetting.queue_jobs = false
       p1.replies << p3
       p2.replies << p4
@@ -178,7 +179,7 @@ describe PostMover do
 
         it "works correctly" do
           topic.expects(:add_moderator_post).once
-          new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id)
+          new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id, tags: ["tag1", "tag2"])
 
           expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
 
@@ -187,6 +188,7 @@ describe PostMover do
           expect(new_topic.like_count).to eq(1)
 
           expect(new_topic.category).to eq(category)
+          expect(new_topic.tags.pluck(:name)).to contain_exactly("tag1", "tag2")
           expect(topic.featured_user1_id).to be_blank
           expect(new_topic.posts.by_post_number).to match_array([p2, p4])
 
@@ -261,6 +263,19 @@ describe PostMover do
 
           moderator_post = topic.posts.last
           expect(moderator_post.raw).to include("2 posts were split")
+        end
+
+        it "forces resulting topic owner to watch the new topic" do
+          new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id)
+
+          expect(new_topic.posts_count).to eq(2)
+
+          expect(TopicUser.exists?(
+            user_id: another_user,
+            topic_id: new_topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+            notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+          )).to eq(true)
         end
       end
 
@@ -355,18 +370,34 @@ describe PostMover do
 
         it "moves email log entries" do
           old_topic = old_post.topic
-          Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
-          Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
-          Fabricate(:email_log, user: old_post.user, post: old_post, email_type: :mailing_list)
 
-          expect(EmailLog.where(topic_id: old_topic.id, post_id: old_post.id).count).to eq(2)
-          expect(EmailLog.where(topic_id: nil, post_id: old_post.id).count).to eq(1)
+          2.times do
+            Fabricate(:email_log,
+              user: old_post.user,
+              post: old_post,
+              email_type: :mailing_list
+            )
+          end
 
-          new_topic = old_topic.move_posts(user, [old_post.id], title: "new testing topic name")
+          some_post = Fabricate(:post)
+
+          Fabricate(:email_log,
+            user: some_post.user,
+            post: some_post,
+            email_type: :mailing_list
+          )
+
+          expect(EmailLog.where(post_id: old_post.id).count).to eq(2)
+
+          new_topic = old_topic.move_posts(
+            user,
+            [old_post.id],
+            title: "new testing topic name"
+          )
+
           new_post = new_topic.first_post
 
-          expect(EmailLog.where(topic_id: old_topic.id, post_id: old_post.id).count).to eq(0)
-          expect(EmailLog.where(topic_id: new_topic.id, post_id: new_post.id).count).to eq(3)
+          expect(EmailLog.where(post_id: new_post.id).count).to eq(2)
         end
 
         it "preserves post attributes" do

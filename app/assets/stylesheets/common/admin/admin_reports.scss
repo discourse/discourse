@@ -1,8 +1,16 @@
 .admin-reports {
-  h3 {
-    border-bottom: 1px solid $primary-low;
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
+  .admin-report {
+    width: 100%;
+
+    .report-header {
+      padding-bottom: 0.5em;
+      margin-bottom: 1em;
+      border-bottom: 1px solid $primary-low;
+    }
+  }
+
+  .admin-report-chart .chart-canvas-container .chart-canvas {
+    height: 400px;
   }
 
   .reports-list {
@@ -51,7 +59,7 @@
       }
     }
 
-    @include small-width {
+    @include breakpoint(medium) {
       flex-direction: column;
       min-width: 100%;
 

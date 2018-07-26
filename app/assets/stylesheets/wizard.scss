@@ -40,7 +40,9 @@ body.wizard {
 }
 
 .wizard-warning {
-  font-family: sans-serif, p {
+  font-family: sans-serif;
+
+  p {
     margin-top: 0;
   }
 
@@ -69,6 +71,11 @@ body.wizard {
 
 .staff-count {
   font-weight: bold;
+}
+
+.wizard-step-form {
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .wizard-step-emoji {
@@ -103,6 +110,50 @@ body.wizard {
 .wizard-step-homepage {
   .field-homepage-style {
     width: 280px;
+  }
+}
+
+.wizard-step-colors {
+  margin-bottom: 20px;
+  .grid {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0;
+    margin: 0 auto;
+    list-style-type: none;
+    text-align: center;
+
+    li {
+      display: inline-block;
+      vertical-align: top;
+      margin: 0 5px 25px 5px;
+      label:checked + div {
+        display: none;
+      }
+      .is-selected {
+        box-shadow: 0 0 0 5px $tertiary;
+      }
+      div {
+        display: flex;
+        flex: 1 1 auto;
+      }
+      .radio-area {
+        display: none;
+        & > * {
+          position: relative;
+          right: 7px;
+        }
+      }
+      canvas {
+        transition: box-shadow 0.25s;
+        &:hover {
+          box-shadow: shadow("card");
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 
@@ -482,6 +533,9 @@ body.wizard {
   }
   .wizard-column {
     margin: auto !important;
+  }
+  .wizard-step-form {
+    max-height: auto;
   }
   .wizard-step-contents {
     min-height: auto !important;

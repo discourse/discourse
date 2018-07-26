@@ -54,34 +54,70 @@ Migration::ColumnDropper.drop(
 
 Migration::ColumnDropper.drop(
   table: 'topics',
-  after_migration: 'DropUnreadTrackingColumns',
-  columns: %w{
-    inappropriate_count
-    bookmark_count
-    off_topic_count
-    illegal_count
-    notify_user_count
-    last_unread_at
-  },
-  on_drop: ->() {
-    STDERR.puts "Removing superflous topic columns!"
-  }
-)
-
-Migration::ColumnDropper.drop(
-  table: 'topics',
-  after_migration: 'RemoveAutoCloseColumnsFromTopics',
+  after_migration: 'DropVoteCountFromTopicsAndPosts',
   columns: %w{
     auto_close_at
     auto_close_user_id
     auto_close_started_at
     auto_close_based_on_last_post
     auto_close_hours
+    inappropriate_count
+    bookmark_count
+    off_topic_count
+    illegal_count
+    notify_user_count
+    last_unread_at
+    vote_count
   },
   on_drop: ->() {
     STDERR.puts "Removing superflous topic columns!"
+  }
+)
+
+VIEW_NAME = "badge_posts".freeze
+
+def badge_posts_view_exists?
+  sql = <<~SQL
+  SELECT 1
+  FROM pg_catalog.pg_views
+  WHERE schemaname
+  IN ('public')
+  AND viewname = '#{VIEW_NAME}';
+  SQL
+
+  DB.exec(sql) == 1
+end
+
+Migration::ColumnDropper.drop(
+  table: 'posts',
+  after_migration: 'DropVoteCountFromTopicsAndPosts',
+  columns: %w{
+    vote_count
   },
-  delay: 3600
+  on_drop: ->() {
+    STDERR.puts "Removing superflous post columns!"
+
+    DB.exec("DROP VIEW #{VIEW_NAME}")
+    raise "Failed to drop '#{VIEW_NAME}' view" if badge_posts_view_exists?
+  },
+  after_drop: -> () {
+    sql = <<~SQL
+    CREATE VIEW #{VIEW_NAME} AS
+    SELECT p.*
+    FROM posts p
+    JOIN topics t ON t.id = p.topic_id
+    JOIN categories c ON c.id = t.category_id
+    WHERE c.allow_badges AND
+          p.deleted_at IS NULL AND
+          t.deleted_at IS NULL AND
+          NOT c.read_restricted AND
+          t.visible AND
+          p.post_type IN (1,2,3)
+    SQL
+
+    DB.exec(sql)
+    raise "Failed to create '#{VIEW_NAME}' view" unless badge_posts_view_exists?
+  }
 )
 
 Migration::ColumnDropper.drop(
@@ -178,6 +214,39 @@ Migration::TableDropper.delayed_drop(
   after_migration: 'DropUnusedTables',
   on_drop: ->() {
     STDERR.puts "Dropping versions. It isn't used anymore."
+  }
+)
+
+Migration::ColumnDropper.drop(
+  table: 'user_options',
+  after_migration: 'DropKeyColumnFromThemes',
+  columns: %w[
+    theme_key
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing theme_key column from user_options table!'
+  }
+)
+
+Migration::ColumnDropper.drop(
+  table: 'themes',
+  after_migration: 'DropKeyColumnFromThemes',
+  columns: %w[
+    key
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing key column from themes table!'
+  }
+)
+
+Migration::ColumnDropper.drop(
+  table: 'email_logs',
+  after_migration: 'DropTopicIdOnEmailLogs',
+  columns: %w{
+    topic_id
+  },
+  on_drop: ->() {
+    STDERR.puts "Removing superflous email_logs columns!"
   }
 )
 

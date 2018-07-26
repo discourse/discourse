@@ -428,7 +428,7 @@ export function uploadLocation(url) {
   if (Discourse.CDN) {
     url = Discourse.getURLWithCDN(url);
     return /^\/\//.test(url) ? "http:" + url : url;
-  } else if (Discourse.SiteSettings.enable_s3_uploads) {
+  } else if (Discourse.S3BaseUrl) {
     return "https:" + url;
   } else {
     var protocol = window.location.protocol + "//",
@@ -591,6 +591,10 @@ export function clipboardData(e, canUpload) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+export function isNumeric(input) {
+  return !isNaN(parseFloat(input)) && isFinite(input);
+}
+
 export function fillMissingDates(data, startDate, endDate) {
   const startMoment = moment(startDate, "YYYY-MM-DD");
   const endMoment = moment(endDate, "YYYY-MM-DD");
@@ -611,6 +615,18 @@ export function fillMissingDates(data, startDate, endDate) {
       .format("YYYY-MM-DD");
   }
   return data;
+}
+
+export function areCookiesEnabled() {
+  // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
+  try {
+    document.cookie = "cookietest=1";
+    var ret = document.cookie.indexOf("cookietest=") !== -1;
+    document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+    return ret;
+  } catch (e) {
+    return false;
+  }
 }
 
 // This prevents a mini racer crash

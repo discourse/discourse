@@ -27,7 +27,7 @@
 
   <% if params[:page].to_i == 0 && @subcategories.present? %>
     <% @subcategories.each do |subcategory| %>
-      <a href='<%= subcategory.url %>' itemprop='item'>
+      <a href='<%= subcategory.url %>'>
         <span itemprop='name'><%= subcategory.name %></span>
       </a>
       <% if subcategory.description.present? %>

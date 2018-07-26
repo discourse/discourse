@@ -21,6 +21,14 @@ module Middleware
         @request = Rack::Request.new(@env)
       end
 
+      def blocked_crawler?
+        @request.get? &&
+        !@request.xhr? &&
+        !@request.path.ends_with?('robots.txt') &&
+        !@request.path.ends_with?('srv/status') &&
+        CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
+      end
+
       def is_mobile=(val)
         @is_mobile = val ? :true : :false
       end
@@ -58,13 +66,14 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_key}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_id}"
       end
 
-      def theme_key
-        key, _ = @request.cookies['theme_key']&.split(',')
-        if key && Guardian.new.allow_theme?(key)
-          key
+      def theme_id
+        ids, _ = @request.cookies['theme_ids']&.split('|')
+        ids = ids&.split(",")&.map(&:to_i)
+        if ids && Guardian.new.allow_themes?(ids)
+          ids.first
         else
           nil
         end
@@ -187,6 +196,11 @@ module Middleware
     def call(env)
       helper = Helper.new(env)
       force_anon = false
+
+      if helper.blocked_crawler?
+        env["discourse.request_tracker.skip"] = true
+        return [403, {}, "Crawler is not allowed!"]
+      end
 
       if helper.should_force_anonymous?
         force_anon = env["DISCOURSE_FORCE_ANON"] = true

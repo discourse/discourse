@@ -73,6 +73,12 @@ describe SiteSettings::TypeSupervisor do
       it "'username' should be at 15th position" do
         expect(SiteSettings::TypeSupervisor.types[:username]).to eq(15)
       end
+      it "'category' should be at 16th position" do
+        expect(SiteSettings::TypeSupervisor.types[:category]).to eq(16)
+      end
+      it "'uploaded_image_list' should be at 17th position" do
+        expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
+      end
     end
   end
 
@@ -268,6 +274,12 @@ describe SiteSettings::TypeSupervisor do
       it 'returns value with a custom type' do
         expect(settings.type_supervisor.to_rb_value(:type_custom, 2)).to eq 2
         expect(settings.type_supervisor.to_rb_value(:type_custom, '2|3')).to eq '2|3'
+      end
+
+      it 'should not modify the types of settings' do
+        types = SiteSettings::TypeSupervisor.types
+        settings.type_supervisor.to_rb_value(:default_locale, 'fr', types[:enum])
+        expect(settings.type_supervisor.to_db_value(:default_locale, 'en')).to eq(['en', types[:string]])
       end
     end
   end

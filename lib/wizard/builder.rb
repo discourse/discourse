@@ -117,40 +117,28 @@ class Wizard
       end
 
       @wizard.append_step('colors') do |step|
-        default_theme = Theme.find_by(key: SiteSetting.default_theme_key)
-        scheme_id = default_theme&.color_scheme&.base_scheme_id || 'default'
+        default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
+        scheme_id = default_theme&.color_scheme&.base_scheme_id || 'Light'
 
-        themes = step.add_field(id: 'base_scheme_id', type: 'dropdown', required: true, value: scheme_id)
+        themes = step.add_field(id: 'theme_previews', type: 'component', required: true, value: scheme_id)
         ColorScheme.base_color_scheme_colors.each do |t|
           with_hash = t[:colors].dup
           with_hash.map { |k, v| with_hash[k] = "##{v}" }
           themes.add_choice(t[:id], data: { colors: with_hash })
         end
-        step.add_field(id: 'theme_preview', type: 'component')
 
         step.on_update do |updater|
-          scheme_name = updater.fields[:base_scheme_id]
+          scheme_name = updater.fields[:theme_previews] || 'Light'
+          name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(' ', '_')}_theme_name")
 
           theme = nil
+          scheme = ColorScheme.find_by(base_scheme_id: scheme_name, via_wizard: true)
+          scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: scheme_name)
+          themes = Theme.where(color_scheme_id: scheme.id).order(:id).to_a
+          theme = themes.find(&:default?)
+          theme ||= themes.first
 
-          if scheme_name == "dark"
-            scheme = ColorScheme.find_by(base_scheme_id: 'dark', via_wizard: true)
-
-            name = I18n.t("wizard.step.colors.fields.theme_id.choices.dark.label")
-            scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: "dark")
-
-            theme = Theme.find_by(color_scheme_id: scheme.id)
-            name = I18n.t('color_schemes.dark_theme_name')
-            theme ||= Theme.create(name: name, color_scheme_id: scheme.id, user_id: @wizard.user.id)
-          else
-            themes = Theme.where(color_scheme_id: nil).order(:id).to_a
-            theme = themes.find(&:default?)
-            theme ||= themes.first
-
-            name = I18n.t('color_schemes.light_theme_name')
-            theme ||= Theme.create(name: name, user_id: @wizard.user.id)
-          end
-
+          theme ||= Theme.create(name: name, user_id: @wizard.user.id, color_scheme_id: scheme.id)
           theme.set_default!
         end
       end
@@ -224,7 +212,7 @@ class Wizard
 
         EmojiSetSiteSetting.values.each do |set|
           imgs = emoji.map do |e|
-            "<img src='/images/emoji/#{set[:value]}/#{e}.png'>"
+            "<img src='#{Discourse.base_uri}/images/emoji/#{set[:value]}/#{e}.png'>"
           end
 
           sets.add_choice(set[:value],             label: I18n.t("js.#{set[:name]}"),

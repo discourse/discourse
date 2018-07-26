@@ -34,7 +34,7 @@ class StylesheetsController < ApplicationController
         split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
         theme = Theme.find_by(color_scheme_id: color_scheme_id)
       end
-      Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.key)
+      Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.id)
     end
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]

@@ -16,11 +16,11 @@ export default Ember.Mixin.create({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
 
     $(document).off("mousedown.select-kit");
 
-    if (this.$header()) {
+    if (this.$header().length) {
       this.$header()
         .off("blur.select-kit")
         .off("focus.select-kit")
@@ -28,16 +28,17 @@ export default Ember.Mixin.create({
         .off("keydown.select-kit");
     }
 
-    if (this.$filterInput()) {
+    if (this.$filterInput().length) {
       this.$filterInput()
         .off("change.select-kit")
         .off("keydown.select-kit")
-        .off("keypress.select-kit");
+        .off("keypress.select-kit")
+        .off("focusout.select-kit");
     }
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     $(document).on("mousedown.select-kit", event => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -66,9 +67,9 @@ export default Ember.Mixin.create({
         this._destroyEvent(event);
       })
       .on("keydown.select-kit", event => {
-        const keyCode = event.keyCode || event.which;
-
         if (document.activeElement !== this.$header()[0]) return event;
+
+        const keyCode = event.keyCode || event.which;
 
         if (keyCode === this.keys.TAB && event.shiftKey) {
           this.unfocus(event);
@@ -104,13 +105,11 @@ export default Ember.Mixin.create({
           this.set("renderedFilterOnce", true);
         }
 
-        if (keyCode >= 65 && keyCode <= 122) {
-          Ember.run.schedule("afterRender", () => {
-            this.$filterInput()
-              .focus()
-              .val(this.$filterInput().val() + String.fromCharCode(keyCode));
-          });
-        }
+        Ember.run.schedule("afterRender", () => {
+          this.$filterInput()
+            .focus()
+            .val(this.$filterInput().val() + String.fromCharCode(keyCode));
+        });
 
         return false;
       });
@@ -121,6 +120,9 @@ export default Ember.Mixin.create({
       })
       .on("keypress.select-kit", event => {
         event.stopPropagation();
+      })
+      .on("focusout.select-kit", event => {
+        this.onFilterInputFocusout(event);
       })
       .on("keydown.select-kit", event => {
         const keyCode = event.keyCode || event.which;
@@ -365,6 +367,12 @@ export default Ember.Mixin.create({
   },
   enterFromFilter(event) {
     this.didPressEnter(event);
+  },
+
+  onFilterInputFocusout(event) {
+    if (!Ember.$.contains(this.element, event.relatedTarget)) {
+      this.close(event);
+    }
   },
 
   _moveHighlight(direction, $rows) {

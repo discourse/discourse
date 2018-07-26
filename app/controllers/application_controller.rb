@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
 
-  attr_reader :theme_key
+  attr_reader :theme_id
 
   serialization_scope :guardian
 
@@ -59,11 +59,11 @@ class ApplicationController < ActionController::Base
   layout :set_layout
 
   if Rails.env == "development"
-    after_action :remember_theme_key
+    after_action :remember_theme_id
 
-    def remember_theme_key
-      if @theme_key
-        Stylesheet::Watcher.theme_key = @theme_key if defined? Stylesheet::Watcher
+    def remember_theme_id
+      if @theme_id
+        Stylesheet::Watcher.theme_id = @theme_id if defined? Stylesheet::Watcher
       end
     end
   end
@@ -257,7 +257,9 @@ class ApplicationController < ActionController::Base
         Notification.read(current_user, notification_ids)
         current_user.reload
         current_user.publish_notifications_state
-        cookies.delete('cn')
+        cookie_args = {}
+        cookie_args[:path] = Discourse.base_uri if Discourse.base_uri.present?
+        cookies.delete('cn', cookie_args)
       end
     end
   end
@@ -323,34 +325,34 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_theme
-
     return if request.xhr? || request.format == "json" || request.format == "js"
     return if request.method != "GET"
 
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = request[:preview_theme_key]
+    theme_id = request[:preview_theme_id]&.to_i
 
     user_option = current_user&.user_option
 
-    unless theme_key
-      key, seq = cookies[:theme_key]&.split(",")
-      if key && seq && seq.to_i == user_option&.theme_key_seq.to_i
-        theme_key = key
+    unless theme_id
+      ids, seq = cookies[:theme_ids]&.split("|")
+      ids = ids&.split(",")&.map(&:to_i)
+      if ids && ids.size > 0 && seq && seq.to_i == user_option&.theme_key_seq.to_i
+        theme_id = ids.first
       end
     end
 
-    theme_key ||= user_option&.theme_key
+    theme_id ||= user_option&.theme_ids&.first
 
-    if theme_key && !guardian.allow_theme?(theme_key)
-      theme_key = nil
+    if theme_id && !guardian.allow_themes?(theme_id)
+      theme_id = nil
     end
 
-    theme_key ||= SiteSetting.default_theme_key
-    theme_key = nil if theme_key.blank?
+    theme_id ||= SiteSetting.default_theme_id
+    theme_id = nil if theme_id.blank? || theme_id == -1
 
-    @theme_key = request.env[:resolved_theme_key] = theme_key
+    @theme_id = request.env[:resolved_theme_id] = theme_id
   end
 
   def guardian
@@ -483,7 +485,6 @@ class ApplicationController < ActionController::Base
   def preload_anonymous_data
     store_preloaded("site", Site.json_for(guardian))
     store_preloaded("siteSettings", SiteSetting.client_settings_json)
-    store_preloaded("themeSettings", Theme.settings_for_client(@theme_key))
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
@@ -501,10 +502,10 @@ class ApplicationController < ActionController::Base
     target = view_context.mobile_view? ? :mobile : :desktop
 
     data =
-      if @theme_key
+      if @theme_id
         {
-         top: Theme.lookup_field(@theme_key, target, "after_header"),
-         footer: Theme.lookup_field(@theme_key, target, "footer")
+         top: Theme.lookup_field(@theme_id, target, "after_header"),
+         footer: Theme.lookup_field(@theme_id, target, "footer")
         }
       else
         {}

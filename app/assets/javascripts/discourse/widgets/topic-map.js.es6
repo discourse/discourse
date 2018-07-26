@@ -125,12 +125,15 @@ createWidget("topic-map-summary", {
         h("h4", I18n.t("views_lowercase", { count: attrs.topicViews }))
       ])
     );
-    contents.push(
-      h("li.secondary", [
-        numberNode(attrs.participantCount),
-        h("h4", I18n.t("users_lowercase", { count: attrs.participantCount }))
-      ])
-    );
+
+    if (attrs.participantCount > 0) {
+      contents.push(
+        h("li.secondary", [
+          numberNode(attrs.participantCount),
+          h("h4", I18n.t("users_lowercase", { count: attrs.participantCount }))
+        ])
+      );
+    }
 
     if (attrs.topicLikeCount) {
       contents.push(
@@ -219,10 +222,14 @@ createWidget("topic-map-expanded", {
   },
 
   html(attrs, state) {
-    const avatars = h("section.avatars.clearfix", [
-      h("h3", I18n.t("topic_map.participants_title")),
-      renderParticipants.call(this, attrs.userFilters, attrs.participants)
-    ]);
+    let avatars;
+
+    if (attrs.participants && attrs.participants.length > 0) {
+      avatars = h("section.avatars.clearfix", [
+        h("h3", I18n.t("topic_map.participants_title")),
+        renderParticipants.call(this, attrs.userFilters, attrs.participants)
+      ]);
+    }
 
     const result = [avatars];
     if (attrs.topicLinks) {

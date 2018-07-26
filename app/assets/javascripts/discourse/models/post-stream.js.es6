@@ -50,7 +50,11 @@ export default RestModel.extend({
     "stagingPost"
   ),
   notLoading: Ember.computed.not("loading"),
-  filteredPostsCount: Ember.computed.alias("stream.length"),
+
+  @computed("isMegaTopic", "stream.length", "topic.highest_post_number")
+  filteredPostsCount(isMegaTopic, streamLength, topicHighestPostNumber) {
+    return isMegaTopic ? topicHighestPostNumber : streamLength;
+  },
 
   @computed("posts.[]")
   hasPosts() {
@@ -82,8 +86,19 @@ export default RestModel.extend({
   },
 
   firstPostNotLoaded: Ember.computed.not("firstPostPresent"),
-  firstPostId: Ember.computed.alias("stream.firstObject"),
-  lastPostId: Ember.computed.alias("stream.lastObject"),
+
+  firstId: null,
+  lastId: null,
+
+  @computed("isMegaTopic", "stream.firstObject", "firstId")
+  firstPostId(isMegaTopic, streamFirstId, firstId) {
+    return isMegaTopic ? firstId : streamFirstId;
+  },
+
+  @computed("isMegaTopic", "stream.lastObject", "lastId")
+  lastPostId(isMegaTopic, streamLastId, lastId) {
+    return isMegaTopic ? lastId : streamLastId;
+  },
 
   @computed("hasLoadedData", "lastPostId", "posts.@each.id")
   loadedAllPosts(hasLoadedData, lastPostId) {
@@ -189,8 +204,13 @@ export default RestModel.extend({
   toggleSummary() {
     this.get("userFilters").clear();
     this.toggleProperty("summary");
+    const opts = {};
 
-    return this.refresh().then(() => {
+    if (!this.get("summary")) {
+      opts.filter = "none";
+    }
+
+    return this.refresh(opts).then(() => {
       if (this.get("summary")) {
         this.jumpToSecondVisible();
       }
@@ -274,26 +294,6 @@ export default RestModel.extend({
       });
   },
 
-  collapsePosts(from, to) {
-    const posts = this.get("posts");
-    const remove = posts.filter(post => {
-      const postNumber = post.get("post_number");
-      return postNumber >= from && postNumber <= to;
-    });
-
-    posts.removeObjects(remove);
-
-    // make gap
-    this.set("gaps", this.get("gaps") || { before: {}, after: {} });
-    const before = this.get("gaps.before");
-    const post = posts.find(p => p.get("post_number") > to);
-
-    before[post.get("id")] = remove.map(p => p.get("id"));
-    post.set("hasGap", true);
-
-    this.get("stream").enumerableContentDidChange();
-  },
-
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
     const postId = post.get("id"),
@@ -353,23 +353,40 @@ export default RestModel.extend({
       return Ember.RSVP.resolve();
     }
 
-    const postIds = this.get("nextWindow");
-    if (Ember.isEmpty(postIds)) {
-      return Ember.RSVP.resolve();
-    }
-
-    this.set("loadingBelow", true);
     const postsWithPlaceholders = this.get("postsWithPlaceholders");
-    postsWithPlaceholders.appending(postIds);
-    return this.findPostsByIds(postIds)
-      .then(posts => {
-        posts.forEach(p => this.appendPost(p));
-        return posts;
-      })
-      .finally(() => {
-        postsWithPlaceholders.finishedAppending(postIds);
+
+    if (this.get("isMegaTopic")) {
+      this.set("loadingBelow", true);
+
+      const fakePostIds = _.range(-1, -this.get("topic.chunk_size"), -1);
+      postsWithPlaceholders.appending(fakePostIds);
+
+      return this.fetchNextWindow(
+        this.get("posts.lastObject.post_number"),
+        true,
+        p => {
+          this.appendPost(p);
+        }
+      ).finally(() => {
+        postsWithPlaceholders.finishedAppending(fakePostIds);
         this.set("loadingBelow", false);
       });
+    } else {
+      const postIds = this.get("nextWindow");
+      if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
+      this.set("loadingBelow", true);
+      postsWithPlaceholders.appending(postIds);
+
+      return this.findPostsByIds(postIds)
+        .then(posts => {
+          posts.forEach(p => this.appendPost(p));
+          return posts;
+        })
+        .finally(() => {
+          postsWithPlaceholders.finishedAppending(postIds);
+          this.set("loadingBelow", false);
+        });
+    }
   },
 
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
@@ -379,21 +396,37 @@ export default RestModel.extend({
       return Ember.RSVP.resolve();
     }
 
-    const postIds = this.get("previousWindow");
-    if (Ember.isEmpty(postIds)) {
-      return Ember.RSVP.resolve();
-    }
+    if (this.get("isMegaTopic")) {
+      this.set("loadingAbove", true);
+      let prependedIds = [];
 
-    this.set("loadingAbove", true);
-    return this.findPostsByIds(postIds.reverse())
-      .then(posts => {
-        posts.forEach(p => this.prependPost(p));
-      })
-      .finally(() => {
+      return this.fetchNextWindow(
+        this.get("posts.firstObject.post_number"),
+        false,
+        p => {
+          this.prependPost(p);
+          prependedIds.push(p.get("id"));
+        }
+      ).finally(() => {
         const postsWithPlaceholders = this.get("postsWithPlaceholders");
-        postsWithPlaceholders.finishedPrepending(postIds);
+        postsWithPlaceholders.finishedPrepending(prependedIds);
         this.set("loadingAbove", false);
       });
+    } else {
+      const postIds = this.get("previousWindow");
+      if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
+      this.set("loadingAbove", true);
+
+      return this.findPostsByIds(postIds.reverse())
+        .then(posts => {
+          posts.forEach(p => this.prependPost(p));
+        })
+        .finally(() => {
+          const postsWithPlaceholders = this.get("postsWithPlaceholders");
+          postsWithPlaceholders.finishedPrepending(postIds);
+          this.set("loadingAbove", false);
+        });
+    }
   },
 
   /**
@@ -523,6 +556,24 @@ export default RestModel.extend({
     return this._identityMap[id];
   },
 
+  loadPostByPostNumber(postNumber) {
+    const url = `/posts/by_number/${this.get("topic.id")}/${postNumber}`;
+    const store = this.store;
+
+    return ajax(url).then(post => {
+      return this.storePost(store.createRecord("post", post));
+    });
+  },
+
+  loadNearestPostToDate(date) {
+    const url = `/posts/by-date/${this.get("topic.id")}/${date}`;
+    const store = this.store;
+
+    return ajax(url).then(post => {
+      return this.storePost(store.createRecord("post", post));
+    });
+  },
+
   loadPost(postId) {
     const url = "/posts/" + postId;
     const store = this.store;
@@ -580,8 +631,9 @@ export default RestModel.extend({
       return this.triggerChangedPost(postId, new Date());
     } else {
       // need to insert into stream
-      const url = "/posts/" + postId;
+      const url = `/posts/${postId}`;
       const store = this.store;
+
       return ajax(url).then(p => {
         const post = store.createRecord("post", p);
         const stream = this.get("stream");
@@ -606,7 +658,9 @@ export default RestModel.extend({
         });
 
         if (index < posts.length) {
-          posts.insertAt(index, post);
+          this.get("postsWithPlaceholders").refreshAll(() => {
+            posts.insertAt(index, post);
+          });
         } else {
           if (post.post_number < posts[posts.length - 1].post_number + 5) {
             this.appendMore();
@@ -687,12 +741,19 @@ export default RestModel.extend({
 
   // Get the index of a post in the stream. (Use this for the topic progress bar.)
   progressIndexOfPost(post) {
-    return this.progressIndexOfPostId(post.get("id"));
+    return this.progressIndexOfPostId(post);
   },
 
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
-  progressIndexOfPostId(postId) {
-    return this.get("stream").indexOf(postId) + 1;
+  progressIndexOfPostId(post) {
+    const postId = post.get("id");
+    const index = this.get("stream").indexOf(postId);
+
+    if (this.get("isMegaTopic")) {
+      return post.get("post_number");
+    } else {
+      return index + 1;
+    }
   },
 
   /**
@@ -728,8 +789,9 @@ export default RestModel.extend({
   closestDaysAgoFor(postNumber) {
     const timelineLookup = this.get("timelineLookup") || [];
 
-    let low = 0,
-      high = timelineLookup.length - 1;
+    let low = 0;
+    let high = timelineLookup.length - 1;
+
     while (low <= high) {
       const mid = Math.floor(low + (high - low) / 2);
       const midValue = timelineLookup[mid][0];
@@ -744,9 +806,7 @@ export default RestModel.extend({
     }
 
     const val = timelineLookup[high] || timelineLookup[low];
-    if (val) {
-      return val[1];
-    }
+    if (val) return val[1];
   },
 
   // Find a postId for a postNumber, respecting gaps
@@ -836,6 +896,35 @@ export default RestModel.extend({
     return post;
   },
 
+  fetchNextWindow(postNumber, asc, callback) {
+    const url = `/t/${this.get("topic.id")}/posts.json`;
+    let data = {
+      post_number: postNumber,
+      asc: asc
+    };
+
+    data = _.merge(data, this.get("streamFilters"));
+    const store = this.store;
+
+    return ajax(url, { data }).then(result => {
+      if (result.suggested_topics) {
+        this.set("topic.suggested_topics", result.suggested_topics);
+      }
+
+      const posts = Ember.get(result, "post_stream.posts");
+
+      if (posts) {
+        posts.forEach(p => {
+          p = this.storePost(store.createRecord("post", p));
+
+          if (callback) {
+            callback.call(this, p);
+          }
+        });
+      }
+    });
+  },
+
   findPostsByIds(postIds) {
     const identityMap = this._identityMap;
     const unloaded = postIds.filter(p => !identityMap[p]);
@@ -854,12 +943,13 @@ export default RestModel.extend({
     const url = "/t/" + this.get("topic.id") + "/posts.json";
     const data = { post_ids: postIds };
     const store = this.store;
-    return ajax(url, { data }).then(result => {
-      const posts = Ember.get(result, "post_stream.posts");
 
+    return ajax(url, { data }).then(result => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }
+
+      const posts = Ember.get(result, "post_stream.posts");
 
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord("post", p)));
@@ -915,6 +1005,10 @@ export default RestModel.extend({
   },
 
   excerpt(streamPosition) {
+    if (this.get("isMegaTopic")) {
+      return new Ember.RSVP.Promise(resolve => resolve(""));
+    }
+
     const stream = this.get("stream");
 
     return new Ember.RSVP.Promise((resolve, reject) => {

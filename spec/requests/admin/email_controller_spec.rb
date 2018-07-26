@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Admin::EmailController do
   let(:admin) { Fabricate(:admin) }
+  let(:email_log) { Fabricate(:email_log) }
 
   before do
     sign_in(admin)
@@ -32,16 +33,62 @@ describe Admin::EmailController do
   end
 
   describe '#sent' do
-    it "succeeds" do
+    let(:post) { Fabricate(:post) }
+    let(:email_log) { Fabricate(:email_log, post: post) }
+
+    let(:post_reply_key) do
+      Fabricate(:post_reply_key, post: post, user: email_log.user)
+    end
+
+    it "should return the right response" do
+      email_log
       get "/admin/email/sent.json"
+
       expect(response.status).to eq(200)
+      log = JSON.parse(response.body).first
+      expect(log["id"]).to eq(email_log.id)
+      expect(log["reply_key"]).to eq(nil)
+
+      post_reply_key
+
+      get "/admin/email/sent.json"
+
+      expect(response.status).to eq(200)
+      log = JSON.parse(response.body).first
+      expect(log["id"]).to eq(email_log.id)
+      expect(log["reply_key"]).to eq(post_reply_key.reply_key)
     end
   end
 
   describe '#skipped' do
+    let(:user) { Fabricate(:user) }
+    let!(:log1) { Fabricate(:skipped_email_log, user: user) }
+    let!(:log2) { Fabricate(:skipped_email_log) }
+
     it "succeeds" do
       get "/admin/email/skipped.json"
+
       expect(response.status).to eq(200)
+
+      logs = JSON.parse(response.body)
+
+      expect(logs.first["id"]).to eq(log2.id)
+      expect(logs.last["id"]).to eq(log1.id)
+    end
+
+    describe 'when filtered by username' do
+      it 'should return the right response' do
+        get "/admin/email/skipped.json", params: {
+          user: user.username
+        }
+
+        expect(response.status).to eq(200)
+
+        logs = JSON.parse(response.body)
+
+        expect(logs.count).to eq(1)
+        expect(logs.first["id"]).to eq(log1.id)
+      end
     end
   end
 
@@ -54,6 +101,7 @@ describe Admin::EmailController do
     context 'with an email address' do
       it 'enqueues a test email job' do
         post "/admin/email/test.json", params: { email_address: 'eviltrout@test.domain' }
+
         expect(response.status).to eq(200)
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include('eviltrout@test.domain')
       end

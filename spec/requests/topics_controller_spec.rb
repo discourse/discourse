@@ -45,6 +45,7 @@ RSpec.describe TopicsController do
   describe '#move_posts' do
     before do
       SiteSetting.min_topic_title_length = 2
+      SiteSetting.tagging_enabled = true
     end
 
     it 'needs you to be logged in' do
@@ -101,7 +102,8 @@ RSpec.describe TopicsController do
             post "/t/#{topic.id}/move-posts.json", params: {
               title: 'Logan is a good movie',
               post_ids: [p2.id],
-              category_id: 123
+              category_id: 123,
+              tags: ["tag1", "tag2"]
             }
           end.to change { Topic.count }.by(1)
 
@@ -111,6 +113,7 @@ RSpec.describe TopicsController do
 
           expect(result['success']).to eq(true)
           expect(result['url']).to eq(Topic.last.relative_url)
+          expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
         end
 
         describe 'when topic has been deleted' do
@@ -197,6 +200,30 @@ RSpec.describe TopicsController do
           result = ::JSON.parse(response.body)
           expect(result['success']).to eq(true)
           expect(result['url']).to be_present
+        end
+
+        it "triggers an event on merge" do
+          begin
+            called = false
+
+            assert = -> (original_topic, destination_topic) do
+              called = true
+              expect(original_topic).to eq(topic)
+              expect(destination_topic).to eq(dest_topic)
+            end
+
+            DiscourseEvent.on(:topic_merged, &assert)
+
+            post "/t/#{topic.id}/move-posts.json", params: {
+              post_ids: [p2.id],
+              destination_topic_id: dest_topic.id
+            }
+
+            expect(called).to eq(true)
+            expect(response.status).to eq(200)
+          ensure
+            DiscourseEvent.off(:topic_merged, &assert)
+          end
         end
       end
 
@@ -644,8 +671,19 @@ RSpec.describe TopicsController do
 
         put "/t/#{topic.id}.json", params: { category_id: category.id }
 
-        expect(response.status).not_to eq(200)
-        expect(topic.category_id).not_to eq(category.id)
+        expect(response.status).to eq(403)
+        expect(topic.reload.category_id).not_to eq(category.id)
+      end
+
+      it 'can not move to a category that requires topic approval' do
+        category = Fabricate(:category)
+        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+        category.save!
+
+        put "/t/#{topic.id}.json", params: { category_id: category.id }
+
+        expect(response.status).to eq(403)
+        expect(topic.reload.category_id).not_to eq(category.id)
       end
 
       describe 'without permission' do
@@ -1189,36 +1227,36 @@ RSpec.describe TopicsController do
       end
 
       it "selects the theme the user has selected" do
-        user.user_option.update_columns(theme_key: theme.key)
+        user.user_option.update_columns(theme_ids: [theme.id])
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).to eq(theme.key)
+        expect(controller.theme_id).to eq(theme.id)
 
         theme.update_attribute(:user_selectable, false)
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).not_to eq(theme.key)
+        expect(controller.theme_id).not_to eq(theme.id)
       end
 
       it "can be overridden with a cookie" do
-        user.user_option.update_columns(theme_key: theme.key)
+        user.user_option.update_columns(theme_ids: [theme.id])
 
-        cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq}"
+        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq}"
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).to eq(theme2.key)
+        expect(controller.theme_id).to eq(theme2.id)
       end
 
       it "cookie can fail back to user if out of sync" do
-        user.user_option.update_columns(theme_key: theme.key)
-        cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq - 1}"
+        user.user_option.update_columns(theme_ids: [theme.id])
+        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq - 1}"
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_key).to eq(theme.key)
+        expect(controller.theme_id).to eq(theme.id)
       end
     end
 
@@ -1281,6 +1319,7 @@ RSpec.describe TopicsController do
 
     describe 'clear_notifications' do
       it 'correctly clears notifications if specified via cookie' do
+        Discourse.stubs(:base_uri).returns("/eviltrout")
         notification = Fabricate(:notification)
         sign_in(notification.user)
 
@@ -1290,6 +1329,7 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(response.cookies['cn']).to eq(nil)
+        expect(response.headers['Set-Cookie']).to match(/^cn=;.*path=\/eviltrout/)
 
         notification.reload
         expect(notification.read).to eq(true)
@@ -1411,13 +1451,126 @@ RSpec.describe TopicsController do
     end
   end
 
-  describe '#posts' do
-    let(:topic) { Fabricate(:post).topic }
+  describe '#post_ids' do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
 
-    it 'returns first posts of the topic' do
-      get "/t/#{topic.id}/posts.json"
+    before do
+      TopicView.stubs(:chunk_size).returns(1)
+    end
+
+    it 'returns the right post ids' do
+      post2 = Fabricate(:post, topic: topic)
+      post3 = Fabricate(:post, topic: topic)
+
+      get "/t/#{topic.id}/post_ids.json", params: {
+        post_number: post.post_number
+      }
+
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/json')
+
+      body = JSON.parse(response.body)
+
+      expect(body["post_ids"]).to eq([post2.id, post3.id])
+    end
+
+    describe 'filtering by post number with filters' do
+      describe 'username filters' do
+        let(:user) { Fabricate(:user) }
+        let(:post) { Fabricate(:post, user: user) }
+        let!(:post2) { Fabricate(:post, topic: topic, user: user) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}/post_ids.json", params: {
+            post_number: post.post_number,
+            username_filters: post2.user.username
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_ids"]).to eq([post2.id])
+        end
+      end
+
+      describe 'summary filter' do
+        let!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}/post_ids.json", params: {
+            post_number: post.post_number,
+            filter: 'summary'
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_ids"]).to eq([post2.id])
+        end
+      end
+    end
+  end
+
+  describe '#posts' do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+
+    it 'returns first post of the topic' do
+      get "/t/#{topic.id}/posts.json"
+
+      expect(response.status).to eq(200)
+
+      body = JSON.parse(response.body)
+
+      expect(body["post_stream"]["posts"].first["id"]).to eq(post.id)
+    end
+
+    describe 'filtering by post number with filters' do
+      describe 'username filters' do
+        let!(:post2) { Fabricate(:post, topic: topic, user: Fabricate(:user)) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          TopicView.stubs(:chunk_size).returns(2)
+
+          get "/t/#{topic.id}/posts.json", params: {
+            post_number: post.post_number,
+            username_filters: post2.user.username,
+            asc: true
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_stream"]["posts"].first["id"]).to eq(post2.id)
+        end
+      end
+
+      describe 'summary filter' do
+        let!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          TopicView.stubs(:chunk_size).returns(2)
+
+          get "/t/#{topic.id}/posts.json", params: {
+            post_number: post.post_number,
+            filter: 'summary',
+            asc: true
+          }
+
+          expect(response.status).to eq(200)
+
+          body = JSON.parse(response.body)
+
+          expect(body["post_stream"]["posts"].first["id"]).to eq(post2.id)
+        end
+      end
     end
   end
 

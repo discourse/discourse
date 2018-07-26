@@ -10,7 +10,7 @@ module Jobs
         .where("retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours")
         .where("created_at < ?", grace_period.hour.ago)
         .where(url: "")
-        .destroy_all
+        .find_each(&:destroy!)
 
       return unless SiteSetting.clean_up_uploads?
 
@@ -24,7 +24,8 @@ module Jobs
         SiteSetting.logo_small_url,
         SiteSetting.favicon_url,
         SiteSetting.apple_touch_icon_url,
-      ].map do |url|
+        *SiteSetting.selectable_avatars.split("\n"),
+      ].flatten.map do |url|
         if url.present?
           url = url.dup
 

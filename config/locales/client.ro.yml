@@ -502,15 +502,12 @@ ro:
       "14": "În așteptare"
     categories:
       all: "Toate categoriile"
-      all_subcategories: "toate în %{categoryName}"
       no_subcategory: "Niciuna"
       category: "Categorie"
       category_list: "Afișează lista de categorii"
       reorder:
         title: "Rearanjează categoriile"
         title_long: "Rearanjeaza lista de categorii"
-        fix_order: "Fixează poziții"
-        fix_order_tooltip: "Nu toate categoriile au un numar de poziție unic, asta poate cauza rezultate neașteptate."
         save: "Salvează ordinea"
         apply_all: "Aplică"
         position: "Poziție"
@@ -705,7 +702,6 @@ ro:
         upload_title: "Încarcă poza preferată"
         upload_picture: "Încarcă poza"
         image_is_not_a_square: "Atenţie: poza este decupată, înălțimea și lățimea nu erau egale."
-        cache_notice: "Poza de profil a fost schimbată cu succes, dar poate dura ceva timp până să fie afișată din cauza caching-ului din browser."
       change_profile_background:
         title: "Fundal pentru pagina de profil"
         instructions: "Fundalul profilului va fi centrat şi va avea o dimensiune standard de 850px."
@@ -902,7 +898,6 @@ ro:
         most_liked_users: "Cele mai apreciate"
         most_replied_to_users: "Cele mai multe răspunsuri pentru"
         no_likes: "Nicio apreciere încă."
-      associated_accounts: "Conectări"
       ip_address:
         title: "Ultima adresă IP"
       registration_ip_address:
@@ -1058,9 +1053,6 @@ ro:
       preferences: "Trebuie să fii autentificat pentru a schimba preferințele."
       forgot: "Nu îmi amintesc detaliile contului meu."
       not_approved: "Contul tău încă nu a fost aprobat. Vei primi notificarea prin email când ești gata de logare."
-      google:
-        title: "Google"
-        message: "Autentificare cu Google (Verifică browserul să nu blocheze ferestrele pop-up)"
       google_oauth2:
         title: "Google"
         message: "Autentificare cu Google (Verifică browserul să nu blocheze ferestrele pop-up)"
@@ -1822,7 +1814,6 @@ ro:
           inappropriate: "Retrage marcaj de avertizare"
           bookmark: "Șterge semn de carte"
           like: "Retrage apreciere"
-          vote: "Retrage vot"
         people:
           off_topic: "marcat cu marcaj de avertizare \"în afara subiectului\""
           spam: "marcat cu marcaj de avertizare \"spam\""
@@ -1835,7 +1826,6 @@ ro:
             one: "și {{count}} altul au apreciat asta"
             few: "și {{count}} alții au apreciat asta"
             other: "și {{count}} alții au apreciat asta"
-          vote: "a votat la asta"
         by_you:
           off_topic: "Ai marcat asta cu mesaj de avertizare, ca fiind în afara subiectului"
           spam: "Ai marcat asta cu mesaj de avertizare, ca fiind spam"
@@ -1844,7 +1834,6 @@ ro:
           notify_user: "Ai trimis un mesaj către acest utilizator"
           bookmark: "Ai marcat ca semn de carte această postare"
           like: "Ai apreciat"
-          vote: "Ai votat aceasta postare"
         by_you_and_others:
           off_topic:
             one: "Tu şi încă o persoană aţi marcat acest mesaj ca fiind în afară subiectului"
@@ -1874,10 +1863,6 @@ ro:
             one: "Tu şi încă o persoană aţi apreciat aceasta."
             few: "Tu şi alte {{count}} persoane aţi apreciat asta."
             other: "Tu şi alte {{count}} de persoane aţi apreciat asta."
-          vote:
-            one: "Tu şi încă o persoană aţi votat la această postare."
-            few: "Tu şi alte {{count}} persoane aţi votat la această postare."
-            other: "Tu şi alte {{count}} de persoane aţi votat la această postare."
         by_others:
           off_topic:
             one: "O persoană a marcat acesta ca fiind în afară discuţiei"
@@ -1907,10 +1892,6 @@ ro:
             one: "o persoană a apreciat aceasta"
             few: "{{count}} persoane au apreciat aceasta"
             other: "{{count}} de persoane au apreciat aceasta"
-          vote:
-            one: "O persoană a votat pentru acest mesaj"
-            few: "{{count}} persoane au votat pentru acest mesaj"
-            other: "{{count}} de persoane au votat pentru acest mesaj"
       delete:
         confirm:
           one: "Ești sigur că vrei să ștergi aca postare?"
@@ -1953,7 +1934,6 @@ ro:
       can: 'can&hellip; '
       none: '(nicio categorie)'
       all: 'Toate categoriile'
-      choose: 'Selectează o categorie&hellip;'
       edit: 'editează'
       edit_long: "Editează"
       view: 'Arată subiectele din categorie'
@@ -1997,14 +1977,12 @@ ro:
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
       email_in_disabled: "Postarea subiectelor noi prin email este dezactivată din setările siteului. Pentru a activa postarea subiectelor noi prin email,"
       email_in_disabled_click: 'activează opțiunea "primire email ".'
-      all_topics_wiki: "Transformă subiectele noi în wiki-uri, implicit."
       sort_order: "Sortează lista de subiecte după:"
       default_view: "Listă implicită de subiecte:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       edit_permissions: "Editează permisiuni"
       add_permission: "Adaugă permisiune"
       this_year: "anul acesta"
-      position: "poziție"
       default_position: "Poziție inițială"
       position_disabled: "Categoriile vor fi afișate în ordinea activității. Pentru a controla ordinea categoriilor în listă, "
       position_disabled_click: 'activează setarea "poziția fixă a categoriei".'
@@ -2080,7 +2058,7 @@ ro:
       notify_action: "Mesaj"
     topic_map:
       title: "Rezumatul subiectului"
-      participants_title: "Postaci frecvenţi"
+      participants_title: "Comentatori frecvenţi"
       links_title: "Legături populare"
       links_shown: "arată mai multe link-uri..."
       clicks:
@@ -2878,7 +2856,6 @@ ro:
             address_placeholder: "nume@exemplu.com"
             type_placeholder: "rezumat, înregistrare..."
             reply_key_placeholder: "cheie de răspuns"
-            skipped_reason_placeholder: "motivul"
       moderation_history:
         no_results: "Niciun istoric de moderare nu e disponibil."
         actions:

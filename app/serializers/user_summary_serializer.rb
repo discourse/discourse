@@ -22,6 +22,12 @@ class UserSummarySerializer < ApplicationSerializer
     attributes :count, :name
   end
 
+  class CategoryWithCountsSerializer < ApplicationSerializer
+    attributes :topic_count, :post_count,
+      :id, :name, :color, :text_color, :slug,
+      :read_restricted, :parent_category_id
+  end
+
   has_many :topics, serializer: TopicSerializer
   has_many :replies, serializer: ReplySerializer, embed: :object
   has_many :links, serializer: LinkSerializer, embed: :object
@@ -29,6 +35,7 @@ class UserSummarySerializer < ApplicationSerializer
   has_many :most_liked_users, serializer: UserWithCountSerializer, embed: :object
   has_many :most_replied_to_users, serializer: UserWithCountSerializer, embed: :object
   has_many :badges, serializer: UserBadgeSerializer, embed: :object
+  has_many :top_categories, serializer: CategoryWithCountsSerializer, embed: :object
 
   attributes :likes_given,
              :likes_received,

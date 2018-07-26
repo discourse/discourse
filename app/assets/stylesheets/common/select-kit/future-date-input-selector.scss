@@ -11,11 +11,16 @@
 
       .future-date-input-selector-datetime {
         color: lighten($primary, 40%);
-        font-size: $font-down-1;
+        margin-left: 5px;
       }
 
       .future-date-input-selector-icons {
-        width: 25px;
+        margin-right: 5px;
+      }
+
+      .btn-clear {
+        padding: 0;
+        margin-left: 5px;
       }
 
       .future-date-input-selector-row {

@@ -8,7 +8,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   BUILTIN_AUTH = [
     Auth::FacebookAuthenticator.new,
     Auth::GoogleOAuth2Authenticator.new,
-    Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
+    Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true),
     Auth::GithubAuthenticator.new,
     Auth::TwitterAuthenticator.new,
     Auth::InstagramAuthenticator.new
@@ -17,10 +17,6 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_action :redirect_to_login_if_required
 
   layout 'no_ember'
-
-  def self.types
-    @types ||= Enum.new(:facebook, :instagram, :twitter, :google, :yahoo, :github, :persona, :cas)
-  end
 
   # need to be able to call this
   skip_before_action :check_xhr
@@ -36,9 +32,13 @@ class Users::OmniauthCallbacksController < ApplicationController
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
-    provider = Discourse.auth_providers && Discourse.auth_providers.find { |p| p.name == params[:provider] }
+    provider = DiscoursePluginRegistry.auth_providers.find { |p| p.name == params[:provider] }
 
-    @auth_result = authenticator.after_authenticate(auth)
+    if authenticator.can_connect_existing_user? && current_user
+      @auth_result = authenticator.after_authenticate(auth, existing_account: current_user)
+    else
+      @auth_result = authenticator.after_authenticate(auth)
+    end
 
     origin = request.env['omniauth.origin']
 
@@ -91,23 +91,10 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def self.find_authenticator(name)
-    BUILTIN_AUTH.each do |authenticator|
-      if authenticator.name == name
-        raise Discourse::InvalidAccess.new(I18n.t("provider_not_enabled")) unless SiteSetting.send("enable_#{name}_logins?")
-        return authenticator
-      end
+    Discourse.enabled_authenticators.each do |authenticator|
+      return authenticator if authenticator.name == name
     end
-
-    Discourse.auth_providers.each do |provider|
-      next if provider.name != name
-
-      unless provider.enabled_setting.nil? || SiteSetting.send(provider.enabled_setting)
-        raise Discourse::InvalidAccess.new(I18n.t("provider_not_enabled"))
-      end
-      return provider.authenticator
-    end
-
-    raise Discourse::InvalidAccess.new(I18n.t("provider_not_found"))
+    raise Discourse::InvalidAccess.new(I18n.t('authenticator_not_found'))
   end
 
   protected

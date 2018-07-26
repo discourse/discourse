@@ -5,6 +5,7 @@ class DiscoursePluginRegistry
 
   class << self
     attr_writer :javascripts
+    attr_writer :auth_providers
     attr_writer :service_workers
     attr_writer :admin_javascripts
     attr_writer :stylesheets
@@ -24,6 +25,10 @@ class DiscoursePluginRegistry
     # Default accessor values
     def javascripts
       @javascripts ||= Set.new
+    end
+
+    def auth_providers
+      @auth_providers ||= Set.new
     end
 
     def service_workers
@@ -85,6 +90,10 @@ class DiscoursePluginRegistry
     def vendored_core_pretty_text
       @vendored_core_pretty_text ||= Set.new
     end
+  end
+
+  def self.register_auth_provider(auth_provider)
+    self.auth_providers << auth_provider
   end
 
   def register_js(filename, options = {})
@@ -203,6 +212,10 @@ class DiscoursePluginRegistry
     self.class.javascripts
   end
 
+  def auth_providers
+    self.class.auth_providers
+  end
+
   def service_workers
     self.class.service_workers
   end
@@ -229,6 +242,7 @@ class DiscoursePluginRegistry
 
   def self.clear
     self.javascripts = nil
+    self.auth_providers = nil
     self.service_workers = nil
     self.stylesheets = nil
     self.mobile_stylesheets = nil
@@ -240,6 +254,7 @@ class DiscoursePluginRegistry
 
   def self.reset!
     javascripts.clear
+    auth_providers.clear
     service_workers.clear
     admin_javascripts.clear
     stylesheets.clear

@@ -1,0 +1,168 @@
+{{#if isEnabled}}
+  {{#conditional-loading-section isLoading=isLoading}}
+    {{#if showTimeoutError}}
+      <div class="alert alert-error">
+        {{i18n "admin.dashboard.timeout_error"}}
+      </div>
+    {{/if}}
+
+    {{#if showHeader}}
+      <div class="report-header">
+        {{#if showTitle}}
+          <div class="report-title">
+            <h3 class="title">
+              {{#if showAllReportsLink}}
+                {{#link-to "adminReports" class="all-report-link"}}
+                  {{i18n "admin.dashboard.all_reports"}}
+                {{/link-to}}
+                <span class="separator">|</span>
+              {{/if}}
+
+              <a href="{{model.reportUrl}}" class="report-link">
+                {{model.title}}
+              </a>
+            </h3>
+
+            {{#if model.description}}
+              <span class="info" data-tooltip="{{model.description}}">
+                {{d-icon "question-circle"}}
+              </span>
+            {{/if}}
+          </div>
+        {{/if}}
+
+        {{#if showTrend}}
+        {{#if model.prev_period}}
+          <div class="trend {{model.trend}}">
+            <span class="trend-value" title="{{model.trendTitle}}">
+              {{#if model.average}}
+                {{number model.currentAverage}}{{#if model.percent}}%{{/if}}
+              {{else}}
+                {{number model.currentTotal noTitle="true"}}{{#if model.percent}}%{{/if}}
+              {{/if}}
+            </span>
+
+            {{#if model.trendIcon}}
+              {{d-icon model.trendIcon class="trend-icon"}}
+            {{/if}}
+          </div>
+        {{/if}}
+        {{/if}}
+
+        {{#if showModes}}
+          <ul class="mode-switch">
+            {{#each displayedModes as |displayedMode|}}
+              <li class="mode">
+                {{d-button
+                  action="changeMode"
+                  actionParam=displayedMode.mode
+                  class=displayedMode.cssClass
+                  icon=displayedMode.icon}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    <div class="report-body">
+      {{#unless showTimeoutError}}
+      {{#if hasData}}
+        {{#if currentMode}}
+          {{component modeComponent model=model options=options}}
+        {{/if}}
+      {{else}}
+        <div class="alert alert-info no-data-alert">
+          {{i18n 'admin.dashboard.reports.no_data'}}
+        </div>
+      {{/if}}
+      {{/unless}}
+
+      {{#if showFilteringUI}}
+        <div class="report-filters">
+          {{#if showDatesOptions}}
+            <div class="filtering-control">
+              <span class="filtering-label">
+                {{i18n 'admin.dashboard.reports.start_date'}}
+              </span>
+
+              <div class="filtering-input">
+                {{date-picker-past
+                  value=startDate
+                  defaultDate=startDate}}
+              </div>
+            </div>
+
+            <div class="filtering-control">
+              <span class="filtering-label">
+                {{i18n 'admin.dashboard.reports.end_date'}}
+              </span>
+
+              <div class="filtering-input">
+                {{date-picker-past
+                  value=endDate
+                  defaultDate=endDate}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if showCategoryOptions}}
+            <div class="filtering-control">
+              <div class="filtering-input">
+                {{search-advanced-category-chooser
+                  filterable=true
+                  value=category
+                  castInteger=true}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if showGroupOptions}}
+            <div class="filtering-control">
+              <div class="filtering-input">
+                {{combo-box
+                  castInteger=true
+                  filterable=true
+                  valueAttribute="value"
+                  content=groupOptions
+                  value=groupId}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if showExport}}
+            <div class="filtering-control">
+              <div class="filtering-input">
+                {{d-button
+                  class="export-csv-btn"
+                  action="exportCsv"
+                  label="admin.export_csv.button_text"
+                  icon="download"}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if showRefresh}}
+            <div class="filtering-control">
+              <div class="filtering-input">
+                {{d-button
+                  class="refresh-report-btn btn-primary"
+                  action="refreshReport"
+                  label="admin.dashboard.reports.refresh_report"
+                  icon="refresh"}}
+              </div>
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+
+    {{#if model.relatedReport}}
+      {{admin-report dataSourceName=model.relatedReport.type}}
+    {{/if}}
+  {{/conditional-loading-section}}
+{{else}}
+  <div class="alert alert-info">
+    {{{i18n disabledLabel}}}
+  </div>
+{{/if}}

@@ -7,6 +7,10 @@
 
     <label>{{i18n 'categories.category'}}</label>
     {{category-chooser value=categoryId class="small"}}
+    {{#if canAddTags}}
+      <label>{{i18n 'tagging.tags'}}</label>
+      {{tag-chooser tags=tags filterable=true categoryId=categoryId}}
+    {{/if}}
   </form>
 {{/d-modal-body}}
 

@@ -1,14 +1,16 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
-import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { userPath } from "discourse/lib/url";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default Ember.Controller.extend(PasswordValidation, {
   isDeveloper: Ember.computed.alias("model.is_developer"),
   admin: Ember.computed.alias("model.admin"),
   secondFactorRequired: Ember.computed.alias("model.second_factor_required"),
+  backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
+  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,
@@ -27,7 +29,7 @@ export default Ember.Controller.extend(PasswordValidation, {
     return Discourse.getURL(redirectTo || "/");
   },
 
-  lockImageUrl: getUrl("/images/lock.svg"),
+  lockImageUrl: Discourse.getURL("/images/lock.svg"),
 
   actions: {
     submit() {
@@ -36,7 +38,8 @@ export default Ember.Controller.extend(PasswordValidation, {
         type: "PUT",
         data: {
           password: this.get("accountPassword"),
-          second_factor_token: this.get("secondFactor")
+          second_factor_token: this.get("secondFactor"),
+          second_factor_method: this.get("secondFactorMethod")
         }
       })
         .then(result => {
@@ -50,7 +53,7 @@ export default Ember.Controller.extend(PasswordValidation, {
               DiscourseURL.redirectTo(result.redirect_to || "/");
             }
           } else {
-            if (result.errors && result.errors.user_second_factor) {
+            if (result.errors && result.errors.user_second_factors) {
               this.setProperties({
                 secondFactorRequired: true,
                 password: null,

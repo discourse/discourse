@@ -3,7 +3,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
   def self.email_keys
     @email_keys ||= ["invite_forum_mailer", "invite_mailer", "invite_password_instructions",
                      "custom_invite_mailer", "custom_invite_forum_mailer",
-                     "new_version_mailer", "new_version_mailer_with_notes", "queued_posts_reminder",
+                     "new_version_mailer", "new_version_mailer_with_notes", "system_messages.queued_posts_reminder",
                      "system_messages.backup_failed", "system_messages.backup_succeeded",
                      "system_messages.silenced_by_staff", "system_messages.bulk_invite_failed",
                      "system_messages.bulk_invite_succeeded", "system_messages.csv_export_failed",

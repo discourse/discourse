@@ -247,6 +247,10 @@
     }
   }
 
+  .public-user-fields {
+    overflow: hidden;
+  }
+
   .viewing-self & .about.collapsed-info {
     .secondary,
     .staff-counters {
@@ -281,7 +285,7 @@
     }
 
     &[type="text"] {
-      @include small-width {
+      @include breakpoint(medium) {
         width: 450px;
       }
     }
@@ -290,10 +294,6 @@
   .instructions {
     display: inline-block;
     margin-top: 0;
-  }
-
-  .form-horizontal .instructions {
-    margin-left: 8px;
   }
 
   .pref-mailing-list-mode .controls {

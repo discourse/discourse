@@ -13,10 +13,6 @@ module Jobs
         # send a message to admins no more often than once per week.
         GroupMessage.create(Group[:admins].name, :dashboard_problems, limit_once_per: 7.days.to_i)
       end
-
-      # TODO: decide if we want to keep caching this every 30 minutes
-      AdminDashboardNextData.refresh_stats
-      AdminDashboardData.refresh_stats
     end
   end
 end

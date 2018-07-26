@@ -1,0 +1,14 @@
+.admin-report-table {
+  .report-table {
+    table-layout: fixed;
+
+    thead tr th {
+      font-weight: normal;
+      font-size: $font-down-2;
+      white-space: unset;
+      .sort-button {
+        display: none;
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
 // account or changing their email.
 
 #simple-container {
-  @include border-radius-all(10px);
+  border-radius: 10px;
   background-color: $secondary;
   padding: 20px;
   width: 550px;

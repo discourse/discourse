@@ -350,7 +350,7 @@ class Admin::UsersController < Admin::AdminController
         silenced: true,
         silence_reason: silencer.user_history.try(:details),
         silenced_till: @user.silenced_till,
-        suspended_at: @user.silenced_at,
+        silenced_at: @user.silenced_at,
         silenced_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
@@ -365,7 +365,7 @@ class Admin::UsersController < Admin::AdminController
         silenced: false,
         silence_reason: nil,
         silenced_till: nil,
-        suspended_at: nil
+        silenced_at: nil
       }
     )
   end
@@ -386,10 +386,10 @@ class Admin::UsersController < Admin::AdminController
 
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
-    user_second_factor = @user.user_second_factor
-    raise Discourse::InvalidParameters unless user_second_factor
+    user_second_factor = @user.user_second_factors
+    raise Discourse::InvalidParameters unless !user_second_factor.empty?
 
-    user_second_factor.destroy!
+    user_second_factor.destroy_all
     StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
 
     Jobs.enqueue(

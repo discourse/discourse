@@ -4,37 +4,28 @@ acceptance("Dashboard Next", {
   loggedIn: true
 });
 
-QUnit.test("Visit dashboard next page", assert => {
-  visit("/admin");
+QUnit.test("Visit dashboard next page", async assert => {
+  await visit("/admin");
 
-  andThen(() => {
-    assert.ok($(".dashboard-next").length, "has dashboard-next class");
+  assert.ok(exists(".dashboard-next"), "has dashboard-next class");
 
-    assert.ok($(".dashboard-mini-chart.signups").length, "has a signups chart");
+  assert.ok(exists(".admin-report.signups"), "signups report");
+  assert.ok(exists(".admin-report.posts"), "posts report");
+  assert.ok(exists(".admin-report.dau-by-mau"), "dau-by-mau report");
+  assert.ok(
+    exists(".admin-report.daily-engaged-users"),
+    "daily-engaged-users report"
+  );
+  assert.ok(
+    exists(".admin-report.new-contributors"),
+    "new-contributors report"
+  );
 
-    assert.ok($(".dashboard-mini-chart.posts").length, "has a posts chart");
-
-    assert.ok(
-      $(".dashboard-mini-chart.dau_by_mau").length,
-      "has a dau_by_mau chart"
-    );
-
-    assert.ok(
-      $(".dashboard-mini-chart.daily_engaged_users").length,
-      "has a daily_engaged_users chart"
-    );
-
-    assert.ok(
-      $(".dashboard-mini-chart.new_contributors").length,
-      "has a new_contributors chart"
-    );
-
-    assert.equal(
-      $(".section.dashboard-problems .problem-messages ul li:first-child")
-        .html()
-        .trim(),
-      "Houston...",
-      "displays problems"
-    );
-  });
+  assert.equal(
+    $(".section.dashboard-problems .problem-messages ul li:first-child")
+      .html()
+      .trim(),
+    "Houston...",
+    "displays problems"
+  );
 });

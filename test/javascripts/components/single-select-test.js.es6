@@ -779,3 +779,49 @@ componentTest("with minimumLabel", {
     });
   }
 });
+
+componentTest("with accents in filter", {
+  template: "{{single-select content=content filterable=true}}",
+
+  beforeEach() {
+    this.set("content", ["sam", "jeff", "neil"]);
+  },
+
+  test(assert) {
+    this.get("subject").expand();
+    this.get("subject").fillInFilter("jéff");
+
+    andThen(() => {
+      assert.equal(this.get("subject").rows().length, 1);
+      assert.equal(
+        this.get("subject")
+          .rowByIndex(0)
+          .name(),
+        "jeff"
+      );
+    });
+  }
+});
+
+componentTest("with accents in content", {
+  template: "{{single-select content=content filterable=true}}",
+
+  beforeEach() {
+    this.set("content", ["sam", "jéff", "neil"]);
+  },
+
+  test(assert) {
+    this.get("subject").expand();
+    this.get("subject").fillInFilter("jeff");
+
+    andThen(() => {
+      assert.equal(this.get("subject").rows().length, 1);
+      assert.equal(
+        this.get("subject")
+          .rowByIndex(0)
+          .name(),
+        "jéff"
+      );
+    });
+  }
+});

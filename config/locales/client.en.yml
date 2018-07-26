@@ -152,6 +152,7 @@ en:
       user_left: "%{who} removed themselves from this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
+      autobumped: "automatically bumped topic"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -196,6 +197,7 @@ en:
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "EU (London)"
+        eu_west_3: "EU (Paris)"
         sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
@@ -547,15 +549,13 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all in %{categoryName}"
+      all_subcategories: "all"
       no_subcategory: "none"
       category: "Category"
       category_list: "Display category list"
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
-        fix_order: "Fix Positions"
-        fix_order_tooltip: "Not all categories have a unique position number, which may cause unexpected results."
         save: "Save Order"
         apply_all: "Apply"
         position: "Position"
@@ -738,6 +738,20 @@ en:
         choose_new: "Choose a new password"
         choose: "Choose a password"
 
+      second_factor_backup:
+        title: "Two Factor backup code management"
+        regenerate: "Regenerate"
+        disable: "Disable"
+        enable: "Enable"
+        enable_long: "Enable backup codes"
+        manage: "Manage backup codes"
+        copied_to_clipboard: "Copied to Clipboard"
+        copy_to_clipboard_error: "Error copying data to Clipboard"
+        remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
+        codes:
+          title: "Backup codes"
+          description: "Each line is a different backup code which can only be used once. It's recommended to save this file in a safe place."
+
       second_factor:
         title: "Two Factor Authentication"
         disable: "Disable two factor authentication"
@@ -781,7 +795,6 @@ en:
         upload_title: "Upload your picture"
         upload_picture: "Upload Picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
-        cache_notice: "You've successfully changed your profile picture but it might take some time to appear due to browser caching."
 
       change_profile_background:
         title: "Profile Background"
@@ -793,6 +806,9 @@ en:
 
       email:
         title: "Email"
+        primary: "Primary Email"
+        secondary: "Secondary Emails"
+        no_secondary: "No secondary emails"
         instructions: "never shown to the public"
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
@@ -801,6 +817,12 @@ en:
         frequency:
           one: "We'll only email you if we haven't seen you in the last minute."
           other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
+
+      associated_accounts:
+        title: "Associated Accounts"
+        connect: "Connect"
+        revoke: "Revoke"
+        not_connected: "(not connected)"
 
       name:
         title: "Name"
@@ -985,9 +1007,10 @@ en:
         most_liked_users: "Most Liked"
         most_replied_to_users: "Most Replied To"
         no_likes: "No likes yet."
+        top_categories: "Top Categories"
+        topics: "Topics"
+        replies: "Replies"
 
-
-      associated_accounts: "Logins"
       ip_address:
         title: "Last IP Address"
       registration_ip_address:
@@ -1144,9 +1167,14 @@ en:
       password: "Password"
       second_factor_title: "Two Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
+      second_factor_backup: "<a href>Log in using a backup code</a>"
+      second_factor_backup_title: "Two Factor Backup"
+      second_factor_backup_description: "Please enter one of your backup codes:"
+      second_factor: "<a href>Log in using Authenticator app</a>"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
+      cookies_error: "Your browsers seems to have cookies disabled. You might not be able to log in without enabling them first."
       rate_limit: "Please wait before trying to log in again."
       blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
@@ -1173,25 +1201,28 @@ en:
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
-      google:
-        title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       google_oauth2:
+        name: "Google"
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
+        name: "Twitter"
         title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       instagram:
+        name: "Instagram"
         title: "with Instagram"
         message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
+        name: "Facebook"
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       yahoo:
+        name: "Yahoo"
         title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
+        name: "GitHub"
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
     invites:
@@ -1752,6 +1783,8 @@ en:
         jump_prompt_of: "of %{count} posts"
         jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
+        jump_prompt_to_date: "to date"
+        jump_prompt_or: "or"
         total: total posts
         current: current post
 
@@ -2079,6 +2112,8 @@ en:
         lock_post_description: "prevent the poster from editing this post"
         unlock_post: "Unlock Post"
         unlock_post_description: "allow the poster to edit this post"
+        delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
+        delete_topic_disallowed: "you don't have permission to delete this topic"
 
       actions:
         flag: 'Flag'
@@ -2091,7 +2126,6 @@ en:
           inappropriate: "Undo flag"
           bookmark: "Undo bookmark"
           like: "Undo like"
-          vote: "Undo vote"
         people:
           off_topic: "flagged this as off-topic"
           spam: "flagged this as spam"
@@ -2103,7 +2137,6 @@ en:
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
-          vote: "voted for this"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -2112,7 +2145,6 @@ en:
           notify_user: "You sent a message to this user"
           bookmark: "You bookmarked this post"
           like: "You liked this"
-          vote: "You voted for this post"
         by_you_and_others:
           off_topic:
             one: "You and 1 other flagged this as off-topic"
@@ -2135,9 +2167,6 @@ en:
           like:
             one: "You and 1 other liked this"
             other: "You and {{count}} other people liked this"
-          vote:
-            one: "You and 1 other voted for this post"
-            other: "You and {{count}} other people voted for this post"
         by_others:
           off_topic:
             one: "1 person flagged this as off-topic"
@@ -2160,9 +2189,6 @@ en:
           like:
             one: "1 person liked this"
             other: "{{count}} people liked this"
-          vote:
-            one: "1 person voted for this post"
-            other: "{{count}} people voted for this post"
 
       delete:
         confirm:
@@ -2213,7 +2239,7 @@ en:
       can: 'can&hellip; '
       none: '(no category)'
       all: 'All categories'
-      choose: 'Select a category&hellip;'
+      choose: 'category&hellip;'
       edit: 'edit'
       edit_long: "Edit"
       view: 'View Topics in Category'
@@ -2262,7 +2288,7 @@ en:
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
-      all_topics_wiki: "Make new topics wikis by default."
+      all_topics_wiki: "Make new topics wikis by default"
       subcategory_list_style: "Subcategory List Style:"
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"
@@ -2270,13 +2296,17 @@ en:
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
+      require_topic_approval: "Require moderator approval of all new topics"
+      require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
-      position: "position"
+      position: "Position:"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
       minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
+      num_auto_bump_daily: 'Number of open topics to automatically bump daily:'
+      navigate_to_first_post_after_read: 'Navigate to first post after topics are read'
       notifications:
         watching:
           title: "Watching"
@@ -2753,9 +2783,14 @@ en:
         page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
         community_health: Community health
+        moderators_activity: Moderators activity
         whats_new_in_discourse: What’s new in Discourse?
         activity_metrics: Activity Metrics
         all_reports: "All reports"
+        general_tab: "General"
+        moderation_tab: "Moderation"
+        disabled: Disabled
+        timeout_error: Sorry, query is taking too long, please pick a shorter interval
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -2774,6 +2809,9 @@ en:
           end_date: "End Date"
           groups: "All groups"
           disabled: "This report is disabled"
+          totals_for_sample: "Totals for sample"
+          total: "All time total"
+          no_data: "No data to display."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
@@ -3315,7 +3353,6 @@ en:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
-            skipped_reason_placeholder: "reason"
 
       moderation_history:
         performed_by: "Performed By"
@@ -3777,6 +3814,14 @@ en:
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
+        uploaded_image_list:
+          label: "Edit list"
+          empty: "There are no pictures yet. Please upload one."
+          upload:
+            label: "Upload"
+            title: "Upload image(s)"
+        selectable_avatars:
+          title: "List of avatars users can choose from"
         categories:
           all_results: 'All'
           required: 'Required'
@@ -3937,6 +3982,7 @@ en:
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
+      upload_error: "Sorry, there was an error uploading that file. Please try again."
       quit: "Maybe Later"
 
       staff_count:
@@ -3950,3 +3996,8 @@ en:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regular User"
+
+      previews:
+        topic_title: "Discussion topic"
+        share_button: "Share"
+        reply_button: "Reply"

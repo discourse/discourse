@@ -71,7 +71,7 @@ describe UsersEmailController do
       end
 
       context 'second factor required' do
-        let!(:second_factor) { Fabricate(:user_second_factor, user: user) }
+        let!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
         it 'requires a second factor token' do
           get "/u/authorize-email/#{user.email_tokens.last.token}"
@@ -86,7 +86,8 @@ describe UsersEmailController do
 
         it 'adds an error on a second factor attempt' do
           get "/u/authorize-email/#{user.email_tokens.last.token}", params: {
-            second_factor_token: "000000"
+            second_factor_token: "000000",
+            second_factor_method: UserSecondFactor.methods[:totp]
           }
 
           expect(response.status).to eq(200)
@@ -95,7 +96,8 @@ describe UsersEmailController do
 
         it 'confirms with a correct second token' do
           get "/u/authorize-email/#{user.email_tokens.last.token}", params: {
-            second_factor_token: ROTP::TOTP.new(second_factor.data).now
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now,
+            second_factor_method: UserSecondFactor.methods[:totp]
           }
 
           expect(response.status).to eq(200)

@@ -1,0 +1,108 @@
+// styles for admin/settings
+
+.settings {
+  .setting {
+    padding-bottom: 20px;
+    .setting-label {
+      float: left;
+      width: 17.6576%;
+      margin-right: 12px;
+      @media (max-width: $mobile-breakpoint) {
+        float: none;
+        margin-right: 0;
+        width: 100%;
+        h3 {
+          margin-bottom: 6px;
+        }
+      }
+    }
+    .setting-value {
+      float: left;
+      width: 53%;
+      padding-right: 20px;
+      .category-selector {
+        width: 95%;
+      }
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+        padding-right: 0;
+      }
+      .select-kit {
+        width: 100% !important; // Needs !important to override hard-coded value
+        @media (max-width: $mobile-breakpoint) {
+          width: 100% !important; // !important overrides hard-coded mobile width of 68px
+        }
+      }
+    }
+    .setting-controls {
+      float: left;
+    }
+    .input-setting-string,
+    .input-setting-textarea {
+      box-sizing: border-box;
+      height: 30px;
+      width: 100%;
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
+    }
+    .input-setting-textarea {
+      height: 150px;
+    }
+    .input-setting-list {
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
+      padding: 1px;
+      background-color: $secondary;
+      border: 1px solid $primary-low;
+      border-radius: 3px;
+      transition: border linear 0.2s, box-shadow linear 0.2s;
+      li.sortable-placeholder {
+        padding: 3px 5px 3px 18px;
+        margin: 3px 0 3px 5px;
+        position: relative;
+        line-height: $line-height-small;
+        cursor: default;
+        border: 1px dashed #aaa;
+        border-radius: 3px;
+        background-clip: padding-box;
+        -moz-user-select: none;
+        background-color: transparent;
+        width: 3em;
+        height: 1em;
+      }
+    }
+    .desc,
+    .validation-error {
+      padding-top: 3px;
+      font-size: $font-down-1;
+      line-height: $line-height-large;
+    }
+    .validation-error {
+      color: $danger;
+    }
+    .desc {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
+    h3 {
+      font-size: $font-0;
+      font-weight: normal;
+    }
+  }
+  .setting.overridden {
+    h3 {
+      color: $highlight-high;
+    }
+  }
+  .setting.overridden.string {
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      background-color: $highlight-medium;
+    }
+  }
+  .warning {
+    color: $danger;
+  }
+}

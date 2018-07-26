@@ -204,6 +204,10 @@ describe PrettyText do
 
   describe "Mentions" do
 
+    it "can handle mentions after abbr" do
+      expect(PrettyText.cook("test <abbr>test</abbr>\n\n@bob")).to eq("<p>test <abbr>test</abbr></p>\n<p><span class=\"mention\">@bob</span></p>")
+    end
+
     it "should handle 3 mentions in a row" do
       expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end

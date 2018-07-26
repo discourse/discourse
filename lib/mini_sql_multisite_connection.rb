@@ -23,6 +23,27 @@ class MiniSqlMultisiteConnection < MiniSql::Connection
     end
   end
 
+  class AfterCommitWrapper
+    def initialize
+      @callback = Proc.new
+    end
+
+    def committed!(*)
+      @callback.call
+    end
+
+    def before_committed!(*); end
+    def rolledback!(*); end
+  end
+
+  # Allows running arbitrary code after the current transaction has been committed.
+  # Works even with nested transactions. Useful for scheduling sidekiq jobs.
+  def after_commit(&blk)
+    ActiveRecord::Base.connection.add_transaction_record(
+      AfterCommitWrapper.new(&blk)
+    )
+  end
+
   def self.instance
     new(nil, param_encoder: ParamEncoder.new)
   end

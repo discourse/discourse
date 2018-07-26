@@ -35,6 +35,7 @@ export default ComboBoxComponent.extend({
     this.get("rowComponentOptions").setProperties({
       hideParentCategory: this.get("subCategory"),
       allowUncategorized: true,
+      countSubcategories: this.get("countSubcategories"),
       displayCategoryDescription: !(
         this.currentUser &&
         (this.currentUser.get("staff") || this.currentUser.trust_level > 0)
@@ -91,6 +92,7 @@ export default ComboBoxComponent.extend({
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);
+      content.title = category.title;
       content.label = categoryBadgeHTML(category, {
         link: false,
         allowUncategorized: true,
@@ -101,10 +103,12 @@ export default ComboBoxComponent.extend({
         content.label = `<span class="category-name">${this.get(
           "noCategoriesLabel"
         )}</span>`;
+        content.title = this.get("noCategoriesLabel");
       } else {
         content.label = `<span class="category-name">${this.get(
           "allCategoriesLabel"
         )}</span>`;
+        content.title = this.get("allCategoriesLabel");
       }
     }
 

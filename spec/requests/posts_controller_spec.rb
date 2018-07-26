@@ -92,6 +92,30 @@ describe PostsController do
     end
   end
 
+  describe '#by_date' do
+    include_examples 'finding and showing post' do
+      let(:url) { "/posts/by-date/#{post.topic_id}/#{post.created_at.strftime("%Y-%m-%d")}.json" }
+    end
+
+    it 'returns the expected post' do
+      first_post = Fabricate(:post, created_at: 10.days.ago)
+      second_post = Fabricate(:post, topic: first_post.topic, created_at: 4.days.ago)
+      third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
+
+      get "/posts/by-date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
+      json = JSON.parse(response.body)
+
+      expect(response.status).to eq(200)
+      expect(json["id"]).to eq(second_post.id)
+    end
+
+    it 'returns no post if date is > at last created post' do
+      get "/posts/by-date/#{post.topic_id}/2245-11-11.json"
+      json = JSON.parse(response.body)
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe '#reply_history' do
     include_examples 'finding and showing post' do
       let(:url) { "/posts/#{post.id}/reply-history.json" }
@@ -123,18 +147,6 @@ describe PostsController do
       let(:topic) { Fabricate(:topic) }
       let(:user) { Fabricate(:user) }
       let(:moderator) { Fabricate(:moderator) }
-
-      it 'does not allow to destroy when edit time limit expired' do
-        SiteSetting.post_edit_time_limit = 5
-
-        post = Fabricate(:post, topic: topic, created_at: 10.minutes.ago, user: user, post_number: 3)
-        sign_in(user)
-
-        delete "/posts/#{post.id}.json"
-
-        expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
-      end
 
       it "raises an error when the user doesn't have permission to see the post" do
         pm = Fabricate(:private_message_topic)
@@ -351,6 +363,20 @@ describe PostsController do
 
       expect(response.status).not_to eq(200)
       expect(post.topic.category_id).not_to eq(category.id)
+    end
+
+    it 'can not move to a category that requires topic approval' do
+      post = create_post
+      sign_in(post.user)
+
+      category = Fabricate(:category)
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+
+      put "/posts/#{post.id}.json", params: { post: { category_id: category.id, raw: "this is a test edit to post" } }
+
+      expect(response.status).to eq(403)
+      expect(post.topic.reload.category_id).not_to eq(category.id)
     end
   end
 

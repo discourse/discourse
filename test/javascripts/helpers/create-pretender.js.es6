@@ -88,7 +88,20 @@ export default function() {
           most_replied_to_users: [{ id: 333 }],
           most_liked_by_users: [{ id: 333 }],
           most_liked_users: [{ id: 333 }],
-          badges: [{ badge_id: 444 }]
+          badges: [{ badge_id: 444 }],
+          top_categories: [
+            {
+              id: 1,
+              name: "bug",
+              color: "e9dd00",
+              text_color: "000000",
+              slug: "bug",
+              read_restricted: false,
+              parent_category_id: null,
+              topic_count: 1,
+              post_count: 1
+            }
+          ]
         },
         badges: [{ id: 444, count: 1 }],
         topics: [{ id: 1234, title: "cool title", url: "/t/1234/cool-title" }]
@@ -252,13 +265,14 @@ export default function() {
       }
 
       if (data.password === "need-second-factor") {
-        if (data.second_factor_token) {
+        if (data.second_factor_token && data.second_factor_token === "123456") {
           return response({ username: "eviltrout" });
         }
 
         return response({
           error: "Invalid Second Factor",
           reason: "invalid_second_factor",
+          backup_enabled: true,
           sent_to_email: "eviltrout@example.com",
           current_email: "current@example.com"
         });
@@ -346,10 +360,28 @@ export default function() {
 
     this.get("/t/:topic_id/posts.json", request => {
       const postIds = request.queryParams.post_ids;
-      const posts = postIds.map(p => ({
-        id: parseInt(p),
-        post_number: parseInt(p)
-      }));
+      const postNumber = parseInt(request.queryParams.post_number);
+      let posts;
+
+      if (postIds) {
+        posts = postIds.map(p => ({
+          id: parseInt(p),
+          post_number: parseInt(p)
+        }));
+      } else if (postNumber && request.queryParams.asc === "true") {
+        posts = _.range(postNumber + 1, postNumber + 6).map(p => ({
+          id: parseInt(p),
+          post_number: parseInt(p)
+        }));
+      } else if (postNumber && request.queryParams.asc === "false") {
+        posts = _.range(postNumber - 5, postNumber)
+          .reverse()
+          .map(p => ({
+            id: parseInt(p),
+            post_number: parseInt(p)
+          }));
+      }
+
       return response(200, { post_stream: { posts } });
     });
 

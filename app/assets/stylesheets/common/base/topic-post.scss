@@ -158,7 +158,7 @@
 
   .post-infos {
     display: flex;
-    align-items: center;
+    align-items: baseline;
   }
 }
 
@@ -428,8 +428,12 @@ aside.quote {
 }
 
 .post-info {
-  margin-left: 0.5em;
+  flex: 0 0 auto;
+  margin-right: 0.5em;
 
+  &.post-date {
+    margin-right: 0;
+  }
   &.via-email,
   &.whisper {
     line-height: $line-height-medium;
@@ -702,6 +706,43 @@ a.mention-group {
 
   img {
     margin: 0 0.25em;
+  }
+}
+
+// Select posts
+
+.topic-post {
+  &.selected {
+    article.boxed {
+      .select-posts {
+        button.select-post {
+          background-color: $tertiary;
+          color: $secondary;
+          border-color: $tertiary;
+        }
+      }
+      .topic-body {
+        .contents:after {
+          display: none;
+        }
+      }
+    }
+  }
+  article.boxed {
+    position: relative;
+    .select-posts {
+      position: absolute;
+      right: 5em;
+      z-index: z("dropdown");
+      top: 0.5em;
+      height: 100px;
+      button {
+        margin-left: 8px;
+        background-color: $primary-low;
+        color: $primary;
+        box-shadow: shadow("dropdown");
+      }
+    }
   }
 }
 

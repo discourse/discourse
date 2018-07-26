@@ -51,6 +51,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @notifications = {}
     @badge_groupings = {}
     @badges = {}
+    @email_tokens = {}
 
     @auto_group_ids = Group::AUTO_GROUPS.values
 
@@ -68,6 +69,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def execute
+    @first_new_user_id = @last_user_id + 1
+    @first_new_topic_id = @last_topic_id + 1
+
     copy_users
     copy_user_stuff
     copy_groups
@@ -78,9 +82,10 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_uploads if @uploads_path
     copy_everything_else
     copy_badges
-    fix_category_descriptions
 
-    # TODO: update @mentions for usernames changed due to conflict
+    fix_user_columns
+    fix_category_descriptions
+    fix_topic_links
   end
 
   def source_raw_connection
@@ -116,6 +121,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
           row['id'] = (@last_user_id += 1)
           @users[old_user_id.to_s] = row['id']
+
           @raw_connection.put_copy_data row.values
         end
         imported_ids << old_user_id
@@ -130,15 +136,23 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_user_stuff
+    copy_model(
+      EmailToken,
+      skip_if_merged: true,
+      is_a_user_model: true,
+      skip_processing: true,
+      mapping: @email_tokens
+    )
+
     [
-      UserEmail, EmailToken, UserStat, UserOption, UserProfile, EmailChangeRequest,
+      UserEmail, UserStat, UserOption, UserProfile,
       UserVisit, UserSearchData, GivenDailyLike, UserSecondFactor, UserOpenId
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
 
     [FacebookUserInfo, GithubUserInfo, GoogleUserInfo, InstagramUserInfo, Oauth2UserInfo,
-      SingleSignOnRecord, TwitterUserInfo
+      SingleSignOnRecord, TwitterUserInfo, EmailChangeRequest
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true)
     end
@@ -152,15 +166,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     )
 
     copy_model(GroupUser, skip_if_merged: true)
-    copy_model(GroupArchivedMessage)
-    copy_model(GroupMention, skip_processing: true)
-
-    [CategoryGroup, GroupHistory].each do |k|
-      col_list = k.columns.map { |c| "\"#{c.name}\"" }.join(', ')
-      copy_model(k,
-        select_sql: "SELECT #{col_list} FROM #{k.table_name} WHERE group_id NOT IN (#{@auto_group_ids.join(', ')})"
-      )
-    end
   end
 
   def copy_categories
@@ -220,7 +225,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_topics
-    copy_model(Topic, skip_processing: true, mapping: @topics)
+    copy_model(Topic, mapping: @topics)
     [TopicAllowedGroup, TopicAllowedUser, TopicEmbed, TopicSearchData,
       TopicTimer, TopicUser, TopicViewItem
     ].each do |k|
@@ -284,42 +289,75 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     puts ''
     print "copying uploads..."
 
-    source_raw_connection.exec("SELECT * FROM uploads").each do |row|
-      user_id = row['user_id'].to_i
-      user_id = user_id_from_imported_id(user_id) if user_id > 0
-      absolute_filename = File.join(@uploads_path, row['url'].gsub(/^\/uploads\/[^\/]+\//, ''))
-      print '.'
+    FileUtils.cp_r(
+      File.join(@uploads_path, '.'),
+      File.join(Rails.root, 'public', 'uploads', 'default')
+    )
 
-      next unless File.exists?(absolute_filename)
+    columns = Upload.columns.map(&:name)
+    last_id = Upload.unscoped.maximum(:id) || 1
+    sql = "COPY uploads (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
 
-      upload = create_upload(user_id, absolute_filename, File.basename(absolute_filename))
-      if upload.persisted?
-        @uploads[row['id']] = upload.id
-        if @source_cdn
-          DbHelper.remap(UrlHelper.absolute(row['url'], @source_cdn), upload.url)
+    @raw_connection.copy_data(sql, @encoder) do
+      source_raw_connection.exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(', ')} FROM uploads").each do |row|
+
+        next if Upload.where(sha1: row['sha1']).exists?
+
+        rel_filename = row['url'].gsub(/^\/uploads\/[^\/]+\//, '')
+        rel_filename = rel_filename.gsub(/^\/\/[^\/]+\.amazonaws\.com\//, '')
+        absolute_filename = File.join(@uploads_path, rel_filename)
+
+        old_id = row['id']
+        if old_id && last_id
+          row['id'] = (last_id += 1)
+          @uploads[old_id.to_s] = row['id']
         end
-        DbHelper.remap(UrlHelper.absolute(row['url'], @source_base_url), upload.url)
-        DbHelper.remap(row['url'], upload.url)
-      else
-        puts "Error: Upload did not persist for #{absolute_filename}! #{upload.errors.full_messages}"
+
+        old_user_id = row['user_id'].to_i
+        if old_user_id >= 1
+          row['user_id'] = user_id_from_imported_id(old_user_id)
+          next if row['user_id'].nil?
+        end
+
+        row['url'] = "/uploads/default/#{rel_filename}" if File.exists?(absolute_filename)
+
+        @raw_connection.put_copy_data(row.values)
       end
     end
+
+    @sequences[Upload.sequence_name] = last_id + 1
+
     puts ''
 
-    copy_model(PostUpload, skip_processing: true)
+    copy_model(PostUpload)
     copy_model(UserAvatar)
+
+    # Users have a column "uploaded_avatar_id" which needs to be mapped now.
+    User.where("id >= ?", @first_new_user_id).find_each do |u|
+      if u.uploaded_avatar_id
+        u.uploaded_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
+        u.save! unless u.uploaded_avatar_id.nil?
+      end
+    end
   end
 
   def copy_everything_else
-    [PostTiming, UserArchivedMessage, UnsubscribeKey].each do |k|
+    [PostTiming, UserArchivedMessage, UnsubscribeKey, GroupMention].each do |k|
       copy_model(k, skip_processing: true)
     end
 
-    [UserHistory, UserWarning].each do |k|
+    [UserHistory, UserWarning, GroupArchivedMessage].each do |k|
       copy_model(k)
     end
 
     copy_model(Notification, mapping: @notifications)
+
+    [CategoryGroup, GroupHistory].each do |k|
+      col_list = k.columns.map { |c| "\"#{c.name}\"" }.join(', ')
+      copy_model(k,
+        select_sql: "SELECT #{col_list} FROM #{k.table_name} WHERE group_id NOT IN (#{@auto_group_ids.join(', ')})"
+      )
+    end
   end
 
   def copy_badges
@@ -436,8 +474,20 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     end
   end
 
+  def process_topic(topic)
+    return nil if topic['category_id'].nil? && topic['archetype'] != Archetype.private_message
+    topic['last_post_user_id'] = user_id_from_imported_id(topic['last_post_user_id']) || -1
+    topic['featured_user1_id'] = user_id_from_imported_id(topic['featured_user1_id']) || -1
+    topic['featured_user2_id'] = user_id_from_imported_id(topic['featured_user2_id']) || -1
+    topic['featured_user3_id'] = user_id_from_imported_id(topic['featured_user3_id']) || -1
+    topic['featured_user4_id'] = user_id_from_imported_id(topic['featured_user4_id']) || -1
+    topic
+  end
+
   def process_post(post)
-    post[:last_editor_id] = user_id_from_imported_id(post[:user_id])
+    post['last_editor_id'] = user_id_from_imported_id(post['last_editor_id']) || -1
+    post['reply_to_user_id'] = user_id_from_imported_id(post['reply_to_user_id']) || -1
+    post['locked_by_id'] = user_id_from_imported_id(post['locked_by_id']) || -1
     @topic_id_by_post_id[post[:id]] = post[:topic_id]
     post
   end
@@ -454,9 +504,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def process_topic_link(topic_link)
+    old_topic_id = topic_link['link_topic_id']
     topic_link['link_topic_id'] = topic_id_from_imported_id(topic_link['link_topic_id']) if topic_link['link_topic_id']
     topic_link['link_post_id'] = post_id_from_imported_id(topic_link['link_post_id']) if topic_link['link_post_id']
-    return nil if topic_link['link_topic_id'].nil? || topic_link['link_post_id'].nil?
+    return nil if topic_link['link_topic_id'].nil?
+
+    r = Regexp.new("^#{@source_base_url}/t/([^\/]+)/#{old_topic_id}(.*)")
+    if m = r.match(topic_link['url'])
+      topic_link['url'] = "#{@source_base_url}/t/#{m[1]}/#{topic_link['link_topic_id']}#{m[2]}"
+    end
+
     topic_link
   end
 
@@ -517,6 +574,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def process_user_avatar(user_avatar)
     user_avatar['custom_upload_id'] = upload_id_from_imported_id(user_avatar['custom_upload_id']) if user_avatar['custom_upload_id']
     user_avatar['gravatar_upload_id'] = upload_id_from_imported_id(user_avatar['gravatar_upload_id']) if user_avatar['gravatar_upload_id']
+    return nil unless user_avatar['custom_upload_id'].present? || user_avatar['gravatar_upload_id'].present?
     user_avatar
   end
 
@@ -529,6 +587,19 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def process_user_warning(user_warning)
     user_warning['created_by_id'] = user_id_from_imported_id(user_warning['created_by_id']) if user_warning['created_by_id']
     user_warning
+  end
+
+  def process_post_upload(post_upload)
+    return nil unless post_upload['upload_id'].present?
+
+    @imported_post_uploads ||= {}
+    return nil if @imported_post_uploads[post_upload['post_id']]&.include?(post_upload['upload_id'])
+    @imported_post_uploads[post_upload['post_id']] ||= []
+    @imported_post_uploads[post_upload['post_id']] << post_upload['upload_id']
+
+    return nil if PostUpload.where(post_id: post_upload['post_id'], upload_id: post_upload['upload_id']).exists?
+
+    post_upload
   end
 
   def process_notification(notification)
@@ -574,7 +645,14 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def process_user_badge(user_badge)
     user_badge['granted_by_id'] = user_id_from_imported_id(user_badge['granted_by_id']) if user_badge['granted_by_id']
     user_badge['notification_id'] = notification_id_from_imported_id(user_badge['notification_id']) if user_badge['notification_id']
+    return nil if UserBadge.where(user_id: user_badge['user_id'], badge_id: user_badge['badge_id']).exists?
     user_badge
+  end
+
+  def process_email_change_request(ecr)
+    ecr['old_email_token_id'] = email_token_id_from_imported_id(ecr['old_email_token_id']) if ecr['old_email_token_id']
+    ecr['new_email_token_id'] = email_token_id_from_imported_id(ecr['new_email_token_id']) if ecr['new_email_token_id']
+    ecr
   end
 
   def user_id_from_imported_id(id)
@@ -611,11 +689,87 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @notifications[id.to_s]
   end
 
+  def email_token_id_from_imported_id(id)
+    @email_tokens[id.to_s]
+  end
+
   def fix_primary_keys
     @sequences.each do |sequence_name, val|
       sql = "SELECT setval('#{sequence_name}', #{val})"
+      puts sql
       @raw_connection.exec(sql)
     end
+  end
+
+  def fix_user_columns
+    puts "updating foreign keys in the users table..."
+
+    User.where('id >= ?', @first_new_user_id).find_each do |u|
+      arr = []
+      sql = "UPDATE users SET"
+
+      if new_approved_by_id = user_id_from_imported_id(u.approved_by_id)
+        arr << " approved_by_id = #{new_approved_by_id}"
+      end
+      if new_primary_group_id = group_id_from_imported_id(u.primary_group_id)
+        arr << " primary_group_id = #{new_primary_group_id}"
+      end
+      if new_notification_id = notification_id_from_imported_id(u.seen_notification_id)
+        arr << " seen_notification_id = #{new_notification_id}"
+      end
+
+      next if arr.empty?
+
+      sql << arr.join(', ')
+      sql << " WHERE id = #{u.id}"
+
+      @raw_connection.exec(sql)
+    end
+  end
+
+  def fix_topic_links
+    puts "updating topic links in posts..."
+
+    update_count = 0
+    total = @topics.size
+    current = 0
+
+    @topics.each do |old_topic_id, new_topic_id|
+      current += 1
+      percent = (current * 100) / total
+      puts "#{current} (#{percent}\%) completed. #{update_count} rows updated." if current % 200 == 0
+
+      if topic = Topic.find_by_id(new_topic_id)
+        replace_arg = [
+          "#{@source_base_url}/t/#{topic.slug}/#{old_topic_id}",
+          "#{@source_base_url}/t/#{topic.slug}/#{new_topic_id}"
+        ]
+
+        r = @raw_connection.async_exec(
+          "UPDATE posts
+          SET raw = replace(raw, $1, $2)
+          WHERE NOT raw IS NULL
+            AND topic_id >= #{@first_new_topic_id}
+            AND raw <> replace(raw, $1, $2)",
+          replace_arg
+        )
+
+        update_count += r.cmd_tuples
+
+        r = @raw_connection.async_exec(
+          "UPDATE posts
+          SET cooked = replace(cooked, $1, $2)
+          WHERE NOT cooked IS NULL
+            AND topic_id >= #{@first_new_topic_id}
+            AND cooked <> replace(cooked, $1, $2)",
+          replace_arg
+        )
+
+        update_count += r.cmd_tuples
+      end
+    end
+
+    puts "updated #{update_count} rows"
   end
 
 end

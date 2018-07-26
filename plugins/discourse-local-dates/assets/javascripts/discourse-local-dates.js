@@ -11,7 +11,10 @@
         clearTimeout(this.timeout);
       }
 
-      var relativeTime = moment.utc(options.date + " " + options.time, "YYYY-MM-DD HH:mm");
+      var relativeTime = moment.utc(
+        options.date + " " + options.time,
+        "YYYY-MM-DD HH:mm"
+      );
 
       if (options.recurring && relativeTime < moment().utc()) {
         var parts = options.recurring.split(".");
@@ -24,7 +27,7 @@
       }
 
       var previews = options.timezones.split("|").map(function(timezone) {
-        var dateTime = relativeTime.tz(timezone).format(options.format);
+        var dateTime = relativeTime.tz(timezone).format("LLL");
         var timezoneParts = _formatTimezone(timezone);
 
         if (dateTime.match(/TZ/)) {
@@ -43,10 +46,13 @@
 
       var html = "<span>";
       html += "<i class='fa fa-globe d-icon d-icon-globe'></i>";
-      html += relativeTime.replace("TZ", _formatTimezone(moment.tz.guess()).join(": "));
+      html += relativeTime.replace(
+        "TZ",
+        _formatTimezone(moment.tz.guess()).join(": ")
+      );
       html += "</span>";
 
-      var joinedPreviews = previews.join("\n");
+      var joinedPreviews = previews.join(" – ");
 
       $element
         .html(html)

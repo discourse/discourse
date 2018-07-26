@@ -114,13 +114,8 @@ export default SelectKitComponent.extend({
   mutateContent() {},
 
   filterComputedContent(computedContent, computedValues, filter) {
-    const lowerFilter = filter.toLowerCase();
     return computedContent.filter(c => {
-      return (
-        get(c, "name")
-          .toLowerCase()
-          .indexOf(lowerFilter) > -1
-      );
+      return this._normalize(get(c, "name")).indexOf(filter) > -1;
     });
   },
 
@@ -147,7 +142,7 @@ export default SelectKitComponent.extend({
       computedContent = this.filterComputedContent(
         computedContent,
         computedValues,
-        filter
+        this._normalize(filter)
       );
     }
 

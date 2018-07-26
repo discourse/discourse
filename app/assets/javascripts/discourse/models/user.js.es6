@@ -19,6 +19,8 @@ import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 
+export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2 };
+
 const isForever = dt => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({
@@ -269,7 +271,7 @@ const User = RestModel.extend({
       "notification_level_when_replying",
       "like_notification_frequency",
       "include_tl0_in_digests",
-      "theme_key",
+      "theme_ids",
       "allow_private_messages",
       "homepage_id"
     ];
@@ -352,11 +354,32 @@ const User = RestModel.extend({
     });
   },
 
-  toggleSecondFactor(token, enable) {
+  toggleSecondFactor(token, enable, method) {
     return ajax("/u/second_factor.json", {
-      data: { second_factor_token: token, enable },
+      data: {
+        second_factor_token: token,
+        second_factor_method: method,
+        enable
+      },
       type: "PUT"
     });
+  },
+
+  generateSecondFactorCodes(token) {
+    return ajax("/u/second_factors_backup.json", {
+      data: { second_factor_token: token },
+      type: "PUT"
+    });
+  },
+
+  revokeAssociatedAccount(providerName) {
+    return ajax(
+      userPath(`${this.get("username")}/preferences/revoke-account`),
+      {
+        data: { provider_name: providerName },
+        type: "POST"
+      }
+    );
   },
 
   loadUserAction(id) {
@@ -487,18 +510,17 @@ const User = RestModel.extend({
     );
   },
 
-  pickAvatar(upload_id, type, avatar_template) {
+  pickAvatar(upload_id, type) {
     return ajax(
       userPath(`${this.get("username_lower")}/preferences/avatar/pick`),
-      {
-        type: "PUT",
-        data: { upload_id, type }
-      }
-    ).then(() =>
-      this.setProperties({
-        avatar_template,
-        uploaded_avatar_id: upload_id
-      })
+      { type: "PUT", data: { upload_id, type } }
+    );
+  },
+
+  selectAvatar(avatarUrl) {
+    return ajax(
+      userPath(`${this.get("username_lower")}/preferences/avatar/select`),
+      { type: "PUT", data: { url: avatarUrl } }
     );
   },
 
@@ -506,7 +528,7 @@ const User = RestModel.extend({
     return (
       this.get("staff") ||
       this.get("trust_level") > 0 ||
-      Discourse.SiteSettings["newuser_max_" + type + "s"] > 0
+      Discourse.SiteSettings[`newuser_max_${type}s`] > 0
     );
   },
 
@@ -591,6 +613,7 @@ const User = RestModel.extend({
       if (result) {
         this.setProperties({
           email: result.email,
+          secondary_emails: result.secondary_emails,
           associated_accounts: result.associated_accounts
         });
       }

@@ -7,5 +7,14 @@ export default Ember.Controller.extend({
         }
       })
       .compact();
-  }.property()
+  }.property(),
+  actions: {
+    clearFilter() {
+      this.setProperties({ filter: "", onlyOverridden: false });
+    },
+
+    toggleMenu() {
+      $(".admin-detail").toggleClass("mobile-closed mobile-open");
+    }
+  }
 });

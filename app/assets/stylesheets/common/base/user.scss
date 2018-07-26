@@ -153,7 +153,6 @@
       .user-profile-avatar {
         position: relative;
         float: left;
-        height: 100%;
         .avatar-flair {
           bottom: 8px;
           right: 16px;
@@ -502,6 +501,23 @@
   }
 }
 
+.top-categories-section {
+  table {
+    max-width: 95%;
+    tr {
+      border: none;
+    }
+    td,
+    th {
+      padding: 0.5em;
+      &.topic-count,
+      &.reply-count {
+        text-align: center;
+      }
+    }
+  }
+}
+
 .summary-user-list {
   li {
     height: 40px;
@@ -555,6 +571,69 @@
   .tag-notifications .tag-controls {
     margin-top: 24px;
   }
+
+  &.second-factor-backup-preferences {
+    padding-left: 0;
+
+    .second-factor-token-input {
+      margin-right: 10px;
+    }
+
+    .form-horizontal .instructions {
+      margin-left: 0;
+    }
+
+    .backup-codes {
+      margin: 2em 0;
+
+      .wrapper {
+        display: inline-block;
+        position: relative;
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid $primary-low;
+      }
+
+      .backup-codes-area {
+        resize: none;
+        padding: 0;
+        height: auto;
+        text-align: center;
+        width: 250px;
+        background: white;
+        border: 0;
+        cursor: auto;
+        overflow: hidden;
+        outline: none;
+        font-family: monospace;
+
+        &:focus {
+          box-shadow: none;
+          border-color: #e9e9e9;
+        }
+      }
+
+      .backup-codes-copy-btn,
+      .backup-codes-download-btn {
+        right: 5px;
+        position: absolute;
+      }
+
+      .backup-codes-copy-btn {
+        top: 5px;
+      }
+
+      .backup-codes-download-btn {
+        top: 40px;
+      }
+    }
+  }
+
+  .pref-associated-accounts table {
+    td {
+      padding: 8px;
+    }
+  }
 }
 
 .paginated-topics-list {
@@ -603,4 +682,22 @@
 .primary-textual .staged,
 #user-card .staged {
   font-style: italic;
+}
+
+.selectable-avatars {
+  max-height: 350px;
+  margin-bottom: 1em;
+  text-align: justify;
+  .selectable-avatar {
+    margin: 5px;
+    display: inline-block;
+    .avatar {
+      cursor: pointer;
+      width: 60px;
+      height: 60px;
+      &:hover {
+        box-shadow: 0 0 10px $primary;
+      }
+    }
+  }
 }

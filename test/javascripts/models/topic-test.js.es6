@@ -32,6 +32,23 @@ QUnit.test("visited", assert => {
   );
 });
 
+QUnit.test("lastUnreadUrl", assert => {
+  const category = Em.Object.create({
+    navigate_to_first_post_after_read: true
+  });
+
+  const topic = Topic.create({
+    id: 101,
+    highest_post_number: 10,
+    last_read_post_number: 10,
+    slug: "hello"
+  });
+
+  topic.set("category", category);
+
+  assert.equal(topic.get("lastUnreadUrl"), "/t/hello/101/1");
+});
+
 QUnit.test("has details", assert => {
   const topic = Topic.create({ id: 1234 });
   const topicDetails = topic.get("details");

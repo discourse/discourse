@@ -4,9 +4,10 @@ import showModal from "discourse/lib/show-modal";
 import { setting } from "discourse/lib/computed";
 import { findAll } from "discourse/models/login-method";
 import { escape } from "pretty-text/sanitizer";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -31,6 +32,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
   loginRequired: Em.computed.alias("application.loginRequired"),
+  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
   resetForm: function() {
     this.setProperties({
@@ -68,17 +70,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get("loggingIn") || this.get("authenticate");
   }.property("loggingIn", "authenticate"),
 
-  @computed("canLoginLocalWithEmail", "loginName", "processingEmailLink")
-  showLoginWithEmailLink(
-    canLoginLocalWithEmail,
-    loginName,
-    processingEmailLink
-  ) {
-    return (
-      canLoginLocalWithEmail &&
-      !Ember.isEmpty(loginName) &&
-      !processingEmailLink
-    );
+  @computed("canLoginLocalWithEmail", "processingEmailLink")
+  showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
+    return canLoginLocalWithEmail && !processingEmailLink;
   },
 
   actions: {
@@ -103,14 +97,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
         data: {
           login: this.get("loginName"),
           password: this.get("loginPassword"),
-          second_factor_token: this.get("loginSecondFactor")
+          second_factor_token: this.get("loginSecondFactor"),
+          second_factor_method: this.get("secondFactorMethod")
         }
       }).then(
         function(result) {
           // Successful login
           if (result && result.error) {
             self.set("loggingIn", false);
-
             if (
               result.reason === "invalid_second_factor" &&
               !self.get("secondFactorRequired")
@@ -118,7 +112,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
               $("#modal-alert").hide();
               self.setProperties({
                 secondFactorRequired: true,
-                showLoginButtons: false
+                showLoginButtons: false,
+                backupEnabled: result.backup_enabled
               });
 
               $("#credentials").hide();
@@ -185,6 +180,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // Failed to login
           if (e.jqXHR && e.jqXHR.status === 429) {
             self.flash(I18n.t("login.rate_limit"), "error");
+          } else if (!areCookiesEnabled()) {
+            self.flash(I18n.t("login.cookies_error"), "error");
           } else {
             self.flash(I18n.t("login.error"), "error");
           }
@@ -196,50 +193,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     externalLogin: function(loginMethod) {
-      const name = loginMethod.get("name");
-      const customLogin = loginMethod.get("customLogin");
-
-      if (customLogin) {
-        customLogin();
-      } else {
-        let authUrl =
-          loginMethod.get("customUrl") || Discourse.getURL("/auth/" + name);
-        if (loginMethod.get("fullScreenLogin")) {
-          document.cookie = "fsl=true";
-          window.location = authUrl;
-        } else {
-          this.set("authenticate", name);
-          const left = this.get("lastX") - 400;
-          const top = this.get("lastY") - 200;
-
-          const height = loginMethod.get("frameHeight") || 400;
-          const width = loginMethod.get("frameWidth") || 800;
-
-          if (loginMethod.get("displayPopup")) {
-            authUrl = authUrl + "?display=popup";
-          }
-
-          const w = window.open(
-            authUrl,
-            "_blank",
-            "menubar=no,status=no,height=" +
-              height +
-              ",width=" +
-              width +
-              ",left=" +
-              left +
-              ",top=" +
-              top
-          );
-          const self = this;
-          const timer = setInterval(function() {
-            if (!w || w.closed) {
-              clearInterval(timer);
-              self.set("authenticate", null);
-            }
-          }, 1000);
-        }
-      }
+      loginMethod.doLogin();
     },
 
     createAccount: function() {

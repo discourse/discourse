@@ -21,19 +21,15 @@ widgetTest("sign up / login buttons", {
     this.on("showLogin", () => (this.loginShown = true));
   },
 
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$("button.sign-up-button").length);
     assert.ok(this.$("button.login-button").length);
 
-    click("button.sign-up-button");
-    andThen(() => {
-      assert.ok(this.signupShown);
-    });
+    await click("button.sign-up-button");
+    assert.ok(this.signupShown);
 
-    click("button.login-button");
-    andThen(() => {
-      assert.ok(this.loginShown);
-    });
+    await click("button.login-button");
+    assert.ok(this.loginShown);
   }
 });
 

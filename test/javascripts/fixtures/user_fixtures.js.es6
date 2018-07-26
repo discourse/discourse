@@ -114,6 +114,13 @@ export default {
         "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
       name: "Robin Ward",
       email: "robin.ward@example.com",
+      associated_accounts: [
+        {
+          name: "facebook",
+          description: "robin.ward@example.com",
+          can_revoke: true
+        }
+      ],
       last_posted_at: "2015-05-07T15:23:35.074Z",
       last_seen_at: "2015-05-13T14:34:23.188Z",
       bio_raw:

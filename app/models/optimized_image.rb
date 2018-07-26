@@ -145,7 +145,7 @@ class OptimizedImage < ActiveRecord::Base
       -background transparent
       -#{thumbnail_or_resize} #{dimensions}^
       -extent #{dimensions}
-      -interpolate bicubic
+      -interpolate catrom
       -unsharp 2x0.5+0.7+0
       -interlace none
       -quality 98
@@ -244,21 +244,20 @@ class OptimizedImage < ActiveRecord::Base
       method_name += "_animated"
     end
     instructions = self.send(method_name.to_sym, from, to, dimensions, opts)
-    convert_with(instructions, to)
+    convert_with(instructions, to, opts)
   end
 
-  def self.convert_with(instructions, to)
-    begin
-      Discourse::Utils.execute_command(*instructions)
-    rescue
-      return false
-    end
-
+  def self.convert_with(instructions, to, opts = {})
+    Discourse::Utils.execute_command(*instructions)
     FileHelper.optimize_image!(to)
     true
-  rescue
-    Rails.logger.error("Could not optimize image: #{to}")
-    false
+  rescue => e
+    if opts[:raise_on_error]
+      raise e
+    else
+      Rails.logger.error("Could not optimize image #{to}: #{e.message}")
+      false
+    end
   end
 
   def self.migrate_to_new_scheme(limit = nil)

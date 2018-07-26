@@ -113,6 +113,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
              , memberIP2
              , is_activated
              , additionalGroups
+             , avatar
              , id_attach
              , attachmentType
              , filename
@@ -167,7 +168,17 @@ class ImportScripts::Smf1 < ImportScripts::Base
             end
 
             # avatar
-            avatar_url = if u["attachmentType"] == 0 && u["id_attach"].present?
+            avatar_url = nil
+
+            if u["avatar"].present?
+              if u["avatar"].start_with?("http")
+                avatar_url = u["avatar"]
+              elsif u["avatar"].start_with?("avatar_")
+                avatar_url = "#{FORUM_URL}/avatar-members/#{u["avatar"]}"
+              end
+            end
+
+            avatar_url ||= if u["attachmentType"] == 0 && u["id_attach"].present?
               "#{FORUM_URL}/index.php?action=dlattach;attach=#{u["id_attach"]};type=avatar"
             elsif u["attachmentType"] == 1 && u["filename"].present?
               "#{FORUM_URL}/avatar-members/#{u["filename"]}"
@@ -402,7 +413,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
         if upload = create_upload(post.user_id, path, u["filename"])
           html = html_for_upload(upload, u["filename"])
-          unless post.raw[html]
+          unless post.raw[html] || PostUpload.where(upload: upload, post: post).exists?
             post.raw += "\n\n#{html}\n\n"
             post.save
             PostUpload.create(upload: upload, post: post)
@@ -459,8 +470,8 @@ class ImportScripts::Smf1 < ImportScripts::Base
     SQL
     ).each do |f|
       print_status(count += 1, total, get_start_time("feedbacks"))
-      next unless user_id_from = user_id_from_imported_user_id(f["id_member"])
-      next unless user_id_to = user_id_from_imported_user_id(f["feedbackmember_id"])
+      next unless user_id_from = user_id_from_imported_user_id(f["feedbackmember_id"])
+      next unless user_id_to = user_id_from_imported_user_id(f["id_member"])
       next unless user = User.find_by(id: user_id_to)
 
       feedbacks = user.custom_fields[FEEDBACKS] || []
@@ -550,8 +561,8 @@ class ImportScripts::Smf1 < ImportScripts::Base
   end
 
   IGNORED_BBCODE ||= %w{
-    black blue center color email flash font glow green img iurl left list move
-    red right shadown size table time white
+    black blue center color email flash font glow green iurl left list move red
+    right shadown size table time white
   }
 
   def pre_process_raw(raw)
@@ -560,7 +571,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw = @htmlentities.decode(raw)
 
     # [acronym]
-    raw.gsub!(/\[acronym=([^\]]+)\](.*?)\[\/acronym\]/im, %{<abbr title="#{$1}">#{$2}</abbr>})
+    raw.gsub!(/\[acronym=([^\]]+)\](.*?)\[\/acronym\]/im) { %{<abbr title="#{$1}">#{$2}</abbr>} }
 
     # [br]
     raw.gsub!(/\[br\]/i, "\n")
@@ -569,9 +580,9 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw.gsub!(/\[hr\]/i, "<hr/>")
 
     # [sub]
-    raw.gsub!(/\[sub\](.*?)\[\/sub\]/im, "<sub>#{$1}</sub>")
+    raw.gsub!(/\[sub\](.*?)\[\/sub\]/im) { "<sub>#{$1}</sub>" }
     # [sup]
-    raw.gsub!(/\[sup\](.*?)\[\/sup\]/im, "<sup>#{$1}</sup>")
+    raw.gsub!(/\[sup\](.*?)\[\/sup\]/im) { "<sup>#{$1}</sup>" }
 
     # [html]
     raw.gsub!(/\[html\]/i, "\n```html\n")
@@ -595,13 +606,16 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw.gsub!(/\[\/ftp\]/i, "[/url]")
 
     # [me]
-    raw.gsub!(/\[me=([^\]]*)\](.*?)\[\/me\]/im, "_\\* #{$1} #{$2}_")
+    raw.gsub!(/\[me=([^\]]*)\](.*?)\[\/me\]/im) { "_\\* #{$1} #{$2}_" }
 
     # [li]
-    raw.gsub!(/\[li\](.*?)\[\/li\]/im, "- #{$1}")
+    raw.gsub!(/\[li\](.*?)\[\/li\]/im) { "- #{$1}" }
+
+    # puts [img] on their own line
+    raw.gsub!(/\[img[^\]]*\](.*?)\[\/img\]/im) { "\n#{$1}\n" }
 
     # puts [youtube] on their own line
-    raw.gsub!(/\[youtube\](.*?)\[\/youtube\]/im, "\n#{$1}\n")
+    raw.gsub!(/\[youtube\](.*?)\[\/youtube\]/im) { "\n#{$1}\n" }
 
     IGNORED_BBCODE.each { |code| raw.gsub!(/\[#{code}[^\]]*\](.*?)\[\/#{code}\]/im, '\1') }
 
@@ -625,6 +639,9 @@ class ImportScripts::Smf1 < ImportScripts::Base
     # remove tapatalk mess
     raw.gsub!(/Sent from .+? using \[url=.*?\].+?\[\/url\]/i, "")
     raw.gsub!(/Sent from .+? using .+?\z/i, "")
+
+    # clean URLs
+    raw.gsub!(/\[url=(.+?)\]\1\[\/url\]/i, '\1')
 
     raw
   end

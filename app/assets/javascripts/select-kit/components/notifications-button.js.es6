@@ -29,7 +29,9 @@ export default DropdownSelectBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super();
     content.name = I18n.t(
-      `${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}.title`
+      `${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}${this.get(
+        "i18nPostfix"
+      )}.title`
     );
     content.hasSelection = this.get("hasSelection");
     return content;

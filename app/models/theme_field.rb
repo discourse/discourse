@@ -44,10 +44,12 @@ class ThemeField < ActiveRecord::Base
   def transpile(es6_source, version)
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<PLUGIN_API_JS
+if ('Discourse' in window) {
 Discourse._registerPluginCode('#{version}', api => {
   #{settings(es6_source)}
   #{es6_source}
 });
+}
 PLUGIN_API_JS
 
     template.babel_transpile(wrapped)
@@ -73,7 +75,9 @@ PLUGIN_API_JS
         node.replace <<COMPILED
           <script>
             (function() {
+              if ('Discourse' in window) {
               Discourse.RAW_TEMPLATES[#{name.sub(/\.raw$/, '').inspect}] = #{template};
+              }
             })();
           </script>
 COMPILED
@@ -82,7 +86,9 @@ COMPILED
         node.replace <<COMPILED
           <script>
             (function() {
+              if ('Em' in window) {
               Ember.TEMPLATES[#{name.inspect}] = #{template};
+              }
             })();
           </script>
 COMPILED
@@ -221,8 +227,8 @@ COMPILED
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
 
     # TODO message for mobile vs desktop
-    MessageBus.publish "/header-change/#{theme.key}", self.value if theme && self.name == "header"
-    MessageBus.publish "/footer-change/#{theme.key}", self.value if theme && self.name == "footer"
+    MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
+    MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
   end
 end
 

@@ -43,9 +43,10 @@ class UsersEmailController < ApplicationController
       end
 
     if change_request&.change_state == EmailChangeRequest.states[:authorizing_new] &&
-       user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+       user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
 
       @update_result = :invalid_second_factor
+      @backup_codes_enabled = true if user.backup_codes_enabled?
 
       if params[:second_factor_token].present?
         RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!

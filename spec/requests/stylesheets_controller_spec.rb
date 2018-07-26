@@ -29,7 +29,7 @@ describe StylesheetsController do
     scheme = ColorScheme.create_from_base(name: "testing", colors: [])
     theme = Theme.create!(name: "test", color_scheme_id: scheme.id, user_id: -1)
 
-    builder = Stylesheet::Manager.new(:desktop, theme.key)
+    builder = Stylesheet::Manager.new(:desktop, theme.id)
     builder.compile
 
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
@@ -42,7 +42,7 @@ describe StylesheetsController do
 
     expect(response.status).to eq(200)
 
-    builder = Stylesheet::Manager.new(:desktop_theme, theme.key)
+    builder = Stylesheet::Manager.new(:desktop_theme, theme.id)
     builder.compile
 
     `rm #{Stylesheet::Manager.cache_fullpath}/*`

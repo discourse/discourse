@@ -263,7 +263,7 @@ module ApplicationHelper
   end
 
   def application_logo_url
-    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
+    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url).presence || SiteSetting.logo_url
   end
 
   def login_path
@@ -346,11 +346,11 @@ module ApplicationHelper
     end
   end
 
-  def theme_key
+  def theme_id
     if customization_disabled?
       nil
     else
-      request.env[:resolved_theme_key]
+      request.env[:resolved_theme_id]
     end
   end
 
@@ -374,17 +374,17 @@ module ApplicationHelper
   end
 
   def theme_lookup(name)
-    lookup = Theme.lookup_field(theme_key, mobile_view? ? :mobile : :desktop, name)
+    lookup = Theme.lookup_field(theme_id, mobile_view? ? :mobile : :desktop, name)
     lookup.html_safe if lookup
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
-    if opts.key?(:theme_key)
-      key = opts[:theme_key] unless customization_disabled?
+    if opts.key?(:theme_id)
+      id = opts[:theme_id] unless customization_disabled?
     else
-      key = theme_key
+      id = theme_id
     end
 
-    Stylesheet::Manager.stylesheet_link_tag(name, 'all', key)
+    Stylesheet::Manager.stylesheet_link_tag(name, 'all', id)
   end
 end

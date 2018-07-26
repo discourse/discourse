@@ -366,27 +366,6 @@ da:
         Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
   lounge_welcome:
     title: "Velkommen i loungen"
-    body: |2
-
-        Tillykke! :confetti_ball:
-
-        Hvis du kan se dette er du nu vlevet opgraderet som **regular** (trust level 3) bruger.
-
-        Nu kan du &hellip;
-
-        * Rediger enhver emne titel
-        * Ændre alle kategorier og emner
-        * Følge alle links ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) ier fjernet)
-        * Få adgang til en privat lounge kategori kun synlig for brugere med Trust LEvel 3, eller højere
-        * Gemme spam - med et enkelt flag
-
-        Her er  [current list of fellow regulars](/badges/3/regular). Sving forbi og hils på!
-
-        Tak fordi du er en vigtig del af dette fællesskab!
-
-        (Formere information om Trust Levels [see this topic][trust]. Bemærk venligst at kun brugere der vedbliver at leve op til Trust Level betingelserne, vil have fortsat adgang)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Kategoridefinition for %{category}"
     replace_paragraph: "(Beskriv din nye kategori her. Beskriv ramme og formål med kategori således at det er tydeligt for andre. Forsøg at holde beskrivelsen på max 200 tegn. **Kategorien vil ikke fremgå på kategori listen, før du har redigeret beskrivelsen, eller oprettet emner)."
@@ -401,9 +380,6 @@ da:
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
-      topic_exists:
-        one: "Kan ikke slette denne kategori, da den indeholder et emne. Ældste emne er %{topic_link}"
-        other: "Kan ikke slette denne kategori, da den indeholder %{count} emner. Ældste emne er %{topic_link}"
       topic_exists_no_oldest: "Kan ikke slette denne kategori fordi antallet af emner er %{count}"
     uncategorized_description: "Emner der ikke behøver kategori, eller ikke passer i eksisterende kategori."
   trust_levels:
@@ -565,10 +541,6 @@ da:
       title: 'Like'
       description: 'Du liker dette indlæg'
       long_form: 'like dette'
-    vote:
-      title: 'Stem'
-      description: 'Stem for dette indlæg'
-      long_form: 'stemte for dette indlæg'
   user_activity:
     no_bookmarks:
       self: "Du har ingen bogmærkede indlæg - bogmærkede indlæg lader dig tilgå dem nemt på et senere tidspunkt."
@@ -705,8 +677,6 @@ da:
       num_users: "Brugere"
     top_referred_topics:
       title: "Top henviste emner"
-      xaxis: "Emne"
-      num_clicks: "Klik"
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
@@ -1052,7 +1022,6 @@ da:
     missing_user_field: "Du har ikke udfyldt alle felterne"
     already_logged_in: "Hovsa, det ser ud til, at du forsøger at acceptere en invitation til en anden bruger. Hvis du ikke er %{current_user}, så log venligst ud og prøv igen."
   user:
-    no_accounts_associated: "Ingen konti tilknyttet"
     deactivated_by_staff: "Deaktiveret af hjælperteamet"
     activated_by_staff: "Aktiveret af hjælperteamet"
     new_user_typed_too_fast: "Ny bruger tastede for hurtigt"
@@ -1135,11 +1104,6 @@ da:
     contents_hidden: "Gå venligst til indlægget for at se indholdet."
     post_hidden:
       subject_template: "Inlægget er skjult pga. flagmarkeringer"
-    usage_tips:
-      text_body_template: |
-        Hvis du vil have et par hurtige tips til at komme i gang som ny bruger, så [tjek dette blogindlæg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Når du deltager her, kommer vi til at kende dig, og de midlertidige begrænsninger for nye brugere vil blive ophævet. Efterhånden vil du få højere [tillidsniveauer](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), som indbærer særlige muligheder for at hjælpe os med at drive vores forum sammen.
     welcome_user:
       title: "Velkomst til bruger"
       subject_template: "Velkommen til %{site_name}!"
@@ -1421,24 +1385,6 @@ da:
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
   flag_reason:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse (%{ip_address}) besvarede. Se indstillinger for <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-  email_log:
-    post_user_deleted: "Brugeren af dette svar er blevet slettet."
-    no_user: "Kan ikke finde brugeren med id %{user_id}"
-    anonymous_user: "Brugeren er anonym"
-    suspended_not_pm: "Brugeren er suspenderet, ikke en besked"
-    seen_recently: "Bruger har været logget på for nyligt"
-    post_not_found: "Kan ikke finde et indlæg med id %{post_id}"
-    notification_already_read: "Den notifikation som denne email handler om er allerede læst"
-    topic_nil: "post.topic er nul"
-    post_deleted: "indlægget er blevet slettet af forfatteren"
-    user_suspended: "brugeren blev suspenderet"
-    already_read: "brugeren har allerede læst dette indlæg"
-    exceeded_emails_limit: "Overskredet max_emails_per_day_per_user"
-    exceeded_bounces_limit: "Overskredet bounce_score_threshold"
-    message_blank: "beskeden er tom"
-    message_to_blank: "message.to er tom"
-    text_part_body_blank: "text_part.body er tom"
-    body_blank: "brødtekst er tom"
   color_schemes:
     base_theme_name: "Base"
   about: "Om"
@@ -1490,8 +1436,6 @@ da:
     great_topic:
       name: Glimrende emne
       description: Modtog 50 synes godt om for et emne
-      long_description: |
-        Dette badge tildeles når dit emne får 50 synes godt om-tilkendegivelser. Du startede en fascinerende dialog og fællesskabet værdsatte den dynamiske diskussion som fulgte!
     good_share:
       description: Delte et indlæg med 300 unikke besøgende
     first_like:
@@ -1500,8 +1444,6 @@ da:
     first_flag:
       name: Første Flagmarkering
       description: Flagmarkerede et indlæg
-      long_description: |
-        Dette badge bliver tildelt den første gang du flagmarkerer et indlæg. Ved at flagmakere hjælper vi alle med at sørge for, at forummet er et godt og rart sted for alle. Hvis du lægger mærke til poster, som kræver moderatorernes opmærksomhed, så tøv ikke med at flagmarkere. Du kan også markere for at sende <b>en personlig besked</b> til andre brugere, hvis du kan se et problem med deres indlæg.  Hvis du ser et problem, så :flag_black: flagmarker det!
     promoter:
       description: Inviterede en bruger
     campaigner:
@@ -1558,8 +1500,6 @@ da:
     empathetic:
       name: Empatisk
       description: Har 500 likede indlæg og givet 1000 likes
-    first_onebox:
-      long_description: "Dette badge bliver tildelt første gang du poster et link i en linie for sig selv. Det vil automatisk ekspandere til en boks med et kort sammendrag af siden, en titel og (når muligt) et billede."
     first_reply_by_email:
       name: Første svar via email
       long_description: |
@@ -1649,7 +1589,6 @@ da:
         fields:
           favicon_url:
             label: "Lille ikon"
-            description: "Ikonbillede som bruges til at fremvise dit site i webbrowsere, og som ser godt ud i små størrelser såsom 32px gange 32px."
           apple_touch_icon_url:
             label: "Stort ikon"
       homepage:

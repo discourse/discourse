@@ -27,6 +27,7 @@ describe ActiveRecord::ConnectionHandling do
   let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
 
   before do
+    @threads = Thread.list
     postgresql_fallback_handler.initialized = true
 
     ['default', multisite_db].each do |db|
@@ -35,10 +36,13 @@ describe ActiveRecord::ConnectionHandling do
   end
 
   after do
+    Sidekiq.unpause!
     postgresql_fallback_handler.setup!
     Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
     ActiveRecord::Base.unstub(:postgresql_connection)
     ActiveRecord::Base.establish_connection
+
+    (Thread.list - @threads).each { |thread| thread.join(5) }
   end
 
   describe "#postgresql_fallback_connection" do

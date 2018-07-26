@@ -386,27 +386,6 @@ pl_PL:
         Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
   lounge_welcome:
     title: "Witaj w Salonie"
-    body: |2
-
-        Gratulacje! :confetti_ball:
-
-        Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
-
-        Od teraz możesz &hellip;
-
-        * Edytować tytuł każdego tematu
-        * Przenieść temat do innej kategorii
-        * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
-        * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
-        * Przyznawać polubienia i flagi o większej wadze
-
-        Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
-
-        Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
-
-        (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "(Zamień ten pierwszy paragraf na krótki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go krótszego niż 200 znaków. **Dopóki nie zmienisz tego opisu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.**)"
@@ -422,11 +401,6 @@ pl_PL:
     cannot_delete:
       uncategorized: "Nie można usunąć kategorii Inne"
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
-      topic_exists:
-        one: "Nie można usunąć tej kategorii ponieważ zawiera temat: %{topic_link}."
-        few: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematy. Najstarszy z nich: %{topic_link}."
-        many: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}."
-        other: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}."
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
     uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
   trust_levels:
@@ -648,11 +622,6 @@ pl_PL:
       description: 'Polub ten wpis'
       short_description: 'Polub ten wpis'
       long_form: 'polubiono to'
-    vote:
-      title: 'Głosuj'
-      description: 'Głosuj za tym wpisem'
-      short_description: 'Zagłosuj na ten wpis'
-      long_form: 'zagłosowano za tym wpisem'
   user_activity:
     no_default:
       self: "Nie masz jeszcze żadnej aktywności."
@@ -796,8 +765,6 @@ pl_PL:
       num_users: "Użytkownicy"
     top_referred_topics:
       title: "Najczęściej linkowane tematy"
-      xaxis: "Temat"
-      num_clicks: "Kliki"
     page_view_anon_reqs:
       title: "Anonimowy"
       xaxis: "Dzień"
@@ -1483,7 +1450,6 @@ pl_PL:
     click_to_continue: "Kliknij tutaj aby kontynuować."
     already_logged_in: "Próbujesz zaakceptować zaproszenie przeznaczone dla innego użytkownika. Jeśli %{current_user} to nie ty, wyloguj się i zaloguj ponownie."
   user:
-    no_accounts_associated: "Brak powiązanych kont"
     deactivated: "Został dezaktywowany w związku ze zbyt dużą liczbą odrzuconych emaili na '%{email}'."
     deactivated_by_staff: "Wyłączone przez personel"
     activated_by_staff: "Aktywowane przez personel"
@@ -1592,11 +1558,6 @@ pl_PL:
     post_hidden:
       title: "Ukryty post"
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
-    usage_tips:
-      text_body_template: |
-        Dla kilku szybkich wskazówek dotyczących rozpoczęcia użytkowania strony dla nowych użytkowników [sprawdź ten blog] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Jeśli będziesz się udzielał, poznamy ciebie i zniesiemy tymczasowe ograniczenia dla nowych użytkowników. Z biegiem czasu uzyskasz [poziomy zaufania] (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), które zawierają specjalne zdolności, aby pomóc nam zarządzać naszą społecznością.
     welcome_user:
       title: "Witaj Użytkowniku"
       subject_template: "Witaj na %{site_name}!"
@@ -2193,32 +2154,11 @@ pl_PL:
   flag_reason:
     sockpuppet: "Nowy użytkownik stworzył temat, a inny nowy użytkownik z tym samym adresem IP (%{ip_address}) odpowiedział. <a href='/admin/site_settings/category/spam'>'flag_sockpuppets'</a> ustawienia strony."
     spam_hosts: "Ten nowy użytkownik próbował stworzyć wiele postów z linkami do tej samej domeny (%{domain}). Zobacz <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold</a> ustawienia strony."
-  email_log:
-    post_user_deleted: "Użytkownik tego wpisu został usunięty."
-    no_user: "Nie można znaleźć użytkownika z ID %{user_id}"
-    anonymous_user: "Użytkownik anonimowy"
-    suspended_not_pm: "Użytkownik jest zawieszony, nie wiadomość"
-    seen_recently: "Użytkownik był widziany niedawno"
-    post_not_found: "Nie można odnaleźć wpisu z numerem %{post_id}"
-    notification_already_read: "Powiadomienie o czym jest ten e-mailu już zostało przeczytane"
-    topic_nil: "wpis.temat jest zerowy"
-    post_deleted: "Wpis został usunięty przez autora"
-    user_suspended: "użytkownik został zawieszony"
-    already_read: "użytkownik przeczytał ten post"
-    exceeded_emails_limit: "Przekroczono maksymalną, dzienną liczbę emaili dla użytkownika"
-    exceeded_bounces_limit: "Przekroczono bounce_score_threshold "
-    message_blank: "wiadomość jest pusta"
-    message_to_blank: "wiadomość.do jest pusta"
-    text_part_body_blank: "text_part.body jest pusta"
-    body_blank: "Wiadomość jest pusta"
-    no_echo_mailing_list_mode: "Powiadomienia listy mailingowej wyłączone dla postów własnych użytkowników."
   color_schemes:
     base_theme_name: "Podstawa"
-    default: "Jasny motyw"
     dark: "Ciemny motyw"
-    default_theme_name: "Domyślny"
-    dark_theme_name: "Ciemny"
     light_theme_name: "Jasny"
+    dark_theme_name: "Ciemny"
   about: "O stronie"
   guidelines: "Przewodnik"
   privacy: "Prywatność"
@@ -2420,70 +2360,40 @@ pl_PL:
     editor:
       name: Edytor
       description: Pierwsza edycja
-      long_description: |
-        Ta odznaka jest przyznawana, gdy po raz pierwszy dokonasz edycji jednego z twoich postów. Nie będziesz miał możliwości dokonywania zmian w postach na zawsze, edytowanie to jest zawsze dobry pomysł - możesz dokonać ulepszenia swoich postów, naprawić małe błędy, lub dodać tekst, który przez przypadek pominąłeś w oryginalnym poście. Edytuj by twoje posty stawały się coraz lepsze!
     basic_user:
       name: Podstawowy
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Przyznano</a> wszystkie podstawowe funkcje"
-      long_description: |
-        To odznaka jest przyznawana, gdy osiągniesz poziom zaufania 1. Dziękujemy, że z nami jesteś i czytasz różne wątki, aby dowiedzieć się jak działa  nasza społeczność. Ograniczenia dla nowego użytkownika zostały usunięte; przyznano ci wszystkie niezbędne funkcję społecznościowe, jak na przykład wysyłanie wiadomości prywatnych, edytowanie wiki, flagowanie i możliwość dodawania wielu obrazków i linków w postach.
     member:
       name: Zwykły
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Przyznano</a> zaproszenia, wysyłanie wiadomości do grup, więcej lajków"
-      long_description: |
-        Ta odznaka jest przyznawana, gdy osiągniesz poziom zaufania 2. Dziękujemy za to, że udzielasz się przez czas kilku tygodni, aby w pełni dołączyć do społeczności. Możesz teraz wysyłać zaproszenia ze strony użytkownika lub z wątków, tworzyć konwersacje grupowe i mieć kilka polubień więcej na dzień.
     regular:
       name: Regularny
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Przyznano</a> możliwość zmiany kategorii, nazwy, linków oraz salon, więcej lajków"
-      long_description: |
-        Ta odznaka jest przyznawana, gdy osiągniesz poziom zaufania 3. Dziękujemy, że regularnie udzielasz się w naszej społeczności od miesięcy. Jesteś teraz jednym z najbardziej aktywnych czytelników i masz realny wkład w tworzenie tej społeczności. Możesz teraz dokonywać zmian kategorii i zmieniać nazwy tematów, wykorzystaj bardziej skuteczne oflagowania, dostęp do obszaru prywatnego pokoju i możliwość dawania dużo większej liczby polubień na dzień.
     leader:
       name: Weteran
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Przyznano</a> możliwość globalnej edycji, przypinania, zamykania, archiwizacji, podziału i scalania, więcej lajków"
-      long_description: |
-        Ta odznaka jest przyznawana, gdy osiągniesz poziom zaufania 4. Obsługa ocenia, że jesteś liderem w tej społeczności i dajesz dobry przykład reszcie społeczności poprzez swoje akcje i wypowiedzi. Masz możliwość edycji wszystkich postów, dokonywania akcji zarezerwowanych dla moderatorów takich jak przypinanie, zamykanie, usuwanie z katalogu, archiwizowanie, rozdzielanie i łącznie, jak również otrzymujesz całe tony polubień do rozdania dziennie.
     welcome:
       name: Powitanie
       description: Otrzymano polubienie
-      long_description: |
-        Ta odznaka jest przyznawana, kiedy dostajesz pierwszego lajka przy poście. Gratulacje, napisałeś coś, co inni użytkownicy uznali za interesujące, fajne lub użyteczne!
     autobiographer:
       name: Autobiograf
     anniversary:
       name: Rocznica
       description: "Aktywność przez rok, co najmniej jeden wpis"
-      long_description: |
-        Ta odznaka jest przyznawana w momencie, gdy jesteś członkiem przynajmniej rok i napisałeś przynajmniej jeden post przez rok. Dziękujemy, że z nami jesteś i udzielasz się w naszej społeczności. Nie moglibyśmy funkcjonować bez ciebie.
     nice_post:
       name: Miła odpowiedź
       description: Otrzymano 10 polubień w odpowiedzi
-      long_description: |
-        Ta odznaka jest przyznawana, gdy uzyskasz 10 polubień twojej odpowiedzi. Twoja odpowiedź zrobiła wrażenie na społeczności i pomogła się jej rozwinąć!
     good_post:
       name: Dobra odpowiedź
       description: Otrzymano 25 polubień w odpowiedzi
-      long_description: |
-        Ta odznaka jest przyznawana, gdy uzyskasz 25 polubień twojej odpowiedzi. Twoja odpowiedź była znakomita i sprawiła, że cała konwersacja stała się dla wszystkich lepsza!
     great_post:
       name: Świetna odpowiedź
       description: Otrzymano 50 polubień w odpowiedzi
-      long_description: |
-        Ta odznaka jest przyznawana, gdy uzyskasz 50 polubień twojej odpowiedzi. Twoja odpowiedź była inspirująca, fascynująca, zabawna lub wnikliwa i przede wszystkim podobała się społeczności.
     nice_topic:
       name: Miły Temat
       description: Otrzymano 10 polubień w temacie.
-      long_description: |
-        Ta odznaka jest przyznawana, gdy uzyskasz 10 polubień twojej odpowiedzi. Hej, rozpocząłeś interesującą konwersacje, która podoba się społeczności!
     good_topic:
       name: Dobry Temat
       description: Otrzymano 25 polubień w temacie.
-      long_description: |
-        Ta odznaka jest przyznawana, gdy uzyskasz 25 polubień. Stworzyłeś ekscytującą konwersację, która spodobała się społeczności!
     great_topic:
       name: Świetny Temat
       description: Otrzymano 50 polubień w temacie.
-      long_description: |
-        Ta odznaka jest przyznawana, gdy twój wątek otrzymał 50 polubień. Rozpocząłeś fascynującą konwersację, a społeczeństwu spodobała się dynamiczna dyskusja, która z tego wynikła.
     nice_share:
       name: Miłe udostępnienie
       description: "Udostępniono post z 25 unikalnymi odwiedzającymi. "
@@ -2492,13 +2402,9 @@ pl_PL:
     good_share:
       name: Dobre udostępnienie
       description: "Udostępniono post z 300 unikalnymi odwiedzającymi. "
-      long_description: |
-        Ta odznaka jest przyznawana za udostępnienie linku, który został naciśnięty przez co najmniej 300 osób. Dobra robota! Pokazałeś jak wygląda prawdziwa dyskusja grupie nowych osób i wspomogłeś rozrost tej społeczności.
     great_share:
       name: Świetne udostępnienie
       description: "Udostępniono post z 1000 unikalnych odwiedzających. "
-      long_description: |
-        Ta odznaka jest przyznawana za udostępnienie linku, który został naciśnięty przez co najmniej 1000 osób. Wow! Dokonałeś promocji naprawdę interesującej dyskusji w dużym gronie odbiorców i wspomogłeś w istotny sposób rozrost naszej społeczności!
     first_like:
       name: Pierwsze polubienie
       description: Polubiono wpis
@@ -2507,21 +2413,15 @@ pl_PL:
     first_flag:
       name: Pierwsza flaga
       description: Zgłoszenie wpisu
-      long_description: |
-        Ta odznaka jest przyznawana, gdy po raz pierwszy oflagujesz post. Flagowanie to metoda, która pozwala na utrzymanie forum na jak najwyższym poziomie merytorycznym. Jeśli zobaczysz jakieś posty, które wymagają uwagi moderatora z jakiegokolwiek powodu, nie wahaj się aby oflagować tą wiadomość. Możesz również oflagować, aby wysłać <b>prywatną wiadomość</b> do innych użytkowników, jeśli zauważysz problem z ich postem. Jeśli zauważysz problem :flag_black:, oflaguj go!
     promoter:
       name: Promotor
       description: Zaproszenie użytkownika
     campaigner:
       name: Działacz
       description: "Zaproszenie 3 użytkowników "
-      long_description: |
-        Ta odznaka jest przyznawana, gdy zaprosisz przynajmniej 3 osoby, które później spędzą wystarczająco dużo czasu na stronie, aby zostać regularnymi użytkownikami. Żyjąca społeczność potrzebuje regularnego wpływu nowych użytkowników, którzy regularnie udzielają się na forum i przedstawiają swój nowy punkt widzenia w konwersacjach.
     champion:
       name: Mistrz
       description: Zaproszono 5 użytkowników
-      long_description: |
-        Ta odznaka jest przyznawana, gdy zaprosisz przynajmniej 5 osób, które następnie spędzą wystarczająco dużo czasu, aby zostać pełnoprawnymi użytkownikami. Wow! Dziękujemy za rozszerzanie różnorodności naszej społeczności.
     first_share:
       name: Pierwsze udostępnienie
       description: Udostępniono wpis
@@ -2535,9 +2435,6 @@ pl_PL:
     first_quote:
       name: Pierwszy cytat
       description: Zacytowano wpis
-      long_description: |+
-        Ta odznaka jest przyznawana, kiedy po raz pierwszy cytujesz jakiś post w swojej odpowiedzi. Cytowanie powiązanych fragmentów wcześniejszych postów w odpowiedziach pozwala na prowadzenie dyskusji na temat.
-
     read_guidelines:
       name: Przeczytany przewodnik
     reader:
@@ -2588,8 +2485,6 @@ pl_PL:
     crazy_in_love:
       name: Szaleńczo zakochany
       description: Użyto 50 polubień w dzień 20 razy
-      long_description: |
-        Ta odznaka jest przyznawana, gdy wykorzystasz wszystkie 50 polubień w 20 dni. Wow! Jesteś naprawdę regularnym użytkownikiem i starasz się cały czas zachęcać osoby z twojej społeczności!
     thank_you:
       name: Dziękuje
       description: Ma 20 polubionych postów i dał 10 polubień
@@ -2603,19 +2498,15 @@ pl_PL:
     empathetic:
       name: Empatyczny
       description: Ma 500 polubionych postów i dał 1000 polubień
-      long_description: |
-        Ta odznaka jest przyznawana, gdy masz co najmniej 500 polubionych postów i dałeś w zamian 1000 lub więcej polubień. Wow! Jesteś przykładem hojności i wzajemnego uznania  :two_hearts:.
     first_emoji:
       name: Pierwszy Emoji
       description: Użyto Emoji w Poście
     first_mention:
       name: Pierwsze Wspomnienie
       description: Wspomniano o użytkowniku w poście
-      long_description: "Ta odznaka jest przyznawana, gdy po raz pierwszy wspomnisz o którymś użytkowniku *nazwa użytkownika w swoim poście. Każde wspomnienie powoduje wysłanie powiadomienia do tej osoby, tak aby wiedział o twoim poście. Po prostu rozpocznij pisanie od @(symbolu) aby wspomnieć o użytkowniku lub jeśli można o grupie - jest to wygodny sposób, aby zwrócić czyjąś uwagę."
     first_onebox:
       name: Pierwszy Onebox
       description: Dodany link został poddany funkcji oneboxe
-      long_description: "Ta odznaka jest przyznawana, gdy po raz pierwszy umieścisz link w swoim poście, który został automatycznie rozszerzony przez funkcję onebox z krótkim podsumowaniem linku; tytuł i (jeśli dozwolone) zdjęcie."
     first_reply_by_email:
       name: Pierwsza Odpowiedz przez Email
       description: Odpowiedział na post poprzez email
@@ -2645,7 +2536,6 @@ pl_PL:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
       help: "zarejestruj nowe konto aby rozpocząć"
-      no_emails: "Niestety, żaden email administratora nie został określony podczas instalacji, więc finalizacja konfiguracji <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>może być trudna</a>."
     confirm_email:
       title: "Potwierdzenie przez email"
       message: "<p>Wysłaliśmy email aktywacyjny na <b>%{email}</b>. Proszę postępować zgodnie z instrukcjami w emailu, tak aby dokonać aktywacji konta,</p><p> Jeśli email nie doszedł, upewnij się, że adres został ustawiony poprawnie i sprawdź folder spam w twojej skrzynce.</p>"
@@ -2747,7 +2637,6 @@ pl_PL:
         fields:
           favicon_url:
             label: "Mała ikona"
-            description: "Ikona obrazu używana, aby reprezentować twoją stronę w przeglądarkach internetowych. Wygląda dobrze w małych rozmiarach jak na przykład 32px na 32px."
           apple_touch_icon_url:
             label: "Duża ikona"
       homepage:

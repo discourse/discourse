@@ -84,9 +84,10 @@ class ComposerMessagesFinder
   def check_sequential_replies
     return unless educate_reply?(:notified_about_sequential_replies)
 
-    # Count the topics made by this user in the last day
+    # Count the posts made by this user in the last day
     recent_posts_user_ids = Post.where(topic_id: @details[:topic_id])
       .where("created_at > ?", 1.day.ago)
+      .where(post_type: Post.types[:regular])
       .order('created_at desc')
       .limit(SiteSetting.sequential_replies_threshold)
       .pluck(:user_id)

@@ -7,7 +7,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def preview
     @theme = Theme.find(params[:id])
-    redirect_to path("/?preview_theme_key=#{@theme.key}")
+    redirect_to path("/?preview_theme_id=#{@theme.id}")
   end
 
   def upload_asset
@@ -97,7 +97,7 @@ class Admin::ThemesController < Admin::AdminController
   def index
     @theme = Theme.order(:name).includes(:theme_fields, :remote_theme)
     @color_schemes = ColorScheme.all.to_a
-    light = ColorScheme.new(name: I18n.t("color_schemes.default"))
+    light = ColorScheme.new(name: I18n.t("color_schemes.light"))
     @color_schemes.unshift(light)
 
     payload = {
@@ -226,7 +226,7 @@ class Admin::ThemesController < Admin::AdminController
   def update_default_theme
     if theme_params.key?(:default)
       is_default = theme_params[:default].to_s == "true"
-      if @theme.key == SiteSetting.default_theme_key && !is_default
+      if @theme.id == SiteSetting.default_theme_id && !is_default
         Theme.clear_default!
       elsif is_default
         @theme.set_default!

@@ -15,6 +15,15 @@ export default Ember.Component.extend({
     return !c.get("parentCategory");
   }),
 
+  parentCategoriesSorted: function() {
+    let cats = this.get("parentCategories");
+    if (this.siteSettings.fixed_category_positions) {
+      return cats;
+    }
+
+    return cats.sortBy("totalTopicCount").reverse();
+  }.property("parentCategories"),
+
   hidden: function() {
     return this.site.mobileView && !this.get("category");
   }.property("category"),

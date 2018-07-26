@@ -1,9 +1,92 @@
 require 'rails_helper'
 
 describe OptimizedImage do
-
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
+
+  unless ENV["TRAVIS"]
+    describe '.crop' do
+      it 'should work correctly' do
+        tmp_path = "/tmp/cropped.png"
+
+        begin
+          OptimizedImage.crop(
+            "#{Rails.root}/spec/fixtures/images/logo.png",
+            tmp_path,
+            5,
+            5
+          )
+
+          expect(File.read(tmp_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/cropped.png")
+          )
+        ensure
+          File.delete(tmp_path) if File.exists?(tmp_path)
+        end
+      end
+    end
+
+    describe '.resize' do
+      it 'should work correctly' do
+        tmp_path = "/tmp/resized.png"
+
+        begin
+          OptimizedImage.resize(
+            "#{Rails.root}/spec/fixtures/images/logo.png",
+            tmp_path,
+            5,
+            5
+          )
+
+          expect(File.read(tmp_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/resized.png")
+          )
+        ensure
+          File.delete(tmp_path) if File.exists?(tmp_path)
+        end
+      end
+
+      describe 'when an svg with a href is masked as a png' do
+        it 'should not trigger the external request' do
+          tmp_path = "/tmp/resized.png"
+
+          begin
+            expect do
+              OptimizedImage.resize(
+                "#{Rails.root}/spec/fixtures/images/svg.png",
+                tmp_path,
+                5,
+                5,
+                raise_on_error: true
+              )
+            end.to raise_error(RuntimeError, /improper image header/)
+          ensure
+            File.delete(tmp_path) if File.exists?(tmp_path)
+          end
+        end
+      end
+    end
+
+    describe '.downsize' do
+      it 'should work correctly' do
+        tmp_path = "/tmp/downsized.png"
+
+        begin
+          OptimizedImage.downsize(
+            "#{Rails.root}/spec/fixtures/images/logo.png",
+            tmp_path,
+            "100x100\>"
+          )
+
+          expect(File.read(tmp_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/downsized.png")
+          )
+        ensure
+          File.delete(tmp_path) if File.exists?(tmp_path)
+        end
+      end
+    end
+  end
 
   describe ".safe_path?" do
 

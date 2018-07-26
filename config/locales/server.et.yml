@@ -306,27 +306,6 @@ et:
         Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:
     title: "Teretulemast Lounge'i"
-    body: |2
-
-        Õnnitlused! :confetti_ball:
-
-        Kui Sa seda teemat näed, oled hiljuti edutatud **püsiliikmeks** (usaldustase 3).
-
-        Nüüd võid &hellip;
-
-        * Muuta suvalise teema pealkirja
-        * Muuta suvalise teema foorumit
-        * Lasta kõiki oma viiteid järgida ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) on eemaldatud)
-        * Siseneda vaid usaldustasemel 3 ja kõrgemal olevatele kasutajatele mõeldud privaatse Salongi foorumisse
-        * Peita spämmi vaid ühe tähisega
-
-        Siin on [hetke püsiliikmete nimekiri](/badges/3/regular). Tervita neid kindlasti.
-
-        Täname, et oled meie kogukonna tähtis liige!
-
-        (Täiendava info saamiseks usaldustasemete kohta [vaata teemat][trust]. Pea meeles, et vaid need liikmed kes jätkuvalt seatud nõudmisi täidavad püsivad püsiliikmetena.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Liigist %{category}"
     replace_paragraph: "(Asenda see paragrahv oma uues kategoorias kategooria lühitutvustusega. See juhis ilmub siis kategooriate vaates. Seega, katsu hoida kirjeldus alla 200 tähemärgi. **Kuniks sa pole muutnud seda kirjeldust või kuni sa pole loonud teemasid, ei ole seda kategooriat kategooriate lehel näha.**)"
@@ -341,9 +320,6 @@ et:
     cannot_delete:
       uncategorized: "Ei saa kustutada Liigitamata liiki"
       has_subcategories: "Seda foorumit ei saa kustutada, kuna tal on alamfoorumid."
-      topic_exists:
-        one: "Seda foorumit ei saa kustutada, kuna tal on 1 teema. Vanim teema on %{topic_link}."
-        other: "Seda foorumit ei saa kustutada, kuna tal on %{count} teemat. Vanim teema on %{topic_link}."
       topic_exists_no_oldest: "Seda foorumit ei saa kustutada, kuna teemade arv on %{count}."
     uncategorized_description: "Teemad, mis ei vaja või mida ei saa liigitada ühegi olemasoleva foorumi alla."
   trust_levels:
@@ -498,10 +474,6 @@ et:
       title: 'Laigi'
       description: 'Laigi seda postitust'
       long_form: 'laikis seda'
-    vote:
-      title: 'Hääleta'
-      description: 'Hääleta selle postituse poolt'
-      long_form: 'hääletas selle postituse poolt'
   user_activity:
     no_bookmarks:
       self: "Te ei ole postitustele järjehoidjaid lisanud. Postitustele järjehoidjate lisamine lubab nende juurde hiljem hõlpsasti tagasi pöörduda."
@@ -612,8 +584,6 @@ et:
       num_users: "Kasutajad"
     top_referred_topics:
       title: "Parimad viidatud teemad"
-      xaxis: "Teema"
-      num_clicks: "Klikid"
     page_view_anon_reqs:
       title: "Anonüümne"
       xaxis: "Päev"
@@ -748,20 +718,10 @@ et:
   image: "pilt"
   upload:
     pasted_image_filename: "Asetatud pilt"
-  email_log:
-    anonymous_user: "Kasutaja on anonüümne"
-    seen_recently: "Kasutajat nähti hiljuti"
-    topic_nil: "post.topic tühi hulk"
-    message_blank: "sõnum on tühi"
-    message_to_blank: "message.to on tühi"
-    text_part_body_blank: "text_part.body on tühi"
-    body_blank: "sisu on tühi"
   color_schemes:
-    default: "Hele skeem"
     dark: "Tume skeem"
-    default_theme_name: "Vaikimisi"
-    dark_theme_name: "Tume"
     light_theme_name: "Hele"
+    dark_theme_name: "Tume"
   about: "Teave"
   guidelines: "Juhendid"
   privacy: "Privaatsus"
@@ -875,8 +835,6 @@ et:
     empathetic:
       name: Empaatiline
       description: Omab 500 laigitud postitust ja laikis 1000 postitust
-      long_description: |
-        Saad selle märgise, kui sul on 500 laigitud postitust ning oled ise laikunud 1000 või enam postitust. Oled tõeline lahkuse ja vastastikuse lugupidamise eeskuju :two_hearts:
     first_emoji:
       name: Esimene emotikon
       description: Kasutasid postituses emotikoni

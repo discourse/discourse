@@ -176,7 +176,7 @@ describe Report do
     end
   end
 
-  describe 'private messages' do
+  describe 'user to user private messages with replies' do
     let(:report) { Report.find('user_to_user_private_messages_with_replies') }
 
     it 'topic report).to not include private messages' do
@@ -232,6 +232,32 @@ describe Report do
           expect(report.data[1][:y]).to eq 2
           expect(report.total).to eq 3
         end
+      end
+    end
+
+    context 'private message from system user' do
+      before do
+        Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
+      end
+
+      it 'does not include system users' do
+        expect(report.data).to be_blank
+        expect(report.total).to eq 0
+      end
+    end
+  end
+
+  describe 'user to user private messages' do
+    let(:report) { Report.find('user_to_user_private_messages') }
+
+    context 'private message from system user' do
+      before do
+        Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
+      end
+
+      it 'does not include system users' do
+        expect(report.data).to be_blank
+        expect(report.total).to eq 0
       end
     end
   end
@@ -346,7 +372,7 @@ describe Report do
       it "returns a report with data" do
         expect(report.data[0][:term]).to eq("ruby")
         expect(report.data[0][:unique_searches]).to eq(2)
-        expect(report.data[0][:ctr]).to eq('33.4%')
+        expect(report.data[0][:ctr]).to eq(33.4)
 
         expect(report.data[1][:term]).to eq("php")
         expect(report.data[1][:unique_searches]).to eq(1)
@@ -433,6 +459,175 @@ describe Report do
       r = Report.find('posts')
       expect(r.total).to eq(1)
       expect(r.data[0][:y]).to eq(1)
+    end
+  end
+
+  describe 'flags_status' do
+    let(:report) { Report.find('flags_status') }
+
+    context "no flags" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with flags" do
+      let(:flagger) { Fabricate(:user) }
+      let(:post) { Fabricate(:post) }
+
+      before do
+        PostAction.act(flagger, post, PostActionType.types[:spam], message: 'bad')
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+
+        row = report.data[0]
+        expect(row[:action_type]).to eq("spam")
+        expect(row[:staff_username]).to eq(nil)
+        expect(row[:staff_id]).to eq(nil)
+        expect(row[:staff_url]).to eq(nil)
+        expect(row[:poster_username]).to eq(post.user.username)
+        expect(row[:poster_id]).to eq(post.user.id)
+        expect(row[:poster_url]).to eq("/admin/users/#{post.user.id}/#{post.user.username}")
+        expect(row[:flagger_id]).to eq(flagger.id)
+        expect(row[:flagger_username]).to eq(flagger.username)
+        expect(row[:flagger_url]).to eq("/admin/users/#{flagger.id}/#{flagger.username}")
+        expect(row[:resolution]).to eq("No action")
+        expect(row[:response_time]).to eq(nil)
+      end
+    end
+  end
+
+  describe 'post_edits' do
+    let(:report) { Report.find('post_edits') }
+
+    context "no edits" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with edits" do
+      let(:editor) { Fabricate(:user) }
+      let(:post) { Fabricate(:post) }
+
+      before do
+        post.revise(editor, raw: 'updated body', edit_reason: 'not cool')
+      end
+
+      it "returns a report with data" do
+        expect(report.data).to be_present
+        expect(report.data.count).to be(1)
+
+        row = report.data[0]
+        expect(row[:editor_id]).to eq(editor.id)
+        expect(row[:editor_username]).to eq(editor.username)
+        expect(row[:editor_url]).to eq("/admin/users/#{editor.id}/#{editor.username}")
+        expect(row[:author_id]).to eq(post.user.id)
+        expect(row[:author_username]).to eq(post.user.username)
+        expect(row[:author_url]).to eq("/admin/users/#{post.user.id}/#{post.user.username}")
+        expect(row[:edit_reason]).to eq("not cool")
+        expect(row[:post_id]).to eq(post.id)
+        expect(row[:post_url]).to eq("/t/-/#{post.topic.id}/#{post.post_number}")
+      end
+    end
+  end
+
+  describe 'moderator activity' do
+    let(:current_report) { Report.find('moderators_activity', start_date: 1.months.ago.beginning_of_day, end_date: Date.today) }
+    let(:previous_report) { Report.find('moderators_activity', start_date: 2.months.ago.beginning_of_day, end_date: 1.month.ago.end_of_day) }
+
+    context "no moderators" do
+      it "returns an empty report" do
+        expect(current_report.data).to be_blank
+      end
+    end
+
+    context "with moderators" do
+      before do
+        freeze_time(Date.today)
+
+        bob = Fabricate(:user, moderator: true, username: 'bob')
+        bob.user_visits.create(visited_at: 2.days.ago, time_read: 200)
+        bob.user_visits.create(visited_at: 1.day.ago, time_read: 100)
+        Fabricate(:topic, user: bob, created_at: 1.day.ago)
+        sally = Fabricate(:user, moderator: true, username: 'sally')
+        sally.user_visits.create(visited_at: 2.days.ago, time_read: 1000)
+        sally.user_visits.create(visited_at: 1.day.ago, time_read: 2000)
+        topic = Fabricate(:topic)
+        2.times {
+          Fabricate(:post, user: sally, topic: topic, created_at: 1.day.ago)
+        }
+        flag_user = Fabricate(:user)
+        flag_post = Fabricate(:post, user: flag_user)
+        action = PostAction.new(user_id: flag_user.id,
+                                post_action_type_id: PostActionType.types[:off_topic],
+                                post_id: flag_post.id,
+                                agreed_by_id: sally.id,
+                                created_at: 1.day.ago,
+                                agreed_at: Time.now)
+        action.save
+        bob.user_visits.create(visited_at: 45.days.ago, time_read: 200)
+        old_topic = Fabricate(:topic, user: bob, created_at: 45.days.ago)
+        3.times {
+          Fabricate(:post, user: bob, topic: old_topic, created_at: 45.days.ago)
+        }
+        old_flag_user = Fabricate(:user)
+        old_flag_post = Fabricate(:post, user: old_flag_user, created_at: 45.days.ago)
+        old_action = PostAction.new(user_id: old_flag_user.id,
+                                    post_action_type_id: PostActionType.types[:spam],
+                                    post_id: old_flag_post.id,
+                                    agreed_by_id: bob.id,
+                                    created_at: 44.days.ago,
+                                    agreed_at: 44.days.ago)
+        old_action.save
+      end
+
+      it "returns a report with data" do
+        expect(current_report.data).to be_present
+      end
+
+      it "returns data for two moderators" do
+        expect(current_report.data.count).to eq(2)
+      end
+
+      it "returns the correct usernames" do
+        expect(current_report.data[0][:username]).to eq('bob')
+        expect(current_report.data[1][:username]).to eq('sally')
+      end
+
+      it "returns the correct read times" do
+        expect(current_report.data[0][:time_read]).to eq(300)
+        expect(current_report.data[1][:time_read]).to eq(3000)
+      end
+
+      it "returns the correct agreed flag count" do
+        expect(current_report.data[0][:flag_count]).to be_blank
+        expect(current_report.data[1][:flag_count]).to eq(1)
+      end
+
+      it "returns the correct topic count" do
+        expect(current_report.data[0][:topic_count]).to eq(1)
+        expect(current_report.data[1][:topic_count]).to be_blank
+      end
+
+      it "returns the correct post count" do
+        expect(current_report.data[0][:post_count]).to be_blank
+        expect(current_report.data[1][:post_count]).to eq(2)
+      end
+
+      it "returns the correct data for the time period" do
+        expect(previous_report.data[0][:flag_count]).to eq(1)
+        expect(previous_report.data[0][:topic_count]).to eq(1)
+        expect(previous_report.data[0][:post_count]).to eq(3)
+        expect(previous_report.data[0][:time_read]).to eq(200)
+
+        expect(previous_report.data[1][:flag_count]).to be_blank
+        expect(previous_report.data[1][:topic_count]).to be_blank
+        expect(previous_report.data[1][:post_count]).to be_blank
+        expect(previous_report.data[1][:time_read]).to be_blank
+      end
     end
   end
 end

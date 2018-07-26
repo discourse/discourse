@@ -35,7 +35,9 @@
     {{#if topicTrackingState.hasIncoming}}
       <div class="show-more {{if hasTopics 'has-topics'}}">
         <div class='alert alert-info clickable' {{action "showInserted"}}>
-          {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+          <a tabindex="0" href="" {{action "showInserted"}}>
+            {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+          </a>
         </div>
       </div>
     {{/if}}

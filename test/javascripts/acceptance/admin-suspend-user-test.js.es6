@@ -22,60 +22,52 @@ acceptance("Admin - Suspend User", {
   }
 });
 
-QUnit.test("suspend a user - cancel", assert => {
-  visit("/admin/users/1234/regular");
-  click(".suspend-user");
+QUnit.test("suspend a user - cancel", async assert => {
+  await visit("/admin/users/1234/regular");
+  await click(".suspend-user");
 
-  andThen(() => {
-    assert.equal(find(".suspend-user-modal:visible").length, 1);
-  });
+  assert.equal(find(".suspend-user-modal:visible").length, 1);
 
-  click(".d-modal-cancel");
-  andThen(() => {
-    assert.equal(find(".suspend-user-modal:visible").length, 0);
-  });
+  await click(".d-modal-cancel");
+
+  assert.equal(find(".suspend-user-modal:visible").length, 0);
 });
 
-QUnit.test("suspend, then unsuspend a user", assert => {
+QUnit.test("suspend, then unsuspend a user", async assert => {
   const suspendUntilCombobox = selectKit(".suspend-until .combobox");
 
-  visit("/admin/flags/active");
+  await visit("/admin/flags/active");
 
-  visit("/admin/users/1234/regular");
+  await visit("/admin/users/1234/regular");
 
-  andThen(() => {
-    assert.ok(!exists(".suspension-info"));
-  });
+  assert.ok(!exists(".suspension-info"));
 
-  click(".suspend-user");
+  await click(".suspend-user");
 
-  andThen(() => {
-    assert.equal(
-      find(".perform-suspend[disabled]").length,
-      1,
-      "disabled by default"
-    );
-  });
+  assert.equal(
+    find(".perform-suspend[disabled]").length,
+    1,
+    "disabled by default"
+  );
 
-  suspendUntilCombobox.expand().selectRowByValue("tomorrow");
+  await suspendUntilCombobox.expandAwait();
+  await suspendUntilCombobox.selectRowByValueAwait("tomorrow");
 
-  fillIn(".suspend-reason", "for breaking the rules");
-  fillIn(".suspend-message", "this is an email reason why");
-  andThen(() => {
-    assert.equal(
-      find(".perform-suspend[disabled]").length,
-      0,
-      "no longer disabled"
-    );
-  });
-  click(".perform-suspend");
-  andThen(() => {
-    assert.equal(find(".suspend-user-modal:visible").length, 0);
-    assert.ok(exists(".suspension-info"));
-  });
+  await fillIn(".suspend-reason", "for breaking the rules");
+  await fillIn(".suspend-message", "this is an email reason why");
 
-  click(".unsuspend-user");
-  andThen(() => {
-    assert.ok(!exists(".suspension-info"));
-  });
+  assert.equal(
+    find(".perform-suspend[disabled]").length,
+    0,
+    "no longer disabled"
+  );
+
+  await click(".perform-suspend");
+
+  assert.equal(find(".suspend-user-modal:visible").length, 0);
+  assert.ok(exists(".suspension-info"));
+
+  await click(".unsuspend-user");
+
+  assert.ok(!exists(".suspension-info"));
 });

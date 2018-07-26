@@ -8,6 +8,7 @@ export default Ember.Component.extend(
     _delayedRerender: null,
 
     rerenderTriggers: [
+      "topicClosed",
       "statusType",
       "executeAt",
       "basedOnLastPost",
@@ -17,6 +18,10 @@ export default Ember.Component.extend(
 
     buildBuffer(buffer) {
       if (!this.get("executeAt")) return;
+
+      const topicStatus = this.get("topicClosed") ? "close" : "open";
+      const topicStatusKnown = this.get("topicClosed") !== undefined;
+      if (topicStatusKnown && topicStatus === this.get("statusType")) return;
 
       let statusUpdateAt = moment(this.get("executeAt"));
 

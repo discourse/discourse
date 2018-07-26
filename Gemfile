@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.50'
+gem 'onebox', '1.8.55'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -60,7 +60,7 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer', '~> 0.1'
 
-# Forked until https://github.com/toy/image_optim/pull/149 is merged
+# Forked until https://github.com/toy/image_optim/pull/162 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
@@ -94,7 +94,7 @@ gem 'tilt', require: false
 
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'highline', require: false
+gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 
 # Gems used only for assets and not required in production environments by default.
@@ -108,6 +108,7 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
+  gem 'danger'
 end
 
 group :test, :development do
@@ -189,4 +190,3 @@ if ENV["IMPORT"] == "1"
 end
 
 gem 'webpush', require: false
-gem 'exifr', '1.2.5'
