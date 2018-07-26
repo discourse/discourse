@@ -19,7 +19,7 @@ class DraftsController < ApplicationController
     guardian.ensure_can_see_drafts!(user)
     stream = Draft.stream(opts)
     stream.each do |d|
-      parsed_data = JSON.parse(d.data) rescue nil
+      parsed_data = JSON.parse(d.data)
       if parsed_data
         if parsed_data['reply']
           d.raw = parsed_data['reply']

@@ -2350,6 +2350,24 @@ describe Guardian do
     end
   end
 
+  describe "can_see_drafts?" do
+    it "won't allow a non-logged in user to see a user's drafts" do
+      expect(Guardian.new.can_see_drafts?(user)).to be_falsey
+    end
+
+    it "won't allow a user to see another user's drafts" do
+      expect(Guardian.new(coding_horror).can_see_drafts?(user)).to be_falsey
+    end
+
+    it "will allow user to see own drafts" do
+      expect(Guardian.new(user).can_see_drafts?(user)).to be_truthy
+    end
+
+    it "will allow an admin to see a user's drafts" do
+      expect(Guardian.new(admin).can_see_drafts?(user)).to be_truthy
+    end
+  end
+
   describe "can_edit_email?" do
     context 'when allowed in settings' do
       before do
