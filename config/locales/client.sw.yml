@@ -495,8 +495,6 @@ sw:
       reorder:
         title: "Panga tena Kategoria"
         title_long: "Panga tena orodha ya kategoria"
-        fix_order: "Weka Nafasi"
-        fix_order_tooltip: "Sio kategoria zote zina nafasi za kipekee, inaweza kusababisha majibu ambayo hayategemewi."
         save: "Hifadhi Oda"
         apply_all: "Tumia"
         position: "Nafasi"
@@ -720,7 +718,6 @@ sw:
         upload_title: "Pakia picha yako"
         upload_picture: "Pakia Picha"
         image_is_not_a_square: "Onyo: tumepogoa picha yako; upana na urefu hauko sawa."
-        cache_notice: "Umebadilisha picha yako lakini itachukua mda kuonekana kwa sababu ya ukuraswa wekwa. "
       change_profile_background:
         title: "Mandharinyuma ya Umbo"
         instructions: "Mandharinyuma ya Umbo yatakuwa katikati na upana wa 850px."
@@ -908,7 +905,6 @@ sw:
         most_liked_users: "Iliyopendwa Zaidi"
         most_replied_to_users: "Iliyojibiwa zaidi"
         no_likes: "Bado hakuna upendo."
-      associated_accounts: "Uingiaji"
       ip_address:
         title: "Anwani ya Mwisho ya Mtandao"
       registration_ip_address:
@@ -1080,9 +1076,6 @@ sw:
       preferences: "Unahitaji uwe umeingia kubadilisha mapendekezo ya mtumiaji."
       forgot: "Sikumbuki taarifa zangu za akaunti"
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
-      google:
-        title: "na Google"
-        message: "uthibitisho na Google (hakikisha  vizuizi vya pop-up havijaruhusiwa)"
       google_oauth2:
         title: "na Google"
         message: "uthibitisho na Google (hakikisha  vizuizi vya pop-up havijaruhusiwa)"
@@ -2818,7 +2811,6 @@ sw:
             address_placeholder: "name@example.com"
             type_placeholder: "jifunze, jiunge..."
             reply_key_placeholder: "ufunguo wa jibu"
-            skipped_reason_placeholder: "sababu"
       moderation_history:
         performed_by: "Imefanywa Na"
         no_results: "Hakuna historia ya usimamizi inayopatikana."

@@ -391,15 +391,12 @@ vi:
       "14": "Đang chờ xử lý"
     categories:
       all: "tất cả chuyên mục"
-      all_subcategories: "tất cả trong %{categoryName}"
       no_subcategory: "không có gì"
       category: "Chuyên mục"
       category_list: "Hiễn thị danh sách chuyên mục"
       reorder:
         title: "Sắp xếp lại danh mục"
         title_long: "Tổ chức lại danh sách danh mục"
-        fix_order: "Vị trí cố định"
-        fix_order_tooltip: "Không phải tất cả danh mục có vị trí duy nhất, điều này có thể dẫn đến kết quả không mong muốn."
         save: "Lưu thứ tự"
         apply_all: "Áp dụng"
         position: "Vị trí"
@@ -577,7 +574,6 @@ vi:
         upload_title: "Upload hình ảnh của bạn"
         upload_picture: "Úp hình"
         image_is_not_a_square: "Cảnh báo: chúng tôi đã cắt hình ảnh của bạn; chiều rộng và chiều cao không bằng nhau."
-        cache_notice: "Hình hồ sở của bạn đã thay đổi thành công nhưng có thể thỉnh thoảng xuất hiện ảnh cũ bởi cache của trình duyệt."
       change_profile_background:
         title: "Hình nền trang hồ sơ"
         instructions: "Hình nền trang hồ sơ sẽ ở giữa và có chiều rộng mặc định là 850px."
@@ -749,7 +745,6 @@ vi:
         more_badges: "Thêm huy hiệu"
         top_links: "Liên kết đầu"
         no_links: "Không có liên kết"
-      associated_accounts: "Đăng nhập"
       ip_address:
         title: "Địa chỉ IP cuối cùng"
       registration_ip_address:
@@ -854,11 +849,11 @@ vi:
       action: "Tôi đã quên mật khẩu của tôi"
       invite: "Điền vào username của bạn hoặc địa chỉ email và chúng tôi sẽ gửi bạn email để khởi tạo lại mật khẩu"
       reset: "Tạo lại mật khẩu"
-      complete_username: "Nếu một tài khoản phù hợp với tên thành viên <b>% {username} </ b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
-      complete_email: "Nếu một trận đấu tài khoản <b>% {email} </ b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
-      complete_username_found: "Chúng tôi tìm thấy một tài khoản phù hợp với tên thành viên <b>% {username} </ b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
-      complete_email_found: "Chúng tôi tìm thấy một tài khoản phù hợp với <b>% {email} </ b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
-      complete_username_not_found: "Không có tài khoản phù hợp với tên thành viên <b>% {username} </ b>"
+      complete_username: "Nếu một tài khoản phù hợp với tên thành viên <b>%{username} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
+      complete_email: "Nếu một trận đấu tài khoản <b>%{email} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
+      complete_username_found: "Chúng tôi tìm thấy một tài khoản phù hợp với tên thành viên <b>%{username} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
+      complete_email_found: "Chúng tôi tìm thấy một tài khoản phù hợp với <b>%{email} </b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
+      complete_username_not_found: "Không có tài khoản phù hợp với tên thành viên <b>%{username} </b>"
       complete_email_not_found: "Không tìm thấy tài khoản nào tương ứng với <b>%{email}</b>"
       button_help: "Giúp "
     login:
@@ -888,9 +883,6 @@ vi:
       to_continue: "Vui lòng đăng nhập"
       preferences: "Bạn cần phải đăng nhập để thay đổi cài đặt tài khoản."
       forgot: "Tôi không thể nhớ lại chi tiết tài khoản của tôi."
-      google:
-        title: "với Google "
-        message: "Chứng thực với Google (Bạn hãy chắc chắn là chặn popup không bật)"
       google_oauth2:
         title: "với Google"
         message: "Chứng thực với Google (chắc chắn rằng cửa sổ pop up blocker không được kích hoạt)"
@@ -1453,7 +1445,6 @@ vi:
           inappropriate: "Hủy gắn cờ"
           bookmark: "Hủy đánh dấu"
           like: "Hủy like"
-          vote: "Hủy bình chọn"
         people:
           off_topic: "đánh dấu là chủ đề đóng"
           spam: "đánh dấu là spam"
@@ -1462,7 +1453,6 @@ vi:
           notify_user: "đã gửi tin nhắn"
           bookmark: "đã đánh dấu bài này"
           like: "đã like bài này"
-          vote: "đã bầu cho bài này"
         by_you:
           off_topic: "Bạn đã đánh dấu cái nfay là chủ đề đóng"
           spam: "Bạn đã đánh dấu cái này là rác"
@@ -1471,7 +1461,6 @@ vi:
           notify_user: "Bạn đã gửi một tin nhắn đến người dùng này"
           bookmark: "Bạn đã đánh dấu bài viết này"
           like: "Bạn đã thích cái này"
-          vote: "Bạn đã bình chọn cho bài viết này"
         by_you_and_others:
           off_topic:
             other: "Bạn và  {{count}}  người khác đã đánh dấu đây là chủ đề đóng"
@@ -1487,8 +1476,6 @@ vi:
             other: "Bạn và {{count}} người khác đã đánh dấu bài viết này"
           like:
             other: "Bạn và {{count}} người khác đã thích cái này"
-          vote:
-            other: "Bạn và {{count}} nười khác đã bình chọn cho bài viết này"
         by_others:
           off_topic:
             other: "{{count}} người đã đánh dấu nó là chủ đề đóng"
@@ -1504,8 +1491,6 @@ vi:
             other: "{{count}} người đã đánh dấu bài viết này"
           like:
             other: "{count}} người đã thích cái này"
-          vote:
-            other: "{{count}} người đã bình chọn cho bài viết này"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"
@@ -1540,7 +1525,6 @@ vi:
       can: 'can&hellip;'
       none: '(không danh mục)'
       all: 'Tất cả danh mục'
-      choose: 'Chọn chuyên mục&hellip;'
       edit: 'sửa'
       edit_long: "Sửa"
       view: 'Xem Chủ đề trong Danh mục'
@@ -1584,7 +1568,6 @@ vi:
       edit_permissions: "Sửa quyền"
       add_permission: "Thêm quyền"
       this_year: "năm nay"
-      position: "vị trí"
       default_position: "vị trí mặc định"
       position_disabled: "Chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự chuyên mục trong danh sách, "
       position_disabled_click: 'bật thiết lập "cố định vị trí chuyên mục".'
@@ -2140,7 +2123,6 @@ vi:
             address_placeholder: "name@example.com"
             type_placeholder: "tập san, đăng ký..."
             reply_key_placeholder: "key phản hồi"
-            skipped_reason_placeholder: "lý do"
       logs:
         title: "Log"
         action: "Hành động"

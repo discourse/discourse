@@ -450,27 +450,6 @@ nb_NO:
       Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
   lounge_welcome:
     title: "Velkommen til salongen"
-    body: |2
-
-        Gratulerer! :confetti_ball:
-
-        Hvis du kan se denne tråden, er du nylig blitt forfremmet til **aktivt medlem** (tillitsnivå 3).
-
-        Du kan nå &hellip;
-
-        * Endre tittelen til hvilken som helst tråd
-        * Endre kategorien til hvilken som helst tråd
-        * Få lenkene dine fulgt opp ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
-        * Se og delta i diskusjonene i en privat salong-kategori som bare er synlig for brukere med tillitsnivå 3 eller høyere.
-        * Skjule søppelpost med ett flagg.
-
-        Her er den [oppdaterte listen over andre trofaste](/badges/3/regular). Si gjerne hei!
-
-        Takk for at du er en viktig del av fellesskapet vårt.
-
-        (For mer informasjon om tillitsnivå [se denne tråden][tillit]. Merk deg at bare medlemmer som fortsetter å oppfylle kravene over tid, vil forbli *trofaste*.)
-
-        [tillit]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
     replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde lengden under 200 bokstaver. **Inntil du endrer denne beskrivelsen eller oppretter tråder, vil denne kategorien ikke vises på kategorier-siden.**)"
@@ -487,9 +466,6 @@ nb_NO:
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategorisert"
       has_subcategories: "Kan ikke slette denne kategorien fordi den har underkategorier."
-      topic_exists:
-        one: "Kan ikke slette denne kategorien fordi den har 1 tråd. Eldste tråd er %{topic_link}."
-        other: "Kan ikke slette denne kategorien fordi den har %{count} tråder. Eldste tråd er %{topic_link}."
       topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall tråder er %{count}."
     uncategorized_description: "Tråder som ikke trenger en kategori eller som ikke passer i noen av de eksisterende kategoriene."
   trust_levels:
@@ -683,11 +659,6 @@ nb_NO:
       description: 'Liker dette innlegget'
       short_description: 'Lik dette innlegget'
       long_form: 'likte dette'
-    vote:
-      title: 'Stem'
-      description: 'Stem på dette innlegget'
-      short_description: 'Stem på dette innlegget'
-      long_form: 'stemte for dette innlegget'
   user_activity:
     no_default:
       self: "Du har ingen aktivitet enda."
@@ -870,8 +841,6 @@ nb_NO:
       num_users: "Brukere"
     top_referred_topics:
       title: "Topp henviste tråder"
-      xaxis: "Tråd"
-      num_clicks: "Klikk"
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
@@ -933,8 +902,6 @@ nb_NO:
       yaxis: "Antall besøk"
     web_crawlers:
       title: "Forespørsler fra Søkeroboter"
-      xaxis: "Brukeragent"
-      yaxis: "Sidevisninger"
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
@@ -1157,7 +1124,6 @@ nb_NO:
     missing_user_field: "Du har ikke fylt ut alle brukerfeltene."
     already_logged_in: "Oisann, ser ut som du prøver å akseptere en invitasjon for en en annen bruker. Hvis du ikke er %{current_user}, logg ut og prøv igjen."
   user:
-    no_accounts_associated: "Ingen tilknyttede kontoer"
     username:
       short: "må være på minst %{min} tegn"
       long: "kan ikke være mer enn %{max} tegn"
@@ -1250,21 +1216,10 @@ nb_NO:
     pasted_image_filename: "Limt inn bilde"
     images:
       size_not_found: "Beklager, vi kunne ikke fastslå størrelsen på bildet ditt. Kanskje bildet ditt er blitt ødelagt?"
-  email_log:
-    no_user: "Finner ikke brukeren med id %{user_id}"
-    anonymous_user: "Brukeren er anonym"
-    suspended_not_pm: "Bruker er utestengt, ikke en beskjed"
-    seen_recently: "Brukeren ble sett nylig"
-    post_deleted: "innlegget var "
-    user_suspended: "Brukeren var utestengt"
-    already_read: "bruker har allerede lest dette innlegget"
-    message_blank: "meldingen er tom"
   color_schemes:
-    default: "Lys drakt"
     dark: "Mørk drakt"
-    default_theme_name: "Forvalg"
-    dark_theme_name: "Mørk"
     light_theme_name: "Lys"
+    dark_theme_name: "Mørk"
   about: "Om"
   guidelines: "Retningslinjer"
   privacy: "Personvern"
@@ -1367,8 +1322,6 @@ nb_NO:
       name: Medlem
     regular:
       name: Aktivt medlem
-      long_description: |
-        Dette merket tildeles når du når tillitsnivå 3. Takk for at du har vært en aktivt medlem av fellesskapet vårt gjennom flere måneder. Du er nå en av de mest aktive leserne og en pålitelig bidragsyter som gjør fellesskapet vårt storartet. Du kan nå endre kategori og navn på tråder, fjerne søppelpost med ett flagg, delta i diskusjoner i en privat kategori bare for medlemmer med tillitsnivå 3 eller høyere , og du vil også få mange flere likes per dag.
     welcome:
       name: Velkommen
     anniversary:
@@ -1394,8 +1347,6 @@ nb_NO:
       name: Takk skal du ha
     gives_back:
       name: Gir tilbake
-    first_onebox:
-      long_description: "Dette merket tildeles den første gangen du publiserer et innlegg med en lenke på en egen linje, som deretter automatisk blir utvidet til en miniboks med en kort oppsummering av lenken, en tittel og (dersom tilgjengelig) et bilde."
   admin_login:
     success: "E-post sendt"
     submit_button: "Send e-post"
@@ -1466,7 +1417,6 @@ nb_NO:
         fields:
           favicon_url:
             label: "Lite ikon"
-            description: "Et ikon som representerer nettstedet ditt i nettlesere. Bør se bra ut i så liten størrelse som 32 ganger 32 piksler."
           apple_touch_icon_url:
             label: "Stort ikon"
       homepage:

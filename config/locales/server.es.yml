@@ -169,7 +169,10 @@ es:
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permiso para ver el recurso solicitado."
+  authenticator_not_found: "El método de autentificación no existe o se ha desactivado"
   invalid_api_credentials: "No tienes permisos para visualizar el recurso solicitado. El nombre de usuario API o la clave es inválida. "
+  provider_not_enabled: "No tienes permisos para visualizar el recurso solicitado. El proveedor de autenticación no está habilitado."
+  provider_not_found: "No tienes permisos para visualizar el recurso solicitado. El proveedor de autenticación no existe."
   read_only_mode_enabled: "El sitio está en modo sólo lectura. Las interacciones están deshabilitadas."
   reading_time: "Tiempo de lectura"
   likes: "Me gusta"
@@ -453,25 +456,25 @@ es:
     title: "Bienvenido a la Sala VIP"
     body: |2
 
-        ¡Enhorabuena! :confetti_ball:
+      ¡Enhorabuena! :confetti_ball:
 
-        Si puedes ver este tema, es que has sido promocionado a usuario **habitual** (nivel de confianza 3).
+      Si puedes ver este tema, es que has sido promocionado a usuario **habitual** (nivel de confianza 3).
 
-        Ahora puedes &hellip;
+      Ahora puedes &hellip;
 
-        * Editar el título de cualquier tema
-        * Cambiar la categoría de cualquier tema
-        * Tus enlaces no llevarán automáticamente la etiqueta [nofollow](http://es.wikipedia.org/wiki/Nofollow)
-        * Acceder a la categoría privada Sala VIP, solo visible para usuarios de nivel 3 o más
-        * Ocultar spam con una sola vez que reportes
+      * Editar el título de cualquier tema
+      * Cambiar la categoría de cualquier tema
+      * Tus enlaces no llevarán automáticamente la etiqueta [nofollow](http://es.wikipedia.org/wiki/Nofollow)
+      * Acceder a la categoría privada Sala VIP, solo visible para usuarios de nivel 3 o más
+      * Ocultar spam con una sola vez que reportes
 
-        Consulta aquí [la lista actualizada de usuarios habituales](/badges/3/regular). ¡Manda un saludo!
+      Consulta aquí [la lista actualizada de usuarios habituales](/badges/3/regular). ¡Manda un saludo!
 
-        ¡Gracias por formar la parte más importante de esta comunidad!
+      ¡Gracias por formar la parte más importante de esta comunidad!
 
-        (Para saber más sobre niveles de confianza, [mira este tema][trust]. Por favor, ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán en el nivel de usuarios habituales.)
+      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Por favor, ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán en el nivel de usuarios habituales.)
 
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Definición de la categoría %{category}"
     replace_paragraph: "(Sustituye este primer párrafo con una descripción breve de tu nueva categoría. Esta descripción aparecerá en el área de selección de categoría, por ello, intenta que sea inferior a 200 caracteres. **Hasta que edites esta descripción o se creen temas, esta categoría no aparecerá en la página de categorías.**)"
@@ -489,8 +492,8 @@ es:
       uncategorized: "Sin categoría no se puede eliminar"
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."
       topic_exists:
-        one: "No se puede eliminar esta categoría porque tiene 1 tema. El más antiguo es %{topic_link}."
-        other: "No se puede eliminar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}."
+        one: "No se puede borrar esta categoría porque tiene 1 tema. El tema más antiguo es %{topic_link}."
+        other: "No se puede borrar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}."
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el contador de temas está en %{count}."
     uncategorized_description: "Debates que no necesitan una categoría, o bien no encajan en alguna de las categorías existentes."
   trust_levels:
@@ -628,6 +631,8 @@ es:
     authorizing_old:
       title: "Gracias por confirmar tu dirección de correo actual"
       description: "Te enviaremos un email a tu nueva dirección para confirmar."
+  associated_accounts:
+    revoke_failed: "No se ha podido revocar la conexión con %{provider_name}."
   activation:
     action: "Haz clic aquí para activar tu cuenta"
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
@@ -685,11 +690,6 @@ es:
       description: 'Te gusta este post'
       short_description: 'Te gusta este post'
       long_form: 'Te gusta esto'
-    vote:
-      title: 'Vota'
-      description: 'Vota por este post'
-      short_description: 'Vota por este post'
-      long_form: 'Votado para este post'
   user_activity:
     no_default:
       self: "No tienes actividad aún."
@@ -708,14 +708,17 @@ es:
       title: 'Spam'
       description: 'Este tema es un anuncio publicitario. No es útil ni relevante para este sitio, sino de naturaleza promocional.'
       long_form: 'marcar esto como spam'
+      short_description: 'Esto es un anuncio'
     inappropriate:
       title: 'Inapropiado'
       description: 'Este tema contiene material que una persona sensata podría considerar ofensivo, abusivo, o que viola <a href="/guidelines">las directrices de nuestra comunidad</a>.'
       long_form: 'marcado como inapropiado'
+      short_description: 'Incumple <a href="/guidelines">nuestras directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
       description: 'Este tema requiere atención del equipo de moderación basándose en las <a href="/guidelines">pautas de la comunidad</a> o los  <a href="%{tos_url}">Términos y condiciones</a>, o por otra razón no especificada arriba.'
       long_form: 'reportado para atención de los moderadores'
+      short_description: 'Requiere atención del staff por otro motivo'
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -761,6 +764,39 @@ es:
       read: "Leer todo"
       write: "Escribir todo"
   reports:
+    default:
+      labels:
+        count: Cuenta
+        day: Día
+    post_edits:
+      title: "Edicione"
+      labels:
+        post: Post
+        editor: Editor
+        author: Autor
+        edit_reason: Motivo
+    moderators_activity:
+      title: "Actividad de moderadores"
+      labels:
+        moderator: Moderador
+        flag_count: Reportes revisados
+        time_read: Tiempo de lectura
+        topic_count: Temas creados
+        post_count: Mensajes creados
+        pm_count: Mensajes privados creados
+    flags_status:
+      title: "Estado de los reportes"
+      values:
+        agreed: De acuerdo
+        disagreed: En desacuerdo
+        deferred: Aplazado
+        no_action: Ninguna acción
+      labels:
+        flag: Tipo
+        assigned: Asignado
+        poster: Autor
+        flagger: Reportado por
+        time_to_resolution: Tiempo de resolución
     visits:
       title: "Visitas de usuario"
       xaxis: "Día"
@@ -819,10 +855,14 @@ es:
       title: "Usuarios por nivel de confianza"
       xaxis: "Día"
       yaxis: "Número de usuarios"
+      labels:
+        level: Nivel
     users_by_type:
       title: "Usuarios por Tipos"
       xaxis: "Tipo"
       yaxis: "Número de Usuarios"
+      labels:
+        type: Tip
       xaxis_labels:
         admin: Admin
         moderator: Moderador
@@ -873,10 +913,15 @@ es:
       num_clicks: "Clics"
       num_topics: "Temas"
       num_users: "Usuarios"
+      labels:
+        domain: Dominio
+        num_clicks: Clics
+        num_topics: Temas
     top_referred_topics:
       title: "Los temas más referidos"
-      xaxis: "Tema"
-      num_clicks: "Clics"
+      labels:
+        num_clicks: "Clics"
+        topic: "Tema"
     page_view_anon_reqs:
       title: "Anónimas"
       xaxis: "Día"
@@ -939,8 +984,9 @@ es:
       yaxis: "Número de visita"
     web_crawlers:
       title: "Solicitudes de Rastreadores Web"
-      xaxis: "User Agent"
-      yaxis: "Páginas vistas"
+      labels:
+        user_agent: "Agente de usuario"
+        page_views: "Páginas vistas"
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
@@ -1092,6 +1138,7 @@ es:
     track_external_right_clicks: "Hacer seguimiento de los enlaces externos en los que se ha hecho clic con el botón derecho (ej: abrir en nueva pestaña) desactivado por defecto porque reescribe URLs"
     site_contact_username: "Nombre de usuario de moderador o administrador desde donde se enviarán mensajes automáticos. Si se deja en blanco, se utilizará la cuenta system por defecto."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje de bienvenida con una guía rápida para comenzar."
+    send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
     suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en un post cuando el post cite la respuesta."
@@ -1193,6 +1240,8 @@ es:
     max_topic_invitations_per_day: "Máximo número de invitaciones a un tema que un usuario puede enviar por día."
     max_logins_per_ip_per_hour: "Máximo número de inicios de sesión permitidos por direcciones IP por hora."
     max_logins_per_ip_per_minute: "Máximo número de inicios de sesión permitidos por direcciones IP por minuto."
+    max_post_deletions_per_minute: "Número máximo de publicaciones que un usuario puede eliminar por minuto."
+    max_post_deletions_per_day: "Número máximo de publicaciones que un usuario puede eliminar por día."
     alert_admins_if_errors_per_minute: "Número de errores por minuto que activa la alerta a administración. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar la instancia."
     alert_admins_if_errors_per_hour: "Número de errores por hora que activa la alerta a administración. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar la instancia."
     categories_topics: "Número de temas a mostrar en la página de /categorías."
@@ -1213,6 +1262,8 @@ es:
     avatar_sizes: "Lista de tamaños de avatar generados automáticamente."
     external_system_avatars_enabled: "Usar un servicio externo para los avatares."
     external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Sustituciones permitidas: {username} {first_letter} {color} {size}"
+    selectable_avatars_enabled: "Forzar a los usuarios a elegir una foto de perfil de la lista."
+    selectable_avatars: "Lista de fotos de perfil de la cual los usuarios pueden elegir"
     default_opengraph_image_url: "URL de la imagen opengraph por defecto."
     twitter_summary_large_image_url: "URL de la imagen por defecto para la tarjeta resumen de Twitter (debería ser al menos de 280px de ancho y 150 px de alto)."
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de email para los mensajes a grupos."
@@ -1363,9 +1414,11 @@ es:
     pop3_polling_host: "El host utilizado para hacer polling de e-mails vía POP3."
     pop3_polling_username: "El nombre de usuario de la cuenta POP3 para hacer polling de e-mails."
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos."
+    pop3_polling_delete_from_server: "Eliminar correos electrónicos del servidor. NOTA: si desactiva esto, debe limpiar manualmente su bandeja de entrada de correo"
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de email a http://yoursitename.com/logs"
     email_in: "Permitir a los usuarios crear nuevos temas por email (requiere el polling pop3). Configura las direcciones en la pestaña \"Ajustes\" de cada categoría."
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
+    email_in_spam_header: "El encabezado del correo electrónico para detectar spam."
     email_prefix: "La [etiqueta] utilizada en el asunto de los emails. Si no está configurado, será por defecto el 'título'."
     email_site_title: "El título del sitio utilizado como remitente de los emails desde el sitio. Si no está configurado, será por defecto 'título'. Si tu 'título' contiene caracteres que no están permitidos en las cadenas del remitente del email, usa esta opción."
     find_related_post_with_key: "Solo usar la 'reply key' para encontrar el mensaje que respondió. ADVERTENCIA: deshabilitar esto permitirá al usuario impersonar basado en las direcciones de email."
@@ -1447,6 +1500,7 @@ es:
     enable_emoji_shortcuts: "Texto común de emoticones como :) :p :( serán convertidos a emojis"
     emoji_set: "¿De qué tipo os gustan los emoji?"
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
+    emoji_autocomplete_min_chars: "Número máximo de caracteres necesarios para que aparezca el diálogo de selección de emoji"
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     approve_new_topics_unless_trust_level: "Los nuevos temas de usuarios por debajo de este nivel de confianza deben ser aprobados"
@@ -1659,9 +1713,13 @@ es:
     already_logged_in: "Ups, parece que estás intentando aceptar una invitación dirigida a otro usuariol. Si no eres %{current_user}, por favor cierra sesión e inténtalo de nuevo."
     second_factor_title: "Autenticación Dos Factores"
     second_factor_description: "Por favor ingrese el código de autenticación desde tu aplicación:"
-    invalid_second_factor_code: "Código de Autenticación inválido"
+    second_factor_backup_description: "Por favor, introduce uno de los códigos de respaldo:"
+    second_factor_backup_title: "Two Factor Backup"
+    invalid_second_factor_code: "Código de autentificación no válido. Cada código puede usarse solo una vez."
+    second_factor_toggle:
+      totp: "Inicie sesión con la aplicación Authenticator"
+      backup_code: "Inicie sesión con un código de respaldo"
   user:
-    no_accounts_associated: "No hay cuentas relacionadas."
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
     activated_by_staff: "Activado por el staff"
@@ -1931,11 +1989,24 @@ es:
         Varios miembros de la comunidad han reportado tu mensaje antes de que éste se haya ocultado.  **Porque este post ha sido ocultado más de una vez, permanecerá oculto hasta que personal del staff lo revise.**
 
         Para aprender más, por favor leer nuestra [guía de la comunidad](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted:
+      title: "Tema reportado y eliminado por el staff"
+      subject_template: "Tema reportado y eliminado por el staff"
+      text_body_template: |
+        Hola,
+
+        Este es un mensaje automático de %{site_name} para hacerte saber que uno de tus mensajes ha sido eliminado.
+
+        <%{base_url}%{url}>
+
+        El mensaje ha sido reportado por la comunidad y un miembro del staff ha decidido eliminarlo.
+
+        Por favor, revisa nuestras [directrices de la comunidad](%{base_url}/guidelines) para más detalles.
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        Conforme vayas participando por aquí, te iremos conociendo más, y tus limitaciones temporales como nuevo usuario serán levantadas. Con el tiempo ganarás [niveles de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) que incluyen habilidades especiales para ayudarnos a gestionar la comunidad juntos.
+        Conforme vayas participando por aquí, te iremos conociendo más, y tus limitaciones temporales como nuevo usuario serán levantadas. Con el tiempo ganarás [niveles de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que incluyen habilidades especiales para ayudarnos a gestionar la comunidad juntos.
     welcome_user:
       title: "Bienvenido Usuario"
       subject_template: "¡Bienvenido a %{site_name}!"
@@ -1947,6 +2018,13 @@ es:
         Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
 
         ¡Disfruta de tu estancia!
+    welcome_tl1_user:
+      title: "Bienvenida al Usuario NC1"
+      subject_template: "Gracias por pasar tiempo con nosotros"
+      text_body_template: |
+        Hola. Hemos visto que has estado leyendo muchas cosas, que es fantástico, ¡así que te hemos aumentado el [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Nos alegra que hayas pasado tiempo con nosotros y nos gustaría saber más sobre ti. Si puedes, tómate un minuto para [completar tu perfil](/my/preferences/profile) o [empieza un nuevo tema](/categories) si quieres.
     welcome_invite:
       title: "Bienvenido Invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
@@ -2723,32 +2801,36 @@ es:
   flag_reason:
     sockpuppet: "Un nuevo usuario ha creado un tema, y otro nuevo usuario con la misma dirección IP  (%{ip_address})  le ha respondido. Mira la opción  <a href='/admin/site_settings/category/spam'>\"flag_sockpuppets\"</a> en la configuración del sitio."
     spam_hosts: "Un nuevo usuario intentó crear varios temas con enlaces al mismo dominio (%{domain}). Mira la opción  <a href='/admin/site_settings/category/spam'>\"newuser_spam_host_threshold\"</a> en la configuración del sitio."
-  email_log:
-    post_user_deleted: "El autor de la publicación ha sido eliminado."
-    no_user: "No se puede encontrar al usuario con id %{user_id}"
-    anonymous_user: "El usuario es anónimo"
-    suspended_not_pm: "El usuario está suspendido, no mensaje"
-    seen_recently: "El usuario fue visto hace poco"
-    post_not_found: "No se puede encontrar un post con id %{post_id}"
-    notification_already_read: "La notificación de la que informaba este email ya ha sido leída"
-    topic_nil: "post.topic es nulo"
-    post_deleted: "el post fue eliminado por su autor"
-    user_suspended: "el usuario fue suspendido"
-    already_read: "el usuario ya ha leído este post"
-    exceeded_emails_limit: "Se ha excedido el max_emails_per_day_per_user"
-    exceeded_bounces_limit: "Se ha excedido el bounce_score_threshold"
-    message_blank: "el mensaje está en blanco"
-    message_to_blank: "message.to está en blanco"
-    text_part_body_blank: "text_part.body está en blanco"
-    body_blank: "el cuerpo está en blanco"
-    no_echo_mailing_list_mode: "Modo lista de correo desactivado para los post del usuario"
+  skipped_email_log:
+    user_email_anonymous_user: "El usuario es anónimo"
+    user_email_user_suspended_not_pm: "El usuario  está suspendido, no es un mensaje"
+    user_email_seen_recently: "El usuario  ha sido visto recientemente"
+    user_email_notification_already_read: "La notificación sobre la que va el correo ya ha sido leída"
+    user_email_notification_topic_nil: "post.topic es nulo"
+    user_email_post_user_deleted: "El usuario del post ha sido eliminado."
+    user_email_post_deleted: "el mensaje ha sido eliminado por el autor"
+    user_email_user_suspended: "el usuario  ha sido suspendido"
+    sender_message_blank: "el mensaje está en blanco"
+    sender_message_to_blank: "mensage.to está en blanco"
   color_schemes:
     base_theme_name: "Base"
-    default: "Esquema Claro"
+    light: "Esquema claro"
     dark: "Esquema Oscuro"
-    default_theme_name: "Por defecto"
-    dark_theme_name: "Oscuro"
+    neutral: "Esquema neutral"
+    grey_amber: "Esquema gris-ámbar"
+    shades_of_blue: "Esquema gama azul"
+    latte: "Esquema Latte"
+    summer: "Esquema veraniego"
+    dark_rose: "Esquema rosa oscuro"
+    default_theme_name: "Claro"
     light_theme_name: "Claro"
+    dark_theme_name: "Oscuro"
+    neutral_theme_name: "Neutral"
+    grey_amber_theme_name: "Gris ámbar"
+    shades_of_blue_theme_name: "Gama azul"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Veraniego"
+    dark_rose_theme_name: "Rosa oscuro"
   about: "Acerca de"
   guidelines: "Directrices"
   privacy: "Privacidad"
@@ -3091,69 +3173,45 @@ es:
         Este distintivo se concede la primera vez que editas uno de tus posts. Aunque no siempre podrás editar tus posts, editar es una buena idea — te permite mejorar tus posts, corregir pequeños errores o añadir algo que se te había pasado. ¡Editar hace mejores tus publicaciones!
     basic_user:
       name: Básico
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Dispone</a> de todas las funciones esenciales de la comunidad"
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dispone</a> de todas las funciones esenciales de la comunidad"
       long_description: |
-        Este distintivo se concede cuando alcanzas el nivel de confianza 1. Gracias por pasar por aquí un momento y leer unos cuantos temas para ver de qué va esta comunidad. Las restricciones de nuevo usuario se eliminan y podrás usar las funcionalidades esenciales del sitio como enviar mensajes a otras personas, reportar posts, editar posts wiki y publicar imágenes o varios enlaces.
+        Este distintivo se concede cuando alcanzas el nivel de confianza 1. Gracias por pasar por aquí y leer unos cuantos temas para aprender acerca de qué es esta comunidad. Las restricciones de nuevo usuario se han eliminado; podrás usar las funcionalidades esenciales como enviar mensajes privados a otras personas, reportar posts, editar posts wiki y publicar con múltiples imágenes y enlaces.
     member:
       name: Miembro
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Disponen</a> de invitaciones, mensaje a grupos y más \"me gusta\""
-      long_description: |
-        Este distintivo se concede cuando alcanzas el nivel de confianza 2. Gracias por tu constante participación en la comunidad. Ahora puedes enviar invitaciones a otras personas desde tu perfil o temas individuales, enviar mensajes a grupos y dar más Me gusta por día.
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Disponen</a> de invitaciones, mensaje a grupos y más \"me gusta\""
     regular:
       name: Habitual
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Disponen</a> del poder recategorizar, renombrar, publicar enlacer sin el tag no-follow y más me gusta"
-      long_description: |
-        Este distintivo se concede cuando alcanzas el nivel de confianza 3. Gracias por tomar parte activa de nuestra comunidad por tanto tiempo, ser uno de los más ávidos lectores y contribuir tanto a su crecimiento y calidad. Ahora puedes recategorizar o renombrar temas, acceder al área vip, reportar spam de forma más contundente y dar muchos más Me gusta por día.
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Disponen</a> del poder recategorizar, renombrar, publicar enlacer sin el tag no-follow y más me gusta"
     leader:
       name: Líder
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Dispone</a> de poder editar, destacar, cerrar, archivar, dividir y combinar temas globalmente"
-      long_description: |
-        Este distintivo se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todos los posts, dar muchísimos Me gusta por día y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o integrarlos.
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dispone</a> de poder editar, destacar, cerrar, archivar, dividir y combinar temas globalmente"
     welcome:
       name: ¡Bienvenido/a!
       description: Recibió un "me gusta"
-      long_description: |
-        Este distintivo se concede cuando recibes tu primer Me gusta en un post. ¡Enhorabuena, has publicado algo que la comunidad considera guay, útil o interesante!
     autobiographer:
       name: Autobiógrafo
       description: "Detalló información en su <a href=\"%{base_uri}/my/preferences/profile\">perfil</a> de usuario"
-      long_description: |
-        Este distintivo se otorga por completar <a href="%{base_uri}/my/preferences/profile">tu perfil de usuario</a> y seleccionando una foto de perfil. Permitiendo a la comunidad saber más sobre ti y tus intereses hace que la comunidad sea mejor y esté más conectada. ¡Anímate!
     anniversary:
       name: Aniversario
       description: Miembro activo desde hace un año y que ha publicado al menos una vez
-      long_description: |
-        Este distintivo se concede cuando cumples un año como miembro que ha publicado al menos un post. Gracias por pasarte por aquí y contribuir a nuestra comunidad. ¡No lo podríamos haber logrado sin ti!
     nice_post:
       name: Buena respuesta
       description: Recibió 10 "me gusta" en una respuesta
-      long_description: |
-        Este distintivo se concede cuando tu respuesta logra obtener 10 Me gusta. ¡Tu respuesta tuvo un buena impresión en la comunidad y ayudó a avanzar en la conversación!
     good_post:
       name: Gran respuesta
       description: Recibió 25 "me gusta" en una respuesta
-      long_description: |
-        Este distintivo se concede cuando tu respuesta logra obtener 25 Me gusta. ¡Tu respuesta fue excepcional y ayudó mucho a avanzar en la conversación!
     great_post:
       name: Excelente respuesta
       description: Recibió 50 "me gusta" en una respuesta
-      long_description: |
-        Este distintivo se concede cuando tu respuesta logra obtener 50 Me gusta. ¡Tu respuesta fue inspiradora, fascinante o verdaderamente útil y la comunidad así lo valoró!
     nice_topic:
       name: Buen tema
       description: Recibió 10 "me gusta" en un tema
-      long_description: |
-        Este distintivo se concede cuando tu tema alcanza los 10 Me gusta. ¡Empezaste una conversación interesante con la que la comunidad ha disfrutado!
     good_topic:
       name: Gran tema
       description: Recibió 25 "me gusta" en un tema
-      long_description: |
-        Este distintivo se concede cuando tu tema alcanza los 25 Me gusta. ¡Has lanzado una conversación vibrante con la que la comunidad se ha reunido y está encantada!
     great_topic:
       name: Excelente tema
       description: Recibió 50 "me gusta" en un tema
-      long_description: |
-        Este distintivo se concede cuando tu tema alcanza los 50 Me gusta. ¡Creaste una conversación fascinante, con un debate movilizador que la comunidad ha disfrutado!
     nice_share:
       name: Buena contribución
       description: Compartió un post con 25 visitantes únicos
@@ -3162,13 +3220,9 @@ es:
     good_share:
       name: Gran contribución
       description: Compartió un post con 300 visitantes únicos
-      long_description: |
-        Este distintivo se concede por compartir un enlace a un post que ha recibido 300 visitantes nuevos. ¡Genial! Has descubierto un debate interesante para <i>mucha</i> gente que no conocía el sitio y nos has ayudado a crecer.
     great_share:
       name: Excelente contribución
       description: Compartió un post con 1000 visitantes únicos
-      long_description: |
-        Este distintivo se concede por compartir un enlace a un post que ha recibido 1000 visitantes nuevos. ¡Bravo! Has promovido un debate interesante para una inmensa audiencia que no conocía el sitio y nos has ayudado a crecer muchísimo.
     first_like:
       name: Primer "me gusta"
       description: Le dio a "me gusta" a un post
@@ -3177,8 +3231,6 @@ es:
     first_flag:
       name: Primer reporte
       description: Reportó un post
-      long_description: |
-        Este distintivo se concede por reportar un post por primera vez. Reportar es la forma en que ayudamos a mantener este sitio limpio y dejar espacio para que todos aporten. Si detectas que alguna publicación requiere de la atención de un moderador por favor no dudes en reportarlo. También puedes usar el diálogo de reporte para enviar <b>mensajes</b> a otros usuarios. Si ves algún problema see a problem, :flag_black: ¡repórtalo!
     promoter:
       name: Promotor
       description: Invitó a un usuario
@@ -3187,13 +3239,9 @@ es:
     campaigner:
       name: Paladín
       description: Invitó a 3 usuarios
-      long_description: |
-        Este distintivo se concede cuando has invitado a 3 personas que han pasado tiempo en el sitio y se han convertido en usuarios básicos. Una comunidad vibrante necesita de un flujo constante de nuevas voces que participen en las conversaciones.
     champion:
       name: Campeón
       description: Invitó a 5 miembros
-      long_description: |
-        Este distintivo se concede cuando has invitado a 5 personas que han pasado el suficiente tiempo en el sitio como para convertirse en miembros de pleno derecho. ¡Bravo! ¡Gracias por enriquecer la diversidad de la comunidad con nuevos miembros!
     first_share:
       name: Primer compartido
       description: Compartió un post
@@ -3207,13 +3255,9 @@ es:
     first_quote:
       name: Primera Cita
       description: Citó un post
-      long_description: |
-        Este distintivo se otorga la primera vez que citas un post en tu respuesta. Citar secciones relevantes de posts anteriores ayuda a mantener los debates conectados y centrados en el tema. La forma más fácil de citar es seleccionando un trozo de cualquier post y utilizando el botón Citar que aparece al lado. ¡Cita generosamente!
     read_guidelines:
       name: Directrices leídas
       description: "Leyó las <a href=\"%{base_uri}/guidelines\">directrices de la comunidad</a>"
-      long_description: |
-        Este distintivo se otorga por <a href="%{base_uri}/guidelines">leer las directrices de la comunidad</a>. Siguiendo y compartiendo estas simples directrices ayudas a construir una comunidad segura, divertida y sostenible para todos. Recuerda siempre que hay otra persona como tú al otro lado de la pantalla, ¡sé agradable!
     reader:
       name: Lector
       description: Leyó todas las respuestas en un tema con más de 100 respuestas
@@ -3262,8 +3306,6 @@ es:
     crazy_in_love:
       name: Generoso
       description: Utilizó 50 "me gusta" 20 veces
-      long_description: |
-        Este distintivo se concede cuando das 20 veces todos los 50 me gusta que puedes utilizar al día. ¡Bravo! Eres un ejemplo de cómo incentivar a tus colegas miembros de la comunidad!
     thank_you:
       name: Agradecido/a
       description: "Ha recibido me gusta en 20 posts y dado a 10 "
@@ -3277,8 +3319,6 @@ es:
     empathetic:
       name: Empático
       description: Ha recibido me gusta en 500 posts y dado a 1000
-      long_description: |
-        Este distintivo se concede cuando has recibido 500 Me gusta en tus posts y has dado 1000 o más de vuelta. ¡Eres un auténtico ejemplo de generosidad! :two_hearts:
     first_emoji:
       name: Primer emoji
       description: Utilizó un emoji en un post
@@ -3287,11 +3327,9 @@ es:
     first_mention:
       name: Primera mención
       description: Mencionó a un usuario en un post
-      long_description: "Este distintivo se concede la primera vez que mencionas a un @usuario en tu post. Las menciones generan una notificación a la persona, así saben de tu publicación. Comienza escribiendo una @ para mencionar a cualquier usuario o, si está permitido, a un grupo – es una forma útil de llamar su atención."
     first_onebox:
       name: Primer Onebox
       description: Publicó un enlace expandido vía Onebox
-      long_description: "Este distintivo se concede la primera vez que publicas un enlace en una línea aparte, que fue automáticamente expandido vía Onebox con un resumen del enlace, un título y (si estuvo disponible) una imagen."
     first_reply_by_email:
       name: Primera respuesta por email
       description: Respondió a un post vía email
@@ -3305,15 +3343,12 @@ es:
     enthusiast:
       name: Entusiasta
       description: 10 días de visitas
-      long_description: Este distintivo se gana por visitas durante 10 días consecutivos. ¡Gracias por quedarte con nosotros por más de una semana!
     aficionado:
       name: Aficionado
       description: 100 días de visitas
-      long_description: Este distintivo se gana por visitas durante 100 días consecutivos. ¡Eso es más de tres meses!
     devotee:
       name: Devoto
       description: 365 días de visitas
-      long_description: "Este distintivo se gana por visitas durante 365 días consecutivos. ¡Wow, un año entero!"
     badge_title_metadata: "%{display_name} distintivo en %{site_title}"
   admin_login:
     success: "Email enviado"
@@ -3337,7 +3372,6 @@ es:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
       help: "registra una nueva cuenta para empezar"
-      no_emails: "Desgraciadamente, no se han definido emails de administrador durante la instalación, por lo que finalizar la configuración <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>podría ser difícil</a>."
     confirm_email:
       title: "Confirmar tu email"
       message: "<p>Hemos enviado un email de activación a <b>%{email}</b>. Por favor, sigue las intrucciones en el email para activar tu cuenta.</p><p>Si no llega, asegúrate que el email esté configurado correctamente en Discourse y comprueba tu carpeta de spam</p>"
@@ -3440,7 +3474,7 @@ es:
         fields:
           favicon_url:
             label: "Icono pequeño"
-            description: "Imagen usada para representar tu página en los navegadores que se vea bien en tamaños pequelos como 32px por 32px."
+            description: "Imagen usada para representar tu página en los navegadores que se vea bien en tamaños pequeños como 32px por 32px. Extensiones recomendadas para las imágenes son PNG o JPG."
           apple_touch_icon_url:
             label: "Icono grande"
             description: "Imagen de icono utilizada para representar su sitio en dispositivos modernos que se ve bien en tamaños más grandes. El tamaño recomendado es de al menos 512 px por 512 px."

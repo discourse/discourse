@@ -342,27 +342,6 @@ zh_TW:
         你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
   lounge_welcome:
     title: "歡迎來到貴賓室"
-    body: |2
-
-        恭喜！ :confetti_ball:
-
-        如果你看到了這個主題，說明你已經被提升至**常規**（信任等級3）了。
-
-        你現在可以&hellip;
-
-        * 編輯任何主題的標題
-        * 改變任何主題的分類
-        * 讓你的連結設置為 follow 屬性（[自動 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已經移除）
-        * 訪問一個只有信任等級3及更高才能見到的貴賓室分類
-        * 一次標記即可隱藏垃圾信息
-
-        這裡是[目前達到常規的用戶列表](/badges/3/regular)。一定要來問個好！
-
-        感謝成為社群的重要一員！
-
-        （想瞭解關於信任等級的更多信息，[參見這個主題][trust]。請注意成員需要在將來也維持一定的選擇條件的成員才能保持在常規。）
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "對於分類：%{category} 的定義"
     replace_paragraph: "（將第一段話修改成你的新分類的簡述。這段文字將出現在用戶選擇分類的地方，所以嘗試保持在 200 個字元內。 **除非你編輯了這段文字或者在這分類中創建了主題，這個分類不會出現在分類頁面中。**）"
@@ -377,8 +356,6 @@ zh_TW:
     cannot_delete:
       uncategorized: "不能刪除該分類"
       has_subcategories: "不能刪除該分類，因為它有子分類"
-      topic_exists:
-        other: "不能刪除該分類，因為它有 %{count} 個話題，最老的話題是 %{topic_link}"
       topic_exists_no_oldest: "不能刪除該分類，因為有 %{count} 個話題"
     uncategorized_description: "不需要分類或者不適合放在現在的任何分類中的主題。"
   trust_levels:
@@ -512,10 +489,6 @@ zh_TW:
       title: '讚'
       description: '給此文章按讚'
       long_form: '已按讚'
-    vote:
-      title: '投票'
-      description: '投票給此文章'
-      long_form: '已投票給此文章'
   user_activity:
     no_bookmarks:
       self: "你沒有收藏帖子，收藏帖子能讓你之後輕鬆找到他們。"
@@ -653,8 +626,6 @@ zh_TW:
       num_users: "用戶數量"
     top_referred_topics:
       title: "最常引用的討論話題"
-      xaxis: "討論話題"
-      num_clicks: "點擊率"
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
@@ -1275,7 +1246,6 @@ zh_TW:
     missing_user_field: "你還沒有填寫完所有用戶字段"
     already_logged_in: "喔，看起來你正嘗試查看給另一個用戶的邀請連結。如果你不是%{current_user}，請退出再重試。"
   user:
-    no_accounts_associated: "無關聯的帳戶"
     deactivated: "因發送至“%{email}”的郵件被多次退信，取消激活"
     deactivated_by_staff: "已由管理員撤銷"
     activated_by_staff: "已由管理員啟動"
@@ -1857,25 +1827,6 @@ zh_TW:
   flag_reason:
     sockpuppet: "新用戶創建了主題，而另一個新用戶以同一個 IP 在該主題回覆。查看站點設置的 <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
     spam_hosts: "新用戶試圖在多個創建帖子中發錶鏈接到同一個域名的內容。查看站點設置的 <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
-  email_log:
-    post_user_deleted: "帖子的用戶已被刪除。"
-    no_user: "無法找到 ID 為 %{user_id} 的使用者"
-    anonymous_user: "匿名用戶"
-    suspended_not_pm: "使用者已被停權，不是訊息"
-    seen_recently: "用戶最近活躍"
-    post_not_found: "無法找到 ID 為 %{post_id} 的文章"
-    notification_already_read: "這封通知 EMail 已被讀取"
-    topic_nil: "post.topic 為空"
-    post_deleted: "文章已被做刪除"
-    user_suspended: "用戶被停權"
-    already_read: "此文章用戶已讀"
-    exceeded_emails_limit: "超過 max_emails_per_day_per_user"
-    exceeded_bounces_limit: "超過 bounce_score_threshold"
-    message_blank: "訊息空白"
-    message_to_blank: "message.to 為空"
-    text_part_body_blank: "text_part.body is 為空"
-    body_blank: "內容空白"
-    no_echo_mailing_list_mode: "郵件列表通知已對用戶自己的帖子禁用"
   color_schemes:
     base_theme_name: "基礎"
   about: "關於"
@@ -2077,70 +2028,40 @@ zh_TW:
     editor:
       name: 編輯
       description: 首次編輯帖子
-      long_description: |
-        該徽章授予給第一次編輯自己帖子的你。雖然你不能永遠在編輯自己的帖子，但是編輯他們總是一個好辦法——你可以改進你的帖子、修正小錯誤，或者是增補你原來沒有寫的內容。編輯能讓你的帖子質量變得更好！
     basic_user:
       name: 初級用戶
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">授予</a>所有常用社群功能"
-      long_description: |
-        該徽章授予給用戶等級達到 1 的成員。感謝你在社群裡花了一些時間並且閲讀了一些帖子，瞭解了我們的社群。你的新用戶限制已經被取消；並且你已經被授予了所有基本的社群權限，必須個人消息、標記、維基編輯和發佈多張圖片和多個連結的能力。
     member:
       name: 成員
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">授予</a>邀請、群組消息和更多的贊"
-      long_description: |
-        該徽章授予給達到用戶等級 2 的你。感謝你在社群待了幾周，真正融入到了社群中。你現在可以在你的用戶頁或者主題中邀請他人或者創建群組消息了。每天你也可以點更多次讚了。
     regular:
       name: 活躍用戶
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">授予</a>重分類、重命名、跟蹤連結、維基功能和更多的贊"
-      long_description: |
-        該徽章授予給達到用戶等級 3 的你。感謝你在這幾個月持續地參與社群。你現在是我們之中最活躍的讀者之一了，你持續的貢獻極大地幫助了我們的社群。你現在可以社群待了幾周，真正融入到了社群中。你現在可以重新分類或者重命名主題、使用能力強大的垃圾標記功能以及訪問隱藏的貴賓分類了。而且每天你可以點更多次讚了。
     leader:
       name: 資深
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">授予</a>全局編輯、固定、鎖定、存檔、分割、合併和更多的贊"
-      long_description: |
-        該徽章授予給達到用戶等級 4 的你。你被管理人員選作了社群的領導力量，你用你的行動和言辭為社群樹立了正面的形象。你現在可以修改所有帖子，使用常見的版主的主題管理功能，比如置頂、鎖定、隱藏、存檔、分割和合併功能。你每天可以點更多的讚了。
     welcome:
       name: 歡迎
       description: 得到一個贊
-      long_description: |
-        該徽章授予給帖子收到了第一個讚的成員。恭喜，有社群成員發現你發表的內容有意思、酷炫或者有用！
     autobiographer:
       name: 自傳作者
     anniversary:
       name: 年度紀念日
       description: 一年活躍用戶，至少發了一個帖子
-      long_description: |
-        該徽章授予給在社群註冊一年並超至少發佈了一個帖子的你。感謝你的持續關注和對我們社群的貢獻！我們希望你繼續參與我們的社群。
     nice_post:
       name: 不錯的回覆
       description: 回覆被讚了 10 次
-      long_description: |
-        該徽章授予給回覆被讚了 10 次的你。你的回覆給社群成員們留下了印象，並且你推動了討論的進程！
     good_post:
       name: 很好的回覆
       description: 回覆被讚了 25 次
-      long_description: |
-        該徽章授予給回覆被讚了 25 次的你。你的回覆很傑出，這個討論對每個人都變得更有意義了！
     great_post:
       name: 精彩的回覆
       description: 回覆被讚了 50 次
-      long_description: |
-        該徽章授予給回覆被讚了 50 次的你。哇！你的回覆很有啟發、引經據典、令人冷俊不禁或者十分有內涵，整個社群都喜歡它。
     nice_topic:
       name: 不錯的主題
       description: 主題被讚了 10 次
-      long_description: |
-        該徽章授予給主題獲得 10 個讚的你。嗨，你開啟了一個社群成員覺得有意思的討論！
     good_topic:
       name: 很好的主題
       description: 主題被讚了 25 次
-      long_description: |
-        該徽章授予給主題獲得 25 個讚的你。你開啟了一個有意義的主題，整個社群都在積極響應，而且大家喜歡你的主題！
     great_topic:
       name: 精彩的主題
       description: 主題被讚了 50 次
-      long_description: |
-        該徽章授予給主題獲得 50 個讚的你。你開啟了一個引人入勝的主題，整個社群都沉浸于討論之中。
     nice_share:
       name: 不錯的分享
       description: 分享了一個有 25 個獨立訪問者的帖子
@@ -2149,14 +2070,9 @@ zh_TW:
     good_share:
       name: 很棒的分享
       description: 分享了一個有 300 個獨立訪問者的帖子
-      long_description: |
-        該徽章授予給分享連結給 300 個其他訪客的你。幹得漂亮！你把一個有意思的討論介紹給了許多新的朋友，並且幫助社群前進了一步。
     great_share:
       name: 精彩的分享
       description: 分享了一個有 1000 個獨立訪問者的帖子
-      long_description: |+
-        該徽章授予給分享連結給 1000 個其他訪客的你。哇！你把一個有意思的討論推廣給了廣大的讀者們，並且幫助社群前進了一大步！
-
     first_like:
       name: 首次贊
       description: 已讚過了一個帖子
@@ -2165,22 +2081,15 @@ zh_TW:
     first_flag:
       name: 首次標記
       description: 已標記過了一個帖子
-      long_description: |
-        該徽章授予給第一次標記帖子的你。標記是幫助我們幫助社群保持健康、合宜的工具。如果你注意到哪個帖子需要版主的注意，不用在乎什麼原因，直接標記。如果你注意到別人帖子裡的某個問題，你也可用標記功能發送<b>私信</b>給該成員。如果你發現了問題，:flag_black: 標記吧！
     promoter:
       name: 推廣者
       description: 已邀請了 1 個用戶
     campaigner:
       name: 活動家
       description: 已邀請了 3 個初級用戶
-      long_description: |+
-        該徽章授予給邀請了 3 人加入社群的你，你的朋友在站點上度過了很長的時間，已經成為了基礎用戶。活躍的社區需要新鮮的血液日常參與，併為交流帶來多元視點。
-
     champion:
       name: 外交官
       description: 已邀請了 5 個成員
-      long_description: |
-        該徽章授予給邀請了 5 人加入社群的你，你的朋友在站點上度過了很長的時間，已經成為了成員。哇！感謝你幫助社群成長，社群因此變得更多元了！
     first_share:
       name: 首次分享
       description: 已分享了一個帖子
@@ -2194,8 +2103,6 @@ zh_TW:
     first_quote:
       name: 首次引用
       description: 已引用過一個帖子
-      long_description: |
-        該徽章授予給第一次在回覆中引用帖子的你。在你的回覆中引用之前帖子中的相關的段落將把主題關聯在一起並切題。只要選中別的帖子中的任何文字，然後點擊回覆按鈕將可以引用啦。多引用一些吧！
     read_guidelines:
       name: 閲讀指引
     reader:
@@ -2246,8 +2153,6 @@ zh_TW:
     crazy_in_love:
       name: 狂熱
       description: 20 天都讚過 50 次
-      long_description: |
-        該徽章授予給 20 天讚過 50 次的你。哇！你為社群成員們樹立了一個令人鼓舞的模範！
     thank_you:
       name: 感謝你
       description: 有 20 個被讚的帖子，給出過 10 個贊
@@ -2261,18 +2166,14 @@ zh_TW:
     empathetic:
       name: 感性
       description: 有 500 個被讚的帖子，給出過 1000 個贊
-      long_description: |
-        該徽章授予給收到了 500 個贊，且讚過別人至少 1000 次的你。哇！你是一個富有同情心且會換位思考的模範。 :two_hearts:
     first_emoji:
       name: 首個表情
       description: 在文章中使用表情符號
     first_mention:
       name: 首次提及
-      long_description: 該徽章授予給第一次在帖子中@別人的你。每個提及都將通知對方，讓他們知道你發了貼。輸入 @ 提及任何用戶，如果可以的話，也可以提及群組——這是個獲得他們注意的好辦法。
     first_onebox:
       name: 首個連結預覽
       description: 張貼過具連結預覽的連結
-      long_description: 該徽章授予給第一次發表單行連結的你。連結將被展開成連結預覽，包還摘要、標題和圖片（如果有的話）。
     first_reply_by_email:
       name: 首次郵件回覆
       long_description: |
@@ -2300,7 +2201,6 @@ zh_TW:
       button: "註冊"
       title: "註冊管理員賬戶"
       help: "註冊新賬戶以開始"
-      no_emails: "不幸的是，在嚮導中你沒有設置管理員郵件地址，所以完善配置<a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>可能有點困難</a>。"
     confirm_email:
       title: "配置你的郵件"
       message: "<p>我們已寄送了一封啟用信件到 <b>%{email}</b>，請按照信中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的 Discourse 郵件設定正確，並檢查你的垃圾郵件收件夾。</p>"
@@ -2400,7 +2300,6 @@ zh_TW:
         fields:
           favicon_url:
             label: "小表徵圖"
-            description: "瀏覽器中你站點顯示的表徵圖，要在小尺寸的情況下表現出色，例如 32px X 32px。"
           apple_touch_icon_url:
             label: "大表徵圖"
       homepage:

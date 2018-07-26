@@ -422,8 +422,6 @@ lv:
       reorder:
         title: "Pārkārtot sadaļas"
         title_long: "Pārkārtot sadaļu sarakstu"
-        fix_order: "Nofiksēt pozīcijas"
-        fix_order_tooltip: "Ne visām kategorijām ir unikāls pozīcijas numurs, un tas var izraisīt negaidītus rezultātus."
         save: "Saglabāt kārtību"
         apply_all: "Pielietot"
         position: "Pozīcija"
@@ -607,7 +605,6 @@ lv:
         upload_title: "Augšupielādēt savu attēlu"
         upload_picture: "Augšupielādēt attēlu"
         image_is_not_a_square: "Uzmanību: mēs apgriezām jūsu attēlu; platums un augstums nebija vienādi."
-        cache_notice: "Jūs veiksmīgi nomainījāt savu profila attēlu, bet var paiet kāds laiks, līdz tas parādīsies, pārlūkprogrammas kešošanas dēļ."
       change_profile_background:
         title: "Profila fons"
         instructions: "Profila fons būs centrēts un ar noklusējuma platumu 850px."
@@ -791,7 +788,6 @@ lv:
         most_liked_users: "Visvairāk atzinību"
         most_replied_to_users: "Visvairāk atbildēja"
         no_likes: "Pagaidām atzinību nav."
-      associated_accounts: "Pieslēgšanās"
       ip_address:
         title: "Pēdējā IP adrese"
       registration_ip_address:
@@ -941,9 +937,6 @@ lv:
       preferences: "Jums ir jāieiet, lai izmainītu savus iestatījumus."
       forgot: "Es nevaru atcerēties sava konta informāciju."
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
-      google:
-        title: "ar Google."
-        message: "Autorizēšanās ar Google (pārliecinieties, ka nav bloķēti uznirstošie logi)"
       google_oauth2:
         title: "ar Google"
         message: "Autorizēšanās ar Google (pārliecinieties, ka nav bloķēti uznirstošie logi)"
@@ -1640,7 +1633,6 @@ lv:
           inappropriate: "Atcelt ziņošanu"
           bookmark: "Atcelt grāmatzīmi"
           like: "Atcelt atzinību"
-          vote: "Atcelt nobalsošanu"
         people:
           off_topic: "ziņot par šo kā novirzīšanos no tēmas"
           spam: "ziņot par šo kā spamu"
@@ -1649,7 +1641,6 @@ lv:
           notify_user: "nosūtīja ziņu"
           bookmark: "pievienoja grāmatzīmēm"
           like: "izteica atzinību par šo"
-          vote: "nobalsoja par šo"
         by_you:
           off_topic: "Jūs ziņojāt par šo kā novirzīšanos no tēmas"
           spam: "Jūs ziņojāt par šo kā spamu"
@@ -1658,7 +1649,6 @@ lv:
           notify_user: "Jūs nosūtījāt ziņu šim lietotājam"
           bookmark: "Jūs pievienojāt šo ierakstu grāmatzīmēm"
           like: "Jūs izteicāt atzinību šim"
-          vote: "Jūs nobalsojāt par šo ierakstu"
         by_you_and_others:
           off_topic:
             zero: "Jūs un {{count}} citi cilvēki ziņoja par šo kā novirzīšanos no tēmas"
@@ -1688,10 +1678,6 @@ lv:
             zero: "Jūs un {{count}} citiem cilvēkiem patika šis"
             one: "Jūs un 1 citam cilvēkam patika šis"
             other: "Jūs un {{count}} citiem cilvēkiem patika šis"
-          vote:
-            zero: "Jūs un {{count}} citi cilvēki nobalsoja par šo ierakstu"
-            one: "Jūs un 1 cits cilvēks nobalsoja par šo ierakstu"
-            other: "Jūs un {{count}} citi cilvēki nobalsoja par šo ierakstu"
         by_others:
           off_topic:
             zero: "{{count}} cilvēki ziņoja par šo kā novirzīšanos no tēmas"
@@ -1721,10 +1707,6 @@ lv:
             zero: "{{count}} cilvēkiem patika šis"
             one: "1 cilvēkam patika šis"
             other: "{{count}} cilvēkiem patika šis"
-          vote:
-            zero: "{{count}} cilvēki balsoja par šo ierakstu"
-            one: "1 cilvēks balsoja par šo ierakstu"
-            other: "{{count}} cilvēki balsoja par šo ierakstu"
       merge:
         confirm:
           zero: "Vai jūs esat drošs, ka vēlaties apvienot šos {{count}} ierakstus?"
@@ -1761,7 +1743,6 @@ lv:
       can: 'var&hellip;'
       none: '(nav sadaļas)'
       all: 'Visas sadaļas'
-      choose: 'Izvēlēties sadaļu&hellip;'
       edit: 'rediģēt'
       edit_long: "Rediģēt"
       view: 'Aplūkot sadaļas ierakstus'
@@ -1802,7 +1783,6 @@ lv:
       email_in_disabled: "Jaunu tēmu ievietošana, izmantojot e-pastu, ir atcelta foruma iestatījumos. Lai atļautu ievietot jaunas tēmas, izmantojot e-pastu,"
       show_subcategory_list: "Rādīt apakšsadaļu sarakstu virs tēmām šai sadaļā."
       num_featured_topics: "Sadaļu lapā parādīto tēmu skaits:"
-      all_topics_wiki: "Pārveidot jaunās tēmas par wiki pēc noklusējuma."
       subcategory_list_style: "Apakšsadaļu saraksta stils:"
       sort_order: "Kārtot tēmu sarakstu pēc:"
       default_view: "Noklusējuma tēmu saraksts:"
@@ -1811,7 +1791,6 @@ lv:
       edit_permissions: "Mainīt atļaujas"
       add_permission: "Pievienot atļauju"
       this_year: "šogad"
-      position: "pozīcija"
       default_position: "Noklusētā pozīcija"
       position_disabled: "Sadaļas tiks sakārtotas pēc aktivitātes. Lai kontrolētu sadaļu secību sarakstos,"
       position_disabled_click: 'ieslēgt iestatījumu "fiksētas sadaļu pozīcijas".'
@@ -2575,7 +2554,6 @@ lv:
             address_placeholder: "Vārds@epasts.lv"
             type_placeholder: "apkopojums, reģistrācija ..."
             reply_key_placeholder: "atbildes atslēga"
-            skipped_reason_placeholder: "iemesls"
       logs:
         title: "Žurnāls"
         action: "Darbība"

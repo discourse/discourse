@@ -379,8 +379,6 @@ sq:
       reorder:
         title: "Rendit kategoritë"
         title_long: "Ri-organizo listën e kategorive"
-        fix_order: "Rregullo pozicionet"
-        fix_order_tooltip: "Jo të gjitha kategoritë kanë një numër pozicioni unik, kjo mund të shkaktojë rezultate të paparashikuara."
         save: "Ruaje renditjen"
         apply_all: "Apliko"
         position: "Pozicioni"
@@ -552,7 +550,6 @@ sq:
         upload_title: "Ngarkoni foton tuaj"
         upload_picture: "Ngarko Foto"
         image_is_not_a_square: "Vini re: fotoja juaj është përshtatur, pasi nuk ishte katrore."
-        cache_notice: "Fotografia e profilit tuaj u ndryshua por paraqitja në faqe mund të vonohet, për shkak të ruajtjes në memorjen \"cache\" të shfletuesit tuaj. "
       change_profile_background:
         title: "Sfondi i profilit"
         instructions: "Sfondi i profilit do të vendoset në qendër dhe do të ketë një gjerësi prej 850px."
@@ -721,7 +718,6 @@ sq:
         most_liked_users: "Më të pëlqyer"
         most_replied_to_users: "Me më shumë përgjigje"
         no_likes: "Nuk ka ende asnjë pëlqim."
-      associated_accounts: "Identifikime"
       ip_address:
         title: "Adresa IP e fundit"
       registration_ip_address:
@@ -863,9 +859,6 @@ sq:
       preferences: "Duhet të identifikoheni për të ndryshuar preferencat e profilit."
       forgot: "Nuk i mbaj mend detajet e llogarisë"
       not_approved: "Llogaria juaj nuk është aprovuar ende. Do t'ju dërgojmë një email kur të aprovohet. "
-      google:
-        title: "me Google"
-        message: "Duke u identifikuar me Google (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
       google_oauth2:
         title: "me Google"
         message: "Duke u identifikuar me Google (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
@@ -1412,7 +1405,6 @@ sq:
           inappropriate: "Anulo sinjalizimin"
           bookmark: "Hiqe nga të preferuarat"
           like: "Anulo pëlqimin"
-          vote: "Rikthe votën"
         people:
           off_topic: "sinjalizoi këtë postim si jashtë teme"
           spam: "sinjalizoi këtë postim si spam"
@@ -1421,7 +1413,6 @@ sq:
           notify_user: "dërgoi një mesazh"
           bookmark: "e shtoi këtë tek të preferuarat"
           like: "pëlqeu këtë"
-          vote: "votoi për këtë"
         by_you:
           off_topic: "Ti sinjalizove këtë postim si jashtë teme"
           spam: "Ti sinjalizove këtë postim si spam"
@@ -1430,7 +1421,6 @@ sq:
           notify_user: "Ju i dërguat një mesazh këtij përdoruesi"
           bookmark: "E ruajte këtë temë tek të preferuarat e tua"
           like: "Ju e pëlqyet këtë"
-          vote: "Votove për këtë postim"
         by_you_and_others:
           off_topic:
             one: "Ti dhe 1 anëtar tjetër sinjalizuat këtë postim si jashtë teme"
@@ -1453,9 +1443,6 @@ sq:
           like:
             one: "Ju dhe 1 person tjetër pëlqyet këtë "
             other: "Ju dhe {{count}} të tjerë pëlqyen këtë postim"
-          vote:
-            one: "Ti dhe 1 anëtar tjetër votuat për këtë postim"
-            other: "Ti dhe {{count}} anëtarë të tjerë votuat për këtë postim"
         by_others:
           off_topic:
             one: "1 anëtar sinjalizoi këtë postim si jashtë teme"
@@ -1478,9 +1465,6 @@ sq:
           like:
             one: "1 person pëlqeu këtë postim"
             other: "{{count}} vetë pëlqyen këtë postim"
-          vote:
-            one: "1 anëtar votoi për këtë postim"
-            other: "{{count}} anëtarë votuan për këtë postim"
       revisions:
         controls:
           first: "Revizioni i parë"
@@ -1510,7 +1494,6 @@ sq:
       can: 'mund&hellip; '
       none: '(pa kategori)'
       all: 'Të gjitha kategoritë'
-      choose: 'Zgjidhni një kategori&hellip;'
       edit: 'redakto'
       edit_long: "Redakto"
       view: 'Shiko temat në kategorinë'
@@ -1557,7 +1540,6 @@ sq:
       edit_permissions: "Ndryshoni autorizimet"
       add_permission: "Shtoni autorizim"
       this_year: "këtë vit"
-      position: "pozicion"
       default_position: "Default Position"
       position_disabled: "Kategoritue do të renditen sipas aktivitetit. Për të kontrolluar renditjen e kategorive nëpër lista, "
       position_disabled_click: 'aktivizoni rregullimin "pozicione fikse për kategoritë".'
@@ -2174,7 +2156,6 @@ sq:
             title: "Filtro"
             user_placeholder: "username"
             address_placeholder: "emri@shembull.com"
-            skipped_reason_placeholder: "arsye"
       logs:
         title: "Ditari"
         action: "Veprimi"
