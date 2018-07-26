@@ -252,8 +252,12 @@ class OptimizedImage < ActiveRecord::Base
     FileHelper.optimize_image!(to)
     true
   rescue => e
-    Rails.logger.error("Could not optimize image #{to}: #{e.message}")
-    false
+    if Rails.env.test?
+      raise e
+    else
+      Rails.logger.error("Could not optimize image #{to}: #{e.message}")
+      false
+    end
   end
 
   def self.migrate_to_new_scheme(limit = nil)

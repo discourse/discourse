@@ -45,6 +45,25 @@ describe OptimizedImage do
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
       end
+
+      describe 'when an svg with a href is masked as a png' do
+        it 'should not trigger the external request' do
+          tmp_path = "/tmp/resized.png"
+
+          begin
+            expect do
+              OptimizedImage.resize(
+                "#{Rails.root}/spec/fixtures/images/svg.png",
+                tmp_path,
+                5,
+                5
+              )
+            end.to raise_error(RuntimeError, /improper image header/)
+          ensure
+            File.delete(tmp_path) if File.exists?(tmp_path)
+          end
+        end
+      end
     end
 
     describe '.downsize' do
