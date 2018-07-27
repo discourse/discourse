@@ -64,6 +64,21 @@ module BackupRestore
         wait_for_sidekiq
 
         BackupRestore.move_tables_between_schemas("public", "backup")
+
+        # This is a temp fix to allow restores to work again. @tgxworld is
+        # current working on a fix that namespaces functions created by Discourse
+        # so that we can alter the schema of those functions before restoring.
+        %w{
+          raise_email_logs_reply_key_readonly
+          raise_email_logs_skipped_reason_readonly
+        }.each do |function|
+          DB.exec(<<~SQL)
+          DROP FUNCTION IF EXISTS backup.#{function};
+          ALTER FUNCTION public.#{function}
+          SET SCHEMA "backup";
+          SQL
+        end
+
         @db_was_changed = true
         restore_dump
         migrate_database
