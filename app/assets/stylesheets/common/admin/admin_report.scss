@@ -1,13 +1,16 @@
 .admin-report {
   .no-data-alert {
+    background: $secondary;
+    border: 1px solid $primary-low;
+    color: $primary-low-mid;
     width: 100%;
     align-self: flex-start;
     text-align: center;
-    padding: 1em;
+    padding: 3em;
 
     .d-icon-pie-chart {
-      color: $primary-low-mid;
-      margin-bottom: 0.5em;
+      color: currentColor;
+      margin-bottom: 0.25em;
       font-size: $font-up-5;
       display: block;
     }
