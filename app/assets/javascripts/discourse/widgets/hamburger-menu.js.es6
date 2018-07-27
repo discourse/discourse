@@ -190,7 +190,7 @@ export default createWidget("hamburger-menu", {
 
       categories = categoryIds.map(id => {
         return categoriesList.find(c => c.id === id);
-      });
+      }).filter(c => c);
     } else {
       showMore = categoriesList.length > maxCategoriesToDisplay;
       categories = categoriesList.slice(0, maxCategoriesToDisplay);
