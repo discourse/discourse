@@ -59,7 +59,12 @@ def mwrap_log
 
   Mwrap.quiet do
     report << "Generation: #{GC.count} RSS kb: #{rss} Accounted Mem kb: #{(Mwrap.total_bytes_allocated - Mwrap.total_bytes_freed) / 1024}\n"
-    report << "Allocated bytes: #{Mwrap.total_bytes_allocated} Freed bytes: #{Mwrap.total_bytes_freed}\n\n"
+    report << "Allocated bytes: #{Mwrap.total_bytes_allocated} Freed bytes: #{Mwrap.total_bytes_freed}\n"
+    stat = GC.stat
+    stat.each do |k, v|
+      report << "#{k}: #{v}\n"
+    end
+    report << "\n"
 
     table = []
     Mwrap.each(200) do |loc, total, allocations, frees, age_sum, max_life|
@@ -74,6 +79,25 @@ def mwrap_log
   end
 
   report
+end
+
+Thread.new do
+  begin
+    puts "Starting Logging Thread"
+    path = "/tmp/mwrap_#{Process.pid}"
+    `mkdir -p #{path}`
+
+    while true
+      log = mwrap_log
+      f = "#{path}/log_#{Time.now.strftime("%Y_%m_%d_%H%M%S")}"
+      File.write(f, log)
+      puts "Wrote #{f}"
+      sleep 60 * 60
+    end
+  rescue => e
+    STDERR.puts "ERROR crashed logger #{e}"
+    STDERR.puts e.backtrace
+  end
 end
 
 Thread.new do
