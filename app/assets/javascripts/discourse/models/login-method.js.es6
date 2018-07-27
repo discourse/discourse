@@ -127,7 +127,7 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
         params.displayPopup = true;
       }
 
-      if (["facebook", "google_oauth2", "twitter"].includes(name)) {
+      if (["facebook", "google_oauth2", "twitter", "yahoo"].includes(name)) {
         params.canConnect = true;
       }
 
