@@ -32,3 +32,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::FLAG
   b.name = "flag"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::QUEUED_POST
+  b.name = "queued_post"
+end
