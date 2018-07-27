@@ -28,9 +28,9 @@ describe PostAlerter do
   let!(:evil_trout) { Fabricate(:evil_trout) }
   let(:user) { Fabricate(:user) }
 
-  def create_post_with_alerts(args = {})
+  def create_post_with_alerts(args = {}, opts = {})
     post = Fabricate(:post, args)
-    PostAlerter.post_created(post)
+    PostAlerter.post_created(post, opts)
   end
 
   context "private message" do
@@ -635,12 +635,11 @@ describe PostAlerter do
 
   describe "push_notification" do
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:') }
+    let(:mention_post_skip_push) { create_post_with_alerts({ user: user, raw: 'Hello @eviltrout :heart' }, skip_push: true) }
     let(:topic) { mention_post.topic }
 
-    it "pushes nothing to suspended users" do
+    before do
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-
-      evil_trout.update_columns(suspended_till: 1.year.from_now)
 
       2.times do |i|
         UserApiKey.create!(user_id: evil_trout.id,
@@ -650,22 +649,20 @@ describe PostAlerter do
                            scopes: ['notifications'],
                            push_url: "https://site2.com/push")
       end
+    end
+
+    it "does not push if the skip_push option is on" do
+      expect { mention_post_skip_push }.to_not change { Jobs::PushNotification.jobs.count }
+    end
+
+    it "pushes nothing to suspended users" do
+      evil_trout.update_columns(suspended_till: 1.year.from_now)
 
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
     end
 
     it "correctly pushes notifications if configured correctly" do
       SiteSetting.queue_jobs = false
-      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-
-      2.times do |i|
-        UserApiKey.create!(user_id: evil_trout.id,
-                           client_id: "xxx#{i}",
-                           key: "yyy#{i}",
-                           application_name: "iPhone#{i}",
-                           scopes: ['notifications'],
-                           push_url: "https://site2.com/push")
-      end
 
       body = nil
       headers = nil
