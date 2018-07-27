@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 if !ENV["LD_PRELOAD"]&.include?('mwrap')
+  # use malloc from libc that interacts better with mwrap
   ENV['RAILS_ENV'] = 'production'
+  ENV["LD_PRELOAD"] = ""
+  ENV["MALLOC_ARENA_MAX"] = "2"
   exec "mwrap #{__FILE__}"
 end
 
@@ -47,11 +50,16 @@ def render_table(array)
   buffer
 end
 
+def rss
+  `ps -o rss= -p #{Process.pid}`.chomp.to_i
+end
+
 def mwrap_log
   report = +""
 
   Mwrap.quiet do
-    report << "Generation: #{GC.count}\n\n"
+    report << "Generation: #{GC.count} RSS kb: #{rss} Accounted Mem kb: #{(Mwrap.total_bytes_allocated - Mwrap.total_bytes_freed) / 1024}\n"
+    report << "Allocated bytes: #{Mwrap.total_bytes_allocated} Freed bytes: #{Mwrap.total_bytes_freed}\n\n"
 
     table = []
     Mwrap.each(200) do |loc, total, allocations, frees, age_sum, max_life|
