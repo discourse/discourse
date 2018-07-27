@@ -6,6 +6,7 @@ require 'excon'
 require_dependency 'final_destination'
 require_dependency 'post_creator'
 require_dependency 'post_revisor'
+require_dependency 'encodings'
 
 module Jobs
   class PollFeed < Jobs::Scheduled
@@ -88,13 +89,15 @@ module Jobs
 
       def parsed_feed
         raw_feed = fetch_rss
-        return nil if raw_feed.blank?
+        encoded_feed = Encodings.to_utf8(raw_feed)
+
+        return nil if encoded_feed.blank?
 
         if SiteSetting.embed_username_key_from_feed.present?
-          FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, raw_feed)
+          FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, encoded_feed)
         end
 
-        RSS::Parser.parse(raw_feed)
+        RSS::Parser.parse(encoded_feed)
       rescue RSS::NotWellFormedError, RSS::InvalidRSSError
         nil
       end
