@@ -176,20 +176,29 @@ export default createWidget("hamburger-menu", {
   },
 
   listCategories() {
-    const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
-    const isStaff = Discourse.User.currentProp("staff");
+    const maxCategoriesToDisplay = 6;
+    const categoriesList = this.site
+      .get("categoriesByCount")
+      .reject(c => c.parent_category_id);
+    let categories = [];
+    let showMore = categoriesList.length > maxCategoriesToDisplay;
 
-    const categories = this.site.get("categoriesList").reject(c => {
-      if (c.get("parentCategory.show_subcategory_list")) {
-        return true;
-      }
-      if (hideUncategorized && c.get("isUncategorizedCategory") && !isStaff) {
-        return true;
-      }
-      return false;
-    });
+    if (this.currentUser) {
+      let categoryIds = this.currentUser.get("top_category_ids") || [];
+      categoryIds = categoryIds.concat(categoriesList.map(c => c.id)).uniq();
 
-    return this.attach("hamburger-categories", { categories });
+      showMore = categoryIds.length > maxCategoriesToDisplay;
+      categoryIds = categoryIds.slice(0, maxCategoriesToDisplay);
+
+      categories = categoryIds.map(id => {
+        return categoriesList.find(c => c.id === id);
+      });
+    } else {
+      showMore = categoriesList.length > maxCategoriesToDisplay;
+      categories = categoriesList.slice(0, maxCategoriesToDisplay);
+    }
+
+    return this.attach("hamburger-categories", { categories, showMore });
   },
 
   footerLinks(prioritizeFaq, faqUrl) {
