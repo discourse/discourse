@@ -15,6 +15,17 @@ class Auth::GithubAuthenticator < Auth::Authenticator
     info&.screen_name || ""
   end
 
+  def can_revoke?
+    true
+  end
+
+  def revoke(user, skip_remote: false)
+    info = GithubUserInfo.find_by(user_id: user.id)
+    raise Discourse::NotFound if info.nil?
+    info.destroy!
+    true
+  end
+
   class GithubEmailChecker
     include ::HasErrors
 
@@ -30,7 +41,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
 
   end
 
-  def after_authenticate(auth_token)
+  def after_authenticate(auth_token, existing_account: nil)
     result = Auth::Result.new
 
     data = auth_token[:info]
@@ -45,6 +56,15 @@ class Auth::GithubAuthenticator < Auth::Authenticator
     }
 
     user_info = GithubUserInfo.find_by(github_user_id: github_user_id)
+
+    if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
+      user_info.destroy! if user_info
+      user_info = GithubUserInfo.create(
+        user_id: existing_account.id,
+        screen_name: screen_name,
+        github_user_id: github_user_id
+        )
+    end
 
     if user_info
       # If there's existing user info with the given GitHub ID, that's all we
