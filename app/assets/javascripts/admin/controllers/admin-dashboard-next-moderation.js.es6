@@ -12,6 +12,16 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     };
   },
 
+  @computed("startDate", "endDate")
+  filters(startDate, endDate) {
+    return { startDate, endDate };
+  },
+
+  @computed("lastWeek", "endDate")
+  lastWeekfilters(startDate, endDate) {
+    return { startDate, endDate };
+  },
+
   _reportsForPeriodURL(period) {
     return Discourse.getURL(`/admin/dashboard/moderation?period=${period}`);
   }
