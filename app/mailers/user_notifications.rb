@@ -541,7 +541,7 @@ class UserNotifications < ActionMailer::Base
       end
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
-      reached_limit &&= (EmailLog.where(user_id: user.id, skipped: false)
+      reached_limit &&= (EmailLog.where(user_id: user.id)
                               .where('created_at > ?', 1.day.ago)
                               .count) >= (SiteSetting.max_emails_per_day_per_user - 1)
 

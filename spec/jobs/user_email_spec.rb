@@ -45,7 +45,6 @@ describe Jobs::UserEmail do
 
       email_log = EmailLog.where(user_id: user.id).last
       expect(email_log.email_type).to eq("signup")
-      expect(email_log.skipped).to eq(false)
     end
 
   end
