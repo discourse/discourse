@@ -50,6 +50,7 @@ export default Ember.Component.extend({
   reportOptions: null,
   forcedModes: null,
   showAllReportsLink: false,
+  filters: null,
   startDate: null,
   endDate: null,
   category: null,
@@ -77,7 +78,7 @@ export default Ember.Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    const state = this.get("filteringState") || {};
+    const state = this.get("filters") || {};
     this.setProperties({
       category: Category.findById(state.categoryId),
       groupId: state.groupId,

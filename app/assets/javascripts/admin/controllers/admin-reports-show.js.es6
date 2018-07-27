@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   },
 
   @computed("category_id", "group_id", "start_date", "end_date")
-  filteringState(categoryId, groupId, startDate, endDate) {
+  filters(categoryId, groupId, startDate, endDate) {
     return {
       categoryId,
       groupId,

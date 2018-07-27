@@ -18,43 +18,37 @@
             dataSourceName="signups"
             showTrend=true
             forcedModes="chart"
-            startDate=startDate
-            endDate=endDate}}
+            filters=filters}}
 
           {{admin-report
             dataSourceName="topics"
             showTrend=true
             forcedModes="chart"
-            startDate=startDate
-            endDate=endDate}}
+            filters=filters}}
 
           {{admin-report
             dataSourceName="posts"
             showTrend=true
             forcedModes="chart"
-            startDate=startDate
-            endDate=endDate}}
+            filters=filters}}
 
           {{admin-report
             dataSourceName="dau_by_mau"
             showTrend=true
             forcedModes="chart"
-            startDate=startDate
-            endDate=endDate}}
+            filters=filters}}
 
           {{admin-report
             dataSourceName="daily_engaged_users"
             showTrend=true
             forcedModes="chart"
-            startDate=startDate
-            endDate=endDate}}
+            filters=filters}}
 
           {{admin-report
             dataSourceName="new_contributors"
             showTrend=true
             forcedModes="chart"
-            startDate=startDate
-            endDate=endDate}}
+            filters=filters}}
         </div>
       </div>
     </div>
@@ -170,17 +164,13 @@
     <div class="section-column">
       {{admin-report
         dataSourceName="top_referred_topics"
-        reportOptions=topReferredTopicsTopions
-        startDate=startDate
-        endDate=endDate}}
+        reportOptions=topReferredTopicsTopions}}
 
       {{admin-report
         dataSourceName="trending_search"
         reportOptions=trendingSearchOptions
         isEnabled=logSearchQueriesEnabled
-        disabledLabel="admin.dashboard.reports.trending_search.disabled"
-        startDate=startDate
-        endDate=endDate}}
+        disabledLabel="admin.dashboard.reports.trending_search.disabled"}}
       {{{i18n "admin.dashboard.reports.trending_search.more"}}}
     </div>
   </div>
