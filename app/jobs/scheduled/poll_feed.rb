@@ -88,8 +88,9 @@ module Jobs
       private
 
       def parsed_feed
-        raw_feed = fetch_rss
-        encoded_feed = Encodings.to_utf8(raw_feed)
+        raw_feed, encoding = fetch_rss
+        encoded_feed = Encodings.try_utf8(raw_feed, encoding) if encoding
+        encoded_feed = Encodings.to_utf8(raw_feed, encoding_hint: encoding) unless encoded_feed
 
         return nil if encoded_feed.blank?
 
@@ -107,8 +108,17 @@ module Jobs
         feed_final_url = final_destination.resolve
         return nil unless final_destination.status == :resolved
 
-        Excon.new(feed_final_url.to_s).request(method: :get, expects: 200).body
+        response = Excon.new(feed_final_url.to_s).request(method: :get, expects: 200)
+        [response.body, detect_charset(response)]
       rescue Excon::Error::HTTPStatus
+        nil
+      end
+
+      def detect_charset(response)
+        if response.headers['Content-Type'] =~ /charset\s*=\s*([a-z0-9\-]+)/i
+          Encoding.find($1)
+        end
+      rescue ArgumentError
         nil
       end
     end
