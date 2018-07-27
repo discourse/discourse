@@ -178,8 +178,7 @@ export default createWidget("hamburger-menu", {
   listCategories() {
     const maxCategoriesToDisplay = 6;
     const categoriesList = this.site
-      .get("categoriesByCount")
-      .reject(c => c.parent_category_id);
+      .get("categoriesByCount");
     let categories = [];
     let showMore = categoriesList.length > maxCategoriesToDisplay;
 
