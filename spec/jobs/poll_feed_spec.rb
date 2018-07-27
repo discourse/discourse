@@ -155,6 +155,26 @@ describe Jobs::PollFeed do
         expect { poller.poll_feed }.to change { Topic.count }.by(1)
         expect(Topic.last.first_post.raw).to include('<p>This is the body &amp; content. </p>')
       end
+
+      it 'respects the charset in the Content-Type header' do
+        stub_request(:get, SiteSetting.feed_polling_url).to_return(
+          body: file_from_fixtures('iso-8859-15-feed.rss', 'feed').read,
+          headers: { "Content-Type" => "application/rss+xml; charset=ISO-8859-15" }
+        )
+
+        expect { poller.poll_feed }.to change { Topic.count }.by(1)
+        expect(Topic.last.first_post.raw).to include('<p>This is the body &amp; content. 100€ </p>')
+      end
+
+      it 'works when the charset in the Content-Type header is unknown' do
+        stub_request(:get, SiteSetting.feed_polling_url).to_return(
+          body: file_from_fixtures('feed.rss', 'feed').read,
+          headers: { "Content-Type" => "application/rss+xml; charset=foo" }
+        )
+
+        expect { poller.poll_feed }.to change { Topic.count }.by(1)
+        expect(Topic.last.first_post.raw).to include('<p>This is the body &amp; content. </p>')
+      end
     end
   end
 end
