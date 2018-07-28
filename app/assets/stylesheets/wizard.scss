@@ -75,7 +75,6 @@ body.wizard {
 
 .wizard-step-form {
   max-height: 500px;
-  overflow-y: auto;
 }
 
 .wizard-step-emoji {
@@ -115,6 +114,7 @@ body.wizard {
 
 .wizard-step-colors {
   margin-bottom: 20px;
+  overflow-y: auto;
   .grid {
     box-sizing: border-box;
     display: flex;
