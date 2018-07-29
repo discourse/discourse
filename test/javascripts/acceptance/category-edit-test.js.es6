@@ -78,8 +78,8 @@ QUnit.test("Subcategory list settings", async assert => {
   );
 
   await click(".edit-category-general");
-  await categoryChooser.expandAwait();
-  await categoryChooser.selectRowByValueAwait(3);
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(3);
 
   await click(".edit-category-settings a");
 

@@ -16,7 +16,7 @@ QUnit.test("replying to post", async assert => {
 
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
-  await composerActions.expandAwait();
+  await composerActions.expand();
 
   assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
   assert.equal(
@@ -34,8 +34,8 @@ QUnit.test("replying to post - reply_as_private_message", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
 
-  await composerActions.expandAwait();
-  await composerActions.selectRowByValueAwait("reply_as_private_message");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_as_private_message");
 
   assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
   assert.ok(
@@ -55,8 +55,8 @@ QUnit.test("replying to post - reply_to_topic", async assert => {
     "test replying to topic when initially replied to post"
   );
 
-  await composerActions.expandAwait();
-  await composerActions.selectRowByValueAwait("reply_to_topic");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_to_topic");
 
   assert.equal(
     find(".action-title .topic-link")
@@ -84,8 +84,8 @@ QUnit.test("replying to post - toggle_whisper", async assert => {
     "test replying as whisper to topic when initially not a whisper"
   );
 
-  await composerActions.expandAwait();
-  await composerActions.selectRowByValueAwait("toggle_whisper");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("toggle_whisper");
 
   assert.ok(
     find(".composer-fields .whisper")
@@ -103,15 +103,15 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
   await visit("/t/internationalization-localization/280");
 
   await click("#topic-title .d-icon-pencil");
-  await categoryChooser.expandAwait();
-  await categoryChooser.selectRowByValueAwait(4);
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(4);
   await click("#topic-title .submit-edit");
 
   await click("article#post_3 button.reply");
   await fillIn(".d-editor-input", quote);
 
-  await composerActions.expandAwait();
-  await composerActions.selectRowByValueAwait("reply_as_new_topic");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_as_new_topic");
 
   assert.equal(categoryChooserReplyArea.header().name(), "faq");
   assert.equal(
@@ -133,8 +133,8 @@ QUnit.test("shared draft", async assert => {
   await visit("/");
   await click("#create-topic");
 
-  await composerActions.expandAwait();
-  await composerActions.selectRowByValueAwait("shared_draft");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("shared_draft");
 
   assert.equal(
     find("#reply-control .btn-primary.create .d-button-label").text(),
@@ -159,8 +159,8 @@ QUnit.test("interactions", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
   await fillIn(".d-editor-input", quote);
-  await composerActions.expandAwait();
-  await composerActions.selectRowByValueAwait("reply_to_topic");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_to_topic");
 
   assert.equal(
     find(".action-title")
@@ -170,7 +170,7 @@ QUnit.test("interactions", async assert => {
   );
   assert.equal(find(".d-editor-input").val(), quote);
 
-  await composerActions.expandAwait();
+  await composerActions.expand();
 
   assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
   assert.equal(composerActions.rowByIndex(1).value(), "reply_to_post");
@@ -181,8 +181,8 @@ QUnit.test("interactions", async assert => {
   assert.equal(composerActions.rowByIndex(3).value(), "toggle_whisper");
   assert.equal(composerActions.rows().length, 4);
 
-  await composerActions.selectRowByValueAwait("reply_to_post");
-  await composerActions.expandAwait();
+  await composerActions.selectRowByValue("reply_to_post");
+  await composerActions.expand();
 
   assert.ok(exists(find(".action-title img.avatar")));
   assert.equal(
@@ -201,8 +201,8 @@ QUnit.test("interactions", async assert => {
   assert.equal(composerActions.rowByIndex(3).value(), "toggle_whisper");
   assert.equal(composerActions.rows().length, 4);
 
-  await composerActions.selectRowByValueAwait("reply_as_new_topic");
-  await composerActions.expandAwait();
+  await composerActions.selectRowByValue("reply_as_new_topic");
+  await composerActions.expand();
 
   assert.equal(
     find(".action-title")
@@ -224,8 +224,8 @@ QUnit.test("interactions", async assert => {
   assert.equal(composerActions.rowByIndex(3).value(), "shared_draft");
   assert.equal(composerActions.rows().length, 4);
 
-  await composerActions.selectRowByValueAwait("reply_as_private_message");
-  await composerActions.expandAwait();
+  await composerActions.selectRowByValue("reply_as_private_message");
+  await composerActions.expand();
 
   assert.equal(
     find(".action-title")

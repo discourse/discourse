@@ -51,8 +51,8 @@ QUnit.test("autoclose - specific time", async assert => {
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("next_week");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("next_week");
 
   assert.equal(futureDateInputSelector.header().title(), "Next week");
   assert.equal(futureDateInputSelector.header().value(), "next_week");
@@ -71,8 +71,8 @@ QUnit.test("autoclose", async assert => {
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("next_week");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("next_week");
 
   assert.equal(futureDateInputSelector.header().title(), "Next week");
   assert.equal(futureDateInputSelector.header().value(), "next_week");
@@ -83,8 +83,8 @@ QUnit.test("autoclose", async assert => {
     .trim();
   assert.ok(regex1.test(html1));
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("pick_date_and_time");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("pick_date_and_time");
 
   await fillIn(".future-date-input .date-picker", "2099-11-24");
 
@@ -97,8 +97,8 @@ QUnit.test("autoclose", async assert => {
     .trim();
   assert.ok(regex2.test(html2));
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("set_based_on_last_post");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("set_based_on_last_post");
 
   await fillIn(".future-date-input input[type=number]", "2");
 
@@ -126,14 +126,14 @@ QUnit.test("close temporarily", async assert => {
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
 
-  await timerType.expandAwait();
-  await timerType.selectRowByValueAwait("open");
+  await timerType.expand();
+  await timerType.selectRowByValue("open");
 
   assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("next_week");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("next_week");
 
   assert.equal(futureDateInputSelector.header().title(), "Next week");
   assert.equal(futureDateInputSelector.header().value(), "next_week");
@@ -144,8 +144,8 @@ QUnit.test("close temporarily", async assert => {
     .trim();
   assert.ok(regex1.test(html1));
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("pick_date_and_time");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("pick_date_and_time");
 
   await fillIn(".future-date-input .date-picker", "2099-11-24");
 
@@ -168,8 +168,8 @@ QUnit.test("schedule", async assert => {
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
 
-  await timerType.expandAwait();
-  await timerType.selectRowByValueAwait("publish_to_category");
+  await timerType.expand();
+  await timerType.selectRowByValue("publish_to_category");
 
   assert.equal(categoryChooser.header().title(), "uncategorized");
   assert.equal(categoryChooser.header().value(), null);
@@ -177,11 +177,11 @@ QUnit.test("schedule", async assert => {
   assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 
-  await categoryChooser.expandAwait();
-  await categoryChooser.selectRowByValueAwait("7");
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue("7");
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("next_week");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("next_week");
 
   assert.equal(futureDateInputSelector.header().title(), "Next week");
   assert.equal(futureDateInputSelector.header().value(), "next_week");
@@ -202,7 +202,7 @@ QUnit.test("TL4 can't auto-delete", async assert => {
 
   const timerType = selectKit(".select-kit.timer-type");
 
-  await timerType.expandAwait();
+  await timerType.expand();
 
   assert.ok(!timerType.rowByValue("delete").exists());
 });
@@ -215,14 +215,14 @@ QUnit.test("auto delete", async assert => {
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
 
-  await timerType.expandAwait();
-  await timerType.selectRowByValueAwait("delete");
+  await timerType.expand();
+  await timerType.selectRowByValue("delete");
 
   assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 
-  await futureDateInputSelector.expandAwait();
-  await futureDateInputSelector.selectRowByValueAwait("two_weeks");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("two_weeks");
 
   assert.equal(futureDateInputSelector.header().title(), "Two Weeks");
   assert.equal(futureDateInputSelector.header().value(), "two_weeks");
@@ -242,7 +242,8 @@ QUnit.test(
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".topic-admin-status-update button");
-    await futureDateInputSelector.expand().selectRowByValue("next_week");
+    await futureDateInputSelector.expand();
+    await futureDateInputSelector.selectRowByValue("next_week");
     await click(".modal-footer button.btn-primary");
 
     const regex = /will automatically close in/g;

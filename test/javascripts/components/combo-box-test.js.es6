@@ -13,7 +13,7 @@ componentTest("default", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -46,7 +46,7 @@ componentTest("with valueAttribute", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -70,7 +70,7 @@ componentTest("with nameProperty", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -94,7 +94,7 @@ componentTest("with an array as content", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -120,7 +120,7 @@ componentTest("with value and none as a string", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -148,7 +148,7 @@ componentTest("with value and none as a string", {
     );
     assert.equal(this.get("value"), "trout");
 
-    await this.get("subject").selectNoneRowAwait();
+    await this.get("subject").selectNoneRow();
 
     assert.equal(this.get("value"), null);
   }
@@ -191,7 +191,7 @@ componentTest("with value and none as an object", {
     );
     assert.equal(this.get("value"), "evil");
 
-    await this.get("subject").selectNoneRowAwait();
+    await this.get("subject").selectNoneRow();
 
     assert.equal(this.get("value"), null);
   }
@@ -207,7 +207,7 @@ componentTest("with no value and none as an object", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -228,7 +228,7 @@ componentTest("with no value and none string", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -247,7 +247,7 @@ componentTest("with no value and no none", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -289,7 +289,7 @@ componentTest("with noneLabel", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
