@@ -68,6 +68,47 @@ Ember.Test.registerAsyncHelper("selectKitSelectRowByIndex", function(
   click(find(selector + " .select-kit-row").eq(index));
 });
 
+Ember.Test.registerAsyncHelper("keyboardHelper", function(
+  app,
+  value,
+  target,
+  selector
+) {
+  function createEvent(element, keyCode, options) {
+    element = element || ".filter-input";
+    selector = find(selector).find(element);
+    options = options || {};
+
+    var type = options.type || "keydown";
+    var event = jQuery.Event(type);
+    event.keyCode = keyCode;
+    if (options && options.metaKey) {
+      event.metaKey = true;
+    }
+
+    andThen(() => {
+      find(selector).trigger(event);
+    });
+  }
+
+  switch (value) {
+    case "enter":
+      return createEvent(target, 13);
+    case "backspace":
+      return createEvent(target, 8);
+    case "selectAll":
+      return createEvent(target, 65, { metaKey: true });
+    case "escape":
+      return createEvent(target, 27);
+    case "down":
+      return createEvent(target, 40);
+    case "up":
+      return createEvent(target, 38);
+    case "tab":
+      return createEvent(target, 9);
+  }
+});
+
 // eslint-disable-next-line no-unused-vars
 function selectKit(selector) {
   selector = selector || ".select-kit";
@@ -132,65 +173,13 @@ function selectKit(selector) {
     };
   }
 
-  function keyboardHelper(eventSelector) {
-    function createEvent(target, keyCode, options) {
-      target = target || ".filter-input";
-      eventSelector = find(eventSelector).find(target);
-      options = options || {};
-
-      andThen(function() {
-        var type = options.type || "keydown";
-        var event = jQuery.Event(type);
-        event.keyCode = keyCode;
-        if (options && options.metaKey) {
-          event.metaKey = true;
-        }
-        find(eventSelector).trigger(event);
-      });
-    }
-
-    return {
-      down: function(target) {
-        createEvent(target, 40);
-      },
-      up: function(target) {
-        createEvent(target, 38);
-      },
-      escape: function(target) {
-        createEvent(target, 27);
-      },
-      enter: function(target) {
-        createEvent(target, 13);
-      },
-      tab: function(target) {
-        createEvent(target, 9);
-      },
-      backspace: function(target) {
-        createEvent(target, 8);
-      },
-      selectAll: function(target) {
-        createEvent(target, 65, { metaKey: true });
-      }
-    };
-  }
-
   return {
-    expandAwait: function() {
+    expand: function() {
       return expandSelectKit(selector);
     },
 
-    expand: function() {
-      expandSelectKit(selector);
-      return selectKit(selector);
-    },
-
-    collapseAwait: function() {
-      return collapseSelectKit(selector);
-    },
-
     collapse: function() {
-      collapseSelectKit(selector);
-      return selectKit(selector);
+      return collapseSelectKit(selector);
     },
 
     selectRowByIndex: function(index) {
@@ -198,13 +187,8 @@ function selectKit(selector) {
       return selectKit(selector);
     },
 
-    selectRowByValueAwait: function(value) {
-      return selectKitSelectRowByValue(value, selector);
-    },
-
     selectRowByValue: function(value) {
-      selectKitSelectRowByValue(value, selector);
-      return selectKit(selector);
+      return selectKitSelectRowByValue(value, selector);
     },
 
     selectRowByName: function(name) {
@@ -213,25 +197,15 @@ function selectKit(selector) {
     },
 
     selectNoneRow: function() {
-      selectKitSelectNoneRow(selector);
-      return selectKit(selector);
-    },
-
-    selectNoneRowAwait: function() {
       return selectKitSelectNoneRow(selector);
     },
 
     fillInFilter: function(filter) {
-      selectKitFillInFilter(filter, selector);
-      return selectKit(selector);
-    },
-
-    fillInFilterAwait: function(filter) {
       return selectKitFillInFilter(filter, selector);
     },
 
-    keyboard: function() {
-      return keyboardHelper(selector);
+    keyboard: function(value, target) {
+      return keyboardHelper(value, target, selector);
     },
 
     isExpanded: function() {
