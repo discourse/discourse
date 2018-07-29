@@ -16,20 +16,18 @@ componentTest("default", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        2
-      );
-      assert.notOk(
-        this.get("subject")
-          .rowByValue(2)
-          .exists(),
-        "selected categories are not in the list"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      2
+    );
+    assert.notOk(
+      this.get("subject")
+        .rowByValue(2)
+        .exists(),
+      "selected categories are not in the list"
+    );
   }
 });
 
@@ -41,23 +39,21 @@ componentTest("with blacklist", {
     this.set("blacklist", [Category.findById(8)]);
   },
 
-  test(assert) {
-    this.get("subject").expand();
+  async test(assert) {
+    await this.get("subject").expand();
 
-    andThen(() => {
-      assert.ok(
-        this.get("subject")
-          .rowByValue(6)
-          .exists(),
-        "not blacklisted categories are in the list"
-      );
-      assert.notOk(
-        this.get("subject")
-          .rowByValue(8)
-          .exists(),
-        "blacklisted categories are not in the list"
-      );
-    });
+    assert.ok(
+      this.get("subject")
+        .rowByValue(6)
+        .exists(),
+      "not blacklisted categories are in the list"
+    );
+    assert.notOk(
+      this.get("subject")
+        .rowByValue(8)
+        .exists(),
+      "blacklisted categories are not in the list"
+    );
   }
 });
 
@@ -68,39 +64,31 @@ componentTest("interactions", {
     this.set("categories", [Category.findById(2), Category.findById(6)]);
   },
 
-  test(assert) {
-    this.get("subject")
-      .expand()
-      .selectRowByValue(8);
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue(8);
 
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        "2,6,8",
-        "it adds the selected category"
-      );
-      assert.equal(this.get("categories").length, 3);
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      "2,6,8",
+      "it adds the selected category"
+    );
+    assert.equal(this.get("categories").length, 3);
 
-    this.get("subject").expand();
-    this.get("subject")
-      .keyboard()
-      .backspace();
-    this.get("subject")
-      .keyboard()
-      .backspace();
+    await this.get("subject").expand();
 
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .value(),
-        "2,6",
-        "it removes the last selected category"
-      );
-      assert.equal(this.get("categories").length, 2);
-    });
+    await this.get("subject").keyboard("backspace");
+    await this.get("subject").keyboard("backspace");
+
+    assert.equal(
+      this.get("subject")
+        .header()
+        .value(),
+      "2,6",
+      "it removes the last selected category"
+    );
+    assert.equal(this.get("categories").length, 2);
   }
 });

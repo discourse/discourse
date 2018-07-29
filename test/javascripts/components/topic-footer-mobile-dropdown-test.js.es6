@@ -22,7 +22,7 @@ componentTest("default", {
   },
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")
@@ -55,7 +55,7 @@ componentTest("default", {
       "it doesn’t preselect first row"
     );
 
-    await this.get("subject").selectRowByValueAwait("share");
+    await this.get("subject").selectRowByValue("share");
 
     assert.equal(this.get("value"), null, "it resets the value");
   }

@@ -54,8 +54,8 @@ QUnit.test("Updating the topic title and category", async assert => {
 
   await click("#topic-title .d-icon-pencil");
   await fillIn("#edit-title", "this is the new title");
-  await categoryChooser.expandAwait();
-  await categoryChooser.selectRowByValueAwait(4);
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(4);
   await click("#topic-title .submit-edit");
 
   assert.equal(

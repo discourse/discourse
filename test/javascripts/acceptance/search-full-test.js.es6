@@ -156,9 +156,9 @@ QUnit.test("update category through advanced search ui", async assert => {
 
   await fillIn(".search-query", "none");
 
-  await categoryChooser.expandAwait();
+  await categoryChooser.expand();
   await categoryChooser.fillInFilter("faq");
-  await categoryChooser.selectRowByValueAwait(4);
+  await categoryChooser.selectRowByValue(4);
 
   assert.ok(
     exists('.search-advanced-options .badge-category:contains("faq")'),
@@ -317,8 +317,8 @@ QUnit.test("update in filter through advanced search ui", async assert => {
   await visit("/search");
 
   await fillIn(".search-query", "none");
-  await inSelector.expandAwait();
-  await inSelector.selectRowByValueAwait("bookmarks");
+  await inSelector.expand();
+  await inSelector.selectRowByValue("bookmarks");
 
   assert.ok(
     inSelector.rowByName("I bookmarked").exists(),
@@ -339,8 +339,8 @@ QUnit.test("update status through advanced search ui", async assert => {
   await visit("/search");
 
   await fillIn(".search-query", "none");
-  await statusSelector.expandAwait();
-  await statusSelector.selectRowByValueAwait("closed");
+  await statusSelector.expand();
+  await statusSelector.selectRowByValue("closed");
 
   assert.ok(
     statusSelector.rowByName("are closed").exists(),
@@ -362,8 +362,8 @@ QUnit.test("update post time through advanced search ui", async assert => {
 
   await fillIn(".search-query", "none");
   await fillIn("#search-post-date .date-picker", "2016-10-05");
-  await postTimeSelector.expandAwait();
-  await postTimeSelector.selectRowByValueAwait("after");
+  await postTimeSelector.expand();
+  await postTimeSelector.selectRowByValue("after");
 
   assert.ok(
     postTimeSelector.rowByName("after").exists(),
