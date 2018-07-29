@@ -98,9 +98,6 @@ basic:
     default: 365
     min: 7
     max: 10000
-  track_external_right_clicks:
-    client: true
-    default: false
   ga_universal_tracking_code:
     client: true
     default: ''
