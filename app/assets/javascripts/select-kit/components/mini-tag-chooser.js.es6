@@ -56,9 +56,7 @@ export default ComboBox.extend(Tags, {
 
     this.$(".selected-name").on(
       "touchend.select-kit pointerup.select-kit",
-      event => {
-        this.focusFilterOrHeader();
-      }
+      () => this.focusFilterOrHeader()
     );
   },
 
