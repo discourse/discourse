@@ -18,12 +18,11 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def sent
-    email_logs = EmailLog.sent
-      .joins("
-        LEFT JOIN post_reply_keys
-        ON post_reply_keys.post_id = email_logs.post_id
-        AND post_reply_keys.user_id = email_logs.user_id
-      ")
+    email_logs = EmailLog.joins(<<~SQL)
+      LEFT JOIN post_reply_keys
+      ON post_reply_keys.post_id = email_logs.post_id
+      AND post_reply_keys.user_id = email_logs.user_id
+    SQL
 
     email_logs = filter_logs(email_logs, params)
 
