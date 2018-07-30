@@ -58,9 +58,7 @@ QUnit.test("update some fields", async assert => {
   await savePreferences();
 
   click(".preferences-nav .nav-notifications a");
-  await selectKit(
-    ".control-group.notifications .combo-box.duration"
-  ).expand();
+  await selectKit(".control-group.notifications .combo-box.duration").expand();
   await selectKit(
     ".control-group.notifications .combo-box.duration"
   ).selectRowByValue(1440);
