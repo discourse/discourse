@@ -3,6 +3,7 @@ import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const flatten = array => [].concat.apply([], array);
 
@@ -178,15 +179,33 @@ export default createWidget("hamburger-menu", {
   listCategories() {
     const maxCategoriesToDisplay = this.siteSettings
       .hamburger_menu_categories_count;
-    const categoriesList = this.site.get("categoriesByCount");
-    let categories = categoriesList.slice();
+    const categoriesByCount = this.site.get("categoriesByCount");
+    let categories = categoriesByCount.slice();
 
     if (this.currentUser) {
-      let categoryIds = this.currentUser.get("top_category_ids") || [];
+      let unreadCategoryIds = [];
+      let topCategoryIds = this.currentUser.get("top_category_ids") || [];
       let i = 0;
-      const mutedCategoryIds = this.currentUser.get("muted_category_ids") || [];
-      categories = categories.filter(c => !mutedCategoryIds.includes(c.id));
-      categoryIds.forEach(id => {
+
+      categoriesByCount
+        .sort((a, b) => {
+          return (
+            b.get("newTopics") +
+            b.get("unreadTopics") -
+            (a.get("newTopics") + a.get("unreadTopics"))
+          );
+        })
+        .forEach(c => {
+          if (c.get("newTopics") > 0 || c.get("unreadTopics") > 0) {
+            unreadCategoryIds.push(c.id);
+          }
+        });
+
+      categories = categories.filter(
+        c => c.notification_level !== NotificationLevels.MUTED
+      );
+
+      [...unreadCategoryIds, ...topCategoryIds].uniq().forEach(id => {
         const category = categories.find(c => c.id === id);
         if (category) {
           categories = categories.filter(c => c.id !== id);
