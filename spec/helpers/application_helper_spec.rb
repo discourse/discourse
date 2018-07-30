@@ -3,6 +3,12 @@ require 'rails_helper'
 describe ApplicationHelper do
 
   describe "preload_script" do
+    let(:nonce) { SecureRandom.base64 }
+
+    before do
+      helper.stubs(:nonce).returns(nonce)
+    end
+
     it "provides brotli links to brotli cdn" do
       set_cdn_url "https://awesome.com"
       set_env "COMPRESS_BROTLI", "1"
@@ -10,7 +16,7 @@ describe ApplicationHelper do
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
       link = helper.preload_script('application')
 
-      expect(link).to eq("<link rel='preload' href='https://awesome.com/brotli_asset/application.js' as='script'/>\n<script src='https://awesome.com/brotli_asset/application.js'></script>")
+      expect(link).to eq("<link rel='preload' href='https://awesome.com/brotli_asset/application.js' as='script' nonce='#{nonce}'/>\n<script src='https://awesome.com/brotli_asset/application.js' nonce='#{nonce}'></script>")
     end
 
     context "with s3 CDN" do
@@ -28,20 +34,20 @@ describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.br.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.br.js'></script>")
+        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.br.js' as='script' nonce='#{nonce}'/>\n<script src='https://s3cdn.com/assets/application.br.js' nonce='#{nonce}'></script>")
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.js'></script>")
+        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script' nonce='#{nonce}'/>\n<script src='https://s3cdn.com/assets/application.js' nonce='#{nonce}'></script>")
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.js'></script>")
+        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script' nonce='#{nonce}'/>\n<script src='https://s3cdn.com/assets/application.js' nonce='#{nonce}'></script>")
       end
     end
   end
@@ -153,6 +159,49 @@ describe ApplicationHelper do
   describe 'gsub_emoji_to_unicode' do
     it "converts all emoji to unicode" do
       expect(helper.gsub_emoji_to_unicode('Boat Talk: my :sailboat: boat: why is it so slow? :snail:')).to eq("Boat Talk: my ⛵ boat: why is it so slow? 🐌")
+    end
+  end
+
+  describe "theme_lookup" do
+    shared_examples "html field" do |name|
+      let(:nonce) { SecureRandom.base64 }
+      let(:theme) { Fabricate(:theme) }
+
+      before do
+        helper.stubs(:nonce).returns(nonce)
+        helper.stubs(:theme_ids).returns([theme.id])
+      end
+
+      it "adds nonce to <script> tags" do
+        pre_nonce = <<HTML
+          <script src="script.js"></script>
+          <script>alert("<script>")</script>
+HTML
+        post_nonce = <<HTML
+          <script src="script.js" nonce="#{nonce}"></script>
+          <script nonce="#{nonce}">alert("<script>")</script>
+HTML
+        theme.set_field(target: :common, name: name, value: pre_nonce)
+        theme.save!
+
+        expect(helper.theme_lookup name).to eq post_nonce
+      end
+    end
+
+    context "when looking up a theme's head_tag" do
+      include_examples "html field", "head_tag"
+    end
+
+    context "when looking up a theme's body_tag" do
+      include_examples "html field", "body_tag"
+    end
+  end
+
+  describe "nonce" do
+    it "returns request.env['nonce']" do
+      nonce = SecureRandom.base64
+      controller.request.env["nonce"] = nonce
+      expect(helper.nonce).to eq nonce
     end
   end
 

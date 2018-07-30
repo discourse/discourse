@@ -1137,6 +1137,9 @@ security:
     default: 'bingbot'
     list_type: compact
   slow_down_crawler_rate: 60
+  content_security_policy:
+    default: "script-src 'unsafe-eval' 'nonce-%{nonce}' %{host}/mini-profiler-resources/ %{host}/service-worker.js %{cdn}/javascripts/;"
+    shadowed_by_global: true
 
 onebox:
   enable_flash_video_onebox: false

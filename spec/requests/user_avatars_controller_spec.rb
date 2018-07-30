@@ -75,7 +75,7 @@ describe UserAvatarsController do
 
       stub_request(:get, "http://cdn.com/something/else").to_return(body: 'image')
 
-      GlobalSetting.expects(:cdn_url).returns("http://awesome.com/boom")
+      GlobalSetting.stubs(:cdn_url).returns("http://awesome.com/boom")
 
       upload = Fabricate(:upload, url: "//test.s3.amazonaws.com/something")
 

@@ -1,4 +1,4 @@
-<script>
+<script nonce="<%= nonce %>">
   Ember.RSVP.configure('onerror', function(e) {
     // Ignore TransitionAborted exceptions that bubble up
     if (e && e.message === "TransitionAborted") { return; }
@@ -19,7 +19,7 @@
   });
 </script>
 
-<script>
+<script nonce="<%= nonce %>">
   <%- if !current_user && flash[:authentication_data] %>
     Discourse.showingSignup = true
     require('discourse/routes/application').default.reopen({
@@ -46,6 +46,7 @@
     Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
     Discourse.MarkdownItURL = '<%= asset_url('markdown-it-bundle.js') %>';
     Discourse.ServiceWorkerURL = Discourse.Environment != "development" ? '<%= Rails.application.assets_manifest.assets['service-worker.js'] %>' : 'service-worker.js';
+    Discourse.CSPNonce = '<%= nonce %>';
     I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
     Discourse.start();
     Discourse.set('assetVersion','<%= Discourse.assets_digest %>');

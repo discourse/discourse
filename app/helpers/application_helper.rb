@@ -83,8 +83,8 @@ module ApplicationHelper
       end
     end
 
-"<link rel='preload' href='#{path}' as='script'/>
-<script src='#{path}'></script>".html_safe
+"<link rel='preload' href='#{path}' as='script' nonce='#{nonce}'/>
+<script src='#{path}' nonce='#{nonce}'></script>".html_safe
   end
 
   def discourse_csrf_tags
@@ -379,7 +379,15 @@ module ApplicationHelper
 
   def theme_lookup(name)
     lookup = Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
-    lookup.html_safe if lookup
+    if lookup
+      if ["head_tag", "body_tag"].include? name
+        doc = Nokogiri::HTML.fragment(lookup.html_safe)
+        doc.css("script").each { |n| n["nonce"] = nonce }
+        doc.to_s
+      else
+        lookup.html_safe
+      end
+    end
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
@@ -390,5 +398,9 @@ module ApplicationHelper
     end
 
     Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
+  end
+
+  def nonce
+    request.env["nonce"]
   end
 end

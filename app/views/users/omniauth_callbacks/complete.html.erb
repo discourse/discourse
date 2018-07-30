@@ -24,7 +24,7 @@
       <a href="<%= Discourse.base_url.html_safe %>?authComplete=true"><%= t("login.click_to_continue") %></a>
     </p>
 
-    <script type="text/javascript">
+    <script nonce="<%= nonce %>">
        var authResult = <%=@auth_result.to_client_hash.to_json.html_safe%>;
 
        if (!window.opener) {

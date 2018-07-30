@@ -3,7 +3,7 @@
   <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url) %>
   <div class='clearfix'></div>
 </header>
-<script>
+<script nonce="<%= nonce %>">
   (function() {
     setTimeout(function() {
       document.location.reload();

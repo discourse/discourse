@@ -8,6 +8,7 @@ function loadWithTag(path, cb) {
   let finished = false;
   let s = document.createElement("script");
   s.src = path;
+  s.setAttribute("nonce", Discourse.CSPNonce);
   if (Ember.Test) {
     Ember.Test.registerWaiter(() => finished);
   }
@@ -100,7 +101,16 @@ export default function loadScript(url, opts) {
       ajax({
         url: cdnUrl,
         dataType: opts.css ? "text" : "script",
-        cache: true
+        cache: true,
+        converters: {
+          "text script": text => {
+            var script = document.createElement("script");
+            script.text = text;
+            script.setAttribute("nonce", Discourse.CSPNonce);
+            document.head.appendChild(script).parentNode.removeChild(script);
+            return text;
+          }
+        }
       }).then(cb);
     }
   });
