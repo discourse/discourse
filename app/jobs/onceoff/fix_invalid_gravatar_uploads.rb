@@ -1,6 +1,6 @@
 module Jobs
   class FixInvalidGravatarUploads < Jobs::Onceoff
-    def execute_onceoff
+    def execute_onceoff(args)
       Upload.where(original_filename: "gravatar.png").find_each do |upload|
         extension = FastImage.type(Discourse.store.path_for(upload))
         current_extension = upload.extension
