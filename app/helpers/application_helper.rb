@@ -237,6 +237,10 @@ module ApplicationHelper
       result << tag(:meta, name: 'twitter:data2', value: "#{opts[:like_count]} ❤")
     end
 
+    if opts[:published_time]
+      result << tag(:meta, property: 'article:published_time', content: opts[:published_time])
+    end
+
     if opts[:ignore_canonical]
       result << tag(:meta, property: 'og:ignore_canonical', content: true)
     end

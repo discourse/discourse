@@ -193,6 +193,11 @@ class TopicView
     @topic.like_count
   end
 
+  def published_time
+    return nil if desired_post.blank?
+    desired_post.created_at.strftime('%FT%T%:z')
+  end
+
   def image_url
     if @post_number > 1 && @desired_post.present?
       if @desired_post.image_url.present?
