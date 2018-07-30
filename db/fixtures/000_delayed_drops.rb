@@ -241,9 +241,12 @@ Migration::ColumnDropper.drop(
 
 Migration::ColumnDropper.drop(
   table: 'email_logs',
-  after_migration: 'DropTopicIdOnEmailLogs',
+  after_migration: 'DropReplyKeySkippedSkippedReasonFromEmailLogs',
   columns: %w{
     topic_id
+    reply_key
+    skipped
+    skipped_reason
   },
   on_drop: ->() {
     STDERR.puts "Removing superflous email_logs columns!"
