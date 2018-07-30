@@ -201,7 +201,10 @@ class PostDestroyer
         :send_system_message,
         user_id: @post.user.id,
         message_type: :flags_agreed_and_post_deleted,
-        message_options: { url: @post.url }
+        message_options: {
+          url: @post.url,
+          flag_reason: I18n.t("flag_reasons.#{@post.active_flags.last.post_action_type.name_key}", locale: SiteSetting.default_locale)
+        }
       )
     end
 
