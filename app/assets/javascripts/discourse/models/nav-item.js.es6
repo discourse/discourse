@@ -1,4 +1,5 @@
 import { toTitleCase } from "discourse/lib/formatter";
+import { emojiUnescape } from "discourse/lib/text";
 import computed from "ember-addons/ember-computed-decorators";
 
 const NavItem = Discourse.Model.extend({
@@ -30,7 +31,9 @@ const NavItem = Discourse.Model.extend({
       extra.categoryName = toTitleCase(categoryName);
     }
 
-    return I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra);
+    return emojiUnescape(
+      I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
+    );
   },
 
   @computed("name")
