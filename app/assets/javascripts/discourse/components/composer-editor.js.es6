@@ -632,7 +632,7 @@ export default Ember.Component.extend({
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",
-          uploadPlaceholder,
+          uploadPlaceholder.trim(),
           markdown
         );
         this._resetUpload(false);
