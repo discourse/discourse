@@ -1415,6 +1415,10 @@ uncategorized:
     client: true
     default: true
 
+  hamburger_menu_categories_count:
+    client: true
+    default: 8
+
   slug_generation_method:
     default: 'ascii'
     enum: 'SlugSetting'
