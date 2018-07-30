@@ -1,9 +1,11 @@
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 moduleForWidget("hamburger-menu");
 
 const topCategoryIds = [2, 3, 1];
 let mutedCategoryIds = [];
+let unreadCategoryIds = [];
 let categoriesByCount = [];
 
 widgetTest("prioritize faq", {
@@ -155,16 +157,24 @@ widgetTest("top categories", {
   beforeEach() {
     this.siteSettings.hamburger_menu_categories_count = 8;
     maxCategoriesToDisplay = this.siteSettings.hamburger_menu_categories_count;
-    categoriesByCount = this.site.get("categoriesByCount");
+    categoriesByCount = this.site.get("categoriesByCount").slice();
     categoriesByCount.every(c => {
       if (!topCategoryIds.includes(c.id)) {
-        mutedCategoryIds.push(c.id);
-        return false;
+        if (mutedCategoryIds.length === 0) {
+          mutedCategoryIds.push(c.id);
+          c.set("notification_level", NotificationLevels.MUTED);
+        } else if (unreadCategoryIds.length === 0) {
+          unreadCategoryIds.push(c.id);
+          c.set("unreadTopics", 5);
+        } else {
+          unreadCategoryIds.splice(0, 0, c.id);
+          c.set("newTopics", 10);
+          return false;
+        }
       }
       return true;
     });
     this.currentUser.set("top_category_ids", topCategoryIds);
-    this.currentUser.set("muted_category_ids", mutedCategoryIds);
   },
 
   test(assert) {
@@ -173,8 +183,11 @@ widgetTest("top categories", {
     categoriesByCount = categoriesByCount.filter(
       c => !mutedCategoryIds.includes(c.id)
     );
-    let ids = topCategoryIds
-      .concat(categoriesByCount.map(c => c.id))
+    let ids = [
+      ...unreadCategoryIds,
+      ...topCategoryIds,
+      ...categoriesByCount.map(c => c.id)
+    ]
       .uniq()
       .slice(0, maxCategoriesToDisplay);
 
