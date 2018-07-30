@@ -179,40 +179,36 @@ export default createWidget("hamburger-menu", {
   listCategories() {
     const maxCategoriesToDisplay = this.siteSettings
       .hamburger_menu_categories_count;
-    const categoriesByCount = this.site.get("categoriesByCount");
-    let categories = categoriesByCount.slice();
+    let categories = this.site.get("categoriesByCount");
 
     if (this.currentUser) {
-      let unreadCategoryIds = [];
-      let topCategoryIds = this.currentUser.get("top_category_ids") || [];
-      let i = 0;
+      const allCategories = this.site
+        .get("categories")
+        .filter(c => c.notification_level !== NotificationLevels.MUTED);
 
-      categoriesByCount
+      categories = allCategories
+        .filter(c => c.get("newTopics") > 0 || c.get("unreadTopics") > 0)
         .sort((a, b) => {
           return (
             b.get("newTopics") +
             b.get("unreadTopics") -
             (a.get("newTopics") + a.get("unreadTopics"))
           );
-        })
-        .forEach(c => {
-          if (c.get("newTopics") > 0 || c.get("unreadTopics") > 0) {
-            unreadCategoryIds.push(c.id);
-          }
         });
 
-      categories = categories.filter(
-        c => c.notification_level !== NotificationLevels.MUTED
-      );
-
-      [...unreadCategoryIds, ...topCategoryIds].uniq().forEach(id => {
-        const category = categories.find(c => c.id === id);
-        if (category) {
-          categories = categories.filter(c => c.id !== id);
-          categories.splice(i, 0, category);
-          i += 1;
+      const topCategoryIds = this.currentUser.get("top_category_ids") || [];
+      topCategoryIds.forEach(id => {
+        const category = allCategories.find(c => c.id === id);
+        if (category && !categories.includes(category)) {
+          categories.push(category);
         }
       });
+
+      categories = categories.concat(
+        allCategories
+          .filter(c => !categories.includes(c))
+          .sort((a, b) => b.topic_count - a.topic_count)
+      );
     }
 
     const moreCount = categories.length - maxCategoriesToDisplay;
