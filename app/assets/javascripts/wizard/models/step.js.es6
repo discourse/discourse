@@ -5,8 +5,7 @@ import { ajax } from "wizard/lib/ajax";
 export default Ember.Object.extend(ValidState, {
   id: null,
 
-  @computed("index")
-  displayIndex: index => index + 1,
+  @computed("index") displayIndex: index => index + 1,
 
   @computed("fields.[]")
   fieldsById(fields) {

@@ -198,17 +198,13 @@ const User = RestModel.extend({
     return suspendedTill && moment(suspendedTill).isAfter();
   },
 
-  @computed("suspended_till")
-  suspendedForever: isForever,
+  @computed("suspended_till") suspendedForever: isForever,
 
-  @computed("silenced_till")
-  silencedForever: isForever,
+  @computed("silenced_till") silencedForever: isForever,
 
-  @computed("suspended_till")
-  suspendedTillDate: longDate,
+  @computed("suspended_till") suspendedTillDate: longDate,
 
-  @computed("silenced_till")
-  silencedTillDate: longDate,
+  @computed("silenced_till") silencedTillDate: longDate,
 
   changeUsername(new_username) {
     return ajax(

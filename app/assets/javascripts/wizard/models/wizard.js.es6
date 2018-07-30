@@ -4,8 +4,7 @@ import { ajax } from "wizard/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
 
 const Wizard = Ember.Object.extend({
-  @computed("steps.length")
-  totalSteps: length => length,
+  @computed("steps.length") totalSteps: length => length,
 
   getTitle() {
     const titleStep = this.get("steps").findBy("id", "forum-title");
