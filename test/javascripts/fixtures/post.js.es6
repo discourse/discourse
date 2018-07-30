@@ -27,8 +27,9 @@ export default {
     version: 1,
     can_edit: true,
     can_delete: false,
-    can_recover: true,
-    user_title: null,
+    can_recover:true ,
+    
+user_title: null,
     raw:
       "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?",
     actions_summary: [
