@@ -158,8 +158,9 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def top_category_ids
+    omitted_notification_levels = [CategoryUser.notification_levels[:muted], CategoryUser.notification_levels[:regular]]
     CategoryUser.where(user_id: object.id)
-      .where.not(notification_level: CategoryUser.notification_levels[:muted])
+      .where.not(notification_level: omitted_notification_levels)
       .order("
         CASE
           WHEN notification_level = 3 THEN 1
