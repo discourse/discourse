@@ -75,7 +75,8 @@ const Composer = RestModel.extend({
     return this.site.get("archetypes");
   }.property(),
 
-  @computed("action") sharedDraft: action => action === CREATE_SHARED_DRAFT,
+  @computed("action")
+  sharedDraft: action => action === CREATE_SHARED_DRAFT,
 
   @computed
   categoryId: {
@@ -133,7 +134,8 @@ const Composer = RestModel.extend({
 
   topicFirstPost: Em.computed.or("creatingTopic", "editingFirstPost"),
 
-  @computed("action") editingPost: isEdit,
+  @computed("action")
+  editingPost: isEdit,
 
   replyingToTopic: Em.computed.equal("action", REPLY),
 

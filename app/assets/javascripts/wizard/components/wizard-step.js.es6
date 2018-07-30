@@ -31,7 +31,8 @@ export default Ember.Component.extend({
     this.autoFocus();
   },
 
-  @computed("step.index") showQuitButton: index => index === 0,
+  @computed("step.index")
+  showQuitButton: index => index === 0,
 
   @computed("step.displayIndex", "wizard.totalSteps")
   showNextButton: (current, total) => current < total,
@@ -39,7 +40,8 @@ export default Ember.Component.extend({
   @computed("step.displayIndex", "wizard.totalSteps")
   showDoneButton: (current, total) => current === total,
 
-  @computed("step.index") showBackButton: index => index > 0,
+  @computed("step.index")
+  showBackButton: index => index > 0,
 
   @computed("step.banner")
   bannerImage(src) {
