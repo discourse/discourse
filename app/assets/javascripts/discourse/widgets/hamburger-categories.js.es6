@@ -59,11 +59,7 @@ export default createWidget("hamburger-categories", {
     let result = [
       h(
         "li.heading",
-        h(
-          "a.d-link.categories-link",
-          { attributes: { href } },
-          title
-        )
+        h("a.d-link.categories-link", { attributes: { href } }, title)
       )
     ];
 
