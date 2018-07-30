@@ -30,6 +30,7 @@ export function currentThemeId() {
 }
 
 export function setLocalTheme(ids, themeSeq) {
+  ids = ids.reject(id => !id);
   if (ids && ids.length > 0) {
     $.cookie("theme_ids", `${ids.join(",")}|${themeSeq}`, {
       path: "/",
@@ -80,22 +81,27 @@ export function refreshCSS(node, hash, newHref, options) {
 }
 
 export function previewTheme(ids = []) {
+  ids = ids.reject(id => !id);
   if (!ids.includes(currentThemeId())) {
     Discourse.set("assetVersion", "forceRefresh");
 
-    ajax(`/themes/assets/${ids ? ids.join("-") : "default"}`).then(results => {
-      const elem = _.first($(keySelector));
-      if (elem) {
-        elem.content = ids.join(",");
-      }
-
-      results.themes.forEach(theme => {
-        const node = $(`link[rel=stylesheet][data-target=${theme.target}]`)[0];
-        if (node) {
-          refreshCSS(node, null, theme.new_href, { force: true });
+    ajax(`/themes/assets/${ids.length > 0 ? ids.join("-") : "default"}`).then(
+      results => {
+        const elem = _.first($(keySelector));
+        if (elem) {
+          elem.content = ids.join(",");
         }
-      });
-    });
+
+        results.themes.forEach(theme => {
+          const node = $(
+            `link[rel=stylesheet][data-target=${theme.target}]`
+          )[0];
+          if (node) {
+            refreshCSS(node, null, theme.new_href, { force: true });
+          }
+        });
+      }
+    );
   }
 }
 
