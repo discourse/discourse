@@ -108,14 +108,6 @@
     }
   }
 
-  .category-links {
-    .footer {
-      clear: both;
-      display: block;
-      padding: 0.25em 0.5em;
-    }
-  }
-
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
