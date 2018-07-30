@@ -32,7 +32,15 @@ class UserAvatar < ActiveRecord::Base
         )
 
         if tempfile
-          upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
+          ext = File.extname(tempfile)
+          ext = '.png' if ext.blank?
+
+          upload = UploadCreator.new(
+            tempfile,
+            "gravatar#{ext}",
+            origin: gravatar_url,
+            type: "avatar"
+          ).create_for(user_id)
 
           if gravatar_upload_id != upload.id
             gravatar_upload&.destroy!
