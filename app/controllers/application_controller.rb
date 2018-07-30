@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
 
-  attr_reader :theme_id
+  attr_reader :theme_ids
 
   serialization_scope :guardian
 
@@ -62,8 +62,8 @@ class ApplicationController < ActionController::Base
     after_action :remember_theme_id
 
     def remember_theme_id
-      if @theme_id
-        Stylesheet::Watcher.theme_id = @theme_id if defined? Stylesheet::Watcher
+      if @theme_ids.present?
+        Stylesheet::Watcher.theme_id = @theme_ids&.first if defined? Stylesheet::Watcher
       end
     end
   end
@@ -331,28 +331,33 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_id = request[:preview_theme_id]&.to_i
+    theme_ids = []
+
+    if preview_key = request[:preview_theme_id]&.to_i
+      theme_ids << preview_key
+    end
 
     user_option = current_user&.user_option
 
-    unless theme_id
+    if theme_ids.blank?
       ids, seq = cookies[:theme_ids]&.split("|")
       ids = ids&.split(",")&.map(&:to_i)
-      if ids && ids.size > 0 && seq && seq.to_i == user_option&.theme_key_seq.to_i
-        theme_id = ids.first
+      if ids.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
+        theme_ids = ids if guardian.allow_themes?(ids)
       end
     end
 
-    theme_id ||= user_option&.theme_ids&.first
+    theme_ids = user_option&.theme_ids || [] if theme_ids.blank?
 
-    if theme_id && !guardian.allow_themes?(theme_id)
-      theme_id = nil
+    unless guardian.allow_themes?(theme_ids)
+      theme_ids = []
     end
 
-    theme_id ||= SiteSetting.default_theme_id
-    theme_id = nil if theme_id.blank? || theme_id == -1
+    if theme_ids.blank? && SiteSetting.default_theme_id != -1
+      theme_ids << SiteSetting.default_theme_id
+    end
 
-    @theme_id = request.env[:resolved_theme_id] = theme_id
+    @theme_ids = request.env[:resolved_theme_ids] = theme_ids
   end
 
   def guardian
@@ -502,10 +507,10 @@ class ApplicationController < ActionController::Base
     target = view_context.mobile_view? ? :mobile : :desktop
 
     data =
-      if @theme_id
+      if @theme_ids.present?
         {
-         top: Theme.lookup_field(@theme_id, target, "after_header"),
-         footer: Theme.lookup_field(@theme_id, target, "footer")
+         top: Theme.lookup_field(@theme_ids, target, "after_header"),
+         footer: Theme.lookup_field(@theme_ids, target, "footer")
         }
       else
         {}

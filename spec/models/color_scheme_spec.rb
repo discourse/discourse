@@ -14,11 +14,11 @@ describe ColorScheme do
     theme.set_field(name: :scss, target: :desktop, value: '.bob {color: $primary;}')
     theme.save!
 
-    href = Stylesheet::Manager.stylesheet_href(:desktop_theme, theme.id)
+    href = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
 
     ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'bbb' }])
 
-    href2 = Stylesheet::Manager.stylesheet_href(:desktop_theme, theme.id)
+    href2 = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
 
     expect(href).not_to eq(href2)
   end

@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
 
-const keySelector = "meta[name=discourse_theme_id]";
+const keySelector = "meta[name=discourse_theme_ids]";
 
 export function currentThemeKey() {
   if (console && console.warn && console.trace) {
@@ -12,18 +12,21 @@ export function currentThemeKey() {
   }
 }
 
-export function currentThemeId() {
-  let themeId = null;
-  let elem = _.first($(keySelector));
+export function currentThemeIds() {
+  const themeIds = [];
+  const elem = _.first($(keySelector));
   if (elem) {
-    themeId = elem.content;
-    if (_.isEmpty(themeId)) {
-      themeId = null;
-    } else {
-      themeId = parseInt(themeId);
-    }
+    elem.content
+      .split(",")
+      .map(num => parseInt(num, 10))
+      .filter(num => !isNaN(num))
+      .forEach(num => themeIds.push(num));
   }
-  return themeId;
+  return themeIds;
+}
+
+export function currentThemeId() {
+  return currentThemeIds()[0];
 }
 
 export function setLocalTheme(ids, themeSeq) {
@@ -76,20 +79,20 @@ export function refreshCSS(node, hash, newHref, options) {
   $orig.data("copy", reloaded);
 }
 
-export function previewTheme(id) {
-  if (currentThemeId() !== id) {
+export function previewTheme(ids = []) {
+  if (!ids.includes(currentThemeId())) {
     Discourse.set("assetVersion", "forceRefresh");
 
-    ajax(`/themes/assets/${id ? id : "default"}`).then(results => {
-      let elem = _.first($(keySelector));
+    ajax(`/themes/assets/${ids ? ids.join("-") : "default"}`).then(results => {
+      const elem = _.first($(keySelector));
       if (elem) {
-        elem.content = id;
+        elem.content = ids.join(",");
       }
 
       results.themes.forEach(theme => {
-        let node = $(`link[rel=stylesheet][data-target=${theme.target}]`)[0];
+        const node = $(`link[rel=stylesheet][data-target=${theme.target}]`)[0];
         if (node) {
-          refreshCSS(node, null, theme.url, { force: true });
+          refreshCSS(node, null, theme.new_href, { force: true });
         }
       });
     });

@@ -1,27 +1,25 @@
 class ThemesController < ::ApplicationController
   def assets
-    theme_id = params[:id].to_i
+    theme_ids = params[:ids].to_s.split("-").map(&:to_i)
 
-    if params[:id] == "default"
-      theme_id = nil
+    if params[:ids] == "default"
+      theme_ids = [nil]
     else
-      raise Discourse::NotFound unless Theme.where(id: theme_id).exists?
+      raise Discourse::NotFound unless guardian.allow_themes?(theme_ids)
     end
 
-    object = [:mobile, :desktop, :desktop_theme, :mobile_theme].map do |target|
-      link = Stylesheet::Manager.stylesheet_link_tag(target, 'all', params[:id])
-      if link
-        href = link.split(/["']/)[1]
+    targets = view_context.mobile_view? ? [:mobile, :mobile_theme] : [:desktop, :desktop_theme]
+    targets << :admin if guardian.is_staff?
+
+    object = targets.map do |target|
+      Stylesheet::Manager.stylesheet_data(target, theme_ids).map do |hash|
         if Rails.env.development?
-          href << (href.include?("?") ? "&" : "?")
-          href << SecureRandom.hex
+          hash[:new_href] << (hash[:new_href].include?("?") ? "&" : "?")
+          hash[:new_href] << SecureRandom.hex
         end
-        {
-          target: target,
-          url: href
-        }
+        hash
       end
-    end.compact
+    end.flatten
 
     render json: object.as_json
   end

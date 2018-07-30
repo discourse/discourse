@@ -9,6 +9,12 @@ const THEME_UPLOAD_VAR = 2;
 export default Ember.Controller.extend({
   editRouteName: "adminCustomizeThemes.edit",
 
+  @computed("selectableChildThemes")
+  selectedChildThemeId() {
+    const available = this.get("selectableChildThemes");
+    return available && available[0] ? available[0].get("id") : null;
+  },
+
   @computed("model", "allThemes")
   parentThemes(model, allThemes) {
     let parents = allThemes.filter(theme =>
@@ -64,16 +70,20 @@ export default Ember.Controller.extend({
 
     let themes = [];
     available.forEach(t => {
-      if (!childThemes || childThemes.indexOf(t) === -1) {
+      if (
+        (!childThemes || childThemes.indexOf(t) === -1) &&
+        _.isEmpty(t.get("childThemes")) &&
+        !t.get("user_selectable")
+      ) {
         themes.push(t);
       }
     });
     return themes.length === 0 ? null : themes;
   },
 
-  @computed("allThemes", "allThemes.length", "model")
-  availableChildThemes(allThemes, count) {
-    if (count === 1) {
+  @computed("allThemes", "allThemes.length", "model", "parentThemes")
+  availableChildThemes(allThemes, count, parentThemes) {
+    if (count === 1 || this.get("parentThemes")) {
       return null;
     }
 

@@ -68,14 +68,23 @@ describe Theme do
   end
 
   it 'can correctly find parent themes' do
+    child = Theme.create!(name: 'child', user_id: user.id)
+    theme = Theme.create!(name: 'theme', user_id: user.id)
+
+    theme.add_child_theme!(child)
+
+    expect(child.dependant_themes.length).to eq(1)
+  end
+
+  it "doesn't allow multi-level theme components" do
     grandchild = Theme.create!(name: 'grandchild', user_id: user.id)
     child = Theme.create!(name: 'child', user_id: user.id)
     theme = Theme.create!(name: 'theme', user_id: user.id)
 
     theme.add_child_theme!(child)
-    child.add_child_theme!(grandchild)
-
-    expect(grandchild.dependant_themes.length).to eq(2)
+    expect do
+      child.add_child_theme!(grandchild)
+    end.to raise_error(Discourse::InvalidParameters)
   end
 
   it 'should correct bad html in body_tag_baked and head_tag_baked' do
@@ -265,24 +274,24 @@ HTML
 
     theme = Theme.create!(name: "bob", user_id: -1)
 
-    expect(Theme.theme_ids).to eq(Set.new([theme.id]))
-    expect(Theme.user_theme_ids).to eq(Set.new([]))
+    expect(Theme.theme_ids).to eq([theme.id])
+    expect(Theme.user_theme_ids).to eq([])
 
     theme.user_selectable = true
     theme.save
 
-    expect(Theme.user_theme_ids).to eq(Set.new([theme.id]))
+    expect(Theme.user_theme_ids).to eq([theme.id])
 
     theme.user_selectable = false
     theme.save
 
     theme.set_default!
-    expect(Theme.user_theme_ids).to eq(Set.new([theme.id]))
+    expect(Theme.user_theme_ids).to eq([theme.id])
 
     theme.destroy
 
-    expect(Theme.theme_ids).to eq(Set.new([]))
-    expect(Theme.user_theme_ids).to eq(Set.new([]))
+    expect(Theme.theme_ids).to eq([])
+    expect(Theme.user_theme_ids).to eq([])
   end
 
   it 'correctly caches user_themes template' do

@@ -1231,13 +1231,13 @@ RSpec.describe TopicsController do
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme.id)
+        expect(controller.theme_ids).to eq([theme.id])
 
         theme.update_attribute(:user_selectable, false)
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_id).not_to eq(theme.id)
+        expect(controller.theme_ids).not_to eq([theme.id])
       end
 
       it "can be overridden with a cookie" do
@@ -1247,7 +1247,7 @@ RSpec.describe TopicsController do
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme2.id)
+        expect(controller.theme_ids).to eq([theme2.id])
       end
 
       it "cookie can fail back to user if out of sync" do
@@ -1256,7 +1256,7 @@ RSpec.describe TopicsController do
 
         get "/t/#{topic.id}"
         expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme.id)
+        expect(controller.theme_ids).to eq([theme.id])
       end
     end
 

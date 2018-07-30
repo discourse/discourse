@@ -2,6 +2,7 @@ require_dependency 'theme_settings_parser'
 
 class ThemeField < ActiveRecord::Base
 
+  include PreserveOrder
   belongs_to :upload
 
   def self.types
