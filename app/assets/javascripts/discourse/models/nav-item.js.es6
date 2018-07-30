@@ -105,8 +105,7 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  @computed("href")
-  href: href => href,
+  @computed("href") href: href => href,
   customFilter: null
 });
 

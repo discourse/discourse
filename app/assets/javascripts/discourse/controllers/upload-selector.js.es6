@@ -25,11 +25,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   remote: Ember.computed.equal("selection", "remote"),
   selection: "local",
 
-  @computed()
-  uploadIcon: () => uploadIcon(),
+  @computed() uploadIcon: () => uploadIcon(),
 
-  @computed()
-  title: () => uploadTranslate("title"),
+  @computed() title: () => uploadTranslate("title"),
 
   @computed("selection")
   tip(selection) {
