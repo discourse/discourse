@@ -184,6 +184,8 @@ export default createWidget("hamburger-menu", {
     if (this.currentUser) {
       let categoryIds = this.currentUser.get("top_category_ids") || [];
       let i = 0;
+      const mutedCategoryIds = this.currentUser.get("muted_category_ids") || [];
+      categories = categories.filter(c => !mutedCategoryIds.includes(c.id));
       categoryIds.forEach(id => {
         const category = categories.find(c => c.id === id);
         if (category) {

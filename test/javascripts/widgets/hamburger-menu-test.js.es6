@@ -3,6 +3,8 @@ import { moduleForWidget, widgetTest } from "helpers/widget-test";
 moduleForWidget("hamburger-menu");
 
 const topCategoryIds = [2, 3, 1];
+let mutedCategoryIds = [];
+let categoriesByCount = [];
 
 widgetTest("prioritize faq", {
   template: '{{mount-widget widget="hamburger-menu"}}',
@@ -136,10 +138,11 @@ widgetTest("top categories - anonymous", {
   beforeEach() {
     this.siteSettings.hamburger_menu_categories_count = 8;
     maxCategoriesToDisplay = this.siteSettings.hamburger_menu_categories_count;
+    categoriesByCount = this.site.get("categoriesByCount");
   },
 
   test(assert) {
-    const count = this.site.get("categoriesByCount").length;
+    const count = categoriesByCount.length;
     const maximum =
       count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
     assert.equal(find(".category-link").length, maximum);
@@ -152,21 +155,32 @@ widgetTest("top categories", {
   beforeEach() {
     this.siteSettings.hamburger_menu_categories_count = 8;
     maxCategoriesToDisplay = this.siteSettings.hamburger_menu_categories_count;
+    categoriesByCount = this.site.get("categoriesByCount");
+    categoriesByCount.every(c => {
+      if (!topCategoryIds.includes(c.id)) {
+        mutedCategoryIds.push(c.id);
+        return false;
+      }
+      return true;
+    });
     this.currentUser.set("top_category_ids", topCategoryIds);
+    this.currentUser.set("muted_category_ids", mutedCategoryIds);
   },
 
   test(assert) {
     assert.equal(find(".category-link").length, maxCategoriesToDisplay);
 
-    const categoriesList = this.site.get("categoriesByCount");
+    categoriesByCount = categoriesByCount.filter(
+      c => !mutedCategoryIds.includes(c.id)
+    );
     let ids = topCategoryIds
-      .concat(categoriesList.map(c => c.id))
+      .concat(categoriesByCount.map(c => c.id))
       .uniq()
       .slice(0, maxCategoriesToDisplay);
 
     assert.equal(
       find(".category-link .category-name").text(),
-      ids.map(i => categoriesList.find(c => c.id === i).name).join("")
+      ids.map(i => categoriesByCount.find(c => c.id === i).name).join("")
     );
   }
 });
