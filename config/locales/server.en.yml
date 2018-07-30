@@ -2253,6 +2253,8 @@ en:
 
         <%{base_url}%{url}>
 
+        %{flag_reason}
+
         This post was flagged by the community and a staff member opted to remove it.
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
