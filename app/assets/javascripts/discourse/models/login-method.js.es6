@@ -128,9 +128,14 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
       }
 
       if (
-        ["facebook", "google_oauth2", "twitter", "yahoo", "github"].includes(
-          name
-        )
+        [
+          "facebook",
+          "google_oauth2",
+          "twitter",
+          "yahoo",
+          "github",
+          "instagram"
+        ].includes(name)
       ) {
         params.canConnect = true;
       }
