@@ -381,6 +381,7 @@
 
     td.value {
       text-align: right;
+      white-space: nowrap;
       padding: 8px 21px 8px 8px; // accounting for negative right caret margin
       &:nth-of-type(2) {
         padding: 8px 12px 8px;
