@@ -7,7 +7,8 @@ export default Ember.Controller.extend({
 
   showLoginButton: Em.computed.equal("model.path", "login"),
 
-  @computed("model.path") bodyClass: path => `static-${path}`,
+  @computed("model.path")
+  bodyClass: path => `static-${path}`,
 
   @computed("model.path")
   showSignupButton() {

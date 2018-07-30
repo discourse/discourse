@@ -31,7 +31,8 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("formattedBackupCodes") base64BackupCode: b64EncodeUnicode,
+  @computed("formattedBackupCodes")
+  base64BackupCode: b64EncodeUnicode,
 
   @computed("backupCodes")
   formattedBackupCodes(backupCodes) {
