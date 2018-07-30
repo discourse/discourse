@@ -2,7 +2,6 @@ import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
 moduleForWidget("hamburger-menu");
 
-const maxCategoriesToDisplay = 6;
 const topCategoryIds = [2, 3, 1];
 
 widgetTest("prioritize faq", {
@@ -128,9 +127,16 @@ widgetTest("general links", {
   }
 });
 
+let maxCategoriesToDisplay;
+
 widgetTest("top categories - anonymous", {
   template: '{{mount-widget widget="hamburger-menu"}}',
   anonymous: true,
+
+  beforeEach() {
+    this.siteSettings.hamburger_menu_categories_count = 8;
+    maxCategoriesToDisplay = this.siteSettings.hamburger_menu_categories_count;
+  },
 
   test(assert) {
     const count = this.site.get("categoriesByCount").length;
@@ -144,15 +150,15 @@ widgetTest("top categories", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
+    this.siteSettings.hamburger_menu_categories_count = 8;
+    maxCategoriesToDisplay = this.siteSettings.hamburger_menu_categories_count;
     this.currentUser.set("top_category_ids", topCategoryIds);
   },
 
   test(assert) {
     assert.equal(find(".category-link").length, maxCategoriesToDisplay);
 
-    const categoriesList = this.site
-      .get("categoriesByCount")
-      .reject(c => c.parent_category_id);
+    const categoriesList = this.site.get("categoriesByCount");
     let ids = topCategoryIds
       .concat(categoriesList.map(c => c.id))
       .uniq()
