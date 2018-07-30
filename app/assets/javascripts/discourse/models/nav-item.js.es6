@@ -102,7 +102,8 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  @computed("href") href: href => href
+  @computed("href") href: href => href,
+  customFilter: null
 });
 
 NavItem.reopenClass({
@@ -169,7 +170,11 @@ NavItem.reopenClass({
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
-    return items.concat(NavItem.extraNavItems);
+    const extraItems = NavItem.extraNavItems.filter(item => {
+      return item.customFilter && item.customFilter.call(this, category, args);
+    });
+
+    return items.concat(extraItems);
   }
 });
 
