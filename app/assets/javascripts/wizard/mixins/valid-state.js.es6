@@ -15,11 +15,14 @@ export default {
     this.set("_validState", States.UNCHECKED);
   },
 
-  @computed("_validState") valid: state => state === States.VALID,
+  @computed("_validState")
+  valid: state => state === States.VALID,
 
-  @computed("_validState") invalid: state => state === States.INVALID,
+  @computed("_validState")
+  invalid: state => state === States.INVALID,
 
-  @computed("_validState") unchecked: state => state === States.UNCHECKED,
+  @computed("_validState")
+  unchecked: state => state === States.UNCHECKED,
 
   setValid(valid, description) {
     this.set("_validState", valid ? States.VALID : States.INVALID);

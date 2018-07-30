@@ -287,7 +287,8 @@ export default Ember.Controller.extend({
     return authorizesOneOrMoreExtensions();
   },
 
-  @computed() uploadIcon: () => uploadIcon(),
+  @computed()
+  uploadIcon: () => uploadIcon(),
 
   actions: {
     cancelUpload() {
