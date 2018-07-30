@@ -148,6 +148,13 @@ widgetTest("top categories - anonymous", {
     const maximum =
       count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
     assert.equal(find(".category-link").length, maximum);
+    assert.equal(
+      find(".category-link .category-name").text(),
+      categoriesByCount
+        .slice(0, maxCategoriesToDisplay)
+        .map(c => c.name)
+        .join("")
+    );
   }
 });
 
