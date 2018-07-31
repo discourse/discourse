@@ -333,8 +333,8 @@ class ApplicationController < ActionController::Base
 
     theme_ids = []
 
-    if preview_key = request[:preview_theme_id]&.to_i
-      theme_ids << preview_key
+    if preview_theme_id = request[:preview_theme_id]&.to_i
+      theme_ids << preview_theme_id
     end
 
     user_option = current_user&.user_option
