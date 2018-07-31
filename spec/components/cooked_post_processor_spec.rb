@@ -513,6 +513,24 @@ describe CookedPostProcessor do
       expect(cpp).to be_dirty
       expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
     end
+
+    it "replaces downloaded onebox image" do
+      url = 'https://image.com/my-avatar'
+      image_url = 'https://image.com/avatar.png'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+
+      post = Fabricate(:post, raw: url)
+      upload = Fabricate(:upload, url: "https://test.s3.amazonaws.com/something.png")
+
+      post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
+      post.save_custom_fields
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process_oneboxes
+
+      expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
+    end
   end
 
   context ".post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
