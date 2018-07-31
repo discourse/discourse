@@ -46,10 +46,10 @@ export default TextField.extend({
       return usernames;
     }
 
-
-    const termRegexp = (currentUser && currentUser.can_send_private_email_messages) ?
-      /[^\w.-@]/g :
-      /[^\w.-]/g;
+    const termRegexp =
+      currentUser && currentUser.can_send_private_email_messages
+        ? /[^\w.-@]/g
+        : /[^\w.-]/g;
 
     this.$()
       .val(this.get("usernames"))
@@ -61,7 +61,6 @@ export default TextField.extend({
         updateData: opts && opts.updateData ? opts.updateData : false,
 
         dataSource(term) {
-
           var results = userSearch({
             term: term.replace(termRegexp, ""),
             topicId: self.get("topicId"),
