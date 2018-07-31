@@ -225,7 +225,7 @@ export default function() {
       return response({ category });
     });
 
-    this.get("/draft.json", () => response({}));
+    this.get("/draft.json", () => response(fixturesByUrl["/draft.json"]));
 
     this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 

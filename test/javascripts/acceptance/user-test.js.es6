@@ -40,21 +40,17 @@ QUnit.test("Viewing Summary", async assert => {
   assert.ok(exists(".top-categories-section .category-link"), "top categories");
 });
 
-QUnit.test("Viewing Drafts", assert => {
-  visit("/u/eviltrout/activity/drafts");
-  andThen(() => {
-    assert.ok(exists(".user-stream"), "has drafts stream");
-    assert.ok(
-      $(".user-stream .user-stream-item-draft-actions").length,
-      "has draft action buttons"
-    );
-  });
+QUnit.test("Viewing Drafts", async assert => {
+  await visit("/u/eviltrout/activity/drafts");
+  assert.ok(exists(".user-stream"), "has drafts stream");
+  assert.ok(
+    $(".user-stream .user-stream-item-draft-actions").length,
+    "has draft action buttons"
+  );
 
-  click(".user-stream .user-stream-item:first-child button.resume-draft");
-  andThen(() => {
-    assert.ok(
-      exists(".d-editor-input"),
-      "composer is visible after resuming a draft"
-    );
-  });
+  await click(".user-stream button.resume-draft:eq(0)");
+  assert.ok(
+    exists(".d-editor-input"),
+    "composer is visible after resuming a draft"
+  );
 });

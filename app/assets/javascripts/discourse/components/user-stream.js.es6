@@ -5,6 +5,7 @@ import Post from "discourse/models/post";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Component.extend(LoadMore, {
   loading: false,
@@ -61,7 +62,7 @@ export default Ember.Component.extend(LoadMore, {
     },
 
     resumeDraft(item) {
-      const composer = this.container.lookup("controller:composer");
+      const composer = getOwner(this).lookup("controller:composer");
       if (composer.get("model.viewOpen")) {
         composer.close();
       }
