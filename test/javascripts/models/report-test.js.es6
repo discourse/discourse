@@ -456,7 +456,7 @@ QUnit.test("computed labels", assert => {
   const computedUsernameLabel = usernameLabel.compute(row);
   assert.equal(
     computedUsernameLabel.formatedValue,
-    "<a href='/admin/users/1/joffrey'><img alt='' width='25' height='25' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+    "<a href='/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
   );
   assert.equal(computedUsernameLabel.type, "user");
   assert.equal(computedUsernameLabel.value, "joffrey");
