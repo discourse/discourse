@@ -60,7 +60,7 @@ componentTest("default", {
       "it has rows"
     );
 
-    assert.ok(exists(".totals-sample-table"), "it has totals");
+    assert.ok(exists(".total-row"), "it has totals");
 
     await click(".admin-report-table-header.y .sort-button");
     assert.equal(

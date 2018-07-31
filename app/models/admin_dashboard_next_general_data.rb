@@ -20,6 +20,6 @@ class AdminDashboardNextGeneralData < AdminDashboardNextData
   end
 
   def self.stats_cache_key
-    'general-dashboard-data'
+    "general-dashboard-data-#{Report::SCHEMA_VERSION}"
   end
 end

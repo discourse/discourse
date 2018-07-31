@@ -67,14 +67,14 @@ export default Ember.Component.extend({
         const computedLabel = label.compute(row);
         const value = computedLabel.value;
 
-        if (computedLabel.type === "link" || (value && !isNumeric(value))) {
+        if (!computedLabel.countable || !value || !isNumeric(value)) {
           return undefined;
         } else {
           return sum + value;
         }
       };
 
-      totalsRow[label.property] = rows.reduce(reducer, 0);
+      totalsRow[label.mainProperty] = rows.reduce(reducer, 0);
     });
 
     return totalsRow;
