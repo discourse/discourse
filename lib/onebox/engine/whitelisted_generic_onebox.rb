@@ -241,6 +241,11 @@ module Onebox
             end
           end
 
+          if Onebox::Helpers.blank?(d[:label_1]) && !Onebox::Helpers.blank?(d[:price_amount]) && !Onebox::Helpers.blank?(d[:price_currency])
+            d[:label_1] = "Price"
+            d[:data_1] = Sanitize.fragment(Onebox::Helpers.truncate("#{d[:price_currency].strip} #{d[:price_amount].strip}"))
+          end
+
           d
         end
       end

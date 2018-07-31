@@ -24,7 +24,7 @@ module Onebox
       og = {}
 
       doc.css('meta').each do |m|
-        if (m["property"] && m["property"][/^(?:og|article):(.+)$/i]) || (m["name"] && m["name"][/^(?:og|article):(.+)$/i])
+        if (m["property"] && m["property"][/^(?:og|article|product):(.+)$/i]) || (m["name"] && m["name"][/^(?:og|article|product):(.+)$/i])
           value = (m["content"] || m["value"]).to_s
           og[$1.tr('-:', '_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
         end
