@@ -23,7 +23,7 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
 
     rvm install 2.5.1
     rvm --default use 2.5.1 # If this error out check https://rvm.io/integration/gnome-terminal
-    gem install bundler mailcatcher
+    gem install bundler mailcatcher rake
 
     # Postgresql
     sudo -u postgres -i
