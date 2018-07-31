@@ -319,7 +319,7 @@ const Report = Discourse.Model.extend({
     });
 
     const avatarImg = renderAvatar(user, {
-      imageSize: "small",
+      imageSize: "tiny",
       ignoreTitle: true
     });
 
