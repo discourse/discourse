@@ -635,7 +635,7 @@ class Report
     report.data = []
     mod_data = {}
 
-    User.real.where(moderator: true).find_each do |u|
+    User.real.where(moderator: true).order(:username_lower).each do |u|
       mod_data[u.id] = {
         user_id: u.id,
         username: u.username,
