@@ -26,6 +26,6 @@ class AdminDashboardNextData
   end
 
   def self.stats_cache_key
-    'dashboard-next-data'
+    "dashboard-next-data-#{Report::SCHEMA_VERSION}"
   end
 end

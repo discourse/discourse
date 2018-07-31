@@ -193,7 +193,7 @@
 }
 
 .admin-report.post-edits {
-  .admin-report-table {
+  .report-table {
     table-layout: auto;
 
     tbody tr td,
@@ -203,7 +203,7 @@
 
     thead tr th.edit_reason,
     tbody tr td.edit_reason {
-      width: 60%;
+      width: 100%;
     }
   }
 }
