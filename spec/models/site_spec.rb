@@ -66,4 +66,10 @@ describe Site do
     expect(Site.new(guardian).categories).not_to include(sub_category)
   end
 
+  it "includes all enabled authentication providers" do
+    SiteSetting.enable_twitter_logins = true
+    SiteSetting.enable_facebook_logins = true
+    expect(Site.new(Guardian.new).auth_providers.map(&:name)).to contain_exactly('facebook', 'twitter')
+  end
+
 end
