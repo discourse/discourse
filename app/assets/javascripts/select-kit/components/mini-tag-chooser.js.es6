@@ -22,7 +22,7 @@ export default ComboBox.extend(Tags, {
   fullWidthOnMobile: true,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     this.set("termMatchesForbidden", false);
     this.selectionSelector = ".selected-tag";
@@ -42,6 +42,21 @@ export default ComboBox.extend(Tags, {
           this.get("maximum") ||
           this.get("siteSettings.max_tags_per_topic")
       )
+    );
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.$(".selected-name").off("touchend.select-kit pointerup.select-kit");
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    this.$(".selected-name").on(
+      "touchend.select-kit pointerup.select-kit",
+      () => this.focusFilterOrHeader()
     );
   },
 

@@ -25,6 +25,7 @@ module Middleware
         @request.get? &&
         !@request.xhr? &&
         !@request.path.ends_with?('robots.txt') &&
+        !@request.path.ends_with?('srv/status') &&
         CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
       end
 

@@ -11,20 +11,18 @@ componentTest("default", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        selectKit()
-          .header()
-          .title(),
-        "bold,italic"
-      );
-      assert.equal(
-        selectKit()
-          .header()
-          .value(),
-        "bold,italic"
-      );
-    });
+    assert.equal(
+      selectKit()
+        .header()
+        .title(),
+      "bold,italic"
+    );
+    assert.equal(
+      selectKit()
+        .header()
+        .value(),
+      "bold,italic"
+    );
   }
 });
 
@@ -36,14 +34,12 @@ componentTest("with empty string as value", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        selectKit()
-          .header()
-          .value(),
-        ""
-      );
-    });
+    assert.equal(
+      selectKit()
+        .header()
+        .value(),
+      ""
+    );
   }
 });
 
@@ -55,14 +51,12 @@ componentTest("with only setting value", {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(
-        selectKit()
-          .header()
-          .value(),
-        "bold,italic"
-      );
-    });
+    assert.equal(
+      selectKit()
+        .header()
+        .value(),
+      "bold,italic"
+    );
   }
 });
 
@@ -74,35 +68,26 @@ componentTest("interactions", {
     this.set("choices", ["bold", "italic", "underline"]);
   },
 
-  test(assert) {
+  async test(assert) {
     const listSetting = selectKit();
 
-    listSetting.expand().selectRowByValue("underline");
+    await listSetting.expand();
+    await listSetting.selectRowByValue("underline");
 
-    andThen(() => {
-      assert.equal(listSetting.header().value(), "bold,italic,underline");
-    });
+    assert.equal(listSetting.header().value(), "bold,italic,underline");
 
-    listSetting.expand().fillInFilter("strike");
+    await listSetting.expand();
+    await listSetting.fillInFilter("strike");
 
-    andThen(() => {
-      assert.equal(listSetting.highlightedRow().value(), "strike");
-    });
+    assert.equal(listSetting.highlightedRow().value(), "strike");
 
-    listSetting.keyboard().enter();
+    await listSetting.keyboard("enter");
 
-    andThen(() => {
-      assert.equal(
-        listSetting.header().value(),
-        "bold,italic,underline,strike"
-      );
-    });
+    assert.equal(listSetting.header().value(), "bold,italic,underline,strike");
 
-    listSetting.keyboard().backspace();
-    listSetting.keyboard().backspace();
+    await listSetting.keyboard("backspace");
+    await listSetting.keyboard("backspace");
 
-    andThen(() => {
-      assert.equal(listSetting.header().value(), "bold,italic,underline");
-    });
+    assert.equal(listSetting.header().value(), "bold,italic,underline");
   }
 });

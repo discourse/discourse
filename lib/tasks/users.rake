@@ -75,7 +75,11 @@ task "users:update_posts", [:old_username, :current_username] => [:environment] 
   end
 
   user = find_user(current_username)
-  UsernameChanger.update_username(user.id, old_username, user.username, user.avatar_template)
+  UsernameChanger.update_username(user_id: user.id,
+                                  old_username: old_username,
+                                  new_username: user.username,
+                                  avatar_template: user.avatar_template,
+                                  asynchronous: false)
 
   puts "", "Username updated!", ""
 end
@@ -133,6 +137,14 @@ GROUP BY p.user_id
   SQL
 
   puts 'Done!', ''
+end
+
+desc "Disable 2FA for user with the given username"
+task "users:disable_2fa", [:username] => [:environment] do |_, args|
+  username = args[:username]
+  user = find_user(username)
+  UserSecondFactor.totp.where(user_id: user.id).each(&:destroy!)
+  puts "2FA disabled for #{username}"
 end
 
 def find_user(username)

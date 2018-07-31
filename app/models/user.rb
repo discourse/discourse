@@ -20,9 +20,6 @@ class User < ActiveRecord::Base
   include HasCustomFields
   include SecondFactorManager
 
-  # TODO: Remove this after 7th Jan 2018
-  self.ignored_columns = %w{email}
-
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
@@ -65,7 +62,7 @@ class User < ActiveRecord::Base
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
-  has_one :oauth2_user_info, dependent: :destroy
+  has_many :oauth2_user_infos, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
   has_one :user_stat, dependent: :destroy
@@ -104,6 +101,7 @@ class User < ActiveRecord::Base
   after_create :create_user_stat
   after_create :create_user_option
   after_create :create_user_profile
+  after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
 
@@ -117,6 +115,7 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_commit :trigger_user_created_event, on: :create
+  after_commit :trigger_user_destroyed_event, on: :destroy
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -612,8 +611,7 @@ class User < ActiveRecord::Base
   end
 
   def self.gravatar_template(email)
-    email_hash = self.email_hash(email)
-    "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
+    "//www.gravatar.com/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
   end
 
   # Don't pass this up to the client - it's meant for server side use
@@ -628,19 +626,19 @@ class User < ActiveRecord::Base
     UrlHelper.schemaless UrlHelper.absolute avatar_template
   end
 
+  def self.username_hash(username)
+    username.each_char.reduce(0) do |result, char|
+      [((result << 5) - result) + char.ord].pack('L').unpack('l').first
+    end.abs
+  end
+
   def self.default_template(username)
     if SiteSetting.default_avatars.present?
-      split_avatars = SiteSetting.default_avatars.split("\n")
-      if split_avatars.present?
-        hash = username.each_char.reduce(0) do |result, char|
-          [((result << 5) - result) + char.ord].pack('L').unpack('l').first
-        end
-
-        split_avatars[hash.abs % split_avatars.size]
-      end
-    else
-      system_avatar_template(username)
+      urls = SiteSetting.default_avatars.split("\n")
+      return urls[username_hash(username) % urls.size] if urls.present?
     end
+
+    system_avatar_template(username)
   end
 
   def self.avatar_template(username, uploaded_avatar_id)
@@ -954,18 +952,18 @@ class User < ActiveRecord::Base
   def associated_accounts
     result = []
 
-    result << "Twitter(#{twitter_user_info.screen_name})"               if twitter_user_info
-    result << "Facebook(#{facebook_user_info.username})"                if facebook_user_info
-    result << "Google(#{google_user_info.email})"                       if google_user_info
-    result << "GitHub(#{github_user_info.screen_name})"                 if github_user_info
-    result << "Instagram(#{instagram_user_info.screen_name})"           if instagram_user_info
-    result << "#{oauth2_user_info.provider}(#{oauth2_user_info.email})" if oauth2_user_info
-
-    user_open_ids.each do |oid|
-      result << "OpenID #{oid.url[0..20]}...(#{oid.email})"
+    Discourse.authenticators.each do |authenticator|
+      account_description = authenticator.description_for_user(self)
+      unless account_description.empty?
+        result << {
+          name: authenticator.name,
+          description: account_description,
+          can_revoke: authenticator.can_revoke?
+        }
+      end
     end
 
-    result.empty? ? I18n.t("user.no_accounts_associated") : result.join(", ")
+    result
   end
 
   def user_fields
@@ -1018,6 +1016,18 @@ class User < ActiveRecord::Base
     UserProfile.create(user_id: id)
   end
 
+  def set_random_avatar
+    if SiteSetting.selectable_avatars_enabled? && SiteSetting.selectable_avatars.present?
+      urls = SiteSetting.selectable_avatars.split("\n")
+      if urls.present?
+        if upload = Upload.find_by(url: urls.sample)
+          update_column(:uploaded_avatar_id, upload.id)
+          UserAvatar.create(user_id: id, custom_upload_id: upload.id)
+        end
+      end
+    end
+  end
+
   def anonymous?
     SiteSetting.allow_anonymous_posting &&
       trust_level >= 1 &&
@@ -1067,6 +1077,14 @@ class User < ActiveRecord::Base
     else
       self.primary_email = UserEmail.new(email: new_email, user: self, primary: true)
     end
+  end
+
+  def emails
+    self.user_emails.order("user_emails.primary DESC NULLS LAST").pluck(:email)
+  end
+
+  def secondary_emails
+    self.user_emails.secondary.pluck(:email)
   end
 
   def recent_time_read
@@ -1253,6 +1271,11 @@ class User < ActiveRecord::Base
     true
   end
 
+  def trigger_user_destroyed_event
+    DiscourseEvent.trigger(:user_destroyed, self)
+    true
+  end
+
   def set_skip_validate_email
     if self.primary_email
       self.primary_email.skip_validate_email = !should_validate_email_address?
@@ -1306,8 +1329,8 @@ end
 #
 # Indexes
 #
-#  idx_users_admin                    (id)
-#  idx_users_moderator                (id)
+#  idx_users_admin                    (id) WHERE admin
+#  idx_users_moderator                (id) WHERE moderator
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)

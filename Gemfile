@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.53'
+gem 'onebox', '1.8.55'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -108,6 +108,7 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
+  gem 'danger'
 end
 
 group :test, :development do

@@ -506,7 +506,12 @@ describe UserNotifications do
   it 'adds a warning when mail limit is reached' do
     SiteSetting.max_emails_per_day_per_user = 2
     user = Fabricate(:user)
-    user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, skipped: false)
+
+    user.email_logs.create!(
+      email_type: 'blah',
+      to_address: user.email,
+      user_id: user.id
+    )
 
     post = Fabricate(:post)
     reply = Fabricate(:post, topic_id: post.topic_id)

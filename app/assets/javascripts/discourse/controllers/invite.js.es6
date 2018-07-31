@@ -225,11 +225,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return Group.findAll({ term: term, ignore_automatic: true });
   },
 
-  @computed("isPrivateTopic", "isMessage")
-  includeMentionableGroups(isPrivateTopic, isMessage) {
-    return !isPrivateTopic && !isMessage;
-  },
-
   @computed("isMessage", "emailOrUsername", "invitingExistingUserToTopic")
   successMessage(isMessage, emailOrUsername, invitingExistingUserToTopic) {
     if (this.get("hasGroups")) {

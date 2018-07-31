@@ -33,6 +33,7 @@
 
 //= require helpers/assertions
 //= require helpers/select-kit-helper
+//= require helpers/d-editor-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures

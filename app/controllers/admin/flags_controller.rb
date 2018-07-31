@@ -77,13 +77,14 @@ class Admin::FlagsController < Admin::AdminController
     delete_post = params[:action_on_post] == "delete"
     restore_post = params[:action_on_post] == "restore"
 
-    PostAction.agree_flags!(post, current_user, delete_post)
-
     if delete_post
+      # PostDestroy calls PostAction.agree_flags!
       PostDestroyer.new(current_user, post).destroy
     elsif restore_post
+      PostAction.agree_flags!(post, current_user, delete_post)
       PostDestroyer.new(current_user, post).recover
     elsif !keep_post
+      PostAction.agree_flags!(post, current_user, delete_post)
       PostAction.hide_post!(post, post_action_type)
     end
 

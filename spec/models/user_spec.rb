@@ -416,17 +416,16 @@ describe User do
   describe 'associated_accounts' do
     it 'should correctly find social associations' do
       user = Fabricate(:user)
-      expect(user.associated_accounts).to eq(I18n.t("user.no_accounts_associated"))
+      expect(user.associated_accounts).to eq([])
 
       TwitterUserInfo.create(user_id: user.id, screen_name: "sam", twitter_user_id: 1)
       FacebookUserInfo.create(user_id: user.id, username: "sam", facebook_user_id: 1)
       GoogleUserInfo.create(user_id: user.id, email: "sam@sam.com", google_user_id: 1)
       GithubUserInfo.create(user_id: user.id, screen_name: "sam", github_user_id: 1)
-      Oauth2UserInfo.create(user_id: user.id, provider: "linkedin", email: "sam@sam.com", uid: 1)
       InstagramUserInfo.create(user_id: user.id, screen_name: "sam", instagram_user_id: "examplel123123")
 
       user.reload
-      expect(user.associated_accounts).to eq("Twitter(sam), Facebook(sam), Google(sam@sam.com), GitHub(sam), Instagram(sam), linkedin(sam@sam.com)")
+      expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly('twitter', 'facebook', 'google_oauth2', 'github', 'instagram')
 
     end
   end
@@ -1758,4 +1757,31 @@ describe User do
       filter_by(:filter_by_username_or_email)
     end
   end
+
+  describe "#secondary_emails" do
+    let(:user) { Fabricate(:user_single_email) }
+
+    it "only contains secondary emails" do
+      expect(user.user_emails.secondary).to eq([])
+
+      secondary_email = Fabricate(:secondary_email, user: user)
+
+      expect(user.user_emails.secondary).to contain_exactly(secondary_email)
+    end
+  end
+
+  describe "set_random_avatar" do
+    it "sets a random avatar when selectable avatars is enabled" do
+      avatar1 = Fabricate(:upload)
+      avatar2 = Fabricate(:upload)
+      SiteSetting.selectable_avatars_enabled = true
+      SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+
+      user = Fabricate(:user)
+      expect(user.uploaded_avatar_id).not_to be(nil)
+      expect([avatar1.id, avatar2.id]).to include(user.uploaded_avatar_id)
+      expect(user.user_avatar.custom_upload_id).to eq(user.uploaded_avatar_id)
+    end
+  end
+
 end

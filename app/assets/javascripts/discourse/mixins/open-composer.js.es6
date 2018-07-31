@@ -16,7 +16,6 @@ export default Ember.Mixin.create({
     topicTitle,
     topicBody,
     topicCategoryId,
-    topicCategory,
     topicTags
   ) {
     this.controllerFor("composer").open({
@@ -24,7 +23,6 @@ export default Ember.Mixin.create({
       topicTitle,
       topicBody,
       topicCategoryId,
-      topicCategory,
       topicTags,
       draftKey: controller.get("model.draft_key"),
       draftSequence: controller.get("model.draft_sequence")

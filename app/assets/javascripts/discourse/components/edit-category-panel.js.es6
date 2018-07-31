@@ -8,7 +8,7 @@ export function buildCategoryPanel(tab, extras) {
       activeTab: Ember.computed.equal("selectedTab", tab),
       classNameBindings: [
         ":modal-tab",
-        "activeTab::invisible",
+        "activeTab::hide",
         `:edit-category-tab-${tab}`
       ]
     },

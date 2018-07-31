@@ -214,10 +214,6 @@ uk:
       title: 'Вподобати'
       description: 'Like this post'
       long_form: 'liked this'
-    vote:
-      title: 'Проголосувати'
-      description: 'Vote for this post'
-      long_form: 'voted for this post'
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -298,8 +294,6 @@ uk:
       num_users: "Користувачі"
     top_referred_topics:
       title: "Найбільше посилаються на"
-      xaxis: "Тема"
-      num_clicks: "Переходи"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -444,19 +438,6 @@ uk:
     store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
     images:
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
-  email_log:
-    no_user: "Can't find user with id %{user_id}"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
   guidelines: "Інструкції"
   privacy: "Конфіденційність"
   edit_this_page: "Редагувати цю сторінку"

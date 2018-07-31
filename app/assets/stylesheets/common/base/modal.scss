@@ -369,12 +369,8 @@
 }
 
 .edit-category-modal {
-  .future-date-input,
-  .num-featured-topics-fields,
-  .position-fields {
-    input[type="text"] {
-      width: 50px;
-    }
+  input[type="number"] {
+    width: 50px;
   }
 
   .subcategory-list-style-field {
@@ -524,6 +520,40 @@
         a:hover {
           color: dark-light-choose($primary-medium, $secondary-medium);
         }
+      }
+    }
+  }
+}
+
+.jump-to-post-modal {
+  .modal-body {
+    #post-jump,
+    .date-picker {
+      margin: 0;
+      width: 100px;
+    }
+
+    .pika-single {
+      position: relative !important;
+    }
+
+    .jump-to-post-control .index {
+      color: $primary-medium;
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      margin: 1em auto;
+
+      .left,
+      .right {
+        flex: 1;
+      }
+
+      .text {
+        margin: 0 0.5em;
+        color: $primary-medium;
       }
     }
   }

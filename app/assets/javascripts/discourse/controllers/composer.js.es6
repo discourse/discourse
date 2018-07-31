@@ -177,7 +177,6 @@ export default Ember.Controller.extend({
   @computed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
     return (
-      !this.site.mobileView &&
       this.site.get("can_tag_topics") &&
       canEditTitle &&
       !creatingPrivateMessage &&
@@ -288,7 +287,8 @@ export default Ember.Controller.extend({
     return authorizesOneOrMoreExtensions();
   },
 
-  @computed() uploadIcon: () => uploadIcon(),
+  @computed()
+  uploadIcon: () => uploadIcon(),
 
   actions: {
     cancelUpload() {
@@ -533,10 +533,13 @@ export default Ember.Controller.extend({
     // if we are replying to a topic AND not on the topic pop the window up
     if (!force && composer.get("replyingToTopic")) {
       const currentTopic = this.get("topicModel");
-      if (
-        !currentTopic ||
-        currentTopic.get("id") !== composer.get("topic.id")
-      ) {
+
+      if (!currentTopic) {
+        this.save(true);
+        return;
+      }
+
+      if (currentTopic.get("id") !== composer.get("topic.id")) {
         const message = I18n.t("composer.posting_not_on_topic");
 
         let buttons = [
@@ -547,21 +550,19 @@ export default Ember.Controller.extend({
           }
         ];
 
-        if (currentTopic) {
-          buttons.push({
-            label:
-              I18n.t("composer.reply_here") +
-              "<br/><div class='topic-title overflow-ellipsis'>" +
-              currentTopic.get("fancyTitle") +
-              "</div>",
-            class: "btn btn-reply-here",
-            callback: () => {
-              composer.set("topic", currentTopic);
-              composer.set("post", null);
-              this.save(true);
-            }
-          });
-        }
+        buttons.push({
+          label:
+            I18n.t("composer.reply_here") +
+            "<br/><div class='topic-title overflow-ellipsis'>" +
+            currentTopic.get("fancyTitle") +
+            "</div>",
+          class: "btn btn-reply-here",
+          callback: () => {
+            composer.set("topic", currentTopic);
+            composer.set("post", null);
+            this.save(true);
+          }
+        });
 
         buttons.push({
           label:
@@ -813,32 +814,6 @@ export default Ember.Controller.extend({
 
     if (opts.topicCategoryId) {
       this.set("model.categoryId", opts.topicCategoryId);
-    } else if (opts.topicCategory) {
-      const splitCategory = opts.topicCategory.split("/");
-      let category;
-
-      if (!splitCategory[1]) {
-        category = this.site
-          .get("categories")
-          .findBy("nameLower", splitCategory[0].toLowerCase());
-      } else {
-        const categories = this.site.get("categories");
-        const mainCategory = categories.findBy(
-          "nameLower",
-          splitCategory[0].toLowerCase()
-        );
-        category = categories.find(function(item) {
-          return (
-            item &&
-            item.get("nameLower") === splitCategory[1].toLowerCase() &&
-            item.get("parent_category_id") === mainCategory.id
-          );
-        });
-      }
-
-      if (category) {
-        this.set("model.categoryId", category.get("id"));
-      }
     }
 
     if (

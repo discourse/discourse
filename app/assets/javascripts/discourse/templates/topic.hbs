@@ -78,7 +78,7 @@
         {{partial "selected-posts"}}
       </div>
 
-      {{#topic-navigation topic=model jumpToIndex=(action "jumpToIndex") as |info|}}
+      {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderTimeline}}
           {{#if info.renderAdminMenuButton}}
             {{topic-admin-menu-button
@@ -223,12 +223,14 @@
 
               {{#if model.private_topic_timer.execute_at}}
                 {{topic-timer-info
+                    topicClosed=model.closed
                     statusType=model.private_topic_timer.status_type
                     executeAt=model.private_topic_timer.execute_at
                     duration=model.private_topic_timer.duration}}
               {{/if}}
 
               {{topic-timer-info
+                  topicClosed=model.closed
                   statusType=model.topic_timer.status_type
                   executeAt=model.topic_timer.execute_at
                   basedOnLastPost=model.topic_timer.based_on_last_post

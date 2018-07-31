@@ -64,9 +64,9 @@
     }
 
     .choices {
-      margin: 0;
+      margin: 1px;
       box-sizing: border-box;
-      display: inline-flex;
+      display: flex;
       justify-content: flex-start;
       flex-wrap: wrap;
 
@@ -79,7 +79,7 @@
         justify-content: space-between;
         flex-wrap: wrap;
         flex-direction: row;
-        margin: 2px;
+        margin: 1px;
       }
 
       .filter {

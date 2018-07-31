@@ -152,6 +152,7 @@ en:
       user_left: "%{who} removed themselves from this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
+      autobumped: "automatically bumped %{when}"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -564,8 +565,6 @@ en:
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
-        fix_order: "Fix Positions"
-        fix_order_tooltip: "Not all categories have a unique position number, which may cause unexpected results."
         save: "Save Order"
         apply_all: "Apply"
         position: "Position"
@@ -581,6 +580,7 @@ en:
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
+      more: " (%{count} more) ..."
 
     ip_lookup:
       title: IP Address Lookup
@@ -805,7 +805,6 @@ en:
         upload_title: "Upload your picture"
         upload_picture: "Upload Picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
-        cache_notice: "You've successfully changed your profile picture but it might take some time to appear due to browser caching."
 
       change_profile_background:
         title: "Profile Background"
@@ -817,6 +816,9 @@ en:
 
       email:
         title: "Email"
+        primary: "Primary Email"
+        secondary: "Secondary Emails"
+        no_secondary: "No secondary emails"
         instructions: "never shown to the public"
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
@@ -825,6 +827,12 @@ en:
         frequency:
           one: "We'll only email you if we haven't seen you in the last minute."
           other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
+
+      associated_accounts:
+        title: "Associated Accounts"
+        connect: "Connect"
+        revoke: "Revoke"
+        not_connected: "(not connected)"
 
       name:
         title: "Name"
@@ -1009,9 +1017,10 @@ en:
         most_liked_users: "Most Liked"
         most_replied_to_users: "Most Replied To"
         no_likes: "No likes yet."
+        top_categories: "Top Categories"
+        topics: "Topics"
+        replies: "Replies"
 
-
-      associated_accounts: "Logins"
       ip_address:
         title: "Last IP Address"
       registration_ip_address:
@@ -1175,6 +1184,7 @@ en:
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
+      cookies_error: "Your browsers seems to have cookies disabled. You might not be able to log in without enabling them first."
       rate_limit: "Please wait before trying to log in again."
       blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
@@ -1201,25 +1211,28 @@ en:
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
-      google:
-        title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       google_oauth2:
+        name: "Google"
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
+        name: "Twitter"
         title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       instagram:
+        name: "Instagram"
         title: "with Instagram"
         message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
+        name: "Facebook"
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       yahoo:
+        name: "Yahoo"
         title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
+        name: "GitHub"
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
     invites:
@@ -1780,6 +1793,8 @@ en:
         jump_prompt_of: "of %{count} posts"
         jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
+        jump_prompt_to_date: "to date"
+        jump_prompt_or: "or"
         total: total posts
         current: current post
 
@@ -2107,6 +2122,8 @@ en:
         lock_post_description: "prevent the poster from editing this post"
         unlock_post: "Unlock Post"
         unlock_post_description: "allow the poster to edit this post"
+        delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
+        delete_topic_disallowed: "you don't have permission to delete this topic"
 
       actions:
         flag: 'Flag'
@@ -2281,7 +2298,7 @@ en:
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
-      all_topics_wiki: "Make new topics wikis by default."
+      all_topics_wiki: "Make new topics wikis by default"
       subcategory_list_style: "Subcategory List Style:"
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"
@@ -2292,12 +2309,14 @@ en:
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
-      position: "position"
+      position: "Position:"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
       minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
+      num_auto_bump_daily: 'Number of open topics to automatically bump daily:'
+      navigate_to_first_post_after_read: 'Navigate to first post after topics are read'
       notifications:
         watching:
           title: "Watching"
@@ -2774,9 +2793,14 @@ en:
         page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
         community_health: Community health
+        moderators_activity: Moderators activity
         whats_new_in_discourse: What’s new in Discourse?
         activity_metrics: Activity Metrics
         all_reports: "All reports"
+        general_tab: "General"
+        moderation_tab: "Moderation"
+        disabled: Disabled
+        timeout_error: Sorry, query is taking too long, please pick a shorter interval
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -2795,8 +2819,9 @@ en:
           end_date: "End Date"
           groups: "All groups"
           disabled: "This report is disabled"
-          total_for_period: "Total for period"
-          total: "Total"
+          totals_for_sample: "Totals for sample"
+          total: "All time total"
+          no_data: "No data to display."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
@@ -3013,6 +3038,9 @@ en:
         flag_event:
           name: "Flag Event"
           details: "When a flag is created, agreed, disagreed or ignored."
+        queued_post_event:
+          name: "Post Approval Event"
+          details: "When a new queued post is created, approved or rejected."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -3338,7 +3366,6 @@ en:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
-            skipped_reason_placeholder: "reason"
 
       moderation_history:
         performed_by: "Performed By"
@@ -3800,6 +3827,14 @@ en:
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
+        uploaded_image_list:
+          label: "Edit list"
+          empty: "There are no pictures yet. Please upload one."
+          upload:
+            label: "Upload"
+            title: "Upload image(s)"
+        selectable_avatars:
+          title: "List of avatars users can choose from"
         categories:
           all_results: 'All'
           required: 'Required'
@@ -3974,3 +4009,8 @@ en:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regular User"
+
+      previews:
+        topic_title: "Discussion topic"
+        share_button: "Share"
+        reply_button: "Reply"

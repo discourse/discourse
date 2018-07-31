@@ -4,7 +4,7 @@ import showModal from "discourse/lib/show-modal";
 import { setting } from "discourse/lib/computed";
 import { findAll } from "discourse/models/login-method";
 import { escape } from "pretty-text/sanitizer";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -180,6 +180,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // Failed to login
           if (e.jqXHR && e.jqXHR.status === 429) {
             self.flash(I18n.t("login.rate_limit"), "error");
+          } else if (!areCookiesEnabled()) {
+            self.flash(I18n.t("login.cookies_error"), "error");
           } else {
             self.flash(I18n.t("login.error"), "error");
           }
@@ -191,50 +193,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     externalLogin: function(loginMethod) {
-      const name = loginMethod.get("name");
-      const customLogin = loginMethod.get("customLogin");
-
-      if (customLogin) {
-        customLogin();
-      } else {
-        let authUrl =
-          loginMethod.get("customUrl") || Discourse.getURL("/auth/" + name);
-        if (loginMethod.get("fullScreenLogin")) {
-          document.cookie = "fsl=true";
-          window.location = authUrl;
-        } else {
-          this.set("authenticate", name);
-          const left = this.get("lastX") - 400;
-          const top = this.get("lastY") - 200;
-
-          const height = loginMethod.get("frameHeight") || 400;
-          const width = loginMethod.get("frameWidth") || 800;
-
-          if (loginMethod.get("displayPopup")) {
-            authUrl = authUrl + "?display=popup";
-          }
-
-          const w = window.open(
-            authUrl,
-            "_blank",
-            "menubar=no,status=no,height=" +
-              height +
-              ",width=" +
-              width +
-              ",left=" +
-              left +
-              ",top=" +
-              top
-          );
-          const self = this;
-          const timer = setInterval(function() {
-            if (!w || w.closed) {
-              clearInterval(timer);
-              self.set("authenticate", null);
-            }
-          }, 1000);
-        }
-      }
+      loginMethod.doLogin();
     },
 
     createAccount: function() {

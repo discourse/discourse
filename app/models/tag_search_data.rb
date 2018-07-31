@@ -14,5 +14,5 @@ end
 #
 # Indexes
 #
-#  idx_search_tag  (search_data)
+#  idx_search_tag  (search_data) USING gin
 #

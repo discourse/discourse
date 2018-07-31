@@ -98,9 +98,6 @@ basic:
     default: 365
     min: 7
     max: 10000
-  track_external_right_clicks:
-    client: true
-    default: false
   ga_universal_tracking_code:
     client: true
     default: ''
@@ -676,6 +673,11 @@ posting:
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
     default: true
+  emoji_autocomplete_min_chars:
+    client: true
+    default: 0
+    locale_default:
+      fr: 1
   approve_post_count:
     default: 0
   approve_unless_trust_level:
@@ -867,6 +869,10 @@ files:
     default: 40
     min: 5
     max: 150
+  max_export_file_size_kb:
+    hidden: true
+    default: 50000
+    max: 1024000
   theme_authorized_extensions:
     default: 'jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif'
     type: list
@@ -924,9 +930,14 @@ files:
   s3_upload_bucket:
     default: ''
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+  s3_endpoint:
+    default: 'https://s3.amazonaws.com'
+    regex: '^https?:\/\/.+[^\/]$'
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
+  s3_force_path_style:
+    default: false
   allow_profile_backgrounds:
     client: true
     default: true
@@ -954,6 +965,12 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
+  selectable_avatars_enabled:
+    default: false
+    client: true
+  selectable_avatars:
+    default: ''
+    type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
   png_to_jpg_quality:
     default: 95
@@ -1402,6 +1419,10 @@ uncategorized:
     client: true
     default: true
 
+  header_dropdown_category_count:
+    client: true
+    default: 8
+
   slug_generation_method:
     default: 'ascii'
     enum: 'SlugSetting'
@@ -1622,6 +1643,8 @@ user_preferences:
 api:
   retain_web_hook_events_period_days:
     default: 30
+  retry_web_hook_events:
+    default: false
 
 user_api:
   allow_user_api_keys:

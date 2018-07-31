@@ -1,4 +1,5 @@
 import { toTitleCase } from "discourse/lib/formatter";
+import { emojiUnescape } from "discourse/lib/text";
 import computed from "ember-addons/ember-computed-decorators";
 
 const NavItem = Discourse.Model.extend({
@@ -30,7 +31,9 @@ const NavItem = Discourse.Model.extend({
       extra.categoryName = toTitleCase(categoryName);
     }
 
-    return I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra);
+    return emojiUnescape(
+      I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
+    );
   },
 
   @computed("name")
@@ -102,7 +105,9 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  @computed("href") href: href => href
+  @computed("href")
+  href: href => href,
+  customFilter: null
 });
 
 NavItem.reopenClass({
@@ -169,7 +174,11 @@ NavItem.reopenClass({
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
-    return items.concat(NavItem.extraNavItems);
+    const extraItems = NavItem.extraNavItems.filter(item => {
+      return item.customFilter && item.customFilter.call(this, category, args);
+    });
+
+    return items.concat(extraItems);
   }
 });
 

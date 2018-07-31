@@ -5,6 +5,7 @@ import PreferencesTabController from "discourse/mixins/preferences-tab-controlle
 import { setting } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
+import { findAll } from "discourse/models/login-method";
 
 export default Ember.Controller.extend(
   CanCheckEmails,
@@ -51,6 +52,44 @@ export default Ember.Controller.extend(
     canChangePassword() {
       return (
         !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins
+      );
+    },
+
+    @computed("model.associated_accounts")
+    associatedAccountsLoaded(associatedAccounts) {
+      return typeof associatedAccounts !== "undefined";
+    },
+
+    @computed("model.associated_accounts.[]")
+    authProviders(accounts) {
+      const allMethods = findAll(
+        this.siteSettings,
+        this.capabilities,
+        this.site.isMobileDevice
+      );
+
+      const result = allMethods.map(method => {
+        return {
+          method,
+          account: accounts.find(account => account.name === method.name) // Will be undefined if no account
+        };
+      });
+
+      return result.filter(value => {
+        return value.account || value.method.get("canConnect");
+      });
+    },
+
+    @computed("model.id")
+    disableConnectButtons(userId) {
+      return userId !== this.get("currentUser.id");
+    },
+
+    @computed()
+    canUpdateAssociatedAccounts() {
+      return (
+        findAll(this.siteSettings, this.capabilities, this.site.isMobileDevice)
+          .length > 0
       );
     },
 
@@ -135,6 +174,28 @@ export default Ember.Controller.extend(
 
       showTwoFactorModal() {
         showModal("second-factor-intro");
+      },
+
+      revokeAccount(account) {
+        const model = this.get("model");
+        this.set("revoking", true);
+        model
+          .revokeAssociatedAccount(account.name)
+          .then(result => {
+            if (result.success) {
+              model.get("associated_accounts").removeObject(account);
+            } else {
+              bootbox.alert(result.message);
+            }
+          })
+          .catch(popupAjaxError)
+          .finally(() => {
+            this.set("revoking", false);
+          });
+      },
+
+      connectAccount(method) {
+        method.doLogin();
       }
     }
   }

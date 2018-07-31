@@ -197,6 +197,7 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  authenticator_not_found: "Authentication method does not exist, or has been disabled."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
@@ -553,7 +554,7 @@ en:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
@@ -701,6 +702,9 @@ en:
       title: "Thanks for confirming your current email address"
       description: "We're now emailing your new address for confirmation."
 
+  associated_accounts:
+    revoke_failed: "Failed to revoke your account with %{provider_name}."
+
   activation:
     action: "Click here to activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
@@ -843,6 +847,39 @@ en:
       write: "Write all"
 
   reports:
+    default:
+      labels:
+        count: Count
+        day: Day
+    post_edits:
+      title: "Post edits"
+      labels:
+        post: Post
+        editor: Editor
+        author: Author
+        edit_reason: Reason
+    moderators_activity:
+      title: "Moderators activity"
+      labels:
+        moderator: Moderator
+        flag_count: Flags reviewed
+        time_read: Time reading
+        topic_count: Topics created
+        post_count: Posts created
+        pm_count: PMs created
+    flags_status:
+      title: "Flags status"
+      values:
+        agreed: Agreed
+        disagreed: Disagreed
+        deferred: Deferred
+        no_action: No action
+      labels:
+        flag: Type
+        assigned: Assigned
+        poster: Poster
+        flagger: Flagger
+        time_to_resolution: Resolution time
     visits:
       title: "User Visits"
       xaxis: "Day"
@@ -901,10 +938,14 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+      labels:
+        level: Level
     users_by_type:
       title: "Users per Type"
       xaxis: "Type"
       yaxis: "Number of Users"
+      labels:
+        type: Type
       xaxis_labels:
         admin: Admin
         moderator: Moderator
@@ -955,10 +996,15 @@ en:
       num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
+      labels:
+        domain: Domain
+        num_clicks: Clicks
+        num_topics: Topics
     top_referred_topics:
       title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Topic"
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
@@ -1021,8 +1067,9 @@ en:
       yaxis: "Number of visits"
     web_crawlers:
       title: "Web Crawler Requests"
-      xaxis: "User Agent"
-      yaxis: "Pageviews"
+      labels:
+        user_agent: "User Agent"
+        page_views: "Pageviews"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1183,7 +1230,6 @@ en:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
@@ -1280,6 +1326,8 @@ en:
     backup_frequency: "The number of days between backups."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Use default if using AWS S3"
+    s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -1339,6 +1387,9 @@ en:
 
     external_system_avatars_enabled: "Use external system avatars service."
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
+
+    selectable_avatars_enabled: "Force users to choose an avatar from the list."
+    selectable_avatars: "List of avatars users can choose from."
 
     default_opengraph_image_url: "URL of the default opengraph image."
     twitter_summary_large_image_url: "URL of the default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
@@ -1607,6 +1658,8 @@ en:
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
+    header_dropdown_category_count: "How many categories can be displayed in the header dropdown menu."
+
     permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
 
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
@@ -1657,6 +1710,7 @@ en:
     enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
+    emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
@@ -1701,6 +1755,7 @@ en:
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+    retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
@@ -1904,7 +1959,6 @@ en:
       backup_code: "Log in using a backup code"
 
   user:
-    no_accounts_associated: "No accounts associated"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     activated_by_staff: "Activated by staff"
@@ -2191,6 +2245,22 @@ en:
         Multiple community members flagged this post before it was hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+
+    flags_agreed_and_post_deleted:
+      title: "Flagged post removed by staff"
+      subject_template: "Flagged post removed by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was removed.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        This post was flagged by the community and a staff member opted to remove it.
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
 
     usage_tips:
       text_body_template: |
@@ -3114,33 +3184,45 @@ en:
     sockpuppet: "A new user created a topic, and another new user at the same IP address (%{ip_address}) replied. See the <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> site setting."
     spam_hosts: "This new user tried to create multiple posts with links to the same domain (%{domain}). See the <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
 
-  email_log:
-    post_user_deleted: "User of the post has been deleted."
-    no_user: "Can't find user with id %{user_id}"
-    anonymous_user: "User is anonymous"
-    suspended_not_pm: "User is suspended, not a message"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
+  skipped_email_log:
     exceeded_emails_limit: "Exceeded max_emails_per_day_per_user"
     exceeded_bounces_limit: "Exceeded bounce_score_threshold"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
-    no_echo_mailing_list_mode: "Mailing list notifications disabled for user's own posts"
+    mailing_list_no_echo_mode: "Mailing list notifications disabled for user's own posts"
+    user_email_no_user: "Can't find user with id %{user_id}"
+    user_email_post_not_found: "Can't find a post with id %{post_id}"
+    user_email_anonymous_user: "User is anonymous"
+    user_email_user_suspended_not_pm: "User is suspended, not a message"
+    user_email_seen_recently: "User was seen recently"
+    user_email_notification_already_read: "The notification this email is about has already been read"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_user_deleted: "User of the post has been deleted."
+    user_email_post_deleted: "post was deleted by the author"
+    user_email_user_suspended: "user was suspended"
+    user_email_already_read: "user has already read this post"
+    sender_message_blank: "message is blank"
+    sender_message_to_blank: "message.to is blank"
+    sender_text_part_body_blank: "text_part.body is blank"
+    sender_text_body_blank: "body is blank"
 
   color_schemes:
     base_theme_name: "Base"
-    default: "Light Scheme"
+    light: "Light Scheme"
     dark: "Dark Scheme"
-    default_theme_name: "Default"
-    dark_theme_name: "Dark"
+    neutral: "Neutral Scheme"
+    grey_amber: "Grey Amber Scheme"
+    shades_of_blue: "Shades of Blue Scheme"
+    latte: "Latte Scheme"
+    summer: "Summer Scheme"
+    dark_rose: "Dark Rose Scheme"
+    default_theme_name: "Light"
     light_theme_name: "Light"
+    dark_theme_name: "Dark"
+    neutral_theme_name: "Neutral"
+    grey_amber_theme_name: "Grey Amber"
+    shades_of_blue_theme_name: "Shades of Blue"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Summer"
+    dark_rose_theme_name: "Dark Rose"
 
   about: "About"
   guidelines: "Guidelines"
@@ -3745,7 +3827,7 @@ en:
       button: "Register"
       title: "Register Admin Account"
       help: "register a new account to get started"
-      no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>may be difficult</a>."
+      no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration may be difficult. Please add a developer email in the configuration file or <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>create an administrator account from console</a>."
     confirm_email:
       title: "Confirm your Email"
       message: "<p>We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, ensure you have set up email correctly for your Discourse and check your spam folder.</p>"

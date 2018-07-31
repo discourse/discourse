@@ -212,11 +212,18 @@ const Topic = RestModel.extend({
   }.property("url", "last_read_post_number"),
 
   lastUnreadUrl: function() {
-    const postNumber = Math.min(
-      this.get("last_read_post_number") + 1,
-      this.get("highest_post_number")
-    );
-    return this.urlForPostNumber(postNumber);
+    const highest = this.get("highest_post_number");
+    const lastRead = this.get("last_read_post_number");
+
+    if (highest <= lastRead) {
+      if (this.get("category.navigate_to_first_post_after_read")) {
+        return this.urlForPostNumber(1);
+      } else {
+        return this.urlForPostNumber(lastRead + 1);
+      }
+    } else {
+      return this.urlForPostNumber(lastRead + 1);
+    }
   }.property("url", "last_read_post_number", "highest_post_number"),
 
   lastPostUrl: function() {

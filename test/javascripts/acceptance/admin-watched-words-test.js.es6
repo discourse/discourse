@@ -1,88 +1,81 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Admin - Watched Words", { loggedIn: true });
 
-QUnit.test("list words in groups", assert => {
-  visit("/admin/logs/watched_words/action/block");
-  andThen(() => {
-    assert.ok(exists(".watched-words-list"));
-    assert.ok(
-      !exists(".watched-words-list .watched-word"),
-      "Don't show bad words by default."
-    );
-  });
+QUnit.test("list words in groups", async assert => {
+  await visit("/admin/logs/watched_words/action/block");
 
-  fillIn(".admin-controls .controls input[type=text]", "li");
-  andThen(() => {
-    assert.equal(
-      find(".watched-words-list .watched-word").length,
-      1,
-      "When filtering, show words even if checkbox is unchecked."
-    );
-  });
+  assert.ok(exists(".watched-words-list"));
+  assert.ok(
+    !exists(".watched-words-list .watched-word"),
+    "Don't show bad words by default."
+  );
 
-  fillIn(".admin-controls .controls input[type=text]", "");
-  andThen(() => {
-    assert.ok(
-      !exists(".watched-words-list .watched-word"),
-      "Clearing the filter hides words again."
-    );
-  });
+  await fillIn(".admin-controls .controls input[type=text]", "li");
 
-  click(".show-words-checkbox");
-  andThen(() => {
-    assert.ok(
-      exists(".watched-words-list .watched-word"),
-      "Always show the words when checkbox is checked."
-    );
-  });
+  assert.equal(
+    find(".watched-words-list .watched-word").length,
+    1,
+    "When filtering, show words even if checkbox is unchecked."
+  );
 
-  click(".nav-stacked .censor a");
-  andThen(() => {
-    assert.ok(exists(".watched-words-list"));
-    assert.ok(!exists(".watched-words-list .watched-word"), "Empty word list.");
-  });
+  await fillIn(".admin-controls .controls input[type=text]", "");
+
+  assert.ok(
+    !exists(".watched-words-list .watched-word"),
+    "Clearing the filter hides words again."
+  );
+
+  await click(".show-words-checkbox");
+
+  assert.ok(
+    exists(".watched-words-list .watched-word"),
+    "Always show the words when checkbox is checked."
+  );
+
+  await click(".nav-stacked .censor a");
+
+  assert.ok(exists(".watched-words-list"));
+  assert.ok(!exists(".watched-words-list .watched-word"), "Empty word list.");
 });
 
-QUnit.test("add words", assert => {
-  visit("/admin/logs/watched_words/action/block");
-  andThen(() => {
-    click(".show-words-checkbox");
-    fillIn(".watched-word-form input", "poutine");
+QUnit.test("add words", async assert => {
+  await visit("/admin/logs/watched_words/action/block");
+
+  click(".show-words-checkbox");
+  fillIn(".watched-word-form input", "poutine");
+
+  await click(".watched-word-form button");
+
+  let found = [];
+  _.each(find(".watched-words-list .watched-word"), i => {
+    if (
+      $(i)
+        .text()
+        .trim() === "poutine"
+    ) {
+      found.push(true);
+    }
   });
-  click(".watched-word-form button");
-  andThen(() => {
-    let found = [];
-    _.each(find(".watched-words-list .watched-word"), i => {
-      if (
-        $(i)
-          .text()
-          .trim() === "poutine"
-      ) {
-        found.push(true);
-      }
-    });
-    assert.equal(found.length, 1);
-  });
+  assert.equal(found.length, 1);
 });
 
-QUnit.test("remove words", assert => {
-  visit("/admin/logs/watched_words/action/block");
-  click(".show-words-checkbox");
+QUnit.test("remove words", async assert => {
+  await visit("/admin/logs/watched_words/action/block");
+  await click(".show-words-checkbox");
 
   let word = null;
-  andThen(() => {
-    _.each(find(".watched-words-list .watched-word"), i => {
-      if (
-        $(i)
-          .text()
-          .trim() === "anise"
-      ) {
-        word = i;
-      }
-    });
-    click("#" + $(word).attr("id"));
+
+  _.each(find(".watched-words-list .watched-word"), i => {
+    if (
+      $(i)
+        .text()
+        .trim() === "anise"
+    ) {
+      word = i;
+    }
   });
-  andThen(() => {
-    assert.equal(find(".watched-words-list .watched-word").length, 1);
-  });
+
+  await click("#" + $(word).attr("id"));
+
+  assert.equal(find(".watched-words-list .watched-word").length, 1);
 });

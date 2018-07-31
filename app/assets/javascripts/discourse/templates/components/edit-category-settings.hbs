@@ -1,3 +1,19 @@
+{{#if showPositionInput}}
+  <section class='field position-fields'>
+    <label>
+      {{i18n 'category.position'}}
+      {{text-field value=category.position class="position-input" type="number"}}
+    </label>
+  </section>
+{{/if}}
+
+{{#unless showPositionInput}}
+  <section class='field'>
+    {{i18n 'category.position_disabled'}}
+    <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
+  </section>
+{{/unless}}
+
 <section class='field'>
   <div class="control-group">
     <label>
@@ -74,14 +90,21 @@
     </div>
 </section>
 
-<section class="field num-featured-topics-fields">
+<section class="field">
   <label>
     {{#if category.parent_category_id}}
       {{i18n "category.subcategory_num_featured_topics"}}
     {{else}}
       {{i18n "category.num_featured_topics"}}
     {{/if}}
-    {{text-field value=category.num_featured_topics}}
+    {{text-field value=category.num_featured_topics type="number"}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{i18n "category.num_auto_bump_daily"}}
+    {{text-field value=category.custom_fields.num_auto_bump_daily type="number"}}
   </label>
 </section>
 
@@ -89,6 +112,13 @@
   <label>
     {{input type="checkbox" checked=category.all_topics_wiki}}
     {{i18n "category.all_topics_wiki"}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.navigate_to_first_post_after_read}}
+    {{i18n "category.navigate_to_first_post_after_read"}}
   </label>
 </section>
 
@@ -129,29 +159,6 @@
   {{plugin-outlet name="category-email-in" args=(hash category=category)}}
 {{/if}}
 
-{{#if showPositionInput}}
-  <section class='field position-fields'>
-    <label>
-      {{i18n 'category.position'}}
-      {{text-field value=category.position class="position-input"}}
-    </label>
-  </section>
-{{/if}}
-
-{{#unless emailInEnabled}}
-  <section class='field'>
-    {{i18n 'category.email_in_disabled'}}
-    <a href="/admin/site_settings/category/email">{{i18n 'category.email_in_disabled_click'}}</a>
-  </section>
-{{/unless}}
-
-{{#unless showPositionInput}}
-  <section class='field'>
-    {{i18n 'category.position_disabled'}}
-    <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
-  </section>
-{{/unless}}
-
 {{#if siteSettings.tagging_enabled}}
   <section class='field minimum-required-tags'>
     <label>
@@ -176,3 +183,10 @@
 </section>
 
 {{plugin-outlet name="category-custom-settings" args=(hash category=category)}}
+
+{{#unless emailInEnabled}}
+  <section class='field'>
+    {{i18n 'category.email_in_disabled'}}
+    <a href="/admin/site_settings/category/email">{{i18n 'category.email_in_disabled_click'}}</a>
+  </section>
+{{/unless}}

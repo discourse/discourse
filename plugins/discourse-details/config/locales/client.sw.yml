@@ -1,0 +1,14 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sw:
+  js:
+    details:
+      title: Ficha Maelezo
+    composer:
+      details_title: Muhtasari
+      details_text: "Haya maandiko yatafichwa"

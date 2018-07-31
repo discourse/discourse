@@ -13,23 +13,25 @@ describe EmailLog do
       post = Fabricate(:post)
       user = post.user
 
-      # skipped emails do not matter
-      Fabricate(:email_log, user: user, email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id, skipped: true)
+      ran = EmailLog.unique_email_per_post(post, user) do
+        true
+      end
+
+      expect(ran).to be(true)
+
+      Fabricate(:email_log,
+        user: user,
+        email_type: 'blah',
+        post_id: post.id,
+        to_address: user.email,
+        user_id: user.id
+      )
 
       ran = EmailLog.unique_email_per_post(post, user) do
         true
       end
 
-      expect(ran).to eq(true)
-
-      Fabricate(:email_log, user: user, email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id)
-
-      ran = EmailLog.unique_email_per_post(post, user) do
-        true
-      end
-
-      expect(ran).to be_falsy
-
+      expect(ran).to be(nil)
     end
   end
 
@@ -41,20 +43,12 @@ describe EmailLog do
           user.reload
         }.to change(user, :last_emailed_at)
       end
-
-      it "doesn't update last_emailed_at if skipped is true" do
-        expect {
-          Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, skipped: true)
-          user.reload
-        }.to_not change { user.last_emailed_at }
-      end
     end
   end
 
   describe '#reached_max_emails?' do
     before do
       SiteSetting.max_emails_per_day_per_user = 2
-      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id, skipped: true)
       Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id)
       Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id, created_at: 3.days.ago)
     end
@@ -76,7 +70,6 @@ describe EmailLog do
   describe '#count_per_day' do
     it "counts sent emails" do
       Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email)
-      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, skipped: true)
       expect(described_class.count_per_day(1.day.ago, Time.now).first[1]).to eq 1
     end
   end
@@ -101,4 +94,18 @@ describe EmailLog do
     end
   end
 
+  describe "#bounce_key" do
+    it "should format the bounce_key correctly" do
+      hex = SecureRandom.hex
+      email_log = Fabricate(:email_log, user: user, bounce_key: hex)
+
+      raw_key = EmailLog.where(id: email_log.id)
+        .pluck("bounce_key::text")
+        .first
+
+      expect(raw_key).to_not eq(hex)
+      expect(raw_key.delete('-')).to eq(hex)
+      expect(EmailLog.find(email_log.id).bounce_key).to eq(hex)
+    end
+  end
 end

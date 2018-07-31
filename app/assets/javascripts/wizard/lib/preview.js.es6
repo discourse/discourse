@@ -2,17 +2,14 @@
 import getUrl from "discourse-common/lib/get-url";
 
 export const LOREM = `
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Nullam eget sem non elit tincidunt rhoncus. Fusce velit nisl,
-porttitor sed nisl ac, consectetur interdum metus. Fusce in
-consequat augue, vel facilisis felis. Nunc tellus elit, and
-semper vitae orci nec, blandit pharetra enim. Aenean a ebus
-posuere nunc. Maecenas ultrices viverra enim ac commodo
-Vestibulum nec quam sit amet libero ultricies sollicitudin.
-Nulla quis scelerisque sem, eget volutpat velit. Fusce eget
-accumsan sapien, nec feugiat quam. Quisque non risus.
-placerat lacus vitae, lacinia nisi. Sed metus arcu, iaculis
-sit amet cursus nec, sodales at eros.`;
+Lorem ipsum dolor sit amet,
+consectetur adipiscing elit.
+Nullam eget sem non elit
+tincidunt rhoncus. Fusce
+velit nisl, porttitor sed
+nisl ac, consectetur interdum
+metus. Fusce in consequat
+augue, vel facilisis felis.`;
 
 const scaled = {};
 
@@ -75,7 +72,9 @@ export function createPreviewComponent(width, height, obj) {
           return false;
         }
 
-        const colors = this.get("wizard").getCurrentColors();
+        const colors = this.get("wizard").getCurrentColors(
+          this.get("colorsId")
+        );
         if (!colors) {
           return;
         }
@@ -137,16 +136,10 @@ export function createPreviewComponent(width, height, obj) {
         const headerMargin = headerHeight * 0.2;
         const logoHeight = headerHeight - headerMargin * 2;
 
-        if (this.logo) {
-          const logoWidth = (logoHeight / this.logo.height) * this.logo.width;
-          this.scaleImage(
-            this.logo,
-            headerMargin,
-            headerMargin,
-            logoWidth,
-            logoHeight
-          );
-        }
+        ctx.beginPath();
+        ctx.fillStyle = colors.header_primary;
+        ctx.font = `bold ${logoHeight}px 'Arial'`;
+        ctx.fillText("Discourse", headerMargin, headerHeight - headerMargin);
 
         // Top right menu
         this.scaleImage(
@@ -368,6 +361,14 @@ export function chooseBrighter(primary, secondary) {
   return brightness(primaryCol) < brightness(secondaryCol)
     ? secondary
     : primary;
+}
+
+export function chooseDarker(primary, secondary) {
+  if (chooseBrighter(primary, secondary) === primary) {
+    return secondary;
+  } else {
+    return primary;
+  }
 }
 
 export function darkLightDiff(adjusted, comparison, lightness, darkness) {

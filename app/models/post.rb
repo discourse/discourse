@@ -19,8 +19,8 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  cattr_accessor :permitted_create_params
-  self.permitted_create_params = Set.new
+  cattr_accessor :plugin_permitted_create_params
+  self.plugin_permitted_create_params = {}
 
   # increase this number to force a system wide post rebake
   # Version 1, was the initial version
@@ -436,8 +436,12 @@ class Post < ActiveRecord::Base
     post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values, deleted_at: nil).count != 0
   end
 
+  def active_flags
+    post_actions.active.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
+  end
+
   def has_active_flag?
-    post_actions.active.where(post_action_type_id: PostActionType.flag_types_without_custom.values).count != 0
+    active_flags.count != 0
   end
 
   def unhide!
@@ -873,10 +877,12 @@ end
 #
 # Indexes
 #
-#  idx_posts_created_at_topic_id            (created_at,topic_id)
-#  idx_posts_deleted_posts                  (topic_id,post_number)
-#  idx_posts_user_id_deleted_at             (user_id)
-#  index_posts_on_reply_to_post_number      (reply_to_post_number)
-#  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
-#  index_posts_on_user_id_and_created_at    (user_id,created_at)
+#  idx_posts_created_at_topic_id             (created_at,topic_id) WHERE (deleted_at IS NULL)
+#  idx_posts_deleted_posts                   (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
+#  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
+#  index_posts_on_reply_to_post_number       (reply_to_post_number)
+#  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
+#  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_sort_order    (topic_id,sort_order)
+#  index_posts_on_user_id_and_created_at     (user_id,created_at)
 #

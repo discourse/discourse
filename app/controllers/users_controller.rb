@@ -11,8 +11,9 @@ class UsersController < ApplicationController
 
   requires_login only: [
     :username, :update, :user_preferences_redirect, :upload_user_image,
-    :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
-    :preferences, :create_second_factor, :update_second_factor, :create_second_factor_backup
+    :pick_avatar, :destroy_user_image, :destroy, :check_emails,
+    :topic_tracking_state, :preferences, :create_second_factor,
+    :update_second_factor, :create_second_factor_backup, :select_avatar
   ]
 
   skip_before_action :check_xhr, only: [
@@ -146,8 +147,11 @@ class UsersController < ApplicationController
 
     StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
 
+    email, *secondary_emails = user.emails
+
     render json: {
-      email: user.email,
+      email: email,
+      secondary_emails: secondary_emails,
       associated_accounts: user.associated_accounts
     }
   rescue Discourse::InvalidAccess
@@ -867,6 +871,8 @@ class UsersController < ApplicationController
         return render_json_error I18n.t("avatar.missing")
       end
 
+      user.create_user_avatar unless user.user_avatar
+
       if type == "gravatar"
         user.user_avatar.gravatar_upload_id = upload_id
       else
@@ -878,6 +884,46 @@ class UsersController < ApplicationController
     user.user_avatar.save!
 
     render json: success_json
+  end
+
+  def select_avatar
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    url = params[:url]
+
+    if url.blank?
+      return render json: failed_json, status: 422
+    end
+
+    unless SiteSetting.selectable_avatars_enabled
+      return render json: failed_json, status: 422
+    end
+
+    if SiteSetting.selectable_avatars.blank?
+      return render json: failed_json, status: 422
+    end
+
+    unless SiteSetting.selectable_avatars[url]
+      return render json: failed_json, status: 422
+    end
+
+    unless upload = Upload.find_by(url: url)
+      return render json: failed_json, status: 422
+    end
+
+    user.uploaded_avatar_id = upload.id
+    user.save!
+
+    avatar = user.user_avatar || user.create_user_avatar
+    avatar.custom_upload_id = upload.id
+    avatar.save!
+
+    render json: {
+      avatar_template: user.avatar_template,
+      custom_avatar_template: user.avatar_template,
+      uploaded_avatar_id: upload.id,
+    }
   end
 
   def destroy_user_image
@@ -1024,6 +1070,32 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
+  end
+
+  def revoke_account
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    provider_name = params.require(:provider_name)
+
+    # Using Discourse.authenticators rather than Discourse.enabled_authenticators so users can
+    # revoke permissions even if the admin has temporarily disabled that type of login
+    authenticator = Discourse.authenticators.find { |authenticator| authenticator.name == provider_name }
+    raise Discourse::NotFound if authenticator.nil?
+
+    skip_remote = params.permit(:skip_remote)
+
+    # We're likely going to contact the remote auth provider, so hijack request
+    hijack do
+      result = authenticator.revoke(user, skip_remote: skip_remote)
+      if result
+        return render json: success_json
+      else
+        return render json: {
+          success: false,
+          message: I18n.t("associated_accounts.revoke_failed", provider_name: provider_name)
+        }
+      end
+    end
   end
 
   private

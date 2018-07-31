@@ -49,6 +49,8 @@ module Jobs
         SiteSetting.min_new_topics_time = last_new_topic.created_at.to_i
       end
 
+      Category.auto_bump_topic!
+
       nil
     end
 

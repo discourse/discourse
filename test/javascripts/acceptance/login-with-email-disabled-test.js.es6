@@ -7,19 +7,17 @@ acceptance("Login with email disabled", {
   }
 });
 
-QUnit.test("with email button", assert => {
-  visit("/");
-  click("header .login-button");
+QUnit.test("with email button", async assert => {
+  await visit("/");
+  await click("header .login-button");
 
-  andThen(() => {
-    assert.ok(
-      exists(".btn-social.facebook"),
-      "it displays the facebook login button"
-    );
+  assert.ok(
+    exists(".btn-social.facebook"),
+    "it displays the facebook login button"
+  );
 
-    assert.notOk(
-      exists(".login-with-email-button"),
-      "it displays the login with email button"
-    );
-  });
+  assert.notOk(
+    exists(".login-with-email-button"),
+    "it displays the login with email button"
+  );
 });

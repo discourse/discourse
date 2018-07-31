@@ -17,6 +17,15 @@ describe CategoriesController do
       get "/categories"
       expect(response.body).not_to include('AMAZING AMAZING')
     end
+
+    it 'web crawler view has correct urls for subfolder install' do
+      GlobalSetting.stubs(:relative_url_root).returns('/forum')
+      Discourse.stubs(:base_uri).returns("/forum")
+      get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
+      html = Nokogiri::HTML(response.body)
+      expect(html.css('body.crawler')).to be_present
+      expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
+    end
   end
 
   context 'extensibility event' do
@@ -297,24 +306,31 @@ describe CategoriesController do
           expect(UserHistory.count).to eq(5) # 2 + 3 (bootstrap mode)
         end
 
-        it 'updates per-category approval settings correctly' do
+        it 'updates per-category settings correctly' do
           category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
           category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = false
+          category.custom_fields[Category::NUM_AUTO_BUMP_DAILY] = 0
+
+          category.navigate_to_first_post_after_read = false
           category.save!
 
           put "/categories/#{category.id}.json", params: {
             name: category.name,
             color: category.color,
             text_color: category.text_color,
+            navigate_to_first_post_after_read: true,
             custom_fields: {
               require_reply_approval: true,
               require_topic_approval: true,
+              num_auto_bump_daily: 10
             }
           }
 
           category.reload
           expect(category.require_topic_approval?).to eq(true)
           expect(category.require_reply_approval?).to eq(true)
+          expect(category.num_auto_bump_daily).to eq(10)
+          expect(category.navigate_to_first_post_after_read).to eq(true)
         end
       end
     end

@@ -46,7 +46,16 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         exceptions = %w(controller action format id)
 
         params = event.payload[:params].except(*exceptions)
-        params[:files].map!(&:headers) if params[:files]
+
+        if (file = params[:file]) && file.respond_to?(:headers)
+          params[:file] = file.headers
+        end
+
+        if (files = params[:files])
+          params[:files] = files.map do |file|
+            file.respond_to?(:headers) ? file.headers : file
+          end
+        end
 
         output = {
           params: params.to_query,

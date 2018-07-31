@@ -152,7 +152,7 @@ class PostAction < ActiveRecord::Base
   def self.agree_flags!(post, moderator, delete_post = false)
     actions = PostAction.active
       .where(post_id: post.id)
-      .where(post_action_type_id: PostActionType.flag_types.values)
+      .where(post_action_type_id: PostActionType.notify_flag_types.values)
 
     trigger_spam = false
     actions.each do |action|
@@ -657,8 +657,8 @@ end
 #
 # Indexes
 #
-#  idx_unique_actions                                     (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
-#  idx_unique_flags                                       (user_id,post_id,targets_topic) UNIQUE
+#  idx_unique_actions                                     (user_id,post_action_type_id,post_id,targets_topic) UNIQUE WHERE ((deleted_at IS NULL) AND (disagreed_at IS NULL) AND (deferred_at IS NULL))
+#  idx_unique_flags                                       (user_id,post_id,targets_topic) UNIQUE WHERE ((deleted_at IS NULL) AND (disagreed_at IS NULL) AND (deferred_at IS NULL) AND (post_action_type_id = ANY (ARRAY[3, 4, 7, 8])))
 #  index_post_actions_on_post_id                          (post_id)
-#  index_post_actions_on_user_id_and_post_action_type_id  (user_id,post_action_type_id)
+#  index_post_actions_on_user_id_and_post_action_type_id  (user_id,post_action_type_id) WHERE (deleted_at IS NULL)
 #

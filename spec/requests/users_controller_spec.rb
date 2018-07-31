@@ -1785,6 +1785,61 @@ describe UsersController do
     end
   end
 
+  describe '#select_avatar' do
+    it 'raises an error when not logged in' do
+      put "/u/asdf/preferences/avatar/select.json", params: { url: "https://meta.discourse.org" }
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+
+      let!(:user) { sign_in(Fabricate(:user)) }
+      let(:avatar1) { Fabricate(:upload) }
+      let(:avatar2) { Fabricate(:upload) }
+      let(:url) { "https://www.discourse.org" }
+
+      it 'raises an error when url is blank' do
+        put "/u/#{user.username}/preferences/avatar/select.json", params: { url: "" }
+        expect(response.status).to eq(422)
+      end
+
+      it 'raises an error when selectable avatars is disabled' do
+        put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
+        expect(response.status).to eq(422)
+      end
+
+      context 'selectable avatars is enabled' do
+
+        before { SiteSetting.selectable_avatars_enabled = true }
+
+        it 'raises an error when selectable avatars is empty' do
+          put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
+          expect(response.status).to eq(422)
+        end
+
+        context 'selectable avatars is properly setup' do
+
+          before do
+            SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          end
+
+          it 'raises an error when url is not in selectable avatars list' do
+            put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
+            expect(response.status).to eq(422)
+          end
+
+          it 'can successfully select an avatar' do
+            put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
+            expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
+          end
+        end
+      end
+    end
+  end
+
   describe '#destroy_user_image' do
 
     it 'raises an error when not logged in' do
@@ -1900,15 +1955,17 @@ describe UsersController do
         expect(response).to be_forbidden
       end
 
-      it "returns both email and associated_accounts when you're allowed to see them" do
+      it "returns emails and associated_accounts when you're allowed to see them" do
+        user = Fabricate(:user)
         sign_in_admin
 
-        get "/u/#{Fabricate(:user).username}/emails.json"
+        get "/u/#{user.username}/emails.json"
 
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json["email"]).to be_present
-        expect(json["associated_accounts"]).to be_present
+        expect(json["email"]).to eq(user.email)
+        expect(json["secondary_emails"]).to eq(user.secondary_emails)
+        expect(json["associated_accounts"]).to eq([])
       end
 
       it "works on inactive users" do
@@ -1919,8 +1976,9 @@ describe UsersController do
 
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json["email"]).to be_present
-        expect(json["associated_accounts"]).to be_present
+        expect(json["email"]).to eq(inactive_user.email)
+        expect(json["secondary_emails"]).to eq(inactive_user.secondary_emails)
+        expect(json["associated_accounts"]).to eq([])
       end
     end
   end
@@ -3009,5 +3067,47 @@ describe UsersController do
         end
       end
     end
+  end
+
+  describe '#revoke_account' do
+    let(:other_user) { Fabricate(:user) }
+    it 'errors for unauthorised users' do
+      post "/u/#{user.username}/preferences/revoke-account.json", params: {
+        provider_name: 'facebook'
+      }
+      expect(response.status).to eq(403)
+
+      sign_in(other_user)
+
+      post "/u/#{user.username}/preferences/revoke-account.json", params: {
+        provider_name: 'facebook'
+      }
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      before do
+        sign_in(user)
+      end
+
+      it 'returns an error when there is no matching account' do
+        post "/u/#{user.username}/preferences/revoke-account.json", params: {
+          provider_name: 'facebook'
+        }
+        expect(response.status).to eq(404)
+      end
+
+      it 'works' do
+        FacebookUserInfo.create!(user_id: user.id, facebook_user_id: 12345, email: 'someuser@somedomain.tld')
+        stub = stub_request(:delete, 'https://graph.facebook.com/12345/permissions?access_token=123%7Cabcde').to_return(body: "true")
+
+        post "/u/#{user.username}/preferences/revoke-account.json", params: {
+          provider_name: 'facebook'
+        }
+        expect(response.status).to eq(200)
+      end
+
+    end
+
   end
 end

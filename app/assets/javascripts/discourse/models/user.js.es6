@@ -204,13 +204,17 @@ const User = RestModel.extend({
     return suspendedTill && moment(suspendedTill).isAfter();
   },
 
-  @computed("suspended_till") suspendedForever: isForever,
+  @computed("suspended_till")
+  suspendedForever: isForever,
 
-  @computed("silenced_till") silencedForever: isForever,
+  @computed("silenced_till")
+  silencedForever: isForever,
 
-  @computed("suspended_till") suspendedTillDate: longDate,
+  @computed("suspended_till")
+  suspendedTillDate: longDate,
 
-  @computed("silenced_till") silencedTillDate: longDate,
+  @computed("silenced_till")
+  silencedTillDate: longDate,
 
   changeUsername(new_username) {
     return ajax(
@@ -378,6 +382,16 @@ const User = RestModel.extend({
     });
   },
 
+  revokeAssociatedAccount(providerName) {
+    return ajax(
+      userPath(`${this.get("username")}/preferences/revoke-account`),
+      {
+        data: { provider_name: providerName },
+        type: "POST"
+      }
+    );
+  },
+
   loadUserAction(id) {
     const stream = this.get("stream");
     return ajax(`/user_actions/${id}.json`, { cache: "false" }).then(result => {
@@ -506,18 +520,17 @@ const User = RestModel.extend({
     );
   },
 
-  pickAvatar(upload_id, type, avatar_template) {
+  pickAvatar(upload_id, type) {
     return ajax(
       userPath(`${this.get("username_lower")}/preferences/avatar/pick`),
-      {
-        type: "PUT",
-        data: { upload_id, type }
-      }
-    ).then(() =>
-      this.setProperties({
-        avatar_template,
-        uploaded_avatar_id: upload_id
-      })
+      { type: "PUT", data: { upload_id, type } }
+    );
+  },
+
+  selectAvatar(avatarUrl) {
+    return ajax(
+      userPath(`${this.get("username_lower")}/preferences/avatar/select`),
+      { type: "PUT", data: { url: avatarUrl } }
     );
   },
 
@@ -525,7 +538,7 @@ const User = RestModel.extend({
     return (
       this.get("staff") ||
       this.get("trust_level") > 0 ||
-      Discourse.SiteSettings["newuser_max_" + type + "s"] > 0
+      Discourse.SiteSettings[`newuser_max_${type}s`] > 0
     );
   },
 
@@ -610,6 +623,7 @@ const User = RestModel.extend({
       if (result) {
         this.setProperties({
           email: result.email,
+          secondary_emails: result.secondary_emails,
           associated_accounts: result.associated_accounts
         });
       }

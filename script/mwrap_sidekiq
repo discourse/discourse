@@ -1,0 +1,142 @@
+#!/usr/bin/env ruby
+if !ENV["LD_PRELOAD"]&.include?('mwrap')
+  # use malloc from libc that interacts better with mwrap
+  ENV['RAILS_ENV'] = 'production'
+  ENV["LD_PRELOAD"] = ""
+  ENV["MALLOC_ARENA_MAX"] = "2"
+  exec "mwrap #{__FILE__}"
+end
+
+require 'mwrap'
+require 'webrick'
+
+require File.expand_path("../../config/environment", __FILE__)
+
+def render_table(array)
+  buffer = +""
+
+  width = array[0].map { |k| k.to_s.length }
+  cols = array[0].length
+
+  array.each do |row|
+    row.each_with_index do |val, i|
+      width[i] = [width[i].to_i, val.to_s.length].max
+    end
+  end
+
+  array[0].each_with_index do |col, i|
+    buffer << col.to_s.ljust(width[i], ' ')
+    if i == cols - 1
+      buffer << "\n"
+    else
+      buffer << ' | '
+    end
+  end
+
+  buffer << ("-" * (width.sum + width.length))
+  buffer << "\n"
+
+  array.drop(1).each do |row|
+    row.each_with_index do |val, i|
+      buffer << val.to_s.ljust(width[i], ' ')
+      if i == cols - 1
+        buffer << "\n"
+      else
+        buffer << ' | '
+      end
+    end
+  end
+
+  buffer
+end
+
+def rss
+  `ps -o rss= -p #{Process.pid}`.chomp.to_i
+end
+
+def mwrap_log
+  report = +""
+
+  Mwrap.quiet do
+    report << "Generation: #{GC.count} RSS kb: #{rss} Accounted Mem kb: #{(Mwrap.total_bytes_allocated - Mwrap.total_bytes_freed) / 1024}\n"
+    report << "Allocated bytes: #{Mwrap.total_bytes_allocated} Freed bytes: #{Mwrap.total_bytes_freed}\n"
+    stat = GC.stat
+    stat.each do |k, v|
+      report << "#{k}: #{v}\n"
+    end
+    report << "\n"
+
+    table = []
+    Mwrap.each(200) do |loc, total, allocations, frees, age_sum, max_life|
+      table << [total, allocations, frees, frees == 0 ? -1 : (age_sum / frees.to_f).round(2), max_life, loc]
+    end
+
+    table.sort! { |a, b| b[1] - b[2] <=> a[1] - a[2] }
+
+    table.prepend(["total", "allocations", "frees", "mean_life", "max_life", "location"])
+
+    report << render_table(table)
+  end
+
+  report
+end
+
+Thread.new do
+  begin
+    puts "Starting Logging Thread"
+    path = "/tmp/mwrap_#{Process.pid}"
+    `mkdir -p #{path}`
+
+    while true
+      log = mwrap_log
+      f = "#{path}/log_#{Time.now.strftime("%Y_%m_%d_%H%M%S")}"
+      File.write(f, log)
+      puts "Wrote #{f}"
+      sleep 60 * 60
+    end
+  rescue => e
+    STDERR.puts "ERROR crashed logger #{e}"
+    STDERR.puts e.backtrace
+  end
+end
+
+Thread.new do
+  puts "Starting WEBrick on port 9874"
+  server = WEBrick::HTTPServer.new(Port: 9874)
+  server.mount_proc '/' do |req, res|
+    res['ContentType'] = 'text/plain; charset=utf-8'
+    res.body = mwrap_log
+    res.status = 200
+  end
+  begin
+    server.start
+  rescue => e
+    STDERR.puts "Failed to start start server #{e}"
+  end
+end
+
+require 'sidekiq/cli'
+
+begin
+  #Sidekiq::Logging.logger = nil
+  cli = Sidekiq::CLI.instance
+
+  options = ["-c", GlobalSetting.sidekiq_workers.to_s]
+
+  [['critical', 4], ['default', 2], ['low', 1]].each do |queue_name, weight|
+    custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
+
+    if !custom_queue_hostname || custom_queue_hostname.split(',').include?(`hostname`.strip)
+      options << "-q"
+      options << "#{queue_name},#{weight}"
+    end
+  end
+
+  cli.parse(options)
+  load Rails.root + "config/initializers/100-sidekiq.rb"
+  cli.run
+rescue => e
+  STDERR.puts e.message
+  STDERR.puts e.backtrace.join("\n")
+  exit 1
+end

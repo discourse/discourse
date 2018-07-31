@@ -330,6 +330,10 @@ ca:
         make_user_group_owner: "Crea persona propietària"
         remove_user_as_group_owner: "Elimina persona propietària"
     groups:
+      add_members:
+        title: "Afegeix membres"
+      manage:
+        add_members: "Afegeix membres"
       empty:
         posts: "No hi ha publicacions de membres d'aquest grup."
         members: "No hi ha membres a aquest grup."
@@ -337,7 +341,7 @@ ca:
         messages: "No hi ha missatges per a aquest grup."
         topics: "No hi ha temes de membres d'aquest grup."
         logs: "No hi ha registres per a aquest grup."
-      add: "Afegegix"
+      add: "Afegeix"
       message: "Missatge"
       membership: "Afiliació"
       name: "Nom"
@@ -399,15 +403,12 @@ ca:
       "14": "Pendents"
     categories:
       all: "totes les categories"
-      all_subcategories: "Tot a %{categoryName}"
       no_subcategory: "cap"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
       reorder:
         title: "Reordena categories"
         title_long: "Reorganitza la llista de categories"
-        fix_order: "Fixa posicions"
-        fix_order_tooltip: "No totes les categories tenen una xifra de posició única, perquè això podria causar resultats inesperats."
         save: "Desa ordre"
         apply_all: "Executa"
         position: "Posició"
@@ -588,7 +589,6 @@ ca:
         upload_title: "Carrega la teva foto"
         upload_picture: "Actualitza la foto"
         image_is_not_a_square: "Atenció: hem retallat la teva imatge; l'amplada i l'alçada no són igual."
-        cache_notice: "Has canviat amb èxit la teva foto de perfil, però la seva aparició trigarà una mica a causa de la memòria cau del navegador."
       change_profile_background:
         title: "Fons del perfil"
         instructions: "Els fons de perfil se centraran i tindran una amplada per defecte de 850px."
@@ -632,7 +632,7 @@ ca:
       last_posted: "Darrer missatge"
       last_emailed: "Darrer correu"
       last_seen: "Mirat"
-      created: "Es va regsitrar"
+      created: "Es va registrar"
       log_out: "Sortir"
       location: "Ubicació"
       website: "Lloc web"
@@ -767,7 +767,6 @@ ca:
         most_liked_users: "Més agradat"
         most_replied_to_users: "Més respost a "
         no_likes: "Encara sense :heart:"
-      associated_accounts: "Sessions iniciades"
       ip_address:
         title: "Darrera adreça IP"
       registration_ip_address:
@@ -777,6 +776,7 @@ ca:
         header_title: "perfil, missatges, preferits i preferències"
       title:
         title: "Títol"
+        none: "(cap)"
       filters:
         all: "Tot"
       stream:
@@ -912,9 +912,6 @@ ca:
       preferences: "Cal que t'identifiquis per canviar les teves preferències"
       forgot: "No recordo els detalls del meu compte"
       not_approved: "El teu compte encara no ha estat aprovat. Et notificarem per correu quan puguis connectar-t'hi."
-      google:
-        title: "amb Google"
-        message: "Autenticar amb Google (assegura't que no tens activats els bloquejadors de finestres emergents)"
       google_oauth2:
         title: "amb Google"
         message: "Autenticar amb Google (assegura't que no tens activats els bloquejadors de finestres emergents)"
@@ -1535,7 +1532,6 @@ ca:
           inappropriate: "Desfés bandera"
           bookmark: "Desfés preferit"
           like: "Desfés m'agrada"
-          vote: "Desfés votar"
         people:
           off_topic: "Marca amb bandera de fora de context"
           spam: "Marca amb bandera de brossa"
@@ -1544,7 +1540,6 @@ ca:
           notify_user: "missatge enviat"
           bookmark: "marcat com a preferit"
           like: "ha agradat"
-          vote: "votat per això"
         by_you:
           off_topic: "Ho has marcat amb bandera de fora de context"
           spam: "Ho has marcat amb bandera de brossa"
@@ -1553,7 +1548,6 @@ ca:
           notify_user: "Has enviat un missatge a aquesta persona"
           bookmark: "Has marcat aquesta publicació com a preferit"
           like: "Això t'ha agradat"
-          vote: "Has votat per aquesta publicació"
         by_you_and_others:
           off_topic:
             one: "Tu i 1 altra persona més heu marcat això amb bandera de fora de context"
@@ -1576,9 +1570,6 @@ ca:
           like:
             one: "Aquesta publicació us ha agradat a tu i a 1 persona més"
             other: "Aquesta publicació us ha agradat a tu i a {{count}} persones més"
-          vote:
-            one: "Tu i 1 persona més heu votat per aquesta publicació"
-            other: "Tu i {{count}} persones més heu votat per aquesta publicació"
         by_others:
           off_topic:
             one: "1 person ha marcat aquesta publicació amb bandera de fora de context"
@@ -1601,9 +1592,6 @@ ca:
           like:
             one: "això ha agradat a 1 persona"
             other: "això ha agradat a {{count}} persones"
-          vote:
-            one: "1 persona ha votat per aquesta publicació"
-            other: "{{count}} persones han votat per aquesta publicació"
       revisions:
         controls:
           first: "Primera revisió"
@@ -1630,7 +1618,6 @@ ca:
       can: 'pot&hellip; '
       none: '(sense categoria)'
       all: 'Totes les categories'
-      choose: 'Tria una categoria&hellip;'
       edit: 'edita'
       edit_long: "Edita"
       view: 'Mira temes per categories'
@@ -1677,13 +1664,11 @@ ca:
       mailinglist_mirror: "La categoria replica una llista de correu"
       show_subcategory_list: "Mostrar les publicacions de les subcategories llistades a continuació d'aquesta categoria."
       subcategory_num_featured_topics: "Nombre de temes destacats en la pàgina mare de la categoria:"
-      all_topics_wiki: "Fes nou temes de wiki per defecte."
       subcategory_list_style: "Estil de llista de la subcategoria:"
       allow_badges_label: "Permet concedir distintius dins aquesta categoria"
       edit_permissions: "Edita permisos"
       add_permission: "Afegeix permisos"
       this_year: "aquest any"
-      position: "posició"
       default_position: "Posició per defecte"
       position_disabled: "Les categories es mostraran per ordre d'activitat. Per controlar l'ordre de les categories en llistes, "
       position_disabled_click: 'activa la configuració "posicions fixes de categories"'
@@ -2157,7 +2142,7 @@ ca:
         delete_confirm: "Esborra aquest grup?"
         delete_failed: "Impossible esborrar aquest grup. Si és un grup automàtic, no pot ser destruït."
         delete_owner_confirm: "Esborra privilegis propietaris per a '%{username}'?"
-        add: "Afegegix"
+        add: "Afegeix"
         custom: "Personalitza"
         automatic: "Automàtic"
         group_owners: Persones propietàries
@@ -2341,6 +2326,23 @@ ca:
           none_selected: "Tria un esborrany de correu per començar a editar."
           revert: "Reverteix canvis"
           revert_confirm: "Segur que vols revertir els teus canvis?"
+        theme:
+          edit: "Edita"
+          settings: "Configuracions"
+          license: "Llicència"
+          add: "Afegeix"
+          scss:
+            text: "CSS"
+          header:
+            text: "Capçalera"
+          after_header:
+            text: "Després de la capçalera"
+          footer:
+            text: "Peu"
+          body_tag:
+            text: "</body>"
+          yaml:
+            text: "YAML"
         colors:
           title: "Colors"
           long_title: "Esquemes de color"
@@ -2443,7 +2445,6 @@ ca:
             address_placeholder: "name@example.com"
             type_placeholder: "resum, registre..."
             reply_key_placeholder: "clau de resposta"
-            skipped_reason_placeholder: "motiu"
       logs:
         title: "Registres"
         action: "Acció"
@@ -2461,6 +2462,8 @@ ca:
           block: "bloca"
           do_nothing: "no facis res"
         staff_actions:
+          all: "tot"
+          filter: "Filtre:"
           title: "Accions d'equip"
           clear_filters: "Mostra-ho tot"
           staff_user: "Persona de l'equip"
@@ -2535,13 +2538,16 @@ ca:
           form:
             label: "Nou:"
             ip_address: "Adreça IP"
-            add: "Afegegix"
+            add: "Afegeix"
             filter: "Cerca"
           roll_up:
             text: "Enrotlla"
             title: "Crea entrades prohibides d'una nova subxarxa si com a mínim hi ha 'min_ban_entries_for_roll_up' entrades."
         logster:
           title: "Error de registres"
+      watched_words:
+        form:
+          add: 'Afegeix'
       impersonate:
         title: "Suplanta"
         help: "Fes servir aquesta eina per suplantar comptes amb l'objectiu de depurar. Hauràs de desconnectar quan acabis."
@@ -2600,7 +2606,9 @@ ca:
         suspend_reason_label: "Per què suspens aquesta persona? Aquest text <b>serà visible per a tothom</b> a la pàgina del seu perfil i es mostrarà quan aquesta persona s'hi vulgui connectar. Fes-ho breu."
         suspend_reason: "Motiu"
         suspended_by: "Persona suspesa per"
+        silence_reason: "Raó"
         delete_all_posts: "Esborra totes les publicacions"
+        penalty_post_edit: "Edita l'entrada"
         delete_all_posts_confirm_MF: "Estàs a punt d'esborrar {POSTS, plural, one {1 publicació} other {# publicacions}} i {TOPICS, plural, one {1 tema} other {# temes}}. Segur?"
         moderator: "Moderador?"
         admin: "Admin?"
@@ -2764,6 +2772,8 @@ ca:
         go_back: "Torna a la cerca"
         recommended: "Recomanem personalitzar el següent text segons les teves necessitats:"
         show_overriden: 'Només mostra anul·lat'
+      settings:
+        none: 'cap'
       site_settings:
         title: 'Configuració'
         no_results: "Sense resultats"
@@ -2787,6 +2797,7 @@ ca:
           developer: 'Desenvolupador'
           embedding: "Incrustant"
           legal: "Legal"
+          api: 'API'
           user_api: 'API de persona usuària'
           uncategorized: 'Altres'
           backups: "Còpies de seguretat"
@@ -2909,7 +2920,7 @@ ca:
         delete_confirm: "Segur que vols esborrar aquest enllaç permanent?"
         form:
           label: "Nou:"
-          add: "Afegegix"
+          add: "Afegeix"
           filter: "Cerca (URL o URL externa)"
   wizard_js:
     wizard:
@@ -2921,7 +2932,7 @@ ca:
       uploading: "Actualitzant..."
       quit: "Potser més tard"
       invites:
-        add_user: "afegegix"
+        add_user: "afegeix"
         none_added: "No hi has convidat cap equip. Segur que vols continuar?"
         roles:
           admin: "Admin"

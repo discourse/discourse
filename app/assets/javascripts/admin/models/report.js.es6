@@ -1,22 +1,104 @@
+import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import round from "discourse/lib/round";
-import { fillMissingDates } from "discourse/lib/utilities";
+import { fillMissingDates, isNumeric } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
-import { number } from "discourse/lib/formatter";
+import { number, durationTiny } from "discourse/lib/formatter";
 
 const Report = Discourse.Model.extend({
   average: false,
   percent: false,
   higher_is_better: true,
 
+  @computed("labels")
+  computedLabels(labels) {
+    return labels.map(label => {
+      const type = label.type;
+      const properties = label.properties;
+      const property = properties[0];
+
+      return {
+        title: label.title,
+        sort_property: label.sort_property || property,
+        property,
+        compute: row => {
+          let value = row[property];
+          let escapedValue = escapeExpression(value);
+          let tooltip;
+          let base = { property, value, type };
+
+          if (value === null || typeof value === "undefined") {
+            return _.assign(base, {
+              value: null,
+              formatedValue: "-",
+              type: "undefined"
+            });
+          }
+
+          if (type === "seconds") {
+            return _.assign(base, {
+              formatedValue: escapeExpression(durationTiny(value))
+            });
+          }
+
+          if (type === "link") {
+            return _.assign(base, {
+              formatedValue: `<a href="${escapeExpression(
+                row[properties[1]]
+              )}">${escapedValue}</a>`
+            });
+          }
+
+          if (type === "percent") {
+            return _.assign(base, {
+              formatedValue: `${escapedValue}%`
+            });
+          }
+
+          if (type === "number" || isNumeric(value))
+            return _.assign(base, {
+              type: "number",
+              formatedValue: number(value)
+            });
+
+          if (type === "date") {
+            const date = moment(value, "YYYY-MM-DD");
+            if (date.isValid()) {
+              return _.assign(base, {
+                formatedValue: date.format("LL")
+              });
+            }
+          }
+
+          if (type === "text") tooltip = escapedValue;
+
+          return _.assign(base, {
+            tooltip,
+            type: type || "string",
+            formatedValue: escapedValue
+          });
+        }
+      };
+    });
+  },
+
+  @computed("modes")
+  onlyTable(modes) {
+    return modes.length === 1 && modes[0] === "table";
+  },
+
   @computed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {
-    start_date = moment(start_date)
+    start_date = moment
+      .utc(start_date)
       .locale("en")
       .format("YYYY-MM-DD");
-    end_date = moment(end_date)
+
+    end_date = moment
+      .utc(end_date)
       .locale("en")
       .format("YYYY-MM-DD");
+
     return Discourse.getURL(
       `/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`
     );
@@ -140,29 +222,6 @@ const Report = Discourse.Model.extend({
   @computed("prev30Days", "lastThirtyDaysCount", "higher_is_better")
   thirtyDaysTrend(prev30Days, lastThirtyDaysCount, higherIsBetter) {
     return this._computeTrend(prev30Days, lastThirtyDaysCount, higherIsBetter);
-  },
-
-  @computed("type")
-  icon(type) {
-    if (type.indexOf("message") > -1) {
-      return "envelope";
-    }
-    switch (type) {
-      case "page_view_total_reqs":
-        return "file";
-      case "visits":
-        return "user";
-      case "time_to_first_response":
-        return "reply";
-      case "flags":
-        return "flag";
-      case "likes":
-        return "heart";
-      case "bookmarks":
-        return "bookmark";
-      default:
-        return null;
-    }
   },
 
   @computed("type")
@@ -290,18 +349,23 @@ const Report = Discourse.Model.extend({
 });
 
 Report.reopenClass({
-  fillMissingDates(report) {
-    if (_.isArray(report.data)) {
+  fillMissingDates(report, options = {}) {
+    const dataField = options.dataField || "data";
+    const filledField = options.filledField || "data";
+    const startDate = options.startDate || "start_date";
+    const endDate = options.endDate || "end_date";
+
+    if (_.isArray(report[dataField])) {
       const startDateFormatted = moment
-        .utc(report.start_date)
+        .utc(report[startDate])
         .locale("en")
         .format("YYYY-MM-DD");
       const endDateFormatted = moment
-        .utc(report.end_date)
+        .utc(report[endDate])
         .locale("en")
         .format("YYYY-MM-DD");
-      report.data = fillMissingDates(
-        report.data,
+      report[filledField] = fillMissingDates(
+        JSON.parse(JSON.stringify(report[dataField])),
         startDateFormatted,
         endDateFormatted
       );
@@ -317,8 +381,12 @@ Report.reopenClass({
         group_id: groupId
       }
     }).then(json => {
-      // Add zero values for missing dates
-      Report.fillMissingDates(json.report);
+      // don’t fill for large multi column tables
+      // which are not date based
+      const modes = json.report.modes;
+      if (modes.length !== 1 && modes[0] !== "table") {
+        Report.fillMissingDates(json.report);
+      }
 
       const model = Report.create({ type: type });
       model.setProperties(json.report);

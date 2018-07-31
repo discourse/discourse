@@ -12,8 +12,22 @@ const LoginMethod = Ember.Object.extend({
     }
 
     return (
-      this.get("titleOverride") ||
-      I18n.t("login." + this.get("name") + ".title")
+      this.get("titleOverride") || I18n.t(`login.${this.get("name")}.title`)
+    );
+  },
+
+  @computed
+  prettyName() {
+    const prettyNameSetting = this.get("prettyNameSetting");
+    if (!Ember.isEmpty(prettyNameSetting)) {
+      const result = this.siteSettings[prettyNameSetting];
+      if (!Ember.isEmpty(result)) {
+        return result;
+      }
+    }
+
+    return (
+      this.get("prettyNameOverride") || I18n.t(`login.${this.get("name")}.name`)
     );
   },
 
@@ -23,6 +37,62 @@ const LoginMethod = Ember.Object.extend({
       this.get("messageOverride") ||
       I18n.t("login." + this.get("name") + ".message")
     );
+  },
+
+  doLogin() {
+    const name = this.get("name");
+    const customLogin = this.get("customLogin");
+
+    if (customLogin) {
+      customLogin();
+    } else {
+      let authUrl = this.get("customUrl") || Discourse.getURL("/auth/" + name);
+
+      // first check if this plugin has a site setting for full screen login before using the static setting
+      let fullScreenLogin = false;
+      const fullScreenLoginSetting = this.get("fullScreenLoginSetting");
+      if (!Ember.isEmpty(fullScreenLoginSetting)) {
+        fullScreenLogin = this.siteSettings[fullScreenLoginSetting];
+      } else {
+        fullScreenLogin = this.get("fullScreenLogin");
+      }
+
+      if (fullScreenLogin) {
+        document.cookie = "fsl=true";
+        window.location = authUrl;
+      } else {
+        this.set("authenticate", name);
+        const left = this.get("lastX") - 400;
+        const top = this.get("lastY") - 200;
+
+        const height = this.get("frameHeight") || 400;
+        const width = this.get("frameWidth") || 800;
+
+        if (this.get("displayPopup")) {
+          authUrl = authUrl + "?display=popup";
+        }
+
+        const w = window.open(
+          authUrl,
+          "_blank",
+          "menubar=no,status=no,height=" +
+            height +
+            ",width=" +
+            width +
+            ",left=" +
+            left +
+            ",top=" +
+            top
+        );
+        const self = this;
+        const timer = setInterval(function() {
+          if (!w || w.closed) {
+            clearInterval(timer);
+            self.set("authenticate", null);
+          }
+        }, 1000);
+      }
+    }
   }
 });
 
@@ -55,6 +125,19 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
         params.frameWidth = 580;
         params.frameHeight = 400;
         params.displayPopup = true;
+      }
+
+      if (
+        [
+          "facebook",
+          "google_oauth2",
+          "twitter",
+          "yahoo",
+          "github",
+          "instagram"
+        ].includes(name)
+      ) {
+        params.canConnect = true;
       }
 
       params.siteSettings = siteSettings;

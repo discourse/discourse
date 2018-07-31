@@ -183,13 +183,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       });
     },
 
-    createNewTopicViaParams(title, body, category_id, category, tags) {
+    createNewTopicViaParams(title, body, category_id, tags) {
       this.openComposerWithTopicParams(
         this.controllerFor("discovery/topics"),
         title,
         body,
         category_id,
-        category,
         tags
       );
     },

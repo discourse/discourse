@@ -79,7 +79,7 @@ end
 #
 # Table name: web_crawler_requests
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  date       :date             not null
 #  user_agent :string           not null
 #  count      :integer          default(0), not null

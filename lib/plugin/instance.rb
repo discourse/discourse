@@ -92,26 +92,26 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_report(name, &block)
     reloadable_patch do |plugin|
-      if plugin.enabled?
-        Report.add_report(name, &block)
-      end
+      Report.add_report(name, &block)
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def replace_flags
     settings = ::FlagSettings.new
     yield settings
 
     reloadable_patch do |plugin|
-      ::PostActionType.replace_flag_settings(settings) if plugin.enabled?
+      ::PostActionType.replace_flag_settings(settings)
     end
   end
 
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
-      ::User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
+      ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
     end
   end
 
@@ -122,9 +122,10 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_body_class(class_name)
     reloadable_patch do |plugin|
-      ::ApplicationHelper.extra_body_classes << class_name if plugin.enabled?
+      ::ApplicationHelper.extra_body_classes << class_name
     end
   end
 
@@ -180,27 +181,33 @@ class Plugin::Instance
     end
   end
 
+  # Add a post_custom_fields_whitelister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_whitelister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_whitelister(&block) if plugin.enabled?
+      ::TopicView.add_post_custom_fields_whitelister do |user|
+        plugin.enabled? ? block.call(user) : []
+      end
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_preloaded_group_custom_field(field)
     reloadable_patch do |plugin|
-      ::Group.preloaded_custom_field_names << field if plugin.enabled?
+      ::Group.preloaded_custom_field_names << field
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_preloaded_topic_list_custom_field(field)
     reloadable_patch do |plugin|
-      ::TopicList.preloaded_custom_fields << field if plugin.enabled?
+      ::TopicList.preloaded_custom_fields << field
     end
   end
 
+  # Add a permitted_create_param to Post, respecting if the plugin is enabled
   def add_permitted_post_create_param(name)
     reloadable_patch do |plugin|
-      ::Post.permitted_create_params << name if plugin.enabled?
+      ::Post.plugin_permitted_create_params[name] = plugin
     end
   end
 
@@ -286,27 +293,31 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_category_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      Category.register_custom_field_type(name, type) if plugin.enabled?
+      Category.register_custom_field_type(name, type)
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_topic_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      ::Topic.register_custom_field_type(name, type) if plugin.enabled?
+      ::Topic.register_custom_field_type(name, type)
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_post_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      ::Post.register_custom_field_type(name, type) if plugin.enabled?
+      ::Post.register_custom_field_type(name, type)
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_group_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      ::Group.register_custom_field_type(name, type) if plugin.enabled?
+      ::Group.register_custom_field_type(name, type)
     end
   end
 
@@ -451,6 +462,7 @@ JS
     register_assets! unless assets.blank?
     register_locales!
     register_service_workers!
+    register_auth_providers!
 
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
@@ -488,6 +500,20 @@ JS
     Plugin::AuthProvider.auth_attributes.each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
+
+    after_initialize do
+      begin
+        provider.authenticator.enabled?
+      rescue NotImplementedError
+        provider.authenticator.define_singleton_method(:enabled?) do
+          Rails.logger.warn("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
+          return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
+          Rails.logger.warn("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
+          true
+        end
+      end
+    end
+
     auth_providers << provider
   end
 
@@ -564,6 +590,12 @@ JS
   def register_service_workers!
     service_workers.each do |asset, opts|
       DiscoursePluginRegistry.register_service_worker(asset, opts)
+    end
+  end
+
+  def register_auth_providers!
+    auth_providers.each do |auth_provider|
+      DiscoursePluginRegistry.register_auth_provider(auth_provider)
     end
   end
 

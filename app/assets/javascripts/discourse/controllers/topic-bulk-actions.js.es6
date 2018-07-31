@@ -36,8 +36,10 @@ addBulkButton("relistTopics", "relist_topics", {
   icon: "eye",
   buttonVisible: topics => topics.some(t => !t.visible)
 });
-addBulkButton("showTagTopics", "change_tags", { icon: "tag" });
-addBulkButton("showAppendTagTopics", "append_tags", { icon: "tag" });
+if (Discourse.SiteSettings.tagging_enabled) {
+  addBulkButton("showTagTopics", "change_tags", { icon: "tag" });
+  addBulkButton("showAppendTagTopics", "append_tags", { icon: "tag" });
+}
 addBulkButton("deleteTopics", "delete", { icon: "trash", class: "btn-danger" });
 
 // Modal for performing bulk actions on topics

@@ -30,7 +30,7 @@ protected
   end
 
   def find_welcome_post
-    welcome_topic = Topic.where(slug: 'welcome-to-discourse').first
+    welcome_topic = Topic.listable_topics.where(slug: 'welcome-to-discourse').first
     return nil unless welcome_topic.present?
 
     post = welcome_topic.posts.where(post_number: 1).first

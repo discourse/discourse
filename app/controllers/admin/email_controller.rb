@@ -18,17 +18,50 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def sent
-    email_logs = filter_email_logs(EmailLog.sent, params)
-    render_serialized(email_logs, EmailLogSerializer)
+    email_logs = EmailLog.joins(<<~SQL)
+      LEFT JOIN post_reply_keys
+      ON post_reply_keys.post_id = email_logs.post_id
+      AND post_reply_keys.user_id = email_logs.user_id
+    SQL
+
+    email_logs = filter_logs(email_logs, params)
+
+    if params[:reply_key].present?
+      email_logs = email_logs.where(
+        "post_reply_keys.reply_key ILIKE ?", "%#{params[:reply_key]}%"
+      )
+    end
+
+    email_logs = email_logs.to_a
+
+    tuples = email_logs.map do |email_log|
+      [email_log.post_id, email_log.user_id]
+    end
+
+    reply_keys = {}
+
+    if tuples.present?
+      PostReplyKey
+        .where(
+          "(post_id,user_id) IN (#{(['(?)'] * tuples.size).join(', ')})",
+          *tuples
+        )
+        .pluck(:post_id, :user_id, "reply_key::text")
+        .each do |post_id, user_id, reply_key|
+          reply_keys[[post_id, user_id]] = reply_key
+        end
+    end
+
+    render_serialized(email_logs, EmailLogSerializer, reply_keys: reply_keys)
   end
 
   def skipped
-    email_logs = filter_email_logs(EmailLog.skipped, params)
-    render_serialized(email_logs, EmailLogSerializer)
+    skipped_email_logs = filter_logs(SkippedEmailLog, params)
+    render_serialized(skipped_email_logs, SkippedEmailLogSerializer)
   end
 
   def bounced
-    email_logs = filter_email_logs(EmailLog.bounced, params)
+    email_logs = filter_logs(EmailLog.bounced, params)
     render_serialized(email_logs, EmailLogSerializer)
   end
 
@@ -137,20 +170,19 @@ class Admin::EmailController < Admin::AdminController
 
   private
 
-  def filter_email_logs(email_logs, params)
-    email_logs = email_logs.includes(:user, post: :topic)
+  def filter_logs(logs, params)
+    table_name = logs.table_name
+
+    logs = logs.includes(:user, post: :topic)
       .references(:user)
       .order(created_at: :desc)
       .offset(params[:offset] || 0)
       .limit(50)
 
-    email_logs = email_logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
-    email_logs = email_logs.where("email_logs.to_address ILIKE ?", "%#{params[:address]}%") if params[:address].present?
-    email_logs = email_logs.where("email_logs.email_type ILIKE ?", "%#{params[:type]}%") if params[:type].present?
-    email_logs = email_logs.where("email_logs.reply_key ILIKE ?", "%#{params[:reply_key]}%") if params[:reply_key].present?
-    email_logs = email_logs.where("email_logs.skipped_reason ILIKE ?", "%#{params[:skipped_reason]}%") if params[:skipped_reason].present?
-
-    email_logs
+    logs = logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
+    logs = logs.where("#{table_name}.to_address ILIKE ?", "%#{params[:address]}%") if params[:address].present?
+    logs = logs.where("#{table_name}.email_type ILIKE ?", "%#{params[:type]}%") if params[:type].present?
+    logs
   end
 
   def filter_incoming_emails(incoming_emails, params)

@@ -548,8 +548,8 @@ module Email
       if match && match.captures
         match.captures.each do |c|
           next if c.blank?
-          email_log = EmailLog.for(c)
-          return { type: :reply, obj: email_log } if email_log
+          post_reply_key = PostReplyKey.find_by(reply_key: c)
+          return { type: :reply, obj: post_reply_key } if post_reply_key
         end
       end
       nil
@@ -580,18 +580,18 @@ module Email
                      skip_validations: user.staged?)
 
       when :reply
-        email_log = destination[:obj]
+        post_reply_key = destination[:obj]
 
-        if email_log.user_id != user.id && !forwarded_reply_key?(email_log, user)
-          raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+        if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
+          raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
         create_reply(user: user,
                      raw: body,
                      elided: elided,
                      hidden_reason_id: hidden_reason_id,
-                     post: email_log.post,
-                     topic: email_log.post.topic,
+                     post: post_reply_key.post,
+                     topic: post_reply_key.post.topic,
                      skip_validations: user.staged?)
       end
     end
@@ -631,11 +631,11 @@ module Email
       end
     end
 
-    def forwarded_reply_key?(email_log, user)
+    def forwarded_reply_key?(post_reply_key, user)
       incoming_emails = IncomingEmail
         .joins(:post)
-        .where('posts.topic_id = ?', email_log.topic_id)
-        .addressed_to(email_log.reply_key)
+        .where('posts.topic_id = ?', post_reply_key.post.topic_id)
+        .addressed_to(post_reply_key.reply_key)
         .addressed_to_user(user)
         .pluck(:to_addresses, :cc_addresses)
 
@@ -643,8 +643,8 @@ module Email
         next unless contains_email_address_of_user?(to_addresses, user) ||
           contains_email_address_of_user?(cc_addresses, user)
 
-        return true if contains_reply_by_email_address(to_addresses, email_log.reply_key) ||
-          contains_reply_by_email_address(cc_addresses, email_log.reply_key)
+        return true if contains_reply_by_email_address(to_addresses, post_reply_key.reply_key) ||
+          contains_reply_by_email_address(cc_addresses, post_reply_key.reply_key)
       end
 
       false

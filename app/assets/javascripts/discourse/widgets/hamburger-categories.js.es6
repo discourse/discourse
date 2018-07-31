@@ -31,15 +31,12 @@ createWidget("hamburger-category", {
     }
 
     if (!this.currentUser) {
-      let count = c.get("topic_count");
+      let count;
 
       if (c.get("show_subcategory_list")) {
-        const subcats = c.get("subcategories");
-        if (subcats) {
-          subcats.forEach(s => {
-            count += s.get("topic_count");
-          });
-        }
+        count = c.get("totalTopicCount");
+      } else {
+        count = c.get("topic_count");
       }
 
       results.push(h("b.topics-count", number(count)));
@@ -54,14 +51,15 @@ export default createWidget("hamburger-categories", {
 
   html(attrs) {
     const href = Discourse.getURL("/categories");
-    const result = [
+    let title = I18n.t("filters.categories.title");
+    if (attrs.moreCount > 0) {
+      title += I18n.t("categories.more", { count: attrs.moreCount });
+    }
+
+    let result = [
       h(
         "li.heading",
-        h(
-          "a.d-link.categories-link",
-          { attributes: { href } },
-          I18n.t("filters.categories.title")
-        )
+        h("a.d-link.categories-link", { attributes: { href } }, title)
       )
     ];
 
@@ -69,8 +67,10 @@ export default createWidget("hamburger-categories", {
     if (categories.length === 0) {
       return;
     }
-    return result.concat(
+    result = result.concat(
       categories.map(c => this.attach("hamburger-category", c))
     );
+
+    return result;
   }
 });

@@ -686,7 +686,9 @@ class Topic < ActiveRecord::Base
 
         if post = self.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
-          Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
+          DB.after_commit do
+            Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
+          end
         end
       end
 
@@ -698,10 +700,16 @@ class Topic < ActiveRecord::Base
     true
   end
 
-  def add_small_action(user, action_code, who = nil)
+  def add_small_action(user, action_code, who = nil, opts = {})
     custom_fields = {}
     custom_fields["action_code_who"] = who if who.present?
-    add_moderator_post(user, nil, post_type: Post.types[:small_action], action_code: action_code, custom_fields: custom_fields)
+    opts = opts.merge(
+      post_type: Post.types[:small_action],
+      action_code: action_code,
+      custom_fields: custom_fields
+    )
+
+    add_moderator_post(user, nil, opts)
   end
 
   def add_moderator_post(user, text, opts = nil)
@@ -1453,12 +1461,12 @@ end
 # Indexes
 #
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
-#  idx_topics_user_id_deleted_at           (user_id)
-#  idxtopicslug                            (slug)
+#  idx_topics_user_id_deleted_at           (user_id) WHERE (deleted_at IS NULL)
+#  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
 #  index_topics_on_bumped_at               (bumped_at)
-#  index_topics_on_created_at_and_visible  (created_at,visible)
+#  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_lower_title             (lower((title)::text))
-#  index_topics_on_pinned_at               (pinned_at)
-#  index_topics_on_pinned_globally         (pinned_globally)
+#  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
+#  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
 #

@@ -565,9 +565,6 @@ uk:
       resend_activation_email: "Натисніть тут, щоб отримати ще один лист з активацією."
       sent_activation_email_again: "Ми надіслали на Вашу скриньку <b>{{currentEmail}}</b> ще один лист для активації облікового запису. Протягом кількох хвилин він має з'явитися у Вашій скриньці. Не забувайте також перевіряти теку зі спамом."
       to_continue: "Будь ласка Увійдіть"
-      google:
-        title: "через Google"
-        message: "Автентифікація через Google (перевірте, щоб блокувальники спливних вікон були вимкнені)"
       google_oauth2:
         title: "з Google"
       twitter:
@@ -878,7 +875,6 @@ uk:
           inappropriate: "Відкликати скаргу"
           bookmark: "Скасувати закладку"
           like: "Скасувати вподобання"
-          vote: "Відкликати голос"
         people:
           notify_user: "надіслати повідомлення"
         by_you:
@@ -888,7 +884,6 @@ uk:
           notify_moderators: "Ви позначили допис для модерації"
           bookmark: "Ви лишили тут закладку"
           like: "Ви це вподобали"
-          vote: "Ви проголосували за цей допис"
       revisions:
         controls:
           first: "Перша версія"
@@ -906,7 +901,6 @@ uk:
       can: 'може&hellip; '
       none: '(без категорії)'
       all: 'Всі категорії'
-      choose: 'Select a category&hellip;'
       edit: 'редагувати'
       edit_long: "Редагувати"
       view: 'Переглянути теми, що належать до категорії'
@@ -938,7 +932,6 @@ uk:
       edit_permissions: "Редагувати дозволи"
       add_permission: "Додати дозвіл"
       this_year: "цього року"
-      position: "position"
       default_position: "Default Position"
       parent: "Батьківська категорія"
       notifications:
@@ -1344,7 +1337,6 @@ uk:
             user_placeholder: "username"
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
-            skipped_reason_placeholder: "reason"
       logs:
         title: "Журнали"
         action: "Дія"

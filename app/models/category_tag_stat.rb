@@ -66,9 +66,9 @@ end
 #
 # Table name: category_tag_stats
 #
-#  id          :integer          not null, primary key
-#  category_id :integer          not null
-#  tag_id      :integer          not null
+#  id          :bigint(8)        not null, primary key
+#  category_id :bigint(8)        not null
+#  tag_id      :bigint(8)        not null
 #  topic_count :integer          default(0), not null
 #
 # Indexes

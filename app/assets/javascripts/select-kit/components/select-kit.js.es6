@@ -92,17 +92,6 @@ export default Ember.Component.extend(
       this.set("computedContent", []);
       this.set("highlightedSelection", []);
 
-      if (this.site && this.site.isMobileDevice) {
-        this.setProperties({
-          filterable: isNone(this.get("filterable"))
-            ? false
-            : this.get("filterable"),
-          autoFilterable: isNone(this.get("autoFilterable"))
-            ? false
-            : this.get("filterable")
-        });
-      }
-
       if (this.get("nameChanges")) {
         this.addObserver(
           `content.@each.${this.get("nameProperty")}`,
@@ -447,7 +436,7 @@ export default Ember.Component.extend(
       if (get(this.actions, actionName)) {
         run.next(() => this.send(actionName, ...params));
       } else if (this.get(actionName)) {
-        run.next(() => this.get(actionName)());
+        run.next(() => this.get(actionName)(...params));
       }
     },
 
@@ -458,7 +447,7 @@ export default Ember.Component.extend(
 
     clearSelection() {
       this.deselect(this.get("selection"));
-      this.focus();
+      this.focusFilterOrHeader();
     },
 
     actions: {

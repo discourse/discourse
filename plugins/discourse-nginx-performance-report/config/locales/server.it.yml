@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-it: {}
+it:
+  site_settings:
+    daily_performance_report: "Analizza i log di NGINX giornalmente, e pubblica un argomento con i dettagli visibile solo allo Staff"

@@ -84,9 +84,9 @@ module Email
     def format_notification
       style('.previous-discussion', 'font-size: 17px; color: #444; margin-bottom:10px;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
-      style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#3b5998;text-decoration:none;font-weight:bold")
+      style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#{SiteSetting.email_link_color};text-decoration:none;font-weight:bold")
       style('.user-title', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #999;")
-      style('.user-name', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #3b5998;font-weight:normal;")
+      style('.user-name', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #{SiteSetting.email_link_color};font-weight:normal;")
       style('.post-wrapper', "margin-bottom:25px;")
       style('.user-avatar', 'vertical-align:top;width:55px;')
       style('.user-avatar img', nil, width: '45', height: '45')
@@ -258,7 +258,8 @@ module Email
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
           if footernum == (0) && linknum == (0)
-            inner['style'] = "background-color: #006699; color:#ffffff; border-top: 4px solid #006699; border-right: 6px solid #006699; border-bottom: 4px solid #006699; border-left: 6px solid #006699; display: inline-block; font-weight: bold;"
+            bg_color = SiteSetting.email_accent_bg_color
+            inner['style'] = "background-color: #{bg_color}; color: #{SiteSetting.email_accent_fg_color}; border-top: 4px solid #{bg_color}; border-right: 6px solid #{bg_color}; border-bottom: 4px solid #{bg_color}; border-left: 6px solid #{bg_color}; display: inline-block; font-weight: bold;"
           end
           return
         end

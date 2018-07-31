@@ -34,6 +34,8 @@ class PostMover
       )
       DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
       move_posts_to new_topic
+      watch_new_topic
+      new_topic
     end
   end
 
@@ -153,7 +155,7 @@ class PostMover
   def move_email_logs(old_post, new_post)
     EmailLog
       .where(post_id: old_post.id)
-      .update_all(topic_id: new_post.topic_id, post_id: new_post.id)
+      .update_all(post_id: new_post.id)
   end
 
   def update_statistics
@@ -222,5 +224,14 @@ class PostMover
       attrs[:updated_at] = Time.now
       destination_topic.update_columns(attrs)
     end
+  end
+
+  def watch_new_topic
+    TopicUser.change(
+      destination_topic.user,
+      destination_topic.id,
+      notification_level: TopicUser.notification_levels[:watching],
+      notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+    )
   end
 end

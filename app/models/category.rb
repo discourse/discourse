@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_cache'
 
 class Category < ActiveRecord::Base
@@ -9,9 +11,11 @@ class Category < ActiveRecord::Base
 
   REQUIRE_TOPIC_APPROVAL = 'require_topic_approval'
   REQUIRE_REPLY_APPROVAL = 'require_reply_approval'
+  NUM_AUTO_BUMP_DAILY = 'num_auto_bump_daily'
 
   register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
+  register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -365,6 +369,81 @@ class Category < ActiveRecord::Base
     custom_fields[REQUIRE_REPLY_APPROVAL]
   end
 
+  def num_auto_bump_daily
+    custom_fields[NUM_AUTO_BUMP_DAILY]
+  end
+
+  def num_auto_bump_daily=(v)
+    custom_fields[NUM_AUTO_BUMP_DAILY] = v
+  end
+
+  def auto_bump_limiter
+    return nil if num_auto_bump_daily.to_i == 0
+    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86400 / num_auto_bump_daily.to_i)
+  end
+
+  def clear_auto_bump_cache!
+    auto_bump_limiter&.clear!
+  end
+
+  def self.auto_bump_topic!
+    bumped = false
+
+    auto_bumps = CategoryCustomField
+      .where(name: Category::NUM_AUTO_BUMP_DAILY)
+      .where('NULLIF(value, \'\')::int > 0')
+      .pluck(:category_id)
+
+    if (auto_bumps.length > 0)
+      auto_bumps.shuffle.each do |category_id|
+        bumped = Category.find_by(id: category_id)&.auto_bump_topic!
+        break if bumped
+      end
+    end
+
+    bumped
+  end
+
+  # will automatically bump a single topic
+  # if number of automatically bumped topics is smaller than threshold
+  def auto_bump_topic!
+    return false if num_auto_bump_daily.to_i == 0
+
+    limiter = auto_bump_limiter
+    return false if !limiter.can_perform?
+
+    filters = []
+    DiscourseEvent.trigger(:filter_auto_bump_topics, self, filters)
+
+    relation = Topic
+
+    if filters.length > 0
+      filters.each do |filter|
+        relation = filter.call(relation)
+      end
+    end
+
+    topic = relation
+      .visible
+      .listable_topics
+      .where(category_id: self.id)
+      .where('id <> ?', self.topic_id)
+      .where('bumped_at < ?', 1.day.ago)
+      .where('pinned_at IS NULL AND NOT closed AND NOT archived')
+      .order('bumped_at ASC')
+      .limit(1)
+      .first
+
+    if topic
+      topic.add_small_action(Discourse.system_user, "autobumped", nil, bump: true)
+      limiter.performed!
+      true
+    else
+      false
+    end
+
+  end
+
   def allowed_tags=(tag_names_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
   end
@@ -459,12 +538,10 @@ class Category < ActiveRecord::Base
   def url
     url = @@url_cache[self.id]
     unless url
-      url = "#{Discourse.base_uri}/c"
+      url = +"#{Discourse.base_uri}/c"
       url << "/#{parent_category.slug}" if parent_category_id
       url << "/#{slug}"
-      url.freeze
-
-      @@url_cache[self.id] = url
+      @@url_cache[self.id] = -url
     end
 
     url
@@ -545,53 +622,54 @@ end
 #
 # Table name: categories
 #
-#  id                            :integer          not null, primary key
-#  name                          :string(50)       not null
-#  color                         :string(6)        default("AB9364"), not null
-#  topic_id                      :integer
-#  topic_count                   :integer          default(0), not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  user_id                       :integer          not null
-#  topics_year                   :integer          default(0)
-#  topics_month                  :integer          default(0)
-#  topics_week                   :integer          default(0)
-#  slug                          :string           not null
-#  description                   :text
-#  text_color                    :string(6)        default("FFFFFF"), not null
-#  read_restricted               :boolean          default(FALSE), not null
-#  auto_close_hours              :float
-#  post_count                    :integer          default(0), not null
-#  latest_post_id                :integer
-#  latest_topic_id               :integer
-#  position                      :integer
-#  parent_category_id            :integer
-#  posts_year                    :integer          default(0)
-#  posts_month                   :integer          default(0)
-#  posts_week                    :integer          default(0)
-#  email_in                      :string
-#  email_in_allow_strangers      :boolean          default(FALSE)
-#  topics_day                    :integer          default(0)
-#  posts_day                     :integer          default(0)
-#  allow_badges                  :boolean          default(TRUE), not null
-#  name_lower                    :string(50)       not null
-#  auto_close_based_on_last_post :boolean          default(FALSE)
-#  topic_template                :text
-#  contains_messages             :boolean
-#  sort_order                    :string
-#  sort_ascending                :boolean
-#  uploaded_logo_id              :integer
-#  uploaded_background_id        :integer
-#  topic_featured_link_allowed   :boolean          default(TRUE)
-#  all_topics_wiki               :boolean          default(FALSE), not null
-#  show_subcategory_list         :boolean          default(FALSE)
-#  num_featured_topics           :integer          default(3)
-#  default_view                  :string(50)
-#  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
-#  default_top_period            :string(20)       default("all")
-#  mailinglist_mirror            :boolean          default(FALSE), not null
-#  suppress_from_latest          :boolean          default(FALSE)
-#  minimum_required_tags         :integer          default(0)
+#  id                                :integer          not null, primary key
+#  name                              :string(50)       not null
+#  color                             :string(6)        default("AB9364"), not null
+#  topic_id                          :integer
+#  topic_count                       :integer          default(0), not null
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  user_id                           :integer          not null
+#  topics_year                       :integer          default(0)
+#  topics_month                      :integer          default(0)
+#  topics_week                       :integer          default(0)
+#  slug                              :string           not null
+#  description                       :text
+#  text_color                        :string(6)        default("FFFFFF"), not null
+#  read_restricted                   :boolean          default(FALSE), not null
+#  auto_close_hours                  :float
+#  post_count                        :integer          default(0), not null
+#  latest_post_id                    :integer
+#  latest_topic_id                   :integer
+#  position                          :integer
+#  parent_category_id                :integer
+#  posts_year                        :integer          default(0)
+#  posts_month                       :integer          default(0)
+#  posts_week                        :integer          default(0)
+#  email_in                          :string
+#  email_in_allow_strangers          :boolean          default(FALSE)
+#  topics_day                        :integer          default(0)
+#  posts_day                         :integer          default(0)
+#  allow_badges                      :boolean          default(TRUE), not null
+#  name_lower                        :string(50)       not null
+#  auto_close_based_on_last_post     :boolean          default(FALSE)
+#  topic_template                    :text
+#  contains_messages                 :boolean
+#  sort_order                        :string
+#  sort_ascending                    :boolean
+#  uploaded_logo_id                  :integer
+#  uploaded_background_id            :integer
+#  topic_featured_link_allowed       :boolean          default(TRUE)
+#  all_topics_wiki                   :boolean          default(FALSE), not null
+#  show_subcategory_list             :boolean          default(FALSE)
+#  num_featured_topics               :integer          default(3)
+#  default_view                      :string(50)
+#  subcategory_list_style            :string(50)       default("rows_with_featured_topics")
+#  default_top_period                :string(20)       default("all")
+#  mailinglist_mirror                :boolean          default(FALSE), not null
+#  suppress_from_latest              :boolean          default(FALSE)
+#  minimum_required_tags             :integer          default(0)
+#  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #
 # Indexes
 #

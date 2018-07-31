@@ -115,6 +115,35 @@
     {{/user-summary-section}}
   </div>
 
+  {{#if model.top_categories.length}}
+    <div class='top-section top-categories-section'>
+      {{#user-summary-section title="top_categories" class="summary-category-list pull-left"}}
+        <table>
+          <thead>
+            <th class="category-link"></th>
+            <th class='topic-count'>{{i18n "user.summary.topics"}}</th>
+            <th class='reply-count'>{{i18n "user.summary.replies"}}</th>
+          </thead>
+          <tbody>
+            {{#each model.top_categories as |category|}}
+              <tr>
+                <td class="category-link">
+                  {{category-link category allowUncategorized="true" hideParent=false}}
+                </td>
+                <td class='topic-count'>
+                  {{user-summary-category-search user=user category=category count=category.topic_count}}
+                </td>
+                <td class='reply-count'>
+                  {{user-summary-category-search user=user category=category count=category.post_count}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/user-summary-section}}
+    </div>
+  {{/if}}
+
   {{#if siteSettings.enable_badges}}
     <div class='top-section badges-section'>
       <h3 class='stats-title'>{{i18n "user.summary.top_badges"}}</h3>

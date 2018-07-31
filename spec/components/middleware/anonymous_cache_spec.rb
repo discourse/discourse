@@ -173,35 +173,35 @@ describe Middleware::AnonymousCache::Helper do
     it "applies whitelisted_crawler_user_agents correctly" do
       SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
 
-      get '/srv/status', headers: {
+      get '/', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
       }
 
       expect(@status).to eq(200)
 
-      get '/srv/status', headers: {
+      get '/', headers: {
         'HTTP_USER_AGENT' => 'Anotherbot/2.1 (+http://www.notgoogle.com/bot.html)'
       }
 
       expect(@status).to eq(403)
 
-      get '/srv/status', headers: non_crawler
+      get '/', headers: non_crawler
       expect(@status).to eq(200)
     end
 
     it "applies blacklisted_crawler_user_agents correctly" do
       SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
 
-      get '/srv/status', headers: non_crawler
+      get '/', headers: non_crawler
       expect(@status).to eq(200)
 
-      get '/srv/status', headers: {
+      get '/', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
       }
 
       expect(@status).to eq(403)
 
-      get '/srv/status', headers: {
+      get '/', headers: {
         'HTTP_USER_AGENT' => 'Twitterbot/2.1 (+http://www.notgoogle.com/bot.html)'
       }
 
@@ -218,10 +218,20 @@ describe Middleware::AnonymousCache::Helper do
       expect(@status).to eq(200)
     end
 
-    it "blocked crawlers shouldn't log page views" do
+    it "should never block srv/status" do
       SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
 
       get '/srv/status', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+    end
+
+    it "blocked crawlers shouldn't log page views" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
       }
 

@@ -709,6 +709,43 @@ a.mention-group {
   }
 }
 
+// Select posts
+
+.topic-post {
+  &.selected {
+    article.boxed {
+      .select-posts {
+        button.select-post {
+          background-color: $tertiary;
+          color: $secondary;
+          border-color: $tertiary;
+        }
+      }
+      .topic-body {
+        .contents:after {
+          display: none;
+        }
+      }
+    }
+  }
+  article.boxed {
+    position: relative;
+    .select-posts {
+      position: absolute;
+      right: 5em;
+      z-index: z("dropdown");
+      top: 0.5em;
+      height: 100px;
+      button {
+        margin-left: 8px;
+        background-color: $primary-low;
+        color: $primary;
+        box-shadow: shadow("dropdown");
+      }
+    }
+  }
+}
+
 @media all and (max-width: 767px) {
   .reply-to-tab {
     span {
