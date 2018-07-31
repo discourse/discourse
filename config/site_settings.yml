@@ -869,6 +869,10 @@ files:
     default: 40
     min: 5
     max: 150
+  max_export_file_size_kb:
+    hidden: true
+    default: 50000
+    max: 1024000
   theme_authorized_extensions:
     default: 'jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif'
     type: list

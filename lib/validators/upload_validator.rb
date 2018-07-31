@@ -113,7 +113,11 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def maximum_file_size(upload, type)
-    max_size_kb = SiteSetting.send("max_#{type}_size_kb")
+    max_size_kb = if upload.for_export
+      SiteSetting.max_export_file_size_kb
+    else
+      SiteSetting.send("max_#{type}_size_kb")
+    end
     max_size_bytes = max_size_kb.kilobytes
 
     if upload.filesize > max_size_bytes
