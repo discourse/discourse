@@ -46,6 +46,11 @@ export default TextField.extend({
       return usernames;
     }
 
+
+    const termRegexp = (currentUser && currentUser.can_send_private_email_messages) ?
+      /[^\w.-@]/g :
+      /[^\w.-]/g;
+
     this.$()
       .val(this.get("usernames"))
       .autocomplete({
@@ -56,14 +61,9 @@ export default TextField.extend({
         updateData: opts && opts.updateData ? opts.updateData : false,
 
         dataSource(term) {
-          const termRegex = Discourse.User.currentProp(
-            "can_send_private_email_messages"
-          )
-            ? /[^a-zA-Z0-9_\-\.@\+]/
-            : /[^a-zA-Z0-9_\-\.]/;
 
           var results = userSearch({
-            term: term.replace(termRegex, ""),
+            term: term.replace(termRegexp, ""),
             topicId: self.get("topicId"),
             exclude: excludedUsernames(),
             includeGroups,
