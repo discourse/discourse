@@ -1,4 +1,5 @@
 require "sidekiq/pausable"
+require "sidekiq/web"
 
 Sidekiq.configure_client do |config|
   config.redis = Discourse.sidekiq_redis_config
@@ -10,6 +11,24 @@ Sidekiq.configure_server do |config|
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
   end
+end
+
+MiniScheduler.configure do |config|
+
+  config.redis = $redis
+
+  config.job_exception_handler do |ex, context|
+    Discourse.handle_job_exception(ex, context)
+  end
+
+  config.job_ran do |stat|
+    DiscourseEvent.trigger(:scheduled_job_ran, stat)
+  end
+
+  config.before_sidekiq_web_request do
+    RailsMultisite::ConnectionManagement.establish_connection(db: 'default')
+  end
+
 end
 
 if Sidekiq.server?
@@ -27,22 +46,7 @@ if Sidekiq.server?
     scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
 
     if !scheduler_hostname || scheduler_hostname.split(',').include?(`hostname`.strip)
-      require 'scheduler/scheduler'
-      manager = Scheduler::Manager.new($redis.without_namespace)
-      Scheduler::Manager.discover_schedules.each do |schedule|
-        manager.ensure_schedule!(schedule)
-      end
-      Thread.new do
-        while true
-          begin
-            manager.tick
-          rescue => e
-            # the show must go on
-            Discourse.handle_job_exception(e, message: "While ticking scheduling manager")
-          end
-          sleep 1
-        end
-      end
+      MiniScheduler.start
     end
   end
 end

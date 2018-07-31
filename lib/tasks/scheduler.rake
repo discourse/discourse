@@ -28,7 +28,7 @@ end
 
 desc "run every task the scheduler knows about in that order, use only for debugging"
 task 'scheduler:run_all' => :environment do
-  Scheduler::Manager.discover_schedules.each do |schedule|
+  MiniScheduler::Manager.discover_schedules.each do |schedule|
     puts "Running #{schedule}"
     time { schedule.new.execute({}) }
   end
