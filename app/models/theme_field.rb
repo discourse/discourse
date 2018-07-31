@@ -2,8 +2,14 @@ require_dependency 'theme_settings_parser'
 
 class ThemeField < ActiveRecord::Base
 
-  include PreserveOrder
   belongs_to :upload
+
+  scope :where_ordered, ->(hash) {
+    return none unless hash.present?
+
+    column, values = hash.first # order by the first element
+    where(hash).order("position(#{column}::text in '#{values.join(',')}')")
+  }
 
   def self.types
     @types ||= Enum.new(html: 0,

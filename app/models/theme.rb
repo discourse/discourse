@@ -9,7 +9,6 @@ class Theme < ActiveRecord::Base
   # TODO: remove in 2019
   self.ignored_columns = ["key"]
 
-  include PreserveOrder
   @cache = DistributedCache.new('theme')
 
   belongs_to :user
