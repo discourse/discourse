@@ -559,6 +559,7 @@ describe Report do
                                 created_at: 1.day.ago,
                                 agreed_at: Time.now)
         action.save
+        Fabricate(:post_revision, user: sally, created_at: 1.day.ago)
         bob.user_visits.create(visited_at: 45.days.ago, time_read: 200)
         old_topic = Fabricate(:topic, user: bob, created_at: 45.days.ago)
         3.times {
@@ -573,6 +574,7 @@ describe Report do
                                     created_at: 44.days.ago,
                                     agreed_at: 44.days.ago)
         old_action.save
+        Fabricate(:post_revision, user: bob, created_at: 44.days.ago)
       end
 
       it "returns a report with data" do
@@ -598,6 +600,11 @@ describe Report do
         expect(report.data[1][:flag_count]).to eq(1)
       end
 
+      it "returns the correct revision count" do
+        expect(report.data[0][:revision_count]).to be_blank
+        expect(report.data[1][:revision_count]).to eq(1)
+      end
+
       it "returns the correct topic count" do
         expect(report.data[0][:topic_count]).to eq(1)
         expect(report.data[1][:topic_count]).to be_blank
@@ -610,11 +617,13 @@ describe Report do
 
       it "returns the correct data for the time period" do
         expect(previous_report.data[0][:flag_count]).to eq(1)
+        expect(previous_report.data[0][:revision_count]).to eq(1)
         expect(previous_report.data[0][:topic_count]).to eq(1)
         expect(previous_report.data[0][:post_count]).to eq(3)
         expect(previous_report.data[0][:time_read]).to eq(200)
 
         expect(previous_report.data[1][:flag_count]).to be_blank
+        expect(previous_report.data[1][:revision_count]).to be_blank
         expect(previous_report.data[1][:topic_count]).to be_blank
         expect(previous_report.data[1][:post_count]).to be_blank
         expect(previous_report.data[1][:time_read]).to be_blank
