@@ -1415,7 +1415,7 @@ uncategorized:
     client: true
     default: true
 
-  hamburger_menu_categories_count:
+  header_dropdown_category_count:
     client: true
     default: 8
 

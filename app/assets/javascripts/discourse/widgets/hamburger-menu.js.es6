@@ -178,7 +178,7 @@ export default createWidget("hamburger-menu", {
 
   listCategories() {
     const maxCategoriesToDisplay = this.siteSettings
-      .hamburger_menu_categories_count;
+      .header_dropdown_category_count;
     let categories = this.site.get("categoriesByCount");
 
     if (this.currentUser) {
