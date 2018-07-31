@@ -1080,7 +1080,7 @@ class UsersController < ApplicationController
     # Using Discourse.authenticators rather than Discourse.enabled_authenticators so users can
     # revoke permissions even if the admin has temporarily disabled that type of login
     authenticator = Discourse.authenticators.find { |authenticator| authenticator.name == provider_name }
-    raise Discourse::NotFound if authenticator.nil?
+    raise Discourse::NotFound if authenticator.nil? || !authenticator.can_revoke?
 
     skip_remote = params.permit(:skip_remote)
 

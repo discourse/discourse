@@ -269,7 +269,6 @@ login:
     client: true
     default: true
   enable_google_oauth2_logins:
-    client: true
     default: false
   google_oauth2_client_id: ''
   google_oauth2_client_secret:
@@ -286,10 +285,8 @@ login:
   google_oauth2_hd:
     default: ''
   enable_yahoo_logins:
-    client: true
     default: false
   enable_twitter_logins:
-    client: true
     default: false
   twitter_consumer_key:
     default: ''
@@ -299,7 +296,6 @@ login:
     regex: "^[\\w+-]+$"
     secret: true
   enable_instagram_logins:
-    client: true
     default: false
   instagram_consumer_key:
     default: ''
@@ -309,7 +305,6 @@ login:
     regex: "^[a-z0-9]+$"
     secret: true
   enable_facebook_logins:
-    client: true
     default: false
   facebook_app_id:
     default: ''
@@ -319,7 +314,6 @@ login:
     regex: "^[a-f0-9]+$"
     secret: true
   enable_github_logins:
-    client: true
     default: false
   github_client_id:
     default: ''

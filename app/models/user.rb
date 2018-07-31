@@ -958,7 +958,6 @@ class User < ActiveRecord::Base
         result << {
           name: authenticator.name,
           description: account_description,
-          can_revoke: authenticator.can_revoke?
         }
       end
     end

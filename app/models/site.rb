@@ -79,6 +79,10 @@ class Site
     Archetype.list.reject { |t| t.id == Archetype.private_message }
   end
 
+  def auth_providers
+    Discourse.enabled_auth_providers
+  end
+
   def self.json_for(guardian)
 
     if guardian.anonymous? && SiteSetting.login_required

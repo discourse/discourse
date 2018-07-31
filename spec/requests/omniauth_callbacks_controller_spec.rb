@@ -37,7 +37,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     context "with a plugin-contributed auth provider" do
 
       let :provider do
-        provider = Plugin::AuthProvider.new
+        provider = Auth::AuthProvider.new
         provider.authenticator = Class.new(Auth::Authenticator) do
           def name
             'ubuntu'

@@ -5,15 +5,6 @@ require_dependency 'user_name_suggester'
 
 class Users::OmniauthCallbacksController < ApplicationController
 
-  BUILTIN_AUTH = [
-    Auth::FacebookAuthenticator.new,
-    Auth::GoogleOAuth2Authenticator.new,
-    Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true),
-    Auth::GithubAuthenticator.new,
-    Auth::TwitterAuthenticator.new,
-    Auth::InstagramAuthenticator.new
-  ]
-
   skip_before_action :redirect_to_login_if_required
 
   layout 'no_ember'
