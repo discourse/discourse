@@ -168,7 +168,7 @@ class CurrentUserSerializer < BasicUserSerializer
           WHEN notification_level = 4 THEN 3
         END")
       .pluck(:category_id)
-      .slice(0, SiteSetting.hamburger_menu_categories_count)
+      .slice(0, SiteSetting.header_dropdown_category_count)
   end
 
   def dismissed_banner_key
