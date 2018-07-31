@@ -485,13 +485,12 @@ describe Report do
         expect(row[:action_type]).to eq("spam")
         expect(row[:staff_username]).to eq(nil)
         expect(row[:staff_id]).to eq(nil)
-        expect(row[:staff_url]).to eq(nil)
         expect(row[:poster_username]).to eq(post.user.username)
         expect(row[:poster_id]).to eq(post.user.id)
-        expect(row[:poster_url]).to eq("/admin/users/#{post.user.id}/#{post.user.username}")
+        expect(row[:poster_avatar_template]).to be_present
         expect(row[:flagger_id]).to eq(flagger.id)
         expect(row[:flagger_username]).to eq(flagger.username)
-        expect(row[:flagger_url]).to eq("/admin/users/#{flagger.id}/#{flagger.username}")
+        expect(row[:flagger_avatar_template]).to be_present
         expect(row[:resolution]).to eq("No action")
         expect(row[:response_time]).to eq(nil)
       end
@@ -518,13 +517,14 @@ describe Report do
         row = report.data[0]
         expect(row[:editor_id]).to eq(editor.id)
         expect(row[:editor_username]).to eq(editor.username)
-        expect(row[:editor_url]).to eq("/admin/users/#{editor.id}/#{editor.username}")
+        expect(row[:editor_avatar_template]).to be_present
         expect(row[:author_id]).to eq(post.user.id)
         expect(row[:author_username]).to eq(post.user.username)
-        expect(row[:author_url]).to eq("/admin/users/#{post.user.id}/#{post.user.username}")
+        expect(row[:author_avatar_template]).to be_present
         expect(row[:edit_reason]).to eq("not cool")
-        expect(row[:post_id]).to eq(post.id)
-        expect(row[:post_url]).to eq("/t/-/#{post.topic.id}/#{post.post_number}")
+        expect(row[:post_raw]).to eq("updated body")
+        expect(row[:post_number]).to eq(post.post_number)
+        expect(row[:topic_id]).to eq(post.topic.id)
       end
     end
   end
