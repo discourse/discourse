@@ -6,7 +6,7 @@ class AdminDashboardNextIndexData < AdminDashboardNextData
   end
 
   def self.stats_cache_key
-    'index-dashboard-data'
+    "index-dashboard-data-#{Report::SCHEMA_VERSION}"
   end
 
   # TODO: problems should be loaded from this model

@@ -2,7 +2,7 @@ import Category from "discourse/models/category";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { ajax } from "discourse/lib/ajax";
-import Report from "admin/models/report";
+import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
 import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
 
@@ -189,24 +189,20 @@ export default Ember.Component.extend({
   reportKey(dataSourceName, categoryId, groupId, startDate, endDate) {
     if (!dataSourceName || !startDate || !endDate) return null;
 
-    let reportKey = `reports:${dataSourceName}`;
-
-    if (categoryId && categoryId !== "all") {
-      reportKey += `:${categoryId}`;
-    } else {
-      reportKey += `:`;
-    }
-
-    reportKey += `:${startDate.replace(/-/g, "")}`;
-    reportKey += `:${endDate.replace(/-/g, "")}`;
-
-    if (groupId && groupId !== "all") {
-      reportKey += `:${groupId}`;
-    } else {
-      reportKey += `:`;
-    }
-
-    reportKey += `:`;
+    let reportKey = "reports:";
+    reportKey += [
+      dataSourceName,
+      categoryId,
+      startDate.replace(/-/g, ""),
+      endDate.replace(/-/g, ""),
+      groupId,
+      "[:prev_period]",
+      this.get("reportOptions.table.limit"),
+      SCHEMA_VERSION
+    ]
+      .filter(x => x)
+      .map(x => x.toString())
+      .join(":");
 
     return reportKey;
   },
