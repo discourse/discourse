@@ -60,21 +60,20 @@ task 'emails:test', [:email] => [:environment] do |_, args|
   email = args[:email]
   message = "OK"
   begin
-    smtp=Discourse::Application.config.action_mailer.smtp_settings
+    smtp = Discourse::Application.config.action_mailer.smtp_settings
 
     if smtp[:address].match(/smtp\.gmail\.com/)
-      puts "
+      puts <<~STR
+        #{smtp}
+        ============================== WARNING ==============================
 
-#{smtp}
-============================== WARNING ==============================
+        Sending mail with Gmail is a violation of their terms of service.
 
-Sending mail with Gmail is a violation of their terms of service.
+        Sending with G Suite might work, but it is not recommended. For information see:
+        https://meta.discourse.org/t/dscourse-aws-ec2-g-suite-troubleshoting/62931?u=pfaffman
 
-Sending with G Suite might work, but it is not recommended. For information see:
-https://meta.discourse.org/t/dscourse-aws-ec2-g-suite-troubleshoting/62931?u=pfaffman
-
-========================= CONTINUING TEST ============================
-"
+        ========================= CONTINUING TEST ============================
+      STR
     end
 
     puts "Testing sending to #{email} using #{smtp[:user_name]}:#{smtp[:password]}@#{smtp[:address]}:#{smtp[:port]}."
@@ -83,80 +82,70 @@ https://meta.discourse.org/t/dscourse-aws-ec2-g-suite-troubleshoting/62931?u=pfa
       .auth_login(smtp[:user_name], smtp[:password])
   rescue Exception => e
 
-
-
-
-
     if e.to_s.match(/execution expired/)
-      message = "
-
-======================================== ERROR ========================================
-Connection to port #{ENV["DISCOURSE_SMTP_PORT"]} failed.
-====================================== SOLUTION =======================================
-The most likely problem is that your server has outgoing SMTP traffic blocked.
-If you are using a service like Mailgun or Sendgrid, try using port 2525.
-=======================================================================================
-
-"
+      message = <<~STR
+        ======================================== ERROR ========================================
+        Connection to port #{ENV["DISCOURSE_SMTP_PORT"]} failed.
+        ====================================== SOLUTION =======================================
+        The most likely problem is that your server has outgoing SMTP traffic blocked.
+        If you are using a service like Mailgun or Sendgrid, try using port 2525.
+        =======================================================================================
+      STR
     elsif e.to_s.match(/535/)
-      message = "
+      message = <<~STR
+        ======================================== ERROR ========================================
+                                          AUTHENTICATION FAILED
 
-======================================== ERROR ========================================
-                                  AUTHENTICATION FAILED
+        #{e}
 
-#{e}
-
-====================================== SOLUTION =======================================
-The most likely problem is that your SMTP username and/or Password is incorrect.
-Check them and try again.
-=======================================================================================
-
-"
+        ====================================== SOLUTION =======================================
+        The most likely problem is that your SMTP username and/or Password is incorrect.
+        Check them and try again.
+        =======================================================================================
+      STR
+      j
     elsif e.to_s.match(/Connection refused/)
-      message = "
+      message = <<~STR
+        ======================================== ERROR ========================================
+                                          CONNECTION REFUSED
 
-======================================== ERROR ========================================
-                                  CONNECTION REFUSED
+        #{e}
 
-#{e}
+        ====================================== SOLUTION =======================================
+        The most likely problem is that you have chosen the wrong port or a network problem is
+        blocking access from the Docker container.
 
-====================================== SOLUTION =======================================
-The most likely problem is that you have chosen the wrong port or a network problem is
-blocking access from the Docker container.
+        Check the port and your networking configuration.
+        =======================================================================================
+      STR
 
-Check the port and your networking configuration.
-=======================================================================================
-
-"
     elsif e.to_s.match(/service not known/)
-      message = "
+      message = <<~STR
+        ======================================== ERROR ========================================
+                                          SMTP SERVER NOT FOUND
 
-======================================== ERROR ========================================
-                                  SMTP SERVER NOT FOUND
+        #{e}
 
-#{e}
+        ====================================== SOLUTION =======================================
+        The most likely problem is that the host name of your SMTP server is incorrect.
+        Check it and try again.
+        =======================================================================================
+      STR
 
-====================================== SOLUTION =======================================
-The most likely problem is that the host name of your SMTP server is incorrect.
-Check it and try again.
-=======================================================================================
-
-"
     else
-      message = "
 
-======================================== ERROR ========================================
-                                    UNEXPECTED ERROR
+      message = <<~STR
+        ======================================== ERROR ========================================
+                                            UNEXPECTED ERROR
 
-#{e}
+        #{e}
 
-====================================== SOLUTION =======================================
-This is not a common error. No recommended solution exists!
+        ====================================== SOLUTION =======================================
+        This is not a common error. No recommended solution exists!
 
-Please report the exact error message above. (And a solution, if you find one!)
-=======================================================================================
-
-"
+        Please report the exact error message above. (And a solution, if you find one!)
+        =======================================================================================
+      STR
     end
   end
   if message == "OK"
@@ -171,16 +160,15 @@ Please report the exact error message above. (And a solution, if you find one!)
   rescue
     puts "Sending mail failed."
   else
-    puts "
-Mail accepted by SMTP server.
+    puts <<~STR
+      Mail accepted by SMTP server.
 
-If you do not receive the message, check your SPAM folder
-or test again using a service like http://www.mail-tester.com/.
+      If you do not receive the message, check your SPAM folder
+      or test again using a service like http://www.mail-tester.com/.
 
-If the message is not delivered it is not a problem with Discourse.
+      If the message is not delivered it is not a problem with Discourse.
 
-Check the SMTP server logs to see why it failed to deliver the message.
-
-"
+      Check the SMTP server logs to see why it failed to deliver the message.
+    STR
   end
 end
