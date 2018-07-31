@@ -180,7 +180,7 @@ gem 'rqrcode'
 
 gem 'sshkey', require: false
 
-gem 'charlock_holmes', require: false
+gem 'rchardet', require: false
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
