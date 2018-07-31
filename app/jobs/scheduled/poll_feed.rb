@@ -90,7 +90,7 @@ module Jobs
       def parsed_feed
         raw_feed, encoding = fetch_rss
         encoded_feed = Encodings.try_utf8(raw_feed, encoding) if encoding
-        encoded_feed = Encodings.to_utf8(raw_feed, encoding_hint: encoding) unless encoded_feed
+        encoded_feed = Encodings.to_utf8(raw_feed) unless encoded_feed
 
         return nil if encoded_feed.blank?
 
