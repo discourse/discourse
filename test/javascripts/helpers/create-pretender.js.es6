@@ -225,7 +225,13 @@ export default function() {
       return response({ category });
     });
 
-    this.get("/draft.json", () => response(fixturesByUrl["/draft.json"]));
+    this.get("/draft.json", request => {
+      if (request.queryParams.draft_key === "new_topic") {
+        return response(fixturesByUrl["/draft.json"]);
+      }
+
+      return response({});
+    });
 
     this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 
