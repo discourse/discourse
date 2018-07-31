@@ -61,7 +61,7 @@ describe Discourse do
 
   context 'authenticators' do
     it 'returns inbuilt authenticators' do
-      expect(Discourse.authenticators).to match_array(Users::OmniauthCallbacksController::BUILTIN_AUTH)
+      expect(Discourse.authenticators).to match_array(Discourse::BUILTIN_AUTH.map(&:authenticator))
     end
 
     context 'with authentication plugin installed' do
@@ -76,7 +76,7 @@ describe Discourse do
           end
         end
 
-        provider = Plugin::AuthProvider.new
+        provider = Auth::AuthProvider.new
         provider.authenticator = authenticator_class.new
         provider
       end
@@ -91,7 +91,7 @@ describe Discourse do
 
       it 'returns inbuilt and plugin authenticators' do
         expect(Discourse.authenticators).to match_array(
-          Users::OmniauthCallbacksController::BUILTIN_AUTH + [plugin_auth_provider.authenticator])
+          Discourse::BUILTIN_AUTH.map(&:authenticator) + [plugin_auth_provider.authenticator])
       end
 
     end
