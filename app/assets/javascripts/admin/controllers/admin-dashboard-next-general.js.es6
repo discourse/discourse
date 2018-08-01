@@ -66,7 +66,9 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
           this.setProperties({
             dashboardFetchedAt: new Date(),
             model: adminDashboardNextModel,
-            reports: adminDashboardNextModel.reports.map(x => Report.create(x))
+            reports: Ember.makeArray(adminDashboardNextModel.reports).map(x =>
+              Report.create(x)
+            )
           });
         })
         .catch(e => {

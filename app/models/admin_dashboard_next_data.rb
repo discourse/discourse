@@ -6,10 +6,6 @@ class AdminDashboardNextData
   end
 
   def self.fetch_stats
-    self.class.new.as_json
-  end
-
-  def self.fetch_stats
     new.as_json
   end
 
