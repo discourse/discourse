@@ -474,7 +474,8 @@ class Element {
   }
 
   tag() {
-    const tag = new (tags().filter(t => new t().name === this.name)[0] || Tag)();
+    const tag = new (tags().filter(t => new t().name === this.name)[0] ||
+      Tag)();
     tag.element = this;
     return tag;
   }
