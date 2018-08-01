@@ -215,7 +215,7 @@ class PostMover
   end
 
   def update_last_post_stats
-    post = destination_topic.posts.where.not(post_type: Post.types[:whisper]).last
+    post = destination_topic.ordered_posts.where.not(post_type: Post.types[:whisper]).last
     if post && post_ids.include?(post.id)
       attrs = {}
       attrs[:last_posted_at] = post.created_at
