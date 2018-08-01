@@ -353,9 +353,7 @@ aside.quote {
       display: flex;
       align-items: center;
       padding: 4px 8px;
-      white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
       flex: 0 0 auto; // IE11
       a {
         color: $primary-high;
