@@ -68,13 +68,13 @@
         {{else}}
           <div class="alert alert-info no-data">
             {{d-icon "pie-chart"}}
-            {{i18n 'admin.dashboard.reports.no_data'}}
+            <span>{{i18n 'admin.dashboard.reports.no_data'}}</span>
           </div>
         {{/if}}
       {{else}}
         {{#if showTimeoutError}}
           <div class="alert alert-error report-error timeout">
-            {{i18n "admin.dashboard.timeout_error"}}
+            <span>{{i18n "admin.dashboard.timeout_error"}}</span>
           </div>
         {{/if}}
 

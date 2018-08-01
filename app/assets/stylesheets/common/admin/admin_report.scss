@@ -6,6 +6,7 @@
     align-self: flex-start;
     text-align: center;
     padding: 3em;
+    box-sizing: border-box;
   }
 
   .report-error {
@@ -26,8 +27,9 @@
     }
   }
 
-  .conditional-loading-section {
-    width: 100%;
+  .conditional-loading-section.is-loading {
+    flex: 1;
+    margin: 0.5em 0;
   }
 
   .report-header {
