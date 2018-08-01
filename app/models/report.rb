@@ -721,6 +721,10 @@ class Report
       {
         property: :post_count,
         title: I18n.t("reports.moderators_activity.labels.post_count")
+      },
+      {
+        property: :revision_count,
+        title: I18n.t("reports.moderators_activity.labels.revision_count")
       }
     ]
 
@@ -787,6 +791,19 @@ class Report
     ON df.user_id = af.user_id
     SQL
 
+    revision_count_query = <<~SQL
+    SELECT pr.user_id,
+    COUNT(*) AS revision_count
+    FROM post_revisions pr
+    JOIN users u
+    ON u.id = pr.user_id
+    WHERE u.moderator = 'true'
+    AND u.id > 0
+    AND pr.created_at >= '#{report.start_date}'
+    AND pr.created_at <= '#{report.end_date}'
+    GROUP BY pr.user_id
+    SQL
+
     topic_count_query = <<~SQL
     SELECT t.user_id,
     COUNT(*) AS topic_count
@@ -839,6 +856,10 @@ class Report
 
     DB.query(flag_count_query).each do |row|
       mod_data[row.user_id][:flag_count] = row.flag_count
+    end
+
+    DB.query(revision_count_query).each do |row|
+      mod_data[row.user_id][:revision_count] = row.revision_count
     end
 
     DB.query(topic_count_query).each do |row|
