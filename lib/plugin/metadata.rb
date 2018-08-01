@@ -24,6 +24,7 @@ class Plugin::Metadata
     "poll",
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
+    "discourse-plugin-discord-auth",
     "discourse-oauth2-basic",
     "discourse-math",
     "discourse-bbcode-color",
