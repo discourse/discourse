@@ -101,7 +101,8 @@ class AdminDashboardData
                       :github_config_check, :s3_config_check, :image_magick_check,
                       :failing_emails_check,
                       :subfolder_ends_in_slash_check,
-                      :pop3_polling_configuration, :email_polling_errored_recently
+                      :pop3_polling_configuration, :email_polling_errored_recently,
+                      :out_of_date_themes
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -247,4 +248,16 @@ class AdminDashboardData
     I18n.t('dashboard.force_https_warning') unless SiteSetting.force_https
   end
 
+  def out_of_date_themes
+    old_themes = RemoteTheme.out_of_date_themes
+    return unless old_themes.present?
+
+    html = old_themes.map do |name, id|
+      "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
+    end.join("\n")
+
+    message = I18n.t("dashboard.out_of_date_themes")
+    message += "<ul>#{html}</ul>"
+    message
+  end
 end
