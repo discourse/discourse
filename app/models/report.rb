@@ -147,12 +147,10 @@ class Report
   end
 
   def self.cache(report, duration)
-    Discourse.cache.write(Report.cache_key(report), report.as_json, force: true, expires_in: duration)
+    Discourse.cache.write(cache_key(report), report.as_json, force: true, expires_in: duration)
   end
 
   def self.find(type, opts = nil)
-    clear_cache
-
     begin
       report = _get(type, opts)
       report_method = :"report_#{type}"
