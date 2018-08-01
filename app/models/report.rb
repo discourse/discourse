@@ -1015,9 +1015,11 @@ class Report
         data[:poster_avatar_template] = User.avatar_template(row.poster_username, row.poster_avatar_id)
       end
 
-      data[:flagger_id] = row.flagger_id
-      data[:flagger_username] = row.flagger_username
-      data[:flagger_avatar_template] = User.avatar_template(row.flagger_username, row.flagger_avatar_id)
+      if row.flagger_id
+        data[:flagger_id] = row.flagger_id
+        data[:flagger_username] = row.flagger_username
+        data[:flagger_avatar_template] = User.avatar_template(row.flagger_username, row.flagger_avatar_id)
+      end
 
       if row.agreed_by_id
         data[:resolution] = I18n.t("reports.flags_status.values.agreed")
