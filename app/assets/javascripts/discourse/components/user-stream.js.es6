@@ -89,7 +89,7 @@ export default Ember.Component.extend(LoadMore, {
       const stream = this.get("stream");
       Draft.clear(draft.draft_key, draft.sequence)
         .then(() => {
-          stream.load(this.site);
+          stream.remove(draft);
         })
         .catch(error => {
           popupAjaxError(error);
