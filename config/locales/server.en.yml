@@ -1949,11 +1949,11 @@ en:
     second_factor_title: "Two Factor Authentication"
     second_factor_description: "Please enter the required authentication code from your app:"
     second_factor_backup_description: "Please enter one of your backup codes:"
-    second_factor_backup_title: "Two Factor Backup"
+    second_factor_backup_title: "Two Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     second_factor_toggle:
-      totp: "Log in using Authenticator app"
-      backup_code: "Log in using a backup code"
+      totp: "Use an authenticator app instead"
+      backup_code: "Use a backup code instead"
 
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
