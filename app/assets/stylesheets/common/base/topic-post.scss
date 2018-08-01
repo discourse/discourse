@@ -369,6 +369,11 @@ aside.quote {
           text-overflow: ellipsis;
         }
       }
+      &.group {
+        .d-icon {
+          margin-right: 4px;
+        }
+      }
     }
     .d-icon-times {
       margin-left: 0.25em;
