@@ -13,6 +13,7 @@ import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";
 import UserAction from "discourse/models/user-action";
+import UserDraftsStream from "discourse/models/user-drafts-stream";
 import Group from "discourse/models/group";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
@@ -45,6 +46,11 @@ const User = RestModel.extend({
   @computed()
   postsStream() {
     return UserPostsStream.create({ user: this });
+  },
+
+  @computed()
+  userDraftsStream() {
+    return UserDraftsStream.create({ user: this });
   },
 
   staff: Em.computed.or("admin", "moderator"),

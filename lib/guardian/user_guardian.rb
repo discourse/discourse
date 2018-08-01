@@ -30,6 +30,10 @@ module UserGuardian
     is_me?(user) || is_admin?
   end
 
+  def can_see_drafts?(user)
+    is_me?(user) || is_admin?
+  end
+
   def can_silence_user?(user)
     user && is_staff? && not(user.staff?)
   end

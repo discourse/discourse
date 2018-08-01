@@ -736,6 +736,7 @@ Discourse::Application.routes.draw do
 
   get "message-bus/poll" => "message_bus#poll"
 
+  resources :drafts, only: [:index]
   get "draft" => "draft#show"
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"

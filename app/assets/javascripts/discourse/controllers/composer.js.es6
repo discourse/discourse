@@ -849,7 +849,10 @@ export default Ember.Controller.extend({
       if (key === "new_topic") {
         this.send("clearTopicDraft");
       }
-      Draft.clear(key, this.get("model.draftSequence"));
+
+      Draft.clear(key, this.get("model.draftSequence")).then(() => {
+        this.appEvents.trigger("draft:destroyed", key);
+      });
     }
   },
 
