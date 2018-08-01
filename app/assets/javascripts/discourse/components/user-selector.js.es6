@@ -2,7 +2,6 @@ import { observes } from "ember-addons/ember-computed-decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";
-import { formatUsername } from "discourse/lib/utilities";
 
 export default TextField.extend({
   autocorrect: false,
