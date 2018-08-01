@@ -418,7 +418,7 @@ QUnit.test("computed labels", assert => {
       },
       title: "Moderator"
     },
-    { property: "flag_count", title: "Flag count" },
+    { type: "number", property: "flag_count", title: "Flag count" },
     { type: "seconds", property: "time_read", title: "Time read" },
     { type: "text", property: "note", title: "Note" },
     {
@@ -453,62 +453,66 @@ QUnit.test("computed labels", assert => {
   assert.equal(usernameLabel.mainProperty, "username");
   assert.equal(usernameLabel.sortProperty, "username");
   assert.equal(usernameLabel.title, "Moderator");
+  assert.equal(usernameLabel.type, "user");
   const computedUsernameLabel = usernameLabel.compute(row);
   assert.equal(
     computedUsernameLabel.formatedValue,
     "<a href='/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
   );
-  assert.equal(computedUsernameLabel.type, "user");
   assert.equal(computedUsernameLabel.value, "joffrey");
 
   const flagCountLabel = computedLabels[1];
   assert.equal(flagCountLabel.mainProperty, "flag_count");
   assert.equal(flagCountLabel.sortProperty, "flag_count");
   assert.equal(flagCountLabel.title, "Flag count");
-  const computedFlagCountLabel = flagCountLabel.compute(row);
+  assert.equal(flagCountLabel.type, "number");
+  let computedFlagCountLabel = flagCountLabel.compute(row);
   assert.equal(computedFlagCountLabel.formatedValue, "1.9k");
-  assert.equal(computedFlagCountLabel.type, "number");
   assert.equal(computedFlagCountLabel.value, 1876);
+  computedFlagCountLabel = flagCountLabel.compute(row, {
+    formatNumbers: false
+  });
+  assert.equal(computedFlagCountLabel.formatedValue, 1876);
 
   const timeReadLabel = computedLabels[2];
   assert.equal(timeReadLabel.mainProperty, "time_read");
   assert.equal(timeReadLabel.sortProperty, "time_read");
   assert.equal(timeReadLabel.title, "Time read");
+  assert.equal(timeReadLabel.type, "seconds");
   const computedTimeReadLabel = timeReadLabel.compute(row);
   assert.equal(computedTimeReadLabel.formatedValue, "3d");
-  assert.equal(computedTimeReadLabel.type, "seconds");
   assert.equal(computedTimeReadLabel.value, 287362);
 
   const noteLabel = computedLabels[3];
   assert.equal(noteLabel.mainProperty, "note");
   assert.equal(noteLabel.sortProperty, "note");
   assert.equal(noteLabel.title, "Note");
+  assert.equal(noteLabel.type, "text");
   const computedNoteLabel = noteLabel.compute(row);
   assert.equal(computedNoteLabel.formatedValue, "This is a long note");
-  assert.equal(computedNoteLabel.type, "text");
   assert.equal(computedNoteLabel.value, "This is a long note");
 
   const topicLabel = computedLabels[4];
   assert.equal(topicLabel.mainProperty, "topic_title");
   assert.equal(topicLabel.sortProperty, "topic_title");
   assert.equal(topicLabel.title, "Topic");
+  assert.equal(topicLabel.type, "topic");
   const computedTopicLabel = topicLabel.compute(row);
   assert.equal(
     computedTopicLabel.formatedValue,
     "<a href='/t/-/2'>Test topic</a>"
   );
-  assert.equal(computedTopicLabel.type, "topic");
   assert.equal(computedTopicLabel.value, "Test topic");
 
   const postLabel = computedLabels[5];
   assert.equal(postLabel.mainProperty, "post_raw");
   assert.equal(postLabel.sortProperty, "post_raw");
   assert.equal(postLabel.title, "Post");
+  assert.equal(postLabel.type, "post");
   const computedPostLabel = postLabel.compute(row);
   assert.equal(
     computedPostLabel.formatedValue,
     "<a href='/t/-/2/3'>This is the beginning of</a>"
   );
-  assert.equal(computedPostLabel.type, "post");
   assert.equal(computedPostLabel.value, "This is the beginning of");
 });

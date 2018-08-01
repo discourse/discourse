@@ -1,11 +1,7 @@
 import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import round from "discourse/lib/round";
-import {
-  fillMissingDates,
-  isNumeric,
-  formatUsername
-} from "discourse/lib/utilities";
+import { fillMissingDates, formatUsername } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
 import { number, durationTiny } from "discourse/lib/formatter";
 import { renderAvatar } from "discourse/helpers/user-avatar";
@@ -252,7 +248,7 @@ const Report = Discourse.Model.extend({
   @computed("labels")
   computedLabels(labels) {
     return labels.map(label => {
-      const type = label.type;
+      const type = label.type || "string";
 
       let mainProperty;
       if (label.property) mainProperty = label.property;
@@ -266,70 +262,63 @@ const Report = Discourse.Model.extend({
         title: label.title,
         sortProperty: label.sort_property || mainProperty,
         mainProperty,
-        compute: row => {
+        type,
+        compute: (row, opts = {}) => {
           const value = row[mainProperty];
 
           if (type === "user") return this._userLabel(label.properties, row);
           if (type === "post") return this._postLabel(label.properties, row);
           if (type === "topic") return this._topicLabel(label.properties, row);
-          if (type === "seconds")
-            return this._secondsLabel(mainProperty, value);
+          if (type === "seconds") return this._secondsLabel(value);
           if (type === "link") return this._linkLabel(label.properties, row);
-          if (type === "percent")
-            return this._percentLabel(mainProperty, value);
-          if (type === "number" || isNumeric(value)) {
-            return this._numberLabel(mainProperty, value);
+          if (type === "percent") return this._percentLabel(value);
+          if (type === "number") {
+            return this._numberLabel(value, opts);
           }
           if (type === "date") {
             const date = moment(value, "YYYY-MM-DD");
-            if (date.isValid())
-              return this._dateLabel(mainProperty, value, date);
+            if (date.isValid()) return this._dateLabel(value, date);
           }
-          if (type === "text") return this._textLabel(mainProperty, value);
-          if (!value) return this._undefinedLabel();
+          if (type === "text") return this._textLabel(value);
 
           return {
-            property: mainProperty,
             value,
-            type: type || "string",
-            formatedValue: escapeExpression(value)
+            type,
+            property: mainProperty,
+            formatedValue: value ? escapeExpression(value) : "-"
           };
         }
       };
     });
   },
 
-  _undefinedLabel() {
-    return {
-      value: null,
-      formatedValue: "-",
-      type: "undefined"
-    };
-  },
-
   _userLabel(properties, row) {
     const username = row[properties.username];
 
-    if (!username) return this._undefinedLabel();
+    const formatedValue = () => {
+      const userId = row[properties.id];
 
-    const user = Ember.Object.create({
-      username,
-      name: formatUsername(username),
-      avatar_template: row[properties.avatar]
-    });
+      const user = Ember.Object.create({
+        username,
+        name: formatUsername(username),
+        avatar_template: row[properties.avatar]
+      });
 
-    const avatarImg = renderAvatar(user, {
-      imageSize: "tiny",
-      ignoreTitle: true
-    });
+      const href = `/admin/users/${userId}/${username}`;
 
-    const href = `/admin/users/${row[properties.id]}/${username}`;
+      const avatarImg = renderAvatar(user, {
+        imageSize: "tiny",
+        ignoreTitle: true
+      });
+
+      return `<a href='${href}'>${avatarImg}<span class='username'>${
+        user.name
+      }</span></a>`;
+    };
 
     return {
-      type: "user",
-      property: properties.username,
       value: username,
-      formatedValue: `<a href='${href}'>${avatarImg}<span class='username'>${username}</span></a>`
+      formatedValue: username ? formatedValue(username) : "-"
     };
   },
 
@@ -339,8 +328,6 @@ const Report = Discourse.Model.extend({
     const href = `/t/-/${topicId}`;
 
     return {
-      type: "topic",
-      property: properties.title,
       value: topicTitle,
       formatedValue: `<a href='${href}'>${topicTitle}</a>`
     };
@@ -353,72 +340,67 @@ const Report = Discourse.Model.extend({
     const href = `/t/-/${topicId}/${postNumber}`;
 
     return {
-      type: "post",
       property: properties.title,
       value: postTitle,
       formatedValue: `<a href='${href}'>${postTitle}</a>`
     };
   },
 
-  _secondsLabel(property, value) {
+  _secondsLabel(value) {
     return {
       value,
-      property,
-      countable: true,
-      type: "seconds",
       formatedValue: durationTiny(value)
     };
   },
 
-  _percentLabel(property, value) {
+  _percentLabel(value) {
     return {
-      type: "percent",
-      property,
       value,
-      formatedValue: `${value}%`
+      formatedValue: value ? `${value}%` : "-"
     };
   },
 
-  _numberLabel(property, value) {
+  _numberLabel(value, options = {}) {
+    const formatNumbers = Ember.isEmpty(options.formatNumbers)
+      ? true
+      : options.formatNumbers;
+
+    const formatedValue = () => (formatNumbers ? number(value) : value);
+
     return {
-      type: "number",
-      countable: true,
-      property,
       value,
-      formatedValue: number(value)
+      formatedValue: value ? formatedValue() : "-"
     };
   },
 
-  _dateLabel(property, value, date) {
+  _dateLabel(value, date) {
     return {
-      type: "date",
-      property,
       value,
-      formatedValue: date.format("LL")
+      formatedValue: value ? date.format("LL") : "-"
     };
   },
 
-  _textLabel(property, value) {
+  _textLabel(value) {
     const escaped = escapeExpression(value);
 
     return {
-      type: "text",
-      property,
       value,
-      formatedValue: escaped
+      formatedValue: value ? escaped : "-"
     };
   },
 
   _linkLabel(properties, row) {
     const property = properties[0];
     const value = row[property];
+    const formatedValue = (href, anchor) => {
+      return `<a href="${escapeExpression(href)}">${escapeExpression(
+        anchor
+      )}</a>`;
+    };
+
     return {
-      type: "link",
-      property,
       value,
-      formatedValue: `<a href="${escapeExpression(
-        row[properties[1]]
-      )}">${escapeExpression(value)}</a>`
+      formatedValue: value ? formatedValue(value, row[properties[1]]) : "-"
     };
   },
 

@@ -9,7 +9,8 @@ import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
 const TABLE_OPTIONS = {
   perPage: 8,
   total: true,
-  limit: 20
+  limit: 20,
+  formatNumbers: true
 };
 
 const CHART_OPTIONS = {};
@@ -347,12 +348,12 @@ export default Ember.Component.extend({
     if (mode === "table") {
       const tableOptions = JSON.parse(JSON.stringify(TABLE_OPTIONS));
       return Ember.Object.create(
-        _.assign(tableOptions, this.get("reportOptions.table") || {})
+        Object.assign(tableOptions, this.get("reportOptions.table") || {})
       );
     } else {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
       return Ember.Object.create(
-        _.assign(chartOptions, this.get("reportOptions.chart") || {})
+        Object.assign(chartOptions, this.get("reportOptions.chart") || {})
       );
     }
   },

@@ -296,6 +296,19 @@ class Report
   end
 
   def self.report_dau_by_mau(report)
+    report.labels = [
+      {
+        type: :date,
+        property: :x,
+        title: I18n.t("reports.default.labels.day")
+      },
+      {
+        type: :percent,
+        property: :y,
+        title: I18n.t("reports.default.labels.percent")
+      },
+    ]
+
     report.average = true
     report.percent = true
 
@@ -441,6 +454,7 @@ class Report
       },
       {
         property: :y,
+        type: :number,
         title: I18n.t("reports.default.labels.count")
       }
     ]
@@ -537,6 +551,7 @@ class Report
       },
       {
         property: :count,
+        type: :number,
         title: I18n.t("reports.web_crawlers.labels.page_views")
       }
     ]
@@ -562,6 +577,7 @@ class Report
       },
       {
         property: :y,
+        type: :number,
         title: I18n.t("reports.default.labels.count")
       }
     ]
@@ -596,6 +612,7 @@ class Report
       },
       {
         property: :num_clicks,
+        type: :number,
         title: I18n.t("reports.top_referred_topics.labels.num_clicks")
       }
     ]
@@ -616,10 +633,12 @@ class Report
       },
       {
         property: :num_clicks,
+        type: :number,
         title: I18n.t("reports.top_traffic_sources.labels.num_clicks")
       },
       {
         property: :num_topics,
+        type: :number,
         title: I18n.t("reports.top_traffic_sources.labels.num_topics")
       }
     ]
@@ -638,6 +657,7 @@ class Report
       },
       {
         property: :unique_searches,
+        type: :number,
         title: I18n.t("reports.trending_search.labels.searches")
       },
       {
@@ -696,6 +716,7 @@ class Report
       },
       {
         property: :flag_count,
+        type: :number,
         title: I18n.t("reports.moderators_activity.labels.flag_count")
       },
       {
@@ -705,18 +726,22 @@ class Report
       },
       {
         property: :topic_count,
+        type: :number,
         title: I18n.t("reports.moderators_activity.labels.topic_count")
       },
       {
         property: :pm_count,
+        type: :number,
         title: I18n.t("reports.moderators_activity.labels.pm_count")
       },
       {
         property: :post_count,
+        type: :number,
         title: I18n.t("reports.moderators_activity.labels.post_count")
       },
       {
         property: :revision_count,
+        type: :number,
         title: I18n.t("reports.moderators_activity.labels.revision_count")
       }
     ]
