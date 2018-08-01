@@ -14,6 +14,11 @@ describe PluginStore do
     value == store.get(k) ? value : "values mismatch"
   end
 
+  def get_all(k)
+    value = PluginStore.get_all("my_plugin", k)
+    value == store.get_all(k) ? value : "values mismatch"
+  end
+
   def remove_row(k)
     PluginStore.remove("my_plugin", k)
     store.remove(k)
@@ -41,6 +46,18 @@ describe PluginStore do
 
     set("hello", nil)
     expect(get("hello")).to eq(nil)
+  end
+
+  it "gets all requested values" do
+    set("hello_str", "world")
+    set("hello_int", 1)
+    set("hello_bool", true)
+
+    expect(get_all(["hello_str", "hello_int", "hello_bool"])).to eq({
+      "hello_str": "world",
+      "hello_int": 1,
+      "hello_bool": true,
+    }.stringify_keys)
   end
 
   it "handles hashes correctly" do
