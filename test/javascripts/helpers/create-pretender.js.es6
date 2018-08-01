@@ -295,6 +295,10 @@ export default function() {
       return response({ csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=" });
     });
 
+    this.get("/groups/check-name", () => {
+      return response({ available: true });
+    });
+
     this.get("/u/check_username", function(request) {
       if (request.queryParams.username === "taken") {
         return response({ available: false, suggestion: "nottaken" });
