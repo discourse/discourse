@@ -23,6 +23,9 @@ function performSearch(
     resultsFn(cached);
     return;
   }
+  if (term === "") {
+    return [];
+  }
 
   // need to be able to cancel this
   oldSearch = $.ajax(userPath("search/users"), {
@@ -122,10 +125,6 @@ export default function userSearch(options) {
   currentTerm = term;
 
   return new Ember.RSVP.Promise(function(resolve) {
-    if (term.length === 0) {
-      resolve([]);
-      return;
-    }
     if (new Date() - cacheTime > 30000 || cacheTopicId !== topicId) {
       cache = {};
     }
