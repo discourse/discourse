@@ -740,7 +740,7 @@ en:
         choose: "Choose a password"
 
       second_factor_backup:
-        title: "Two Factor backup code management"
+        title: "Two Factor Backup Codes"
         regenerate: "Regenerate"
         disable: "Disable"
         enable: "Enable"
@@ -750,8 +750,8 @@ en:
         copy_to_clipboard_error: "Error copying data to Clipboard"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
         codes:
-          title: "Backup codes"
-          description: "Each line is a different backup code which can only be used once. It's recommended to save this file in a safe place."
+          title: "Backup Codes Generated"
+          description: "Each of these backup codes can only be used once. Keep them somewhere safe but accessible."
 
       second_factor:
         title: "Two Factor Authentication"
