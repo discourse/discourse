@@ -2,6 +2,7 @@ import { observes } from "ember-addons/ember-computed-decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";
+import { formatUsername } from "discourse/lib/utilities";
 
 export default TextField.extend({
   autocorrect: false,
@@ -46,11 +47,6 @@ export default TextField.extend({
       return usernames;
     }
 
-    const termRegexp =
-      currentUser && currentUser.can_send_private_email_messages
-        ? /[^\w.-@]/g
-        : /[^\w.-]/g;
-
     this.$()
       .val(this.get("usernames"))
       .autocomplete({
@@ -62,7 +58,7 @@ export default TextField.extend({
 
         dataSource(term) {
           var results = userSearch({
-            term: term.replace(termRegexp, ""),
+            term,
             topicId: self.get("topicId"),
             exclude: excludedUsernames(),
             includeGroups,
@@ -72,7 +68,6 @@ export default TextField.extend({
             group: self.get("group"),
             disallowEmails
           });
-
           return results;
         },
 

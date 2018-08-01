@@ -122,8 +122,7 @@ export default function userSearch(options) {
   currentTerm = term;
 
   return new Ember.RSVP.Promise(function(resolve) {
-    // TODO site setting for allowed regex in username
-    if (term.match(/[^\w_\-\.@\+]/)) {
+    if (term.length === 0) {
       resolve([]);
       return;
     }
