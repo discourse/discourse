@@ -112,7 +112,7 @@ componentTest("timeout", {
   template: "{{admin-report dataSourceName='signups_timeout'}}",
 
   test(assert) {
-    assert.ok(exists(".alert-error"), "it displays a timeout error");
+    assert.ok(exists(".alert-error.timeout"), "it displays a timeout error");
   }
 });
 
@@ -120,6 +120,14 @@ componentTest("no data", {
   template: "{{admin-report dataSourceName='posts'}}",
 
   test(assert) {
-    assert.ok(exists(".no-data-alert"), "it displays a no data alert");
+    assert.ok(exists(".no-data"), "it displays a no data alert");
+  }
+});
+
+componentTest("exception", {
+  template: "{{admin-report dataSourceName='signups_exception'}}",
+
+  test(assert) {
+    assert.ok(exists(".alert-error.exception"), "it displays an error");
   }
 });

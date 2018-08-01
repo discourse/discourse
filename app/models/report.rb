@@ -3,14 +3,14 @@ require_dependency 'topic_subtype'
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 1
+  SCHEMA_VERSION = 2
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :category_id, :group_id, :labels, :async,
                 :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :timeout
+                :dates_filtering, :error
 
   def self.default_days
     30
@@ -113,7 +113,7 @@ class Report
       group_filtering: self.group_filtering,
       modes: self.modes,
     }.tap do |json|
-      json[:timeout] = self.timeout if self.timeout
+      json[:error] = self.error if self.error
       json[:total] = self.total if self.total
       json[:prev_period] = self.prev_period if self.prev_period
       json[:prev30Days] = self.prev30Days if self.prev30Days
@@ -160,15 +160,24 @@ class Report
   def self.find(type, opts = nil)
     clear_cache
 
-    report = _get(type, opts)
-    report_method = :"report_#{type}"
+    begin
+      report = _get(type, opts)
+      report_method = :"report_#{type}"
 
-    if respond_to?(report_method)
-      send(report_method, report)
-    elsif type =~ /_reqs$/
-      req_report(report, type.split(/_reqs$/)[0].to_sym)
-    else
-      return nil
+      if respond_to?(report_method)
+        send(report_method, report)
+      elsif type =~ /_reqs$/
+        req_report(report, type.split(/_reqs$/)[0].to_sym)
+      else
+        return nil
+      end
+    rescue Exception => e
+      report.error = :exception
+
+      # given reports can be added by plugins we don’t want dashboard failures
+      # on report computation, however we do want to log which report is provoking
+      # an error
+      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}")
     end
 
     report
@@ -596,7 +605,7 @@ class Report
 
     options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
     result = nil
-    report.timeout = wrap_slow_query do
+    report.error = wrap_slow_query do
       result = IncomingLinksReport.find(:top_referred_topics, options)
       report.data = result.data
     end
@@ -622,7 +631,7 @@ class Report
 
     options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
     result = nil
-    report.timeout = wrap_slow_query do
+    report.error = wrap_slow_query do
       result = IncomingLinksReport.find(:top_traffic_sources, options)
       report.data = result.data
     end
