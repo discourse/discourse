@@ -31,6 +31,7 @@ const bindings = {
   "g b": { path: "/bookmarks" },
   "g p": { path: "/my/activity" },
   "g m": { path: "/my/messages" },
+  "g d": { path: "/my/activity/drafts" },
   home: { handler: "goToFirstPost", anonymous: true },
   "command+up": { handler: "goToFirstPost", anonymous: true },
   j: { handler: "selectDown", anonymous: true },

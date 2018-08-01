@@ -31,17 +31,15 @@ export default RestModel.extend({
     );
   },
 
-  @computed("draft_key", "post_number")
-  draftType(draftKey, postNumber) {
+  @computed("draft_key")
+  draftType(draftKey) {
     switch (draftKey) {
       case NEW_TOPIC_KEY:
         return I18n.t("drafts.new_topic");
       case NEW_PRIVATE_MESSAGE_KEY:
         return I18n.t("drafts.new_private_message");
       default:
-        return postNumber
-          ? I18n.t("drafts.post_reply", { postNumber })
-          : I18n.t("drafts.topic_reply");
+        return false;
     }
   }
 });

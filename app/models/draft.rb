@@ -58,13 +58,15 @@ class Draft < ActiveRecord::Base
         pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id, pu.username_lower,
         du.username draft_username, NULL as raw, NULL as cooked, NULL as post_number
       FROM drafts d
+      LEFT JOIN LATERAL json_extract_path_text (d.data::json, 'postId') postId ON TRUE
+      LEFT JOIN posts p ON postId :: BIGINT = p.id
       LEFT JOIN topics t ON
         CASE
             WHEN d.draft_key LIKE '%' || '#{EXISTING_TOPIC}' || '%'
               THEN CAST(replace(d.draft_key, '#{EXISTING_TOPIC}', '') AS INT)
             ELSE 0
         END = t.id
-      JOIN users pu on pu.id = COALESCE(t.user_id, d.user_id)
+      JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id, d.user_id)
       JOIN users du on du.id = #{user_id}
       /*where*/
       /*order_by*/
