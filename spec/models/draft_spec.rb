@@ -73,19 +73,19 @@ describe Draft do
     end
 
     it "should include the correct number of drafts in the stream" do
-      Draft.set(@user, "test", 0, "first")
-      Draft.set(@user, "test2", 0, "second")
+      Draft.set(@user, "test", 0, '{"reply":"hey.","action":"createTopic","title":"Hey"}')
+      Draft.set(@user, "test2", 0, '{"reply":"howdy"}')
       expect(stream.count).to eq(2)
     end
 
     it "should include the right topic id in a draft reply in the stream" do
-      Draft.set(@user, "topic_#{public_topic.id}", 0, "hey")
+      Draft.set(@user, "topic_#{public_topic.id}", 0, '{"reply":"hi"}')
       draft_row = stream.first
       expect(draft_row.topic_id).to eq(public_topic.id)
     end
 
     it "should include the right draft username in the stream" do
-      Draft.set(@user, "topic_#{public_topic.id}", 0, "hey")
+      Draft.set(@user, "topic_#{public_topic.id}", 0, '{"reply":"hey"}')
       draft_row = stream.first
       expect(draft_row.draft_username).to eq(@user.username)
     end
