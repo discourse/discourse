@@ -19,7 +19,7 @@
   </thead>
   <tbody>
     {{#each paginatedData as |data|}}
-      {{admin-report-table-row data=data labels=model.computedLabels}}
+      {{admin-report-table-row data=data labels=model.computedLabels options=options}}
     {{/each}}
 
     {{#if showTotalForSample}}
@@ -30,7 +30,7 @@
       </tr>
       <tr class="admin-report-table-row">
         {{#each totalsForSample as |total|}}
-          <td class="admin-report-table-row {{total.type}} {{total.property}}">
+          <td class="{{total.type}} {{total.property}}">
             {{total.formatedValue}}
           </td>
         {{/each}}
