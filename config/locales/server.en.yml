@@ -864,6 +864,7 @@ en:
         topic_count: Topics created
         post_count: Posts created
         pm_count: PMs created
+        revision_count: Revisions
     flags_status:
       title: "Flags status"
       values:
