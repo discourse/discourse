@@ -482,6 +482,7 @@ Discourse::Application.routes.draw do
     get 'logs' => 'groups#histories'
 
     collection do
+      get "check-name" => 'groups#check_name'
       get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
       get "search" => "groups#search"
     end

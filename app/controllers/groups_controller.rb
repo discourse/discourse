@@ -3,6 +3,7 @@ class GroupsController < ApplicationController
     :set_notifications,
     :mentionable,
     :messageable,
+    :check_name,
     :update,
     :histories,
     :request_membership,
@@ -312,6 +313,12 @@ class GroupsController < ApplicationController
     else
       raise Discourse::InvalidAccess.new
     end
+  end
+
+  def check_name
+    group_name = params.require(:group_name)
+    checker = UsernameCheckerService.new(allow_reserved_username: true)
+    render json: checker.check_username(group_name, nil)
   end
 
   def remove_member
