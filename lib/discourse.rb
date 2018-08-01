@@ -43,6 +43,8 @@ module Discourse
   # other desired context.
   # See app/jobs/base.rb for the error_context function.
   def self.handle_job_exception(ex, context = {}, parent_logger = nil)
+    return if ex.class == Jobs::HandledExceptionWrapper
+
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 
