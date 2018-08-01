@@ -1320,4 +1320,22 @@ describe GroupsController do
       end
     end
   end
+
+  describe '#check_name' do
+    describe 'for an anon user' do
+      it 'should return the right response' do
+        get "/groups/check-name.json", params: { group_name: 'test' }
+        expect(response.status).to eq(403)
+      end
+    end
+
+    it 'should return the right response' do
+      sign_in(Fabricate(:user))
+      SiteSetting.reserved_usernames = 'test|donkey'
+      get "/groups/check-name.json", params: { group_name: 'test' }
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["available"]).to eq(true)
+    end
+  end
 end

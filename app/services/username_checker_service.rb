@@ -1,4 +1,7 @@
 class UsernameCheckerService
+  def initialize(allow_reserved_username: false)
+    @allow_reserved_username = allow_reserved_username
+  end
 
   def check_username(username, email)
     if username && username.length > 0
@@ -12,7 +15,13 @@ class UsernameCheckerService
   end
 
   def check_username_availability(username, email)
-    if User.username_available?(username, email)
+    available = User.username_available?(
+      username,
+      email,
+      allow_reserved_username: @allow_reserved_username
+    )
+
+    if available
       { available: true, is_developer: is_developer?(email) }
     else
       { available: false, suggestion: UserNameSuggester.suggest(username) }
