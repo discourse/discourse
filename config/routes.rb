@@ -1,5 +1,5 @@
 require "sidekiq/web"
-require_dependency "scheduler/web"
+require "mini_scheduler/web"
 require_dependency "admin_constraint"
 require_dependency "staff_constraint"
 require_dependency "homepage_constraint"

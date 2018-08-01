@@ -88,6 +88,7 @@ gem 'thor', require: false
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
+gem 'mini_scheduler'
 
 # for sidekiq web
 gem 'tilt', require: false

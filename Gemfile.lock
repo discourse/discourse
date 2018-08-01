@@ -200,6 +200,7 @@ GEM
     mini_portile2 (2.3.0)
     mini_racer (0.2.0)
       libv8 (>= 6.3)
+    mini_scheduler (0.8.1)
     mini_sql (0.1.10)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
@@ -490,6 +491,7 @@ DEPENDENCIES
   message_bus
   mini_mime
   mini_racer
+  mini_scheduler
   mini_sql
   mini_suffix
   minitest
