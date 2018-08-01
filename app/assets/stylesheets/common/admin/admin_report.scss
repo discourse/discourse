@@ -1,12 +1,22 @@
 .admin-report {
-  .no-data-alert {
-    background: $secondary;
-    border: 1px solid $primary-low;
-    color: $primary-low-mid;
+  .report-error,
+  .no-data {
+    width: 100%;
     width: 100%;
     align-self: flex-start;
     text-align: center;
     padding: 3em;
+  }
+
+  .report-error {
+    color: $danger;
+    border: 1px solid $danger;
+  }
+
+  .no-data {
+    background: $secondary;
+    border: 1px solid $primary-low;
+    color: $primary-low-mid;
 
     .d-icon-pie-chart {
       color: currentColor;

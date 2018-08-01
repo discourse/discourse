@@ -110,7 +110,9 @@ export default Ember.Component.extend({
     unregisterTooltip($(".info[data-tooltip]"));
   },
 
-  showTimeoutError: Ember.computed.alias("model.timeout"),
+  showError: Ember.computed.or("showTimeoutError", "showExceptionError"),
+  showTimeoutError: Ember.computed.equal("model.error", "timeout"),
+  showExceptionError: Ember.computed.equal("model.error", "exception"),
 
   hasData: Ember.computed.notEmpty("model.data"),
 

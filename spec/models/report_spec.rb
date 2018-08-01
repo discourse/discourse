@@ -475,6 +475,8 @@ describe Report do
       let(:post) { Fabricate(:post) }
 
       before do
+        freeze_time
+
         PostAction.act(flagger, post, PostActionType.types[:spam], message: 'bad')
       end
 
@@ -507,6 +509,8 @@ describe Report do
       let(:post) { Fabricate(:post) }
 
       before do
+        freeze_time
+
         post.revise(editor, raw: 'updated body', edit_reason: 'not cool')
       end
 
@@ -672,6 +676,40 @@ describe Report do
 
         include_examples 'category filtering'
       end
+    end
+  end
+
+  describe "exception report" do
+    before(:each) do
+      class Report
+        def self.report_exception_test(report)
+          report.data = x
+        end
+      end
+    end
+
+    it "returns a report with an exception error" do
+      report = Report.find("exception_test")
+      expect(report.error).to eq(:exception)
+    end
+  end
+
+  describe "timeout report" do
+    before(:each) do
+      freeze_time
+
+      class Report
+        def self.report_timeout_test(report)
+          report.error = wrap_slow_query(1) do
+            ActiveRecord::Base.connection.execute("SELECT pg_sleep(5)")
+          end
+        end
+      end
+    end
+
+    it "returns a report with a timeout error" do
+      report = Report.find("timeout_test")
+      expect(report.error).to eq(:timeout)
     end
   end
 end

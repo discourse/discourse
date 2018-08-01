@@ -1,11 +1,5 @@
 {{#if isEnabled}}
   {{#conditional-loading-section isLoading=isLoading}}
-    {{#if showTimeoutError}}
-      <div class="alert alert-error">
-        {{i18n "admin.dashboard.timeout_error"}}
-      </div>
-    {{/if}}
-
     {{#if showHeader}}
       <div class="report-header">
         {{#if showTitle}}
@@ -66,17 +60,29 @@
     {{/if}}
 
     <div class="report-body">
-      {{#unless showTimeoutError}}
-      {{#if hasData}}
-        {{#if currentMode}}
-          {{component modeComponent model=model options=options}}
+      {{#unless showError}}
+        {{#if hasData}}
+          {{#if currentMode}}
+            {{component modeComponent model=model options=options}}
+          {{/if}}
+        {{else}}
+          <div class="alert alert-info no-data">
+            {{d-icon "pie-chart"}}
+            {{i18n 'admin.dashboard.reports.no_data'}}
+          </div>
         {{/if}}
       {{else}}
-        <div class="alert alert-info no-data-alert">
-          {{d-icon "pie-chart"}}
-          {{i18n 'admin.dashboard.reports.no_data'}}
-        </div>
-      {{/if}}
+        {{#if showTimeoutError}}
+          <div class="alert alert-error report-error timeout">
+            {{i18n "admin.dashboard.timeout_error"}}
+          </div>
+        {{/if}}
+
+        {{#if showExceptionError}}
+          <div class="alert alert-error report-error exception">
+            {{i18n "admin.dashboard.exception_error"}}
+          </div>
+        {{/if}}
       {{/unless}}
 
       {{#if showFilteringUI}}
