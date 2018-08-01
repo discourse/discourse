@@ -14,7 +14,7 @@ class AdminDashboardNextGeneralData < AdminDashboardNextData
 
   def get_json
     {
-      reports: self.class.reports(reports),
+      reports: self.class.reports(reports).compact,
       updated_at: Time.zone.now.as_json
     }
   end
