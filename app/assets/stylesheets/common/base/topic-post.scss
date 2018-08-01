@@ -370,8 +370,11 @@ aside.quote {
         }
       }
       &.group {
+        margin: 0;
         .d-icon {
           margin-right: 4px;
+          width: 20px;
+          text-align: center;
         }
       }
     }
