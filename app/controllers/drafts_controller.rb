@@ -16,29 +16,29 @@ class DraftsController < ApplicationController
       limit: params[:limit]
     }
 
-    guardian.ensure_can_see_drafts!(user)
-    stream = Draft.stream(opts)
-    stream.each do |d|
-      parsed_data = JSON.parse(d.data)
-      if parsed_data
-        if parsed_data['reply']
-          d.raw = parsed_data['reply']
-        end
-        if parsed_data['categoryId'].present? && !d.category_id.present?
-          d.category_id = parsed_data['categoryId']
+    help_key = "user_activity.no_drafts"
+
+    if user == current_user
+      stream = Draft.stream(opts)
+      stream.each do |d|
+        parsed_data = JSON.parse(d.data)
+        if parsed_data
+          if parsed_data['reply']
+            d.raw = parsed_data['reply']
+          end
+          if parsed_data['categoryId'].present? && !d.category_id.present?
+            d.category_id = parsed_data['categoryId']
+          end
         end
       end
-    end
 
-    help_key = "user_activity.no_drafts"
-    if user == current_user
       help_key += ".self"
     else
       help_key += ".others"
     end
 
     render json: {
-      drafts: serialize_data(stream, DraftSerializer),
+      drafts: stream ? serialize_data(stream, DraftSerializer) : [],
       no_results_help: I18n.t(help_key)
     }
 

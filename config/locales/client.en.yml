@@ -288,12 +288,11 @@ en:
       confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
 
     drafts:
-      resume: "Resume Draft"
-      remove: "Remove Draft"
+      resume: "Resume"
+      remove: "Remove"
       new_topic: "New topic draft"
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"
-      post_reply: "Draft reply to #{{postNumber}}"
 
     topic_count_latest:
       one: "See {{count}} new or updated topic"
@@ -2565,6 +2564,7 @@ en:
         bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
         profile: '<b>g</b>, <b>p</b> Profile'
         messages: '<b>g</b>, <b>m</b> Messages'
+        drafts: '<b>g</b>, <b>d</b> Drafts'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Go to post #'

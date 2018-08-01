@@ -778,7 +778,7 @@ en:
       others: "No replies."
     no_drafts:
       self: "You have no drafts."
-      others: "No drafts."
+      others: "You do not have permission to see drafts for this user."
 
   topic_flag_types:
     spam:
