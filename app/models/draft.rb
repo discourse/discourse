@@ -43,6 +43,43 @@ class Draft < ActiveRecord::Base
     end
   end
 
+  def self.stream(opts = nil)
+    opts ||= {}
+
+    user_id = opts[:user].id
+    offset = (opts[:offset] || 0).to_i
+    limit = (opts[:limit] || 30).to_i
+
+    # JOIN of topics table based on manipulating draft_key seems imperfect
+    builder = DB.build <<~SQL
+      SELECT
+        d.*, t.title, t.id topic_id, t.archetype,
+        t.category_id, t.closed topic_closed, t.archived topic_archived,
+        pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id, pu.username_lower,
+        du.username draft_username, NULL as raw, NULL as cooked, NULL as post_number
+      FROM drafts d
+      LEFT JOIN topics t ON
+        CASE
+            WHEN d.draft_key LIKE '%' || '#{EXISTING_TOPIC}' || '%'
+              THEN CAST(replace(d.draft_key, '#{EXISTING_TOPIC}', '') AS INT)
+            ELSE 0
+        END = t.id
+      JOIN users pu on pu.id = COALESCE(t.user_id, d.user_id)
+      JOIN users du on du.id = #{user_id}
+      /*where*/
+      /*order_by*/
+      /*offset*/
+      /*limit*/
+    SQL
+
+    builder
+      .where('d.user_id = :user_id', user_id: user_id.to_i)
+      .order_by('d.updated_at desc')
+      .offset(offset)
+      .limit(limit)
+      .query
+  end
+
   def self.cleanup!
     DB.exec("DELETE FROM drafts where sequence < (
                SELECT max(s.sequence) from draft_sequences s

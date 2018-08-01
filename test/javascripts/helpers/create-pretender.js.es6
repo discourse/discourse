@@ -225,7 +225,15 @@ export default function() {
       return response({ category });
     });
 
-    this.get("/draft.json", () => response({}));
+    this.get("/draft.json", request => {
+      if (request.queryParams.draft_key === "new_topic") {
+        return response(fixturesByUrl["/draft.json"]);
+      }
+
+      return response({});
+    });
+
+    this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 
     this.put("/queued_posts/:queued_post_id", function(request) {
       return response({ queued_post: { id: request.params.queued_post_id } });
