@@ -52,17 +52,11 @@ class Report
   end
 
   def self.wrap_slow_query(timeout = 20000)
-    begin
-      ActiveRecord::Base.connection.transaction do
-        # Set a statement timeout so we can't tie up the server
-        DB.exec "SET LOCAL statement_timeout = #{timeout}"
-        yield
-      end
-    rescue ActiveRecord::QueryCanceled
-      return :timeout
+    ActiveRecord::Base.connection.transaction do
+      # Set a statement timeout so we can't tie up the server
+      DB.exec "SET LOCAL statement_timeout = #{timeout}"
+      yield
     end
-
-    nil
   end
 
   def prev_start_date
@@ -144,7 +138,6 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.higher_is_better = opts[:higher_is_better] if opts[:higher_is_better]
-
     report
   end
 
@@ -164,12 +157,18 @@ class Report
       report = _get(type, opts)
       report_method = :"report_#{type}"
 
-      if respond_to?(report_method)
-        send(report_method, report)
-      elsif type =~ /_reqs$/
-        req_report(report, type.split(/_reqs$/)[0].to_sym)
-      else
-        return nil
+      begin
+        wrap_slow_query do
+          if respond_to?(report_method)
+            send(report_method, report)
+          elsif type =~ /_reqs$/
+            req_report(report, type.split(/_reqs$/)[0].to_sym)
+          else
+            return nil
+          end
+        end
+      rescue ActiveRecord::QueryCanceled, PG::QueryCanceled => e
+        report.error = :timeout
       end
     rescue Exception => e
       report.error = :exception
@@ -605,10 +604,8 @@ class Report
 
     options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
     result = nil
-    report.error = wrap_slow_query do
-      result = IncomingLinksReport.find(:top_referred_topics, options)
-      report.data = result.data
-    end
+    result = IncomingLinksReport.find(:top_referred_topics, options)
+    report.data = result.data
   end
 
   def self.report_top_traffic_sources(report)
@@ -631,10 +628,8 @@ class Report
 
     options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
     result = nil
-    report.error = wrap_slow_query do
-      result = IncomingLinksReport.find(:top_traffic_sources, options)
-      report.data = result.data
-    end
+    result = IncomingLinksReport.find(:top_traffic_sources, options)
+    report.data = result.data
   end
 
   def self.report_trending_search(report)
