@@ -596,7 +596,7 @@ posting:
     default: 'com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov'
   enable_rich_text_paste:
     client: true
-    default: false
+    default: true
   suppress_reply_directly_below:
     client: true
     default: true
