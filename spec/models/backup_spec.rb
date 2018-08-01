@@ -98,20 +98,6 @@ describe Backup do
         SiteSetting.enable_s3_backups = true
       end
 
-      it "should upload the backup to S3 with the right paths" do
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_object = stub
-
-        s3_bucket.expects(:object).with(b1.filename).returns(s3_object)
-        s3_object.expects(:delete)
-
-        expect {
-          b1.after_remove_hook
-        }.to change {
-          Jobs::UpdateDiskSpace.jobs.size
-        }.by(0)
-      end
-
       context "when s3_backup_bucket includes folders path" do
         before do
           SiteSetting.s3_backup_bucket = "s3-upload-bucket/discourse-backups"
@@ -137,14 +123,6 @@ describe Backup do
       it "doesn’t call remove_from_s3" do
         b1.expects(:remove_from_s3).never
         b1.after_remove_hook
-      end
-
-      it "refreshes disk space if not backuping on s3" do
-        expect {
-          b1.after_remove_hook
-        }.to change {
-          Jobs::UpdateDiskSpace.jobs.size
-        }.by(1)
       end
     end
   end
