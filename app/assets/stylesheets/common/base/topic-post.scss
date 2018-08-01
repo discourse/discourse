@@ -292,7 +292,7 @@ aside.quote {
 
   h3 {
     margin-bottom: 4px;
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: $primary;
     line-height: $line-height-large;
     font-weight: normal;
     font-size: $font-0;
@@ -322,6 +322,57 @@ aside.quote {
     }
     .badge-notification {
       margin: 1px 5px 2px 0;
+    }
+  }
+
+  .participants {
+    // PMs
+    box-sizing: border-box;
+    margin: 0 -10px;
+    margin-bottom: 0.5em;
+    display: flex; // IE11
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    @supports (display: grid) {
+      // Overrides flex fallback above
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      @include breakpoint(tablet, min-width) {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      @include breakpoint(mobile) {
+        grid-template-columns: repeat(2, 1fr);
+        font-size: $font-down-1;
+      }
+      @include breakpoint(mobile-small) {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      overflow: hidden;
+      flex: 0 0 auto; // IE11
+      a {
+        color: $primary-high;
+        &[href] {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          min-width: 0;
+        }
+        span {
+          flex: 1 1 auto;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+    .d-icon-times {
+      margin-left: 0.25em;
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
   }
 }

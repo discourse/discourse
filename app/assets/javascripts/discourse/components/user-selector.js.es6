@@ -46,11 +46,6 @@ export default TextField.extend({
       return usernames;
     }
 
-    const termRegexp =
-      currentUser && currentUser.can_send_private_email_messages
-        ? /[^\w.-@]/g
-        : /[^\w.-]/g;
-
     this.$()
       .val(this.get("usernames"))
       .autocomplete({
@@ -62,7 +57,7 @@ export default TextField.extend({
 
         dataSource(term) {
           var results = userSearch({
-            term: term.replace(termRegexp, ""),
+            term,
             topicId: self.get("topicId"),
             exclude: excludedUsernames(),
             includeGroups,
@@ -72,7 +67,6 @@ export default TextField.extend({
             group: self.get("group"),
             disallowEmails
           });
-
           return results;
         },
 

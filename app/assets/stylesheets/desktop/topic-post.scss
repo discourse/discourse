@@ -382,21 +382,6 @@ nav.post-controls {
     padding: 7px 10px 15px 10px;
     color: $primary;
   }
-  .participants {
-    // PMs //
-    .user {
-      float: left;
-      margin: 7px 20px 7px 0;
-    }
-    .user a {
-      color: dark-light-choose($primary-high, $secondary-low);
-      font-weight: bold;
-      font-size: $font-down-1;
-    }
-    .d-icon-times {
-      color: dark-light-choose($primary-medium, $secondary-high);
-    }
-  }
   .buttons {
     float: right;
     .btn {
