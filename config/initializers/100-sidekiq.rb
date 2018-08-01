@@ -1,5 +1,4 @@
 require "sidekiq/pausable"
-require "sidekiq/web"
 
 Sidekiq.configure_client do |config|
   config.redis = Discourse.sidekiq_redis_config
