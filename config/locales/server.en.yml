@@ -850,6 +850,7 @@ en:
     default:
       labels:
         count: Count
+        percent: Percent
         day: Day
     post_edits:
       title: "Post edits"
