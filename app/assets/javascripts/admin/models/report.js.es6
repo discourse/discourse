@@ -324,12 +324,16 @@ const Report = Discourse.Model.extend({
 
   _topicLabel(properties, row) {
     const topicTitle = row[properties.title];
-    const topicId = row[properties.id];
-    const href = `/t/-/${topicId}`;
+
+    const formatedValue = () => {
+      const topicId = row[properties.id];
+      const href = `/t/-/${topicId}`;
+      return `<a href='${href}'>${topicTitle}</a>`;
+    };
 
     return {
       value: topicTitle,
-      formatedValue: `<a href='${href}'>${topicTitle}</a>`
+      formatedValue: topicTitle ? formatedValue() : "-"
     };
   },
 
