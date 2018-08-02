@@ -722,20 +722,10 @@ class Report
     ]
 
     report.modes = [:table]
-
     report.data = []
-    mod_data = {}
-
-    User.real.where(moderator: true).find_each do |u|
-      mod_data[u.id] = {
-        user_id: u.id,
-        username: u.username_lower,
-        user_avatar_template: u.avatar_template,
-      }
-    end
 
     query = <<~SQL
-    WITH m AS (
+    WITH mods AS (
     SELECT
     id AS user_id,
     username_lower AS username,
@@ -744,29 +734,29 @@ class Report
     WHERE u.moderator = 'true'
     AND u.id > 0
     ),
-    tr AS (
+    time_read AS (
     SELECT SUM(uv.time_read) AS time_read,
     uv.user_id
-    FROM m
+    FROM mods m
     JOIN user_visits uv
     ON m.user_id = uv.user_id
     WHERE uv.visited_at >= '#{report.start_date}'
     AND uv.visited_at <= '#{report.end_date}'
     GROUP BY uv.user_id
     ),
-    fc AS (
+    flag_count AS (
         WITH period_actions AS (
         SELECT agreed_by_id,
         disagreed_by_id
         FROM post_actions
-        WHERE post_action_type_id =  ANY ('{3, 4, 8}')
+        WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
         AND created_at >= '#{report.start_date}'
         AND created_at <= '#{report.end_date}'
         ),
         agreed_flags AS (
         SELECT pa.agreed_by_id AS user_id,
         COUNT(*) AS flag_count
-        FROM m
+        FROM mods m
         JOIN period_actions pa
         ON pa.agreed_by_id = m.user_id
         GROUP BY agreed_by_id
@@ -774,7 +764,7 @@ class Report
         disagreed_flags AS (
         SELECT pa.disagreed_by_id AS user_id,
         COUNT(*) AS flag_count
-        FROM m
+        FROM mods m
         JOIN period_actions pa
         ON pa.disagreed_by_id = m.user_id
         GROUP BY disagreed_by_id
@@ -786,20 +776,23 @@ class Report
     FULL OUTER JOIN disagreed_flags df
     ON df.user_id = af.user_id
     ),
-    rc AS (
+    revision_count AS (
     SELECT pr.user_id,
     COUNT(*) AS revision_count
-    FROM m
+    FROM mods m
     JOIN post_revisions pr
     ON pr.user_id = m.user_id
+    JOIN posts p
+    ON p.id = pr.post_id
     WHERE pr.created_at >= '#{report.start_date}'
     AND pr.created_at <= '#{report.end_date}'
+    AND p.user_id <> pr.user_id
     GROUP BY pr.user_id
     ),
-    tc AS (
+    topic_count AS (
     SELECT t.user_id,
     COUNT(*) AS topic_count
-    FROM m
+    FROM mods m
     JOIN topics t
     ON t.user_id = m.user_id
     WHERE t.archetype = 'regular'
@@ -807,10 +800,10 @@ class Report
     AND t.created_at <= '#{report.end_date}'
     GROUP BY t.user_id
     ),
-    pc AS (
+    post_count AS (
     SELECT p.user_id,
     COUNT(*) AS post_count
-    FROM m
+    FROM mods m
     JOIN posts p
     ON p.user_id = m.user_id
     JOIN topics t
@@ -820,10 +813,10 @@ class Report
     AND p.created_at <= '#{report.end_date}'
     GROUP BY p.user_id
     ),
-    pmc AS (
+    pm_count AS (
     SELECT p.user_id,
     COUNT(*) AS pm_count
-    FROM m
+    FROM mods m
     JOIN posts p
     ON p.user_id = m.user_id
     JOIN topics t
@@ -838,19 +831,19 @@ class Report
     m.user_id,
     m.username,
     m.uploaded_avatar_id,
-    COALESCE(tr.time_read, 0) AS time_read,
-    COALESCE(fc.flag_count, 0) AS flag_count,
-    COALESCE(rc.revision_count, 0) AS revision_count,
-    COALESCE(tc.topic_count, 0) AS topic_count,
-    COALESCE(pc.post_count, 0) AS post_count,
-    COALESCE(pmc.pm_count, 0) AS pm_count
-    FROM m
-    LEFT JOIN tr ON tr.user_id = m.user_id
-    LEFT JOIN fc ON fc.user_id = m.user_id
-    LEFT JOIN rc ON rc.user_id = m.user_id
-    LEFT JOIN tc ON tc.user_id = m.user_id
-    LEFT JOIN pc ON pc.user_id = m.user_id
-    LEFT JOIN pmc ON pmc.user_id = m.user_id
+    tr.time_read,
+    fc.flag_count,
+    rc.revision_count,
+    tc.topic_count,
+    pc.post_count,
+    pmc.pm_count
+    FROM mods m
+    LEFT JOIN time_read tr ON tr.user_id = m.user_id
+    LEFT JOIN flag_count fc ON fc.user_id = m.user_id
+    LEFT JOIN revision_count rc ON rc.user_id = m.user_id
+    LEFT JOIN topic_count tc ON tc.user_id = m.user_id
+    LEFT JOIN post_count pc ON pc.user_id = m.user_id
+    LEFT JOIN pm_count pmc ON pmc.user_id = m.user_id
     ORDER BY m.username
     SQL
 
