@@ -4,11 +4,15 @@ class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
 
-  scope :where_ordered, ->(hash) {
-    return none unless hash.present?
+  scope :find_by_theme_ids, ->(theme_ids) {
+    return none unless theme_ids.present?
 
-    column, values = hash.first # order by the first element
-    where(hash).order("position(#{column}::text in '#{values.join(',')}')")
+    where(theme_id: theme_ids)
+      .joins(
+        "JOIN (
+          SELECT #{theme_ids.map.with_index { |id, idx| "#{id.to_i} AS theme_id, #{idx} AS sort_column" }.join(" UNION ALL SELECT ")}
+        ) as X ON X.theme_id = theme_fields.theme_id")
+      .order("sort_column")
   }
 
   def self.types

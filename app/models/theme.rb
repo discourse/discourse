@@ -245,7 +245,7 @@ class Theme < ActiveRecord::Base
   def self.list_baked_fields(theme_ids, target, name)
     target = target.to_sym
 
-    fields = ThemeField.where_ordered(theme_id: theme_ids.map(&:to_i))
+    fields = ThemeField.find_by_theme_ids(theme_ids)
       .where(target_id: [Theme.targets[target], Theme.targets[:common]])
       .where(name: name.to_s)
 
@@ -305,7 +305,7 @@ class Theme < ActiveRecord::Base
     fields = {}
     ids = [self.id] + (included_themes&.map(&:id) || [])
     _fields = ThemeField
-      .where_ordered(theme_id: ids)
+      .find_by_theme_ids(ids)
       .where(type_id: ThemeField.theme_var_type_ids)
 
     _fields.each do |field|
