@@ -151,4 +151,17 @@ describe RemoteTheme do
       expect(scheme_count).to eq(1)
     end
   end
+
+  context ".out_of_date_themes" do
+    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
+    let!(:theme) { Theme.create!(remote_theme_id: remote.id, name: "Test Theme", user_id: -1) }
+
+    it "finds out of date themes" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      expect(described_class.out_of_date_themes).to eq([[theme.name, theme.id]])
+
+      remote.update!(local_version: "new version", commits_behind: 0)
+      expect(described_class.out_of_date_themes).to eq([])
+    end
+  end
 end

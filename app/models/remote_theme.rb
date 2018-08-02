@@ -56,11 +56,18 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
+  def self.out_of_date_themes
+    self.joins("JOIN themes ON themes.remote_theme_id = remote_themes.id")
+      .where.not(remote_url: "")
+      .where("commits_behind > 0 OR remote_version <> local_version")
+      .pluck("themes.name", "themes.id")
+  end
+
   def update_remote_version
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
     importer.import!
     self.updated_at = Time.zone.now
-    self.remote_version, self.commits_behind = importer.commits_since(remote_version)
+    self.remote_version, self.commits_behind = importer.commits_since(local_version)
   end
 
   def update_from_remote(importer = nil, skip_update: false)
