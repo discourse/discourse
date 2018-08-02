@@ -117,14 +117,14 @@ class Theme < ActiveRecord::Base
     expire_site_cache!
   end
 
-  def self.transform_ids(ids)
+  def self.transform_ids(ids, extend: true)
     return [] if ids.blank?
 
     ids.uniq!
     parent = ids.first
 
     components = ids[1..-1]
-    components.push(*components_for(parent))
+    components.push(*components_for(parent)) if extend
     components.sort!.uniq!
 
     [parent, *components]

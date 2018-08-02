@@ -13,13 +13,14 @@ class ThemesController < ::ApplicationController
 
     object = targets.map do |target|
       Stylesheet::Manager.stylesheet_data(target, theme_ids).map do |hash|
-        if Rails.env.development?
-          hash[:new_href] << (hash[:new_href].include?("?") ? "&" : "?")
-          hash[:new_href] << SecureRandom.hex
-        end
-        hash
+        return hash unless Rails.env.development?
+
+        dup_hash = hash.dup
+        dup_hash[:new_href] << (dup_hash[:new_href].include?("?") ? "&" : "?")
+        dup_hash[:new_href] << SecureRandom.hex
+        dup_hash
       end
-    end.flatten
+    end.flatten.freeze
 
     render json: object.as_json
   end

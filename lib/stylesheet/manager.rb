@@ -21,20 +21,16 @@ class Stylesheet::Manager
   end
 
   def self.stylesheet_data(target = :desktop, theme_ids = :missing)
-    stylesheets = stylesheet_details(target, "all", theme_ids)
-    stylesheets.map do |stylesheet|
-      stylesheet[:new_href] = stylesheet.delete(:path)
-      stylesheet
-    end
+    stylesheet_details(target, "all", theme_ids)
   end
 
   def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_ids = :missing)
     stylesheets = stylesheet_details(target, media, theme_ids)
     stylesheets.map do |stylesheet|
-      path = stylesheet[:path]
+      href = stylesheet[:new_href]
       theme_id = stylesheet[:theme_id]
       data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
-      %[<link href="#{path}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id}/>]
+      %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id}/>]
     end.join("\n").html_safe
   end
 
@@ -44,18 +40,25 @@ class Stylesheet::Manager
     end
 
     target = target.to_sym
+
     theme_ids = [theme_ids] unless Array === theme_ids
     theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
+    theme_ids = Theme.transform_ids(theme_ids, extend: false)
 
     current_hostname = Discourse.current_hostname
+
+    array_cache_key = "array_themes_#{theme_ids.join(",")}_#{target}_#{current_hostname}"
+    stylesheets = cache[array_cache_key]
+    return stylesheets if stylesheets.present?
+
     @lock.synchronize do
       stylesheets = []
       theme_ids.each do |theme_id|
         data = { target: target }
         cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
-        path = cache[cache_key]
+        href = cache[cache_key]
 
-        unless path
+        unless href
           builder = self.new(target, theme_id)
           is_theme = builder.is_theme?
           has_theme = builder.theme.present?
@@ -65,15 +68,16 @@ class Stylesheet::Manager
           else
             data[:theme_id] = builder.theme.id if has_theme && is_theme
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
-            path = builder.stylesheet_path(current_hostname)
+            href = builder.stylesheet_path(current_hostname)
           end
-          cache[cache_key] = path
+          cache[cache_key] = href
         end
 
         data[:theme_id] = theme_id if theme_id.present? && data[:theme_id].blank?
-        data[:path] = path
+        data[:new_href] = href
         stylesheets << data
       end
+      cache[array_cache_key] = stylesheets.freeze
       stylesheets
     end
   end
