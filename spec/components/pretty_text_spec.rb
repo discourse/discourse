@@ -1307,4 +1307,9 @@ HTML
     expect(cooked).to include("data-theme-a")
   end
 
+  it "whitelists lang attribute" do
+    cooked = PrettyText.cook("<p lang='fr'>tester</p><div lang='fr'>tester</div><span lang='fr'>tester</span>")
+    expect(cooked).to eq("<p lang=\"fr\">tester</p><div lang=\"fr\">tester</div><span lang=\"fr\">tester</span>")
+  end
+
 end
