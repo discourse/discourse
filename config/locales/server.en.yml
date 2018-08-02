@@ -2510,6 +2510,14 @@ en:
 
         If you can correct the problem, please try again.
 
+    email_reject_post_too_short:
+      title: "Email Reject Post Too Short"
+      subject_template: "[%{email_prefix}] Email issue -- Post too short"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        To promote more in depth conversations, very short replies are not allowed. Can you please reply with at least %{count} characters? Alternatively, you can like a post via email by replying with "+1".
+
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
