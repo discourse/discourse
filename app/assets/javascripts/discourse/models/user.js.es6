@@ -19,6 +19,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
+import Category from "discourse/models/category";
 
 export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2 };
 
@@ -662,6 +663,14 @@ const User = RestModel.extend({
             const badge = badgeMap[ub.badge_id];
             badge.count = ub.count;
             return badge;
+          });
+        }
+
+        if (summary.top_categories) {
+          summary.top_categories.forEach(c => {
+            if (c.parent_category_id) {
+              c.parentCategory = Category.findById(c.parent_category_id);
+            }
           });
         }
 
