@@ -159,15 +159,17 @@ def migrate_from_s3
         begin
           if sha1 = Upload.sha1_from_short_url(url)
             if upload = Upload.find_by(sha1: sha1)
-              file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
-              filename = upload.original_filename
-              origin = upload.origin
-              upload.destroy
+              if upload.url.start_with?("//")
+                file = FileHelper.download("http:#{upload.url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+                filename = upload.original_filename
+                origin = upload.origin
+                upload.destroy
 
-              new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
-              if new_upload&.save
-                updated = true
-                url = new_upload.url
+                new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
+                if new_upload&.save
+                  updated = true
+                  url = new_upload.url
+                end
               end
             end
           end
