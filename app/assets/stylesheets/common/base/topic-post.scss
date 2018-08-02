@@ -336,16 +336,16 @@ aside.quote {
     @supports (display: grid) {
       // Overrides flex fallback above
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, auto);
       @include breakpoint(tablet, min-width) {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(5, auto);
       }
       @include breakpoint(mobile) {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, auto);
         font-size: $font-down-1;
       }
       @include breakpoint(mobile-small) {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(1, auto);
       }
     }
 
