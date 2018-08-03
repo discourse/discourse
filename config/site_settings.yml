@@ -596,6 +596,7 @@ posting:
     client: true
     type: list
     default: 'com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov'
+    list_type: compact
   enable_rich_text_paste:
     client: true
     default: true
@@ -662,6 +663,7 @@ posting:
     choices: 'HighlightJs.languages'
     type: list
     client: true
+    list_type: compact
   delete_old_hidden_posts: true
   enable_emoji:
     default: true
@@ -713,6 +715,7 @@ posting:
     client: true
     default: ''
     type: list
+    list_type: compact
   max_allowed_message_recipients:
     default: 30
     min: 1
@@ -851,9 +854,11 @@ email:
   attachment_content_type_blacklist:
     type: list
     default: "pkcs7|x-vcard"
+    list_type: compact
   attachment_filename_blacklist:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
+    list_type: compact
   enable_forwarded_emails: false
   always_show_trimmed_content: false
   private_email: false
@@ -878,20 +883,24 @@ files:
   theme_authorized_extensions:
     default: 'jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif'
     type: list
+    list_type: compact
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
     refresh: true
     type: list
+    list_type: compact
   authorized_extensions_for_staff:
     client: true
     default: ''
     refresh: true
     type: list
+    list_type: compact
   export_authorized_extensions:
     hidden: true
     default: 'gz'
     type: list
+    list_type: compact
   crawl_images:
     default: true
   max_image_width:
@@ -958,6 +967,7 @@ files:
   avatar_sizes:
     default: '20|25|32|45|60|120'
     type: list
+    list_type: compact
   external_system_avatars_enabled:
     default: true
     client: true
@@ -1093,10 +1103,12 @@ security:
     hidden: true
     default: 'trident|webkit|gecko|chrome|safari|msie|opera|goanna'
     type: list
+    list_type: compact
   crawler_user_agents:
     hidden: true
     default: 'rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor'
     type: list
+    list_type: compact
   crawler_check_bypass_agents:
     hidden: true
     default: 'cubot'
@@ -1109,6 +1121,7 @@ security:
   blacklist_ip_blocks:
     default: ''
     type: list
+    list_type: compact
     shadowed_by_global: true
   whitelist_internal_hosts:
     default: ''
@@ -1120,12 +1133,15 @@ security:
   whitelisted_crawler_user_agents:
     type: list
     default: ''
+    list_type: compact
   blacklisted_crawler_user_agents:
     type: list
     default: 'mauibot'
+    list_type: compact
   slow_down_crawler_user_agents:
     type: list
     default: 'bingbot'
+    list_type: compact
   slow_down_crawler_rate: 60
 
 onebox:
@@ -1138,12 +1154,14 @@ onebox:
   onebox_domains_blacklist:
     default: ''
     type: list
+    list_type: compact
   max_oneboxes_per_post:
     default: 50
     client: true
   inline_onebox_domains_whitelist:
     default: ''
     type: list
+    list_type: compact
   enable_inline_onebox_on_all_domains:
     default: false
 
