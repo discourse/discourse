@@ -6,7 +6,7 @@ class RemoteTheme < ActiveRecord::Base
 
   ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
 
-  GITHUB_REGEXP = /^(http|https):\/\/github\.com\//
+  GITHUB_REGEXP = /^https?:\/\/github\.com\//
   GITHUB_SSH_REGEXP = /^git@github\.com:/
 
   has_one :theme
