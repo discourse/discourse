@@ -2593,6 +2593,15 @@ en:
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
+
+    email_revoked:
+      title: "Email Revoked"
+      subject_template: "[%{email_prefix}] Is your email address correct?"
+      text_body_template: |
+        We're sorry, but we're having trouble reaching you via email.
+
+        Can you make sure [your email address](%{base_url}/my/preferences/email) is a valid and working email address?
+
     too_many_spam_flags:
       title: "Too Many Spam Flags"
       subject_template: "New account on hold"
