@@ -151,9 +151,14 @@ export default Ember.Component.extend(
         this
       );
 
-      const existingCreatedComputedContent = this.get(
-        "computedContent"
-      ).filterBy("created", true);
+      let existingCreatedComputedContent = [];
+      if (!this.get("allowContentReplacement")) {
+        existingCreatedComputedContent = this.get("computedContent").filterBy(
+          "created",
+          true
+        );
+      }
+
       this.setProperties({
         computedContent: content
           .map(c => this.computeContentItem(c))

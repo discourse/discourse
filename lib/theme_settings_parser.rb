@@ -33,6 +33,11 @@ class ThemeSettingsParser
       opts[:max] = raw_opts[:max].is_a?(Numeric) ? raw_opts[:max] : Float::INFINITY
       opts[:min] = raw_opts[:min].is_a?(Numeric) ? raw_opts[:min] : -Float::INFINITY
     end
+
+    if raw_opts[:list_type]
+      opts[:list_type] = raw_opts[:list_type]
+    end
+
     opts
   end
 
