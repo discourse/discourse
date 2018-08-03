@@ -114,4 +114,11 @@ describe ThemeSettingsManager do
       expect { string_setting.value = ("a" * 21) }.to raise_error(Discourse::InvalidParameters)
     end
   end
+
+  context "List" do
+    it "can have a list type" do
+      list_setting = find_by_name(:compact_list_setting)
+      expect(list_setting.list_type).to eq("compact")
+    end
+  end
 end

@@ -77,8 +77,8 @@ export default Ember.Mixin.create({
 
   // use to collapse and remove focus
   close(event) {
-    this.collapse(event);
     this.setProperties({ isFocused: false });
+    this.collapse(event);
   },
 
   focus() {
@@ -118,8 +118,11 @@ export default Ember.Mixin.create({
 
   collapse() {
     this.set("isExpanded", false);
-    Ember.run.schedule("afterRender", () => this._removeFixedPosition());
-    this._boundaryActionHandler("onCollapse", this);
+
+    Ember.run.next(() => {
+      Ember.run.schedule("afterRender", () => this._removeFixedPosition());
+      this._boundaryActionHandler("onCollapse", this);
+    });
   },
 
   // lose focus of the component in two steps

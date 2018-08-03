@@ -37,6 +37,12 @@ list_setting:
   description: "help text"
   default: "name|age|last name"
 
+compact_list_setting:
+  type: list
+  list_type: compact
+  description: "help text"
+  default: "name|age|last name"
+
 enum_setting:
   default: "trust level 4"
   type: enum

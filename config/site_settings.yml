@@ -116,6 +116,7 @@ basic:
     client: true
     refresh: true
     type: list
+    list_type: compact
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
@@ -176,6 +177,7 @@ basic:
   category_colors:
     client: true
     type: list
+    list_type: compact
     default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
   category_style:
     client: true
