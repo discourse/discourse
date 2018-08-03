@@ -24,7 +24,7 @@ $mobile-breakpoint: 700px;
     padding: 0 0 0 10px;
   }
 
-  .nav.nav-pills {
+  .nav-pills {
     display: inline-flex;
     width: calc(100% - 10px);
     flex: 1 0 auto;
@@ -508,7 +508,7 @@ $mobile-breakpoint: 700px;
     }
   }
 
-  .nav.nav-pills {
+  .nav-pills {
     width: calc(100% - 10px);
     display: inline-flex;
     padding: 10px;

@@ -617,7 +617,7 @@ blockquote {
 .quote {
   & > blockquote {
     .onebox-result {
-      background-color: blend-primary-secondary(5%);
+      background-color: $primary-very-low;
     }
   }
   aside {
@@ -626,7 +626,7 @@ blockquote {
     blockquote,
     .onebox,
     .onebox-result {
-      background: blend-primary-secondary(5%);
+      background: $primary-very-low;
       border-left: 5px solid $primary-low;
     }
     aside.quote > blockquote,

@@ -254,7 +254,7 @@ aside.quote {
 }
 
 .topic-map {
-  background: blend-primary-secondary(5%);
+  background: $primary-very-low;
   border: 1px solid $primary-low;
   border-top: none; // would cause double top border
 
