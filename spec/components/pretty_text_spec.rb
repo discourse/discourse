@@ -1312,4 +1312,21 @@ HTML
     expect(cooked).to eq("<p lang=\"fr\">tester</p><div lang=\"fr\">tester</div><span lang=\"fr\">tester</span>")
   end
 
+  it "whitelists ruby tags" do
+    # read all about ruby chars at: https://en.wikipedia.org/wiki/Ruby_character
+    # basically it is super hard to remember every single rare letter when there are
+    # so many, so ruby tags provide a hint.
+    #
+    html = (<<~MD).strip
+      <ruby lang="je">
+        <rb lang="je">X</rb>
+        漢 <rp>(</rp><rt lang="je"> ㄏㄢˋ </rt><rp>)</rp>
+      </ruby>
+    MD
+
+    cooked = PrettyText.cook html
+
+    expect(cooked).to eq(html)
+  end
+
 end
