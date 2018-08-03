@@ -232,9 +232,12 @@ module Email
           reason = I18n.t("user.deactivated", email: user.email)
           StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
         elsif range === SiteSetting.bounce_score_threshold
-          # NOTE: we check bounce_score before sending emails, nothing to do here other than log it happened.
+          # NOTE: we check bounce_score before sending emails
+          # So log we revoked the email...
           reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
           StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
+          # ... and PM the user
+          SystemMessage.create_from_system_user(user, :email_revoked)
         end
       end
     end

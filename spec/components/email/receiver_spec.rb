@@ -129,6 +129,17 @@ describe Email::Receiver do
       expect(email_log_2.bounced).to eq(true)
     end
 
+    it "sends a system message once they reach the 'bounce_score_threshold'" do
+      expect(user.active).to eq(true)
+
+      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold - 1
+      user.user_stat.save!
+
+      SystemMessage.expects(:create_from_system_user).with(user, :email_revoked)
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
+
     it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
       expect(user.active).to eq(true)
 
