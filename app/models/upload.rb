@@ -87,6 +87,8 @@ class Upload < ActiveRecord::Base
 
     path = uri.path[/(\/original\/\dX\/[\/\.\w]+)/, 1]
 
+    return if path.blank?
+
     Upload.find_by("url LIKE ?", "%#{path}")
   end
 
