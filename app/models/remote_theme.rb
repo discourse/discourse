@@ -6,6 +6,9 @@ class RemoteTheme < ActiveRecord::Base
 
   ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
 
+  GITHUB_REGEXP = /^(http|https):\/\/github\.com\//
+  GITHUB_SSH_REGEXP = /^git@github\.com:/
+
   has_one :theme
 
   def self.update_tgz_theme(filename, user: Discourse.system_user)
@@ -189,6 +192,21 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
+  def github_diff_link
+    if github_repo_url.present? && local_version != remote_version
+      "#{github_repo_url.gsub(/\.git$/, "")}/compare/#{local_version}...#{remote_version}"
+    end
+  end
+
+  def github_repo_url
+    url = remote_url.strip
+    return url if url.match?(GITHUB_REGEXP)
+
+    if url.match?(GITHUB_SSH_REGEXP)
+      org_repo = url.gsub(GITHUB_SSH_REGEXP, "")
+      "https://github.com/#{org_repo}"
+    end
+  end
 end
 
 # == Schema Information

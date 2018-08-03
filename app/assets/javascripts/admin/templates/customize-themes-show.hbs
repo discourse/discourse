@@ -77,6 +77,11 @@
         {{else}}
           {{#if model.remote_theme.commits_behind}}
             {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
+            {{#if model.remote_theme.github_diff_link}}
+              <a href="{{model.remote_theme.github_diff_link}}">
+                {{i18n 'admin.customize.theme.compare_commits'}}
+              </a>
+            {{/if}}
           {{else}}
             {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
           {{/if}}

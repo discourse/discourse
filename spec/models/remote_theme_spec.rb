@@ -152,6 +152,41 @@ describe RemoteTheme do
     end
   end
 
+  let(:github_repo) do
+    RemoteTheme.create!(
+      remote_url: "https://github.com/org/testtheme.git",
+      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
+      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
+      commits_behind: 2
+    )
+  end
+
+  let(:gitlab_repo) do
+    RemoteTheme.create!(
+      remote_url: "https://gitlab.com/org/repo.git",
+      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
+      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
+      commits_behind: 5
+    )
+  end
+
+  context "#github_diff_link" do
+    it "is blank for non-github repos" do
+      expect(gitlab_repo.github_diff_link).to be_blank
+    end
+
+    it "returns URL for comparing between local_version and remote_version" do
+      expect(github_repo.github_diff_link).to eq(
+        "https://github.com/org/testtheme/compare/#{github_repo.local_version}...#{github_repo.remote_version}"
+      )
+    end
+
+    it "is blank when theme is up-to-date" do
+      github_repo.update!(local_version: github_repo.remote_version, commits_behind: 0)
+      expect(github_repo.reload.github_diff_link).to be_blank
+    end
+  end
+
   context ".out_of_date_themes" do
     let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
     let!(:theme) { Theme.create!(remote_theme_id: remote.id, name: "Test Theme", user_id: -1) }
