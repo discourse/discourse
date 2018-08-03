@@ -6,7 +6,7 @@ module SiteSettings; end
 class SiteSettings::TypeSupervisor
   include SiteSettings::Validations
 
-  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any].freeze
+  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error].freeze
 
   # For plugins, so they can tell if a feature is supported
@@ -63,6 +63,7 @@ class SiteSettings::TypeSupervisor
     @validators = {}
     @types = {}
     @allow_any = {}
+    @list_type = {}
   end
 
   def load_setting(name_arg, opts = {})
@@ -88,6 +89,7 @@ class SiteSettings::TypeSupervisor
 
       if type.to_sym == :list
         @allow_any[name] = opts[:allow_any] == false ? false : true
+        @list_type[name] = opts[:list_type] if opts[:list_type]
       end
     end
     @types[name] = get_data_type(name, @defaults_provider[name])
@@ -144,6 +146,7 @@ class SiteSettings::TypeSupervisor
     end
 
     result[:choices] = @choices[name] if @choices.has_key? name
+    result[:list_type] = @list_type[name] if @list_type.has_key? name
     result
   end
 
