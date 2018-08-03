@@ -183,5 +183,12 @@ const DEFAULT_LIST = [
   "strong",
   "sub",
   "sup",
-  "ul"
+  "ul",
+  "ruby",
+  "ruby[lang]",
+  "rb",
+  "rb[lang]",
+  "rp",
+  "rt",
+  "rt[lang]"
 ];
