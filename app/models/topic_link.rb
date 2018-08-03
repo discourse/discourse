@@ -136,7 +136,8 @@ SQL
           topic_id = nil
           post_number = nil
 
-          if Discourse.store.has_been_uploaded?(url)
+          if upload = Upload.get_from_url(url)
+            url = upload.url
             internal = Discourse.store.internal?
           elsif route = Discourse.route_for(parsed)
             internal = true

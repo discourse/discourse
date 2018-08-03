@@ -41,10 +41,10 @@ describe CookedPostProcessor do
   end
 
   context ".keep_reverse_index_up_to_date" do
-    let(:video_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.mp4') }
-    let(:image_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.jpg') }
-    let(:audio_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.ogg') }
-    let(:attachment_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.csv') }
+    let(:video_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.mp4') }
+    let(:image_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.jpg') }
+    let(:audio_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.ogg') }
+    let(:attachment_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.csv') }
 
     let(:raw) do
       <<~RAW
