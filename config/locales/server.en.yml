@@ -2598,9 +2598,9 @@ en:
       title: "Email Revoked"
       subject_template: "[%{email_prefix}] Is your email address correct?"
       text_body_template: |
-        We're sorry, but we're having trouble reaching you via email.
+        We’re sorry, but we’re having trouble reaching you via email. Our last few emails to you have all bounced back as undeliverable.
 
-        Can you make sure [your email address](%{base_url}/my/preferences/email) is a valid and working email address?
+        Can you make sure [your email address](%{base_url}/my/preferences/email) is valid and working? You may also wish to add our email address to your address book / contact list to improve deliverability. 
 
     too_many_spam_flags:
       title: "Too Many Spam Flags"
@@ -2610,7 +2610,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced and will be unable to create replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:
