@@ -40,7 +40,9 @@ class TopicViewSerializer < ApplicationSerializer
                         :featured_link_root_domain,
                         :pinned_globally,
                         :pinned_at,
-                        :pinned_until
+                        :pinned_until,
+                        :skip_bump,
+                        :bumped_at
 
   attributes :draft,
              :draft_key,
@@ -295,6 +297,14 @@ class TopicViewSerializer < ApplicationSerializer
     scope.can_create_shared_draft? &&
       object.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
       object.topic.shared_draft.present?
+  end
+
+  def include_skip_bump?
+    scope.can_update_bump?
+  end
+
+  def include_bumped_at?
+    scope.can_update_bump?
   end
 
   private

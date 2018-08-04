@@ -353,6 +353,16 @@ describe PostMover do
           moderator_post = topic.posts.find_by(post_number: 2)
           expect(moderator_post.raw).to include("4 posts were merged")
         end
+
+        it "doesn't bump the topic when bumping is disabled" do
+          destination_topic.update_attribute(:skip_bump, true)
+          destination_topic.reload
+
+          expect {
+            topic.move_posts(user, [p2.id], destination_topic_id: destination_topic.id)
+            destination_topic.reload
+          }.to_not change(destination_topic, :bumped_at)
+        end
       end
 
       shared_examples "moves email related stuff" do

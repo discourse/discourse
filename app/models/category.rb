@@ -429,6 +429,7 @@ class Category < ActiveRecord::Base
       .where(category_id: self.id)
       .where('id <> ?', self.topic_id)
       .where('bumped_at < ?', 1.day.ago)
+      .where('skip_bump IS NULL OR skip_bump = FALSE')
       .where('pinned_at IS NULL AND NOT closed AND NOT archived')
       .order('bumped_at ASC')
       .limit(1)
