@@ -1108,8 +1108,8 @@ en:
       hide_session: "Remind me tomorrow"
       hide_forever: "no thanks"
       hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
-      intro: "Hey there! :heart_eyes: Looks like you're enjoying the discussion, but you're not signed up for an account."
-      value_prop: "When you create an account, we remember exactly what you've read, so you always come right back where you left off. You also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
+      intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
+      value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. 💗"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
