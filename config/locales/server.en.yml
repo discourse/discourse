@@ -768,7 +768,7 @@ en:
       self: "You have no activity yet."
       others: "No activity."
     no_bookmarks:
-      self: "You have no bookmarked posts, bookmarking posts allows you to easily access them later on."
+      self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       others: "No bookmarks."
     no_likes_given:
       self: "You have not liked any posts."
@@ -777,7 +777,7 @@ en:
       self: "You have not replied to any posts."
       others: "No replies."
     no_drafts:
-      self: "You have no drafts."
+      self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
       others: "You do not have permission to see drafts for this user."
 
   topic_flag_types:
