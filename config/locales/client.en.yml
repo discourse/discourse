@@ -1276,6 +1276,7 @@ en:
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...
+      filter_placeholder_with_any: Search or create...
       create: "Create: '{{content}}'"
       max_content_reached:
         one: "You can only select {{count}} item."
@@ -3828,9 +3829,6 @@ en:
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
-        value_list:
-          default_none: "Type to filter or create..."
-          no_choices_none: "Type to create..."
         uploaded_image_list:
           label: "Edit list"
           empty: "There are no pictures yet. Please upload one."

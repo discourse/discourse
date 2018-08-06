@@ -11,13 +11,7 @@ export default Ember.Component.extend({
   newValue: "",
   collection: null,
   values: null,
-
-  @computed("addKey", "filteredChoices.length")
-  noneKey(addKey, filteredChoicesLength) {
-    return addKey || filteredChoicesLength === 0
-      ? "admin.site_settings.value_list.no_choices_none"
-      : "admin.site_settings.value_list.default_none";
-  },
+  noneKey: Ember.computed.alias("addKey"),
 
   @on("didReceiveAttrs")
   _setupCollection() {
