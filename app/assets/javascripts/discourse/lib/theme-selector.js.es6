@@ -16,12 +16,12 @@ export function currentThemeIds() {
   const themeIds = [];
   const elem = _.first($(keySelector));
   if (elem) {
-    elem.content
-      .split(",")
-      .forEach(num => {
-        num = parseInt(num, 10);
-        if (!isNaN(num)) { themeIds.push(num) }
-      });
+    elem.content.split(",").forEach(num => {
+      num = parseInt(num, 10);
+      if (!isNaN(num)) {
+        themeIds.push(num);
+      }
+    });
   }
   return themeIds;
 }
