@@ -20,7 +20,6 @@ class IntroductionUpdater
       remaining = post.raw.split("\n")[1..-1]
       revisor.revise!(@user, raw: "#{new_value}\n#{remaining.join("\n")}")
     end
-
   end
 
 protected
@@ -30,7 +29,12 @@ protected
   end
 
   def find_welcome_post
-    welcome_topic = Topic.listable_topics.where(slug: 'welcome-to-discourse').first
+    topic_id = TopicCustomField.where(name: "is_welcome_topic").where(value: "true").pluck(:topic_id)
+    unless topic_id.present?
+      topic_id = Topic.listable_topics.where(slug: 'welcome-to-discourse').pluck(:id)
+    end
+
+    welcome_topic = Topic.find(topic_id).first
     return nil unless welcome_topic.present?
 
     post = welcome_topic.posts.where(post_number: 1).first
