@@ -42,10 +42,18 @@ class UserAvatar < ActiveRecord::Base
             type: "avatar"
           ).create_for(user_id)
 
-          if gravatar_upload_id != upload.id
-            gravatar_upload&.destroy!
-            self.gravatar_upload = upload
-            save!
+          upload_id = upload.id
+
+          if gravatar_upload_id != upload_id
+            User.transaction do
+              if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
+                user.update!(uploaded_avatar_id: upload_id)
+              end
+
+              gravatar_upload&.destroy!
+              self.gravatar_upload = upload
+              save!
+            end
           end
         end
       rescue OpenURI::HTTPError
