@@ -119,4 +119,11 @@
       color: $primary-low-mid;
     }
   }
+
+  .alert-error {
+    text-align: left;
+    padding: 0.5em;
+    margin: 0;
+    border: 0;
+  }
 }
