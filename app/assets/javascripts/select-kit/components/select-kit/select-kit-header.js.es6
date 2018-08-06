@@ -25,7 +25,7 @@ export default Ember.Component.extend({
     if (computedContentTitle) return computedContentTitle;
     if (name) return name;
 
-    return null;
+    return "";
   },
 
   // this might need a more advanced solution
