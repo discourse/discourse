@@ -4,18 +4,11 @@ import AdminDashboardNext from "admin/models/admin-dashboard-next";
 import Report from "admin/models/report";
 import PeriodComputationMixin from "admin/mixins/period-computation";
 
-const ACTIVITY_METRICS_REPORTS = [
-  "page_view_total_reqs",
-  "visits",
-  "time_to_first_response",
-  "likes",
-  "flags",
-  "user_to_user_private_messages_with_replies"
-];
-
 function staticReport(reportType) {
   return function() {
-    return this.get("reports").find(x => x.type === reportType);
+    return Ember.makeArray(this.get("reports")).find(
+      report => report.type === reportType
+    );
   }.property("reports.[]");
 }
 
@@ -36,19 +29,24 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   },
 
   @computed
+  activityMetrics() {
+    return [
+      "page_view_total_reqs",
+      "visits",
+      "time_to_first_response",
+      "likes",
+      "flags",
+      "user_to_user_private_messages_with_replies"
+    ];
+  },
+
+  @computed
   trendingSearchOptions() {
     return { table: { total: false, limit: 8 } };
   },
 
   usersByTypeReport: staticReport("users_by_type"),
   usersByTrustLevelReport: staticReport("users_by_trust_level"),
-
-  @computed("reports.[]")
-  activityMetricsReports(reports) {
-    return reports.filter(report =>
-      ACTIVITY_METRICS_REPORTS.includes(report.type)
-    );
-  },
 
   fetchDashboard() {
     if (this.get("isLoading")) return;

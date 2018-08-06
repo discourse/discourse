@@ -107,6 +107,7 @@ class Report
       group_filtering: self.group_filtering,
       modes: self.modes,
     }.tap do |json|
+      json[:icon] = self.icon if self.icon
       json[:error] = self.error if self.error
       json[:total] = self.total if self.total
       json[:prev_period] = self.prev_period if self.prev_period
