@@ -23,7 +23,7 @@ class Theme < ActiveRecord::Base
   validate :user_selectable_validation
 
   scope :parent_themes, ->() {
-    where("id NOT IN (SELECT child_theme_id FROM child_themes)")
+    joins("LEFT JOIN child_themes ON child_themes.child_theme_id = themes.id").where("parent_theme_id IS NULL")
   }
 
   scope :user_selectable, ->() {
@@ -97,7 +97,7 @@ class Theme < ActiveRecord::Base
 
   def self.user_theme_ids
     get_set_cache "user_theme_ids" do
-      Theme.parent_themes.user_selectable.pluck(:id)
+      Theme.user_selectable.pluck(:id)
     end
   end
 
@@ -109,6 +109,7 @@ class Theme < ActiveRecord::Base
 
   def self.expire_site_cache!
     Site.clear_anon_cache!
+    clear_cache!
     ApplicationSerializer.expire_cache_fragment!("user_themes")
   end
 
@@ -185,7 +186,7 @@ class Theme < ActiveRecord::Base
     self.targets.invert[target_id]
   end
 
-  def self.notify_theme_change(theme_ids, with_scheme: false, clear_manager_cache: true)
+  def self.notify_theme_change(theme_ids, with_scheme: false, clear_manager_cache: true, all_themes: false)
     Stylesheet::Manager.clear_theme_cache!
     targets = [:mobile_theme, :desktop_theme]
 
@@ -194,13 +195,17 @@ class Theme < ActiveRecord::Base
       Stylesheet::Manager.cache.clear if clear_manager_cache
     end
 
-    message = refresh_message_for_targets(targets, theme_ids).flatten
+    if all_themes
+      message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
+    else
+      message = refresh_message_for_targets(targets, theme_ids).flatten
+    end
 
     MessageBus.publish('/file-change', message)
   end
 
   def notify_theme_change(with_scheme: false)
-    theme_ids = [self.id] + (dependant_themes&.pluck(:id) || [])
+    theme_ids = (dependant_themes&.pluck(:id) || []).unshift(self.id)
     self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
   end
 
@@ -220,10 +225,10 @@ class Theme < ActiveRecord::Base
 
   def resolve_dependant_themes(direction)
     if direction == :up
-      select_field = "parent_theme_id"
+      join_field = "parent_theme_id"
       where_field = "child_theme_id"
     elsif direction == :down
-      select_field = "child_theme_id"
+      join_field = "child_theme_id"
       where_field = "parent_theme_id"
     else
       raise "Unknown direction"
@@ -231,11 +236,7 @@ class Theme < ActiveRecord::Base
 
     return [] unless id
 
-    Theme.where(
-      "id IN (SELECT #{select_field}
-              FROM child_themes
-              WHERE #{where_field} = :id)", id: id
-    )
+    Theme.joins("JOIN child_themes ON themes.id = child_themes.#{join_field}").where("#{where_field} = ?", id)
   end
 
   def self.resolve_baked_field(theme_ids, target, name)
@@ -258,7 +259,7 @@ class Theme < ActiveRecord::Base
   end
 
   def list_baked_fields(target, name)
-    theme_ids = [self.id] + (included_themes.map(&:id) || [])
+    theme_ids = (included_themes&.pluck(:id) || []).unshift(self.id)
     self.class.list_baked_fields(theme_ids, target, name)
   end
 
@@ -303,12 +304,8 @@ class Theme < ActiveRecord::Base
 
   def all_theme_variables
     fields = {}
-    ids = [self.id] + (included_themes&.map(&:id) || [])
-    _fields = ThemeField
-      .find_by_theme_ids(ids)
-      .where(type_id: ThemeField.theme_var_type_ids)
-
-    _fields.each do |field|
+    ids = (included_themes&.pluck(:id) || []).unshift(self.id)
+    ThemeField.find_by_theme_ids(ids).where(type_id: ThemeField.theme_var_type_ids).each do |field|
       next if fields.key?(field.name)
       fields[field.name] = field
     end

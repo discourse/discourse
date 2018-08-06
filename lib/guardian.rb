@@ -366,10 +366,8 @@ class Guardian
     parent = theme_ids.first
     components = theme_ids[1..-1] || []
 
-    parent_allowed = Theme.user_theme_ids.include?(parent)
-    children_allowed = (components - Theme.components_for(parent)).empty?
-
-    parent_allowed && children_allowed
+    Theme.user_theme_ids.include?(parent) &&
+      (components - Theme.components_for(parent)).empty?
   end
 
   private

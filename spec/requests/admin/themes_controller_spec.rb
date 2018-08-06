@@ -198,5 +198,17 @@ describe Admin::ThemesController do
       expect(json["theme"]["child_themes"].length).to eq(1)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
+
+    it 'returns the right error message' do
+      parent = Theme.create!(name: "parent", user_id: -1)
+      parent.add_child_theme!(theme)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: { default: true }
+      }
+
+      expect(response.status).to eq(400)
+      expect(JSON.parse(response.body)["errors"].first).to include(I18n.t("themes.errors.component_no_default"))
+    end
   end
 end

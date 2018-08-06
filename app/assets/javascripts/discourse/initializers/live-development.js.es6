@@ -66,7 +66,7 @@ export default {
               if (
                 themeIds.indexOf(me.theme_id) !== -1 &&
                 target === me.target &&
-                (!themeId || (themeId && themeId === me.theme_id))
+                (!themeId || themeId === me.theme_id)
               ) {
                 refreshCSS(this, null, me.new_href);
               }

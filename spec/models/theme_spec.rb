@@ -68,8 +68,8 @@ describe Theme do
   end
 
   it 'can correctly find parent themes' do
-    child = Theme.create!(name: 'child', user_id: user.id)
-    theme = Theme.create!(name: 'theme', user_id: user.id)
+    child = Theme.create!(name: 'child', user: user)
+    theme = Theme.create!(name: 'theme', user: user)
 
     theme.add_child_theme!(child)
 
@@ -77,14 +77,41 @@ describe Theme do
   end
 
   it "doesn't allow multi-level theme components" do
-    grandchild = Theme.create!(name: 'grandchild', user_id: user.id)
-    child = Theme.create!(name: 'child', user_id: user.id)
-    theme = Theme.create!(name: 'theme', user_id: user.id)
+    grandchild = Theme.create!(name: 'grandchild', user: user)
+    child = Theme.create!(name: 'child', user: user)
+    theme = Theme.create!(name: 'theme', user: user)
+    grandparent = Theme.create!(name: 'grandparent', user: user)
 
     theme.add_child_theme!(child)
     expect do
       child.add_child_theme!(grandchild)
-    end.to raise_error(Discourse::InvalidParameters)
+    end.to raise_error(Discourse::InvalidParameters, I18n.t("themes.errors.no_multilevels_components"))
+
+    expect do
+      grandparent.add_child_theme!(theme)
+    end.to raise_error(Discourse::InvalidParameters, I18n.t("themes.errors.no_multilevels_components"))
+  end
+
+  it "doesn't allow a child to be user selectable" do
+    child = Theme.create!(name: 'child', user: user)
+    theme = Theme.create!(name: 'theme', user: user)
+
+    theme.add_child_theme!(child)
+    begin
+      child.update!(user_selectable: true)
+    rescue ActiveRecord::RecordInvalid => e
+      expect(child.errors.full_messages).to contain_exactly(I18n.t("themes.errors.component_no_user_selectable"))
+    end
+  end
+
+  it "doesn't allow a child to be set as the default theme" do
+    child = Theme.create!(name: 'child', user: user)
+    theme = Theme.create!(name: 'theme', user: user)
+
+    theme.add_child_theme!(child)
+    expect do
+      child.set_default!
+    end.to raise_error(Discourse::InvalidParameters, I18n.t("themes.errors.component_no_default"))
   end
 
   it 'should correct bad html in body_tag_baked and head_tag_baked' do
@@ -123,6 +150,33 @@ HTML
     ThemeField.update_all(value_baked: nil)
 
     expect(Theme.lookup_field(theme.id, :desktop, :body_tag)).to match(/<b>test<\/b>/)
+  end
+
+  it 'can find fields for multiple themes' do
+    theme = Fabricate(:theme)
+    theme2 = Fabricate(:theme)
+
+    theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
+    theme2.set_field(target: :common, name: :body_tag, value: "<b>theme2test</b>")
+    theme.save!
+    theme2.save!
+
+    field = Theme.lookup_field([theme.id, theme2.id], :desktop, :body_tag)
+    expect(field).to match(/<b>testtheme1<\/b>/)
+    expect(field).to match(/<b>theme2test<\/b>/)
+  end
+
+  describe ".transform_ids" do
+    it "adds the child themes of the parent" do
+      theme = Fabricate(:theme)
+      child = Fabricate(:theme, id: 97)
+      child2 = Fabricate(:theme, id: 96)
+
+      theme.add_child_theme!(child)
+      theme.add_child_theme!(child2)
+      expect(Theme.transform_ids([theme.id])).to eq([theme.id, child2.id, child.id])
+      expect(Theme.transform_ids([theme.id, 94, 90])).to eq([theme.id, 90, 94, child2.id, child.id])
+    end
   end
 
   context "plugin api" do
@@ -273,22 +327,26 @@ HTML
     Theme.destroy_all
 
     theme = Theme.create!(name: "bob", user_id: -1)
+    theme2 = Theme.create!(name: "mob", user_id: -1)
 
-    expect(Theme.theme_ids).to eq([theme.id])
+    expect(Theme.theme_ids).to contain_exactly(theme.id, theme2.id)
     expect(Theme.user_theme_ids).to eq([])
 
-    theme.user_selectable = true
-    theme.save
+    theme.update!(user_selectable: true)
 
-    expect(Theme.user_theme_ids).to eq([theme.id])
+    expect(Theme.user_theme_ids).to contain_exactly(theme.id)
 
-    theme.user_selectable = false
-    theme.save
+    theme2.update!(user_selectable: true)
+    expect(Theme.user_theme_ids).to contain_exactly(theme.id, theme2.id)
+
+    theme.update!(user_selectable: false)
+    theme2.update!(user_selectable: false)
 
     theme.set_default!
-    expect(Theme.user_theme_ids).to eq([theme.id])
+    expect(Theme.user_theme_ids).to contain_exactly(theme.id)
 
     theme.destroy
+    theme2.destroy
 
     expect(Theme.theme_ids).to eq([])
     expect(Theme.user_theme_ids).to eq([])

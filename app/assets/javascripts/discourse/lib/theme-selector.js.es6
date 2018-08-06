@@ -18,9 +18,10 @@ export function currentThemeIds() {
   if (elem) {
     elem.content
       .split(",")
-      .map(num => parseInt(num, 10))
-      .filter(num => !isNaN(num))
-      .forEach(num => themeIds.push(num));
+      .forEach(num => {
+        num = parseInt(num, 10);
+        if (!isNaN(num)) { themeIds.push(num) }
+      });
   }
   return themeIds;
 }

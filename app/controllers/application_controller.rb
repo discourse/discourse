@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
 
     def remember_theme_id
       if @theme_ids.present?
-        Stylesheet::Watcher.theme_id = @theme_ids&.first if defined? Stylesheet::Watcher
+        Stylesheet::Watcher.theme_id = @theme_ids.first if defined? Stylesheet::Watcher
       end
     end
   end

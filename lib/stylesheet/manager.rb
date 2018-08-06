@@ -299,22 +299,14 @@ class Stylesheet::Manager
   end
 
   def settings_digest
-    timestamps = ""
-    proc = Proc.new do |&blck|
-      timestamps += blck.call.pluck(:updated_at).map(&:to_f).sort.join(",")
-    end
+    fields = ThemeField.where(
+      name: "yaml",
+      type_id: ThemeField.types[:yaml],
+      theme_id: @theme_id
+    ).pluck(:updated_at)
 
-    proc.call do
-      ThemeField.where(
-        name: "yaml",
-        type_id: ThemeField.types[:yaml],
-        theme_id: @theme_id
-      )
-    end
-
-    proc.call do
-      ThemeSetting.where(theme_id: @theme_id)
-    end
+    settings = ThemeSetting.where(theme_id: @theme_id).pluck(:updated_at)
+    timestamps = (fields + settings).map(&:to_f).sort.join(",")
 
     Digest::SHA1.hexdigest(timestamps)
   end
