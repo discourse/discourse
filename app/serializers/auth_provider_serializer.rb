@@ -15,6 +15,7 @@ class AuthProviderSerializer < ApplicationSerializer
 
   def full_screen_login
     return SiteSetting.send(object.full_screen_login_setting) if object.full_screen_login_setting
+    return object.full_screen_login if object.full_screen_login
     false
   end
 
