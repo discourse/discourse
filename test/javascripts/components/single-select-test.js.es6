@@ -726,3 +726,22 @@ componentTest("with accents in content", {
     );
   }
 });
+
+componentTest("with no content and allowAny", {
+  template: "{{single-select allowAny=true}}",
+
+  async test(assert) {
+    await click(
+      this.get("subject")
+        .header()
+        .el()
+    );
+
+    const $filter = this.get("subject")
+      .filter()
+      .el();
+
+    assert.ok($filter.hasClass("is-focused"));
+    assert.ok(!$filter.hasClass("is-hidden"));
+  }
+});
