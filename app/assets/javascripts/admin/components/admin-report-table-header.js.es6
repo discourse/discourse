@@ -3,10 +3,10 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Component.extend({
   tagName: "th",
   classNames: ["admin-report-table-header"],
-  classNameBindings: ["label.property", "isCurrentSort"],
+  classNameBindings: ["label.mainProperty", "label.type", "isCurrentSort"],
   attributeBindings: ["label.title:title"],
 
-  @computed("currentSortLabel.sort_property", "label.sort_property")
+  @computed("currentSortLabel.sortProperty", "label.sortProperty")
   isCurrentSort(currentSortField, labelSortField) {
     return currentSortField === labelSortField;
   },

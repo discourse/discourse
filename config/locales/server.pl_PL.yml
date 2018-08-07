@@ -627,7 +627,6 @@ pl_PL:
       self: "Nie masz jeszcze żadnej aktywności."
       others: "Brak aktywności"
     no_bookmarks:
-      self: "Nie masz postów dodanych do zakładek, posty w zakładkach pozwalają ci na łatwiejszy dostęp do nich w późniejszym czasie."
       others: "Brak zakładek."
     no_likes_given:
       self: "Nie masz lajkowanych postów."
@@ -943,7 +942,6 @@ pl_PL:
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Elementy w menu, które w menu posta będą ukryte, chyba że kliknięty zostanie przycisk rozwijania."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
-    track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
     site_contact_username: "Nazwa użytkownika, spod której wysyłane będą automatyczne wiadomości. Jeśli pusta, użyte będzie domyślne konto System."
     send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
     suppress_reply_directly_below: "Nie pokazuj rozwijanej liczby odpowiedzi przy poście, gdy jest tylko jedna odpowiedź bezpośrednio pod tym postem."

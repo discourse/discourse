@@ -43,6 +43,8 @@ module Discourse
   # other desired context.
   # See app/jobs/base.rb for the error_context function.
   def self.handle_job_exception(ex, context = {}, parent_logger = nil)
+    return if ex.class == Jobs::HandledExceptionWrapper
+
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 
@@ -198,12 +200,27 @@ module Discourse
     end
   end
 
+  BUILTIN_AUTH = [
+    Auth::AuthProvider.new(authenticator: Auth::FacebookAuthenticator.new, frame_width: 580, frame_height: 400),
+    Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500),
+    Auth::AuthProvider.new(authenticator: Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true)),
+    Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new),
+    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new),
+    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, frame_width: 1, frame_height: 1)
+  ]
+
+  def self.auth_providers
+    BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.to_a
+  end
+
+  def self.enabled_auth_providers
+    auth_providers.select { |provider|  provider.authenticator.enabled?  }
+  end
+
   def self.authenticators
     # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
     #  for the cases of multisite
-    # In future we may change it so we don't include them all for cases where we are not a multisite, but we would
-    #  require a restart after site settings change
-    Users::OmniauthCallbacksController::BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.map(&:authenticator)
+    auth_providers.map(&:authenticator)
   end
 
   def self.enabled_authenticators

@@ -1,11 +1,35 @@
 .admin-report {
-  .no-data-alert {
+  .report-error,
+  .no-data {
+    width: 100%;
     width: 100%;
     align-self: flex-start;
+    text-align: center;
+    padding: 3em;
+    box-sizing: border-box;
+  }
+
+  .report-error {
+    color: $danger;
+    border: 1px solid $danger;
+  }
+
+  .no-data {
+    background: $secondary;
+    border: 1px solid $primary-low;
+    color: $primary-low-mid;
+
+    .d-icon-pie-chart {
+      color: currentColor;
+      margin-bottom: 0.25em;
+      font-size: $font-up-5;
+      display: block;
+    }
   }
 
   .conditional-loading-section {
-    width: 100%;
+    flex: 1;
+    margin: 0;
   }
 
   .report-header {
@@ -181,7 +205,7 @@
 }
 
 .admin-report.post-edits {
-  .admin-report-table {
+  .report-table {
     table-layout: auto;
 
     tbody tr td,
@@ -191,7 +215,7 @@
 
     thead tr th.edit_reason,
     tbody tr td.edit_reason {
-      width: 60%;
+      width: 100%;
     }
   }
 }

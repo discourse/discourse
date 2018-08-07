@@ -1,12 +1,16 @@
 require_dependency 'topic_subtype'
 
 class Report
+  # Change this line each time report format change
+  # and you want to ensure cache is reset
+  SCHEMA_VERSION = 2
+
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :category_id, :group_id, :labels, :async,
                 :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :timeout
+                :dates_filtering, :error
 
   def self.default_days
     30
@@ -15,7 +19,7 @@ class Report
   def initialize(type)
     @type = type
     @start_date ||= Report.default_days.days.ago.beginning_of_day
-    @end_date ||= Time.zone.now.end_of_day
+    @end_date ||= Time.now.end_of_day
     @prev_end_date = @start_date
     @average = false
     @percent = false
@@ -36,8 +40,9 @@ class Report
       report.end_date.to_date.strftime("%Y%m%d"),
       report.group_id,
       report.facets,
-      report.limit
-    ].map(&:to_s).join(':')
+      report.limit,
+      SCHEMA_VERSION,
+    ].compact.map(&:to_s).join(':')
   end
 
   def self.clear_cache
@@ -47,17 +52,11 @@ class Report
   end
 
   def self.wrap_slow_query(timeout = 20000)
-    begin
-      ActiveRecord::Base.connection.transaction do
-        # Set a statement timeout so we can't tie up the server
-        DB.exec "SET LOCAL statement_timeout = #{timeout}"
-        yield
-      end
-    rescue ActiveRecord::QueryCanceled
-      return :timeout
+    ActiveRecord::Base.connection.transaction do
+      # Set a statement timeout so we can't tie up the server
+      DB.exec "SET LOCAL statement_timeout = #{timeout}"
+      yield
     end
-
-    nil
   end
 
   def prev_start_date
@@ -72,35 +71,44 @@ class Report
     description = I18n.t("reports.#{type}.description", default: "")
 
     {
-     type: type,
-     title: I18n.t("reports.#{type}.title"),
-     xaxis: I18n.t("reports.#{type}.xaxis"),
-     yaxis: I18n.t("reports.#{type}.yaxis"),
-     description: description.presence ? description : nil,
-     data: data,
-     start_date: start_date&.iso8601,
-     end_date: end_date&.iso8601,
-     prev_data: self.prev_data,
-     prev_start_date: prev_start_date&.iso8601,
-     prev_end_date: prev_end_date&.iso8601,
-     category_id: category_id,
-     group_id: group_id,
-     prev30Days: self.prev30Days,
-     dates_filtering: self.dates_filtering,
-     report_key: Report.cache_key(self),
-     labels: labels || [
-       { type: :date, properties: [:x], title: I18n.t("reports.default.labels.day") },
-       { type: :number, properties: [:y], title: I18n.t("reports.default.labels.count") },
-     ],
-     processing: self.processing,
-     average: self.average,
-     percent: self.percent,
-     higher_is_better: self.higher_is_better,
-     category_filtering: self.category_filtering,
-     group_filtering: self.group_filtering,
-     modes: self.modes
+      type: type,
+      title: I18n.t("reports.#{type}.title"),
+      xaxis: I18n.t("reports.#{type}.xaxis"),
+      yaxis: I18n.t("reports.#{type}.yaxis"),
+      description: description.presence ? description : nil,
+      data: data,
+      start_date: start_date&.iso8601,
+      end_date: end_date&.iso8601,
+      prev_data: self.prev_data,
+      prev_start_date: prev_start_date&.iso8601,
+      prev_end_date: prev_end_date&.iso8601,
+      category_id: category_id,
+      group_id: group_id,
+      prev30Days: self.prev30Days,
+      dates_filtering: self.dates_filtering,
+      report_key: Report.cache_key(self),
+      labels: labels || [
+        {
+          type: :date,
+          property: :x,
+          title: I18n.t("reports.default.labels.day")
+        },
+        {
+          type: :number,
+          property: :y,
+          title: I18n.t("reports.default.labels.count")
+        },
+      ],
+      processing: self.processing,
+      average: self.average,
+      percent: self.percent,
+      higher_is_better: self.higher_is_better,
+      category_filtering: self.category_filtering,
+      group_filtering: self.group_filtering,
+      modes: self.modes,
     }.tap do |json|
-      json[:timeout] = self.timeout if self.timeout
+      json[:icon] = self.icon if self.icon
+      json[:error] = self.error if self.error
       json[:total] = self.total if self.total
       json[:prev_period] = self.prev_period if self.prev_period
       json[:prev30Days] = self.prev30Days if self.prev30Days
@@ -131,7 +139,6 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.higher_is_better = opts[:higher_is_better] if opts[:higher_is_better]
-
     report
   end
 
@@ -141,21 +148,34 @@ class Report
   end
 
   def self.cache(report, duration)
-    Discourse.cache.write(Report.cache_key(report), report.as_json, force: true, expires_in: duration)
+    Discourse.cache.write(cache_key(report), report.as_json, force: true, expires_in: duration)
   end
 
   def self.find(type, opts = nil)
-    clear_cache
+    begin
+      report = _get(type, opts)
+      report_method = :"report_#{type}"
 
-    report = _get(type, opts)
-    report_method = :"report_#{type}"
+      begin
+        wrap_slow_query do
+          if respond_to?(report_method)
+            send(report_method, report)
+          elsif type =~ /_reqs$/
+            req_report(report, type.split(/_reqs$/)[0].to_sym)
+          else
+            return nil
+          end
+        end
+      rescue ActiveRecord::QueryCanceled, PG::QueryCanceled => e
+        report.error = :timeout
+      end
+    rescue Exception => e
+      report.error = :exception
 
-    if respond_to?(report_method)
-      send(report_method, report)
-    elsif type =~ /_reqs$/
-      req_report(report, type.split(/_reqs$/)[0].to_sym)
-    else
-      return nil
+      # given reports can be added by plugins we don’t want dashboard failures
+      # on report computation, however we do want to log which report is provoking
+      # an error
+      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}")
     end
 
     report
@@ -168,7 +188,7 @@ class Report
           ApplicationRequest.req_types.reject { |k, v| k =~ /mobile/ }.map { |k, v| v if k =~ /page_view/ }.compact
         ].flatten)
       else
-        ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
+        ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
       end
 
     if filter == :page_view_total
@@ -277,6 +297,19 @@ class Report
   end
 
   def self.report_dau_by_mau(report)
+    report.labels = [
+      {
+        type: :date,
+        property: :x,
+        title: I18n.t("reports.default.labels.day")
+      },
+      {
+        type: :percent,
+        property: :y,
+        title: I18n.t("reports.default.labels.percent")
+      },
+    ]
+
     report.average = true
     report.percent = true
 
@@ -416,8 +449,15 @@ class Report
     report.dates_filtering = false
 
     report.labels = [
-      { properties: [:key], title: I18n.t("reports.users_by_trust_level.labels.level") },
-      { properties: [:y], title: I18n.t("reports.default.labels.count") },
+      {
+        property: :key,
+        title: I18n.t("reports.users_by_trust_level.labels.level")
+      },
+      {
+        property: :y,
+        type: :number,
+        title: I18n.t("reports.default.labels.count")
+      }
     ]
 
     User.real.group('trust_level').count.sort.each do |level, count|
@@ -505,8 +545,16 @@ class Report
 
   def self.report_web_crawlers(report)
     report.labels = [
-      { type: :string, properties: [:user_agent], title: I18n.t("reports.web_crawlers.labels.user_agent") },
-      { properties: [:count], title: I18n.t("reports.web_crawlers.labels.page_views") }
+      {
+        type: :string,
+        property: :user_agent,
+        title: I18n.t("reports.web_crawlers.labels.user_agent")
+      },
+      {
+        property: :count,
+        type: :number,
+        title: I18n.t("reports.web_crawlers.labels.page_views")
+      }
     ]
     report.modes = [:table]
     report.data = WebCrawlerRequest.where('date >= ? and date <= ?', report.start_date, report.end_date)
@@ -524,8 +572,15 @@ class Report
     report.dates_filtering = false
 
     report.labels = [
-      { properties: [:x], title: I18n.t("reports.users_by_type.labels.type") },
-      { properties: [:y], title: I18n.t("reports.default.labels.count") },
+      {
+        property: :x,
+        title: I18n.t("reports.users_by_type.labels.type")
+      },
+      {
+        property: :y,
+        type: :number,
+        title: I18n.t("reports.default.labels.count")
+      }
     ]
 
     label = Proc.new { |x| I18n.t("reports.users_by_type.xaxis_labels.#{x}") }
@@ -548,40 +603,69 @@ class Report
     report.modes = [:table]
 
     report.labels = [
-      { type: :link, properties: [:topic_title, :topic_url], title: I18n.t("reports.top_referred_topics.labels.topic") },
-      { properties: [:num_clicks], title: I18n.t("reports.top_referred_topics.labels.num_clicks") }
+      {
+        type: :topic,
+        properties: {
+          title: :topic_title,
+          id: :topic_id
+        },
+        title: I18n.t("reports.top_referred_topics.labels.topic")
+      },
+      {
+        property: :num_clicks,
+        type: :number,
+        title: I18n.t("reports.top_referred_topics.labels.num_clicks")
+      }
     ]
 
     options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
     result = nil
-    report.timeout = wrap_slow_query do
-      result = IncomingLinksReport.find(:top_referred_topics, options)
-      report.data = result.data
-    end
+    result = IncomingLinksReport.find(:top_referred_topics, options)
+    report.data = result.data
   end
 
   def self.report_top_traffic_sources(report)
     report.modes = [:table]
 
     report.labels = [
-      { properties: [:domain], title: I18n.t("reports.top_traffic_sources.labels.domain") },
-      { properties: [:num_clicks], title: I18n.t("reports.top_traffic_sources.labels.num_clicks") },
-      { properties: [:num_topics], title: I18n.t("reports.top_traffic_sources.labels.num_topics") }
+      {
+        property: :domain,
+        title: I18n.t("reports.top_traffic_sources.labels.domain")
+      },
+      {
+        property: :num_clicks,
+        type: :number,
+        title: I18n.t("reports.top_traffic_sources.labels.num_clicks")
+      },
+      {
+        property: :num_topics,
+        type: :number,
+        title: I18n.t("reports.top_traffic_sources.labels.num_topics")
+      }
     ]
 
     options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
     result = nil
-    report.timeout = wrap_slow_query do
-      result = IncomingLinksReport.find(:top_traffic_sources, options)
-      report.data = result.data
-    end
+    result = IncomingLinksReport.find(:top_traffic_sources, options)
+    report.data = result.data
   end
 
   def self.report_trending_search(report)
     report.labels = [
-      { properties: [:term], title: I18n.t("reports.trending_search.labels.term") },
-      { properties: [:unique_searches], title: I18n.t("reports.trending_search.labels.searches") },
-      { type: :percent, properties: [:ctr], title: I18n.t("reports.trending_search.labels.click_through") }
+      {
+        property: :term,
+        title: I18n.t("reports.trending_search.labels.term")
+      },
+      {
+        property: :unique_searches,
+        type: :number,
+        title: I18n.t("reports.trending_search.labels.searches")
+      },
+      {
+        type: :percent,
+        property: :ctr,
+        title: I18n.t("reports.trending_search.labels.click_through")
+      }
     ]
 
     report.data = []
@@ -622,12 +706,45 @@ class Report
 
   def self.report_moderators_activity(report)
     report.labels = [
-      { type: :link, properties: [:username, :user_url], title: I18n.t("reports.moderators_activity.labels.moderator") },
-      { properties: [:flag_count], title: I18n.t("reports.moderators_activity.labels.flag_count") },
-      { type: :seconds, properties: [:time_read], title: I18n.t("reports.moderators_activity.labels.time_read") },
-      { properties: [:topic_count], title: I18n.t("reports.moderators_activity.labels.topic_count") },
-      { properties: [:pm_count], title: I18n.t("reports.moderators_activity.labels.pm_count") },
-      { properties: [:post_count], title: I18n.t("reports.moderators_activity.labels.post_count") }
+      {
+        type: :user,
+        properties: {
+          username: :username,
+          id: :user_id,
+          avatar: :user_avatar_template,
+        },
+        title: I18n.t("reports.moderators_activity.labels.moderator"),
+      },
+      {
+        property: :flag_count,
+        type: :number,
+        title: I18n.t("reports.moderators_activity.labels.flag_count")
+      },
+      {
+        type: :seconds,
+        property: :time_read,
+        title: I18n.t("reports.moderators_activity.labels.time_read")
+      },
+      {
+        property: :topic_count,
+        type: :number,
+        title: I18n.t("reports.moderators_activity.labels.topic_count")
+      },
+      {
+        property: :pm_count,
+        type: :number,
+        title: I18n.t("reports.moderators_activity.labels.pm_count")
+      },
+      {
+        property: :post_count,
+        type: :number,
+        title: I18n.t("reports.moderators_activity.labels.post_count")
+      },
+      {
+        property: :revision_count,
+        type: :number,
+        title: I18n.t("reports.moderators_activity.labels.revision_count")
+      }
     ]
 
     report.modes = [:table]
@@ -638,8 +755,8 @@ class Report
     User.real.where(moderator: true).find_each do |u|
       mod_data[u.id] = {
         user_id: u.id,
-        username: u.username,
-        user_url: "/admin/users/#{u.id}/#{u.username}"
+        username: u.username_lower,
+        user_avatar_template: u.avatar_template,
       }
     end
 
@@ -691,6 +808,19 @@ class Report
     FROM agreed_flags af
     FULL OUTER JOIN disagreed_flags df
     ON df.user_id = af.user_id
+    SQL
+
+    revision_count_query = <<~SQL
+    SELECT pr.user_id,
+    COUNT(*) AS revision_count
+    FROM post_revisions pr
+    JOIN users u
+    ON u.id = pr.user_id
+    WHERE u.moderator = 'true'
+    AND u.id > 0
+    AND pr.created_at >= '#{report.start_date}'
+    AND pr.created_at <= '#{report.end_date}'
+    GROUP BY pr.user_id
     SQL
 
     topic_count_query = <<~SQL
@@ -747,6 +877,10 @@ class Report
       mod_data[row.user_id][:flag_count] = row.flag_count
     end
 
+    DB.query(revision_count_query).each do |row|
+      mod_data[row.user_id][:revision_count] = row.revision_count
+    end
+
     DB.query(topic_count_query).each do |row|
       mod_data[row.user_id][:topic_count] = row.topic_count
     end
@@ -766,11 +900,42 @@ class Report
     report.modes = [:table]
 
     report.labels = [
-      { properties: [:action_type], title: I18n.t("reports.flags_status.labels.flag") },
-      { type: :link, properties: [:staff_username, :staff_url], title: I18n.t("reports.flags_status.labels.assigned") },
-      { type: :link, properties: [:poster_username, :poster_url], title: I18n.t("reports.flags_status.labels.poster") },
-      { type: :link, properties: [:flagger_username, :flagger_url], title: I18n.t("reports.flags_status.labels.flagger") },
-      { type: :seconds, properties: [:response_time], title: I18n.t("reports.flags_status.labels.time_to_resolution") }
+      {
+        property: :action_type,
+        title: I18n.t("reports.flags_status.labels.flag")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :staff_username,
+          id: :staff_id,
+          avatar: :staff_avatar_template
+        },
+        title: I18n.t("reports.flags_status.labels.assigned")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :poster_username,
+          id: :poster_id,
+          avatar: :poster_avatar_template
+        },
+        title: I18n.t("reports.flags_status.labels.poster")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :flagger_username,
+          id: :flagger_id,
+          avatar: :flagger_avatar_template
+          },
+        title: I18n.t("reports.flags_status.labels.flagger")
+      },
+      {
+        type: :seconds,
+        property: :response_time,
+        title: I18n.t("reports.flags_status.labels.time_to_resolution")
+      }
     ]
 
     report.data = []
@@ -799,7 +964,8 @@ class Report
     poster_data AS (
     SELECT pa.id,
     p.user_id AS poster_id,
-    u.username AS poster_username
+    u.username_lower AS poster_username,
+    u.uploaded_avatar_id AS poster_avatar_id
     FROM period_actions pa
     JOIN posts p
     ON p.id = pa.post_id
@@ -809,7 +975,8 @@ class Report
     flagger_data AS (
     SELECT pa.id,
     u.id AS flagger_id,
-    u.username AS flagger_username
+    u.username_lower AS flagger_username,
+    u.uploaded_avatar_id AS flagger_avatar_id
     FROM period_actions pa
     JOIN users u
     ON u.id = pa.user_id
@@ -817,7 +984,8 @@ class Report
     staff_data AS (
     SELECT pa.id,
     u.id AS staff_id,
-    u.username AS staff_username
+    u.username_lower AS staff_username,
+    u.uploaded_avatar_id AS staff_avatar_id
     FROM period_actions pa
     JOIN users u
     ON u.id = COALESCE(pa.agreed_by_id, pa.disagreed_by_id, pa.deferred_by_id)
@@ -825,10 +993,13 @@ class Report
     SELECT
     sd.staff_username,
     sd.staff_id,
+    sd.staff_avatar_id,
     pd.poster_username,
     pd.poster_id,
+    pd.poster_avatar_id,
     fd.flagger_username,
     fd.flagger_id,
+    fd.flagger_avatar_id,
     pa.post_action_type_id,
     pa.created_at,
     pa.agreed_at,
@@ -850,17 +1021,25 @@ class Report
     DB.query(sql).each do |row|
       data = {}
       data[:action_type] = flag_types.key(row.post_action_type_id).to_s
-      data[:staff_username] = row.staff_username
-      data[:staff_id] = row.staff_id
-      if row.staff_username && row.staff_id
-        data[:staff_url] = "/admin/users/#{row.staff_id}/#{row.staff_username}"
+
+      if row.staff_id
+        data[:staff_username] = row.staff_username
+        data[:staff_id] = row.staff_id
+        data[:staff_avatar_template] = User.avatar_template(row.staff_username, row.staff_avatar_id)
       end
-      data[:poster_username] = row.poster_username
-      data[:poster_id] = row.poster_id
-      data[:poster_url] = "/admin/users/#{row.poster_id}/#{row.poster_username}"
-      data[:flagger_id] = row.flagger_id
-      data[:flagger_username] = row.flagger_username
-      data[:flagger_url] = "/admin/users/#{row.flagger_id}/#{row.flagger_username}"
+
+      if row.poster_id
+        data[:poster_username] = row.poster_username
+        data[:poster_id] = row.poster_id
+        data[:poster_avatar_template] = User.avatar_template(row.poster_username, row.poster_avatar_id)
+      end
+
+      if row.flagger_id
+        data[:flagger_id] = row.flagger_id
+        data[:flagger_username] = row.flagger_username
+        data[:flagger_avatar_template] = User.avatar_template(row.flagger_username, row.flagger_avatar_id)
+      end
+
       if row.agreed_by_id
         data[:resolution] = I18n.t("reports.flags_status.values.agreed")
       elsif row.disagreed_by_id
@@ -879,10 +1058,38 @@ class Report
     report.modes = [:table]
 
     report.labels = [
-      { type: :link, properties: [:post_id, :post_url], title: I18n.t("reports.post_edits.labels.post") },
-      { type: :link, properties: [:editor_username, :editor_url], title: I18n.t("reports.post_edits.labels.editor") },
-      { type: :link, properties: [:author_username, :author_url], title: I18n.t("reports.post_edits.labels.author") },
-      { type: :text, properties: [:edit_reason], title: I18n.t("reports.post_edits.labels.edit_reason") }
+      {
+        type: :post,
+        properties: {
+          topic_id: :topic_id,
+          number: :post_number,
+          truncated_raw: :post_raw
+        },
+        title: I18n.t("reports.post_edits.labels.post")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :editor_username,
+          id: :editor_id,
+          avatar: :editor_avatar_template,
+        },
+        title: I18n.t("reports.post_edits.labels.editor")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :author_username,
+          id: :author_id,
+          avatar: :author_avatar_template,
+        },
+        title: I18n.t("reports.post_edits.labels.author")
+      },
+      {
+        type: :text,
+        property: :edit_reason,
+        title: I18n.t("reports.post_edits.labels.edit_reason")
+      },
     ]
 
     report.data = []
@@ -893,7 +1100,8 @@ class Report
     pr.number AS revision_version,
     pr.created_at,
     pr.post_id,
-    u.username AS editor_username
+    u.username AS editor_username,
+    u.uploaded_avatar_id as editor_avatar_id
     FROM post_revisions pr
     JOIN users u
     ON u.id = pr.user_id
@@ -905,11 +1113,14 @@ class Report
     )
     SELECT pr.editor_id,
     pr.editor_username,
+    pr.editor_avatar_id,
     p.user_id AS author_id,
     u.username AS author_username,
+    u.uploaded_avatar_id AS author_avatar_id,
     pr.revision_version,
     p.version AS post_version,
     pr.post_id,
+    left(p.raw, 40) AS post_raw,
     p.topic_id,
     p.post_number,
     p.edit_reason,
@@ -925,14 +1136,15 @@ class Report
       revision = {}
       revision[:editor_id] = r.editor_id
       revision[:editor_username] = r.editor_username
-      revision[:editor_url] = "/admin/users/#{r.editor_id}/#{r.editor_username}"
+      revision[:editor_avatar_template] = User.avatar_template(r.editor_username, r.editor_avatar_id)
       revision[:author_id] = r.author_id
       revision[:author_username] = r.author_username
-      revision[:author_url] = "/admin/users/#{r.author_id}/#{r.author_username}"
+      revision[:author_avatar_template] = User.avatar_template(r.author_username, r.author_avatar_id)
       revision[:edit_reason] = r.revision_version == r.post_version ? r.edit_reason : nil
       revision[:created_at] = r.created_at
-      revision[:post_id] = r.post_id
-      revision[:post_url] = "/t/-/#{r.topic_id}/#{r.post_number}"
+      revision[:post_raw] = r.post_raw
+      revision[:topic_id] = r.topic_id
+      revision[:post_number] = r.post_number
 
       report.data << revision
     end

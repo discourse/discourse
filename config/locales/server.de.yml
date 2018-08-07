@@ -169,6 +169,7 @@ de:
   not_logged_in: "Dazu musst du angemeldet sein."
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
   invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
+  authenticator_not_found: "Authentifizierungsmethode existiert nicht oder wurde deaktiviert"
   invalid_api_credentials: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen. Der API-Benutzername oder -Schlüssel ist ungültig."
   provider_not_enabled: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen. Der Authentifizierungsprovider ist nicht aktiviert."
   provider_not_found: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen. Der Authentifizierungsprovider existiert nicht."
@@ -470,6 +471,9 @@ de:
     cannot_delete:
       uncategorized: "Die \"unkategorisiert\" Kategorie kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien besitzt."
+      topic_exists:
+        one: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält. Das älteste Thema ist %{topic_link}."
+        other: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält. Das älteste Thema ist %{topic_link}."
       topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, weil sie #{category.topic_count} Themen enthält."
     uncategorized_description: "Themen welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
   trust_levels:
@@ -607,6 +611,8 @@ de:
     authorizing_old:
       title: "Vielen Dank für die Bestätigung deiner aktuellen E-Mail-Adresse"
       description: "Wir senden dir jetzt zur Bestätigung eine E-Mail an deine neue Adresse."
+  associated_accounts:
+    revoke_failed: "Das Widerrufen deines Kontos bei %{provider_name} ist fehlgeschlagen."
   activation:
     action: "Klicke hier, um deinen Account zu aktivieren"
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
@@ -669,7 +675,6 @@ de:
       self: "Du hast noch keine Aktivität."
       others: "Keine Aktivität."
     no_bookmarks:
-      self: "Du hast keine Beiträge mit Lesezeichen, Lesezeichen ermöglichen es dir, diese später einfach zu finden."
       others: "Keine Lesezeichen."
     no_likes_given:
       self: "Du hast noch keine Beiträge mit einem „Like“ markiert."
@@ -738,6 +743,39 @@ de:
       read: "Alles lesen"
       write: "Alles schreiben"
   reports:
+    default:
+      labels:
+        count: Anzahl
+        day: Tag
+    post_edits:
+      title: "Beitragsbearbeitungen"
+      labels:
+        post: Beitrag
+        editor: Bearbeiter
+        author: Ersteller
+        edit_reason: Grund
+    moderators_activity:
+      title: "Moderator-Aktivität"
+      labels:
+        moderator: Moderator
+        flag_count: Überprüfte Meldungen
+        time_read: Lesezeit
+        topic_count: Erstellte Themen
+        post_count: Erstellte Beiträge
+        pm_count: Erstellte Nachrichten
+    flags_status:
+      title: "Meldungsstatus"
+      values:
+        agreed: Zugestimmt
+        disagreed: Abgelehnt
+        deferred: Zurückgestellt
+        no_action: Keine Aktion
+      labels:
+        flag: Typ
+        assigned: Zugewiesen
+        poster: Ersteller
+        flagger: Meldender
+        time_to_resolution: Lösungszeit
     visits:
       title: "Nutzerbesuche"
       xaxis: "Tag"
@@ -796,10 +834,14 @@ de:
       title: "Benutzer nach Stufe"
       xaxis: "Stufe"
       yaxis: "Anzahl der Benutzer"
+      labels:
+        level: Stufe
     users_by_type:
       title: "Benutzer nach Art"
       xaxis: "Art"
       yaxis: "Anzahl der Benutzer"
+      labels:
+        type: Typ
       xaxis_labels:
         admin: Administrator
         moderator: Moderator
@@ -850,8 +892,15 @@ de:
       num_clicks: "Klicks"
       num_topics: "Themen"
       num_users: "Benutzer"
+      labels:
+        domain: Domain
+        num_clicks: Klicks
+        num_topics: Themen
     top_referred_topics:
       title: "Top verwiesene Themen"
+      labels:
+        num_clicks: "Klicks"
+        topic: "Thema"
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Tag"
@@ -914,6 +963,9 @@ de:
       yaxis: "Anzahl der Besuche"
     web_crawlers:
       title: "Anfragen von Suchmaschinen"
+      labels:
+        user_agent: "Browserkennung"
+        page_views: "Seitenaufrufe"
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen deiner Website ein."
@@ -1062,7 +1114,6 @@ de:
     post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
-    track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     site_contact_username: "Gültiger Benutzername eines Team-Mitglieds, in dessen Name alle automatisch erzeugten Direktnachrichten versendet werden sollen. Falls leer wird das Standardkonto \"system\" verwendet."
     send_welcome_message: "Sende allen neuen Benutzern eine Willkommensnachricht mit Hinweisen zur Benutzung des Forums."
     send_tl1_welcome_message: "Sende neuen Benutzern mit der Vertrauensstufe 1 eine Willkommensnachricht."
@@ -1120,8 +1171,6 @@ de:
     enable_google_oauth2_logins: "Google OAuth2-Authentifizierung aktivieren. Dies ist der momentan von Google unterstützte Authentifizierungs-Mechanismus. Benötigt Client-ID und Secret."
     google_oauth2_client_id: "Client-ID deiner Google-Anwendung."
     google_oauth2_client_secret: "Client-Secret deiner Google-Anwendung."
-    google_oauth2_prompt: "Eine Leerzeichen-separierte Liste von String-Werten, die angeben, ob der autorisierende Server den Benutzer zur Reauthentifizierung und Zustimmung fragt. Siehe https://developers.google.com/identity/protocols/OpenIDConnect#prompt für die gültigen Werte."
-    google_oauth2_hd: "Domain, die von Google Apps gehostet wird und auf die Anmeldung eingeschränkt wird. Siehe https://developers.google.com/identity/protocols/OpenIDConnect#hd-param für weitere Details."
     enable_twitter_logins: "Aktiviere Twitter-Authentifizierung (benötigt twitter_consumer_key und twitter_consumer_secret)."
     twitter_consumer_key: "Consumer Key für Twitter-Authentifizierung, registriert auf https://apps.twitter.com/"
     twitter_consumer_secret: "Consumer Secret für Twitter-Authentifizierung, registriert auf https://apps.twitter.com"
@@ -1142,6 +1191,8 @@ de:
     backup_frequency: "Die Anzahl von Tagen zwischen Backups."
     enable_s3_backups: "Lade fertige Backups zu S3 hoch. WICHTIG: In den Dateien-Einstellungen müssen gültige S3-Kontodaten eingegeben sein."
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
+    s3_endpoint: "Dieser Endpunkt kann so angepasst werden, dass er die Sicherung an einen S3-kompatiblen Service wie DigitalOcean Spaces oder Minio übertragt. WARNUNG: Verwende den Standard bei Verwendung von AWS S3."
+    s3_force_path_style: "Forciere Pfad-Adressierung deines benutzerdefinierten Endpunkts. WICHTIG: Erforderlich bei Verwendung von Minio für Uploads und Sicherungen."
     s3_disable_cleanup: "Deaktiviere das Löschen von Backups aus S3 wenn sie lokal entfernt werden"
     backup_time_of_day: "Uhrzeit in UTC, wenn Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups mit einbeziehen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
@@ -1189,6 +1240,8 @@ de:
     avatar_sizes: "Liste der Größe von automatisch generierten Profilbildern."
     external_system_avatars_enabled: "Benutze einen externen Avatar Service"
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
+    selectable_avatars_enabled: "Forciere Benutzer, ein Avatar aus der Liste auszuwählen."
+    selectable_avatars: "Liste von Avataren, aus der Benutzer wählen können."
     default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
     twitter_summary_large_image_url: "URL des Bildes, das standardmäßig in Twitter-Cards angezeigt wird (sollte mindestens 280 Pixel breit und 150 Pixel hoch sein)."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
@@ -1425,6 +1478,7 @@ de:
     enable_emoji_shortcuts: "Geläufige Text-Smileys wie :) :p :( werden in Emojis umgewandelt"
     emoji_set: "Welche Emoji sollen es sein?"
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
+    emoji_autocomplete_min_chars: "Erforderliche Minimalanzahl von Zeichen, um das Popup zur Emoji-Autovervollständigung zu öffnen."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzer oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     approve_new_topics_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
@@ -1459,6 +1513,7 @@ de:
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     default_categories_watching_first_post: "Liste von Kategorien, in denen der erste Beiträge in jedem neuen Thema automatisch beobachtet wird."
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Web-Hook-Ereigniseinträge aufbewahrt werden"
+    retry_web_hook_events: "Fehlgeschlagene Web-Hook-Ereignisse automatisch 4-mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen 1, 5, 25 und 125 MInuten."
     allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
     allow_user_api_key_scopes: "Liste erlaubter Scopes für Benutzer-API-Schlüssel"
     max_api_keys_per_user: "Maximale Zahl der Benutzer API Anfragen pro Benutzer"
@@ -1638,11 +1693,7 @@ de:
     second_factor_title: "Zwei-Faktor Authentifizierung"
     second_factor_description: "Bitte gib den erforderlichen Authentifizierungscode aus deiner App ein:"
     second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
-    second_factor_backup_title: "Zwei-Faktor-Wiederherstellung"
     invalid_second_factor_code: "Ungültiger Authentifizierungscode. Jeder Code kann nur einmal benutzt werden."
-    second_factor_toggle:
-      totp: "Anmeldung mit Authenticator-App"
-      backup_code: "Anmeldung mit einem Wiederherstellungscode"
   user:
     deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
     deactivated_by_staff: "Deaktiviert vom Team"
@@ -1912,6 +1963,9 @@ de:
         Mehrere Community-Mitglieder haben diesen Beitrag gemeldet, bevor er ausgeblendet wurde. **Weil der Beitrag mehr als einmal ausgeblendet wurde, wird er nun ausgeblendet bleiben, bis er vom Team behandelt wurde.**
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted:
+      title: "Gemeldeter Beitrag von Team entfernt"
+      subject_template: "Gemeldeter Beitrag von Team entfernt"
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2200,14 +2254,6 @@ de:
     too_many_spam_flags:
       title: "Neues Konto gesperrt wegen zu viel Spam"
       subject_template: "Neues Konto gesperrt"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag vorübergehend versteckt wurde, weil er von der Community gemeldet wurde..
-
-        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen stummgeschaltet, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
-
-        Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "E-Mail abgelehnt wegen Meldungen durch Vertrauensstufe 3"
       subject_template: "Neues Konto gesperrt"
@@ -2707,11 +2753,44 @@ de:
   flag_reason:
     sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP-Adresse (%{ip_address}) hat darauf geantwortet. Beachte die <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> Einstellung."
     spam_hosts: "Dieser Benutzer hat versucht, mehrere Antworten mit Links zur gleichen Domain (%{domain}) zu schreiben. Beachte die <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>-Einstellung."
+  skipped_email_log:
+    exceeded_emails_limit: "max_emails_per_day_per_user überschritten"
+    exceeded_bounces_limit: "bounce_score_threshold wurde überschritten"
+    mailing_list_no_echo_mode: "Mailinglisten-Benachrichtigung für eigene Beiträge deaktivieren"
+    user_email_no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
+    user_email_post_not_found: "Kann Beitrag mit ID %{post_id} nicht finden"
+    user_email_anonymous_user: "Benutzer ist anonym"
+    user_email_user_suspended_not_pm: "Benutzer ist gesperrt, keine Nachricht"
+    user_email_seen_recently: "Benutzer war kürzlich online"
+    user_email_notification_already_read: "Die Benachrichtigung zu dieser E-Mail wurde bereits gelesen"
+    user_email_notification_topic_nil: "post.topic ist leer"
+    user_email_post_user_deleted: "Der Ersteller dieses Beitrags wurde gelöscht."
+    user_email_post_deleted: "Beitrag wurde vom Ersteller entfernt"
+    user_email_user_suspended: "Benutzer wurde gesperrt"
+    user_email_already_read: "Benutzer hat diesen Beitrag bereits gelesen"
+    sender_message_blank: "Nachricht ist leer"
+    sender_message_to_blank: "message.to ist leer"
+    sender_text_part_body_blank: "text_part.body ist leer"
+    sender_text_body_blank: "body ist leer"
   color_schemes:
     base_theme_name: "Basis"
+    light: "Helles Schema"
     dark: "Dunkles Schema"
+    neutral: "Neutrales Schema"
+    grey_amber: "Graues Bernstein-Schema"
+    shades_of_blue: "Blautöne-Schema"
+    latte: "Latte-Schema"
+    summer: "Sommer-Schema"
+    dark_rose: "Dunkle-Rosen-Schema"
+    default_theme_name: "Hell"
     light_theme_name: "Hell"
     dark_theme_name: "Dunkel"
+    neutral_theme_name: "Neutral"
+    grey_amber_theme_name: "Grauer Bernstein"
+    shades_of_blue_theme_name: "Blautöne"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Sommer"
+    dark_rose_theme_name: "Dunkle Rosen"
   about: "Über uns"
   guidelines: "Richtlinien"
   privacy: "Datenschutz"
@@ -3311,6 +3390,7 @@ de:
       button: "Registrieren"
       title: "Administrator-Konto registrieren"
       help: "registriere ein neues Konto, um loszulegen"
+      no_emails: "Leider wurde bei der Einrichtung keine Administrator-E-Mail-Adresse festgelegt, sodass es schwer sein könnte, die Konfiguration abzuschließen. Bitte füge eine Entwickler-E-Mail-Adresse in der Konfigurationsdatei hinzu oder <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>erstelle ein Administrator-Konto über die Konsole</a>."
     confirm_email:
       title: "Bestätige deine E-Mail-Adresse"
       message: "<p>Wir haben eine Aktivierungsmail an <b>%{email}</b> gesendet. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn diese nicht ankommst, stelle sicher, dass du E-Mail für dein Discourse richtig eingestellt hast und prüfe deinen Spamordner.</p>"

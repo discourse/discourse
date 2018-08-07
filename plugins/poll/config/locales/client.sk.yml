@@ -82,3 +82,5 @@ sk:
           label: Ukázať kto hlasoval
         poll_options:
           label: Zadajte každú možnosť voľby do nového riadka
+        automatic_close:
+          label: Automaticky zatvoriť hlasovanie

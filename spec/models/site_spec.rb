@@ -66,4 +66,19 @@ describe Site do
     expect(Site.new(guardian).categories).not_to include(sub_category)
   end
 
+  it "includes all enabled authentication providers" do
+    SiteSetting.enable_twitter_logins = true
+    SiteSetting.enable_facebook_logins = true
+    data = JSON.parse(Site.json_for(Guardian.new))
+    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
+  end
+
+  it "includes all enabled authentication providers for anon when login_required" do
+    SiteSetting.login_required = true
+    SiteSetting.enable_twitter_logins = true
+    SiteSetting.enable_facebook_logins = true
+    data = JSON.parse(Site.json_for(Guardian.new))
+    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
+  end
+
 end

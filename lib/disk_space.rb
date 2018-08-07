@@ -41,14 +41,13 @@ class DiskSpace
   end
 
   def self.reset_cached_stats
-    $redis.del(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
-    $redis.del(DISK_SPACE_STATS_CACHE_KEY)
-    Jobs.enqueue(:update_disk_space)
+    Discourse.cache.delete(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
+    Discourse.cache.delete(DISK_SPACE_STATS_CACHE_KEY)
   end
 
   def self.cached_stats
-    stats = $redis.get(DISK_SPACE_STATS_CACHE_KEY)
-    updated_at = $redis.get(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
+    stats = Discourse.cache.read(DISK_SPACE_STATS_CACHE_KEY)
+    updated_at = Discourse.cache.read(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
 
     unless updated_at && (Time.now.to_i - updated_at.to_i) < 30.minutes
       Jobs.enqueue(:update_disk_space)
@@ -68,5 +67,4 @@ class DiskSpace
   def self.used(path)
     `du -s #{path}`.to_i * 1024
   end
-
 end

@@ -1,86 +1,19 @@
 import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import round from "discourse/lib/round";
-import { fillMissingDates, isNumeric } from "discourse/lib/utilities";
+import { fillMissingDates, formatUsername } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
 import { number, durationTiny } from "discourse/lib/formatter";
+import { renderAvatar } from "discourse/helpers/user-avatar";
+
+// Change this line each time report format change
+// and you want to ensure cache is reset
+export const SCHEMA_VERSION = 2;
 
 const Report = Discourse.Model.extend({
   average: false,
   percent: false,
   higher_is_better: true,
-
-  @computed("labels")
-  computedLabels(labels) {
-    return labels.map(label => {
-      const type = label.type;
-      const properties = label.properties;
-      const property = properties[0];
-
-      return {
-        title: label.title,
-        sort_property: label.sort_property || property,
-        property,
-        compute: row => {
-          let value = row[property];
-          let escapedValue = escapeExpression(value);
-          let tooltip;
-          let base = { property, value, type };
-
-          if (value === null || typeof value === "undefined") {
-            return _.assign(base, {
-              value: null,
-              formatedValue: "-",
-              type: "undefined"
-            });
-          }
-
-          if (type === "seconds") {
-            return _.assign(base, {
-              formatedValue: escapeExpression(durationTiny(value))
-            });
-          }
-
-          if (type === "link") {
-            return _.assign(base, {
-              formatedValue: `<a href="${escapeExpression(
-                row[properties[1]]
-              )}">${escapedValue}</a>`
-            });
-          }
-
-          if (type === "percent") {
-            return _.assign(base, {
-              formatedValue: `${escapedValue}%`
-            });
-          }
-
-          if (type === "number" || isNumeric(value))
-            return _.assign(base, {
-              type: "number",
-              formatedValue: number(value)
-            });
-
-          if (type === "date") {
-            const date = moment(value, "YYYY-MM-DD");
-            if (date.isValid()) {
-              return _.assign(base, {
-                formatedValue: date.format("LL")
-              });
-            }
-          }
-
-          if (type === "text") tooltip = escapedValue;
-
-          return _.assign(base, {
-            tooltip,
-            type: type || "string",
-            formatedValue: escapedValue
-          });
-        }
-      };
-    });
-  },
 
   @computed("modes")
   onlyTable(modes) {
@@ -310,6 +243,169 @@ const Report = Discourse.Model.extend({
   xAxisIsDate() {
     if (!this.data[0]) return false;
     return this.data && this.data[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/);
+  },
+
+  @computed("labels")
+  computedLabels(labels) {
+    return labels.map(label => {
+      const type = label.type || "string";
+
+      let mainProperty;
+      if (label.property) mainProperty = label.property;
+      else if (type === "user") mainProperty = label.properties["username"];
+      else if (type === "topic") mainProperty = label.properties["title"];
+      else if (type === "post")
+        mainProperty = label.properties["truncated_raw"];
+      else mainProperty = label.properties[0];
+
+      return {
+        title: label.title,
+        sortProperty: label.sort_property || mainProperty,
+        mainProperty,
+        type,
+        compute: (row, opts = {}) => {
+          const value = row[mainProperty];
+
+          if (type === "user") return this._userLabel(label.properties, row);
+          if (type === "post") return this._postLabel(label.properties, row);
+          if (type === "topic") return this._topicLabel(label.properties, row);
+          if (type === "seconds") return this._secondsLabel(value);
+          if (type === "link") return this._linkLabel(label.properties, row);
+          if (type === "percent") return this._percentLabel(value);
+          if (type === "number") {
+            return this._numberLabel(value, opts);
+          }
+          if (type === "date") {
+            const date = moment(value, "YYYY-MM-DD");
+            if (date.isValid()) return this._dateLabel(value, date);
+          }
+          if (type === "text") return this._textLabel(value);
+
+          return {
+            value,
+            type,
+            property: mainProperty,
+            formatedValue: value ? escapeExpression(value) : "-"
+          };
+        }
+      };
+    });
+  },
+
+  _userLabel(properties, row) {
+    const username = row[properties.username];
+
+    const formatedValue = () => {
+      const userId = row[properties.id];
+
+      const user = Ember.Object.create({
+        username,
+        name: formatUsername(username),
+        avatar_template: row[properties.avatar]
+      });
+
+      const href = `/admin/users/${userId}/${username}`;
+
+      const avatarImg = renderAvatar(user, {
+        imageSize: "tiny",
+        ignoreTitle: true
+      });
+
+      return `<a href='${href}'>${avatarImg}<span class='username'>${
+        user.name
+      }</span></a>`;
+    };
+
+    return {
+      value: username,
+      formatedValue: username ? formatedValue(username) : "-"
+    };
+  },
+
+  _topicLabel(properties, row) {
+    const topicTitle = row[properties.title];
+
+    const formatedValue = () => {
+      const topicId = row[properties.id];
+      const href = `/t/-/${topicId}`;
+      return `<a href='${href}'>${topicTitle}</a>`;
+    };
+
+    return {
+      value: topicTitle,
+      formatedValue: topicTitle ? formatedValue() : "-"
+    };
+  },
+
+  _postLabel(properties, row) {
+    const postTitle = row[properties.truncated_raw];
+    const postNumber = row[properties.number];
+    const topicId = row[properties.topic_id];
+    const href = `/t/-/${topicId}/${postNumber}`;
+
+    return {
+      property: properties.title,
+      value: postTitle,
+      formatedValue: `<a href='${href}'>${postTitle}</a>`
+    };
+  },
+
+  _secondsLabel(value) {
+    return {
+      value,
+      formatedValue: durationTiny(value)
+    };
+  },
+
+  _percentLabel(value) {
+    return {
+      value,
+      formatedValue: value ? `${value}%` : "-"
+    };
+  },
+
+  _numberLabel(value, options = {}) {
+    const formatNumbers = Ember.isEmpty(options.formatNumbers)
+      ? true
+      : options.formatNumbers;
+
+    const formatedValue = () => (formatNumbers ? number(value) : value);
+
+    return {
+      value,
+      formatedValue: value ? formatedValue() : "-"
+    };
+  },
+
+  _dateLabel(value, date) {
+    return {
+      value,
+      formatedValue: value ? date.format("LL") : "-"
+    };
+  },
+
+  _textLabel(value) {
+    const escaped = escapeExpression(value);
+
+    return {
+      value,
+      formatedValue: value ? escaped : "-"
+    };
+  },
+
+  _linkLabel(properties, row) {
+    const property = properties[0];
+    const value = row[property];
+    const formatedValue = (href, anchor) => {
+      return `<a href="${escapeExpression(href)}">${escapeExpression(
+        anchor
+      )}</a>`;
+    };
+
+    return {
+      value,
+      formatedValue: value ? formatedValue(value, row[properties[1]]) : "-"
+    };
   },
 
   _computeChange(valAtT1, valAtT2) {

@@ -32,7 +32,7 @@
     }
   }
 
-  table {
+  .report-table {
     table-layout: fixed;
     border: 1px solid $primary-low;
     margin-top: 0;
@@ -41,16 +41,28 @@
     tbody {
       border: none;
 
+      .total-row {
+        td {
+          font-weight: 700;
+          text-align: left;
+        }
+      }
+
       tr {
         td {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
-        }
-
-        td {
           text-align: center;
           padding: 8px;
+
+          &.user {
+            text-align: left;
+
+            .username {
+              margin-left: 3px;
+            }
+          }
         }
       }
     }

@@ -204,9 +204,9 @@ class User < ActiveRecord::Base
     SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
 
-  def self.username_available?(username, email = nil)
+  def self.username_available?(username, email = nil, allow_reserved_username: false)
     lower = username.downcase
-    return false if reserved_username?(lower)
+    return false if !allow_reserved_username && reserved_username?(lower)
     return true  if DB.exec(User::USERNAME_EXISTS_SQL, username: lower) == 0
 
     # staged users can use the same username since they will take over the account
@@ -958,7 +958,6 @@ class User < ActiveRecord::Base
         result << {
           name: authenticator.name,
           description: account_description,
-          can_revoke: authenticator.can_revoke?
         }
       end
     end

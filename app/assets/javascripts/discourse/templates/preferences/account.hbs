@@ -111,7 +111,7 @@
           {{#if authProvider.account}}
             <td>{{authProvider.account.description}}</td>
             <td>
-              {{#if authProvider.account.can_revoke}}
+              {{#if authProvider.method.can_revoke}}
                 {{#conditional-loading-spinner condition=revoking size='small'}}
                   {{d-button action="revokeAccount" actionParam=authProvider.account title="user.associated_accounts.revoke" icon="times-circle" }}
                 {{/conditional-loading-spinner}}
@@ -119,7 +119,7 @@
             </td>
           {{else}}
             <td colspan=2>
-              {{#if authProvider.method.canConnect}}
+              {{#if authProvider.method.can_connect}}
                 {{d-button action="connectAccount" actionParam=authProvider.method label="user.associated_accounts.connect" icon="plug" disabled=disableConnectButtons}}
               {{else}}
                 {{i18n 'user.associated_accounts.not_connected'}}

@@ -668,6 +668,18 @@ class PluginApi {
    *   displayName: "Discourse"
    *   href: "https://www.discourse.org",
    * })
+   *
+   * An optional `customFilter` callback can be included to not display the
+   * nav item on certain routes
+   *
+   * Example:
+   *
+   * addNavigationBarItem({
+   *   name: "link-to-bugs-category",
+   *   displayName: "bugs"
+   *   href: "/c/bugs",
+   *   customFilter: (category, args) => { category && category.get('name') !== 'bug' }
+   * })
    */
   addNavigationBarItem(item) {
     if (!item["name"]) {

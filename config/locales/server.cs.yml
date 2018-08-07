@@ -598,7 +598,6 @@ cs:
       long_form: 'se líbí'
   user_activity:
     no_bookmarks:
-      self: "Nemáte žádné příspěvky v záložkách. Přidání do záložek vám umožní téma v budoucnu snadněji nalézt."
       others: "Žádné záložky."
     no_likes_given:
       self: "Zatím se ti nelíbil žádný příspěvek."
@@ -784,7 +783,6 @@ cs:
     ga_universal_domain_name: "Doménové jméno Google Universal Analytics (analytics.js); například mojeforum.cz; více na http://google.com/analytics"
     allow_moderators_to_create_categories: "Povolit moderátorům vytváření nových kategorií."
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
-    track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
     enable_badges: "Povolit odznaky"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."

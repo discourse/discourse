@@ -193,7 +193,7 @@ class CookedPostProcessor
   end
 
   def oneboxed_images
-    @doc.css(".onebox-body img, .onebox img")
+    @doc.css(".onebox-body img, .onebox img, img.onebox")
   end
 
   def limit_size!(img)

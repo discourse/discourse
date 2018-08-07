@@ -469,7 +469,6 @@ sv:
       long_form: 'gillade detta inlägg'
   user_activity:
     no_bookmarks:
-      self: "Du har inga märkta inlägg, märkta inlägg möjliggör att du enkelt når dem vid ett senare tillfälle."
       others: "Inga bokmärken."
     no_likes_given:
       self: "Du har inte gillat några inlägg."
@@ -765,7 +764,6 @@ sv:
     post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel:  like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
-    track_external_right_clicks: "Följ externa länkar som högerklickas (ex: öppna i en ny flik) inaktiverat som standard eftersom det skriver över URL:er."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om lämnad blank används det System-kontot."
     send_welcome_message: "Skicka ett välkomstmeddelande till alla nya användare tillsammans med en snabbstartsguide."
     suppress_reply_directly_below: "Visa inte den utvidgade inläggsräknaren på ett inlägg när det bara finns ett svar direkt nedanför det här inlägget. "

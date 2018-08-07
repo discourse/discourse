@@ -11,6 +11,8 @@ class Admin::DashboardNextController < Admin::AdminController
     render json: data
   end
 
+  def moderation; end
+
   def general
     data = AdminDashboardNextGeneralData.fetch_cached_stats
 
@@ -25,7 +27,7 @@ class Admin::DashboardNextController < Admin::AdminController
   private
 
   def last_backup_taken_at
-    if last_backup = Backup.all.last
+    if last_backup = Backup.all.first
       File.ctime(last_backup.path).utc
     end
   end

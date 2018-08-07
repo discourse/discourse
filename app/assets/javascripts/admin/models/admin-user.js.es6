@@ -530,11 +530,14 @@ const AdminUser = Discourse.User.extend({
     }
   },
 
-  @computed("suspended_by") suspendedBy: wrapAdmin,
+  @computed("suspended_by")
+  suspendedBy: wrapAdmin,
 
-  @computed("silenced_by") silencedBy: wrapAdmin,
+  @computed("silenced_by")
+  silencedBy: wrapAdmin,
 
-  @computed("approved_by") approvedBy: wrapAdmin
+  @computed("approved_by")
+  approvedBy: wrapAdmin
 });
 
 AdminUser.reopenClass({

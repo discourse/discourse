@@ -396,22 +396,48 @@ QUnit.test("computed labels", assert => {
   const data = [
     {
       username: "joffrey",
-      user_url: "/admin/users/1/joffrey",
+      user_id: 1,
+      user_avatar: "/",
       flag_count: 1876,
       time_read: 287362,
-      note: "This is a long note"
+      note: "This is a long note",
+      topic_id: 2,
+      topic_title: "Test topic",
+      post_number: 3,
+      post_raw: "This is the beginning of"
     }
   ];
 
   const labels = [
     {
-      type: "link",
-      properties: ["username", "user_url"],
-      title: "Username"
+      type: "user",
+      properties: {
+        username: "username",
+        id: "user_id",
+        avatar: "user_avatar"
+      },
+      title: "Moderator"
     },
-    { properties: ["flag_count"], title: "Flag count" },
-    { type: "seconds", properties: ["time_read"], title: "Time read" },
-    { type: "text", properties: ["note"], title: "Note" }
+    { type: "number", property: "flag_count", title: "Flag count" },
+    { type: "seconds", property: "time_read", title: "Time read" },
+    { type: "text", property: "note", title: "Note" },
+    {
+      type: "topic",
+      properties: {
+        title: "topic_title",
+        id: "topic_id"
+      },
+      title: "Topic"
+    },
+    {
+      type: "post",
+      properties: {
+        topic_id: "topic_id",
+        number: "post_number",
+        truncated_raw: "post_raw"
+      },
+      title: "Post"
+    }
   ];
 
   const report = Report.create({
@@ -424,41 +450,69 @@ QUnit.test("computed labels", assert => {
   const computedLabels = report.get("computedLabels");
 
   const usernameLabel = computedLabels[0];
-  assert.equal(usernameLabel.property, "username");
-  assert.equal(usernameLabel.sort_property, "username");
-  assert.equal(usernameLabel.title, "Username");
+  assert.equal(usernameLabel.mainProperty, "username");
+  assert.equal(usernameLabel.sortProperty, "username");
+  assert.equal(usernameLabel.title, "Moderator");
+  assert.equal(usernameLabel.type, "user");
   const computedUsernameLabel = usernameLabel.compute(row);
   assert.equal(
     computedUsernameLabel.formatedValue,
-    '<a href="/admin/users/1/joffrey">joffrey</a>'
+    "<a href='/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
   );
-  assert.equal(computedUsernameLabel.type, "link");
   assert.equal(computedUsernameLabel.value, "joffrey");
 
   const flagCountLabel = computedLabels[1];
-  assert.equal(flagCountLabel.property, "flag_count");
-  assert.equal(flagCountLabel.sort_property, "flag_count");
+  assert.equal(flagCountLabel.mainProperty, "flag_count");
+  assert.equal(flagCountLabel.sortProperty, "flag_count");
   assert.equal(flagCountLabel.title, "Flag count");
-  const computedFlagCountLabel = flagCountLabel.compute(row);
+  assert.equal(flagCountLabel.type, "number");
+  let computedFlagCountLabel = flagCountLabel.compute(row);
   assert.equal(computedFlagCountLabel.formatedValue, "1.9k");
-  assert.equal(computedFlagCountLabel.type, "number");
   assert.equal(computedFlagCountLabel.value, 1876);
+  computedFlagCountLabel = flagCountLabel.compute(row, {
+    formatNumbers: false
+  });
+  assert.equal(computedFlagCountLabel.formatedValue, 1876);
 
   const timeReadLabel = computedLabels[2];
-  assert.equal(timeReadLabel.property, "time_read");
-  assert.equal(timeReadLabel.sort_property, "time_read");
+  assert.equal(timeReadLabel.mainProperty, "time_read");
+  assert.equal(timeReadLabel.sortProperty, "time_read");
   assert.equal(timeReadLabel.title, "Time read");
+  assert.equal(timeReadLabel.type, "seconds");
   const computedTimeReadLabel = timeReadLabel.compute(row);
   assert.equal(computedTimeReadLabel.formatedValue, "3d");
-  assert.equal(computedTimeReadLabel.type, "seconds");
   assert.equal(computedTimeReadLabel.value, 287362);
 
   const noteLabel = computedLabels[3];
-  assert.equal(noteLabel.property, "note");
-  assert.equal(noteLabel.sort_property, "note");
+  assert.equal(noteLabel.mainProperty, "note");
+  assert.equal(noteLabel.sortProperty, "note");
   assert.equal(noteLabel.title, "Note");
+  assert.equal(noteLabel.type, "text");
   const computedNoteLabel = noteLabel.compute(row);
   assert.equal(computedNoteLabel.formatedValue, "This is a long note");
-  assert.equal(computedNoteLabel.type, "text");
   assert.equal(computedNoteLabel.value, "This is a long note");
+
+  const topicLabel = computedLabels[4];
+  assert.equal(topicLabel.mainProperty, "topic_title");
+  assert.equal(topicLabel.sortProperty, "topic_title");
+  assert.equal(topicLabel.title, "Topic");
+  assert.equal(topicLabel.type, "topic");
+  const computedTopicLabel = topicLabel.compute(row);
+  assert.equal(
+    computedTopicLabel.formatedValue,
+    "<a href='/t/-/2'>Test topic</a>"
+  );
+  assert.equal(computedTopicLabel.value, "Test topic");
+
+  const postLabel = computedLabels[5];
+  assert.equal(postLabel.mainProperty, "post_raw");
+  assert.equal(postLabel.sortProperty, "post_raw");
+  assert.equal(postLabel.title, "Post");
+  assert.equal(postLabel.type, "post");
+  const computedPostLabel = postLabel.compute(row);
+  assert.equal(
+    computedPostLabel.formatedValue,
+    "<a href='/t/-/2/3'>This is the beginning of</a>"
+  );
+  assert.equal(computedPostLabel.value, "This is the beginning of");
 });

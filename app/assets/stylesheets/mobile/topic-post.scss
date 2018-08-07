@@ -212,13 +212,6 @@ a.reply-to-tab {
       margin: 0 0 10px 0;
     }
   }
-  .participants {
-    // PMs //
-    .user {
-      float: left;
-      margin: 0 10px 10px 0;
-    }
-  }
   .buttons {
     .btn {
       border: 0;
@@ -449,7 +442,7 @@ span.highlighted {
     }
     .user-title {
       order: 4;
-      flex-basis: 100%;
+      margin-right: auto;
     }
     span {
       margin-right: 4px;

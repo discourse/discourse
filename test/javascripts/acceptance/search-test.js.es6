@@ -89,7 +89,7 @@ QUnit.test("Right filters are shown to anonymous users", async assert => {
 
   await visit("/search?expanded=true");
 
-  await inSelector.expandAwait();
+  await inSelector.expand();
 
   assert.ok(inSelector.rowByValue("first").exists());
   assert.ok(inSelector.rowByValue("pinned").exists());
@@ -115,7 +115,7 @@ QUnit.test("Right filters are shown to logged-in users", async assert => {
   Discourse.reset();
   await visit("/search?expanded=true");
 
-  await inSelector.expandAwait();
+  await inSelector.expand();
 
   assert.ok(inSelector.rowByValue("first").exists());
   assert.ok(inSelector.rowByValue("pinned").exists());

@@ -48,21 +48,15 @@ export default ComboBox.extend(Tags, {
   willDestroyElement() {
     this._super(...arguments);
 
-    $(".selected-name").off("touchend.select-kit pointerup.select-kit");
+    this.$(".selected-name").off("touchend.select-kit pointerup.select-kit");
   },
 
   didInsertElement() {
     this._super(...arguments);
 
-    $(".selected-name").on(
+    this.$(".selected-name").on(
       "touchend.select-kit pointerup.select-kit",
-      event => {
-        if (!this.get("isExpanded")) {
-          this.expand(event);
-        }
-
-        this.focusFilterOrHeader();
-      }
+      () => this.focusFilterOrHeader()
     );
   },
 

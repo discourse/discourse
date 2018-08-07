@@ -10,7 +10,7 @@ componentTest("default", {
     assert.equal(subject.el().find(".d-icon-bars").length, 1);
     assert.equal(subject.el().find(".d-icon-caret-down").length, 1);
 
-    await subject.expandAwait();
+    await subject.expand();
 
     assert.equal(subject.rowByValue("create").name(), "New Category");
   }

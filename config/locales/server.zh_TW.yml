@@ -491,7 +491,6 @@ zh_TW:
       long_form: '已按讚'
   user_activity:
     no_bookmarks:
-      self: "你沒有收藏帖子，收藏帖子能讓你之後輕鬆找到他們。"
       others: "沒有書籤。"
     no_likes_given:
       self: "你沒有對任何文章按讚。"
@@ -794,7 +793,6 @@ zh_TW:
     post_menu: "確定在文章功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜單中默認隱藏的按鈕，點擊省略號後顯示。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
-    track_external_right_clicks: "追蹤外部連結的右鍵點擊 ( 例如：開啟於瀏覽器的新頁面 )，預設是關閉的，因為它會重寫URLs"
     site_contact_username: "論壇給用戶自動發送消息時使用的用戶名；如果留空將使用預設的系統賬戶。"
     send_welcome_message: "給所有用戶發送快速開始指導的消息"
     suppress_reply_directly_below: "當帖子只有一個回覆時，不顯示帖子的回覆數量。"

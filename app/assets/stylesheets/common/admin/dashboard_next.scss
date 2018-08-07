@@ -31,7 +31,7 @@
     border-bottom: 10px solid $secondary;
   }
 
-  &.moderation .navigation-item.moderation {
+  &.dashboard-next-moderation .navigation-item.moderation {
     @include active-navigation-item;
   }
 
@@ -262,6 +262,10 @@
   }
 }
 
+.activity-metrics {
+  margin-bottom: 1em;
+}
+
 .user-metrics {
   display: flex;
   flex-wrap: wrap;
@@ -330,84 +334,6 @@
   }
 }
 
-.admin-report.activity-metrics {
-  table {
-    @media screen and (min-width: 400px) {
-      table-layout: auto;
-    }
-    tr th {
-      text-align: right;
-    }
-    .d-icon {
-      color: $primary-low-mid;
-      min-width: 14px;
-      text-align: center;
-    }
-    @media screen and (max-width: 400px) {
-      .d-icon {
-        display: none;
-      }
-      td.title {
-        padding: 8px 0 8px 4px;
-      }
-    }
-
-    tr {
-      td {
-        text-overflow: unset;
-        overflow: auto;
-        white-space: normal;
-      }
-
-      td:first-child {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: normal;
-      }
-    }
-
-    td {
-      text-align: center;
-      padding: 8px;
-    }
-
-    td.left {
-      text-align: left;
-    }
-
-    td.title {
-      text-align: left;
-    }
-
-    td.value {
-      text-align: right;
-      padding: 8px 21px 8px 8px; // accounting for negative right caret margin
-      &:nth-of-type(2) {
-        padding: 8px 12px 8px;
-      }
-      i {
-        margin-right: -12px; // align on caret
-        @media screen and (max-width: 650px) {
-          margin-right: -9px;
-        }
-      }
-
-      &.high-trending-up,
-      &.trending-up {
-        i {
-          color: $success;
-        }
-      }
-      &.high-trending-down,
-      &.trending-down {
-        i {
-          color: $danger;
-        }
-      }
-    }
-  }
-}
-
 .rtl .dashboard-next {
   .section-column {
     &:last-child {
@@ -418,17 +344,6 @@
     &:first-child {
       margin-left: 1em;
       margin-right: 0;
-    }
-  }
-
-  .dashboard-table table tbody tr {
-    td.title {
-      text-align: right;
-    }
-
-    td.value i {
-      margin-right: 0;
-      margin-left: -12px;
     }
   }
 

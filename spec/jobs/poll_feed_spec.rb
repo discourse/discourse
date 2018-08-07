@@ -136,5 +136,45 @@ describe Jobs::PollFeed do
 
       include_examples 'topic creation based on the the feed'
     end
+
+    context 'encodings' do
+      before do
+        SiteSetting.feed_polling_enabled = true
+        SiteSetting.feed_polling_url = 'https://blog.discourse.org/feed/atom/'
+        SiteSetting.embed_by_username = 'eviltrout'
+
+        stub_request(:head, SiteSetting.feed_polling_url)
+      end
+
+      it 'works with encodings other than UTF-8' do
+        stub_request(:get, SiteSetting.feed_polling_url).to_return(
+          body: file_from_fixtures('utf-16le-feed.rss', 'feed').read,
+          headers: { "Content-Type" => "application/rss+xml" }
+        )
+
+        expect { poller.poll_feed }.to change { Topic.count }.by(1)
+        expect(Topic.last.first_post.raw).to include('<p>This is the body &amp; content. </p>')
+      end
+
+      it 'respects the charset in the Content-Type header' do
+        stub_request(:get, SiteSetting.feed_polling_url).to_return(
+          body: file_from_fixtures('iso-8859-15-feed.rss', 'feed').read,
+          headers: { "Content-Type" => "application/rss+xml; charset=ISO-8859-15" }
+        )
+
+        expect { poller.poll_feed }.to change { Topic.count }.by(1)
+        expect(Topic.last.first_post.raw).to include('<p>This is the body &amp; content. 100€ </p>')
+      end
+
+      it 'works when the charset in the Content-Type header is unknown' do
+        stub_request(:get, SiteSetting.feed_polling_url).to_return(
+          body: file_from_fixtures('feed.rss', 'feed').read,
+          headers: { "Content-Type" => "application/rss+xml; charset=foo" }
+        )
+
+        expect { poller.poll_feed }.to change { Topic.count }.by(1)
+        expect(Topic.last.first_post.raw).to include('<p>This is the body &amp; content. </p>')
+      end
+    end
   end
 end

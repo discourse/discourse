@@ -125,7 +125,6 @@ es:
       user_left: "%{who} se eliminó a sí mismo de este mensaje %{when}"
       removed_user: "eliminó a %{who} %{when}"
       removed_group: "eliminó a %{who} %{when}"
-      autobumped: "tema reactivado automáticamente"
       autoclosed:
         enabled: 'cerrado %{when}'
         disabled: 'abierto %{when}'
@@ -669,7 +668,6 @@ es:
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
       second_factor_backup:
-        title: "Gestión de Código Two Factor Backup"
         regenerate: "Regenerar"
         disable: "Deshabilitar"
         enable: "Habilitar"
@@ -678,9 +676,6 @@ es:
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error copiando datos al portapapeles"
         remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
-        codes:
-          title: "Códigos de Respaldo"
-          description: "Cada línea es un código de respaldo diferente que solo se puede usar una vez. Se recomienda guardar este archivo en un lugar seguro."
       second_factor:
         title: "Autenticación Dos Factores"
         disable: "Inhabilitar Autenticación Dos Factores"

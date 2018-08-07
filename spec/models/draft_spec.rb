@@ -64,6 +64,34 @@ describe Draft do
     expect(Draft.count).to eq 0
   end
 
+  describe '#stream' do
+    let(:public_post) { Fabricate(:post) }
+    let(:public_topic) { public_post.topic }
+
+    let(:stream) do
+      Draft.stream(user: @user)
+    end
+
+    it "should include the correct number of drafts in the stream" do
+      Draft.set(@user, "test", 0, '{"reply":"hey.","action":"createTopic","title":"Hey"}')
+      Draft.set(@user, "test2", 0, '{"reply":"howdy"}')
+      expect(stream.count).to eq(2)
+    end
+
+    it "should include the right topic id in a draft reply in the stream" do
+      Draft.set(@user, "topic_#{public_topic.id}", 0, '{"reply":"hi"}')
+      draft_row = stream.first
+      expect(draft_row.topic_id).to eq(public_topic.id)
+    end
+
+    it "should include the right draft username in the stream" do
+      Draft.set(@user, "topic_#{public_topic.id}", 0, '{"reply":"hey"}')
+      draft_row = stream.first
+      expect(draft_row.draft_username).to eq(@user.username)
+    end
+
+  end
+
   context 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
       u = Fabricate(:user)

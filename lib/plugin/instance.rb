@@ -1,7 +1,7 @@
 require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
-require_dependency 'plugin/auth_provider'
+require_dependency 'auth'
 
 class Plugin::CustomEmoji
   def self.cache_key
@@ -393,38 +393,6 @@ class Plugin::Instance
     css = styles.join("\n")
     js = javascripts.join("\n")
 
-    auth_providers.each do |auth|
-
-      auth_json = auth.to_json
-      hash = Digest::SHA1.hexdigest(auth_json)
-      js << <<JS
-define("discourse/initializers/login-method-#{hash}",
-  ["discourse/models/login-method", "exports"],
-  function(module, __exports__) {
-    "use strict";
-    __exports__["default"] = {
-      name: "login-method-#{hash}",
-      after: "inject-objects",
-      initialize: function(container) {
-        if (Ember.testing) { return; }
-
-        var authOpts = #{auth_json};
-        authOpts.siteSettings = container.lookup('site-settings:main');
-        module.register(authOpts);
-      }
-    };
-  });
-JS
-
-      if auth.glyph
-        css << ".btn-social.#{auth.name}:before{ content: '#{auth.glyph}'; }\n"
-      end
-
-      if auth.background_color
-        css << ".btn-social.#{auth.name}{ background: #{auth.background_color}; }\n"
-      end
-    end
-
     # Generate an IIFE for the JS
     js = "(function(){#{js}})();" if js.present?
 
@@ -495,9 +463,9 @@ JS
   end
 
   def auth_provider(opts)
-    provider = Plugin::AuthProvider.new
+    provider = Auth::AuthProvider.new
 
-    Plugin::AuthProvider.auth_attributes.each do |sym|
+    Auth::AuthProvider.auth_attributes.each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
 
@@ -506,9 +474,9 @@ JS
         provider.authenticator.enabled?
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
-          Rails.logger.warn("Auth::Authenticator subclasses should define an `enabled?` function. Patching for now.")
+          Rails.logger.warn("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
           return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
-          Rails.logger.warn("Plugin::AuthProvider has not defined an enabled_setting. Defaulting to true.")
+          Rails.logger.warn("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
           true
         end
       end

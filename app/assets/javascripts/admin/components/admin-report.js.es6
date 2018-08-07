@@ -2,14 +2,15 @@ import Category from "discourse/models/category";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { ajax } from "discourse/lib/ajax";
-import Report from "admin/models/report";
+import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
 import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
 
 const TABLE_OPTIONS = {
   perPage: 8,
   total: true,
-  limit: 20
+  limit: 20,
+  formatNumbers: true
 };
 
 const CHART_OPTIONS = {};
@@ -50,9 +51,10 @@ export default Ember.Component.extend({
   reportOptions: null,
   forcedModes: null,
   showAllReportsLink: false,
+  filters: null,
   startDate: null,
   endDate: null,
-  categoryId: null,
+  category: null,
   groupId: null,
   showTrend: false,
   showHeader: true,
@@ -77,7 +79,7 @@ export default Ember.Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    const state = this.get("filteringState") || {};
+    const state = this.get("filters") || {};
     this.setProperties({
       category: Category.findById(state.categoryId),
       groupId: state.groupId,
@@ -109,7 +111,9 @@ export default Ember.Component.extend({
     unregisterTooltip($(".info[data-tooltip]"));
   },
 
-  showTimeoutError: Ember.computed.alias("model.timeout"),
+  showError: Ember.computed.or("showTimeoutError", "showExceptionError"),
+  showTimeoutError: Ember.computed.equal("model.error", "timeout"),
+  showExceptionError: Ember.computed.equal("model.error", "exception"),
 
   hasData: Ember.computed.notEmpty("model.data"),
 
@@ -128,6 +132,8 @@ export default Ember.Component.extend({
   showModes(displayedModesLength) {
     return displayedModesLength > 1;
   },
+
+  categoryId: Ember.computed.alias("category.id"),
 
   @computed("currentMode", "model.modes", "forcedModes")
   displayedModes(currentMode, reportModes, forcedModes) {
@@ -186,24 +192,20 @@ export default Ember.Component.extend({
   reportKey(dataSourceName, categoryId, groupId, startDate, endDate) {
     if (!dataSourceName || !startDate || !endDate) return null;
 
-    let reportKey = `reports:${dataSourceName}`;
-
-    if (categoryId && categoryId !== "all") {
-      reportKey += `:${categoryId}`;
-    } else {
-      reportKey += `:`;
-    }
-
-    reportKey += `:${startDate.replace(/-/g, "")}`;
-    reportKey += `:${endDate.replace(/-/g, "")}`;
-
-    if (groupId && groupId !== "all") {
-      reportKey += `:${groupId}`;
-    } else {
-      reportKey += `:`;
-    }
-
-    reportKey += `:`;
+    let reportKey = "reports:";
+    reportKey += [
+      dataSourceName,
+      categoryId,
+      startDate.replace(/-/g, ""),
+      endDate.replace(/-/g, ""),
+      groupId,
+      "[:prev_period]",
+      this.get("reportOptions.table.limit"),
+      SCHEMA_VERSION
+    ]
+      .filter(x => x)
+      .map(x => x.toString())
+      .join(":");
 
     return reportKey;
   },
@@ -211,7 +213,7 @@ export default Ember.Component.extend({
   actions: {
     refreshReport() {
       this.attrs.onRefresh({
-        categoryId: this.get("category.id"),
+        categoryId: this.get("categoryId"),
         groupId: this.get("groupId"),
         startDate: this.get("startDate"),
         endDate: this.get("endDate")
@@ -346,12 +348,12 @@ export default Ember.Component.extend({
     if (mode === "table") {
       const tableOptions = JSON.parse(JSON.stringify(TABLE_OPTIONS));
       return Ember.Object.create(
-        _.assign(tableOptions, this.get("reportOptions.table") || {})
+        Object.assign(tableOptions, this.get("reportOptions.table") || {})
       );
     } else {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
       return Ember.Object.create(
-        _.assign(chartOptions, this.get("reportOptions.chart") || {})
+        Object.assign(chartOptions, this.get("reportOptions.chart") || {})
       );
     }
   },

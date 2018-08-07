@@ -55,8 +55,8 @@
 }
 
 .menu-panel {
-  ul.menu-links li,
-  ul li.heading {
+  li,
+  li.heading {
     a {
       padding: 0.25em 0.5em;
       display: block;
@@ -81,6 +81,13 @@
     padding: 0.25em 0.5em;
     width: 50%;
     box-sizing: border-box;
+    a {
+      display: inline-flex;
+      &:hover,
+      &:focus {
+        background: transparent;
+      }
+    }
     .badge-notification {
       color: dark-light-choose($primary-medium, $secondary-medium);
       background-color: transparent;
@@ -95,6 +102,7 @@
       &.bar,
       &.bullet {
         color: $primary;
+        padding: 0 0 0 0.15em;
       }
       &.box {
         color: $secondary;

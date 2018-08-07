@@ -32,9 +32,11 @@ export default Ember.Component.extend(CleansUp, {
   topic: null,
   visible: null,
 
-  @computed("topic.created_at") createdDate: createdAt => new Date(createdAt),
+  @computed("topic.created_at")
+  createdDate: createdAt => new Date(createdAt),
 
-  @computed("topic.bumped_at") bumpedDate: bumpedAt => new Date(bumpedAt),
+  @computed("topic.bumped_at")
+  bumpedDate: bumpedAt => new Date(bumpedAt),
 
   @computed("createdDate", "bumpedDate")
   showTime(createdDate, bumpedDate) {

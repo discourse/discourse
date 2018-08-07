@@ -1,6 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
-import { isNumeric } from "discourse/lib/utilities";
 
 const PAGES_LIMIT = 8;
 
@@ -67,14 +66,16 @@ export default Ember.Component.extend({
         const computedLabel = label.compute(row);
         const value = computedLabel.value;
 
-        if (computedLabel.type === "link" || (value && !isNumeric(value))) {
-          return undefined;
+        if (!["seconds", "number", "percent"].includes(label.type)) {
+          return;
         } else {
-          return sum + value;
+          return sum + Math.round(value || 0);
         }
       };
 
-      totalsRow[label.property] = rows.reduce(reducer, 0);
+      const total = rows.reduce(reducer, 0);
+      totalsRow[label.mainProperty] =
+        label.type === "percent" ? Math.round(total / rows.length) : total;
     });
 
     return totalsRow;

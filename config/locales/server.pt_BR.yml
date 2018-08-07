@@ -694,7 +694,6 @@ pt_BR:
       self: "Você não tem nenhuma atividade ainda."
       others: "Nenhuma atividade."
     no_bookmarks:
-      self: "Você não tem posts favoritos, os posts de bookmarking permitem que você os acesse facilmente mais tarde."
       others: "Nenhum favorito."
     no_likes_given:
       self: "Você não curtiu nenhuma publicação."
@@ -702,6 +701,8 @@ pt_BR:
     no_replies:
       self: "Você não respondeu a nenhuma postagem."
       others: "Sem Respostas."
+    no_drafts:
+      others: "Você não tem permissão para ver rascunhos desse usuário."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -766,6 +767,7 @@ pt_BR:
     default:
       labels:
         count: Contagem
+        percent: Porcento
         day: Dia
     post_edits:
       title: "Publicar edições"
@@ -783,6 +785,7 @@ pt_BR:
         topic_count: Tópicos criados
         post_count: Publicações criadas
         pm_count: MPs criadas
+        revision_count: Revisões
     flags_status:
       title: " status de Sinalização"
       values:
@@ -1134,7 +1137,6 @@ pt_BR:
     post_menu: "Determine quais itens aparecem no menu de postagem e em qual ordem. Exemplo como | editar | sinalizar | excluir | compartilhar | marcador | resposta"
     post_menu_hidden_items: "Os items de menu a ser escondidos por padrão no menu de postagem, a menos que uma elipse de expansão seja clicada."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
-    track_external_right_clicks: "Monitorar cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
     site_contact_username: "Um nome de usuário válido de membro da equipe para enviar todas mensagens automáticas por ele. Se deixado em branco a conta padrão System será utilizada."
     send_welcome_message: "Enviar a todos novos usuários uma mensagem de boas vindas com um guia de início rápido."
     send_tl1_welcome_message: "Envie aos novos usuários do nível de confiança 1 uma mensagem de boas-vindas."
@@ -1192,8 +1194,6 @@ pt_BR:
     enable_google_oauth2_logins: "Ativar autentincação Google Oauth2. Esse é o método de autenticação que o Google atualmente suporta. Necessita de uma chave e chave secreta."
     google_oauth2_client_id: "Client ID da sua aplicação Google."
     google_oauth2_client_secret: "Client secret da sua aplicação Google."
-    google_oauth2_prompt: "Uma lista delimitada por espaço de valores de sequência que especifica se o servidor de autorização solicita ao usuário a reautenticação e o consentimento. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#prompt para os valores possíveis."
-    google_oauth2_hd: "Domínio do Google Apps Hospedado ao qual o login será limitado. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#hd-param para mais detalhes."
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "Chave do consumidor para autenticação do Twitter, registrada em https://apps.twitter.com/"
     twitter_consumer_secret: "Segredo do consumidor para autenticação do Twitter, registrado em https://apps.twitter.com/"
@@ -1467,6 +1467,7 @@ pt_BR:
     dominating_topic_minimum_percent: "Qual o percentual de postagens que um usuário precisa fazer em um tópico antes de ser relembrado sobre ser excessivamente dominante em um tópico."
     disable_avatar_education_message: "Desabilitar mensagem de educação para mudar de avatar."
     suppress_uncategorized_badge: "Não mostrar emblema para assuntos não categorizados em listas de tópicos"
+    header_dropdown_category_count: "Quantas categorias podem ser exibidas no menu suspenso do cabeçalho."
     permalink_normalizations: "Aplique o seguinte regex antes de combinar permalinks, por exemplo: /(topic.*)\\?.*/\\1 irá retirar as strings de consulta das rotas de tópicos. Formato é regex + string use \\ 1 etc. para acessar capturas"
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
@@ -1716,11 +1717,11 @@ pt_BR:
     second_factor_title: "Autenticação de dois fatores"
     second_factor_description: "Insira o código de autenticação necessário no seu aplicativo:"
     second_factor_backup_description: "Por favor, insira um dos seus códigos de backup:"
-    second_factor_backup_title: "Backup de dois fatores"
+    second_factor_backup_title: "Código de Backup de Dois Fatores"
     invalid_second_factor_code: "Código de autenticação inválido. Cada código só pode ser usado uma vez."
     second_factor_toggle:
-      totp: "Faça o login usando o aplicativo Authenticator"
-      backup_code: "Faça o login usando um código de backup"
+      totp: "Use um aplicativo autenticador"
+      backup_code: "Use um código de backup"
   user:
     deactivated: "Foi desativado devido a muitos e-mails devolvidos para '%{email}'."
     deactivated_by_staff: "Desativado pela equipe"
@@ -1990,6 +1991,21 @@ pt_BR:
         Vários membros da comunidade sinalizaram esta postagem antes que ela estivesse oculta. ** Como esta postagem foi ocultada mais de uma vez, sua postagem permanecerá oculta até que seja manipulada por um membro da equipe. **
 
         Para orientação adicional, por favor consulte as nossas [diretrizes da comunidade](%{base_url}/diretrizes).
+    flags_agreed_and_post_deleted:
+      title: "Postagem sinalizada removida pela equipe"
+      subject_template: "Postagem sinalizada removida pela equipe"
+      text_body_template: |
+        Olá,
+
+        Essa é uma mensagem automatizada de %{site_name} para que você saiba que sua postagem foi removida.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Este post foi sinalizado pela comunidade e um membro da equipe optou por removê-lo.
+
+        Por favor, reveja nossas [diretrizes da comunidade](%{base_url}/diretrizes) para detalhes.
     usage_tips:
       text_body_template: |
         Para algumas dicas rápidas sobre como começar como um novo usuário, [confira este post no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2240,29 +2256,87 @@ pt_BR:
     email_reject_topic_not_found:
       title: "E-mail Rejeitado por Tópico Não Encontrado"
       subject_template: "[%{email_prefix}] Problema de e-mail - Tópico não encontrado"
+      text_body_template: |
+        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
+
+        O tópico para o qual você está respondendo não existe mais - talvez tenha sido excluído? Se você acredita que isso é um erro, [contate um membro da equipe](%{base_url}/sobre).
     email_reject_topic_closed:
+      title: "E-mail Rejeitado por Tópico fechado"
       subject_template: "[%{email_prefix}] Problema de e-mail - Tópico fechado"
+      text_body_template: |
+        Desculpe, mas sua mensagem de e-mail para%{destination} (intitulada %{former_title}) não funcionou.
+
+        O tópico para o qual você está respondendo está atualmente fechado e não aceita mais respostas. Se você acredita que isso é um erro, [contate um membro da equipe](%{base_url}/sobre).
     email_reject_auto_generated:
+      title: "E-mail Rejeitado Gerado automaticamente"
       subject_template: "[%{email_prefix}] Problema de e-mail - Resposta gerada automaticamente"
+      text_body_template: |
+        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
+
+        Seu e-mail foi marcado como "gerado automaticamente", o que significa que foi criado automaticamente por um computador em vez de ser digitado por um ser humano; não podemos aceitar esses tipos de e-mails. Se você acredita que isso é um erro, [entre em contato com um funcionário](%{base_url}/sobre).
     email_reject_unrecognized_error:
+      title: "E-mail Rejeitado Erro não reconhecido"
       subject_template: "[%{email_prefix}] Problema de e-mail - erro não reconhecido"
+      text_body_template: |
+        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
+
+        Ocorreu um erro não reconhecido ao processar seu e-mail e não foi publicado. Você deve tentar novamente ou [contatar um membro da equipe](%{base_url}/sobre).
     email_error_notification:
+      title: "Notificação de erro por e-mail"
       subject_template: "[%{email_prefix}] Problema de e-mail - erro de autenticação POP"
+      text_body_template: |
+        Infelizmente, houve um erro de autenticação ao pesquisar e-mails do servidor POP.
+
+        Certifique-se de ter configurado corretamente as credenciais POP em [as configurações do site](%{base_url}/admin/site_settings/category/email).
+
+        Se houver uma interface de usuário da web para a conta de e-mail POP, talvez seja necessário fazer login na web e verificar suas configurações lá.
     too_many_spam_flags:
       title: "Muitas Sinalizações de Spam"
       subject_template: "Nova conta suspensa"
     too_many_tl3_flags:
       title: "Muitas Sinalizações TL3"
       subject_template: "Nova conta suspensa"
+      text_body_template: |
+        Olá,
+
+        Essa  é uma mensagem automatizada de  %{site_name} para informá-lo de que sua conta foi colocada em espera devido a um grande número de sinalizações da comunidade.
+
+        Como medida de precaução, sua nova conta foi silenciada para criar novas respostas ou tópicos até que um membro da equipe possa revisar sua conta. Pedimos desculpas pela inconveniência.
+
+        Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     silenced_by_staff:
       title: "Silenciado pelo Staff"
       subject_template: "Conta temporariamente em espera"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automatizada de %{site_name} para informá-lo de que sua conta foi temporariamente suspensa como medida de precaução.
+
+        Por favor, continue a navegar, mas você não poderá responder ou criar tópicos até que um [membro da equipe](%{base_url}/sobre) analisa seus posts mais recentes. Pedimos desculpas pela inconveniência.
+
+        Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     user_automatically_silenced:
       title: "Usuário Silenciado Automaticamente"
       subject_template: "Novo usuário %{username} silenciado por bandeiras da comunidade"
+      text_body_template: |
+        Está é uma mensagem automática.
+
+        O novo usuário [%{username}](%{user_url}) foi automaticamente silenciado porque vários usuários sinalizaram %{username}seus post(s).
+
+        Por favor [revise as sinalizações](%{base_url}/admin/flags). Se %{username} foi silenciada incorretamente na postagem, clique no botão de inatividade na [página de administração desse usuário](%{user_url}).
+
+        Este limite pode ser alterado através das configurações do site `silence_new_user`
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
       subject_template: "Novo usuário%{username} postagens bloqueadas devido a links repetidos"
+      text_body_template: |
+        Essa é uma mensagem automatizada.
+
+        O novo usuário [%{username}](%{user_url}) tentou criar vários posts com links para%{domains}, mas essas postagens foram bloqueadas para evitar spam. O usuário ainda pode criar novas postagens que não vinculam a %{domains}.
+
+        Por favor, [revise o usuário](%{user_url}).
+
+        Isso pode ser modificado através das configurações do site `newuser_spam_host_threshold` e` white_listed_spam_host_domains`.
     unsilenced:
       title: "Não silenciado"
       subject_template: "Conta não está mais em espera"
@@ -2295,29 +2369,68 @@ pt_BR:
     new_user_of_the_month:
       title: "Você é um novo usuário do mês!"
       subject_template: "Você é um novo usuário do mês!"
+      text_body_template: |
+        Parabéns, você ganhou o prêmio ** Novo Usuário do Mês para %{month_year}**. :troféu:
+
+        Este prêmio é concedido apenas a dois novos usuários por mês e ficará permanentemente visível na [página de crachás].(%{url}).
+
+        Você rapidamente se tornou um membro valioso da nossa comunidade. Obrigado por se juntar e manter o excelente trabalho!
     queued_posts_reminder:
       title: "Lembrete de postagens enfileiradas"
       subject_template:
         one: "1 post esperando para ser revisado"
         other: "%{count} postagens esperando para serem revisadas"
+      text_body_template: |
+        Olá,
+
+        Mensagens de novos usuários foram mantidas para moderação e estão atualmente aguardando revisão. [Aprovar ou rejeitá-los aqui](%{base_url}/postagens enfileiradas).
   unsubscribe_link: |
     Para cancelar a subscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
     Para cancelar a subscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Você está recebendo isso porque ativou o modo de lista de discussão.
+
+    Para cancelar a inscrição desses e-mails, clique [aqui](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Respostas Anteriores"
+    reached_limit:
+      one: "Atenção: enviamos no máximo 1 e-mail diário. Verifique o site para ver os que podem ser retidos."
+      other: "Atenção: enviamos no máximo %{count} e-mails diários. Verifique o site para ver os que podem ser retidos. PS obrigado por ser popular!"
     in_reply_to: "Em réplica a"
     unsubscribe:
       title: "Desinscrever"
       description: "Não está interessado em receber estes emails? Não tem problema! Clique em baixo para se desinscrever instantaneamente:"
     reply_by_email: "[Visite o Tópico](%{base_url}%{url}) ou responda este email para responder."
+    reply_by_email_pm: "[Visite a mensagem](%{base_url}%{url}) ou responda a este e-mail para responder a %{participants}."
     only_reply_by_email: "Responda a este email para responder."
     only_reply_by_email_pm: "Responda a este e-mail para responder a %{participants}."
     visit_link_to_respond: "[Visite o Tópico](%{base_url}%{url}) para responder."
+    visit_link_to_respond_pm: "[Visite a Mensagem](%{base_url}%{url}) para responder a %{participants}."
     posted_by: "Postado por %{username} em %{post_date}"
     pm_participants: "Participantes: %{participants}"
+    invited_group_to_private_message_body: |
+      %{username} convidou @%{group_name} para uma mensagem
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} -- %{site_description}
+    invited_to_private_message_body: |
+      %{username} convidou você para uma mensagem
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} -- %{site_description}
     invited_to_topic_body: |
       %{username} te convidou para uma discussão
 
@@ -2501,9 +2614,23 @@ pt_BR:
     account_exists:
       title: "essa conta já existe"
       subject_template: "[%{email_prefix}] essa conta já existe"
+      text_body_template: |
+        Você acabou de tentar criar uma conta em %{site_name}, ou tentou alterar o e-mail de uma conta para %{email}. No entanto, já existe uma conta para %{email}.
+
+        Se você esqueceu sua senha, [redefina agora](%{base_url}/password-reset).
+
+        Se você não tentou criar uma conta para %{email} ou altere seu endereço de e-mail, não se preocupe. Você pode ignorar essa mensagem com segurança.
+
+        Se você tiver alguma dúvida, [entre em contato com nossa equipe amigável](%{base_url}/sobre).
     account_second_factor_disabled:
       title: "Autenticação de dois fatores desativada"
       subject_template: "[%{email_prefix}] Autenticação de dois fatores desativada"
+      text_body_template: |
+        A autenticação de dois fatores foi desativada na sua conta em %{site_name}. Agora você pode fazer o login apenas com sua senha; um código de autenticação adicional não é mais necessário.
+
+        Se você não optou por desativar a autenticação de dois fatores, alguém pode ter comprometido sua conta.
+
+        Se você tiver alguma dúvida, [entre em contato com nossa equipe amigável](%{base_url}/sobre).
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"
@@ -2519,6 +2646,7 @@ pt_BR:
       popular_posts: "Publicações Populares"
       more_new: "Novo para você"
       subject_template: "[%{email_prefix}] Resumo"
+      unsubscribe: "Este resumo é enviado de %{site_link} quando não te vemos há algum tempo. Mude%{email_preferences_link}, ou%{unsubscribe_link} para cancelar a inscrição."
       your_email_settings: "suas configurações de e-mail"
       click_here: "clique aqui"
       from: "resumo do site %{site_name} "
@@ -2526,14 +2654,37 @@ pt_BR:
     forgot_password:
       title: "Esqueceu a senha"
       subject_template: "[%{email_prefix}] Resetar a senha"
+      text_body_template: |
+        Alguém pediu para redefinir sua senha [%{site_name}](%{base_url}).
+
+        Se não foi você, você pode ignorar com segurança este e-mail.
+
+        Clique no link a seguir para escolher uma nova senha:
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Faça o login via link"
       subject_template: "[%{email_prefix}] Faça o login via link"
+      text_body_template: |
+        Aqui está o seu link para entrar em [%{site_name}](%{base_url}).
+
+        Se você não solicitou este link, pode ignorar esse e-mail com segurança.
+
+        Clique no link a seguir para fazer login:
+        %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Configurar senha"
       subject_template: "[%{email_prefix}] Configurar senha"
+      text_body_template: "Alguém pediu para adicionar uma senha à sua conta em [%{site_name}](%{base_url}). \nComo alternativa, você pode fazer login usando qualquer serviço online suportado (Google, Facebook, etc.) associado a esse endereço de e-mail validado.\n\nSe você não fez essa solicitação, pode ignorar esse e-mail com segurança.\n\nClique no link a seguir para escolher uma senha:\n%{base_url}/u/password-reset/%{email_token}\n"
     admin_login:
+      title: "Login de administrador"
       subject_template: "[%{email_prefix}] Login"
+      text_body_template: |
+        Alguém pediu para fazer login na sua conta [%{site_name}](%{base_url}).
+
+        Se você não fez essa solicitação, pode ignorar esse e-mail com segurança.
+
+        Clique no link a seguir para fazer o login:
+        %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "Conta Criada"
       subject_template: "[%{email_prefix}] Sua Nova Conta"
@@ -2545,10 +2696,17 @@ pt_BR:
     confirm_new_email:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
+      text_body_template: |
+        Confirme seu novo endereço de e-mail para %{site_name} clicando no seguinte link:
+
+        %{base_url}/u/authorize-email/%{email_token}
     confirm_old_email:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
+      text_body_template: "Antes que possamos alterar seu endereço de e-mail, precisamos que você confirme que você controla a conta de e-mail atual. \nDepois de concluir esta etapa, você terá que confirmar\no novo endereço de e-mail.\n\nConfirme seu endereço de e-mail atual para %{site_name} clicando no seguinte link:\n\n%{base_url}/u/authorize-email/%{email_token}\n"
     notify_old_email:
+      title: "Notificar e-mail antigo"
+      subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"
       text_body_template: |
         Esta é uma mensagem automática para lhe avisar que seu endereço de email para
         %{site_name} foi modificado. Se isso foi um erro, por favor entre em contato
@@ -2558,10 +2716,33 @@ pt_BR:
 
         %{new_email}
     signup_after_approval:
+      title: "Inscrição Após Aprovação"
       subject_template: "Você foi aprovado no %{site_name}!"
+      text_body_template: |
+        Bem-vindo ao %{site_name}!
+
+        Um membro da equipe aprovou sua conta em %{site_name}.
+
+        Agora você pode acessar sua nova conta fazendo login em:
+        %{base_url}
+
+        Se o link acima não for clicável, tente copiá-lo e colá-lo na barra de endereços do seu navegador da Web..
+
+        %{new_user_tips}
+
+        Nós acreditamos em [comportamento comunitário civilizado](%{base_url}/diretrizes) em todos os momentos.
+
+        Aproveite sua estadia!
     signup:
       title: "Inscrever-se"
       subject_template: "[%{email_prefix}] Confirme sua nova conta"
+      text_body_template: |
+        Bem-vindo(a)  %{site_name}!
+
+        Clique no link a seguir para confirmar e ativar sua nova conta:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Se o link acima não for clicável, tente copiá-lo e colá-lo na barra de endereços do seu navegador da Web..
   page_not_found:
     title: "Oops! Essa página não existe ou é privada."
     popular_topics: "Popular"
@@ -2572,6 +2753,10 @@ pt_BR:
   offline:
     title: "Não é possível carregar o aplicativo"
     offline_page_message: "Parece que você está off-line! Por favor, verifique sua conexão de rede e tente novamente."
+  login_required:
+    welcome_message: |
+      ## [Bem-vindo à %{title}](#bem-vindo)
+      Uma conta é necessária. Por favor, crie uma conta ou faça o login para continuar.
   terms_of_service:
     title: "Termos de Serviço"
     signup_form_message: 'Eu li e aceito os <a href="/tos" target="_blank">Termos de Serviço</ a>.'
@@ -2589,6 +2774,7 @@ pt_BR:
       too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB)."
     images:
       too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor a redimensione e tente novamente."
+      larger_than_x_megapixels: "Desculpe, a imagem que você está tentando enviar é muito grande (a dimensão máxima é %{max_image_megapixels}-megapixels), redimensione e tente novamente."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
     placeholders:
       too_large: "(imagem mais larga que%{max_size_kb}KB)"
@@ -2597,11 +2783,44 @@ pt_BR:
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico, e um outro novo usuário no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
     spam_hosts: "Esse novo usuário tentou criar múltiplas publicações com links para o mesmo domínio (%{domain}). Veja a configuração <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> do site."
+  skipped_email_log:
+    exceeded_emails_limit: "Excedido max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Excedido bounce_score_threshold"
+    mailing_list_no_echo_mode: "Notificações da lista de discussão desativadas para as próprias postagens do usuário"
+    user_email_no_user: "Não é possível encontrar usuário com id %{user_id}"
+    user_email_post_not_found: "Não é possível encontrar uma postagem com o ID%{post_id}"
+    user_email_anonymous_user: "Usuário é anônimo"
+    user_email_user_suspended_not_pm: "Usuário está suspenso, não é uma mensagem"
+    user_email_seen_recently: "Usuário foi visto recentemente"
+    user_email_notification_already_read: "A notificação deste e-mail já foi lida"
+    user_email_notification_topic_nil: "post.topic é nulo"
+    user_email_post_user_deleted: "O usuário da postagem foi excluído."
+    user_email_post_deleted: "post foi excluído pelo autor"
+    user_email_user_suspended: "usuário foi suspenso"
+    user_email_already_read: "usuário já leu este post"
+    sender_message_blank: "mensagem está em branco"
+    sender_message_to_blank: "message.to está em branco"
+    sender_text_part_body_blank: "text_part.body está em branco"
+    sender_text_body_blank: "o corpo está em branco"
   color_schemes:
     base_theme_name: "Base"
+    light: "Esquema de Luz"
     dark: "Esquema Escuro"
+    neutral: "Esquema Neutro"
+    grey_amber: "Esquema Âmbar Cinzento"
+    shades_of_blue: "Sombras do Esquema Azul"
+    latte: "Esquema Latte"
+    summer: "Esquema De Verão"
+    dark_rose: "Esquema de Rosa Escura"
+    default_theme_name: "Claro"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
+    neutral_theme_name: "Neutro"
+    grey_amber_theme_name: "Âmbar cinzento"
+    shades_of_blue_theme_name: "Tons de azul"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Verão"
+    dark_rose_theme_name: "Rosa Escura"
   about: "Sobre"
   guidelines: "Diretrizes"
   privacy: "Privacidade"
@@ -2613,32 +2832,265 @@ pt_BR:
     Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name}
   guidelines_topic:
     title: "Perguntas frequentes/Diretrizes"
+    body: "<a name=\"civilized\"></a>\n\n## [Este é um lugar civilizado para discussão pública] (#civilizado)\n\nPor favor, trate este fórum de discussão com o mesmo respeito que você faria com um parque público. Nós também somos um recurso da comunidade compartilhada & mdash; um lugar para compartilhar habilidades, conhecimento e interesses por meio de conversas contínuas.\n\nEssas não são regras rígidas e rápidas, meras diretrizes para ajudar o julgamento humano de nossa comunidade e manter esse lugar limpo e bem iluminado para o discurso público civilizado.\n\n<a name=\"improve\"></a>\n\n## [Melhore a discussão] (#melhorar) \n\nAjude-nos a fazer deste um ótimo lugar para discussão, sempre trabalhando para melhorar a discussão de alguma forma, por menor que seja. Se você não tiver certeza de que sua postagem será adicionada à conversa, pense no que deseja dizer e tente novamente mais tarde.\n\nOs tópicos discutidos aqui são importantes para nós e queremos que você aja como se eles também fossem importantes para você. Seja respeitoso com os tópicos e as pessoas que os discutem, mesmo que você discorde de algo do que está sendo dito.\n\nUma maneira de melhorar a discussão é descobrindo aquelas que já estão acontecendo. Passe algum tempo navegando pelos tópicos aqui antes de responder ou iniciar o seu, e você terá mais chances de conhecer outras pessoas que compartilham seus interesses.\n\n<a name=\"agreeable\"></a>\n\n## [Seja agradável, mesmo quando você discordar] (#agradável)\n\nVocê pode querer responder a algo discordando dele. Isso é bom. Mas lembre-se de _criticizar idéias, não pessoas_. Por favor, evite:\n\n*   Xingamento\n*   Ataques ad hominem\n*   Respondendo ao tom de uma postagem em vez de seu conteúdo real\n*   Contradição do joelho-empurrão\n\nEm vez disso, forneça contra-argumentos fundamentados que melhorem a conversa.\n\n<a name=\"participate\"></a>\n\n## [Sua participação conta](#participe)\n\nAs conversas que temos aqui dão o tom para cada nova chegada. Ajude-nos a influenciar o futuro desta comunidade escolhendo participar de discussões que tornem este fórum um lugar interessante para ser & mdash; e evitando aqueles que não o fazem.\n\nO discurso fornece ferramentas que permitem à comunidade identificar coletivamente as melhores (e piores) contribuições: favoritos, marcações, sinalizações, respostas, edições e assim por diante. Use essas ferramentas para melhorar sua própria experiência e a das outras pessoas também.\n\nVamos deixar nossa comunidade melhor do que a encontramos.\n\n<a name=\"flag-problems\"></a>\n\n## [Se você ver um problema, sinalize-o] (#SinalizçãoDeProblemas)\n\nModeradores têm autoridade especial; eles são responsáveis ​​por este fórum. Mas você também. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas zeladores ou policiais.\n\nQuando você vir um mau comportamento, não responda. Ele encoraja o mau comportamento reconhecendo-o, consome sua energia e desperdiça o tempo de todos. _Apenas sinalize_ Se houver sinalizadores suficientes, ações serão tomadas, automaticamente ou por intervenção do moderador.\n\nPara manter nossa comunidade, os moderadores reservam-se o direito de remover qualquer conteúdo e qualquer conta de usuário por qualquer motivo a qualquer momento. Os moderadores não visualizam novas postagens; os moderadores e os operadores do site não se responsabilizam por nenhum conteúdo postado pela comunidade.\n\n<a name=\"be-civil\"></a>\n\n## [Seja sempre civil] (#seja civil)\n\nNada sabota uma conversa saudável como grosseria:\n\n*   Seja civilizado. Não poste nada que uma pessoa razoável consideraria ofensiva, abusiva ou de incitação ao ódio.\n*   Mantenha-se limpo. Não publique nada de obsceno ou sexualmente explícito.\n*   Respeitar-se mutuamente. Não assedie nem lamente ninguém, personifique pessoas ou exponha suas informações pessoais.\n*   Respeite o nosso fórum. Não publique spam nem ofusque o fórum.\n\nEstes não são termos concretos com definições precisas & mdash; evite até mesmo a aparência de qualquer uma dessas coisas. Se você não tiver certeza, pergunte-se como se sentiria se sua publicação fosse publicada na primeira página do New York Times..\n\nEste é um fórum público e os mecanismos de pesquisa indexam essas discussões. Mantenha o idioma, links e imagens seguros para familiares e amigos.\n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o arrumado] (#manter-arrumado)\n\nFaça o esforço para colocar as coisas no lugar certo, para que possamos passar mais tempo discutindo e menos limpando, assim:\n\n*   Não comece um tópico na categoria errada.\n*   Não publique a mesma coisa em vários tópicos.\n*   Não publique respostas sem conteúdo.\n*   Não desvie um tópico alterando-o no meio do caminho.\n*   Não assine suas postagens & mdash; cada post tem suas informações de perfil anexadas.\n\nEm vez de postar \"+1\" ou \"Concordo\", use o botão Curtir. Em vez de usar um tópico existente em uma direção radicalmente diferente, use Responder como um tópico vinculado.\n\n<a name=\"stealing\"></a>\n\n## [Post apenas seu próprio material] (#roubar)\n\nVocê não pode postar nada digital que pertença a outra pessoa sem permissão. Você não pode postar descrições, links ou métodos para roubar propriedade intelectual de alguém (software, vídeo, áudio, imagens) ou violar qualquer outra lei.\n\n<a name=\"power\"></a>\n\n## [Empoderado por você] (#poder)\n\nEste site é operado por sua [equipe local amigável] (/ sobre) e * você *, a comunidade. Se você tiver outras dúvidas sobre como as coisas devem funcionar aqui, abra um novo tópico na [categoria de feedback do site] (/ c / feedback do site) e vamos discutir! Se houver um problema crítico ou urgente que não possa ser tratado por um meta tópico ou sinalizador, entre em contato conosco através da [página pessoal] (/ about).\n\n<a name=\"tos\"></a>\n\n## [Termos de Serviço] (#tds)\n\nSim, legalês é chato, mas devemos nos proteger & ndash; e por extensão, você e seus dados & ndash; contra pessoas hostis. Temos um [Termos de Serviço] (/ tos) descrevendo seu (e nosso) comportamento e direitos relacionados a conteúdo, privacidade e leis. Para usar este serviço, você deve concordar em cumprir nossos [TOS] (/ tos).\n"
   tos_topic:
     title: "Termos de Serviço"
+    body: |
+      Os seguintes termos e condições regem todo o uso do %{company_domain} site e todo o conteúdo, serviços e produtos disponíveis no site ou através dele, incluindo, mas não se limitando a, %{company_domain} Software do Fórum, %{company_domain} Fóruns de Suporte e o %{company_domain}Serviço de hospedagem ("Hospedagem"), (em conjunto, o site). O site é de propriedade e operado por %{company_full_name} ("%{company_name}"). O Site é oferecido sujeito a sua aceitação sem modificação de todos os termos e condições aqui contidos e todas as outras regras operacionais, políticas (incluindo, sem limitação, %{company_domain} [Política de Privacidade] (/ privacidade) e [Diretrizes da Comunidade] (/ faq) e procedimentos que podem ser publicados de tempos em tempos neste Site por %{company_name} (coletivamente, o "Acordo").
+
+      Por favor, leia este Acordo cuidadosamente antes de acessar ou usar o Site. Ao acessar ou usar qualquer parte do site, você concorda em ficar vinculado aos termos e condições deste contrato. Se você não concordar com todos os termos e condições deste contrato, você não poderá acessar o site ou usar quaisquer serviços. Se estes termos e condições forem considerados uma oferta por %{company_name}, aceitação é expressamente limitada a estes termos. O site está disponível apenas para indivíduos com pelo menos 13 anos de idade.
+      <a name="1"></a>
+
+      ## [1. Sua %{company_domain} Conta](#1)
+
+      Se você criar uma conta no site, será responsável por manter a segurança da sua conta e será totalmente responsável por todas as atividades que ocorram na conta. Você deve notificar imediatamente %{company_name} de qualquer uso não autorizado de sua conta ou qualquer outra violação de segurança. %{company_name} não será responsável por quaisquer atos ou omissões por você, incluindo quaisquer danos de qualquer natureza incorridos como resultado de tais atos ou omissões.
+
+      <a name="2"></a>
+
+      ## [2. Responsabilidade dos Colaboradores](#2)
+
+      Se você postar material no site, postar links no site, ou de outra forma fazer (ou permitir que qualquer terceiro faça) material disponível por meio do site (qualquer material, "conteúdo"), você é inteiramente responsável pelo conteúdo e qualquer dano resultante desse Conteúdo. Esse é o caso, independentemente de o Conteúdo em questão constituir texto, gráficos, arquivo de áudio ou software de computador. Ao disponibilizar o Conteúdo, você representa e garante que:
+
+      *   o download, a cópia e o uso do Conteúdo não infringirão os direitos de propriedade, incluindo, mas não se limitando aos direitos autorais, patente, marca registrada ou direitos de segredo comercial, de qualquer terceiro;
+      *   se o seu empregador tiver direitos de propriedade intelectual que você criou, você (i) recebeu permissão do seu empregador para publicar ou disponibilizar o Conteúdo, incluindo, mas não se limitando a, qualquer software, ou (ii) garantiu ao seu empregador uma isenção de todos os direitos no ou para o Conteúdo;
+      *   você cumpriu integralmente quaisquer licenças de terceiros relacionadas ao Conteúdo e fez todos os esforços necessários para transmitir aos usuários finais todos os termos necessários;
+      *   o Conteúdo não contém ou instala vírus, worms, malware, cavalos de Tróia ou outro conteúdo nocivo ou destrutivo;
+      *   o Conteúdo não é spam, não é gerado por computador ou aleatoriamente e não contém conteúdo comercial indesejado ou antiético destinado a direcionar tráfego para sites de terceiros ou aumentar a classificação dos mecanismos de pesquisa de sites de terceiros ou a outros atos ilícitos (como como phishing) ou enganar os destinatários quanto à origem do material (como spoofing);
+      *   o Conteúdo não é pornográfico, não contém ameaças ou incita a violência e não viola os direitos de privacidade ou publicidade de terceiros;
+      *  seu conteúdo não está sendo anunciado por meio de mensagens eletrônicas indesejadas, como links de spam em grupos de notícias, listas de e-mail, blogs e sites da Web, e métodos promocionais não solicitados semelhantes;
+      *   seu conteúdo não é nomeado de uma maneira que induza seus leitores a pensar que você é outra pessoa ou empresa; e
+      *   você tem, no caso de Conteúdo que inclui código de computador, categorizou com precisão e / ou descreveu o tipo, natureza, usos e efeitos dos materiais, se solicitado a fazê-lo por%{company_name} ou de outra maneira.
+
+      <a name="3"></a>
+
+      ## [3. Licenças de Conteúdo do Usuárioe](#3)
+
+      Contribuições do usuário são licenciadas sob uma [Licença Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported] (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem limitar nenhuma dessas representações ou garantias, %{company_name} tem o direito (embora não a obrigação) de, em descrição de %{company_name} (i) recusar ou remover qualquer conteúdo que, em opinião razoável de%{company_name}, viola %{company_name} de qualquer forma prejudicial ou censurável, ou (ii) encerrar ou negar acesso e uso do Site a qualquer indivíduo ou entidade por qualquer motivo,  em critério exclusivo de %{company_name}. %{company_name} Não terá obrigação de fornecer um reembolso de quaisquer valores pagos anteriormente.
+
+
+      <a name="4"></a>
+
+      ## [4. Pagamento e Renovação](#4)
+
+      ### Termos Geral
+
+      Serviços pagos opcionais ou upgrades podem estar disponíveis no site. Ao utilizar um serviço pago ou upgrade opcional, você concorda em pagar %{company_name} as taxas de assinatura mensais ou anuais indicadas. Os pagamentos serão cobrados em uma base pré-paga no dia em que você começar a utilizar o serviço ou upgrade e cobrirá o uso desse serviço ou upgrade por um período de assinatura mensal ou anual, conforme indicado. Estas taxas não são reembolsáveis.
+
+      ### Renovação automática
+
+      A menos que você notifique %{company_name} antes do final do período de assinatura aplicável que você deseja cancelar um serviço ou atualização, sua assinatura será renovada automaticamente e você nos autoriza a cobrar a taxa de assinatura anual ou mensal aplicável (assim como todos os impostos) usando qualquer cartão de crédito ou outro mecanismo de pagamento que temos registrado para você. As assinaturas podem ser canceladas a qualquer momento.
+
+      <a name="5"></a>
+
+      ## [5. Serviços](#5)
+
+      ### Hospedagem, Serviços de Suporte
+
+      Os serviços opcionais de hospedagem e suporte podem ser fornecidos por %{company_name} nos termos e condições de cada serviço. Ao se inscrever para uma conta de serviços de hospedagem / suporte ou suporte, você concorda em obedecer a esses termos e condições.
+
+      ### HTTPS
+
+      Oferecemos HTTPS como um complemento pago. Ao inscrever-se e usar um domínio personalizado em %{company_domain}, você nos autoriza a agir em nome do registrante do nome de domínio (solicitando os certificados necessários, por exemplo) com o único propósito de fornecer HTTPS em seu site.
+
+      ### Empresa
+
+      Os serviços de hospedagem empresarial são fornecidos por %{company_name} nos termos e condições de cada serviço, que são determinados por um contrato específico do cliente. Ao inscrever-se em uma conta de hospedagem corporativa, você concorda em obedecer a esses termos e condições.
+
+      <a name="6"></a>
+
+      ## [6. Responsabilidade dos visitantes do site](#6)
+
+      %{company_name} não analisou e não pode revisar todo o material, incluindo software de computador, publicado no site e, portanto, não pode ser responsável pelo conteúdo, uso ou efeitos do material. Ao operar o site, %{company_name} não representa ou implica que endossa o material ali publicado, ou que acredita que esse material seja preciso, útil ou não prejudicial. Você é responsável por tomar as precauções necessárias para proteger a si e aos seus sistemas de computador contra vírus, worms, cavalos de Tróia e outros conteúdos prejudiciais ou destrutivos. O site pode conter conteúdo ofensivo, indecente ou censurável, bem como conteúdo que contenha imprecisões técnicas, erros tipográficos e outros erros. O Site também pode conter material que viola os direitos de privacidade ou publicidade, ou infringe a propriedade intelectual e outros direitos de propriedade de terceiros, ou o download, cópia ou uso dos mesmos está sujeito a termos e condições adicionais, declarados ou não declarados. %{company_name} se exime de qualquer responsabilidade por qualquer dano resultante do uso pelos visitantes do site, ou de qualquer download por aqueles visitantes de conteúdo lá publicado.
+
+      <a name="7"></a>
+
+      ## [7. Conteúdo publicado em outros sites](#7)
+
+      Não revisamos e não podemos revisar todo o material, incluindo software de computador, disponibilizado através dos sites e páginas da Web para os quais %{company_domain} links, e esse link para %{company_domain}. %{company_name} não tem nenhum controle sobre esses não-%{company_domain} sites e páginas da Web, e não é responsável por seu conteúdo ou seu uso. Ligando a um não-%{company_domain} website ou páginas da web, %{company_name} não representa ou implica que endossa tal site ou página da web. Você é responsável por tomar as precauções necessárias para proteger a si e seus sistemas de computador contra vírus, worms, cavalos de Tróia e outros conteúdos prejudiciais ou destrutivos. %{company_name} se exime de qualquer responsabilidade por qualquer dano resultante do uso de-%{company_domain} sites e páginas da web.
+
+      <a name="8"></a>
+
+      ## [8. Violação de direitos autorais e política de DMCA](#8)
+
+      Como %{company_name} pede aos outros que respeitem os seus direitos de propriedade intelectual, respeita os direitos de propriedade intelectual de terceiros. Se você acredita que o material localizado ou vinculado por %{company_domain} viola os seus direitos de autor e, se este website residir nos EUA, deverá notificar %{company_name} em concordância com a  Lei [Digital Millennium Copyright Act] (http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") de %{company_name} . %{company_name} responderá a todos esses avisos, inclusive conforme necessário ou apropriado, removendo o material infrator ou desativando todos os links para o material infrator. %{company_name} terminará o acesso de um visitante e o uso do Website se, em circunstâncias apropriadas, o visitante estiver determinado a ser um infrator reincidente dos direitos autorais ou outros direitos de propriedade intelectual de %{company_name} ou outros. No caso de tal rescisão, %{company_name} não terá obrigação de fornecer um reembolso de quaisquer valores pagos anteriormente %{company_name}.
+
+      <a name="9"></a>
+
+      ## [9. Propriedade intelectual](#9)
+
+      Este Contrato não transfere de %{company_name} para você qualquer %{company_name} ou propriedade intelectual de terceiros, e todos os direitos, títulos e interesses relativos a essa propriedade permanecerão (entre as partes) unicamente com %{company_name}. %{company_name}, %{company_domain}, o %{company_domain} logotipo, e todas as outras marcas registradas, marcas de serviço, gráficos e logotipos usados ​​em conexão com %{company_domain}, ou o site são marcas comerciais ou marcas registradas da%{company_name} ou os licenciadores de%{company_name}. Outras marcas comerciais, marcas de serviço, gráficos e logotipos utilizados em conexão com o site podem ser marcas registradas de terceiros. Seu uso do site não lhe concede nenhum direito ou licença para reproduzir ou usar qualquer %{company_name} ou marcas registradas de terceiros.
+
+      <a name="10"></a>
+
+      ## [10. Atribuição](#10)
+
+      %{company_name} reserva-se o direito de exibir links de atribuição como "Distribuído por%{company_domain},’ Autor do tema e atribuição de fonte em seu rodapé de conteúdo.
+
+      <a name="11"></a>
+
+      ## [11. Alterar](#11)
+
+      %{company_name} se reserva o direito, a seu exclusivo critério, de modificar ou substituir qualquer parte deste Contrato. É de sua responsabilidade verificar este Contrato periodicamente quanto a mudanças. Seu uso continuado ou acesso ao site após a publicação de quaisquer alterações a este Contrato constitui aceitação dessas alterações. %{company_name} poderá também, no futuro, oferecer novos serviços e / ou recursos através do Site (incluindo o lançamento de novas ferramentas e recursos). Tais novos recursos e / ou serviços estarão sujeitos aos termos e condições deste Contrato.
+
+      <a name="12"></a>
+
+      ## [12. Terminação](#12)
+
+      %{company_name} pode rescindir o seu acesso a toda ou qualquer parte do site a qualquer momento, com ou sem motivo, com ou sem aviso prévio, com efeito imediato. Se você deseja rescindir este Acordo ou sua %{company_domain} conta (se você tiver uma), você pode simplesmente interromper o uso do site. Todas as disposições deste Contrato, que por sua natureza devem sobreviver ao término, sobreviverão à rescisão, incluindo, sem limitação, disposições de propriedade, isenções de garantia, indenização e limitações de responsabilidade..
+
+      <a name="13"></a>
+
+      ## [13. Isenção de Garantias](#13)
+
+      O site é fornecido "como está". %{company_name} e seus fornecedores e licenciantes renunciam todas as garantias de qualquer tipo, expressas ou implícitas, incluindo, sem limitação, as garantias de comercialização, adequação a uma finalidade específica e não violação. Nem %{company_name} nem seus fornecedores e licenciadores, faz qualquer garantia de que o site estará livre de erros ou que o acesso a ele será contínuo ou ininterrupto. Se você está realmente lendo isso, aqui está [um prazer] (http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html) . Você entende que você faz o download ou obtém conteúdo ou serviços através do Site por sua própria conta e risco.
+
+      <a name="14"></a>
+
+      ## [14. Limitação de responsabilidade](#14)
+
+      Em nenhum caso %{company_name}, ou seus fornecedores ou licenciadores, devem ser responsáveis ​​com relação a qualquer assunto deste contrato sob qualquer contrato, negligência, responsabilidade estrita ou outra teoria legal ou eqüitativa para: (i) quaisquer danos especiais, incidentais ou consequências; (ii) o custo de aquisição de produtos ou serviços substitutos; (iii) por interrupção de uso ou perda ou corrupção de dados; ou (iv) por quaisquer valores que excedam as taxas pagas por você para %{company_name} sob este contrato durante o período de 12 (doze) meses antes da causa da ação. %{company_name} não terá nenhuma responsabilidade por qualquer falha ou atraso devido a questões além de seu controle razoável. O acima exposto não se aplica na medida proibida pela lei aplicável.
+
+      <a name="15"></a>
+
+      ## [15. General Representation and Warranty](#15)
+
+      Você declara e garante que (i) seu uso do Website estará em estrita conformidade com o %{company_name} [Política de Privacidade] (/ privacidade), [Diretrizes da comunidade] (/ diretrizes), com este Contrato e com todas as leis e regulamentações aplicáveis ​​(incluindo, sem limitação, quaisquer leis ou regulamentos locais em seu país, estado, cidade ou outra área governamental, em relação à conduta on-line e conteúdo aceitável, e incluindo todas as leis aplicáveis ​​relativas à transmissão de dados técnicos exportados do país em que este site reside ou do país em que você reside) e (ii) seu uso do Site não infringirá ou utilizará indevidamente direitos de propriedade intelectual de terceiros.
+
+      <a name="16"></a>
+
+      ## [16. Indemnification](#16)
+
+      Você concorda em indenizar e inocentar %{company_name}, seus contratados e seus licenciadores e seus respectivos diretores, executivos, funcionários e agentes de e contra todas e quaisquer reivindicações e despesas, incluindo honorários advocatícios, decorrentes do uso do Website, incluindo, mas não se limitando à sua violação deste Acordo.
+
+      <a name="17"></a>
+
+      ## [17. Diversos](#17)
+
+      Este Contrato constitui o acordo integral entre %{company_name} e você sobre o assunto em questão, e eles só podem ser modificados por uma emenda escrita assinada por um executivo autorizado da %{company_name}, ou pela postagem por %{company_name} de uma versão revisada. Exceto na medida em que a lei aplicável, caso exista, em contrário, este Contrato, qualquer acesso ou uso do Site será regido pelas leis do estado da Califórnia, EUA, excluindo o conflito de provisões legais e o local adequado para quaisquer disputas decorrentes de ou relacionadas a qualquer um dos mesmos serão os tribunais estaduais e federais localizados no Condado de San Francisco, Califórnia. Exceto por reivindicações por medidas cautelares ou equitativas ou reclamações referentes a direitos de propriedade intelectual (que podem ser trazidas em qualquer tribunal competente sem a publicação de uma fiança), qualquer disputa que surja sob este Acordo será finalmente resolvida de acordo com as Regras de Arbitragem Abrangentes da Arbitragem Judicial e Serviço de Mediação, Inc. (“JAMS”) por três árbitros indicados de acordo com tais Regras. A arbitragem será realizada em São Francisco, Califórnia, no idioma inglês, e a decisão arbitral poderá ser executada em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para fazer cumprir este Contrato terá direito a custos e honorários advocatícios. Se qualquer parte deste Contrato for considerada inválida ou inexequível, essa parte será interpretada de forma a refletir a intenção original das partes e as partes restantes permanecerão em pleno vigor e efeito. Uma renúncia por qualquer das partes de qualquer termo ou condição deste Contrato ou qualquer violação do mesmo, em qualquer instância, não renunciará a tal termo ou condição ou qualquer violação subseqüente do mesmo. Você pode ceder seus direitos sob este Contrato a qualquer parte que consente e concorda em ficar vinculada aos seus termos e condições.; %{company_name} pode ceder seus direitos sob este Contrato sem condição. Este Contrato será vinculativo e terá efeito em benefício das partes, seus sucessores e cessionários permitidos.
+
+      Este documento é CC-BY-SA. Última atualização: 1 de janeiro de 2018.
+
+      Originalmente adaptado dos [Termos de Serviço do WordPress] (http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Política de Privacidade"
+    body: |
+      <a name="collect"></a>
+
+      ## [Quais informações coletamos?] (# Coletar)
+
+      Coletamos informações de você quando você se registra em nosso site e coletamos dados quando você participa do fórum lendo, escrevendo e avaliando o conteúdo compartilhado aqui.
+
+      Ao se registrar em nosso site, você pode ser solicitado a digitar seu nome e endereço de e-mail. Você pode, no entanto, visitar o nosso site sem se registrar. Seu endereço de e-mail será verificado por um e-mail contendo um link exclusivo. Se esse link for visitado, sabemos que você controla o endereço de e-mail.
+
+      Quando registrado e postando, nós registramos o endereço IP de onde a postagem se originou. Também podemos reter logs do servidor, que incluem o endereço IP de cada solicitação para o nosso servidor.
+
+      <a name="use"></a>
+
+      ## [Para que usamos suas informações?] (# Use)
+
+      Qualquer informação que coletamos de você pode ser usada de uma das seguintes formas:
+
+      *   Para personalizar sua experiência & mdash; suas informações nos ajudam a responder melhor às suas necessidades individuais.
+      *   Para melhorar nosso site & mdash; nos esforçamos continuamente para melhorar nossas ofertas de sites com base nas informações e comentários que recebemos de você.
+      *   Para melhorar o atendimento ao cliente & mdash; suas informações nos ajudam a responder com mais eficácia às suas solicitações de atendimento ao cliente e às necessidades de suporte.
+      *   Para enviar emails periódicos & mdash; O endereço de e-mail que você fornece pode ser usado para enviar informações, notificações que você solicita sobre alterações em tópicos ou em resposta ao seu nome de usuário, responder a perguntas e / ou outras solicitações ou perguntas.
+
+      <a name="protect"></a>
+
+      ## [Como protegemos suas informações?] (# Protect)
+
+      Implementamos uma variedade de medidas de segurança para manter a segurança de suas informações pessoais quando você insere, envia ou acessa suas informações pessoais..
+
+      <a name="data-retention"></a>
+
+      ## [Qual é a sua política de retenção de dados?] (# Retenção de dados)
+
+      Faremos um esforço de boa fé para:
+
+      *   Manter logs do servidor contendo o endereço IP de todas as solicitações para esse servidor por no máximo 90 dias.
+      *   Manter os endereços IP associados aos usuários registrados e suas postagens não mais que 5 anos.
+
+      <a name="cookies"></a>
+
+      ## [Nós usamos cookies?] (# Cookies)
+
+      Sim. Cookies são pequenos arquivos que um site ou seu provedor de serviços transfere para o disco rígido do seu computador através do navegador da Web (se você permitir). Esses cookies permitem que o site reconheça seu navegador e, se você tiver uma conta registrada, associe-a à sua conta registrada.
+
+      Usamos cookies para entender e salvar suas preferências para futuras visitas e compilar dados agregados sobre o tráfego do site e a interação no site para que possamos oferecer melhores experiências e ferramentas ao site no futuro. Podemos contratar prestadores de serviços terceirizados para nos ajudar a entender melhor os visitantes do nosso site. Esses provedores de serviços não têm permissão para usar as informações coletadas em nosso nome, exceto para nos ajudar a conduzir e melhorar nossos negócios.
+
+      <a name="disclose"></a>
+
+      ## [Nós divulgamos qualquer informação a terceiros?] (# Divulgue)
+
+      Nós não vendemos, comercializamos ou transferimos de outra forma para terceiros suas informações pessoalmente identificáveis. Isso não inclui terceiros confiáveis ​​que nos auxiliam a operar nosso site, conduzir nossos negócios ou prestar serviços a você, desde que essas partes concordem em manter essas informações confidenciais. Também podemos liberar suas informações quando acreditarmos que a divulgação é apropriada para cumprir a lei, aplicar as políticas do nosso site ou proteger os direitos, propriedade ou segurança da nossa empresa ou de terceiros. No entanto, informações de visitantes não pessoalmente identificáveis ​​podem ser fornecidas a terceiros para fins de marketing, publicidade ou outros usos.
+
+      <a name="third-party"></a>
+
+      ## [Links de terceiros] (# terceiros)
+
+      Ocasionalmente, a nosso critério, podemos incluir ou oferecer produtos ou serviços de terceiros em nosso site. Esses sites de terceiros possuem políticas de privacidade separadas e independentes. Portanto, não temos responsabilidade nem obrigação pelo conteúdo e atividades desses sites vinculados. No entanto, procuramos proteger a integridade do nosso site e agradecemos qualquer feedback sobre esses sites.
+
+      <a name="coppa"></a>
+
+      ## [Cumprimento da Lei de Proteção à Privacidade Online das Crianças] (#coppa)
+
+      Nosso site, produtos e serviços são direcionados para pessoas com pelo menos 13 anos de idade ou mais. Se este servidor estiver nos EUA e você tiver menos de 13 anos, de acordo com os requisitos da COPPA (https://en.wikipedia.org/wiki/Children_Online_Privacy_Privection_Act), não use esse site.
+
+      <a name="online"></a>
+
+      ## [Política de Privacidade Online Apenas] (#online)
+
+      Esta política de privacidade on-line se aplica somente a informações coletadas por meio de nosso site e não a informações coletadas off-line.
+
+      <a name="consent"></a>
+
+      ## [Seu consentimento] (#consentimento)
+
+      Ao utilizar o nosso site, você concorda com a política de privacidade do nosso site..
+
+      <a name="changes"></a>
+
+      ## [Alterações à nossa Política de Privacidade] (#alterações)
+
+      Se decidirmos alterar nossa política de privacidade, publicaremos essas alterações nesta página.
+
+      Este documento é CC-BY-SA. Última atualização em 31 de maio de 2013.
   badges:
     editor:
       name: Editor
       description: Primeira edição de mensagem
+      long_description: |
+        Esse selo é concedido na primeira vez que você edita uma de suas postagens. Embora você não possa editar suas postagens para sempre, a edição é incentivada. Você pode melhorar a formatação, corrigir pequenos erros ou adicionar qualquer coisa que tenha perdido quando postou originalmente. Edite para tornar suas postagens ainda melhores!
     basic_user:
       name: Básico
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Concedido</a> todas as funções essenciais da comunidade"
+      long_description: |
+        Este selo é concedido quando você atinge o nível de confiança 1. Obrigado por ficar por perto e ler alguns tópicos para aprender sobre o que é a nossa comunidade. Novas restrições de usuários foram levantadas; você recebeu todas as habilidades essenciais da comunidade, como mensagens pessoais, sinalização, edição de wiki e a capacidade de postar várias imagens e links.
     member:
       name: Membro
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Concedido</a>convites, mensagens de grupo, mais curtidas"
+      long_description: |
+        Este selo é concedido quando você atinge o nível de confiança 2. Obrigado por participar durante um período de semanas para realmente se juntar à nossa comunidade. Agora você pode enviar convites a partir de sua página de usuário ou tópicos individuais, criar mensagens pessoais de grupo e ter mais curtidas por dia.
     regular:
       name: Habitual
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Concedido</a>recategorize, renomeie, links seguidos, wiki, mais curtidas"
+      long_description: |
+        Este crachá é concedido quando você atinge o nível de confiança 3. Obrigado por ser uma parte regular de nossa comunidade durante um período de meses. Agora você é um dos leitores mais ativos e um colaborador confiável que torna nossa comunidade excelente. Agora você pode recategorizar e renomear tópicos, aproveitar os sinalizadores de spam mais poderosos, acessar uma área de espera privada e também aproveitar muito mais curtidas por dia.
     leader:
       name: Líder
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Concedido</a> editar global, pin, fechar, arquivar, dividir e mesclar, mais curtidas"
+      long_description: |
+        Esse selo é concedido quando você atinge o nível de confiança 4. Você é um líder nessa comunidade, conforme selecionado pela equipe, e você define um exemplo positivo para o restante da comunidade em suas ações e palavras aqui. Você pode editar todas as postagens, realizar ações comuns de moderador de tópicos, como pin, close, unlist, archive, split e merge.
     welcome:
       name: Bem-Vindo
       description: Recebeu uma curtida
+      long_description: |
+        Este crachá é concedido quando você recebe seu primeiro como em um post. Parabéns, você postou algo que seus colegas da comunidade acharam interessante, interessante ou útil.
     autobiographer:
       name: Autobiógrafo
       description: "Preencher <a href=\"%{base_uri}/my/preferences/profile\">Perfil</a> informação"
+      long_description: |
+        Este crachá é concedido para preenchimento <a href="%{base_uri}/my/preferences/profile">seu perfil de usuário</a> e selecionando uma foto de perfil. Permitir que a comunidade saiba um pouco mais sobre quem você é e sobre o que você está interessado contribui para uma comunidade melhor e mais conectada. Junte-se a nós!
     anniversary:
       name: Aniversário
       description: "Membro ativo por um ano, postou ao menos uma vez"
@@ -2862,6 +3314,7 @@ pt_BR:
       button: "Registro"
       title: "Registro da Conta Administradora"
       help: "registro de uma nova conta para ser iniciado"
+      no_emails: "Infelizmente, nenhum e-mail de administrador foi definido durante a configuração, portanto, a finalização da configuração pode ser difícil. Por favor, adicione o e-mail no arquivo de configuração ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>criar uma conta de administrador a partir do console</a>."
     confirm_email:
       title: "Confirme seu email"
       message: "<p>Enviamos um e-mail de ativação para <b>%{email}</b>. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se ele não chegar, verifique se você configurou o e-mail corretamente para seu Discurso e verifique sua pasta de spam.</p>"

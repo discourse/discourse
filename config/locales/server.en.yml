@@ -768,7 +768,7 @@ en:
       self: "You have no activity yet."
       others: "No activity."
     no_bookmarks:
-      self: "You have no bookmarked posts, bookmarking posts allows you to easily access them later on."
+      self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       others: "No bookmarks."
     no_likes_given:
       self: "You have not liked any posts."
@@ -776,6 +776,9 @@ en:
     no_replies:
       self: "You have not replied to any posts."
       others: "No replies."
+    no_drafts:
+      self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
+      others: "You do not have permission to see drafts for this user."
 
   topic_flag_types:
     spam:
@@ -847,6 +850,7 @@ en:
     default:
       labels:
         count: Count
+        percent: Percent
         day: Day
     post_edits:
       title: "Post edits"
@@ -864,6 +868,7 @@ en:
         topic_count: Topics created
         post_count: Posts created
         pm_count: PMs created
+        revision_count: Revisions
     flags_status:
       title: "Flags status"
       values:
@@ -1092,6 +1097,7 @@ en:
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
+    out_of_date_themes: "Updates are available for the following themes:"
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -1227,7 +1233,6 @@ en:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
@@ -1297,8 +1302,8 @@ en:
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    google_oauth2_prompt: "A space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See https://developers.google.com/identity/protocols/OpenIDConnect#prompt for the possible values."
-    google_oauth2_hd: "Google Apps Hosted domain that the sign-in will be limited to. See https://developers.google.com/identity/protocols/OpenIDConnect#hd-param for more details."
+    google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See https://developers.google.com/identity/protocols/OpenIDConnect#prompt for the possible values."
+    google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See https://developers.google.com/identity/protocols/OpenIDConnect#hd-param for more details."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at https://apps.twitter.com/"
@@ -1656,6 +1661,8 @@ en:
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
+    header_dropdown_category_count: "How many categories can be displayed in the header dropdown menu."
+
     permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
 
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
@@ -1948,11 +1955,11 @@ en:
     second_factor_title: "Two Factor Authentication"
     second_factor_description: "Please enter the required authentication code from your app:"
     second_factor_backup_description: "Please enter one of your backup codes:"
-    second_factor_backup_title: "Two Factor Backup"
+    second_factor_backup_title: "Two Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     second_factor_toggle:
-      totp: "Log in using Authenticator app"
-      backup_code: "Log in using a backup code"
+      totp: "Use an authenticator app instead"
+      backup_code: "Use a backup code instead"
 
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
@@ -2252,6 +2259,8 @@ en:
 
         <%{base_url}%{url}>
 
+        %{flag_reason}
+
         This post was flagged by the community and a staff member opted to remove it.
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
@@ -2502,6 +2511,14 @@ en:
 
         If you can correct the problem, please try again.
 
+    email_reject_post_too_short:
+      title: "Email Reject Post Too Short"
+      subject_template: "[%{email_prefix}] Email issue -- Post too short"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        To promote more in depth conversations, very short replies are not allowed. Can you please reply with at least %{count} characters? Alternatively, you can like a post via email by replying with "+1".
+
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
@@ -2576,6 +2593,15 @@ en:
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
+
+    email_revoked:
+      title: "Email Revoked"
+      subject_template: "Is your email address correct?"
+      text_body_template: |
+        We’re sorry, but we’re having trouble reaching you via email. Our last few emails to you have all bounced back as undeliverable.
+
+        Can you make sure [your email address](%{base_url}/my/preferences/email) is valid and working? You may also wish to add our email address to your address book / contact list to improve deliverability.
+
     too_many_spam_flags:
       title: "Too Many Spam Flags"
       subject_template: "New account on hold"
@@ -2584,7 +2610,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced and will be unable to create replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:

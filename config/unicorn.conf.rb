@@ -5,9 +5,6 @@ if ENV["LOGSTASH_UNICORN_URI"]
   logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
 end
 
-# enable out of band gc out of the box, it is low risk and improves perf a lot
-ENV['UNICORN_ENABLE_OOBGC'] ||= "1"
-
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
@@ -21,14 +18,22 @@ listen (ENV["UNICORN_PORT"] || 3000).to_i
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30
 
+if !File.exist?("#{discourse_path}/tmp/pids")
+  Dir.mkdir("#{discourse_path}/tmp/pids")
+end
+
 # feel free to point this anywhere accessible on the filesystem
 pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
-# By default, the Unicorn logger will write to stderr.
-# Additionally, some applications/frameworks log to stderr or stdout,
-# so prevent them from going to /dev/null when daemonized here:
-stderr_path "#{discourse_path}/log/unicorn.stderr.log"
-stdout_path "#{discourse_path}/log/unicorn.stdout.log"
+if ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"]
+  logger Logger.new($stdout)
+else
+  # By default, the Unicorn logger will write to stderr.
+  # Additionally, some applications/frameworks log to stderr or stdout,
+  # so prevent them from going to /dev/null when daemonized here:
+  stderr_path "#{discourse_path}/log/unicorn.stderr.log"
+  stdout_path "#{discourse_path}/log/unicorn.stdout.log"
+end
 
 # important for Ruby 2.0
 preload_app true

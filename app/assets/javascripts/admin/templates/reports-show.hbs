@@ -1,11 +1,7 @@
-<div class="report-container">
-  <div class="visualization">
-    {{admin-report
-      showAllReportsLink=true
-      dataSourceName=model.type
-      filteringState=filteringState
-      reportOptions=reportOptions
-      showFilteringUI=true
-      onRefresh=(action "onParamsChange")}}
-  </div>
-</div>
+{{admin-report
+  showAllReportsLink=true
+  dataSourceName=model.type
+  filters=filters
+  reportOptions=reportOptions
+  showFilteringUI=true
+  onRefresh=(action "onParamsChange")}}

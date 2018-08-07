@@ -20,8 +20,8 @@ QUnit.test("Updating topic notification level", async assert => {
     "it should display the notification options button in the topic's footer"
   );
 
-  await notificationOptions.expandAwait();
-  await notificationOptions.selectRowByValueAwait("3");
+  await notificationOptions.expand();
+  await notificationOptions.selectRowByValue("3");
 
   assert.equal(
     notificationOptions.selectedRow().name(),

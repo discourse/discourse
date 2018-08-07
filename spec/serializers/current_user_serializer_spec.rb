@@ -32,4 +32,37 @@ RSpec.describe CurrentUserSerializer do
       expect(payload[:external_id]).to eq("12345")
     end
   end
+
+  context "#top_category_ids" do
+    let(:user) { Fabricate(:user) }
+    let(:category1) { Fabricate(:category) }
+    let(:category2) { Fabricate(:category) }
+    let(:category3) { Fabricate(:category) }
+    let :serializer do
+      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
+    end
+
+    it "should include empty top_category_ids array" do
+      payload = serializer.as_json
+      expect(payload[:top_category_ids]).to eq([])
+    end
+
+    it "should include correct id in top_category_ids array" do
+      category = Category.first
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category1.id,
+                           notification_level: CategoryUser.notification_levels[:tracking])
+
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category2.id,
+                           notification_level: CategoryUser.notification_levels[:watching])
+
+      CategoryUser.create!(user_id: user.id,
+                           category_id: category3.id,
+                           notification_level: CategoryUser.notification_levels[:regular])
+
+      payload = serializer.as_json
+      expect(payload[:top_category_ids]).to eq([category2.id, category1.id])
+    end
+  end
 end

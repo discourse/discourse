@@ -12,6 +12,7 @@ export const CREATE_TOPIC = "createTopic",
   EDIT_SHARED_DRAFT = "editSharedDraft",
   PRIVATE_MESSAGE = "privateMessage",
   NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
+  NEW_TOPIC_KEY = "new_topic",
   REPLY = "reply",
   EDIT = "edit",
   REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
@@ -75,7 +76,8 @@ const Composer = RestModel.extend({
     return this.site.get("archetypes");
   }.property(),
 
-  @computed("action") sharedDraft: action => action === CREATE_SHARED_DRAFT,
+  @computed("action")
+  sharedDraft: action => action === CREATE_SHARED_DRAFT,
 
   @computed
   categoryId: {
@@ -133,7 +135,8 @@ const Composer = RestModel.extend({
 
   topicFirstPost: Em.computed.or("creatingTopic", "editingFirstPost"),
 
-  @computed("action") editingPost: isEdit,
+  @computed("action")
+  editingPost: isEdit,
 
   replyingToTopic: Em.computed.equal("action", REPLY),
 

@@ -6,6 +6,7 @@ require 'excon'
 require_dependency 'final_destination'
 require_dependency 'post_creator'
 require_dependency 'post_revisor'
+require_dependency 'encodings'
 
 module Jobs
   class PollFeed < Jobs::Scheduled
@@ -87,14 +88,17 @@ module Jobs
       private
 
       def parsed_feed
-        raw_feed = fetch_rss
-        return nil if raw_feed.blank?
+        raw_feed, encoding = fetch_rss
+        encoded_feed = Encodings.try_utf8(raw_feed, encoding) if encoding
+        encoded_feed = Encodings.to_utf8(raw_feed) unless encoded_feed
+
+        return nil if encoded_feed.blank?
 
         if SiteSetting.embed_username_key_from_feed.present?
-          FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, raw_feed)
+          FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, encoded_feed)
         end
 
-        RSS::Parser.parse(raw_feed)
+        RSS::Parser.parse(encoded_feed)
       rescue RSS::NotWellFormedError, RSS::InvalidRSSError
         nil
       end
@@ -104,8 +108,17 @@ module Jobs
         feed_final_url = final_destination.resolve
         return nil unless final_destination.status == :resolved
 
-        Excon.new(feed_final_url.to_s).request(method: :get, expects: 200).body
+        response = Excon.new(feed_final_url.to_s).request(method: :get, expects: 200)
+        [response.body, detect_charset(response)]
       rescue Excon::Error::HTTPStatus
+        nil
+      end
+
+      def detect_charset(response)
+        if response.headers['Content-Type'] =~ /charset\s*=\s*([a-z0-9\-]+)/i
+          Encoding.find($1)
+        end
+      rescue ArgumentError
         nil
       end
     end

@@ -8,6 +8,7 @@ import RestModel from "discourse/models/rest";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import Topic from "discourse/models/topic";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const Group = RestModel.extend({
   limit: 50,
@@ -303,6 +304,12 @@ Group.reopenClass({
 
   messageable(name) {
     return ajax(`/groups/${name}/messageable`);
+  },
+
+  checkName(name) {
+    return ajax("/groups/check-name", {
+      data: { group_name: name }
+    }).catch(popupAjaxError);
   }
 });
 

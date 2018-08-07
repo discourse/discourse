@@ -476,7 +476,6 @@ et:
       long_form: 'laikis seda'
   user_activity:
     no_bookmarks:
-      self: "Te ei ole postitustele järjehoidjaid lisanud. Postitustele järjehoidjate lisamine lubab nende juurde hiljem hõlpsasti tagasi pöörduda."
       others: "Järjehoidjad puuduvad."
     no_likes_given:
       self: "Sa pole oma meeldimist ühelegi postitusele andnud."

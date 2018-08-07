@@ -306,7 +306,7 @@ describe SiteSettings::TypeSupervisor do
       settings.setting(:type_url_list, 'string', type: 'url_list')
       settings.setting(:type_enum_choices, '2', type: 'enum', choices: ['1', '2'])
       settings.setting(:type_enum_class, 'a', enum: 'TestEnumClass2')
-      settings.setting(:type_list, 'a', type: 'list', choices: ['a', 'b'])
+      settings.setting(:type_list, 'a', type: 'list', choices: ['a', 'b'], list_type: 'compact')
       settings.refresh!
     end
 
@@ -334,6 +334,10 @@ describe SiteSettings::TypeSupervisor do
 
     it 'returns list choices' do
       expect(settings.type_supervisor.type_hash(:type_list)[:choices]).to eq ['a', 'b']
+    end
+
+    it 'returns list list_type' do
+      expect(settings.type_supervisor.type_hash(:type_list)[:list_type]).to eq 'compact'
     end
 
     it 'returns enum choices' do

@@ -1,0 +1,129 @@
+.admin-report-counters-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  .counters-header {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
+    border: 1px solid $primary-low;
+    border-bottom: 0;
+    padding: 0.25em;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .conditional-loading-section.is-loading {
+    padding: 0.5em;
+    margin: 0;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    .title {
+      font-weight: normal;
+      font-size: $font-down-1;
+    }
+
+    .spinner {
+      margin: 0 0 0 0.5em;
+      height: 5px;
+      width: 5px;
+    }
+  }
+}
+
+.admin-report.counters {
+  &:last-child .admin-report-counters {
+    border-bottom: 1px solid $primary-low;
+  }
+
+  .admin-report-counters {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(32px, 1fr));
+    border: 1px solid $primary-low;
+    align-items: center;
+    border-bottom: 0;
+
+    .cell {
+      padding: 0.25em;
+      text-align: right;
+      white-space: nowrap;
+      padding: 8px 21px 8px 8px; // accounting for negative right caret margin
+      &:nth-of-type(2) {
+        padding: 8px 12px 8px;
+      }
+      i {
+        margin-right: -12px; // align on caret
+        @media screen and (max-width: 650px) {
+          margin-right: -9px;
+        }
+      }
+
+      &.title {
+        text-align: left;
+        padding: 8px;
+
+        .d-icon {
+          color: $primary-low-mid;
+          min-width: 14px;
+          text-align: center;
+        }
+
+        i {
+          margin: 0;
+        }
+      }
+
+      @media screen and (max-width: 400px) {
+        &.title {
+          padding: 8px 0 8px 4px;
+          font-size: $font-down-1;
+
+          .d-icon {
+            display: none;
+          }
+        }
+      }
+
+      &.high-trending-up,
+      &.trending-up {
+        i {
+          color: $success;
+        }
+      }
+      &.high-trending-down,
+      &.trending-down {
+        i {
+          color: $danger;
+        }
+      }
+    }
+  }
+
+  .no-data {
+    margin: 0;
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: $font-0;
+    border: 0;
+    background: $primary-low;
+    color: $primary-medium;
+    .d-icon {
+      font-size: $font-up-1;
+      margin: 0 0.25em 0 0;
+      color: $primary-low-mid;
+    }
+  }
+
+  .alert-error {
+    text-align: left;
+    padding: 0.5em;
+    margin: 0;
+    border: 0;
+  }
+}

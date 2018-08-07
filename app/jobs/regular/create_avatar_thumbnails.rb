@@ -1,6 +1,7 @@
 module Jobs
 
   class CreateAvatarThumbnails < Jobs::Base
+    sidekiq_options queue: 'low'
 
     def execute(args)
       return if Rails.env.test?

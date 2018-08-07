@@ -144,6 +144,7 @@ zh_CN:
         eu_central_1: "欧洲（Frankfurt）"
         eu_west_1: "欧洲（Ireland）"
         eu_west_2: "欧洲（London）"
+        eu_west_3: "欧洲（Paris）"
         sa_east_1: "南美（Sao Paulo）"
         us_east_1: "美国东部（N. Virginia）"
         us_east_2: "美国东部（俄亥俄州）"
@@ -223,6 +224,12 @@ zh_CN:
       last_read: "这是你阅读过的最后一帖；点击收藏"
       remove: "取消收藏"
       confirm_clear: "你确定要清除该主题的所有收藏吗？"
+    topic_count_latest:
+      other: "有 {{count}} 个更新或新主题"
+    topic_count_unread:
+      other: "有 {{count}} 个未读主题"
+    topic_count_new:
+      other: "有 {{count}} 个新主题"
     preview: "预览"
     cancel: "取消"
     save: "保存更改"
@@ -366,13 +373,16 @@ zh_CN:
         all: "所有群组"
         empty: "没有可见的群组。"
         filter: "根据群组类型筛选"
+        owner_groups: "拥有的群组"
         close_groups: "封闭群组"
         automatic_groups: "自动分组"
         automatic: "自动"
+        closed: "已关闭"
         public: "公开"
         private: "私密"
         public_groups: "公开群组"
         automatic_group: 自动群组
+        close_group: 关闭群组
         my_groups: "我的群组"
         group_type: "群组类别"
         is_group_user: "成员"

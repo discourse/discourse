@@ -7,7 +7,6 @@ Discourse.SiteSettingsOriginal = {
   "favicon_url":"//meta.discourse.org/uploads/default/2499/79d53726406d87af.ico",
   "allow_user_locale":false,
   "suggested_topics":7,
-  "track_external_right_clicks":false,
   "ga_universal_tracking_code":"",
   "ga_universal_domain_name":"auto",
   "top_menu":"latest|new|unread|categories|top",

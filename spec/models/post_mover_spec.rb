@@ -196,17 +196,16 @@ describe PostMover do
           expect(new_topic.posts_count).to eq(2)
           expect(new_topic.highest_post_number).to eq(2)
 
-          last_post = new_topic.posts.last
-          expect(new_topic.last_post_user_id).to eq(last_post.user_id)
-          expect(new_topic.last_posted_at).to eq(last_post.created_at)
-          expect(new_topic.bumped_at).to eq(last_post.created_at)
+          p4.reload
+          expect(new_topic.last_post_user_id).to eq(p4.user_id)
+          expect(new_topic.last_posted_at).to eq(p4.created_at)
+          expect(new_topic.bumped_at).to eq(p4.created_at)
 
           p2.reload
           expect(p2.sort_order).to eq(1)
           expect(p2.post_number).to eq(1)
           expect(p2.topic_links.first.topic_id).to eq(new_topic.id)
 
-          p4.reload
           expect(p4.post_number).to eq(2)
           expect(p4.sort_order).to eq(2)
 
@@ -280,8 +279,8 @@ describe PostMover do
       end
 
       context "to an existing topic" do
-        let!(:destination_topic) { Fabricate(:topic, user: user) }
-        let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
+        let!(:destination_topic) { Fabricate(:topic, user: another_user) }
+        let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user) }
 
         it "works correctly" do
           topic.expects(:add_moderator_post).once
@@ -292,9 +291,13 @@ describe PostMover do
           moved_to.reload
           expect(moved_to.posts_count).to eq(3)
           expect(moved_to.highest_post_number).to eq(3)
-          expect(moved_to.user_id).to eq(p1.user_id)
+          expect(moved_to.user_id).to eq(destination_op.user_id)
           expect(moved_to.like_count).to eq(1)
           expect(moved_to.category_id).to eq(SiteSetting.uncategorized_category_id)
+          p4.reload
+          expect(moved_to.last_post_user_id).to eq(p4.user_id)
+          expect(moved_to.last_posted_at).to eq(p4.created_at)
+          expect(moved_to.bumped_at).to eq(p4.created_at)
 
           # Posts should be re-ordered
           p2.reload
@@ -304,7 +307,6 @@ describe PostMover do
           expect(p2.reply_count).to eq(1)
           expect(p2.reply_to_post_number).to eq(nil)
 
-          p4.reload
           expect(p4.post_number).to eq(3)
           expect(p4.sort_order).to eq(3)
           expect(p4.topic_id).to eq(moved_to.id)

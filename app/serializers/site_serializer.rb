@@ -35,7 +35,8 @@ class SiteSerializer < ApplicationSerializer
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
-  has_many :user_fields, embed: :objects, serialzer: UserFieldSerializer
+  has_many :user_fields, embed: :objects, serializer: UserFieldSerializer
+  has_many :auth_providers, embed: :objects, serializer: AuthProviderSerializer
 
   def user_themes
     cache_fragment("user_themes") do

@@ -5,7 +5,7 @@ export default Ember.Controller.extend({
 
   @computed("model.type")
   reportOptions(type) {
-    let options = { table: { perPage: 50, limit: 50 } };
+    let options = { table: { perPage: 50, limit: 50, formatNumbers: false } };
 
     if (type === "top_referred_topics") {
       options.table.limit = 10;
@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   },
 
   @computed("category_id", "group_id", "start_date", "end_date")
-  filteringState(categoryId, groupId, startDate, endDate) {
+  filters(categoryId, groupId, startDate, endDate) {
     return {
       categoryId,
       groupId,
