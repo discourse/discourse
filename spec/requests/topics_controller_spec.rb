@@ -427,6 +427,74 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "#update_bump" do
+    context "authentication" do
+      let(:params) { { skip_bump: true } }
+
+      it "needs you to be logged in" do
+        put "/t/1/update-bump.json", params: params
+        expect(response.status).to eq(403)
+      end
+
+      [:moderator, :trust_level_4].each do |user|
+        it "denies access for #{user}" do
+          user = sign_in(Fabricate(user))
+          put "/t/1/update-bump.json", params: params
+          expect(response).to be_forbidden
+        end
+      end
+    end
+
+    context "errors" do
+      let!(:admin) { sign_in(Fabricate(:admin)) }
+
+      it "should fail for non-existend topic" do
+        put "/t/1/update-bump.json"
+        expect(response.status).to eq(400)
+      end
+
+      it "should fail when skip_bump param is missing" do
+        topic = Fabricate(:topic)
+        put "/t/#{topic.id}/update-bump.json", params: {}
+        expect(response.status).to eq(400)
+      end
+    end
+
+    context "updates topic" do
+      let!(:admin) { sign_in(Fabricate(:admin)) }
+      let!(:topic) { Fabricate(:topic) }
+
+      it "disables topic bump" do
+        put "/t/#{topic.id}/update-bump.json", params: { skip_bump: true }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.skip_bump).to eq(true)
+      end
+
+      it "enables topic bump" do
+        topic.update(skip_bump: true)
+        put "/t/#{topic.id}/update-bump.json", params: { skip_bump: false }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.skip_bump).to eq(false)
+      end
+
+      it "updates bumped_at" do
+        timestamp = 1.day.ago
+
+        put "/t/#{topic.id}/update-bump.json", params: {
+          skip_bump: false, bumped_at: timestamp.to_i
+        }
+
+        expect(response.status).to eq(200)
+
+        topic.reload
+        expect(topic.skip_bump).to eq(false)
+        expect(topic.bumped_at).to be_within_one_second_of(timestamp)
+      end
+    end
+  end
+
   describe '#clear_pin' do
     it 'needs you to be logged in' do
       put "/t/1/clear-pin.json"

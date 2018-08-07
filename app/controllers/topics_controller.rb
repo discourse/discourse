@@ -29,6 +29,7 @@ class TopicsController < ApplicationController
     :reset_new,
     :change_post_owners,
     :change_timestamps,
+    :update_bump,
     :archive_message,
     :move_to_inbox,
     :convert_topic,
@@ -627,6 +628,29 @@ class TopicsController < ApplicationController
       render json: success_json
     rescue ActiveRecord::RecordInvalid, TopicTimestampChanger::InvalidTimestampError
       render json: failed_json, status: 422
+    end
+  end
+
+  def update_bump
+    params.require(:topic_id)
+    params.require(:skip_bump)
+
+    guardian.ensure_can_update_bump!
+
+    begin
+      attributes = { skip_bump: params[:skip_bump].to_s == "true" }
+
+      unless params[:bumped_at].blank?
+        bumped_at = Time.zone.at(params[:bumped_at].to_i)
+        attributes[:bumped_at] = bumped_at
+      end
+
+      topic = Topic.find_by(id: params[:topic_id].to_i)
+      topic.update_columns(attributes)
+
+      render json: success_json
+    rescue ActiveRecord::RecordInvalid => e
+      render_json_error(e)
     end
   end
 

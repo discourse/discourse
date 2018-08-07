@@ -784,6 +784,33 @@ describe Topic do
         }.not_to change(@topic, :bumped_at)
       end
     end
+
+    context "bumping disabled" do
+      before do
+        @last_post = Fabricate(:post, topic: @topic, user: @topic.user)
+        @topic.update_attribute(:skip_bump, true)
+        @topic.reload
+      end
+
+      after do
+        @topic.update_attribute(:skip_bump, false)
+      end
+
+      it "editing the last post doesn't bump the topic" do
+        expect {
+          @last_post.revise(Fabricate(:moderator), raw: 'updated contents')
+          @topic.reload
+        }.to_not change(@topic, :bumped_at)
+      end
+
+      it "creating a post doesn't bump the topic" do
+        @topic.update_attribute(:skip_bump, true)
+        expect {
+          create_post(topic: @topic, user: @topic.user)
+          @topic.reload
+        }.to_not change(@topic, :bumped_at)
+      end
+    end
   end
 
   context 'moderator posts' do

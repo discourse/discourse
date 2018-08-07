@@ -687,6 +687,17 @@ Topic.reopenClass({
     return promise;
   },
 
+  updateBump(topicId, skipBump, bumpedAt) {
+    const promise = ajax("/t/" + topicId + "/update-bump", {
+      type: "PUT",
+      data: { skip_bump: skipBump, bumped_at: bumpedAt }
+    }).then(function(result) {
+      if (result.success) return result;
+      promise.reject(new Error("error updating bump date of topic"));
+    });
+    return promise;
+  },
+
   bulkOperation(topics, operation) {
     return ajax("/topics/bulk", {
       type: "PUT",

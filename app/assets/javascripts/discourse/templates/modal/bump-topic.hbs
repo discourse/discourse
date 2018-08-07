@@ -1,0 +1,26 @@
+{{#d-modal-body class="bump-topic"}}
+  <form>
+    <label class='checkbox-label'>
+      {{input type="checkbox" checked=skipBump}}
+      {{i18n "topic.bump.disable"}}
+    </label>
+
+    <p class="alert alert-error {{unless validBumpDate 'hidden'}}">
+      {{i18n 'topic.bump.invalid_date'}}
+    </p>
+
+    <label class='checkbox-label'>
+      {{input type="checkbox" checked=updateDate}}
+      {{i18n "topic.bump.update_date"}}
+    </label>
+
+    {{date-picker-past value=date defaultDate=date containerId="date-container"}}
+    {{input type="time" value=time}}
+
+    <div id="date-container"/>
+  </form>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  <button class="btn btn-primary" disabled={{buttonDisabled}} {{action "save"}}>{{i18n 'topic.bump.action'}}</button>
+</div>

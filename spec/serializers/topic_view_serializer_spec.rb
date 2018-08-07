@@ -130,4 +130,20 @@ describe TopicViewSerializer do
       expect(json[:tags]).to eq([])
     end
   end
+
+  context "bump date" do
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "should not include bumped_at and skip_bump for users and moderators" do
+      [user, moderator].each do |user|
+        json = serialize_topic(topic, user)
+        expect(json).to_not include(:bumped_at, :skip_bump)
+      end
+    end
+
+    it "should include bumped_at and skip_bump for admins" do
+      json = serialize_topic(topic, admin)
+      expect(json).to include(:bumped_at, :skip_bump)
+    end
+  end
 end

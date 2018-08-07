@@ -201,6 +201,13 @@ export default createWidget("topic-admin-menu", {
         icon: "calendar",
         label: "change_timestamp.title"
       });
+
+      buttons.push({
+        className: "topic-admin-bump",
+        action: "showBumpTopic",
+        icon: "level-up",
+        label: "actions.bump"
+      });
     }
 
     if (!isPrivateMessage) {

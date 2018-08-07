@@ -77,6 +77,13 @@ const TopicRoute = Discourse.Route.extend({
       });
     },
 
+    showBumpTopic() {
+      showModal("bump-topic", {
+        model: this.modelFor("topic"),
+        title: "topic.bump.title"
+      });
+    },
+
     showFeatureTopic() {
       showModal("featureTopic", {
         model: this.modelFor("topic"),

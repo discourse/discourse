@@ -20,6 +20,8 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     topic_timer
     private_topic_timer
     details
+    bumped_at
+    skip_bump
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

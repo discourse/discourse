@@ -1858,6 +1858,7 @@ en:
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
         make_private: "Make Personal Message"
+        bump: "Bump Topic…"
 
       feature:
         pin: "Pin Topic"
@@ -1994,6 +1995,14 @@ en:
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
         instructions: "Please select the new timestamp of the topic. Posts in the topic will be updated to have the same time difference."
+
+      bump:
+        title: "Bump Topic…"
+        disable: "Disable bumping for this topic"
+        update_date: "Update bump date"
+        invalid_date: "Bump date cannot be in the future."
+        error: "There was an error changing the bump date of the topic."
+        action: "Save"
 
       multi_select:
         select: 'select'
