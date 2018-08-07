@@ -163,6 +163,24 @@ describe UploadsController do
         message = JSON.parse(response.body)["errors"]
         expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
+
+      describe 'when filename has the wrong extension' do
+        let(:file) do
+          Rack::Test::UploadedFile.new(file_from_fixtures("png_as.jpg"))
+        end
+
+        it 'should store the upload with the right extension' do
+          expect do
+            post "/uploads.json", params: { file: file, type: "avatar" }
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('png')
+          expect(File.extname(upload.url)).to eq('.png')
+          expect(upload.original_filename).to eq('png_as.png')
+        end
+      end
     end
   end
 
