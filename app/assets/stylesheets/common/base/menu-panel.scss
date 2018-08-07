@@ -82,6 +82,7 @@
     width: 50%;
     box-sizing: border-box;
     a {
+      display: inline-flex;
       &:hover,
       &:focus {
         background: transparent;
