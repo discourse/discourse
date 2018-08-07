@@ -32,7 +32,7 @@ describe Middleware::AnonymousCache::Helper do
 
   context "per theme cache" do
     it "handles theme keys" do
-      theme = Theme.create(name: "test", user_id: -1, user_selectable: true)
+      theme = Fabricate(:theme, user_selectable: true)
 
       with_bad_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=abc").cache_key
       with_no_theme_key = new_helper().cache_key

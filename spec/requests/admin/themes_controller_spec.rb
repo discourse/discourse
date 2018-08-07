@@ -49,7 +49,7 @@ describe Admin::ThemesController do
 
     it 'can import a theme with an upload' do
       upload = Fabricate(:upload)
-      theme = Theme.new(name: 'with-upload', user_id: -1)
+      theme = Fabricate(:theme)
       upload = UploadCreator.new(image, "logo.png").create_for(-1)
       theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
       theme.save!
@@ -93,7 +93,7 @@ describe Admin::ThemesController do
       ColorScheme.destroy_all
       Theme.destroy_all
 
-      theme = Theme.new(name: 'my name', user_id: -1)
+      theme = Fabricate(:theme)
       theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
       theme.set_field(target: :desktop, name: :after_header, value: '<b>test</b>')
 
@@ -141,7 +141,7 @@ describe Admin::ThemesController do
   end
 
   describe '#update' do
-    let(:theme) { Theme.create(name: 'my name', user_id: -1) }
+    let(:theme) { Fabricate(:theme) }
 
     it 'can change default theme' do
       SiteSetting.default_theme_id = -1
@@ -169,7 +169,7 @@ describe Admin::ThemesController do
       theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
       theme.save
 
-      child_theme = Theme.create(name: 'my name', user_id: -1)
+      child_theme = Fabricate(:theme)
 
       upload = Fabricate(:upload)
 
@@ -200,7 +200,7 @@ describe Admin::ThemesController do
     end
 
     it 'returns the right error message' do
-      parent = Theme.create!(name: "parent", user_id: -1)
+      parent = Fabricate(:theme)
       parent.add_child_theme!(theme)
 
       put "/admin/themes/#{theme.id}.json", params: {

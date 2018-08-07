@@ -17,9 +17,9 @@ describe Site do
   end
 
   it "includes user themes and expires them as needed" do
-    default_theme = Theme.create!(user_id: -1, name: 'default')
+    default_theme = Fabricate(:theme)
     SiteSetting.default_theme_id = default_theme.id
-    user_theme = Theme.create!(user_id: -1, name: 'user theme', user_selectable: true)
+    user_theme = Fabricate(:theme, user_selectable: true)
 
     anon_guardian = Guardian.new
     user_guardian = Guardian.new(Fabricate(:user))

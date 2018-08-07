@@ -10,7 +10,7 @@ describe ColorScheme do
 
   it "correctly invalidates theme css when changed" do
     scheme = ColorScheme.create_from_base(name: 'Bob')
-    theme = Theme.new(name: 'Amazing Theme', color_scheme_id: scheme.id, user_id: -1)
+    theme = Fabricate(:theme, color_scheme_id: scheme.id)
     theme.set_field(name: :scss, target: :desktop, value: '.bob {color: $primary;}')
     theme.save!
 

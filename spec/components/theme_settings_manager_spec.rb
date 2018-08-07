@@ -4,7 +4,7 @@ require 'theme_settings_manager'
 describe ThemeSettingsManager do
 
   let(:theme_settings) do
-    theme = Theme.create!(name: "awesome theme", user_id: -1)
+    theme = Fabricate(:theme)
     yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
