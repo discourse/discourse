@@ -66,7 +66,10 @@ const DiscourseLocation = Ember.Object.extend({
   getURL() {
     const location = get(this, "location");
     let url = location.pathname;
-    url = url.replace(Discourse.BaseUri, "");
+
+    if (Discourse.BaseUri.length() > 0 && url.startsWith(Discourse.BaseUri)) {
+      url = url.substring(Discourse.BaseUri.length);
+    }
 
     const search = location.search || "";
     url += search;
