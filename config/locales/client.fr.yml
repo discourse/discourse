@@ -665,6 +665,12 @@ fr:
         set_password: "Définir le mot de passe"
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
+      second_factor_backup:
+        regenerate: "Regénérer"
+        disable: "Désactiver"
+        enable: "Activer"
+        copied_to_clipboard: "Copié dans le presse-papier"
+        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
       second_factor:
         title: "Authentification à deux facteurs"
         disable: "Désactiver l'authentification à deux facteurs"
@@ -1060,21 +1066,27 @@ fr:
       forgot: "J'ai oublié les détails de mon compte"
       not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par mail lorsque vous pourrez vous connecter."
       google_oauth2:
+        name: "Google"
         title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       twitter:
+        name: "Twitter"
         title: "via Twitter"
         message: "Authentification via Twitter (assurez-vous que les popups ne soient pas bloquées)"
       instagram:
+        name: "Instagram"
         title: "via Instagram"
         message: "Authentification via Instagtram (assurez-vous que les popups ne soient pas bloquées)"
       facebook:
+        name: "Facebook"
         title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
       yahoo:
+        name: "Yahoo"
         title: "via Yahoo"
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
       github:
+        name: "GitHub"
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
     invites:
@@ -2508,6 +2520,8 @@ fr:
         whats_new_in_discourse: "Quoi de neuf dans Discourse ?"
         activity_metrics: Mesures d'activité
         all_reports: "Tous les rapports"
+        general_tab: "Général"
+        moderation_tab: "Modération"
         reports:
           trend_title: "%{percent} modifié. Actuellement %{current}, était %{prev} pour la période précédente."
           today: "Aujourd'hui"
@@ -3662,3 +3676,6 @@ fr:
           admin: "Administrateur"
           moderator: "Modérateur"
           regular: "Utilisateur"
+      previews:
+        share_button: "Partager"
+        reply_button: "Répondre"

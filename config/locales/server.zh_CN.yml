@@ -548,7 +548,6 @@ zh_CN:
       self: "你还没有活动。"
       others: "无活动。"
     no_bookmarks:
-      self: "你没有收藏帖子，收藏帖子能让你之后轻松找到他们。"
       others: "没有收藏。"
     no_likes_given:
       self: "你还没有赞任何帖子。"
@@ -883,7 +882,6 @@ zh_CN:
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
     share_links: "决定分享对话框中出现的按钮及显示顺序。"
-    track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
     site_contact_username: "论坛给用户自动发送私信时使用的用户名；如果留空将使用默认的系统账户。"
     send_welcome_message: "给所有用户发送快速开始指导的私信"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"
@@ -1852,16 +1850,6 @@ zh_CN:
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被暂时封禁"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件。你的帖子因社区标记而被临时隐藏
-
-        。
-
-        出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
-
-        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "太多信任等级3用户标记"
       subject_template: "新账户被暂时封禁"

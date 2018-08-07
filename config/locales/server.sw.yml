@@ -497,7 +497,6 @@ sw:
       self: "Bado hauna shughuli."
       others: "Hakuna shughuli."
     no_bookmarks:
-      self: "Haujatunza machapisho, utunzaji wa machapisho utakuruhusu uweze kuziona kwa urahizi zaidi baadae."
       others: "Hakuna mialamisho."
     no_likes_given:
       self: "Haujapenda machapisho yoyote."
@@ -1518,13 +1517,6 @@ sw:
     too_many_spam_flags:
       title: "Bendera Nyingi Sana za Taka"
       subject_template: "Akaunti mpya inasubirishwa"
-      text_body_template: |
-        Habari,
-
-        Huu ni ujumbe wa roboti kutoka %{site_name}kukujulisha kuwa machapisho yako yamefichwa kwa mda mfupi kwa sababu yamepewa bendera na jukwaa.
-
-        Kama tahadhari, akaunti yako mpya imenyamazishwa haitatengeneza majibu au mada mpya mpaka msaidizi wetu akikagua akaunti yako. Tunaomba radhi kwa usumbufu wowote utakao tokea.
-        Kwa mwongozo zaidi, tafadhali tembelea [mwongozo wa jukwaa](%{base_url}/mwongozo).
     too_many_tl3_flags:
       title: "Bendera Nyingi za Kiwango cha Uaminifu cha 3"
       subject_template: "Akaunti mpya inasubirishwa"

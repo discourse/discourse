@@ -527,7 +527,6 @@ ko:
       long_form: '이것을 좋아함'
   user_activity:
     no_bookmarks:
-      self: "북마크한 포스트가 없습니다. 포스트를 북마크하면 나중에 쉽게 확인할 수 있습니다."
       others: "북마크가 없습니다"
     no_likes_given:
       self: "좋아요한 게시글이 없습니다"
@@ -838,7 +837,6 @@ ko:
     post_menu: "글 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: like(좋아요)|edit(수정)|flag(신고)|delete(삭제)|share(공유)|bookmark(북마크)|reply(답글)"
     post_menu_hidden_items: "게시 메뉴에서 기본으로 숨길 메뉴 아이템들"
     share_links: "공유 다이얼로그에 어떤 아이템이 어떤 순서로 나올지 결정"
-    track_external_right_clicks: "우클릭한 외부 링크를 추적한다 (에: 새 탭 열기) 이 설정을 위해선 해당 URL를 다시 써야하는 이유로 기본값은 비활성화이다."
     site_contact_username: "자동 메세지를 보낼 올바른 스태프 아이디. 빈칸으로 놔두면 기본 시스템 계정이 사용됩니다."
     send_welcome_message: "모든 신규 유저들에게 시작 매뉴얼과 함께 환영 메세지 보내기"
     suppress_reply_directly_below: "글의 바로 아래에 단 하나의 댓글만 있는 경우 '댓글 수'를 보여주지 않음"

@@ -668,7 +668,6 @@ de:
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
       second_factor_backup:
-        title: "Zwei-Faktor-Wiederherstellungscode-Verwaltung"
         regenerate: "Erneuern"
         disable: "Deaktivieren"
         enable: "Aktivieren"
@@ -677,9 +676,6 @@ de:
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         remaining_codes: "Du hast noch <strong>{{count}}</strong> Wiederherstellungscodes übrig."
-        codes:
-          title: "Wiederherstellungscodes"
-          description: "Jede Zeile ist ein anderer Wiederherstellungscode, der nur einmal benutzt werden kann. Es wird empfohlen, diese Datei an einem sicheren Ort zu speichern."
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
         disable: "Zwei-Faktor-Authentifizierung deaktivieren"
@@ -727,6 +723,9 @@ de:
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
       email:
         title: "E-Mail"
+        primary: "Primäre E-Mail-Adresse"
+        secondary: "Weitere E-Mail-Adressen"
+        no_secondary: "Keine weiteren E-Mail-Adressen"
         instructions: "wird nicht öffentlich angezeigt"
         ok: "Wir senden dir zur Bestätigung eine E-Mail"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
@@ -735,6 +734,11 @@ de:
         frequency:
           one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
           other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten {{count}} Minuten gesehen haben."
+      associated_accounts:
+        title: "Zugehörige Konten"
+        connect: "Verbinden"
+        revoke: "Entziehen"
+        not_connected: "(nicht verbunden)"
       name:
         title: "Name"
         instructions: "dein vollständiger Name (optional)"
@@ -906,6 +910,9 @@ de:
         most_liked_users: "Häufigste Likes für"
         most_replied_to_users: "Häufigste Antworten an"
         no_likes: "Noch keine Likes."
+        top_categories: "Top-Kategorien"
+        topics: "Themen"
+        replies: "Antworten"
       ip_address:
         title: "Letzte IP-Adresse"
       registration_ip_address:
@@ -1053,6 +1060,7 @@ de:
       email_placeholder: "E-Mail oder Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
+      cookies_error: "Dein Browser scheint Cookies deaktiviert zu haben. Du kannst dich möglicherweise nicht anmelden, ohne diese zu aktivieren."
       rate_limit: "Warte bitte ein wenig, bevor du erneut versuchst dich anzumelden."
       blank_username: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen ein."
       blank_username_or_password: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen und dein Passwort ein."
@@ -1078,21 +1086,27 @@ de:
       forgot: "Ich kann mich nicht an meine Zugangsdaten erinnern"
       not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
       google_oauth2:
+        name: "Google"
         title: "mit Google"
         message: "Authentifiziere mit Google (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       twitter:
+        name: "Twitter"
         title: "mit Twitter"
         message: "Authentifiziere mit Twitter (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       instagram:
+        name: "Instagram"
         title: "mit Instagram"
         message: "Authentifiziere mit Instagram (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       facebook:
+        name: "Facebook"
         title: "mit Facebook"
         message: "Authentifiziere mit Facebook (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       yahoo:
+        name: "Yahoo"
         title: "mit Yahoo"
         message: "Authentifiziere mit Yahoo (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       github:
+        name: "GitHub"
         title: "mit GitHub"
         message: "Authentifiziere mit GitHub (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
     invites:
@@ -1604,6 +1618,8 @@ de:
         jump_prompt_of: "von %{count} Beiträgen"
         jump_prompt_long: "Zu welchem Beitrag möchtest du springen?"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
+        jump_prompt_to_date: "zu Datum"
+        jump_prompt_or: "oder"
         total: Beiträge insgesamt
         current: aktueller Beitrag
       notifications:
@@ -1898,6 +1914,8 @@ de:
         lock_post_description: "verhindern, dass der Autor den Beitrag bearbeitet"
         unlock_post: "Beitrag entsperren"
         unlock_post_description: "erlaube, dass der Autor den Beitrag bearbeitet"
+        delete_topic_disallowed_modal: "Du hast keine Berechtigung, dieses Thema zu löschen. Wenn du wirklich möchtest, dass es gelöscht wird, melde es mit einer Begründung, um einen Moderator darauf aufmerksam zu machen."
+        delete_topic_disallowed: "du hast keine Berechtigung, dieses Thema zu löschen"
       actions:
         flag: 'Melden'
         defer_flags:
@@ -2066,6 +2084,7 @@ de:
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
       subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
+      all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
       subcategory_list_style: "Listenstil für Unterkategorien"
       sort_order: "Themenliste sortieren nach:"
       default_view: "Standard-Themenliste"
@@ -2076,11 +2095,14 @@ de:
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
       this_year: "dieses Jahr"
+      position: "Position:"
       default_position: "Standardposition"
       position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern,"
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
       minimum_required_tags: 'Minimal Anzahl an Schlagwörtern, die ein Thema erfordert'
       parent: "Übergeordnete Kategorie"
+      num_auto_bump_daily: 'Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden'
+      navigate_to_first_post_after_read: 'Gehe zum ersten Beitrag, nachdem Themen gelesen wurden'
       notifications:
         watching:
           title: "Beobachten"
@@ -2522,9 +2544,14 @@ de:
         page_views_short: "Seitenaufrufe"
         show_traffic_report: "Zeige detaillierten Traffic-Bericht"
         community_health: Community-Gesundheit
+        moderators_activity: Moderator-Aktivität
         whats_new_in_discourse: "Was ist neu in Discourse?"
         activity_metrics: Aktivitätsmetriken
         all_reports: "Alle Berichte"
+        general_tab: "Allgemein"
+        moderation_tab: "Moderation"
+        disabled: Deaktiviert
+        timeout_error: "Entschuldige bitte, die Warteschlange ist zu lang, bitte wähle ein kürzeres Intervall"
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           today: "Heute"
@@ -2542,6 +2569,9 @@ de:
           end_date: "Enddatum"
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
+          totals_for_sample: "Insgesamt für Stichprobe"
+          total: "Gesamt aller Zeiten"
+          no_data: "Keine Daten anzuzeigen."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Suchprotokoll</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
@@ -2747,6 +2777,9 @@ de:
         flag_event:
           name: "Meldung-Ereignis"
           details: "Wenn eine Meldung erstellt, akzeptiert, abgelehnt oder ignoriert wird."
+        queued_post_event:
+          name: "Ereignis nach Beitragsgenehmigung"
+          details: "Wenn eine Beitrag in der Warteschlange erstellt, genehmigt oder abgelehnt wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -3514,6 +3547,14 @@ de:
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"
+        uploaded_image_list:
+          label: "Liste bearbeiten"
+          empty: "Es gibt noch keine Bilder. Bitte lade eines hoch."
+          upload:
+            label: "Hochladen"
+            title: "Bild(er) hochladen"
+        selectable_avatars:
+          title: "Liste von Avataren, aus der Benutzer wählen können."
         categories:
           all_results: 'Alle'
           required: 'Erforderlich'
@@ -3680,3 +3721,7 @@ de:
           admin: "Administration"
           moderator: "Moderator"
           regular: "Normaler Anwender"
+      previews:
+        topic_title: "Diskussionsthema"
+        share_button: "Teilen"
+        reply_button: "Antworten"

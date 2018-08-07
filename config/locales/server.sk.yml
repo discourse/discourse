@@ -796,7 +796,6 @@ sk:
     post_menu: "Určuje, ktoré položky sa objavia v menu príspevku a v akom poradí. Napríklad páči sa mi|upraviť|označiť|vymazať|zdieľať|záložka|odpovedať"
     post_menu_hidden_items: "Položky vo východzích nastaveniach menu schované pri príspevkovom menu, dokiaľ neni kliknuté na rozbaľovaciu elipsu."
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
-    track_external_right_clicks: "Sledovať externé odkazy na ktoré sa klkne pravým tlačidlom (napr. otvorenie na novej karte) Vypnuté vo východzích nastaveniach, pretože to prepisuje URL adresy"
     site_contact_username: "Platné používateľské meno obsluhy, ktorá bude posielať automatizované správy. Pokiaľ je vynechané, použije sa východzí systémový účet. "
     send_welcome_message: "Poslať všetkým novým používateľom uvítaciu správu s návodom ako začať. "
     suppress_reply_directly_below: "Nezobrazovať rozbaľovacie tlačidlo s počtom odpovedí ak je k príspevku len jedna odpoveď priamo pod ním."

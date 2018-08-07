@@ -664,7 +664,6 @@ nb_NO:
       self: "Du har ingen aktivitet enda."
       others: "Ingen aktivitet."
     no_bookmarks:
-      self: "Du har ingen bokmerker, hvis du lager bokmerker for innlegg er det lettere å finne dem igjen senere."
       others: "Ingen bokmerker."
     no_likes_given:
       self: "Du har ikke likt noen innlegg."
