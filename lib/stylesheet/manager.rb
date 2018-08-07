@@ -306,7 +306,7 @@ class Stylesheet::Manager
     ).pluck(:updated_at)
 
     settings = ThemeSetting.where(theme_id: @theme_id).pluck(:updated_at)
-    timestamps = (fields + settings).map(&:to_f).sort.join(",")
+    timestamps = fields.concat(settings).map!(&:to_f).sort!.join(",")
 
     Digest::SHA1.hexdigest(timestamps)
   end

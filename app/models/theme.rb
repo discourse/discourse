@@ -22,10 +22,6 @@ class Theme < ActiveRecord::Base
 
   validate :user_selectable_validation
 
-  scope :parent_themes, ->() {
-    joins("LEFT JOIN child_themes ON child_themes.child_theme_id = themes.id").where("parent_theme_id IS NULL")
-  }
-
   scope :user_selectable, ->() {
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }

@@ -34,8 +34,8 @@ RSpec.describe ApplicationController do
   end
 
   describe "#handle_theme" do
-    let(:theme) { Theme.create!(user_id: -1, name: 'bob', user_selectable: true) }
-    let(:theme2) { Theme.create!(user_id: -1, name: 'bobbob', user_selectable: true) }
+    let(:theme) { Fabricate(:theme, user_selectable: true) }
+    let(:theme2) { Fabricate(:theme, user_selectable: true) }
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
@@ -47,12 +47,14 @@ RSpec.describe ApplicationController do
       user.user_option.update_columns(theme_ids: [theme.id])
 
       get "/"
+      expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme.id])
 
       theme.update_attribute(:user_selectable, false)
 
       get "/"
-      expect(controller.theme_ids).not_to eq([theme.id])
+      expect(response.status).to eq(200)
+      expect(controller.theme_ids).to eq([SiteSetting.default_theme_id])
     end
 
     it "can be overridden with a cookie" do
@@ -61,6 +63,7 @@ RSpec.describe ApplicationController do
       cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq}"
 
       get "/"
+      expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
 
       theme2.update!(user_selectable: false)
@@ -68,6 +71,7 @@ RSpec.describe ApplicationController do
       cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
 
       get "/"
+      expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme.id, theme2.id])
     end
 
@@ -77,6 +81,7 @@ RSpec.describe ApplicationController do
       theme2.set_default!
 
       get "/"
+      expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
     end
 
@@ -84,7 +89,8 @@ RSpec.describe ApplicationController do
       sign_in(admin)
       cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{admin.user_option.theme_key_seq}"
 
-      get "/?preview_theme_id=#{theme2.id}"
+      get "/", params: { preview_theme_id: theme2.id }
+      expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
     end
 
@@ -93,6 +99,7 @@ RSpec.describe ApplicationController do
       cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq - 1}"
 
       get "/"
+      expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme.id])
     end
   end

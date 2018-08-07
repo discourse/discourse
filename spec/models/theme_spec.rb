@@ -19,15 +19,16 @@ describe Theme do
   end
 
   let :customization do
-    Theme.create!(customization_params)
+    Fabricate(:theme, customization_params)
   end
 
+  let(:theme) { Fabricate(:theme, user: user) }
+  let(:child) { Fabricate(:theme, user: user) }
   it 'can properly clean up color schemes' do
-    theme = Theme.create!(name: 'bob', user_id: -1)
     scheme = ColorScheme.create!(theme_id: theme.id, name: 'test')
     scheme2 = ColorScheme.create!(theme_id: theme.id, name: 'test2')
 
-    Theme.create!(name: 'bob', user_id: -1, color_scheme_id: scheme2.id)
+    Fabricate(:theme, color_scheme_id: scheme2.id)
 
     theme.destroy!
     scheme2.reload
@@ -38,8 +39,6 @@ describe Theme do
   end
 
   it 'can support child themes' do
-    child = Theme.new(name: '2', user_id: user.id)
-
     child.set_field(target: :common, name: "header", value: "World")
     child.set_field(target: :desktop, name: "header", value: "Desktop")
     child.set_field(target: :mobile, name: "header", value: "Mobile")
@@ -54,7 +53,7 @@ describe Theme do
 
     expect(Theme.lookup_field(child.id, :mobile, :header)).to eq("Worldie\nMobile")
 
-    parent = Theme.new(name: '1', user_id: user.id)
+    parent = Fabricate(:theme, user: user)
 
     parent.set_field(target: :common, name: "header", value: "Common Parent")
     parent.set_field(target: :mobile, name: "header", value: "Mobile Parent")
@@ -68,19 +67,14 @@ describe Theme do
   end
 
   it 'can correctly find parent themes' do
-    child = Theme.create!(name: 'child', user: user)
-    theme = Theme.create!(name: 'theme', user: user)
-
     theme.add_child_theme!(child)
 
     expect(child.dependant_themes.length).to eq(1)
   end
 
   it "doesn't allow multi-level theme components" do
-    grandchild = Theme.create!(name: 'grandchild', user: user)
-    child = Theme.create!(name: 'child', user: user)
-    theme = Theme.create!(name: 'theme', user: user)
-    grandparent = Theme.create!(name: 'grandparent', user: user)
+    grandchild = Fabricate(:theme, user: user)
+    grandparent = Fabricate(:theme, user: user)
 
     theme.add_child_theme!(child)
     expect do
@@ -93,21 +87,12 @@ describe Theme do
   end
 
   it "doesn't allow a child to be user selectable" do
-    child = Theme.create!(name: 'child', user: user)
-    theme = Theme.create!(name: 'theme', user: user)
-
     theme.add_child_theme!(child)
-    begin
-      child.update!(user_selectable: true)
-    rescue ActiveRecord::RecordInvalid => e
-      expect(child.errors.full_messages).to contain_exactly(I18n.t("themes.errors.component_no_user_selectable"))
-    end
+    child.update(user_selectable: true)
+    expect(child.errors.full_messages).to contain_exactly(I18n.t("themes.errors.component_no_user_selectable"))
   end
 
   it "doesn't allow a child to be set as the default theme" do
-    child = Theme.create!(name: 'child', user: user)
-    theme = Theme.create!(name: 'theme', user: user)
-
     theme.add_child_theme!(child)
     expect do
       child.set_default!
@@ -115,7 +100,6 @@ describe Theme do
   end
 
   it 'should correct bad html in body_tag_baked and head_tag_baked' do
-    theme = Theme.new(user_id: -1, name: "test")
     theme.set_field(target: :common, name: "head_tag", value: "<b>I am bold")
     theme.save!
 
@@ -131,7 +115,6 @@ describe Theme do
       {{hello}}
     </script>
 HTML
-    theme = Theme.new(user_id: -1, name: "test")
     theme.set_field(target: :common, name: "header", value: with_template)
     theme.save!
 
@@ -142,8 +125,6 @@ HTML
   end
 
   it 'should create body_tag_baked on demand if needed' do
-
-    theme = Theme.new(user_id: -1, name: "test")
     theme.set_field(target: :common, name: :body_tag, value: "<b>test")
     theme.save
 
@@ -153,7 +134,6 @@ HTML
   end
 
   it 'can find fields for multiple themes' do
-    theme = Fabricate(:theme)
     theme2 = Fabricate(:theme)
 
     theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
@@ -168,7 +148,6 @@ HTML
 
   describe ".transform_ids" do
     it "adds the child themes of the parent" do
-      theme = Fabricate(:theme)
       child = Fabricate(:theme, id: 97)
       child2 = Fabricate(:theme, id: 96)
 
@@ -176,6 +155,16 @@ HTML
       theme.add_child_theme!(child2)
       expect(Theme.transform_ids([theme.id])).to eq([theme.id, child2.id, child.id])
       expect(Theme.transform_ids([theme.id, 94, 90])).to eq([theme.id, 90, 94, child2.id, child.id])
+    end
+
+    it "doesn't insert children when extend is false" do
+      child = Fabricate(:theme, id: 97)
+      child2 = Fabricate(:theme, id: 96)
+
+      theme.add_child_theme!(child)
+      theme.add_child_theme!(child2)
+      expect(Theme.transform_ids([theme.id], extend: false)).to eq([theme.id])
+      expect(Theme.transform_ids([theme.id, 94, 90, 70, 70], extend: false)).to eq([theme.id, 70, 90, 94])
     end
   end
 
@@ -215,14 +204,12 @@ HTML
   context 'theme vars' do
 
     it 'works in parent theme' do
-
-      theme = Theme.new(name: 'theme', user_id: -1)
       theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; }')
       theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
       theme.set_field(target: :common, name: :not_red, value: 'red', type: :theme_var)
       theme.save
 
-      parent_theme = Theme.new(name: 'parent theme', user_id: -1)
+      parent_theme = Fabricate(:theme)
       parent_theme.set_field(target: :common, name: :scss, value: 'body {background-color: $not_red; }')
       parent_theme.set_field(target: :common, name: :not_red, value: 'blue', type: :theme_var)
       parent_theme.save
@@ -234,7 +221,6 @@ HTML
     end
 
     it 'can generate scss based off theme vars' do
-      theme = Theme.new(name: 'theme', user_id: -1)
       theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')
       theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
       theme.set_field(target: :common, name: :content, value: 'Sam\'s Test', type: :theme_var)
@@ -250,7 +236,6 @@ HTML
     end
 
     it 'can handle uploads based of ThemeField' do
-      theme = Theme.new(name: 'theme', user_id: -1)
       upload = UploadCreator.new(image, "logo.png").create_for(-1)
       theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
       theme.set_field(target: :common, name: :scss, value: 'body {background-image: url($logo)}')
@@ -273,7 +258,6 @@ HTML
 
   context "theme settings" do
     it "allows values to be used in scss" do
-      theme = Theme.new(name: "awesome theme", user_id: -1)
       theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
       theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
       theme.save!
@@ -290,7 +274,6 @@ HTML
     end
 
     it "allows values to be used in JS" do
-      theme = Theme.new(name: "awesome theme", user_id: -1)
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
       theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
       theme.save!
@@ -326,8 +309,8 @@ HTML
   it 'correctly caches theme ids' do
     Theme.destroy_all
 
-    theme = Theme.create!(name: "bob", user_id: -1)
-    theme2 = Theme.create!(name: "mob", user_id: -1)
+    theme
+    theme2 = Fabricate(:theme)
 
     expect(Theme.theme_ids).to contain_exactly(theme.id, theme2.id)
     expect(Theme.user_theme_ids).to eq([])
@@ -359,8 +342,7 @@ HTML
     user_themes = JSON.parse(json)["user_themes"]
     expect(user_themes).to eq([])
 
-    theme = Theme.create!(name: "bob", user_id: -1, user_selectable: true)
-    theme.save!
+    theme = Fabricate(:theme, name: "bob", user_selectable: true)
 
     json = Site.json_for(guardian)
     user_themes = JSON.parse(json)["user_themes"].map { |t| t["name"] }
@@ -387,7 +369,6 @@ HTML
   it 'handles settings cache correctly' do
     Theme.destroy_all
 
-    theme = Theme.create!(name: "awesome theme", user_id: -1)
     expect(cached_settings(theme.id)).to eq("{}")
 
     theme.set_field(target: :settings, name: "yaml", value: "boolean_setting: true")
@@ -397,7 +378,6 @@ HTML
     theme.settings.first.value = "false"
     expect(cached_settings(theme.id)).to match(/\"boolean_setting\":false/)
 
-    child = Theme.create!(name: "child theme", user_id: -1)
     child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")
 
     child.save!
@@ -414,5 +394,4 @@ HTML
     expect(json).not_to match(/\"integer_setting\":54/)
     expect(json).to match(/\"boolean_setting\":false/)
   end
-
 end
