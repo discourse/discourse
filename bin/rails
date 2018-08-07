@@ -1,4 +1,9 @@
 #!/usr/bin/env ruby
+
+if !ENV["RAILS_ENV"] && (ARGV == ["s"] || ARGV["server"])
+  exec File.expand_path("unicorn", __dir__)
+end
+
 APP_PATH = File.expand_path('../config/application', __dir__)
 require_relative '../config/boot'
 require 'rails/commands'
