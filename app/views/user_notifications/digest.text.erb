@@ -13,7 +13,7 @@
 ### <%=t 'user_notifications.digest.popular_topics' %>
 
 <%- @popular_topics.each_with_index do |t,i| %>
-<%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
+<%= raw(@markdown_linker.create(t.title, t.url)) %>
 
 <%- if t.best_post.present? %>
  <%= raw(t.best_post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
@@ -29,7 +29,7 @@
 ### <%=t 'user_notifications.digest.popular_posts' %>
 
 <%- @popular_posts.each_with_index do |post,i| %>
-<%= post.user.username -%> - <%= raw(@markdown_linker.create(post.topic.title, post.topic.relative_url)) %>
+<%= post.user.username -%> - <%= raw(@markdown_linker.create(post.topic.title, post.topic.url)) %>
 
  <%= raw(post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
 --------------------------------------------------------------------------------
@@ -41,7 +41,7 @@
 **<%=t 'user_notifications.digest.more_new' %>**
 
 <%- @other_new_for_you.each do |t| %>
-* <%= raw(@markdown_linker.create(t.title, t.relative_url)) %> - <%= t.posts_count %> - <%- if t.category %>[<%= t.category.name %>]<%- end %>
+* <%= raw(@markdown_linker.create(t.title, t.url)) %> - <%= t.posts_count %> - <%- if t.category %>[<%= t.category.name %>]<%- end %>
 <%- end -%>
 <%- end %>
 
@@ -53,7 +53,7 @@
 <%=raw(t :'user_notifications.digest.unsubscribe',
      site_link: site_link,
      email_preferences_link: raw(@markdown_linker.create(t('user_notifications.digest.your_email_settings'), '/my/preferences/emails')),
-     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_url(key: @unsubscribe_key, only_path: true))))  %>
+     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), "/email/unsubscribe/#{@unsubscribe_key}")))  %>
 
 <%= raw(@markdown_linker.references) %>
 
