@@ -1,15 +1,5 @@
 require "sidekiq/pausable"
 
-module Sidekiq
-  class CLI
-    private
-
-    def print_banner
-      # banner takes up too much space
-    end
-  end
-end
-
 Sidekiq.configure_client do |config|
   config.redis = Discourse.sidekiq_redis_config
 end
@@ -41,6 +31,17 @@ MiniScheduler.configure do |config|
 end
 
 if Sidekiq.server?
+
+  module Sidekiq
+    class CLI
+      private
+
+      def print_banner
+        # banner takes up too much space
+      end
+    end
+  end
+
   # defer queue should simply run in sidekiq
   Scheduler::Defer.async = false
 
