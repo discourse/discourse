@@ -21,6 +21,7 @@ if !ARGV.include?("-E") &&
 
   ENV["UNICORN_PORT"] ||= "9292"
   ENV["UNICORN_SIDEKIQS"] ||= "1"
+
 end
 
 load Gem.bin_path('unicorn', 'unicorn')
