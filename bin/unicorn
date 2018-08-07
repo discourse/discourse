@@ -19,11 +19,8 @@ if !ARGV.include?("-E") &&
       Pathname.new(__FILE__).realpath))
   end
 
-  ENV["UNICORN_PORT"] = "9292"
-
-  if !ENV["UNICORN_SIDEKIQS"]
-    ENV["UNICORN_SIDEKIQS"] = "1"
-  end
+  ENV["UNICORN_PORT"] ||= "9292"
+  ENV["UNICORN_SIDEKIQS"] ||= "1"
 end
 
 load Gem.bin_path('unicorn', 'unicorn')
