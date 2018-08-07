@@ -83,9 +83,11 @@ class Admin::FlagsController < Admin::AdminController
     elsif restore_post
       PostAction.agree_flags!(post, current_user, delete_post)
       PostDestroyer.new(current_user, post).recover
-    elsif !keep_post
+    else
       PostAction.agree_flags!(post, current_user, delete_post)
-      PostAction.hide_post!(post, post_action_type)
+      if !keep_post
+        PostAction.hide_post!(post, post_action_type)
+      end
     end
 
     render body: nil
