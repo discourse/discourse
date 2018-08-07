@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-if !ENV["RAILS_ENV"] && (ARGV == ["s"] || ARGV["server"])
+if !ENV["RAILS_ENV"] && (ARGV == ["s"] || ARGV == ["server"])
+  ENV["UNICORN_PORT"] = "9292"
   exec File.expand_path("unicorn", __dir__)
 end
 
