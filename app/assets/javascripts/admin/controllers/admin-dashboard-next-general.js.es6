@@ -84,12 +84,16 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
 
   @computed("model.attributes.updated_at")
   updatedTimestamp(updatedAt) {
-    return moment(updatedAt).format("LLL");
+    return moment(updatedAt)
+      .tz(moment.tz.guess())
+      .format("LLL");
   },
 
   @computed("lastBackupTakenAt")
   backupTimestamp(lastBackupTakenAt) {
-    return moment(lastBackupTakenAt).format("LLL");
+    return moment(lastBackupTakenAt)
+      .tz(moment.tz.guess())
+      .format("LLL");
   },
 
   _reportsForPeriodURL(period) {
