@@ -14,7 +14,6 @@ class UploadCreator
 
   # Available options
   #  - type (string)
-  #  - content_type (string)
   #  - origin (string)
   #  - for_group_message (boolean)
   #  - for_theme (boolean)
@@ -38,6 +37,10 @@ class UploadCreator
       if FileHelper.is_image?(@filename)
         extract_image_info!
         return @upload if @upload.errors.present?
+
+        image_type = @image_info.type.to_s
+        basename = File.basename(@filename, File.extname(@filename))
+        @filename = "#{basename}.#{image_type}"
 
         if @filename[/\.svg$/i]
           whitelist_svg!
@@ -76,7 +79,7 @@ class UploadCreator
       @upload.sha1              = sha1
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
-      @upload.extension         = File.extname(@filename)[1..10]
+      @upload.extension         = image_type
 
       if FileHelper.is_image?(@filename)
         @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
@@ -91,10 +94,10 @@ class UploadCreator
 
       # store the file and update its url
       File.open(@file.path) do |f|
-        url = Discourse.store.store_upload(f, @upload, @opts[:content_type])
+        url = Discourse.store.store_upload(f, @upload)
+
         if url.present?
-          @upload.url = url
-          @upload.save
+          @upload.update!(url: url)
         else
           @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
         end
@@ -154,7 +157,6 @@ class UploadCreator
     if File.size(jpeg_tempfile.path) < filesize * 0.85
       @file = jpeg_tempfile
       @filename = (File.basename(@filename, ".*").presence || I18n.t("image").presence || "image") + ".jpg"
-      @opts[:content_type] = "image/jpeg"
       extract_image_info!
     else
       jpeg_tempfile&.close
