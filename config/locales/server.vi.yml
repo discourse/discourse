@@ -632,7 +632,6 @@ vi:
     post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Các mục được để ẩn theo mặc định trong menu bài viết trừ khi click vào dấu '...' để mở rộng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
-    track_external_right_clicks: "Theo dõi các liên kết ngoài được click đúng (vd: mở trong tab mới) bị vô hiệu hóa theo mặc định do Rewrite URL."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
     send_welcome_message: "Gửi tất cả các thành viên mới một thông điệp chào mừng kèm theo hướng dẫn nhanh."
     suppress_reply_directly_below: "Không hiện bộ đếm trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên dưới bài viết này."

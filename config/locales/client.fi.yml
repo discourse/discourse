@@ -125,7 +125,6 @@ fi:
       user_left: "%{who} poisti itsensä tästä yksityiskeskustelusta %{when}"
       removed_user: "poisti käyttäjän %{who} %{when}"
       removed_group: "poisti käyttäjän %{who} %{when}"
-      autobumped: "automaattisesti nostettu ketju"
       autoclosed:
         enabled: 'sulki %{when}'
         disabled: 'avasi %{when}'
@@ -670,7 +669,6 @@ fi:
         choose_new: "Valitse uusi salasana"
         choose: "Valitse salasana"
       second_factor_backup:
-        title: "Kaksivaiheisen tunnistautumisen varakoodien hallinta"
         regenerate: "Tee uusi"
         disable: "Poista käytöstä"
         enable: "Ota käyttöön"
@@ -679,9 +677,6 @@ fi:
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         remaining_codes: "Sinulla on <strong>{{count}}</strong> varakoodia jäljellä."
-        codes:
-          title: "Varakoodit"
-          description: "Kullakin rivillä on eri varakoodi, jonka voi käyttää vain kerran. Tämä luettelo kannattaa tallettaa turvalliseen paikkaan."
       second_factor:
         title: "Kaksivaiheinen tunnistautuminen"
         disable: "Poista kaksivaiheinen tunnistautuminen käytöstä"

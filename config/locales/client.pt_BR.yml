@@ -125,7 +125,7 @@ pt_BR:
       user_left: "%{who} se removeram desta mensagem %{when}"
       removed_user: "removido %{who} %{when}"
       removed_group: "removido %{who} %{when}"
-      autobumped: "tópico colidido automaticamente"
+      autobumped: "automaticamente colidido %{when}"
       autoclosed:
         enabled: 'fechou %{when}'
         disabled: 'abriu %{when}'
@@ -249,6 +249,12 @@ pt_BR:
       last_read: "este é a última resposta que você leu; clique para favoritar."
       remove: "Remover favorito"
       confirm_clear: "Tem certeza que deseja apagar todos os atalhos deste tópico?"
+    drafts:
+      resume: "Resuma"
+      remove: "Remova"
+      new_topic: "Novo rascunho de tópico"
+      new_private_message: "Novo rascunho de mensagem privada"
+      topic_reply: "Resposta preliminar"
     topic_count_latest:
       one: "Veja {{conta}} tópicos novos ou atualizados"
       other: "Veja {{conta}} tópicos novos ou atualizados"
@@ -488,6 +494,7 @@ pt_BR:
       "12": "Itens enviados"
       "13": "Caixa de Entrada"
       "14": "Pendente"
+      "15": "Rascunhos"
     categories:
       all: "todas as categorias"
       all_subcategories: "todos"
@@ -512,6 +519,7 @@ pt_BR:
       topic_stat_sentence:
         one: "%{count} novo tópico nos últimos %{unit}."
         other: "%{count} novos tópicos nos últimos %{unit}."
+      more: " (%{count} mais) ..."
     ip_lookup:
       title: Pesquisa do endereço de IP
       hostname: Nome do host
@@ -669,7 +677,7 @@ pt_BR:
         choose_new: "Escolha uma nova senha"
         choose: "Escolha uma senha"
       second_factor_backup:
-        title: "Gerenciamento de código de backup de dois fatores"
+        title: "Códigos de backup de dois fatores"
         regenerate: "Regenerado"
         disable: "Desabilitar"
         enable: "habilitar"
@@ -679,8 +687,8 @@ pt_BR:
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
         remaining_codes: "Você tem <strong>{{count}}</strong>códigos de backup restantes."
         codes:
-          title: "Códigos de backup"
-          description: "Cada linha é um código de backup diferente, que pode ser usado apenas uma vez. É recomendado salvar este arquivo em um local seguro."
+          title: "Códigos de backup gerados"
+          description: "Cada um desses códigos de backup só pode ser usado uma vez. Mantenha-os em algum lugar seguro, mas acessível."
       second_factor:
         title: "Autenticação de dois fatores"
         disable: "Desabilitar autenticação de dois fatores"
@@ -2340,6 +2348,7 @@ pt_BR:
         bookmarks: '<b>g</b>, <b>b</b> Favoritos'
         profile: '<b>g</b>, <b>p</b> Perfil'
         messages: '<b>g</b>, <b>m</b> Mensagens'
+        drafts: '<b>g</b>, <b>d</b> Rascunhos'
       navigation:
         title: 'Navegação'
         jump: '<b>#</b> Ir para a mensagem #'
@@ -2561,6 +2570,7 @@ pt_BR:
         moderation_tab: "Moderação"
         disabled: Desativado
         timeout_error: "Desculpe, a consulta está demorando muito, por favor, escolha um intervalo menor"
+        exception_error: "Desculpe, ocorreu um erro ao executar a consulta"
         reports:
           trend_title: "%{percent} mudança. Atualmente %{current}, estava%{prev} no período anterior."
           today: "Hoje"
@@ -2786,6 +2796,9 @@ pt_BR:
         flag_event:
           name: "Evento de sinalização"
           details: "Quando uma bandeira é criada, aceita, discordada ou ignorada."
+        queued_post_event:
+          name: "Postar evento de aprovação"
+          details: "Quando uma nova postagem na fila é criada, aprovada ou rejeitada."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"

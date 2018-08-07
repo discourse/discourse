@@ -165,6 +165,7 @@ sk:
       user_left: "%{who}ktorí sa odobrali z tejto správy %{when}"
       removed_user: "odstránený %{who} %{when}"
       removed_group: "odstránený %{who} %{when}"
+      autobumped: "automaticky obnovené %{when}"
       autoclosed:
         enabled: 'uzavreté %{when}'
         disabled: 'otvorené %{when}'
@@ -204,6 +205,7 @@ sk:
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Írsko)"
         eu_west_2: "EU (Londýn)"
+        eu_west_3: "EU (Paríž)"
         sa_east_1: "Južná Amerika (Sao Paulo)"
         us_east_1: "USA Východ (S. Virginia)"
         us_east_2: "USA Východ (Ohio)"
@@ -425,6 +427,7 @@ sk:
           title: "Záznamy"
           when: "Kedy"
           action: "Akcia"
+          acting_user: "Konajúci používateľ"
           target_user: "Cieľový používateľ"
           subject: "Predmet"
           details: "Detaily"
@@ -545,6 +548,7 @@ sk:
       "14": "Čakajúce správy"
     categories:
       all: "všetky kategórie"
+      all_subcategories: "všetko"
       no_subcategory: "žiadne"
       category: "Kategória"
       category_list: "Zobraziť zoznam kategórií"
@@ -570,6 +574,7 @@ sk:
         few: "%{count} nové témy za posledných %{unit}."
         many: "%{count} nových tém za posledných %{unit}."
         other: "%{count} nových tém za posledných %{unit}."
+      more: "(%{count} viac) ..."
     ip_lookup:
       title: Vyhľadávanie podľa IP adresy
       hostname: Hostname
@@ -726,6 +731,15 @@ sk:
         set_password: "Nastaviť heslo"
         choose_new: "Vyberte si nové heslo"
         choose: "Vyberte si heslo"
+      second_factor_backup:
+        regenerate: "Znovu vygenerovať"
+        disable: "Zakázať"
+        enable: "Povoliť"
+        enable_long: "Povoliť kódy zálohy"
+        manage: "Spravovať kódy zálohy"
+        copied_to_clipboard: "Skopírované do schránky"
+        copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
+        remaining_codes: "Zostáva vám <strong>{{count}}</strong> kódov zálohy."
       second_factor:
         title: "Dvojfaktorová autentifikácia"
         disable: "Vypnúť dvojfaktorovú autentifikáciu"
@@ -2908,6 +2922,7 @@ sk:
           plugins: "Pluginy"
           user_preferences: "Používateľské Nastavenia"
           tags: "Štítky"
+          search: "Hľadať"
           groups: "Skupiny"
       badges:
         title: Odznaky
@@ -3038,3 +3053,7 @@ sk:
           admin: "Administrátor"
           moderator: "Moderátor"
           regular: "Bežný používateľ"
+      previews:
+        topic_title: "Diskusná téma"
+        share_button: "Zdieľať"
+        reply_button: "Odpoveď"

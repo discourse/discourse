@@ -164,6 +164,7 @@ it:
         eu_central_1: "Europa (Francoforte)"
         eu_west_1: "Europa (Irlanda)"
         eu_west_2: "EU (Londra)"
+        eu_west_3: "UE (Parigi)"
         sa_east_1: "America del Sud (San Paolo)"
         us_east_1: "Stati Uniti Est (Virginia del Nord)"
         us_east_2: "USA Est (Ohio)"
@@ -247,6 +248,12 @@ it:
       last_read: "questo è l'ultimo messaggio che hai letto; clicca per inserirlo nei segnalibri"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei sicuro di voler cancellare tutti segnalibri da questo argomento?"
+    drafts:
+      resume: "Riprendi"
+      remove: "Rimuovi"
+      new_topic: "Nuovo Argomento in bozza"
+      new_private_message: "Nuovo Messaggio Privato in bozza"
+      topic_reply: "Bozza di risposta"
     topic_count_latest:
       one: "Visualizza {{count}} argomenti nuovi o aggiornati"
       other: "Visualizza {{count}} argomenti nuovi o aggiornati."
@@ -486,8 +493,10 @@ it:
       "12": "Inviati"
       "13": "Posta in arrivo"
       "14": "In Attesa"
+      "15": "Bozze"
     categories:
       all: "tutte le categorie"
+      all_subcategories: "tutte"
       no_subcategory: "nessuno"
       category: "Categoria"
       category_list: "Visualizza l'elenco delle categorie"
@@ -509,6 +518,7 @@ it:
       topic_stat_sentence:
         one: "%{count} nuovo argomento nell'ultimo %{unit}."
         other: "%{count} nuovi argomenti nell'ultimo %{unit}."
+      more: " (altre %{count}) ..."
     ip_lookup:
       title: Ricerca Indirizzo IP
       hostname: Hostname
@@ -666,7 +676,7 @@ it:
         choose_new: "Scegli una nuova password"
         choose: "Scegli una password"
       second_factor_backup:
-        title: "Gestione codici di backup per l'Autenticazione a due Fattori"
+        title: "Codici di backup Due Fattori"
         regenerate: "Rigenera"
         disable: "Disabilita"
         enable: "Abilita"
@@ -676,8 +686,8 @@ it:
         copy_to_clipboard_error: "Errore durante la copia nella Clipboard"
         remaining_codes: "Ti sono rimasti <strong>{{count}}</strong> codici di backup."
         codes:
-          title: "Codici di backup"
-          description: "Ogni linea contiene un codice di backup differente, che può essere usato una sola volta. Si raccomanda di salvare questo file in un posto sicuro."
+          title: "Codici di backup generati"
+          description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
         title: "Autenticazione a Due Fattori"
         disable: "Disabilita l'autenticazione a due fattori"
@@ -725,6 +735,9 @@ it:
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
       email:
         title: "Email"
+        primary: "Email principale"
+        secondary: "Email secondaria"
+        no_secondary: "Nessuna email secondaria"
         instructions: "mai mostrato pubblicamente"
         ok: "Ti invieremo una email di conferma"
         invalid: "Inserisci un indirizzo email valido"
@@ -733,6 +746,11 @@ it:
         frequency:
           one: "TI invieremo un email solo se non ti avremo visto nell'ultimo minuto."
           other: "Ti invieremo una email solo se non ti si vede da almeno {{count}} minuti."
+      associated_accounts:
+        title: "Account associati"
+        connect: "Connetti"
+        revoke: "Revoca"
+        not_connected: "(non connesso)"
       name:
         title: "Nome"
         instructions: "il tuo nome completo (opzionale)"
@@ -904,6 +922,9 @@ it:
         most_liked_users: "Con più \"Mi Piace\""
         most_replied_to_users: "Più Risposte A"
         no_likes: "Ancora nessun \"Mi piace\"."
+        top_categories: "Categorie principali"
+        topics: "Argomenti"
+        replies: "Risposte"
       ip_address:
         title: "Ultimo indirizzo IP"
       registration_ip_address:
@@ -1051,6 +1072,7 @@ it:
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
+      cookies_error: "Sembra che il tuo browser abbia i cookie disabilitati. Potresti non riuscire a connetterti senza abilitarli."
       rate_limit: "Per favore attendi prima di provare nuovamente la connessione."
       blank_username: "Per favore, inserisci la tua email o il tuo nome utente."
       blank_username_or_password: "Per favore inserisci la tua email o il tuo nome utente, e la password."
@@ -1076,21 +1098,27 @@ it:
       forgot: "Non ricordo i dettagli del mio account"
       not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via email quando potrai collegarti."
       google_oauth2:
+        name: "Google"
         title: "con Google"
         message: "Autenticazione tramite Google (assicurati che il blocco pop up non siano attivo)"
       twitter:
+        name: "Twitter"
         title: "con Twitter"
         message: "Autenticazione con Twitter (assicurati che il blocco pop up non sia attivo)"
       instagram:
+        name: "Instagram"
         title: "con Instagram"
         message: "Autenticazione con Instagram (assicurati che il blocco pop up non sia attivo)"
       facebook:
+        name: "Facebook"
         title: "con Facebook"
         message: "Autenticazione con Facebook (assicurati che il blocco pop up non sia attivo)"
       yahoo:
+        name: "Yahoo"
         title: "con Yahoo"
         message: "Autenticazione con Yahoo (assicurati che il blocco pop up non sia attivo)"
       github:
+        name: "GitHub"
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
     invites:
@@ -1259,6 +1287,7 @@ it:
         draft: Bozza
         edit: Modifica
         reply_to_post:
+          label: "Rispondi al messaggio %{postNumber} di %{postUsername}"
           desc: Rispondi a uno specifico messaggio
         reply_as_new_topic:
           label: Rispondi come Argomento correlato
@@ -1888,6 +1917,7 @@ it:
         lock_post_description: "impedisci all'autore di modificare questo messaggio"
         unlock_post: "Sblocca messaggio"
         unlock_post_description: "consenti all'autore di modificare questo messaggio"
+        delete_topic_disallowed: "non hai il permesso di eliminare questo argomento"
       actions:
         flag: 'Segnala'
         defer_flags:
@@ -2051,6 +2081,7 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
+      mailinglist_mirror: "La categoria si comporta come una mailing list"
       suppress_from_latest: "Nascondi la categoria dagli Argomenti Recenti."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
@@ -2062,12 +2093,16 @@ it:
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
+      require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
+      require_reply_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       this_year: "quest'anno"
+      position: "Posizione:"
       default_position: "Posizione di default"
       position_disabled: "Le categorie verranno mostrate in ordine d'attività. Per modificare l'ordinamento delle categorie nelle liste,"
       position_disabled_click: 'attiva l''impostazione "posizione fissa delle categorie".'
       minimum_required_tags: 'Numero minimo di Etichette per Argomento:'
       parent: "Categoria Superiore"
+      navigate_to_first_post_after_read: 'Vai al primo messaggio dopo che gli argomenti vengono letti'
       notifications:
         watching:
           title: "In osservazione"
@@ -2501,9 +2536,14 @@ it:
         page_views_short: "Pagine Viste"
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         community_health: Stato di salute
+        moderators_activity: Attività dei Moderatori
         whats_new_in_discourse: "Novità in Discourse?"
         activity_metrics: Metrica Attività
         all_reports: "Tutti i rapporti"
+        general_tab: "Generale"
+        moderation_tab: "Moderazione"
+        disabled: Disabilitato
+        timeout_error: "Spiacenti, la ricerca sta impiegando troppo tempo, per favore scegli un intervallo più breve"
         reports:
           today: "Oggi"
           yesterday: "Ieri"
@@ -3250,6 +3290,7 @@ it:
         penalty_post_delete: "Elimina il messaggio"
         penalty_post_edit: "Modifica il messaggio"
         penalty_post_none: "Non fare nulla"
+        penalty_count: "Conteggio Penalità"
         delete_all_posts_confirm_MF: "Stai per cancellare {POSTS, plural, one {1 messaggio} other {# messaggi}} e {TOPICS, plural, one {1 argomento} other {# argomenti}}. Sei sicuro?"
         silence: "Silenzio"
         unsilence: "Non in silenzio"
@@ -3436,6 +3477,14 @@ it:
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"
         add_host: "aggiungi host"
+        uploaded_image_list:
+          label: "Modifica lista"
+          empty: "Ancora non ci sono immagini. Per favore, caricane una."
+          upload:
+            label: "Carica"
+            title: "Carica immagine(i)"
+        selectable_avatars:
+          title: "Lista degli Avatar da cui l'utente può scegliere"
         categories:
           all_results: 'Tutti'
           required: 'Obbligatorie'
@@ -3600,3 +3649,6 @@ it:
           admin: "Amministratore"
           moderator: "Moderatore"
           regular: "Utente Normale"
+      previews:
+        share_button: "Condividi"
+        reply_button: "Rispondi"

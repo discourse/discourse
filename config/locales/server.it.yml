@@ -610,7 +610,6 @@ it:
       self: "Non hai ancora nessuna attività."
       others: "Nessuna attività."
     no_bookmarks:
-      self: "Non hai aggiunto nessun segnalibro ai messaggi, farlo ti consentirà di ritrovarli facilmente più avanti. "
       others: "Nessun segnalibro."
     no_likes_given:
       self: "Non hai messo \"Mi piace\" ad alcun messaggio."
@@ -950,7 +949,6 @@ it:
     post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Le voci di menu da nascondere per difetto nel menu di composizione del messaggio, a meno che non vengano premuti i punti di sospensione per espanderle."
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
-    track_external_right_clicks: "Segui i collegamenti esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché riscrive le URL"
     site_contact_username: "Un utente dello staff valido da cui inviare tutti i messaggi automatici. Se lasciato vuoto verrà usato l'account System di default."
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     suppress_reply_directly_below: "Non mostrare il conteggio espandibile delle risposte quando c'è una sola risposta sotto quel messaggio."
@@ -1858,14 +1856,6 @@ it:
     too_many_spam_flags:
       title: "Troppe Segnalazioni Spam"
       subject_template: "Nuovo account sospeso"
-      text_body_template: |
-        Ciao,
-
-        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato bloccato a causa di un gran numero di segnalazioni da parte della comunità.
-
-        Come misura precauzionale, il tuo nuovo account è stato silenziato e non può creare altre risposte o argomenti finché non verrà revisionato da un membro dello staff.  Ci scusiamo per l'inconveniente
-
-        Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Troppe Segnalazioni Da TL3"
       subject_template: "Nuovo account sospeso"

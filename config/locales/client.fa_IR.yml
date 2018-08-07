@@ -1291,6 +1291,7 @@ fa_IR:
         other: "{{count}} نوشته در این موضوع وجود دارد"
       create: 'موضوع جدید'
       create_long: 'ساخت یک موضوع جدید'
+      open_draft: "بازکردن پیشنویس"
       private_message: 'شروع یک پیام'
       archive_message:
         help: 'انتقال پیام به بایگانی شما'

@@ -707,7 +707,6 @@ tr_TR:
     post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|imle|cevapla"
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
-    track_external_right_clicks: "URL'leri tekrar yazdığı için, sağ tıklanan dış bağlantıların (ör: yeni bir sekmede aç) takibi öntanımlı ayarlarda devre dışı bırakılmıştır."
     site_contact_username: "Tüm otomatik iletiler için gönderen kişi olarak gözükecek geçerli bir görevli kullanıcı adı. Boş bırakılırsa öntanımlı Sistem hesabı kullanılacak."
     send_welcome_message: "Tüm yeni kullanıcılara bir hoş geldiniz iletisi ile beraber hızlı başlangıç kılavuzu gönderin."
     suppress_reply_directly_below: "Bu gönderinin direk altında sadece tek bir cevap varsa, gönderideki açılabilir cevap sayısı bölümünü gösterme."

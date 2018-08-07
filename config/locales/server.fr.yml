@@ -666,7 +666,6 @@ fr:
       self: "Vous n'avez aucune activité pour le moment."
       others: "Aucune activité."
     no_bookmarks:
-      self: "Vous n'avez mis de signets à aucun message ; mettre des signets vous permet de facilement les retrouver par la suite."
       others: "Aucun signet."
     no_likes_given:
       self: "Vous n'avez aimé aucun message"
@@ -1055,7 +1054,6 @@ fr:
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
     share_links: "Choix des éléments qui doivent apparaître dans la fenêtre de partage, et leur ordre."
-    track_external_right_clicks: "Suivi des clics sur les liens externes (ex. : ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écriture de toutes les URLs"
     site_contact_username: "Un pseudo de responsable valide pour envoyer tous les message automatiques. Si laissé vide, le compte système sera utilisé."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
     suppress_reply_directly_below: "Ne pas afficher le panneau extensible des réponses d'un message quand la seule réponse est juste en dessous ce dernier."
@@ -1112,8 +1110,6 @@ fr:
     enable_google_oauth2_logins: "Activer l'authentification Google Oauth2. C'est la méthode d'authentification que Google supporte désormais. Nécessite une clé et une phrase secrète."
     google_oauth2_client_id: "Identifiante du client de votre application Google."
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
-    google_oauth2_prompt: "Une liste de valeurs de chaînes de caractères délimitées par des espaces qui spécifie si le serveur d'autorisation demande à l'utilisateur de se réauthentifier et de donner son consentement. Voir https://developers.google.com/identity/protocols/OpenIDConnect#prompt pour les valeurs possibles."
-    google_oauth2_hd: "Google Apps Hosted domain auquel la connexion sera limitée. Voir https://developers.google.com/identity/protocols/OpenIDConnect#hd-param pour plus de détails."
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret"
     twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur https://apps.twitter.com/"
     twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistré sur http://dev.twitter.com"
@@ -2174,14 +2170,6 @@ fr:
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que vos messages ont été temporairement masqués suite à des signalements de la communauté.
-
-        Par mesure de précaution, votre nouveau compte a été mis sous silence et vous ne pourrez plus créer de nouvelles réponses et sujets tant qu'un responsable n'a pas vérifié votre compte. Veuillez nous excuser pour la gêne occasionnée.
-
-        Pour plus d'informations, merci de vous référer à la [charte de la communauté](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Trop de flags TL3"
       subject_template: "Nouveau compte bloqué"

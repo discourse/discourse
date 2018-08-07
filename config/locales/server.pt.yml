@@ -511,7 +511,6 @@ pt:
       long_form: 'gostou disto'
   user_activity:
     no_bookmarks:
-      self: "Não tem publicações marcadas, marcar publicações permite-lhe aceder-lhes facilmente mais tarde."
       others: "Sem marcadores."
     no_likes_given:
       self: "Ainda não gostou de nenhuma publicação."
@@ -810,7 +809,6 @@ pt:
     post_menu: "Determine que itens irão aparecer no menu de mensagens, e em que ordem. Exemplo\ngostar|editar|sinalizar|eliminar|partilhar|marcar|responder"
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
-    track_external_right_clicks: "Acompanhar cliques externos que são clicados com o botão direito (ex: abrir num novo separador) desativado por padrão pois este reescreve URLs"
     site_contact_username: "Um nome de utilizador válido de um membro do pessoal de onde enviar todas as mensagens automatizadas. Quando deixado em branco, a conta padrão do Sistema será usada."
     send_welcome_message: "Enviar a todos os novos utilizadores uma mensagem de boas-vindas com um guia de início rápido."
     suppress_reply_directly_below: "Não mostrar a contagem de respostas expansível quando há apenas uma única resposta diretamente abaixo desta publicação."

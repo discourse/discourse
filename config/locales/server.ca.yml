@@ -518,7 +518,6 @@ ca:
       long_form: 'ha agradat'
   user_activity:
     no_bookmarks:
-      self: "No tens publicacions marcades com a preferits, fer-ho et permet accedir-hi després amb facilitat."
       others: "Sense preferits."
     no_likes_given:
       self: "Encara no t'ha agradat cap publicació."
@@ -825,7 +824,6 @@ ca:
     post_menu: "Determina quins elements apareixen al menú de publicacions i en qui ordre. Per exemple,\nlike|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Els elements del menú que s'oculten per defecte al menú de publicacions, tret que es cliqui sobre una el·lipsi d'expansió."
     share_links: "Determina quins elements apareixen a diàleg d'acció i en qui ordre."
-    track_external_right_clicks: "Rastreig d'enllaços externs que es cliquen amb el botó dret (en obrir a una nova pestanya, per exemple) desactivat per defecte, perquè reescriu les URL."
     site_contact_username: "Un nom vàlid de membre de l'equip per emetre tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
     send_welcome_message: "Envia a totes les noves persones usuàries un missatge de benvinguda amb la guia ràpida d'inici."
     suppress_reply_directly_below: "No mostris el recompte de respostes expansibles a una publicació quan només hi hagi una resposta directa sota la publicació."

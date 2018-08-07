@@ -695,7 +695,6 @@ es:
       self: "No tienes actividad aún."
       others: "Sin actividad."
     no_bookmarks:
-      self: "No tienes temas en marcadores, añadir temas a marcadores te permite acceder a ellos más tarde fácilmente."
       others: "Sin marcadores."
     no_likes_given:
       self: "No le has dado a \"Me gusta\" en ningún tema."
@@ -1135,7 +1134,6 @@ es:
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
-    track_external_right_clicks: "Hacer seguimiento de los enlaces externos en los que se ha hecho clic con el botón derecho (ej: abrir en nueva pestaña) desactivado por defecto porque reescribe URLs"
     site_contact_username: "Nombre de usuario de moderador o administrador desde donde se enviarán mensajes automáticos. Si se deja en blanco, se utilizará la cuenta system por defecto."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje de bienvenida con una guía rápida para comenzar."
     send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
@@ -1193,8 +1191,6 @@ es:
     enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación a la que Google da soporte actualmente. Requiere de una clave de cliente y una clave secreta."
     google_oauth2_client_id: "Client ID de tu aplicación Google."
     google_oauth2_client_secret: "Client secret de tu aplicación Google."
-    google_oauth2_prompt: "Una lista delimitada por espacios de valores de cadena que especifica si el servidor de autorizaciones solicita al usuario la reautenticación y el consentimiento. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#prompt para conocer los valores posibles."
-    google_oauth2_hd: "Dominio hospedado de Google Apps al que se limitará el inicio de sesión. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#hd-param para obtener más detalles."
     enable_twitter_logins: "Activar autenticación por Twitter, requiere una twitter_consumer_key y un twitter_consumer_secret"
     twitter_consumer_key: "Clave del consumidor para la autenticación de Twitter, registrado en  https://apps.twitter.com/"
     twitter_consumer_secret: "Secreto del consumidor para la autenticación de Twitter, registrado en https://apps.twitter.com/"
@@ -1714,11 +1710,7 @@ es:
     second_factor_title: "Autenticación Dos Factores"
     second_factor_description: "Por favor ingrese el código de autenticación desde tu aplicación:"
     second_factor_backup_description: "Por favor, introduce uno de los códigos de respaldo:"
-    second_factor_backup_title: "Two Factor Backup"
     invalid_second_factor_code: "Código de autentificación no válido. Cada código puede usarse solo una vez."
-    second_factor_toggle:
-      totp: "Inicie sesión con la aplicación Authenticator"
-      backup_code: "Inicie sesión con un código de respaldo"
   user:
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
@@ -1992,16 +1984,6 @@ es:
     flags_agreed_and_post_deleted:
       title: "Tema reportado y eliminado por el staff"
       subject_template: "Tema reportado y eliminado por el staff"
-      text_body_template: |
-        Hola,
-
-        Este es un mensaje automático de %{site_name} para hacerte saber que uno de tus mensajes ha sido eliminado.
-
-        <%{base_url}%{url}>
-
-        El mensaje ha sido reportado por la comunidad y un miembro del staff ha decidido eliminarlo.
-
-        Por favor, revisa nuestras [directrices de la comunidad](%{base_url}/guidelines) para más detalles.
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2294,14 +2276,6 @@ es:
     too_many_spam_flags:
       title: "Demasiadas banderas por Spam"
       subject_template: "Nueva cuenta retenida"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tus mensajes han sido ocultados temporalmente porque han sido reportados muchas veces por la comunidad.
-
-        Como medida cautelar, tu cuenta nueva ha sido silenciada de crear nuevas respuestas o debates hasta que un miembro del staff la revise tu cuenta. Sentimos las molestias ocasionadas.
-
-        Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Demasiadas banderas NC3"
       subject_template: "Nueva cuenta retenida"
