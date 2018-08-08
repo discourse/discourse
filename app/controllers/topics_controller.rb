@@ -538,6 +538,12 @@ class TopicsController < ApplicationController
       group_names: params[:group_names]
     )
 
+    if !guardian.is_staff? && topic.reached_recipients_limit?
+      return render_json_error(I18n.t("pm_reached_recipients_limit",
+        recipients_limit: SiteSetting.max_allowed_message_recipients
+      ))
+    end
+
     guardian.ensure_can_invite_to!(topic, groups)
     group_ids = groups.map(&:id)
 

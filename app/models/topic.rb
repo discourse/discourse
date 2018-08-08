@@ -790,6 +790,11 @@ class Topic < ActiveRecord::Base
     false
   end
 
+  def reached_recipients_limit?
+    return false unless private_message?
+    topic_allowed_users.count >= SiteSetting.max_allowed_message_recipients
+  end
+
   def invite_group(user, group)
     TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
 
