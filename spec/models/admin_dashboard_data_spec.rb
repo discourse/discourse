@@ -338,7 +338,7 @@ describe AdminDashboardData do
 
   describe '#out_of_date_themes' do
     let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
-    let!(:theme) { Theme.create!(remote_theme_id: remote.id, name: "Test< Theme", user_id: -1) }
+    let!(:theme) { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
 
     it "outputs correctly formatted html" do
       remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)

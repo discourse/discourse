@@ -182,11 +182,13 @@ class Admin::ThemesController < Admin::AdminController
         log_theme_change(original_json, @theme)
         format.json { render json: @theme, status: :ok }
       else
-        format.json {
+        format.json do
+          error = @theme.errors.full_messages.join(", ").presence
+          error = I18n.t("themes.bad_color_scheme") if @theme.errors[:color_scheme].present?
+          error ||= I18n.t("themes.other_error")
 
-          error = @theme.errors[:color_scheme] ? I18n.t("themes.bad_color_scheme") : I18n.t("themes.other_error")
           render json: { errors: [ error ] }, status: :unprocessable_entity
-        }
+        end
       end
     end
   end

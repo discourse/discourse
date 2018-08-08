@@ -2537,6 +2537,46 @@ describe Guardian do
     end
   end
 
+  describe "#allow_themes?" do
+    let(:theme) { Fabricate(:theme) }
+    let(:theme2) { Fabricate(:theme) }
+
+    it "allows staff to use any themes" do
+      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(true)
+      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id])).to eq(true)
+    end
+
+    it "only allows normal users to use user-selectable themes or default theme" do
+      user_guardian = Guardian.new(user)
+
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
+      expect(user_guardian.allow_themes?([theme.id])).to eq(false)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(false)
+
+      theme.set_default!
+      expect(user_guardian.allow_themes?([theme.id])).to eq(true)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(false)
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
+
+      theme2.update!(user_selectable: true)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(true)
+      expect(user_guardian.allow_themes?([theme2.id, theme.id])).to eq(false)
+    end
+
+    it "allows child themes to be only used with their parent" do
+      user_guardian = Guardian.new(user)
+
+      theme.update!(user_selectable: true)
+      theme2.update!(user_selectable: true)
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
+
+      theme2.update!(user_selectable: false)
+      theme.add_child_theme!(theme2)
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(true)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(false)
+    end
+  end
+
   describe 'can_wiki?' do
     let(:post) { build(:post, created_at: 1.minute.ago) }
 

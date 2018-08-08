@@ -8,7 +8,10 @@ module Stylesheet
     end
 
     def self.theme_id
-      @theme_id || SiteSetting.default_theme_id
+      if @theme_id.blank? && SiteSetting.default_theme_id != -1
+        @theme_id = SiteSetting.default_theme_id
+      end
+      @theme_id
     end
 
     def self.watch(paths = nil)
@@ -76,12 +79,8 @@ module Stylesheet
       Stylesheet::Manager.cache.clear
 
       message = ["desktop", "mobile", "admin"].map do |name|
-        {
-          target: name,
-          new_href: Stylesheet::Manager.stylesheet_href(name.to_sym),
-          theme_id: Stylesheet::Watcher.theme_id
-        }
-      end
+        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+      end.flatten
       MessageBus.publish '/file-change', message
     end
 

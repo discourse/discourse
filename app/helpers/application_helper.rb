@@ -350,11 +350,11 @@ module ApplicationHelper
     end
   end
 
-  def theme_id
+  def theme_ids
     if customization_disabled?
       nil
     else
-      request.env[:resolved_theme_id]
+      request.env[:resolved_theme_ids]
     end
   end
 
@@ -378,17 +378,17 @@ module ApplicationHelper
   end
 
   def theme_lookup(name)
-    lookup = Theme.lookup_field(theme_id, mobile_view? ? :mobile : :desktop, name)
+    lookup = Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
     lookup.html_safe if lookup
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
-    if opts.key?(:theme_id)
-      id = opts[:theme_id] unless customization_disabled?
+    if opts.key?(:theme_ids)
+      ids = opts[:theme_ids] unless customization_disabled?
     else
-      id = theme_id
+      ids = theme_ids
     end
 
-    Stylesheet::Manager.stylesheet_link_tag(name, 'all', id)
+    Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
   end
 end
