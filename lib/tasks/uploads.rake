@@ -710,3 +710,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   puts "List of file paths @ #{path}"
   puts "Duration: #{Time.zone.now - now} seconds"
 end
+
+task "uploads:fix_incorrect_extensions" => :environment do
+  UploadFixer.fix_extensions
+end
