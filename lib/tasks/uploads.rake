@@ -712,5 +712,6 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
 end
 
 task "uploads:fix_incorrect_extensions" => :environment do
+  require_dependency "upload_fixer"
   UploadFixer.fix_extensions
 end
