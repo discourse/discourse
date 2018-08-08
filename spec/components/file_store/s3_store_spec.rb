@@ -125,10 +125,10 @@ describe FileStore::S3Store do
 
         s3_object = stub
 
-        s3_bucket.expects(:object).with(source).returns(s3_object)
+        s3_bucket.expects(:object).with(destination).returns(s3_object)
 
         s3_object.expects(:copy_from).with(
-          copy_source: "s3-upload-bucket/#{destination}"
+          copy_source: "s3-upload-bucket/#{source}"
         )
 
         store.copy_file(upload.url, source, destination)
