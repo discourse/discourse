@@ -33,8 +33,8 @@ class S3Helper
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
       self.copy(
-        File.join(@tombstone_prefix, s3_filename),
-        get_path_for_s3_upload(s3_filename)
+        get_path_for_s3_upload(s3_filename),
+        File.join(@tombstone_prefix, s3_filename)
       )
     end
 
@@ -45,8 +45,8 @@ class S3Helper
 
   def copy(source, destination)
     s3_bucket
-      .object(source)
-      .copy_from(copy_source: File.join(@s3_bucket_name, destination))
+      .object(destination)
+      .copy_from(copy_source: File.join(@s3_bucket_name, source))
   end
 
   # make sure we have a cors config for assets
