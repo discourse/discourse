@@ -196,6 +196,8 @@ export default createWidget("search-menu", {
       this.triggerSearch();
     }
 
+    searchData.contextEnabled = attrs.contextEnabled;
+
     return this.attach("menu-panel", {
       maxWidth: 500,
       contents: () => this.panelContents()
