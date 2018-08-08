@@ -13,7 +13,7 @@ class ThemesController < ::ApplicationController
 
     object = targets.map do |target|
       Stylesheet::Manager.stylesheet_data(target, theme_ids).map do |hash|
-        return hash unless Rails.env.development?
+        next hash unless Rails.env.development?
 
         dup_hash = hash.dup
         dup_hash[:new_href] << (dup_hash[:new_href].include?("?") ? "&" : "?")
