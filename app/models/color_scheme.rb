@@ -43,7 +43,7 @@ class ColorScheme < ActiveRecord::Base
       "success" =>           'fdd459',
       "love" =>              'fdd459'
     },
-    # By @awesomerobot
+    # By @rafafotes
     'Shades of Blue': {
       "primary" =>           '203243',
       "secondary" =>         'eef4f7',
