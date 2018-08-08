@@ -30,7 +30,7 @@ describe Admin::StaffActionLogsController do
 
   describe '#diff' do
     it 'can generate diffs for theme changes' do
-      theme = Theme.new(user_id: -1, name: 'bob')
+      theme = Fabricate(:theme)
       theme.set_field(target: :mobile, name: :scss, value: 'body {.up}')
       theme.set_field(target: :common, name: :scss, value: 'omit-dupe')
 

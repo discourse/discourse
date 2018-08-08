@@ -137,7 +137,7 @@
     {{/unless}}
     {{#if selectableChildThemes}}
       <p>
-        {{combo-box content=selectableChildThemes value=selectedChildThemeId}}
+        {{combo-box filterable=true content=selectableChildThemes value=selectedChildThemeId}}
         {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
       </p>
     {{/if}}

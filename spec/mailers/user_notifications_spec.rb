@@ -191,12 +191,12 @@ describe UserNotifications do
           Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
           Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
         ])
-        theme = Theme.create!(
-          name: 'my name',
-          user_id: Fabricate(:admin).id,
+        theme = Fabricate(:theme,
           user_selectable: true,
+          user: Fabricate(:admin),
           color_scheme_id: cs.id
         )
+
         theme.set_default!
 
         html = subject.html_part.body.to_s

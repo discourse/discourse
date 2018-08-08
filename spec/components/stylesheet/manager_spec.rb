@@ -8,7 +8,7 @@ describe Stylesheet::Manager do
     link = Stylesheet::Manager.stylesheet_link_tag(:embedded_theme)
     expect(link).to eq("")
 
-    theme = Theme.create(name: "embedded", user_id: -1)
+    theme = Fabricate(:theme)
     SiteSetting.default_theme_id = theme.id
 
     link = Stylesheet::Manager.stylesheet_link_tag(:embedded_theme)
@@ -16,10 +16,7 @@ describe Stylesheet::Manager do
   end
 
   it 'can correctly compile theme css' do
-    theme = Theme.new(
-      name: 'parent',
-      user_id: -1
-    )
+    theme = Fabricate(:theme)
 
     theme.set_field(target: :common, name: "scss", value: ".common{.scss{color: red;}}")
     theme.set_field(target: :desktop, name: "scss", value: ".desktop{.scss{color: red;}}")
@@ -28,10 +25,7 @@ describe Stylesheet::Manager do
 
     theme.save!
 
-    child_theme = Theme.new(
-      name: 'parent',
-      user_id: -1,
-    )
+    child_theme = Fabricate(:theme)
 
     child_theme.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
     child_theme.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -72,10 +66,7 @@ describe Stylesheet::Manager do
 
     it 'can correctly account for plugins in digest' do
 
-      theme = Theme.create!(
-        name: 'parent',
-        user_id: -1
-      )
+      theme = Fabricate(:theme)
 
       manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest1 = manager.digest
@@ -92,10 +83,7 @@ describe Stylesheet::Manager do
     let(:image2) { file_from_fixtures("logo-dev.png") }
 
     it 'can correctly account for theme uploads in digest' do
-      theme = Theme.create!(
-        name: 'parent',
-        user_id: -1
-      )
+      theme = Fabricate(:theme)
 
       upload = UploadCreator.new(image, "logo.png").create_for(-1)
       field = ThemeField.create!(
@@ -130,10 +118,7 @@ describe Stylesheet::Manager do
 
   describe 'color_scheme_digest' do
     it "changes with category background image" do
-      theme = Theme.new(
-        name: 'parent',
-        user_id: -1
-      )
+      theme = Fabricate(:theme)
       category1 = Fabricate(:category, uploaded_background_id: 123, updated_at: 1.week.ago)
       category2 = Fabricate(:category, uploaded_background_id: 456, updated_at: 2.days.ago)
 

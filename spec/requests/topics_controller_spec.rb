@@ -1218,48 +1218,6 @@ RSpec.describe TopicsController do
       expect(response.headers['X-Robots-Tag']).to eq(nil)
     end
 
-    describe "themes" do
-      let(:theme) { Theme.create!(user_id: -1, name: 'bob', user_selectable: true) }
-      let(:theme2) { Theme.create!(user_id: -1, name: 'bobbob', user_selectable: true) }
-
-      before do
-        sign_in(user)
-      end
-
-      it "selects the theme the user has selected" do
-        user.user_option.update_columns(theme_ids: [theme.id])
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme.id)
-
-        theme.update_attribute(:user_selectable, false)
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).not_to eq(theme.id)
-      end
-
-      it "can be overridden with a cookie" do
-        user.user_option.update_columns(theme_ids: [theme.id])
-
-        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq}"
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme2.id)
-      end
-
-      it "cookie can fail back to user if out of sync" do
-        user.user_option.update_columns(theme_ids: [theme.id])
-        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq - 1}"
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme.id)
-      end
-    end
-
     it "doesn't store an incoming link when there's no referer" do
       expect {
         get "/t/#{topic.id}.json"

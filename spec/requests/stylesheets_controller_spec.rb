@@ -27,7 +27,7 @@ describe StylesheetsController do
 
   it 'can lookup theme specific css' do
     scheme = ColorScheme.create_from_base(name: "testing", colors: [])
-    theme = Theme.create!(name: "test", color_scheme_id: scheme.id, user_id: -1)
+    theme = Fabricate(:theme, color_scheme_id: scheme.id)
 
     builder = Stylesheet::Manager.new(:desktop, theme.id)
     builder.compile

@@ -82,7 +82,7 @@ describe UserUpdater do
       updater = UserUpdater.new(acting_user, user)
       date_of_birth = Time.zone.now
 
-      theme = Theme.create!(user_id: -1, name: "test", user_selectable: true)
+      theme = Fabricate(:theme, user_selectable: true)
 
       seq = user.user_option.theme_key_seq
 

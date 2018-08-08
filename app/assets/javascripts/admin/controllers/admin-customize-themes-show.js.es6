@@ -1,4 +1,7 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
@@ -8,6 +11,18 @@ const THEME_UPLOAD_VAR = 2;
 
 export default Ember.Controller.extend({
   editRouteName: "adminCustomizeThemes.edit",
+
+  @observes("allowChildThemes")
+  setSelectedThemeId() {
+    const available = this.get("selectableChildThemes");
+    if (
+      !this.get("selectedChildThemeId") &&
+      available &&
+      available.length > 0
+    ) {
+      this.set("selectedChildThemeId", available[0].get("id"));
+    }
+  },
 
   @computed("model", "allThemes")
   parentThemes(model, allThemes) {
@@ -64,16 +79,21 @@ export default Ember.Controller.extend({
 
     let themes = [];
     available.forEach(t => {
-      if (!childThemes || childThemes.indexOf(t) === -1) {
+      if (
+        (!childThemes || childThemes.indexOf(t) === -1) &&
+        Em.isEmpty(t.get("childThemes")) &&
+        !t.get("user_selectable") &&
+        !t.get("default")
+      ) {
         themes.push(t);
       }
     });
     return themes.length === 0 ? null : themes;
   },
 
-  @computed("allThemes", "allThemes.length", "model")
+  @computed("allThemes", "allThemes.length", "model", "parentThemes")
   availableChildThemes(allThemes, count) {
-    if (count === 1) {
+    if (count === 1 || this.get("parentThemes")) {
       return null;
     }
 
