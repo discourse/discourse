@@ -2,6 +2,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { findAll } from "discourse/models/login-method";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Controller.extend({
   loading: false,
@@ -33,7 +34,13 @@ export default Ember.Controller.extend({
 
   @computed
   displayOAuthWarning() {
-    return findAll().length > 0;
+    return (
+      findAll(
+        this.siteSettings,
+        getOwner(this).lookup("capabilities:main"),
+        this.site.isMobileDevice
+      ).length > 0
+    );
   },
 
   toggleSecondFactor(enable) {
