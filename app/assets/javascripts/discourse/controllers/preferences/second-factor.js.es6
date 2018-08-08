@@ -2,7 +2,6 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { findAll } from "discourse/models/login-method";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Controller.extend({
   loading: false,
