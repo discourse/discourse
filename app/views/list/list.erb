@@ -52,6 +52,12 @@
         <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
       <% end %>
       <span class='posts' title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
+
+      <% if t.pinned_until && t.pinned_until > Time.zone.now && (t.pinned_globally || @list.category) %>
+        <p class='excerpt'>
+          <%= t.excerpt.html_safe %>
+        </p>
+      <% end %>
     </div>
   <% end %>
 </div>
