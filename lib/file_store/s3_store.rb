@@ -50,6 +50,11 @@ module FileStore
       @s3_helper.remove(path, true)
     end
 
+    def copy_file(url, source, destination)
+      return unless has_been_uploaded?(url)
+      @s3_helper.copy(source, destination)
+    end
+
     def has_been_uploaded?(url)
       return false if url.blank?
 

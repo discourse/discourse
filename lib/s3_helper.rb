@@ -30,18 +30,23 @@ class S3Helper
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
-    bucket = s3_bucket
-
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
-      bucket
-        .object(File.join(@tombstone_prefix, s3_filename))
-        .copy_from(copy_source: File.join(@s3_bucket_name, get_path_for_s3_upload(s3_filename)))
+      self.copy(
+        File.join(@tombstone_prefix, s3_filename),
+        get_path_for_s3_upload(s3_filename)
+      )
     end
 
     # delete the file
-    bucket.object(get_path_for_s3_upload(s3_filename)).delete
+    s3_bucket.object(get_path_for_s3_upload(s3_filename)).delete
   rescue Aws::S3::Errors::NoSuchKey
+  end
+
+  def copy(source, destination)
+    s3_bucket
+      .object(source)
+      .copy_from(copy_source: File.join(@s3_bucket_name, destination))
   end
 
   # make sure we have a cors config for assets
@@ -186,9 +191,11 @@ class S3Helper
   end
 
   def s3_bucket
-    bucket = s3_resource.bucket(@s3_bucket_name)
-    bucket.create unless bucket.exists?
-    bucket
+    @s3_bucket ||= begin
+      bucket = s3_resource.bucket(@s3_bucket_name)
+      bucket.create unless bucket.exists?
+      bucket
+    end
   end
 
   def check_missing_site_options
