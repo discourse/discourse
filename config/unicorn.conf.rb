@@ -19,7 +19,7 @@ listen (ENV["UNICORN_PORT"] || 3000).to_i
 timeout 30
 
 if !File.exist?("#{discourse_path}/tmp/pids")
-  Dir.mkdir("#{discourse_path}/tmp/pids")
+  FileUtils.mkdir_p("#{discourse_path}/tmp/pids")
 end
 
 # feel free to point this anywhere accessible on the filesystem
