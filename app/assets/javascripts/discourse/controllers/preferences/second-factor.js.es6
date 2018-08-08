@@ -34,13 +34,7 @@ export default Ember.Controller.extend({
 
   @computed
   displayOAuthWarning() {
-    return (
-      findAll(
-        this.siteSettings,
-        getOwner(this).lookup("capabilities:main"),
-        this.site.isMobileDevice
-      ).length > 0
-    );
+    return findAll().length > 0;
   },
 
   toggleSecondFactor(enable) {
