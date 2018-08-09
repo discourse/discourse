@@ -1370,6 +1370,16 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
+  def reset_bumped_at
+    post = ordered_posts.where(
+      user_deleted: false,
+      hidden: false,
+      post_type: Topic.visible_post_types
+    ).last
+
+    update!(bumped_at: post.created_at)
+  end
+
   private
 
   def update_category_topic_count_by(num)

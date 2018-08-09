@@ -33,7 +33,8 @@ class TopicsController < ApplicationController
     :move_to_inbox,
     :convert_topic,
     :bookmark,
-    :publish
+    :publish,
+    :reset_bump_date
   ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -718,6 +719,17 @@ class TopicsController < ApplicationController
     render_topic_changes(converted_topic)
   rescue ActiveRecord::RecordInvalid => ex
     render_json_error(ex)
+  end
+
+  def reset_bump_date
+    params.require(:id)
+    guardian.ensure_can_update_bumped_at!
+
+    topic = Topic.find_by(id: params[:id])
+    raise Discourse::NotFound.new unless topic
+
+    topic.reset_bumped_at
+    render body: nil
   end
 
   private

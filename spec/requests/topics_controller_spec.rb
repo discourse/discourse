@@ -2266,4 +2266,41 @@ RSpec.describe TopicsController do
 
   end
 
+  describe "#reset_bump_date" do
+    context "errors" do
+      let(:topic) { Fabricate(:topic) }
+
+      it "needs you to be logged in" do
+        put "/t/#{topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(403)
+      end
+
+      [:user, :trust_level_4].each do |user|
+        it "denies access for #{user}" do
+          sign_in(Fabricate(user))
+          put "/t/#{topic.id}/reset-bump-date.json"
+          expect(response.status).to eq(403)
+        end
+      end
+
+      it "should fail for non-existend topic" do
+        sign_in(Fabricate(:admin))
+        put "/t/1/reset-bump-date.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    [:admin, :moderator].each do |user|
+      it "should reset bumped_at as #{user}" do
+        sign_in(Fabricate(user))
+        topic = Fabricate(:topic, bumped_at: 1.hour.ago)
+        timestamp = 1.day.ago
+        Fabricate(:post, topic: topic, created_at: timestamp)
+
+        put "/t/#{topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to be_within_one_second_of(timestamp)
+      end
+    end
+  end
 end
