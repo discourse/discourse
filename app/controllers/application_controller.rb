@@ -224,13 +224,8 @@ class ApplicationController < ActionController::Base
 
       if permalink.present?
         # permalink present, redirect to that URL
-        if permalink.external_url
-          redirect_with_client_support permalink.external_url, status: :moved_permanently
-          return
-        elsif permalink.target_url
-          redirect_with_client_support "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
-          return
-        end
+        redirect_with_client_support permalink.target_url, status: :moved_permanently
+        return
       end
     end
 

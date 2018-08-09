@@ -37,6 +37,34 @@ RSpec.describe ApplicationController do
         expect(response.body).to eq(external_url)
       end
 
+      it 'supports subfolder with permalinks' do
+        GlobalSetting.stubs(:relative_url_root).returns('/forum')
+        Discourse.stubs(:base_uri).returns("/forum")
+
+        trashed_topic = create_post.topic
+        trashed_topic.trash!
+        new_topic = create_post.topic
+        permalink = Permalink.create!(url: trashed_topic.relative_url, topic_id: new_topic.id)
+
+        # no subfolder because router doesn't know about subfolder in this test
+        get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/t/#{new_topic.slug}/#{new_topic.id}")
+
+        permalink.destroy
+        category = Fabricate(:category)
+        permalink = Permalink.create!(url: trashed_topic.relative_url, category_id: category.id)
+        get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}")
+
+        permalink.destroy
+        permalink = Permalink.create!(url: trashed_topic.relative_url, post_id: new_topic.posts.last.id)
+        get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/t/#{new_topic.slug}/#{new_topic.id}/#{new_topic.posts.last.post_number}")
+      end
+
       it 'should return 404 and show Google search' do
         get "/t/nope-nope/99999999"
         expect(response.status).to eq(404)
