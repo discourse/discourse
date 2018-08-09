@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
 if (!Object.entries) {
   Object.entries = function( obj ){
@@ -41,3 +42,4 @@ if (typeof Object.assign !== 'function') {
     configurable: true
   });
 }
+//@license-end

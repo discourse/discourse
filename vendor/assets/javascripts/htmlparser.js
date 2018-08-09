@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 /***********************************************
 Copyright 2010 - 2012 Chris Winberry <chris@winberry.net>. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -991,3 +992,4 @@ exports.ElementType = Mode;
 exports.DomUtils = DomUtils;
 
 })();
+//@license-end

@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 // http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
 var clone, getCaret;
 getCaret = function(el) {
@@ -136,3 +137,4 @@ $.fn.caretPosition = function(options) {
   };
 
 };
+//@license-end

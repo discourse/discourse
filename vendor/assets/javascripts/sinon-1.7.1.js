@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 /**
  * Sinon.JS 1.7.1, 2013/05/07
  *
@@ -4297,3 +4298,4 @@ if (typeof module == "object" && typeof require == "function") {
 }(typeof sinon == "object" && sinon || null, typeof window != "undefined" ? window : (typeof self != "undefined") ? self : global));
 
 return sinon;}.call(typeof window != 'undefined' && window || {}));
+//@license-end

@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 //= require markdown-it.js
 //= require ./pretty-text/engines/discourse-markdown/helpers
 //= require ./pretty-text/engines/discourse-markdown/mentions
@@ -16,3 +17,4 @@
 //= require ./pretty-text/engines/discourse-markdown/text-post-process
 //= require ./pretty-text/engines/discourse-markdown/image-protocol
 //= require ./pretty-text/engines/discourse-markdown/inject-line-number
+//@license-end

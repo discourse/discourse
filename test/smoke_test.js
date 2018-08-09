@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 const args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
@@ -249,3 +250,4 @@ const path = require('path');
 
   console.log("ALL PASSED");
 })();
+//@license-end

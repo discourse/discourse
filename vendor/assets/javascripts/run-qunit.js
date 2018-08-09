@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 // Chrome QUnit Test Runner
 // Author: David Taylor
 // Requires chrome-launcher and chrome-remote-interface from npm
@@ -207,3 +208,4 @@ function check() {
 }
 
 const check_script = check.toString();
+//@license-end
