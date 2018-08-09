@@ -45,19 +45,15 @@ export default ComboBox.extend(Tags, {
     );
   },
 
-  willDestroyElement() {
-    this._super(...arguments);
+  click(event) {
+    if (event.target.tagName === "BUTTON") {
+      const $button = $(event.target);
 
-    this.$(".selected-name").off("touchend.select-kit pointerup.select-kit");
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    this.$(".selected-name").on(
-      "touchend.select-kit pointerup.select-kit",
-      () => this.focusFilterOrHeader()
-    );
+      if ($button.hasClass("selected-tag")) {
+        this._destroyEvent(event);
+        this.destroyTags(this.computeContentItem($button.attr("data-value")));
+      }
+    }
   },
 
   @computed("hasReachedMaximum")
@@ -72,37 +68,6 @@ export default ComboBox.extend(Tags, {
 
   filterComputedContent(computedContent) {
     return computedContent;
-  },
-
-  didRender() {
-    this._super();
-
-    this.$(".select-kit-body").on(
-      "click.mini-tag-chooser",
-      ".selected-tag",
-      event => {
-        event.stopImmediatePropagation();
-        this.destroyTags(
-          this.computeContentItem($(event.target).attr("data-value"))
-        );
-      }
-    );
-
-    this.$(".select-kit-header").on(
-      "focus.mini-tag-chooser",
-      ".selected-name",
-      event => {
-        event.stopImmediatePropagation();
-        this.focus(event);
-      }
-    );
-  },
-
-  willDestroyElement() {
-    this._super();
-
-    this.$(".select-kit-body").off("click.mini-tag-chooser");
-    this.$(".select-kit-header").off("focus.mini-tag-chooser");
   },
 
   // we are directly mutatings tags to define the current selection
