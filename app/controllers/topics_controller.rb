@@ -135,8 +135,12 @@ class TopicsController < ApplicationController
     end
 
     if ex.obj && Topic === ex.obj && guardian.can_see_topic_if_not_deleted?(ex.obj)
-      rescue_discourse_actions(:not_found, 410)
-      return
+      raise Discourse::NotFound.new(
+        "topic was deleted",
+        status: 410,
+        check_permalinks: true,
+        original_path: ex.obj.relative_url
+      )
     end
 
     raise ex

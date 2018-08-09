@@ -77,7 +77,18 @@ module Discourse
   end
 
   # When something they want is not found
-  class NotFound < StandardError; end
+  class NotFound < StandardError
+    attr_reader :status
+    attr_reader :check_permalinks
+    attr_reader :original_path
+
+    def initialize(message = nil, status: 404, check_permalinks: false, original_path: nil)
+      @status = status
+      @check_permalinks = check_permalinks
+      @original_path = original_path
+      super(message)
+    end
+  end
 
   # When a setting is missing
   class SiteSettingMissing < StandardError; end
