@@ -91,7 +91,14 @@ export default Ember.Mixin.create({
     // next so we are sure it finised expand/collapse
     Ember.run.next(() => {
       Ember.run.schedule("afterRender", () => {
-        if (!context.$filterInput() || !context.$filterInput().is(":visible")) {
+        if (
+          !context.$filterInput() ||
+          !context.$filterInput().is(":visible") ||
+          context
+            .$filterInput()
+            .parent()
+            .hasClass("is-hidden")
+        ) {
           if (context.$header()) {
             context.$header().focus();
           } else {
