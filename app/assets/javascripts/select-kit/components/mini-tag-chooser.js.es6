@@ -45,15 +45,20 @@ export default ComboBox.extend(Tags, {
     );
   },
 
-  click(event) {
-    if (event.target.tagName === "BUTTON") {
-      const $button = $(event.target);
+  didInsertElement() {
+    this._super(...arguments);
 
-      if ($button.hasClass("selected-tag")) {
-        this._destroyEvent(event);
-        this.destroyTags(this.computeContentItem($button.attr("data-value")));
-      }
-    }
+    this.$(".select-kit-body").on("click", ".selected-tag", event => {
+      const $button = $(event.target);
+      this._destroyEvent(event);
+      this.destroyTags(this.computeContentItem($button.attr("data-value")));
+    });
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.$(".select-kit-body").off("click");
   },
 
   @computed("hasReachedMaximum")
