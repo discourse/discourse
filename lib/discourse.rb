@@ -211,7 +211,7 @@ module Discourse
     end
   end
 
-  BUILTIN_AUTH = [
+  BUILTIN_AUTH ||= [
     Auth::AuthProvider.new(authenticator: Auth::FacebookAuthenticator.new, frame_width: 580, frame_height: 400),
     Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500),
     Auth::AuthProvider.new(authenticator: Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true)),
