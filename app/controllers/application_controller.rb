@@ -173,7 +173,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound, PluginDisabled, ActionController::RoutingError  do
+  rescue_from Discourse::NotFound do |e|
+    rescue_discourse_actions(
+      :not_found,
+      e.status,
+      check_permalinks: e.check_permalinks,
+      original_path: e.original_path
+    )
+  end
+
+  rescue_from PluginDisabled, ActionController::RoutingError  do
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -194,11 +203,36 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
+  def redirect_with_client_support(url, options)
+    if request.xhr?
+      response.headers['Discourse-Xhr-Redirect'] = 'true'
+      render plain: url
+    else
+      redirect_to url, options
+    end
+  end
+
   def rescue_discourse_actions(type, status_code, opts = nil)
     opts ||= {}
     show_json_errors = (request.format && request.format.json?) ||
                        (request.xhr?) ||
                        ((params[:external_id] || '').ends_with? '.json')
+
+    if type == :not_found && opts[:check_permalinks]
+      url = opts[:original_path] || request.fullpath
+      permalink = Permalink.find_by_url(url)
+
+      if permalink.present?
+        # permalink present, redirect to that URL
+        if permalink.external_url
+          redirect_with_client_support permalink.external_url, status: :moved_permanently
+          return
+        elsif permalink.target_url
+          redirect_with_client_support "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
+          return
+        end
+      end
+    end
 
     message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
 
@@ -442,25 +476,6 @@ class ApplicationController < ActionController::Base
     # longer term we may want to push this into middleware
     headers.delete 'Set-Cookie'
     request.session_options[:skip] = true
-  end
-
-  def permalink_redirect_or_not_found
-    url = request.fullpath
-    permalink = Permalink.find_by_url(url)
-
-    if permalink.present?
-      # permalink present, redirect to that URL
-      if permalink.external_url
-        redirect_to permalink.external_url, status: :moved_permanently
-      elsif permalink.target_url
-        redirect_to "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
-      else
-        raise Discourse::NotFound
-      end
-    else
-      # redirect to 404
-      raise Discourse::NotFound
-    end
   end
 
   def secure_session

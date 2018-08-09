@@ -17,6 +17,26 @@ RSpec.describe ApplicationController do
 
   describe 'build_not_found_page' do
     describe 'topic not found' do
+
+      it 'should return permalink for deleted topics' do
+        topic = create_post.topic
+        external_url = 'https://somewhere.over.rainbow'
+        Permalink.create!(url: topic.relative_url, external_url: external_url)
+        topic.trash!
+
+        get topic.relative_url
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to(external_url)
+
+        get "/t/#{topic.id}.json"
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to(external_url)
+
+        get "/t/#{topic.id}.json", xhr: true
+        expect(response.status).to eq(200)
+        expect(response.body).to eq(external_url)
+      end
+
       it 'should return 404 and show Google search' do
         get "/t/nope-nope/99999999"
         expect(response.status).to eq(404)
