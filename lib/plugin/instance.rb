@@ -109,6 +109,12 @@ class Plugin::Instance
     end
   end
 
+  def whitelist_flag_post_custom_field(field)
+    reloadable_patch do |plugin|
+      ::FlagQuery.register_plugin_post_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+    end
+  end
+
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
