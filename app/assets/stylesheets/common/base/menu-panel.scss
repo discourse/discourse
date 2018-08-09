@@ -275,6 +275,9 @@
 
       a {
         padding: 0;
+        > div {
+          overflow: hidden; // clears the text from wrapping below icons
+        }
       }
 
       p {
