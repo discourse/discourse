@@ -53,7 +53,8 @@ function loadDraft(store, opts) {
       composerTime: draft.composerTime,
       typingTime: draft.typingTime,
       whisper: draft.whisper,
-      tags: draft.tags
+      tags: draft.tags,
+      noBump: draft.noBump
     });
     return composer;
   }
@@ -191,6 +192,13 @@ export default Ember.Controller.extend({
       return I18n.t("composer.whisper");
     } else if (unlistTopic) {
       return I18n.t("composer.unlist");
+    }
+  },
+
+  @computed("model.noBump")
+  topicBumpText(noBump) {
+    if (noBump) {
+      return I18n.t("composer.no_topic_bump");
     }
   },
 
