@@ -105,7 +105,11 @@ export default Ember.Mixin.create({
             $(context.element).focus();
           }
         } else {
-          context.$filterInput().focus();
+          if (this.site && this.site.isMobileDevice) {
+            this.expand();
+          } else {
+            context.$filterInput().focus();
+          }
         }
       });
     });
