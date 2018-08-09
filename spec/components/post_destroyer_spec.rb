@@ -91,6 +91,12 @@ describe PostDestroyer do
       reply1.reload
       expect(reply1.deleted_at).to eq(nil)
 
+      # defer the flag, we should be able to delete the stub
+      PostAction.defer_flags!(reply1, Discourse.system_user)
+      PostDestroyer.destroy_stubs
+
+      reply1.reload
+      expect(reply1.deleted_at).to_not eq(nil)
     end
 
     it 'uses the delete_removed_posts_after site setting' do

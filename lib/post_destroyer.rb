@@ -26,9 +26,10 @@ class PostDestroyer
       .where("NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
-                  WHERE pa.post_id = posts.id AND
-                        pa.deleted_at IS NULL AND
-                        pa.post_action_type_id IN (?)
+                  WHERE pa.post_id = posts.id
+                    AND pa.deleted_at IS NULL
+                    AND pa.deferred_at IS NULL
+                    AND pa.post_action_type_id IN (?)
               )", PostActionType.notify_flag_type_ids)
       .find_each do |post|
 
