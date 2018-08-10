@@ -7,28 +7,33 @@
 
 .dashboard-next {
   .section-top {
-    margin-bottom: 1em;
+    margin-bottom: .5em;
   }
 
   .navigation {
     display: flex;
-    margin: 0 0 1em 0;
+    margin: 0 0 2.5em 0;
+    border-bottom: 1px solid $primary-low-mid;
 
     .navigation-item {
       display: inline;
       background: $secondary;
-      padding: 0.5em 1em;
+      &:hover {
+        background: $primary-very-low;
+      }
     }
 
     .navigation-link {
-      font-weight: 700;
+      display: block;
+      font-weight: bold;
+      padding: .6em 1em .5em 1em;
     }
   }
 
   @mixin active-navigation-item {
-    border-radius: 3px 3px 0 0;
-    border: 1px solid $primary-low;
-    border-bottom: 10px solid $secondary;
+    .navigation-link {
+      border-bottom: .4em solid $tertiary;
+    }
   }
 
   &.dashboard-next-moderation .navigation-item.moderation {
@@ -108,6 +113,9 @@
 
     .section-body {
       padding: 1em 0 0;
+      > p {
+        margin-top: 0;
+      }
     }
   }
 
@@ -122,7 +130,6 @@
       flex-grow: 1;
       flex-basis: 100%;
       display: flex;
-      margin-bottom: 1em;
     }
 
     @include breakpoint(medium) {
@@ -158,6 +165,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+      border-right: 1px solid $primary-low;
 
       .backups,
       .uploads {
@@ -189,7 +197,6 @@
       }
     }
     .last-dashboard-update {
-      border-left: 1px solid $primary-low;
       text-align: center;
       display: flex;
       justify-content: center;
@@ -229,7 +236,7 @@
   }
 
   .dashboard-problems {
-    margin-bottom: 2em;
+    margin-bottom: 2.5em;
 
     .d-icon-exclamation-triangle {
       color: $danger;
@@ -242,8 +249,6 @@
 }
 
 .admin-report-table {
-  margin-bottom: 1em;
-
   &.is-disabled {
     background: $primary-low;
     padding: 1em;
@@ -263,7 +268,7 @@
 }
 
 .activity-metrics {
-  margin-bottom: 1em;
+  margin-bottom: .25em;
 }
 
 .user-metrics {

@@ -6,6 +6,7 @@
     align-self: flex-start;
     text-align: center;
     padding: 3em;
+    margin-bottom: 1.5em;
     box-sizing: border-box;
   }
 
@@ -36,7 +37,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 
     .report-title {
       align-items: center;
@@ -169,16 +171,16 @@
 }
 
 .admin-report.users-by-type {
-  margin-top: 1em;
+  margin-top: 1.5em;
 }
 
 .admin-report.users-by-type,
 .admin-report.users-by-trust-level {
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
   flex: 1;
   .report-header {
     border-bottom: 1px solid $primary-medium;
-    padding-bottom: 0.5em;
+    padding-bottom: 0.25em;
     border-bottom: 1px solid #e9e9e9;
   }
 }

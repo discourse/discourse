@@ -2,6 +2,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  border-bottom: 1px solid $primary-low;
 
   .counters-header {
     display: grid;
@@ -34,9 +35,6 @@
 }
 
 .admin-report.counters {
-  &:last-child .admin-report-counters {
-    border-bottom: 1px solid $primary-low;
-  }
 
   .admin-report-counters {
     display: grid;
@@ -110,8 +108,7 @@
     flex-direction: row;
     align-items: center;
     font-size: $font-0;
-    border: 0;
-    background: $primary-low;
+    border-bottom: 0;
     color: $primary-medium;
     .d-icon {
       font-size: $font-up-1;

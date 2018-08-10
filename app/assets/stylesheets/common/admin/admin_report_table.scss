@@ -10,7 +10,7 @@
   .pagination {
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.5em;
+    margin-top: 0.25em;
 
     button {
       margin-left: 0.5em;
@@ -36,7 +36,6 @@
     table-layout: fixed;
     border: 1px solid $primary-low;
     margin-top: 0;
-    margin-bottom: 10px;
 
     tbody {
       border: none;
