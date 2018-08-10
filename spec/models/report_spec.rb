@@ -16,17 +16,17 @@ describe Report do
   end
 
   shared_examples 'category filtering on subcategories' do
-    before(:all) do
-      c3 = Fabricate(:category, id: 3)
-      c2 = Fabricate(:category, id: 2, parent_category_id: 3)
-      Topic.find(c2.topic_id).delete
-      Topic.find(c3.topic_id).delete
+    before do
+      c = Fabricate(:category, id: 3)
+      c.topic.destroy
+      c = Fabricate(:category, id: 2, parent_category_id: 3)
+      c.topic.destroy
+      # destroy the category description topics so the count is right, on filtered data
     end
-    after(:all) do
-      Category.where(id: 2).or(Category.where(id: 3)).destroy_all
-      User.where("id > 0").destroy_all
+
+    it 'returns the filtered data' do
+      expect(report.total).to eq(1)
     end
-    include_examples 'category filtering'
   end
 
   shared_examples 'with data x/y' do
