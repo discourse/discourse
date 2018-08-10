@@ -359,6 +359,8 @@ class Guardian
   end
 
   def allow_themes?(theme_ids)
+    return true if theme_ids.blank?
+
     if is_staff? && (theme_ids - Theme.theme_ids).blank?
       return true
     end
