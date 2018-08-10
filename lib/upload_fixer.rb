@@ -74,7 +74,7 @@ class UploadFixer
       end
     end
   rescue => e
-    STDERR.puts "Skipping upload: ailed to correct extension on upload id: #{upload.id} #{current_extension} => #{correct_extension}"
+    STDERR.puts "Skipping upload: failed to correct extension on upload id: #{upload.id} #{current_extension} => #{correct_extension}"
     STDERR.puts e
   end
 
