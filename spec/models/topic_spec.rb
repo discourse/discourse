@@ -1366,6 +1366,22 @@ describe Topic do
         expect(Topic.visible).to include c
       end
     end
+
+    describe '#in_category_and_subcategories' do
+      it 'returns topics in a category and its subcategories' do
+        c1 = Fabricate(:category)
+        c2 = Fabricate(:category, parent_category_id: c1.id)
+        c3 = Fabricate(:category)
+
+        t1 = Fabricate(:topic, category_id: c1.id)
+        t2 = Fabricate(:topic, category_id: c2.id)
+        t3 = Fabricate(:topic, category_id: c3.id)
+
+        expect(Topic.in_category_and_subcategories(c1.id)).not_to include(t3)
+        expect(Topic.in_category_and_subcategories(c1.id)).to include(t2)
+        expect(Topic.in_category_and_subcategories(c1.id)).to include(t1)
+      end
+    end
   end
 
   describe '#private_topic_timer' do

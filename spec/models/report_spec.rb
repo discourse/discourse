@@ -15,6 +15,20 @@ describe Report do
     end
   end
 
+  shared_examples 'category filtering on subcategories' do
+    before(:all) do
+      c3 = Fabricate(:category, id: 3)
+      c2 = Fabricate(:category, id: 2, parent_category_id: 3)
+      Topic.find(c2.topic_id).delete
+      Topic.find(c3.topic_id).delete
+    end
+    after(:all) do
+      Category.where(id: 2).or(Category.where(id: 3)).destroy_all
+      User.where("id > 0").destroy_all
+    end
+    include_examples 'category filtering'
+  end
+
   shared_examples 'with data x/y' do
     it "returns today's data" do
       expect(report.data.select { |v| v[:x].today? }).to be_present
@@ -717,6 +731,12 @@ describe Report do
         let(:report) { Report.find('flags', category_id: 2) }
 
         include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('flags', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
       end
     end
   end
@@ -740,6 +760,12 @@ describe Report do
         let(:report) { Report.find('topics', category_id: 2) }
 
         include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('topics', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
       end
     end
   end
@@ -775,6 +801,68 @@ describe Report do
     it "returns a report with a timeout error" do
       report = Report.find("timeout_test")
       expect(report.error).to eq(:timeout)
+    end
+  end
+
+  describe 'posts' do
+    let(:report) { Report.find('posts') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        topic = Fabricate(:topic)
+        topic_with_category_id = Fabricate(:topic, category_id: 2)
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: topic_with_category_id)
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, created_at: 45.days.ago, topic: topic)
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('posts', category_id: 2) }
+
+        include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('posts', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
+      end
+    end
+  end
+
+  # TODO: time_to_first_response
+
+  describe 'topics_with_no_response' do
+    let(:report) { Report.find('topics_with_no_response') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        Fabricate(:topic, category_id: 2)
+        Fabricate(:post, topic: Fabricate(:topic))
+        Fabricate(:topic)
+        Fabricate(:topic, created_at: 45.days.ago)
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('topics_with_no_response', category_id: 2) }
+
+        include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('topics_with_no_response', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
+      end
     end
   end
 end
