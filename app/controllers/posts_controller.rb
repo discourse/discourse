@@ -653,6 +653,11 @@ class PostsController < ApplicationController
       result[:is_warning] = false
     end
 
+    if params[:no_bump] == "true"
+      raise Discourse::InvalidParameters.new(:no_bump) unless guardian.can_skip_bump?
+      result[:no_bump] = true
+    end
+
     if params[:shared_draft] == 'true'
       raise Discourse::InvalidParameters.new(:shared_draft) unless guardian.can_create_shared_draft?
 
