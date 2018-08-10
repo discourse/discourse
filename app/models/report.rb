@@ -360,7 +360,7 @@ class Report
     report.category_filtering = true
     basic_report_about report, Topic, :listable_count_per_day, report.start_date, report.end_date, report.category_id
     countable = Topic.listable_topics
-    countable = countable.where(category_id: report.category_id) if report.category_id
+    countable = countable.in_category_and_subcategories(report.category_id) if report.category_id
     add_counts report, countable, 'topics.created_at'
   end
 
@@ -369,7 +369,9 @@ class Report
     report.category_filtering = true
     basic_report_about report, Post, :public_posts_count_per_day, report.start_date, report.end_date, report.category_id
     countable = Post.public_posts.where(post_type: Post.types[:regular])
-    countable = countable.joins(:topic).where("topics.category_id = ?", report.category_id) if report.category_id
+    if report.category_id
+      countable = countable.joins(:topic).merge(Topic.in_category_and_subcategories(report.category_id))
+    end
     add_counts report, countable, 'posts.created_at'
   end
 
@@ -475,7 +477,7 @@ class Report
 
     basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date, report.category_id
     countable = PostAction.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
-    countable = countable.joins(post: :topic).where("topics.category_id = ?", report.category_id) if report.category_id
+    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
     add_counts report, countable, 'post_actions.created_at'
   end
 
@@ -497,7 +499,7 @@ class Report
       report.data << { x: date, y: count }
     end
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
-    countable = countable.joins(post: :topic).where("topics.category_id = ?", report.category_id) if report.category_id
+    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
     add_counts report, countable, 'post_actions.created_at'
   end
 
@@ -600,6 +602,7 @@ class Report
   end
 
   def self.report_top_referred_topics(report)
+    report.category_filtering = true
     report.modes = [:table]
 
     report.labels = [
@@ -618,13 +621,19 @@ class Report
       }
     ]
 
-    options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
+    options = {
+      end_date: report.end_date,
+      start_date: report.start_date,
+      limit: report.limit || 8,
+      category_id: report.category_id
+    }
     result = nil
     result = IncomingLinksReport.find(:top_referred_topics, options)
     report.data = result.data
   end
 
   def self.report_top_traffic_sources(report)
+    report.category_filtering = true
     report.modes = [:table]
 
     report.labels = [
@@ -644,7 +653,12 @@ class Report
       }
     ]
 
-    options = { end_date: report.end_date, start_date: report.start_date, limit: report.limit || 8 }
+    options = {
+      end_date: report.end_date,
+      start_date: report.start_date,
+      limit: report.limit || 8,
+      category_id: report.category_id
+    }
     result = nil
     result = IncomingLinksReport.find(:top_traffic_sources, options)
     report.data = result.data
@@ -1055,6 +1069,7 @@ class Report
   end
 
   def self.report_post_edits(report)
+    report.category_filtering = true
     report.modes = [:table]
 
     report.labels = [
@@ -1132,7 +1147,16 @@ class Report
     ON u.id = p.user_id
     SQL
 
-    DB.query(sql).each do |r|
+    if report.category_id
+      sql += <<~SQL
+      JOIN topics t
+      ON t.id = p.topic_id
+      WHERE t.category_id = ? OR t.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = ?)
+      SQL
+    end
+    result = report.category_id ? DB.query(sql, report.category_id, report.category_id) : DB.query(sql)
+
+    result.each do |r|
       revision = {}
       revision[:editor_id] = r.editor_id
       revision[:editor_username] = r.editor_username
