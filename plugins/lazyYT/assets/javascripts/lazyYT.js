@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 /*!
 * lazyYT (lazy load YouTube videos)
 * v1.0.1 - 2014-12-30
@@ -131,3 +132,4 @@
   };
 
 })(jQuery);
+//@license-end

@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 //= require_tree ./ember-addons/utils
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
@@ -104,3 +105,4 @@
 //= require_tree ./discourse/initializers
 //= require_tree ./discourse/services
 //= require_tree ./discourse/widgets
+//@license-end

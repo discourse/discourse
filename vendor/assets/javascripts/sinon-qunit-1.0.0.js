@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 /**
  * sinon-qunit 1.0.0, 2010/12/09
  *
@@ -47,3 +48,4 @@ sinon.config = {
     useFakeTimers: true,
     useFakeServer: false
 };
+//@license-end

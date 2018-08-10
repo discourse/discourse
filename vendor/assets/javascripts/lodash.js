@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 /**
  * @license
  * Lo-Dash 1.3.0 (Custom Build) <http://lodash.com/>
@@ -5665,3 +5666,4 @@
     window._ = _;
   }
 }(this));
+//@license-end

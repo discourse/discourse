@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 /*global I18n:true */
 
 // Instantiate the object
@@ -322,3 +323,4 @@ I18n.enableVerboseLocalizationSession = function() {
 
 // shortcuts
 I18n.t = I18n.translate;
+//@license-end

@@ -1,3 +1,4 @@
+ //@license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&dn=gpl-2.0.txt GPL-v2-or-Later
 /**
  * bootbox.js v3.2.0
  *
@@ -658,3 +659,4 @@ var bootbox = window.bootbox || (function(document, $) {
 
 // @see https://github.com/makeusabrew/bootbox/issues/71
 window.bootbox = bootbox;
+//@license-end
