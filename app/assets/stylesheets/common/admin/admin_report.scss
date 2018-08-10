@@ -10,6 +10,10 @@
     box-sizing: border-box;
   }
 
+  + .table {
+    margin-top: 1.5em;
+  }
+
   .report-error {
     color: $danger;
     border: 1px solid $danger;
