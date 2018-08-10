@@ -1318,6 +1318,7 @@ en:
       whisper: "whisper"
       unlist: "unlisted"
       blockquote_text: "Blockquote"
+      no_topic_bump: "(no bump)"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
@@ -1437,6 +1438,9 @@ en:
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to staff"
+        toggle_topic_bump:
+          label: "Toggle topic bump"
+          desc: "Reply without changing the topic's bump date"
 
     notifications:
       tooltip:
