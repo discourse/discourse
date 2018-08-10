@@ -8,9 +8,8 @@ module Jobs
       demoted_user_ids = []
       User.real.where(
         trust_level: TrustLevel[3],
-        manual_locked_trust_level: nil,
-        group_locked_trust_level: nil
-      ).find_each do |u|
+        manual_locked_trust_level: nil
+      ).where("group_locked_trust_level IS NULL OR group_locked_trust_level < ?", TrustLevel[3]).find_each do |u|
         # Don't demote too soon after being promoted
         next if u.on_tl3_grace_period?
 
@@ -23,8 +22,7 @@ module Jobs
       # Promotions
       User.real.not_suspended.where(
           trust_level: TrustLevel[2],
-          manual_locked_trust_level: nil,
-          group_locked_trust_level: nil
+          manual_locked_trust_level: nil
         ).where.not(id: demoted_user_ids)
         .joins(:user_stat)
         .where("user_stats.days_visited >= ?", SiteSetting.tl3_requires_days_visited)
