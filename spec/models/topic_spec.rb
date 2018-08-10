@@ -2296,4 +2296,27 @@ describe Topic do
       end
     end
   end
+
+  describe "#reset_bumped_at" do
+    it "ignores hidden and deleted posts when resetting the topic's bump date" do
+      post = create_post(created_at: 10.hours.ago)
+      topic = post.topic
+
+      expect { topic.reset_bumped_at }.to_not change { topic.bumped_at }
+
+      post = Fabricate(:post, topic: topic, post_number: 2, created_at: 9.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 8.hours.ago, deleted_at: 1.hour.ago)
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 7.hours.ago, hidden: true)
+      Fabricate(:post, topic: topic, post_number: 5, created_at: 6.hours.ago, user_deleted: true)
+      Fabricate(:post, topic: topic, post_number: 6, created_at: 5.hours.ago, post_type: Post.types[:whisper])
+
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+
+      post = Fabricate(:post, topic: topic, post_number: 7, created_at: 4.hours.ago, post_type: Post.types[:moderator_action])
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+
+      post = Fabricate(:post, topic: topic, post_number: 8, created_at: 3.hours.ago, post_type: Post.types[:small_action])
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+    end
+  end
 end
