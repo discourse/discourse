@@ -148,23 +148,35 @@ HTML
 
   describe ".transform_ids" do
     it "adds the child themes of the parent" do
-      child = Fabricate(:theme, id: 97)
-      child2 = Fabricate(:theme, id: 96)
+      child = Fabricate(:theme)
+      child2 = Fabricate(:theme)
+      sorted = [child.id, child2.id].sort
 
       theme.add_child_theme!(child)
       theme.add_child_theme!(child2)
-      expect(Theme.transform_ids([theme.id])).to eq([theme.id, child2.id, child.id])
-      expect(Theme.transform_ids([theme.id, 94, 90])).to eq([theme.id, 90, 94, child2.id, child.id])
+      expect(Theme.transform_ids([theme.id])).to eq([theme.id, *sorted])
+
+      fake_id = [child.id, child2.id, theme.id].min - 5
+      fake_id2 = [child.id, child2.id, theme.id].max + 5
+
+      expect(Theme.transform_ids([theme.id, fake_id2, fake_id]))
+        .to eq([theme.id, fake_id, *sorted, fake_id2])
     end
 
     it "doesn't insert children when extend is false" do
-      child = Fabricate(:theme, id: 97)
-      child2 = Fabricate(:theme, id: 96)
+      child = Fabricate(:theme)
+      child2 = Fabricate(:theme)
 
       theme.add_child_theme!(child)
       theme.add_child_theme!(child2)
+
+      fake_id = theme.id + 1
+      fake_id2 = fake_id + 2
+      fake_id3 = fake_id2 + 3
+
       expect(Theme.transform_ids([theme.id], extend: false)).to eq([theme.id])
-      expect(Theme.transform_ids([theme.id, 94, 90, 70, 70], extend: false)).to eq([theme.id, 70, 90, 94])
+      expect(Theme.transform_ids([theme.id, fake_id3, fake_id, fake_id2, fake_id2], extend: false))
+        .to eq([theme.id, fake_id, fake_id2, fake_id3])
     end
   end
 
