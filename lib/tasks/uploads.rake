@@ -713,5 +713,5 @@ end
 
 task "uploads:fix_incorrect_extensions" => :environment do
   require_dependency "upload_fixer"
-  UploadFixer.fix_extensions
+  UploadFixer.fix_all_extensions
 end
