@@ -563,6 +563,18 @@ describe Report do
         freeze_time(Date.today)
       end
 
+      context "moderators order" do
+        before do
+          Fabricate(:post, user: sam)
+          Fabricate(:post, user: jeff)
+        end
+
+        it "returns the moderators in alphabetical order" do
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:username]).to eq('sam')
+        end
+      end
+
       context "time read" do
         before do
           sam.user_visits.create(visited_at: 2.days.ago, time_read: 200)
@@ -575,10 +587,10 @@ describe Report do
         end
 
         it "returns the correct read times" do
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[0][:time_read]).to eq(300)
-          expect(report.data[1][:username]).to eq('jeff')
-          expect(report.data[1][:time_read]).to eq(3000)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[0][:time_read]).to eq(3000)
+          expect(report.data[1][:username]).to eq('sam')
+          expect(report.data[1][:time_read]).to eq(300)
         end
       end
 
@@ -589,7 +601,7 @@ describe Report do
           PostAction.agree_flags!(flagged_post, jeff)
         end
 
-        it "returns the correct read times" do
+        it "returns the correct flag counts" do
           expect(report.data.count).to eq(1)
           expect(report.data[0][:flag_count]).to eq(1)
           expect(report.data[0][:username]).to eq("jeff")
@@ -604,10 +616,10 @@ describe Report do
         end
 
         it "returns the correct topic count" do
-          expect(report.data[0][:topic_count]).to eq(2)
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[1][:topic_count]).to eq(1)
-          expect(report.data[1][:username]).to eq('jeff')
+          expect(report.data[0][:topic_count]).to eq(1)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:topic_count]).to eq(2)
+          expect(report.data[1][:username]).to eq('sam')
         end
 
         context "private messages" do
@@ -616,8 +628,8 @@ describe Report do
           end
 
           it "doesn’t count private topic" do
-            expect(report.data[0][:topic_count]).to eq(2)
-            expect(report.data[1][:topic_count]).to eq(1)
+            expect(report.data[0][:topic_count]).to eq(1)
+            expect(report.data[1][:topic_count]).to eq(2)
           end
         end
       end
@@ -630,10 +642,10 @@ describe Report do
         end
 
         it "returns the correct topic count" do
-          expect(report.data[0][:topic_count]).to eq(2)
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[1][:topic_count]).to eq(1)
-          expect(report.data[1][:username]).to eq('jeff')
+          expect(report.data[0][:topic_count]).to eq(1)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:topic_count]).to eq(2)
+          expect(report.data[1][:username]).to eq('sam')
         end
 
         context "private messages" do
@@ -642,8 +654,8 @@ describe Report do
           end
 
           it "doesn’t count private post" do
-            expect(report.data[0][:post_count]).to eq(2)
-            expect(report.data[1][:post_count]).to eq(1)
+            expect(report.data[0][:post_count]).to eq(1)
+            expect(report.data[1][:post_count]).to eq(2)
           end
         end
       end
@@ -657,10 +669,11 @@ describe Report do
         end
 
         it "returns the correct topic count" do
-          expect(report.data[0][:pm_count]).to be_blank
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[1][:pm_count]).to eq(1)
-          expect(report.data[1][:username]).to eq('jeff')
+          expect(report.data[0][:pm_count]).to eq(1)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:pm_count]).to be_blank
+          expect(report.data[1][:username]).to eq('sam')
+
         end
       end
 
@@ -678,15 +691,11 @@ describe Report do
         context "revise own post" do
           before do
             post = Fabricate(:post, user: sam)
-            Fabricate(:post, user: sam)
-              .revise(sam, raw: 'updated body', edit_reason: 'not cool')
-
-            Fabricate(:post)
-              .revise(sam, raw: 'updated body', edit_reason: 'not cool')
+            post.revise(sam, raw: 'updated body')
           end
 
-          it "doesnt count a revison on your own post" do
-            expect(report.data[0][:revision_count]).to eq(2)
+          it "doesn't count a revison on your own post" do
+            expect(report.data[0][:revision_count]).to eq(1)
             expect(report.data[0][:username]).to eq('sam')
           end
         end

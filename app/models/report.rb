@@ -762,152 +762,144 @@ class Report
     ]
 
     report.modes = [:table]
-
     report.data = []
-    mod_data = {}
 
-    User.real.where(moderator: true).find_each do |u|
-      mod_data[u.id] = {
-        user_id: u.id,
-        username: u.username_lower,
-        user_avatar_template: u.avatar_template,
-      }
-    end
-
-    time_read_query = <<~SQL
+    query = <<~SQL
+    WITH mods AS (
+    SELECT
+    id AS user_id,
+    username_lower AS username,
+    uploaded_avatar_id
+    FROM users u
+    WHERE u.moderator = 'true'
+    AND u.id > 0
+    ),
+    time_read AS (
     SELECT SUM(uv.time_read) AS time_read,
     uv.user_id
-    FROM user_visits uv
-    JOIN users u
-    ON u.id = uv.user_id
-    WHERE u.moderator = 'true'
-    AND u.id > 0
-    AND uv.visited_at >= '#{report.start_date}'
+    FROM mods m
+    JOIN user_visits uv
+    ON m.user_id = uv.user_id
+    WHERE uv.visited_at >= '#{report.start_date}'
     AND uv.visited_at <= '#{report.end_date}'
     GROUP BY uv.user_id
-    SQL
-
-    flag_count_query = <<~SQL
-    WITH period_actions AS (
-    SELECT agreed_by_id,
-    disagreed_by_id
-    FROM post_actions
-    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
-    AND created_at >= '#{report.start_date}'
-    AND created_at <= '#{report.end_date}'
     ),
-    agreed_flags AS (
-    SELECT pa.agreed_by_id AS user_id,
-    COUNT(*) AS flag_count
-    FROM period_actions pa
-    JOIN users u
-    ON u.id = pa.agreed_by_id
-    WHERE u.moderator = 'true'
-    AND u.id > 0
-    GROUP BY agreed_by_id
-    ),
-    disagreed_flags AS (
-    SELECT pa.disagreed_by_id AS user_id,
-    COUNT(*) AS flag_count
-    FROM period_actions pa
-    JOIN users u
-    ON u.id = pa.disagreed_by_id
-    WHERE u.moderator = 'true'
-    AND u.id > 0
-    GROUP BY disagreed_by_id
-    )
+    flag_count AS (
+        WITH period_actions AS (
+        SELECT agreed_by_id,
+        disagreed_by_id
+        FROM post_actions
+        WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
+        AND created_at >= '#{report.start_date}'
+        AND created_at <= '#{report.end_date}'
+        ),
+        agreed_flags AS (
+        SELECT pa.agreed_by_id AS user_id,
+        COUNT(*) AS flag_count
+        FROM mods m
+        JOIN period_actions pa
+        ON pa.agreed_by_id = m.user_id
+        GROUP BY agreed_by_id
+        ),
+        disagreed_flags AS (
+        SELECT pa.disagreed_by_id AS user_id,
+        COUNT(*) AS flag_count
+        FROM mods m
+        JOIN period_actions pa
+        ON pa.disagreed_by_id = m.user_id
+        GROUP BY disagreed_by_id
+        )
     SELECT
     COALESCE(af.user_id, df.user_id) AS user_id,
     COALESCE(af.flag_count, 0) + COALESCE(df.flag_count, 0) AS flag_count
     FROM agreed_flags af
     FULL OUTER JOIN disagreed_flags df
     ON df.user_id = af.user_id
-    SQL
-
-    revision_count_query = <<~SQL
+    ),
+    revision_count AS (
     SELECT pr.user_id,
     COUNT(*) AS revision_count
-    FROM post_revisions pr
-    JOIN users u
-    ON u.id = pr.user_id
-    WHERE u.moderator = 'true'
-    AND u.id > 0
-    AND pr.created_at >= '#{report.start_date}'
+    FROM mods m
+    JOIN post_revisions pr
+    ON pr.user_id = m.user_id
+    JOIN posts p
+    ON p.id = pr.post_id
+    WHERE pr.created_at >= '#{report.start_date}'
     AND pr.created_at <= '#{report.end_date}'
+    AND p.user_id <> pr.user_id
     GROUP BY pr.user_id
-    SQL
-
-    topic_count_query = <<~SQL
+    ),
+    topic_count AS (
     SELECT t.user_id,
     COUNT(*) AS topic_count
-    FROM topics t
-    JOIN users u
-    ON u.id = t.user_id
-    WHERE u.moderator = 'true'
-    AND u.id > 0
-    AND t.archetype = 'regular'
+    FROM mods m
+    JOIN topics t
+    ON t.user_id = m.user_id
+    WHERE t.archetype = 'regular'
     AND t.created_at >= '#{report.start_date}'
     AND t.created_at <= '#{report.end_date}'
     GROUP BY t.user_id
-    SQL
-
-    post_count_query = <<~SQL
+    ),
+    post_count AS (
     SELECT p.user_id,
     COUNT(*) AS post_count
-    FROM posts p
-    JOIN users u
-    ON u.id = p.user_id
+    FROM mods m
+    JOIN posts p
+    ON p.user_id = m.user_id
     JOIN topics t
     ON t.id = p.topic_id
-    WHERE u.moderator = 'true'
-    AND u.id > 0
-    AND t.archetype = 'regular'
+    WHERE t.archetype = 'regular'
     AND p.created_at >= '#{report.start_date}'
     AND p.created_at <= '#{report.end_date}'
     GROUP BY p.user_id
-    SQL
-
-    pm_count_query = <<~SQL
+    ),
+    pm_count AS (
     SELECT p.user_id,
     COUNT(*) AS pm_count
-    FROM posts p
-    JOIN users u
-    ON u.id = p.user_id
+    FROM mods m
+    JOIN posts p
+    ON p.user_id = m.user_id
     JOIN topics t
     ON t.id = p.topic_id
-    WHERE u.moderator = 'true'
-    AND u.id > 0
-    AND t.archetype = 'private_message'
+    WHERE t.archetype = 'private_message'
     AND p.created_at >= '#{report.start_date}'
     AND p.created_at <= '#{report.end_date}'
     GROUP BY p.user_id
+    )
+
+    SELECT
+    m.user_id,
+    m.username,
+    m.uploaded_avatar_id,
+    tr.time_read,
+    fc.flag_count,
+    rc.revision_count,
+    tc.topic_count,
+    pc.post_count,
+    pmc.pm_count
+    FROM mods m
+    LEFT JOIN time_read tr ON tr.user_id = m.user_id
+    LEFT JOIN flag_count fc ON fc.user_id = m.user_id
+    LEFT JOIN revision_count rc ON rc.user_id = m.user_id
+    LEFT JOIN topic_count tc ON tc.user_id = m.user_id
+    LEFT JOIN post_count pc ON pc.user_id = m.user_id
+    LEFT JOIN pm_count pmc ON pmc.user_id = m.user_id
+    ORDER BY m.username
     SQL
 
-    DB.query(time_read_query).each do |row|
-      mod_data[row.user_id][:time_read] = row.time_read
+    DB.query(query).each do |row|
+      mod = {}
+      mod[:username] = row.username
+      mod[:user_id] = row.user_id
+      mod[:user_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      mod[:time_read] = row.time_read
+      mod[:flag_count] = row.flag_count
+      mod[:revision_count] = row.revision_count
+      mod[:topic_count] = row.topic_count
+      mod[:post_count] = row.post_count
+      mod[:pm_count] = row.pm_count
+      report.data << mod
     end
-
-    DB.query(flag_count_query).each do |row|
-      mod_data[row.user_id][:flag_count] = row.flag_count
-    end
-
-    DB.query(revision_count_query).each do |row|
-      mod_data[row.user_id][:revision_count] = row.revision_count
-    end
-
-    DB.query(topic_count_query).each do |row|
-      mod_data[row.user_id][:topic_count] = row.topic_count
-    end
-
-    DB.query(post_count_query).each do |row|
-      mod_data[row.user_id][:post_count] = row.post_count
-    end
-
-    DB.query(pm_count_query).each do |row|
-      mod_data[row.user_id][:pm_count] = row.pm_count
-    end
-
-    report.data = mod_data.values
   end
 
   def self.report_flags_status(report)
