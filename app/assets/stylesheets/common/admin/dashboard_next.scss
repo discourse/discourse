@@ -7,7 +7,7 @@
 
 .dashboard-next {
   .section-top {
-    margin-bottom: .5em;
+    margin-bottom: 0.5em;
   }
 
   .navigation {
@@ -26,13 +26,13 @@
     .navigation-link {
       display: block;
       font-weight: bold;
-      padding: .6em 1em .5em 1em;
+      padding: 0.6em 1em 0.5em 1em;
     }
   }
 
   @mixin active-navigation-item {
     .navigation-link {
-      border-bottom: .4em solid $tertiary;
+      border-bottom: 0.4em solid $tertiary;
     }
   }
 
@@ -268,7 +268,7 @@
 }
 
 .activity-metrics {
-  margin-bottom: .25em;
+  margin-bottom: 0.25em;
 }
 
 .user-metrics {
