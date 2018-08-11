@@ -1318,7 +1318,6 @@ en:
       whisper: "whisper"
       unlist: "unlisted"
       blockquote_text: "Blockquote"
-      no_topic_bump: "(no bump)"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
