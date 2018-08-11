@@ -261,10 +261,9 @@ QUnit.test("replying to post - toggle_topic_bump", async assert => {
   await composerActions.expand();
   await composerActions.selectRowByValue("toggle_topic_bump");
 
-  assert.equal(
-    find(".composer-fields .no-bump").text(),
-    I18n.t("composer.no_topic_bump"),
-    "no-bump text is visible"
+  assert.ok(
+    find(".composer-fields .no-bump").length === 1,
+    "no-bump icon is visible"
   );
 
   await composerActions.expand();
@@ -272,7 +271,7 @@ QUnit.test("replying to post - toggle_topic_bump", async assert => {
 
   assert.ok(
     find(".composer-fields .no-bump").length === 0,
-    "no-bump text is not visible"
+    "no-bump icon is not visible"
   );
 });
 

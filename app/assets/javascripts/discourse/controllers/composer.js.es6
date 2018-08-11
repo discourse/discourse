@@ -195,13 +195,6 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.noBump")
-  topicBumpText(noBump) {
-    if (noBump) {
-      return I18n.t("composer.no_topic_bump");
-    }
-  },
-
   @computed
   isStaffUser() {
     const currentUser = this.currentUser;
