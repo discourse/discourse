@@ -1,0 +1,25 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hu:
+  js:
+    discourse_local_dates:
+      title: Dátum beszúrása
+      create:
+        modal_title: Dátum beszúrása
+        modal_subtitle: "Automatikusan átkonvertáljuk a dátumot és az időt a látogató helyi időzónájára."
+        form:
+          insert: Beszúrás
+          advanced_mode: Haladó mód
+          simple_mode: Egyszerű mód
+          timezones_title: Megjelenített időzónák
+          recurring_title: Ismétlődés
+          recurring_none: Nincs ismétlődés
+          invalid_date: Érvénytelen dátum, győződj meg róla, hogy a dátum és idő helyes
+          date_title: Dátum
+          time_title: Idő
+          format_title: Dátumformátum
