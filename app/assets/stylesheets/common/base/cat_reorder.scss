@@ -1,31 +1,31 @@
 .reorder-categories {
+  thead {
+    border-bottom: 1px solid $primary-low;
+    th {
+      padding-bottom: 0.5em;
+      text-align: left;
+    }
+  }
   input {
     width: 4em;
-  }
-  .th-pos {
-    width: calc(4em + 150px);
-  }
-  tbody tr {
-    background-color: transparent;
-    transition: background 0s ease;
-    &.highlighted {
-      background-color: rgba($highlight, 0.4);
-      &.done {
-        background-color: transparent;
-        transition-duration: 1s;
-      }
+    @include breakpoint(mobile) {
+      width: 2em;
     }
-    &:first-child td {
-      padding-top: 7px;
-    }
-  }
-  tbody {
-    border-bottom: 1px solid blend-primary-secondary(50%);
   }
   table {
+    width: 100%;
     padding-bottom: 150px;
+    td {
+      padding: 0.5em 0.5em 0.5em 0;
+      @include breakpoint(mobile, min-width) {
+        min-width: 15em;
+      }
+    }
   }
-}
-.category-admin-menu ul {
-  width: 320px;
+  .badge-wrapper span.badge-category {
+    max-width: 20em;
+    @include breakpoint(mobile) {
+      max-width: 30vw;
+    }
+  }
 }
