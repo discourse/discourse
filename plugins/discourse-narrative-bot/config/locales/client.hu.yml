@@ -1,0 +1,13 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hu:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Indítsa el az új felhasználói oktatást minden új felhasználónak"
+        welcome_message: "Küldjön minden új felhasználónak egy üzenetet egy rövid gyorstalpalóval."
