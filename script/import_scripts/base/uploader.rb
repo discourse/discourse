@@ -13,7 +13,7 @@ module ImportScripts
 
       UploadCreator.new(tmp, source_filename).create_for(user_id)
     rescue => e
-      puts "Failed to create upload: #{e}"
+      STDERR.puts "Failed to create upload: #{e}"
       nil
     ensure
       tmp.close rescue nil
@@ -30,9 +30,11 @@ module ImportScripts
         user.user_avatar.update(custom_upload_id: upload.id)
         user.update(uploaded_avatar_id: upload.id)
       else
-        puts "Failed to upload avatar for user #{user.username}: #{avatar_path}"
-        puts upload.errors.inspect if upload
+        STDERR.puts "Failed to upload avatar for user #{user.username}: #{avatar_path}"
+        STDERR.puts upload.errors.inspect if upload
       end
+    rescue
+      STDERR.puts "Failed to create avatar for user #{user.username}: #{avatar_path}"
     ensure
       tempfile.close! if tempfile
     end
@@ -59,6 +61,8 @@ module ImportScripts
     private
 
     def copy_to_tempfile(source_path)
+      # extension = File.extname(source_path)
+      # tmp = Tempfile.new(['discourse-upload', extension])
       tmp = Tempfile.new('discourse-upload')
 
       File.open(source_path) do |source_stream|
