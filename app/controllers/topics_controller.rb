@@ -518,6 +518,12 @@ class TopicsController < ApplicationController
 
     topic = Topic.find_by(id: params[:topic_id])
 
+    unless pm_has_slots?(topic)
+      return render_json_error(I18n.t("pm_reached_recipients_limit",
+        recipients_limit: SiteSetting.max_allowed_message_recipients
+      ))
+    end
+
     if topic.private_message?
       guardian.ensure_can_invite_group_to_private_message!(group, topic)
       topic.invite_group(current_user, group)
@@ -538,7 +544,7 @@ class TopicsController < ApplicationController
       group_names: params[:group_names]
     )
 
-    if !guardian.is_staff? && topic.reached_recipients_limit?
+    unless pm_has_slots?(topic)
       return render_json_error(I18n.t("pm_reached_recipients_limit",
         recipients_limit: SiteSetting.max_allowed_message_recipients
       ))
@@ -858,4 +864,7 @@ class TopicsController < ApplicationController
     params[:email]
   end
 
+  def pm_has_slots?(pm)
+    guardian.is_staff? || !pm.reached_recipients_limit?
+  end
 end
