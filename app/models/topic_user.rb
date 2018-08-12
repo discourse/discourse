@@ -243,7 +243,8 @@ class TopicUser < ActiveRecord::Base
                                       notification_level =
                                          case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
                                             coalesce(uo.auto_track_topics_after_msecs,:threshold) and
-                                            coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0 then
+                                            coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0
+                                            and t.archetype = 'regular' then
                                               :tracking
                                          else
                                             tu.notification_level
