@@ -1,0 +1,21 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hu:
+  site_settings:
+    poll_maximum_options: "Maximum megszavazható tétel a szavazásokban."
+  poll:
+    default_poll_must_have_at_least_2_options: "Legalább 2 választható tételt kell tartalmaznia a szavazásnak."
+    default_poll_must_have_different_options: "A szavazásnak több különböző megszavazható tételt kell tartalmaznia."
+    named_poll_must_have_different_options: "A <strong>%[name]</strong> nevű szavazásnak több különböző megszavazható tételt kell tartalmaznia."
+    requires_at_least_1_valid_option: "Legalább 1 érvényes lehetőséget kell kiválasztanod."
+    topic_must_be_open_to_vote: "A témának nyítottnak kell hogy legyen hogy szavazni lehessen."
+    poll_must_be_open_to_vote: "A szavazásnak engedélyezve kell lennie ahhoz, hogy a felhasználok tudjanak szavazni."
+    topic_must_be_open_to_toggle_status: "A témának nyitottnak kell lennie hogy bekapcsolni lehessen a státuszt."
+    only_staff_or_op_can_toggle_status: "Csak egy staff tag vagy az eredeti posztoló tudja bekapcsolni a szavazás státuszát."
+    email:
+      link_to_poll: "Klikk, hogy megnézd ezt a szavazást."
