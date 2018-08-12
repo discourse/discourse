@@ -61,9 +61,8 @@ module ImportScripts
     private
 
     def copy_to_tempfile(source_path)
-      # extension = File.extname(source_path)
-      # tmp = Tempfile.new(['discourse-upload', extension])
-      tmp = Tempfile.new('discourse-upload')
+      extension = File.extname(source_path)
+      tmp = Tempfile.new(['discourse-upload', extension])
 
       File.open(source_path) do |source_stream|
         IO.copy_stream(source_stream, tmp)
