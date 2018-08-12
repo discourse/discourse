@@ -258,6 +258,7 @@ class Auth::DefaultCurrentUserProvider
         raise Discourse::InvalidAccess
       end
 
+      api_key.update_columns(last_used_at: Time.zone.now)
       if client_id.present? && client_id != api_key.client_id
         api_key.update_columns(client_id: client_id)
       end
