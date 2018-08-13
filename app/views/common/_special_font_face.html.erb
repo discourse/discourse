@@ -8,7 +8,7 @@
   &1 was added last when the nginx sample config changed
 %>
 
-<% font_domain = "#{request.protocol}#{request.host_with_port}&2" %>
+<% font_domain = "#{Discourse.base_url_no_prefix}&2".html_safe %>
 <% woff2_url = "#{asset_path("fontawesome-webfont.woff2")}?#{font_domain}&v=4.7.0".html_safe %>
 
 <link rel="preload" href="<%=woff2_url%>" as="font" type="font/woff2" crossorigin />
