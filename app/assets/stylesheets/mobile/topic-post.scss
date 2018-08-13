@@ -442,7 +442,7 @@ span.highlighted {
     }
     .user-title {
       order: 4;
-      margin-right: auto;
+      flex-basis: 100%;
     }
     span {
       margin-right: 4px;
@@ -456,7 +456,6 @@ span.highlighted {
 
 .user-title {
   color: #aaa;
-  padding-top: 2px;
   overflow: hidden;
   margin-right: 50px;
 }
