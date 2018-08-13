@@ -164,7 +164,29 @@ describe UploadsController do
         expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
 
-      describe 'when filename has the wrong extension' do
+      describe 'when upload is not an image' do
+        before do
+          SiteSetting.authorized_extensions = 'txt'
+        end
+
+        let(:file) do
+          Rack::Test::UploadedFile.new(file_from_fixtures("utf-8.txt", "encodings"))
+        end
+
+        it 'should store the upload with the right extension' do
+          expect do
+            post "/uploads.json", params: { file: file, type: "composer" }
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('txt')
+          expect(File.extname(upload.url)).to eq('.txt')
+          expect(upload.original_filename).to eq('utf-8.txt')
+        end
+      end
+
+      describe 'when image has the wrong extension' do
         let(:file) do
           Rack::Test::UploadedFile.new(file_from_fixtures("png_as.jpg"))
         end
