@@ -86,8 +86,14 @@ describe UserAvatar do
       user = Fabricate(:user, uploaded_avatar_id: 1)
       user.user_avatar.update_columns(gravatar_upload_id: 1)
 
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
-      UserAvatar.import_url_for_user("logo.png", user, override_gravatar: false)
+      stub_request(:get, "http://thisfakesomething.something.com/")
+        .to_return(status: 200, body: file_from_fixtures("logo.png"), headers: {})
+
+      url = "http://thisfakesomething.something.com/"
+
+      expect do
+        UserAvatar.import_url_for_user(url, user, override_gravatar: false)
+      end.to change { Upload.count }.by(1)
 
       user.reload
       expect(user.uploaded_avatar_id).to eq(1)
@@ -101,7 +107,9 @@ describe UserAvatar do
 
         url = "http://thisfakesomething.something.com/"
 
-        UserAvatar.import_url_for_user(url, user)
+        expect do
+          UserAvatar.import_url_for_user(url, user)
+        end.to_not change { Upload.count }
 
         user.reload
 
