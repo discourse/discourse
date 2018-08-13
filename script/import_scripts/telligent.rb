@@ -1,11 +1,18 @@
 require_relative 'base'
 require 'tiny_tds'
 
+# Import script for Telligent communities
+#
+# Users are currently imported from a temp table. This will need some
+# work the next time this import script is used, because that table
+# won't exist. Also, it's really hard to find all attachments, but
+# the script tries to do it anyway.
+
 class ImportScripts::Telligent < ImportScripts::Base
   BATCH_SIZE ||= 1000
   LOCAL_AVATAR_REGEX ||= /\A~\/.*(?<directory>communityserver-components-(?:selectable)?avatars)\/(?<path>[^\/]+)\/(?<filename>.+)/i
   REMOTE_AVATAR_REGEX ||= /\Ahttps?:\/\//i
-  EMBEDDED_ATTACHMENT_REGEX ||= /<a href="\/cfs-file(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+)">.*?<\/a>/i
+  EMBEDDED_ATTACHMENT_REGEX ||= /<a href="\/cfs-file(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename1>.+)">(?<filename2>.*?)<\/a>/i
 
   CATEGORY_LINK_NORMALIZATION = '/.*?(f\/\d+)$/\1'
   TOPIC_LINK_NORMALIZATION = '/.*?(f\/\d+\/t\/\d+)$/\1'
@@ -174,7 +181,8 @@ class ImportScripts::Telligent < ImportScripts::Base
 
       if category_id = replace_with_category_id(row, child_categories, parent_category_id)
         add_category(row['ForumId'], Category.find_by_id(category_id))
-        Permalink.create(url: "f/#{row['ForumId']}", category_id: category_id)
+        url = "f/#{row['ForumId']}"
+        Permalink.create(url: url, category_id: category_id) unless Permalink.exists?(url: url)
         nil
       else
         {
@@ -268,7 +276,8 @@ class ImportScripts::Telligent < ImportScripts::Base
           post_create_action: proc do |post|
             topic = post.topic
             Jobs.enqueue_at(topic.pinned_until, :unpin_topic, topic_id: topic.id) if topic.pinned_until
-            Permalink.create(url: "f/#{row['ForumId']}/t/#{row['ThreadId']}", topic_id: topic.id)
+            url = "f/#{row['ForumId']}/t/#{row['ThreadId']}"
+            Permalink.create(url: url, topic_id: topic.id) unless Permalink.exists?(url: url)
           end
         }
 
@@ -345,7 +354,7 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def raw_with_attachment(row, user_id)
-    raw, embedded_paths = replace_embedded_attachments(row["Body"], user_id)
+    raw, embedded_paths, upload_ids = replace_embedded_attachments(row["Body"], user_id)
     raw = html_to_markdown(raw) || ""
 
     filename = row["FileName"]
@@ -358,13 +367,16 @@ class ImportScripts::Telligent < ImportScripts::Base
       "%02d" % row["ApplicationId"],
       "%02d" % row["ApplicationContentTypeId"],
       ("%010d" % row["ContentId"]).scan(/.{2}/),
-      filename
+      clean_filename(filename)
     )
 
     unless embedded_paths.include?(path)
       if File.exists?(path)
         upload = @uploader.create_upload(user_id, path, filename)
-        raw << "\n" << @uploader.html_for_upload(upload, filename) if upload.present? && upload.persisted?
+
+        if upload.present? && upload.persisted? && !upload_ids.include?(upload.id)
+          raw << "\n" << @uploader.html_for_upload(upload, filename)
+        end
       else
         STDERR.puts "Could not find file: #{path}"
       end
@@ -375,23 +387,17 @@ class ImportScripts::Telligent < ImportScripts::Base
 
   def replace_embedded_attachments(raw, user_id)
     paths = []
+    upload_ids = []
 
     raw = raw.gsub(EMBEDDED_ATTACHMENT_REGEX) do
-      match_data = Regexp.last_match
-      filename = match_data[:filename]
-
-      path = File.join(
-        ENV["FILE_BASE_DIR"],
-        match_data[:directory].gsub("-", "."),
-        match_data[:path].split("-"),
-        filename
-      )
+      filename, path = attachment_path(Regexp.last_match)
 
       if File.exists?(path)
         upload = @uploader.create_upload(user_id, path, filename)
 
         if upload.present? && upload.persisted?
           paths << path
+          upload_ids << upload.id
           @uploader.html_for_upload(upload, filename)
         end
       else
@@ -399,7 +405,45 @@ class ImportScripts::Telligent < ImportScripts::Base
       end
     end
 
-    [raw, paths]
+    [raw, paths, upload_ids]
+  end
+
+  def clean_filename(filename)
+    CGI.unescapeHTML(filename)
+      .gsub(/[\x00\/\\:\*\?\"<>\|]/, '_')
+      .gsub(/_(?:2B00|2E00|2D00|5B00|5D00|5F00)/, '')
+  end
+
+  def attachment_path(match_data)
+    filename, path = join_attachment_path(match_data, filename_index: 2)
+    filename, path = join_attachment_path(match_data, filename_index: 1) unless File.exists?(path)
+    [filename, path]
+  end
+
+  # filenames are a total mess - try to guess the correct filename
+  # works for 70% of all files
+  def join_attachment_path(match_data, filename_index:)
+    filename = clean_filename(match_data[:"filename#{filename_index}"])
+    base_path = File.join(
+      ENV["FILE_BASE_DIR"],
+      match_data[:directory].gsub("-", "."),
+      match_data[:path].split("-")
+    )
+
+    path = File.join(base_path, filename)
+    return [filename, path] if File.exists?(path)
+
+    original_filename = filename.dup
+
+    filename = filename.gsub("-", " ")
+    path = File.join(base_path, filename)
+    return [filename, path] if File.exists?(path)
+
+    filename = filename.gsub("_", "-")
+    path = File.join(base_path, filename)
+    return [filename, path] if File.exists?(path)
+
+    [original_filename, File.join(base_path, original_filename)]
   end
 
   def mark_topics_as_solved
