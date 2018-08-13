@@ -504,12 +504,18 @@ module Discourse
       loggers.concat(Rails.logger.chained)
     end
 
+    logster_env = env
+
     if old_env = Thread.current[Logster::Logger::LOGSTER_ENV]
-      env = env.merge(old_env)
+      logster_env = Logster::Message.populate_from_env(old_env)
+
+      # a bit awkward by try to keep the new params
+      env.each do |k, v|
+        logster_env[k] = v
+      end
     end
 
     loggers.each do |logger|
-
       if !(Logster::Logger === logger)
         logger.warn("#{message} #{append}")
         next
@@ -519,9 +525,18 @@ module Discourse
         ::Logger::Severity::WARN,
         "discourse",
         message,
-        env: env
+        env: logster_env
       )
     end
+
+    if old_env
+      env.each do |k, v|
+        # do not leak state
+        logster_env.delete(k)
+      end
+    end
+
+    nil
   end
 
   # report a warning maintaining backtrack for logster
