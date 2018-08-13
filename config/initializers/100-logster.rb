@@ -1,4 +1,4 @@
-if Rails.env.development? && !Sidekiq.server?
+if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
   console = ActiveSupport::Logger.new(STDOUT)
   original_logger = Rails.logger.chained.first
   console.formatter = original_logger.formatter
