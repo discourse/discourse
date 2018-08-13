@@ -1278,10 +1278,17 @@ function walk(a, b, patch, index) {
         apply = appendPatch(apply, new VPatch(VPatch.REMOVE, a, b))
     } else if (isVNode(b)) {
         if (isVNode(a)) {
-            if (a.tagName === b.tagName &&
+            // if <use> tag apply VPatch.VNODE instead of VPatch.PROPS
+            // when xlink:href has changed
+            const useNodeValue = (n) => return n.properties["xlink:href"].value
+            if (b.tagName === "use" && useNodeValue(a) !== useNodeValue(b)) {
+              apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
+            } else if (a.tagName === b.tagName &&
                 a.namespace === b.namespace &&
-                a.key === b.key) {
-                var propsPatch = diffProps(a.properties, b.properties)
+                a.key === b.key
+              ) {
+                var propsPatch = diffProps(a.properties, b.properties);
+
                 if (propsPatch) {
                     apply = appendPatch(apply,
                         new VPatch(VPatch.PROPS, a, propsPatch))
