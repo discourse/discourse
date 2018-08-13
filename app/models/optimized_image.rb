@@ -255,7 +255,7 @@ class OptimizedImage < ActiveRecord::Base
     if opts[:raise_on_error]
       raise e
     else
-      Rails.logger.error("Could not optimize image #{to}: #{e.message}")
+      Discourse.warn("Failed to optimize image", location: to, error_message: e.message)
       false
     end
   end
