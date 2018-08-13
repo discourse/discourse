@@ -489,6 +489,41 @@ module Discourse
     nil
   end
 
+  # you can use Discourse.warn when you want to report custom environment
+  # with the error, this helps with grouping
+  def self.warn(message, env = nil)
+    append = env ? (+" ") << env.map { |k, v|"#{k}: #{v}" }.join(" ") : ""
+
+    if !(Logster::Logger === Rails.logger)
+      Rails.logger.warn("#{message}#{append}")
+      return
+    end
+
+    loggers = [Rails.logger]
+    if Rails.logger.chained
+      loggers.concat(Rails.logger.chained)
+    end
+
+    if old_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+      env = env.merge(old_env)
+    end
+
+    loggers.each do |logger|
+
+      if !(Logster::Logger === logger)
+        logger.warn("#{message} #{append}")
+        next
+      end
+
+      logger.store.report(
+        ::Logger::Severity::WARN,
+        "discourse",
+        message,
+        env: env
+      )
+    end
+  end
+
   # report a warning maintaining backtrack for logster
   def self.warn_exception(e, message: "", env: nil)
     if Rails.logger.respond_to? :add_with_opts
