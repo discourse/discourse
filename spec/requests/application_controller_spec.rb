@@ -68,7 +68,7 @@ RSpec.describe ApplicationController do
       it 'should return 404 and show Google search' do
         get "/t/nope-nope/99999999"
         expect(response.status).to eq(404)
-        expect(response.body).to include(I18n.t('page_not_found.search_google'))
+        expect(response.body).to include(I18n.t('page_not_found.search_button'))
       end
 
       it 'should not include Google search if login_required is enabled' do
