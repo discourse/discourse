@@ -17,13 +17,14 @@ class TopicQuery
         Integer === x && x >= 0
       end
 
-      array_zero_or_more = lambda do |x|
-        Array === x && x.length > 0 && x.all? { |i| Integer === i && i >= 0 }
+      array_int = lambda do |x|
+        Array === x && x.length > 0 && x.all? { |i| Integer === i }
       end
 
       {
         max_posts: zero_or_more,
         min_posts: zero_or_more,
+        exclude_category_ids: array_int
       }
     end
   end

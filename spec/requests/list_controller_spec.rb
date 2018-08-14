@@ -22,6 +22,12 @@ RSpec.describe ListController do
 
       get "/latest?max_posts=bob"
       expect(response.status).to eq(400)
+
+      get "/latest?exclude_category_ids=bob"
+      expect(response.status).to eq(400)
+
+      get "/latest?exclude_category_ids[]=bob"
+      expect(response.status).to eq(400)
     end
 
     it "doesn't throw an error with page params as an array" do
