@@ -153,7 +153,7 @@ module Email
           # If an iframe is protocol relative, use SSL when displaying it
           display_src = "#{src_uri.scheme || 'https'}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? '' : '?' + src_uri.query}#{src_uri.fragment.nil? ? '' : '#' + src_uri.fragment}"
           i.replace "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>"
-        rescue URI::InvalidURIError
+        rescue URI::Error
           # If the URL is weird, remove the iframe
           i.remove
         end
@@ -215,7 +215,7 @@ module Email
       @fragment.css("a").each do |link|
         begin
           link["href"] = "#{site_uri}#{link['href']}" unless URI(link["href"].to_s).host.present?
-        rescue URI::InvalidURIError, URI::InvalidComponentError
+        rescue URI::Error
           # leave it
         end
       end

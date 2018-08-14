@@ -46,25 +46,25 @@ end
 
 Fabricator(:post_with_plenty_of_images, from: :post) do
   cooked '
-<aside class="quote"><img src="/uploads/default/1/1234567890123456.jpg"></aside>
-<div class="onebox-result"><img src="/uploads/default/1/1234567890123456.jpg"></div>
-<div class="onebox"><img src="/uploads/default/1/1234567890123456.jpg"></div>
+<aside class="quote"><img src="/uploads/default/original/1X/1234567890123456.jpg"></aside>
+<div class="onebox-result"><img src="/uploads/default/original/1X/1234567890123456.jpg"></div>
+<div class="onebox"><img src="/uploads/default/original/1X/1234567890123456.jpg"></div>
 <p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=1" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
 '
 end
 
 Fabricator(:post_with_uploaded_image, from: :post) do
-  raw '<img src="/uploads/default/2/3456789012345678.png" width="1500" height="2000">'
+  raw '<img src="/uploads/default/original/2X/3456789012345678.png" width="1500" height="2000">'
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do
-  raw '<a class="attachment" href="/uploads/default/186/66b3ed1503efc936.zip">archive.zip</a>'
+  raw '<a class="attachment" href="/uploads/default/origina/1X/66b3ed1503efc936.zip">archive.zip</a>'
 end
 
 Fabricator(:post_with_unsized_images, from: :post) do
   raw '
 <img src="http://foo.bar/image.png">
-<img src="/uploads/default/1/1234567890123456.jpg">
+<img src="/uploads/default/original/1X/1234567890123456.jpg">
 '
 end
 
@@ -76,28 +76,28 @@ Fabricator(:post_with_image_urls, from: :post) do
 end
 
 Fabricator(:post_with_large_image, from: :post) do
-  raw '<img src="/uploads/default/1/1234567890123456.jpg">'
+  raw '<img src="/uploads/default/original/1X/1234567890123456.jpg">'
 end
 
 Fabricator(:post_with_large_image_and_title, from: :post) do
-  raw '<img src="/uploads/default/1/1234567890123456.jpg" title="WAT">'
+  raw '<img src="/uploads/default/original/1X/1234567890123456.jpg" title="WAT">'
 end
 
 Fabricator(:post_with_large_image_on_subfolder, from: :post) do
-  raw '<img src="/subfolder/uploads/default/1/1234567890123456.jpg">'
+  raw '<img src="/subfolder/uploads/default/original/1X/1234567890123456.jpg">'
 end
 
 Fabricator(:post_with_uploads, from: :post) do
   raw '
-<a href="/uploads/default/2/2345678901234567.jpg">Link</a>
-<img src="/uploads/default/1/1234567890123456.jpg">
+<a href="/uploads/default/original/2X/2345678901234567.jpg">Link</a>
+<img src="/uploads/default/original/1X/1234567890123456.jpg">
 '
 end
 
 Fabricator(:post_with_uploads_and_links, from: :post) do
   raw '
-<a href="/uploads/default/2/2345678901234567.jpg">Link</a>
-<img src="/uploads/default/1/1234567890123456.jpg">
+<a href="/uploads/default/original/2X/2345678901234567.jpg">Link</a>
+<img src="/uploads/default/original/1X/1234567890123456.jpg">
 <a href="http://www.google.com">Google</a>
 <img src="http://foo.bar/image.png">
 <a class="attachment" href="/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)

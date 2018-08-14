@@ -257,14 +257,14 @@ class CookedPostProcessor
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
 
     @size_cache[url] = FastImage.size(absolute_url)
-  rescue Zlib::BufError, URI::InvalidURIError, URI::InvalidComponentError, OpenSSL::SSL::SSLError
+  rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.
   end
 
   def is_valid_image_url?(url)
     uri = URI.parse(url)
     %w(http https).include? uri.scheme
-  rescue URI::InvalidURIError
+  rescue URI::Error
   end
 
   def convert_to_link!(img)
@@ -460,28 +460,14 @@ class CookedPostProcessor
   end
 
   def optimize_urls
-    # attachments can't be on the CDN when either setting is enabled
-    if SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
-      @doc.css("a.attachment[href]").each do |a|
-        href = a["href"].to_s
-        a["href"] = UrlHelper.schemaless UrlHelper.absolute_without_cdn(href) if UrlHelper.is_local(href)
-      end
-    end
-
-    use_s3_cdn = SiteSetting.Upload.enable_s3_uploads && SiteSetting.Upload.s3_cdn_url.present?
-
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
-        href = a[selector].to_s
-        a[selector] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
-        a[selector] = Discourse.store.cdn_url(a[selector]) if use_s3_cdn
+        a[selector] = UrlHelper.cook_url(a[selector].to_s)
       end
     end
 
     @doc.css("img[src]").each do |img|
-      src = img["src"].to_s
-      img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
-      img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
+      img["src"] = UrlHelper.cook_url(img["src"].to_s)
     end
   end
 
@@ -544,7 +530,7 @@ class CookedPostProcessor
     path =
       begin
         URI(img["src"]).path
-      rescue URI::InvalidURIError, URI::InvalidComponentError
+      rescue URI::Error
         nil
       end
 

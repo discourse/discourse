@@ -206,7 +206,7 @@ class UserSerializer < BasicUserSerializer
   def website_name
     uri = begin
       URI(website.to_s)
-    rescue URI::InvalidURIError
+    rescue URI::Error
     end
 
     return if uri.nil? || uri.host.nil?

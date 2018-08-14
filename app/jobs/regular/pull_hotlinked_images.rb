@@ -149,7 +149,7 @@ module Jobs
       # parse the src
       begin
         uri = URI.parse(src)
-      rescue URI::InvalidURIError
+      rescue URI::Error
         return false
       end
 
