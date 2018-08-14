@@ -100,6 +100,6 @@ RailsMultisite::ConnectionManagement.each_connection do
 end
 
 if Rails.configuration.multisite
-  chained = Rails.logger.instance_variable_get(:@chained)
+  chained = Rails.logger.chained
   chained && chained.first.formatter = RailsMultisite::Formatter.new
 end
