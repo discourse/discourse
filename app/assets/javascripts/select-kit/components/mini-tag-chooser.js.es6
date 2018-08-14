@@ -48,17 +48,21 @@ export default ComboBox.extend(Tags, {
   didInsertElement() {
     this._super(...arguments);
 
-    this.$(".select-kit-body").on("click", ".selected-tag", event => {
-      const $button = $(event.target);
-      this._destroyEvent(event);
-      this.destroyTags(this.computeContentItem($button.attr("data-value")));
-    });
+    this.$(".select-kit-body").on(
+      "mousedown touchstart",
+      ".selected-tag",
+      event => {
+        const $button = $(event.target);
+        this._destroyEvent(event);
+        this.destroyTags(this.computeContentItem($button.attr("data-value")));
+      }
+    );
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    this.$(".select-kit-body").off("click");
+    this.$(".select-kit-body").off("mousedown touchstart");
   },
 
   @computed("hasReachedMaximum")
