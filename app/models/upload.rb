@@ -80,7 +80,7 @@ class Upload < ActiveRecord::Base
 
     uri = begin
       URI(URI.unescape(url))
-    rescue URI::InvalidURIError, URI::InvalidComponentError
+    rescue URI::Error
     end
 
     return if uri&.path.blank?

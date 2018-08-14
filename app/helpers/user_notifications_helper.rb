@@ -106,7 +106,7 @@ module UserNotificationsHelper
 
   def url_for_email(href)
     URI(href).host.present? ? href : UrlHelper.absolute("#{Discourse.base_uri}#{href}")
-  rescue URI::InvalidURIError, URI::InvalidComponentError
+  rescue URI::Error
     href
   end
 

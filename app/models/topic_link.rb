@@ -137,8 +137,9 @@ SQL
           post_number = nil
 
           if upload = Upload.get_from_url(url)
-            url = upload.url
             internal = Discourse.store.internal?
+            # Store the same URL that will be used in the cooked version of the post
+            url = UrlHelper.cook_url(upload.url)
           elsif route = Discourse.route_for(parsed)
             internal = true
 
@@ -217,7 +218,7 @@ SQL
             end
           end
 
-        rescue URI::InvalidURIError
+        rescue URI::Error
           # if the URI is invalid, don't store it.
         rescue ActionController::RoutingError
           # If we can't find the route, no big deal

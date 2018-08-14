@@ -218,7 +218,7 @@ module Email
         begin
           uri = URI.parse(base_url)
           host = uri.host.downcase if uri.host.present?
-        rescue URI::InvalidURIError
+        rescue URI::Error
         end
       end
       host

@@ -426,13 +426,13 @@ module SiteSettingExtension
 
     host = begin
       URI.parse(url)&.host
-    rescue URI::InvalidURIError
+    rescue URI::Error
       nil
     end
 
     host ||= begin
       URI.parse("http://#{url}")&.host
-    rescue URI::InvalidURIError
+    rescue URI::Error
       nil
     end
 

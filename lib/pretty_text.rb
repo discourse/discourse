@@ -293,7 +293,7 @@ module PrettyText
         else
           l["rel"] = "nofollow noopener"
         end
-      rescue URI::InvalidURIError, URI::InvalidComponentError
+      rescue URI::Error
         # add a nofollow anyway
         l["rel"] = "nofollow noopener"
       end
@@ -363,7 +363,7 @@ module PrettyText
         unless uri.host.present? || href.start_with?('mailto')
           link["href"] = "#{site_uri}#{link['href']}"
         end
-      rescue URI::InvalidURIError, URI::InvalidComponentError
+      rescue URI::Error
         # leave it
       end
     end
