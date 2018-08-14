@@ -104,6 +104,11 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
     end
 
+    it "returns false when the user is silenced" do
+      UserSilencer.silence(user, admin)
+      expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+    end
+
     it "allows flagging archived posts" do
       post.topic.archived = true
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
