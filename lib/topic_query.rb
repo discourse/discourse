@@ -23,7 +23,6 @@ class TopicQuery
 
       {
         max_posts: zero_or_more,
-        exclude_category_ids: array_zero_or_more,
         min_posts: zero_or_more,
       }
     end

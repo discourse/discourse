@@ -17,9 +17,6 @@ RSpec.describe ListController do
     end
 
     it "does not return a 500 for invalid input" do
-      get "/latest?exclude_category_ids[]=bob"
-      expect(response.status).to eq(400)
-
       get "/latest?min_posts=bob"
       expect(response.status).to eq(400)
 
