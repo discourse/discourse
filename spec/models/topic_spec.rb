@@ -1181,6 +1181,12 @@ describe Topic do
         topic.change_category_to_id(12312312)
         expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
       end
+
+      it "changes the category even when the topic title is invalid" do
+        SiteSetting.min_topic_title_length = 5
+        topic.update_column(:title, "xyz")
+        expect { topic.change_category_to_id(category.id) }.to change { topic.category_id }.to(category.id)
+      end
     end
 
     describe 'with a previous category' do
