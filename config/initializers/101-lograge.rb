@@ -106,7 +106,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
 
       # Remove ActiveSupport::Logger from the chain and replace with Lograge's
       # logger
-      Rails.logger.instance_variable_get(:@chained).pop
+      Rails.logger.chained.pop
       Rails.logger.chain(config.lograge.logger)
     end
   end
