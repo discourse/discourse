@@ -371,7 +371,12 @@ class ListController < ApplicationController
     params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
-      options[key] = params[key]
+      if params.key?(key)
+        val = options[key] = params[key]
+        if !TopicQuery.validate?(key, val)
+          raise Discourse::InvalidParameters.new key
+        end
+      end
     end
 
     # hacky columns get special handling
