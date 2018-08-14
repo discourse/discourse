@@ -401,7 +401,7 @@ class TopicQuery
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
-    list.per_page = per_page_setting
+    list.per_page = options[:per_page] || per_page_setting
     list
   end
 
