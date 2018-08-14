@@ -16,6 +16,17 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
+    it "does not return a 500 for invalid input" do
+      get "/latest?exclude_category_ids[]=bob"
+      expect(response.status).to eq(400)
+
+      get "/latest?min_posts=bob"
+      expect(response.status).to eq(400)
+
+      get "/latest?max_posts=bob"
+      expect(response.status).to eq(400)
+    end
+
     it "doesn't throw an error with page params as an array" do
       get "/#{Discourse.anonymous_filters[1]}", params: { page: ['7'] }
       expect(response.status).to eq(200)
