@@ -298,9 +298,35 @@ th:
         add_user_to_group: "เพิ่มผู้ใช้"
         remove_user_from_group: "ลบผู้ใช้"
     groups:
+      add_members:
+        title: "เพิ่มสมาชิก"
+        usernames: "ชื่อผู้ใช้"
+      manage:
+        title: 'จัดการ'
+        name: 'ชื่อ'
+        full_name: 'ชื่อ-นามสกุล'
+        add_members: "เพิ่มสมาชิก"
+        delete_member_confirm: "ลบ '%{username}' ออกจากกลุ่ม '%{group}' "
+        profile:
+          title: ข้อมูลผู้ใช้
+        interaction:
+          notification: การแจ้งเตือน
+        membership:
+          title: การเป็นสมาชิก
+          access: การเข้าถึง
+        logs:
+          when: "เมื่อ"
+          details: "รายละเอียด"
+          from: "จาก"
+          to: "ถึง"
       public_exit: "อนุญาตให้ผู้ใช้ออกจากกลุ่มอย่างอิสระ"
       add: "เพิ่ม"
+      join: "เข้าร่วม"
+      leave: "ออก"
+      request: "ร้องขอ"
       message: "ข้อความ<br><div><br data-mce-bogus=\"1\"></div>"
+      membership_request:
+        title: "ขอเข้าร่วม @%{group_name}"
       membership: "การเป็นสมาชิก"
       name: "ชื่อ"
       bio: "เกี่ยวกับกลุ่ม"
@@ -308,7 +334,9 @@ th:
       owner: "เจ้าของ"
       index:
         title: "กลุ่ม"
+        all: "ทุกกลุ่ม"
         empty: "ไม่มีกลุ่มที่เห็นได้"
+        closed: "ปิด"
       activity: "กิจกรรม"
       topics: "กระทู้"
       posts: "โพสต์"
@@ -361,8 +389,6 @@ th:
       reorder:
         title: "เรียงหมวดหมู่ใหม่"
         title_long: "จัดการรายชื่อหมวดหมู่"
-        fix_order: "ตรึงตำแหน่ง"
-        fix_order_tooltip: "ไม่ใช่หมวดหมู่ทุกอันจะมีเลขตำแหน่งของตัวเอง ซึ่งนั่นอาจส่งผลให้เกิดผลที่ไม่ได้คาดหวังไว้"
         save: "บันทึกตำแหน่ง"
         apply_all: "นำไปใช้"
         position: "ตำแหน่ง"
@@ -509,7 +535,6 @@ th:
         upload_title: "อัปโหลดรูปภาพของคุณ"
         upload_picture: "อัปโหลดรูปภาพ"
         image_is_not_a_square: "ระวัง: เราได้ตัวรูปภาพบางส่วนของคุณ; ความยาวและความสูงจะไม่เท่ากัน"
-        cache_notice: "คุณได้เปลี่ยนรูปภาพประจำตัวเรียบร้อยแล้วแต่อาจใช้เวลาในการเปลี่ยนแปลงบ้างเนื่องจากแคชของบาวเซอร์"
       change_profile_background:
         title: "พื้นหลังโปรไฟล์"
         instructions: "พื้นหลังโปรไฟล์จะถูกจัดให้อยู่กึ่งกลางและมีค่าปริยายของความกว้างเท่ากับ 850 พิกเซล"
@@ -666,7 +691,6 @@ th:
         most_liked_users: "ถูกชอบมากที่สุด"
         most_replied_to_users: "ถูกตอบมากที่สุด"
         no_likes: "ยังไม่มีใครชอบเลย"
-      associated_accounts: "การเข้าสู่ระบบ"
       ip_address:
         title: "ไอพีล่าสุด"
       registration_ip_address:
@@ -794,9 +818,6 @@ th:
       to_continue: "โปรดเข้าสู่ระบบ"
       preferences: "คุณจำเป็นต้องเข้าสู่ระบบจึงจะสามารถเปลี่ยนการตั้งค่าส่วนตัวของคุณได้"
       forgot: "ฉันจำรายละเอียดบัญชีของตัวเองไม่ได้"
-      google:
-        title: "ด้วย Google"
-        message: "กำลังตรวจสอบกับ Google (ต้องไม่ปิดกั้นป๊อปอัพ)"
       google_oauth2:
         title: "ด้วย Google"
         message: "กำลังตรวจสอบกับ Google (ต้องไม่ปิดกั้นป๊อปอัพ)"

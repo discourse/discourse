@@ -1,5 +1,6 @@
 module Auth; end
 
+require_dependency 'auth/auth_provider'
 require_dependency 'auth/result'
 require_dependency 'auth/authenticator'
 require_dependency 'auth/facebook_authenticator'

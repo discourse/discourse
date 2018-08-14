@@ -11,7 +11,7 @@ AdminDashboard.reopenClass({
     @return {jqXHR} a jQuery Promise object
   **/
   find: function() {
-    return ajax("/admin/dashboard.json").then(function(json) {
+    return ajax("/admin/dashboard-old.json").then(function(json) {
       var model = AdminDashboard.create(json);
       model.set("loaded", true);
       return model;

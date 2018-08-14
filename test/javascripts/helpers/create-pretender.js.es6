@@ -88,7 +88,20 @@ export default function() {
           most_replied_to_users: [{ id: 333 }],
           most_liked_by_users: [{ id: 333 }],
           most_liked_users: [{ id: 333 }],
-          badges: [{ badge_id: 444 }]
+          badges: [{ badge_id: 444 }],
+          top_categories: [
+            {
+              id: 1,
+              name: "bug",
+              color: "e9dd00",
+              text_color: "000000",
+              slug: "bug",
+              read_restricted: false,
+              parent_category_id: null,
+              topic_count: 1,
+              post_count: 1
+            }
+          ]
         },
         badges: [{ id: 444, count: 1 }],
         topics: [{ id: 1234, title: "cool title", url: "/t/1234/cool-title" }]
@@ -212,7 +225,15 @@ export default function() {
       return response({ category });
     });
 
-    this.get("/draft.json", () => response({}));
+    this.get("/draft.json", request => {
+      if (request.queryParams.draft_key === "new_topic") {
+        return response(fixturesByUrl["/draft.json"]);
+      }
+
+      return response({});
+    });
+
+    this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 
     this.put("/queued_posts/:queued_post_id", function(request) {
       return response({ queued_post: { id: request.params.queued_post_id } });
@@ -280,6 +301,10 @@ export default function() {
 
     this.get("/session/csrf", function() {
       return response({ csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=" });
+    });
+
+    this.get("/groups/check-name", () => {
+      return response({ available: true });
     });
 
     this.get("/u/check_username", function(request) {

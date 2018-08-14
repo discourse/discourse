@@ -107,14 +107,12 @@ class UploadsController < ApplicationController
     else
       tempfile = file.tempfile
       filename = file.original_filename
-      content_type = file.content_type
     end
 
     return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
 
     opts = {
       type: type,
-      content_type: content_type,
       for_private_message: for_private_message,
       pasted: pasted,
     }

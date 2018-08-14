@@ -46,11 +46,9 @@ widgetTest("collapsed links", {
       ]
     });
   },
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$(".expand-links").length === 1, "collapsed by default");
-    click("a.expand-links");
-    andThen(() => {
-      assert.equal(this.$(".post-links a.track-link").length, 7);
-    });
+    await click("a.expand-links");
+    assert.equal(this.$(".post-links a.track-link").length, 7);
   }
 });

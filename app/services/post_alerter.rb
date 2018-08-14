@@ -90,7 +90,7 @@ class PostAlerter
     if new_record
       if post.topic.private_message?
         notify_pm_users(post, reply_to_user, notified)
-      elsif post.post_type == Post.types[:regular]
+      elsif notify_about_reply?(post)
         notify_post_users(post, notified)
       end
     end

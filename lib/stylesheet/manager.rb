@@ -8,6 +8,7 @@ class Stylesheet::Manager
   CACHE_PATH ||= 'tmp/stylesheet-cache'
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
+  THEME_REGEX ||= /_theme$/
 
   @lock = Mutex.new
 
@@ -19,38 +20,65 @@ class Stylesheet::Manager
     cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }
   end
 
-  def self.stylesheet_href(target = :desktop, theme_id = :missing)
-    href = stylesheet_link_tag(target, 'all', theme_id)
-    if href
-      href.split(/["']/)[1]
-    end
+  def self.stylesheet_data(target = :desktop, theme_ids = :missing)
+    stylesheet_details(target, "all", theme_ids)
   end
 
-  def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_id = :missing)
+  def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_ids = :missing)
+    stylesheets = stylesheet_details(target, media, theme_ids)
+    stylesheets.map do |stylesheet|
+      href = stylesheet[:new_href]
+      theme_id = stylesheet[:theme_id]
+      data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
+      %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id}/>]
+    end.join("\n").html_safe
+  end
+
+  def self.stylesheet_details(target = :desktop, media = 'all', theme_ids = :missing)
+    if theme_ids == :missing
+      theme_ids = [SiteSetting.default_theme_id]
+    end
 
     target = target.to_sym
 
-    if theme_id == :missing
-      theme_id = SiteSetting.default_theme_id
-    end
+    theme_ids = [theme_ids] unless Array === theme_ids
+    theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
+    theme_ids = Theme.transform_ids(theme_ids, extend: false)
 
     current_hostname = Discourse.current_hostname
-    cache_key = "#{target}_#{theme_id}_#{current_hostname}"
-    tag = cache[cache_key]
 
-    return tag.dup.html_safe if tag
+    array_cache_key = "array_themes_#{theme_ids.join(",")}_#{target}_#{current_hostname}"
+    stylesheets = cache[array_cache_key]
+    return stylesheets if stylesheets.present?
 
     @lock.synchronize do
-      builder = self.new(target, theme_id)
-      if builder.is_theme? && !builder.theme
-        tag = ""
-      else
-        builder.compile unless File.exists?(builder.stylesheet_fullpath)
-        tag = %[<link href="#{builder.stylesheet_path(current_hostname)}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
-      end
+      stylesheets = []
+      theme_ids.each do |theme_id|
+        data = { target: target }
+        cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
+        href = cache[cache_key]
 
-      cache[cache_key] = tag
-      tag.dup.html_safe
+        unless href
+          builder = self.new(target, theme_id)
+          is_theme = builder.is_theme?
+          has_theme = builder.theme.present?
+
+          if is_theme && !has_theme
+            next
+          else
+            data[:theme_id] = builder.theme.id if has_theme && is_theme
+            builder.compile unless File.exists?(builder.stylesheet_fullpath)
+            href = builder.stylesheet_path(current_hostname)
+          end
+          cache[cache_key] = href
+        end
+
+        data[:theme_id] = theme_id if theme_id.present? && data[:theme_id].blank?
+        data[:new_href] = href
+        stylesheets << data
+      end
+      cache[array_cache_key] = stylesheets.freeze
+      stylesheets
     end
   end
 
@@ -98,6 +126,10 @@ class Stylesheet::Manager
     globs.map do |pattern|
       Dir.glob(pattern).map { |x| File.mtime(x) }.max
     end.compact.max.to_i
+  end
+
+  def self.cache_fullpath
+    "#{Rails.root}/#{CACHE_PATH}"
   end
 
   def initialize(target = :desktop, theme_id)
@@ -162,10 +194,6 @@ class Stylesheet::Manager
     css
   end
 
-  def self.cache_fullpath
-    "#{Rails.root}/#{CACHE_PATH}"
-  end
-
   def cache_fullpath
     self.class.cache_fullpath
   end
@@ -225,7 +253,7 @@ class Stylesheet::Manager
   end
 
   def is_theme?
-    !!(@target.to_s =~ /_theme$/)
+    !!(@target.to_s =~ THEME_REGEX)
   end
 
   # digest encodes the things that trigger a recompile
@@ -240,7 +268,7 @@ class Stylesheet::Manager
   end
 
   def theme
-    @theme ||= (Theme.find_by(id: @theme_id) || :nil)
+    @theme ||= Theme.find_by(id: @theme_id) || :nil
     @theme == :nil ? nil : @theme
   end
 
@@ -271,7 +299,16 @@ class Stylesheet::Manager
   end
 
   def settings_digest
-    Digest::SHA1.hexdigest((theme&.included_settings || {}).to_json)
+    fields = ThemeField.where(
+      name: "yaml",
+      type_id: ThemeField.types[:yaml],
+      theme_id: @theme_id
+    ).pluck(:updated_at)
+
+    settings = ThemeSetting.where(theme_id: @theme_id).pluck(:updated_at)
+    timestamps = fields.concat(settings).map!(&:to_f).sort!.join(",")
+
+    Digest::SHA1.hexdigest(timestamps)
   end
 
   def uploads_digest

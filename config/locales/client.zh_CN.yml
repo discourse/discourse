@@ -129,6 +129,8 @@ zh_CN:
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你新安装的 Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
+    bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过 %{min_users} 个时关闭。"
+    bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
     themes:
       default_description: "默认"
     s3:
@@ -142,6 +144,7 @@ zh_CN:
         eu_central_1: "欧洲（Frankfurt）"
         eu_west_1: "欧洲（Ireland）"
         eu_west_2: "欧洲（London）"
+        eu_west_3: "欧洲（Paris）"
         sa_east_1: "南美（Sao Paulo）"
         us_east_1: "美国东部（N. Virginia）"
         us_east_2: "美国东部（俄亥俄州）"
@@ -221,6 +224,12 @@ zh_CN:
       last_read: "这是你阅读过的最后一帖；点击收藏"
       remove: "取消收藏"
       confirm_clear: "你确定要清除该主题的所有收藏吗？"
+    topic_count_latest:
+      other: "有 {{count}} 个更新或新主题"
+    topic_count_unread:
+      other: "有 {{count}} 个未读主题"
+    topic_count_new:
+      other: "有 {{count}} 个新主题"
     preview: "预览"
     cancel: "取消"
     save: "保存更改"
@@ -312,6 +321,9 @@ zh_CN:
         title: "添加成员"
         usernames: "用户名"
       manage:
+        title: '管理'
+        name: '名字'
+        full_name: '全名'
         add_members: "添加成员"
         delete_member_confirm: "要从群组 %{group} 中移除用户 %{username} 吗？"
         profile:
@@ -361,15 +373,26 @@ zh_CN:
         all: "所有群组"
         empty: "没有可见的群组。"
         filter: "根据群组类型筛选"
+        owner_groups: "拥有的群组"
+        close_groups: "封闭群组"
+        automatic_groups: "自动分组"
+        automatic: "自动"
+        closed: "已关闭"
         public: "公开"
         private: "私密"
+        public_groups: "公开群组"
+        automatic_group: 自动群组
+        close_group: 关闭群组
         my_groups: "我的群组"
+        group_type: "群组类别"
+        is_group_user: "成员"
         is_group_owner: "所有者"
       title:
         other: "小组"
       activity: "活动"
       members:
         title: "成员"
+        filter_placeholder_admin: "用户名或电子邮件"
         filter_placeholder: "用户名"
         remove_member: "移除成员"
         make_owner: "设为所有者"
@@ -433,8 +456,6 @@ zh_CN:
       reorder:
         title: "重新分类排序"
         title_long: "重新对分类列表进行排序"
-        fix_order: "固定排序"
-        fix_order_tooltip: "不是所有分类都有单独的排序编号，可能能会导致出错。"
         save: "保存排序"
         apply_all: "应用"
         position: "位置"
@@ -482,6 +503,7 @@ zh_CN:
       activity_stream: "活动"
       preferences: "设置"
       expand_profile: "展开"
+      collapse_profile: "折叠"
       bookmarks: "收藏"
       bio: "我是谁"
       invited_by: "邀请人"
@@ -631,7 +653,6 @@ zh_CN:
         upload_title: "上传图片"
         upload_picture: "上传图片"
         image_is_not_a_square: "注意：图片不是正方形的，我们裁剪了部分图像。"
-        cache_notice: "更改了头像成功，但是鉴于浏览器缓存可能需要一段时间后才会生效。"
       change_profile_background:
         title: "个人档背景"
         instructions: "显示在个人资料页面中，上传的图片将被居中且默认宽度为 850px。"
@@ -808,7 +829,6 @@ zh_CN:
         most_liked_users: "赞谁最多"
         most_replied_to_users: "最多回复至"
         no_likes: "暂无赞。"
-      associated_accounts: "登录"
       ip_address:
         title: "最后使用的 IP 地址"
       registration_ip_address:
@@ -931,14 +951,20 @@ zh_CN:
       help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账号的邮箱，请联系<a href='/about'>我们的工作人员。</a></p>"
       button_ok: "OK"
       button_help: "帮助"
+    email_login:
+      link_label: "给我通过邮件发送一个登录链接"
+      button_label: "通过邮件"
     login:
       title: "登录"
       username: "用户"
       password: "密码"
+      second_factor_title: "双重验证"
+      second_factor_description: "请输入来自  app  的验证码："
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "出错了"
       rate_limit: "请请稍后再重试"
+      blank_username: "请输入你的邮件地址或用户名。"
       blank_username_or_password: "请输入你的邮件地址或用户名，以及密码。"
       reset_password: '重置密码'
       logging_in: "登录中..."
@@ -951,6 +977,7 @@ zh_CN:
       not_allowed_from_ip_address: "你使用的 IP 地址已被封禁。"
       admin_not_allowed_from_ip_address: "你不能从这个 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活邮件。"
+      omniauth_disallow_totp: "您的账户已启用双重验证，请使用密码登录。"
       resend_title: "重发激活邮件"
       change_email: "更改邮件地址"
       provide_new_email: "给个新地址！然后我们会再给你发一封确认邮件。"
@@ -960,9 +987,6 @@ zh_CN:
       preferences: "需要登入后更改设置"
       forgot: "我记不清帐号详情了"
       not_approved: "你的帐号还未通过审核。一旦审核通过，我们将邮件通知你。"
-      google:
-        title: "Google 登录"
-        message: "正在通过 Google 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       google_oauth2:
         title: "Google 登录"
         message: "正在通过 Google 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
@@ -1006,14 +1030,19 @@ zh_CN:
       categories_only: "仅分类"
       categories_with_featured_topics: "有推荐主题的分类"
       categories_and_latest_topics: "分类和最新主题"
+      categories_and_top_topics: "分类和最热主题"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: 载入中……
     select_kit:
       default_header_text: 选择...
       no_content: 无符合的结果
       filter_placeholder: 搜索……
+      max_content_reached:
+        other: "您只能选择 {{count}} 条记录。"
     emoji_picker:
       filter_placeholder: 查找表情符号
       people: 人物
@@ -1031,6 +1060,8 @@ zh_CN:
       medium_tone: 中间肤色
       medium_dark_tone: 中深肤色
       dark_tone: 深肤色
+    shared_drafts:
+      title: "共享草稿"
     composer:
       emoji: "Emoji :)"
       more_emoji: "更多…"
@@ -1119,6 +1150,19 @@ zh_CN:
         body: "目前该私信只发给了你自己！"
       admin_options_title: "本主题可选设置"
       composer_actions:
+        reply: 回复
+        draft: 草稿
+        edit: 编辑
+        reply_as_new_topic:
+          label: 回复为联结主题
+          desc: 创建一个新主题链接到这一主题
+        reply_as_private_message:
+          label: 新消息
+          desc: 新建一个私信
+        reply_to_topic:
+          label: 回复主题
+        create_topic:
+          label: "新主题"
         shared_draft:
           label: "共享草稿"
     notifications:
@@ -1187,6 +1231,7 @@ zh_CN:
       clear_all: "清除所有"
       too_short: "你的搜索词太短。"
       title: "搜索主题、帖子、用户或分类"
+      full_page_title: "搜索主题或帖子"
       no_results: "没有找到结果。"
       no_more_results: "没有找到更多结果。"
       searching: "搜索中..."
@@ -1318,6 +1363,8 @@ zh_CN:
       move_to_inbox:
         title: '移动到收件箱'
         help: '移动私信到收件箱'
+      edit_message:
+        title: '编辑消息'
       list: '主题'
       new: '近期主题'
       unread: '未读'
@@ -1482,6 +1529,7 @@ zh_CN:
         visible: "取消隐藏主题"
         reset_read: "重置阅读数据"
         make_public: "设置为公共主题"
+        make_private: "设置为私信"
       feature:
         pin: "置顶主题"
         unpin: "取消置顶主题"
@@ -1698,7 +1746,6 @@ zh_CN:
           inappropriate: "撤回标记"
           bookmark: "取消收藏"
           like: "取消赞"
-          vote: "撤销投票"
         people:
           off_topic: "标记为偏离主题"
           spam: "标记为垃圾信息"
@@ -1709,7 +1756,6 @@ zh_CN:
           like: "赞了它"
           like_capped:
             other: "和其他 {{count}} 人赞了它"
-          vote: "已投票"
         by_you:
           off_topic: "你标记其偏离主题"
           spam: "你标记其为垃圾信息"
@@ -1718,7 +1764,6 @@ zh_CN:
           notify_user: "你已经通知了该用户"
           bookmark: "你以收藏了该帖"
           like: "你赞了它"
-          vote: "你已投票"
         by_you_and_others:
           off_topic:
             other: "你和其他 {{count}} 人标记其偏离主题"
@@ -1734,8 +1779,6 @@ zh_CN:
             other: "你和其他 {{count}} 人收藏了这个帖子"
           like:
             other: "你和其他 {{count}} 人赞了它"
-          vote:
-            other: "你和其他 {{count}} 人已投票"
         by_others:
           off_topic:
             other: "{{count}} 人标记其偏离主题"
@@ -1751,8 +1794,6 @@ zh_CN:
             other: "{{count}} 人收藏了这个帖子"
           like:
             other: "{{count}} 人赞了它"
-          vote:
-            other: "{{count}} 人已投票"
       merge:
         confirm:
           other: "确定要合并这 {{count}} 个帖子吗？"
@@ -1793,7 +1834,6 @@ zh_CN:
       can: '能够&hellip; '
       none: '（未分类）'
       all: '所有分类'
-      choose: '选择分类&hellip;'
       edit: '编辑'
       edit_long: "编辑"
       view: '浏览分类的主题'
@@ -1841,7 +1881,6 @@ zh_CN:
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："
       subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
-      all_topics_wiki: "默认将新主题设为维基主题"
       subcategory_list_style: "子分类列表样式："
       sort_order: "列表样式，按排序："
       default_view: "默认主题列表："
@@ -1850,7 +1889,6 @@ zh_CN:
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
-      position: "位置"
       default_position: "默认位置"
       position_disabled: "分类按照其活跃程度的顺序显示。要固定分类列表的显示顺序，"
       position_disabled_click: '启用“固定分类位置”设置。'
@@ -2284,6 +2322,7 @@ zh_CN:
         moderation_history: "管理日志"
         agree: "确认标记"
         agree_title: "确认这个标记有效且正确"
+        agree_flag_hide_post: "隐藏帖子"
         agree_flag_hide_post_title: "隐藏帖子并自动发送私信给作者使其修改"
         agree_flag_restore_post: "确认并恢复帖子"
         agree_flag_restore_post_title: "恢复帖子为所有用户可见。"
@@ -2291,7 +2330,9 @@ zh_CN:
         agree_flag_suspend_title: "同意标记并暂停用户。"
         agree_flag_silence: "禁言用户"
         agree_flag_silence_title: "同意标记并禁言用户。"
+        agree_flag: "保持帖子"
         agree_flag_title: "确认标记并保持帖子不变。"
+        ignore_flag: "忽略"
         delete: "删除"
         delete_title: "删除标记指向的帖子。"
         delete_post_defer_flag: "删除帖子并忽略标记"
@@ -2342,6 +2383,12 @@ zh_CN:
       groups:
         new:
           title: "新建群组"
+          create: "创建"
+        manage:
+          interaction:
+            email: 邮箱
+          membership:
+            trust_levels_none: "无"
         primary: "主要群组"
         no_primary: "(无主要群组)"
         title: "群组"
@@ -2722,7 +2769,6 @@ zh_CN:
             address_placeholder: "name@example.com"
             type_placeholder: "摘要、注册…"
             reply_key_placeholder: "回复键"
-            skipped_reason_placeholder: "原因"
       moderation_history:
         performed_by: "执行由"
         no_results: "暂无管理历史。"
@@ -2813,6 +2859,10 @@ zh_CN:
             check_personal_message: "检查个人信息"
             disabled_second_factor: "停用双重验证"
             topic_published: "帖子已发布"
+            create_badge: "创建徽章"
+            change_badge: "更换徽章"
+            delete_badge: "删除徽章"
+            merge_user: "合并用户"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2879,6 +2929,7 @@ zh_CN:
           placeholder_regexp: "正则表达式"
           add: '新增'
           success: '成功'
+          exists: '已存在'
           upload: "上传"
           upload_successful: "上传成功。敏感词已添加。"
       impersonate:
@@ -3014,6 +3065,7 @@ zh_CN:
         delete_confirm: "你确定要删除这个用户吗？这个操作是不可逆的！"
         delete_and_block: "删除并<b>封禁</b>该邮件地址和IP地址"
         delete_dont_block: "仅删除"
+        deleting_user: "删除用户"
         deleted: "该用户已被删除。"
         delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
         send_activation_email: "发送激活邮件"

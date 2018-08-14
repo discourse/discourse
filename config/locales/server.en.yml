@@ -60,6 +60,10 @@ en:
     bad_color_scheme: "Can not update theme, invalid color scheme"
     other_error: "Something went wrong updating theme"
     error_importing: "Error cloning git repository, access is denied or repository is not found"
+    errors:
+      component_no_user_selectable: "Theme components can't be user-selectable"
+      component_no_default: "Theme components can't be default theme"
+      no_multilevels_components: "Themes with child themes can't be child themes themselves"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
       data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list` and `enum`"
@@ -197,6 +201,7 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  authenticator_not_found: "Authentication method does not exist, or has been disabled."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
@@ -701,6 +706,9 @@ en:
       title: "Thanks for confirming your current email address"
       description: "We're now emailing your new address for confirmation."
 
+  associated_accounts:
+    revoke_failed: "Failed to revoke your account with %{provider_name}."
+
   activation:
     action: "Click here to activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
@@ -764,7 +772,7 @@ en:
       self: "You have no activity yet."
       others: "No activity."
     no_bookmarks:
-      self: "You have no bookmarked posts, bookmarking posts allows you to easily access them later on."
+      self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       others: "No bookmarks."
     no_likes_given:
       self: "You have not liked any posts."
@@ -772,6 +780,9 @@ en:
     no_replies:
       self: "You have not replied to any posts."
       others: "No replies."
+    no_drafts:
+      self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
+      others: "You do not have permission to see drafts for this user."
 
   topic_flag_types:
     spam:
@@ -840,6 +851,41 @@ en:
       write: "Write all"
 
   reports:
+    default:
+      labels:
+        count: Count
+        percent: Percent
+        day: Day
+    post_edits:
+      title: "Post edits"
+      labels:
+        post: Post
+        editor: Editor
+        author: Author
+        edit_reason: Reason
+    moderators_activity:
+      title: "Moderators activity"
+      labels:
+        moderator: Moderator
+        flag_count: Flags reviewed
+        time_read: Time reading
+        topic_count: Topics created
+        post_count: Posts created
+        pm_count: PMs created
+        revision_count: Revisions
+    flags_status:
+      title: "Flags status"
+      values:
+        agreed: Agreed
+        disagreed: Disagreed
+        deferred: Deferred
+        no_action: No action
+      labels:
+        flag: Type
+        assigned: Assigned
+        poster: Poster
+        flagger: Flagger
+        time_to_resolution: Resolution time
     visits:
       title: "User Visits"
       xaxis: "Day"
@@ -898,10 +944,14 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+      labels:
+        level: Level
     users_by_type:
       title: "Users per Type"
       xaxis: "Type"
       yaxis: "Number of Users"
+      labels:
+        type: Type
       xaxis_labels:
         admin: Admin
         moderator: Moderator
@@ -952,10 +1002,15 @@ en:
       num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
+      labels:
+        domain: Domain
+        num_clicks: Clicks
+        num_topics: Topics
     top_referred_topics:
       title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Topic"
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
@@ -1018,8 +1073,9 @@ en:
       yaxis: "Number of visits"
     web_crawlers:
       title: "Web Crawler Requests"
-      xaxis: "User Agent"
-      yaxis: "Pageviews"
+      labels:
+        user_agent: "User Agent"
+        page_views: "Pageviews"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1045,6 +1101,7 @@ en:
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
+    out_of_date_themes: "Updates are available for the following themes:"
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -1180,7 +1237,6 @@ en:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
@@ -1250,8 +1306,8 @@ en:
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    google_oauth2_prompt: "A space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See https://developers.google.com/identity/protocols/OpenIDConnect#prompt for the possible values."
-    google_oauth2_hd: "Google Apps Hosted domain that the sign-in will be limited to. See https://developers.google.com/identity/protocols/OpenIDConnect#hd-param for more details."
+    google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See https://developers.google.com/identity/protocols/OpenIDConnect#prompt for the possible values."
+    google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See https://developers.google.com/identity/protocols/OpenIDConnect#hd-param for more details."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at https://apps.twitter.com/"
@@ -1609,6 +1665,8 @@ en:
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
+    header_dropdown_category_count: "How many categories can be displayed in the header dropdown menu."
+
     permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
 
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
@@ -1659,6 +1717,7 @@ en:
     enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
+    emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
@@ -1703,6 +1762,7 @@ en:
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+    retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
@@ -1899,14 +1959,13 @@ en:
     second_factor_title: "Two Factor Authentication"
     second_factor_description: "Please enter the required authentication code from your app:"
     second_factor_backup_description: "Please enter one of your backup codes:"
-    second_factor_backup_title: "Two Factor Backup"
+    second_factor_backup_title: "Two Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     second_factor_toggle:
-      totp: "Log in using Authenticator app"
-      backup_code: "Log in using a backup code"
+      totp: "Use an authenticator app instead"
+      backup_code: "Use a backup code instead"
 
   user:
-    no_accounts_associated: "No accounts associated"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     activated_by_staff: "Activated by staff"
@@ -2194,6 +2253,22 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    flags_agreed_and_post_deleted:
+      title: "Flagged post removed by staff"
+      subject_template: "Flagged post removed by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was removed.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        This post was flagged by the community and a staff member opted to remove it.
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
+
     usage_tips:
       text_body_template: |
         For a few quick tips on getting started as a new user, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2440,6 +2515,14 @@ en:
 
         If you can correct the problem, please try again.
 
+    email_reject_post_too_short:
+      title: "Email Reject Post Too Short"
+      subject_template: "[%{email_prefix}] Email issue -- Post too short"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        To promote more in depth conversations, very short replies are not allowed. Can you please reply with at least %{count} characters? Alternatively, you can like a post via email by replying with "+1".
+
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
@@ -2514,6 +2597,15 @@ en:
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
+
+    email_revoked:
+      title: "Email Revoked"
+      subject_template: "Is your email address correct?"
+      text_body_template: |
+        We’re sorry, but we’re having trouble reaching you via email. Our last few emails to you have all bounced back as undeliverable.
+
+        Can you make sure [your email address](%{base_url}/my/preferences/email) is valid and working? You may also wish to add our email address to your address book / contact list to improve deliverability.
+
     too_many_spam_flags:
       title: "Too Many Spam Flags"
       subject_template: "New account on hold"
@@ -2522,7 +2614,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced and will be unable to create replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -3116,33 +3208,45 @@ en:
     sockpuppet: "A new user created a topic, and another new user at the same IP address (%{ip_address}) replied. See the <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> site setting."
     spam_hosts: "This new user tried to create multiple posts with links to the same domain (%{domain}). See the <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
 
-  email_log:
-    post_user_deleted: "User of the post has been deleted."
-    no_user: "Can't find user with id %{user_id}"
-    anonymous_user: "User is anonymous"
-    suspended_not_pm: "User is suspended, not a message"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
+  skipped_email_log:
     exceeded_emails_limit: "Exceeded max_emails_per_day_per_user"
     exceeded_bounces_limit: "Exceeded bounce_score_threshold"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
-    no_echo_mailing_list_mode: "Mailing list notifications disabled for user's own posts"
+    mailing_list_no_echo_mode: "Mailing list notifications disabled for user's own posts"
+    user_email_no_user: "Can't find user with id %{user_id}"
+    user_email_post_not_found: "Can't find a post with id %{post_id}"
+    user_email_anonymous_user: "User is anonymous"
+    user_email_user_suspended_not_pm: "User is suspended, not a message"
+    user_email_seen_recently: "User was seen recently"
+    user_email_notification_already_read: "The notification this email is about has already been read"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_user_deleted: "User of the post has been deleted."
+    user_email_post_deleted: "post was deleted by the author"
+    user_email_user_suspended: "user was suspended"
+    user_email_already_read: "user has already read this post"
+    sender_message_blank: "message is blank"
+    sender_message_to_blank: "message.to is blank"
+    sender_text_part_body_blank: "text_part.body is blank"
+    sender_text_body_blank: "body is blank"
 
   color_schemes:
     base_theme_name: "Base"
-    default: "Light Scheme"
+    light: "Light Scheme"
     dark: "Dark Scheme"
-    default_theme_name: "Default"
-    dark_theme_name: "Dark"
+    neutral: "Neutral Scheme"
+    grey_amber: "Grey Amber Scheme"
+    shades_of_blue: "Shades of Blue Scheme"
+    latte: "Latte Scheme"
+    summer: "Summer Scheme"
+    dark_rose: "Dark Rose Scheme"
+    default_theme_name: "Light"
     light_theme_name: "Light"
+    dark_theme_name: "Dark"
+    neutral_theme_name: "Neutral"
+    grey_amber_theme_name: "Grey Amber"
+    shades_of_blue_theme_name: "Shades of Blue"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Summer"
+    dark_rose_theme_name: "Dark Rose"
 
   about: "About"
   guidelines: "Guidelines"
@@ -3747,7 +3851,7 @@ en:
       button: "Register"
       title: "Register Admin Account"
       help: "register a new account to get started"
-      no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>may be difficult</a>."
+      no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration may be difficult. Please add a developer email in the configuration file or <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>create an administrator account from console</a>."
     confirm_email:
       title: "Confirm your Email"
       message: "<p>We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, ensure you have set up email correctly for your Discourse and check your spam folder.</p>"

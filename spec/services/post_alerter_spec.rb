@@ -890,18 +890,37 @@ describe PostAlerter do
     end
   end
 
-  context "watching" do
-    it "triggers :before_create_notifications_for_users" do
-      user = Fabricate(:user)
-      category = Fabricate(:category)
-      topic = Fabricate(:topic, category: category)
-      post = Fabricate(:post, topic: topic)
-      level = CategoryUser.notification_levels[:watching]
-      CategoryUser.set_notification_level_for_category(user, level, category.id)
-      events = DiscourseEvent.track_events do
-        PostAlerter.post_created(post)
+  context "category" do
+    context "watching" do
+      it "triggers :before_create_notifications_for_users" do
+        user = Fabricate(:user)
+        category = Fabricate(:category)
+        topic = Fabricate(:topic, category: category)
+        post = Fabricate(:post, topic: topic)
+        level = CategoryUser.notification_levels[:watching]
+        CategoryUser.set_notification_level_for_category(user, level, category.id)
+        events = DiscourseEvent.track_events do
+          PostAlerter.post_created(post)
+        end
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
       end
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
+
+      it "notifies staff about whispered post" do
+        category = Fabricate(:category)
+        topic = Fabricate(:topic, category: category)
+        admin = Fabricate(:admin)
+        user = Fabricate(:user)
+        level = CategoryUser.notification_levels[:watching]
+        CategoryUser.set_notification_level_for_category(admin, level, category.id)
+        CategoryUser.set_notification_level_for_category(user, level, category.id)
+        whispered_post = Fabricate(:post, user: Fabricate(:admin), topic: topic, post_type: Post.types[:whisper])
+        expect {
+          PostAlerter.post_created(whispered_post)
+        }.to add_notification(admin, :posted)
+        expect {
+          PostAlerter.post_created(whispered_post)
+        }.not_to add_notification(user, :posted)
+      end
     end
   end
 

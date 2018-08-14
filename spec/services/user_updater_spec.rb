@@ -82,7 +82,7 @@ describe UserUpdater do
       updater = UserUpdater.new(acting_user, user)
       date_of_birth = Time.zone.now
 
-      theme = Theme.create!(user_id: -1, name: "test", user_selectable: true)
+      theme = Fabricate(:theme, user_selectable: true)
 
       seq = user.user_option.theme_key_seq
 
@@ -127,6 +127,29 @@ describe UserUpdater do
 
       expect(user.user_option.email_digests).to eq false
       expect(user.user_option.mailing_list_mode).to eq true
+    end
+
+    it "filters theme_ids blank values before updating perferences" do
+      user = Fabricate(:user)
+      user.user_option.update!(theme_ids: [1])
+      updater = UserUpdater.new(acting_user, user)
+
+      updater.update(theme_ids: [""])
+      user.reload
+      expect(user.user_option.theme_ids).to eq([])
+
+      updater.update(theme_ids: [nil])
+      user.reload
+      expect(user.user_option.theme_ids).to eq([])
+
+      theme = Fabricate(:theme)
+      child = Fabricate(:theme)
+      theme.add_child_theme!(child)
+      theme.set_default!
+
+      updater.update(theme_ids: [theme.id.to_s, child.id.to_s, "", nil])
+      user.reload
+      expect(user.user_option.theme_ids).to eq([theme.id, child.id])
     end
 
     context 'when sso overrides bio' do

@@ -212,13 +212,6 @@ a.reply-to-tab {
       margin: 0 0 10px 0;
     }
   }
-  .participants {
-    // PMs //
-    .user {
-      float: left;
-      margin: 0 10px 10px 0;
-    }
-  }
   .buttons {
     .btn {
       border: 0;
@@ -363,18 +356,7 @@ iframe {
 }
 
 .selected-posts {
-  width: 97%;
   padding: 0.1em 0.7em;
-  background-color: srgb-scale($tertiary, $secondary, 15%);
-  .btn {
-    margin-bottom: 10px;
-    color: $secondary;
-    background: $tertiary;
-    clear: both;
-  }
-  p {
-    clear: both;
-  }
 }
 
 // hide the full set of selection buttons on mobile
@@ -385,18 +367,6 @@ iframe {
 // unhide the simple "select just this post" button
 button.select-post {
   display: inline-block;
-  position: absolute;
-  z-index: z("base") + 1;
-  left: 200px;
-  background-color: srgb-scale($tertiary, $secondary, 60%);
-  color: $secondary;
-  padding: 5px;
-}
-
-.post-select {
-  float: right;
-  margin-right: 20px;
-  margin-top: -20px;
 }
 
 .deleted {
@@ -486,7 +456,6 @@ span.highlighted {
 
 .user-title {
   color: #aaa;
-  padding-top: 2px;
   overflow: hidden;
   margin-right: 50px;
 }

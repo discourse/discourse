@@ -5,6 +5,52 @@ describe Email::Processor do
 
   let(:from) { "foo@bar.com" }
 
+  context "when reply via email is too short" do
+    let(:mail) { file_from_fixtures("email_reply_3.eml", "emails").read }
+    let(:post) { Fabricate(:post) }
+    let!(:user) { Fabricate(:user, email: "three@foo.com") }
+    let!(:email_log) do
+      Fabricate(:email_log,
+        message_id: "35@foo.bar.mail", # don't change, based on fixture file "email_reply_3.eml"
+        email_type: "user_posted",
+        post_id: post.id,
+        to_address: "asdas@dasdfd.com"
+      )
+    end
+
+    before do
+      SiteSetting.min_post_length = 1000
+      SiteSetting.find_related_post_with_key = false
+    end
+
+    it "rejects reply and sends an email with custom error message" do
+      begin
+        receiver = Email::Receiver.new(mail)
+        receiver.process!
+      rescue Email::Receiver::TooShortPost => e
+        error = e
+      end
+
+      expect(error.class).to eq(Email::Receiver::TooShortPost)
+      processor = Email::Processor.new(mail)
+      processor.process!
+
+      rejection_raw = processor.send(:handle_failure, mail, error).body.raw_source
+
+      count = SiteSetting.min_post_length
+      destination = receiver.mail.to
+      former_title = receiver.mail.subject
+
+      expect(rejection_raw.gsub(/\r/, "")).to eq(
+        I18n.t("system_messages.email_reject_post_too_short.text_body_template",
+          count: count,
+          destination: destination,
+          former_title: former_title
+        ).gsub(/\r/, "")
+      )
+    end
+  end
+
   describe "rate limits" do
 
     let(:mail) { "From: #{from}\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }

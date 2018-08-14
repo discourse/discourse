@@ -22,13 +22,11 @@ widgetTest("log out", {
     this.on("logout", () => (this.loggedOut = true));
   },
 
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$(".logout").length);
 
-    click(".logout");
-    andThen(() => {
-      assert.ok(this.loggedOut);
-    });
+    await click(".logout");
+    assert.ok(this.loggedOut);
   }
 });
 
@@ -66,12 +64,10 @@ widgetTest("anonymous", {
     this.on("toggleAnonymous", () => (this.anonymous = true));
   },
 
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$(".enable-anonymous").length);
-    click(".enable-anonymous");
-    andThen(() => {
-      assert.ok(this.anonymous);
-    });
+    await click(".enable-anonymous");
+    assert.ok(this.anonymous);
   }
 });
 
@@ -98,11 +94,9 @@ widgetTest("anonymous - switch back", {
     this.on("toggleAnonymous", () => (this.anonymous = true));
   },
 
-  test(assert) {
+  async test(assert) {
     assert.ok(this.$(".disable-anonymous").length);
-    click(".disable-anonymous");
-    andThen(() => {
-      assert.ok(this.anonymous);
-    });
+    await click(".disable-anonymous");
+    assert.ok(this.anonymous);
   }
 });

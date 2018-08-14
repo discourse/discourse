@@ -14,7 +14,6 @@ class UploadCreator
 
   # Available options
   #  - type (string)
-  #  - content_type (string)
   #  - origin (string)
   #  - for_group_message (boolean)
   #  - for_theme (boolean)
@@ -38,6 +37,10 @@ class UploadCreator
       if FileHelper.is_image?(@filename)
         extract_image_info!
         return @upload if @upload.errors.present?
+
+        image_type = @image_info.type.to_s
+        basename = File.basename(@filename, File.extname(@filename))
+        @filename = "#{basename}.#{image_type}"
 
         if @filename[/\.svg$/i]
           whitelist_svg!
@@ -76,7 +79,7 @@ class UploadCreator
       @upload.sha1              = sha1
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
-      @upload.extension         = File.extname(@filename)[1..10]
+      @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if FileHelper.is_image?(@filename)
         @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
@@ -91,10 +94,10 @@ class UploadCreator
 
       # store the file and update its url
       File.open(@file.path) do |f|
-        url = Discourse.store.store_upload(f, @upload, @opts[:content_type])
+        url = Discourse.store.store_upload(f, @upload)
+
         if url.present?
-          @upload.url = url
-          @upload.save
+          @upload.update!(url: url)
         else
           @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
         end
@@ -135,35 +138,43 @@ class UploadCreator
   def convert_to_jpeg!
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
-    OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
+    from = @file.path
+    to = jpeg_tempfile.path
+
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    from = OptimizedImage.prepend_decoder!(from)
+    to = OptimizedImage.prepend_decoder!(to)
 
     begin
-      execute_convert(@file, jpeg_tempfile)
+      execute_convert(from, to)
     rescue
       # retry with debugging enabled
-      execute_convert(@file, jpeg_tempfile, true)
+      execute_convert(from, to, true)
     end
 
     # keep the JPEG if it's at least 15% smaller
     if File.size(jpeg_tempfile.path) < filesize * 0.85
       @file = jpeg_tempfile
       @filename = (File.basename(@filename, ".*").presence || I18n.t("image").presence || "image") + ".jpg"
-      @opts[:content_type] = "image/jpeg"
       extract_image_info!
     else
       jpeg_tempfile&.close
     end
   end
 
-  def execute_convert(input_file, output_file, debug = false)
-    command = ['convert', input_file.path,
-               '-auto-orient',
-               '-background', 'white',
-               '-interlace', 'none',
-               '-flatten',
-               '-quality', SiteSetting.png_to_jpg_quality.to_s]
-    command << '-debug' << 'all' if debug
-    command << output_file.path
+  def execute_convert(from, to, debug = false)
+    command = [
+      "convert",
+      from,
+      "-auto-orient",
+      "-background", "white",
+      "-interlace", "none",
+      "-flatten",
+      "-quality", SiteSetting.png_to_jpg_quality.to_s
+    ]
+    command << "-debug" << "all" if debug
+    command << to
 
     Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
   end
@@ -208,8 +219,13 @@ class UploadCreator
   end
 
   def fix_orientation!
-    OptimizedImage.ensure_safe_paths!(@file.path)
-    Discourse::Utils.execute_command('convert', @file.path, '-auto-orient', @file.path)
+    path = @file.path
+
+    OptimizedImage.ensure_safe_paths!(path)
+    path = OptimizedImage.prepend_decoder!(path)
+
+    Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
+
     extract_image_info!
   end
 

@@ -1,5 +1,3 @@
-require 'scheduler/scheduler'
-
 module Jobs
 
   def self.queued
@@ -173,7 +171,7 @@ module Jobs
   end
 
   class Scheduled < Base
-    extend Scheduler::Schedule
+    extend MiniScheduler::Schedule
 
     def perform(*args)
       return if Discourse.readonly_mode?

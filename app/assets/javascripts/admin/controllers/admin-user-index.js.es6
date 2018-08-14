@@ -40,6 +40,18 @@ export default Ember.Controller.extend(CanCheckEmails, {
       .join(", ");
   },
 
+  @computed("model.associated_accounts")
+  associatedAccountsLoaded(associatedAccounts) {
+    return typeof associatedAccounts !== "undefined";
+  },
+
+  @computed("model.associated_accounts")
+  associatedAccounts(associatedAccounts) {
+    return associatedAccounts
+      .map(provider => `${provider.name} (${provider.description})`)
+      .join(", ");
+  },
+
   userFields: function() {
     const siteUserFields = this.site.get("user_fields"),
       userFields = this.get("model.user_fields");

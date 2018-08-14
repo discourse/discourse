@@ -65,14 +65,14 @@ createWidget("pm-map-user", {
 
   html(attrs) {
     const user = attrs.user;
-    const avatar = avatarFor("small", {
+    const avatar = avatarFor("tiny", {
       template: user.avatar_template,
       username: user.username
     });
     const link = h("a", { attributes: { href: user.get("path") } }, [
       avatar,
       " ",
-      user.username
+      h("span", user.username)
     ]);
     const result = [link];
     const isCurrentUser = attrs.canRemoveSelfId === user.get("id");
@@ -123,7 +123,7 @@ export default createWidget("private-message-map", {
         " ",
         I18n.t("private_message_info.title")
       ]),
-      h("div.participants.clearfix", participants)
+      h("div.participants", participants)
     ];
 
     if (attrs.canInvite) {

@@ -10,6 +10,33 @@ require_dependency 'avatar_lookup'
 
 class TopicQuery
 
+  def self.validators
+    @validators ||= begin
+
+      zero_or_more = lambda do |x|
+        Integer === x && x >= 0
+      end
+
+      array_zero_or_more = lambda do |x|
+        Array === x && x.length > 0 && x.all? { |i| Integer === i && i >= 0 }
+      end
+
+      {
+        max_posts: zero_or_more,
+        min_posts: zero_or_more,
+      }
+    end
+  end
+
+  def self.validate?(option, value)
+
+    if fn = validators[option.to_sym]
+      fn.call(value)
+    else
+      true
+    end
+  end
+
   def self.public_valid_options
     @public_valid_options ||=
       %i(page

@@ -6,64 +6,54 @@ acceptance("Category Edit", {
   settings: { email_in: true }
 });
 
-QUnit.test("Can open the category modal", assert => {
-  visit("/c/bug");
+QUnit.test("Can open the category modal", async assert => {
+  await visit("/c/bug");
 
-  click(".edit-category");
-  andThen(() => {
-    assert.ok(visible(".d-modal"), "it pops up a modal");
-  });
+  await click(".edit-category");
+  assert.ok(visible(".d-modal"), "it pops up a modal");
 
-  click("a.close");
-  andThen(() => {
-    assert.ok(!visible(".d-modal"), "it closes the modal");
-  });
+  await click("a.close");
+  assert.ok(!visible(".d-modal"), "it closes the modal");
 });
 
-QUnit.test("Change the category color", assert => {
-  visit("/c/bug");
+QUnit.test("Change the category color", async assert => {
+  await visit("/c/bug");
 
-  click(".edit-category");
-  fillIn("#edit-text-color", "#ff0000");
-  click("#save-category");
-  andThen(() => {
-    assert.ok(!visible(".d-modal"), "it closes the modal");
-    assert.equal(
-      DiscourseURL.redirectedTo,
-      "/c/bug",
-      "it does one of the rare full page redirects"
-    );
-  });
+  await click(".edit-category");
+  await fillIn("#edit-text-color", "#ff0000");
+  await click("#save-category");
+  assert.ok(!visible(".d-modal"), "it closes the modal");
+  assert.equal(
+    DiscourseURL.redirectedTo,
+    "/c/bug",
+    "it does one of the rare full page redirects"
+  );
 });
 
-QUnit.test("Change the topic template", assert => {
-  visit("/c/bug");
+QUnit.test("Change the topic template", async assert => {
+  await visit("/c/bug");
 
-  click(".edit-category");
-  click(".edit-category-topic-template");
-  fillIn(".d-editor-input", "this is the new topic template");
-  click("#save-category");
-  andThen(() => {
-    assert.ok(!visible(".d-modal"), "it closes the modal");
-    assert.equal(
-      DiscourseURL.redirectedTo,
-      "/c/bug",
-      "it does one of the rare full page redirects"
-    );
-  });
+  await click(".edit-category");
+  await click(".edit-category-topic-template");
+  await fillIn(".d-editor-input", "this is the new topic template");
+  await click("#save-category");
+  assert.ok(!visible(".d-modal"), "it closes the modal");
+  assert.equal(
+    DiscourseURL.redirectedTo,
+    "/c/bug",
+    "it does one of the rare full page redirects"
+  );
 });
 
-QUnit.test("Error Saving", assert => {
-  visit("/c/bug");
+QUnit.test("Error Saving", async assert => {
+  await visit("/c/bug");
 
-  click(".edit-category");
-  click(".edit-category-settings");
-  fillIn(".email-in", "duplicate@example.com");
-  click("#save-category");
-  andThen(() => {
-    assert.ok(visible("#modal-alert"));
-    assert.equal(find("#modal-alert").html(), "duplicate email");
-  });
+  await click(".edit-category");
+  await click(".edit-category-settings");
+  await fillIn(".email-in", "duplicate@example.com");
+  await click("#save-category");
+  assert.ok(visible("#modal-alert"));
+  assert.equal(find("#modal-alert").html(), "duplicate email");
 });
 
 QUnit.test("Subcategory list settings", async assert => {
@@ -88,7 +78,8 @@ QUnit.test("Subcategory list settings", async assert => {
   );
 
   await click(".edit-category-general");
-  categoryChooser.expand().selectRowByValue(3);
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(3);
 
   await click(".edit-category-settings a");
 

@@ -214,10 +214,6 @@ uk:
       title: 'Вподобати'
       description: 'Like this post'
       long_form: 'liked this'
-    vote:
-      title: 'Проголосувати'
-      description: 'Vote for this post'
-      long_form: 'voted for this post'
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -298,8 +294,6 @@ uk:
       num_users: "Користувачі"
     top_referred_topics:
       title: "Найбільше посилаються на"
-      xaxis: "Тема"
-      num_clicks: "Переходи"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -323,7 +317,6 @@ uk:
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
     min_password_length: "Мінімальна довжина пароля."
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
@@ -444,19 +437,6 @@ uk:
     store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
     images:
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
-  email_log:
-    no_user: "Can't find user with id %{user_id}"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
   guidelines: "Інструкції"
   privacy: "Конфіденційність"
   edit_this_page: "Редагувати цю сторінку"

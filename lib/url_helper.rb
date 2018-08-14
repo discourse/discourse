@@ -31,4 +31,21 @@ class UrlHelper
     encoded
   end
 
+  def self.cook_url(url)
+    return url unless is_local(url)
+
+    uri = URI.parse(url)
+    filename = File.basename(uri.path)
+    is_attachment = !FileHelper.is_image?(filename)
+
+    no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
+
+    url = absolute_without_cdn(url)
+    url = Discourse.store.cdn_url(url) unless is_attachment && no_cdn
+
+    schemaless(url)
+  rescue URI::Error
+    url
+  end
+
 end

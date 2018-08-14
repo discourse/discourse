@@ -165,4 +165,37 @@ describe QueuedPost do
     end
   end
 
+  describe 'create' do
+    subject { Fabricate.build(:queued_post) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.first
+
+      expect(event[:event_name]).to eq(:queued_post_created)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
+  describe 'approve' do
+    subject { Fabricate(:queued_post) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.approve!(Discourse.system_user) }.last
+
+      expect(event[:event_name]).to eq(:approved_post)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
+  describe 'reject' do
+    subject { Fabricate(:queued_post) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.reject!(Discourse.system_user) }.last
+
+      expect(event[:event_name]).to eq(:rejected_post)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
 end

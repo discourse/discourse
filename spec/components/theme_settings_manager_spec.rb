@@ -4,7 +4,7 @@ require 'theme_settings_manager'
 describe ThemeSettingsManager do
 
   let(:theme_settings) do
-    theme = Theme.create!(name: "awesome theme", user_id: -1)
+    theme = Fabricate(:theme)
     yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
@@ -112,6 +112,13 @@ describe ThemeSettingsManager do
       expect(string_setting.value).to eq("ab" * 10)
 
       expect { string_setting.value = ("a" * 21) }.to raise_error(Discourse::InvalidParameters)
+    end
+  end
+
+  context "List" do
+    it "can have a list type" do
+      list_setting = find_by_name(:compact_list_setting)
+      expect(list_setting.list_type).to eq("compact")
     end
   end
 end

@@ -12,13 +12,7 @@ acceptance("CustomHTML template", {
   }
 });
 
-QUnit.test("renders custom template", assert => {
-  visit("/static/faq");
-  andThen(() => {
-    assert.equal(
-      find("span.top-span").text(),
-      "TOP",
-      "it inserted the template"
-    );
-  });
+QUnit.test("renders custom template", async assert => {
+  await visit("/static/faq");
+  assert.equal(find("span.top-span").text(), "TOP", "it inserted the template");
 });

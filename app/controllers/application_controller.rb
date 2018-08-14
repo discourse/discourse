@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
 
-  attr_reader :theme_id
+  attr_reader :theme_ids
 
   serialization_scope :guardian
 
@@ -62,8 +62,8 @@ class ApplicationController < ActionController::Base
     after_action :remember_theme_id
 
     def remember_theme_id
-      if @theme_id
-        Stylesheet::Watcher.theme_id = @theme_id if defined? Stylesheet::Watcher
+      if @theme_ids.present?
+        Stylesheet::Watcher.theme_id = @theme_ids.first if defined? Stylesheet::Watcher
       end
     end
   end
@@ -173,7 +173,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound, PluginDisabled, ActionController::RoutingError  do
+  rescue_from Discourse::NotFound do |e|
+    rescue_discourse_actions(
+      :not_found,
+      e.status,
+      check_permalinks: e.check_permalinks,
+      original_path: e.original_path
+    )
+  end
+
+  rescue_from PluginDisabled, ActionController::RoutingError  do
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -194,11 +203,31 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
+  def redirect_with_client_support(url, options)
+    if request.xhr?
+      response.headers['Discourse-Xhr-Redirect'] = 'true'
+      render plain: url
+    else
+      redirect_to url, options
+    end
+  end
+
   def rescue_discourse_actions(type, status_code, opts = nil)
     opts ||= {}
     show_json_errors = (request.format && request.format.json?) ||
                        (request.xhr?) ||
                        ((params[:external_id] || '').ends_with? '.json')
+
+    if type == :not_found && opts[:check_permalinks]
+      url = opts[:original_path] || request.fullpath
+      permalink = Permalink.find_by_url(url)
+
+      if permalink.present?
+        # permalink present, redirect to that URL
+        redirect_with_client_support permalink.target_url, status: :moved_permanently
+        return
+      end
+    end
 
     message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
 
@@ -331,28 +360,33 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_id = request[:preview_theme_id]&.to_i
+    theme_ids = []
+
+    if preview_theme_id = request[:preview_theme_id]&.to_i
+      theme_ids << preview_theme_id
+    end
 
     user_option = current_user&.user_option
 
-    unless theme_id
+    if theme_ids.blank?
       ids, seq = cookies[:theme_ids]&.split("|")
       ids = ids&.split(",")&.map(&:to_i)
-      if ids && ids.size > 0 && seq && seq.to_i == user_option&.theme_key_seq.to_i
-        theme_id = ids.first
+      if ids.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
+        theme_ids = ids if guardian.allow_themes?(ids)
       end
     end
 
-    theme_id ||= user_option&.theme_ids&.first
+    theme_ids = user_option&.theme_ids || [] if theme_ids.blank?
 
-    if theme_id && !guardian.allow_themes?(theme_id)
-      theme_id = nil
+    unless guardian.allow_themes?(theme_ids)
+      theme_ids = []
     end
 
-    theme_id ||= SiteSetting.default_theme_id
-    theme_id = nil if theme_id.blank? || theme_id == -1
+    if theme_ids.blank? && SiteSetting.default_theme_id != -1
+      theme_ids << SiteSetting.default_theme_id
+    end
 
-    @theme_id = request.env[:resolved_theme_id] = theme_id
+    @theme_ids = request.env[:resolved_theme_ids] = theme_ids
   end
 
   def guardian
@@ -439,25 +473,6 @@ class ApplicationController < ActionController::Base
     request.session_options[:skip] = true
   end
 
-  def permalink_redirect_or_not_found
-    url = request.fullpath
-    permalink = Permalink.find_by_url(url)
-
-    if permalink.present?
-      # permalink present, redirect to that URL
-      if permalink.external_url
-        redirect_to permalink.external_url, status: :moved_permanently
-      elsif permalink.target_url
-        redirect_to "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
-      else
-        raise Discourse::NotFound
-      end
-    else
-      # redirect to 404
-      raise Discourse::NotFound
-    end
-  end
-
   def secure_session
     SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
   end
@@ -502,10 +517,10 @@ class ApplicationController < ActionController::Base
     target = view_context.mobile_view? ? :mobile : :desktop
 
     data =
-      if @theme_id
+      if @theme_ids.present?
         {
-         top: Theme.lookup_field(@theme_id, target, "after_header"),
-         footer: Theme.lookup_field(@theme_id, target, "footer")
+         top: Theme.lookup_field(@theme_ids, target, "after_header"),
+         footer: Theme.lookup_field(@theme_ids, target, "footer")
         }
       else
         {}

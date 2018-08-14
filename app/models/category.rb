@@ -388,9 +388,10 @@ class Category < ActiveRecord::Base
 
   def self.auto_bump_topic!
     bumped = false
+
     auto_bumps = CategoryCustomField
       .where(name: Category::NUM_AUTO_BUMP_DAILY)
-      .where('value::int > 0')
+      .where('NULLIF(value, \'\')::int > 0')
       .pluck(:category_id)
 
     if (auto_bumps.length > 0)
@@ -399,13 +400,14 @@ class Category < ActiveRecord::Base
         break if bumped
       end
     end
+
     bumped
   end
 
   # will automatically bump a single topic
   # if number of automatically bumped topics is smaller than threshold
   def auto_bump_topic!
-    return false if num_auto_bump_daily.blank?
+    return false if num_auto_bump_daily.to_i == 0
 
     limiter = auto_bump_limiter
     return false if !limiter.can_perform?

@@ -77,14 +77,12 @@ export default Ember.Mixin.create({
 
   // use to collapse and remove focus
   close(event) {
-    this.collapse(event);
     this.setProperties({ isFocused: false });
+    this.collapse(event);
   },
 
   focus() {
-    Ember.run.schedule("afterRender", () => {
-      this.$header().focus();
-    });
+    this.focusFilterOrHeader();
   },
 
   // try to focus filter and fallback to header if not present
@@ -94,13 +92,24 @@ export default Ember.Mixin.create({
     Ember.run.next(() => {
       Ember.run.schedule("afterRender", () => {
         if (
-          (this.site && this.site.isMobileDevice) ||
           !context.$filterInput() ||
-          !context.$filterInput().is(":visible")
+          !context.$filterInput().is(":visible") ||
+          context
+            .$filterInput()
+            .parent()
+            .hasClass("is-hidden")
         ) {
-          context.$header().focus();
+          if (context.$header()) {
+            context.$header().focus();
+          } else {
+            $(context.element).focus();
+          }
         } else {
-          context.$filterInput().focus();
+          if (this.site && this.site.isMobileDevice) {
+            this.expand();
+          } else {
+            context.$filterInput().focus();
+          }
         }
       });
     });
@@ -120,8 +129,11 @@ export default Ember.Mixin.create({
 
   collapse() {
     this.set("isExpanded", false);
-    Ember.run.schedule("afterRender", () => this._removeFixedPosition());
-    this._boundaryActionHandler("onCollapse", this);
+
+    Ember.run.next(() => {
+      Ember.run.schedule("afterRender", () => this._removeFixedPosition());
+      this._boundaryActionHandler("onCollapse", this);
+    });
   },
 
   // lose focus of the component in two steps

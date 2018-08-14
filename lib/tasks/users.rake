@@ -75,7 +75,11 @@ task "users:update_posts", [:old_username, :current_username] => [:environment] 
   end
 
   user = find_user(current_username)
-  UsernameChanger.update_username(user.id, old_username, user.username, user.avatar_template)
+  UsernameChanger.update_username(user_id: user.id,
+                                  old_username: old_username,
+                                  new_username: user.username,
+                                  avatar_template: user.avatar_template,
+                                  asynchronous: false)
 
   puts "", "Username updated!", ""
 end

@@ -87,6 +87,12 @@ class ImportScripts::Base
   end
 
   def change_site_settings
+    if SiteSetting.bootstrap_mode_enabled
+      SiteSetting.default_trust_level = TrustLevel[0] if SiteSetting.default_trust_level == TrustLevel[1]
+      SiteSetting.default_email_digest_frequency = 10080 if SiteSetting.default_email_digest_frequency == 1440
+      SiteSetting.bootstrap_mode_enabled = false
+    end
+
     @site_settings_during_import = get_site_settings_for_import
 
     @site_settings_during_import.each do |key, value|

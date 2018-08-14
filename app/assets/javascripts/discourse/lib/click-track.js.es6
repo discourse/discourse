@@ -83,15 +83,6 @@ export default {
       }
     }
 
-    // If they right clicked, change the destination href
-    if (e.which === 3) {
-      $link.attr(
-        "href",
-        Discourse.SiteSettings.track_external_right_clicks ? destUrl : href
-      );
-      return true;
-    }
-
     // if they want to open in a new tab, do an AJAX request
     if (tracking && wantsNewWindow(e)) {
       ajax("/clicks/track", {

@@ -92,6 +92,30 @@ describe PostsController do
     end
   end
 
+  describe '#by_date' do
+    include_examples 'finding and showing post' do
+      let(:url) { "/posts/by-date/#{post.topic_id}/#{post.created_at.strftime("%Y-%m-%d")}.json" }
+    end
+
+    it 'returns the expected post' do
+      first_post = Fabricate(:post, created_at: 10.days.ago)
+      second_post = Fabricate(:post, topic: first_post.topic, created_at: 4.days.ago)
+      third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
+
+      get "/posts/by-date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
+      json = JSON.parse(response.body)
+
+      expect(response.status).to eq(200)
+      expect(json["id"]).to eq(second_post.id)
+    end
+
+    it 'returns no post if date is > at last created post' do
+      get "/posts/by-date/#{post.topic_id}/2245-11-11.json"
+      json = JSON.parse(response.body)
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe '#reply_history' do
     include_examples 'finding and showing post' do
       let(:url) { "/posts/#{post.id}/reply-history.json" }
@@ -1031,6 +1055,67 @@ describe PostsController do
         end
       end
     end
+
+    context "topic bump" do
+      shared_examples "it works" do
+        let(:original_bumped_at) { 1.day.ago }
+        let!(:topic) { Fabricate(:topic, bumped_at: original_bumped_at) }
+
+        it "should be able to skip topic bumping" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            topic_id: topic.id,
+            no_bump: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to be_within_one_second_of(original_bumped_at)
+        end
+
+        it "should be able to post with topic bumping" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to eq(topic.posts.last.created_at)
+        end
+      end
+
+      context "admins" do
+        before do
+          sign_in(Fabricate(:admin))
+        end
+
+        include_examples "it works"
+      end
+
+      context "moderators" do
+        before do
+          sign_in(Fabricate(:moderator))
+        end
+
+        include_examples "it works"
+      end
+
+      context "users" do
+        let(:topic) { Fabricate(:topic) }
+
+        [:user, :trust_level_4].each do |user|
+          it "will raise an error for #{user}" do
+            sign_in(Fabricate(user))
+            post "/posts.json", params: {
+              raw: 'this is the test content',
+              topic_id: topic.id,
+              no_bump: true
+            }
+            expect(response.status).to eq(400)
+          end
+        end
+      end
+    end
+
   end
 
   describe '#revisions' do
@@ -1500,5 +1585,4 @@ describe PostsController do
       expect(public_post).not_to be_locked
     end
   end
-
 end

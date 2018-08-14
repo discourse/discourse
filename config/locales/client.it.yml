@@ -164,6 +164,7 @@ it:
         eu_central_1: "Europa (Francoforte)"
         eu_west_1: "Europa (Irlanda)"
         eu_west_2: "EU (Londra)"
+        eu_west_3: "UE (Parigi)"
         sa_east_1: "America del Sud (San Paolo)"
         us_east_1: "Stati Uniti Est (Virginia del Nord)"
         us_east_2: "USA Est (Ohio)"
@@ -181,7 +182,7 @@ it:
     log_in: "Connetti"
     age: "Età"
     joined: "Iscritto"
-    admin_title: "Amministrazione"
+    admin_title: "Amministratore"
     flags_title: "Segnalazioni"
     show_more: "mostra altro"
     show_help: "opzioni"
@@ -247,6 +248,12 @@ it:
       last_read: "questo è l'ultimo messaggio che hai letto; clicca per inserirlo nei segnalibri"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei sicuro di voler cancellare tutti segnalibri da questo argomento?"
+    drafts:
+      resume: "Riprendi"
+      remove: "Rimuovi"
+      new_topic: "Nuovo Argomento in bozza"
+      new_private_message: "Nuovo Messaggio Privato in bozza"
+      topic_reply: "Bozza di risposta"
     topic_count_latest:
       one: "Visualizza {{count}} argomenti nuovi o aggiornati"
       other: "Visualizza {{count}} argomenti nuovi o aggiornati."
@@ -486,17 +493,16 @@ it:
       "12": "Inviati"
       "13": "Posta in arrivo"
       "14": "In Attesa"
+      "15": "Bozze"
     categories:
       all: "tutte le categorie"
-      all_subcategories: "tutto in %{categoryName}"
+      all_subcategories: "tutte"
       no_subcategory: "nessuno"
       category: "Categoria"
       category_list: "Visualizza l'elenco delle categorie"
       reorder:
         title: "Riordina Categorie"
         title_long: "Riorganizza l'elenco di categorie"
-        fix_order: "Posizioni Fisse"
-        fix_order_tooltip: "Non tutte le categorie hanno un numero di posizionamento univoco, ciò potrebbe causare risultati inattesi."
         save: "Salva Ordinamento"
         apply_all: "Applica"
         position: "Posizione"
@@ -512,6 +518,7 @@ it:
       topic_stat_sentence:
         one: "%{count} nuovo argomento nell'ultimo %{unit}."
         other: "%{count} nuovi argomenti nell'ultimo %{unit}."
+      more: " (altre %{count}) ..."
     ip_lookup:
       title: Ricerca Indirizzo IP
       hostname: Hostname
@@ -594,6 +601,7 @@ it:
         individual_no_echo: "Invia una email per ogni nuovo messaggio, eccetto per i miei"
         many_per_day: "Inviamo una email per ogni nuovo messaggio (circa {{dailyEmailEstimate}} al giorno)"
         few_per_day: "Inviami una email per ogni nuovo messaggio (circa 2 al giorno)"
+        warning: "Modalità Mailing List attiva. Le impostazioni per la notifica via email verranno ignorate."
       tag_settings: "Etichette"
       watched_tags: "Osservate"
       watched_tags_instructions: "Osserverai automaticamente tutti gli argomenti con queste etichette. Verrai notificato di tutti i  nuovi messaggi e argomenti, e accanto all'argomento apparirà anche un conteggio dei nuovi messaggi."
@@ -610,7 +618,7 @@ it:
       watched_first_post_tags: "Osservando Primo Messaggio"
       watched_first_post_tags_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento con queste etichette."
       muted_categories: "Silenziate"
-      muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nell'elenco Ultimi."
+      muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nell'elenco Recenti."
       no_category_access: "Come moderatore hai accesso limitato alla categoria, il salvataggio è disabilitato."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
@@ -667,6 +675,19 @@ it:
         set_password: "Imposta Password"
         choose_new: "Scegli una nuova password"
         choose: "Scegli una password"
+      second_factor_backup:
+        title: "Codici di backup Due Fattori"
+        regenerate: "Rigenera"
+        disable: "Disabilita"
+        enable: "Abilita"
+        enable_long: "Abilita codici di backup"
+        manage: "Gestisci codici di backup"
+        copied_to_clipboard: "Copiato nella Clipboard"
+        copy_to_clipboard_error: "Errore durante la copia nella Clipboard"
+        remaining_codes: "Ti sono rimasti <strong>{{count}}</strong> codici di backup."
+        codes:
+          title: "Codici di backup generati"
+          description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
         title: "Autenticazione a Due Fattori"
         disable: "Disabilita l'autenticazione a due fattori"
@@ -685,6 +706,7 @@ it:
         error: "Si è verificato un errore durante la modifica del valore."
       change_username:
         title: "Cambia Utente"
+        confirm: "Sei assolutamente certo di voler cambiare il tuo nome utente?"
         taken: "Spiacenti, questo nome utente è già riservato."
         invalid: "Nome utente non valido: usa solo lettere e cifre"
       change_email:
@@ -705,7 +727,6 @@ it:
         upload_title: "Carica la tua foto"
         upload_picture: "Carica Immagine"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
-        cache_notice: "Hai cambiato correttamente la tua immagine di profilo ma potrebbe volerci un po' prima di vederla apparire a causa della cache del browser."
       change_profile_background:
         title: "Sfondo Profilo"
         instructions: "Gli sfondi del profilo saranno centrati e avranno per difetto un'ampiezza di 850px."
@@ -714,6 +735,9 @@ it:
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
       email:
         title: "Email"
+        primary: "Email principale"
+        secondary: "Email secondaria"
+        no_secondary: "Nessuna email secondaria"
         instructions: "mai mostrato pubblicamente"
         ok: "Ti invieremo una email di conferma"
         invalid: "Inserisci un indirizzo email valido"
@@ -722,6 +746,11 @@ it:
         frequency:
           one: "TI invieremo un email solo se non ti avremo visto nell'ultimo minuto."
           other: "Ti invieremo una email solo se non ti si vede da almeno {{count}} minuti."
+      associated_accounts:
+        title: "Account associati"
+        connect: "Connetti"
+        revoke: "Revoca"
+        not_connected: "(non connesso)"
       name:
         title: "Nome"
         instructions: "il tuo nome completo (opzionale)"
@@ -893,7 +922,9 @@ it:
         most_liked_users: "Con più \"Mi Piace\""
         most_replied_to_users: "Più Risposte A"
         no_likes: "Ancora nessun \"Mi piace\"."
-      associated_accounts: "Connessioni"
+        top_categories: "Categorie principali"
+        topics: "Argomenti"
+        replies: "Risposte"
       ip_address:
         title: "Ultimo indirizzo IP"
       registration_ip_address:
@@ -1025,6 +1056,7 @@ it:
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b> , a breve dovresti ricevere un'email con un link di accesso."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email con un link di accesso. "
       complete_username_found: "Abbiamo trovato un account che corrisponde al nome utente <b>%{username}</b>, dovresti ricevere un'email con un link di accesso a breve."
+      complete_email_found: "Abbiamo trovato un account che corrisponde a <b>%{email}</b>. A breve dovresti ricevere una email con un link di login."
       complete_username_not_found: "Nessun account con nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account con email <b>%{email}</b>"
     login:
@@ -1033,9 +1065,14 @@ it:
       password: "Password"
       second_factor_title: "Autenticazione a due fattori"
       second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
+      second_factor_backup: "<a href>Connessione tramite codice di backup</a>"
+      second_factor_backup_title: "Backup Due Fattori"
+      second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
+      second_factor: "<a href>Connessione tramite l'app Authenticator</a>"
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
+      cookies_error: "Sembra che il tuo browser abbia i cookie disabilitati. Potresti non riuscire a connetterti senza abilitarli."
       rate_limit: "Per favore attendi prima di provare nuovamente la connessione."
       blank_username: "Per favore, inserisci la tua email o il tuo nome utente."
       blank_username_or_password: "Per favore inserisci la tua email o il tuo nome utente, e la password."
@@ -1060,25 +1097,28 @@ it:
       preferences: "Devi essere connesso per cambiare le tue impostazioni."
       forgot: "Non ricordo i dettagli del mio account"
       not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via email quando potrai collegarti."
-      google:
-        title: "con Google"
-        message: "Autenticazione tramite Google (assicurati che il blocco pop up non sia attivo)"
       google_oauth2:
+        name: "Google"
         title: "con Google"
         message: "Autenticazione tramite Google (assicurati che il blocco pop up non siano attivo)"
       twitter:
+        name: "Twitter"
         title: "con Twitter"
         message: "Autenticazione con Twitter (assicurati che il blocco pop up non sia attivo)"
       instagram:
+        name: "Instagram"
         title: "con Instagram"
         message: "Autenticazione con Instagram (assicurati che il blocco pop up non sia attivo)"
       facebook:
+        name: "Facebook"
         title: "con Facebook"
         message: "Autenticazione con Facebook (assicurati che il blocco pop up non sia attivo)"
       yahoo:
+        name: "Yahoo"
         title: "con Yahoo"
         message: "Autenticazione con Yahoo (assicurati che il blocco pop up non sia attivo)"
       github:
+        name: "GitHub"
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
     invites:
@@ -1105,7 +1145,7 @@ it:
     category_page_style:
       categories_only: "Solo Categorie"
       categories_with_featured_topics: "Categorie con argomenti in evidenza"
-      categories_and_latest_topics: "Categorie e ultimi argomenti"
+      categories_and_latest_topics: "Categorie e argomenti recenti"
       categories_and_top_topics: "Categorie e argomenti più popolari"
     shortcut_modifier_key:
       shift: 'Maiusc'
@@ -1117,7 +1157,7 @@ it:
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
       filter_placeholder: Ricerca...
-      create: "Creato: '{{content}}'"
+      create: "Crea: '{{content}}'"
       max_content_reached:
         one: "Puoi selezionare solo {{count}} elemento."
         other: "Puoi selezionare solo {{count}} elementi."
@@ -1200,6 +1240,8 @@ it:
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
       remove_featured_link: "Rimuovi il collegamento dall'argomento."
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
+      reply_placeholder_no_images: "Scrivi qui. Usa Markdown, BBcode o HTML per formattare."
+      reply_placeholder_choose_category: "Devi selezionare una Categoria prima di scrivere qui."
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio"
       saved: "Salvato!"
@@ -1229,6 +1271,7 @@ it:
       olist_title: "Elenco Numerato"
       ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
+      toggle_direction: "Cambia direzione"
       help: "Aiuto Inserimento Markdown"
       collapse: "minimizza il pannello del composer"
       abandon: "chiudi il composer e scarta la bozza"
@@ -1240,7 +1283,11 @@ it:
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       composer_actions:
+        reply: Rispondi
+        draft: Bozza
+        edit: Modifica
         reply_to_post:
+          label: "Rispondi al messaggio %{postNumber} di %{postUsername}"
           desc: Rispondi a uno specifico messaggio
         reply_as_new_topic:
           label: Rispondi come Argomento correlato
@@ -1408,10 +1455,10 @@ it:
         dismiss_button: "Chiudi..."
         dismiss_tooltip: "Chiudi solo gli ultimi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti così che non compariranno più come non letti per me"
-        dismiss_new: "Chiudi Nuovo"
+        dismiss_new: "Chiudi Nuovi"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
-        change_category: "Impostare Categoria"
+        change_category: "Imposta Categoria"
         close_topics: "Chiudi Argomenti"
         archive_topics: "Archivia Argomenti"
         notification_level: "Notifiche"
@@ -1621,7 +1668,7 @@ it:
           description: "Non ti verrà notificato nulla per questo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non riceverai mai notifiche o altro circa questo argomento e non apparirà nella sezione Ultimi."
+          description: "Non riceverai mai notifiche o altro circa questo argomento e non apparirà nella sezione Recenti."
       actions:
         recover: "Ripristina Argomento"
         delete: "Cancella Argomento"
@@ -1778,6 +1825,7 @@ it:
           other: "Hai selezionato <b>{{count}}</b> messaggi."
     post:
       quote_reply: "Cita"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"
       wiki_last_edited_on: "ultima modifica alla wiki"
@@ -1849,6 +1897,12 @@ it:
         more: "Di più"
         delete_replies:
           confirm: "Vuoi eliminare anche le risposte a questo messaggio?"
+          direct_replies:
+            one: "Sì, e 1 risposta diretta"
+            other: "Sì, e le {{count}} risposte dirette"
+          all_replies:
+            one: "Sì, e 1 risposta."
+            other: "Sì, e tutte le {{count}} risposte"
           just_the_post: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
         wiki: "Rendi Wiki"
@@ -1863,6 +1917,7 @@ it:
         lock_post_description: "impedisci all'autore di modificare questo messaggio"
         unlock_post: "Sblocca messaggio"
         unlock_post_description: "consenti all'autore di modificare questo messaggio"
+        delete_topic_disallowed: "non hai il permesso di eliminare questo argomento"
       actions:
         flag: 'Segnala'
         defer_flags:
@@ -1874,7 +1929,6 @@ it:
           inappropriate: "Rimuovi segnalazione"
           bookmark: "Annulla segnalibro"
           like: "Annulla il \"Mi piace\""
-          vote: "Rimuovi voto"
         people:
           off_topic: "l'hanno segnalato come fuori tema"
           spam: "l'hanno segnalato come spam"
@@ -1886,7 +1940,6 @@ it:
           like_capped:
             one: "e a {{count}} persona è piaciuto"
             other: "e ad altre {{count}} persone è piaciuto"
-          vote: "hanno votato"
         by_you:
           off_topic: "L'hai segnalato come fuori tema"
           spam: "L'hai segnalato come spam"
@@ -1895,7 +1948,6 @@ it:
           notify_user: "Hai inviato un messaggio a questo utente"
           bookmark: "Hai inserito questo messaggio nei segnalibri"
           like: "Ti piace"
-          vote: "Hai votato per questo messaggio"
         by_you_and_others:
           off_topic:
             one: "Tu e un'altra persona lo avete contrassegnato come fuori tema"
@@ -1918,9 +1970,6 @@ it:
           like:
             one: "A te e a un'altra persona è piaciuto"
             other: "A te e a {{count}} altre persone è piaciuto"
-          vote:
-            one: "Tu e un'altra persona avete votato per questo messaggio"
-            other: "Tu e {{count}} altre persone avete votato per questo messaggio"
         by_others:
           off_topic:
             one: "Una persona lo ha contrassegnato come fuori tema"
@@ -1943,9 +1992,10 @@ it:
           like:
             one: "A una persona è piaciuto"
             other: "A {{count}} persone è piaciuto"
-          vote:
-            one: "Una persona ha votato per questo post"
-            other: "{{count}} persone hanno votato per questo post"
+      delete:
+        confirm:
+          one: "Vuoi davvero eliminare quel messaggio?"
+          other: "Vuoi davvero eliminare questi {{count}} messaggi?"
       merge:
         confirm:
           one: "Sicuro di voler unire questi messaggi?"
@@ -1987,7 +2037,7 @@ it:
       can: 'può&hellip;'
       none: '(nessuna categoria)'
       all: 'Tutte le categorie'
-      choose: 'Seleziona una categoria&hellip;'
+      choose: 'categoria&hellip;'
       edit: 'modifica'
       edit_long: "Modifica"
       view: 'Visualizza Argomenti della Categoria'
@@ -2031,11 +2081,11 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
+      mailinglist_mirror: "La categoria si comporta come una mailing list"
       suppress_from_latest: "Nascondi la categoria dagli Argomenti Recenti."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
-      all_topics_wiki: "Rendi i nuovi argomenti wiki di default."
       subcategory_list_style: "Stile Lista Sottocategorie:"
       sort_order: "Lista Argomenti Ordinata Per:"
       default_view: "Lista Argomenti Predefinita:"
@@ -2043,13 +2093,16 @@ it:
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
+      require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
+      require_reply_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       this_year: "quest'anno"
-      position: "posizione"
+      position: "Posizione:"
       default_position: "Posizione di default"
       position_disabled: "Le categorie verranno mostrate in ordine d'attività. Per modificare l'ordinamento delle categorie nelle liste,"
       position_disabled_click: 'attiva l''impostazione "posizione fissa delle categorie".'
       minimum_required_tags: 'Numero minimo di Etichette per Argomento:'
       parent: "Categoria Superiore"
+      navigate_to_first_post_after_read: 'Vai al primo messaggio dopo che gli argomenti vengono letti'
       notifications:
         watching:
           title: "In osservazione"
@@ -2147,7 +2200,7 @@ it:
         help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento di default"
       pinned_globally:
         title: "Appuntato Globalmente"
-        help: "Questo argomento è appuntato globalmente; verrà mostrato in cima all'elenco Ultimi e nella sua categoria."
+        help: "Questo argomento è appuntato globalmente; verrà mostrato in cima all'elenco Recenti e nella sua categoria."
       pinned:
         title: "Appuntato"
         help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"
@@ -2187,10 +2240,10 @@ it:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
       latest:
-        title: "Ultimi"
+        title: "Recenti"
         title_with_count:
           one: "Ultimo (1)"
-          other: "Ultimi ({{count}})"
+          other: "Recenti ({{count}})"
         help: "argomenti con messaggi recenti"
       hot:
         title: "Caldo"
@@ -2235,7 +2288,7 @@ it:
         title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "ultimi argomenti nella categoria {{categoryName}}"
+        help: "argomenti recenti nella categoria {{categoryName}}"
       top:
         title: "Popolari"
         help: "gli argomenti più attivi nell'ultimo anno, mese, settimana o giorno"
@@ -2270,7 +2323,7 @@ it:
       jump_to:
         title: 'Salta A'
         home: '<b>g</b>, <b>h</b> Home'
-        latest: '<b>g</b>, <b>l</b> Ultimi'
+        latest: '<b>g</b>, <b>l</b> Recenti'
         new: '<b>g</b>, <b>n</b> Nuovi'
         unread: '<b>g</b>, <b>u</b> Non letti'
         categories: '<b>g</b>, <b>c</b> Categorie'
@@ -2446,6 +2499,8 @@ it:
     admin:
       title: 'Amministratore Discourse'
       moderator: 'Moderatore'
+      reports:
+        title: "Lista dei rapporti disponibili"
       dashboard:
         title: "Cruscotto"
         last_updated: "Ultimo aggiornamento cruscotto:"
@@ -2481,8 +2536,14 @@ it:
         page_views_short: "Pagine Viste"
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         community_health: Stato di salute
+        moderators_activity: Attività dei Moderatori
         whats_new_in_discourse: "Novità in Discourse?"
         activity_metrics: Metrica Attività
+        all_reports: "Tutti i rapporti"
+        general_tab: "Generale"
+        moderation_tab: "Moderazione"
+        disabled: Disabilitato
+        timeout_error: "Spiacenti, la ricerca sta impiegando troppo tempo, per favore scegli un intervallo più breve"
         reports:
           today: "Oggi"
           yesterday: "Ieri"
@@ -2499,6 +2560,8 @@ it:
           end_date: "Data Fine"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Cerca nei log</a>'
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"
@@ -2568,6 +2631,7 @@ it:
           type: "Tipo"
           users: "Utenti"
           last_flagged: "Ultima Segnalazione"
+          no_results: "Non ci sono messaggi segnalati."
         short_names:
           off_topic: "fuori tema"
           inappropriate: "inappropriato"
@@ -2590,6 +2654,7 @@ it:
         manage:
           interaction:
             email: Email
+            incoming_email_placeholder: "inserisci indirizzo email"
             visibility: Visibilità
             visibility_levels:
               title: "Chi può vedere questo Gruppo?"
@@ -2597,6 +2662,10 @@ it:
               members: "Proprietari del Gruppo, membri e amministratori"
           membership:
             automatic: Automatico
+            trust_level: Livello Esperienza
+            trust_levels_title: "Livello Esperienza assegnato agli Utenti quando vengono aggiunti:"
+            trust_levels_none: "Nessuno"
+            primary_group: "Imposta automaticamente come gruppo primario"
         primary: "Gruppo Primario"
         no_primary: "(nessun gruppo primario)"
         title: "Gruppi"
@@ -2747,6 +2816,7 @@ it:
             label: "Backup"
             title: "Crea un backup"
             confirm: "Vuoi creare un nuovo backup?"
+            without_uploads: "Sì (non includere i caricamenti)"
           download:
             label: "Scarica"
             title: "Invia una email con il collegamento per il download"
@@ -2869,6 +2939,9 @@ it:
           body_tag:
             text: "</body>"
             title: "HTML che deve essere inserito prima del tag </body>"
+          yaml:
+            text: "YAML"
+            title: "Definisci le impostazioni del tema in formato YAML"
         colors:
           select_base:
             title: "Seleziona combinazione colori di base"
@@ -2976,7 +3049,6 @@ it:
             address_placeholder: "nome@esempio.com"
             type_placeholder: "riepilogo, iscrizione..."
             reply_key_placeholder: "chiave di risposta"
-            skipped_reason_placeholder: "motivo"
       moderation_history:
         actions:
           delete_user: "Utente Eliminato"
@@ -3159,6 +3231,7 @@ it:
           suspended: 'Sospesi'
           silenced: 'Silenziato'
           suspect: 'Sospetti'
+          staged: 'Da approvare'
         approved: "Approvato?"
         approved_selected:
           one: "approva l'utente"
@@ -3181,6 +3254,7 @@ it:
           silenced: 'Utenti Silenziati'
           suspended: 'Utenti Sospesi'
           suspect: 'Utenti Sospetti'
+          staged: 'Utenti da approvare'
         reject_successful:
           one: "1 utente rifiutato."
           other: "%{count} utenti rifiutati."
@@ -3213,6 +3287,10 @@ it:
         suspended_until: "(fino %{until})"
         cant_suspend: "Questo utente non può essere sospeso."
         delete_all_posts: "Cancella tutti i messaggi"
+        penalty_post_delete: "Elimina il messaggio"
+        penalty_post_edit: "Modifica il messaggio"
+        penalty_post_none: "Non fare nulla"
+        penalty_count: "Conteggio Penalità"
         delete_all_posts_confirm_MF: "Stai per cancellare {POSTS, plural, one {1 messaggio} other {# messaggi}} e {TOPICS, plural, one {1 argomento} other {# argomenti}}. Sei sicuro?"
         silence: "Silenzio"
         unsilence: "Non in silenzio"
@@ -3245,6 +3323,7 @@ it:
         private_topics_count: Argomenti Privati
         posts_read_count: Messaggi Letti
         post_count: Messaggi Creati
+        second_factor_enabled: Autenticazione a Due Fattori abilitata
         topics_entered: Argomenti Visti
         flags_given_count: Segnalazioni Fatte
         flags_received_count: Segnalazioni Ricevute
@@ -3387,12 +3466,25 @@ it:
         go_back: "Torna alla Ricerca"
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: 'Mostra solo le opzioni sovrascritte'
+      settings:
+        show_overriden: 'Mostra solo i sovrascritti'
+        reset: 'reimposta'
+        none: 'nessuno'
       site_settings:
         title: 'Impostazioni'
         no_results: "Nessun risultato trovato."
+        more_than_30_results: "Ci sono più di 30 risultati. Per favore, raffina la tua ricerca o seleziona una Categoria."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"
         add_host: "aggiungi host"
+        uploaded_image_list:
+          label: "Modifica lista"
+          empty: "Ancora non ci sono immagini. Per favore, caricane una."
+          upload:
+            label: "Carica"
+            title: "Carica immagine(i)"
+        selectable_avatars:
+          title: "Lista degli Avatar da cui l'utente può scegliere"
         categories:
           all_results: 'Tutti'
           required: 'Obbligatorie'
@@ -3557,3 +3649,6 @@ it:
           admin: "Amministratore"
           moderator: "Moderatore"
           regular: "Utente Normale"
+      previews:
+        share_button: "Condividi"
+        reply_button: "Rispondi"

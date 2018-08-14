@@ -112,7 +112,7 @@ class EmbedController < ApplicationController
     end
 
     response.headers['X-Frame-Options'] = "ALLOWALL"
-  rescue URI::InvalidURIError
+  rescue URI::Error
     raise Discourse::InvalidAccess.new('invalid referer host')
   end
 

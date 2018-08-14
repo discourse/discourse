@@ -17,7 +17,7 @@ class TopicLinkClick < ActiveRecord::Base
 
     uri = begin
       URI.parse(url)
-    rescue URI::InvalidURIError
+    rescue URI::Error
     end
 
     urls = Set.new
@@ -47,7 +47,7 @@ class TopicLinkClick < ActiveRecord::Base
       if Discourse.asset_host.present?
         cdn_uri = begin
           URI.parse(Discourse.asset_host)
-        rescue URI::InvalidURIError
+        rescue URI::Error
         end
 
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
@@ -59,7 +59,7 @@ class TopicLinkClick < ActiveRecord::Base
       if SiteSetting.Upload.s3_cdn_url.present?
         cdn_uri = begin
           URI.parse(SiteSetting.Upload.s3_cdn_url)
-        rescue URI::InvalidURIError
+        rescue URI::Error
         end
 
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)

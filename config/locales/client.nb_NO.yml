@@ -488,15 +488,12 @@ nb_NO:
       "14": "Venter"
     categories:
       all: "Alle"
-      all_subcategories: "alle i %{categoryName}"
       no_subcategory: "ingen"
       category: "Kategori"
       category_list: "Vis kategoriliste"
       reorder:
         title: "Endre rekkefølge på kategorier"
         title_long: "Reorganiser kategorilisten"
-        fix_order: "Lås posisjoner"
-        fix_order_tooltip: "Ikke alle kategoriene har et unikt posisjonsnummer. Det kan gi uventede resultater."
         save: "Lagre Rekkefølge"
         apply_all: "Bruk"
         position: "Posisjon"
@@ -705,7 +702,6 @@ nb_NO:
         upload_title: "Last opp bilde"
         upload_picture: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
-        cache_notice: "Profilbildet ditt er oppdatert, men på grunn av mellomlagring i nettlesere kan det ta litt tid før det synes."
       change_profile_background:
         title: "Profilbakgrunn"
         instructions: "Profilbakgrunner vil bli sentrert med en forvalgt bredde på 850 piksler."
@@ -893,7 +889,6 @@ nb_NO:
         most_liked_users: "Mest likt"
         most_replied_to_users: "Mest besvart"
         no_likes: "Ingen likes her ennå."
-      associated_accounts: "Innloggingsforsøk"
       ip_address:
         title: "Siste IP-adresse"
       registration_ip_address:
@@ -1061,9 +1056,6 @@ nb_NO:
       preferences: "Du må være innlogget for å endre brukerinnstillinger."
       forgot: "I husker ikke mine kontodetaljer"
       not_approved: "Kontoen din har ikke blitt godkjent ennå. Du vil få beskjed via e-post når du er klar til å logge inn."
-      google:
-        title: "med Google"
-        message: "Autentiserer med Google (sørg for at du tillater oppsprettsvindu)"
       google_oauth2:
         title: "med Google"
         message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
@@ -1893,7 +1885,6 @@ nb_NO:
           inappropriate: "Angre rapportering"
           bookmark: "Angre bokmerking"
           like: "Angre liker"
-          vote: "Angre stemme"
         people:
           off_topic: "markerte dette som utenfor temaet"
           spam: "flagget dette som søppelpost"
@@ -1905,7 +1896,6 @@ nb_NO:
           like_capped:
             one: "og {{count}} annen likte dette"
             other: "og {{count}} andre likte dette"
-          vote: "stemte for dette"
         by_you:
           off_topic: "Du rapporterte dette som utenfor temaet"
           spam: "Du rapporterte dette som spam"
@@ -1914,7 +1904,6 @@ nb_NO:
           notify_user: "Du sendte en melding til denne brukeren"
           bookmark: "Du bokmerket dette innlegget"
           like: "Du likte dette"
-          vote: "Du stemte for dette innlegget"
         by_you_and_others:
           off_topic:
             one: "Du og 1 annen markerte dette som irrelevant"
@@ -1937,9 +1926,6 @@ nb_NO:
           like:
             one: "Du og 1 annen likte dette"
             other: "Du og {{count}} andre likte dette"
-          vote:
-            one: "Du og 1 annen stemte på dette innlegget"
-            other: "Du og {{count}} andre stemte på dette innlegget"
         by_others:
           off_topic:
             one: "1 bruker markerte dette som irrelevant"
@@ -1962,9 +1948,6 @@ nb_NO:
           like:
             one: "1 bruker likte dette"
             other: "{{count}} brukere likte dette"
-          vote:
-            one: "1 bruker stemte på dette innlegget"
-            other: "{{count}} brukere stemte på dette innlegget"
       delete:
         confirm:
           one: "Er du sikker på at du ønsker å slette dette innlegget?"
@@ -2010,7 +1993,6 @@ nb_NO:
       can: 'kan&hellip;'
       none: '(no category)'
       all: 'Alle kategorier'
-      choose: 'Velg en katekori&hellip;'
       edit: 'rediger'
       edit_long: "Rediger"
       view: 'Se Emner i Kategori'
@@ -2059,7 +2041,6 @@ nb_NO:
       show_subcategory_list: "Plasser listen over underkategorien i toppen av emner i denne kategorien."
       num_featured_topics: "Antall emner som skal vises på kategori-siden:"
       subcategory_num_featured_topics: "Antall fremhevede emner på hovedkategoriens side:"
-      all_topics_wiki: "Gjør nye emner til wiki-er som standard."
       subcategory_list_style: "Listestil for underkategorier:"
       sort_order: "Emneliste Sorteres Etter:"
       default_view: "Forvalgt Emneliste:"
@@ -2068,7 +2049,6 @@ nb_NO:
       edit_permissions: "Rediger tillatelser"
       add_permission: "Legg til tillatelser"
       this_year: "dette året"
-      position: "posisjon"
       default_position: "Forvalgt posisjon"
       position_disabled: "Kategorier vil bli vist i henhold til aktivitet. For å styre rekkefølgen av kategorier i listen"
       position_disabled_click: 'aktiver innstillingen "faste kategoriposisjoner".'
@@ -3060,7 +3040,6 @@ nb_NO:
             address_placeholder: "navn@eksempel.no"
             type_placeholder: "oppsummering, registrering…"
             reply_key_placeholder: "svarnøkkel"
-            skipped_reason_placeholder: "grunn"
       moderation_history:
         performed_by: "Utført av"
         no_results: "Ingen moderatorhistorikk tilgjengelig."

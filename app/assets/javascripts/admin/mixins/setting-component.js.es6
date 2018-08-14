@@ -10,7 +10,8 @@ const CUSTOM_TYPES = [
   "category_list",
   "value_list",
   "category",
-  "uploaded_image_list"
+  "uploaded_image_list",
+  "compact_list"
 ];
 
 export default Ember.Mixin.create({
@@ -59,9 +60,18 @@ export default Ember.Mixin.create({
     return setting.replace(/\_/g, " ");
   },
 
-  @computed("setting.type")
+  @computed("type")
   componentType(type) {
     return CUSTOM_TYPES.indexOf(type) !== -1 ? type : "string";
+  },
+
+  @computed("setting")
+  type(setting) {
+    if (setting.type === "list" && setting.list_type) {
+      return `${setting.list_type}_list`;
+    }
+
+    return setting.type;
   },
 
   @computed("typeClass")

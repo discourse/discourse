@@ -401,8 +401,6 @@ pt:
       reorder:
         title: "Re-organizar Categorias"
         title_long: "Re-organizar a lista de categorias"
-        fix_order: "Fixar Posições"
-        fix_order_tooltip: "Nem todas as categorias têm um número único de posição, o que pode causar resultados inesperados."
         save: "Guardar Ordem"
         apply_all: "Aplicar"
         position: "Posição"
@@ -584,7 +582,6 @@ pt:
         upload_title: "Carregar a sua foto"
         upload_picture: "Carregar Imagem"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
-        cache_notice: "Alterou a sua fotografia de perfil com sucesso mas poderá demorar algum tempo até esta aparecer devido à cache do navegador de internet."
       change_profile_background:
         title: "Fundo de Perfil"
         instructions: "O fundo do perfil será centrado e terá por defeito uma largura de 850px."
@@ -772,7 +769,6 @@ pt:
         most_liked_users: "Mais Gostados"
         most_replied_to_users: "Mais Respondidos"
         no_likes: "Ainda sem gostos."
-      associated_accounts: "Sessões"
       ip_address:
         title: "Último Endereço de IP"
       registration_ip_address:
@@ -931,9 +927,6 @@ pt:
       preferences: "Necessita de ter a sessão iniciada para alterar as suas preferências de utilizador."
       forgot: "Eu não me lembro dos detalhes da minha conta"
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
-      google:
-        title: "com Google"
-        message: "A autenticar com Google (certifique-se de que os bloqueadores de janela estão desativados)"
       google_oauth2:
         title: "com Google"
         message: "A autenticar com Google (certifique-se de que os bloqueadores de janela estão desativados)"
@@ -1616,7 +1609,6 @@ pt:
           inappropriate: "Retirar denúncia"
           bookmark: "Remover marcador"
           like: "Retirar gosto"
-          vote: "Retirar voto"
         people:
           off_topic: "denunciou isto como fora de contexto"
           spam: "denunciou isto como spam"
@@ -1625,7 +1617,6 @@ pt:
           notify_user: "enviou uma mensagem"
           bookmark: "adicionou um marcador disto"
           like: "gostou disto"
-          vote: "votou nisto"
         by_you:
           off_topic: "Denunciou isto como fora de contexto"
           spam: "Denunciou isto como spam"
@@ -1634,7 +1625,6 @@ pt:
           notify_user: "Enviou uma mensagem a este utilizador"
           bookmark: "Adicionou um marcador a esta publicação"
           like: "Gostou disto"
-          vote: "Votou nesta publicação"
         by_you_and_others:
           off_topic:
             one: "Para além de si, 1 pessoa denunciou isto como fora de contexto"
@@ -1657,9 +1647,6 @@ pt:
           like:
             one: "Para além de si, 1 pessoa gostou disto"
             other: "Para além de si, {{count}} pessoas gostaram disto"
-          vote:
-            one: "Para além de si, 1 pessoa votou nesta publicação"
-            other: "Para além de si, {{count}} pessoas votaram nesta publicação"
         by_others:
           off_topic:
             one: "1 pessoa denunciou isto como fora de contexto"
@@ -1682,9 +1669,6 @@ pt:
           like:
             one: "1 pessoa gostou disto"
             other: "{{count}} pessoas gostaram disto"
-          vote:
-            one: "1 pessoa votou nesta publicação"
-            other: "{{count}} pessoas votaram nesta publicação"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -1711,7 +1695,6 @@ pt:
       can: 'pode&hellip; '
       none: '(sem categoria)'
       all: 'Todas as categorias'
-      choose: 'Selecione uma category&hellip;'
       edit: 'editar'
       edit_long: "Editar"
       view: 'Visualizar Tópicos na Categoria'
@@ -1756,7 +1739,6 @@ pt:
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
       this_year: "este ano"
-      position: "posição"
       default_position: "Posição Padrão"
       position_disabled: "As categorias serão exibidas por ordem de actividade. Para controlar a ordenação das categorias nas listas,"
       position_disabled_click: 'ative a definição "categoria em posição fixa".'
@@ -2512,7 +2494,6 @@ pt:
             address_placeholder: "nome@exemplo.com"
             type_placeholder: "resumo, subscrever..."
             reply_key_placeholder: "chave de resposta"
-            skipped_reason_placeholder: "motivo"
       logs:
         title: "Logs"
         action: "Ação"

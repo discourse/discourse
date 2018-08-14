@@ -90,7 +90,7 @@ class TagsController < ::ApplicationController
       canonical_url "#{Discourse.base_url_no_prefix}#{public_send(path_name, *(params.slice(:parent_category, :category, :tag_id).values.map { |t| t.force_encoding("UTF-8") }))}"
 
       if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where(name: @tag_id).exists?
-        permalink_redirect_or_not_found
+        raise Discourse::NotFound.new("tag not found", check_permalinks: true)
       else
         respond_with_list(@list)
       end

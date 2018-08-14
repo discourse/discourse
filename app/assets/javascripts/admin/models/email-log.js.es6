@@ -11,6 +11,10 @@ EmailLog.reopenClass({
       attrs.user = AdminUser.create(attrs.user);
     }
 
+    if (attrs.post_url) {
+      attrs.post_url = Discourse.getURL(attrs.post_url);
+    }
+
     return this._super(attrs);
   },
 

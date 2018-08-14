@@ -297,27 +297,6 @@ sv:
     title: "Välkommen till diskussionen"
   lounge_welcome:
     title: "Välkommen till loungen"
-    body: |2
-
-        Grattis! :confetti_ball:
-
-        Om du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3).
-
-        Du kan nu &hellip;
-
-        * Redigera rubriken för alla ämnen
-        * Ändra kategorin för alla ämnen
-        * Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)
-        * Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre
-        * Gömma spam med en enda flagga
-
-        Här är den [aktuella listan över regelbundna användare](/badges/3/regular). Glöm inte att hälsa.
-
-        Tack för att du är en viktig del av det här forumet!
-
-        (För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att tillfredställa kraven över tid kommer att fortsätta vara regelbundna medlemmar.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorin %{category}"
     replace_paragraph: "(Byt ut den här första paragrafen med en sammanfattad beskrivning av din nya kategori. Den här vägledningen kommer att dyka upp i kategorins urvalsområde, så försök att hålla det kortare än 200 tecken. **Tills du har redigerat den här beskrivningen eller skapat nya ämnen så kommer den här kategorin inte att synas på kategorisidan.**)"
@@ -332,9 +311,6 @@ sv:
     cannot_delete:
       uncategorized: "Du kan inte ta bort kategorin \"Okategoriserat\""
       has_subcategories: "Du kan inte ta bort den här kategorin för att den har underkategorier."
-      topic_exists:
-        one: "Kan inte ta bort den här kategorien eftersom den innehåller ett ämne. Ämnet är %{topic_link}."
-        other: "Kan inte ta bort den här kategorien eftersom den innehåller %{count} ämnen. Äldsta ämnet är %{topic_link}."
       topic_exists_no_oldest: "Kan inte ta bort den här kategorin eftersom antalet ämnen är %{count}."
     uncategorized_description: "Ämnen som inte behöver en kategori, eller som inte passar in i någon annan befintlig kategori."
   trust_levels:
@@ -491,13 +467,8 @@ sv:
       title: 'Gilla'
       description: 'Gilla detta inlägg'
       long_form: 'gillade detta inlägg'
-    vote:
-      title: 'Rösta'
-      description: 'Rösta för detta inlägg'
-      long_form: 'röstade för detta inlägg'
   user_activity:
     no_bookmarks:
-      self: "Du har inga märkta inlägg, märkta inlägg möjliggör att du enkelt når dem vid ett senare tillfälle."
       others: "Inga bokmärken."
     no_likes_given:
       self: "Du har inte gillat några inlägg."
@@ -630,8 +601,6 @@ sv:
       num_users: "Användare"
     top_referred_topics:
       title: "Mest refererade ämnen"
-      xaxis: "Ämne"
-      num_clicks: "Klick"
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
@@ -795,7 +764,6 @@ sv:
     post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel:  like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
-    track_external_right_clicks: "Följ externa länkar som högerklickas (ex: öppna i en ny flik) inaktiverat som standard eftersom det skriver över URL:er."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om lämnad blank används det System-kontot."
     send_welcome_message: "Skicka ett välkomstmeddelande till alla nya användare tillsammans med en snabbstartsguide."
     suppress_reply_directly_below: "Visa inte den utvidgade inläggsräknaren på ett inlägg när det bara finns ett svar direkt nedanför det här inlägget. "
@@ -1241,7 +1209,6 @@ sv:
     missing_user_field: "Du har inte fyllt i alla användarfält"
     already_logged_in: "Hoppsan, det ser ut som att du försöker acceptera en inbjudan för en annan användare. Logga ut och försök igen om du inte är %{current_user}. "
   user:
-    no_accounts_associated: "Inga kopplade konton"
     deactivated_by_staff: "Avaktiverades av personalen"
     activated_by_staff: "Aktiverades av personalen"
     username:
@@ -1633,25 +1600,6 @@ sv:
   flag_reason:
     sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän (%{domain}). Granska webbplatsinställningen <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
-  email_log:
-    post_user_deleted: "Användaren som skrivit inlägget har raderats."
-    no_user: "Kan inte hitta användare med id %{user_id}"
-    anonymous_user: "Användare är anonym"
-    suspended_not_pm: "Användaren är avstängd, inte ett meddelande"
-    seen_recently: "Användare sågs senast"
-    post_not_found: "Kan inte hitta ett inlägg med id %{post_id}"
-    notification_already_read: "Notificieringen som e-posten handlar om har redan blivit läst"
-    topic_nil: "post.topic är nil"
-    post_deleted: "inlägg raderades av författaren"
-    user_suspended: "användare blev avstängd"
-    already_read: "användaren har redan läst det här inlägget"
-    exceeded_emails_limit: "Översteg max_emails_per_day_per_user"
-    exceeded_bounces_limit: "Översteg bounce_score_threshold"
-    message_blank: "meddelande är tomt"
-    message_to_blank: "message.to är tomt"
-    text_part_body_blank: "text_part.body är tomt"
-    body_blank: "body är tom"
-    no_echo_mailing_list_mode: "Email list meddelande är inaktiverat för användarens egna meddelanden"
   color_schemes:
     base_theme_name: "Bas"
   about: "Om"
@@ -1673,70 +1621,40 @@ sv:
     editor:
       name: Redigerare
       description: Första inläggsredigeringen
-      long_description: |
-        Den här utmärkelsen beviljas första gången som du redigerar något av dina inlägg. Även om du inte kan redigera dina inlägg förevigt så är redigering alltid en god idé — du kan förbättra dina inlägg, fixa små misstag eller lägga till något som du missade när du först skrev inlägget. Redigera dina inlägg för att göra dem ännu bättre!
     basic_user:
       name: Grundläggande
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Beviljad</a> alla väsentliga forumfunktioner"
-      long_description: |
-        Den här utmärkelsen beviljas när du uppnår förtroendenivå 1. Tack för att du har följt med en stund och läst några ämnen för att lära dig vad vårt forum handlar om. Dina användarrestriktioner som ny användare har lyfts och du har nu tillgång till alla väsentliga forumfunktioner, bland annat personliga meddelanden, flaggningar, redigering av wikin och möjligheten att posta flertalet bilder och länkar
     member:
       name: Medlem
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Beviljad</a> inbjudningar, gruppmeddelanden, fler gillningar"
-      long_description: |
-        Den här utmärkelsen beviljas när du når förtroendenivå 2. Tack för att har varit en del av forumet de senaste veckorna. Du kan nu skicka inbjudningar från din användarsida eller från individuella ämnen, skicka gruppmeddelanden och ha några fler gillningar varje dag.
     regular:
       name: Regelbunden
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Beviljad</a> omkategorisera, döpa om, följa länkar, wiki, fler gillningar"
-      long_description: |
-        Den här utmärkelsen beviljas när du når förtroendenivå 3. Tack för att du regelbundet har varit en del av forumet de senaste månaderna. Du är nu en av våra mest aktiva läsare och en tillförlitlig bidragsgivare som gör forumet fantastiskt. Du kan nu omkategorisera och döpa om ämnen, använda mer kraftfulla verktyg som skräppost-flaggor, få tillgång till ett privat delforum och du får också massor av fler gillningar varje dag.
     leader:
       name: Ledare
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Beviljad</a> globala redigeringar, klistra, stänga, arkivera, splitta och sammanfoga, fler gillningar"
-      long_description: |
-        Den här utmärkelsen beviljas när du når förtroendenivå 4. Du är en ledare för det här forumet speciellt utvald av personalen och du är en fin förebild genom dina handlingar och ord här. Du har möjlighet att ändra alla inlägg, använda vanliga moderingsverktyg för ämnen såsom att klistra, stänga, olista, arkivera, splitta och sammanfoga, och du har massor av fler gillningar varje dag.
     welcome:
       name: Välkommen
       description: Mottog en gillning
-      long_description: |
-        Den här utmärkelsen beviljas när du får din första gillning på ett inlägg. Grattis, du har skrivit något som en av medlemmarna på forumet tyckte var intressant, coolt eller användbart!
     autobiographer:
       name: Självbiograf
     anniversary:
       name: Årsdag
       description: "Aktiv medlem ett år, har skrivit minst en gång"
-      long_description: |
-        Den här utmärkelsen beviljas när du har varit en medlem i ett år med minst ett inlägg under det året. Tack för att du har varit en del av och bidragit till forumet. Vi kunde inte ha gjort det utan dig.
     nice_post:
       name: Bra svar
       description: Fick 10 gillningar på ett inlägg
-      long_description: |
-        Den här utmärkelsen beviljas när ett av dina inlägg får 10 gillningar. Ditt inlägg gjorde verkligen ett intryck på forumet och hjälpte konversationen!
     good_post:
       name: Jättebra svar
       description: Fick 25 gillningar på ett inlägg
-      long_description: |
-        Den här utmärkelsen beviljas när ett av dina inlägg får 25 gillningar. Ditt inlägg var exceptionellt och gjorde den här konversationen mycket bättre för alla!
     great_post:
       name: Fantastiskt svar
       description: Fick 50 gillningar på ett inlägg
-      long_description: |
-        Den här utmärkelsen beviljas när ett inlägg får 50 gillningar. Wow! Ditt inlägg var inspirerande, fascinerande, superroligt eller insiktsfullt och forumet älskade det.
     nice_topic:
       name: Bra ämne
       description: Fick 10 gillningar på ett ämne
-      long_description: |
-        Den här utmärkelsen beviljas när ditt ämne får 10 gillningar. Du startade en intressant konversation som forumet uppskattade!
     good_topic:
       name: Jättebra ämne
       description: Fick 25 gillningar på ett ämne
-      long_description: |
-        Den här utmärkelsen beviljas när ditt ämne får 25 gillningar. Du startade en livfull konversation som forumet flockades kring och älskade!
     great_topic:
       name: Fantastiskt ämne
       description: Fick 50 gillningar på ett ämne
-      long_description: |
-        Den här utmärkelsen beviljas när ditt ämne får 50 gillningar. Du startade en fascinerande konversation och forumet uppskattade den dynamiska konversationen som följde!
     nice_share:
       name: Bra delning
       description: Delade ett inlägg med 25 unika besökare
@@ -1745,13 +1663,9 @@ sv:
     good_share:
       name: Jättebra delning
       description: Delade ett inlägg med 300 unika besökare
-      long_description: |
-        Den här utmärkelsen beviljas för att du delade en länk som klickades på av 300 besökare. Bra jobbat! Du har visat upp en fantastisk diskussion för en hel grupp nya människor och hjälpt forumet växa.
     great_share:
       name: Fantastisk delning
       description: Delade ett inlägg med 1000 unika besökare
-      long_description: |
-        Den här utmärkelsen beviljas för att du delade en länk som klickades på av 1000 besökare. Wow! Du har visat upp en intressant diskussion för en helt ny public och hjälpt forumet växa enormt!
     first_like:
       name: Första gillning
       description: Gillade ett inlägg
@@ -1760,21 +1674,15 @@ sv:
     first_flag:
       name: Första flaggning
       description: Flaggade ett inlägg
-      long_description: |
-        Den här utmärkelsen beviljas första gången du flaggar ett inlägg. Flaggning är det sätt som vi alla hjälps åt att hålla det här forumet rent för alla användare. Om du upptäcker något inlägg som bör granskas av moderatorer av någon anledning så tveka inte att flagga det. Du kan också flagga för att skicka <b>personliga meddelanden</b> till medlemmar om du ser något problematiskt med deras inlägg. Om du ser ett problem, :flag_black: flagga det!
     promoter:
       name: Främjare
       description: Bjöd in en användare
     campaigner:
       name: Förespråkare
       description: Bjöd in 3 grundläggande användare
-      long_description: |
-        Den här utmärkelsen beviljas när du bjudit in 3 personer som sedan tillbringat tillräckligt mycket tid på webbplatsen för att bli grundläggande användare. Ett levande forum behöver ständig tillförsel av nykomlingar som regelbundet deltar och förnyar konversationerna.
     champion:
       name: Förkämpe
       description: Bjöd in 5 medlemmar
-      long_description: |
-        Den här utmärkelsen beviljas när du bjudit in 5 personer som sedan tillbringat tillräckligt mycket tid på webbplatsen för att bli fullvärdiga medlemmar. Wow! Tack för att du berikar mångfalden i vårt forum med nya medlemmar!
     first_share:
       name: Första delning
       description: Delade ett inlägg
@@ -1788,8 +1696,6 @@ sv:
     first_quote:
       name: Första citation
       description: Citerade ett inlägg
-      long_description: |
-        Den här utmärkelsen beviljas första gången du citerar ett inlägg i ditt svar. Att citera relevanta delar av tidigare inlägg i ditt svar hjälper att hålla diskussionen sammankopplad och relevant för ämnet. Det lättaste sättet att citera är att markera en del av ett inlägg och sedan klicka på svara-knappen. Citera generöst!
     read_guidelines:
       name: Läst riktlinjer
     reader:
@@ -1840,8 +1746,6 @@ sv:
     crazy_in_love:
       name: Galet kär
       description: Använde 50 gillningar på en dag 20 gånger
-      long_description: |
-        Den här utmärkelsen beviljas när du använder alla dina 50 gillningar för en dag på 20 olika dagar. Wow! Du är en förebild som regelbundet uppmuntrar medlemmarna på forumet!
     thank_you:
       name: Tack
       description: Har 20 gillade inlägg och gav 10 gillningar
@@ -1855,18 +1759,14 @@ sv:
     empathetic:
       name: Empatisk
       description: Har 500 gillade inlägg och gav 1000 gillningar
-      long_description: |
-        Den här utmärkelsen beviljas när du har 500 gillade inlägg och i gengäld har gillat 1000 eller fler inlägg. Wow! Du är en förebild av generositet och ömsesidig uppskattning :two_hearts:.
     first_emoji:
       name: Första emoji
       description: Använde en emoji i ett inlägg
     first_mention:
       name: Första omnämningen
-      long_description: "Den här utmärkelsen beviljas när du nämner någons @användarnamn i ett inlägg. Varje omnämnande genererar en notifiering till den personen, så att det känner till ditt inlägg. Börja skriva @ (snabel-a) för att nämna en användare, eller, om det tillåts, en grupp - det är ett bekvämt sätt att uppmärksamma dem på något. "
     first_onebox:
       name: "Första onebox:en"
       description: "Lade upp en länk som var onebox:ad"
-      long_description: "Den här utmärkelsen beviljas när du för första gången lägger upp en länk på en rad för sig själv, vilken sedan automatiskt utvidgas och blir en onebox med en kort sammanfattning av länken, en rubrik och (när det finns tillgängligt) även en bild. "
     first_reply_by_email:
       name: Första svaret via e-post
       long_description: |

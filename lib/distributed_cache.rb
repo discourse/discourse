@@ -74,7 +74,7 @@ class DistributedCache
 
     def set(hash, key, value)
       # special support for set
-      marshal = (Set === value || Hash === value)
+      marshal = (Set === value || Hash === value || Array === value)
       value = Base64.encode64(Marshal.dump(value)) if marshal
       publish(hash, op: :set, key: key, value: value, marshalled: marshal)
     end

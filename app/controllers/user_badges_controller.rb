@@ -60,7 +60,7 @@ class UserBadgesController < ApplicationController
     if params[:reason].present?
       path = begin
         URI.parse(params[:reason]).path
-      rescue URI::InvalidURIError
+      rescue URI::Error
       end
 
       route = Rails.application.routes.recognize_path(path) if path

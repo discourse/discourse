@@ -54,15 +54,13 @@ class FileHelper
           end
         end
 
-        # first run
-        tmp_file_ext = File.extname(uri.path)
-
-        if tmp_file_ext.blank? && response.content_type.present?
+        if response.content_type.present?
           ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
           ext = "jpg" if ext == "jpe"
           tmp_file_ext = "." + ext if ext.present?
         end
 
+        tmp_file_ext ||= File.extname(uri.path)
         tmp = Tempfile.new([tmp_file_name, tmp_file_ext])
         tmp.binmode
       end

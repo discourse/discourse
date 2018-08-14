@@ -136,6 +136,7 @@ const DEFAULT_LIST = [
   "div.quote-controls",
   "div.title",
   "div[align]",
+  "div[lang]",
   "div[data-*]" /* This may seem a bit much but polls does
                     it anyway and this is needed for themes,
                     special code in sanitizer handles data-*
@@ -170,9 +171,11 @@ const DEFAULT_LIST = [
   "ol",
   "ol[start]",
   "p",
+  "p[lang]",
   "pre",
   "s",
   "small",
+  "span[lang]",
   "span.excerpt",
   "span.hashtag",
   "span.mention",
@@ -180,5 +183,12 @@ const DEFAULT_LIST = [
   "strong",
   "sub",
   "sup",
-  "ul"
+  "ul",
+  "ruby",
+  "ruby[lang]",
+  "rb",
+  "rb[lang]",
+  "rp",
+  "rt",
+  "rt[lang]"
 ];

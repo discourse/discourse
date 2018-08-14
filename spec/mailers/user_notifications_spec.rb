@@ -127,9 +127,7 @@ describe UserNotifications do
 
     context "with new topics" do
 
-      before do
-        Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago)
-      end
+      let!(:popular_topic) { Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago) }
 
       it "works" do
         expect(subject.to).to eq([user.email])
@@ -193,18 +191,34 @@ describe UserNotifications do
           Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
           Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
         ])
-        theme = Theme.create!(
-          name: 'my name',
-          user_id: Fabricate(:admin).id,
+        theme = Fabricate(:theme,
           user_selectable: true,
+          user: Fabricate(:admin),
           color_scheme_id: cs.id
         )
+
         theme.set_default!
 
         html = subject.html_part.body.to_s
         expect(html).to include 'F0F0F0'
         expect(html).to include '1E1E1E'
         expect(html).to include '858585'
+      end
+
+      it "supports subfolder" do
+        GlobalSetting.stubs(:relative_url_root).returns('/forum')
+        Discourse.stubs(:base_uri).returns("/forum")
+        html = subject.html_part.body.to_s
+        text = subject.text_part.body.to_s
+        expect(html).to be_present
+        expect(text).to be_present
+        expect(html).to_not include("/forum/forum")
+        expect(text).to_not include("/forum/forum")
+        expect(subject.header["List-Unsubscribe"].to_s).to match(/http:\/\/test.localhost\/forum\/email\/unsubscribe\/\h{64}/)
+
+        topic_url = "http://test.localhost/forum/t/#{popular_topic.slug}/#{popular_topic.id}"
+        expect(html).to include(topic_url)
+        expect(text).to include(topic_url)
       end
     end
 
@@ -506,7 +520,12 @@ describe UserNotifications do
   it 'adds a warning when mail limit is reached' do
     SiteSetting.max_emails_per_day_per_user = 2
     user = Fabricate(:user)
-    user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, skipped: false)
+
+    user.email_logs.create!(
+      email_type: 'blah',
+      to_address: user.email,
+      user_id: user.id
+    )
 
     post = Fabricate(:post)
     reply = Fabricate(:post, topic_id: post.topic_id)

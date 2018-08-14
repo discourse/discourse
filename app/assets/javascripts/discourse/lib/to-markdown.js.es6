@@ -9,7 +9,7 @@ const msoListClasses = [
   "MsoListParagraphCxSpLast"
 ];
 
-class Tag {
+export class Tag {
   constructor(name, prefix = "", suffix = "", inline = false) {
     this.name = name;
     this.prefix = prefix;
@@ -419,31 +419,33 @@ class Tag {
   }
 }
 
-const tags = [
-  ...Tag.blocks().map(b => Tag.block(b)),
-  ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
-  ...Tag.slices().map(s => Tag.slice(s, "\n")),
-  ...Tag.emphases().map(e => Tag.emphasis(e[0], e[1])),
-  Tag.cell("td"),
-  Tag.cell("th"),
-  Tag.replace("br", "\n"),
-  Tag.replace("hr", "\n---\n"),
-  Tag.replace("head", ""),
-  Tag.keep("ins"),
-  Tag.keep("del"),
-  Tag.keep("small"),
-  Tag.keep("big"),
-  Tag.keep("kbd"),
-  Tag.li(),
-  Tag.link(),
-  Tag.image(),
-  Tag.code(),
-  Tag.blockquote(),
-  Tag.table(),
-  Tag.tr(),
-  Tag.ol(),
-  Tag.list("ul")
-];
+function tags() {
+  return [
+    ...Tag.blocks().map(b => Tag.block(b)),
+    ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
+    ...Tag.slices().map(s => Tag.slice(s, "\n")),
+    ...Tag.emphases().map(e => Tag.emphasis(e[0], e[1])),
+    Tag.cell("td"),
+    Tag.cell("th"),
+    Tag.replace("br", "\n"),
+    Tag.replace("hr", "\n---\n"),
+    Tag.replace("head", ""),
+    Tag.keep("ins"),
+    Tag.keep("del"),
+    Tag.keep("small"),
+    Tag.keep("big"),
+    Tag.keep("kbd"),
+    Tag.li(),
+    Tag.link(),
+    Tag.image(),
+    Tag.code(),
+    Tag.blockquote(),
+    Tag.table(),
+    Tag.tr(),
+    Tag.ol(),
+    Tag.list("ul")
+  ];
+}
 
 class Element {
   constructor(element, parent, previous, next) {
@@ -472,7 +474,8 @@ class Element {
   }
 
   tag() {
-    const tag = new (tags.filter(t => new t().name === this.name)[0] || Tag)();
+    const tag = new (tags().filter(t => new t().name === this.name)[0] ||
+      Tag)();
     tag.element = this;
     return tag;
   }

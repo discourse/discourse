@@ -6,6 +6,7 @@ class WebHookEventType < ActiveRecord::Base
   CATEGORY = 5
   TAG = 6
   FLAG = 7
+  QUEUED_POST = 8
 
   has_and_belongs_to_many :web_hooks
 

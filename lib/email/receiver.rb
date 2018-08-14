@@ -31,6 +31,7 @@ module Email
     class TopicNotFoundError           < ProcessingError; end
     class TopicClosedError             < ProcessingError; end
     class InvalidPost                  < ProcessingError; end
+    class TooShortPost                 < ProcessingError; end
     class InvalidPostAction            < ProcessingError; end
     class UnsubscribeNotAllowed        < ProcessingError; end
     class EmailNotAllowed              < ProcessingError; end
@@ -231,9 +232,12 @@ module Email
           reason = I18n.t("user.deactivated", email: user.email)
           StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
         elsif range === SiteSetting.bounce_score_threshold
-          # NOTE: we check bounce_score before sending emails, nothing to do here other than log it happened.
+          # NOTE: we check bounce_score before sending emails
+          # So log we revoked the email...
           reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
           StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
+          # ... and PM the user
+          SystemMessage.create_from_system_user(user, :email_revoked)
         end
       end
     end
@@ -548,8 +552,8 @@ module Email
       if match && match.captures
         match.captures.each do |c|
           next if c.blank?
-          email_log = EmailLog.for(c)
-          return { type: :reply, obj: email_log } if email_log
+          post_reply_key = PostReplyKey.find_by(reply_key: c)
+          return { type: :reply, obj: post_reply_key } if post_reply_key
         end
       end
       nil
@@ -580,18 +584,18 @@ module Email
                      skip_validations: user.staged?)
 
       when :reply
-        email_log = destination[:obj]
+        post_reply_key = destination[:obj]
 
-        if email_log.user_id != user.id && !forwarded_reply_key?(email_log, user)
-          raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+        if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
+          raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
         create_reply(user: user,
                      raw: body,
                      elided: elided,
                      hidden_reason_id: hidden_reason_id,
-                     post: email_log.post,
-                     topic: email_log.post.topic,
+                     post: post_reply_key.post,
+                     topic: post_reply_key.post.topic,
                      skip_validations: user.staged?)
       end
     end
@@ -631,11 +635,11 @@ module Email
       end
     end
 
-    def forwarded_reply_key?(email_log, user)
+    def forwarded_reply_key?(post_reply_key, user)
       incoming_emails = IncomingEmail
         .joins(:post)
-        .where('posts.topic_id = ?', email_log.topic.id)
-        .addressed_to(email_log.reply_key)
+        .where('posts.topic_id = ?', post_reply_key.post.topic_id)
+        .addressed_to(post_reply_key.reply_key)
         .addressed_to_user(user)
         .pluck(:to_addresses, :cc_addresses)
 
@@ -643,8 +647,8 @@ module Email
         next unless contains_email_address_of_user?(to_addresses, user) ||
           contains_email_address_of_user?(cc_addresses, user)
 
-        return true if contains_reply_by_email_address(to_addresses, email_log.reply_key) ||
-          contains_reply_by_email_address(cc_addresses, email_log.reply_key)
+        return true if contains_reply_by_email_address(to_addresses, post_reply_key.reply_key) ||
+          contains_reply_by_email_address(cc_addresses, post_reply_key.reply_key)
       end
 
       false
@@ -932,7 +936,14 @@ module Email
       user = options.delete(:user)
       result = NewPostManager.new(user, options).perform
 
-      raise InvalidPost, result.errors.full_messages.join("\n") if result.errors.any?
+      errors = result.errors.full_messages
+      if errors.any? do |message|
+           message.include?(I18n.t("activerecord.attributes.post.raw").strip) &&
+           message.include?(I18n.t("errors.messages.too_short", count: SiteSetting.min_post_length).strip)
+         end
+        raise TooShortPost
+      end
+      raise InvalidPost, errors.join("\n") if result.errors.any?
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)

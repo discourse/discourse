@@ -1,7 +1,15 @@
 export default function() {
   this.route("admin", { resetNamespace: true }, function() {
     this.route("dashboard", { path: "/dashboard-old" });
-    this.route("dashboardNext", { path: "/" });
+
+    this.route("dashboardNext", { path: "/" }, function() {
+      this.route("general", { path: "/" });
+      this.route("admin.dashboardNextModeration", {
+        path: "/dashboard/moderation",
+        resetNamespace: true
+      });
+    });
+
     this.route(
       "adminSiteSettings",
       { path: "/site_settings", resetNamespace: true },

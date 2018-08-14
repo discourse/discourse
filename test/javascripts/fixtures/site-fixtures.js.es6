@@ -634,6 +634,20 @@ export default {
           name: "translation missing: en.archetypes.banner.title",
           options: []
         }
+      ],
+      auth_providers: [
+        {
+          name: "facebook",
+          custom_url: null,
+          pretty_name_override: null,
+          title_override: null,
+          message_override: null,
+          frame_width: 580,
+          frame_height: 400,
+          full_screen_login: false,
+          can_connect: true,
+          can_revoke: true
+        }
       ]
     }
   }

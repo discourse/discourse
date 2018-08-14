@@ -1,5 +1,6 @@
 class ThemeSettingsSerializer < ApplicationSerializer
-  attributes :setting, :type, :default, :value, :description, :valid_values
+  attributes :setting, :type, :default, :value, :description, :valid_values,
+             :list_type
 
   def setting
     object.name
@@ -31,5 +32,13 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def include_description?
     object.description.present?
+  end
+
+  def list_type
+    object.list_type
+  end
+
+  def include_list_type?
+    object.type == ThemeSetting.types[:list]
   end
 end

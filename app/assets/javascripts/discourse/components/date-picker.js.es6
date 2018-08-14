@@ -29,13 +29,17 @@ export default Ember.Component.extend({
             weekdays: moment.weekdays(),
             weekdaysShort: moment.weekdaysShort()
           },
-          onSelect: date =>
-            this.set(
-              "value",
-              moment(date)
-                .locale("en")
-                .format("YYYY-MM-DD")
-            )
+          onSelect: date => {
+            const formattedDate = moment(date).format("YYYY-MM-DD");
+
+            if (this.attrs.onSelect) {
+              this.attrs.onSelect(formattedDate);
+            }
+
+            if (!this.element || this.isDestroying || this.isDestroyed) return;
+
+            this.set("value", formattedDate);
+          }
         };
 
         this._picker = new Pikaday(_.merge(default_opts, this._opts()));

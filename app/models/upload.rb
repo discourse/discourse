@@ -77,28 +77,19 @@ class Upload < ActiveRecord::Base
 
   def self.get_from_url(url)
     return if url.blank?
-    # we store relative urls, so we need to remove any host/cdn
-    url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present? && Discourse.asset_host != SiteSetting.Upload.s3_cdn_url
-    # when using s3 without CDN
-    url = url.sub(/^https?\:/, "") if url.include?(Discourse.store.absolute_base_url) && Discourse.store.external?
 
-    # when using s3, we need to replace with the absolute base url
-    if SiteSetting.Upload.s3_cdn_url.present?
-      url = url.sub(
-        SiteSetting.Upload.s3_cdn_url,
-        SiteSetting.Upload.s3_base_url
-      )
-    end
-
-    # always try to get the path
     uri = begin
       URI(URI.unescape(url))
-    rescue URI::InvalidURIError, URI::InvalidComponentError
+    rescue URI::Error
     end
 
-    url = uri.path if uri.try(:scheme)
+    return if uri&.path.blank?
 
-    Upload.find_by(url: url)
+    path = uri.path[/(\/original\/\dX\/[\/\.\w]+)/, 1]
+
+    return if path.blank?
+
+    Upload.find_by("url LIKE ?", "%#{path}")
   end
 
   def self.migrate_to_new_scheme(limit = nil)

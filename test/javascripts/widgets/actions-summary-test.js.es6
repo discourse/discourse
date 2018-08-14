@@ -12,17 +12,15 @@ widgetTest("listing actions", {
       ]
     });
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".post-actions .post-action").length, 2);
 
-    click(".post-action:eq(0) .action-link a");
-    andThen(() => {
-      assert.equal(
-        this.$(".post-action:eq(0) img.avatar").length,
-        1,
-        "clicking it shows the user"
-      );
-    });
+    await click(".post-action:eq(0) .action-link a");
+    assert.equal(
+      this.$(".post-action:eq(0) img.avatar").length,
+      1,
+      "clicking it shows the user"
+    );
   }
 });
 
@@ -38,13 +36,11 @@ widgetTest("undo", {
 
     this.set("undoPostAction", () => (this.undid = true));
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".post-actions .post-action").length, 1);
 
-    click(".action-link.undo");
-    andThen(() => {
-      assert.ok(this.undid, "it triggered the action");
-    });
+    await click(".action-link.undo");
+    assert.ok(this.undid, "it triggered the action");
   }
 });
 
@@ -65,13 +61,11 @@ widgetTest("deferFlags", {
 
     this.on("deferPostActionFlags", () => (this.deferred = true));
   },
-  test(assert) {
+  async test(assert) {
     assert.equal(this.$(".post-actions .post-action").length, 1);
 
-    click(".action-link.defer-flags");
-    andThen(() => {
-      assert.ok(this.deferred, "it triggered the action");
-    });
+    await click(".action-link.defer-flags");
+    assert.ok(this.deferred, "it triggered the action");
   }
 });
 

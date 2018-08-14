@@ -2,6 +2,15 @@ require 'ostruct'
 
 module FlagQuery
 
+  def self.plugin_post_custom_fields
+    @plugin_post_custom_fields ||= {}
+  end
+
+  # Allow plugins to add custom fields to the flag views
+  def self.register_plugin_post_custom_field(field, plugin)
+    plugin_post_custom_fields[field] = plugin
+  end
+
   def self.flagged_posts_report(current_user, opts = nil)
     opts ||= {}
     offset = opts[:offset] || 0
@@ -126,10 +135,30 @@ module FlagQuery
       user_ids << pa.disposed_by_id if pa.disposed_by_id
     end
 
+    post_custom_field_names = []
+    plugin_post_custom_fields.each do |field, plugin|
+      post_custom_field_names << field if plugin.enabled?
+    end
+
+    post_custom_fields = {}
+    if post_custom_field_names.present?
+      PostCustomField.where(post_id: post_ids, name: post_custom_field_names).each do |f|
+        post_custom_fields[f.post_id] ||= {}
+        post_custom_fields[f.post_id][f.name] = f.value
+      end
+    end
+
     # maintain order
     posts = post_ids.map { |id| post_lookup[id] }
+
     # TODO: add serializer so we can skip this
-    posts.map!(&:to_h)
+    posts.map! do |post|
+      result = post.to_h
+      if cfs = post_custom_fields[post.id]
+        result[:custom_fields] = cfs
+      end
+      result
+    end
 
     users = User.includes(:user_stat).where(id: user_ids.to_a).to_a
     User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))

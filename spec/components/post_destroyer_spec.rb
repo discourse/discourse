@@ -91,6 +91,12 @@ describe PostDestroyer do
       reply1.reload
       expect(reply1.deleted_at).to eq(nil)
 
+      # defer the flag, we should be able to delete the stub
+      PostAction.defer_flags!(reply1, Discourse.system_user)
+      PostDestroyer.destroy_stubs
+
+      reply1.reload
+      expect(reply1.deleted_at).to_not eq(nil)
     end
 
     it 'uses the delete_removed_posts_after site setting' do
@@ -566,6 +572,10 @@ describe PostDestroyer do
     let!(:bookmark) { PostAction.act(moderator, second_post, PostActionType.types[:bookmark]) }
     let!(:flag) { PostAction.act(moderator, second_post, PostActionType.types[:off_topic]) }
 
+    before do
+      SiteSetting.queue_jobs = false
+    end
+
     it "should delete public post actions and agree with flags" do
       second_post.expects(:update_flagged_posts_count)
 
@@ -580,6 +590,37 @@ describe PostDestroyer do
       second_post.reload
       expect(second_post.bookmark_count).to eq(0)
       expect(second_post.off_topic_count).to eq(1)
+
+      notification = second_post.user.notifications.where(notification_type: Notification.types[:private_message]).last
+      expect(notification).to be_present
+      expect(notification.topic.title).to eq(I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template'))
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
+      second_post.expects(:update_flagged_posts_count)
+      PostDestroyer.new(Discourse.system_user, second_post).destroy
+      expect(
+        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
+      ).to eq(false)
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if it was deleted by author" do
+      SiteSetting.delete_removed_posts_after = 0
+      second_post.expects(:update_flagged_posts_count)
+      PostDestroyer.new(second_post.user, second_post).destroy
+      expect(
+        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
+      ).to eq(false)
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if flags were deferred" do
+      second_post.expects(:update_flagged_posts_count)
+      PostAction.defer_flags!(second_post, moderator)
+      second_post.reload
+      PostDestroyer.new(moderator, second_post).destroy
+      expect(
+        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
+      ).to eq(false)
     end
   end
 

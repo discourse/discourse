@@ -26,25 +26,21 @@ componentTest("updating the content refreshes the list", {
     this.set("pinned", true);
   },
 
-  test(assert) {
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .name(),
-        "pinned"
-      );
-    });
+  async test(assert) {
+    assert.equal(
+      this.get("subject")
+        .header()
+        .name(),
+      "pinned"
+    );
 
-    andThen(() => this.set("pinned", false));
+    await this.set("pinned", false);
 
-    andThen(() => {
-      assert.equal(
-        this.get("subject")
-          .header()
-          .name(),
-        "unpinned"
-      );
-    });
+    assert.equal(
+      this.get("subject")
+        .header()
+        .name(),
+      "unpinned"
+    );
   }
 });

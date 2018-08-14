@@ -24,7 +24,7 @@ class TwitterApi
             end
           elsif m['type'] == 'video'
             if large = m['sizes']['large']
-              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0'></iframe></div>"
+              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0' allowfullscreen></iframe></div>"
             end
           end
         end

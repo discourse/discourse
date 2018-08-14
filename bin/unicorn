@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
+  Pathname.new(__FILE__).realpath)
+
+require 'rubygems'
+require 'bundler/setup'
+
+# in development do some fussing around, to automate config
+if !ARGV.include?("-E") &&
+    !ARGV.include?("--env") &&
+    (ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"])
+
+  ARGV.push("-N")
+  if !ARGV.include?("-c") && !ARGV.include?("--config-file")
+    ARGV.push("-c")
+    ARGV.push(File.expand_path("../../config/unicorn.conf.rb",
+      Pathname.new(__FILE__).realpath))
+  end
+
+  ENV["UNICORN_PORT"] ||= "9292"
+  ENV["UNICORN_SIDEKIQS"] ||= "1"
+
+end
+
+load Gem.bin_path('unicorn', 'unicorn')

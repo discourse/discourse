@@ -58,14 +58,16 @@
       .select-kit-collection {
         .collection-header {
           max-height: 125px;
-          overflow-y: auto;
+          overflow: hidden;
           flex: 1 0 auto;
+          border-bottom: 1px solid $primary-low;
 
           .selected-tags {
             display: flex;
-            padding: 4px 8px;
+            padding: 4px;
             flex-wrap: wrap;
-            border-bottom: 1px solid $primary-low;
+            margin: -2px;
+            overflow: hidden;
           }
 
           .selected-tag {

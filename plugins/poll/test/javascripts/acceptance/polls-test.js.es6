@@ -9,7 +9,7 @@ acceptance("Rendering polls", {
   }
 });
 
-test("Single Poll", assert => {
+test("Single Poll", async assert => {
   // prettier-ignore
   server.get("/t/13.json", () => { // eslint-disable-line no-undef
     return [
@@ -313,26 +313,24 @@ test("Single Poll", assert => {
     ];
   });
 
-  visit("/t/this-is-a-test-topic-for-polls/13");
+  await visit("/t/this-is-a-test-topic-for-polls/13");
 
-  andThen(() => {
-    const polls = find(".poll");
+  const polls = find(".poll");
 
-    assert.equal(polls.length, 2, "it should render the polls correctly");
-    assert.equal(
-      find(".info-number", polls[0]).text(),
-      "2",
-      "it should display the right number of votes"
-    );
-    assert.equal(
-      find(".info-number", polls[1]).text(),
-      "3",
-      "it should display the right number of votes"
-    );
-  });
+  assert.equal(polls.length, 2, "it should render the polls correctly");
+  assert.equal(
+    find(".info-number", polls[0]).text(),
+    "2",
+    "it should display the right number of votes"
+  );
+  assert.equal(
+    find(".info-number", polls[1]).text(),
+    "3",
+    "it should display the right number of votes"
+  );
 });
 
-test("Public poll", assert => {
+test("Public poll", async assert => {
   // prettier-ignore
   server.get("/t/12.json", () => { // eslint-disable-line no-undef
     return [
@@ -1328,35 +1326,29 @@ test("Public poll", assert => {
     return [200, { "Content-Type": "application/json" }, body];
   });
 
-  visit("/t/this-is-a-topic-created-for-testing/12");
+  await visit("/t/this-is-a-topic-created-for-testing/12");
 
-  andThen(() => {
-    const polls = find(".poll");
-    assert.equal(polls.length, 1, "it should render the poll correctly");
-  });
+  const polls = find(".poll");
+  assert.equal(polls.length, 1, "it should render the poll correctly");
 
-  click("button.toggle-results");
+  await click("button.toggle-results");
 
-  andThen(() => {
-    assert.equal(
-      find(".poll-voters:first li").length,
-      25,
-      "it should display the right number of voters"
-    );
-  });
+  assert.equal(
+    find(".poll-voters:first li").length,
+    25,
+    "it should display the right number of voters"
+  );
 
-  click(".poll-voters-toggle-expand:first a");
+  await click(".poll-voters-toggle-expand:first a");
 
-  andThen(() => {
-    assert.equal(
-      find(".poll-voters:first li").length,
-      50,
-      "it should display the right number of voters"
-    );
-  });
+  assert.equal(
+    find(".poll-voters:first li").length,
+    50,
+    "it should display the right number of voters"
+  );
 });
 
-test("Public number poll", assert => {
+test("Public number poll", async assert => {
   // prettier-ignore
   server.get("/t/13.json", () => { // eslint-disable-line no-undef
     return [
@@ -2016,30 +2008,24 @@ test("Public number poll", assert => {
     return [200, { "Content-Type": "application/json" }, body];
   });
 
-  visit("/t/this-is-a-topic-for-testing-number-poll/13");
+  await visit("/t/this-is-a-topic-for-testing-number-poll/13");
 
-  andThen(() => {
-    const polls = find(".poll");
-    assert.equal(polls.length, 1, "it should render the poll correctly");
-  });
+  const polls = find(".poll");
+  assert.equal(polls.length, 1, "it should render the poll correctly");
 
-  click("button.toggle-results");
+  await click("button.toggle-results");
 
-  andThen(() => {
-    assert.equal(
-      find(".poll-voters:first li").length,
-      25,
-      "it should display the right number of voters"
-    );
-  });
+  assert.equal(
+    find(".poll-voters:first li").length,
+    25,
+    "it should display the right number of voters"
+  );
 
-  click(".poll-voters-toggle-expand:first a");
+  await click(".poll-voters-toggle-expand:first a");
 
-  andThen(() => {
-    assert.equal(
-      find(".poll-voters:first li").length,
-      35,
-      "it should display the right number of voters"
-    );
-  });
+  assert.equal(
+    find(".poll-voters:first li").length,
+    35,
+    "it should display the right number of voters"
+  );
 });

@@ -169,27 +169,6 @@ sq:
   staff_category_name: "Stafi"
   lounge_welcome:
     title: "Mirë se vini në Lounge"
-    body: |2
-
-        Congratulations! :confetti_ball:
-
-        If you can see this topic, you were recently promoted to **regular** (trust level 3).
-
-        You can now &hellip;
-
-        * Edit the title of any topic
-        * Change the category of any topic
-        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-        * Access a private Lounge category only visible to users at trust level 3 and higher
-        * Hide spam with a single flag
-
-        Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
-
-        Thanks for being an important part of this community!
-
-        (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Rreth kategorisë %{category}"
     errors:
@@ -200,9 +179,6 @@ sq:
     cannot_delete:
       uncategorized: "Nuk fshij dot kategorinë \"Uncategorized\""
       has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
-      topic_exists:
-        one: "Nuk e fshini dot këtë kategori sepse këtu ka 1 temë. Tema më e vjetër është %{topic_link}."
-        other: "Nuk e fshini dot këtë kategori sepse këtu ka %{count} tema. Tema më e vjetër është %{topic_link}."
       topic_exists_no_oldest: "Nuk e fshini dot këtë kategori sepse numri i temave është %{count}."
   trust_levels:
     newuser:
@@ -348,10 +324,6 @@ sq:
       title: 'Pëlqe'
       description: 'Më pëlqen ky postim'
       long_form: 'pëlqeu këtë'
-    vote:
-      title: 'Voto'
-      description: 'Voto për këtë postim'
-      long_form: 'votoi për këtë postim'
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -464,8 +436,6 @@ sq:
       num_users: "Users"
     top_referred_topics:
       title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Ditë"
@@ -593,7 +563,6 @@ sq:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
@@ -881,7 +850,6 @@ sq:
     reserved_username: "Ky emër nuk lejohet."
     missing_user_field: "You have not completed all the user fields"
   user:
-    no_accounts_associated: "No accounts associated"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
@@ -1138,22 +1106,6 @@ sq:
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
-  email_log:
-    post_user_deleted: "Përdoruesi i këtij postimi është fshirë."
-    no_user: "Can't find user with id %{user_id}"
-    anonymous_user: "User is anonymous"
-    suspended_not_pm: "User is suspended, not a message"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "autori e ka fshirë postimin"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "përmbajtja është bosh"
   color_schemes:
     base_theme_name: "Baza"
   about: "Rreth"
@@ -1175,70 +1127,40 @@ sq:
     editor:
       name: Redaktor
       description: Redaktori i parë i postimit
-      long_description: |
-        Kjo stemë jepet kur ndryshoni një nga postimet tuaja për herë të parë. Ndërkohë që nuk do jetë e mundur të ndryshoni postimet tuaja përgjithmonë, ndryshimi është gjithmonë një ide e mirë - ju mund të përmirësoni postimet tuaja, të korigjoni gabime të vogla, apo të shtoni çdo gjë që mungonte nga postimi i parë. Ndryshojini postimet që t'i bëni akoma më të mira!
     basic_user:
       name: Anëtar i Thjeshtë
-      description: "Ka të drejtat bazë të një anëtari në këtë komunitet <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Informacion shtesë në anglisht</a>"
-      long_description: |
-        Kjo stemë jepet kur ju arrini nivelin e bisedës 1. Falemindeit që jeni përreth prej ca kohësh dhe që lexoni disa tema për të mësuar më tepër rreth komunitetit tonë. Limitet e përdoruesit të ri janë hequr, keni mundësi të përdorni të gjitha aftësitë kryesore të komunitetit, si mesazhet private, sinjalizimet, ndryshim për wiki, dhe aftësinë për të postuar disa imazhe njëherazi dhe lidhje.
     member:
       name: Anëtar
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">U dha</a> mundësia për ftesa, mesazhe në grup, më shumë pëlqime"
-      long_description: |
-        Kjo stemë jepet kur ju arrini nivelin e besimit 2. Faleminderit që jeni pjesë prej më shumë se disa javësh e komunitetit tonë. Ju tashmë mund të dërgoni ftesa nga faqja juaj e përdoruesit ose nga tema të veçanta, të krijoni mesazhe në grup, dhe të keni ca pëlqime më shumë në ditë.
     regular:
       name: I zakonshëm
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">U dha</a> mundësia për ri-kategorizim, ri-emërtim, lidhje ndjekëse, wiki, dhe më shumë pëlqime"
-      long_description: |
-        Kjo stemë jepet kur ju arrini nivelin e besimit 3. Faleminderit që jeni pjesë e komutetit tonë prej disa muajsh. Ju jeni tashmë një prej lexuesve më aktivë, dhe një bashkëpunëtor i besueshëm që përmirëson komunitetin tonë. Ju mundet tashmë të ri-kategorizoni dhe ri-emëroni temat, të keni cilësime të mëtejshme për sinjalizime spam-esh, të keni hyrje në zona private të faqes, gjithashtu dhe më tepër pëlqime ditore.
     leader:
       name: Udhëheqës
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Dhënë</a> mundësia për ndryshim të gjithanshëm, ngjitje në krye, mbyllje, arkivim, ndarje dhe ngjitje, më tepër pëlqime"
-      long_description: |
-        Kjo stemë jepet kur ju arrini nivelin e besimit 4. Jeni një udhëheqës në këtë komunitet si i përzgjedhur nga stafi, dhe ju jeni një shembull për pjesën tjetër të anëtarëve me veprimet dhe fjalët tuaja këtu. Ju keni mundësinë të ndryshoni të gjitha postimet, të aftë për moderime të tjera siç janë ngjitja në krye, mbyllja, çlistimi, arkivimi, ndarja dhe ngjitja, dhe ju keni tonelata pëlqimesh ditore.
     welcome:
       name: Mirë se vini
       description: Mori një pëlqim
-      long_description: |
-        Kjo stemë jepet kur merrni pëlqimin e parë për një postim. Urime, keni postuar diçka të cilën anëtarët e komunitetit e gjetën interesante, fantastike apo të dobishme!
     autobiographer:
       name: Autobiograf
     anniversary:
       name: Përvjetor
       description: "Anëtar aktiv për një vit, postoi të paktën një herë"
-      long_description: |
-        Kjo stemë jepet kur keni qenë një anëtar për një vit me të paktën një postim për atë vit. Faleminderit që jeni përreth dhe jepni ndihmën tuaj për komunitetin tonë. Ne nuk mund t'ia dilnim pa ju.
     nice_post:
       name: Përgjigje e mirë
       description: Mori 10 pëlqime në një përgjigje
-      long_description: |
-        Kjo stemë jepet kur përgjigja juaj merr 10 pëlqime. Përgjigja juaj ishte vërtet e goditur për komunitetit dhe ndihmoi në ecjen e bisedës më tej!
     good_post:
       name: Përgjigje goxha e mirë
       description: Mori 25 pëlqime në një përgjigje
-      long_description: |
-        Kjo stemë jepet kur përgjigja juaj merr 25 pëlqime. Përgjigja juaj ishte e jashtëzakonshme dhe e shndërroi bisedën më të pëlqyeshme për këdo!
     great_post:
       name: Përgjigje shumë e mirë
       description: Mori 50 pëlqime në një përgjigje
-      long_description: |
-        Kjo stemë jepet kur përgjigja juaj merr 50 pëlqime. Uau! Përgjigja juaj ishte frymëzuese, interesante, për të qeshur, ose e mprehtë dhe komuniteti e pëlqeu jashtë mase!
     nice_topic:
       name: Temë e mirë
       description: Mori 10 pëlqime në një temë
-      long_description: |
-        Kjo stemë jepet kur tema juaj merr 10 pëlqime. Hej, ju nisët një bisedë interesante që komuniteti e shijoi!
     good_topic:
       name: Temë goxha e mirë
       description: Mori 25 pëlqime në një temë
-      long_description: |
-        Kjo stemë jepet kur tema juaj merr 25 pëlqime. Ju nisët një bisedë të zjarrtë për të cilën komuniteti u mblodh përreth dhe e pëlqeu!
     great_topic:
       name: Temë shumë e mirë
       description: Mori 50 pëlqime në një temë
-      long_description: |
-        Kjo stemë jepet kur tema juaj merr 50 pëlqime. Ju nisët një bisedë interesante dhe komuniteti e shijoi bisedën dinamike që ndoqi!
     nice_share:
       name: Shpërndarje e mirë
       description: Ndau një postim me 25 vizitorë unikë
@@ -1247,13 +1169,9 @@ sq:
     good_share:
       name: Shpërndarje goxha e mirë
       description: Ndau një postim me 300 vizitorë unikë
-      long_description: |
-        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 300 vizitorë të jashtëm. Punë e paqme! Keni reklamuar një diskutim të mire tek një grup njerëzish të panjohur dhe keni ndihmuar në rritjen e këtij komuniteti.
     great_share:
       name: Shpërndarje shumë e mirë
       description: Ndau një postim me 1000 vizitorë unikë
-      long_description: |
-        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 1000 vizitorë të jashtëm. Uau! Keni reklamuar një bisedë interesante tek një lexues i shumtë dhe i ri, dhe ndihmuat mjaft në rritjen e komunitetit!
     first_like:
       name: Pëlqimi i Parë
       description: Pëlqeu një postim
@@ -1262,21 +1180,15 @@ sq:
     first_flag:
       name: Sinjalizimi i parë
       description: Sinjalizoi një postim
-      long_description: |
-        Kjo stemë jepet kur për herë të parë sinjalizoni një postim. Sinjalizimi është mënyra se si ndihmojmë në mbajtjen pastër të faqes për këdo. Nëse vini re ndonjë postim që ka nevojë për vëmendjen e një moderatori për cilëndo arsye, ju lutem mos ngurroni të sinjalizoni. Gjithashtu mund të sinjalizoni duke u nisur një <b>mesazh personal</b> përdoruesve nëse shihni diçka që nuk shkon me postimin e tyre. Nëse shihni një problem, :flag_black: sinjalizojeni!
     promoter:
       name: Promotor
       description: Ftoi një anëtar të ri në faqe
     campaigner:
       name: Ambasador
       description: Ftoi 3 anëtarë të thjeshtë
-      long_description: |
-        Kjo stemë jepet kur ke ftuar 3 persona që në vazhdim, kanë shpenzuar kohë mjaftueshëm në faqe për t'u bërë anëtarë të thjeshtë. Një komunitet kumbues ka nevojë për anëtarë të rinj që marrin pjesë rregullisht dhe i shtojnë zëra të rinj bisedave.
     champion:
       name: Mega-ambasador
       description: Ftoi 5 anëtarë
-      long_description: |
-        Kjo stemë jepet kur ke ftuar 5 persona që në vazhdim, kanë shpenzuar kohë mjaftueshëm në faqe për t'u bërë anëtarë të plotë. Uau! Faleminderit për zgjerimin e komunitetit tonë me anëtarë të rinj!
     first_share:
       name: Shpërndarja e parë
       description: Shpërndau një postim
@@ -1290,8 +1202,6 @@ sq:
     first_quote:
       name: Citimi i parë
       description: Citoi një postim
-      long_description: |
-        Kjo stemë jepet kur për herë të parë citoni një postim në përgjigjen tuaj. Të cituarit në përgjigjen tuaj e pjesëve të rëndësishme prej postimeve të mëparshme, ndihmon në mbajtjen e bisedave të lidhura me njëra-tjetrën dhe brenda tematikës. Mënyra më e lehtë për të cituar është duke theksuar pjesë të një postimi, dhe duke shtypur më pas butonin përgjigju. Citoni me bollëk!
     read_guidelines:
       name: Lexoi Udhëzimet
     reader:
@@ -1343,8 +1253,6 @@ sq:
     crazy_in_love:
       name: Zemërluan
       description: Ka dhënë 50 pëlqime në ditë mbi 20 herë
-      long_description: |
-        Kjo stemë jepet kur ju pëlqeni 50 postime brenda 20 ditëve. Uau! Ju jeni një shembull nxitjeje të rregullt të anëtarëve të komunitetit!
     thank_you:
       name: Faleminderit
       description: Ka pëlqyer 20 postime dhe ka dhënë 10 pëlqime
@@ -1358,18 +1266,14 @@ sq:
     empathetic:
       name: Empatik
       description: Ka pëlqyer 500 postime dhe ka dhënë 1000 pëlqime
-      long_description: |
-        Kjo stemë jepet kur ju keni 500 postime të pëlqyera dhe kur jepni 1000 apo më tepër pëlqime në këmbim. Uau! Qenkeni shembulli i zemërgjërit dhe vlerësimit të dyanshëm :two_hearts:.
     first_emoji:
       name: Emoji i parë
       description: Përdori Emoji në një postim
     first_mention:
       name: Përmendja e parë
-      long_description: "Kjo stemë jepet herën e parë kur ju përmendni @username e dikujt në një postim. Secila përmendje krijon një njoftim për atë person, që të vihen në dijeni për postimin tuaj. Thjesht filloni të shtypni @ (simbolin te) për të përmendur çdo përdorues ose, nëse e mundur, çdo grup - është një mënyrë e volitshme për të patur vëmendjen e dikujt."
     first_onebox:
       name: Onebox i Parë
       description: Postoi një lidhje në onebox
-      long_description: "Kjo stemë jepet herën e parë kur postoni një lidhje në një rresht të vetëm, i cili shpaloset automatikisht në një onebox me një përmbledhje të shkurtër të lidhjes, një titull, dhe (kur është e mundur) një imazh."
     first_reply_by_email:
       name: Përgjigja e parë me email
       long_description: |

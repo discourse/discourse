@@ -378,27 +378,6 @@ nl:
         Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
   lounge_welcome:
     title: "Welkom in de Lounge"
-    body: |2
-
-        Gefeliciteerd! :confetti_ball:
-
-        Als u dit bericht kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
-
-        U kunt nu &hellip;
-
-        * De titel van elk topic bewerken
-        * De categorie van elk topic wijzigen
-        * Al uw koppelingen laten volgen ([automatische nofollow](http://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
-        * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
-        * Spam verbergen met één markering
-
-        Hier is de [huidige lijst van vaste gebruikers](/badges/3/regular). Zeg zeker even hallo.
-
-        Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
-
-        ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "(Vervang deze eerste alinea door een korte beschrijving van uw nieuwe categorie. Deze leidraad verschijnt in het categorieselectiegebied, dus probeer deze onder de 200 tekens te houden. **Voordat u deze beschrijving bewerkt of topics aanmaakt, verschijnt deze categorie niet op de categoriepagina.**)"
@@ -414,9 +393,6 @@ nl:
     cannot_delete:
       uncategorized: "Ongecategoriseerd kan niet worden verwijderd"
       has_subcategories: "Deze categorie kan niet worden verwijderd, omdat deze subcategorieën bevat"
-      topic_exists:
-        one: "Deze categorie kan niet worden verwijderd, omdat deze 1 topic bevat. Het oudste topic is %{topic_link}."
-        other: "Deze categorie kan niet worden verwijderd, omdat deze %{count} topics bevat. Het oudste topic is %{topic_link}."
       topic_exists_no_oldest: "Deze categorie kan niet worden verwijderd, omdat het aantal topics %{count} is."
     uncategorized_description: "Topics die geen categorie nodig hebben of niet in een andere bestaande categorie passen."
   trust_levels:
@@ -585,14 +561,8 @@ nl:
       description: 'Dit bericht leuk vinden'
       short_description: 'Like dit bericht'
       long_form: 'vindt dit bericht leuk'
-    vote:
-      title: 'Stemmen'
-      description: 'Stemmen op dit bericht'
-      short_description: 'Stemmen op dit bericht'
-      long_form: 'heeft op dit bericht gestemd'
   user_activity:
     no_bookmarks:
-      self: "U hebt geen bladwijzers voor berichten; door bladwijzers voor berichten te maken, kunt u deze later makkelijk terugvinden."
       others: "Geen bladwijzers."
     no_likes_given:
       self: "U hebt geen berichten geliket."
@@ -729,8 +699,6 @@ nl:
       num_users: "Gebruikers"
     top_referred_topics:
       title: "Top doorverwezen topics"
-      xaxis: "Topic"
-      num_clicks: "Klikken"
     page_view_anon_reqs:
       title: "Anoniem"
       xaxis: "Dag"
@@ -892,7 +860,6 @@ nl:
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "De menu-items die standaard verborgen moeten worden in het post menu totdat er op de uitbreidings-ellips is geklikt."
     share_links: "Bepaal de volgorde en selectie van items in het deelmenu."
-    track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     site_contact_username: "Een geldige gebruikersnaam van een staflid waarvandaan alle automatische berichten worden verzonden. Wanneer leeg gelaten, wordt de standaardaccount van het systeem gebruikt."
     send_welcome_message: "Stuur alle nieuwe gebruikers een welkomstbericht met een snel-start-gids."
     suppress_reply_directly_below: "Verberg de uitklapbare reactieteller bij een post als er maar één reactie direct onder staat."
@@ -1285,7 +1252,6 @@ nl:
     reserved_username: "Die gebruikersnaam is niet toegestaan."
     missing_user_field: "U hebt niet alle gebruikersvelden ingevuld"
   user:
-    no_accounts_associated: "Geen accounts gekoppeld"
     username:
       short: "moet ten minste %{min} tekens zijn"
       long: "moet niet meer dan %{max} tekens zijn"
@@ -1461,25 +1427,6 @@ nl:
   flag_reason:
     sockpuppet: "Een nieuwe gebruiker heeft een topic aangemaakt, en een andere nieuwe gebruiker op hetzelfde IP-adres (%{ip_address}) heeft geantwoord. Bekijk de website-instelling <a href='/admin/site_settings/category/spam'>'flag_sockpuppets'</a>."
     spam_hosts: "Deze nieuwe gebruiker heeft geprobeerd meerdere berichten met koppelingen naar hetzelfde domein (%{domain}) aan te maken. Bekijk de website-instelling <a href='/admin/site_settings/category/spam'>newuser_spam_host_threshold</a>."
-  email_log:
-    post_user_deleted: "Gebruiker van het bericht is verwijderd."
-    no_user: "Kan geen gebruiker met id %{user_id} vinden"
-    anonymous_user: "Gebruiker is anoniem"
-    suspended_not_pm: "Gebruiker is geschorst, geen bericht"
-    seen_recently: "Gebruiker is onlangs nog gezien"
-    post_not_found: "Kan geen bericht met id %{post_id} vinden"
-    notification_already_read: "De melding waar deze e-mail over gaat is al gelezen"
-    topic_nil: "bericht.topic is leeg"
-    post_deleted: "bericht is verwijderd door de schrijver"
-    user_suspended: "gebruiker was geschorst"
-    already_read: "gebruiker heeft dit bericht al gelezen"
-    exceeded_emails_limit: "max_emails_per_day_per_user overschreden"
-    exceeded_bounces_limit: "bounce_score_threshold overschreden"
-    message_blank: "bericht is leeg"
-    message_to_blank: "message.to is leeg"
-    text_part_body_blank: "text_part.body is leeg"
-    body_blank: "geen tekst"
-    no_echo_mailing_list_mode: "Mailinglijstmeldingen voor eigen berichten van gebruiker uitgeschakeld"
   color_schemes:
     base_theme_name: "Basis"
   about: "Over"

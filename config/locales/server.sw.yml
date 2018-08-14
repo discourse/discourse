@@ -497,7 +497,6 @@ sw:
       self: "Bado hauna shughuli."
       others: "Hakuna shughuli."
     no_bookmarks:
-      self: "Haujatunza machapisho, utunzaji wa machapisho utakuruhusu uweze kuziona kwa urahizi zaidi baadae."
       others: "Hakuna mialamisho."
     no_likes_given:
       self: "Haujapenda machapisho yoyote."
@@ -655,8 +654,6 @@ sw:
       num_users: "Watumiaji"
     top_referred_topics:
       title: "Mada za Juu za Kurejesha"
-      xaxis: "Mada"
-      num_clicks: "Imebonyezwa"
     page_view_anon_reqs:
       title: "Asiyejulikana"
       xaxis: "Siku"
@@ -711,8 +708,6 @@ sw:
       yaxis: "Namba ya watu waliyotembelea"
     web_crawlers:
       title: "Vidudu vya kuchunza mitandao vina maombi"
-      xaxis: "Mwakilishi wa Mtumiaji"
-      yaxis: "Ukurasa Umeonwa Mara"
   dashboard:
     rails_env_warning: "Seva inafanyakazi ndani ya %{env} halitumizi."
     host_names_warning: "Fili lako la config/database.yml linatumia localhost hostname. Sasisha ili itumie hostname ya tovuti yako."
@@ -1056,7 +1051,6 @@ sw:
     second_factor_title: "Uthibitisho wa Vipengele Viwili"
     second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye programu-tumizi:"
   user:
-    no_accounts_associated: "Hakuna akaunti zilizoshirikishwa"
     deactivated: "Imesitishwa kwa sababu barua pepe nyingi hazifikii '%{email}'."
     deactivated_by_staff: "Imesitishwa na msimamizi"
     activated_by_staff: "Imeanzishwa na msaidizi"
@@ -1523,13 +1517,6 @@ sw:
     too_many_spam_flags:
       title: "Bendera Nyingi Sana za Taka"
       subject_template: "Akaunti mpya inasubirishwa"
-      text_body_template: |
-        Habari,
-
-        Huu ni ujumbe wa roboti kutoka %{site_name}kukujulisha kuwa machapisho yako yamefichwa kwa mda mfupi kwa sababu yamepewa bendera na jukwaa.
-
-        Kama tahadhari, akaunti yako mpya imenyamazishwa haitatengeneza majibu au mada mpya mpaka msaidizi wetu akikagua akaunti yako. Tunaomba radhi kwa usumbufu wowote utakao tokea.
-        Kwa mwongozo zaidi, tafadhali tembelea [mwongozo wa jukwaa](%{base_url}/mwongozo).
     too_many_tl3_flags:
       title: "Bendera Nyingi za Kiwango cha Uaminifu cha 3"
       subject_template: "Akaunti mpya inasubirishwa"
@@ -1997,29 +1984,9 @@ sw:
   flag_reason:
     sockpuppet: "Mtumiaji mpya ametengeneza mada, na mtumiaji mpya mwenye anwani ya mtandao hiyo hiyo (%{ip_address}) amejibu. Angalia mpangilio wa tovuti <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Mtumiaji mpya amejaribu kutengeneza machapisho mengi yenye viungo kwenda kwa kikoa (%{domain}). Tembelea <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> mpangilio wa tovuti."
-  email_log:
-    post_user_deleted: "Muandishi wa mada ameondolewa."
-    no_user: "Tumeshindwa kumpata mtumiaji mwenye utambulisho %{user_id}"
-    anonymous_user: "Mtumiaji Asiyejulikana"
-    suspended_not_pm: "Mtumiaji amesimamishwa, sio ujumbe"
-    seen_recently: "Mtumiaji alionwa hivi karibuni"
-    post_not_found: "Tumeshindwa kupata chapisho lenye utambulisho %{user_id}"
-    notification_already_read: "Taarifa zilizokuwa ndani ya barua pepe hii zimesomwa."
-    topic_nil: "chapisho.mada ni sifuri"
-    post_deleted: "chapisho limefutwa na muandishi"
-    user_suspended: "mtumiaji alisitishwa"
-    already_read: "mtumiaji amesoma mada hii"
-    exceeded_emails_limit: "Kiwango kimepita max_emails_per_day_per_user"
-    exceeded_bounces_limit: "Kiwango kimepita bounce_score_threshold"
-    message_blank: "ujumbe hauna maandishi"
-    message_to_blank: "ujumbe.to hauna maandishi"
-    text_part_body_blank: "text_part.body hauna maandishi"
-    body_blank: "mwili hauna maandishi"
-    no_echo_mailing_list_mode: "Taarifa za orodha ya ujumbe zimezimwa kwa machapisho ya mtumiaji."
   color_schemes:
-    default_theme_name: "chaguo-msingi"
-    dark_theme_name: "Nyeusi"
     light_theme_name: "Hafifu"
+    dark_theme_name: "Nyeusi"
   about: "Kuhusu"
   guidelines: "Miongozo"
   privacy: "Siri"
@@ -2315,7 +2282,6 @@ sw:
       button: "Jisajili"
       title: "Sajili Akaunti ya Kiongozi"
       help: "sajili akaunti mpya kuanza"
-      no_emails: "Kwa bahati mbaya, hakuna barua pepe za msimamizi zilitajwa wakati wa utayarishaji, kwa hiyo umalizaji wa usanidi <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>unaweza kuwa mgumu</a>."
     confirm_email:
       title: "Thibitisha Barua pepe yako"
       message: "<p>Tumekutumia barua pepe ya uanzisho kwenye <b>%{email}</b>. Tafadhali fuatiia maelezo kwenye barua pepe kuanzisha akaunti yako.</p><p>Kama haijafika, hakikisha umeandika barua pepe sawa kwenye Discourse yako na angalia folda la barua taka au spam.</p>"

@@ -288,7 +288,7 @@ $user_card_background: $secondary;
       margin-top: 5px;
 
       .user-badge {
-        background: scale-color($user_card_background, $lightness: -5%);
+        background: $primary-very-low;
         border: 1px solid $primary-low;
         color: $user_card_primary;
       }

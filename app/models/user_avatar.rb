@@ -32,12 +32,28 @@ class UserAvatar < ActiveRecord::Base
         )
 
         if tempfile
-          upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
+          ext = File.extname(tempfile)
+          ext = '.png' if ext.blank?
 
-          if gravatar_upload_id != upload.id
-            gravatar_upload&.destroy!
-            self.gravatar_upload = upload
-            save!
+          upload = UploadCreator.new(
+            tempfile,
+            "gravatar#{ext}",
+            origin: gravatar_url,
+            type: "avatar"
+          ).create_for(user_id)
+
+          upload_id = upload.id
+
+          if gravatar_upload_id != upload_id
+            User.transaction do
+              if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
+                user.update!(uploaded_avatar_id: upload_id)
+              end
+
+              gravatar_upload&.destroy!
+              self.gravatar_upload = upload
+              save!
+            end
           end
         end
       rescue OpenURI::HTTPError

@@ -31,19 +31,7 @@ export default DropdownSelectBoxComponent.extend({
       .filter(contentItem => contentItem);
   },
 
-  didInsertElement() {
-    this._super();
-
-    $("#reply-control").on("touchstart.toolbar-popup-menu-options", event => {
-      if (this.get("isExpanded") && !this.element.contains(event.target)) {
-        this.close(event);
-      }
-    });
-  },
-
-  willDestroyElement() {
-    this._super();
-
-    $("#reply-control").off("touchstart.toolbar-popup-menu-options");
-  }
+  // composer is triggering a focus on textarea, we avoid instantly closing
+  // popup menu by tweaking the focus out behavior
+  onFilterInputFocusout() {}
 });

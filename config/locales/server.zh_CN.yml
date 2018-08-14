@@ -382,27 +382,6 @@ zh_CN:
         你可能想要在管理 :wrench: （右上角）中关闭这个主题，这样回复就不会积压在这个通告下。
   lounge_welcome:
     title: "欢迎来到贵宾室"
-    body: |2
-
-        恭喜！ :confetti_ball:
-
-        如果你看到了这个主题，说明你已经被提升至**常规**（信任等级3）了。
-
-        你现在可以&hellip;
-
-        * 编辑任何主题的标题
-        * 改变任何主题的分类
-        * 让你的链接设置为 follow 属性（[自动 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已经移除）
-        * 访问一个只有信任等级3及更高才能见到的贵宾室分类
-        * 一次标记即可隐藏垃圾信息
-
-        这里是[目前达到常规的用户列表](/badges/3/regular)。一定要来问个好！
-
-        感谢成为社区的重要一员！
-
-        （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "关于“%{category}”分类"
     replace_paragraph: "（将第一段话修改成你的新分类的简述。这段文字将出现在用户选择分类的地方，所以尝试保持在 200 个字符内。 **除非你编辑了这段文字或者在这分类中创建了主题，这个分类不会出现在分类页面中。**）"
@@ -418,8 +397,6 @@ zh_CN:
     cannot_delete:
       uncategorized: "不能删除未分类。"
       has_subcategories: "不能删除该分类，因为它有子分类"
-      topic_exists:
-        other: "不能删除该分类，因为它有 %{count} 个主题。最老的主题是 %{topic_link}。"
       topic_exists_no_oldest: "不能删除该分类，因为主题数量为 %{count}。"
     uncategorized_description: "不需要分类或者不适合放在现在的任何分类中的主题。"
   trust_levels:
@@ -566,17 +543,11 @@ zh_CN:
       description: '赞本帖'
       short_description: '赞该贴'
       long_form: '赞本帖内容'
-    vote:
-      title: '投票'
-      description: '给本帖投票'
-      short_description: '为该贴投票'
-      long_form: '已给本帖投票'
   user_activity:
     no_default:
       self: "你还没有活动。"
       others: "无活动。"
     no_bookmarks:
-      self: "你没有收藏帖子，收藏帖子能让你之后轻松找到他们。"
       others: "没有收藏。"
     no_likes_given:
       self: "你还没有赞任何帖子。"
@@ -725,8 +696,6 @@ zh_CN:
       num_users: "用户数"
     top_referred_topics:
       title: "最多引用主题"
-      xaxis: "主题"
-      num_clicks: "点击数"
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
@@ -913,7 +882,6 @@ zh_CN:
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
     share_links: "决定分享对话框中出现的按钮及显示顺序。"
-    track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
     site_contact_username: "论坛给用户自动发送私信时使用的用户名；如果留空将使用默认的系统账户。"
     send_welcome_message: "给所有用户发送快速开始指导的私信"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"
@@ -1417,7 +1385,6 @@ zh_CN:
     click_to_continue: "点击这里继续。"
     already_logged_in: "喔，看起来你正尝试查看给另一个用户的邀请链接。如果你不是%{current_user}，请退出再重试。"
   user:
-    no_accounts_associated: "无关联账户"
     deactivated: "因发送至“%{email}”的邮件被多次退信，取消激活"
     deactivated_by_staff: "被管理人员禁用"
     activated_by_staff: "被管理人员激活"
@@ -1614,11 +1581,6 @@ zh_CN:
     post_hidden:
       title: "帖子隐藏"
       subject_template: "帖子因社区标记隐藏"
-    usage_tips:
-      text_body_template: |
-        要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
-
-        只要你不断参与，我们将更了解你，并且新用户的临时限制将被移除。一段时间后你将获得[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，这将提供一些特殊功能来帮助我们更好地管理社群。
     welcome_user:
       title: "欢迎用户"
       subject_template: "欢迎来到 %{site_name}！"
@@ -1888,16 +1850,6 @@ zh_CN:
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被暂时封禁"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件。你的帖子因社区标记而被临时隐藏
-
-        。
-
-        出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
-
-        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "太多信任等级3用户标记"
       subject_template: "新账户被暂时封禁"
@@ -2348,32 +2300,11 @@ zh_CN:
   flag_reason:
     sockpuppet: "新用户创建了主题，而另一个新用户以同一个 IP 在该主题回复。查看站点设置的 <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
     spam_hosts: "新用户试图在多个创建帖子中发表链接到同一个域名的内容。查看站点设置的 <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
-  email_log:
-    post_user_deleted: "帖子的用户已被删除。"
-    no_user: "不能找到用户 ID 为 %{user_id} 的用户"
-    anonymous_user: "这是匿名用户"
-    suspended_not_pm: "用户被封禁，这不是私信"
-    seen_recently: "用户最近活跃"
-    post_not_found: "不能找到帖子 ID 为 %{post_id} 的帖子"
-    notification_already_read: "这封邮件中的通知已经被阅读了"
-    topic_nil: "post.topic 为空"
-    post_deleted: "主题被作者删除"
-    user_suspended: "用户被封禁"
-    already_read: "用户已经阅读了主题"
-    exceeded_emails_limit: "超过 max_emails_per_day_per_user"
-    exceeded_bounces_limit: "超过 bounce_score_threshold"
-    message_blank: "私信为空"
-    message_to_blank: "message.to 为空"
-    text_part_body_blank: "text_part.body 为空"
-    body_blank: "body 为空"
-    no_echo_mailing_list_mode: "邮件列表通知已对用户自己的帖子禁用"
   color_schemes:
     base_theme_name: "基础"
-    default: "亮色方案"
     dark: "暗色方案"
-    default_theme_name: "默认"
-    dark_theme_name: "暗"
     light_theme_name: "亮"
+    dark_theme_name: "暗"
   about: "关于"
   guidelines: "指导"
   privacy: "隐私"
@@ -2572,73 +2503,41 @@ zh_CN:
     editor:
       name: 编辑
       description: 首次编辑帖子
-      long_description: |
-        该徽章授予给第一次编辑自己帖子的你。虽然你不能永远在编辑自己的帖子，但是编辑他们总是一个好办法——你可以改进你的帖子、修正小错误，或者是增补你原来没有写的内容。编辑能让你的帖子质量变得更好！
     basic_user:
       name: 初级用户
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">授予</a>所有常用社区功能"
-      long_description: |
-        该徽章授予给用户等级达到 1 的成员。感谢你在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。你的新用户限制已经被取消；并且你已经被授予了所有基本的社区权限，必须个人私信、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
       name: 成员
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">授予</a>邀请、群组私信和更多的赞"
-      long_description: |
-        该徽章授予给达到用户等级 2 的你。感谢你在社区待了几周，真正融入到了社区中。你现在可以在你的用户页或者主题中邀请他人或者创建群组私信了。每天你也可以点更多次赞了。
     regular:
       name: 活跃用户
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">授予</a>重分类、重命名、跟踪链接、维基功能和更多的赞"
-      long_description: |
-        该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社区。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社区。你现在可以社区待了几周，真正融入到了社区中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
     leader:
       name: 资深
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">授予</a>全局编辑、固定、锁定、存档、分割、合并和更多的赞"
-      long_description: |
-        该徽章授予给达到用户等级 4 的你。你被管理人员选作了社区的领导力量，你用你的行动和言辞为社区树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、锁定、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
     welcome:
       name: 欢迎
       description: 得到一个赞
-      long_description: |
-        该徽章授予给帖子收到了第一个赞的成员。恭喜，有社区成员发现你发表的内容有意思、酷炫或者有用！
     autobiographer:
       name: 自传作者
       description: "填写<a href=\"%{base_uri}/my/preferences/profile\">用户资料</a>信息"
-      long_description: |
-        该徽章授予给填写了<a href="%{base_uri}/my/preferences/profile">用户资料页</a>并设置了用户头像的你。让社群成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社群。让我们一起努力！
     anniversary:
       name: 年度纪念日
       description: 一年活跃用户，至少发了一个帖子
-      long_description: |
-        该徽章授予给在社区注册一年并超至少发布了一个帖子的你。感谢你的持续关注和对我们社区的贡献！我们希望你继续参与我们的社区。
     nice_post:
       name: 不错的回复
       description: 回复被赞了 10 次
-      long_description: |
-        该徽章授予给回复被赞了 10 次的你。你的回复给社区成员们留下了印象，并且你推动了讨论的进程！
     good_post:
       name: 很好的回复
       description: 回复被赞了 25 次
-      long_description: |
-        该徽章授予给回复被赞了 25 次的你。你的回复很杰出，这个讨论对每个人都变得更有意义了！
     great_post:
       name: 精彩的回复
       description: 回复被赞了 50 次
-      long_description: |
-        该徽章授予给回复被赞了 50 次的你。哇！你的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社区都喜欢它。
     nice_topic:
       name: 不错的主题
       description: 主题被赞了 10 次
-      long_description: |
-        该徽章授予给主题获得 10 个赞的你。嗨，你开启了一个社区成员觉得有意思的讨论！
     good_topic:
       name: 很好的主题
       description: 主题被赞了 25 次
-      long_description: |
-        该徽章授予给主题获得 25 个赞的你。你开启了一个有意义的主题，整个社区都在积极响应，而且大家喜欢你的主题！
     great_topic:
       name: 精彩的主题
       description: 主题被赞了 50 次
-      long_description: |
-        该徽章授予给主题获得 50 个赞的你。你开启了一个引人入胜的主题，整个社区都沉浸于讨论之中。
     nice_share:
       name: 不错的分享
       description: 分享了一个有 25 个独立访问者的帖子
@@ -2647,14 +2546,9 @@ zh_CN:
     good_share:
       name: 很棒的分享
       description: 分享了一个有 300 个独立访问者的帖子
-      long_description: |
-        该徽章授予给分享链接给 300 个其他访客的你。干得漂亮！你把一个有意思的讨论介绍给了许多新的朋友，并且帮助社区前进了一步。
     great_share:
       name: 精彩的分享
       description: 分享了一个有 1000 个独立访问者的帖子
-      long_description: |+
-        该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社区前进了一大步！
-
     first_like:
       name: 首次赞
       description: 已赞过了一个帖子
@@ -2663,22 +2557,15 @@ zh_CN:
     first_flag:
       name: 首次标记
       description: 已标记过了一个帖子
-      long_description: |
-        该徽章授予给第一次标记帖子的你。标记是帮助我们帮助社区保持健康、合宜的工具。如果你注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果你注意到别人帖子里的某个问题，你也可用标记功能发送<b>私信</b>给该成员。如果你发现了问题，:flag_black: 标记吧！
     promoter:
       name: 推广者
       description: 已邀请了 1 个用户
     campaigner:
       name: 活动家
       description: 已邀请了 3 个初级用户
-      long_description: |+
-        该徽章授予给邀请了 3 人加入社区的你，你的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
-
     champion:
       name: 外交官
       description: 已邀请了 5 个成员
-      long_description: |
-        该徽章授予给邀请了 5 人加入社区的你，你的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢你帮助社区成长，社区因此变得更多元了！
     first_share:
       name: 首次分享
       description: 已分享了一个帖子
@@ -2692,13 +2579,9 @@ zh_CN:
     first_quote:
       name: 首次引用
       description: 已引用过一个帖子
-      long_description: |
-        该徽章授予给第一次在回复中引用帖子的你。在你的回复中引用之前帖子中的相关的段落将把主题关联在一起并切题。只要选中别的帖子中的任何文字，然后点击回复按钮将可以引用啦。多引用一些吧！
     read_guidelines:
       name: 阅读指引
       description: "阅读<a href=\"%{base_uri}/guidelines\">社群指引</a>"
-      long_description: |
-        该徽章授予给<a href="%{base_uri}/guidelines">阅读了社群指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社群。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
     reader:
       name: 读者
       description: 阅读了有至少 100 个回复的主题中的所有回复
@@ -2747,8 +2630,6 @@ zh_CN:
     crazy_in_love:
       name: 狂热
       description: 20 天都赞过 50 次
-      long_description: |
-        该徽章授予给 20 天赞过 50 次的你。哇！你为社区成员们树立了一个令人鼓舞的模范！
     thank_you:
       name: 感谢你
       description: 有 20 个被赞的帖子，给出过 10 个赞
@@ -2762,19 +2643,15 @@ zh_CN:
     empathetic:
       name: 感性
       description: 有 500 个被赞的帖子，给出过 1000 个赞
-      long_description: |
-        该徽章授予给收到了 500 个赞，且赞过别人至少 1000 次的你。哇！你是一个富有同情心且会换位思考的模范。 :two_hearts:
     first_emoji:
       name: 首个表情
       description: 在帖子中使用表情符号
     first_mention:
       name: 首次提及
       description: 帖子中提及用户
-      long_description: 该徽章授予给第一次在帖子中@别人的你。每个提及都将通知对方，让他们知道你发了贴。输入 @ 提及任何用户，如果可以的话，也可以提及群组——这是个获得他们注意的好办法。
     first_onebox:
       name: 首个Onebox
       description: 发布过 oneboxed 链接
-      long_description: 该徽章授予给第一次在空行中发表链接的你，链接将被展开成 onebox。其中有链接摘要、标题和（如果有）图片。
     first_reply_by_email:
       name: 首次邮件回复
       description: 通过邮件回复
@@ -2788,15 +2665,12 @@ zh_CN:
     enthusiast:
       name: 十全十美
       description: 连续 10 天访问
-      long_description: 连续 10 天访问论坛会被授予该勋章。感谢与我们共度超过一周的时光！
     aficionado:
       name: 百尺竿头
       description: 连续 100 天访问
-      long_description: 连续 100 天访问论坛会被授予该勋章。这可是超过三个月的时间！
     devotee:
       name: 全年不落
       description: 连续 365 天访问
-      long_description: 连续365 天访问论坛会被授予该勋章。哇哦，一整年了！
     badge_title_metadata: "%{site_title}的%{display_name}徽章"
   admin_login:
     success: "邮件已发送"
@@ -2816,7 +2690,6 @@ zh_CN:
       button: "注册"
       title: "注册管理员账户"
       help: "注册新账户以开始"
-      no_emails: "不幸的是，在向导中你没有设置管理员邮件地址，所以完善配置<a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>可能有点困难</a>。"
     confirm_email:
       title: "配置你的邮件"
       message: "<p>我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活你的帐号。</p><p>如果你没有收到邮件，请检查你正确设置了 Discourse 邮件配置，然后查看你的垃圾邮件收件箱。</p>"
@@ -2919,7 +2792,6 @@ zh_CN:
         fields:
           favicon_url:
             label: "小图标"
-            description: "浏览器中你站点显示的图标，要在小尺寸的情况下表现出色，例如 32px X 32px。"
           apple_touch_icon_url:
             label: "大图标"
       homepage:

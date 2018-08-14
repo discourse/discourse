@@ -164,6 +164,7 @@ es:
         eu_central_1: "UE (Frankfurt)"
         eu_west_1: "UE (Irlanda)"
         eu_west_2: "EU (Londres)"
+        eu_west_3: "EU (Paris)"
         sa_east_1: "Sudamérica (São Paulo)"
         us_east_1: "EEUU Este (Virginia del Norte)"
         us_east_2: "US East (Ohio)"
@@ -488,15 +489,13 @@ es:
       "14": "Pendiente"
     categories:
       all: "Categorías"
-      all_subcategories: "todo en %{categoryName}"
+      all_subcategories: "todas"
       no_subcategory: "ninguna"
       category: "Categoría"
       category_list: "Mostrar lista de categorías"
       reorder:
         title: "Reorganizar Categorías"
         title_long: "Reorganizar la lista de categorías"
-        fix_order: "Ordenar posiciones"
-        fix_order_tooltip: "No todas las categorías tienen un número de posición único, lo que puede causar resultados inesperados."
         save: "Guardar orden"
         apply_all: "Aplicar"
         position: "Posición"
@@ -668,6 +667,15 @@ es:
         set_password: "Establecer contraseña"
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
+      second_factor_backup:
+        regenerate: "Regenerar"
+        disable: "Deshabilitar"
+        enable: "Habilitar"
+        enable_long: "Habilitar códigos de respaldo"
+        manage: "Gestionar códigos de respaldo"
+        copied_to_clipboard: "Copiado al portapapeles"
+        copy_to_clipboard_error: "Error copiando datos al portapapeles"
+        remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
       second_factor:
         title: "Autenticación Dos Factores"
         disable: "Inhabilitar Autenticación Dos Factores"
@@ -707,7 +715,6 @@ es:
         upload_title: "Sube tu foto"
         upload_picture: "Subir Imagen"
         image_is_not_a_square: "Advertencia: hemos recortado su imagen; la anchura y la altura no eran iguales."
-        cache_notice: "Has cambiado correctamente tu imagen de perfil pero podría tardar un poco en aparecer debido al caching del navegador."
       change_profile_background:
         title: "Fondo de perfil"
         instructions: "Fondos de perfil serán centrados y tendrán un ancho por default de 850px."
@@ -716,6 +723,9 @@ es:
         instructions: "Imágenes de fondo serán centrados y tendrán un ancho por default de 590px."
       email:
         title: "E-mail"
+        primary: "Correo electrónico principal"
+        secondary: "Correo electrónico secundario"
+        no_secondary: "Sin correo electrónico secundario"
         instructions: "nunca se mostrará al público"
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
@@ -724,6 +734,11 @@ es:
         frequency:
           one: "Sólo te enviaremos emails si no te hemos visto en el último minuto."
           other: "Sólo te enviaremos si no te hemos visto en los últimos {{count}} minutos."
+      associated_accounts:
+        title: "Cuentas asociadas"
+        connect: "Conectar"
+        revoke: "Revocar"
+        not_connected: "(no conectada)"
       name:
         title: "Nombre"
         instructions: "tu nombre completo (opcional)"
@@ -895,7 +910,9 @@ es:
         most_liked_users: "Más gustado"
         most_replied_to_users: "A quienes más respondió"
         no_likes: "No hay me gusta aún."
-      associated_accounts: "Inicios de sesión"
+        top_categories: "Categorías top"
+        topics: "Temas"
+        replies: "Respuestas"
       ip_address:
         title: "Última dirección IP"
       registration_ip_address:
@@ -1036,9 +1053,14 @@ es:
       password: "Contraseña"
       second_factor_title: "Autenticación Dos Factores"
       second_factor_description: "Por favor ingrese el código de autenticación desde su aplicación:"
+      second_factor_backup: "<a href>Ingresar usando código de respaldo</a>"
+      second_factor_backup_title: "Two Factor Backup"
+      second_factor_backup_description: "Por favor, introduce uno de los códigos de respaldo:"
+      second_factor: "<a href>Inicie sesión usando la app Authenticator</a>"
       email_placeholder: "dirección de e-mail o nombre de usuario"
       caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
+      cookies_error: "Tu navegador parece tener las cookies desactivadas. El inicio de sesión podría no funcionar hasta que las actives."
       rate_limit: "Por favor, espera un poco antes de volver a intentar iniciar sesión."
       blank_username: "Por favor ingresa tu email o nombre de usuario."
       blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
@@ -1063,25 +1085,28 @@ es:
       preferences: "Debes tener una sesión iniciada para cambiar tus preferencias de usuario."
       forgot: "No me acuerdo de los detalles de mi cuenta."
       not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por email cuando todo esté listo para iniciar sesión."
-      google:
-        title: "con Google"
-        message: "Autenticando con Google (asegúrate de desactivar cualquier bloqueador de pop ups)"
       google_oauth2:
+        name: "Google"
         title: "con Google"
         message: "Autenticando con Google (asegúrate de no tener habilitados bloqueadores de pop-up)"
       twitter:
+        name: "Twitter"
         title: "con Twitter"
         message: "Autenticando con Twitter (asegúrate de desactivar cualquier bloqueador de pop ups)"
       instagram:
+        name: "Instagram"
         title: "con Instagram"
         message: "Autenticando con Instagram (asegúrate que los bloqueadores de pop up no están activados)"
       facebook:
+        name: "Facebook"
         title: "con Facebook"
         message: "Autenticando con Facebook (asegúrate de desactivar cualquier bloqueador de pop ups)"
       yahoo:
+        name: "Yahoo"
         title: "con Yahoo"
         message: "Autenticando con Yahoo (asegúrate de desactivar cualquier bloqueador de pop ups)"
       github:
+        name: "GitHub"
         title: "con GitHub"
         message: "Autenticando con GitHub (asegúrate de desactivar cualquier bloqueador de pop ups)"
     invites:
@@ -1593,6 +1618,8 @@ es:
         jump_prompt_of: "de %{count} posts"
         jump_prompt_long: "¿Hacia qué post quieres saltar?"
         jump_bottom_with_number: "saltar al post %{post_number}"
+        jump_prompt_to_date: "hasta hoy"
+        jump_prompt_or: "o"
         total: posts totales
         current: post actual
       notifications:
@@ -1887,6 +1914,8 @@ es:
         lock_post_description: "evitar que el usuario que publicó edite esta publicación"
         unlock_post: "Desbloquear Post"
         unlock_post_description: "permitir al usuario que publicó, editar este post"
+        delete_topic_disallowed_modal: "No tienes permiso para borrar este tema. Si de verdad quieres que se elimine, repórtalo y explica los motivos en el propio reporte para que lo estudiemos."
+        delete_topic_disallowed: "no tienes permiso para borrar este tema"
       actions:
         flag: 'Reportar'
         defer_flags:
@@ -1898,7 +1927,6 @@ es:
           inappropriate: "Deshacer reporte"
           bookmark: "Deshacer marcador"
           like: "Deshacer Me gusta"
-          vote: "Deshacer voto"
         people:
           off_topic: "reportó esto como off-topic"
           spam: "reportó esto como spam"
@@ -1910,7 +1938,6 @@ es:
           like_capped:
             one: "y {{count}} otro le gustó esto"
             other: "y {{count}} otros les gustó esto"
-          vote: "votó por esto"
         by_you:
           off_topic: "Has reportado esto como off-topic"
           spam: "Has reportado esto como Spam"
@@ -1919,7 +1946,6 @@ es:
           notify_user: "Has enviado un mensaje a este usuario"
           bookmark: "Has marcado este post"
           like: "Te ha gustado esto"
-          vote: "Has votado este post"
         by_you_and_others:
           off_topic:
             one: "Tú y otro usuarios habéis reportado esto como off-topic"
@@ -1942,9 +1968,6 @@ es:
           like:
             one: "A ti y a otro usuario os ha gustado esto"
             other: "A ti y a otros {{count}} usuarios os ha gustado esto"
-          vote:
-            one: "Tú y otro usuario habéis votado este post"
-            other: "Tú y otros {{count}} habéis votado este post"
         by_others:
           off_topic:
             one: "1 usuario ha reportado esto como off-topic"
@@ -1967,9 +1990,6 @@ es:
           like:
             one: "A 1 persona le gusta esto"
             other: "A {{count}} personas les gusta esto"
-          vote:
-            one: "Una persona ha votado este post"
-            other: "{{count}} personas votaron este post"
       delete:
         confirm:
           one: "¿Estás seguro que quieres eliminar ese post?"
@@ -2015,7 +2035,7 @@ es:
       can: 'puede&hellip; '
       none: '(sin categoría)'
       all: 'Categorías'
-      choose: 'Seleccionar una categoría&hellip;'
+      choose: 'categoría&hellip;'
       edit: 'editar'
       edit_long: "Editar"
       view: 'Ver temas en la categoría'
@@ -2064,7 +2084,7 @@ es:
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       num_featured_topics: "Número de temas a mostrar en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página superior de categorías:"
-      all_topics_wiki: "Hacer todos los temas wiki por defecto"
+      all_topics_wiki: "Hacer nuevos temas wikis por defecto"
       subcategory_list_style: "Estilo de lista de Subcategorías"
       sort_order: "Ordenar lista de temas:"
       default_view: "Orden por defecto:"
@@ -2072,13 +2092,17 @@ es:
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
+      require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
+      require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"
       this_year: "este año"
-      position: "posición"
+      position: "Posición:"
       default_position: "Posición predeterminada"
       position_disabled: "Las Categorías se mostrarán por orden de actividad. Para controlar el orden en que aparecen en las listas,"
       position_disabled_click: 'activa la opción "fixed category positions".'
       minimum_required_tags: 'Número mínimo de etiquetas requeridas en un tema:'
       parent: "Categoría primaria"
+      num_auto_bump_daily: 'Número de temas abiertos a revivir diariamente:'
+      navigate_to_first_post_after_read: 'Ir al primer post después de que los temas sean leídos'
       notifications:
         watching:
           title: "Vigilar"
@@ -2524,9 +2548,14 @@ es:
         page_views_short: "Páginas vistas"
         show_traffic_report: "Mostrar informe detallado del tráfico"
         community_health: Salud de la Comunidad
+        moderators_activity: Actividad de los moderadores
         whats_new_in_discourse: "¿Qué hay de nuevo en Discourse?"
         activity_metrics: Métricas de Actividad
         all_reports: "Todos los reportes"
+        general_tab: "General"
+        moderation_tab: "Moderación"
+        disabled: Desactivado
+        timeout_error: "Lo sentimos, la solicitud está durando demasiado, por favor selecciona un periodo más corto"
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el periodo previo."
           today: "Hoy"
@@ -2544,6 +2573,9 @@ es:
           end_date: "Hasta fecha"
           groups: "Todos los grupos"
           disabled: "Este reporte está inhabilitado"
+          totals_for_sample: "Total para la muestra"
+          total: "Total de siempre"
+          no_data: "Ningún dato a mostrar."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Buscar logs</a>'
             disabled: 'El reporte de Tendencias de Búsquedas está inhabilitado. Habilita el <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log consultas de búsquedas</a> para colectar datos.'
@@ -3068,7 +3100,6 @@ es:
             address_placeholder: "nombre@ejemplo.com"
             type_placeholder: "resumen, registro..."
             reply_key_placeholder: "clave de respuesta"
-            skipped_reason_placeholder: "motivo"
       moderation_history:
         performed_by: "Realizado por"
         no_results: "No hay historia de moderación disponible."
@@ -3517,6 +3548,14 @@ es:
         clear_filter: "Limpiar filtro"
         add_url: "añadir URL"
         add_host: "añadir host"
+        uploaded_image_list:
+          label: "Editar lista"
+          empty: "No hay imágenes todavía. Por favor, sube una."
+          upload:
+            label: "Subir"
+            title: "Subir imagen(es)"
+        selectable_avatars:
+          title: "Lista de avatares que los usuarios pueden elegir"
         categories:
           all_results: 'Todo'
           required: 'Requerido'
@@ -3671,6 +3710,7 @@ es:
       step: "%{current} de %{total}"
       upload: "Subir"
       uploading: "Subiendo..."
+      upload_error: "Lo sentimos, hubo un error subiendo ese archivo. Por favor, inténtalo de nuevo."
       quit: "Tal vez más tarde"
       staff_count:
         one: "Tu comunidad tiene 1 staff (tú). "
@@ -3682,3 +3722,7 @@ es:
           admin: "Admin"
           moderator: "Moderador"
           regular: "Usuario habitual"
+      previews:
+        topic_title: "Tema"
+        share_button: "Compartir"
+        reply_button: "Responder"

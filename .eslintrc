@@ -48,6 +48,7 @@
     "selectKitSelectRowByValue":true,
     "selectKitSelectRowByName":true,
     "selectKitSelectRowByIndex":true,
+    "keyboardHelper":true,
     "selectKitSelectNoneRow":true,
     "selectKitFillInFilter":true,
     "asyncTestDiscourse":true,

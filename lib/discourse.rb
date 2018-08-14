@@ -43,6 +43,8 @@ module Discourse
   # other desired context.
   # See app/jobs/base.rb for the error_context function.
   def self.handle_job_exception(ex, context = {}, parent_logger = nil)
+    return if ex.class == Jobs::HandledExceptionWrapper
+
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 
@@ -75,7 +77,18 @@ module Discourse
   end
 
   # When something they want is not found
-  class NotFound < StandardError; end
+  class NotFound < StandardError
+    attr_reader :status
+    attr_reader :check_permalinks
+    attr_reader :original_path
+
+    def initialize(message = nil, status: 404, check_permalinks: false, original_path: nil)
+      @status = status
+      @check_permalinks = check_permalinks
+      @original_path = original_path
+      super(message)
+    end
+  end
 
   # When a setting is missing
   class SiteSettingMissing < StandardError; end
@@ -198,25 +211,31 @@ module Discourse
     end
   end
 
-  def self.authenticators
-    # TODO: perhaps we don't need auth providers and authenticators maybe one object is enough
-
-    # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
-    #  for the cases of multisite
-    # In future we may change it so we don't include them all for cases where we are not a multisite, but we would
-    #  require a restart after site settings change
-    Users::OmniauthCallbacksController::BUILTIN_AUTH + auth_providers.map(&:authenticator)
-  end
+  BUILTIN_AUTH ||= [
+    Auth::AuthProvider.new(authenticator: Auth::FacebookAuthenticator.new, frame_width: 580, frame_height: 400),
+    Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500),
+    Auth::AuthProvider.new(authenticator: Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true)),
+    Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new),
+    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new),
+    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, frame_width: 1, frame_height: 1)
+  ]
 
   def self.auth_providers
-    providers = []
-    plugins.each do |p|
-      next unless p.auth_providers
-      p.auth_providers.each do |prov|
-        providers << prov
-      end
-    end
-    providers
+    BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.to_a
+  end
+
+  def self.enabled_auth_providers
+    auth_providers.select { |provider|  provider.authenticator.enabled?  }
+  end
+
+  def self.authenticators
+    # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
+    #  for the cases of multisite
+    auth_providers.map(&:authenticator)
+  end
+
+  def self.enabled_authenticators
+    authenticators.select { |authenticator|  authenticator.enabled?  }
   end
 
   def self.cache
@@ -251,7 +270,7 @@ module Discourse
     unless uri.is_a?(URI)
       uri = begin
         URI(uri)
-      rescue URI::InvalidURIError
+      rescue URI::Error
       end
     end
 
@@ -467,6 +486,56 @@ module Discourse
 
     Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
     JsLocaleHelper.reset_context if defined? JsLocaleHelper
+    nil
+  end
+
+  # you can use Discourse.warn when you want to report custom environment
+  # with the error, this helps with grouping
+  def self.warn(message, env = nil)
+    append = env ? (+" ") << env.map { |k, v|"#{k}: #{v}" }.join(" ") : ""
+
+    if !(Logster::Logger === Rails.logger)
+      Rails.logger.warn("#{message}#{append}")
+      return
+    end
+
+    loggers = [Rails.logger]
+    if Rails.logger.chained
+      loggers.concat(Rails.logger.chained)
+    end
+
+    logster_env = env
+
+    if old_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+      logster_env = Logster::Message.populate_from_env(old_env)
+
+      # a bit awkward by try to keep the new params
+      env.each do |k, v|
+        logster_env[k] = v
+      end
+    end
+
+    loggers.each do |logger|
+      if !(Logster::Logger === logger)
+        logger.warn("#{message} #{append}")
+        next
+      end
+
+      logger.store.report(
+        ::Logger::Severity::WARN,
+        "discourse",
+        message,
+        env: logster_env
+      )
+    end
+
+    if old_env
+      env.each do |k, v|
+        # do not leak state
+        logster_env.delete(k)
+      end
+    end
+
     nil
   end
 

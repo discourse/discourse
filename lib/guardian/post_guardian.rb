@@ -36,6 +36,10 @@ module PostGuardian
     already_did_flagging      = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 
     result = if authenticated? && post && !@user.anonymous?
+
+      # Silenced users can't act on posts
+      return false if @user.silenced?
+
       # post made by staff, but we don't allow staff flags
       return false if is_flag &&
         (!SiteSetting.allow_flagging_staff?) &&
@@ -254,5 +258,9 @@ module PostGuardian
 
   def can_unhide?(post)
     post.try(:hidden) && is_staff?
+  end
+
+  def can_skip_bump?
+    is_staff?
   end
 end

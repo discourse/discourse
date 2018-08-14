@@ -2,7 +2,7 @@ import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
-import User from "discourse/models/user";
+import Group from "discourse/models/group";
 import InputValidation from "discourse/models/input-validation";
 import debounce from "discourse/lib/debounce";
 
@@ -63,7 +63,7 @@ export default Ember.Component.extend({
     name = this.get("nameInput");
     if (Ember.isEmpty(name)) return;
 
-    User.checkUsername(name).then(response => {
+    Group.checkName(name).then(response => {
       const validationName = "uniqueNameValidation";
 
       if (response.available) {

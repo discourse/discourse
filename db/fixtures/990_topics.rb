@@ -42,6 +42,7 @@ if seed_welcome_topics
 
   post = PostCreator.create(Discourse.system_user, raw: I18n.t('discourse_welcome_topic.body'), title: I18n.t('discourse_welcome_topic.title'), skip_validations: true)
   post.topic.update_pinned(true, true)
+  TopicCustomField.create(topic_id: post.topic.id, name: "is_welcome_topic", value: "true")
 
   lounge = Category.find_by(id: SiteSetting.lounge_category_id)
   if lounge

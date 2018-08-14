@@ -63,12 +63,12 @@ describe Email::Receiver do
 
   it "doesn't raise an InactiveUserError when the sender is staged" do
     user = Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+    post = Fabricate(:post)
 
-    email_log = Fabricate(:email_log,
-      to_address: 'reply+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bar.com',
-      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    post_reply_key = Fabricate(:post_reply_key,
       user: user,
-      post: Fabricate(:post)
+      post: post,
+      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     )
 
     expect { process(:staged_sender) }.not_to raise_error
@@ -129,6 +129,17 @@ describe Email::Receiver do
       expect(email_log_2.bounced).to eq(true)
     end
 
+    it "sends a system message once they reach the 'bounce_score_threshold'" do
+      expect(user.active).to eq(true)
+
+      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold - 1
+      user.user_stat.save!
+
+      SystemMessage.expects(:create_from_system_user).with(user, :email_revoked)
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
+
     it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
       expect(user.active).to eq(true)
 
@@ -153,7 +164,14 @@ describe Email::Receiver do
     let(:user) { Fabricate(:user, email: "discourse@bar.com") }
     let(:topic) { create_topic(category: category, user: user) }
     let(:post) { create_post(topic: topic, user: user) }
-    let!(:email_log) { Fabricate(:email_log, reply_key: reply_key, user: user, topic: topic, post: post) }
+
+    let!(:post_reply_key) do
+      Fabricate(:post_reply_key,
+        reply_key: reply_key,
+        user: user,
+        post: post
+      )
+    end
 
     it "uses MD5 of 'mail_string' there is no message_id" do
       mail_string = email(:missing_message_id)
@@ -200,7 +218,7 @@ describe Email::Receiver do
     end
 
     it "raises an InvalidPost when there was an error while creating the post" do
-      expect { process(:too_small) }.to raise_error(Email::Receiver::InvalidPost)
+      expect { process(:too_small) }.to raise_error(Email::Receiver::TooShortPost)
     end
 
     it "raises an InvalidPost when there are too may mentions" do
@@ -814,12 +832,15 @@ describe Email::Receiver do
 
     context "with a valid reply" do
       it "returns the destination when the key is valid" do
-        Fabricate(:email_log, reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8')
+        post_reply_key = Fabricate(:post_reply_key,
+          reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8'
+        )
 
         dest = Email::Receiver.check_address('foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com')
+
         expect(dest).to be_present
         expect(dest[:type]).to eq(:reply)
-        expect(dest[:obj]).to be_present
+        expect(dest[:obj]).to eq(post_reply_key)
       end
     end
   end
@@ -925,7 +946,10 @@ describe Email::Receiver do
       let(:user) { Fabricate(:user, email: "discourse@bar.com") }
       let(:topic) { create_topic(category: category, user: user) }
       let(:post) { create_post(topic: topic, user: user) }
-      let!(:email_log) { Fabricate(:email_log, reply_key: reply_key, user: user, topic: topic, post: post) }
+
+      let!(:post_reply_key) do
+        Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
+      end
 
       context "when the email address isn't matching the one we sent the notification to" do
         include_examples "no staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError

@@ -14,14 +14,12 @@ acceptance("Raw Plugin Outlet", {
   }
 });
 
-QUnit.test("Renders the raw plugin outlet", assert => {
-  visit("/");
-  andThen(() => {
-    assert.ok(find(".topic-lala").length > 0, "it renders the outlet");
-    assert.equal(
-      find(".topic-lala:eq(0)").text(),
-      "11557",
-      "it has the topic id"
-    );
-  });
+QUnit.test("Renders the raw plugin outlet", async assert => {
+  await visit("/");
+  assert.ok(find(".topic-lala").length > 0, "it renders the outlet");
+  assert.equal(
+    find(".topic-lala:eq(0)").text(),
+    "11557",
+    "it has the topic id"
+  );
 });

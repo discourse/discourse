@@ -1,5 +1,5 @@
 import DiscourseURL from "discourse/lib/url";
-import { currentThemeId, refreshCSS } from "discourse/lib/theme-selector";
+import { currentThemeIds, refreshCSS } from "discourse/lib/theme-selector";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -58,12 +58,16 @@ export default {
           // Refresh if necessary
           document.location.reload(true);
         } else {
-          let themeId = currentThemeId();
-
+          const themeIds = currentThemeIds();
           $("link").each(function() {
             if (me.hasOwnProperty("theme_id") && me.new_href) {
-              let target = $(this).data("target");
-              if (me.theme_id === themeId && target === me.target) {
+              const target = $(this).data("target");
+              const themeId = $(this).data("theme-id");
+              if (
+                themeIds.indexOf(me.theme_id) !== -1 &&
+                target === me.target &&
+                (!themeId || themeId === me.theme_id)
+              ) {
                 refreshCSS(this, null, me.new_href);
               }
             } else if (this.href.match(me.name) && (me.hash || me.new_href)) {

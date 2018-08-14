@@ -367,9 +367,6 @@ ko:
         이 토픽에 답글이 쌓이는 게 싫다면, 관리기능 :wrench:(우측 상단에 있어요)을 통해 이 토픽을 닫을 수 있습니다.
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
-    body: |2
-
-        축하합니다! :confetti_ball: 당신의 회원등급이 **지도자** (회원등급 3등급)로 올라갔기 때문에 이 토픽을 볼 수 있게 되었습니다. 이제부터 아래의 행동들을 할 수 있습니다 &hellip; * 토픽 제목을 수정할 수 있습니다 * 토픽의 카테고리를 수정할 수 있습니다 * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다) * 회원등급 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다 * 좋아요와 신고의 가중치가 높아집니다 [정규 멤버 목록](&#x2F;badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요. 이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다! (회원등급에 관한 더 자세한 정보를 보시려면, [이 토픽 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.) [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
     replace_paragraph: "(이 문단을 새로운 카테고리를 간단히 설명하는 내용으로 대체하세요. 이 가이드는 카테고리 섹션 영역에 표시되므로, 200자 이하로 유지하는 게 좋습니다. **이 설명을 편집하거나 토픽을 생성하기 전까지는, 이 카테고리는 카테고리 페이지에 표시되지 않습니다.**)"
@@ -385,8 +382,6 @@ ko:
     cannot_delete:
       uncategorized: "Uncategorized는 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
-      topic_exists:
-        other: "%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다. 가장 오래된 글타래는 %{topic_link}입니다."
       topic_exists_no_oldest: "%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다."
     uncategorized_description: "카테고리가 필요없는 토픽이거나, 토픽에 부합하는 카테고리가 없습니다."
   trust_levels:
@@ -530,14 +525,8 @@ ko:
       description: '좋아요'
       short_description: '좋아요'
       long_form: '이것을 좋아함'
-    vote:
-      title: '투표'
-      description: '투표하기'
-      short_description: '투표하기'
-      long_form: '투표 됨'
   user_activity:
     no_bookmarks:
-      self: "북마크한 포스트가 없습니다. 포스트를 북마크하면 나중에 쉽게 확인할 수 있습니다."
       others: "북마크가 없습니다"
     no_likes_given:
       self: "좋아요한 게시글이 없습니다"
@@ -677,8 +666,6 @@ ko:
       num_users: "사용자들"
     top_referred_topics:
       title: "가장 많이 참조된 글타래들"
-      xaxis: "글타래"
-      num_clicks: "클릭"
     page_view_anon_reqs:
       title: "익명"
       xaxis: "일"
@@ -850,7 +837,6 @@ ko:
     post_menu: "글 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: like(좋아요)|edit(수정)|flag(신고)|delete(삭제)|share(공유)|bookmark(북마크)|reply(답글)"
     post_menu_hidden_items: "게시 메뉴에서 기본으로 숨길 메뉴 아이템들"
     share_links: "공유 다이얼로그에 어떤 아이템이 어떤 순서로 나올지 결정"
-    track_external_right_clicks: "우클릭한 외부 링크를 추적한다 (에: 새 탭 열기) 이 설정을 위해선 해당 URL를 다시 써야하는 이유로 기본값은 비활성화이다."
     site_contact_username: "자동 메세지를 보낼 올바른 스태프 아이디. 빈칸으로 놔두면 기본 시스템 계정이 사용됩니다."
     send_welcome_message: "모든 신규 유저들에게 시작 매뉴얼과 함께 환영 메세지 보내기"
     suppress_reply_directly_below: "글의 바로 아래에 단 하나의 댓글만 있는 경우 '댓글 수'를 보여주지 않음"
@@ -1239,7 +1225,6 @@ ko:
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."
   user:
-    no_accounts_associated: "연계된 계정이 없음"
     deactivated_by_staff: "운영진에 의해 비활성화됨"
     activated_by_staff: "운영진에 의해 활성화됨"
     new_user_typed_too_fast: "타이핑이 너무 빠른 신규 사용자"
@@ -1414,31 +1399,11 @@ ko:
     images:
       too_large: "죄송합니다, 업로드하려는 이미지가 너무 큽니다. (최대 크기 %{max_size_kb}KB). 크기를 줄여서 다시 시도해보세요."
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
-  email_log:
-    post_user_deleted: "이 포스트를 쓴 사용자가 삭제되었습니다"
-    no_user: "ID %{user_id} 인 사용자를 찾을 수 없습니다"
-    anonymous_user: "유저가 익명임"
-    suspended_not_pm: "메세지가 아니라 사용자가 정지됐습니다."
-    seen_recently: "최근 보여진 사용자"
-    post_not_found: "해당하는 ID %{post_id} 을 찾을 수 없습니다. "
-    notification_already_read: "이 알림 이미 읽은 것에 대한 이메일 입니다."
-    topic_nil: "글 제목이 없음"
-    post_deleted: "글쓴이에 의해 삭제된 글"
-    user_suspended: "정지된 사용자"
-    already_read: "이미 읽은 글"
-    exceeded_emails_limit: "max_emails_per_day_per_user 초과"
-    exceeded_bounces_limit: "bounce_score_threshold 초과"
-    message_blank: "메세지가 비어있음"
-    message_to_blank: "메세지가 비어있음"
-    text_part_body_blank: "본문이 비어있음"
-    body_blank: "본문이 비어있음"
   color_schemes:
     base_theme_name: "기본 테마 색상"
-    default: "라이트 Scheme"
     dark: "다크 Scheme"
-    default_theme_name: "기본값"
-    dark_theme_name: "다크"
     light_theme_name: "라이트"
+    dark_theme_name: "다크"
   about: "소개"
   guidelines: "가이드라인"
   privacy: "개인정보처리방침"
@@ -1459,70 +1424,40 @@ ko:
     editor:
       name: 에디터
       description: 첫 포스트 편집
-      long_description: |
-        이 배지는 처음으로 포스트를 편집했을 때 수여됩니다. 글을 고치는 것은 언제나 좋은 일이죠. 포스트를 더 낫게 만들 수도 있고, 작은 실수를 고칠 수도 있고, 처음 포스트를 올렸을 때 깜빡하고 못올렸던 걸 추가할 수도 있으니까요. 편집으로 당신의 포스트를 더 좋게 만들어보세요!
     basic_user:
       name: 초보회원
-      description: "모든 기본적인 커뮤니티 기능이 <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">수여되었습니다</a>"
-      long_description: |
-        이 배지는 신뢰도 1에 도달했을 때 수여됩니다. 잠시 동안 머물러서 몇 가지 토픽을 읽고 이 커뮤니티가 어떤 곳인지 탐구해주셔서 감사합니다. 당신의 신규 사용자 제한은 사라졌습니다. 이제 개인 메시지 보내기, 신고하기, 위키 편집하기, 이미지나 링크를 여러 개 올리기와 같은 기본적인 커뮤니티 기능을 사용하실 수 있습니다.
     member:
       name: 준회원
-      description: "초대장 보내기, 그룹 메시징, 더 많은 좋아요 보내기가<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">가능합니다</a>"
-      long_description: |
-        이 배지는 신뢰도 2에 도달했을 때 수여됩니다. 몇 주가 넘도록 참여하시면서 우리 커뮤니티와 함께해주셔서 감사합니다. 이제 개인 토픽이나 사용자 페이지에서 초대장을 보낼 수 있고, 그룹 개인 메시지를 보내고 하루에 더 많은 좋아요를 보낼 수 있습니다.
     regular:
       name: 정회원
-      description: "카테고리 재조정, 이름바꾸기, 링크 팔로우, 위키, 더 많은 좋아요<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">가 가능합니다.</a>"
-      long_description: |
-        이 배지는 신뢰도 4에 도달했을 때 수여됩니다. 여러 달이 넘도록 우리 커뮤니티의 중요멤버가 되어주셔서 감사합니다. 당신은 가장 활동적인 구독자이고 우리 커뮤니티를 훌륭하게 만드는 믿을만한 기여자이기도 합니다. 이제 당신은 토픽의 이름을 바꾸거나 카테고리 재조정을 할 수 있고, 더 강력한 신고 기능과 개인 라운지의 사용이 가능합니다. 그리고 하루에 더 많은 좋아요를 보낼 수 있습니다.
     leader:
       name: 지도자
-      description: "전역 편집, 핀 고정, 닫기, 아카이브, 자르고 붙이기, 더 많은 좋아요가<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">가능합니다</a>"
-      long_description: |
-        이 배지는 신뢰도 4에 도달했을 때 수여됩니다. 당신은 운영진에게 선택받은 이 커뮤니티의 리더입니다. 당신의 말과 행동은 이 커뮤니티의 다른 사용자에게 좋은 모범이 되고 있습니다. 이제 당신은 모든 포스트를 편집할 수 있는 권한과 핀 고정, 닫기, 목록해제, 아카이브, 자르기, 붙이기 같은 공통 토픽 운영권한을 가지게 됩니다. 그리고 하루에 엄청나게 많은 좋아요를 보낼 수 있습니다.
     welcome:
       name: 웰컴
       description: 좋아요를 받았습니다
-      long_description: |
-        이 배지는 당신이 쓴 포스트에 좋아요를 처음받았을 때 수여됩니다. 축하드립니다. 동료 커뮤니티 사용자들이 흥미를 느끼는 훌륭한 포스트를 올리셨군요!
     autobiographer:
       name: 자서전 작가
     anniversary:
       name: 1주년
       description: 1년동안 활동하고 글도 1개이상 썼습니다
-      long_description: |
-        이 배지는 한 해동안 회원으로 활동하고 그 동안 글도 하나 이상 썼을 때 수여됩니다. 이 커뮤니티에 머물면서 기여해주셔서 감사합니다. 당신 없이는 안됐을거예요.
     nice_post:
       name: 멋진 답글
       description: 답글에 좋아요 10개를 받았습니다
-      long_description: |
-        이 배지는 당신이 쓴 답글에 좋아요 10개가 달렸을 때 수여됩니다. 당신의 답글은 커뮤니티에 인상을 남기고, 토론이 원활히 진행되는데 도움이 되었습니다!
     good_post:
       name: 훌륭한 답글
       description: 답글에 좋아요 25개를 받았습니다
-      long_description: |
-        이 배지는 당신이 쓴 답글에 좋아요 25개가 달렸을 때 수여됩니다. 써주신 답글은 독창적이고 모두의 대화의 수준을 올리는 데 기여했습니다!
     great_post:
       name: 위대한 답글
       description: 답글에 좋아요 50개를 받았습니다
-      long_description: |
-        이 배지는 당신이 쓴 답글에 좋아요 50개가 달렸을 때 수여됩니다. 쓰신 답글은 매우 영감 넘치며, 흥미있으며, 재미있고, 마음을 움직이는 답글이어서 커뮤니티가 이 답글을 매우 좋아합니다.
     nice_topic:
       name: 멋진 토픽
       description: 토픽에 좋아요 10개를 받았습니다
-      long_description: |
-        이 배지는 올린 토픽에 좋아요 10개가 달렸을 때 수여됩니다. 우와, 커뮤니티가 즐기는 좋은 대화거리를 올리셨군요!
     good_topic:
       name: 훌륭한 토픽
       description: 토픽에 좋아요 25개를 받았습니다
-      long_description: |
-        이 배지는 올린 토픽에 좋아요 25개가 달렸을 때 수여됩니다. 커뮤니티가 활발히 움직이게끔 하는 활기찬 토론을 시작하셨군요!
     great_topic:
       name: 위대한 토픽
       description: 토픽에 좋아요 50개를 받았습니다
-      long_description: |
-        이 배지는 올린 토픽이 좋아요 50개를 받았을 때 수여됩니다. 온 커뮤니티가 좋아하는 활동적인 이야기가 오고가는 멋진 대화를 시작하셨군요!
     nice_share:
       name: 멋진 공유
       description: 공유한 포스트로 외부 방문자 25명이 들어왔습니다
@@ -1531,13 +1466,9 @@ ko:
     good_share:
       name: 훌륭한 공유
       description: 공유한 포스트로 외부 방문자 300명이 들어왔습니다
-      long_description: |
-        이 배지는 공유한 포스트 링크로 외부 방문자 300명이 들어왔을 때 수여됩니다. 잘하셨어요! 여러 사람에게 우리의 훌륭한 토론을 보여주고 이 커뮤니티가 성장하는데 도움을 주셨습니다.
     great_share:
       name: 위대한 공유
       description: 공유한 포스트로 외부 방문자 1000명이 들어왔습니다
-      long_description: |
-        이 배지는 공유한 포스트 링크로 외부 방문자 1000명이 들어왔을 때 수여됩니다. 우와! 엄청나게 많은 사람을 데리고 와서 이 토론을 더 흥미롭게 만드셨네요. 우리 커뮤니티의 성장에 아주 큰 기여를 하셨습니다!
     first_like:
       name: 첫 좋아요
       description: 포스트에 좋아요를 보냈습니다
@@ -1546,21 +1477,15 @@ ko:
     first_flag:
       name: 첫 신고
       description: 포스트를 신고했습니다
-      long_description: |
-        이 배지는 처음으로 포스트를 신고했을 때 수여됩니다. 신고를 하는 것은 이 커뮤니티를 깨끗하고 밝게 만드는 방법입니다. 이유를 불문하고 운영진이 체크해야할 필요가 있다고생각되면 주저하지 말고 신고를 해주세요. 글을 쓴 사용자에게 포스트에 문제가 있는 것 같다고 <b> 개인 메시지</b>를 보낼 수도 있습니다. 문제를 발견했다면 :flag_black: 신고하세요!
     promoter:
       name: 후원자
       description: 사용자를 초청했습니다
     campaigner:
       name: 사회운동가
       description: 기본 사용자 3명을 초청했습니다
-      long_description: |
-        이 배지는 초대한 사용자 3명이 기본 사용자가 되는 충분한 시간을 보냈을 때 수여됩니다. 활기찬 커뮤니티가 되려면 대화에 꾸준히 참여하며 새로운 목소리를 더하는 새로운 사람이 늘 필요하지요.
     champion:
       name: 챔피언
       description: 회원 5명을 초대했습니다
-      long_description: |
-        이 배지는 초대한 사용자 5명이 정회원이 되는 충분한 시간을 보냈을 때 수여됩니다. 우와! 우리 커뮤니티에 새로운 멤버를 초대해서 다양성을 넓혀주신 것에 감사드립니다!
     first_share:
       name: 처음 공유해요
       description: 포스트를 공유했습니다
@@ -1574,8 +1499,6 @@ ko:
     first_quote:
       name: 처음 인용해요
       description: 포스트를 인용함
-      long_description: |
-        이 배지는 답글을 쓸 때 처음으로 인용을 했을 때 수여됩니다. 앞선 포스트의 관련있는 부분을 인용하면 대화가 토픽과 다른 포스트끼리 연결되는데 도움이 됩니다. 인용을 하는 가장 쉬운 방법은 포스트의 특정 내용을 마우스로 드래그하고 답글 버튼을 누르는 것입니다. 아낌없이 인용해보세요!
     read_guidelines:
       name: 가이드라인을 읽었어요
     reader:
@@ -1626,8 +1549,6 @@ ko:
     crazy_in_love:
       name: 사랑밖에 모르는 바보
       description: 20번이나 좋아요 50개를 보냈습니다
-      long_description: |
-        이 배지는 50개의 좋아요를 사용한 날이 20일 이상일 때 수여됩니다. 와우! 동료 사용자를 어떻게 응원해야하는지의 모범 그 자체시네요!
     thank_you:
       name: 고마워요
       description: 10개의 포스트를 '좋아요'하고 20개의 '좋아요'를 받았습니다
@@ -1641,19 +1562,15 @@ ko:
     empathetic:
       name: 대인배
       description: 1000개의 게시글을 '좋아요'하고 500개의 '좋아요'를 받았습니다
-      long_description: |
-        이 배지는 500개의 좋아요를 받고 1000개 이상의 좋아요를 되돌려줬을 때 수여됩니다. 우와! 당신은 관대함과 상호 존중의 모범입니다 :two_hearts:.
     first_emoji:
       name: 첫 Emoji
       description: 게시글에 Emoji를 사용했습니다
     first_mention:
       name: 첫 멘션
       description: 처음으로 포스트에서 다른 사용자를 멘션했습니다
-      long_description: "이 배지는 포스트에서 다른 사람의 @아이디 를 처음으로 멘션했을 때 수여됩니다. 각각의 멘션들은 해당 사용자에게 알림을 생성해서 당신이 쓴 포스트에 대해 알게 해줍니다. 그냥 @ 를 친 후 사용자 아이디를 입력하거나, 허용이 되어있다면 그룹을 입력할 수 있습니다. 관심을 끌 수 있는 아주 간편한 방법이죠."
     first_onebox:
       name: 첫 박스 링크
       description: 박스 링크를 처음으로 포스팅했습니다
-      long_description: "이 배지는 포스트의 링크만으로 이루어진 글 한줄을 남겨서 박스링크를 만들 때 수여됩니다.  박스링크에는 링크의 간략한 요약과 타이틀, (만약에 있다면) 그림이 실리게 됩니다."
     first_reply_by_email:
       name: 첫 이메일 답글
       description: 포스트에 이메일로 답글을 달았습니다
@@ -1683,7 +1600,6 @@ ko:
       button: "등록하기"
       title: "관리자 계정 등록"
       help: "시작하려면 새로운 계정을 등록하세요"
-      no_emails: "안타깝게도, 설치중에 입력된 관리자 이메일이 없습니다. 그래서 설정을 완료하는 것이<a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>어려울 수도 있습니다</a>."
     confirm_email:
       title: "이메일을 확인하세요"
       message: "<p>활성화 메일을 <b>%{email}</b>로 보냈습니다. 안내에 따라 계정을 활성화 하세요.</p><p>만약 메일이 도착하지 않았다면, Discourse를 위한 이메일 설정을 정확히 했는지 확인하시고 스팸폴더를 확인해 보세요.</p>"
@@ -1784,7 +1700,6 @@ ko:
         fields:
           favicon_url:
             label: "작은 아이콘"
-            description: "가로 세로 32px 와 같은 작은 사이즈의 아이콘을 쓸 때 예쁘게 보이는 웹 브라우저에서 사이트를 대표할 아이콘 이미지"
           apple_touch_icon_url:
             label: "큰 아이콘"
       homepage:

@@ -4,7 +4,8 @@ import { ajax } from "wizard/lib/ajax";
 import computed from "ember-addons/ember-computed-decorators";
 
 const Wizard = Ember.Object.extend({
-  @computed("steps.length") totalSteps: length => length,
+  @computed("steps.length")
+  totalSteps: length => length,
 
   getTitle() {
     const titleStep = this.get("steps").findBy("id", "forum-title");
@@ -23,18 +24,18 @@ const Wizard = Ember.Object.extend({
   },
 
   // A bit clunky, but get the current colors from the appropriate step
-  getCurrentColors() {
+  getCurrentColors(schemeId) {
     const colorStep = this.get("steps").findBy("id", "colors");
     if (!colorStep) {
       return;
     }
 
-    const themeChoice = colorStep.get("fieldsById.base_scheme_id");
+    const themeChoice = colorStep.get("fieldsById.theme_previews");
     if (!themeChoice) {
       return;
     }
 
-    const themeId = themeChoice.get("value");
+    const themeId = schemeId ? schemeId : themeChoice.get("value");
     if (!themeId) {
       return;
     }

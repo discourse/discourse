@@ -153,7 +153,6 @@
       .user-profile-avatar {
         position: relative;
         float: left;
-        height: 100%;
         .avatar-flair {
           bottom: 8px;
           right: 16px;
@@ -502,6 +501,23 @@
   }
 }
 
+.top-categories-section {
+  table {
+    max-width: 95%;
+    tr {
+      border: none;
+    }
+    td,
+    th {
+      padding: 0.5em;
+      &.topic-count,
+      &.reply-count {
+        text-align: center;
+      }
+    }
+  }
+}
+
 .summary-user-list {
   li {
     height: 40px;
@@ -612,6 +628,12 @@
       }
     }
   }
+
+  .pref-associated-accounts table {
+    td {
+      padding: 8px;
+    }
+  }
 }
 
 .paginated-topics-list {
@@ -670,6 +692,7 @@
     margin: 5px;
     display: inline-block;
     .avatar {
+      cursor: pointer;
       width: 60px;
       height: 60px;
       &:hover {

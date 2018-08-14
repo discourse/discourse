@@ -387,8 +387,6 @@ ko:
       reorder:
         title: "카테고리 순서변경"
         title_long: "카테고리 목록 재구성"
-        fix_order: "위치 고정"
-        fix_order_tooltip: "카데고리에 고유 위치가 표시되지 않은 게 있습니다. 이 경우 예기치 않은 문제를 일으킬 수 있습니다."
         save: "순서 저장"
         apply_all: "적용"
         position: "위치"
@@ -575,7 +573,6 @@ ko:
         upload_title: "프로필 사진 업로드"
         upload_picture: "사진 업로드"
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
-        cache_notice: "프로필 사진을 바꾸는데 성공했습니다만 브라우져 캐쉬로 인해 보여지기까지 시간이 조금 걸립니다."
       change_profile_background:
         title: "프로필 배경"
         instructions: "프로필 배경은 가운데를 기준으로 표시되며 850px이 기본 가로 사이즈 입니다."
@@ -752,7 +749,6 @@ ko:
         most_liked_users: "가장 많이 좋아요를 받은"
         most_replied_to_users: "댓글을 가장 많이 단 사람"
         no_likes: "아직 좋아요가 없습니다."
-      associated_accounts: "로그인"
       ip_address:
         title: "마지막 IP 주소"
       registration_ip_address:
@@ -901,9 +897,6 @@ ko:
       preferences: "사용자 환경을 변경하려면 로그인이 필요합니다."
       forgot: "내 계정의 상세내역 기억하지 않는다."
       not_approved: "당신의 계정은 아직 활성화되지 않았습니다. 이메일을 확인하시고 로그인 해주세요."
-      google:
-        title: "Google"
-        message: "Google 인증 중(팝업 차단을 해제 하세요)"
       google_oauth2:
         title: "with Google"
         message: "구글을 통해 인증 중 (파업이 허용되어 있는지 확인해주세요.)"
@@ -1587,7 +1580,6 @@ ko:
           inappropriate: "신고 취소"
           bookmark: "북마크 취소"
           like: "좋아요 취소"
-          vote: "투표 취소"
         people:
           off_topic: "주제에서 벗어났다고 신고했습니다"
           spam: "스팸으로 신고했습니다"
@@ -1596,7 +1588,6 @@ ko:
           notify_user: "글쓴이에게 메시지를 보냈습니다"
           bookmark: "북마크 했습니다"
           like: "좋아해요"
-          vote: "이곳에 투표했습니다"
         by_you:
           off_topic: "이글을 주제에서 벗어났다고 신고했습니다"
           spam: "이글을 스팸으로 신고했습니다"
@@ -1605,7 +1596,6 @@ ko:
           notify_user: "글쓴이에게 메시지를 보냈습니다"
           bookmark: "이 글을 북마크했습니다"
           like: "좋아해요"
-          vote: "이 글에 투표했습니다"
         by_you_and_others:
           off_topic:
             other: "당신 외 {{count}}명이 주제에서 벗어났다고 신고했습니다"
@@ -1621,8 +1611,6 @@ ko:
             other: "당신 외 {{count}}명이 북마크 했습니다"
           like:
             other: "당신 외 {{count}}명이 좋아합니다"
-          vote:
-            other: "당신 외 {{count}}명이 이 글에 투표했습니다"
         by_others:
           off_topic:
             other: "{{count}}명이 주제에서 벗어났다고 신고했습니다"
@@ -1638,8 +1626,6 @@ ko:
             other: "{{count}}명이 북마크했습니다"
           like:
             other: "{{count}}명이 좋아합니다"
-          vote:
-            other: "{{count}}명이 이 글에 투표했습니다"
       merge:
         confirm:
           other: "정말로 이 {{count}}개의 게시글을 합칠까요?"
@@ -1680,7 +1666,6 @@ ko:
       can: '허용'
       none: '(카테고리 없음)'
       all: '모든 카테고리'
-      choose: '카테고리를 선택하세요&hellip;'
       edit: '편집'
       edit_long: "카테고리 편집"
       view: '카테고리 안의 주제 보기'
@@ -1727,7 +1712,6 @@ ko:
       show_subcategory_list: "하위 카테고리 목록을 토픽위에 표시하기."
       num_featured_topics: "이 카테고리 페이지에 표시되는 토픽의 수:"
       subcategory_num_featured_topics: "부모 카테고리 페이지에 표시되는 주요 토픽의 수:"
-      all_topics_wiki: "새로운 토픽 생성시 위키로 기본설정"
       subcategory_list_style: "하위 카테고리 목록 스타일:"
       sort_order: "다음 기준으로 토픽 목록 정렬:"
       default_view: "기본 토픽 목록:"
@@ -1736,7 +1720,6 @@ ko:
       edit_permissions: "권한 수정"
       add_permission: "권한 추가"
       this_year: "올해"
-      position: "위치"
       default_position: "기본 위치"
       position_disabled: "카테고리는 활동량에 따라서 표시됩니다. 목록 내의 카테고리 순서를 지정하하려면"
       position_disabled_click: '"카테고리 위치 고정" 설정을 활성화 시키십시요.'
@@ -2583,7 +2566,6 @@ ko:
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
-            skipped_reason_placeholder: "이유"
       logs:
         title: "로그"
         action: "허용여부"

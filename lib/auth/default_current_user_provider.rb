@@ -75,14 +75,6 @@ class Auth::DefaultCurrentUserProvider
       @env[BAD_TOKEN] = true
     end
 
-    if current_user && should_update_last_seen?
-      u = current_user
-      Scheduler::Defer.later "Updating Last Seen" do
-        u.update_last_seen!
-        u.update_ip_address!(request.ip)
-      end
-    end
-
     # possible we have an api call, impersonate
     if api_key
       current_user = lookup_api_user(api_key, request)
@@ -125,6 +117,14 @@ class Auth::DefaultCurrentUserProvider
     # under no conditions to suspended or inactive accounts get current_user
     if current_user && (current_user.suspended? || !current_user.active)
       current_user = nil
+    end
+
+    if current_user && should_update_last_seen?
+      u = current_user
+      Scheduler::Defer.later "Updating Last Seen" do
+        u.update_last_seen!
+        u.update_ip_address!(request.ip)
+      end
     end
 
     @env[CURRENT_USER_KEY] = current_user

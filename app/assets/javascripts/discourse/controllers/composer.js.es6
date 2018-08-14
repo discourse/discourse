@@ -53,7 +53,8 @@ function loadDraft(store, opts) {
       composerTime: draft.composerTime,
       typingTime: draft.typingTime,
       whisper: draft.whisper,
-      tags: draft.tags
+      tags: draft.tags,
+      noBump: draft.noBump
     });
     return composer;
   }
@@ -177,7 +178,6 @@ export default Ember.Controller.extend({
   @computed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
     return (
-      !this.site.mobileView &&
       this.site.get("can_tag_topics") &&
       canEditTitle &&
       !creatingPrivateMessage &&
@@ -288,7 +288,8 @@ export default Ember.Controller.extend({
     return authorizesOneOrMoreExtensions();
   },
 
-  @computed() uploadIcon: () => uploadIcon(),
+  @computed()
+  uploadIcon: () => uploadIcon(),
 
   actions: {
     cancelUpload() {
@@ -814,32 +815,6 @@ export default Ember.Controller.extend({
 
     if (opts.topicCategoryId) {
       this.set("model.categoryId", opts.topicCategoryId);
-    } else if (opts.topicCategory) {
-      const splitCategory = opts.topicCategory.split("/");
-      let category;
-
-      if (!splitCategory[1]) {
-        category = this.site
-          .get("categories")
-          .findBy("nameLower", splitCategory[0].toLowerCase());
-      } else {
-        const categories = this.site.get("categories");
-        const mainCategory = categories.findBy(
-          "nameLower",
-          splitCategory[0].toLowerCase()
-        );
-        category = categories.find(function(item) {
-          return (
-            item &&
-            item.get("nameLower") === splitCategory[1].toLowerCase() &&
-            item.get("parent_category_id") === mainCategory.id
-          );
-        });
-      }
-
-      if (category) {
-        this.set("model.categoryId", category.get("id"));
-      }
     }
 
     if (
@@ -875,7 +850,10 @@ export default Ember.Controller.extend({
       if (key === "new_topic") {
         this.send("clearTopicDraft");
       }
-      Draft.clear(key, this.get("model.draftSequence"));
+
+      Draft.clear(key, this.get("model.draftSequence")).then(() => {
+        this.appEvents.trigger("draft:destroyed", key);
+      });
     }
   },
 

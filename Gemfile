@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.55'
+gem 'onebox', '1.8.57'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -88,6 +88,7 @@ gem 'thor', require: false
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
+gem 'mini_scheduler'
 
 # for sidekiq web
 gem 'tilt', require: false
@@ -108,6 +109,7 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
+  gem 'danger'
 end
 
 group :test, :development do
@@ -178,6 +180,8 @@ gem 'rotp'
 gem 'rqrcode'
 
 gem 'sshkey', require: false
+
+gem 'rchardet', require: false
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

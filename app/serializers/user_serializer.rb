@@ -75,7 +75,8 @@ class UserSerializer < BasicUserSerializer
              :staged,
              :second_factor_enabled,
              :second_factor_backup_enabled,
-             :second_factor_remaining_backup_codes
+             :second_factor_remaining_backup_codes,
+             :associated_accounts
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -145,6 +146,10 @@ class UserSerializer < BasicUserSerializer
       (scope.is_staff? && object.staged?)
   end
 
+  def include_associated_accounts?
+    (object.id && object.id == scope.user.try(:id))
+  end
+
   def include_second_factor_enabled?
     (object&.id == scope.user&.id) || scope.is_staff?
   end
@@ -201,7 +206,7 @@ class UserSerializer < BasicUserSerializer
   def website_name
     uri = begin
       URI(website.to_s)
-    rescue URI::InvalidURIError
+    rescue URI::Error
     end
 
     return if uri.nil? || uri.host.nil?

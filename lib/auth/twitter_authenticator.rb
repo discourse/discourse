@@ -4,7 +4,35 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
     "twitter"
   end
 
-  def after_authenticate(auth_token)
+  def enabled?
+    SiteSetting.enable_twitter_logins
+  end
+
+  def description_for_user(user)
+    info = TwitterUserInfo.find_by(user_id: user.id)
+    info&.email || info&.screen_name || ""
+  end
+
+  def can_revoke?
+    true
+  end
+
+  def revoke(user, skip_remote: false)
+    info = TwitterUserInfo.find_by(user_id: user.id)
+    raise Discourse::NotFound if info.nil?
+
+    # We get a token from twitter upon login but do not need it, and do not store it.
+    # Therefore we do not have any way to revoke the token automatically on twitter's end
+
+    info.destroy!
+    true
+  end
+
+  def can_connect_existing_user?
+    true
+  end
+
+  def after_authenticate(auth_token, existing_account: nil)
     result = Auth::Result.new
 
     data = auth_token[:info]
@@ -26,9 +54,21 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
 
     user_info = TwitterUserInfo.find_by(twitter_user_id: twitter_user_id)
 
-    result.user = user_info.try(:user)
+    if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
+      user_info.destroy! if user_info
+      result.user = existing_account
+      user_info = TwitterUserInfo.create!(
+        user_id: result.user.id,
+        screen_name: result.username,
+        twitter_user_id: twitter_user_id,
+        email: result.email
+      )
+    else
+      result.user = user_info&.user
+    end
+
     if (!result.user) && result.email_valid && (result.user = User.find_by_email(result.email))
-      TwitterUserInfo.create(
+      TwitterUserInfo.create!(
         user_id: result.user.id,
         screen_name: result.username,
         twitter_user_id: twitter_user_id,
