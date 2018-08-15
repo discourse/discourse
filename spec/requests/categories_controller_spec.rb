@@ -26,6 +26,13 @@ describe CategoriesController do
       expect(html.css('body.crawler')).to be_present
       expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
     end
+
+    it "properly preloads topic list" do
+      SiteSetting.categories_topics = 5
+      SiteSetting.categories_topics.times { Fabricate(:topic) }
+      get "/categories"
+      expect(response.body).to include(%{"more_topics_url":"/latest"})
+    end
   end
 
   context 'extensibility event' do

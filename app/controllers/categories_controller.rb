@@ -48,11 +48,13 @@ class CategoriesController < ApplicationController
 
         if style == "categories_and_latest_topics".freeze
           @topic_list = TopicQuery.new(current_user, topic_options).list_latest
+          @topic_list.more_topics_url = url_for(public_send("latest_path"))
         elsif style == "categories_and_top_topics".freeze
           @topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+          @topic_list.more_topics_url = url_for(public_send("top_path"))
         end
 
-        if @topic_list.present?
+        if @topic_list.present? && @topic_list.topics.present?
           store_preloaded(
             @topic_list.preload_key,
             MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian))

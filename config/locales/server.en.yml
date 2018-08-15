@@ -3165,7 +3165,7 @@ en:
     recent_topics: "Recent"
     see_more: "More"
     search_title: "Search this site"
-    search_google: "Google"
+    search_button: "Search"
 
   offline:
     title: "Cannot load app"
