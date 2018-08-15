@@ -17,14 +17,20 @@ class TopicQuery
         Integer === x && x >= 0
       end
 
-      array_int = lambda do |x|
-        Array === x && x.length > 0 && x.all? { |i| Integer === i || i.match?(/^-?[0-9]+$/) }
+      int = lambda do |x|
+        Integer === x || (String === x && x.match?(/^-?[0-9]+$/))
+      end
+
+      array_int_or_int = lambda do |x|
+        int.call(x) || (
+          Array === x && x.length > 0 && x.all?(&int)
+        )
       end
 
       {
         max_posts: zero_or_more,
         min_posts: zero_or_more,
-        exclude_category_ids: array_int
+        exclude_category_ids: array_int_or_int
       }
     end
   end

@@ -33,6 +33,9 @@ RSpec.describe ListController do
     it "returns 200 for legit requests" do
       get "/latest.json?exclude_category_ids%5B%5D=69&exclude_category_ids%5B%5D=70&no_definitions=true&no_subcategories=false&page=1&_=1534296100767"
       expect(response.status).to eq(200)
+
+      get "/latest.json?exclude_category_ids=-1"
+      expect(response.status).to eq(200)
     end
 
     it "doesn't throw an error with page params as an array" do
