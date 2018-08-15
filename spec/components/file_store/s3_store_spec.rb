@@ -17,6 +17,7 @@ describe FileStore::S3Store do
     SiteSetting.s3_access_key_id = "s3-access-key-id"
     SiteSetting.s3_secret_access_key = "s3-secret-access-key"
     SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_canned_acl = 'public-read'
   end
 
   shared_context 's3 helpers' do
@@ -248,6 +249,13 @@ describe FileStore::S3Store do
 
     end
 
+  end
+
+  it "s3_canned_acl" do
+    expect(store.s3_canned_acl).to eq('public-read')
+
+    SiteSetting.s3_canned_acl = 'private'
+    expect(store.s3_canned_acl).to eq('private')
   end
 
   it "is external" do
