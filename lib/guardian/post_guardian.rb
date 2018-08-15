@@ -147,6 +147,9 @@ module PostGuardian
     end
 
     if is_my_own?(post)
+
+      return false if @user.silenced?
+
       if post.hidden?
         return false if post.hidden_at.present? &&
                         post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
