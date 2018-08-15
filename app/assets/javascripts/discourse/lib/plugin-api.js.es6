@@ -35,9 +35,10 @@ import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
+import { addComposerUploadHandler } from "discourse/components/composer-editor";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.23";
+const PLUGIN_API_VERSION = "0.8.24";
 
 class PluginApi {
   constructor(version, container) {
@@ -752,6 +753,22 @@ class PluginApi {
   addSharingSource(options) {
     Sharing.addSharingId(options.id);
     Sharing.addSource(options);
+  }
+
+  /**
+   *
+   * Registers a function to handle uploads for specified file types
+   * The normal uploading functionality will be bypassed
+   * This only for uploads of individual files
+   *
+   * Example:
+   *
+   * addComposerUploadHandler(["mp4", "mov"], (file) => {
+   *    console.log("Handling upload for", file.name);
+   * })
+   */
+  addComposerUploadHandler(extensions, method) {
+    addComposerUploadHandler(extensions, method);
   }
 }
 
