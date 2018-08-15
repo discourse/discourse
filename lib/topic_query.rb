@@ -18,7 +18,7 @@ class TopicQuery
       end
 
       array_int = lambda do |x|
-        Array === x && x.length > 0 && x.all? { |i| Integer === i }
+        Array === x && x.length > 0 && x.all? { |i| Integer === i || i.match?(/^-?[0-9]+$/) }
       end
 
       {
@@ -656,7 +656,7 @@ class TopicQuery
     result = apply_shared_drafts(result, category_id, options)
 
     if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
-      result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids]).references(:categories)
+      result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)
     end
 
     # Don't include the category topics if excluded
