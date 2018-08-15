@@ -34,6 +34,13 @@ export default function(page) {
       this.controllerFor("static").set("model", model);
     },
 
+    titleToken() {
+      if (page === "tos") {
+        return I18n.t("terms_of_service");
+      }
+      return I18n.t(page);
+    },
+
     actions: {
       didTransition() {
         this.controllerFor("application").set("showFooter", true);
