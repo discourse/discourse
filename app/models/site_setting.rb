@@ -124,6 +124,10 @@ class SiteSetting < ActiveRecord::Base
       SiteSetting.enable_s3_uploads ? SiteSetting.s3_region : GlobalSetting.s3_region
     end
 
+    def self.s3_canned_acl
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_canned_acl : GlobalSetting.s3_canned_acl
+    end
+
     def self.s3_upload_bucket
       SiteSetting.enable_s3_uploads ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
     end

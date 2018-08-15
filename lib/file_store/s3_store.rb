@@ -33,7 +33,7 @@ module FileStore
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       # stored uploaded are public by default
       options = {
-        acl: "public-read",
+        acl: s3_canned_acl,
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
@@ -107,6 +107,11 @@ module FileStore
     def s3_bucket
       raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.Upload.s3_upload_bucket.blank?
       SiteSetting.Upload.s3_upload_bucket.downcase
+    end
+
+    def s3_canned_acl
+      raise Discourse::SiteSettingMissing.new("s3_canned_acl") if SiteSetting.Upload.s3_canned_acl.blank?
+      SiteSetting.Upload.s3_canned_acl.downcase
     end
   end
 end
