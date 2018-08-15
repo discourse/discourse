@@ -10,6 +10,7 @@ end
 #  key         :string           not null
 #  type_name   :string           not null
 #  value       :text
+#  data        :jsonb
 #
 # Indexes
 #
