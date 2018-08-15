@@ -599,7 +599,15 @@ class Group < ActiveRecord::Base
   protected
 
   def name_format_validator
-    self.name.strip!
+
+    return if !name_changed?
+
+    # avoid strip! here, it works now
+    # but may not continue to work long term, especially
+    # once we start returning frozen strings
+    if self.name != (stripped = self.name.strip)
+      self.name = stripped
+    end
 
     UsernameValidator.perform_validation(self, 'name') || begin
       name_lower = self.name.downcase
