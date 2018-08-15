@@ -19,6 +19,11 @@ if !ARGV.include?("-E") &&
       Pathname.new(__FILE__).realpath))
   end
 
+  # we do not want to listen on 2 ports, so lets fix it
+  if (idx = ARGV.index("-p")) && (port = ARGV[idx + 1].to_i) > 0
+    ENV["UNICORN_PORT"] ||= port.to_s
+  end
+
   ENV["UNICORN_PORT"] ||= "9292"
   ENV["UNICORN_SIDEKIQS"] ||= "1"
 
