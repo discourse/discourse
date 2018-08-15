@@ -1174,6 +1174,11 @@ describe Guardian do
 
     describe 'a Post' do
 
+      it 'returns false for silenced users' do
+        post.user.silenced_till = 1.day.from_now
+        expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
+      end
+
       it 'returns false when not logged in' do
         expect(Guardian.new.can_edit?(post)).to be_falsey
       end
