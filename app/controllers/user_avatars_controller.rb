@@ -179,13 +179,49 @@ class UserAvatarsController < ApplicationController
     send_file path, disposition: nil
   end
 
+  protected
+
+  # consider removal of hacks some time in 2019
+
   def get_optimized_image(upload, size)
+    if (!upload.extension || upload.extension.length == 0)
+      fix_extension(upload)
+    end
+
+    begin
+      try_optimize(upload, size, true)
+    rescue
+      if fix_extension(upload)
+        try_optimize(upload, size, false)
+        # TODO decide if we want to detach faulty avatar here?
+      else
+        nil
+      end
+    end
+  end
+
+  def fix_extension(upload)
+    # this is relatively cheap
+    original_path = Discourse.store.path_for(upload)
+    if original_path.blank?
+      external_copy = Discourse.store.download(upload) rescue nil
+      original_path = external_copy.try(:path)
+    end
+
+    image_info = FastImage.new(original_path) rescue nil
+    if image_info && image_info.type.to_s != upload.extension
+      upload.update_columns(extension: image_info.type.to_s)
+      true
+    end
+  end
+
+  def try_optimize(upload, size, raise_on_error)
     OptimizedImage.create_for(
       upload,
       size,
       size,
-      filename: upload.original_filename,
       allow_animation: SiteSetting.allow_animated_avatars,
+      raise_on_error: raise_on_error
     )
   end
 

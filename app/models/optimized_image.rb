@@ -48,7 +48,12 @@ class OptimizedImage < ActiveRecord::Base
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
       else
         # create a temp file with the same extension as the original
-        extension = File.extname(original_path)
+        extension = ".#{upload.extension}"
+
+        if extension.length == 1
+          return nil
+        end
+
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
@@ -120,8 +125,8 @@ class OptimizedImage < ActiveRecord::Base
 
   IM_DECODERS ||= /\A(jpe?g|png|tiff?|bmp|ico|gif)\z/i
 
-  def self.prepend_decoder!(path)
-    extension = File.extname(path)[1..-1]
+  def self.prepend_decoder!(path, ext_path)
+    extension = File.extname(ext_path)[1..-1]
     raise Discourse::InvalidAccess unless extension.present? && extension[IM_DECODERS]
     "#{extension}:#{path}"
   end
@@ -133,8 +138,9 @@ class OptimizedImage < ActiveRecord::Base
   def self.resize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    from = prepend_decoder!(from)
-    to = prepend_decoder!(to)
+    # note FROM my not be named correctly
+    from = prepend_decoder!(from, to)
+    to = prepend_decoder!(to, to)
 
     # NOTE: ORDER is important!
     %W{
@@ -170,8 +176,8 @@ class OptimizedImage < ActiveRecord::Base
   def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    from = prepend_decoder!(from)
-    to = prepend_decoder!(to)
+    from = prepend_decoder!(from, to)
+    to = prepend_decoder!(to, to)
 
     %W{
       convert
@@ -205,8 +211,8 @@ class OptimizedImage < ActiveRecord::Base
   def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    from = prepend_decoder!(from)
-    to = prepend_decoder!(to)
+    from = prepend_decoder!(from, to)
+    to = prepend_decoder!(to, to)
 
     %W{
       convert
@@ -240,7 +246,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     method_name = "#{operation}_instructions"
-    if !!opts[:allow_animation] && (from =~ /\.GIF$/i || opts[:filename] =~ /\.GIF$/i)
+    if !!opts[:allow_animation] && (from =~ /\.GIF$/i)
       method_name += "_animated"
     end
     instructions = self.send(method_name.to_sym, from, to, dimensions, opts)

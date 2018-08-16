@@ -165,7 +165,12 @@ class Wizard
             if upload && upload.width > dimensions && upload.height > dimensions
               updater.update_setting(:large_icon_url, updater.fields[:apple_touch_icon_url])
 
-              apple_touch_icon_optimized = OptimizedImage.create_for(upload, dimensions, dimensions, filename: upload.original_filename)
+              apple_touch_icon_optimized = OptimizedImage.create_for(
+                upload,
+                dimensions,
+                dimensions
+              )
+
               original_file = File.new(Discourse.store.path_for(apple_touch_icon_optimized)) rescue nil
               if original_file
                 apple_touch_icon_upload = UploadCreator.new(original_file, upload.original_filename).create_for(@wizard.user.id)
