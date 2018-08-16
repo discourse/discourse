@@ -1,4 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
+import { IMAGE_VERSION as v } from "pretty-text/emoji";
+
 acceptance("Topic", {
   loggedIn: true,
   pretend(server, helper) {
@@ -181,7 +183,7 @@ QUnit.test("Updating the topic title with emojis", async assert => {
     find(".fancy-title")
       .html()
       .trim(),
-    'emojis title <img src="/images/emoji/emoji_one/bike.png?v=5" title="bike" alt="bike" class="emoji"> <img src="/images/emoji/emoji_one/blonde_woman/6.png?v=5" title="blonde_woman:t6" alt="blonde_woman:t6" class="emoji">',
+    `emojis title <img src="/images/emoji/emoji_one/bike.png?v=${v}" title="bike" alt="bike" class="emoji"> <img src="/images/emoji/emoji_one/blonde_woman/6.png?v=${v}" title="blonde_woman:t6" alt="blonde_woman:t6" class="emoji">`,
     "it displays the new title with emojis"
   );
 });
