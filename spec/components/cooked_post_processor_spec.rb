@@ -600,7 +600,7 @@ describe CookedPostProcessor do
         <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
         <img src="http://foo.bar/image.png"><br>
         <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-        <img src="//test.localhost/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:"></p>
+        <img src="//test.localhost/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt=":smile:"></p>
       HTML
     end
 
@@ -615,7 +615,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:"></p>
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt=":smile:"></p>
         HTML
       end
 
@@ -628,7 +628,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="https://my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="https://my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:"></p>
+          <img src="https://my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt=":smile:"></p>
         HTML
       end
 
@@ -642,7 +642,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:"></p>
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt=":smile:"></p>
         HTML
       end
 
@@ -656,7 +656,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:"></p>
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt=":smile:"></p>
         HTML
       end
 
