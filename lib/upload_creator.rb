@@ -241,13 +241,13 @@ class UploadCreator
     when "profile_background"
       max_width = 850 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}" + '>', filename: @filename, allow_animation: allow_animation)
     when "card_background"
       max_width = 590 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}" + '>', filename: @filename, allow_animation: allow_animation)
     when "custom_emoji"
-      OptimizedImage.downsize(@file.path, @file.path, "100x100\\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, '100x100>', filename: @filename, allow_animation: allow_animation)
     end
 
     extract_image_info!

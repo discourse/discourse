@@ -145,7 +145,7 @@ class OptimizedImage < ActiveRecord::Base
       -background transparent
       -#{thumbnail_or_resize} #{dimensions}^
       -extent #{dimensions}
-      -interpolate bicubic
+      -interpolate catrom
       -unsharp 2x0.5+0.7+0
       -interlace none
       -quality 98
