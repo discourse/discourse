@@ -203,14 +203,16 @@ class UserAvatarsController < ApplicationController
   def fix_extension(upload)
     # this is relatively cheap
     original_path = Discourse.store.path_for(upload)
+
     if original_path.blank?
-      external_copy = Discourse.store.download(upload) rescue nil
-      original_path = external_copy.try(:path)
+      external_copy = Discourse.store.download(upload)
+      original_path = external_copy&.path
     end
 
-    image_info = FastImage.new(original_path) rescue nil
-    if image_info && image_info.type.to_s != upload.extension
-      upload.update_columns(extension: image_info.type.to_s)
+    image_type = FastImage.type(original_path).to_s
+
+    if image_type.to_s != upload.extension
+      upload.update!(extension: image_type)
       true
     end
   end
