@@ -253,7 +253,7 @@ def migrate_to_s3
       putc "X"
       next
     ensure
-      file.try(:close!) rescue nil
+      file&.close
     end
 
     # remap the URL
