@@ -57,6 +57,9 @@ describe UserAvatarsController do
 
           expect(OptimizedImage.where(upload_id: upload.id).count).to eq(1)
           expect(response.status).to eq(200)
+
+          upload.reload
+          expect(upload.extension).to eq('png')
         end
       end
 
