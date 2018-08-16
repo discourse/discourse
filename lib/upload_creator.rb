@@ -187,8 +187,18 @@ class UploadCreator
     3.times do
       original_size = filesize
       downsized_pixels = [pixels, max_image_pixels].min / 2
-      OptimizedImage.downsize(@file.path, @file.path, "#{downsized_pixels}@", filename: @filename, allow_animation: allow_animation)
+
+      OptimizedImage.downsize(
+        @file.path,
+        @file.path,
+        "#{downsized_pixels}@",
+        filename: @filename,
+        allow_animation: allow_animation,
+        raise_on_error: true
+      )
+
       extract_image_info!
+
       return if filesize >= original_size || pixels == 0 || !should_downsize?
     end
   end
