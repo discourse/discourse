@@ -48,10 +48,10 @@ class OptimizedImage < ActiveRecord::Base
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
       else
         # create a temp file with the same extension as the original
-        extension = ".#{upload.extension}"
-
-        if extension.length == 1
-          return nil
+        if upload_extension = upload.extension
+          extension = ".#{upload.extension}"
+        else
+          return
         end
 
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
