@@ -8,7 +8,7 @@ RSpec.describe Jobs::RebakeCustomEmojiPosts do
     post = Fabricate(:post, raw: 'some post with :test: yay')
 
     expect(post.reload.cooked).to eq(
-      "<p>some post with <img src=\"#{upload.url}?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> yay</p>"
+      "<p>some post with <img src=\"#{upload.url}?v=#{Emoji::EMOJI_VERSION}\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> yay</p>"
     )
 
     custom_emoji.destroy!
