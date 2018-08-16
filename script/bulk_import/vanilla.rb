@@ -1,6 +1,7 @@
 require_relative "base"
 require "mysql2"
 require "rake"
+require "htmlentities"
 
 class BulkImport::Vanilla < BulkImport::Base
 
