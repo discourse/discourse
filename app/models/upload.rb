@@ -36,7 +36,6 @@ class Upload < ActiveRecord::Base
     return unless SiteSetting.create_thumbnails?
 
     opts = {
-      filename: self.original_filename,
       allow_animation: SiteSetting.allow_animated_thumbnails,
       crop: crop
     }
