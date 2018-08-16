@@ -125,8 +125,8 @@ class OptimizedImage < ActiveRecord::Base
 
   IM_DECODERS ||= /\A(jpe?g|png|tiff?|bmp|ico|gif)\z/i
 
-  def self.prepend_decoder!(path, ext_path)
-    extension = File.extname(ext_path)[1..-1]
+  def self.prepend_decoder!(path, ext_path = nil)
+    extension = File.extname(ext_path || path)[1..-1]
     raise Discourse::InvalidAccess unless extension.present? && extension[IM_DECODERS]
     "#{extension}:#{path}"
   end
