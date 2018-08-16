@@ -35,7 +35,7 @@ describe PrettyText do
           <aside class="quote no-group" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
           </div>
           <blockquote>
           <p>ddd</p>
@@ -410,7 +410,7 @@ describe PrettyText do
       end
 
       it "should strip images, but keep emojis when option is set" do
-        emoji_image = "<img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
+        emoji_image = "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt='heart'>"
         html = "<img src='http://cnn.com/a.gif'> Hello world #{emoji_image}"
 
         expect(PrettyText.excerpt(html, 100, strip_images: true)).to eq("Hello world heart")
@@ -531,17 +531,17 @@ describe PrettyText do
     end
 
     it "should have an option to preserve emoji images" do
-      emoji_image = "<img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
+      emoji_image = "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt='heart'>"
       expect(PrettyText.excerpt(emoji_image, 100, keep_emoji_images: true)).to match_html(emoji_image)
     end
 
     it "should have an option to remap emoji to code points" do
-      emoji_image = "I <img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'> you <img src='/images/emoji/twitter/heart.png?v=1' title=':unknown:' class='emoji' alt=':unknown:'> "
+      emoji_image = "I <img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:'> you <img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':unknown:' class='emoji' alt=':unknown:'> "
       expect(PrettyText.excerpt(emoji_image, 100, remap_emoji: true)).to match_html("I ❤  you :unknown:")
     end
 
     it "should have an option to preserve emoji codes" do
-      emoji_code = "<img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
+      emoji_code = "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:'>"
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
@@ -792,10 +792,10 @@ describe PrettyText do
     end
 
     it "replaces skin toned emoji" do
-      expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
-      expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
-      expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=5\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
-      expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=5\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
+      expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
+      expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
+      expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
+      expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
     end
   end
 
@@ -809,10 +809,10 @@ describe PrettyText do
   end
 
   it "replaces skin toned emoji" do
-    expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
-    expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
-    expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=5\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
-    expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=5\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
+    expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
+    expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
+    expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
+    expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
   end
 
   it "should not treat a non emoji as an emoji" do
@@ -904,19 +904,19 @@ describe PrettyText do
   it "can handle emoji by name" do
 
     expected = <<HTML
-<p><img src="/images/emoji/twitter/smile.png?v=5\" title=":smile:" class="emoji" alt=":smile:"><img src="/images/emoji/twitter/sunny.png?v=5" title=":sunny:" class="emoji" alt=":sunny:"></p>
+<p><img src="/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=":smile:" class="emoji" alt=":smile:"><img src="/images/emoji/twitter/sunny.png?v=#{Emoji::EMOJI_VERSION}" title=":sunny:" class="emoji" alt=":sunny:"></p>
 HTML
     expect(PrettyText.cook(":smile::sunny:")).to eq(expected.strip)
   end
 
   it "handles emoji boundaries correctly" do
     cooked = PrettyText.cook("a,:man:t2:,b")
-    expected = '<p>a,<img src="/images/emoji/twitter/man/2.png?v=5" title=":man:t2:" class="emoji" alt=":man:t2:">,b</p>'
+    expected = "<p>a,<img src=\"/images/emoji/twitter/man/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":man:t2:\" class=\"emoji\" alt=\":man:t2:\">,b</p>"
     expect(cooked).to match(expected.strip)
   end
 
   it "can handle emoji by translation" do
-    expected = '<p><img src="/images/emoji/twitter/wink.png?v=5" title=":wink:" class="emoji" alt=":wink:"></p>'
+    expected = "<p><img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji\" alt=\":wink:\"></p>"
     expect(PrettyText.cook(";)")).to eq(expected)
   end
 
