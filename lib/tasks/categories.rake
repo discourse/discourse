@@ -26,19 +26,9 @@ task "categories:create_definition" => :environment do
   puts "Creating category definitions"
   puts
 
-  done = 0
-  current = 0
-  total = Category.count
+  Category.where(topic_id: nil).each(&:create_category_definition)
 
-  Category.find_each do |c|
-    if c.topic_id.blank?
-      c.create_category_definition
-      done += 1
-    end
-    print_status(current += 1, total)
-  end
-
-  puts "", "category definition created for #{done} categories!", ""
+  puts "", "Done!", ""
 end
 
 
