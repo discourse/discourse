@@ -13,12 +13,12 @@ class TopicQuery
   def self.validators
     @validators ||= begin
 
-      zero_or_more = lambda do |x|
-        Integer === x && x >= 0
-      end
-
       int = lambda do |x|
         Integer === x || (String === x && x.match?(/^-?[0-9]+$/))
+      end
+
+      zero_or_more = lambda do |x|
+        int.call(x) && x.to_i >= 0
       end
 
       array_int_or_int = lambda do |x|

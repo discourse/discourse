@@ -36,6 +36,12 @@ RSpec.describe ListController do
 
       get "/latest.json?exclude_category_ids=-1"
       expect(response.status).to eq(200)
+
+      get "/latest.json?max_posts=12"
+      expect(response.status).to eq(200)
+
+      get "/latest.json?min_posts=0"
+      expect(response.status).to eq(200)
     end
 
     it "doesn't throw an error with page params as an array" do
