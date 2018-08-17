@@ -40,10 +40,55 @@ class Upload < ActiveRecord::Base
       crop: crop
     }
 
-    if _thumbnail = OptimizedImage.create_for(self, width, height, opts)
+    if get_optimized_image(width, height, opts)
+      # TODO: this code is not right, we may have multiple
+      # thumbs
       self.width = width
       self.height = height
       save(validate: false)
+    end
+  end
+
+  # this method attempts to correct old incorrect extensions
+  def get_optimized_image(width, height, opts)
+    if (!extension || extension.length == 0)
+      fix_image_extension
+    end
+
+    opts = opts.merge(raise_on_error: true)
+    begin
+      OptimizedImage.create_for(self, width, height, opts)
+    rescue
+      opts = opts.merge(raise_on_error: false)
+      if fix_image_extension
+        OptimizedImage.create_for(self, width, height, opts)
+      else
+        nil
+      end
+    end
+  end
+
+  def fix_image_extension
+    return false if extension == "unknown"
+
+    begin
+      # this is relatively cheap once cached
+      original_path = Discourse.store.path_for(self)
+      if original_path.blank?
+        external_copy = Discourse.store.download(self) rescue nil
+        original_path = external_copy.try(:path)
+      end
+
+      image_info = FastImage.new(original_path) rescue nil
+      new_extension = image_info&.type&.to_s || "unknown"
+
+      if new_extension != self.extension
+        self.update_columns(extension: new_extension)
+        true
+      end
+    rescue
+      self.update_columns(extension: "unknown")
+      true
     end
   end
 

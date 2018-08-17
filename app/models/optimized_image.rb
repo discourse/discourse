@@ -24,6 +24,20 @@ class OptimizedImage < ActiveRecord::Base
     return unless width > 0 && height > 0
     return if upload.try(:sha1).blank?
 
+    # no extension so try to guess it
+    if (!upload.extension)
+      upload.fix_image_extension
+    end
+
+    if !upload.extension.match?(IM_DECODERS)
+      if !opts[:raise_on_error]
+        # nothing to do ... bad extension, not an image
+        return
+      else
+        raise InvalidAccess
+      end
+    end
+
     lock(upload.id, width, height) do
       # do we already have that thumbnail?
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
@@ -127,7 +141,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.prepend_decoder!(path, ext_path = nil)
     extension = File.extname(ext_path || path)[1..-1]
-    raise Discourse::InvalidAccess unless extension.present? && extension[IM_DECODERS]
+    raise Discourse::InvalidAccess if !extension || !extension.match?(IM_DECODERS)
     "#{extension}:#{path}"
   end
 
