@@ -25,8 +25,24 @@ if !ARGV.include?("-E") &&
   end
 
   ENV["UNICORN_PORT"] ||= "9292"
+
+  if ARGV.delete("-x")
+    puts "Running without sidekiq"
+    ENV["UNICORN_SIDEKIQS"] = "0"
+  end
+
   ENV["UNICORN_SIDEKIQS"] ||= "1"
 
+end
+
+if ARGV.include?("--help")
+  fork do
+    load Gem.bin_path('unicorn', 'unicorn')
+  end
+  Process.wait
+  puts "Extra Discourse Options:"
+  puts "  -x                       run without sidekiq"
+  exit
 end
 
 load Gem.bin_path('unicorn', 'unicorn')
