@@ -38,13 +38,9 @@ class UploadCreator
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        image_type = @image_info.type.to_s
-        basename = File.basename(@filename, File.extname(@filename))
-        @filename = "#{basename}.#{image_type}"
-
         if @filename[/\.svg$/i]
           whitelist_svg!
-        elsif !Rails.env.test?
+        elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if should_convert_to_jpeg?
           downsize!        if should_downsize?
 
@@ -54,6 +50,8 @@ class UploadCreator
           crop!            if should_crop?
           optimize!        if should_optimize?
         end
+
+        image_type = @image_info.type.to_s
       end
 
       # compute the sha of the file
@@ -156,7 +154,6 @@ class UploadCreator
     # keep the JPEG if it's at least 15% smaller
     if File.size(jpeg_tempfile.path) < filesize * 0.85
       @file = jpeg_tempfile
-      @filename = (File.basename(@filename, ".*").presence || I18n.t("image").presence || "image") + ".jpg"
       extract_image_info!
     else
       jpeg_tempfile&.close
