@@ -120,16 +120,26 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
     end
 
-    it "doesn't allow flagging of staff posts when allow_flagging_staff is false" do
-      SiteSetting.allow_flagging_staff = false
-      staff_post = Fabricate(:post, user: Fabricate(:moderator))
-      expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
-    end
+    describe 'when allow_flagging_staff is false' do
+      let(:staff_post) { Fabricate(:post, user: Fabricate(:moderator)) }
 
-    it "allows liking of staff when allow_flagging_staff is false" do
-      SiteSetting.allow_flagging_staff = false
-      staff_post = Fabricate(:post, user: Fabricate(:moderator))
-      expect(Guardian.new(user).post_can_act?(staff_post, :like)).to eq(true)
+      before do
+        SiteSetting.allow_flagging_staff = false
+      end
+
+      it "doesn't allow flagging of staff posts" do
+        expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
+      end
+
+      it "allows flagging of staff posts when staff has been deleted" do
+        staff_post.user.destroy!
+        staff_post.reload
+        expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(true)
+      end
+
+      it "allows liking of staff" do
+        expect(Guardian.new(user).post_can_act?(staff_post, :like)).to eq(true)
+      end
     end
 
     it "returns false when liking yourself" do
