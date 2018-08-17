@@ -59,6 +59,8 @@ describe FileHelper do
       )
 
       expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
+    ensure
+      tmpfile&.close
     end
 
     it "works with a protocol relative url" do
@@ -69,6 +71,8 @@ describe FileHelper do
       )
 
       expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
+    ensure
+      tmpfile&.close
     end
 
     describe 'when max_file_size is exceeded' do
@@ -80,6 +84,19 @@ describe FileHelper do
         )
 
         expect(tmpfile).to eq(nil)
+      end
+
+      it 'is able to retain the tmpfile' do
+        tmpfile = FileHelper.download(
+          "//eviltrout.com/trout.png",
+          max_file_size: 1,
+          tmp_file_name: 'trouttmp',
+          retain_on_max_file_size_exceeded: true
+        )
+
+        expect(tmpfile.closed?).to eq(false)
+      ensure
+        tmpfile&.close
       end
     end
 
@@ -98,6 +115,8 @@ describe FileHelper do
         )
 
         expect(File.extname(tmpfile)).to eq('.png')
+      ensure
+        tmpfile&.close
       end
     end
   end

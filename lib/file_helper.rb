@@ -25,7 +25,8 @@ class FileHelper
                     follow_redirect: false,
                     read_timeout: 5,
                     skip_rate_limit: false,
-                    verbose: false)
+                    verbose: false,
+                    retain_on_max_file_size_exceeded: false)
 
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
@@ -68,8 +69,11 @@ class FileHelper
       tmp.write(chunk)
 
       if tmp.size > max_file_size
-        tmp.close
-        tmp = nil
+        unless retain_on_max_file_size_exceeded
+          tmp.close
+          tmp = nil
+        end
+
         throw :done
       end
     end
