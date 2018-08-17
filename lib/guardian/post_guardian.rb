@@ -43,7 +43,7 @@ module PostGuardian
       # post made by staff, but we don't allow staff flags
       return false if is_flag &&
         (!SiteSetting.allow_flagging_staff?) &&
-        post.user.staff?
+        post&.user&.staff?
 
       if [:notify_user, :notify_moderators].include?(action_key) &&
          (!SiteSetting.enable_personal_messages? ||
