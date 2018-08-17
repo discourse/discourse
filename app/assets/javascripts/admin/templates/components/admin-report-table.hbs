@@ -1,4 +1,4 @@
-<table class="report-table">
+<table class="table">
   <thead>
     <tr>
       {{#if model.computedLabels}}
@@ -30,7 +30,7 @@
       </tr>
       <tr class="admin-report-table-row">
         {{#each totalsForSample as |total|}}
-          <td class="{{total.type}} {{total.property}}">
+          <td class="admin-report-table-cell {{total.type}} {{total.property}}">
             {{total.formatedValue}}
           </td>
         {{/each}}
@@ -44,8 +44,8 @@
         </td>
       </tr>
       <tr class="admin-report-table-row">
-        <td class="date x">-</td>
-        <td class="number y">{{number model.total}}</td>
+        <td class="admin-report-table-cell date x">—</td>
+        <td class="admin-report-table-cell number y">{{number model.total}}</td>
       </tr>
     {{/if}}
   </tbody>

@@ -18,8 +18,8 @@ class Report
 
   def initialize(type)
     @type = type
-    @start_date ||= Report.default_days.days.ago.beginning_of_day
-    @end_date ||= Time.now.end_of_day
+    @start_date ||= Report.default_days.days.ago.utc.beginning_of_day
+    @end_date ||= Time.now.utc.end_of_day
     @prev_end_date = @start_date
     @average = false
     @percent = false
