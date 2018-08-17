@@ -67,7 +67,11 @@ class FileHelper
 
       tmp.write(chunk)
 
-      throw :done if tmp.size > max_file_size
+      if tmp.size > max_file_size
+        tmp.close
+        tmp = nil
+        throw :done
+      end
     end
 
     tmp&.rewind

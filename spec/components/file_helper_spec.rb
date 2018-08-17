@@ -71,6 +71,18 @@ describe FileHelper do
       expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
     end
 
+    describe 'when max_file_size is exceeded' do
+      it 'should return nil' do
+        tmpfile = FileHelper.download(
+          "//eviltrout.com/trout.png",
+          max_file_size: 1,
+          tmp_file_name: 'trouttmp'
+        )
+
+        expect(tmpfile).to eq(nil)
+      end
+    end
+
     describe 'when url is a jpeg' do
       let(:url) { "https://eviltrout.com/trout.jpg" }
 
