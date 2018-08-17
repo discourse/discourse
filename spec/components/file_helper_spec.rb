@@ -52,27 +52,31 @@ describe FileHelper do
     end
 
     it "returns a file with the image" do
-      tmpfile = FileHelper.download(
-        url,
-        max_file_size: 10000,
-        tmp_file_name: 'trouttmp'
-      )
+      begin
+        tmpfile = FileHelper.download(
+          url,
+          max_file_size: 10000,
+          tmp_file_name: 'trouttmp'
+        )
 
-      expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
-    ensure
-      tmpfile&.close
+        expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
+      ensure
+        tmpfile&.close
+      end
     end
 
     it "works with a protocol relative url" do
-      tmpfile = FileHelper.download(
-        "//eviltrout.com/trout.png",
-        max_file_size: 10000,
-        tmp_file_name: 'trouttmp'
-      )
+      begin
+        tmpfile = FileHelper.download(
+          "//eviltrout.com/trout.png",
+          max_file_size: 10000,
+          tmp_file_name: 'trouttmp'
+        )
 
-      expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
-    ensure
-      tmpfile&.close
+        expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
+      ensure
+        tmpfile&.close
+      end
     end
 
     describe 'when max_file_size is exceeded' do
@@ -87,16 +91,18 @@ describe FileHelper do
       end
 
       it 'is able to retain the tmpfile' do
-        tmpfile = FileHelper.download(
-          "//eviltrout.com/trout.png",
-          max_file_size: 1,
-          tmp_file_name: 'trouttmp',
-          retain_on_max_file_size_exceeded: true
-        )
+        begin
+          tmpfile = FileHelper.download(
+            "//eviltrout.com/trout.png",
+            max_file_size: 1,
+            tmp_file_name: 'trouttmp',
+            retain_on_max_file_size_exceeded: true
+          )
 
-        expect(tmpfile.closed?).to eq(false)
-      ensure
-        tmpfile&.close
+          expect(tmpfile.closed?).to eq(false)
+        ensure
+          tmpfile&.close
+        end
       end
     end
 
@@ -104,19 +110,21 @@ describe FileHelper do
       let(:url) { "https://eviltrout.com/trout.jpg" }
 
       it "should prioritize the content type returned by the response" do
-        stub_request(:get, url).to_return(body: png, headers: {
-          "content-type": "image/png"
-        })
+        begin
+          stub_request(:get, url).to_return(body: png, headers: {
+            "content-type": "image/png"
+          })
 
-        tmpfile = FileHelper.download(
-          url,
-          max_file_size: 10000,
-          tmp_file_name: 'trouttmp'
-        )
+          tmpfile = FileHelper.download(
+            url,
+            max_file_size: 10000,
+            tmp_file_name: 'trouttmp'
+          )
 
-        expect(File.extname(tmpfile)).to eq('.png')
-      ensure
-        tmpfile&.close
+          expect(File.extname(tmpfile)).to eq('.png')
+        ensure
+          tmpfile&.close
+        end
       end
     end
   end
