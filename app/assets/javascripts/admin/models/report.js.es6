@@ -285,7 +285,7 @@ const Report = Discourse.Model.extend({
             value,
             type,
             property: mainProperty,
-            formatedValue: value ? escapeExpression(value) : "-"
+            formatedValue: value ? escapeExpression(value) : "—"
           };
         }
       };
@@ -318,7 +318,7 @@ const Report = Discourse.Model.extend({
 
     return {
       value: username,
-      formatedValue: username ? formatedValue(username) : "-"
+      formatedValue: username ? formatedValue(username) : "—"
     };
   },
 
@@ -333,7 +333,7 @@ const Report = Discourse.Model.extend({
 
     return {
       value: topicTitle,
-      formatedValue: topicTitle ? formatedValue() : "-"
+      formatedValue: topicTitle ? formatedValue() : "—"
     };
   },
 
@@ -360,7 +360,7 @@ const Report = Discourse.Model.extend({
   _percentLabel(value) {
     return {
       value,
-      formatedValue: value ? `${value}%` : "-"
+      formatedValue: value ? `${value}%` : "—"
     };
   },
 
@@ -373,14 +373,14 @@ const Report = Discourse.Model.extend({
 
     return {
       value,
-      formatedValue: value ? formatedValue() : "-"
+      formatedValue: value ? formatedValue() : "—"
     };
   },
 
   _dateLabel(value, date) {
     return {
       value,
-      formatedValue: value ? date.format("LL") : "-"
+      formatedValue: value ? date.format("LL") : "—"
     };
   },
 
@@ -389,7 +389,7 @@ const Report = Discourse.Model.extend({
 
     return {
       value,
-      formatedValue: value ? escaped : "-"
+      formatedValue: value ? escaped : "—"
     };
   },
 
@@ -404,7 +404,7 @@ const Report = Discourse.Model.extend({
 
     return {
       value,
-      formatedValue: value ? formatedValue(value, row[properties[1]]) : "-"
+      formatedValue: value ? formatedValue(value, row[properties[1]]) : "—"
     };
   },
 

@@ -57,23 +57,23 @@
   <div class="section-columns">
     <div class="section-column">
       <div class="admin-report activity-metrics">
-        <div class="report-header">
-          <div class="report-title">
-            <h3 class="title">
-              {{#link-to "adminReports" class="report-link"}}
+        <div class="header">
+          <ul class="breadcrumb">
+            <li class="item report">
+              {{#link-to "adminReports" class="report-url"}}
                 {{i18n "admin.dashboard.activity_metrics"}}
               {{/link-to}}
-            </h3>
-          </div>
+            </li>
+          </ul>
         </div>
         <div class="report-body">
-          <div class="admin-report-counters-list">
+          <div class="counters-list">
             <div class="counters-header">
-              <div class="header"></div>
-              <div class="header">{{i18n 'admin.dashboard.reports.today'}}</div>
-              <div class="header">{{i18n 'admin.dashboard.reports.yesterday'}}</div>
-              <div class="header">{{i18n 'admin.dashboard.reports.last_7_days'}}</div>
-              <div class="header">{{i18n 'admin.dashboard.reports.last_30_days'}}</div>
+              <div class="counters-cell"></div>
+              <div class="counters-cell">{{i18n 'admin.dashboard.reports.today'}}</div>
+              <div class="counters-cell">{{i18n 'admin.dashboard.reports.yesterday'}}</div>
+              <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_7_days'}}</div>
+              <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_30_days'}}</div>
             </div>
 
             {{#each activityMetrics as |metric|}}
@@ -84,10 +84,11 @@
             {{/each}}
           </div>
         </div>
+
+        {{#link-to "adminReports"}}
+          {{i18n "admin.dashboard.all_reports"}}
+        {{/link-to}}
       </div>
-      {{#link-to "adminReports"}}
-        {{i18n "admin.dashboard.all_reports"}}
-      {{/link-to}}
 
       <div class="user-metrics">
         {{#conditional-loading-section isLoading=isLoading}}
