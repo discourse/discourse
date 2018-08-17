@@ -37,8 +37,8 @@ module PostGuardian
 
     result = if authenticated? && post && !@user.anonymous?
 
-      # Silenced users can't act on posts
-      return false if @user.silenced?
+      # Silenced users can't flag
+      return false if is_flag && @user.silenced?
 
       # post made by staff, but we don't allow staff flags
       return false if is_flag &&
