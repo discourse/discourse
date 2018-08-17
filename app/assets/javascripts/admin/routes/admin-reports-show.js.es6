@@ -5,14 +5,23 @@ export default Discourse.Route.extend({
     if (!controller.get("start_date")) {
       controller.set(
         "start_date",
-        moment()
-          .subtract("30", "day")
+        moment
+          .utc()
+          .subtract(1, "day")
+          .subtract(1, "month")
+          .startOf("day")
           .format("YYYY-MM-DD")
       );
     }
 
     if (!controller.get("end_date")) {
-      controller.set("end_date", moment().format("YYYY-MM-DD"));
+      controller.set(
+        "end_date",
+        moment()
+          .utc()
+          .endOf("day")
+          .format("YYYY-MM-DD")
+      );
     }
   }
 });

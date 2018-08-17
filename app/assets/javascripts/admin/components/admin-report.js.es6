@@ -4,7 +4,10 @@ import { outputExportResult } from "discourse/lib/export-result";
 import { ajax } from "discourse/lib/ajax";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
-import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
+import {
+  registerHoverTooltip,
+  unregisterHoverTooltip
+} from "discourse/lib/tooltip";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -35,12 +38,7 @@ function collapseWeekly(data, average) {
 }
 
 export default Ember.Component.extend({
-  classNameBindings: [
-    "isEnabled",
-    "isLoading",
-    "dasherizedDataSourceName",
-    "currentMode"
-  ],
+  classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
   classNames: ["admin-report"],
   isEnabled: true,
   disabledLabel: "admin.dashboard.disabled",
@@ -69,6 +67,7 @@ export default Ember.Component.extend({
     "showDatesOptions",
     "showGroupOptions"
   ),
+  shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
 
   init() {
     this._super(...arguments);
@@ -80,6 +79,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     const state = this.get("filters") || {};
+
     this.setProperties({
       category: Category.findById(state.categoryId),
       groupId: state.groupId,
@@ -101,14 +101,13 @@ export default Ember.Component.extend({
   didRender() {
     this._super(...arguments);
 
-    unregisterTooltip($(".info[data-tooltip]"));
-    registerTooltip($(".info[data-tooltip]"));
+    registerHoverTooltip($(".info[data-tooltip]"));
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    unregisterTooltip($(".info[data-tooltip]"));
+    unregisterHoverTooltip($(".info[data-tooltip]"));
   },
 
   showError: Ember.computed.or("showTimeoutError", "showExceptionError"),
@@ -140,8 +139,8 @@ export default Ember.Component.extend({
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
     return Ember.makeArray(modes).map(mode => {
-      const base = `mode-button ${mode}`;
-      const cssClass = currentMode === mode ? `${base} current` : base;
+      const base = `mode-btn ${mode}`;
+      const cssClass = currentMode === mode ? `${base} is-current` : base;
 
       return {
         mode,
@@ -157,7 +156,7 @@ export default Ember.Component.extend({
       { name: I18n.t("admin.dashboard.reports.groups"), value: "all" }
     ];
     return arr.concat(
-      this.site.groups.map(i => {
+      (this.site.groups || []).map(i => {
         return { name: i["name"], value: i["id"] };
       })
     );
@@ -171,15 +170,25 @@ export default Ember.Component.extend({
   @computed("startDate")
   normalizedStartDate(startDate) {
     return startDate && typeof startDate.isValid === "function"
-      ? startDate.format("YYYYMMDD")
-      : startDate;
+      ? moment
+          .utc(startDate.toISOString())
+          .locale("en")
+          .format("YYYYMMDD")
+      : moment(startDate)
+          .locale("en")
+          .format("YYYYMMDD");
   },
 
   @computed("endDate")
   normalizedEndDate(endDate) {
     return endDate && typeof endDate.isValid === "function"
-      ? endDate.format("YYYYMMDD")
-      : endDate;
+      ? moment
+          .utc(endDate.toISOString())
+          .locale("en")
+          .format("YYYYMMDD")
+      : moment(endDate)
+          .locale("en")
+          .format("YYYYMMDD");
   },
 
   @computed(
@@ -317,16 +326,15 @@ export default Ember.Component.extend({
     let payload = { data: { cache: true, facets } };
 
     if (this.get("startDate")) {
-      payload.data.start_date = moment(
-        this.get("startDate"),
-        "YYYY-MM-DD"
-      ).format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
+      payload.data.start_date = moment
+        .utc(this.get("startDate"), "YYYY-MM-DD")
+        .toISOString();
     }
 
     if (this.get("endDate")) {
-      payload.data.end_date = moment(this.get("endDate"), "YYYY-MM-DD").format(
-        "YYYY-MM-DD[T]HH:mm:ss.SSSZZ"
-      );
+      payload.data.end_date = moment
+        .utc(this.get("endDate"), "YYYY-MM-DD")
+        .toISOString();
     }
 
     if (this.get("groupId") && this.get("groupId") !== "all") {
