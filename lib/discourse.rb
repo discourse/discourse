@@ -25,7 +25,7 @@ module Discourse
 
       if !status.success?
         failure_message = "#{failure_message}\n" if !failure_message.blank?
-        raise "#{failure_message}#{stderr}"
+        raise "#{caller[0]}: #{failure_message}#{stderr}"
       end
 
       stdout
