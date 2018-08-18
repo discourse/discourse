@@ -5,7 +5,7 @@ require_dependency 'user_name_suggester'
 
 class Users::OmniauthCallbacksController < ApplicationController
 
-  skip_before_action :redirect_to_login_if_required
+  skip_before_action :redirect_to_login_if_required, :redirect_to_second_factor_if_required
 
   layout 'no_ember'
 

@@ -1,5 +1,5 @@
 class HighlightJsController < ApplicationController
-  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show]
+  skip_before_action :preload_json, :redirect_to_login_if_required, :redirect_to_second_factor_if_required, :check_xhr, :verify_authenticity_token, only: [:show]
 
   def show
 

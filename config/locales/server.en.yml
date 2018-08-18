@@ -1339,6 +1339,7 @@ en:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    enforce_second_factor: "Forces users to enable second factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"

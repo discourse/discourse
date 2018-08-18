@@ -7,7 +7,7 @@ class UsersEmailController < ApplicationController
   requires_login only: [:index, :update]
 
   skip_before_action :check_xhr, only: [:confirm]
-  skip_before_action :redirect_to_login_if_required, only: [:confirm]
+  skip_before_action :redirect_to_login_if_required, :redirect_to_second_factor_if_required, only: [:confirm]
 
   def index
   end
