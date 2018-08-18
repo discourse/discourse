@@ -162,9 +162,9 @@ en:
       invalid_choice:
         one: 'You specified the invalid choice %{name}'
         other: 'You specified the invalid choices %{name}'
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username."
+      min_username_length_exists: "You cannot set the minimum username length above the shortest username or group name."
       min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username."
+      max_username_length_exists: "You cannot set the maximum username length below the longest username or group name."
       max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
