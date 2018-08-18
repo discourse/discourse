@@ -21,6 +21,14 @@ describe SearchIndexer do
     expect(scrubbed).to eq(" Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive] ")
   end
 
+  it 'extract a link' do
+    html = "<a href='http://meta.discourse.org/'>link</a>"
+
+    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+
+    expect(scrubbed).to eq(" http://meta.discourse.org/  link ")
+  end
+
   it 'correctly indexes a post according to version' do
     # Preparing so that they can be indexed to right version
     SearchIndexer.update_posts_index(post_id, "dummy", "", nil, nil)
