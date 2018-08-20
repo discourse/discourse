@@ -139,8 +139,8 @@ class OptimizedImage < ActiveRecord::Base
 
   IM_DECODERS ||= /\A(jpe?g|png|tiff?|bmp|ico|gif)\z/i
 
-  def self.prepend_decoder!(path, ext_path = nil)
-    extension = File.extname(ext_path || path)[1..-1]
+  def self.prepend_decoder!(path, ext_path = nil, opts = nil)
+    extension = File.extname((opts && opts[:filename]) || ext_path || path)[1..-1]
     raise Discourse::InvalidAccess if !extension || !extension.match?(IM_DECODERS)
     "#{extension}:#{path}"
   end
@@ -153,8 +153,8 @@ class OptimizedImage < ActiveRecord::Base
     ensure_safe_paths!(from, to)
 
     # note FROM my not be named correctly
-    from = prepend_decoder!(from, to)
-    to = prepend_decoder!(to, to)
+    from = prepend_decoder!(from, to, opts)
+    to = prepend_decoder!(to, to, opts)
 
     # NOTE: ORDER is important!
     %W{
@@ -190,8 +190,8 @@ class OptimizedImage < ActiveRecord::Base
   def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    from = prepend_decoder!(from, to)
-    to = prepend_decoder!(to, to)
+    from = prepend_decoder!(from, to, opts)
+    to = prepend_decoder!(to, to, opts)
 
     %W{
       convert
@@ -225,8 +225,8 @@ class OptimizedImage < ActiveRecord::Base
   def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
-    from = prepend_decoder!(from, to)
-    to = prepend_decoder!(to, to)
+    from = prepend_decoder!(from, to, opts)
+    to = prepend_decoder!(to, to, opts)
 
     %W{
       convert

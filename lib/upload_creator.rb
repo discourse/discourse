@@ -34,7 +34,13 @@ class UploadCreator
     end
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
-      if FileHelper.is_image?(@filename)
+      # test for image regardless of input
+      @image_info = FastImage.new(@file) rescue nil
+
+      is_image = FileHelper.is_image?(@filename)
+      is_image ||= @image_info && FileHelper.is_image?("test.#{@image_info.type}")
+
+      if is_image
         extract_image_info!
         return @upload if @upload.errors.present?
 
@@ -51,6 +57,7 @@ class UploadCreator
           optimize!        if should_optimize?
         end
 
+        # conversion may have switched the type
         image_type = @image_info.type.to_s
       end
 
@@ -69,17 +76,27 @@ class UploadCreator
       # return the previous upload if any
       return @upload unless @upload.nil?
 
+      fixed_original_filename = nil
+      if is_image
+        # we have to correct original filename here, no choice
+        # otherwise validation will fail and we can not save
+        # TODO decide if we only run the validation on the extension
+        if File.extname(@filename) != ".#{image_type}"
+          fixed_original_filename = "#{@filename}.fixed.#{image_type}"
+        end
+      end
+
       # create the upload otherwise
       @upload = Upload.new
       @upload.user_id           = user_id
-      @upload.original_filename = @filename
+      @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize          = filesize
       @upload.sha1              = sha1
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
-      if FileHelper.is_image?(@filename)
+      if is_image
         @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
       end
 
@@ -101,7 +118,7 @@ class UploadCreator
         end
       end
 
-      if @upload.errors.empty? && FileHelper.is_image?(@filename) && @opts[:type] == "avatar"
+      if @upload.errors.empty? && is_image && @opts[:type] == "avatar"
         Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
       end
 
@@ -141,7 +158,7 @@ class UploadCreator
 
     OptimizedImage.ensure_safe_paths!(from, to)
 
-    from = OptimizedImage.prepend_decoder!(from)
+    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
     to = OptimizedImage.prepend_decoder!(to)
 
     begin
@@ -229,7 +246,7 @@ class UploadCreator
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
-    path = OptimizedImage.prepend_decoder!(path)
+    path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
     Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
 
@@ -243,20 +260,22 @@ class UploadCreator
   def crop!
     max_pixel_ratio = Discourse::PIXEL_RATIOS.max
 
+    filename_with_correct_ext = "image.#{@image_info.type}"
+
     case @opts[:type]
     when "avatar"
       width = height = Discourse.avatar_sizes.max
-      OptimizedImage.resize(@file.path, @file.path, width, height, filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.resize(@file.path, @file.path, width, height, filename: filename_with_correct_ext, allow_animation: allow_animation)
     when "profile_background"
       max_width = 850 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
     when "card_background"
       max_width = 590 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
     when "custom_emoji"
-      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: @filename, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
     end
 
     extract_image_info!
