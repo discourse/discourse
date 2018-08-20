@@ -182,7 +182,7 @@ class S3Helper
   end
 
   def get_path_for_s3_upload(path)
-    path = File.join(@s3_bucket_folder_path, Discourse.base_uri, path) if @s3_bucket_folder_path
+    path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path
     path
   end
 
