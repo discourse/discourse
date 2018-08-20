@@ -75,14 +75,19 @@ after_initialize do
     class CertificatesController < ::ApplicationController
       layout :false
       skip_before_action :check_xhr
+      requires_login
 
       def generate
-        raise Discourse::InvalidParameters.new('user_id must be present') unless params[:user_id]&.present?
+        unless params[:user_id]&.present?
+          raise Discourse::InvalidParameters.new('user_id must be present')
+        end
 
         user = User.find_by(id: params[:user_id])
         raise Discourse::NotFound if user.blank?
 
-        raise Discourse::InvalidParameters.new('date must be present') unless params[:date]&.present?
+        unless params[:date]&.present?
+          raise Discourse::InvalidParameters.new('date must be present')
+        end
 
         generator = CertificateGenerator.new(user, params[:date])
 
