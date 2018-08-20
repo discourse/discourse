@@ -222,7 +222,9 @@ class ApplicationController < ActionController::Base
       url = opts[:original_path] || request.fullpath
       permalink = Permalink.find_by_url(url)
 
-      if permalink.present?
+      # there are some cases where we have a permalink but no url
+      # cause category / topic was deleted
+      if permalink.present? && permalink.target_url
         # permalink present, redirect to that URL
         redirect_with_client_support permalink.target_url, status: :moved_permanently
         return
