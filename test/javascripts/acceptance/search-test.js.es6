@@ -1,19 +1,16 @@
 import { acceptance, logIn } from "helpers/qunit-helpers";
-import { fixturesByUrl } from "helpers/create-pretender";
 
 const emptySearchContextCallbacks = [];
 
 acceptance("Search", {
-  pretend(server, helper) {
-    server.get("/search/query", request => {
+  pretend(server) {
+    server.handledRequest = (verb, path, request) => {
       if (request.queryParams["search_context[type]"] === undefined) {
         emptySearchContextCallbacks.forEach(callback => {
           callback.call();
         });
       }
-
-      return helper.response(fixturesByUrl["search/query.json"]);
-    });
+    };
   }
 });
 
