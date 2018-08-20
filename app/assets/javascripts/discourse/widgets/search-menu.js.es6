@@ -182,7 +182,6 @@ export default createWidget("search-menu", {
   },
 
   html(attrs) {
-    searchData.contextEnabled = attrs.contextEnabled;
     const searchContext = this.searchContext();
 
     const shouldTriggerSearch =
