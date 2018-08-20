@@ -78,11 +78,20 @@ class UploadCreator
 
       fixed_original_filename = nil
       if is_image
+
+        current_extension = File.extname(@filename).downcase.sub("jpeg", "jpg")
+        expected_extension = ".#{image_type}".downcase.sub("jpeg", "jpg")
+
         # we have to correct original filename here, no choice
         # otherwise validation will fail and we can not save
         # TODO decide if we only run the validation on the extension
-        if File.extname(@filename) != ".#{image_type}"
-          fixed_original_filename = "#{@filename}_fixed.#{image_type}"
+        if current_extension != expected_extension
+          basename = File.basename(@filename, current_extension)
+
+          if basename.length == 0
+            basename = "image"
+          end
+          fixed_original_filename = "#{basename}#{expected_extension}"
         end
       end
 

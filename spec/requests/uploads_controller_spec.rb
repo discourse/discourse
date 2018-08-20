@@ -212,7 +212,7 @@ describe UploadsController do
 
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
-      expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"image_no_extension_fixed.png\"")
+      expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"image_no_extension.png\"")
     end
 
     it "handles file without extension" do
