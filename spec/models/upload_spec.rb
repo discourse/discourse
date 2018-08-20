@@ -53,8 +53,7 @@ describe Upload do
 
   it "should create an invalid upload when the filename is blank" do
     SiteSetting.authorized_extensions = "*"
-
-    created_upload = UploadCreator.new(image, nil).create_for(user_id)
+    created_upload = UploadCreator.new(attachment, nil).create_for(user_id)
     expect(created_upload.valid?).to eq(false)
   end
 

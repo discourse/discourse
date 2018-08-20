@@ -82,7 +82,7 @@ class UploadCreator
         # otherwise validation will fail and we can not save
         # TODO decide if we only run the validation on the extension
         if File.extname(@filename) != ".#{image_type}"
-          fixed_original_filename = "#{@filename}.fixed.#{image_type}"
+          fixed_original_filename = "#{@filename}_fixed.#{image_type}"
         end
       end
 
