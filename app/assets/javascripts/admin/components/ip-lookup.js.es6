@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
+import copyText from "discourse/lib/copy-text";
 
 export default Ember.Component.extend({
   classNames: ["ip-lookup"],
@@ -60,6 +61,38 @@ export default Ember.Component.extend({
 
     hide: function() {
       this.set("show", false);
+    },
+
+    copy: function() {
+      let text = `IP: ${this.get("ip")}\n`;
+      const location = this.get("location");
+      if (location) {
+        if (location.hostname) {
+          text += `${I18n.t("ip_lookup.hostname")}: ${location.hostname}\n`;
+        }
+
+        text += I18n.t("ip_lookup.location");
+        if (location.loc) {
+          text += `: ${location.loc} ${this.get("city")}\n`;
+        } else {
+          text += `: ${I18n.t("ip_lookup.location_not_found")}\n`;
+        }
+
+        if (location.org) {
+          text += I18n.t("ip_lookup.organisation");
+          text += `: ${location.org}\n`;
+        }
+
+        if (location.phone) {
+          text += I18n.t("ip_lookup.phone");
+          text += `: ${location.phone}\n`;
+        }
+      }
+      const copyRange = $(`<textarea id="copy-range"></textarea>`);
+      copyRange.text(text);
+      $(document.body).append(copyRange);
+      copyText(text, copyRange[0]);
+      copyRange.remove();
     },
 
     deleteOtherAccounts: function() {
