@@ -41,7 +41,7 @@ RSpec.describe UploadCreator do
 
         expect(upload.extension).to eq('png')
         expect(File.extname(upload.url)).to eq('.png')
-        expect(upload.original_filename).to eq('png_as.bin.fixed.png')
+        expect(upload.original_filename).to eq('png_as.bin_fixed.png')
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe UploadCreator do
 
         expect(upload.extension).to eq('jpeg')
         expect(File.extname(upload.url)).to eq('.jpeg')
-        expect(upload.original_filename).to eq('logo.png.fixed.jpeg')
+        expect(upload.original_filename).to eq('logo.png_fixed.jpeg')
       end
     end
   end

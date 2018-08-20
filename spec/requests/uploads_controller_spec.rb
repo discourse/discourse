@@ -206,13 +206,22 @@ describe UploadsController do
       expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"logo.png\"")
     end
 
-    it "handles file without extension" do
+    it "handles image without extension" do
       SiteSetting.authorized_extensions = "*"
       upload = upload_file("image_no_extension")
 
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
-      expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"image_no_extension\"")
+      expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"image_no_extension_fixed.png\"")
+    end
+
+    it "handles file without extension" do
+      SiteSetting.authorized_extensions = "*"
+      upload = upload_file("not_an_image")
+
+      get "/uploads/#{site}/#{upload.sha1}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"not_an_image\"")
     end
 
     context "prevent anons from downloading files" do
