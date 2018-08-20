@@ -1868,8 +1868,7 @@ en:
       other: "%{count} posts were merged into an existing topic: %{topic_link}"
 
   change_owner:
-    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
-    deleted_user: "a deleted user"
+    post_revision_text: "Ownership transferred"
 
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."

@@ -1077,16 +1077,12 @@ describe Post do
 
     it "uses default locale for edit reason" do
       I18n.locale = 'de'
-      old_username = post.user.username_lower
 
       post.set_owner(coding_horror, Discourse.system_user)
       post.reload
 
       expected_reason = I18n.with_locale(SiteSetting.default_locale) do
-        I18n.t('change_owner.post_revision_text',
-               old_user: old_username,
-               new_user: coding_horror.username_lower
-        )
+        I18n.t('change_owner.post_revision_text')
       end
 
       expect(post.edit_reason).to eq(expected_reason)
