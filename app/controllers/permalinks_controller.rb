@@ -8,9 +8,7 @@ class PermalinksController < ApplicationController
 
     raise Discourse::NotFound unless permalink
 
-    if permalink.external_url
-      redirect_to permalink.external_url, status: :moved_permanently
-    elsif permalink.target_url
+    if permalink.target_url
       redirect_to permalink.target_url, status: :moved_permanently
     else
       raise Discourse::NotFound
