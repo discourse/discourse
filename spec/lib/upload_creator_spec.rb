@@ -26,7 +26,7 @@ RSpec.describe UploadCreator do
     end
 
     describe 'when image has the wrong extension' do
-      let(:filename) { "png_as.jpg" }
+      let(:filename) { "png_as.bin" }
       let(:file) { file_from_fixtures(filename) }
 
       it 'should store the upload with the right extension' do
@@ -41,7 +41,7 @@ RSpec.describe UploadCreator do
 
         expect(upload.extension).to eq('png')
         expect(File.extname(upload.url)).to eq('.png')
-        expect(upload.original_filename).to eq('png_as.jpg')
+        expect(upload.original_filename).to eq('png_as.bin.fixed.png')
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe UploadCreator do
 
         expect(upload.extension).to eq('jpeg')
         expect(File.extname(upload.url)).to eq('.jpeg')
-        expect(upload.original_filename).to eq('logo.png')
+        expect(upload.original_filename).to eq('logo.png.fixed.jpeg')
       end
     end
   end

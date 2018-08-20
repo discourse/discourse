@@ -27,6 +27,32 @@ describe OptimizedImage do
     end
 
     describe '.resize' do
+      it 'should work correctly when extension is bad' do
+
+        original_path = Dir::Tmpname.create(['origin', '.bin']) { nil }
+
+        begin
+          FileUtils.cp "#{Rails.root}/spec/fixtures/images/logo.png", original_path
+
+          # we use "filename" to get the correct extension here, it is more important
+          # then any other param
+
+          OptimizedImage.resize(
+            original_path,
+            original_path,
+            5,
+            5,
+            filename: "test.png"
+          )
+
+          expect(File.read(original_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/resized.png")
+          )
+        ensure
+          File.delete(original_path) if File.exists?(original_path)
+        end
+      end
+
       it 'should work correctly' do
         tmp_path = "/tmp/resized.png"
 
