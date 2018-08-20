@@ -15,7 +15,13 @@
     <div class="avatar-choice">
       {{radio-button id="gravatar" name="avatar" value="gravatar" selection=selected}}
       <label class="radio" for="gravatar">{{bound-avatar-template user.gravatar_avatar_template "large"}} {{{i18n 'user.change_avatar.gravatar'}}} {{user.email}}</label>
-      {{d-button action="refreshGravatar" title="user.change_avatar.refresh_gravatar_title" disabled=gravatarRefreshDisabled icon="refresh"}}
+
+      {{d-button action="refreshGravatar"
+                 title="user.change_avatar.refresh_gravatar_title"
+                 disabled=gravatarRefreshDisabled
+                 icon="refresh"
+                 class="avatar-selector-refresh-gravatar"}}
+
       {{#if gravatarFailed}}
         <p class="error">{{I18n 'user.change_avatar.gravatar_failed'}}</p>
       {{/if}}
