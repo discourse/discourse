@@ -704,6 +704,7 @@ en:
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
+      api_last_used_at: "Last used at:"
       theme: "Theme"
       home: "Default Home Page"
       staged: "Staged"
