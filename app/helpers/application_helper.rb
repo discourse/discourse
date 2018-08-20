@@ -177,10 +177,8 @@ module ApplicationHelper
     ["ar", "ur", "fa_IR", "he"].include? I18n.locale.to_s
   end
 
-  def user_locale
-    locale = current_user.locale if current_user && SiteSetting.allow_user_locale
-    # changing back to default shoves a blank string there
-    locale.present? ? locale : SiteSetting.default_locale
+  def html_lang
+    SiteSetting.default_locale.sub("_", "-")
   end
 
   # Creates open graph and twitter card meta data
