@@ -1770,6 +1770,7 @@ en:
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys"
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
+    expire_user_api_keys_days: "Number of days before an user API key automatically expires (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."

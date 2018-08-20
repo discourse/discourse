@@ -1681,6 +1681,8 @@ user_api:
   allowed_user_api_auth_redirects:
     default: 'https://api.discourse.org/api/auth_redirect|discourse://auth_redirect'
     type: list
+  expire_user_api_keys_days:
+    default: 180
 
 tags:
   tagging_enabled:
