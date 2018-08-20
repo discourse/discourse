@@ -59,18 +59,14 @@ export default Ember.Component.extend({
         screenedIpAddress
           .save()
           .then(result => {
-            if (result.success) {
-              this.setProperties({ ip_address: "", formSubmitted: false });
-              this.sendAction(
-                "action",
-                ScreenedIpAddress.create(result.screened_ip_address)
-              );
-              Ember.run.schedule("afterRender", () =>
-                this.$(".ip-address-input").focus()
-              );
-            } else {
-              bootbox.alert(result.errors);
-            }
+            this.setProperties({ ip_address: "", formSubmitted: false });
+            this.sendAction(
+              "action",
+              ScreenedIpAddress.create(result.screened_ip_address)
+            );
+            Ember.run.schedule("afterRender", () =>
+              this.$(".ip-address-input").focus()
+            );
           })
           .catch(e => {
             this.set("formSubmitted", false);
