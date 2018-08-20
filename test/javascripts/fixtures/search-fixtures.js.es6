@@ -819,7 +819,7 @@ export default {
       ]
     }
   },
-  "search/query.json": {
+  "search/query": {
     posts: [
       {
         id: 3833,
