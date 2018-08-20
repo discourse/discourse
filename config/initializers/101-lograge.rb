@@ -19,7 +19,9 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
       begin
         username =
           begin
-            controller.current_user&.username
+            if controller.respond_to?(:current_user)
+              controller.current_user&.username
+            end
           rescue Discourse::InvalidAccess
             nil
           end
