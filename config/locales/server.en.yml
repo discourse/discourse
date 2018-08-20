@@ -63,6 +63,7 @@ en:
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
+      component_no_color_scheme: "Theme components can't have color scheme"
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."

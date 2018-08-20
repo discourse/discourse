@@ -44,6 +44,16 @@
   }
 }
 
+.create-theme-modal {
+  div.input {
+    margin-bottom: 12px;
+    .label {
+      width: 20%;
+      display: inline-block;
+    }
+  }
+}
+
 .admin-customize {
   h1 {
     margin-bottom: 10px;
@@ -98,6 +108,62 @@
     h3 {
       margin-bottom: 10px;
       margin-top: 30px;
+    }
+  }
+
+  .create-actions {
+    margin-bottom: 10px;
+  }
+
+  .themes-list {
+    margin-bottom: 20px;
+  }
+
+  .themes-list-header {
+    font-size: $font-up-1;
+    padding: 10px;
+    background-color: $primary-low;
+  }
+
+  .themes-list-container {
+    max-height: 280px;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      background-color: $secondary;
+    }
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: $primary-low-mid;
+    }
+
+    .themes-list-item {
+      color: $primary;
+      border-bottom: 1px solid $primary-low;
+      display: flex;
+
+      &:hover {
+        background-color: $tertiary-low;
+      }
+
+      &.active {
+        color: $secondary;
+        font-weight: bold;
+        background-color: $tertiary;
+      }
+
+      a,
+      span.empty {
+        color: inherit;
+        width: 100%;
+        padding: 10px;
+      }
     }
   }
 
