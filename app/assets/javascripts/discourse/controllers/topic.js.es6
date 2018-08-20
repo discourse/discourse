@@ -262,7 +262,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
       if (this.revision) {
         this.send("showHistory", post, this.revision);
-        delete this.revision
+        delete this.revision;
       }
 
       this.send("postChangedRoute", postNumber);
