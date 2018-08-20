@@ -189,7 +189,7 @@ class UserSerializer < BasicUserSerializer
       }
     end
 
-    keys.sort! { |a, b| a.last_used_at.to_time > b.last_used_at.to_time }
+    keys.sort! { |a, b| a[:last_used_at].to_time > b[:last_used_at].to_time }
     keys.length > 0 ? keys : nil
   end
 
