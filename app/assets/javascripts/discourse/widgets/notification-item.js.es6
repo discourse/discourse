@@ -6,6 +6,7 @@ import { h } from "virtual-dom";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   postUrl,
+  revisionUrl,
   escapeExpression,
   formatUsername
 } from "discourse/lib/utilities";
@@ -51,7 +52,13 @@ createWidget("notification-item", {
       );
     }
 
+    const revisionNumber = data.revision_number;
     const topicId = attrs.topic_id;
+
+    if (revisionNumber) {
+      return revisionUrl(attrs.slug, topicId, attrs.post_number, revisionNumber)
+    }
+
     if (topicId) {
       return postUrl(attrs.slug, topicId, attrs.post_number);
     }
