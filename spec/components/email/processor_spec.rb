@@ -2,44 +2,40 @@ require "rails_helper"
 require "email/processor"
 
 describe Email::Processor do
+  after do
+    $redis.flushall
+  end
 
   let(:from) { "foo@bar.com" }
 
   context "when reply via email is too short" do
-    let(:mail) { file_from_fixtures("email_reply_3.eml", "emails").read }
+    let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
     let(:post) { Fabricate(:post) }
-    let!(:user) { Fabricate(:user, email: "three@foo.com") }
-    let!(:email_log) do
-      Fabricate(:email_log,
-        message_id: "35@foo.bar.mail", # don't change, based on fixture file "email_reply_3.eml"
-        email_type: "user_posted",
-        post_id: post.id,
-        to_address: "asdas@dasdfd.com"
+    let(:user) { Fabricate(:user, email: 'discourse@bar.com') }
+
+    let!(:post_reply_key) do
+      Fabricate(:post_reply_key,
+        user: user,
+        post: post,
+        reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8'
       )
     end
 
     before do
+      SiteSetting.email_in = true
+      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
       SiteSetting.min_post_length = 1000
-      SiteSetting.find_related_post_with_key = false
     end
 
     it "rejects reply and sends an email with custom error message" do
-      begin
-        receiver = Email::Receiver.new(mail)
-        receiver.process!
-      rescue Email::Receiver::TooShortPost => e
-        error = e
-      end
-
-      expect(error.class).to eq(Email::Receiver::TooShortPost)
       processor = Email::Processor.new(mail)
       processor.process!
 
-      rejection_raw = processor.send(:handle_failure, mail, error).body.raw_source
+      rejection_raw = ActionMailer::Base.deliveries.first.body.raw_source
 
       count = SiteSetting.min_post_length
-      destination = receiver.mail.to
-      former_title = receiver.mail.subject
+      destination = processor.receiver.mail.to
+      former_title = processor.receiver.mail.subject
 
       expect(rejection_raw.gsub(/\r/, "")).to eq(
         I18n.t("system_messages.email_reject_post_too_short.text_body_template",
