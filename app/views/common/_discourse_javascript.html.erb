@@ -60,6 +60,18 @@
       <%- end %>
     Discourse.S3BaseUrl = '<%= SiteSetting.Upload.s3_base_url %>';
     <%- end %>
+    Discourse.colors = {
+      primary: '#<%= ColorScheme.hex_for_name("primary") %>',
+      secondary: '#<%= ColorScheme.hex_for_name("secondary") %>',
+      tertiary: '#<%= ColorScheme.hex_for_name("tertiary") %>',
+      quaternary: '#<%= ColorScheme.hex_for_name("quaternary") %>',
+      header_background: '#<%= ColorScheme.hex_for_name("header_background") %>',
+      header_primary: '#<%= ColorScheme.hex_for_name("header_primary") %>',
+      highlight: '#<%= ColorScheme.hex_for_name("highlight") %>',
+      danger: '#<%= ColorScheme.hex_for_name("danger") %>',
+      success: '#<%= ColorScheme.hex_for_name("success") %>',
+      love: '#<%= ColorScheme.hex_for_name("love") %>'
+    };
   })();
 </script>
 
