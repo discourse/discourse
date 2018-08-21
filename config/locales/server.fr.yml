@@ -39,10 +39,6 @@ fr:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleur est invalide"
     other_error: "Il y a eu un problème pendant la mise à jour du thème"
     error_importing: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
-    errors:
-      component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
-      component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
-      no_multilevels_components: "Les thèmes incluant d'autres thèmes ne peuvent pas être inclus eux-mêmes"
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
       data_type_not_a_number: "Le type du paramètre `%{name}` n'est pas supporté. Les types supportés sont `integer`, `bool`, `list` et `enum`"
@@ -173,10 +169,7 @@ fr:
   not_logged_in: "Vous devez être connecté pour faire cela."
   not_found: "L'URL ou ressource demandée n'a pas été retrouvé."
   invalid_access: "Vous n'avez pas la permission de voir cette ressource."
-  authenticator_not_found: "La méthode d'authentification n'existe pas ou a été désactivée."
   invalid_api_credentials: "Vous n'êtes pas autorisés à voir cette ressource. Le nom d’utilisateur ou la clé API n'est pas valide."
-  provider_not_enabled: "Vous n'êtes pas autorisés à voir cette ressources. Le fournisseur d'authentification n'est pas activé."
-  provider_not_found: "Vous n'êtes pas autorisés à voir cette ressources. Le fournisseur d'authentification n'existe pas."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
   reading_time: "Temps de lecture"
   likes: "J'aime"
@@ -738,41 +731,6 @@ fr:
       read: "Tout lire"
       write: "Tout écrire"
   reports:
-    default:
-      labels:
-        count: Nombre
-        percent: Pourcentage
-        day: Jour
-    post_edits:
-      title: "Modifications de message"
-      labels:
-        post: Message
-        editor: Éditeur
-        author: Auteur
-        edit_reason: Raison
-    moderators_activity:
-      title: "Activité des modérateurs"
-      labels:
-        moderator: Modérateur
-        flag_count: Signalements examinés
-        time_read: Temps de lecture
-        topic_count: Sujets créés
-        post_count: Messages créés
-        pm_count: Messages privés créés
-        revision_count: Révisions
-    flags_status:
-      title: "Statut des signalements"
-      values:
-        agreed: Acceptés
-        disagreed: Rejetés
-        deferred: Reportés
-        no_action: Aucune action
-      labels:
-        flag: Type
-        assigned: Affectés
-        poster: Auteur
-        flagger: Signalant
-        time_to_resolution: Temps de résolution
     visits:
       title: "Visites d'utilisateurs"
       xaxis: "Jour"
@@ -831,14 +789,10 @@ fr:
       title: "Utilisateurs par niveau de confiance"
       xaxis: "Niveau de confiance"
       yaxis: "Nombre d'utilisateurs"
-      labels:
-        level: Niveau
     users_by_type:
       title: "Utilisateurs par type"
       xaxis: "Type"
       yaxis: "Nombre d'utilisateurs"
-      labels:
-        type: Type
       xaxis_labels:
         admin: Administrateur
         moderator: Modérateur
@@ -889,15 +843,8 @@ fr:
       num_clicks: "Clics"
       num_topics: "Sujets"
       num_users: "Utilisateurs"
-      labels:
-        domain: Domaine
-        num_clicks: Clics
-        num_topics: Sujets
     top_referred_topics:
       title: "Sujets les plus référencés"
-      labels:
-        num_clicks: "Clics"
-        topic: "Sujet"
     page_view_anon_reqs:
       title: "Anonyme"
       xaxis: "Jour"
@@ -960,9 +907,6 @@ fr:
       yaxis: "Nombre de visites"
     web_crawlers:
       title: "Requêtes de crawler web"
-      labels:
-        user_agent: "User Agent"
-        page_views: "Pages vues"
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
@@ -987,7 +931,6 @@ fr:
     poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
     force_https_warning: "Votre site web utiliser le SSL. Mais  `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
-    out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
@@ -1591,6 +1534,9 @@ fr:
     existing_topic_moderator_post:
       one: "Un message a été intégré dans un sujet existant : %{topic_link}"
       other: "%{count} messages ont été intégrés dans un sujet existant : %{topic_link}"
+  change_owner:
+    post_revision_text: "Auteur du message changé de %{old_user} vers %{new_user}"
+    deleted_user: "un utilisateur supprimé"
   topic_statuses:
     archived_enabled: "Ce sujet est maintenant archivé. Il est gelé et ne peut plus être modifié d'aucune façon."
     archived_disabled: "Ce sujet est maintenant désarchivé. Il n'est plus figé et peut être modifié."
@@ -2691,6 +2637,7 @@ fr:
     recent_topics: "Récents"
     see_more: "Plus"
     search_title: "Rechercher dans ce site"
+    search_google: "Google"
   offline:
     title: "Impossible de charger l'application"
     offline_page_message: "Il semble que vous n'êtes pas connectés à Internet. Veuillez vérifier votre connexion réseau puis réessayez."

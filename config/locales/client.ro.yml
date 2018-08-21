@@ -745,7 +745,7 @@ ro:
         title: "Confirmă parola"
       last_posted: "Ultima postare"
       last_emailed: "Ultimul email"
-      last_seen: "Văzut "
+      last_seen: "Văzut acum"
       created: "Înscris"
       log_out: "Ieșire"
       location: "Locație"
@@ -1704,8 +1704,6 @@ ro:
         select_replies:
           label: 'selectează +răspunsuri'
           title: 'Adaugă postarea și toate răspunsurile la selecție'
-        select_below:
-          label: 'selectează +tot ce urmează'
         delete: șterge selecția
         cancel: anulare selecție
         select_all: selectează tot
@@ -2099,9 +2097,9 @@ ro:
     posts_long: "sunt {{number}} (de) postări în acest subiect"
     posts_likes_MF: |
       Acest subiect are {count, plural, one {1 răspuns} other {# răspunsuri}} {ratio, select,
-      low {cu o rată înaltă de aprecieri pe postare}
+      jos {cu o rată înaltă de aprecieri pe postare}
       med {cu o foarte înaltă de aprecieri pe postare}
-      high {cu o rată extrem de înaltă de aprecieri pe postare}
+      înalt {cu o rată extrem de înaltă de aprecieri pe postare}
       other {}}
     original_post: "Postare inițială"
     views: "Vizualizări"

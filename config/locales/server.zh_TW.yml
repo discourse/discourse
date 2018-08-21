@@ -1188,6 +1188,9 @@ zh_TW:
       other: "%{count} 個帖子被分離到了新主題：%{topic_link}"
     existing_topic_moderator_post:
       other: "%{count} 個帖子被合併到現存主題：%{topic_link}"
+  change_owner:
+    post_revision_text: "所有權從 %{old_user} 轉移至 %{new_user}"
+    deleted_user: "已經刪除的用戶"
   topic_statuses:
     archived_enabled: "此討論話題已封存，即已經凍結，無法修改。"
     archived_disabled: "此討論話題已被解除封存，即不再凍結，可以修改。"
@@ -1796,6 +1799,7 @@ zh_TW:
     recent_topics: "最近"
     see_more: "更多"
     search_title: "搜尋該網頁"
+    search_google: "Google"
   login_required:
     welcome_message: |
       ## [歡迎來到 %{title}](#welcome)

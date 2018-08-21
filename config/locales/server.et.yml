@@ -710,6 +710,7 @@ et:
     recent_topics: "Viimased"
     see_more: "Veel"
     search_title: "Otsi sellelt saidilt"
+    search_google: "Google"
   terms_of_service:
     title: "Teenuse tingimused"
   deleted: 'kustutatud'

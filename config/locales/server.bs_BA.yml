@@ -582,6 +582,8 @@ bs_BA:
   redirected_to_top_reasons:
     new_user: "Dobrodošli u našu zajednicu! Ovo su najnovije popularne teme."
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
+  change_owner:
+    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
@@ -678,6 +680,7 @@ bs_BA:
     recent_topics: "Nove"
     see_more: "Više"
     search_title: "Pretraži stranicu"
+    search_google: "Google"
   terms_of_service:
     title: "Terms of Service"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'

@@ -421,6 +421,7 @@ gl:
       subject_template: "O convite en bloque procesouse correctamente"
   page_not_found:
     see_more: "Máis"
+    search_google: "Google"
   terms_of_service:
     title: "Termos do servizo"
   about: "Sobre"

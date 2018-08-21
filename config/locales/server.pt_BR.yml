@@ -1629,6 +1629,9 @@ pt_BR:
     existing_topic_moderator_post:
       one: "Uma publicação foi combinada em um tópico existente: %{topic_link}"
       other: "%{count} publicações foram combinadas em um tópico existente: %{topic_link}"
+  change_owner:
+    post_revision_text: "Autoria transferida de %{old_user} para %{new_user}"
+    deleted_user: "um usuário deletado"
   topic_statuses:
     archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer forma."
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
@@ -2746,6 +2749,7 @@ pt_BR:
     recent_topics: "Recente"
     see_more: "Mais"
     search_title: "Procurar neste site"
+    search_google: "Google"
   offline:
     title: "Não é possível carregar o aplicativo"
     offline_page_message: "Parece que você está off-line! Por favor, verifique sua conexão de rede e tente novamente."

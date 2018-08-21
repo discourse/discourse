@@ -1314,6 +1314,9 @@ zh_CN:
       other: "%{count} 个帖子被分离到了新主题：%{topic_link}"
     existing_topic_moderator_post:
       other: "%{count} 个帖子被合并到现存主题：%{topic_link}"
+  change_owner:
+    post_revision_text: "所有权从 %{old_user} 转移至 %{new_user}"
+    deleted_user: "已经删除的用户"
   topic_statuses:
     archived_enabled: "本主题已归档，即已经冻结，无法修改。"
     archived_disabled: "本主题已被解除归档，即不再冻结，可以修改。"
@@ -2264,6 +2267,7 @@ zh_CN:
     recent_topics: "最近"
     see_more: "更多"
     search_title: "搜索该网页"
+    search_google: "Google"
   offline:
     title: "无法载入应用"
     offline_page_message: "看起来你掉线了！请检查网络连接并重试。"

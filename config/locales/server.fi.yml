@@ -1524,6 +1524,9 @@ fi:
     existing_topic_moderator_post:
       one: "Yksi viesti siirrettiin toiseen ketjuun: %{topic_link}"
       other: "%{count} viestiä siirrettiin toiseen ketjuun: %{topic_link}"
+  change_owner:
+    post_revision_text: "Omistus siirrettiin käyttäjältä %{old_user} käyttäjälle %{new_user}"
+    deleted_user: "poistettu käyttäjä"
   topic_statuses:
     archived_enabled: "Tämä ketju on arkistoitu. Se on jäädytetty eikä sitä voi muuttaa millään tavalla."
     archived_disabled: "Ketjun arkistointi on poistettu, se ei ole enää jäädytettynä ja sitä voi taas muuttaa."
@@ -2503,6 +2506,7 @@ fi:
     recent_topics: "Tuoreimpia"
     see_more: "Lisää"
     search_title: "Etsi tältä sivustolta"
+    search_google: "Google"
   offline:
     title: "Sovellusta ei voida ladata"
     offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."

@@ -34,7 +34,6 @@ it:
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
   remove_posts_deleted_by_author: "Cancellato dall'autore"
-  redirect_warning: "Non è stato possibile verificare che il collegamento che hai selezionato sia stato effettivamente pubblicato sul forum. Se desideri procedere comunque, seleziona il collegamento qui sotto."
   themes:
     bad_color_scheme: "Impossibile aggiornare il tema, lo schema colori non è valido"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
@@ -418,27 +417,6 @@ it:
         Puoi chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
   lounge_welcome:
     title: "Benvenuto nel Salotto"
-    body: |2
-
-      Congratulazioni! :confetti_ball:
-
-      Se vedi questo messaggio, significa che sei stato promosso ad **Assiduo** (Livello Esperienza 3).
-
-      Da ora sarai in grado di: &hellip;
-
-      * Cambiare il titolo a qualsiasi Argomento
-      * Cambiare la Categoria di qualsiasi Argomento
-      * I tuoi collegamenti saranno seguibili ([il nofollow automatico](http://en.wikipedia.org/wiki/Nofollow) è stato rimosso)
-      * Accedere alla categoria privata Lounge visibile ai soli utenti che hanno raggiunto il Livello Esperienza 3 o superiore
-      * Nascondere messaggi spam con una sola segnalazione
-
-      Ecco la [lista degli attuali utenti con Livello Esperienza 3](/badges/3/regular). Lascia loro un saluto.
-
-      Grazie per essere un importante membro della nostra community!
-
-      (Per ulteriori informazioni sui Livelli Esperienza dai [uno sguardo a questo Argomento][trust]. Tieni presente che solo gli utenti che continuano a rispettare i requisiti resteranno Assidui nel tempo.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. **Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.**)"
@@ -977,9 +955,9 @@ it:
     suppress_reply_directly_above: "Non mostrare in-risposta-a espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio. "
     suppress_reply_when_quoting: "Non mostrare in-risposta-a espandibile in un messaggio quando il messaggio include la citazione."
     max_reply_history: "Numero massimo di risposte da espandere quando si espande in-risposta-a"
-    topics_per_period_in_top_summary: "Numero di argomenti popolari mostrati nel riepilogo di default."
-    topics_per_period_in_top_page: "Numero di argomenti popolari mostrati nella vista espansa 'Mostra Altro'"
-    redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti popolari."
+    topics_per_period_in_top_summary: "Numero di argomenti di punta mostrati nel riepilogo di default."
+    topics_per_period_in_top_page: "Numero di argomenti di punta mostrati nella vista espansa 'Mostra Altro'"
+    redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti di punta."
     top_page_default_timeframe: "Lasso di tempo di default per la pagina principale."
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
     prioritize_username_in_ux: "Nella pagina utente mostra prima il nome utente, la sua scheda e i suoi messaggi (quando l'opzione è disabilitata viene mostrato prima il nome)"
@@ -1411,6 +1389,9 @@ it:
     existing_topic_moderator_post:
       one: "Un messaggio è stato fuso in un argomento esistente: %{topic_link}"
       other: "%{count} messaggi sono stati fusi in un argomento esistente: %{topic_link}"
+  change_owner:
+    post_revision_text: "Proprietà trasferita da %{old_user} a %{new_user}"
+    deleted_user: "un utente eliminato"
   topic_statuses:
     archived_enabled: "Questo argomento è stato archiviato. È congelato e non può più essere modificato."
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
@@ -1607,11 +1588,6 @@ it:
     post_hidden:
       title: "Messaggio Nascosto"
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-    usage_tips:
-      text_body_template: |
-        Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)
-
-        Partecipando ti conosceremo meglio, e le limitazioni temporanee per i nuovi utenti saranno rimosse. Col tempo incrementerai il tuo [Livello Esperienza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), sbloccando ulteriori funzionalità che ci aiuteranno a gestire insieme la comunità.
     welcome_user:
       title: "Benvenuto Utente"
       subject_template: "Benvenuto su %{site_name}!"
@@ -2292,6 +2268,7 @@ it:
     recent_topics: "Recenti"
     see_more: "Altro"
     search_title: "Cerca nel sito"
+    search_google: "Google"
   offline:
     title: "Impossibile caricare l'app"
     offline_page_message: "Sembra che tu sia offline! Controlla la tua connessione di rete e riprova."
@@ -2528,69 +2505,41 @@ it:
     editor:
       name: Redattore
       description: Prima modifica ad un messaggio
-      long_description: |
-        Questo Distintivo è assegnato la prima volta che modifichi uno dei tuoi messaggi. Anche se non potrai modificare i messaggi per sempre, eventuali aggiornamenti sono incoraggiati: puoi migliorare la punteggiatura, sistemare errori di battitura, o aggiungere dettagli omessi nel primo invio. Modifica pure, e rendi i tuoi messaggi ancora migliori!
     basic_user:
       name: Base
-      long_description: |
-        Questo Distintivo è assegnato quando si raggiunge il Livello Esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi dubbi, la creazione di messaggi Wiki e la possibilità di inviare immagini multiple e collegamenti.
     member:
       name: Membro
-      long_description: |
-        Questo Distintivo viene assegnato quando si raggiunge il Livello Esperienza 2. Grazie per aver essere stato partecipe per varie settimane, diventando veramente parte della comunità. Ora puoi mandare inviti dalla tua pagina utente, creare messaggi personali di gruppo, e lasciare più "Mi Piace" per giorno.
     regular:
       name: Assiduo
-      long_description: |
-        Questo Distintivo viene assegnato al raggiungimento del Livello Esperienza 3. Grazie per aver partecipato in modo assiduo alla nostra comunità per vari mesi. Ora sei uno dei nostri lettori più attivi, un contributore affidabile che rende la comunità sempre migliore. Ora puoi cambiare la categoria degli argomenti, trarre vantaggio da segnalazioni di spam più potenti, hai accesso all'esclusiva area Lounge, e potrai avere molti più "Mi piace" al giorno.
     leader:
       name: Veterano
-      long_description: |
-        Questo Distintivo viene assegnato quando si raggiunge il Livello Esperienza 4. Sei ormai un leader di questa comunità scelto dallo Staff, e rappresenti un esempio positivo per il resto del gruppo per come agisci e come ti esprimi. Hai ora la capacità di modificare tutti i messaggi e di compiere azioni di moderazione quali mettere in evidenza, chiudere, archiviare, dividere e unire messaggi.
     welcome:
       name: Benvenuto
       description: Ha ricevuto un "Mi piace"
-      long_description: |
-        Questo Distintivo viene assegnato quando ricevi il tuo primo "Mi piace". Congratulazioni, hai pubblicato qualcosa che gli altri membri della comunità hanno trovato interessante, utile o semplicemente cool!
     autobiographer:
       name: Autobiografo
       description: "Ha compilato le informazioni del <a href=\"%{base_uri}/my/preferences/profile\">profilo</a>"
-      long_description: |
-        Questo Distintivo viene assegnato per aver compilato il <a href="%{base_uri}/my/preferences/profile">tuo Profilo utente</a> e aver impostato un'immagine di profilo. Far sì che la comunità sappia qualcosa di te e dei tuoi interessi aiuta a creare un gruppo migliore e più coeso. Unisciti a noi!
     anniversary:
       name: Compleanno
       description: "Membro attivo per un anno, ha scritto almeno una volta"
-      long_description: |
-        Questo Distintivo è assegnato a chi è membro della comunità da almeno un anno e ha scritto, in quel periodo, almeno un messaggio. Grazie per essere rimasto nei paraggi e per aver contribuito alla comunità. Non esisterebbe senza persone come te.
     nice_post:
       name: Risposta Piacevole
       description: Ha ricevuto 10 mi piace su una risposta
-      long_description: |
-        Questo Distintivo viene assegnato quando una tua risposta ottiene 10 "Mi piace". Il tuo messaggio ha colpito la comunità e aiutato a portare avanti la discussione.
     good_post:
       name: Buona Risposta
       description: Ha ricevuto 25 mi piace su una risposta
-      long_description: |
-        Questo Distintivo viene assegnato quando una tua risposta ottiene 25 "Mi piace". Il tuo messaggio è stato eccezionale e ha reso la conversazione molto più interessante.
     great_post:
       name: Grande Risposta
       description: Ha ricevuto 50 mi piace su una risposta
-      long_description: |
-        Questo Distintivo viene assegnato quando una tua risposta ottiene 50 "Mi piace". Il tuo messaggio si è rivelato affascinante, simpatico, ha dato ispirazione e particolarmente sul punto, e la comunità lo ha davvero gradito!
     nice_topic:
       name: Argomento Piacevole
       description: Ha ricevuto 10 mi piace su un argomento
-      long_description: |
-        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 10 "Mi piace". Hai iniziato una conversazione interessante che la comunità ha gradito.
     good_topic:
       name: Buon Argomento
       description: Ha ricevuto 25 mi piace su un argomento
-      long_description: |
-        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 25 "Mi piace". Hai iniziato una conversazione interessante che ha attratto molto interesse nella comunità.
     great_topic:
       name: Grande Argomento
       description: Ha ricevuto 50 "Mi piace" in un argomento
-      long_description: |
-        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 50 "Mi piace". Hai iniziato una conversazione affascinante e la comunità è stata entusiasta dell'animata conversazione che ne è scaturita.
     nice_share:
       name: Piacevole Condivisione
       description: Ha condiviso un messaggio con 25 visitatori unici
@@ -2599,13 +2548,9 @@ it:
     good_share:
       name: Buona Condivisione
       description: Ha condiviso un messaggio con 300 visitatori unici
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 300 visitatori esterni. Ottimo lavoro! Hai mostrato una bella discussione a un bel mucchio di persone e aiutato la crescita della comunità.
     great_share:
       name: Grande Condivisione
       description: Ha condiviso un messaggio con 1000 visitatori unici
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 1000 visitatori esterni. Hai promosso un'interessante discussione per un'audience enorme, e aiutato tantissimo la crescita di questa comunità.
     first_like:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
@@ -2636,13 +2581,9 @@ it:
     first_quote:
       name: Prima Citazione
       description: Ha citato un messaggio
-      long_description: |
-        Questo Distintivo è assegnato la prima volta che citi un messaggio in una tua risposta. Citare le parti rilevanti di un messaggio precedente nelle tue risposte aiuta a mantenere coese e in tema le discussioni. Il modo più semplice di citare è selezionare una sezione di un messaggio e cliccare sul pulsante Rispondi. Cita a volontà!
     read_guidelines:
       name: Linee Guida
       description: "Ha letto le <a href=\"%{base_uri}/guidelines\">linee guida della comunità</a>"
-      long_description: |
-        Questo Distintivo è assegnato a chi <a href="%{base_uri}/guidelines">legge le linee guida della comunità</a>. Seguire e condividere queste semplici regole aiuta a costruire una comunità che sia sicura, divertente e sostenibile per tutti. Ricorda sempre che dall'altra parte dello schermo ci sono esseri umani proprio come te. Sii sempre gentile!
     reader:
       name: Lettore
       description: Ha letto ogni risposta in un argomento con più di 100 risposte
@@ -2691,8 +2632,6 @@ it:
     crazy_in_love:
       name: Pazzo d’Amore
       description: Ha messo 50 mi piace al giorno per 20 volte
-      long_description: |
-        Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 20 giorni. Wow, sei davvero un modello di comportamento per tutti i tuoi compagni di comunità!
     thank_you:
       name: Grazie
       description: Ha ricevuto 20 mi piace sui messaggi e dato 10 mi piace
@@ -2712,13 +2651,9 @@ it:
     first_mention:
       name: Prima Menzione
       description: Ha menzionato un utente in un messaggio
-      long_description: |
-        Questo Distintivo viene assegnato la prima volta che menzioni lo @username di un altro utente in un tuo messaggio. Ogni menzione genera una notifica a quella persona, così che siano informati del tuo messaggio. Inizia col digitare il simbolo @ (il simbolo "at") per menzionare un altro utente o, se consentito, un gruppo. Si tratta di un modo semplice di portare qualcosa alla loro attenzione.
     first_onebox:
       name: Prima Onebox
       description: ha inserito un collegamento che ha generato una onebox
-      long_description: |
-        Questo Distintivo viene assegnato la prima volta che pubblichi un collegamento scrivendolo su una riga a sé stante, in modo che venga incorporato dalla funzione onebox insieme ad un sommario, un titolo e, se disponibile, ad un'immagine.
     first_reply_by_email:
       name: Prima Risposta Da Email
       description: Ha risposto ad un messaggio tramite email
@@ -2732,18 +2667,12 @@ it:
     enthusiast:
       name: Appassionato
       description: 10 giorni di frequenza
-      long_description: |
-        Questo Distintivo è assegnato per aver visitato il sito per 10 giorni consecutivi. Grazie per essere rimasto nei paraggi per oltre una settimana!
     aficionado:
       name: Amatoriale
       description: 100 giorni di frequenza
-      long_description: |
-        Questo Distintivo viene assegnato per aver visitato il sito per oltre 100 giorni consecutivi. Si tratta di oltre tre mesi!
     devotee:
       name: Devoto
       description: 365 giorni di frequenza
-      long_description: |
-        Questo Distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
   admin_login:
     success: "email Inviata"
