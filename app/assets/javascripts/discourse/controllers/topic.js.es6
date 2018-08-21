@@ -104,7 +104,9 @@ export default Ember.Controller.extend(BufferedContent, {
         return;
       }
 
-      this.send("showHistory", post, revision)
+      Ember.run.scheduleOnce("afterRender", () => {
+        this.send("showHistory", post, revision)
+      });
     });
     this.setProperties({
       selectedPostIds: [],
