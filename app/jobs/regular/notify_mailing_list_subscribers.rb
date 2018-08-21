@@ -91,7 +91,7 @@ module Jobs
       if reason_type == SkippedEmailLog.reason_types[:exceeded_emails_limit]
         exists = SkippedEmailLog.exists?({
           created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
-        }.merge(attributes))
+        }.merge!(attributes.except(:post_id)))
 
         return if exists
       end
