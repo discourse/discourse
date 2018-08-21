@@ -171,8 +171,12 @@ module Email
 
         raise first_exception if first_exception
 
-        if post = find_related_post(force: true)
-          if Guardian.new(user).can_see_post?(post) && post.created_at < 90.days.ago
+        post = find_related_post(force: true)
+
+        if post && Guardian.new(user).can_see_post?(post)
+          num_of_days = SiteSetting.disallow_reply_by_email_after_days
+
+          if num_of_days > 0 && post.created_at < num_of_days.days.ago
             raise OldDestinationError.new("#{Discourse.base_url}/p/#{post.id}")
           end
         end

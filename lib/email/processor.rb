@@ -85,6 +85,7 @@ module Email
 
       if message_template == :email_reject_old_destination
         template_args[:short_url] = e.message
+        template_args[:number_of_days] = SiteSetting.disallow_reply_by_email_after_days
       end
 
       if message_template
