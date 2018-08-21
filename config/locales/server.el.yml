@@ -1340,9 +1340,6 @@ el:
     existing_topic_moderator_post:
       one: "Μία ανάρτηση συγχωνεύθηκε σε ένα υπάρχον νήμα: %{topic_link}"
       other: "%{count} αναρτήσεις συγχωνεύθηκαν σε ένα υπάρχον νήμα: %{topic_link}"
-  change_owner:
-    post_revision_text: "Η κυριότητα μεταφέρεται από %{old_user} σε %{new_user}."
-    deleted_user: "έναν διεγραμμένο χρήστη"
   topic_statuses:
     archived_enabled: "Αυτό το νήμα είναι τώρα αρχειοθετημένο. Έχει παγώσει και δεν μπορεί να τροποποιηθεί με κανένα τρόπο."
     archived_disabled: "Αυτό το νήμα δεν είναι τώρα αρχειοθετημένο. Δεν είναι πια παγωμένο και μπορεί να τροποποιηθεί."
@@ -2212,7 +2209,6 @@ el:
     recent_topics: "Πρόσφατα"
     see_more: "Περισσότερα"
     search_title: "Αναζήτηση στην ιστοσελίδα"
-    search_google: "Google"
   offline:
     title: "Cannot load app"
     offline_page_message: "Πιθανώς βρίσκεσαι εκτός σύνδεσης! Έλεγξε την σύνδεσή σου και δοκίμασε ξανά."

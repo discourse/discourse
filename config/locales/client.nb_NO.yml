@@ -125,6 +125,7 @@ nb_NO:
       user_left: "%{who} fjernet seg selv fra denne meldingen %{when}"
       removed_user: "fjernet %{who} %{when}"
       removed_group: "fjernet %{who} %{when}"
+      autobumped: "automatisk løftet %{when}"
       autoclosed:
         enabled: 'lukket %{when}'
         disabled: 'åpnet %{when}'
@@ -164,6 +165,7 @@ nb_NO:
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
+        eu_west_3: "EU (Paris)"
         sa_east_1: "Asia/Stillehavsregionen (Sao Paulo)"
         us_east_1: "USA øst (N. Virginia)"
         us_east_2: "USA øst (Ohio)"
@@ -247,6 +249,12 @@ nb_NO:
       last_read: "dette er det siste innlegget du har lest; klikk for å bokmerke det"
       remove: "Fjern bokmerke"
       confirm_clear: "Er du sikker på at du vil fjerne alle bokmerkene fra dette emnet?"
+    drafts:
+      resume: "Fortsett"
+      remove: "Fjern"
+      new_topic: "Nytt emneutkast"
+      new_private_message: "Nytt privat emneutkast"
+      topic_reply: "Svarutkast"
     topic_count_latest:
       one: "Se {{count}} nytt eller oppdatert emne"
       other: "Se {{count}} nye eller oppdaterte emner"
@@ -486,8 +494,10 @@ nb_NO:
       "12": "Sendte elementer"
       "13": "Innboks"
       "14": "Venter"
+      "15": "Utkast"
     categories:
       all: "Alle"
+      all_subcategories: "alle"
       no_subcategory: "ingen"
       category: "Kategori"
       category_list: "Vis kategoriliste"
@@ -509,6 +519,7 @@ nb_NO:
       topic_stat_sentence:
         one: "%{count} nytt emne de siste %{unit}."
         other: "%{count} nye emner de siste %{unit}."
+      more: "(%{count} til) ..."
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -665,9 +676,23 @@ nb_NO:
         set_password: "Sett passord"
         choose_new: "Velg et nytt passord"
         choose: "Velg et passord"
+      second_factor_backup:
+        title: "Tofaktor Nødkoder"
+        regenerate: "Regenerer"
+        disable: "Deaktiver"
+        enable: "Aktiver"
+        enable_long: "Aktiver nødkoder"
+        manage: "Behandle nødkoder"
+        copied_to_clipboard: "Kopiert til Utklippstavlen"
+        copy_to_clipboard_error: "Feil ved kopiering til Utklippstavlen"
+        remaining_codes: "Du har <strong>{{count}}</strong> nødkoder igjen."
+        codes:
+          title: "Nødkoder Opprettet"
+          description: "Hver av nødkodene kan kun brukes en gang. Oppbevar dem et trygt men tilgjengelig sted."
       second_factor:
         title: "Totrinnsverifisering"
         disable: "Skru av totrinnsverifisering"
+        enable: "Aktiver <a href>tofaktorautentisering</a> for å øke kontosikkerheten"
         confirm_password_description: "Bekreft passordet ditt for å fortsette"
         label: "Kode"
         enable_description: |
@@ -682,6 +707,7 @@ nb_NO:
         error: "Det oppstod en feil ved endring av denne verdien."
       change_username:
         title: "Endre brukernavn"
+        confirm: "Er du helt sikker på at du ønsker å endre brukernavnet ditt?"
         taken: "Beklager, det brukernavnet er tatt."
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
       change_email:
@@ -710,6 +736,9 @@ nb_NO:
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en forvalgt bredde på 590 piksler."
       email:
         title: "E-post"
+        primary: "Primær e-post"
+        secondary: "Sekundære e-poster"
+        no_secondary: "Ingen sekundære e-poster"
         instructions: "aldri vist til offentligheten"
         ok: "Vi sender deg en e-post for å bekrefte"
         invalid: "Oppgi en gyldig e-postadresse"
@@ -718,6 +747,11 @@ nb_NO:
         frequency:
           one: "Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet."
           other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}}  minuttene."
+      associated_accounts:
+        title: "Tilknyttede Kontoer"
+        connect: "Koble til"
+        revoke: "Trekk tilbake"
+        not_connected: "(ikke tilkoblet)"
       name:
         title: "Navn"
         instructions: "ditt fulle navn (valgfritt)"
@@ -889,6 +923,9 @@ nb_NO:
         most_liked_users: "Mest likt"
         most_replied_to_users: "Mest besvart"
         no_likes: "Ingen likes her ennå."
+        top_categories: "Toppkategorier"
+        topics: "Emner"
+        replies: "Svar"
       ip_address:
         title: "Siste IP-adresse"
       registration_ip_address:
@@ -1029,9 +1066,14 @@ nb_NO:
       password: "Passord"
       second_factor_title: "Totrinnsverifisering"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
+      second_factor_backup: "<a href>Logg inn med en nødkode</a>"
+      second_factor_backup_title: "Tofaktor Nødkode"
+      second_factor_backup_description: "Vennligst skriv en nødkodene dine:"
+      second_factor: "<a href>Logg inn med Authenticator app</a>"
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
+      cookies_error: "Nettleseren din ser ut til å ha deaktivert informasjonskapsler (cookies). Det er mulig du ikke vil kunne logge inn uten å aktivere dem først."
       rate_limit: "Vent litt før du logger inn igjen."
       blank_username: "Vennligst oppgi din e-post eller brukernavn."
       blank_username_or_password: "Oppgi din e-postadresse eller brukernavn og ditt passord."
@@ -1057,21 +1099,27 @@ nb_NO:
       forgot: "I husker ikke mine kontodetaljer"
       not_approved: "Kontoen din har ikke blitt godkjent ennå. Du vil få beskjed via e-post når du er klar til å logge inn."
       google_oauth2:
+        name: "Google"
         title: "med Google"
         message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
       twitter:
+        name: "Twitter"
         title: "med Twitter"
         message: "Autentiserer med Twitter (sørg for at du tillater oppsprettsvindu)"
       instagram:
+        name: "Instagram"
         title: "med Instagram"
         message: "Logger inn med Instagram. Sørg for at du ikke har programvare som blokkerer forgrunnsvinduer."
       facebook:
+        name: "Facebook"
         title: "med Facebook"
         message: "Autentiserer med Facebook (sørg for at du tillater oppsprettsvindu)"
       yahoo:
+        name: "Yahoo"
         title: "med Yahoo"
         message: "Autentiserer med Yahoo (sørg for at du tillater oppsprettsvindu)"
       github:
+        name: "GitHub"
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater oppsprettsvindu)"
     invites:
@@ -1236,6 +1284,9 @@ nb_NO:
         body: "Nå sender du denne meldingen bare til deg selv!"
       admin_options_title: "Valgfrie emne-instillinger for stab"
       composer_actions:
+        reply: Svar
+        draft: Utkast
+        edit: Rediger
         reply_to_post:
           label: "Svar på innlegg %{postNumber} av %{postUsername}"
           desc: Svar på et spesifikt innlegg
@@ -1580,6 +1631,8 @@ nb_NO:
         jump_prompt_of: "av %{count} innlegg"
         jump_prompt_long: "Hvilket innlegg vil du gå til?"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
+        jump_prompt_to_date: "til dato"
+        jump_prompt_or: "eller"
         total: innlegg totalt
         current: gjeldende innlegg
       notifications:
@@ -1874,6 +1927,8 @@ nb_NO:
         lock_post_description: "forhindre innleggsskriveren fra å redigere dette innlegget"
         unlock_post: "Lås opp innlegg"
         unlock_post_description: "tillat innleggsskriveren å redigere dette innlegget"
+        delete_topic_disallowed_modal: "Du har ikke rettigheter til å slette dette emnet. Hvis du virkelig vil at det skal slettes, flagg emnet og skriv en begrunnelse slik at en moderator kan vurdere forespørselen din."
+        delete_topic_disallowed: "du har ikke rettigheter til å slette dette emnet"
       actions:
         flag: 'Rapportering'
         defer_flags:
@@ -1993,6 +2048,7 @@ nb_NO:
       can: 'kan&hellip;'
       none: '(no category)'
       all: 'Alle kategorier'
+      choose: 'kategori&hellip;'
       edit: 'rediger'
       edit_long: "Rediger"
       view: 'Se Emner i Kategori'
@@ -2041,6 +2097,7 @@ nb_NO:
       show_subcategory_list: "Plasser listen over underkategorien i toppen av emner i denne kategorien."
       num_featured_topics: "Antall emner som skal vises på kategori-siden:"
       subcategory_num_featured_topics: "Antall fremhevede emner på hovedkategoriens side:"
+      all_topics_wiki: "Gjør nye emner til wikier som standard"
       subcategory_list_style: "Listestil for underkategorier:"
       sort_order: "Emneliste Sorteres Etter:"
       default_view: "Forvalgt Emneliste:"
@@ -2048,12 +2105,17 @@ nb_NO:
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
       add_permission: "Legg til tillatelser"
+      require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
+      require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"
       this_year: "dette året"
+      position: "Posisjon:"
       default_position: "Forvalgt posisjon"
       position_disabled: "Kategorier vil bli vist i henhold til aktivitet. For å styre rekkefølgen av kategorier i listen"
       position_disabled_click: 'aktiver innstillingen "faste kategoriposisjoner".'
       minimum_required_tags: 'Minste antall stikkord som kreves for et emne:'
       parent: "Foreldrekategori"
+      num_auto_bump_daily: 'Antall åpne emner som vil løftes automatisk per dag:'
+      navigate_to_first_post_after_read: 'Naviger til første innlegg etter at emner er lest'
       notifications:
         watching:
           title: "Følger"
@@ -2286,6 +2348,7 @@ nb_NO:
         bookmarks: '<b>g</b>, <b>b</b> Bokmerker'
         profile: '<b>g</b>, <b>p</b> Profil'
         messages: '<b>g</b>, <b>m</b> Meldinger'
+        drafts: '<b>g</b>, <b>d</b> Utkast'
       navigation:
         title: 'Navigasjon'
         jump: '<b>#</b> Gå til innlegg #'
@@ -2461,6 +2524,8 @@ nb_NO:
     admin:
       title: 'Discourse-admin'
       moderator: 'Moderator'
+      reports:
+        title: "Liste over tilgjengelige rapporter"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashboardet var sist oppdatert:"
@@ -2497,8 +2562,15 @@ nb_NO:
         page_views_short: "Sidevisninger"
         show_traffic_report: "Vis detaljert trafikkrapport"
         community_health: Samfunnshelse
+        moderators_activity: Moderatoraktivitet
         whats_new_in_discourse: "Hva er nytt i Discourse?"
         activity_metrics: Aktivitetsmåling
+        all_reports: "Alle rapporter"
+        general_tab: "Generelt"
+        moderation_tab: "Moderering"
+        disabled: Deaktivert
+        timeout_error: "Beklager, spørringen tar for lang tid, vennligst velg et kortere tidsrom"
+        exception_error: "Beklager, en feil oppstod under kjøringen av denne spørringen"
         reports:
           trend_title: "%{percent} endring. Nåværende %{current}, var %{prev} i forrige periode."
           today: "I dag"
@@ -2516,6 +2588,9 @@ nb_NO:
           end_date: "Sluttdato"
           groups: "Alle grupper"
           disabled: "Denne rapporten er deaktivert"
+          totals_for_sample: "Totalt for tidsrom"
+          total: "Totalt siden starten"
+          no_data: "Ingen data å vise."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Logg for søk</a>'
             disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
@@ -2721,6 +2796,9 @@ nb_NO:
         flag_event:
           name: "Flagghandling"
           details: "Når et flagg settes, aksepteres, avvises eller ignoreres."
+        queued_post_event:
+          name: "Hendelse for godkjent innlegg"
+          details: "Når et køet innlegg opprettes, godkjennes eller avvises."
         delivery_status:
           title: "Sendingsstatus"
           inactive: "Inaktiv"
@@ -3093,6 +3171,8 @@ nb_NO:
             change_site_text: "endre sidens tekst"
             suspend_user: "steng ute bruker"
             unsuspend_user: "Opphev utestenging av bruker"
+            removed_suspend_user: "utesteng bruker (fjernet)"
+            removed_unsuspend_user: "opphev utestenging av bruker (fjernet)"
             grant_badge: "tildel merke"
             revoke_badge: "trekk tilbake merke"
             check_email: "sjekk e-post"
@@ -3107,6 +3187,8 @@ nb_NO:
             create_category: "opprett kategori"
             silence_user: "demp bruker"
             unsilence_user: "opphev demping av bruker"
+            removed_silence_user: "demp bruker (fjernet)"
+            removed_unsilence_user: "opphev demping av bruker (fjernet)"
             grant_admin: "innvilg admin"
             revoke_admin: "trekk tilbake administrering"
             grant_moderation: "innvilg moderering"
@@ -3131,9 +3213,11 @@ nb_NO:
             disabled_second_factor: "deaktiver totrinnsverifisering"
             topic_published: "emne publisert"
             post_approved: "innlegg godkjent"
+            post_rejected: "innlegg avvist"
             create_badge: "lag merke"
             change_badge: "endre merke"
             delete_badge: "slett merke"
+            merge_user: "slå sammen bruker"
         screened_emails:
           title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -3287,6 +3371,10 @@ nb_NO:
         penalty_post_delete: "Slett innlegget"
         penalty_post_edit: "Rediger innlegget"
         penalty_post_none: "ikke gjør noe"
+        penalty_count: "Antall Straffer"
+        clear_penalty_history:
+          title: "Fjern Straffehistorikk"
+          description: "brukere med straffer kan ikke nå TL3"
         delete_all_posts_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {1 innlegg} other {# innlegg}} og {TOPICS, plural, one {1 emne} other {# emner}}. Er du sikker?"
         silence: "Demp"
         unsilence: "Opphev demping"
@@ -3478,6 +3566,17 @@ nb_NO:
         clear_filter: "Tøm"
         add_url: "legg til URL"
         add_host: "legg til vert"
+        value_list:
+          default_none: "Skriv for å filtrere eller opprette..."
+          no_choices_none: "Skriv for å opprette..."
+        uploaded_image_list:
+          label: "Rediger liste"
+          empty: "Det finnes ingen bilder enda. Vennligst last opp ett."
+          upload:
+            label: "Last opp"
+            title: "Last opp bilde(r)"
+        selectable_avatars:
+          title: "Liste over avatarer brukere kan velge mellom"
         categories:
           all_results: 'Alle'
           required: 'Påkrevd'
@@ -3632,6 +3731,7 @@ nb_NO:
       step: "%{current} av %{total}"
       upload: "Last opp"
       uploading: "Laster opp…"
+      upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
       quit: "Kanskje senere"
       staff_count:
         one: "Din gemenskap har ett stabsmedlem (deg)."
@@ -3643,3 +3743,7 @@ nb_NO:
           admin: "Administrator"
           moderator: "Moderator"
           regular: "Aktivt medlem"
+      previews:
+        topic_title: "Diskusjonsemne"
+        share_button: "Del"
+        reply_button: "Svar"
