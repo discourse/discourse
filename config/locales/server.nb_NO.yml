@@ -39,6 +39,10 @@ nb_NO:
     bad_color_scheme: "Kan ikke oppdatere drakt, ugyldig fargepalett"
     other_error: "Noe gikk galt under oppdateringen av drakten"
     error_importing: "En feil oppstod under kloning av git repository, tilgang ble nektet eller repository ikke funnet."
+    errors:
+      component_no_user_selectable: "Draktkomponenter kan ikke gjøres valgbare for brukere"
+      component_no_default: "Draktkomponenter kan ikke være standard drakt"
+      no_multilevels_components: "Drakter som inneholder underdrakter kan ikke selv være en underdrakt"
     settings_errors:
       invalid_yaml: "YAML koden er ikke gyldig."
       data_type_not_a_number: "Innstilling `%{name}` typen er ikke støttet. Støttede typer er `integer`, `bool`, `list` og `enum`"
@@ -68,6 +72,7 @@ nb_NO:
         auto_generated_email_error: "Skjer når «Presedens»-hodet er satt til list, junk, bulk eller auto_reply eller når en annen header inneholder auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
         no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-hodet."
+        from_reply_by_address_error: "Skjer når avsender i meldingshodet er identisk med den konfigurerte adressen for svar via e-post."
         inactive_user_error: "Skjer når senderen ikke er aktiv."
         silenced_user_error: "Skjer når senderen er dempet."
         bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
@@ -168,7 +173,10 @@ nb_NO:
   not_logged_in: "Du må være innlogget for å gjøre det."
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
   invalid_access: "Du har ingen tilgang til denne resurssen."
+  authenticator_not_found: "Autentiseringsmetoden finnes ikke eller er deaktivert."
   invalid_api_credentials: "Du har ikke tillatelse til å se denne forespurte ressuresen. API-brukernavnet eller -nøkkelen er ikke gyldig."
+  provider_not_enabled: "Du har ikke tillatelse til å lese denne ressursen. Autentiseringsmetoden er ikke aktivert. "
+  provider_not_found: "Du har ikke tillatelse til å lese denne ressursen. Autentiseringsmetoden eksisterer ikke."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
   reading_time: "Lesetid"
   likes: "Likes"
@@ -450,6 +458,27 @@ nb_NO:
       Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
   lounge_welcome:
     title: "Velkommen til salongen"
+    body: |2
+
+      Gratulerer! :confetti_ball:
+
+      Hvis du kan se dette emnet betyr det at du nylig ble forfremmet til  **trofast** (tillitsnivå 3).
+
+      Du kan nå &hellip;
+
+      * Redigere tittelen på alle emner
+      * Endre kategorien på alle emner
+      * Tillate søkemotorer å følge lenkene dine ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
+      * Delta i en privat Lounge kategori som kun er synlig for brukere med tillitsnivå 3 og høyere
+      * Skjule spam med et enkelt flagg
+
+      Her er [hele listen over trofaste brukere](/badges/3/regular). Si gjerne hei til dem!
+
+      Takk for at du er en viktig del av dette brukersamfunnet!
+
+      (For mer informasjon om forskjellige tillitsnivå, [se dette emnet][trust]. Vær klar over at brukere må fortsette å oppfylle kravene over tid for å forbli i gruppen for trofaste.)
+
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Om kategorien %{category} "
     replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde lengden under 200 bokstaver. **Inntil du endrer denne beskrivelsen eller oppretter tråder, vil denne kategorien ikke vises på kategorier-siden.**)"
@@ -466,6 +495,9 @@ nb_NO:
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategorisert"
       has_subcategories: "Kan ikke slette denne kategorien fordi den har underkategorier."
+      topic_exists:
+        one: "Kan ikke slette denne kategorien fordi den har 1 emne. Eldste emne er %{topic_link}."
+        other: "Kan ikke slette denne kategorien fordi den har %{count} emner. Eldste emne er %{topic_link}."
       topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall tråder er %{count}."
     uncategorized_description: "Tråder som ikke trenger en kategori eller som ikke passer i noen av de eksisterende kategoriene."
   trust_levels:
@@ -510,6 +542,7 @@ nb_NO:
     seconds:
       one: "1 sekund"
       other: "%{count} sekunder"
+    short_time: "noen få sekunder"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
@@ -602,6 +635,8 @@ nb_NO:
     authorizing_old:
       title: "Takk for at du bekreftet din nåværende e-postadresse"
       description: "Vi sender deg en e-post til din nye adresse for bekreftelse."
+  associated_accounts:
+    revoke_failed: "Klarte ikke å oppheve kontotilknytningen til %{provider_name}."
   activation:
     action: "Klikk her for å aktivere din konto"
     already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
@@ -664,6 +699,7 @@ nb_NO:
       self: "Du har ingen aktivitet enda."
       others: "Ingen aktivitet."
     no_bookmarks:
+      self: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
       others: "Ingen bokmerker."
     no_likes_given:
       self: "Du har ikke likt noen innlegg."
@@ -671,19 +707,24 @@ nb_NO:
     no_replies:
       self: "Du har ikke svart på noen innlegg."
       others: "Ingen svar."
+    no_drafts:
+      self: "Du har ingen utkast; når du begynner å forfatte et svar på et emne vil det automatisk lagres som et nytt utkast."
   topic_flag_types:
     spam:
       title: 'Spam'
       description: 'Dette innlegget er reklame. Det er ikke nyttig eller relevant for dette nettstedet, men av promoterende karakter.'
       long_form: 'rapporterte dette som spam'
+      short_description: 'Dette er en reklame'
     inappropriate:
       title: 'Upassende'
       description: 'Dette innlegget har innhold som en fornuftig person vil anslå å være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til denne gemenskapen</a>.'
       long_form: 'markerte dette som upassende'
+      short_description: 'Et brudd på <a href="/guidelines">retningslinjene for samfunnet</a>'
     notify_moderators:
       title: "Noe annet"
       description: 'Emnet krever oppfølging av staben basert på <a href="/guidelines">retningslinjene</a>, <a href="%{tos_url}">brukeravtale</a>, eller en annen grunn ikke i listen over.'
       long_form: 'Markert for mederering'
+      short_description: 'Krever handling fra staben av en annen grunn'
       email_title: 'Tråden "%{title}" krever oppmerksomhet fra en moderator'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -729,12 +770,50 @@ nb_NO:
       read: "Les alt"
       write: "Skriv alt"
   reports:
+    default:
+      labels:
+        count: Antall
+        percent: Prosent
+        day: Dag
+    post_edits:
+      title: "Innlegg redigert"
+      labels:
+        post: Innlegg
+        editor: Tekstbehandler
+        author: Forfatter
+        edit_reason: Begrunnelse
+    moderators_activity:
+      title: "Moderatoraktivitet"
+      labels:
+        moderator: Moderator
+        flag_count: Flagg vurdert
+        time_read: Lesetid
+        topic_count: Emner opprettet
+        post_count: Innlegg skrevet
+        pm_count: Meldinger opprettet
+        revision_count: Revisjoner
+    flags_status:
+      title: "Flagg status"
+      values:
+        agreed: Enig
+        disagreed: Uenig
+        deferred: Utsatt
+        no_action: Ingen handling
+      labels:
+        flag: Type
+        assigned: Tildelt
+        poster: Forfatter
+        flagger: Flagger
+        time_to_resolution: Løsningstid
     visits:
       title: "Brukerbesøk"
       xaxis: "Dag"
       yaxis: "Antall besøk"
     signups:
+      title: "Nye brukere"
       xaxis: "Dag"
+      yaxis: "Antall nye brukere"
+      description: "Nyregistrerte brukere i denne perioden"
     new_contributors:
       title: "Nye Bidragsytere"
       xaxis: "Dag"
@@ -784,10 +863,14 @@ nb_NO:
       title: "Brukere per tillitsnivå"
       xaxis: "Tillitsnivå"
       yaxis: "Antall brukere"
+      labels:
+        level: Nivå
     users_by_type:
       title: "Brukere per Type"
       xaxis: "Type"
       yaxis: "Antall Brukere"
+      labels:
+        type: Type
       xaxis_labels:
         admin: Admin
         moderator: Moderator
@@ -838,8 +921,15 @@ nb_NO:
       num_clicks: "Klikk"
       num_topics: "Tråder"
       num_users: "Brukere"
+      labels:
+        domain: Domene
+        num_clicks: Klikk
+        num_topics: Emner
     top_referred_topics:
       title: "Topp henviste tråder"
+      labels:
+        num_clicks: "Klikk"
+        topic: "Emne"
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
@@ -897,10 +987,14 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Totalt"
     mobile_visits:
+      title: "Brukerbesøk (mobil)"
       xaxis: "Dag"
       yaxis: "Antall besøk"
     web_crawlers:
       title: "Forespørsler fra Søkeroboter"
+      labels:
+        user_agent: "Brukeragent"
+        page_views: "Sidevisninger"
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
@@ -925,6 +1019,7 @@ nb_NO:
     poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
     poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='/admin/site_settings/category/email'>POP3 instillingene</a>. "
     force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
+    out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
@@ -948,6 +1043,7 @@ nb_NO:
     search_recent_posts_size: "Hvor mange innlegg som beholdes i indeksen"
     log_search_queries: "Logg søkeord som benyttes av brukerne"
     search_query_log_max_size: "Maksimalt antall søkeord som beholdes"
+    search_query_log_max_retention_days: "Maksimal tid å beholde søkeord, i dager."
     allow_uncategorized_topics: "Tillat opprettelse av ukategoriserte emner. ADVARSEL: Hvis det finnes ukategoriserte emner, må du sette en kategori på dem før du skrur denne instillingen av."
     allow_duplicate_topic_titles: "Tillat flere tråder med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"
@@ -997,6 +1093,7 @@ nb_NO:
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_posts_required: "Minste antall innlegg før 'Sammendrag for Emnet' aktiveres"
     summary_likes_required: "Minste antall 'likes' i et emne før 'Sammendrag for Emnet' aktiveres"
+    summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
     summary_max_results: "Maksimalt antall innlegg som returneres av 'Oppsummer denne tråden'"
     num_spam_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam av minst num_users_to_silence_new_user forskjellige brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
@@ -1076,8 +1173,6 @@ nb_NO:
   redirected_to_top_reasons:
     new_user: "Velkommen til forumet vårt! Dette er de mest populære trådene for tiden. "
     not_seen_in_a_month: "Velkommen tilbake! Vi har ikke sett deg på en stund. Dette er de mest populære trådene siden du var her sist."
-  change_owner:
-    deleted_user: "en slettet bruker"
   topic_statuses:
     archived_enabled: "Denne tråden er nå arkivert. Den er fryst og kan ikke endres på noen måte. "
     archived_disabled: "Denne tråden er ikke lenger arkivert. Den er ikke lenger fryst, og kan endres."
@@ -1204,7 +1299,6 @@ nb_NO:
     recent_topics: "Nylig"
     see_more: "Mer"
     search_title: "Søk i denne siden"
-    search_google: "Google"
   terms_of_service:
     title: "Bruksvilkår"
     signup_form_message: 'Jeg har lest og akseptert <a href="/tos" target="_blank">Bruksvilkårene</a>.'

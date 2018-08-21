@@ -366,8 +366,6 @@ uk:
   most_posts: "Найбільше дописів"
   most_recent_poster: "Автор останнього допису"
   frequent_poster: "Частий дописувач"
-  change_owner:
-    post_revision_text: "Володіння передано від %{old_user} до %{new_user}"
   topic_statuses:
     archived_enabled: "Цю тему тепер заархівовано. Вона заморожена і її жодним чином не можна змінити."
     archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
@@ -425,7 +423,6 @@ uk:
     recent_topics: "Останні"
     see_more: "Більше"
     search_title: "Пошук на цьому сайті"
-    search_google: "Google"
   terms_of_service:
     title: "Умови Використання"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'

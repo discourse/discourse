@@ -2560,6 +2560,7 @@ it:
           end_date: "Data Fine"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
+          no_data: "Non ci sono dati da mostrare."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Cerca nei log</a>'
       commits:
@@ -2651,6 +2652,10 @@ it:
             blank: "Il nome del Gruppo non può essere vuoto"
         bulk_add:
           title: "Aggiungi in blocco al Gruppo"
+          complete_users_not_added: "Questi utenti non sono stati aggiunti (assicurati che abbiano un account():"
+          paste: "Incolla un elenco di username ed email, uno per riga:"
+        add_members:
+          as_owner: "Imposta l'utente(i) come proprietario di questo gruppo"
         manage:
           interaction:
             email: Email
@@ -2660,6 +2665,8 @@ it:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
               members: "Proprietari del Gruppo, membri e amministratori"
+              staff: "Proprietari del gruppo e staff"
+              owners: "Proprietari del gruppo e amministratori"
           membership:
             automatic: Automatico
             trust_level: Livello Esperienza
@@ -3638,6 +3645,7 @@ it:
       step: "%{current} di %{total}"
       upload: "Carica"
       uploading: "Caricamento..."
+      upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
       quit: "Forse Dopo"
       staff_count:
         one: "Your community has 1 staff (you). "
