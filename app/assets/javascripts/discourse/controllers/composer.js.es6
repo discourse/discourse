@@ -217,7 +217,6 @@ export default Ember.Controller.extend({
     );
   },
 
-
   _setupPopupMenuOption(callback) {
     let option = callback();
 
