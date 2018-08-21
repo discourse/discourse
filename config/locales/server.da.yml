@@ -963,8 +963,6 @@ da:
   frequent_poster: "Hyppig forfatter"
   redirected_to_top_reasons:
     new_user: "Velkommen til fællesskabet! Dette er de seneste mest populære emner."
-  change_owner:
-    deleted_user: "en slettet bruger"
   topic_statuses:
     archived_enabled: "Dette emne er nu arkiveret. Det er frosset fast og kan ikke ændres på nogen måde."
     archived_disabled: "Dette emne er nu ikke længere arkiveret. Det er ikke længere frosset fast, og kan ændres."
@@ -1367,7 +1365,6 @@ da:
     recent_topics: "Nye"
     see_more: "Flere"
     search_title: "Søg på denne side"
-    search_google: "Google"
   terms_of_service:
     title: "Vilkår"
     signup_form_message: 'Jeg har læst og accepterer  <a href="/tos" target="_blank">vilkårene</a>.'

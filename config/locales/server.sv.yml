@@ -1146,9 +1146,6 @@ sv:
     existing_topic_moderator_post:
       one: "Ett inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
       other: "%{count} inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
-  change_owner:
-    post_revision_text: "Ägarbyte från %{old_user} till %{new_user}"
-    deleted_user: "en raderad användare"
   topic_statuses:
     archived_enabled: "Detta ämne är nu arkiverat. Det är fryst och kan inte förändras på något sätt."
     archived_disabled: "Detta ämne är nu oarkiverat. Det är inte längre fruset, och kan ändras."
@@ -1579,7 +1576,6 @@ sv:
     recent_topics: "Senaste"
     see_more: "Mer"
     search_title: "Sök på hemsidan"
-    search_google: "Google"
   terms_of_service:
     title: "Användarvillkor"
     signup_form_message: 'Jag har läst och accepterat <a href="/tos" target="_blank">Användarvillkoren</a>.'

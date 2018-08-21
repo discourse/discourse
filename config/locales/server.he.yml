@@ -1377,9 +1377,6 @@ he:
       two: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
       many: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
       other: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
-  change_owner:
-    post_revision_text: "בעלות הועברה מהמשתמש %{old_user} אל %{new_user}"
-    deleted_user: "משתמש שנמחק"
   topic_statuses:
     archived_enabled: "הנושא הזה נכנס לארכיון. הוא קפוא ולא ניתן לשינוי בכל דרך."
     archived_disabled: "הנושא הזה הוצא מהארכיון. הוא כבר לא קפוא, וניתן לשינוי."
@@ -2074,7 +2071,6 @@ he:
     recent_topics: "לאחרונה"
     see_more: "עוד"
     search_title: "חיפוש באתר זה"
-    search_google: "גוגל"
   login_required:
     welcome_message: |
       ## [ברוך בואך אל %{title}](#welcome)

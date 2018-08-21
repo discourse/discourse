@@ -1117,9 +1117,6 @@ ru:
       few: "%{count} сообщения перенесены в тему %{topic_link}"
       many: "%{count} сообщений перенесены в тему %{topic_link}"
       other: "%{count} сообщений перенесены в тему %{topic_link}"
-  change_owner:
-    post_revision_text: "Владелец сменен с %{old_user} на %{new_user}"
-    deleted_user: "Удаленный пользователь"
   topic_statuses:
     archived_enabled: "Эта тема отправлена в Архив. Она заморожена и не может быть изменена."
     archived_disabled: "Эта тема разархивирована. Она более не заморожена, и может быть изменена."
@@ -1339,7 +1336,6 @@ ru:
     recent_topics: "Недавние"
     see_more: "Еще"
     search_title: "Искать на этом сайте"
-    search_google: "Google"
   terms_of_service:
     title: "Условия предоставления услуг"
     signup_form_message: 'Я прочитал(а) и согласен(а) с <a href="/tos" target="_blank">пользовательским соглашением</a>.'

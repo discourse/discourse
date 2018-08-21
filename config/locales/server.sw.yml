@@ -1005,9 +1005,6 @@ sw:
     errors:
       different_topics: "Machapisho kutoka mada tofauti hayawezi kuunganishwa."
       different_users: "Machapisho kutoka watumiaji tofauti hayawezi kuunganishwa."
-  change_owner:
-    post_revision_text: "Umiliki umeamishwa kutoka kwa %{old_user} kwenda kwa %{new_user}"
-    deleted_user: "mtumiaji aliyefutwa"
   topic_statuses:
     archived_enabled: "Mada hii ni nyaraka. Imesimamishwa na haiwezi kubadilishwa."
     archived_disabled: "Mada hii sio nyaraka. Haijasimamishwa na inaweza kubadilishwa."
@@ -1954,7 +1951,6 @@ sw:
     recent_topics: "Hivi Karibuni"
     see_more: "Zaidi"
     search_title: "Tafuta tovuti hii"
-    search_google: "Google"
   offline:
     title: "Haiwezi kupakia programu-tumizi"
     offline_page_message: "Inaonekana kuwa hauko hewani! Tafadhali angalia muunganisho wa mtandao na jaribu tena."

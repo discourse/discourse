@@ -1622,9 +1622,6 @@ es:
     existing_topic_moderator_post:
       one: "Un post fue trasladado al siguiente tema: %{topic_link}"
       other: "%{count} posts fueron trasladados al siguiente tema: %{topic_link}"
-  change_owner:
-    post_revision_text: "Se ha transferido la propiedad de %{old_user} a %{new_user}"
-    deleted_user: "un usuario eliminado"
   topic_statuses:
     archived_enabled: "Este tema está ahora archivado. Se paraliza y no puede ser cambiado en ningún modo."
     archived_disabled: "Este tema se ha desarchivado. Se desparaliza y ahora puede ser cambiado."
@@ -2741,7 +2738,6 @@ es:
     recent_topics: "Recientes"
     see_more: "Más"
     search_title: "Busca en este sitio"
-    search_google: "Google"
   offline:
     title: "No carga app"
     offline_page_message: "¡Parece que estás offline! Por favor revisa tu conexión a internet e intenta de nuevo."

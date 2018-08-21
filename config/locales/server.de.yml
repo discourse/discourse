@@ -1605,9 +1605,6 @@ de:
     existing_topic_moderator_post:
       one: "Ein Beitrag wurde in ein neues Thema verschoben: %{topic_link}"
       other: "%{count} Beiträge wurden in ein neues Thema verschoben: %{topic_link}"
-  change_owner:
-    post_revision_text: "Eigentümer geändert von %{old_user} zu %{new_user}"
-    deleted_user: "ein gelöschter Benutzer"
   topic_statuses:
     archived_enabled: "Dieses Thema ist nun archiviert. Es ist eingefroren und kann in keiner Weise mehr verändert werden."
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
@@ -2719,7 +2716,6 @@ de:
     recent_topics: "Aktuell"
     see_more: "Mehr"
     search_title: "Diese Site durchsuchen"
-    search_google: "Google"
   offline:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es nochmal."
