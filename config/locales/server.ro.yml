@@ -1209,9 +1209,6 @@ ro:
       one: "o postare a fost comasată într-un subiect existent: %{topic_link}"
       few: "%{count} postări au fost comasate într-un subiect existent: %{topic_link}"
       other: "%{count} de postări au fost comasate într-un subiect existent: %{topic_link}"
-  change_owner:
-    post_revision_text: "Autor schimbat din %{old_user} în %{new_user}"
-    deleted_user: "un utilizator șters"
   topic_statuses:
     archived_enabled: "Acest subiect este acum arhivat. Este înghețat și nu mai poate fi schimbat în nici un fel."
     archived_disabled: "Acest subiect este acum dezarhivat. Nu mai este înghețat și poate fi modificat."
@@ -1635,7 +1632,6 @@ ro:
     recent_topics: "Recente"
     see_more: "Mai multe"
     search_title: "Caută în site"
-    search_google: "Google"
   terms_of_service:
     title: "Condițiile generale de utilizare"
     signup_form_message: 'Am citit și accept <a href="/tos" target="_blank">Condițiile generale de utilizare</a>.'

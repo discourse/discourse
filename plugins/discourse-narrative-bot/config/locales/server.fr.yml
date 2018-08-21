@@ -141,6 +141,7 @@ fr:
           Pendant ce temps là, je serais silencieux.
     new_user_narrative:
       reset_trigger: "nouvel utilisateur"
+      title: "Certificat de complétion des étapes de nouvel utilisateur"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel nouvel utilisateur"
       hello:
         title: ":robot: Bienvenue !"

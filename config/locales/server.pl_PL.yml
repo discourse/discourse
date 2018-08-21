@@ -1366,9 +1366,6 @@ pl_PL:
       few: "%{count} posty przeniesiono do wątku: %{topic_link}"
       many: "%{count} postów przeniesiono do wątku: %{topic_link}"
       other: "%{count} postów przeniesiono do wątku: %{topic_link}"
-  change_owner:
-    post_revision_text: "Zmieniono właściciela z %{old_user} na %{new_user}"
-    deleted_user: "usunięty użytkownik"
   topic_statuses:
     archived_enabled: "Temat został zarchiwizowany. Został zablokowany i nie może być zmieniany. "
     archived_disabled: "Temat został przywrócony z archiwum. Został odblokowany i może ponownie być zmieniany."
@@ -2122,7 +2119,6 @@ pl_PL:
     recent_topics: "Ostatnie"
     see_more: "Więcej"
     search_title: "Szukaj w serwisie"
-    search_google: "Google"
   login_required:
     welcome_message: |+
       #[Witamy na %{title}](#welcome)

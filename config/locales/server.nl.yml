@@ -1172,9 +1172,6 @@ nl:
     existing_topic_moderator_post:
       one: "Een bericht is samengevoegd in een bestaand topic: %{topic_link}"
       other: "%{count} berichten zijn samengevoegd in een bestaand topic: %{topic_link}"
-  change_owner:
-    post_revision_text: "Eigendom overgezet van %{old_user} naar %{new_user}"
-    deleted_user: "een verwijderde gebruiker"
   topic_statuses:
     archived_enabled: "Dit topic is nu gearchiveerd. Het is bevroren en kan op geen enkele manier worden gewijzigd."
     archived_disabled: "Dit topic is nu niet meer gearchiveerd. Het is niet meer bevroren en kan worden gewijzigd."
@@ -1406,7 +1403,6 @@ nl:
     recent_topics: "Recent"
     see_more: "Meer"
     search_title: "Zoeken op deze website"
-    search_google: "Google"
   terms_of_service:
     title: "Servicevoorwaarden"
     signup_form_message: 'Ik heb de <a href="/tos" target="_blank">Servicevoorwaarden</a> gelezen en ga hiermee akkoord.'

@@ -1224,9 +1224,6 @@ ca:
     existing_topic_moderator_post:
       one: "Una publicació ha estat fusionada a un tema existent: %{topic_link}"
       other: "%{count} publicacions han estat fusionades a un tema existent: %{topic_link}"
-  change_owner:
-    post_revision_text: "Propietat transferida per %{old_user} a %{new_user}"
-    deleted_user: "una persona usuària esborrada"
   topic_statuses:
     archived_enabled: "Aquest tema ara està arxivat. Està congelat i no es pot canviar de cap manera."
     archived_disabled: "Aquest tema ara està desarxivat. Ja no està congelat i es pot canviar."
@@ -1710,7 +1707,6 @@ ca:
     recent_topics: "Recent"
     see_more: "Més"
     search_title: "Busca aquest lloc"
-    search_google: "Google"
   terms_of_service:
     title: "Condicions d'ús"
     signup_form_message: 'He llegit i accepto les <a href="/tos" target="_blank">Condicions del servei</a>.'

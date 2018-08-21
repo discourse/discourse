@@ -3566,6 +3566,9 @@ pt_BR:
         clear_filter: "Limpar"
         add_url: "adicionar URL"
         add_host: "adicionar host"
+        value_list:
+          default_none: "Digite para filtrar ou criar..."
+          no_choices_none: "Digite para criar..."
         uploaded_image_list:
           label: "Lista de edição"
           empty: "Não há fotos ainda. Por favor, faça o upload de uma."

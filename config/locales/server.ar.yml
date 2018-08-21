@@ -1270,9 +1270,6 @@ ar:
       few: "%{count} المشاركات التي اندمجت الي مشاركه واحده %{topic_link}"
       many: "%{count} المشاركات التي اندمجت الي مشاركه واحده %{topic_link}"
       other: "%{count} المشاركات التي اندمجت الي مشاركه واحده %{topic_link}"
-  change_owner:
-    post_revision_text: "نقل الملكية من %{old_user} إلى %{new_user}"
-    deleted_user: "عضو محذوف"
   topic_statuses:
     archived_enabled: "هذا الموضوع مؤرشف الأن. لن تستطيع أن تعدل عليه بأي طريقة."
     archived_disabled: "هذا الموضوع غير مؤرشف الأن.لم يجمد، و تستطيع أن تعدل عليه."
@@ -1517,7 +1514,6 @@ ar:
     recent_topics: "الأحدث"
     see_more: "المزيد"
     search_title: "البحث في الموقع"
-    search_google: "غوغل"
   login_required:
     welcome_message: |
       ## اهلا بك في %{title}
