@@ -262,7 +262,8 @@ module Email
         post_id &&
         header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
 
-      reply_key = PostReplyKey.find_or_create_by!(
+      # use safe variant here cause we tend to see concurrency issue
+      reply_key = PostReplyKey.find_or_create_by_safe!(
         post_id: post_id,
         user_id: user_id
       ).reply_key
