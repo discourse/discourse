@@ -1025,6 +1025,9 @@ tr_TR:
     existing_topic_moderator_post:
       one: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
       other: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
+  change_owner:
+    post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
+    deleted_user: "silinmiş kullanıcı"
   topic_statuses:
     archived_enabled: "Konu şimdi arşivlendi. Donduruldu ve herhangi bir şekilde değişiklik yapılamaz."
     archived_disabled: "Konu şimdi arşivden çıkarıldı. Artık donmuş değil, değiştirilebilir."
@@ -1361,6 +1364,7 @@ tr_TR:
     recent_topics: "Yeni"
     see_more: "Daha fazla"
     search_title: "Bu sitede ara"
+    search_google: "Google"
   terms_of_service:
     title: "Üyelik Sözleşmesi"
     signup_form_message: '<a href="/tos" target="_blank">Üyelik Sözleşmesini</a> okudum ve kabul ediyorum.'

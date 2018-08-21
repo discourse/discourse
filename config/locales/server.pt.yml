@@ -1201,6 +1201,9 @@ pt:
     existing_topic_moderator_post:
       one: "Uma mensagem foi unida em um tópico existente: %{topic_link}"
       other: "%{count} mensagens foram unidas em um tópico existente: %{topic_link}"
+  change_owner:
+    post_revision_text: "Direito de posse transferido de %{old_user} para %{new_user}"
+    deleted_user: "um utilizador eliminado"
   topic_statuses:
     archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer maneira."
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
@@ -1614,6 +1617,7 @@ pt:
     recent_topics: "Recente"
     see_more: "Mais"
     search_title: "Pesquisar neste sítio"
+    search_google: "Google"
   terms_of_service:
     title: "Termos de Serviço"
     signup_form_message: 'Li e aceito os <a href="/tos" target="_blank">Termos de Serviço</a>.'

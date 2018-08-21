@@ -1079,6 +1079,9 @@ sk:
       few: "%{count} príspevky boli pripojené k existujúcej téme: %{topic_link}"
       many: "%{count} príspevkov bolo pripojených k existujúcej téme: %{topic_link}"
       other: "%{count} príspevkov bolo pripojených k existujúcej téme: %{topic_link}"
+  change_owner:
+    post_revision_text: "Vlástníctvo bolo prenesené z  %{old_user} na %{new_user}"
+    deleted_user: "vymazaný užívateľ"
   topic_statuses:
     archived_enabled: "Táto téma je archivovaná. Je zmrazená a už sa nedá nijako meniť. "
     archived_disabled: "Táto téma je vyňatá z archivu. Už nie je zmrazená a môže sa opäť meniť. "
@@ -1273,6 +1276,7 @@ sk:
     recent_topics: "Nedávne"
     see_more: "Viac"
     search_title: "Prehľadať tieto stránky"
+    search_google: "Google"
   terms_of_service:
     title: "Podmienky používania"
     signup_form_message: 'Prečítal som si <a href="/tos" target="_blank">Podmienky používania</a> a súhlasím s nimi.'

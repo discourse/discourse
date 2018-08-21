@@ -531,6 +531,7 @@ te:
     recent_topics: "తాజా"
     see_more: "ఇంకా"
     search_title: "ఈ సైట్ వెదుకు"
+    search_google: "గూగుల్"
   terms_of_service:
     title: "సేవా నియమాలు"
     signup_form_message: 'నేను <a href="/tos" target="_blank">సేవా నియమాలను</a> చదివాను, వాటికి అంగీకరిస్తున్నాను.'

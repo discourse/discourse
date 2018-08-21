@@ -1458,6 +1458,9 @@ ur:
     existing_topic_moderator_post:
       one: "پوسٹ کو ایک موجودہ ٹاپک میں ضم کر دیا گیا تھا: %{topic_link}"
       other: "%{count} پوسٹس کو ایک موجودہ ٹاپک میں ضم کر دیا گیا تھا: %{topic_link}"
+  change_owner:
+    post_revision_text: "%{old_user} سے %{new_user} کو مالکیت منتقل کر دی گئی"
+    deleted_user: "ایک حذف شدہ صارف"
   topic_statuses:
     archived_enabled: "یہ ٹاپک اب آرکائیو کیا ہوا ہے۔ یہ منجمد ہے اور کسی طرح سے بھی تبدیل نہیں کیا جاسکتا۔"
     archived_disabled: "یہ ٹاپک اب غیر آرکائیو شدہ ہے۔ یہ اب منجمد نہیں اور تبدیل کیا جاسکتا ہے۔"
@@ -2518,6 +2521,7 @@ ur:
     recent_topics: "حالیہ"
     see_more: "مذید"
     search_title: "اِس سائٹ میں تلاش کریں"
+    search_google: "گُوگَل"
   offline:
     title: "اَیپ کو لوڈ نہیں کیا جا سکا"
     offline_page_message: "لگتا ہے کہ آپ آف لائن ہیں! براہ مہربانی اپنا نیٹ وَرک کنکشن چیک کریں اور دوبارہ کوشش کیجیے۔"

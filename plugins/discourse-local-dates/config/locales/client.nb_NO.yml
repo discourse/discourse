@@ -11,11 +11,9 @@ nb_NO:
       title: Sett inn dato
       create:
         modal_title: Sett inn dato
-        modal_subtitle: "Vi vil automatisk konvertere dato og tid til leserens lokale tidssone."
         form:
           insert: Sett inn
           advanced_mode: Avansert modus
-          simple_mode: Enkel modus
           format_description: "Format som brukes for å vise datoen til en bruker. Bruk \"\\T\\Z\" for å vise tidssonen som ord (Europe/Paris)"
           timezones_title: Tidssoner som vises
           timezones_description: Tidssoner vil brukes for å vise datoer i forhåndsvisninger og fallback.
@@ -23,6 +21,3 @@ nb_NO:
           recurring_description: "Definer regelmessigheten til en hendelse. Du kan også manuelt redigere regelmessigheten etter at den er opprettet ved å bruke de følgende nøklene: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Ingen regelmessighet
           invalid_date: Ugyldig dato, sjekk at dato og klokkeslett er korrekt
-          date_title: Dato
-          time_title: Tid
-          format_title: Datoformat

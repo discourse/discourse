@@ -1285,6 +1285,9 @@ fa_IR:
     existing_topic_moderator_post:
       one: "%{count} نوشته با یک موضوع موجود ترکیب شدند: %{topic_link}"
       other: "%{count} نوشته با یک موضوع موجود ترکیب شدند: %{topic_link}"
+  change_owner:
+    post_revision_text: "حق مالکیت از کاربر {old_user}% به کاربر {new_user}% منتقل شد"
+    deleted_user: "یک کاربر حذف شده"
   topic_statuses:
     archived_enabled: "این موضوع بایگانی شده است.  غیر قابل دسترسی است و قادر به تغییر آن نیستید."
     archived_disabled: "این موضوع الان از بایگانی خارج شد.این دیگر غیر قابل دسترسی نیست و قادر به عوض شدن است."
@@ -1979,6 +1982,7 @@ fa_IR:
     recent_topics: "اخیر"
     see_more: "بیشتر"
     search_title: "جستجو در سایت"
+    search_google: "گوگل"
   login_required:
     welcome_message: |
       ## [خوش آمدید به %{title}](#welcome)

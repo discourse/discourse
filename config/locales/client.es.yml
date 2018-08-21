@@ -125,7 +125,6 @@ es:
       user_left: "%{who} se eliminó a sí mismo de este mensaje %{when}"
       removed_user: "eliminó a %{who} %{when}"
       removed_group: "eliminó a %{who} %{when}"
-      autobumped: "bumped automáticamente %{when}"
       autoclosed:
         enabled: 'cerrado %{when}'
         disabled: 'abierto %{when}'
@@ -249,12 +248,6 @@ es:
       last_read: "este es el último post que has leído; haz clic para guardarlo en marcadores"
       remove: "Eliminar marcador"
       confirm_clear: "¿Seguro que deseas borrar todos los marcadores de este tema?"
-    drafts:
-      resume: "Resúmen"
-      remove: "Eliminar"
-      new_topic: "Nuevo tema borrador"
-      new_private_message: "Nuevo mensaje privado borrador"
-      topic_reply: "Respuesta borrador"
     topic_count_latest:
       one: "Ver {{count}} tema nuevo o actualizado"
       other: "Ver {{count}} temas nuevos o actualizados"
@@ -494,7 +487,6 @@ es:
       "12": "Elementos Enviados"
       "13": "Bandeja de entrada"
       "14": "Pendiente"
-      "15": "Borradores"
     categories:
       all: "Categorías"
       all_subcategories: "todas"
@@ -519,7 +511,6 @@ es:
       topic_stat_sentence:
         one: "%{count} tema nuevo en los últimos %{unit}."
         other: "%{count} temas nuevos en los últimos %{unit}."
-      more: "(%{count} más) ..."
     ip_lookup:
       title: Búsqueda de Direcciones IP
       hostname: Nombre del host
@@ -677,7 +668,6 @@ es:
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
       second_factor_backup:
-        title: "Códigos Two Factor Backup"
         regenerate: "Regenerar"
         disable: "Deshabilitar"
         enable: "Habilitar"
@@ -686,9 +676,6 @@ es:
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error copiando datos al portapapeles"
         remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
-        codes:
-          title: "Códigos de Respaldo Generados"
-          description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Mantén los códigos en un lugar seguro, pero accesible."
       second_factor:
         title: "Autenticación Dos Factores"
         disable: "Inhabilitar Autenticación Dos Factores"
@@ -2348,7 +2335,6 @@ es:
         bookmarks: '<b>g</b>, <b>b</b> Marcadores'
         profile: '<b>g</b>, <b>p</b> Perfil'
         messages: '<b>g</b>, <b>m</b> Mensajes'
-        drafts: '<b>g</b>, <b>d</b> Borradores'
       navigation:
         title: 'Navegación'
         jump: '<b>#</b> Ir al post #'
@@ -2570,7 +2556,6 @@ es:
         moderation_tab: "Moderación"
         disabled: Desactivado
         timeout_error: "Lo sentimos, la solicitud está durando demasiado, por favor selecciona un periodo más corto"
-        exception_error: "Lo siento, ha ocurrido un error al ejecutar la consulta"
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el periodo previo."
           today: "Hoy"
@@ -2796,9 +2781,6 @@ es:
         flag_event:
           name: "Reportar Evento"
           details: "Cuando un reporte es creado, de acuerdo, en desacuerdo, o ignorado."
-        queued_post_event:
-          name: "Evento de aprobación de publicación"
-          details: "Cuando se crea, aprueba o rechaza una nueva publicación en cola."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -3566,9 +3548,6 @@ es:
         clear_filter: "Limpiar filtro"
         add_url: "añadir URL"
         add_host: "añadir host"
-        value_list:
-          default_none: "Escribe para filtrar o crear..."
-          no_choices_none: "Escribe para crear..."
         uploaded_image_list:
           label: "Editar lista"
           empty: "No hay imágenes todavía. Por favor, sube una."
