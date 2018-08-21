@@ -12,7 +12,7 @@ class SkippedEmailLog < ActiveRecord::Base
   validate :ensure_valid_reason_type
 
   def self.reason_types
-    Enum.new(
+    @types ||= Enum.new(
       custom: 1,
       exceeded_emails_limit: 2,
       exceeded_bounces_limit: 3,
