@@ -12,7 +12,7 @@ class AvatarLookup
   private
 
   def self.lookup_columns
-    @lookup_columns ||= %i{id user_emails.email username uploaded_avatar_id}
+    @lookup_columns ||= %i{id user_emails.email username name uploaded_avatar_id}
   end
 
   def users

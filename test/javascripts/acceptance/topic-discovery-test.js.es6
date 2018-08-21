@@ -7,6 +7,12 @@ QUnit.test("Visit Discovery Pages", async assert => {
   assert.ok(exists(".topic-list"), "The list of topics was rendered");
   assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
+  assert.equal(
+    find("a[data-user-card=eviltrout]:first img.avatar").attr("title"),
+    "Evil Trout - Most Posts",
+    "it shows user's full name in avatar title"
+  );
+
   await visit("/c/bug");
   assert.ok(exists(".topic-list"), "The list of topics was rendered");
   assert.ok(exists(".topic-list .topic-list-item"), "has topics");
