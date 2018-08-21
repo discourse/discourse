@@ -1,6 +1,7 @@
 module Email
 
   class Processor
+    attr_reader :receiver
 
     def initialize(mail, retry_on_rate_limit = true)
       @mail = mail
