@@ -22,8 +22,8 @@ class UploadCreator
   #  - for_export (boolean)
   def initialize(file, filename, opts = {})
     @file = file
-    @filename = filename || ''
-    @upload = Upload.new(original_filename: filename, filesize: 0)
+    @filename = (filename || "").gsub(/[^[:print:]]/, "")
+    @upload = Upload.new(original_filename: @filename, filesize: 0)
     @opts = opts
   end
 
