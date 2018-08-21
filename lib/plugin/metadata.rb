@@ -55,7 +55,8 @@ class Plugin::Metadata
     "discourse-github-linkback",
     "discourse-characters-required",
     "discourse-auto-deactivate",
-    "discourse-invite-tokens"
+    "discourse-invite-tokens",
+    "discourse-checklist"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
