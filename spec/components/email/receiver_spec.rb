@@ -622,7 +622,6 @@ describe Email::Receiver do
 
     context "when message sent to a group has no key and find_related_post_with_key is enabled" do
       let!(:topic) do
-        SiteSetting.find_related_post_with_key = true
         process(:email_reply_1)
         Topic.last
       end
