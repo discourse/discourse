@@ -129,6 +129,14 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  rescue_from ActiveRecord::RecordInvalid do |e|
+    if request.format && request.format.json?
+      render_json_error e, type: :record_invalid, status: 422
+    else
+      raise e
+    end
+  end
+
   # If they hit the rate limiter
   rescue_from RateLimiter::LimitExceeded do |e|
     render_rate_limit_error(e)
