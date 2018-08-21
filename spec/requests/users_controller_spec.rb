@@ -1440,7 +1440,7 @@ describe UsersController do
             notification_level: TagUser.notification_levels[:watching]
           ).pluck(:tag_id)).to contain_exactly(tags[0].id, tags[1].id)
 
-          theme = Theme.create(name: "test", user_selectable: true, user_id: -1)
+          theme = Fabricate(:theme, user_selectable: true)
 
           put "/u/#{user.username}.json", params: {
             muted_usernames: "",
@@ -3097,14 +3097,63 @@ describe UsersController do
         expect(response.status).to eq(404)
       end
 
-      it 'works' do
-        FacebookUserInfo.create!(user_id: user.id, facebook_user_id: 12345, email: 'someuser@somedomain.tld')
-        stub = stub_request(:delete, 'https://graph.facebook.com/12345/permissions?access_token=123%7Cabcde').to_return(body: "true")
+      context "with fake provider" do
+        let(:authenticator) do
+          Class.new(Auth::Authenticator) do
+            attr_accessor :can_revoke
+            def name
+              "testprovider"
+            end
 
-        post "/u/#{user.username}/preferences/revoke-account.json", params: {
-          provider_name: 'facebook'
-        }
-        expect(response.status).to eq(200)
+            def enabled?
+              true
+            end
+
+            def description_for_user(user)
+              "an account"
+            end
+
+            def can_revoke?
+              can_revoke
+            end
+
+            def revoke(user, skip_remote: false)
+              true
+            end
+          end.new
+        end
+
+        before do
+          DiscoursePluginRegistry.register_auth_provider(Auth::AuthProvider.new(authenticator: authenticator))
+        end
+
+        after do
+          DiscoursePluginRegistry.reset!
+        end
+
+        it 'returns an error when revoking is not allowed' do
+          authenticator.can_revoke = false
+
+          post "/u/#{user.username}/preferences/revoke-account.json", params: {
+            provider_name: 'testprovider'
+          }
+          expect(response.status).to eq(404)
+
+          authenticator.can_revoke = true
+          post "/u/#{user.username}/preferences/revoke-account.json", params: {
+            provider_name: 'testprovider'
+          }
+          expect(response.status).to eq(200)
+        end
+
+        it 'works' do
+          authenticator.can_revoke = true
+
+          post "/u/#{user.username}/preferences/revoke-account.json", params: {
+            provider_name: 'testprovider'
+          }
+          expect(response.status).to eq(200)
+        end
       end
 
     end

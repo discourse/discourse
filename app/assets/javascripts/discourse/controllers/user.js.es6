@@ -62,6 +62,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return viewingSelf || isAdmin;
   },
 
+  @computed("viewingSelf")
+  showDrafts(viewingSelf) {
+    return viewingSelf;
+  },
+
   @computed("viewingSelf", "currentUser.admin")
   showPrivateMessages(viewingSelf, isAdmin) {
     return (

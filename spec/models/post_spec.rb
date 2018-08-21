@@ -141,7 +141,7 @@ describe Post do
     let(:user) { Fabricate(:coding_horror) }
     let(:admin) { Fabricate(:admin) }
 
-    it 'isFlagged is accurate' do
+    it 'is_flagged? is accurate' do
       PostAction.act(user, post, PostActionType.types[:off_topic])
       post.reload
       expect(post.is_flagged?).to eq(true)
@@ -151,12 +151,33 @@ describe Post do
       expect(post.is_flagged?).to eq(false)
     end
 
-    it 'has_active_flag is accurate' do
+    it 'is_flagged? is true if flag was deferred' do
+      PostAction.act(user, post, PostActionType.types[:off_topic])
+      PostAction.defer_flags!(post.reload, admin)
+      post.reload
+      expect(post.is_flagged?).to eq(true)
+    end
+
+    it 'is_flagged? is true if flag was cleared' do
+      PostAction.act(user, post, PostActionType.types[:off_topic])
+      PostAction.clear_flags!(post.reload, admin)
+      post.reload
+      expect(post.is_flagged?).to eq(true)
+    end
+
+    it 'has_active_flag? is false for deferred flags' do
       PostAction.act(user, post, PostActionType.types[:spam])
       post.reload
       expect(post.has_active_flag?).to eq(true)
 
       PostAction.defer_flags!(post, admin)
+      post.reload
+      expect(post.has_active_flag?).to eq(false)
+    end
+
+    it 'has_active_flag? is false for cleared flags' do
+      PostAction.act(user, post, PostActionType.types[:spam])
+      PostAction.clear_flags!(post.reload, admin)
       post.reload
       expect(post.has_active_flag?).to eq(false)
     end
@@ -1056,16 +1077,12 @@ describe Post do
 
     it "uses default locale for edit reason" do
       I18n.locale = 'de'
-      old_username = post.user.username_lower
 
       post.set_owner(coding_horror, Discourse.system_user)
       post.reload
 
       expected_reason = I18n.with_locale(SiteSetting.default_locale) do
-        I18n.t('change_owner.post_revision_text',
-               old_user: old_username,
-               new_user: coding_horror.username_lower
-        )
+        I18n.t('change_owner.post_revision_text')
       end
 
       expect(post.edit_reason).to eq(expected_reason)

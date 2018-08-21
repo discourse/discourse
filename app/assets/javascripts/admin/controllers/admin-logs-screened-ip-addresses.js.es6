@@ -46,19 +46,14 @@ export default Ember.Controller.extend({
       record.set("editing", false);
       record
         .save()
-        .then(saved => {
-          if (saved.success) {
-            this.set("savedIpAddress", null);
-          } else {
-            bootbox.alert(saved.errors);
-            if (wasEditing) record.set("editing", true);
-          }
+        .then(() => {
+          this.set("savedIpAddress", null);
         })
         .catch(e => {
-          if (e.responseJSON && e.responseJSON.errors) {
+          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
             bootbox.alert(
               I18n.t("generic_error_with_reason", {
-                error: e.responseJSON.errors.join(". ")
+                error: e.jqXHR.responseJSON.errors.join(". ")
               })
             );
           } else {

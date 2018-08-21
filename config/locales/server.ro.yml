@@ -314,27 +314,6 @@ ro:
   staff_category_description: "Categorie privată pentru discuțiile personalului. Subiectele sunt vizibile numai pentru admini și moderatori."
   lounge_welcome:
     title: "Bine ai venit în sufragerie"
-    body: |2
-
-        Felicitări! :confetti_ball:
-
-        Dacă poți vedea acest subiect, ai fost promovat recent la **utilizator frecvent** (nivel de încredere 3).
-
-        Acum poți să &hellip;
-
-        * Editezi titlul oricărui subiect
-        * Schimbi categoria oricărui subiect
-        * Setezi ca toate link-urile tale să fie urmărite ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) este dezactivat)
-        * Accesezi secțiunea privată din categoria Sufragerie unde au acces numai utilizatorii de nivel 3 sau mai mare
-        * Ascunzi spam-ul folosind un singur marcaj de avertizare
-
-        Aici este [lista colegilor utilizatori ce au ajuns la nivelul de încredere 3](/badges/3/regular). Salută-i!
-
-        Îți mulțumim că ești o parte importantă a acestei comunități!
-
-        (Pentru mai multe informații cu privire la nivelurile de încredere, [vezi subiectul ăsta][încredere]. Ține aminte că doar membrii ce vor îndeplini constant criteriile cerute vor rămâne la nivelul de încredere 3.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Despre categoria %{category}"
     replace_paragraph: "(Înlocuiește acest prim paragraf cu o scurtă descriere a noii tale categorii. Acest îndreptar va apărea în zona de selecție a categoriei, așa că încearcă să îl limitezi la maxim 200 de caractere. **Această categorie nu va apărea în pagina categoriilor până ce nu editezi această descriere sau până ce nu creezi subiecte**)"
@@ -349,10 +328,6 @@ ro:
     cannot_delete:
       uncategorized: "Nu se poate șterge Necategorizat"
       has_subcategories: "Nu putem șterge categoria aceasta pentru că are sub-categorii."
-      topic_exists:
-        one: "Nu poți șterge categoria aceasta pentru că are un subiect. Cel mai vechi subiect este %{topic_link}."
-        few: "Nu poți șterge categoria aceasta pentru că are %{count} subiecte. Cel mai vechi subiect este %{topic_link}."
-        other: "Nu poți șterge categoria aceasta pentru că are %{count} de subiecte. Cel mai vechi subiect este %{topic_link}."
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
@@ -539,13 +514,8 @@ ro:
       title: 'Apreciere'
       description: 'Apreciază această postare'
       long_form: 'a apreciat asta'
-    vote:
-      title: 'Votează'
-      description: 'Votează pentru această postare'
-      long_form: 'a votat pentru această postare'
   user_activity:
     no_bookmarks:
-      self: "Nu ai nicio postare cu semn de carte. Folosirea semnelor de carte pentru postări permite accesarea lor ulterioară într-un mod facil. "
       others: "Nu există semne de carte."
     no_likes_given:
       self: "Nu ai apreciat nicio postare."
@@ -679,8 +649,6 @@ ro:
       num_users: "Utilizatori"
     top_referred_topics:
       title: "Top subiecte la care se face referire"
-      xaxis: "Subiect"
-      num_clicks: "Click-uri"
     page_view_anon_reqs:
       title: "Anonimi"
       xaxis: "Zi"
@@ -847,7 +815,6 @@ ro:
     post_menu: "Determină ce elemente apar în meniul de postare și în ce ordine . Exemplu: apreciere|editează|marchează|șterge|distribuie|semne de carte|răspunde"
     post_menu_hidden_items: "Elemente de meniu care să fie ascunse implicit în meniul de postări dacă nu se dă click pe partea de extindere a meniului."
     share_links: "Determină ce elemente apar în dialogul de distribuire și în ce ordine."
-    track_external_right_clicks: "Urmărește link-urile externe care sunt dezactivate prin click-dreapta (ex: deschide în tab nou) în mod implicit fiindcă rescriu URL-uri"
     site_contact_username: "Un nume utilizator valid al unui membru al echipei de la care să se trimită toate mesajele. Dacă e lăsat liber se va folosi contul implicit System."
     send_welcome_message: "Trimite tuturor utilizatorilor un mesaj de bun venit cu un ghid rapid de inițiere."
     suppress_reply_directly_below: "Nu arăta contorul expandabil de răspunsuri la o postare atunci când nu există decât un singur răspuns direct sub această postare."
@@ -1242,9 +1209,6 @@ ro:
       one: "o postare a fost comasată într-un subiect existent: %{topic_link}"
       few: "%{count} postări au fost comasate într-un subiect existent: %{topic_link}"
       other: "%{count} de postări au fost comasate într-un subiect existent: %{topic_link}"
-  change_owner:
-    post_revision_text: "Autor schimbat din %{old_user} în %{new_user}"
-    deleted_user: "un utilizator șters"
   topic_statuses:
     archived_enabled: "Acest subiect este acum arhivat. Este înghețat și nu mai poate fi schimbat în nici un fel."
     archived_disabled: "Acest subiect este acum dezarhivat. Nu mai este înghețat și poate fi modificat."
@@ -1313,7 +1277,6 @@ ro:
     missing_user_field: "Nu ai completat toate câmpurile utilizatorului"
     already_logged_in: "Oops, se pare că încerci să accepți o invitație de la un alt utilizator. Dacă nu ești %{current_user}, te rugăm ieși și intră din nou."
   user:
-    no_accounts_associated: "Nu sunt conturi asociate"
     deactivated: "A fost dezactivat din cauza pre a multor emailuri ricoșate la '%{email}'."
     username:
       short: "trebuie să fie cel puțin %{min} de caractere"
@@ -1466,14 +1429,6 @@ ro:
         Dacă există interfață utilizator web pentru contul tău POP, ar trebui să te autentifici pe ea și să îți verifici acolo setările.
     too_many_spam_flags:
       subject_template: "Cont nou suspendat"
-      text_body_template: |
-        Salut,
-
-        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că postările tale au fost temporar ascunse pentru că au fost marcate cu marcaje de avertizare de către comunitate..
-
-        Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
-
-        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Cont nou suspendat"
       text_body_template: |
@@ -1677,7 +1632,6 @@ ro:
     recent_topics: "Recente"
     see_more: "Mai multe"
     search_title: "Caută în site"
-    search_google: "Google"
   terms_of_service:
     title: "Condițiile generale de utilizare"
     signup_form_message: 'Am citit și accept <a href="/tos" target="_blank">Condițiile generale de utilizare</a>.'
@@ -1698,25 +1652,6 @@ ro:
   flag_reason:
     sockpuppet: "Un utilizator nou a creat un subiect, și un alt utilizator nou de la aceeași adresă de IP (%{ip_address}) a răspuns. Vezi <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> la setările site-ului."
     spam_hosts: "Acest nou utilizator a încrecat să creeze postări multiple cu link-uri către acelasi domeniu (%{domain}). Vezi <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> la setările site-ului."
-  email_log:
-    post_user_deleted: "Utilizatorul acestei postări a fost șters."
-    no_user: "Nu s-a găsit utilizatorul cu id-ul %{user_id}"
-    anonymous_user: "Utilizatorul este anonim"
-    suspended_not_pm: "Utilizatorul este suspendat, nici un mesaj"
-    seen_recently: "Utilizatorul a fost văzut recent"
-    post_not_found: "Nu s-a găsit postarea cu id-ul %{post_id}"
-    notification_already_read: "Notificarea ce face obiectul acestui email a fost deja citită"
-    topic_nil: "post.topic este nil"
-    post_deleted: "postarea a fost ștearsă de către autor"
-    user_suspended: "utilizatorul a fost suspendat"
-    already_read: "utilizatorul a citit deja această postare"
-    exceeded_emails_limit: "Depășit max_emails_per_day_per_user"
-    exceeded_bounces_limit: "Depășit bounce_score_threshold"
-    message_blank: "mesajul este gol"
-    message_to_blank: "message.to este gol"
-    text_part_body_blank: "text_part.body e gol"
-    body_blank: "conținutul este gol"
-    no_echo_mailing_list_mode: "Notificările pe mail dezactivate pentru postările proprii ale utilizatorului"
   color_schemes:
     base_theme_name: "Bază"
   about: "Despre"
@@ -1819,70 +1754,40 @@ ro:
     editor:
       name: Editor
       description: Prima postare editată
-      long_description: |
-        Acest ecuson se acordă când, pentru prima dată, îți editezi una din postări. Deși nu poți să îți editezi postările la infinit, editarea este întotdeauna o idee buna: poți să îți îmbunătățești postările, să corectezi micile greșeli sau să adaugi chestii pe care le-ai uitat când ai postat prima dată. Editează ca să îți faci postările să strălucească.
     basic_user:
       name: Simplu utilizator
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Ți-au fost acordate</a> toate funcțiile esențiale ale comunității"
-      long_description: |
-        Acest ecuson se acordă când ai ajuns la nivelul de încredere 1. Îți mulțumim că stai nițel pe aici ca să citești câteva subiecte și să înveți despre ce anume e comunitatea noastră. Restricțiile de utilizator nou ți-au fost ridicate; ți-au fost acordate toate capacitățile esențiale, precum trimiterea de mesaje personale, marcarea cu marcaje de avertizare, editare wiki, și capacitatea de a posta imagini și link-uri multiple.
     member:
       name: Membru
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Ți s-au acordat</a> invitații, mesaje în grup, mai multe aprecieri"
-      long_description: |
-        Acest ecuson se acordă când ajungi la nivelul de încredere 2. Îți mulțumim că încerci de câteva săptămâni să te alături cu adevărat comunității noastre.
     regular:
       name: Utilizator frecvent
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Ți s-au acordat</a> recategorizare, redenumire, link-uri urmărite, wiki, mai multe aprecieri"
-      long_description: |
-        Acest ecuson se acordă atunci când ai atins nivelul de încredere 3. Îți mulțumim că ești un utilizator frecvent, „adevărat client al casei” în comunitatea noastră, deja de câteva luni de zile. Acum ești unul dintre cei mai activi cititori și un contributor de încredere care ne ridică întreaga comunitate. Acum vei avea posibilitatea să recategorisești și redenumești subiecte, să utilizezi marcaje de avertizare spam mai puternice, să ai acces la zona privată de sufragerie, și o să primești mult mai multe aprecieri în fiecare zi.
     leader:
       name: Lider
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Ți s-au acordat</a> editare globală, fixare, închidere, arhivare, divizare și comasare, mai multe aprecieri"
-      long_description: |
-        Acest ecuson se acordă când ajungi la nivelul de încredere 4. Ești un lider al acestei comunități, după cum te-a selectat echipa și, reprezinți un exemplu pozitiv prin acțiunile și cuvintele tale. Ai capacitatea să editezi toate postările, să aplici acțiuni de moderare obișnuite precum fixare, închidere, delistare, arhivare, divizare și comasare, și ai tone de aprecieri pe zi.
     welcome:
       name: Bun venit
       description: Ai primit o apreciere
-      long_description: |
-        Acest ecuson se acordă atunci când primești prima apreciere la o postare. Felicitări, ai postat ceva ce colegii tăi membri ai comunității au găsit a fi interesant, mișto și folositor!
     autobiographer:
       name: Autobiograf
     anniversary:
       name: Aniversare
       description: "Ești membru activ de un an, ai postat cel puțin odată"
-      long_description: |
-        Acest ecuson se acordă când ai împlinit un an de când ești membru și ai avut cel puțin o postare în acest timp. Îți mulțumim că stai prin zonă și contribui la comunitatea noastră. Nu ne-am putea descurca fără tine.
     nice_post:
       name: Răspuns fain
       description: Ai primit 10 aprecieri la un răspuns
-      long_description: |
-        Acest ecuson se acordă când un răspuns de-al tău primește 10 aprecieri. Răspunsul tău a făcut impresie în comunitate și a împins conversația înainte!
     good_post:
       name: Răspuns mișto
       description: Ai primit 25 de aprecieri la un răspuns
-      long_description: |
-        Acest ecuson se acordă când un răspuns de-al tău primește 25 de aprecieri. Răspunsul tău a fost excepțional și a făcut conversația mult mai bună pentru toată lumea!
     great_post:
       name: Răspuns beton
       description: Ai primit 50 de aprecieri la un răspuns
-      long_description: |
-        Acest ecuson se acordă când un răspuns de-al tău primește 50 de aprecieri. Wow! Răspunsul tău a fost inspirat, fascinant, amuzant sau expert și comunitatea l-a iubit.
     nice_topic:
       name: Subiect fain
       description: Ai primit 10 de aprecieri la un subiect
-      long_description: |
-        Acest ecuson se acordă când unul din subiectele tale primește 10 aprecieri. Hei, ai început o conversație care i-a plăcut comunității!
     good_topic:
       name: Subiect mișto
       description: Ai primit 25 de aprecieri la un subiect
-      long_description: |
-        Acest ecuson este acordat când un subiect de-al tău primește 25 de aprecieri. Ai lansat o conversație vibrantă și în jurul căreia s-a adunat comunitatea și pe care au iubit-o.
     great_topic:
       name: Subiect beton
       description: Ai primit 50 de aprecieri la un subiect
-      long_description: |
-        Acest ecuson se acordă când un subiect de-al tău primește 50 de aprecieri. Ai inițiat o conversație fascinantă și comunitatea s-a bucurat de discuția dinamică ce a rezultat!
     nice_share:
       name: Distribuție faină
       description: Ai distribuit o postare care a atras 25 de vizitatori unici
@@ -1891,13 +1796,9 @@ ro:
     good_share:
       name: Distribuție mișto
       description: Ai distribuit o postare care a atras 300 de vizitatori unici
-      long_description: |
-        Acest ecuson se acordat pentru distribuirea unui link care a fost accesat de 300 de vizitatori externi. Bună treabă! Ai arătat o discuție fantastică unei mulțimi de oameni noi și ai ajutat această comunitate să crească.
     great_share:
       name: Distribuție beton
       description: Ai distribuit o postare ce a atras 1000 de vizitatori unici
-      long_description: |
-        Acest ecuson este acordat pentru distribuirea unui link care a fost accesat de 1000 de vizitatori externi. Wow! A promovat o discuție interesantă în fața unei audiențe enorme și ai ajutat mult comunitatea noastră să crească!
     first_like:
       name: Prima apreciere
       description: Ai apreciat o postare
@@ -1906,21 +1807,15 @@ ro:
     first_flag:
       name: Primul marcaj de avertizare
       description: Marcat postare cu marcaj de avertizare
-      long_description: |
-        Acest ecuson se acordă când, pentru prima dată, ai marcat o postare cu marcaj de avertizare. Marcarea cu marcaj de avertizare este metoda prin care cu toții ajutăm la menținerea acestui site în condiții de curățenie și luminozitate pentru toată lumea. Dacă observi vreo postare care, indiferent de motiv, necesită atenția moderatorilor, te rugăm să nu eziți să îl marchezi. Poți de asemenea să marchezi cu marcaj de avertizare spre trimiterea de  <b>mesaj personal</b> către un coleg utilizator, dacă vezi vreo problemă cu postarea lui. Dacă vezi vreo problemă, :flag_black: semnalează-o!
     promoter:
       name: Promotor
       description: Ai invitat un utilizator
     campaigner:
       name: șef de campanie
       description: Ai invitat 3 utilizatori simpli
-      long_description: |
-        Acest ecuson se acordă după ce ai invitat 3 persoane care apoi au petrecut suficient timp pe site pentru a deveni utilizatori simpli. O comunitate vibrantă are nevoie de o infuzie regulată de noi-veniți care sa participe în mod obișnuit și care să adauge noi voci la conversații.
     champion:
       name: Campion
       description: Ai invitat 5 membri
-      long_description: |
-        Acest ecuson se acordă când ai invitat 5 membri care ulterior au petrecut suficient timp pe site pentru a deveni membri deplini. Wow! Îți mulțumim că ne sporești diversitatea comunității cu noi membri.
     first_share:
       name: Prima distribuire
       description: Ai distribuit o postare
@@ -1934,8 +1829,6 @@ ro:
     first_quote:
       name: Prima citare
       description: Ai citat o postare
-      long_description: |
-        Acest ecuson se acordă când, pentru prima dată, citezi o postare precedentă în cadrul propriului tău răspuns și ajută la conexarea discuțiilor în cadrul unui subiect. Cel mai simplu mod să citezi este să selectezi o secțiune a unei postări și apoi să apeși orice buton de răspuns. Citează generos!
     read_guidelines:
       name: Ghid Citit
     reader:
@@ -1986,8 +1879,6 @@ ro:
     crazy_in_love:
       name: Maximă stimă
       description: Ai folosit de 20 de ori 50 de aprecieri pe zi
-      long_description: |
-        Acest ecuson se acordă atunci când folosești toate cele 50 de aprecieri la care ai zilnic dreptul, de-a lungul a 20 zile. Wow! Ești un model de încurajare pentru colegii din comunitate!
     thank_you:
       name: Mulțumesc
       description: Ai 20 de postări apreciate și ai dat 10 apreiceri
@@ -2001,18 +1892,14 @@ ro:
     empathetic:
       name: Empatic
       description: Ai 500 de postări apreciate și ai oferit 1000 de aprecieri
-      long_description: |
-        Acest ecuson se acordă când ți-au fost apreciate 500 de postări și ai acordat la rândul tău 1000 sau mai multe aprecieri. Wow! Ești un model de generozitate și apreciere reciprocă :two_hearts:.
     first_emoji:
       name: Primul emoji
       description: Ai folosit un emoji într-o postare.
     first_mention:
       name: Prima mențiune
-      long_description: "Acest ecuson se acordă când, pentru prima oară, ai menționat @numele de utilizator al cuiva într-o postare de-a ta. Fiecare menționare generează o notificare către acea persoană, astfel încât ea să știe despre postarea ta. Începi prin a apăsa tasta @ (simbolul at) ca să menționezi orice utilizator sau, dacă îți este permis, grup. E o metodă convenabilă să atragi atenția cuiva."
     first_onebox:
       name: Primul onebox
       description: Ai postat un link care a devenit onebox
-      long_description: "Acest ecuson se acordă când, pentru prima data, ai postat un link singur pe line, ceea ce a făcut ca automat să fie expandat într-un onebox cu un scurt rezumat al link-ului, un titlu și (dacă e disponibilă) cu o poză."
     first_reply_by_email:
       name: Forum prin email
       long_description: |
@@ -2035,7 +1922,6 @@ ro:
       button: "Înregistrare"
       title: "Înregistrare cont administrator"
       help: "înregistrează un cont nou ca să începi"
-      no_emails: "Din păcate, niciun email de administrator nu a fost setat pe parcursul instalării, așa că finalizarea configurării <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>poate fi dificilă</a>."
     confirm_email:
       title: "Confirmare email"
       message: "<p>Am trimis un email de activare la <b>%{email}</b>. Urmează instrucțiunile din email ca să-ți activezi contul.</p><p>Dacă nu primești email, verifică dacă l-ai introdus corect și verifică și dosarul de spam.</p>"
@@ -2131,7 +2017,6 @@ ro:
         fields:
           favicon_url:
             label: "Iconiță mică"
-            description: "Imagine iconiță folosită la reprezentarea site-ului tău în web browsere și care arată bine la mărimi mici, ca de ex 32px pe 32px."
           apple_touch_icon_url:
             label: "Iconiță mare"
       homepage:

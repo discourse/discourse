@@ -26,7 +26,7 @@ class IncomingLink < ActiveRecord::Base
       begin
         host = URI.parse(opts[:referer]).host
         referer = opts[:referer][0..999]
-      rescue URI::InvalidURIError
+      rescue URI::Error
         # bad uri, skip
       end
     end
@@ -71,7 +71,7 @@ class IncomingLink < ActiveRecord::Base
       self.incoming_referer_id = referer_record.id if referer_record
     end
 
-  rescue URI::InvalidURIError
+  rescue URI::Error
     # ignore
   end
 

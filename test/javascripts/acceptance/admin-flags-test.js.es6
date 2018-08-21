@@ -24,8 +24,8 @@ QUnit.test("flagged posts - agree", async assert => {
 
   await visit("/admin/flags/active");
 
-  await agreeFlag.expandAwait();
-  await agreeFlag.selectRowByValueAwait("confirm-agree-keep");
+  await agreeFlag.expand();
+  await agreeFlag.selectRowByValue("confirm-agree-keep");
 
   assert.equal(
     find(".admin-flags .flagged-post").length,
@@ -39,8 +39,8 @@ QUnit.test("flagged posts - agree + hide", async assert => {
 
   await visit("/admin/flags/active");
 
-  await agreeFlag.expandAwait();
-  await agreeFlag.selectRowByValueAwait("confirm-agree-hide");
+  await agreeFlag.expand();
+  await agreeFlag.selectRowByValue("confirm-agree-hide");
 
   assert.equal(
     find(".admin-flags .flagged-post").length,
@@ -54,8 +54,8 @@ QUnit.test("flagged posts - agree + deleteSpammer", async assert => {
 
   await visit("/admin/flags/active");
 
-  await agreeFlag.expandAwait();
-  await agreeFlag.selectRowByValueAwait("delete-spammer");
+  await agreeFlag.expand();
+  await agreeFlag.selectRowByValue("delete-spammer");
 
   await click(".confirm-delete");
 
@@ -85,8 +85,8 @@ QUnit.test("flagged posts - delete + defer", async assert => {
 
   await visit("/admin/flags/active");
 
-  await deleteFlag.expandAwait();
-  await deleteFlag.selectRowByValueAwait("delete-defer");
+  await deleteFlag.expand();
+  await deleteFlag.selectRowByValue("delete-defer");
 
   assert.equal(find(".admin-flags .flagged-post").length, 0);
 });
@@ -96,8 +96,8 @@ QUnit.test("flagged posts - delete + agree", async assert => {
 
   await visit("/admin/flags/active");
 
-  await deleteFlag.expandAwait();
-  await deleteFlag.selectRowByValueAwait("delete-agree");
+  await deleteFlag.expand();
+  await deleteFlag.selectRowByValue("delete-agree");
 
   assert.equal(find(".admin-flags .flagged-post").length, 0);
 });
@@ -107,8 +107,8 @@ QUnit.test("flagged posts - delete + deleteSpammer", async assert => {
 
   await visit("/admin/flags/active");
 
-  await deleteFlag.expandAwait();
-  await deleteFlag.selectRowByValueAwait("delete-spammer");
+  await deleteFlag.expand();
+  await deleteFlag.selectRowByValue("delete-spammer");
 
   await click(".confirm-delete");
 

@@ -13,11 +13,13 @@ import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";
 import UserAction from "discourse/models/user-action";
+import UserDraftsStream from "discourse/models/user-drafts-stream";
 import Group from "discourse/models/group";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
+import Category from "discourse/models/category";
 
 export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2 };
 
@@ -45,6 +47,11 @@ const User = RestModel.extend({
   @computed()
   postsStream() {
     return UserPostsStream.create({ user: this });
+  },
+
+  @computed()
+  userDraftsStream() {
+    return UserDraftsStream.create({ user: this });
   },
 
   staff: Em.computed.or("admin", "moderator"),
@@ -198,13 +205,17 @@ const User = RestModel.extend({
     return suspendedTill && moment(suspendedTill).isAfter();
   },
 
-  @computed("suspended_till") suspendedForever: isForever,
+  @computed("suspended_till")
+  suspendedForever: isForever,
 
-  @computed("silenced_till") silencedForever: isForever,
+  @computed("silenced_till")
+  silencedForever: isForever,
 
-  @computed("suspended_till") suspendedTillDate: longDate,
+  @computed("suspended_till")
+  suspendedTillDate: longDate,
 
-  @computed("silenced_till") silencedTillDate: longDate,
+  @computed("silenced_till")
+  silencedTillDate: longDate,
 
   changeUsername(new_username) {
     return ajax(
@@ -510,15 +521,10 @@ const User = RestModel.extend({
     );
   },
 
-  pickAvatar(upload_id, type, avatar_template) {
+  pickAvatar(upload_id, type) {
     return ajax(
       userPath(`${this.get("username_lower")}/preferences/avatar/pick`),
-      {
-        type: "PUT",
-        data: { upload_id, type }
-      }
-    ).then(() =>
-      this.setProperties({ avatar_template, uploaded_avatar_id: upload_id })
+      { type: "PUT", data: { upload_id, type } }
     );
   },
 
@@ -526,7 +532,7 @@ const User = RestModel.extend({
     return ajax(
       userPath(`${this.get("username_lower")}/preferences/avatar/select`),
       { type: "PUT", data: { url: avatarUrl } }
-    ).then(result => this.setProperties(result));
+    );
   },
 
   isAllowedToUploadAFile(type) {
@@ -657,6 +663,14 @@ const User = RestModel.extend({
             const badge = badgeMap[ub.badge_id];
             badge.count = ub.count;
             return badge;
+          });
+        }
+
+        if (summary.top_categories) {
+          summary.top_categories.forEach(c => {
+            if (c.parent_category_id) {
+              c.parentCategory = Category.findById(c.parent_category_id);
+            }
           });
         }
 

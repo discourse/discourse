@@ -50,7 +50,6 @@ export default Ember.Component.extend(
     filterable: false,
     filter: "",
     previousFilter: "",
-    filterPlaceholder: "select_kit.filter_placeholder",
     filterIcon: "search",
     headerIcon: null,
     rowComponent: "select-kit/select-kit-row",
@@ -151,9 +150,14 @@ export default Ember.Component.extend(
         this
       );
 
-      const existingCreatedComputedContent = this.get(
-        "computedContent"
-      ).filterBy("created", true);
+      let existingCreatedComputedContent = [];
+      if (!this.get("allowContentReplacement")) {
+        existingCreatedComputedContent = this.get("computedContent").filterBy(
+          "created",
+          true
+        );
+      }
+
       this.setProperties({
         computedContent: content
           .map(c => this.computeContentItem(c))
@@ -230,8 +234,8 @@ export default Ember.Component.extend(
       }
     },
 
-    validateCreate() {
-      return !this.get("hasReachedMaximum");
+    validateCreate(created) {
+      return !this.get("hasReachedMaximum") && created.length > 0;
     },
 
     validateSelect() {
@@ -252,10 +256,10 @@ export default Ember.Component.extend(
       return selection.length >= minimum;
     },
 
-    @computed("shouldFilter", "allowAny", "filter")
-    shouldDisplayFilter(shouldFilter, allowAny, filter) {
+    @computed("shouldFilter", "allowAny")
+    shouldDisplayFilter(shouldFilter, allowAny) {
       if (shouldFilter) return true;
-      if (allowAny && filter.length > 0) return true;
+      if (allowAny) return true;
       return false;
     },
 
@@ -285,6 +289,13 @@ export default Ember.Component.extend(
       }
     },
 
+    @computed("allowAny")
+    filterPlaceholder(allowAny) {
+      return allowAny
+        ? "select_kit.filter_placeholder_with_any"
+        : "select_kit.filter_placeholder";
+    },
+
     @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
     shouldFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
       if (renderedFilterOnce && filterable) return true;
@@ -310,12 +321,7 @@ export default Ember.Component.extend(
       if (isLoading || hasReachedMaximum) return false;
       if (collectionComputedContent.map(c => c.value).includes(filter))
         return false;
-      if (
-        this.get("allowAny") &&
-        filter.length > 0 &&
-        this.validateCreate(filter)
-      )
-        return true;
+      if (this.get("allowAny") && this.validateCreate(filter)) return true;
       return false;
     },
 

@@ -44,7 +44,7 @@
     <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
       <meta itemprop='position' content='<%= i %>'>
       <meta itemprop='url' content='<%= t.url %>'>
-      <a href='<%= t.url %>' itemprop='item'>
+      <a href='<%= t.url %>'>
         <span itemprop='name'><%= t.title %></span>
       </a>
       <span class="page-links"><%= page_links(t) %></span>
@@ -52,6 +52,12 @@
         <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
       <% end %>
       <span class='posts' title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
+
+      <% if t.pinned_until && (t.pinned_until > Time.zone.now) && (t.pinned_globally || @list.category) && t.excerpt %>
+        <p class='excerpt'>
+          <%= t.excerpt.html_safe %>
+        </p>
+      <% end %>
     </div>
   <% end %>
 </div>

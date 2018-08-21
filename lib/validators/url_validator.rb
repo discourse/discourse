@@ -5,7 +5,7 @@ class UrlValidator < ActiveModel::EachValidator
         begin
           uri = URI.parse(value)
           uri.is_a?(URI::HTTP) && !uri.host.nil? && uri.host.include?(".")
-        rescue URI::InvalidURIError => e
+        rescue URI::Error => e
           if (e.message =~ /URI must be ascii only/)
             value = URI.encode(value)
             retry

@@ -1,0 +1,24 @@
+.admin-reports {
+  .admin-report {
+    .body {
+      flex-direction: column;
+
+      .filters {
+        order: 0;
+        margin: 0;
+        width: 100%;
+      }
+
+      .main {
+        order: 2;
+      }
+
+      .report-alert {
+        margin: 0;
+        order: 1;
+        flex: 1;
+        padding: 1em;
+      }
+    }
+  }
+}

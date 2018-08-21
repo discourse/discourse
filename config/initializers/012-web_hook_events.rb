@@ -88,3 +88,13 @@ end
     WebHook.enqueue_object_hooks(:flag, flag, event)
   end
 end
+
+%i(
+  queued_post_created
+  approved_post
+  rejected_post
+).each do |event|
+  DiscourseEvent.on(event) do |queued_post|
+    WebHook.enqueue_object_hooks(:queued_post, queued_post, event, QueuedPostSerializer)
+  end
+end

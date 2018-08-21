@@ -437,4 +437,10 @@ div.ac-wrap {
 
 .md-table {
   overflow-y: auto;
+  margin: 1em 0;
+  .mobile-view & {
+    table {
+      width: 100%;
+    }
+  }
 }

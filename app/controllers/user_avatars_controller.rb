@@ -179,14 +179,15 @@ class UserAvatarsController < ApplicationController
     send_file path, disposition: nil
   end
 
+  protected
+
+  # consider removal of hacks some time in 2019
+
   def get_optimized_image(upload, size)
-    OptimizedImage.create_for(
-      upload,
-      size,
-      size,
-      filename: upload.original_filename,
-      allow_animation: SiteSetting.allow_animated_avatars,
-    )
+    return if !upload
+
+    upload.get_optimized_image(size, size, allow_animation: SiteSetting.allow_animated_avatars)
+    # TODO decide if we want to detach here
   end
 
 end

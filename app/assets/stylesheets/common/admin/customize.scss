@@ -136,7 +136,7 @@
     }
   }
 
-  .nav.nav-pills.fields {
+  .nav-pills.fields {
     margin-left: 10px;
   }
   .content-list,
@@ -333,6 +333,10 @@
   }
 }
 
+.permalink-form .select-kit {
+  width: 150px;
+}
+
 .permalink-title {
   margin-bottom: 10px;
 }
@@ -444,8 +448,16 @@
       padding: 0.25em 0;
       &.input-area {
         width: 75%;
+        .value-list,
+        .select-kit,
         input[type="text"] {
           width: 50%;
+        }
+
+        .value-list {
+          .select-kit {
+            width: 100%;
+          }
         }
       }
       &.label-area {

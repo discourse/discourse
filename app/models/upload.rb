@@ -36,15 +36,59 @@ class Upload < ActiveRecord::Base
     return unless SiteSetting.create_thumbnails?
 
     opts = {
-      filename: self.original_filename,
       allow_animation: SiteSetting.allow_animated_thumbnails,
       crop: crop
     }
 
-    if _thumbnail = OptimizedImage.create_for(self, width, height, opts)
+    if get_optimized_image(width, height, opts)
+      # TODO: this code is not right, we may have multiple
+      # thumbs
       self.width = width
       self.height = height
       save(validate: false)
+    end
+  end
+
+  # this method attempts to correct old incorrect extensions
+  def get_optimized_image(width, height, opts)
+    if (!extension || extension.length == 0)
+      fix_image_extension
+    end
+
+    opts = opts.merge(raise_on_error: true)
+    begin
+      OptimizedImage.create_for(self, width, height, opts)
+    rescue
+      opts = opts.merge(raise_on_error: false)
+      if fix_image_extension
+        OptimizedImage.create_for(self, width, height, opts)
+      else
+        nil
+      end
+    end
+  end
+
+  def fix_image_extension
+    return false if extension == "unknown"
+
+    begin
+      # this is relatively cheap once cached
+      original_path = Discourse.store.path_for(self)
+      if original_path.blank?
+        external_copy = Discourse.store.download(self) rescue nil
+        original_path = external_copy.try(:path)
+      end
+
+      image_info = FastImage.new(original_path) rescue nil
+      new_extension = image_info&.type&.to_s || "unknown"
+
+      if new_extension != self.extension
+        self.update_columns(extension: new_extension)
+        true
+      end
+    rescue
+      self.update_columns(extension: "unknown")
+      true
     end
   end
 
@@ -77,28 +121,19 @@ class Upload < ActiveRecord::Base
 
   def self.get_from_url(url)
     return if url.blank?
-    # we store relative urls, so we need to remove any host/cdn
-    url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present? && Discourse.asset_host != SiteSetting.Upload.s3_cdn_url
-    # when using s3 without CDN
-    url = url.sub(/^https?\:/, "") if url.include?(Discourse.store.absolute_base_url) && Discourse.store.external?
 
-    # when using s3, we need to replace with the absolute base url
-    if SiteSetting.Upload.s3_cdn_url.present?
-      url = url.sub(
-        SiteSetting.Upload.s3_cdn_url,
-        SiteSetting.Upload.s3_base_url
-      )
-    end
-
-    # always try to get the path
     uri = begin
       URI(URI.unescape(url))
-    rescue URI::InvalidURIError, URI::InvalidComponentError
+    rescue URI::Error
     end
 
-    url = uri.path if uri.try(:scheme)
+    return if uri&.path.blank?
 
-    Upload.find_by(url: url)
+    path = uri.path[/(\/original\/\dX\/[\/\.\w]+)/, 1]
+
+    return if path.blank?
+
+    Upload.find_by("url LIKE ?", "%#{path}")
   end
 
   def self.migrate_to_new_scheme(limit = nil)

@@ -1,5 +1,5 @@
 class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
-  has_one :granted_by
+  has_one :granted_by, serializer: UserBadgeSerializer::UserSerializer
 
   attributes :post_number, :topic_id, :topic_title
 

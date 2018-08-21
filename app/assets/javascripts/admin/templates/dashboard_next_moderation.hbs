@@ -17,8 +17,7 @@
 
     <div class="section-body">
       {{admin-report
-        startDate=startDate
-        endDate=endDate
+        filters=filters
         showHeader=false
         dataSourceName="moderators_activity"}}
     </div>
@@ -27,14 +26,12 @@
   <div class="main-section">
     {{admin-report
       dataSourceName="flags_status"
-      startDate=lastWeek
       reportOptions=flagsStatusOptions
-      endDate=endDate}}
+      filters=lastWeekfilters}}
 
     {{admin-report
       dataSourceName="post_edits"
-      startDate=lastWeek
-      endDate=endDate}}
+      filters=lastWeekfilters}}
 
     {{plugin-outlet name="admin-dashboard-moderation-bottom"}}
   </div>

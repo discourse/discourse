@@ -402,8 +402,6 @@ id:
       reorder:
         title: "memesan ulang kategori"
         title_long: "Mengatur ulang daftar kategori"
-        fix_order: "Posisi yang tepat"
-        fix_order_tooltip: "Tidak semua kategori mempunyai angka posisi yang unik, yang mana dapat menyebabkan hasil yang tidak diharapkan."
         save: "menyimpan pesanan"
         apply_all: "menerapkan"
         position: "Posisi"
@@ -558,7 +556,6 @@ id:
         upload_title: "Unggah gambar anda"
         upload_picture: "Unggah Gambar"
         image_is_not_a_square: "Peringatan: kami telah memotong gambar anda; lebar dan tinggi tidak sama."
-        cache_notice: "Anda telah sukses mengganti gambar profil, tetapi mungkin akan memerlukan waktu untuk tampil karena cache peramban"
       change_profile_background:
         title: "Latar Belakang Profil"
         instructions: "Latar belakang profil akan ditengahkan, dan mempunyai lebar standar 850px"
@@ -702,7 +699,6 @@ id:
         no_links: "Belum ada tautan."
         most_liked_by: "Banyak Disukai Oleh"
         most_liked_users: "Paling Disukai"
-      associated_accounts: "Masuk"
       ip_address:
         title: "Alamat IP terakhir"
       registration_ip_address:
@@ -787,9 +783,6 @@ id:
       reset_password: 'Atur Ulang Kata Sandi'
       or: "atau"
       submit_new_email: "Perbarui Alamat Email"
-      google:
-        title: "dengan Google"
-        message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"
       google_oauth2:
         title: "dengan Google"
         message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"

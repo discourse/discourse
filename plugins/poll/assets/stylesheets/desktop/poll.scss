@@ -8,7 +8,7 @@ div.poll {
     min-width: 150px;
     width: 100%;
     display: table-cell;
-    border-left: 1px solid $border-color;
+    border-left: 1px solid $primary-low;
 
     p {
       margin: 40px 20px;
@@ -26,7 +26,7 @@ div.poll {
   }
 
   .poll-buttons {
-    border-top: 1px solid $border-color;
+    border-top: 1px solid $primary-low;
     padding: 10px;
 
     .toggle-status {

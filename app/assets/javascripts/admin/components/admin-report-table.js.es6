@@ -1,6 +1,4 @@
 import computed from "ember-addons/ember-computed-decorators";
-import { registerTooltip, unregisterTooltip } from "discourse/lib/tooltip";
-import { isNumeric } from "discourse/lib/utilities";
 
 const PAGES_LIMIT = 8;
 
@@ -11,19 +9,6 @@ export default Ember.Component.extend({
   sortDirection: 1,
   perPage: Ember.computed.alias("options.perPage"),
   page: 0,
-
-  didRender() {
-    this._super(...arguments);
-
-    unregisterTooltip($(".text[data-tooltip]"));
-    registerTooltip($(".text[data-tooltip]"));
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    unregisterTooltip($(".text[data-tooltip]"));
-  },
 
   @computed("model.computedLabels.length")
   twoColumns(labelsLength) {
@@ -53,7 +38,12 @@ export default Ember.Component.extend({
 
   @computed("totalsForSampleRow", "model.computedLabels")
   totalsForSample(row, labels) {
-    return labels.map(label => label.compute(row));
+    return labels.map(label => {
+      const computedLabel = label.compute(row);
+      computedLabel.type = label.type;
+      computedLabel.property = label.mainProperty;
+      return computedLabel;
+    });
   },
 
   @computed("model.data", "model.computedLabels")
@@ -67,14 +57,16 @@ export default Ember.Component.extend({
         const computedLabel = label.compute(row);
         const value = computedLabel.value;
 
-        if (computedLabel.type === "link" || (value && !isNumeric(value))) {
-          return undefined;
+        if (!["seconds", "number", "percent"].includes(label.type)) {
+          return;
         } else {
-          return sum + value;
+          return sum + Math.round(value || 0);
         }
       };
 
-      totalsRow[label.property] = rows.reduce(reducer, 0);
+      const total = rows.reduce(reducer, 0);
+      totalsRow[label.mainProperty] =
+        label.type === "percent" ? Math.round(total / rows.length) : total;
     });
 
     return totalsRow;
@@ -118,7 +110,7 @@ export default Ember.Component.extend({
       return {
         page: v + 1,
         index: v,
-        class: v === page ? "current" : null
+        class: v === page ? "is-current" : null
       };
     });
 

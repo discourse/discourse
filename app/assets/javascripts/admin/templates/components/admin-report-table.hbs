@@ -1,4 +1,4 @@
-<table class="report-table">
+<table class="table">
   <thead>
     <tr>
       {{#if model.computedLabels}}
@@ -19,35 +19,37 @@
   </thead>
   <tbody>
     {{#each paginatedData as |data|}}
-      {{admin-report-table-row data=data labels=model.computedLabels}}
+      {{admin-report-table-row data=data labels=model.computedLabels options=options}}
     {{/each}}
-  </tbody>
-</table>
 
-{{#if showTotalForSample}}
-  <small>{{i18n 'admin.dashboard.reports.totals_for_sample'}}</small>
-  <table class="totals-sample-table">
-    <tbody>
-      <tr>
+    {{#if showTotalForSample}}
+      <tr class="total-row">
+        <td colspan="{{totalsForSample.length}}">
+          {{i18n 'admin.dashboard.reports.totals_for_sample'}}
+        </td>
+      </tr>
+      <tr class="admin-report-table-row">
         {{#each totalsForSample as |total|}}
-          <td>{{total.formatedValue}}</td>
+          <td class="admin-report-table-cell {{total.type}} {{total.property}}">
+            {{total.formatedValue}}
+          </td>
         {{/each}}
       </tr>
-    </tbody>
-  </table>
-{{/if}}
+    {{/if}}
 
-{{#if showTotal}}
-  <small>{{i18n 'admin.dashboard.reports.total'}}</small>
-  <table class="totals-table">
-    <tbody>
-      <tr>
-        <td>-</td>
-        <td>{{number model.total}}</td>
+    {{#if showTotal}}
+      <tr class="total-row">
+        <td colspan="2">
+          {{i18n 'admin.dashboard.reports.total'}}
+        </td>
       </tr>
-    </tbody>
-  </table>
-{{/if}}
+      <tr class="admin-report-table-row">
+        <td class="admin-report-table-cell date x">—</td>
+        <td class="admin-report-table-cell number y">{{number model.total}}</td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
 
 <div class="pagination">
   {{#each pages as |pageState|}}

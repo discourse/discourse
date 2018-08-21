@@ -1,4 +1,16 @@
 #!/usr/bin/env ruby
+
+if !ENV["RAILS_ENV"] && (ARGV[0] == "s" || ARGV[0] == "server")
+  ENV["UNICORN_PORT"] ||= "3000"
+
+  if ARGV[1] == "-p" && (port = ARGV[2].to_i) > 0
+    ENV["UNICORN_PORT"] = port.to_s
+  end
+
+  ENV["RAILS_LOGS_STDOUT"] ||= "1"
+  exec File.expand_path("unicorn", __dir__)
+end
+
 APP_PATH = File.expand_path('../config/application', __dir__)
 require_relative '../config/boot'
 require 'rails/commands'

@@ -39,3 +39,18 @@ QUnit.test("Viewing Summary", async assert => {
   assert.ok(exists(".badges-section .badge-card"), "badges");
   assert.ok(exists(".top-categories-section .category-link"), "top categories");
 });
+
+QUnit.test("Viewing Drafts", async assert => {
+  await visit("/u/eviltrout/activity/drafts");
+  assert.ok(exists(".user-stream"), "has drafts stream");
+  assert.ok(
+    $(".user-stream .user-stream-item-draft-actions").length,
+    "has draft action buttons"
+  );
+
+  await click(".user-stream button.resume-draft:eq(0)");
+  assert.ok(
+    exists(".d-editor-input"),
+    "composer is visible after resuming a draft"
+  );
+});

@@ -754,21 +754,24 @@ describe PostAction do
       end
 
       it 'flag agreed' do
-        event = DiscourseEvent.track_events { PostAction.agree_flags!(post, moderator) }.last
-        expect(event[:event_name]).to eq(:flag_agreed)
-        expect(event[:params].first).to eq(@flag)
+        events = DiscourseEvent.track_events { PostAction.agree_flags!(post, moderator) }.last(2)
+        expect(events[0][:event_name]).to eq(:flag_reviewed)
+        expect(events[1][:event_name]).to eq(:flag_agreed)
+        expect(events[1][:params].first).to eq(@flag)
       end
 
       it 'flag disagreed' do
-        event = DiscourseEvent.track_events { PostAction.clear_flags!(post, moderator) }.last
-        expect(event[:event_name]).to eq(:flag_disagreed)
-        expect(event[:params].first).to eq(@flag)
+        events = DiscourseEvent.track_events { PostAction.clear_flags!(post, moderator) }.last(2)
+        expect(events[0][:event_name]).to eq(:flag_reviewed)
+        expect(events[1][:event_name]).to eq(:flag_disagreed)
+        expect(events[1][:params].first).to eq(@flag)
       end
 
       it 'flag deferred' do
-        event = DiscourseEvent.track_events { PostAction.defer_flags!(post, moderator) }.last
-        expect(event[:event_name]).to eq(:flag_deferred)
-        expect(event[:params].first).to eq(@flag)
+        events = DiscourseEvent.track_events { PostAction.defer_flags!(post, moderator) }.last(2)
+        expect(events[0][:event_name]).to eq(:flag_reviewed)
+        expect(events[1][:event_name]).to eq(:flag_deferred)
+        expect(events[1][:params].first).to eq(@flag)
       end
     end
   end

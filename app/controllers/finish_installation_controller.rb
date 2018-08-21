@@ -15,7 +15,11 @@ class FinishInstallationController < ApplicationController
       email = params[:email].strip
       raise Discourse::InvalidParameters.new unless @allowed_emails.include?(email)
 
-      return redirect_confirm(email) if UserEmail.where("lower(email) = ?", email).exists?
+      if existing_user = User.find_by_email(email)
+        @user = existing_user
+        send_signup_email
+        return redirect_confirm(email)
+      end
 
       @user.email = email
       @user.username = params[:username]
@@ -24,8 +28,7 @@ class FinishInstallationController < ApplicationController
 
       if @user.save
         @user.change_trust_level!(1)
-        @email_token = @user.email_tokens.unconfirmed.active.first
-        Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
+        send_signup_email
         return redirect_confirm(@user.email)
       end
 
@@ -39,15 +42,21 @@ class FinishInstallationController < ApplicationController
   def resend_email
     @email = session[:registered_email]
     @user = User.find_by_email(@email)
-    if @user.present?
-      @email_token = @user.email_tokens.unconfirmed.active.first
-      if @email_token.present?
-        Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
-      end
-    end
+    send_signup_email if @user.present?
   end
 
   protected
+
+  def send_signup_email
+    email_token = @user.email_tokens.unconfirmed.active.first
+
+    if email_token.present?
+      Jobs.enqueue(:critical_user_email,
+                   type: :signup,
+                   user_id: @user.id,
+                   email_token: email_token.token)
+    end
+  end
 
   def redirect_confirm(email)
     session[:registered_email] = email

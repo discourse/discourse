@@ -46,7 +46,7 @@ class InlineOneboxer
     if always_allow || domains
       uri = begin
         URI(url)
-      rescue URI::InvalidURIError
+      rescue URI::Error
       end
 
       if uri.present? &&

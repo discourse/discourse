@@ -546,6 +546,16 @@ describe User do
       expect(User.username_available?('tESt')).to eq(false)
     end
 
+    it 'returns true when reserved username is explicity allowed' do
+      SiteSetting.reserved_usernames = 'test|donkey'
+
+      expect(User.username_available?(
+        'tESt',
+        nil,
+        allow_reserved_username: true)
+      ).to eq(true)
+    end
+
     it "returns true when username is associated to a staged user of the same email" do
       staged = Fabricate(:user, staged: true, email: "foo@bar.com")
       expect(User.username_available?(staged.username, staged.primary_email.email)).to eq(true)

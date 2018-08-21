@@ -382,27 +382,6 @@ cs:
         Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
   lounge_welcome:
     title: "Vítejte ve VIP"
-    body: |2
-
-        Gratulujeme! :confetti_ball:
-
-        Pokud vidíte toto téma, byli jste nedávno povýšeni na **pravidelného** uživatele (důvěryhodnost 3).
-
-        Teď můžete &hellip;
-
-        * Upravovat nadpis jakéhokoliv tématu
-        * Měnit kategorii jakéhokoliv tématu
-        * Budou se sledovat všecky Vaše odkazy ([automatické nofollow](http://en.wikipedia.org/wiki/Nofollow) je odstraněno)
-        * Máte přístup do privátní kategorie VIP přístupné jen členům  s důvěryhodností 3 a vyšší
-        * Skrýt spam pomocí vlajky
-
-        Zde je [aktuální seznam pravidelných uživatelů](/badges/3/regular). Určitě je pozdravte.
-
-        Děkujeme, že jste důležitou součástí této komunity!
-
-        (Více informací naleznete na stránce o [důvěryhodnosti][trust]. Prosím nezapomeňte, že jen členové, kteří stále splňují požadavky zůstanou pravidelnými uživateli.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "(Nahraďte tento první odstavec stručným popisem nové kategorie. Tento návod se objeví v seznamu kategorií, takže se zkuste vejít do 200 znaků. **Kategorie se neobjeví v seznamu kategorií pokud neupravíte tento popis nebo v ní nevytvoříte témata.**)"
@@ -418,11 +397,6 @@ cs:
     cannot_delete:
       uncategorized: "„Bez kategorie“ nejde smazat"
       has_subcategories: "Tato kategorie nejde smazat protože obsahuje podkategorie."
-      topic_exists:
-        one: "Tato kategorie nejde smazat protože obsahuje 1 téma: %{topic_link}."
-        few: "Tato kategorie nejde smazat protože obsahuje %{count} témata. Nejstarší téma je %{topic_link}."
-        many: "Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}."
-        other: "Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}."
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
     uncategorized_description: "Témata bez kategorií, případně která nepasují do stávajících kategorií."
   trust_levels:
@@ -622,14 +596,8 @@ cs:
       description: 'Tento příspěvek se mi líbí'
       short_description: 'Tento příspěvek se mi líbí'
       long_form: 'se líbí'
-    vote:
-      title: 'Hlasovat'
-      description: 'Hlasujte pro tento příspěvek'
-      short_description: 'Hlasujte pro tento příspěvek'
-      long_form: 'hlasoval pro tento příspěvek'
   user_activity:
     no_bookmarks:
-      self: "Nemáte žádné příspěvky v záložkách. Přidání do záložek vám umožní téma v budoucnu snadněji nalézt."
       others: "Žádné záložky."
     no_likes_given:
       self: "Zatím se ti nelíbil žádný příspěvek."
@@ -743,8 +711,6 @@ cs:
       num_users: "Uživatelé"
     top_referred_topics:
       title: "Odkazovaná témata"
-      xaxis: "Témata"
-      num_clicks: "Kliknutí"
     page_view_anon_reqs:
       title: "Anonymní"
       xaxis: "Den"
@@ -817,7 +783,6 @@ cs:
     ga_universal_domain_name: "Doménové jméno Google Universal Analytics (analytics.js); například mojeforum.cz; více na http://google.com/analytics"
     allow_moderators_to_create_categories: "Povolit moderátorům vytváření nových kategorií."
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
-    track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
     enable_badges: "Povolit odznaky"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."
@@ -965,7 +930,6 @@ cs:
     popular_topics: "Populární"
     recent_topics: "Nedávné"
     see_more: "Více"
-    search_google: "Google"
   terms_of_service:
     title: "Podmínky používání"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
@@ -975,19 +939,6 @@ cs:
     pasted_image_filename: "Vložený obrázek"
     images:
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
-  email_log:
-    no_user: "Can't find user with id %{user_id}"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "příspěvek byl odstraněn autorem"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
   about: "O fóru"
   guidelines: "Pokyny"
   privacy: "Soukromí"
@@ -1001,9 +952,6 @@ cs:
   privacy_topic:
     title: "Ochrana soukromí"
   badges:
-    editor:
-      long_description: |
-        Tento odznak je udělen, když poprvé upravíte jeden z Vašich příspěvků. I když nebudete moci upravovat Vaše příspěvky po určitém čase, úprava je vždy dobrý nápad - můžete své příspěvky vylepšit, opravit malé chyby nebo přidat cokoliv, co jste v původním příspěvku zapomněli. Upravujte, abyste Vaše příspěvky udělali ještě lepšími!
     welcome:
       name: Vítejte
     first_like:

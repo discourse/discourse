@@ -121,3 +121,8 @@ tr {
     animation: background-fade-highlight 2.5s ease-out;
   }
 }
+
+// https://en.wikipedia.org/wiki/Ruby_character
+ruby > rt {
+  font-size: 72%; // ~10px with 14px base
+}

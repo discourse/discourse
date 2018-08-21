@@ -23,6 +23,9 @@ function performSearch(
     resultsFn(cached);
     return;
   }
+  if (term === "") {
+    return [];
+  }
 
   // need to be able to cancel this
   oldSearch = $.ajax(userPath("search/users"), {
@@ -122,11 +125,6 @@ export default function userSearch(options) {
   currentTerm = term;
 
   return new Ember.RSVP.Promise(function(resolve) {
-    // TODO site setting for allowed regex in username
-    if (term.match(/[^\w_\-\.@\+]/)) {
-      resolve([]);
-      return;
-    }
     if (new Date() - cacheTime > 30000 || cacheTopicId !== topicId) {
       cache = {};
     }

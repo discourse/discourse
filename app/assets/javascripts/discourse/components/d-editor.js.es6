@@ -434,6 +434,10 @@ export default Ember.Component.extend({
           const full = `:${term}`;
           term = term.toLowerCase();
 
+          if (term.length < self.siteSettings.emoji_autocomplete_min_chars) {
+            return resolve([]);
+          }
+
           if (term === "") {
             return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
           }
@@ -870,6 +874,9 @@ export default Ember.Component.extend({
         return;
       }
 
+      this.set("linkUrl", "");
+      this.set("linkText", "");
+
       this._lastSel = this._getSelected();
 
       if (this._lastSel) {
@@ -943,9 +950,6 @@ export default Ember.Component.extend({
           this._selectText(sel.start + 1, origLink.length);
         }
       }
-
-      this.set("linkUrl", "");
-      this.set("linkText", "");
     },
 
     emoji() {

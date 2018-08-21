@@ -378,8 +378,8 @@ class FinalDestination
 
   def uri(location)
     begin
-      URI(location)
-    rescue URI::InvalidURIError, ArgumentError
+      URI.parse(location)
+    rescue URI::Error
     end
   end
 

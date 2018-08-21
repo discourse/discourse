@@ -271,7 +271,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @sequences[Tag.sequence_name] = last_id + 1
 
     [TagUser, TopicTag, CategoryTag, CategoryTagStat].each do |k|
-      copy_model(k, skip_processing: true)
+      copy_model(k)
     end
     copy_model(TagGroup, mapping: @tag_groups)
     [TagGroupMembership, CategoryTagGroup].each do |k|
@@ -653,6 +653,26 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     ecr['old_email_token_id'] = email_token_id_from_imported_id(ecr['old_email_token_id']) if ecr['old_email_token_id']
     ecr['new_email_token_id'] = email_token_id_from_imported_id(ecr['new_email_token_id']) if ecr['new_email_token_id']
     ecr
+  end
+
+  def process_tag_user(x)
+    return nil if TagUser.where(tag_id: x['tag_id'], user_id: x['user_id']).exists?
+    x
+  end
+
+  def process_topic_tag(x)
+    return nil if TopicTag.where(topic_id: x['topic_id'], tag_id: x['tag_id']).exists?
+    x
+  end
+
+  def process_category_tag(x)
+    return nil if CategoryTag.where(category_id: x['category_id'], tag_id: x['tag_id']).exists?
+    x
+  end
+
+  def process_category_tag_stat(x)
+    return nil if CategoryTagStat.where(category_id: x['category_id'], tag_id: x['tag_id']).exists?
+    x
   end
 
   def user_id_from_imported_id(id)

@@ -83,7 +83,7 @@ describe EmbedController do
     end
 
     it "includes CSS from embedded_scss field" do
-      theme = Theme.create!(name: "Awesome blog", user_id: -1)
+      theme = Fabricate(:theme)
       theme.set_default!
 
       ThemeField.create!(

@@ -27,6 +27,32 @@ describe OptimizedImage do
     end
 
     describe '.resize' do
+      it 'should work correctly when extension is bad' do
+
+        original_path = Dir::Tmpname.create(['origin', '.bin']) { nil }
+
+        begin
+          FileUtils.cp "#{Rails.root}/spec/fixtures/images/logo.png", original_path
+
+          # we use "filename" to get the correct extension here, it is more important
+          # then any other param
+
+          OptimizedImage.resize(
+            original_path,
+            original_path,
+            5,
+            5,
+            filename: "test.png"
+          )
+
+          expect(File.read(original_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/resized.png")
+          )
+        ensure
+          File.delete(original_path) if File.exists?(original_path)
+        end
+      end
+
       it 'should work correctly' do
         tmp_path = "/tmp/resized.png"
 
@@ -43,6 +69,26 @@ describe OptimizedImage do
           )
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
+        end
+      end
+
+      describe 'when an svg with a href is masked as a png' do
+        it 'should not trigger the external request' do
+          tmp_path = "/tmp/resized.png"
+
+          begin
+            expect do
+              OptimizedImage.resize(
+                "#{Rails.root}/spec/fixtures/images/svg.png",
+                tmp_path,
+                5,
+                5,
+                raise_on_error: true
+              )
+            end.to raise_error(RuntimeError, /improper image header/)
+          ensure
+            File.delete(tmp_path) if File.exists?(tmp_path)
+          end
         end
       end
     end
@@ -93,7 +139,7 @@ describe OptimizedImage do
       }.not_to raise_error
     end
 
-    it "raises nothing on paths" do
+    it "raises InvalidAccess error on paths" do
       expect {
         OptimizedImage.ensure_safe_paths!("/a.png", "/b.png", "c.png")
       }.to raise_error(Discourse::InvalidAccess)

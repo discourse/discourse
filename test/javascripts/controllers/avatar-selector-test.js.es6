@@ -12,9 +12,11 @@ QUnit.test("avatarTemplate", function(assert) {
 
   avatarSelectorController.setProperties({
     selected: "system",
-    system_avatar_upload_id: 1,
-    gravatar_avatar_upload_id: 2,
-    custom_avatar_upload_id: 3
+    user: {
+      system_avatar_upload_id: 1,
+      gravatar_avatar_upload_id: 2,
+      custom_avatar_upload_id: 3
+    }
   });
 
   assert.equal(

@@ -38,6 +38,14 @@ import {
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
+const uploadHandlers = [];
+export function addComposerUploadHandler(extensions, method) {
+  uploadHandlers.push({
+    extensions,
+    method
+  });
+}
+
 export default Ember.Component.extend({
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
@@ -587,6 +595,19 @@ export default Ember.Component.extend({
     });
 
     $element.on("fileuploadsubmit", (e, data) => {
+      // Look for a matching file upload handler contributed from a plugin
+      const matcher = handler => {
+        const ext = handler.extensions.join("|");
+        const regex = new RegExp(`\\.(${ext})$`, "i");
+        return regex.test(data.files[0].name);
+      };
+      const matchingHandler = uploadHandlers.find(matcher);
+      if (data.files.length === 1 && matchingHandler) {
+        matchingHandler.method(data.files[0]);
+        return false;
+      }
+
+      // If no plugin, continue as normal
       const isPrivateMessage = this.get("composer.privateMessage");
 
       data.formData = { type: "composer" };
@@ -632,7 +653,7 @@ export default Ember.Component.extend({
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",
-          uploadPlaceholder,
+          uploadPlaceholder.trim(),
           markdown
         );
         this._resetUpload(false);

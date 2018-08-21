@@ -82,4 +82,11 @@ describe ThemeSettingsParser do
       expect(choices.length).to eq(1)
     end
   end
+
+  context "list setting" do
+    it "supports list type" do
+      list_type = loader.find_by_name(:compact_list_setting)[:opts][:list_type]
+      expect(list_type).to eq("compact")
+    end
+  end
 end

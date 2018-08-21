@@ -152,7 +152,7 @@ en:
       user_left: "%{who} removed themselves from this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
-      autobumped: "automatically bumped topic"
+      autobumped: "automatically bumped %{when}"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -228,7 +228,7 @@ en:
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
     privacy: "Privacy"
-    terms_of_service: "Terms of Service"
+    tos: "Terms of Service"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
     you: "You"
@@ -286,6 +286,13 @@ en:
       last_read: "this is the last post you've read; click to bookmark it"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
+
+    drafts:
+      resume: "Resume"
+      remove: "Remove"
+      new_topic: "New topic draft"
+      new_private_message: "New private message draft"
+      topic_reply: "Draft reply"
 
     topic_count_latest:
       one: "See {{count}} new or updated topic"
@@ -546,6 +553,7 @@ en:
       "12": "Sent Items"
       "13": "Inbox"
       "14": "Pending"
+      "15": "Drafts"
 
     categories:
       all: "all categories"
@@ -571,6 +579,7 @@ en:
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
+      more: " (%{count} more) ..."
 
     ip_lookup:
       title: IP Address Lookup
@@ -695,6 +704,7 @@ en:
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
+      api_last_used_at: "Last used at:"
       theme: "Theme"
       home: "Default Home Page"
       staged: "Staged"
@@ -739,7 +749,7 @@ en:
         choose: "Choose a password"
 
       second_factor_backup:
-        title: "Two Factor backup code management"
+        title: "Two Factor Backup Codes"
         regenerate: "Regenerate"
         disable: "Disable"
         enable: "Enable"
@@ -749,8 +759,8 @@ en:
         copy_to_clipboard_error: "Error copying data to Clipboard"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
         codes:
-          title: "Backup codes"
-          description: "Each line is a different backup code which can only be used once. It's recommended to save this file in a safe place."
+          title: "Backup Codes Generated"
+          description: "Each of these backup codes can only be used once. Keep them somewhere safe but accessible."
 
       second_factor:
         title: "Two Factor Authentication"
@@ -785,7 +795,6 @@ en:
 
       change_avatar:
         title: "Change your profile picture"
-        label: "Change your profile picture"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
         gravatar_failed: "Could not fetch the Gravatar. Is there one associated to that email address?"
@@ -1100,8 +1109,8 @@ en:
       hide_session: "Remind me tomorrow"
       hide_forever: "no thanks"
       hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
-      intro: "Hey there! :heart_eyes: Looks like you're enjoying the discussion, but you're not signed up for an account."
-      value_prop: "When you create an account, we remember exactly what you've read, so you always come right back where you left off. You also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
+      intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
+      value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. 💗"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -1268,6 +1277,7 @@ en:
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...
+      filter_placeholder_with_any: Search or create...
       create: "Create: '{{content}}'"
       max_content_reached:
         one: "You can only select {{count}} item."
@@ -1428,6 +1438,9 @@ en:
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to staff"
+        toggle_topic_bump:
+          label: "Toggle topic bump"
+          desc: "Reply without changing the topic's bump date"
 
     notifications:
       tooltip:
@@ -1849,6 +1862,7 @@ en:
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
         make_private: "Make Personal Message"
+        reset_bump_date: "Reset Bump Date"
 
       feature:
         pin: "Pin Topic"
@@ -2556,6 +2570,7 @@ en:
         bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
         profile: '<b>g</b>, <b>p</b> Profile'
         messages: '<b>g</b>, <b>m</b> Messages'
+        drafts: '<b>g</b>, <b>d</b> Drafts'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Go to post #'
@@ -2792,6 +2807,7 @@ en:
         moderation_tab: "Moderation"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
+        exception_error: Sorry, an error occurred while executing the query
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -2812,6 +2828,7 @@ en:
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
           total: "All time total"
+          no_data: "No data to display."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
@@ -3028,6 +3045,9 @@ en:
         flag_event:
           name: "Flag Event"
           details: "When a flag is created, agreed, disagreed or ignored."
+        queued_post_event:
+          name: "Post Approval Event"
+          details: "When a new queued post is created, approved or rejected."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -3221,6 +3241,7 @@ en:
           commits_behind:
             one: "Theme is 1 commit behind!"
             other: "Theme is {{count}} commits behind!"
+          compare_commits: "(See new commits)"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
@@ -3996,7 +4017,7 @@ en:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regular User"
-      
+
       previews:
         topic_title: "Discussion topic"
         share_button: "Share"

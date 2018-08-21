@@ -20,7 +20,7 @@ describe ReplyByEmailAddressValidator do
     end
 
     it "returns true if value does not contain '%{reply_key}' but 'find_related_post_with_key' is also disabled" do
-      SiteSetting.expects(:find_related_post_with_key).returns(false)
+      SiteSetting.find_related_post_with_key = false
       expect(validator.valid_value?('foo@bar.com')).to eq(true)
     end
 

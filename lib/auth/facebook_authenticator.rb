@@ -1,6 +1,6 @@
 class Auth::FacebookAuthenticator < Auth::Authenticator
 
-  AVATAR_SIZE = 480
+  AVATAR_SIZE ||= 480
 
   def name
     "facebook"

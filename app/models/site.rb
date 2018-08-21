@@ -79,6 +79,10 @@ class Site
     Archetype.list.reject { |t| t.id == Archetype.private_message }
   end
 
+  def auth_providers
+    Discourse.enabled_auth_providers
+  end
+
   def self.json_for(guardian)
 
     if guardian.anonymous? && SiteSetting.login_required
@@ -87,6 +91,9 @@ class Site
         filters: Discourse.filters.map(&:to_s),
         user_fields: UserField.all.map do |userfield|
           UserFieldSerializer.new(userfield, root: false, scope: guardian)
+        end,
+        auth_providers: Discourse.enabled_auth_providers.map do |provider|
+          AuthProviderSerializer.new(provider, root: false, scope: guardian)
         end
       }.to_json
     end

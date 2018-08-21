@@ -41,7 +41,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_name,
              :can_create_topic,
              :link_posting_access,
-             :external_id
+             :external_id,
+             :top_category_ids
 
   def link_posting_access
     scope.link_posting_access
@@ -153,9 +154,21 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def muted_category_ids
-    @muted_category_ids ||= CategoryUser.where(user_id: object.id,
-                                               notification_level: TopicUser.notification_levels[:muted])
+    CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def top_category_ids
+    omitted_notification_levels = [CategoryUser.notification_levels[:muted], CategoryUser.notification_levels[:regular]]
+    CategoryUser.where(user_id: object.id)
+      .where.not(notification_level: omitted_notification_levels)
+      .order("
+        CASE
+          WHEN notification_level = 3 THEN 1
+          WHEN notification_level = 2 THEN 2
+          WHEN notification_level = 4 THEN 3
+        END")
       .pluck(:category_id)
+      .slice(0, SiteSetting.header_dropdown_category_count)
   end
 
   def dismissed_banner_key

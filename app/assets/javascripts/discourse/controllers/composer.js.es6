@@ -53,7 +53,8 @@ function loadDraft(store, opts) {
       composerTime: draft.composerTime,
       typingTime: draft.typingTime,
       whisper: draft.whisper,
-      tags: draft.tags
+      tags: draft.tags,
+      noBump: draft.noBump
     });
     return composer;
   }
@@ -202,12 +203,17 @@ export default Ember.Controller.extend({
 
   canUnlistTopic: Em.computed.and("model.creatingTopic", "isStaffUser"),
 
-  @computed("model.action", "isStaffUser")
-  canWhisper(action, isStaffUser) {
+  @computed("canWhisper", "model.whisper")
+  showWhisperToggle(canWhisper, isWhisper) {
+    return canWhisper && !isWhisper;
+  },
+
+  @computed("isStaffUser", "model.action")
+  canWhisper(isStaffUser, action) {
     return (
-      isStaffUser &&
       this.siteSettings.enable_whispers &&
-      action === Composer.REPLY
+      isStaffUser &&
+      Composer.REPLY === action
     );
   },
 
@@ -245,7 +251,7 @@ export default Ember.Controller.extend({
             action: "toggleWhisper",
             icon: "eye-slash",
             label: "composer.toggle_whisper",
-            condition: "canWhisper"
+            condition: "showWhisperToggle"
           };
         })
       );
@@ -287,7 +293,8 @@ export default Ember.Controller.extend({
     return authorizesOneOrMoreExtensions();
   },
 
-  @computed() uploadIcon: () => uploadIcon(),
+  @computed()
+  uploadIcon: () => uploadIcon(),
 
   actions: {
     cancelUpload() {
@@ -848,7 +855,10 @@ export default Ember.Controller.extend({
       if (key === "new_topic") {
         this.send("clearTopicDraft");
       }
-      Draft.clear(key, this.get("model.draftSequence"));
+
+      Draft.clear(key, this.get("model.draftSequence")).then(() => {
+        this.appEvents.trigger("draft:destroyed", key);
+      });
     }
   },
 
