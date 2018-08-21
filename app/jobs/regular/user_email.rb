@@ -5,6 +5,7 @@ module Jobs
 
   # Asynchronously send an email to a user
   class UserEmail < Jobs::Base
+    include Skippable
 
     sidekiq_options queue: 'low'
 
@@ -202,7 +203,7 @@ module Jobs
     end
 
     def skip(reason_type)
-      SkippedEmailLog.create!(
+      create_skipped_email_log(
         email_type: @skip_context[:type],
         to_address: @skip_context[:to_address],
         user_id: @skip_context[:user_id],

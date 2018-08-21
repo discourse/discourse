@@ -136,7 +136,7 @@ describe Jobs::NotifyMailingListSubscribers do
             end
 
             Jobs::NotifyMailingListSubscribers.new.execute(
-              post_id: Fabricate(:post, user: user)
+              post_id: Fabricate(:post, user: user).id
             )
           end.to change { SkippedEmailLog.count }.by(1)
 
@@ -148,13 +148,19 @@ describe Jobs::NotifyMailingListSubscribers do
             reason_type: SkippedEmailLog.reason_types[:exceeded_emails_limit]
           )).to eq(true)
 
-          freeze_time(Time.zone.now + 1.day)
+          freeze_time(Time.zone.now.tomorrow + 1.second)
 
           expect do
+            post = Fabricate(:post, user: user)
+
+            UserNotifications.expects(:mailing_list_notify)
+              .with(mailing_list_user, post)
+              .once
+
             Jobs::NotifyMailingListSubscribers.new.execute(
-              post_id: Fabricate(:post, user: user)
+              post_id: post.id
             )
-          end.to change { SkippedEmailLog.count }.by(1)
+          end.to change { SkippedEmailLog.count }.by(0)
         end
       end
 

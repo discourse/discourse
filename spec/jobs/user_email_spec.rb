@@ -245,12 +245,14 @@ describe Jobs::UserEmail do
 
         it "does not send notification if limit is reached" do
           expect do
-            Jobs::UserEmail.new.execute(
-              type: :user_mentioned,
-              user_id: user.id,
-              notification_id: notification.id,
-              post_id: post.id
-            )
+            2.times do
+              Jobs::UserEmail.new.execute(
+                type: :user_mentioned,
+                user_id: user.id,
+                notification_id: notification.id,
+                post_id: post.id
+              )
+            end
           end.to change { SkippedEmailLog.count }.by(1)
 
           expect(SkippedEmailLog.exists?(
@@ -260,6 +262,17 @@ describe Jobs::UserEmail do
             to_address: user.email,
             reason_type: SkippedEmailLog.reason_types[:exceeded_emails_limit]
           )).to eq(true)
+
+          freeze_time(Time.zone.now.tomorrow + 1.second)
+
+          expect do
+            Jobs::UserEmail.new.execute(
+              type: :user_mentioned,
+              user_id: user.id,
+              notification_id: notification.id,
+              post_id: post.id
+            )
+          end.to change { SkippedEmailLog.count }.by(0)
         end
 
         it "sends critical email" do
