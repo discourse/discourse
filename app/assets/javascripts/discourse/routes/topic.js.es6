@@ -16,8 +16,7 @@ const TopicRoute = Discourse.Route.extend({
 
   queryParams: {
     filter: { replace: true },
-    username_filters: { replace: true },
-    revision: { replace: true }
+    username_filters: { replace: true }
   },
 
   titleToken() {

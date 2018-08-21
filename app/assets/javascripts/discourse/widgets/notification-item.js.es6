@@ -52,10 +52,10 @@ createWidget("notification-item", {
       );
     }
 
-    const revisionNumber = data.revision_number;
     const topicId = attrs.topic_id;
+    const revisionNumber = data.revision_number;
 
-    if (revisionNumber) {
+    if (topicId && revisionNumber) {
       return revisionUrl(attrs.slug, topicId, attrs.post_number, revisionNumber)
     }
 

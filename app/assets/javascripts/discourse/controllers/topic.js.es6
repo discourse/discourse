@@ -38,7 +38,7 @@ export default Ember.Controller.extend(BufferedContent, {
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
-  queryParams: ["filter", "username_filters", "revision"],
+  queryParams: ["filter", "username_filters"],
   loadedAllPosts: Ember.computed.or(
     "model.postStream.loadedAllPosts",
     "model.postStream.loadingLastPost"
@@ -98,6 +98,14 @@ export default Ember.Controller.extend(BufferedContent, {
 
   init() {
     this._super();
+    this.appEvents.on("post:show-revision", (postNumber, revision) => {
+      const post = this.model.get('postStream').postForPostNumber(postNumber)
+      if (!post) {
+        return;
+      }
+
+      this.send("showHistory", post, revision)
+    });
     this.setProperties({
       selectedPostIds: [],
       quoteState: new QuoteState()
@@ -258,11 +266,6 @@ export default Ember.Controller.extend(BufferedContent, {
       if (postNumber > (topic.get("last_read_post_number") || 0)) {
         topic.set("last_read_post_id", post.get("id"));
         topic.set("last_read_post_number", postNumber);
-      }
-
-      if (this.revision) {
-        this.send("showHistory", post, this.revision);
-        delete this.revision;
       }
 
       this.send("postChangedRoute", postNumber);
