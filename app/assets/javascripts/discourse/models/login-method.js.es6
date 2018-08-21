@@ -86,7 +86,10 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
   });
 
   // On Mobile, Android or iOS always go with full screen
-  if (isMobileDevice || capabilities.isIOS || capabilities.isAndroid) {
+  if (
+    isMobileDevice ||
+    (capabilities && (capabilities.isIOS || capabilities.isAndroid))
+  ) {
     methods.forEach(m => m.set("full_screen_login", true));
   }
 

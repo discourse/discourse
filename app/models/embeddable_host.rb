@@ -14,7 +14,7 @@ class EmbeddableHost < ActiveRecord::Base
     if uri.is_a?(String)
       uri = begin
         URI(UrlHelper.escape_uri(uri))
-      rescue URI::InvalidURIError
+      rescue URI::Error
       end
     end
     return false unless uri.present?
@@ -45,7 +45,7 @@ class EmbeddableHost < ActiveRecord::Base
 
     uri = begin
       URI(UrlHelper.escape_uri(url))
-    rescue URI::InvalidURIError
+    rescue URI::Error
     end
 
     uri.present? && record_for_url(uri).present?

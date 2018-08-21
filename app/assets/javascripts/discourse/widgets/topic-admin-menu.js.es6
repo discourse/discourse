@@ -203,6 +203,15 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
+    if (this.currentUser.get("staff")) {
+      buttons.push({
+        className: "topic-admin-reset-bump-date",
+        action: "resetBumpDate",
+        icon: "anchor",
+        label: "actions.reset_bump_date"
+      });
+    }
+
     if (!isPrivateMessage) {
       buttons.push({
         className: "topic-admin-archive",

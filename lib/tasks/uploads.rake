@@ -253,7 +253,7 @@ def migrate_to_s3
       putc "X"
       next
     ensure
-      file.try(:close!) rescue nil
+      file&.close
     end
 
     # remap the URL
@@ -709,4 +709,9 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   puts "\n"
   puts "List of file paths @ #{path}"
   puts "Duration: #{Time.zone.now - now} seconds"
+end
+
+task "uploads:fix_incorrect_extensions" => :environment do
+  require_dependency "upload_fixer"
+  UploadFixer.fix_all_extensions
 end

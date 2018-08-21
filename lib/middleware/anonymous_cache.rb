@@ -66,16 +66,16 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_id}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}"
       end
 
-      def theme_id
+      def theme_ids
         ids, _ = @request.cookies['theme_ids']&.split('|')
         ids = ids&.split(",")&.map(&:to_i)
         if ids && Guardian.new.allow_themes?(ids)
-          ids.first
+          Theme.transform_ids(ids)
         else
-          nil
+          []
         end
       end
 

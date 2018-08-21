@@ -78,6 +78,7 @@
     float: left;
     background-color: transparent;
     display: inline-flex;
+    align-items: center;
     padding: 0.25em 0.5em;
     width: 50%;
     box-sizing: border-box;
@@ -121,9 +122,6 @@
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
     font-size: $font-down-1;
-  }
-  .box + b.topics-count {
-    padding-top: 2px;
   }
 
   span.badge-category {
@@ -275,6 +273,9 @@
 
       a {
         padding: 0;
+        > div {
+          overflow: hidden; // clears the text from wrapping below icons
+        }
       }
 
       p {

@@ -61,7 +61,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
             this.set("gravatarFailed", true);
           } else {
             this.set("gravatarFailed", false);
-            this.get("user").setProperties(result);
+
+            this.get("user").setProperties({
+              gravatar_avatar_upload_id: result.gravatar_upload_id,
+              gravatar_avatar_template: result.gravatar_avatar_template
+            });
           }
         })
         .finally(() => this.set("gravatarRefreshDisabled", false));

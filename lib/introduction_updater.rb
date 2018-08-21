@@ -34,7 +34,7 @@ protected
       topic_id = Topic.listable_topics.where(slug: 'welcome-to-discourse').pluck(:id)
     end
 
-    welcome_topic = Topic.find(topic_id).first
+    welcome_topic = Topic.where(id: topic_id).first
     return nil unless welcome_topic.present?
 
     post = welcome_topic.posts.where(post_number: 1).first

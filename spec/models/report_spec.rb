@@ -15,6 +15,20 @@ describe Report do
     end
   end
 
+  shared_examples 'category filtering on subcategories' do
+    before do
+      c = Fabricate(:category, id: 3)
+      c.topic.destroy
+      c = Fabricate(:category, id: 2, parent_category_id: 3)
+      c.topic.destroy
+      # destroy the category description topics so the count is right, on filtered data
+    end
+
+    it 'returns the filtered data' do
+      expect(report.total).to eq(1)
+    end
+  end
+
   shared_examples 'with data x/y' do
     it "returns today's data" do
       expect(report.data.select { |v| v[:x].today? }).to be_present
@@ -549,6 +563,18 @@ describe Report do
         freeze_time(Date.today)
       end
 
+      context "moderators order" do
+        before do
+          Fabricate(:post, user: sam)
+          Fabricate(:post, user: jeff)
+        end
+
+        it "returns the moderators in alphabetical order" do
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:username]).to eq('sam')
+        end
+      end
+
       context "time read" do
         before do
           sam.user_visits.create(visited_at: 2.days.ago, time_read: 200)
@@ -561,10 +587,10 @@ describe Report do
         end
 
         it "returns the correct read times" do
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[0][:time_read]).to eq(300)
-          expect(report.data[1][:username]).to eq('jeff')
-          expect(report.data[1][:time_read]).to eq(3000)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[0][:time_read]).to eq(3000)
+          expect(report.data[1][:username]).to eq('sam')
+          expect(report.data[1][:time_read]).to eq(300)
         end
       end
 
@@ -575,7 +601,7 @@ describe Report do
           PostAction.agree_flags!(flagged_post, jeff)
         end
 
-        it "returns the correct read times" do
+        it "returns the correct flag counts" do
           expect(report.data.count).to eq(1)
           expect(report.data[0][:flag_count]).to eq(1)
           expect(report.data[0][:username]).to eq("jeff")
@@ -590,10 +616,10 @@ describe Report do
         end
 
         it "returns the correct topic count" do
-          expect(report.data[0][:topic_count]).to eq(2)
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[1][:topic_count]).to eq(1)
-          expect(report.data[1][:username]).to eq('jeff')
+          expect(report.data[0][:topic_count]).to eq(1)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:topic_count]).to eq(2)
+          expect(report.data[1][:username]).to eq('sam')
         end
 
         context "private messages" do
@@ -602,8 +628,8 @@ describe Report do
           end
 
           it "doesn’t count private topic" do
-            expect(report.data[0][:topic_count]).to eq(2)
-            expect(report.data[1][:topic_count]).to eq(1)
+            expect(report.data[0][:topic_count]).to eq(1)
+            expect(report.data[1][:topic_count]).to eq(2)
           end
         end
       end
@@ -616,10 +642,10 @@ describe Report do
         end
 
         it "returns the correct topic count" do
-          expect(report.data[0][:topic_count]).to eq(2)
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[1][:topic_count]).to eq(1)
-          expect(report.data[1][:username]).to eq('jeff')
+          expect(report.data[0][:topic_count]).to eq(1)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:topic_count]).to eq(2)
+          expect(report.data[1][:username]).to eq('sam')
         end
 
         context "private messages" do
@@ -628,8 +654,8 @@ describe Report do
           end
 
           it "doesn’t count private post" do
-            expect(report.data[0][:post_count]).to eq(2)
-            expect(report.data[1][:post_count]).to eq(1)
+            expect(report.data[0][:post_count]).to eq(1)
+            expect(report.data[1][:post_count]).to eq(2)
           end
         end
       end
@@ -643,10 +669,11 @@ describe Report do
         end
 
         it "returns the correct topic count" do
-          expect(report.data[0][:pm_count]).to be_blank
-          expect(report.data[0][:username]).to eq('sam')
-          expect(report.data[1][:pm_count]).to eq(1)
-          expect(report.data[1][:username]).to eq('jeff')
+          expect(report.data[0][:pm_count]).to eq(1)
+          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[1][:pm_count]).to be_blank
+          expect(report.data[1][:username]).to eq('sam')
+
         end
       end
 
@@ -664,15 +691,11 @@ describe Report do
         context "revise own post" do
           before do
             post = Fabricate(:post, user: sam)
-            Fabricate(:post, user: sam)
-              .revise(sam, raw: 'updated body', edit_reason: 'not cool')
-
-            Fabricate(:post)
-              .revise(sam, raw: 'updated body', edit_reason: 'not cool')
+            post.revise(sam, raw: 'updated body')
           end
 
-          it "doesnt count a revison on your own post" do
-            expect(report.data[0][:revision_count]).to eq(2)
+          it "doesn't count a revison on your own post" do
+            expect(report.data[0][:revision_count]).to eq(1)
             expect(report.data[0][:username]).to eq('sam')
           end
         end
@@ -717,6 +740,12 @@ describe Report do
         let(:report) { Report.find('flags', category_id: 2) }
 
         include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('flags', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
       end
     end
   end
@@ -740,6 +769,12 @@ describe Report do
         let(:report) { Report.find('topics', category_id: 2) }
 
         include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('topics', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
       end
     end
   end
@@ -775,6 +810,68 @@ describe Report do
     it "returns a report with a timeout error" do
       report = Report.find("timeout_test")
       expect(report.error).to eq(:timeout)
+    end
+  end
+
+  describe 'posts' do
+    let(:report) { Report.find('posts') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        topic = Fabricate(:topic)
+        topic_with_category_id = Fabricate(:topic, category_id: 2)
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: topic_with_category_id)
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, created_at: 45.days.ago, topic: topic)
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('posts', category_id: 2) }
+
+        include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('posts', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
+      end
+    end
+  end
+
+  # TODO: time_to_first_response
+
+  describe 'topics_with_no_response' do
+    let(:report) { Report.find('topics_with_no_response') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        Fabricate(:topic, category_id: 2)
+        Fabricate(:post, topic: Fabricate(:topic))
+        Fabricate(:topic)
+        Fabricate(:topic, created_at: 45.days.ago)
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('topics_with_no_response', category_id: 2) }
+
+        include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('topics_with_no_response', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
+      end
     end
   end
 end

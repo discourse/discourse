@@ -140,10 +140,12 @@
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
-      background-color: dark-light-choose($highlight-low, $highlight-medium);
       color: dark-light-choose($primary-high, $secondary-low);
-      padding-left: 4px;
-      padding-right: 4px;
+      a {
+        background-color: dark-light-choose($highlight-low, $highlight-medium);
+        padding-left: 4px;
+        padding-right: 4px;
+      }
     }
   }
 }

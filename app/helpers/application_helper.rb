@@ -177,10 +177,8 @@ module ApplicationHelper
     ["ar", "ur", "fa_IR", "he"].include? I18n.locale.to_s
   end
 
-  def user_locale
-    locale = current_user.locale if current_user && SiteSetting.allow_user_locale
-    # changing back to default shoves a blank string there
-    locale.present? ? locale : SiteSetting.default_locale
+  def html_lang
+    SiteSetting.default_locale.sub("_", "-")
   end
 
   # Creates open graph and twitter card meta data
@@ -350,11 +348,11 @@ module ApplicationHelper
     end
   end
 
-  def theme_id
+  def theme_ids
     if customization_disabled?
       nil
     else
-      request.env[:resolved_theme_id]
+      request.env[:resolved_theme_ids]
     end
   end
 
@@ -378,17 +376,17 @@ module ApplicationHelper
   end
 
   def theme_lookup(name)
-    lookup = Theme.lookup_field(theme_id, mobile_view? ? :mobile : :desktop, name)
+    lookup = Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
     lookup.html_safe if lookup
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
-    if opts.key?(:theme_id)
-      id = opts[:theme_id] unless customization_disabled?
+    if opts.key?(:theme_ids)
+      ids = opts[:theme_ids] unless customization_disabled?
     else
-      id = theme_id
+      ids = theme_ids
     end
 
-    Stylesheet::Manager.stylesheet_link_tag(name, 'all', id)
+    Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
   end
 end

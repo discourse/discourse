@@ -41,7 +41,8 @@ const CLOSED = "closed",
     composer_open_duration_msecs: "composerTime",
     tags: "tags",
     featured_link: "featuredLink",
-    shared_draft: "sharedDraft"
+    shared_draft: "sharedDraft",
+    no_bump: "noBump"
   },
   _edit_topic_serializer = {
     title: "topic.title",
@@ -71,6 +72,7 @@ const SAVE_ICONS = {
 const Composer = RestModel.extend({
   _categoryId: null,
   unlistTopic: false,
+  noBump: false,
 
   archetypes: function() {
     return this.site.get("archetypes");
@@ -608,7 +610,8 @@ const Composer = RestModel.extend({
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,
-      tags: opts.tags
+      tags: opts.tags,
+      noBump: opts.noBump
     });
 
     if (opts.post) {
@@ -714,7 +717,8 @@ const Composer = RestModel.extend({
       typingTime: 0,
       composerOpened: null,
       composerTotalOpened: 0,
-      featuredLink: null
+      featuredLink: null,
+      noBump: false
     });
   },
 
@@ -964,7 +968,8 @@ const Composer = RestModel.extend({
       usernames: this.get("targetUsernames"),
       composerTime: this.get("composerTime"),
       typingTime: this.get("typingTime"),
-      tags: this.get("tags")
+      tags: this.get("tags"),
+      noBump: this.get("noBump")
     };
 
     this.set("draftStatus", I18n.t("composer.saving_draft_tip"));

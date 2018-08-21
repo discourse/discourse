@@ -66,7 +66,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
   @observes("themeId")
   themeIdChanged() {
     const id = this.get("themeId");
-    previewTheme(id);
+    previewTheme([id]);
   },
 
   homeChanged() {

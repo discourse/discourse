@@ -53,7 +53,8 @@ function loadDraft(store, opts) {
       composerTime: draft.composerTime,
       typingTime: draft.typingTime,
       whisper: draft.whisper,
-      tags: draft.tags
+      tags: draft.tags,
+      noBump: draft.noBump
     });
     return composer;
   }

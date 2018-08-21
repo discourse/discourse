@@ -98,7 +98,7 @@ describe PrettyText do
       <div>
       <div class="poll-container">
       <ol>
-      <li data-poll-option-id="b6475cbf6acb8676b20c60582cfc487a">test 1 <img src="/images/emoji/twitter/slight_smile.png?v=5" title=":slight_smile:" class="emoji" alt=":slight_smile:"> <b>test</b>
+      <li data-poll-option-id="b6475cbf6acb8676b20c60582cfc487a">test 1 <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:"> <b>test</b>
       </li>
       <li data-poll-option-id="7158af352698eb1443d709818df097d4">test 2</li>
       </ol>

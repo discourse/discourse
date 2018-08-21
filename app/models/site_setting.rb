@@ -77,7 +77,7 @@ class SiteSetting < ActiveRecord::Base
 
     host = URI.parse(src).host
     return !(setting.split('|').include?(host))
-  rescue URI::InvalidURIError
+  rescue URI::Error
     return true
   end
 

@@ -25,7 +25,7 @@ module Discourse
 
       if !status.success?
         failure_message = "#{failure_message}\n" if !failure_message.blank?
-        raise "#{failure_message}#{stderr}"
+        raise "#{caller[0]}: #{failure_message}#{stderr}"
       end
 
       stdout
@@ -77,7 +77,18 @@ module Discourse
   end
 
   # When something they want is not found
-  class NotFound < StandardError; end
+  class NotFound < StandardError
+    attr_reader :status
+    attr_reader :check_permalinks
+    attr_reader :original_path
+
+    def initialize(message = nil, status: 404, check_permalinks: false, original_path: nil)
+      @status = status
+      @check_permalinks = check_permalinks
+      @original_path = original_path
+      super(message)
+    end
+  end
 
   # When a setting is missing
   class SiteSettingMissing < StandardError; end
@@ -200,7 +211,7 @@ module Discourse
     end
   end
 
-  BUILTIN_AUTH = [
+  BUILTIN_AUTH ||= [
     Auth::AuthProvider.new(authenticator: Auth::FacebookAuthenticator.new, frame_width: 580, frame_height: 400),
     Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500),
     Auth::AuthProvider.new(authenticator: Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true)),
@@ -259,7 +270,7 @@ module Discourse
     unless uri.is_a?(URI)
       uri = begin
         URI(uri)
-      rescue URI::InvalidURIError
+      rescue URI::Error
       end
     end
 
@@ -475,6 +486,56 @@ module Discourse
 
     Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
     JsLocaleHelper.reset_context if defined? JsLocaleHelper
+    nil
+  end
+
+  # you can use Discourse.warn when you want to report custom environment
+  # with the error, this helps with grouping
+  def self.warn(message, env = nil)
+    append = env ? (+" ") << env.map { |k, v|"#{k}: #{v}" }.join(" ") : ""
+
+    if !(Logster::Logger === Rails.logger)
+      Rails.logger.warn("#{message}#{append}")
+      return
+    end
+
+    loggers = [Rails.logger]
+    if Rails.logger.chained
+      loggers.concat(Rails.logger.chained)
+    end
+
+    logster_env = env
+
+    if old_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+      logster_env = Logster::Message.populate_from_env(old_env)
+
+      # a bit awkward by try to keep the new params
+      env.each do |k, v|
+        logster_env[k] = v
+      end
+    end
+
+    loggers.each do |logger|
+      if !(Logster::Logger === logger)
+        logger.warn("#{message} #{append}")
+        next
+      end
+
+      logger.store.report(
+        ::Logger::Severity::WARN,
+        "discourse",
+        message,
+        env: logster_env
+      )
+    end
+
+    if old_env
+      env.each do |k, v|
+        # do not leak state
+        logster_env.delete(k)
+      end
+    end
+
     nil
   end
 

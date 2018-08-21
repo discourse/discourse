@@ -184,10 +184,12 @@ class UserSerializer < BasicUserSerializer
         id: k.id,
         application_name: k.application_name,
         scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
-        created_at: k.created_at
+        created_at: k.created_at,
+        last_used_at: k.last_used_at,
       }
     end
 
+    keys.sort! { |a, b| a[:last_used_at].to_time <=> b[:last_used_at].to_time }
     keys.length > 0 ? keys : nil
   end
 
@@ -206,7 +208,7 @@ class UserSerializer < BasicUserSerializer
   def website_name
     uri = begin
       URI(website.to_s)
-    rescue URI::InvalidURIError
+    rescue URI::Error
     end
 
     return if uri.nil? || uri.host.nil?

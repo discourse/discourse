@@ -527,14 +527,16 @@ module Email
     end
 
     def sent_to_mailinglist_mirror?
-      destinations.each do |destination|
-        next unless destination[:type] == :category
+      @sent_to_mailinglist_mirror ||= begin
+        destinations.each do |destination|
+          next unless destination[:type] == :category
 
-        category = destination[:obj]
-        return true if category.mailinglist_mirror?
+          category = destination[:obj]
+          return true if category.mailinglist_mirror?
+        end
+
+        false
       end
-
-      false
     end
 
     def self.check_address(address)

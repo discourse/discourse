@@ -146,4 +146,8 @@ module TopicGuardian
     return false unless SiteSetting.topic_featured_link_enabled
     Category.where(id: category_id || SiteSetting.uncategorized_category_id, topic_featured_link_allowed: true).exists?
   end
+
+  def can_update_bumped_at?
+    is_staff?
+  end
 end

@@ -98,7 +98,13 @@ class GroupsController < ApplicationController
         type_filters: type_filters
       },
       total_rows_groups: count,
-      load_more_groups: groups_path(page: page + 1, type: type),
+      load_more_groups: groups_path(
+        page: page + 1,
+        type: type,
+        order: order,
+        asc: params[:asc],
+        filter: filter
+      ),
     )
   end
 

@@ -565,6 +565,12 @@ const Topic = RestModel.extend({
         window.location.reload();
       })
       .catch(popupAjaxError);
+  },
+
+  resetBumpDate() {
+    return ajax(`/t/${this.get("id")}/reset-bump-date`, { type: "PUT" }).catch(
+      popupAjaxError
+    );
   }
 });
 

@@ -15,11 +15,8 @@ working_directory discourse_path
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
 listen (ENV["UNICORN_PORT"] || 3000).to_i
 
-# nuke workers after 30 seconds instead of 60 seconds (the default)
-timeout 30
-
 if !File.exist?("#{discourse_path}/tmp/pids")
-  Dir.mkdir("#{discourse_path}/tmp/pids")
+  FileUtils.mkdir_p("#{discourse_path}/tmp/pids")
 end
 
 # feel free to point this anywhere accessible on the filesystem
@@ -27,12 +24,16 @@ pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
 if ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"]
   logger Logger.new($stdout)
+  # we want a longer timeout in dev cause first request can be really slow
+  timeout 60
 else
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
   # so prevent them from going to /dev/null when daemonized here:
   stderr_path "#{discourse_path}/log/unicorn.stderr.log"
   stdout_path "#{discourse_path}/log/unicorn.stdout.log"
+  # nuke workers after 30 seconds instead of 60 seconds (the default)
+  timeout 30
 end
 
 # important for Ruby 2.0

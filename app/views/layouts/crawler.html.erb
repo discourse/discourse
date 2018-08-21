@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= SiteSetting.default_locale %>">
+<html lang="<%= html_lang %>">
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
@@ -10,7 +10,7 @@
     <%- else %>
       <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
     <%- end %>
-    <%- if theme_id %>
+    <%- if theme_ids.present? %>
       <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
     <%- end %>
     <%= theme_lookup("head_tag") %>

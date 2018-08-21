@@ -136,7 +136,8 @@ class TopicsBulkAction
   def delete
     topics.each do |t|
       if guardian.can_delete?(t)
-        PostDestroyer.new(@user, t.ordered_posts.first).destroy
+        post = t.ordered_posts.first
+        PostDestroyer.new(@user, post).destroy if post
       end
     end
   end
@@ -166,7 +167,7 @@ class TopicsBulkAction
         if tags.present?
           DiscourseTagging.tag_topic_by_names(t, guardian, tags, append: true)
         end
-      @changed_ids << t.id
+        @changed_ids << t.id
       end
     end
   end

@@ -1,3 +1,14 @@
+if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
+  console = ActiveSupport::Logger.new(STDOUT)
+  original_logger = Rails.logger.chained.first
+  console.formatter = original_logger.formatter
+  console.level = original_logger.level
+
+  unless ActiveSupport::Logger.logger_outputs_to?(original_logger, STDOUT)
+    original_logger.extend(ActiveSupport::Logger.broadcast(console))
+  end
+end
+
 if Rails.env.production?
   Logster.store.ignore = [
     # honestly, Rails should not be logging this, its real noisy
@@ -89,6 +100,6 @@ RailsMultisite::ConnectionManagement.each_connection do
 end
 
 if Rails.configuration.multisite
-  chained = Rails.logger.instance_variable_get(:@chained)
+  chained = Rails.logger.chained
   chained && chained.first.formatter = RailsMultisite::Formatter.new
 end

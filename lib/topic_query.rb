@@ -10,6 +10,40 @@ require_dependency 'avatar_lookup'
 
 class TopicQuery
 
+  def self.validators
+    @validators ||= begin
+
+      int = lambda do |x|
+        Integer === x || (String === x && x.match?(/^-?[0-9]+$/))
+      end
+
+      zero_or_more = lambda do |x|
+        int.call(x) && x.to_i >= 0
+      end
+
+      array_int_or_int = lambda do |x|
+        int.call(x) || (
+          Array === x && x.length > 0 && x.all?(&int)
+        )
+      end
+
+      {
+        max_posts: zero_or_more,
+        min_posts: zero_or_more,
+        exclude_category_ids: array_int_or_int
+      }
+    end
+  end
+
+  def self.validate?(option, value)
+
+    if fn = validators[option.to_sym]
+      fn.call(value)
+    else
+      true
+    end
+  end
+
   def self.public_valid_options
     @public_valid_options ||=
       %i(page
@@ -374,7 +408,7 @@ class TopicQuery
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
-    list.per_page = per_page_setting
+    list.per_page = options[:per_page] || per_page_setting
     list
   end
 
@@ -628,7 +662,7 @@ class TopicQuery
     result = apply_shared_drafts(result, category_id, options)
 
     if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
-      result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids]).references(:categories)
+      result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)
     end
 
     # Don't include the category topics if excluded

@@ -4,7 +4,7 @@ class UploadUrlValidator < ActiveModel::EachValidator
       uri =
         begin
           URI.parse(value)
-        rescue URI::InvalidURIError
+        rescue URI::Error
         end
 
       unless uri && Upload.exists?(url: value)

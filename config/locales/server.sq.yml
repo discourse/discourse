@@ -798,9 +798,6 @@ sq:
     existing_topic_moderator_post:
       one: "A post was merged into an existing topic: %{topic_link}"
       other: "%{count} posts were merged into an existing topic: %{topic_link}"
-  change_owner:
-    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
-    deleted_user: "a deleted user"
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
@@ -1091,7 +1088,6 @@ sq:
     recent_topics: "Më të fundit"
     see_more: "Më shumë"
     search_title: "Kërko në këtë faqe"
-    search_google: "Google"
   terms_of_service:
     title: "Kushtet e shërbimit"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'

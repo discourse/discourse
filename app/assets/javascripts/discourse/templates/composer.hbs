@@ -21,6 +21,9 @@
                   {{#if whisperOrUnlistTopicText}}
                     <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
                   {{/if}}
+                  {{#if model.noBump}}
+                    <span class="no-bump">{{d-icon "anchor"}}</span>
+                  {{/if}}
                 {{/unless}}
 
                 {{#if canEdit}}
@@ -119,6 +122,9 @@
                   <span class='whisper'>
                     {{d-icon "eye-slash"}}
                   </span>
+                {{/if}}
+                {{#if model.noBump}}
+                  <span class="no-bump">{{d-icon "anchor"}}</span>
                 {{/if}}
               {{/if}}
 

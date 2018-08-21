@@ -154,7 +154,7 @@ describe StaffActionLogger do
     end
 
     let :theme do
-      Theme.new(name: 'bob', user_id: -1)
+      Fabricate(:theme)
     end
 
     it "logs new site customizations" do
@@ -188,7 +188,7 @@ describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      theme = Theme.new(name: 'Banana')
+      theme = Fabricate(:theme)
       theme.set_field(target: :common, name: :scss, value: "body{margin: 10px;}")
 
       log_record = logger.log_theme_destroy(theme)

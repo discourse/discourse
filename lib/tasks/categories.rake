@@ -21,3 +21,16 @@ task "categories:move_topics", [:from_category, :to_category] => [:environment] 
 
   puts "", "Done!", ""
 end
+
+task "categories:create_definition" => :environment do
+  puts "Creating category definitions"
+  puts
+
+  Category.where(topic_id: nil).each(&:create_category_definition)
+
+  puts "", "Done!", ""
+end
+
+def print_status(current, max)
+  print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
+end

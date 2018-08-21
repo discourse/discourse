@@ -936,9 +936,6 @@ vi:
       other: "%{count} bài viết đã được chia thành chủ đề mới: %{topic_link}"
     existing_topic_moderator_post:
       other: "%{count} bài viết đã được hợp nhất vào chủ đề: %{topic_link}"
-  change_owner:
-    post_revision_text: "Chuyển quyền sở hữu từ %{old_user} sang %{new_user}"
-    deleted_user: "xóa người dùng"
   topic_statuses:
     archived_enabled: "Chủ đề này được đưa vào lưu trữ. Nó sẽ không được sửa đổi nữa. "
     archived_disabled: "Chủ đề này được đưa khỏi lưu trữ. Nó có thể được sửa đổi."
@@ -1128,7 +1125,6 @@ vi:
     recent_topics: "Gân đây"
     see_more: "Thêm"
     search_title: "Tìm trang này"
-    search_google: "Goole"
   terms_of_service:
     title: "Điều khoản Dịch vụ"
     signup_form_message: 'Tôi đã đọc và đồng ý với <a href="/tos" target="_blank">Điều khoản dịch vụ</a>.'

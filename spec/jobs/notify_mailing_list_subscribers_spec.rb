@@ -126,8 +126,19 @@ describe Jobs::NotifyMailingListSubscribers do
             mailing_list_user.email_logs.create(email_type: 'foobar', to_address: mailing_list_user.email)
           }
 
-          Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
-          UserNotifications.expects(:mailing_list_notify).with(mailing_list_user, post).never
+          expect do
+            UserNotifications.expects(:mailing_list_notify)
+              .with(mailing_list_user, post)
+              .never
+
+            2.times do
+              Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+            end
+
+            Jobs::NotifyMailingListSubscribers.new.execute(
+              post_id: Fabricate(:post, user: user).id
+            )
+          end.to change { SkippedEmailLog.count }.by(1)
 
           expect(SkippedEmailLog.exists?(
             email_type: "mailing_list",
@@ -136,6 +147,20 @@ describe Jobs::NotifyMailingListSubscribers do
             to_address: mailing_list_user.email,
             reason_type: SkippedEmailLog.reason_types[:exceeded_emails_limit]
           )).to eq(true)
+
+          freeze_time(Time.zone.now.tomorrow + 1.second)
+
+          expect do
+            post = Fabricate(:post, user: user)
+
+            UserNotifications.expects(:mailing_list_notify)
+              .with(mailing_list_user, post)
+              .once
+
+            Jobs::NotifyMailingListSubscribers.new.execute(
+              post_id: post.id
+            )
+          end.to change { SkippedEmailLog.count }.by(0)
         end
       end
 

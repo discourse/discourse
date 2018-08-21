@@ -228,7 +228,7 @@ en:
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
     privacy: "Privacy"
-    terms_of_service: "Terms of Service"
+    tos: "Terms of Service"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
     you: "You"
@@ -704,6 +704,7 @@ en:
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
+      api_last_used_at: "Last used at:"
       theme: "Theme"
       home: "Default Home Page"
       staged: "Staged"
@@ -1437,6 +1438,9 @@ en:
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to staff"
+        toggle_topic_bump:
+          label: "Toggle topic bump"
+          desc: "Reply without changing the topic's bump date"
 
     notifications:
       tooltip:
@@ -1858,6 +1862,7 @@ en:
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
         make_private: "Make Personal Message"
+        reset_bump_date: "Reset Bump Date"
 
       feature:
         pin: "Pin Topic"

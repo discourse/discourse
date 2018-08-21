@@ -133,6 +133,7 @@ RSpec.configure do |config|
     end
 
     unfreeze_time
+    ActionMailer::Base.deliveries.clear
 
     raise if ActiveRecord::Base.connection_pool.stat[:busy] > 1
   end

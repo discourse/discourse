@@ -1,64 +1,36 @@
 .admin-report {
-  .report-error,
-  .no-data {
-    width: 100%;
-    width: 100%;
-    align-self: flex-start;
-    text-align: center;
-    padding: 3em;
-    box-sizing: border-box;
-  }
-
-  .report-error {
-    color: $danger;
-    border: 1px solid $danger;
-  }
-
-  .no-data {
-    background: $secondary;
-    border: 1px solid $primary-low;
-    color: $primary-low-mid;
-
-    .d-icon-pie-chart {
-      color: currentColor;
-      margin-bottom: 0.25em;
-      font-size: $font-up-5;
-      display: block;
+  .conditional-loading-section {
+    &.is-loading {
+      margin: 0;
     }
   }
 
-  .conditional-loading-section {
-    flex: 1;
-    margin: 0;
+  .header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $primary-low;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
   }
 
-  .report-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1em;
+  .header .breadcrumb {
+    margin: 0;
+    list-style: none;
 
-    .report-title {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
+    .item {
+      display: inline;
+      font-size: $font-up-1;
+    }
 
-      .title {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        font-size: $font-up-1;
-        .separator {
-          font-weight: normal;
-        }
+    .all-reports .report-url {
+      font-weight: 700;
+    }
 
-        .report-link {
-          color: $primary;
-        }
+    .report {
+      font-weight: 700;
 
-        .separator + .report-link {
-          font-weight: normal;
-        }
+      .report-url {
+        color: $primary;
       }
 
       .info {
@@ -71,167 +43,134 @@
         }
       }
     }
+  }
 
-    .trend {
-      align-items: center;
-
-      &.trending-down,
-      &.high-trending-down {
-        color: $danger;
-      }
-
-      &.trending-up,
-      &.high-trending-up {
-        color: $success;
-      }
-
-      &.no-change {
-        color: $primary-medium;
-      }
-
-      .trend-value {
-        font-size: $font-up-1;
-      }
-
-      .trend-icon {
-        font-size: $font-up-1;
-        font-weight: 700;
-      }
+  .header .trend {
+    margin-left: auto;
+    &.trending-down,
+    &.high-trending-down {
+      color: $danger;
     }
 
-    .mode-switch {
+    &.trending-up,
+    &.high-trending-up {
+      color: $success;
+    }
+
+    &.no-change {
+      color: $primary-medium;
+    }
+
+    .value {
+      font-size: $font-up-1;
+    }
+
+    .icon {
+      font-size: $font-up-1;
+      font-weight: 700;
+    }
+  }
+
+  .body {
+    display: flex;
+  }
+
+  .main {
+    flex: 1;
+  }
+
+  .main .report-alert {
+    margin: 0;
+    text-align: center;
+    padding: 3em;
+    border: 1px solid transparent;
+
+    a {
+      color: $primary-medium;
+    }
+
+    .d-icon {
+      color: currentColor;
+      margin-bottom: 0.25em;
+      font-size: $font-up-5;
+      display: block;
+    }
+
+    &.no-data {
+      background: $secondary;
+      border-color: $primary-low;
+      color: $primary-low-mid;
+    }
+
+    &.timeout,
+    &.exception {
+      border-color: $danger-low;
+      color: $danger;
+    }
+  }
+
+  .filters {
+    display: flex;
+    margin-left: 1em;
+    flex-direction: column;
+    width: 220px;
+
+    .modes {
+      margin: 0 0 1em 0;
+      padding: 0;
       list-style: none;
-      display: flex;
-      margin: 0;
 
       .mode {
-        display: inline;
+        display: inline-flex;
+        flex: 1;
 
-        .mode-button.current {
+        .mode-btn.is-current {
           color: $tertiary;
         }
       }
     }
-  }
 
-  .report-body {
-    display: flex;
-    justify-content: space-between;
+    .control {
+      margin-bottom: 1em;
+    }
 
-    .admin-report-table,
-    .admin-report-chart {
+    .control .label {
+      font-weight: 700;
       width: 100%;
     }
 
-    .report-filters {
-      margin-left: 1em;
-      min-width: 250px;
-      display: flex;
-      flex-direction: column;
+    .control .input,
+    .control .select-kit {
+      width: 100%;
 
-      .filtering-control {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1em;
-      }
-      .filtering-label {
-      }
-      .filtering-input {
+      .export-csv-btn {
         width: 100%;
+      }
 
-        .date-picker-wrapper,
-        .combo-box,
-        .export-csv-btn,
-        .refresh-report-btn {
+      .refresh-report-btn {
+        width: 100%;
+      }
+
+      .date-picker-wrapper {
+        width: 100%;
+        .date-picker {
+          box-sizing: border-box;
           width: 100%;
-        }
-
-        .date-picker-wrapper {
-          .date-picker {
-            width: 100%;
-            box-sizing: border-box;
-            margin: 0;
-          }
+          margin: 0;
         }
       }
     }
-
-    .report-filters:only-child {
-      margin-left: auto;
-    }
   }
 }
 
-.admin-report.activity-metrics {
-  table {
-    table-layout: auto;
+.rtl .admin-report {
+  .filters {
+    margin-left: 0;
+    margin-right: 1em;
   }
-}
 
-.admin-report.users-by-type {
-  margin-top: 1em;
-}
-
-.admin-report.users-by-type,
-.admin-report.users-by-trust-level {
-  margin-bottom: 1em;
-  flex: 1;
-  .report-header {
-    border-bottom: 1px solid $primary-medium;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid #e9e9e9;
-  }
-}
-
-.admin-report.moderators-activity {
-  tbody tr td.username,
-  thead tr th.username {
-    text-align: left;
-  }
-}
-
-.admin-report.trending-search {
-  tbody tr td.term,
-  thead tr th.term {
-    text-align: left;
-  }
-}
-
-.admin-report.top-traffic-sources {
-  tbody tr td.domain,
-  thead tr th.domain {
-    text-align: left;
-  }
-}
-
-.admin-report.post-edits {
-  .report-table {
-    table-layout: auto;
-
-    tbody tr td,
-    thead tr th {
-      text-align: left;
-    }
-
-    thead tr th.edit_reason,
-    tbody tr td.edit_reason {
-      width: 100%;
-    }
-  }
-}
-
-.admin-report.flags-status {
-  .admin-report-table {
-    table-layout: auto;
-
-    tbody tr td,
-    thead tr th {
-      text-align: left;
-    }
-
-    tbody tr td.response_time,
-    thead tr th.response_time {
-      text-align: center;
-    }
+  .trend {
+    margin-left: unset;
+    margin-right: auto;
   }
 }

@@ -29,7 +29,7 @@ class StylesheetsController < ApplicationController
       # we hold of re-compilation till someone asks for asset
       if target.include?("theme")
         split_target, theme_id = target.split(/_(-?[0-9]+)/)
-        theme = Theme.find(theme_id) if theme_id
+        theme = Theme.find_by(id: theme_id) if theme_id.present?
       else
         split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
         theme = Theme.find_by(color_scheme_id: color_scheme_id)
