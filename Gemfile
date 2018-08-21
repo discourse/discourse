@@ -128,6 +128,7 @@ group :test, :development do
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
   gem 'rubocop', require: false
+  gem 'mailcatcher', require: false
 end
 
 group :development do
