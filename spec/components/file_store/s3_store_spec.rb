@@ -285,17 +285,18 @@ describe FileStore::S3Store do
 
   describe '.cdn_url' do
 
-    it 'uses the correct path' do
-      url = "//s3-upload-bucket.s3-us-west-2.amazonaws.com/livechat/original/1X/2252ae522257fc537351e47bbdd34698936b6c38.jpeg"
-      expect(store.cdn_url(url)).to end_with('/livechat/original/1X/2252ae522257fc537351e47bbdd34698936b6c38.jpeg')
-    end
-
     it 'supports subfolder' do
-      SiteSetting.s3_upload_bucket = 's3-upload-bucket/livechat/community'
-      GlobalSetting.stubs(:relative_url_root).returns('/community')
+      SiteSetting.s3_upload_bucket = 's3-upload-bucket/livechat'
+      SiteSetting.s3_cdn_url = 'https://rainbow.com'
+
+      # none of this should matter at all
+      # subfolder should not leak into uploads
+      global_setting :relative_url_root, '/community'
       Discourse.stubs(:base_uri).returns("/community")
-      url = "//s3-upload-bucket.s3-us-west-2.amazonaws.com/livechat/community/original/1X/2252ae522257fc537351e47bbdd34698936b6c38.jpeg"
-      expect(store.cdn_url(url)).to end_with('/livechat/community/original/1X/2252ae522257fc537351e47bbdd34698936b6c38.jpeg')
+
+      url = "//s3-upload-bucket.s3.amazonaws.com/livechat/original/gif.png"
+
+      expect(store.cdn_url(url)).to eq("https://rainbow.com/original/gif.png")
     end
   end
 

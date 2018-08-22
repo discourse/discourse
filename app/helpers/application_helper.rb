@@ -65,6 +65,12 @@ module ApplicationHelper
       if GlobalSetting.cdn_url
         path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
       else
+        # we must remove the subfolder path here, assets are uploaded to s3
+        # without it getting involved
+        if ActionController::Base.config.relative_url_root
+          path = path.sub(ActionController::Base.config.relative_url_root, "")
+        end
+
         path = "#{GlobalSetting.s3_cdn_url}#{path}"
       end
 
