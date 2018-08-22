@@ -1236,7 +1236,7 @@ rate_limits:
     default: 3
   max_post_deletions_per_day:
     min: 1
-    default: 50
+    default: 20
 
 developer:
   force_hostname:
