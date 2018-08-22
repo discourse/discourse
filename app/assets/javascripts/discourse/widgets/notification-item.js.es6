@@ -53,16 +53,6 @@ createWidget("notification-item", {
     }
 
     const topicId = attrs.topic_id;
-    const revisionNumber = data.revision_number;
-
-    if (topicId && revisionNumber) {
-      return revisionUrl(
-        attrs.slug,
-        topicId,
-        attrs.post_number,
-        revisionNumber
-      );
-    }
 
     if (topicId) {
       return postUrl(attrs.slug, topicId, attrs.post_number);
@@ -164,6 +154,18 @@ createWidget("notification-item", {
     e.preventDefault();
 
     this.sendWidgetEvent("linkClicked");
-    DiscourseURL.routeTo(this.url());
+    DiscourseURL.routeTo(this.url(), {
+      callback: () => {
+        if (!this.attrs.data.revision_number) {
+          return;
+        }
+
+        this.appEvents.trigger(
+          "post:show-revision",
+          this.attrs.post_number,
+          this.attrs.data.revision_number
+        );
+      }
+    });
   }
 });

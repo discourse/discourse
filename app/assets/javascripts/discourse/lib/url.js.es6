@@ -4,7 +4,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
-const REVISION_REGEXP = /\?revision=(\d+)$/;
 
 function redirectTo(url) {
   document.location = url;
@@ -243,6 +242,10 @@ const DiscourseURL = Ember.Object.extend({
 
     path = rewritePath(path);
 
+    if (typeof opts.callback === "function") {
+      Ember.run.schedule("afterRender", opts.callback);
+    }
+
     if (this.navigatedToPost(oldPath, path, opts)) {
       return;
     }
@@ -316,7 +319,6 @@ const DiscourseURL = Ember.Object.extend({
     if (newTopicId) {
       const oldMatches = TOPIC_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
-      const revision = REVISION_REGEXP.exec(path);
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
@@ -342,10 +344,6 @@ const DiscourseURL = Ember.Object.extend({
             "model.currentPost": closest,
             enteredAt: new Date().getTime().toString()
           });
-
-          if (revision) {
-            this.appEvents.trigger("post:show-revision", closest, revision[1]);
-          }
 
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {

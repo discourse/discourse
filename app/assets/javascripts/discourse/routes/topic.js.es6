@@ -16,8 +16,7 @@ const TopicRoute = Discourse.Route.extend({
 
   queryParams: {
     filter: { replace: true },
-    username_filters: { replace: true },
-    revision: { replace: true }
+    username_filters: { replace: true }
   },
 
   titleToken() {
@@ -200,8 +199,6 @@ const TopicRoute = Discourse.Route.extend({
       userFilters.addObjects(usernames.split(","));
     }
 
-    this.set("revision", params.revision);
-
     return topic;
   },
 
@@ -281,14 +278,6 @@ const TopicRoute = Discourse.Route.extend({
 
     Ember.run.scheduleOnce("afterRender", () => {
       this.appEvents.trigger("header:update-topic", model);
-      if (this.revision) {
-        this.appEvents.trigger(
-          "post:show-revision",
-          model.currentPost,
-          this.revision
-        );
-        this.set("revision", undefined);
-      }
     });
   }
 });
